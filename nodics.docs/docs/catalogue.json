@@ -8473,6 +8473,710 @@
       ]
     },
     {
+      "id": "applications.nexus-data-content-guide",
+      "functionalModule": "nodics.kickoff",
+      "technicalModule": "nexus.web",
+      "title": "Nexus Data and Content Guide",
+      "summary": "How Nexus corporate content, media, editorial, engagement, Staged publication, Online delivery, and browser validation are authored from project data releases.",
+      "locale": "en",
+      "content": "docs/pages/applications/nexus-data-content-guide.md",
+      "slug": "applications-nexus-data-content-guide",
+      "parentId": "nodics-application-suite.application-overview",
+      "hierarchyPath": [
+        "Nodics Documentation",
+        "Nodics Application Suite",
+        "Application Overview",
+        "Nexus Data and Content Guide"
+      ],
+      "hierarchyDepth": 4,
+      "navigationSection": "Nodics Application Suite",
+      "navigationSectionCode": "nodics-application-suite",
+      "navigationSectionOrder": 60,
+      "navigationGroup": "Application Overview",
+      "navigationGroupCode": "application-overview",
+      "navigationGroupOrder": 10,
+      "navigationSubgroup": null,
+      "navigationSubgroupCode": null,
+      "navigationOrder": 20,
+      "documentType": "how-to",
+      "audience": [
+        "business",
+        "architect",
+        "administrator",
+        "developer",
+        "operator",
+        "qa",
+        "ai-tool"
+      ],
+      "businessAudience": [
+        "business user",
+        "administrator",
+        "implementation partner"
+      ],
+      "technicalAudience": [
+        "architect",
+        "developer",
+        "operator",
+        "qa engineer",
+        "ai tool"
+      ],
+      "sourceOwner": "nodics.kickoff",
+      "sourcePath": "docs/pages/applications/nexus-data-content-guide.md",
+      "visibility": "public",
+      "channel": [
+        "axis",
+        "nexus",
+        "web"
+      ],
+      "accessMode": "PUBLIC",
+      "publiclyAvailable": true,
+      "requiresAuthentication": false,
+      "allowedRoles": [],
+      "allowedGroups": [],
+      "allowedPermissions": [],
+      "lifecycleState": "ONLINE",
+      "version": "0.16.7",
+      "relatedPages": [
+        "applications.suite",
+        "wcms.overview",
+        "wcms.media-import-publication",
+        "wcms.publishing-lifecycle"
+      ],
+      "sourceEvidence": [
+        "docs/catalogue.json",
+        "docs/pages/applications/nexus-data-content-guide.md",
+        "../../nodics.kickoff/modules/nexus.web/package.json",
+        "../../nodics.kickoff/modules/nexus.web/data/manifest.json",
+        "../../nodics.kickoff/modules/nexus.web/data/sample-v001/content/assets/nexus-cms-media/assetManifest.js",
+        "../../nodics.kickoff/modules/nexus.web/test/nexusCorporateContentContract.test.mjs",
+        "../../nodics.exp/nodics.nexus/package.json"
+      ],
+      "maturityState": "operational",
+      "implementationState": "current",
+      "renderingComponent": "documentation.component.article",
+      "searchKeywords": [
+        "nexus",
+        "corporate-site",
+        "content-pack",
+        "media-assets",
+        "online-delivery"
+      ],
+      "topicKeywords": [
+        "Nodics Application Suite",
+        "Application Overview",
+        "Nexus Data and Content Guide"
+      ],
+      "visualRequirements": [
+        "diagram",
+        "table",
+        "code-example",
+        "troubleshooting-matrix"
+      ]
+    },
+    {
+      "id": "applications.axis-setup-error-contracts",
+      "functionalModule": "nodics.platform",
+      "technicalModule": "backoffice",
+      "title": "Axis Setup and User-Safe Error Contracts",
+      "summary": "How Axis presents setup, retry, blocker, and initialization errors with safe business messages while preserving technical evidence for operators.",
+      "locale": "en",
+      "content": "docs/pages/applications/axis-setup-error-contracts.md",
+      "slug": "applications-axis-setup-error-contracts",
+      "parentId": "axis-and-backoffice-operations.setup-and-accelerators",
+      "hierarchyPath": [
+        "Nodics Documentation",
+        "Axis and BackOffice Operations",
+        "Setup and Accelerators",
+        "Axis Setup and User-Safe Error Contracts"
+      ],
+      "hierarchyDepth": 4,
+      "navigationSection": "Axis and BackOffice Operations",
+      "navigationSectionCode": "axis-and-backoffice-operations",
+      "navigationSectionOrder": 110,
+      "navigationGroup": "Setup and Accelerators",
+      "navigationGroupCode": "setup-and-accelerators",
+      "navigationGroupOrder": 20,
+      "navigationSubgroup": null,
+      "navigationSubgroupCode": null,
+      "navigationOrder": 10,
+      "documentType": "contract",
+      "audience": [
+        "business",
+        "architect",
+        "administrator",
+        "developer",
+        "operator",
+        "qa",
+        "ai-tool"
+      ],
+      "businessAudience": [
+        "business user",
+        "administrator",
+        "implementation partner"
+      ],
+      "technicalAudience": [
+        "architect",
+        "developer",
+        "operator",
+        "qa engineer",
+        "ai tool"
+      ],
+      "sourceOwner": "nodics.platform",
+      "sourcePath": "docs/pages/applications/axis-setup-error-contracts.md",
+      "visibility": "public",
+      "channel": [
+        "axis",
+        "web"
+      ],
+      "accessMode": "PUBLIC",
+      "publiclyAvailable": true,
+      "requiresAuthentication": false,
+      "allowedRoles": [],
+      "allowedGroups": [],
+      "allowedPermissions": [],
+      "lifecycleState": "ONLINE",
+      "version": "0.16.7",
+      "relatedPages": [
+        "axis.business-customization",
+        "platform.module-registry",
+        "framework.fresh-schema-setup-journey",
+        "applications.suite"
+      ],
+      "sourceEvidence": [
+        "docs/catalogue.json",
+        "docs/pages/applications/axis-setup-error-contracts.md",
+        "../nodics.platform/modules/backoffice/src/service/defaultBackofficeApplicationInitializationService.js",
+        "../nodics.platform/modules/backoffice/src/service/availability/defaultBackofficeAvailabilityService.js",
+        "../nodics.platform/modules/backoffice/src/service/registry/defaultBackofficeCapabilityRegistryService.js",
+        "../nodics.platform/modules/backoffice/test/backofficeApplicationInitializationContract.test.js",
+        "../../nodics.exp/nodics.axis/package.json"
+      ],
+      "maturityState": "operational",
+      "implementationState": "current",
+      "renderingComponent": "documentation.component.article",
+      "searchKeywords": [
+        "axis",
+        "setup",
+        "accelerator",
+        "safe-error",
+        "backoffice"
+      ],
+      "topicKeywords": [
+        "Axis and BackOffice Operations",
+        "Setup and Accelerators",
+        "User-Safe Error Contracts"
+      ],
+      "visualRequirements": [
+        "lifecycle-state-diagram",
+        "table",
+        "troubleshooting-matrix"
+      ]
+    },
+    {
+      "id": "wcms.cms-source-map-authoring-contract",
+      "functionalModule": "nodics.wcms",
+      "technicalModule": "cms",
+      "title": "CMS Source Map and Authoring Contract",
+      "summary": "Exact CMS implementation map for sites, routes, pages, components, renderers, migration, publication manifests, delivery cache, and governance.",
+      "locale": "en",
+      "content": "docs/pages/nodics.wcms/cms-source-map-and-authoring-contract.md",
+      "slug": "wcms-cms-source-map-authoring-contract",
+      "parentId": "wcms-and-content-management.content-model-and-delivery",
+      "hierarchyPath": [
+        "Nodics Documentation",
+        "WCMS and Content Management",
+        "Content Model and Delivery",
+        "CMS Source Map and Authoring Contract"
+      ],
+      "hierarchyDepth": 4,
+      "navigationSection": "WCMS and Content Management",
+      "navigationSectionCode": "wcms-and-content-management",
+      "navigationSectionOrder": 230,
+      "navigationGroup": "Content Model and Delivery",
+      "navigationGroupCode": "content-model-and-delivery",
+      "navigationGroupOrder": 10,
+      "navigationSubgroup": null,
+      "navigationSubgroupCode": null,
+      "navigationOrder": 50,
+      "documentType": "contract",
+      "audience": [
+        "business",
+        "architect",
+        "administrator",
+        "developer",
+        "operator",
+        "qa",
+        "ai-tool"
+      ],
+      "businessAudience": [
+        "business user",
+        "administrator",
+        "implementation partner"
+      ],
+      "technicalAudience": [
+        "architect",
+        "developer",
+        "operator",
+        "qa engineer",
+        "ai tool"
+      ],
+      "sourceOwner": "nodics.wcms",
+      "sourcePath": "docs/pages/nodics.wcms/cms-source-map-and-authoring-contract.md",
+      "visibility": "public",
+      "channel": [
+        "axis",
+        "nexus",
+        "web"
+      ],
+      "accessMode": "PUBLIC",
+      "publiclyAvailable": true,
+      "requiresAuthentication": false,
+      "allowedRoles": [],
+      "allowedGroups": [],
+      "allowedPermissions": [],
+      "lifecycleState": "ONLINE",
+      "version": "0.16.7",
+      "relatedPages": [
+        "wcms.overview",
+        "wcms.content-catalog-model",
+        "wcms.page-designer-components",
+        "wcms.publishing-lifecycle"
+      ],
+      "sourceEvidence": [
+        "docs/catalogue.json",
+        "docs/pages/nodics.wcms/cms-source-map-and-authoring-contract.md",
+        "../nodics.wcms/modules/cms/src/schemas/schemas.js",
+        "../nodics.wcms/modules/cms/src/service/delivery/defaultCmsDeliveryService.js",
+        "../nodics.wcms/modules/cms/src/service/publication/defaultCmsPublicationManifestOrchestrationService.js",
+        "../nodics.wcms/modules/cms/data/manifest.json",
+        "../nodics.wcms/modules/cms/test/cmsPublicationManifestContract.test.js"
+      ],
+      "maturityState": "operational",
+      "implementationState": "current",
+      "renderingComponent": "documentation.component.article",
+      "searchKeywords": [
+        "cms",
+        "source-map",
+        "authoring",
+        "publication-manifest",
+        "delivery-cache"
+      ],
+      "topicKeywords": [
+        "WCMS and Content Management",
+        "Content Model and Delivery",
+        "CMS Source Map and Authoring Contract"
+      ],
+      "visualRequirements": [
+        "diagram",
+        "table",
+        "code-example",
+        "troubleshooting-matrix"
+      ]
+    },
+    {
+      "id": "wcms.media-operations-runbook",
+      "functionalModule": "nodics.wcms",
+      "technicalModule": "media",
+      "title": "Media Operations Runbook",
+      "summary": "Operational contract for media import hydration, storage providers, publication transfer, DR replication, cleanup lifecycle, and browser delivery evidence.",
+      "locale": "en",
+      "content": "docs/pages/nodics.wcms/media-operations-runbook.md",
+      "slug": "wcms-media-operations-runbook",
+      "parentId": "media-management.media-lifecycle-and-storage",
+      "hierarchyPath": [
+        "Nodics Documentation",
+        "Media Management",
+        "Media Lifecycle and Storage",
+        "Media Operations Runbook"
+      ],
+      "hierarchyDepth": 4,
+      "navigationSection": "Media Management",
+      "navigationSectionCode": "media-management",
+      "navigationSectionOrder": 260,
+      "navigationGroup": "Media Lifecycle and Storage",
+      "navigationGroupCode": "media-lifecycle-and-storage",
+      "navigationGroupOrder": 10,
+      "navigationSubgroup": null,
+      "navigationSubgroupCode": null,
+      "navigationOrder": 40,
+      "documentType": "operations",
+      "audience": [
+        "business",
+        "architect",
+        "administrator",
+        "developer",
+        "operator",
+        "qa",
+        "ai-tool"
+      ],
+      "businessAudience": [
+        "business user",
+        "administrator",
+        "implementation partner"
+      ],
+      "technicalAudience": [
+        "architect",
+        "developer",
+        "operator",
+        "qa engineer",
+        "ai tool"
+      ],
+      "sourceOwner": "nodics.wcms",
+      "sourcePath": "docs/pages/nodics.wcms/media-operations-runbook.md",
+      "visibility": "public",
+      "channel": [
+        "axis",
+        "nexus",
+        "web"
+      ],
+      "accessMode": "PUBLIC",
+      "publiclyAvailable": true,
+      "requiresAuthentication": false,
+      "allowedRoles": [],
+      "allowedGroups": [],
+      "allowedPermissions": [],
+      "lifecycleState": "ONLINE",
+      "version": "0.16.7",
+      "relatedPages": [
+        "wcms.media-management",
+        "wcms.media-storage-delivery",
+        "wcms.media-import-publication",
+        "wcms.publishing-lifecycle"
+      ],
+      "sourceEvidence": [
+        "docs/catalogue.json",
+        "docs/pages/nodics.wcms/media-operations-runbook.md",
+        "../nodics.wcms/modules/media/src/service/storage/defaultMediaUploadService.js",
+        "../nodics.wcms/modules/media/src/service/publication/defaultMediaPublicationTransferService.js",
+        "../nodics.wcms/modules/media/src/service/storage/defaultMediaCleanupLifecycleService.js",
+        "../nodics.foundation/modules/nData/nImport/import/src/service/media/defaultMediaReleaseAssetHydrationService.js",
+        "../nodics.wcms/modules/media/test/mediaPublicationTransferContract.test.js"
+      ],
+      "maturityState": "operational",
+      "implementationState": "current",
+      "renderingComponent": "documentation.component.article",
+      "searchKeywords": [
+        "media",
+        "storage-provider",
+        "publication-transfer",
+        "asset-hydration",
+        "disaster-recovery"
+      ],
+      "topicKeywords": [
+        "Media Management",
+        "Media Lifecycle and Storage",
+        "Media Operations Runbook"
+      ],
+      "visualRequirements": [
+        "diagram",
+        "table",
+        "troubleshooting-matrix"
+      ]
+    },
+    {
+      "id": "data.import-export-provider-guides",
+      "functionalModule": "nodics.foundation",
+      "technicalModule": "nImport",
+      "title": "Import and Export Provider Guides",
+      "summary": "Provider-level guide for JavaScript, JSON, CSV, and Excel import/export behavior, masking, parser rules, diagnostics, and extension boundaries.",
+      "locale": "en",
+      "content": "docs/pages/nodics.foundation/import-export-provider-guides.md",
+      "slug": "data-import-export-provider-guides",
+      "parentId": "data-import-export-and-migration.data-movement-and-migration",
+      "hierarchyPath": [
+        "Nodics Documentation",
+        "Data Import, Export, and Migration",
+        "Data Movement and Migration",
+        "Import and Export Provider Guides"
+      ],
+      "hierarchyDepth": 4,
+      "navigationSection": "Data Import, Export, and Migration",
+      "navigationSectionCode": "data-import-export-and-migration",
+      "navigationSectionOrder": 400,
+      "navigationGroup": "Data Movement and Migration",
+      "navigationGroupCode": "data-movement-and-migration",
+      "navigationGroupOrder": 10,
+      "navigationSubgroup": null,
+      "navigationSubgroupCode": null,
+      "navigationOrder": 20,
+      "documentType": "operations",
+      "audience": [
+        "business",
+        "architect",
+        "administrator",
+        "developer",
+        "operator",
+        "qa",
+        "ai-tool"
+      ],
+      "businessAudience": [
+        "business user",
+        "administrator",
+        "implementation partner"
+      ],
+      "technicalAudience": [
+        "architect",
+        "developer",
+        "operator",
+        "qa engineer",
+        "ai tool"
+      ],
+      "sourceOwner": "nodics.foundation",
+      "sourcePath": "docs/pages/nodics.foundation/import-export-provider-guides.md",
+      "visibility": "public",
+      "channel": [
+        "axis",
+        "web"
+      ],
+      "accessMode": "PUBLIC",
+      "publiclyAvailable": true,
+      "requiresAuthentication": false,
+      "allowedRoles": [],
+      "allowedGroups": [],
+      "allowedPermissions": [],
+      "lifecycleState": "ONLINE",
+      "version": "0.16.7",
+      "relatedPages": [
+        "data.import-export-migration",
+        "wcms.media-operations-runbook",
+        "framework.local-verification-checklist"
+      ],
+      "sourceEvidence": [
+        "docs/catalogue.json",
+        "docs/pages/nodics.foundation/import-export-provider-guides.md",
+        "../nodics.foundation/modules/nData/nImport/import/src/service/import/defaultImportService.js",
+        "../nodics.foundation/modules/nData/nImport/import/src/service/header/defaultHeaderProcessService.js",
+        "../nodics.foundation/modules/nData/nExport/export/src/service/DataExportService.js",
+        "../nodics.foundation/modules/nData/nExport/jsExport/package.json",
+        "../nodics.foundation/modules/nData/nImport/import/test/importUtilityReleaseOrder.test.js"
+      ],
+      "maturityState": "operational",
+      "implementationState": "current",
+      "renderingComponent": "documentation.component.article",
+      "searchKeywords": [
+        "import",
+        "export",
+        "provider",
+        "javascript-data",
+        "csv",
+        "excel"
+      ],
+      "topicKeywords": [
+        "Data Import, Export, and Migration",
+        "Data Movement and Migration",
+        "Import and Export Provider Guides"
+      ],
+      "visualRequirements": [
+        "diagram",
+        "table",
+        "code-example",
+        "troubleshooting-matrix"
+      ]
+    },
+    {
+      "id": "commerce.data-authoring-fulfillment",
+      "functionalModule": "nodics.commerce",
+      "technicalModule": "baseCommerce",
+      "title": "Commerce Data Authoring and Fulfillment",
+      "summary": "How product, category, price, inventory, search, order, fulfillment, return, and refund data are authored, imported, published, and verified.",
+      "locale": "en",
+      "content": "docs/pages/nodics.commerce/commerce-data-authoring-and-fulfillment.md",
+      "slug": "commerce-data-authoring-fulfillment",
+      "parentId": "product-catalog-and-discovery.catalog-model-and-publication",
+      "hierarchyPath": [
+        "Nodics Documentation",
+        "Product Catalog and Discovery",
+        "Catalog Model and Publication",
+        "Commerce Data Authoring and Fulfillment"
+      ],
+      "hierarchyDepth": 4,
+      "navigationSection": "Product Catalog and Discovery",
+      "navigationSectionCode": "product-catalog-and-discovery",
+      "navigationSectionOrder": 240,
+      "navigationGroup": "Catalog Model and Publication",
+      "navigationGroupCode": "catalog-model-and-publication",
+      "navigationGroupOrder": 10,
+      "navigationSubgroup": null,
+      "navigationSubgroupCode": null,
+      "navigationOrder": 20,
+      "documentType": "how-to",
+      "audience": [
+        "business",
+        "architect",
+        "administrator",
+        "developer",
+        "operator",
+        "qa",
+        "ai-tool"
+      ],
+      "businessAudience": [
+        "business user",
+        "administrator",
+        "implementation partner"
+      ],
+      "technicalAudience": [
+        "architect",
+        "developer",
+        "operator",
+        "qa engineer",
+        "ai tool"
+      ],
+      "sourceOwner": "nodics.commerce",
+      "sourcePath": "docs/pages/nodics.commerce/commerce-data-authoring-and-fulfillment.md",
+      "visibility": "public",
+      "channel": [
+        "axis",
+        "nexus",
+        "web"
+      ],
+      "accessMode": "PUBLIC",
+      "publiclyAvailable": true,
+      "requiresAuthentication": false,
+      "allowedRoles": [],
+      "allowedGroups": [],
+      "allowedPermissions": [],
+      "lifecycleState": "ONLINE",
+      "version": "0.16.7",
+      "relatedPages": [
+        "catalog.product-discovery-management",
+        "commerce.payment-fulfillment",
+        "fulfillment.shipping-management",
+        "accelerators.agora-apparel-product-data-authoring"
+      ],
+      "sourceEvidence": [
+        "docs/catalogue.json",
+        "docs/pages/nodics.commerce/commerce-data-authoring-and-fulfillment.md",
+        "../nodics.commerce/modules/baseCommerce/modules/product/package.json",
+        "../nodics.commerce/modules/baseCommerce/modules/pricing/package.json",
+        "../nodics.commerce/modules/baseCommerce/modules/inventory/package.json",
+        "../nodics.commerce/modules/fulfillment/package.json",
+        "../../nodics.kickoff/modules/agora.apparel/data/manifest.json"
+      ],
+      "maturityState": "operational",
+      "implementationState": "current",
+      "renderingComponent": "documentation.component.article",
+      "searchKeywords": [
+        "commerce",
+        "product",
+        "price",
+        "inventory",
+        "fulfillment",
+        "agora"
+      ],
+      "topicKeywords": [
+        "Product Catalog and Discovery",
+        "Catalog Model and Publication",
+        "Commerce Data Authoring and Fulfillment"
+      ],
+      "visualRequirements": [
+        "diagram",
+        "table",
+        "code-example",
+        "troubleshooting-matrix"
+      ]
+    },
+    {
+      "id": "docs.documentation-publishing-runbook",
+      "functionalModule": "nodics.docs",
+      "technicalModule": "documentation",
+      "title": "Documentation Publishing Runbook",
+      "summary": "Runbook for authored Markdown, catalogue metadata, generated WCMS records, Staged review, Online activation, rollback evidence, and consumer rendering.",
+      "locale": "en",
+      "content": "docs/pages/nodics.docs/documentation-publishing-runbook.md",
+      "slug": "docs-documentation-publishing-runbook",
+      "parentId": "documentation-management.documentation-runtime-and-publishing",
+      "hierarchyPath": [
+        "Nodics Documentation",
+        "Documentation Management",
+        "Documentation Runtime and Publishing",
+        "Documentation Publishing Runbook"
+      ],
+      "hierarchyDepth": 4,
+      "navigationSection": "Documentation Management",
+      "navigationSectionCode": "documentation-management",
+      "navigationSectionOrder": 440,
+      "navigationGroup": "Documentation Runtime and Publishing",
+      "navigationGroupCode": "documentation-runtime-and-publishing",
+      "navigationGroupOrder": 20,
+      "navigationSubgroup": null,
+      "navigationSubgroupCode": null,
+      "navigationOrder": 30,
+      "documentType": "operations",
+      "audience": [
+        "business",
+        "architect",
+        "administrator",
+        "developer",
+        "operator",
+        "qa",
+        "ai-tool"
+      ],
+      "businessAudience": [
+        "business user",
+        "administrator",
+        "implementation partner"
+      ],
+      "technicalAudience": [
+        "architect",
+        "developer",
+        "operator",
+        "qa engineer",
+        "ai tool"
+      ],
+      "sourceOwner": "nodics.docs",
+      "sourcePath": "docs/pages/nodics.docs/documentation-publishing-runbook.md",
+      "visibility": "public",
+      "channel": [
+        "axis",
+        "nexus",
+        "web"
+      ],
+      "accessMode": "PUBLIC",
+      "publiclyAvailable": true,
+      "requiresAuthentication": false,
+      "allowedRoles": [],
+      "allowedGroups": [],
+      "allowedPermissions": [],
+      "lifecycleState": "ONLINE",
+      "version": "0.16.7",
+      "relatedPages": [
+        "docs.overview",
+        "docs.documentation-publishing-model",
+        "wcms.publishing-lifecycle",
+        "reference.source-backed-documentation-coverage-audit"
+      ],
+      "sourceEvidence": [
+        "docs/catalogue.json",
+        "docs/pages/nodics.docs/documentation-publishing-runbook.md",
+        "scripts/generate-content-pack.mjs",
+        "scripts/validate.mjs",
+        "scripts/audit-source-coverage.mjs",
+        "data/manifest.json",
+        "../nodics.wcms/modules/cms/src/service/publication/defaultCmsPublicationWorkflowService.js"
+      ],
+      "maturityState": "operational",
+      "implementationState": "current",
+      "renderingComponent": "documentation.component.article",
+      "searchKeywords": [
+        "documentation",
+        "publishing",
+        "staged",
+        "online",
+        "content-pack"
+      ],
+      "topicKeywords": [
+        "Documentation Management",
+        "Documentation Runtime and Publishing",
+        "Documentation Publishing Runbook"
+      ],
+      "visualRequirements": [
+        "diagram",
+        "table",
+        "code-example",
+        "troubleshooting-matrix"
+      ]
+    },
+    {
       "id": "tooling.ai-developer-enablement",
       "functionalModule": "nodics.foundation",
       "technicalModule": "nSetup",

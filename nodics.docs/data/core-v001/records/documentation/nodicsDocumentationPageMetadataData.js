@@ -10557,6 +10557,790 @@ module.exports = {
     "active": true
   },
   "record91": {
+    "code": "nodicsDocsMetadataapplicationsNexusDataContentGuide",
+    "product": "nodicsDocumentationProduct",
+    "documentId": "applications.nexus-data-content-guide",
+    "title": "Nexus Data and Content Guide",
+    "summary": "How Nexus corporate content, media, editorial, engagement, Staged publication, Online delivery, and browser validation are authored from project data releases.",
+    "businessSummary": "Nexus Data and Content Guide explains the business purpose, supported decisions, operational impact, and controls for the Application Overview journey.",
+    "technicalSummary": "Nexus Data and Content Guide records owning module nodics.kickoff, technical module nexus.web, source path docs/pages/applications/nexus-data-content-guide.md, extension points, validation, and troubleshooting evidence.",
+    "ownerFunctionalModule": "nodics.kickoff",
+    "technicalModule": "nexus.web",
+    "targetPage": "nodicsDocsPageapplicationsNexusDataContentGuide",
+    "targetRoute": "nodicsDocsRouteapplicationsNexusDataContentGuide",
+    "articleComponent": "nodicsDocsComponentapplicationsNexusDataContentGuide",
+    "template": "nodicsDocumentationArticleTemplate",
+    "searchMetadata": "nodicsDocsSearchpagenodicsdocsmetadataapplicationsnexusdatacontentguide",
+    "headings": [
+      {
+        "text": "Source map",
+        "anchor": "applicationsNexusDataContentGuide-1-source-map",
+        "level": 2
+      },
+      {
+        "text": "Release layout",
+        "anchor": "applicationsNexusDataContentGuide-2-release-layout",
+        "level": 2
+      },
+      {
+        "text": "Header contract",
+        "anchor": "applicationsNexusDataContentGuide-3-header-contract",
+        "level": 2
+      },
+      {
+        "text": "Import and publication flow",
+        "anchor": "applicationsNexusDataContentGuide-4-import-and-publication-flow",
+        "level": 2
+      },
+      {
+        "text": "Customization and extension guidance",
+        "anchor": "applicationsNexusDataContentGuide-5-customization-and-extension-guidance",
+        "level": 2
+      },
+      {
+        "text": "Troubleshooting",
+        "anchor": "applicationsNexusDataContentGuide-6-troubleshooting",
+        "level": 2
+      },
+      {
+        "text": "Common mistakes",
+        "anchor": "applicationsNexusDataContentGuide-7-common-mistakes",
+        "level": 2
+      },
+      {
+        "text": "Verification",
+        "anchor": "applicationsNexusDataContentGuide-8-verification",
+        "level": 2
+      }
+    ],
+    "diagrams": [
+      {
+        "language": "mermaid"
+      }
+    ],
+    "visualAssets": [
+      {
+        "kind": "table",
+        "title": "Area, Current source"
+      },
+      {
+        "kind": "table",
+        "title": "Symptom, Likely owner, User-safe message, Technical evidence"
+      }
+    ],
+    "visualRequirements": [
+      "diagram",
+      "table",
+      "code-example",
+      "troubleshooting-matrix"
+    ],
+    "relatedPages": [
+      "applications.suite",
+      "wcms.overview",
+      "wcms.media-import-publication",
+      "wcms.publishing-lifecycle"
+    ],
+    "sourceRepository": "nodics.docs",
+    "sourcePath": "docs/pages/applications/nexus-data-content-guide.md",
+    "sourceChecksum": "a00f81961bbd87c0fe28dee3f17e90fc5fb902f41d73907b018028792a681706",
+    "sourceWordCount": 920,
+    "audience": [
+      "business",
+      "architect",
+      "administrator",
+      "developer",
+      "operator",
+      "qa",
+      "ai-tool"
+    ],
+    "managedInAxis": true,
+    "axisAuthoringPermissions": [
+      "documentation.draft.update"
+    ],
+    "workflowRequired": true,
+    "workflowTriggers": [
+      "CONTENT_CHANGE",
+      "ACCESS_POLICY_CHANGE",
+      "SOURCE_EVIDENCE_CHANGE"
+    ],
+    "accessPolicy": "nodicsDocsAccessPublic",
+    "accessMode": "PUBLIC",
+    "lifecycleState": "ONLINE",
+    "maturityState": "IMPLEMENTED",
+    "active": true
+  },
+  "record92": {
+    "code": "nodicsDocsMetadataapplicationsAxisSetupErrorContracts",
+    "product": "nodicsDocumentationProduct",
+    "documentId": "applications.axis-setup-error-contracts",
+    "title": "Axis Setup and User-Safe Error Contracts",
+    "summary": "How Axis presents setup, retry, blocker, and initialization errors with safe business messages while preserving technical evidence for operators.",
+    "businessSummary": "Axis Setup and User-Safe Error Contracts explains the business purpose, supported decisions, operational impact, and controls for the Setup and Accelerators journey.",
+    "technicalSummary": "Axis Setup and User-Safe Error Contracts records owning module nodics.platform, technical module backoffice, source path docs/pages/applications/axis-setup-error-contracts.md, extension points, validation, and troubleshooting evidence.",
+    "ownerFunctionalModule": "nodics.platform",
+    "technicalModule": "backoffice",
+    "targetPage": "nodicsDocsPageapplicationsAxisSetupErrorContracts",
+    "targetRoute": "nodicsDocsRouteapplicationsAxisSetupErrorContracts",
+    "articleComponent": "nodicsDocsComponentapplicationsAxisSetupErrorContracts",
+    "template": "nodicsDocumentationArticleTemplate",
+    "searchMetadata": "nodicsDocsSearchpagenodicsdocsmetadataapplicationsaxissetuperrorcontracts",
+    "headings": [
+      {
+        "text": "Source map",
+        "anchor": "applicationsAxisSetupErrorContracts-1-source-map",
+        "level": 2
+      },
+      {
+        "text": "State model",
+        "anchor": "applicationsAxisSetupErrorContracts-2-state-model",
+        "level": 2
+      },
+      {
+        "text": "Error contract",
+        "anchor": "applicationsAxisSetupErrorContracts-3-error-contract",
+        "level": 2
+      },
+      {
+        "text": "Setup flow",
+        "anchor": "applicationsAxisSetupErrorContracts-4-setup-flow",
+        "level": 2
+      },
+      {
+        "text": "Customization and extension guidance",
+        "anchor": "applicationsAxisSetupErrorContracts-5-customization-and-extension-guidance",
+        "level": 2
+      },
+      {
+        "text": "Common mistakes",
+        "anchor": "applicationsAxisSetupErrorContracts-6-common-mistakes",
+        "level": 2
+      },
+      {
+        "text": "Verification",
+        "anchor": "applicationsAxisSetupErrorContracts-7-verification",
+        "level": 2
+      }
+    ],
+    "diagrams": [
+      {
+        "language": "mermaid"
+      }
+    ],
+    "visualAssets": [
+      {
+        "kind": "table",
+        "title": "Area, Current source"
+      },
+      {
+        "kind": "table",
+        "title": "Backend condition, Axis headline, Axis detail, Technical detail"
+      }
+    ],
+    "visualRequirements": [
+      "lifecycle-state-diagram",
+      "table",
+      "troubleshooting-matrix"
+    ],
+    "relatedPages": [
+      "axis.business-customization",
+      "platform.module-registry",
+      "framework.fresh-schema-setup-journey",
+      "applications.suite"
+    ],
+    "sourceRepository": "nodics.docs",
+    "sourcePath": "docs/pages/applications/axis-setup-error-contracts.md",
+    "sourceChecksum": "65ff40cb60120061ed51ccd752425db1aca138d9f2fe5066e3301f8ac64c980e",
+    "sourceWordCount": 779,
+    "audience": [
+      "business",
+      "architect",
+      "administrator",
+      "developer",
+      "operator",
+      "qa",
+      "ai-tool"
+    ],
+    "managedInAxis": true,
+    "axisAuthoringPermissions": [
+      "documentation.draft.update"
+    ],
+    "workflowRequired": true,
+    "workflowTriggers": [
+      "CONTENT_CHANGE",
+      "ACCESS_POLICY_CHANGE",
+      "SOURCE_EVIDENCE_CHANGE"
+    ],
+    "accessPolicy": "nodicsDocsAccessPublic",
+    "accessMode": "PUBLIC",
+    "lifecycleState": "ONLINE",
+    "maturityState": "IMPLEMENTED",
+    "active": true
+  },
+  "record93": {
+    "code": "nodicsDocsMetadatawcmsCmsSourceMapAuthoringContract",
+    "product": "nodicsDocumentationProduct",
+    "documentId": "wcms.cms-source-map-authoring-contract",
+    "title": "CMS Source Map and Authoring Contract",
+    "summary": "Exact CMS implementation map for sites, routes, pages, components, renderers, migration, publication manifests, delivery cache, and governance.",
+    "businessSummary": "CMS Source Map and Authoring Contract explains the business purpose, supported decisions, operational impact, and controls for the Content Model and Delivery journey.",
+    "technicalSummary": "CMS Source Map and Authoring Contract records owning module nodics.wcms, technical module cms, source path docs/pages/nodics.wcms/cms-source-map-and-authoring-contract.md, extension points, validation, and troubleshooting evidence.",
+    "ownerFunctionalModule": "nodics.wcms",
+    "technicalModule": "cms",
+    "targetPage": "nodicsDocsPagewcmsCmsSourceMapAuthoringContract",
+    "targetRoute": "nodicsDocsRoutewcmsCmsSourceMapAuthoringContract",
+    "articleComponent": "nodicsDocsComponentwcmsCmsSourceMapAuthoringContract",
+    "template": "nodicsDocumentationArticleTemplate",
+    "searchMetadata": "nodicsDocsSearchpagenodicsdocsmetadatawcmscmssourcemapauthoringcontract",
+    "headings": [
+      {
+        "text": "Source map",
+        "anchor": "wcmsCmsSourceMapAuthoringContract-1-source-map",
+        "level": 2
+      },
+      {
+        "text": "Content model",
+        "anchor": "wcmsCmsSourceMapAuthoringContract-2-content-model",
+        "level": 2
+      },
+      {
+        "text": "Authoring contract",
+        "anchor": "wcmsCmsSourceMapAuthoringContract-3-authoring-contract",
+        "level": 2
+      },
+      {
+        "text": "Publication and delivery",
+        "anchor": "wcmsCmsSourceMapAuthoringContract-4-publication-and-delivery",
+        "level": 2
+      },
+      {
+        "text": "Customization and extension guidance",
+        "anchor": "wcmsCmsSourceMapAuthoringContract-5-customization-and-extension-guidance",
+        "level": 2
+      },
+      {
+        "text": "Operational checks",
+        "anchor": "wcmsCmsSourceMapAuthoringContract-6-operational-checks",
+        "level": 2
+      },
+      {
+        "text": "Common mistakes",
+        "anchor": "wcmsCmsSourceMapAuthoringContract-7-common-mistakes",
+        "level": 2
+      },
+      {
+        "text": "Verification",
+        "anchor": "wcmsCmsSourceMapAuthoringContract-8-verification",
+        "level": 2
+      }
+    ],
+    "diagrams": [
+      {
+        "language": "mermaid"
+      }
+    ],
+    "visualAssets": [
+      {
+        "kind": "table",
+        "title": "Capability, Source location"
+      },
+      {
+        "kind": "table",
+        "title": "Check, Owner, Evidence"
+      }
+    ],
+    "visualRequirements": [
+      "diagram",
+      "table",
+      "code-example",
+      "troubleshooting-matrix"
+    ],
+    "relatedPages": [
+      "wcms.overview",
+      "wcms.content-catalog-model",
+      "wcms.page-designer-components",
+      "wcms.publishing-lifecycle"
+    ],
+    "sourceRepository": "nodics.docs",
+    "sourcePath": "docs/pages/nodics.wcms/cms-source-map-and-authoring-contract.md",
+    "sourceChecksum": "0951eb7b346d28374138aebdb77167dbd860622ce57460ff0e166903e99fabab",
+    "sourceWordCount": 781,
+    "audience": [
+      "business",
+      "architect",
+      "administrator",
+      "developer",
+      "operator",
+      "qa",
+      "ai-tool"
+    ],
+    "managedInAxis": true,
+    "axisAuthoringPermissions": [
+      "documentation.draft.update"
+    ],
+    "workflowRequired": true,
+    "workflowTriggers": [
+      "CONTENT_CHANGE",
+      "ACCESS_POLICY_CHANGE",
+      "SOURCE_EVIDENCE_CHANGE"
+    ],
+    "accessPolicy": "nodicsDocsAccessPublic",
+    "accessMode": "PUBLIC",
+    "lifecycleState": "ONLINE",
+    "maturityState": "IMPLEMENTED",
+    "active": true
+  },
+  "record94": {
+    "code": "nodicsDocsMetadatawcmsMediaOperationsRunbook",
+    "product": "nodicsDocumentationProduct",
+    "documentId": "wcms.media-operations-runbook",
+    "title": "Media Operations Runbook",
+    "summary": "Operational contract for media import hydration, storage providers, publication transfer, DR replication, cleanup lifecycle, and browser delivery evidence.",
+    "businessSummary": "Media Operations Runbook explains the business purpose, supported decisions, operational impact, and controls for the Media Lifecycle and Storage journey.",
+    "technicalSummary": "Media Operations Runbook records owning module nodics.wcms, technical module media, source path docs/pages/nodics.wcms/media-operations-runbook.md, extension points, validation, and troubleshooting evidence.",
+    "ownerFunctionalModule": "nodics.wcms",
+    "technicalModule": "media",
+    "targetPage": "nodicsDocsPagewcmsMediaOperationsRunbook",
+    "targetRoute": "nodicsDocsRoutewcmsMediaOperationsRunbook",
+    "articleComponent": "nodicsDocsComponentwcmsMediaOperationsRunbook",
+    "template": "nodicsDocumentationArticleTemplate",
+    "searchMetadata": "nodicsDocsSearchpagenodicsdocsmetadatawcmsmediaoperationsrunbook",
+    "headings": [
+      {
+        "text": "Business problem",
+        "anchor": "wcmsMediaOperationsRunbook-1-business-problem",
+        "level": 2
+      },
+      {
+        "text": "Source map",
+        "anchor": "wcmsMediaOperationsRunbook-2-source-map",
+        "level": 2
+      },
+      {
+        "text": "Import contract",
+        "anchor": "wcmsMediaOperationsRunbook-3-import-contract",
+        "level": 2
+      },
+      {
+        "text": "Storage and provider model",
+        "anchor": "wcmsMediaOperationsRunbook-4-storage-and-provider-model",
+        "level": 2
+      },
+      {
+        "text": "Publication and DR",
+        "anchor": "wcmsMediaOperationsRunbook-5-publication-and-dr",
+        "level": 2
+      },
+      {
+        "text": "Operations",
+        "anchor": "wcmsMediaOperationsRunbook-6-operations",
+        "level": 2
+      },
+      {
+        "text": "Customization and extension guidance",
+        "anchor": "wcmsMediaOperationsRunbook-7-customization-and-extension-guidance",
+        "level": 2
+      },
+      {
+        "text": "Common mistakes",
+        "anchor": "wcmsMediaOperationsRunbook-8-common-mistakes",
+        "level": 2
+      },
+      {
+        "text": "Verification",
+        "anchor": "wcmsMediaOperationsRunbook-9-verification",
+        "level": 2
+      }
+    ],
+    "diagrams": [
+      {
+        "language": "mermaid"
+      }
+    ],
+    "visualAssets": [
+      {
+        "kind": "table",
+        "title": "Capability, Source location"
+      },
+      {
+        "kind": "table",
+        "title": "Provider area, Responsibility, Operator evidence"
+      }
+    ],
+    "visualRequirements": [
+      "diagram",
+      "table",
+      "troubleshooting-matrix"
+    ],
+    "relatedPages": [
+      "wcms.media-management",
+      "wcms.media-storage-delivery",
+      "wcms.media-import-publication",
+      "wcms.publishing-lifecycle"
+    ],
+    "sourceRepository": "nodics.docs",
+    "sourcePath": "docs/pages/nodics.wcms/media-operations-runbook.md",
+    "sourceChecksum": "b740475fc531c039dfed1e48d092e7f2ba99f9f3557915a5735529b5aabe65b7",
+    "sourceWordCount": 829,
+    "audience": [
+      "business",
+      "architect",
+      "administrator",
+      "developer",
+      "operator",
+      "qa",
+      "ai-tool"
+    ],
+    "managedInAxis": true,
+    "axisAuthoringPermissions": [
+      "documentation.draft.update"
+    ],
+    "workflowRequired": true,
+    "workflowTriggers": [
+      "CONTENT_CHANGE",
+      "ACCESS_POLICY_CHANGE",
+      "SOURCE_EVIDENCE_CHANGE"
+    ],
+    "accessPolicy": "nodicsDocsAccessPublic",
+    "accessMode": "PUBLIC",
+    "lifecycleState": "ONLINE",
+    "maturityState": "IMPLEMENTED",
+    "active": true
+  },
+  "record95": {
+    "code": "nodicsDocsMetadatadataImportExportProviderGuides",
+    "product": "nodicsDocumentationProduct",
+    "documentId": "data.import-export-provider-guides",
+    "title": "Import and Export Provider Guides",
+    "summary": "Provider-level guide for JavaScript, JSON, CSV, and Excel import/export behavior, masking, parser rules, diagnostics, and extension boundaries.",
+    "businessSummary": "Import and Export Provider Guides explains the business purpose, supported decisions, operational impact, and controls for the Data Movement and Migration journey.",
+    "technicalSummary": "Import and Export Provider Guides records owning module nodics.foundation, technical module nImport, source path docs/pages/nodics.foundation/import-export-provider-guides.md, extension points, validation, and troubleshooting evidence.",
+    "ownerFunctionalModule": "nodics.foundation",
+    "technicalModule": "nImport",
+    "targetPage": "nodicsDocsPagedataImportExportProviderGuides",
+    "targetRoute": "nodicsDocsRoutedataImportExportProviderGuides",
+    "articleComponent": "nodicsDocsComponentdataImportExportProviderGuides",
+    "template": "nodicsDocumentationArticleTemplate",
+    "searchMetadata": "nodicsDocsSearchpagenodicsdocsmetadatadataimportexportproviderguides",
+    "headings": [
+      {
+        "text": "Source map",
+        "anchor": "dataImportExportProviderGuides-1-source-map",
+        "level": 2
+      },
+      {
+        "text": "Provider model",
+        "anchor": "dataImportExportProviderGuides-2-provider-model",
+        "level": 2
+      },
+      {
+        "text": "JavaScript release data",
+        "anchor": "dataImportExportProviderGuides-3-javascript-release-data",
+        "level": 2
+      },
+      {
+        "text": "JSON, CSV, and Excel",
+        "anchor": "dataImportExportProviderGuides-4-json-csv-and-excel",
+        "level": 2
+      },
+      {
+        "text": "Export contract",
+        "anchor": "dataImportExportProviderGuides-5-export-contract",
+        "level": 2
+      },
+      {
+        "text": "Customization and extension guidance",
+        "anchor": "dataImportExportProviderGuides-6-customization-and-extension-guidance",
+        "level": 2
+      },
+      {
+        "text": "Common mistakes",
+        "anchor": "dataImportExportProviderGuides-7-common-mistakes",
+        "level": 2
+      },
+      {
+        "text": "Verification",
+        "anchor": "dataImportExportProviderGuides-8-verification",
+        "level": 2
+      }
+    ],
+    "diagrams": [
+      {
+        "language": "mermaid"
+      }
+    ],
+    "visualAssets": [
+      {
+        "kind": "table",
+        "title": "Capability, Source location"
+      },
+      {
+        "kind": "table",
+        "title": "Format, Best use, Watch point"
+      }
+    ],
+    "visualRequirements": [
+      "diagram",
+      "table",
+      "code-example",
+      "troubleshooting-matrix"
+    ],
+    "relatedPages": [
+      "data.import-export-migration",
+      "wcms.media-operations-runbook",
+      "framework.local-verification-checklist"
+    ],
+    "sourceRepository": "nodics.docs",
+    "sourcePath": "docs/pages/nodics.foundation/import-export-provider-guides.md",
+    "sourceChecksum": "7a61b1f82fe212a4dd698669b0c5876b9d0fb0b90145d5bf62e9cdcf74c64443",
+    "sourceWordCount": 753,
+    "audience": [
+      "business",
+      "architect",
+      "administrator",
+      "developer",
+      "operator",
+      "qa",
+      "ai-tool"
+    ],
+    "managedInAxis": true,
+    "axisAuthoringPermissions": [
+      "documentation.draft.update"
+    ],
+    "workflowRequired": true,
+    "workflowTriggers": [
+      "CONTENT_CHANGE",
+      "ACCESS_POLICY_CHANGE",
+      "SOURCE_EVIDENCE_CHANGE"
+    ],
+    "accessPolicy": "nodicsDocsAccessPublic",
+    "accessMode": "PUBLIC",
+    "lifecycleState": "ONLINE",
+    "maturityState": "IMPLEMENTED",
+    "active": true
+  },
+  "record96": {
+    "code": "nodicsDocsMetadatacommerceDataAuthoringFulfillment",
+    "product": "nodicsDocumentationProduct",
+    "documentId": "commerce.data-authoring-fulfillment",
+    "title": "Commerce Data Authoring and Fulfillment",
+    "summary": "How product, category, price, inventory, search, order, fulfillment, return, and refund data are authored, imported, published, and verified.",
+    "businessSummary": "Commerce Data Authoring and Fulfillment explains the business purpose, supported decisions, operational impact, and controls for the Catalog Model and Publication journey.",
+    "technicalSummary": "Commerce Data Authoring and Fulfillment records owning module nodics.commerce, technical module baseCommerce, source path docs/pages/nodics.commerce/commerce-data-authoring-and-fulfillment.md, extension points, validation, and troubleshooting evidence.",
+    "ownerFunctionalModule": "nodics.commerce",
+    "technicalModule": "baseCommerce",
+    "targetPage": "nodicsDocsPagecommerceDataAuthoringFulfillment",
+    "targetRoute": "nodicsDocsRoutecommerceDataAuthoringFulfillment",
+    "articleComponent": "nodicsDocsComponentcommerceDataAuthoringFulfillment",
+    "template": "nodicsDocumentationArticleTemplate",
+    "searchMetadata": "nodicsDocsSearchpagenodicsdocsmetadatacommercedataauthoringfulfillment",
+    "headings": [
+      {
+        "text": "Source map",
+        "anchor": "commerceDataAuthoringFulfillment-1-source-map",
+        "level": 2
+      },
+      {
+        "text": "Data bundle",
+        "anchor": "commerceDataAuthoringFulfillment-2-data-bundle",
+        "level": 2
+      },
+      {
+        "text": "Authoring sequence",
+        "anchor": "commerceDataAuthoringFulfillment-3-authoring-sequence",
+        "level": 2
+      },
+      {
+        "text": "Header and record contract",
+        "anchor": "commerceDataAuthoringFulfillment-4-header-and-record-contract",
+        "level": 2
+      },
+      {
+        "text": "Fulfillment flow",
+        "anchor": "commerceDataAuthoringFulfillment-5-fulfillment-flow",
+        "level": 2
+      },
+      {
+        "text": "Customization and extension guidance",
+        "anchor": "commerceDataAuthoringFulfillment-6-customization-and-extension-guidance",
+        "level": 2
+      },
+      {
+        "text": "Common mistakes",
+        "anchor": "commerceDataAuthoringFulfillment-7-common-mistakes",
+        "level": 2
+      },
+      {
+        "text": "Verification",
+        "anchor": "commerceDataAuthoringFulfillment-8-verification",
+        "level": 2
+      }
+    ],
+    "diagrams": [
+      {
+        "language": "mermaid"
+      }
+    ],
+    "visualAssets": [
+      {
+        "kind": "table",
+        "title": "Capability, Source location"
+      },
+      {
+        "kind": "table",
+        "title": "Step, Business view, Developer contract, Operator evidence"
+      }
+    ],
+    "visualRequirements": [
+      "diagram",
+      "table",
+      "code-example",
+      "troubleshooting-matrix"
+    ],
+    "relatedPages": [
+      "catalog.product-discovery-management",
+      "commerce.payment-fulfillment",
+      "fulfillment.shipping-management",
+      "accelerators.agora-apparel-product-data-authoring"
+    ],
+    "sourceRepository": "nodics.docs",
+    "sourcePath": "docs/pages/nodics.commerce/commerce-data-authoring-and-fulfillment.md",
+    "sourceChecksum": "5d2b5fc7a1cb924d793f1898e2ac264c0b7989e43dec7c36d828db46d8e293ef",
+    "sourceWordCount": 754,
+    "audience": [
+      "business",
+      "architect",
+      "administrator",
+      "developer",
+      "operator",
+      "qa",
+      "ai-tool"
+    ],
+    "managedInAxis": true,
+    "axisAuthoringPermissions": [
+      "documentation.draft.update"
+    ],
+    "workflowRequired": true,
+    "workflowTriggers": [
+      "CONTENT_CHANGE",
+      "ACCESS_POLICY_CHANGE",
+      "SOURCE_EVIDENCE_CHANGE"
+    ],
+    "accessPolicy": "nodicsDocsAccessPublic",
+    "accessMode": "PUBLIC",
+    "lifecycleState": "ONLINE",
+    "maturityState": "IMPLEMENTED",
+    "active": true
+  },
+  "record97": {
+    "code": "nodicsDocsMetadatadocsDocumentationPublishingRunbook",
+    "product": "nodicsDocumentationProduct",
+    "documentId": "docs.documentation-publishing-runbook",
+    "title": "Documentation Publishing Runbook",
+    "summary": "Runbook for authored Markdown, catalogue metadata, generated WCMS records, Staged review, Online activation, rollback evidence, and consumer rendering.",
+    "businessSummary": "Documentation Publishing Runbook explains the business purpose, supported decisions, operational impact, and controls for the Documentation Runtime and Publishing journey.",
+    "technicalSummary": "Documentation Publishing Runbook records owning module nodics.docs, technical module documentation, source path docs/pages/nodics.docs/documentation-publishing-runbook.md, extension points, validation, and troubleshooting evidence.",
+    "ownerFunctionalModule": "nodics.docs",
+    "technicalModule": "documentation",
+    "targetPage": "nodicsDocsPagedocsDocumentationPublishingRunbook",
+    "targetRoute": "nodicsDocsRoutedocsDocumentationPublishingRunbook",
+    "articleComponent": "nodicsDocsComponentdocsDocumentationPublishingRunbook",
+    "template": "nodicsDocumentationArticleTemplate",
+    "searchMetadata": "nodicsDocsSearchpagenodicsdocsmetadatadocsdocumentationpublishingrunbook",
+    "headings": [
+      {
+        "text": "Source map",
+        "anchor": "docsDocumentationPublishingRunbook-1-source-map",
+        "level": 2
+      },
+      {
+        "text": "Publishing model",
+        "anchor": "docsDocumentationPublishingRunbook-2-publishing-model",
+        "level": 2
+      },
+      {
+        "text": "Authoring steps",
+        "anchor": "docsDocumentationPublishingRunbook-3-authoring-steps",
+        "level": 2
+      },
+      {
+        "text": "Generated data contract",
+        "anchor": "docsDocumentationPublishingRunbook-4-generated-data-contract",
+        "level": 2
+      },
+      {
+        "text": "Review and Online activation",
+        "anchor": "docsDocumentationPublishingRunbook-5-review-and-online-activation",
+        "level": 2
+      },
+      {
+        "text": "Customization and extension guidance",
+        "anchor": "docsDocumentationPublishingRunbook-6-customization-and-extension-guidance",
+        "level": 2
+      },
+      {
+        "text": "Common mistakes",
+        "anchor": "docsDocumentationPublishingRunbook-7-common-mistakes",
+        "level": 2
+      },
+      {
+        "text": "Verification",
+        "anchor": "docsDocumentationPublishingRunbook-8-verification",
+        "level": 2
+      }
+    ],
+    "diagrams": [
+      {
+        "language": "mermaid"
+      }
+    ],
+    "visualAssets": [
+      {
+        "kind": "table",
+        "title": "Capability, Source location"
+      }
+    ],
+    "visualRequirements": [
+      "diagram",
+      "table",
+      "code-example",
+      "troubleshooting-matrix"
+    ],
+    "relatedPages": [
+      "docs.overview",
+      "docs.documentation-publishing-model",
+      "wcms.publishing-lifecycle",
+      "reference.source-backed-documentation-coverage-audit"
+    ],
+    "sourceRepository": "nodics.docs",
+    "sourcePath": "docs/pages/nodics.docs/documentation-publishing-runbook.md",
+    "sourceChecksum": "bf505eab722000d91ad26dbdb541551d458650831b5fb41343a35fcdebc49344",
+    "sourceWordCount": 690,
+    "audience": [
+      "business",
+      "architect",
+      "administrator",
+      "developer",
+      "operator",
+      "qa",
+      "ai-tool"
+    ],
+    "managedInAxis": true,
+    "axisAuthoringPermissions": [
+      "documentation.draft.update"
+    ],
+    "workflowRequired": true,
+    "workflowTriggers": [
+      "CONTENT_CHANGE",
+      "ACCESS_POLICY_CHANGE",
+      "SOURCE_EVIDENCE_CHANGE"
+    ],
+    "accessPolicy": "nodicsDocsAccessPublic",
+    "accessMode": "PUBLIC",
+    "lifecycleState": "ONLINE",
+    "maturityState": "IMPLEMENTED",
+    "active": true
+  },
+  "record98": {
     "code": "nodicsDocsMetadatatoolingAiDeveloperEnablement",
     "product": "nodicsDocumentationProduct",
     "documentId": "tooling.ai-developer-enablement",
@@ -10675,7 +11459,7 @@ module.exports = {
     "maturityState": "IMPLEMENTED",
     "active": true
   },
-  "record92": {
+  "record99": {
     "code": "nodicsDocsMetadatareferenceSourceMapGlossary",
     "product": "nodicsDocumentationProduct",
     "documentId": "reference.source-map-glossary",
@@ -10803,7 +11587,7 @@ module.exports = {
     "maturityState": "IMPLEMENTED",
     "active": true
   },
-  "record93": {
+  "record100": {
     "code": "nodicsDocsMetadatareferenceSourceBackedDocumentationCoverageAudit",
     "product": "nodicsDocumentationProduct",
     "documentId": "reference.source-backed-documentation-coverage-audit",
@@ -10979,7 +11763,7 @@ module.exports = {
     "maturityState": "IMPLEMENTED",
     "active": true
   },
-  "record94": {
+  "record101": {
     "code": "nodicsDocsMetadatareferenceDocumentationGapBacklog",
     "product": "nodicsDocumentationProduct",
     "documentId": "reference.documentation-gap-backlog",
@@ -11048,7 +11832,7 @@ module.exports = {
       },
       {
         "kind": "table",
-        "title": "Item, Source areas, Documentation outcome"
+        "title": "Status, Item, Source areas, Documentation outcome"
       },
       {
         "kind": "table",
@@ -11073,8 +11857,8 @@ module.exports = {
     ],
     "sourceRepository": "nodics.docs",
     "sourcePath": "docs/pages/reference/documentation-gap-backlog.md",
-    "sourceChecksum": "1a4386b343bf51fac42c6e326b56defba3501d060b006305608b0580c3978f47",
-    "sourceWordCount": 1404,
+    "sourceChecksum": "ff9b54926fbd90c52b92e1ef2776737a9513c0ebf7e4a40048f31f5651eefeb1",
+    "sourceWordCount": 1468,
     "audience": [
       "business",
       "architect",

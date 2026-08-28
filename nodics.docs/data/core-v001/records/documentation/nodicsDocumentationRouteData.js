@@ -1106,6 +1106,90 @@ module.exports = {
     "active": true
   },
   "record91": {
+    "code": "nodicsDocsRouteapplicationsNexusDataContentGuide",
+    "site": "nodicsDocumentationSite",
+    "path": "/docs/framework/applications-nexus-data-content-guide",
+    "locale": "en",
+    "channel": "web",
+    "page": "nodicsDocsPageapplicationsNexusDataContentGuide",
+    "routeType": "PAGE",
+    "deliveryState": "ONLINE",
+    "accessMode": "PUBLIC",
+    "active": true
+  },
+  "record92": {
+    "code": "nodicsDocsRouteapplicationsAxisSetupErrorContracts",
+    "site": "nodicsDocumentationSite",
+    "path": "/docs/framework/applications-axis-setup-error-contracts",
+    "locale": "en",
+    "channel": "web",
+    "page": "nodicsDocsPageapplicationsAxisSetupErrorContracts",
+    "routeType": "PAGE",
+    "deliveryState": "ONLINE",
+    "accessMode": "PUBLIC",
+    "active": true
+  },
+  "record93": {
+    "code": "nodicsDocsRoutewcmsCmsSourceMapAuthoringContract",
+    "site": "nodicsDocumentationSite",
+    "path": "/docs/framework/wcms-cms-source-map-authoring-contract",
+    "locale": "en",
+    "channel": "web",
+    "page": "nodicsDocsPagewcmsCmsSourceMapAuthoringContract",
+    "routeType": "PAGE",
+    "deliveryState": "ONLINE",
+    "accessMode": "PUBLIC",
+    "active": true
+  },
+  "record94": {
+    "code": "nodicsDocsRoutewcmsMediaOperationsRunbook",
+    "site": "nodicsDocumentationSite",
+    "path": "/docs/framework/wcms-media-operations-runbook",
+    "locale": "en",
+    "channel": "web",
+    "page": "nodicsDocsPagewcmsMediaOperationsRunbook",
+    "routeType": "PAGE",
+    "deliveryState": "ONLINE",
+    "accessMode": "PUBLIC",
+    "active": true
+  },
+  "record95": {
+    "code": "nodicsDocsRoutedataImportExportProviderGuides",
+    "site": "nodicsDocumentationSite",
+    "path": "/docs/framework/data-import-export-provider-guides",
+    "locale": "en",
+    "channel": "web",
+    "page": "nodicsDocsPagedataImportExportProviderGuides",
+    "routeType": "PAGE",
+    "deliveryState": "ONLINE",
+    "accessMode": "PUBLIC",
+    "active": true
+  },
+  "record96": {
+    "code": "nodicsDocsRoutecommerceDataAuthoringFulfillment",
+    "site": "nodicsDocumentationSite",
+    "path": "/docs/framework/commerce-data-authoring-fulfillment",
+    "locale": "en",
+    "channel": "web",
+    "page": "nodicsDocsPagecommerceDataAuthoringFulfillment",
+    "routeType": "PAGE",
+    "deliveryState": "ONLINE",
+    "accessMode": "PUBLIC",
+    "active": true
+  },
+  "record97": {
+    "code": "nodicsDocsRoutedocsDocumentationPublishingRunbook",
+    "site": "nodicsDocumentationSite",
+    "path": "/docs/framework/docs-documentation-publishing-runbook",
+    "locale": "en",
+    "channel": "web",
+    "page": "nodicsDocsPagedocsDocumentationPublishingRunbook",
+    "routeType": "PAGE",
+    "deliveryState": "ONLINE",
+    "accessMode": "PUBLIC",
+    "active": true
+  },
+  "record98": {
     "code": "nodicsDocsRoutetoolingAiDeveloperEnablement",
     "site": "nodicsDocumentationSite",
     "path": "/docs/framework/tooling-ai-developer-enablement",
@@ -1117,7 +1201,7 @@ module.exports = {
     "accessMode": "PUBLIC",
     "active": true
   },
-  "record92": {
+  "record99": {
     "code": "nodicsDocsRoutereferenceSourceMapGlossary",
     "site": "nodicsDocumentationSite",
     "path": "/docs/framework/reference-source-map-glossary",
@@ -1129,7 +1213,7 @@ module.exports = {
     "accessMode": "PUBLIC",
     "active": true
   },
-  "record93": {
+  "record100": {
     "code": "nodicsDocsRoutereferenceSourceBackedDocumentationCoverageAudit",
     "site": "nodicsDocumentationSite",
     "path": "/docs/framework/reference-source-backed-documentation-coverage-audit",
@@ -1141,7 +1225,7 @@ module.exports = {
     "accessMode": "PUBLIC",
     "active": true
   },
-  "record94": {
+  "record101": {
     "code": "nodicsDocsRoutereferenceDocumentationGapBacklog",
     "site": "nodicsDocumentationSite",
     "path": "/docs/framework/reference-documentation-gap-backlog",

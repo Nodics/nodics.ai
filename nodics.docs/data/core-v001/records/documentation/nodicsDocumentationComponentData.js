@@ -7033,6 +7033,497 @@ module.exports = {
           "searchText": "Staged-to-Online publishing lifecycle Author, approve, deploy, recover, and customize immutable WCMS releases across physically separated Staged and Online runtimes. # Staged-to-Online publishing lifecycle\n\nPublishing is the governed movement of an exact, approved content version from\nan authoring runtime to a delivery runtime. Think of Staged as a newsroom where\neditors prepare and verify an edition, and Online as the distribution system\nthat serves only editions formally released. Saving a page does not make it\npublic; publishing its frozen version does.\n\nThis beginner-friendly guide is for business users, administrators, developers, architects,\noperators, testers, partners, and AI tools working with publishable Nodics\ncontent. WCMS owns content and deployment behavior, `nPublish` owns the generic\npublication lifecycle, Process owns approval workflow state, and Platform/Axis\nprovides the employee administration surface. A public client consumes Online\nonly.\n\n## Why separate Staged and Online\n\nA content editor needs freedom to create incomplete versions without exposing\nthem to customers. Physical runtime separation also prevents a public request\nfrom accidentally resolving an unpublished record. Publishing therefore uses\nseparate runtime roles, databases, credentials, routes, APIs, and media stores.\n\n```mermaid\nflowchart LR\n  Author[\"Business user in Axis\"] --> Staged[\"WCMS Staged: author and freeze\"]\n  Staged --> Process[\"Process: approval workflow\"]\n  Process --> Publish[\"nPublish: authorized lifecycle\"]\n  Publish --> Online[\"WCMS Online: deploy and activate\"]\n  Online --> Public[\"Nexus or another public client\"]\n```\n\nAxis may reach authoring and delivery operations through backend-declared\nrouting. Nexus and other public applications receive only Online coordinates;\nthey must never receive a Staged host, credential, or operation route.\n\n## Data lifecycle categories\n\nNot all records should be published:\n\n| Category | Examples | Lifecycle |\n| --- | --- | --- |\n| Publishable and versioned | sites, catalogs, pages, templates, components, navigation, routes, selected media and editorial projections | Author and freeze in Staged; approve; deploy an immutable package to Online |\n| Operational and versioned | orders, workflow state, governed submissions and audit history | Remain in the owning Online/operational runtime; version for history without Staged-to-Online publication |\n| Operational reference | users, customers, runtime registrations and similar identity/reference records | Remain with the owning module; do not invent publication or business-version semantics |\n\nEvery module-owned data bundle declares its lifecycle and destination. Import\ndoes not grant authority to publish, and export does not become an import or\npublication bypass.\n\n## Running example\n\nAn editor changes a page template and page data in WCMS Staged. The editor\nselects a specific version and requests publication. WCMS freezes the exact\ndependency graph—including required components, routes, localization, media,\nand accepted editorial members—into an immutable manifest. Process creates or\nresumes the approval workflow. After an authorized decision, `nPublish` invokes\nthe WCMS adapter, which validates the Online role, promotes required media,\ndeploys the manifest transactionally, activates Online pointers, and records an\nidempotent receipt and outbox evidence. The public client then resolves that\nOnline version.\n\nA validation rejection, approval rejection, signature failure, missing media,\nor transaction failure leaves the previous Online version active. A repeated\nrequest with the same operation identity converges on the existing result.\nRollback reactivates a previously deployed immutable release; it does not copy\nthe latest Staged state.\n\n## Site bundle shape\n\nMost site publications move as one immutable `SITE` manifest. The manifest\ncontains the selected site, routes, page versions, component graph,\nlocalization references, and media references. Online imports the manifest,\npromotes required media into Online-owned storage, then atomically activates\nthe route pointers that make the release visible.\n\nLarge documentation or content sites may exceed the configured source-side\n`siteBundleChunkThresholdBytes` policy. In that case WCMS keeps the same\nbusiness lifecycle but changes the transfer shape:\n\n| Shape | Purpose |\n| --- | --- |\n| Route chunk manifest | Carries one route's frozen page, dependency graph, and required media. Online imports it as prepared content without activating public pointers yet. |\n| `SITE_INDEX` manifest | Carries the release identity and a route index pointing to the prepared chunk manifests with content hashes. This is the version `nPublish` records as the Online target. |\n\nOnline activates a chunked site only after every referenced route chunk is\npresent, matches the expected route scope, and matches the expected content\nhash. The final `SITE_INDEX` activation switches all route pointers in one\ngoverned transaction. Reconciliation, verification, rollback, support bundles,\nand withdrawal operate through the index and its child route manifests, so the\noperator still sees one release even when transport used multiple manifests.\n\nChunking is runtime publication behavior, not release-data business logic.\nAuthors still define sites, pages, routes, components, and media as normal\nrecords. They must not add custom code or procedural import steps to make a\nbundle publishable.\n\n## Initialization and reusable site bundles\n\nMandatory framework data such as the standard publication approval workflow\nand baseline policy is installed from its owning backend module. Application or\nwebsite bundles are imported into Staged through governed nImport APIs. An\nadministrator verifies the content and explicitly publishes it. This supports\nAxis initialization, partner website starters, and additional template bundles\nwithout making the frontend or a customer database script the content owner.\n\nAxis includes a minimal bundled recovery login so an administrator can sign in\nwhen CMS data is not initialized. Once the Axis content baseline is Online, the\nnormal WCMS-delivered experience replaces that recovery surface.\n\n## Security and integrity rules\n\n- Never create, repair, seed, version, publish, restore, or verify business data\n  through direct database CRUD. Use Nodics APIs or owning services.\n- Human and service identities are distinct. Internal deployment credentials\n  cannot substitute for a human approval decision.\n- Online refuses authoring and publication-source export operations. Staged,\n  Online, Process, Platform, and public routes fail closed for the wrong role.\n- Tenant and enterprise identity, manifest checksum, source version, actor,\n  approval, correlation ID, target receipt, and delivery outcome remain linked\n  in audit evidence.\n- Media is promoted to Online-owned storage before metadata activation. Online\n  never reads a Staged media path.\n- Reconciliation may rebuild missing evidence only when the target already\n  points to the exact manifest. Pointer drift is reported and never silently\n  overwritten.\n\n## Customization boundary\n\nA customer project may contribute later-loaded content bundles, environment\nproperties, server compositions, approval policy, or service overlays through\nthe standard Nodics extension hierarchy. It must preserve functional ownership,\nruntime-role checks, immutable package identity, authorization, tenant\nisolation, audit lineage, and idempotency. Do not fork `nPublish`, introduce a\nsecond workflow authority, hardcode Staged routing in a frontend, or place\nbackend-importable CMS data in Axis or Nexus.\n\n## Common mistakes\n\nDo not treat a database copy as publication: it loses the selected-version,\napproval, receipt, audit, and retry guarantees. Do not point Nexus at Staged to\npreview a change, publish whichever version happens to be latest, seed Online\nthrough an importer, or let a Process definition become content authority.\nDo not store Axis or Nexus CMS records in the frontend merely because those\napplications render them. Finally, do not report Local timing or automated\naccessibility checks as production or human assurance.\n\n## Verification\n\nVerify a release through the complete path: Staged import and version, frozen\nmanifest, Process approval, authenticated deployment, Online receipt and\npointer, media availability, outbox delivery, audit correlation, and public\ndelivery. Also test rejection, response loss, retry, concurrent requests,\nrestart recovery, rollback, and unpublished isolation.\n\nLocal production simulation may prove container health, network separation,\nauthenticated data services, failover, backup/restore rehearsal, bounded load,\nand soak behavior. It is not production certification. Managed-provider\nfailover, regional residency, real external providers, independent penetration\ntesting, production-scale load, and human assistive-technology review require\nenvironment-specific evidence and accountable approval.\n\nFor executable reference-project commands, use the owning Kickoff Local\npublishing operations guide. For content concepts and delivery structure, read\nthe WCMS overview and Media management guides next.\n"
         },
         {
+          "code": "applications.nexus-data-content-guide",
+          "title": "Nexus Data and Content Guide",
+          "route": "/docs/framework/applications-nexus-data-content-guide",
+          "section": "nodics-application-suite",
+          "sectionTitle": "Nodics Application Suite",
+          "sectionOrder": 60,
+          "group": "nodics-application-suite",
+          "groupTitle": "Nodics Application Suite",
+          "groupOrder": 60,
+          "order": 20,
+          "parentId": "nodics-application-suite",
+          "hierarchyPath": [
+            "Nodics Application Suite",
+            "Nexus Data and Content Guide"
+          ],
+          "hierarchyDepth": 2,
+          "documentType": "how-to",
+          "audience": [
+            "business",
+            "architect",
+            "administrator",
+            "developer",
+            "operator",
+            "qa",
+            "ai-tool"
+          ],
+          "businessAudience": [
+            "business user",
+            "administrator",
+            "implementation partner"
+          ],
+          "technicalAudience": [
+            "architect",
+            "developer",
+            "operator",
+            "qa engineer",
+            "ai tool"
+          ],
+          "summary": "How Nexus corporate content, media, editorial, engagement, Staged publication, Online delivery, and browser validation are authored from project data releases.",
+          "visibility": "public",
+          "accessMode": "PUBLIC",
+          "publiclyAvailable": true,
+          "requiresAuthentication": false,
+          "allowedRoles": [],
+          "allowedGroups": [],
+          "allowedPermissions": [],
+          "lifecycleState": "ONLINE",
+          "maturityState": "operational",
+          "implementationState": "current",
+          "relatedPages": [
+            "applications.suite",
+            "wcms.overview",
+            "wcms.media-import-publication",
+            "wcms.publishing-lifecycle"
+          ],
+          "searchKeywords": [
+            "nexus",
+            "corporate-site",
+            "content-pack",
+            "media-assets",
+            "online-delivery"
+          ],
+          "topicKeywords": [
+            "Nodics Application Suite",
+            "Application Overview",
+            "Nexus Data and Content Guide"
+          ],
+          "searchText": "Nexus Data and Content Guide How Nexus corporate content, media, editorial, engagement, Staged publication, Online delivery, and browser validation are authored from project data releases. # Nexus Data and Content Guide\n\nNexus is the corporate website accelerator in the Kickoff project. It is a\nbusiness application that renders published content, but it is not the data\nauthority for sites, pages, media, articles, forms, or navigation. Those\nobjects are authored as governed data releases, imported into the owning\nbackend modules, reviewed in Staged, and made visible through Online delivery.\nFor beginners, the easiest model is this: Nexus is the window, WCMS and Media\nown the content contract, Engagement owns contact and testimonial records, and\nthe project data folder provides the release package.\n\n## Source map\n\n| Area | Current source |\n| --- | --- |\n| Module package and lifecycle | `../../nodics.kickoff/modules/nexus.web/package.json`, `../../nodics.kickoff/modules/nexus.web/LIFECYCLE.md` |\n| Release manifest | `../../nodics.kickoff/modules/nexus.web/data/manifest.json` |\n| WCMS headers | `../../nodics.kickoff/modules/nexus.web/data/sample-v001/content/headers/wcms/` |\n| WCMS update headers | `../../nodics.kickoff/modules/nexus.web/data/sample-v001/content/headers/wcmsUpdate/` |\n| Media headers and records | `../../nodics.kickoff/modules/nexus.web/data/sample-v001/content/headers/media/`, `../../nodics.kickoff/modules/nexus.web/data/sample-v001/content/records/media/` |\n| Physical media assets | `../../nodics.kickoff/modules/nexus.web/data/sample-v001/content/assets/nexus-cms-media/` |\n| Editorial records | `../../nodics.kickoff/modules/nexus.web/data/sample-v001/content/records/editorial/` |\n| Engagement records | `../../nodics.kickoff/modules/nexus.web/data/sample-v001/content/records/engagement/` |\n| Browser application | `../../nodics.exp/nodics.nexus/package.json` |\n| Acceptance tests | `../../nodics.kickoff/modules/nexus.web/test/nexusCorporateContentContract.test.mjs` |\n\n## Release layout\n\nNexus uses the same customer-project data structure as Agora content packs:\n\n```text\nmodules/nexus.web/data/\n  sample-v001/\n    content/\n      headers/\n      records/\n      assets/\n  manifest.json\n```\n\nThe release folder tells the importer which lifecycle lane is being installed.\n`sample-v001` is sample content owned by the project until the first production\nbaseline is frozen. Inside it, `content` separates CMS, Media, Editorial, and\nEngagement records from commerce data. The `manifest.json` is generated by the\nsystem from the folder structure and file checksums; developers should not hand\nmaintain it except during a deliberate tooling repair.\n\n## Header contract\n\nHeaders route each record file to its owning module and schema. The top-level\nkey is the target module, the child key is a logical import item, `schemaName`\nis the backend schema, `operation` is the persistence behavior, and `query`\ndefines idempotency.\n\n```js\nmodule.exports = {\n  cms: {\n    nexusCorporatePages: {\n      options: {\n        enabled: true,\n        schemaName: 'cmsPage',\n        operation: 'saveAll',\n        dataFilePrefix: 'nexusCorporatePageData'\n      },\n      query: { code: '$code', tenant: '$tenant' }\n    }\n  }\n};\n```\n\nBusiness users do not need to understand this file. Developers and AI tools do,\nbecause it is the safe routing contract between release data and backend\nauthority. Record files must remain declarative. They can contain business\nkeys, labels, relation codes, locale values, publication state, and asset\nreferences, but they must not call services, read environment variables, or\ngenerate runtime paths.\n\n## Import and publication flow\n\n```mermaid\nsequenceDiagram\n  participant Project as Nexus data release\n  participant Import as nImport\n  participant Media as Media module\n  participant Wcms as WCMS Staged\n  participant Governance as Review workflow\n  participant Online as WCMS Online\n  participant App as Nexus browser\n\n  Project->>Import: Select sample-v001 content\n  Import->>Media: Hydrate physical media assets\n  Import->>Wcms: Persist pages, routes, components, articles\n  Wcms->>Governance: Request publication approval\n  Governance->>Online: Activate approved manifest\n  Online->>App: Serve public route and media payload\n```\n\nNexus content should never be hardcoded into the frontend as the long-term\ntruth. A component can show a clear unavailable state, but the published site\nmust ultimately render from Online WCMS and Online Media. Operators should be\nable to trace an image or page from browser route to Online delivery pointer,\npublication manifest, Staged source record, and project release file.\n\n## Customization and extension guidance\n\nA project can customize Nexus by creating a new content release folder after a\nbaseline is frozen, adding new headers for additional schemas, adding new\nrecord maps, and placing physical assets under the release-owned assets folder.\nDevelopers should extend the owning backend module when a new schema or\noperation is required. Business users should use Axis for normal page, media,\narticle, and form journeys once the backoffice capability is available.\n\nWhen a customer needs a new corporate page, the developer should add a page\nrecord, page route, layout or component relation, localized copy, media object,\nand media asset manifest entry. A QA owner should then import into a fresh\nschema, publish through Staged approval, open Nexus in the browser, and verify\nthe route, title, navigation, media URL, and friendly empty states.\n\n## Troubleshooting\n\n| Symptom | Likely owner | User-safe message | Technical evidence |\n| --- | --- | --- | --- |\n| Page route is missing | WCMS data release | Content is not ready for this site. | Missing `cmsPageRoute` record or failed import run. |\n| Image is broken | Media import | Media is still being prepared. | Missing asset manifest entry, checksum failure, or Staged storage failure. |\n| Form is hidden | Engagement data | Contact form is not available. | Missing form definition or inactive version record. |\n| Nexus shows fallback copy | Publication | Latest approved content is not online yet. | No active Online manifest for the route. |\n\n## Common mistakes\n\n- Treating Nexus as the owner of corporate content instead of a consumer.\n- Adding a page record without its route, slot, component, or media relation.\n- Copying physical media into a frontend public folder instead of the release\n  assets folder.\n- Hand editing generated manifest checksums after a file changes.\n- Showing technical import errors directly to a business user.\n\n## Verification\n\nRun the Nexus contract tests, regenerate data manifests, import into a fresh\nschema, publish to Online, and open Nexus from the browser. A successful check\nproves that developers can trace the release files, business users can see a\nclear setup journey, operators can inspect import and publication evidence, and\nproduction delivery reads Online records rather than frontend defaults.\n"
+        },
+        {
+          "code": "applications.axis-setup-error-contracts",
+          "title": "Axis Setup and User-Safe Error Contracts",
+          "route": "/docs/framework/applications-axis-setup-error-contracts",
+          "section": "axis-and-backoffice-operations",
+          "sectionTitle": "Axis and BackOffice Operations",
+          "sectionOrder": 110,
+          "group": "axis-and-backoffice-operations",
+          "groupTitle": "Axis and BackOffice Operations",
+          "groupOrder": 110,
+          "order": 20,
+          "parentId": "axis-and-backoffice-operations",
+          "hierarchyPath": [
+            "Axis and BackOffice Operations",
+            "Axis Setup and User-Safe Error Contracts"
+          ],
+          "hierarchyDepth": 2,
+          "documentType": "contract",
+          "audience": [
+            "business",
+            "architect",
+            "administrator",
+            "developer",
+            "operator",
+            "qa",
+            "ai-tool"
+          ],
+          "businessAudience": [
+            "business user",
+            "administrator",
+            "implementation partner"
+          ],
+          "technicalAudience": [
+            "architect",
+            "developer",
+            "operator",
+            "qa engineer",
+            "ai tool"
+          ],
+          "summary": "How Axis presents setup, retry, blocker, and initialization errors with safe business messages while preserving technical evidence for operators.",
+          "visibility": "public",
+          "accessMode": "PUBLIC",
+          "publiclyAvailable": true,
+          "requiresAuthentication": false,
+          "allowedRoles": [],
+          "allowedGroups": [],
+          "allowedPermissions": [],
+          "lifecycleState": "ONLINE",
+          "maturityState": "operational",
+          "implementationState": "current",
+          "relatedPages": [
+            "axis.business-customization",
+            "platform.module-registry",
+            "framework.fresh-schema-setup-journey",
+            "applications.suite"
+          ],
+          "searchKeywords": [
+            "axis",
+            "setup",
+            "accelerator",
+            "safe-error",
+            "backoffice"
+          ],
+          "topicKeywords": [
+            "Axis and BackOffice Operations",
+            "Setup and Accelerators",
+            "User-Safe Error Contracts"
+          ],
+          "searchText": "Axis Setup and User-Safe Error Contracts How Axis presents setup, retry, blocker, and initialization errors with safe business messages while preserving technical evidence for operators. # Axis Setup and User-Safe Error Contracts\n\nAxis is the business-facing backoffice journey for setup, governance, and\noperation. It should help a business user initialize accelerators, inspect\nstatus, retry failed work, and navigate to the right owner without exposing\nraw framework exceptions. Axis is not the authority for catalogs, pages,\nmedia, products, prices, inventory, or documentation data. It consumes\nBackOffice capability metadata and runtime evidence, then presents a safe\noperator experience.\n\n## Source map\n\n| Area | Current source |\n| --- | --- |\n| BackOffice initialization services | `../nodics.platform/modules/backoffice/src/service/defaultBackofficeApplicationInitializationService.js` |\n| BackOffice availability and registry | `../nodics.platform/modules/backoffice/src/service/availability/`, `../nodics.platform/modules/backoffice/src/service/registry/` |\n| BackOffice setup controllers | `../nodics.platform/modules/backoffice/src/controller/application/`, `../nodics.platform/modules/backoffice/src/controller/registry/` |\n| Axis module docs | `../nodics.platform/modules/axis/docs/pages/module-health.md`, `../nodics.platform/modules/axis/docs/pages/implementation-and-documentation-contract.md` |\n| Axis frontend | `../../nodics.exp/nodics.axis/package.json` |\n| Contract tests | `../nodics.platform/modules/backoffice/test/backofficeApplicationInitializationContract.test.js`, `../nodics.platform/modules/backoffice/test/availability.test.js` |\n\n## State model\n\n```mermaid\nstateDiagram-v2\n  [*] --> NotInitialized\n  NotInitialized --> Preparing: initialize\n  Preparing --> WaitingApproval: staged prepared\n  Preparing --> SetupBlocked: validation failed\n  WaitingApproval --> Online: publish approved\n  WaitingApproval --> SetupBlocked: approval or target blocked\n  SetupBlocked --> Preparing: retry after repair\n  Online --> Preparing: new release\n```\n\nEvery status shown in Axis should be business-safe and evidence-backed. A\nbeginner should see \"Content catalog pending setup\" rather than a stack trace.\nA developer should still be able to open the details panel or backend logs and\nfind the exact missing module, release, schema, and operation. An operator\nneeds retry guidance and a way to prove whether the failure is configuration,\ndata quality, permission, missing dependency, or target runtime availability.\n\n## Error contract\n\n| Backend condition | Axis headline | Axis detail | Technical detail |\n| --- | --- | --- | --- |\n| Required module inactive | Setup blocked | Required capability is not active. | Module code, expected runtime role, dependency check. |\n| Missing content catalog | Staged preparation blocked | Storefront content is not available for this application. | Data release item, catalog code, schema name. |\n| Missing application release | Setup blocked | Application release is not configured. | Profile code, baseline, release version field. |\n| Publication target unavailable | Publication blocked | Online target is not reachable. | Target URL, correlation id, health result. |\n| Unexpected exception | Setup needs attention | Setup could not be completed. | Error code, stack in logs, request id. |\n\nThe user-facing message should explain the business impact and next action.\nThe technical evidence should be available to administrators and support, but\nit should not replace the safe message. Axis should avoid labels such as\n`ERR_SYS_00000` in the primary row, because that message tells neither the\nbusiness user nor the operator what to do.\n\n## Setup flow\n\n```text\n1. Axis asks BackOffice for the accelerator setup profile.\n2. BackOffice resolves module registry and capability readiness.\n3. BackOffice validates the requested application release and target runtime.\n4. Initialization imports or prepares Staged data owned by backend modules.\n5. The setup response returns normalized state, user-safe message, and evidence.\n6. Axis renders action buttons based on capability state and allowed operation.\n```\n\nConfiguration matters, but it should be expressed as capability metadata and\nruntime health, not frontend assumptions. When a release version is required,\nBackOffice must validate it before dispatching work. When a content catalog is\nmissing, the response should identify the missing catalog in technical\nevidence and phrase the UI message as a setup problem that needs data repair.\n\n## Customization and extension guidance\n\nDevelopers can extend setup by adding new BackOffice capability providers,\ninitialization targets, evidence fields, and status mappers. Keep the mapper\nnear the owning backend service so Axis does not duplicate business rules.\nBusiness users can customize through Axis only when a capability exposes a\ngoverned operation. Operators can add observability by carrying request ids,\nprofile code, baseline code, target runtime, release folder, import run id,\nand publication code through the response.\n\nNew frontend panels should consume a normalized setup DTO. They should not\nparse exception text. If a new backend error code is introduced, the owning\nservice should also define the safe headline, business detail, severity,\nrecoverability, retry action, and evidence payload.\n\n## Common mistakes\n\n- Rendering raw error codes as the main business message.\n- Letting Axis infer data ownership from component names.\n- Making retry buttons available when the backend says the capability is\n  blocked by configuration or missing data.\n- Hiding technical evidence from administrators and operators.\n- Returning a generic internal error when the backend can identify a missing\n  release, catalog, module, or target runtime.\n\n## Verification\n\nTest setup with a fresh schema and intentionally broken data. Confirm that\nAxis shows friendly setup states, BackOffice logs keep technical evidence,\nretry behavior is gated by capability state, and production-facing users never\nsee stack traces or unknown framework codes. Run the BackOffice application\ninitialization tests and the Axis live smoke checks after each setup contract\nchange.\n"
+        },
+        {
+          "code": "wcms.cms-source-map-authoring-contract",
+          "title": "CMS Source Map and Authoring Contract",
+          "route": "/docs/framework/wcms-cms-source-map-authoring-contract",
+          "section": "wcms-and-content-management",
+          "sectionTitle": "WCMS and Content Management",
+          "sectionOrder": 230,
+          "group": "wcms-and-content-management",
+          "groupTitle": "WCMS and Content Management",
+          "groupOrder": 230,
+          "order": 50,
+          "parentId": "wcms-and-content-management",
+          "hierarchyPath": [
+            "WCMS and Content Management",
+            "CMS Source Map and Authoring Contract"
+          ],
+          "hierarchyDepth": 2,
+          "documentType": "contract",
+          "audience": [
+            "business",
+            "architect",
+            "administrator",
+            "developer",
+            "operator",
+            "qa",
+            "ai-tool"
+          ],
+          "businessAudience": [
+            "business user",
+            "administrator",
+            "implementation partner"
+          ],
+          "technicalAudience": [
+            "architect",
+            "developer",
+            "operator",
+            "qa engineer",
+            "ai tool"
+          ],
+          "summary": "Exact CMS implementation map for sites, routes, pages, components, renderers, migration, publication manifests, delivery cache, and governance.",
+          "visibility": "public",
+          "accessMode": "PUBLIC",
+          "publiclyAvailable": true,
+          "requiresAuthentication": false,
+          "allowedRoles": [],
+          "allowedGroups": [],
+          "allowedPermissions": [],
+          "lifecycleState": "ONLINE",
+          "maturityState": "operational",
+          "implementationState": "current",
+          "relatedPages": [
+            "wcms.overview",
+            "wcms.content-catalog-model",
+            "wcms.page-designer-components",
+            "wcms.publishing-lifecycle"
+          ],
+          "searchKeywords": [
+            "cms",
+            "source-map",
+            "authoring",
+            "publication-manifest",
+            "delivery-cache"
+          ],
+          "topicKeywords": [
+            "WCMS and Content Management",
+            "Content Model and Delivery",
+            "CMS Source Map and Authoring Contract"
+          ],
+          "searchText": "CMS Source Map and Authoring Contract Exact CMS implementation map for sites, routes, pages, components, renderers, migration, publication manifests, delivery cache, and governance. # CMS Source Map and Authoring Contract\n\nCMS is the backend authority for sites, pages, routes, templates, slots,\ncomponents, renderers, content localization, migration, publication manifests,\nand Online delivery pointers. Axis can offer the business authoring journey,\nNexus can render the public website, and Agora can consume storefront content,\nbut CMS owns the data contract. This page gives beginners a precise map of\nwhere the implementation lives and gives developers enough detail to customize\ncontent safely.\n\n## Source map\n\n| Capability | Source location |\n| --- | --- |\n| Schemas and routers | `../nodics.wcms/modules/cms/src/schemas/`, `../nodics.wcms/modules/cms/src/router/` |\n| Delivery APIs | `../nodics.wcms/modules/cms/src/controller/delivery/`, `../nodics.wcms/modules/cms/src/service/delivery/` |\n| Designer composition | `../nodics.wcms/modules/cms/src/controller/designer/`, `../nodics.wcms/modules/cms/src/service/designer/` |\n| Publication workflow | `../nodics.wcms/modules/cms/src/controller/publication/`, `../nodics.wcms/modules/cms/src/service/publication/` |\n| Documentation governance | `../nodics.wcms/modules/cms/src/service/documentation/` |\n| Migration | `../nodics.wcms/modules/cms/src/controller/migration/`, `../nodics.wcms/modules/cms/src/service/migration/` |\n| Init and sample data | `../nodics.wcms/modules/cms/data/init-v001/`, `../nodics.wcms/modules/cms/data/sample-v001/` |\n| Contract tests | `../nodics.wcms/modules/cms/test/` |\n\n## Content model\n\n```mermaid\nflowchart TD\n  Site[\"cmsSite\"] --> Route[\"cmsPageRoute\"]\n  Route --> Page[\"cmsPage version\"]\n  Page --> Slot[\"cmsSlot\"]\n  Slot --> Component[\"cmsComponent\"]\n  Component --> Renderer[\"itemRenderer\"]\n  Component --> Media[\"media reference\"]\n  Page --> Localization[\"localized content\"]\n  Route --> Delivery[\"Online delivery pointer\"]\n```\n\nThe business value is governed composition. A content administrator should be\nable to prepare a page in Staged, preview it, request approval, and publish a\ncontrolled version. A developer should know which schema owns each object and\nwhere to extend validation, delivery, or rendering. An operator should know\nwhich publication, cache, and route evidence proves that production is serving\nthe approved version.\n\n## Authoring contract\n\nData files can create CMS objects for module releases and project releases.\nAxis can create the same objects through backoffice APIs. Both lanes must land\nin the same schemas and obey the same validation. Data definitions should\ncontain structure and business metadata, not runtime logic.\n\n```js\nmodule.exports = {\n  cms: {\n    pages: {\n      options: {\n        enabled: true,\n        schemaName: 'cmsPage',\n        operation: 'saveAll',\n        dataFilePrefix: 'defaultCmsPageData'\n      },\n      query: { code: '$code', tenant: '$tenant', catalogVersion: '$catalogVersion' }\n    }\n  }\n};\n```\n\nThe header says where records go. The record says what should exist. The CMS\nservice decides whether the object is valid. The publication workflow decides\nwhen it becomes Online. This separation keeps business users, developers, AI\ntools, and operators from creating parallel authorities.\n\n## Publication and delivery\n\nCMS publication starts in Staged. The publication adapter loads the selected\nroot version, resolves dependencies, validates graph limits, builds a\ndeterministic manifest, includes media references, and sends the manifest to\nthe Online target. The target imports the manifest, validates integrity,\nactivates delivery scopes, and invalidates the relevant delivery cache. Staged\nmust not write Online storage directly.\n\nDelivery services then resolve the active route pointer, load the Online\nsnapshot, apply localization and renderer hints, and return a bounded response\nto consumers. Nexus and Agora should handle unavailable routes with friendly\nmessages, but they should not invent pages when CMS has no approved route.\n\n## Customization and extension guidance\n\nDevelopers can customize CMS by adding schemas, item renderers, composition\nrules, validation handlers, migration adapters, or publication adapters. The\nextension should live in the owning module or customer project and should add\ntests beside the capability it changes. Business users should see the result\nas new fields, components, page templates, workflow states, or validation\nmessages in Axis.\n\nWhen adding a component type, define the renderer, allowed properties,\nlocalization behavior, media relation behavior, authoring validation, and\npublication dependency collection. When adding a migration path, define source\nclassification, mapping rules, conflict behavior, partial failure handling,\nand retry evidence.\n\n## Operational checks\n\n| Check | Owner | Evidence |\n| --- | --- | --- |\n| Page can be authored | CMS authoring | `cmsPage`, slot, component, route records exist in Staged. |\n| Page can be published | CMS publication | Manifest has dependencies, hash, revision, and approval state. |\n| Page can be delivered | CMS Online | Active delivery pointer resolves to the expected route. |\n| Page can render media | CMS plus Media | Media codes are included and Online media paths resolve. |\n| Page can be recovered | Operator | Rollback or withdraw endpoint has lineage evidence. |\n\n## Common mistakes\n\n- Creating components without renderer or media dependency rules.\n- Adding a route without an active page version.\n- Treating a Staged preview as Online publication.\n- Putting logic or environment-specific URLs into data record files.\n- Updating Nexus or Agora to hide a CMS data problem instead of fixing CMS\n  authoring, import, or publication.\n\n## Verification\n\nRun CMS contract tests for authoring, delivery, migration, publication\nmanifest, workflow callbacks, localization, and storefront delivery. Then run\na fresh-schema import, publish a sample page, open the consuming application\nin the browser, and prove that production delivery reads an active Online\nmanifest with the expected page, component, media, and route evidence.\n"
+        },
+        {
+          "code": "wcms.media-operations-runbook",
+          "title": "Media Operations Runbook",
+          "route": "/docs/framework/wcms-media-operations-runbook",
+          "section": "media-management",
+          "sectionTitle": "Media Management",
+          "sectionOrder": 260,
+          "group": "media-management",
+          "groupTitle": "Media Management",
+          "groupOrder": 260,
+          "order": 40,
+          "parentId": "media-management",
+          "hierarchyPath": [
+            "Media Management",
+            "Media Operations Runbook"
+          ],
+          "hierarchyDepth": 2,
+          "documentType": "operations",
+          "audience": [
+            "business",
+            "architect",
+            "administrator",
+            "developer",
+            "operator",
+            "qa",
+            "ai-tool"
+          ],
+          "businessAudience": [
+            "business user",
+            "administrator",
+            "implementation partner"
+          ],
+          "technicalAudience": [
+            "architect",
+            "developer",
+            "operator",
+            "qa engineer",
+            "ai tool"
+          ],
+          "summary": "Operational contract for media import hydration, storage providers, publication transfer, DR replication, cleanup lifecycle, and browser delivery evidence.",
+          "visibility": "public",
+          "accessMode": "PUBLIC",
+          "publiclyAvailable": true,
+          "requiresAuthentication": false,
+          "allowedRoles": [],
+          "allowedGroups": [],
+          "allowedPermissions": [],
+          "lifecycleState": "ONLINE",
+          "maturityState": "operational",
+          "implementationState": "current",
+          "relatedPages": [
+            "wcms.media-management",
+            "wcms.media-storage-delivery",
+            "wcms.media-import-publication",
+            "wcms.publishing-lifecycle"
+          ],
+          "searchKeywords": [
+            "media",
+            "storage-provider",
+            "publication-transfer",
+            "asset-hydration",
+            "disaster-recovery"
+          ],
+          "topicKeywords": [
+            "Media Management",
+            "Media Lifecycle and Storage",
+            "Media Operations Runbook"
+          ],
+          "searchText": "Media Operations Runbook Operational contract for media import hydration, storage providers, publication transfer, DR replication, cleanup lifecycle, and browser delivery evidence. # Media Operations Runbook\n\nMedia has a different lifecycle from normal records because a media object has\nboth metadata and a physical artifact. The record can be declared in a module\nor project data folder, but the bytes must be copied to the correct storage\nlocation before the schema object becomes useful. For beginners, think of media\nas two linked things: a governed object in the database and a file in managed\nstorage. Both must move from authoring assets to Staged and from Staged to\nOnline before a production page or product can safely render it.\n\n## Business problem\n\nThe business problem is trust in visual and downloadable content. A storefront\nbanner, product image, corporate logo, or document link may look like simple\npresentation, but a broken file can stop a launch, confuse customers, or make\nan approved page look unfinished. The media runbook solves that problem by\nmaking every physical file traceable from data release to Staged storage,\nOnline storage, delivery URL, and recovery evidence.\n\n## Source map\n\n| Capability | Source location |\n| --- | --- |\n| Media schemas and routes | `../nodics.wcms/modules/media/src/schemas/`, `../nodics.wcms/modules/media/src/router/` |\n| Upload and storage lifecycle | `../nodics.wcms/modules/media/src/service/storage/` |\n| Storage providers | `../nodics.wcms/modules/media/src/service/storage/provider/` |\n| Storage key strategies | `../nodics.wcms/modules/media/src/service/storage/strategy/` |\n| Reference lookup and sets | `../nodics.wcms/modules/media/src/service/reference/`, `../nodics.wcms/modules/media/src/service/set/` |\n| Publication transfer | `../nodics.wcms/modules/media/src/service/publication/` |\n| Import asset hydration | `../nodics.foundation/modules/nData/nImport/import/src/service/media/` |\n| Jobs and policies | `../nodics.wcms/modules/media/data/init-v001/`, `../nodics.wcms/modules/media/data/standard/` |\n| Contract tests | `../nodics.wcms/modules/media/test/` |\n\n## Import contract\n\n```mermaid\nsequenceDiagram\n  participant Data as Release data\n  participant Import as nImport\n  participant Resolver as Media source resolver\n  participant Storage as Media storage provider\n  participant Schema as Media schema\n\n  Data->>Import: Header and media record\n  Import->>Resolver: Resolve asset.sourceFile\n  Resolver->>Storage: Copy bytes to Staged storage\n  Storage-->>Import: Return storage key and relative path\n  Import->>Schema: Save media object with managed location\n```\n\nThe data definition is declarative. It can declare `code`, `name`,\n`folderCode`, `formatCode`, `businessPurpose`, `ownerType`, `ownerReference`,\nand an `asset.sourceFile` that points inside the release-owned assets folder.\nIt should not declare final storage keys, public URLs, provider-owned paths, or\nruntime-specific delivery links. Those fields belong to the importer and media\nruntime.\n\n## Storage and provider model\n\n| Provider area | Responsibility | Operator evidence |\n| --- | --- | --- |\n| Local provider | Store development and local runtime files. | Relative path, checksum, file existence. |\n| Cloud provider | Store production-ready managed objects. | Bucket/key, checksum, access policy. |\n| NAS provider | Store enterprise shared storage objects. | Mount path, storage key, permission result. |\n| Key strategy | Build deterministic paths per tenant/schema/date. | Strategy code and generated key. |\n| Cleanup lifecycle | Retain referenced media and remove expired artifacts. | Job run, pointer count, deleted file count. |\n\nConfiguration selects providers and roots, but business data should not change\nwhen a provider changes. This keeps customer projects portable across local,\nStaged, Online, and disaster recovery environments.\n\n## Publication and DR\n\nPublication is a controlled copy, not a path rewrite by the frontend. CMS or a\nbusiness object publication identifies required media codes. Media publication\nloads the Staged media object, copies the physical artifact to the Online\nprovider, records the Online storage coordinates, and replicates to disaster\nrecovery storage when configured. The Online media object must reference the\nOnline location. Staged paths should never leak into production responses.\n\n## Operations\n\nOperators should inspect media import history, storage provider health,\nreference lookup, publication transfer receipts, cleanup jobs, and delivery\nresponses. A failed image can be caused by missing source bytes, a bad asset\nmanifest entry, storage permission failure, missing media reference, inactive\nOnline object, or route publication missing the media dependency. A safe UI\nmessage should explain the visible effect. Technical evidence should carry the\nmedia code, release folder, source file, provider code, storage key, checksum,\nand correlation id.\n\n## Customization and extension guidance\n\nDevelopers can add media formats, folders, storage policies, key strategies,\nproviders, reference lookups, or publication transfer adapters. Keep new\nbusiness rules in the owning service or policy, not inside seed records. Add\ntests for upload, import hydration, provider summary, publication transfer,\ncleanup lifecycle, and delivery. Business users should interact with media\nthrough Axis workbenches, while data releases continue to support developer\nand AI-assisted baselines.\n\n## Common mistakes\n\n- Creating a media record while forgetting the physical file.\n- Putting generated URLs or absolute local paths in release data.\n- Publishing a page without publishing its required media artifacts.\n- Deleting unreferenced files without checking active Online pointers.\n- Treating provider configuration as business data.\n\n## Verification\n\nUse a fresh schema and a clean media storage root. Import a release with media\nassets, confirm the physical files are copied to Staged, verify media records\ncontain managed paths, publish a page or product that references the media,\nconfirm Online storage receives the file, and open the browser route. Run the\nmedia import source resolver, media release hydration, publication transfer,\ndelivery, cleanup lifecycle, and route contract tests before production use.\n"
+        },
+        {
+          "code": "data.import-export-provider-guides",
+          "title": "Import and Export Provider Guides",
+          "route": "/docs/framework/data-import-export-provider-guides",
+          "section": "data-import-export-and-migration",
+          "sectionTitle": "Data Import, Export, and Migration",
+          "sectionOrder": 400,
+          "group": "data-import-export-and-migration",
+          "groupTitle": "Data Import, Export, and Migration",
+          "groupOrder": 400,
+          "order": 20,
+          "parentId": "data-import-export-and-migration",
+          "hierarchyPath": [
+            "Data Import, Export, and Migration",
+            "Import and Export Provider Guides"
+          ],
+          "hierarchyDepth": 2,
+          "documentType": "operations",
+          "audience": [
+            "business",
+            "architect",
+            "administrator",
+            "developer",
+            "operator",
+            "qa",
+            "ai-tool"
+          ],
+          "businessAudience": [
+            "business user",
+            "administrator",
+            "implementation partner"
+          ],
+          "technicalAudience": [
+            "architect",
+            "developer",
+            "operator",
+            "qa engineer",
+            "ai tool"
+          ],
+          "summary": "Provider-level guide for JavaScript, JSON, CSV, and Excel import/export behavior, masking, parser rules, diagnostics, and extension boundaries.",
+          "visibility": "public",
+          "accessMode": "PUBLIC",
+          "publiclyAvailable": true,
+          "requiresAuthentication": false,
+          "allowedRoles": [],
+          "allowedGroups": [],
+          "allowedPermissions": [],
+          "lifecycleState": "ONLINE",
+          "maturityState": "operational",
+          "implementationState": "current",
+          "relatedPages": [
+            "data.import-export-migration",
+            "wcms.media-operations-runbook",
+            "framework.local-verification-checklist"
+          ],
+          "searchKeywords": [
+            "import",
+            "export",
+            "provider",
+            "javascript-data",
+            "csv",
+            "excel"
+          ],
+          "topicKeywords": [
+            "Data Import, Export, and Migration",
+            "Data Movement and Migration",
+            "Import and Export Provider Guides"
+          ],
+          "searchText": "Import and Export Provider Guides Provider-level guide for JavaScript, JSON, CSV, and Excel import/export behavior, masking, parser rules, diagnostics, and extension boundaries. # Import and Export Provider Guides\n\nNodics import and export are provider-driven so developers can author data in\nthe format that fits the use case while business users still get one governed\noperation. JavaScript object exports are preferred for module release data\nbecause they are easy to extend record by record. JSON, CSV, and Excel remain\nuseful for integration, migration, reporting, and business-facing exchange.\nThe authority is not the file format; the authority is the target module,\nschema, operation, validation, and audit trail.\n\n## Source map\n\n| Capability | Source location |\n| --- | --- |\n| Import core | `../nodics.foundation/modules/nData/nImport/import/src/service/import/` |\n| Header processing | `../nodics.foundation/modules/nData/nImport/import/src/service/header/` |\n| Release discovery | `../nodics.foundation/modules/nData/nImport/import/src/service/release/` |\n| Import history and diagnostics | `../nodics.foundation/modules/nData/nImport/import/src/service/history/`, `../nodics.foundation/modules/nData/nImport/import/src/service/diagnostics/` |\n| Media import handling | `../nodics.foundation/modules/nData/nImport/import/src/service/media/` |\n| CSV import provider | `../nodics.foundation/modules/nData/nImport/csvImport/` |\n| Excel import provider | `../nodics.foundation/modules/nData/nImport/excelImport/` |\n| Export core | `../nodics.foundation/modules/nData/nExport/export/` |\n| Export providers | `../nodics.foundation/modules/nData/nExport/csvExport/`, `../nodics.foundation/modules/nData/nExport/excelExport/`, `../nodics.foundation/modules/nData/nExport/jsExport/`, `../nodics.foundation/modules/nData/nExport/jsonExport/` |\n| Provider tests | `../nodics.foundation/modules/nData/nImport/import/test/`, `../nodics.foundation/modules/nData/nExport/` |\n\n## Provider model\n\n```mermaid\nflowchart TD\n  Request[\"Axis, script, or release installer\"] --> Core[\"Import/export core\"]\n  Core --> Header[\"Header and release resolver\"]\n  Header --> Provider[\"Format provider\"]\n  Provider --> Records[\"Normalized records\"]\n  Records --> Target[\"Owning schema service\"]\n  Target --> History[\"Run history and diagnostics\"]\n```\n\nFor beginners, import is a controlled journey from declared source files to\nbackend-owned schemas. Export is the reverse journey from authorized records to\na bounded file or payload. Business users should see actions like import,\npreview, validate, export, and download. Developers should see providers,\nparsers, field mapping, schema names, and tests. Operators should see run\nhistory, counts, failures, and rollback boundaries.\n\n## JavaScript release data\n\nJavaScript object maps are the preferred developer and AI-tool format for\nmodule data releases:\n\n```js\nmodule.exports = {\n  summerDress: {\n    code: 'summerDress',\n    tenant: 'default',\n    catalogVersion: 'agoraApparelStaged',\n    active: true\n  }\n};\n```\n\nObject maps allow customer projects to override or extend one named record\nwithout copying an entire array. Keep files declarative. Do not call services,\nread files, calculate timestamps, or branch by environment. The release folder\nand generated manifest identify the release; the header identifies module,\nschema, operation, data file prefix, tenants, and query.\n\n## JSON, CSV, and Excel\n\n| Format | Best use | Watch point |\n| --- | --- | --- |\n| JavaScript | Module release data and developer-maintained baselines. | No runtime logic in files. |\n| JSON | API exchange, generated fixtures, and machine contracts. | Avoid large arrays that are hard to override. |\n| CSV | Flat business lists, quick migration, and external feeds. | Define delimiter, headers, locale, and type conversion. |\n| Excel | Business review, mapping workshops, and multi-sheet migration. | Validate sheet names, required columns, and formulas. |\n\nAll providers should normalize records before persistence so the target schema\ndoes not care whether the source was JavaScript, JSON, CSV, or Excel. Provider\nconfiguration should define allowed fields, required fields, masking,\nduplicate handling, parser options, and maximum file size.\n\n## Export contract\n\nExports must be permission-aware and privacy-aware. A business user can export\nonly the data allowed by role, group, permission, and lifecycle state. A\ndeveloper can add an export provider by implementing the provider contract and\nregistering it with the export core. Operators should verify row count, field\nallow-list, masking, retention, checksum, and download audit. Generated export\nfiles should be treated as operational artifacts, not source-of-truth data.\n\n## Customization and extension guidance\n\nDevelopers can customize import by adding provider parsers, header handlers,\nvalidation adapters, post-import diagnostics, and migration mappers. They can\ncustomize export by adding serializers, file writers, masking strategies, and\ndelivery adapters. Add tests that prove malformed input, duplicate rows,\npartial failures, unauthorized fields, masked export columns, and retry\nbehavior. Business rules still belong to target modules and services, not the\nprovider parser.\n\n## Common mistakes\n\n- Treating CSV or Excel column names as schema authority.\n- Exporting sensitive fields without a mask or permission check.\n- Putting rollback logic in provider files instead of import history and\n  owning services.\n- Losing idempotency because a header query does not include stable keys.\n- Mixing media physical file handling into normal record persistence.\n\n## Verification\n\nRun provider tests for JavaScript, JSON, CSV, and Excel import/export paths.\nUse a fresh schema to import a release, inspect import history counts, export\nthe same domain with masking enabled, and compare allowed fields. Production\nreadiness requires friendly Axis messages, developer-visible diagnostics,\noperator audit evidence, and target module validation for every imported\nrecord.\n"
+        },
+        {
+          "code": "commerce.data-authoring-fulfillment",
+          "title": "Commerce Data Authoring and Fulfillment",
+          "route": "/docs/framework/commerce-data-authoring-fulfillment",
+          "section": "product-catalog-and-discovery",
+          "sectionTitle": "Product Catalog and Discovery",
+          "sectionOrder": 240,
+          "group": "product-catalog-and-discovery",
+          "groupTitle": "Product Catalog and Discovery",
+          "groupOrder": 240,
+          "order": 20,
+          "parentId": "product-catalog-and-discovery",
+          "hierarchyPath": [
+            "Product Catalog and Discovery",
+            "Commerce Data Authoring and Fulfillment"
+          ],
+          "hierarchyDepth": 2,
+          "documentType": "how-to",
+          "audience": [
+            "business",
+            "architect",
+            "administrator",
+            "developer",
+            "operator",
+            "qa",
+            "ai-tool"
+          ],
+          "businessAudience": [
+            "business user",
+            "administrator",
+            "implementation partner"
+          ],
+          "technicalAudience": [
+            "architect",
+            "developer",
+            "operator",
+            "qa engineer",
+            "ai tool"
+          ],
+          "summary": "How product, category, price, inventory, search, order, fulfillment, return, and refund data are authored, imported, published, and verified.",
+          "visibility": "public",
+          "accessMode": "PUBLIC",
+          "publiclyAvailable": true,
+          "requiresAuthentication": false,
+          "allowedRoles": [],
+          "allowedGroups": [],
+          "allowedPermissions": [],
+          "lifecycleState": "ONLINE",
+          "maturityState": "operational",
+          "implementationState": "current",
+          "relatedPages": [
+            "catalog.product-discovery-management",
+            "commerce.payment-fulfillment",
+            "fulfillment.shipping-management",
+            "accelerators.agora-apparel-product-data-authoring"
+          ],
+          "searchKeywords": [
+            "commerce",
+            "product",
+            "price",
+            "inventory",
+            "fulfillment",
+            "agora"
+          ],
+          "topicKeywords": [
+            "Product Catalog and Discovery",
+            "Catalog Model and Publication",
+            "Commerce Data Authoring and Fulfillment"
+          ],
+          "searchText": "Commerce Data Authoring and Fulfillment How product, category, price, inventory, search, order, fulfillment, return, and refund data are authored, imported, published, and verified. # Commerce Data Authoring and Fulfillment\n\nCommerce data authoring covers the records that make a product visible,\nsellable, priced, searchable, ordered, shipped, returned, and refunded. A\nbusiness user may create the same information through Axis workbenches, while\na developer or AI tool may create it through module or project release data.\nBoth paths must land in the owning Commerce schemas and services. Agora\nApparel is the clearest current project example because it combines product,\nprice, inventory, content, media, and storefront validation.\n\n## Source map\n\n| Capability | Source location |\n| --- | --- |\n| Product model | `../nodics.commerce/modules/baseCommerce/modules/product/` |\n| Pricing and promotions | `../nodics.commerce/modules/baseCommerce/modules/pricing/`, `../nodics.commerce/modules/baseCommerce/modules/promotion/` |\n| Inventory and warehouses | `../nodics.commerce/modules/baseCommerce/modules/inventory/` |\n| Cart and checkout | `../nodics.commerce/modules/checkout/` |\n| Order management | `../nodics.commerce/modules/baseCommerce/modules/order/` |\n| Fulfillment | `../nodics.commerce/modules/fulfillment/` |\n| Commerce search | `../nodics.commerce/modules/baseCommerce/modules/commerceSearch/` |\n| Agora Apparel release data | `../../nodics.kickoff/modules/agora.apparel/data/sample-v001/commerce/` |\n| Agora product how-to | `docs/pages/accelerators/agora-apparel-product-data-authoring.md` |\n\n## Data bundle\n\n```mermaid\nflowchart LR\n  Product[\"Product and variants\"] --> Price[\"Price rows\"]\n  Product --> Inventory[\"Inventory balances\"]\n  Product --> Media[\"Media and content\"]\n  Product --> Search[\"Search projection\"]\n  Price --> Cart[\"Cart and checkout\"]\n  Inventory --> Cart\n  Cart --> Order[\"Order\"]\n  Order --> Fulfillment[\"Fulfillment and consignment\"]\n  Fulfillment --> Return[\"Returns and refunds\"]\n```\n\nBeginners should not think of a product as one row. A useful commerce product\nusually needs category membership, localization, variants, price, tax context,\ninventory availability, media, and search projection. Business value appears\nonly when those records work together. Developers should author stable codes\nand relation keys. Operators should verify import counts, publication state,\nsearch freshness, checkout availability, fulfillment execution, and exception\nhandling before production use.\n\n## Authoring sequence\n\n1. Create product and category records.\n2. Add localized product names, descriptions, slugs, and SEO values.\n3. Add variants or sellable SKUs with stable codes.\n4. Add price rows and currency context.\n5. Add inventory balances for the warehouse or stock location.\n6. Add media references and content components when the storefront needs\n   product imagery or landing content.\n7. Add search rules or projection data when discovery behavior must be\n   controlled.\n8. Import the release into a fresh schema.\n9. Publish required content and commerce projections.\n10. Validate Agora, checkout, order placement, fulfillment, and return flows.\n\n## Header and record contract\n\n```js\nmodule.exports = {\n  product: {\n    products: {\n      options: {\n        enabled: true,\n        schemaName: 'product',\n        operation: 'saveAll',\n        dataFilePrefix: 'agoraApparelProductData'\n      },\n      query: { code: '$code', tenant: '$tenant' }\n    }\n  }\n};\n```\n\nHeaders define target module, schema, operation, and idempotent query. Records\ndefine business data. They should not calculate availability, call pricing\nservices, assign fulfillment status from code, or write publication results.\nThe runtime services own validation and lifecycle transitions.\n\n## Fulfillment flow\n\nFulfillment begins after order placement. The order identifies entries,\nquantities, delivery mode, payment state, and warehouse assignment. Fulfillment\ncreates consignments or equivalent execution records, tracks picking and\nshipment state, raises exceptions when stock or carrier information is missing,\nand records evidence for operators. Returns and refunds depend on the original\norder, delivered quantity, receipt state, and payment reconciliation.\n\n| Step | Business view | Developer contract | Operator evidence |\n| --- | --- | --- | --- |\n| Product imported | Product exists. | Product and variant schemas validate. | Import run counts and no relation failures. |\n| Price active | Customer can see a price. | Price row matches product, market, currency. | Pricing lookup result. |\n| Stock active | Customer can buy. | Inventory balance maps to SKU and warehouse. | Available quantity calculation. |\n| Order placed | Customer has an order. | Checkout creates order records. | Order id, payment state, totals. |\n| Fulfillment started | Order is being prepared. | Fulfillment service creates execution records. | Consignment, carrier, exception state. |\n\n## Customization and extension guidance\n\nDevelopers can add product attributes, price strategies, inventory providers,\nsearch ranking rules, fulfillment adapters, return policies, and refund\nintegration points. Keep the extension in the owning module and add tests\naround schema validation, service behavior, and storefront result. Business\nusers should see these extensions as controlled fields, actions, dashboards,\nand recovery messages in Axis, not as data-file business logic.\n\n## Common mistakes\n\n- Creating products without price or inventory and expecting checkout to work.\n- Treating storefront display content as Commerce authority.\n- Adding fulfillment records before the order lifecycle creates execution\n  evidence.\n- Forgetting search projection after product import.\n- Using generated database ids instead of stable business codes in release\n  data.\n\n## Verification\n\nRun Commerce product, pricing, inventory, checkout, order, fulfillment, and\nreturn tests for the touched areas. Import Agora Apparel data into a fresh\nschema, publish content and commerce projections, open the storefront in the\nbrowser, search for the product, add it to cart, place a controlled order, and\nconfirm fulfillment evidence. Production readiness requires business-visible\nstatus, developer traceability, operator recovery steps, and QA browser proof.\n"
+        },
+        {
+          "code": "docs.documentation-publishing-runbook",
+          "title": "Documentation Publishing Runbook",
+          "route": "/docs/framework/docs-documentation-publishing-runbook",
+          "section": "documentation-management",
+          "sectionTitle": "Documentation Management",
+          "sectionOrder": 440,
+          "group": "documentation-management",
+          "groupTitle": "Documentation Management",
+          "groupOrder": 440,
+          "order": 30,
+          "parentId": "documentation-management",
+          "hierarchyPath": [
+            "Documentation Management",
+            "Documentation Publishing Runbook"
+          ],
+          "hierarchyDepth": 2,
+          "documentType": "operations",
+          "audience": [
+            "business",
+            "architect",
+            "administrator",
+            "developer",
+            "operator",
+            "qa",
+            "ai-tool"
+          ],
+          "businessAudience": [
+            "business user",
+            "administrator",
+            "implementation partner"
+          ],
+          "technicalAudience": [
+            "architect",
+            "developer",
+            "operator",
+            "qa engineer",
+            "ai tool"
+          ],
+          "summary": "Runbook for authored Markdown, catalogue metadata, generated WCMS records, Staged review, Online activation, rollback evidence, and consumer rendering.",
+          "visibility": "public",
+          "accessMode": "PUBLIC",
+          "publiclyAvailable": true,
+          "requiresAuthentication": false,
+          "allowedRoles": [],
+          "allowedGroups": [],
+          "allowedPermissions": [],
+          "lifecycleState": "ONLINE",
+          "maturityState": "operational",
+          "implementationState": "current",
+          "relatedPages": [
+            "docs.overview",
+            "docs.documentation-publishing-model",
+            "wcms.publishing-lifecycle",
+            "reference.source-backed-documentation-coverage-audit"
+          ],
+          "searchKeywords": [
+            "documentation",
+            "publishing",
+            "staged",
+            "online",
+            "content-pack"
+          ],
+          "topicKeywords": [
+            "Documentation Management",
+            "Documentation Runtime and Publishing",
+            "Documentation Publishing Runbook"
+          ],
+          "searchText": "Documentation Publishing Runbook Runbook for authored Markdown, catalogue metadata, generated WCMS records, Staged review, Online activation, rollback evidence, and consumer rendering. # Documentation Publishing Runbook\n\nNodics documentation has two lanes. Repository guidance lives in module\n`README.md` and `AGENTS.md` files for developers and AI tools. Publishable\ndocumentation lives as authored Markdown plus catalogue metadata in\n`nodics.docs`, is generated into WCMS content-pack records, imported into\nStaged, reviewed, and then activated Online. Axis manages the business and\noperator journey. Nexus or other public consumers read Online content after\napproval.\n\n## Source map\n\n| Capability | Source location |\n| --- | --- |\n| Authored pages | `docs/pages/` |\n| Catalogue metadata | `docs/catalogue.json` |\n| Content-pack generator | `scripts/generate-content-pack.mjs` |\n| Documentation validation | `scripts/validate.mjs`, `scripts/audit-hardening.mjs` |\n| Source coverage audit | `scripts/audit-source-coverage.mjs` |\n| Generated WCMS data | `data/core-v001/headers/documentation/`, `data/core-v001/records/documentation/` |\n| Documentation manifest | `data/manifest.json` |\n| CMS publication services | `../nodics.wcms/modules/cms/src/service/publication/` |\n| CMS documentation governance | `../nodics.wcms/modules/cms/src/service/documentation/` |\n\n## Publishing model\n\n```mermaid\nflowchart TD\n  Markdown[\"Authored Markdown\"] --> Catalogue[\"Catalogue metadata\"]\n  Catalogue --> Generate[\"Generate WCMS records\"]\n  Generate --> Validate[\"Docs validation and hardening\"]\n  Validate --> Import[\"Import to Staged\"]\n  Import --> Review[\"Approval workflow\"]\n  Review --> Online[\"Online activation\"]\n  Online --> Consumers[\"Axis, Nexus, web readers\"]\n```\n\nFor beginners, the Markdown file is the human-readable source, the catalogue\nis the navigation and access contract, and generated records are the importable\ndata. Business users should not edit generated files directly. Developers\nchange authored pages and metadata, regenerate the content pack, and run the\nvalidation gates. Operators prove that Staged and Online are aligned before\nproduction readers see a page.\n\n## Authoring steps\n\n1. Create or edit an authored Markdown page under `docs/pages/`.\n2. Add catalogue metadata with id, title, section, group, navigation order,\n   access mode, source owner, related pages, source evidence, keywords, and\n   visual requirements.\n3. Include enough detail for business users, developers, operators, QA, and AI\n   tools.\n4. Include source maps, how-to guidance, customization and extension rules,\n   common mistakes, and verification.\n5. Run the generator and validation commands.\n6. Review generated records and manifest checksums.\n7. Import `core-v001` documentation data into Staged.\n8. Request approval and publish Online.\n9. Open Axis and public consumers to verify the page and navigation.\n\n## Generated data contract\n\n```text\nnodics.docs/data/\n  core-v001/\n    headers/documentation/\n    records/documentation/\n  manifest.json\n```\n\nGenerated files include documentation site, product, navigation, nodes,\ndashboards, page records, routes, components, page metadata, access policies,\npublication state, and search metadata. The generator owns these records so\nall pages share the same hierarchy, access, workflow, rendering, and search\ncontract. Developers should update the Markdown and catalogue, then regenerate\ndata rather than hand editing generated record files.\n\n## Review and Online activation\n\nDocumentation should flow through Staged before Online. Staged lets\nadministrators and reviewers inspect hierarchy, access, rendering, source\nevidence, and search metadata. Online activation should validate the\npublication manifest, preserve approved checksums, activate delivery pointers,\nand keep rollback evidence. A production page should never be served from a\ndeveloper working file or from generated data that bypassed approval.\n\n## Customization and extension guidance\n\nDevelopers can extend documentation by adding new pages, navigation sections,\nmetadata fields, validation checks, generated record types, or renderer\ncomponents. Keep custom validation in scripts or tooling services and keep\nbusiness content in Markdown. A customer project can add documentation packs\nusing the same release structure as other data packs, while Axis remains the\nreview and publication journey.\n\nIf a capability page documents a module, add `sourceEvidence` paths to the\nmodule package, schema, service, router, data, and test files where possible.\nWhen source changes introduce a user-visible or extension-visible behavior,\nupdate the authored page in the same release batch.\n\n## Common mistakes\n\n- Editing generated documentation records instead of the authored page.\n- Adding a page without catalogue metadata or source evidence.\n- Publishing directly to Online without Staged review.\n- Treating README files as the complete business documentation.\n- Showing references as copied designs instead of standards for comparison.\n\n## Verification\n\nRun the documentation generator, validator, source coverage audit, and\nhardening audit. Then import generated documentation data into a fresh Staged\nschema, request approval, publish Online, and open Axis plus the public\nconsumer route. The work is complete when business users see the page in the\nright journey, developers can trace source evidence, operators can verify\npublication state, QA can repeat the commands, and production readers receive\nOnline content only.\n"
+        },
+        {
           "code": "tooling.ai-developer-enablement",
           "title": "AI and Developer Tooling",
           "route": "/docs/framework/tooling-ai-developer-enablement",
@@ -7307,7 +7798,7 @@ module.exports = {
             "Documentation Gap Backlog",
             "Coverage Closure"
           ],
-          "searchText": "Documentation Gap Backlog Classified backlog for closing source-backed documentation gaps across runtime capabilities, data releases, media, applications, operations, and validation. # Documentation Gap Backlog\n\nThis backlog turns the source-backed coverage audit into executable\ndocumentation work. It captures the remaining categories that must be closed so\nNodics documentation explains not only what the product is, but how developers,\nbusiness users, operators, QA owners, and AI tools can safely work with the\nframework.\n\nFor beginners, the mental model is simple: the coverage report tells us where\nthe source is richer than the documentation, and this backlog tells us what to\ndo next. A source boundary may need a new page, a deeper section in an existing\npage, an explicit owner mapping, or an internal-only decision. The backlog is\nnot a marketing roadmap. It is a release-quality checklist for source-backed\ndocumentation.\n\n## Backlog flow\n\n```mermaid\nflowchart LR\n  Report[\"Generated coverage report\"] --> Classify[\"Classify each gap\"]\n  Classify --> Page[\"New page\"]\n  Classify --> Deepen[\"Deeper section\"]\n  Classify --> Map[\"Owner mapping\"]\n  Classify --> Internal[\"Internal-only decision\"]\n  Page --> Generate[\"Regenerate docs data\"]\n  Deepen --> Generate\n  Map --> Generate\n  Internal --> Generate\n  Generate --> Test[\"Docs tests and source evidence\"]\n  Test --> Publish[\"Staged approval and Online publication\"]\n```\n\n## Classification policy\n\n| Classification | Meaning | Required action |\n| --- | --- | --- |\n| `needs-page` | A user-visible or developer-extensible capability has no clear page. | Create authored Markdown, catalogue metadata, source evidence, generated records, and validation. |\n| `needs-deeper-section` | A page exists, but it lacks exact source map, data, service, operation, or validation detail. | Extend the existing page with how-to, how-it-works, customization, errors, and tests. |\n| `needs-page-or-owner-mapping` | The source is significant, but ownership may belong under a broader page. | Decide owner, then either create a page or add explicit mapping to the owning page. |\n| `internal-only-candidate` | The module is likely a utility or provider implementation. | Document the owner page that covers it, or mark it internal with justification. |\n| `covered` | Existing docs and source evidence are sufficient for the current maturity state. | Keep validation and browser evidence current when behavior changes. |\n\n## P0 closure items\n\n| Item | Source areas | Documentation outcome |\n| --- | --- | --- |\n| Nexus data and content guide | `nodics.kickoff/modules/nexus.web` | Explain Nexus project content, media assets, headers, records, publication, Online delivery, and browser validation. |\n| Axis setup and user-safe error contracts | `nodics.platform/modules/backoffice`, `nodics.platform/modules/axis`, `nodics.exp/nodics.axis` | Explain setup states, blockers, retry behavior, required capability checks, technical evidence, and customer-safe messages. |\n| CMS exact source map | `nodics.wcms/modules/cms` | Split page, route, component, slot, template, renderer, publication manifest, migration, delivery cache, and documentation governance details. |\n| Media operations runbook | `nodics.wcms/modules/media`, `nodics.foundation/modules/nData/nImport/import/src/service/media` | Explain upload, import hydration, storage providers, cleanup, replication queue, delivery failures, and DR evidence. |\n| Import/export provider guides | `nodics.foundation/modules/nData/nImport`, `nodics.foundation/modules/nData/nExport` | Explain JavaScript, JSON, CSV, Excel, generated exports, parsers, field allow-lists, masking, and rollback boundaries. |\n| Commerce authoring and fulfillment | `nodics.commerce/modules/baseCommerce`, `nodics.commerce/modules/fulfillment` | Explain product, price, inventory, search projection, fulfillment execution, consignments, exceptions, return receipts, and browser proof. |\n| Documentation publishing runbook | `nodics.docs`, `nodics.wcms/modules/cms`, `nodics.process/modules/nPublish` | Explain Markdown source, generated content-pack data, Staged import, review, Online activation, rollback, and Axis/Nexus rendering. |\n\n## P1 closure items\n\n| Item | Source areas | Documentation outcome |\n| --- | --- | --- |\n| Module Registry journey | `nodics.platform/modules/backoffice`, registry-related Platform services | Explain registration, activation, dependency state, required capability checks, and Axis visibility. |\n| Commerce Search guide | `nodics.commerce/modules/baseCommerce/modules/commerceSearch` | Explain ranking rules, projections, publish flow, index ownership, storefront effect, and recovery. |\n| Localization depth | `nodics.localization/modules/localizationCore`, `nodics.localization/modules/localizationApi` | Explain locale records, fallback, content/product localization, import data, API boundaries, and browser proof. |\n| Payment Core and provider split | `nodics.commerce/modules/payment` | Explain payment decisions, method/provider separation, reconciliation, safe customer payload, and provider extension. |\n| Customer List and Profile-Commerce boundary | `nodics.commerce/modules/checkout/modules/customerList`, `nodics.platform/modules/profile` | Explain why customer list exists in Commerce and what Profile continues to own. |\n| NMS runtime monitoring | `nodics.foundation/modules/nNms` | Explain node monitoring, topology, health, operational evidence, and recovery actions. |\n| Service runtime and overrides | `nodics.foundation/modules/nService`, `nodics.foundation/modules/nService/vService` | Explain service discovery, virtual services, generated services, override precedence, and extension safety. |\n| Cache provider runbooks | `nodics.foundation/modules/nCache`, Redis, Hazelcast, Node cache | Explain provider boundaries, cache key strategy, invalidation, failure behavior, and production configuration. |\n| Database provider boundaries | `nodics.foundation/modules/nDatabase` | Explain MongoDB, virtual DB, Cassandra, Elasticsearch, provider contracts, configuration, and validation. |\n| OTP and security flow | `nodics.foundation/modules/nOtp` | Explain OTP generation, verification, expiry, retry, throttling, audit, and security controls. |\n| Communication providers | `nodics.communication/modules/smtpCommsProvider`, `nodics.communication/modules/smsCommsProvider` | Explain SMTP/SMS provider behavior, templates, retries, failed delivery evidence, and extension rules. |\n| Engagement and contact submission | `nodics.engagement/modules/contactSubmission` | Explain contact forms, moderation, workflow, notification, audit, and recovery. |\n| Workflow and BPM source map | `nodics.foundation/modules/nbpm`, `nodics.process` | Explain workflow definitions, transitions, tasks, callbacks, history, and operator visibility. |\n| Cron job data authoring | `nodics.process/modules/cronjob` | Explain job records, schedules, execution policy, retry, idempotency, and Process server ownership. |\n| Release and upgrade compatibility | `nodics.foundation/modules/nSetup`, all module data folders | Explain version freeze, upgrade path, rollback, checksum drift, generated manifests, and extension compatibility. |\n\n## P2 closure items\n\n| Item | Source areas | Documentation outcome |\n| --- | --- | --- |\n| Fresh-schema setup per runtime | Platform, WCMS Staged, WCMS Online, Process, Commerce, Engagement | Add runtime-specific import order, seed data, publication, and acceptance evidence where existing quick-start docs are too broad. |\n| Environment, server, and node discovery | `nodics.kickoff/envs`, framework server/node configuration | Explain how physical hierarchy, environment config, server composition, and runtime roles are discovered. |\n| Permission and access matrix | Profile, BackOffice, WCMS, documentation access policies | Explain roles, groups, permissions, access modes, public/authenticated/restricted behavior, and publication visibility. |\n| Search indexing operations | Discovery and Commerce Search modules | Explain index jobs, reindex, projection freshness, failure recovery, and ownership. |\n| Migration and import reconciliation | Import, migration, CMS migration, Commerce data | Explain source classification, mapping tables, partial failures, retry, and data correction. |\n| Export and data privacy | Export providers, media-owned generated files | Explain allow-lists, masking, retention, download permissions, and audit. |\n| Observability | NMS, import runs, publication receipts, logs, dashboards | Explain correlation IDs, status evidence, health checks, support cards, and escalation. |\n| Disaster recovery | Media publication, Online storage, replication queue | Explain Online media replication, DR queues, recovery receipts, and failure escalation. |\n| Frontend consumption contracts | Axis, Nexus, Agora | Explain that Axis consumes BackOffice metadata, Nexus consumes Online WCMS, and Agora consumes Online commerce/content. |\n| Data quality rules | All module data folders | Explain required fields, stable keys, idempotent queries, relation integrity, and no runtime logic in data files. |\n| Testing standards | All modules and frontends | Explain unit, contract, generator, fresh-schema, publication, browser, accessibility, and regression expectations. |\n| Troubleshooting matrices | Every operational capability page | Add what failed, who owns it, user-safe message, technical evidence, and recovery action. |\n| Decision-maker overview pages | Product and capability overview docs | Explain business value, ownership model, platform differentiation, risk controls, and implementation confidence. |\n| Internal-only register | Low-score utility modules | Decide and document which technical modules do not need public pages and where they are covered. |\n\n## Closure workflow\n\n1. Start from the generated source coverage report.\n2. Pick the highest-priority open item.\n3. Inspect source files, schemas, services, routers, data, assets, tests, and\n   frontend consumers.\n4. Decide whether the work is a new page, deeper section, owner mapping, or\n   internal-only classification.\n5. Update authored Markdown and catalogue metadata.\n6. Regenerate documentation data and source coverage reports.\n7. Run docs tests and any owning module tests needed for the behavior.\n8. For runtime-visible changes, import into Staged, publish Online, and verify\n   Axis, Nexus, or Agora from the browser.\n9. Commit the smallest coherent documentation batch.\n\n## Common mistakes\n\n- Treating this backlog as optional once a high-level overview exists.\n- Closing a source gap without reading the current source files and tests.\n- Creating public documentation for a module that should be an internal utility\n  without explaining the broader owner.\n- Forgetting business users when writing deep developer detail.\n- Forgetting developers when writing a business-friendly page.\n- Forgetting operators and QA owners when documenting publishable or\n  production-visible behavior.\n- Showing external references as source design instead of industry-standard\n  expectation checks.\n\n## Verification\n\nRun the documentation gates after each closure batch:\n\n```bash\nnpm --prefix nodics.docs run audit:source-coverage\nnpm --prefix nodics.docs run docs:generate\nnpm --prefix nodics.docs test\ngit -C nodics.ai diff --check\n```\n\nThe backlog is healthy when the generated report, this page, catalogue\nmetadata, generated WCMS records, and runtime evidence agree. Business users\nshould see clear journeys, developers should see exact source paths and\nextension points, operators should see evidence and recovery steps, QA owners\nshould see validation commands, and AI tools should see boundaries that prevent\nunsafe source or data changes.\n"
+          "searchText": "Documentation Gap Backlog Classified backlog for closing source-backed documentation gaps across runtime capabilities, data releases, media, applications, operations, and validation. # Documentation Gap Backlog\n\nThis backlog turns the source-backed coverage audit into executable\ndocumentation work. It captures the remaining categories that must be closed so\nNodics documentation explains not only what the product is, but how developers,\nbusiness users, operators, QA owners, and AI tools can safely work with the\nframework.\n\nFor beginners, the mental model is simple: the coverage report tells us where\nthe source is richer than the documentation, and this backlog tells us what to\ndo next. A source boundary may need a new page, a deeper section in an existing\npage, an explicit owner mapping, or an internal-only decision. The backlog is\nnot a marketing roadmap. It is a release-quality checklist for source-backed\ndocumentation.\n\n## Backlog flow\n\n```mermaid\nflowchart LR\n  Report[\"Generated coverage report\"] --> Classify[\"Classify each gap\"]\n  Classify --> Page[\"New page\"]\n  Classify --> Deepen[\"Deeper section\"]\n  Classify --> Map[\"Owner mapping\"]\n  Classify --> Internal[\"Internal-only decision\"]\n  Page --> Generate[\"Regenerate docs data\"]\n  Deepen --> Generate\n  Map --> Generate\n  Internal --> Generate\n  Generate --> Test[\"Docs tests and source evidence\"]\n  Test --> Publish[\"Staged approval and Online publication\"]\n```\n\n## Classification policy\n\n| Classification | Meaning | Required action |\n| --- | --- | --- |\n| `needs-page` | A user-visible or developer-extensible capability has no clear page. | Create authored Markdown, catalogue metadata, source evidence, generated records, and validation. |\n| `needs-deeper-section` | A page exists, but it lacks exact source map, data, service, operation, or validation detail. | Extend the existing page with how-to, how-it-works, customization, errors, and tests. |\n| `needs-page-or-owner-mapping` | The source is significant, but ownership may belong under a broader page. | Decide owner, then either create a page or add explicit mapping to the owning page. |\n| `internal-only-candidate` | The module is likely a utility or provider implementation. | Document the owner page that covers it, or mark it internal with justification. |\n| `covered` | Existing docs and source evidence are sufficient for the current maturity state. | Keep validation and browser evidence current when behavior changes. |\n\n## P0 closure items\n\n| Status | Item | Source areas | Documentation outcome |\n| --- | --- | --- | --- |\n| Closed by P0 docs batch | Nexus data and content guide | `nodics.kickoff/modules/nexus.web` | Covered by `applications.nexus-data-content-guide` with Nexus project content, media assets, headers, records, publication, Online delivery, and browser validation. |\n| Closed by P0 docs batch | Axis setup and user-safe error contracts | `nodics.platform/modules/backoffice`, `nodics.platform/modules/axis`, `nodics.exp/nodics.axis` | Covered by `applications.axis-setup-error-contracts` with setup states, blockers, retry behavior, required capability checks, technical evidence, and customer-safe messages. |\n| Closed by P0 docs batch | CMS exact source map | `nodics.wcms/modules/cms` | Covered by `wcms.cms-source-map-authoring-contract` with page, route, component, slot, template, renderer, publication manifest, migration, delivery cache, and documentation governance details. |\n| Closed by P0 docs batch | Media operations runbook | `nodics.wcms/modules/media`, `nodics.foundation/modules/nData/nImport/import/src/service/media` | Covered by `wcms.media-operations-runbook` with upload, import hydration, storage providers, cleanup, replication queue, delivery failures, and DR evidence. |\n| Closed by P0 docs batch | Import/export provider guides | `nodics.foundation/modules/nData/nImport`, `nodics.foundation/modules/nData/nExport` | Covered by `data.import-export-provider-guides` with JavaScript, JSON, CSV, Excel, generated exports, parsers, field allow-lists, masking, and rollback boundaries. |\n| Closed by P0 docs batch | Commerce authoring and fulfillment | `nodics.commerce/modules/baseCommerce`, `nodics.commerce/modules/fulfillment` | Covered by `commerce.data-authoring-fulfillment` with product, price, inventory, search projection, fulfillment execution, consignments, exceptions, return receipts, and browser proof. |\n| Closed by P0 docs batch | Documentation publishing runbook | `nodics.docs`, `nodics.wcms/modules/cms`, `nodics.process/modules/nPublish` | Covered by `docs.documentation-publishing-runbook` with Markdown source, generated content-pack data, Staged import, review, Online activation, rollback, and Axis/Nexus rendering. |\n\n## P1 closure items\n\n| Item | Source areas | Documentation outcome |\n| --- | --- | --- |\n| Module Registry journey | `nodics.platform/modules/backoffice`, registry-related Platform services | Explain registration, activation, dependency state, required capability checks, and Axis visibility. |\n| Commerce Search guide | `nodics.commerce/modules/baseCommerce/modules/commerceSearch` | Explain ranking rules, projections, publish flow, index ownership, storefront effect, and recovery. |\n| Localization depth | `nodics.localization/modules/localizationCore`, `nodics.localization/modules/localizationApi` | Explain locale records, fallback, content/product localization, import data, API boundaries, and browser proof. |\n| Payment Core and provider split | `nodics.commerce/modules/payment` | Explain payment decisions, method/provider separation, reconciliation, safe customer payload, and provider extension. |\n| Customer List and Profile-Commerce boundary | `nodics.commerce/modules/checkout/modules/customerList`, `nodics.platform/modules/profile` | Explain why customer list exists in Commerce and what Profile continues to own. |\n| NMS runtime monitoring | `nodics.foundation/modules/nNms` | Explain node monitoring, topology, health, operational evidence, and recovery actions. |\n| Service runtime and overrides | `nodics.foundation/modules/nService`, `nodics.foundation/modules/nService/vService` | Explain service discovery, virtual services, generated services, override precedence, and extension safety. |\n| Cache provider runbooks | `nodics.foundation/modules/nCache`, Redis, Hazelcast, Node cache | Explain provider boundaries, cache key strategy, invalidation, failure behavior, and production configuration. |\n| Database provider boundaries | `nodics.foundation/modules/nDatabase` | Explain MongoDB, virtual DB, Cassandra, Elasticsearch, provider contracts, configuration, and validation. |\n| OTP and security flow | `nodics.foundation/modules/nOtp` | Explain OTP generation, verification, expiry, retry, throttling, audit, and security controls. |\n| Communication providers | `nodics.communication/modules/smtpCommsProvider`, `nodics.communication/modules/smsCommsProvider` | Explain SMTP/SMS provider behavior, templates, retries, failed delivery evidence, and extension rules. |\n| Engagement and contact submission | `nodics.engagement/modules/contactSubmission` | Explain contact forms, moderation, workflow, notification, audit, and recovery. |\n| Workflow and BPM source map | `nodics.foundation/modules/nbpm`, `nodics.process` | Explain workflow definitions, transitions, tasks, callbacks, history, and operator visibility. |\n| Cron job data authoring | `nodics.process/modules/cronjob` | Explain job records, schedules, execution policy, retry, idempotency, and Process server ownership. |\n| Release and upgrade compatibility | `nodics.foundation/modules/nSetup`, all module data folders | Explain version freeze, upgrade path, rollback, checksum drift, generated manifests, and extension compatibility. |\n\n## P2 closure items\n\n| Item | Source areas | Documentation outcome |\n| --- | --- | --- |\n| Fresh-schema setup per runtime | Platform, WCMS Staged, WCMS Online, Process, Commerce, Engagement | Add runtime-specific import order, seed data, publication, and acceptance evidence where existing quick-start docs are too broad. |\n| Environment, server, and node discovery | `nodics.kickoff/envs`, framework server/node configuration | Explain how physical hierarchy, environment config, server composition, and runtime roles are discovered. |\n| Permission and access matrix | Profile, BackOffice, WCMS, documentation access policies | Explain roles, groups, permissions, access modes, public/authenticated/restricted behavior, and publication visibility. |\n| Search indexing operations | Discovery and Commerce Search modules | Explain index jobs, reindex, projection freshness, failure recovery, and ownership. |\n| Migration and import reconciliation | Import, migration, CMS migration, Commerce data | Explain source classification, mapping tables, partial failures, retry, and data correction. |\n| Export and data privacy | Export providers, media-owned generated files | Explain allow-lists, masking, retention, download permissions, and audit. |\n| Observability | NMS, import runs, publication receipts, logs, dashboards | Explain correlation IDs, status evidence, health checks, support cards, and escalation. |\n| Disaster recovery | Media publication, Online storage, replication queue | Explain Online media replication, DR queues, recovery receipts, and failure escalation. |\n| Frontend consumption contracts | Axis, Nexus, Agora | Explain that Axis consumes BackOffice metadata, Nexus consumes Online WCMS, and Agora consumes Online commerce/content. |\n| Data quality rules | All module data folders | Explain required fields, stable keys, idempotent queries, relation integrity, and no runtime logic in data files. |\n| Testing standards | All modules and frontends | Explain unit, contract, generator, fresh-schema, publication, browser, accessibility, and regression expectations. |\n| Troubleshooting matrices | Every operational capability page | Add what failed, who owns it, user-safe message, technical evidence, and recovery action. |\n| Decision-maker overview pages | Product and capability overview docs | Explain business value, ownership model, platform differentiation, risk controls, and implementation confidence. |\n| Internal-only register | Low-score utility modules | Decide and document which technical modules do not need public pages and where they are covered. |\n\n## Closure workflow\n\n1. Start from the generated source coverage report.\n2. Pick the highest-priority open item.\n3. Inspect source files, schemas, services, routers, data, assets, tests, and\n   frontend consumers.\n4. Decide whether the work is a new page, deeper section, owner mapping, or\n   internal-only classification.\n5. Update authored Markdown and catalogue metadata.\n6. Regenerate documentation data and source coverage reports.\n7. Run docs tests and any owning module tests needed for the behavior.\n8. For runtime-visible changes, import into Staged, publish Online, and verify\n   Axis, Nexus, or Agora from the browser.\n9. Commit the smallest coherent documentation batch.\n\n## Common mistakes\n\n- Treating this backlog as optional once a high-level overview exists.\n- Closing a source gap without reading the current source files and tests.\n- Creating public documentation for a module that should be an internal utility\n  without explaining the broader owner.\n- Forgetting business users when writing deep developer detail.\n- Forgetting developers when writing a business-friendly page.\n- Forgetting operators and QA owners when documenting publishable or\n  production-visible behavior.\n- Showing external references as source design instead of industry-standard\n  expectation checks.\n\n## Verification\n\nRun the documentation gates after each closure batch:\n\n```bash\nnpm --prefix nodics.docs run audit:source-coverage\nnpm --prefix nodics.docs run docs:generate\nnpm --prefix nodics.docs test\ngit -C nodics.ai diff --check\n```\n\nThe backlog is healthy when the generated report, this page, catalogue\nmetadata, generated WCMS records, and runtime evidence agree. Business users\nshould see clear journeys, developers should see exact source paths and\nextension points, operators should see evidence and recovery steps, QA owners\nshould see validation commands, and AI tools should see boundaries that prevent\nunsafe source or data changes.\n"
         }
       ]
     },
@@ -39402,8 +39893,8 @@ module.exports = {
         "route": "/docs/framework/docs-overview"
       },
       "next": {
-        "title": "AI and Developer Tooling",
-        "route": "/docs/framework/tooling-ai-developer-enablement"
+        "title": "Nexus Data and Content Guide",
+        "route": "/docs/framework/applications-nexus-data-content-guide"
       },
       "source": {
         "repository": "nodics.docs",
@@ -39419,6 +39910,2321 @@ module.exports = {
     "active": true
   },
   "record92": {
+    "code": "nodicsDocsComponentapplicationsNexusDataContentGuide",
+    "typeCode": "nodicsDocumentationArticleComponentType",
+    "renderer": "documentation.component.article",
+    "accessMode": "PUBLIC",
+    "properties": {
+      "code": "applications.nexus-data-content-guide",
+      "title": "Nexus Data and Content Guide",
+      "route": "/docs/framework/applications-nexus-data-content-guide",
+      "section": "nodics-application-suite",
+      "sectionTitle": "Nodics Application Suite",
+      "group": "nodics-application-suite",
+      "groupTitle": "Nodics Application Suite",
+      "parentId": "nodics-application-suite",
+      "hierarchyPath": [
+        "Nodics Application Suite",
+        "Nexus Data and Content Guide"
+      ],
+      "hierarchyDepth": 2,
+      "documentType": "how-to",
+      "audience": [
+        "business",
+        "architect",
+        "administrator",
+        "developer",
+        "operator",
+        "qa",
+        "ai-tool"
+      ],
+      "businessAudience": [
+        "business user",
+        "administrator",
+        "implementation partner"
+      ],
+      "technicalAudience": [
+        "architect",
+        "developer",
+        "operator",
+        "qa engineer",
+        "ai tool"
+      ],
+      "summary": "How Nexus corporate content, media, editorial, engagement, Staged publication, Online delivery, and browser validation are authored from project data releases.",
+      "visibility": "public",
+      "accessMode": "PUBLIC",
+      "publiclyAvailable": true,
+      "requiresAuthentication": false,
+      "allowedRoles": [],
+      "allowedGroups": [],
+      "allowedPermissions": [],
+      "lifecycleState": "ONLINE",
+      "version": "0.16.7",
+      "maturityState": "operational",
+      "implementationState": "current",
+      "renderingComponent": "documentation.component.article",
+      "relatedPages": [
+        "applications.suite",
+        "wcms.overview",
+        "wcms.media-import-publication",
+        "wcms.publishing-lifecycle"
+      ],
+      "sourceEvidence": [
+        "docs/catalogue.json",
+        "docs/pages/applications/nexus-data-content-guide.md",
+        "../../nodics.kickoff/modules/nexus.web/package.json",
+        "../../nodics.kickoff/modules/nexus.web/data/manifest.json",
+        "../../nodics.kickoff/modules/nexus.web/data/sample-v001/content/assets/nexus-cms-media/assetManifest.js",
+        "../../nodics.kickoff/modules/nexus.web/test/nexusCorporateContentContract.test.mjs",
+        "../../nodics.exp/nodics.nexus/package.json"
+      ],
+      "visualRequirements": [
+        "diagram",
+        "table",
+        "code-example",
+        "troubleshooting-matrix"
+      ],
+      "searchKeywords": [
+        "nexus",
+        "corporate-site",
+        "content-pack",
+        "media-assets",
+        "online-delivery"
+      ],
+      "topicKeywords": [
+        "Nodics Application Suite",
+        "Application Overview",
+        "Nexus Data and Content Guide"
+      ],
+      "headings": [
+        {
+          "text": "Source map",
+          "anchor": "applicationsNexusDataContentGuide-1-source-map",
+          "level": 2
+        },
+        {
+          "text": "Release layout",
+          "anchor": "applicationsNexusDataContentGuide-2-release-layout",
+          "level": 2
+        },
+        {
+          "text": "Header contract",
+          "anchor": "applicationsNexusDataContentGuide-3-header-contract",
+          "level": 2
+        },
+        {
+          "text": "Import and publication flow",
+          "anchor": "applicationsNexusDataContentGuide-4-import-and-publication-flow",
+          "level": 2
+        },
+        {
+          "text": "Customization and extension guidance",
+          "anchor": "applicationsNexusDataContentGuide-5-customization-and-extension-guidance",
+          "level": 2
+        },
+        {
+          "text": "Troubleshooting",
+          "anchor": "applicationsNexusDataContentGuide-6-troubleshooting",
+          "level": 2
+        },
+        {
+          "text": "Common mistakes",
+          "anchor": "applicationsNexusDataContentGuide-7-common-mistakes",
+          "level": 2
+        },
+        {
+          "text": "Verification",
+          "anchor": "applicationsNexusDataContentGuide-8-verification",
+          "level": 2
+        }
+      ],
+      "blocks": [
+        {
+          "kind": "paragraph",
+          "text": "Nexus is the corporate website accelerator in the Kickoff project. It is a business application that renders published content, but it is not the data authority for sites, pages, media, articles, forms, or navigation. Those objects are authored as governed data releases, imported into the owning backend modules, reviewed in Staged, and made visible through Online delivery. For beginners, the easiest model is this: Nexus is the window, WCMS and Media own the content contract, Engagement owns contact and testimonial records, and the project data folder provides the release package."
+        },
+        {
+          "kind": "heading",
+          "level": 2,
+          "text": "Source map",
+          "anchor": "applicationsNexusDataContentGuide-1-source-map"
+        },
+        {
+          "kind": "table",
+          "headers": [
+            "Area",
+            "Current source"
+          ],
+          "rows": [
+            [
+              "Module package and lifecycle",
+              "`../../nodics.kickoff/modules/nexus.web/package.json`, `../../nodics.kickoff/modules/nexus.web/LIFECYCLE.md`"
+            ],
+            [
+              "Release manifest",
+              "`../../nodics.kickoff/modules/nexus.web/data/manifest.json`"
+            ],
+            [
+              "WCMS headers",
+              "`../../nodics.kickoff/modules/nexus.web/data/sample-v001/content/headers/wcms/`"
+            ],
+            [
+              "WCMS update headers",
+              "`../../nodics.kickoff/modules/nexus.web/data/sample-v001/content/headers/wcmsUpdate/`"
+            ],
+            [
+              "Media headers and records",
+              "`../../nodics.kickoff/modules/nexus.web/data/sample-v001/content/headers/media/`, `../../nodics.kickoff/modules/nexus.web/data/sample-v001/content/records/media/`"
+            ],
+            [
+              "Physical media assets",
+              "`../../nodics.kickoff/modules/nexus.web/data/sample-v001/content/assets/nexus-cms-media/`"
+            ],
+            [
+              "Editorial records",
+              "`../../nodics.kickoff/modules/nexus.web/data/sample-v001/content/records/editorial/`"
+            ],
+            [
+              "Engagement records",
+              "`../../nodics.kickoff/modules/nexus.web/data/sample-v001/content/records/engagement/`"
+            ],
+            [
+              "Browser application",
+              "`../../nodics.exp/nodics.nexus/package.json`"
+            ],
+            [
+              "Acceptance tests",
+              "`../../nodics.kickoff/modules/nexus.web/test/nexusCorporateContentContract.test.mjs`"
+            ]
+          ]
+        },
+        {
+          "kind": "heading",
+          "level": 2,
+          "text": "Release layout",
+          "anchor": "applicationsNexusDataContentGuide-2-release-layout"
+        },
+        {
+          "kind": "paragraph",
+          "text": "Nexus uses the same customer-project data structure as Agora content packs:"
+        },
+        {
+          "kind": "code",
+          "language": "text",
+          "text": "modules/nexus.web/data/\n  sample-v001/\n    content/\n      headers/\n      records/\n      assets/\n  manifest.json"
+        },
+        {
+          "kind": "paragraph",
+          "text": "The release folder tells the importer which lifecycle lane is being installed. `sample-v001` is sample content owned by the project until the first production baseline is frozen. Inside it, `content` separates CMS, Media, Editorial, and Engagement records from commerce data. The `manifest.json` is generated by the system from the folder structure and file checksums; developers should not hand maintain it except during a deliberate tooling repair."
+        },
+        {
+          "kind": "heading",
+          "level": 2,
+          "text": "Header contract",
+          "anchor": "applicationsNexusDataContentGuide-3-header-contract"
+        },
+        {
+          "kind": "paragraph",
+          "text": "Headers route each record file to its owning module and schema. The top-level key is the target module, the child key is a logical import item, `schemaName` is the backend schema, `operation` is the persistence behavior, and `query` defines idempotency."
+        },
+        {
+          "kind": "code",
+          "language": "js",
+          "text": "module.exports = {\n  cms: {\n    nexusCorporatePages: {\n      options: {\n        enabled: true,\n        schemaName: 'cmsPage',\n        operation: 'saveAll',\n        dataFilePrefix: 'nexusCorporatePageData'\n      },\n      query: { code: '$code', tenant: '$tenant' }\n    }\n  }\n};"
+        },
+        {
+          "kind": "paragraph",
+          "text": "Business users do not need to understand this file. Developers and AI tools do, because it is the safe routing contract between release data and backend authority. Record files must remain declarative. They can contain business keys, labels, relation codes, locale values, publication state, and asset references, but they must not call services, read environment variables, or generate runtime paths."
+        },
+        {
+          "kind": "heading",
+          "level": 2,
+          "text": "Import and publication flow",
+          "anchor": "applicationsNexusDataContentGuide-4-import-and-publication-flow"
+        },
+        {
+          "kind": "diagram",
+          "language": "mermaid",
+          "text": "sequenceDiagram\n  participant Project as Nexus data release\n  participant Import as nImport\n  participant Media as Media module\n  participant Wcms as WCMS Staged\n  participant Governance as Review workflow\n  participant Online as WCMS Online\n  participant App as Nexus browser\n\n  Project->>Import: Select sample-v001 content\n  Import->>Media: Hydrate physical media assets\n  Import->>Wcms: Persist pages, routes, components, articles\n  Wcms->>Governance: Request publication approval\n  Governance->>Online: Activate approved manifest\n  Online->>App: Serve public route and media payload"
+        },
+        {
+          "kind": "paragraph",
+          "text": "Nexus content should never be hardcoded into the frontend as the long-term truth. A component can show a clear unavailable state, but the published site must ultimately render from Online WCMS and Online Media. Operators should be able to trace an image or page from browser route to Online delivery pointer, publication manifest, Staged source record, and project release file."
+        },
+        {
+          "kind": "heading",
+          "level": 2,
+          "text": "Customization and extension guidance",
+          "anchor": "applicationsNexusDataContentGuide-5-customization-and-extension-guidance"
+        },
+        {
+          "kind": "paragraph",
+          "text": "A project can customize Nexus by creating a new content release folder after a baseline is frozen, adding new headers for additional schemas, adding new record maps, and placing physical assets under the release-owned assets folder. Developers should extend the owning backend module when a new schema or operation is required. Business users should use Axis for normal page, media, article, and form journeys once the backoffice capability is available."
+        },
+        {
+          "kind": "paragraph",
+          "text": "When a customer needs a new corporate page, the developer should add a page record, page route, layout or component relation, localized copy, media object, and media asset manifest entry. A QA owner should then import into a fresh schema, publish through Staged approval, open Nexus in the browser, and verify the route, title, navigation, media URL, and friendly empty states."
+        },
+        {
+          "kind": "heading",
+          "level": 2,
+          "text": "Troubleshooting",
+          "anchor": "applicationsNexusDataContentGuide-6-troubleshooting"
+        },
+        {
+          "kind": "table",
+          "headers": [
+            "Symptom",
+            "Likely owner",
+            "User-safe message",
+            "Technical evidence"
+          ],
+          "rows": [
+            [
+              "Page route is missing",
+              "WCMS data release",
+              "Content is not ready for this site.",
+              "Missing `cmsPageRoute` record or failed import run."
+            ],
+            [
+              "Image is broken",
+              "Media import",
+              "Media is still being prepared.",
+              "Missing asset manifest entry, checksum failure, or Staged storage failure."
+            ],
+            [
+              "Form is hidden",
+              "Engagement data",
+              "Contact form is not available.",
+              "Missing form definition or inactive version record."
+            ],
+            [
+              "Nexus shows fallback copy",
+              "Publication",
+              "Latest approved content is not online yet.",
+              "No active Online manifest for the route."
+            ]
+          ]
+        },
+        {
+          "kind": "heading",
+          "level": 2,
+          "text": "Common mistakes",
+          "anchor": "applicationsNexusDataContentGuide-7-common-mistakes"
+        },
+        {
+          "kind": "unordered-list",
+          "items": [
+            "Treating Nexus as the owner of corporate content instead of a consumer.",
+            "Adding a page record without its route, slot, component, or media relation.",
+            "Copying physical media into a frontend public folder instead of the release assets folder.",
+            "Hand editing generated manifest checksums after a file changes.",
+            "Showing technical import errors directly to a business user."
+          ]
+        },
+        {
+          "kind": "heading",
+          "level": 2,
+          "text": "Verification",
+          "anchor": "applicationsNexusDataContentGuide-8-verification"
+        },
+        {
+          "kind": "paragraph",
+          "text": "Run the Nexus contract tests, regenerate data manifests, import into a fresh schema, publish to Online, and open Nexus from the browser. A successful check proves that developers can trace the release files, business users can see a clear setup journey, operators can inspect import and publication evidence, and production delivery reads Online records rather than frontend defaults."
+        }
+      ],
+      "searchText": "Nexus Data and Content Guide How Nexus corporate content, media, editorial, engagement, Staged publication, Online delivery, and browser validation are authored from project data releases. # Nexus Data and Content Guide\n\nNexus is the corporate website accelerator in the Kickoff project. It is a\nbusiness application that renders published content, but it is not the data\nauthority for sites, pages, media, articles, forms, or navigation. Those\nobjects are authored as governed data releases, imported into the owning\nbackend modules, reviewed in Staged, and made visible through Online delivery.\nFor beginners, the easiest model is this: Nexus is the window, WCMS and Media\nown the content contract, Engagement owns contact and testimonial records, and\nthe project data folder provides the release package.\n\n## Source map\n\n| Area | Current source |\n| --- | --- |\n| Module package and lifecycle | `../../nodics.kickoff/modules/nexus.web/package.json`, `../../nodics.kickoff/modules/nexus.web/LIFECYCLE.md` |\n| Release manifest | `../../nodics.kickoff/modules/nexus.web/data/manifest.json` |\n| WCMS headers | `../../nodics.kickoff/modules/nexus.web/data/sample-v001/content/headers/wcms/` |\n| WCMS update headers | `../../nodics.kickoff/modules/nexus.web/data/sample-v001/content/headers/wcmsUpdate/` |\n| Media headers and records | `../../nodics.kickoff/modules/nexus.web/data/sample-v001/content/headers/media/`, `../../nodics.kickoff/modules/nexus.web/data/sample-v001/content/records/media/` |\n| Physical media assets | `../../nodics.kickoff/modules/nexus.web/data/sample-v001/content/assets/nexus-cms-media/` |\n| Editorial records | `../../nodics.kickoff/modules/nexus.web/data/sample-v001/content/records/editorial/` |\n| Engagement records | `../../nodics.kickoff/modules/nexus.web/data/sample-v001/content/records/engagement/` |\n| Browser application | `../../nodics.exp/nodics.nexus/package.json` |\n| Acceptance tests | `../../nodics.kickoff/modules/nexus.web/test/nexusCorporateContentContract.test.mjs` |\n\n## Release layout\n\nNexus uses the same customer-project data structure as Agora content packs:\n\n```text\nmodules/nexus.web/data/\n  sample-v001/\n    content/\n      headers/\n      records/\n      assets/\n  manifest.json\n```\n\nThe release folder tells the importer which lifecycle lane is being installed.\n`sample-v001` is sample content owned by the project until the first production\nbaseline is frozen. Inside it, `content` separates CMS, Media, Editorial, and\nEngagement records from commerce data. The `manifest.json` is generated by the\nsystem from the folder structure and file checksums; developers should not hand\nmaintain it except during a deliberate tooling repair.\n\n## Header contract\n\nHeaders route each record file to its owning module and schema. The top-level\nkey is the target module, the child key is a logical import item, `schemaName`\nis the backend schema, `operation` is the persistence behavior, and `query`\ndefines idempotency.\n\n```js\nmodule.exports = {\n  cms: {\n    nexusCorporatePages: {\n      options: {\n        enabled: true,\n        schemaName: 'cmsPage',\n        operation: 'saveAll',\n        dataFilePrefix: 'nexusCorporatePageData'\n      },\n      query: { code: '$code', tenant: '$tenant' }\n    }\n  }\n};\n```\n\nBusiness users do not need to understand this file. Developers and AI tools do,\nbecause it is the safe routing contract between release data and backend\nauthority. Record files must remain declarative. They can contain business\nkeys, labels, relation codes, locale values, publication state, and asset\nreferences, but they must not call services, read environment variables, or\ngenerate runtime paths.\n\n## Import and publication flow\n\n```mermaid\nsequenceDiagram\n  participant Project as Nexus data release\n  participant Import as nImport\n  participant Media as Media module\n  participant Wcms as WCMS Staged\n  participant Governance as Review workflow\n  participant Online as WCMS Online\n  participant App as Nexus browser\n\n  Project->>Import: Select sample-v001 content\n  Import->>Media: Hydrate physical media assets\n  Import->>Wcms: Persist pages, routes, components, articles\n  Wcms->>Governance: Request publication approval\n  Governance->>Online: Activate approved manifest\n  Online->>App: Serve public route and media payload\n```\n\nNexus content should never be hardcoded into the frontend as the long-term\ntruth. A component can show a clear unavailable state, but the published site\nmust ultimately render from Online WCMS and Online Media. Operators should be\nable to trace an image or page from browser route to Online delivery pointer,\npublication manifest, Staged source record, and project release file.\n\n## Customization and extension guidance\n\nA project can customize Nexus by creating a new content release folder after a\nbaseline is frozen, adding new headers for additional schemas, adding new\nrecord maps, and placing physical assets under the release-owned assets folder.\nDevelopers should extend the owning backend module when a new schema or\noperation is required. Business users should use Axis for normal page, media,\narticle, and form journeys once the backoffice capability is available.\n\nWhen a customer needs a new corporate page, the developer should add a page\nrecord, page route, layout or component relation, localized copy, media object,\nand media asset manifest entry. A QA owner should then import into a fresh\nschema, publish through Staged approval, open Nexus in the browser, and verify\nthe route, title, navigation, media URL, and friendly empty states.\n\n## Troubleshooting\n\n| Symptom | Likely owner | User-safe message | Technical evidence |\n| --- | --- | --- | --- |\n| Page route is missing | WCMS data release | Content is not ready for this site. | Missing `cmsPageRoute` record or failed import run. |\n| Image is broken | Media import | Media is still being prepared. | Missing asset manifest entry, checksum failure, or Staged storage failure. |\n| Form is hidden | Engagement data | Contact form is not available. | Missing form definition or inactive version record. |\n| Nexus shows fallback copy | Publication | Latest approved content is not online yet. | No active Online manifest for the route. |\n\n## Common mistakes\n\n- Treating Nexus as the owner of corporate content instead of a consumer.\n- Adding a page record without its route, slot, component, or media relation.\n- Copying physical media into a frontend public folder instead of the release\n  assets folder.\n- Hand editing generated manifest checksums after a file changes.\n- Showing technical import errors directly to a business user.\n\n## Verification\n\nRun the Nexus contract tests, regenerate data manifests, import into a fresh\nschema, publish to Online, and open Nexus from the browser. A successful check\nproves that developers can trace the release files, business users can see a\nclear setup journey, operators can inspect import and publication evidence, and\nproduction delivery reads Online records rather than frontend defaults.\n",
+      "previous": {
+        "title": "Staged-to-Online publishing lifecycle",
+        "route": "/docs/framework/wcms-publishing-lifecycle"
+      },
+      "next": {
+        "title": "Axis Setup and User-Safe Error Contracts",
+        "route": "/docs/framework/applications-axis-setup-error-contracts"
+      },
+      "source": {
+        "repository": "nodics.docs",
+        "functionalModule": "nodics.kickoff",
+        "technicalModule": "nexus.web",
+        "owner": "nodics.kickoff",
+        "sourcePath": "docs/pages/applications/nexus-data-content-guide.md",
+        "path": "docs/pages/applications/nexus-data-content-guide.md",
+        "wordCount": 920,
+        "checksum": "a00f81961bbd87c0fe28dee3f17e90fc5fb902f41d73907b018028792a681706"
+      }
+    },
+    "active": true
+  },
+  "record93": {
+    "code": "nodicsDocsComponentapplicationsAxisSetupErrorContracts",
+    "typeCode": "nodicsDocumentationArticleComponentType",
+    "renderer": "documentation.component.article",
+    "accessMode": "PUBLIC",
+    "properties": {
+      "code": "applications.axis-setup-error-contracts",
+      "title": "Axis Setup and User-Safe Error Contracts",
+      "route": "/docs/framework/applications-axis-setup-error-contracts",
+      "section": "axis-and-backoffice-operations",
+      "sectionTitle": "Axis and BackOffice Operations",
+      "group": "axis-and-backoffice-operations",
+      "groupTitle": "Axis and BackOffice Operations",
+      "parentId": "axis-and-backoffice-operations",
+      "hierarchyPath": [
+        "Axis and BackOffice Operations",
+        "Axis Setup and User-Safe Error Contracts"
+      ],
+      "hierarchyDepth": 2,
+      "documentType": "contract",
+      "audience": [
+        "business",
+        "architect",
+        "administrator",
+        "developer",
+        "operator",
+        "qa",
+        "ai-tool"
+      ],
+      "businessAudience": [
+        "business user",
+        "administrator",
+        "implementation partner"
+      ],
+      "technicalAudience": [
+        "architect",
+        "developer",
+        "operator",
+        "qa engineer",
+        "ai tool"
+      ],
+      "summary": "How Axis presents setup, retry, blocker, and initialization errors with safe business messages while preserving technical evidence for operators.",
+      "visibility": "public",
+      "accessMode": "PUBLIC",
+      "publiclyAvailable": true,
+      "requiresAuthentication": false,
+      "allowedRoles": [],
+      "allowedGroups": [],
+      "allowedPermissions": [],
+      "lifecycleState": "ONLINE",
+      "version": "0.16.7",
+      "maturityState": "operational",
+      "implementationState": "current",
+      "renderingComponent": "documentation.component.article",
+      "relatedPages": [
+        "axis.business-customization",
+        "platform.module-registry",
+        "framework.fresh-schema-setup-journey",
+        "applications.suite"
+      ],
+      "sourceEvidence": [
+        "docs/catalogue.json",
+        "docs/pages/applications/axis-setup-error-contracts.md",
+        "../nodics.platform/modules/backoffice/src/service/defaultBackofficeApplicationInitializationService.js",
+        "../nodics.platform/modules/backoffice/src/service/availability/defaultBackofficeAvailabilityService.js",
+        "../nodics.platform/modules/backoffice/src/service/registry/defaultBackofficeCapabilityRegistryService.js",
+        "../nodics.platform/modules/backoffice/test/backofficeApplicationInitializationContract.test.js",
+        "../../nodics.exp/nodics.axis/package.json"
+      ],
+      "visualRequirements": [
+        "lifecycle-state-diagram",
+        "table",
+        "troubleshooting-matrix"
+      ],
+      "searchKeywords": [
+        "axis",
+        "setup",
+        "accelerator",
+        "safe-error",
+        "backoffice"
+      ],
+      "topicKeywords": [
+        "Axis and BackOffice Operations",
+        "Setup and Accelerators",
+        "User-Safe Error Contracts"
+      ],
+      "headings": [
+        {
+          "text": "Source map",
+          "anchor": "applicationsAxisSetupErrorContracts-1-source-map",
+          "level": 2
+        },
+        {
+          "text": "State model",
+          "anchor": "applicationsAxisSetupErrorContracts-2-state-model",
+          "level": 2
+        },
+        {
+          "text": "Error contract",
+          "anchor": "applicationsAxisSetupErrorContracts-3-error-contract",
+          "level": 2
+        },
+        {
+          "text": "Setup flow",
+          "anchor": "applicationsAxisSetupErrorContracts-4-setup-flow",
+          "level": 2
+        },
+        {
+          "text": "Customization and extension guidance",
+          "anchor": "applicationsAxisSetupErrorContracts-5-customization-and-extension-guidance",
+          "level": 2
+        },
+        {
+          "text": "Common mistakes",
+          "anchor": "applicationsAxisSetupErrorContracts-6-common-mistakes",
+          "level": 2
+        },
+        {
+          "text": "Verification",
+          "anchor": "applicationsAxisSetupErrorContracts-7-verification",
+          "level": 2
+        }
+      ],
+      "blocks": [
+        {
+          "kind": "paragraph",
+          "text": "Axis is the business-facing backoffice journey for setup, governance, and operation. It should help a business user initialize accelerators, inspect status, retry failed work, and navigate to the right owner without exposing raw framework exceptions. Axis is not the authority for catalogs, pages, media, products, prices, inventory, or documentation data. It consumes BackOffice capability metadata and runtime evidence, then presents a safe operator experience."
+        },
+        {
+          "kind": "heading",
+          "level": 2,
+          "text": "Source map",
+          "anchor": "applicationsAxisSetupErrorContracts-1-source-map"
+        },
+        {
+          "kind": "table",
+          "headers": [
+            "Area",
+            "Current source"
+          ],
+          "rows": [
+            [
+              "BackOffice initialization services",
+              "`../nodics.platform/modules/backoffice/src/service/defaultBackofficeApplicationInitializationService.js`"
+            ],
+            [
+              "BackOffice availability and registry",
+              "`../nodics.platform/modules/backoffice/src/service/availability/`, `../nodics.platform/modules/backoffice/src/service/registry/`"
+            ],
+            [
+              "BackOffice setup controllers",
+              "`../nodics.platform/modules/backoffice/src/controller/application/`, `../nodics.platform/modules/backoffice/src/controller/registry/`"
+            ],
+            [
+              "Axis module docs",
+              "`../nodics.platform/modules/axis/docs/pages/module-health.md`, `../nodics.platform/modules/axis/docs/pages/implementation-and-documentation-contract.md`"
+            ],
+            [
+              "Axis frontend",
+              "`../../nodics.exp/nodics.axis/package.json`"
+            ],
+            [
+              "Contract tests",
+              "`../nodics.platform/modules/backoffice/test/backofficeApplicationInitializationContract.test.js`, `../nodics.platform/modules/backoffice/test/availability.test.js`"
+            ]
+          ]
+        },
+        {
+          "kind": "heading",
+          "level": 2,
+          "text": "State model",
+          "anchor": "applicationsAxisSetupErrorContracts-2-state-model"
+        },
+        {
+          "kind": "diagram",
+          "language": "mermaid",
+          "text": "stateDiagram-v2\n  [*] --> NotInitialized\n  NotInitialized --> Preparing: initialize\n  Preparing --> WaitingApproval: staged prepared\n  Preparing --> SetupBlocked: validation failed\n  WaitingApproval --> Online: publish approved\n  WaitingApproval --> SetupBlocked: approval or target blocked\n  SetupBlocked --> Preparing: retry after repair\n  Online --> Preparing: new release"
+        },
+        {
+          "kind": "paragraph",
+          "text": "Every status shown in Axis should be business-safe and evidence-backed. A beginner should see \"Content catalog pending setup\" rather than a stack trace. A developer should still be able to open the details panel or backend logs and find the exact missing module, release, schema, and operation. An operator needs retry guidance and a way to prove whether the failure is configuration, data quality, permission, missing dependency, or target runtime availability."
+        },
+        {
+          "kind": "heading",
+          "level": 2,
+          "text": "Error contract",
+          "anchor": "applicationsAxisSetupErrorContracts-3-error-contract"
+        },
+        {
+          "kind": "table",
+          "headers": [
+            "Backend condition",
+            "Axis headline",
+            "Axis detail",
+            "Technical detail"
+          ],
+          "rows": [
+            [
+              "Required module inactive",
+              "Setup blocked",
+              "Required capability is not active.",
+              "Module code, expected runtime role, dependency check."
+            ],
+            [
+              "Missing content catalog",
+              "Staged preparation blocked",
+              "Storefront content is not available for this application.",
+              "Data release item, catalog code, schema name."
+            ],
+            [
+              "Missing application release",
+              "Setup blocked",
+              "Application release is not configured.",
+              "Profile code, baseline, release version field."
+            ],
+            [
+              "Publication target unavailable",
+              "Publication blocked",
+              "Online target is not reachable.",
+              "Target URL, correlation id, health result."
+            ],
+            [
+              "Unexpected exception",
+              "Setup needs attention",
+              "Setup could not be completed.",
+              "Error code, stack in logs, request id."
+            ]
+          ]
+        },
+        {
+          "kind": "paragraph",
+          "text": "The user-facing message should explain the business impact and next action. The technical evidence should be available to administrators and support, but it should not replace the safe message. Axis should avoid labels such as `ERR_SYS_00000` in the primary row, because that message tells neither the business user nor the operator what to do."
+        },
+        {
+          "kind": "heading",
+          "level": 2,
+          "text": "Setup flow",
+          "anchor": "applicationsAxisSetupErrorContracts-4-setup-flow"
+        },
+        {
+          "kind": "code",
+          "language": "text",
+          "text": "1. Axis asks BackOffice for the accelerator setup profile.\n2. BackOffice resolves module registry and capability readiness.\n3. BackOffice validates the requested application release and target runtime.\n4. Initialization imports or prepares Staged data owned by backend modules.\n5. The setup response returns normalized state, user-safe message, and evidence.\n6. Axis renders action buttons based on capability state and allowed operation."
+        },
+        {
+          "kind": "paragraph",
+          "text": "Configuration matters, but it should be expressed as capability metadata and runtime health, not frontend assumptions. When a release version is required, BackOffice must validate it before dispatching work. When a content catalog is missing, the response should identify the missing catalog in technical evidence and phrase the UI message as a setup problem that needs data repair."
+        },
+        {
+          "kind": "heading",
+          "level": 2,
+          "text": "Customization and extension guidance",
+          "anchor": "applicationsAxisSetupErrorContracts-5-customization-and-extension-guidance"
+        },
+        {
+          "kind": "paragraph",
+          "text": "Developers can extend setup by adding new BackOffice capability providers, initialization targets, evidence fields, and status mappers. Keep the mapper near the owning backend service so Axis does not duplicate business rules. Business users can customize through Axis only when a capability exposes a governed operation. Operators can add observability by carrying request ids, profile code, baseline code, target runtime, release folder, import run id, and publication code through the response."
+        },
+        {
+          "kind": "paragraph",
+          "text": "New frontend panels should consume a normalized setup DTO. They should not parse exception text. If a new backend error code is introduced, the owning service should also define the safe headline, business detail, severity, recoverability, retry action, and evidence payload."
+        },
+        {
+          "kind": "heading",
+          "level": 2,
+          "text": "Common mistakes",
+          "anchor": "applicationsAxisSetupErrorContracts-6-common-mistakes"
+        },
+        {
+          "kind": "unordered-list",
+          "items": [
+            "Rendering raw error codes as the main business message.",
+            "Letting Axis infer data ownership from component names.",
+            "Making retry buttons available when the backend says the capability is blocked by configuration or missing data.",
+            "Hiding technical evidence from administrators and operators.",
+            "Returning a generic internal error when the backend can identify a missing release, catalog, module, or target runtime."
+          ]
+        },
+        {
+          "kind": "heading",
+          "level": 2,
+          "text": "Verification",
+          "anchor": "applicationsAxisSetupErrorContracts-7-verification"
+        },
+        {
+          "kind": "paragraph",
+          "text": "Test setup with a fresh schema and intentionally broken data. Confirm that Axis shows friendly setup states, BackOffice logs keep technical evidence, retry behavior is gated by capability state, and production-facing users never see stack traces or unknown framework codes. Run the BackOffice application initialization tests and the Axis live smoke checks after each setup contract change."
+        }
+      ],
+      "searchText": "Axis Setup and User-Safe Error Contracts How Axis presents setup, retry, blocker, and initialization errors with safe business messages while preserving technical evidence for operators. # Axis Setup and User-Safe Error Contracts\n\nAxis is the business-facing backoffice journey for setup, governance, and\noperation. It should help a business user initialize accelerators, inspect\nstatus, retry failed work, and navigate to the right owner without exposing\nraw framework exceptions. Axis is not the authority for catalogs, pages,\nmedia, products, prices, inventory, or documentation data. It consumes\nBackOffice capability metadata and runtime evidence, then presents a safe\noperator experience.\n\n## Source map\n\n| Area | Current source |\n| --- | --- |\n| BackOffice initialization services | `../nodics.platform/modules/backoffice/src/service/defaultBackofficeApplicationInitializationService.js` |\n| BackOffice availability and registry | `../nodics.platform/modules/backoffice/src/service/availability/`, `../nodics.platform/modules/backoffice/src/service/registry/` |\n| BackOffice setup controllers | `../nodics.platform/modules/backoffice/src/controller/application/`, `../nodics.platform/modules/backoffice/src/controller/registry/` |\n| Axis module docs | `../nodics.platform/modules/axis/docs/pages/module-health.md`, `../nodics.platform/modules/axis/docs/pages/implementation-and-documentation-contract.md` |\n| Axis frontend | `../../nodics.exp/nodics.axis/package.json` |\n| Contract tests | `../nodics.platform/modules/backoffice/test/backofficeApplicationInitializationContract.test.js`, `../nodics.platform/modules/backoffice/test/availability.test.js` |\n\n## State model\n\n```mermaid\nstateDiagram-v2\n  [*] --> NotInitialized\n  NotInitialized --> Preparing: initialize\n  Preparing --> WaitingApproval: staged prepared\n  Preparing --> SetupBlocked: validation failed\n  WaitingApproval --> Online: publish approved\n  WaitingApproval --> SetupBlocked: approval or target blocked\n  SetupBlocked --> Preparing: retry after repair\n  Online --> Preparing: new release\n```\n\nEvery status shown in Axis should be business-safe and evidence-backed. A\nbeginner should see \"Content catalog pending setup\" rather than a stack trace.\nA developer should still be able to open the details panel or backend logs and\nfind the exact missing module, release, schema, and operation. An operator\nneeds retry guidance and a way to prove whether the failure is configuration,\ndata quality, permission, missing dependency, or target runtime availability.\n\n## Error contract\n\n| Backend condition | Axis headline | Axis detail | Technical detail |\n| --- | --- | --- | --- |\n| Required module inactive | Setup blocked | Required capability is not active. | Module code, expected runtime role, dependency check. |\n| Missing content catalog | Staged preparation blocked | Storefront content is not available for this application. | Data release item, catalog code, schema name. |\n| Missing application release | Setup blocked | Application release is not configured. | Profile code, baseline, release version field. |\n| Publication target unavailable | Publication blocked | Online target is not reachable. | Target URL, correlation id, health result. |\n| Unexpected exception | Setup needs attention | Setup could not be completed. | Error code, stack in logs, request id. |\n\nThe user-facing message should explain the business impact and next action.\nThe technical evidence should be available to administrators and support, but\nit should not replace the safe message. Axis should avoid labels such as\n`ERR_SYS_00000` in the primary row, because that message tells neither the\nbusiness user nor the operator what to do.\n\n## Setup flow\n\n```text\n1. Axis asks BackOffice for the accelerator setup profile.\n2. BackOffice resolves module registry and capability readiness.\n3. BackOffice validates the requested application release and target runtime.\n4. Initialization imports or prepares Staged data owned by backend modules.\n5. The setup response returns normalized state, user-safe message, and evidence.\n6. Axis renders action buttons based on capability state and allowed operation.\n```\n\nConfiguration matters, but it should be expressed as capability metadata and\nruntime health, not frontend assumptions. When a release version is required,\nBackOffice must validate it before dispatching work. When a content catalog is\nmissing, the response should identify the missing catalog in technical\nevidence and phrase the UI message as a setup problem that needs data repair.\n\n## Customization and extension guidance\n\nDevelopers can extend setup by adding new BackOffice capability providers,\ninitialization targets, evidence fields, and status mappers. Keep the mapper\nnear the owning backend service so Axis does not duplicate business rules.\nBusiness users can customize through Axis only when a capability exposes a\ngoverned operation. Operators can add observability by carrying request ids,\nprofile code, baseline code, target runtime, release folder, import run id,\nand publication code through the response.\n\nNew frontend panels should consume a normalized setup DTO. They should not\nparse exception text. If a new backend error code is introduced, the owning\nservice should also define the safe headline, business detail, severity,\nrecoverability, retry action, and evidence payload.\n\n## Common mistakes\n\n- Rendering raw error codes as the main business message.\n- Letting Axis infer data ownership from component names.\n- Making retry buttons available when the backend says the capability is\n  blocked by configuration or missing data.\n- Hiding technical evidence from administrators and operators.\n- Returning a generic internal error when the backend can identify a missing\n  release, catalog, module, or target runtime.\n\n## Verification\n\nTest setup with a fresh schema and intentionally broken data. Confirm that\nAxis shows friendly setup states, BackOffice logs keep technical evidence,\nretry behavior is gated by capability state, and production-facing users never\nsee stack traces or unknown framework codes. Run the BackOffice application\ninitialization tests and the Axis live smoke checks after each setup contract\nchange.\n",
+      "previous": {
+        "title": "Nexus Data and Content Guide",
+        "route": "/docs/framework/applications-nexus-data-content-guide"
+      },
+      "next": {
+        "title": "CMS Source Map and Authoring Contract",
+        "route": "/docs/framework/wcms-cms-source-map-authoring-contract"
+      },
+      "source": {
+        "repository": "nodics.docs",
+        "functionalModule": "nodics.platform",
+        "technicalModule": "backoffice",
+        "owner": "nodics.platform",
+        "sourcePath": "docs/pages/applications/axis-setup-error-contracts.md",
+        "path": "docs/pages/applications/axis-setup-error-contracts.md",
+        "wordCount": 779,
+        "checksum": "65ff40cb60120061ed51ccd752425db1aca138d9f2fe5066e3301f8ac64c980e"
+      }
+    },
+    "active": true
+  },
+  "record94": {
+    "code": "nodicsDocsComponentwcmsCmsSourceMapAuthoringContract",
+    "typeCode": "nodicsDocumentationArticleComponentType",
+    "renderer": "documentation.component.article",
+    "accessMode": "PUBLIC",
+    "properties": {
+      "code": "wcms.cms-source-map-authoring-contract",
+      "title": "CMS Source Map and Authoring Contract",
+      "route": "/docs/framework/wcms-cms-source-map-authoring-contract",
+      "section": "wcms-and-content-management",
+      "sectionTitle": "WCMS and Content Management",
+      "group": "wcms-and-content-management",
+      "groupTitle": "WCMS and Content Management",
+      "parentId": "wcms-and-content-management",
+      "hierarchyPath": [
+        "WCMS and Content Management",
+        "CMS Source Map and Authoring Contract"
+      ],
+      "hierarchyDepth": 2,
+      "documentType": "contract",
+      "audience": [
+        "business",
+        "architect",
+        "administrator",
+        "developer",
+        "operator",
+        "qa",
+        "ai-tool"
+      ],
+      "businessAudience": [
+        "business user",
+        "administrator",
+        "implementation partner"
+      ],
+      "technicalAudience": [
+        "architect",
+        "developer",
+        "operator",
+        "qa engineer",
+        "ai tool"
+      ],
+      "summary": "Exact CMS implementation map for sites, routes, pages, components, renderers, migration, publication manifests, delivery cache, and governance.",
+      "visibility": "public",
+      "accessMode": "PUBLIC",
+      "publiclyAvailable": true,
+      "requiresAuthentication": false,
+      "allowedRoles": [],
+      "allowedGroups": [],
+      "allowedPermissions": [],
+      "lifecycleState": "ONLINE",
+      "version": "0.16.7",
+      "maturityState": "operational",
+      "implementationState": "current",
+      "renderingComponent": "documentation.component.article",
+      "relatedPages": [
+        "wcms.overview",
+        "wcms.content-catalog-model",
+        "wcms.page-designer-components",
+        "wcms.publishing-lifecycle"
+      ],
+      "sourceEvidence": [
+        "docs/catalogue.json",
+        "docs/pages/nodics.wcms/cms-source-map-and-authoring-contract.md",
+        "../nodics.wcms/modules/cms/src/schemas/schemas.js",
+        "../nodics.wcms/modules/cms/src/service/delivery/defaultCmsDeliveryService.js",
+        "../nodics.wcms/modules/cms/src/service/publication/defaultCmsPublicationManifestOrchestrationService.js",
+        "../nodics.wcms/modules/cms/data/manifest.json",
+        "../nodics.wcms/modules/cms/test/cmsPublicationManifestContract.test.js"
+      ],
+      "visualRequirements": [
+        "diagram",
+        "table",
+        "code-example",
+        "troubleshooting-matrix"
+      ],
+      "searchKeywords": [
+        "cms",
+        "source-map",
+        "authoring",
+        "publication-manifest",
+        "delivery-cache"
+      ],
+      "topicKeywords": [
+        "WCMS and Content Management",
+        "Content Model and Delivery",
+        "CMS Source Map and Authoring Contract"
+      ],
+      "headings": [
+        {
+          "text": "Source map",
+          "anchor": "wcmsCmsSourceMapAuthoringContract-1-source-map",
+          "level": 2
+        },
+        {
+          "text": "Content model",
+          "anchor": "wcmsCmsSourceMapAuthoringContract-2-content-model",
+          "level": 2
+        },
+        {
+          "text": "Authoring contract",
+          "anchor": "wcmsCmsSourceMapAuthoringContract-3-authoring-contract",
+          "level": 2
+        },
+        {
+          "text": "Publication and delivery",
+          "anchor": "wcmsCmsSourceMapAuthoringContract-4-publication-and-delivery",
+          "level": 2
+        },
+        {
+          "text": "Customization and extension guidance",
+          "anchor": "wcmsCmsSourceMapAuthoringContract-5-customization-and-extension-guidance",
+          "level": 2
+        },
+        {
+          "text": "Operational checks",
+          "anchor": "wcmsCmsSourceMapAuthoringContract-6-operational-checks",
+          "level": 2
+        },
+        {
+          "text": "Common mistakes",
+          "anchor": "wcmsCmsSourceMapAuthoringContract-7-common-mistakes",
+          "level": 2
+        },
+        {
+          "text": "Verification",
+          "anchor": "wcmsCmsSourceMapAuthoringContract-8-verification",
+          "level": 2
+        }
+      ],
+      "blocks": [
+        {
+          "kind": "paragraph",
+          "text": "CMS is the backend authority for sites, pages, routes, templates, slots, components, renderers, content localization, migration, publication manifests, and Online delivery pointers. Axis can offer the business authoring journey, Nexus can render the public website, and Agora can consume storefront content, but CMS owns the data contract. This page gives beginners a precise map of where the implementation lives and gives developers enough detail to customize content safely."
+        },
+        {
+          "kind": "heading",
+          "level": 2,
+          "text": "Source map",
+          "anchor": "wcmsCmsSourceMapAuthoringContract-1-source-map"
+        },
+        {
+          "kind": "table",
+          "headers": [
+            "Capability",
+            "Source location"
+          ],
+          "rows": [
+            [
+              "Schemas and routers",
+              "`../nodics.wcms/modules/cms/src/schemas/`, `../nodics.wcms/modules/cms/src/router/`"
+            ],
+            [
+              "Delivery APIs",
+              "`../nodics.wcms/modules/cms/src/controller/delivery/`, `../nodics.wcms/modules/cms/src/service/delivery/`"
+            ],
+            [
+              "Designer composition",
+              "`../nodics.wcms/modules/cms/src/controller/designer/`, `../nodics.wcms/modules/cms/src/service/designer/`"
+            ],
+            [
+              "Publication workflow",
+              "`../nodics.wcms/modules/cms/src/controller/publication/`, `../nodics.wcms/modules/cms/src/service/publication/`"
+            ],
+            [
+              "Documentation governance",
+              "`../nodics.wcms/modules/cms/src/service/documentation/`"
+            ],
+            [
+              "Migration",
+              "`../nodics.wcms/modules/cms/src/controller/migration/`, `../nodics.wcms/modules/cms/src/service/migration/`"
+            ],
+            [
+              "Init and sample data",
+              "`../nodics.wcms/modules/cms/data/init-v001/`, `../nodics.wcms/modules/cms/data/sample-v001/`"
+            ],
+            [
+              "Contract tests",
+              "`../nodics.wcms/modules/cms/test/`"
+            ]
+          ]
+        },
+        {
+          "kind": "heading",
+          "level": 2,
+          "text": "Content model",
+          "anchor": "wcmsCmsSourceMapAuthoringContract-2-content-model"
+        },
+        {
+          "kind": "diagram",
+          "language": "mermaid",
+          "text": "flowchart TD\n  Site[\"cmsSite\"] --> Route[\"cmsPageRoute\"]\n  Route --> Page[\"cmsPage version\"]\n  Page --> Slot[\"cmsSlot\"]\n  Slot --> Component[\"cmsComponent\"]\n  Component --> Renderer[\"itemRenderer\"]\n  Component --> Media[\"media reference\"]\n  Page --> Localization[\"localized content\"]\n  Route --> Delivery[\"Online delivery pointer\"]"
+        },
+        {
+          "kind": "paragraph",
+          "text": "The business value is governed composition. A content administrator should be able to prepare a page in Staged, preview it, request approval, and publish a controlled version. A developer should know which schema owns each object and where to extend validation, delivery, or rendering. An operator should know which publication, cache, and route evidence proves that production is serving the approved version."
+        },
+        {
+          "kind": "heading",
+          "level": 2,
+          "text": "Authoring contract",
+          "anchor": "wcmsCmsSourceMapAuthoringContract-3-authoring-contract"
+        },
+        {
+          "kind": "paragraph",
+          "text": "Data files can create CMS objects for module releases and project releases. Axis can create the same objects through backoffice APIs. Both lanes must land in the same schemas and obey the same validation. Data definitions should contain structure and business metadata, not runtime logic."
+        },
+        {
+          "kind": "code",
+          "language": "js",
+          "text": "module.exports = {\n  cms: {\n    pages: {\n      options: {\n        enabled: true,\n        schemaName: 'cmsPage',\n        operation: 'saveAll',\n        dataFilePrefix: 'defaultCmsPageData'\n      },\n      query: { code: '$code', tenant: '$tenant', catalogVersion: '$catalogVersion' }\n    }\n  }\n};"
+        },
+        {
+          "kind": "paragraph",
+          "text": "The header says where records go. The record says what should exist. The CMS service decides whether the object is valid. The publication workflow decides when it becomes Online. This separation keeps business users, developers, AI tools, and operators from creating parallel authorities."
+        },
+        {
+          "kind": "heading",
+          "level": 2,
+          "text": "Publication and delivery",
+          "anchor": "wcmsCmsSourceMapAuthoringContract-4-publication-and-delivery"
+        },
+        {
+          "kind": "paragraph",
+          "text": "CMS publication starts in Staged. The publication adapter loads the selected root version, resolves dependencies, validates graph limits, builds a deterministic manifest, includes media references, and sends the manifest to the Online target. The target imports the manifest, validates integrity, activates delivery scopes, and invalidates the relevant delivery cache. Staged must not write Online storage directly."
+        },
+        {
+          "kind": "paragraph",
+          "text": "Delivery services then resolve the active route pointer, load the Online snapshot, apply localization and renderer hints, and return a bounded response to consumers. Nexus and Agora should handle unavailable routes with friendly messages, but they should not invent pages when CMS has no approved route."
+        },
+        {
+          "kind": "heading",
+          "level": 2,
+          "text": "Customization and extension guidance",
+          "anchor": "wcmsCmsSourceMapAuthoringContract-5-customization-and-extension-guidance"
+        },
+        {
+          "kind": "paragraph",
+          "text": "Developers can customize CMS by adding schemas, item renderers, composition rules, validation handlers, migration adapters, or publication adapters. The extension should live in the owning module or customer project and should add tests beside the capability it changes. Business users should see the result as new fields, components, page templates, workflow states, or validation messages in Axis."
+        },
+        {
+          "kind": "paragraph",
+          "text": "When adding a component type, define the renderer, allowed properties, localization behavior, media relation behavior, authoring validation, and publication dependency collection. When adding a migration path, define source classification, mapping rules, conflict behavior, partial failure handling, and retry evidence."
+        },
+        {
+          "kind": "heading",
+          "level": 2,
+          "text": "Operational checks",
+          "anchor": "wcmsCmsSourceMapAuthoringContract-6-operational-checks"
+        },
+        {
+          "kind": "table",
+          "headers": [
+            "Check",
+            "Owner",
+            "Evidence"
+          ],
+          "rows": [
+            [
+              "Page can be authored",
+              "CMS authoring",
+              "`cmsPage`, slot, component, route records exist in Staged."
+            ],
+            [
+              "Page can be published",
+              "CMS publication",
+              "Manifest has dependencies, hash, revision, and approval state."
+            ],
+            [
+              "Page can be delivered",
+              "CMS Online",
+              "Active delivery pointer resolves to the expected route."
+            ],
+            [
+              "Page can render media",
+              "CMS plus Media",
+              "Media codes are included and Online media paths resolve."
+            ],
+            [
+              "Page can be recovered",
+              "Operator",
+              "Rollback or withdraw endpoint has lineage evidence."
+            ]
+          ]
+        },
+        {
+          "kind": "heading",
+          "level": 2,
+          "text": "Common mistakes",
+          "anchor": "wcmsCmsSourceMapAuthoringContract-7-common-mistakes"
+        },
+        {
+          "kind": "unordered-list",
+          "items": [
+            "Creating components without renderer or media dependency rules.",
+            "Adding a route without an active page version.",
+            "Treating a Staged preview as Online publication.",
+            "Putting logic or environment-specific URLs into data record files.",
+            "Updating Nexus or Agora to hide a CMS data problem instead of fixing CMS authoring, import, or publication."
+          ]
+        },
+        {
+          "kind": "heading",
+          "level": 2,
+          "text": "Verification",
+          "anchor": "wcmsCmsSourceMapAuthoringContract-8-verification"
+        },
+        {
+          "kind": "paragraph",
+          "text": "Run CMS contract tests for authoring, delivery, migration, publication manifest, workflow callbacks, localization, and storefront delivery. Then run a fresh-schema import, publish a sample page, open the consuming application in the browser, and prove that production delivery reads an active Online manifest with the expected page, component, media, and route evidence."
+        }
+      ],
+      "searchText": "CMS Source Map and Authoring Contract Exact CMS implementation map for sites, routes, pages, components, renderers, migration, publication manifests, delivery cache, and governance. # CMS Source Map and Authoring Contract\n\nCMS is the backend authority for sites, pages, routes, templates, slots,\ncomponents, renderers, content localization, migration, publication manifests,\nand Online delivery pointers. Axis can offer the business authoring journey,\nNexus can render the public website, and Agora can consume storefront content,\nbut CMS owns the data contract. This page gives beginners a precise map of\nwhere the implementation lives and gives developers enough detail to customize\ncontent safely.\n\n## Source map\n\n| Capability | Source location |\n| --- | --- |\n| Schemas and routers | `../nodics.wcms/modules/cms/src/schemas/`, `../nodics.wcms/modules/cms/src/router/` |\n| Delivery APIs | `../nodics.wcms/modules/cms/src/controller/delivery/`, `../nodics.wcms/modules/cms/src/service/delivery/` |\n| Designer composition | `../nodics.wcms/modules/cms/src/controller/designer/`, `../nodics.wcms/modules/cms/src/service/designer/` |\n| Publication workflow | `../nodics.wcms/modules/cms/src/controller/publication/`, `../nodics.wcms/modules/cms/src/service/publication/` |\n| Documentation governance | `../nodics.wcms/modules/cms/src/service/documentation/` |\n| Migration | `../nodics.wcms/modules/cms/src/controller/migration/`, `../nodics.wcms/modules/cms/src/service/migration/` |\n| Init and sample data | `../nodics.wcms/modules/cms/data/init-v001/`, `../nodics.wcms/modules/cms/data/sample-v001/` |\n| Contract tests | `../nodics.wcms/modules/cms/test/` |\n\n## Content model\n\n```mermaid\nflowchart TD\n  Site[\"cmsSite\"] --> Route[\"cmsPageRoute\"]\n  Route --> Page[\"cmsPage version\"]\n  Page --> Slot[\"cmsSlot\"]\n  Slot --> Component[\"cmsComponent\"]\n  Component --> Renderer[\"itemRenderer\"]\n  Component --> Media[\"media reference\"]\n  Page --> Localization[\"localized content\"]\n  Route --> Delivery[\"Online delivery pointer\"]\n```\n\nThe business value is governed composition. A content administrator should be\nable to prepare a page in Staged, preview it, request approval, and publish a\ncontrolled version. A developer should know which schema owns each object and\nwhere to extend validation, delivery, or rendering. An operator should know\nwhich publication, cache, and route evidence proves that production is serving\nthe approved version.\n\n## Authoring contract\n\nData files can create CMS objects for module releases and project releases.\nAxis can create the same objects through backoffice APIs. Both lanes must land\nin the same schemas and obey the same validation. Data definitions should\ncontain structure and business metadata, not runtime logic.\n\n```js\nmodule.exports = {\n  cms: {\n    pages: {\n      options: {\n        enabled: true,\n        schemaName: 'cmsPage',\n        operation: 'saveAll',\n        dataFilePrefix: 'defaultCmsPageData'\n      },\n      query: { code: '$code', tenant: '$tenant', catalogVersion: '$catalogVersion' }\n    }\n  }\n};\n```\n\nThe header says where records go. The record says what should exist. The CMS\nservice decides whether the object is valid. The publication workflow decides\nwhen it becomes Online. This separation keeps business users, developers, AI\ntools, and operators from creating parallel authorities.\n\n## Publication and delivery\n\nCMS publication starts in Staged. The publication adapter loads the selected\nroot version, resolves dependencies, validates graph limits, builds a\ndeterministic manifest, includes media references, and sends the manifest to\nthe Online target. The target imports the manifest, validates integrity,\nactivates delivery scopes, and invalidates the relevant delivery cache. Staged\nmust not write Online storage directly.\n\nDelivery services then resolve the active route pointer, load the Online\nsnapshot, apply localization and renderer hints, and return a bounded response\nto consumers. Nexus and Agora should handle unavailable routes with friendly\nmessages, but they should not invent pages when CMS has no approved route.\n\n## Customization and extension guidance\n\nDevelopers can customize CMS by adding schemas, item renderers, composition\nrules, validation handlers, migration adapters, or publication adapters. The\nextension should live in the owning module or customer project and should add\ntests beside the capability it changes. Business users should see the result\nas new fields, components, page templates, workflow states, or validation\nmessages in Axis.\n\nWhen adding a component type, define the renderer, allowed properties,\nlocalization behavior, media relation behavior, authoring validation, and\npublication dependency collection. When adding a migration path, define source\nclassification, mapping rules, conflict behavior, partial failure handling,\nand retry evidence.\n\n## Operational checks\n\n| Check | Owner | Evidence |\n| --- | --- | --- |\n| Page can be authored | CMS authoring | `cmsPage`, slot, component, route records exist in Staged. |\n| Page can be published | CMS publication | Manifest has dependencies, hash, revision, and approval state. |\n| Page can be delivered | CMS Online | Active delivery pointer resolves to the expected route. |\n| Page can render media | CMS plus Media | Media codes are included and Online media paths resolve. |\n| Page can be recovered | Operator | Rollback or withdraw endpoint has lineage evidence. |\n\n## Common mistakes\n\n- Creating components without renderer or media dependency rules.\n- Adding a route without an active page version.\n- Treating a Staged preview as Online publication.\n- Putting logic or environment-specific URLs into data record files.\n- Updating Nexus or Agora to hide a CMS data problem instead of fixing CMS\n  authoring, import, or publication.\n\n## Verification\n\nRun CMS contract tests for authoring, delivery, migration, publication\nmanifest, workflow callbacks, localization, and storefront delivery. Then run\na fresh-schema import, publish a sample page, open the consuming application\nin the browser, and prove that production delivery reads an active Online\nmanifest with the expected page, component, media, and route evidence.\n",
+      "previous": {
+        "title": "Axis Setup and User-Safe Error Contracts",
+        "route": "/docs/framework/applications-axis-setup-error-contracts"
+      },
+      "next": {
+        "title": "Media Operations Runbook",
+        "route": "/docs/framework/wcms-media-operations-runbook"
+      },
+      "source": {
+        "repository": "nodics.docs",
+        "functionalModule": "nodics.wcms",
+        "technicalModule": "cms",
+        "owner": "nodics.wcms",
+        "sourcePath": "docs/pages/nodics.wcms/cms-source-map-and-authoring-contract.md",
+        "path": "docs/pages/nodics.wcms/cms-source-map-and-authoring-contract.md",
+        "wordCount": 781,
+        "checksum": "0951eb7b346d28374138aebdb77167dbd860622ce57460ff0e166903e99fabab"
+      }
+    },
+    "active": true
+  },
+  "record95": {
+    "code": "nodicsDocsComponentwcmsMediaOperationsRunbook",
+    "typeCode": "nodicsDocumentationArticleComponentType",
+    "renderer": "documentation.component.article",
+    "accessMode": "PUBLIC",
+    "properties": {
+      "code": "wcms.media-operations-runbook",
+      "title": "Media Operations Runbook",
+      "route": "/docs/framework/wcms-media-operations-runbook",
+      "section": "media-management",
+      "sectionTitle": "Media Management",
+      "group": "media-management",
+      "groupTitle": "Media Management",
+      "parentId": "media-management",
+      "hierarchyPath": [
+        "Media Management",
+        "Media Operations Runbook"
+      ],
+      "hierarchyDepth": 2,
+      "documentType": "operations",
+      "audience": [
+        "business",
+        "architect",
+        "administrator",
+        "developer",
+        "operator",
+        "qa",
+        "ai-tool"
+      ],
+      "businessAudience": [
+        "business user",
+        "administrator",
+        "implementation partner"
+      ],
+      "technicalAudience": [
+        "architect",
+        "developer",
+        "operator",
+        "qa engineer",
+        "ai tool"
+      ],
+      "summary": "Operational contract for media import hydration, storage providers, publication transfer, DR replication, cleanup lifecycle, and browser delivery evidence.",
+      "visibility": "public",
+      "accessMode": "PUBLIC",
+      "publiclyAvailable": true,
+      "requiresAuthentication": false,
+      "allowedRoles": [],
+      "allowedGroups": [],
+      "allowedPermissions": [],
+      "lifecycleState": "ONLINE",
+      "version": "0.16.7",
+      "maturityState": "operational",
+      "implementationState": "current",
+      "renderingComponent": "documentation.component.article",
+      "relatedPages": [
+        "wcms.media-management",
+        "wcms.media-storage-delivery",
+        "wcms.media-import-publication",
+        "wcms.publishing-lifecycle"
+      ],
+      "sourceEvidence": [
+        "docs/catalogue.json",
+        "docs/pages/nodics.wcms/media-operations-runbook.md",
+        "../nodics.wcms/modules/media/src/service/storage/defaultMediaUploadService.js",
+        "../nodics.wcms/modules/media/src/service/publication/defaultMediaPublicationTransferService.js",
+        "../nodics.wcms/modules/media/src/service/storage/defaultMediaCleanupLifecycleService.js",
+        "../nodics.foundation/modules/nData/nImport/import/src/service/media/defaultMediaReleaseAssetHydrationService.js",
+        "../nodics.wcms/modules/media/test/mediaPublicationTransferContract.test.js"
+      ],
+      "visualRequirements": [
+        "diagram",
+        "table",
+        "troubleshooting-matrix"
+      ],
+      "searchKeywords": [
+        "media",
+        "storage-provider",
+        "publication-transfer",
+        "asset-hydration",
+        "disaster-recovery"
+      ],
+      "topicKeywords": [
+        "Media Management",
+        "Media Lifecycle and Storage",
+        "Media Operations Runbook"
+      ],
+      "headings": [
+        {
+          "text": "Business problem",
+          "anchor": "wcmsMediaOperationsRunbook-1-business-problem",
+          "level": 2
+        },
+        {
+          "text": "Source map",
+          "anchor": "wcmsMediaOperationsRunbook-2-source-map",
+          "level": 2
+        },
+        {
+          "text": "Import contract",
+          "anchor": "wcmsMediaOperationsRunbook-3-import-contract",
+          "level": 2
+        },
+        {
+          "text": "Storage and provider model",
+          "anchor": "wcmsMediaOperationsRunbook-4-storage-and-provider-model",
+          "level": 2
+        },
+        {
+          "text": "Publication and DR",
+          "anchor": "wcmsMediaOperationsRunbook-5-publication-and-dr",
+          "level": 2
+        },
+        {
+          "text": "Operations",
+          "anchor": "wcmsMediaOperationsRunbook-6-operations",
+          "level": 2
+        },
+        {
+          "text": "Customization and extension guidance",
+          "anchor": "wcmsMediaOperationsRunbook-7-customization-and-extension-guidance",
+          "level": 2
+        },
+        {
+          "text": "Common mistakes",
+          "anchor": "wcmsMediaOperationsRunbook-8-common-mistakes",
+          "level": 2
+        },
+        {
+          "text": "Verification",
+          "anchor": "wcmsMediaOperationsRunbook-9-verification",
+          "level": 2
+        }
+      ],
+      "blocks": [
+        {
+          "kind": "paragraph",
+          "text": "Media has a different lifecycle from normal records because a media object has both metadata and a physical artifact. The record can be declared in a module or project data folder, but the bytes must be copied to the correct storage location before the schema object becomes useful. For beginners, think of media as two linked things: a governed object in the database and a file in managed storage. Both must move from authoring assets to Staged and from Staged to Online before a production page or product can safely render it."
+        },
+        {
+          "kind": "heading",
+          "level": 2,
+          "text": "Business problem",
+          "anchor": "wcmsMediaOperationsRunbook-1-business-problem"
+        },
+        {
+          "kind": "paragraph",
+          "text": "The business problem is trust in visual and downloadable content. A storefront banner, product image, corporate logo, or document link may look like simple presentation, but a broken file can stop a launch, confuse customers, or make an approved page look unfinished. The media runbook solves that problem by making every physical file traceable from data release to Staged storage, Online storage, delivery URL, and recovery evidence."
+        },
+        {
+          "kind": "heading",
+          "level": 2,
+          "text": "Source map",
+          "anchor": "wcmsMediaOperationsRunbook-2-source-map"
+        },
+        {
+          "kind": "table",
+          "headers": [
+            "Capability",
+            "Source location"
+          ],
+          "rows": [
+            [
+              "Media schemas and routes",
+              "`../nodics.wcms/modules/media/src/schemas/`, `../nodics.wcms/modules/media/src/router/`"
+            ],
+            [
+              "Upload and storage lifecycle",
+              "`../nodics.wcms/modules/media/src/service/storage/`"
+            ],
+            [
+              "Storage providers",
+              "`../nodics.wcms/modules/media/src/service/storage/provider/`"
+            ],
+            [
+              "Storage key strategies",
+              "`../nodics.wcms/modules/media/src/service/storage/strategy/`"
+            ],
+            [
+              "Reference lookup and sets",
+              "`../nodics.wcms/modules/media/src/service/reference/`, `../nodics.wcms/modules/media/src/service/set/`"
+            ],
+            [
+              "Publication transfer",
+              "`../nodics.wcms/modules/media/src/service/publication/`"
+            ],
+            [
+              "Import asset hydration",
+              "`../nodics.foundation/modules/nData/nImport/import/src/service/media/`"
+            ],
+            [
+              "Jobs and policies",
+              "`../nodics.wcms/modules/media/data/init-v001/`, `../nodics.wcms/modules/media/data/standard/`"
+            ],
+            [
+              "Contract tests",
+              "`../nodics.wcms/modules/media/test/`"
+            ]
+          ]
+        },
+        {
+          "kind": "heading",
+          "level": 2,
+          "text": "Import contract",
+          "anchor": "wcmsMediaOperationsRunbook-3-import-contract"
+        },
+        {
+          "kind": "diagram",
+          "language": "mermaid",
+          "text": "sequenceDiagram\n  participant Data as Release data\n  participant Import as nImport\n  participant Resolver as Media source resolver\n  participant Storage as Media storage provider\n  participant Schema as Media schema\n\n  Data->>Import: Header and media record\n  Import->>Resolver: Resolve asset.sourceFile\n  Resolver->>Storage: Copy bytes to Staged storage\n  Storage-->>Import: Return storage key and relative path\n  Import->>Schema: Save media object with managed location"
+        },
+        {
+          "kind": "paragraph",
+          "text": "The data definition is declarative. It can declare `code`, `name`, `folderCode`, `formatCode`, `businessPurpose`, `ownerType`, `ownerReference`, and an `asset.sourceFile` that points inside the release-owned assets folder. It should not declare final storage keys, public URLs, provider-owned paths, or runtime-specific delivery links. Those fields belong to the importer and media runtime."
+        },
+        {
+          "kind": "heading",
+          "level": 2,
+          "text": "Storage and provider model",
+          "anchor": "wcmsMediaOperationsRunbook-4-storage-and-provider-model"
+        },
+        {
+          "kind": "table",
+          "headers": [
+            "Provider area",
+            "Responsibility",
+            "Operator evidence"
+          ],
+          "rows": [
+            [
+              "Local provider",
+              "Store development and local runtime files.",
+              "Relative path, checksum, file existence."
+            ],
+            [
+              "Cloud provider",
+              "Store production-ready managed objects.",
+              "Bucket/key, checksum, access policy."
+            ],
+            [
+              "NAS provider",
+              "Store enterprise shared storage objects.",
+              "Mount path, storage key, permission result."
+            ],
+            [
+              "Key strategy",
+              "Build deterministic paths per tenant/schema/date.",
+              "Strategy code and generated key."
+            ],
+            [
+              "Cleanup lifecycle",
+              "Retain referenced media and remove expired artifacts.",
+              "Job run, pointer count, deleted file count."
+            ]
+          ]
+        },
+        {
+          "kind": "paragraph",
+          "text": "Configuration selects providers and roots, but business data should not change when a provider changes. This keeps customer projects portable across local, Staged, Online, and disaster recovery environments."
+        },
+        {
+          "kind": "heading",
+          "level": 2,
+          "text": "Publication and DR",
+          "anchor": "wcmsMediaOperationsRunbook-5-publication-and-dr"
+        },
+        {
+          "kind": "paragraph",
+          "text": "Publication is a controlled copy, not a path rewrite by the frontend. CMS or a business object publication identifies required media codes. Media publication loads the Staged media object, copies the physical artifact to the Online provider, records the Online storage coordinates, and replicates to disaster recovery storage when configured. The Online media object must reference the Online location. Staged paths should never leak into production responses."
+        },
+        {
+          "kind": "heading",
+          "level": 2,
+          "text": "Operations",
+          "anchor": "wcmsMediaOperationsRunbook-6-operations"
+        },
+        {
+          "kind": "paragraph",
+          "text": "Operators should inspect media import history, storage provider health, reference lookup, publication transfer receipts, cleanup jobs, and delivery responses. A failed image can be caused by missing source bytes, a bad asset manifest entry, storage permission failure, missing media reference, inactive Online object, or route publication missing the media dependency. A safe UI message should explain the visible effect. Technical evidence should carry the media code, release folder, source file, provider code, storage key, checksum, and correlation id."
+        },
+        {
+          "kind": "heading",
+          "level": 2,
+          "text": "Customization and extension guidance",
+          "anchor": "wcmsMediaOperationsRunbook-7-customization-and-extension-guidance"
+        },
+        {
+          "kind": "paragraph",
+          "text": "Developers can add media formats, folders, storage policies, key strategies, providers, reference lookups, or publication transfer adapters. Keep new business rules in the owning service or policy, not inside seed records. Add tests for upload, import hydration, provider summary, publication transfer, cleanup lifecycle, and delivery. Business users should interact with media through Axis workbenches, while data releases continue to support developer and AI-assisted baselines."
+        },
+        {
+          "kind": "heading",
+          "level": 2,
+          "text": "Common mistakes",
+          "anchor": "wcmsMediaOperationsRunbook-8-common-mistakes"
+        },
+        {
+          "kind": "unordered-list",
+          "items": [
+            "Creating a media record while forgetting the physical file.",
+            "Putting generated URLs or absolute local paths in release data.",
+            "Publishing a page without publishing its required media artifacts.",
+            "Deleting unreferenced files without checking active Online pointers.",
+            "Treating provider configuration as business data."
+          ]
+        },
+        {
+          "kind": "heading",
+          "level": 2,
+          "text": "Verification",
+          "anchor": "wcmsMediaOperationsRunbook-9-verification"
+        },
+        {
+          "kind": "paragraph",
+          "text": "Use a fresh schema and a clean media storage root. Import a release with media assets, confirm the physical files are copied to Staged, verify media records contain managed paths, publish a page or product that references the media, confirm Online storage receives the file, and open the browser route. Run the media import source resolver, media release hydration, publication transfer, delivery, cleanup lifecycle, and route contract tests before production use."
+        }
+      ],
+      "searchText": "Media Operations Runbook Operational contract for media import hydration, storage providers, publication transfer, DR replication, cleanup lifecycle, and browser delivery evidence. # Media Operations Runbook\n\nMedia has a different lifecycle from normal records because a media object has\nboth metadata and a physical artifact. The record can be declared in a module\nor project data folder, but the bytes must be copied to the correct storage\nlocation before the schema object becomes useful. For beginners, think of media\nas two linked things: a governed object in the database and a file in managed\nstorage. Both must move from authoring assets to Staged and from Staged to\nOnline before a production page or product can safely render it.\n\n## Business problem\n\nThe business problem is trust in visual and downloadable content. A storefront\nbanner, product image, corporate logo, or document link may look like simple\npresentation, but a broken file can stop a launch, confuse customers, or make\nan approved page look unfinished. The media runbook solves that problem by\nmaking every physical file traceable from data release to Staged storage,\nOnline storage, delivery URL, and recovery evidence.\n\n## Source map\n\n| Capability | Source location |\n| --- | --- |\n| Media schemas and routes | `../nodics.wcms/modules/media/src/schemas/`, `../nodics.wcms/modules/media/src/router/` |\n| Upload and storage lifecycle | `../nodics.wcms/modules/media/src/service/storage/` |\n| Storage providers | `../nodics.wcms/modules/media/src/service/storage/provider/` |\n| Storage key strategies | `../nodics.wcms/modules/media/src/service/storage/strategy/` |\n| Reference lookup and sets | `../nodics.wcms/modules/media/src/service/reference/`, `../nodics.wcms/modules/media/src/service/set/` |\n| Publication transfer | `../nodics.wcms/modules/media/src/service/publication/` |\n| Import asset hydration | `../nodics.foundation/modules/nData/nImport/import/src/service/media/` |\n| Jobs and policies | `../nodics.wcms/modules/media/data/init-v001/`, `../nodics.wcms/modules/media/data/standard/` |\n| Contract tests | `../nodics.wcms/modules/media/test/` |\n\n## Import contract\n\n```mermaid\nsequenceDiagram\n  participant Data as Release data\n  participant Import as nImport\n  participant Resolver as Media source resolver\n  participant Storage as Media storage provider\n  participant Schema as Media schema\n\n  Data->>Import: Header and media record\n  Import->>Resolver: Resolve asset.sourceFile\n  Resolver->>Storage: Copy bytes to Staged storage\n  Storage-->>Import: Return storage key and relative path\n  Import->>Schema: Save media object with managed location\n```\n\nThe data definition is declarative. It can declare `code`, `name`,\n`folderCode`, `formatCode`, `businessPurpose`, `ownerType`, `ownerReference`,\nand an `asset.sourceFile` that points inside the release-owned assets folder.\nIt should not declare final storage keys, public URLs, provider-owned paths, or\nruntime-specific delivery links. Those fields belong to the importer and media\nruntime.\n\n## Storage and provider model\n\n| Provider area | Responsibility | Operator evidence |\n| --- | --- | --- |\n| Local provider | Store development and local runtime files. | Relative path, checksum, file existence. |\n| Cloud provider | Store production-ready managed objects. | Bucket/key, checksum, access policy. |\n| NAS provider | Store enterprise shared storage objects. | Mount path, storage key, permission result. |\n| Key strategy | Build deterministic paths per tenant/schema/date. | Strategy code and generated key. |\n| Cleanup lifecycle | Retain referenced media and remove expired artifacts. | Job run, pointer count, deleted file count. |\n\nConfiguration selects providers and roots, but business data should not change\nwhen a provider changes. This keeps customer projects portable across local,\nStaged, Online, and disaster recovery environments.\n\n## Publication and DR\n\nPublication is a controlled copy, not a path rewrite by the frontend. CMS or a\nbusiness object publication identifies required media codes. Media publication\nloads the Staged media object, copies the physical artifact to the Online\nprovider, records the Online storage coordinates, and replicates to disaster\nrecovery storage when configured. The Online media object must reference the\nOnline location. Staged paths should never leak into production responses.\n\n## Operations\n\nOperators should inspect media import history, storage provider health,\nreference lookup, publication transfer receipts, cleanup jobs, and delivery\nresponses. A failed image can be caused by missing source bytes, a bad asset\nmanifest entry, storage permission failure, missing media reference, inactive\nOnline object, or route publication missing the media dependency. A safe UI\nmessage should explain the visible effect. Technical evidence should carry the\nmedia code, release folder, source file, provider code, storage key, checksum,\nand correlation id.\n\n## Customization and extension guidance\n\nDevelopers can add media formats, folders, storage policies, key strategies,\nproviders, reference lookups, or publication transfer adapters. Keep new\nbusiness rules in the owning service or policy, not inside seed records. Add\ntests for upload, import hydration, provider summary, publication transfer,\ncleanup lifecycle, and delivery. Business users should interact with media\nthrough Axis workbenches, while data releases continue to support developer\nand AI-assisted baselines.\n\n## Common mistakes\n\n- Creating a media record while forgetting the physical file.\n- Putting generated URLs or absolute local paths in release data.\n- Publishing a page without publishing its required media artifacts.\n- Deleting unreferenced files without checking active Online pointers.\n- Treating provider configuration as business data.\n\n## Verification\n\nUse a fresh schema and a clean media storage root. Import a release with media\nassets, confirm the physical files are copied to Staged, verify media records\ncontain managed paths, publish a page or product that references the media,\nconfirm Online storage receives the file, and open the browser route. Run the\nmedia import source resolver, media release hydration, publication transfer,\ndelivery, cleanup lifecycle, and route contract tests before production use.\n",
+      "previous": {
+        "title": "CMS Source Map and Authoring Contract",
+        "route": "/docs/framework/wcms-cms-source-map-authoring-contract"
+      },
+      "next": {
+        "title": "Import and Export Provider Guides",
+        "route": "/docs/framework/data-import-export-provider-guides"
+      },
+      "source": {
+        "repository": "nodics.docs",
+        "functionalModule": "nodics.wcms",
+        "technicalModule": "media",
+        "owner": "nodics.wcms",
+        "sourcePath": "docs/pages/nodics.wcms/media-operations-runbook.md",
+        "path": "docs/pages/nodics.wcms/media-operations-runbook.md",
+        "wordCount": 829,
+        "checksum": "b740475fc531c039dfed1e48d092e7f2ba99f9f3557915a5735529b5aabe65b7"
+      }
+    },
+    "active": true
+  },
+  "record96": {
+    "code": "nodicsDocsComponentdataImportExportProviderGuides",
+    "typeCode": "nodicsDocumentationArticleComponentType",
+    "renderer": "documentation.component.article",
+    "accessMode": "PUBLIC",
+    "properties": {
+      "code": "data.import-export-provider-guides",
+      "title": "Import and Export Provider Guides",
+      "route": "/docs/framework/data-import-export-provider-guides",
+      "section": "data-import-export-and-migration",
+      "sectionTitle": "Data Import, Export, and Migration",
+      "group": "data-import-export-and-migration",
+      "groupTitle": "Data Import, Export, and Migration",
+      "parentId": "data-import-export-and-migration",
+      "hierarchyPath": [
+        "Data Import, Export, and Migration",
+        "Import and Export Provider Guides"
+      ],
+      "hierarchyDepth": 2,
+      "documentType": "operations",
+      "audience": [
+        "business",
+        "architect",
+        "administrator",
+        "developer",
+        "operator",
+        "qa",
+        "ai-tool"
+      ],
+      "businessAudience": [
+        "business user",
+        "administrator",
+        "implementation partner"
+      ],
+      "technicalAudience": [
+        "architect",
+        "developer",
+        "operator",
+        "qa engineer",
+        "ai tool"
+      ],
+      "summary": "Provider-level guide for JavaScript, JSON, CSV, and Excel import/export behavior, masking, parser rules, diagnostics, and extension boundaries.",
+      "visibility": "public",
+      "accessMode": "PUBLIC",
+      "publiclyAvailable": true,
+      "requiresAuthentication": false,
+      "allowedRoles": [],
+      "allowedGroups": [],
+      "allowedPermissions": [],
+      "lifecycleState": "ONLINE",
+      "version": "0.16.7",
+      "maturityState": "operational",
+      "implementationState": "current",
+      "renderingComponent": "documentation.component.article",
+      "relatedPages": [
+        "data.import-export-migration",
+        "wcms.media-operations-runbook",
+        "framework.local-verification-checklist"
+      ],
+      "sourceEvidence": [
+        "docs/catalogue.json",
+        "docs/pages/nodics.foundation/import-export-provider-guides.md",
+        "../nodics.foundation/modules/nData/nImport/import/src/service/import/defaultImportService.js",
+        "../nodics.foundation/modules/nData/nImport/import/src/service/header/defaultHeaderProcessService.js",
+        "../nodics.foundation/modules/nData/nExport/export/src/service/DataExportService.js",
+        "../nodics.foundation/modules/nData/nExport/jsExport/package.json",
+        "../nodics.foundation/modules/nData/nImport/import/test/importUtilityReleaseOrder.test.js"
+      ],
+      "visualRequirements": [
+        "diagram",
+        "table",
+        "code-example",
+        "troubleshooting-matrix"
+      ],
+      "searchKeywords": [
+        "import",
+        "export",
+        "provider",
+        "javascript-data",
+        "csv",
+        "excel"
+      ],
+      "topicKeywords": [
+        "Data Import, Export, and Migration",
+        "Data Movement and Migration",
+        "Import and Export Provider Guides"
+      ],
+      "headings": [
+        {
+          "text": "Source map",
+          "anchor": "dataImportExportProviderGuides-1-source-map",
+          "level": 2
+        },
+        {
+          "text": "Provider model",
+          "anchor": "dataImportExportProviderGuides-2-provider-model",
+          "level": 2
+        },
+        {
+          "text": "JavaScript release data",
+          "anchor": "dataImportExportProviderGuides-3-javascript-release-data",
+          "level": 2
+        },
+        {
+          "text": "JSON, CSV, and Excel",
+          "anchor": "dataImportExportProviderGuides-4-json-csv-and-excel",
+          "level": 2
+        },
+        {
+          "text": "Export contract",
+          "anchor": "dataImportExportProviderGuides-5-export-contract",
+          "level": 2
+        },
+        {
+          "text": "Customization and extension guidance",
+          "anchor": "dataImportExportProviderGuides-6-customization-and-extension-guidance",
+          "level": 2
+        },
+        {
+          "text": "Common mistakes",
+          "anchor": "dataImportExportProviderGuides-7-common-mistakes",
+          "level": 2
+        },
+        {
+          "text": "Verification",
+          "anchor": "dataImportExportProviderGuides-8-verification",
+          "level": 2
+        }
+      ],
+      "blocks": [
+        {
+          "kind": "paragraph",
+          "text": "Nodics import and export are provider-driven so developers can author data in the format that fits the use case while business users still get one governed operation. JavaScript object exports are preferred for module release data because they are easy to extend record by record. JSON, CSV, and Excel remain useful for integration, migration, reporting, and business-facing exchange. The authority is not the file format; the authority is the target module, schema, operation, validation, and audit trail."
+        },
+        {
+          "kind": "heading",
+          "level": 2,
+          "text": "Source map",
+          "anchor": "dataImportExportProviderGuides-1-source-map"
+        },
+        {
+          "kind": "table",
+          "headers": [
+            "Capability",
+            "Source location"
+          ],
+          "rows": [
+            [
+              "Import core",
+              "`../nodics.foundation/modules/nData/nImport/import/src/service/import/`"
+            ],
+            [
+              "Header processing",
+              "`../nodics.foundation/modules/nData/nImport/import/src/service/header/`"
+            ],
+            [
+              "Release discovery",
+              "`../nodics.foundation/modules/nData/nImport/import/src/service/release/`"
+            ],
+            [
+              "Import history and diagnostics",
+              "`../nodics.foundation/modules/nData/nImport/import/src/service/history/`, `../nodics.foundation/modules/nData/nImport/import/src/service/diagnostics/`"
+            ],
+            [
+              "Media import handling",
+              "`../nodics.foundation/modules/nData/nImport/import/src/service/media/`"
+            ],
+            [
+              "CSV import provider",
+              "`../nodics.foundation/modules/nData/nImport/csvImport/`"
+            ],
+            [
+              "Excel import provider",
+              "`../nodics.foundation/modules/nData/nImport/excelImport/`"
+            ],
+            [
+              "Export core",
+              "`../nodics.foundation/modules/nData/nExport/export/`"
+            ],
+            [
+              "Export providers",
+              "`../nodics.foundation/modules/nData/nExport/csvExport/`, `../nodics.foundation/modules/nData/nExport/excelExport/`, `../nodics.foundation/modules/nData/nExport/jsExport/`, `../nodics.foundation/modules/nData/nExport/jsonExport/`"
+            ],
+            [
+              "Provider tests",
+              "`../nodics.foundation/modules/nData/nImport/import/test/`, `../nodics.foundation/modules/nData/nExport/`"
+            ]
+          ]
+        },
+        {
+          "kind": "heading",
+          "level": 2,
+          "text": "Provider model",
+          "anchor": "dataImportExportProviderGuides-2-provider-model"
+        },
+        {
+          "kind": "diagram",
+          "language": "mermaid",
+          "text": "flowchart TD\n  Request[\"Axis, script, or release installer\"] --> Core[\"Import/export core\"]\n  Core --> Header[\"Header and release resolver\"]\n  Header --> Provider[\"Format provider\"]\n  Provider --> Records[\"Normalized records\"]\n  Records --> Target[\"Owning schema service\"]\n  Target --> History[\"Run history and diagnostics\"]"
+        },
+        {
+          "kind": "paragraph",
+          "text": "For beginners, import is a controlled journey from declared source files to backend-owned schemas. Export is the reverse journey from authorized records to a bounded file or payload. Business users should see actions like import, preview, validate, export, and download. Developers should see providers, parsers, field mapping, schema names, and tests. Operators should see run history, counts, failures, and rollback boundaries."
+        },
+        {
+          "kind": "heading",
+          "level": 2,
+          "text": "JavaScript release data",
+          "anchor": "dataImportExportProviderGuides-3-javascript-release-data"
+        },
+        {
+          "kind": "paragraph",
+          "text": "JavaScript object maps are the preferred developer and AI-tool format for module data releases:"
+        },
+        {
+          "kind": "code",
+          "language": "js",
+          "text": "module.exports = {\n  summerDress: {\n    code: 'summerDress',\n    tenant: 'default',\n    catalogVersion: 'agoraApparelStaged',\n    active: true\n  }\n};"
+        },
+        {
+          "kind": "paragraph",
+          "text": "Object maps allow customer projects to override or extend one named record without copying an entire array. Keep files declarative. Do not call services, read files, calculate timestamps, or branch by environment. The release folder and generated manifest identify the release; the header identifies module, schema, operation, data file prefix, tenants, and query."
+        },
+        {
+          "kind": "heading",
+          "level": 2,
+          "text": "JSON, CSV, and Excel",
+          "anchor": "dataImportExportProviderGuides-4-json-csv-and-excel"
+        },
+        {
+          "kind": "table",
+          "headers": [
+            "Format",
+            "Best use",
+            "Watch point"
+          ],
+          "rows": [
+            [
+              "JavaScript",
+              "Module release data and developer-maintained baselines.",
+              "No runtime logic in files."
+            ],
+            [
+              "JSON",
+              "API exchange, generated fixtures, and machine contracts.",
+              "Avoid large arrays that are hard to override."
+            ],
+            [
+              "CSV",
+              "Flat business lists, quick migration, and external feeds.",
+              "Define delimiter, headers, locale, and type conversion."
+            ],
+            [
+              "Excel",
+              "Business review, mapping workshops, and multi-sheet migration.",
+              "Validate sheet names, required columns, and formulas."
+            ]
+          ]
+        },
+        {
+          "kind": "paragraph",
+          "text": "All providers should normalize records before persistence so the target schema does not care whether the source was JavaScript, JSON, CSV, or Excel. Provider configuration should define allowed fields, required fields, masking, duplicate handling, parser options, and maximum file size."
+        },
+        {
+          "kind": "heading",
+          "level": 2,
+          "text": "Export contract",
+          "anchor": "dataImportExportProviderGuides-5-export-contract"
+        },
+        {
+          "kind": "paragraph",
+          "text": "Exports must be permission-aware and privacy-aware. A business user can export only the data allowed by role, group, permission, and lifecycle state. A developer can add an export provider by implementing the provider contract and registering it with the export core. Operators should verify row count, field allow-list, masking, retention, checksum, and download audit. Generated export files should be treated as operational artifacts, not source-of-truth data."
+        },
+        {
+          "kind": "heading",
+          "level": 2,
+          "text": "Customization and extension guidance",
+          "anchor": "dataImportExportProviderGuides-6-customization-and-extension-guidance"
+        },
+        {
+          "kind": "paragraph",
+          "text": "Developers can customize import by adding provider parsers, header handlers, validation adapters, post-import diagnostics, and migration mappers. They can customize export by adding serializers, file writers, masking strategies, and delivery adapters. Add tests that prove malformed input, duplicate rows, partial failures, unauthorized fields, masked export columns, and retry behavior. Business rules still belong to target modules and services, not the provider parser."
+        },
+        {
+          "kind": "heading",
+          "level": 2,
+          "text": "Common mistakes",
+          "anchor": "dataImportExportProviderGuides-7-common-mistakes"
+        },
+        {
+          "kind": "unordered-list",
+          "items": [
+            "Treating CSV or Excel column names as schema authority.",
+            "Exporting sensitive fields without a mask or permission check.",
+            "Putting rollback logic in provider files instead of import history and owning services.",
+            "Losing idempotency because a header query does not include stable keys.",
+            "Mixing media physical file handling into normal record persistence."
+          ]
+        },
+        {
+          "kind": "heading",
+          "level": 2,
+          "text": "Verification",
+          "anchor": "dataImportExportProviderGuides-8-verification"
+        },
+        {
+          "kind": "paragraph",
+          "text": "Run provider tests for JavaScript, JSON, CSV, and Excel import/export paths. Use a fresh schema to import a release, inspect import history counts, export the same domain with masking enabled, and compare allowed fields. Production readiness requires friendly Axis messages, developer-visible diagnostics, operator audit evidence, and target module validation for every imported record."
+        }
+      ],
+      "searchText": "Import and Export Provider Guides Provider-level guide for JavaScript, JSON, CSV, and Excel import/export behavior, masking, parser rules, diagnostics, and extension boundaries. # Import and Export Provider Guides\n\nNodics import and export are provider-driven so developers can author data in\nthe format that fits the use case while business users still get one governed\noperation. JavaScript object exports are preferred for module release data\nbecause they are easy to extend record by record. JSON, CSV, and Excel remain\nuseful for integration, migration, reporting, and business-facing exchange.\nThe authority is not the file format; the authority is the target module,\nschema, operation, validation, and audit trail.\n\n## Source map\n\n| Capability | Source location |\n| --- | --- |\n| Import core | `../nodics.foundation/modules/nData/nImport/import/src/service/import/` |\n| Header processing | `../nodics.foundation/modules/nData/nImport/import/src/service/header/` |\n| Release discovery | `../nodics.foundation/modules/nData/nImport/import/src/service/release/` |\n| Import history and diagnostics | `../nodics.foundation/modules/nData/nImport/import/src/service/history/`, `../nodics.foundation/modules/nData/nImport/import/src/service/diagnostics/` |\n| Media import handling | `../nodics.foundation/modules/nData/nImport/import/src/service/media/` |\n| CSV import provider | `../nodics.foundation/modules/nData/nImport/csvImport/` |\n| Excel import provider | `../nodics.foundation/modules/nData/nImport/excelImport/` |\n| Export core | `../nodics.foundation/modules/nData/nExport/export/` |\n| Export providers | `../nodics.foundation/modules/nData/nExport/csvExport/`, `../nodics.foundation/modules/nData/nExport/excelExport/`, `../nodics.foundation/modules/nData/nExport/jsExport/`, `../nodics.foundation/modules/nData/nExport/jsonExport/` |\n| Provider tests | `../nodics.foundation/modules/nData/nImport/import/test/`, `../nodics.foundation/modules/nData/nExport/` |\n\n## Provider model\n\n```mermaid\nflowchart TD\n  Request[\"Axis, script, or release installer\"] --> Core[\"Import/export core\"]\n  Core --> Header[\"Header and release resolver\"]\n  Header --> Provider[\"Format provider\"]\n  Provider --> Records[\"Normalized records\"]\n  Records --> Target[\"Owning schema service\"]\n  Target --> History[\"Run history and diagnostics\"]\n```\n\nFor beginners, import is a controlled journey from declared source files to\nbackend-owned schemas. Export is the reverse journey from authorized records to\na bounded file or payload. Business users should see actions like import,\npreview, validate, export, and download. Developers should see providers,\nparsers, field mapping, schema names, and tests. Operators should see run\nhistory, counts, failures, and rollback boundaries.\n\n## JavaScript release data\n\nJavaScript object maps are the preferred developer and AI-tool format for\nmodule data releases:\n\n```js\nmodule.exports = {\n  summerDress: {\n    code: 'summerDress',\n    tenant: 'default',\n    catalogVersion: 'agoraApparelStaged',\n    active: true\n  }\n};\n```\n\nObject maps allow customer projects to override or extend one named record\nwithout copying an entire array. Keep files declarative. Do not call services,\nread files, calculate timestamps, or branch by environment. The release folder\nand generated manifest identify the release; the header identifies module,\nschema, operation, data file prefix, tenants, and query.\n\n## JSON, CSV, and Excel\n\n| Format | Best use | Watch point |\n| --- | --- | --- |\n| JavaScript | Module release data and developer-maintained baselines. | No runtime logic in files. |\n| JSON | API exchange, generated fixtures, and machine contracts. | Avoid large arrays that are hard to override. |\n| CSV | Flat business lists, quick migration, and external feeds. | Define delimiter, headers, locale, and type conversion. |\n| Excel | Business review, mapping workshops, and multi-sheet migration. | Validate sheet names, required columns, and formulas. |\n\nAll providers should normalize records before persistence so the target schema\ndoes not care whether the source was JavaScript, JSON, CSV, or Excel. Provider\nconfiguration should define allowed fields, required fields, masking,\nduplicate handling, parser options, and maximum file size.\n\n## Export contract\n\nExports must be permission-aware and privacy-aware. A business user can export\nonly the data allowed by role, group, permission, and lifecycle state. A\ndeveloper can add an export provider by implementing the provider contract and\nregistering it with the export core. Operators should verify row count, field\nallow-list, masking, retention, checksum, and download audit. Generated export\nfiles should be treated as operational artifacts, not source-of-truth data.\n\n## Customization and extension guidance\n\nDevelopers can customize import by adding provider parsers, header handlers,\nvalidation adapters, post-import diagnostics, and migration mappers. They can\ncustomize export by adding serializers, file writers, masking strategies, and\ndelivery adapters. Add tests that prove malformed input, duplicate rows,\npartial failures, unauthorized fields, masked export columns, and retry\nbehavior. Business rules still belong to target modules and services, not the\nprovider parser.\n\n## Common mistakes\n\n- Treating CSV or Excel column names as schema authority.\n- Exporting sensitive fields without a mask or permission check.\n- Putting rollback logic in provider files instead of import history and\n  owning services.\n- Losing idempotency because a header query does not include stable keys.\n- Mixing media physical file handling into normal record persistence.\n\n## Verification\n\nRun provider tests for JavaScript, JSON, CSV, and Excel import/export paths.\nUse a fresh schema to import a release, inspect import history counts, export\nthe same domain with masking enabled, and compare allowed fields. Production\nreadiness requires friendly Axis messages, developer-visible diagnostics,\noperator audit evidence, and target module validation for every imported\nrecord.\n",
+      "previous": {
+        "title": "Media Operations Runbook",
+        "route": "/docs/framework/wcms-media-operations-runbook"
+      },
+      "next": {
+        "title": "Commerce Data Authoring and Fulfillment",
+        "route": "/docs/framework/commerce-data-authoring-fulfillment"
+      },
+      "source": {
+        "repository": "nodics.docs",
+        "functionalModule": "nodics.foundation",
+        "technicalModule": "nImport",
+        "owner": "nodics.foundation",
+        "sourcePath": "docs/pages/nodics.foundation/import-export-provider-guides.md",
+        "path": "docs/pages/nodics.foundation/import-export-provider-guides.md",
+        "wordCount": 753,
+        "checksum": "7a61b1f82fe212a4dd698669b0c5876b9d0fb0b90145d5bf62e9cdcf74c64443"
+      }
+    },
+    "active": true
+  },
+  "record97": {
+    "code": "nodicsDocsComponentcommerceDataAuthoringFulfillment",
+    "typeCode": "nodicsDocumentationArticleComponentType",
+    "renderer": "documentation.component.article",
+    "accessMode": "PUBLIC",
+    "properties": {
+      "code": "commerce.data-authoring-fulfillment",
+      "title": "Commerce Data Authoring and Fulfillment",
+      "route": "/docs/framework/commerce-data-authoring-fulfillment",
+      "section": "product-catalog-and-discovery",
+      "sectionTitle": "Product Catalog and Discovery",
+      "group": "product-catalog-and-discovery",
+      "groupTitle": "Product Catalog and Discovery",
+      "parentId": "product-catalog-and-discovery",
+      "hierarchyPath": [
+        "Product Catalog and Discovery",
+        "Commerce Data Authoring and Fulfillment"
+      ],
+      "hierarchyDepth": 2,
+      "documentType": "how-to",
+      "audience": [
+        "business",
+        "architect",
+        "administrator",
+        "developer",
+        "operator",
+        "qa",
+        "ai-tool"
+      ],
+      "businessAudience": [
+        "business user",
+        "administrator",
+        "implementation partner"
+      ],
+      "technicalAudience": [
+        "architect",
+        "developer",
+        "operator",
+        "qa engineer",
+        "ai tool"
+      ],
+      "summary": "How product, category, price, inventory, search, order, fulfillment, return, and refund data are authored, imported, published, and verified.",
+      "visibility": "public",
+      "accessMode": "PUBLIC",
+      "publiclyAvailable": true,
+      "requiresAuthentication": false,
+      "allowedRoles": [],
+      "allowedGroups": [],
+      "allowedPermissions": [],
+      "lifecycleState": "ONLINE",
+      "version": "0.16.7",
+      "maturityState": "operational",
+      "implementationState": "current",
+      "renderingComponent": "documentation.component.article",
+      "relatedPages": [
+        "catalog.product-discovery-management",
+        "commerce.payment-fulfillment",
+        "fulfillment.shipping-management",
+        "accelerators.agora-apparel-product-data-authoring"
+      ],
+      "sourceEvidence": [
+        "docs/catalogue.json",
+        "docs/pages/nodics.commerce/commerce-data-authoring-and-fulfillment.md",
+        "../nodics.commerce/modules/baseCommerce/modules/product/package.json",
+        "../nodics.commerce/modules/baseCommerce/modules/pricing/package.json",
+        "../nodics.commerce/modules/baseCommerce/modules/inventory/package.json",
+        "../nodics.commerce/modules/fulfillment/package.json",
+        "../../nodics.kickoff/modules/agora.apparel/data/manifest.json"
+      ],
+      "visualRequirements": [
+        "diagram",
+        "table",
+        "code-example",
+        "troubleshooting-matrix"
+      ],
+      "searchKeywords": [
+        "commerce",
+        "product",
+        "price",
+        "inventory",
+        "fulfillment",
+        "agora"
+      ],
+      "topicKeywords": [
+        "Product Catalog and Discovery",
+        "Catalog Model and Publication",
+        "Commerce Data Authoring and Fulfillment"
+      ],
+      "headings": [
+        {
+          "text": "Source map",
+          "anchor": "commerceDataAuthoringFulfillment-1-source-map",
+          "level": 2
+        },
+        {
+          "text": "Data bundle",
+          "anchor": "commerceDataAuthoringFulfillment-2-data-bundle",
+          "level": 2
+        },
+        {
+          "text": "Authoring sequence",
+          "anchor": "commerceDataAuthoringFulfillment-3-authoring-sequence",
+          "level": 2
+        },
+        {
+          "text": "Header and record contract",
+          "anchor": "commerceDataAuthoringFulfillment-4-header-and-record-contract",
+          "level": 2
+        },
+        {
+          "text": "Fulfillment flow",
+          "anchor": "commerceDataAuthoringFulfillment-5-fulfillment-flow",
+          "level": 2
+        },
+        {
+          "text": "Customization and extension guidance",
+          "anchor": "commerceDataAuthoringFulfillment-6-customization-and-extension-guidance",
+          "level": 2
+        },
+        {
+          "text": "Common mistakes",
+          "anchor": "commerceDataAuthoringFulfillment-7-common-mistakes",
+          "level": 2
+        },
+        {
+          "text": "Verification",
+          "anchor": "commerceDataAuthoringFulfillment-8-verification",
+          "level": 2
+        }
+      ],
+      "blocks": [
+        {
+          "kind": "paragraph",
+          "text": "Commerce data authoring covers the records that make a product visible, sellable, priced, searchable, ordered, shipped, returned, and refunded. A business user may create the same information through Axis workbenches, while a developer or AI tool may create it through module or project release data. Both paths must land in the owning Commerce schemas and services. Agora Apparel is the clearest current project example because it combines product, price, inventory, content, media, and storefront validation."
+        },
+        {
+          "kind": "heading",
+          "level": 2,
+          "text": "Source map",
+          "anchor": "commerceDataAuthoringFulfillment-1-source-map"
+        },
+        {
+          "kind": "table",
+          "headers": [
+            "Capability",
+            "Source location"
+          ],
+          "rows": [
+            [
+              "Product model",
+              "`../nodics.commerce/modules/baseCommerce/modules/product/`"
+            ],
+            [
+              "Pricing and promotions",
+              "`../nodics.commerce/modules/baseCommerce/modules/pricing/`, `../nodics.commerce/modules/baseCommerce/modules/promotion/`"
+            ],
+            [
+              "Inventory and warehouses",
+              "`../nodics.commerce/modules/baseCommerce/modules/inventory/`"
+            ],
+            [
+              "Cart and checkout",
+              "`../nodics.commerce/modules/checkout/`"
+            ],
+            [
+              "Order management",
+              "`../nodics.commerce/modules/baseCommerce/modules/order/`"
+            ],
+            [
+              "Fulfillment",
+              "`../nodics.commerce/modules/fulfillment/`"
+            ],
+            [
+              "Commerce search",
+              "`../nodics.commerce/modules/baseCommerce/modules/commerceSearch/`"
+            ],
+            [
+              "Agora Apparel release data",
+              "`../../nodics.kickoff/modules/agora.apparel/data/sample-v001/commerce/`"
+            ],
+            [
+              "Agora product how-to",
+              "`docs/pages/accelerators/agora-apparel-product-data-authoring.md`"
+            ]
+          ]
+        },
+        {
+          "kind": "heading",
+          "level": 2,
+          "text": "Data bundle",
+          "anchor": "commerceDataAuthoringFulfillment-2-data-bundle"
+        },
+        {
+          "kind": "diagram",
+          "language": "mermaid",
+          "text": "flowchart LR\n  Product[\"Product and variants\"] --> Price[\"Price rows\"]\n  Product --> Inventory[\"Inventory balances\"]\n  Product --> Media[\"Media and content\"]\n  Product --> Search[\"Search projection\"]\n  Price --> Cart[\"Cart and checkout\"]\n  Inventory --> Cart\n  Cart --> Order[\"Order\"]\n  Order --> Fulfillment[\"Fulfillment and consignment\"]\n  Fulfillment --> Return[\"Returns and refunds\"]"
+        },
+        {
+          "kind": "paragraph",
+          "text": "Beginners should not think of a product as one row. A useful commerce product usually needs category membership, localization, variants, price, tax context, inventory availability, media, and search projection. Business value appears only when those records work together. Developers should author stable codes and relation keys. Operators should verify import counts, publication state, search freshness, checkout availability, fulfillment execution, and exception handling before production use."
+        },
+        {
+          "kind": "heading",
+          "level": 2,
+          "text": "Authoring sequence",
+          "anchor": "commerceDataAuthoringFulfillment-3-authoring-sequence"
+        },
+        {
+          "kind": "ordered-list",
+          "items": [
+            "Create product and category records.",
+            "Add localized product names, descriptions, slugs, and SEO values.",
+            "Add variants or sellable SKUs with stable codes.",
+            "Add price rows and currency context.",
+            "Add inventory balances for the warehouse or stock location.",
+            "Add media references and content components when the storefront needs product imagery or landing content.",
+            "Add search rules or projection data when discovery behavior must be controlled.",
+            "Import the release into a fresh schema.",
+            "Publish required content and commerce projections.",
+            "Validate Agora, checkout, order placement, fulfillment, and return flows."
+          ]
+        },
+        {
+          "kind": "heading",
+          "level": 2,
+          "text": "Header and record contract",
+          "anchor": "commerceDataAuthoringFulfillment-4-header-and-record-contract"
+        },
+        {
+          "kind": "code",
+          "language": "js",
+          "text": "module.exports = {\n  product: {\n    products: {\n      options: {\n        enabled: true,\n        schemaName: 'product',\n        operation: 'saveAll',\n        dataFilePrefix: 'agoraApparelProductData'\n      },\n      query: { code: '$code', tenant: '$tenant' }\n    }\n  }\n};"
+        },
+        {
+          "kind": "paragraph",
+          "text": "Headers define target module, schema, operation, and idempotent query. Records define business data. They should not calculate availability, call pricing services, assign fulfillment status from code, or write publication results. The runtime services own validation and lifecycle transitions."
+        },
+        {
+          "kind": "heading",
+          "level": 2,
+          "text": "Fulfillment flow",
+          "anchor": "commerceDataAuthoringFulfillment-5-fulfillment-flow"
+        },
+        {
+          "kind": "paragraph",
+          "text": "Fulfillment begins after order placement. The order identifies entries, quantities, delivery mode, payment state, and warehouse assignment. Fulfillment creates consignments or equivalent execution records, tracks picking and shipment state, raises exceptions when stock or carrier information is missing, and records evidence for operators. Returns and refunds depend on the original order, delivered quantity, receipt state, and payment reconciliation."
+        },
+        {
+          "kind": "table",
+          "headers": [
+            "Step",
+            "Business view",
+            "Developer contract",
+            "Operator evidence"
+          ],
+          "rows": [
+            [
+              "Product imported",
+              "Product exists.",
+              "Product and variant schemas validate.",
+              "Import run counts and no relation failures."
+            ],
+            [
+              "Price active",
+              "Customer can see a price.",
+              "Price row matches product, market, currency.",
+              "Pricing lookup result."
+            ],
+            [
+              "Stock active",
+              "Customer can buy.",
+              "Inventory balance maps to SKU and warehouse.",
+              "Available quantity calculation."
+            ],
+            [
+              "Order placed",
+              "Customer has an order.",
+              "Checkout creates order records.",
+              "Order id, payment state, totals."
+            ],
+            [
+              "Fulfillment started",
+              "Order is being prepared.",
+              "Fulfillment service creates execution records.",
+              "Consignment, carrier, exception state."
+            ]
+          ]
+        },
+        {
+          "kind": "heading",
+          "level": 2,
+          "text": "Customization and extension guidance",
+          "anchor": "commerceDataAuthoringFulfillment-6-customization-and-extension-guidance"
+        },
+        {
+          "kind": "paragraph",
+          "text": "Developers can add product attributes, price strategies, inventory providers, search ranking rules, fulfillment adapters, return policies, and refund integration points. Keep the extension in the owning module and add tests around schema validation, service behavior, and storefront result. Business users should see these extensions as controlled fields, actions, dashboards, and recovery messages in Axis, not as data-file business logic."
+        },
+        {
+          "kind": "heading",
+          "level": 2,
+          "text": "Common mistakes",
+          "anchor": "commerceDataAuthoringFulfillment-7-common-mistakes"
+        },
+        {
+          "kind": "unordered-list",
+          "items": [
+            "Creating products without price or inventory and expecting checkout to work.",
+            "Treating storefront display content as Commerce authority.",
+            "Adding fulfillment records before the order lifecycle creates execution evidence.",
+            "Forgetting search projection after product import.",
+            "Using generated database ids instead of stable business codes in release data."
+          ]
+        },
+        {
+          "kind": "heading",
+          "level": 2,
+          "text": "Verification",
+          "anchor": "commerceDataAuthoringFulfillment-8-verification"
+        },
+        {
+          "kind": "paragraph",
+          "text": "Run Commerce product, pricing, inventory, checkout, order, fulfillment, and return tests for the touched areas. Import Agora Apparel data into a fresh schema, publish content and commerce projections, open the storefront in the browser, search for the product, add it to cart, place a controlled order, and confirm fulfillment evidence. Production readiness requires business-visible status, developer traceability, operator recovery steps, and QA browser proof."
+        }
+      ],
+      "searchText": "Commerce Data Authoring and Fulfillment How product, category, price, inventory, search, order, fulfillment, return, and refund data are authored, imported, published, and verified. # Commerce Data Authoring and Fulfillment\n\nCommerce data authoring covers the records that make a product visible,\nsellable, priced, searchable, ordered, shipped, returned, and refunded. A\nbusiness user may create the same information through Axis workbenches, while\na developer or AI tool may create it through module or project release data.\nBoth paths must land in the owning Commerce schemas and services. Agora\nApparel is the clearest current project example because it combines product,\nprice, inventory, content, media, and storefront validation.\n\n## Source map\n\n| Capability | Source location |\n| --- | --- |\n| Product model | `../nodics.commerce/modules/baseCommerce/modules/product/` |\n| Pricing and promotions | `../nodics.commerce/modules/baseCommerce/modules/pricing/`, `../nodics.commerce/modules/baseCommerce/modules/promotion/` |\n| Inventory and warehouses | `../nodics.commerce/modules/baseCommerce/modules/inventory/` |\n| Cart and checkout | `../nodics.commerce/modules/checkout/` |\n| Order management | `../nodics.commerce/modules/baseCommerce/modules/order/` |\n| Fulfillment | `../nodics.commerce/modules/fulfillment/` |\n| Commerce search | `../nodics.commerce/modules/baseCommerce/modules/commerceSearch/` |\n| Agora Apparel release data | `../../nodics.kickoff/modules/agora.apparel/data/sample-v001/commerce/` |\n| Agora product how-to | `docs/pages/accelerators/agora-apparel-product-data-authoring.md` |\n\n## Data bundle\n\n```mermaid\nflowchart LR\n  Product[\"Product and variants\"] --> Price[\"Price rows\"]\n  Product --> Inventory[\"Inventory balances\"]\n  Product --> Media[\"Media and content\"]\n  Product --> Search[\"Search projection\"]\n  Price --> Cart[\"Cart and checkout\"]\n  Inventory --> Cart\n  Cart --> Order[\"Order\"]\n  Order --> Fulfillment[\"Fulfillment and consignment\"]\n  Fulfillment --> Return[\"Returns and refunds\"]\n```\n\nBeginners should not think of a product as one row. A useful commerce product\nusually needs category membership, localization, variants, price, tax context,\ninventory availability, media, and search projection. Business value appears\nonly when those records work together. Developers should author stable codes\nand relation keys. Operators should verify import counts, publication state,\nsearch freshness, checkout availability, fulfillment execution, and exception\nhandling before production use.\n\n## Authoring sequence\n\n1. Create product and category records.\n2. Add localized product names, descriptions, slugs, and SEO values.\n3. Add variants or sellable SKUs with stable codes.\n4. Add price rows and currency context.\n5. Add inventory balances for the warehouse or stock location.\n6. Add media references and content components when the storefront needs\n   product imagery or landing content.\n7. Add search rules or projection data when discovery behavior must be\n   controlled.\n8. Import the release into a fresh schema.\n9. Publish required content and commerce projections.\n10. Validate Agora, checkout, order placement, fulfillment, and return flows.\n\n## Header and record contract\n\n```js\nmodule.exports = {\n  product: {\n    products: {\n      options: {\n        enabled: true,\n        schemaName: 'product',\n        operation: 'saveAll',\n        dataFilePrefix: 'agoraApparelProductData'\n      },\n      query: { code: '$code', tenant: '$tenant' }\n    }\n  }\n};\n```\n\nHeaders define target module, schema, operation, and idempotent query. Records\ndefine business data. They should not calculate availability, call pricing\nservices, assign fulfillment status from code, or write publication results.\nThe runtime services own validation and lifecycle transitions.\n\n## Fulfillment flow\n\nFulfillment begins after order placement. The order identifies entries,\nquantities, delivery mode, payment state, and warehouse assignment. Fulfillment\ncreates consignments or equivalent execution records, tracks picking and\nshipment state, raises exceptions when stock or carrier information is missing,\nand records evidence for operators. Returns and refunds depend on the original\norder, delivered quantity, receipt state, and payment reconciliation.\n\n| Step | Business view | Developer contract | Operator evidence |\n| --- | --- | --- | --- |\n| Product imported | Product exists. | Product and variant schemas validate. | Import run counts and no relation failures. |\n| Price active | Customer can see a price. | Price row matches product, market, currency. | Pricing lookup result. |\n| Stock active | Customer can buy. | Inventory balance maps to SKU and warehouse. | Available quantity calculation. |\n| Order placed | Customer has an order. | Checkout creates order records. | Order id, payment state, totals. |\n| Fulfillment started | Order is being prepared. | Fulfillment service creates execution records. | Consignment, carrier, exception state. |\n\n## Customization and extension guidance\n\nDevelopers can add product attributes, price strategies, inventory providers,\nsearch ranking rules, fulfillment adapters, return policies, and refund\nintegration points. Keep the extension in the owning module and add tests\naround schema validation, service behavior, and storefront result. Business\nusers should see these extensions as controlled fields, actions, dashboards,\nand recovery messages in Axis, not as data-file business logic.\n\n## Common mistakes\n\n- Creating products without price or inventory and expecting checkout to work.\n- Treating storefront display content as Commerce authority.\n- Adding fulfillment records before the order lifecycle creates execution\n  evidence.\n- Forgetting search projection after product import.\n- Using generated database ids instead of stable business codes in release\n  data.\n\n## Verification\n\nRun Commerce product, pricing, inventory, checkout, order, fulfillment, and\nreturn tests for the touched areas. Import Agora Apparel data into a fresh\nschema, publish content and commerce projections, open the storefront in the\nbrowser, search for the product, add it to cart, place a controlled order, and\nconfirm fulfillment evidence. Production readiness requires business-visible\nstatus, developer traceability, operator recovery steps, and QA browser proof.\n",
+      "previous": {
+        "title": "Import and Export Provider Guides",
+        "route": "/docs/framework/data-import-export-provider-guides"
+      },
+      "next": {
+        "title": "Documentation Publishing Runbook",
+        "route": "/docs/framework/docs-documentation-publishing-runbook"
+      },
+      "source": {
+        "repository": "nodics.docs",
+        "functionalModule": "nodics.commerce",
+        "technicalModule": "baseCommerce",
+        "owner": "nodics.commerce",
+        "sourcePath": "docs/pages/nodics.commerce/commerce-data-authoring-and-fulfillment.md",
+        "path": "docs/pages/nodics.commerce/commerce-data-authoring-and-fulfillment.md",
+        "wordCount": 754,
+        "checksum": "5d2b5fc7a1cb924d793f1898e2ac264c0b7989e43dec7c36d828db46d8e293ef"
+      }
+    },
+    "active": true
+  },
+  "record98": {
+    "code": "nodicsDocsComponentdocsDocumentationPublishingRunbook",
+    "typeCode": "nodicsDocumentationArticleComponentType",
+    "renderer": "documentation.component.article",
+    "accessMode": "PUBLIC",
+    "properties": {
+      "code": "docs.documentation-publishing-runbook",
+      "title": "Documentation Publishing Runbook",
+      "route": "/docs/framework/docs-documentation-publishing-runbook",
+      "section": "documentation-management",
+      "sectionTitle": "Documentation Management",
+      "group": "documentation-management",
+      "groupTitle": "Documentation Management",
+      "parentId": "documentation-management",
+      "hierarchyPath": [
+        "Documentation Management",
+        "Documentation Publishing Runbook"
+      ],
+      "hierarchyDepth": 2,
+      "documentType": "operations",
+      "audience": [
+        "business",
+        "architect",
+        "administrator",
+        "developer",
+        "operator",
+        "qa",
+        "ai-tool"
+      ],
+      "businessAudience": [
+        "business user",
+        "administrator",
+        "implementation partner"
+      ],
+      "technicalAudience": [
+        "architect",
+        "developer",
+        "operator",
+        "qa engineer",
+        "ai tool"
+      ],
+      "summary": "Runbook for authored Markdown, catalogue metadata, generated WCMS records, Staged review, Online activation, rollback evidence, and consumer rendering.",
+      "visibility": "public",
+      "accessMode": "PUBLIC",
+      "publiclyAvailable": true,
+      "requiresAuthentication": false,
+      "allowedRoles": [],
+      "allowedGroups": [],
+      "allowedPermissions": [],
+      "lifecycleState": "ONLINE",
+      "version": "0.16.7",
+      "maturityState": "operational",
+      "implementationState": "current",
+      "renderingComponent": "documentation.component.article",
+      "relatedPages": [
+        "docs.overview",
+        "docs.documentation-publishing-model",
+        "wcms.publishing-lifecycle",
+        "reference.source-backed-documentation-coverage-audit"
+      ],
+      "sourceEvidence": [
+        "docs/catalogue.json",
+        "docs/pages/nodics.docs/documentation-publishing-runbook.md",
+        "scripts/generate-content-pack.mjs",
+        "scripts/validate.mjs",
+        "scripts/audit-source-coverage.mjs",
+        "data/manifest.json",
+        "../nodics.wcms/modules/cms/src/service/publication/defaultCmsPublicationWorkflowService.js"
+      ],
+      "visualRequirements": [
+        "diagram",
+        "table",
+        "code-example",
+        "troubleshooting-matrix"
+      ],
+      "searchKeywords": [
+        "documentation",
+        "publishing",
+        "staged",
+        "online",
+        "content-pack"
+      ],
+      "topicKeywords": [
+        "Documentation Management",
+        "Documentation Runtime and Publishing",
+        "Documentation Publishing Runbook"
+      ],
+      "headings": [
+        {
+          "text": "Source map",
+          "anchor": "docsDocumentationPublishingRunbook-1-source-map",
+          "level": 2
+        },
+        {
+          "text": "Publishing model",
+          "anchor": "docsDocumentationPublishingRunbook-2-publishing-model",
+          "level": 2
+        },
+        {
+          "text": "Authoring steps",
+          "anchor": "docsDocumentationPublishingRunbook-3-authoring-steps",
+          "level": 2
+        },
+        {
+          "text": "Generated data contract",
+          "anchor": "docsDocumentationPublishingRunbook-4-generated-data-contract",
+          "level": 2
+        },
+        {
+          "text": "Review and Online activation",
+          "anchor": "docsDocumentationPublishingRunbook-5-review-and-online-activation",
+          "level": 2
+        },
+        {
+          "text": "Customization and extension guidance",
+          "anchor": "docsDocumentationPublishingRunbook-6-customization-and-extension-guidance",
+          "level": 2
+        },
+        {
+          "text": "Common mistakes",
+          "anchor": "docsDocumentationPublishingRunbook-7-common-mistakes",
+          "level": 2
+        },
+        {
+          "text": "Verification",
+          "anchor": "docsDocumentationPublishingRunbook-8-verification",
+          "level": 2
+        }
+      ],
+      "blocks": [
+        {
+          "kind": "paragraph",
+          "text": "Nodics documentation has two lanes. Repository guidance lives in module `README.md` and `AGENTS.md` files for developers and AI tools. Publishable documentation lives as authored Markdown plus catalogue metadata in `nodics.docs`, is generated into WCMS content-pack records, imported into Staged, reviewed, and then activated Online. Axis manages the business and operator journey. Nexus or other public consumers read Online content after approval."
+        },
+        {
+          "kind": "heading",
+          "level": 2,
+          "text": "Source map",
+          "anchor": "docsDocumentationPublishingRunbook-1-source-map"
+        },
+        {
+          "kind": "table",
+          "headers": [
+            "Capability",
+            "Source location"
+          ],
+          "rows": [
+            [
+              "Authored pages",
+              "`docs/pages/`"
+            ],
+            [
+              "Catalogue metadata",
+              "`docs/catalogue.json`"
+            ],
+            [
+              "Content-pack generator",
+              "`scripts/generate-content-pack.mjs`"
+            ],
+            [
+              "Documentation validation",
+              "`scripts/validate.mjs`, `scripts/audit-hardening.mjs`"
+            ],
+            [
+              "Source coverage audit",
+              "`scripts/audit-source-coverage.mjs`"
+            ],
+            [
+              "Generated WCMS data",
+              "`data/core-v001/headers/documentation/`, `data/core-v001/records/documentation/`"
+            ],
+            [
+              "Documentation manifest",
+              "`data/manifest.json`"
+            ],
+            [
+              "CMS publication services",
+              "`../nodics.wcms/modules/cms/src/service/publication/`"
+            ],
+            [
+              "CMS documentation governance",
+              "`../nodics.wcms/modules/cms/src/service/documentation/`"
+            ]
+          ]
+        },
+        {
+          "kind": "heading",
+          "level": 2,
+          "text": "Publishing model",
+          "anchor": "docsDocumentationPublishingRunbook-2-publishing-model"
+        },
+        {
+          "kind": "diagram",
+          "language": "mermaid",
+          "text": "flowchart TD\n  Markdown[\"Authored Markdown\"] --> Catalogue[\"Catalogue metadata\"]\n  Catalogue --> Generate[\"Generate WCMS records\"]\n  Generate --> Validate[\"Docs validation and hardening\"]\n  Validate --> Import[\"Import to Staged\"]\n  Import --> Review[\"Approval workflow\"]\n  Review --> Online[\"Online activation\"]\n  Online --> Consumers[\"Axis, Nexus, web readers\"]"
+        },
+        {
+          "kind": "paragraph",
+          "text": "For beginners, the Markdown file is the human-readable source, the catalogue is the navigation and access contract, and generated records are the importable data. Business users should not edit generated files directly. Developers change authored pages and metadata, regenerate the content pack, and run the validation gates. Operators prove that Staged and Online are aligned before production readers see a page."
+        },
+        {
+          "kind": "heading",
+          "level": 2,
+          "text": "Authoring steps",
+          "anchor": "docsDocumentationPublishingRunbook-3-authoring-steps"
+        },
+        {
+          "kind": "ordered-list",
+          "items": [
+            "Create or edit an authored Markdown page under `docs/pages/`.",
+            "Add catalogue metadata with id, title, section, group, navigation order, access mode, source owner, related pages, source evidence, keywords, and visual requirements.",
+            "Include enough detail for business users, developers, operators, QA, and AI tools.",
+            "Include source maps, how-to guidance, customization and extension rules, common mistakes, and verification.",
+            "Run the generator and validation commands.",
+            "Review generated records and manifest checksums.",
+            "Import `core-v001` documentation data into Staged.",
+            "Request approval and publish Online.",
+            "Open Axis and public consumers to verify the page and navigation."
+          ]
+        },
+        {
+          "kind": "heading",
+          "level": 2,
+          "text": "Generated data contract",
+          "anchor": "docsDocumentationPublishingRunbook-4-generated-data-contract"
+        },
+        {
+          "kind": "code",
+          "language": "text",
+          "text": "nodics.docs/data/\n  core-v001/\n    headers/documentation/\n    records/documentation/\n  manifest.json"
+        },
+        {
+          "kind": "paragraph",
+          "text": "Generated files include documentation site, product, navigation, nodes, dashboards, page records, routes, components, page metadata, access policies, publication state, and search metadata. The generator owns these records so all pages share the same hierarchy, access, workflow, rendering, and search contract. Developers should update the Markdown and catalogue, then regenerate data rather than hand editing generated record files."
+        },
+        {
+          "kind": "heading",
+          "level": 2,
+          "text": "Review and Online activation",
+          "anchor": "docsDocumentationPublishingRunbook-5-review-and-online-activation"
+        },
+        {
+          "kind": "paragraph",
+          "text": "Documentation should flow through Staged before Online. Staged lets administrators and reviewers inspect hierarchy, access, rendering, source evidence, and search metadata. Online activation should validate the publication manifest, preserve approved checksums, activate delivery pointers, and keep rollback evidence. A production page should never be served from a developer working file or from generated data that bypassed approval."
+        },
+        {
+          "kind": "heading",
+          "level": 2,
+          "text": "Customization and extension guidance",
+          "anchor": "docsDocumentationPublishingRunbook-6-customization-and-extension-guidance"
+        },
+        {
+          "kind": "paragraph",
+          "text": "Developers can extend documentation by adding new pages, navigation sections, metadata fields, validation checks, generated record types, or renderer components. Keep custom validation in scripts or tooling services and keep business content in Markdown. A customer project can add documentation packs using the same release structure as other data packs, while Axis remains the review and publication journey."
+        },
+        {
+          "kind": "paragraph",
+          "text": "If a capability page documents a module, add `sourceEvidence` paths to the module package, schema, service, router, data, and test files where possible. When source changes introduce a user-visible or extension-visible behavior, update the authored page in the same release batch."
+        },
+        {
+          "kind": "heading",
+          "level": 2,
+          "text": "Common mistakes",
+          "anchor": "docsDocumentationPublishingRunbook-7-common-mistakes"
+        },
+        {
+          "kind": "unordered-list",
+          "items": [
+            "Editing generated documentation records instead of the authored page.",
+            "Adding a page without catalogue metadata or source evidence.",
+            "Publishing directly to Online without Staged review.",
+            "Treating README files as the complete business documentation.",
+            "Showing references as copied designs instead of standards for comparison."
+          ]
+        },
+        {
+          "kind": "heading",
+          "level": 2,
+          "text": "Verification",
+          "anchor": "docsDocumentationPublishingRunbook-8-verification"
+        },
+        {
+          "kind": "paragraph",
+          "text": "Run the documentation generator, validator, source coverage audit, and hardening audit. Then import generated documentation data into a fresh Staged schema, request approval, publish Online, and open Axis plus the public consumer route. The work is complete when business users see the page in the right journey, developers can trace source evidence, operators can verify publication state, QA can repeat the commands, and production readers receive Online content only."
+        }
+      ],
+      "searchText": "Documentation Publishing Runbook Runbook for authored Markdown, catalogue metadata, generated WCMS records, Staged review, Online activation, rollback evidence, and consumer rendering. # Documentation Publishing Runbook\n\nNodics documentation has two lanes. Repository guidance lives in module\n`README.md` and `AGENTS.md` files for developers and AI tools. Publishable\ndocumentation lives as authored Markdown plus catalogue metadata in\n`nodics.docs`, is generated into WCMS content-pack records, imported into\nStaged, reviewed, and then activated Online. Axis manages the business and\noperator journey. Nexus or other public consumers read Online content after\napproval.\n\n## Source map\n\n| Capability | Source location |\n| --- | --- |\n| Authored pages | `docs/pages/` |\n| Catalogue metadata | `docs/catalogue.json` |\n| Content-pack generator | `scripts/generate-content-pack.mjs` |\n| Documentation validation | `scripts/validate.mjs`, `scripts/audit-hardening.mjs` |\n| Source coverage audit | `scripts/audit-source-coverage.mjs` |\n| Generated WCMS data | `data/core-v001/headers/documentation/`, `data/core-v001/records/documentation/` |\n| Documentation manifest | `data/manifest.json` |\n| CMS publication services | `../nodics.wcms/modules/cms/src/service/publication/` |\n| CMS documentation governance | `../nodics.wcms/modules/cms/src/service/documentation/` |\n\n## Publishing model\n\n```mermaid\nflowchart TD\n  Markdown[\"Authored Markdown\"] --> Catalogue[\"Catalogue metadata\"]\n  Catalogue --> Generate[\"Generate WCMS records\"]\n  Generate --> Validate[\"Docs validation and hardening\"]\n  Validate --> Import[\"Import to Staged\"]\n  Import --> Review[\"Approval workflow\"]\n  Review --> Online[\"Online activation\"]\n  Online --> Consumers[\"Axis, Nexus, web readers\"]\n```\n\nFor beginners, the Markdown file is the human-readable source, the catalogue\nis the navigation and access contract, and generated records are the importable\ndata. Business users should not edit generated files directly. Developers\nchange authored pages and metadata, regenerate the content pack, and run the\nvalidation gates. Operators prove that Staged and Online are aligned before\nproduction readers see a page.\n\n## Authoring steps\n\n1. Create or edit an authored Markdown page under `docs/pages/`.\n2. Add catalogue metadata with id, title, section, group, navigation order,\n   access mode, source owner, related pages, source evidence, keywords, and\n   visual requirements.\n3. Include enough detail for business users, developers, operators, QA, and AI\n   tools.\n4. Include source maps, how-to guidance, customization and extension rules,\n   common mistakes, and verification.\n5. Run the generator and validation commands.\n6. Review generated records and manifest checksums.\n7. Import `core-v001` documentation data into Staged.\n8. Request approval and publish Online.\n9. Open Axis and public consumers to verify the page and navigation.\n\n## Generated data contract\n\n```text\nnodics.docs/data/\n  core-v001/\n    headers/documentation/\n    records/documentation/\n  manifest.json\n```\n\nGenerated files include documentation site, product, navigation, nodes,\ndashboards, page records, routes, components, page metadata, access policies,\npublication state, and search metadata. The generator owns these records so\nall pages share the same hierarchy, access, workflow, rendering, and search\ncontract. Developers should update the Markdown and catalogue, then regenerate\ndata rather than hand editing generated record files.\n\n## Review and Online activation\n\nDocumentation should flow through Staged before Online. Staged lets\nadministrators and reviewers inspect hierarchy, access, rendering, source\nevidence, and search metadata. Online activation should validate the\npublication manifest, preserve approved checksums, activate delivery pointers,\nand keep rollback evidence. A production page should never be served from a\ndeveloper working file or from generated data that bypassed approval.\n\n## Customization and extension guidance\n\nDevelopers can extend documentation by adding new pages, navigation sections,\nmetadata fields, validation checks, generated record types, or renderer\ncomponents. Keep custom validation in scripts or tooling services and keep\nbusiness content in Markdown. A customer project can add documentation packs\nusing the same release structure as other data packs, while Axis remains the\nreview and publication journey.\n\nIf a capability page documents a module, add `sourceEvidence` paths to the\nmodule package, schema, service, router, data, and test files where possible.\nWhen source changes introduce a user-visible or extension-visible behavior,\nupdate the authored page in the same release batch.\n\n## Common mistakes\n\n- Editing generated documentation records instead of the authored page.\n- Adding a page without catalogue metadata or source evidence.\n- Publishing directly to Online without Staged review.\n- Treating README files as the complete business documentation.\n- Showing references as copied designs instead of standards for comparison.\n\n## Verification\n\nRun the documentation generator, validator, source coverage audit, and\nhardening audit. Then import generated documentation data into a fresh Staged\nschema, request approval, publish Online, and open Axis plus the public\nconsumer route. The work is complete when business users see the page in the\nright journey, developers can trace source evidence, operators can verify\npublication state, QA can repeat the commands, and production readers receive\nOnline content only.\n",
+      "previous": {
+        "title": "Commerce Data Authoring and Fulfillment",
+        "route": "/docs/framework/commerce-data-authoring-fulfillment"
+      },
+      "next": {
+        "title": "AI and Developer Tooling",
+        "route": "/docs/framework/tooling-ai-developer-enablement"
+      },
+      "source": {
+        "repository": "nodics.docs",
+        "functionalModule": "nodics.docs",
+        "technicalModule": "documentation",
+        "owner": "nodics.docs",
+        "sourcePath": "docs/pages/nodics.docs/documentation-publishing-runbook.md",
+        "path": "docs/pages/nodics.docs/documentation-publishing-runbook.md",
+        "wordCount": 690,
+        "checksum": "bf505eab722000d91ad26dbdb541551d458650831b5fb41343a35fcdebc49344"
+      }
+    },
+    "active": true
+  },
+  "record99": {
     "code": "nodicsDocsComponenttoolingAiDeveloperEnablement",
     "typeCode": "nodicsDocumentationArticleComponentType",
     "renderer": "documentation.component.article",
@@ -39787,8 +42593,8 @@ module.exports = {
       ],
       "searchText": "AI and Developer Tooling How AI tools, developers, and reviewers use contracts, source maps, generated context, quality gates, and documentation principles safely. # AI and Developer Tooling\n\nHow AI tools, developers, and reviewers use contracts, source maps, generated context, quality gates, and documentation principles safely. This page is intentionally written for beginners, business users, developers, operators, architects, QA owners, and AI tools. It explains the business problem first, then the technical ownership model, then the exact customization and verification responsibilities so nobody has to guess where a change belongs.\n\nAI and developer automation can accelerate delivery, but it can also invent owners, bypass contracts, overwrite user changes, or generate shallow documentation if rules are not executable. Nodics keeps AI enablement as contracts, templates, quality checks, source maps, and validation scripts. Generated documentation must follow the same business, technical, visual, and audit principles every time.\n\n## Business context\n\nFor a business user, this topic answers what decision can be made, which operational journey is supported, and what risk is reduced. The practical value is faster delivery without losing governance: teams can understand the current capability, decide whether it applies to their project, and know when Axis, Nexus, content catalog, workflow, or runtime services are involved.\n\nFor beginners, the mental model is simple: the page title is the business capability, the table identifies who owns each part, and the diagram shows how a request or change flows. A reader should not need source-code knowledge to understand the journey, but the developer path is still available when customization is needed.\n\n| Business question | Answer for this topic |\n| --- | --- |\n| What problem does it solve? | AI and developer automation can accelerate delivery, but it can also invent owners, bypass contracts, overwrite user changes, or generate shallow documentation if rules are not executable. |\n| Who uses it? | Business users, administrators, developers, operators, QA owners, implementation partners, and AI-assisted delivery tools. |\n| What changes can it support? | Nodics keeps AI enablement as contracts, templates, quality checks, source maps, and validation scripts. Generated documentation must follow the same business, technical, visual, and audit principles every time. |\n| What must be governed? | Permissions, validation, source ownership, publication state, runtime impact, audit evidence, and rollback boundaries. |\n\n## Journey and ownership\n\nnSetup and nTooling own AI contracts, generation templates, quality validators, and release checks. Functional modules own the implementation facts being documented. This keeps the reader-facing name friendly while preserving exact source ownership for developers and AI tools. Axis may render management screens or authenticated documentation, Nexus may render public Online content, and the backend content catalog remains authoritative for navigation, pages, access policies, and publication state.\n\n```mermaid\nflowchart LR\n  Reader[\"Business or developer request\"] --> Axis[\"Axis or Nexus view\"]\n  Axis --> Backend[\"Owning backend capability\"]\n  Backend --> Catalog[\"Content/catalog/schema/config records\"]\n  Catalog --> Runtime[\"Runtime behavior or published page\"]\n  Runtime --> Evidence[\"Audit, validation, and support evidence\"]\n```\n\n| Responsibility | Owner | Notes |\n| --- | --- | --- |\n| Business capability name | AI and Developer Tooling | Used in navigation and dashboards so readers are not exposed to raw module names first. |\n| Source owner | nodics.foundation | Carries exact implementation, documentation, and validation evidence. |\n| Technical module | nSetup | Holds the relevant schema, service, router, data, or contract detail where applicable. |\n| Axis experience | Backend-declared workspace | Axis renders metadata and actions but does not become the authority. |\n| Public experience | Online content delivery | Nexus renders only records approved for public access. |\n\n## Data and configuration detail\n\nEvery topic must explain the data that changes behavior. Some topics are schema-driven, some are configuration-driven, some are publishable content, and some are operational records. The documentation must say which category applies before showing code. That keeps production operators and developers aligned on whether a change needs publication, restart, event propagation, approval, or only a project-layer override.\n\n| Detail area | What to document | Verification signal |\n| --- | --- | --- |\n| Model or record | Type code, catalog, tenant, enterprise, state, owner, and lifecycle. | Schema contract or generated model test. |\n| Configuration key | Default value, override location, environment scope, and runtime impact. | Config validation and runtime refresh evidence. |\n| API or event | Route/event name, payload boundary, permission, idempotency, and failure mode. | Route, service, event, and authorization tests. |\n| Publication and access | Staged/Online state, access mode, roles, groups, and permissions. | Content-pack validation and access-policy test. |\n\n```js\ndocumentationImpact: { requiresBusinessView: true, requiresVisuals: true, requiresSourceMap: true, validation: \"blocking\" }\n```\n\n## Customization and extension\n\nDevelopers should customize from the project layer first. A customer project may add properties, services, validators, pipelines, renderers, data packs, or provider configuration when the extension respects the owning capability. Business users may update governed records in Axis when the record is designed for administration. Framework source changes are reserved for improving the reusable product capability itself.\n\n| Customization type | Recommended path | Avoid |\n| --- | --- | --- |\n| Business label, navigation, or content area | Axis-managed content catalog item with publication workflow. | Hardcoding labels or page trees in the frontend. |\n| Runtime setting | Module configuration with validation and governed runtime propagation. | Editing node-local files on each server by hand. |\n| Domain behavior | Extension service, validator, pipeline step, or provider adapter. | Forking the standard module for customer-only logic. |\n| Public visibility | Access policy with public/authenticated/role-based state. | Exposing internal or draft pages through Nexus. |\n\n## Operations and governance\n\nOperators need production-safe evidence, not only implementation notes. Each page must call out logging, tracing, permission checks, event propagation, data import/export, publication status, rollback behavior, and troubleshooting. If a capability affects multiple nodes, the documentation must explain how changes reach every node and how a partial failure is detected.\n\n| Operational concern | Required documentation detail |\n| --- | --- |\n| Security | Authentication mode, permission code, role/group, tenant and enterprise isolation. |\n| Audit | Actor, timestamp, source record, checksum, approval, route/event, and result. |\n| Resilience | Retry, idempotency, compensation, fallback, cache invalidation, and rollback. |\n| Observability | Logs, metrics, dashboard cards, health checks, and support evidence. |\n\n## Common mistakes\n\n- Treating a friendly navigation label as the technical source owner.\n- Writing only developer details and skipping the business decision that the page supports.\n- Updating Axis or Nexus code when the content catalog, schema, or backend capability should own the change.\n- Forgetting access rules for public, authenticated, role-based, group-based, or permission-based pages.\n- Skipping diagrams, comparison tables, source maps, or troubleshooting matrices because the topic feels obvious.\n- Changing runtime behavior without explaining production impact, cluster propagation, and rollback.\n- Leaving generated documentation without source evidence, validation commands, and maturity state.\n\n## Verification\n\nVerification starts with the document itself: it must include business context, technical ownership, a visual flow, data or configuration tables, customization guidance, common mistakes, and validation evidence. Developers then run the documentation generator and content-pack validator so the page becomes backend-owned data with checksum, lifecycle, navigation, access policy, publication state, and search metadata.\n\nFor implementation verification, run the owning module tests and any Axis or Nexus renderer tests that consume the page. Operators should confirm that production-like runtime behavior matches the documentation: permissions reject unauthorized access, Online pages do not expose Staged data, runtime changes propagate through governed events, and troubleshooting evidence is available without exposing secrets.\n",
       "previous": {
-        "title": "Staged-to-Online publishing lifecycle",
-        "route": "/docs/framework/wcms-publishing-lifecycle"
+        "title": "Documentation Publishing Runbook",
+        "route": "/docs/framework/docs-documentation-publishing-runbook"
       },
       "next": {
         "title": "Reference Source Map and Glossary",
@@ -39807,7 +42613,7 @@ module.exports = {
     },
     "active": true
   },
-  "record93": {
+  "record100": {
     "code": "nodicsDocsComponentreferenceSourceMapGlossary",
     "typeCode": "nodicsDocumentationArticleComponentType",
     "renderer": "documentation.component.article",
@@ -40528,7 +43334,7 @@ module.exports = {
     },
     "active": true
   },
-  "record94": {
+  "record101": {
     "code": "nodicsDocsComponentreferenceSourceBackedDocumentationCoverageAudit",
     "typeCode": "nodicsDocumentationArticleComponentType",
     "renderer": "documentation.component.article",
@@ -41299,7 +44105,7 @@ module.exports = {
     },
     "active": true
   },
-  "record95": {
+  "record102": {
     "code": "nodicsDocsComponentreferenceDocumentationGapBacklog",
     "typeCode": "nodicsDocumentationArticleComponentType",
     "renderer": "documentation.component.article",
@@ -41498,45 +44304,53 @@ module.exports = {
         {
           "kind": "table",
           "headers": [
+            "Status",
             "Item",
             "Source areas",
             "Documentation outcome"
           ],
           "rows": [
             [
+              "Closed by P0 docs batch",
               "Nexus data and content guide",
               "`nodics.kickoff/modules/nexus.web`",
-              "Explain Nexus project content, media assets, headers, records, publication, Online delivery, and browser validation."
+              "Covered by `applications.nexus-data-content-guide` with Nexus project content, media assets, headers, records, publication, Online delivery, and browser validation."
             ],
             [
+              "Closed by P0 docs batch",
               "Axis setup and user-safe error contracts",
               "`nodics.platform/modules/backoffice`, `nodics.platform/modules/axis`, `nodics.exp/nodics.axis`",
-              "Explain setup states, blockers, retry behavior, required capability checks, technical evidence, and customer-safe messages."
+              "Covered by `applications.axis-setup-error-contracts` with setup states, blockers, retry behavior, required capability checks, technical evidence, and customer-safe messages."
             ],
             [
+              "Closed by P0 docs batch",
               "CMS exact source map",
               "`nodics.wcms/modules/cms`",
-              "Split page, route, component, slot, template, renderer, publication manifest, migration, delivery cache, and documentation governance details."
+              "Covered by `wcms.cms-source-map-authoring-contract` with page, route, component, slot, template, renderer, publication manifest, migration, delivery cache, and documentation governance details."
             ],
             [
+              "Closed by P0 docs batch",
               "Media operations runbook",
               "`nodics.wcms/modules/media`, `nodics.foundation/modules/nData/nImport/import/src/service/media`",
-              "Explain upload, import hydration, storage providers, cleanup, replication queue, delivery failures, and DR evidence."
+              "Covered by `wcms.media-operations-runbook` with upload, import hydration, storage providers, cleanup, replication queue, delivery failures, and DR evidence."
             ],
             [
+              "Closed by P0 docs batch",
               "Import/export provider guides",
               "`nodics.foundation/modules/nData/nImport`, `nodics.foundation/modules/nData/nExport`",
-              "Explain JavaScript, JSON, CSV, Excel, generated exports, parsers, field allow-lists, masking, and rollback boundaries."
+              "Covered by `data.import-export-provider-guides` with JavaScript, JSON, CSV, Excel, generated exports, parsers, field allow-lists, masking, and rollback boundaries."
             ],
             [
+              "Closed by P0 docs batch",
               "Commerce authoring and fulfillment",
               "`nodics.commerce/modules/baseCommerce`, `nodics.commerce/modules/fulfillment`",
-              "Explain product, price, inventory, search projection, fulfillment execution, consignments, exceptions, return receipts, and browser proof."
+              "Covered by `commerce.data-authoring-fulfillment` with product, price, inventory, search projection, fulfillment execution, consignments, exceptions, return receipts, and browser proof."
             ],
             [
+              "Closed by P0 docs batch",
               "Documentation publishing runbook",
               "`nodics.docs`, `nodics.wcms/modules/cms`, `nodics.process/modules/nPublish`",
-              "Explain Markdown source, generated content-pack data, Staged import, review, Online activation, rollback, and Axis/Nexus rendering."
+              "Covered by `docs.documentation-publishing-runbook` with Markdown source, generated content-pack data, Staged import, review, Online activation, rollback, and Axis/Nexus rendering."
             ]
           ]
         },
@@ -41775,7 +44589,7 @@ module.exports = {
           "text": "The backlog is healthy when the generated report, this page, catalogue metadata, generated WCMS records, and runtime evidence agree. Business users should see clear journeys, developers should see exact source paths and extension points, operators should see evidence and recovery steps, QA owners should see validation commands, and AI tools should see boundaries that prevent unsafe source or data changes."
         }
       ],
-      "searchText": "Documentation Gap Backlog Classified backlog for closing source-backed documentation gaps across runtime capabilities, data releases, media, applications, operations, and validation. # Documentation Gap Backlog\n\nThis backlog turns the source-backed coverage audit into executable\ndocumentation work. It captures the remaining categories that must be closed so\nNodics documentation explains not only what the product is, but how developers,\nbusiness users, operators, QA owners, and AI tools can safely work with the\nframework.\n\nFor beginners, the mental model is simple: the coverage report tells us where\nthe source is richer than the documentation, and this backlog tells us what to\ndo next. A source boundary may need a new page, a deeper section in an existing\npage, an explicit owner mapping, or an internal-only decision. The backlog is\nnot a marketing roadmap. It is a release-quality checklist for source-backed\ndocumentation.\n\n## Backlog flow\n\n```mermaid\nflowchart LR\n  Report[\"Generated coverage report\"] --> Classify[\"Classify each gap\"]\n  Classify --> Page[\"New page\"]\n  Classify --> Deepen[\"Deeper section\"]\n  Classify --> Map[\"Owner mapping\"]\n  Classify --> Internal[\"Internal-only decision\"]\n  Page --> Generate[\"Regenerate docs data\"]\n  Deepen --> Generate\n  Map --> Generate\n  Internal --> Generate\n  Generate --> Test[\"Docs tests and source evidence\"]\n  Test --> Publish[\"Staged approval and Online publication\"]\n```\n\n## Classification policy\n\n| Classification | Meaning | Required action |\n| --- | --- | --- |\n| `needs-page` | A user-visible or developer-extensible capability has no clear page. | Create authored Markdown, catalogue metadata, source evidence, generated records, and validation. |\n| `needs-deeper-section` | A page exists, but it lacks exact source map, data, service, operation, or validation detail. | Extend the existing page with how-to, how-it-works, customization, errors, and tests. |\n| `needs-page-or-owner-mapping` | The source is significant, but ownership may belong under a broader page. | Decide owner, then either create a page or add explicit mapping to the owning page. |\n| `internal-only-candidate` | The module is likely a utility or provider implementation. | Document the owner page that covers it, or mark it internal with justification. |\n| `covered` | Existing docs and source evidence are sufficient for the current maturity state. | Keep validation and browser evidence current when behavior changes. |\n\n## P0 closure items\n\n| Item | Source areas | Documentation outcome |\n| --- | --- | --- |\n| Nexus data and content guide | `nodics.kickoff/modules/nexus.web` | Explain Nexus project content, media assets, headers, records, publication, Online delivery, and browser validation. |\n| Axis setup and user-safe error contracts | `nodics.platform/modules/backoffice`, `nodics.platform/modules/axis`, `nodics.exp/nodics.axis` | Explain setup states, blockers, retry behavior, required capability checks, technical evidence, and customer-safe messages. |\n| CMS exact source map | `nodics.wcms/modules/cms` | Split page, route, component, slot, template, renderer, publication manifest, migration, delivery cache, and documentation governance details. |\n| Media operations runbook | `nodics.wcms/modules/media`, `nodics.foundation/modules/nData/nImport/import/src/service/media` | Explain upload, import hydration, storage providers, cleanup, replication queue, delivery failures, and DR evidence. |\n| Import/export provider guides | `nodics.foundation/modules/nData/nImport`, `nodics.foundation/modules/nData/nExport` | Explain JavaScript, JSON, CSV, Excel, generated exports, parsers, field allow-lists, masking, and rollback boundaries. |\n| Commerce authoring and fulfillment | `nodics.commerce/modules/baseCommerce`, `nodics.commerce/modules/fulfillment` | Explain product, price, inventory, search projection, fulfillment execution, consignments, exceptions, return receipts, and browser proof. |\n| Documentation publishing runbook | `nodics.docs`, `nodics.wcms/modules/cms`, `nodics.process/modules/nPublish` | Explain Markdown source, generated content-pack data, Staged import, review, Online activation, rollback, and Axis/Nexus rendering. |\n\n## P1 closure items\n\n| Item | Source areas | Documentation outcome |\n| --- | --- | --- |\n| Module Registry journey | `nodics.platform/modules/backoffice`, registry-related Platform services | Explain registration, activation, dependency state, required capability checks, and Axis visibility. |\n| Commerce Search guide | `nodics.commerce/modules/baseCommerce/modules/commerceSearch` | Explain ranking rules, projections, publish flow, index ownership, storefront effect, and recovery. |\n| Localization depth | `nodics.localization/modules/localizationCore`, `nodics.localization/modules/localizationApi` | Explain locale records, fallback, content/product localization, import data, API boundaries, and browser proof. |\n| Payment Core and provider split | `nodics.commerce/modules/payment` | Explain payment decisions, method/provider separation, reconciliation, safe customer payload, and provider extension. |\n| Customer List and Profile-Commerce boundary | `nodics.commerce/modules/checkout/modules/customerList`, `nodics.platform/modules/profile` | Explain why customer list exists in Commerce and what Profile continues to own. |\n| NMS runtime monitoring | `nodics.foundation/modules/nNms` | Explain node monitoring, topology, health, operational evidence, and recovery actions. |\n| Service runtime and overrides | `nodics.foundation/modules/nService`, `nodics.foundation/modules/nService/vService` | Explain service discovery, virtual services, generated services, override precedence, and extension safety. |\n| Cache provider runbooks | `nodics.foundation/modules/nCache`, Redis, Hazelcast, Node cache | Explain provider boundaries, cache key strategy, invalidation, failure behavior, and production configuration. |\n| Database provider boundaries | `nodics.foundation/modules/nDatabase` | Explain MongoDB, virtual DB, Cassandra, Elasticsearch, provider contracts, configuration, and validation. |\n| OTP and security flow | `nodics.foundation/modules/nOtp` | Explain OTP generation, verification, expiry, retry, throttling, audit, and security controls. |\n| Communication providers | `nodics.communication/modules/smtpCommsProvider`, `nodics.communication/modules/smsCommsProvider` | Explain SMTP/SMS provider behavior, templates, retries, failed delivery evidence, and extension rules. |\n| Engagement and contact submission | `nodics.engagement/modules/contactSubmission` | Explain contact forms, moderation, workflow, notification, audit, and recovery. |\n| Workflow and BPM source map | `nodics.foundation/modules/nbpm`, `nodics.process` | Explain workflow definitions, transitions, tasks, callbacks, history, and operator visibility. |\n| Cron job data authoring | `nodics.process/modules/cronjob` | Explain job records, schedules, execution policy, retry, idempotency, and Process server ownership. |\n| Release and upgrade compatibility | `nodics.foundation/modules/nSetup`, all module data folders | Explain version freeze, upgrade path, rollback, checksum drift, generated manifests, and extension compatibility. |\n\n## P2 closure items\n\n| Item | Source areas | Documentation outcome |\n| --- | --- | --- |\n| Fresh-schema setup per runtime | Platform, WCMS Staged, WCMS Online, Process, Commerce, Engagement | Add runtime-specific import order, seed data, publication, and acceptance evidence where existing quick-start docs are too broad. |\n| Environment, server, and node discovery | `nodics.kickoff/envs`, framework server/node configuration | Explain how physical hierarchy, environment config, server composition, and runtime roles are discovered. |\n| Permission and access matrix | Profile, BackOffice, WCMS, documentation access policies | Explain roles, groups, permissions, access modes, public/authenticated/restricted behavior, and publication visibility. |\n| Search indexing operations | Discovery and Commerce Search modules | Explain index jobs, reindex, projection freshness, failure recovery, and ownership. |\n| Migration and import reconciliation | Import, migration, CMS migration, Commerce data | Explain source classification, mapping tables, partial failures, retry, and data correction. |\n| Export and data privacy | Export providers, media-owned generated files | Explain allow-lists, masking, retention, download permissions, and audit. |\n| Observability | NMS, import runs, publication receipts, logs, dashboards | Explain correlation IDs, status evidence, health checks, support cards, and escalation. |\n| Disaster recovery | Media publication, Online storage, replication queue | Explain Online media replication, DR queues, recovery receipts, and failure escalation. |\n| Frontend consumption contracts | Axis, Nexus, Agora | Explain that Axis consumes BackOffice metadata, Nexus consumes Online WCMS, and Agora consumes Online commerce/content. |\n| Data quality rules | All module data folders | Explain required fields, stable keys, idempotent queries, relation integrity, and no runtime logic in data files. |\n| Testing standards | All modules and frontends | Explain unit, contract, generator, fresh-schema, publication, browser, accessibility, and regression expectations. |\n| Troubleshooting matrices | Every operational capability page | Add what failed, who owns it, user-safe message, technical evidence, and recovery action. |\n| Decision-maker overview pages | Product and capability overview docs | Explain business value, ownership model, platform differentiation, risk controls, and implementation confidence. |\n| Internal-only register | Low-score utility modules | Decide and document which technical modules do not need public pages and where they are covered. |\n\n## Closure workflow\n\n1. Start from the generated source coverage report.\n2. Pick the highest-priority open item.\n3. Inspect source files, schemas, services, routers, data, assets, tests, and\n   frontend consumers.\n4. Decide whether the work is a new page, deeper section, owner mapping, or\n   internal-only classification.\n5. Update authored Markdown and catalogue metadata.\n6. Regenerate documentation data and source coverage reports.\n7. Run docs tests and any owning module tests needed for the behavior.\n8. For runtime-visible changes, import into Staged, publish Online, and verify\n   Axis, Nexus, or Agora from the browser.\n9. Commit the smallest coherent documentation batch.\n\n## Common mistakes\n\n- Treating this backlog as optional once a high-level overview exists.\n- Closing a source gap without reading the current source files and tests.\n- Creating public documentation for a module that should be an internal utility\n  without explaining the broader owner.\n- Forgetting business users when writing deep developer detail.\n- Forgetting developers when writing a business-friendly page.\n- Forgetting operators and QA owners when documenting publishable or\n  production-visible behavior.\n- Showing external references as source design instead of industry-standard\n  expectation checks.\n\n## Verification\n\nRun the documentation gates after each closure batch:\n\n```bash\nnpm --prefix nodics.docs run audit:source-coverage\nnpm --prefix nodics.docs run docs:generate\nnpm --prefix nodics.docs test\ngit -C nodics.ai diff --check\n```\n\nThe backlog is healthy when the generated report, this page, catalogue\nmetadata, generated WCMS records, and runtime evidence agree. Business users\nshould see clear journeys, developers should see exact source paths and\nextension points, operators should see evidence and recovery steps, QA owners\nshould see validation commands, and AI tools should see boundaries that prevent\nunsafe source or data changes.\n",
+      "searchText": "Documentation Gap Backlog Classified backlog for closing source-backed documentation gaps across runtime capabilities, data releases, media, applications, operations, and validation. # Documentation Gap Backlog\n\nThis backlog turns the source-backed coverage audit into executable\ndocumentation work. It captures the remaining categories that must be closed so\nNodics documentation explains not only what the product is, but how developers,\nbusiness users, operators, QA owners, and AI tools can safely work with the\nframework.\n\nFor beginners, the mental model is simple: the coverage report tells us where\nthe source is richer than the documentation, and this backlog tells us what to\ndo next. A source boundary may need a new page, a deeper section in an existing\npage, an explicit owner mapping, or an internal-only decision. The backlog is\nnot a marketing roadmap. It is a release-quality checklist for source-backed\ndocumentation.\n\n## Backlog flow\n\n```mermaid\nflowchart LR\n  Report[\"Generated coverage report\"] --> Classify[\"Classify each gap\"]\n  Classify --> Page[\"New page\"]\n  Classify --> Deepen[\"Deeper section\"]\n  Classify --> Map[\"Owner mapping\"]\n  Classify --> Internal[\"Internal-only decision\"]\n  Page --> Generate[\"Regenerate docs data\"]\n  Deepen --> Generate\n  Map --> Generate\n  Internal --> Generate\n  Generate --> Test[\"Docs tests and source evidence\"]\n  Test --> Publish[\"Staged approval and Online publication\"]\n```\n\n## Classification policy\n\n| Classification | Meaning | Required action |\n| --- | --- | --- |\n| `needs-page` | A user-visible or developer-extensible capability has no clear page. | Create authored Markdown, catalogue metadata, source evidence, generated records, and validation. |\n| `needs-deeper-section` | A page exists, but it lacks exact source map, data, service, operation, or validation detail. | Extend the existing page with how-to, how-it-works, customization, errors, and tests. |\n| `needs-page-or-owner-mapping` | The source is significant, but ownership may belong under a broader page. | Decide owner, then either create a page or add explicit mapping to the owning page. |\n| `internal-only-candidate` | The module is likely a utility or provider implementation. | Document the owner page that covers it, or mark it internal with justification. |\n| `covered` | Existing docs and source evidence are sufficient for the current maturity state. | Keep validation and browser evidence current when behavior changes. |\n\n## P0 closure items\n\n| Status | Item | Source areas | Documentation outcome |\n| --- | --- | --- | --- |\n| Closed by P0 docs batch | Nexus data and content guide | `nodics.kickoff/modules/nexus.web` | Covered by `applications.nexus-data-content-guide` with Nexus project content, media assets, headers, records, publication, Online delivery, and browser validation. |\n| Closed by P0 docs batch | Axis setup and user-safe error contracts | `nodics.platform/modules/backoffice`, `nodics.platform/modules/axis`, `nodics.exp/nodics.axis` | Covered by `applications.axis-setup-error-contracts` with setup states, blockers, retry behavior, required capability checks, technical evidence, and customer-safe messages. |\n| Closed by P0 docs batch | CMS exact source map | `nodics.wcms/modules/cms` | Covered by `wcms.cms-source-map-authoring-contract` with page, route, component, slot, template, renderer, publication manifest, migration, delivery cache, and documentation governance details. |\n| Closed by P0 docs batch | Media operations runbook | `nodics.wcms/modules/media`, `nodics.foundation/modules/nData/nImport/import/src/service/media` | Covered by `wcms.media-operations-runbook` with upload, import hydration, storage providers, cleanup, replication queue, delivery failures, and DR evidence. |\n| Closed by P0 docs batch | Import/export provider guides | `nodics.foundation/modules/nData/nImport`, `nodics.foundation/modules/nData/nExport` | Covered by `data.import-export-provider-guides` with JavaScript, JSON, CSV, Excel, generated exports, parsers, field allow-lists, masking, and rollback boundaries. |\n| Closed by P0 docs batch | Commerce authoring and fulfillment | `nodics.commerce/modules/baseCommerce`, `nodics.commerce/modules/fulfillment` | Covered by `commerce.data-authoring-fulfillment` with product, price, inventory, search projection, fulfillment execution, consignments, exceptions, return receipts, and browser proof. |\n| Closed by P0 docs batch | Documentation publishing runbook | `nodics.docs`, `nodics.wcms/modules/cms`, `nodics.process/modules/nPublish` | Covered by `docs.documentation-publishing-runbook` with Markdown source, generated content-pack data, Staged import, review, Online activation, rollback, and Axis/Nexus rendering. |\n\n## P1 closure items\n\n| Item | Source areas | Documentation outcome |\n| --- | --- | --- |\n| Module Registry journey | `nodics.platform/modules/backoffice`, registry-related Platform services | Explain registration, activation, dependency state, required capability checks, and Axis visibility. |\n| Commerce Search guide | `nodics.commerce/modules/baseCommerce/modules/commerceSearch` | Explain ranking rules, projections, publish flow, index ownership, storefront effect, and recovery. |\n| Localization depth | `nodics.localization/modules/localizationCore`, `nodics.localization/modules/localizationApi` | Explain locale records, fallback, content/product localization, import data, API boundaries, and browser proof. |\n| Payment Core and provider split | `nodics.commerce/modules/payment` | Explain payment decisions, method/provider separation, reconciliation, safe customer payload, and provider extension. |\n| Customer List and Profile-Commerce boundary | `nodics.commerce/modules/checkout/modules/customerList`, `nodics.platform/modules/profile` | Explain why customer list exists in Commerce and what Profile continues to own. |\n| NMS runtime monitoring | `nodics.foundation/modules/nNms` | Explain node monitoring, topology, health, operational evidence, and recovery actions. |\n| Service runtime and overrides | `nodics.foundation/modules/nService`, `nodics.foundation/modules/nService/vService` | Explain service discovery, virtual services, generated services, override precedence, and extension safety. |\n| Cache provider runbooks | `nodics.foundation/modules/nCache`, Redis, Hazelcast, Node cache | Explain provider boundaries, cache key strategy, invalidation, failure behavior, and production configuration. |\n| Database provider boundaries | `nodics.foundation/modules/nDatabase` | Explain MongoDB, virtual DB, Cassandra, Elasticsearch, provider contracts, configuration, and validation. |\n| OTP and security flow | `nodics.foundation/modules/nOtp` | Explain OTP generation, verification, expiry, retry, throttling, audit, and security controls. |\n| Communication providers | `nodics.communication/modules/smtpCommsProvider`, `nodics.communication/modules/smsCommsProvider` | Explain SMTP/SMS provider behavior, templates, retries, failed delivery evidence, and extension rules. |\n| Engagement and contact submission | `nodics.engagement/modules/contactSubmission` | Explain contact forms, moderation, workflow, notification, audit, and recovery. |\n| Workflow and BPM source map | `nodics.foundation/modules/nbpm`, `nodics.process` | Explain workflow definitions, transitions, tasks, callbacks, history, and operator visibility. |\n| Cron job data authoring | `nodics.process/modules/cronjob` | Explain job records, schedules, execution policy, retry, idempotency, and Process server ownership. |\n| Release and upgrade compatibility | `nodics.foundation/modules/nSetup`, all module data folders | Explain version freeze, upgrade path, rollback, checksum drift, generated manifests, and extension compatibility. |\n\n## P2 closure items\n\n| Item | Source areas | Documentation outcome |\n| --- | --- | --- |\n| Fresh-schema setup per runtime | Platform, WCMS Staged, WCMS Online, Process, Commerce, Engagement | Add runtime-specific import order, seed data, publication, and acceptance evidence where existing quick-start docs are too broad. |\n| Environment, server, and node discovery | `nodics.kickoff/envs`, framework server/node configuration | Explain how physical hierarchy, environment config, server composition, and runtime roles are discovered. |\n| Permission and access matrix | Profile, BackOffice, WCMS, documentation access policies | Explain roles, groups, permissions, access modes, public/authenticated/restricted behavior, and publication visibility. |\n| Search indexing operations | Discovery and Commerce Search modules | Explain index jobs, reindex, projection freshness, failure recovery, and ownership. |\n| Migration and import reconciliation | Import, migration, CMS migration, Commerce data | Explain source classification, mapping tables, partial failures, retry, and data correction. |\n| Export and data privacy | Export providers, media-owned generated files | Explain allow-lists, masking, retention, download permissions, and audit. |\n| Observability | NMS, import runs, publication receipts, logs, dashboards | Explain correlation IDs, status evidence, health checks, support cards, and escalation. |\n| Disaster recovery | Media publication, Online storage, replication queue | Explain Online media replication, DR queues, recovery receipts, and failure escalation. |\n| Frontend consumption contracts | Axis, Nexus, Agora | Explain that Axis consumes BackOffice metadata, Nexus consumes Online WCMS, and Agora consumes Online commerce/content. |\n| Data quality rules | All module data folders | Explain required fields, stable keys, idempotent queries, relation integrity, and no runtime logic in data files. |\n| Testing standards | All modules and frontends | Explain unit, contract, generator, fresh-schema, publication, browser, accessibility, and regression expectations. |\n| Troubleshooting matrices | Every operational capability page | Add what failed, who owns it, user-safe message, technical evidence, and recovery action. |\n| Decision-maker overview pages | Product and capability overview docs | Explain business value, ownership model, platform differentiation, risk controls, and implementation confidence. |\n| Internal-only register | Low-score utility modules | Decide and document which technical modules do not need public pages and where they are covered. |\n\n## Closure workflow\n\n1. Start from the generated source coverage report.\n2. Pick the highest-priority open item.\n3. Inspect source files, schemas, services, routers, data, assets, tests, and\n   frontend consumers.\n4. Decide whether the work is a new page, deeper section, owner mapping, or\n   internal-only classification.\n5. Update authored Markdown and catalogue metadata.\n6. Regenerate documentation data and source coverage reports.\n7. Run docs tests and any owning module tests needed for the behavior.\n8. For runtime-visible changes, import into Staged, publish Online, and verify\n   Axis, Nexus, or Agora from the browser.\n9. Commit the smallest coherent documentation batch.\n\n## Common mistakes\n\n- Treating this backlog as optional once a high-level overview exists.\n- Closing a source gap without reading the current source files and tests.\n- Creating public documentation for a module that should be an internal utility\n  without explaining the broader owner.\n- Forgetting business users when writing deep developer detail.\n- Forgetting developers when writing a business-friendly page.\n- Forgetting operators and QA owners when documenting publishable or\n  production-visible behavior.\n- Showing external references as source design instead of industry-standard\n  expectation checks.\n\n## Verification\n\nRun the documentation gates after each closure batch:\n\n```bash\nnpm --prefix nodics.docs run audit:source-coverage\nnpm --prefix nodics.docs run docs:generate\nnpm --prefix nodics.docs test\ngit -C nodics.ai diff --check\n```\n\nThe backlog is healthy when the generated report, this page, catalogue\nmetadata, generated WCMS records, and runtime evidence agree. Business users\nshould see clear journeys, developers should see exact source paths and\nextension points, operators should see evidence and recovery steps, QA owners\nshould see validation commands, and AI tools should see boundaries that prevent\nunsafe source or data changes.\n",
       "previous": {
         "title": "Source-Backed Documentation Coverage Audit",
         "route": "/docs/framework/reference-source-backed-documentation-coverage-audit"
@@ -41787,8 +44601,8 @@ module.exports = {
         "owner": "nodics.docs",
         "sourcePath": "docs/pages/reference/documentation-gap-backlog.md",
         "path": "docs/pages/reference/documentation-gap-backlog.md",
-        "wordCount": 1404,
-        "checksum": "1a4386b343bf51fac42c6e326b56defba3501d060b006305608b0580c3978f47"
+        "wordCount": 1468,
+        "checksum": "ff9b54926fbd90c52b92e1ef2776737a9513c0ebf7e4a40048f31f5651eefeb1"
       }
     },
     "active": true

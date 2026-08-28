@@ -201,6 +201,10 @@ const documentationBacklog = [
   },
 ];
 
+function backlogStatus(item) {
+  return item.priority === 'P0' ? 'closed-by-p0-docs-batch' : 'open';
+}
+
 function isIgnored(pathValue) {
   return pathValue.split(sep).some((segment) => ignoredSegments.has(segment));
 }
@@ -413,7 +417,10 @@ const report = {
     reason: 'Open documentation gaps are tracked as release work; this report fails only when stale or malformed.',
     classifications: ['needs-page-or-owner-mapping', 'needs-deeper-section', 'covered', 'internal-only-candidate'],
   },
-  documentationBacklog,
+  documentationBacklog: documentationBacklog.map((item) => ({
+    ...item,
+    status: backlogStatus(item),
+  })),
   rows,
 };
 
@@ -440,11 +447,11 @@ function markdown(reportValue) {
     '',
     '## Classified Backlog',
     '',
-    '| Priority | Item | Classification | Source areas | Action |',
-    '| --- | --- | --- | --- | --- |',
+    '| Priority | Status | Item | Classification | Source areas | Action |',
+    '| --- | --- | --- | --- | --- | --- |',
   ];
   reportValue.documentationBacklog.forEach((item) => {
-    lines.push(`| ${item.priority} | ${item.item} | ${item.classification} | ${item.sourceAreas.map((source) => `\`${source}\``).join('<br/>')} | ${item.action} |`);
+    lines.push(`| ${item.priority} | ${item.status} | ${item.item} | ${item.classification} | ${item.sourceAreas.map((source) => `\`${source}\``).join('<br/>')} | ${item.action} |`);
   });
   lines.push(
     '',

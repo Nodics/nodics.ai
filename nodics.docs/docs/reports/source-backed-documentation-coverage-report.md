@@ -6,41 +6,41 @@ This generated report maps current source boundaries to published documentation 
 
 | Metric | Count |
 | --- | --- |
-| Catalogue documents | 95 |
+| Catalogue documents | 102 |
 | Source boundaries scanned | 172 |
-| Needs page or owner mapping | 15 |
-| Needs deeper section | 6 |
-| Covered | 126 |
+| Needs page or owner mapping | 11 |
+| Needs deeper section | 5 |
+| Covered | 131 |
 | Internal-only candidate | 25 |
 | Classified backlog items | 23 |
 
 ## Classified Backlog
 
-| Priority | Item | Classification | Source areas | Action |
-| --- | --- | --- | --- | --- |
-| P0 | Nexus data and content guide | needs-page | `nodics.kickoff/modules/nexus.web` | Document project content data, media assets, publication, Online delivery, and browser validation for Nexus. |
-| P0 | Axis setup and user-safe error contracts | needs-deeper-section | `nodics.platform/modules/backoffice`<br/>`nodics.platform/modules/axis`<br/>`nodics.exp/nodics.axis` | Document status states, setup blockers, retry actions, technical evidence, and user-safe message rules. |
-| P0 | CMS exact source map | needs-deeper-section | `nodics.wcms/modules/cms` | Split authoring, delivery, publication manifest, migration, cache, and documentation governance coverage. |
-| P0 | Media operations runbook | needs-deeper-section | `nodics.wcms/modules/media`<br/>`nodics.foundation/modules/nData/nImport/import/src/service/media` | Document upload, import hydration, storage providers, cleanup lifecycle, replication queue, and delivery failures. |
-| P0 | Import/export provider guides | needs-page | `nodics.foundation/modules/nData/nImport`<br/>`nodics.foundation/modules/nData/nExport` | Document JavaScript, JSON, CSV, Excel, generated exports, parser behavior, safety, masking, and customization. |
-| P0 | Commerce product, price, inventory, and fulfillment authoring | needs-page-or-deeper-section | `nodics.commerce/modules/baseCommerce`<br/>`nodics.commerce/modules/fulfillment` | Document data dependencies, creation lanes, publication, search projection, fulfillment evidence, and browser proof. |
-| P0 | Documentation publishing runbook | needs-deeper-section | `nodics.docs`<br/>`nodics.wcms/modules/cms`<br/>`nodics.process/modules/nPublish` | Document source Markdown to generated data, Staged import, review, Online publication, rollback, and rendering. |
-| P1 | Module Registry journey | needs-deeper-section | `nodics.platform/modules/backoffice`<br/>`nodics.platform/modules/moduleRegistry` | Document registration, activation, dependencies, required capability checks, status projection, and Axis visibility. |
-| P1 | Commerce Search guide | needs-deeper-section | `nodics.commerce/modules/baseCommerce/modules/commerceSearch` | Document ranking rules, projections, publishing, index ownership, and storefront impact. |
-| P1 | Localization depth | needs-page-or-deeper-section | `nodics.localization/modules/localizationCore`<br/>`nodics.localization/modules/localizationApi` | Document locale records, fallback behavior, content and product localization, import data, and API boundary. |
-| P1 | Payment Core and provider split | needs-page-or-owner-mapping | `nodics.commerce/modules/payment` | Document payment decisions, method/provider separation, reconciliation, and safe customer payloads. |
-| P1 | Customer List and Profile-Commerce boundary | needs-page-or-owner-mapping | `nodics.commerce/modules/checkout/modules/customerList`<br/>`nodics.platform/modules/profile` | Document why customer list exists in Commerce and what Profile owns. |
-| P1 | NMS runtime monitoring | needs-page-or-owner-mapping | `nodics.foundation/modules/nNms` | Document node monitoring, topology, health checks, runtime evidence, and operator recovery. |
-| P1 | Service runtime and override precedence | needs-page-or-owner-mapping | `nodics.foundation/modules/nService`<br/>`nodics.foundation/modules/nService/vService` | Document generated services, virtual service behavior, override precedence, and extension safety. |
-| P1 | Cache provider runbooks | needs-page-or-owner-mapping | `nodics.foundation/modules/nCache`<br/>`nodics.foundation/modules/nCache/redisCache`<br/>`nodics.foundation/modules/nCache/hazelcastCache` | Document Redis, Hazelcast, Node cache, key strategy, invalidation, and production behavior. |
-| P1 | Database provider boundaries | needs-page-or-owner-mapping | `nodics.foundation/modules/nDatabase` | Document MongoDB, virtual DB, Cassandra, Elasticsearch, configuration, provider contracts, and validation. |
-| P1 | OTP and security flow | needs-page-or-owner-mapping | `nodics.foundation/modules/nOtp` | Document OTP generation, verification, expiry, retry, throttling, audit, and security controls. |
-| P1 | Communication providers | needs-page-or-deeper-section | `nodics.communication/modules/smtpCommsProvider`<br/>`nodics.communication/modules/smsCommsProvider` | Document SMTP/SMS providers, templates, retry, failed delivery evidence, and extension rules. |
-| P1 | Engagement and contact submission | needs-deeper-section | `nodics.engagement/modules/contactSubmission` | Document contact forms, moderation, workflow, notification, audit, and recovery. |
-| P1 | Workflow and BPM source map | needs-deeper-section | `nodics.foundation/modules/nbpm`<br/>`nodics.process` | Document workflow definitions, transitions, tasks, callbacks, history, and operator visibility. |
-| P1 | Cron job data authoring | needs-deeper-section | `nodics.process/modules/cronjob` | Document job records, schedules, execution policy, retry, idempotency, and Process server ownership. |
-| P1 | Release and upgrade compatibility | needs-deeper-section | `nodics.docs`<br/>`nodics.foundation/modules/nSetup`<br/>`all module data folders` | Document version freeze, upgrade path, rollback, checksum drift, generated manifest policy, and customer extension compatibility. |
-| P2 | Internal-only classification register | needs-owner-decision | `all low-score utility modules` | Decide which technical modules remain internal and which broader page owns their explanation. |
+| Priority | Status | Item | Classification | Source areas | Action |
+| --- | --- | --- | --- | --- | --- |
+| P0 | closed-by-p0-docs-batch | Nexus data and content guide | needs-page | `nodics.kickoff/modules/nexus.web` | Document project content data, media assets, publication, Online delivery, and browser validation for Nexus. |
+| P0 | closed-by-p0-docs-batch | Axis setup and user-safe error contracts | needs-deeper-section | `nodics.platform/modules/backoffice`<br/>`nodics.platform/modules/axis`<br/>`nodics.exp/nodics.axis` | Document status states, setup blockers, retry actions, technical evidence, and user-safe message rules. |
+| P0 | closed-by-p0-docs-batch | CMS exact source map | needs-deeper-section | `nodics.wcms/modules/cms` | Split authoring, delivery, publication manifest, migration, cache, and documentation governance coverage. |
+| P0 | closed-by-p0-docs-batch | Media operations runbook | needs-deeper-section | `nodics.wcms/modules/media`<br/>`nodics.foundation/modules/nData/nImport/import/src/service/media` | Document upload, import hydration, storage providers, cleanup lifecycle, replication queue, and delivery failures. |
+| P0 | closed-by-p0-docs-batch | Import/export provider guides | needs-page | `nodics.foundation/modules/nData/nImport`<br/>`nodics.foundation/modules/nData/nExport` | Document JavaScript, JSON, CSV, Excel, generated exports, parser behavior, safety, masking, and customization. |
+| P0 | closed-by-p0-docs-batch | Commerce product, price, inventory, and fulfillment authoring | needs-page-or-deeper-section | `nodics.commerce/modules/baseCommerce`<br/>`nodics.commerce/modules/fulfillment` | Document data dependencies, creation lanes, publication, search projection, fulfillment evidence, and browser proof. |
+| P0 | closed-by-p0-docs-batch | Documentation publishing runbook | needs-deeper-section | `nodics.docs`<br/>`nodics.wcms/modules/cms`<br/>`nodics.process/modules/nPublish` | Document source Markdown to generated data, Staged import, review, Online publication, rollback, and rendering. |
+| P1 | open | Module Registry journey | needs-deeper-section | `nodics.platform/modules/backoffice`<br/>`nodics.platform/modules/moduleRegistry` | Document registration, activation, dependencies, required capability checks, status projection, and Axis visibility. |
+| P1 | open | Commerce Search guide | needs-deeper-section | `nodics.commerce/modules/baseCommerce/modules/commerceSearch` | Document ranking rules, projections, publishing, index ownership, and storefront impact. |
+| P1 | open | Localization depth | needs-page-or-deeper-section | `nodics.localization/modules/localizationCore`<br/>`nodics.localization/modules/localizationApi` | Document locale records, fallback behavior, content and product localization, import data, and API boundary. |
+| P1 | open | Payment Core and provider split | needs-page-or-owner-mapping | `nodics.commerce/modules/payment` | Document payment decisions, method/provider separation, reconciliation, and safe customer payloads. |
+| P1 | open | Customer List and Profile-Commerce boundary | needs-page-or-owner-mapping | `nodics.commerce/modules/checkout/modules/customerList`<br/>`nodics.platform/modules/profile` | Document why customer list exists in Commerce and what Profile owns. |
+| P1 | open | NMS runtime monitoring | needs-page-or-owner-mapping | `nodics.foundation/modules/nNms` | Document node monitoring, topology, health checks, runtime evidence, and operator recovery. |
+| P1 | open | Service runtime and override precedence | needs-page-or-owner-mapping | `nodics.foundation/modules/nService`<br/>`nodics.foundation/modules/nService/vService` | Document generated services, virtual service behavior, override precedence, and extension safety. |
+| P1 | open | Cache provider runbooks | needs-page-or-owner-mapping | `nodics.foundation/modules/nCache`<br/>`nodics.foundation/modules/nCache/redisCache`<br/>`nodics.foundation/modules/nCache/hazelcastCache` | Document Redis, Hazelcast, Node cache, key strategy, invalidation, and production behavior. |
+| P1 | open | Database provider boundaries | needs-page-or-owner-mapping | `nodics.foundation/modules/nDatabase` | Document MongoDB, virtual DB, Cassandra, Elasticsearch, configuration, provider contracts, and validation. |
+| P1 | open | OTP and security flow | needs-page-or-owner-mapping | `nodics.foundation/modules/nOtp` | Document OTP generation, verification, expiry, retry, throttling, audit, and security controls. |
+| P1 | open | Communication providers | needs-page-or-deeper-section | `nodics.communication/modules/smtpCommsProvider`<br/>`nodics.communication/modules/smsCommsProvider` | Document SMTP/SMS providers, templates, retry, failed delivery evidence, and extension rules. |
+| P1 | open | Engagement and contact submission | needs-deeper-section | `nodics.engagement/modules/contactSubmission` | Document contact forms, moderation, workflow, notification, audit, and recovery. |
+| P1 | open | Workflow and BPM source map | needs-deeper-section | `nodics.foundation/modules/nbpm`<br/>`nodics.process` | Document workflow definitions, transitions, tasks, callbacks, history, and operator visibility. |
+| P1 | open | Cron job data authoring | needs-deeper-section | `nodics.process/modules/cronjob` | Document job records, schedules, execution policy, retry, idempotency, and Process server ownership. |
+| P1 | open | Release and upgrade compatibility | needs-deeper-section | `nodics.docs`<br/>`nodics.foundation/modules/nSetup`<br/>`all module data folders` | Document version freeze, upgrade path, rollback, checksum drift, generated manifest policy, and customer extension compatibility. |
+| P2 | open | Internal-only classification register | needs-owner-decision | `all low-score utility modules` | Decide which technical modules remain internal and which broader page owns their explanation. |
 
 ## Top Open Items
 
@@ -55,14 +55,9 @@ This generated report maps current source boundaries to published documentation 
 | needs-page-or-owner-mapping | 24 | `nodics.ai/nodics.foundation/modules/nDatabase/mongodb/vMongodb` | None | schemas:1, services:1, routers:2, tests:3 |
 | needs-page-or-owner-mapping | 22 | `nodics.ai/nodics.accelerators/modules/domainCommerceCore` | None | schemas:1, services:1, routers:2, tests:2 |
 | needs-page-or-owner-mapping | 22 | `nodics.ai/nodics.accelerators/modules/telco/modules/telcoSubscription` | None | schemas:1, services:1, routers:2, tests:2 |
-| needs-page-or-owner-mapping | 19 | `nodics.ai/nodics.foundation/modules/nData/nExport/csvExport` | None | schemas:1, routers:2, tests:2 |
-| needs-page-or-owner-mapping | 19 | `nodics.ai/nodics.foundation/modules/nData/nExport/excelExport` | None | schemas:1, routers:2, tests:2 |
-| needs-page-or-owner-mapping | 19 | `nodics.ai/nodics.foundation/modules/nData/nExport/jsExport` | None | schemas:1, routers:2, tests:2 |
-| needs-page-or-owner-mapping | 19 | `nodics.ai/nodics.foundation/modules/nData/nExport/jsonExport` | None | schemas:1, routers:2, tests:2 |
 | needs-page-or-owner-mapping | 19 | `nodics.ai/nodics.foundation/modules/nDatabase/cassandradb` | None | schemas:1, routers:2, tests:2 |
 | needs-page-or-owner-mapping | 19 | `nodics.ai/nodics.foundation/modules/nDatabase/elasticdb` | None | schemas:1, routers:2, tests:2 |
 | needs-deeper-section | 238 | `nodics.ai/nodics.foundation/modules/nTooling` | foundation.overview, tooling.ai-developer-enablement | services:48, tests:47 |
-| needs-deeper-section | 151 | `nodics.kickoff/modules/nexus.web` | reference.documentation-gap-backlog | dataHeaders:8, dataRecords:25, assets:25, tests:1 |
 | needs-deeper-section | 117 | `nodics.ai/nodics.foundation/modules/nEms` | foundation.overview, events.messaging-cluster-coordination | schemas:3, services:12, controllers:1, routers:6, tests:16 |
 | needs-deeper-section | 79 | `nodics.ai/nodics.localization/modules/localizationCore` | reference.source-backed-documentation-coverage-audit, reference.documentation-gap-backlog | schemas:1, services:15, routers:2, dataHeaders:1, dataRecords:4, tests:2 |
 | needs-deeper-section | 65 | `nodics.ai/nodics.foundation/modules/nEms/emsClient` | runtime.governed-change, events.messaging-cluster-coordination | schemas:1, services:8, controllers:1, routers:2, tests:11 |
@@ -86,6 +81,11 @@ This generated report maps current source boundaries to published documentation 
 | internal-only-candidate | 0 | `nodics.kickoff/envs/kickoffDockerLocal/commerceStagedServer` | None | package only |
 | internal-only-candidate | 0 | `nodics.kickoff/envs/kickoffDockerLocal/wcmsOnlineServer` | None | package only |
 | internal-only-candidate | 0 | `nodics.kickoff/envs/kickoffDockerLocal/wcmsStagedServer` | None | package only |
+| internal-only-candidate | 0 | `nodics.kickoff/envs/kickoffLocal/commerceServer` | None | package only |
+| internal-only-candidate | 0 | `nodics.kickoff/envs/kickoffLocal/commerceStagedServer` | None | package only |
+| internal-only-candidate | 0 | `nodics.kickoff/envs/kickoffLocal/wcmsOnlineServer` | None | package only |
+| internal-only-candidate | 0 | `nodics.kickoff/envs/kickoffLocal/wcmsStagedServer` | None | package only |
+| internal-only-candidate | 0 | `nodics.kickoff/modules/kickoffApi` | None | package only |
 
 ## Verification
 

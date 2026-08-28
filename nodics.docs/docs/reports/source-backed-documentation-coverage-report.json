@@ -18,11 +18,11 @@
   ],
   "summary": {
     "totalModules": 172,
-    "documents": 95,
-    "needs-page-or-owner-mapping": 15,
-    "needs-deeper-section": 6,
+    "documents": 102,
+    "needs-page-or-owner-mapping": 11,
+    "needs-deeper-section": 5,
     "internal-only-candidate": 25,
-    "covered": 126
+    "covered": 131
   },
   "policy": {
     "blocking": false,
@@ -42,7 +42,8 @@
       "sourceAreas": [
         "nodics.kickoff/modules/nexus.web"
       ],
-      "action": "Document project content data, media assets, publication, Online delivery, and browser validation for Nexus."
+      "action": "Document project content data, media assets, publication, Online delivery, and browser validation for Nexus.",
+      "status": "closed-by-p0-docs-batch"
     },
     {
       "priority": "P0",
@@ -53,7 +54,8 @@
         "nodics.platform/modules/axis",
         "nodics.exp/nodics.axis"
       ],
-      "action": "Document status states, setup blockers, retry actions, technical evidence, and user-safe message rules."
+      "action": "Document status states, setup blockers, retry actions, technical evidence, and user-safe message rules.",
+      "status": "closed-by-p0-docs-batch"
     },
     {
       "priority": "P0",
@@ -62,7 +64,8 @@
       "sourceAreas": [
         "nodics.wcms/modules/cms"
       ],
-      "action": "Split authoring, delivery, publication manifest, migration, cache, and documentation governance coverage."
+      "action": "Split authoring, delivery, publication manifest, migration, cache, and documentation governance coverage.",
+      "status": "closed-by-p0-docs-batch"
     },
     {
       "priority": "P0",
@@ -72,7 +75,8 @@
         "nodics.wcms/modules/media",
         "nodics.foundation/modules/nData/nImport/import/src/service/media"
       ],
-      "action": "Document upload, import hydration, storage providers, cleanup lifecycle, replication queue, and delivery failures."
+      "action": "Document upload, import hydration, storage providers, cleanup lifecycle, replication queue, and delivery failures.",
+      "status": "closed-by-p0-docs-batch"
     },
     {
       "priority": "P0",
@@ -82,7 +86,8 @@
         "nodics.foundation/modules/nData/nImport",
         "nodics.foundation/modules/nData/nExport"
       ],
-      "action": "Document JavaScript, JSON, CSV, Excel, generated exports, parser behavior, safety, masking, and customization."
+      "action": "Document JavaScript, JSON, CSV, Excel, generated exports, parser behavior, safety, masking, and customization.",
+      "status": "closed-by-p0-docs-batch"
     },
     {
       "priority": "P0",
@@ -92,7 +97,8 @@
         "nodics.commerce/modules/baseCommerce",
         "nodics.commerce/modules/fulfillment"
       ],
-      "action": "Document data dependencies, creation lanes, publication, search projection, fulfillment evidence, and browser proof."
+      "action": "Document data dependencies, creation lanes, publication, search projection, fulfillment evidence, and browser proof.",
+      "status": "closed-by-p0-docs-batch"
     },
     {
       "priority": "P0",
@@ -103,7 +109,8 @@
         "nodics.wcms/modules/cms",
         "nodics.process/modules/nPublish"
       ],
-      "action": "Document source Markdown to generated data, Staged import, review, Online publication, rollback, and rendering."
+      "action": "Document source Markdown to generated data, Staged import, review, Online publication, rollback, and rendering.",
+      "status": "closed-by-p0-docs-batch"
     },
     {
       "priority": "P1",
@@ -113,7 +120,8 @@
         "nodics.platform/modules/backoffice",
         "nodics.platform/modules/moduleRegistry"
       ],
-      "action": "Document registration, activation, dependencies, required capability checks, status projection, and Axis visibility."
+      "action": "Document registration, activation, dependencies, required capability checks, status projection, and Axis visibility.",
+      "status": "open"
     },
     {
       "priority": "P1",
@@ -122,7 +130,8 @@
       "sourceAreas": [
         "nodics.commerce/modules/baseCommerce/modules/commerceSearch"
       ],
-      "action": "Document ranking rules, projections, publishing, index ownership, and storefront impact."
+      "action": "Document ranking rules, projections, publishing, index ownership, and storefront impact.",
+      "status": "open"
     },
     {
       "priority": "P1",
@@ -132,7 +141,8 @@
         "nodics.localization/modules/localizationCore",
         "nodics.localization/modules/localizationApi"
       ],
-      "action": "Document locale records, fallback behavior, content and product localization, import data, and API boundary."
+      "action": "Document locale records, fallback behavior, content and product localization, import data, and API boundary.",
+      "status": "open"
     },
     {
       "priority": "P1",
@@ -141,7 +151,8 @@
       "sourceAreas": [
         "nodics.commerce/modules/payment"
       ],
-      "action": "Document payment decisions, method/provider separation, reconciliation, and safe customer payloads."
+      "action": "Document payment decisions, method/provider separation, reconciliation, and safe customer payloads.",
+      "status": "open"
     },
     {
       "priority": "P1",
@@ -151,7 +162,8 @@
         "nodics.commerce/modules/checkout/modules/customerList",
         "nodics.platform/modules/profile"
       ],
-      "action": "Document why customer list exists in Commerce and what Profile owns."
+      "action": "Document why customer list exists in Commerce and what Profile owns.",
+      "status": "open"
     },
     {
       "priority": "P1",
@@ -160,7 +172,8 @@
       "sourceAreas": [
         "nodics.foundation/modules/nNms"
       ],
-      "action": "Document node monitoring, topology, health checks, runtime evidence, and operator recovery."
+      "action": "Document node monitoring, topology, health checks, runtime evidence, and operator recovery.",
+      "status": "open"
     },
     {
       "priority": "P1",
@@ -170,7 +183,8 @@
         "nodics.foundation/modules/nService",
         "nodics.foundation/modules/nService/vService"
       ],
-      "action": "Document generated services, virtual service behavior, override precedence, and extension safety."
+      "action": "Document generated services, virtual service behavior, override precedence, and extension safety.",
+      "status": "open"
     },
     {
       "priority": "P1",
@@ -181,7 +195,8 @@
         "nodics.foundation/modules/nCache/redisCache",
         "nodics.foundation/modules/nCache/hazelcastCache"
       ],
-      "action": "Document Redis, Hazelcast, Node cache, key strategy, invalidation, and production behavior."
+      "action": "Document Redis, Hazelcast, Node cache, key strategy, invalidation, and production behavior.",
+      "status": "open"
     },
     {
       "priority": "P1",
@@ -190,7 +205,8 @@
       "sourceAreas": [
         "nodics.foundation/modules/nDatabase"
       ],
-      "action": "Document MongoDB, virtual DB, Cassandra, Elasticsearch, configuration, provider contracts, and validation."
+      "action": "Document MongoDB, virtual DB, Cassandra, Elasticsearch, configuration, provider contracts, and validation.",
+      "status": "open"
     },
     {
       "priority": "P1",
@@ -199,7 +215,8 @@
       "sourceAreas": [
         "nodics.foundation/modules/nOtp"
       ],
-      "action": "Document OTP generation, verification, expiry, retry, throttling, audit, and security controls."
+      "action": "Document OTP generation, verification, expiry, retry, throttling, audit, and security controls.",
+      "status": "open"
     },
     {
       "priority": "P1",
@@ -209,7 +226,8 @@
         "nodics.communication/modules/smtpCommsProvider",
         "nodics.communication/modules/smsCommsProvider"
       ],
-      "action": "Document SMTP/SMS providers, templates, retry, failed delivery evidence, and extension rules."
+      "action": "Document SMTP/SMS providers, templates, retry, failed delivery evidence, and extension rules.",
+      "status": "open"
     },
     {
       "priority": "P1",
@@ -218,7 +236,8 @@
       "sourceAreas": [
         "nodics.engagement/modules/contactSubmission"
       ],
-      "action": "Document contact forms, moderation, workflow, notification, audit, and recovery."
+      "action": "Document contact forms, moderation, workflow, notification, audit, and recovery.",
+      "status": "open"
     },
     {
       "priority": "P1",
@@ -228,7 +247,8 @@
         "nodics.foundation/modules/nbpm",
         "nodics.process"
       ],
-      "action": "Document workflow definitions, transitions, tasks, callbacks, history, and operator visibility."
+      "action": "Document workflow definitions, transitions, tasks, callbacks, history, and operator visibility.",
+      "status": "open"
     },
     {
       "priority": "P1",
@@ -237,7 +257,8 @@
       "sourceAreas": [
         "nodics.process/modules/cronjob"
       ],
-      "action": "Document job records, schedules, execution policy, retry, idempotency, and Process server ownership."
+      "action": "Document job records, schedules, execution policy, retry, idempotency, and Process server ownership.",
+      "status": "open"
     },
     {
       "priority": "P1",
@@ -248,7 +269,8 @@
         "nodics.foundation/modules/nSetup",
         "all module data folders"
       ],
-      "action": "Document version freeze, upgrade path, rollback, checksum drift, generated manifest policy, and customer extension compatibility."
+      "action": "Document version freeze, upgrade path, rollback, checksum drift, generated manifest policy, and customer extension compatibility.",
+      "status": "open"
     },
     {
       "priority": "P2",
@@ -257,7 +279,8 @@
       "sourceAreas": [
         "all low-score utility modules"
       ],
-      "action": "Decide which technical modules remain internal and which broader page owns their explanation."
+      "action": "Decide which technical modules remain internal and which broader page owns their explanation.",
+      "status": "open"
     }
   ],
   "rows": [
@@ -663,166 +686,6 @@
       }
     },
     {
-      "name": "csvExport",
-      "kind": "capability",
-      "runtimeModule": true,
-      "path": "nodics.ai/nodics.foundation/modules/nData/nExport/csvExport",
-      "packageJsonPath": "nodics.ai/nodics.foundation/modules/nData/nExport/csvExport/package.json",
-      "priorityScore": 19,
-      "classification": "needs-page-or-owner-mapping",
-      "matchedDocuments": [],
-      "counts": {
-        "schemas": 1,
-        "services": 0,
-        "controllers": 0,
-        "routers": 2,
-        "dataHeaders": 0,
-        "dataRecords": 0,
-        "assets": 0,
-        "tests": 2,
-        "frontends": 0
-      },
-      "examples": {
-        "schemas": [
-          "nodics.ai/nodics.foundation/modules/nData/nExport/csvExport/src/schemas/schemas.js"
-        ],
-        "services": [],
-        "controllers": [],
-        "routers": [
-          "nodics.ai/nodics.foundation/modules/nData/nExport/csvExport/src/router/appConfig.js",
-          "nodics.ai/nodics.foundation/modules/nData/nExport/csvExport/src/router/routers.js"
-        ],
-        "dataHeaders": [],
-        "dataRecords": [],
-        "assets": [],
-        "tests": [
-          "nodics.ai/nodics.foundation/modules/nData/nExport/csvExport/test/common/commonTest.js",
-          "nodics.ai/nodics.foundation/modules/nData/nExport/csvExport/test/env-local/envTest.js"
-        ],
-        "frontends": []
-      }
-    },
-    {
-      "name": "excelExport",
-      "kind": "capability",
-      "runtimeModule": true,
-      "path": "nodics.ai/nodics.foundation/modules/nData/nExport/excelExport",
-      "packageJsonPath": "nodics.ai/nodics.foundation/modules/nData/nExport/excelExport/package.json",
-      "priorityScore": 19,
-      "classification": "needs-page-or-owner-mapping",
-      "matchedDocuments": [],
-      "counts": {
-        "schemas": 1,
-        "services": 0,
-        "controllers": 0,
-        "routers": 2,
-        "dataHeaders": 0,
-        "dataRecords": 0,
-        "assets": 0,
-        "tests": 2,
-        "frontends": 0
-      },
-      "examples": {
-        "schemas": [
-          "nodics.ai/nodics.foundation/modules/nData/nExport/excelExport/src/schemas/schemas.js"
-        ],
-        "services": [],
-        "controllers": [],
-        "routers": [
-          "nodics.ai/nodics.foundation/modules/nData/nExport/excelExport/src/router/appConfig.js",
-          "nodics.ai/nodics.foundation/modules/nData/nExport/excelExport/src/router/routers.js"
-        ],
-        "dataHeaders": [],
-        "dataRecords": [],
-        "assets": [],
-        "tests": [
-          "nodics.ai/nodics.foundation/modules/nData/nExport/excelExport/test/common/commonTest.js",
-          "nodics.ai/nodics.foundation/modules/nData/nExport/excelExport/test/env-local/envTest.js"
-        ],
-        "frontends": []
-      }
-    },
-    {
-      "name": "jsExport",
-      "kind": "capability",
-      "runtimeModule": true,
-      "path": "nodics.ai/nodics.foundation/modules/nData/nExport/jsExport",
-      "packageJsonPath": "nodics.ai/nodics.foundation/modules/nData/nExport/jsExport/package.json",
-      "priorityScore": 19,
-      "classification": "needs-page-or-owner-mapping",
-      "matchedDocuments": [],
-      "counts": {
-        "schemas": 1,
-        "services": 0,
-        "controllers": 0,
-        "routers": 2,
-        "dataHeaders": 0,
-        "dataRecords": 0,
-        "assets": 0,
-        "tests": 2,
-        "frontends": 0
-      },
-      "examples": {
-        "schemas": [
-          "nodics.ai/nodics.foundation/modules/nData/nExport/jsExport/src/schemas/schemas.js"
-        ],
-        "services": [],
-        "controllers": [],
-        "routers": [
-          "nodics.ai/nodics.foundation/modules/nData/nExport/jsExport/src/router/appConfig.js",
-          "nodics.ai/nodics.foundation/modules/nData/nExport/jsExport/src/router/routers.js"
-        ],
-        "dataHeaders": [],
-        "dataRecords": [],
-        "assets": [],
-        "tests": [
-          "nodics.ai/nodics.foundation/modules/nData/nExport/jsExport/test/common/commonTest.js",
-          "nodics.ai/nodics.foundation/modules/nData/nExport/jsExport/test/env-local/envTest.js"
-        ],
-        "frontends": []
-      }
-    },
-    {
-      "name": "jsonExport",
-      "kind": "capability",
-      "runtimeModule": true,
-      "path": "nodics.ai/nodics.foundation/modules/nData/nExport/jsonExport",
-      "packageJsonPath": "nodics.ai/nodics.foundation/modules/nData/nExport/jsonExport/package.json",
-      "priorityScore": 19,
-      "classification": "needs-page-or-owner-mapping",
-      "matchedDocuments": [],
-      "counts": {
-        "schemas": 1,
-        "services": 0,
-        "controllers": 0,
-        "routers": 2,
-        "dataHeaders": 0,
-        "dataRecords": 0,
-        "assets": 0,
-        "tests": 2,
-        "frontends": 0
-      },
-      "examples": {
-        "schemas": [
-          "nodics.ai/nodics.foundation/modules/nData/nExport/jsonExport/src/schemas/schemas.js"
-        ],
-        "services": [],
-        "controllers": [],
-        "routers": [
-          "nodics.ai/nodics.foundation/modules/nData/nExport/jsonExport/src/router/appConfig.js",
-          "nodics.ai/nodics.foundation/modules/nData/nExport/jsonExport/src/router/routers.js"
-        ],
-        "dataHeaders": [],
-        "dataRecords": [],
-        "assets": [],
-        "tests": [
-          "nodics.ai/nodics.foundation/modules/nData/nExport/jsonExport/test/common/commonTest.js",
-          "nodics.ai/nodics.foundation/modules/nData/nExport/jsonExport/test/env-local/envTest.js"
-        ],
-        "frontends": []
-      }
-    },
-    {
       "name": "cassandradb",
       "kind": "capability",
       "runtimeModule": true,
@@ -943,57 +806,6 @@
           "nodics.ai/nodics.foundation/modules/nTooling/test/applicationBuilderAnswersTemplateContract.test.js",
           "nodics.ai/nodics.foundation/modules/nTooling/test/applicationBuilderDryRunContract.test.js",
           "nodics.ai/nodics.foundation/modules/nTooling/test/applicationBuilderEndToEndJourneyContract.test.js"
-        ],
-        "frontends": []
-      }
-    },
-    {
-      "name": "nexus.web",
-      "kind": "content-pack",
-      "runtimeModule": true,
-      "path": "nodics.kickoff/modules/nexus.web",
-      "packageJsonPath": "nodics.kickoff/modules/nexus.web/package.json",
-      "priorityScore": 151,
-      "classification": "needs-deeper-section",
-      "matchedDocuments": [
-        "reference.documentation-gap-backlog"
-      ],
-      "counts": {
-        "schemas": 0,
-        "services": 0,
-        "controllers": 0,
-        "routers": 0,
-        "dataHeaders": 8,
-        "dataRecords": 25,
-        "assets": 25,
-        "tests": 1,
-        "frontends": 0
-      },
-      "examples": {
-        "schemas": [],
-        "services": [],
-        "controllers": [],
-        "routers": [],
-        "dataHeaders": [
-          "nodics.kickoff/modules/nexus.web/data/sample-v001/content/headers/editorial/nexusEditorialSampleDataHeader.js",
-          "nodics.kickoff/modules/nexus.web/data/sample-v001/content/headers/engagement/nexusExperienceConfigurationHeader.js",
-          "nodics.kickoff/modules/nexus.web/data/sample-v001/content/headers/media/nexusMediaReferenceHeader.js",
-          "nodics.kickoff/modules/nexus.web/data/sample-v001/content/headers/wcms/nexusCorporateContentHeader.js"
-        ],
-        "dataRecords": [
-          "nodics.kickoff/modules/nexus.web/data/sample-v001/content/records/editorial/nexusEditorialArticleData.js",
-          "nodics.kickoff/modules/nexus.web/data/sample-v001/content/records/editorial/nexusEditorialArticleLocalizationData.js",
-          "nodics.kickoff/modules/nexus.web/data/sample-v001/content/records/editorial/nexusEditorialArticleTaxonomyData.js",
-          "nodics.kickoff/modules/nexus.web/data/sample-v001/content/records/editorial/nexusEditorialAuthorData.js"
-        ],
-        "assets": [
-          "nodics.kickoff/modules/nexus.web/data/sample-v001/content/assets/nexus-cms-media/assetManifest.js",
-          "nodics.kickoff/modules/nexus.web/data/sample-v001/content/assets/nexus-cms-media/files/nexusBlogAxisOperations.png",
-          "nodics.kickoff/modules/nexus.web/data/sample-v001/content/assets/nexus-cms-media/files/nexusBlogCustomerEngagement.png",
-          "nodics.kickoff/modules/nexus.web/data/sample-v001/content/assets/nexus-cms-media/files/nexusBlogEditorialPublication.png"
-        ],
-        "tests": [
-          "nodics.kickoff/modules/nexus.web/test/expectedOnlineProjections/nexusEditorialOnlineArticleData.js"
         ],
         "frontends": []
       }
@@ -2569,8 +2381,8 @@
         "persistence.provider-data-access-layer",
         "commerce.base-foundations",
         "commerce.overview",
-        "reference.source-map-glossary",
-        "reference.documentation-gap-backlog"
+        "commerce.data-authoring-fulfillment",
+        "reference.source-map-glossary"
       ],
       "counts": {
         "schemas": 7,
@@ -2763,8 +2575,9 @@
         "accelerators.agora-industry-templates",
         "accelerators.agora-apparel-product-data-authoring",
         "framework.local-quick-start",
-        "reference.source-map-glossary",
-        "reference.source-backed-documentation-coverage-audit"
+        "data.import-export-provider-guides",
+        "commerce.data-authoring-fulfillment",
+        "reference.source-map-glossary"
       ],
       "counts": {
         "schemas": 0,
@@ -3533,7 +3346,7 @@
         "cache.runtime-state-management",
         "wcms.media-storage-delivery",
         "framework.devops-runtime",
-        "reference.documentation-gap-backlog"
+        "wcms.cms-source-map-authoring-contract"
       ],
       "counts": {
         "schemas": 4,
@@ -3638,6 +3451,59 @@
           "nodics.ai/nodics.commerce/modules/checkout/modules/checkoutCore/test/checkoutCustomerApiContract.test.js",
           "nodics.ai/nodics.commerce/modules/checkout/modules/checkoutCore/test/checkoutPaymentMethodSelectionContract.test.js",
           "nodics.ai/nodics.commerce/modules/checkout/modules/checkoutCore/test/orderPlacementContract.test.js"
+        ],
+        "frontends": []
+      }
+    },
+    {
+      "name": "nexus.web",
+      "kind": "content-pack",
+      "runtimeModule": true,
+      "path": "nodics.kickoff/modules/nexus.web",
+      "packageJsonPath": "nodics.kickoff/modules/nexus.web/package.json",
+      "priorityScore": 151,
+      "classification": "covered",
+      "matchedDocuments": [
+        "applications.nexus-data-content-guide",
+        "docs.documentation-publishing-runbook",
+        "reference.documentation-gap-backlog"
+      ],
+      "counts": {
+        "schemas": 0,
+        "services": 0,
+        "controllers": 0,
+        "routers": 0,
+        "dataHeaders": 8,
+        "dataRecords": 25,
+        "assets": 25,
+        "tests": 1,
+        "frontends": 0
+      },
+      "examples": {
+        "schemas": [],
+        "services": [],
+        "controllers": [],
+        "routers": [],
+        "dataHeaders": [
+          "nodics.kickoff/modules/nexus.web/data/sample-v001/content/headers/editorial/nexusEditorialSampleDataHeader.js",
+          "nodics.kickoff/modules/nexus.web/data/sample-v001/content/headers/engagement/nexusExperienceConfigurationHeader.js",
+          "nodics.kickoff/modules/nexus.web/data/sample-v001/content/headers/media/nexusMediaReferenceHeader.js",
+          "nodics.kickoff/modules/nexus.web/data/sample-v001/content/headers/wcms/nexusCorporateContentHeader.js"
+        ],
+        "dataRecords": [
+          "nodics.kickoff/modules/nexus.web/data/sample-v001/content/records/editorial/nexusEditorialArticleData.js",
+          "nodics.kickoff/modules/nexus.web/data/sample-v001/content/records/editorial/nexusEditorialArticleLocalizationData.js",
+          "nodics.kickoff/modules/nexus.web/data/sample-v001/content/records/editorial/nexusEditorialArticleTaxonomyData.js",
+          "nodics.kickoff/modules/nexus.web/data/sample-v001/content/records/editorial/nexusEditorialAuthorData.js"
+        ],
+        "assets": [
+          "nodics.kickoff/modules/nexus.web/data/sample-v001/content/assets/nexus-cms-media/assetManifest.js",
+          "nodics.kickoff/modules/nexus.web/data/sample-v001/content/assets/nexus-cms-media/files/nexusBlogAxisOperations.png",
+          "nodics.kickoff/modules/nexus.web/data/sample-v001/content/assets/nexus-cms-media/files/nexusBlogCustomerEngagement.png",
+          "nodics.kickoff/modules/nexus.web/data/sample-v001/content/assets/nexus-cms-media/files/nexusBlogEditorialPublication.png"
+        ],
+        "tests": [
+          "nodics.kickoff/modules/nexus.web/test/expectedOnlineProjections/nexusEditorialOnlineArticleData.js"
         ],
         "frontends": []
       }
@@ -3956,6 +3822,7 @@
         "accelerators.agora-industry-templates",
         "localization.internationalization",
         "wcms.publishing-lifecycle",
+        "applications.nexus-data-content-guide",
         "reference.source-map-glossary"
       ],
       "counts": {
@@ -4016,6 +3883,7 @@
         "solutions.data-engineering-analytics-platform",
         "engagement.unified-operations",
         "data.import-export-migration",
+        "data.import-export-provider-guides",
         "reference.documentation-gap-backlog"
       ],
       "counts": {
@@ -5505,7 +5373,8 @@
       "matchedDocuments": [
         "foundation.overview",
         "applications.suite",
-        "data.import-export-migration"
+        "data.import-export-migration",
+        "docs.documentation-publishing-runbook"
       ],
       "counts": {
         "schemas": 1,
@@ -5811,7 +5680,7 @@
         "framework.local-quick-start",
         "builder.workspace-generation",
         "catalog.product-discovery-management",
-        "reference.source-map-glossary"
+        "data.import-export-provider-guides"
       ],
       "counts": {
         "schemas": 1,
@@ -5859,7 +5728,8 @@
       "priorityScore": 36,
       "classification": "covered",
       "matchedDocuments": [
-        "accelerators.agora-apparel-product-data-authoring"
+        "accelerators.agora-apparel-product-data-authoring",
+        "commerce.data-authoring-fulfillment"
       ],
       "counts": {
         "schemas": 1,
@@ -5908,6 +5778,7 @@
       "classification": "covered",
       "matchedDocuments": [
         "accelerators.agora-apparel-product-data-authoring",
+        "commerce.data-authoring-fulfillment",
         "reference.source-map-glossary",
         "reference.source-backed-documentation-coverage-audit",
         "reference.documentation-gap-backlog"
@@ -6315,6 +6186,7 @@
         "engagement.unified-operations",
         "engagement.governed-automation",
         "communication.overview",
+        "applications.nexus-data-content-guide",
         "reference.source-map-glossary"
       ],
       "counts": {
@@ -6609,6 +6481,7 @@
       "classification": "covered",
       "matchedDocuments": [
         "accelerators.agora-apparel-product-data-authoring",
+        "data.import-export-provider-guides",
         "reference.source-backed-documentation-coverage-audit"
       ],
       "counts": {
@@ -6798,6 +6671,7 @@
       "priorityScore": 25,
       "classification": "covered",
       "matchedDocuments": [
+        "data.import-export-provider-guides",
         "reference.source-backed-documentation-coverage-audit"
       ],
       "counts": {
@@ -7142,6 +7016,174 @@
         "assets": [],
         "tests": [
           "nodics.ai/nodics.accelerators/modules/telco/modules/telcoProvisioning/test/gen/schema/telcoServiceOrderSchemaContract.test.js"
+        ],
+        "frontends": []
+      }
+    },
+    {
+      "name": "csvExport",
+      "kind": "capability",
+      "runtimeModule": true,
+      "path": "nodics.ai/nodics.foundation/modules/nData/nExport/csvExport",
+      "packageJsonPath": "nodics.ai/nodics.foundation/modules/nData/nExport/csvExport/package.json",
+      "priorityScore": 19,
+      "classification": "covered",
+      "matchedDocuments": [
+        "data.import-export-provider-guides"
+      ],
+      "counts": {
+        "schemas": 1,
+        "services": 0,
+        "controllers": 0,
+        "routers": 2,
+        "dataHeaders": 0,
+        "dataRecords": 0,
+        "assets": 0,
+        "tests": 2,
+        "frontends": 0
+      },
+      "examples": {
+        "schemas": [
+          "nodics.ai/nodics.foundation/modules/nData/nExport/csvExport/src/schemas/schemas.js"
+        ],
+        "services": [],
+        "controllers": [],
+        "routers": [
+          "nodics.ai/nodics.foundation/modules/nData/nExport/csvExport/src/router/appConfig.js",
+          "nodics.ai/nodics.foundation/modules/nData/nExport/csvExport/src/router/routers.js"
+        ],
+        "dataHeaders": [],
+        "dataRecords": [],
+        "assets": [],
+        "tests": [
+          "nodics.ai/nodics.foundation/modules/nData/nExport/csvExport/test/common/commonTest.js",
+          "nodics.ai/nodics.foundation/modules/nData/nExport/csvExport/test/env-local/envTest.js"
+        ],
+        "frontends": []
+      }
+    },
+    {
+      "name": "excelExport",
+      "kind": "capability",
+      "runtimeModule": true,
+      "path": "nodics.ai/nodics.foundation/modules/nData/nExport/excelExport",
+      "packageJsonPath": "nodics.ai/nodics.foundation/modules/nData/nExport/excelExport/package.json",
+      "priorityScore": 19,
+      "classification": "covered",
+      "matchedDocuments": [
+        "data.import-export-provider-guides"
+      ],
+      "counts": {
+        "schemas": 1,
+        "services": 0,
+        "controllers": 0,
+        "routers": 2,
+        "dataHeaders": 0,
+        "dataRecords": 0,
+        "assets": 0,
+        "tests": 2,
+        "frontends": 0
+      },
+      "examples": {
+        "schemas": [
+          "nodics.ai/nodics.foundation/modules/nData/nExport/excelExport/src/schemas/schemas.js"
+        ],
+        "services": [],
+        "controllers": [],
+        "routers": [
+          "nodics.ai/nodics.foundation/modules/nData/nExport/excelExport/src/router/appConfig.js",
+          "nodics.ai/nodics.foundation/modules/nData/nExport/excelExport/src/router/routers.js"
+        ],
+        "dataHeaders": [],
+        "dataRecords": [],
+        "assets": [],
+        "tests": [
+          "nodics.ai/nodics.foundation/modules/nData/nExport/excelExport/test/common/commonTest.js",
+          "nodics.ai/nodics.foundation/modules/nData/nExport/excelExport/test/env-local/envTest.js"
+        ],
+        "frontends": []
+      }
+    },
+    {
+      "name": "jsExport",
+      "kind": "capability",
+      "runtimeModule": true,
+      "path": "nodics.ai/nodics.foundation/modules/nData/nExport/jsExport",
+      "packageJsonPath": "nodics.ai/nodics.foundation/modules/nData/nExport/jsExport/package.json",
+      "priorityScore": 19,
+      "classification": "covered",
+      "matchedDocuments": [
+        "data.import-export-provider-guides"
+      ],
+      "counts": {
+        "schemas": 1,
+        "services": 0,
+        "controllers": 0,
+        "routers": 2,
+        "dataHeaders": 0,
+        "dataRecords": 0,
+        "assets": 0,
+        "tests": 2,
+        "frontends": 0
+      },
+      "examples": {
+        "schemas": [
+          "nodics.ai/nodics.foundation/modules/nData/nExport/jsExport/src/schemas/schemas.js"
+        ],
+        "services": [],
+        "controllers": [],
+        "routers": [
+          "nodics.ai/nodics.foundation/modules/nData/nExport/jsExport/src/router/appConfig.js",
+          "nodics.ai/nodics.foundation/modules/nData/nExport/jsExport/src/router/routers.js"
+        ],
+        "dataHeaders": [],
+        "dataRecords": [],
+        "assets": [],
+        "tests": [
+          "nodics.ai/nodics.foundation/modules/nData/nExport/jsExport/test/common/commonTest.js",
+          "nodics.ai/nodics.foundation/modules/nData/nExport/jsExport/test/env-local/envTest.js"
+        ],
+        "frontends": []
+      }
+    },
+    {
+      "name": "jsonExport",
+      "kind": "capability",
+      "runtimeModule": true,
+      "path": "nodics.ai/nodics.foundation/modules/nData/nExport/jsonExport",
+      "packageJsonPath": "nodics.ai/nodics.foundation/modules/nData/nExport/jsonExport/package.json",
+      "priorityScore": 19,
+      "classification": "covered",
+      "matchedDocuments": [
+        "data.import-export-provider-guides"
+      ],
+      "counts": {
+        "schemas": 1,
+        "services": 0,
+        "controllers": 0,
+        "routers": 2,
+        "dataHeaders": 0,
+        "dataRecords": 0,
+        "assets": 0,
+        "tests": 2,
+        "frontends": 0
+      },
+      "examples": {
+        "schemas": [
+          "nodics.ai/nodics.foundation/modules/nData/nExport/jsonExport/src/schemas/schemas.js"
+        ],
+        "services": [],
+        "controllers": [],
+        "routers": [
+          "nodics.ai/nodics.foundation/modules/nData/nExport/jsonExport/src/router/appConfig.js",
+          "nodics.ai/nodics.foundation/modules/nData/nExport/jsonExport/src/router/routers.js"
+        ],
+        "dataHeaders": [],
+        "dataRecords": [],
+        "assets": [],
+        "tests": [
+          "nodics.ai/nodics.foundation/modules/nData/nExport/jsonExport/test/common/commonTest.js",
+          "nodics.ai/nodics.foundation/modules/nData/nExport/jsonExport/test/env-local/envTest.js"
         ],
         "frontends": []
       }
@@ -7624,6 +7666,7 @@
         "accelerators.agora-apparel-product-data-authoring",
         "data.import-export-migration",
         "wcms.publishing-lifecycle",
+        "applications.nexus-data-content-guide",
         "reference.documentation-gap-backlog"
       ],
       "counts": {
@@ -7929,8 +7972,9 @@
         "accelerators.agora-industry-templates",
         "accelerators.agora-apparel-product-data-authoring",
         "framework.local-quick-start",
-        "reference.source-map-glossary",
-        "reference.source-backed-documentation-coverage-audit"
+        "data.import-export-provider-guides",
+        "commerce.data-authoring-fulfillment",
+        "reference.source-map-glossary"
       ],
       "counts": {
         "schemas": 0,
