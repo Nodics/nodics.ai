@@ -313,7 +313,7 @@ module.exports = {
     "childJourneyLinks": [],
     "childStatusSummary": {
       "childCount": 47,
-      "pages": 94
+      "pages": 95
     },
     "nodeOrder": 10,
     "expandable": true,
@@ -4361,7 +4361,8 @@ module.exports = {
       "navigationDepth": 2,
       "pages": [
         "reference.source-map-glossary",
-        "reference.source-backed-documentation-coverage-audit"
+        "reference.source-backed-documentation-coverage-audit",
+        "reference.documentation-gap-backlog"
       ]
     },
     "nodeDashboard": "nodicsDocsDashboardSecreference",
@@ -4377,6 +4378,12 @@ module.exports = {
         "title": "Source-Backed Documentation Coverage Audit",
         "summary": "Code-to-documentation coverage audit contract for finding missing or shallow Nodics functionality documentation across framework, projects, data, assets, and applications.",
         "order": 20
+      },
+      {
+        "code": "reference.documentation-gap-backlog",
+        "title": "Documentation Gap Backlog",
+        "summary": "Classified backlog for closing source-backed documentation gaps across runtime capabilities, data releases, media, applications, operations, and validation.",
+        "order": 30
       }
     ],
     "childJourneyLinks": [
@@ -4389,11 +4396,16 @@ module.exports = {
         "label": "Source-Backed Documentation Coverage Audit",
         "targetPage": "reference.source-backed-documentation-coverage-audit",
         "route": "/docs/framework/reference-source-backed-documentation-coverage-audit"
+      },
+      {
+        "label": "Documentation Gap Backlog",
+        "targetPage": "reference.documentation-gap-backlog",
+        "route": "/docs/framework/reference-documentation-gap-backlog"
       }
     ],
     "childStatusSummary": {
-      "childCount": 2,
-      "pages": 2
+      "childCount": 3,
+      "pages": 3
     },
     "nodeOrder": 470,
     "expandable": true,
@@ -11725,6 +11737,86 @@ module.exports = {
       "nodicsDocsNodeTopicdocsReaderJourneyAndCoverage",
       "nodicsDocsNodeTopicdataImportExportMigration",
       "nodicsDocsNodeTopicacceleratorsAgoraApparelProductDataAuthoring"
+    ],
+    "locale": "en",
+    "channel": "web",
+    "active": true
+  },
+  "record142": {
+    "code": "nodicsDocsNodeTopicreferenceDocumentationGapBacklog",
+    "product": "nodicsDocumentationProduct",
+    "navigation": "nodicsDocumentationNavigation",
+    "parentNode": "nodicsDocsNodeSecreference",
+    "nodeLevel": "TOPIC",
+    "nodeType": "PAGE",
+    "nodeTitle": "Documentation Gap Backlog",
+    "nodeSummary": "Classified backlog for closing source-backed documentation gaps across runtime capabilities, data releases, media, applications, operations, and validation.",
+    "nodeContentArea": {
+      "route": "/docs/framework/reference-documentation-gap-backlog",
+      "documentType": "reference",
+      "businessAudience": [
+        "business user",
+        "decision maker",
+        "implementation partner"
+      ],
+      "technicalAudience": [
+        "architect",
+        "developer",
+        "operator",
+        "qa engineer",
+        "ai tool"
+      ]
+    },
+    "childSummaryCards": [],
+    "childJourneyLinks": [],
+    "childStatusSummary": {
+      "childCount": 0
+    },
+    "targetDocumentationPage": "nodicsDocsMetadatareferenceDocumentationGapBacklog",
+    "targetPage": "nodicsDocsPagereferenceDocumentationGapBacklog",
+    "targetRoute": "nodicsDocsRoutereferenceDocumentationGapBacklog",
+    "nodeOrder": 10030,
+    "expandable": false,
+    "expandedByDefault": false,
+    "nodeIcon": "file-text",
+    "nodeAudience": [
+      "business",
+      "architect",
+      "administrator",
+      "developer",
+      "operator",
+      "qa",
+      "ai-tool"
+    ],
+    "accessPolicy": "nodicsDocsAccessPublic",
+    "accessMode": "PUBLIC",
+    "allowedRoles": [],
+    "allowedGroups": [],
+    "allowedPermissions": [],
+    "managedInAxis": true,
+    "axisAuthoringPermissions": [
+      "documentation.navigation.update"
+    ],
+    "workflowRequired": true,
+    "workflowTriggers": [
+      "NAVIGATION_CHANGE",
+      "DASHBOARD_CHANGE",
+      "ACCESS_POLICY_CHANGE"
+    ],
+    "lifecycleState": "ONLINE",
+    "maturityState": "IMPLEMENTED",
+    "searchKeywords": [
+      "documentation-gap-backlog",
+      "source-backed",
+      "coverage-closure",
+      "documentation-workflow",
+      "missing-docs"
+    ],
+    "relatedNodes": [
+      "nodicsDocsNodeTopicreferenceSourceBackedDocumentationCoverageAudit",
+      "nodicsDocsNodeTopicreferenceSourceMapGlossary",
+      "nodicsDocsNodeTopicframeworkCapabilityDocumentationMaturityPattern",
+      "nodicsDocsNodeTopicdataImportExportMigration"
     ],
     "locale": "en",
     "channel": "web",

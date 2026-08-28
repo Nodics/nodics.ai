@@ -2362,5 +2362,30 @@ module.exports = {
       }
     ],
     "active": true
+  },
+  "record94": {
+    "code": "nodicsDocsPagereferenceDocumentationGapBacklog",
+    "name": "Documentation Gap Backlog",
+    "cmsSite": [
+      "nodicsDocumentationSite"
+    ],
+    "typeCode": "nodicsDocumentationArticlePageType",
+    "template": "nodicsDocumentationArticleTemplate",
+    "renderer": "documentation.page.article",
+    "cmsComponents": [
+      {
+        "target": "nodicsDocumentationNavigation",
+        "slot": "navigation",
+        "index": 5,
+        "active": true
+      },
+      {
+        "target": "nodicsDocsComponentreferenceDocumentationGapBacklog",
+        "slot": "article",
+        "index": 10,
+        "active": true
+      }
+    ],
+    "active": true
   }
 };

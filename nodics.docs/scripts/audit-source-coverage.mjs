@@ -37,6 +37,169 @@ const scanRoots = [
   resolve(workspaceRoot, 'nodics.kickoff/envs'),
   resolve(workspaceRoot, 'nodics.exp'),
 ].filter(existsSync);
+const documentationBacklog = [
+  {
+    priority: 'P0',
+    item: 'Nexus data and content guide',
+    classification: 'needs-page',
+    sourceAreas: ['nodics.kickoff/modules/nexus.web'],
+    action: 'Document project content data, media assets, publication, Online delivery, and browser validation for Nexus.',
+  },
+  {
+    priority: 'P0',
+    item: 'Axis setup and user-safe error contracts',
+    classification: 'needs-deeper-section',
+    sourceAreas: ['nodics.platform/modules/backoffice', 'nodics.platform/modules/axis', 'nodics.exp/nodics.axis'],
+    action: 'Document status states, setup blockers, retry actions, technical evidence, and user-safe message rules.',
+  },
+  {
+    priority: 'P0',
+    item: 'CMS exact source map',
+    classification: 'needs-deeper-section',
+    sourceAreas: ['nodics.wcms/modules/cms'],
+    action: 'Split authoring, delivery, publication manifest, migration, cache, and documentation governance coverage.',
+  },
+  {
+    priority: 'P0',
+    item: 'Media operations runbook',
+    classification: 'needs-deeper-section',
+    sourceAreas: ['nodics.wcms/modules/media', 'nodics.foundation/modules/nData/nImport/import/src/service/media'],
+    action: 'Document upload, import hydration, storage providers, cleanup lifecycle, replication queue, and delivery failures.',
+  },
+  {
+    priority: 'P0',
+    item: 'Import/export provider guides',
+    classification: 'needs-page',
+    sourceAreas: ['nodics.foundation/modules/nData/nImport', 'nodics.foundation/modules/nData/nExport'],
+    action: 'Document JavaScript, JSON, CSV, Excel, generated exports, parser behavior, safety, masking, and customization.',
+  },
+  {
+    priority: 'P0',
+    item: 'Commerce product, price, inventory, and fulfillment authoring',
+    classification: 'needs-page-or-deeper-section',
+    sourceAreas: ['nodics.commerce/modules/baseCommerce', 'nodics.commerce/modules/fulfillment'],
+    action: 'Document data dependencies, creation lanes, publication, search projection, fulfillment evidence, and browser proof.',
+  },
+  {
+    priority: 'P0',
+    item: 'Documentation publishing runbook',
+    classification: 'needs-deeper-section',
+    sourceAreas: ['nodics.docs', 'nodics.wcms/modules/cms', 'nodics.process/modules/nPublish'],
+    action: 'Document source Markdown to generated data, Staged import, review, Online publication, rollback, and rendering.',
+  },
+  {
+    priority: 'P1',
+    item: 'Module Registry journey',
+    classification: 'needs-deeper-section',
+    sourceAreas: ['nodics.platform/modules/backoffice', 'nodics.platform/modules/moduleRegistry'],
+    action: 'Document registration, activation, dependencies, required capability checks, status projection, and Axis visibility.',
+  },
+  {
+    priority: 'P1',
+    item: 'Commerce Search guide',
+    classification: 'needs-deeper-section',
+    sourceAreas: ['nodics.commerce/modules/baseCommerce/modules/commerceSearch'],
+    action: 'Document ranking rules, projections, publishing, index ownership, and storefront impact.',
+  },
+  {
+    priority: 'P1',
+    item: 'Localization depth',
+    classification: 'needs-page-or-deeper-section',
+    sourceAreas: ['nodics.localization/modules/localizationCore', 'nodics.localization/modules/localizationApi'],
+    action: 'Document locale records, fallback behavior, content and product localization, import data, and API boundary.',
+  },
+  {
+    priority: 'P1',
+    item: 'Payment Core and provider split',
+    classification: 'needs-page-or-owner-mapping',
+    sourceAreas: ['nodics.commerce/modules/payment'],
+    action: 'Document payment decisions, method/provider separation, reconciliation, and safe customer payloads.',
+  },
+  {
+    priority: 'P1',
+    item: 'Customer List and Profile-Commerce boundary',
+    classification: 'needs-page-or-owner-mapping',
+    sourceAreas: ['nodics.commerce/modules/checkout/modules/customerList', 'nodics.platform/modules/profile'],
+    action: 'Document why customer list exists in Commerce and what Profile owns.',
+  },
+  {
+    priority: 'P1',
+    item: 'NMS runtime monitoring',
+    classification: 'needs-page-or-owner-mapping',
+    sourceAreas: ['nodics.foundation/modules/nNms'],
+    action: 'Document node monitoring, topology, health checks, runtime evidence, and operator recovery.',
+  },
+  {
+    priority: 'P1',
+    item: 'Service runtime and override precedence',
+    classification: 'needs-page-or-owner-mapping',
+    sourceAreas: ['nodics.foundation/modules/nService', 'nodics.foundation/modules/nService/vService'],
+    action: 'Document generated services, virtual service behavior, override precedence, and extension safety.',
+  },
+  {
+    priority: 'P1',
+    item: 'Cache provider runbooks',
+    classification: 'needs-page-or-owner-mapping',
+    sourceAreas: ['nodics.foundation/modules/nCache', 'nodics.foundation/modules/nCache/redisCache', 'nodics.foundation/modules/nCache/hazelcastCache'],
+    action: 'Document Redis, Hazelcast, Node cache, key strategy, invalidation, and production behavior.',
+  },
+  {
+    priority: 'P1',
+    item: 'Database provider boundaries',
+    classification: 'needs-page-or-owner-mapping',
+    sourceAreas: ['nodics.foundation/modules/nDatabase'],
+    action: 'Document MongoDB, virtual DB, Cassandra, Elasticsearch, configuration, provider contracts, and validation.',
+  },
+  {
+    priority: 'P1',
+    item: 'OTP and security flow',
+    classification: 'needs-page-or-owner-mapping',
+    sourceAreas: ['nodics.foundation/modules/nOtp'],
+    action: 'Document OTP generation, verification, expiry, retry, throttling, audit, and security controls.',
+  },
+  {
+    priority: 'P1',
+    item: 'Communication providers',
+    classification: 'needs-page-or-deeper-section',
+    sourceAreas: ['nodics.communication/modules/smtpCommsProvider', 'nodics.communication/modules/smsCommsProvider'],
+    action: 'Document SMTP/SMS providers, templates, retry, failed delivery evidence, and extension rules.',
+  },
+  {
+    priority: 'P1',
+    item: 'Engagement and contact submission',
+    classification: 'needs-deeper-section',
+    sourceAreas: ['nodics.engagement/modules/contactSubmission'],
+    action: 'Document contact forms, moderation, workflow, notification, audit, and recovery.',
+  },
+  {
+    priority: 'P1',
+    item: 'Workflow and BPM source map',
+    classification: 'needs-deeper-section',
+    sourceAreas: ['nodics.foundation/modules/nbpm', 'nodics.process'],
+    action: 'Document workflow definitions, transitions, tasks, callbacks, history, and operator visibility.',
+  },
+  {
+    priority: 'P1',
+    item: 'Cron job data authoring',
+    classification: 'needs-deeper-section',
+    sourceAreas: ['nodics.process/modules/cronjob'],
+    action: 'Document job records, schedules, execution policy, retry, idempotency, and Process server ownership.',
+  },
+  {
+    priority: 'P1',
+    item: 'Release and upgrade compatibility',
+    classification: 'needs-deeper-section',
+    sourceAreas: ['nodics.docs', 'nodics.foundation/modules/nSetup', 'all module data folders'],
+    action: 'Document version freeze, upgrade path, rollback, checksum drift, generated manifest policy, and customer extension compatibility.',
+  },
+  {
+    priority: 'P2',
+    item: 'Internal-only classification register',
+    classification: 'needs-owner-decision',
+    sourceAreas: ['all low-score utility modules'],
+    action: 'Decide which technical modules remain internal and which broader page owns their explanation.',
+  },
+];
 
 function isIgnored(pathValue) {
   return pathValue.split(sep).some((segment) => ignoredSegments.has(segment));
@@ -250,6 +413,7 @@ const report = {
     reason: 'Open documentation gaps are tracked as release work; this report fails only when stale or malformed.',
     classifications: ['needs-page-or-owner-mapping', 'needs-deeper-section', 'covered', 'internal-only-candidate'],
   },
+  documentationBacklog,
   rows,
 };
 
@@ -272,12 +436,23 @@ function markdown(reportValue) {
     `| Needs deeper section | ${reportValue.summary['needs-deeper-section'] || 0} |`,
     `| Covered | ${reportValue.summary.covered || 0} |`,
     `| Internal-only candidate | ${reportValue.summary['internal-only-candidate'] || 0} |`,
+    `| Classified backlog items | ${reportValue.documentationBacklog.length} |`,
+    '',
+    '## Classified Backlog',
+    '',
+    '| Priority | Item | Classification | Source areas | Action |',
+    '| --- | --- | --- | --- | --- |',
+  ];
+  reportValue.documentationBacklog.forEach((item) => {
+    lines.push(`| ${item.priority} | ${item.item} | ${item.classification} | ${item.sourceAreas.map((source) => `\`${source}\``).join('<br/>')} | ${item.action} |`);
+  });
+  lines.push(
     '',
     '## Top Open Items',
     '',
     '| Classification | Score | Source boundary | Current matches | Key signals |',
     '| --- | ---: | --- | --- | --- |',
-  ];
+  );
   topGaps.forEach((row) => {
     const signals = Object.entries(row.counts)
       .filter(([, count]) => count > 0)

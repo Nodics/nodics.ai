@@ -322,7 +322,7 @@ module.exports = {
     ],
     "statusSummary": {
       "sections": 47,
-      "pages": 94,
+      "pages": 95,
       "lifecycleState": "ONLINE"
     },
     "product": "nodicsDocumentationProduct",
@@ -644,7 +644,7 @@ module.exports = {
     ],
     "statusSummary": {
       "sections": 47,
-      "pages": 94,
+      "pages": 95,
       "searchable": true,
       "expandable": true
     },
@@ -3158,6 +3158,12 @@ module.exports = {
         "title": "Source-Backed Documentation Coverage Audit",
         "summary": "Code-to-documentation coverage audit contract for finding missing or shallow Nodics functionality documentation across framework, projects, data, assets, and applications.",
         "order": 20
+      },
+      {
+        "code": "reference.documentation-gap-backlog",
+        "title": "Documentation Gap Backlog",
+        "summary": "Classified backlog for closing source-backed documentation gaps across runtime capabilities, data releases, media, applications, operations, and validation.",
+        "order": 30
       }
     ],
     "journeyLinks": [
@@ -3170,10 +3176,15 @@ module.exports = {
         "label": "Source-Backed Documentation Coverage Audit",
         "targetPage": "reference.source-backed-documentation-coverage-audit",
         "route": "/docs/framework/reference-source-backed-documentation-coverage-audit"
+      },
+      {
+        "label": "Documentation Gap Backlog",
+        "targetPage": "reference.documentation-gap-backlog",
+        "route": "/docs/framework/reference-documentation-gap-backlog"
       }
     ],
     "statusSummary": {
-      "pages": 2,
+      "pages": 3,
       "navigationDepth": 2
     },
     "accessMode": "PUBLIC",

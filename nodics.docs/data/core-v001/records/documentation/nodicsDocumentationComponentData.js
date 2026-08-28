@@ -7237,6 +7237,77 @@ module.exports = {
             "Source-Backed Documentation"
           ],
           "searchText": "Source-Backed Documentation Coverage Audit Code-to-documentation coverage audit contract for finding missing or shallow Nodics functionality documentation across framework, projects, data, assets, and applications. # Source-Backed Documentation Coverage Audit\n\nThis audit is the working contract for revisiting the whole Nodics codebase and\nfinding functionality that is missing from documentation. It is intentionally\nsource-backed: code, schemas, services, controllers, routes, data releases,\nassets, tests, and frontend journeys are treated as evidence that documentation\nmay need to exist or be deepened.\n\nThe current documentation set already explains many architecture principles.\nThe next maturity step is coverage depth. A developer should be able to create\nor customize data, services, providers, APIs, pages, media, product catalog,\npricing, inventory, workflow, search, localization, import/export, or\npublication behavior by following the docs and tracing the referenced source.\nA business user or decision maker should be able to understand what the\ncapability does, who owns it, whether it is ready, and what risk is governed.\n\nFor beginners, the mental model is simple: source files are evidence, docs are\nthe map, and generated documentation data is the published route into Axis,\nNexus, and the web. Developers use the map to customize safely. Operators use\nit to verify runtime behavior. Business users use it to decide whether a\ncapability is ready for adoption.\n\n## Audit method\n\n```mermaid\nflowchart LR\n  Source[\"Repository inventory\"] --> Signals[\"Schemas, services, routes, data, assets, tests\"]\n  Signals --> Docs[\"Published documentation catalogue\"]\n  Docs --> Coverage[\"Coverage matrix\"]\n  Coverage --> Backlog[\"Missing or shallow topics\"]\n  Backlog --> Improve[\"Source-backed page updates\"]\n  Improve --> Generate[\"Generated documentation data\"]\n  Generate --> Publish[\"Staged to Online publication\"]\n```\n\nThe audit compares implementation signals against documented topics:\n\n| Signal | Why it matters |\n| --- | --- |\n| `src/schemas/schemas.js` | A persisted or generated model usually needs business meaning, field behavior, ownership, security, import/export, and validation docs. |\n| `src/service/*.js` | Service behavior often defines customization, provider boundaries, publication, policy, error handling, and runtime evidence. |\n| `src/controller` and `src/router` | Routes need user journey, authorization, request/response, error, and observability documentation. |\n| `data/<release>/headers` and `records` | Release data needs authoring, import, lifecycle, idempotency, and rollback documentation. |\n| `assets/` and media manifests | Physical media requires file, metadata, staging, publication, replication, and browser validation docs. |\n| `test/` | Tests reveal implemented behavior that should be documented before the topic is called operational. |\n| Frontend apps | Axis, Nexus, and Agora journeys need backend source ownership, permission, state, and browser behavior docs. |\n\nThe inventory is repeatable through the generated source coverage report:\n\n```bash\nnpm --prefix nodics.docs run audit:source-coverage\nnpm --prefix nodics.docs run audit:source-coverage:check\n```\n\nThe report is generated at\n`nodics.docs/docs/reports/source-backed-documentation-coverage-report.md` with\na JSON companion file for automated review. Developers may still use `rg` and\n`find` during investigation, but the report is the durable evidence committed\nwith documentation work.\n\nThis is a triage method, not a blind rule. A utility module may be covered by a\nbroader capability page. A business topic may be implemented by several\ntechnical modules. The audit still requires each implementation signal to trace\nto a clear documentation owner.\n\n## Coverage standard\n\nEvery mature topic should include:\n\n| Required section | Reader it helps |\n| --- | --- |\n| Business problem and outcome | Business user, decision maker, product owner |\n| Beginner mental model | New developer, business evaluator, AI tool |\n| Source map | Developer, architect, support engineer |\n| How to do it | Developer, administrator, implementation partner |\n| How it works | Architect, operator, QA owner |\n| Data and configuration contracts | Developer, operator, AI tool |\n| API, service, event, and publication flow | Developer, integrator, operator |\n| Customization and extension points | Developer, partner, customer project owner |\n| Visual flow or screenshot guidance | Everyone |\n| Common mistakes and failure modes | Developer, operator, support |\n| Validation commands and acceptance proof | QA owner, release owner, operator |\n| Official external references when useful | Architect, decision maker, implementation partner |\n\n## Audience levels\n\nEach page must deliberately serve more than one reader. It is acceptable for a\npage to go deeper for developers, but it should never become source-code notes\nonly.\n\n| Audience level | Required answer |\n| --- | --- |\n| Business overview | What decision, journey, value, cost reduction, risk reduction, or operating improvement the capability supports. |\n| Developer how-to | Which files to edit, which contracts to respect, and how to test the change locally. |\n| Operator runbook | Which server role, runtime state, logs, health checks, retries, rollbacks, and production evidence matter. |\n| QA validation | Which unit, contract, generated-data, fresh-schema, publication, and browser checks prove the behavior. |\n| AI-tool guidance | What can be safely generated or refactored, what must remain backend-owned, and what evidence must be preserved. |\n\n## Ownership checklist\n\nEvery page must identify source ownership before it explains customization.\nThat keeps Axis, Nexus, Agora, customer projects, and backend modules from\nbecoming parallel authorities.\n\n| Ownership layer | Documentation must state |\n| --- | --- |\n| Business capability | The human-facing capability name and business journey. |\n| Functional module | The owning Nodics capability or project module. |\n| Technical module | The package or nested module where implementation lives. |\n| Schema and service | The data model and service behavior that own validation and persistence. |\n| Route and controller | The API surface and permission boundary, if user or system calls exist. |\n| Data and assets | Release folders, headers, records, manifests, physical assets, and generated files. |\n| Frontend consumer | Axis, Nexus, Agora, or another application that renders approved backend data. |\n| Tests and reports | Contract tests, generated reports, and runtime acceptance commands. |\n\n## Creation and publication lanes\n\nEvery data-bearing topic must show both creation lanes. Module release data is\nauthored by developers or AI tools under the owning module or project `data/`\nfolder. Business-created data is authored through Axis or another governed\nBackOffice journey. Both lanes must converge on the same backend schemas,\nvalidators, permission policies, workflows, publication lifecycle, and audit\nevidence.\n\nPublishable data must always explain Staged, approval, and Online activation.\nDocumentation data, CMS pages, media, product content, and storefront-visible\nrecords should not be described as direct Online writes. Operational data such\nas cron schedules, runtime configuration, and internal evidence may have a\ndifferent lifecycle, but the page must say that clearly.\n\n## Media and asset rule\n\nMedia-bearing topics must separate four things:\n\n| Media layer | Meaning |\n| --- | --- |\n| Physical asset | Source file under a release-owned `assets/` folder. |\n| Media object | Backend schema record that represents stored media metadata and provider-owned storage fields. |\n| Media reference | Relationship from a business object, page, component, product, or article to the media code. |\n| Publication transfer | Staged-to-Online copy, checksum validation, placement evidence, and replication obligation. |\n\nRelease data may reference physical files, but it must not author provider\npaths, Online URLs, storage keys, or replication behavior. Those remain importer\nand media-runtime responsibilities.\n\n## Error message standard\n\nBackend logs may carry technical error codes and internal detail. Axis, Nexus,\nand Agora should show business-safe messages that explain the user state and\nthe next action without leaking internals. A documentation page that covers a\nruntime-visible journey must document:\n\n| Error concern | Required detail |\n| --- | --- |\n| User-safe message | What the user should see in Axis, Nexus, or Agora. |\n| Technical evidence | Error code, correlation id, logs, import run, workflow task, or publication receipt for support. |\n| Recoverability | Retry, repair data, register capability, approve publication, restart service, or escalate. |\n| Ownership | Which backend module or project data release must be fixed. |\n\n## Fresh schema and browser proof\n\nFor major user-visible capabilities, documentation is not complete until the\npage explains fresh-schema verification and browser verification. Fresh-schema\nchecks prove installation, import order, generated manifests, required\ncapabilities, and publication readiness. Browser checks prove the actual Axis,\nNexus, or Agora journey that users experience.\n\n| Proof type | Examples |\n| --- | --- |\n| Fresh schema | Initialize the runtime, import `init-v001`, `core-v001`, and selected `sample-v001` sections, confirm idempotency, and check data counts. |\n| Publication | Approve and publish Staged records to Online through `nPublish`; verify Online records and media coordinates. |\n| Browser | Open Axis setup, Module Registry, Documentation, Nexus public pages, and Agora product journeys with real backend data. |\n| Regression | Run package tests, generated documentation checks, source coverage report checks, and runtime acceptance scripts. |\n\n## First inventory snapshot\n\nA generated source coverage scan of current framework and reference project\nroots found 172 module or package boundaries and 94 published documentation\npages. The committed report currently identifies 22 source boundaries that\nneed a page or explicit owner mapping, 6 high-surface boundaries that need\ndeeper documentation sections, 28 internal-only candidates, and 116 covered\nboundaries. This does not mean exactly 22 new pages are required; it means\nthose areas need owner confirmation and documentation mapping.\n\n| Priority | Area | Why it is important | Documentation action |\n| --- | --- | --- | --- |\n| P0 | Agora Apparel, Electronics, and Telco data packs | Large `sample-v001` data and media assets exist, but the accelerator page is broad. | Add domain authoring guides for product, content, media, search, publication, and browser validation. |\n| P0 | CMS module | Many schemas, services, controllers, routes, data files, and tests implement authoring, delivery, publication, and documentation governance. | Split exact CMS authoring, delivery, publication manifest, and migration coverage where broader WCMS pages are shallow. |\n| P0 | Import/export providers | `jsImport`, `jsonImport`, `csvImport`, `excelImport`, and export variants are implementation surfaces under the import/export capability. | Add provider-specific how-to and customization sections under Data Import, Export, and Migration. |\n| P0 | Commerce product, price, inventory, fulfillment | The business journey depends on several modules and data files. | Add source-backed create/update/publish guides and relation maps. |\n| P0 | Axis setup and registry error states | Manual testing exposed customer-visible setup failures and message quality concerns. | Document status states, required capabilities, retry paths, and user-safe error contracts. |\n| P1 | `nController` | Large controller infrastructure surface with little direct documentation signal. | Map it into Routing and API Governance or create a controller runtime page. |\n| P1 | `nbpm` and workflow foundations | Process behavior is broad and business-critical. | Connect workflow docs to BPM schemas, services, and tests. |\n| P1 | `nTest` | Test scaffolding is important for developers and AI tools. | Add a developer testing harness guide. |\n| P1 | Localization Core and API | Localization has schemas, services, data, and public behavior. | Deepen localization docs with source map, data imports, fallback, and customization. |\n| P1 | Discovery configuration and Commerce Search | Search ranking and discovery rules affect customer journeys. | Add exact rule authoring, publication, and projection docs. |\n| P1 | Communication and Engagement details | Provider and operational modules exist beyond high-level overview. | Add provider, event, retry, template, and moderation detail. |\n\n## Documentation backlog workflow\n\n1. Inventory the implementation surface with `rg --files`, module package\n   metadata, schema files, service files, controllers, routers, data folders,\n   assets, and tests.\n2. Map each signal to an existing documentation page.\n3. Mark the page as covered, shallow, missing, or intentionally internal.\n4. For shallow pages, add source map, how-to, how-it-works, customization, and\n   validation sections.\n5. For missing business topics, add a new page and catalogue metadata.\n6. Regenerate documentation content-pack data.\n7. Validate the generated records and run the docs tests.\n8. Import the generated content through Staged and publish Online when runtime\n   evidence is required.\n\n## External reference policy\n\nOfficial external references help readers understand industry-standard\nexpectations for terms, data movement, administration, auditability, and\noperator evidence. They do not define Nodics behavior, architecture, code, data\nshape, or product direction. Nodics must never be presented as a copy,\nderivative, or reimplementation of another framework.\n\nUse vendor docs only to calibrate standards and reader expectations: what an\nenterprise buyer expects from import/export, how administrators usually reason\nabout product data, what operators expect from repeatable migrations, and what\nquality bar public documentation should meet. Every page must still identify\nthe Nodics owner, source files, runtime contract, and validation evidence.\n\nGood reference examples:\n\n- [SAP Commerce importing data](https://help.sap.com/docs/SAP_COMMERCE/d0224eca81e249cb821f2cdf45a82ace/c4f121fb358e46069fc01acf8c5c254b.html)\n- [Shopify product CSV import/export](https://help.shopify.com/en/manual/products/import-export/using-csv)\n- [Salesforce B2C Commerce import and export](https://help.salesforce.com/s/articleView?id=cc.b2c_import_and_export.htm&type=5)\n- [Contentful import and export with CLI](https://www.contentful.com/developers/docs/tutorials/cli/import-and-export/)\n- [Contentful migration scripts](https://www.contentful.com/developers/docs/tutorials/cli/scripting-migrations/)\n\n## Common mistakes\n\n- Counting a page as complete because the business idea is described but no\n  source files, tests, data, or services are mapped.\n- Creating one page per technical module when a broader capability topic would\n  be clearer for business users.\n- Hiding an implemented route, schema, or service because it is \"internal\" but\n  still developer-extensible or operator-visible.\n- Linking to vendor references as if they define Nodics behavior or design.\n- Updating generated documentation data without changing the authored Markdown\n  and catalogue metadata.\n- Forgetting Axis, Nexus, or Agora browser evidence for a capability that is\n  visible to users.\n\n## Troubleshooting\n\n| Symptom | Likely cause | Action |\n| --- | --- | --- |\n| A source file has no matching page | The capability is missing documentation or is covered under an unclear title. | Map it to an owner page or add a new catalogue entry. |\n| A page exists but developers still ask where to customize | The page is shallow. | Add source map, services, data files, extension points, and validation commands. |\n| Docs say a feature is operational but tests show partial behavior | Maturity state is inaccurate. | Downgrade maturity or add the missing implementation and evidence. |\n| Axis renders a confusing error | Error contract is not documented or the backend emits technical text. | Document the user-safe status and fix the backend or Axis mapping. |\n| Generated records are stale | Authored docs changed without regeneration. | Run the docs generator and validator before import. |\n\n## Acceptance rule\n\nThe documentation program is complete only when every implemented user-visible\nor developer-extensible capability has either a source-backed page or a clear\nentry in this audit explaining why it is internal. Each accepted page must be\ngenerated into documentation data, imported through the governed data process,\nand published through Staged-to-Online when it is intended for Axis, Nexus, or\npublic web consumption.\n\n## Verification\n\nRun documentation verification after each audit improvement:\n\n```bash\nnpm --prefix nodics.docs run docs:generate\nnpm --prefix nodics.docs test\ngit -C nodics.ai diff --check\n```\n\nFor runtime-visible topics, also run the owning module tests, fresh-schema\nimport checks, publication checks, and browser qualification for Axis, Nexus,\nor Agora. A topic is accepted only when the authored page, generated CMS data,\nsource evidence, and runtime behavior agree.\n"
+        },
+        {
+          "code": "reference.documentation-gap-backlog",
+          "title": "Documentation Gap Backlog",
+          "route": "/docs/framework/reference-documentation-gap-backlog",
+          "section": "reference",
+          "sectionTitle": "Reference",
+          "sectionOrder": 470,
+          "group": "reference",
+          "groupTitle": "Reference",
+          "groupOrder": 470,
+          "order": 30,
+          "parentId": "reference",
+          "hierarchyPath": [
+            "Reference",
+            "Documentation Gap Backlog"
+          ],
+          "hierarchyDepth": 2,
+          "documentType": "reference",
+          "audience": [
+            "business",
+            "architect",
+            "administrator",
+            "developer",
+            "operator",
+            "qa",
+            "ai-tool"
+          ],
+          "businessAudience": [
+            "business user",
+            "decision maker",
+            "implementation partner"
+          ],
+          "technicalAudience": [
+            "architect",
+            "developer",
+            "operator",
+            "qa engineer",
+            "ai tool"
+          ],
+          "summary": "Classified backlog for closing source-backed documentation gaps across runtime capabilities, data releases, media, applications, operations, and validation.",
+          "visibility": "public",
+          "accessMode": "PUBLIC",
+          "publiclyAvailable": true,
+          "requiresAuthentication": false,
+          "allowedRoles": [],
+          "allowedGroups": [],
+          "allowedPermissions": [],
+          "lifecycleState": "ONLINE",
+          "maturityState": "operational",
+          "implementationState": "current",
+          "relatedPages": [
+            "reference.source-backed-documentation-coverage-audit",
+            "reference.source-map-glossary",
+            "framework.capability-documentation-maturity-pattern",
+            "data.import-export-migration"
+          ],
+          "searchKeywords": [
+            "documentation-gap-backlog",
+            "source-backed",
+            "coverage-closure",
+            "documentation-workflow",
+            "missing-docs"
+          ],
+          "topicKeywords": [
+            "Reference",
+            "Source Map and Glossary",
+            "Documentation Gap Backlog",
+            "Coverage Closure"
+          ],
+          "searchText": "Documentation Gap Backlog Classified backlog for closing source-backed documentation gaps across runtime capabilities, data releases, media, applications, operations, and validation. # Documentation Gap Backlog\n\nThis backlog turns the source-backed coverage audit into executable\ndocumentation work. It captures the remaining categories that must be closed so\nNodics documentation explains not only what the product is, but how developers,\nbusiness users, operators, QA owners, and AI tools can safely work with the\nframework.\n\nFor beginners, the mental model is simple: the coverage report tells us where\nthe source is richer than the documentation, and this backlog tells us what to\ndo next. A source boundary may need a new page, a deeper section in an existing\npage, an explicit owner mapping, or an internal-only decision. The backlog is\nnot a marketing roadmap. It is a release-quality checklist for source-backed\ndocumentation.\n\n## Backlog flow\n\n```mermaid\nflowchart LR\n  Report[\"Generated coverage report\"] --> Classify[\"Classify each gap\"]\n  Classify --> Page[\"New page\"]\n  Classify --> Deepen[\"Deeper section\"]\n  Classify --> Map[\"Owner mapping\"]\n  Classify --> Internal[\"Internal-only decision\"]\n  Page --> Generate[\"Regenerate docs data\"]\n  Deepen --> Generate\n  Map --> Generate\n  Internal --> Generate\n  Generate --> Test[\"Docs tests and source evidence\"]\n  Test --> Publish[\"Staged approval and Online publication\"]\n```\n\n## Classification policy\n\n| Classification | Meaning | Required action |\n| --- | --- | --- |\n| `needs-page` | A user-visible or developer-extensible capability has no clear page. | Create authored Markdown, catalogue metadata, source evidence, generated records, and validation. |\n| `needs-deeper-section` | A page exists, but it lacks exact source map, data, service, operation, or validation detail. | Extend the existing page with how-to, how-it-works, customization, errors, and tests. |\n| `needs-page-or-owner-mapping` | The source is significant, but ownership may belong under a broader page. | Decide owner, then either create a page or add explicit mapping to the owning page. |\n| `internal-only-candidate` | The module is likely a utility or provider implementation. | Document the owner page that covers it, or mark it internal with justification. |\n| `covered` | Existing docs and source evidence are sufficient for the current maturity state. | Keep validation and browser evidence current when behavior changes. |\n\n## P0 closure items\n\n| Item | Source areas | Documentation outcome |\n| --- | --- | --- |\n| Nexus data and content guide | `nodics.kickoff/modules/nexus.web` | Explain Nexus project content, media assets, headers, records, publication, Online delivery, and browser validation. |\n| Axis setup and user-safe error contracts | `nodics.platform/modules/backoffice`, `nodics.platform/modules/axis`, `nodics.exp/nodics.axis` | Explain setup states, blockers, retry behavior, required capability checks, technical evidence, and customer-safe messages. |\n| CMS exact source map | `nodics.wcms/modules/cms` | Split page, route, component, slot, template, renderer, publication manifest, migration, delivery cache, and documentation governance details. |\n| Media operations runbook | `nodics.wcms/modules/media`, `nodics.foundation/modules/nData/nImport/import/src/service/media` | Explain upload, import hydration, storage providers, cleanup, replication queue, delivery failures, and DR evidence. |\n| Import/export provider guides | `nodics.foundation/modules/nData/nImport`, `nodics.foundation/modules/nData/nExport` | Explain JavaScript, JSON, CSV, Excel, generated exports, parsers, field allow-lists, masking, and rollback boundaries. |\n| Commerce authoring and fulfillment | `nodics.commerce/modules/baseCommerce`, `nodics.commerce/modules/fulfillment` | Explain product, price, inventory, search projection, fulfillment execution, consignments, exceptions, return receipts, and browser proof. |\n| Documentation publishing runbook | `nodics.docs`, `nodics.wcms/modules/cms`, `nodics.process/modules/nPublish` | Explain Markdown source, generated content-pack data, Staged import, review, Online activation, rollback, and Axis/Nexus rendering. |\n\n## P1 closure items\n\n| Item | Source areas | Documentation outcome |\n| --- | --- | --- |\n| Module Registry journey | `nodics.platform/modules/backoffice`, registry-related Platform services | Explain registration, activation, dependency state, required capability checks, and Axis visibility. |\n| Commerce Search guide | `nodics.commerce/modules/baseCommerce/modules/commerceSearch` | Explain ranking rules, projections, publish flow, index ownership, storefront effect, and recovery. |\n| Localization depth | `nodics.localization/modules/localizationCore`, `nodics.localization/modules/localizationApi` | Explain locale records, fallback, content/product localization, import data, API boundaries, and browser proof. |\n| Payment Core and provider split | `nodics.commerce/modules/payment` | Explain payment decisions, method/provider separation, reconciliation, safe customer payload, and provider extension. |\n| Customer List and Profile-Commerce boundary | `nodics.commerce/modules/checkout/modules/customerList`, `nodics.platform/modules/profile` | Explain why customer list exists in Commerce and what Profile continues to own. |\n| NMS runtime monitoring | `nodics.foundation/modules/nNms` | Explain node monitoring, topology, health, operational evidence, and recovery actions. |\n| Service runtime and overrides | `nodics.foundation/modules/nService`, `nodics.foundation/modules/nService/vService` | Explain service discovery, virtual services, generated services, override precedence, and extension safety. |\n| Cache provider runbooks | `nodics.foundation/modules/nCache`, Redis, Hazelcast, Node cache | Explain provider boundaries, cache key strategy, invalidation, failure behavior, and production configuration. |\n| Database provider boundaries | `nodics.foundation/modules/nDatabase` | Explain MongoDB, virtual DB, Cassandra, Elasticsearch, provider contracts, configuration, and validation. |\n| OTP and security flow | `nodics.foundation/modules/nOtp` | Explain OTP generation, verification, expiry, retry, throttling, audit, and security controls. |\n| Communication providers | `nodics.communication/modules/smtpCommsProvider`, `nodics.communication/modules/smsCommsProvider` | Explain SMTP/SMS provider behavior, templates, retries, failed delivery evidence, and extension rules. |\n| Engagement and contact submission | `nodics.engagement/modules/contactSubmission` | Explain contact forms, moderation, workflow, notification, audit, and recovery. |\n| Workflow and BPM source map | `nodics.foundation/modules/nbpm`, `nodics.process` | Explain workflow definitions, transitions, tasks, callbacks, history, and operator visibility. |\n| Cron job data authoring | `nodics.process/modules/cronjob` | Explain job records, schedules, execution policy, retry, idempotency, and Process server ownership. |\n| Release and upgrade compatibility | `nodics.foundation/modules/nSetup`, all module data folders | Explain version freeze, upgrade path, rollback, checksum drift, generated manifests, and extension compatibility. |\n\n## P2 closure items\n\n| Item | Source areas | Documentation outcome |\n| --- | --- | --- |\n| Fresh-schema setup per runtime | Platform, WCMS Staged, WCMS Online, Process, Commerce, Engagement | Add runtime-specific import order, seed data, publication, and acceptance evidence where existing quick-start docs are too broad. |\n| Environment, server, and node discovery | `nodics.kickoff/envs`, framework server/node configuration | Explain how physical hierarchy, environment config, server composition, and runtime roles are discovered. |\n| Permission and access matrix | Profile, BackOffice, WCMS, documentation access policies | Explain roles, groups, permissions, access modes, public/authenticated/restricted behavior, and publication visibility. |\n| Search indexing operations | Discovery and Commerce Search modules | Explain index jobs, reindex, projection freshness, failure recovery, and ownership. |\n| Migration and import reconciliation | Import, migration, CMS migration, Commerce data | Explain source classification, mapping tables, partial failures, retry, and data correction. |\n| Export and data privacy | Export providers, media-owned generated files | Explain allow-lists, masking, retention, download permissions, and audit. |\n| Observability | NMS, import runs, publication receipts, logs, dashboards | Explain correlation IDs, status evidence, health checks, support cards, and escalation. |\n| Disaster recovery | Media publication, Online storage, replication queue | Explain Online media replication, DR queues, recovery receipts, and failure escalation. |\n| Frontend consumption contracts | Axis, Nexus, Agora | Explain that Axis consumes BackOffice metadata, Nexus consumes Online WCMS, and Agora consumes Online commerce/content. |\n| Data quality rules | All module data folders | Explain required fields, stable keys, idempotent queries, relation integrity, and no runtime logic in data files. |\n| Testing standards | All modules and frontends | Explain unit, contract, generator, fresh-schema, publication, browser, accessibility, and regression expectations. |\n| Troubleshooting matrices | Every operational capability page | Add what failed, who owns it, user-safe message, technical evidence, and recovery action. |\n| Decision-maker overview pages | Product and capability overview docs | Explain business value, ownership model, platform differentiation, risk controls, and implementation confidence. |\n| Internal-only register | Low-score utility modules | Decide and document which technical modules do not need public pages and where they are covered. |\n\n## Closure workflow\n\n1. Start from the generated source coverage report.\n2. Pick the highest-priority open item.\n3. Inspect source files, schemas, services, routers, data, assets, tests, and\n   frontend consumers.\n4. Decide whether the work is a new page, deeper section, owner mapping, or\n   internal-only classification.\n5. Update authored Markdown and catalogue metadata.\n6. Regenerate documentation data and source coverage reports.\n7. Run docs tests and any owning module tests needed for the behavior.\n8. For runtime-visible changes, import into Staged, publish Online, and verify\n   Axis, Nexus, or Agora from the browser.\n9. Commit the smallest coherent documentation batch.\n\n## Common mistakes\n\n- Treating this backlog as optional once a high-level overview exists.\n- Closing a source gap without reading the current source files and tests.\n- Creating public documentation for a module that should be an internal utility\n  without explaining the broader owner.\n- Forgetting business users when writing deep developer detail.\n- Forgetting developers when writing a business-friendly page.\n- Forgetting operators and QA owners when documenting publishable or\n  production-visible behavior.\n- Showing external references as source design instead of industry-standard\n  expectation checks.\n\n## Verification\n\nRun the documentation gates after each closure batch:\n\n```bash\nnpm --prefix nodics.docs run audit:source-coverage\nnpm --prefix nodics.docs run docs:generate\nnpm --prefix nodics.docs test\ngit -C nodics.ai diff --check\n```\n\nThe backlog is healthy when the generated report, this page, catalogue\nmetadata, generated WCMS records, and runtime evidence agree. Business users\nshould see clear journeys, developers should see exact source paths and\nextension points, operators should see evidence and recovery steps, QA owners\nshould see validation commands, and AI tools should see boundaries that prevent\nunsafe source or data changes.\n"
         }
       ]
     },
@@ -41211,6 +41282,10 @@ module.exports = {
         "title": "Reference Source Map and Glossary",
         "route": "/docs/framework/reference-source-map-glossary"
       },
+      "next": {
+        "title": "Documentation Gap Backlog",
+        "route": "/docs/framework/reference-documentation-gap-backlog"
+      },
       "source": {
         "repository": "nodics.docs",
         "functionalModule": "nodics.docs",
@@ -41220,6 +41295,500 @@ module.exports = {
         "path": "docs/pages/reference/source-backed-documentation-coverage-audit.md",
         "wordCount": 2234,
         "checksum": "4d4752d26711b9614d199cbb7c9ba6ccafcc1f4ef54bd5ec02e8e55fca97b974"
+      }
+    },
+    "active": true
+  },
+  "record95": {
+    "code": "nodicsDocsComponentreferenceDocumentationGapBacklog",
+    "typeCode": "nodicsDocumentationArticleComponentType",
+    "renderer": "documentation.component.article",
+    "accessMode": "PUBLIC",
+    "properties": {
+      "code": "reference.documentation-gap-backlog",
+      "title": "Documentation Gap Backlog",
+      "route": "/docs/framework/reference-documentation-gap-backlog",
+      "section": "reference",
+      "sectionTitle": "Reference",
+      "group": "reference",
+      "groupTitle": "Reference",
+      "parentId": "reference",
+      "hierarchyPath": [
+        "Reference",
+        "Documentation Gap Backlog"
+      ],
+      "hierarchyDepth": 2,
+      "documentType": "reference",
+      "audience": [
+        "business",
+        "architect",
+        "administrator",
+        "developer",
+        "operator",
+        "qa",
+        "ai-tool"
+      ],
+      "businessAudience": [
+        "business user",
+        "decision maker",
+        "implementation partner"
+      ],
+      "technicalAudience": [
+        "architect",
+        "developer",
+        "operator",
+        "qa engineer",
+        "ai tool"
+      ],
+      "summary": "Classified backlog for closing source-backed documentation gaps across runtime capabilities, data releases, media, applications, operations, and validation.",
+      "visibility": "public",
+      "accessMode": "PUBLIC",
+      "publiclyAvailable": true,
+      "requiresAuthentication": false,
+      "allowedRoles": [],
+      "allowedGroups": [],
+      "allowedPermissions": [],
+      "lifecycleState": "ONLINE",
+      "version": "0.16.7",
+      "maturityState": "operational",
+      "implementationState": "current",
+      "renderingComponent": "documentation.component.article",
+      "relatedPages": [
+        "reference.source-backed-documentation-coverage-audit",
+        "reference.source-map-glossary",
+        "framework.capability-documentation-maturity-pattern",
+        "data.import-export-migration"
+      ],
+      "sourceEvidence": [
+        "docs/catalogue.json",
+        "docs/pages/reference/documentation-gap-backlog.md",
+        "docs/pages/reference/source-backed-documentation-coverage-audit.md",
+        "docs/reports/source-backed-documentation-coverage-report.json",
+        "docs/reports/source-backed-documentation-coverage-report.md",
+        "scripts/audit-source-coverage.mjs"
+      ],
+      "visualRequirements": [
+        "diagram",
+        "configuration-table",
+        "code-example",
+        "troubleshooting-matrix"
+      ],
+      "searchKeywords": [
+        "documentation-gap-backlog",
+        "source-backed",
+        "coverage-closure",
+        "documentation-workflow",
+        "missing-docs"
+      ],
+      "topicKeywords": [
+        "Reference",
+        "Source Map and Glossary",
+        "Documentation Gap Backlog",
+        "Coverage Closure"
+      ],
+      "headings": [
+        {
+          "text": "Backlog flow",
+          "anchor": "referenceDocumentationGapBacklog-1-backlog-flow",
+          "level": 2
+        },
+        {
+          "text": "Classification policy",
+          "anchor": "referenceDocumentationGapBacklog-2-classification-policy",
+          "level": 2
+        },
+        {
+          "text": "P0 closure items",
+          "anchor": "referenceDocumentationGapBacklog-3-p0-closure-items",
+          "level": 2
+        },
+        {
+          "text": "P1 closure items",
+          "anchor": "referenceDocumentationGapBacklog-4-p1-closure-items",
+          "level": 2
+        },
+        {
+          "text": "P2 closure items",
+          "anchor": "referenceDocumentationGapBacklog-5-p2-closure-items",
+          "level": 2
+        },
+        {
+          "text": "Closure workflow",
+          "anchor": "referenceDocumentationGapBacklog-6-closure-workflow",
+          "level": 2
+        },
+        {
+          "text": "Common mistakes",
+          "anchor": "referenceDocumentationGapBacklog-7-common-mistakes",
+          "level": 2
+        },
+        {
+          "text": "Verification",
+          "anchor": "referenceDocumentationGapBacklog-8-verification",
+          "level": 2
+        }
+      ],
+      "blocks": [
+        {
+          "kind": "paragraph",
+          "text": "This backlog turns the source-backed coverage audit into executable documentation work. It captures the remaining categories that must be closed so Nodics documentation explains not only what the product is, but how developers, business users, operators, QA owners, and AI tools can safely work with the framework."
+        },
+        {
+          "kind": "paragraph",
+          "text": "For beginners, the mental model is simple: the coverage report tells us where the source is richer than the documentation, and this backlog tells us what to do next. A source boundary may need a new page, a deeper section in an existing page, an explicit owner mapping, or an internal-only decision. The backlog is not a marketing roadmap. It is a release-quality checklist for source-backed documentation."
+        },
+        {
+          "kind": "heading",
+          "level": 2,
+          "text": "Backlog flow",
+          "anchor": "referenceDocumentationGapBacklog-1-backlog-flow"
+        },
+        {
+          "kind": "diagram",
+          "language": "mermaid",
+          "text": "flowchart LR\n  Report[\"Generated coverage report\"] --> Classify[\"Classify each gap\"]\n  Classify --> Page[\"New page\"]\n  Classify --> Deepen[\"Deeper section\"]\n  Classify --> Map[\"Owner mapping\"]\n  Classify --> Internal[\"Internal-only decision\"]\n  Page --> Generate[\"Regenerate docs data\"]\n  Deepen --> Generate\n  Map --> Generate\n  Internal --> Generate\n  Generate --> Test[\"Docs tests and source evidence\"]\n  Test --> Publish[\"Staged approval and Online publication\"]"
+        },
+        {
+          "kind": "heading",
+          "level": 2,
+          "text": "Classification policy",
+          "anchor": "referenceDocumentationGapBacklog-2-classification-policy"
+        },
+        {
+          "kind": "table",
+          "headers": [
+            "Classification",
+            "Meaning",
+            "Required action"
+          ],
+          "rows": [
+            [
+              "`needs-page`",
+              "A user-visible or developer-extensible capability has no clear page.",
+              "Create authored Markdown, catalogue metadata, source evidence, generated records, and validation."
+            ],
+            [
+              "`needs-deeper-section`",
+              "A page exists, but it lacks exact source map, data, service, operation, or validation detail.",
+              "Extend the existing page with how-to, how-it-works, customization, errors, and tests."
+            ],
+            [
+              "`needs-page-or-owner-mapping`",
+              "The source is significant, but ownership may belong under a broader page.",
+              "Decide owner, then either create a page or add explicit mapping to the owning page."
+            ],
+            [
+              "`internal-only-candidate`",
+              "The module is likely a utility or provider implementation.",
+              "Document the owner page that covers it, or mark it internal with justification."
+            ],
+            [
+              "`covered`",
+              "Existing docs and source evidence are sufficient for the current maturity state.",
+              "Keep validation and browser evidence current when behavior changes."
+            ]
+          ]
+        },
+        {
+          "kind": "heading",
+          "level": 2,
+          "text": "P0 closure items",
+          "anchor": "referenceDocumentationGapBacklog-3-p0-closure-items"
+        },
+        {
+          "kind": "table",
+          "headers": [
+            "Item",
+            "Source areas",
+            "Documentation outcome"
+          ],
+          "rows": [
+            [
+              "Nexus data and content guide",
+              "`nodics.kickoff/modules/nexus.web`",
+              "Explain Nexus project content, media assets, headers, records, publication, Online delivery, and browser validation."
+            ],
+            [
+              "Axis setup and user-safe error contracts",
+              "`nodics.platform/modules/backoffice`, `nodics.platform/modules/axis`, `nodics.exp/nodics.axis`",
+              "Explain setup states, blockers, retry behavior, required capability checks, technical evidence, and customer-safe messages."
+            ],
+            [
+              "CMS exact source map",
+              "`nodics.wcms/modules/cms`",
+              "Split page, route, component, slot, template, renderer, publication manifest, migration, delivery cache, and documentation governance details."
+            ],
+            [
+              "Media operations runbook",
+              "`nodics.wcms/modules/media`, `nodics.foundation/modules/nData/nImport/import/src/service/media`",
+              "Explain upload, import hydration, storage providers, cleanup, replication queue, delivery failures, and DR evidence."
+            ],
+            [
+              "Import/export provider guides",
+              "`nodics.foundation/modules/nData/nImport`, `nodics.foundation/modules/nData/nExport`",
+              "Explain JavaScript, JSON, CSV, Excel, generated exports, parsers, field allow-lists, masking, and rollback boundaries."
+            ],
+            [
+              "Commerce authoring and fulfillment",
+              "`nodics.commerce/modules/baseCommerce`, `nodics.commerce/modules/fulfillment`",
+              "Explain product, price, inventory, search projection, fulfillment execution, consignments, exceptions, return receipts, and browser proof."
+            ],
+            [
+              "Documentation publishing runbook",
+              "`nodics.docs`, `nodics.wcms/modules/cms`, `nodics.process/modules/nPublish`",
+              "Explain Markdown source, generated content-pack data, Staged import, review, Online activation, rollback, and Axis/Nexus rendering."
+            ]
+          ]
+        },
+        {
+          "kind": "heading",
+          "level": 2,
+          "text": "P1 closure items",
+          "anchor": "referenceDocumentationGapBacklog-4-p1-closure-items"
+        },
+        {
+          "kind": "table",
+          "headers": [
+            "Item",
+            "Source areas",
+            "Documentation outcome"
+          ],
+          "rows": [
+            [
+              "Module Registry journey",
+              "`nodics.platform/modules/backoffice`, registry-related Platform services",
+              "Explain registration, activation, dependency state, required capability checks, and Axis visibility."
+            ],
+            [
+              "Commerce Search guide",
+              "`nodics.commerce/modules/baseCommerce/modules/commerceSearch`",
+              "Explain ranking rules, projections, publish flow, index ownership, storefront effect, and recovery."
+            ],
+            [
+              "Localization depth",
+              "`nodics.localization/modules/localizationCore`, `nodics.localization/modules/localizationApi`",
+              "Explain locale records, fallback, content/product localization, import data, API boundaries, and browser proof."
+            ],
+            [
+              "Payment Core and provider split",
+              "`nodics.commerce/modules/payment`",
+              "Explain payment decisions, method/provider separation, reconciliation, safe customer payload, and provider extension."
+            ],
+            [
+              "Customer List and Profile-Commerce boundary",
+              "`nodics.commerce/modules/checkout/modules/customerList`, `nodics.platform/modules/profile`",
+              "Explain why customer list exists in Commerce and what Profile continues to own."
+            ],
+            [
+              "NMS runtime monitoring",
+              "`nodics.foundation/modules/nNms`",
+              "Explain node monitoring, topology, health, operational evidence, and recovery actions."
+            ],
+            [
+              "Service runtime and overrides",
+              "`nodics.foundation/modules/nService`, `nodics.foundation/modules/nService/vService`",
+              "Explain service discovery, virtual services, generated services, override precedence, and extension safety."
+            ],
+            [
+              "Cache provider runbooks",
+              "`nodics.foundation/modules/nCache`, Redis, Hazelcast, Node cache",
+              "Explain provider boundaries, cache key strategy, invalidation, failure behavior, and production configuration."
+            ],
+            [
+              "Database provider boundaries",
+              "`nodics.foundation/modules/nDatabase`",
+              "Explain MongoDB, virtual DB, Cassandra, Elasticsearch, provider contracts, configuration, and validation."
+            ],
+            [
+              "OTP and security flow",
+              "`nodics.foundation/modules/nOtp`",
+              "Explain OTP generation, verification, expiry, retry, throttling, audit, and security controls."
+            ],
+            [
+              "Communication providers",
+              "`nodics.communication/modules/smtpCommsProvider`, `nodics.communication/modules/smsCommsProvider`",
+              "Explain SMTP/SMS provider behavior, templates, retries, failed delivery evidence, and extension rules."
+            ],
+            [
+              "Engagement and contact submission",
+              "`nodics.engagement/modules/contactSubmission`",
+              "Explain contact forms, moderation, workflow, notification, audit, and recovery."
+            ],
+            [
+              "Workflow and BPM source map",
+              "`nodics.foundation/modules/nbpm`, `nodics.process`",
+              "Explain workflow definitions, transitions, tasks, callbacks, history, and operator visibility."
+            ],
+            [
+              "Cron job data authoring",
+              "`nodics.process/modules/cronjob`",
+              "Explain job records, schedules, execution policy, retry, idempotency, and Process server ownership."
+            ],
+            [
+              "Release and upgrade compatibility",
+              "`nodics.foundation/modules/nSetup`, all module data folders",
+              "Explain version freeze, upgrade path, rollback, checksum drift, generated manifests, and extension compatibility."
+            ]
+          ]
+        },
+        {
+          "kind": "heading",
+          "level": 2,
+          "text": "P2 closure items",
+          "anchor": "referenceDocumentationGapBacklog-5-p2-closure-items"
+        },
+        {
+          "kind": "table",
+          "headers": [
+            "Item",
+            "Source areas",
+            "Documentation outcome"
+          ],
+          "rows": [
+            [
+              "Fresh-schema setup per runtime",
+              "Platform, WCMS Staged, WCMS Online, Process, Commerce, Engagement",
+              "Add runtime-specific import order, seed data, publication, and acceptance evidence where existing quick-start docs are too broad."
+            ],
+            [
+              "Environment, server, and node discovery",
+              "`nodics.kickoff/envs`, framework server/node configuration",
+              "Explain how physical hierarchy, environment config, server composition, and runtime roles are discovered."
+            ],
+            [
+              "Permission and access matrix",
+              "Profile, BackOffice, WCMS, documentation access policies",
+              "Explain roles, groups, permissions, access modes, public/authenticated/restricted behavior, and publication visibility."
+            ],
+            [
+              "Search indexing operations",
+              "Discovery and Commerce Search modules",
+              "Explain index jobs, reindex, projection freshness, failure recovery, and ownership."
+            ],
+            [
+              "Migration and import reconciliation",
+              "Import, migration, CMS migration, Commerce data",
+              "Explain source classification, mapping tables, partial failures, retry, and data correction."
+            ],
+            [
+              "Export and data privacy",
+              "Export providers, media-owned generated files",
+              "Explain allow-lists, masking, retention, download permissions, and audit."
+            ],
+            [
+              "Observability",
+              "NMS, import runs, publication receipts, logs, dashboards",
+              "Explain correlation IDs, status evidence, health checks, support cards, and escalation."
+            ],
+            [
+              "Disaster recovery",
+              "Media publication, Online storage, replication queue",
+              "Explain Online media replication, DR queues, recovery receipts, and failure escalation."
+            ],
+            [
+              "Frontend consumption contracts",
+              "Axis, Nexus, Agora",
+              "Explain that Axis consumes BackOffice metadata, Nexus consumes Online WCMS, and Agora consumes Online commerce/content."
+            ],
+            [
+              "Data quality rules",
+              "All module data folders",
+              "Explain required fields, stable keys, idempotent queries, relation integrity, and no runtime logic in data files."
+            ],
+            [
+              "Testing standards",
+              "All modules and frontends",
+              "Explain unit, contract, generator, fresh-schema, publication, browser, accessibility, and regression expectations."
+            ],
+            [
+              "Troubleshooting matrices",
+              "Every operational capability page",
+              "Add what failed, who owns it, user-safe message, technical evidence, and recovery action."
+            ],
+            [
+              "Decision-maker overview pages",
+              "Product and capability overview docs",
+              "Explain business value, ownership model, platform differentiation, risk controls, and implementation confidence."
+            ],
+            [
+              "Internal-only register",
+              "Low-score utility modules",
+              "Decide and document which technical modules do not need public pages and where they are covered."
+            ]
+          ]
+        },
+        {
+          "kind": "heading",
+          "level": 2,
+          "text": "Closure workflow",
+          "anchor": "referenceDocumentationGapBacklog-6-closure-workflow"
+        },
+        {
+          "kind": "ordered-list",
+          "items": [
+            "Start from the generated source coverage report.",
+            "Pick the highest-priority open item.",
+            "Inspect source files, schemas, services, routers, data, assets, tests, and frontend consumers.",
+            "Decide whether the work is a new page, deeper section, owner mapping, or internal-only classification.",
+            "Update authored Markdown and catalogue metadata.",
+            "Regenerate documentation data and source coverage reports.",
+            "Run docs tests and any owning module tests needed for the behavior.",
+            "For runtime-visible changes, import into Staged, publish Online, and verify Axis, Nexus, or Agora from the browser.",
+            "Commit the smallest coherent documentation batch."
+          ]
+        },
+        {
+          "kind": "heading",
+          "level": 2,
+          "text": "Common mistakes",
+          "anchor": "referenceDocumentationGapBacklog-7-common-mistakes"
+        },
+        {
+          "kind": "unordered-list",
+          "items": [
+            "Treating this backlog as optional once a high-level overview exists.",
+            "Closing a source gap without reading the current source files and tests.",
+            "Creating public documentation for a module that should be an internal utility without explaining the broader owner.",
+            "Forgetting business users when writing deep developer detail.",
+            "Forgetting developers when writing a business-friendly page.",
+            "Forgetting operators and QA owners when documenting publishable or production-visible behavior.",
+            "Showing external references as source design instead of industry-standard expectation checks."
+          ]
+        },
+        {
+          "kind": "heading",
+          "level": 2,
+          "text": "Verification",
+          "anchor": "referenceDocumentationGapBacklog-8-verification"
+        },
+        {
+          "kind": "paragraph",
+          "text": "Run the documentation gates after each closure batch:"
+        },
+        {
+          "kind": "code",
+          "language": "bash",
+          "text": "npm --prefix nodics.docs run audit:source-coverage\nnpm --prefix nodics.docs run docs:generate\nnpm --prefix nodics.docs test\ngit -C nodics.ai diff --check"
+        },
+        {
+          "kind": "paragraph",
+          "text": "The backlog is healthy when the generated report, this page, catalogue metadata, generated WCMS records, and runtime evidence agree. Business users should see clear journeys, developers should see exact source paths and extension points, operators should see evidence and recovery steps, QA owners should see validation commands, and AI tools should see boundaries that prevent unsafe source or data changes."
+        }
+      ],
+      "searchText": "Documentation Gap Backlog Classified backlog for closing source-backed documentation gaps across runtime capabilities, data releases, media, applications, operations, and validation. # Documentation Gap Backlog\n\nThis backlog turns the source-backed coverage audit into executable\ndocumentation work. It captures the remaining categories that must be closed so\nNodics documentation explains not only what the product is, but how developers,\nbusiness users, operators, QA owners, and AI tools can safely work with the\nframework.\n\nFor beginners, the mental model is simple: the coverage report tells us where\nthe source is richer than the documentation, and this backlog tells us what to\ndo next. A source boundary may need a new page, a deeper section in an existing\npage, an explicit owner mapping, or an internal-only decision. The backlog is\nnot a marketing roadmap. It is a release-quality checklist for source-backed\ndocumentation.\n\n## Backlog flow\n\n```mermaid\nflowchart LR\n  Report[\"Generated coverage report\"] --> Classify[\"Classify each gap\"]\n  Classify --> Page[\"New page\"]\n  Classify --> Deepen[\"Deeper section\"]\n  Classify --> Map[\"Owner mapping\"]\n  Classify --> Internal[\"Internal-only decision\"]\n  Page --> Generate[\"Regenerate docs data\"]\n  Deepen --> Generate\n  Map --> Generate\n  Internal --> Generate\n  Generate --> Test[\"Docs tests and source evidence\"]\n  Test --> Publish[\"Staged approval and Online publication\"]\n```\n\n## Classification policy\n\n| Classification | Meaning | Required action |\n| --- | --- | --- |\n| `needs-page` | A user-visible or developer-extensible capability has no clear page. | Create authored Markdown, catalogue metadata, source evidence, generated records, and validation. |\n| `needs-deeper-section` | A page exists, but it lacks exact source map, data, service, operation, or validation detail. | Extend the existing page with how-to, how-it-works, customization, errors, and tests. |\n| `needs-page-or-owner-mapping` | The source is significant, but ownership may belong under a broader page. | Decide owner, then either create a page or add explicit mapping to the owning page. |\n| `internal-only-candidate` | The module is likely a utility or provider implementation. | Document the owner page that covers it, or mark it internal with justification. |\n| `covered` | Existing docs and source evidence are sufficient for the current maturity state. | Keep validation and browser evidence current when behavior changes. |\n\n## P0 closure items\n\n| Item | Source areas | Documentation outcome |\n| --- | --- | --- |\n| Nexus data and content guide | `nodics.kickoff/modules/nexus.web` | Explain Nexus project content, media assets, headers, records, publication, Online delivery, and browser validation. |\n| Axis setup and user-safe error contracts | `nodics.platform/modules/backoffice`, `nodics.platform/modules/axis`, `nodics.exp/nodics.axis` | Explain setup states, blockers, retry behavior, required capability checks, technical evidence, and customer-safe messages. |\n| CMS exact source map | `nodics.wcms/modules/cms` | Split page, route, component, slot, template, renderer, publication manifest, migration, delivery cache, and documentation governance details. |\n| Media operations runbook | `nodics.wcms/modules/media`, `nodics.foundation/modules/nData/nImport/import/src/service/media` | Explain upload, import hydration, storage providers, cleanup, replication queue, delivery failures, and DR evidence. |\n| Import/export provider guides | `nodics.foundation/modules/nData/nImport`, `nodics.foundation/modules/nData/nExport` | Explain JavaScript, JSON, CSV, Excel, generated exports, parsers, field allow-lists, masking, and rollback boundaries. |\n| Commerce authoring and fulfillment | `nodics.commerce/modules/baseCommerce`, `nodics.commerce/modules/fulfillment` | Explain product, price, inventory, search projection, fulfillment execution, consignments, exceptions, return receipts, and browser proof. |\n| Documentation publishing runbook | `nodics.docs`, `nodics.wcms/modules/cms`, `nodics.process/modules/nPublish` | Explain Markdown source, generated content-pack data, Staged import, review, Online activation, rollback, and Axis/Nexus rendering. |\n\n## P1 closure items\n\n| Item | Source areas | Documentation outcome |\n| --- | --- | --- |\n| Module Registry journey | `nodics.platform/modules/backoffice`, registry-related Platform services | Explain registration, activation, dependency state, required capability checks, and Axis visibility. |\n| Commerce Search guide | `nodics.commerce/modules/baseCommerce/modules/commerceSearch` | Explain ranking rules, projections, publish flow, index ownership, storefront effect, and recovery. |\n| Localization depth | `nodics.localization/modules/localizationCore`, `nodics.localization/modules/localizationApi` | Explain locale records, fallback, content/product localization, import data, API boundaries, and browser proof. |\n| Payment Core and provider split | `nodics.commerce/modules/payment` | Explain payment decisions, method/provider separation, reconciliation, safe customer payload, and provider extension. |\n| Customer List and Profile-Commerce boundary | `nodics.commerce/modules/checkout/modules/customerList`, `nodics.platform/modules/profile` | Explain why customer list exists in Commerce and what Profile continues to own. |\n| NMS runtime monitoring | `nodics.foundation/modules/nNms` | Explain node monitoring, topology, health, operational evidence, and recovery actions. |\n| Service runtime and overrides | `nodics.foundation/modules/nService`, `nodics.foundation/modules/nService/vService` | Explain service discovery, virtual services, generated services, override precedence, and extension safety. |\n| Cache provider runbooks | `nodics.foundation/modules/nCache`, Redis, Hazelcast, Node cache | Explain provider boundaries, cache key strategy, invalidation, failure behavior, and production configuration. |\n| Database provider boundaries | `nodics.foundation/modules/nDatabase` | Explain MongoDB, virtual DB, Cassandra, Elasticsearch, provider contracts, configuration, and validation. |\n| OTP and security flow | `nodics.foundation/modules/nOtp` | Explain OTP generation, verification, expiry, retry, throttling, audit, and security controls. |\n| Communication providers | `nodics.communication/modules/smtpCommsProvider`, `nodics.communication/modules/smsCommsProvider` | Explain SMTP/SMS provider behavior, templates, retries, failed delivery evidence, and extension rules. |\n| Engagement and contact submission | `nodics.engagement/modules/contactSubmission` | Explain contact forms, moderation, workflow, notification, audit, and recovery. |\n| Workflow and BPM source map | `nodics.foundation/modules/nbpm`, `nodics.process` | Explain workflow definitions, transitions, tasks, callbacks, history, and operator visibility. |\n| Cron job data authoring | `nodics.process/modules/cronjob` | Explain job records, schedules, execution policy, retry, idempotency, and Process server ownership. |\n| Release and upgrade compatibility | `nodics.foundation/modules/nSetup`, all module data folders | Explain version freeze, upgrade path, rollback, checksum drift, generated manifests, and extension compatibility. |\n\n## P2 closure items\n\n| Item | Source areas | Documentation outcome |\n| --- | --- | --- |\n| Fresh-schema setup per runtime | Platform, WCMS Staged, WCMS Online, Process, Commerce, Engagement | Add runtime-specific import order, seed data, publication, and acceptance evidence where existing quick-start docs are too broad. |\n| Environment, server, and node discovery | `nodics.kickoff/envs`, framework server/node configuration | Explain how physical hierarchy, environment config, server composition, and runtime roles are discovered. |\n| Permission and access matrix | Profile, BackOffice, WCMS, documentation access policies | Explain roles, groups, permissions, access modes, public/authenticated/restricted behavior, and publication visibility. |\n| Search indexing operations | Discovery and Commerce Search modules | Explain index jobs, reindex, projection freshness, failure recovery, and ownership. |\n| Migration and import reconciliation | Import, migration, CMS migration, Commerce data | Explain source classification, mapping tables, partial failures, retry, and data correction. |\n| Export and data privacy | Export providers, media-owned generated files | Explain allow-lists, masking, retention, download permissions, and audit. |\n| Observability | NMS, import runs, publication receipts, logs, dashboards | Explain correlation IDs, status evidence, health checks, support cards, and escalation. |\n| Disaster recovery | Media publication, Online storage, replication queue | Explain Online media replication, DR queues, recovery receipts, and failure escalation. |\n| Frontend consumption contracts | Axis, Nexus, Agora | Explain that Axis consumes BackOffice metadata, Nexus consumes Online WCMS, and Agora consumes Online commerce/content. |\n| Data quality rules | All module data folders | Explain required fields, stable keys, idempotent queries, relation integrity, and no runtime logic in data files. |\n| Testing standards | All modules and frontends | Explain unit, contract, generator, fresh-schema, publication, browser, accessibility, and regression expectations. |\n| Troubleshooting matrices | Every operational capability page | Add what failed, who owns it, user-safe message, technical evidence, and recovery action. |\n| Decision-maker overview pages | Product and capability overview docs | Explain business value, ownership model, platform differentiation, risk controls, and implementation confidence. |\n| Internal-only register | Low-score utility modules | Decide and document which technical modules do not need public pages and where they are covered. |\n\n## Closure workflow\n\n1. Start from the generated source coverage report.\n2. Pick the highest-priority open item.\n3. Inspect source files, schemas, services, routers, data, assets, tests, and\n   frontend consumers.\n4. Decide whether the work is a new page, deeper section, owner mapping, or\n   internal-only classification.\n5. Update authored Markdown and catalogue metadata.\n6. Regenerate documentation data and source coverage reports.\n7. Run docs tests and any owning module tests needed for the behavior.\n8. For runtime-visible changes, import into Staged, publish Online, and verify\n   Axis, Nexus, or Agora from the browser.\n9. Commit the smallest coherent documentation batch.\n\n## Common mistakes\n\n- Treating this backlog as optional once a high-level overview exists.\n- Closing a source gap without reading the current source files and tests.\n- Creating public documentation for a module that should be an internal utility\n  without explaining the broader owner.\n- Forgetting business users when writing deep developer detail.\n- Forgetting developers when writing a business-friendly page.\n- Forgetting operators and QA owners when documenting publishable or\n  production-visible behavior.\n- Showing external references as source design instead of industry-standard\n  expectation checks.\n\n## Verification\n\nRun the documentation gates after each closure batch:\n\n```bash\nnpm --prefix nodics.docs run audit:source-coverage\nnpm --prefix nodics.docs run docs:generate\nnpm --prefix nodics.docs test\ngit -C nodics.ai diff --check\n```\n\nThe backlog is healthy when the generated report, this page, catalogue\nmetadata, generated WCMS records, and runtime evidence agree. Business users\nshould see clear journeys, developers should see exact source paths and\nextension points, operators should see evidence and recovery steps, QA owners\nshould see validation commands, and AI tools should see boundaries that prevent\nunsafe source or data changes.\n",
+      "previous": {
+        "title": "Source-Backed Documentation Coverage Audit",
+        "route": "/docs/framework/reference-source-backed-documentation-coverage-audit"
+      },
+      "source": {
+        "repository": "nodics.docs",
+        "functionalModule": "nodics.docs",
+        "technicalModule": "documentation",
+        "owner": "nodics.docs",
+        "sourcePath": "docs/pages/reference/documentation-gap-backlog.md",
+        "path": "docs/pages/reference/documentation-gap-backlog.md",
+        "wordCount": 1404,
+        "checksum": "1a4386b343bf51fac42c6e326b56defba3501d060b006305608b0580c3978f47"
       }
     },
     "active": true

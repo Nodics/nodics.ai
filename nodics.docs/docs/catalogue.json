@@ -8759,6 +8759,107 @@
         "code-example",
         "troubleshooting-matrix"
       ]
+    },
+    {
+      "id": "reference.documentation-gap-backlog",
+      "functionalModule": "nodics.docs",
+      "technicalModule": "documentation",
+      "title": "Documentation Gap Backlog",
+      "summary": "Classified backlog for closing source-backed documentation gaps across runtime capabilities, data releases, media, applications, operations, and validation.",
+      "locale": "en",
+      "content": "docs/pages/reference/documentation-gap-backlog.md",
+      "slug": "reference-documentation-gap-backlog",
+      "parentId": "reference.source-map-and-glossary",
+      "hierarchyPath": [
+        "Nodics Documentation",
+        "Reference",
+        "Source Map and Glossary",
+        "Documentation Gap Backlog"
+      ],
+      "hierarchyDepth": 4,
+      "navigationSection": "Reference",
+      "navigationSectionCode": "reference",
+      "navigationSectionOrder": 470,
+      "navigationGroup": "Source Map and Glossary",
+      "navigationGroupCode": "source-map-and-glossary",
+      "navigationGroupOrder": 10,
+      "navigationSubgroup": null,
+      "navigationSubgroupCode": null,
+      "navigationOrder": 30,
+      "documentType": "reference",
+      "audience": [
+        "business",
+        "architect",
+        "administrator",
+        "developer",
+        "operator",
+        "qa",
+        "ai-tool"
+      ],
+      "businessAudience": [
+        "business user",
+        "decision maker",
+        "implementation partner"
+      ],
+      "technicalAudience": [
+        "architect",
+        "developer",
+        "operator",
+        "qa engineer",
+        "ai tool"
+      ],
+      "sourceOwner": "nodics.docs",
+      "sourcePath": "docs/pages/reference/documentation-gap-backlog.md",
+      "visibility": "public",
+      "channel": [
+        "axis",
+        "nexus",
+        "web"
+      ],
+      "accessMode": "PUBLIC",
+      "publiclyAvailable": true,
+      "requiresAuthentication": false,
+      "allowedRoles": [],
+      "allowedGroups": [],
+      "allowedPermissions": [],
+      "lifecycleState": "ONLINE",
+      "version": "0.16.7",
+      "relatedPages": [
+        "reference.source-backed-documentation-coverage-audit",
+        "reference.source-map-glossary",
+        "framework.capability-documentation-maturity-pattern",
+        "data.import-export-migration"
+      ],
+      "sourceEvidence": [
+        "docs/catalogue.json",
+        "docs/pages/reference/documentation-gap-backlog.md",
+        "docs/pages/reference/source-backed-documentation-coverage-audit.md",
+        "docs/reports/source-backed-documentation-coverage-report.json",
+        "docs/reports/source-backed-documentation-coverage-report.md",
+        "scripts/audit-source-coverage.mjs"
+      ],
+      "maturityState": "operational",
+      "implementationState": "current",
+      "renderingComponent": "documentation.component.article",
+      "searchKeywords": [
+        "documentation-gap-backlog",
+        "source-backed",
+        "coverage-closure",
+        "documentation-workflow",
+        "missing-docs"
+      ],
+      "topicKeywords": [
+        "Reference",
+        "Source Map and Glossary",
+        "Documentation Gap Backlog",
+        "Coverage Closure"
+      ],
+      "visualRequirements": [
+        "diagram",
+        "configuration-table",
+        "code-example",
+        "troubleshooting-matrix"
+      ]
     }
   ],
   "navigationSections": [

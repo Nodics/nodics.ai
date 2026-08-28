@@ -10978,5 +10978,126 @@ module.exports = {
     "lifecycleState": "ONLINE",
     "maturityState": "IMPLEMENTED",
     "active": true
+  },
+  "record94": {
+    "code": "nodicsDocsMetadatareferenceDocumentationGapBacklog",
+    "product": "nodicsDocumentationProduct",
+    "documentId": "reference.documentation-gap-backlog",
+    "title": "Documentation Gap Backlog",
+    "summary": "Classified backlog for closing source-backed documentation gaps across runtime capabilities, data releases, media, applications, operations, and validation.",
+    "businessSummary": "Documentation Gap Backlog explains the business purpose, supported decisions, operational impact, and controls for the Source Map and Glossary journey.",
+    "technicalSummary": "Documentation Gap Backlog records owning module nodics.docs, technical module documentation, source path docs/pages/reference/documentation-gap-backlog.md, extension points, validation, and troubleshooting evidence.",
+    "ownerFunctionalModule": "nodics.docs",
+    "technicalModule": "documentation",
+    "targetPage": "nodicsDocsPagereferenceDocumentationGapBacklog",
+    "targetRoute": "nodicsDocsRoutereferenceDocumentationGapBacklog",
+    "articleComponent": "nodicsDocsComponentreferenceDocumentationGapBacklog",
+    "template": "nodicsDocumentationArticleTemplate",
+    "searchMetadata": "nodicsDocsSearchpagenodicsdocsmetadatareferencedocumentationgapbacklog",
+    "headings": [
+      {
+        "text": "Backlog flow",
+        "anchor": "referenceDocumentationGapBacklog-1-backlog-flow",
+        "level": 2
+      },
+      {
+        "text": "Classification policy",
+        "anchor": "referenceDocumentationGapBacklog-2-classification-policy",
+        "level": 2
+      },
+      {
+        "text": "P0 closure items",
+        "anchor": "referenceDocumentationGapBacklog-3-p0-closure-items",
+        "level": 2
+      },
+      {
+        "text": "P1 closure items",
+        "anchor": "referenceDocumentationGapBacklog-4-p1-closure-items",
+        "level": 2
+      },
+      {
+        "text": "P2 closure items",
+        "anchor": "referenceDocumentationGapBacklog-5-p2-closure-items",
+        "level": 2
+      },
+      {
+        "text": "Closure workflow",
+        "anchor": "referenceDocumentationGapBacklog-6-closure-workflow",
+        "level": 2
+      },
+      {
+        "text": "Common mistakes",
+        "anchor": "referenceDocumentationGapBacklog-7-common-mistakes",
+        "level": 2
+      },
+      {
+        "text": "Verification",
+        "anchor": "referenceDocumentationGapBacklog-8-verification",
+        "level": 2
+      }
+    ],
+    "diagrams": [
+      {
+        "language": "mermaid"
+      }
+    ],
+    "visualAssets": [
+      {
+        "kind": "table",
+        "title": "Classification, Meaning, Required action"
+      },
+      {
+        "kind": "table",
+        "title": "Item, Source areas, Documentation outcome"
+      },
+      {
+        "kind": "table",
+        "title": "Item, Source areas, Documentation outcome"
+      },
+      {
+        "kind": "table",
+        "title": "Item, Source areas, Documentation outcome"
+      }
+    ],
+    "visualRequirements": [
+      "diagram",
+      "configuration-table",
+      "code-example",
+      "troubleshooting-matrix"
+    ],
+    "relatedPages": [
+      "reference.source-backed-documentation-coverage-audit",
+      "reference.source-map-glossary",
+      "framework.capability-documentation-maturity-pattern",
+      "data.import-export-migration"
+    ],
+    "sourceRepository": "nodics.docs",
+    "sourcePath": "docs/pages/reference/documentation-gap-backlog.md",
+    "sourceChecksum": "1a4386b343bf51fac42c6e326b56defba3501d060b006305608b0580c3978f47",
+    "sourceWordCount": 1404,
+    "audience": [
+      "business",
+      "architect",
+      "administrator",
+      "developer",
+      "operator",
+      "qa",
+      "ai-tool"
+    ],
+    "managedInAxis": true,
+    "axisAuthoringPermissions": [
+      "documentation.draft.update"
+    ],
+    "workflowRequired": true,
+    "workflowTriggers": [
+      "CONTENT_CHANGE",
+      "ACCESS_POLICY_CHANGE",
+      "SOURCE_EVIDENCE_CHANGE"
+    ],
+    "accessPolicy": "nodicsDocsAccessPublic",
+    "accessMode": "PUBLIC",
+    "lifecycleState": "ONLINE",
+    "maturityState": "IMPLEMENTED",
+    "active": true
   }
 };
