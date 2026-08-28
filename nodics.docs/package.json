@@ -27,8 +27,10 @@
     "docs:generate": "node scripts/generate-content-pack.mjs",
     "docs:check": "node scripts/generate-content-pack.mjs --check",
     "validate": "node scripts/validate.mjs",
+    "audit:source-coverage": "node scripts/audit-source-coverage.mjs",
+    "audit:source-coverage:check": "node scripts/audit-source-coverage.mjs --check",
     "audit:hardening": "node scripts/audit-hardening.mjs",
-    "test": "npm run docs:check && npm run validate && npm run audit:hardening"
+    "test": "npm run docs:check && npm run validate && npm run audit:source-coverage:check && npm run audit:hardening"
   },
   "files": [
     "docs",

@@ -10302,8 +10302,8 @@ module.exports = {
     ],
     "sourceRepository": "nodics.docs",
     "sourcePath": "docs/pages/framework/capability-documentation-maturity-pattern.md",
-    "sourceChecksum": "b61625fa87bd1e8f50635674b6c0eade493cdb5fee9853bef0f98c01d5f067cc",
-    "sourceWordCount": 1506,
+    "sourceChecksum": "12ec14b0796becbe04fc94a91de252eda62a1cdfa65d86696236bf797fc2631c",
+    "sourceWordCount": 1567,
     "audience": [
       "business",
       "architect",
@@ -10830,38 +10830,68 @@ module.exports = {
         "level": 2
       },
       {
+        "text": "Audience levels",
+        "anchor": "referenceSourceBackedDocumentationCoverageAudit-3-audience-levels",
+        "level": 2
+      },
+      {
+        "text": "Ownership checklist",
+        "anchor": "referenceSourceBackedDocumentationCoverageAudit-4-ownership-checklist",
+        "level": 2
+      },
+      {
+        "text": "Creation and publication lanes",
+        "anchor": "referenceSourceBackedDocumentationCoverageAudit-5-creation-and-publication-lanes",
+        "level": 2
+      },
+      {
+        "text": "Media and asset rule",
+        "anchor": "referenceSourceBackedDocumentationCoverageAudit-6-media-and-asset-rule",
+        "level": 2
+      },
+      {
+        "text": "Error message standard",
+        "anchor": "referenceSourceBackedDocumentationCoverageAudit-7-error-message-standard",
+        "level": 2
+      },
+      {
+        "text": "Fresh schema and browser proof",
+        "anchor": "referenceSourceBackedDocumentationCoverageAudit-8-fresh-schema-and-browser-proof",
+        "level": 2
+      },
+      {
         "text": "First inventory snapshot",
-        "anchor": "referenceSourceBackedDocumentationCoverageAudit-3-first-inventory-snapshot",
+        "anchor": "referenceSourceBackedDocumentationCoverageAudit-9-first-inventory-snapshot",
         "level": 2
       },
       {
         "text": "Documentation backlog workflow",
-        "anchor": "referenceSourceBackedDocumentationCoverageAudit-4-documentation-backlog-workflow",
+        "anchor": "referenceSourceBackedDocumentationCoverageAudit-10-documentation-backlog-workflow",
         "level": 2
       },
       {
         "text": "External reference policy",
-        "anchor": "referenceSourceBackedDocumentationCoverageAudit-5-external-reference-policy",
+        "anchor": "referenceSourceBackedDocumentationCoverageAudit-11-external-reference-policy",
         "level": 2
       },
       {
         "text": "Common mistakes",
-        "anchor": "referenceSourceBackedDocumentationCoverageAudit-6-common-mistakes",
+        "anchor": "referenceSourceBackedDocumentationCoverageAudit-12-common-mistakes",
         "level": 2
       },
       {
         "text": "Troubleshooting",
-        "anchor": "referenceSourceBackedDocumentationCoverageAudit-7-troubleshooting",
+        "anchor": "referenceSourceBackedDocumentationCoverageAudit-13-troubleshooting",
         "level": 2
       },
       {
         "text": "Acceptance rule",
-        "anchor": "referenceSourceBackedDocumentationCoverageAudit-8-acceptance-rule",
+        "anchor": "referenceSourceBackedDocumentationCoverageAudit-14-acceptance-rule",
         "level": 2
       },
       {
         "text": "Verification",
-        "anchor": "referenceSourceBackedDocumentationCoverageAudit-9-verification",
+        "anchor": "referenceSourceBackedDocumentationCoverageAudit-15-verification",
         "level": 2
       }
     ],
@@ -10878,6 +10908,26 @@ module.exports = {
       {
         "kind": "table",
         "title": "Required section, Reader it helps"
+      },
+      {
+        "kind": "table",
+        "title": "Audience level, Required answer"
+      },
+      {
+        "kind": "table",
+        "title": "Ownership layer, Documentation must state"
+      },
+      {
+        "kind": "table",
+        "title": "Media layer, Meaning"
+      },
+      {
+        "kind": "table",
+        "title": "Error concern, Required detail"
+      },
+      {
+        "kind": "table",
+        "title": "Proof type, Examples"
       },
       {
         "kind": "table",
@@ -10902,8 +10952,8 @@ module.exports = {
     ],
     "sourceRepository": "nodics.docs",
     "sourcePath": "docs/pages/reference/source-backed-documentation-coverage-audit.md",
-    "sourceChecksum": "331f149bca5006750427fb76237f575af8023eed64d9a6cbb16b32b29aad8a88",
-    "sourceWordCount": 1535,
+    "sourceChecksum": "4d4752d26711b9614d199cbb7c9ba6ccafcc1f4ef54bd5ec02e8e55fca97b974",
+    "sourceWordCount": 2234,
     "audience": [
       "business",
       "architect",

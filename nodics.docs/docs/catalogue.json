@@ -8732,7 +8732,10 @@
       "sourceEvidence": [
         "docs/catalogue.json",
         "docs/pages/reference/source-backed-documentation-coverage-audit.md",
-        "docs/pages/framework/capability-documentation-maturity-pattern.md"
+        "docs/pages/framework/capability-documentation-maturity-pattern.md",
+        "docs/reports/source-backed-documentation-coverage-report.json",
+        "docs/reports/source-backed-documentation-coverage-report.md",
+        "scripts/audit-source-coverage.mjs"
       ],
       "maturityState": "operational",
       "implementationState": "current",

@@ -45,13 +45,18 @@ The audit compares implementation signals against documented topics:
 | `test/` | Tests reveal implemented behavior that should be documented before the topic is called operational. |
 | Frontend apps | Axis, Nexus, and Agora journeys need backend source ownership, permission, state, and browser behavior docs. |
 
-The inventory starts with commands like:
+The inventory is repeatable through the generated source coverage report:
 
 ```bash
-rg --files nodics.ai nodics.kickoff nodics.exp
-find nodics.ai nodics.kickoff -path '*/modules/*' -type d
-rg -n "src/schemas|src/service|src/controller|src/router|data/.+-v[0-9]+|assetManifest" nodics.ai nodics.kickoff
+npm --prefix nodics.docs run audit:source-coverage
+npm --prefix nodics.docs run audit:source-coverage:check
 ```
+
+The report is generated at
+`nodics.docs/docs/reports/source-backed-documentation-coverage-report.md` with
+a JSON companion file for automated review. Developers may still use `rg` and
+`find` during investigation, but the report is the durable evidence committed
+with documentation work.
 
 This is a triage method, not a blind rule. A utility module may be covered by a
 broader capability page. A business topic may be implemented by several
@@ -77,13 +82,105 @@ Every mature topic should include:
 | Validation commands and acceptance proof | QA owner, release owner, operator |
 | Official external references when useful | Architect, decision maker, implementation partner |
 
+## Audience levels
+
+Each page must deliberately serve more than one reader. It is acceptable for a
+page to go deeper for developers, but it should never become source-code notes
+only.
+
+| Audience level | Required answer |
+| --- | --- |
+| Business overview | What decision, journey, value, cost reduction, risk reduction, or operating improvement the capability supports. |
+| Developer how-to | Which files to edit, which contracts to respect, and how to test the change locally. |
+| Operator runbook | Which server role, runtime state, logs, health checks, retries, rollbacks, and production evidence matter. |
+| QA validation | Which unit, contract, generated-data, fresh-schema, publication, and browser checks prove the behavior. |
+| AI-tool guidance | What can be safely generated or refactored, what must remain backend-owned, and what evidence must be preserved. |
+
+## Ownership checklist
+
+Every page must identify source ownership before it explains customization.
+That keeps Axis, Nexus, Agora, customer projects, and backend modules from
+becoming parallel authorities.
+
+| Ownership layer | Documentation must state |
+| --- | --- |
+| Business capability | The human-facing capability name and business journey. |
+| Functional module | The owning Nodics capability or project module. |
+| Technical module | The package or nested module where implementation lives. |
+| Schema and service | The data model and service behavior that own validation and persistence. |
+| Route and controller | The API surface and permission boundary, if user or system calls exist. |
+| Data and assets | Release folders, headers, records, manifests, physical assets, and generated files. |
+| Frontend consumer | Axis, Nexus, Agora, or another application that renders approved backend data. |
+| Tests and reports | Contract tests, generated reports, and runtime acceptance commands. |
+
+## Creation and publication lanes
+
+Every data-bearing topic must show both creation lanes. Module release data is
+authored by developers or AI tools under the owning module or project `data/`
+folder. Business-created data is authored through Axis or another governed
+BackOffice journey. Both lanes must converge on the same backend schemas,
+validators, permission policies, workflows, publication lifecycle, and audit
+evidence.
+
+Publishable data must always explain Staged, approval, and Online activation.
+Documentation data, CMS pages, media, product content, and storefront-visible
+records should not be described as direct Online writes. Operational data such
+as cron schedules, runtime configuration, and internal evidence may have a
+different lifecycle, but the page must say that clearly.
+
+## Media and asset rule
+
+Media-bearing topics must separate four things:
+
+| Media layer | Meaning |
+| --- | --- |
+| Physical asset | Source file under a release-owned `assets/` folder. |
+| Media object | Backend schema record that represents stored media metadata and provider-owned storage fields. |
+| Media reference | Relationship from a business object, page, component, product, or article to the media code. |
+| Publication transfer | Staged-to-Online copy, checksum validation, placement evidence, and replication obligation. |
+
+Release data may reference physical files, but it must not author provider
+paths, Online URLs, storage keys, or replication behavior. Those remain importer
+and media-runtime responsibilities.
+
+## Error message standard
+
+Backend logs may carry technical error codes and internal detail. Axis, Nexus,
+and Agora should show business-safe messages that explain the user state and
+the next action without leaking internals. A documentation page that covers a
+runtime-visible journey must document:
+
+| Error concern | Required detail |
+| --- | --- |
+| User-safe message | What the user should see in Axis, Nexus, or Agora. |
+| Technical evidence | Error code, correlation id, logs, import run, workflow task, or publication receipt for support. |
+| Recoverability | Retry, repair data, register capability, approve publication, restart service, or escalate. |
+| Ownership | Which backend module or project data release must be fixed. |
+
+## Fresh schema and browser proof
+
+For major user-visible capabilities, documentation is not complete until the
+page explains fresh-schema verification and browser verification. Fresh-schema
+checks prove installation, import order, generated manifests, required
+capabilities, and publication readiness. Browser checks prove the actual Axis,
+Nexus, or Agora journey that users experience.
+
+| Proof type | Examples |
+| --- | --- |
+| Fresh schema | Initialize the runtime, import `init-v001`, `core-v001`, and selected `sample-v001` sections, confirm idempotency, and check data counts. |
+| Publication | Approve and publish Staged records to Online through `nPublish`; verify Online records and media coordinates. |
+| Browser | Open Axis setup, Module Registry, Documentation, Nexus public pages, and Agora product journeys with real backend data. |
+| Regression | Run package tests, generated documentation checks, source coverage report checks, and runtime acceptance scripts. |
+
 ## First inventory snapshot
 
-A first source scan of current framework and reference project roots found 128
-module or package boundaries and 92 published documentation pages. The
-heuristic identified 57 direct missing matches and 8 shallow high-surface
-areas. This does not mean exactly 57 new pages are required; it means those
-areas need owner confirmation and documentation mapping.
+A generated source coverage scan of current framework and reference project
+roots found 172 module or package boundaries and 94 published documentation
+pages. The committed report currently identifies 22 source boundaries that
+need a page or explicit owner mapping, 6 high-surface boundaries that need
+deeper documentation sections, 28 internal-only candidates, and 116 covered
+boundaries. This does not mean exactly 22 new pages are required; it means
+those areas need owner confirmation and documentation mapping.
 
 | Priority | Area | Why it is important | Documentation action |
 | --- | --- | --- | --- |

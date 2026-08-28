@@ -64,6 +64,12 @@ Every capability page should include:
 10. **Common mistakes** — things developers and AI tools must avoid.
 11. **Verification** — tests, generated data checks, local acceptance, and
    runtime proof.
+12. **Audience levels** — explicit guidance for business users, developers,
+   operators, QA owners, and AI tools where the topic affects them.
+13. **Error behavior** — user-safe messages for Axis, Nexus, or Agora and
+   technical evidence for developers and support.
+14. **Fresh-schema and browser proof** — when the capability is visible at
+   runtime, prove it from an empty database and through the real user journey.
 
 ## Source-backed coverage rule
 
