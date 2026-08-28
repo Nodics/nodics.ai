@@ -130,7 +130,7 @@ module.exports = {
         dependencies = Array.from(dependencies.reduce((result, item) => {
             result.set(item.schema + ':' + item.code + ':' + item.version, item); return result;
         }, new Map()).values());
-        if (dependencies.length > Number(this.settings().maxDependencies || 500)) {
+        if (dependencies.length > Number(this.settings().maxBundleDependencies || 10000)) {
             throw this.error('CMS_PUBLICATION_DEPENDENCY_EXCEEDED', 'CMS publication graph exceeds configured size');
         }
         return dependencies;

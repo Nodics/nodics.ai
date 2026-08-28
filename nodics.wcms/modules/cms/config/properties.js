@@ -79,6 +79,7 @@ module.exports = {
             maximumDeploymentRequestBytes: '64mb',
             runtimeRole: 'UNASSIGNED',
             maxDependencies: 500,
+            maxBundleDependencies: 10000,
             maxDepth: 12,
             maxBundleRoutes: 200,
             siteBundleChunkThresholdBytes: 50331648,

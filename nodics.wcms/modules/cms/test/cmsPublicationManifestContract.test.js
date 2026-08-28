@@ -40,6 +40,8 @@ assert.strictEqual(properties.publish.providers.versionProviders.cms, 'DefaultCm
 assert.strictEqual(properties.cms.publication.maximumDeploymentRequestBytes, '64mb');
 assert.strictEqual(properties.cms.publication.target.maxManifestBytes, 67108864);
 assert.strictEqual(properties.cms.publication.siteBundleChunkThresholdBytes, 50331648);
+assert.strictEqual(properties.cms.publication.maxDependencies, 500);
+assert.strictEqual(properties.cms.publication.maxBundleDependencies, 10000);
 assert.strictEqual(properties.bodyParserHandler.cmsPublicationBodyParserHandler,
     'DefaultCmsPublicationBodyParserHandlerService');
 assert.strictEqual(routes.cmsPublicationTarget.deployPublication.bodyParserHandler,
@@ -413,6 +415,11 @@ const request = { tenant: 'tenant-a', authData: { principalId: 'publisher-a' }, 
     assert(data.pointers.every(pointer => pointer.manifestCode === siteManifest.code),
         'one site-bundle deployment must switch every route pointer to the same immutable manifest');
     assert.strictEqual((await provider.getOnlineVersion(sitePublication, request)).version, siteManifest.code);
+    let originalMaxBundleDependencies = properties.cms.publication.maxBundleDependencies;
+    properties.cms.publication.maxBundleDependencies = 1;
+    await assert.rejects(adapter.resolveDependencies(sitePublication, siteRoot, request),
+        error => error.code === 'CMS_PUBLICATION_DEPENDENCY_EXCEEDED');
+    properties.cms.publication.maxBundleDependencies = originalMaxBundleDependencies;
     properties.cms.publication.enabled = true;
     let siteDelivery = await delivery.resolvePage({ tenant: 'tenant-a', authData: {}, router: { publicAccess: true },
         delivery: { site: 'site-a', path: '/home', locale: 'en', channel: 'web' } });
