@@ -647,6 +647,17 @@ const backofficeMetadata = {
     },
   },
 };
+const authorityClaim = {
+  type: "object",
+  additionalProperties: false,
+  required: ["kind", "moduleName", "claimName", "authorityContext"],
+  properties: {
+    kind: { enum: ["schema", "service"] },
+    moduleName: moduleName,
+    claimName: { type: "string", minLength: 1, maxLength: 256 },
+    authorityContext: { type: "string", minLength: 1, maxLength: 256 },
+  },
+};
 const registration = {
   type: "object",
   additionalProperties: false,
@@ -664,6 +675,7 @@ const registration = {
     canonicalIdentity: { type: "string", minLength: 1, maxLength: 2048 },
     instanceId: { type: "string", minLength: 1 },
     version: { type: "string" },
+    moduleIndex: { type: "string" },
     moduleKind: { type: "string" },
     capabilities: {
       type: "array",
@@ -695,6 +707,11 @@ const registration = {
       }
     },
     backoffice: backofficeMetadata,
+    authorityClaims: {
+      type: "array",
+      maxItems: 512,
+      items: authorityClaim,
+    },
   },
 };
 const functionalModuleRegistration = {
@@ -706,6 +723,7 @@ const functionalModuleRegistration = {
     functionalModule: moduleName,
     displayName: { type: "string", minLength: 1, maxLength: 160 },
     registeredVersion: { type: "string" },
+    moduleIndex: { type: "string" },
     registrationState: { enum: ["AVAILABLE", "REGISTERED", "DEREGISTERED"] },
     enabled: { type: "boolean" },
     required: { type: "boolean" },
@@ -929,6 +947,7 @@ module.exports = {
     required: ["instanceId", "registrations"],
     properties: {
       instanceId: { type: "string", minLength: 1 },
+      project: moduleName,
       environment: { type: "string" },
       server: { type: "string" },
       node: { type: "string", nullable: true },

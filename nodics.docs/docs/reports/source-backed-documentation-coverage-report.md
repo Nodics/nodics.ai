@@ -6,7 +6,7 @@ This generated report maps current source boundaries to published documentation 
 
 | Metric | Count |
 | --- | --- |
-| Catalogue documents | 122 |
+| Catalogue documents | 127 |
 | Source boundaries scanned | 172 |
 | Needs page or owner mapping | 0 |
 | Needs deeper section | 0 |

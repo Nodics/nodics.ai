@@ -1,7 +1,7 @@
 {
   "name": "commerceSearchCore",
   "version": "0.0.0",
-  "index": "70.16",
+  "index": "76.16",
   "private": true,
   "main": "nodics.js",
   "description": "Commerce Search Core capability.",

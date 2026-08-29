@@ -23,6 +23,7 @@ const assert = require('node:assert/strict');
 const discovery = require('../package.json');
 
 assert.equal(discovery.name, 'nodics.discovery');
+assert.equal(discovery.index, '75.99');
 assert.equal(discovery.nodics.functionalModule.identity, 'nodics.discovery');
 assert.deepEqual(discovery.requiredModules, [
     'discoveryConfig',

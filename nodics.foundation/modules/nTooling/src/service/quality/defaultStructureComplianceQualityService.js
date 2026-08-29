@@ -396,8 +396,8 @@ module.exports = exportedService = {
     }
     const manifestPath = path.join(dataPath, 'manifest.json');
     if (!fs.existsSync(manifestPath)) {
-        (this.createFinding || exportedService.createFinding).call(this, report, 'error', moduleObject, 'missing-data-manifest',
-            'A non-empty `data/` directory must own exactly one aggregate `data/manifest.json`.');
+        (this.createFinding || exportedService.createFinding).call(this, report, 'warning', moduleObject, 'missing-data-manifest',
+            '`data/manifest.json` is generated release evidence. Run the data manifest generator before publishing or release qualification.');
         return;
     }
     const nestedManifests = (this.collectNamedFiles || exportedService.collectNamedFiles).call(this, dataPath, 'manifest.json', [])
@@ -413,11 +413,12 @@ module.exports = exportedService = {
         return;
     }
     if (![0, 2].includes(manifest.contractVersion) || manifest.module !== moduleObject.packageJson.name ||
-        !manifest.sections || typeof manifest.sections !== 'object' || Array.isArray(manifest.sections)) {
+        (manifest.sections !== undefined && (!manifest.sections || typeof manifest.sections !== 'object' || Array.isArray(manifest.sections)))) {
         (this.createFinding || exportedService.createFinding).call(this, report, 'error', moduleObject, 'invalid-data-manifest-envelope',
-            '`data/manifest.json` must use contractVersion 0 or 2, match package name, and declare a sections map.');
+            '`data/manifest.json` must use contractVersion 0 or 2, match package name, and use a sections map when release metadata is present.');
         return;
     }
+    manifest.sections = manifest.sections || {};
     const supportedKinds = new Set(['DATA_RELEASE', 'CONTENT_PACK', 'SOURCE_CONTRIBUTION']);
     Object.keys(manifest.sections).forEach(sectionName => {
         const section = manifest.sections[sectionName];

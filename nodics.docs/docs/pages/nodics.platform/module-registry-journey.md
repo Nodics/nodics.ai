@@ -63,6 +63,46 @@ because a module can be locally active while its publication target is
 unavailable. Business users should see the impact. Developers should see the
 owner and missing dependency. Operators should see a retry or repair path.
 
+Nodics should not introduce a second sequencing framework for functional
+modules when the runtime already has one. BackOffice should project the
+functional module's package `index` as `moduleIndex`, and Axis should use that
+value for stable visual ordering. The project environment should use existing
+`nodics.extends` metadata to load local module groups in dependency order.
+Activation dependencies should live in the backend activation-data
+configuration, where Axis can show missing prerequisites without becoming the
+authority.
+
+The current commerce sequence follows that rule:
+
+1. Commerce loads first because it owns products, categories, prices,
+   inventory, tax, cart, checkout, payment, and fulfillment records.
+2. Discovery loads after Commerce because it provides search/indexing support
+   for product, content, and other searchable data.
+3. Commerce Search loads after Discovery because it bridges Commerce-owned
+   catalogue data into searchable storefront projections.
+4. Accelerators activate after Commerce and Discovery because they compose
+   business applications such as Agora and Nexus on top of the foundation.
+
+```js
+// Project activation-data configuration, not Axis hardcoding.
+module.exports = {
+  backofficeFunctionalModuleActivationData: {
+    modules: {
+      'nodics.accelerators': {
+        dependencies: ['nodics.commerce', 'nodics.discovery'],
+        dataPackages: []
+      }
+    }
+  }
+};
+```
+
+When a future functional module has prerequisites, add those prerequisites to
+the backend activation-data configuration and make sure each involved package
+has the correct `index` and `nodics.extends` relationship. Do not add a
+frontend-only sort number, hidden button rule, or duplicate dependency list in
+Axis.
+
 ## Customization and extension guidance
 
 Developers can add new capability providers, discovery adapters, registry

@@ -24,6 +24,13 @@ const dataPath = path.join(dataRoot, 'records/documentation');
 const headerPath = path.join(dataRoot, 'headers/nodicsDocumentationContentPackHeader.js');
 const manifestPath = path.join(root, 'data/manifest.json');
 const checkOnly = process.argv.includes('--check');
+const generatedOutputDirectories = [
+  'data/core-v001/records/documentation/',
+  'data/core-v001/headers/',
+];
+const generatedOutputFiles = [
+  'data/manifest.json',
+];
 const copyrightHeader = `/*
     Nodics - Enterprice Micro-Services Management Framework
 
@@ -278,6 +285,13 @@ function markdownBlocks(markdown, pageCode, contentPath) {
 }
 
 async function writeOrCheck(relativePath, content) {
+  const normalizedPath = relativePath.replace(/\\/g, '/');
+  const allowed =
+    generatedOutputFiles.includes(normalizedPath) ||
+    generatedOutputDirectories.some((directory) => normalizedPath.startsWith(directory));
+  if (!allowed) {
+    throw new Error(`Refusing to write non-generated documentation source: ${relativePath}`);
+  }
   const target = path.join(root, relativePath);
   if (checkOnly) {
     const current = fs.existsSync(target) ? fs.readFileSync(target, 'utf8') : null;

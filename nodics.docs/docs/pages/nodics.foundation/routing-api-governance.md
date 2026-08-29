@@ -20,6 +20,12 @@ For business users, routing is not just a developer concern. It decides whether 
 
 The technical module is `nRouter`, but the reader-facing capability is Routing and API Governance. Functional modules declare the APIs they own. `nRouter` registers those declarations, generated route metadata, route utilities, request context, and HTTP behavior. Axis may render operations and documentation links from backend metadata. Nexus may call public Online routes. Neither frontend becomes the source of truth for route existence or access.
 
+Use this page to decide whether a route should exist and who owns it. Use
+`API Request Lifecycle and Handler Pipeline` when a developer needs the
+step-by-step runtime path from Express binding through request parsing,
+security branching, cache lookup, controller dispatch, response handlers, and
+safe customization.
+
 ```mermaid
 flowchart LR
   Module["Owning capability module"] --> Metadata["Route metadata"]
@@ -77,6 +83,15 @@ Developers should customize routing from the project layer or the owning capabil
 | Change anonymous access | Explicit route security configuration and allow-list evidence. | Treating `secured: false` as a casual convenience. |
 | Refresh routes at runtime | Governed runtime router change plus propagation event. | Editing local files on one node in a cluster. |
 
+## Related developer guides
+
+| Topic | When to use it |
+| --- | --- |
+| `API Request Lifecycle and Handler Pipeline` | Explain how an accepted route is processed after Express receives the HTTP request. |
+| `Pipeline and Business Logic Orchestration` | Add or adjust ordered business behavior behind a route. |
+| `Module-to-Module Communication` | Call another module without copying its schema or bypassing its API authority. |
+| `Error Handling and Status Codes` | Define stable status codes, HTTP statuses, safe error bodies, localization metadata, and project-specific overrides. |
+
 ## Operations and governance
 
 Operators need to know whether a route is missing, blocked by permission, failing in controller logic, or stale on only part of a cluster. Documentation must therefore include request path, security mode, expected status codes, error shape, logs, correlation id, tenant scope, and rollback behavior. When route changes are runtime-governed, the page must also explain which event refreshes local registries and how operators prove all nodes are aligned.
@@ -104,4 +119,3 @@ Operators need to know whether a route is missing, blocked by permission, failin
 Verification starts with the documentation page. It must include the business problem, owning capability, route metadata table, security and access rules, visual request flow, customization guidance, runtime-change behavior, common mistakes, and validation commands. The catalogue entry must include source evidence pointing to route metadata, router services, schema CRUD configuration, and related docs.
 
 Implementation verification should include router syntax checks, generated route tests, authorization denial tests, profile permission resolution tests, request-context tests, controller/facade tests, and runtime router override tests where applicable. Public Nexus routes must be verified separately from Axis authenticated routes. Production-like validation should prove that no draft or restricted route becomes public documentation, no secret-like example is rendered, and all cluster nodes agree on the effective route registry.
-

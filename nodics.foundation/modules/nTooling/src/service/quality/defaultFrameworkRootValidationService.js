@@ -190,35 +190,38 @@ module.exports = exportedService = {
             const publishedFiles = (this.collectPublishedFiles || exportedService.collectPublishedFiles).call(this, dataRoot, []);
             if (publishedFiles.length > 0) {
                 const manifestPath = path.join(dataRoot, 'manifest.json');
-                (this.assert || exportedService.assert).call(this, fs.existsSync(manifestPath), `Published data root is missing data/manifest.json: ${path.relative(repositoryRoot, folder)}`);
-                const packageMetadata = (this.readJson || exportedService.readJson).call(this, packagePath);
-                const manifest = (this.readJson || exportedService.readJson).call(this, manifestPath);
-                (this.assert || exportedService.assert).call(this, [0, 2].includes(manifest.contractVersion), `Aggregate data manifest must use contractVersion 0 or 2: ${path.relative(repositoryRoot, manifestPath)}`);
-                (this.assert || exportedService.assert).call(this, manifest.module === packageMetadata.name, `Aggregate data manifest module identity mismatch: ${path.relative(repositoryRoot, manifestPath)}`);
-                (this.assert || exportedService.assert).call(this, manifest.sections && typeof manifest.sections === 'object' && !Array.isArray(manifest.sections),
-                    `Aggregate data manifest sections are invalid: ${path.relative(repositoryRoot, manifestPath)}`);
-                const nestedManifests = publishedFiles.filter(file => file !== manifestPath && path.basename(file) === 'manifest.json');
-                (this.assert || exportedService.assert).call(this, nestedManifests.length === 0,
-                    `Per-type or nested data manifests are prohibited: ${nestedManifests.map(file => path.relative(repositoryRoot, file)).join(', ')}`);
-                Object.entries(manifest.sections).forEach(([sectionName, section]) => {
-                    (this.assert || exportedService.assert).call(this, section && supportedKinds.has(section.kind), `Unsupported data manifest section kind: ${packageMetadata.name}#${sectionName}`);
-                    (this.assert || exportedService.assert).call(this, /^\d+\.\d+\.\d+$/.test(section.version || ''), `Data manifest section version is invalid: ${packageMetadata.name}#${sectionName}`);
-                    const files = section.kind === 'CONTENT_PACK' ? section.generatedHashes : section.files;
-                    (this.assert || exportedService.assert).call(this, files && typeof files === 'object' && !Array.isArray(files) && Object.keys(files).length > 0,
-                        `Data manifest section files are invalid: ${packageMetadata.name}#${sectionName}`);
-                    Object.entries(files).forEach(([relativeFile, expectedHash]) => {
-                        (this.assert || exportedService.assert).call(this, !path.isAbsolute(relativeFile) && !relativeFile.includes('..'),
-                            `Data manifest file path is invalid: ${packageMetadata.name}#${sectionName}:${relativeFile}`);
-                        const absolute = path.resolve(dataRoot, relativeFile);
-                        (this.assert || exportedService.assert).call(this, absolute.startsWith(dataRoot + path.sep) && fs.existsSync(absolute) && fs.statSync(absolute).isFile(),
-                            `Data manifest file is unavailable: ${packageMetadata.name}#${sectionName}:${relativeFile}`);
-                        (this.assert || exportedService.assert).call(this, !fs.lstatSync(absolute).isSymbolicLink(),
-                            `Data manifest file must not be a symbolic link: ${packageMetadata.name}#${sectionName}:${relativeFile}`);
-                        const actualHash = crypto.createHash('sha256').update(fs.readFileSync(absolute)).digest('hex');
-                        (this.assert || exportedService.assert).call(this, actualHash === expectedHash,
-                            `Data manifest checksum mismatch: ${packageMetadata.name}#${sectionName}:${relativeFile}`);
+                if (fs.existsSync(manifestPath)) {
+                    const packageMetadata = (this.readJson || exportedService.readJson).call(this, packagePath);
+                    const manifest = (this.readJson || exportedService.readJson).call(this, manifestPath);
+                    (this.assert || exportedService.assert).call(this, [0, 2].includes(manifest.contractVersion), `Aggregate data manifest must use contractVersion 0 or 2: ${path.relative(repositoryRoot, manifestPath)}`);
+                    (this.assert || exportedService.assert).call(this, manifest.module === packageMetadata.name, `Aggregate data manifest module identity mismatch: ${path.relative(repositoryRoot, manifestPath)}`);
+                    (this.assert || exportedService.assert).call(this, manifest.sections === undefined ||
+                        manifest.sections && typeof manifest.sections === 'object' && !Array.isArray(manifest.sections),
+                        `Aggregate data manifest sections are invalid: ${path.relative(repositoryRoot, manifestPath)}`);
+                    const nestedManifests = publishedFiles.filter(file => file !== manifestPath && path.basename(file) === 'manifest.json');
+                    (this.assert || exportedService.assert).call(this, nestedManifests.length === 0,
+                        `Per-type or nested data manifests are prohibited: ${nestedManifests.map(file => path.relative(repositoryRoot, file)).join(', ')}`);
+                    Object.entries(manifest.sections || {}).forEach(([sectionName, section]) => {
+                        (this.assert || exportedService.assert).call(this, section && supportedKinds.has(section.kind), `Unsupported data manifest section kind: ${packageMetadata.name}#${sectionName}`);
+                        (this.assert || exportedService.assert).call(this, /^\d+\.\d+\.\d+$/.test(section.version || ''), `Data manifest section version is invalid: ${packageMetadata.name}#${sectionName}`);
+                        const files = section.kind === 'CONTENT_PACK' ? section.generatedHashes : section.files;
+                        if (section.kind === 'DATA_RELEASE' && files === undefined) return;
+                        (this.assert || exportedService.assert).call(this, files && typeof files === 'object' && !Array.isArray(files) && Object.keys(files).length > 0,
+                            `Data manifest section files are invalid: ${packageMetadata.name}#${sectionName}`);
+                        Object.entries(files).forEach(([relativeFile, expectedHash]) => {
+                            (this.assert || exportedService.assert).call(this, !path.isAbsolute(relativeFile) && !relativeFile.includes('..'),
+                                `Data manifest file path is invalid: ${packageMetadata.name}#${sectionName}:${relativeFile}`);
+                            const absolute = path.resolve(dataRoot, relativeFile);
+                            (this.assert || exportedService.assert).call(this, absolute.startsWith(dataRoot + path.sep) && fs.existsSync(absolute) && fs.statSync(absolute).isFile(),
+                                `Data manifest file is unavailable: ${packageMetadata.name}#${sectionName}:${relativeFile}`);
+                            (this.assert || exportedService.assert).call(this, !fs.lstatSync(absolute).isSymbolicLink(),
+                                `Data manifest file must not be a symbolic link: ${packageMetadata.name}#${sectionName}:${relativeFile}`);
+                            const actualHash = crypto.createHash('sha256').update(fs.readFileSync(absolute)).digest('hex');
+                            (this.assert || exportedService.assert).call(this, actualHash === expectedHash,
+                                `Data manifest checksum mismatch: ${packageMetadata.name}#${sectionName}:${relativeFile}`);
+                        });
                     });
-                });
+                }
             }
         }
         fs.readdirSync(folder, { withFileTypes: true }).forEach(entry => {

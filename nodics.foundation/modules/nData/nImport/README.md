@@ -37,7 +37,7 @@ storage locations, credentials, or tenant mappings in framework import code.
 ## Runtime Flow
 
 1. A startup process, API request, CronJob, local file trigger, or governed remote adapter starts an import.
-2. The selected import type resolves active module headers and data sources.
+2. The selected import type resolves active module release folders, headers, and data sources.
 3. Tenant precedence is applied so request tenant can narrow but not broaden header scope.
 4. File/data processors convert source input into model arrays.
 5. `dataCore` applies processors, import interceptors, and validators.
@@ -46,6 +46,59 @@ storage locations, credentials, or tenant mappings in framework import code.
 7. Models are saved through generated schema services and pipelines.
 8. Import diagnostics and run history record counts, checksums, fingerprints, retry metadata, failures, and rollback evidence.
 9. Finalized import events can dispatch follow-up behavior such as search indexing or business processing.
+
+## Module Release Discovery
+
+Module release data is folder and header driven.
+
+```text
+data/
+  init-v001/
+    headers/
+    records/
+  core-v001/
+    headers/
+    records/
+  sample-v001/
+    content/
+      headers/
+      records/
+      assets/
+  manifest.json
+```
+
+The developer-created source is the release folder. Headers declare where data
+goes and which record file prefix belongs to the header:
+
+```js
+module.exports = {
+  product: {
+    defaultProducts: {
+      options: {
+        enabled: true,
+        schemaName: 'product',
+        operation: 'saveAll',
+        dataFilePrefix: 'defaultProductData'
+      },
+      query: { code: '$code' }
+    }
+  }
+};
+```
+
+`data/manifest.json` is generated evidence, not the authoring source of truth.
+It can carry display, lifecycle, destination, publication review, and checksum
+evidence, but developers should not hand-maintain per-file checksum maps.
+Runtime discovery computes the current file map from disk, expands selected
+headers through their `dataFilePrefix`, includes referenced media assets, and
+uses the computed checksum for installation comparison.
+
+If the manifest is absent, Nodics still discovers conventional `init-v001`,
+`core-v001`, and `sample-v001` folders for active modules. If the generated
+manifest checksum map is stale, Nodics recalculates the current checksum rather
+than marking the release manifest invalid. A stable installed release still
+cannot silently change: non-development versions must use a version bump when
+their computed checksum changes.
 
 ## Target Routing
 

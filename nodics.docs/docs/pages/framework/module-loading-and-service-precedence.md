@@ -12,6 +12,12 @@ the earlier framework layer when the module is composed into the same runtime.
 That is how customer projects customize behavior without renaming the
 framework capability or modifying shared framework source.
 
+Service precedence answers which local implementation wins. It does not decide
+whether a call should stay local or cross to another runtime. Use
+`Module-to-Module Communication` for that local-versus-remote decision and
+`API Request Lifecycle and Handler Pipeline` for incoming HTTP request
+processing before a controller calls services.
+
 ## Loading order
 
 Runtime loading starts with foundational modules, then loads functional
@@ -19,6 +25,11 @@ capabilities, then project, environment, and server-specific modules. The exact
 composition is declared by the project. Service precedence follows that load
 order, so a project service can replace or extend a framework service when the
 contract allows it.
+
+For the full startup timeline, including raw module discovery, active module
+resolution, dotted numeric index sorting, pre-scripts, module `nodics.js`
+hooks, post-scripts, initial data import, and listener startup, use
+`Framework Startup Lifecycle`.
 
 ```mermaid
 flowchart LR

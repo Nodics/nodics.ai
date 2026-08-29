@@ -1,7 +1,7 @@
 {
   "name": "commerceSearch",
   "version": "0.0.0",
-  "index": "70.17",
+  "index": "76.17",
   "private": true,
   "main": "nodics.js",
   "description": "Commerce Search module group.",

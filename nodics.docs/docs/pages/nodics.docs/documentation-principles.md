@@ -26,6 +26,29 @@ because they are public entry points into the whole workspace.
 | `nodics.docs` | Framework-wide product documentation and navigation source. | Enterprise hierarchy with business and technical journeys. |
 | Generated content pack | Publishable documentation data imported into Staged and Online. | Backend-owned records with access, workflow, search, and checksums. |
 
+## Generation preservation contract
+
+Documentation generation must preserve authored knowledge. The source files in
+`docs/pages` and the metadata in `docs/catalogue.json` are the authoring
+authority. The generator reads them and creates or updates derived content-pack
+records, routes, navigation nodes, access policies, search metadata, publication
+state, and manifest checksums. It must not overwrite source Markdown with a
+basic template, remove detailed sections, or replace implementation-specific
+guidance with generated filler.
+
+When a topic is missing, the right sequence is to create the source page first,
+add the catalogue entry with source evidence, then run generation. When a topic
+already exists, generation may update its derived records because the source
+changed, but the source page remains developer-authored and reviewable in Git.
+
+| Area | Authority | Generator behavior |
+| --- | --- | --- |
+| `docs/pages/**/*.md` | Developer, architect, documentation author, or AI-assisted authoring review | Read only. Never downgraded or scaffolded over. |
+| `docs/catalogue.json` | Documentation catalogue author | Read only for generation; edited intentionally by a developer or AI tool. |
+| `data/core-v001/records/documentation/*.js` | Generated content pack | Create or update from the current authored source. |
+| `data/core-v001/headers/*.js` | Generated import routing metadata for this pack | Create or update from the generator contract. |
+| `data/manifest.json` | Generated release evidence | Merge/update generated documentation section and checksums. |
+
 ## Required topic depth
 
 Each detailed topic must explain the business problem first, then technical

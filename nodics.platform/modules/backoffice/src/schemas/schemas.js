@@ -31,6 +31,7 @@ module.exports = {
                 functionalModule: { type: 'string', required: true, description: 'Canonical functional-module identity' },
                 displayName: { type: 'string', required: true, description: 'Business-facing functional-module name' },
                 registeredVersion: { type: 'string', required: true, description: 'Last reconciled standard functional-module version' },
+                moduleIndex: { type: 'string', required: false, description: 'Runtime package index used for stable module ordering' },
                 registrationState: { type: 'string', required: true, description: 'Durable AVAILABLE, REGISTERED, or DEREGISTERED project decision' },
                 enabled: { type: 'bool', required: true, default: true, description: 'Whether Axis may present the functional module' },
                 required: { type: 'bool', required: true, default: false, description: 'Whether the project protects this functional module from disablement or deregistration' },

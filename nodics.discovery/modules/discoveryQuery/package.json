@@ -1,7 +1,7 @@
 {
     "name": "discoveryQuery",
     "version": "0.0.0",
-    "index": "65.60",
+    "index": "75.60",
     "private": true,
     "main": "nodics.js",
     "description": "Discovery query capability.",

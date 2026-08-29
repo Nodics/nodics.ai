@@ -157,6 +157,7 @@ module.exports = {
             canonicalIdentity: rawModule.canonicalIdentity || moduleName,
             instanceId: this.getInstanceId(),
             version: metadata.version || 'unknown',
+            moduleIndex: metadata.index || undefined,
             moduleKind: nodicsMetadata.kind || 'unknown',
             capabilities: (nodicsMetadata.owns || []).slice(),
             clientCallable: runtime.router === true,

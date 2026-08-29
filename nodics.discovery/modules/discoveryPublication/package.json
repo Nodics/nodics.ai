@@ -1,7 +1,7 @@
 {
     "name": "discoveryPublication",
     "version": "0.0.0",
-    "index": "65.50",
+    "index": "75.50",
     "private": true,
     "main": "nodics.js",
     "description": "Discovery publication capability.",

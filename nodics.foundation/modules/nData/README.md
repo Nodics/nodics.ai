@@ -64,6 +64,26 @@ the records.
 Startup data must be idempotent. Sample data must never become a production
 dependency.
 
+## Release Manifest Principle
+
+Developers author data folders, headers, records, and assets. They should not
+hand-maintain large `manifest.json` file maps or checksums.
+
+`data/manifest.json` is generated release evidence. It may provide display
+metadata, destination/lifecycle policy, publication review guidance, and audit
+checksums, but runtime discovery derives the effective executable files from the
+current release folder. Header files are the routing authority: each enabled
+header declares the target module, schema or index, operation, query, and
+`dataFilePrefix`; Nodics includes the matching record files from the release
+folder and computes the current release checksum.
+
+When `data/manifest.json` is missing, Nodics can still discover conventional
+`init-v001`, `core-v001`, and `sample-v001` folders for active modules. When a
+manifest exists but its generated file checksums are stale, Nodics recomputes
+the current checksum from disk instead of making developers repair JSON by
+hand. Stable installed releases are still protected: if a non-development
+version changes without a version bump, the upgrade policy blocks execution.
+
 ## Runtime Safety
 
 Imports and exports can affect many records quickly, so they must preserve

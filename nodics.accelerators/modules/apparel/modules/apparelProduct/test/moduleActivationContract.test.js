@@ -59,7 +59,7 @@ try {
 
 const acceleratorPackage = require(path.join(acceleratorsRoot, 'package.json'));
 const apparelPackage = require(path.join(acceleratorsRoot, 'modules/apparel/package.json'));
-assert.deepStrictEqual(acceleratorPackage.nodics.extends, ['nodics.foundation']);
+assert.deepStrictEqual(acceleratorPackage.nodics.extends, ['nodics.foundation', 'nodics.commerce', 'nodics.discovery']);
 assert.deepStrictEqual(apparelPackage.nodics.extends, ['nodics.commerce']);
 assert.strictEqual(acceleratorPackage.nodics.functionalModule.identity, 'nodics.accelerators');
 assert.strictEqual(fs.existsSync(path.join(acceleratorsRoot, 'src')), false, 'Accelerator root must remain source-free');

@@ -57,6 +57,20 @@ order. On retry, current releases are skipped and only pending, updated, or
 failed releases execute. Initialization, Core, and Sample remain available as
 advanced administrator workspaces.
 
+Axis discovers guided setup profiles from every import-capable runtime
+connection and merges the backend responses into one operator workspace. A
+profile belongs to the backend runtime that declares it in
+`data.dataReleases.initializationProfiles`; Axis must not create hidden data
+authority, infer release order from the UI, or silently combine unrelated
+runtimes.
+
+Add a guided profile whenever a new runtime capability has required first-time
+release data, a meaningful install sequence, or a repeatable setup journey that
+an operator should not assemble manually. The profile must include a friendly
+label, description, completion message, destination-compatible releases, ordered
+steps, and validation evidence. A cross-runtime "full local project" setup must
+be exposed as a backend orchestration contract rather than a UI-only shortcut.
+
 Choose Initialization, Core, or Sample data; review friendly module names,
 descriptions, versions, and states; select releases; validate; then install or
 update when authorized. A release marked `CURRENT` is already installed at the

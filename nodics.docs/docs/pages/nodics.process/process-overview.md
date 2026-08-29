@@ -128,6 +128,12 @@ is supported as the first reliable path. Complex gateways, domain action
 execution, compensation, retries, timers, and BPMN import/export can be added
 later as governed extensions after the foundation is proven.
 
+Use `Workflow Orchestration Patterns` when the process is more than a first
+human approval. That guide explains the boundary between workflow and
+pipeline, and uses a product export scenario to show aggregation, filters,
+multi-target branching, target adapters, retry, and recovery without moving
+Commerce or export business logic into Process.
+
 ## Extension direction
 
 Additional modules or customer projects should extend Process through:

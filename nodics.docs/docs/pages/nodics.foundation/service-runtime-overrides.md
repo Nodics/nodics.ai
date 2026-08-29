@@ -7,6 +7,11 @@ without editing framework source. For beginners, the simple idea is that a
 service name resolves to the most specific active implementation allowed by
 the module graph.
 
+Use this page to understand which service implementation wins. Use
+`Module-to-Module Communication` when a service needs to call another module
+through `DefaultModuleService`, especially when the target may be local in one
+runtime and remote in another.
+
 ## Source map
 
 | Area | Source location |
@@ -62,6 +67,14 @@ module.exports = {
 | Why was it selected? | Override relationship and active module state. |
 | Is it safe? | Contract tests, init result, and health status. |
 | Can it be rolled back? | Disable override module or restore previous release. |
+
+## Related developer guides
+
+| Topic | When to use it |
+| --- | --- |
+| `Module-to-Module Communication` | Build local, remote, runtime-registry, or external HTTP calls safely. |
+| `API Request Lifecycle and Handler Pipeline` | Understand how incoming HTTP requests reach service-backed controllers. |
+| `Module Loading and Service Precedence` | Prove why a project override or framework default was selected. |
 
 ## Customization and extension guidance
 

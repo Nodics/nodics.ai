@@ -1,7 +1,7 @@
 {
     "name": "discoveryRuntime",
     "version": "0.0.0",
-    "index": "65.80",
+    "index": "75.80",
     "private": true,
     "main": "nodics.js",
     "description": "Discovery runtime execution capability.",

@@ -69,7 +69,7 @@
             "removalPolicy": "RETAIN",
             "installer": "DOCUMENTATION",
             "files": {
-                "standard/data-pack-media-structure.md": "69dea2519b0cf1fca1337c2300b3f51831f00fc4b8860b40535cf6daeebfe24f",
+                "standard/data-pack-media-structure.md": "dccd5a5ecaa57ef3efddf726d1e1f3d5cf0e31dc83700d74959b0b13a7498d7d",
                 "standard/non-publishable-media-policy.json": "c393f8c190b31bc3b5418f561869e64f1674b805d54da3cd9aff4aa4d46b6a1d"
             },
             "sourceRoot": "init-v001"

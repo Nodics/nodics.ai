@@ -28,6 +28,13 @@ publication state, and checksums. Axis imports the pack to Staged. Approval
 decides whether the Staged release becomes Online. Public apps read Online
 only.
 
+Generation is intentionally one-way. `docs:generate` reads authored Markdown
+and catalogue metadata, then updates the generated content pack. It does not
+rewrite authored pages, delete detailed sections, or recreate mature topics as
+basic scaffolds. Existing source detail is preserved in Git and reviewed like
+implementation code; generated records are refreshed from that source so Axis,
+Staged, Online, search, workflow, and checksums stay current.
+
 ```mermaid
 sequenceDiagram
   participant Source as Source docs
@@ -102,6 +109,12 @@ browser routes, logs, audit evidence, and rollback candidates.
 
 This responsibility is ongoing. Documentation generation happens with current
 implementation and future implementation updates.
+
+Before merging a generated pack, reviewers should check two things: the
+authored source diff explains the real change, and the generated data diff
+matches that source. A generated data-only change is acceptable for checksum or
+record-shape updates, but a source page disappearing, shrinking to a template,
+or losing code examples is a release blocker.
 
 ## Common mistakes
 

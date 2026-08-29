@@ -18,6 +18,7 @@ This module determines how framework defaults, project overrides, server propert
 Deep documentation lives in:
 
 - `nodics.docs/docs/pages/nodics.foundation/runtime-configuration.md`
+- `nodics.docs/docs/pages/nodics.foundation/framework-startup-lifecycle.md`
 - `nodics.docs/docs/pages/nodics.foundation/governed-runtime-change.md`
 - `nodics.docs/docs/pages/nodics.foundation/events-messaging-cluster.md`
 

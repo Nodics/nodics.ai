@@ -35,6 +35,26 @@ Use these files for rules that are more specific than root `AGENTS.md` and the m
   removal, catalog activation or publication until composed through CMS,
   Workflow and nPublish authorities.
 
+## Module release manifests
+
+- Module release authoring is folder and header driven. Developers create
+  `data/init-v001`, `data/core-v001`, or `data/sample-v001` folders with
+  `headers`, `records`, and optional `assets`.
+- Headers are the executable routing contract. They declare target module,
+  schema or index, operation, query, and `dataFilePrefix`.
+- `data/manifest.json` is generated evidence. It may provide lifecycle,
+  destination, display, publication-review, grouping, and checksum metadata,
+  but it is not the place where developers maintain file membership by hand.
+- Runtime discovery must compute the current file map from disk, expand
+  selected headers to matching record files, include referenced media assets,
+  and calculate the release checksum from that current state.
+- A missing manifest must not hide conventional active-module release folders.
+  A stale generated checksum map must not make a release invalid by itself.
+- Stable installed releases still require version discipline. If the computed
+  checksum changes for a non-development installed version, block execution
+  unless the release version changes or an explicit later-layer policy permits
+  the change.
+
 ## Media-backed file import
 
 - Axis and other frontend clients must upload files through `nodics.wcms/media`

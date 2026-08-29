@@ -1019,7 +1019,9 @@
       "relatedPages": [
         "foundation.overview",
         "framework.customization-guide",
-        "platform.module-registry"
+        "platform.module-registry",
+        "foundation.module-to-module-communication",
+        "routing.api-request-lifecycle"
       ],
       "sourceEvidence": [
         "docs/catalogue.json",
@@ -2738,7 +2740,9 @@
       "version": "0.16.5",
       "relatedPages": [
         "foundation.overview",
+        "configuration.framework-startup-lifecycle",
         "cache.runtime-state-management",
+        "foundation.error-handling-status-codes",
         "routing.api-governance",
         "runtime.governed-change"
       ],
@@ -2762,6 +2766,132 @@
       "visualRequirements": [
         "diagram",
         "configuration-table",
+        "code-example",
+        "troubleshooting-matrix"
+      ]
+    },
+    {
+      "id": "configuration.framework-startup-lifecycle",
+      "functionalModule": "nodics.foundation",
+      "technicalModule": "nConfig",
+      "title": "Framework Startup Lifecycle",
+      "summary": "Step-by-step startup path from runtime launch through nConfig module discovery, configuration loading, lifecycle hooks, init data import, identity bootstrap, and server readiness.",
+      "locale": "en",
+      "content": "docs/pages/nodics.foundation/framework-startup-lifecycle.md",
+      "slug": "configuration-framework-startup-lifecycle",
+      "parentId": "application-configuration-and-runtime-behavior-management.configuration-layers-and-behavior",
+      "hierarchyPath": [
+        "Nodics Documentation",
+        "Application Configuration and Runtime Behavior Management",
+        "Configuration Layers and Behavior",
+        "Framework Startup Lifecycle"
+      ],
+      "hierarchyDepth": 4,
+      "navigationSection": "Application Configuration and Runtime Behavior Management",
+      "navigationSectionCode": "application-configuration-and-runtime-behavior-management",
+      "navigationSectionOrder": 150,
+      "navigationGroup": "Configuration Layers and Behavior",
+      "navigationGroupCode": "configuration-layers-and-behavior",
+      "navigationGroupOrder": 10,
+      "navigationSubgroup": null,
+      "navigationSubgroupCode": null,
+      "navigationOrder": 15,
+      "documentType": "configuration",
+      "audience": [
+        "business",
+        "architect",
+        "administrator",
+        "developer",
+        "operator",
+        "qa",
+        "ai-tool"
+      ],
+      "businessAudience": [
+        "business user",
+        "administrator",
+        "implementation partner"
+      ],
+      "technicalAudience": [
+        "architect",
+        "developer",
+        "operator",
+        "qa engineer",
+        "ai tool"
+      ],
+      "sourceOwner": "nodics.foundation",
+      "sourcePath": "docs/pages/nodics.foundation/framework-startup-lifecycle.md",
+      "visibility": "public",
+      "channel": [
+        "axis",
+        "nexus",
+        "web"
+      ],
+      "accessMode": "PUBLIC",
+      "publiclyAvailable": true,
+      "requiresAuthentication": false,
+      "allowedRoles": [],
+      "allowedGroups": [],
+      "allowedPermissions": [],
+      "lifecycleState": "ONLINE",
+      "version": "0.16.7",
+      "relatedPages": [
+        "configuration.runtime-behavior-management",
+        "framework.module-loading-service-precedence",
+        "routing.api-request-lifecycle",
+        "foundation.error-handling-status-codes",
+        "pipeline.business-logic-orchestration",
+        "data.import-export-migration",
+        "framework.local-quick-start"
+      ],
+      "sourceEvidence": [
+        "docs/catalogue.json",
+        "docs/pages/nodics.foundation/framework-startup-lifecycle.md",
+        "../nodics.foundation/nodics.js",
+        "../nodics.foundation/modules/nConfig/nodics.js",
+        "../nodics.foundation/modules/nConfig/bin/nodics.js",
+        "../nodics.foundation/modules/nConfig/bin/config.js",
+        "../nodics.foundation/modules/nConfig/src/utils/utils.js",
+        "../nodics.foundation/modules/nConfig/src/service/DefaultFrameworkInitializerService.js",
+        "../nodics.foundation/modules/nConfig/src/service/DefaultScriptsHandlerService.js",
+        "../nodics.foundation/modules/nConfig/src/service/defaultFilesLoaderService.js",
+        "../nodics.foundation/modules/nConfig/src/service/defaultEnumService.js",
+        "../nodics.foundation/modules/nConfig/src/service/defaultClassesHandlerService.js",
+        "../nodics.foundation/modules/nDatabase/database/src/service/connection/defaultDatabaseConnectionHandlerService.js",
+        "../nodics.foundation/modules/nDatabase/mongodb/src/service/connection/defaultMongodbDatabaseConnectionHandlerService.js",
+        "../nodics.foundation/modules/nData/nImport/import/src/service/import/defaultImportService.js",
+        "../nodics.foundation/modules/nData/nImport/import/src/pipelines/pipelines.js",
+        "../nodics.foundation/modules/nRouter/src/service/router/defaultRouterService.js",
+        "../nodics.platform/modules/profile/nodics.js",
+        "../nodics.platform/modules/profile/src/service/profile/defaultProfileService.js"
+      ],
+      "maturityState": "operational",
+      "implementationState": "current",
+      "renderingComponent": "documentation.component.article",
+      "searchKeywords": [
+        "framework-startup",
+        "nConfig",
+        "prepareStart",
+        "module-discovery",
+        "module-index",
+        "activeModules",
+        "properties",
+        "prescripts",
+        "postscripts",
+        "nodics.js",
+        "initRequired",
+        "init-v001",
+        "mandatoryBootstrapServices",
+        "startServers"
+      ],
+      "topicKeywords": [
+        "Application Configuration and Runtime Behavior Management",
+        "Configuration Layers and Behavior",
+        "Framework Startup Lifecycle",
+        "nConfig startup"
+      ],
+      "visualRequirements": [
+        "diagram",
+        "table",
         "code-example",
         "troubleshooting-matrix"
       ]
@@ -2843,7 +2973,10 @@
       "relatedPages": [
         "configuration.runtime-behavior-management",
         "runtime.governed-change",
-        "security.identity-access-governance"
+        "security.identity-access-governance",
+        "routing.api-request-lifecycle",
+        "foundation.error-handling-status-codes",
+        "foundation.module-to-module-communication"
       ],
       "sourceEvidence": [
         "docs/catalogue.json",
@@ -2876,6 +3009,250 @@
       "visualRequirements": [
         "diagram",
         "configuration-table",
+        "code-example",
+        "troubleshooting-matrix"
+      ]
+    },
+    {
+      "id": "routing.api-request-lifecycle",
+      "functionalModule": "nodics.foundation",
+      "technicalModule": "nRouter",
+      "title": "API Request Lifecycle and Handler Pipeline",
+      "summary": "How each Nodics HTTP request moves from Express route binding through request context, exposure checks, authentication branches, cache lookup, controller dispatch, response handlers, and safe customization.",
+      "locale": "en",
+      "content": "docs/pages/nodics.foundation/api-request-lifecycle-handler-pipeline.md",
+      "slug": "api-request-lifecycle-handler-pipeline",
+      "parentId": "application-configuration-and-runtime-behavior-management.configuration-layers-and-behavior",
+      "hierarchyPath": [
+        "Nodics Documentation",
+        "Application Configuration and Runtime Behavior Management",
+        "Configuration Layers and Behavior",
+        "API Request Lifecycle and Handler Pipeline"
+      ],
+      "hierarchyDepth": 4,
+      "navigationSection": "Application Configuration and Runtime Behavior Management",
+      "navigationSectionCode": "application-configuration-and-runtime-behavior-management",
+      "navigationSectionOrder": 150,
+      "navigationGroup": "Configuration Layers and Behavior",
+      "navigationGroupCode": "configuration-layers-and-behavior",
+      "navigationGroupOrder": 10,
+      "navigationSubgroup": null,
+      "navigationSubgroupCode": null,
+      "navigationOrder": 30,
+      "documentType": "contract",
+      "audience": [
+        "business",
+        "architect",
+        "administrator",
+        "developer",
+        "operator",
+        "qa",
+        "ai-tool"
+      ],
+      "businessAudience": [
+        "business user",
+        "administrator",
+        "implementation partner"
+      ],
+      "technicalAudience": [
+        "architect",
+        "developer",
+        "operator",
+        "qa engineer",
+        "ai tool"
+      ],
+      "sourceOwner": "nodics.foundation",
+      "sourcePath": "docs/pages/nodics.foundation/api-request-lifecycle-handler-pipeline.md",
+      "visibility": "authenticated",
+      "channel": [
+        "axis",
+        "nexus",
+        "web"
+      ],
+      "accessMode": "AUTHENTICATED",
+      "publiclyAvailable": false,
+      "requiresAuthentication": true,
+      "allowedRoles": [
+        "admin",
+        "documentationAuthor",
+        "axisViewer"
+      ],
+      "allowedGroups": [
+        "documentationAuthorUserGroup",
+        "axisReadOnlyUserGroup"
+      ],
+      "allowedPermissions": [
+        "documentation.read",
+        "router.configuration.read"
+      ],
+      "lifecycleState": "ONLINE",
+      "version": "0.16.7",
+      "relatedPages": [
+        "routing.api-governance",
+        "foundation.error-handling-status-codes",
+        "pipeline.business-logic-orchestration",
+        "foundation.service-runtime-overrides",
+        "foundation.module-to-module-communication"
+      ],
+      "sourceEvidence": [
+        "docs/catalogue.json",
+        "docs/pages/nodics.foundation/api-request-lifecycle-handler-pipeline.md",
+        "../nodics.foundation/modules/nRouter/src/service/defaultRequestHandlerService.js",
+        "../nodics.foundation/modules/nRouter/src/pipelines/pipelines.js",
+        "../nodics.foundation/modules/nRouter/src/service/request/defaultRequestHandlerPipelineService.js",
+        "../nodics.foundation/modules/nRouter/src/service/request/defaultSecuredRequestPipelineService.js",
+        "../nodics.foundation/modules/nRouter/src/service/request/defaultNonSecuredRequestPipelineService.js",
+        "../nodics.foundation/modules/nRouter/src/service/handlers/response/defaultJsonResponseHandlerService.js",
+        "../nodics.foundation/modules/nRouter/test/requestPipelineResponseContract.test.js"
+      ],
+      "maturityState": "operational",
+      "implementationState": "current",
+      "renderingComponent": "documentation.component.article",
+      "searchKeywords": [
+        "request lifecycle",
+        "handler pipeline",
+        "requestHandlerPipeline",
+        "nRouter",
+        "controller dispatch",
+        "response handler"
+      ],
+      "topicKeywords": [
+        "API Request Lifecycle",
+        "Handler Pipeline",
+        "Request Context",
+        "Controller Dispatch",
+        "Response Handler"
+      ],
+      "visualRequirements": [
+        "diagram",
+        "configuration-table",
+        "code-example",
+        "troubleshooting-matrix"
+      ]
+    },
+    {
+      "id": "foundation.error-handling-status-codes",
+      "functionalModule": "nodics.foundation",
+      "technicalModule": "nCommon",
+      "title": "Error Handling and Status Codes",
+      "summary": "How Nodics errors, status definitions, response handlers, HTTP status codes, localization metadata, safe public messages, and project overrides work.",
+      "locale": "en",
+      "content": "docs/pages/nodics.foundation/error-handling-and-status-codes.md",
+      "slug": "error-handling-and-status-codes",
+      "parentId": "application-configuration-and-runtime-behavior-management.configuration-layers-and-behavior",
+      "hierarchyPath": [
+        "Nodics Documentation",
+        "Application Configuration and Runtime Behavior Management",
+        "Configuration Layers and Behavior",
+        "Error Handling and Status Codes"
+      ],
+      "hierarchyDepth": 4,
+      "navigationSection": "Application Configuration and Runtime Behavior Management",
+      "navigationSectionCode": "application-configuration-and-runtime-behavior-management",
+      "navigationSectionOrder": 150,
+      "navigationGroup": "Configuration Layers and Behavior",
+      "navigationGroupCode": "configuration-layers-and-behavior",
+      "navigationGroupOrder": 10,
+      "navigationSubgroup": null,
+      "navigationSubgroupCode": null,
+      "navigationOrder": 35,
+      "documentType": "contract",
+      "audience": [
+        "business",
+        "architect",
+        "administrator",
+        "developer",
+        "operator",
+        "qa",
+        "ai-tool"
+      ],
+      "businessAudience": [
+        "business user",
+        "administrator",
+        "implementation partner"
+      ],
+      "technicalAudience": [
+        "architect",
+        "developer",
+        "operator",
+        "qa engineer",
+        "ai tool"
+      ],
+      "sourceOwner": "nodics.foundation",
+      "sourcePath": "docs/pages/nodics.foundation/error-handling-and-status-codes.md",
+      "visibility": "authenticated",
+      "channel": [
+        "axis",
+        "nexus",
+        "web"
+      ],
+      "accessMode": "AUTHENTICATED",
+      "publiclyAvailable": false,
+      "requiresAuthentication": true,
+      "allowedRoles": [
+        "admin",
+        "documentationAuthor",
+        "axisViewer"
+      ],
+      "allowedGroups": [
+        "documentationAuthorUserGroup",
+        "axisReadOnlyUserGroup"
+      ],
+      "allowedPermissions": [
+        "documentation.read",
+        "router.configuration.read"
+      ],
+      "lifecycleState": "ONLINE",
+      "version": "0.16.7",
+      "relatedPages": [
+        "configuration.runtime-behavior-management",
+        "configuration.framework-startup-lifecycle",
+        "routing.api-governance",
+        "routing.api-request-lifecycle",
+        "pipeline.business-logic-orchestration",
+        "applications.axis-setup-error-contracts"
+      ],
+      "sourceEvidence": [
+        "docs/catalogue.json",
+        "docs/pages/nodics.foundation/error-handling-and-status-codes.md",
+        "../nodics.foundation/modules/nCommon/src/lib/nodicsError.js",
+        "../nodics.foundation/modules/nCommon/config/properties.js",
+        "../nodics.foundation/modules/nCommon/src/utils/statusDefinitions.js",
+        "../nodics.foundation/modules/nCommon/test/errorTraceability.test.js",
+        "../nodics.foundation/modules/nService/src/service/status/defaultStatusService.js",
+        "../nodics.foundation/modules/nService/test/statusDefinitionCatalog.test.js",
+        "../nodics.foundation/modules/nRouter/src/service/defaultRequestHandlerService.js",
+        "../nodics.foundation/modules/nRouter/src/service/handlers/response/defaultJsonResponseHandlerService.js",
+        "../nodics.foundation/modules/nRouter/src/service/handlers/response/defaultFileDownloadResponseHandlerService.js",
+        "../nodics.foundation/modules/nRouter/src/service/handlers/response/defaultTextResponseHandlerService.js",
+        "../nodics.foundation/modules/nRouter/src/utils/statusDefinitions.js",
+        "../nodics.process/modules/workflow/src/utils/statusDefinitions.js",
+        "../nodics.foundation/modules/nData/nExport/export/src/utils/statusDefinitions.js"
+      ],
+      "maturityState": "operational",
+      "implementationState": "current",
+      "renderingComponent": "documentation.component.article",
+      "searchKeywords": [
+        "error-handling",
+        "status-codes",
+        "NodicsError",
+        "DefaultStatusService",
+        "responseCode",
+        "HTTP status",
+        "DefaultJsonResponseHandlerService",
+        "statusDefinitions",
+        "messageKey",
+        "publicError"
+      ],
+      "topicKeywords": [
+        "Application Configuration and Runtime Behavior Management",
+        "Configuration Layers and Behavior",
+        "Error Handling and Status Codes",
+        "NodicsError"
+      ],
+      "visualRequirements": [
+        "diagram",
+        "table",
         "code-example",
         "troubleshooting-matrix"
       ]
@@ -3505,7 +3882,9 @@
       "relatedPages": [
         "framework.modular-architecture",
         "process.custom-project-extension",
-        "docs.overview"
+        "docs.overview",
+        "routing.api-request-lifecycle",
+        "foundation.module-to-module-communication"
       ],
       "sourceEvidence": [
         "docs/catalogue.json",
@@ -6337,6 +6716,7 @@
       "relatedPages": [
         "process.first-workflow",
         "process.runtime-lifecycle",
+        "process.workflow-orchestration-patterns",
         "cron.operations"
       ],
       "sourceEvidence": [
@@ -6429,7 +6809,8 @@
       "version": "0.16.5",
       "relatedPages": [
         "process.overview",
-        "process.incident-recovery"
+        "process.incident-recovery",
+        "process.workflow-orchestration-patterns"
       ],
       "sourceEvidence": [
         "docs/catalogue.json",
@@ -6452,6 +6833,127 @@
         "lifecycle-state-diagram",
         "troubleshooting-matrix",
         "code-example"
+      ]
+    },
+    {
+      "id": "process.workflow-orchestration-patterns",
+      "functionalModule": "nodics.process",
+      "technicalModule": "workflow",
+      "title": "Workflow Orchestration Patterns",
+      "summary": "How Process workflows govern long-running business lifecycle with product export aggregation, filters, multi-target branching, ACTION adapters, retry, and recovery.",
+      "locale": "en",
+      "route": "/docs/framework/process/workflow-orchestration-patterns",
+      "content": "docs/pages/nodics.process/workflow-orchestration-patterns.md",
+      "slug": "workflow-orchestration-patterns",
+      "parentId": "process-and-workflow-automation.runtime-lifecycle",
+      "hierarchyPath": [
+        "Nodics Documentation",
+        "Process and Workflow Automation",
+        "Runtime Lifecycle",
+        "Workflow Orchestration Patterns"
+      ],
+      "hierarchyDepth": 4,
+      "navigationSection": "Process and Workflow Automation",
+      "navigationSectionCode": "process-and-workflow-automation",
+      "navigationSectionOrder": 370,
+      "navigationGroup": "Runtime Lifecycle",
+      "navigationGroupCode": "runtime-lifecycle",
+      "navigationGroupOrder": 20,
+      "navigationSubgroup": null,
+      "navigationSubgroupCode": null,
+      "navigationOrder": 25,
+      "documentType": "customization",
+      "audience": [
+        "business",
+        "architect",
+        "administrator",
+        "developer",
+        "operator",
+        "qa",
+        "ai-tool"
+      ],
+      "businessAudience": [
+        "business user",
+        "administrator",
+        "implementation partner"
+      ],
+      "technicalAudience": [
+        "architect",
+        "developer",
+        "operator",
+        "qa engineer",
+        "ai tool"
+      ],
+      "sourceOwner": "nodics.process",
+      "sourcePath": "docs/pages/nodics.process/workflow-orchestration-patterns.md",
+      "visibility": "public",
+      "channel": [
+        "axis",
+        "nexus",
+        "web"
+      ],
+      "accessMode": "PUBLIC",
+      "publiclyAvailable": true,
+      "requiresAuthentication": false,
+      "allowedRoles": [],
+      "allowedGroups": [],
+      "allowedPermissions": [],
+      "lifecycleState": "ONLINE",
+      "version": "0.16.7",
+      "relatedPages": [
+        "process.overview",
+        "process.runtime-lifecycle",
+        "process.action-adapters",
+        "process.incident-recovery",
+        "pipeline.business-logic-orchestration",
+        "data.import-export-migration",
+        "catalog.product-discovery-management",
+        "pricing.promotions-tax-management",
+        "inventory.stock-management"
+      ],
+      "sourceEvidence": [
+        "docs/catalogue.json",
+        "docs/pages/nodics.process/workflow-orchestration-patterns.md",
+        "../nodics.process/modules/workflow/src/schemas/schemas.js",
+        "../nodics.process/modules/workflow/src/service/designer/defaultProcessGraphValidationService.js",
+        "../nodics.process/modules/workflow/src/service/operation/defaultProcessRuntimeLifecycleService.js",
+        "../nodics.process/modules/workflow/src/service/operation/defaultProcessActionAdapterRegistryService.js",
+        "../nodics.process/modules/workflow/src/router/routers.js",
+        "../nodics.process/modules/workflow/config/properties.js",
+        "../nodics.foundation/modules/nData/nExport/export/src/service/DataExportService.js",
+        "../nodics.commerce/modules/baseCommerce/modules/product/src/service/defaultProductDiscoveryService.js",
+        "../nodics.commerce/modules/baseCommerce/modules/pricing/src/service/defaultCustomerPriceSummaryService.js",
+        "../nodics.commerce/modules/baseCommerce/modules/inventory/src/service/defaultCustomerAvailabilitySummaryService.js"
+      ],
+      "maturityState": "operational",
+      "implementationState": "current",
+      "renderingComponent": "documentation.component.article",
+      "searchKeywords": [
+        "workflow",
+        "process",
+        "product-export",
+        "multi-target-export",
+        "target-branching",
+        "action-adapter",
+        "processDefinition",
+        "processInstance",
+        "processTask",
+        "processIncident",
+        "data-export",
+        "filters",
+        "aggregation"
+      ],
+      "topicKeywords": [
+        "Process and Workflow Automation",
+        "Runtime Lifecycle",
+        "Workflow Orchestration Patterns",
+        "Product Export Workflow"
+      ],
+      "visualRequirements": [
+        "diagram",
+        "table",
+        "code-example",
+        "troubleshooting-matrix"
       ]
     },
     {
@@ -6521,7 +7023,8 @@
       "version": "0.16.5",
       "relatedPages": [
         "process.overview",
-        "process.first-human-task"
+        "process.first-human-task",
+        "process.workflow-orchestration-patterns"
       ],
       "sourceEvidence": [
         "docs/catalogue.json",
@@ -6796,11 +7299,20 @@
       "relatedPages": [
         "framework.customization-guide",
         "commerce.cart-order",
-        "runtime.governed-change"
+        "runtime.governed-change",
+        "routing.api-request-lifecycle",
+        "process.workflow-orchestration-patterns",
+        "foundation.module-to-module-communication"
       ],
       "sourceEvidence": [
         "docs/catalogue.json",
-        "docs/pages/nodics.foundation/pipeline-business-logic.md"
+        "docs/pages/nodics.foundation/pipeline-business-logic.md",
+        "../nodics.foundation/modules/nPipeline/src/service/pipeline/defaultPipelineService.js",
+        "../nodics.foundation/modules/nPipeline/src/lib/pipelineHead.js",
+        "../nodics.foundation/modules/nPipeline/src/lib/pipelineNode.js",
+        "../nodics.foundation/modules/nPipeline/src/pipelines/pipelines.js",
+        "../nodics.commerce/modules/checkout/modules/cart/src/service/defaultCartOperationService.js",
+        "../nodics.platform/modules/profile/src/service/customer/defaultCustomerService.js"
       ],
       "maturityState": "operational",
       "implementationState": "current",
@@ -6808,7 +7320,17 @@
       "searchKeywords": [
         "pipeline-and-business-logic-orchestration",
         "pipeline-execution-model",
-        "pipeline-and-business-logic-orchestration"
+        "pipeline-and-business-logic-orchestration",
+        "PipelineHead",
+        "PipelineNode",
+        "DefaultPipelineService.start",
+        "startNode",
+        "process.nextSuccess",
+        "process.stop",
+        "process.error",
+        "response.targetNode",
+        "hardStop",
+        "nested pipeline"
       ],
       "topicKeywords": [
         "Pipeline and Business Logic Orchestration",
@@ -9205,13 +9727,34 @@
       "navigationSubgroupCode": null,
       "navigationOrder": 20,
       "documentType": "operations",
-      "audience": ["business", "architect", "administrator", "developer", "operator", "qa", "ai-tool"],
-      "businessAudience": ["business user", "administrator", "implementation partner"],
-      "technicalAudience": ["architect", "developer", "operator", "qa engineer", "ai tool"],
+      "audience": [
+        "business",
+        "architect",
+        "administrator",
+        "developer",
+        "operator",
+        "qa",
+        "ai-tool"
+      ],
+      "businessAudience": [
+        "business user",
+        "administrator",
+        "implementation partner"
+      ],
+      "technicalAudience": [
+        "architect",
+        "developer",
+        "operator",
+        "qa engineer",
+        "ai tool"
+      ],
       "sourceOwner": "nodics.platform",
       "sourcePath": "docs/pages/nodics.platform/module-registry-journey.md",
       "visibility": "public",
-      "channel": ["axis", "web"],
+      "channel": [
+        "axis",
+        "web"
+      ],
       "accessMode": "PUBLIC",
       "publiclyAvailable": true,
       "requiresAuthentication": false,
@@ -9220,7 +9763,11 @@
       "allowedPermissions": [],
       "lifecycleState": "ONLINE",
       "version": "0.16.7",
-      "relatedPages": ["platform.module-registry", "applications.axis-setup-error-contracts", "framework.module-loading-service-precedence"],
+      "relatedPages": [
+        "platform.module-registry",
+        "applications.axis-setup-error-contracts",
+        "framework.module-loading-service-precedence"
+      ],
       "sourceEvidence": [
         "docs/catalogue.json",
         "docs/pages/nodics.platform/module-registry-journey.md",
@@ -9233,9 +9780,24 @@
       "maturityState": "operational",
       "implementationState": "current",
       "renderingComponent": "documentation.component.article",
-      "searchKeywords": ["module-registry", "backoffice", "activation", "dependency", "axis"],
-      "topicKeywords": ["Capability Registry and Lifecycle Management", "Module Registry Foundations", "Module Registry Journey"],
-      "visualRequirements": ["diagram", "table", "code-example", "troubleshooting-matrix"]
+      "searchKeywords": [
+        "module-registry",
+        "backoffice",
+        "activation",
+        "dependency",
+        "axis"
+      ],
+      "topicKeywords": [
+        "Capability Registry and Lifecycle Management",
+        "Module Registry Foundations",
+        "Module Registry Journey"
+      ],
+      "visualRequirements": [
+        "diagram",
+        "table",
+        "code-example",
+        "troubleshooting-matrix"
+      ]
     },
     {
       "id": "commerce.search-guide",
@@ -9247,7 +9809,12 @@
       "content": "docs/pages/nodics.commerce/commerce-search-guide.md",
       "slug": "commerce-search-guide",
       "parentId": "search-and-discovery.search-providers-and-indexing",
-      "hierarchyPath": ["Nodics Documentation", "Search and Discovery", "Search Providers and Indexing", "Commerce Search Guide"],
+      "hierarchyPath": [
+        "Nodics Documentation",
+        "Search and Discovery",
+        "Search Providers and Indexing",
+        "Commerce Search Guide"
+      ],
       "hierarchyDepth": 4,
       "navigationSection": "Search and Discovery",
       "navigationSectionCode": "search-and-discovery",
@@ -9259,13 +9826,35 @@
       "navigationSubgroupCode": null,
       "navigationOrder": 20,
       "documentType": "operations",
-      "audience": ["business", "architect", "administrator", "developer", "operator", "qa", "ai-tool"],
-      "businessAudience": ["business user", "administrator", "implementation partner"],
-      "technicalAudience": ["architect", "developer", "operator", "qa engineer", "ai tool"],
+      "audience": [
+        "business",
+        "architect",
+        "administrator",
+        "developer",
+        "operator",
+        "qa",
+        "ai-tool"
+      ],
+      "businessAudience": [
+        "business user",
+        "administrator",
+        "implementation partner"
+      ],
+      "technicalAudience": [
+        "architect",
+        "developer",
+        "operator",
+        "qa engineer",
+        "ai tool"
+      ],
       "sourceOwner": "nodics.commerce",
       "sourcePath": "docs/pages/nodics.commerce/commerce-search-guide.md",
       "visibility": "public",
-      "channel": ["axis", "nexus", "web"],
+      "channel": [
+        "axis",
+        "nexus",
+        "web"
+      ],
       "accessMode": "PUBLIC",
       "publiclyAvailable": true,
       "requiresAuthentication": false,
@@ -9274,7 +9863,11 @@
       "allowedPermissions": [],
       "lifecycleState": "ONLINE",
       "version": "0.16.7",
-      "relatedPages": ["discovery.search-indexing", "catalog.product-discovery-management", "commerce.data-authoring-fulfillment"],
+      "relatedPages": [
+        "discovery.search-indexing",
+        "catalog.product-discovery-management",
+        "commerce.data-authoring-fulfillment"
+      ],
       "sourceEvidence": [
         "docs/catalogue.json",
         "docs/pages/nodics.commerce/commerce-search-guide.md",
@@ -9286,9 +9879,24 @@
       "maturityState": "operational",
       "implementationState": "current",
       "renderingComponent": "documentation.component.article",
-      "searchKeywords": ["commerce-search", "projection", "ranking", "index", "agora"],
-      "topicKeywords": ["Search and Discovery", "Search Providers and Indexing", "Commerce Search Guide"],
-      "visualRequirements": ["diagram", "table", "code-example", "troubleshooting-matrix"]
+      "searchKeywords": [
+        "commerce-search",
+        "projection",
+        "ranking",
+        "index",
+        "agora"
+      ],
+      "topicKeywords": [
+        "Search and Discovery",
+        "Search Providers and Indexing",
+        "Commerce Search Guide"
+      ],
+      "visualRequirements": [
+        "diagram",
+        "table",
+        "code-example",
+        "troubleshooting-matrix"
+      ]
     },
     {
       "id": "localization.runtime-authoring",
@@ -9300,7 +9908,12 @@
       "content": "docs/pages/nodics.localization/localization-runtime-authoring.md",
       "slug": "localization-runtime-authoring",
       "parentId": "localization-and-internationalization.localization-foundations",
-      "hierarchyPath": ["Nodics Documentation", "Localization and Internationalization", "Localization Foundations", "Localization Runtime Authoring"],
+      "hierarchyPath": [
+        "Nodics Documentation",
+        "Localization and Internationalization",
+        "Localization Foundations",
+        "Localization Runtime Authoring"
+      ],
       "hierarchyDepth": 4,
       "navigationSection": "Localization and Internationalization",
       "navigationSectionCode": "localization-and-internationalization",
@@ -9312,13 +9925,35 @@
       "navigationSubgroupCode": null,
       "navigationOrder": 20,
       "documentType": "how-to",
-      "audience": ["business", "architect", "administrator", "developer", "operator", "qa", "ai-tool"],
-      "businessAudience": ["business user", "administrator", "implementation partner"],
-      "technicalAudience": ["architect", "developer", "operator", "qa engineer", "ai tool"],
+      "audience": [
+        "business",
+        "architect",
+        "administrator",
+        "developer",
+        "operator",
+        "qa",
+        "ai-tool"
+      ],
+      "businessAudience": [
+        "business user",
+        "administrator",
+        "implementation partner"
+      ],
+      "technicalAudience": [
+        "architect",
+        "developer",
+        "operator",
+        "qa engineer",
+        "ai tool"
+      ],
       "sourceOwner": "nodics.localization",
       "sourcePath": "docs/pages/nodics.localization/localization-runtime-authoring.md",
       "visibility": "public",
-      "channel": ["axis", "nexus", "web"],
+      "channel": [
+        "axis",
+        "nexus",
+        "web"
+      ],
       "accessMode": "PUBLIC",
       "publiclyAvailable": true,
       "requiresAuthentication": false,
@@ -9327,7 +9962,11 @@
       "allowedPermissions": [],
       "lifecycleState": "ONLINE",
       "version": "0.16.7",
-      "relatedPages": ["localization.internationalization", "wcms.cms-source-map-authoring-contract", "commerce.data-authoring-fulfillment"],
+      "relatedPages": [
+        "localization.internationalization",
+        "wcms.cms-source-map-authoring-contract",
+        "commerce.data-authoring-fulfillment"
+      ],
       "sourceEvidence": [
         "docs/catalogue.json",
         "docs/pages/nodics.localization/localization-runtime-authoring.md",
@@ -9339,9 +9978,24 @@
       "maturityState": "operational",
       "implementationState": "current",
       "renderingComponent": "documentation.component.article",
-      "searchKeywords": ["localization", "fallback", "locale", "translation", "authoring"],
-      "topicKeywords": ["Localization and Internationalization", "Localization Foundations", "Localization Runtime Authoring"],
-      "visualRequirements": ["diagram", "table", "code-example", "troubleshooting-matrix"]
+      "searchKeywords": [
+        "localization",
+        "fallback",
+        "locale",
+        "translation",
+        "authoring"
+      ],
+      "topicKeywords": [
+        "Localization and Internationalization",
+        "Localization Foundations",
+        "Localization Runtime Authoring"
+      ],
+      "visualRequirements": [
+        "diagram",
+        "table",
+        "code-example",
+        "troubleshooting-matrix"
+      ]
     },
     {
       "id": "commerce.payment-provider-boundaries",
@@ -9353,7 +10007,12 @@
       "content": "docs/pages/nodics.commerce/payment-provider-boundaries.md",
       "slug": "commerce-payment-provider-boundaries",
       "parentId": "payment-management.payment-operations",
-      "hierarchyPath": ["Nodics Documentation", "Payment Management", "Payment Operations", "Payment Core and Provider Boundaries"],
+      "hierarchyPath": [
+        "Nodics Documentation",
+        "Payment Management",
+        "Payment Operations",
+        "Payment Core and Provider Boundaries"
+      ],
       "hierarchyDepth": 4,
       "navigationSection": "Payment Management",
       "navigationSectionCode": "payment-management",
@@ -9365,13 +10024,34 @@
       "navigationSubgroupCode": null,
       "navigationOrder": 20,
       "documentType": "contract",
-      "audience": ["business", "architect", "administrator", "developer", "operator", "qa", "ai-tool"],
-      "businessAudience": ["business user", "administrator", "implementation partner"],
-      "technicalAudience": ["architect", "developer", "operator", "qa engineer", "ai tool"],
+      "audience": [
+        "business",
+        "architect",
+        "administrator",
+        "developer",
+        "operator",
+        "qa",
+        "ai-tool"
+      ],
+      "businessAudience": [
+        "business user",
+        "administrator",
+        "implementation partner"
+      ],
+      "technicalAudience": [
+        "architect",
+        "developer",
+        "operator",
+        "qa engineer",
+        "ai tool"
+      ],
       "sourceOwner": "nodics.commerce",
       "sourcePath": "docs/pages/nodics.commerce/payment-provider-boundaries.md",
       "visibility": "public",
-      "channel": ["axis", "web"],
+      "channel": [
+        "axis",
+        "web"
+      ],
       "accessMode": "PUBLIC",
       "publiclyAvailable": true,
       "requiresAuthentication": false,
@@ -9380,7 +10060,11 @@
       "allowedPermissions": [],
       "lifecycleState": "ONLINE",
       "version": "0.16.7",
-      "relatedPages": ["commerce.payment-fulfillment", "commerce.cart-order", "commerce.returns-refunds"],
+      "relatedPages": [
+        "commerce.payment-fulfillment",
+        "commerce.cart-order",
+        "commerce.returns-refunds"
+      ],
       "sourceEvidence": [
         "docs/catalogue.json",
         "docs/pages/nodics.commerce/payment-provider-boundaries.md",
@@ -9393,9 +10077,24 @@
       "maturityState": "operational",
       "implementationState": "current",
       "renderingComponent": "documentation.component.article",
-      "searchKeywords": ["payment", "provider", "method", "reconciliation", "refund"],
-      "topicKeywords": ["Payment Management", "Payment Operations", "Payment Core and Provider Boundaries"],
-      "visualRequirements": ["diagram", "table", "code-example", "troubleshooting-matrix"]
+      "searchKeywords": [
+        "payment",
+        "provider",
+        "method",
+        "reconciliation",
+        "refund"
+      ],
+      "topicKeywords": [
+        "Payment Management",
+        "Payment Operations",
+        "Payment Core and Provider Boundaries"
+      ],
+      "visualRequirements": [
+        "diagram",
+        "table",
+        "code-example",
+        "troubleshooting-matrix"
+      ]
     },
     {
       "id": "commerce.customer-list-profile-boundary",
@@ -9407,7 +10106,12 @@
       "content": "docs/pages/nodics.commerce/customer-list-profile-boundary.md",
       "slug": "commerce-customer-list-profile-boundary",
       "parentId": "user-enterprise-and-tenant-management.customer-data-and-identity",
-      "hierarchyPath": ["Nodics Documentation", "User, Enterprise, and Tenant Management", "Customer Data and Identity", "Customer List and Profile Commerce Boundary"],
+      "hierarchyPath": [
+        "Nodics Documentation",
+        "User, Enterprise, and Tenant Management",
+        "Customer Data and Identity",
+        "Customer List and Profile Commerce Boundary"
+      ],
       "hierarchyDepth": 4,
       "navigationSection": "User, Enterprise, and Tenant Management",
       "navigationSectionCode": "user-enterprise-and-tenant-management",
@@ -9419,13 +10123,34 @@
       "navigationSubgroupCode": null,
       "navigationOrder": 20,
       "documentType": "contract",
-      "audience": ["business", "architect", "administrator", "developer", "operator", "qa", "ai-tool"],
-      "businessAudience": ["business user", "administrator", "implementation partner"],
-      "technicalAudience": ["architect", "developer", "operator", "qa engineer", "ai tool"],
+      "audience": [
+        "business",
+        "architect",
+        "administrator",
+        "developer",
+        "operator",
+        "qa",
+        "ai-tool"
+      ],
+      "businessAudience": [
+        "business user",
+        "administrator",
+        "implementation partner"
+      ],
+      "technicalAudience": [
+        "architect",
+        "developer",
+        "operator",
+        "qa engineer",
+        "ai tool"
+      ],
       "sourceOwner": "nodics.commerce",
       "sourcePath": "docs/pages/nodics.commerce/customer-list-profile-boundary.md",
       "visibility": "public",
-      "channel": ["axis", "web"],
+      "channel": [
+        "axis",
+        "web"
+      ],
       "accessMode": "PUBLIC",
       "publiclyAvailable": true,
       "requiresAuthentication": false,
@@ -9434,7 +10159,11 @@
       "allowedPermissions": [],
       "lifecycleState": "ONLINE",
       "version": "0.16.7",
-      "relatedPages": ["security.identity-access-governance", "commerce.cart-order", "commerce.payment-provider-boundaries"],
+      "relatedPages": [
+        "security.identity-access-governance",
+        "commerce.cart-order",
+        "commerce.payment-provider-boundaries"
+      ],
       "sourceEvidence": [
         "docs/catalogue.json",
         "docs/pages/nodics.commerce/customer-list-profile-boundary.md",
@@ -9445,9 +10174,24 @@
       "maturityState": "operational",
       "implementationState": "current",
       "renderingComponent": "documentation.component.article",
-      "searchKeywords": ["customer-list", "profile", "commerce-boundary", "eligibility", "identity"],
-      "topicKeywords": ["User, Enterprise, and Tenant Management", "Customer Data and Identity", "Customer List and Profile Commerce Boundary"],
-      "visualRequirements": ["diagram", "table", "code-example", "troubleshooting-matrix"]
+      "searchKeywords": [
+        "customer-list",
+        "profile",
+        "commerce-boundary",
+        "eligibility",
+        "identity"
+      ],
+      "topicKeywords": [
+        "User, Enterprise, and Tenant Management",
+        "Customer Data and Identity",
+        "Customer List and Profile Commerce Boundary"
+      ],
+      "visualRequirements": [
+        "diagram",
+        "table",
+        "code-example",
+        "troubleshooting-matrix"
+      ]
     },
     {
       "id": "foundation.nms-runtime-monitoring",
@@ -9459,7 +10203,12 @@
       "content": "docs/pages/nodics.foundation/nms-runtime-monitoring.md",
       "slug": "foundation-nms-runtime-monitoring",
       "parentId": "operations-monitoring-and-recovery.runtime-health-and-support",
-      "hierarchyPath": ["Nodics Documentation", "Operations, Monitoring, and Recovery", "Runtime Health and Support", "NMS Runtime Monitoring"],
+      "hierarchyPath": [
+        "Nodics Documentation",
+        "Operations, Monitoring, and Recovery",
+        "Runtime Health and Support",
+        "NMS Runtime Monitoring"
+      ],
       "hierarchyDepth": 4,
       "navigationSection": "Operations, Monitoring, and Recovery",
       "navigationSectionCode": "operations-monitoring-and-recovery",
@@ -9471,13 +10220,34 @@
       "navigationSubgroupCode": null,
       "navigationOrder": 10,
       "documentType": "operations",
-      "audience": ["business", "architect", "administrator", "developer", "operator", "qa", "ai-tool"],
-      "businessAudience": ["business user", "administrator", "implementation partner"],
-      "technicalAudience": ["architect", "developer", "operator", "qa engineer", "ai tool"],
+      "audience": [
+        "business",
+        "architect",
+        "administrator",
+        "developer",
+        "operator",
+        "qa",
+        "ai-tool"
+      ],
+      "businessAudience": [
+        "business user",
+        "administrator",
+        "implementation partner"
+      ],
+      "technicalAudience": [
+        "architect",
+        "developer",
+        "operator",
+        "qa engineer",
+        "ai tool"
+      ],
       "sourceOwner": "nodics.foundation",
       "sourcePath": "docs/pages/nodics.foundation/nms-runtime-monitoring.md",
       "visibility": "public",
-      "channel": ["axis", "web"],
+      "channel": [
+        "axis",
+        "web"
+      ],
       "accessMode": "PUBLIC",
       "publiclyAvailable": true,
       "requiresAuthentication": false,
@@ -9486,7 +10256,11 @@
       "allowedPermissions": [],
       "lifecycleState": "ONLINE",
       "version": "0.16.7",
-      "relatedPages": ["framework.devops-runtime", "framework.local-verification-checklist", "process.runtime-lifecycle"],
+      "relatedPages": [
+        "framework.devops-runtime",
+        "framework.local-verification-checklist",
+        "process.runtime-lifecycle"
+      ],
       "sourceEvidence": [
         "docs/catalogue.json",
         "docs/pages/nodics.foundation/nms-runtime-monitoring.md",
@@ -9495,9 +10269,23 @@
       "maturityState": "operational",
       "implementationState": "current",
       "renderingComponent": "documentation.component.article",
-      "searchKeywords": ["nms", "monitoring", "node", "runtime-health", "operator"],
-      "topicKeywords": ["Operations, Monitoring, and Recovery", "Runtime Health and Support", "NMS Runtime Monitoring"],
-      "visualRequirements": ["diagram", "table", "troubleshooting-matrix"]
+      "searchKeywords": [
+        "nms",
+        "monitoring",
+        "node",
+        "runtime-health",
+        "operator"
+      ],
+      "topicKeywords": [
+        "Operations, Monitoring, and Recovery",
+        "Runtime Health and Support",
+        "NMS Runtime Monitoring"
+      ],
+      "visualRequirements": [
+        "diagram",
+        "table",
+        "troubleshooting-matrix"
+      ]
     },
     {
       "id": "foundation.service-runtime-overrides",
@@ -9509,7 +10297,12 @@
       "content": "docs/pages/nodics.foundation/service-runtime-overrides.md",
       "slug": "foundation-service-runtime-overrides",
       "parentId": "pipeline-and-business-logic-orchestration.service-runtime-and-overrides",
-      "hierarchyPath": ["Nodics Documentation", "Pipeline and Business Logic Orchestration", "Service Runtime and Overrides", "Service Runtime and Override Precedence"],
+      "hierarchyPath": [
+        "Nodics Documentation",
+        "Pipeline and Business Logic Orchestration",
+        "Service Runtime and Overrides",
+        "Service Runtime and Override Precedence"
+      ],
       "hierarchyDepth": 4,
       "navigationSection": "Pipeline and Business Logic Orchestration",
       "navigationSectionCode": "pipeline-and-business-logic-orchestration",
@@ -9521,13 +10314,34 @@
       "navigationSubgroupCode": null,
       "navigationOrder": 10,
       "documentType": "contract",
-      "audience": ["business", "architect", "administrator", "developer", "operator", "qa", "ai-tool"],
-      "businessAudience": ["business user", "administrator", "implementation partner"],
-      "technicalAudience": ["architect", "developer", "operator", "qa engineer", "ai tool"],
+      "audience": [
+        "business",
+        "architect",
+        "administrator",
+        "developer",
+        "operator",
+        "qa",
+        "ai-tool"
+      ],
+      "businessAudience": [
+        "business user",
+        "administrator",
+        "implementation partner"
+      ],
+      "technicalAudience": [
+        "architect",
+        "developer",
+        "operator",
+        "qa engineer",
+        "ai tool"
+      ],
       "sourceOwner": "nodics.foundation",
       "sourcePath": "docs/pages/nodics.foundation/service-runtime-overrides.md",
       "visibility": "public",
-      "channel": ["axis", "web"],
+      "channel": [
+        "axis",
+        "web"
+      ],
       "accessMode": "PUBLIC",
       "publiclyAvailable": true,
       "requiresAuthentication": false,
@@ -9536,7 +10350,13 @@
       "allowedPermissions": [],
       "lifecycleState": "ONLINE",
       "version": "0.16.7",
-      "relatedPages": ["framework.module-loading-service-precedence", "framework.backend-extension-patterns", "runtime.governed-change"],
+      "relatedPages": [
+        "framework.module-loading-service-precedence",
+        "framework.backend-extension-patterns",
+        "runtime.governed-change",
+        "foundation.module-to-module-communication",
+        "routing.api-request-lifecycle"
+      ],
       "sourceEvidence": [
         "docs/catalogue.json",
         "docs/pages/nodics.foundation/service-runtime-overrides.md",
@@ -9546,9 +10366,130 @@
       "maturityState": "operational",
       "implementationState": "current",
       "renderingComponent": "documentation.component.article",
-      "searchKeywords": ["nService", "vService", "override", "service-runtime", "module-graph"],
-      "topicKeywords": ["Pipeline and Business Logic Orchestration", "Service Runtime and Overrides", "Service Runtime and Override Precedence"],
-      "visualRequirements": ["diagram", "table", "code-example", "troubleshooting-matrix"]
+      "searchKeywords": [
+        "nService",
+        "vService",
+        "override",
+        "service-runtime",
+        "module-graph"
+      ],
+      "topicKeywords": [
+        "Pipeline and Business Logic Orchestration",
+        "Service Runtime and Overrides",
+        "Service Runtime and Override Precedence"
+      ],
+      "visualRequirements": [
+        "diagram",
+        "table",
+        "code-example",
+        "troubleshooting-matrix"
+      ]
+    },
+    {
+      "id": "foundation.module-to-module-communication",
+      "functionalModule": "nodics.foundation",
+      "technicalModule": "nService",
+      "title": "Module-to-Module Communication",
+      "summary": "How DefaultModuleService invokes local services or remote module APIs through target authority, Runtime Registry, static endpoints, internal auth, retries, circuit breakers, and bounded external HTTP calls.",
+      "locale": "en",
+      "content": "docs/pages/nodics.foundation/module-to-module-communication.md",
+      "slug": "foundation-module-to-module-communication",
+      "parentId": "pipeline-and-business-logic-orchestration.service-runtime-and-overrides",
+      "hierarchyPath": [
+        "Nodics Documentation",
+        "Pipeline and Business Logic Orchestration",
+        "Service Runtime and Overrides",
+        "Module-to-Module Communication"
+      ],
+      "hierarchyDepth": 4,
+      "navigationSection": "Pipeline and Business Logic Orchestration",
+      "navigationSectionCode": "pipeline-and-business-logic-orchestration",
+      "navigationSectionOrder": 380,
+      "navigationGroup": "Service Runtime and Overrides",
+      "navigationGroupCode": "service-runtime-and-overrides",
+      "navigationGroupOrder": 20,
+      "navigationSubgroup": null,
+      "navigationSubgroupCode": null,
+      "navigationOrder": 20,
+      "documentType": "contract",
+      "audience": [
+        "business",
+        "architect",
+        "administrator",
+        "developer",
+        "operator",
+        "qa",
+        "ai-tool"
+      ],
+      "businessAudience": [
+        "business user",
+        "administrator",
+        "implementation partner"
+      ],
+      "technicalAudience": [
+        "architect",
+        "developer",
+        "operator",
+        "qa engineer",
+        "ai tool"
+      ],
+      "sourceOwner": "nodics.foundation",
+      "sourcePath": "docs/pages/nodics.foundation/module-to-module-communication.md",
+      "visibility": "public",
+      "channel": [
+        "axis",
+        "web"
+      ],
+      "accessMode": "PUBLIC",
+      "publiclyAvailable": true,
+      "requiresAuthentication": false,
+      "allowedRoles": [],
+      "allowedGroups": [],
+      "allowedPermissions": [],
+      "lifecycleState": "ONLINE",
+      "version": "0.16.7",
+      "relatedPages": [
+        "foundation.service-runtime-overrides",
+        "routing.api-request-lifecycle",
+        "framework.module-loading-service-precedence",
+        "framework.backend-extension-patterns",
+        "runtime.governed-change"
+      ],
+      "sourceEvidence": [
+        "docs/catalogue.json",
+        "docs/pages/nodics.foundation/module-to-module-communication.md",
+        "../nodics.foundation/modules/nService/src/service/module/defaultModuleService.js",
+        "../nodics.foundation/modules/nService/src/lib/moduleConfiguration.js",
+        "../nodics.foundation/modules/nRouter/src/service/router/defaultRouterService.js",
+        "../nodics.foundation/modules/nService/test/moduleInvocationContract.test.js",
+        "../nodics.foundation/modules/nService/test/moduleTransportResilience.test.js",
+        "../nodics.foundation/modules/nService/test/moduleRequestHeaderNormalization.test.js"
+      ],
+      "maturityState": "operational",
+      "implementationState": "current",
+      "renderingComponent": "documentation.component.article",
+      "searchKeywords": [
+        "DefaultModuleService",
+        "module communication",
+        "invokeModule",
+        "targetAuthority",
+        "runtime registry",
+        "internal auth",
+        "circuit breaker"
+      ],
+      "topicKeywords": [
+        "Module-to-Module Communication",
+        "DefaultModuleService",
+        "Runtime Registry",
+        "Target Authority",
+        "Internal Module Calls"
+      ],
+      "visualRequirements": [
+        "diagram",
+        "configuration-table",
+        "code-example",
+        "troubleshooting-matrix"
+      ]
     },
     {
       "id": "foundation.cache-provider-runbooks",
@@ -9560,7 +10501,12 @@
       "content": "docs/pages/nodics.foundation/cache-provider-runbooks.md",
       "slug": "foundation-cache-provider-runbooks",
       "parentId": "caching-and-runtime-state-management.cache-foundations",
-      "hierarchyPath": ["Nodics Documentation", "Caching and Runtime State Management", "Cache Foundations", "Cache Provider Runbooks"],
+      "hierarchyPath": [
+        "Nodics Documentation",
+        "Caching and Runtime State Management",
+        "Cache Foundations",
+        "Cache Provider Runbooks"
+      ],
       "hierarchyDepth": 4,
       "navigationSection": "Caching and Runtime State Management",
       "navigationSectionCode": "caching-and-runtime-state-management",
@@ -9572,13 +10518,34 @@
       "navigationSubgroupCode": null,
       "navigationOrder": 20,
       "documentType": "operations",
-      "audience": ["business", "architect", "administrator", "developer", "operator", "qa", "ai-tool"],
-      "businessAudience": ["business user", "administrator", "implementation partner"],
-      "technicalAudience": ["architect", "developer", "operator", "qa engineer", "ai tool"],
+      "audience": [
+        "business",
+        "architect",
+        "administrator",
+        "developer",
+        "operator",
+        "qa",
+        "ai-tool"
+      ],
+      "businessAudience": [
+        "business user",
+        "administrator",
+        "implementation partner"
+      ],
+      "technicalAudience": [
+        "architect",
+        "developer",
+        "operator",
+        "qa engineer",
+        "ai tool"
+      ],
       "sourceOwner": "nodics.foundation",
       "sourcePath": "docs/pages/nodics.foundation/cache-provider-runbooks.md",
       "visibility": "public",
-      "channel": ["axis", "web"],
+      "channel": [
+        "axis",
+        "web"
+      ],
       "accessMode": "PUBLIC",
       "publiclyAvailable": true,
       "requiresAuthentication": false,
@@ -9587,7 +10554,11 @@
       "allowedPermissions": [],
       "lifecycleState": "ONLINE",
       "version": "0.16.7",
-      "relatedPages": ["cache.runtime-state-management", "runtime.governed-change", "wcms.publishing-lifecycle"],
+      "relatedPages": [
+        "cache.runtime-state-management",
+        "runtime.governed-change",
+        "wcms.publishing-lifecycle"
+      ],
       "sourceEvidence": [
         "docs/catalogue.json",
         "docs/pages/nodics.foundation/cache-provider-runbooks.md",
@@ -9600,9 +10571,23 @@
       "maturityState": "operational",
       "implementationState": "current",
       "renderingComponent": "documentation.component.article",
-      "searchKeywords": ["cache", "redis", "hazelcast", "node-cache", "invalidation"],
-      "topicKeywords": ["Caching and Runtime State Management", "Cache Foundations", "Cache Provider Runbooks"],
-      "visualRequirements": ["diagram", "configuration-table", "troubleshooting-matrix"]
+      "searchKeywords": [
+        "cache",
+        "redis",
+        "hazelcast",
+        "node-cache",
+        "invalidation"
+      ],
+      "topicKeywords": [
+        "Caching and Runtime State Management",
+        "Cache Foundations",
+        "Cache Provider Runbooks"
+      ],
+      "visualRequirements": [
+        "diagram",
+        "configuration-table",
+        "troubleshooting-matrix"
+      ]
     },
     {
       "id": "foundation.database-provider-boundaries",
@@ -9614,7 +10599,12 @@
       "content": "docs/pages/nodics.foundation/database-provider-boundaries.md",
       "slug": "foundation-database-provider-boundaries",
       "parentId": "database-and-persistence-management.database-provider-contracts",
-      "hierarchyPath": ["Nodics Documentation", "Database and Persistence Management", "Database Provider Contracts", "Database Provider Boundaries"],
+      "hierarchyPath": [
+        "Nodics Documentation",
+        "Database and Persistence Management",
+        "Database Provider Contracts",
+        "Database Provider Boundaries"
+      ],
       "hierarchyDepth": 4,
       "navigationSection": "Database and Persistence Management",
       "navigationSectionCode": "database-and-persistence-management",
@@ -9626,13 +10616,34 @@
       "navigationSubgroupCode": null,
       "navigationOrder": 20,
       "documentType": "contract",
-      "audience": ["business", "architect", "administrator", "developer", "operator", "qa", "ai-tool"],
-      "businessAudience": ["business user", "administrator", "implementation partner"],
-      "technicalAudience": ["architect", "developer", "operator", "qa engineer", "ai tool"],
+      "audience": [
+        "business",
+        "architect",
+        "administrator",
+        "developer",
+        "operator",
+        "qa",
+        "ai-tool"
+      ],
+      "businessAudience": [
+        "business user",
+        "administrator",
+        "implementation partner"
+      ],
+      "technicalAudience": [
+        "architect",
+        "developer",
+        "operator",
+        "qa engineer",
+        "ai tool"
+      ],
       "sourceOwner": "nodics.foundation",
       "sourcePath": "docs/pages/nodics.foundation/database-provider-boundaries.md",
       "visibility": "public",
-      "channel": ["axis", "web"],
+      "channel": [
+        "axis",
+        "web"
+      ],
       "accessMode": "PUBLIC",
       "publiclyAvailable": true,
       "requiresAuthentication": false,
@@ -9641,7 +10652,11 @@
       "allowedPermissions": [],
       "lifecycleState": "ONLINE",
       "version": "0.16.7",
-      "relatedPages": ["persistence.provider-data-access-layer", "foundation.cache-provider-runbooks", "discovery.search-indexing"],
+      "relatedPages": [
+        "persistence.provider-data-access-layer",
+        "foundation.cache-provider-runbooks",
+        "discovery.search-indexing"
+      ],
       "sourceEvidence": [
         "docs/catalogue.json",
         "docs/pages/nodics.foundation/database-provider-boundaries.md",
@@ -9656,9 +10671,24 @@
       "maturityState": "operational",
       "implementationState": "current",
       "renderingComponent": "documentation.component.article",
-      "searchKeywords": ["database", "mongodb", "cassandra", "elasticsearch", "provider"],
-      "topicKeywords": ["Database and Persistence Management", "Database Provider Contracts", "Database Provider Boundaries"],
-      "visualRequirements": ["diagram", "configuration-table", "code-example", "troubleshooting-matrix"]
+      "searchKeywords": [
+        "database",
+        "mongodb",
+        "cassandra",
+        "elasticsearch",
+        "provider"
+      ],
+      "topicKeywords": [
+        "Database and Persistence Management",
+        "Database Provider Contracts",
+        "Database Provider Boundaries"
+      ],
+      "visualRequirements": [
+        "diagram",
+        "configuration-table",
+        "code-example",
+        "troubleshooting-matrix"
+      ]
     },
     {
       "id": "security.otp-security-flow",
@@ -9670,7 +10700,12 @@
       "content": "docs/pages/nodics.platform/otp-security-flow.md",
       "slug": "security-otp-security-flow",
       "parentId": "security-governance-and-compliance.authentication-and-verification",
-      "hierarchyPath": ["Nodics Documentation", "Security, Governance, and Compliance", "Authentication and Verification", "OTP and Security Flow"],
+      "hierarchyPath": [
+        "Nodics Documentation",
+        "Security, Governance, and Compliance",
+        "Authentication and Verification",
+        "OTP and Security Flow"
+      ],
       "hierarchyDepth": 4,
       "navigationSection": "Security, Governance, and Compliance",
       "navigationSectionCode": "security-governance-and-compliance",
@@ -9682,13 +10717,34 @@
       "navigationSubgroupCode": null,
       "navigationOrder": 10,
       "documentType": "operations",
-      "audience": ["business", "architect", "administrator", "developer", "operator", "qa", "ai-tool"],
-      "businessAudience": ["business user", "administrator", "implementation partner"],
-      "technicalAudience": ["architect", "developer", "operator", "qa engineer", "ai tool"],
+      "audience": [
+        "business",
+        "architect",
+        "administrator",
+        "developer",
+        "operator",
+        "qa",
+        "ai-tool"
+      ],
+      "businessAudience": [
+        "business user",
+        "administrator",
+        "implementation partner"
+      ],
+      "technicalAudience": [
+        "architect",
+        "developer",
+        "operator",
+        "qa engineer",
+        "ai tool"
+      ],
       "sourceOwner": "nodics.foundation",
       "sourcePath": "docs/pages/nodics.platform/otp-security-flow.md",
       "visibility": "public",
-      "channel": ["axis", "web"],
+      "channel": [
+        "axis",
+        "web"
+      ],
       "accessMode": "PUBLIC",
       "publiclyAvailable": true,
       "requiresAuthentication": false,
@@ -9697,7 +10753,11 @@
       "allowedPermissions": [],
       "lifecycleState": "ONLINE",
       "version": "0.16.7",
-      "relatedPages": ["security.identity-access-governance", "communication.overview", "communication.provider-runbooks"],
+      "relatedPages": [
+        "security.identity-access-governance",
+        "communication.overview",
+        "communication.provider-runbooks"
+      ],
       "sourceEvidence": [
         "docs/catalogue.json",
         "docs/pages/nodics.platform/otp-security-flow.md",
@@ -9709,9 +10769,23 @@
       "maturityState": "operational",
       "implementationState": "current",
       "renderingComponent": "documentation.component.article",
-      "searchKeywords": ["otp", "verification", "security", "throttling", "audit"],
-      "topicKeywords": ["Security, Governance, and Compliance", "Authentication and Verification", "OTP and Security Flow"],
-      "visualRequirements": ["diagram", "configuration-table", "troubleshooting-matrix"]
+      "searchKeywords": [
+        "otp",
+        "verification",
+        "security",
+        "throttling",
+        "audit"
+      ],
+      "topicKeywords": [
+        "Security, Governance, and Compliance",
+        "Authentication and Verification",
+        "OTP and Security Flow"
+      ],
+      "visualRequirements": [
+        "diagram",
+        "configuration-table",
+        "troubleshooting-matrix"
+      ]
     },
     {
       "id": "communication.provider-runbooks",
@@ -9723,7 +10797,12 @@
       "content": "docs/pages/nodics.communication/provider-runbooks.md",
       "slug": "communication-provider-runbooks",
       "parentId": "communication-and-notifications.provider-delivery",
-      "hierarchyPath": ["Nodics Documentation", "Communication and Notifications", "Provider Delivery", "Communication Provider Runbooks"],
+      "hierarchyPath": [
+        "Nodics Documentation",
+        "Communication and Notifications",
+        "Provider Delivery",
+        "Communication Provider Runbooks"
+      ],
       "hierarchyDepth": 4,
       "navigationSection": "Communication and Notifications",
       "navigationSectionCode": "communication-and-notifications",
@@ -9735,13 +10814,34 @@
       "navigationSubgroupCode": null,
       "navigationOrder": 10,
       "documentType": "operations",
-      "audience": ["business", "architect", "administrator", "developer", "operator", "qa", "ai-tool"],
-      "businessAudience": ["business user", "administrator", "implementation partner"],
-      "technicalAudience": ["architect", "developer", "operator", "qa engineer", "ai tool"],
+      "audience": [
+        "business",
+        "architect",
+        "administrator",
+        "developer",
+        "operator",
+        "qa",
+        "ai-tool"
+      ],
+      "businessAudience": [
+        "business user",
+        "administrator",
+        "implementation partner"
+      ],
+      "technicalAudience": [
+        "architect",
+        "developer",
+        "operator",
+        "qa engineer",
+        "ai tool"
+      ],
       "sourceOwner": "nodics.communication",
       "sourcePath": "docs/pages/nodics.communication/provider-runbooks.md",
       "visibility": "public",
-      "channel": ["axis", "web"],
+      "channel": [
+        "axis",
+        "web"
+      ],
       "accessMode": "PUBLIC",
       "publiclyAvailable": true,
       "requiresAuthentication": false,
@@ -9750,7 +10850,11 @@
       "allowedPermissions": [],
       "lifecycleState": "ONLINE",
       "version": "0.16.7",
-      "relatedPages": ["communication.overview", "security.otp-security-flow", "engagement.contact-submission-operations"],
+      "relatedPages": [
+        "communication.overview",
+        "security.otp-security-flow",
+        "engagement.contact-submission-operations"
+      ],
       "sourceEvidence": [
         "docs/catalogue.json",
         "docs/pages/nodics.communication/provider-runbooks.md",
@@ -9762,9 +10866,24 @@
       "maturityState": "operational",
       "implementationState": "current",
       "renderingComponent": "documentation.component.article",
-      "searchKeywords": ["communication", "smtp", "sms", "delivery", "retry"],
-      "topicKeywords": ["Communication and Notifications", "Provider Delivery", "Communication Provider Runbooks"],
-      "visualRequirements": ["diagram", "table", "code-example", "troubleshooting-matrix"]
+      "searchKeywords": [
+        "communication",
+        "smtp",
+        "sms",
+        "delivery",
+        "retry"
+      ],
+      "topicKeywords": [
+        "Communication and Notifications",
+        "Provider Delivery",
+        "Communication Provider Runbooks"
+      ],
+      "visualRequirements": [
+        "diagram",
+        "table",
+        "code-example",
+        "troubleshooting-matrix"
+      ]
     },
     {
       "id": "engagement.contact-submission-operations",
@@ -9776,7 +10895,12 @@
       "content": "docs/pages/nodics.engagement/contact-submission-operations.md",
       "slug": "engagement-contact-submission-operations",
       "parentId": "customer-engagement-and-feedback.contact-and-feedback",
-      "hierarchyPath": ["Nodics Documentation", "Customer Engagement and Feedback", "Contact and Feedback", "Contact Submission Operations"],
+      "hierarchyPath": [
+        "Nodics Documentation",
+        "Customer Engagement and Feedback",
+        "Contact and Feedback",
+        "Contact Submission Operations"
+      ],
       "hierarchyDepth": 4,
       "navigationSection": "Customer Engagement and Feedback",
       "navigationSectionCode": "customer-engagement-and-feedback",
@@ -9788,13 +10912,35 @@
       "navigationSubgroupCode": null,
       "navigationOrder": 10,
       "documentType": "operations",
-      "audience": ["business", "architect", "administrator", "developer", "operator", "qa", "ai-tool"],
-      "businessAudience": ["business user", "administrator", "implementation partner"],
-      "technicalAudience": ["architect", "developer", "operator", "qa engineer", "ai tool"],
+      "audience": [
+        "business",
+        "architect",
+        "administrator",
+        "developer",
+        "operator",
+        "qa",
+        "ai-tool"
+      ],
+      "businessAudience": [
+        "business user",
+        "administrator",
+        "implementation partner"
+      ],
+      "technicalAudience": [
+        "architect",
+        "developer",
+        "operator",
+        "qa engineer",
+        "ai tool"
+      ],
       "sourceOwner": "nodics.engagement",
       "sourcePath": "docs/pages/nodics.engagement/contact-submission-operations.md",
       "visibility": "public",
-      "channel": ["axis", "nexus", "web"],
+      "channel": [
+        "axis",
+        "nexus",
+        "web"
+      ],
       "accessMode": "PUBLIC",
       "publiclyAvailable": true,
       "requiresAuthentication": false,
@@ -9803,7 +10949,11 @@
       "allowedPermissions": [],
       "lifecycleState": "ONLINE",
       "version": "0.16.7",
-      "relatedPages": ["engagement.unified-operations", "engagement.governed-automation", "communication.provider-runbooks"],
+      "relatedPages": [
+        "engagement.unified-operations",
+        "engagement.governed-automation",
+        "communication.provider-runbooks"
+      ],
       "sourceEvidence": [
         "docs/catalogue.json",
         "docs/pages/nodics.engagement/contact-submission-operations.md",
@@ -9813,9 +10963,24 @@
       "maturityState": "operational",
       "implementationState": "current",
       "renderingComponent": "documentation.component.article",
-      "searchKeywords": ["contact-submission", "engagement", "moderation", "workflow", "notification"],
-      "topicKeywords": ["Customer Engagement and Feedback", "Contact and Feedback", "Contact Submission Operations"],
-      "visualRequirements": ["diagram", "table", "code-example", "troubleshooting-matrix"]
+      "searchKeywords": [
+        "contact-submission",
+        "engagement",
+        "moderation",
+        "workflow",
+        "notification"
+      ],
+      "topicKeywords": [
+        "Customer Engagement and Feedback",
+        "Contact and Feedback",
+        "Contact Submission Operations"
+      ],
+      "visualRequirements": [
+        "diagram",
+        "table",
+        "code-example",
+        "troubleshooting-matrix"
+      ]
     },
     {
       "id": "process.workflow-bpm-source-map",
@@ -9827,7 +10992,12 @@
       "content": "docs/pages/nodics.process/workflow-bpm-source-map.md",
       "slug": "process-workflow-bpm-source-map",
       "parentId": "process-and-workflow-automation.workflow-runtime",
-      "hierarchyPath": ["Nodics Documentation", "Process and Workflow Automation", "Workflow Runtime", "Workflow and BPM Source Map"],
+      "hierarchyPath": [
+        "Nodics Documentation",
+        "Process and Workflow Automation",
+        "Workflow Runtime",
+        "Workflow and BPM Source Map"
+      ],
       "hierarchyDepth": 4,
       "navigationSection": "Process and Workflow Automation",
       "navigationSectionCode": "process-and-workflow-automation",
@@ -9839,13 +11009,34 @@
       "navigationSubgroupCode": null,
       "navigationOrder": 20,
       "documentType": "reference",
-      "audience": ["business", "architect", "administrator", "developer", "operator", "qa", "ai-tool"],
-      "businessAudience": ["business user", "administrator", "implementation partner"],
-      "technicalAudience": ["architect", "developer", "operator", "qa engineer", "ai tool"],
+      "audience": [
+        "business",
+        "architect",
+        "administrator",
+        "developer",
+        "operator",
+        "qa",
+        "ai-tool"
+      ],
+      "businessAudience": [
+        "business user",
+        "administrator",
+        "implementation partner"
+      ],
+      "technicalAudience": [
+        "architect",
+        "developer",
+        "operator",
+        "qa engineer",
+        "ai tool"
+      ],
       "sourceOwner": "nodics.process",
       "sourcePath": "docs/pages/nodics.process/workflow-bpm-source-map.md",
       "visibility": "public",
-      "channel": ["axis", "web"],
+      "channel": [
+        "axis",
+        "web"
+      ],
       "accessMode": "PUBLIC",
       "publiclyAvailable": true,
       "requiresAuthentication": false,
@@ -9854,7 +11045,12 @@
       "allowedPermissions": [],
       "lifecycleState": "ONLINE",
       "version": "0.16.7",
-      "relatedPages": ["process.overview", "process.first-workflow", "process.first-human-task", "process.action-adapters"],
+      "relatedPages": [
+        "process.overview",
+        "process.first-workflow",
+        "process.first-human-task",
+        "process.action-adapters"
+      ],
       "sourceEvidence": [
         "docs/catalogue.json",
         "docs/pages/nodics.process/workflow-bpm-source-map.md",
@@ -9863,9 +11059,24 @@
       "maturityState": "operational",
       "implementationState": "current",
       "renderingComponent": "documentation.component.article",
-      "searchKeywords": ["workflow", "bpm", "human-task", "callback", "process"],
-      "topicKeywords": ["Process and Workflow Automation", "Workflow Runtime", "Workflow and BPM Source Map"],
-      "visualRequirements": ["diagram", "table", "code-example", "troubleshooting-matrix"]
+      "searchKeywords": [
+        "workflow",
+        "bpm",
+        "human-task",
+        "callback",
+        "process"
+      ],
+      "topicKeywords": [
+        "Process and Workflow Automation",
+        "Workflow Runtime",
+        "Workflow and BPM Source Map"
+      ],
+      "visualRequirements": [
+        "diagram",
+        "table",
+        "code-example",
+        "troubleshooting-matrix"
+      ]
     },
     {
       "id": "process.cronjob-data-authoring",
@@ -9877,7 +11088,12 @@
       "content": "docs/pages/nodics.process/cronjob-data-authoring.md",
       "slug": "process-cronjob-data-authoring",
       "parentId": "cron-and-scheduled-automation.scheduled-automation-triggers",
-      "hierarchyPath": ["Nodics Documentation", "Cron and Scheduled Automation", "Scheduled Automation Triggers", "CronJob Data Authoring"],
+      "hierarchyPath": [
+        "Nodics Documentation",
+        "Cron and Scheduled Automation",
+        "Scheduled Automation Triggers",
+        "CronJob Data Authoring"
+      ],
       "hierarchyDepth": 4,
       "navigationSection": "Cron and Scheduled Automation",
       "navigationSectionCode": "cron-and-scheduled-automation",
@@ -9889,13 +11105,34 @@
       "navigationSubgroupCode": null,
       "navigationOrder": 40,
       "documentType": "how-to",
-      "audience": ["business", "architect", "administrator", "developer", "operator", "qa", "ai-tool"],
-      "businessAudience": ["business user", "administrator", "implementation partner"],
-      "technicalAudience": ["architect", "developer", "operator", "qa engineer", "ai tool"],
+      "audience": [
+        "business",
+        "architect",
+        "administrator",
+        "developer",
+        "operator",
+        "qa",
+        "ai-tool"
+      ],
+      "businessAudience": [
+        "business user",
+        "administrator",
+        "implementation partner"
+      ],
+      "technicalAudience": [
+        "architect",
+        "developer",
+        "operator",
+        "qa engineer",
+        "ai tool"
+      ],
       "sourceOwner": "nodics.process",
       "sourcePath": "docs/pages/nodics.process/cronjob-data-authoring.md",
       "visibility": "public",
-      "channel": ["axis", "web"],
+      "channel": [
+        "axis",
+        "web"
+      ],
       "accessMode": "PUBLIC",
       "publiclyAvailable": true,
       "requiresAuthentication": false,
@@ -9904,7 +11141,11 @@
       "allowedPermissions": [],
       "lifecycleState": "ONLINE",
       "version": "0.16.7",
-      "relatedPages": ["cron.operations", "process.process-cron-runtime", "cron.project-customization"],
+      "relatedPages": [
+        "cron.operations",
+        "process.process-cron-runtime",
+        "cron.project-customization"
+      ],
       "sourceEvidence": [
         "docs/catalogue.json",
         "docs/pages/nodics.process/cronjob-data-authoring.md",
@@ -9915,9 +11156,24 @@
       "maturityState": "operational",
       "implementationState": "current",
       "renderingComponent": "documentation.component.article",
-      "searchKeywords": ["cronjob", "scheduled-job", "data-authoring", "retry", "idempotency"],
-      "topicKeywords": ["Cron and Scheduled Automation", "Scheduled Automation Triggers", "CronJob Data Authoring"],
-      "visualRequirements": ["diagram", "table", "code-example", "troubleshooting-matrix"]
+      "searchKeywords": [
+        "cronjob",
+        "scheduled-job",
+        "data-authoring",
+        "retry",
+        "idempotency"
+      ],
+      "topicKeywords": [
+        "Cron and Scheduled Automation",
+        "Scheduled Automation Triggers",
+        "CronJob Data Authoring"
+      ],
+      "visualRequirements": [
+        "diagram",
+        "table",
+        "code-example",
+        "troubleshooting-matrix"
+      ]
     },
     {
       "id": "framework.release-upgrade-compatibility",
@@ -9929,7 +11185,12 @@
       "content": "docs/pages/framework/release-upgrade-compatibility.md",
       "slug": "framework-release-upgrade-compatibility",
       "parentId": "release-staging-and-publication.release-compatibility",
-      "hierarchyPath": ["Nodics Documentation", "Release, Staging, and Publication", "Release Compatibility", "Release and Upgrade Compatibility"],
+      "hierarchyPath": [
+        "Nodics Documentation",
+        "Release, Staging, and Publication",
+        "Release Compatibility",
+        "Release and Upgrade Compatibility"
+      ],
       "hierarchyDepth": 4,
       "navigationSection": "Release, Staging, and Publication",
       "navigationSectionCode": "release-staging-and-publication",
@@ -9941,13 +11202,35 @@
       "navigationSubgroupCode": null,
       "navigationOrder": 10,
       "documentType": "operations",
-      "audience": ["business", "architect", "administrator", "developer", "operator", "qa", "ai-tool"],
-      "businessAudience": ["business user", "administrator", "implementation partner"],
-      "technicalAudience": ["architect", "developer", "operator", "qa engineer", "ai tool"],
+      "audience": [
+        "business",
+        "architect",
+        "administrator",
+        "developer",
+        "operator",
+        "qa",
+        "ai-tool"
+      ],
+      "businessAudience": [
+        "business user",
+        "administrator",
+        "implementation partner"
+      ],
+      "technicalAudience": [
+        "architect",
+        "developer",
+        "operator",
+        "qa engineer",
+        "ai tool"
+      ],
       "sourceOwner": "nodics.foundation",
       "sourcePath": "docs/pages/framework/release-upgrade-compatibility.md",
       "visibility": "public",
-      "channel": ["axis", "nexus", "web"],
+      "channel": [
+        "axis",
+        "nexus",
+        "web"
+      ],
       "accessMode": "PUBLIC",
       "publiclyAvailable": true,
       "requiresAuthentication": false,
@@ -9956,7 +11239,11 @@
       "allowedPermissions": [],
       "lifecycleState": "ONLINE",
       "version": "0.16.7",
-      "relatedPages": ["data.import-export-migration", "docs.documentation-publishing-runbook", "framework.runtime-release-rollback"],
+      "relatedPages": [
+        "data.import-export-migration",
+        "docs.documentation-publishing-runbook",
+        "framework.runtime-release-rollback"
+      ],
       "sourceEvidence": [
         "docs/catalogue.json",
         "docs/pages/framework/release-upgrade-compatibility.md",
@@ -9968,9 +11255,24 @@
       "maturityState": "operational",
       "implementationState": "current",
       "renderingComponent": "documentation.component.article",
-      "searchKeywords": ["release", "upgrade", "manifest", "compatibility", "data-folder"],
-      "topicKeywords": ["Release, Staging, and Publication", "Release Compatibility", "Release and Upgrade Compatibility"],
-      "visualRequirements": ["diagram", "configuration-table", "code-example", "troubleshooting-matrix"]
+      "searchKeywords": [
+        "release",
+        "upgrade",
+        "manifest",
+        "compatibility",
+        "data-folder"
+      ],
+      "topicKeywords": [
+        "Release, Staging, and Publication",
+        "Release Compatibility",
+        "Release and Upgrade Compatibility"
+      ],
+      "visualRequirements": [
+        "diagram",
+        "configuration-table",
+        "code-example",
+        "troubleshooting-matrix"
+      ]
     },
     {
       "id": "commerce.fulfillment-core-source-map",
@@ -9982,7 +11284,12 @@
       "content": "docs/pages/nodics.commerce/fulfillment-core-source-map.md",
       "slug": "commerce-fulfillment-core-source-map",
       "parentId": "shipping-and-fulfillment.shipping-and-fulfillment-flow",
-      "hierarchyPath": ["Nodics Documentation", "Shipping and Fulfillment", "Shipping and Fulfillment Flow", "Fulfillment Core Source Map"],
+      "hierarchyPath": [
+        "Nodics Documentation",
+        "Shipping and Fulfillment",
+        "Shipping and Fulfillment Flow",
+        "Fulfillment Core Source Map"
+      ],
       "hierarchyDepth": 4,
       "navigationSection": "Shipping and Fulfillment",
       "navigationSectionCode": "shipping-and-fulfillment",
@@ -9994,13 +11301,34 @@
       "navigationSubgroupCode": null,
       "navigationOrder": 20,
       "documentType": "reference",
-      "audience": ["business", "architect", "administrator", "developer", "operator", "qa", "ai-tool"],
-      "businessAudience": ["business user", "administrator", "implementation partner"],
-      "technicalAudience": ["architect", "developer", "operator", "qa engineer", "ai tool"],
+      "audience": [
+        "business",
+        "architect",
+        "administrator",
+        "developer",
+        "operator",
+        "qa",
+        "ai-tool"
+      ],
+      "businessAudience": [
+        "business user",
+        "administrator",
+        "implementation partner"
+      ],
+      "technicalAudience": [
+        "architect",
+        "developer",
+        "operator",
+        "qa engineer",
+        "ai tool"
+      ],
       "sourceOwner": "nodics.commerce",
       "sourcePath": "docs/pages/nodics.commerce/fulfillment-core-source-map.md",
       "visibility": "public",
-      "channel": ["axis", "web"],
+      "channel": [
+        "axis",
+        "web"
+      ],
       "accessMode": "PUBLIC",
       "publiclyAvailable": true,
       "requiresAuthentication": false,
@@ -10009,7 +11337,11 @@
       "allowedPermissions": [],
       "lifecycleState": "ONLINE",
       "version": "0.16.7",
-      "relatedPages": ["fulfillment.shipping-management", "commerce.data-authoring-fulfillment", "commerce.payment-provider-boundaries"],
+      "relatedPages": [
+        "fulfillment.shipping-management",
+        "commerce.data-authoring-fulfillment",
+        "commerce.payment-provider-boundaries"
+      ],
       "sourceEvidence": [
         "docs/catalogue.json",
         "docs/pages/nodics.commerce/fulfillment-core-source-map.md",
@@ -10021,9 +11353,24 @@
       "maturityState": "operational",
       "implementationState": "current",
       "renderingComponent": "documentation.component.article",
-      "searchKeywords": ["fulfillment-core", "carrier", "return-execution", "readiness", "operator"],
-      "topicKeywords": ["Shipping and Fulfillment", "Shipping and Fulfillment Flow", "Fulfillment Core Source Map"],
-      "visualRequirements": ["diagram", "table", "code-example", "troubleshooting-matrix"]
+      "searchKeywords": [
+        "fulfillment-core",
+        "carrier",
+        "return-execution",
+        "readiness",
+        "operator"
+      ],
+      "topicKeywords": [
+        "Shipping and Fulfillment",
+        "Shipping and Fulfillment Flow",
+        "Fulfillment Core Source Map"
+      ],
+      "visualRequirements": [
+        "diagram",
+        "table",
+        "code-example",
+        "troubleshooting-matrix"
+      ]
     },
     {
       "id": "accelerators.domain-commerce-source-map",
@@ -10035,7 +11382,12 @@
       "content": "docs/pages/accelerators/domain-commerce-source-map.md",
       "slug": "accelerators-domain-commerce-source-map",
       "parentId": "accelerators-and-industry-solution-templates.agora-accelerator-family",
-      "hierarchyPath": ["Nodics Documentation", "Accelerators and Industry Solution Templates", "Agora Accelerator Family", "Domain Commerce Accelerator Source Map"],
+      "hierarchyPath": [
+        "Nodics Documentation",
+        "Accelerators and Industry Solution Templates",
+        "Agora Accelerator Family",
+        "Domain Commerce Accelerator Source Map"
+      ],
       "hierarchyDepth": 4,
       "navigationSection": "Accelerators and Industry Solution Templates",
       "navigationSectionCode": "accelerators-and-industry-solution-templates",
@@ -10047,13 +11399,35 @@
       "navigationSubgroupCode": null,
       "navigationOrder": 30,
       "documentType": "reference",
-      "audience": ["business", "architect", "administrator", "developer", "operator", "qa", "ai-tool"],
-      "businessAudience": ["business user", "administrator", "implementation partner"],
-      "technicalAudience": ["architect", "developer", "operator", "qa engineer", "ai tool"],
+      "audience": [
+        "business",
+        "architect",
+        "administrator",
+        "developer",
+        "operator",
+        "qa",
+        "ai-tool"
+      ],
+      "businessAudience": [
+        "business user",
+        "administrator",
+        "implementation partner"
+      ],
+      "technicalAudience": [
+        "architect",
+        "developer",
+        "operator",
+        "qa engineer",
+        "ai tool"
+      ],
       "sourceOwner": "nodics.accelerators",
       "sourcePath": "docs/pages/accelerators/domain-commerce-source-map.md",
       "visibility": "public",
-      "channel": ["axis", "nexus", "web"],
+      "channel": [
+        "axis",
+        "nexus",
+        "web"
+      ],
       "accessMode": "PUBLIC",
       "publiclyAvailable": true,
       "requiresAuthentication": false,
@@ -10062,7 +11436,11 @@
       "allowedPermissions": [],
       "lifecycleState": "ONLINE",
       "version": "0.16.7",
-      "relatedPages": ["accelerators.agora-industry-templates", "accelerators.agora-apparel-product-data-authoring", "commerce.search-guide"],
+      "relatedPages": [
+        "accelerators.agora-industry-templates",
+        "accelerators.agora-apparel-product-data-authoring",
+        "commerce.search-guide"
+      ],
       "sourceEvidence": [
         "docs/catalogue.json",
         "docs/pages/accelerators/domain-commerce-source-map.md",
@@ -10075,9 +11453,24 @@
       "maturityState": "operational",
       "implementationState": "current",
       "renderingComponent": "documentation.component.article",
-      "searchKeywords": ["accelerator", "domain-commerce", "electronics", "telco", "subscription"],
-      "topicKeywords": ["Accelerators and Industry Solution Templates", "Agora Accelerator Family", "Domain Commerce Accelerator Source Map"],
-      "visualRequirements": ["diagram", "table", "code-example", "troubleshooting-matrix"]
+      "searchKeywords": [
+        "accelerator",
+        "domain-commerce",
+        "electronics",
+        "telco",
+        "subscription"
+      ],
+      "topicKeywords": [
+        "Accelerators and Industry Solution Templates",
+        "Agora Accelerator Family",
+        "Domain Commerce Accelerator Source Map"
+      ],
+      "visualRequirements": [
+        "diagram",
+        "table",
+        "code-example",
+        "troubleshooting-matrix"
+      ]
     },
     {
       "id": "foundation.tooling-runtime-contracts",
@@ -10089,7 +11482,12 @@
       "content": "docs/pages/nodics.foundation/tooling-runtime-contracts.md",
       "slug": "foundation-tooling-runtime-contracts",
       "parentId": "ai-and-developer-tooling.ai-and-developer-enablement",
-      "hierarchyPath": ["Nodics Documentation", "AI and Developer Tooling", "AI and Developer Enablement", "Tooling Runtime Contracts"],
+      "hierarchyPath": [
+        "Nodics Documentation",
+        "AI and Developer Tooling",
+        "AI and Developer Enablement",
+        "Tooling Runtime Contracts"
+      ],
       "hierarchyDepth": 4,
       "navigationSection": "AI and Developer Tooling",
       "navigationSectionCode": "ai-and-developer-tooling",
@@ -10101,13 +11499,34 @@
       "navigationSubgroupCode": null,
       "navigationOrder": 20,
       "documentType": "contract",
-      "audience": ["business", "architect", "administrator", "developer", "operator", "qa", "ai-tool"],
-      "businessAudience": ["business user", "administrator", "implementation partner"],
-      "technicalAudience": ["architect", "developer", "operator", "qa engineer", "ai tool"],
+      "audience": [
+        "business",
+        "architect",
+        "administrator",
+        "developer",
+        "operator",
+        "qa",
+        "ai-tool"
+      ],
+      "businessAudience": [
+        "business user",
+        "administrator",
+        "implementation partner"
+      ],
+      "technicalAudience": [
+        "architect",
+        "developer",
+        "operator",
+        "qa engineer",
+        "ai tool"
+      ],
       "sourceOwner": "nodics.foundation",
       "sourcePath": "docs/pages/nodics.foundation/tooling-runtime-contracts.md",
       "visibility": "public",
-      "channel": ["axis", "web"],
+      "channel": [
+        "axis",
+        "web"
+      ],
       "accessMode": "PUBLIC",
       "publiclyAvailable": true,
       "requiresAuthentication": false,
@@ -10116,7 +11535,11 @@
       "allowedPermissions": [],
       "lifecycleState": "ONLINE",
       "version": "0.16.7",
-      "relatedPages": ["tooling.ai-developer-enablement", "framework.release-upgrade-compatibility", "reference.source-backed-documentation-coverage-audit"],
+      "relatedPages": [
+        "tooling.ai-developer-enablement",
+        "framework.release-upgrade-compatibility",
+        "reference.source-backed-documentation-coverage-audit"
+      ],
       "sourceEvidence": [
         "docs/catalogue.json",
         "docs/pages/nodics.foundation/tooling-runtime-contracts.md",
@@ -10128,9 +11551,24 @@
       "maturityState": "operational",
       "implementationState": "current",
       "renderingComponent": "documentation.component.article",
-      "searchKeywords": ["tooling", "application-builder", "manifest", "validation", "ai-context"],
-      "topicKeywords": ["AI and Developer Tooling", "AI and Developer Enablement", "Tooling Runtime Contracts"],
-      "visualRequirements": ["diagram", "table", "code-example", "troubleshooting-matrix"]
+      "searchKeywords": [
+        "tooling",
+        "application-builder",
+        "manifest",
+        "validation",
+        "ai-context"
+      ],
+      "topicKeywords": [
+        "AI and Developer Tooling",
+        "AI and Developer Enablement",
+        "Tooling Runtime Contracts"
+      ],
+      "visualRequirements": [
+        "diagram",
+        "table",
+        "code-example",
+        "troubleshooting-matrix"
+      ]
     },
     {
       "id": "foundation.ems-runtime-client-runbook",
@@ -10142,7 +11580,12 @@
       "content": "docs/pages/nodics.foundation/ems-runtime-client-runbook.md",
       "slug": "foundation-ems-runtime-client-runbook",
       "parentId": "event-and-messaging-management.events-and-cluster-coordination",
-      "hierarchyPath": ["Nodics Documentation", "Event and Messaging Management", "Events and Cluster Coordination", "EMS Runtime and Client Runbook"],
+      "hierarchyPath": [
+        "Nodics Documentation",
+        "Event and Messaging Management",
+        "Events and Cluster Coordination",
+        "EMS Runtime and Client Runbook"
+      ],
       "hierarchyDepth": 4,
       "navigationSection": "Event and Messaging Management",
       "navigationSectionCode": "event-and-messaging-management",
@@ -10154,13 +11597,34 @@
       "navigationSubgroupCode": null,
       "navigationOrder": 20,
       "documentType": "operations",
-      "audience": ["business", "architect", "administrator", "developer", "operator", "qa", "ai-tool"],
-      "businessAudience": ["business user", "administrator", "implementation partner"],
-      "technicalAudience": ["architect", "developer", "operator", "qa engineer", "ai tool"],
+      "audience": [
+        "business",
+        "architect",
+        "administrator",
+        "developer",
+        "operator",
+        "qa",
+        "ai-tool"
+      ],
+      "businessAudience": [
+        "business user",
+        "administrator",
+        "implementation partner"
+      ],
+      "technicalAudience": [
+        "architect",
+        "developer",
+        "operator",
+        "qa engineer",
+        "ai tool"
+      ],
       "sourceOwner": "nodics.foundation",
       "sourcePath": "docs/pages/nodics.foundation/ems-runtime-client-runbook.md",
       "visibility": "public",
-      "channel": ["axis", "web"],
+      "channel": [
+        "axis",
+        "web"
+      ],
       "accessMode": "PUBLIC",
       "publiclyAvailable": true,
       "requiresAuthentication": false,
@@ -10169,7 +11633,11 @@
       "allowedPermissions": [],
       "lifecycleState": "ONLINE",
       "version": "0.16.7",
-      "relatedPages": ["events.messaging-cluster-coordination", "communication.provider-runbooks", "process.workflow-bpm-source-map"],
+      "relatedPages": [
+        "events.messaging-cluster-coordination",
+        "communication.provider-runbooks",
+        "process.workflow-bpm-source-map"
+      ],
       "sourceEvidence": [
         "docs/catalogue.json",
         "docs/pages/nodics.foundation/ems-runtime-client-runbook.md",
@@ -10181,9 +11649,24 @@
       "maturityState": "operational",
       "implementationState": "current",
       "renderingComponent": "documentation.component.article",
-      "searchKeywords": ["ems", "ems-client", "events", "broker", "tenant-resolution"],
-      "topicKeywords": ["Event and Messaging Management", "Events and Cluster Coordination", "EMS Runtime and Client Runbook"],
-      "visualRequirements": ["sequence-flow", "table", "code-example", "troubleshooting-matrix"]
+      "searchKeywords": [
+        "ems",
+        "ems-client",
+        "events",
+        "broker",
+        "tenant-resolution"
+      ],
+      "topicKeywords": [
+        "Event and Messaging Management",
+        "Events and Cluster Coordination",
+        "EMS Runtime and Client Runbook"
+      ],
+      "visualRequirements": [
+        "sequence-flow",
+        "table",
+        "code-example",
+        "troubleshooting-matrix"
+      ]
     },
     {
       "id": "reference.internal-source-boundary-register",
@@ -10195,7 +11678,12 @@
       "content": "docs/pages/reference/internal-source-boundary-register.md",
       "slug": "reference-internal-source-boundary-register",
       "parentId": "reference.source-map-and-glossary",
-      "hierarchyPath": ["Nodics Documentation", "Reference", "Source Map and Glossary", "Internal Source Boundary Register"],
+      "hierarchyPath": [
+        "Nodics Documentation",
+        "Reference",
+        "Source Map and Glossary",
+        "Internal Source Boundary Register"
+      ],
       "hierarchyDepth": 4,
       "navigationSection": "Reference",
       "navigationSectionCode": "reference",
@@ -10207,13 +11695,34 @@
       "navigationSubgroupCode": null,
       "navigationOrder": 40,
       "documentType": "reference",
-      "audience": ["business", "architect", "administrator", "developer", "operator", "qa", "ai-tool"],
-      "businessAudience": ["business user", "administrator", "implementation partner"],
-      "technicalAudience": ["architect", "developer", "operator", "qa engineer", "ai tool"],
+      "audience": [
+        "business",
+        "architect",
+        "administrator",
+        "developer",
+        "operator",
+        "qa",
+        "ai-tool"
+      ],
+      "businessAudience": [
+        "business user",
+        "administrator",
+        "implementation partner"
+      ],
+      "technicalAudience": [
+        "architect",
+        "developer",
+        "operator",
+        "qa engineer",
+        "ai tool"
+      ],
       "sourceOwner": "nodics.docs",
       "sourcePath": "docs/pages/reference/internal-source-boundary-register.md",
       "visibility": "public",
-      "channel": ["axis", "web"],
+      "channel": [
+        "axis",
+        "web"
+      ],
       "accessMode": "PUBLIC",
       "publiclyAvailable": true,
       "requiresAuthentication": false,
@@ -10222,7 +11731,12 @@
       "allowedPermissions": [],
       "lifecycleState": "ONLINE",
       "version": "0.16.7",
-      "relatedPages": ["reference.source-backed-documentation-coverage-audit", "reference.documentation-gap-backlog", "commerce.payment-provider-boundaries", "discovery.search-indexing"],
+      "relatedPages": [
+        "reference.source-backed-documentation-coverage-audit",
+        "reference.documentation-gap-backlog",
+        "commerce.payment-provider-boundaries",
+        "discovery.search-indexing"
+      ],
       "sourceEvidence": [
         "docs/catalogue.json",
         "docs/pages/reference/internal-source-boundary-register.md",
@@ -10249,9 +11763,23 @@
       "maturityState": "operational",
       "implementationState": "current",
       "renderingComponent": "documentation.component.article",
-      "searchKeywords": ["internal-source", "owner-mapping", "provider", "source-coverage", "reference"],
-      "topicKeywords": ["Reference", "Source Map and Glossary", "Internal Source Boundary Register"],
-      "visualRequirements": ["diagram", "table", "troubleshooting-matrix"]
+      "searchKeywords": [
+        "internal-source",
+        "owner-mapping",
+        "provider",
+        "source-coverage",
+        "reference"
+      ],
+      "topicKeywords": [
+        "Reference",
+        "Source Map and Glossary",
+        "Internal Source Boundary Register"
+      ],
+      "visualRequirements": [
+        "diagram",
+        "table",
+        "troubleshooting-matrix"
+      ]
     },
     {
       "id": "tooling.ai-developer-enablement",

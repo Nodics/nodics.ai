@@ -150,11 +150,15 @@ module.exports = {
                     this.activeExecutions.has(tenant + ':' + release.dataType))) };
         });
         let releases = steps.flatMap(step => step.releases);
+        let moduleIndex = this.profileModuleIndex(releases);
         let requiredPermissions = [...new Set(steps.filter(step => step.releases.length > 0)
             .map(step => 'import.' + step.dataType + '.run'))];
+        let configuredRole = CONFIG.get('runtimeRole');
+        let runtimeRole = typeof configuredRole === 'string' ? configuredRole : configuredRole && configuredRole.code;
         return {
             profileCode: code, label: String(definition.label), description: String(definition.description),
-            completionMessage: String(definition.completionMessage), destinationRole: (CONFIG.get('runtimeRole') || {}).publication,
+            completionMessage: String(definition.completionMessage), destinationRole: runtimeRole,
+            moduleIndex: moduleIndex,
             status: releases.length > 0 && releases.every(item => item.status === 'CURRENT') ? 'CURRENT' :
                 releases.some(item => ['INVALID_RELEASE', 'DOWNGRADE_AVAILABLE'].includes(item.status)) ? 'BLOCKED' :
                     releases.some(item => item.status === 'RUNNING') ? 'RUNNING' : 'ACTION_REQUIRED',
@@ -175,6 +179,25 @@ module.exports = {
         return Boolean(runtimeRole && release.destinationRole === runtimeRole &&
             Array.isArray(release.environmentScope) &&
             (release.environmentScope.includes('ALL') || release.environmentScope.includes(environment)));
+    },
+
+    /** Resolves the earliest owning module index represented by a guided profile. */
+    profileModuleIndex: function (releases) {
+        let indexes = [...new Set((releases || []).map(release => release.moduleIndex).filter(index =>
+            typeof index === 'string' && index.trim()))];
+        return indexes.sort(this.compareModuleIndex)[0];
+    },
+
+    /** Sorts hierarchical module index values without adding a profile-specific order. */
+    compareModuleIndex: function (left, right) {
+        let leftParts = String(left || '').split('.').map(value => Number(value) || 0);
+        let rightParts = String(right || '').split('.').map(value => Number(value) || 0);
+        let length = Math.max(leftParts.length, rightParts.length);
+        for (let index = 0; index < length; index++) {
+            let difference = (leftParts[index] || 0) - (rightParts[index] || 0);
+            if (difference !== 0) return difference;
+        }
+        return String(left || '').localeCompare(String(right || ''));
     },
 
     /** Resolves a bounded route-owned profile identifier. */
@@ -220,25 +243,35 @@ module.exports = {
         let executionKey = plan.tenant + ':' + plan.dataType;
         if (this.activeExecutions.has(executionKey)) throw this.error('ERR_IMP_00003', 'A data release import is already running');
         this.activeExecutions.set(executionKey, true);
-        await Promise.all(plan.releases.map(release => this.recordInstallation(plan, release, undefined, 'RUNNING')));
+        let completed = [];
+        let importRuns = [];
+        let results = [];
         try {
-            let importRequest = this.createImportRequest(request, plan, false);
-            let result = await this.invokeImport(importRequest, plan.dataType);
-            await Promise.all(plan.releases.map(release => this.recordInstallation(plan, release, importRequest.importRun, 'CURRENT')));
-            let operationReleases = plan.releases.map(release => this.operationRelease(release, 'CURRENT'));
+            for (let release of plan.releases) {
+                await this.recordInstallation(plan, release, undefined, 'RUNNING');
+                let releasePlan = Object.assign({}, plan, { releases: [release] });
+                let importRequest = this.createImportRequest(request, releasePlan, false);
+                let result = await this.invokeImport(importRequest, plan.dataType);
+                await this.recordInstallation(plan, release, importRequest.importRun, 'CURRENT');
+                completed.push(release);
+                if (importRequest.importRun) importRuns.push(importRequest.importRun);
+                results.push({ releaseCode: release.releaseCode, result: result, importRun: importRequest.importRun });
+            }
+            let operationReleases = completed.map(release => this.operationRelease(release, 'CURRENT'));
             return {
                 code: 'SUC_IMP_00000',
                 data: {
                     dataType: plan.dataType,
                     tenant: plan.tenant,
                     releases: operationReleases,
-                    importRun: importRequest.importRun,
-                    result: result
+                    importRun: importRuns[importRuns.length - 1],
+                    importRuns: importRuns,
+                    result: { releases: results }
                 }
             };
         } catch (error) {
-            await Promise.all(plan.releases.map(release => this.recordInstallation(plan, release, undefined, 'FAILED')))
-                .catch(() => false);
+            await Promise.all(plan.releases.filter(release => !completed.includes(release))
+                .map(release => this.recordInstallation(plan, release, undefined, 'FAILED'))).catch(() => false);
             throw error;
         } finally {
             this.activeExecutions.delete(executionKey);
@@ -356,7 +389,7 @@ module.exports = {
     discoverReleases: function (requestedType) {
         if (requestedType) this.validateDataType(requestedType);
         let releases = [];
-        let discoveryOrder = 0;
+        let discovery = { order: 0 };
         this.discoveryOwners().forEach(selector => {
             let rawModule = NODICS.getRawModule(selector.moduleName);
             if (!rawModule || !rawModule.path) return;
@@ -382,38 +415,96 @@ module.exports = {
                     try {
                         releases.push(Object.assign(
                             this.inspectManifest(rawModule, entry[1].dataType, aggregatePath, entry[1], entry[0], !selector.active),
-                            { discoveryOrder: discoveryOrder++ }
+                            { discoveryOrder: discovery.order++ }
                         ));
                     } catch (error) {
                         releases.push(Object.assign(
                             this.invalidManifestRelease(rawModule, entry[1].dataType, aggregatePath, error, entry[0]),
-                            { discoveryOrder: discoveryOrder++ }
+                            { discoveryOrder: discovery.order++ }
                         ));
                     }
                 });
+                if (selector.active) {
+                    let representedRoots = new Set(sections.map(entry => entry[1].sourceRoot || entry[0]));
+                    this.discoverFolderReleases(rawModule, requestedType, representedRoots, discovery)
+                        .forEach(release => releases.push(release));
+                }
                 return;
             }
             if (!selector.active) return;
-            ['init', 'core', 'sample'].filter(type => !requestedType || requestedType === type).forEach(dataType => {
-                let legacyPath = path.join(rawModule.path, 'data', dataType, 'manifest.json');
-                if (!fs.existsSync(legacyPath)) return;
-                try {
-                    releases.push(Object.assign(
-                        this.inspectManifest(rawModule, dataType, legacyPath, undefined, dataType),
-                        { discoveryOrder: discoveryOrder++ }
-                    ));
-                } catch (error) {
-                    releases.push(Object.assign(
-                        this.invalidManifestRelease(rawModule, dataType, legacyPath, error, dataType),
-                        { discoveryOrder: discoveryOrder++ }
-                    ));
-                }
-            });
+            this.discoverFolderReleases(rawModule, requestedType, new Set(), discovery)
+                .forEach(release => releases.push(release));
         });
         return releases.sort((first, second) =>
             first.dataType.localeCompare(second.dataType) ||
             first.discoveryOrder - second.discoveryOrder ||
             first.releaseCode.localeCompare(second.releaseCode));
+    },
+
+    /** Discovers conventional release folders when no generated manifest section owns them yet. */
+    discoverFolderReleases: function (rawModule, requestedType, representedRoots, discovery) {
+        let dataRoot = path.join(rawModule.path, 'data');
+        if (!fs.existsSync(dataRoot) || !fs.statSync(dataRoot).isDirectory()) return [];
+        let result = [];
+        ['init', 'core', 'sample'].filter(type => !requestedType || requestedType === type).forEach(dataType => {
+            this.releaseRootsForDataType(dataRoot, dataType)
+                .filter(releaseRoot => !representedRoots.has(releaseRoot.sourceRoot))
+                .forEach(releaseRoot => {
+                    try {
+                        let section = this.syntheticReleaseSection(rawModule, dataType, releaseRoot.sourceRoot);
+                        result.push(Object.assign(
+                            this.inspectManifest(rawModule, dataType, path.join(dataRoot, 'manifest.json'), section, releaseRoot.sectionCode),
+                            { discoveryOrder: discovery.order++ }
+                        ));
+                    } catch (error) {
+                        result.push(Object.assign(
+                            this.invalidManifestRelease(rawModule, dataType, path.join(dataRoot, 'manifest.json'), error, releaseRoot.sectionCode),
+                            { discoveryOrder: discovery.order++ }
+                        ));
+                    }
+                });
+        });
+        return result;
+    },
+
+    /** Returns legacy and versioned release roots for one data type. */
+    releaseRootsForDataType: function (dataRoot, dataType) {
+        let roots = [];
+        let legacyRoot = path.join(dataRoot, dataType);
+        if (fs.existsSync(legacyRoot) && fs.statSync(legacyRoot).isDirectory()) {
+            roots.push({ sectionCode: dataType, sourceRoot: dataType });
+        }
+        let releasePattern = new RegExp('^' + dataType + '-v\\d{3}$');
+        fs.readdirSync(dataRoot, { withFileTypes: true })
+            .filter(entry => entry.isDirectory() && releasePattern.test(entry.name))
+            .sort((left, right) => left.name.localeCompare(right.name))
+            .forEach(entry => roots.push({ sectionCode: entry.name, sourceRoot: entry.name }));
+        return roots;
+    },
+
+    /** Builds a minimal runtime section from the conventional release folder contract. */
+    syntheticReleaseSection: function (rawModule, dataType, sourceRoot) {
+        let configuredRole = CONFIG.get('runtimeRole');
+        let destinationRole = typeof configuredRole === 'string' ? configuredRole : configuredRole && configuredRole.code;
+        let staged = /_STAGED$/.test(String(destinationRole || ''));
+        return {
+            kind: 'DATA_RELEASE',
+            dataType: dataType,
+            sourceRoot: sourceRoot,
+            version: '0.0.0',
+            displayName: rawModule.metaData && rawModule.metaData.nodics && rawModule.metaData.nodics.displayName || rawModule.name,
+            description: (rawModule.metaData && rawModule.metaData.nodics && rawModule.metaData.nodics.displayName || rawModule.name) +
+                ' ' + dataType + ' data',
+            owningDomain: rawModule.name,
+            lifecycle: staged ? 'PUBLISHABLE' : 'REFERENCE',
+            destinationRole: destinationRole,
+            environmentScope: ['ALL'],
+            sensitivity: 'INTERNAL',
+            versioningPolicy: staged ? 'IMMUTABLE' : 'NONE',
+            publicationPolicy: staged ? 'REQUIRED' : 'NONE',
+            initialPublicationPolicy: staged ? 'ADMIN_INITIATED' : 'NONE',
+            removalPolicy: staged ? 'UNPUBLISH_OR_RETIRE' : 'RETAIN'
+        };
     },
 
     /** Reads and validates the aggregate manifest envelope when a module owns a data directory. */
@@ -426,15 +517,19 @@ module.exports = {
             throw this.error('ERR_IMP_00003', 'Aggregate data manifest JSON is invalid for module ' + rawModule.name);
         }
         let allowedContracts = this.configuration().allowedContractVersions || [2];
-        if (!manifest || !allowedContracts.includes(manifest.contractVersion) || manifest.module !== rawModule.name ||
-            !manifest.sections || typeof manifest.sections !== 'object' || Array.isArray(manifest.sections)) {
+        if (!manifest || !allowedContracts.includes(manifest.contractVersion) || manifest.module !== rawModule.name) {
+            throw this.error('ERR_IMP_00003', 'Aggregate data manifest is incompatible for module ' + rawModule.name +
+                '; verify contractVersion, module identity, and sections map');
+        }
+        if (manifest.sections === undefined) manifest.sections = {};
+        if (!manifest.sections || typeof manifest.sections !== 'object' || Array.isArray(manifest.sections)) {
             throw this.error('ERR_IMP_00003', 'Aggregate data manifest is incompatible for module ' + rawModule.name +
                 '; verify contractVersion, module identity, and sections map');
         }
         return manifest;
     },
 
-    /** Validates one manifest, containment, symlink policy, and every declared checksum. */
+    /** Validates one release section and computes current file integrity from the release folder. */
     inspectManifest: function (rawModule, dataType, manifestPath, aggregateSection, sectionCode, lifecycleRequired) {
         let releaseRoot = path.dirname(manifestPath);
         let manifest;
@@ -452,7 +547,7 @@ module.exports = {
             (!isAggregate && manifest.module !== rawModule.name) ||
             (isAggregate && manifest.kind !== 'DATA_RELEASE') ||
             manifest.dataType !== dataType || !/^\d+\.\d+\.\d+$/.test(manifest.version || '') ||
-            !manifest.files || typeof manifest.files !== 'object' || Array.isArray(manifest.files)) {
+            (manifest.files !== undefined && (!manifest.files || typeof manifest.files !== 'object' || Array.isArray(manifest.files)))) {
             throw this.error('ERR_IMP_00003', 'Data release manifest is incompatible for module ' + rawModule.name + ' and data type ' + dataType + '; verify kind, dataType, semantic version, and files map');
         }
         let lifecycle = this.validateLifecycleMetadata(manifest, rawModule.name, dataType, lifecycleRequired);
@@ -465,30 +560,19 @@ module.exports = {
         if (!isVersionedSourceRoot && !['init', 'core', 'sample'].includes(sourceRoot)) {
             throw this.error('ERR_IMP_00003', 'Data release sourceRoot is invalid');
         }
-        let fileNames = Object.keys(manifest.files).sort();
+        let files = this.currentReleaseFiles(rawModule, releaseRoot, sourceRoot, manifest.files, isAggregate);
+        let fileNames = Object.keys(files).sort();
         if (fileNames.length === 0 || fileNames.length > Number(this.configuration().maximumFilesPerRelease || 1024)) {
             throw this.error('ERR_IMP_00003', 'Data release file count is invalid');
         }
-        fileNames.forEach(relativeFile => {
-            if (path.isAbsolute(relativeFile) || relativeFile.includes('..')) throw this.error('ERR_IMP_00003', 'Data release path is invalid: ' + relativeFile);
-            let filePath = path.resolve(releaseRoot, relativeFile);
-            if (!filePath.startsWith(releaseRoot + path.sep) || !fs.existsSync(filePath) ||
-                fs.lstatSync(filePath).isSymbolicLink() || !fs.statSync(filePath).isFile()) {
-                throw this.error('ERR_IMP_00003', 'Data release file is unavailable: ' + relativeFile);
-            }
-            let checksum = crypto.createHash('sha256').update(fs.readFileSync(filePath)).digest('hex');
-            if (checksum !== manifest.files[relativeFile]) throw this.error('ERR_IMP_00003',
-                'Data release checksum validation failed for ' + rawModule.name + '/' + dataType + '/' +
-                (isAggregate && relativeFile.startsWith(dataType + '/') ? relativeFile.slice(dataType.length + 1) : relativeFile) +
-                '; expected ' + String(manifest.files[relativeFile]).slice(0, 12) + '..., actual ' + checksum.slice(0, 12) + '...');
-        });
-        let checksum = crypto.createHash('sha256').update(fileNames.map(file => file + ':' + manifest.files[file]).join('|')).digest('hex');
+        let checksum = crypto.createHash('sha256').update(fileNames.map(file => file + ':' + files[file]).join('|')).digest('hex');
         return {
             releaseCode: rawModule.name + ':' + sectionCode,
             sectionCode: sectionCode,
             moduleName: rawModule.name,
             displayName: manifest.displayName ||
                 rawModule.metaData && rawModule.metaData.nodics && rawModule.metaData.nodics.displayName || rawModule.name,
+            moduleIndex: rawModule.index,
             parentModule: rawModule.parent,
             canonicalIdentity: rawModule.canonicalIdentity || rawModule.name,
             dataType: dataType,
@@ -509,6 +593,102 @@ module.exports = {
             declaredFiles: fileNames.slice(),
             publicationReview: this.validatePublicationReview(manifest.publicationReview, rawModule.name, sectionCode)
         };
+    },
+
+    /** Returns the effective release file map from disk, using manifest files only as section grouping hints. */
+    currentReleaseFiles: function (rawModule, releaseRoot, sourceRoot, declaredFiles, isAggregate) {
+        let sourceFolder = isAggregate ? path.resolve(releaseRoot, sourceRoot) : releaseRoot;
+        if (!fs.existsSync(sourceFolder) || !fs.statSync(sourceFolder).isDirectory()) {
+            throw this.error('ERR_IMP_00003', 'Data release sourceRoot is unavailable: ' + sourceRoot);
+        }
+        let allFiles = this.collectReleaseFiles(sourceFolder).reduce((result, relativeFile) => {
+            let releaseFile = isAggregate ? sourceRoot + '/' + relativeFile : relativeFile;
+            result[releaseFile] = crypto.createHash('sha256').update(fs.readFileSync(path.resolve(releaseRoot, releaseFile))).digest('hex');
+            return result;
+        }, {});
+        let declaredNames = Object.keys(declaredFiles || {});
+        if (declaredNames.length === 0) return allFiles;
+        let selected = declaredNames.reduce((result, relativeFile) => {
+            let releaseFile = isAggregate && !relativeFile.startsWith(sourceRoot + '/') ?
+                sourceRoot + '/' + relativeFile : relativeFile;
+            if (allFiles[releaseFile]) result[releaseFile] = allFiles[releaseFile];
+            return result;
+        }, {});
+        if (Object.keys(selected).length === Object.keys(allFiles).length) return selected;
+        this.expandFilesFromHeaderPrefixes(selected, allFiles, releaseRoot);
+        if (Object.keys(selected).length === Object.keys(allFiles).length) return selected;
+        this.expandMediaAssetFiles(selected, allFiles, releaseRoot);
+        return Object.keys(selected).length > 0 ? selected : allFiles;
+    },
+
+    /** Recursively lists non-symlink files under a release folder. */
+    collectReleaseFiles: function (folder, prefix) {
+        return fs.readdirSync(folder, { withFileTypes: true }).sort((left, right) => left.name.localeCompare(right.name))
+            .flatMap(entry => {
+                let relative = prefix ? prefix + '/' + entry.name : entry.name;
+                let absolute = path.join(folder, entry.name);
+                if (fs.lstatSync(absolute).isSymbolicLink()) {
+                    throw this.error('ERR_IMP_00003', 'Data release symlink paths are not allowed: ' + relative);
+                }
+                return entry.isDirectory() ? this.collectReleaseFiles(absolute, relative) : [relative];
+            });
+    },
+
+    /** Adds record files referenced by selected headers through options.dataFilePrefix. */
+    expandFilesFromHeaderPrefixes: function (selected, allFiles, releaseRoot) {
+        let prefixes = new Set();
+        Object.keys(selected).filter(file => file.split('/').includes('headers') && file.endsWith('.js'))
+            .forEach(file => this.collectDataFilePrefixes(this.requireReleaseFile(path.resolve(releaseRoot, file)), prefixes));
+        if (prefixes.size === 0) return selected;
+        Object.keys(allFiles).forEach(file => {
+            let segments = file.split('/');
+            let fileName = path.basename(file);
+            if (!segments.includes('records') || !file.endsWith('.js') ||
+                fileName.endsWith('Header.js') || fileName.endsWith('Headers.js')) return;
+            prefixes.forEach(prefix => {
+                if (fileName.startsWith(prefix)) selected[file] = allFiles[file];
+            });
+        });
+        return selected;
+    },
+
+    /** Collects every dataFilePrefix declared by nested header objects. */
+    collectDataFilePrefixes: function (value, prefixes) {
+        if (!value || typeof value !== 'object') return prefixes;
+        if (value.options && typeof value.options.dataFilePrefix === 'string' && value.options.dataFilePrefix.trim()) {
+            prefixes.add(value.options.dataFilePrefix.trim());
+        }
+        Object.values(value).forEach(child => this.collectDataFilePrefixes(child, prefixes));
+        return prefixes;
+    },
+
+    /** Adds physical asset files referenced by selected media records. */
+    expandMediaAssetFiles: function (selected, allFiles, releaseRoot) {
+        let sourceFiles = new Set();
+        Object.keys(selected).filter(file => file.split('/').includes('records') && file.endsWith('.js'))
+            .forEach(file => this.collectAssetSourceFiles(this.requireReleaseFile(path.resolve(releaseRoot, file)), sourceFiles));
+        sourceFiles.forEach(sourceFile => {
+            Object.keys(allFiles).forEach(file => {
+                if (file.endsWith('/' + sourceFile) || file === sourceFile) selected[file] = allFiles[file];
+            });
+        });
+        return selected;
+    },
+
+    /** Collects declarative media asset source files from JS data objects. */
+    collectAssetSourceFiles: function (value, sourceFiles) {
+        if (!value || typeof value !== 'object') return sourceFiles;
+        if (value.asset && typeof value.asset.sourceFile === 'string' && value.asset.sourceFile.trim()) {
+            sourceFiles.add(value.asset.sourceFile.trim());
+        }
+        Object.values(value).forEach(child => this.collectAssetSourceFiles(child, sourceFiles));
+        return sourceFiles;
+    },
+
+    /** Loads a release JS file without letting Node cache stale generated/data objects. */
+    requireReleaseFile: function (filePath) {
+        delete require.cache[require.resolve(filePath)];
+        return require(filePath);
     },
 
     /** Validates optional client-safe publication review guidance owned by an immutable release manifest. */
@@ -618,6 +798,7 @@ module.exports = {
             moduleName: rawModule.name,
             displayName: manifest.displayName ||
                 rawModule.metaData && rawModule.metaData.nodics && rawModule.metaData.nodics.displayName || rawModule.name,
+            moduleIndex: rawModule.index,
             parentModule: rawModule.parent,
             canonicalIdentity: rawModule.canonicalIdentity || rawModule.name,
             dataType: dataType,
@@ -792,6 +973,7 @@ module.exports = {
         return {
             releaseCode: release.releaseCode, sectionCode: release.sectionCode,
             moduleName: release.moduleName, displayName: release.displayName,
+            moduleIndex: release.moduleIndex,
             parentModule: release.parentModule, canonicalIdentity: release.canonicalIdentity,
             dataType: release.dataType, version: release.version,
             sourceRoot: release.sourceRoot,

@@ -39,7 +39,8 @@ authorization, CMS delivery, or session-revocation failures.
 8. BackOffice returns the effective tenant-scoped Axis employee policy,
    authorized module catalogue, navigation contributions, compatibility,
    availability, and client-safe environment observations.
-9. Axis constructs its shell from the local Dashboard route plus authorized
+9. Axis constructs its shell from the authenticated BackOffice bootstrap
+   navigation, including the backend-owned Dashboard entry and authorized
    module-owned navigation.
 10. If authorized, Axis loads `/dashboard` from authenticated CMS delivery.
 

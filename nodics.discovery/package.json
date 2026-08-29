@@ -1,7 +1,7 @@
 {
     "name": "nodics.discovery",
     "version": "0.0.0",
-    "index": "65.99",
+    "index": "75.99",
     "private": true,
     "main": "nodics.js",
     "description": "Nodics Discovery module group.",

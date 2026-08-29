@@ -22,7 +22,9 @@
             "web": false
         },
         "extends": [
-            "nodics.foundation"
+            "nodics.foundation",
+            "nodics.commerce",
+            "nodics.discovery"
         ],
         "functionalModule": {
             "identity": "nodics.accelerators",

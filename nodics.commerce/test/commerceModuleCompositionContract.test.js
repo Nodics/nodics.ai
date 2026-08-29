@@ -19,8 +19,8 @@ const root = path.resolve(__dirname, '..');
 const expected = new Map([
     ['nodics.commerce', '70.99'], ['baseCommerce', '70.19'], ['store', '70.10'],
     ['product', '70.11'], ['pricing', '70.12'], ['tax', '70.13'],
-    ['promotion', '70.14'], ['inventory', '70.15'], ['commerceSearch', '70.17'],
-    ['commerceSearchCore', '70.16'], ['checkout', '70.29'],
+    ['promotion', '70.14'], ['inventory', '70.15'], ['commerceSearch', '76.17'],
+    ['commerceSearchCore', '76.16'], ['checkout', '70.29'],
     ['checkoutCore', '70.20'], ['cart', '70.21'], ['customerList', '70.23'], ['order', '70.22'],
     ['payment', '70.49'], ['paymentCore', '70.30'], ['paymentMethods', '70.35'],
     ['cardPayment', '70.31'], ['walletPayment', '70.32'],
@@ -48,6 +48,8 @@ packages.forEach(({ folder, value }) => {
     ['README.md', 'AGENTS.md', 'nodics.js', 'config/properties.js', 'config/prescripts.js', 'config/postscripts.js', 'llm/contracts/README.md', 'llm/examples/README.md'].forEach(file => assert(fs.existsSync(path.join(folder, file)), value.name + ' missing ' + file));
 });
 assert.deepStrictEqual(packages[0].value.requiredModules, ['baseCommerce', 'checkout', 'payment', 'fulfillment']);
-assert.deepStrictEqual(packages.find(item => item.value.name === 'baseCommerce').value.requiredModules, ['store', 'product', 'pricing', 'tax', 'promotion', 'inventory', 'commerceSearch']);
+assert.deepStrictEqual(packages.find(item => item.value.name === 'baseCommerce').value.requiredModules, ['store', 'product', 'pricing', 'tax', 'promotion', 'inventory']);
 assert.deepStrictEqual(packages.find(item => item.value.name === 'checkout').value.requiredModules, ['checkoutCore', 'cart', 'customerList', 'order']);
+assert(Number(packages.find(item => item.value.name === 'commerceSearch').value.index) > 75.99,
+    'Commerce Search must load after generic Discovery services');
 console.log('Commerce module composition contract validated');

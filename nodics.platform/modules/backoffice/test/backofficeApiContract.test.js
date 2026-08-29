@@ -33,6 +33,9 @@ const capabilities = [
 ];
 
 assert(contracts.registrationBatch.required.includes("registrations"));
+assert(contracts.registration.properties.moduleIndex);
+assert(contracts.registration.properties.authorityClaims);
+assert(contracts.registrationBatch.properties.project);
 assert(contracts.capabilitySnapshot.required.includes("hash"));
 assert(
   contracts.capabilitySnapshot.properties.changeClassification.enum.includes(
@@ -596,13 +599,33 @@ let registration = {
   parentModule: "nodics.wcms",
   canonicalIdentity: "nodics.wcms/modules/cms",
   instanceId: "runtime-1",
+  moduleIndex: "80.10",
   clientCallable: true,
   endpoint: "https://cms.example/nodics/cms",
   capabilities: ["router"],
   leaseTtlMs: 30000,
+  authorityClaims: [{
+    kind: "schema",
+    moduleName: "cms",
+    claimName: "cmsPage",
+    authorityContext: "cms.cmsPage",
+  }],
   backoffice: capabilities[1],
 };
 assert(service.validateRegistration(registration));
+assert.deepStrictEqual(
+  service.getContractFieldNames(contracts.registration).sort(),
+  Object.keys(contracts.registration.properties).sort(),
+  "registration accepted fields must be derived from the API contract",
+);
+assert.strictEqual(
+  service.hasOnlyContractFields(
+    { moduleName: "cms", futureField: true },
+    contracts.registration,
+  ),
+  false,
+  "unknown registration fields must still fail closed",
+);
 let contentGroupRegistration = {
   moduleName: "nodics.wcms",
   displayName: "Content",
@@ -615,6 +638,7 @@ assert(
   service.validateRegistrationBatch(
     {
       instanceId: "runtime-1",
+      project: "example.project",
       environment: "resolvedByEnvModule",
       server: "runtimeComposition",
       node: null,
@@ -654,6 +678,14 @@ assert.strictEqual(
   service.validateRegistration(
     Object.assign({}, registration, {
       healthPath: "https://evil.example/ready",
+    }),
+  ),
+  false,
+);
+assert.strictEqual(
+  service.validateRegistration(
+    Object.assign({}, registration, {
+      moduleIndex: 80.1,
     }),
   ),
   false,

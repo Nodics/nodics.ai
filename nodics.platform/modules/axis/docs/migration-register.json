@@ -125,8 +125,8 @@
       "canonicalSource": "docs/pages/design-system-and-shell.md",
       "destinationRoute": "/docs/nodics-axis/design-system",
       "disposition": "migrated",
-      "sourceHash": "558038919926e06e2d06c1754554310d2277fae79d3fb227896081f53a338a76",
-      "wordCount": 2043,
+      "sourceHash": "5bc37f01fed84e1b15a3aac31bc77c23c6946161debfb26ef32366b8327f31d1",
+      "wordCount": 2062,
       "headings": [
         "Implemented scope",
         "Authentication layout",
@@ -210,8 +210,8 @@
       "canonicalSource": "docs/pages/employee-login.md",
       "destinationRoute": "/docs/nodics-axis/employee-access",
       "disposition": "migrated",
-      "sourceHash": "2ac8fe6425b374cb89bd2d156f41f0ceead2aa76cc2bf863153c57b7ec9c6d23",
-      "wordCount": 1431,
+      "sourceHash": "5d072426a550384fc0a857e268cc2a9552ddbd7d286ae32cb365eae35a65f558",
+      "wordCount": 1437,
       "headings": [
         "Startup journey",
         "Password recovery",
@@ -385,8 +385,8 @@
       "canonicalSource": "docs/pages/imports-and-exports.md",
       "destinationRoute": "/docs/nodics-axis/imports-exports",
       "disposition": "migrated",
-      "sourceHash": "2a39fc976699d1fe0e7856e38761a09ec181c5574a0479937223efde9c8f4210",
-      "wordCount": 2209,
+      "sourceHash": "3276761777c6f2a21183ffa6fe4067ac46abaea66fa9e67a4195fc92ab989d19",
+      "wordCount": 2326,
       "headings": [
         "Purpose and ownership",
         "Frontend organization",

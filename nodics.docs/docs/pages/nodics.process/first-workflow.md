@@ -24,6 +24,12 @@ The workflow is intentionally small, but it introduces the same building blocks
 used by larger commerce, telco, logistics, onboarding, support, and publishing
 processes.
 
+After this first workflow works, use `Workflow Orchestration Patterns` for
+enterprise flows such as product export. That guide shows how a workflow can
+aggregate Product, Pricing, Inventory, and Media data, apply filters, split to
+multiple export targets, and use target adapters while Process keeps only
+orchestration state and audit evidence.
+
 ## Step 1: create a draft definition
 
 In Axis, open Business Process & Automation, then open Workflows or Designer.

@@ -69,14 +69,20 @@ const expected = {
     'promotions-discounts': ['Promotion Workspace', 'Promotions', 'Discount Rules', 'Coupons and Promotion Codes', 'Eligibility and Qualification', 'Priority, Combination, and Stacking', 'Schedules and Budgets', 'Promotion Evaluation', 'Promotion Governance', 'Promotion Insights'],
     'editorial-space': ['Editorial Workspace', 'Editorial Content', 'Article Editor', 'Editorial Review and Approval', 'Languages and Localization', 'Authors', 'Taxonomy', 'Series', 'Featured and Special Content', 'Corrections and Governance', 'Content Type Policies', 'Editorial Calendar', 'Editorial Preview and Distribution', 'Editorial History and Insights'],
     'process-and-automations': ['Operations Workspace', 'Workflow Management', 'Pipeline Management', 'Cron jobs', 'Triggers and Relationships', 'Automation Monitoring', 'Advanced Configuration'],
-    documentation: ['Dashboard', 'Framework', 'Swaggers', 'Nodics Axis', 'Nodics Kickoff'],
+    documentation: ['Dashboard', 'Documentation Designer', 'Framework', 'Swaggers', 'Nodics Axis', 'Nodics Kickoff'],
     publishing: ['Publishing Workspace', 'Publication Requests', 'Approval Queue', 'Staged-to-Online Operations', 'Publication Manifests', 'Publishing History', 'Publishing Audit', 'Scheduled Publications', 'Online Publications', 'Publication Dependencies', 'Failures & Recovery', 'Withdrawals & Rollbacks', 'Publishing Configuration', 'Setup & Accelerators']
 };
 
 const rootLabelsByGroup = {};
+const childrenByParent = {};
 providerFiles.forEach(file => {
     const capability = require(path.join(root, file)).getCapability();
     (capability.navigation || []).forEach(item => {
+        if (item.parentId && item.featureState !== 'HIDDEN') {
+            const parentKey = `${item.group && item.group.id || item.moduleName}:${item.parentId}`;
+            childrenByParent[parentKey] = childrenByParent[parentKey] || [];
+            childrenByParent[parentKey].push(item.label);
+        }
         if (!item.group || item.featureState === 'HIDDEN' || item.parentId) return;
         rootLabelsByGroup[item.group.id] = rootLabelsByGroup[item.group.id] || [];
         rootLabelsByGroup[item.group.id].push(item.label);
@@ -90,5 +96,11 @@ Object.entries(expected).forEach(([groupId, expectedLabels]) => {
         `Locked first-level hierarchy mismatch for ${groupId}`
     );
 });
+
+assert.deepStrictEqual(
+    new Set(childrenByParent['system-integrations:system-integrations'] || []),
+    new Set(['Dashboard', 'Overall Runtime Status', 'Nodes and Modules Requiring Attention', 'Failed Integration and Data-exchange Operations', 'Security and Configuration Warnings', 'Authorized Operational Quick Links']),
+    'System Workspace child hierarchy must keep Dashboard parallel to Overall Runtime Status'
+);
 
 console.log('Axis locked first-level navigation hierarchy contract passed');

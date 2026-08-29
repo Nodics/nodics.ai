@@ -322,7 +322,7 @@ module.exports = {
     ],
     "statusSummary": {
       "sections": 47,
-      "pages": 122,
+      "pages": 127,
       "lifecycleState": "ONLINE"
     },
     "product": "nodicsDocumentationProduct",
@@ -644,7 +644,7 @@ module.exports = {
     ],
     "statusSummary": {
       "sections": 47,
-      "pages": 122,
+      "pages": 127,
       "searchable": true,
       "expandable": true
     },
@@ -1502,10 +1502,28 @@ module.exports = {
         "order": 10
       },
       {
+        "code": "configuration.framework-startup-lifecycle",
+        "title": "Framework Startup Lifecycle",
+        "summary": "Step-by-step startup path from runtime launch through nConfig module discovery, configuration loading, lifecycle hooks, init data import, identity bootstrap, and server readiness.",
+        "order": 20
+      },
+      {
         "code": "routing.api-governance",
         "title": "Routing and API Governance",
         "summary": "How Nodics owns route metadata, generated CRUD routes, security, permissions, request context, and runtime API behavior.",
-        "order": 20
+        "order": 30
+      },
+      {
+        "code": "routing.api-request-lifecycle",
+        "title": "API Request Lifecycle and Handler Pipeline",
+        "summary": "How each Nodics HTTP request moves from Express route binding through request context, exposure checks, authentication branches, cache lookup, controller dispatch, response handlers, and safe customization.",
+        "order": 40
+      },
+      {
+        "code": "foundation.error-handling-status-codes",
+        "title": "Error Handling and Status Codes",
+        "summary": "How Nodics errors, status definitions, response handlers, HTTP status codes, localization metadata, safe public messages, and project overrides work.",
+        "order": 50
       }
     ],
     "journeyLinks": [
@@ -1515,13 +1533,28 @@ module.exports = {
         "route": "/docs/framework/configuration-runtime-behavior-management"
       },
       {
+        "label": "Framework Startup Lifecycle",
+        "targetPage": "configuration.framework-startup-lifecycle",
+        "route": "/docs/framework/configuration-framework-startup-lifecycle"
+      },
+      {
         "label": "Routing and API Governance",
         "targetPage": "routing.api-governance",
         "route": "/docs/framework/routing-api-governance"
+      },
+      {
+        "label": "API Request Lifecycle and Handler Pipeline",
+        "targetPage": "routing.api-request-lifecycle",
+        "route": "/docs/framework/routing-api-request-lifecycle"
+      },
+      {
+        "label": "Error Handling and Status Codes",
+        "targetPage": "foundation.error-handling-status-codes",
+        "route": "/docs/framework/foundation-error-handling-status-codes"
       }
     ],
     "statusSummary": {
-      "pages": 2,
+      "pages": 5,
       "navigationDepth": 2
     },
     "accessMode": "PUBLIC",
@@ -2769,22 +2802,28 @@ module.exports = {
         "order": 30
       },
       {
+        "code": "process.workflow-orchestration-patterns",
+        "title": "Workflow Orchestration Patterns",
+        "summary": "How Process workflows govern long-running business lifecycle with product export aggregation, filters, multi-target branching, ACTION adapters, retry, and recovery.",
+        "order": 40
+      },
+      {
         "code": "process.first-workflow",
         "title": "Build Your First Workflow",
         "summary": "Create a first Process workflow from START through TASK, DECISION, ACTION, TIMER, SUB_PROCESS, and END with beginner-safe examples.",
-        "order": 40
+        "order": 50
       },
       {
         "code": "process.first-human-task",
         "title": "Build Your First Human Task Flow",
         "summary": "Understand task lifecycle, assignment, Axis presentation, and customer customization for human workflow steps.",
-        "order": 50
+        "order": 60
       },
       {
         "code": "process.business-value",
         "title": "Business Value and Adoption Model",
         "summary": "Explain the business problems Process solves, how it lowers operating cost, and how business users should think about automation governance.",
-        "order": 60
+        "order": 70
       }
     ],
     "journeyLinks": [
@@ -2804,6 +2843,11 @@ module.exports = {
         "route": "/docs/framework/process/runtime-lifecycle"
       },
       {
+        "label": "Workflow Orchestration Patterns",
+        "targetPage": "process.workflow-orchestration-patterns",
+        "route": "/docs/framework/process/workflow-orchestration-patterns"
+      },
+      {
         "label": "Build Your First Workflow",
         "targetPage": "process.first-workflow",
         "route": "/docs/framework/process/first-workflow"
@@ -2812,15 +2856,10 @@ module.exports = {
         "label": "Build Your First Human Task Flow",
         "targetPage": "process.first-human-task",
         "route": "/docs/framework/process/first-human-task"
-      },
-      {
-        "label": "Business Value and Adoption Model",
-        "targetPage": "process.business-value",
-        "route": "/docs/framework/process/business-value"
       }
     ],
     "statusSummary": {
-      "pages": 6,
+      "pages": 7,
       "navigationDepth": 2
     },
     "accessMode": "PUBLIC",
@@ -2859,6 +2898,12 @@ module.exports = {
         "title": "Service Runtime and Override Precedence",
         "summary": "How generated services, virtual services, module graph resolution, customer overrides, fallback behavior, and extension safety work.",
         "order": 20
+      },
+      {
+        "code": "foundation.module-to-module-communication",
+        "title": "Module-to-Module Communication",
+        "summary": "How DefaultModuleService invokes local services or remote module APIs through target authority, Runtime Registry, static endpoints, internal auth, retries, circuit breakers, and bounded external HTTP calls.",
+        "order": 30
       }
     ],
     "journeyLinks": [
@@ -2871,10 +2916,15 @@ module.exports = {
         "label": "Service Runtime and Override Precedence",
         "targetPage": "foundation.service-runtime-overrides",
         "route": "/docs/framework/foundation-service-runtime-overrides"
+      },
+      {
+        "label": "Module-to-Module Communication",
+        "targetPage": "foundation.module-to-module-communication",
+        "route": "/docs/framework/foundation-module-to-module-communication"
       }
     ],
     "statusSummary": {
-      "pages": 2,
+      "pages": 3,
       "navigationDepth": 2
     },
     "accessMode": "PUBLIC",

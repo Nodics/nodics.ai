@@ -114,6 +114,11 @@ The folder name is the release identity:
 | `core-v001` | Standard module capability data needed by the module. |
 | `sample-v001` | Demo, reference, accelerator, or customer-project sample data. |
 
+During a fresh-schema startup, Nodics imports active module `init-v001` data
+only when the runtime sets `NODICS.initRequired`. The full trigger sequence is
+documented in `Framework Startup Lifecycle`; this page owns the release folder,
+header, record, validation, and import processing contract.
+
 The prefix before `-` is the data type. The `v001` suffix is the release
 sequence. When one release contains multiple business areas, use named
 subfolders inside the release, such as `sample-v001/commerce` and
@@ -216,6 +221,14 @@ Nodics tooling generates:
 data work. It is the technical contract that proves exactly which files belong
 to a release and how the release may be imported.
 
+For documentation content packs, `docs:generate` follows the same source versus
+generated boundary. Authored Markdown pages and `docs/catalogue.json` are source
+inputs. The generator creates or updates missing and changed release records
+under `data/core-v001` and refreshes manifest evidence. It must not overwrite a
+detailed authored page with a basic generated page, remove examples, or
+downgrade mature documentation. If a topic is missing, create the source page
+and catalogue entry first, then generate the release data from that source.
+
 ## Release lifecycle
 
 Current framework and reference application data is still pre-production. Until
@@ -274,6 +287,66 @@ owning runtime and does not enter the Staged-to-Online publication path.
 This keeps the authoring experience simple while preserving enterprise
 evidence: the developer writes headers and records, the system generates the
 technical release index, and `nImport` remains the execution authority.
+
+## Guided initialization profiles
+
+Guided initialization profiles turn technical release lists into an operator
+journey. Axis displays the journey, but the executing backend runtime declares
+the profile under `data.dataReleases.initializationProfiles`. This keeps Axis
+friendly without making it the data authority.
+
+```js
+data: {
+  dataReleases: {
+    allowedDestinationRoles: ['COMMERCE'],
+    initializationProfiles: {
+      localCommerceFoundation: {
+        enabled: true,
+        label: 'Local Commerce foundation',
+        description: 'Install required operational Commerce core releases.',
+        completionMessage: 'The Local Commerce foundation is ready.',
+        steps: [{ dataType: 'core' }]
+      }
+    }
+  }
+}
+```
+
+Profile rules:
+
+| Rule | Contract |
+| --- | --- |
+| Backend ownership | Declare the profile in the runtime that can validate and execute the releases. Axis only discovers and renders it. |
+| Friendly purpose | Use a label and description that explain the business capability, not just the module name. |
+| Destination alignment | The profile must use releases compatible with the runtime `allowedDestinationRoles`. |
+| Ordered steps | Use explicit `init`, `core`, and `sample` steps in the order the operator should run them. |
+| Sample intent | Include `sample` only when the profile is clearly for local, demo, reference, or accelerator setup. |
+| Optional narrowing | Use `releaseCodes` when a profile should initialize a precise subset instead of every release for a data type. |
+| Completion message | Tell the operator what is now possible after the profile completes. |
+| Validation evidence | Add or update tests, acceptance checks, and documentation in the same change as the profile. |
+
+The principle is simple: whenever a new runtime capability requires a
+first-time operator to install more than one release, or to choose a release
+sequence that has business meaning, add or update a guided initialization
+profile. Do not leave that knowledge only in a developer note, manual runbook,
+or UI assumption.
+
+Examples of local profiles:
+
+| Profile | Runtime owner | Typical steps | Purpose |
+| --- | --- | --- | --- |
+| Local Platform foundation | `PLATFORM` | `init`, `core` | Sign-in, module lifecycle, catalog, profile, authorization, and localization foundation. |
+| Local WCMS foundation | `WCMS_STAGED` | `init`, `core` | Staged content authoring and publication preparation. |
+| Local Documentation foundation | `WCMS_STAGED` | narrowed `init` | Prepare WCMS prerequisites before documentation packs are reviewed and published. |
+| Local Commerce foundation | `COMMERCE` | `core` | Operational Commerce services and shared reference data. |
+| Local Commerce Staged catalog foundation | `COMMERCE_STAGED` | `sample` | Agora storefront catalog, product search, prices, inventory, and preview data. |
+| Local Process and Workflow foundation | `PROCESS` | `init` | Publication approval and governed operator workflow definitions. |
+| Local Engagement foundation | `ENGAGEMENT` | `core`, `sample` | Communication, feedback, review, and notification validation data. |
+
+A full local project foundation must not be hard-coded in Axis by combining
+screens or release arrays. It should be exposed as a backend orchestration
+contract that coordinates several runtime-owned profiles, preserves validation
+and audit evidence per runtime, and can fail or retry safely at each boundary.
 
 ## Provider-specific documentation rule
 

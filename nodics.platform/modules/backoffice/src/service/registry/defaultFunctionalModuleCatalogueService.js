@@ -124,6 +124,12 @@ module.exports = {
             dataType: String(item.dataType || this.inferActivationDataType(item))
         })).filter(item => item.code);
     },
+    /** Returns existing functional-module activation prerequisites. */
+    getActivationDependencies: function (functionalModule) {
+        let modules = this.getActivationDataConfiguration().modules || {};
+        return this.uniqueSorted([].concat((modules[this.normalizeFunctionalModule(functionalModule)] || {}).dependencies || [])
+            .map(item => this.normalizeFunctionalModule(item)).filter(Boolean));
+    },
     /** Infers the existing nImport release type from activation package metadata. */
     inferActivationDataType: function (item) {
         let operation = String(item.operation || '').toUpperCase();
@@ -172,16 +178,48 @@ module.exports = {
         if (existing) return this.updateReceiptRecord({ tenant: tenant, authData: authData, query: { code: receiptKey }, model: model }).then(() => Object.assign({}, existing, model));
         return this.saveReceiptRecord({ tenant: tenant, authData: authData, model: model }).then(() => model);
     },
+    /** Resolves current state for functional-module activation prerequisites. */
+    getFunctionalDependencyStates: async function (record, request) {
+        let dependencies = this.getActivationDependencies(record.functionalModule);
+        let states = [];
+        for (let dependency of dependencies) {
+            let dependencyRecord = await this.getRecord(record.projectCode, dependency, request).catch(() => undefined);
+            states.push({
+                functionalModule: dependency,
+                displayName: dependencyRecord && dependencyRecord.displayName || dependency,
+                registrationState: dependencyRecord && dependencyRecord.registrationState || 'UNAVAILABLE',
+                enabled: dependencyRecord && dependencyRecord.enabled === true,
+                runtimeState: dependencyRecord && dependencyRecord.runtimeState || 'OFFLINE',
+                satisfied: dependencyRecord && dependencyRecord.registrationState === 'REGISTERED' &&
+                    dependencyRecord.enabled === true && dependencyRecord.runtimeState === 'ACTIVE'
+            });
+        }
+        return states;
+    },
+    /** Blocks activation when declared functional-module prerequisites are not active. */
+    assertFunctionalDependenciesSatisfied: async function (record, request) {
+        let states = await this.getFunctionalDependencyStates(record, request);
+        let missing = states.filter(item => item.satisfied !== true);
+        if (missing.length) {
+            throw new CLASSES.NodicsError('ERR_BOF_00000',
+                'Functional module activation is blocked until required modules are active: ' +
+                missing.map(item => item.displayName || item.functionalModule).join(', '));
+        }
+        return true;
+    },
     /** Builds the client-safe activation-data plan and receipt projection for the current lifecycle action. */
     buildActivationDataPlan: function (record, action, context) {
         context = context || {};
         let packages = this.getActivationDataPackages(record.functionalModule);
         let receiptMap = context.receiptMap || {};
-        let dependencies = [].concat(((this.getActivationDataConfiguration().modules || {})[record.functionalModule] || {}).dependencies || []).map(String);
+        let dependencyStates = [].concat(context.dependencyStates || []);
+        let dependencies = this.getActivationDependencies(record.functionalModule);
+        let missingDependencies = dependencyStates.filter(item => item.satisfied !== true).map(item => item.functionalModule);
         let dryRun = context && context.dryRun === true;
         let blockedReasons = [];
         if (['activate', 'dryRun'].includes(action) && record.registrationState !== 'REGISTERED') blockedReasons.push('MODULE_NOT_REGISTERED');
         if (['activate', 'dryRun'].includes(action) && record.runtimeState !== 'ACTIVE') blockedReasons.push('RUNTIME_NOT_ACTIVE');
+        if (['activate', 'dryRun'].includes(action)) missingDependencies.forEach(item => blockedReasons.push('MISSING_DEPENDENCY:' + item));
         let receipts = packages.map(item => {
             let persisted = receiptMap[item.code];
             let status = persisted && persisted.status || 'NOT_APPLICABLE';
@@ -221,7 +259,8 @@ module.exports = {
             action: action, dryRun: dryRun, executionMode: receipts.some(item => item.executionMode === 'NIMPORT_RELEASE') ? 'NIMPORT_RELEASE' : 'USER_TRIGGERED',
             readiness: blockedReasons.length ? 'BLOCKED' : failed ? 'DATA_FAILED' : running || requiredPending ? 'DATA_RUNNING' : 'READY',
             preflight: { runtimeActive: record.runtimeState === 'ACTIVE', registered: record.registrationState === 'REGISTERED',
-                protectedModule: record.required === true, dependencies: dependencies, blockedReasons: blockedReasons },
+                protectedModule: record.required === true, dependencies: dependencies, dependencyStates: dependencyStates,
+                missingDependencies: missingDependencies, blockedReasons: blockedReasons },
             packages: packages, receipts: receipts,
             nextActions: [].concat(failed ? ['RETRY_REQUIRED_DATA_IMPORT'] : [],
                 receipts.some(item => item.status === 'SKIPPED_USER_TRIGGERED') ? ['OPTIONAL_SAMPLE_DATA_USER_ACTION'] : [],
@@ -255,6 +294,7 @@ module.exports = {
                 functionalModule: identity,
                 displayName: root.functionalModule.displayName,
                 registeredVersion: root.version || 'unknown',
+                moduleIndex: root.moduleIndex,
                 required: root.functionalModule.protected === true,
                 technicalModules: this.uniqueSorted(technicalModules),
                 observedServer: [batch.environment, batch.server, batch.node || 'default'].join(':')
@@ -343,13 +383,15 @@ module.exports = {
         let changed = existing.code !== canonicalCode || existing.functionalModule !== observation.functionalModule ||
             existing.registrationState !== desiredRegistrationState || existing.enabled !== desiredEnabled ||
             existing.runtimeState !== 'ACTIVE' || existing.registeredVersion !== observation.registeredVersion ||
-            existing.displayName !== observation.displayName || existing.required !== observation.required ||
+            existing.displayName !== observation.displayName || existing.moduleIndex !== observation.moduleIndex ||
+            existing.required !== observation.required ||
             !this.sameList(existing.technicalModules, observation.technicalModules) ||
             !this.sameList(existing.observedServers, observedServers);
         let model = {
             code: canonicalCode, functionalModule: observation.functionalModule,
             registrationState: desiredRegistrationState, enabled: desiredEnabled, runtimeState: 'ACTIVE',
             displayName: observation.displayName, registeredVersion: observation.registeredVersion,
+            moduleIndex: observation.moduleIndex,
             required: observation.required, technicalModules: observation.technicalModules,
             observedServers: observedServers, catalogueRevision: Number(existing.catalogueRevision || 1) + (changed ? 1 : 0),
             updatedAt: changed ? now : existing.updatedAt, updatedBy: changed ? 'runtime-reconciler' : existing.updatedBy,
@@ -403,6 +445,7 @@ module.exports = {
             functionalModule: this.normalizeFunctionalModule(record.functionalModule),
             displayName: record.displayName,
             registeredVersion: record.registeredVersion,
+            moduleIndex: record.moduleIndex,
             registrationState: record.registrationState,
             enabled: record.enabled === true,
             required: record.required === true,
@@ -418,7 +461,10 @@ module.exports = {
     /** Returns a client-safe projection enriched with durable activation receipt history. */
     projectClientSafeWithReceipts: async function (record, options, request) {
         let receiptMap = await this.getActivationReceiptMap(record.projectCode, record.functionalModule, request);
-        return this.projectClientSafe(record, Object.assign({}, options, { receiptMap: receiptMap }));
+        let dependencyStates = await this.getFunctionalDependencyStates(record, request);
+        return this.projectClientSafe(record, Object.assign({}, options, {
+            receiptMap: receiptMap, dependencyStates: dependencyStates
+        }));
     },
     /** Returns normalized HTTP or internal query parameters. */
     getQuery: function (request) { return request && (request.query || request.httpRequest && request.httpRequest.query) || {}; },
@@ -511,6 +557,7 @@ module.exports = {
         } else if (action === 'activate') {
             if (existing.registrationState !== 'REGISTERED') throw new CLASSES.NodicsError('ERR_BOF_00000', 'Functional module must be registered before activation');
             if (existing.runtimeState !== 'ACTIVE') throw new CLASSES.NodicsError('ERR_BOF_00000', 'Functional module has no active compatible runtime');
+            await this.assertFunctionalDependenciesSatisfied(existing, request);
             next = { enabled: true };
         } else if (action === 'deactivate') {
             if (existing.registrationState !== 'REGISTERED') throw new CLASSES.NodicsError('ERR_BOF_00000', 'Functional module is not registered');

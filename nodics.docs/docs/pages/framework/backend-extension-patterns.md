@@ -17,6 +17,7 @@ keeps that balance by making extension points explicit.
 | Configuration | Behavior already has a supported switch. | Config validation and runtime evidence. |
 | Provider adapter | Storage, cache, search, messaging, or integration backend changes. | Provider tests and fallback behavior. |
 | Service override | Business decision changes for a project. | Default and override tests. |
+| Module communication | One module must call another local or remote module. | Local, remote, target-authority, internal-auth, timeout, and failure tests. |
 | Validator | Data rules or approval rules change. | Valid and invalid payload tests. |
 | Pipeline step | Business logic is staged or composable. | Step order and failure tests. |
 | Schema extension | Project needs additional data fields. | Generated schema and API tests. |
@@ -47,6 +48,11 @@ the base behavior, where the project override lives, which server loads it,
 which configuration enables it, which API or event changes, and how rollback
 works. If the customization is business-configurable from Axis, the Axis
 journey and approval rules must be documented as well.
+
+For HTTP request customization, start from `API Request Lifecycle and Handler
+Pipeline` before changing controllers or route middleware. For cross-module
+calls, start from `Module-to-Module Communication` before adding direct
+service access, endpoint URLs, or provider-specific transport code.
 
 ## Reader and implementation contract
 

@@ -225,7 +225,7 @@ async function validateCommerceContract(headers) {
 }
 
 async function exerciseProductDiscovery(headers) {
-  const productCode = process.env.NODICS_STOREFRONT_PRODUCT_CODE || "agoraApparelLinenDress";
+  const productCode = process.env.NODICS_STOREFRONT_PRODUCT_CODE || "agoraLinenWrapDress";
   const categoryCode = process.env.NODICS_STOREFRONT_CATEGORY_CODE || "agoraWomen";
   const storeCode = process.env.NODICS_STOREFRONT_STORE_CODE || "agoraMainStore";
   const locale = process.env.NODICS_STOREFRONT_LOCALE || "en";
@@ -249,17 +249,17 @@ async function exerciseProductDiscovery(headers) {
 async function exerciseCustomerCart(headers) {
   const journeyId = randomUUID();
   const commonHeaders = { ...headers, "x-correlation-id": `agora-commerce-${journeyId}` };
-  const primaryProductCode = process.env.NODICS_STOREFRONT_PRODUCT_CODE || "agoraApparelLinenDress";
-  const primaryVariantCode = process.env.NODICS_STOREFRONT_VARIANT_CODE || "agoraApparelLinenDressNaturalS";
-  const secondaryProductCode = process.env.NODICS_STOREFRONT_SECONDARY_PRODUCT_CODE || "agoraApparelOxfordShirt";
-  const secondaryVariantCode = process.env.NODICS_STOREFRONT_SECONDARY_VARIANT_CODE || "agoraApparelOxfordShirtBlueM";
+  const primaryProductCode = process.env.NODICS_STOREFRONT_PRODUCT_CODE || "agoraLinenWrapDress";
+  const primaryVariantCode = process.env.NODICS_STOREFRONT_VARIANT_CODE || "agoraLinenWrapDressIvoryS";
+  const secondaryProductCode = process.env.NODICS_STOREFRONT_SECONDARY_PRODUCT_CODE || "agoraOxfordShirt";
+  const secondaryVariantCode = process.env.NODICS_STOREFRONT_SECONDARY_VARIANT_CODE || "agoraOxfordShirtIvoryM";
   const body = {
     cartCode: `storefront_cart_${journeyId}`,
     storeCode: process.env.NODICS_STOREFRONT_STORE_CODE || "agoraMainStore",
     channelCode: process.env.NODICS_STOREFRONT_CHANNEL_CODE || "web",
     locale: process.env.NODICS_STOREFRONT_LOCALE || "en",
     jurisdiction: process.env.NODICS_STOREFRONT_JURISDICTION || "AE",
-    currency: process.env.NODICS_STOREFRONT_CURRENCY || "AED",
+    currency: process.env.NODICS_STOREFRONT_CURRENCY || "USD",
   };
   const created = dataOf(await request(commerceUrl, "/nodics/cart/v0/customer/carts", {
     method: "POST",
@@ -321,8 +321,8 @@ async function exerciseCustomerCart(headers) {
 }
 
 async function exerciseCustomerLists(headers) {
-  const productCode = process.env.NODICS_STOREFRONT_PRODUCT_CODE || "agoraApparelLinenDress";
-  const variantCode = process.env.NODICS_STOREFRONT_VARIANT_CODE || "agoraApparelLinenDressNaturalS";
+  const productCode = process.env.NODICS_STOREFRONT_PRODUCT_CODE || "agoraLinenWrapDress";
+  const variantCode = process.env.NODICS_STOREFRONT_VARIANT_CODE || "agoraLinenWrapDressIvoryS";
   const storeCode = process.env.NODICS_STOREFRONT_STORE_CODE || "agoraMainStore";
   const locale = process.env.NODICS_STOREFRONT_LOCALE || "en";
   const touched = [];
@@ -368,10 +368,10 @@ async function exerciseCustomerPromotions(headers, promotion) {
   const cartCode = `promotion_cart_${randomUUID()}`;
   const payload = {
     cartCode,
-    currency: process.env.NODICS_STOREFRONT_CURRENCY || "AED",
+    currency: process.env.NODICS_STOREFRONT_CURRENCY || "USD",
     subtotal: "150.00",
     entries: [{
-      productCode: process.env.NODICS_STOREFRONT_PRODUCT_CODE || "agoraApparelLinenDress",
+      productCode: process.env.NODICS_STOREFRONT_PRODUCT_CODE || "agoraLinenWrapDress",
       quantity: 1,
       totalPrice: "150.00",
     }],

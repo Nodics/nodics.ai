@@ -55,7 +55,7 @@ assert.deepStrictEqual(documentationLinks.map(item => item.id), [
 ]);
 assert.deepStrictEqual(documentationLinks.map(item => item.label), [
     'Dashboard',
-    'Documentation Management',
+    'Documentation Designer',
     'Navigation Builder',
     'Pages and Topic Content',
     'Audience and Access Policies',
@@ -70,14 +70,14 @@ assert.deepStrictEqual(documentationLinks.map(item => item.label), [
 ]);
 assert.deepStrictEqual(documentationLinks.map(item => item.route), [
     '/docs',
-    '/content/designer/documentation',
-    '/content/designer/documentation/navigation',
-    '/content/designer/documentation/pages',
-    '/content/designer/documentation/access-policies',
-    '/content/designer/documentation/publication',
-    '/content/designer/documentation/search',
-    '/content/designer/documentation/governance',
-    '/content/designer/documentation/source-evidence',
+    '/docs/designer',
+    '/docs/designer/navigation',
+    '/docs/designer/pages',
+    '/docs/designer/access-policies',
+    '/docs/designer/publication',
+    '/docs/designer/search',
+    '/docs/designer/governance',
+    '/docs/designer/source-evidence',
     '/docs/framework',
     '/docs/swaggers',
     '/docs/nodics-axis',
@@ -92,7 +92,7 @@ assert.deepStrictEqual(
         'documentation.accessPolicy.update',
         'documentation.submitReview'
     ],
-    'Documentation Management must be visible only to documentation authors or administrators'
+    'Documentation Designer must be visible only to documentation authors or administrators'
 );
 assert.deepStrictEqual(
     Object.fromEntries(documentationLinks.filter(item => item.parentId === 'documentation-management').map(item => [

@@ -32,14 +32,14 @@ const service = Object.assign({}, definition);
 const batch = {
     project: 'example.project', environment: 'localEnvironment', server: 'platformServer', node: null,
     registrations: [
-        { moduleName: 'nodics.foundation', version: '0.0.0', functionalModule: {
+        { moduleName: 'nodics.foundation', version: '0.0.0', moduleIndex: '10.99', functionalModule: {
             identity: 'nodics.foundation', displayName: 'Foundation', type: 'STANDARD', protected: true } },
         { moduleName: 'nConfig', parentModule: 'nodics.foundation' },
-        { moduleName: 'nodics.platform', parentModule: 'nodics.foundation', version: '0.0.0', functionalModule: {
+        { moduleName: 'nodics.platform', parentModule: 'nodics.foundation', version: '0.0.0', moduleIndex: '60.99', functionalModule: {
             identity: 'nodics.platform', displayName: 'Platform', type: 'STANDARD', protected: true } },
         { moduleName: 'profile', parentModule: 'nodics.platform' },
         { moduleName: 'backoffice', parentModule: 'nodics.platform' },
-        { moduleName: 'nodics.wcms', parentModule: 'nodics.foundation', version: '0.0.0', functionalModule: {
+        { moduleName: 'nodics.wcms', parentModule: 'nodics.foundation', version: '0.0.0', moduleIndex: '80.99', functionalModule: {
             identity: 'nodics.wcms', displayName: 'WCMS', type: 'STANDARD', protected: true } },
         { moduleName: 'cms', parentModule: 'nodics.wcms' },
         { moduleName: 'media', parentModule: 'nodics.wcms' },
@@ -57,6 +57,7 @@ async function run() {
     let observations = service.buildObservations(batch);
     assert.deepStrictEqual(observations.map(item => item.functionalModule), ['nodics.foundation', 'nodics.platform', 'nodics.wcms']);
     assert.deepStrictEqual(observations[0].technicalModules, ['nConfig']);
+    assert.strictEqual(observations[0].moduleIndex, '10.99');
     assert.deepStrictEqual(observations[1].technicalModules, ['backoffice', 'profile']);
     assert.deepStrictEqual(observations[2].technicalModules, ['cms', 'media', 'wcms']);
     assert.strictEqual(observations[2].required, true, 'WCMS is an Axis prerequisite and must be default-registered');
@@ -222,6 +223,35 @@ async function run() {
     assert.strictEqual(remotePreflight.data.releases[0].status, 'CURRENT');
     CONFIG.get = originalConfigGet;
     NODICS = originalNodics;
+
+    const dependencyService = Object.assign({}, definition);
+    let dependencyRecords = {
+        'nodics.commerce': { functionalModule: 'nodics.commerce', displayName: 'Commerce',
+            registrationState: 'REGISTERED', enabled: true, runtimeState: 'ACTIVE' },
+        'nodics.discovery': { functionalModule: 'nodics.discovery', displayName: 'Discovery',
+            registrationState: 'AVAILABLE', enabled: false, runtimeState: 'ACTIVE' }
+    };
+    CONFIG.get = key => key === 'defaultTenant' ? 'default' :
+        key === 'backofficeFunctionalModuleActivationData' ? { modules: {
+            'nodics.accelerators': { dependencies: ['nodics.commerce', 'nodics.discovery'] }
+        } } : originalConfigGet(key);
+    dependencyService.getRecord = async (project, functionalModule) => dependencyRecords[functionalModule];
+    let acceleratorRecord = { projectCode: 'example.project', functionalModule: 'nodics.accelerators' };
+    let dependencyStates = await dependencyService.getFunctionalDependencyStates(acceleratorRecord, {});
+    assert.deepStrictEqual(dependencyStates.map(item => item.functionalModule), ['nodics.commerce', 'nodics.discovery']);
+    assert.strictEqual(dependencyStates[0].satisfied, true);
+    assert.strictEqual(dependencyStates[1].satisfied, false);
+    let dependencyPlan = dependencyService.buildActivationDataPlan(Object.assign({}, acceleratorRecord, {
+        registrationState: 'REGISTERED', runtimeState: 'ACTIVE'
+    }), 'dryRun', { dependencyStates: dependencyStates });
+    assert(dependencyPlan.preflight.blockedReasons.includes('MISSING_DEPENDENCY:nodics.discovery'),
+        'dry-run activation plan must expose missing functional dependencies');
+    await assert.rejects(() => dependencyService.assertFunctionalDependenciesSatisfied(acceleratorRecord, {}), /Discovery/);
+    dependencyRecords['nodics.discovery'] = Object.assign({}, dependencyRecords['nodics.discovery'], {
+        registrationState: 'REGISTERED', enabled: true
+    });
+    await dependencyService.assertFunctionalDependenciesSatisfied(acceleratorRecord, {});
+    CONFIG.get = originalConfigGet;
 
     console.log('Functional-module catalogue service validated');
 }

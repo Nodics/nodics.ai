@@ -56,6 +56,11 @@ it should not replace the safe message. Axis should avoid labels such as
 `ERR_SYS_00000` in the primary row, because that message tells neither the
 business user nor the operator what to do.
 
+Use `Error Handling and Status Codes` for the backend contract behind these
+states. The owning backend module defines the stable status code, HTTP status,
+public message, localization metadata, and safe evidence. Axis consumes the
+normalized setup DTO and displays the business-safe outcome.
+
 ## Setup flow
 
 ```text

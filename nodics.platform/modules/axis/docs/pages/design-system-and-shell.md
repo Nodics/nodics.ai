@@ -101,10 +101,11 @@ The shared authenticated shell provides:
 
 After authentication, Axis consumes the authorized BackOffice `catalogue`,
 `availability`, and client-safe module leases. It does not define a second
-functional menu authority. The local Dashboard entry is combined with
-module-owned navigation entries. Axis uses an explicitly supplied backend
-business group first and retains the legacy category mapping only as a safe
-fallback for older compatible contributions:
+functional menu authority. The System Workspace entry, its Dashboard child,
+and module-owned navigation entries are published by backend bootstrap
+metadata. Axis renders those entries in the shell and uses an explicitly
+supplied backend business group first, retaining the legacy category mapping
+only as a safe fallback for older compatible contributions:
 
 - `content` and `experience` become Content and Experience;
 - `commerce` becomes Commerce;
@@ -231,8 +232,9 @@ safe for an unknown backend mutation.
   authoritative validation into a shell component.
 - Add functional navigation through the owning module's BackOffice capability
   contribution. Do not hardcode module routes in Axis.
-- Keep the single local Dashboard route recovery-safe. Every other displayed
-  functional destination must come from authenticated bootstrap.
+- Keep recovery routes such as login, lock-screen, and direct `/dashboard`
+  restoration safe. Every displayed functional destination, including
+  Dashboard, must come from authenticated bootstrap.
 - Keep the expanded/compact navigation and color-mode choice in application
   memory. Only bounded favourite/recent navigation identifiers use the
   reviewed preference store; do not add tokens, routes, context, records, or

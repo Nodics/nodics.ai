@@ -21,6 +21,12 @@ For beginners, the mental model is simple: the page title is the business capabi
 
 nConfig owns configuration loading and runtime registries. Individual modules own their keys, defaults, validation, and operational meaning. This keeps the reader-facing name friendly while preserving exact source ownership for developers and AI tools. Axis may render management screens or authenticated documentation, Nexus may render public Online content, and the backend content catalog remains authoritative for navigation, pages, access policies, and publication state.
 
+For the complete sequence from runtime launch to server readiness, use
+`Framework Startup Lifecycle`. That page explains how startup selects the
+environment, discovers modules, sorts module indexes, loads properties, runs
+pre/post scripts, imports initialization data on a fresh schema, prepares
+internal identity, and finally opens HTTP/HTTPS listeners.
+
 ```mermaid
 flowchart LR
   Reader["Business or developer request"] --> Axis["Axis or Nexus view"]

@@ -18,7 +18,7 @@
   ],
   "summary": {
     "totalModules": 172,
-    "documents": 122,
+    "documents": 127,
     "covered": 172
   },
   "policy": {
@@ -359,7 +359,7 @@
       "runtimeModule": false,
       "path": "nodics.kickoff/modules",
       "packageJsonPath": "nodics.kickoff/modules/package.json",
-      "priorityScore": 988,
+      "priorityScore": 1000,
       "classification": "covered",
       "matchedDocuments": [
         "framework.what-is-nodics",
@@ -375,7 +375,7 @@
         "controllers": 0,
         "routers": 0,
         "dataHeaders": 15,
-        "dataRecords": 100,
+        "dataRecords": 104,
         "assets": 319,
         "tests": 1,
         "frontends": 0
@@ -423,9 +423,9 @@
         "framework.modular-architecture",
         "foundation.overview",
         "installer.installed-runtime-application-builder",
+        "configuration.framework-startup-lifecycle",
         "routing.api-governance",
-        "runtime.governed-change",
-        "schema.data-modeling-management"
+        "routing.api-request-lifecycle"
       ],
       "counts": {
         "schemas": 0,
@@ -807,8 +807,8 @@
         "persistence.provider-data-access-layer",
         "commerce.base-foundations",
         "commerce.overview",
-        "commerce.data-authoring-fulfillment",
-        "commerce.search-guide"
+        "process.workflow-orchestration-patterns",
+        "commerce.data-authoring-fulfillment"
       ],
       "counts": {
         "schemas": 7,
@@ -995,15 +995,15 @@
       "runtimeModule": true,
       "path": "nodics.kickoff/modules/agora.apparel",
       "packageJsonPath": "nodics.kickoff/modules/agora.apparel/package.json",
-      "priorityScore": 289,
+      "priorityScore": 292,
       "classification": "covered",
       "matchedDocuments": [
         "accelerators.agora-industry-templates",
         "accelerators.agora-apparel-product-data-authoring",
         "framework.local-quick-start",
-        "data.import-export-provider-guides",
-        "commerce.data-authoring-fulfillment",
-        "commerce.search-guide"
+        "process.workflow-orchestration-patterns",
+        "pipeline.business-logic-orchestration",
+        "data.import-export-provider-guides"
       ],
       "counts": {
         "schemas": 0,
@@ -1011,7 +1011,7 @@
         "controllers": 0,
         "routers": 0,
         "dataHeaders": 3,
-        "dataRecords": 28,
+        "dataRecords": 29,
         "assets": 98,
         "tests": 0,
         "frontends": 0
@@ -1053,10 +1053,10 @@
       "matchedDocuments": [
         "foundation.overview",
         "solutions.data-engineering-analytics-platform",
+        "configuration.framework-startup-lifecycle",
         "persistence.provider-data-access-layer",
         "engagement.unified-operations",
-        "commerce.enterprise-operations",
-        "process.devops-topology"
+        "commerce.enterprise-operations"
       ],
       "counts": {
         "schemas": 6,
@@ -1111,7 +1111,7 @@
       "runtimeModule": true,
       "path": "nodics.kickoff/modules/agora.telco",
       "packageJsonPath": "nodics.kickoff/modules/agora.telco/package.json",
-      "priorityScore": 274,
+      "priorityScore": 277,
       "classification": "covered",
       "matchedDocuments": [
         "accelerators.agora-industry-templates",
@@ -1124,7 +1124,7 @@
         "controllers": 0,
         "routers": 0,
         "dataHeaders": 2,
-        "dataRecords": 24,
+        "dataRecords": 25,
         "assets": 98,
         "tests": 0,
         "frontends": 0
@@ -1160,7 +1160,7 @@
       "runtimeModule": true,
       "path": "nodics.kickoff/modules/agora.electronics",
       "packageJsonPath": "nodics.kickoff/modules/agora.electronics/package.json",
-      "priorityScore": 271,
+      "priorityScore": 274,
       "classification": "covered",
       "matchedDocuments": [
         "accelerators.agora-industry-templates",
@@ -1173,7 +1173,7 @@
         "controllers": 0,
         "routers": 0,
         "dataHeaders": 2,
-        "dataRecords": 23,
+        "dataRecords": 24,
         "assets": 98,
         "tests": 0,
         "frontends": 0
@@ -1815,11 +1815,11 @@
       "classification": "covered",
       "matchedDocuments": [
         "platform.overview",
+        "routing.api-request-lifecycle",
         "runtime.governed-change",
         "cache.runtime-state-management",
         "wcms.media-storage-delivery",
-        "framework.devops-runtime",
-        "wcms.cms-source-map-authoring-contract"
+        "framework.devops-runtime"
       ],
       "counts": {
         "schemas": 4,
@@ -1860,6 +1860,60 @@
           "nodics.ai/nodics.foundation/modules/nCache/cache/test/cacheBenchmarkContract.test.js",
           "nodics.ai/nodics.foundation/modules/nCache/cache/test/cacheBoundedIncrementContract.test.js",
           "nodics.ai/nodics.foundation/modules/nCache/cache/test/cacheDiagnosticsContract.test.js"
+        ],
+        "frontends": []
+      }
+    },
+    {
+      "name": "nexus.web",
+      "kind": "content-pack",
+      "runtimeModule": true,
+      "path": "nodics.kickoff/modules/nexus.web",
+      "packageJsonPath": "nodics.kickoff/modules/nexus.web/package.json",
+      "priorityScore": 154,
+      "classification": "covered",
+      "matchedDocuments": [
+        "applications.nexus-data-content-guide",
+        "docs.documentation-publishing-runbook",
+        "engagement.contact-submission-operations",
+        "reference.documentation-gap-backlog"
+      ],
+      "counts": {
+        "schemas": 0,
+        "services": 0,
+        "controllers": 0,
+        "routers": 0,
+        "dataHeaders": 8,
+        "dataRecords": 26,
+        "assets": 25,
+        "tests": 1,
+        "frontends": 0
+      },
+      "examples": {
+        "schemas": [],
+        "services": [],
+        "controllers": [],
+        "routers": [],
+        "dataHeaders": [
+          "nodics.kickoff/modules/nexus.web/data/sample-v001/content/headers/editorial/nexusEditorialSampleDataHeader.js",
+          "nodics.kickoff/modules/nexus.web/data/sample-v001/content/headers/engagement/nexusExperienceConfigurationHeader.js",
+          "nodics.kickoff/modules/nexus.web/data/sample-v001/content/headers/media/nexusMediaReferenceHeader.js",
+          "nodics.kickoff/modules/nexus.web/data/sample-v001/content/headers/wcms/nexusCorporateContentHeader.js"
+        ],
+        "dataRecords": [
+          "nodics.kickoff/modules/nexus.web/data/sample-v001/content/records/editorial/nexusEditorialArticleData.js",
+          "nodics.kickoff/modules/nexus.web/data/sample-v001/content/records/editorial/nexusEditorialArticleLocalizationData.js",
+          "nodics.kickoff/modules/nexus.web/data/sample-v001/content/records/editorial/nexusEditorialArticleTaxonomyData.js",
+          "nodics.kickoff/modules/nexus.web/data/sample-v001/content/records/editorial/nexusEditorialAuthorData.js"
+        ],
+        "assets": [
+          "nodics.kickoff/modules/nexus.web/data/sample-v001/content/assets/nexus-cms-media/assetManifest.js",
+          "nodics.kickoff/modules/nexus.web/data/sample-v001/content/assets/nexus-cms-media/files/nexusBlogAxisOperations.png",
+          "nodics.kickoff/modules/nexus.web/data/sample-v001/content/assets/nexus-cms-media/files/nexusBlogCustomerEngagement.png",
+          "nodics.kickoff/modules/nexus.web/data/sample-v001/content/assets/nexus-cms-media/files/nexusBlogEditorialPublication.png"
+        ],
+        "tests": [
+          "nodics.kickoff/modules/nexus.web/test/expectedOnlineProjections/nexusEditorialOnlineArticleData.js"
         ],
         "frontends": []
       }
@@ -1924,60 +1978,6 @@
           "nodics.ai/nodics.commerce/modules/checkout/modules/checkoutCore/test/checkoutCustomerApiContract.test.js",
           "nodics.ai/nodics.commerce/modules/checkout/modules/checkoutCore/test/checkoutPaymentMethodSelectionContract.test.js",
           "nodics.ai/nodics.commerce/modules/checkout/modules/checkoutCore/test/orderPlacementContract.test.js"
-        ],
-        "frontends": []
-      }
-    },
-    {
-      "name": "nexus.web",
-      "kind": "content-pack",
-      "runtimeModule": true,
-      "path": "nodics.kickoff/modules/nexus.web",
-      "packageJsonPath": "nodics.kickoff/modules/nexus.web/package.json",
-      "priorityScore": 151,
-      "classification": "covered",
-      "matchedDocuments": [
-        "applications.nexus-data-content-guide",
-        "docs.documentation-publishing-runbook",
-        "engagement.contact-submission-operations",
-        "reference.documentation-gap-backlog"
-      ],
-      "counts": {
-        "schemas": 0,
-        "services": 0,
-        "controllers": 0,
-        "routers": 0,
-        "dataHeaders": 8,
-        "dataRecords": 25,
-        "assets": 25,
-        "tests": 1,
-        "frontends": 0
-      },
-      "examples": {
-        "schemas": [],
-        "services": [],
-        "controllers": [],
-        "routers": [],
-        "dataHeaders": [
-          "nodics.kickoff/modules/nexus.web/data/sample-v001/content/headers/editorial/nexusEditorialSampleDataHeader.js",
-          "nodics.kickoff/modules/nexus.web/data/sample-v001/content/headers/engagement/nexusExperienceConfigurationHeader.js",
-          "nodics.kickoff/modules/nexus.web/data/sample-v001/content/headers/media/nexusMediaReferenceHeader.js",
-          "nodics.kickoff/modules/nexus.web/data/sample-v001/content/headers/wcms/nexusCorporateContentHeader.js"
-        ],
-        "dataRecords": [
-          "nodics.kickoff/modules/nexus.web/data/sample-v001/content/records/editorial/nexusEditorialArticleData.js",
-          "nodics.kickoff/modules/nexus.web/data/sample-v001/content/records/editorial/nexusEditorialArticleLocalizationData.js",
-          "nodics.kickoff/modules/nexus.web/data/sample-v001/content/records/editorial/nexusEditorialArticleTaxonomyData.js",
-          "nodics.kickoff/modules/nexus.web/data/sample-v001/content/records/editorial/nexusEditorialAuthorData.js"
-        ],
-        "assets": [
-          "nodics.kickoff/modules/nexus.web/data/sample-v001/content/assets/nexus-cms-media/assetManifest.js",
-          "nodics.kickoff/modules/nexus.web/data/sample-v001/content/assets/nexus-cms-media/files/nexusBlogAxisOperations.png",
-          "nodics.kickoff/modules/nexus.web/data/sample-v001/content/assets/nexus-cms-media/files/nexusBlogCustomerEngagement.png",
-          "nodics.kickoff/modules/nexus.web/data/sample-v001/content/assets/nexus-cms-media/files/nexusBlogEditorialPublication.png"
-        ],
-        "tests": [
-          "nodics.kickoff/modules/nexus.web/test/expectedOnlineProjections/nexusEditorialOnlineArticleData.js"
         ],
         "frontends": []
       }
@@ -2228,8 +2228,8 @@
         "docs.documentation-principles",
         "accelerators.agora-industry-templates",
         "accelerators.agora-apparel-product-data-authoring",
-        "localization.internationalization",
-        "catalog.product-discovery-management"
+        "routing.api-governance",
+        "routing.api-request-lifecycle"
       ],
       "counts": {
         "schemas": 2,
@@ -2414,10 +2414,11 @@
       "classification": "covered",
       "matchedDocuments": [
         "solutions.data-engineering-analytics-platform",
+        "foundation.error-handling-status-codes",
         "engagement.unified-operations",
+        "process.workflow-orchestration-patterns",
         "data.import-export-migration",
-        "data.import-export-provider-guides",
-        "reference.documentation-gap-backlog"
+        "data.import-export-provider-guides"
       ],
       "counts": {
         "schemas": 5,
@@ -2642,9 +2643,9 @@
         "framework.how-nodics-works",
         "docs.reader-journey-and-coverage",
         "framework.runtime-server-composition",
+        "framework.module-loading-service-precedence",
         "foundation.overview",
-        "solutions.data-engineering-analytics-platform",
-        "accelerators.agora-industry-templates"
+        "solutions.data-engineering-analytics-platform"
       ],
       "counts": {
         "schemas": 5,
@@ -2814,7 +2815,8 @@
         "engagement.customer-feedback",
         "engagement.unified-operations",
         "engagement.governed-automation",
-        "engagement.enterprise-operations"
+        "engagement.enterprise-operations",
+        "data.import-export-migration"
       ],
       "counts": {
         "schemas": 1,
@@ -2860,12 +2862,12 @@
       "priorityScore": 73,
       "classification": "covered",
       "matchedDocuments": [
+        "framework.module-loading-service-precedence",
         "accelerators.agora-industry-templates",
+        "routing.api-governance",
+        "framework.backend-extension-patterns",
         "engagement.customer-feedback",
-        "engagement.unified-operations",
-        "engagement.governed-automation",
-        "engagement.enterprise-operations",
-        "communication.overview"
+        "engagement.unified-operations"
       ],
       "counts": {
         "schemas": 1,
@@ -2986,8 +2988,8 @@
         "foundation.overview",
         "solutions.task-execution-engine",
         "accelerators.agora-apparel-product-data-authoring",
-        "framework.backend-extension-patterns",
-        "wcms.media-storage-delivery"
+        "configuration.framework-startup-lifecycle",
+        "foundation.error-handling-status-codes"
       ],
       "counts": {
         "schemas": 1,
@@ -3096,6 +3098,7 @@
       "classification": "covered",
       "matchedDocuments": [
         "solutions.data-engineering-analytics-platform",
+        "configuration.framework-startup-lifecycle",
         "persistence.provider-data-access-layer",
         "foundation.database-provider-boundaries",
         "reference.documentation-gap-backlog"
@@ -3696,8 +3699,8 @@
         "accelerators.agora-apparel-product-data-authoring",
         "installer.installed-runtime-application-builder",
         "builder.workspace-generation",
-        "commerce.base-foundations",
-        "inventory.stock-management"
+        "routing.api-request-lifecycle",
+        "commerce.base-foundations"
       ],
       "counts": {
         "schemas": 1,
@@ -4123,6 +4126,7 @@
       "priorityScore": 40,
       "classification": "covered",
       "matchedDocuments": [
+        "docs.documentation-principles",
         "foundation.overview",
         "applications.suite",
         "data.import-export-migration",
@@ -4430,8 +4434,8 @@
         "installer.installed-runtime-application-builder",
         "platform.overview",
         "security.identity-access-governance",
-        "routing.api-governance",
-        "commerce.base-foundations"
+        "configuration.framework-startup-lifecycle",
+        "routing.api-governance"
       ],
       "counts": {
         "schemas": 1,
@@ -4483,7 +4487,7 @@
         "framework.local-quick-start",
         "builder.workspace-generation",
         "catalog.product-discovery-management",
-        "data.import-export-provider-guides"
+        "process.workflow-orchestration-patterns"
       ],
       "counts": {
         "schemas": 1,
@@ -4532,6 +4536,7 @@
       "classification": "covered",
       "matchedDocuments": [
         "accelerators.agora-apparel-product-data-authoring",
+        "process.workflow-orchestration-patterns",
         "commerce.data-authoring-fulfillment",
         "accelerators.domain-commerce-source-map"
       ],
@@ -4583,10 +4588,10 @@
       "matchedDocuments": [
         "accelerators.agora-apparel-product-data-authoring",
         "commerce.data-authoring-fulfillment",
+        "platform.module-registry-journey",
         "commerce.search-guide",
         "reference.source-map-glossary",
-        "reference.source-backed-documentation-coverage-audit",
-        "reference.documentation-gap-backlog"
+        "reference.source-backed-documentation-coverage-audit"
       ],
       "counts": {
         "schemas": 1,
@@ -4940,6 +4945,7 @@
       "classification": "covered",
       "matchedDocuments": [
         "localization.internationalization",
+        "data.import-export-migration",
         "localization.runtime-authoring",
         "reference.source-map-glossary",
         "reference.source-backed-documentation-coverage-audit"
@@ -5144,12 +5150,12 @@
       "priorityScore": 30,
       "classification": "covered",
       "matchedDocuments": [
+        "configuration.framework-startup-lifecycle",
         "routing.api-governance",
         "process.developer-customization",
         "commerce.base-foundations",
         "pricing.promotions-tax-management",
-        "commerce.overview",
-        "commerce.cart-order"
+        "commerce.overview"
       ],
       "counts": {
         "schemas": 1,
@@ -5342,10 +5348,10 @@
       "matchedDocuments": [
         "docs.reader-journey-and-coverage",
         "foundation.overview",
+        "configuration.framework-startup-lifecycle",
+        "foundation.error-handling-status-codes",
         "framework.axis-content-customization",
-        "process.first-workflow",
-        "cron.project-customization",
-        "process.incident-recovery"
+        "process.first-workflow"
       ],
       "counts": {
         "schemas": 0,
@@ -6296,6 +6302,7 @@
       "priorityScore": 19,
       "classification": "covered",
       "matchedDocuments": [
+        "process.workflow-orchestration-patterns",
         "data.import-export-provider-guides"
       ],
       "counts": {
@@ -6510,6 +6517,7 @@
       "priorityScore": 15,
       "classification": "covered",
       "matchedDocuments": [
+        "configuration.framework-startup-lifecycle",
         "discovery.search-indexing",
         "reference.source-map-glossary",
         "reference.source-backed-documentation-coverage-audit"
@@ -6790,132 +6798,6 @@
         "tests": [
           "nodics.ai/nodics.discovery/modules/discoverySource/test/discoverySourceContract.test.js"
         ],
-        "frontends": []
-      }
-    },
-    {
-      "name": "kickoff.environments",
-      "kind": "group",
-      "runtimeModule": false,
-      "path": "nodics.kickoff/envs",
-      "packageJsonPath": "nodics.kickoff/envs/package.json",
-      "priorityScore": 12,
-      "classification": "covered",
-      "matchedDocuments": [
-        "reference.internal-source-boundary-register"
-      ],
-      "counts": {
-        "schemas": 0,
-        "services": 0,
-        "controllers": 0,
-        "routers": 0,
-        "dataHeaders": 2,
-        "dataRecords": 2,
-        "assets": 0,
-        "tests": 0,
-        "frontends": 0
-      },
-      "examples": {
-        "schemas": [],
-        "services": [],
-        "controllers": [],
-        "routers": [],
-        "dataHeaders": [
-          "nodics.kickoff/envs/kickoffLocal/processServer/data/init-v001/headers/editorial/defaultEditorialProcessDefinitionDataHeader.js",
-          "nodics.kickoff/envs/kickoffLocal/processServer/data/init-v001/headers/editorial/defaultEditorialProcessDefinitionVersionDataHeader.js"
-        ],
-        "dataRecords": [
-          "nodics.kickoff/envs/kickoffLocal/processServer/data/init-v001/records/editorial/defaultEditorialProcessDefinitionData.js",
-          "nodics.kickoff/envs/kickoffLocal/processServer/data/init-v001/records/editorial/defaultEditorialProcessDefinitionVersionData.js"
-        ],
-        "assets": [],
-        "tests": [],
-        "frontends": []
-      }
-    },
-    {
-      "name": "kickoffLocal",
-      "kind": "group",
-      "runtimeModule": true,
-      "path": "nodics.kickoff/envs/kickoffLocal",
-      "packageJsonPath": "nodics.kickoff/envs/kickoffLocal/package.json",
-      "priorityScore": 12,
-      "classification": "covered",
-      "matchedDocuments": [
-        "wcms.publishing-lifecycle",
-        "reference.internal-source-boundary-register"
-      ],
-      "counts": {
-        "schemas": 0,
-        "services": 0,
-        "controllers": 0,
-        "routers": 0,
-        "dataHeaders": 2,
-        "dataRecords": 2,
-        "assets": 0,
-        "tests": 0,
-        "frontends": 0
-      },
-      "examples": {
-        "schemas": [],
-        "services": [],
-        "controllers": [],
-        "routers": [],
-        "dataHeaders": [
-          "nodics.kickoff/envs/kickoffLocal/processServer/data/init-v001/headers/editorial/defaultEditorialProcessDefinitionDataHeader.js",
-          "nodics.kickoff/envs/kickoffLocal/processServer/data/init-v001/headers/editorial/defaultEditorialProcessDefinitionVersionDataHeader.js"
-        ],
-        "dataRecords": [
-          "nodics.kickoff/envs/kickoffLocal/processServer/data/init-v001/records/editorial/defaultEditorialProcessDefinitionData.js",
-          "nodics.kickoff/envs/kickoffLocal/processServer/data/init-v001/records/editorial/defaultEditorialProcessDefinitionVersionData.js"
-        ],
-        "assets": [],
-        "tests": [],
-        "frontends": []
-      }
-    },
-    {
-      "name": "processServer",
-      "kind": "server",
-      "runtimeModule": true,
-      "path": "nodics.kickoff/envs/kickoffLocal/processServer",
-      "packageJsonPath": "nodics.kickoff/envs/kickoffLocal/processServer/package.json",
-      "priorityScore": 12,
-      "classification": "covered",
-      "matchedDocuments": [
-        "framework.how-nodics-works",
-        "framework.runtime-server-composition",
-        "platform.module-registry",
-        "platform.overview",
-        "process.custom-project-extension",
-        "process.overview"
-      ],
-      "counts": {
-        "schemas": 0,
-        "services": 0,
-        "controllers": 0,
-        "routers": 0,
-        "dataHeaders": 2,
-        "dataRecords": 2,
-        "assets": 0,
-        "tests": 0,
-        "frontends": 0
-      },
-      "examples": {
-        "schemas": [],
-        "services": [],
-        "controllers": [],
-        "routers": [],
-        "dataHeaders": [
-          "nodics.kickoff/envs/kickoffLocal/processServer/data/init-v001/headers/editorial/defaultEditorialProcessDefinitionDataHeader.js",
-          "nodics.kickoff/envs/kickoffLocal/processServer/data/init-v001/headers/editorial/defaultEditorialProcessDefinitionVersionDataHeader.js"
-        ],
-        "dataRecords": [
-          "nodics.kickoff/envs/kickoffLocal/processServer/data/init-v001/records/editorial/defaultEditorialProcessDefinitionData.js",
-          "nodics.kickoff/envs/kickoffLocal/processServer/data/init-v001/records/editorial/defaultEditorialProcessDefinitionVersionData.js"
-        ],
-        "assets": [],
-        "tests": [],
         "frontends": []
       }
     },
@@ -7363,9 +7245,9 @@
         "accelerators.agora-industry-templates",
         "accelerators.agora-apparel-product-data-authoring",
         "framework.local-quick-start",
-        "data.import-export-provider-guides",
-        "commerce.data-authoring-fulfillment",
-        "commerce.search-guide"
+        "process.workflow-orchestration-patterns",
+        "pipeline.business-logic-orchestration",
+        "data.import-export-provider-guides"
       ],
       "counts": {
         "schemas": 0,
@@ -7804,6 +7686,120 @@
       }
     },
     {
+      "name": "kickoff.environments",
+      "kind": "group",
+      "runtimeModule": false,
+      "path": "nodics.kickoff/envs",
+      "packageJsonPath": "nodics.kickoff/envs/package.json",
+      "priorityScore": 3,
+      "classification": "covered",
+      "matchedDocuments": [
+        "reference.internal-source-boundary-register"
+      ],
+      "counts": {
+        "schemas": 0,
+        "services": 0,
+        "controllers": 0,
+        "routers": 0,
+        "dataHeaders": 0,
+        "dataRecords": 1,
+        "assets": 0,
+        "tests": 0,
+        "frontends": 0
+      },
+      "examples": {
+        "schemas": [],
+        "services": [],
+        "controllers": [],
+        "routers": [],
+        "dataHeaders": [],
+        "dataRecords": [
+          "nodics.kickoff/envs/kickoffLocal/processServer/data/init-v001/records/process/defaultEditorialProcessDefinitionContributionData.js"
+        ],
+        "assets": [],
+        "tests": [],
+        "frontends": []
+      }
+    },
+    {
+      "name": "kickoffLocal",
+      "kind": "group",
+      "runtimeModule": true,
+      "path": "nodics.kickoff/envs/kickoffLocal",
+      "packageJsonPath": "nodics.kickoff/envs/kickoffLocal/package.json",
+      "priorityScore": 3,
+      "classification": "covered",
+      "matchedDocuments": [
+        "wcms.publishing-lifecycle",
+        "reference.internal-source-boundary-register"
+      ],
+      "counts": {
+        "schemas": 0,
+        "services": 0,
+        "controllers": 0,
+        "routers": 0,
+        "dataHeaders": 0,
+        "dataRecords": 1,
+        "assets": 0,
+        "tests": 0,
+        "frontends": 0
+      },
+      "examples": {
+        "schemas": [],
+        "services": [],
+        "controllers": [],
+        "routers": [],
+        "dataHeaders": [],
+        "dataRecords": [
+          "nodics.kickoff/envs/kickoffLocal/processServer/data/init-v001/records/process/defaultEditorialProcessDefinitionContributionData.js"
+        ],
+        "assets": [],
+        "tests": [],
+        "frontends": []
+      }
+    },
+    {
+      "name": "processServer",
+      "kind": "server",
+      "runtimeModule": true,
+      "path": "nodics.kickoff/envs/kickoffLocal/processServer",
+      "packageJsonPath": "nodics.kickoff/envs/kickoffLocal/processServer/package.json",
+      "priorityScore": 3,
+      "classification": "covered",
+      "matchedDocuments": [
+        "framework.how-nodics-works",
+        "framework.runtime-server-composition",
+        "platform.module-registry",
+        "platform.overview",
+        "process.custom-project-extension",
+        "process.overview"
+      ],
+      "counts": {
+        "schemas": 0,
+        "services": 0,
+        "controllers": 0,
+        "routers": 0,
+        "dataHeaders": 0,
+        "dataRecords": 1,
+        "assets": 0,
+        "tests": 0,
+        "frontends": 0
+      },
+      "examples": {
+        "schemas": [],
+        "services": [],
+        "controllers": [],
+        "routers": [],
+        "dataHeaders": [],
+        "dataRecords": [
+          "nodics.kickoff/envs/kickoffLocal/processServer/data/init-v001/records/process/defaultEditorialProcessDefinitionContributionData.js"
+        ],
+        "assets": [],
+        "tests": [],
+        "frontends": []
+      }
+    },
+    {
       "name": "kickoffInt",
       "kind": "capability",
       "runtimeModule": true,
@@ -7951,6 +7947,7 @@
       "classification": "covered",
       "matchedDocuments": [
         "foundation.overview",
+        "configuration.framework-startup-lifecycle",
         "process.developer-customization"
       ],
       "counts": {
@@ -8166,6 +8163,7 @@
         "framework.how-nodics-works",
         "framework.runtime-server-composition",
         "platform.overview",
+        "configuration.framework-startup-lifecycle",
         "process.devops-topology",
         "framework.capability-documentation-maturity-pattern"
       ],
@@ -8416,6 +8414,7 @@
         "framework.how-nodics-works",
         "framework.runtime-server-composition",
         "platform.overview",
+        "configuration.framework-startup-lifecycle",
         "process.devops-topology",
         "framework.capability-documentation-maturity-pattern"
       ],

@@ -471,8 +471,8 @@ module.exports = {
     ],
     "sourceRepository": "nodics.platform",
     "sourcePath": "docs/pages/design-system-and-shell.md",
-    "sourceChecksum": "558038919926e06e2d06c1754554310d2277fae79d3fb227896081f53a338a76",
-    "sourceWordCount": 2043,
+    "sourceChecksum": "5bc37f01fed84e1b15a3aac31bc77c23c6946161debfb26ef32366b8327f31d1",
+    "sourceWordCount": 2062,
     "audience": [
       "designer",
       "developer",
@@ -765,8 +765,8 @@ module.exports = {
     ],
     "sourceRepository": "nodics.platform",
     "sourcePath": "docs/pages/employee-login.md",
-    "sourceChecksum": "2ac8fe6425b374cb89bd2d156f41f0ceead2aa76cc2bf863153c57b7ec9c6d23",
-    "sourceWordCount": 1431,
+    "sourceChecksum": "5d072426a550384fc0a857e268cc2a9552ddbd7d286ae32cb365eae35a65f558",
+    "sourceWordCount": 1437,
     "audience": [
       "business-user",
       "administrator",
@@ -1369,8 +1369,8 @@ module.exports = {
     ],
     "sourceRepository": "nodics.platform",
     "sourcePath": "docs/pages/imports-and-exports.md",
-    "sourceChecksum": "2a39fc976699d1fe0e7856e38761a09ec181c5574a0479937223efde9c8f4210",
-    "sourceWordCount": 2209,
+    "sourceChecksum": "3276761777c6f2a21183ffa6fe4067ac46abaea66fa9e67a4195fc92ab989d19",
+    "sourceWordCount": 2326,
     "audience": [
       "administrator",
       "operator",

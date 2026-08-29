@@ -1,7 +1,7 @@
 {
     "name": "discoveryRanking",
     "version": "0.0.0",
-    "index": "65.70",
+    "index": "75.70",
     "private": true,
     "main": "nodics.js",
     "description": "Discovery ranking capability.",

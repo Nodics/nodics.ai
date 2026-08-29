@@ -17,6 +17,7 @@ This file gives AI coding agents mandatory guidance for this Nodics module or pa
 - Update the concise `README.md`, canonical documentation content, `llm/contracts`, `llm/examples`, generated context, and tests whenever behavior or extension contracts change.
 - Use `llm/contracts` for exact module-local AI/developer rules, `llm/examples` for approved patterns, and `llm/generated` for source-derived facts. Do not add a module-local llm README file; this `AGENTS.md` is the AI navigation and behavior entrypoint for the module.
 - Generated files must be recreated from source definitions; do not hand-maintain generated artifacts as source of truth.
+- For module release data, treat `headers`, `records`, and `assets` as the developer-authored source. Treat `data/manifest.json` as generated audit evidence and grouping metadata. Do not ask developers or AI tools to hand-update checksum maps when header or record files change.
 
 ## Content-pack rules
 
@@ -24,8 +25,10 @@ This file gives AI coding agents mandatory guidance for this Nodics module or pa
   secured control-plane routes and BackOffice clients may invoke them, but no
   client or experience module may create another importer.
 - Treat a content pack as an immutable, versioned, checksummed release. Reject
-  checksum changes without a version change and reject downgrades unless a
-  later configuration layer explicitly permits them.
+  installed stable-release checksum changes without a version change and reject
+  downgrades unless a later configuration layer explicitly permits them. For
+  module release data, compute the current checksum from the release folder at
+  discovery time; generated manifest checksum drift is not a hand-repair task.
 - Never give the local importer a source-controlled content-pack directory.
   Validate the release and copy it into server-owned staging because local
   import processing moves files.

@@ -1,7 +1,7 @@
 {
     "name": "discoverySource",
     "version": "0.0.0",
-    "index": "65.20",
+    "index": "75.20",
     "private": true,
     "main": "nodics.js",
     "description": "Discovery source provider capability.",

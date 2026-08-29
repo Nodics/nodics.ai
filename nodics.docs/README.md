@@ -15,6 +15,13 @@ validate the contract version, content hashes, functional owners, and document
 IDs before persisting a new catalogue revision. Axis reads the imported
 Platform projection and never reads this repository or raw Markdown paths.
 
+`npm run docs:generate` is a preservation step, not a rewrite step. Developers
+author durable source documentation in `docs/pages` and metadata in
+`docs/catalogue.json`. The generator reads those sources and writes only derived
+release records under `data/core-v001` plus `data/manifest.json`. It must never
+replace a detailed source page with a generic scaffold, remove authored
+sections, or write into `docs/pages`.
+
 This package is for framework documentation. Axis product documentation belongs
 to `nodics.platform/modules/axis`; customer/project documentation belongs to the
 owning customer or project documentation package.

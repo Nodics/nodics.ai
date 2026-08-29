@@ -303,8 +303,8 @@ const capability = {
         },
         {
             "id": "documentation-management",
-            "label": "Documentation Management",
-            "route": "/content/designer/documentation",
+            "label": "Documentation Designer",
+            "route": "/docs/designer",
             "icon": "cms",
             "order": 107,
             "group": {
@@ -337,7 +337,7 @@ const capability = {
             "id": "documentation-navigation",
             "parentId": "documentation-management",
             "label": "Navigation Builder",
-            "route": "/content/designer/documentation/navigation",
+            "route": "/docs/designer/navigation",
             "icon": "list-tree",
             "order": 108,
             "group": {
@@ -370,7 +370,7 @@ const capability = {
             "id": "documentation-pages",
             "parentId": "documentation-management",
             "label": "Pages and Topic Content",
-            "route": "/content/designer/documentation/pages",
+            "route": "/docs/designer/pages",
             "icon": "content",
             "order": 109,
             "group": {
@@ -403,7 +403,7 @@ const capability = {
             "id": "documentation-access-policies",
             "parentId": "documentation-management",
             "label": "Audience and Access Policies",
-            "route": "/content/designer/documentation/access-policies",
+            "route": "/docs/designer/access-policies",
             "icon": "security",
             "order": 110,
             "group": {
@@ -436,7 +436,7 @@ const capability = {
             "id": "documentation-publication-queue",
             "parentId": "documentation-management",
             "label": "Review and Publication Queue",
-            "route": "/content/designer/documentation/publication",
+            "route": "/docs/designer/publication",
             "icon": "workflow",
             "order": 111,
             "group": {
@@ -471,7 +471,7 @@ const capability = {
             "id": "documentation-search-preview",
             "parentId": "documentation-management",
             "label": "Search Metadata Preview",
-            "route": "/content/designer/documentation/search",
+            "route": "/docs/designer/search",
             "icon": "search",
             "order": 112,
             "group": {
@@ -504,7 +504,7 @@ const capability = {
             "id": "documentation-governance-readiness",
             "parentId": "documentation-management",
             "label": "Governance and Readiness",
-            "route": "/content/designer/documentation/governance",
+            "route": "/docs/designer/governance",
             "icon": "validation",
             "order": 113,
             "group": {
@@ -544,7 +544,7 @@ const capability = {
             "id": "documentation-source-evidence",
             "parentId": "documentation-management",
             "label": "Source Evidence Review",
-            "route": "/content/designer/documentation/source-evidence",
+            "route": "/docs/designer/source-evidence",
             "icon": "validation",
             "order": 114,
             "group": {
@@ -970,6 +970,36 @@ const capability = {
             "featureState": "ACTIVE",
             "requiredPermissions": [
                 "backoffice.registry.view"
+            ]
+        },
+        {
+            "id": "dashboard",
+            "parentId": "system-integrations",
+            "label": "Dashboard",
+            "route": "/dashboard",
+            "icon": "dashboard",
+            "order": 900,
+            "group": {
+                "id": "system-integrations",
+                "label": "System & Integrations",
+                "order": 100
+            },
+            "perspectives": [
+                "operations"
+            ],
+            "contexts": [
+                "environment",
+                "tenant",
+                "enterprise"
+            ],
+            "help": {
+                "summary": "Review functional readiness, guided setup, release-data progress, publishing attention, and next recommended Axis actions.",
+                "documentationRoute": "/docs/nodics-axis/employee-login-recovery-lock-and-dashboard",
+                "documentationFragment": "dashboard"
+            },
+            "featureState": "ACTIVE",
+            "requiredPermissions": [
+                "axis.dashboard.view"
             ]
         },
         {

@@ -31,6 +31,17 @@ module.exports = {
   getContracts: function () {
     return contracts;
   },
+  /** Returns the declared field names for a bounded object contract. */
+  getContractFieldNames: function (contract) {
+    return contract && contract.properties && typeof contract.properties === "object"
+      ? Object.keys(contract.properties)
+      : [];
+  },
+  /** Returns whether an object only contains fields declared by its API contract. */
+  hasOnlyContractFields: function (value, contract) {
+    let allowed = this.getContractFieldNames(contract);
+    return !Object.keys(value).some((key) => !allowed.includes(key));
+  },
   /** Returns whether a value is a non-empty bounded string. */
   isString: function (value, maxLength = 256) {
     return (
@@ -759,26 +770,8 @@ module.exports = {
       Array.isArray(registration)
     )
       return false;
-    let allowed = [
-      "moduleName",
-      "displayName",
-      "parentModule",
-      "canonicalIdentity",
-      "instanceId",
-      "version",
-      "moduleKind",
-      "capabilities",
-      "clientCallable",
-      "endpoint",
-      "healthPath",
-      "leaseTtlMs",
-      "runtime",
-      "functionalModule",
-      "backoffice",
-      "authorityClaims",
-    ];
     return (
-      !Object.keys(registration).some((key) => !allowed.includes(key)) &&
+      this.hasOnlyContractFields(registration, contracts.registration) &&
       contracts.moduleName.pattern &&
       new RegExp(contracts.moduleName.pattern).test(
         registration.moduleName || "",
@@ -798,6 +791,8 @@ module.exports = {
       registration.canonicalIdentity.split("/").slice(-1)[0] ===
         registration.moduleName &&
       this.isString(registration.instanceId, 512) &&
+      (registration.moduleIndex === undefined ||
+        this.isString(registration.moduleIndex, 64)) &&
       typeof registration.clientCallable === "boolean" &&
       (registration.healthPath === undefined ||
         (this.isString(registration.healthPath, 512) &&
@@ -859,20 +854,11 @@ module.exports = {
       batch.registrations.length > Number(limit || 512)
     )
       return false;
-    let allowed = [
-      "instanceId",
-      "project",
-      "environment",
-      "server",
-      "node",
-      "runtimeRole",
-      "registrations",
-    ];
     let moduleNames = batch.registrations.map(
       (registration) => registration.moduleName,
     );
     return (
-      !Object.keys(batch).some((key) => !allowed.includes(key)) &&
+      this.hasOnlyContractFields(batch, contracts.registrationBatch) &&
       (batch.project === undefined || this.isString(batch.project)) &&
       (batch.environment === undefined || this.isString(batch.environment)) &&
       (batch.server === undefined || this.isString(batch.server)) &&
