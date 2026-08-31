@@ -31,7 +31,8 @@ module.exports = {
     "minItems": 1,
     "maxItems": 1,
     "allowedComponentTypes": [
-      "nodicsDocumentationArticleComponentType"
+      "nodicsDocumentationArticleComponentType",
+      "cmsRichTextComponent"
     ],
     "active": true
   }

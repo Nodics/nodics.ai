@@ -40,10 +40,10 @@ const products = [
     { code: 'agoraOxfordShirt', tenant: 'default', name: 'Oxford Shirt', status: 'ACTIVE', catalogVersion: 'agoraStaged', revision: 1 }
 ];
 const localizations = [
-    { code: 'agoraLinenWrapDress-en', tenant: 'default', productCode: 'agoraLinenWrapDress', locale: 'en', name: 'Linen Wrap Dress', description: 'Linen dress', slug: 'linen-wrap-dress', seo: { title: 'Linen' }, classificationValues: { categoryCodes: ['agoraWomen'] }, status: 'READY', revision: 1 },
-    { code: 'agoraLinenWrapDress-ar', tenant: 'default', productCode: 'agoraLinenWrapDress', locale: 'ar', name: 'فستان كتان', description: 'فستان كتان', slug: 'linen-wrap-dress', seo: { title: 'فستان' }, classificationValues: { categoryCodes: ['agoraWomen'] }, status: 'READY', revision: 1 },
-    { code: 'agoraOxfordShirt-en', tenant: 'default', productCode: 'agoraOxfordShirt', locale: 'en', name: 'Oxford Shirt', description: 'Oxford shirt', slug: 'oxford-shirt', seo: { title: 'Oxford' }, classificationValues: { categoryCodes: ['agoraMen'] }, status: 'READY', revision: 1 },
-    { code: 'agoraOxfordShirt-ar', tenant: 'default', productCode: 'agoraOxfordShirt', locale: 'ar', name: 'قميص أكسفورد', description: 'قميص أكسفورد', slug: 'oxford-shirt', seo: { title: 'أكسفورد' }, classificationValues: { categoryCodes: ['agoraMen'] }, status: 'READY', revision: 1 }
+    { code: 'agoraLinenWrapDress-en', tenant: 'default', productCode: 'agoraLinenWrapDress', locale: 'en', name: 'Linen Wrap Dress', description: 'Linen dress', slug: 'linen-wrap-dress', seo: { title: 'Linen' }, classificationValues: { categoryCodes: ['agoraWomen'], domain: 'apparel' }, status: 'READY', revision: 1 },
+    { code: 'agoraLinenWrapDress-ar', tenant: 'default', productCode: 'agoraLinenWrapDress', locale: 'ar', name: 'فستان كتان', description: 'فستان كتان', slug: 'linen-wrap-dress', seo: { title: 'فستان' }, classificationValues: { categoryCodes: ['agoraWomen'], domain: 'apparel' }, status: 'READY', revision: 1 },
+    { code: 'agoraOxfordShirt-en', tenant: 'default', productCode: 'agoraOxfordShirt', locale: 'en', name: 'Oxford Shirt', description: 'Oxford shirt', slug: 'oxford-shirt', seo: { title: 'Oxford' }, classificationValues: { categoryCodes: ['agoraMen'], domain: 'apparel' }, status: 'READY', revision: 1 },
+    { code: 'agoraOxfordShirt-ar', tenant: 'default', productCode: 'agoraOxfordShirt', locale: 'ar', name: 'قميص أكسفورد', description: 'قميص أكسفورد', slug: 'oxford-shirt', seo: { title: 'أكسفورد' }, classificationValues: { categoryCodes: ['agoraMen'], domain: 'apparel' }, status: 'READY', revision: 1 }
 ];
 const variants = [
     { code: 'agoraLinenWrapDressNaturalS', tenant: 'default', productCode: 'agoraLinenWrapDress', sku: 'AGORA-DRESS-S', status: 'ACTIVE', attributes: {}, revision: 1 },
@@ -52,14 +52,14 @@ const variants = [
 const projections = [
     { code: 'agoraLinenWrapDress|agoraMainStore|en', tenant: 'default', productCode: 'agoraLinenWrapDress', storeCode: 'agoraMainStore', locale: 'en', status: 'CURRENT',
         payload: { code: 'agoraLinenWrapDress', name: 'Linen Wrap Dress', description: 'Linen dress', slug: 'linen-wrap-dress', seo: { title: 'Linen' },
-            localizedAttributes: { material: 'linen' }, categoryCodes: ['agoraWomen'], variantCodes: ['agoraLinenWrapDressNaturalS'],
+            localizedAttributes: { material: 'linen' }, classificationValues: { domain: 'apparel' }, categoryCodes: ['agoraWomen'], variantCodes: ['agoraLinenWrapDressNaturalS'],
             media: { primaryImage: 'agora-owned-product-linen-wrap-dress-primary', primaryAlt: 'Linen wrap dress' },
             variantSkuMap: { agoraLinenWrapDressNaturalS: 'AGORA-DRESS-S' },
             price: { currency: 'USD', unitAmount: '129.00', priceRowCode: 'internalPriceRow' },
             availability: { available: true, status: 'IN_STOCK', warehouseCode: 'internalWarehouse' }, inventory: { available: 12 }, sku: 'AGORA-DRESS-S' } },
     { code: 'agoraOxfordShirt|agoraMainStore|en', tenant: 'default', productCode: 'agoraOxfordShirt', storeCode: 'agoraMainStore', locale: 'en', status: 'CURRENT',
         payload: { code: 'agoraOxfordShirt', name: 'Oxford Shirt', description: 'Oxford shirt', slug: 'oxford-shirt', seo: { title: 'Oxford' },
-            localizedAttributes: { material: 'cotton' }, categoryCodes: ['agoraMen'], variantCodes: ['agoraOxfordShirtBlueM'] } }
+            localizedAttributes: { material: 'cotton' }, classificationValues: { domain: 'apparel' }, categoryCodes: ['agoraMen'], variantCodes: ['agoraOxfordShirtBlueM'] } }
 ];
 
 let searchRequests;
@@ -123,6 +123,7 @@ function installGlobals() {
                     item.status === request.query.status);
             if (request.query.productCode) rows = rows.filter(item => item.productCode === request.query.productCode);
             if (request.query['payload.categoryCodes']) rows = rows.filter(item => item.payload.categoryCodes.includes(request.query['payload.categoryCodes']));
+            if (request.query['payload.classificationValues.domain']) rows = rows.filter(item => item.payload.classificationValues && item.payload.classificationValues.domain === request.query['payload.classificationValues.domain']);
                 return { result: rows };
             },
             save: async request => savedProjections.push(request),
@@ -197,7 +198,7 @@ test('Product exposes customer discovery/PDP routes and operator publication rou
 test('customer discovery lists Product cards with safe price and availability but no raw inventory or SKU leakage', async () => {
     let response = await discoveryController.list({
         tenant: 'default',
-        httpRequest: { query: { storeCode: 'agoraMainStore', locale: 'en', categoryCode: 'agoraWomen', pageSize: '12' } }
+        httpRequest: { query: { storeCode: 'agoraMainStore', locale: 'en', categoryCode: 'agoraWomen', domainCode: 'apparel', pageSize: '12' } }
     });
 
     assert.equal(response.data.products.length, 1);
@@ -225,6 +226,20 @@ test('customer discovery lists Product cards with safe price and availability bu
     assert.equal(response.data.discovery.sourceMixCode, 'agoraProductDiscoverySourceMix');
     assert.equal(response.data.discovery.fieldMappingCode, 'agoraProductDiscoveryFieldMapping');
     assert.equal(response.data.discovery.rankingProfileCode, 'agoraProductRankingProfile');
+    assert.deepEqual(searchRequests[0].query, {
+        tenant: 'default', storeCode: 'agoraMainStore', locale: 'en', status: 'CURRENT',
+        'payload.categoryCodes': 'agoraWomen', 'payload.classificationValues.domain': 'apparel'
+    });
+});
+
+test('customer discovery maps storefront collection codes to indexed product category classifications', async () => {
+    let response = await discoveryController.list({
+        tenant: 'default',
+        httpRequest: { query: { storeCode: 'agoraMainStore', locale: 'en', collectionCode: 'agoraWomen', pageSize: '12' } }
+    });
+
+    assert.equal(response.data.products.length, 1);
+    assert.equal(response.data.products[0].productCode, 'agoraLinenWrapDress');
     assert.deepEqual(searchRequests[0].query, {
         tenant: 'default', storeCode: 'agoraMainStore', locale: 'en', status: 'CURRENT', 'payload.categoryCodes': 'agoraWomen'
     });
@@ -268,6 +283,21 @@ test('customer discovery falls back to Product projection store when browse sear
 
     assert.equal(response.data.products.length, 1);
     assert.equal(response.data.products[0].productCode, 'agoraLinenWrapDress');
+    assert.equal(response.data.discovery.source, 'PROJECTION_STORE_FALLBACK');
+});
+
+test('customer discovery completes short search-adapter pages from Product projection store', async () => {
+    global.SERVICE.DefaultProductSearchProjectionService.doSearch = async request => {
+        searchRequests.push(request);
+        return { result: [projections[0]] };
+    };
+    let response = await discoveryController.list({
+        tenant: 'default',
+        httpRequest: { query: { storeCode: 'agoraMainStore', locale: 'en', pageSize: '2' } }
+    });
+
+    assert.equal(response.data.products.length, 2);
+    assert.deepEqual(response.data.products.map(item => item.productCode).sort(), ['agoraLinenWrapDress', 'agoraOxfordShirt']);
     assert.equal(response.data.discovery.source, 'PROJECTION_STORE_FALLBACK');
 });
 

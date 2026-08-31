@@ -1867,7 +1867,7 @@ module.exports = {
         "path": "modules/axis/docs/pages/project-overview.md",
         "evidence": "README.md",
         "hash": "8175d307de409b5df6c760f5f81f2e3010c230394647ea1fb4778370ec06868f",
-        "version": "0.0.1"
+        "version": "0.0.2"
       },
       "next": {
         "title": "Architecture and Repository Boundaries",
@@ -2400,7 +2400,7 @@ module.exports = {
         "path": "modules/axis/docs/pages/architecture-and-ownership.md",
         "evidence": "docs/architecture-and-ownership.md",
         "hash": "eee71ed4e3e3a40da29740508fca1ad7f3ab0deba558a4833b10bb097b299a2a",
-        "version": "0.0.1"
+        "version": "0.0.2"
       },
       "previous": {
         "title": "What Is Nodics Axis?",
@@ -2830,7 +2830,7 @@ module.exports = {
         "path": "modules/axis/docs/pages/frontend-technology-stack.md",
         "evidence": "docs/frontend-technology-stack.md",
         "hash": "30a69d3ecf89cd910f4a061f0747ec7e9c58fbfb8f5d3e8e3083274a65ecfeb3",
-        "version": "0.0.1"
+        "version": "0.0.2"
       },
       "previous": {
         "title": "Architecture and Repository Boundaries",
@@ -3289,7 +3289,7 @@ module.exports = {
         "path": "modules/axis/docs/pages/design-system-and-shell.md",
         "evidence": "docs/design-system-and-shell.md",
         "hash": "5bc37f01fed84e1b15a3aac31bc77c23c6946161debfb26ef32366b8327f31d1",
-        "version": "0.0.1"
+        "version": "0.0.2"
       },
       "previous": {
         "title": "Frontend Technology Stack",
@@ -3611,7 +3611,7 @@ module.exports = {
         "path": "modules/axis/docs/pages/cms-delivery-and-renderers.md",
         "evidence": "docs/cms-delivery-and-renderers.md",
         "hash": "3e4110bf8ca0e936ce783c4586aaefe41b0a342108992998d656f537049251c1",
-        "version": "0.0.1"
+        "version": "0.0.2"
       },
       "previous": {
         "title": "Design System and Application Shell",
@@ -4022,7 +4022,7 @@ module.exports = {
         "path": "modules/axis/docs/pages/documentation-content.md",
         "evidence": "docs/documentation-content.md",
         "hash": "d75ba0ab1416701c9307010534704e069d2b33f5d08e0e82bf892a3f81285e44",
-        "version": "0.0.1"
+        "version": "0.0.2"
       },
       "previous": {
         "title": "CMS Delivery and Renderer Integration",
@@ -4423,7 +4423,7 @@ module.exports = {
         "path": "modules/axis/docs/pages/employee-login.md",
         "evidence": "docs/employee-login.md",
         "hash": "5d072426a550384fc0a857e268cc2a9552ddbd7d286ae32cb365eae35a65f558",
-        "version": "0.0.1"
+        "version": "0.0.2"
       },
       "previous": {
         "title": "Documentation Content in Axis",
@@ -5003,7 +5003,7 @@ module.exports = {
         "path": "modules/axis/docs/pages/assistant-frontend.md",
         "evidence": "docs/assistant-frontend.md",
         "hash": "199da4f778cd70a0ed82ebc5f91a6dc36a48df4de16ce896afd75791c28841c5",
-        "version": "0.0.1"
+        "version": "0.0.2"
       },
       "previous": {
         "title": "Employee Login, Recovery, Lock, and Dashboard",
@@ -5510,7 +5510,7 @@ module.exports = {
         "path": "modules/axis/docs/pages/schema-workbench.md",
         "evidence": "docs/schema-workbench.md",
         "hash": "ae0af42ccfd2d3f0c27062b1ac59344a8eb045efb72d05b8767c7fbd2deee6e4",
-        "version": "0.0.1"
+        "version": "0.0.2"
       },
       "previous": {
         "title": "Axis Assistant Frontend",
@@ -5973,7 +5973,7 @@ module.exports = {
         "path": "modules/axis/docs/pages/page-designer.md",
         "evidence": "docs/pages/page-designer.md",
         "hash": "8a4e1150ea79a10388a88b24e89847f6ecf2135db3ceb305939ef7b90379fb70",
-        "version": "0.0.1"
+        "version": "0.0.2"
       },
       "previous": {
         "title": "Axis Schema Workbench",
@@ -6529,7 +6529,7 @@ module.exports = {
         "path": "modules/axis/docs/pages/module-health.md",
         "evidence": "docs/module-health.md",
         "hash": "cc4a43b059168fa417dadf280cbe7e3a57b0b311d8185330af9c11e6ffc68478",
-        "version": "0.0.1"
+        "version": "0.0.2"
       },
       "previous": {
         "title": "Axis Page Designer",
@@ -6913,7 +6913,7 @@ module.exports = {
         "path": "modules/axis/docs/pages/imports-and-exports.md",
         "evidence": "docs/imports-and-exports.md",
         "hash": "3276761777c6f2a21183ffa6fe4067ac46abaea66fa9e67a4195fc92ab989d19",
-        "version": "0.0.1"
+        "version": "0.0.2"
       },
       "previous": {
         "title": "Module Health",
@@ -7551,7 +7551,7 @@ module.exports = {
         "path": "modules/axis/docs/pages/media-management.md",
         "evidence": "docs/pages/media-management.md",
         "hash": "2710d3266b059252555d1055c049171f699d7f2d681ad773738d40def6a96e20",
-        "version": "0.0.1"
+        "version": "0.0.2"
       },
       "previous": {
         "title": "Imports and Exports Workspace",
@@ -7973,7 +7973,7 @@ module.exports = {
         "path": "modules/axis/docs/pages/customer-engagement.md",
         "evidence": "docs/pages/customer-engagement.md",
         "hash": "716dfa1de2edb29bf2894033f32cb20862148769aa48b234fb994859c7a86bfc",
-        "version": "0.0.1"
+        "version": "0.0.2"
       },
       "previous": {
         "title": "Media Management Workspace",
@@ -8273,7 +8273,7 @@ module.exports = {
         "path": "modules/axis/docs/pages/openapi-reference.md",
         "evidence": "docs/pages/openapi-reference.md",
         "hash": "43512fb8d6aa176e97ccf3a98db3dbfe932e6aec483462ab77fca53264aec2be",
-        "version": "0.0.1"
+        "version": "0.0.2"
       },
       "previous": {
         "title": "Customer Engagement Workspaces",
@@ -8732,7 +8732,7 @@ module.exports = {
         "path": "modules/axis/docs/pages/feature-delivery-checklist.md",
         "evidence": "docs/feature-delivery-checklist.md",
         "hash": "c3125712d4721150a0215cee15ad99ac0a4c8df3bf2daf584a0e8d98fd154284",
-        "version": "0.0.1"
+        "version": "0.0.2"
       },
       "previous": {
         "title": "Swagger and OpenAPI Reference",
@@ -9317,7 +9317,7 @@ module.exports = {
         "path": "modules/axis/docs/pages/implementation-and-documentation-contract.md",
         "evidence": "docs/implementation-and-documentation-contract.md",
         "hash": "f09a22ff6d47ec6e0229739914ede662baba3d40fb431d5eced1e57a0e47b5f5",
-        "version": "0.0.1"
+        "version": "0.0.2"
       },
       "previous": {
         "title": "Axis Feature Delivery Checklist",

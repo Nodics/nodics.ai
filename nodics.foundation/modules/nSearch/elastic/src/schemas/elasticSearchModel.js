@@ -215,6 +215,7 @@ module.exports = {
                 return new Promise((resolve, reject) => {
                     try {
                         let searchQuery = _.merge({}, _self.searchEngine.getOptions().searchOptions || {});
+                        searchQuery = _.merge(searchQuery, (searchModel.searchOptionsQuery || module.exports.default.searchOptionsQuery)(input.searchOptions));
                         searchQuery = _.merge(searchQuery, input.options || {});
                         searchQuery = _.merge(searchQuery, {
                             index: _self.indexDef.indexName.toLowerCase()
@@ -271,6 +272,24 @@ module.exports = {
                     }
                 });
             };
+        },
+
+        /**
+         * Maps Nodics searchOptions pagination into Elastic search parameters.
+         *
+         * @param {Object} searchOptions Provider-neutral search options.
+         * @returns {Object} Elastic pagination options.
+         */
+        searchOptionsQuery: function (searchOptions) {
+            let options = searchOptions || {};
+            let output = {};
+            let size = Number(options.pageSize || options.limit || 0);
+            let pageNumber = Number(options.pageNumber || options.page || 1);
+            if (Number.isInteger(size) && size > 0) output.size = size;
+            if (Number.isInteger(size) && size > 0 && Number.isInteger(pageNumber) && pageNumber > 1) {
+                output.from = (pageNumber - 1) * size;
+            }
+            return output;
         },
 
         /**

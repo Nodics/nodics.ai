@@ -1,6 +1,6 @@
 {
   "contract": "nodics.documentation.sourceCoverage/v1",
-  "release": "0.16.7",
+  "release": "0.16.8",
   "scope": [
     "nodics.ai/nodics.foundation",
     "nodics.ai/nodics.platform",

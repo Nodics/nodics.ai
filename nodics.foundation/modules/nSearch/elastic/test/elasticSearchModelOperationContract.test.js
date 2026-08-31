@@ -180,6 +180,16 @@ async function assertOperation(operation, input, expectedClientOperation, expect
     });
 
     await assertOperation('doSearch', {
+        q: 'code:ENT-1',
+        searchOptions: { pageSize: 24, pageNumber: 3 }
+    }, 'search', {
+        size: 24,
+        from: 48,
+        index: 'enterpriseindex',
+        q: 'code:ENT-1'
+    });
+
+    await assertOperation('doSearch', {
         query: { tenant: 'default', productCode: 'ENT-1' }
     }, 'search', {
         size: 10,

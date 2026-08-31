@@ -9,31 +9,39 @@
 
  */
 
-'use strict';
+"use strict";
 
 /** @description Nodics Axis documentation renderer mappings owned by the Axis client. */
 module.exports = {
   record0: {
-    code: 'axisDocumentationArticlePageType',
-    renderer: 'documentation.page.article',
+    code: "axisDocumentationArticlePageType",
+    renderer: "documentation.page.article",
     contractVersion: 0,
-    channels: ['web', 'mobile-webview'],
+    channels: ["web", "mobile-webview"],
     deprecated: false,
     active: true,
   },
   record1: {
-    code: 'axisDocumentationArticleComponentType',
-    renderer: 'documentation.component.article',
+    code: "axisDocumentationArticleComponentType",
+    renderer: "documentation.component.article",
     contractVersion: 0,
-    channels: ['web', 'mobile-webview'],
+    channels: ["web", "mobile-webview"],
     deprecated: false,
     active: true,
   },
   record2: {
-    code: 'axisDocumentationNavigationComponentType',
-    renderer: 'documentation.component.navigation',
+    code: "axisDocumentationNavigationComponentType",
+    renderer: "documentation.component.navigation",
     contractVersion: 0,
-    channels: ['web', 'mobile-webview'],
+    channels: ["web", "mobile-webview"],
+    deprecated: false,
+    active: true,
+  },
+  record3: {
+    code: "cmsRichTextComponent",
+    renderer: "cms.component.rich-text",
+    contractVersion: 0,
+    channels: ["web", "mobile-webview"],
     deprecated: false,
     active: true,
   },

@@ -30,5 +30,17 @@ module.exports = {
     "kind": "COMPONENT",
     "contractVersion": 0,
     "active": true
+  },
+  "record3": {
+    "code": "cmsRichTextComponent",
+    "kind": "COMPONENT",
+    "contractVersion": 0,
+    "propertySchema": {
+      "content": "object",
+      "blocks": "array",
+      "plainText": "string",
+      "format": "string"
+    },
+    "active": true
   }
 };

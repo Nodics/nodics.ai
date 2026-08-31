@@ -118,7 +118,8 @@ const catalogueUrl = `${staged.endpoint}/v0/initialization-profiles`;
 let profiles = await request(catalogueUrl, { headers });
 let profile = profiles.find(item => item.profileCode === profileCode);
 assert(profile, `Initialization profile is unavailable: ${profileCode}`);
-assert(profile.destinationRole === 'STAGED', 'Initialization profile is not bound to the STAGED destination');
+assert(profile.destinationRole === staged.runtimeRole.code,
+  `Initialization profile is not bound to the ${staged.runtimeRole.code} destination`);
 assert(profile.steps.map(item => item.dataType).join(',') === 'init,core', 'Initialization step order drifted');
 
 const validation = await request(`${staged.endpoint}/v0/initialization-profiles/${profileCode}/validate`, {

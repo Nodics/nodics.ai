@@ -45,5 +45,16 @@ module.exports = {
     ],
     "deprecated": false,
     "active": true
+  },
+  "record3": {
+    "code": "cmsRichTextComponent",
+    "renderer": "cms.component.rich-text",
+    "contractVersion": 0,
+    "channels": [
+      "web",
+      "mobile-webview"
+    ],
+    "deprecated": false,
+    "active": true
   }
 };

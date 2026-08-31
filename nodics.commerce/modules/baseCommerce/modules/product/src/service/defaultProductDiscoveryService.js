@@ -90,7 +90,8 @@ module.exports = {
             locale: request.locale,
             status: 'CURRENT'
         };
-        if (input.categoryCode) query['payload.categoryCodes'] = input.categoryCode;
+        if (input.categoryCode || input.collectionCode) query['payload.categoryCodes'] = input.categoryCode || input.collectionCode;
+        if (input.domainCode) query['payload.classificationValues.domain'] = input.domainCode;
         if (request.productCode) query.productCode = request.productCode;
         if (input.q) query.text = String(input.q).trim();
         return query;
@@ -134,6 +135,7 @@ module.exports = {
         };
         if (typeof service.doSearch === 'function') {
             let records = this.records(await service.doSearch(searchRequest));
+            records = await this.completePartialPageFromProjectionStore(request, searchRequest, query, records, searchOptions);
             if (records.length > 0 || policy.projectionStoreFallback === false) return records;
         }
         let searchIndexRecords = await this.searchIndexRecords(searchRequest);
@@ -143,6 +145,20 @@ module.exports = {
             query: this.projectionStoreQuery(query)
         }));
         return query.text ? this.filterByText(records, query.text) : records;
+    },
+
+    /** Uses the projection store when the search adapter returns a shorter page than requested. @param {Object} request Nodics request. @param {Object} searchRequest Search request. @param {Object} query Search query. @param {Array} records Search records. @param {Object} searchOptions Search options. @returns {Promise<Array>} Complete page candidates. */
+    completePartialPageFromProjectionStore: async function (request, searchRequest, query, records, searchOptions) {
+        let requestedPageSize = Number(searchOptions && searchOptions.pageSize || searchOptions && searchOptions.limit || 0);
+        if (!Array.isArray(records) || records.length === 0 || !requestedPageSize || records.length >= requestedPageSize) return records;
+        if (((CONFIG.get('product') || {}).discovery || {}).projectionStoreFallback === false) return records;
+        let fallbackRecords = await this.projectionStoreRecords(Object.assign({}, searchRequest, {
+            query: this.projectionStoreQuery(query)
+        }));
+        if (query.text) fallbackRecords = this.filterByText(fallbackRecords, query.text);
+        if (fallbackRecords.length <= records.length) return records;
+        request.discoveryServedFrom = 'PROJECTION_STORE_FALLBACK';
+        return fallbackRecords;
     },
 
     /** Reads Product projections through the active nSearch model registry when generated service search is unavailable or empty. @param {Object} request Search request. @returns {Promise<Array>} Records. */
@@ -187,37 +203,92 @@ module.exports = {
 
     /** Reads published Product search projections from the owned projection store as a bounded fallback when nSearch is empty. @param {Object} request Read request. @returns {Promise<Array>} Projection records. */
     projectionStoreRecords: async function (request) {
-        if (SERVICE.DefaultProductSearchProjectionService && typeof SERVICE.DefaultProductSearchProjectionService.get === 'function') {
-            let response = await SERVICE.DefaultProductSearchProjectionService.get(request);
-            let records = this.records(response);
-            if (records.length > 0) return records;
-        }
-        let model = request.schemaModel || (global.NODICS && NODICS.getModels &&
-            NODICS.getModels(request.moduleName || 'product', request.tenant).ProductSearchProjectionModel);
-        if (!model || typeof model.find !== 'function') return [];
         let options = request.searchOptions || {}, pageSize = this.boundedInteger(options.pageSize || options.limit, Number(this.policy().defaultPageSize || 24), 1, Number(this.policy().maximumPageSize || 100));
         let pageNumber = this.boundedInteger(options.pageNumber || options.page, 1, 1, 10000);
-        let query = model.find(request.query || {});
-        if (options.sort && typeof query.sort === 'function') query = query.sort(options.sort);
-        if (typeof query.skip === 'function') query = query.skip((pageNumber - 1) * pageSize);
-        if (typeof query.limit === 'function') query = query.limit(pageSize);
-        if (typeof query.lean === 'function') query = query.lean();
-        if (typeof query.exec === 'function') {
-            let records = await query.exec();
-            if (Array.isArray(records) && records.length > 0) return records;
+        let pagedRequest = Object.assign({}, request, {
+            pageSize: pageSize,
+            pageNumber: pageNumber,
+            searchOptions: Object.assign({}, options, { pageSize: pageSize, pageNumber: pageNumber })
+        });
+        let generatedRecords = [];
+        let bestRecords = [];
+        if (SERVICE.DefaultProductSearchProjectionService && typeof SERVICE.DefaultProductSearchProjectionService.get === 'function') {
+            let response = await SERVICE.DefaultProductSearchProjectionService.get(pagedRequest);
+            generatedRecords = this.records(response);
+            bestRecords = generatedRecords;
+            if (generatedRecords.length > 0 && generatedRecords.length >= pageSize) return generatedRecords;
         }
-        if (query && typeof query.then === 'function') {
-            let records = await query;
-            if (Array.isArray(records) && records.length > 0) return records;
+        let models = [request.schemaModel, this.projectionStoreModel(request), this.rawProjectionStoreModel(request)].filter(Boolean);
+        for (let model of models) {
+            let records = await this.readProjectionStoreModelRecords(model, request.query || {}, options, pageNumber, pageSize);
+            if (records.length >= pageSize) return records;
+            if (records.length > bestRecords.length) bestRecords = records;
+        }
+        return bestRecords;
+    },
+
+    /** Reads one Product projection-store model or collection using common pagination semantics. @param {Object|Array} model Model or collection handle. @param {Object} query Projection query. @param {Object} options Search options. @param {number} pageNumber Page number. @param {number} pageSize Page size. @returns {Promise<Array>} Records. */
+    readProjectionStoreModelRecords: async function (model, query, options, pageNumber, pageSize) {
+        let bestRecords = [];
+        if (!model) return bestRecords;
+        if (Array.isArray(model)) return model;
+        if (typeof model.find === 'function') {
+            let cursor = model.find(query);
+            let records = await this.readProjectionCursor(cursor, options, pageNumber, pageSize);
+            if (records.length > bestRecords.length) bestRecords = records;
         }
         if (model.collection && typeof model.collection.find === 'function') {
-            let cursor = model.collection.find(request.query || {});
-            if (options.sort && typeof cursor.sort === 'function') cursor = cursor.sort(options.sort);
-            if (typeof cursor.skip === 'function') cursor = cursor.skip((pageNumber - 1) * pageSize);
-            if (typeof cursor.limit === 'function') cursor = cursor.limit(pageSize);
-            if (typeof cursor.toArray === 'function') return cursor.toArray();
+            let cursor = model.collection.find(query);
+            let records = await this.readProjectionCursor(cursor, options, pageNumber, pageSize);
+            if (records.length > bestRecords.length) bestRecords = records;
         }
-        return Array.isArray(query) ? query : [];
+        return bestRecords;
+    },
+
+    /** Applies sorting and pagination to a Mongoose or native Mongo cursor and resolves records. @param {*} cursor Cursor. @param {Object} options Search options. @param {number} pageNumber Page number. @param {number} pageSize Page size. @returns {Promise<Array>} Records. */
+    readProjectionCursor: async function (cursor, options, pageNumber, pageSize) {
+        if (!cursor) return [];
+        if (options.sort && typeof cursor.sort === 'function') cursor = cursor.sort(options.sort);
+        if (typeof cursor.skip === 'function') cursor = cursor.skip((pageNumber - 1) * pageSize);
+        if (typeof cursor.limit === 'function') cursor = cursor.limit(pageSize);
+        if (typeof cursor.lean === 'function') cursor = cursor.lean();
+        if (typeof cursor.exec === 'function') {
+            let records = await cursor.exec();
+            if (Array.isArray(records)) return records;
+        }
+        if (cursor && typeof cursor.then === 'function') {
+            let records = await cursor;
+            if (Array.isArray(records)) return records;
+        }
+        if (cursor && typeof cursor.toArray === 'function') {
+            let records = await cursor.toArray();
+            if (Array.isArray(records)) return records;
+        }
+        return Array.isArray(cursor) ? cursor : [];
+    },
+
+    /** Resolves the Product search projection model from runtime model registry or database handle. @param {Object} request Read request. @returns {Object|undefined} Model or collection handle. */
+    projectionStoreModel: function (request) {
+        let moduleName = request.moduleName || 'product', tenant = request.tenant;
+        if (global.NODICS && typeof NODICS.getModels === 'function') {
+            let models = NODICS.getModels(moduleName, tenant) || {};
+            if (models.ProductSearchProjectionModel) return models.ProductSearchProjectionModel;
+        }
+        if (!SERVICE.DefaultDatabaseConfigurationService || typeof SERVICE.DefaultDatabaseConfigurationService.getTenantDatabase !== 'function') return undefined;
+        let database = SERVICE.DefaultDatabaseConfigurationService.getTenantDatabase(moduleName, tenant);
+        let master = database && (database.master || database.default || database);
+        let connection = master && typeof master.getConnection === 'function' ? master.getConnection() : undefined;
+        return connection && typeof connection.collection === 'function' ? connection.collection('ProductSearchProjectionModel') : undefined;
+    },
+
+    /** Resolves the native Product projection-store collection so generated model caps cannot truncate customer browse pages. @param {Object} request Read request. @returns {Object|undefined} Collection handle. */
+    rawProjectionStoreModel: function (request) {
+        if (!SERVICE.DefaultDatabaseConfigurationService || typeof SERVICE.DefaultDatabaseConfigurationService.getTenantDatabase !== 'function') return undefined;
+        let moduleName = request.moduleName || 'product', tenant = request.tenant;
+        let database = SERVICE.DefaultDatabaseConfigurationService.getTenantDatabase(moduleName, tenant);
+        let master = database && (database.master || database.default || database);
+        let connection = master && typeof master.getConnection === 'function' ? master.getConnection() : undefined;
+        return connection && typeof connection.collection === 'function' ? connection.collection('ProductSearchProjectionModel') : undefined;
     },
 
     /** Extracts records from generated service, nSearch, or adapter result shapes. @param {*} response Service response. @returns {Array} Records. */

@@ -19,9 +19,12 @@ const domains = [
   { code: 'electronics', title: 'Electronics', module: 'agora.electronics' },
   { code: 'telco', title: 'Telco', module: 'agora.telco' },
 ];
+const domainReleaseVersions = {
+  'agora.apparel': '0.0.2'
+};
 const releaseRoot = 'sample-v001';
 const digest = file => crypto.createHash('sha256').update(fs.readFileSync(file)).digest('hex');
-const section = (description, owningDomain, destinationRole, files) => ({ kind: 'DATA_RELEASE', dataType: 'sample', sourceRoot: releaseRoot, version: '0.0.0', description, owningDomain, lifecycle: 'PUBLISHABLE', destinationRole, environmentScope: ['LOCAL', 'LOCAL_PRODUCTION_SIMULATION'], sensitivity: 'PUBLIC', versioningPolicy: 'IMMUTABLE', publicationPolicy: 'REQUIRED', initialPublicationPolicy: 'ADMIN_INITIATED', removalPolicy: 'UNPUBLISH_OR_RETIRE', files });
+const section = (description, owningDomain, destinationRole, files, version = '0.0.0') => ({ kind: 'DATA_RELEASE', dataType: 'sample', sourceRoot: releaseRoot, version, description, owningDomain, lifecycle: 'PUBLISHABLE', destinationRole, environmentScope: ['LOCAL', 'LOCAL_PRODUCTION_SIMULATION'], sensitivity: 'PUBLIC', versioningPolicy: 'IMMUTABLE', publicationPolicy: 'REQUIRED', initialPublicationPolicy: 'ADMIN_INITIATED', removalPolicy: 'UNPUBLISH_OR_RETIRE', files });
 const relativeFiles = function (root, directory, files = []) {
   const absoluteDirectory = path.join(root, directory);
   if (!fs.existsSync(absoluteDirectory)) return files;
@@ -107,8 +110,8 @@ for (const domain of domains) {
     `${releaseRoot}/content/assets/agora-cms-media`
   ]);
   const manifest = { contractVersion: 2, module: domain.module, sections: {
-    [`agora${domain.title}CommerceCatalog`]: section(`Agora ${domain.title} commerce catalog`, `agora.${domain.code}`, 'COMMERCE_STAGED', commerce),
-    [`agora${domain.title}ContentCatalog`]: section(`Agora ${domain.title} content and renderer catalog`, `agora.${domain.code}.wcms`, 'WCMS_STAGED', content),
+    [`agora${domain.title}CommerceCatalog`]: section(`Agora ${domain.title} commerce catalog`, `agora.${domain.code}`, 'COMMERCE_STAGED', commerce, domainReleaseVersions[domain.module]),
+    [`agora${domain.title}ContentCatalog`]: section(`Agora ${domain.title} content and renderer catalog`, `agora.${domain.code}.wcms`, 'WCMS_STAGED', content, domainReleaseVersions[domain.module]),
   } };
   fs.writeFileSync(path.join(packRoot, 'data', 'manifest.json'), `${JSON.stringify(manifest, null, 2)}\n`);
   console.log(`Generated ${domain.module} manifest with ${Object.keys(commerce).length + Object.keys(content).length} files`);

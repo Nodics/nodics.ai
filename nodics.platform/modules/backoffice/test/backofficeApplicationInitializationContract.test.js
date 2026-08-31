@@ -14,6 +14,7 @@ const assert = require('node:assert/strict');
 const controller = require('../src/controller/defaultBackofficeApplicationInitializationController');
 const service = require('../src/service/defaultBackofficeApplicationInitializationService');
 const routes = require('../src/router/routers').backoffice.applicationInitialization;
+const statusDefinitions = require('../src/utils/statusDefinitions');
 
 class NodicsError extends Error {
     constructor(code, message) {
@@ -80,6 +81,9 @@ global.fetch = async () => {
 };
 
 (async () => {
+    assert.deepStrictEqual(statusDefinitions.ERR_BOF_00084,
+        { code: '400', message: 'Application initialization content pack is unavailable' },
+        'Application initialization content-pack errors must have a registered BackOffice status definition');
     let status = await service.status('nexus', { tenant: 'default', authData: { principalId: 'admin' } });
     assert.strictEqual(status.owner, 'nexus.web');
     assert.strictEqual(status.siteCode, 'nexusCorporateSite');
