@@ -430,9 +430,9 @@ module.exports = {
     "active": true
   },
   "record9": {
-    "code": "axisDocsPublicationnodeaxisdocsnodegrpdiscoveraxisaxisoverviewandarchitecture",
+    "code": "axisDocsPublicationnodeaxisdocsnodepageaxisoverview",
     "targetType": "NODE",
-    "targetCode": "axisDocsNodeGrpdiscoverAxisaxisOverviewAndArchitecture",
+    "targetCode": "axisDocsNodePageaxisOverview",
     "lifecycleState": "ONLINE",
     "publicationCode": "axisDocumentation",
     "workflowReference": "axisDocumentationReviewWorkflow",
@@ -445,7 +445,7 @@ module.exports = {
       "publicationPath": "STAGED_REVIEW_APPROVAL_ONLINE",
       "nexusVisibleOnlyWhenOnlineAndPublic": true
     },
-    "checksum": "d790464e9cabe6cd708f55553065a8fefe5d4016667dfb70c76aa5cc13d19292",
+    "checksum": "d95bd22b5951a99eb5cc9c436bc451e1ad62f0549649dda2b5f2ecf29a948e0f",
     "managedInAxis": true,
     "axisAuthoringPermissions": [
       "documentation.navigation.update"
@@ -477,9 +477,9 @@ module.exports = {
     "active": true
   },
   "record10": {
-    "code": "axisDocsPublicationnodeaxisdocsnodetopicaxisoverview",
+    "code": "axisDocsPublicationnodeaxisdocsnodepageaxisarchitecture",
     "targetType": "NODE",
-    "targetCode": "axisDocsNodeTopicaxisOverview",
+    "targetCode": "axisDocsNodePageaxisArchitecture",
     "lifecycleState": "ONLINE",
     "publicationCode": "axisDocumentation",
     "workflowReference": "axisDocumentationReviewWorkflow",
@@ -492,7 +492,7 @@ module.exports = {
       "publicationPath": "STAGED_REVIEW_APPROVAL_ONLINE",
       "nexusVisibleOnlyWhenOnlineAndPublic": true
     },
-    "checksum": "8490e609c6f715802e20a2762001eae18390138edd2654c9ccd973dc97d45508",
+    "checksum": "a1642ad24d535327add8982d3b7862573077978f60097b97282f8b45dc5d7dab",
     "managedInAxis": true,
     "axisAuthoringPermissions": [
       "documentation.navigation.update"
@@ -524,9 +524,9 @@ module.exports = {
     "active": true
   },
   "record11": {
-    "code": "axisDocsPublicationnodeaxisdocsnodetopicaxisarchitecture",
+    "code": "axisDocsPublicationnodeaxisdocsnodepageaxistechnologystack",
     "targetType": "NODE",
-    "targetCode": "axisDocsNodeTopicaxisArchitecture",
+    "targetCode": "axisDocsNodePageaxisTechnologyStack",
     "lifecycleState": "ONLINE",
     "publicationCode": "axisDocumentation",
     "workflowReference": "axisDocumentationReviewWorkflow",
@@ -539,7 +539,7 @@ module.exports = {
       "publicationPath": "STAGED_REVIEW_APPROVAL_ONLINE",
       "nexusVisibleOnlyWhenOnlineAndPublic": true
     },
-    "checksum": "d575ab1f2f5bc87284e6be1168f918bbc877bfa77256aaff2a91751045d23789",
+    "checksum": "5f6206ac4d9147c76ea33aa7e726405b249e8e4a99fa94ce7ea6e181012d3cee",
     "managedInAxis": true,
     "axisAuthoringPermissions": [
       "documentation.navigation.update"
@@ -571,9 +571,9 @@ module.exports = {
     "active": true
   },
   "record12": {
-    "code": "axisDocsPublicationnodeaxisdocsnodegrpbuildandoperateaxisaxisbuildandruntime",
+    "code": "axisDocsPublicationnodeaxisdocsnodepageaxisdesignsystem",
     "targetType": "NODE",
-    "targetCode": "axisDocsNodeGrpbuildAndOperateAxisaxisBuildAndRuntime",
+    "targetCode": "axisDocsNodePageaxisDesignSystem",
     "lifecycleState": "ONLINE",
     "publicationCode": "axisDocumentation",
     "workflowReference": "axisDocumentationReviewWorkflow",
@@ -586,7 +586,7 @@ module.exports = {
       "publicationPath": "STAGED_REVIEW_APPROVAL_ONLINE",
       "nexusVisibleOnlyWhenOnlineAndPublic": true
     },
-    "checksum": "3488beac77e0799af688801bd3686a462023fb528fbebf08beba069f847ee8f7",
+    "checksum": "228fe3ceca1848e13d46cd8a0ce2ef4c5ead7b99fd806f3cd5fe364f58ac9202",
     "managedInAxis": true,
     "axisAuthoringPermissions": [
       "documentation.navigation.update"
@@ -618,9 +618,9 @@ module.exports = {
     "active": true
   },
   "record13": {
-    "code": "axisDocsPublicationnodeaxisdocsnodetopicaxistechnologystack",
+    "code": "axisDocsPublicationnodeaxisdocsnodepageaxiscmsrenderers",
     "targetType": "NODE",
-    "targetCode": "axisDocsNodeTopicaxisTechnologyStack",
+    "targetCode": "axisDocsNodePageaxisCmsRenderers",
     "lifecycleState": "ONLINE",
     "publicationCode": "axisDocumentation",
     "workflowReference": "axisDocumentationReviewWorkflow",
@@ -633,7 +633,7 @@ module.exports = {
       "publicationPath": "STAGED_REVIEW_APPROVAL_ONLINE",
       "nexusVisibleOnlyWhenOnlineAndPublic": true
     },
-    "checksum": "ca81f1a55e44ef577a881c99cff2915e657737a58b5da1a1d4ccff377202c8ae",
+    "checksum": "02c6a40c03d2321be408839797499dd92614c91ec5d4fbe49531c4c7bdeb66fd",
     "managedInAxis": true,
     "axisAuthoringPermissions": [
       "documentation.navigation.update"
@@ -665,9 +665,9 @@ module.exports = {
     "active": true
   },
   "record14": {
-    "code": "axisDocsPublicationnodeaxisdocsnodetopicaxisdesignsystem",
+    "code": "axisDocsPublicationnodeaxisdocsnodepageaxisdocumentationcontent",
     "targetType": "NODE",
-    "targetCode": "axisDocsNodeTopicaxisDesignSystem",
+    "targetCode": "axisDocsNodePageaxisDocumentationContent",
     "lifecycleState": "ONLINE",
     "publicationCode": "axisDocumentation",
     "workflowReference": "axisDocumentationReviewWorkflow",
@@ -680,7 +680,7 @@ module.exports = {
       "publicationPath": "STAGED_REVIEW_APPROVAL_ONLINE",
       "nexusVisibleOnlyWhenOnlineAndPublic": true
     },
-    "checksum": "2e9354923dc112482d1992830277d367ac157ea6d8d2bdb592b59f61a51ea0cb",
+    "checksum": "e3ddda128828789b7da1e2582d60543680163daa21610e66527d70eed951a0fb",
     "managedInAxis": true,
     "axisAuthoringPermissions": [
       "documentation.navigation.update"
@@ -712,9 +712,9 @@ module.exports = {
     "active": true
   },
   "record15": {
-    "code": "axisDocsPublicationnodeaxisdocsnodetopicaxiscmsrenderers",
+    "code": "axisDocsPublicationnodeaxisdocsnodepageaxisemployeeaccess",
     "targetType": "NODE",
-    "targetCode": "axisDocsNodeTopicaxisCmsRenderers",
+    "targetCode": "axisDocsNodePageaxisEmployeeAccess",
     "lifecycleState": "ONLINE",
     "publicationCode": "axisDocumentation",
     "workflowReference": "axisDocumentationReviewWorkflow",
@@ -727,7 +727,7 @@ module.exports = {
       "publicationPath": "STAGED_REVIEW_APPROVAL_ONLINE",
       "nexusVisibleOnlyWhenOnlineAndPublic": true
     },
-    "checksum": "9d85d4c85cd496a4c2248e479ecfdbbc8d7dbc8ba61b1fe098c66d22fcdfa99e",
+    "checksum": "5b5d9b88e0ad803afb6015db9fcf49bffbf47d5f76ecdd5338944be18bb198b5",
     "managedInAxis": true,
     "axisAuthoringPermissions": [
       "documentation.navigation.update"
@@ -759,9 +759,9 @@ module.exports = {
     "active": true
   },
   "record16": {
-    "code": "axisDocsPublicationnodeaxisdocsnodetopicaxisdocumentationcontent",
+    "code": "axisDocsPublicationnodeaxisdocsnodepageaxisassistant",
     "targetType": "NODE",
-    "targetCode": "axisDocsNodeTopicaxisDocumentationContent",
+    "targetCode": "axisDocsNodePageaxisAssistant",
     "lifecycleState": "ONLINE",
     "publicationCode": "axisDocumentation",
     "workflowReference": "axisDocumentationReviewWorkflow",
@@ -774,7 +774,7 @@ module.exports = {
       "publicationPath": "STAGED_REVIEW_APPROVAL_ONLINE",
       "nexusVisibleOnlyWhenOnlineAndPublic": true
     },
-    "checksum": "91270d9bea48d27372693e67df7acf1d22991110b284e3ea195a797041f852b0",
+    "checksum": "2f025d1e6661fd64141b2be53bd20b3a05b5f98444f69023118f65a428ca9004",
     "managedInAxis": true,
     "axisAuthoringPermissions": [
       "documentation.navigation.update"
@@ -806,9 +806,9 @@ module.exports = {
     "active": true
   },
   "record17": {
-    "code": "axisDocsPublicationnodeaxisdocsnodegrpaxiscapabilitiesaxisworkspacesandoperations",
+    "code": "axisDocsPublicationnodeaxisdocsnodepageaxisschemaworkbench",
     "targetType": "NODE",
-    "targetCode": "axisDocsNodeGrpaxisCapabilitiesaxisWorkspacesAndOperations",
+    "targetCode": "axisDocsNodePageaxisSchemaWorkbench",
     "lifecycleState": "ONLINE",
     "publicationCode": "axisDocumentation",
     "workflowReference": "axisDocumentationReviewWorkflow",
@@ -821,7 +821,7 @@ module.exports = {
       "publicationPath": "STAGED_REVIEW_APPROVAL_ONLINE",
       "nexusVisibleOnlyWhenOnlineAndPublic": true
     },
-    "checksum": "c2229498eff4ee21a1300429df7ceb682cee61a5bc74b2f0b5cc8fdd406eef4a",
+    "checksum": "ef0e87ad8b57a1d8c35afb1d66af580d2b385d5f9a90a366a0cd0c1449a069ad",
     "managedInAxis": true,
     "axisAuthoringPermissions": [
       "documentation.navigation.update"
@@ -853,9 +853,9 @@ module.exports = {
     "active": true
   },
   "record18": {
-    "code": "axisDocsPublicationnodeaxisdocsnodetopicaxisemployeeaccess",
+    "code": "axisDocsPublicationnodeaxisdocsnodepageaxispagedesigner",
     "targetType": "NODE",
-    "targetCode": "axisDocsNodeTopicaxisEmployeeAccess",
+    "targetCode": "axisDocsNodePageaxisPageDesigner",
     "lifecycleState": "ONLINE",
     "publicationCode": "axisDocumentation",
     "workflowReference": "axisDocumentationReviewWorkflow",
@@ -868,7 +868,7 @@ module.exports = {
       "publicationPath": "STAGED_REVIEW_APPROVAL_ONLINE",
       "nexusVisibleOnlyWhenOnlineAndPublic": true
     },
-    "checksum": "68eeb7aebead52a5a314426484e6b67483a1b9094b064f6f62eaa4b8218351be",
+    "checksum": "0d3aa28fcd9905cca43a83dbb4b2978a29f4ca057884787ece1ce9fac3133f72",
     "managedInAxis": true,
     "axisAuthoringPermissions": [
       "documentation.navigation.update"
@@ -900,9 +900,9 @@ module.exports = {
     "active": true
   },
   "record19": {
-    "code": "axisDocsPublicationnodeaxisdocsnodetopicaxisassistant",
+    "code": "axisDocsPublicationnodeaxisdocsnodepageaxisexperiencestudio",
     "targetType": "NODE",
-    "targetCode": "axisDocsNodeTopicaxisAssistant",
+    "targetCode": "axisDocsNodePageaxisExperienceStudio",
     "lifecycleState": "ONLINE",
     "publicationCode": "axisDocumentation",
     "workflowReference": "axisDocumentationReviewWorkflow",
@@ -915,7 +915,7 @@ module.exports = {
       "publicationPath": "STAGED_REVIEW_APPROVAL_ONLINE",
       "nexusVisibleOnlyWhenOnlineAndPublic": true
     },
-    "checksum": "1a2f892d274ad318c53c241fd7aec134d57a407bf93dfd4980e7db988854f077",
+    "checksum": "3e995a9fca08c4ad826fa0e3644d760752c17502ef8c10c2e05f9947b987a4f9",
     "managedInAxis": true,
     "axisAuthoringPermissions": [
       "documentation.navigation.update"
@@ -947,9 +947,9 @@ module.exports = {
     "active": true
   },
   "record20": {
-    "code": "axisDocsPublicationnodeaxisdocsnodetopicaxisschemaworkbench",
+    "code": "axisDocsPublicationnodeaxisdocsnodepageaxismodulehealth",
     "targetType": "NODE",
-    "targetCode": "axisDocsNodeTopicaxisSchemaWorkbench",
+    "targetCode": "axisDocsNodePageaxisModuleHealth",
     "lifecycleState": "ONLINE",
     "publicationCode": "axisDocumentation",
     "workflowReference": "axisDocumentationReviewWorkflow",
@@ -962,7 +962,7 @@ module.exports = {
       "publicationPath": "STAGED_REVIEW_APPROVAL_ONLINE",
       "nexusVisibleOnlyWhenOnlineAndPublic": true
     },
-    "checksum": "9d10edf5724e238ee9a54bd041ec95d7776557b616e277e2bdb3d80203138b6a",
+    "checksum": "77d4a5b0f0398d8b891a588ded1a5e51f3baa2fba624e3396bc9fa55a6822958",
     "managedInAxis": true,
     "axisAuthoringPermissions": [
       "documentation.navigation.update"
@@ -994,9 +994,9 @@ module.exports = {
     "active": true
   },
   "record21": {
-    "code": "axisDocsPublicationnodeaxisdocsnodetopicaxispagedesigner",
+    "code": "axisDocsPublicationnodeaxisdocsnodepageaxisimportsexports",
     "targetType": "NODE",
-    "targetCode": "axisDocsNodeTopicaxisPageDesigner",
+    "targetCode": "axisDocsNodePageaxisImportsExports",
     "lifecycleState": "ONLINE",
     "publicationCode": "axisDocumentation",
     "workflowReference": "axisDocumentationReviewWorkflow",
@@ -1009,7 +1009,7 @@ module.exports = {
       "publicationPath": "STAGED_REVIEW_APPROVAL_ONLINE",
       "nexusVisibleOnlyWhenOnlineAndPublic": true
     },
-    "checksum": "56c2cc4963d34d71cf1e5bbbdf9af95076dd86c8171a2657817f4b87e68f3d39",
+    "checksum": "82bdd3b5cefcb8fe1ea76f498698c41c796ca57bb216628bd9d0432f71368975",
     "managedInAxis": true,
     "axisAuthoringPermissions": [
       "documentation.navigation.update"
@@ -1041,9 +1041,9 @@ module.exports = {
     "active": true
   },
   "record22": {
-    "code": "axisDocsPublicationnodeaxisdocsnodetopicaxisexperiencestudio",
+    "code": "axisDocsPublicationnodeaxisdocsnodepageaxismediamanagement",
     "targetType": "NODE",
-    "targetCode": "axisDocsNodeTopicaxisExperienceStudio",
+    "targetCode": "axisDocsNodePageaxisMediaManagement",
     "lifecycleState": "ONLINE",
     "publicationCode": "axisDocumentation",
     "workflowReference": "axisDocumentationReviewWorkflow",
@@ -1056,7 +1056,7 @@ module.exports = {
       "publicationPath": "STAGED_REVIEW_APPROVAL_ONLINE",
       "nexusVisibleOnlyWhenOnlineAndPublic": true
     },
-    "checksum": "554b51d79c7ae332dc84b71ca6c141faaadeea4c29796963144d065283a3ebc3",
+    "checksum": "df55236a32400fa5c88641adbdaf99125bd7d8835e4585230a8a9d5af3a72d40",
     "managedInAxis": true,
     "axisAuthoringPermissions": [
       "documentation.navigation.update"
@@ -1088,9 +1088,9 @@ module.exports = {
     "active": true
   },
   "record23": {
-    "code": "axisDocsPublicationnodeaxisdocsnodetopicaxismodulehealth",
+    "code": "axisDocsPublicationnodeaxisdocsnodepageaxiscustomerengagement",
     "targetType": "NODE",
-    "targetCode": "axisDocsNodeTopicaxisModuleHealth",
+    "targetCode": "axisDocsNodePageaxisCustomerEngagement",
     "lifecycleState": "ONLINE",
     "publicationCode": "axisDocumentation",
     "workflowReference": "axisDocumentationReviewWorkflow",
@@ -1103,7 +1103,7 @@ module.exports = {
       "publicationPath": "STAGED_REVIEW_APPROVAL_ONLINE",
       "nexusVisibleOnlyWhenOnlineAndPublic": true
     },
-    "checksum": "3647ff382b14d1064d57b110e5e3b91ba87ab449f2f1076e110673305e5860f2",
+    "checksum": "ea08dd19dd3b1fa28c68d06b114cd5ebc0967ac67d377c26f0a9c8b219454fd2",
     "managedInAxis": true,
     "axisAuthoringPermissions": [
       "documentation.navigation.update"
@@ -1135,9 +1135,9 @@ module.exports = {
     "active": true
   },
   "record24": {
-    "code": "axisDocsPublicationnodeaxisdocsnodetopicaxisimportsexports",
+    "code": "axisDocsPublicationnodeaxisdocsnodepageaxisopenapireference",
     "targetType": "NODE",
-    "targetCode": "axisDocsNodeTopicaxisImportsExports",
+    "targetCode": "axisDocsNodePageaxisOpenapiReference",
     "lifecycleState": "ONLINE",
     "publicationCode": "axisDocumentation",
     "workflowReference": "axisDocumentationReviewWorkflow",
@@ -1150,7 +1150,7 @@ module.exports = {
       "publicationPath": "STAGED_REVIEW_APPROVAL_ONLINE",
       "nexusVisibleOnlyWhenOnlineAndPublic": true
     },
-    "checksum": "d0e967df131c55d850c7b2080205b5a6a05dd25d768294909fd0ba4281528335",
+    "checksum": "70fb20a11fb7e6e425eb6a36add785b2af8a3518efe5bcf025d540bc888a4494",
     "managedInAxis": true,
     "axisAuthoringPermissions": [
       "documentation.navigation.update"
@@ -1182,9 +1182,9 @@ module.exports = {
     "active": true
   },
   "record25": {
-    "code": "axisDocsPublicationnodeaxisdocsnodetopicaxismediamanagement",
+    "code": "axisDocsPublicationnodeaxisdocsnodepageaxisfeaturedelivery",
     "targetType": "NODE",
-    "targetCode": "axisDocsNodeTopicaxisMediaManagement",
+    "targetCode": "axisDocsNodePageaxisFeatureDelivery",
     "lifecycleState": "ONLINE",
     "publicationCode": "axisDocumentation",
     "workflowReference": "axisDocumentationReviewWorkflow",
@@ -1197,7 +1197,7 @@ module.exports = {
       "publicationPath": "STAGED_REVIEW_APPROVAL_ONLINE",
       "nexusVisibleOnlyWhenOnlineAndPublic": true
     },
-    "checksum": "d457b8ee5773a6cb5bf39f90bafdbece4a612943faaaa0218ae85b4e0f7ae851",
+    "checksum": "a6d8299a5af69f3b7c1b599a949bfab48cef95b1a2ef7369b20d63974c24749a",
     "managedInAxis": true,
     "axisAuthoringPermissions": [
       "documentation.navigation.update"
@@ -1229,9 +1229,9 @@ module.exports = {
     "active": true
   },
   "record26": {
-    "code": "axisDocsPublicationnodeaxisdocsnodetopicaxiscustomerengagement",
+    "code": "axisDocsPublicationnodeaxisdocsnodepageaxisimplementationcontract",
     "targetType": "NODE",
-    "targetCode": "axisDocsNodeTopicaxisCustomerEngagement",
+    "targetCode": "axisDocsNodePageaxisImplementationContract",
     "lifecycleState": "ONLINE",
     "publicationCode": "axisDocumentation",
     "workflowReference": "axisDocumentationReviewWorkflow",
@@ -1244,7 +1244,7 @@ module.exports = {
       "publicationPath": "STAGED_REVIEW_APPROVAL_ONLINE",
       "nexusVisibleOnlyWhenOnlineAndPublic": true
     },
-    "checksum": "8b8320ca1b43b298686a9b6dde189f29f9370c4de59fbcaec4e65dde95790b31",
+    "checksum": "d4e3a5383ecaf44edd04753a30c7534251f3214ffffd0491ba572a24e045382e",
     "managedInAxis": true,
     "axisAuthoringPermissions": [
       "documentation.navigation.update"
@@ -1276,194 +1276,6 @@ module.exports = {
     "active": true
   },
   "record27": {
-    "code": "axisDocsPublicationnodeaxisdocsnodetopicaxisopenapireference",
-    "targetType": "NODE",
-    "targetCode": "axisDocsNodeTopicaxisOpenapiReference",
-    "lifecycleState": "ONLINE",
-    "publicationCode": "axisDocumentation",
-    "workflowReference": "axisDocumentationReviewWorkflow",
-    "stagedVersion": "0.0.2",
-    "onlineVersion": "0.0.2",
-    "previousOnlineVersion": "",
-    "validationResult": {
-      "generated": true,
-      "sourceAuthority": "docs/catalogue.json",
-      "publicationPath": "STAGED_REVIEW_APPROVAL_ONLINE",
-      "nexusVisibleOnlyWhenOnlineAndPublic": true
-    },
-    "checksum": "209e8216bbafc4ac3368b696a9226cd69bf1f9652a00b3ff46f49ba50c557cab",
-    "managedInAxis": true,
-    "axisAuthoringPermissions": [
-      "documentation.navigation.update"
-    ],
-    "workflowRequired": true,
-    "workflowTriggers": [
-      "NAVIGATION_CHANGE",
-      "DASHBOARD_CHANGE",
-      "ACCESS_POLICY_CHANGE"
-    ],
-    "decisionPolicy": {
-      "reviewPermission": "documentation.review",
-      "approvePermission": "documentation.approve",
-      "publishPermission": "documentation.publish",
-      "permissionEnforced": true,
-      "adminOverrideAudited": true
-    },
-    "actor": "nodics.platform.axis.generator",
-    "author": "nodics.platform.axis.generator",
-    "submittedBy": "",
-    "submittedAt": "",
-    "reviewer": "",
-    "reviewedAt": "",
-    "approver": "",
-    "approvedAt": "",
-    "publisher": "",
-    "publishedAt": "",
-    "auditTrail": [],
-    "active": true
-  },
-  "record28": {
-    "code": "axisDocsPublicationnodeaxisdocsnodegrpcontributetoaxisaxiscontributionandgovernance",
-    "targetType": "NODE",
-    "targetCode": "axisDocsNodeGrpcontributeToAxisaxisContributionAndGovernance",
-    "lifecycleState": "ONLINE",
-    "publicationCode": "axisDocumentation",
-    "workflowReference": "axisDocumentationReviewWorkflow",
-    "stagedVersion": "0.0.2",
-    "onlineVersion": "0.0.2",
-    "previousOnlineVersion": "",
-    "validationResult": {
-      "generated": true,
-      "sourceAuthority": "docs/catalogue.json",
-      "publicationPath": "STAGED_REVIEW_APPROVAL_ONLINE",
-      "nexusVisibleOnlyWhenOnlineAndPublic": true
-    },
-    "checksum": "1e6efba92bb281311f6093930f34ba43fd045153219514cb60347213d2c178e7",
-    "managedInAxis": true,
-    "axisAuthoringPermissions": [
-      "documentation.navigation.update"
-    ],
-    "workflowRequired": true,
-    "workflowTriggers": [
-      "NAVIGATION_CHANGE",
-      "DASHBOARD_CHANGE",
-      "ACCESS_POLICY_CHANGE"
-    ],
-    "decisionPolicy": {
-      "reviewPermission": "documentation.review",
-      "approvePermission": "documentation.approve",
-      "publishPermission": "documentation.publish",
-      "permissionEnforced": true,
-      "adminOverrideAudited": true
-    },
-    "actor": "nodics.platform.axis.generator",
-    "author": "nodics.platform.axis.generator",
-    "submittedBy": "",
-    "submittedAt": "",
-    "reviewer": "",
-    "reviewedAt": "",
-    "approver": "",
-    "approvedAt": "",
-    "publisher": "",
-    "publishedAt": "",
-    "auditTrail": [],
-    "active": true
-  },
-  "record29": {
-    "code": "axisDocsPublicationnodeaxisdocsnodetopicaxisfeaturedelivery",
-    "targetType": "NODE",
-    "targetCode": "axisDocsNodeTopicaxisFeatureDelivery",
-    "lifecycleState": "ONLINE",
-    "publicationCode": "axisDocumentation",
-    "workflowReference": "axisDocumentationReviewWorkflow",
-    "stagedVersion": "0.0.2",
-    "onlineVersion": "0.0.2",
-    "previousOnlineVersion": "",
-    "validationResult": {
-      "generated": true,
-      "sourceAuthority": "docs/catalogue.json",
-      "publicationPath": "STAGED_REVIEW_APPROVAL_ONLINE",
-      "nexusVisibleOnlyWhenOnlineAndPublic": true
-    },
-    "checksum": "829d52d051a3dc24fe19e16004b5971eb3b7cfd161ac09b0f871c5c4e44b1bb4",
-    "managedInAxis": true,
-    "axisAuthoringPermissions": [
-      "documentation.navigation.update"
-    ],
-    "workflowRequired": true,
-    "workflowTriggers": [
-      "NAVIGATION_CHANGE",
-      "DASHBOARD_CHANGE",
-      "ACCESS_POLICY_CHANGE"
-    ],
-    "decisionPolicy": {
-      "reviewPermission": "documentation.review",
-      "approvePermission": "documentation.approve",
-      "publishPermission": "documentation.publish",
-      "permissionEnforced": true,
-      "adminOverrideAudited": true
-    },
-    "actor": "nodics.platform.axis.generator",
-    "author": "nodics.platform.axis.generator",
-    "submittedBy": "",
-    "submittedAt": "",
-    "reviewer": "",
-    "reviewedAt": "",
-    "approver": "",
-    "approvedAt": "",
-    "publisher": "",
-    "publishedAt": "",
-    "auditTrail": [],
-    "active": true
-  },
-  "record30": {
-    "code": "axisDocsPublicationnodeaxisdocsnodetopicaxisimplementationcontract",
-    "targetType": "NODE",
-    "targetCode": "axisDocsNodeTopicaxisImplementationContract",
-    "lifecycleState": "ONLINE",
-    "publicationCode": "axisDocumentation",
-    "workflowReference": "axisDocumentationReviewWorkflow",
-    "stagedVersion": "0.0.2",
-    "onlineVersion": "0.0.2",
-    "previousOnlineVersion": "",
-    "validationResult": {
-      "generated": true,
-      "sourceAuthority": "docs/catalogue.json",
-      "publicationPath": "STAGED_REVIEW_APPROVAL_ONLINE",
-      "nexusVisibleOnlyWhenOnlineAndPublic": true
-    },
-    "checksum": "acc570d9d8ae07529308b155d7f337927b3eb5e31e41d55a898eb7d41b9a9e5d",
-    "managedInAxis": true,
-    "axisAuthoringPermissions": [
-      "documentation.navigation.update"
-    ],
-    "workflowRequired": true,
-    "workflowTriggers": [
-      "NAVIGATION_CHANGE",
-      "DASHBOARD_CHANGE",
-      "ACCESS_POLICY_CHANGE"
-    ],
-    "decisionPolicy": {
-      "reviewPermission": "documentation.review",
-      "approvePermission": "documentation.approve",
-      "publishPermission": "documentation.publish",
-      "permissionEnforced": true,
-      "adminOverrideAudited": true
-    },
-    "actor": "nodics.platform.axis.generator",
-    "author": "nodics.platform.axis.generator",
-    "submittedBy": "",
-    "submittedAt": "",
-    "reviewer": "",
-    "reviewedAt": "",
-    "approver": "",
-    "approvedAt": "",
-    "publisher": "",
-    "publishedAt": "",
-    "auditTrail": [],
-    "active": true
-  },
-  "record31": {
     "code": "axisDocsPublicationdashboardaxisdocsdashboardproduct",
     "targetType": "DASHBOARD",
     "targetCode": "axisDocsDashboardProduct",
@@ -1508,7 +1320,7 @@ module.exports = {
     "auditTrail": [],
     "active": true
   },
-  "record32": {
+  "record28": {
     "code": "axisDocsPublicationdashboardaxisdocsdashboardnavigation",
     "targetType": "DASHBOARD",
     "targetCode": "axisDocsDashboardNavigation",
@@ -1553,7 +1365,7 @@ module.exports = {
     "auditTrail": [],
     "active": true
   },
-  "record33": {
+  "record29": {
     "code": "axisDocsPublicationdashboardaxisdocsdashboardsecdiscoveraxis",
     "targetType": "DASHBOARD",
     "targetCode": "axisDocsDashboardSecdiscoverAxis",
@@ -1598,7 +1410,7 @@ module.exports = {
     "auditTrail": [],
     "active": true
   },
-  "record34": {
+  "record30": {
     "code": "axisDocsPublicationdashboardaxisdocsdashboardsecbuildandoperateaxis",
     "targetType": "DASHBOARD",
     "targetCode": "axisDocsDashboardSecbuildAndOperateAxis",
@@ -1643,7 +1455,7 @@ module.exports = {
     "auditTrail": [],
     "active": true
   },
-  "record35": {
+  "record31": {
     "code": "axisDocsPublicationdashboardaxisdocsdashboardsecaxiscapabilities",
     "targetType": "DASHBOARD",
     "targetCode": "axisDocsDashboardSecaxisCapabilities",
@@ -1688,7 +1500,7 @@ module.exports = {
     "auditTrail": [],
     "active": true
   },
-  "record36": {
+  "record32": {
     "code": "axisDocsPublicationdashboardaxisdocsdashboardseccontributetoaxis",
     "targetType": "DASHBOARD",
     "targetCode": "axisDocsDashboardSeccontributeToAxis",
@@ -1733,187 +1545,7 @@ module.exports = {
     "auditTrail": [],
     "active": true
   },
-  "record37": {
-    "code": "axisDocsPublicationdashboardaxisdocsdashboardgrpdiscoveraxisaxisoverviewandarchitecture",
-    "targetType": "DASHBOARD",
-    "targetCode": "axisDocsDashboardGrpdiscoverAxisaxisOverviewAndArchitecture",
-    "lifecycleState": "ONLINE",
-    "publicationCode": "axisDocumentation",
-    "workflowReference": "axisDocumentationReviewWorkflow",
-    "stagedVersion": "0.0.2",
-    "onlineVersion": "0.0.2",
-    "previousOnlineVersion": "",
-    "validationResult": {
-      "generated": true,
-      "sourceAuthority": "docs/catalogue.json",
-      "publicationPath": "STAGED_REVIEW_APPROVAL_ONLINE",
-      "nexusVisibleOnlyWhenOnlineAndPublic": true
-    },
-    "checksum": "20147e20c46a38d476141961749b829a0c99b74f9c6f2efbe80e0e469c238298",
-    "managedInAxis": true,
-    "axisAuthoringPermissions": [
-      "documentation.dashboard.update"
-    ],
-    "workflowRequired": true,
-    "workflowTriggers": [
-      "DASHBOARD_CHANGE"
-    ],
-    "decisionPolicy": {
-      "reviewPermission": "documentation.review",
-      "approvePermission": "documentation.approve",
-      "publishPermission": "documentation.publish",
-      "permissionEnforced": true,
-      "adminOverrideAudited": true
-    },
-    "actor": "nodics.platform.axis.generator",
-    "author": "nodics.platform.axis.generator",
-    "submittedBy": "",
-    "submittedAt": "",
-    "reviewer": "",
-    "reviewedAt": "",
-    "approver": "",
-    "approvedAt": "",
-    "publisher": "",
-    "publishedAt": "",
-    "auditTrail": [],
-    "active": true
-  },
-  "record38": {
-    "code": "axisDocsPublicationdashboardaxisdocsdashboardgrpbuildandoperateaxisaxisbuildandruntime",
-    "targetType": "DASHBOARD",
-    "targetCode": "axisDocsDashboardGrpbuildAndOperateAxisaxisBuildAndRuntime",
-    "lifecycleState": "ONLINE",
-    "publicationCode": "axisDocumentation",
-    "workflowReference": "axisDocumentationReviewWorkflow",
-    "stagedVersion": "0.0.2",
-    "onlineVersion": "0.0.2",
-    "previousOnlineVersion": "",
-    "validationResult": {
-      "generated": true,
-      "sourceAuthority": "docs/catalogue.json",
-      "publicationPath": "STAGED_REVIEW_APPROVAL_ONLINE",
-      "nexusVisibleOnlyWhenOnlineAndPublic": true
-    },
-    "checksum": "08de1e9eb1872b0fae8bb08eea518730f72620b1621515b98c8f46343f5a7548",
-    "managedInAxis": true,
-    "axisAuthoringPermissions": [
-      "documentation.dashboard.update"
-    ],
-    "workflowRequired": true,
-    "workflowTriggers": [
-      "DASHBOARD_CHANGE"
-    ],
-    "decisionPolicy": {
-      "reviewPermission": "documentation.review",
-      "approvePermission": "documentation.approve",
-      "publishPermission": "documentation.publish",
-      "permissionEnforced": true,
-      "adminOverrideAudited": true
-    },
-    "actor": "nodics.platform.axis.generator",
-    "author": "nodics.platform.axis.generator",
-    "submittedBy": "",
-    "submittedAt": "",
-    "reviewer": "",
-    "reviewedAt": "",
-    "approver": "",
-    "approvedAt": "",
-    "publisher": "",
-    "publishedAt": "",
-    "auditTrail": [],
-    "active": true
-  },
-  "record39": {
-    "code": "axisDocsPublicationdashboardaxisdocsdashboardgrpaxiscapabilitiesaxisworkspacesandoperations",
-    "targetType": "DASHBOARD",
-    "targetCode": "axisDocsDashboardGrpaxisCapabilitiesaxisWorkspacesAndOperations",
-    "lifecycleState": "ONLINE",
-    "publicationCode": "axisDocumentation",
-    "workflowReference": "axisDocumentationReviewWorkflow",
-    "stagedVersion": "0.0.2",
-    "onlineVersion": "0.0.2",
-    "previousOnlineVersion": "",
-    "validationResult": {
-      "generated": true,
-      "sourceAuthority": "docs/catalogue.json",
-      "publicationPath": "STAGED_REVIEW_APPROVAL_ONLINE",
-      "nexusVisibleOnlyWhenOnlineAndPublic": true
-    },
-    "checksum": "0f1ef6033199cd7a40177d50ca4b425c9a414ca6723ad90e8891e7c0fe623c5a",
-    "managedInAxis": true,
-    "axisAuthoringPermissions": [
-      "documentation.dashboard.update"
-    ],
-    "workflowRequired": true,
-    "workflowTriggers": [
-      "DASHBOARD_CHANGE"
-    ],
-    "decisionPolicy": {
-      "reviewPermission": "documentation.review",
-      "approvePermission": "documentation.approve",
-      "publishPermission": "documentation.publish",
-      "permissionEnforced": true,
-      "adminOverrideAudited": true
-    },
-    "actor": "nodics.platform.axis.generator",
-    "author": "nodics.platform.axis.generator",
-    "submittedBy": "",
-    "submittedAt": "",
-    "reviewer": "",
-    "reviewedAt": "",
-    "approver": "",
-    "approvedAt": "",
-    "publisher": "",
-    "publishedAt": "",
-    "auditTrail": [],
-    "active": true
-  },
-  "record40": {
-    "code": "axisDocsPublicationdashboardaxisdocsdashboardgrpcontributetoaxisaxiscontributionandgovernance",
-    "targetType": "DASHBOARD",
-    "targetCode": "axisDocsDashboardGrpcontributeToAxisaxisContributionAndGovernance",
-    "lifecycleState": "ONLINE",
-    "publicationCode": "axisDocumentation",
-    "workflowReference": "axisDocumentationReviewWorkflow",
-    "stagedVersion": "0.0.2",
-    "onlineVersion": "0.0.2",
-    "previousOnlineVersion": "",
-    "validationResult": {
-      "generated": true,
-      "sourceAuthority": "docs/catalogue.json",
-      "publicationPath": "STAGED_REVIEW_APPROVAL_ONLINE",
-      "nexusVisibleOnlyWhenOnlineAndPublic": true
-    },
-    "checksum": "15e601e1298b82e94f04ee7b94fa165b7306f47e4d65b404a629c15183e6a7e4",
-    "managedInAxis": true,
-    "axisAuthoringPermissions": [
-      "documentation.dashboard.update"
-    ],
-    "workflowRequired": true,
-    "workflowTriggers": [
-      "DASHBOARD_CHANGE"
-    ],
-    "decisionPolicy": {
-      "reviewPermission": "documentation.review",
-      "approvePermission": "documentation.approve",
-      "publishPermission": "documentation.publish",
-      "permissionEnforced": true,
-      "adminOverrideAudited": true
-    },
-    "actor": "nodics.platform.axis.generator",
-    "author": "nodics.platform.axis.generator",
-    "submittedBy": "",
-    "submittedAt": "",
-    "reviewer": "",
-    "reviewedAt": "",
-    "approver": "",
-    "approvedAt": "",
-    "publisher": "",
-    "publishedAt": "",
-    "auditTrail": [],
-    "active": true
-  },
-  "record41": {
+  "record33": {
     "code": "axisDocsPublicationpageaxisdocsmetadataoverview",
     "targetType": "PAGE",
     "targetCode": "axisDocsMetadataoverview",
@@ -1960,7 +1592,7 @@ module.exports = {
     "auditTrail": [],
     "active": true
   },
-  "record42": {
+  "record34": {
     "code": "axisDocsPublicationpageaxisdocsmetadataarchitecture",
     "targetType": "PAGE",
     "targetCode": "axisDocsMetadataarchitecture",
@@ -2007,7 +1639,7 @@ module.exports = {
     "auditTrail": [],
     "active": true
   },
-  "record43": {
+  "record35": {
     "code": "axisDocsPublicationpageaxisdocsmetadatatechnologystack",
     "targetType": "PAGE",
     "targetCode": "axisDocsMetadatatechnologystack",
@@ -2054,7 +1686,7 @@ module.exports = {
     "auditTrail": [],
     "active": true
   },
-  "record44": {
+  "record36": {
     "code": "axisDocsPublicationpageaxisdocsmetadatadesignsystem",
     "targetType": "PAGE",
     "targetCode": "axisDocsMetadatadesignsystem",
@@ -2101,7 +1733,7 @@ module.exports = {
     "auditTrail": [],
     "active": true
   },
-  "record45": {
+  "record37": {
     "code": "axisDocsPublicationpageaxisdocsmetadatacmsrenderers",
     "targetType": "PAGE",
     "targetCode": "axisDocsMetadatacmsrenderers",
@@ -2148,7 +1780,7 @@ module.exports = {
     "auditTrail": [],
     "active": true
   },
-  "record46": {
+  "record38": {
     "code": "axisDocsPublicationpageaxisdocsmetadatadocumentationcontent",
     "targetType": "PAGE",
     "targetCode": "axisDocsMetadatadocumentationcontent",
@@ -2195,7 +1827,7 @@ module.exports = {
     "auditTrail": [],
     "active": true
   },
-  "record47": {
+  "record39": {
     "code": "axisDocsPublicationpageaxisdocsmetadataemployeeaccess",
     "targetType": "PAGE",
     "targetCode": "axisDocsMetadataemployeeaccess",
@@ -2242,7 +1874,7 @@ module.exports = {
     "auditTrail": [],
     "active": true
   },
-  "record48": {
+  "record40": {
     "code": "axisDocsPublicationpageaxisdocsmetadataassistant",
     "targetType": "PAGE",
     "targetCode": "axisDocsMetadataassistant",
@@ -2289,7 +1921,7 @@ module.exports = {
     "auditTrail": [],
     "active": true
   },
-  "record49": {
+  "record41": {
     "code": "axisDocsPublicationpageaxisdocsmetadataschemaworkbench",
     "targetType": "PAGE",
     "targetCode": "axisDocsMetadataschemaworkbench",
@@ -2336,7 +1968,7 @@ module.exports = {
     "auditTrail": [],
     "active": true
   },
-  "record50": {
+  "record42": {
     "code": "axisDocsPublicationpageaxisdocsmetadatapagedesigner",
     "targetType": "PAGE",
     "targetCode": "axisDocsMetadatapagedesigner",
@@ -2383,7 +2015,7 @@ module.exports = {
     "auditTrail": [],
     "active": true
   },
-  "record51": {
+  "record43": {
     "code": "axisDocsPublicationpageaxisdocsmetadataexperiencestudio",
     "targetType": "PAGE",
     "targetCode": "axisDocsMetadataexperiencestudio",
@@ -2430,7 +2062,7 @@ module.exports = {
     "auditTrail": [],
     "active": true
   },
-  "record52": {
+  "record44": {
     "code": "axisDocsPublicationpageaxisdocsmetadatamodulehealth",
     "targetType": "PAGE",
     "targetCode": "axisDocsMetadatamodulehealth",
@@ -2477,7 +2109,7 @@ module.exports = {
     "auditTrail": [],
     "active": true
   },
-  "record53": {
+  "record45": {
     "code": "axisDocsPublicationpageaxisdocsmetadataimportsexports",
     "targetType": "PAGE",
     "targetCode": "axisDocsMetadataimportsexports",
@@ -2524,7 +2156,7 @@ module.exports = {
     "auditTrail": [],
     "active": true
   },
-  "record54": {
+  "record46": {
     "code": "axisDocsPublicationpageaxisdocsmetadatamediamanagement",
     "targetType": "PAGE",
     "targetCode": "axisDocsMetadatamediamanagement",
@@ -2571,7 +2203,7 @@ module.exports = {
     "auditTrail": [],
     "active": true
   },
-  "record55": {
+  "record47": {
     "code": "axisDocsPublicationpageaxisdocsmetadatacustomerengagement",
     "targetType": "PAGE",
     "targetCode": "axisDocsMetadatacustomerengagement",
@@ -2618,7 +2250,7 @@ module.exports = {
     "auditTrail": [],
     "active": true
   },
-  "record56": {
+  "record48": {
     "code": "axisDocsPublicationpageaxisdocsmetadataopenapireference",
     "targetType": "PAGE",
     "targetCode": "axisDocsMetadataopenapireference",
@@ -2665,7 +2297,7 @@ module.exports = {
     "auditTrail": [],
     "active": true
   },
-  "record57": {
+  "record49": {
     "code": "axisDocsPublicationpageaxisdocsmetadatafeaturedelivery",
     "targetType": "PAGE",
     "targetCode": "axisDocsMetadatafeaturedelivery",
@@ -2712,7 +2344,7 @@ module.exports = {
     "auditTrail": [],
     "active": true
   },
-  "record58": {
+  "record50": {
     "code": "axisDocsPublicationpageaxisdocsmetadataimplementationcontract",
     "targetType": "PAGE",
     "targetCode": "axisDocsMetadataimplementationcontract",
@@ -2759,7 +2391,7 @@ module.exports = {
     "auditTrail": [],
     "active": true
   },
-  "record59": {
+  "record51": {
     "code": "axisDocsPublicationsearchmetadataaxisdocssearchproductaxisdocumentationproduct",
     "targetType": "SEARCH_METADATA",
     "targetCode": "axisDocsSearchproductaxisdocumentationproduct",
@@ -2804,7 +2436,7 @@ module.exports = {
     "auditTrail": [],
     "active": true
   },
-  "record60": {
+  "record52": {
     "code": "axisDocsPublicationsearchmetadataaxisdocssearchnavigationaxisdocumentationnavigationmetadata",
     "targetType": "SEARCH_METADATA",
     "targetCode": "axisDocsSearchnavigationaxisdocumentationnavigationmetadata",
@@ -2849,7 +2481,7 @@ module.exports = {
     "auditTrail": [],
     "active": true
   },
-  "record61": {
+  "record53": {
     "code": "axisDocsPublicationsearchmetadataaxisdocssearchnodeaxisdocsnoderoot",
     "targetType": "SEARCH_METADATA",
     "targetCode": "axisDocsSearchnodeaxisdocsnoderoot",
@@ -2894,7 +2526,7 @@ module.exports = {
     "auditTrail": [],
     "active": true
   },
-  "record62": {
+  "record54": {
     "code": "axisDocsPublicationsearchmetadataaxisdocssearchnodeaxisdocsnodesecdiscoveraxis",
     "targetType": "SEARCH_METADATA",
     "targetCode": "axisDocsSearchnodeaxisdocsnodesecdiscoveraxis",
@@ -2939,7 +2571,7 @@ module.exports = {
     "auditTrail": [],
     "active": true
   },
-  "record63": {
+  "record55": {
     "code": "axisDocsPublicationsearchmetadataaxisdocssearchnodeaxisdocsnodesecbuildandoperateaxis",
     "targetType": "SEARCH_METADATA",
     "targetCode": "axisDocsSearchnodeaxisdocsnodesecbuildandoperateaxis",
@@ -2984,7 +2616,7 @@ module.exports = {
     "auditTrail": [],
     "active": true
   },
-  "record64": {
+  "record56": {
     "code": "axisDocsPublicationsearchmetadataaxisdocssearchnodeaxisdocsnodesecaxiscapabilities",
     "targetType": "SEARCH_METADATA",
     "targetCode": "axisDocsSearchnodeaxisdocsnodesecaxiscapabilities",
@@ -3029,7 +2661,7 @@ module.exports = {
     "auditTrail": [],
     "active": true
   },
-  "record65": {
+  "record57": {
     "code": "axisDocsPublicationsearchmetadataaxisdocssearchnodeaxisdocsnodeseccontributetoaxis",
     "targetType": "SEARCH_METADATA",
     "targetCode": "axisDocsSearchnodeaxisdocsnodeseccontributetoaxis",
@@ -3074,10 +2706,10 @@ module.exports = {
     "auditTrail": [],
     "active": true
   },
-  "record66": {
-    "code": "axisDocsPublicationsearchmetadataaxisdocssearchnodeaxisdocsnodegrpdiscoveraxisaxisoverviewandarchitecture",
+  "record58": {
+    "code": "axisDocsPublicationsearchmetadataaxisdocssearchnodeaxisdocsnodepageaxisoverview",
     "targetType": "SEARCH_METADATA",
-    "targetCode": "axisDocsSearchnodeaxisdocsnodegrpdiscoveraxisaxisoverviewandarchitecture",
+    "targetCode": "axisDocsSearchnodeaxisdocsnodepageaxisoverview",
     "lifecycleState": "ONLINE",
     "publicationCode": "axisDocumentation",
     "workflowReference": "axisDocumentationReviewWorkflow",
@@ -3090,7 +2722,367 @@ module.exports = {
       "publicationPath": "STAGED_REVIEW_APPROVAL_ONLINE",
       "nexusVisibleOnlyWhenOnlineAndPublic": true
     },
-    "checksum": "a8243c5d7c6dc53af44c46aa4cd7ff380e535875a4cda3cfbbe27933996643bb",
+    "checksum": "8d24214854f54a39627b54a7790382a1472209830f64703d9b5cff18390ff2aa",
+    "managedInAxis": true,
+    "axisAuthoringPermissions": [
+      "documentation.search.preview"
+    ],
+    "workflowRequired": true,
+    "workflowTriggers": [
+      "SEARCH_METADATA_CHANGE"
+    ],
+    "decisionPolicy": {
+      "reviewPermission": "documentation.review",
+      "approvePermission": "documentation.approve",
+      "publishPermission": "documentation.publish",
+      "permissionEnforced": true,
+      "adminOverrideAudited": true
+    },
+    "actor": "nodics.platform.axis.generator",
+    "author": "nodics.platform.axis.generator",
+    "submittedBy": "",
+    "submittedAt": "",
+    "reviewer": "",
+    "reviewedAt": "",
+    "approver": "",
+    "approvedAt": "",
+    "publisher": "",
+    "publishedAt": "",
+    "auditTrail": [],
+    "active": true
+  },
+  "record59": {
+    "code": "axisDocsPublicationsearchmetadataaxisdocssearchnodeaxisdocsnodepageaxisarchitecture",
+    "targetType": "SEARCH_METADATA",
+    "targetCode": "axisDocsSearchnodeaxisdocsnodepageaxisarchitecture",
+    "lifecycleState": "ONLINE",
+    "publicationCode": "axisDocumentation",
+    "workflowReference": "axisDocumentationReviewWorkflow",
+    "stagedVersion": "0.0.2",
+    "onlineVersion": "0.0.2",
+    "previousOnlineVersion": "",
+    "validationResult": {
+      "generated": true,
+      "sourceAuthority": "docs/catalogue.json",
+      "publicationPath": "STAGED_REVIEW_APPROVAL_ONLINE",
+      "nexusVisibleOnlyWhenOnlineAndPublic": true
+    },
+    "checksum": "9b9d7859222519d5fda6b3fd9d5f6cc765ea79ce534e3a21d9ed7ce49e73de9d",
+    "managedInAxis": true,
+    "axisAuthoringPermissions": [
+      "documentation.search.preview"
+    ],
+    "workflowRequired": true,
+    "workflowTriggers": [
+      "SEARCH_METADATA_CHANGE"
+    ],
+    "decisionPolicy": {
+      "reviewPermission": "documentation.review",
+      "approvePermission": "documentation.approve",
+      "publishPermission": "documentation.publish",
+      "permissionEnforced": true,
+      "adminOverrideAudited": true
+    },
+    "actor": "nodics.platform.axis.generator",
+    "author": "nodics.platform.axis.generator",
+    "submittedBy": "",
+    "submittedAt": "",
+    "reviewer": "",
+    "reviewedAt": "",
+    "approver": "",
+    "approvedAt": "",
+    "publisher": "",
+    "publishedAt": "",
+    "auditTrail": [],
+    "active": true
+  },
+  "record60": {
+    "code": "axisDocsPublicationsearchmetadataaxisdocssearchnodeaxisdocsnodepageaxistechnologystack",
+    "targetType": "SEARCH_METADATA",
+    "targetCode": "axisDocsSearchnodeaxisdocsnodepageaxistechnologystack",
+    "lifecycleState": "ONLINE",
+    "publicationCode": "axisDocumentation",
+    "workflowReference": "axisDocumentationReviewWorkflow",
+    "stagedVersion": "0.0.2",
+    "onlineVersion": "0.0.2",
+    "previousOnlineVersion": "",
+    "validationResult": {
+      "generated": true,
+      "sourceAuthority": "docs/catalogue.json",
+      "publicationPath": "STAGED_REVIEW_APPROVAL_ONLINE",
+      "nexusVisibleOnlyWhenOnlineAndPublic": true
+    },
+    "checksum": "7af85c76a51c113a1db69206304f6db88dcde05441a29dcc9bfedd4f2300aa78",
+    "managedInAxis": true,
+    "axisAuthoringPermissions": [
+      "documentation.search.preview"
+    ],
+    "workflowRequired": true,
+    "workflowTriggers": [
+      "SEARCH_METADATA_CHANGE"
+    ],
+    "decisionPolicy": {
+      "reviewPermission": "documentation.review",
+      "approvePermission": "documentation.approve",
+      "publishPermission": "documentation.publish",
+      "permissionEnforced": true,
+      "adminOverrideAudited": true
+    },
+    "actor": "nodics.platform.axis.generator",
+    "author": "nodics.platform.axis.generator",
+    "submittedBy": "",
+    "submittedAt": "",
+    "reviewer": "",
+    "reviewedAt": "",
+    "approver": "",
+    "approvedAt": "",
+    "publisher": "",
+    "publishedAt": "",
+    "auditTrail": [],
+    "active": true
+  },
+  "record61": {
+    "code": "axisDocsPublicationsearchmetadataaxisdocssearchnodeaxisdocsnodepageaxisdesignsystem",
+    "targetType": "SEARCH_METADATA",
+    "targetCode": "axisDocsSearchnodeaxisdocsnodepageaxisdesignsystem",
+    "lifecycleState": "ONLINE",
+    "publicationCode": "axisDocumentation",
+    "workflowReference": "axisDocumentationReviewWorkflow",
+    "stagedVersion": "0.0.2",
+    "onlineVersion": "0.0.2",
+    "previousOnlineVersion": "",
+    "validationResult": {
+      "generated": true,
+      "sourceAuthority": "docs/catalogue.json",
+      "publicationPath": "STAGED_REVIEW_APPROVAL_ONLINE",
+      "nexusVisibleOnlyWhenOnlineAndPublic": true
+    },
+    "checksum": "0e007c46dd8c293f0e41b66502ca0ba6e4a9ac7ccc4bb3666aba3875601c3a74",
+    "managedInAxis": true,
+    "axisAuthoringPermissions": [
+      "documentation.search.preview"
+    ],
+    "workflowRequired": true,
+    "workflowTriggers": [
+      "SEARCH_METADATA_CHANGE"
+    ],
+    "decisionPolicy": {
+      "reviewPermission": "documentation.review",
+      "approvePermission": "documentation.approve",
+      "publishPermission": "documentation.publish",
+      "permissionEnforced": true,
+      "adminOverrideAudited": true
+    },
+    "actor": "nodics.platform.axis.generator",
+    "author": "nodics.platform.axis.generator",
+    "submittedBy": "",
+    "submittedAt": "",
+    "reviewer": "",
+    "reviewedAt": "",
+    "approver": "",
+    "approvedAt": "",
+    "publisher": "",
+    "publishedAt": "",
+    "auditTrail": [],
+    "active": true
+  },
+  "record62": {
+    "code": "axisDocsPublicationsearchmetadataaxisdocssearchnodeaxisdocsnodepageaxiscmsrenderers",
+    "targetType": "SEARCH_METADATA",
+    "targetCode": "axisDocsSearchnodeaxisdocsnodepageaxiscmsrenderers",
+    "lifecycleState": "ONLINE",
+    "publicationCode": "axisDocumentation",
+    "workflowReference": "axisDocumentationReviewWorkflow",
+    "stagedVersion": "0.0.2",
+    "onlineVersion": "0.0.2",
+    "previousOnlineVersion": "",
+    "validationResult": {
+      "generated": true,
+      "sourceAuthority": "docs/catalogue.json",
+      "publicationPath": "STAGED_REVIEW_APPROVAL_ONLINE",
+      "nexusVisibleOnlyWhenOnlineAndPublic": true
+    },
+    "checksum": "5e24baac30b57055eccd170597d58f171aabb6dccd34d2afff04528cd88c4b3e",
+    "managedInAxis": true,
+    "axisAuthoringPermissions": [
+      "documentation.search.preview"
+    ],
+    "workflowRequired": true,
+    "workflowTriggers": [
+      "SEARCH_METADATA_CHANGE"
+    ],
+    "decisionPolicy": {
+      "reviewPermission": "documentation.review",
+      "approvePermission": "documentation.approve",
+      "publishPermission": "documentation.publish",
+      "permissionEnforced": true,
+      "adminOverrideAudited": true
+    },
+    "actor": "nodics.platform.axis.generator",
+    "author": "nodics.platform.axis.generator",
+    "submittedBy": "",
+    "submittedAt": "",
+    "reviewer": "",
+    "reviewedAt": "",
+    "approver": "",
+    "approvedAt": "",
+    "publisher": "",
+    "publishedAt": "",
+    "auditTrail": [],
+    "active": true
+  },
+  "record63": {
+    "code": "axisDocsPublicationsearchmetadataaxisdocssearchnodeaxisdocsnodepageaxisdocumentationcontent",
+    "targetType": "SEARCH_METADATA",
+    "targetCode": "axisDocsSearchnodeaxisdocsnodepageaxisdocumentationcontent",
+    "lifecycleState": "ONLINE",
+    "publicationCode": "axisDocumentation",
+    "workflowReference": "axisDocumentationReviewWorkflow",
+    "stagedVersion": "0.0.2",
+    "onlineVersion": "0.0.2",
+    "previousOnlineVersion": "",
+    "validationResult": {
+      "generated": true,
+      "sourceAuthority": "docs/catalogue.json",
+      "publicationPath": "STAGED_REVIEW_APPROVAL_ONLINE",
+      "nexusVisibleOnlyWhenOnlineAndPublic": true
+    },
+    "checksum": "8b16a7285d0291b996fe095b9a96589b2a891587af987b9db1cb70e7eafb8536",
+    "managedInAxis": true,
+    "axisAuthoringPermissions": [
+      "documentation.search.preview"
+    ],
+    "workflowRequired": true,
+    "workflowTriggers": [
+      "SEARCH_METADATA_CHANGE"
+    ],
+    "decisionPolicy": {
+      "reviewPermission": "documentation.review",
+      "approvePermission": "documentation.approve",
+      "publishPermission": "documentation.publish",
+      "permissionEnforced": true,
+      "adminOverrideAudited": true
+    },
+    "actor": "nodics.platform.axis.generator",
+    "author": "nodics.platform.axis.generator",
+    "submittedBy": "",
+    "submittedAt": "",
+    "reviewer": "",
+    "reviewedAt": "",
+    "approver": "",
+    "approvedAt": "",
+    "publisher": "",
+    "publishedAt": "",
+    "auditTrail": [],
+    "active": true
+  },
+  "record64": {
+    "code": "axisDocsPublicationsearchmetadataaxisdocssearchnodeaxisdocsnodepageaxisemployeeaccess",
+    "targetType": "SEARCH_METADATA",
+    "targetCode": "axisDocsSearchnodeaxisdocsnodepageaxisemployeeaccess",
+    "lifecycleState": "ONLINE",
+    "publicationCode": "axisDocumentation",
+    "workflowReference": "axisDocumentationReviewWorkflow",
+    "stagedVersion": "0.0.2",
+    "onlineVersion": "0.0.2",
+    "previousOnlineVersion": "",
+    "validationResult": {
+      "generated": true,
+      "sourceAuthority": "docs/catalogue.json",
+      "publicationPath": "STAGED_REVIEW_APPROVAL_ONLINE",
+      "nexusVisibleOnlyWhenOnlineAndPublic": true
+    },
+    "checksum": "1b150fa3e9a7502c9b723f86a34fb081ee624374b1c1bdcccad058b301a1fe96",
+    "managedInAxis": true,
+    "axisAuthoringPermissions": [
+      "documentation.search.preview"
+    ],
+    "workflowRequired": true,
+    "workflowTriggers": [
+      "SEARCH_METADATA_CHANGE"
+    ],
+    "decisionPolicy": {
+      "reviewPermission": "documentation.review",
+      "approvePermission": "documentation.approve",
+      "publishPermission": "documentation.publish",
+      "permissionEnforced": true,
+      "adminOverrideAudited": true
+    },
+    "actor": "nodics.platform.axis.generator",
+    "author": "nodics.platform.axis.generator",
+    "submittedBy": "",
+    "submittedAt": "",
+    "reviewer": "",
+    "reviewedAt": "",
+    "approver": "",
+    "approvedAt": "",
+    "publisher": "",
+    "publishedAt": "",
+    "auditTrail": [],
+    "active": true
+  },
+  "record65": {
+    "code": "axisDocsPublicationsearchmetadataaxisdocssearchnodeaxisdocsnodepageaxisassistant",
+    "targetType": "SEARCH_METADATA",
+    "targetCode": "axisDocsSearchnodeaxisdocsnodepageaxisassistant",
+    "lifecycleState": "ONLINE",
+    "publicationCode": "axisDocumentation",
+    "workflowReference": "axisDocumentationReviewWorkflow",
+    "stagedVersion": "0.0.2",
+    "onlineVersion": "0.0.2",
+    "previousOnlineVersion": "",
+    "validationResult": {
+      "generated": true,
+      "sourceAuthority": "docs/catalogue.json",
+      "publicationPath": "STAGED_REVIEW_APPROVAL_ONLINE",
+      "nexusVisibleOnlyWhenOnlineAndPublic": true
+    },
+    "checksum": "726e33eb25ee737bfdb6ff9490120b546bee446aaab19ab6d0a4dd227f966271",
+    "managedInAxis": true,
+    "axisAuthoringPermissions": [
+      "documentation.search.preview"
+    ],
+    "workflowRequired": true,
+    "workflowTriggers": [
+      "SEARCH_METADATA_CHANGE"
+    ],
+    "decisionPolicy": {
+      "reviewPermission": "documentation.review",
+      "approvePermission": "documentation.approve",
+      "publishPermission": "documentation.publish",
+      "permissionEnforced": true,
+      "adminOverrideAudited": true
+    },
+    "actor": "nodics.platform.axis.generator",
+    "author": "nodics.platform.axis.generator",
+    "submittedBy": "",
+    "submittedAt": "",
+    "reviewer": "",
+    "reviewedAt": "",
+    "approver": "",
+    "approvedAt": "",
+    "publisher": "",
+    "publishedAt": "",
+    "auditTrail": [],
+    "active": true
+  },
+  "record66": {
+    "code": "axisDocsPublicationsearchmetadataaxisdocssearchnodeaxisdocsnodepageaxisschemaworkbench",
+    "targetType": "SEARCH_METADATA",
+    "targetCode": "axisDocsSearchnodeaxisdocsnodepageaxisschemaworkbench",
+    "lifecycleState": "ONLINE",
+    "publicationCode": "axisDocumentation",
+    "workflowReference": "axisDocumentationReviewWorkflow",
+    "stagedVersion": "0.0.2",
+    "onlineVersion": "0.0.2",
+    "previousOnlineVersion": "",
+    "validationResult": {
+      "generated": true,
+      "sourceAuthority": "docs/catalogue.json",
+      "publicationPath": "STAGED_REVIEW_APPROVAL_ONLINE",
+      "nexusVisibleOnlyWhenOnlineAndPublic": true
+    },
+    "checksum": "da09ed927599b4a52a6a470e6200601c5df9b34f2b751e2ecc32482f629b9e47",
     "managedInAxis": true,
     "axisAuthoringPermissions": [
       "documentation.search.preview"
@@ -3120,9 +3112,9 @@ module.exports = {
     "active": true
   },
   "record67": {
-    "code": "axisDocsPublicationsearchmetadataaxisdocssearchnodeaxisdocsnodetopicaxisoverview",
+    "code": "axisDocsPublicationsearchmetadataaxisdocssearchnodeaxisdocsnodepageaxispagedesigner",
     "targetType": "SEARCH_METADATA",
-    "targetCode": "axisDocsSearchnodeaxisdocsnodetopicaxisoverview",
+    "targetCode": "axisDocsSearchnodeaxisdocsnodepageaxispagedesigner",
     "lifecycleState": "ONLINE",
     "publicationCode": "axisDocumentation",
     "workflowReference": "axisDocumentationReviewWorkflow",
@@ -3135,7 +3127,7 @@ module.exports = {
       "publicationPath": "STAGED_REVIEW_APPROVAL_ONLINE",
       "nexusVisibleOnlyWhenOnlineAndPublic": true
     },
-    "checksum": "8136630711cad5ed5c8ecadaaf6e8f45deee051ff53bda077afb93e9da4f23c2",
+    "checksum": "351f0f9d2e1838d598ea598adf4eb120d0243601bf8fb33d0f1ec588cf168aed",
     "managedInAxis": true,
     "axisAuthoringPermissions": [
       "documentation.search.preview"
@@ -3165,9 +3157,9 @@ module.exports = {
     "active": true
   },
   "record68": {
-    "code": "axisDocsPublicationsearchmetadataaxisdocssearchnodeaxisdocsnodetopicaxisarchitecture",
+    "code": "axisDocsPublicationsearchmetadataaxisdocssearchnodeaxisdocsnodepageaxisexperiencestudio",
     "targetType": "SEARCH_METADATA",
-    "targetCode": "axisDocsSearchnodeaxisdocsnodetopicaxisarchitecture",
+    "targetCode": "axisDocsSearchnodeaxisdocsnodepageaxisexperiencestudio",
     "lifecycleState": "ONLINE",
     "publicationCode": "axisDocumentation",
     "workflowReference": "axisDocumentationReviewWorkflow",
@@ -3180,7 +3172,7 @@ module.exports = {
       "publicationPath": "STAGED_REVIEW_APPROVAL_ONLINE",
       "nexusVisibleOnlyWhenOnlineAndPublic": true
     },
-    "checksum": "2caa92e6fa391ad706cdc8afcac188ebba80035cb3dc55c69051eef9d4937474",
+    "checksum": "b704bb2c678514ae45ff9350d8315ef80365c8ea81de64e943b4ba8a57afa50c",
     "managedInAxis": true,
     "axisAuthoringPermissions": [
       "documentation.search.preview"
@@ -3210,9 +3202,9 @@ module.exports = {
     "active": true
   },
   "record69": {
-    "code": "axisDocsPublicationsearchmetadataaxisdocssearchnodeaxisdocsnodegrpbuildandoperateaxisaxisbuildandruntime",
+    "code": "axisDocsPublicationsearchmetadataaxisdocssearchnodeaxisdocsnodepageaxismodulehealth",
     "targetType": "SEARCH_METADATA",
-    "targetCode": "axisDocsSearchnodeaxisdocsnodegrpbuildandoperateaxisaxisbuildandruntime",
+    "targetCode": "axisDocsSearchnodeaxisdocsnodepageaxismodulehealth",
     "lifecycleState": "ONLINE",
     "publicationCode": "axisDocumentation",
     "workflowReference": "axisDocumentationReviewWorkflow",
@@ -3225,7 +3217,7 @@ module.exports = {
       "publicationPath": "STAGED_REVIEW_APPROVAL_ONLINE",
       "nexusVisibleOnlyWhenOnlineAndPublic": true
     },
-    "checksum": "6f9a1974d26b563fd0df9783396efb3b4102b983b8724f8cbb94d53f4cd98a00",
+    "checksum": "f38033c8011295c249a78c780835c97670c7171a4c11f27181cf007f78934834",
     "managedInAxis": true,
     "axisAuthoringPermissions": [
       "documentation.search.preview"
@@ -3255,9 +3247,9 @@ module.exports = {
     "active": true
   },
   "record70": {
-    "code": "axisDocsPublicationsearchmetadataaxisdocssearchnodeaxisdocsnodetopicaxistechnologystack",
+    "code": "axisDocsPublicationsearchmetadataaxisdocssearchnodeaxisdocsnodepageaxisimportsexports",
     "targetType": "SEARCH_METADATA",
-    "targetCode": "axisDocsSearchnodeaxisdocsnodetopicaxistechnologystack",
+    "targetCode": "axisDocsSearchnodeaxisdocsnodepageaxisimportsexports",
     "lifecycleState": "ONLINE",
     "publicationCode": "axisDocumentation",
     "workflowReference": "axisDocumentationReviewWorkflow",
@@ -3270,7 +3262,7 @@ module.exports = {
       "publicationPath": "STAGED_REVIEW_APPROVAL_ONLINE",
       "nexusVisibleOnlyWhenOnlineAndPublic": true
     },
-    "checksum": "f35d53fb427e00eff250bb3e429b9ce861ea4be5cac9ab4ed4caa8db832dce54",
+    "checksum": "a33d562cd4256f79bd999c8c8d52f71c3456e9701d506c979198dbe207e870ab",
     "managedInAxis": true,
     "axisAuthoringPermissions": [
       "documentation.search.preview"
@@ -3300,9 +3292,9 @@ module.exports = {
     "active": true
   },
   "record71": {
-    "code": "axisDocsPublicationsearchmetadataaxisdocssearchnodeaxisdocsnodetopicaxisdesignsystem",
+    "code": "axisDocsPublicationsearchmetadataaxisdocssearchnodeaxisdocsnodepageaxismediamanagement",
     "targetType": "SEARCH_METADATA",
-    "targetCode": "axisDocsSearchnodeaxisdocsnodetopicaxisdesignsystem",
+    "targetCode": "axisDocsSearchnodeaxisdocsnodepageaxismediamanagement",
     "lifecycleState": "ONLINE",
     "publicationCode": "axisDocumentation",
     "workflowReference": "axisDocumentationReviewWorkflow",
@@ -3315,7 +3307,7 @@ module.exports = {
       "publicationPath": "STAGED_REVIEW_APPROVAL_ONLINE",
       "nexusVisibleOnlyWhenOnlineAndPublic": true
     },
-    "checksum": "b0ac4ff8cb57088764ad34326fd1f3a2794428ced6bc361de97328911a7dea3d",
+    "checksum": "5ac2fd9399bf2fe44dd472aacbf24fbd533032b0ac1cb98f29de91cd3e30d781",
     "managedInAxis": true,
     "axisAuthoringPermissions": [
       "documentation.search.preview"
@@ -3345,9 +3337,9 @@ module.exports = {
     "active": true
   },
   "record72": {
-    "code": "axisDocsPublicationsearchmetadataaxisdocssearchnodeaxisdocsnodetopicaxiscmsrenderers",
+    "code": "axisDocsPublicationsearchmetadataaxisdocssearchnodeaxisdocsnodepageaxiscustomerengagement",
     "targetType": "SEARCH_METADATA",
-    "targetCode": "axisDocsSearchnodeaxisdocsnodetopicaxiscmsrenderers",
+    "targetCode": "axisDocsSearchnodeaxisdocsnodepageaxiscustomerengagement",
     "lifecycleState": "ONLINE",
     "publicationCode": "axisDocumentation",
     "workflowReference": "axisDocumentationReviewWorkflow",
@@ -3360,7 +3352,7 @@ module.exports = {
       "publicationPath": "STAGED_REVIEW_APPROVAL_ONLINE",
       "nexusVisibleOnlyWhenOnlineAndPublic": true
     },
-    "checksum": "e086c5bbfa2a079c8cd5c7457e4aa64da004964c12398ab789377f822c8ac245",
+    "checksum": "0c0a2253afbcf422522eb0fee4fbf4b04f03ee930b13e74615006f3cf4837346",
     "managedInAxis": true,
     "axisAuthoringPermissions": [
       "documentation.search.preview"
@@ -3390,9 +3382,9 @@ module.exports = {
     "active": true
   },
   "record73": {
-    "code": "axisDocsPublicationsearchmetadataaxisdocssearchnodeaxisdocsnodetopicaxisdocumentationcontent",
+    "code": "axisDocsPublicationsearchmetadataaxisdocssearchnodeaxisdocsnodepageaxisopenapireference",
     "targetType": "SEARCH_METADATA",
-    "targetCode": "axisDocsSearchnodeaxisdocsnodetopicaxisdocumentationcontent",
+    "targetCode": "axisDocsSearchnodeaxisdocsnodepageaxisopenapireference",
     "lifecycleState": "ONLINE",
     "publicationCode": "axisDocumentation",
     "workflowReference": "axisDocumentationReviewWorkflow",
@@ -3405,7 +3397,7 @@ module.exports = {
       "publicationPath": "STAGED_REVIEW_APPROVAL_ONLINE",
       "nexusVisibleOnlyWhenOnlineAndPublic": true
     },
-    "checksum": "77b2d6170da4c35d7098880531454aad9df2baa2b95bb154f2a0dfafdb641b84",
+    "checksum": "5ccefb14c942da93f4f9390096f435500c1788d4284d66de910e2aa09630a7f6",
     "managedInAxis": true,
     "axisAuthoringPermissions": [
       "documentation.search.preview"
@@ -3435,9 +3427,9 @@ module.exports = {
     "active": true
   },
   "record74": {
-    "code": "axisDocsPublicationsearchmetadataaxisdocssearchnodeaxisdocsnodegrpaxiscapabilitiesaxisworkspacesandoperations",
+    "code": "axisDocsPublicationsearchmetadataaxisdocssearchnodeaxisdocsnodepageaxisfeaturedelivery",
     "targetType": "SEARCH_METADATA",
-    "targetCode": "axisDocsSearchnodeaxisdocsnodegrpaxiscapabilitiesaxisworkspacesandoperations",
+    "targetCode": "axisDocsSearchnodeaxisdocsnodepageaxisfeaturedelivery",
     "lifecycleState": "ONLINE",
     "publicationCode": "axisDocumentation",
     "workflowReference": "axisDocumentationReviewWorkflow",
@@ -3450,7 +3442,7 @@ module.exports = {
       "publicationPath": "STAGED_REVIEW_APPROVAL_ONLINE",
       "nexusVisibleOnlyWhenOnlineAndPublic": true
     },
-    "checksum": "ed0e9a356a53e9a1d8a0116389459b7e2022fe028752af85cefb920194d8ba48",
+    "checksum": "56fd77139a8e1412d3cdc238e2ea919f5d4c5b9662ce5796d41bcf3dc6a7586f",
     "managedInAxis": true,
     "axisAuthoringPermissions": [
       "documentation.search.preview"
@@ -3480,9 +3472,9 @@ module.exports = {
     "active": true
   },
   "record75": {
-    "code": "axisDocsPublicationsearchmetadataaxisdocssearchnodeaxisdocsnodetopicaxisemployeeaccess",
+    "code": "axisDocsPublicationsearchmetadataaxisdocssearchnodeaxisdocsnodepageaxisimplementationcontract",
     "targetType": "SEARCH_METADATA",
-    "targetCode": "axisDocsSearchnodeaxisdocsnodetopicaxisemployeeaccess",
+    "targetCode": "axisDocsSearchnodeaxisdocsnodepageaxisimplementationcontract",
     "lifecycleState": "ONLINE",
     "publicationCode": "axisDocumentation",
     "workflowReference": "axisDocumentationReviewWorkflow",
@@ -3495,7 +3487,7 @@ module.exports = {
       "publicationPath": "STAGED_REVIEW_APPROVAL_ONLINE",
       "nexusVisibleOnlyWhenOnlineAndPublic": true
     },
-    "checksum": "cbf9daa16930759aa81dc1db447cd6f9455a41d0bdc0b4a2c1bf8433968e3bb3",
+    "checksum": "0ef8f994a5a4259162bda648a0872e4236eaae5dc33255bab9d7a4a3132e8cfa",
     "managedInAxis": true,
     "axisAuthoringPermissions": [
       "documentation.search.preview"
@@ -3525,546 +3517,6 @@ module.exports = {
     "active": true
   },
   "record76": {
-    "code": "axisDocsPublicationsearchmetadataaxisdocssearchnodeaxisdocsnodetopicaxisassistant",
-    "targetType": "SEARCH_METADATA",
-    "targetCode": "axisDocsSearchnodeaxisdocsnodetopicaxisassistant",
-    "lifecycleState": "ONLINE",
-    "publicationCode": "axisDocumentation",
-    "workflowReference": "axisDocumentationReviewWorkflow",
-    "stagedVersion": "0.0.2",
-    "onlineVersion": "0.0.2",
-    "previousOnlineVersion": "",
-    "validationResult": {
-      "generated": true,
-      "sourceAuthority": "docs/catalogue.json",
-      "publicationPath": "STAGED_REVIEW_APPROVAL_ONLINE",
-      "nexusVisibleOnlyWhenOnlineAndPublic": true
-    },
-    "checksum": "bb44c633c63787ee62d264afe5be9760b6a9dd5c50bbed5979502ffe053fdeff",
-    "managedInAxis": true,
-    "axisAuthoringPermissions": [
-      "documentation.search.preview"
-    ],
-    "workflowRequired": true,
-    "workflowTriggers": [
-      "SEARCH_METADATA_CHANGE"
-    ],
-    "decisionPolicy": {
-      "reviewPermission": "documentation.review",
-      "approvePermission": "documentation.approve",
-      "publishPermission": "documentation.publish",
-      "permissionEnforced": true,
-      "adminOverrideAudited": true
-    },
-    "actor": "nodics.platform.axis.generator",
-    "author": "nodics.platform.axis.generator",
-    "submittedBy": "",
-    "submittedAt": "",
-    "reviewer": "",
-    "reviewedAt": "",
-    "approver": "",
-    "approvedAt": "",
-    "publisher": "",
-    "publishedAt": "",
-    "auditTrail": [],
-    "active": true
-  },
-  "record77": {
-    "code": "axisDocsPublicationsearchmetadataaxisdocssearchnodeaxisdocsnodetopicaxisschemaworkbench",
-    "targetType": "SEARCH_METADATA",
-    "targetCode": "axisDocsSearchnodeaxisdocsnodetopicaxisschemaworkbench",
-    "lifecycleState": "ONLINE",
-    "publicationCode": "axisDocumentation",
-    "workflowReference": "axisDocumentationReviewWorkflow",
-    "stagedVersion": "0.0.2",
-    "onlineVersion": "0.0.2",
-    "previousOnlineVersion": "",
-    "validationResult": {
-      "generated": true,
-      "sourceAuthority": "docs/catalogue.json",
-      "publicationPath": "STAGED_REVIEW_APPROVAL_ONLINE",
-      "nexusVisibleOnlyWhenOnlineAndPublic": true
-    },
-    "checksum": "5f70e95eeaf0c8465b509651f6f82b20eb1e4c9bc3a62083ae15f0c5e47125ab",
-    "managedInAxis": true,
-    "axisAuthoringPermissions": [
-      "documentation.search.preview"
-    ],
-    "workflowRequired": true,
-    "workflowTriggers": [
-      "SEARCH_METADATA_CHANGE"
-    ],
-    "decisionPolicy": {
-      "reviewPermission": "documentation.review",
-      "approvePermission": "documentation.approve",
-      "publishPermission": "documentation.publish",
-      "permissionEnforced": true,
-      "adminOverrideAudited": true
-    },
-    "actor": "nodics.platform.axis.generator",
-    "author": "nodics.platform.axis.generator",
-    "submittedBy": "",
-    "submittedAt": "",
-    "reviewer": "",
-    "reviewedAt": "",
-    "approver": "",
-    "approvedAt": "",
-    "publisher": "",
-    "publishedAt": "",
-    "auditTrail": [],
-    "active": true
-  },
-  "record78": {
-    "code": "axisDocsPublicationsearchmetadataaxisdocssearchnodeaxisdocsnodetopicaxispagedesigner",
-    "targetType": "SEARCH_METADATA",
-    "targetCode": "axisDocsSearchnodeaxisdocsnodetopicaxispagedesigner",
-    "lifecycleState": "ONLINE",
-    "publicationCode": "axisDocumentation",
-    "workflowReference": "axisDocumentationReviewWorkflow",
-    "stagedVersion": "0.0.2",
-    "onlineVersion": "0.0.2",
-    "previousOnlineVersion": "",
-    "validationResult": {
-      "generated": true,
-      "sourceAuthority": "docs/catalogue.json",
-      "publicationPath": "STAGED_REVIEW_APPROVAL_ONLINE",
-      "nexusVisibleOnlyWhenOnlineAndPublic": true
-    },
-    "checksum": "56029c17dd436817cfff6028b0195ef9af3857ec3de7e547437383f7ecae2e23",
-    "managedInAxis": true,
-    "axisAuthoringPermissions": [
-      "documentation.search.preview"
-    ],
-    "workflowRequired": true,
-    "workflowTriggers": [
-      "SEARCH_METADATA_CHANGE"
-    ],
-    "decisionPolicy": {
-      "reviewPermission": "documentation.review",
-      "approvePermission": "documentation.approve",
-      "publishPermission": "documentation.publish",
-      "permissionEnforced": true,
-      "adminOverrideAudited": true
-    },
-    "actor": "nodics.platform.axis.generator",
-    "author": "nodics.platform.axis.generator",
-    "submittedBy": "",
-    "submittedAt": "",
-    "reviewer": "",
-    "reviewedAt": "",
-    "approver": "",
-    "approvedAt": "",
-    "publisher": "",
-    "publishedAt": "",
-    "auditTrail": [],
-    "active": true
-  },
-  "record79": {
-    "code": "axisDocsPublicationsearchmetadataaxisdocssearchnodeaxisdocsnodetopicaxisexperiencestudio",
-    "targetType": "SEARCH_METADATA",
-    "targetCode": "axisDocsSearchnodeaxisdocsnodetopicaxisexperiencestudio",
-    "lifecycleState": "ONLINE",
-    "publicationCode": "axisDocumentation",
-    "workflowReference": "axisDocumentationReviewWorkflow",
-    "stagedVersion": "0.0.2",
-    "onlineVersion": "0.0.2",
-    "previousOnlineVersion": "",
-    "validationResult": {
-      "generated": true,
-      "sourceAuthority": "docs/catalogue.json",
-      "publicationPath": "STAGED_REVIEW_APPROVAL_ONLINE",
-      "nexusVisibleOnlyWhenOnlineAndPublic": true
-    },
-    "checksum": "f226596d266da9bac58ed72834ae7b145a4bb4ce93695c1dd923cb94b0951cc7",
-    "managedInAxis": true,
-    "axisAuthoringPermissions": [
-      "documentation.search.preview"
-    ],
-    "workflowRequired": true,
-    "workflowTriggers": [
-      "SEARCH_METADATA_CHANGE"
-    ],
-    "decisionPolicy": {
-      "reviewPermission": "documentation.review",
-      "approvePermission": "documentation.approve",
-      "publishPermission": "documentation.publish",
-      "permissionEnforced": true,
-      "adminOverrideAudited": true
-    },
-    "actor": "nodics.platform.axis.generator",
-    "author": "nodics.platform.axis.generator",
-    "submittedBy": "",
-    "submittedAt": "",
-    "reviewer": "",
-    "reviewedAt": "",
-    "approver": "",
-    "approvedAt": "",
-    "publisher": "",
-    "publishedAt": "",
-    "auditTrail": [],
-    "active": true
-  },
-  "record80": {
-    "code": "axisDocsPublicationsearchmetadataaxisdocssearchnodeaxisdocsnodetopicaxismodulehealth",
-    "targetType": "SEARCH_METADATA",
-    "targetCode": "axisDocsSearchnodeaxisdocsnodetopicaxismodulehealth",
-    "lifecycleState": "ONLINE",
-    "publicationCode": "axisDocumentation",
-    "workflowReference": "axisDocumentationReviewWorkflow",
-    "stagedVersion": "0.0.2",
-    "onlineVersion": "0.0.2",
-    "previousOnlineVersion": "",
-    "validationResult": {
-      "generated": true,
-      "sourceAuthority": "docs/catalogue.json",
-      "publicationPath": "STAGED_REVIEW_APPROVAL_ONLINE",
-      "nexusVisibleOnlyWhenOnlineAndPublic": true
-    },
-    "checksum": "83d3c5058bc9c96d9d83e5412e82f0d2edd42940b0e2c3a59909b76cbd644f22",
-    "managedInAxis": true,
-    "axisAuthoringPermissions": [
-      "documentation.search.preview"
-    ],
-    "workflowRequired": true,
-    "workflowTriggers": [
-      "SEARCH_METADATA_CHANGE"
-    ],
-    "decisionPolicy": {
-      "reviewPermission": "documentation.review",
-      "approvePermission": "documentation.approve",
-      "publishPermission": "documentation.publish",
-      "permissionEnforced": true,
-      "adminOverrideAudited": true
-    },
-    "actor": "nodics.platform.axis.generator",
-    "author": "nodics.platform.axis.generator",
-    "submittedBy": "",
-    "submittedAt": "",
-    "reviewer": "",
-    "reviewedAt": "",
-    "approver": "",
-    "approvedAt": "",
-    "publisher": "",
-    "publishedAt": "",
-    "auditTrail": [],
-    "active": true
-  },
-  "record81": {
-    "code": "axisDocsPublicationsearchmetadataaxisdocssearchnodeaxisdocsnodetopicaxisimportsexports",
-    "targetType": "SEARCH_METADATA",
-    "targetCode": "axisDocsSearchnodeaxisdocsnodetopicaxisimportsexports",
-    "lifecycleState": "ONLINE",
-    "publicationCode": "axisDocumentation",
-    "workflowReference": "axisDocumentationReviewWorkflow",
-    "stagedVersion": "0.0.2",
-    "onlineVersion": "0.0.2",
-    "previousOnlineVersion": "",
-    "validationResult": {
-      "generated": true,
-      "sourceAuthority": "docs/catalogue.json",
-      "publicationPath": "STAGED_REVIEW_APPROVAL_ONLINE",
-      "nexusVisibleOnlyWhenOnlineAndPublic": true
-    },
-    "checksum": "15059cb11e7a9647a06dec024ae088f04421ef31b47b7af40978db82bc247294",
-    "managedInAxis": true,
-    "axisAuthoringPermissions": [
-      "documentation.search.preview"
-    ],
-    "workflowRequired": true,
-    "workflowTriggers": [
-      "SEARCH_METADATA_CHANGE"
-    ],
-    "decisionPolicy": {
-      "reviewPermission": "documentation.review",
-      "approvePermission": "documentation.approve",
-      "publishPermission": "documentation.publish",
-      "permissionEnforced": true,
-      "adminOverrideAudited": true
-    },
-    "actor": "nodics.platform.axis.generator",
-    "author": "nodics.platform.axis.generator",
-    "submittedBy": "",
-    "submittedAt": "",
-    "reviewer": "",
-    "reviewedAt": "",
-    "approver": "",
-    "approvedAt": "",
-    "publisher": "",
-    "publishedAt": "",
-    "auditTrail": [],
-    "active": true
-  },
-  "record82": {
-    "code": "axisDocsPublicationsearchmetadataaxisdocssearchnodeaxisdocsnodetopicaxismediamanagement",
-    "targetType": "SEARCH_METADATA",
-    "targetCode": "axisDocsSearchnodeaxisdocsnodetopicaxismediamanagement",
-    "lifecycleState": "ONLINE",
-    "publicationCode": "axisDocumentation",
-    "workflowReference": "axisDocumentationReviewWorkflow",
-    "stagedVersion": "0.0.2",
-    "onlineVersion": "0.0.2",
-    "previousOnlineVersion": "",
-    "validationResult": {
-      "generated": true,
-      "sourceAuthority": "docs/catalogue.json",
-      "publicationPath": "STAGED_REVIEW_APPROVAL_ONLINE",
-      "nexusVisibleOnlyWhenOnlineAndPublic": true
-    },
-    "checksum": "5de22da5bd9207692d99d04164e4f844f10c19286aa55ba0bfb7dd0a63632221",
-    "managedInAxis": true,
-    "axisAuthoringPermissions": [
-      "documentation.search.preview"
-    ],
-    "workflowRequired": true,
-    "workflowTriggers": [
-      "SEARCH_METADATA_CHANGE"
-    ],
-    "decisionPolicy": {
-      "reviewPermission": "documentation.review",
-      "approvePermission": "documentation.approve",
-      "publishPermission": "documentation.publish",
-      "permissionEnforced": true,
-      "adminOverrideAudited": true
-    },
-    "actor": "nodics.platform.axis.generator",
-    "author": "nodics.platform.axis.generator",
-    "submittedBy": "",
-    "submittedAt": "",
-    "reviewer": "",
-    "reviewedAt": "",
-    "approver": "",
-    "approvedAt": "",
-    "publisher": "",
-    "publishedAt": "",
-    "auditTrail": [],
-    "active": true
-  },
-  "record83": {
-    "code": "axisDocsPublicationsearchmetadataaxisdocssearchnodeaxisdocsnodetopicaxiscustomerengagement",
-    "targetType": "SEARCH_METADATA",
-    "targetCode": "axisDocsSearchnodeaxisdocsnodetopicaxiscustomerengagement",
-    "lifecycleState": "ONLINE",
-    "publicationCode": "axisDocumentation",
-    "workflowReference": "axisDocumentationReviewWorkflow",
-    "stagedVersion": "0.0.2",
-    "onlineVersion": "0.0.2",
-    "previousOnlineVersion": "",
-    "validationResult": {
-      "generated": true,
-      "sourceAuthority": "docs/catalogue.json",
-      "publicationPath": "STAGED_REVIEW_APPROVAL_ONLINE",
-      "nexusVisibleOnlyWhenOnlineAndPublic": true
-    },
-    "checksum": "5391bd82eaf809a2b0295d20facc4591b97bbbff00caba6dfdc0ea7c1651b09f",
-    "managedInAxis": true,
-    "axisAuthoringPermissions": [
-      "documentation.search.preview"
-    ],
-    "workflowRequired": true,
-    "workflowTriggers": [
-      "SEARCH_METADATA_CHANGE"
-    ],
-    "decisionPolicy": {
-      "reviewPermission": "documentation.review",
-      "approvePermission": "documentation.approve",
-      "publishPermission": "documentation.publish",
-      "permissionEnforced": true,
-      "adminOverrideAudited": true
-    },
-    "actor": "nodics.platform.axis.generator",
-    "author": "nodics.platform.axis.generator",
-    "submittedBy": "",
-    "submittedAt": "",
-    "reviewer": "",
-    "reviewedAt": "",
-    "approver": "",
-    "approvedAt": "",
-    "publisher": "",
-    "publishedAt": "",
-    "auditTrail": [],
-    "active": true
-  },
-  "record84": {
-    "code": "axisDocsPublicationsearchmetadataaxisdocssearchnodeaxisdocsnodetopicaxisopenapireference",
-    "targetType": "SEARCH_METADATA",
-    "targetCode": "axisDocsSearchnodeaxisdocsnodetopicaxisopenapireference",
-    "lifecycleState": "ONLINE",
-    "publicationCode": "axisDocumentation",
-    "workflowReference": "axisDocumentationReviewWorkflow",
-    "stagedVersion": "0.0.2",
-    "onlineVersion": "0.0.2",
-    "previousOnlineVersion": "",
-    "validationResult": {
-      "generated": true,
-      "sourceAuthority": "docs/catalogue.json",
-      "publicationPath": "STAGED_REVIEW_APPROVAL_ONLINE",
-      "nexusVisibleOnlyWhenOnlineAndPublic": true
-    },
-    "checksum": "d1b2e6e8dda11e80f3d0dbd744c90903f15fe840bd207595f9174e42cb1f5eba",
-    "managedInAxis": true,
-    "axisAuthoringPermissions": [
-      "documentation.search.preview"
-    ],
-    "workflowRequired": true,
-    "workflowTriggers": [
-      "SEARCH_METADATA_CHANGE"
-    ],
-    "decisionPolicy": {
-      "reviewPermission": "documentation.review",
-      "approvePermission": "documentation.approve",
-      "publishPermission": "documentation.publish",
-      "permissionEnforced": true,
-      "adminOverrideAudited": true
-    },
-    "actor": "nodics.platform.axis.generator",
-    "author": "nodics.platform.axis.generator",
-    "submittedBy": "",
-    "submittedAt": "",
-    "reviewer": "",
-    "reviewedAt": "",
-    "approver": "",
-    "approvedAt": "",
-    "publisher": "",
-    "publishedAt": "",
-    "auditTrail": [],
-    "active": true
-  },
-  "record85": {
-    "code": "axisDocsPublicationsearchmetadataaxisdocssearchnodeaxisdocsnodegrpcontributetoaxisaxiscontributionandgovernance",
-    "targetType": "SEARCH_METADATA",
-    "targetCode": "axisDocsSearchnodeaxisdocsnodegrpcontributetoaxisaxiscontributionandgovernance",
-    "lifecycleState": "ONLINE",
-    "publicationCode": "axisDocumentation",
-    "workflowReference": "axisDocumentationReviewWorkflow",
-    "stagedVersion": "0.0.2",
-    "onlineVersion": "0.0.2",
-    "previousOnlineVersion": "",
-    "validationResult": {
-      "generated": true,
-      "sourceAuthority": "docs/catalogue.json",
-      "publicationPath": "STAGED_REVIEW_APPROVAL_ONLINE",
-      "nexusVisibleOnlyWhenOnlineAndPublic": true
-    },
-    "checksum": "24212585ba2fc20c1d9cf36b5c7efe16b33ad1c0075927154d4f4fab8f0e7e9a",
-    "managedInAxis": true,
-    "axisAuthoringPermissions": [
-      "documentation.search.preview"
-    ],
-    "workflowRequired": true,
-    "workflowTriggers": [
-      "SEARCH_METADATA_CHANGE"
-    ],
-    "decisionPolicy": {
-      "reviewPermission": "documentation.review",
-      "approvePermission": "documentation.approve",
-      "publishPermission": "documentation.publish",
-      "permissionEnforced": true,
-      "adminOverrideAudited": true
-    },
-    "actor": "nodics.platform.axis.generator",
-    "author": "nodics.platform.axis.generator",
-    "submittedBy": "",
-    "submittedAt": "",
-    "reviewer": "",
-    "reviewedAt": "",
-    "approver": "",
-    "approvedAt": "",
-    "publisher": "",
-    "publishedAt": "",
-    "auditTrail": [],
-    "active": true
-  },
-  "record86": {
-    "code": "axisDocsPublicationsearchmetadataaxisdocssearchnodeaxisdocsnodetopicaxisfeaturedelivery",
-    "targetType": "SEARCH_METADATA",
-    "targetCode": "axisDocsSearchnodeaxisdocsnodetopicaxisfeaturedelivery",
-    "lifecycleState": "ONLINE",
-    "publicationCode": "axisDocumentation",
-    "workflowReference": "axisDocumentationReviewWorkflow",
-    "stagedVersion": "0.0.2",
-    "onlineVersion": "0.0.2",
-    "previousOnlineVersion": "",
-    "validationResult": {
-      "generated": true,
-      "sourceAuthority": "docs/catalogue.json",
-      "publicationPath": "STAGED_REVIEW_APPROVAL_ONLINE",
-      "nexusVisibleOnlyWhenOnlineAndPublic": true
-    },
-    "checksum": "698a265f4209951601d7b21bd15efe8d16ca926e87df42f8c85766c2d0e080dd",
-    "managedInAxis": true,
-    "axisAuthoringPermissions": [
-      "documentation.search.preview"
-    ],
-    "workflowRequired": true,
-    "workflowTriggers": [
-      "SEARCH_METADATA_CHANGE"
-    ],
-    "decisionPolicy": {
-      "reviewPermission": "documentation.review",
-      "approvePermission": "documentation.approve",
-      "publishPermission": "documentation.publish",
-      "permissionEnforced": true,
-      "adminOverrideAudited": true
-    },
-    "actor": "nodics.platform.axis.generator",
-    "author": "nodics.platform.axis.generator",
-    "submittedBy": "",
-    "submittedAt": "",
-    "reviewer": "",
-    "reviewedAt": "",
-    "approver": "",
-    "approvedAt": "",
-    "publisher": "",
-    "publishedAt": "",
-    "auditTrail": [],
-    "active": true
-  },
-  "record87": {
-    "code": "axisDocsPublicationsearchmetadataaxisdocssearchnodeaxisdocsnodetopicaxisimplementationcontract",
-    "targetType": "SEARCH_METADATA",
-    "targetCode": "axisDocsSearchnodeaxisdocsnodetopicaxisimplementationcontract",
-    "lifecycleState": "ONLINE",
-    "publicationCode": "axisDocumentation",
-    "workflowReference": "axisDocumentationReviewWorkflow",
-    "stagedVersion": "0.0.2",
-    "onlineVersion": "0.0.2",
-    "previousOnlineVersion": "",
-    "validationResult": {
-      "generated": true,
-      "sourceAuthority": "docs/catalogue.json",
-      "publicationPath": "STAGED_REVIEW_APPROVAL_ONLINE",
-      "nexusVisibleOnlyWhenOnlineAndPublic": true
-    },
-    "checksum": "23ff89d58c97e2e95af9e21c4f6bfd5775a69bd540ee23bb8c4a332b6bae90ef",
-    "managedInAxis": true,
-    "axisAuthoringPermissions": [
-      "documentation.search.preview"
-    ],
-    "workflowRequired": true,
-    "workflowTriggers": [
-      "SEARCH_METADATA_CHANGE"
-    ],
-    "decisionPolicy": {
-      "reviewPermission": "documentation.review",
-      "approvePermission": "documentation.approve",
-      "publishPermission": "documentation.publish",
-      "permissionEnforced": true,
-      "adminOverrideAudited": true
-    },
-    "actor": "nodics.platform.axis.generator",
-    "author": "nodics.platform.axis.generator",
-    "submittedBy": "",
-    "submittedAt": "",
-    "reviewer": "",
-    "reviewedAt": "",
-    "approver": "",
-    "approvedAt": "",
-    "publisher": "",
-    "publishedAt": "",
-    "auditTrail": [],
-    "active": true
-  },
-  "record88": {
     "code": "axisDocsPublicationsearchmetadataaxisdocssearchdashboardaxisdocsdashboardproduct",
     "targetType": "SEARCH_METADATA",
     "targetCode": "axisDocsSearchdashboardaxisdocsdashboardproduct",
@@ -4109,7 +3561,7 @@ module.exports = {
     "auditTrail": [],
     "active": true
   },
-  "record89": {
+  "record77": {
     "code": "axisDocsPublicationsearchmetadataaxisdocssearchdashboardaxisdocsdashboardnavigation",
     "targetType": "SEARCH_METADATA",
     "targetCode": "axisDocsSearchdashboardaxisdocsdashboardnavigation",
@@ -4154,7 +3606,7 @@ module.exports = {
     "auditTrail": [],
     "active": true
   },
-  "record90": {
+  "record78": {
     "code": "axisDocsPublicationsearchmetadataaxisdocssearchdashboardaxisdocsdashboardsecdiscoveraxis",
     "targetType": "SEARCH_METADATA",
     "targetCode": "axisDocsSearchdashboardaxisdocsdashboardsecdiscoveraxis",
@@ -4199,7 +3651,7 @@ module.exports = {
     "auditTrail": [],
     "active": true
   },
-  "record91": {
+  "record79": {
     "code": "axisDocsPublicationsearchmetadataaxisdocssearchdashboardaxisdocsdashboardsecbuildandoperateaxis",
     "targetType": "SEARCH_METADATA",
     "targetCode": "axisDocsSearchdashboardaxisdocsdashboardsecbuildandoperateaxis",
@@ -4244,7 +3696,7 @@ module.exports = {
     "auditTrail": [],
     "active": true
   },
-  "record92": {
+  "record80": {
     "code": "axisDocsPublicationsearchmetadataaxisdocssearchdashboardaxisdocsdashboardsecaxiscapabilities",
     "targetType": "SEARCH_METADATA",
     "targetCode": "axisDocsSearchdashboardaxisdocsdashboardsecaxiscapabilities",
@@ -4289,7 +3741,7 @@ module.exports = {
     "auditTrail": [],
     "active": true
   },
-  "record93": {
+  "record81": {
     "code": "axisDocsPublicationsearchmetadataaxisdocssearchdashboardaxisdocsdashboardseccontributetoaxis",
     "targetType": "SEARCH_METADATA",
     "targetCode": "axisDocsSearchdashboardaxisdocsdashboardseccontributetoaxis",
@@ -4334,187 +3786,7 @@ module.exports = {
     "auditTrail": [],
     "active": true
   },
-  "record94": {
-    "code": "axisDocsPublicationsearchmetadataaxisdocssearchdashboardaxisdocsdashboardgrpdiscoveraxisaxisoverviewandarchitecture",
-    "targetType": "SEARCH_METADATA",
-    "targetCode": "axisDocsSearchdashboardaxisdocsdashboardgrpdiscoveraxisaxisoverviewandarchitecture",
-    "lifecycleState": "ONLINE",
-    "publicationCode": "axisDocumentation",
-    "workflowReference": "axisDocumentationReviewWorkflow",
-    "stagedVersion": "0.0.2",
-    "onlineVersion": "0.0.2",
-    "previousOnlineVersion": "",
-    "validationResult": {
-      "generated": true,
-      "sourceAuthority": "docs/catalogue.json",
-      "publicationPath": "STAGED_REVIEW_APPROVAL_ONLINE",
-      "nexusVisibleOnlyWhenOnlineAndPublic": true
-    },
-    "checksum": "2a2733a0c3b8acff9a3b7072f3b0c5affd58d7df8c7dea4ba9f23f5efcb01c13",
-    "managedInAxis": true,
-    "axisAuthoringPermissions": [
-      "documentation.search.preview"
-    ],
-    "workflowRequired": true,
-    "workflowTriggers": [
-      "SEARCH_METADATA_CHANGE"
-    ],
-    "decisionPolicy": {
-      "reviewPermission": "documentation.review",
-      "approvePermission": "documentation.approve",
-      "publishPermission": "documentation.publish",
-      "permissionEnforced": true,
-      "adminOverrideAudited": true
-    },
-    "actor": "nodics.platform.axis.generator",
-    "author": "nodics.platform.axis.generator",
-    "submittedBy": "",
-    "submittedAt": "",
-    "reviewer": "",
-    "reviewedAt": "",
-    "approver": "",
-    "approvedAt": "",
-    "publisher": "",
-    "publishedAt": "",
-    "auditTrail": [],
-    "active": true
-  },
-  "record95": {
-    "code": "axisDocsPublicationsearchmetadataaxisdocssearchdashboardaxisdocsdashboardgrpbuildandoperateaxisaxisbuildandruntime",
-    "targetType": "SEARCH_METADATA",
-    "targetCode": "axisDocsSearchdashboardaxisdocsdashboardgrpbuildandoperateaxisaxisbuildandruntime",
-    "lifecycleState": "ONLINE",
-    "publicationCode": "axisDocumentation",
-    "workflowReference": "axisDocumentationReviewWorkflow",
-    "stagedVersion": "0.0.2",
-    "onlineVersion": "0.0.2",
-    "previousOnlineVersion": "",
-    "validationResult": {
-      "generated": true,
-      "sourceAuthority": "docs/catalogue.json",
-      "publicationPath": "STAGED_REVIEW_APPROVAL_ONLINE",
-      "nexusVisibleOnlyWhenOnlineAndPublic": true
-    },
-    "checksum": "ecd73bc1aba0b16a8cf52a63f69ba69e78d68688ea4fb4fa185765fdb69f70be",
-    "managedInAxis": true,
-    "axisAuthoringPermissions": [
-      "documentation.search.preview"
-    ],
-    "workflowRequired": true,
-    "workflowTriggers": [
-      "SEARCH_METADATA_CHANGE"
-    ],
-    "decisionPolicy": {
-      "reviewPermission": "documentation.review",
-      "approvePermission": "documentation.approve",
-      "publishPermission": "documentation.publish",
-      "permissionEnforced": true,
-      "adminOverrideAudited": true
-    },
-    "actor": "nodics.platform.axis.generator",
-    "author": "nodics.platform.axis.generator",
-    "submittedBy": "",
-    "submittedAt": "",
-    "reviewer": "",
-    "reviewedAt": "",
-    "approver": "",
-    "approvedAt": "",
-    "publisher": "",
-    "publishedAt": "",
-    "auditTrail": [],
-    "active": true
-  },
-  "record96": {
-    "code": "axisDocsPublicationsearchmetadataaxisdocssearchdashboardaxisdocsdashboardgrpaxiscapabilitiesaxisworkspacesandoperations",
-    "targetType": "SEARCH_METADATA",
-    "targetCode": "axisDocsSearchdashboardaxisdocsdashboardgrpaxiscapabilitiesaxisworkspacesandoperations",
-    "lifecycleState": "ONLINE",
-    "publicationCode": "axisDocumentation",
-    "workflowReference": "axisDocumentationReviewWorkflow",
-    "stagedVersion": "0.0.2",
-    "onlineVersion": "0.0.2",
-    "previousOnlineVersion": "",
-    "validationResult": {
-      "generated": true,
-      "sourceAuthority": "docs/catalogue.json",
-      "publicationPath": "STAGED_REVIEW_APPROVAL_ONLINE",
-      "nexusVisibleOnlyWhenOnlineAndPublic": true
-    },
-    "checksum": "c6feb2c9f1786eb164494b208475b28dbf5c3760d5261f708a51b6ea73116c4d",
-    "managedInAxis": true,
-    "axisAuthoringPermissions": [
-      "documentation.search.preview"
-    ],
-    "workflowRequired": true,
-    "workflowTriggers": [
-      "SEARCH_METADATA_CHANGE"
-    ],
-    "decisionPolicy": {
-      "reviewPermission": "documentation.review",
-      "approvePermission": "documentation.approve",
-      "publishPermission": "documentation.publish",
-      "permissionEnforced": true,
-      "adminOverrideAudited": true
-    },
-    "actor": "nodics.platform.axis.generator",
-    "author": "nodics.platform.axis.generator",
-    "submittedBy": "",
-    "submittedAt": "",
-    "reviewer": "",
-    "reviewedAt": "",
-    "approver": "",
-    "approvedAt": "",
-    "publisher": "",
-    "publishedAt": "",
-    "auditTrail": [],
-    "active": true
-  },
-  "record97": {
-    "code": "axisDocsPublicationsearchmetadataaxisdocssearchdashboardaxisdocsdashboardgrpcontributetoaxisaxis39cb895b4ecbc510",
-    "targetType": "SEARCH_METADATA",
-    "targetCode": "axisDocsSearchdashboardaxisdocsdashboardgrpcontributetoaxisaxiscontributionandgovernance",
-    "lifecycleState": "ONLINE",
-    "publicationCode": "axisDocumentation",
-    "workflowReference": "axisDocumentationReviewWorkflow",
-    "stagedVersion": "0.0.2",
-    "onlineVersion": "0.0.2",
-    "previousOnlineVersion": "",
-    "validationResult": {
-      "generated": true,
-      "sourceAuthority": "docs/catalogue.json",
-      "publicationPath": "STAGED_REVIEW_APPROVAL_ONLINE",
-      "nexusVisibleOnlyWhenOnlineAndPublic": true
-    },
-    "checksum": "5f2bbd9c05a75395bf717dc86ad25631203ceff6c00f216ba7abd89e87d80a8c",
-    "managedInAxis": true,
-    "axisAuthoringPermissions": [
-      "documentation.search.preview"
-    ],
-    "workflowRequired": true,
-    "workflowTriggers": [
-      "SEARCH_METADATA_CHANGE"
-    ],
-    "decisionPolicy": {
-      "reviewPermission": "documentation.review",
-      "approvePermission": "documentation.approve",
-      "publishPermission": "documentation.publish",
-      "permissionEnforced": true,
-      "adminOverrideAudited": true
-    },
-    "actor": "nodics.platform.axis.generator",
-    "author": "nodics.platform.axis.generator",
-    "submittedBy": "",
-    "submittedAt": "",
-    "reviewer": "",
-    "reviewedAt": "",
-    "approver": "",
-    "approvedAt": "",
-    "publisher": "",
-    "publishedAt": "",
-    "auditTrail": [],
-    "active": true
-  },
-  "record98": {
+  "record82": {
     "code": "axisDocsPublicationsearchmetadataaxisdocssearchpageaxisdocsmetadataoverview",
     "targetType": "SEARCH_METADATA",
     "targetCode": "axisDocsSearchpageaxisdocsmetadataoverview",
@@ -4559,7 +3831,7 @@ module.exports = {
     "auditTrail": [],
     "active": true
   },
-  "record99": {
+  "record83": {
     "code": "axisDocsPublicationsearchmetadataaxisdocssearchpageaxisdocsmetadataarchitecture",
     "targetType": "SEARCH_METADATA",
     "targetCode": "axisDocsSearchpageaxisdocsmetadataarchitecture",
@@ -4604,7 +3876,7 @@ module.exports = {
     "auditTrail": [],
     "active": true
   },
-  "record100": {
+  "record84": {
     "code": "axisDocsPublicationsearchmetadataaxisdocssearchpageaxisdocsmetadatatechnologystack",
     "targetType": "SEARCH_METADATA",
     "targetCode": "axisDocsSearchpageaxisdocsmetadatatechnologystack",
@@ -4649,7 +3921,7 @@ module.exports = {
     "auditTrail": [],
     "active": true
   },
-  "record101": {
+  "record85": {
     "code": "axisDocsPublicationsearchmetadataaxisdocssearchpageaxisdocsmetadatadesignsystem",
     "targetType": "SEARCH_METADATA",
     "targetCode": "axisDocsSearchpageaxisdocsmetadatadesignsystem",
@@ -4694,7 +3966,7 @@ module.exports = {
     "auditTrail": [],
     "active": true
   },
-  "record102": {
+  "record86": {
     "code": "axisDocsPublicationsearchmetadataaxisdocssearchpageaxisdocsmetadatacmsrenderers",
     "targetType": "SEARCH_METADATA",
     "targetCode": "axisDocsSearchpageaxisdocsmetadatacmsrenderers",
@@ -4739,7 +4011,7 @@ module.exports = {
     "auditTrail": [],
     "active": true
   },
-  "record103": {
+  "record87": {
     "code": "axisDocsPublicationsearchmetadataaxisdocssearchpageaxisdocsmetadatadocumentationcontent",
     "targetType": "SEARCH_METADATA",
     "targetCode": "axisDocsSearchpageaxisdocsmetadatadocumentationcontent",
@@ -4784,7 +4056,7 @@ module.exports = {
     "auditTrail": [],
     "active": true
   },
-  "record104": {
+  "record88": {
     "code": "axisDocsPublicationsearchmetadataaxisdocssearchpageaxisdocsmetadataemployeeaccess",
     "targetType": "SEARCH_METADATA",
     "targetCode": "axisDocsSearchpageaxisdocsmetadataemployeeaccess",
@@ -4829,7 +4101,7 @@ module.exports = {
     "auditTrail": [],
     "active": true
   },
-  "record105": {
+  "record89": {
     "code": "axisDocsPublicationsearchmetadataaxisdocssearchpageaxisdocsmetadataassistant",
     "targetType": "SEARCH_METADATA",
     "targetCode": "axisDocsSearchpageaxisdocsmetadataassistant",
@@ -4874,7 +4146,7 @@ module.exports = {
     "auditTrail": [],
     "active": true
   },
-  "record106": {
+  "record90": {
     "code": "axisDocsPublicationsearchmetadataaxisdocssearchpageaxisdocsmetadataschemaworkbench",
     "targetType": "SEARCH_METADATA",
     "targetCode": "axisDocsSearchpageaxisdocsmetadataschemaworkbench",
@@ -4919,7 +4191,7 @@ module.exports = {
     "auditTrail": [],
     "active": true
   },
-  "record107": {
+  "record91": {
     "code": "axisDocsPublicationsearchmetadataaxisdocssearchpageaxisdocsmetadatapagedesigner",
     "targetType": "SEARCH_METADATA",
     "targetCode": "axisDocsSearchpageaxisdocsmetadatapagedesigner",
@@ -4964,7 +4236,7 @@ module.exports = {
     "auditTrail": [],
     "active": true
   },
-  "record108": {
+  "record92": {
     "code": "axisDocsPublicationsearchmetadataaxisdocssearchpageaxisdocsmetadataexperiencestudio",
     "targetType": "SEARCH_METADATA",
     "targetCode": "axisDocsSearchpageaxisdocsmetadataexperiencestudio",
@@ -5009,7 +4281,7 @@ module.exports = {
     "auditTrail": [],
     "active": true
   },
-  "record109": {
+  "record93": {
     "code": "axisDocsPublicationsearchmetadataaxisdocssearchpageaxisdocsmetadatamodulehealth",
     "targetType": "SEARCH_METADATA",
     "targetCode": "axisDocsSearchpageaxisdocsmetadatamodulehealth",
@@ -5054,7 +4326,7 @@ module.exports = {
     "auditTrail": [],
     "active": true
   },
-  "record110": {
+  "record94": {
     "code": "axisDocsPublicationsearchmetadataaxisdocssearchpageaxisdocsmetadataimportsexports",
     "targetType": "SEARCH_METADATA",
     "targetCode": "axisDocsSearchpageaxisdocsmetadataimportsexports",
@@ -5099,7 +4371,7 @@ module.exports = {
     "auditTrail": [],
     "active": true
   },
-  "record111": {
+  "record95": {
     "code": "axisDocsPublicationsearchmetadataaxisdocssearchpageaxisdocsmetadatamediamanagement",
     "targetType": "SEARCH_METADATA",
     "targetCode": "axisDocsSearchpageaxisdocsmetadatamediamanagement",
@@ -5144,7 +4416,7 @@ module.exports = {
     "auditTrail": [],
     "active": true
   },
-  "record112": {
+  "record96": {
     "code": "axisDocsPublicationsearchmetadataaxisdocssearchpageaxisdocsmetadatacustomerengagement",
     "targetType": "SEARCH_METADATA",
     "targetCode": "axisDocsSearchpageaxisdocsmetadatacustomerengagement",
@@ -5189,7 +4461,7 @@ module.exports = {
     "auditTrail": [],
     "active": true
   },
-  "record113": {
+  "record97": {
     "code": "axisDocsPublicationsearchmetadataaxisdocssearchpageaxisdocsmetadataopenapireference",
     "targetType": "SEARCH_METADATA",
     "targetCode": "axisDocsSearchpageaxisdocsmetadataopenapireference",
@@ -5234,7 +4506,7 @@ module.exports = {
     "auditTrail": [],
     "active": true
   },
-  "record114": {
+  "record98": {
     "code": "axisDocsPublicationsearchmetadataaxisdocssearchpageaxisdocsmetadatafeaturedelivery",
     "targetType": "SEARCH_METADATA",
     "targetCode": "axisDocsSearchpageaxisdocsmetadatafeaturedelivery",
@@ -5279,7 +4551,7 @@ module.exports = {
     "auditTrail": [],
     "active": true
   },
-  "record115": {
+  "record99": {
     "code": "axisDocsPublicationsearchmetadataaxisdocssearchpageaxisdocsmetadataimplementationcontract",
     "targetType": "SEARCH_METADATA",
     "targetCode": "axisDocsSearchpageaxisdocsmetadataimplementationcontract",

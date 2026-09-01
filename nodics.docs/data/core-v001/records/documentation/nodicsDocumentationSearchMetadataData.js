@@ -131,6 +131,46 @@ module.exports = {
     "active": true
   },
   "record3": {
+    "code": "nodicsDocsSearchnodenodicsdocsnodesecstarthere",
+    "product": "nodicsDocumentationProduct",
+    "targetType": "NODE",
+    "targetCode": "nodicsDocsNodeSecstartHere",
+    "title": "Start Here",
+    "summary": "Choose the right documentation entry point before opening detailed framework, Axis, Kickoff, or API contract pages.",
+    "searchText": "Start Here Choose the right documentation entry point before opening detailed framework, Axis, Kickoff, or API contract pages. start-here Start Here",
+    "keywords": [
+      "start-here",
+      "Start Here"
+    ],
+    "facets": {
+      "nodeLevel": "SECTION",
+      "nodeType": "CONTAINER",
+      "audience": [
+        "business",
+        "architect",
+        "administrator",
+        "developer",
+        "operator",
+        "qa"
+      ]
+    },
+    "managedInAxis": true,
+    "axisAuthoringPermissions": [
+      "documentation.search.preview"
+    ],
+    "workflowRequired": true,
+    "workflowTriggers": [
+      "SEARCH_METADATA_CHANGE"
+    ],
+    "locale": "en",
+    "channel": "web",
+    "accessPolicy": "nodicsDocsAccessPublic",
+    "accessMode": "PUBLIC",
+    "lifecycleState": "ONLINE",
+    "indexState": "INDEX_READY",
+    "active": true
+  },
+  "record4": {
     "code": "nodicsDocsSearchnodenodicsdocsnodesecnodicsframework",
     "product": "nodicsDocumentationProduct",
     "targetType": "NODE",
@@ -171,7 +211,7 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record4": {
+  "record5": {
     "code": "nodicsDocsSearchnodenodicsdocsnodesecdocumentationroadmap",
     "product": "nodicsDocumentationProduct",
     "targetType": "NODE",
@@ -212,7 +252,7 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record5": {
+  "record6": {
     "code": "nodicsDocsSearchnodenodicsdocsnodesecframeworkarchitectureanddesign",
     "product": "nodicsDocumentationProduct",
     "targetType": "NODE",
@@ -253,7 +293,7 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record6": {
+  "record7": {
     "code": "nodicsDocsSearchnodenodicsdocsnodeseccapabilityregistryandlifecyclemanagement",
     "product": "nodicsDocumentationProduct",
     "targetType": "NODE",
@@ -294,7 +334,7 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record7": {
+  "record8": {
     "code": "nodicsDocsSearchnodenodicsdocsnodesecfoundationruntimeservices",
     "product": "nodicsDocumentationProduct",
     "targetType": "NODE",
@@ -335,7 +375,7 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record8": {
+  "record9": {
     "code": "nodicsDocsSearchnodenodicsdocsnodesecnodicsapplicationsuite",
     "product": "nodicsDocumentationProduct",
     "targetType": "NODE",
@@ -376,7 +416,7 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record9": {
+  "record10": {
     "code": "nodicsDocsSearchnodenodicsdocsnodesecsolutionusecases",
     "product": "nodicsDocumentationProduct",
     "targetType": "NODE",
@@ -417,7 +457,7 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record10": {
+  "record11": {
     "code": "nodicsDocsSearchnodenodicsdocsnodesecacceleratorsandindustrysolutiontemplates",
     "product": "nodicsDocumentationProduct",
     "targetType": "NODE",
@@ -458,7 +498,7 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record11": {
+  "record12": {
     "code": "nodicsDocsSearchnodenodicsdocsnodesecnodicsinstallerandworkspacesetup",
     "product": "nodicsDocumentationProduct",
     "targetType": "NODE",
@@ -499,7 +539,7 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record12": {
+  "record13": {
     "code": "nodicsDocsSearchnodenodicsdocsnodesecapplicationbuilderandworkspacegeneration",
     "product": "nodicsDocumentationProduct",
     "targetType": "NODE",
@@ -540,7 +580,7 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record13": {
+  "record14": {
     "code": "nodicsDocsSearchnodenodicsdocsnodesecaxisandbackofficeoperations",
     "product": "nodicsDocumentationProduct",
     "targetType": "NODE",
@@ -581,7 +621,7 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record14": {
+  "record15": {
     "code": "nodicsDocsSearchnodenodicsdocsnodesecbusinesscustomizationinaxis",
     "product": "nodicsDocumentationProduct",
     "targetType": "NODE",
@@ -622,7 +662,7 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record15": {
+  "record16": {
     "code": "nodicsDocsSearchnodenodicsdocsnodesecuserenterpriseandtenantmanagement",
     "product": "nodicsDocumentationProduct",
     "targetType": "NODE",
@@ -663,7 +703,7 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record16": {
+  "record17": {
     "code": "nodicsDocsSearchnodenodicsdocsnodesecsecuritygovernanceandcompliance",
     "product": "nodicsDocumentationProduct",
     "targetType": "NODE",
@@ -704,7 +744,7 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record17": {
+  "record18": {
     "code": "nodicsDocsSearchnodenodicsdocsnodesecapplicationconfigurationandruntimebehaviormanagement",
     "product": "nodicsDocumentationProduct",
     "targetType": "NODE",
@@ -745,7 +785,7 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record18": {
+  "record19": {
     "code": "nodicsDocsSearchnodenodicsdocsnodesecruntimegovernanceanddynamicchangemanagement",
     "product": "nodicsDocumentationProduct",
     "targetType": "NODE",
@@ -786,7 +826,7 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record19": {
+  "record20": {
     "code": "nodicsDocsSearchnodenodicsdocsnodeseclocalizationandinternationalization",
     "product": "nodicsDocumentationProduct",
     "targetType": "NODE",
@@ -827,7 +867,7 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record20": {
+  "record21": {
     "code": "nodicsDocsSearchnodenodicsdocsnodesecdatamodelingandschemamanagement",
     "product": "nodicsDocumentationProduct",
     "targetType": "NODE",
@@ -868,7 +908,7 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record21": {
+  "record22": {
     "code": "nodicsDocsSearchnodenodicsdocsnodesecdatabaseandpersistencemanagement",
     "product": "nodicsDocumentationProduct",
     "targetType": "NODE",
@@ -909,7 +949,7 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record22": {
+  "record23": {
     "code": "nodicsDocsSearchnodenodicsdocsnodeseccachingandruntimestatemanagement",
     "product": "nodicsDocumentationProduct",
     "targetType": "NODE",
@@ -950,7 +990,7 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record23": {
+  "record24": {
     "code": "nodicsDocsSearchnodenodicsdocsnodesecdeveloperextensionandprojectcustomization",
     "product": "nodicsDocumentationProduct",
     "targetType": "NODE",
@@ -991,7 +1031,7 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record24": {
+  "record25": {
     "code": "nodicsDocsSearchnodenodicsdocsnodesecstoremarketsiteandchannelmanagement",
     "product": "nodicsDocumentationProduct",
     "targetType": "NODE",
@@ -1032,7 +1072,7 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record25": {
+  "record26": {
     "code": "nodicsDocsSearchnodenodicsdocsnodesecwcmsandcontentmanagement",
     "product": "nodicsDocumentationProduct",
     "targetType": "NODE",
@@ -1073,7 +1113,7 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record26": {
+  "record27": {
     "code": "nodicsDocsSearchnodenodicsdocsnodesecproductcataloganddiscovery",
     "product": "nodicsDocumentationProduct",
     "targetType": "NODE",
@@ -1114,7 +1154,7 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record27": {
+  "record28": {
     "code": "nodicsDocsSearchnodenodicsdocsnodesecsearchanddiscovery",
     "product": "nodicsDocumentationProduct",
     "targetType": "NODE",
@@ -1155,7 +1195,7 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record28": {
+  "record29": {
     "code": "nodicsDocsSearchnodenodicsdocsnodesecmediamanagement",
     "product": "nodicsDocumentationProduct",
     "targetType": "NODE",
@@ -1196,7 +1236,7 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record29": {
+  "record30": {
     "code": "nodicsDocsSearchnodenodicsdocsnodesecinventoryandstockmanagement",
     "product": "nodicsDocumentationProduct",
     "targetType": "NODE",
@@ -1237,7 +1277,7 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record30": {
+  "record31": {
     "code": "nodicsDocsSearchnodenodicsdocsnodesecpricingpromotionsandtax",
     "product": "nodicsDocumentationProduct",
     "targetType": "NODE",
@@ -1278,7 +1318,7 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record31": {
+  "record32": {
     "code": "nodicsDocsSearchnodenodicsdocsnodeseccommercecartandcheckout",
     "product": "nodicsDocumentationProduct",
     "targetType": "NODE",
@@ -1319,7 +1359,7 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record32": {
+  "record33": {
     "code": "nodicsDocsSearchnodenodicsdocsnodesecpaymentmanagement",
     "product": "nodicsDocumentationProduct",
     "targetType": "NODE",
@@ -1360,7 +1400,7 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record33": {
+  "record34": {
     "code": "nodicsDocsSearchnodenodicsdocsnodesecloyaltyandrewards",
     "product": "nodicsDocumentationProduct",
     "targetType": "NODE",
@@ -1401,7 +1441,7 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record34": {
+  "record35": {
     "code": "nodicsDocsSearchnodenodicsdocsnodesecshippingandfulfillment",
     "product": "nodicsDocumentationProduct",
     "targetType": "NODE",
@@ -1442,7 +1482,7 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record35": {
+  "record36": {
     "code": "nodicsDocsSearchnodenodicsdocsnodesecordermanagement",
     "product": "nodicsDocumentationProduct",
     "targetType": "NODE",
@@ -1483,7 +1523,7 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record36": {
+  "record37": {
     "code": "nodicsDocsSearchnodenodicsdocsnodeseccancellationsreturnsandrefunds",
     "product": "nodicsDocumentationProduct",
     "targetType": "NODE",
@@ -1524,7 +1564,7 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record37": {
+  "record38": {
     "code": "nodicsDocsSearchnodenodicsdocsnodeseccustomerengagementandfeedback",
     "product": "nodicsDocumentationProduct",
     "targetType": "NODE",
@@ -1565,7 +1605,7 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record38": {
+  "record39": {
     "code": "nodicsDocsSearchnodenodicsdocsnodeseccommunicationandnotifications",
     "product": "nodicsDocumentationProduct",
     "targetType": "NODE",
@@ -1606,7 +1646,7 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record39": {
+  "record40": {
     "code": "nodicsDocsSearchnodenodicsdocsnodeseceventandmessagingmanagement",
     "product": "nodicsDocumentationProduct",
     "targetType": "NODE",
@@ -1647,7 +1687,7 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record40": {
+  "record41": {
     "code": "nodicsDocsSearchnodenodicsdocsnodesecprocessandworkflowautomation",
     "product": "nodicsDocumentationProduct",
     "targetType": "NODE",
@@ -1688,7 +1728,7 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record41": {
+  "record42": {
     "code": "nodicsDocsSearchnodenodicsdocsnodesecpipelineandbusinesslogicorchestration",
     "product": "nodicsDocumentationProduct",
     "targetType": "NODE",
@@ -1729,7 +1769,7 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record42": {
+  "record43": {
     "code": "nodicsDocsSearchnodenodicsdocsnodeseccronandscheduledautomation",
     "product": "nodicsDocumentationProduct",
     "targetType": "NODE",
@@ -1770,7 +1810,7 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record43": {
+  "record44": {
     "code": "nodicsDocsSearchnodenodicsdocsnodesecdataimportexportandmigration",
     "product": "nodicsDocumentationProduct",
     "targetType": "NODE",
@@ -1811,7 +1851,7 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record44": {
+  "record45": {
     "code": "nodicsDocsSearchnodenodicsdocsnodesecsystemintegrationandexternalconnectivity",
     "product": "nodicsDocumentationProduct",
     "targetType": "NODE",
@@ -1852,7 +1892,7 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record45": {
+  "record46": {
     "code": "nodicsDocsSearchnodenodicsdocsnodesecoperationsmonitoringandrecovery",
     "product": "nodicsDocumentationProduct",
     "targetType": "NODE",
@@ -1893,7 +1933,7 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record46": {
+  "record47": {
     "code": "nodicsDocsSearchnodenodicsdocsnodesecqualitytestingandcertification",
     "product": "nodicsDocumentationProduct",
     "targetType": "NODE",
@@ -1934,7 +1974,7 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record47": {
+  "record48": {
     "code": "nodicsDocsSearchnodenodicsdocsnodesecdocumentationmanagement",
     "product": "nodicsDocumentationProduct",
     "targetType": "NODE",
@@ -1975,7 +2015,7 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record48": {
+  "record49": {
     "code": "nodicsDocsSearchnodenodicsdocsnodesecreleasestagingandpublication",
     "product": "nodicsDocumentationProduct",
     "targetType": "NODE",
@@ -2016,7 +2056,7 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record49": {
+  "record50": {
     "code": "nodicsDocsSearchnodenodicsdocsnodesecaianddevelopertooling",
     "product": "nodicsDocumentationProduct",
     "targetType": "NODE",
@@ -2057,7 +2097,7 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record50": {
+  "record51": {
     "code": "nodicsDocsSearchnodenodicsdocsnodesecreference",
     "product": "nodicsDocumentationProduct",
     "targetType": "NODE",
@@ -2098,7 +2138,51 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record51": {
+  "record52": {
+    "code": "nodicsDocsSearchnodenodicsdocsnodepagedocsgateway",
+    "product": "nodicsDocumentationProduct",
+    "targetType": "NODE",
+    "targetCode": "nodicsDocsNodePagedocsGateway",
+    "title": "Nodics Documentation",
+    "summary": "Public documentation gateway for framework, Axis, Kickoff, and generated API contract entry points.",
+    "searchText": "Nodics Documentation Public documentation gateway for framework, Axis, Kickoff, and generated API contract entry points. documentation gateway setup publishing nexus axis",
+    "keywords": [
+      "documentation",
+      "gateway",
+      "setup",
+      "publishing",
+      "nexus",
+      "axis"
+    ],
+    "facets": {
+      "nodeLevel": "PAGE_LINK",
+      "nodeType": "PAGE",
+      "audience": [
+        "business",
+        "architect",
+        "administrator",
+        "developer",
+        "operator",
+        "qa"
+      ]
+    },
+    "managedInAxis": true,
+    "axisAuthoringPermissions": [
+      "documentation.search.preview"
+    ],
+    "workflowRequired": true,
+    "workflowTriggers": [
+      "SEARCH_METADATA_CHANGE"
+    ],
+    "locale": "en",
+    "channel": "web",
+    "accessPolicy": "nodicsDocsAccessPublic",
+    "accessMode": "PUBLIC",
+    "lifecycleState": "ONLINE",
+    "indexState": "INDEX_READY",
+    "active": true
+  },
+  "record53": {
     "code": "nodicsDocsSearchnodenodicsdocsnodepageframeworkwhatisnodics",
     "product": "nodicsDocumentationProduct",
     "targetType": "NODE",
@@ -2141,7 +2225,7 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record52": {
+  "record54": {
     "code": "nodicsDocsSearchnodenodicsdocsnodepageframeworkwhynodicsexists",
     "product": "nodicsDocumentationProduct",
     "targetType": "NODE",
@@ -2185,7 +2269,7 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record53": {
+  "record55": {
     "code": "nodicsDocsSearchnodenodicsdocsnodepageframeworkhownodicsworks",
     "product": "nodicsDocumentationProduct",
     "targetType": "NODE",
@@ -2229,7 +2313,7 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record54": {
+  "record56": {
     "code": "nodicsDocsSearchnodenodicsdocsnodepageframeworkadoptionandfirstjourney",
     "product": "nodicsDocumentationProduct",
     "targetType": "NODE",
@@ -2273,7 +2357,7 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record55": {
+  "record57": {
     "code": "nodicsDocsSearchnodenodicsdocsnodepagedocsdocumentationroadmap",
     "product": "nodicsDocumentationProduct",
     "targetType": "NODE",
@@ -2315,7 +2399,7 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record56": {
+  "record58": {
     "code": "nodicsDocsSearchnodenodicsdocsnodepagedocsdocumentationprinciples",
     "product": "nodicsDocumentationProduct",
     "targetType": "NODE",
@@ -2359,7 +2443,7 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record57": {
+  "record59": {
     "code": "nodicsDocsSearchnodenodicsdocsnodepagedocsreaderjourneyandcoverage",
     "product": "nodicsDocumentationProduct",
     "targetType": "NODE",
@@ -2403,7 +2487,7 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record58": {
+  "record60": {
     "code": "nodicsDocsSearchnodenodicsdocsnodepagedocsdocumentationpublishingmodel",
     "product": "nodicsDocumentationProduct",
     "targetType": "NODE",
@@ -2447,7 +2531,7 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record59": {
+  "record61": {
     "code": "nodicsDocsSearchnodenodicsdocsnodepageframeworkmodulararchitecture",
     "product": "nodicsDocumentationProduct",
     "targetType": "NODE",
@@ -2489,7 +2573,7 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record60": {
+  "record62": {
     "code": "nodicsDocsSearchnodenodicsdocsnodepageframeworkruntimeservercomposition",
     "product": "nodicsDocumentationProduct",
     "targetType": "NODE",
@@ -2531,7 +2615,7 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record61": {
+  "record63": {
     "code": "nodicsDocsSearchnodenodicsdocsnodepageframeworkmoduleloadingserviceprecedence",
     "product": "nodicsDocumentationProduct",
     "targetType": "NODE",
@@ -2573,7 +2657,7 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record62": {
+  "record64": {
     "code": "nodicsDocsSearchnodenodicsdocsnodepageframeworkarchitecturedecisionguide",
     "product": "nodicsDocumentationProduct",
     "targetType": "NODE",
@@ -2615,7 +2699,7 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record63": {
+  "record65": {
     "code": "nodicsDocsSearchnodenodicsdocsnodepageplatformmoduleregistry",
     "product": "nodicsDocumentationProduct",
     "targetType": "NODE",
@@ -2657,7 +2741,7 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record64": {
+  "record66": {
     "code": "nodicsDocsSearchnodenodicsdocsnodepagefoundationoverview",
     "product": "nodicsDocumentationProduct",
     "targetType": "NODE",
@@ -2699,7 +2783,7 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record65": {
+  "record67": {
     "code": "nodicsDocsSearchnodenodicsdocsnodepageapplicationssuite",
     "product": "nodicsDocumentationProduct",
     "targetType": "NODE",
@@ -2742,7 +2826,7 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record66": {
+  "record68": {
     "code": "nodicsDocsSearchnodenodicsdocsnodepagesolutionstaskexecutionengine",
     "product": "nodicsDocumentationProduct",
     "targetType": "NODE",
@@ -2788,7 +2872,7 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record67": {
+  "record69": {
     "code": "nodicsDocsSearchnodenodicsdocsnodepagesolutionsdataengineeringanalyticsplatform",
     "product": "nodicsDocumentationProduct",
     "targetType": "NODE",
@@ -2835,7 +2919,7 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record68": {
+  "record70": {
     "code": "nodicsDocsSearchnodenodicsdocsnodepageacceleratorsagoraindustrytemplates",
     "product": "nodicsDocumentationProduct",
     "targetType": "NODE",
@@ -2879,7 +2963,7 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record69": {
+  "record71": {
     "code": "nodicsDocsSearchnodenodicsdocsnodepageacceleratorsagoraapparelproductdataauthoring",
     "product": "nodicsDocumentationProduct",
     "targetType": "NODE",
@@ -2925,7 +3009,7 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record70": {
+  "record72": {
     "code": "nodicsDocsSearchnodenodicsdocsnodepageframeworklocalquickstart",
     "product": "nodicsDocumentationProduct",
     "targetType": "NODE",
@@ -2967,7 +3051,7 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record71": {
+  "record73": {
     "code": "nodicsDocsSearchnodenodicsdocsnodepageframeworkfreshschemasetupjourney",
     "product": "nodicsDocumentationProduct",
     "targetType": "NODE",
@@ -3009,7 +3093,7 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record72": {
+  "record74": {
     "code": "nodicsDocsSearchnodenodicsdocsnodepageframeworklocalruntimetroubleshooting",
     "product": "nodicsDocumentationProduct",
     "targetType": "NODE",
@@ -3051,7 +3135,7 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record73": {
+  "record75": {
     "code": "nodicsDocsSearchnodenodicsdocsnodepageinstallerinstalledruntimeapplicationbuilder",
     "product": "nodicsDocumentationProduct",
     "targetType": "NODE",
@@ -3095,7 +3179,7 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record74": {
+  "record76": {
     "code": "nodicsDocsSearchnodenodicsdocsnodepagebuilderworkspacegeneration",
     "product": "nodicsDocumentationProduct",
     "targetType": "NODE",
@@ -3137,7 +3221,7 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record75": {
+  "record77": {
     "code": "nodicsDocsSearchnodenodicsdocsnodepageprocessvisualdesigner",
     "product": "nodicsDocumentationProduct",
     "targetType": "NODE",
@@ -3179,7 +3263,7 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record76": {
+  "record78": {
     "code": "nodicsDocsSearchnodenodicsdocsnodepageaxisbusinesscustomization",
     "product": "nodicsDocumentationProduct",
     "targetType": "NODE",
@@ -3221,7 +3305,7 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record77": {
+  "record79": {
     "code": "nodicsDocsSearchnodenodicsdocsnodepageplatformoverview",
     "product": "nodicsDocumentationProduct",
     "targetType": "NODE",
@@ -3263,7 +3347,7 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record78": {
+  "record80": {
     "code": "nodicsDocsSearchnodenodicsdocsnodepagesecurityidentityaccessgovernance",
     "product": "nodicsDocumentationProduct",
     "targetType": "NODE",
@@ -3305,7 +3389,7 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record79": {
+  "record81": {
     "code": "nodicsDocsSearchnodenodicsdocsnodepageconfigurationruntimebehaviormanagement",
     "product": "nodicsDocumentationProduct",
     "targetType": "NODE",
@@ -3347,7 +3431,7 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record80": {
+  "record82": {
     "code": "nodicsDocsSearchnodenodicsdocsnodepageconfigurationframeworkstartuplifecycle",
     "product": "nodicsDocumentationProduct",
     "targetType": "NODE",
@@ -3400,7 +3484,7 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record81": {
+  "record83": {
     "code": "nodicsDocsSearchnodenodicsdocsnodepageroutingapigovernance",
     "product": "nodicsDocumentationProduct",
     "targetType": "NODE",
@@ -3444,7 +3528,7 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record82": {
+  "record84": {
     "code": "nodicsDocsSearchnodenodicsdocsnodepageroutingapirequestlifecycle",
     "product": "nodicsDocumentationProduct",
     "targetType": "NODE",
@@ -3489,7 +3573,7 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record83": {
+  "record85": {
     "code": "nodicsDocsSearchnodenodicsdocsnodepagefoundationerrorhandlingstatuscodes",
     "product": "nodicsDocumentationProduct",
     "targetType": "NODE",
@@ -3538,7 +3622,7 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record84": {
+  "record86": {
     "code": "nodicsDocsSearchnodenodicsdocsnodepageruntimegovernedchange",
     "product": "nodicsDocumentationProduct",
     "targetType": "NODE",
@@ -3580,7 +3664,7 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record85": {
+  "record87": {
     "code": "nodicsDocsSearchnodenodicsdocsnodepagelocalizationinternationalization",
     "product": "nodicsDocumentationProduct",
     "targetType": "NODE",
@@ -3622,7 +3706,7 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record86": {
+  "record88": {
     "code": "nodicsDocsSearchnodenodicsdocsnodepageschemadatamodelingmanagement",
     "product": "nodicsDocumentationProduct",
     "targetType": "NODE",
@@ -3664,7 +3748,7 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record87": {
+  "record89": {
     "code": "nodicsDocsSearchnodenodicsdocsnodepagepersistenceproviderdataaccesslayer",
     "product": "nodicsDocumentationProduct",
     "targetType": "NODE",
@@ -3706,7 +3790,7 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record88": {
+  "record90": {
     "code": "nodicsDocsSearchnodenodicsdocsnodepagecacheruntimestatemanagement",
     "product": "nodicsDocumentationProduct",
     "targetType": "NODE",
@@ -3748,7 +3832,7 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record89": {
+  "record91": {
     "code": "nodicsDocsSearchnodenodicsdocsnodepageframeworkcustomizationguide",
     "product": "nodicsDocumentationProduct",
     "targetType": "NODE",
@@ -3790,7 +3874,7 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record90": {
+  "record92": {
     "code": "nodicsDocsSearchnodenodicsdocsnodepageframeworkbackendextensionpatterns",
     "product": "nodicsDocumentationProduct",
     "targetType": "NODE",
@@ -3833,7 +3917,7 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record91": {
+  "record93": {
     "code": "nodicsDocsSearchnodenodicsdocsnodepageframeworkaxiscontentcustomization",
     "product": "nodicsDocumentationProduct",
     "targetType": "NODE",
@@ -3875,7 +3959,7 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record92": {
+  "record94": {
     "code": "nodicsDocsSearchnodenodicsdocsnodepageprocessdevelopercustomization",
     "product": "nodicsDocumentationProduct",
     "targetType": "NODE",
@@ -3917,7 +4001,7 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record93": {
+  "record95": {
     "code": "nodicsDocsSearchnodenodicsdocsnodepageprocesscustomprojectextension",
     "product": "nodicsDocumentationProduct",
     "targetType": "NODE",
@@ -3959,7 +4043,7 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record94": {
+  "record96": {
     "code": "nodicsDocsSearchnodenodicsdocsnodepagecommercebasefoundations",
     "product": "nodicsDocumentationProduct",
     "targetType": "NODE",
@@ -4001,7 +4085,7 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record95": {
+  "record97": {
     "code": "nodicsDocsSearchnodenodicsdocsnodepagewcmsoverview",
     "product": "nodicsDocumentationProduct",
     "targetType": "NODE",
@@ -4043,7 +4127,7 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record96": {
+  "record98": {
     "code": "nodicsDocsSearchnodenodicsdocsnodepagewcmscontentcatalogmodel",
     "product": "nodicsDocumentationProduct",
     "targetType": "NODE",
@@ -4085,7 +4169,7 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record97": {
+  "record99": {
     "code": "nodicsDocsSearchnodenodicsdocsnodepagewcmspagedesignercomponents",
     "product": "nodicsDocumentationProduct",
     "targetType": "NODE",
@@ -4127,7 +4211,7 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record98": {
+  "record100": {
     "code": "nodicsDocsSearchnodenodicsdocsnodepagewcmssitepublicationvisibility",
     "product": "nodicsDocumentationProduct",
     "targetType": "NODE",
@@ -4170,7 +4254,7 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record99": {
+  "record101": {
     "code": "nodicsDocsSearchnodenodicsdocsnodepagecatalogproductdiscoverymanagement",
     "product": "nodicsDocumentationProduct",
     "targetType": "NODE",
@@ -4212,7 +4296,7 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record100": {
+  "record102": {
     "code": "nodicsDocsSearchnodenodicsdocsnodepagediscoverysearchindexing",
     "product": "nodicsDocumentationProduct",
     "targetType": "NODE",
@@ -4254,7 +4338,7 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record101": {
+  "record103": {
     "code": "nodicsDocsSearchnodenodicsdocsnodepagewcmsmediamanagement",
     "product": "nodicsDocumentationProduct",
     "targetType": "NODE",
@@ -4296,7 +4380,7 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record102": {
+  "record104": {
     "code": "nodicsDocsSearchnodenodicsdocsnodepagewcmsmediastoragedelivery",
     "product": "nodicsDocumentationProduct",
     "targetType": "NODE",
@@ -4338,7 +4422,7 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record103": {
+  "record105": {
     "code": "nodicsDocsSearchnodenodicsdocsnodepagewcmsmediaimportpublication",
     "product": "nodicsDocumentationProduct",
     "targetType": "NODE",
@@ -4380,7 +4464,7 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record104": {
+  "record106": {
     "code": "nodicsDocsSearchnodenodicsdocsnodepageinventorystockmanagement",
     "product": "nodicsDocumentationProduct",
     "targetType": "NODE",
@@ -4422,7 +4506,7 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record105": {
+  "record107": {
     "code": "nodicsDocsSearchnodenodicsdocsnodepagepricingpromotionstaxmanagement",
     "product": "nodicsDocumentationProduct",
     "targetType": "NODE",
@@ -4464,7 +4548,7 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record106": {
+  "record108": {
     "code": "nodicsDocsSearchnodenodicsdocsnodepagecommerceoverview",
     "product": "nodicsDocumentationProduct",
     "targetType": "NODE",
@@ -4506,7 +4590,7 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record107": {
+  "record109": {
     "code": "nodicsDocsSearchnodenodicsdocsnodepagecommercecartorder",
     "product": "nodicsDocumentationProduct",
     "targetType": "NODE",
@@ -4548,7 +4632,7 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record108": {
+  "record110": {
     "code": "nodicsDocsSearchnodenodicsdocsnodepagecommercepaymentfulfillment",
     "product": "nodicsDocumentationProduct",
     "targetType": "NODE",
@@ -4590,7 +4674,7 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record109": {
+  "record111": {
     "code": "nodicsDocsSearchnodenodicsdocsnodepagefulfillmentshippingmanagement",
     "product": "nodicsDocumentationProduct",
     "targetType": "NODE",
@@ -4632,7 +4716,7 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record110": {
+  "record112": {
     "code": "nodicsDocsSearchnodenodicsdocsnodepageordermanagementlifecycle",
     "product": "nodicsDocumentationProduct",
     "targetType": "NODE",
@@ -4674,7 +4758,7 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record111": {
+  "record113": {
     "code": "nodicsDocsSearchnodenodicsdocsnodepagecommercereturnsrefunds",
     "product": "nodicsDocumentationProduct",
     "targetType": "NODE",
@@ -4716,7 +4800,7 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record112": {
+  "record114": {
     "code": "nodicsDocsSearchnodenodicsdocsnodepageengagementcustomerreviews",
     "product": "nodicsDocumentationProduct",
     "targetType": "NODE",
@@ -4758,7 +4842,7 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record113": {
+  "record115": {
     "code": "nodicsDocsSearchnodenodicsdocsnodepageengagementreviewmoderationgovernance",
     "product": "nodicsDocumentationProduct",
     "targetType": "NODE",
@@ -4800,7 +4884,7 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record114": {
+  "record116": {
     "code": "nodicsDocsSearchnodenodicsdocsnodepageengagementreviewaggregationrecovery",
     "product": "nodicsDocumentationProduct",
     "targetType": "NODE",
@@ -4842,7 +4926,7 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record115": {
+  "record117": {
     "code": "nodicsDocsSearchnodenodicsdocsnodepageengagementcustomerfeedback",
     "product": "nodicsDocumentationProduct",
     "targetType": "NODE",
@@ -4884,7 +4968,7 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record116": {
+  "record118": {
     "code": "nodicsDocsSearchnodenodicsdocsnodepageengagementunifiedoperations",
     "product": "nodicsDocumentationProduct",
     "targetType": "NODE",
@@ -4926,7 +5010,7 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record117": {
+  "record119": {
     "code": "nodicsDocsSearchnodenodicsdocsnodepageengagementgovernedautomation",
     "product": "nodicsDocumentationProduct",
     "targetType": "NODE",
@@ -4968,7 +5052,7 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record118": {
+  "record120": {
     "code": "nodicsDocsSearchnodenodicsdocsnodepageengagemententerpriseoperations",
     "product": "nodicsDocumentationProduct",
     "targetType": "NODE",
@@ -5010,7 +5094,7 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record119": {
+  "record121": {
     "code": "nodicsDocsSearchnodenodicsdocsnodepagecommunicationoverview",
     "product": "nodicsDocumentationProduct",
     "targetType": "NODE",
@@ -5052,7 +5136,7 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record120": {
+  "record122": {
     "code": "nodicsDocsSearchnodenodicsdocsnodepageeventsmessagingclustercoordination",
     "product": "nodicsDocumentationProduct",
     "targetType": "NODE",
@@ -5094,7 +5178,7 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record121": {
+  "record123": {
     "code": "nodicsDocsSearchnodenodicsdocsnodepageprocessoverview",
     "product": "nodicsDocumentationProduct",
     "targetType": "NODE",
@@ -5136,7 +5220,7 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record122": {
+  "record124": {
     "code": "nodicsDocsSearchnodenodicsdocsnodepageprocessruntimelifecycle",
     "product": "nodicsDocumentationProduct",
     "targetType": "NODE",
@@ -5178,7 +5262,7 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record123": {
+  "record125": {
     "code": "nodicsDocsSearchnodenodicsdocsnodepageprocessworkfloworchestrationpatterns",
     "product": "nodicsDocumentationProduct",
     "targetType": "NODE",
@@ -5230,7 +5314,7 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record124": {
+  "record126": {
     "code": "nodicsDocsSearchnodenodicsdocsnodepageprocessfirstworkflow",
     "product": "nodicsDocumentationProduct",
     "targetType": "NODE",
@@ -5272,7 +5356,7 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record125": {
+  "record127": {
     "code": "nodicsDocsSearchnodenodicsdocsnodepageprocessfirsthumantask",
     "product": "nodicsDocumentationProduct",
     "targetType": "NODE",
@@ -5314,7 +5398,7 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record126": {
+  "record128": {
     "code": "nodicsDocsSearchnodenodicsdocsnodepageprocessbusinessvalue",
     "product": "nodicsDocumentationProduct",
     "targetType": "NODE",
@@ -5356,7 +5440,7 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record127": {
+  "record129": {
     "code": "nodicsDocsSearchnodenodicsdocsnodepagepipelinebusinesslogicorchestration",
     "product": "nodicsDocumentationProduct",
     "targetType": "NODE",
@@ -5408,7 +5492,7 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record128": {
+  "record130": {
     "code": "nodicsDocsSearchnodenodicsdocsnodepagecronoperations",
     "product": "nodicsDocumentationProduct",
     "targetType": "NODE",
@@ -5450,7 +5534,7 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record129": {
+  "record131": {
     "code": "nodicsDocsSearchnodenodicsdocsnodepagecronnoderesponsibilitytee",
     "product": "nodicsDocumentationProduct",
     "targetType": "NODE",
@@ -5493,7 +5577,7 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record130": {
+  "record132": {
     "code": "nodicsDocsSearchnodenodicsdocsnodepagecronprojectcustomization",
     "product": "nodicsDocumentationProduct",
     "targetType": "NODE",
@@ -5535,7 +5619,7 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record131": {
+  "record133": {
     "code": "nodicsDocsSearchnodenodicsdocsnodepageprocessprocesscronruntime",
     "product": "nodicsDocumentationProduct",
     "targetType": "NODE",
@@ -5577,7 +5661,7 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record132": {
+  "record134": {
     "code": "nodicsDocsSearchnodenodicsdocsnodepageprocessscheduledautomation",
     "product": "nodicsDocumentationProduct",
     "targetType": "NODE",
@@ -5619,7 +5703,7 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record133": {
+  "record135": {
     "code": "nodicsDocsSearchnodenodicsdocsnodepagedataimportexportmigration",
     "product": "nodicsDocumentationProduct",
     "targetType": "NODE",
@@ -5661,7 +5745,7 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record134": {
+  "record136": {
     "code": "nodicsDocsSearchnodenodicsdocsnodepageprocessactionadapters",
     "product": "nodicsDocumentationProduct",
     "targetType": "NODE",
@@ -5703,7 +5787,7 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record135": {
+  "record137": {
     "code": "nodicsDocsSearchnodenodicsdocsnodepageframeworkdevopsruntime",
     "product": "nodicsDocumentationProduct",
     "targetType": "NODE",
@@ -5745,7 +5829,7 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record136": {
+  "record138": {
     "code": "nodicsDocsSearchnodenodicsdocsnodepageframeworkruntimereleaserollback",
     "product": "nodicsDocumentationProduct",
     "targetType": "NODE",
@@ -5787,7 +5871,7 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record137": {
+  "record139": {
     "code": "nodicsDocsSearchnodenodicsdocsnodepageframeworklocalbrowseracceptancejourney",
     "product": "nodicsDocumentationProduct",
     "targetType": "NODE",
@@ -5829,7 +5913,7 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record138": {
+  "record140": {
     "code": "nodicsDocsSearchnodenodicsdocsnodepageframeworklocalverificationchecklist",
     "product": "nodicsDocumentationProduct",
     "targetType": "NODE",
@@ -5871,7 +5955,7 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record139": {
+  "record141": {
     "code": "nodicsDocsSearchnodenodicsdocsnodepagecommerceenterpriseoperations",
     "product": "nodicsDocumentationProduct",
     "targetType": "NODE",
@@ -5913,7 +5997,7 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record140": {
+  "record142": {
     "code": "nodicsDocsSearchnodenodicsdocsnodepageprocessincidentrecovery",
     "product": "nodicsDocumentationProduct",
     "targetType": "NODE",
@@ -5955,7 +6039,7 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record141": {
+  "record143": {
     "code": "nodicsDocsSearchnodenodicsdocsnodepageprocessdevopstopology",
     "product": "nodicsDocumentationProduct",
     "targetType": "NODE",
@@ -5997,7 +6081,7 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record142": {
+  "record144": {
     "code": "nodicsDocsSearchnodenodicsdocsnodepageprocessqaregressionguide",
     "product": "nodicsDocumentationProduct",
     "targetType": "NODE",
@@ -6039,7 +6123,7 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record143": {
+  "record145": {
     "code": "nodicsDocsSearchnodenodicsdocsnodepageframeworkcapabilitydocumentationmaturitypattern",
     "product": "nodicsDocumentationProduct",
     "targetType": "NODE",
@@ -6081,7 +6165,7 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record144": {
+  "record146": {
     "code": "nodicsDocsSearchnodenodicsdocsnodepagedocsoverview",
     "product": "nodicsDocumentationProduct",
     "targetType": "NODE",
@@ -6123,7 +6207,7 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record145": {
+  "record147": {
     "code": "nodicsDocsSearchnodenodicsdocsnodepagewcmspublishinglifecycle",
     "product": "nodicsDocumentationProduct",
     "targetType": "NODE",
@@ -6165,7 +6249,7 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record146": {
+  "record148": {
     "code": "nodicsDocsSearchnodenodicsdocsnodepageapplicationsnexusdatacontentguide",
     "product": "nodicsDocumentationProduct",
     "targetType": "NODE",
@@ -6209,7 +6293,7 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record147": {
+  "record149": {
     "code": "nodicsDocsSearchnodenodicsdocsnodepageapplicationsaxissetuperrorcontracts",
     "product": "nodicsDocumentationProduct",
     "targetType": "NODE",
@@ -6253,7 +6337,7 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record148": {
+  "record150": {
     "code": "nodicsDocsSearchnodenodicsdocsnodepagewcmscmssourcemapauthoringcontract",
     "product": "nodicsDocumentationProduct",
     "targetType": "NODE",
@@ -6297,7 +6381,7 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record149": {
+  "record151": {
     "code": "nodicsDocsSearchnodenodicsdocsnodepagewcmsmediaoperationsrunbook",
     "product": "nodicsDocumentationProduct",
     "targetType": "NODE",
@@ -6341,7 +6425,7 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record150": {
+  "record152": {
     "code": "nodicsDocsSearchnodenodicsdocsnodepagedataimportexportproviderguides",
     "product": "nodicsDocumentationProduct",
     "targetType": "NODE",
@@ -6386,7 +6470,7 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record151": {
+  "record153": {
     "code": "nodicsDocsSearchnodenodicsdocsnodepagecommercedataauthoringfulfillment",
     "product": "nodicsDocumentationProduct",
     "targetType": "NODE",
@@ -6431,7 +6515,7 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record152": {
+  "record154": {
     "code": "nodicsDocsSearchnodenodicsdocsnodepagedocsdocumentationpublishingrunbook",
     "product": "nodicsDocumentationProduct",
     "targetType": "NODE",
@@ -6475,7 +6559,7 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record153": {
+  "record155": {
     "code": "nodicsDocsSearchnodenodicsdocsnodepageplatformmoduleregistryjourney",
     "product": "nodicsDocumentationProduct",
     "targetType": "NODE",
@@ -6519,7 +6603,7 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record154": {
+  "record156": {
     "code": "nodicsDocsSearchnodenodicsdocsnodepagecommercesearchguide",
     "product": "nodicsDocumentationProduct",
     "targetType": "NODE",
@@ -6563,7 +6647,7 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record155": {
+  "record157": {
     "code": "nodicsDocsSearchnodenodicsdocsnodepagelocalizationruntimeauthoring",
     "product": "nodicsDocumentationProduct",
     "targetType": "NODE",
@@ -6607,7 +6691,7 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record156": {
+  "record158": {
     "code": "nodicsDocsSearchnodenodicsdocsnodepagecommercepaymentproviderboundaries",
     "product": "nodicsDocumentationProduct",
     "targetType": "NODE",
@@ -6651,7 +6735,7 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record157": {
+  "record159": {
     "code": "nodicsDocsSearchnodenodicsdocsnodepageloyaltywalletsrewardsledger",
     "product": "nodicsDocumentationProduct",
     "targetType": "NODE",
@@ -6699,7 +6783,7 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record158": {
+  "record160": {
     "code": "nodicsDocsSearchnodenodicsdocsnodepagecommerceshoppinglistcommerceboundary",
     "product": "nodicsDocumentationProduct",
     "targetType": "NODE",
@@ -6745,7 +6829,7 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record159": {
+  "record161": {
     "code": "nodicsDocsSearchnodenodicsdocsnodepagefoundationnmsruntimemonitoring",
     "product": "nodicsDocumentationProduct",
     "targetType": "NODE",
@@ -6789,7 +6873,7 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record160": {
+  "record162": {
     "code": "nodicsDocsSearchnodenodicsdocsnodepagefoundationserviceruntimeoverrides",
     "product": "nodicsDocumentationProduct",
     "targetType": "NODE",
@@ -6833,7 +6917,7 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record161": {
+  "record163": {
     "code": "nodicsDocsSearchnodenodicsdocsnodepagefoundationmoduletomodulecommunication",
     "product": "nodicsDocumentationProduct",
     "targetType": "NODE",
@@ -6879,7 +6963,7 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record162": {
+  "record164": {
     "code": "nodicsDocsSearchnodenodicsdocsnodepagefoundationcacheproviderrunbooks",
     "product": "nodicsDocumentationProduct",
     "targetType": "NODE",
@@ -6923,7 +7007,7 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record163": {
+  "record165": {
     "code": "nodicsDocsSearchnodenodicsdocsnodepagefoundationdatabaseproviderboundaries",
     "product": "nodicsDocumentationProduct",
     "targetType": "NODE",
@@ -6967,7 +7051,7 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record164": {
+  "record166": {
     "code": "nodicsDocsSearchnodenodicsdocsnodepagesecurityotpsecurityflow",
     "product": "nodicsDocumentationProduct",
     "targetType": "NODE",
@@ -7011,7 +7095,7 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record165": {
+  "record167": {
     "code": "nodicsDocsSearchnodenodicsdocsnodepagecommunicationproviderrunbooks",
     "product": "nodicsDocumentationProduct",
     "targetType": "NODE",
@@ -7055,7 +7139,7 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record166": {
+  "record168": {
     "code": "nodicsDocsSearchnodenodicsdocsnodepageengagementcontactsubmissionoperations",
     "product": "nodicsDocumentationProduct",
     "targetType": "NODE",
@@ -7099,7 +7183,7 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record167": {
+  "record169": {
     "code": "nodicsDocsSearchnodenodicsdocsnodepageprocessworkflowbpmsourcemap",
     "product": "nodicsDocumentationProduct",
     "targetType": "NODE",
@@ -7143,7 +7227,7 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record168": {
+  "record170": {
     "code": "nodicsDocsSearchnodenodicsdocsnodepageprocesscronjobdataauthoring",
     "product": "nodicsDocumentationProduct",
     "targetType": "NODE",
@@ -7187,7 +7271,7 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record169": {
+  "record171": {
     "code": "nodicsDocsSearchnodenodicsdocsnodepageframeworkreleaseupgradecompatibility",
     "product": "nodicsDocumentationProduct",
     "targetType": "NODE",
@@ -7231,7 +7315,7 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record170": {
+  "record172": {
     "code": "nodicsDocsSearchnodenodicsdocsnodepagecommercefulfillmentcoresourcemap",
     "product": "nodicsDocumentationProduct",
     "targetType": "NODE",
@@ -7275,7 +7359,7 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record171": {
+  "record173": {
     "code": "nodicsDocsSearchnodenodicsdocsnodepageacceleratorsdomaincommercesourcemap",
     "product": "nodicsDocumentationProduct",
     "targetType": "NODE",
@@ -7319,7 +7403,7 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record172": {
+  "record174": {
     "code": "nodicsDocsSearchnodenodicsdocsnodepagefoundationtoolingruntimecontracts",
     "product": "nodicsDocumentationProduct",
     "targetType": "NODE",
@@ -7363,7 +7447,7 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record173": {
+  "record175": {
     "code": "nodicsDocsSearchnodenodicsdocsnodepagefoundationemsruntimeclientrunbook",
     "product": "nodicsDocumentationProduct",
     "targetType": "NODE",
@@ -7407,7 +7491,7 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record174": {
+  "record176": {
     "code": "nodicsDocsSearchnodenodicsdocsnodepagereferenceinternalsourceboundaryregister",
     "product": "nodicsDocumentationProduct",
     "targetType": "NODE",
@@ -7451,7 +7535,7 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record175": {
+  "record177": {
     "code": "nodicsDocsSearchnodenodicsdocsnodepagetoolingaideveloperenablement",
     "product": "nodicsDocumentationProduct",
     "targetType": "NODE",
@@ -7493,7 +7577,7 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record176": {
+  "record178": {
     "code": "nodicsDocsSearchnodenodicsdocsnodepagereferencesourcemapglossary",
     "product": "nodicsDocumentationProduct",
     "targetType": "NODE",
@@ -7535,7 +7619,7 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record177": {
+  "record179": {
     "code": "nodicsDocsSearchnodenodicsdocsnodepagereferencesourcebackeddocumentationcoverageaudit",
     "product": "nodicsDocumentationProduct",
     "targetType": "NODE",
@@ -7579,7 +7663,7 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record178": {
+  "record180": {
     "code": "nodicsDocsSearchnodenodicsdocsnodepagereferencedocumentationgapbacklog",
     "product": "nodicsDocumentationProduct",
     "targetType": "NODE",
@@ -7623,7 +7707,7 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record179": {
+  "record181": {
     "code": "nodicsDocsSearchdashboardnodicsdocsdashboardproduct",
     "product": "nodicsDocumentationProduct",
     "targetType": "DASHBOARD",
@@ -7656,7 +7740,7 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record180": {
+  "record182": {
     "code": "nodicsDocsSearchdashboardnodicsdocsdashboardnavigation",
     "product": "nodicsDocumentationProduct",
     "targetType": "DASHBOARD",
@@ -7689,7 +7773,40 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record181": {
+  "record183": {
+    "code": "nodicsDocsSearchdashboardnodicsdocsdashboardsecstarthere",
+    "product": "nodicsDocumentationProduct",
+    "targetType": "DASHBOARD",
+    "targetCode": "nodicsDocsDashboardSecstartHere",
+    "title": "Start Here",
+    "summary": "Choose the right documentation entry point before opening detailed framework, Axis, Kickoff, or API contract pages.",
+    "searchText": "Start Here Choose the right documentation entry point before opening detailed framework, Axis, Kickoff, or API contract pages.",
+    "keywords": [
+      "SECTION",
+      "nodicsDocsNodeSecstartHere",
+      "Start Here"
+    ],
+    "facets": {
+      "ownerType": "SECTION",
+      "ownerCode": "nodicsDocsNodeSecstartHere"
+    },
+    "managedInAxis": true,
+    "axisAuthoringPermissions": [
+      "documentation.search.preview"
+    ],
+    "workflowRequired": true,
+    "workflowTriggers": [
+      "SEARCH_METADATA_CHANGE"
+    ],
+    "locale": "en",
+    "channel": "web",
+    "accessPolicy": "nodicsDocsAccessPublic",
+    "accessMode": "PUBLIC",
+    "lifecycleState": "ONLINE",
+    "indexState": "INDEX_READY",
+    "active": true
+  },
+  "record184": {
     "code": "nodicsDocsSearchdashboardnodicsdocsdashboardsecnodicsframework",
     "product": "nodicsDocumentationProduct",
     "targetType": "DASHBOARD",
@@ -7722,7 +7839,7 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record182": {
+  "record185": {
     "code": "nodicsDocsSearchdashboardnodicsdocsdashboardsecdocumentationroadmap",
     "product": "nodicsDocumentationProduct",
     "targetType": "DASHBOARD",
@@ -7755,7 +7872,7 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record183": {
+  "record186": {
     "code": "nodicsDocsSearchdashboardnodicsdocsdashboardsecframeworkarchitectureanddesign",
     "product": "nodicsDocumentationProduct",
     "targetType": "DASHBOARD",
@@ -7788,7 +7905,7 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record184": {
+  "record187": {
     "code": "nodicsDocsSearchdashboardnodicsdocsdashboardseccapabilityregistryandlifecyclemanagement",
     "product": "nodicsDocumentationProduct",
     "targetType": "DASHBOARD",
@@ -7821,7 +7938,7 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record185": {
+  "record188": {
     "code": "nodicsDocsSearchdashboardnodicsdocsdashboardsecfoundationruntimeservices",
     "product": "nodicsDocumentationProduct",
     "targetType": "DASHBOARD",
@@ -7854,7 +7971,7 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record186": {
+  "record189": {
     "code": "nodicsDocsSearchdashboardnodicsdocsdashboardsecnodicsapplicationsuite",
     "product": "nodicsDocumentationProduct",
     "targetType": "DASHBOARD",
@@ -7887,7 +8004,7 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record187": {
+  "record190": {
     "code": "nodicsDocsSearchdashboardnodicsdocsdashboardsecsolutionusecases",
     "product": "nodicsDocumentationProduct",
     "targetType": "DASHBOARD",
@@ -7920,7 +8037,7 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record188": {
+  "record191": {
     "code": "nodicsDocsSearchdashboardnodicsdocsdashboardsecacceleratorsandindustrysolutiontemplates",
     "product": "nodicsDocumentationProduct",
     "targetType": "DASHBOARD",
@@ -7953,7 +8070,7 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record189": {
+  "record192": {
     "code": "nodicsDocsSearchdashboardnodicsdocsdashboardsecnodicsinstallerandworkspacesetup",
     "product": "nodicsDocumentationProduct",
     "targetType": "DASHBOARD",
@@ -7986,7 +8103,7 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record190": {
+  "record193": {
     "code": "nodicsDocsSearchdashboardnodicsdocsdashboardsecapplicationbuilderandworkspacegeneration",
     "product": "nodicsDocumentationProduct",
     "targetType": "DASHBOARD",
@@ -8019,7 +8136,7 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record191": {
+  "record194": {
     "code": "nodicsDocsSearchdashboardnodicsdocsdashboardsecaxisandbackofficeoperations",
     "product": "nodicsDocumentationProduct",
     "targetType": "DASHBOARD",
@@ -8052,7 +8169,7 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record192": {
+  "record195": {
     "code": "nodicsDocsSearchdashboardnodicsdocsdashboardsecbusinesscustomizationinaxis",
     "product": "nodicsDocumentationProduct",
     "targetType": "DASHBOARD",
@@ -8085,7 +8202,7 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record193": {
+  "record196": {
     "code": "nodicsDocsSearchdashboardnodicsdocsdashboardsecuserenterpriseandtenantmanagement",
     "product": "nodicsDocumentationProduct",
     "targetType": "DASHBOARD",
@@ -8118,7 +8235,7 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record194": {
+  "record197": {
     "code": "nodicsDocsSearchdashboardnodicsdocsdashboardsecsecuritygovernanceandcompliance",
     "product": "nodicsDocumentationProduct",
     "targetType": "DASHBOARD",
@@ -8151,7 +8268,7 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record195": {
+  "record198": {
     "code": "nodicsDocsSearchdashboardnodicsdocsdashboardsecapplicationconfigurationandruntimebehaviormanagement",
     "product": "nodicsDocumentationProduct",
     "targetType": "DASHBOARD",
@@ -8184,7 +8301,7 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record196": {
+  "record199": {
     "code": "nodicsDocsSearchdashboardnodicsdocsdashboardsecruntimegovernanceanddynamicchangemanagement",
     "product": "nodicsDocumentationProduct",
     "targetType": "DASHBOARD",
@@ -8217,7 +8334,7 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record197": {
+  "record200": {
     "code": "nodicsDocsSearchdashboardnodicsdocsdashboardseclocalizationandinternationalization",
     "product": "nodicsDocumentationProduct",
     "targetType": "DASHBOARD",
@@ -8250,7 +8367,7 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record198": {
+  "record201": {
     "code": "nodicsDocsSearchdashboardnodicsdocsdashboardsecdatamodelingandschemamanagement",
     "product": "nodicsDocumentationProduct",
     "targetType": "DASHBOARD",
@@ -8283,7 +8400,7 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record199": {
+  "record202": {
     "code": "nodicsDocsSearchdashboardnodicsdocsdashboardsecdatabaseandpersistencemanagement",
     "product": "nodicsDocumentationProduct",
     "targetType": "DASHBOARD",
@@ -8316,7 +8433,7 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record200": {
+  "record203": {
     "code": "nodicsDocsSearchdashboardnodicsdocsdashboardseccachingandruntimestatemanagement",
     "product": "nodicsDocumentationProduct",
     "targetType": "DASHBOARD",
@@ -8349,7 +8466,7 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record201": {
+  "record204": {
     "code": "nodicsDocsSearchdashboardnodicsdocsdashboardsecdeveloperextensionandprojectcustomization",
     "product": "nodicsDocumentationProduct",
     "targetType": "DASHBOARD",
@@ -8382,7 +8499,7 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record202": {
+  "record205": {
     "code": "nodicsDocsSearchdashboardnodicsdocsdashboardsecstoremarketsiteandchannelmanagement",
     "product": "nodicsDocumentationProduct",
     "targetType": "DASHBOARD",
@@ -8415,7 +8532,7 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record203": {
+  "record206": {
     "code": "nodicsDocsSearchdashboardnodicsdocsdashboardsecwcmsandcontentmanagement",
     "product": "nodicsDocumentationProduct",
     "targetType": "DASHBOARD",
@@ -8448,7 +8565,7 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record204": {
+  "record207": {
     "code": "nodicsDocsSearchdashboardnodicsdocsdashboardsecproductcataloganddiscovery",
     "product": "nodicsDocumentationProduct",
     "targetType": "DASHBOARD",
@@ -8481,7 +8598,7 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record205": {
+  "record208": {
     "code": "nodicsDocsSearchdashboardnodicsdocsdashboardsecsearchanddiscovery",
     "product": "nodicsDocumentationProduct",
     "targetType": "DASHBOARD",
@@ -8514,7 +8631,7 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record206": {
+  "record209": {
     "code": "nodicsDocsSearchdashboardnodicsdocsdashboardsecmediamanagement",
     "product": "nodicsDocumentationProduct",
     "targetType": "DASHBOARD",
@@ -8547,7 +8664,7 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record207": {
+  "record210": {
     "code": "nodicsDocsSearchdashboardnodicsdocsdashboardsecinventoryandstockmanagement",
     "product": "nodicsDocumentationProduct",
     "targetType": "DASHBOARD",
@@ -8580,7 +8697,7 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record208": {
+  "record211": {
     "code": "nodicsDocsSearchdashboardnodicsdocsdashboardsecpricingpromotionsandtax",
     "product": "nodicsDocumentationProduct",
     "targetType": "DASHBOARD",
@@ -8613,7 +8730,7 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record209": {
+  "record212": {
     "code": "nodicsDocsSearchdashboardnodicsdocsdashboardseccommercecartandcheckout",
     "product": "nodicsDocumentationProduct",
     "targetType": "DASHBOARD",
@@ -8646,7 +8763,7 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record210": {
+  "record213": {
     "code": "nodicsDocsSearchdashboardnodicsdocsdashboardsecpaymentmanagement",
     "product": "nodicsDocumentationProduct",
     "targetType": "DASHBOARD",
@@ -8679,7 +8796,7 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record211": {
+  "record214": {
     "code": "nodicsDocsSearchdashboardnodicsdocsdashboardsecloyaltyandrewards",
     "product": "nodicsDocumentationProduct",
     "targetType": "DASHBOARD",
@@ -8712,7 +8829,7 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record212": {
+  "record215": {
     "code": "nodicsDocsSearchdashboardnodicsdocsdashboardsecshippingandfulfillment",
     "product": "nodicsDocumentationProduct",
     "targetType": "DASHBOARD",
@@ -8745,7 +8862,7 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record213": {
+  "record216": {
     "code": "nodicsDocsSearchdashboardnodicsdocsdashboardsecordermanagement",
     "product": "nodicsDocumentationProduct",
     "targetType": "DASHBOARD",
@@ -8778,7 +8895,7 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record214": {
+  "record217": {
     "code": "nodicsDocsSearchdashboardnodicsdocsdashboardseccancellationsreturnsandrefunds",
     "product": "nodicsDocumentationProduct",
     "targetType": "DASHBOARD",
@@ -8811,7 +8928,7 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record215": {
+  "record218": {
     "code": "nodicsDocsSearchdashboardnodicsdocsdashboardseccustomerengagementandfeedback",
     "product": "nodicsDocumentationProduct",
     "targetType": "DASHBOARD",
@@ -8844,7 +8961,7 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record216": {
+  "record219": {
     "code": "nodicsDocsSearchdashboardnodicsdocsdashboardseccommunicationandnotifications",
     "product": "nodicsDocumentationProduct",
     "targetType": "DASHBOARD",
@@ -8877,7 +8994,7 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record217": {
+  "record220": {
     "code": "nodicsDocsSearchdashboardnodicsdocsdashboardseceventandmessagingmanagement",
     "product": "nodicsDocumentationProduct",
     "targetType": "DASHBOARD",
@@ -8910,7 +9027,7 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record218": {
+  "record221": {
     "code": "nodicsDocsSearchdashboardnodicsdocsdashboardsecprocessandworkflowautomation",
     "product": "nodicsDocumentationProduct",
     "targetType": "DASHBOARD",
@@ -8943,7 +9060,7 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record219": {
+  "record222": {
     "code": "nodicsDocsSearchdashboardnodicsdocsdashboardsecpipelineandbusinesslogicorchestration",
     "product": "nodicsDocumentationProduct",
     "targetType": "DASHBOARD",
@@ -8976,7 +9093,7 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record220": {
+  "record223": {
     "code": "nodicsDocsSearchdashboardnodicsdocsdashboardseccronandscheduledautomation",
     "product": "nodicsDocumentationProduct",
     "targetType": "DASHBOARD",
@@ -9009,7 +9126,7 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record221": {
+  "record224": {
     "code": "nodicsDocsSearchdashboardnodicsdocsdashboardsecdataimportexportandmigration",
     "product": "nodicsDocumentationProduct",
     "targetType": "DASHBOARD",
@@ -9042,7 +9159,7 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record222": {
+  "record225": {
     "code": "nodicsDocsSearchdashboardnodicsdocsdashboardsecsystemintegrationandexternalconnectivity",
     "product": "nodicsDocumentationProduct",
     "targetType": "DASHBOARD",
@@ -9075,7 +9192,7 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record223": {
+  "record226": {
     "code": "nodicsDocsSearchdashboardnodicsdocsdashboardsecoperationsmonitoringandrecovery",
     "product": "nodicsDocumentationProduct",
     "targetType": "DASHBOARD",
@@ -9108,7 +9225,7 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record224": {
+  "record227": {
     "code": "nodicsDocsSearchdashboardnodicsdocsdashboardsecqualitytestingandcertification",
     "product": "nodicsDocumentationProduct",
     "targetType": "DASHBOARD",
@@ -9141,7 +9258,7 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record225": {
+  "record228": {
     "code": "nodicsDocsSearchdashboardnodicsdocsdashboardsecdocumentationmanagement",
     "product": "nodicsDocumentationProduct",
     "targetType": "DASHBOARD",
@@ -9174,7 +9291,7 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record226": {
+  "record229": {
     "code": "nodicsDocsSearchdashboardnodicsdocsdashboardsecreleasestagingandpublication",
     "product": "nodicsDocumentationProduct",
     "targetType": "DASHBOARD",
@@ -9207,7 +9324,7 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record227": {
+  "record230": {
     "code": "nodicsDocsSearchdashboardnodicsdocsdashboardsecaianddevelopertooling",
     "product": "nodicsDocumentationProduct",
     "targetType": "DASHBOARD",
@@ -9240,7 +9357,7 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record228": {
+  "record231": {
     "code": "nodicsDocsSearchdashboardnodicsdocsdashboardsecreference",
     "product": "nodicsDocumentationProduct",
     "targetType": "DASHBOARD",
@@ -9273,7 +9390,58 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record229": {
+  "record232": {
+    "code": "nodicsDocsSearchpagenodicsdocsmetadatadocsgateway",
+    "product": "nodicsDocumentationProduct",
+    "targetType": "PAGE",
+    "targetCode": "nodicsDocsMetadatadocsGateway",
+    "title": "Nodics Documentation",
+    "summary": "Public documentation gateway for framework, Axis, Kickoff, and generated API contract entry points.",
+    "searchText": "Nodics Documentation Public documentation gateway for framework, Axis, Kickoff, and generated API contract entry points. # Nodics Documentation\n\nNodics documentation is the governed reader entry point for understanding,\nsetting up, operating, and extending a Nodics project. It should help a\nbeginner decide where to go first, help a business user see the journey in\nplain language, help a developer find the owning module, and help an operator\nverify that the published experience matches the approved release.\n\nThis page is intentionally delivered as CMS documentation content. Nexus can\nrender it publicly after publication, while Axis can render the same content\nfor authenticated administrators. The browser application owns the renderer;\nthe backend documentation pack owns the page, navigation, publication state,\nand search metadata.\n\n## Choose the right entry point\n\n| Entry point | Best reader | Use it when |\n| --- | --- | --- |\n| Framework | Business, architect, developer, operator | You need the core architecture, module ownership, extension model, runtime behavior, publishing rules, or governance contract. |\n| Nodics Axis | Administrator, author, operator | You need the authenticated BackOffice journey for setup, content operations, documentation management, process tasks, and publication. |\n| Nodics Kickoff | Beginner, implementation partner, QA | You need the reference customer-project path from fresh schema to working Nexus and Agora applications. |\n| Swagger and OpenAPI | Developer, tester, integrator | You need generated runtime API contracts. Swagger is generated from active backend routes and does not require documentation publication approval. |\n\nThe first useful decision is not which page looks interesting. The first useful\ndecision is what job the reader is trying to complete. A business reader should\nstart with the framework value and adoption pages. A developer should start\nwith architecture and module ownership. An operator or QA owner should start\nwith local runtime, publication, and verification pages.\n\n## First setup sequence\n\nFresh setup should feel like one guided operational journey instead of a hunt\nthrough unrelated tools. The recommended sequence is:\n\n1. Start the local topology and open Axis.\n2. Initialize the Axis baseline so the managed BackOffice control plane exists.\n3. Register required capabilities for the application you want to run.\n4. Import the Nexus or Agora accelerator data pack.\n5. Review, approve, publish, and verify Online content in the browser.\n\nDocumentation packs can be imported and approved in parallel with application\nsetup because they do not block module registration or application data\npreparation. Public Nexus readers see only documentation pages that are Online\nand public. Axis readers may use authenticated delivery where the route is\nintended for administrators.\n\n```mermaid\nflowchart LR\n  Runtime[\"Start runtime\"] --> Axis[\"Initialize Axis\"]\n  Axis --> Modules[\"Register capabilities\"]\n  Modules --> Apps[\"Import Nexus or Agora data\"]\n  Apps --> Publish[\"Approve and publish Online\"]\n  Publish --> Browser[\"Verify public pages\"]\n  Axis -. parallel .-> Docs[\"Import documentation packs\"]\n  Modules -. generated .-> Swagger[\"Open Swagger/OpenAPI\"]\n```\n\n## What appears before publication\n\nWhen no Online CMS content is available, public applications should show a\ncustomer-friendly maintenance state, not half-rendered placeholder content.\nThat protects the customer experience and makes the setup status honest. Nexus\nand Agora should not show real headers, footers, promotional cards, catalog\ntiles, blogs, news, or documentation links until their Online content is\napproved and available.\n\nAxis is different because it is the authenticated control plane. It can show\nsetup, import, approval, and publishing tasks before public content is ready.\nThe Axis screen should make the next action clear: initialize data, register a\nmissing module, approve a pending request, publish Online, or verify the public\nroute.\n\n## How documentation publication works\n\nDocumentation content is prepared in a content pack, imported into Staged,\nreviewed in Axis, approved through the governed process task, and activated for\nOnline delivery. Approval is permission-based. A user who has review, approve,\nand publish rights can complete the decision even if that same user requested\nthe publication. A user without those permissions cannot approve simply because\nthey can see the task.\n\nThe documentation navigation has only two levels: section and page link.\nSections organize the reader journey, and page links open real pages directly.\nAvoid adding a third level just to preserve an internal hierarchy from source\nfiles. If a page covers several independent use cases, split those use cases\ninto separate pages and place each one directly under the correct section.\n\n## Common mistakes\n\n- Do not put public documentation landing cards in Nexus React code when the\n  CMS documentation pack can own them.\n- Do not hide Swagger behind CMS documentation approval. Swagger is generated\n  from the active runtime contract and should remain independently available.\n- Do not import Agora data before the required Commerce and related\n  capabilities are registered and active.\n- Do not treat an import success as a full site success unless media binaries,\n  media objects, pages, routes, navigation, catalog data, blogs, news, and\n  references are all present where the application expects them.\n- Do not make users jump between unrelated pages to review and approve one\n  publication decision.\n\n## Verification\n\nVerify documentation as a customer journey, not only as generated records. From\na fresh schema, start the topology, initialize Axis, import the documentation\npack, submit approval, approve or reject through the queue, publish Online, and\nopen the public Nexus documentation route in the browser. Confirm the left\nnavigation refreshes, the page content resolves from CMS, the navigation is\nonly section plus page link, and the public route shows an unpublished message\ninstead of hardcoded content when Online data is absent.\n\nFor developers, run the generator validation and focused renderer tests after\nchanging content, navigation records, or frontend documentation renderers. For\noperators, keep the publication status, audit trail, import run, and browser\nevidence together so a later reviewer can understand what changed and why it\nis safe for readers.\n\n## Continue\n\n- [Start with the framework](framework-what-is-nodics.md)\n- [Understand the documentation roadmap](documentation-roadmap.md)\n- [Review the publishing model](documentation-publishing-model.md)\n",
+    "keywords": [
+      "documentation",
+      "gateway",
+      "setup",
+      "publishing",
+      "nexus",
+      "axis",
+      "Nodics Documentation",
+      "Start Here",
+      "Publishing",
+      "Setup"
+    ],
+    "facets": {
+      "section": "start-here",
+      "group": "start-here",
+      "navigationDepth": 2,
+      "documentType": "overview",
+      "audience": [
+        "business",
+        "architect",
+        "administrator",
+        "developer",
+        "operator",
+        "qa"
+      ],
+      "maturityState": "operational"
+    },
+    "managedInAxis": true,
+    "axisAuthoringPermissions": [
+      "documentation.search.preview"
+    ],
+    "workflowRequired": true,
+    "workflowTriggers": [
+      "SEARCH_METADATA_CHANGE"
+    ],
+    "locale": "en",
+    "channel": "web",
+    "accessPolicy": "nodicsDocsAccessPublic",
+    "accessMode": "PUBLIC",
+    "lifecycleState": "ONLINE",
+    "indexState": "INDEX_READY",
+    "active": true
+  },
+  "record233": {
     "code": "nodicsDocsSearchpagenodicsdocsmetadataframeworkoverview",
     "product": "nodicsDocumentationProduct",
     "targetType": "PAGE",
@@ -9323,7 +9491,7 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record230": {
+  "record234": {
     "code": "nodicsDocsSearchpagenodicsdocsmetadataframeworkwhynodicsexists",
     "product": "nodicsDocumentationProduct",
     "targetType": "PAGE",
@@ -9373,7 +9541,7 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record231": {
+  "record235": {
     "code": "nodicsDocsSearchpagenodicsdocsmetadataframeworkhownodicsworks",
     "product": "nodicsDocumentationProduct",
     "targetType": "PAGE",
@@ -9423,7 +9591,7 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record232": {
+  "record236": {
     "code": "nodicsDocsSearchpagenodicsdocsmetadataframeworkadoptionandfirstjourney",
     "product": "nodicsDocumentationProduct",
     "targetType": "PAGE",
@@ -9473,7 +9641,7 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record233": {
+  "record237": {
     "code": "nodicsDocsSearchpagenodicsdocsmetadatadocsdocumentationroadmap",
     "product": "nodicsDocumentationProduct",
     "targetType": "PAGE",
@@ -9521,7 +9689,7 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record234": {
+  "record238": {
     "code": "nodicsDocsSearchpagenodicsdocsmetadatadocsdocumentationprinciples",
     "product": "nodicsDocumentationProduct",
     "targetType": "PAGE",
@@ -9571,7 +9739,7 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record235": {
+  "record239": {
     "code": "nodicsDocsSearchpagenodicsdocsmetadatadocsreaderjourneyandcoverage",
     "product": "nodicsDocumentationProduct",
     "targetType": "PAGE",
@@ -9621,7 +9789,7 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record236": {
+  "record240": {
     "code": "nodicsDocsSearchpagenodicsdocsmetadatadocsdocumentationpublishingmodel",
     "product": "nodicsDocumentationProduct",
     "targetType": "PAGE",
@@ -9671,7 +9839,7 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record237": {
+  "record241": {
     "code": "nodicsDocsSearchpagenodicsdocsmetadataframeworkmodulararchitecture",
     "product": "nodicsDocumentationProduct",
     "targetType": "PAGE",
@@ -9719,7 +9887,7 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record238": {
+  "record242": {
     "code": "nodicsDocsSearchpagenodicsdocsmetadataframeworkruntimeservercomposition",
     "product": "nodicsDocumentationProduct",
     "targetType": "PAGE",
@@ -9767,7 +9935,7 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record239": {
+  "record243": {
     "code": "nodicsDocsSearchpagenodicsdocsmetadataframeworkmoduleloadingserviceprecedence",
     "product": "nodicsDocumentationProduct",
     "targetType": "PAGE",
@@ -9815,7 +9983,7 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record240": {
+  "record244": {
     "code": "nodicsDocsSearchpagenodicsdocsmetadataframeworkarchitecturedecisionguide",
     "product": "nodicsDocumentationProduct",
     "targetType": "PAGE",
@@ -9863,7 +10031,7 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record241": {
+  "record245": {
     "code": "nodicsDocsSearchpagenodicsdocsmetadataplatformmoduleregistry",
     "product": "nodicsDocumentationProduct",
     "targetType": "PAGE",
@@ -9911,7 +10079,7 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record242": {
+  "record246": {
     "code": "nodicsDocsSearchpagenodicsdocsmetadatafoundationoverview",
     "product": "nodicsDocumentationProduct",
     "targetType": "PAGE",
@@ -9959,7 +10127,7 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record243": {
+  "record247": {
     "code": "nodicsDocsSearchpagenodicsdocsmetadataapplicationssuite",
     "product": "nodicsDocumentationProduct",
     "targetType": "PAGE",
@@ -10009,7 +10177,7 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record244": {
+  "record248": {
     "code": "nodicsDocsSearchpagenodicsdocsmetadatasolutionstaskexecutionengine",
     "product": "nodicsDocumentationProduct",
     "targetType": "PAGE",
@@ -10062,7 +10230,7 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record245": {
+  "record249": {
     "code": "nodicsDocsSearchpagenodicsdocsmetadatasolutionsdataengineeringanalyticsplatform",
     "product": "nodicsDocumentationProduct",
     "targetType": "PAGE",
@@ -10116,7 +10284,7 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record246": {
+  "record250": {
     "code": "nodicsDocsSearchpagenodicsdocsmetadataacceleratorsagoraindustrytemplates",
     "product": "nodicsDocumentationProduct",
     "targetType": "PAGE",
@@ -10167,7 +10335,7 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record247": {
+  "record251": {
     "code": "nodicsDocsSearchpagenodicsdocsmetadataacceleratorsagoraapparelproductdataauthoring",
     "product": "nodicsDocumentationProduct",
     "targetType": "PAGE",
@@ -10221,7 +10389,7 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record248": {
+  "record252": {
     "code": "nodicsDocsSearchpagenodicsdocsmetadataframeworklocalquickstart",
     "product": "nodicsDocumentationProduct",
     "targetType": "PAGE",
@@ -10269,7 +10437,7 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record249": {
+  "record253": {
     "code": "nodicsDocsSearchpagenodicsdocsmetadataframeworkfreshschemasetupjourney",
     "product": "nodicsDocumentationProduct",
     "targetType": "PAGE",
@@ -10317,7 +10485,7 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record250": {
+  "record254": {
     "code": "nodicsDocsSearchpagenodicsdocsmetadataframeworklocalruntimetroubleshooting",
     "product": "nodicsDocumentationProduct",
     "targetType": "PAGE",
@@ -10365,7 +10533,7 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record251": {
+  "record255": {
     "code": "nodicsDocsSearchpagenodicsdocsmetadatainstallerinstalledruntimeapplicationbuilder",
     "product": "nodicsDocumentationProduct",
     "targetType": "PAGE",
@@ -10415,7 +10583,7 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record252": {
+  "record256": {
     "code": "nodicsDocsSearchpagenodicsdocsmetadatabuilderworkspacegeneration",
     "product": "nodicsDocumentationProduct",
     "targetType": "PAGE",
@@ -10463,7 +10631,7 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record253": {
+  "record257": {
     "code": "nodicsDocsSearchpagenodicsdocsmetadataprocessvisualdesigner",
     "product": "nodicsDocumentationProduct",
     "targetType": "PAGE",
@@ -10511,7 +10679,7 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record254": {
+  "record258": {
     "code": "nodicsDocsSearchpagenodicsdocsmetadataaxisbusinesscustomization",
     "product": "nodicsDocumentationProduct",
     "targetType": "PAGE",
@@ -10559,7 +10727,7 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record255": {
+  "record259": {
     "code": "nodicsDocsSearchpagenodicsdocsmetadataplatformoverview",
     "product": "nodicsDocumentationProduct",
     "targetType": "PAGE",
@@ -10607,7 +10775,7 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record256": {
+  "record260": {
     "code": "nodicsDocsSearchpagenodicsdocsmetadatasecurityidentityaccessgovernance",
     "product": "nodicsDocumentationProduct",
     "targetType": "PAGE",
@@ -10655,7 +10823,7 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record257": {
+  "record261": {
     "code": "nodicsDocsSearchpagenodicsdocsmetadataconfigurationruntimebehaviormanagement",
     "product": "nodicsDocumentationProduct",
     "targetType": "PAGE",
@@ -10703,7 +10871,7 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record258": {
+  "record262": {
     "code": "nodicsDocsSearchpagenodicsdocsmetadataconfigurationframeworkstartuplifecycle",
     "product": "nodicsDocumentationProduct",
     "targetType": "PAGE",
@@ -10763,7 +10931,7 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record259": {
+  "record263": {
     "code": "nodicsDocsSearchpagenodicsdocsmetadataroutingapigovernance",
     "product": "nodicsDocumentationProduct",
     "targetType": "PAGE",
@@ -10815,7 +10983,7 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record260": {
+  "record264": {
     "code": "nodicsDocsSearchpagenodicsdocsmetadataroutingapirequestlifecycle",
     "product": "nodicsDocumentationProduct",
     "targetType": "PAGE",
@@ -10868,7 +11036,7 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record261": {
+  "record265": {
     "code": "nodicsDocsSearchpagenodicsdocsmetadatafoundationerrorhandlingstatuscodes",
     "product": "nodicsDocumentationProduct",
     "targetType": "PAGE",
@@ -10924,7 +11092,7 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record262": {
+  "record266": {
     "code": "nodicsDocsSearchpagenodicsdocsmetadataruntimegovernedchange",
     "product": "nodicsDocumentationProduct",
     "targetType": "PAGE",
@@ -10972,7 +11140,7 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record263": {
+  "record267": {
     "code": "nodicsDocsSearchpagenodicsdocsmetadatalocalizationinternationalization",
     "product": "nodicsDocumentationProduct",
     "targetType": "PAGE",
@@ -11020,7 +11188,7 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record264": {
+  "record268": {
     "code": "nodicsDocsSearchpagenodicsdocsmetadataschemadatamodelingmanagement",
     "product": "nodicsDocumentationProduct",
     "targetType": "PAGE",
@@ -11068,7 +11236,7 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record265": {
+  "record269": {
     "code": "nodicsDocsSearchpagenodicsdocsmetadatapersistenceproviderdataaccesslayer",
     "product": "nodicsDocumentationProduct",
     "targetType": "PAGE",
@@ -11116,7 +11284,7 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record266": {
+  "record270": {
     "code": "nodicsDocsSearchpagenodicsdocsmetadatacacheruntimestatemanagement",
     "product": "nodicsDocumentationProduct",
     "targetType": "PAGE",
@@ -11164,7 +11332,7 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record267": {
+  "record271": {
     "code": "nodicsDocsSearchpagenodicsdocsmetadataframeworkcustomizationguide",
     "product": "nodicsDocumentationProduct",
     "targetType": "PAGE",
@@ -11212,7 +11380,7 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record268": {
+  "record272": {
     "code": "nodicsDocsSearchpagenodicsdocsmetadataframeworkbackendextensionpatterns",
     "product": "nodicsDocumentationProduct",
     "targetType": "PAGE",
@@ -11261,7 +11429,7 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record269": {
+  "record273": {
     "code": "nodicsDocsSearchpagenodicsdocsmetadataframeworkaxiscontentcustomization",
     "product": "nodicsDocumentationProduct",
     "targetType": "PAGE",
@@ -11309,7 +11477,7 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record270": {
+  "record274": {
     "code": "nodicsDocsSearchpagenodicsdocsmetadataprocessdevelopercustomization",
     "product": "nodicsDocumentationProduct",
     "targetType": "PAGE",
@@ -11357,7 +11525,7 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record271": {
+  "record275": {
     "code": "nodicsDocsSearchpagenodicsdocsmetadataprocesscustomprojectextension",
     "product": "nodicsDocumentationProduct",
     "targetType": "PAGE",
@@ -11405,7 +11573,7 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record272": {
+  "record276": {
     "code": "nodicsDocsSearchpagenodicsdocsmetadatacommercebasefoundations",
     "product": "nodicsDocumentationProduct",
     "targetType": "PAGE",
@@ -11453,7 +11621,7 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record273": {
+  "record277": {
     "code": "nodicsDocsSearchpagenodicsdocsmetadatawcmsoverview",
     "product": "nodicsDocumentationProduct",
     "targetType": "PAGE",
@@ -11501,7 +11669,7 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record274": {
+  "record278": {
     "code": "nodicsDocsSearchpagenodicsdocsmetadatawcmscontentcatalogmodel",
     "product": "nodicsDocumentationProduct",
     "targetType": "PAGE",
@@ -11549,7 +11717,7 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record275": {
+  "record279": {
     "code": "nodicsDocsSearchpagenodicsdocsmetadatawcmspagedesignercomponents",
     "product": "nodicsDocumentationProduct",
     "targetType": "PAGE",
@@ -11597,7 +11765,7 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record276": {
+  "record280": {
     "code": "nodicsDocsSearchpagenodicsdocsmetadatawcmssitepublicationvisibility",
     "product": "nodicsDocumentationProduct",
     "targetType": "PAGE",
@@ -11646,7 +11814,7 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record277": {
+  "record281": {
     "code": "nodicsDocsSearchpagenodicsdocsmetadatacatalogproductdiscoverymanagement",
     "product": "nodicsDocumentationProduct",
     "targetType": "PAGE",
@@ -11694,7 +11862,7 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record278": {
+  "record282": {
     "code": "nodicsDocsSearchpagenodicsdocsmetadatadiscoverysearchindexing",
     "product": "nodicsDocumentationProduct",
     "targetType": "PAGE",
@@ -11742,7 +11910,7 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record279": {
+  "record283": {
     "code": "nodicsDocsSearchpagenodicsdocsmetadatawcmsmediamanagement",
     "product": "nodicsDocumentationProduct",
     "targetType": "PAGE",
@@ -11790,7 +11958,7 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record280": {
+  "record284": {
     "code": "nodicsDocsSearchpagenodicsdocsmetadatawcmsmediastoragedelivery",
     "product": "nodicsDocumentationProduct",
     "targetType": "PAGE",
@@ -11838,7 +12006,7 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record281": {
+  "record285": {
     "code": "nodicsDocsSearchpagenodicsdocsmetadatawcmsmediaimportpublication",
     "product": "nodicsDocumentationProduct",
     "targetType": "PAGE",
@@ -11886,7 +12054,7 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record282": {
+  "record286": {
     "code": "nodicsDocsSearchpagenodicsdocsmetadatainventorystockmanagement",
     "product": "nodicsDocumentationProduct",
     "targetType": "PAGE",
@@ -11934,7 +12102,7 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record283": {
+  "record287": {
     "code": "nodicsDocsSearchpagenodicsdocsmetadatapricingpromotionstaxmanagement",
     "product": "nodicsDocumentationProduct",
     "targetType": "PAGE",
@@ -11982,7 +12150,7 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record284": {
+  "record288": {
     "code": "nodicsDocsSearchpagenodicsdocsmetadatacommerceoverview",
     "product": "nodicsDocumentationProduct",
     "targetType": "PAGE",
@@ -12030,7 +12198,7 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record285": {
+  "record289": {
     "code": "nodicsDocsSearchpagenodicsdocsmetadatacommercecartorder",
     "product": "nodicsDocumentationProduct",
     "targetType": "PAGE",
@@ -12078,7 +12246,7 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record286": {
+  "record290": {
     "code": "nodicsDocsSearchpagenodicsdocsmetadatacommercepaymentfulfillment",
     "product": "nodicsDocumentationProduct",
     "targetType": "PAGE",
@@ -12126,7 +12294,7 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record287": {
+  "record291": {
     "code": "nodicsDocsSearchpagenodicsdocsmetadatafulfillmentshippingmanagement",
     "product": "nodicsDocumentationProduct",
     "targetType": "PAGE",
@@ -12174,7 +12342,7 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record288": {
+  "record292": {
     "code": "nodicsDocsSearchpagenodicsdocsmetadataordermanagementlifecycle",
     "product": "nodicsDocumentationProduct",
     "targetType": "PAGE",
@@ -12222,7 +12390,7 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record289": {
+  "record293": {
     "code": "nodicsDocsSearchpagenodicsdocsmetadatacommercereturnsrefunds",
     "product": "nodicsDocumentationProduct",
     "targetType": "PAGE",
@@ -12270,7 +12438,7 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record290": {
+  "record294": {
     "code": "nodicsDocsSearchpagenodicsdocsmetadataengagementcustomerreviews",
     "product": "nodicsDocumentationProduct",
     "targetType": "PAGE",
@@ -12318,7 +12486,7 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record291": {
+  "record295": {
     "code": "nodicsDocsSearchpagenodicsdocsmetadataengagementreviewmoderationgovernance",
     "product": "nodicsDocumentationProduct",
     "targetType": "PAGE",
@@ -12366,7 +12534,7 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record292": {
+  "record296": {
     "code": "nodicsDocsSearchpagenodicsdocsmetadataengagementreviewaggregationrecovery",
     "product": "nodicsDocumentationProduct",
     "targetType": "PAGE",
@@ -12414,7 +12582,7 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record293": {
+  "record297": {
     "code": "nodicsDocsSearchpagenodicsdocsmetadataengagementcustomerfeedback",
     "product": "nodicsDocumentationProduct",
     "targetType": "PAGE",
@@ -12462,7 +12630,7 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record294": {
+  "record298": {
     "code": "nodicsDocsSearchpagenodicsdocsmetadataengagementunifiedoperations",
     "product": "nodicsDocumentationProduct",
     "targetType": "PAGE",
@@ -12510,7 +12678,7 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record295": {
+  "record299": {
     "code": "nodicsDocsSearchpagenodicsdocsmetadataengagementgovernedautomation",
     "product": "nodicsDocumentationProduct",
     "targetType": "PAGE",
@@ -12558,7 +12726,7 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record296": {
+  "record300": {
     "code": "nodicsDocsSearchpagenodicsdocsmetadataengagemententerpriseoperations",
     "product": "nodicsDocumentationProduct",
     "targetType": "PAGE",
@@ -12606,7 +12774,7 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record297": {
+  "record301": {
     "code": "nodicsDocsSearchpagenodicsdocsmetadatacommunicationoverview",
     "product": "nodicsDocumentationProduct",
     "targetType": "PAGE",
@@ -12654,7 +12822,7 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record298": {
+  "record302": {
     "code": "nodicsDocsSearchpagenodicsdocsmetadataeventsmessagingclustercoordination",
     "product": "nodicsDocumentationProduct",
     "targetType": "PAGE",
@@ -12702,7 +12870,7 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record299": {
+  "record303": {
     "code": "nodicsDocsSearchpagenodicsdocsmetadataprocessoverview",
     "product": "nodicsDocumentationProduct",
     "targetType": "PAGE",
@@ -12750,7 +12918,7 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record300": {
+  "record304": {
     "code": "nodicsDocsSearchpagenodicsdocsmetadataprocessruntimelifecycle",
     "product": "nodicsDocumentationProduct",
     "targetType": "PAGE",
@@ -12798,7 +12966,7 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record301": {
+  "record305": {
     "code": "nodicsDocsSearchpagenodicsdocsmetadataprocessworkfloworchestrationpatterns",
     "product": "nodicsDocumentationProduct",
     "targetType": "PAGE",
@@ -12857,7 +13025,7 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record302": {
+  "record306": {
     "code": "nodicsDocsSearchpagenodicsdocsmetadataprocessfirstworkflow",
     "product": "nodicsDocumentationProduct",
     "targetType": "PAGE",
@@ -12905,7 +13073,7 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record303": {
+  "record307": {
     "code": "nodicsDocsSearchpagenodicsdocsmetadataprocessfirsthumantask",
     "product": "nodicsDocumentationProduct",
     "targetType": "PAGE",
@@ -12953,7 +13121,7 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record304": {
+  "record308": {
     "code": "nodicsDocsSearchpagenodicsdocsmetadataprocessbusinessvalue",
     "product": "nodicsDocumentationProduct",
     "targetType": "PAGE",
@@ -13001,7 +13169,7 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record305": {
+  "record309": {
     "code": "nodicsDocsSearchpagenodicsdocsmetadatapipelinebusinesslogicorchestration",
     "product": "nodicsDocumentationProduct",
     "targetType": "PAGE",
@@ -13059,7 +13227,7 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record306": {
+  "record310": {
     "code": "nodicsDocsSearchpagenodicsdocsmetadatacronoperations",
     "product": "nodicsDocumentationProduct",
     "targetType": "PAGE",
@@ -13107,7 +13275,7 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record307": {
+  "record311": {
     "code": "nodicsDocsSearchpagenodicsdocsmetadatacronnoderesponsibilitytee",
     "product": "nodicsDocumentationProduct",
     "targetType": "PAGE",
@@ -13156,7 +13324,7 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record308": {
+  "record312": {
     "code": "nodicsDocsSearchpagenodicsdocsmetadatacronprojectcustomization",
     "product": "nodicsDocumentationProduct",
     "targetType": "PAGE",
@@ -13204,7 +13372,7 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record309": {
+  "record313": {
     "code": "nodicsDocsSearchpagenodicsdocsmetadataprocessprocesscronruntime",
     "product": "nodicsDocumentationProduct",
     "targetType": "PAGE",
@@ -13252,7 +13420,7 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record310": {
+  "record314": {
     "code": "nodicsDocsSearchpagenodicsdocsmetadataprocessscheduledautomation",
     "product": "nodicsDocumentationProduct",
     "targetType": "PAGE",
@@ -13300,7 +13468,7 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record311": {
+  "record315": {
     "code": "nodicsDocsSearchpagenodicsdocsmetadatadataimportexportmigration",
     "product": "nodicsDocumentationProduct",
     "targetType": "PAGE",
@@ -13348,7 +13516,7 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record312": {
+  "record316": {
     "code": "nodicsDocsSearchpagenodicsdocsmetadataprocessactionadapters",
     "product": "nodicsDocumentationProduct",
     "targetType": "PAGE",
@@ -13396,7 +13564,7 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record313": {
+  "record317": {
     "code": "nodicsDocsSearchpagenodicsdocsmetadataframeworkdevopsruntime",
     "product": "nodicsDocumentationProduct",
     "targetType": "PAGE",
@@ -13444,7 +13612,7 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record314": {
+  "record318": {
     "code": "nodicsDocsSearchpagenodicsdocsmetadataframeworkruntimereleaserollback",
     "product": "nodicsDocumentationProduct",
     "targetType": "PAGE",
@@ -13492,7 +13660,7 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record315": {
+  "record319": {
     "code": "nodicsDocsSearchpagenodicsdocsmetadataframeworklocalbrowseracceptancejourney",
     "product": "nodicsDocumentationProduct",
     "targetType": "PAGE",
@@ -13540,7 +13708,7 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record316": {
+  "record320": {
     "code": "nodicsDocsSearchpagenodicsdocsmetadataframeworklocalverificationchecklist",
     "product": "nodicsDocumentationProduct",
     "targetType": "PAGE",
@@ -13588,7 +13756,7 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record317": {
+  "record321": {
     "code": "nodicsDocsSearchpagenodicsdocsmetadatacommerceenterpriseoperations",
     "product": "nodicsDocumentationProduct",
     "targetType": "PAGE",
@@ -13636,7 +13804,7 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record318": {
+  "record322": {
     "code": "nodicsDocsSearchpagenodicsdocsmetadataprocessincidentrecovery",
     "product": "nodicsDocumentationProduct",
     "targetType": "PAGE",
@@ -13684,7 +13852,7 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record319": {
+  "record323": {
     "code": "nodicsDocsSearchpagenodicsdocsmetadataprocessdevopstopology",
     "product": "nodicsDocumentationProduct",
     "targetType": "PAGE",
@@ -13732,7 +13900,7 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record320": {
+  "record324": {
     "code": "nodicsDocsSearchpagenodicsdocsmetadataprocessqaregressionguide",
     "product": "nodicsDocumentationProduct",
     "targetType": "PAGE",
@@ -13780,7 +13948,7 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record321": {
+  "record325": {
     "code": "nodicsDocsSearchpagenodicsdocsmetadataframeworkcapabilitydocumentationmaturitypattern",
     "product": "nodicsDocumentationProduct",
     "targetType": "PAGE",
@@ -13828,7 +13996,7 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record322": {
+  "record326": {
     "code": "nodicsDocsSearchpagenodicsdocsmetadatadocsoverview",
     "product": "nodicsDocumentationProduct",
     "targetType": "PAGE",
@@ -13876,7 +14044,7 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record323": {
+  "record327": {
     "code": "nodicsDocsSearchpagenodicsdocsmetadatawcmspublishinglifecycle",
     "product": "nodicsDocumentationProduct",
     "targetType": "PAGE",
@@ -13924,7 +14092,7 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record324": {
+  "record328": {
     "code": "nodicsDocsSearchpagenodicsdocsmetadataapplicationsnexusdatacontentguide",
     "product": "nodicsDocumentationProduct",
     "targetType": "PAGE",
@@ -13974,7 +14142,7 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record325": {
+  "record329": {
     "code": "nodicsDocsSearchpagenodicsdocsmetadataapplicationsaxissetuperrorcontracts",
     "product": "nodicsDocumentationProduct",
     "targetType": "PAGE",
@@ -14024,7 +14192,7 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record326": {
+  "record330": {
     "code": "nodicsDocsSearchpagenodicsdocsmetadatawcmscmssourcemapauthoringcontract",
     "product": "nodicsDocumentationProduct",
     "targetType": "PAGE",
@@ -14074,7 +14242,7 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record327": {
+  "record331": {
     "code": "nodicsDocsSearchpagenodicsdocsmetadatawcmsmediaoperationsrunbook",
     "product": "nodicsDocumentationProduct",
     "targetType": "PAGE",
@@ -14124,7 +14292,7 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record328": {
+  "record332": {
     "code": "nodicsDocsSearchpagenodicsdocsmetadatadataimportexportproviderguides",
     "product": "nodicsDocumentationProduct",
     "targetType": "PAGE",
@@ -14175,7 +14343,7 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record329": {
+  "record333": {
     "code": "nodicsDocsSearchpagenodicsdocsmetadatacommercedataauthoringfulfillment",
     "product": "nodicsDocumentationProduct",
     "targetType": "PAGE",
@@ -14226,7 +14394,7 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record330": {
+  "record334": {
     "code": "nodicsDocsSearchpagenodicsdocsmetadatadocsdocumentationpublishingrunbook",
     "product": "nodicsDocumentationProduct",
     "targetType": "PAGE",
@@ -14276,7 +14444,7 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record331": {
+  "record335": {
     "code": "nodicsDocsSearchpagenodicsdocsmetadataplatformmoduleregistryjourney",
     "product": "nodicsDocumentationProduct",
     "targetType": "PAGE",
@@ -14326,7 +14494,7 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record332": {
+  "record336": {
     "code": "nodicsDocsSearchpagenodicsdocsmetadatacommercesearchguide",
     "product": "nodicsDocumentationProduct",
     "targetType": "PAGE",
@@ -14376,7 +14544,7 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record333": {
+  "record337": {
     "code": "nodicsDocsSearchpagenodicsdocsmetadatalocalizationruntimeauthoring",
     "product": "nodicsDocumentationProduct",
     "targetType": "PAGE",
@@ -14426,7 +14594,7 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record334": {
+  "record338": {
     "code": "nodicsDocsSearchpagenodicsdocsmetadatacommercepaymentproviderboundaries",
     "product": "nodicsDocumentationProduct",
     "targetType": "PAGE",
@@ -14476,7 +14644,7 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record335": {
+  "record339": {
     "code": "nodicsDocsSearchpagenodicsdocsmetadataloyaltywalletsrewardsledger",
     "product": "nodicsDocumentationProduct",
     "targetType": "PAGE",
@@ -14530,7 +14698,7 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record336": {
+  "record340": {
     "code": "nodicsDocsSearchpagenodicsdocsmetadatacommerceshoppinglistcommerceboundary",
     "product": "nodicsDocumentationProduct",
     "targetType": "PAGE",
@@ -14582,7 +14750,7 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record337": {
+  "record341": {
     "code": "nodicsDocsSearchpagenodicsdocsmetadatafoundationnmsruntimemonitoring",
     "product": "nodicsDocumentationProduct",
     "targetType": "PAGE",
@@ -14632,7 +14800,7 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record338": {
+  "record342": {
     "code": "nodicsDocsSearchpagenodicsdocsmetadatafoundationserviceruntimeoverrides",
     "product": "nodicsDocumentationProduct",
     "targetType": "PAGE",
@@ -14682,7 +14850,7 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record339": {
+  "record343": {
     "code": "nodicsDocsSearchpagenodicsdocsmetadatafoundationmoduletomodulecommunication",
     "product": "nodicsDocumentationProduct",
     "targetType": "PAGE",
@@ -14736,7 +14904,7 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record340": {
+  "record344": {
     "code": "nodicsDocsSearchpagenodicsdocsmetadatafoundationcacheproviderrunbooks",
     "product": "nodicsDocumentationProduct",
     "targetType": "PAGE",
@@ -14786,7 +14954,7 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record341": {
+  "record345": {
     "code": "nodicsDocsSearchpagenodicsdocsmetadatafoundationdatabaseproviderboundaries",
     "product": "nodicsDocumentationProduct",
     "targetType": "PAGE",
@@ -14836,7 +15004,7 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record342": {
+  "record346": {
     "code": "nodicsDocsSearchpagenodicsdocsmetadatasecurityotpsecurityflow",
     "product": "nodicsDocumentationProduct",
     "targetType": "PAGE",
@@ -14886,7 +15054,7 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record343": {
+  "record347": {
     "code": "nodicsDocsSearchpagenodicsdocsmetadatacommunicationproviderrunbooks",
     "product": "nodicsDocumentationProduct",
     "targetType": "PAGE",
@@ -14936,7 +15104,7 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record344": {
+  "record348": {
     "code": "nodicsDocsSearchpagenodicsdocsmetadataengagementcontactsubmissionoperations",
     "product": "nodicsDocumentationProduct",
     "targetType": "PAGE",
@@ -14986,7 +15154,7 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record345": {
+  "record349": {
     "code": "nodicsDocsSearchpagenodicsdocsmetadataprocessworkflowbpmsourcemap",
     "product": "nodicsDocumentationProduct",
     "targetType": "PAGE",
@@ -15036,7 +15204,7 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record346": {
+  "record350": {
     "code": "nodicsDocsSearchpagenodicsdocsmetadataprocesscronjobdataauthoring",
     "product": "nodicsDocumentationProduct",
     "targetType": "PAGE",
@@ -15086,7 +15254,7 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record347": {
+  "record351": {
     "code": "nodicsDocsSearchpagenodicsdocsmetadataframeworkreleaseupgradecompatibility",
     "product": "nodicsDocumentationProduct",
     "targetType": "PAGE",
@@ -15136,7 +15304,7 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record348": {
+  "record352": {
     "code": "nodicsDocsSearchpagenodicsdocsmetadatacommercefulfillmentcoresourcemap",
     "product": "nodicsDocumentationProduct",
     "targetType": "PAGE",
@@ -15186,7 +15354,7 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record349": {
+  "record353": {
     "code": "nodicsDocsSearchpagenodicsdocsmetadataacceleratorsdomaincommercesourcemap",
     "product": "nodicsDocumentationProduct",
     "targetType": "PAGE",
@@ -15236,7 +15404,7 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record350": {
+  "record354": {
     "code": "nodicsDocsSearchpagenodicsdocsmetadatafoundationtoolingruntimecontracts",
     "product": "nodicsDocumentationProduct",
     "targetType": "PAGE",
@@ -15286,7 +15454,7 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record351": {
+  "record355": {
     "code": "nodicsDocsSearchpagenodicsdocsmetadatafoundationemsruntimeclientrunbook",
     "product": "nodicsDocumentationProduct",
     "targetType": "PAGE",
@@ -15336,7 +15504,7 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record352": {
+  "record356": {
     "code": "nodicsDocsSearchpagenodicsdocsmetadatareferenceinternalsourceboundaryregister",
     "product": "nodicsDocumentationProduct",
     "targetType": "PAGE",
@@ -15386,7 +15554,7 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record353": {
+  "record357": {
     "code": "nodicsDocsSearchpagenodicsdocsmetadatatoolingaideveloperenablement",
     "product": "nodicsDocumentationProduct",
     "targetType": "PAGE",
@@ -15434,7 +15602,7 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record354": {
+  "record358": {
     "code": "nodicsDocsSearchpagenodicsdocsmetadatareferencesourcemapglossary",
     "product": "nodicsDocumentationProduct",
     "targetType": "PAGE",
@@ -15482,7 +15650,7 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record355": {
+  "record359": {
     "code": "nodicsDocsSearchpagenodicsdocsmetadatareferencesourcebackeddocumentationcoverageaudit",
     "product": "nodicsDocumentationProduct",
     "targetType": "PAGE",
@@ -15533,7 +15701,7 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record356": {
+  "record360": {
     "code": "nodicsDocsSearchpagenodicsdocsmetadatareferencedocumentationgapbacklog",
     "product": "nodicsDocumentationProduct",
     "targetType": "PAGE",

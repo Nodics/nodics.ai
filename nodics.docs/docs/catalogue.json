@@ -3,6 +3,99 @@
   "release": "0.16.8",
   "documents": [
     {
+      "id": "docs.gateway",
+      "recordCode": "docs.gateway",
+      "functionalModule": "nodics.docs",
+      "technicalModule": "documentation",
+      "title": "Nodics Documentation",
+      "summary": "Public documentation gateway for framework, Axis, Kickoff, and generated API contract entry points.",
+      "locale": "en",
+      "content": "docs/pages/framework/documentation-gateway.md",
+      "route": "/docs",
+      "slug": "docs",
+      "parentId": "start-here",
+      "hierarchyPath": [
+        "Nodics Documentation",
+        "Start Here",
+        "Nodics Documentation"
+      ],
+      "hierarchyDepth": 3,
+      "navigationSection": "Start Here",
+      "navigationSectionCode": "start-here",
+      "navigationSectionOrder": 1,
+      "navigationGroup": "Start Here",
+      "navigationGroupCode": "start-here",
+      "navigationGroupOrder": 1,
+      "navigationSubgroup": null,
+      "navigationSubgroupCode": null,
+      "navigationOrder": 1,
+      "documentType": "overview",
+      "audience": [
+        "business",
+        "architect",
+        "administrator",
+        "developer",
+        "operator",
+        "qa"
+      ],
+      "businessAudience": [
+        "business user",
+        "administrator",
+        "implementation partner"
+      ],
+      "technicalAudience": [
+        "architect",
+        "developer",
+        "operator",
+        "qa engineer"
+      ],
+      "sourceOwner": "nodics.docs",
+      "sourcePath": "docs/pages/framework/documentation-gateway.md",
+      "visibility": "public",
+      "channel": [
+        "axis",
+        "nexus",
+        "web"
+      ],
+      "accessMode": "PUBLIC",
+      "publiclyAvailable": true,
+      "requiresAuthentication": false,
+      "allowedRoles": [],
+      "allowedGroups": [],
+      "allowedPermissions": [],
+      "lifecycleState": "ONLINE",
+      "version": "0.16.8",
+      "relatedPages": [
+        "framework.what-is-nodics",
+        "docs.documentation-roadmap",
+        "docs.documentation-publishing-model"
+      ],
+      "sourceEvidence": [
+        "docs/catalogue.json",
+        "docs/pages/framework/documentation-gateway.md"
+      ],
+      "maturityState": "operational",
+      "implementationState": "current",
+      "renderingComponent": "documentation.component.article",
+      "searchKeywords": [
+        "documentation",
+        "gateway",
+        "setup",
+        "publishing",
+        "nexus",
+        "axis"
+      ],
+      "topicKeywords": [
+        "Nodics Documentation",
+        "Start Here",
+        "Publishing",
+        "Setup"
+      ],
+      "visualRequirements": [
+        "table"
+      ]
+    },
+    {
       "id": "framework.what-is-nodics",
       "recordCode": "framework.overview",
       "functionalModule": "nodics.docs",
@@ -11,6 +104,7 @@
       "summary": "Introductory definition of Nodics, its enterprise purpose, and the first mental model for business, developer, and operator readers.",
       "locale": "en",
       "content": "docs/pages/framework/what-is-nodics.md",
+      "route": "/docs/framework",
       "slug": "framework-what-is-nodics",
       "parentId": "nodics-framework.framework-value-and-adoption",
       "hierarchyPath": [
@@ -12285,6 +12379,25 @@
     }
   ],
   "navigationSections": [
+    {
+      "code": "start-here",
+      "title": "Start Here",
+      "order": 1,
+      "summary": "Choose the right documentation entry point before opening detailed framework, Axis, Kickoff, or API contract pages.",
+      "audience": [
+        "business",
+        "architect",
+        "administrator",
+        "developer",
+        "operator",
+        "qa"
+      ],
+      "visibility": "public",
+      "accessMode": "PUBLIC",
+      "publiclyAvailable": true,
+      "requiresAuthentication": false,
+      "lifecycleState": "ONLINE"
+    },
     {
       "code": "nodics-framework",
       "title": "Nodics Framework",

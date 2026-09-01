@@ -24,7 +24,8 @@ module.exports = {
                 schemaName: 'contact',
                 operation: 'saveAll', //saveAll, update and saveOrUpdate
                 tenants: ['default'],
-                dataFilePrefix: 'defaultContactsData'
+                dataFilePrefix: 'defaultContactsData',
+                userGroups: ['adminGroup']
             },
             query: {
                 code: '$code'
@@ -36,7 +37,8 @@ module.exports = {
                 enabled: true,
                 schemaName: 'contact',
                 operation: 'saveAll', //saveAll, update and saveOrUpdate
-                dataFilePrefix: 'defaultTenantContactsData'
+                dataFilePrefix: 'defaultTenantContactsData',
+                userGroups: ['adminGroup']
             },
             query: {
                 code: '$code'

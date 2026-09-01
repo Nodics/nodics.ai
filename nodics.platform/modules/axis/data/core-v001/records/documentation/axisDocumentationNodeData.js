@@ -106,9 +106,7 @@ module.exports = {
     "nodeSummary": "Business and architecture introduction to Nodics Axis, its purpose, boundaries, documentation ownership, and repository responsibilities.",
     "nodeContentArea": {
       "dashboard": "axisDocsDashboardSecdiscoverAxis",
-      "groups": [
-        "axis-overview-and-architecture"
-      ],
+      "navigationDepth": 2,
       "pages": [
         "axis.overview",
         "axis.architecture"
@@ -117,8 +115,15 @@ module.exports = {
     "nodeDashboard": "axisDocsDashboardSecdiscoverAxis",
     "childSummaryCards": [
       {
-        "code": "axis-overview-and-architecture",
-        "title": "Axis Overview and Architecture",
+        "code": "axis.overview",
+        "title": "What Is Nodics Axis?",
+        "summary": "Understand Axis, its backend boundary, supported runtime, setup, configuration, quality commands, and implemented scope.",
+        "order": 10
+      },
+      {
+        "code": "axis.architecture",
+        "title": "Architecture and Repository Boundaries",
+        "summary": "Learn the per-project deployment model, authority boundaries, role journeys, security model, documentation ownership, customization rules, and verification expectations.",
         "order": 20
       }
     ],
@@ -135,7 +140,7 @@ module.exports = {
       }
     ],
     "childStatusSummary": {
-      "childCount": 1,
+      "childCount": 2,
       "pages": 2
     },
     "nodeOrder": 10,
@@ -188,9 +193,7 @@ module.exports = {
     "nodeSummary": "Technology, shell, renderer, documentation, CMS delivery, and operational rules for building and running Axis safely.",
     "nodeContentArea": {
       "dashboard": "axisDocsDashboardSecbuildAndOperateAxis",
-      "groups": [
-        "axis-build-and-runtime"
-      ],
+      "navigationDepth": 2,
       "pages": [
         "axis.technology-stack",
         "axis.design-system",
@@ -201,9 +204,28 @@ module.exports = {
     "nodeDashboard": "axisDocsDashboardSecbuildAndOperateAxis",
     "childSummaryCards": [
       {
-        "code": "axis-build-and-runtime",
-        "title": "Axis Build and Runtime",
-        "order": 60
+        "code": "axis.technology-stack",
+        "title": "Frontend Technology Stack",
+        "summary": "Review exact package versions, state ownership, styling, repository shape, renderer organization, dependency governance, and verification.",
+        "order": 10
+      },
+      {
+        "code": "axis.design-system",
+        "title": "Design System and Application Shell",
+        "summary": "Understand authentication layouts, design foundations, shell structure, responsive states, accessibility, recovery, and extension rules.",
+        "order": 20
+      },
+      {
+        "code": "axis.cms-renderers",
+        "title": "CMS Delivery and Renderer Integration",
+        "summary": "Follow the CMS delivery, validation, cache-safety, logical renderer, and frontend implementation boundaries.",
+        "order": 30
+      },
+      {
+        "code": "axis.documentation-content",
+        "title": "Documentation Content in Axis",
+        "summary": "Understand dynamic documentation products, content-pack installation, renderer ownership, failure recovery, and contributor verification.",
+        "order": 40
       }
     ],
     "childJourneyLinks": [
@@ -229,7 +251,7 @@ module.exports = {
       }
     ],
     "childStatusSummary": {
-      "childCount": 1,
+      "childCount": 4,
       "pages": 4
     },
     "nodeOrder": 20,
@@ -282,9 +304,7 @@ module.exports = {
     "nodeSummary": "Axis user-facing workspaces, dashboards, actions, recovery behavior, and backend-owned capability contracts.",
     "nodeContentArea": {
       "dashboard": "axisDocsDashboardSecaxisCapabilities",
-      "groups": [
-        "axis-workspaces-and-operations"
-      ],
+      "navigationDepth": 2,
       "pages": [
         "axis.employee-access",
         "axis.assistant",
@@ -301,9 +321,64 @@ module.exports = {
     "nodeDashboard": "axisDocsDashboardSecaxisCapabilities",
     "childSummaryCards": [
       {
-        "code": "axis-workspaces-and-operations",
-        "title": "Axis Workspaces and Operations",
-        "order": 118
+        "code": "axis.employee-access",
+        "title": "Employee Login, Recovery, Lock, and Dashboard",
+        "summary": "Operate the employee-only authentication journey, recovery, persistent browser session, idle lock, logout, configuration, and safe failures.",
+        "order": 10
+      },
+      {
+        "code": "axis.assistant",
+        "title": "Axis Assistant Frontend",
+        "summary": "Learn the governed Assistant request flow, typed API contracts, resumable streaming, presentation lifecycle, evidence, accessibility, and security behavior.",
+        "order": 20
+      },
+      {
+        "code": "axis.schema-workbench",
+        "title": "Axis Schema Workbench",
+        "summary": "Use and extend governed schema discovery, record operations, relationship coordination, failure recovery, responsive behavior, and verification.",
+        "order": 30
+      },
+      {
+        "code": "axis.page-designer",
+        "title": "Axis Page Designer",
+        "summary": "Use the governed catalog-first Designer flow for sites, templates, dynamic slots, sections, components, media, routes, navigation, and publish readiness.",
+        "order": 40
+      },
+      {
+        "code": "axis.experience-studio",
+        "title": "Axis Experience Studio and Targeted CMS Experiences",
+        "summary": "Configure targeted CMS components for collection, category, brand, and fallback journeys through backend-owned WCMS Experience contracts.",
+        "order": 50
+      },
+      {
+        "code": "axis.module-health",
+        "title": "Module Health",
+        "summary": "Monitor backend-governed module registration and runtime health evidence without creating a browser-side health authority.",
+        "order": 60
+      },
+      {
+        "code": "axis.imports-exports",
+        "title": "Imports and Exports Workspace",
+        "summary": "Review immutable data releases, validation, installation, history, security, responsive behavior, and the fail-closed export boundary.",
+        "order": 70
+      },
+      {
+        "code": "axis.media-management",
+        "title": "Media Management Workspace",
+        "summary": "Understand the governed Media Management navigation, route shell, backend ownership, storage and delivery boundaries, and upcoming capability slices.",
+        "order": 80
+      },
+      {
+        "code": "axis.customer-engagement",
+        "title": "Customer Engagement Workspaces",
+        "summary": "Use the lightweight six-domain Engagement journey for contact, testimonials, reviews, feedback, work management, governance, and recovery.",
+        "order": 90
+      },
+      {
+        "code": "axis.openapi-reference",
+        "title": "Swagger and OpenAPI Reference",
+        "summary": "Explain how Axis presents backend-owned Swagger and OpenAPI contracts grouped by registered runtime, functional module, and authorized API category.",
+        "order": 100
       }
     ],
     "childJourneyLinks": [
@@ -339,7 +414,7 @@ module.exports = {
       }
     ],
     "childStatusSummary": {
-      "childCount": 1,
+      "childCount": 10,
       "pages": 10
     },
     "nodeOrder": 30,
@@ -392,9 +467,7 @@ module.exports = {
     "nodeSummary": "Contribution, implementation, quality, documentation, and governance rules for adding or changing Axis behavior.",
     "nodeContentArea": {
       "dashboard": "axisDocsDashboardSeccontributeToAxis",
-      "groups": [
-        "axis-contribution-and-governance"
-      ],
+      "navigationDepth": 2,
       "pages": [
         "axis.feature-delivery",
         "axis.implementation-contract"
@@ -403,9 +476,16 @@ module.exports = {
     "nodeDashboard": "axisDocsDashboardSeccontributeToAxis",
     "childSummaryCards": [
       {
-        "code": "axis-contribution-and-governance",
-        "title": "Axis Contribution and Governance",
-        "order": 130
+        "code": "axis.feature-delivery",
+        "title": "Axis Feature Delivery Checklist",
+        "summary": "Apply repository-boundary, reuse, security, interaction, contract-testing, documentation, partial-discovery, and completion gates.",
+        "order": 10
+      },
+      {
+        "code": "axis.implementation-contract",
+        "title": "Axis Implementation and Documentation Contract",
+        "summary": "Follow local discovery, repository ownership, placement, documentation, required scenarios, customization, and acceptance contracts.",
+        "order": 20
       }
     ],
     "childJourneyLinks": [
@@ -421,7 +501,7 @@ module.exports = {
       }
     ],
     "childStatusSummary": {
-      "childCount": 1,
+      "childCount": 2,
       "pages": 2
     },
     "nodeOrder": 40,
@@ -464,100 +544,11 @@ module.exports = {
     "active": true
   },
   "record5": {
-    "code": "axisDocsNodeGrpdiscoverAxisaxisOverviewAndArchitecture",
+    "code": "axisDocsNodePageaxisOverview",
     "product": "axisDocumentationProduct",
     "navigation": "axisDocumentationNavigationMetadata",
     "parentNode": "axisDocsNodeSecdiscoverAxis",
-    "nodeLevel": "GROUP",
-    "nodeType": "CONTAINER",
-    "nodeTitle": "Axis Overview and Architecture",
-    "nodeSummary": "Business-friendly group for Axis Overview and Architecture documentation topics.",
-    "nodeContentArea": {
-      "dashboard": "axisDocsDashboardGrpdiscoverAxisaxisOverviewAndArchitecture",
-      "pages": [
-        "axis.overview",
-        "axis.architecture"
-      ],
-      "subgroups": []
-    },
-    "nodeDashboard": "axisDocsDashboardGrpdiscoverAxisaxisOverviewAndArchitecture",
-    "childSummaryCards": [
-      {
-        "code": "axis.overview",
-        "title": "What Is Nodics Axis?",
-        "summary": "Understand Axis, its backend boundary, supported runtime, setup, configuration, quality commands, and implemented scope.",
-        "order": 10
-      },
-      {
-        "code": "axis.architecture",
-        "title": "Architecture and Repository Boundaries",
-        "summary": "Learn the per-project deployment model, authority boundaries, role journeys, security model, documentation ownership, customization rules, and verification expectations.",
-        "order": 20
-      }
-    ],
-    "childJourneyLinks": [
-      {
-        "label": "What Is Nodics Axis?",
-        "targetPage": "axis.overview",
-        "route": "/docs/nodics-axis"
-      },
-      {
-        "label": "Architecture and Repository Boundaries",
-        "targetPage": "axis.architecture",
-        "route": "/docs/nodics-axis/architecture"
-      }
-    ],
-    "childStatusSummary": {
-      "childCount": 2,
-      "subgroups": 0
-    },
-    "nodeOrder": 10,
-    "expandable": true,
-    "expandedByDefault": false,
-    "nodeIcon": "folder-open",
-    "nodeAudience": [
-      "business-user",
-      "administrator",
-      "developer",
-      "operator"
-    ],
-    "accessPolicy": "axisDocsAccessPublic",
-    "accessMode": "PUBLIC",
-    "allowedRoles": [],
-    "allowedGroups": [],
-    "allowedPermissions": [],
-    "managedInAxis": true,
-    "axisAuthoringPermissions": [
-      "documentation.navigation.update"
-    ],
-    "workflowRequired": true,
-    "workflowTriggers": [
-      "NAVIGATION_CHANGE",
-      "DASHBOARD_CHANGE",
-      "ACCESS_POLICY_CHANGE"
-    ],
-    "lifecycleState": "ONLINE",
-    "maturityState": "IMPLEMENTED",
-    "searchKeywords": [
-      "discover-axis",
-      "axis-overview-and-architecture",
-      "what-is-nodics-axis",
-      "business-user",
-      "administrator",
-      "developer",
-      "operator"
-    ],
-    "relatedNodes": [],
-    "locale": "en",
-    "channel": "web",
-    "active": true
-  },
-  "record6": {
-    "code": "axisDocsNodeTopicaxisOverview",
-    "product": "axisDocumentationProduct",
-    "navigation": "axisDocumentationNavigationMetadata",
-    "parentNode": "axisDocsNodeGrpdiscoverAxisaxisOverviewAndArchitecture",
-    "nodeLevel": "TOPIC",
+    "nodeLevel": "PAGE_LINK",
     "nodeType": "PAGE",
     "nodeTitle": "What Is Nodics Axis?",
     "nodeSummary": "Understand Axis, its backend boundary, supported runtime, setup, configuration, quality commands, and implemented scope.",
@@ -581,7 +572,7 @@ module.exports = {
     "targetDocumentationPage": "axisDocsMetadataoverview",
     "targetPage": "axisDocsPageoverview",
     "targetRoute": "axisDocsRouteoverview",
-    "nodeOrder": 10,
+    "nodeOrder": 10010,
     "expandable": false,
     "expandedByDefault": false,
     "nodeIcon": "file-text",
@@ -618,20 +609,20 @@ module.exports = {
       "operator"
     ],
     "relatedNodes": [
-      "axisDocsNodeTopicaxisArchitecture",
-      "axisDocsNodeTopicaxisDocumentationContent",
-      "axisDocsNodeTopicaxisEmployeeAccess"
+      "axisDocsNodePageaxisArchitecture",
+      "axisDocsNodePageaxisDocumentationContent",
+      "axisDocsNodePageaxisEmployeeAccess"
     ],
     "locale": "en",
     "channel": "web",
     "active": true
   },
-  "record7": {
-    "code": "axisDocsNodeTopicaxisArchitecture",
+  "record6": {
+    "code": "axisDocsNodePageaxisArchitecture",
     "product": "axisDocumentationProduct",
     "navigation": "axisDocumentationNavigationMetadata",
-    "parentNode": "axisDocsNodeGrpdiscoverAxisaxisOverviewAndArchitecture",
-    "nodeLevel": "TOPIC",
+    "parentNode": "axisDocsNodeSecdiscoverAxis",
+    "nodeLevel": "PAGE_LINK",
     "nodeType": "PAGE",
     "nodeTitle": "Architecture and Repository Boundaries",
     "nodeSummary": "Learn the per-project deployment model, authority boundaries, role journeys, security model, documentation ownership, customization rules, and verification expectations.",
@@ -654,7 +645,7 @@ module.exports = {
     "targetDocumentationPage": "axisDocsMetadataarchitecture",
     "targetPage": "axisDocsPagearchitecture",
     "targetRoute": "axisDocsRoutearchitecture",
-    "nodeOrder": 20,
+    "nodeOrder": 10020,
     "expandable": false,
     "expandedByDefault": false,
     "nodeIcon": "file-text",
@@ -691,133 +682,20 @@ module.exports = {
       "ai-tool"
     ],
     "relatedNodes": [
-      "axisDocsNodeTopicaxisOverview",
-      "axisDocsNodeTopicaxisImplementationContract",
-      "axisDocsNodeTopicaxisCmsRenderers"
+      "axisDocsNodePageaxisOverview",
+      "axisDocsNodePageaxisImplementationContract",
+      "axisDocsNodePageaxisCmsRenderers"
     ],
     "locale": "en",
     "channel": "web",
     "active": true
   },
-  "record8": {
-    "code": "axisDocsNodeGrpbuildAndOperateAxisaxisBuildAndRuntime",
+  "record7": {
+    "code": "axisDocsNodePageaxisTechnologyStack",
     "product": "axisDocumentationProduct",
     "navigation": "axisDocumentationNavigationMetadata",
     "parentNode": "axisDocsNodeSecbuildAndOperateAxis",
-    "nodeLevel": "GROUP",
-    "nodeType": "CONTAINER",
-    "nodeTitle": "Axis Build and Runtime",
-    "nodeSummary": "Business-friendly group for Axis Build and Runtime documentation topics.",
-    "nodeContentArea": {
-      "dashboard": "axisDocsDashboardGrpbuildAndOperateAxisaxisBuildAndRuntime",
-      "pages": [
-        "axis.technology-stack",
-        "axis.design-system",
-        "axis.cms-renderers",
-        "axis.documentation-content"
-      ],
-      "subgroups": []
-    },
-    "nodeDashboard": "axisDocsDashboardGrpbuildAndOperateAxisaxisBuildAndRuntime",
-    "childSummaryCards": [
-      {
-        "code": "axis.technology-stack",
-        "title": "Frontend Technology Stack",
-        "summary": "Review exact package versions, state ownership, styling, repository shape, renderer organization, dependency governance, and verification.",
-        "order": 30
-      },
-      {
-        "code": "axis.design-system",
-        "title": "Design System and Application Shell",
-        "summary": "Understand authentication layouts, design foundations, shell structure, responsive states, accessibility, recovery, and extension rules.",
-        "order": 40
-      },
-      {
-        "code": "axis.cms-renderers",
-        "title": "CMS Delivery and Renderer Integration",
-        "summary": "Follow the CMS delivery, validation, cache-safety, logical renderer, and frontend implementation boundaries.",
-        "order": 50
-      },
-      {
-        "code": "axis.documentation-content",
-        "title": "Documentation Content in Axis",
-        "summary": "Understand dynamic documentation products, content-pack installation, renderer ownership, failure recovery, and contributor verification.",
-        "order": 60
-      }
-    ],
-    "childJourneyLinks": [
-      {
-        "label": "Frontend Technology Stack",
-        "targetPage": "axis.technology-stack",
-        "route": "/docs/nodics-axis/technology-stack"
-      },
-      {
-        "label": "Design System and Application Shell",
-        "targetPage": "axis.design-system",
-        "route": "/docs/nodics-axis/design-system"
-      },
-      {
-        "label": "CMS Delivery and Renderer Integration",
-        "targetPage": "axis.cms-renderers",
-        "route": "/docs/nodics-axis/cms-renderers"
-      },
-      {
-        "label": "Documentation Content in Axis",
-        "targetPage": "axis.documentation-content",
-        "route": "/docs/nodics-axis/documentation-content"
-      }
-    ],
-    "childStatusSummary": {
-      "childCount": 4,
-      "subgroups": 0
-    },
-    "nodeOrder": 30,
-    "expandable": true,
-    "expandedByDefault": false,
-    "nodeIcon": "folder-open",
-    "nodeAudience": [
-      "developer",
-      "operator",
-      "architect",
-      "ai-tool"
-    ],
-    "accessPolicy": "axisDocsAccessPublic",
-    "accessMode": "PUBLIC",
-    "allowedRoles": [],
-    "allowedGroups": [],
-    "allowedPermissions": [],
-    "managedInAxis": true,
-    "axisAuthoringPermissions": [
-      "documentation.navigation.update"
-    ],
-    "workflowRequired": true,
-    "workflowTriggers": [
-      "NAVIGATION_CHANGE",
-      "DASHBOARD_CHANGE",
-      "ACCESS_POLICY_CHANGE"
-    ],
-    "lifecycleState": "ONLINE",
-    "maturityState": "IMPLEMENTED",
-    "searchKeywords": [
-      "build-and-operate-axis",
-      "axis-build-and-runtime",
-      "frontend-technology-stack",
-      "developer",
-      "operator",
-      "architect",
-      "ai-tool"
-    ],
-    "relatedNodes": [],
-    "locale": "en",
-    "channel": "web",
-    "active": true
-  },
-  "record9": {
-    "code": "axisDocsNodeTopicaxisTechnologyStack",
-    "product": "axisDocumentationProduct",
-    "navigation": "axisDocumentationNavigationMetadata",
-    "parentNode": "axisDocsNodeGrpbuildAndOperateAxisaxisBuildAndRuntime",
-    "nodeLevel": "TOPIC",
+    "nodeLevel": "PAGE_LINK",
     "nodeType": "PAGE",
     "nodeTitle": "Frontend Technology Stack",
     "nodeSummary": "Review exact package versions, state ownership, styling, repository shape, renderer organization, dependency governance, and verification.",
@@ -840,7 +718,7 @@ module.exports = {
     "targetDocumentationPage": "axisDocsMetadatatechnologystack",
     "targetPage": "axisDocsPagetechnologystack",
     "targetRoute": "axisDocsRoutetechnologystack",
-    "nodeOrder": 30,
+    "nodeOrder": 10010,
     "expandable": false,
     "expandedByDefault": false,
     "nodeIcon": "file-text",
@@ -877,19 +755,19 @@ module.exports = {
       "ai-tool"
     ],
     "relatedNodes": [
-      "axisDocsNodeTopicaxisDesignSystem",
-      "axisDocsNodeTopicaxisFeatureDelivery"
+      "axisDocsNodePageaxisDesignSystem",
+      "axisDocsNodePageaxisFeatureDelivery"
     ],
     "locale": "en",
     "channel": "web",
     "active": true
   },
-  "record10": {
-    "code": "axisDocsNodeTopicaxisDesignSystem",
+  "record8": {
+    "code": "axisDocsNodePageaxisDesignSystem",
     "product": "axisDocumentationProduct",
     "navigation": "axisDocumentationNavigationMetadata",
-    "parentNode": "axisDocsNodeGrpbuildAndOperateAxisaxisBuildAndRuntime",
-    "nodeLevel": "TOPIC",
+    "parentNode": "axisDocsNodeSecbuildAndOperateAxis",
+    "nodeLevel": "PAGE_LINK",
     "nodeType": "PAGE",
     "nodeTitle": "Design System and Application Shell",
     "nodeSummary": "Understand authentication layouts, design foundations, shell structure, responsive states, accessibility, recovery, and extension rules.",
@@ -913,7 +791,7 @@ module.exports = {
     "targetDocumentationPage": "axisDocsMetadatadesignsystem",
     "targetPage": "axisDocsPagedesignsystem",
     "targetRoute": "axisDocsRoutedesignsystem",
-    "nodeOrder": 40,
+    "nodeOrder": 10020,
     "expandable": false,
     "expandedByDefault": false,
     "nodeIcon": "file-text",
@@ -950,19 +828,19 @@ module.exports = {
       "ai-tool"
     ],
     "relatedNodes": [
-      "axisDocsNodeTopicaxisTechnologyStack",
-      "axisDocsNodeTopicaxisEmployeeAccess"
+      "axisDocsNodePageaxisTechnologyStack",
+      "axisDocsNodePageaxisEmployeeAccess"
     ],
     "locale": "en",
     "channel": "web",
     "active": true
   },
-  "record11": {
-    "code": "axisDocsNodeTopicaxisCmsRenderers",
+  "record9": {
+    "code": "axisDocsNodePageaxisCmsRenderers",
     "product": "axisDocumentationProduct",
     "navigation": "axisDocumentationNavigationMetadata",
-    "parentNode": "axisDocsNodeGrpbuildAndOperateAxisaxisBuildAndRuntime",
-    "nodeLevel": "TOPIC",
+    "parentNode": "axisDocsNodeSecbuildAndOperateAxis",
+    "nodeLevel": "PAGE_LINK",
     "nodeType": "PAGE",
     "nodeTitle": "CMS Delivery and Renderer Integration",
     "nodeSummary": "Follow the CMS delivery, validation, cache-safety, logical renderer, and frontend implementation boundaries.",
@@ -985,7 +863,7 @@ module.exports = {
     "targetDocumentationPage": "axisDocsMetadatacmsrenderers",
     "targetPage": "axisDocsPagecmsrenderers",
     "targetRoute": "axisDocsRoutecmsrenderers",
-    "nodeOrder": 50,
+    "nodeOrder": 10030,
     "expandable": false,
     "expandedByDefault": false,
     "nodeIcon": "file-text",
@@ -1022,19 +900,19 @@ module.exports = {
       "ai-tool"
     ],
     "relatedNodes": [
-      "axisDocsNodeTopicaxisDocumentationContent",
-      "axisDocsNodeTopicaxisPageDesigner"
+      "axisDocsNodePageaxisDocumentationContent",
+      "axisDocsNodePageaxisPageDesigner"
     ],
     "locale": "en",
     "channel": "web",
     "active": true
   },
-  "record12": {
-    "code": "axisDocsNodeTopicaxisDocumentationContent",
+  "record10": {
+    "code": "axisDocsNodePageaxisDocumentationContent",
     "product": "axisDocumentationProduct",
     "navigation": "axisDocumentationNavigationMetadata",
-    "parentNode": "axisDocsNodeGrpbuildAndOperateAxisaxisBuildAndRuntime",
-    "nodeLevel": "TOPIC",
+    "parentNode": "axisDocsNodeSecbuildAndOperateAxis",
+    "nodeLevel": "PAGE_LINK",
     "nodeType": "PAGE",
     "nodeTitle": "Documentation Content in Axis",
     "nodeSummary": "Understand dynamic documentation products, content-pack installation, renderer ownership, failure recovery, and contributor verification.",
@@ -1058,7 +936,7 @@ module.exports = {
     "targetDocumentationPage": "axisDocsMetadatadocumentationcontent",
     "targetPage": "axisDocsPagedocumentationcontent",
     "targetRoute": "axisDocsRoutedocumentationcontent",
-    "nodeOrder": 60,
+    "nodeOrder": 10040,
     "expandable": false,
     "expandedByDefault": false,
     "nodeIcon": "file-text",
@@ -1095,204 +973,19 @@ module.exports = {
       "ai-tool"
     ],
     "relatedNodes": [
-      "axisDocsNodeTopicaxisCmsRenderers",
-      "axisDocsNodeTopicaxisImportsExports"
+      "axisDocsNodePageaxisCmsRenderers",
+      "axisDocsNodePageaxisImportsExports"
     ],
     "locale": "en",
     "channel": "web",
     "active": true
   },
-  "record13": {
-    "code": "axisDocsNodeGrpaxisCapabilitiesaxisWorkspacesAndOperations",
+  "record11": {
+    "code": "axisDocsNodePageaxisEmployeeAccess",
     "product": "axisDocumentationProduct",
     "navigation": "axisDocumentationNavigationMetadata",
     "parentNode": "axisDocsNodeSecaxisCapabilities",
-    "nodeLevel": "GROUP",
-    "nodeType": "CONTAINER",
-    "nodeTitle": "Axis Workspaces and Operations",
-    "nodeSummary": "Business-friendly group for Axis Workspaces and Operations documentation topics.",
-    "nodeContentArea": {
-      "dashboard": "axisDocsDashboardGrpaxisCapabilitiesaxisWorkspacesAndOperations",
-      "pages": [
-        "axis.employee-access",
-        "axis.assistant",
-        "axis.schema-workbench",
-        "axis.page-designer",
-        "axis.experience-studio",
-        "axis.module-health",
-        "axis.imports-exports",
-        "axis.media-management",
-        "axis.customer-engagement",
-        "axis.openapi-reference"
-      ],
-      "subgroups": []
-    },
-    "nodeDashboard": "axisDocsDashboardGrpaxisCapabilitiesaxisWorkspacesAndOperations",
-    "childSummaryCards": [
-      {
-        "code": "axis.employee-access",
-        "title": "Employee Login, Recovery, Lock, and Dashboard",
-        "summary": "Operate the employee-only authentication journey, recovery, persistent browser session, idle lock, logout, configuration, and safe failures.",
-        "order": 70
-      },
-      {
-        "code": "axis.assistant",
-        "title": "Axis Assistant Frontend",
-        "summary": "Learn the governed Assistant request flow, typed API contracts, resumable streaming, presentation lifecycle, evidence, accessibility, and security behavior.",
-        "order": 80
-      },
-      {
-        "code": "axis.schema-workbench",
-        "title": "Axis Schema Workbench",
-        "summary": "Use and extend governed schema discovery, record operations, relationship coordination, failure recovery, responsive behavior, and verification.",
-        "order": 90
-      },
-      {
-        "code": "axis.page-designer",
-        "title": "Axis Page Designer",
-        "summary": "Use the governed catalog-first Designer flow for sites, templates, dynamic slots, sections, components, media, routes, navigation, and publish readiness.",
-        "order": 95
-      },
-      {
-        "code": "axis.experience-studio",
-        "title": "Axis Experience Studio and Targeted CMS Experiences",
-        "summary": "Configure targeted CMS components for collection, category, brand, and fallback journeys through backend-owned WCMS Experience contracts.",
-        "order": 97
-      },
-      {
-        "code": "axis.module-health",
-        "title": "Module Health",
-        "summary": "Monitor backend-governed module registration and runtime health evidence without creating a browser-side health authority.",
-        "order": 100
-      },
-      {
-        "code": "axis.imports-exports",
-        "title": "Imports and Exports Workspace",
-        "summary": "Review immutable data releases, validation, installation, history, security, responsive behavior, and the fail-closed export boundary.",
-        "order": 110
-      },
-      {
-        "code": "axis.media-management",
-        "title": "Media Management Workspace",
-        "summary": "Understand the governed Media Management navigation, route shell, backend ownership, storage and delivery boundaries, and upcoming capability slices.",
-        "order": 115
-      },
-      {
-        "code": "axis.customer-engagement",
-        "title": "Customer Engagement Workspaces",
-        "summary": "Use the lightweight six-domain Engagement journey for contact, testimonials, reviews, feedback, work management, governance, and recovery.",
-        "order": 116
-      },
-      {
-        "code": "axis.openapi-reference",
-        "title": "Swagger and OpenAPI Reference",
-        "summary": "Explain how Axis presents backend-owned Swagger and OpenAPI contracts grouped by registered runtime, functional module, and authorized API category.",
-        "order": 118
-      }
-    ],
-    "childJourneyLinks": [
-      {
-        "label": "Employee Login, Recovery, Lock, and Dashboard",
-        "targetPage": "axis.employee-access",
-        "route": "/docs/nodics-axis/employee-access"
-      },
-      {
-        "label": "Axis Assistant Frontend",
-        "targetPage": "axis.assistant",
-        "route": "/docs/nodics-axis/assistant"
-      },
-      {
-        "label": "Axis Schema Workbench",
-        "targetPage": "axis.schema-workbench",
-        "route": "/docs/nodics-axis/schema-workbench"
-      },
-      {
-        "label": "Axis Page Designer",
-        "targetPage": "axis.page-designer",
-        "route": "/docs/nodics-axis/page-designer"
-      },
-      {
-        "label": "Axis Experience Studio and Targeted CMS Experiences",
-        "targetPage": "axis.experience-studio",
-        "route": "/docs/nodics-axis/experience-studio"
-      },
-      {
-        "label": "Module Health",
-        "targetPage": "axis.module-health",
-        "route": "/docs/nodics-axis/module-health"
-      },
-      {
-        "label": "Imports and Exports Workspace",
-        "targetPage": "axis.imports-exports",
-        "route": "/docs/nodics-axis/imports-exports"
-      },
-      {
-        "label": "Media Management Workspace",
-        "targetPage": "axis.media-management",
-        "route": "/docs/nodics-axis/media"
-      },
-      {
-        "label": "Customer Engagement Workspaces",
-        "targetPage": "axis.customer-engagement",
-        "route": "/docs/nodics-axis/customer-engagement"
-      },
-      {
-        "label": "Swagger and OpenAPI Reference",
-        "targetPage": "axis.openapi-reference",
-        "route": "/docs/nodics-axis/openapi-reference"
-      }
-    ],
-    "childStatusSummary": {
-      "childCount": 10,
-      "subgroups": 0
-    },
-    "nodeOrder": 70,
-    "expandable": true,
-    "expandedByDefault": false,
-    "nodeIcon": "folder-open",
-    "nodeAudience": [
-      "business-user",
-      "administrator",
-      "developer",
-      "security-reviewer"
-    ],
-    "accessPolicy": "axisDocsAccessPublic",
-    "accessMode": "PUBLIC",
-    "allowedRoles": [],
-    "allowedGroups": [],
-    "allowedPermissions": [],
-    "managedInAxis": true,
-    "axisAuthoringPermissions": [
-      "documentation.navigation.update"
-    ],
-    "workflowRequired": true,
-    "workflowTriggers": [
-      "NAVIGATION_CHANGE",
-      "DASHBOARD_CHANGE",
-      "ACCESS_POLICY_CHANGE"
-    ],
-    "lifecycleState": "ONLINE",
-    "maturityState": "IMPLEMENTED",
-    "searchKeywords": [
-      "axis-capabilities",
-      "axis-workspaces-and-operations",
-      "employee-login-recovery-lock-and-dashboard",
-      "business-user",
-      "administrator",
-      "developer",
-      "security-reviewer"
-    ],
-    "relatedNodes": [],
-    "locale": "en",
-    "channel": "web",
-    "active": true
-  },
-  "record14": {
-    "code": "axisDocsNodeTopicaxisEmployeeAccess",
-    "product": "axisDocumentationProduct",
-    "navigation": "axisDocumentationNavigationMetadata",
-    "parentNode": "axisDocsNodeGrpaxisCapabilitiesaxisWorkspacesAndOperations",
-    "nodeLevel": "TOPIC",
+    "nodeLevel": "PAGE_LINK",
     "nodeType": "PAGE",
     "nodeTitle": "Employee Login, Recovery, Lock, and Dashboard",
     "nodeSummary": "Operate the employee-only authentication journey, recovery, persistent browser session, idle lock, logout, configuration, and safe failures.",
@@ -1316,7 +1009,7 @@ module.exports = {
     "targetDocumentationPage": "axisDocsMetadataemployeeaccess",
     "targetPage": "axisDocsPageemployeeaccess",
     "targetRoute": "axisDocsRouteemployeeaccess",
-    "nodeOrder": 70,
+    "nodeOrder": 10010,
     "expandable": false,
     "expandedByDefault": false,
     "nodeIcon": "file-text",
@@ -1353,19 +1046,19 @@ module.exports = {
       "security-reviewer"
     ],
     "relatedNodes": [
-      "axisDocsNodeTopicaxisOverview",
-      "axisDocsNodeTopicaxisModuleHealth"
+      "axisDocsNodePageaxisOverview",
+      "axisDocsNodePageaxisModuleHealth"
     ],
     "locale": "en",
     "channel": "web",
     "active": true
   },
-  "record15": {
-    "code": "axisDocsNodeTopicaxisAssistant",
+  "record12": {
+    "code": "axisDocsNodePageaxisAssistant",
     "product": "axisDocumentationProduct",
     "navigation": "axisDocumentationNavigationMetadata",
-    "parentNode": "axisDocsNodeGrpaxisCapabilitiesaxisWorkspacesAndOperations",
-    "nodeLevel": "TOPIC",
+    "parentNode": "axisDocsNodeSecaxisCapabilities",
+    "nodeLevel": "PAGE_LINK",
     "nodeType": "PAGE",
     "nodeTitle": "Axis Assistant Frontend",
     "nodeSummary": "Learn the governed Assistant request flow, typed API contracts, resumable streaming, presentation lifecycle, evidence, accessibility, and security behavior.",
@@ -1389,7 +1082,7 @@ module.exports = {
     "targetDocumentationPage": "axisDocsMetadataassistant",
     "targetPage": "axisDocsPageassistant",
     "targetRoute": "axisDocsRouteassistant",
-    "nodeOrder": 80,
+    "nodeOrder": 10020,
     "expandable": false,
     "expandedByDefault": false,
     "nodeIcon": "file-text",
@@ -1426,19 +1119,19 @@ module.exports = {
       "security-reviewer"
     ],
     "relatedNodes": [
-      "axisDocsNodeTopicaxisImplementationContract",
-      "axisDocsNodeTopicaxisEmployeeAccess"
+      "axisDocsNodePageaxisImplementationContract",
+      "axisDocsNodePageaxisEmployeeAccess"
     ],
     "locale": "en",
     "channel": "web",
     "active": true
   },
-  "record16": {
-    "code": "axisDocsNodeTopicaxisSchemaWorkbench",
+  "record13": {
+    "code": "axisDocsNodePageaxisSchemaWorkbench",
     "product": "axisDocumentationProduct",
     "navigation": "axisDocumentationNavigationMetadata",
-    "parentNode": "axisDocsNodeGrpaxisCapabilitiesaxisWorkspacesAndOperations",
-    "nodeLevel": "TOPIC",
+    "parentNode": "axisDocsNodeSecaxisCapabilities",
+    "nodeLevel": "PAGE_LINK",
     "nodeType": "PAGE",
     "nodeTitle": "Axis Schema Workbench",
     "nodeSummary": "Use and extend governed schema discovery, record operations, relationship coordination, failure recovery, responsive behavior, and verification.",
@@ -1462,7 +1155,7 @@ module.exports = {
     "targetDocumentationPage": "axisDocsMetadataschemaworkbench",
     "targetPage": "axisDocsPageschemaworkbench",
     "targetRoute": "axisDocsRouteschemaworkbench",
-    "nodeOrder": 90,
+    "nodeOrder": 10030,
     "expandable": false,
     "expandedByDefault": false,
     "nodeIcon": "file-text",
@@ -1499,19 +1192,19 @@ module.exports = {
       "operator"
     ],
     "relatedNodes": [
-      "axisDocsNodeTopicaxisPageDesigner",
-      "axisDocsNodeTopicaxisImplementationContract"
+      "axisDocsNodePageaxisPageDesigner",
+      "axisDocsNodePageaxisImplementationContract"
     ],
     "locale": "en",
     "channel": "web",
     "active": true
   },
-  "record17": {
-    "code": "axisDocsNodeTopicaxisPageDesigner",
+  "record14": {
+    "code": "axisDocsNodePageaxisPageDesigner",
     "product": "axisDocumentationProduct",
     "navigation": "axisDocumentationNavigationMetadata",
-    "parentNode": "axisDocsNodeGrpaxisCapabilitiesaxisWorkspacesAndOperations",
-    "nodeLevel": "TOPIC",
+    "parentNode": "axisDocsNodeSecaxisCapabilities",
+    "nodeLevel": "PAGE_LINK",
     "nodeType": "PAGE",
     "nodeTitle": "Axis Page Designer",
     "nodeSummary": "Use the governed catalog-first Designer flow for sites, templates, dynamic slots, sections, components, media, routes, navigation, and publish readiness.",
@@ -1535,7 +1228,7 @@ module.exports = {
     "targetDocumentationPage": "axisDocsMetadatapagedesigner",
     "targetPage": "axisDocsPagepagedesigner",
     "targetRoute": "axisDocsRoutepagedesigner",
-    "nodeOrder": 95,
+    "nodeOrder": 10040,
     "expandable": false,
     "expandedByDefault": false,
     "nodeIcon": "file-text",
@@ -1572,19 +1265,19 @@ module.exports = {
       "operator"
     ],
     "relatedNodes": [
-      "axisDocsNodeTopicaxisCmsRenderers",
-      "axisDocsNodeTopicaxisMediaManagement"
+      "axisDocsNodePageaxisCmsRenderers",
+      "axisDocsNodePageaxisMediaManagement"
     ],
     "locale": "en",
     "channel": "web",
     "active": true
   },
-  "record18": {
-    "code": "axisDocsNodeTopicaxisExperienceStudio",
+  "record15": {
+    "code": "axisDocsNodePageaxisExperienceStudio",
     "product": "axisDocumentationProduct",
     "navigation": "axisDocumentationNavigationMetadata",
-    "parentNode": "axisDocsNodeGrpaxisCapabilitiesaxisWorkspacesAndOperations",
-    "nodeLevel": "TOPIC",
+    "parentNode": "axisDocsNodeSecaxisCapabilities",
+    "nodeLevel": "PAGE_LINK",
     "nodeType": "PAGE",
     "nodeTitle": "Axis Experience Studio and Targeted CMS Experiences",
     "nodeSummary": "Configure targeted CMS components for collection, category, brand, and fallback journeys through backend-owned WCMS Experience contracts.",
@@ -1609,7 +1302,7 @@ module.exports = {
     "targetDocumentationPage": "axisDocsMetadataexperiencestudio",
     "targetPage": "axisDocsPageexperiencestudio",
     "targetRoute": "axisDocsRouteexperiencestudio",
-    "nodeOrder": 97,
+    "nodeOrder": 10050,
     "expandable": false,
     "expandedByDefault": false,
     "nodeIcon": "file-text",
@@ -1652,20 +1345,20 @@ module.exports = {
       "operator"
     ],
     "relatedNodes": [
-      "axisDocsNodeTopicaxisPageDesigner",
-      "axisDocsNodeTopicaxisCmsRenderers",
-      "axisDocsNodeTopicaxisDocumentationContent"
+      "axisDocsNodePageaxisPageDesigner",
+      "axisDocsNodePageaxisCmsRenderers",
+      "axisDocsNodePageaxisDocumentationContent"
     ],
     "locale": "en",
     "channel": "web",
     "active": true
   },
-  "record19": {
-    "code": "axisDocsNodeTopicaxisModuleHealth",
+  "record16": {
+    "code": "axisDocsNodePageaxisModuleHealth",
     "product": "axisDocumentationProduct",
     "navigation": "axisDocumentationNavigationMetadata",
-    "parentNode": "axisDocsNodeGrpaxisCapabilitiesaxisWorkspacesAndOperations",
-    "nodeLevel": "TOPIC",
+    "parentNode": "axisDocsNodeSecaxisCapabilities",
+    "nodeLevel": "PAGE_LINK",
     "nodeType": "PAGE",
     "nodeTitle": "Module Health",
     "nodeSummary": "Monitor backend-governed module registration and runtime health evidence without creating a browser-side health authority.",
@@ -1689,7 +1382,7 @@ module.exports = {
     "targetDocumentationPage": "axisDocsMetadatamodulehealth",
     "targetPage": "axisDocsPagemodulehealth",
     "targetRoute": "axisDocsRoutemodulehealth",
-    "nodeOrder": 100,
+    "nodeOrder": 10060,
     "expandable": false,
     "expandedByDefault": false,
     "nodeIcon": "file-text",
@@ -1726,19 +1419,19 @@ module.exports = {
       "security-reviewer"
     ],
     "relatedNodes": [
-      "axisDocsNodeTopicaxisImportsExports",
-      "axisDocsNodeTopicaxisOverview"
+      "axisDocsNodePageaxisImportsExports",
+      "axisDocsNodePageaxisOverview"
     ],
     "locale": "en",
     "channel": "web",
     "active": true
   },
-  "record20": {
-    "code": "axisDocsNodeTopicaxisImportsExports",
+  "record17": {
+    "code": "axisDocsNodePageaxisImportsExports",
     "product": "axisDocumentationProduct",
     "navigation": "axisDocumentationNavigationMetadata",
-    "parentNode": "axisDocsNodeGrpaxisCapabilitiesaxisWorkspacesAndOperations",
-    "nodeLevel": "TOPIC",
+    "parentNode": "axisDocsNodeSecaxisCapabilities",
+    "nodeLevel": "PAGE_LINK",
     "nodeType": "PAGE",
     "nodeTitle": "Imports and Exports Workspace",
     "nodeSummary": "Review immutable data releases, validation, installation, history, security, responsive behavior, and the fail-closed export boundary.",
@@ -1762,7 +1455,7 @@ module.exports = {
     "targetDocumentationPage": "axisDocsMetadataimportsexports",
     "targetPage": "axisDocsPageimportsexports",
     "targetRoute": "axisDocsRouteimportsexports",
-    "nodeOrder": 110,
+    "nodeOrder": 10070,
     "expandable": false,
     "expandedByDefault": false,
     "nodeIcon": "file-text",
@@ -1799,19 +1492,19 @@ module.exports = {
       "security-reviewer"
     ],
     "relatedNodes": [
-      "axisDocsNodeTopicaxisModuleHealth",
-      "axisDocsNodeTopicaxisDocumentationContent"
+      "axisDocsNodePageaxisModuleHealth",
+      "axisDocsNodePageaxisDocumentationContent"
     ],
     "locale": "en",
     "channel": "web",
     "active": true
   },
-  "record21": {
-    "code": "axisDocsNodeTopicaxisMediaManagement",
+  "record18": {
+    "code": "axisDocsNodePageaxisMediaManagement",
     "product": "axisDocumentationProduct",
     "navigation": "axisDocumentationNavigationMetadata",
-    "parentNode": "axisDocsNodeGrpaxisCapabilitiesaxisWorkspacesAndOperations",
-    "nodeLevel": "TOPIC",
+    "parentNode": "axisDocsNodeSecaxisCapabilities",
+    "nodeLevel": "PAGE_LINK",
     "nodeType": "PAGE",
     "nodeTitle": "Media Management Workspace",
     "nodeSummary": "Understand the governed Media Management navigation, route shell, backend ownership, storage and delivery boundaries, and upcoming capability slices.",
@@ -1835,7 +1528,7 @@ module.exports = {
     "targetDocumentationPage": "axisDocsMetadatamediamanagement",
     "targetPage": "axisDocsPagemediamanagement",
     "targetRoute": "axisDocsRoutemediamanagement",
-    "nodeOrder": 115,
+    "nodeOrder": 10080,
     "expandable": false,
     "expandedByDefault": false,
     "nodeIcon": "file-text",
@@ -1872,19 +1565,19 @@ module.exports = {
       "business-user"
     ],
     "relatedNodes": [
-      "axisDocsNodeTopicaxisPageDesigner",
-      "axisDocsNodeTopicaxisCmsRenderers"
+      "axisDocsNodePageaxisPageDesigner",
+      "axisDocsNodePageaxisCmsRenderers"
     ],
     "locale": "en",
     "channel": "web",
     "active": true
   },
-  "record22": {
-    "code": "axisDocsNodeTopicaxisCustomerEngagement",
+  "record19": {
+    "code": "axisDocsNodePageaxisCustomerEngagement",
     "product": "axisDocumentationProduct",
     "navigation": "axisDocumentationNavigationMetadata",
-    "parentNode": "axisDocsNodeGrpaxisCapabilitiesaxisWorkspacesAndOperations",
-    "nodeLevel": "TOPIC",
+    "parentNode": "axisDocsNodeSecaxisCapabilities",
+    "nodeLevel": "PAGE_LINK",
     "nodeType": "PAGE",
     "nodeTitle": "Customer Engagement Workspaces",
     "nodeSummary": "Use the lightweight six-domain Engagement journey for contact, testimonials, reviews, feedback, work management, governance, and recovery.",
@@ -1908,7 +1601,7 @@ module.exports = {
     "targetDocumentationPage": "axisDocsMetadatacustomerengagement",
     "targetPage": "axisDocsPagecustomerengagement",
     "targetRoute": "axisDocsRoutecustomerengagement",
-    "nodeOrder": 116,
+    "nodeOrder": 10090,
     "expandable": false,
     "expandedByDefault": false,
     "nodeIcon": "file-text",
@@ -1945,19 +1638,19 @@ module.exports = {
       "developer"
     ],
     "relatedNodes": [
-      "axisDocsNodeTopicaxisModuleHealth",
-      "axisDocsNodeTopicaxisImportsExports"
+      "axisDocsNodePageaxisModuleHealth",
+      "axisDocsNodePageaxisImportsExports"
     ],
     "locale": "en",
     "channel": "web",
     "active": true
   },
-  "record23": {
-    "code": "axisDocsNodeTopicaxisOpenapiReference",
+  "record20": {
+    "code": "axisDocsNodePageaxisOpenapiReference",
     "product": "axisDocumentationProduct",
     "navigation": "axisDocumentationNavigationMetadata",
-    "parentNode": "axisDocsNodeGrpaxisCapabilitiesaxisWorkspacesAndOperations",
-    "nodeLevel": "TOPIC",
+    "parentNode": "axisDocsNodeSecaxisCapabilities",
+    "nodeLevel": "PAGE_LINK",
     "nodeType": "PAGE",
     "nodeTitle": "Swagger and OpenAPI Reference",
     "nodeSummary": "Explain how Axis presents backend-owned Swagger and OpenAPI contracts grouped by registered runtime, functional module, and authorized API category.",
@@ -1982,7 +1675,7 @@ module.exports = {
     "targetDocumentationPage": "axisDocsMetadataopenapireference",
     "targetPage": "axisDocsPageopenapireference",
     "targetRoute": "axisDocsRouteopenapireference",
-    "nodeOrder": 118,
+    "nodeOrder": 10100,
     "expandable": false,
     "expandedByDefault": false,
     "nodeIcon": "file-text",
@@ -2021,108 +1714,19 @@ module.exports = {
       "ai-tool"
     ],
     "relatedNodes": [
-      "axisDocsNodeTopicaxisModuleHealth",
-      "axisDocsNodeTopicaxisSchemaWorkbench"
+      "axisDocsNodePageaxisModuleHealth",
+      "axisDocsNodePageaxisSchemaWorkbench"
     ],
     "locale": "en",
     "channel": "web",
     "active": true
   },
-  "record24": {
-    "code": "axisDocsNodeGrpcontributeToAxisaxisContributionAndGovernance",
+  "record21": {
+    "code": "axisDocsNodePageaxisFeatureDelivery",
     "product": "axisDocumentationProduct",
     "navigation": "axisDocumentationNavigationMetadata",
     "parentNode": "axisDocsNodeSeccontributeToAxis",
-    "nodeLevel": "GROUP",
-    "nodeType": "CONTAINER",
-    "nodeTitle": "Axis Contribution and Governance",
-    "nodeSummary": "Business-friendly group for Axis Contribution and Governance documentation topics.",
-    "nodeContentArea": {
-      "dashboard": "axisDocsDashboardGrpcontributeToAxisaxisContributionAndGovernance",
-      "pages": [
-        "axis.feature-delivery",
-        "axis.implementation-contract"
-      ],
-      "subgroups": []
-    },
-    "nodeDashboard": "axisDocsDashboardGrpcontributeToAxisaxisContributionAndGovernance",
-    "childSummaryCards": [
-      {
-        "code": "axis.feature-delivery",
-        "title": "Axis Feature Delivery Checklist",
-        "summary": "Apply repository-boundary, reuse, security, interaction, contract-testing, documentation, partial-discovery, and completion gates.",
-        "order": 120
-      },
-      {
-        "code": "axis.implementation-contract",
-        "title": "Axis Implementation and Documentation Contract",
-        "summary": "Follow local discovery, repository ownership, placement, documentation, required scenarios, customization, and acceptance contracts.",
-        "order": 130
-      }
-    ],
-    "childJourneyLinks": [
-      {
-        "label": "Axis Feature Delivery Checklist",
-        "targetPage": "axis.feature-delivery",
-        "route": "/docs/nodics-axis/feature-delivery"
-      },
-      {
-        "label": "Axis Implementation and Documentation Contract",
-        "targetPage": "axis.implementation-contract",
-        "route": "/docs/nodics-axis/implementation-contract"
-      }
-    ],
-    "childStatusSummary": {
-      "childCount": 2,
-      "subgroups": 0
-    },
-    "nodeOrder": 120,
-    "expandable": true,
-    "expandedByDefault": false,
-    "nodeIcon": "folder-open",
-    "nodeAudience": [
-      "developer",
-      "architect",
-      "framework-maintainer",
-      "ai-tool"
-    ],
-    "accessPolicy": "axisDocsAccessPublic",
-    "accessMode": "PUBLIC",
-    "allowedRoles": [],
-    "allowedGroups": [],
-    "allowedPermissions": [],
-    "managedInAxis": true,
-    "axisAuthoringPermissions": [
-      "documentation.navigation.update"
-    ],
-    "workflowRequired": true,
-    "workflowTriggers": [
-      "NAVIGATION_CHANGE",
-      "DASHBOARD_CHANGE",
-      "ACCESS_POLICY_CHANGE"
-    ],
-    "lifecycleState": "ONLINE",
-    "maturityState": "IMPLEMENTED",
-    "searchKeywords": [
-      "contribute-to-axis",
-      "axis-contribution-and-governance",
-      "axis-feature-delivery-checklist",
-      "developer",
-      "architect",
-      "framework-maintainer",
-      "ai-tool"
-    ],
-    "relatedNodes": [],
-    "locale": "en",
-    "channel": "web",
-    "active": true
-  },
-  "record25": {
-    "code": "axisDocsNodeTopicaxisFeatureDelivery",
-    "product": "axisDocumentationProduct",
-    "navigation": "axisDocumentationNavigationMetadata",
-    "parentNode": "axisDocsNodeGrpcontributeToAxisaxisContributionAndGovernance",
-    "nodeLevel": "TOPIC",
+    "nodeLevel": "PAGE_LINK",
     "nodeType": "PAGE",
     "nodeTitle": "Axis Feature Delivery Checklist",
     "nodeSummary": "Apply repository-boundary, reuse, security, interaction, contract-testing, documentation, partial-discovery, and completion gates.",
@@ -2145,7 +1749,7 @@ module.exports = {
     "targetDocumentationPage": "axisDocsMetadatafeaturedelivery",
     "targetPage": "axisDocsPagefeaturedelivery",
     "targetRoute": "axisDocsRoutefeaturedelivery",
-    "nodeOrder": 120,
+    "nodeOrder": 10010,
     "expandable": false,
     "expandedByDefault": false,
     "nodeIcon": "file-text",
@@ -2182,19 +1786,19 @@ module.exports = {
       "ai-tool"
     ],
     "relatedNodes": [
-      "axisDocsNodeTopicaxisImplementationContract",
-      "axisDocsNodeTopicaxisTechnologyStack"
+      "axisDocsNodePageaxisImplementationContract",
+      "axisDocsNodePageaxisTechnologyStack"
     ],
     "locale": "en",
     "channel": "web",
     "active": true
   },
-  "record26": {
-    "code": "axisDocsNodeTopicaxisImplementationContract",
+  "record22": {
+    "code": "axisDocsNodePageaxisImplementationContract",
     "product": "axisDocumentationProduct",
     "navigation": "axisDocumentationNavigationMetadata",
-    "parentNode": "axisDocsNodeGrpcontributeToAxisaxisContributionAndGovernance",
-    "nodeLevel": "TOPIC",
+    "parentNode": "axisDocsNodeSeccontributeToAxis",
+    "nodeLevel": "PAGE_LINK",
     "nodeType": "PAGE",
     "nodeTitle": "Axis Implementation and Documentation Contract",
     "nodeSummary": "Follow local discovery, repository ownership, placement, documentation, required scenarios, customization, and acceptance contracts.",
@@ -2217,7 +1821,7 @@ module.exports = {
     "targetDocumentationPage": "axisDocsMetadataimplementationcontract",
     "targetPage": "axisDocsPageimplementationcontract",
     "targetRoute": "axisDocsRouteimplementationcontract",
-    "nodeOrder": 130,
+    "nodeOrder": 10020,
     "expandable": false,
     "expandedByDefault": false,
     "nodeIcon": "file-text",
@@ -2254,8 +1858,8 @@ module.exports = {
       "ai-tool"
     ],
     "relatedNodes": [
-      "axisDocsNodeTopicaxisFeatureDelivery",
-      "axisDocsNodeTopicaxisArchitecture"
+      "axisDocsNodePageaxisFeatureDelivery",
+      "axisDocsNodePageaxisArchitecture"
     ],
     "locale": "en",
     "channel": "web",

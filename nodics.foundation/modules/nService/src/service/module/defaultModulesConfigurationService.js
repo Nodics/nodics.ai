@@ -35,7 +35,10 @@ module.exports = {
      */
     normalizeModuleConfiguration: function (moduleConfig, defaultOptions) {
         let normalized = _.merge({}, moduleConfig);
-        normalized.options = normalized.options || defaultOptions || {};
+        normalized.options = _.merge({}, defaultOptions || {}, normalized.options || {});
+        if (normalized.remoteOnly === true) {
+            normalized.options.remoteOnly = true;
+        }
         normalized.abstractEndpoint = normalized.abstractEndpoint || normalized.endpoint;
         if (UTILS.isBlank(normalized.nodes)) {
             normalized.nodes = {

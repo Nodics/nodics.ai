@@ -27,8 +27,9 @@ module.exports = {
         logResult: true,
         jobDetail: {
             internal: {
-                nodeId: 'node0',
                 module: 'media',
+                connectionName: 'cmsStaged',
+                connectionType: 'abstract',
                 method: 'POST',
                 uri: '/publication/replication/retry-pending',
                 body: {

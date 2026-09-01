@@ -14,6 +14,18 @@
 /** @description Generated Nodics framework documentation routes. */
 module.exports = {
   "record0": {
+    "code": "nodicsDocsRoutedocsGateway",
+    "site": "nodicsDocumentationSite",
+    "path": "/docs",
+    "locale": "en",
+    "channel": "web",
+    "page": "nodicsDocsPagedocsGateway",
+    "routeType": "PAGE",
+    "deliveryState": "ONLINE",
+    "accessMode": "PUBLIC",
+    "active": true
+  },
+  "record1": {
     "code": "nodicsDocsRouteframeworkOverview",
     "site": "nodicsDocumentationSite",
     "path": "/docs/framework",
@@ -25,7 +37,7 @@ module.exports = {
     "accessMode": "PUBLIC",
     "active": true
   },
-  "record1": {
+  "record2": {
     "code": "nodicsDocsRouteframeworkWhyNodicsExists",
     "site": "nodicsDocumentationSite",
     "path": "/docs/framework/framework-why-nodics-exists",
@@ -37,7 +49,7 @@ module.exports = {
     "accessMode": "PUBLIC",
     "active": true
   },
-  "record2": {
+  "record3": {
     "code": "nodicsDocsRouteframeworkHowNodicsWorks",
     "site": "nodicsDocumentationSite",
     "path": "/docs/framework/framework-how-nodics-works",
@@ -49,7 +61,7 @@ module.exports = {
     "accessMode": "PUBLIC",
     "active": true
   },
-  "record3": {
+  "record4": {
     "code": "nodicsDocsRouteframeworkAdoptionAndFirstJourney",
     "site": "nodicsDocumentationSite",
     "path": "/docs/framework/framework-adoption-and-first-journey",
@@ -61,7 +73,7 @@ module.exports = {
     "accessMode": "PUBLIC",
     "active": true
   },
-  "record4": {
+  "record5": {
     "code": "nodicsDocsRoutedocsDocumentationRoadmap",
     "site": "nodicsDocumentationSite",
     "path": "/docs/framework/docs-documentation-roadmap",
@@ -73,7 +85,7 @@ module.exports = {
     "accessMode": "PUBLIC",
     "active": true
   },
-  "record5": {
+  "record6": {
     "code": "nodicsDocsRoutedocsDocumentationPrinciples",
     "site": "nodicsDocumentationSite",
     "path": "/docs/framework/docs-documentation-principles",
@@ -85,7 +97,7 @@ module.exports = {
     "accessMode": "PUBLIC",
     "active": true
   },
-  "record6": {
+  "record7": {
     "code": "nodicsDocsRoutedocsReaderJourneyAndCoverage",
     "site": "nodicsDocumentationSite",
     "path": "/docs/framework/docs-reader-journey-and-coverage",
@@ -97,7 +109,7 @@ module.exports = {
     "accessMode": "PUBLIC",
     "active": true
   },
-  "record7": {
+  "record8": {
     "code": "nodicsDocsRoutedocsDocumentationPublishingModel",
     "site": "nodicsDocumentationSite",
     "path": "/docs/framework/docs-documentation-publishing-model",
@@ -109,7 +121,7 @@ module.exports = {
     "accessMode": "PUBLIC",
     "active": true
   },
-  "record8": {
+  "record9": {
     "code": "nodicsDocsRouteframeworkModularArchitecture",
     "site": "nodicsDocumentationSite",
     "path": "/docs/framework/framework-modular-architecture",
@@ -121,7 +133,7 @@ module.exports = {
     "accessMode": "PUBLIC",
     "active": true
   },
-  "record9": {
+  "record10": {
     "code": "nodicsDocsRouteframeworkRuntimeServerComposition",
     "site": "nodicsDocumentationSite",
     "path": "/docs/framework/framework-runtime-server-composition",
@@ -133,7 +145,7 @@ module.exports = {
     "accessMode": "PUBLIC",
     "active": true
   },
-  "record10": {
+  "record11": {
     "code": "nodicsDocsRouteframeworkModuleLoadingServicePrecedence",
     "site": "nodicsDocumentationSite",
     "path": "/docs/framework/framework-module-loading-service-precedence",
@@ -145,7 +157,7 @@ module.exports = {
     "accessMode": "PUBLIC",
     "active": true
   },
-  "record11": {
+  "record12": {
     "code": "nodicsDocsRouteframeworkArchitectureDecisionGuide",
     "site": "nodicsDocumentationSite",
     "path": "/docs/framework/framework-architecture-decision-guide",
@@ -157,7 +169,7 @@ module.exports = {
     "accessMode": "PUBLIC",
     "active": true
   },
-  "record12": {
+  "record13": {
     "code": "nodicsDocsRouteplatformModuleRegistry",
     "site": "nodicsDocumentationSite",
     "path": "/docs/framework/platform-module-registry",
@@ -169,7 +181,7 @@ module.exports = {
     "accessMode": "PUBLIC",
     "active": true
   },
-  "record13": {
+  "record14": {
     "code": "nodicsDocsRoutefoundationOverview",
     "site": "nodicsDocumentationSite",
     "path": "/docs/framework/foundation-overview",
@@ -181,7 +193,7 @@ module.exports = {
     "accessMode": "PUBLIC",
     "active": true
   },
-  "record14": {
+  "record15": {
     "code": "nodicsDocsRouteapplicationsSuite",
     "site": "nodicsDocumentationSite",
     "path": "/docs/framework/applications-suite",
@@ -193,7 +205,7 @@ module.exports = {
     "accessMode": "PUBLIC",
     "active": true
   },
-  "record15": {
+  "record16": {
     "code": "nodicsDocsRoutesolutionsTaskExecutionEngine",
     "site": "nodicsDocumentationSite",
     "path": "/docs/framework/solutions-task-execution-engine",
@@ -205,7 +217,7 @@ module.exports = {
     "accessMode": "PUBLIC",
     "active": true
   },
-  "record16": {
+  "record17": {
     "code": "nodicsDocsRoutesolutionsDataEngineeringAnalyticsPlatform",
     "site": "nodicsDocumentationSite",
     "path": "/docs/framework/solutions-data-engineering-analytics-platform",
@@ -217,7 +229,7 @@ module.exports = {
     "accessMode": "PUBLIC",
     "active": true
   },
-  "record17": {
+  "record18": {
     "code": "nodicsDocsRouteacceleratorsAgoraIndustryTemplates",
     "site": "nodicsDocumentationSite",
     "path": "/docs/framework/accelerators-agora-industry-templates",
@@ -229,7 +241,7 @@ module.exports = {
     "accessMode": "PUBLIC",
     "active": true
   },
-  "record18": {
+  "record19": {
     "code": "nodicsDocsRouteacceleratorsAgoraApparelProductDataAuthoring",
     "site": "nodicsDocumentationSite",
     "path": "/docs/framework/accelerators-agora-apparel-product-data-authoring",
@@ -241,7 +253,7 @@ module.exports = {
     "accessMode": "PUBLIC",
     "active": true
   },
-  "record19": {
+  "record20": {
     "code": "nodicsDocsRouteframeworkLocalQuickStart",
     "site": "nodicsDocumentationSite",
     "path": "/docs/framework/framework-local-quick-start",
@@ -253,7 +265,7 @@ module.exports = {
     "accessMode": "PUBLIC",
     "active": true
   },
-  "record20": {
+  "record21": {
     "code": "nodicsDocsRouteframeworkFreshSchemaSetupJourney",
     "site": "nodicsDocumentationSite",
     "path": "/docs/framework/framework-fresh-schema-setup-journey",
@@ -265,7 +277,7 @@ module.exports = {
     "accessMode": "PUBLIC",
     "active": true
   },
-  "record21": {
+  "record22": {
     "code": "nodicsDocsRouteframeworkLocalRuntimeTroubleshooting",
     "site": "nodicsDocumentationSite",
     "path": "/docs/framework/framework-local-runtime-troubleshooting",
@@ -277,7 +289,7 @@ module.exports = {
     "accessMode": "PUBLIC",
     "active": true
   },
-  "record22": {
+  "record23": {
     "code": "nodicsDocsRouteinstallerInstalledRuntimeApplicationBuilder",
     "site": "nodicsDocumentationSite",
     "path": "/docs/framework/installer-installed-runtime-application-builder",
@@ -289,7 +301,7 @@ module.exports = {
     "accessMode": "PUBLIC",
     "active": true
   },
-  "record23": {
+  "record24": {
     "code": "nodicsDocsRoutebuilderWorkspaceGeneration",
     "site": "nodicsDocumentationSite",
     "path": "/docs/framework/builder-workspace-generation",
@@ -301,7 +313,7 @@ module.exports = {
     "accessMode": "PUBLIC",
     "active": true
   },
-  "record24": {
+  "record25": {
     "code": "nodicsDocsRouteprocessVisualDesigner",
     "site": "nodicsDocumentationSite",
     "path": "/docs/framework/process/visual-designer",
@@ -313,7 +325,7 @@ module.exports = {
     "accessMode": "PUBLIC",
     "active": true
   },
-  "record25": {
+  "record26": {
     "code": "nodicsDocsRouteaxisBusinessCustomization",
     "site": "nodicsDocumentationSite",
     "path": "/docs/framework/axis-business-customization",
@@ -325,7 +337,7 @@ module.exports = {
     "accessMode": "PUBLIC",
     "active": true
   },
-  "record26": {
+  "record27": {
     "code": "nodicsDocsRouteplatformOverview",
     "site": "nodicsDocumentationSite",
     "path": "/docs/framework/platform-overview",
@@ -337,7 +349,7 @@ module.exports = {
     "accessMode": "PUBLIC",
     "active": true
   },
-  "record27": {
+  "record28": {
     "code": "nodicsDocsRoutesecurityIdentityAccessGovernance",
     "site": "nodicsDocumentationSite",
     "path": "/docs/framework/security-identity-access-governance",
@@ -349,7 +361,7 @@ module.exports = {
     "accessMode": "PUBLIC",
     "active": true
   },
-  "record28": {
+  "record29": {
     "code": "nodicsDocsRouteconfigurationRuntimeBehaviorManagement",
     "site": "nodicsDocumentationSite",
     "path": "/docs/framework/configuration-runtime-behavior-management",
@@ -361,7 +373,7 @@ module.exports = {
     "accessMode": "PUBLIC",
     "active": true
   },
-  "record29": {
+  "record30": {
     "code": "nodicsDocsRouteconfigurationFrameworkStartupLifecycle",
     "site": "nodicsDocumentationSite",
     "path": "/docs/framework/configuration-framework-startup-lifecycle",
@@ -373,7 +385,7 @@ module.exports = {
     "accessMode": "PUBLIC",
     "active": true
   },
-  "record30": {
+  "record31": {
     "code": "nodicsDocsRouteroutingApiGovernance",
     "site": "nodicsDocumentationSite",
     "path": "/docs/framework/routing-api-governance",
@@ -385,7 +397,7 @@ module.exports = {
     "accessMode": "AUTHENTICATED",
     "active": true
   },
-  "record31": {
+  "record32": {
     "code": "nodicsDocsRouteroutingApiRequestLifecycle",
     "site": "nodicsDocumentationSite",
     "path": "/docs/framework/routing-api-request-lifecycle",
@@ -397,7 +409,7 @@ module.exports = {
     "accessMode": "AUTHENTICATED",
     "active": true
   },
-  "record32": {
+  "record33": {
     "code": "nodicsDocsRoutefoundationErrorHandlingStatusCodes",
     "site": "nodicsDocumentationSite",
     "path": "/docs/framework/foundation-error-handling-status-codes",
@@ -409,7 +421,7 @@ module.exports = {
     "accessMode": "AUTHENTICATED",
     "active": true
   },
-  "record33": {
+  "record34": {
     "code": "nodicsDocsRouteruntimeGovernedChange",
     "site": "nodicsDocumentationSite",
     "path": "/docs/framework/runtime-governed-change",
@@ -421,7 +433,7 @@ module.exports = {
     "accessMode": "PUBLIC",
     "active": true
   },
-  "record34": {
+  "record35": {
     "code": "nodicsDocsRoutelocalizationInternationalization",
     "site": "nodicsDocumentationSite",
     "path": "/docs/framework/localization-internationalization",
@@ -433,7 +445,7 @@ module.exports = {
     "accessMode": "PUBLIC",
     "active": true
   },
-  "record35": {
+  "record36": {
     "code": "nodicsDocsRouteschemaDataModelingManagement",
     "site": "nodicsDocumentationSite",
     "path": "/docs/framework/schema-data-modeling-management",
@@ -445,7 +457,7 @@ module.exports = {
     "accessMode": "PUBLIC",
     "active": true
   },
-  "record36": {
+  "record37": {
     "code": "nodicsDocsRoutepersistenceProviderDataAccessLayer",
     "site": "nodicsDocumentationSite",
     "path": "/docs/framework/persistence-provider-data-access-layer",
@@ -457,7 +469,7 @@ module.exports = {
     "accessMode": "PUBLIC",
     "active": true
   },
-  "record37": {
+  "record38": {
     "code": "nodicsDocsRoutecacheRuntimeStateManagement",
     "site": "nodicsDocumentationSite",
     "path": "/docs/framework/cache-runtime-state-management",
@@ -469,7 +481,7 @@ module.exports = {
     "accessMode": "PUBLIC",
     "active": true
   },
-  "record38": {
+  "record39": {
     "code": "nodicsDocsRouteframeworkCustomizationGuide",
     "site": "nodicsDocumentationSite",
     "path": "/docs/framework/framework-customization-guide",
@@ -481,7 +493,7 @@ module.exports = {
     "accessMode": "PUBLIC",
     "active": true
   },
-  "record39": {
+  "record40": {
     "code": "nodicsDocsRouteframeworkBackendExtensionPatterns",
     "site": "nodicsDocumentationSite",
     "path": "/docs/framework/framework-backend-extension-patterns",
@@ -493,7 +505,7 @@ module.exports = {
     "accessMode": "PUBLIC",
     "active": true
   },
-  "record40": {
+  "record41": {
     "code": "nodicsDocsRouteframeworkAxisContentCustomization",
     "site": "nodicsDocumentationSite",
     "path": "/docs/framework/framework-axis-content-customization",
@@ -505,7 +517,7 @@ module.exports = {
     "accessMode": "PUBLIC",
     "active": true
   },
-  "record41": {
+  "record42": {
     "code": "nodicsDocsRouteprocessDeveloperCustomization",
     "site": "nodicsDocumentationSite",
     "path": "/docs/framework/process/developer-customization",
@@ -517,7 +529,7 @@ module.exports = {
     "accessMode": "PUBLIC",
     "active": true
   },
-  "record42": {
+  "record43": {
     "code": "nodicsDocsRouteprocessCustomProjectExtension",
     "site": "nodicsDocumentationSite",
     "path": "/docs/framework/process/custom-project-extension",
@@ -529,7 +541,7 @@ module.exports = {
     "accessMode": "PUBLIC",
     "active": true
   },
-  "record43": {
+  "record44": {
     "code": "nodicsDocsRoutecommerceBaseFoundations",
     "site": "nodicsDocumentationSite",
     "path": "/docs/framework/commerce-base-foundations",
@@ -541,7 +553,7 @@ module.exports = {
     "accessMode": "PUBLIC",
     "active": true
   },
-  "record44": {
+  "record45": {
     "code": "nodicsDocsRoutewcmsOverview",
     "site": "nodicsDocumentationSite",
     "path": "/docs/framework/wcms-overview",
@@ -553,7 +565,7 @@ module.exports = {
     "accessMode": "PUBLIC",
     "active": true
   },
-  "record45": {
+  "record46": {
     "code": "nodicsDocsRoutewcmsContentCatalogModel",
     "site": "nodicsDocumentationSite",
     "path": "/docs/framework/wcms-content-catalog-model",
@@ -565,7 +577,7 @@ module.exports = {
     "accessMode": "PUBLIC",
     "active": true
   },
-  "record46": {
+  "record47": {
     "code": "nodicsDocsRoutewcmsPageDesignerComponents",
     "site": "nodicsDocumentationSite",
     "path": "/docs/framework/wcms-page-designer-components",
@@ -577,7 +589,7 @@ module.exports = {
     "accessMode": "PUBLIC",
     "active": true
   },
-  "record47": {
+  "record48": {
     "code": "nodicsDocsRoutewcmsSitePublicationVisibility",
     "site": "nodicsDocumentationSite",
     "path": "/docs/framework/wcms-site-publication-visibility",
@@ -589,7 +601,7 @@ module.exports = {
     "accessMode": "PUBLIC",
     "active": true
   },
-  "record48": {
+  "record49": {
     "code": "nodicsDocsRoutecatalogProductDiscoveryManagement",
     "site": "nodicsDocumentationSite",
     "path": "/docs/framework/catalog-product-discovery-management",
@@ -601,7 +613,7 @@ module.exports = {
     "accessMode": "PUBLIC",
     "active": true
   },
-  "record49": {
+  "record50": {
     "code": "nodicsDocsRoutediscoverySearchIndexing",
     "site": "nodicsDocumentationSite",
     "path": "/docs/framework/discovery-search-indexing",
@@ -613,7 +625,7 @@ module.exports = {
     "accessMode": "PUBLIC",
     "active": true
   },
-  "record50": {
+  "record51": {
     "code": "nodicsDocsRoutewcmsMediaManagement",
     "site": "nodicsDocumentationSite",
     "path": "/docs/framework/wcms-media-management",
@@ -625,7 +637,7 @@ module.exports = {
     "accessMode": "PUBLIC",
     "active": true
   },
-  "record51": {
+  "record52": {
     "code": "nodicsDocsRoutewcmsMediaStorageDelivery",
     "site": "nodicsDocumentationSite",
     "path": "/docs/framework/wcms-media-storage-delivery",
@@ -637,7 +649,7 @@ module.exports = {
     "accessMode": "PUBLIC",
     "active": true
   },
-  "record52": {
+  "record53": {
     "code": "nodicsDocsRoutewcmsMediaImportPublication",
     "site": "nodicsDocumentationSite",
     "path": "/docs/framework/wcms-media-import-publication",
@@ -649,7 +661,7 @@ module.exports = {
     "accessMode": "PUBLIC",
     "active": true
   },
-  "record53": {
+  "record54": {
     "code": "nodicsDocsRouteinventoryStockManagement",
     "site": "nodicsDocumentationSite",
     "path": "/docs/framework/inventory-stock-management",
@@ -661,7 +673,7 @@ module.exports = {
     "accessMode": "PUBLIC",
     "active": true
   },
-  "record54": {
+  "record55": {
     "code": "nodicsDocsRoutepricingPromotionsTaxManagement",
     "site": "nodicsDocumentationSite",
     "path": "/docs/framework/pricing-promotions-tax-management",
@@ -673,7 +685,7 @@ module.exports = {
     "accessMode": "PUBLIC",
     "active": true
   },
-  "record55": {
+  "record56": {
     "code": "nodicsDocsRoutecommerceOverview",
     "site": "nodicsDocumentationSite",
     "path": "/docs/framework/commerce-overview",
@@ -685,7 +697,7 @@ module.exports = {
     "accessMode": "PUBLIC",
     "active": true
   },
-  "record56": {
+  "record57": {
     "code": "nodicsDocsRoutecommerceCartOrder",
     "site": "nodicsDocumentationSite",
     "path": "/docs/framework/commerce-cart-order",
@@ -697,7 +709,7 @@ module.exports = {
     "accessMode": "PUBLIC",
     "active": true
   },
-  "record57": {
+  "record58": {
     "code": "nodicsDocsRoutecommercePaymentFulfillment",
     "site": "nodicsDocumentationSite",
     "path": "/docs/framework/commerce-payment-fulfillment",
@@ -709,7 +721,7 @@ module.exports = {
     "accessMode": "PUBLIC",
     "active": true
   },
-  "record58": {
+  "record59": {
     "code": "nodicsDocsRoutefulfillmentShippingManagement",
     "site": "nodicsDocumentationSite",
     "path": "/docs/framework/fulfillment-shipping-management",
@@ -721,7 +733,7 @@ module.exports = {
     "accessMode": "PUBLIC",
     "active": true
   },
-  "record59": {
+  "record60": {
     "code": "nodicsDocsRouteorderManagementLifecycle",
     "site": "nodicsDocumentationSite",
     "path": "/docs/framework/order-management-lifecycle",
@@ -733,7 +745,7 @@ module.exports = {
     "accessMode": "PUBLIC",
     "active": true
   },
-  "record60": {
+  "record61": {
     "code": "nodicsDocsRoutecommerceReturnsRefunds",
     "site": "nodicsDocumentationSite",
     "path": "/docs/framework/commerce-returns-refunds",
@@ -745,7 +757,7 @@ module.exports = {
     "accessMode": "PUBLIC",
     "active": true
   },
-  "record61": {
+  "record62": {
     "code": "nodicsDocsRouteengagementCustomerReviews",
     "site": "nodicsDocumentationSite",
     "path": "/docs/framework/engagement-customer-reviews",
@@ -757,7 +769,7 @@ module.exports = {
     "accessMode": "PUBLIC",
     "active": true
   },
-  "record62": {
+  "record63": {
     "code": "nodicsDocsRouteengagementReviewModerationGovernance",
     "site": "nodicsDocumentationSite",
     "path": "/docs/framework/engagement-review-moderation-governance",
@@ -769,7 +781,7 @@ module.exports = {
     "accessMode": "PUBLIC",
     "active": true
   },
-  "record63": {
+  "record64": {
     "code": "nodicsDocsRouteengagementReviewAggregationRecovery",
     "site": "nodicsDocumentationSite",
     "path": "/docs/framework/engagement-review-aggregation-recovery",
@@ -781,7 +793,7 @@ module.exports = {
     "accessMode": "PUBLIC",
     "active": true
   },
-  "record64": {
+  "record65": {
     "code": "nodicsDocsRouteengagementCustomerFeedback",
     "site": "nodicsDocumentationSite",
     "path": "/docs/framework/engagement-customer-feedback",
@@ -793,7 +805,7 @@ module.exports = {
     "accessMode": "PUBLIC",
     "active": true
   },
-  "record65": {
+  "record66": {
     "code": "nodicsDocsRouteengagementUnifiedOperations",
     "site": "nodicsDocumentationSite",
     "path": "/docs/framework/engagement-unified-operations",
@@ -805,7 +817,7 @@ module.exports = {
     "accessMode": "PUBLIC",
     "active": true
   },
-  "record66": {
+  "record67": {
     "code": "nodicsDocsRouteengagementGovernedAutomation",
     "site": "nodicsDocumentationSite",
     "path": "/docs/framework/engagement-governed-automation",
@@ -817,7 +829,7 @@ module.exports = {
     "accessMode": "PUBLIC",
     "active": true
   },
-  "record67": {
+  "record68": {
     "code": "nodicsDocsRouteengagementEnterpriseOperations",
     "site": "nodicsDocumentationSite",
     "path": "/docs/framework/engagement-enterprise-operations",
@@ -829,7 +841,7 @@ module.exports = {
     "accessMode": "PUBLIC",
     "active": true
   },
-  "record68": {
+  "record69": {
     "code": "nodicsDocsRoutecommunicationOverview",
     "site": "nodicsDocumentationSite",
     "path": "/docs/framework/communication-overview",
@@ -841,7 +853,7 @@ module.exports = {
     "accessMode": "PUBLIC",
     "active": true
   },
-  "record69": {
+  "record70": {
     "code": "nodicsDocsRouteeventsMessagingClusterCoordination",
     "site": "nodicsDocumentationSite",
     "path": "/docs/framework/events-messaging-cluster-coordination",
@@ -853,7 +865,7 @@ module.exports = {
     "accessMode": "PUBLIC",
     "active": true
   },
-  "record70": {
+  "record71": {
     "code": "nodicsDocsRouteprocessOverview",
     "site": "nodicsDocumentationSite",
     "path": "/docs/framework/process",
@@ -865,7 +877,7 @@ module.exports = {
     "accessMode": "PUBLIC",
     "active": true
   },
-  "record71": {
+  "record72": {
     "code": "nodicsDocsRouteprocessRuntimeLifecycle",
     "site": "nodicsDocumentationSite",
     "path": "/docs/framework/process/runtime-lifecycle",
@@ -877,7 +889,7 @@ module.exports = {
     "accessMode": "PUBLIC",
     "active": true
   },
-  "record72": {
+  "record73": {
     "code": "nodicsDocsRouteprocessWorkflowOrchestrationPatterns",
     "site": "nodicsDocumentationSite",
     "path": "/docs/framework/process/workflow-orchestration-patterns",
@@ -889,7 +901,7 @@ module.exports = {
     "accessMode": "PUBLIC",
     "active": true
   },
-  "record73": {
+  "record74": {
     "code": "nodicsDocsRouteprocessFirstWorkflow",
     "site": "nodicsDocumentationSite",
     "path": "/docs/framework/process/first-workflow",
@@ -901,7 +913,7 @@ module.exports = {
     "accessMode": "PUBLIC",
     "active": true
   },
-  "record74": {
+  "record75": {
     "code": "nodicsDocsRouteprocessFirstHumanTask",
     "site": "nodicsDocumentationSite",
     "path": "/docs/framework/process/first-human-task",
@@ -913,7 +925,7 @@ module.exports = {
     "accessMode": "PUBLIC",
     "active": true
   },
-  "record75": {
+  "record76": {
     "code": "nodicsDocsRouteprocessBusinessValue",
     "site": "nodicsDocumentationSite",
     "path": "/docs/framework/process/business-value",
@@ -925,7 +937,7 @@ module.exports = {
     "accessMode": "PUBLIC",
     "active": true
   },
-  "record76": {
+  "record77": {
     "code": "nodicsDocsRoutepipelineBusinessLogicOrchestration",
     "site": "nodicsDocumentationSite",
     "path": "/docs/framework/pipeline-business-logic-orchestration",
@@ -937,7 +949,7 @@ module.exports = {
     "accessMode": "PUBLIC",
     "active": true
   },
-  "record77": {
+  "record78": {
     "code": "nodicsDocsRoutecronOperations",
     "site": "nodicsDocumentationSite",
     "path": "/docs/framework/cron-operations",
@@ -949,7 +961,7 @@ module.exports = {
     "accessMode": "PUBLIC",
     "active": true
   },
-  "record78": {
+  "record79": {
     "code": "nodicsDocsRoutecronNodeResponsibilityTee",
     "site": "nodicsDocumentationSite",
     "path": "/docs/framework/cron-node-responsibility-tee",
@@ -961,7 +973,7 @@ module.exports = {
     "accessMode": "PUBLIC",
     "active": true
   },
-  "record79": {
+  "record80": {
     "code": "nodicsDocsRoutecronProjectCustomization",
     "site": "nodicsDocumentationSite",
     "path": "/docs/framework/cron-project-customization",
@@ -973,7 +985,7 @@ module.exports = {
     "accessMode": "PUBLIC",
     "active": true
   },
-  "record80": {
+  "record81": {
     "code": "nodicsDocsRouteprocessProcessCronRuntime",
     "site": "nodicsDocumentationSite",
     "path": "/docs/framework/process/process-cron-runtime",
@@ -985,7 +997,7 @@ module.exports = {
     "accessMode": "PUBLIC",
     "active": true
   },
-  "record81": {
+  "record82": {
     "code": "nodicsDocsRouteprocessScheduledAutomation",
     "site": "nodicsDocumentationSite",
     "path": "/docs/framework/process/scheduled-automation",
@@ -997,7 +1009,7 @@ module.exports = {
     "accessMode": "PUBLIC",
     "active": true
   },
-  "record82": {
+  "record83": {
     "code": "nodicsDocsRoutedataImportExportMigration",
     "site": "nodicsDocumentationSite",
     "path": "/docs/framework/data-import-export-migration",
@@ -1009,7 +1021,7 @@ module.exports = {
     "accessMode": "PUBLIC",
     "active": true
   },
-  "record83": {
+  "record84": {
     "code": "nodicsDocsRouteprocessActionAdapters",
     "site": "nodicsDocumentationSite",
     "path": "/docs/framework/process/action-adapters",
@@ -1021,7 +1033,7 @@ module.exports = {
     "accessMode": "PUBLIC",
     "active": true
   },
-  "record84": {
+  "record85": {
     "code": "nodicsDocsRouteframeworkDevopsRuntime",
     "site": "nodicsDocumentationSite",
     "path": "/docs/framework/framework-devops-runtime",
@@ -1033,7 +1045,7 @@ module.exports = {
     "accessMode": "PUBLIC",
     "active": true
   },
-  "record85": {
+  "record86": {
     "code": "nodicsDocsRouteframeworkRuntimeReleaseRollback",
     "site": "nodicsDocumentationSite",
     "path": "/docs/framework/framework-runtime-release-rollback",
@@ -1045,7 +1057,7 @@ module.exports = {
     "accessMode": "PUBLIC",
     "active": true
   },
-  "record86": {
+  "record87": {
     "code": "nodicsDocsRouteframeworkLocalBrowserAcceptanceJourney",
     "site": "nodicsDocumentationSite",
     "path": "/docs/framework/framework-local-browser-acceptance-journey",
@@ -1057,7 +1069,7 @@ module.exports = {
     "accessMode": "PUBLIC",
     "active": true
   },
-  "record87": {
+  "record88": {
     "code": "nodicsDocsRouteframeworkLocalVerificationChecklist",
     "site": "nodicsDocumentationSite",
     "path": "/docs/framework/framework-local-verification-checklist",
@@ -1069,7 +1081,7 @@ module.exports = {
     "accessMode": "PUBLIC",
     "active": true
   },
-  "record88": {
+  "record89": {
     "code": "nodicsDocsRoutecommerceEnterpriseOperations",
     "site": "nodicsDocumentationSite",
     "path": "/docs/framework/commerce-enterprise-operations",
@@ -1081,7 +1093,7 @@ module.exports = {
     "accessMode": "PUBLIC",
     "active": true
   },
-  "record89": {
+  "record90": {
     "code": "nodicsDocsRouteprocessIncidentRecovery",
     "site": "nodicsDocumentationSite",
     "path": "/docs/framework/process/incident-recovery",
@@ -1093,7 +1105,7 @@ module.exports = {
     "accessMode": "PUBLIC",
     "active": true
   },
-  "record90": {
+  "record91": {
     "code": "nodicsDocsRouteprocessDevopsTopology",
     "site": "nodicsDocumentationSite",
     "path": "/docs/framework/process/devops-topology",
@@ -1105,7 +1117,7 @@ module.exports = {
     "accessMode": "PUBLIC",
     "active": true
   },
-  "record91": {
+  "record92": {
     "code": "nodicsDocsRouteprocessQaRegressionGuide",
     "site": "nodicsDocumentationSite",
     "path": "/docs/framework/process/qa-regression-guide",
@@ -1117,7 +1129,7 @@ module.exports = {
     "accessMode": "PUBLIC",
     "active": true
   },
-  "record92": {
+  "record93": {
     "code": "nodicsDocsRouteframeworkCapabilityDocumentationMaturityPattern",
     "site": "nodicsDocumentationSite",
     "path": "/docs/framework/framework-capability-documentation-maturity-pattern",
@@ -1129,7 +1141,7 @@ module.exports = {
     "accessMode": "PUBLIC",
     "active": true
   },
-  "record93": {
+  "record94": {
     "code": "nodicsDocsRoutedocsOverview",
     "site": "nodicsDocumentationSite",
     "path": "/docs/framework/docs-overview",
@@ -1141,7 +1153,7 @@ module.exports = {
     "accessMode": "PUBLIC",
     "active": true
   },
-  "record94": {
+  "record95": {
     "code": "nodicsDocsRoutewcmsPublishingLifecycle",
     "site": "nodicsDocumentationSite",
     "path": "/docs/framework/wcms-publishing-lifecycle",
@@ -1153,7 +1165,7 @@ module.exports = {
     "accessMode": "PUBLIC",
     "active": true
   },
-  "record95": {
+  "record96": {
     "code": "nodicsDocsRouteapplicationsNexusDataContentGuide",
     "site": "nodicsDocumentationSite",
     "path": "/docs/framework/applications-nexus-data-content-guide",
@@ -1165,7 +1177,7 @@ module.exports = {
     "accessMode": "PUBLIC",
     "active": true
   },
-  "record96": {
+  "record97": {
     "code": "nodicsDocsRouteapplicationsAxisSetupErrorContracts",
     "site": "nodicsDocumentationSite",
     "path": "/docs/framework/applications-axis-setup-error-contracts",
@@ -1177,7 +1189,7 @@ module.exports = {
     "accessMode": "PUBLIC",
     "active": true
   },
-  "record97": {
+  "record98": {
     "code": "nodicsDocsRoutewcmsCmsSourceMapAuthoringContract",
     "site": "nodicsDocumentationSite",
     "path": "/docs/framework/wcms-cms-source-map-authoring-contract",
@@ -1189,7 +1201,7 @@ module.exports = {
     "accessMode": "PUBLIC",
     "active": true
   },
-  "record98": {
+  "record99": {
     "code": "nodicsDocsRoutewcmsMediaOperationsRunbook",
     "site": "nodicsDocumentationSite",
     "path": "/docs/framework/wcms-media-operations-runbook",
@@ -1201,7 +1213,7 @@ module.exports = {
     "accessMode": "PUBLIC",
     "active": true
   },
-  "record99": {
+  "record100": {
     "code": "nodicsDocsRoutedataImportExportProviderGuides",
     "site": "nodicsDocumentationSite",
     "path": "/docs/framework/data-import-export-provider-guides",
@@ -1213,7 +1225,7 @@ module.exports = {
     "accessMode": "PUBLIC",
     "active": true
   },
-  "record100": {
+  "record101": {
     "code": "nodicsDocsRoutecommerceDataAuthoringFulfillment",
     "site": "nodicsDocumentationSite",
     "path": "/docs/framework/commerce-data-authoring-fulfillment",
@@ -1225,7 +1237,7 @@ module.exports = {
     "accessMode": "PUBLIC",
     "active": true
   },
-  "record101": {
+  "record102": {
     "code": "nodicsDocsRoutedocsDocumentationPublishingRunbook",
     "site": "nodicsDocumentationSite",
     "path": "/docs/framework/docs-documentation-publishing-runbook",
@@ -1237,7 +1249,7 @@ module.exports = {
     "accessMode": "PUBLIC",
     "active": true
   },
-  "record102": {
+  "record103": {
     "code": "nodicsDocsRouteplatformModuleRegistryJourney",
     "site": "nodicsDocumentationSite",
     "path": "/docs/framework/platform-module-registry-journey",
@@ -1249,7 +1261,7 @@ module.exports = {
     "accessMode": "PUBLIC",
     "active": true
   },
-  "record103": {
+  "record104": {
     "code": "nodicsDocsRoutecommerceSearchGuide",
     "site": "nodicsDocumentationSite",
     "path": "/docs/framework/commerce-search-guide",
@@ -1261,7 +1273,7 @@ module.exports = {
     "accessMode": "PUBLIC",
     "active": true
   },
-  "record104": {
+  "record105": {
     "code": "nodicsDocsRoutelocalizationRuntimeAuthoring",
     "site": "nodicsDocumentationSite",
     "path": "/docs/framework/localization-runtime-authoring",
@@ -1273,7 +1285,7 @@ module.exports = {
     "accessMode": "PUBLIC",
     "active": true
   },
-  "record105": {
+  "record106": {
     "code": "nodicsDocsRoutecommercePaymentProviderBoundaries",
     "site": "nodicsDocumentationSite",
     "path": "/docs/framework/commerce-payment-provider-boundaries",
@@ -1285,7 +1297,7 @@ module.exports = {
     "accessMode": "PUBLIC",
     "active": true
   },
-  "record106": {
+  "record107": {
     "code": "nodicsDocsRouteloyaltyWalletsRewardsLedger",
     "site": "nodicsDocumentationSite",
     "path": "/docs/framework/loyalty-wallets-rewards-ledger",
@@ -1297,7 +1309,7 @@ module.exports = {
     "accessMode": "PUBLIC",
     "active": true
   },
-  "record107": {
+  "record108": {
     "code": "nodicsDocsRoutecommerceShoppingListCommerceBoundary",
     "site": "nodicsDocumentationSite",
     "path": "/docs/framework/commerce-shopping-list-commerce-boundary",
@@ -1309,7 +1321,7 @@ module.exports = {
     "accessMode": "PUBLIC",
     "active": true
   },
-  "record108": {
+  "record109": {
     "code": "nodicsDocsRoutefoundationNmsRuntimeMonitoring",
     "site": "nodicsDocumentationSite",
     "path": "/docs/framework/foundation-nms-runtime-monitoring",
@@ -1321,7 +1333,7 @@ module.exports = {
     "accessMode": "PUBLIC",
     "active": true
   },
-  "record109": {
+  "record110": {
     "code": "nodicsDocsRoutefoundationServiceRuntimeOverrides",
     "site": "nodicsDocumentationSite",
     "path": "/docs/framework/foundation-service-runtime-overrides",
@@ -1333,7 +1345,7 @@ module.exports = {
     "accessMode": "PUBLIC",
     "active": true
   },
-  "record110": {
+  "record111": {
     "code": "nodicsDocsRoutefoundationModuleToModuleCommunication",
     "site": "nodicsDocumentationSite",
     "path": "/docs/framework/foundation-module-to-module-communication",
@@ -1345,7 +1357,7 @@ module.exports = {
     "accessMode": "PUBLIC",
     "active": true
   },
-  "record111": {
+  "record112": {
     "code": "nodicsDocsRoutefoundationCacheProviderRunbooks",
     "site": "nodicsDocumentationSite",
     "path": "/docs/framework/foundation-cache-provider-runbooks",
@@ -1357,7 +1369,7 @@ module.exports = {
     "accessMode": "PUBLIC",
     "active": true
   },
-  "record112": {
+  "record113": {
     "code": "nodicsDocsRoutefoundationDatabaseProviderBoundaries",
     "site": "nodicsDocumentationSite",
     "path": "/docs/framework/foundation-database-provider-boundaries",
@@ -1369,7 +1381,7 @@ module.exports = {
     "accessMode": "PUBLIC",
     "active": true
   },
-  "record113": {
+  "record114": {
     "code": "nodicsDocsRoutesecurityOtpSecurityFlow",
     "site": "nodicsDocumentationSite",
     "path": "/docs/framework/security-otp-security-flow",
@@ -1381,7 +1393,7 @@ module.exports = {
     "accessMode": "PUBLIC",
     "active": true
   },
-  "record114": {
+  "record115": {
     "code": "nodicsDocsRoutecommunicationProviderRunbooks",
     "site": "nodicsDocumentationSite",
     "path": "/docs/framework/communication-provider-runbooks",
@@ -1393,7 +1405,7 @@ module.exports = {
     "accessMode": "PUBLIC",
     "active": true
   },
-  "record115": {
+  "record116": {
     "code": "nodicsDocsRouteengagementContactSubmissionOperations",
     "site": "nodicsDocumentationSite",
     "path": "/docs/framework/engagement-contact-submission-operations",
@@ -1405,7 +1417,7 @@ module.exports = {
     "accessMode": "PUBLIC",
     "active": true
   },
-  "record116": {
+  "record117": {
     "code": "nodicsDocsRouteprocessWorkflowBpmSourceMap",
     "site": "nodicsDocumentationSite",
     "path": "/docs/framework/process-workflow-bpm-source-map",
@@ -1417,7 +1429,7 @@ module.exports = {
     "accessMode": "PUBLIC",
     "active": true
   },
-  "record117": {
+  "record118": {
     "code": "nodicsDocsRouteprocessCronjobDataAuthoring",
     "site": "nodicsDocumentationSite",
     "path": "/docs/framework/process-cronjob-data-authoring",
@@ -1429,7 +1441,7 @@ module.exports = {
     "accessMode": "PUBLIC",
     "active": true
   },
-  "record118": {
+  "record119": {
     "code": "nodicsDocsRouteframeworkReleaseUpgradeCompatibility",
     "site": "nodicsDocumentationSite",
     "path": "/docs/framework/framework-release-upgrade-compatibility",
@@ -1441,7 +1453,7 @@ module.exports = {
     "accessMode": "PUBLIC",
     "active": true
   },
-  "record119": {
+  "record120": {
     "code": "nodicsDocsRoutecommerceFulfillmentCoreSourceMap",
     "site": "nodicsDocumentationSite",
     "path": "/docs/framework/commerce-fulfillment-core-source-map",
@@ -1453,7 +1465,7 @@ module.exports = {
     "accessMode": "PUBLIC",
     "active": true
   },
-  "record120": {
+  "record121": {
     "code": "nodicsDocsRouteacceleratorsDomainCommerceSourceMap",
     "site": "nodicsDocumentationSite",
     "path": "/docs/framework/accelerators-domain-commerce-source-map",
@@ -1465,7 +1477,7 @@ module.exports = {
     "accessMode": "PUBLIC",
     "active": true
   },
-  "record121": {
+  "record122": {
     "code": "nodicsDocsRoutefoundationToolingRuntimeContracts",
     "site": "nodicsDocumentationSite",
     "path": "/docs/framework/foundation-tooling-runtime-contracts",
@@ -1477,7 +1489,7 @@ module.exports = {
     "accessMode": "PUBLIC",
     "active": true
   },
-  "record122": {
+  "record123": {
     "code": "nodicsDocsRoutefoundationEmsRuntimeClientRunbook",
     "site": "nodicsDocumentationSite",
     "path": "/docs/framework/foundation-ems-runtime-client-runbook",
@@ -1489,7 +1501,7 @@ module.exports = {
     "accessMode": "PUBLIC",
     "active": true
   },
-  "record123": {
+  "record124": {
     "code": "nodicsDocsRoutereferenceInternalSourceBoundaryRegister",
     "site": "nodicsDocumentationSite",
     "path": "/docs/framework/reference-internal-source-boundary-register",
@@ -1501,7 +1513,7 @@ module.exports = {
     "accessMode": "PUBLIC",
     "active": true
   },
-  "record124": {
+  "record125": {
     "code": "nodicsDocsRoutetoolingAiDeveloperEnablement",
     "site": "nodicsDocumentationSite",
     "path": "/docs/framework/tooling-ai-developer-enablement",
@@ -1513,7 +1525,7 @@ module.exports = {
     "accessMode": "PUBLIC",
     "active": true
   },
-  "record125": {
+  "record126": {
     "code": "nodicsDocsRoutereferenceSourceMapGlossary",
     "site": "nodicsDocumentationSite",
     "path": "/docs/framework/reference-source-map-glossary",
@@ -1525,7 +1537,7 @@ module.exports = {
     "accessMode": "PUBLIC",
     "active": true
   },
-  "record126": {
+  "record127": {
     "code": "nodicsDocsRoutereferenceSourceBackedDocumentationCoverageAudit",
     "site": "nodicsDocumentationSite",
     "path": "/docs/framework/reference-source-backed-documentation-coverage-audit",
@@ -1537,7 +1549,7 @@ module.exports = {
     "accessMode": "PUBLIC",
     "active": true
   },
-  "record127": {
+  "record128": {
     "code": "nodicsDocsRoutereferenceDocumentationGapBacklog",
     "site": "nodicsDocumentationSite",
     "path": "/docs/framework/reference-documentation-gap-backlog",

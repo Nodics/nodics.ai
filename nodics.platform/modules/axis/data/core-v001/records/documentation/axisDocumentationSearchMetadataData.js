@@ -291,13 +291,13 @@ module.exports = {
     "active": true
   },
   "record7": {
-    "code": "axisDocsSearchnodeaxisdocsnodegrpdiscoveraxisaxisoverviewandarchitecture",
+    "code": "axisDocsSearchnodeaxisdocsnodepageaxisoverview",
     "product": "axisDocumentationProduct",
     "targetType": "NODE",
-    "targetCode": "axisDocsNodeGrpdiscoverAxisaxisOverviewAndArchitecture",
-    "title": "Axis Overview and Architecture",
-    "summary": "Business-friendly group for Axis Overview and Architecture documentation topics.",
-    "searchText": "Axis Overview and Architecture Business-friendly group for Axis Overview and Architecture documentation topics. discover-axis axis-overview-and-architecture what-is-nodics-axis business-user administrator developer operator",
+    "targetCode": "axisDocsNodePageaxisOverview",
+    "title": "What Is Nodics Axis?",
+    "summary": "Understand Axis, its backend boundary, supported runtime, setup, configuration, quality commands, and implemented scope.",
+    "searchText": "What Is Nodics Axis? Understand Axis, its backend boundary, supported runtime, setup, configuration, quality commands, and implemented scope. discover-axis axis-overview-and-architecture what-is-nodics-axis business-user administrator developer operator",
     "keywords": [
       "discover-axis",
       "axis-overview-and-architecture",
@@ -308,8 +308,8 @@ module.exports = {
       "operator"
     ],
     "facets": {
-      "nodeLevel": "GROUP",
-      "nodeType": "CONTAINER",
+      "nodeLevel": "PAGE_LINK",
+      "nodeType": "PAGE",
       "audience": [
         "business-user",
         "administrator",
@@ -334,30 +334,30 @@ module.exports = {
     "active": true
   },
   "record8": {
-    "code": "axisDocsSearchnodeaxisdocsnodetopicaxisoverview",
+    "code": "axisDocsSearchnodeaxisdocsnodepageaxisarchitecture",
     "product": "axisDocumentationProduct",
     "targetType": "NODE",
-    "targetCode": "axisDocsNodeTopicaxisOverview",
-    "title": "What Is Nodics Axis?",
-    "summary": "Understand Axis, its backend boundary, supported runtime, setup, configuration, quality commands, and implemented scope.",
-    "searchText": "What Is Nodics Axis? Understand Axis, its backend boundary, supported runtime, setup, configuration, quality commands, and implemented scope. discover-axis axis-overview-and-architecture what-is-nodics-axis business-user administrator developer operator",
+    "targetCode": "axisDocsNodePageaxisArchitecture",
+    "title": "Architecture and Repository Boundaries",
+    "summary": "Learn the per-project deployment model, authority boundaries, role journeys, security model, documentation ownership, customization rules, and verification expectations.",
+    "searchText": "Architecture and Repository Boundaries Learn the per-project deployment model, authority boundaries, role journeys, security model, documentation ownership, customization rules, and verification expectations. discover-axis axis-overview-and-architecture architecture-and-repository-boundaries architect developer security-reviewer ai-tool",
     "keywords": [
       "discover-axis",
       "axis-overview-and-architecture",
-      "what-is-nodics-axis",
-      "business-user",
-      "administrator",
+      "architecture-and-repository-boundaries",
+      "architect",
       "developer",
-      "operator"
+      "security-reviewer",
+      "ai-tool"
     ],
     "facets": {
-      "nodeLevel": "TOPIC",
+      "nodeLevel": "PAGE_LINK",
       "nodeType": "PAGE",
       "audience": [
-        "business-user",
-        "administrator",
+        "architect",
         "developer",
-        "operator"
+        "security-reviewer",
+        "ai-tool"
       ]
     },
     "managedInAxis": true,
@@ -377,29 +377,29 @@ module.exports = {
     "active": true
   },
   "record9": {
-    "code": "axisDocsSearchnodeaxisdocsnodetopicaxisarchitecture",
+    "code": "axisDocsSearchnodeaxisdocsnodepageaxistechnologystack",
     "product": "axisDocumentationProduct",
     "targetType": "NODE",
-    "targetCode": "axisDocsNodeTopicaxisArchitecture",
-    "title": "Architecture and Repository Boundaries",
-    "summary": "Learn the per-project deployment model, authority boundaries, role journeys, security model, documentation ownership, customization rules, and verification expectations.",
-    "searchText": "Architecture and Repository Boundaries Learn the per-project deployment model, authority boundaries, role journeys, security model, documentation ownership, customization rules, and verification expectations. discover-axis axis-overview-and-architecture architecture-and-repository-boundaries architect developer security-reviewer ai-tool",
+    "targetCode": "axisDocsNodePageaxisTechnologyStack",
+    "title": "Frontend Technology Stack",
+    "summary": "Review exact package versions, state ownership, styling, repository shape, renderer organization, dependency governance, and verification.",
+    "searchText": "Frontend Technology Stack Review exact package versions, state ownership, styling, repository shape, renderer organization, dependency governance, and verification. build-and-operate-axis axis-build-and-runtime frontend-technology-stack developer operator architect ai-tool",
     "keywords": [
-      "discover-axis",
-      "axis-overview-and-architecture",
-      "architecture-and-repository-boundaries",
-      "architect",
+      "build-and-operate-axis",
+      "axis-build-and-runtime",
+      "frontend-technology-stack",
       "developer",
-      "security-reviewer",
+      "operator",
+      "architect",
       "ai-tool"
     ],
     "facets": {
-      "nodeLevel": "TOPIC",
+      "nodeLevel": "PAGE_LINK",
       "nodeType": "PAGE",
       "audience": [
-        "architect",
         "developer",
-        "security-reviewer",
+        "operator",
+        "architect",
         "ai-tool"
       ]
     },
@@ -420,96 +420,10 @@ module.exports = {
     "active": true
   },
   "record10": {
-    "code": "axisDocsSearchnodeaxisdocsnodegrpbuildandoperateaxisaxisbuildandruntime",
+    "code": "axisDocsSearchnodeaxisdocsnodepageaxisdesignsystem",
     "product": "axisDocumentationProduct",
     "targetType": "NODE",
-    "targetCode": "axisDocsNodeGrpbuildAndOperateAxisaxisBuildAndRuntime",
-    "title": "Axis Build and Runtime",
-    "summary": "Business-friendly group for Axis Build and Runtime documentation topics.",
-    "searchText": "Axis Build and Runtime Business-friendly group for Axis Build and Runtime documentation topics. build-and-operate-axis axis-build-and-runtime frontend-technology-stack developer operator architect ai-tool",
-    "keywords": [
-      "build-and-operate-axis",
-      "axis-build-and-runtime",
-      "frontend-technology-stack",
-      "developer",
-      "operator",
-      "architect",
-      "ai-tool"
-    ],
-    "facets": {
-      "nodeLevel": "GROUP",
-      "nodeType": "CONTAINER",
-      "audience": [
-        "developer",
-        "operator",
-        "architect",
-        "ai-tool"
-      ]
-    },
-    "managedInAxis": true,
-    "axisAuthoringPermissions": [
-      "documentation.search.preview"
-    ],
-    "workflowRequired": true,
-    "workflowTriggers": [
-      "SEARCH_METADATA_CHANGE"
-    ],
-    "locale": "en",
-    "channel": "web",
-    "accessPolicy": "axisDocsAccessPublic",
-    "accessMode": "PUBLIC",
-    "lifecycleState": "ONLINE",
-    "indexState": "INDEX_READY",
-    "active": true
-  },
-  "record11": {
-    "code": "axisDocsSearchnodeaxisdocsnodetopicaxistechnologystack",
-    "product": "axisDocumentationProduct",
-    "targetType": "NODE",
-    "targetCode": "axisDocsNodeTopicaxisTechnologyStack",
-    "title": "Frontend Technology Stack",
-    "summary": "Review exact package versions, state ownership, styling, repository shape, renderer organization, dependency governance, and verification.",
-    "searchText": "Frontend Technology Stack Review exact package versions, state ownership, styling, repository shape, renderer organization, dependency governance, and verification. build-and-operate-axis axis-build-and-runtime frontend-technology-stack developer operator architect ai-tool",
-    "keywords": [
-      "build-and-operate-axis",
-      "axis-build-and-runtime",
-      "frontend-technology-stack",
-      "developer",
-      "operator",
-      "architect",
-      "ai-tool"
-    ],
-    "facets": {
-      "nodeLevel": "TOPIC",
-      "nodeType": "PAGE",
-      "audience": [
-        "developer",
-        "operator",
-        "architect",
-        "ai-tool"
-      ]
-    },
-    "managedInAxis": true,
-    "axisAuthoringPermissions": [
-      "documentation.search.preview"
-    ],
-    "workflowRequired": true,
-    "workflowTriggers": [
-      "SEARCH_METADATA_CHANGE"
-    ],
-    "locale": "en",
-    "channel": "web",
-    "accessPolicy": "axisDocsAccessPublic",
-    "accessMode": "PUBLIC",
-    "lifecycleState": "ONLINE",
-    "indexState": "INDEX_READY",
-    "active": true
-  },
-  "record12": {
-    "code": "axisDocsSearchnodeaxisdocsnodetopicaxisdesignsystem",
-    "product": "axisDocumentationProduct",
-    "targetType": "NODE",
-    "targetCode": "axisDocsNodeTopicaxisDesignSystem",
+    "targetCode": "axisDocsNodePageaxisDesignSystem",
     "title": "Design System and Application Shell",
     "summary": "Understand authentication layouts, design foundations, shell structure, responsive states, accessibility, recovery, and extension rules.",
     "searchText": "Design System and Application Shell Understand authentication layouts, design foundations, shell structure, responsive states, accessibility, recovery, and extension rules. build-and-operate-axis axis-build-and-runtime design-system-and-application-shell designer developer business-user ai-tool",
@@ -523,7 +437,7 @@ module.exports = {
       "ai-tool"
     ],
     "facets": {
-      "nodeLevel": "TOPIC",
+      "nodeLevel": "PAGE_LINK",
       "nodeType": "PAGE",
       "audience": [
         "designer",
@@ -548,11 +462,11 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record13": {
-    "code": "axisDocsSearchnodeaxisdocsnodetopicaxiscmsrenderers",
+  "record11": {
+    "code": "axisDocsSearchnodeaxisdocsnodepageaxiscmsrenderers",
     "product": "axisDocumentationProduct",
     "targetType": "NODE",
-    "targetCode": "axisDocsNodeTopicaxisCmsRenderers",
+    "targetCode": "axisDocsNodePageaxisCmsRenderers",
     "title": "CMS Delivery and Renderer Integration",
     "summary": "Follow the CMS delivery, validation, cache-safety, logical renderer, and frontend implementation boundaries.",
     "searchText": "CMS Delivery and Renderer Integration Follow the CMS delivery, validation, cache-safety, logical renderer, and frontend implementation boundaries. build-and-operate-axis axis-build-and-runtime cms-delivery-and-renderer-integration developer architect security-reviewer ai-tool",
@@ -566,7 +480,7 @@ module.exports = {
       "ai-tool"
     ],
     "facets": {
-      "nodeLevel": "TOPIC",
+      "nodeLevel": "PAGE_LINK",
       "nodeType": "PAGE",
       "audience": [
         "developer",
@@ -591,11 +505,11 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record14": {
-    "code": "axisDocsSearchnodeaxisdocsnodetopicaxisdocumentationcontent",
+  "record12": {
+    "code": "axisDocsSearchnodeaxisdocsnodepageaxisdocumentationcontent",
     "product": "axisDocumentationProduct",
     "targetType": "NODE",
-    "targetCode": "axisDocsNodeTopicaxisDocumentationContent",
+    "targetCode": "axisDocsNodePageaxisDocumentationContent",
     "title": "Documentation Content in Axis",
     "summary": "Understand dynamic documentation products, content-pack installation, renderer ownership, failure recovery, and contributor verification.",
     "searchText": "Documentation Content in Axis Understand dynamic documentation products, content-pack installation, renderer ownership, failure recovery, and contributor verification. build-and-operate-axis axis-build-and-runtime documentation-content-in-axis administrator developer operator ai-tool",
@@ -609,7 +523,7 @@ module.exports = {
       "ai-tool"
     ],
     "facets": {
-      "nodeLevel": "TOPIC",
+      "nodeLevel": "PAGE_LINK",
       "nodeType": "PAGE",
       "audience": [
         "administrator",
@@ -634,54 +548,11 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record15": {
-    "code": "axisDocsSearchnodeaxisdocsnodegrpaxiscapabilitiesaxisworkspacesandoperations",
+  "record13": {
+    "code": "axisDocsSearchnodeaxisdocsnodepageaxisemployeeaccess",
     "product": "axisDocumentationProduct",
     "targetType": "NODE",
-    "targetCode": "axisDocsNodeGrpaxisCapabilitiesaxisWorkspacesAndOperations",
-    "title": "Axis Workspaces and Operations",
-    "summary": "Business-friendly group for Axis Workspaces and Operations documentation topics.",
-    "searchText": "Axis Workspaces and Operations Business-friendly group for Axis Workspaces and Operations documentation topics. axis-capabilities axis-workspaces-and-operations employee-login-recovery-lock-and-dashboard business-user administrator developer security-reviewer",
-    "keywords": [
-      "axis-capabilities",
-      "axis-workspaces-and-operations",
-      "employee-login-recovery-lock-and-dashboard",
-      "business-user",
-      "administrator",
-      "developer",
-      "security-reviewer"
-    ],
-    "facets": {
-      "nodeLevel": "GROUP",
-      "nodeType": "CONTAINER",
-      "audience": [
-        "business-user",
-        "administrator",
-        "developer",
-        "security-reviewer"
-      ]
-    },
-    "managedInAxis": true,
-    "axisAuthoringPermissions": [
-      "documentation.search.preview"
-    ],
-    "workflowRequired": true,
-    "workflowTriggers": [
-      "SEARCH_METADATA_CHANGE"
-    ],
-    "locale": "en",
-    "channel": "web",
-    "accessPolicy": "axisDocsAccessPublic",
-    "accessMode": "PUBLIC",
-    "lifecycleState": "ONLINE",
-    "indexState": "INDEX_READY",
-    "active": true
-  },
-  "record16": {
-    "code": "axisDocsSearchnodeaxisdocsnodetopicaxisemployeeaccess",
-    "product": "axisDocumentationProduct",
-    "targetType": "NODE",
-    "targetCode": "axisDocsNodeTopicaxisEmployeeAccess",
+    "targetCode": "axisDocsNodePageaxisEmployeeAccess",
     "title": "Employee Login, Recovery, Lock, and Dashboard",
     "summary": "Operate the employee-only authentication journey, recovery, persistent browser session, idle lock, logout, configuration, and safe failures.",
     "searchText": "Employee Login, Recovery, Lock, and Dashboard Operate the employee-only authentication journey, recovery, persistent browser session, idle lock, logout, configuration, and safe failures. axis-capabilities axis-workspaces-and-operations employee-login-recovery-lock-and-dashboard business-user administrator developer security-reviewer",
@@ -695,7 +566,7 @@ module.exports = {
       "security-reviewer"
     ],
     "facets": {
-      "nodeLevel": "TOPIC",
+      "nodeLevel": "PAGE_LINK",
       "nodeType": "PAGE",
       "audience": [
         "business-user",
@@ -720,11 +591,11 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record17": {
-    "code": "axisDocsSearchnodeaxisdocsnodetopicaxisassistant",
+  "record14": {
+    "code": "axisDocsSearchnodeaxisdocsnodepageaxisassistant",
     "product": "axisDocumentationProduct",
     "targetType": "NODE",
-    "targetCode": "axisDocsNodeTopicaxisAssistant",
+    "targetCode": "axisDocsNodePageaxisAssistant",
     "title": "Axis Assistant Frontend",
     "summary": "Learn the governed Assistant request flow, typed API contracts, resumable streaming, presentation lifecycle, evidence, accessibility, and security behavior.",
     "searchText": "Axis Assistant Frontend Learn the governed Assistant request flow, typed API contracts, resumable streaming, presentation lifecycle, evidence, accessibility, and security behavior. axis-capabilities axis-workspaces-and-operations axis-assistant-frontend business-user developer architect security-reviewer",
@@ -738,7 +609,7 @@ module.exports = {
       "security-reviewer"
     ],
     "facets": {
-      "nodeLevel": "TOPIC",
+      "nodeLevel": "PAGE_LINK",
       "nodeType": "PAGE",
       "audience": [
         "business-user",
@@ -763,11 +634,11 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record18": {
-    "code": "axisDocsSearchnodeaxisdocsnodetopicaxisschemaworkbench",
+  "record15": {
+    "code": "axisDocsSearchnodeaxisdocsnodepageaxisschemaworkbench",
     "product": "axisDocumentationProduct",
     "targetType": "NODE",
-    "targetCode": "axisDocsNodeTopicaxisSchemaWorkbench",
+    "targetCode": "axisDocsNodePageaxisSchemaWorkbench",
     "title": "Axis Schema Workbench",
     "summary": "Use and extend governed schema discovery, record operations, relationship coordination, failure recovery, responsive behavior, and verification.",
     "searchText": "Axis Schema Workbench Use and extend governed schema discovery, record operations, relationship coordination, failure recovery, responsive behavior, and verification. axis-capabilities axis-workspaces-and-operations axis-schema-workbench business-user administrator developer operator",
@@ -781,7 +652,7 @@ module.exports = {
       "operator"
     ],
     "facets": {
-      "nodeLevel": "TOPIC",
+      "nodeLevel": "PAGE_LINK",
       "nodeType": "PAGE",
       "audience": [
         "business-user",
@@ -806,11 +677,11 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record19": {
-    "code": "axisDocsSearchnodeaxisdocsnodetopicaxispagedesigner",
+  "record16": {
+    "code": "axisDocsSearchnodeaxisdocsnodepageaxispagedesigner",
     "product": "axisDocumentationProduct",
     "targetType": "NODE",
-    "targetCode": "axisDocsNodeTopicaxisPageDesigner",
+    "targetCode": "axisDocsNodePageaxisPageDesigner",
     "title": "Axis Page Designer",
     "summary": "Use the governed catalog-first Designer flow for sites, templates, dynamic slots, sections, components, media, routes, navigation, and publish readiness.",
     "searchText": "Axis Page Designer Use the governed catalog-first Designer flow for sites, templates, dynamic slots, sections, components, media, routes, navigation, and publish readiness. axis-capabilities axis-workspaces-and-operations axis-page-designer business-user designer developer operator",
@@ -824,7 +695,7 @@ module.exports = {
       "operator"
     ],
     "facets": {
-      "nodeLevel": "TOPIC",
+      "nodeLevel": "PAGE_LINK",
       "nodeType": "PAGE",
       "audience": [
         "business-user",
@@ -849,11 +720,11 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record20": {
-    "code": "axisDocsSearchnodeaxisdocsnodetopicaxisexperiencestudio",
+  "record17": {
+    "code": "axisDocsSearchnodeaxisdocsnodepageaxisexperiencestudio",
     "product": "axisDocumentationProduct",
     "targetType": "NODE",
-    "targetCode": "axisDocsNodeTopicaxisExperienceStudio",
+    "targetCode": "axisDocsNodePageaxisExperienceStudio",
     "title": "Axis Experience Studio and Targeted CMS Experiences",
     "summary": "Configure targeted CMS components for collection, category, brand, and fallback journeys through backend-owned WCMS Experience contracts.",
     "searchText": "Axis Experience Studio and Targeted CMS Experiences Configure targeted CMS components for collection, category, brand, and fallback journeys through backend-owned WCMS Experience contracts. axis-capabilities axis-workspaces-and-operations axis-experience-studio targeted-cms-experiences collection-journey brand-journey default-fallback business-user merchandiser administrator developer operator",
@@ -872,7 +743,7 @@ module.exports = {
       "operator"
     ],
     "facets": {
-      "nodeLevel": "TOPIC",
+      "nodeLevel": "PAGE_LINK",
       "nodeType": "PAGE",
       "audience": [
         "business-user",
@@ -898,11 +769,11 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record21": {
-    "code": "axisDocsSearchnodeaxisdocsnodetopicaxismodulehealth",
+  "record18": {
+    "code": "axisDocsSearchnodeaxisdocsnodepageaxismodulehealth",
     "product": "axisDocumentationProduct",
     "targetType": "NODE",
-    "targetCode": "axisDocsNodeTopicaxisModuleHealth",
+    "targetCode": "axisDocsNodePageaxisModuleHealth",
     "title": "Module Health",
     "summary": "Monitor backend-governed module registration and runtime health evidence without creating a browser-side health authority.",
     "searchText": "Module Health Monitor backend-governed module registration and runtime health evidence without creating a browser-side health authority. axis-capabilities axis-workspaces-and-operations module-health administrator operator developer security-reviewer",
@@ -916,7 +787,7 @@ module.exports = {
       "security-reviewer"
     ],
     "facets": {
-      "nodeLevel": "TOPIC",
+      "nodeLevel": "PAGE_LINK",
       "nodeType": "PAGE",
       "audience": [
         "administrator",
@@ -941,11 +812,11 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record22": {
-    "code": "axisDocsSearchnodeaxisdocsnodetopicaxisimportsexports",
+  "record19": {
+    "code": "axisDocsSearchnodeaxisdocsnodepageaxisimportsexports",
     "product": "axisDocumentationProduct",
     "targetType": "NODE",
-    "targetCode": "axisDocsNodeTopicaxisImportsExports",
+    "targetCode": "axisDocsNodePageaxisImportsExports",
     "title": "Imports and Exports Workspace",
     "summary": "Review immutable data releases, validation, installation, history, security, responsive behavior, and the fail-closed export boundary.",
     "searchText": "Imports and Exports Workspace Review immutable data releases, validation, installation, history, security, responsive behavior, and the fail-closed export boundary. axis-capabilities axis-workspaces-and-operations imports-and-exports-workspace administrator operator developer security-reviewer",
@@ -959,7 +830,7 @@ module.exports = {
       "security-reviewer"
     ],
     "facets": {
-      "nodeLevel": "TOPIC",
+      "nodeLevel": "PAGE_LINK",
       "nodeType": "PAGE",
       "audience": [
         "administrator",
@@ -984,11 +855,11 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record23": {
-    "code": "axisDocsSearchnodeaxisdocsnodetopicaxismediamanagement",
+  "record20": {
+    "code": "axisDocsSearchnodeaxisdocsnodepageaxismediamanagement",
     "product": "axisDocumentationProduct",
     "targetType": "NODE",
-    "targetCode": "axisDocsNodeTopicaxisMediaManagement",
+    "targetCode": "axisDocsNodePageaxisMediaManagement",
     "title": "Media Management Workspace",
     "summary": "Understand the governed Media Management navigation, route shell, backend ownership, storage and delivery boundaries, and upcoming capability slices.",
     "searchText": "Media Management Workspace Understand the governed Media Management navigation, route shell, backend ownership, storage and delivery boundaries, and upcoming capability slices. axis-capabilities axis-workspaces-and-operations media-management-workspace administrator operator developer business-user",
@@ -1002,7 +873,7 @@ module.exports = {
       "business-user"
     ],
     "facets": {
-      "nodeLevel": "TOPIC",
+      "nodeLevel": "PAGE_LINK",
       "nodeType": "PAGE",
       "audience": [
         "administrator",
@@ -1027,11 +898,11 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record24": {
-    "code": "axisDocsSearchnodeaxisdocsnodetopicaxiscustomerengagement",
+  "record21": {
+    "code": "axisDocsSearchnodeaxisdocsnodepageaxiscustomerengagement",
     "product": "axisDocumentationProduct",
     "targetType": "NODE",
-    "targetCode": "axisDocsNodeTopicaxisCustomerEngagement",
+    "targetCode": "axisDocsNodePageaxisCustomerEngagement",
     "title": "Customer Engagement Workspaces",
     "summary": "Use the lightweight six-domain Engagement journey for contact, testimonials, reviews, feedback, work management, governance, and recovery.",
     "searchText": "Customer Engagement Workspaces Use the lightweight six-domain Engagement journey for contact, testimonials, reviews, feedback, work management, governance, and recovery. axis-capabilities axis-workspaces-and-operations customer-engagement-workspaces business-user administrator operator developer",
@@ -1045,7 +916,7 @@ module.exports = {
       "developer"
     ],
     "facets": {
-      "nodeLevel": "TOPIC",
+      "nodeLevel": "PAGE_LINK",
       "nodeType": "PAGE",
       "audience": [
         "business-user",
@@ -1070,11 +941,11 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record25": {
-    "code": "axisDocsSearchnodeaxisdocsnodetopicaxisopenapireference",
+  "record22": {
+    "code": "axisDocsSearchnodeaxisdocsnodepageaxisopenapireference",
     "product": "axisDocumentationProduct",
     "targetType": "NODE",
-    "targetCode": "axisDocsNodeTopicaxisOpenapiReference",
+    "targetCode": "axisDocsNodePageaxisOpenapiReference",
     "title": "Swagger and OpenAPI Reference",
     "summary": "Explain how Axis presents backend-owned Swagger and OpenAPI contracts grouped by registered runtime, functional module, and authorized API category.",
     "searchText": "Swagger and OpenAPI Reference Explain how Axis presents backend-owned Swagger and OpenAPI contracts grouped by registered runtime, functional module, and authorized API category. axis-capabilities axis-workspaces-and-operations swagger-and-openapi-reference developer operator administrator integration ai-tool",
@@ -1089,7 +960,7 @@ module.exports = {
       "ai-tool"
     ],
     "facets": {
-      "nodeLevel": "TOPIC",
+      "nodeLevel": "PAGE_LINK",
       "nodeType": "PAGE",
       "audience": [
         "developer",
@@ -1115,54 +986,11 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record26": {
-    "code": "axisDocsSearchnodeaxisdocsnodegrpcontributetoaxisaxiscontributionandgovernance",
+  "record23": {
+    "code": "axisDocsSearchnodeaxisdocsnodepageaxisfeaturedelivery",
     "product": "axisDocumentationProduct",
     "targetType": "NODE",
-    "targetCode": "axisDocsNodeGrpcontributeToAxisaxisContributionAndGovernance",
-    "title": "Axis Contribution and Governance",
-    "summary": "Business-friendly group for Axis Contribution and Governance documentation topics.",
-    "searchText": "Axis Contribution and Governance Business-friendly group for Axis Contribution and Governance documentation topics. contribute-to-axis axis-contribution-and-governance axis-feature-delivery-checklist developer architect framework-maintainer ai-tool",
-    "keywords": [
-      "contribute-to-axis",
-      "axis-contribution-and-governance",
-      "axis-feature-delivery-checklist",
-      "developer",
-      "architect",
-      "framework-maintainer",
-      "ai-tool"
-    ],
-    "facets": {
-      "nodeLevel": "GROUP",
-      "nodeType": "CONTAINER",
-      "audience": [
-        "developer",
-        "architect",
-        "framework-maintainer",
-        "ai-tool"
-      ]
-    },
-    "managedInAxis": true,
-    "axisAuthoringPermissions": [
-      "documentation.search.preview"
-    ],
-    "workflowRequired": true,
-    "workflowTriggers": [
-      "SEARCH_METADATA_CHANGE"
-    ],
-    "locale": "en",
-    "channel": "web",
-    "accessPolicy": "axisDocsAccessPublic",
-    "accessMode": "PUBLIC",
-    "lifecycleState": "ONLINE",
-    "indexState": "INDEX_READY",
-    "active": true
-  },
-  "record27": {
-    "code": "axisDocsSearchnodeaxisdocsnodetopicaxisfeaturedelivery",
-    "product": "axisDocumentationProduct",
-    "targetType": "NODE",
-    "targetCode": "axisDocsNodeTopicaxisFeatureDelivery",
+    "targetCode": "axisDocsNodePageaxisFeatureDelivery",
     "title": "Axis Feature Delivery Checklist",
     "summary": "Apply repository-boundary, reuse, security, interaction, contract-testing, documentation, partial-discovery, and completion gates.",
     "searchText": "Axis Feature Delivery Checklist Apply repository-boundary, reuse, security, interaction, contract-testing, documentation, partial-discovery, and completion gates. contribute-to-axis axis-contribution-and-governance axis-feature-delivery-checklist developer architect framework-maintainer ai-tool",
@@ -1176,7 +1004,7 @@ module.exports = {
       "ai-tool"
     ],
     "facets": {
-      "nodeLevel": "TOPIC",
+      "nodeLevel": "PAGE_LINK",
       "nodeType": "PAGE",
       "audience": [
         "developer",
@@ -1201,11 +1029,11 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record28": {
-    "code": "axisDocsSearchnodeaxisdocsnodetopicaxisimplementationcontract",
+  "record24": {
+    "code": "axisDocsSearchnodeaxisdocsnodepageaxisimplementationcontract",
     "product": "axisDocumentationProduct",
     "targetType": "NODE",
-    "targetCode": "axisDocsNodeTopicaxisImplementationContract",
+    "targetCode": "axisDocsNodePageaxisImplementationContract",
     "title": "Axis Implementation and Documentation Contract",
     "summary": "Follow local discovery, repository ownership, placement, documentation, required scenarios, customization, and acceptance contracts.",
     "searchText": "Axis Implementation and Documentation Contract Follow local discovery, repository ownership, placement, documentation, required scenarios, customization, and acceptance contracts. contribute-to-axis axis-contribution-and-governance axis-implementation-and-documentation-contract developer architect framework-maintainer ai-tool",
@@ -1219,7 +1047,7 @@ module.exports = {
       "ai-tool"
     ],
     "facets": {
-      "nodeLevel": "TOPIC",
+      "nodeLevel": "PAGE_LINK",
       "nodeType": "PAGE",
       "audience": [
         "developer",
@@ -1244,7 +1072,7 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record29": {
+  "record25": {
     "code": "axisDocsSearchdashboardaxisdocsdashboardproduct",
     "product": "axisDocumentationProduct",
     "targetType": "DASHBOARD",
@@ -1277,7 +1105,7 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record30": {
+  "record26": {
     "code": "axisDocsSearchdashboardaxisdocsdashboardnavigation",
     "product": "axisDocumentationProduct",
     "targetType": "DASHBOARD",
@@ -1310,7 +1138,7 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record31": {
+  "record27": {
     "code": "axisDocsSearchdashboardaxisdocsdashboardsecdiscoveraxis",
     "product": "axisDocumentationProduct",
     "targetType": "DASHBOARD",
@@ -1343,7 +1171,7 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record32": {
+  "record28": {
     "code": "axisDocsSearchdashboardaxisdocsdashboardsecbuildandoperateaxis",
     "product": "axisDocumentationProduct",
     "targetType": "DASHBOARD",
@@ -1376,7 +1204,7 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record33": {
+  "record29": {
     "code": "axisDocsSearchdashboardaxisdocsdashboardsecaxiscapabilities",
     "product": "axisDocumentationProduct",
     "targetType": "DASHBOARD",
@@ -1409,7 +1237,7 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record34": {
+  "record30": {
     "code": "axisDocsSearchdashboardaxisdocsdashboardseccontributetoaxis",
     "product": "axisDocumentationProduct",
     "targetType": "DASHBOARD",
@@ -1442,139 +1270,7 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record35": {
-    "code": "axisDocsSearchdashboardaxisdocsdashboardgrpdiscoveraxisaxisoverviewandarchitecture",
-    "product": "axisDocumentationProduct",
-    "targetType": "DASHBOARD",
-    "targetCode": "axisDocsDashboardGrpdiscoverAxisaxisOverviewAndArchitecture",
-    "title": "Axis Overview and Architecture",
-    "summary": "Detailed landing content for Axis Overview and Architecture, including business purpose, technical ownership, customization routes, and validation evidence.",
-    "searchText": "Axis Overview and Architecture Detailed landing content for Axis Overview and Architecture, including business purpose, technical ownership, customization routes, and validation evidence.",
-    "keywords": [
-      "GROUP",
-      "axisDocsNodeGrpdiscoverAxisaxisOverviewAndArchitecture",
-      "Axis Overview and Architecture"
-    ],
-    "facets": {
-      "ownerType": "GROUP",
-      "ownerCode": "axisDocsNodeGrpdiscoverAxisaxisOverviewAndArchitecture"
-    },
-    "managedInAxis": true,
-    "axisAuthoringPermissions": [
-      "documentation.search.preview"
-    ],
-    "workflowRequired": true,
-    "workflowTriggers": [
-      "SEARCH_METADATA_CHANGE"
-    ],
-    "locale": "en",
-    "channel": "web",
-    "accessPolicy": "axisDocsAccessPublic",
-    "accessMode": "PUBLIC",
-    "lifecycleState": "ONLINE",
-    "indexState": "INDEX_READY",
-    "active": true
-  },
-  "record36": {
-    "code": "axisDocsSearchdashboardaxisdocsdashboardgrpbuildandoperateaxisaxisbuildandruntime",
-    "product": "axisDocumentationProduct",
-    "targetType": "DASHBOARD",
-    "targetCode": "axisDocsDashboardGrpbuildAndOperateAxisaxisBuildAndRuntime",
-    "title": "Axis Build and Runtime",
-    "summary": "Detailed landing content for Axis Build and Runtime, including business purpose, technical ownership, customization routes, and validation evidence.",
-    "searchText": "Axis Build and Runtime Detailed landing content for Axis Build and Runtime, including business purpose, technical ownership, customization routes, and validation evidence.",
-    "keywords": [
-      "GROUP",
-      "axisDocsNodeGrpbuildAndOperateAxisaxisBuildAndRuntime",
-      "Axis Build and Runtime"
-    ],
-    "facets": {
-      "ownerType": "GROUP",
-      "ownerCode": "axisDocsNodeGrpbuildAndOperateAxisaxisBuildAndRuntime"
-    },
-    "managedInAxis": true,
-    "axisAuthoringPermissions": [
-      "documentation.search.preview"
-    ],
-    "workflowRequired": true,
-    "workflowTriggers": [
-      "SEARCH_METADATA_CHANGE"
-    ],
-    "locale": "en",
-    "channel": "web",
-    "accessPolicy": "axisDocsAccessPublic",
-    "accessMode": "PUBLIC",
-    "lifecycleState": "ONLINE",
-    "indexState": "INDEX_READY",
-    "active": true
-  },
-  "record37": {
-    "code": "axisDocsSearchdashboardaxisdocsdashboardgrpaxiscapabilitiesaxisworkspacesandoperations",
-    "product": "axisDocumentationProduct",
-    "targetType": "DASHBOARD",
-    "targetCode": "axisDocsDashboardGrpaxisCapabilitiesaxisWorkspacesAndOperations",
-    "title": "Axis Workspaces and Operations",
-    "summary": "Detailed landing content for Axis Workspaces and Operations, including business purpose, technical ownership, customization routes, and validation evidence.",
-    "searchText": "Axis Workspaces and Operations Detailed landing content for Axis Workspaces and Operations, including business purpose, technical ownership, customization routes, and validation evidence.",
-    "keywords": [
-      "GROUP",
-      "axisDocsNodeGrpaxisCapabilitiesaxisWorkspacesAndOperations",
-      "Axis Workspaces and Operations"
-    ],
-    "facets": {
-      "ownerType": "GROUP",
-      "ownerCode": "axisDocsNodeGrpaxisCapabilitiesaxisWorkspacesAndOperations"
-    },
-    "managedInAxis": true,
-    "axisAuthoringPermissions": [
-      "documentation.search.preview"
-    ],
-    "workflowRequired": true,
-    "workflowTriggers": [
-      "SEARCH_METADATA_CHANGE"
-    ],
-    "locale": "en",
-    "channel": "web",
-    "accessPolicy": "axisDocsAccessPublic",
-    "accessMode": "PUBLIC",
-    "lifecycleState": "ONLINE",
-    "indexState": "INDEX_READY",
-    "active": true
-  },
-  "record38": {
-    "code": "axisDocsSearchdashboardaxisdocsdashboardgrpcontributetoaxisaxiscontributionandgovernance",
-    "product": "axisDocumentationProduct",
-    "targetType": "DASHBOARD",
-    "targetCode": "axisDocsDashboardGrpcontributeToAxisaxisContributionAndGovernance",
-    "title": "Axis Contribution and Governance",
-    "summary": "Detailed landing content for Axis Contribution and Governance, including business purpose, technical ownership, customization routes, and validation evidence.",
-    "searchText": "Axis Contribution and Governance Detailed landing content for Axis Contribution and Governance, including business purpose, technical ownership, customization routes, and validation evidence.",
-    "keywords": [
-      "GROUP",
-      "axisDocsNodeGrpcontributeToAxisaxisContributionAndGovernance",
-      "Axis Contribution and Governance"
-    ],
-    "facets": {
-      "ownerType": "GROUP",
-      "ownerCode": "axisDocsNodeGrpcontributeToAxisaxisContributionAndGovernance"
-    },
-    "managedInAxis": true,
-    "axisAuthoringPermissions": [
-      "documentation.search.preview"
-    ],
-    "workflowRequired": true,
-    "workflowTriggers": [
-      "SEARCH_METADATA_CHANGE"
-    ],
-    "locale": "en",
-    "channel": "web",
-    "accessPolicy": "axisDocsAccessPublic",
-    "accessMode": "PUBLIC",
-    "lifecycleState": "ONLINE",
-    "indexState": "INDEX_READY",
-    "active": true
-  },
-  "record39": {
+  "record31": {
     "code": "axisDocsSearchpageaxisdocsmetadataoverview",
     "product": "axisDocumentationProduct",
     "targetType": "PAGE",
@@ -1600,7 +1296,8 @@ module.exports = {
     ],
     "facets": {
       "section": "discover-axis",
-      "group": "axis-overview-and-architecture",
+      "group": "discover-axis",
+      "navigationDepth": 2,
       "documentType": "overview",
       "audience": [
         "business-user",
@@ -1626,7 +1323,7 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record40": {
+  "record32": {
     "code": "axisDocsSearchpageaxisdocsmetadataarchitecture",
     "product": "axisDocumentationProduct",
     "targetType": "PAGE",
@@ -1652,7 +1349,8 @@ module.exports = {
     ],
     "facets": {
       "section": "discover-axis",
-      "group": "axis-overview-and-architecture",
+      "group": "discover-axis",
+      "navigationDepth": 2,
       "documentType": "contract",
       "audience": [
         "architect",
@@ -1678,7 +1376,7 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record41": {
+  "record33": {
     "code": "axisDocsSearchpageaxisdocsmetadatatechnologystack",
     "product": "axisDocumentationProduct",
     "targetType": "PAGE",
@@ -1704,7 +1402,8 @@ module.exports = {
     ],
     "facets": {
       "section": "build-and-operate-axis",
-      "group": "axis-build-and-runtime",
+      "group": "build-and-operate-axis",
+      "navigationDepth": 2,
       "documentType": "how-to",
       "audience": [
         "developer",
@@ -1730,7 +1429,7 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record42": {
+  "record34": {
     "code": "axisDocsSearchpageaxisdocsmetadatadesignsystem",
     "product": "axisDocumentationProduct",
     "targetType": "PAGE",
@@ -1756,7 +1455,8 @@ module.exports = {
     ],
     "facets": {
       "section": "build-and-operate-axis",
-      "group": "axis-build-and-runtime",
+      "group": "build-and-operate-axis",
+      "navigationDepth": 2,
       "documentType": "how-to",
       "audience": [
         "designer",
@@ -1782,7 +1482,7 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record43": {
+  "record35": {
     "code": "axisDocsSearchpageaxisdocsmetadatacmsrenderers",
     "product": "axisDocumentationProduct",
     "targetType": "PAGE",
@@ -1808,7 +1508,8 @@ module.exports = {
     ],
     "facets": {
       "section": "build-and-operate-axis",
-      "group": "axis-build-and-runtime",
+      "group": "build-and-operate-axis",
+      "navigationDepth": 2,
       "documentType": "how-to",
       "audience": [
         "developer",
@@ -1834,7 +1535,7 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record44": {
+  "record36": {
     "code": "axisDocsSearchpageaxisdocsmetadatadocumentationcontent",
     "product": "axisDocumentationProduct",
     "targetType": "PAGE",
@@ -1860,7 +1561,8 @@ module.exports = {
     ],
     "facets": {
       "section": "build-and-operate-axis",
-      "group": "axis-build-and-runtime",
+      "group": "build-and-operate-axis",
+      "navigationDepth": 2,
       "documentType": "how-to",
       "audience": [
         "administrator",
@@ -1886,7 +1588,7 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record45": {
+  "record37": {
     "code": "axisDocsSearchpageaxisdocsmetadataemployeeaccess",
     "product": "axisDocumentationProduct",
     "targetType": "PAGE",
@@ -1912,7 +1614,8 @@ module.exports = {
     ],
     "facets": {
       "section": "axis-capabilities",
-      "group": "axis-workspaces-and-operations",
+      "group": "axis-capabilities",
+      "navigationDepth": 2,
       "documentType": "how-to",
       "audience": [
         "business-user",
@@ -1938,7 +1641,7 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record46": {
+  "record38": {
     "code": "axisDocsSearchpageaxisdocsmetadataassistant",
     "product": "axisDocumentationProduct",
     "targetType": "PAGE",
@@ -1964,7 +1667,8 @@ module.exports = {
     ],
     "facets": {
       "section": "axis-capabilities",
-      "group": "axis-workspaces-and-operations",
+      "group": "axis-capabilities",
+      "navigationDepth": 2,
       "documentType": "how-to",
       "audience": [
         "business-user",
@@ -1990,7 +1694,7 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record47": {
+  "record39": {
     "code": "axisDocsSearchpageaxisdocsmetadataschemaworkbench",
     "product": "axisDocumentationProduct",
     "targetType": "PAGE",
@@ -2016,7 +1720,8 @@ module.exports = {
     ],
     "facets": {
       "section": "axis-capabilities",
-      "group": "axis-workspaces-and-operations",
+      "group": "axis-capabilities",
+      "navigationDepth": 2,
       "documentType": "how-to",
       "audience": [
         "business-user",
@@ -2042,7 +1747,7 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record48": {
+  "record40": {
     "code": "axisDocsSearchpageaxisdocsmetadatapagedesigner",
     "product": "axisDocumentationProduct",
     "targetType": "PAGE",
@@ -2068,7 +1773,8 @@ module.exports = {
     ],
     "facets": {
       "section": "axis-capabilities",
-      "group": "axis-workspaces-and-operations",
+      "group": "axis-capabilities",
+      "navigationDepth": 2,
       "documentType": "how-to",
       "audience": [
         "business-user",
@@ -2094,7 +1800,7 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record49": {
+  "record41": {
     "code": "axisDocsSearchpageaxisdocsmetadataexperiencestudio",
     "product": "axisDocumentationProduct",
     "targetType": "PAGE",
@@ -2129,7 +1835,8 @@ module.exports = {
     ],
     "facets": {
       "section": "axis-capabilities",
-      "group": "axis-workspaces-and-operations",
+      "group": "axis-capabilities",
+      "navigationDepth": 2,
       "documentType": "how-to",
       "audience": [
         "business-user",
@@ -2156,7 +1863,7 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record50": {
+  "record42": {
     "code": "axisDocsSearchpageaxisdocsmetadatamodulehealth",
     "product": "axisDocumentationProduct",
     "targetType": "PAGE",
@@ -2182,7 +1889,8 @@ module.exports = {
     ],
     "facets": {
       "section": "axis-capabilities",
-      "group": "axis-workspaces-and-operations",
+      "group": "axis-capabilities",
+      "navigationDepth": 2,
       "documentType": "how-to",
       "audience": [
         "administrator",
@@ -2208,7 +1916,7 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record51": {
+  "record43": {
     "code": "axisDocsSearchpageaxisdocsmetadataimportsexports",
     "product": "axisDocumentationProduct",
     "targetType": "PAGE",
@@ -2234,7 +1942,8 @@ module.exports = {
     ],
     "facets": {
       "section": "axis-capabilities",
-      "group": "axis-workspaces-and-operations",
+      "group": "axis-capabilities",
+      "navigationDepth": 2,
       "documentType": "how-to",
       "audience": [
         "administrator",
@@ -2260,7 +1969,7 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record52": {
+  "record44": {
     "code": "axisDocsSearchpageaxisdocsmetadatamediamanagement",
     "product": "axisDocumentationProduct",
     "targetType": "PAGE",
@@ -2286,7 +1995,8 @@ module.exports = {
     ],
     "facets": {
       "section": "axis-capabilities",
-      "group": "axis-workspaces-and-operations",
+      "group": "axis-capabilities",
+      "navigationDepth": 2,
       "documentType": "how-to",
       "audience": [
         "administrator",
@@ -2312,7 +2022,7 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record53": {
+  "record45": {
     "code": "axisDocsSearchpageaxisdocsmetadatacustomerengagement",
     "product": "axisDocumentationProduct",
     "targetType": "PAGE",
@@ -2338,7 +2048,8 @@ module.exports = {
     ],
     "facets": {
       "section": "axis-capabilities",
-      "group": "axis-workspaces-and-operations",
+      "group": "axis-capabilities",
+      "navigationDepth": 2,
       "documentType": "how-to",
       "audience": [
         "business-user",
@@ -2364,7 +2075,7 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record54": {
+  "record46": {
     "code": "axisDocsSearchpageaxisdocsmetadataopenapireference",
     "product": "axisDocumentationProduct",
     "targetType": "PAGE",
@@ -2392,7 +2103,8 @@ module.exports = {
     ],
     "facets": {
       "section": "axis-capabilities",
-      "group": "axis-workspaces-and-operations",
+      "group": "axis-capabilities",
+      "navigationDepth": 2,
       "documentType": "how-to",
       "audience": [
         "developer",
@@ -2419,7 +2131,7 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record55": {
+  "record47": {
     "code": "axisDocsSearchpageaxisdocsmetadatafeaturedelivery",
     "product": "axisDocumentationProduct",
     "targetType": "PAGE",
@@ -2445,7 +2157,8 @@ module.exports = {
     ],
     "facets": {
       "section": "contribute-to-axis",
-      "group": "axis-contribution-and-governance",
+      "group": "contribute-to-axis",
+      "navigationDepth": 2,
       "documentType": "how-to",
       "audience": [
         "developer",
@@ -2471,7 +2184,7 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record56": {
+  "record48": {
     "code": "axisDocsSearchpageaxisdocsmetadataimplementationcontract",
     "product": "axisDocumentationProduct",
     "targetType": "PAGE",
@@ -2497,7 +2210,8 @@ module.exports = {
     ],
     "facets": {
       "section": "contribute-to-axis",
-      "group": "axis-contribution-and-governance",
+      "group": "contribute-to-axis",
+      "navigationDepth": 2,
       "documentType": "contract",
       "audience": [
         "developer",

@@ -262,15 +262,11 @@ module.exports = {
      */
     prepareInternalURL: function (definition) {
         let jobDetail = definition.jobDetail.internal;
-        let connectionType = 'abstract';
-        let nodeId = CONFIG.get('nodeId');
-        if (jobDetail.nodeId) {
-            connectionType = 'node';
-            nodeId = jobDetail.nodeId;
-        }
+        let useNode = jobDetail.connectionType === 'node';
         return SERVICE.DefaultModuleService.buildRequest({
-            connectionType: connectionType,
-            nodeId: nodeId,
+            connectionType: jobDetail.connectionType || 'abstract',
+            connectionName: jobDetail.connectionName,
+            nodeId: useNode ? (jobDetail.nodeId || CONFIG.get('nodeId')) : undefined,
             moduleName: jobDetail.module,
             methodName: jobDetail.method,
             apiName: jobDetail.uri,

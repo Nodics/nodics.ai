@@ -33,6 +33,8 @@ assert.strictEqual(job.priority, 900);
 
 assert.ok(job.jobDetail.internal, 'Generic media retry job must use Cron internal target contract');
 assert.strictEqual(job.jobDetail.internal.module, 'media');
+assert.strictEqual(job.jobDetail.internal.connectionName, 'cmsStaged');
+assert.strictEqual(job.jobDetail.internal.connectionType, 'abstract');
 assert.strictEqual(job.jobDetail.internal.method, 'POST');
 assert.strictEqual(job.jobDetail.internal.uri, '/publication/replication/retry-pending');
 assert.strictEqual(job.jobDetail.internal.body.batchSize, 100);

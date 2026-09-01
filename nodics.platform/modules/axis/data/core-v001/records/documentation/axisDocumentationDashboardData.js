@@ -88,7 +88,7 @@ module.exports = {
     "title": "Nodics Axis Documentation Navigation",
     "summary": "Expandable and searchable Axis documentation navigation generated from backend-owned content-catalog metadata.",
     "contentArea": {
-      "navigationPattern": "Sections, groups, subgroups, and topics are content records so Axis can reorder, preview, submit, approve, and publish documentation without hardcoded frontend navigation."
+      "navigationPattern": "Sections and page links are content records so Axis can reorder, preview, submit, approve, and publish documentation without hardcoded frontend navigation."
     },
     "cards": [
       {
@@ -180,9 +180,15 @@ module.exports = {
     },
     "cards": [
       {
-        "code": "axis-overview-and-architecture",
-        "title": "Axis Overview and Architecture",
-        "summary": "Open Axis Overview and Architecture topics and implementation guidance.",
+        "code": "axis.overview",
+        "title": "What Is Nodics Axis?",
+        "summary": "Understand Axis, its backend boundary, supported runtime, setup, configuration, quality commands, and implemented scope.",
+        "order": 10
+      },
+      {
+        "code": "axis.architecture",
+        "title": "Architecture and Repository Boundaries",
+        "summary": "Learn the per-project deployment model, authority boundaries, role journeys, security model, documentation ownership, customization rules, and verification expectations.",
         "order": 20
       }
     ],
@@ -200,7 +206,7 @@ module.exports = {
     ],
     "statusSummary": {
       "pages": 2,
-      "groups": 1
+      "navigationDepth": 2
     },
     "accessMode": "PUBLIC",
     "lifecycleState": "ONLINE",
@@ -228,10 +234,28 @@ module.exports = {
     },
     "cards": [
       {
-        "code": "axis-build-and-runtime",
-        "title": "Axis Build and Runtime",
-        "summary": "Open Axis Build and Runtime topics and implementation guidance.",
-        "order": 60
+        "code": "axis.technology-stack",
+        "title": "Frontend Technology Stack",
+        "summary": "Review exact package versions, state ownership, styling, repository shape, renderer organization, dependency governance, and verification.",
+        "order": 10
+      },
+      {
+        "code": "axis.design-system",
+        "title": "Design System and Application Shell",
+        "summary": "Understand authentication layouts, design foundations, shell structure, responsive states, accessibility, recovery, and extension rules.",
+        "order": 20
+      },
+      {
+        "code": "axis.cms-renderers",
+        "title": "CMS Delivery and Renderer Integration",
+        "summary": "Follow the CMS delivery, validation, cache-safety, logical renderer, and frontend implementation boundaries.",
+        "order": 30
+      },
+      {
+        "code": "axis.documentation-content",
+        "title": "Documentation Content in Axis",
+        "summary": "Understand dynamic documentation products, content-pack installation, renderer ownership, failure recovery, and contributor verification.",
+        "order": 40
       }
     ],
     "journeyLinks": [
@@ -258,7 +282,7 @@ module.exports = {
     ],
     "statusSummary": {
       "pages": 4,
-      "groups": 1
+      "navigationDepth": 2
     },
     "accessMode": "PUBLIC",
     "lifecycleState": "ONLINE",
@@ -286,10 +310,64 @@ module.exports = {
     },
     "cards": [
       {
-        "code": "axis-workspaces-and-operations",
-        "title": "Axis Workspaces and Operations",
-        "summary": "Open Axis Workspaces and Operations topics and implementation guidance.",
-        "order": 118
+        "code": "axis.employee-access",
+        "title": "Employee Login, Recovery, Lock, and Dashboard",
+        "summary": "Operate the employee-only authentication journey, recovery, persistent browser session, idle lock, logout, configuration, and safe failures.",
+        "order": 10
+      },
+      {
+        "code": "axis.assistant",
+        "title": "Axis Assistant Frontend",
+        "summary": "Learn the governed Assistant request flow, typed API contracts, resumable streaming, presentation lifecycle, evidence, accessibility, and security behavior.",
+        "order": 20
+      },
+      {
+        "code": "axis.schema-workbench",
+        "title": "Axis Schema Workbench",
+        "summary": "Use and extend governed schema discovery, record operations, relationship coordination, failure recovery, responsive behavior, and verification.",
+        "order": 30
+      },
+      {
+        "code": "axis.page-designer",
+        "title": "Axis Page Designer",
+        "summary": "Use the governed catalog-first Designer flow for sites, templates, dynamic slots, sections, components, media, routes, navigation, and publish readiness.",
+        "order": 40
+      },
+      {
+        "code": "axis.experience-studio",
+        "title": "Axis Experience Studio and Targeted CMS Experiences",
+        "summary": "Configure targeted CMS components for collection, category, brand, and fallback journeys through backend-owned WCMS Experience contracts.",
+        "order": 50
+      },
+      {
+        "code": "axis.module-health",
+        "title": "Module Health",
+        "summary": "Monitor backend-governed module registration and runtime health evidence without creating a browser-side health authority.",
+        "order": 60
+      },
+      {
+        "code": "axis.imports-exports",
+        "title": "Imports and Exports Workspace",
+        "summary": "Review immutable data releases, validation, installation, history, security, responsive behavior, and the fail-closed export boundary.",
+        "order": 70
+      },
+      {
+        "code": "axis.media-management",
+        "title": "Media Management Workspace",
+        "summary": "Understand the governed Media Management navigation, route shell, backend ownership, storage and delivery boundaries, and upcoming capability slices.",
+        "order": 80
+      },
+      {
+        "code": "axis.customer-engagement",
+        "title": "Customer Engagement Workspaces",
+        "summary": "Use the lightweight six-domain Engagement journey for contact, testimonials, reviews, feedback, work management, governance, and recovery.",
+        "order": 90
+      },
+      {
+        "code": "axis.openapi-reference",
+        "title": "Swagger and OpenAPI Reference",
+        "summary": "Explain how Axis presents backend-owned Swagger and OpenAPI contracts grouped by registered runtime, functional module, and authorized API category.",
+        "order": 100
       }
     ],
     "journeyLinks": [
@@ -326,7 +404,7 @@ module.exports = {
     ],
     "statusSummary": {
       "pages": 10,
-      "groups": 1
+      "navigationDepth": 2
     },
     "accessMode": "PUBLIC",
     "lifecycleState": "ONLINE",
@@ -354,336 +432,16 @@ module.exports = {
     },
     "cards": [
       {
-        "code": "axis-contribution-and-governance",
-        "title": "Axis Contribution and Governance",
-        "summary": "Open Axis Contribution and Governance topics and implementation guidance.",
-        "order": 130
-      }
-    ],
-    "journeyLinks": [
-      {
-        "label": "Axis Feature Delivery Checklist",
-        "targetPage": "axis.feature-delivery",
-        "route": "/docs/nodics-axis/feature-delivery"
-      },
-      {
-        "label": "Axis Implementation and Documentation Contract",
-        "targetPage": "axis.implementation-contract",
-        "route": "/docs/nodics-axis/implementation-contract"
-      }
-    ],
-    "statusSummary": {
-      "pages": 2,
-      "groups": 1
-    },
-    "accessMode": "PUBLIC",
-    "lifecycleState": "ONLINE",
-    "product": "axisDocumentationProduct",
-    "accessPolicy": "axisDocsAccessPublic",
-    "managedInAxis": true,
-    "axisAuthoringPermissions": [
-      "documentation.dashboard.update"
-    ],
-    "workflowRequired": true,
-    "workflowTriggers": [
-      "DASHBOARD_CHANGE"
-    ],
-    "active": true
-  },
-  "record6": {
-    "code": "axisDocsDashboardGrpdiscoverAxisaxisOverviewAndArchitecture",
-    "ownerType": "GROUP",
-    "ownerCode": "axisDocsNodeGrpdiscoverAxisaxisOverviewAndArchitecture",
-    "title": "Axis Overview and Architecture",
-    "summary": "Detailed landing content for Axis Overview and Architecture, including business purpose, technical ownership, customization routes, and validation evidence.",
-    "contentArea": {
-      "businessPurpose": "Group related Axis topics so business and development users can enter from the capability they recognize.",
-      "technicalPurpose": "Preserve Axis group ownership as backend records that can be reordered and summarized through Axis."
-    },
-    "cards": [
-      {
-        "code": "axis.overview",
-        "title": "What Is Nodics Axis?",
-        "summary": "Understand Axis, its backend boundary, supported runtime, setup, configuration, quality commands, and implemented scope.",
-        "order": 10
-      },
-      {
-        "code": "axis.architecture",
-        "title": "Architecture and Repository Boundaries",
-        "summary": "Learn the per-project deployment model, authority boundaries, role journeys, security model, documentation ownership, customization rules, and verification expectations.",
-        "order": 20
-      }
-    ],
-    "journeyLinks": [
-      {
-        "label": "What Is Nodics Axis?",
-        "targetPage": "axis.overview",
-        "route": "/docs/nodics-axis"
-      },
-      {
-        "label": "Architecture and Repository Boundaries",
-        "targetPage": "axis.architecture",
-        "route": "/docs/nodics-axis/architecture"
-      }
-    ],
-    "statusSummary": {
-      "pages": 2,
-      "subgroups": 0
-    },
-    "accessMode": "PUBLIC",
-    "lifecycleState": "ONLINE",
-    "product": "axisDocumentationProduct",
-    "accessPolicy": "axisDocsAccessPublic",
-    "managedInAxis": true,
-    "axisAuthoringPermissions": [
-      "documentation.dashboard.update"
-    ],
-    "workflowRequired": true,
-    "workflowTriggers": [
-      "DASHBOARD_CHANGE"
-    ],
-    "active": true
-  },
-  "record7": {
-    "code": "axisDocsDashboardGrpbuildAndOperateAxisaxisBuildAndRuntime",
-    "ownerType": "GROUP",
-    "ownerCode": "axisDocsNodeGrpbuildAndOperateAxisaxisBuildAndRuntime",
-    "title": "Axis Build and Runtime",
-    "summary": "Detailed landing content for Axis Build and Runtime, including business purpose, technical ownership, customization routes, and validation evidence.",
-    "contentArea": {
-      "businessPurpose": "Group related Axis topics so business and development users can enter from the capability they recognize.",
-      "technicalPurpose": "Preserve Axis group ownership as backend records that can be reordered and summarized through Axis."
-    },
-    "cards": [
-      {
-        "code": "axis.technology-stack",
-        "title": "Frontend Technology Stack",
-        "summary": "Review exact package versions, state ownership, styling, repository shape, renderer organization, dependency governance, and verification.",
-        "order": 30
-      },
-      {
-        "code": "axis.design-system",
-        "title": "Design System and Application Shell",
-        "summary": "Understand authentication layouts, design foundations, shell structure, responsive states, accessibility, recovery, and extension rules.",
-        "order": 40
-      },
-      {
-        "code": "axis.cms-renderers",
-        "title": "CMS Delivery and Renderer Integration",
-        "summary": "Follow the CMS delivery, validation, cache-safety, logical renderer, and frontend implementation boundaries.",
-        "order": 50
-      },
-      {
-        "code": "axis.documentation-content",
-        "title": "Documentation Content in Axis",
-        "summary": "Understand dynamic documentation products, content-pack installation, renderer ownership, failure recovery, and contributor verification.",
-        "order": 60
-      }
-    ],
-    "journeyLinks": [
-      {
-        "label": "Frontend Technology Stack",
-        "targetPage": "axis.technology-stack",
-        "route": "/docs/nodics-axis/technology-stack"
-      },
-      {
-        "label": "Design System and Application Shell",
-        "targetPage": "axis.design-system",
-        "route": "/docs/nodics-axis/design-system"
-      },
-      {
-        "label": "CMS Delivery and Renderer Integration",
-        "targetPage": "axis.cms-renderers",
-        "route": "/docs/nodics-axis/cms-renderers"
-      },
-      {
-        "label": "Documentation Content in Axis",
-        "targetPage": "axis.documentation-content",
-        "route": "/docs/nodics-axis/documentation-content"
-      }
-    ],
-    "statusSummary": {
-      "pages": 4,
-      "subgroups": 0
-    },
-    "accessMode": "PUBLIC",
-    "lifecycleState": "ONLINE",
-    "product": "axisDocumentationProduct",
-    "accessPolicy": "axisDocsAccessPublic",
-    "managedInAxis": true,
-    "axisAuthoringPermissions": [
-      "documentation.dashboard.update"
-    ],
-    "workflowRequired": true,
-    "workflowTriggers": [
-      "DASHBOARD_CHANGE"
-    ],
-    "active": true
-  },
-  "record8": {
-    "code": "axisDocsDashboardGrpaxisCapabilitiesaxisWorkspacesAndOperations",
-    "ownerType": "GROUP",
-    "ownerCode": "axisDocsNodeGrpaxisCapabilitiesaxisWorkspacesAndOperations",
-    "title": "Axis Workspaces and Operations",
-    "summary": "Detailed landing content for Axis Workspaces and Operations, including business purpose, technical ownership, customization routes, and validation evidence.",
-    "contentArea": {
-      "businessPurpose": "Group related Axis topics so business and development users can enter from the capability they recognize.",
-      "technicalPurpose": "Preserve Axis group ownership as backend records that can be reordered and summarized through Axis."
-    },
-    "cards": [
-      {
-        "code": "axis.employee-access",
-        "title": "Employee Login, Recovery, Lock, and Dashboard",
-        "summary": "Operate the employee-only authentication journey, recovery, persistent browser session, idle lock, logout, configuration, and safe failures.",
-        "order": 70
-      },
-      {
-        "code": "axis.assistant",
-        "title": "Axis Assistant Frontend",
-        "summary": "Learn the governed Assistant request flow, typed API contracts, resumable streaming, presentation lifecycle, evidence, accessibility, and security behavior.",
-        "order": 80
-      },
-      {
-        "code": "axis.schema-workbench",
-        "title": "Axis Schema Workbench",
-        "summary": "Use and extend governed schema discovery, record operations, relationship coordination, failure recovery, responsive behavior, and verification.",
-        "order": 90
-      },
-      {
-        "code": "axis.page-designer",
-        "title": "Axis Page Designer",
-        "summary": "Use the governed catalog-first Designer flow for sites, templates, dynamic slots, sections, components, media, routes, navigation, and publish readiness.",
-        "order": 95
-      },
-      {
-        "code": "axis.experience-studio",
-        "title": "Axis Experience Studio and Targeted CMS Experiences",
-        "summary": "Configure targeted CMS components for collection, category, brand, and fallback journeys through backend-owned WCMS Experience contracts.",
-        "order": 97
-      },
-      {
-        "code": "axis.module-health",
-        "title": "Module Health",
-        "summary": "Monitor backend-governed module registration and runtime health evidence without creating a browser-side health authority.",
-        "order": 100
-      },
-      {
-        "code": "axis.imports-exports",
-        "title": "Imports and Exports Workspace",
-        "summary": "Review immutable data releases, validation, installation, history, security, responsive behavior, and the fail-closed export boundary.",
-        "order": 110
-      },
-      {
-        "code": "axis.media-management",
-        "title": "Media Management Workspace",
-        "summary": "Understand the governed Media Management navigation, route shell, backend ownership, storage and delivery boundaries, and upcoming capability slices.",
-        "order": 115
-      },
-      {
-        "code": "axis.customer-engagement",
-        "title": "Customer Engagement Workspaces",
-        "summary": "Use the lightweight six-domain Engagement journey for contact, testimonials, reviews, feedback, work management, governance, and recovery.",
-        "order": 116
-      },
-      {
-        "code": "axis.openapi-reference",
-        "title": "Swagger and OpenAPI Reference",
-        "summary": "Explain how Axis presents backend-owned Swagger and OpenAPI contracts grouped by registered runtime, functional module, and authorized API category.",
-        "order": 118
-      }
-    ],
-    "journeyLinks": [
-      {
-        "label": "Employee Login, Recovery, Lock, and Dashboard",
-        "targetPage": "axis.employee-access",
-        "route": "/docs/nodics-axis/employee-access"
-      },
-      {
-        "label": "Axis Assistant Frontend",
-        "targetPage": "axis.assistant",
-        "route": "/docs/nodics-axis/assistant"
-      },
-      {
-        "label": "Axis Schema Workbench",
-        "targetPage": "axis.schema-workbench",
-        "route": "/docs/nodics-axis/schema-workbench"
-      },
-      {
-        "label": "Axis Page Designer",
-        "targetPage": "axis.page-designer",
-        "route": "/docs/nodics-axis/page-designer"
-      },
-      {
-        "label": "Axis Experience Studio and Targeted CMS Experiences",
-        "targetPage": "axis.experience-studio",
-        "route": "/docs/nodics-axis/experience-studio"
-      },
-      {
-        "label": "Module Health",
-        "targetPage": "axis.module-health",
-        "route": "/docs/nodics-axis/module-health"
-      },
-      {
-        "label": "Imports and Exports Workspace",
-        "targetPage": "axis.imports-exports",
-        "route": "/docs/nodics-axis/imports-exports"
-      },
-      {
-        "label": "Media Management Workspace",
-        "targetPage": "axis.media-management",
-        "route": "/docs/nodics-axis/media"
-      },
-      {
-        "label": "Customer Engagement Workspaces",
-        "targetPage": "axis.customer-engagement",
-        "route": "/docs/nodics-axis/customer-engagement"
-      },
-      {
-        "label": "Swagger and OpenAPI Reference",
-        "targetPage": "axis.openapi-reference",
-        "route": "/docs/nodics-axis/openapi-reference"
-      }
-    ],
-    "statusSummary": {
-      "pages": 10,
-      "subgroups": 0
-    },
-    "accessMode": "PUBLIC",
-    "lifecycleState": "ONLINE",
-    "product": "axisDocumentationProduct",
-    "accessPolicy": "axisDocsAccessPublic",
-    "managedInAxis": true,
-    "axisAuthoringPermissions": [
-      "documentation.dashboard.update"
-    ],
-    "workflowRequired": true,
-    "workflowTriggers": [
-      "DASHBOARD_CHANGE"
-    ],
-    "active": true
-  },
-  "record9": {
-    "code": "axisDocsDashboardGrpcontributeToAxisaxisContributionAndGovernance",
-    "ownerType": "GROUP",
-    "ownerCode": "axisDocsNodeGrpcontributeToAxisaxisContributionAndGovernance",
-    "title": "Axis Contribution and Governance",
-    "summary": "Detailed landing content for Axis Contribution and Governance, including business purpose, technical ownership, customization routes, and validation evidence.",
-    "contentArea": {
-      "businessPurpose": "Group related Axis topics so business and development users can enter from the capability they recognize.",
-      "technicalPurpose": "Preserve Axis group ownership as backend records that can be reordered and summarized through Axis."
-    },
-    "cards": [
-      {
         "code": "axis.feature-delivery",
         "title": "Axis Feature Delivery Checklist",
         "summary": "Apply repository-boundary, reuse, security, interaction, contract-testing, documentation, partial-discovery, and completion gates.",
-        "order": 120
+        "order": 10
       },
       {
         "code": "axis.implementation-contract",
         "title": "Axis Implementation and Documentation Contract",
         "summary": "Follow local discovery, repository ownership, placement, documentation, required scenarios, customization, and acceptance contracts.",
-        "order": 130
+        "order": 20
       }
     ],
     "journeyLinks": [
@@ -700,7 +458,7 @@ module.exports = {
     ],
     "statusSummary": {
       "pages": 2,
-      "subgroups": 0
+      "navigationDepth": 2
     },
     "accessMode": "PUBLIC",
     "lifecycleState": "ONLINE",

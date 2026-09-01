@@ -25,6 +25,23 @@ module.exports = {
       "emptyMessage": "No framework documentation matches your search.",
       "sections": [
         {
+          "code": "start-here",
+          "title": "Start Here",
+          "order": 1,
+          "summary": "Choose the right documentation entry point before opening detailed framework, Axis, Kickoff, or API contract pages.",
+          "audience": [
+            "business",
+            "architect",
+            "administrator",
+            "developer",
+            "operator",
+            "qa"
+          ],
+          "visibility": "public",
+          "accessMode": "PUBLIC",
+          "lifecycleState": "ONLINE"
+        },
+        {
           "code": "nodics-framework",
           "title": "Nodics Framework",
           "order": 10,
@@ -890,6 +907,75 @@ module.exports = {
         }
       ],
       "items": [
+        {
+          "code": "docs.gateway",
+          "title": "Nodics Documentation",
+          "route": "/docs",
+          "section": "start-here",
+          "sectionTitle": "Start Here",
+          "sectionOrder": 1,
+          "group": "start-here",
+          "groupTitle": "Start Here",
+          "groupOrder": 1,
+          "order": 10,
+          "parentId": "start-here",
+          "hierarchyPath": [
+            "Start Here",
+            "Nodics Documentation"
+          ],
+          "hierarchyDepth": 2,
+          "documentType": "overview",
+          "audience": [
+            "business",
+            "architect",
+            "administrator",
+            "developer",
+            "operator",
+            "qa"
+          ],
+          "businessAudience": [
+            "business user",
+            "administrator",
+            "implementation partner"
+          ],
+          "technicalAudience": [
+            "architect",
+            "developer",
+            "operator",
+            "qa engineer"
+          ],
+          "summary": "Public documentation gateway for framework, Axis, Kickoff, and generated API contract entry points.",
+          "visibility": "public",
+          "accessMode": "PUBLIC",
+          "publiclyAvailable": true,
+          "requiresAuthentication": false,
+          "allowedRoles": [],
+          "allowedGroups": [],
+          "allowedPermissions": [],
+          "lifecycleState": "ONLINE",
+          "maturityState": "operational",
+          "implementationState": "current",
+          "relatedPages": [
+            "framework.what-is-nodics",
+            "docs.documentation-roadmap",
+            "docs.documentation-publishing-model"
+          ],
+          "searchKeywords": [
+            "documentation",
+            "gateway",
+            "setup",
+            "publishing",
+            "nexus",
+            "axis"
+          ],
+          "topicKeywords": [
+            "Nodics Documentation",
+            "Start Here",
+            "Publishing",
+            "Setup"
+          ],
+          "searchText": "Nodics Documentation Public documentation gateway for framework, Axis, Kickoff, and generated API contract entry points. # Nodics Documentation\n\nNodics documentation is the governed reader entry point for understanding,\nsetting up, operating, and extending a Nodics project. It should help a\nbeginner decide where to go first, help a business user see the journey in\nplain language, help a developer find the owning module, and help an operator\nverify that the published experience matches the approved release.\n\nThis page is intentionally delivered as CMS documentation content. Nexus can\nrender it publicly after publication, while Axis can render the same content\nfor authenticated administrators. The browser application owns the renderer;\nthe backend documentation pack owns the page, navigation, publication state,\nand search metadata.\n\n## Choose the right entry point\n\n| Entry point | Best reader | Use it when |\n| --- | --- | --- |\n| Framework | Business, architect, developer, operator | You need the core architecture, module ownership, extension model, runtime behavior, publishing rules, or governance contract. |\n| Nodics Axis | Administrator, author, operator | You need the authenticated BackOffice journey for setup, content operations, documentation management, process tasks, and publication. |\n| Nodics Kickoff | Beginner, implementation partner, QA | You need the reference customer-project path from fresh schema to working Nexus and Agora applications. |\n| Swagger and OpenAPI | Developer, tester, integrator | You need generated runtime API contracts. Swagger is generated from active backend routes and does not require documentation publication approval. |\n\nThe first useful decision is not which page looks interesting. The first useful\ndecision is what job the reader is trying to complete. A business reader should\nstart with the framework value and adoption pages. A developer should start\nwith architecture and module ownership. An operator or QA owner should start\nwith local runtime, publication, and verification pages.\n\n## First setup sequence\n\nFresh setup should feel like one guided operational journey instead of a hunt\nthrough unrelated tools. The recommended sequence is:\n\n1. Start the local topology and open Axis.\n2. Initialize the Axis baseline so the managed BackOffice control plane exists.\n3. Register required capabilities for the application you want to run.\n4. Import the Nexus or Agora accelerator data pack.\n5. Review, approve, publish, and verify Online content in the browser.\n\nDocumentation packs can be imported and approved in parallel with application\nsetup because they do not block module registration or application data\npreparation. Public Nexus readers see only documentation pages that are Online\nand public. Axis readers may use authenticated delivery where the route is\nintended for administrators.\n\n```mermaid\nflowchart LR\n  Runtime[\"Start runtime\"] --> Axis[\"Initialize Axis\"]\n  Axis --> Modules[\"Register capabilities\"]\n  Modules --> Apps[\"Import Nexus or Agora data\"]\n  Apps --> Publish[\"Approve and publish Online\"]\n  Publish --> Browser[\"Verify public pages\"]\n  Axis -. parallel .-> Docs[\"Import documentation packs\"]\n  Modules -. generated .-> Swagger[\"Open Swagger/OpenAPI\"]\n```\n\n## What appears before publication\n\nWhen no Online CMS content is available, public applications should show a\ncustomer-friendly maintenance state, not half-rendered placeholder content.\nThat protects the customer experience and makes the setup status honest. Nexus\nand Agora should not show real headers, footers, promotional cards, catalog\ntiles, blogs, news, or documentation links until their Online content is\napproved and available.\n\nAxis is different because it is the authenticated control plane. It can show\nsetup, import, approval, and publishing tasks before public content is ready.\nThe Axis screen should make the next action clear: initialize data, register a\nmissing module, approve a pending request, publish Online, or verify the public\nroute.\n\n## How documentation publication works\n\nDocumentation content is prepared in a content pack, imported into Staged,\nreviewed in Axis, approved through the governed process task, and activated for\nOnline delivery. Approval is permission-based. A user who has review, approve,\nand publish rights can complete the decision even if that same user requested\nthe publication. A user without those permissions cannot approve simply because\nthey can see the task.\n\nThe documentation navigation has only two levels: section and page link.\nSections organize the reader journey, and page links open real pages directly.\nAvoid adding a third level just to preserve an internal hierarchy from source\nfiles. If a page covers several independent use cases, split those use cases\ninto separate pages and place each one directly under the correct section.\n\n## Common mistakes\n\n- Do not put public documentation landing cards in Nexus React code when the\n  CMS documentation pack can own them.\n- Do not hide Swagger behind CMS documentation approval. Swagger is generated\n  from the active runtime contract and should remain independently available.\n- Do not import Agora data before the required Commerce and related\n  capabilities are registered and active.\n- Do not treat an import success as a full site success unless media binaries,\n  media objects, pages, routes, navigation, catalog data, blogs, news, and\n  references are all present where the application expects them.\n- Do not make users jump between unrelated pages to review and approve one\n  publication decision.\n\n## Verification\n\nVerify documentation as a customer journey, not only as generated records. From\na fresh schema, start the topology, initialize Axis, import the documentation\npack, submit approval, approve or reject through the queue, publish Online, and\nopen the public Nexus documentation route in the browser. Confirm the left\nnavigation refreshes, the page content resolves from CMS, the navigation is\nonly section plus page link, and the public route shows an unpublished message\ninstead of hardcoded content when Online data is absent.\n\nFor developers, run the generator validation and focused renderer tests after\nchanging content, navigation records, or frontend documentation renderers. For\noperators, keep the publication status, audit trail, import run, and browser\nevidence together so a later reviewer can understand what changed and why it\nis safe for readers.\n\n## Continue\n\n- [Start with the framework](framework-what-is-nodics.md)\n- [Understand the documentation roadmap](documentation-roadmap.md)\n- [Review the publishing model](documentation-publishing-model.md)\n"
+        },
         {
           "code": "framework.what-is-nodics",
           "title": "What is Nodics?",
@@ -9722,6 +9808,290 @@ module.exports = {
     "active": true
   },
   "record1": {
+    "code": "nodicsDocsComponentdocsGateway",
+    "typeCode": "nodicsDocumentationArticleComponentType",
+    "renderer": "documentation.component.article",
+    "accessMode": "PUBLIC",
+    "properties": {
+      "code": "docs.gateway",
+      "title": "Nodics Documentation",
+      "route": "/docs",
+      "section": "start-here",
+      "sectionTitle": "Start Here",
+      "group": "start-here",
+      "groupTitle": "Start Here",
+      "parentId": "start-here",
+      "hierarchyPath": [
+        "Start Here",
+        "Nodics Documentation"
+      ],
+      "hierarchyDepth": 2,
+      "documentType": "overview",
+      "audience": [
+        "business",
+        "architect",
+        "administrator",
+        "developer",
+        "operator",
+        "qa"
+      ],
+      "businessAudience": [
+        "business user",
+        "administrator",
+        "implementation partner"
+      ],
+      "technicalAudience": [
+        "architect",
+        "developer",
+        "operator",
+        "qa engineer"
+      ],
+      "summary": "Public documentation gateway for framework, Axis, Kickoff, and generated API contract entry points.",
+      "visibility": "public",
+      "accessMode": "PUBLIC",
+      "publiclyAvailable": true,
+      "requiresAuthentication": false,
+      "allowedRoles": [],
+      "allowedGroups": [],
+      "allowedPermissions": [],
+      "lifecycleState": "ONLINE",
+      "version": "0.16.8",
+      "maturityState": "operational",
+      "implementationState": "current",
+      "renderingComponent": "documentation.component.article",
+      "relatedPages": [
+        "framework.what-is-nodics",
+        "docs.documentation-roadmap",
+        "docs.documentation-publishing-model"
+      ],
+      "sourceEvidence": [
+        "docs/catalogue.json",
+        "docs/pages/framework/documentation-gateway.md"
+      ],
+      "visualRequirements": [
+        "table"
+      ],
+      "searchKeywords": [
+        "documentation",
+        "gateway",
+        "setup",
+        "publishing",
+        "nexus",
+        "axis"
+      ],
+      "topicKeywords": [
+        "Nodics Documentation",
+        "Start Here",
+        "Publishing",
+        "Setup"
+      ],
+      "headings": [
+        {
+          "text": "Choose the right entry point",
+          "anchor": "docsGateway-1-choose-the-right-entry-point",
+          "level": 2
+        },
+        {
+          "text": "First setup sequence",
+          "anchor": "docsGateway-2-first-setup-sequence",
+          "level": 2
+        },
+        {
+          "text": "What appears before publication",
+          "anchor": "docsGateway-3-what-appears-before-publication",
+          "level": 2
+        },
+        {
+          "text": "How documentation publication works",
+          "anchor": "docsGateway-4-how-documentation-publication-works",
+          "level": 2
+        },
+        {
+          "text": "Common mistakes",
+          "anchor": "docsGateway-5-common-mistakes",
+          "level": 2
+        },
+        {
+          "text": "Verification",
+          "anchor": "docsGateway-6-verification",
+          "level": 2
+        },
+        {
+          "text": "Continue",
+          "anchor": "docsGateway-7-continue",
+          "level": 2
+        }
+      ],
+      "blocks": [
+        {
+          "kind": "paragraph",
+          "text": "Nodics documentation is the governed reader entry point for understanding, setting up, operating, and extending a Nodics project. It should help a beginner decide where to go first, help a business user see the journey in plain language, help a developer find the owning module, and help an operator verify that the published experience matches the approved release."
+        },
+        {
+          "kind": "paragraph",
+          "text": "This page is intentionally delivered as CMS documentation content. Nexus can render it publicly after publication, while Axis can render the same content for authenticated administrators. The browser application owns the renderer; the backend documentation pack owns the page, navigation, publication state, and search metadata."
+        },
+        {
+          "kind": "heading",
+          "level": 2,
+          "text": "Choose the right entry point",
+          "anchor": "docsGateway-1-choose-the-right-entry-point"
+        },
+        {
+          "kind": "table",
+          "headers": [
+            "Entry point",
+            "Best reader",
+            "Use it when"
+          ],
+          "rows": [
+            [
+              "Framework",
+              "Business, architect, developer, operator",
+              "You need the core architecture, module ownership, extension model, runtime behavior, publishing rules, or governance contract."
+            ],
+            [
+              "Nodics Axis",
+              "Administrator, author, operator",
+              "You need the authenticated BackOffice journey for setup, content operations, documentation management, process tasks, and publication."
+            ],
+            [
+              "Nodics Kickoff",
+              "Beginner, implementation partner, QA",
+              "You need the reference customer-project path from fresh schema to working Nexus and Agora applications."
+            ],
+            [
+              "Swagger and OpenAPI",
+              "Developer, tester, integrator",
+              "You need generated runtime API contracts. Swagger is generated from active backend routes and does not require documentation publication approval."
+            ]
+          ]
+        },
+        {
+          "kind": "paragraph",
+          "text": "The first useful decision is not which page looks interesting. The first useful decision is what job the reader is trying to complete. A business reader should start with the framework value and adoption pages. A developer should start with architecture and module ownership. An operator or QA owner should start with local runtime, publication, and verification pages."
+        },
+        {
+          "kind": "heading",
+          "level": 2,
+          "text": "First setup sequence",
+          "anchor": "docsGateway-2-first-setup-sequence"
+        },
+        {
+          "kind": "paragraph",
+          "text": "Fresh setup should feel like one guided operational journey instead of a hunt through unrelated tools. The recommended sequence is:"
+        },
+        {
+          "kind": "ordered-list",
+          "items": [
+            "Start the local topology and open Axis.",
+            "Initialize the Axis baseline so the managed BackOffice control plane exists.",
+            "Register required capabilities for the application you want to run.",
+            "Import the Nexus or Agora accelerator data pack.",
+            "Review, approve, publish, and verify Online content in the browser."
+          ]
+        },
+        {
+          "kind": "paragraph",
+          "text": "Documentation packs can be imported and approved in parallel with application setup because they do not block module registration or application data preparation. Public Nexus readers see only documentation pages that are Online and public. Axis readers may use authenticated delivery where the route is intended for administrators."
+        },
+        {
+          "kind": "diagram",
+          "language": "mermaid",
+          "text": "flowchart LR\n  Runtime[\"Start runtime\"] --> Axis[\"Initialize Axis\"]\n  Axis --> Modules[\"Register capabilities\"]\n  Modules --> Apps[\"Import Nexus or Agora data\"]\n  Apps --> Publish[\"Approve and publish Online\"]\n  Publish --> Browser[\"Verify public pages\"]\n  Axis -. parallel .-> Docs[\"Import documentation packs\"]\n  Modules -. generated .-> Swagger[\"Open Swagger/OpenAPI\"]"
+        },
+        {
+          "kind": "heading",
+          "level": 2,
+          "text": "What appears before publication",
+          "anchor": "docsGateway-3-what-appears-before-publication"
+        },
+        {
+          "kind": "paragraph",
+          "text": "When no Online CMS content is available, public applications should show a customer-friendly maintenance state, not half-rendered placeholder content. That protects the customer experience and makes the setup status honest. Nexus and Agora should not show real headers, footers, promotional cards, catalog tiles, blogs, news, or documentation links until their Online content is approved and available."
+        },
+        {
+          "kind": "paragraph",
+          "text": "Axis is different because it is the authenticated control plane. It can show setup, import, approval, and publishing tasks before public content is ready. The Axis screen should make the next action clear: initialize data, register a missing module, approve a pending request, publish Online, or verify the public route."
+        },
+        {
+          "kind": "heading",
+          "level": 2,
+          "text": "How documentation publication works",
+          "anchor": "docsGateway-4-how-documentation-publication-works"
+        },
+        {
+          "kind": "paragraph",
+          "text": "Documentation content is prepared in a content pack, imported into Staged, reviewed in Axis, approved through the governed process task, and activated for Online delivery. Approval is permission-based. A user who has review, approve, and publish rights can complete the decision even if that same user requested the publication. A user without those permissions cannot approve simply because they can see the task."
+        },
+        {
+          "kind": "paragraph",
+          "text": "The documentation navigation has only two levels: section and page link. Sections organize the reader journey, and page links open real pages directly. Avoid adding a third level just to preserve an internal hierarchy from source files. If a page covers several independent use cases, split those use cases into separate pages and place each one directly under the correct section."
+        },
+        {
+          "kind": "heading",
+          "level": 2,
+          "text": "Common mistakes",
+          "anchor": "docsGateway-5-common-mistakes"
+        },
+        {
+          "kind": "unordered-list",
+          "items": [
+            "Do not put public documentation landing cards in Nexus React code when the CMS documentation pack can own them.",
+            "Do not hide Swagger behind CMS documentation approval. Swagger is generated from the active runtime contract and should remain independently available.",
+            "Do not import Agora data before the required Commerce and related capabilities are registered and active.",
+            "Do not treat an import success as a full site success unless media binaries, media objects, pages, routes, navigation, catalog data, blogs, news, and references are all present where the application expects them.",
+            "Do not make users jump between unrelated pages to review and approve one publication decision."
+          ]
+        },
+        {
+          "kind": "heading",
+          "level": 2,
+          "text": "Verification",
+          "anchor": "docsGateway-6-verification"
+        },
+        {
+          "kind": "paragraph",
+          "text": "Verify documentation as a customer journey, not only as generated records. From a fresh schema, start the topology, initialize Axis, import the documentation pack, submit approval, approve or reject through the queue, publish Online, and open the public Nexus documentation route in the browser. Confirm the left navigation refreshes, the page content resolves from CMS, the navigation is only section plus page link, and the public route shows an unpublished message instead of hardcoded content when Online data is absent."
+        },
+        {
+          "kind": "paragraph",
+          "text": "For developers, run the generator validation and focused renderer tests after changing content, navigation records, or frontend documentation renderers. For operators, keep the publication status, audit trail, import run, and browser evidence together so a later reviewer can understand what changed and why it is safe for readers."
+        },
+        {
+          "kind": "heading",
+          "level": 2,
+          "text": "Continue",
+          "anchor": "docsGateway-7-continue"
+        },
+        {
+          "kind": "unordered-list",
+          "items": [
+            "[Start with the framework](framework-what-is-nodics.md)",
+            "[Understand the documentation roadmap](documentation-roadmap.md)",
+            "[Review the publishing model](documentation-publishing-model.md)"
+          ]
+        }
+      ],
+      "searchText": "Nodics Documentation Public documentation gateway for framework, Axis, Kickoff, and generated API contract entry points. # Nodics Documentation\n\nNodics documentation is the governed reader entry point for understanding,\nsetting up, operating, and extending a Nodics project. It should help a\nbeginner decide where to go first, help a business user see the journey in\nplain language, help a developer find the owning module, and help an operator\nverify that the published experience matches the approved release.\n\nThis page is intentionally delivered as CMS documentation content. Nexus can\nrender it publicly after publication, while Axis can render the same content\nfor authenticated administrators. The browser application owns the renderer;\nthe backend documentation pack owns the page, navigation, publication state,\nand search metadata.\n\n## Choose the right entry point\n\n| Entry point | Best reader | Use it when |\n| --- | --- | --- |\n| Framework | Business, architect, developer, operator | You need the core architecture, module ownership, extension model, runtime behavior, publishing rules, or governance contract. |\n| Nodics Axis | Administrator, author, operator | You need the authenticated BackOffice journey for setup, content operations, documentation management, process tasks, and publication. |\n| Nodics Kickoff | Beginner, implementation partner, QA | You need the reference customer-project path from fresh schema to working Nexus and Agora applications. |\n| Swagger and OpenAPI | Developer, tester, integrator | You need generated runtime API contracts. Swagger is generated from active backend routes and does not require documentation publication approval. |\n\nThe first useful decision is not which page looks interesting. The first useful\ndecision is what job the reader is trying to complete. A business reader should\nstart with the framework value and adoption pages. A developer should start\nwith architecture and module ownership. An operator or QA owner should start\nwith local runtime, publication, and verification pages.\n\n## First setup sequence\n\nFresh setup should feel like one guided operational journey instead of a hunt\nthrough unrelated tools. The recommended sequence is:\n\n1. Start the local topology and open Axis.\n2. Initialize the Axis baseline so the managed BackOffice control plane exists.\n3. Register required capabilities for the application you want to run.\n4. Import the Nexus or Agora accelerator data pack.\n5. Review, approve, publish, and verify Online content in the browser.\n\nDocumentation packs can be imported and approved in parallel with application\nsetup because they do not block module registration or application data\npreparation. Public Nexus readers see only documentation pages that are Online\nand public. Axis readers may use authenticated delivery where the route is\nintended for administrators.\n\n```mermaid\nflowchart LR\n  Runtime[\"Start runtime\"] --> Axis[\"Initialize Axis\"]\n  Axis --> Modules[\"Register capabilities\"]\n  Modules --> Apps[\"Import Nexus or Agora data\"]\n  Apps --> Publish[\"Approve and publish Online\"]\n  Publish --> Browser[\"Verify public pages\"]\n  Axis -. parallel .-> Docs[\"Import documentation packs\"]\n  Modules -. generated .-> Swagger[\"Open Swagger/OpenAPI\"]\n```\n\n## What appears before publication\n\nWhen no Online CMS content is available, public applications should show a\ncustomer-friendly maintenance state, not half-rendered placeholder content.\nThat protects the customer experience and makes the setup status honest. Nexus\nand Agora should not show real headers, footers, promotional cards, catalog\ntiles, blogs, news, or documentation links until their Online content is\napproved and available.\n\nAxis is different because it is the authenticated control plane. It can show\nsetup, import, approval, and publishing tasks before public content is ready.\nThe Axis screen should make the next action clear: initialize data, register a\nmissing module, approve a pending request, publish Online, or verify the public\nroute.\n\n## How documentation publication works\n\nDocumentation content is prepared in a content pack, imported into Staged,\nreviewed in Axis, approved through the governed process task, and activated for\nOnline delivery. Approval is permission-based. A user who has review, approve,\nand publish rights can complete the decision even if that same user requested\nthe publication. A user without those permissions cannot approve simply because\nthey can see the task.\n\nThe documentation navigation has only two levels: section and page link.\nSections organize the reader journey, and page links open real pages directly.\nAvoid adding a third level just to preserve an internal hierarchy from source\nfiles. If a page covers several independent use cases, split those use cases\ninto separate pages and place each one directly under the correct section.\n\n## Common mistakes\n\n- Do not put public documentation landing cards in Nexus React code when the\n  CMS documentation pack can own them.\n- Do not hide Swagger behind CMS documentation approval. Swagger is generated\n  from the active runtime contract and should remain independently available.\n- Do not import Agora data before the required Commerce and related\n  capabilities are registered and active.\n- Do not treat an import success as a full site success unless media binaries,\n  media objects, pages, routes, navigation, catalog data, blogs, news, and\n  references are all present where the application expects them.\n- Do not make users jump between unrelated pages to review and approve one\n  publication decision.\n\n## Verification\n\nVerify documentation as a customer journey, not only as generated records. From\na fresh schema, start the topology, initialize Axis, import the documentation\npack, submit approval, approve or reject through the queue, publish Online, and\nopen the public Nexus documentation route in the browser. Confirm the left\nnavigation refreshes, the page content resolves from CMS, the navigation is\nonly section plus page link, and the public route shows an unpublished message\ninstead of hardcoded content when Online data is absent.\n\nFor developers, run the generator validation and focused renderer tests after\nchanging content, navigation records, or frontend documentation renderers. For\noperators, keep the publication status, audit trail, import run, and browser\nevidence together so a later reviewer can understand what changed and why it\nis safe for readers.\n\n## Continue\n\n- [Start with the framework](framework-what-is-nodics.md)\n- [Understand the documentation roadmap](documentation-roadmap.md)\n- [Review the publishing model](documentation-publishing-model.md)\n",
+      "next": {
+        "title": "What is Nodics?",
+        "route": "/docs/framework"
+      },
+      "source": {
+        "repository": "nodics.docs",
+        "functionalModule": "nodics.docs",
+        "technicalModule": "documentation",
+        "owner": "nodics.docs",
+        "sourcePath": "docs/pages/framework/documentation-gateway.md",
+        "path": "docs/pages/framework/documentation-gateway.md",
+        "wordCount": 921,
+        "checksum": "0e008661ea8abe0fb19248bdf60ec06bedbe83f6546558fdf840acbc55c6ee11"
+      }
+    },
+    "active": true
+  },
+  "record2": {
     "code": "nodicsDocsComponentframeworkOverview",
     "typeCode": "nodicsDocumentationArticleComponentType",
     "renderer": "documentation.component.article",
@@ -9946,6 +10316,10 @@ module.exports = {
         }
       ],
       "searchText": "What is Nodics? Introductory definition of Nodics, its enterprise purpose, and the first mental model for business, developer, and operator readers. # What is Nodics?\n\nNodics is a modular enterprise application framework for building governed\nbusiness platforms without forcing every project to reinvent authentication,\ncontent management, APIs, configuration, data import, publishing, workflow,\nscheduled jobs, media, documentation, and operational contracts. It is not a\nsingle finished storefront or one fixed business product. It is the framework\nfoundation that customer projects, internal tools, public sites, accelerators,\nand solution use cases can build on.\n\nFor a beginner, the easiest mental model is this: Nodics gives the reusable\nenterprise machinery, while the customer project supplies the business-specific\nrules, content, branding, integrations, and runtime decisions. Axis is the\nauthenticated business workspace. Nexus and Agora are public-facing\napplications that consume approved Online content and APIs. Backend modules\nremain the authority for data, permissions, workflows, routes, and publication.\n\n## Business definition\n\nNodics helps teams move faster without giving up enterprise governance. A\nbusiness can start with a reference project, initialize the required data,\npublish public content, then customize behavior through Axis, configuration,\nprovider adapters, services, pipelines, and project modules. The value is not\nonly speed. The value is speed with a path to operate, secure, explain,\nextend, test, and upgrade the platform.\n\n| Business question | Nodics answer |\n| --- | --- |\n| What is being adopted? | A modular framework for enterprise application delivery. |\n| Who uses it? | Business users, administrators, developers, operators, QA owners, partners, and AI-assisted delivery tools. |\n| What does it reduce? | Repeated architecture work, customer forks, hidden configuration, unclear ownership, and fragile runtime changes. |\n| What does it enable? | Faster setup, governed customization, publishable content, reusable capability modules, and clearer production support. |\n\n## Technical definition\n\nTechnically, Nodics is a layered runtime. Framework modules live in\n`nodics.ai`. Customer projects such as Kickoff declare which framework modules\nand project modules load into Platform, WCMS, Process, and other runtime\nservers. Axis renders authorized capabilities from backend contracts. CMS\ncontent, documentation, storefront pages, media, routes, and publication state\ncome from backend-owned content packs and catalogs.\n\n```mermaid\nflowchart LR\n  Framework[\"Nodics framework modules\"] --> Project[\"Customer project\"]\n  Project --> Runtime[\"Platform, WCMS, Process runtime\"]\n  Runtime --> Axis[\"Axis business workspace\"]\n  Runtime --> PublicApps[\"Nexus, Agora, partner apps\"]\n  Project --> Extensions[\"Configuration, providers, services, pipelines\"]\n```\n\n## What teams can build\n\nTeams can build employee BackOffice applications, public corporate sites,\nCMS-driven storefronts, commerce accelerators, process automation, scheduled\njobs, integrations, documentation portals, data engineering solutions, and\ncustomer-specific project layers. The framework gives common contracts; the\nproject decides which business journey is needed.\n\nNodics is also meant to work well with AI-assisted development. AI can help\nmove quickly, but the framework keeps ownership explicit so generated changes\ndo not scatter behavior across the wrong modules.\n\n## Where to continue\n\nUse the sibling pages in this group as the first reader path. Read **Why Nodics\nExists** for the business problem and industry context. Read **How Nodics\nWorks** for runtime, module, Axis, Nexus, Agora, and backend ownership. Read\n**Adoption and First Journey** for the first setup and verification path.\n\n## Common mistakes\n\n- Treating Nodics as one application instead of a framework used by many\n  applications and solution use cases.\n- Assuming Axis owns backend records because administrators use Axis screens.\n- Expecting Nexus or Agora to show Staged content before Online publication.\n- Customizing framework source before checking project-layer extension paths.\n- Reading only technical modules before understanding the business journey.\n\n## Verification\n\nThis introduction is correct when a new business user can explain what Nodics\nis, a developer can identify framework versus project ownership, and an\noperator can explain why public apps only render approved Online content. The\nlocal proof is to start the reference workspace, initialize Axis, register\nrequired capabilities, import content packs, approve publication where needed,\nand verify Axis, Nexus, and Agora from the browser.\n",
+      "previous": {
+        "title": "Nodics Documentation",
+        "route": "/docs"
+      },
       "next": {
         "title": "Why Nodics Exists",
         "route": "/docs/framework/framework-why-nodics-exists"
@@ -9963,7 +10337,7 @@ module.exports = {
     },
     "active": true
   },
-  "record2": {
+  "record3": {
     "code": "nodicsDocsComponentframeworkWhyNodicsExists",
     "typeCode": "nodicsDocumentationArticleComponentType",
     "renderer": "documentation.component.article",
@@ -10248,7 +10622,7 @@ module.exports = {
     },
     "active": true
   },
-  "record3": {
+  "record4": {
     "code": "nodicsDocsComponentframeworkHowNodicsWorks",
     "typeCode": "nodicsDocumentationArticleComponentType",
     "renderer": "documentation.component.article",
@@ -10517,7 +10891,7 @@ module.exports = {
     },
     "active": true
   },
-  "record4": {
+  "record5": {
     "code": "nodicsDocsComponentframeworkAdoptionAndFirstJourney",
     "typeCode": "nodicsDocumentationArticleComponentType",
     "renderer": "documentation.component.article",
@@ -10834,7 +11208,7 @@ module.exports = {
     },
     "active": true
   },
-  "record5": {
+  "record6": {
     "code": "nodicsDocsComponentdocsDocumentationRoadmap",
     "typeCode": "nodicsDocumentationArticleComponentType",
     "renderer": "documentation.component.article",
@@ -11280,7 +11654,7 @@ module.exports = {
     },
     "active": true
   },
-  "record6": {
+  "record7": {
     "code": "nodicsDocsComponentdocsDocumentationPrinciples",
     "typeCode": "nodicsDocumentationArticleComponentType",
     "renderer": "documentation.component.article",
@@ -11627,7 +12001,7 @@ module.exports = {
     },
     "active": true
   },
-  "record7": {
+  "record8": {
     "code": "nodicsDocsComponentdocsReaderJourneyAndCoverage",
     "typeCode": "nodicsDocumentationArticleComponentType",
     "renderer": "documentation.component.article",
@@ -11926,7 +12300,7 @@ module.exports = {
     },
     "active": true
   },
-  "record8": {
+  "record9": {
     "code": "nodicsDocsComponentdocsDocumentationPublishingModel",
     "typeCode": "nodicsDocumentationArticleComponentType",
     "renderer": "documentation.component.article",
@@ -12214,7 +12588,7 @@ module.exports = {
     },
     "active": true
   },
-  "record9": {
+  "record10": {
     "code": "nodicsDocsComponentframeworkModularArchitecture",
     "typeCode": "nodicsDocumentationArticleComponentType",
     "renderer": "documentation.component.article",
@@ -12468,7 +12842,7 @@ module.exports = {
     },
     "active": true
   },
-  "record10": {
+  "record11": {
     "code": "nodicsDocsComponentframeworkRuntimeServerComposition",
     "typeCode": "nodicsDocumentationArticleComponentType",
     "renderer": "documentation.component.article",
@@ -12706,7 +13080,7 @@ module.exports = {
     },
     "active": true
   },
-  "record11": {
+  "record12": {
     "code": "nodicsDocsComponentframeworkModuleLoadingServicePrecedence",
     "typeCode": "nodicsDocumentationArticleComponentType",
     "renderer": "documentation.component.article",
@@ -12974,7 +13348,7 @@ module.exports = {
     },
     "active": true
   },
-  "record12": {
+  "record13": {
     "code": "nodicsDocsComponentframeworkArchitectureDecisionGuide",
     "typeCode": "nodicsDocumentationArticleComponentType",
     "renderer": "documentation.component.article",
@@ -13237,7 +13611,7 @@ module.exports = {
     },
     "active": true
   },
-  "record13": {
+  "record14": {
     "code": "nodicsDocsComponentplatformModuleRegistry",
     "typeCode": "nodicsDocumentationArticleComponentType",
     "renderer": "documentation.component.article",
@@ -13754,7 +14128,7 @@ module.exports = {
     },
     "active": true
   },
-  "record14": {
+  "record15": {
     "code": "nodicsDocsComponentfoundationOverview",
     "typeCode": "nodicsDocumentationArticleComponentType",
     "renderer": "documentation.component.article",
@@ -14280,7 +14654,7 @@ module.exports = {
     },
     "active": true
   },
-  "record15": {
+  "record16": {
     "code": "nodicsDocsComponentapplicationsSuite",
     "typeCode": "nodicsDocumentationArticleComponentType",
     "renderer": "documentation.component.article",
@@ -14578,7 +14952,7 @@ module.exports = {
     },
     "active": true
   },
-  "record16": {
+  "record17": {
     "code": "nodicsDocsComponentsolutionsTaskExecutionEngine",
     "typeCode": "nodicsDocumentationArticleComponentType",
     "renderer": "documentation.component.article",
@@ -14979,7 +15353,7 @@ module.exports = {
     },
     "active": true
   },
-  "record17": {
+  "record18": {
     "code": "nodicsDocsComponentsolutionsDataEngineeringAnalyticsPlatform",
     "typeCode": "nodicsDocumentationArticleComponentType",
     "renderer": "documentation.component.article",
@@ -15381,7 +15755,7 @@ module.exports = {
     },
     "active": true
   },
-  "record18": {
+  "record19": {
     "code": "nodicsDocsComponentacceleratorsAgoraIndustryTemplates",
     "typeCode": "nodicsDocumentationArticleComponentType",
     "renderer": "documentation.component.article",
@@ -15726,7 +16100,7 @@ module.exports = {
     },
     "active": true
   },
-  "record19": {
+  "record20": {
     "code": "nodicsDocsComponentacceleratorsAgoraApparelProductDataAuthoring",
     "typeCode": "nodicsDocumentationArticleComponentType",
     "renderer": "documentation.component.article",
@@ -16385,7 +16759,7 @@ module.exports = {
     },
     "active": true
   },
-  "record20": {
+  "record21": {
     "code": "nodicsDocsComponentframeworkLocalQuickStart",
     "typeCode": "nodicsDocumentationArticleComponentType",
     "renderer": "documentation.component.article",
@@ -16671,7 +17045,7 @@ module.exports = {
     },
     "active": true
   },
-  "record21": {
+  "record22": {
     "code": "nodicsDocsComponentframeworkFreshSchemaSetupJourney",
     "typeCode": "nodicsDocumentationArticleComponentType",
     "renderer": "documentation.component.article",
@@ -16939,7 +17313,7 @@ module.exports = {
     },
     "active": true
   },
-  "record22": {
+  "record23": {
     "code": "nodicsDocsComponentframeworkLocalRuntimeTroubleshooting",
     "typeCode": "nodicsDocumentationArticleComponentType",
     "renderer": "documentation.component.article",
@@ -17197,7 +17571,7 @@ module.exports = {
     },
     "active": true
   },
-  "record23": {
+  "record24": {
     "code": "nodicsDocsComponentinstallerInstalledRuntimeApplicationBuilder",
     "typeCode": "nodicsDocumentationArticleComponentType",
     "renderer": "documentation.component.article",
@@ -17489,7 +17863,7 @@ module.exports = {
     },
     "active": true
   },
-  "record24": {
+  "record25": {
     "code": "nodicsDocsComponentbuilderWorkspaceGeneration",
     "typeCode": "nodicsDocumentationArticleComponentType",
     "renderer": "documentation.component.article",
@@ -17878,7 +18252,7 @@ module.exports = {
     },
     "active": true
   },
-  "record25": {
+  "record26": {
     "code": "nodicsDocsComponentprocessVisualDesigner",
     "typeCode": "nodicsDocumentationArticleComponentType",
     "renderer": "documentation.component.article",
@@ -18267,7 +18641,7 @@ module.exports = {
     },
     "active": true
   },
-  "record26": {
+  "record27": {
     "code": "nodicsDocsComponentaxisBusinessCustomization",
     "typeCode": "nodicsDocumentationArticleComponentType",
     "renderer": "documentation.component.article",
@@ -18656,7 +19030,7 @@ module.exports = {
     },
     "active": true
   },
-  "record27": {
+  "record28": {
     "code": "nodicsDocsComponentplatformOverview",
     "typeCode": "nodicsDocumentationArticleComponentType",
     "renderer": "documentation.component.article",
@@ -19140,7 +19514,7 @@ module.exports = {
     },
     "active": true
   },
-  "record28": {
+  "record29": {
     "code": "nodicsDocsComponentsecurityIdentityAccessGovernance",
     "typeCode": "nodicsDocumentationArticleComponentType",
     "renderer": "documentation.component.article",
@@ -19592,7 +19966,7 @@ module.exports = {
     },
     "active": true
   },
-  "record29": {
+  "record30": {
     "code": "nodicsDocsComponentconfigurationRuntimeBehaviorManagement",
     "typeCode": "nodicsDocumentationArticleComponentType",
     "renderer": "documentation.component.article",
@@ -19988,7 +20362,7 @@ module.exports = {
     },
     "active": true
   },
-  "record30": {
+  "record31": {
     "code": "nodicsDocsComponentconfigurationFrameworkStartupLifecycle",
     "typeCode": "nodicsDocumentationArticleComponentType",
     "renderer": "documentation.component.article",
@@ -21118,7 +21492,7 @@ module.exports = {
     },
     "active": true
   },
-  "record31": {
+  "record32": {
     "code": "nodicsDocsComponentroutingApiGovernance",
     "typeCode": "nodicsDocumentationArticleComponentType",
     "renderer": "documentation.component.article",
@@ -21601,7 +21975,7 @@ module.exports = {
     },
     "active": true
   },
-  "record32": {
+  "record33": {
     "code": "nodicsDocsComponentroutingApiRequestLifecycle",
     "typeCode": "nodicsDocumentationArticleComponentType",
     "renderer": "documentation.component.article",
@@ -22184,7 +22558,7 @@ module.exports = {
     },
     "active": true
   },
-  "record33": {
+  "record34": {
     "code": "nodicsDocsComponentfoundationErrorHandlingStatusCodes",
     "typeCode": "nodicsDocumentationArticleComponentType",
     "renderer": "documentation.component.article",
@@ -23061,7 +23435,7 @@ module.exports = {
     },
     "active": true
   },
-  "record34": {
+  "record35": {
     "code": "nodicsDocsComponentruntimeGovernedChange",
     "typeCode": "nodicsDocumentationArticleComponentType",
     "renderer": "documentation.component.article",
@@ -23467,7 +23841,7 @@ module.exports = {
     },
     "active": true
   },
-  "record35": {
+  "record36": {
     "code": "nodicsDocsComponentlocalizationInternationalization",
     "typeCode": "nodicsDocumentationArticleComponentType",
     "renderer": "documentation.component.article",
@@ -23919,7 +24293,7 @@ module.exports = {
     },
     "active": true
   },
-  "record36": {
+  "record37": {
     "code": "nodicsDocsComponentschemaDataModelingManagement",
     "typeCode": "nodicsDocumentationArticleComponentType",
     "renderer": "documentation.component.article",
@@ -24308,7 +24682,7 @@ module.exports = {
     },
     "active": true
   },
-  "record37": {
+  "record38": {
     "code": "nodicsDocsComponentpersistenceProviderDataAccessLayer",
     "typeCode": "nodicsDocumentationArticleComponentType",
     "renderer": "documentation.component.article",
@@ -24690,7 +25064,7 @@ module.exports = {
     },
     "active": true
   },
-  "record38": {
+  "record39": {
     "code": "nodicsDocsComponentcacheRuntimeStateManagement",
     "typeCode": "nodicsDocumentationArticleComponentType",
     "renderer": "documentation.component.article",
@@ -25079,7 +25453,7 @@ module.exports = {
     },
     "active": true
   },
-  "record39": {
+  "record40": {
     "code": "nodicsDocsComponentframeworkCustomizationGuide",
     "typeCode": "nodicsDocumentationArticleComponentType",
     "renderer": "documentation.component.article",
@@ -25337,7 +25711,7 @@ module.exports = {
     },
     "active": true
   },
-  "record40": {
+  "record41": {
     "code": "nodicsDocsComponentframeworkBackendExtensionPatterns",
     "typeCode": "nodicsDocumentationArticleComponentType",
     "renderer": "documentation.component.article",
@@ -25612,7 +25986,7 @@ module.exports = {
     },
     "active": true
   },
-  "record41": {
+  "record42": {
     "code": "nodicsDocsComponentframeworkAxisContentCustomization",
     "typeCode": "nodicsDocumentationArticleComponentType",
     "renderer": "documentation.component.article",
@@ -25870,7 +26244,7 @@ module.exports = {
     },
     "active": true
   },
-  "record42": {
+  "record43": {
     "code": "nodicsDocsComponentprocessDeveloperCustomization",
     "typeCode": "nodicsDocumentationArticleComponentType",
     "renderer": "documentation.component.article",
@@ -26219,7 +26593,7 @@ module.exports = {
     },
     "active": true
   },
-  "record43": {
+  "record44": {
     "code": "nodicsDocsComponentprocessCustomProjectExtension",
     "typeCode": "nodicsDocumentationArticleComponentType",
     "renderer": "documentation.component.article",
@@ -26502,7 +26876,7 @@ module.exports = {
     },
     "active": true
   },
-  "record44": {
+  "record45": {
     "code": "nodicsDocsComponentcommerceBaseFoundations",
     "typeCode": "nodicsDocumentationArticleComponentType",
     "renderer": "documentation.component.article",
@@ -26849,7 +27223,7 @@ module.exports = {
     },
     "active": true
   },
-  "record45": {
+  "record46": {
     "code": "nodicsDocsComponentwcmsOverview",
     "typeCode": "nodicsDocumentationArticleComponentType",
     "renderer": "documentation.component.article",
@@ -27118,7 +27492,7 @@ module.exports = {
     },
     "active": true
   },
-  "record46": {
+  "record47": {
     "code": "nodicsDocsComponentwcmsContentCatalogModel",
     "typeCode": "nodicsDocumentationArticleComponentType",
     "renderer": "documentation.component.article",
@@ -27381,7 +27755,7 @@ module.exports = {
     },
     "active": true
   },
-  "record47": {
+  "record48": {
     "code": "nodicsDocsComponentwcmsPageDesignerComponents",
     "typeCode": "nodicsDocumentationArticleComponentType",
     "renderer": "documentation.component.article",
@@ -27639,7 +28013,7 @@ module.exports = {
     },
     "active": true
   },
-  "record48": {
+  "record49": {
     "code": "nodicsDocsComponentwcmsSitePublicationVisibility",
     "typeCode": "nodicsDocumentationArticleComponentType",
     "renderer": "documentation.component.article",
@@ -27903,7 +28277,7 @@ module.exports = {
     },
     "active": true
   },
-  "record49": {
+  "record50": {
     "code": "nodicsDocsComponentcatalogProductDiscoveryManagement",
     "typeCode": "nodicsDocumentationArticleComponentType",
     "renderer": "documentation.component.article",
@@ -28355,7 +28729,7 @@ module.exports = {
     },
     "active": true
   },
-  "record50": {
+  "record51": {
     "code": "nodicsDocsComponentdiscoverySearchIndexing",
     "typeCode": "nodicsDocumentationArticleComponentType",
     "renderer": "documentation.component.article",
@@ -28812,7 +29186,7 @@ module.exports = {
     },
     "active": true
   },
-  "record51": {
+  "record52": {
     "code": "nodicsDocsComponentwcmsMediaManagement",
     "typeCode": "nodicsDocumentationArticleComponentType",
     "renderer": "documentation.component.article",
@@ -29083,7 +29457,7 @@ module.exports = {
     },
     "active": true
   },
-  "record52": {
+  "record53": {
     "code": "nodicsDocsComponentwcmsMediaStorageDelivery",
     "typeCode": "nodicsDocumentationArticleComponentType",
     "renderer": "documentation.component.article",
@@ -29366,7 +29740,7 @@ module.exports = {
     },
     "active": true
   },
-  "record53": {
+  "record54": {
     "code": "nodicsDocsComponentwcmsMediaImportPublication",
     "typeCode": "nodicsDocumentationArticleComponentType",
     "renderer": "documentation.component.article",
@@ -29637,7 +30011,7 @@ module.exports = {
     },
     "active": true
   },
-  "record54": {
+  "record55": {
     "code": "nodicsDocsComponentinventoryStockManagement",
     "typeCode": "nodicsDocumentationArticleComponentType",
     "renderer": "documentation.component.article",
@@ -30089,7 +30463,7 @@ module.exports = {
     },
     "active": true
   },
-  "record55": {
+  "record56": {
     "code": "nodicsDocsComponentpricingPromotionsTaxManagement",
     "typeCode": "nodicsDocumentationArticleComponentType",
     "renderer": "documentation.component.article",
@@ -30536,7 +30910,7 @@ module.exports = {
     },
     "active": true
   },
-  "record56": {
+  "record57": {
     "code": "nodicsDocsComponentcommerceOverview",
     "typeCode": "nodicsDocumentationArticleComponentType",
     "renderer": "documentation.component.article",
@@ -30899,7 +31273,7 @@ module.exports = {
     },
     "active": true
   },
-  "record57": {
+  "record58": {
     "code": "nodicsDocsComponentcommerceCartOrder",
     "typeCode": "nodicsDocumentationArticleComponentType",
     "renderer": "documentation.component.article",
@@ -31183,7 +31557,7 @@ module.exports = {
     },
     "active": true
   },
-  "record58": {
+  "record59": {
     "code": "nodicsDocsComponentcommercePaymentFulfillment",
     "typeCode": "nodicsDocumentationArticleComponentType",
     "renderer": "documentation.component.article",
@@ -31526,7 +31900,7 @@ module.exports = {
     },
     "active": true
   },
-  "record59": {
+  "record60": {
     "code": "nodicsDocsComponentfulfillmentShippingManagement",
     "typeCode": "nodicsDocumentationArticleComponentType",
     "renderer": "documentation.component.article",
@@ -31979,7 +32353,7 @@ module.exports = {
     },
     "active": true
   },
-  "record60": {
+  "record61": {
     "code": "nodicsDocsComponentorderManagementLifecycle",
     "typeCode": "nodicsDocumentationArticleComponentType",
     "renderer": "documentation.component.article",
@@ -32431,7 +32805,7 @@ module.exports = {
     },
     "active": true
   },
-  "record61": {
+  "record62": {
     "code": "nodicsDocsComponentcommerceReturnsRefunds",
     "typeCode": "nodicsDocumentationArticleComponentType",
     "renderer": "documentation.component.article",
@@ -32776,7 +33150,7 @@ module.exports = {
     },
     "active": true
   },
-  "record62": {
+  "record63": {
     "code": "nodicsDocsComponentengagementCustomerReviews",
     "typeCode": "nodicsDocumentationArticleComponentType",
     "renderer": "documentation.component.article",
@@ -33062,7 +33436,7 @@ module.exports = {
     },
     "active": true
   },
-  "record63": {
+  "record64": {
     "code": "nodicsDocsComponentengagementReviewModerationGovernance",
     "typeCode": "nodicsDocumentationArticleComponentType",
     "renderer": "documentation.component.article",
@@ -33337,7 +33711,7 @@ module.exports = {
     },
     "active": true
   },
-  "record64": {
+  "record65": {
     "code": "nodicsDocsComponentengagementReviewAggregationRecovery",
     "typeCode": "nodicsDocumentationArticleComponentType",
     "renderer": "documentation.component.article",
@@ -33621,7 +33995,7 @@ module.exports = {
     },
     "active": true
   },
-  "record65": {
+  "record66": {
     "code": "nodicsDocsComponentengagementCustomerFeedback",
     "typeCode": "nodicsDocumentationArticleComponentType",
     "renderer": "documentation.component.article",
@@ -34034,7 +34408,7 @@ module.exports = {
     },
     "active": true
   },
-  "record66": {
+  "record67": {
     "code": "nodicsDocsComponentengagementUnifiedOperations",
     "typeCode": "nodicsDocumentationArticleComponentType",
     "renderer": "documentation.component.article",
@@ -34465,7 +34839,7 @@ module.exports = {
     },
     "active": true
   },
-  "record67": {
+  "record68": {
     "code": "nodicsDocsComponentengagementGovernedAutomation",
     "typeCode": "nodicsDocumentationArticleComponentType",
     "renderer": "documentation.component.article",
@@ -34826,7 +35200,7 @@ module.exports = {
     },
     "active": true
   },
-  "record68": {
+  "record69": {
     "code": "nodicsDocsComponentengagementEnterpriseOperations",
     "typeCode": "nodicsDocumentationArticleComponentType",
     "renderer": "documentation.component.article",
@@ -35190,7 +35564,7 @@ module.exports = {
     },
     "active": true
   },
-  "record69": {
+  "record70": {
     "code": "nodicsDocsComponentcommunicationOverview",
     "typeCode": "nodicsDocumentationArticleComponentType",
     "renderer": "documentation.component.article",
@@ -35547,7 +35921,7 @@ module.exports = {
     },
     "active": true
   },
-  "record70": {
+  "record71": {
     "code": "nodicsDocsComponenteventsMessagingClusterCoordination",
     "typeCode": "nodicsDocumentationArticleComponentType",
     "renderer": "documentation.component.article",
@@ -35974,7 +36348,7 @@ module.exports = {
     },
     "active": true
   },
-  "record71": {
+  "record72": {
     "code": "nodicsDocsComponentprocessOverview",
     "typeCode": "nodicsDocumentationArticleComponentType",
     "renderer": "documentation.component.article",
@@ -36422,7 +36796,7 @@ module.exports = {
     },
     "active": true
   },
-  "record72": {
+  "record73": {
     "code": "nodicsDocsComponentprocessRuntimeLifecycle",
     "typeCode": "nodicsDocumentationArticleComponentType",
     "renderer": "documentation.component.article",
@@ -36875,7 +37249,7 @@ module.exports = {
     },
     "active": true
   },
-  "record73": {
+  "record74": {
     "code": "nodicsDocsComponentprocessWorkflowOrchestrationPatterns",
     "typeCode": "nodicsDocumentationArticleComponentType",
     "renderer": "documentation.component.article",
@@ -37495,7 +37869,7 @@ module.exports = {
     },
     "active": true
   },
-  "record74": {
+  "record75": {
     "code": "nodicsDocsComponentprocessFirstWorkflow",
     "typeCode": "nodicsDocumentationArticleComponentType",
     "renderer": "documentation.component.article",
@@ -37823,7 +38197,7 @@ module.exports = {
     },
     "active": true
   },
-  "record75": {
+  "record76": {
     "code": "nodicsDocsComponentprocessFirstHumanTask",
     "typeCode": "nodicsDocumentationArticleComponentType",
     "renderer": "documentation.component.article",
@@ -38146,7 +38520,7 @@ module.exports = {
     },
     "active": true
   },
-  "record76": {
+  "record77": {
     "code": "nodicsDocsComponentprocessBusinessValue",
     "typeCode": "nodicsDocumentationArticleComponentType",
     "renderer": "documentation.component.article",
@@ -38511,7 +38885,7 @@ module.exports = {
     },
     "active": true
   },
-  "record77": {
+  "record78": {
     "code": "nodicsDocsComponentpipelineBusinessLogicOrchestration",
     "typeCode": "nodicsDocumentationArticleComponentType",
     "renderer": "documentation.component.article",
@@ -39385,7 +39759,7 @@ module.exports = {
     },
     "active": true
   },
-  "record78": {
+  "record79": {
     "code": "nodicsDocsComponentcronOperations",
     "typeCode": "nodicsDocumentationArticleComponentType",
     "renderer": "documentation.component.article",
@@ -39674,7 +40048,7 @@ module.exports = {
     },
     "active": true
   },
-  "record79": {
+  "record80": {
     "code": "nodicsDocsComponentcronNodeResponsibilityTee",
     "typeCode": "nodicsDocumentationArticleComponentType",
     "renderer": "documentation.component.article",
@@ -39941,7 +40315,7 @@ module.exports = {
     },
     "active": true
   },
-  "record80": {
+  "record81": {
     "code": "nodicsDocsComponentcronProjectCustomization",
     "typeCode": "nodicsDocumentationArticleComponentType",
     "renderer": "documentation.component.article",
@@ -40211,7 +40585,7 @@ module.exports = {
     },
     "active": true
   },
-  "record81": {
+  "record82": {
     "code": "nodicsDocsComponentprocessProcessCronRuntime",
     "typeCode": "nodicsDocumentationArticleComponentType",
     "renderer": "documentation.component.article",
@@ -40545,7 +40919,7 @@ module.exports = {
     },
     "active": true
   },
-  "record82": {
+  "record83": {
     "code": "nodicsDocsComponentprocessScheduledAutomation",
     "typeCode": "nodicsDocumentationArticleComponentType",
     "renderer": "documentation.component.article",
@@ -40859,7 +41233,7 @@ module.exports = {
     },
     "active": true
   },
-  "record83": {
+  "record84": {
     "code": "nodicsDocsComponentdataImportExportMigration",
     "typeCode": "nodicsDocumentationArticleComponentType",
     "renderer": "documentation.component.article",
@@ -41932,7 +42306,7 @@ module.exports = {
     },
     "active": true
   },
-  "record84": {
+  "record85": {
     "code": "nodicsDocsComponentprocessActionAdapters",
     "typeCode": "nodicsDocumentationArticleComponentType",
     "renderer": "documentation.component.article",
@@ -42245,7 +42619,7 @@ module.exports = {
     },
     "active": true
   },
-  "record85": {
+  "record86": {
     "code": "nodicsDocsComponentframeworkDevopsRuntime",
     "typeCode": "nodicsDocumentationArticleComponentType",
     "renderer": "documentation.component.article",
@@ -42536,7 +42910,7 @@ module.exports = {
     },
     "active": true
   },
-  "record86": {
+  "record87": {
     "code": "nodicsDocsComponentframeworkRuntimeReleaseRollback",
     "typeCode": "nodicsDocumentationArticleComponentType",
     "renderer": "documentation.component.article",
@@ -42815,7 +43189,7 @@ module.exports = {
     },
     "active": true
   },
-  "record87": {
+  "record88": {
     "code": "nodicsDocsComponentframeworkLocalBrowserAcceptanceJourney",
     "typeCode": "nodicsDocumentationArticleComponentType",
     "renderer": "documentation.component.article",
@@ -43098,7 +43472,7 @@ module.exports = {
     },
     "active": true
   },
-  "record88": {
+  "record89": {
     "code": "nodicsDocsComponentframeworkLocalVerificationChecklist",
     "typeCode": "nodicsDocumentationArticleComponentType",
     "renderer": "documentation.component.article",
@@ -43386,7 +43760,7 @@ module.exports = {
     },
     "active": true
   },
-  "record89": {
+  "record90": {
     "code": "nodicsDocsComponentcommerceEnterpriseOperations",
     "typeCode": "nodicsDocumentationArticleComponentType",
     "renderer": "documentation.component.article",
@@ -43745,7 +44119,7 @@ module.exports = {
     },
     "active": true
   },
-  "record90": {
+  "record91": {
     "code": "nodicsDocsComponentprocessIncidentRecovery",
     "typeCode": "nodicsDocumentationArticleComponentType",
     "renderer": "documentation.component.article",
@@ -44079,7 +44453,7 @@ module.exports = {
     },
     "active": true
   },
-  "record91": {
+  "record92": {
     "code": "nodicsDocsComponentprocessDevopsTopology",
     "typeCode": "nodicsDocumentationArticleComponentType",
     "renderer": "documentation.component.article",
@@ -44412,7 +44786,7 @@ module.exports = {
     },
     "active": true
   },
-  "record92": {
+  "record93": {
     "code": "nodicsDocsComponentprocessQaRegressionGuide",
     "typeCode": "nodicsDocumentationArticleComponentType",
     "renderer": "documentation.component.article",
@@ -44751,7 +45125,7 @@ module.exports = {
     },
     "active": true
   },
-  "record93": {
+  "record94": {
     "code": "nodicsDocsComponentframeworkCapabilityDocumentationMaturityPattern",
     "typeCode": "nodicsDocumentationArticleComponentType",
     "renderer": "documentation.component.article",
@@ -45180,7 +45554,7 @@ module.exports = {
     },
     "active": true
   },
-  "record94": {
+  "record95": {
     "code": "nodicsDocsComponentdocsOverview",
     "typeCode": "nodicsDocumentationArticleComponentType",
     "renderer": "documentation.component.article",
@@ -45464,7 +45838,7 @@ module.exports = {
     },
     "active": true
   },
-  "record95": {
+  "record96": {
     "code": "nodicsDocsComponentwcmsPublishingLifecycle",
     "typeCode": "nodicsDocumentationArticleComponentType",
     "renderer": "documentation.component.article",
@@ -45799,7 +46173,7 @@ module.exports = {
     },
     "active": true
   },
-  "record96": {
+  "record97": {
     "code": "nodicsDocsComponentapplicationsNexusDataContentGuide",
     "typeCode": "nodicsDocumentationArticleComponentType",
     "renderer": "documentation.component.article",
@@ -46145,7 +46519,7 @@ module.exports = {
     },
     "active": true
   },
-  "record97": {
+  "record98": {
     "code": "nodicsDocsComponentapplicationsAxisSetupErrorContracts",
     "typeCode": "nodicsDocumentationArticleComponentType",
     "renderer": "documentation.component.article",
@@ -46460,7 +46834,7 @@ module.exports = {
     },
     "active": true
   },
-  "record98": {
+  "record99": {
     "code": "nodicsDocsComponentwcmsCmsSourceMapAuthoringContract",
     "typeCode": "nodicsDocumentationArticleComponentType",
     "renderer": "documentation.component.article",
@@ -46793,7 +47167,7 @@ module.exports = {
     },
     "active": true
   },
-  "record99": {
+  "record100": {
     "code": "nodicsDocsComponentwcmsMediaOperationsRunbook",
     "typeCode": "nodicsDocumentationArticleComponentType",
     "renderer": "documentation.component.article",
@@ -47131,7 +47505,7 @@ module.exports = {
     },
     "active": true
   },
-  "record100": {
+  "record101": {
     "code": "nodicsDocsComponentdataImportExportProviderGuides",
     "typeCode": "nodicsDocumentationArticleComponentType",
     "renderer": "documentation.component.article",
@@ -47463,7 +47837,7 @@ module.exports = {
     },
     "active": true
   },
-  "record101": {
+  "record102": {
     "code": "nodicsDocsComponentcommerceDataAuthoringFulfillment",
     "typeCode": "nodicsDocumentationArticleComponentType",
     "renderer": "documentation.component.article",
@@ -47811,7 +48185,7 @@ module.exports = {
     },
     "active": true
   },
-  "record102": {
+  "record103": {
     "code": "nodicsDocsComponentdocsDocumentationPublishingRunbook",
     "typeCode": "nodicsDocumentationArticleComponentType",
     "renderer": "documentation.component.article",
@@ -48119,7 +48493,7 @@ module.exports = {
     },
     "active": true
   },
-  "record103": {
+  "record104": {
     "code": "nodicsDocsComponentplatformModuleRegistryJourney",
     "typeCode": "nodicsDocumentationArticleComponentType",
     "renderer": "documentation.component.article",
@@ -48422,7 +48796,7 @@ module.exports = {
     },
     "active": true
   },
-  "record104": {
+  "record105": {
     "code": "nodicsDocsComponentcommerceSearchGuide",
     "typeCode": "nodicsDocumentationArticleComponentType",
     "renderer": "documentation.component.article",
@@ -48698,7 +49072,7 @@ module.exports = {
     },
     "active": true
   },
-  "record105": {
+  "record106": {
     "code": "nodicsDocsComponentlocalizationRuntimeAuthoring",
     "typeCode": "nodicsDocumentationArticleComponentType",
     "renderer": "documentation.component.article",
@@ -48974,7 +49348,7 @@ module.exports = {
     },
     "active": true
   },
-  "record106": {
+  "record107": {
     "code": "nodicsDocsComponentcommercePaymentProviderBoundaries",
     "typeCode": "nodicsDocumentationArticleComponentType",
     "renderer": "documentation.component.article",
@@ -49259,7 +49633,7 @@ module.exports = {
     },
     "active": true
   },
-  "record107": {
+  "record108": {
     "code": "nodicsDocsComponentloyaltyWalletsRewardsLedger",
     "typeCode": "nodicsDocumentationArticleComponentType",
     "renderer": "documentation.component.article",
@@ -49916,7 +50290,7 @@ module.exports = {
     },
     "active": true
   },
-  "record108": {
+  "record109": {
     "code": "nodicsDocsComponentcommerceShoppingListCommerceBoundary",
     "typeCode": "nodicsDocumentationArticleComponentType",
     "renderer": "documentation.component.article",
@@ -50375,7 +50749,7 @@ module.exports = {
     },
     "active": true
   },
-  "record109": {
+  "record110": {
     "code": "nodicsDocsComponentfoundationNmsRuntimeMonitoring",
     "typeCode": "nodicsDocumentationArticleComponentType",
     "renderer": "documentation.component.article",
@@ -50667,7 +51041,7 @@ module.exports = {
     },
     "active": true
   },
-  "record110": {
+  "record111": {
     "code": "nodicsDocsComponentfoundationServiceRuntimeOverrides",
     "typeCode": "nodicsDocumentationArticleComponentType",
     "renderer": "documentation.component.article",
@@ -51000,7 +51374,7 @@ module.exports = {
     },
     "active": true
   },
-  "record111": {
+  "record112": {
     "code": "nodicsDocsComponentfoundationModuleToModuleCommunication",
     "typeCode": "nodicsDocumentationArticleComponentType",
     "renderer": "documentation.component.article",
@@ -51584,7 +51958,7 @@ module.exports = {
     },
     "active": true
   },
-  "record112": {
+  "record113": {
     "code": "nodicsDocsComponentfoundationCacheProviderRunbooks",
     "typeCode": "nodicsDocumentationArticleComponentType",
     "renderer": "documentation.component.article",
@@ -51879,7 +52253,7 @@ module.exports = {
     },
     "active": true
   },
-  "record113": {
+  "record114": {
     "code": "nodicsDocsComponentfoundationDatabaseProviderBoundaries",
     "typeCode": "nodicsDocumentationArticleComponentType",
     "renderer": "documentation.component.article",
@@ -52190,7 +52564,7 @@ module.exports = {
     },
     "active": true
   },
-  "record114": {
+  "record115": {
     "code": "nodicsDocsComponentsecurityOtpSecurityFlow",
     "typeCode": "nodicsDocumentationArticleComponentType",
     "renderer": "documentation.component.article",
@@ -52500,7 +52874,7 @@ module.exports = {
     },
     "active": true
   },
-  "record115": {
+  "record116": {
     "code": "nodicsDocsComponentcommunicationProviderRunbooks",
     "typeCode": "nodicsDocumentationArticleComponentType",
     "renderer": "documentation.component.article",
@@ -52784,7 +53158,7 @@ module.exports = {
     },
     "active": true
   },
-  "record116": {
+  "record117": {
     "code": "nodicsDocsComponentengagementContactSubmissionOperations",
     "typeCode": "nodicsDocumentationArticleComponentType",
     "renderer": "documentation.component.article",
@@ -53066,7 +53440,7 @@ module.exports = {
     },
     "active": true
   },
-  "record117": {
+  "record118": {
     "code": "nodicsDocsComponentprocessWorkflowBpmSourceMap",
     "typeCode": "nodicsDocumentationArticleComponentType",
     "renderer": "documentation.component.article",
@@ -53348,7 +53722,7 @@ module.exports = {
     },
     "active": true
   },
-  "record118": {
+  "record119": {
     "code": "nodicsDocsComponentprocessCronjobDataAuthoring",
     "typeCode": "nodicsDocumentationArticleComponentType",
     "renderer": "documentation.component.article",
@@ -53632,7 +54006,7 @@ module.exports = {
     },
     "active": true
   },
-  "record119": {
+  "record120": {
     "code": "nodicsDocsComponentframeworkReleaseUpgradeCompatibility",
     "typeCode": "nodicsDocumentationArticleComponentType",
     "renderer": "documentation.component.article",
@@ -53952,7 +54326,7 @@ module.exports = {
     },
     "active": true
   },
-  "record120": {
+  "record121": {
     "code": "nodicsDocsComponentcommerceFulfillmentCoreSourceMap",
     "typeCode": "nodicsDocumentationArticleComponentType",
     "renderer": "documentation.component.article",
@@ -54236,7 +54610,7 @@ module.exports = {
     },
     "active": true
   },
-  "record121": {
+  "record122": {
     "code": "nodicsDocsComponentacceleratorsDomainCommerceSourceMap",
     "typeCode": "nodicsDocumentationArticleComponentType",
     "renderer": "documentation.component.article",
@@ -54521,7 +54895,7 @@ module.exports = {
     },
     "active": true
   },
-  "record122": {
+  "record123": {
     "code": "nodicsDocsComponentfoundationToolingRuntimeContracts",
     "typeCode": "nodicsDocumentationArticleComponentType",
     "renderer": "documentation.component.article",
@@ -54801,7 +55175,7 @@ module.exports = {
     },
     "active": true
   },
-  "record123": {
+  "record124": {
     "code": "nodicsDocsComponentfoundationEmsRuntimeClientRunbook",
     "typeCode": "nodicsDocumentationArticleComponentType",
     "renderer": "documentation.component.article",
@@ -55081,7 +55455,7 @@ module.exports = {
     },
     "active": true
   },
-  "record124": {
+  "record125": {
     "code": "nodicsDocsComponentreferenceInternalSourceBoundaryRegister",
     "typeCode": "nodicsDocumentationArticleComponentType",
     "renderer": "documentation.component.article",
@@ -55443,7 +55817,7 @@ module.exports = {
     },
     "active": true
   },
-  "record125": {
+  "record126": {
     "code": "nodicsDocsComponenttoolingAiDeveloperEnablement",
     "typeCode": "nodicsDocumentationArticleComponentType",
     "renderer": "documentation.component.article",
@@ -55832,7 +56206,7 @@ module.exports = {
     },
     "active": true
   },
-  "record126": {
+  "record127": {
     "code": "nodicsDocsComponentreferenceSourceMapGlossary",
     "typeCode": "nodicsDocumentationArticleComponentType",
     "renderer": "documentation.component.article",
@@ -56553,7 +56927,7 @@ module.exports = {
     },
     "active": true
   },
-  "record127": {
+  "record128": {
     "code": "nodicsDocsComponentreferenceSourceBackedDocumentationCoverageAudit",
     "typeCode": "nodicsDocumentationArticleComponentType",
     "renderer": "documentation.component.article",
@@ -57324,7 +57698,7 @@ module.exports = {
     },
     "active": true
   },
-  "record128": {
+  "record129": {
     "code": "nodicsDocsComponentreferenceDocumentationGapBacklog",
     "typeCode": "nodicsDocumentationArticleComponentType",
     "renderer": "documentation.component.article",

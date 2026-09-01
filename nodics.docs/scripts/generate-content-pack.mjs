@@ -369,7 +369,7 @@ const routeFor = (document, index) => {
     (index === 0
       ? "/docs/framework"
       : `/docs/framework/${slug(document.id.replace(/\./g, "-"))}`);
-  if (!/^\/docs\/framework(?:\/[a-z0-9-]+)*$/.test(route)) {
+  if (!/^(?:\/docs|\/docs\/framework(?:\/[a-z0-9-]+)*)$/.test(route)) {
     throw new Error(`Invalid framework documentation route: ${route}`);
   }
   return route;
@@ -586,7 +586,7 @@ const productRecords = {
       "Business-friendly and developer-ready framework documentation rendered from a governed documentation content catalog.",
     contentCatalog: "documentationContentCatalog",
     site: "nodicsDocumentationSite",
-    publicRootPath: "/docs/framework",
+    publicRootPath: "/docs",
     defaultLocale: "en",
     channels: ["axis", "nexus", "web"],
     ownerFunctionalModule: "nodics.docs",

@@ -23,7 +23,8 @@ module.exports = {
                 enabled: true,
                 schemaName: 'employee',
                 operation: 'saveAll', //saveAll, update and saveOrUpdate
-                dataFilePrefix: 'defaultCmsEmployeeData'
+                dataFilePrefix: 'defaultCmsEmployeeData',
+                userGroups: ['adminGroup']
             },
             query: {
                 code: '$code',

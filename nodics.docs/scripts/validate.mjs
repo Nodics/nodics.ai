@@ -430,7 +430,7 @@ for (const document of catalogue.documents) {
   }
   if (
     document.route &&
-    !/^\/docs\/framework(?:\/[a-z0-9-]+)*$/.test(document.route)
+    !/^(?:\/docs|\/docs\/framework(?:\/[a-z0-9-]+)*)$/.test(document.route)
   ) {
     throw new Error(`Invalid framework documentation route: ${document.id}`);
   }

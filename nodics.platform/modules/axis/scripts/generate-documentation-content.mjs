@@ -379,15 +379,15 @@ const navigationItems = sourcePages.map((page) => ({
   section: page.navigationSectionCode || slug(page.section),
   sectionTitle: page.navigationSection || page.section,
   sectionOrder: page.navigationSectionOrder || page.sectionOrder,
-  group: page.navigationGroupCode || slug(page.navigationGroup || page.section),
-  groupTitle: page.navigationGroup || page.section,
-  groupOrder: page.navigationGroupOrder || page.navigationOrder || page.order,
-  subgroup: page.navigationSubgroupCode || null,
-  subgroupTitle: page.navigationSubgroup || null,
+  group: page.navigationSectionCode || slug(page.section),
+  groupTitle: page.navigationSection || page.section,
+  groupOrder: page.navigationSectionOrder || page.sectionOrder,
+  subgroup: null,
+  subgroupTitle: null,
   order: page.navigationOrder || page.order,
-  parentId: page.parentId || null,
-  hierarchyPath: page.hierarchyPath || [page.section, page.title],
-  hierarchyDepth: page.hierarchyDepth || 2,
+  parentId: page.navigationSectionCode || slug(page.section),
+  hierarchyPath: [page.navigationSection || page.section, page.title],
+  hierarchyDepth: 2,
   documentType: page.documentType || 'overview',
   audience: page.audience,
   businessAudience: page.businessAudience || [],
@@ -512,6 +512,24 @@ const sections = [...sectionEntries.values()].sort((left, right) =>
   left.order - right.order || left.title.localeCompare(right.title),
 );
 
+const sectionPageOrder = new Map();
+sections.forEach((section) => {
+  sourcePages
+    .filter((page) => (page.navigationSectionCode || slug(page.section)) === section.code)
+    .sort(
+      (left, right) =>
+        (left.navigationOrder || left.order) - (right.navigationOrder || right.order) ||
+        left.title.localeCompare(right.title),
+    )
+    .forEach((page, index) => {
+      sectionPageOrder.set(page.id || `axis.${page.code}`, (index + 1) * 10);
+    });
+});
+
+function twoLevelNavigationOrder(page) {
+  return sectionPageOrder.get(page.id || `axis.${page.code}`) || page.navigationOrder || page.order;
+}
+
 const accessPolicyRecords = {
   record0: {
     code: publicAccessPolicyCode,
@@ -598,8 +616,6 @@ const navigationComponent = {
 };
 
 const sectionNodeCodes = new Map();
-const groupNodeCodes = new Map();
-const subgroupNodeCodes = new Map();
 const nodeRecords = [];
 const dashboardRecords = [];
 
@@ -653,7 +669,7 @@ pushDashboard({
     'Expandable and searchable Axis documentation navigation generated from backend-owned content-catalog metadata.',
   contentArea: {
     navigationPattern:
-      'Sections, groups, subgroups, and topics are content records so Axis can reorder, preview, submit, approve, and publish documentation without hardcoded frontend navigation.',
+      'Sections and page links are content records so Axis can reorder, preview, submit, approve, and publish documentation without hardcoded frontend navigation.',
   },
   cards: sections.map((section) => ({
     code: section.code,
@@ -724,18 +740,11 @@ sections.forEach((section) => {
   const sectionPages = sourcePages.filter(
     (page) => (page.navigationSectionCode || slug(page.section)) === section.code,
   );
-  const groups = [
-    ...new Map(
-      sectionPages.map((page) => [
-        page.navigationGroupCode || slug(page.navigationGroup || page.section),
-        {
-          code: page.navigationGroupCode || slug(page.navigationGroup || page.section),
-          title: page.navigationGroup || page.section,
-          order: page.navigationGroupOrder || page.navigationOrder || page.order,
-        },
-      ]),
-    ).values(),
-  ].sort((left, right) => left.order - right.order || left.title.localeCompare(right.title));
+  const sortedSectionPages = [...sectionPages].sort(
+    (left, right) =>
+      twoLevelNavigationOrder(left) - twoLevelNavigationOrder(right) ||
+      left.title.localeCompare(right.title),
+  );
   const dashboardCode = boundedCode('axisDocsDashboardSec', [section.code]);
   pushDashboard({
     code: dashboardCode,
@@ -748,18 +757,18 @@ sections.forEach((section) => {
       technicalPurpose:
         'This section is a backend documentation node with ordered children, search metadata, access policy, and publication lifecycle state.',
     },
-    cards: groups.map((group) => ({
-      code: group.code,
-      title: group.title,
-      summary: `Open ${group.title} topics and implementation guidance.`,
-      order: group.order,
+    cards: sortedSectionPages.map((page) => ({
+      code: page.id || `axis.${page.code}`,
+      title: page.title,
+      summary: page.summary,
+      order: twoLevelNavigationOrder(page),
     })),
-    journeyLinks: sectionPages.slice(0, 6).map((page) => ({
+    journeyLinks: sortedSectionPages.slice(0, 6).map((page) => ({
       label: page.title,
       targetPage: page.id || `axis.${page.code}`,
       route: page.route,
     })),
-    statusSummary: { pages: sectionPages.length, groups: groups.length },
+    statusSummary: { pages: sectionPages.length, navigationDepth: 2 },
     accessMode: section.accessMode || 'PUBLIC',
     lifecycleState: section.lifecycleState || defaultLifecycle,
   });
@@ -774,21 +783,22 @@ sections.forEach((section) => {
     nodeSummary: section.summary || `Axis documentation section for ${section.title}.`,
     nodeContentArea: {
       dashboard: dashboardCode,
-      groups: groups.map((group) => group.code),
-      pages: sectionPages.map((page) => page.id || `axis.${page.code}`),
+      navigationDepth: 2,
+      pages: sortedSectionPages.map((page) => page.id || `axis.${page.code}`),
     },
     nodeDashboard: dashboardCode,
-    childSummaryCards: groups.map((group) => ({
-      code: group.code,
-      title: group.title,
-      order: group.order,
+    childSummaryCards: sortedSectionPages.map((page) => ({
+      code: page.id || `axis.${page.code}`,
+      title: page.title,
+      summary: page.summary,
+      order: twoLevelNavigationOrder(page),
     })),
-    childJourneyLinks: sectionPages.slice(0, 6).map((page) => ({
+    childJourneyLinks: sortedSectionPages.slice(0, 6).map((page) => ({
       label: page.title,
       targetPage: page.id || `axis.${page.code}`,
       route: page.route,
     })),
-    childStatusSummary: { childCount: groups.length, pages: sectionPages.length },
+    childStatusSummary: { childCount: sectionPages.length, pages: sectionPages.length },
     nodeOrder: section.order,
     expandable: true,
     expandedByDefault: false,
@@ -812,211 +822,12 @@ sections.forEach((section) => {
 
 sourcePages.forEach((page) => {
   const sectionCode = page.navigationSectionCode || slug(page.section);
-  const groupCode = page.navigationGroupCode || slug(page.navigationGroup || page.section);
-  const groupKey = `${sectionCode}:${groupCode}`;
-  if (!groupNodeCodes.has(groupKey)) {
-    const groupNodeCode = boundedCode('axisDocsNodeGrp', [sectionCode, groupCode]);
-    const groupPages = sourcePages.filter(
-      (candidate) =>
-        (candidate.navigationSectionCode || slug(candidate.section)) === sectionCode &&
-        (candidate.navigationGroupCode ||
-          slug(candidate.navigationGroup || candidate.section)) === groupCode,
-    );
-    const subgroups = [
-      ...new Map(
-        groupPages
-          .filter((candidate) => candidate.navigationSubgroupCode)
-          .map((candidate) => [
-            candidate.navigationSubgroupCode,
-            {
-              code: candidate.navigationSubgroupCode,
-              title: candidate.navigationSubgroup,
-              order: candidate.navigationOrder || candidate.order,
-            },
-          ]),
-      ).values(),
-    ];
-    const dashboardCode = boundedCode('axisDocsDashboardGrp', [sectionCode, groupCode]);
-    groupNodeCodes.set(groupKey, groupNodeCode);
-    pushDashboard({
-      code: dashboardCode,
-      ownerType: 'GROUP',
-      ownerCode: groupNodeCode,
-      title: page.navigationGroup || page.section,
-      summary: `Detailed landing content for ${page.navigationGroup || page.section}, including business purpose, technical ownership, customization routes, and validation evidence.`,
-      contentArea: {
-        businessPurpose:
-          'Group related Axis topics so business and development users can enter from the capability they recognize.',
-        technicalPurpose:
-          'Preserve Axis group ownership as backend records that can be reordered and summarized through Axis.',
-      },
-      cards: groupPages.map((candidate) => ({
-        code: candidate.id || `axis.${candidate.code}`,
-        title: candidate.title,
-        summary: candidate.summary,
-        order: candidate.navigationOrder || candidate.order,
-      })),
-      journeyLinks: groupPages.map((candidate) => ({
-        label: candidate.title,
-        targetPage: candidate.id || `axis.${candidate.code}`,
-        route: candidate.route,
-      })),
-      statusSummary: { pages: groupPages.length, subgroups: subgroups.length },
-      accessMode: page.accessMode || 'PUBLIC',
-      lifecycleState: page.lifecycleState || defaultLifecycle,
-    });
-    nodeRecords.push({
-      code: groupNodeCode,
-      product: productCode,
-      navigation: navigationCode,
-      parentNode: sectionNodeCodes.get(sectionCode),
-      nodeLevel: 'GROUP',
-      nodeType: 'CONTAINER',
-      nodeTitle: page.navigationGroup || page.section,
-      nodeSummary: `Business-friendly group for ${page.navigationGroup || page.section} documentation topics.`,
-      nodeContentArea: {
-        dashboard: dashboardCode,
-        pages: groupPages.map((candidate) => candidate.id || `axis.${candidate.code}`),
-        subgroups: subgroups.map((subgroup) => subgroup.code),
-      },
-      nodeDashboard: dashboardCode,
-      childSummaryCards: groupPages.map((candidate) => ({
-        code: candidate.id || `axis.${candidate.code}`,
-        title: candidate.title,
-        summary: candidate.summary,
-        order: candidate.navigationOrder || candidate.order,
-      })),
-      childJourneyLinks: groupPages.map((candidate) => ({
-        label: candidate.title,
-        targetPage: candidate.id || `axis.${candidate.code}`,
-        route: candidate.route,
-      })),
-      childStatusSummary: { childCount: groupPages.length, subgroups: subgroups.length },
-      nodeOrder: page.navigationGroupOrder || page.navigationOrder || page.order,
-      expandable: true,
-      expandedByDefault: false,
-      nodeIcon: 'folder-open',
-      nodeAudience: page.audience || ['administrator', 'business-user', 'developer'],
-      accessPolicy: accessPolicyFor(page),
-      accessMode: page.accessMode || 'PUBLIC',
-      allowedRoles: page.allowedRoles || [],
-      allowedGroups: page.allowedGroups || [],
-      allowedPermissions: page.allowedPermissions || [],
-      ...workflowMetadata('NODE'),
-      lifecycleState: page.lifecycleState || defaultLifecycle,
-      maturityState: schemaMaturity(page.maturityState),
-      searchKeywords: page.searchKeywords || [],
-      relatedNodes: [],
-      locale: page.locale || 'en',
-      channel: 'web',
-      active: true,
-    });
-  }
-
-  let parentNode = groupNodeCodes.get(groupKey);
-  if (page.navigationSubgroupCode) {
-    const subgroupKey = `${groupKey}:${page.navigationSubgroupCode}`;
-    if (!subgroupNodeCodes.has(subgroupKey)) {
-      const subgroupNodeCode = boundedCode('axisDocsNodeSub', [
-        sectionCode,
-        groupCode,
-        page.navigationSubgroupCode,
-      ]);
-      const subgroupPages = sourcePages.filter(
-        (candidate) =>
-          (candidate.navigationSectionCode || slug(candidate.section)) === sectionCode &&
-          (candidate.navigationGroupCode ||
-            slug(candidate.navigationGroup || candidate.section)) === groupCode &&
-          candidate.navigationSubgroupCode === page.navigationSubgroupCode,
-      );
-      const dashboardCode = boundedCode('axisDocsDashboardSub', [
-        sectionCode,
-        groupCode,
-        page.navigationSubgroupCode,
-      ]);
-      subgroupNodeCodes.set(subgroupKey, subgroupNodeCode);
-      pushDashboard({
-        code: dashboardCode,
-        ownerType: 'SUBGROUP',
-        ownerCode: subgroupNodeCode,
-        title: page.navigationSubgroup,
-        summary: `Detailed landing content for ${page.navigationSubgroup}, with links to each owned Axis topic and implementation reference.`,
-        contentArea: {
-          businessPurpose:
-            'Separate deeper Axis details without forcing users to know internal source paths.',
-          technicalPurpose:
-            'Keep related topics under a stable backend node for Axis-managed order, access, and publication lifecycle.',
-        },
-        cards: subgroupPages.map((candidate) => ({
-          code: candidate.id || `axis.${candidate.code}`,
-          title: candidate.title,
-          summary: candidate.summary,
-          order: candidate.navigationOrder || candidate.order,
-        })),
-        journeyLinks: subgroupPages.map((candidate) => ({
-          label: candidate.title,
-          targetPage: candidate.id || `axis.${candidate.code}`,
-          route: candidate.route,
-        })),
-        statusSummary: { pages: subgroupPages.length },
-        accessMode: page.accessMode || 'PUBLIC',
-        lifecycleState: page.lifecycleState || defaultLifecycle,
-      });
-      nodeRecords.push({
-        code: subgroupNodeCode,
-        product: productCode,
-        navigation: navigationCode,
-        parentNode,
-        nodeLevel: 'SUBGROUP',
-        nodeType: 'CONTAINER',
-        nodeTitle: page.navigationSubgroup,
-        nodeSummary: `Subgroup for ${page.navigationSubgroup} Axis documentation topics.`,
-        nodeContentArea: {
-          dashboard: dashboardCode,
-          pages: subgroupPages.map((candidate) => candidate.id || `axis.${candidate.code}`),
-        },
-        nodeDashboard: dashboardCode,
-        childSummaryCards: subgroupPages.map((candidate) => ({
-          code: candidate.id || `axis.${candidate.code}`,
-          title: candidate.title,
-          summary: candidate.summary,
-          order: candidate.navigationOrder || candidate.order,
-        })),
-        childJourneyLinks: subgroupPages.map((candidate) => ({
-          label: candidate.title,
-          targetPage: candidate.id || `axis.${candidate.code}`,
-          route: candidate.route,
-        })),
-        childStatusSummary: { childCount: subgroupPages.length },
-        nodeOrder: page.navigationOrder || page.order,
-        expandable: true,
-        expandedByDefault: false,
-        nodeIcon: 'list-tree',
-        nodeAudience: page.audience || ['administrator', 'business-user', 'developer'],
-        accessPolicy: accessPolicyFor(page),
-        accessMode: page.accessMode || 'PUBLIC',
-        allowedRoles: page.allowedRoles || [],
-        allowedGroups: page.allowedGroups || [],
-        allowedPermissions: page.allowedPermissions || [],
-        ...workflowMetadata('NODE'),
-        lifecycleState: page.lifecycleState || defaultLifecycle,
-        maturityState: schemaMaturity(page.maturityState),
-        searchKeywords: page.searchKeywords || [],
-        relatedNodes: [],
-        locale: page.locale || 'en',
-        channel: 'web',
-        active: true,
-      });
-    }
-    parentNode = subgroupNodeCodes.get(subgroupKey);
-  }
-
   nodeRecords.push({
-    code: boundedCode('axisDocsNodeTopic', [page.id || `axis.${page.code}`]),
+    code: boundedCode('axisDocsNodePage', [page.id || `axis.${page.code}`]),
     product: productCode,
     navigation: navigationCode,
-    parentNode,
-    nodeLevel: 'TOPIC',
+    parentNode: sectionNodeCodes.get(sectionCode),
+    nodeLevel: 'PAGE_LINK',
     nodeType: 'PAGE',
     nodeTitle: page.title,
     nodeSummary: page.summary,
@@ -1032,7 +843,7 @@ sourcePages.forEach((page) => {
     targetDocumentationPage: metadataPageCode(page),
     targetPage: pageRecordCode(page),
     targetRoute: routeRecordCode(page),
-    nodeOrder: page.navigationOrder || page.order,
+    nodeOrder: 10000 + twoLevelNavigationOrder(page),
     expandable: false,
     expandedByDefault: false,
     nodeIcon: 'file-text',
@@ -1047,13 +858,22 @@ sourcePages.forEach((page) => {
     maturityState: schemaMaturity(page.maturityState),
     searchKeywords: page.searchKeywords || [],
     relatedNodes: (page.relatedPages || []).map((relatedPage) =>
-      boundedCode('axisDocsNodeTopic', [relatedPage]),
+      boundedCode('axisDocsNodePage', [relatedPage]),
     ),
     locale: page.locale || 'en',
     channel: 'web',
     active: true,
   });
 });
+
+const legacyNavigationCleanupRecords = {
+  record0: {
+    code: 'axisDocumentationLegacyNavigationCleanup',
+    reason:
+      'Remove generated multi-level navigation containers before importing the two-level section and page-link hierarchy.',
+    active: true,
+  },
+};
 
 const navigationRecords = {
   record0: {
@@ -1141,13 +961,13 @@ const articleRecords = Object.fromEntries(
         route: page.route,
         section: page.navigationSectionCode || slug(page.section),
         sectionTitle: page.navigationSection || page.section,
-        group: page.navigationGroupCode || slug(page.navigationGroup || page.section),
-        groupTitle: page.navigationGroup || page.section,
-        subgroup: page.navigationSubgroupCode || null,
-        subgroupTitle: page.navigationSubgroup || null,
-        parentId: page.parentId || null,
-        hierarchyPath: page.hierarchyPath || [page.section, page.title],
-        hierarchyDepth: page.hierarchyDepth || 2,
+        group: page.navigationSectionCode || slug(page.section),
+        groupTitle: page.navigationSection || page.section,
+        subgroup: null,
+        subgroupTitle: null,
+        parentId: page.navigationSectionCode || slug(page.section),
+        hierarchyPath: [page.navigationSection || page.section, page.title],
+        hierarchyDepth: 2,
         documentType: page.documentType || 'overview',
         category: page.section,
         audience: page.audience,
@@ -1218,7 +1038,7 @@ const pageMetadataRecords = Object.fromEntries(
       documentId: page.id || `axis.${page.code}`,
       title: page.title,
       summary: page.summary,
-      businessSummary: `${page.title} explains the business purpose, supported user decisions, operational effect, and Axis-facing controls for the ${page.navigationGroup || page.section} journey.`,
+      businessSummary: `${page.title} explains the business purpose, supported user decisions, operational effect, and Axis-facing controls for the ${page.navigationSection || page.section} journey.`,
       technicalSummary: `${page.title} records Platform axis ownership, source path docs/${page.source}, renderer contract, extension path, validation, and troubleshooting evidence.`,
       ownerFunctionalModule: 'nodics.platform.axis',
       technicalModule: 'axis',
@@ -1378,7 +1198,8 @@ const searchTargets = [
     keywords: [...(page.searchKeywords || []), ...(page.topicKeywords || [])],
     facets: {
       section: page.navigationSectionCode || slug(page.section),
-      group: page.navigationGroupCode || slug(page.navigationGroup || page.section),
+      group: page.navigationSectionCode || slug(page.section),
+      navigationDepth: 2,
       documentType: page.documentType,
       audience: page.audience || [],
       maturityState: page.maturityState || 'operational',
@@ -1522,6 +1343,13 @@ await writeOrCheck(
   recordModule(dashboardRecordsMap, 'Generated Nodics Axis documentation hierarchy dashboards.'),
 );
 await writeOrCheck(
+  'data/core-v001/records/documentation/axisDocumentationLegacyNavigationCleanupData.js',
+  recordModule(
+    legacyNavigationCleanupRecords,
+    'Generated Nodics Axis legacy documentation navigation cleanup marker.',
+  ),
+);
+await writeOrCheck(
   'data/core-v001/records/documentation/axisDocumentationNodeData.js',
   recordModule(nodeRecordsMap, 'Generated Nodics Axis documentation hierarchy nodes.'),
 );
@@ -1565,12 +1393,13 @@ await writeOrCheck(
 
 await writeOrCheck(
   'data/core-v001/headers/axisDocumentationContentPackHeader.js',
-  `${copyrightHeader}'use strict';\n\n/** @description Nodics foundation-import header for the Nodics Axis documentation content pack. */\nmodule.exports = {\n  cms: {\n    axisDocumentationSiteData: { options: { enabled: true, schemaName: 'cmsSite', operation: 'saveAll', dataFilePrefix: 'axisDocumentationSiteData' }, query: { code: '$code' } },\n    axisDocumentationProductData: { options: { enabled: true, schemaName: 'cmsDocumentationProduct', operation: 'saveAll', dataFilePrefix: 'axisDocumentationProductData' }, query: { code: '$code' } },\n    axisDocumentationAccessPolicyData: { options: { enabled: true, schemaName: 'cmsDocumentationAccessPolicy', operation: 'saveAll', dataFilePrefix: 'axisDocumentationAccessPolicyData' }, query: { code: '$code' } },\n    axisDocumentationNavigationData: { options: { enabled: true, schemaName: 'cmsDocumentationNavigation', operation: 'saveAll', dataFilePrefix: 'axisDocumentationNavigationData' }, query: { code: '$code' } },\n    axisDocumentationDashboardData: { options: { enabled: true, schemaName: 'cmsDocumentationDashboard', operation: 'saveAll', dataFilePrefix: 'axisDocumentationDashboardData' }, query: { code: '$code' } },\n    axisDocumentationNodeData: { options: { enabled: true, schemaName: 'cmsDocumentationNode', operation: 'saveAll', dataFilePrefix: 'axisDocumentationNodeData' }, query: { code: '$code' } },\n    axisDocumentationPageMetadataData: { options: { enabled: true, schemaName: 'cmsDocumentationPage', operation: 'saveAll', dataFilePrefix: 'axisDocumentationPageMetadataData' }, query: { code: '$code' } },\n    axisDocumentationPublicationStateData: { options: { enabled: true, schemaName: 'cmsDocumentationPublicationState', operation: 'saveAll', dataFilePrefix: 'axisDocumentationPublicationStateData' }, query: { code: '$code' } },\n    axisDocumentationSearchMetadataData: { options: { enabled: true, schemaName: 'cmsDocumentationSearchMetadata', operation: 'saveAll', dataFilePrefix: 'axisDocumentationSearchMetadataData' }, query: { code: '$code' } },\n    axisDocumentationTypeCodeData: { options: { enabled: true, schemaName: 'cmsTypeCode', operation: 'saveAll', dataFilePrefix: 'axisDocumentationTypeCodeData' }, query: { code: '$code' } },\n    axisDocumentationRendererData: { options: { enabled: true, schemaName: 'cmsTypeCode2Renderer', operation: 'saveAll', dataFilePrefix: 'axisDocumentationRendererData' }, query: { code: '$code' } },\n    axisDocumentationTemplateData: { options: { enabled: true, schemaName: 'cmsPageTemplate', operation: 'saveAll', dataFilePrefix: 'axisDocumentationTemplateData' }, query: { code: '$code' } },\n    axisDocumentationSlotData: { options: { enabled: true, schemaName: 'cmsSlotDefinition', operation: 'saveAll', dataFilePrefix: 'axisDocumentationSlotData' }, query: { code: '$code' } },\n    axisDocumentationComponentData: { options: { enabled: true, schemaName: 'cmsComponent', operation: 'saveAll', dataFilePrefix: 'axisDocumentationComponentData' }, query: { code: '$code' } },\n    axisDocumentationPageData: { options: { enabled: true, schemaName: 'cmsPage', operation: 'saveAll', dataFilePrefix: 'axisDocumentationPageData' }, query: { code: '$code' } },\n    axisDocumentationRouteData: { options: { enabled: true, schemaName: 'cmsPageRoute', operation: 'saveAll', dataFilePrefix: 'axisDocumentationRouteData' }, query: { code: '$code' } },\n  },\n};\n`,
+  `${copyrightHeader}'use strict';\n\n/** @description Nodics foundation-import header for the Nodics Axis documentation content pack. */\nmodule.exports = {\n  cms: {\n    axisDocumentationSiteData: { options: { enabled: true, schemaName: 'cmsSite', operation: 'saveAll', dataFilePrefix: 'axisDocumentationSiteData' }, query: { code: '$code' } },\n    axisDocumentationProductData: { options: { enabled: true, schemaName: 'cmsDocumentationProduct', operation: 'saveAll', dataFilePrefix: 'axisDocumentationProductData' }, query: { code: '$code' } },\n    axisDocumentationAccessPolicyData: { options: { enabled: true, schemaName: 'cmsDocumentationAccessPolicy', operation: 'saveAll', dataFilePrefix: 'axisDocumentationAccessPolicyData' }, query: { code: '$code' } },\n    axisDocumentationNavigationData: { options: { enabled: true, schemaName: 'cmsDocumentationNavigation', operation: 'saveAll', dataFilePrefix: 'axisDocumentationNavigationData' }, query: { code: '$code' } },\n    axisDocumentationDashboardData: { options: { enabled: true, schemaName: 'cmsDocumentationDashboard', operation: 'saveAll', dataFilePrefix: 'axisDocumentationDashboardData' }, query: { code: '$code' } },\n    axisDocumentationLegacyNavigationCleanupData: { options: { enabled: true, schemaName: 'cmsDocumentationNode', operation: 'remove', dataFilePrefix: 'axisDocumentationLegacyNavigationCleanupData' }, query: { product: '${productCode}', navigation: '${navigationCode}', nodeLevel: { $in: ['GROUP', 'SUBGROUP', 'TOPIC'] } } },\n    axisDocumentationNodeData: { options: { enabled: true, schemaName: 'cmsDocumentationNode', operation: 'saveAll', dataFilePrefix: 'axisDocumentationNodeData' }, query: { code: '$code' } },\n    axisDocumentationPageMetadataData: { options: { enabled: true, schemaName: 'cmsDocumentationPage', operation: 'saveAll', dataFilePrefix: 'axisDocumentationPageMetadataData' }, query: { code: '$code' } },\n    axisDocumentationPublicationStateData: { options: { enabled: true, schemaName: 'cmsDocumentationPublicationState', operation: 'saveAll', dataFilePrefix: 'axisDocumentationPublicationStateData' }, query: { code: '$code' } },\n    axisDocumentationSearchMetadataData: { options: { enabled: true, schemaName: 'cmsDocumentationSearchMetadata', operation: 'saveAll', dataFilePrefix: 'axisDocumentationSearchMetadataData' }, query: { code: '$code' } },\n    axisDocumentationTypeCodeData: { options: { enabled: true, schemaName: 'cmsTypeCode', operation: 'saveAll', dataFilePrefix: 'axisDocumentationTypeCodeData' }, query: { code: '$code' } },\n    axisDocumentationRendererData: { options: { enabled: true, schemaName: 'cmsTypeCode2Renderer', operation: 'saveAll', dataFilePrefix: 'axisDocumentationRendererData' }, query: { code: '$code' } },\n    axisDocumentationTemplateData: { options: { enabled: true, schemaName: 'cmsPageTemplate', operation: 'saveAll', dataFilePrefix: 'axisDocumentationTemplateData' }, query: { code: '$code' } },\n    axisDocumentationSlotData: { options: { enabled: true, schemaName: 'cmsSlotDefinition', operation: 'saveAll', dataFilePrefix: 'axisDocumentationSlotData' }, query: { code: '$code' } },\n    axisDocumentationComponentData: { options: { enabled: true, schemaName: 'cmsComponent', operation: 'saveAll', dataFilePrefix: 'axisDocumentationComponentData' }, query: { code: '$code' } },\n    axisDocumentationPageData: { options: { enabled: true, schemaName: 'cmsPage', operation: 'saveAll', dataFilePrefix: 'axisDocumentationPageData' }, query: { code: '$code' } },\n    axisDocumentationRouteData: { options: { enabled: true, schemaName: 'cmsPageRoute', operation: 'saveAll', dataFilePrefix: 'axisDocumentationRouteData' }, query: { code: '$code' } },\n  },\n};\n`,
 );
 
 const generatedFiles = [
   'data/core-v001/records/documentation/axisDocumentationAccessPolicyData.js',
   'data/core-v001/records/documentation/axisDocumentationDashboardData.js',
+  'data/core-v001/records/documentation/axisDocumentationLegacyNavigationCleanupData.js',
   'data/core-v001/records/documentation/axisDocumentationNavigationData.js',
   'data/core-v001/records/documentation/axisDocumentationNodeData.js',
   'data/core-v001/records/documentation/axisDocumentationPageMetadataData.js',

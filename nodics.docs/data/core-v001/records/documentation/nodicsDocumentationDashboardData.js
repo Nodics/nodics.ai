@@ -24,6 +24,12 @@ module.exports = {
     },
     "cards": [
       {
+        "code": "start-here",
+        "title": "Start Here",
+        "summary": "Choose the right documentation entry point before opening detailed framework, Axis, Kickoff, or API contract pages.",
+        "order": 1
+      },
+      {
         "code": "nodics-framework",
         "title": "Nodics Framework",
         "summary": "Framework purpose, adoption value, enterprise problems solved, and how Nodics supports fast but governed delivery.",
@@ -327,8 +333,8 @@ module.exports = {
       }
     ],
     "statusSummary": {
-      "sections": 48,
-      "pages": 128,
+      "sections": 49,
+      "pages": 129,
       "lifecycleState": "ONLINE"
     },
     "product": "nodicsDocumentationProduct",
@@ -355,6 +361,12 @@ module.exports = {
       "navigationPattern": "Sections and page links are backend records that Axis can manage and render without hardcoded frontend menus."
     },
     "cards": [
+      {
+        "code": "start-here",
+        "title": "Start Here",
+        "summary": "Choose the right documentation entry point before opening detailed framework, Axis, Kickoff, or API contract pages.",
+        "order": 1
+      },
       {
         "code": "nodics-framework",
         "title": "Nodics Framework",
@@ -655,8 +667,8 @@ module.exports = {
       }
     ],
     "statusSummary": {
-      "sections": 48,
-      "pages": 128,
+      "sections": 49,
+      "pages": 129,
       "searchable": true,
       "expandable": true
     },
@@ -675,6 +687,49 @@ module.exports = {
     "active": true
   },
   "record2": {
+    "code": "nodicsDocsDashboardSecstartHere",
+    "ownerType": "SECTION",
+    "ownerCode": "nodicsDocsNodeSecstartHere",
+    "title": "Start Here",
+    "summary": "Choose the right documentation entry point before opening detailed framework, Axis, Kickoff, or API contract pages.",
+    "contentArea": {
+      "businessPurpose": "Choose the right documentation entry point before opening detailed framework, Axis, Kickoff, or API contract pages.",
+      "technicalPurpose": "This section is a backend documentation node with direct page links, search metadata, access policy, and publication lifecycle state."
+    },
+    "cards": [
+      {
+        "code": "docs.gateway",
+        "title": "Nodics Documentation",
+        "summary": "Public documentation gateway for framework, Axis, Kickoff, and generated API contract entry points.",
+        "order": 10
+      }
+    ],
+    "journeyLinks": [
+      {
+        "label": "Nodics Documentation",
+        "targetPage": "docs.gateway",
+        "route": "/docs"
+      }
+    ],
+    "statusSummary": {
+      "pages": 1,
+      "navigationDepth": 2
+    },
+    "accessMode": "PUBLIC",
+    "lifecycleState": "ONLINE",
+    "product": "nodicsDocumentationProduct",
+    "accessPolicy": "nodicsDocsAccessPublic",
+    "managedInAxis": true,
+    "axisAuthoringPermissions": [
+      "documentation.dashboard.update"
+    ],
+    "workflowRequired": true,
+    "workflowTriggers": [
+      "DASHBOARD_CHANGE"
+    ],
+    "active": true
+  },
+  "record3": {
     "code": "nodicsDocsDashboardSecnodicsFramework",
     "ownerType": "SECTION",
     "ownerCode": "nodicsDocsNodeSecnodicsFramework",
@@ -750,7 +805,7 @@ module.exports = {
     ],
     "active": true
   },
-  "record3": {
+  "record4": {
     "code": "nodicsDocsDashboardSecdocumentationRoadmap",
     "ownerType": "SECTION",
     "ownerCode": "nodicsDocsNodeSecdocumentationRoadmap",
@@ -826,7 +881,7 @@ module.exports = {
     ],
     "active": true
   },
-  "record4": {
+  "record5": {
     "code": "nodicsDocsDashboardSecframeworkArchitectureAndDesign",
     "ownerType": "SECTION",
     "ownerCode": "nodicsDocsNodeSecframeworkArchitectureAndDesign",
@@ -902,7 +957,7 @@ module.exports = {
     ],
     "active": true
   },
-  "record5": {
+  "record6": {
     "code": "nodicsDocsDashboardSeccapabilityRegistryAndLifecycleManagement",
     "ownerType": "SECTION",
     "ownerCode": "nodicsDocsNodeSeccapabilityRegistryAndLifecycleManagement",
@@ -956,7 +1011,7 @@ module.exports = {
     ],
     "active": true
   },
-  "record6": {
+  "record7": {
     "code": "nodicsDocsDashboardSecfoundationRuntimeServices",
     "ownerType": "SECTION",
     "ownerCode": "nodicsDocsNodeSecfoundationRuntimeServices",
@@ -999,7 +1054,7 @@ module.exports = {
     ],
     "active": true
   },
-  "record7": {
+  "record8": {
     "code": "nodicsDocsDashboardSecnodicsApplicationSuite",
     "ownerType": "SECTION",
     "ownerCode": "nodicsDocsNodeSecnodicsApplicationSuite",
@@ -1053,7 +1108,7 @@ module.exports = {
     ],
     "active": true
   },
-  "record8": {
+  "record9": {
     "code": "nodicsDocsDashboardSecsolutionUseCases",
     "ownerType": "SECTION",
     "ownerCode": "nodicsDocsNodeSecsolutionUseCases",
@@ -1107,7 +1162,7 @@ module.exports = {
     ],
     "active": true
   },
-  "record9": {
+  "record10": {
     "code": "nodicsDocsDashboardSecacceleratorsAndIndustrySolutionTemplates",
     "ownerType": "SECTION",
     "ownerCode": "nodicsDocsNodeSecacceleratorsAndIndustrySolutionTemplates",
@@ -1172,7 +1227,7 @@ module.exports = {
     ],
     "active": true
   },
-  "record10": {
+  "record11": {
     "code": "nodicsDocsDashboardSecnodicsInstallerAndWorkspaceSetup",
     "ownerType": "SECTION",
     "ownerCode": "nodicsDocsNodeSecnodicsInstallerAndWorkspaceSetup",
@@ -1248,7 +1303,7 @@ module.exports = {
     ],
     "active": true
   },
-  "record11": {
+  "record12": {
     "code": "nodicsDocsDashboardSecapplicationBuilderAndWorkspaceGeneration",
     "ownerType": "SECTION",
     "ownerCode": "nodicsDocsNodeSecapplicationBuilderAndWorkspaceGeneration",
@@ -1291,7 +1346,7 @@ module.exports = {
     ],
     "active": true
   },
-  "record12": {
+  "record13": {
     "code": "nodicsDocsDashboardSecaxisAndBackofficeOperations",
     "ownerType": "SECTION",
     "ownerCode": "nodicsDocsNodeSecaxisAndBackofficeOperations",
@@ -1345,7 +1400,7 @@ module.exports = {
     ],
     "active": true
   },
-  "record13": {
+  "record14": {
     "code": "nodicsDocsDashboardSecbusinessCustomizationInAxis",
     "ownerType": "SECTION",
     "ownerCode": "nodicsDocsNodeSecbusinessCustomizationInAxis",
@@ -1388,7 +1443,7 @@ module.exports = {
     ],
     "active": true
   },
-  "record14": {
+  "record15": {
     "code": "nodicsDocsDashboardSecuserEnterpriseAndTenantManagement",
     "ownerType": "SECTION",
     "ownerCode": "nodicsDocsNodeSecuserEnterpriseAndTenantManagement",
@@ -1442,7 +1497,7 @@ module.exports = {
     ],
     "active": true
   },
-  "record15": {
+  "record16": {
     "code": "nodicsDocsDashboardSecsecurityGovernanceAndCompliance",
     "ownerType": "SECTION",
     "ownerCode": "nodicsDocsNodeSecsecurityGovernanceAndCompliance",
@@ -1496,7 +1551,7 @@ module.exports = {
     ],
     "active": true
   },
-  "record16": {
+  "record17": {
     "code": "nodicsDocsDashboardSecapplicationConfigurationAndRuntimeBehaviorManagement",
     "ownerType": "SECTION",
     "ownerCode": "nodicsDocsNodeSecapplicationConfigurationAndRuntimeBehaviorManagement",
@@ -1583,7 +1638,7 @@ module.exports = {
     ],
     "active": true
   },
-  "record17": {
+  "record18": {
     "code": "nodicsDocsDashboardSecruntimeGovernanceAndDynamicChangeManagement",
     "ownerType": "SECTION",
     "ownerCode": "nodicsDocsNodeSecruntimeGovernanceAndDynamicChangeManagement",
@@ -1626,7 +1681,7 @@ module.exports = {
     ],
     "active": true
   },
-  "record18": {
+  "record19": {
     "code": "nodicsDocsDashboardSeclocalizationAndInternationalization",
     "ownerType": "SECTION",
     "ownerCode": "nodicsDocsNodeSeclocalizationAndInternationalization",
@@ -1680,7 +1735,7 @@ module.exports = {
     ],
     "active": true
   },
-  "record19": {
+  "record20": {
     "code": "nodicsDocsDashboardSecdataModelingAndSchemaManagement",
     "ownerType": "SECTION",
     "ownerCode": "nodicsDocsNodeSecdataModelingAndSchemaManagement",
@@ -1723,7 +1778,7 @@ module.exports = {
     ],
     "active": true
   },
-  "record20": {
+  "record21": {
     "code": "nodicsDocsDashboardSecdatabaseAndPersistenceManagement",
     "ownerType": "SECTION",
     "ownerCode": "nodicsDocsNodeSecdatabaseAndPersistenceManagement",
@@ -1777,7 +1832,7 @@ module.exports = {
     ],
     "active": true
   },
-  "record21": {
+  "record22": {
     "code": "nodicsDocsDashboardSeccachingAndRuntimeStateManagement",
     "ownerType": "SECTION",
     "ownerCode": "nodicsDocsNodeSeccachingAndRuntimeStateManagement",
@@ -1831,7 +1886,7 @@ module.exports = {
     ],
     "active": true
   },
-  "record22": {
+  "record23": {
     "code": "nodicsDocsDashboardSecdeveloperExtensionAndProjectCustomization",
     "ownerType": "SECTION",
     "ownerCode": "nodicsDocsNodeSecdeveloperExtensionAndProjectCustomization",
@@ -1918,7 +1973,7 @@ module.exports = {
     ],
     "active": true
   },
-  "record23": {
+  "record24": {
     "code": "nodicsDocsDashboardSecstoreMarketSiteAndChannelManagement",
     "ownerType": "SECTION",
     "ownerCode": "nodicsDocsNodeSecstoreMarketSiteAndChannelManagement",
@@ -1961,7 +2016,7 @@ module.exports = {
     ],
     "active": true
   },
-  "record24": {
+  "record25": {
     "code": "nodicsDocsDashboardSecwcmsAndContentManagement",
     "ownerType": "SECTION",
     "ownerCode": "nodicsDocsNodeSecwcmsAndContentManagement",
@@ -2048,7 +2103,7 @@ module.exports = {
     ],
     "active": true
   },
-  "record25": {
+  "record26": {
     "code": "nodicsDocsDashboardSecproductCatalogAndDiscovery",
     "ownerType": "SECTION",
     "ownerCode": "nodicsDocsNodeSecproductCatalogAndDiscovery",
@@ -2102,7 +2157,7 @@ module.exports = {
     ],
     "active": true
   },
-  "record26": {
+  "record27": {
     "code": "nodicsDocsDashboardSecsearchAndDiscovery",
     "ownerType": "SECTION",
     "ownerCode": "nodicsDocsNodeSecsearchAndDiscovery",
@@ -2156,7 +2211,7 @@ module.exports = {
     ],
     "active": true
   },
-  "record27": {
+  "record28": {
     "code": "nodicsDocsDashboardSecmediaManagement",
     "ownerType": "SECTION",
     "ownerCode": "nodicsDocsNodeSecmediaManagement",
@@ -2232,7 +2287,7 @@ module.exports = {
     ],
     "active": true
   },
-  "record28": {
+  "record29": {
     "code": "nodicsDocsDashboardSecinventoryAndStockManagement",
     "ownerType": "SECTION",
     "ownerCode": "nodicsDocsNodeSecinventoryAndStockManagement",
@@ -2275,7 +2330,7 @@ module.exports = {
     ],
     "active": true
   },
-  "record29": {
+  "record30": {
     "code": "nodicsDocsDashboardSecpricingPromotionsAndTax",
     "ownerType": "SECTION",
     "ownerCode": "nodicsDocsNodeSecpricingPromotionsAndTax",
@@ -2318,7 +2373,7 @@ module.exports = {
     ],
     "active": true
   },
-  "record30": {
+  "record31": {
     "code": "nodicsDocsDashboardSeccommerceCartAndCheckout",
     "ownerType": "SECTION",
     "ownerCode": "nodicsDocsNodeSeccommerceCartAndCheckout",
@@ -2372,7 +2427,7 @@ module.exports = {
     ],
     "active": true
   },
-  "record31": {
+  "record32": {
     "code": "nodicsDocsDashboardSecpaymentManagement",
     "ownerType": "SECTION",
     "ownerCode": "nodicsDocsNodeSecpaymentManagement",
@@ -2426,7 +2481,7 @@ module.exports = {
     ],
     "active": true
   },
-  "record32": {
+  "record33": {
     "code": "nodicsDocsDashboardSecloyaltyAndRewards",
     "ownerType": "SECTION",
     "ownerCode": "nodicsDocsNodeSecloyaltyAndRewards",
@@ -2469,7 +2524,7 @@ module.exports = {
     ],
     "active": true
   },
-  "record33": {
+  "record34": {
     "code": "nodicsDocsDashboardSecshippingAndFulfillment",
     "ownerType": "SECTION",
     "ownerCode": "nodicsDocsNodeSecshippingAndFulfillment",
@@ -2523,7 +2578,7 @@ module.exports = {
     ],
     "active": true
   },
-  "record34": {
+  "record35": {
     "code": "nodicsDocsDashboardSecorderManagement",
     "ownerType": "SECTION",
     "ownerCode": "nodicsDocsNodeSecorderManagement",
@@ -2566,7 +2621,7 @@ module.exports = {
     ],
     "active": true
   },
-  "record35": {
+  "record36": {
     "code": "nodicsDocsDashboardSeccancellationsReturnsAndRefunds",
     "ownerType": "SECTION",
     "ownerCode": "nodicsDocsNodeSeccancellationsReturnsAndRefunds",
@@ -2609,7 +2664,7 @@ module.exports = {
     ],
     "active": true
   },
-  "record36": {
+  "record37": {
     "code": "nodicsDocsDashboardSeccustomerEngagementAndFeedback",
     "ownerType": "SECTION",
     "ownerCode": "nodicsDocsNodeSeccustomerEngagementAndFeedback",
@@ -2719,7 +2774,7 @@ module.exports = {
     ],
     "active": true
   },
-  "record37": {
+  "record38": {
     "code": "nodicsDocsDashboardSeccommunicationAndNotifications",
     "ownerType": "SECTION",
     "ownerCode": "nodicsDocsNodeSeccommunicationAndNotifications",
@@ -2773,7 +2828,7 @@ module.exports = {
     ],
     "active": true
   },
-  "record38": {
+  "record39": {
     "code": "nodicsDocsDashboardSeceventAndMessagingManagement",
     "ownerType": "SECTION",
     "ownerCode": "nodicsDocsNodeSeceventAndMessagingManagement",
@@ -2827,7 +2882,7 @@ module.exports = {
     ],
     "active": true
   },
-  "record39": {
+  "record40": {
     "code": "nodicsDocsDashboardSecprocessAndWorkflowAutomation",
     "ownerType": "SECTION",
     "ownerCode": "nodicsDocsNodeSecprocessAndWorkflowAutomation",
@@ -2931,7 +2986,7 @@ module.exports = {
     ],
     "active": true
   },
-  "record40": {
+  "record41": {
     "code": "nodicsDocsDashboardSecpipelineAndBusinessLogicOrchestration",
     "ownerType": "SECTION",
     "ownerCode": "nodicsDocsNodeSecpipelineAndBusinessLogicOrchestration",
@@ -2996,7 +3051,7 @@ module.exports = {
     ],
     "active": true
   },
-  "record41": {
+  "record42": {
     "code": "nodicsDocsDashboardSeccronAndScheduledAutomation",
     "ownerType": "SECTION",
     "ownerCode": "nodicsDocsNodeSeccronAndScheduledAutomation",
@@ -3094,7 +3149,7 @@ module.exports = {
     ],
     "active": true
   },
-  "record42": {
+  "record43": {
     "code": "nodicsDocsDashboardSecdataImportExportAndMigration",
     "ownerType": "SECTION",
     "ownerCode": "nodicsDocsNodeSecdataImportExportAndMigration",
@@ -3148,7 +3203,7 @@ module.exports = {
     ],
     "active": true
   },
-  "record43": {
+  "record44": {
     "code": "nodicsDocsDashboardSecsystemIntegrationAndExternalConnectivity",
     "ownerType": "SECTION",
     "ownerCode": "nodicsDocsNodeSecsystemIntegrationAndExternalConnectivity",
@@ -3191,7 +3246,7 @@ module.exports = {
     ],
     "active": true
   },
-  "record44": {
+  "record45": {
     "code": "nodicsDocsDashboardSecoperationsMonitoringAndRecovery",
     "ownerType": "SECTION",
     "ownerCode": "nodicsDocsNodeSecoperationsMonitoringAndRecovery",
@@ -3301,7 +3356,7 @@ module.exports = {
     ],
     "active": true
   },
-  "record45": {
+  "record46": {
     "code": "nodicsDocsDashboardSecqualityTestingAndCertification",
     "ownerType": "SECTION",
     "ownerCode": "nodicsDocsNodeSecqualityTestingAndCertification",
@@ -3344,7 +3399,7 @@ module.exports = {
     ],
     "active": true
   },
-  "record46": {
+  "record47": {
     "code": "nodicsDocsDashboardSecdocumentationManagement",
     "ownerType": "SECTION",
     "ownerCode": "nodicsDocsNodeSecdocumentationManagement",
@@ -3409,7 +3464,7 @@ module.exports = {
     ],
     "active": true
   },
-  "record47": {
+  "record48": {
     "code": "nodicsDocsDashboardSecreleaseStagingAndPublication",
     "ownerType": "SECTION",
     "ownerCode": "nodicsDocsNodeSecreleaseStagingAndPublication",
@@ -3463,7 +3518,7 @@ module.exports = {
     ],
     "active": true
   },
-  "record48": {
+  "record49": {
     "code": "nodicsDocsDashboardSecaiAndDeveloperTooling",
     "ownerType": "SECTION",
     "ownerCode": "nodicsDocsNodeSecaiAndDeveloperTooling",
@@ -3517,7 +3572,7 @@ module.exports = {
     ],
     "active": true
   },
-  "record49": {
+  "record50": {
     "code": "nodicsDocsDashboardSecreference",
     "ownerType": "SECTION",
     "ownerCode": "nodicsDocsNodeSecreference",

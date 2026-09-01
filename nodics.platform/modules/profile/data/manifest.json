@@ -19,6 +19,12 @@
             "initialPublicationPolicy": "NONE",
             "removalPolicy": "RETAIN",
             "files": {
+                "init-v001/headers/address/defaultAddressesHeader.js": "4ed06921a980aaf32c9f87c969c3aef6b107da9db56750aa23a507f28626b33b",
+                "init-v001/headers/address/defaultContactsHeader.js": "7e811060eeb1e685c039df892e02bb2f061c70e18d38a66597ed487eb948a53a",
+                "init-v001/headers/enterprise/defaultEnterpriseHeader.js": "d709cc3141675a46e91b871632eef328bab647ce9fd6b8859ee3bfd6c088fb14",
+                "init-v001/headers/enterprise/defaultTenantsHeader.js": "755d4697206ec16e96e2790235dc40512c1740e662dd83b8fd07b7b27b11684b",
+                "init-v001/headers/groups/defaultUserGroupsHeader.js": "be55304ca13a0fa06dec9b1f6a3c19d88d62677bdc29d49d78f6f6ebb8eeeb98",
+                "init-v001/headers/user/defaultUsersHeader.js": "b59f637428bd6cedcde7b171a0cc9c43b5d36da618d25f550d1f6a2ecb67bfbd",
                 "init-v001/records/address/defaultAddressesData.js": "c1657ffd4c9400f434a87de0d40121a165ad1828d298bedad374d2ecc97f872c",
                 "init-v001/records/address/defaultContactsData.js": "de5ff9494a541fb1df0fa30ce816ad6aee616385222d9a71dc93cb19f2914095",
                 "init-v001/records/address/defaultTenantAddressesData.js": "1d209fa6a8b24ee4632a6e1e77aaf80ef880f0b91ffabd2880c2ea02a9dd17dd",
@@ -27,13 +33,7 @@
                 "init-v001/records/enterprise/defaultTenantsData.js": "2855a833d2b24a6b4005d9c6772e9c8d0c6f5da0863dfc8912d8fa7c5dd9f83e",
                 "init-v001/records/groups/defaultBootstrapUserGroupsData.js": "c6cd0739998b80f967a3f918bb1a30bab622cd96518eb375a7c021ad2c1c5624",
                 "init-v001/records/user/defaultCutomerData.js": "fdbcd52c7188c370aabe614477e06d67fe1b94972325d5dfdda67679556adb21",
-                "init-v001/records/user/defaultEmployeeData.js": "b11e40cd9fd2663d47de27a794427578c11c848a1188bfc71c4109b5d6d03de0",
-                "init-v001/headers/address/defaultAddressesHeader.js": "234ff8f38ed73b22cbe6a36eaa63b18e177ca33af1650a2d40a15b45c737cf0a",
-                "init-v001/headers/address/defaultContactsHeader.js": "07f67b81bb021b4bd2f234af5e027acc1bbabf3b96aeecce17933fc6abb0ee85",
-                "init-v001/headers/enterprise/defaultEnterpriseHeader.js": "8f82d95adf916168a84fe34b83345f18c329b7140df0af1830a3e62380ae0382",
-                "init-v001/headers/enterprise/defaultTenantsHeader.js": "755d4697206ec16e96e2790235dc40512c1740e662dd83b8fd07b7b27b11684b",
-                "init-v001/headers/groups/defaultUserGroupsHeader.js": "4055c1ad35b26b9b6c524d6f9246f3b5f6ed9f4f738447438e0f4a47315f7de4",
-                "init-v001/headers/user/defaultUsersHeader.js": "f67f433e151ce2671df6762a7a7e1e56f71a44a40fb43753252c40437fcb5db6"
+                "init-v001/records/user/defaultEmployeeData.js": "b11e40cd9fd2663d47de27a794427578c11c848a1188bfc71c4109b5d6d03de0"
             },
             "sourceRoot": "init-v001"
         },

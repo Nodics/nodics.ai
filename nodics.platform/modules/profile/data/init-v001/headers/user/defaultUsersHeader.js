@@ -23,7 +23,8 @@ module.exports = {
                 enabled: true,
                 schemaName: 'employee',
                 operation: 'saveAll', //saveAll, update and saveOrUpdate
-                dataFilePrefix: 'defaultEmployeeData'
+                dataFilePrefix: 'defaultEmployeeData',
+                userGroups: ['adminGroup']
             },
             query: {
                 code: '$code',
@@ -62,7 +63,8 @@ module.exports = {
                 enabled: true,
                 schemaName: 'customer',
                 operation: 'saveAll', //saveAll, update and saveOrUpdate
-                dataFilePrefix: 'defaultCutomerData'
+                dataFilePrefix: 'defaultCutomerData',
+                userGroups: ['adminGroup']
             },
             query: {
                 code: '$code',

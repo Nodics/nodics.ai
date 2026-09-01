@@ -416,6 +416,10 @@ module.exports = {
                             app.use('/', NODICS.getModules().default.moduleRouter);
                             displayName = 'default';
                         }
+                        if (moduleConfig.getOptions().remoteOnly === true) {
+                            _self.LOG.info('Skipping listener startup for remote-only module : ' + moduleName);
+                            return;
+                        }
                         const httpPort = moduleConfig.getEndpoint().getHttpPort();
                         const httpsPort = moduleConfig.getEndpoint().getHttpsPort();
                         if (!httpPort) {

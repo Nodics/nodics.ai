@@ -24,7 +24,8 @@ module.exports = {
                 schemaName: 'tenant', //put type name, if want to push data into search
                 operation: 'saveAll', //saveAll, update and saveOrUpdate, put doSave, if data needs to be pushed into serach
                 tenants: ['default'],
-                dataFilePrefix: 'defaultTenantsData'
+                dataFilePrefix: 'defaultTenantsData',
+                userGroups: ['adminGroup']
             },
             query: {
                 //addresses.code: '$code'
@@ -39,7 +40,8 @@ module.exports = {
                 schemaName: 'enterprise',
                 operation: 'saveAll', //saveAll, update and saveOrUpdate
                 tenants: ['default'],
-                dataFilePrefix: 'defaultEnterpriseData'
+                dataFilePrefix: 'defaultEnterpriseData',
+                userGroups: ['adminGroup']
             },
             query: {
                 code: '$code'

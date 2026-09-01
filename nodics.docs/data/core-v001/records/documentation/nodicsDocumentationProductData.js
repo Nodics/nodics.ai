@@ -19,7 +19,7 @@ module.exports = {
     "description": "Business-friendly and developer-ready framework documentation rendered from a governed documentation content catalog.",
     "contentCatalog": "documentationContentCatalog",
     "site": "nodicsDocumentationSite",
-    "publicRootPath": "/docs/framework",
+    "publicRootPath": "/docs",
     "defaultLocale": "en",
     "channels": [
       "axis",
