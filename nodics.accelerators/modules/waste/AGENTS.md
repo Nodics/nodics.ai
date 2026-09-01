@@ -1,21 +1,18 @@
-# waste Agents
+# waste Accelerator Agents
 
 Follow the root Nodics AI agent contract before changing this boundary:
 
 - Follow the repository agent contract: `../../../AGENTS.md`.
 - Follow the accelerator group contract: `../../AGENTS.md`.
+- Follow the common Waste framework contract: `../../../nodics.waste/AGENTS.md`.
 - Follow global AI guidance: `../../../nodics.foundation/modules/nSetup/llm/ai-enablement-index.md`.
 
-Keep this group composition-only. Waste child modules own reusable waste, recycling,
-circular-economy, collection, verification, receipt, impact, movement, and
-compliance semantics. Partner projects may extend these modules with project
-policy, seed data, customer journeys, provider adapters, and reward formulas.
+Keep this group composition-only. `nodics.waste` owns common waste-management
+schemas, APIs, lifecycles, and services. Scenario modules under this group
+package reusable waste-industry presets and guidance over those common
+contracts.
 
-Do not place customer-specific project names, reward ledgers, Commerce coupon
-behavior, raw media storage, map-provider logic, or generic identity ownership
-inside this accelerator. Waste records may reference those capabilities through
-source references and lifecycle events.
-
-Before implementing non-trivial behavior here, record the business outcome,
-owning child module, studied sources, extension path, security/tenant/data/API
-impact, intended files, and validation route.
+Do not duplicate `nodics.waste` schemas or common services here. Do not place
+partner-specific project names, reward formulas, coupon marketplace behavior,
+map-provider implementation, provider credentials, or concrete external
+recycler/logistics adapters in this umbrella.

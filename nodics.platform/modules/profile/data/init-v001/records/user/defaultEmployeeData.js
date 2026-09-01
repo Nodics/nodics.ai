@@ -76,7 +76,7 @@ module.exports = {
       "auth.internal.token.read.anyTenant",
     ],
     apiKeyStatus: "active",
-    identityMigrationVersion: 4,
+    identityMigrationVersion: 5,
     principalType: "service",
     userGroups: ["serviceAccountUserGroup"],
     addresses: ["defaultEmployeeAddress"],

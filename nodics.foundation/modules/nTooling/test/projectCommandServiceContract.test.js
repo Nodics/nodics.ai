@@ -61,6 +61,10 @@ const minimalManifest = service.readManifest(minimalRoot);
 service.validateManifest(minimalRoot, minimalManifest);
 assert.equal(service.resolveProjectCode(minimalRoot, minimalManifest), 'acme.startio');
 assert.equal(service.resolveCommands(minimalManifest)['start:platform'].command, 'project:runtime-start');
+assert.deepEqual(service.resolveCommands(minimalManifest)['start:waste'].args, ['waste']);
+assert.equal(service.resolveCommands(minimalManifest)['start:wcms'], undefined);
+assert.equal(service.resolveCommands(minimalManifest)['acceptance:waste-management'].command, 'project:waste-management-acceptance');
+assert.equal(service.resolveCommands(minimalManifest)['acceptance:waste-backoffice-discovery'].command, 'project:waste-backoffice-discovery-acceptance');
 assert.deepEqual(service.resolveCommands(minimalManifest)['docker-local:preflight'].args, ['dockerLocal', 'preflight']);
 assert.equal(service.resolveCommands(minimalManifest)['acceptance:nexus-cms-media-seed'].command, 'project:nexus-cms-media-seed');
 

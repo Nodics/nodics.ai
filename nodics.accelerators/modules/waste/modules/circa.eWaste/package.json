@@ -1,0 +1,40 @@
+{
+    "name": "circa.eWaste",
+    "index": "92.73",
+    "description": "Reusable Nodics Circa eWaste backend application composition over nodics.waste.",
+    "main": "nodics.js",
+    "requiredModules": [
+        "eWaste",
+        "wasteRecycling"
+    ],
+    "version": "0.0.0",
+    "private": true,
+    "license": "SEE LICENSE IN LICENSE",
+    "nodics": {
+        "kind": "capability",
+        "displayName": "Circa eWaste",
+        "runtimeModule": true,
+        "loadableByNodicsModuleLoader": true,
+        "owns": [
+            "composition",
+            "configuration",
+            "source",
+            "test",
+            "llm"
+        ],
+        "runtime": {
+            "router": false,
+            "publish": false,
+            "web": false
+        },
+        "extends": [
+            "eWaste",
+            "wasteRecycling"
+        ]
+    },
+    "scripts": {
+        "check:syntax": "find . -name '*.js' -not -path './node_modules/*' -print0 | xargs -0 -n 50 node --check",
+        "test:contract": "for file in test/*.test.js; do node \"$file\" || exit 1; done",
+        "test": "npm run check:syntax && npm run test:contract"
+    }
+}

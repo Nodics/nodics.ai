@@ -1,19 +1,12 @@
 {
     "name": "waste",
     "index": "92.79",
-    "description": "Reusable Waste Management accelerator composition boundary.",
+    "description": "Waste Management accelerator umbrella for scenario-specific waste presets.",
     "main": "nodics.js",
     "requiredModules": [
-        "wasteCore",
-        "wasteMaterial",
-        "wasteCollection",
-        "wasteSubmission",
-        "wasteVerification",
-        "wasteReceipt",
-        "wasteImpact",
-        "wasteMovement",
-        "wasteCompliance",
-        "wasteApi"
+        "eWaste",
+        "wasteRecycling",
+        "circa.eWaste"
     ],
     "version": "0.0.0",
     "private": true,
@@ -35,7 +28,7 @@
             "web": false
         },
         "extends": [
-            "nodics.foundation"
+            "nodics.waste"
         ]
     },
     "scripts": {

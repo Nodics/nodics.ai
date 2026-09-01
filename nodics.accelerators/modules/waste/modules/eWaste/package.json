@@ -1,0 +1,30 @@
+{
+    "name": "eWaste",
+    "index": "92.71",
+    "description": "Electronic waste scenario accelerator presets for nodics.waste.",
+    "main": "nodics.js",
+    "version": "0.0.0",
+    "private": true,
+    "license": "SEE LICENSE IN LICENSE",
+    "nodics": {
+        "kind": "capability",
+        "displayName": "E-Waste",
+        "runtimeModule": true,
+        "loadableByNodicsModuleLoader": true,
+        "owns": [
+            "configuration",
+            "data",
+            "test",
+            "llm"
+        ],
+        "runtime": {
+            "router": false,
+            "publish": false,
+            "web": false
+        },
+        "extends": [
+            "nodics.waste"
+        ]
+    },
+    "scripts": {}
+}

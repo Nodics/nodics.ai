@@ -398,6 +398,9 @@ module.exports = {
                 { node: 'nodics.platform/modules/backoffice/test/backofficeModuleBoundaryContract.test.js' },
                 { node: 'nodics.platform/modules/backoffice/test/backofficeRegistryRouteContract.test.js' },
                 { node: 'nodics.platform/modules/backoffice/test/backofficeApiContract.test.js' },
+                { node: 'nodics.platform/modules/backoffice/test/backofficeCapabilityProviderInventoryContract.test.js' },
+                { node: 'nodics.platform/modules/backoffice/test/axisNavigationLockedHierarchyContract.test.js' },
+                { node: 'nodics.waste/test/wasteBackofficeCapabilityContract.test.js' },
                 { node: 'nodics.platform/modules/backoffice/test/backofficeDiscoveryService.test.js' },
                 { node: 'nodics.platform/modules/backoffice/test/backofficeAvailabilityService.test.js' },
                 { node: 'nodics.platform/modules/backoffice/test/backofficeAdministrativeSecurityService.test.js' },
@@ -634,6 +637,16 @@ module.exports = {
                 description: 'Run project Loyalty reward checkout acceptance through Platform, Commerce, and Loyalty module servers.',
                 handler: 'src/service/command/defaultNodeScriptCommandService.js',
                 script: 'src/service/project/defaultProjectLoyaltyRewardCheckoutAcceptanceService.mjs'
+            },
+            'project:waste-management-acceptance': {
+                description: 'Run project Waste Management acceptance through the project-owned Waste server composition.',
+                handler: 'src/service/command/defaultNodeScriptCommandService.js',
+                script: 'src/service/project/defaultProjectWasteManagementAcceptanceService.mjs'
+            },
+            'project:waste-backoffice-discovery-acceptance': {
+                description: 'Run live Waste BackOffice discovery acceptance through Platform and the project-owned Waste server.',
+                handler: 'src/service/command/defaultNodeScriptCommandService.js',
+                script: 'src/service/project/defaultProjectWasteBackofficeDiscoveryAcceptanceService.mjs'
             },
             'project:agora-commerce-data-acceptance': {
                 description: 'Run project Agora commerce staged data acceptance through framework-owned tooling.',

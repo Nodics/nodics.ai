@@ -1,0 +1,32 @@
+{
+    "contractVersion": 2,
+    "module": "partnerWasteOverlay",
+    "sections": {
+        "project-reference": {
+            "kind": "DATA_RELEASE",
+            "dataType": "project",
+            "version": "0.0.0",
+            "displayName": "Partner Waste Overlay Fixture",
+            "description": "Fixture project Waste data overlay extending and overriding eWaste presets.",
+            "owningDomain": "waste",
+            "lifecycle": "REFERENCE",
+            "destinationRole": "WASTE",
+            "environmentScope": [
+                "ALL"
+            ],
+            "sensitivity": "INTERNAL",
+            "versioningPolicy": "NONE",
+            "publicationPolicy": "NONE",
+            "initialPublicationPolicy": "NONE",
+            "removalPolicy": "RETAIN",
+            "files": {
+                "project-v001/records/waste/partnerWasteAcceptanceRuleData.js": "221d40200d4e659ad420213658bb3e1247095829be59c21a7f1ca84ce3f45e3a",
+                "project-v001/records/waste/partnerWasteCategoryData.js": "cc2a9e8d2fc07a8728632b0da95ddf9fcc20d9bf4db8b691db8ac57ca652915d",
+                "project-v001/records/waste/partnerWasteCollectionPresetData.js": "af576528a2d1513ea42a04a0531703c407ec544441b91580e470c48d85f4c140",
+                "project-v001/records/waste/partnerWasteImpactProfileData.js": "dcf33e25fa97765eefd0740e2396f2737376fc1ac2a06a1afed762774aea1a46",
+                "project-v001/headers/waste/partnerWasteOverlayHeader.js": "7baa8ee74058321b67aba0e9956a946b52b2c1060bf496f49bd384c48a4b87c7"
+            },
+            "sourceRoot": "project-v001"
+        }
+    }
+}

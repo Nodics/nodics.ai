@@ -48,7 +48,7 @@ const validRuntimeKeys = new Set([
 ]);
 const validNodicsKeys = new Set([
     'kind', 'displayName', 'runtimeModule', 'loadableByNodicsModuleLoader', 'owns', 'runtime',
-    'entrypoints', 'dependencyGovernance', 'extends', 'functionalModule'
+    'entrypoints', 'dependencyGovernance', 'extends', 'functionalModule', 'runtimeModuleRoots'
 ]);
 
 const rootPackage = JSON.parse(fs.readFileSync(path.join(rootPath, 'package.json'), 'utf8'));

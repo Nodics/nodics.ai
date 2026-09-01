@@ -9,29 +9,10 @@
 
  */
 
-/**
- * @module waste/nodics
- * @description Declares the Waste accelerator composition boundary without owning child capability behavior.
- * @layer module
- * @owner waste
- * @override Partner accelerator modules may extend child capabilities while this group remains composition-only.
- */
+/** @module waste/nodics @description Declares the Waste accelerator umbrella lifecycle without owning common Waste framework behavior. @layer module @owner waste @override Later scenario accelerators may be composed under this group. */
 module.exports = {
-    /**
-     * Initializes this module boundary.
-     * @param {Object} options Startup options.
-     * @returns {Promise<boolean>} Resolves when initialization completes.
-     */
-    init: function (options) {
-        return Promise.resolve(true);
-    },
-
-    /**
-     * Finalizes this module boundary.
-     * @param {Object} options Startup options.
-     * @returns {Promise<boolean>} Resolves when post-initialization completes.
-     */
-    postInit: function (options) {
-        return Promise.resolve(true);
-    }
+    /** Initializes this accelerator umbrella. */
+    init: function (options) { return Promise.resolve(true); },
+    /** Completes this accelerator umbrella startup. */
+    postInit: function (options) { return Promise.resolve(true); }
 };

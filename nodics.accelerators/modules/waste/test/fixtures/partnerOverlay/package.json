@@ -1,0 +1,28 @@
+{
+    "name": "partnerWasteOverlay",
+    "index": "99.71",
+    "description": "Fixture partner Waste overlay proving later-loaded project data customization.",
+    "main": "nodics.js",
+    "version": "0.0.0",
+    "private": true,
+    "license": "SEE LICENSE IN LICENSE",
+    "nodics": {
+        "kind": "capability",
+        "displayName": "Partner Waste Overlay Fixture",
+        "runtimeModule": true,
+        "loadableByNodicsModuleLoader": false,
+        "owns": [
+            "data",
+            "test"
+        ],
+        "runtime": {
+            "router": false,
+            "publish": false,
+            "web": false
+        },
+        "extends": [
+            "eWaste"
+        ]
+    },
+    "scripts": {}
+}

@@ -29,7 +29,7 @@ const frameworkRoot = path.join(root, 'nodics.ai');
 const projectRoot = path.join(root, 'customer.project');
 const environmentRoot = path.join(projectRoot, 'envs', 'customerLocal');
 const serverRoot = path.join(environmentRoot, 'loyaltyServer');
-const retiredRoot = path.join(environmentRoot, 'wcmsServer');
+const retiredRoot = path.join(environmentRoot, 'legacyServer');
 
 function writeJson(file, value) {
     fs.mkdirSync(path.dirname(file), { recursive: true });
@@ -39,6 +39,8 @@ function writeJson(file, value) {
 writeJson(path.join(frameworkRoot, 'package.json'), { name: 'nodics.ai' });
 writeJson(path.join(frameworkRoot, 'nodics.foundation', 'package.json'), { name: 'nodics.foundation' });
 writeJson(path.join(frameworkRoot, 'nodics.loyalty', 'package.json'), { name: 'nodics.loyalty' });
+writeJson(path.join(frameworkRoot, 'nodics.waste', 'package.json'), { name: 'nodics.waste' });
+writeJson(path.join(frameworkRoot, 'nodics.accelerators/modules/waste', 'package.json'), { name: 'waste' });
 writeJson(path.join(projectRoot, 'package.json'), { name: 'customer.project' });
 writeJson(path.join(projectRoot, 'nodics.project.json'), {
     topology: { environment: 'customerLocal' }
@@ -47,8 +49,16 @@ writeJson(path.join(serverRoot, 'package.json'), {
     name: 'loyaltyServer',
     nodics: { kind: 'server', extends: ['nodics.loyalty'] }
 });
+writeJson(path.join(environmentRoot, 'wasteServer', 'package.json'), {
+    name: 'wasteServer',
+    nodics: {
+        kind: 'server',
+        extends: ['nodics.waste'],
+        runtimeModuleRoots: ['nodics.waste', 'nodics.accelerators/modules/waste']
+    }
+});
 writeJson(path.join(retiredRoot, 'package.json'), {
-    name: 'wcmsServerRetired',
+    name: 'legacyServerRetired',
     nodics: { kind: 'server', retired: true, replacementServers: ['wcmsStagedServer', 'wcmsOnlineServer'] }
 });
 
@@ -68,9 +78,23 @@ assert.deepEqual(moduleRoots, [
 const dockerServer = service.resolveServer(projectRoot, manifest, 'loyalty', { ENV: 'customerLocal' });
 assert.equal(dockerServer.server, 'loyaltyServer');
 
+const wasteServer = service.resolveServer(projectRoot, manifest, 'waste', {});
+assert.deepEqual(wasteServer.moduleRoots, [
+    'nodics.foundation',
+    'nodics.waste',
+    'nodics.accelerators/modules/waste',
+    '{project}'
+]);
+assert.deepEqual(service.resolveModuleRoots(projectRoot, frameworkRoot, wasteServer), [
+    path.join(frameworkRoot, 'nodics.foundation'),
+    path.join(frameworkRoot, 'nodics.waste'),
+    path.join(frameworkRoot, 'nodics.accelerators/modules/waste'),
+    projectRoot
+]);
+
 assert.throws(
-    () => service.resolveServer(projectRoot, manifest, 'wcms', {}),
-    /Project runtime server is retired: wcms/
+    () => service.resolveServer(projectRoot, manifest, 'legacy', {}),
+    /Project runtime server is retired: legacy/
 );
 
 console.log('nTooling project runtime start discovery contract validated');

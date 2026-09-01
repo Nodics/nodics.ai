@@ -166,7 +166,7 @@ module.exports = {
             return {
                 environment: environmentName,
                 server: candidate,
-                moduleRoots: ['nodics.foundation'].concat(nodics.extends || [], ['{project}'])
+                moduleRoots: ['nodics.foundation'].concat(nodics.runtimeModuleRoots || nodics.extends || [], ['{project}'])
             };
         }
         throw new Error('Unknown project runtime server `' + serverCode + '` in envs/' + environmentName);

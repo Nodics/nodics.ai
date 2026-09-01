@@ -1,0 +1,47 @@
+{
+    "contractVersion": 2,
+    "module": "eWaste",
+    "sections": {
+        "core-reference": {
+            "kind": "DATA_RELEASE",
+            "dataType": "core",
+            "version": "0.0.0",
+            "displayName": "E-Waste Preset Reference",
+            "description": "Reusable electronic-waste taxonomy, policy, collection, and impact presets for nodics.waste.",
+            "owningDomain": "waste",
+            "lifecycle": "REFERENCE",
+            "destinationRole": "WASTE",
+            "environmentScope": [
+                "ALL"
+            ],
+            "sensitivity": "INTERNAL",
+            "versioningPolicy": "NONE",
+            "publicationPolicy": "NONE",
+            "initialPublicationPolicy": "NONE",
+            "removalPolicy": "RETAIN",
+            "files": {
+                "core-v001/records/waste/eWasteAcceptanceRuleData.js": "4456e2ea68bb8fb4b3ca31281bc096b72dec887f441a8f44e616dc8ec85b5db6",
+                "core-v001/records/waste/eWasteAssetCreationPolicyData.js": "210a00eb91aee7df81d0f9003b4913b3f5ed599796b1e08f90f0da3d1c1bcb92",
+                "core-v001/records/waste/eWasteAssetTransferPolicyData.js": "d0c876e549787ab37bbafb4e295ec256b29996d75f4f1df2b4bc07dbe8bdcd90",
+                "core-v001/records/waste/eWasteAssetTypeData.js": "c573b3d5347f4400c9b0a2d24dab11e6ed65af06166403b57a47c8eac01555f1",
+                "core-v001/records/waste/eWasteCarbonSettlementPolicyData.js": "a3b880c52f9522d890669db9b918519f5ec6db3bc297e52d996d80cf3cf56957",
+                "core-v001/records/waste/eWasteCategoryData.js": "1e84ffef5ed3dbb9e6e5712993659a223bde6bb5960ec1ba7b921454cd58b01d",
+                "core-v001/records/waste/eWasteCollectionPresetData.js": "f5fabc7c03f682c9f3a120945959b6947612c3676a50971bbc452d3bfc741cc1",
+                "core-v001/records/waste/eWasteCollectionPointTypeData.js": "86299664351cfe45443d4147315973131273e0fde0e8d717aea607f0168ce237",
+                "core-v001/records/waste/eWasteCouponRedemptionSettlementPolicyData.js": "95c206269a4a07adcf38aa5665e823ca132daab7efeb857b1ea817a515120e3f",
+                "core-v001/records/waste/eWasteEvidencePolicyData.js": "7e4310b62b69b974b4dd07e559e1c7cfce6b792ce735045f632339632f02ed57",
+                "core-v001/records/waste/eWasteFamilyData.js": "82fa3c5e42458789e79c2616a6ac1238b861b429220fea7b0cb1ee03e7d1efeb",
+                "core-v001/records/waste/eWasteImpactMetricData.js": "d62a264d8e909d9cbd67083136d4837aeb32e0db6ccb7eeff6701022dd8ea622",
+                "core-v001/records/waste/eWasteImpactProfileData.js": "40bc0e2e8cef4231d5e7d351603af7c043a0da724347ba407ed1b46ac26cae3c",
+                "core-v001/records/waste/eWasteItemTypeData.js": "b2c81dc3fc125c5c72500479016ace3912e3291c1070719fc1fda6c252701a4f",
+                "core-v001/records/waste/eWasteMarketplaceEligibilityPolicyData.js": "941361de90656a93927ccc96bf50da57c7250c1d7f0c943a74cb99f0ebd86054",
+                "core-v001/records/waste/eWasteMaterialTypeData.js": "cab02d21bade54da2e950a3defb1482ac778a430fc5c27f13fc41d5ec2c30a8e",
+                "core-v001/records/waste/eWasteReceiptPolicyData.js": "5d6002dc2805483ead98e1c05b0b740736f9a89e5681445897ad0a3fa643f19c",
+                "core-v001/records/waste/eWasteRewardSettlementPolicyData.js": "c3f606b22ae6dbaf31ae75d6fabd05c26ee5a0d41d58d71d7a21cbb9b0326023",
+                "core-v001/records/waste/eWasteVerificationPolicyData.js": "030e366068bf984e031b269190c41132a332e8c49488fcfb2063a69d49af07e5",
+                "core-v001/headers/waste/eWastePresetHeader.js": "395b31b52e07154c757b3c972b009ad5ca1e38f49ba613e689b26fafba287aa0"
+            },
+            "sourceRoot": "core-v001"
+        }
+    }
+}

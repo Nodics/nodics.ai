@@ -223,6 +223,34 @@ assert(
       permission,
   ),
 );
+[
+  "waste.asset.create",
+  "waste.asset.own.read",
+  "waste.asset.marketplace.project",
+  "waste.asset.gift.transfer",
+  "waste.asset.coupon.redeem",
+  "waste.asset.sale.transfer",
+  "waste.asset.donation.transfer",
+].forEach((permission) =>
+  assert(
+    platformAdminGroup.permissions.includes(permission),
+    "Default platform administrators should include Waste asset permission: " +
+      permission,
+  ),
+);
+[
+  "waste.asset.own.read",
+  "waste.asset.marketplace.project",
+  "waste.asset.gift.transfer",
+  "waste.asset.coupon.redeem",
+  "waste.asset.donation.transfer",
+].forEach((permission) =>
+  assert(
+    customerGroup.permissions.includes(permission),
+    "Default customers should include Waste asset ownership permission: " +
+      permission,
+  ),
+);
 ["commerce.promotion.manage", "commerce.promotion.approve", "commerce.inventory.operate"].forEach((permission) => {
   assert(
     platformAdminGroup.permissions.includes(permission),

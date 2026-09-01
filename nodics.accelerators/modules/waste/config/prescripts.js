@@ -9,5 +9,5 @@
 
  */
 
-/** @module waste/config/prescripts @description Reserves Waste pre-start hooks. @layer config @owner waste */
+/** @module waste/config/prescripts @description Reserves Waste accelerator pre-start hooks. @layer config @owner waste */
 module.exports = {};

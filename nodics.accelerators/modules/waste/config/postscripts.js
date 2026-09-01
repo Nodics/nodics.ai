@@ -9,5 +9,5 @@
 
  */
 
-/** @module waste/config/postscripts @description Reserves Waste post-start hooks. @layer config @owner waste */
+/** @module waste/config/postscripts @description Reserves Waste accelerator post-start hooks. @layer config @owner waste */
 module.exports = {};

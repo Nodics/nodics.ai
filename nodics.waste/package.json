@@ -1,0 +1,52 @@
+{
+    "name": "nodics.waste",
+    "index": "82.99",
+    "description": "Nodics Waste Management common framework module group.",
+    "main": "nodics.js",
+    "requiredModules": [
+        "wasteCore",
+        "wasteMaterial",
+        "wasteCollection",
+        "wasteSubmission",
+        "wasteVerification",
+        "wasteReceipt",
+        "wasteImpact",
+        "wasteMovement",
+        "wasteCompliance",
+        "wasteApi"
+    ],
+    "version": "0.0.0",
+    "private": true,
+    "license": "SEE LICENSE IN LICENSE",
+    "nodics": {
+        "kind": "group",
+        "displayName": "Nodics Waste",
+        "runtimeModule": true,
+        "loadableByNodicsModuleLoader": true,
+        "owns": [
+            "composition",
+            "configuration",
+            "llm",
+            "test"
+        ],
+        "runtime": {
+            "router": false,
+            "publish": false,
+            "web": false
+        },
+        "extends": [
+            "nodics.foundation"
+        ],
+        "functionalModule": {
+            "identity": "nodics.waste",
+            "displayName": "Waste Management",
+            "type": "STANDARD",
+            "protected": false
+        }
+    },
+    "scripts": {
+        "check:syntax": "find . -name '*.js' -not -path './node_modules/*' -print0 | xargs -0 -n 50 node --check",
+        "test:contract": "for file in test/*.test.js modules/*/test/*.test.js; do node \"$file\" || exit 1; done",
+        "test": "npm run check:syntax && npm run test:contract"
+    }
+}

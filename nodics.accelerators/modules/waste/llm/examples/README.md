@@ -1,5 +1,6 @@
-# Waste Examples
+# Waste Accelerator Examples
 
-Examples should show partner modules adding category seed data, accepted-material
-rules, reward policy consumers, location materializers, and provider adapters
-without changing this accelerator's generic lifecycle contracts.
+Examples should show scenario accelerators such as `eWaste` contributing seed
+records to `nodics.waste` schemas and `wasteRecycling` contributing
+provider-neutral recycler/logistics handoff contracts, then partner projects
+adding policy and integration layers above them.

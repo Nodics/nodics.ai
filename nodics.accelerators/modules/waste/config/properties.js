@@ -9,5 +9,5 @@
 
  */
 
-/** @module waste/config/properties @description Reserves group-level Waste accelerator configuration. @layer config @owner waste @override Partner modules should override child capability policy rather than this composition boundary. */
+/** @module waste/config/properties @description Reserves Waste accelerator umbrella configuration. @layer config @owner waste @override Scenario accelerators define their own preset data and policy defaults. */
 module.exports = {};

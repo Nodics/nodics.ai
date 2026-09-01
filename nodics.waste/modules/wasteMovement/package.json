@@ -1,0 +1,18 @@
+{
+    "name": "wasteMovement",
+    "index": "82.80",
+    "description": "Reusable Waste batch and downstream movement contracts.",
+    "main": "nodics.js",
+    "version": "0.0.0",
+    "private": true,
+    "license": "SEE LICENSE IN LICENSE",
+    "nodics": {
+        "kind": "capability",
+        "displayName": "Waste Movement",
+        "runtimeModule": true,
+        "loadableByNodicsModuleLoader": true,
+        "owns": ["configuration", "schema", "service", "test", "llm"],
+        "runtime": { "router": false, "publish": false, "web": false }
+    },
+    "scripts": {}
+}
