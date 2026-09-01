@@ -41,22 +41,20 @@ const AUTHORING_SEQUENCE = Object.freeze([
     { id: 12, group: 'Navigation Authoring', code: 'navigation.rename', label: 'Edit navigation name/label', target: 'cmsDocumentationNavigation', trigger: 'NAVIGATION_CHANGE' },
     { id: 13, group: 'Navigation Authoring', code: 'navigation.sequence', label: 'Manage navigation sequence', target: 'cmsDocumentationNode', trigger: 'NAVIGATION_CHANGE' },
     { id: 14, group: 'Navigation Authoring', code: 'navigation.addSection', label: 'Add section node', target: 'cmsDocumentationNode', trigger: 'NAVIGATION_CHANGE' },
-    { id: 15, group: 'Navigation Authoring', code: 'navigation.addGroup', label: 'Add group node', target: 'cmsDocumentationNode', trigger: 'NAVIGATION_CHANGE' },
-    { id: 16, group: 'Navigation Authoring', code: 'navigation.addSubgroup', label: 'Add subgroup node', target: 'cmsDocumentationNode', trigger: 'NAVIGATION_CHANGE' },
-    { id: 17, group: 'Navigation Authoring', code: 'navigation.addTopic', label: 'Add topic node', target: 'cmsDocumentationNode', trigger: 'NAVIGATION_CHANGE' },
+    { id: 17, group: 'Navigation Authoring', code: 'navigation.addPageLink', label: 'Add page-link node', target: 'cmsDocumentationNode', trigger: 'NAVIGATION_CHANGE' },
     { id: 18, group: 'Navigation Authoring', code: 'navigation.moveParent', label: 'Move node under parent', target: 'cmsDocumentationNode', trigger: 'NAVIGATION_CHANGE' },
     { id: 19, group: 'Navigation Authoring', code: 'navigation.reorderSiblings', label: 'Reorder sibling nodes', target: 'cmsDocumentationNode', trigger: 'NAVIGATION_CHANGE' },
     { id: 20, group: 'Navigation Authoring', code: 'navigation.validateHierarchy', label: 'Validate hierarchy loops/orphans', target: 'readinessReport', trigger: 'NAVIGATION_CHANGE' },
-    { id: 21, group: 'Page and Topic Content', code: 'page.create', label: 'Create documentation page', target: 'cmsDocumentationPage', trigger: 'CONTENT_CHANGE' },
-    { id: 22, group: 'Page and Topic Content', code: 'page.attachTopic', label: 'Attach page to topic node', target: 'cmsDocumentationNode', trigger: 'NAVIGATION_CHANGE' },
-    { id: 23, group: 'Page and Topic Content', code: 'page.summary', label: 'Edit detailed summary', target: 'cmsDocumentationPage', trigger: 'CONTENT_CHANGE' },
-    { id: 24, group: 'Page and Topic Content', code: 'page.businessPerspective', label: 'Add business perspective block', target: 'cmsDocumentationPage', trigger: 'CONTENT_CHANGE' },
-    { id: 25, group: 'Page and Topic Content', code: 'page.technicalPerspective', label: 'Add technical perspective block', target: 'cmsDocumentationPage', trigger: 'CONTENT_CHANGE' },
-    { id: 26, group: 'Page and Topic Content', code: 'page.configurationDetails', label: 'Add configuration details', target: 'cmsDocumentationPage', trigger: 'CONTENT_CHANGE' },
-    { id: 27, group: 'Page and Topic Content', code: 'page.extensionDetails', label: 'Add customization/extension details', target: 'cmsDocumentationPage', trigger: 'CONTENT_CHANGE' },
-    { id: 28, group: 'Page and Topic Content', code: 'page.troubleshooting', label: 'Add troubleshooting section', target: 'cmsDocumentationPage', trigger: 'CONTENT_CHANGE' },
-    { id: 29, group: 'Page and Topic Content', code: 'page.relatedPages', label: 'Add related pages', target: 'cmsDocumentationPage', trigger: 'CONTENT_CHANGE' },
-    { id: 30, group: 'Page and Topic Content', code: 'page.sourceEvidence', label: 'Preserve source evidence', target: 'cmsDocumentationPage', trigger: 'SOURCE_EVIDENCE_CHANGE' },
+    { id: 21, group: 'Page Content', code: 'page.create', label: 'Create documentation page', target: 'cmsDocumentationPage', trigger: 'CONTENT_CHANGE' },
+    { id: 22, group: 'Page Content', code: 'page.attachPageLink', label: 'Attach page to page-link node', target: 'cmsDocumentationNode', trigger: 'NAVIGATION_CHANGE' },
+    { id: 23, group: 'Page Content', code: 'page.summary', label: 'Edit detailed summary', target: 'cmsDocumentationPage', trigger: 'CONTENT_CHANGE' },
+    { id: 24, group: 'Page Content', code: 'page.businessPerspective', label: 'Add business perspective block', target: 'cmsDocumentationPage', trigger: 'CONTENT_CHANGE' },
+    { id: 25, group: 'Page Content', code: 'page.technicalPerspective', label: 'Add technical perspective block', target: 'cmsDocumentationPage', trigger: 'CONTENT_CHANGE' },
+    { id: 26, group: 'Page Content', code: 'page.configurationDetails', label: 'Add configuration details', target: 'cmsDocumentationPage', trigger: 'CONTENT_CHANGE' },
+    { id: 27, group: 'Page Content', code: 'page.extensionDetails', label: 'Add customization/extension details', target: 'cmsDocumentationPage', trigger: 'CONTENT_CHANGE' },
+    { id: 28, group: 'Page Content', code: 'page.troubleshooting', label: 'Add troubleshooting section', target: 'cmsDocumentationPage', trigger: 'CONTENT_CHANGE' },
+    { id: 29, group: 'Page Content', code: 'page.relatedPages', label: 'Add related pages', target: 'cmsDocumentationPage', trigger: 'CONTENT_CHANGE' },
+    { id: 30, group: 'Page Content', code: 'page.sourceEvidence', label: 'Preserve source evidence', target: 'cmsDocumentationPage', trigger: 'SOURCE_EVIDENCE_CHANGE' },
     { id: 31, group: 'Visual Documentation Contract', code: 'visual.diagram', label: 'Add diagram block support', target: 'cmsDocumentationPage', trigger: 'CONTENT_CHANGE' },
     { id: 32, group: 'Visual Documentation Contract', code: 'visual.dataFlow', label: 'Add data-flow visual support', target: 'cmsDocumentationPage', trigger: 'CONTENT_CHANGE' },
     { id: 33, group: 'Visual Documentation Contract', code: 'visual.schemaModel', label: 'Add schema/model visual support', target: 'cmsDocumentationPage', trigger: 'CONTENT_CHANGE' },
@@ -89,16 +87,14 @@ const AUTHORING_SEQUENCE = Object.freeze([
     { id: 60, group: 'Access and Visibility', code: 'access.auditEvidence', label: 'Add access audit evidence', target: 'cmsDocumentationPublicationState' },
     { id: 61, group: 'Runtime Rendering', code: 'render.navigation', label: 'Render expandable navigation from backend data', target: 'renderProjection' },
     { id: 62, group: 'Runtime Rendering', code: 'render.sectionDashboard', label: 'Render section dashboard', target: 'cmsDocumentationDashboard' },
-    { id: 63, group: 'Runtime Rendering', code: 'render.groupDashboard', label: 'Render group dashboard', target: 'cmsDocumentationDashboard' },
-    { id: 64, group: 'Runtime Rendering', code: 'render.subgroupDashboard', label: 'Render subgroup dashboard', target: 'cmsDocumentationDashboard' },
-    { id: 65, group: 'Runtime Rendering', code: 'render.topicPage', label: 'Render topic page', target: 'cmsDocumentationPage' },
+    { id: 65, group: 'Runtime Rendering', code: 'render.pageLinkPage', label: 'Render page-link page', target: 'cmsDocumentationPage' },
     { id: 66, group: 'Runtime Rendering', code: 'render.breadcrumbs', label: 'Render breadcrumbs', target: 'renderProjection' },
     { id: 67, group: 'Runtime Rendering', code: 'render.toc', label: 'Render table of contents', target: 'renderProjection' },
     { id: 68, group: 'Runtime Rendering', code: 'render.badges', label: 'Render lifecycle/access badges', target: 'renderProjection' },
     { id: 69, group: 'Runtime Rendering', code: 'render.relatedPages', label: 'Render related pages', target: 'renderProjection' },
     { id: 70, group: 'Runtime Rendering', code: 'render.emptyError', label: 'Render empty/error states', target: 'renderProjection' },
     { id: 71, group: 'Search and Discovery', code: 'search.keyword', label: 'Keyword search over catalog records', target: 'cmsDocumentationSearchMetadata' },
-    { id: 72, group: 'Search and Discovery', code: 'search.topicMetadata', label: 'Topic search metadata validation', target: 'cmsDocumentationSearchMetadata' },
+    { id: 72, group: 'Search and Discovery', code: 'search.pageMetadataValidation', label: 'Page search metadata validation', target: 'cmsDocumentationSearchMetadata' },
     { id: 73, group: 'Search and Discovery', code: 'search.navigationNode', label: 'Navigation node search metadata', target: 'cmsDocumentationSearchMetadata' },
     { id: 74, group: 'Search and Discovery', code: 'search.dashboardMetadata', label: 'Dashboard search metadata', target: 'cmsDocumentationSearchMetadata' },
     { id: 75, group: 'Search and Discovery', code: 'search.pageMetadata', label: 'Page search metadata', target: 'cmsDocumentationSearchMetadata' },
@@ -195,7 +191,7 @@ module.exports = {
             },
             panels: [
                 { code: 'navigation', label: 'Navigation Builder', schemaName: 'cmsDocumentationNode', permission: 'documentation.navigation.update' },
-                { code: 'pages', label: 'Pages and Topic Content', schemaName: 'cmsDocumentationPage', permission: 'documentation.draft.update' },
+                { code: 'pages', label: 'Page Content', schemaName: 'cmsDocumentationPage', permission: 'documentation.draft.update' },
                 { code: 'dashboards', label: 'Dashboards and Content Areas', schemaName: 'cmsDocumentationDashboard', permission: 'documentation.dashboard.update' },
                 { code: 'access', label: 'Audience and Access Policies', schemaName: 'cmsDocumentationAccessPolicy', permission: 'documentation.accessPolicy.update' },
                 { code: 'publication', label: 'Review and Publication Queue', schemaName: 'cmsDocumentationPublicationState', permission: 'documentation.review' },
@@ -377,7 +373,7 @@ module.exports = {
         };
     },
 
-    /** Validates hierarchy loops, orphan nodes, and topic-page binding. */
+    /** Validates hierarchy loops, orphan nodes, and page-link binding. */
     validateHierarchy: function (records, issues) {
         const nodes = new Map(records.nodes.map(node => [node.code, node]));
         records.nodes.filter(node => node.parentNode && !nodes.has(node.parentNode)).forEach(node =>
@@ -395,8 +391,8 @@ module.exports = {
             }
         });
         const pageCodes = new Set(records.pages.map(page => page.code));
-        records.nodes.filter(node => node.nodeLevel === 'TOPIC' && !pageCodes.has(node.targetDocumentationPage))
-            .forEach(node => issues.push({ severity: 'error', rule: 'topic-without-page', target: node.code }));
+        records.nodes.filter(node => node.nodeLevel === 'PAGE_LINK' && !pageCodes.has(node.targetDocumentationPage))
+            .forEach(node => issues.push({ severity: 'error', rule: 'page-link-without-page', target: node.code }));
     },
 
     /** Validates public/authenticated/role/group/permission access policies. */
@@ -416,7 +412,7 @@ module.exports = {
         });
     },
 
-    /** Validates that topic pages carry visual explanation metadata. */
+    /** Validates that documentation pages carry visual explanation metadata. */
     validateVisuals: function (records, issues) {
         records.pages.filter(page => !Array.isArray(page.visualRequirements) || page.visualRequirements.length === 0)
             .forEach(page => issues.push({ severity: 'error', rule: 'missing-visual-requirements', target: page.code }));

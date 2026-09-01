@@ -92,14 +92,14 @@ function fixture() {
                 active: true
             },
             {
-                code: 'publicTopic',
+                code: 'publicPageLink',
                 product: 'docsProduct',
                 navigation: 'docsNavigation',
                 parentNode: 'root',
-                nodeLevel: 'TOPIC',
+                nodeLevel: 'PAGE_LINK',
                 nodeType: 'PAGE',
-                nodeTitle: 'Public Topic',
-                nodeSummary: 'Public topic summary',
+                nodeTitle: 'Public Page',
+                nodeSummary: 'Public page summary',
                 targetDocumentationPage: 'publicPage',
                 nodeOrder: 20,
                 accessPolicy: 'publicDocs',
@@ -108,14 +108,14 @@ function fixture() {
                 active: true
             },
             {
-                code: 'authorTopic',
+                code: 'authorPageLink',
                 product: 'docsProduct',
                 navigation: 'docsNavigation',
                 parentNode: 'root',
-                nodeLevel: 'TOPIC',
+                nodeLevel: 'PAGE_LINK',
                 nodeType: 'PAGE',
-                nodeTitle: 'Author Topic',
-                nodeSummary: 'Author-only topic summary',
+                nodeTitle: 'Author Page',
+                nodeSummary: 'Author-only page summary',
                 targetDocumentationPage: 'authorPage',
                 nodeOrder: 30,
                 accessPolicy: 'authorDocs',
@@ -205,8 +205,8 @@ function fixture() {
             publication('PRODUCT', 'docsProduct'),
             publication('NAVIGATION', 'docsNavigation'),
             publication('NODE', 'root'),
-            publication('NODE', 'publicTopic'),
-            publication('NODE', 'authorTopic'),
+            publication('NODE', 'publicPageLink'),
+            publication('NODE', 'authorPageLink'),
             publication('DASHBOARD', 'rootDashboard'),
             publication('PAGE', 'publicPage'),
             publication('PAGE', 'authorPage'),
@@ -215,8 +215,8 @@ function fixture() {
             publication('SEARCH_METADATA', 'searchPRODUCTdocsProduct'),
             publication('SEARCH_METADATA', 'searchNAVIGATIONdocsNavigation'),
             publication('SEARCH_METADATA', 'searchNODEroot'),
-            publication('SEARCH_METADATA', 'searchNODEpublicTopic'),
-            publication('SEARCH_METADATA', 'searchNODEauthorTopic'),
+            publication('SEARCH_METADATA', 'searchNODEpublicPageLink'),
+            publication('SEARCH_METADATA', 'searchNODEauthorPageLink'),
             publication('SEARCH_METADATA', 'searchDASHBOARDrootDashboard'),
             publication('SEARCH_METADATA', 'searchPAGEpublicPage'),
             publication('SEARCH_METADATA', 'searchPAGEauthorPage')
@@ -225,8 +225,8 @@ function fixture() {
             search('PRODUCT', 'docsProduct', 'Docs', 'PUBLIC'),
             search('NAVIGATION', 'docsNavigation', 'Docs Navigation', 'PUBLIC'),
             search('NODE', 'root', 'Root', 'PUBLIC'),
-            search('NODE', 'publicTopic', 'Public Topic', 'PUBLIC'),
-            search('NODE', 'authorTopic', 'Author Topic', 'PERMISSION_BASED'),
+            search('NODE', 'publicPageLink', 'Public Page', 'PUBLIC'),
+            search('NODE', 'authorPageLink', 'Author Page', 'PERMISSION_BASED'),
             search('DASHBOARD', 'rootDashboard', 'Root Dashboard', 'PUBLIC'),
             search('PAGE', 'publicPage', 'Public Page', 'PUBLIC'),
             search('PAGE', 'authorPage', 'Author Page', 'PERMISSION_BASED')
@@ -236,11 +236,11 @@ function fixture() {
 
 const model = service.authoringModel();
 assert.strictEqual(model.contract, 'cms.documentation.authoring/v1');
-assert.strictEqual(model.sequence.length, 100);
+assert.strictEqual(model.sequence.length, 96);
 assert.deepStrictEqual(Object.keys(model.sequenceByGroup), [
     'Axis Documentation Workspace',
     'Navigation Authoring',
-    'Page and Topic Content',
+    'Page Content',
     'Visual Documentation Contract',
     'Publishing Workflow',
     'Access and Visibility',
@@ -268,7 +268,7 @@ assert.strictEqual(
 const nexusProjection = service.renderProjection({ documentation: { records: pack, channel: 'NEXUS' } });
 assert.strictEqual(nexusProjection.channel, 'NEXUS');
 assert.deepStrictEqual(nexusProjection.pages.map(page => page.code), ['publicPage']);
-assert.deepStrictEqual(nexusProjection.navigation[0].children.map(node => node.code), ['publicTopic']);
+assert.deepStrictEqual(nexusProjection.navigation[0].children.map(node => node.code), ['publicPageLink']);
 
 const axisProjection = service.renderProjection({
     documentation: {

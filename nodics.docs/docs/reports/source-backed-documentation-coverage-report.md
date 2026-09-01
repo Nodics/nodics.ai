@@ -7,11 +7,11 @@ This generated report maps current source boundaries to published documentation 
 | Metric | Count |
 | --- | --- |
 | Catalogue documents | 128 |
-| Source boundaries scanned | 179 |
-| Needs page or owner mapping | 3 |
+| Source boundaries scanned | 185 |
+| Needs page or owner mapping | 6 |
 | Needs deeper section | 0 |
 | Covered | 176 |
-| Internal-only candidate | 0 |
+| Internal-only candidate | 3 |
 | Classified backlog items | 23 |
 
 ## Classified Backlog
@@ -46,9 +46,15 @@ This generated report maps current source boundaries to published documentation 
 
 | Classification | Score | Source boundary | Current matches | Key signals |
 | --- | ---: | --- | --- | --- |
+| needs-page-or-owner-mapping | 107 | `nodics.ai/nodics.accelerators/modules/waste` | None | services:2, dataHeaders:2, dataRecords:23, tests:13 |
+| needs-page-or-owner-mapping | 64 | `nodics.ai/nodics.accelerators/modules/waste/modules/eWaste` | None | dataHeaders:1, dataRecords:19, tests:2 |
 | needs-page-or-owner-mapping | 54 | `nodics.ai/nodics.wcms/modules/wcmsExperience` | None | schemas:1, services:5, controllers:2, routers:2, tests:8 |
 | needs-page-or-owner-mapping | 27 | `nodics.ai/nodics.commerce/modules/digitalCommerce` | None | schemas:1, services:2, controllers:1, routers:2, tests:1 |
 | needs-page-or-owner-mapping | 27 | `nodics.ai/nodics.commerce/modules/digitalCommerce/modules/digitalCore` | None | schemas:1, services:2, controllers:1, routers:2, tests:1 |
+| needs-page-or-owner-mapping | 17 | `nodics.kickoff/modules/kickoffWaste` | None | dataHeaders:1, dataRecords:4, tests:1 |
+| internal-only-candidate | 7 | `nodics.ai/nodics.accelerators/modules/waste/modules/circa.eWaste` | None | services:1, tests:2 |
+| internal-only-candidate | 5 | `nodics.ai/nodics.accelerators/modules/waste/modules/wasteRecycling` | None | services:1, tests:1 |
+| internal-only-candidate | 0 | `nodics.kickoff/envs/kickoffLocal/wasteServer` | None | package only |
 
 ## Verification
 

@@ -4897,11 +4897,11 @@ module.exports = {
     "active": true
   },
   "record49": {
-    "code": "nodicsDocsNodeTopicframeworkWhatIsNodics",
+    "code": "nodicsDocsNodePageframeworkWhatIsNodics",
     "product": "nodicsDocumentationProduct",
     "navigation": "nodicsDocumentationNavigation",
     "parentNode": "nodicsDocsNodeSecnodicsFramework",
-    "nodeLevel": "TOPIC",
+    "nodeLevel": "PAGE_LINK",
     "nodeType": "PAGE",
     "nodeTitle": "What is Nodics?",
     "nodeSummary": "Introductory definition of Nodics, its enterprise purpose, and the first mental model for business, developer, and operator readers.",
@@ -4966,23 +4966,23 @@ module.exports = {
       "enterprise-framework"
     ],
     "relatedNodes": [
-      "nodicsDocsNodeTopicframeworkWhyNodicsExists",
-      "nodicsDocsNodeTopicframeworkHowNodicsWorks",
-      "nodicsDocsNodeTopicframeworkAdoptionAndFirstJourney",
-      "nodicsDocsNodeTopicframeworkModularArchitecture",
-      "nodicsDocsNodeTopicframeworkLocalQuickStart",
-      "nodicsDocsNodeTopicdocsDocumentationRoadmap"
+      "nodicsDocsNodePageframeworkWhyNodicsExists",
+      "nodicsDocsNodePageframeworkHowNodicsWorks",
+      "nodicsDocsNodePageframeworkAdoptionAndFirstJourney",
+      "nodicsDocsNodePageframeworkModularArchitecture",
+      "nodicsDocsNodePageframeworkLocalQuickStart",
+      "nodicsDocsNodePagedocsDocumentationRoadmap"
     ],
     "locale": "en",
     "channel": "web",
     "active": true
   },
   "record50": {
-    "code": "nodicsDocsNodeTopicframeworkWhyNodicsExists",
+    "code": "nodicsDocsNodePageframeworkWhyNodicsExists",
     "product": "nodicsDocumentationProduct",
     "navigation": "nodicsDocumentationNavigation",
     "parentNode": "nodicsDocsNodeSecnodicsFramework",
-    "nodeLevel": "TOPIC",
+    "nodeLevel": "PAGE_LINK",
     "nodeType": "PAGE",
     "nodeTitle": "Why Nodics Exists",
     "nodeSummary": "Industry problems, business value, and why Nodics turns fast delivery into governed enterprise software.",
@@ -5048,21 +5048,21 @@ module.exports = {
       "enterprise-problems"
     ],
     "relatedNodes": [
-      "nodicsDocsNodeTopicframeworkWhatIsNodics",
-      "nodicsDocsNodeTopicframeworkHowNodicsWorks",
-      "nodicsDocsNodeTopicframeworkAdoptionAndFirstJourney",
-      "nodicsDocsNodeTopicdocsDocumentationRoadmap"
+      "nodicsDocsNodePageframeworkWhatIsNodics",
+      "nodicsDocsNodePageframeworkHowNodicsWorks",
+      "nodicsDocsNodePageframeworkAdoptionAndFirstJourney",
+      "nodicsDocsNodePagedocsDocumentationRoadmap"
     ],
     "locale": "en",
     "channel": "web",
     "active": true
   },
   "record51": {
-    "code": "nodicsDocsNodeTopicframeworkHowNodicsWorks",
+    "code": "nodicsDocsNodePageframeworkHowNodicsWorks",
     "product": "nodicsDocumentationProduct",
     "navigation": "nodicsDocumentationNavigation",
     "parentNode": "nodicsDocsNodeSecnodicsFramework",
-    "nodeLevel": "TOPIC",
+    "nodeLevel": "PAGE_LINK",
     "nodeType": "PAGE",
     "nodeTitle": "How Nodics Works",
     "nodeSummary": "Mental model for framework modules, customer projects, Axis, public applications, runtime ownership, and customization.",
@@ -5128,21 +5128,21 @@ module.exports = {
       "backend-driven-experience"
     ],
     "relatedNodes": [
-      "nodicsDocsNodeTopicframeworkWhatIsNodics",
-      "nodicsDocsNodeTopicframeworkWhyNodicsExists",
-      "nodicsDocsNodeTopicframeworkAdoptionAndFirstJourney",
-      "nodicsDocsNodeTopicdocsDocumentationRoadmap"
+      "nodicsDocsNodePageframeworkWhatIsNodics",
+      "nodicsDocsNodePageframeworkWhyNodicsExists",
+      "nodicsDocsNodePageframeworkAdoptionAndFirstJourney",
+      "nodicsDocsNodePagedocsDocumentationRoadmap"
     ],
     "locale": "en",
     "channel": "web",
     "active": true
   },
   "record52": {
-    "code": "nodicsDocsNodeTopicframeworkAdoptionAndFirstJourney",
+    "code": "nodicsDocsNodePageframeworkAdoptionAndFirstJourney",
     "product": "nodicsDocumentationProduct",
     "navigation": "nodicsDocumentationNavigation",
     "parentNode": "nodicsDocsNodeSecnodicsFramework",
-    "nodeLevel": "TOPIC",
+    "nodeLevel": "PAGE_LINK",
     "nodeType": "PAGE",
     "nodeTitle": "Adoption and First Journey",
     "nodeSummary": "The first business, developer, and operator path through setup, capability registration, imports, publishing, and browser verification.",
@@ -5208,21 +5208,21 @@ module.exports = {
       "fresh-schema-setup"
     ],
     "relatedNodes": [
-      "nodicsDocsNodeTopicframeworkWhatIsNodics",
-      "nodicsDocsNodeTopicframeworkWhyNodicsExists",
-      "nodicsDocsNodeTopicframeworkHowNodicsWorks",
-      "nodicsDocsNodeTopicdocsDocumentationRoadmap"
+      "nodicsDocsNodePageframeworkWhatIsNodics",
+      "nodicsDocsNodePageframeworkWhyNodicsExists",
+      "nodicsDocsNodePageframeworkHowNodicsWorks",
+      "nodicsDocsNodePagedocsDocumentationRoadmap"
     ],
     "locale": "en",
     "channel": "web",
     "active": true
   },
   "record53": {
-    "code": "nodicsDocsNodeTopicdocsDocumentationRoadmap",
+    "code": "nodicsDocsNodePagedocsDocumentationRoadmap",
     "product": "nodicsDocumentationProduct",
     "navigation": "nodicsDocumentationNavigation",
     "parentNode": "nodicsDocsNodeSecdocumentationRoadmap",
-    "nodeLevel": "TOPIC",
+    "nodeLevel": "PAGE_LINK",
     "nodeType": "PAGE",
     "nodeTitle": "Documentation Roadmap",
     "nodeSummary": "How the Nodics documentation product is organized and how readers choose the right path through the enterprise hierarchy.",
@@ -5286,23 +5286,23 @@ module.exports = {
       "reader-navigation"
     ],
     "relatedNodes": [
-      "nodicsDocsNodeTopicframeworkWhatIsNodics",
-      "nodicsDocsNodeTopicdocsDocumentationPrinciples",
-      "nodicsDocsNodeTopicdocsReaderJourneyAndCoverage",
-      "nodicsDocsNodeTopicdocsDocumentationPublishingModel",
-      "nodicsDocsNodeTopicdocsOverview",
-      "nodicsDocsNodeTopicframeworkCapabilityDocumentationMaturityPattern"
+      "nodicsDocsNodePageframeworkWhatIsNodics",
+      "nodicsDocsNodePagedocsDocumentationPrinciples",
+      "nodicsDocsNodePagedocsReaderJourneyAndCoverage",
+      "nodicsDocsNodePagedocsDocumentationPublishingModel",
+      "nodicsDocsNodePagedocsOverview",
+      "nodicsDocsNodePageframeworkCapabilityDocumentationMaturityPattern"
     ],
     "locale": "en",
     "channel": "web",
     "active": true
   },
   "record54": {
-    "code": "nodicsDocsNodeTopicdocsDocumentationPrinciples",
+    "code": "nodicsDocsNodePagedocsDocumentationPrinciples",
     "product": "nodicsDocumentationProduct",
     "navigation": "nodicsDocumentationNavigation",
     "parentNode": "nodicsDocsNodeSecdocumentationRoadmap",
-    "nodeLevel": "TOPIC",
+    "nodeLevel": "PAGE_LINK",
     "nodeType": "PAGE",
     "nodeTitle": "Documentation Principles",
     "nodeSummary": "Framework-level documentation rules for README thinness, detailed docs depth, visual evidence, customization, publishing, and access.",
@@ -5368,21 +5368,21 @@ module.exports = {
       "visual-contract"
     ],
     "relatedNodes": [
-      "nodicsDocsNodeTopicdocsDocumentationRoadmap",
-      "nodicsDocsNodeTopicdocsReaderJourneyAndCoverage",
-      "nodicsDocsNodeTopicdocsDocumentationPublishingModel",
-      "nodicsDocsNodeTopicframeworkWhatIsNodics"
+      "nodicsDocsNodePagedocsDocumentationRoadmap",
+      "nodicsDocsNodePagedocsReaderJourneyAndCoverage",
+      "nodicsDocsNodePagedocsDocumentationPublishingModel",
+      "nodicsDocsNodePageframeworkWhatIsNodics"
     ],
     "locale": "en",
     "channel": "web",
     "active": true
   },
   "record55": {
-    "code": "nodicsDocsNodeTopicdocsReaderJourneyAndCoverage",
+    "code": "nodicsDocsNodePagedocsReaderJourneyAndCoverage",
     "product": "nodicsDocumentationProduct",
     "navigation": "nodicsDocumentationNavigation",
     "parentNode": "nodicsDocsNodeSecdocumentationRoadmap",
-    "nodeLevel": "TOPIC",
+    "nodeLevel": "PAGE_LINK",
     "nodeType": "PAGE",
     "nodeTitle": "Reader Journey and Coverage",
     "nodeSummary": "How business users, developers, operators, QA owners, administrators, and AI tools navigate capability documentation.",
@@ -5448,21 +5448,21 @@ module.exports = {
       "audience-paths"
     ],
     "relatedNodes": [
-      "nodicsDocsNodeTopicdocsDocumentationRoadmap",
-      "nodicsDocsNodeTopicdocsDocumentationPrinciples",
-      "nodicsDocsNodeTopicdocsDocumentationPublishingModel",
-      "nodicsDocsNodeTopicframeworkWhatIsNodics"
+      "nodicsDocsNodePagedocsDocumentationRoadmap",
+      "nodicsDocsNodePagedocsDocumentationPrinciples",
+      "nodicsDocsNodePagedocsDocumentationPublishingModel",
+      "nodicsDocsNodePageframeworkWhatIsNodics"
     ],
     "locale": "en",
     "channel": "web",
     "active": true
   },
   "record56": {
-    "code": "nodicsDocsNodeTopicdocsDocumentationPublishingModel",
+    "code": "nodicsDocsNodePagedocsDocumentationPublishingModel",
     "product": "nodicsDocumentationProduct",
     "navigation": "nodicsDocumentationNavigation",
     "parentNode": "nodicsDocsNodeSecdocumentationRoadmap",
-    "nodeLevel": "TOPIC",
+    "nodeLevel": "PAGE_LINK",
     "nodeType": "PAGE",
     "nodeTitle": "Documentation Publishing Model",
     "nodeSummary": "How documentation source becomes content catalog data, Staged records, approval tasks, Online pages, and public or authenticated delivery.",
@@ -5528,21 +5528,21 @@ module.exports = {
       "staged-online"
     ],
     "relatedNodes": [
-      "nodicsDocsNodeTopicdocsDocumentationRoadmap",
-      "nodicsDocsNodeTopicdocsDocumentationPrinciples",
-      "nodicsDocsNodeTopicdocsReaderJourneyAndCoverage",
-      "nodicsDocsNodeTopicframeworkWhatIsNodics"
+      "nodicsDocsNodePagedocsDocumentationRoadmap",
+      "nodicsDocsNodePagedocsDocumentationPrinciples",
+      "nodicsDocsNodePagedocsReaderJourneyAndCoverage",
+      "nodicsDocsNodePageframeworkWhatIsNodics"
     ],
     "locale": "en",
     "channel": "web",
     "active": true
   },
   "record57": {
-    "code": "nodicsDocsNodeTopicframeworkModularArchitecture",
+    "code": "nodicsDocsNodePageframeworkModularArchitecture",
     "product": "nodicsDocumentationProduct",
     "navigation": "nodicsDocumentationNavigation",
     "parentNode": "nodicsDocsNodeSecframeworkArchitectureAndDesign",
-    "nodeLevel": "TOPIC",
+    "nodeLevel": "PAGE_LINK",
     "nodeType": "PAGE",
     "nodeTitle": "Modular architecture and ownership",
     "nodeSummary": "How functional modules, technical modules, runtime servers, and customer projects fit together.",
@@ -5606,23 +5606,23 @@ module.exports = {
       "modular-architecture-and-ownership"
     ],
     "relatedNodes": [
-      "nodicsDocsNodeTopicframeworkRuntimeServerComposition",
-      "nodicsDocsNodeTopicframeworkModuleLoadingServicePrecedence",
-      "nodicsDocsNodeTopicframeworkArchitectureDecisionGuide",
-      "nodicsDocsNodeTopicfoundationOverview",
-      "nodicsDocsNodeTopicframeworkCustomizationGuide",
-      "nodicsDocsNodeTopicplatformModuleRegistry"
+      "nodicsDocsNodePageframeworkRuntimeServerComposition",
+      "nodicsDocsNodePageframeworkModuleLoadingServicePrecedence",
+      "nodicsDocsNodePageframeworkArchitectureDecisionGuide",
+      "nodicsDocsNodePagefoundationOverview",
+      "nodicsDocsNodePageframeworkCustomizationGuide",
+      "nodicsDocsNodePageplatformModuleRegistry"
     ],
     "locale": "en",
     "channel": "web",
     "active": true
   },
   "record58": {
-    "code": "nodicsDocsNodeTopicframeworkRuntimeServerComposition",
+    "code": "nodicsDocsNodePageframeworkRuntimeServerComposition",
     "product": "nodicsDocumentationProduct",
     "navigation": "nodicsDocumentationNavigation",
     "parentNode": "nodicsDocsNodeSecframeworkArchitectureAndDesign",
-    "nodeLevel": "TOPIC",
+    "nodeLevel": "PAGE_LINK",
     "nodeType": "PAGE",
     "nodeTitle": "Runtime Server Composition",
     "nodeSummary": "How project topology composes framework modules into Platform, WCMS, Process, and other runtime servers.",
@@ -5686,20 +5686,20 @@ module.exports = {
       "platform-wcms-process"
     ],
     "relatedNodes": [
-      "nodicsDocsNodeTopicfoundationOverview",
-      "nodicsDocsNodeTopicframeworkCustomizationGuide",
-      "nodicsDocsNodeTopicplatformModuleRegistry"
+      "nodicsDocsNodePagefoundationOverview",
+      "nodicsDocsNodePageframeworkCustomizationGuide",
+      "nodicsDocsNodePageplatformModuleRegistry"
     ],
     "locale": "en",
     "channel": "web",
     "active": true
   },
   "record59": {
-    "code": "nodicsDocsNodeTopicframeworkModuleLoadingServicePrecedence",
+    "code": "nodicsDocsNodePageframeworkModuleLoadingServicePrecedence",
     "product": "nodicsDocumentationProduct",
     "navigation": "nodicsDocumentationNavigation",
     "parentNode": "nodicsDocsNodeSecframeworkArchitectureAndDesign",
-    "nodeLevel": "TOPIC",
+    "nodeLevel": "PAGE_LINK",
     "nodeType": "PAGE",
     "nodeTitle": "Module Loading and Service Precedence",
     "nodeSummary": "How runtime loading order, service overrides, and project layers decide which implementation is active.",
@@ -5763,22 +5763,22 @@ module.exports = {
       "override-order"
     ],
     "relatedNodes": [
-      "nodicsDocsNodeTopicfoundationOverview",
-      "nodicsDocsNodeTopicframeworkCustomizationGuide",
-      "nodicsDocsNodeTopicplatformModuleRegistry",
-      "nodicsDocsNodeTopicfoundationModuleToModuleCommunication",
-      "nodicsDocsNodeTopicroutingApiRequestLifecycle"
+      "nodicsDocsNodePagefoundationOverview",
+      "nodicsDocsNodePageframeworkCustomizationGuide",
+      "nodicsDocsNodePageplatformModuleRegistry",
+      "nodicsDocsNodePagefoundationModuleToModuleCommunication",
+      "nodicsDocsNodePageroutingApiRequestLifecycle"
     ],
     "locale": "en",
     "channel": "web",
     "active": true
   },
   "record60": {
-    "code": "nodicsDocsNodeTopicframeworkArchitectureDecisionGuide",
+    "code": "nodicsDocsNodePageframeworkArchitectureDecisionGuide",
     "product": "nodicsDocumentationProduct",
     "navigation": "nodicsDocumentationNavigation",
     "parentNode": "nodicsDocsNodeSecframeworkArchitectureAndDesign",
-    "nodeLevel": "TOPIC",
+    "nodeLevel": "PAGE_LINK",
     "nodeType": "PAGE",
     "nodeTitle": "Architecture Decision Guide",
     "nodeSummary": "Decision path for choosing framework, project, content, provider, service, pipeline, schema, route, or renderer ownership.",
@@ -5842,20 +5842,20 @@ module.exports = {
       "where-change-belongs"
     ],
     "relatedNodes": [
-      "nodicsDocsNodeTopicfoundationOverview",
-      "nodicsDocsNodeTopicframeworkCustomizationGuide",
-      "nodicsDocsNodeTopicplatformModuleRegistry"
+      "nodicsDocsNodePagefoundationOverview",
+      "nodicsDocsNodePageframeworkCustomizationGuide",
+      "nodicsDocsNodePageplatformModuleRegistry"
     ],
     "locale": "en",
     "channel": "web",
     "active": true
   },
   "record61": {
-    "code": "nodicsDocsNodeTopicplatformModuleRegistry",
+    "code": "nodicsDocsNodePageplatformModuleRegistry",
     "product": "nodicsDocumentationProduct",
     "navigation": "nodicsDocumentationNavigation",
     "parentNode": "nodicsDocsNodeSeccapabilityRegistryAndLifecycleManagement",
-    "nodeLevel": "TOPIC",
+    "nodeLevel": "PAGE_LINK",
     "nodeType": "PAGE",
     "nodeTitle": "Functional module registry",
     "nodeSummary": "Durable project registration and runtime observation rules.",
@@ -5919,20 +5919,20 @@ module.exports = {
       "functional-module-registry"
     ],
     "relatedNodes": [
-      "nodicsDocsNodeTopicplatformOverview",
-      "nodicsDocsNodeTopicfoundationOverview",
-      "nodicsDocsNodeTopicframeworkLocalQuickStart"
+      "nodicsDocsNodePageplatformOverview",
+      "nodicsDocsNodePagefoundationOverview",
+      "nodicsDocsNodePageframeworkLocalQuickStart"
     ],
     "locale": "en",
     "channel": "web",
     "active": true
   },
   "record62": {
-    "code": "nodicsDocsNodeTopicfoundationOverview",
+    "code": "nodicsDocsNodePagefoundationOverview",
     "product": "nodicsDocumentationProduct",
     "navigation": "nodicsDocumentationNavigation",
     "parentNode": "nodicsDocsNodeSecfoundationRuntimeServices",
-    "nodeLevel": "TOPIC",
+    "nodeLevel": "PAGE_LINK",
     "nodeType": "PAGE",
     "nodeTitle": "Foundation overview",
     "nodeSummary": "Beginner, developer, and operations guide to the Foundation runtime, request path, cache, events, configuration, and quality rules.",
@@ -5996,19 +5996,19 @@ module.exports = {
       "foundation-overview"
     ],
     "relatedNodes": [
-      "nodicsDocsNodeTopicframeworkModularArchitecture",
-      "nodicsDocsNodeTopicframeworkDevopsRuntime"
+      "nodicsDocsNodePageframeworkModularArchitecture",
+      "nodicsDocsNodePageframeworkDevopsRuntime"
     ],
     "locale": "en",
     "channel": "web",
     "active": true
   },
   "record63": {
-    "code": "nodicsDocsNodeTopicapplicationsSuite",
+    "code": "nodicsDocsNodePageapplicationsSuite",
     "product": "nodicsDocumentationProduct",
     "navigation": "nodicsDocumentationNavigation",
     "parentNode": "nodicsDocsNodeSecnodicsApplicationSuite",
-    "nodeLevel": "TOPIC",
+    "nodeLevel": "PAGE_LINK",
     "nodeType": "PAGE",
     "nodeTitle": "Nodics Application Suite",
     "nodeSummary": "Business and technical overview of Axis, Nexus, and Kickoff as application experiences built on the Nodics Framework.",
@@ -6073,21 +6073,21 @@ module.exports = {
       "kickoff"
     ],
     "relatedNodes": [
-      "nodicsDocsNodeTopicframeworkWhatIsNodics",
-      "nodicsDocsNodeTopicframeworkLocalQuickStart",
-      "nodicsDocsNodeTopicdocsOverview",
-      "nodicsDocsNodeTopicprocessVisualDesigner"
+      "nodicsDocsNodePageframeworkWhatIsNodics",
+      "nodicsDocsNodePageframeworkLocalQuickStart",
+      "nodicsDocsNodePagedocsOverview",
+      "nodicsDocsNodePageprocessVisualDesigner"
     ],
     "locale": "en",
     "channel": "web",
     "active": true
   },
   "record64": {
-    "code": "nodicsDocsNodeTopicsolutionsTaskExecutionEngine",
+    "code": "nodicsDocsNodePagesolutionsTaskExecutionEngine",
     "product": "nodicsDocumentationProduct",
     "navigation": "nodicsDocumentationNavigation",
     "parentNode": "nodicsDocsNodeSecsolutionUseCases",
-    "nodeLevel": "TOPIC",
+    "nodeLevel": "PAGE_LINK",
     "nodeType": "PAGE",
     "nodeTitle": "Task Execution Engine",
     "nodeSummary": "How customers use Nodics Process, Cron, Pipelines, Events, and governed runtime change to build a Task Execution Engine.",
@@ -6155,23 +6155,23 @@ module.exports = {
       "runtime-change"
     ],
     "relatedNodes": [
-      "nodicsDocsNodeTopicprocessOverview",
-      "nodicsDocsNodeTopicprocessScheduledAutomation",
-      "nodicsDocsNodeTopicpipelineBusinessLogicOrchestration",
-      "nodicsDocsNodeTopiceventsMessagingClusterCoordination",
-      "nodicsDocsNodeTopicruntimeGovernedChange",
-      "nodicsDocsNodeTopiccronNodeResponsibilityTee"
+      "nodicsDocsNodePageprocessOverview",
+      "nodicsDocsNodePageprocessScheduledAutomation",
+      "nodicsDocsNodePagepipelineBusinessLogicOrchestration",
+      "nodicsDocsNodePageeventsMessagingClusterCoordination",
+      "nodicsDocsNodePageruntimeGovernedChange",
+      "nodicsDocsNodePagecronNodeResponsibilityTee"
     ],
     "locale": "en",
     "channel": "web",
     "active": true
   },
   "record65": {
-    "code": "nodicsDocsNodeTopicsolutionsDataEngineeringAnalyticsPlatform",
+    "code": "nodicsDocsNodePagesolutionsDataEngineeringAnalyticsPlatform",
     "product": "nodicsDocumentationProduct",
     "navigation": "nodicsDocumentationNavigation",
     "parentNode": "nodicsDocsNodeSecsolutionUseCases",
-    "nodeLevel": "TOPIC",
+    "nodeLevel": "PAGE_LINK",
     "nodeType": "PAGE",
     "nodeTitle": "Data Engineering and Analytics Platform",
     "nodeSummary": "How customers use Nodics import, export, discovery, provider, event, pipeline, and publishing capabilities to build governed data platforms.",
@@ -6240,23 +6240,23 @@ module.exports = {
       "data-pipeline"
     ],
     "relatedNodes": [
-      "nodicsDocsNodeTopicdataImportExportMigration",
-      "nodicsDocsNodeTopicdiscoverySearchIndexing",
-      "nodicsDocsNodeTopicschemaDataModelingManagement",
-      "nodicsDocsNodeTopicpersistenceProviderDataAccessLayer",
-      "nodicsDocsNodeTopicpipelineBusinessLogicOrchestration",
-      "nodicsDocsNodeTopiceventsMessagingClusterCoordination"
+      "nodicsDocsNodePagedataImportExportMigration",
+      "nodicsDocsNodePagediscoverySearchIndexing",
+      "nodicsDocsNodePageschemaDataModelingManagement",
+      "nodicsDocsNodePagepersistenceProviderDataAccessLayer",
+      "nodicsDocsNodePagepipelineBusinessLogicOrchestration",
+      "nodicsDocsNodePageeventsMessagingClusterCoordination"
     ],
     "locale": "en",
     "channel": "web",
     "active": true
   },
   "record66": {
-    "code": "nodicsDocsNodeTopicacceleratorsAgoraIndustryTemplates",
+    "code": "nodicsDocsNodePageacceleratorsAgoraIndustryTemplates",
     "product": "nodicsDocumentationProduct",
     "navigation": "nodicsDocumentationNavigation",
     "parentNode": "nodicsDocsNodeSecacceleratorsAndIndustrySolutionTemplates",
-    "nodeLevel": "TOPIC",
+    "nodeLevel": "PAGE_LINK",
     "nodeType": "PAGE",
     "nodeTitle": "Accelerators and Industry Solution Templates",
     "nodeSummary": "Agora accelerator family overview for Apparel, Electronics, and Telco customer commerce storefronts.",
@@ -6322,22 +6322,22 @@ module.exports = {
       "agora-telco"
     ],
     "relatedNodes": [
-      "nodicsDocsNodeTopicapplicationsSuite",
-      "nodicsDocsNodeTopiccommerceOverview",
-      "nodicsDocsNodeTopiccommerceCartOrder",
-      "nodicsDocsNodeTopicwcmsOverview",
-      "nodicsDocsNodeTopicwcmsPublishingLifecycle"
+      "nodicsDocsNodePageapplicationsSuite",
+      "nodicsDocsNodePagecommerceOverview",
+      "nodicsDocsNodePagecommerceCartOrder",
+      "nodicsDocsNodePagewcmsOverview",
+      "nodicsDocsNodePagewcmsPublishingLifecycle"
     ],
     "locale": "en",
     "channel": "web",
     "active": true
   },
   "record67": {
-    "code": "nodicsDocsNodeTopicacceleratorsAgoraApparelProductDataAuthoring",
+    "code": "nodicsDocsNodePageacceleratorsAgoraApparelProductDataAuthoring",
     "product": "nodicsDocumentationProduct",
     "navigation": "nodicsDocumentationNavigation",
     "parentNode": "nodicsDocsNodeSecacceleratorsAndIndustrySolutionTemplates",
-    "nodeLevel": "TOPIC",
+    "nodeLevel": "PAGE_LINK",
     "nodeType": "PAGE",
     "nodeTitle": "Agora Apparel Product Data Authoring",
     "nodeSummary": "Step-by-step source-backed guide for adding Agora Apparel product, price, inventory, content, media, and search data through project release folders.",
@@ -6405,24 +6405,24 @@ module.exports = {
       "sample-v001"
     ],
     "relatedNodes": [
-      "nodicsDocsNodeTopicacceleratorsAgoraIndustryTemplates",
-      "nodicsDocsNodeTopicdataImportExportMigration",
-      "nodicsDocsNodeTopiccatalogProductDiscoveryManagement",
-      "nodicsDocsNodeTopicpricingPromotionsTaxManagement",
-      "nodicsDocsNodeTopicinventoryStockManagement",
-      "nodicsDocsNodeTopicwcmsMediaImportPublication",
-      "nodicsDocsNodeTopicdiscoverySearchIndexing"
+      "nodicsDocsNodePageacceleratorsAgoraIndustryTemplates",
+      "nodicsDocsNodePagedataImportExportMigration",
+      "nodicsDocsNodePagecatalogProductDiscoveryManagement",
+      "nodicsDocsNodePagepricingPromotionsTaxManagement",
+      "nodicsDocsNodePageinventoryStockManagement",
+      "nodicsDocsNodePagewcmsMediaImportPublication",
+      "nodicsDocsNodePagediscoverySearchIndexing"
     ],
     "locale": "en",
     "channel": "web",
     "active": true
   },
   "record68": {
-    "code": "nodicsDocsNodeTopicframeworkLocalQuickStart",
+    "code": "nodicsDocsNodePageframeworkLocalQuickStart",
     "product": "nodicsDocumentationProduct",
     "navigation": "nodicsDocumentationNavigation",
     "parentNode": "nodicsDocsNodeSecnodicsInstallerAndWorkspaceSetup",
-    "nodeLevel": "TOPIC",
+    "nodeLevel": "PAGE_LINK",
     "nodeType": "PAGE",
     "nodeTitle": "Local quick start with Kickoff and Axis",
     "nodeSummary": "Beginner-friendly steps to configure the framework, start local servers, log in to Axis, and open documentation.",
@@ -6486,22 +6486,22 @@ module.exports = {
       "local-quick-start-with-kickoff-and-axis"
     ],
     "relatedNodes": [
-      "nodicsDocsNodeTopicframeworkFreshSchemaSetupJourney",
-      "nodicsDocsNodeTopicframeworkLocalRuntimeTroubleshooting",
-      "nodicsDocsNodeTopicframeworkWhatIsNodics",
-      "nodicsDocsNodeTopicframeworkLocalVerificationChecklist",
-      "nodicsDocsNodeTopicplatformModuleRegistry"
+      "nodicsDocsNodePageframeworkFreshSchemaSetupJourney",
+      "nodicsDocsNodePageframeworkLocalRuntimeTroubleshooting",
+      "nodicsDocsNodePageframeworkWhatIsNodics",
+      "nodicsDocsNodePageframeworkLocalVerificationChecklist",
+      "nodicsDocsNodePageplatformModuleRegistry"
     ],
     "locale": "en",
     "channel": "web",
     "active": true
   },
   "record69": {
-    "code": "nodicsDocsNodeTopicframeworkFreshSchemaSetupJourney",
+    "code": "nodicsDocsNodePageframeworkFreshSchemaSetupJourney",
     "product": "nodicsDocumentationProduct",
     "navigation": "nodicsDocumentationNavigation",
     "parentNode": "nodicsDocsNodeSecnodicsInstallerAndWorkspaceSetup",
-    "nodeLevel": "TOPIC",
+    "nodeLevel": "PAGE_LINK",
     "nodeType": "PAGE",
     "nodeTitle": "Fresh Schema Setup Journey",
     "nodeSummary": "Required order for initializing Axis, registering capabilities, importing app packs, publishing Online, and verifying browsers.",
@@ -6565,20 +6565,20 @@ module.exports = {
       "axis-nexus-agora-initialization"
     ],
     "relatedNodes": [
-      "nodicsDocsNodeTopicframeworkWhatIsNodics",
-      "nodicsDocsNodeTopicframeworkLocalVerificationChecklist",
-      "nodicsDocsNodeTopicplatformModuleRegistry"
+      "nodicsDocsNodePageframeworkWhatIsNodics",
+      "nodicsDocsNodePageframeworkLocalVerificationChecklist",
+      "nodicsDocsNodePageplatformModuleRegistry"
     ],
     "locale": "en",
     "channel": "web",
     "active": true
   },
   "record70": {
-    "code": "nodicsDocsNodeTopicframeworkLocalRuntimeTroubleshooting",
+    "code": "nodicsDocsNodePageframeworkLocalRuntimeTroubleshooting",
     "product": "nodicsDocumentationProduct",
     "navigation": "nodicsDocumentationNavigation",
     "parentNode": "nodicsDocsNodeSecnodicsInstallerAndWorkspaceSetup",
-    "nodeLevel": "TOPIC",
+    "nodeLevel": "PAGE_LINK",
     "nodeType": "PAGE",
     "nodeTitle": "Local Runtime Troubleshooting",
     "nodeSummary": "Practical troubleshooting for ports, stale topology state, schema import failures, publication state, and missing navigation.",
@@ -6642,20 +6642,20 @@ module.exports = {
       "fresh-schema-errors"
     ],
     "relatedNodes": [
-      "nodicsDocsNodeTopicframeworkWhatIsNodics",
-      "nodicsDocsNodeTopicframeworkLocalVerificationChecklist",
-      "nodicsDocsNodeTopicplatformModuleRegistry"
+      "nodicsDocsNodePageframeworkWhatIsNodics",
+      "nodicsDocsNodePageframeworkLocalVerificationChecklist",
+      "nodicsDocsNodePageplatformModuleRegistry"
     ],
     "locale": "en",
     "channel": "web",
     "active": true
   },
   "record71": {
-    "code": "nodicsDocsNodeTopicinstallerInstalledRuntimeApplicationBuilder",
+    "code": "nodicsDocsNodePageinstallerInstalledRuntimeApplicationBuilder",
     "product": "nodicsDocumentationProduct",
     "navigation": "nodicsDocumentationNavigation",
     "parentNode": "nodicsDocsNodeSecnodicsInstallerAndWorkspaceSetup",
-    "nodeLevel": "TOPIC",
+    "nodeLevel": "PAGE_LINK",
     "nodeType": "PAGE",
     "nodeTitle": "Installed Runtime Installer and Application Builder APIs",
     "nodeSummary": "Safe read-only runtime API model for installed workspace inspection, setup planning, operation catalogue, and redacted evidence.",
@@ -6721,21 +6721,21 @@ module.exports = {
       "evidence"
     ],
     "relatedNodes": [
-      "nodicsDocsNodeTopicframeworkLocalQuickStart",
-      "nodicsDocsNodeTopicframeworkLocalVerificationChecklist",
-      "nodicsDocsNodeTopicplatformModuleRegistry",
-      "nodicsDocsNodeTopicdocsOverview"
+      "nodicsDocsNodePageframeworkLocalQuickStart",
+      "nodicsDocsNodePageframeworkLocalVerificationChecklist",
+      "nodicsDocsNodePageplatformModuleRegistry",
+      "nodicsDocsNodePagedocsOverview"
     ],
     "locale": "en",
     "channel": "web",
     "active": true
   },
   "record72": {
-    "code": "nodicsDocsNodeTopicbuilderWorkspaceGeneration",
+    "code": "nodicsDocsNodePagebuilderWorkspaceGeneration",
     "product": "nodicsDocumentationProduct",
     "navigation": "nodicsDocumentationNavigation",
     "parentNode": "nodicsDocsNodeSecapplicationBuilderAndWorkspaceGeneration",
-    "nodeLevel": "TOPIC",
+    "nodeLevel": "PAGE_LINK",
     "nodeType": "PAGE",
     "nodeTitle": "Application Builder and Workspace Generation",
     "nodeSummary": "How the installed runtime exposes governed workspace discovery, readiness, setup planning, and accelerator selection for Axis-driven application building.",
@@ -6799,20 +6799,20 @@ module.exports = {
       "application-builder-and-workspace-generation"
     ],
     "relatedNodes": [
-      "nodicsDocsNodeTopicinstallerInstalledRuntimeApplicationBuilder",
-      "nodicsDocsNodeTopicframeworkLocalQuickStart",
-      "nodicsDocsNodeTopicacceleratorsAgoraIndustryTemplates"
+      "nodicsDocsNodePageinstallerInstalledRuntimeApplicationBuilder",
+      "nodicsDocsNodePageframeworkLocalQuickStart",
+      "nodicsDocsNodePageacceleratorsAgoraIndustryTemplates"
     ],
     "locale": "en",
     "channel": "web",
     "active": true
   },
   "record73": {
-    "code": "nodicsDocsNodeTopicprocessVisualDesigner",
+    "code": "nodicsDocsNodePageprocessVisualDesigner",
     "product": "nodicsDocumentationProduct",
     "navigation": "nodicsDocumentationNavigation",
     "parentNode": "nodicsDocsNodeSecaxisAndBackofficeOperations",
-    "nodeLevel": "TOPIC",
+    "nodeLevel": "PAGE_LINK",
     "nodeType": "PAGE",
     "nodeTitle": "Visual Workflow Designer Contract",
     "nodeSummary": "Describe the backend-owned graph contract, Axis editor projection, and validation workflow for the visual designer.",
@@ -6876,19 +6876,19 @@ module.exports = {
       "visual-workflow-designer-contract"
     ],
     "relatedNodes": [
-      "nodicsDocsNodeTopicprocessFirstHumanTask",
-      "nodicsDocsNodeTopicprocessOverview"
+      "nodicsDocsNodePageprocessFirstHumanTask",
+      "nodicsDocsNodePageprocessOverview"
     ],
     "locale": "en",
     "channel": "web",
     "active": true
   },
   "record74": {
-    "code": "nodicsDocsNodeTopicaxisBusinessCustomization",
+    "code": "nodicsDocsNodePageaxisBusinessCustomization",
     "product": "nodicsDocumentationProduct",
     "navigation": "nodicsDocumentationNavigation",
     "parentNode": "nodicsDocsNodeSecbusinessCustomizationInAxis",
-    "nodeLevel": "TOPIC",
+    "nodeLevel": "PAGE_LINK",
     "nodeType": "PAGE",
     "nodeTitle": "Business Customization in Axis",
     "nodeSummary": "How Axis lets authorized users manage navigation, content areas, documentation pages, runtime configuration, and capability-specific business data.",
@@ -6952,20 +6952,20 @@ module.exports = {
       "business-customization-in-axis"
     ],
     "relatedNodes": [
-      "nodicsDocsNodeTopicdocsOverview",
-      "nodicsDocsNodeTopicprocessVisualDesigner",
-      "nodicsDocsNodeTopicwcmsOverview"
+      "nodicsDocsNodePagedocsOverview",
+      "nodicsDocsNodePageprocessVisualDesigner",
+      "nodicsDocsNodePagewcmsOverview"
     ],
     "locale": "en",
     "channel": "web",
     "active": true
   },
   "record75": {
-    "code": "nodicsDocsNodeTopicplatformOverview",
+    "code": "nodicsDocsNodePageplatformOverview",
     "product": "nodicsDocumentationProduct",
     "navigation": "nodicsDocumentationNavigation",
     "parentNode": "nodicsDocsNodeSecuserEnterpriseAndTenantManagement",
-    "nodeLevel": "TOPIC",
+    "nodeLevel": "PAGE_LINK",
     "nodeType": "PAGE",
     "nodeTitle": "Platform overview",
     "nodeSummary": "How Platform, Profile, BackOffice, authentication, authorization, Axis backend content, and module governance fit together.",
@@ -7029,19 +7029,19 @@ module.exports = {
       "platform-overview"
     ],
     "relatedNodes": [
-      "nodicsDocsNodeTopicplatformModuleRegistry",
-      "nodicsDocsNodeTopicframeworkModularArchitecture"
+      "nodicsDocsNodePageplatformModuleRegistry",
+      "nodicsDocsNodePageframeworkModularArchitecture"
     ],
     "locale": "en",
     "channel": "web",
     "active": true
   },
   "record76": {
-    "code": "nodicsDocsNodeTopicsecurityIdentityAccessGovernance",
+    "code": "nodicsDocsNodePagesecurityIdentityAccessGovernance",
     "product": "nodicsDocumentationProduct",
     "navigation": "nodicsDocumentationNavigation",
     "parentNode": "nodicsDocsNodeSecsecurityGovernanceAndCompliance",
-    "nodeLevel": "TOPIC",
+    "nodeLevel": "PAGE_LINK",
     "nodeType": "PAGE",
     "nodeTitle": "Security, Identity, and Access Governance",
     "nodeSummary": "Authentication, authorization, groups, documentation authoring roles, read-only Axis access, tenant isolation, and audit responsibilities.",
@@ -7105,20 +7105,20 @@ module.exports = {
       "security-identity-and-access-governance"
     ],
     "relatedNodes": [
-      "nodicsDocsNodeTopicplatformOverview",
-      "nodicsDocsNodeTopicaxisBusinessCustomization",
-      "nodicsDocsNodeTopicdocsOverview"
+      "nodicsDocsNodePageplatformOverview",
+      "nodicsDocsNodePageaxisBusinessCustomization",
+      "nodicsDocsNodePagedocsOverview"
     ],
     "locale": "en",
     "channel": "web",
     "active": true
   },
   "record77": {
-    "code": "nodicsDocsNodeTopicconfigurationRuntimeBehaviorManagement",
+    "code": "nodicsDocsNodePageconfigurationRuntimeBehaviorManagement",
     "product": "nodicsDocumentationProduct",
     "navigation": "nodicsDocumentationNavigation",
     "parentNode": "nodicsDocsNodeSecapplicationConfigurationAndRuntimeBehaviorManagement",
-    "nodeLevel": "TOPIC",
+    "nodeLevel": "PAGE_LINK",
     "nodeType": "PAGE",
     "nodeTitle": "Application Configuration and Runtime Behavior Management",
     "nodeSummary": "How configuration layers, provider choices, runtime settings, and project overrides change Nodics behavior safely.",
@@ -7182,23 +7182,23 @@ module.exports = {
       "application-configuration-and-runtime-behavior-management"
     ],
     "relatedNodes": [
-      "nodicsDocsNodeTopicfoundationOverview",
-      "nodicsDocsNodeTopicconfigurationFrameworkStartupLifecycle",
-      "nodicsDocsNodeTopiccacheRuntimeStateManagement",
-      "nodicsDocsNodeTopicfoundationErrorHandlingStatusCodes",
-      "nodicsDocsNodeTopicroutingApiGovernance",
-      "nodicsDocsNodeTopicruntimeGovernedChange"
+      "nodicsDocsNodePagefoundationOverview",
+      "nodicsDocsNodePageconfigurationFrameworkStartupLifecycle",
+      "nodicsDocsNodePagecacheRuntimeStateManagement",
+      "nodicsDocsNodePagefoundationErrorHandlingStatusCodes",
+      "nodicsDocsNodePageroutingApiGovernance",
+      "nodicsDocsNodePageruntimeGovernedChange"
     ],
     "locale": "en",
     "channel": "web",
     "active": true
   },
   "record78": {
-    "code": "nodicsDocsNodeTopicconfigurationFrameworkStartupLifecycle",
+    "code": "nodicsDocsNodePageconfigurationFrameworkStartupLifecycle",
     "product": "nodicsDocumentationProduct",
     "navigation": "nodicsDocumentationNavigation",
     "parentNode": "nodicsDocsNodeSecapplicationConfigurationAndRuntimeBehaviorManagement",
-    "nodeLevel": "TOPIC",
+    "nodeLevel": "PAGE_LINK",
     "nodeType": "PAGE",
     "nodeTitle": "Framework Startup Lifecycle",
     "nodeSummary": "Step-by-step startup path from runtime launch through nConfig module discovery, configuration loading, lifecycle hooks, init data import, identity bootstrap, and server readiness.",
@@ -7273,24 +7273,24 @@ module.exports = {
       "startServers"
     ],
     "relatedNodes": [
-      "nodicsDocsNodeTopicconfigurationRuntimeBehaviorManagement",
-      "nodicsDocsNodeTopicframeworkModuleLoadingServicePrecedence",
-      "nodicsDocsNodeTopicroutingApiRequestLifecycle",
-      "nodicsDocsNodeTopicfoundationErrorHandlingStatusCodes",
-      "nodicsDocsNodeTopicpipelineBusinessLogicOrchestration",
-      "nodicsDocsNodeTopicdataImportExportMigration",
-      "nodicsDocsNodeTopicframeworkLocalQuickStart"
+      "nodicsDocsNodePageconfigurationRuntimeBehaviorManagement",
+      "nodicsDocsNodePageframeworkModuleLoadingServicePrecedence",
+      "nodicsDocsNodePageroutingApiRequestLifecycle",
+      "nodicsDocsNodePagefoundationErrorHandlingStatusCodes",
+      "nodicsDocsNodePagepipelineBusinessLogicOrchestration",
+      "nodicsDocsNodePagedataImportExportMigration",
+      "nodicsDocsNodePageframeworkLocalQuickStart"
     ],
     "locale": "en",
     "channel": "web",
     "active": true
   },
   "record79": {
-    "code": "nodicsDocsNodeTopicroutingApiGovernance",
+    "code": "nodicsDocsNodePageroutingApiGovernance",
     "product": "nodicsDocumentationProduct",
     "navigation": "nodicsDocumentationNavigation",
     "parentNode": "nodicsDocsNodeSecapplicationConfigurationAndRuntimeBehaviorManagement",
-    "nodeLevel": "TOPIC",
+    "nodeLevel": "PAGE_LINK",
     "nodeType": "PAGE",
     "nodeTitle": "Routing and API Governance",
     "nodeSummary": "How Nodics owns route metadata, generated CRUD routes, security, permissions, request context, and runtime API behavior.",
@@ -7366,23 +7366,23 @@ module.exports = {
       "generated-crud"
     ],
     "relatedNodes": [
-      "nodicsDocsNodeTopicconfigurationRuntimeBehaviorManagement",
-      "nodicsDocsNodeTopicruntimeGovernedChange",
-      "nodicsDocsNodeTopicsecurityIdentityAccessGovernance",
-      "nodicsDocsNodeTopicroutingApiRequestLifecycle",
-      "nodicsDocsNodeTopicfoundationErrorHandlingStatusCodes",
-      "nodicsDocsNodeTopicfoundationModuleToModuleCommunication"
+      "nodicsDocsNodePageconfigurationRuntimeBehaviorManagement",
+      "nodicsDocsNodePageruntimeGovernedChange",
+      "nodicsDocsNodePagesecurityIdentityAccessGovernance",
+      "nodicsDocsNodePageroutingApiRequestLifecycle",
+      "nodicsDocsNodePagefoundationErrorHandlingStatusCodes",
+      "nodicsDocsNodePagefoundationModuleToModuleCommunication"
     ],
     "locale": "en",
     "channel": "web",
     "active": true
   },
   "record80": {
-    "code": "nodicsDocsNodeTopicroutingApiRequestLifecycle",
+    "code": "nodicsDocsNodePageroutingApiRequestLifecycle",
     "product": "nodicsDocumentationProduct",
     "navigation": "nodicsDocumentationNavigation",
     "parentNode": "nodicsDocsNodeSecapplicationConfigurationAndRuntimeBehaviorManagement",
-    "nodeLevel": "TOPIC",
+    "nodeLevel": "PAGE_LINK",
     "nodeType": "PAGE",
     "nodeTitle": "API Request Lifecycle and Handler Pipeline",
     "nodeSummary": "How each Nodics HTTP request moves from Express route binding through request context, exposure checks, authentication branches, cache lookup, controller dispatch, response handlers, and safe customization.",
@@ -7459,22 +7459,22 @@ module.exports = {
       "response handler"
     ],
     "relatedNodes": [
-      "nodicsDocsNodeTopicroutingApiGovernance",
-      "nodicsDocsNodeTopicfoundationErrorHandlingStatusCodes",
-      "nodicsDocsNodeTopicpipelineBusinessLogicOrchestration",
-      "nodicsDocsNodeTopicfoundationServiceRuntimeOverrides",
-      "nodicsDocsNodeTopicfoundationModuleToModuleCommunication"
+      "nodicsDocsNodePageroutingApiGovernance",
+      "nodicsDocsNodePagefoundationErrorHandlingStatusCodes",
+      "nodicsDocsNodePagepipelineBusinessLogicOrchestration",
+      "nodicsDocsNodePagefoundationServiceRuntimeOverrides",
+      "nodicsDocsNodePagefoundationModuleToModuleCommunication"
     ],
     "locale": "en",
     "channel": "web",
     "active": true
   },
   "record81": {
-    "code": "nodicsDocsNodeTopicfoundationErrorHandlingStatusCodes",
+    "code": "nodicsDocsNodePagefoundationErrorHandlingStatusCodes",
     "product": "nodicsDocumentationProduct",
     "navigation": "nodicsDocumentationNavigation",
     "parentNode": "nodicsDocsNodeSecapplicationConfigurationAndRuntimeBehaviorManagement",
-    "nodeLevel": "TOPIC",
+    "nodeLevel": "PAGE_LINK",
     "nodeType": "PAGE",
     "nodeTitle": "Error Handling and Status Codes",
     "nodeSummary": "How Nodics errors, status definitions, response handlers, HTTP status codes, localization metadata, safe public messages, and project overrides work.",
@@ -7555,23 +7555,23 @@ module.exports = {
       "publicError"
     ],
     "relatedNodes": [
-      "nodicsDocsNodeTopicconfigurationRuntimeBehaviorManagement",
-      "nodicsDocsNodeTopicconfigurationFrameworkStartupLifecycle",
-      "nodicsDocsNodeTopicroutingApiGovernance",
-      "nodicsDocsNodeTopicroutingApiRequestLifecycle",
-      "nodicsDocsNodeTopicpipelineBusinessLogicOrchestration",
-      "nodicsDocsNodeTopicapplicationsAxisSetupErrorContracts"
+      "nodicsDocsNodePageconfigurationRuntimeBehaviorManagement",
+      "nodicsDocsNodePageconfigurationFrameworkStartupLifecycle",
+      "nodicsDocsNodePageroutingApiGovernance",
+      "nodicsDocsNodePageroutingApiRequestLifecycle",
+      "nodicsDocsNodePagepipelineBusinessLogicOrchestration",
+      "nodicsDocsNodePageapplicationsAxisSetupErrorContracts"
     ],
     "locale": "en",
     "channel": "web",
     "active": true
   },
   "record82": {
-    "code": "nodicsDocsNodeTopicruntimeGovernedChange",
+    "code": "nodicsDocsNodePageruntimeGovernedChange",
     "product": "nodicsDocumentationProduct",
     "navigation": "nodicsDocumentationNavigation",
     "parentNode": "nodicsDocsNodeSecruntimeGovernanceAndDynamicChangeManagement",
-    "nodeLevel": "TOPIC",
+    "nodeLevel": "PAGE_LINK",
     "nodeType": "PAGE",
     "nodeTitle": "Governed Runtime Change Capability",
     "nodeSummary": "How Nodics handles runtime configuration and business behavior changes across clustered nodes through governed APIs and event propagation.",
@@ -7635,20 +7635,20 @@ module.exports = {
       "governed-runtime-change-capability"
     ],
     "relatedNodes": [
-      "nodicsDocsNodeTopicconfigurationRuntimeBehaviorManagement",
-      "nodicsDocsNodeTopiceventsMessagingClusterCoordination",
-      "nodicsDocsNodeTopicpipelineBusinessLogicOrchestration"
+      "nodicsDocsNodePageconfigurationRuntimeBehaviorManagement",
+      "nodicsDocsNodePageeventsMessagingClusterCoordination",
+      "nodicsDocsNodePagepipelineBusinessLogicOrchestration"
     ],
     "locale": "en",
     "channel": "web",
     "active": true
   },
   "record83": {
-    "code": "nodicsDocsNodeTopiclocalizationInternationalization",
+    "code": "nodicsDocsNodePagelocalizationInternationalization",
     "product": "nodicsDocumentationProduct",
     "navigation": "nodicsDocumentationNavigation",
     "parentNode": "nodicsDocsNodeSeclocalizationAndInternationalization",
-    "nodeLevel": "TOPIC",
+    "nodeLevel": "PAGE_LINK",
     "nodeType": "PAGE",
     "nodeTitle": "Localization and Internationalization",
     "nodeSummary": "Locales, translations, fallback behavior, localized content, project overrides, and release validation for multilingual customer experiences.",
@@ -7712,20 +7712,20 @@ module.exports = {
       "localization-and-internationalization"
     ],
     "relatedNodes": [
-      "nodicsDocsNodeTopicwcmsOverview",
-      "nodicsDocsNodeTopiccommerceCartOrder",
-      "nodicsDocsNodeTopicdocsDocumentationRoadmap"
+      "nodicsDocsNodePagewcmsOverview",
+      "nodicsDocsNodePagecommerceCartOrder",
+      "nodicsDocsNodePagedocsDocumentationRoadmap"
     ],
     "locale": "en",
     "channel": "web",
     "active": true
   },
   "record84": {
-    "code": "nodicsDocsNodeTopicschemaDataModelingManagement",
+    "code": "nodicsDocsNodePageschemaDataModelingManagement",
     "product": "nodicsDocumentationProduct",
     "navigation": "nodicsDocumentationNavigation",
     "parentNode": "nodicsDocsNodeSecdataModelingAndSchemaManagement",
-    "nodeLevel": "TOPIC",
+    "nodeLevel": "PAGE_LINK",
     "nodeType": "PAGE",
     "nodeTitle": "Data Modeling and Schema Management",
     "nodeSummary": "How schemas define model behavior, generated services, API contracts, validation, and project-layer property extension.",
@@ -7789,20 +7789,20 @@ module.exports = {
       "data-modeling-and-schema-management"
     ],
     "relatedNodes": [
-      "nodicsDocsNodeTopicpersistenceProviderDataAccessLayer",
-      "nodicsDocsNodeTopicframeworkCustomizationGuide",
-      "nodicsDocsNodeTopicaxisBusinessCustomization"
+      "nodicsDocsNodePagepersistenceProviderDataAccessLayer",
+      "nodicsDocsNodePageframeworkCustomizationGuide",
+      "nodicsDocsNodePageaxisBusinessCustomization"
     ],
     "locale": "en",
     "channel": "web",
     "active": true
   },
   "record85": {
-    "code": "nodicsDocsNodeTopicpersistenceProviderDataAccessLayer",
+    "code": "nodicsDocsNodePagepersistenceProviderDataAccessLayer",
     "product": "nodicsDocumentationProduct",
     "navigation": "nodicsDocumentationNavigation",
     "parentNode": "nodicsDocsNodeSecdatabaseAndPersistenceManagement",
-    "nodeLevel": "TOPIC",
+    "nodeLevel": "PAGE_LINK",
     "nodeType": "PAGE",
     "nodeTitle": "Provider and Data Access Layer",
     "nodeSummary": "How the Nodics data access layer uses MongoDB today while preserving provider seams for additional database providers.",
@@ -7866,20 +7866,20 @@ module.exports = {
       "provider-and-data-access-layer"
     ],
     "relatedNodes": [
-      "nodicsDocsNodeTopicschemaDataModelingManagement",
-      "nodicsDocsNodeTopicconfigurationRuntimeBehaviorManagement",
-      "nodicsDocsNodeTopicfoundationOverview"
+      "nodicsDocsNodePageschemaDataModelingManagement",
+      "nodicsDocsNodePageconfigurationRuntimeBehaviorManagement",
+      "nodicsDocsNodePagefoundationOverview"
     ],
     "locale": "en",
     "channel": "web",
     "active": true
   },
   "record86": {
-    "code": "nodicsDocsNodeTopiccacheRuntimeStateManagement",
+    "code": "nodicsDocsNodePagecacheRuntimeStateManagement",
     "product": "nodicsDocumentationProduct",
     "navigation": "nodicsDocumentationNavigation",
     "parentNode": "nodicsDocsNodeSeccachingAndRuntimeStateManagement",
-    "nodeLevel": "TOPIC",
+    "nodeLevel": "PAGE_LINK",
     "nodeType": "PAGE",
     "nodeTitle": "Caching and Runtime State Management",
     "nodeSummary": "How local node cache, Redis-style providers, invalidation, runtime state, and diagnostics influence application behavior.",
@@ -7943,20 +7943,20 @@ module.exports = {
       "caching-and-runtime-state-management"
     ],
     "relatedNodes": [
-      "nodicsDocsNodeTopicconfigurationRuntimeBehaviorManagement",
-      "nodicsDocsNodeTopicruntimeGovernedChange",
-      "nodicsDocsNodeTopiceventsMessagingClusterCoordination"
+      "nodicsDocsNodePageconfigurationRuntimeBehaviorManagement",
+      "nodicsDocsNodePageruntimeGovernedChange",
+      "nodicsDocsNodePageeventsMessagingClusterCoordination"
     ],
     "locale": "en",
     "channel": "web",
     "active": true
   },
   "record87": {
-    "code": "nodicsDocsNodeTopicframeworkCustomizationGuide",
+    "code": "nodicsDocsNodePageframeworkCustomizationGuide",
     "product": "nodicsDocumentationProduct",
     "navigation": "nodicsDocumentationNavigation",
     "parentNode": "nodicsDocsNodeSecdeveloperExtensionAndProjectCustomization",
-    "nodeLevel": "TOPIC",
+    "nodeLevel": "PAGE_LINK",
     "nodeType": "PAGE",
     "nodeTitle": "Customization and extension guide",
     "nodeSummary": "How customer projects customize Nodics safely without forking framework authority.",
@@ -8020,22 +8020,22 @@ module.exports = {
       "customization-and-extension-guide"
     ],
     "relatedNodes": [
-      "nodicsDocsNodeTopicframeworkBackendExtensionPatterns",
-      "nodicsDocsNodeTopicframeworkAxisContentCustomization",
-      "nodicsDocsNodeTopicframeworkArchitectureDecisionGuide",
-      "nodicsDocsNodeTopicframeworkModularArchitecture",
-      "nodicsDocsNodeTopicprocessCustomProjectExtension"
+      "nodicsDocsNodePageframeworkBackendExtensionPatterns",
+      "nodicsDocsNodePageframeworkAxisContentCustomization",
+      "nodicsDocsNodePageframeworkArchitectureDecisionGuide",
+      "nodicsDocsNodePageframeworkModularArchitecture",
+      "nodicsDocsNodePageprocessCustomProjectExtension"
     ],
     "locale": "en",
     "channel": "web",
     "active": true
   },
   "record88": {
-    "code": "nodicsDocsNodeTopicframeworkBackendExtensionPatterns",
+    "code": "nodicsDocsNodePageframeworkBackendExtensionPatterns",
     "product": "nodicsDocumentationProduct",
     "navigation": "nodicsDocumentationNavigation",
     "parentNode": "nodicsDocsNodeSecdeveloperExtensionAndProjectCustomization",
-    "nodeLevel": "TOPIC",
+    "nodeLevel": "PAGE_LINK",
     "nodeType": "PAGE",
     "nodeTitle": "Backend Extension Patterns",
     "nodeSummary": "How projects extend behavior through configuration, provider adapters, services, validators, pipelines, schemas, and events.",
@@ -8100,22 +8100,22 @@ module.exports = {
       "pipeline-extension"
     ],
     "relatedNodes": [
-      "nodicsDocsNodeTopicframeworkModularArchitecture",
-      "nodicsDocsNodeTopicprocessCustomProjectExtension",
-      "nodicsDocsNodeTopicdocsOverview",
-      "nodicsDocsNodeTopicroutingApiRequestLifecycle",
-      "nodicsDocsNodeTopicfoundationModuleToModuleCommunication"
+      "nodicsDocsNodePageframeworkModularArchitecture",
+      "nodicsDocsNodePageprocessCustomProjectExtension",
+      "nodicsDocsNodePagedocsOverview",
+      "nodicsDocsNodePageroutingApiRequestLifecycle",
+      "nodicsDocsNodePagefoundationModuleToModuleCommunication"
     ],
     "locale": "en",
     "channel": "web",
     "active": true
   },
   "record89": {
-    "code": "nodicsDocsNodeTopicframeworkAxisContentCustomization",
+    "code": "nodicsDocsNodePageframeworkAxisContentCustomization",
     "product": "nodicsDocumentationProduct",
     "navigation": "nodicsDocumentationNavigation",
     "parentNode": "nodicsDocsNodeSecdeveloperExtensionAndProjectCustomization",
-    "nodeLevel": "TOPIC",
+    "nodeLevel": "PAGE_LINK",
     "nodeType": "PAGE",
     "nodeTitle": "Axis Content Customization",
     "nodeSummary": "How business users customize backend-owned content, navigation, visibility, setup records, and publishing decisions from Axis.",
@@ -8179,20 +8179,20 @@ module.exports = {
       "backend-owned-navigation"
     ],
     "relatedNodes": [
-      "nodicsDocsNodeTopicframeworkModularArchitecture",
-      "nodicsDocsNodeTopicprocessCustomProjectExtension",
-      "nodicsDocsNodeTopicdocsOverview"
+      "nodicsDocsNodePageframeworkModularArchitecture",
+      "nodicsDocsNodePageprocessCustomProjectExtension",
+      "nodicsDocsNodePagedocsOverview"
     ],
     "locale": "en",
     "channel": "web",
     "active": true
   },
   "record90": {
-    "code": "nodicsDocsNodeTopicprocessDeveloperCustomization",
+    "code": "nodicsDocsNodePageprocessDeveloperCustomization",
     "product": "nodicsDocumentationProduct",
     "navigation": "nodicsDocumentationNavigation",
     "parentNode": "nodicsDocsNodeSecdeveloperExtensionAndProjectCustomization",
-    "nodeLevel": "TOPIC",
+    "nodeLevel": "PAGE_LINK",
     "nodeType": "PAGE",
     "nodeTitle": "Developer Customization Guide",
     "nodeSummary": "Show where developers extend Process behavior, where domain actions belong, and how customer modules customize safely.",
@@ -8256,19 +8256,19 @@ module.exports = {
       "developer-customization-guide"
     ],
     "relatedNodes": [
-      "nodicsDocsNodeTopicprocessCustomProjectExtension",
-      "nodicsDocsNodeTopicprocessActionAdapters"
+      "nodicsDocsNodePageprocessCustomProjectExtension",
+      "nodicsDocsNodePageprocessActionAdapters"
     ],
     "locale": "en",
     "channel": "web",
     "active": true
   },
   "record91": {
-    "code": "nodicsDocsNodeTopicprocessCustomProjectExtension",
+    "code": "nodicsDocsNodePageprocessCustomProjectExtension",
     "product": "nodicsDocumentationProduct",
     "navigation": "nodicsDocumentationNavigation",
     "parentNode": "nodicsDocsNodeSecdeveloperExtensionAndProjectCustomization",
-    "nodeLevel": "TOPIC",
+    "nodeLevel": "PAGE_LINK",
     "nodeType": "PAGE",
     "nodeTitle": "Custom Project Extension Guide",
     "nodeSummary": "Explain how customer overlays customize Process behavior while preserving functional module identity and backend governance.",
@@ -8332,19 +8332,19 @@ module.exports = {
       "custom-project-extension-guide"
     ],
     "relatedNodes": [
-      "nodicsDocsNodeTopicframeworkCustomizationGuide",
-      "nodicsDocsNodeTopicprocessDeveloperCustomization"
+      "nodicsDocsNodePageframeworkCustomizationGuide",
+      "nodicsDocsNodePageprocessDeveloperCustomization"
     ],
     "locale": "en",
     "channel": "web",
     "active": true
   },
   "record92": {
-    "code": "nodicsDocsNodeTopiccommerceBaseFoundations",
+    "code": "nodicsDocsNodePagecommerceBaseFoundations",
     "product": "nodicsDocumentationProduct",
     "navigation": "nodicsDocumentationNavigation",
     "parentNode": "nodicsDocsNodeSecstoreMarketSiteAndChannelManagement",
-    "nodeLevel": "TOPIC",
+    "nodeLevel": "PAGE_LINK",
     "nodeType": "PAGE",
     "nodeTitle": "Base Commerce foundations",
     "nodeSummary": "Beginner-to-operator guide for Store, Product, Pricing, Tax, Promotion, Inventory, exact decisions, publication, recovery, and customization.",
@@ -8408,19 +8408,19 @@ module.exports = {
       "base-commerce-foundations"
     ],
     "relatedNodes": [
-      "nodicsDocsNodeTopiccommerceOverview",
-      "nodicsDocsNodeTopicwcmsMediaManagement"
+      "nodicsDocsNodePagecommerceOverview",
+      "nodicsDocsNodePagewcmsMediaManagement"
     ],
     "locale": "en",
     "channel": "web",
     "active": true
   },
   "record93": {
-    "code": "nodicsDocsNodeTopicwcmsOverview",
+    "code": "nodicsDocsNodePagewcmsOverview",
     "product": "nodicsDocumentationProduct",
     "navigation": "nodicsDocumentationNavigation",
     "parentNode": "nodicsDocsNodeSecwcmsAndContentManagement",
-    "nodeLevel": "TOPIC",
+    "nodeLevel": "PAGE_LINK",
     "nodeType": "PAGE",
     "nodeTitle": "WCMS content management",
     "nodeSummary": "How Nodics manages sites, catalogs, pages, components, routes, and delivery through the WCMS runtime.",
@@ -8484,23 +8484,23 @@ module.exports = {
       "wcms-content-management"
     ],
     "relatedNodes": [
-      "nodicsDocsNodeTopicwcmsContentCatalogModel",
-      "nodicsDocsNodeTopicwcmsPageDesignerComponents",
-      "nodicsDocsNodeTopicwcmsSitePublicationVisibility",
-      "nodicsDocsNodeTopicwcmsMediaManagement",
-      "nodicsDocsNodeTopicwcmsPublishingLifecycle",
-      "nodicsDocsNodeTopicdocsOverview"
+      "nodicsDocsNodePagewcmsContentCatalogModel",
+      "nodicsDocsNodePagewcmsPageDesignerComponents",
+      "nodicsDocsNodePagewcmsSitePublicationVisibility",
+      "nodicsDocsNodePagewcmsMediaManagement",
+      "nodicsDocsNodePagewcmsPublishingLifecycle",
+      "nodicsDocsNodePagedocsOverview"
     ],
     "locale": "en",
     "channel": "web",
     "active": true
   },
   "record94": {
-    "code": "nodicsDocsNodeTopicwcmsContentCatalogModel",
+    "code": "nodicsDocsNodePagewcmsContentCatalogModel",
     "product": "nodicsDocumentationProduct",
     "navigation": "nodicsDocumentationNavigation",
     "parentNode": "nodicsDocsNodeSecwcmsAndContentManagement",
-    "nodeLevel": "TOPIC",
+    "nodeLevel": "PAGE_LINK",
     "nodeType": "PAGE",
     "nodeTitle": "Content Catalog Model",
     "nodeSummary": "How sites, catalogs, pages, components, media, routes, access policy, and publication state drive public content.",
@@ -8564,20 +8564,20 @@ module.exports = {
       "online-content"
     ],
     "relatedNodes": [
-      "nodicsDocsNodeTopicwcmsMediaManagement",
-      "nodicsDocsNodeTopicwcmsPublishingLifecycle",
-      "nodicsDocsNodeTopicdocsOverview"
+      "nodicsDocsNodePagewcmsMediaManagement",
+      "nodicsDocsNodePagewcmsPublishingLifecycle",
+      "nodicsDocsNodePagedocsOverview"
     ],
     "locale": "en",
     "channel": "web",
     "active": true
   },
   "record95": {
-    "code": "nodicsDocsNodeTopicwcmsPageDesignerComponents",
+    "code": "nodicsDocsNodePagewcmsPageDesignerComponents",
     "product": "nodicsDocumentationProduct",
     "navigation": "nodicsDocumentationNavigation",
     "parentNode": "nodicsDocsNodeSecwcmsAndContentManagement",
-    "nodeLevel": "TOPIC",
+    "nodeLevel": "PAGE_LINK",
     "nodeType": "PAGE",
     "nodeTitle": "Page Designer and Components",
     "nodeSummary": "How Axis-managed content areas, components, renderer metadata, sequence, validation, and publishing work together.",
@@ -8641,20 +8641,20 @@ module.exports = {
       "content-area"
     ],
     "relatedNodes": [
-      "nodicsDocsNodeTopicwcmsMediaManagement",
-      "nodicsDocsNodeTopicwcmsPublishingLifecycle",
-      "nodicsDocsNodeTopicdocsOverview"
+      "nodicsDocsNodePagewcmsMediaManagement",
+      "nodicsDocsNodePagewcmsPublishingLifecycle",
+      "nodicsDocsNodePagedocsOverview"
     ],
     "locale": "en",
     "channel": "web",
     "active": true
   },
   "record96": {
-    "code": "nodicsDocsNodeTopicwcmsSitePublicationVisibility",
+    "code": "nodicsDocsNodePagewcmsSitePublicationVisibility",
     "product": "nodicsDocumentationProduct",
     "navigation": "nodicsDocumentationNavigation",
     "parentNode": "nodicsDocsNodeSecwcmsAndContentManagement",
-    "nodeLevel": "TOPIC",
+    "nodeLevel": "PAGE_LINK",
     "nodeType": "PAGE",
     "nodeTitle": "Site Publication and Visibility",
     "nodeSummary": "How Staged, approval, Online, access policy, maintenance pages, and public delivery determine what users see.",
@@ -8719,20 +8719,20 @@ module.exports = {
       "online-only"
     ],
     "relatedNodes": [
-      "nodicsDocsNodeTopicwcmsMediaManagement",
-      "nodicsDocsNodeTopicwcmsPublishingLifecycle",
-      "nodicsDocsNodeTopicdocsOverview"
+      "nodicsDocsNodePagewcmsMediaManagement",
+      "nodicsDocsNodePagewcmsPublishingLifecycle",
+      "nodicsDocsNodePagedocsOverview"
     ],
     "locale": "en",
     "channel": "web",
     "active": true
   },
   "record97": {
-    "code": "nodicsDocsNodeTopiccatalogProductDiscoveryManagement",
+    "code": "nodicsDocsNodePagecatalogProductDiscoveryManagement",
     "product": "nodicsDocumentationProduct",
     "navigation": "nodicsDocumentationNavigation",
     "parentNode": "nodicsDocsNodeSecproductCatalogAndDiscovery",
-    "nodeLevel": "TOPIC",
+    "nodeLevel": "PAGE_LINK",
     "nodeType": "PAGE",
     "nodeTitle": "Product Catalog and Discovery Management",
     "nodeSummary": "Products, categories, variants, localized attributes, catalog publication, discovery projections, and project customization.",
@@ -8796,20 +8796,20 @@ module.exports = {
       "product-catalog-and-discovery-management"
     ],
     "relatedNodes": [
-      "nodicsDocsNodeTopiccommerceBaseFoundations",
-      "nodicsDocsNodeTopicdiscoverySearchIndexing",
-      "nodicsDocsNodeTopicwcmsMediaManagement"
+      "nodicsDocsNodePagecommerceBaseFoundations",
+      "nodicsDocsNodePagediscoverySearchIndexing",
+      "nodicsDocsNodePagewcmsMediaManagement"
     ],
     "locale": "en",
     "channel": "web",
     "active": true
   },
   "record98": {
-    "code": "nodicsDocsNodeTopicdiscoverySearchIndexing",
+    "code": "nodicsDocsNodePagediscoverySearchIndexing",
     "product": "nodicsDocumentationProduct",
     "navigation": "nodicsDocumentationNavigation",
     "parentNode": "nodicsDocsNodeSecsearchAndDiscovery",
-    "nodeLevel": "TOPIC",
+    "nodeLevel": "PAGE_LINK",
     "nodeType": "PAGE",
     "nodeTitle": "Search, Indexing, and Discovery",
     "nodeSummary": "Elasticsearch, Solr, provider adapters, catalog/content indexing, ranking, query profiles, and search metadata governance.",
@@ -8873,20 +8873,20 @@ module.exports = {
       "search-indexing-and-discovery"
     ],
     "relatedNodes": [
-      "nodicsDocsNodeTopiccatalogProductDiscoveryManagement",
-      "nodicsDocsNodeTopicdocsOverview",
-      "nodicsDocsNodeTopicpersistenceProviderDataAccessLayer"
+      "nodicsDocsNodePagecatalogProductDiscoveryManagement",
+      "nodicsDocsNodePagedocsOverview",
+      "nodicsDocsNodePagepersistenceProviderDataAccessLayer"
     ],
     "locale": "en",
     "channel": "web",
     "active": true
   },
   "record99": {
-    "code": "nodicsDocsNodeTopicwcmsMediaManagement",
+    "code": "nodicsDocsNodePagewcmsMediaManagement",
     "product": "nodicsDocumentationProduct",
     "navigation": "nodicsDocumentationNavigation",
     "parentNode": "nodicsDocsNodeSecmediaManagement",
-    "nodeLevel": "TOPIC",
+    "nodeLevel": "PAGE_LINK",
     "nodeType": "PAGE",
     "nodeTitle": "Media management",
     "nodeSummary": "Governed upload, storage policy, media metadata, source contexts, and safe frontend boundaries.",
@@ -8950,21 +8950,21 @@ module.exports = {
       "media-management"
     ],
     "relatedNodes": [
-      "nodicsDocsNodeTopicwcmsOverview",
-      "nodicsDocsNodeTopiccommerceBaseFoundations",
-      "nodicsDocsNodeTopicwcmsMediaStorageDelivery",
-      "nodicsDocsNodeTopicwcmsMediaImportPublication"
+      "nodicsDocsNodePagewcmsOverview",
+      "nodicsDocsNodePagecommerceBaseFoundations",
+      "nodicsDocsNodePagewcmsMediaStorageDelivery",
+      "nodicsDocsNodePagewcmsMediaImportPublication"
     ],
     "locale": "en",
     "channel": "web",
     "active": true
   },
   "record100": {
-    "code": "nodicsDocsNodeTopicwcmsMediaStorageDelivery",
+    "code": "nodicsDocsNodePagewcmsMediaStorageDelivery",
     "product": "nodicsDocumentationProduct",
     "navigation": "nodicsDocumentationNavigation",
     "parentNode": "nodicsDocsNodeSecmediaManagement",
-    "nodeLevel": "TOPIC",
+    "nodeLevel": "PAGE_LINK",
     "nodeType": "PAGE",
     "nodeTitle": "Media Storage and Delivery",
     "nodeSummary": "Provider, access, URL, cache, and browser delivery model for media used by content and storefront experiences.",
@@ -9028,18 +9028,18 @@ module.exports = {
       "media-management"
     ],
     "relatedNodes": [
-      "nodicsDocsNodeTopicwcmsMediaManagement"
+      "nodicsDocsNodePagewcmsMediaManagement"
     ],
     "locale": "en",
     "channel": "web",
     "active": true
   },
   "record101": {
-    "code": "nodicsDocsNodeTopicwcmsMediaImportPublication",
+    "code": "nodicsDocsNodePagewcmsMediaImportPublication",
     "product": "nodicsDocumentationProduct",
     "navigation": "nodicsDocumentationNavigation",
     "parentNode": "nodicsDocsNodeSecmediaManagement",
-    "nodeLevel": "TOPIC",
+    "nodeLevel": "PAGE_LINK",
     "nodeType": "PAGE",
     "nodeTitle": "Media Import and Publication",
     "nodeSummary": "Complete content-pack preparation for media assets, media records, page references, and Online publication.",
@@ -9103,18 +9103,18 @@ module.exports = {
       "media-management"
     ],
     "relatedNodes": [
-      "nodicsDocsNodeTopicwcmsMediaManagement"
+      "nodicsDocsNodePagewcmsMediaManagement"
     ],
     "locale": "en",
     "channel": "web",
     "active": true
   },
   "record102": {
-    "code": "nodicsDocsNodeTopicinventoryStockManagement",
+    "code": "nodicsDocsNodePageinventoryStockManagement",
     "product": "nodicsDocumentationProduct",
     "navigation": "nodicsDocumentationNavigation",
     "parentNode": "nodicsDocsNodeSecinventoryAndStockManagement",
-    "nodeLevel": "TOPIC",
+    "nodeLevel": "PAGE_LINK",
     "nodeType": "PAGE",
     "nodeTitle": "Inventory and Stock Management",
     "nodeSummary": "Inventory balances, stock movements, reservations, warehouse relationships, availability summaries, and checkout protection.",
@@ -9178,20 +9178,20 @@ module.exports = {
       "inventory-and-stock-management"
     ],
     "relatedNodes": [
-      "nodicsDocsNodeTopiccommerceCartOrder",
-      "nodicsDocsNodeTopiccatalogProductDiscoveryManagement",
-      "nodicsDocsNodeTopicfulfillmentShippingManagement"
+      "nodicsDocsNodePagecommerceCartOrder",
+      "nodicsDocsNodePagecatalogProductDiscoveryManagement",
+      "nodicsDocsNodePagefulfillmentShippingManagement"
     ],
     "locale": "en",
     "channel": "web",
     "active": true
   },
   "record103": {
-    "code": "nodicsDocsNodeTopicpricingPromotionsTaxManagement",
+    "code": "nodicsDocsNodePagepricingPromotionsTaxManagement",
     "product": "nodicsDocumentationProduct",
     "navigation": "nodicsDocumentationNavigation",
     "parentNode": "nodicsDocsNodeSecpricingPromotionsAndTax",
-    "nodeLevel": "TOPIC",
+    "nodeLevel": "PAGE_LINK",
     "nodeType": "PAGE",
     "nodeTitle": "Pricing, Promotions, and Tax Management",
     "nodeSummary": "Price books, price rows, promotion decisions, coupon behavior, tax policies, calculation evidence, and extension boundaries.",
@@ -9255,20 +9255,20 @@ module.exports = {
       "pricing-promotions-and-tax-management"
     ],
     "relatedNodes": [
-      "nodicsDocsNodeTopiccommerceCartOrder",
-      "nodicsDocsNodeTopicinventoryStockManagement",
-      "nodicsDocsNodeTopiccommerceBaseFoundations"
+      "nodicsDocsNodePagecommerceCartOrder",
+      "nodicsDocsNodePageinventoryStockManagement",
+      "nodicsDocsNodePagecommerceBaseFoundations"
     ],
     "locale": "en",
     "channel": "web",
     "active": true
   },
   "record104": {
-    "code": "nodicsDocsNodeTopiccommerceOverview",
+    "code": "nodicsDocsNodePagecommerceOverview",
     "product": "nodicsDocumentationProduct",
     "navigation": "nodicsDocumentationNavigation",
     "parentNode": "nodicsDocsNodeSeccommerceCartAndCheckout",
-    "nodeLevel": "TOPIC",
+    "nodeLevel": "PAGE_LINK",
     "nodeType": "PAGE",
     "nodeTitle": "Commerce overview",
     "nodeSummary": "Beginner orientation to the Commerce journey, ownership map, capability state, security baseline, verification, and safe customization.",
@@ -9332,20 +9332,20 @@ module.exports = {
       "commerce-overview"
     ],
     "relatedNodes": [
-      "nodicsDocsNodeTopiccommerceBaseFoundations",
-      "nodicsDocsNodeTopiccommerceCartOrder",
-      "nodicsDocsNodeTopiccommerceReturnsRefunds"
+      "nodicsDocsNodePagecommerceBaseFoundations",
+      "nodicsDocsNodePagecommerceCartOrder",
+      "nodicsDocsNodePagecommerceReturnsRefunds"
     ],
     "locale": "en",
     "channel": "web",
     "active": true
   },
   "record105": {
-    "code": "nodicsDocsNodeTopiccommerceCartOrder",
+    "code": "nodicsDocsNodePagecommerceCartOrder",
     "product": "nodicsDocumentationProduct",
     "navigation": "nodicsDocumentationNavigation",
     "parentNode": "nodicsDocsNodeSeccommerceCartAndCheckout",
-    "nodeLevel": "TOPIC",
+    "nodeLevel": "PAGE_LINK",
     "nodeType": "PAGE",
     "nodeTitle": "Cart, checkout, and order placement",
     "nodeSummary": "Customer, developer, and operator journey for exact calculation, placement, idempotency, compensation, immutable Orders, and recovery.",
@@ -9409,20 +9409,20 @@ module.exports = {
       "cart-checkout-and-order-placement"
     ],
     "relatedNodes": [
-      "nodicsDocsNodeTopiccommerceOverview",
-      "nodicsDocsNodeTopiccommercePaymentFulfillment",
-      "nodicsDocsNodeTopiccommerceReturnsRefunds"
+      "nodicsDocsNodePagecommerceOverview",
+      "nodicsDocsNodePagecommercePaymentFulfillment",
+      "nodicsDocsNodePagecommerceReturnsRefunds"
     ],
     "locale": "en",
     "channel": "web",
     "active": true
   },
   "record106": {
-    "code": "nodicsDocsNodeTopiccommercePaymentFulfillment",
+    "code": "nodicsDocsNodePagecommercePaymentFulfillment",
     "product": "nodicsDocumentationProduct",
     "navigation": "nodicsDocumentationNavigation",
     "parentNode": "nodicsDocsNodeSecpaymentManagement",
-    "nodeLevel": "TOPIC",
+    "nodeLevel": "PAGE_LINK",
     "nodeType": "PAGE",
     "nodeTitle": "Payment and fulfillment operations",
     "nodeSummary": "Provider-safe payment and fulfillment guide covering methods, adapters, callbacks, reconciliation, shipment, tracking, warehouse work, and returns.",
@@ -9486,19 +9486,19 @@ module.exports = {
       "payment-and-fulfillment-operations"
     ],
     "relatedNodes": [
-      "nodicsDocsNodeTopiccommerceCartOrder",
-      "nodicsDocsNodeTopiccommerceReturnsRefunds"
+      "nodicsDocsNodePagecommerceCartOrder",
+      "nodicsDocsNodePagecommerceReturnsRefunds"
     ],
     "locale": "en",
     "channel": "web",
     "active": true
   },
   "record107": {
-    "code": "nodicsDocsNodeTopicfulfillmentShippingManagement",
+    "code": "nodicsDocsNodePagefulfillmentShippingManagement",
     "product": "nodicsDocumentationProduct",
     "navigation": "nodicsDocumentationNavigation",
     "parentNode": "nodicsDocsNodeSecshippingAndFulfillment",
-    "nodeLevel": "TOPIC",
+    "nodeLevel": "PAGE_LINK",
     "nodeType": "PAGE",
     "nodeTitle": "Shipping and Fulfillment Management",
     "nodeSummary": "Shipping methods, fulfillment policy, consignments, warehouse handoff, shipment tracking, and provider integration boundaries.",
@@ -9562,20 +9562,20 @@ module.exports = {
       "shipping-and-fulfillment-management"
     ],
     "relatedNodes": [
-      "nodicsDocsNodeTopiccommercePaymentFulfillment",
-      "nodicsDocsNodeTopicinventoryStockManagement",
-      "nodicsDocsNodeTopicorderManagementLifecycle"
+      "nodicsDocsNodePagecommercePaymentFulfillment",
+      "nodicsDocsNodePageinventoryStockManagement",
+      "nodicsDocsNodePageorderManagementLifecycle"
     ],
     "locale": "en",
     "channel": "web",
     "active": true
   },
   "record108": {
-    "code": "nodicsDocsNodeTopicorderManagementLifecycle",
+    "code": "nodicsDocsNodePageorderManagementLifecycle",
     "product": "nodicsDocumentationProduct",
     "navigation": "nodicsDocumentationNavigation",
     "parentNode": "nodicsDocsNodeSecorderManagement",
-    "nodeLevel": "TOPIC",
+    "nodeLevel": "PAGE_LINK",
     "nodeType": "PAGE",
     "nodeTitle": "Order Management Lifecycle",
     "nodeSummary": "Order state, operational ownership, fulfillment coordination, lifecycle requests, history, reversals, and support visibility.",
@@ -9639,20 +9639,20 @@ module.exports = {
       "order-management-lifecycle"
     ],
     "relatedNodes": [
-      "nodicsDocsNodeTopiccommerceCartOrder",
-      "nodicsDocsNodeTopiccommerceReturnsRefunds",
-      "nodicsDocsNodeTopicfulfillmentShippingManagement"
+      "nodicsDocsNodePagecommerceCartOrder",
+      "nodicsDocsNodePagecommerceReturnsRefunds",
+      "nodicsDocsNodePagefulfillmentShippingManagement"
     ],
     "locale": "en",
     "channel": "web",
     "active": true
   },
   "record109": {
-    "code": "nodicsDocsNodeTopiccommerceReturnsRefunds",
+    "code": "nodicsDocsNodePagecommerceReturnsRefunds",
     "product": "nodicsDocumentationProduct",
     "navigation": "nodicsDocumentationNavigation",
     "parentNode": "nodicsDocsNodeSeccancellationsReturnsAndRefunds",
-    "nodeLevel": "TOPIC",
+    "nodeLevel": "PAGE_LINK",
     "nodeType": "PAGE",
     "nodeTitle": "Cancellation, return, and refund lifecycle",
     "nodeSummary": "Structured self-service and operator journey for policy, maker-checker approval, owner intents, checkpoints, recovery, and final Order evidence.",
@@ -9716,19 +9716,19 @@ module.exports = {
       "cancellation-return-and-refund-lifecycle"
     ],
     "relatedNodes": [
-      "nodicsDocsNodeTopiccommerceCartOrder",
-      "nodicsDocsNodeTopiccommercePaymentFulfillment"
+      "nodicsDocsNodePagecommerceCartOrder",
+      "nodicsDocsNodePagecommercePaymentFulfillment"
     ],
     "locale": "en",
     "channel": "web",
     "active": true
   },
   "record110": {
-    "code": "nodicsDocsNodeTopicengagementCustomerReviews",
+    "code": "nodicsDocsNodePageengagementCustomerReviews",
     "product": "nodicsDocumentationProduct",
     "navigation": "nodicsDocumentationNavigation",
     "parentNode": "nodicsDocsNodeSeccustomerEngagementAndFeedback",
-    "nodeLevel": "TOPIC",
+    "nodeLevel": "PAGE_LINK",
     "nodeType": "PAGE",
     "nodeTitle": "Customer reviews and ratings",
     "nodeSummary": "Beginner-to-operator journey for review submission, moderation, publication, rating aggregates, recovery, APIs, and safe customization.",
@@ -9792,21 +9792,21 @@ module.exports = {
       "customer-reviews-and-ratings"
     ],
     "relatedNodes": [
-      "nodicsDocsNodeTopicengagementUnifiedOperations",
-      "nodicsDocsNodeTopicengagementEnterpriseOperations",
-      "nodicsDocsNodeTopicengagementReviewModerationGovernance",
-      "nodicsDocsNodeTopicengagementReviewAggregationRecovery"
+      "nodicsDocsNodePageengagementUnifiedOperations",
+      "nodicsDocsNodePageengagementEnterpriseOperations",
+      "nodicsDocsNodePageengagementReviewModerationGovernance",
+      "nodicsDocsNodePageengagementReviewAggregationRecovery"
     ],
     "locale": "en",
     "channel": "web",
     "active": true
   },
   "record111": {
-    "code": "nodicsDocsNodeTopicengagementReviewModerationGovernance",
+    "code": "nodicsDocsNodePageengagementReviewModerationGovernance",
     "product": "nodicsDocumentationProduct",
     "navigation": "nodicsDocumentationNavigation",
     "parentNode": "nodicsDocsNodeSeccustomerEngagementAndFeedback",
-    "nodeLevel": "TOPIC",
+    "nodeLevel": "PAGE_LINK",
     "nodeType": "PAGE",
     "nodeTitle": "Review Moderation and Governance",
     "nodeSummary": "Axis moderation queues, approval and rejection decisions, permissions, state transitions, and audit expectations.",
@@ -9870,18 +9870,18 @@ module.exports = {
       "customer-reviews-and-ratings"
     ],
     "relatedNodes": [
-      "nodicsDocsNodeTopicengagementCustomerReviews"
+      "nodicsDocsNodePageengagementCustomerReviews"
     ],
     "locale": "en",
     "channel": "web",
     "active": true
   },
   "record112": {
-    "code": "nodicsDocsNodeTopicengagementReviewAggregationRecovery",
+    "code": "nodicsDocsNodePageengagementReviewAggregationRecovery",
     "product": "nodicsDocumentationProduct",
     "navigation": "nodicsDocumentationNavigation",
     "parentNode": "nodicsDocsNodeSeccustomerEngagementAndFeedback",
-    "nodeLevel": "TOPIC",
+    "nodeLevel": "PAGE_LINK",
     "nodeType": "PAGE",
     "nodeTitle": "Review Aggregation and Recovery",
     "nodeSummary": "Rating aggregate correctness, recalculation, event recovery, and product or discovery visibility after review changes.",
@@ -9945,18 +9945,18 @@ module.exports = {
       "customer-reviews-and-ratings"
     ],
     "relatedNodes": [
-      "nodicsDocsNodeTopicengagementCustomerReviews"
+      "nodicsDocsNodePageengagementCustomerReviews"
     ],
     "locale": "en",
     "channel": "web",
     "active": true
   },
   "record113": {
-    "code": "nodicsDocsNodeTopicengagementCustomerFeedback",
+    "code": "nodicsDocsNodePageengagementCustomerFeedback",
     "product": "nodicsDocumentationProduct",
     "navigation": "nodicsDocumentationNavigation",
     "parentNode": "nodicsDocsNodeSeccustomerEngagementAndFeedback",
-    "nodeLevel": "TOPIC",
+    "nodeLevel": "PAGE_LINK",
     "nodeType": "PAGE",
     "nodeTitle": "Customer feedback, complaints, and closed-loop action",
     "nodeSummary": "Beginner-to-operator journey for feedback intake, triage, follow-up, resolution, handoffs, surveys, insights, recovery, and safe customization.",
@@ -10020,19 +10020,19 @@ module.exports = {
       "customer-feedback-complaints-and-closed-loop-action"
     ],
     "relatedNodes": [
-      "nodicsDocsNodeTopicengagementUnifiedOperations",
-      "nodicsDocsNodeTopicengagementGovernedAutomation"
+      "nodicsDocsNodePageengagementUnifiedOperations",
+      "nodicsDocsNodePageengagementGovernedAutomation"
     ],
     "locale": "en",
     "channel": "web",
     "active": true
   },
   "record114": {
-    "code": "nodicsDocsNodeTopicengagementUnifiedOperations",
+    "code": "nodicsDocsNodePageengagementUnifiedOperations",
     "product": "nodicsDocumentationProduct",
     "navigation": "nodicsDocumentationNavigation",
     "parentNode": "nodicsDocsNodeSeccustomerEngagementAndFeedback",
-    "nodeLevel": "TOPIC",
+    "nodeLevel": "PAGE_LINK",
     "nodeType": "PAGE",
     "nodeTitle": "Unified engagement operations",
     "nodeSummary": "Beginner-to-operator journey for unified queues, dashboards, batch previews, repair evidence, bounded exports, authority boundaries, and recovery.",
@@ -10096,19 +10096,19 @@ module.exports = {
       "unified-engagement-operations"
     ],
     "relatedNodes": [
-      "nodicsDocsNodeTopicengagementCustomerReviews",
-      "nodicsDocsNodeTopicengagementCustomerFeedback"
+      "nodicsDocsNodePageengagementCustomerReviews",
+      "nodicsDocsNodePageengagementCustomerFeedback"
     ],
     "locale": "en",
     "channel": "web",
     "active": true
   },
   "record115": {
-    "code": "nodicsDocsNodeTopicengagementGovernedAutomation",
+    "code": "nodicsDocsNodePageengagementGovernedAutomation",
     "product": "nodicsDocumentationProduct",
     "navigation": "nodicsDocumentationNavigation",
     "parentNode": "nodicsDocsNodeSeccustomerEngagementAndFeedback",
-    "nodeLevel": "TOPIC",
+    "nodeLevel": "PAGE_LINK",
     "nodeType": "PAGE",
     "nodeTitle": "Governed automation and AI",
     "nodeSummary": "Beginner-to-operator journey for optional AI proposals, deterministic fallback, evidence, evaluation, human review, overrides, monitoring, and safe extension.",
@@ -10172,19 +10172,19 @@ module.exports = {
       "governed-automation-and-ai"
     ],
     "relatedNodes": [
-      "nodicsDocsNodeTopicengagementCustomerFeedback",
-      "nodicsDocsNodeTopicengagementEnterpriseOperations"
+      "nodicsDocsNodePageengagementCustomerFeedback",
+      "nodicsDocsNodePageengagementEnterpriseOperations"
     ],
     "locale": "en",
     "channel": "web",
     "active": true
   },
   "record116": {
-    "code": "nodicsDocsNodeTopicengagementEnterpriseOperations",
+    "code": "nodicsDocsNodePageengagementEnterpriseOperations",
     "product": "nodicsDocumentationProduct",
     "navigation": "nodicsDocumentationNavigation",
     "parentNode": "nodicsDocsNodeSeccustomerEngagementAndFeedback",
-    "nodeLevel": "TOPIC",
+    "nodeLevel": "PAGE_LINK",
     "nodeType": "PAGE",
     "nodeTitle": "Enterprise scale, resilience, and ecosystem operations",
     "nodeSummary": "Beginner-to-operator journey for capacity, regional residency, provider delivery, backpressure, recovery, compatibility, accessibility, security, and release acceptance.",
@@ -10248,19 +10248,19 @@ module.exports = {
       "enterprise-scale-resilience-and-ecosystem-operations"
     ],
     "relatedNodes": [
-      "nodicsDocsNodeTopicengagementUnifiedOperations",
-      "nodicsDocsNodeTopicframeworkDevopsRuntime"
+      "nodicsDocsNodePageengagementUnifiedOperations",
+      "nodicsDocsNodePageframeworkDevopsRuntime"
     ],
     "locale": "en",
     "channel": "web",
     "active": true
   },
   "record117": {
-    "code": "nodicsDocsNodeTopiccommunicationOverview",
+    "code": "nodicsDocsNodePagecommunicationOverview",
     "product": "nodicsDocumentationProduct",
     "navigation": "nodicsDocumentationNavigation",
     "parentNode": "nodicsDocsNodeSeccommunicationAndNotifications",
-    "nodeLevel": "TOPIC",
+    "nodeLevel": "PAGE_LINK",
     "nodeType": "PAGE",
     "nodeTitle": "Communication, delivery, and verification",
     "nodeSummary": "Beginner-to-operator journey for templates, intent, consent, suppression, verification, provider delivery, callbacks, retry, inbox, recovery, and domain integration.",
@@ -10324,19 +10324,19 @@ module.exports = {
       "communication-delivery-and-verification"
     ],
     "relatedNodes": [
-      "nodicsDocsNodeTopicengagementCustomerFeedback",
-      "nodicsDocsNodeTopicprocessActionAdapters"
+      "nodicsDocsNodePageengagementCustomerFeedback",
+      "nodicsDocsNodePageprocessActionAdapters"
     ],
     "locale": "en",
     "channel": "web",
     "active": true
   },
   "record118": {
-    "code": "nodicsDocsNodeTopiceventsMessagingClusterCoordination",
+    "code": "nodicsDocsNodePageeventsMessagingClusterCoordination",
     "product": "nodicsDocumentationProduct",
     "navigation": "nodicsDocumentationNavigation",
     "parentNode": "nodicsDocsNodeSeceventAndMessagingManagement",
-    "nodeLevel": "TOPIC",
+    "nodeLevel": "PAGE_LINK",
     "nodeType": "PAGE",
     "nodeTitle": "Events, Messaging, and Cluster Coordination",
     "nodeSummary": "Event publishing, event splitting, cluster propagation, node responsibility transfer, runtime refresh, and provider extension.",
@@ -10400,20 +10400,20 @@ module.exports = {
       "events-messaging-and-cluster-coordination"
     ],
     "relatedNodes": [
-      "nodicsDocsNodeTopicruntimeGovernedChange",
-      "nodicsDocsNodeTopiccronOperations",
-      "nodicsDocsNodeTopiccacheRuntimeStateManagement"
+      "nodicsDocsNodePageruntimeGovernedChange",
+      "nodicsDocsNodePagecronOperations",
+      "nodicsDocsNodePagecacheRuntimeStateManagement"
     ],
     "locale": "en",
     "channel": "web",
     "active": true
   },
   "record119": {
-    "code": "nodicsDocsNodeTopicprocessOverview",
+    "code": "nodicsDocsNodePageprocessOverview",
     "product": "nodicsDocumentationProduct",
     "navigation": "nodicsDocumentationNavigation",
     "parentNode": "nodicsDocsNodeSecprocessAndWorkflowAutomation",
-    "nodeLevel": "TOPIC",
+    "nodeLevel": "PAGE_LINK",
     "nodeType": "PAGE",
     "nodeTitle": "Business Process and Automation Overview",
     "nodeSummary": "Understand why nodics.process exists, how it helps business users, developers, and operators, and where it fits with Core, Cron, Platform, Axis, and customer modules.",
@@ -10477,21 +10477,21 @@ module.exports = {
       "business-process-and-automation-overview"
     ],
     "relatedNodes": [
-      "nodicsDocsNodeTopicprocessFirstWorkflow",
-      "nodicsDocsNodeTopicprocessRuntimeLifecycle",
-      "nodicsDocsNodeTopicprocessWorkflowOrchestrationPatterns",
-      "nodicsDocsNodeTopiccronOperations"
+      "nodicsDocsNodePageprocessFirstWorkflow",
+      "nodicsDocsNodePageprocessRuntimeLifecycle",
+      "nodicsDocsNodePageprocessWorkflowOrchestrationPatterns",
+      "nodicsDocsNodePagecronOperations"
     ],
     "locale": "en",
     "channel": "web",
     "active": true
   },
   "record120": {
-    "code": "nodicsDocsNodeTopicprocessRuntimeLifecycle",
+    "code": "nodicsDocsNodePageprocessRuntimeLifecycle",
     "product": "nodicsDocumentationProduct",
     "navigation": "nodicsDocumentationNavigation",
     "parentNode": "nodicsDocsNodeSecprocessAndWorkflowAutomation",
-    "nodeLevel": "TOPIC",
+    "nodeLevel": "PAGE_LINK",
     "nodeType": "PAGE",
     "nodeTitle": "Runtime Instance and Task Lifecycle",
     "nodeSummary": "Learn the backend-owned lifecycle for definitions, versions, instances, tasks, audit events, and scheduled trigger relationships.",
@@ -10555,20 +10555,20 @@ module.exports = {
       "runtime-instance-and-task-lifecycle"
     ],
     "relatedNodes": [
-      "nodicsDocsNodeTopicprocessOverview",
-      "nodicsDocsNodeTopicprocessIncidentRecovery",
-      "nodicsDocsNodeTopicprocessWorkflowOrchestrationPatterns"
+      "nodicsDocsNodePageprocessOverview",
+      "nodicsDocsNodePageprocessIncidentRecovery",
+      "nodicsDocsNodePageprocessWorkflowOrchestrationPatterns"
     ],
     "locale": "en",
     "channel": "web",
     "active": true
   },
   "record121": {
-    "code": "nodicsDocsNodeTopicprocessWorkflowOrchestrationPatterns",
+    "code": "nodicsDocsNodePageprocessWorkflowOrchestrationPatterns",
     "product": "nodicsDocumentationProduct",
     "navigation": "nodicsDocumentationNavigation",
     "parentNode": "nodicsDocsNodeSecprocessAndWorkflowAutomation",
-    "nodeLevel": "TOPIC",
+    "nodeLevel": "PAGE_LINK",
     "nodeType": "PAGE",
     "nodeTitle": "Workflow Orchestration Patterns",
     "nodeSummary": "How Process workflows govern long-running business lifecycle with product export aggregation, filters, multi-target branching, ACTION adapters, retry, and recovery.",
@@ -10642,26 +10642,26 @@ module.exports = {
       "aggregation"
     ],
     "relatedNodes": [
-      "nodicsDocsNodeTopicprocessOverview",
-      "nodicsDocsNodeTopicprocessRuntimeLifecycle",
-      "nodicsDocsNodeTopicprocessActionAdapters",
-      "nodicsDocsNodeTopicprocessIncidentRecovery",
-      "nodicsDocsNodeTopicpipelineBusinessLogicOrchestration",
-      "nodicsDocsNodeTopicdataImportExportMigration",
-      "nodicsDocsNodeTopiccatalogProductDiscoveryManagement",
-      "nodicsDocsNodeTopicpricingPromotionsTaxManagement",
-      "nodicsDocsNodeTopicinventoryStockManagement"
+      "nodicsDocsNodePageprocessOverview",
+      "nodicsDocsNodePageprocessRuntimeLifecycle",
+      "nodicsDocsNodePageprocessActionAdapters",
+      "nodicsDocsNodePageprocessIncidentRecovery",
+      "nodicsDocsNodePagepipelineBusinessLogicOrchestration",
+      "nodicsDocsNodePagedataImportExportMigration",
+      "nodicsDocsNodePagecatalogProductDiscoveryManagement",
+      "nodicsDocsNodePagepricingPromotionsTaxManagement",
+      "nodicsDocsNodePageinventoryStockManagement"
     ],
     "locale": "en",
     "channel": "web",
     "active": true
   },
   "record122": {
-    "code": "nodicsDocsNodeTopicprocessFirstWorkflow",
+    "code": "nodicsDocsNodePageprocessFirstWorkflow",
     "product": "nodicsDocumentationProduct",
     "navigation": "nodicsDocumentationNavigation",
     "parentNode": "nodicsDocsNodeSecprocessAndWorkflowAutomation",
-    "nodeLevel": "TOPIC",
+    "nodeLevel": "PAGE_LINK",
     "nodeType": "PAGE",
     "nodeTitle": "Build Your First Workflow",
     "nodeSummary": "Create a first Process workflow from START through TASK, DECISION, ACTION, TIMER, SUB_PROCESS, and END with beginner-safe examples.",
@@ -10725,20 +10725,20 @@ module.exports = {
       "build-your-first-workflow"
     ],
     "relatedNodes": [
-      "nodicsDocsNodeTopicprocessOverview",
-      "nodicsDocsNodeTopicprocessFirstHumanTask",
-      "nodicsDocsNodeTopicprocessWorkflowOrchestrationPatterns"
+      "nodicsDocsNodePageprocessOverview",
+      "nodicsDocsNodePageprocessFirstHumanTask",
+      "nodicsDocsNodePageprocessWorkflowOrchestrationPatterns"
     ],
     "locale": "en",
     "channel": "web",
     "active": true
   },
   "record123": {
-    "code": "nodicsDocsNodeTopicprocessFirstHumanTask",
+    "code": "nodicsDocsNodePageprocessFirstHumanTask",
     "product": "nodicsDocumentationProduct",
     "navigation": "nodicsDocumentationNavigation",
     "parentNode": "nodicsDocsNodeSecprocessAndWorkflowAutomation",
-    "nodeLevel": "TOPIC",
+    "nodeLevel": "PAGE_LINK",
     "nodeType": "PAGE",
     "nodeTitle": "Build Your First Human Task Flow",
     "nodeSummary": "Understand task lifecycle, assignment, Axis presentation, and customer customization for human workflow steps.",
@@ -10802,19 +10802,19 @@ module.exports = {
       "build-your-first-human-task-flow"
     ],
     "relatedNodes": [
-      "nodicsDocsNodeTopicprocessFirstWorkflow",
-      "nodicsDocsNodeTopicprocessVisualDesigner"
+      "nodicsDocsNodePageprocessFirstWorkflow",
+      "nodicsDocsNodePageprocessVisualDesigner"
     ],
     "locale": "en",
     "channel": "web",
     "active": true
   },
   "record124": {
-    "code": "nodicsDocsNodeTopicprocessBusinessValue",
+    "code": "nodicsDocsNodePageprocessBusinessValue",
     "product": "nodicsDocumentationProduct",
     "navigation": "nodicsDocumentationNavigation",
     "parentNode": "nodicsDocsNodeSecprocessAndWorkflowAutomation",
-    "nodeLevel": "TOPIC",
+    "nodeLevel": "PAGE_LINK",
     "nodeType": "PAGE",
     "nodeTitle": "Business Value and Adoption Model",
     "nodeSummary": "Explain the business problems Process solves, how it lowers operating cost, and how business users should think about automation governance.",
@@ -10878,19 +10878,19 @@ module.exports = {
       "business-value-and-adoption-model"
     ],
     "relatedNodes": [
-      "nodicsDocsNodeTopicprocessOverview",
-      "nodicsDocsNodeTopicprocessFirstWorkflow"
+      "nodicsDocsNodePageprocessOverview",
+      "nodicsDocsNodePageprocessFirstWorkflow"
     ],
     "locale": "en",
     "channel": "web",
     "active": true
   },
   "record125": {
-    "code": "nodicsDocsNodeTopicpipelineBusinessLogicOrchestration",
+    "code": "nodicsDocsNodePagepipelineBusinessLogicOrchestration",
     "product": "nodicsDocumentationProduct",
     "navigation": "nodicsDocumentationNavigation",
     "parentNode": "nodicsDocsNodeSecpipelineAndBusinessLogicOrchestration",
-    "nodeLevel": "TOPIC",
+    "nodeLevel": "PAGE_LINK",
     "nodeType": "PAGE",
     "nodeTitle": "Pipeline and Business Logic Orchestration",
     "nodeSummary": "How Nodics pipelines compose validation, enrichment, decisioning, side effects, events, and project-layer business logic.",
@@ -10964,23 +10964,23 @@ module.exports = {
       "nested pipeline"
     ],
     "relatedNodes": [
-      "nodicsDocsNodeTopicframeworkCustomizationGuide",
-      "nodicsDocsNodeTopiccommerceCartOrder",
-      "nodicsDocsNodeTopicruntimeGovernedChange",
-      "nodicsDocsNodeTopicroutingApiRequestLifecycle",
-      "nodicsDocsNodeTopicprocessWorkflowOrchestrationPatterns",
-      "nodicsDocsNodeTopicfoundationModuleToModuleCommunication"
+      "nodicsDocsNodePageframeworkCustomizationGuide",
+      "nodicsDocsNodePagecommerceCartOrder",
+      "nodicsDocsNodePageruntimeGovernedChange",
+      "nodicsDocsNodePageroutingApiRequestLifecycle",
+      "nodicsDocsNodePageprocessWorkflowOrchestrationPatterns",
+      "nodicsDocsNodePagefoundationModuleToModuleCommunication"
     ],
     "locale": "en",
     "channel": "web",
     "active": true
   },
   "record126": {
-    "code": "nodicsDocsNodeTopiccronOperations",
+    "code": "nodicsDocsNodePagecronOperations",
     "product": "nodicsDocumentationProduct",
     "navigation": "nodicsDocumentationNavigation",
     "parentNode": "nodicsDocsNodeSeccronAndScheduledAutomation",
-    "nodeLevel": "TOPIC",
+    "nodeLevel": "PAGE_LINK",
     "nodeType": "PAGE",
     "nodeTitle": "Cron operations",
     "nodeSummary": "Scheduled job ownership, runtime placement, lifecycle commands, resilience, and production safety.",
@@ -11044,21 +11044,21 @@ module.exports = {
       "cron-operations"
     ],
     "relatedNodes": [
-      "nodicsDocsNodeTopiccronNodeResponsibilityTee",
-      "nodicsDocsNodeTopiccronProjectCustomization",
-      "nodicsDocsNodeTopicprocessScheduledAutomation",
-      "nodicsDocsNodeTopicprocessProcessCronRuntime"
+      "nodicsDocsNodePagecronNodeResponsibilityTee",
+      "nodicsDocsNodePagecronProjectCustomization",
+      "nodicsDocsNodePageprocessScheduledAutomation",
+      "nodicsDocsNodePageprocessProcessCronRuntime"
     ],
     "locale": "en",
     "channel": "web",
     "active": true
   },
   "record127": {
-    "code": "nodicsDocsNodeTopiccronNodeResponsibilityTee",
+    "code": "nodicsDocsNodePagecronNodeResponsibilityTee",
     "product": "nodicsDocumentationProduct",
     "navigation": "nodicsDocumentationNavigation",
     "parentNode": "nodicsDocsNodeSeccronAndScheduledAutomation",
-    "nodeLevel": "TOPIC",
+    "nodeLevel": "PAGE_LINK",
     "nodeType": "PAGE",
     "nodeTitle": "Cron Node Responsibility and TEE",
     "nodeSummary": "How scheduled work ownership, failover, responsibility transfer, recovery, and TEE references should be documented.",
@@ -11123,19 +11123,19 @@ module.exports = {
       "cluster-failover"
     ],
     "relatedNodes": [
-      "nodicsDocsNodeTopicprocessScheduledAutomation",
-      "nodicsDocsNodeTopicprocessProcessCronRuntime"
+      "nodicsDocsNodePageprocessScheduledAutomation",
+      "nodicsDocsNodePageprocessProcessCronRuntime"
     ],
     "locale": "en",
     "channel": "web",
     "active": true
   },
   "record128": {
-    "code": "nodicsDocsNodeTopiccronProjectCustomization",
+    "code": "nodicsDocsNodePagecronProjectCustomization",
     "product": "nodicsDocumentationProduct",
     "navigation": "nodicsDocumentationNavigation",
     "parentNode": "nodicsDocsNodeSeccronAndScheduledAutomation",
-    "nodeLevel": "TOPIC",
+    "nodeLevel": "PAGE_LINK",
     "nodeType": "PAGE",
     "nodeTitle": "Project Cron Customization",
     "nodeSummary": "How customer projects add scheduled business work with job definitions, triggers, permissions, retry, audit, and tests.",
@@ -11199,19 +11199,19 @@ module.exports = {
       "cron-project-module"
     ],
     "relatedNodes": [
-      "nodicsDocsNodeTopicprocessScheduledAutomation",
-      "nodicsDocsNodeTopicprocessProcessCronRuntime"
+      "nodicsDocsNodePageprocessScheduledAutomation",
+      "nodicsDocsNodePageprocessProcessCronRuntime"
     ],
     "locale": "en",
     "channel": "web",
     "active": true
   },
   "record129": {
-    "code": "nodicsDocsNodeTopicprocessProcessCronRuntime",
+    "code": "nodicsDocsNodePageprocessProcessCronRuntime",
     "product": "nodicsDocumentationProduct",
     "navigation": "nodicsDocumentationNavigation",
     "parentNode": "nodicsDocsNodeSeccronAndScheduledAutomation",
-    "nodeLevel": "TOPIC",
+    "nodeLevel": "PAGE_LINK",
     "nodeType": "PAGE",
     "nodeTitle": "Process and Cronjob Shared Runtime",
     "nodeSummary": "Clarify how processServer can include workflow and cronjob while each module keeps a separate ownership boundary.",
@@ -11275,19 +11275,19 @@ module.exports = {
       "process-and-cronjob-shared-runtime"
     ],
     "relatedNodes": [
-      "nodicsDocsNodeTopiccronOperations",
-      "nodicsDocsNodeTopicprocessScheduledAutomation"
+      "nodicsDocsNodePagecronOperations",
+      "nodicsDocsNodePageprocessScheduledAutomation"
     ],
     "locale": "en",
     "channel": "web",
     "active": true
   },
   "record130": {
-    "code": "nodicsDocsNodeTopicprocessScheduledAutomation",
+    "code": "nodicsDocsNodePageprocessScheduledAutomation",
     "product": "nodicsDocumentationProduct",
     "navigation": "nodicsDocumentationNavigation",
     "parentNode": "nodicsDocsNodeSeccronAndScheduledAutomation",
-    "nodeLevel": "TOPIC",
+    "nodeLevel": "PAGE_LINK",
     "nodeType": "PAGE",
     "nodeTitle": "Scheduled Automation and Cron Triggers",
     "nodeSummary": "Show how active Process triggers are executed by Cron or another authorized scheduler with correlation and audit evidence.",
@@ -11351,19 +11351,19 @@ module.exports = {
       "scheduled-automation-and-cron-triggers"
     ],
     "relatedNodes": [
-      "nodicsDocsNodeTopiccronOperations",
-      "nodicsDocsNodeTopicprocessProcessCronRuntime"
+      "nodicsDocsNodePagecronOperations",
+      "nodicsDocsNodePageprocessProcessCronRuntime"
     ],
     "locale": "en",
     "channel": "web",
     "active": true
   },
   "record131": {
-    "code": "nodicsDocsNodeTopicdataImportExportMigration",
+    "code": "nodicsDocsNodePagedataImportExportMigration",
     "product": "nodicsDocumentationProduct",
     "navigation": "nodicsDocumentationNavigation",
     "parentNode": "nodicsDocsNodeSecdataImportExportAndMigration",
-    "nodeLevel": "TOPIC",
+    "nodeLevel": "PAGE_LINK",
     "nodeType": "PAGE",
     "nodeTitle": "Data Import, Export, and Migration",
     "nodeSummary": "Import definitions, data installation, exports, migration registers, release evidence, rollback boundaries, and customer onboarding.",
@@ -11427,20 +11427,20 @@ module.exports = {
       "data-import-export-and-migration"
     ],
     "relatedNodes": [
-      "nodicsDocsNodeTopicwcmsPublishingLifecycle",
-      "nodicsDocsNodeTopicdocsOverview",
-      "nodicsDocsNodeTopicframeworkLocalVerificationChecklist"
+      "nodicsDocsNodePagewcmsPublishingLifecycle",
+      "nodicsDocsNodePagedocsOverview",
+      "nodicsDocsNodePageframeworkLocalVerificationChecklist"
     ],
     "locale": "en",
     "channel": "web",
     "active": true
   },
   "record132": {
-    "code": "nodicsDocsNodeTopicprocessActionAdapters",
+    "code": "nodicsDocsNodePageprocessActionAdapters",
     "product": "nodicsDocumentationProduct",
     "navigation": "nodicsDocumentationNavigation",
     "parentNode": "nodicsDocsNodeSecsystemIntegrationAndExternalConnectivity",
-    "nodeLevel": "TOPIC",
+    "nodeLevel": "PAGE_LINK",
     "nodeType": "PAGE",
     "nodeTitle": "Action Adapter Contract",
     "nodeSummary": "Learn why ACTION nodes use registered declarative adapters and how customer and domain modules own business execution.",
@@ -11504,19 +11504,19 @@ module.exports = {
       "action-adapter-contract"
     ],
     "relatedNodes": [
-      "nodicsDocsNodeTopicprocessDeveloperCustomization",
-      "nodicsDocsNodeTopiccommunicationOverview"
+      "nodicsDocsNodePageprocessDeveloperCustomization",
+      "nodicsDocsNodePagecommunicationOverview"
     ],
     "locale": "en",
     "channel": "web",
     "active": true
   },
   "record133": {
-    "code": "nodicsDocsNodeTopicframeworkDevopsRuntime",
+    "code": "nodicsDocsNodePageframeworkDevopsRuntime",
     "product": "nodicsDocumentationProduct",
     "navigation": "nodicsDocumentationNavigation",
     "parentNode": "nodicsDocsNodeSecoperationsMonitoringAndRecovery",
-    "nodeLevel": "TOPIC",
+    "nodeLevel": "PAGE_LINK",
     "nodeType": "PAGE",
     "nodeTitle": "Runtime and DevOps operations",
     "nodeSummary": "Runtime topology, dependencies, public and private properties, deployment, monitoring, and recovery guidance.",
@@ -11580,23 +11580,23 @@ module.exports = {
       "runtime-and-devops-operations"
     ],
     "relatedNodes": [
-      "nodicsDocsNodeTopicframeworkLocalVerificationChecklist",
-      "nodicsDocsNodeTopicfoundationOverview",
-      "nodicsDocsNodeTopiccommerceEnterpriseOperations",
-      "nodicsDocsNodeTopicframeworkRuntimeReleaseRollback",
-      "nodicsDocsNodeTopicframeworkLocalRuntimeTroubleshooting",
-      "nodicsDocsNodeTopicframeworkLocalBrowserAcceptanceJourney"
+      "nodicsDocsNodePageframeworkLocalVerificationChecklist",
+      "nodicsDocsNodePagefoundationOverview",
+      "nodicsDocsNodePagecommerceEnterpriseOperations",
+      "nodicsDocsNodePageframeworkRuntimeReleaseRollback",
+      "nodicsDocsNodePageframeworkLocalRuntimeTroubleshooting",
+      "nodicsDocsNodePageframeworkLocalBrowserAcceptanceJourney"
     ],
     "locale": "en",
     "channel": "web",
     "active": true
   },
   "record134": {
-    "code": "nodicsDocsNodeTopicframeworkRuntimeReleaseRollback",
+    "code": "nodicsDocsNodePageframeworkRuntimeReleaseRollback",
     "product": "nodicsDocumentationProduct",
     "navigation": "nodicsDocumentationNavigation",
     "parentNode": "nodicsDocsNodeSecoperationsMonitoringAndRecovery",
-    "nodeLevel": "TOPIC",
+    "nodeLevel": "PAGE_LINK",
     "nodeType": "PAGE",
     "nodeTitle": "Runtime Release and Rollback",
     "nodeSummary": "Release and rollback guidance for code, configuration, content, data import, generated contracts, and browser evidence.",
@@ -11660,18 +11660,18 @@ module.exports = {
       "runtime-and-devops-operations"
     ],
     "relatedNodes": [
-      "nodicsDocsNodeTopicframeworkDevopsRuntime"
+      "nodicsDocsNodePageframeworkDevopsRuntime"
     ],
     "locale": "en",
     "channel": "web",
     "active": true
   },
   "record135": {
-    "code": "nodicsDocsNodeTopicframeworkLocalBrowserAcceptanceJourney",
+    "code": "nodicsDocsNodePageframeworkLocalBrowserAcceptanceJourney",
     "product": "nodicsDocumentationProduct",
     "navigation": "nodicsDocumentationNavigation",
     "parentNode": "nodicsDocsNodeSecoperationsMonitoringAndRecovery",
-    "nodeLevel": "TOPIC",
+    "nodeLevel": "PAGE_LINK",
     "nodeType": "PAGE",
     "nodeTitle": "Local Browser Acceptance Journey",
     "nodeSummary": "Fresh-schema browser acceptance path for Axis, documentation, Nexus, Agora, setup actions, and unpublished states.",
@@ -11735,18 +11735,18 @@ module.exports = {
       "local-verification-and-acceptance-checklist"
     ],
     "relatedNodes": [
-      "nodicsDocsNodeTopicframeworkLocalVerificationChecklist"
+      "nodicsDocsNodePageframeworkLocalVerificationChecklist"
     ],
     "locale": "en",
     "channel": "web",
     "active": true
   },
   "record136": {
-    "code": "nodicsDocsNodeTopicframeworkLocalVerificationChecklist",
+    "code": "nodicsDocsNodePageframeworkLocalVerificationChecklist",
     "product": "nodicsDocumentationProduct",
     "navigation": "nodicsDocumentationNavigation",
     "parentNode": "nodicsDocsNodeSecoperationsMonitoringAndRecovery",
-    "nodeLevel": "TOPIC",
+    "nodeLevel": "PAGE_LINK",
     "nodeType": "PAGE",
     "nodeTitle": "Local verification and acceptance checklist",
     "nodeSummary": "How to prove the local framework, customer-project servers, Axis, documentation, registry, imports, WCMS, and Cron are healthy.",
@@ -11810,23 +11810,23 @@ module.exports = {
       "local-verification-and-acceptance-checklist"
     ],
     "relatedNodes": [
-      "nodicsDocsNodeTopicframeworkLocalQuickStart",
-      "nodicsDocsNodeTopicframeworkDevopsRuntime",
-      "nodicsDocsNodeTopicprocessQaRegressionGuide",
-      "nodicsDocsNodeTopicframeworkFreshSchemaSetupJourney",
-      "nodicsDocsNodeTopicframeworkLocalBrowserAcceptanceJourney",
-      "nodicsDocsNodeTopicframeworkLocalRuntimeTroubleshooting"
+      "nodicsDocsNodePageframeworkLocalQuickStart",
+      "nodicsDocsNodePageframeworkDevopsRuntime",
+      "nodicsDocsNodePageprocessQaRegressionGuide",
+      "nodicsDocsNodePageframeworkFreshSchemaSetupJourney",
+      "nodicsDocsNodePageframeworkLocalBrowserAcceptanceJourney",
+      "nodicsDocsNodePageframeworkLocalRuntimeTroubleshooting"
     ],
     "locale": "en",
     "channel": "web",
     "active": true
   },
   "record137": {
-    "code": "nodicsDocsNodeTopiccommerceEnterpriseOperations",
+    "code": "nodicsDocsNodePagecommerceEnterpriseOperations",
     "product": "nodicsDocumentationProduct",
     "navigation": "nodicsDocumentationNavigation",
     "parentNode": "nodicsDocsNodeSecoperationsMonitoringAndRecovery",
-    "nodeLevel": "TOPIC",
+    "nodeLevel": "PAGE_LINK",
     "nodeType": "PAGE",
     "nodeTitle": "Commerce enterprise operations and migration",
     "nodeSummary": "Capacity, backpressure, providers, recovery, compatibility, tenant migration, rollback, legacy retirement, and production qualification guidance.",
@@ -11890,19 +11890,19 @@ module.exports = {
       "commerce-enterprise-operations-and-migration"
     ],
     "relatedNodes": [
-      "nodicsDocsNodeTopiccommerceOverview",
-      "nodicsDocsNodeTopicframeworkDevopsRuntime"
+      "nodicsDocsNodePagecommerceOverview",
+      "nodicsDocsNodePageframeworkDevopsRuntime"
     ],
     "locale": "en",
     "channel": "web",
     "active": true
   },
   "record138": {
-    "code": "nodicsDocsNodeTopicprocessIncidentRecovery",
+    "code": "nodicsDocsNodePageprocessIncidentRecovery",
     "product": "nodicsDocumentationProduct",
     "navigation": "nodicsDocumentationNavigation",
     "parentNode": "nodicsDocsNodeSecoperationsMonitoringAndRecovery",
-    "nodeLevel": "TOPIC",
+    "nodeLevel": "PAGE_LINK",
     "nodeType": "PAGE",
     "nodeTitle": "Incident, Retry, and Compensation Operations",
     "nodeSummary": "Operate failed ACTION nodes through Process-owned incidents, bounded retries, dead-letter handling, and declarative domain-owned compensation.",
@@ -11966,19 +11966,19 @@ module.exports = {
       "incident-retry-and-compensation-operations"
     ],
     "relatedNodes": [
-      "nodicsDocsNodeTopicprocessRuntimeLifecycle",
-      "nodicsDocsNodeTopicprocessQaRegressionGuide"
+      "nodicsDocsNodePageprocessRuntimeLifecycle",
+      "nodicsDocsNodePageprocessQaRegressionGuide"
     ],
     "locale": "en",
     "channel": "web",
     "active": true
   },
   "record139": {
-    "code": "nodicsDocsNodeTopicprocessDevopsTopology",
+    "code": "nodicsDocsNodePageprocessDevopsTopology",
     "product": "nodicsDocumentationProduct",
     "navigation": "nodicsDocumentationNavigation",
     "parentNode": "nodicsDocsNodeSecoperationsMonitoringAndRecovery",
-    "nodeLevel": "TOPIC",
+    "nodeLevel": "PAGE_LINK",
     "nodeType": "PAGE",
     "nodeTitle": "DevOps and Runtime Topology",
     "nodeSummary": "Explain deployment topology, observability, fresh bootstrap evidence, and production sustainability for Process runtimes.",
@@ -12042,19 +12042,19 @@ module.exports = {
       "devops-and-runtime-topology"
     ],
     "relatedNodes": [
-      "nodicsDocsNodeTopicprocessOverview",
-      "nodicsDocsNodeTopicframeworkDevopsRuntime"
+      "nodicsDocsNodePageprocessOverview",
+      "nodicsDocsNodePageframeworkDevopsRuntime"
     ],
     "locale": "en",
     "channel": "web",
     "active": true
   },
   "record140": {
-    "code": "nodicsDocsNodeTopicprocessQaRegressionGuide",
+    "code": "nodicsDocsNodePageprocessQaRegressionGuide",
     "product": "nodicsDocumentationProduct",
     "navigation": "nodicsDocumentationNavigation",
     "parentNode": "nodicsDocsNodeSecqualityTestingAndCertification",
-    "nodeLevel": "TOPIC",
+    "nodeLevel": "PAGE_LINK",
     "nodeType": "PAGE",
     "nodeTitle": "Process QA and Regression Guide",
     "nodeSummary": "Define backend, fresh database, Axis smoke, and negative regression checks for Process and Cron automation.",
@@ -12118,19 +12118,19 @@ module.exports = {
       "process-qa-and-regression-guide"
     ],
     "relatedNodes": [
-      "nodicsDocsNodeTopicprocessIncidentRecovery",
-      "nodicsDocsNodeTopicframeworkLocalVerificationChecklist"
+      "nodicsDocsNodePageprocessIncidentRecovery",
+      "nodicsDocsNodePageframeworkLocalVerificationChecklist"
     ],
     "locale": "en",
     "channel": "web",
     "active": true
   },
   "record141": {
-    "code": "nodicsDocsNodeTopicframeworkCapabilityDocumentationMaturityPattern",
+    "code": "nodicsDocsNodePageframeworkCapabilityDocumentationMaturityPattern",
     "product": "nodicsDocumentationProduct",
     "navigation": "nodicsDocumentationNavigation",
     "parentNode": "nodicsDocsNodeSecdocumentationManagement",
-    "nodeLevel": "TOPIC",
+    "nodeLevel": "PAGE_LINK",
     "nodeType": "PAGE",
     "nodeTitle": "Capability documentation maturity pattern",
     "nodeSummary": "How to document concept, design-contract, partial, and operational capabilities without creating false runtime authority.",
@@ -12194,19 +12194,19 @@ module.exports = {
       "capability-documentation-maturity-pattern"
     ],
     "relatedNodes": [
-      "nodicsDocsNodeTopicdocsOverview",
-      "nodicsDocsNodeTopicframeworkCustomizationGuide"
+      "nodicsDocsNodePagedocsOverview",
+      "nodicsDocsNodePageframeworkCustomizationGuide"
     ],
     "locale": "en",
     "channel": "web",
     "active": true
   },
   "record142": {
-    "code": "nodicsDocsNodeTopicdocsOverview",
+    "code": "nodicsDocsNodePagedocsOverview",
     "product": "nodicsDocumentationProduct",
     "navigation": "nodicsDocumentationNavigation",
     "parentNode": "nodicsDocsNodeSecdocumentationManagement",
-    "nodeLevel": "TOPIC",
+    "nodeLevel": "PAGE_LINK",
     "nodeType": "PAGE",
     "nodeTitle": "Docs overview",
     "nodeSummary": "How Nodics framework documentation is authored, generated, validated, imported, rendered, and kept separate from Axis and customer project documentation.",
@@ -12270,22 +12270,22 @@ module.exports = {
       "docs-overview"
     ],
     "relatedNodes": [
-      "nodicsDocsNodeTopicframeworkCapabilityDocumentationMaturityPattern",
-      "nodicsDocsNodeTopicwcmsPublishingLifecycle",
-      "nodicsDocsNodeTopicdocsDocumentationPrinciples",
-      "nodicsDocsNodeTopicdocsReaderJourneyAndCoverage",
-      "nodicsDocsNodeTopicdocsDocumentationPublishingModel"
+      "nodicsDocsNodePageframeworkCapabilityDocumentationMaturityPattern",
+      "nodicsDocsNodePagewcmsPublishingLifecycle",
+      "nodicsDocsNodePagedocsDocumentationPrinciples",
+      "nodicsDocsNodePagedocsReaderJourneyAndCoverage",
+      "nodicsDocsNodePagedocsDocumentationPublishingModel"
     ],
     "locale": "en",
     "channel": "web",
     "active": true
   },
   "record143": {
-    "code": "nodicsDocsNodeTopicwcmsPublishingLifecycle",
+    "code": "nodicsDocsNodePagewcmsPublishingLifecycle",
     "product": "nodicsDocumentationProduct",
     "navigation": "nodicsDocumentationNavigation",
     "parentNode": "nodicsDocsNodeSecreleaseStagingAndPublication",
-    "nodeLevel": "TOPIC",
+    "nodeLevel": "PAGE_LINK",
     "nodeType": "PAGE",
     "nodeTitle": "Staged-to-Online publishing lifecycle",
     "nodeSummary": "Author, approve, deploy, recover, and customize immutable WCMS releases across physically separated Staged and Online runtimes.",
@@ -12349,19 +12349,19 @@ module.exports = {
       "staged-to-online-publishing-lifecycle"
     ],
     "relatedNodes": [
-      "nodicsDocsNodeTopicwcmsOverview",
-      "nodicsDocsNodeTopicdocsOverview"
+      "nodicsDocsNodePagewcmsOverview",
+      "nodicsDocsNodePagedocsOverview"
     ],
     "locale": "en",
     "channel": "web",
     "active": true
   },
   "record144": {
-    "code": "nodicsDocsNodeTopicapplicationsNexusDataContentGuide",
+    "code": "nodicsDocsNodePageapplicationsNexusDataContentGuide",
     "product": "nodicsDocumentationProduct",
     "navigation": "nodicsDocumentationNavigation",
     "parentNode": "nodicsDocsNodeSecnodicsApplicationSuite",
-    "nodeLevel": "TOPIC",
+    "nodeLevel": "PAGE_LINK",
     "nodeType": "PAGE",
     "nodeTitle": "Nexus Data and Content Guide",
     "nodeSummary": "How Nexus corporate content, media, editorial, engagement, Staged publication, Online delivery, and browser validation are authored from project data releases.",
@@ -12427,21 +12427,21 @@ module.exports = {
       "online-delivery"
     ],
     "relatedNodes": [
-      "nodicsDocsNodeTopicapplicationsSuite",
-      "nodicsDocsNodeTopicwcmsOverview",
-      "nodicsDocsNodeTopicwcmsMediaImportPublication",
-      "nodicsDocsNodeTopicwcmsPublishingLifecycle"
+      "nodicsDocsNodePageapplicationsSuite",
+      "nodicsDocsNodePagewcmsOverview",
+      "nodicsDocsNodePagewcmsMediaImportPublication",
+      "nodicsDocsNodePagewcmsPublishingLifecycle"
     ],
     "locale": "en",
     "channel": "web",
     "active": true
   },
   "record145": {
-    "code": "nodicsDocsNodeTopicapplicationsAxisSetupErrorContracts",
+    "code": "nodicsDocsNodePageapplicationsAxisSetupErrorContracts",
     "product": "nodicsDocumentationProduct",
     "navigation": "nodicsDocumentationNavigation",
     "parentNode": "nodicsDocsNodeSecaxisAndBackofficeOperations",
-    "nodeLevel": "TOPIC",
+    "nodeLevel": "PAGE_LINK",
     "nodeType": "PAGE",
     "nodeTitle": "Axis Setup and User-Safe Error Contracts",
     "nodeSummary": "How Axis presents setup, retry, blocker, and initialization errors with safe business messages while preserving technical evidence for operators.",
@@ -12507,21 +12507,21 @@ module.exports = {
       "backoffice"
     ],
     "relatedNodes": [
-      "nodicsDocsNodeTopicaxisBusinessCustomization",
-      "nodicsDocsNodeTopicplatformModuleRegistry",
-      "nodicsDocsNodeTopicframeworkFreshSchemaSetupJourney",
-      "nodicsDocsNodeTopicapplicationsSuite"
+      "nodicsDocsNodePageaxisBusinessCustomization",
+      "nodicsDocsNodePageplatformModuleRegistry",
+      "nodicsDocsNodePageframeworkFreshSchemaSetupJourney",
+      "nodicsDocsNodePageapplicationsSuite"
     ],
     "locale": "en",
     "channel": "web",
     "active": true
   },
   "record146": {
-    "code": "nodicsDocsNodeTopicwcmsCmsSourceMapAuthoringContract",
+    "code": "nodicsDocsNodePagewcmsCmsSourceMapAuthoringContract",
     "product": "nodicsDocumentationProduct",
     "navigation": "nodicsDocumentationNavigation",
     "parentNode": "nodicsDocsNodeSecwcmsAndContentManagement",
-    "nodeLevel": "TOPIC",
+    "nodeLevel": "PAGE_LINK",
     "nodeType": "PAGE",
     "nodeTitle": "CMS Source Map and Authoring Contract",
     "nodeSummary": "Exact CMS implementation map for sites, routes, pages, components, renderers, migration, publication manifests, delivery cache, and governance.",
@@ -12587,21 +12587,21 @@ module.exports = {
       "delivery-cache"
     ],
     "relatedNodes": [
-      "nodicsDocsNodeTopicwcmsOverview",
-      "nodicsDocsNodeTopicwcmsContentCatalogModel",
-      "nodicsDocsNodeTopicwcmsPageDesignerComponents",
-      "nodicsDocsNodeTopicwcmsPublishingLifecycle"
+      "nodicsDocsNodePagewcmsOverview",
+      "nodicsDocsNodePagewcmsContentCatalogModel",
+      "nodicsDocsNodePagewcmsPageDesignerComponents",
+      "nodicsDocsNodePagewcmsPublishingLifecycle"
     ],
     "locale": "en",
     "channel": "web",
     "active": true
   },
   "record147": {
-    "code": "nodicsDocsNodeTopicwcmsMediaOperationsRunbook",
+    "code": "nodicsDocsNodePagewcmsMediaOperationsRunbook",
     "product": "nodicsDocumentationProduct",
     "navigation": "nodicsDocumentationNavigation",
     "parentNode": "nodicsDocsNodeSecmediaManagement",
-    "nodeLevel": "TOPIC",
+    "nodeLevel": "PAGE_LINK",
     "nodeType": "PAGE",
     "nodeTitle": "Media Operations Runbook",
     "nodeSummary": "Operational contract for media import hydration, storage providers, publication transfer, DR replication, cleanup lifecycle, and browser delivery evidence.",
@@ -12667,21 +12667,21 @@ module.exports = {
       "disaster-recovery"
     ],
     "relatedNodes": [
-      "nodicsDocsNodeTopicwcmsMediaManagement",
-      "nodicsDocsNodeTopicwcmsMediaStorageDelivery",
-      "nodicsDocsNodeTopicwcmsMediaImportPublication",
-      "nodicsDocsNodeTopicwcmsPublishingLifecycle"
+      "nodicsDocsNodePagewcmsMediaManagement",
+      "nodicsDocsNodePagewcmsMediaStorageDelivery",
+      "nodicsDocsNodePagewcmsMediaImportPublication",
+      "nodicsDocsNodePagewcmsPublishingLifecycle"
     ],
     "locale": "en",
     "channel": "web",
     "active": true
   },
   "record148": {
-    "code": "nodicsDocsNodeTopicdataImportExportProviderGuides",
+    "code": "nodicsDocsNodePagedataImportExportProviderGuides",
     "product": "nodicsDocumentationProduct",
     "navigation": "nodicsDocumentationNavigation",
     "parentNode": "nodicsDocsNodeSecdataImportExportAndMigration",
-    "nodeLevel": "TOPIC",
+    "nodeLevel": "PAGE_LINK",
     "nodeType": "PAGE",
     "nodeTitle": "Import and Export Provider Guides",
     "nodeSummary": "Provider-level guide for JavaScript, JSON, CSV, and Excel import/export behavior, masking, parser rules, diagnostics, and extension boundaries.",
@@ -12748,20 +12748,20 @@ module.exports = {
       "excel"
     ],
     "relatedNodes": [
-      "nodicsDocsNodeTopicdataImportExportMigration",
-      "nodicsDocsNodeTopicwcmsMediaOperationsRunbook",
-      "nodicsDocsNodeTopicframeworkLocalVerificationChecklist"
+      "nodicsDocsNodePagedataImportExportMigration",
+      "nodicsDocsNodePagewcmsMediaOperationsRunbook",
+      "nodicsDocsNodePageframeworkLocalVerificationChecklist"
     ],
     "locale": "en",
     "channel": "web",
     "active": true
   },
   "record149": {
-    "code": "nodicsDocsNodeTopiccommerceDataAuthoringFulfillment",
+    "code": "nodicsDocsNodePagecommerceDataAuthoringFulfillment",
     "product": "nodicsDocumentationProduct",
     "navigation": "nodicsDocumentationNavigation",
     "parentNode": "nodicsDocsNodeSecproductCatalogAndDiscovery",
-    "nodeLevel": "TOPIC",
+    "nodeLevel": "PAGE_LINK",
     "nodeType": "PAGE",
     "nodeTitle": "Commerce Data Authoring and Fulfillment",
     "nodeSummary": "How product, category, price, inventory, search, order, fulfillment, return, and refund data are authored, imported, published, and verified.",
@@ -12828,21 +12828,21 @@ module.exports = {
       "agora"
     ],
     "relatedNodes": [
-      "nodicsDocsNodeTopiccatalogProductDiscoveryManagement",
-      "nodicsDocsNodeTopiccommercePaymentFulfillment",
-      "nodicsDocsNodeTopicfulfillmentShippingManagement",
-      "nodicsDocsNodeTopicacceleratorsAgoraApparelProductDataAuthoring"
+      "nodicsDocsNodePagecatalogProductDiscoveryManagement",
+      "nodicsDocsNodePagecommercePaymentFulfillment",
+      "nodicsDocsNodePagefulfillmentShippingManagement",
+      "nodicsDocsNodePageacceleratorsAgoraApparelProductDataAuthoring"
     ],
     "locale": "en",
     "channel": "web",
     "active": true
   },
   "record150": {
-    "code": "nodicsDocsNodeTopicdocsDocumentationPublishingRunbook",
+    "code": "nodicsDocsNodePagedocsDocumentationPublishingRunbook",
     "product": "nodicsDocumentationProduct",
     "navigation": "nodicsDocumentationNavigation",
     "parentNode": "nodicsDocsNodeSecdocumentationManagement",
-    "nodeLevel": "TOPIC",
+    "nodeLevel": "PAGE_LINK",
     "nodeType": "PAGE",
     "nodeTitle": "Documentation Publishing Runbook",
     "nodeSummary": "Runbook for authored Markdown, catalogue metadata, generated WCMS records, Staged review, Online activation, rollback evidence, and consumer rendering.",
@@ -12908,21 +12908,21 @@ module.exports = {
       "content-pack"
     ],
     "relatedNodes": [
-      "nodicsDocsNodeTopicdocsOverview",
-      "nodicsDocsNodeTopicdocsDocumentationPublishingModel",
-      "nodicsDocsNodeTopicwcmsPublishingLifecycle",
-      "nodicsDocsNodeTopicreferenceSourceBackedDocumentationCoverageAudit"
+      "nodicsDocsNodePagedocsOverview",
+      "nodicsDocsNodePagedocsDocumentationPublishingModel",
+      "nodicsDocsNodePagewcmsPublishingLifecycle",
+      "nodicsDocsNodePagereferenceSourceBackedDocumentationCoverageAudit"
     ],
     "locale": "en",
     "channel": "web",
     "active": true
   },
   "record151": {
-    "code": "nodicsDocsNodeTopicplatformModuleRegistryJourney",
+    "code": "nodicsDocsNodePageplatformModuleRegistryJourney",
     "product": "nodicsDocumentationProduct",
     "navigation": "nodicsDocumentationNavigation",
     "parentNode": "nodicsDocsNodeSeccapabilityRegistryAndLifecycleManagement",
-    "nodeLevel": "TOPIC",
+    "nodeLevel": "PAGE_LINK",
     "nodeType": "PAGE",
     "nodeTitle": "Module Registry Journey",
     "nodeSummary": "How installed modules become registered, activated, dependency-checked, and visible to Axis as governed business capabilities.",
@@ -12988,20 +12988,20 @@ module.exports = {
       "axis"
     ],
     "relatedNodes": [
-      "nodicsDocsNodeTopicplatformModuleRegistry",
-      "nodicsDocsNodeTopicapplicationsAxisSetupErrorContracts",
-      "nodicsDocsNodeTopicframeworkModuleLoadingServicePrecedence"
+      "nodicsDocsNodePageplatformModuleRegistry",
+      "nodicsDocsNodePageapplicationsAxisSetupErrorContracts",
+      "nodicsDocsNodePageframeworkModuleLoadingServicePrecedence"
     ],
     "locale": "en",
     "channel": "web",
     "active": true
   },
   "record152": {
-    "code": "nodicsDocsNodeTopiccommerceSearchGuide",
+    "code": "nodicsDocsNodePagecommerceSearchGuide",
     "product": "nodicsDocumentationProduct",
     "navigation": "nodicsDocumentationNavigation",
     "parentNode": "nodicsDocsNodeSecsearchAndDiscovery",
-    "nodeLevel": "TOPIC",
+    "nodeLevel": "PAGE_LINK",
     "nodeType": "PAGE",
     "nodeTitle": "Commerce Search Guide",
     "nodeSummary": "How commerce search projections, ranking rules, index freshness, rebuild evidence, and storefront discovery are governed.",
@@ -13067,20 +13067,20 @@ module.exports = {
       "agora"
     ],
     "relatedNodes": [
-      "nodicsDocsNodeTopicdiscoverySearchIndexing",
-      "nodicsDocsNodeTopiccatalogProductDiscoveryManagement",
-      "nodicsDocsNodeTopiccommerceDataAuthoringFulfillment"
+      "nodicsDocsNodePagediscoverySearchIndexing",
+      "nodicsDocsNodePagecatalogProductDiscoveryManagement",
+      "nodicsDocsNodePagecommerceDataAuthoringFulfillment"
     ],
     "locale": "en",
     "channel": "web",
     "active": true
   },
   "record153": {
-    "code": "nodicsDocsNodeTopiclocalizationRuntimeAuthoring",
+    "code": "nodicsDocsNodePagelocalizationRuntimeAuthoring",
     "product": "nodicsDocumentationProduct",
     "navigation": "nodicsDocumentationNavigation",
     "parentNode": "nodicsDocsNodeSeclocalizationAndInternationalization",
-    "nodeLevel": "TOPIC",
+    "nodeLevel": "PAGE_LINK",
     "nodeType": "PAGE",
     "nodeTitle": "Localization Runtime Authoring",
     "nodeSummary": "How localized records, fallback behavior, content and product translation, import data, and runtime API boundaries work.",
@@ -13146,20 +13146,20 @@ module.exports = {
       "authoring"
     ],
     "relatedNodes": [
-      "nodicsDocsNodeTopiclocalizationInternationalization",
-      "nodicsDocsNodeTopicwcmsCmsSourceMapAuthoringContract",
-      "nodicsDocsNodeTopiccommerceDataAuthoringFulfillment"
+      "nodicsDocsNodePagelocalizationInternationalization",
+      "nodicsDocsNodePagewcmsCmsSourceMapAuthoringContract",
+      "nodicsDocsNodePagecommerceDataAuthoringFulfillment"
     ],
     "locale": "en",
     "channel": "web",
     "active": true
   },
   "record154": {
-    "code": "nodicsDocsNodeTopiccommercePaymentProviderBoundaries",
+    "code": "nodicsDocsNodePagecommercePaymentProviderBoundaries",
     "product": "nodicsDocumentationProduct",
     "navigation": "nodicsDocumentationNavigation",
     "parentNode": "nodicsDocsNodeSecpaymentManagement",
-    "nodeLevel": "TOPIC",
+    "nodeLevel": "PAGE_LINK",
     "nodeType": "PAGE",
     "nodeTitle": "Payment Core and Provider Boundaries",
     "nodeSummary": "How Payment Core, payment methods, gateway providers, safe payloads, reconciliation, refunds, and provider extension boundaries work.",
@@ -13225,20 +13225,20 @@ module.exports = {
       "refund"
     ],
     "relatedNodes": [
-      "nodicsDocsNodeTopiccommercePaymentFulfillment",
-      "nodicsDocsNodeTopiccommerceCartOrder",
-      "nodicsDocsNodeTopiccommerceReturnsRefunds"
+      "nodicsDocsNodePagecommercePaymentFulfillment",
+      "nodicsDocsNodePagecommerceCartOrder",
+      "nodicsDocsNodePagecommerceReturnsRefunds"
     ],
     "locale": "en",
     "channel": "web",
     "active": true
   },
   "record155": {
-    "code": "nodicsDocsNodeTopicloyaltyWalletsRewardsLedger",
+    "code": "nodicsDocsNodePageloyaltyWalletsRewardsLedger",
     "product": "nodicsDocumentationProduct",
     "navigation": "nodicsDocumentationNavigation",
     "parentNode": "nodicsDocsNodeSecloyaltyAndRewards",
-    "nodeLevel": "TOPIC",
+    "nodeLevel": "PAGE_LINK",
     "nodeType": "PAGE",
     "nodeTitle": "Loyalty Wallets, Rewards, and Ledger",
     "nodeSummary": "Business, developer, operator, and customization guidance for reward wallets, balances, reservations, redemptions, ledger evidence, and Commerce reward payment provider integration.",
@@ -13308,21 +13308,21 @@ module.exports = {
       "payment-provider"
     ],
     "relatedNodes": [
-      "nodicsDocsNodeTopiccommercePaymentProviderBoundaries",
-      "nodicsDocsNodeTopiccommercePaymentFulfillment",
-      "nodicsDocsNodeTopicframeworkCustomizationGuide",
-      "nodicsDocsNodeTopicframeworkLocalBrowserAcceptanceJourney"
+      "nodicsDocsNodePagecommercePaymentProviderBoundaries",
+      "nodicsDocsNodePagecommercePaymentFulfillment",
+      "nodicsDocsNodePageframeworkCustomizationGuide",
+      "nodicsDocsNodePageframeworkLocalBrowserAcceptanceJourney"
     ],
     "locale": "en",
     "channel": "web",
     "active": true
   },
   "record156": {
-    "code": "nodicsDocsNodeTopiccommerceShoppingListCommerceBoundary",
+    "code": "nodicsDocsNodePagecommerceShoppingListCommerceBoundary",
     "product": "nodicsDocumentationProduct",
     "navigation": "nodicsDocumentationNavigation",
     "parentNode": "nodicsDocsNodeSecuserEnterpriseAndTenantManagement",
-    "nodeLevel": "TOPIC",
+    "nodeLevel": "PAGE_LINK",
     "nodeType": "PAGE",
     "nodeTitle": "Shopping List Commerce Boundary",
     "nodeSummary": "Why wishlist, compare, and save-for-later belong to Commerce while Profile remains the identity authority.",
@@ -13390,20 +13390,20 @@ module.exports = {
       "identity"
     ],
     "relatedNodes": [
-      "nodicsDocsNodeTopicsecurityIdentityAccessGovernance",
-      "nodicsDocsNodeTopiccommerceCartOrder",
-      "nodicsDocsNodeTopiccommercePaymentProviderBoundaries"
+      "nodicsDocsNodePagesecurityIdentityAccessGovernance",
+      "nodicsDocsNodePagecommerceCartOrder",
+      "nodicsDocsNodePagecommercePaymentProviderBoundaries"
     ],
     "locale": "en",
     "channel": "web",
     "active": true
   },
   "record157": {
-    "code": "nodicsDocsNodeTopicfoundationNmsRuntimeMonitoring",
+    "code": "nodicsDocsNodePagefoundationNmsRuntimeMonitoring",
     "product": "nodicsDocumentationProduct",
     "navigation": "nodicsDocumentationNavigation",
     "parentNode": "nodicsDocsNodeSecoperationsMonitoringAndRecovery",
-    "nodeLevel": "TOPIC",
+    "nodeLevel": "PAGE_LINK",
     "nodeType": "PAGE",
     "nodeTitle": "NMS Runtime Monitoring",
     "nodeSummary": "How NMS captures node health, runtime roles, responsibility, capability state, degraded conditions, and operator recovery evidence.",
@@ -13469,20 +13469,20 @@ module.exports = {
       "operator"
     ],
     "relatedNodes": [
-      "nodicsDocsNodeTopicframeworkDevopsRuntime",
-      "nodicsDocsNodeTopicframeworkLocalVerificationChecklist",
-      "nodicsDocsNodeTopicprocessRuntimeLifecycle"
+      "nodicsDocsNodePageframeworkDevopsRuntime",
+      "nodicsDocsNodePageframeworkLocalVerificationChecklist",
+      "nodicsDocsNodePageprocessRuntimeLifecycle"
     ],
     "locale": "en",
     "channel": "web",
     "active": true
   },
   "record158": {
-    "code": "nodicsDocsNodeTopicfoundationServiceRuntimeOverrides",
+    "code": "nodicsDocsNodePagefoundationServiceRuntimeOverrides",
     "product": "nodicsDocumentationProduct",
     "navigation": "nodicsDocumentationNavigation",
     "parentNode": "nodicsDocsNodeSecpipelineAndBusinessLogicOrchestration",
-    "nodeLevel": "TOPIC",
+    "nodeLevel": "PAGE_LINK",
     "nodeType": "PAGE",
     "nodeTitle": "Service Runtime and Override Precedence",
     "nodeSummary": "How generated services, virtual services, module graph resolution, customer overrides, fallback behavior, and extension safety work.",
@@ -13548,22 +13548,22 @@ module.exports = {
       "module-graph"
     ],
     "relatedNodes": [
-      "nodicsDocsNodeTopicframeworkModuleLoadingServicePrecedence",
-      "nodicsDocsNodeTopicframeworkBackendExtensionPatterns",
-      "nodicsDocsNodeTopicruntimeGovernedChange",
-      "nodicsDocsNodeTopicfoundationModuleToModuleCommunication",
-      "nodicsDocsNodeTopicroutingApiRequestLifecycle"
+      "nodicsDocsNodePageframeworkModuleLoadingServicePrecedence",
+      "nodicsDocsNodePageframeworkBackendExtensionPatterns",
+      "nodicsDocsNodePageruntimeGovernedChange",
+      "nodicsDocsNodePagefoundationModuleToModuleCommunication",
+      "nodicsDocsNodePageroutingApiRequestLifecycle"
     ],
     "locale": "en",
     "channel": "web",
     "active": true
   },
   "record159": {
-    "code": "nodicsDocsNodeTopicfoundationModuleToModuleCommunication",
+    "code": "nodicsDocsNodePagefoundationModuleToModuleCommunication",
     "product": "nodicsDocumentationProduct",
     "navigation": "nodicsDocumentationNavigation",
     "parentNode": "nodicsDocsNodeSecpipelineAndBusinessLogicOrchestration",
-    "nodeLevel": "TOPIC",
+    "nodeLevel": "PAGE_LINK",
     "nodeType": "PAGE",
     "nodeTitle": "Module-to-Module Communication",
     "nodeSummary": "How DefaultModuleService invokes local services or remote module APIs through target authority, Runtime Registry, static endpoints, internal auth, retries, circuit breakers, and bounded external HTTP calls.",
@@ -13631,22 +13631,22 @@ module.exports = {
       "circuit breaker"
     ],
     "relatedNodes": [
-      "nodicsDocsNodeTopicfoundationServiceRuntimeOverrides",
-      "nodicsDocsNodeTopicroutingApiRequestLifecycle",
-      "nodicsDocsNodeTopicframeworkModuleLoadingServicePrecedence",
-      "nodicsDocsNodeTopicframeworkBackendExtensionPatterns",
-      "nodicsDocsNodeTopicruntimeGovernedChange"
+      "nodicsDocsNodePagefoundationServiceRuntimeOverrides",
+      "nodicsDocsNodePageroutingApiRequestLifecycle",
+      "nodicsDocsNodePageframeworkModuleLoadingServicePrecedence",
+      "nodicsDocsNodePageframeworkBackendExtensionPatterns",
+      "nodicsDocsNodePageruntimeGovernedChange"
     ],
     "locale": "en",
     "channel": "web",
     "active": true
   },
   "record160": {
-    "code": "nodicsDocsNodeTopicfoundationCacheProviderRunbooks",
+    "code": "nodicsDocsNodePagefoundationCacheProviderRunbooks",
     "product": "nodicsDocumentationProduct",
     "navigation": "nodicsDocumentationNavigation",
     "parentNode": "nodicsDocsNodeSeccachingAndRuntimeStateManagement",
-    "nodeLevel": "TOPIC",
+    "nodeLevel": "PAGE_LINK",
     "nodeType": "PAGE",
     "nodeTitle": "Cache Provider Runbooks",
     "nodeSummary": "Redis, Hazelcast, node cache, key strategy, invalidation, provider health, fallback behavior, and production cache recovery guidance.",
@@ -13712,20 +13712,20 @@ module.exports = {
       "invalidation"
     ],
     "relatedNodes": [
-      "nodicsDocsNodeTopiccacheRuntimeStateManagement",
-      "nodicsDocsNodeTopicruntimeGovernedChange",
-      "nodicsDocsNodeTopicwcmsPublishingLifecycle"
+      "nodicsDocsNodePagecacheRuntimeStateManagement",
+      "nodicsDocsNodePageruntimeGovernedChange",
+      "nodicsDocsNodePagewcmsPublishingLifecycle"
     ],
     "locale": "en",
     "channel": "web",
     "active": true
   },
   "record161": {
-    "code": "nodicsDocsNodeTopicfoundationDatabaseProviderBoundaries",
+    "code": "nodicsDocsNodePagefoundationDatabaseProviderBoundaries",
     "product": "nodicsDocumentationProduct",
     "navigation": "nodicsDocumentationNavigation",
     "parentNode": "nodicsDocsNodeSecdatabaseAndPersistenceManagement",
-    "nodeLevel": "TOPIC",
+    "nodeLevel": "PAGE_LINK",
     "nodeType": "PAGE",
     "nodeTitle": "Database Provider Boundaries",
     "nodeSummary": "How MongoDB, virtual DB, Cassandra, Elasticsearch, schemas, query translation, indexes, migration, and provider validation are separated.",
@@ -13791,20 +13791,20 @@ module.exports = {
       "provider"
     ],
     "relatedNodes": [
-      "nodicsDocsNodeTopicpersistenceProviderDataAccessLayer",
-      "nodicsDocsNodeTopicfoundationCacheProviderRunbooks",
-      "nodicsDocsNodeTopicdiscoverySearchIndexing"
+      "nodicsDocsNodePagepersistenceProviderDataAccessLayer",
+      "nodicsDocsNodePagefoundationCacheProviderRunbooks",
+      "nodicsDocsNodePagediscoverySearchIndexing"
     ],
     "locale": "en",
     "channel": "web",
     "active": true
   },
   "record162": {
-    "code": "nodicsDocsNodeTopicsecurityOtpSecurityFlow",
+    "code": "nodicsDocsNodePagesecurityOtpSecurityFlow",
     "product": "nodicsDocumentationProduct",
     "navigation": "nodicsDocumentationNavigation",
     "parentNode": "nodicsDocsNodeSecsecurityGovernanceAndCompliance",
-    "nodeLevel": "TOPIC",
+    "nodeLevel": "PAGE_LINK",
     "nodeType": "PAGE",
     "nodeTitle": "OTP and Security Flow",
     "nodeSummary": "OTP generation, delivery intent, verification, expiry, retry, throttling, lockout, audit, and secure frontend message behavior.",
@@ -13870,20 +13870,20 @@ module.exports = {
       "audit"
     ],
     "relatedNodes": [
-      "nodicsDocsNodeTopicsecurityIdentityAccessGovernance",
-      "nodicsDocsNodeTopiccommunicationOverview",
-      "nodicsDocsNodeTopiccommunicationProviderRunbooks"
+      "nodicsDocsNodePagesecurityIdentityAccessGovernance",
+      "nodicsDocsNodePagecommunicationOverview",
+      "nodicsDocsNodePagecommunicationProviderRunbooks"
     ],
     "locale": "en",
     "channel": "web",
     "active": true
   },
   "record163": {
-    "code": "nodicsDocsNodeTopiccommunicationProviderRunbooks",
+    "code": "nodicsDocsNodePagecommunicationProviderRunbooks",
     "product": "nodicsDocumentationProduct",
     "navigation": "nodicsDocumentationNavigation",
     "parentNode": "nodicsDocsNodeSeccommunicationAndNotifications",
-    "nodeLevel": "TOPIC",
+    "nodeLevel": "PAGE_LINK",
     "nodeType": "PAGE",
     "nodeTitle": "Communication Provider Runbooks",
     "nodeSummary": "SMTP and SMS provider delivery, template, locale, suppression, retry, callback, receipt, privacy, and failure evidence guidance.",
@@ -13949,20 +13949,20 @@ module.exports = {
       "retry"
     ],
     "relatedNodes": [
-      "nodicsDocsNodeTopiccommunicationOverview",
-      "nodicsDocsNodeTopicsecurityOtpSecurityFlow",
-      "nodicsDocsNodeTopicengagementContactSubmissionOperations"
+      "nodicsDocsNodePagecommunicationOverview",
+      "nodicsDocsNodePagesecurityOtpSecurityFlow",
+      "nodicsDocsNodePageengagementContactSubmissionOperations"
     ],
     "locale": "en",
     "channel": "web",
     "active": true
   },
   "record164": {
-    "code": "nodicsDocsNodeTopicengagementContactSubmissionOperations",
+    "code": "nodicsDocsNodePageengagementContactSubmissionOperations",
     "product": "nodicsDocumentationProduct",
     "navigation": "nodicsDocumentationNavigation",
     "parentNode": "nodicsDocsNodeSeccustomerEngagementAndFeedback",
-    "nodeLevel": "TOPIC",
+    "nodeLevel": "PAGE_LINK",
     "nodeType": "PAGE",
     "nodeTitle": "Contact Submission Operations",
     "nodeSummary": "How contact forms, submissions, validation, moderation, workflow routing, notifications, retention, audit, and recovery work.",
@@ -14028,20 +14028,20 @@ module.exports = {
       "notification"
     ],
     "relatedNodes": [
-      "nodicsDocsNodeTopicengagementUnifiedOperations",
-      "nodicsDocsNodeTopicengagementGovernedAutomation",
-      "nodicsDocsNodeTopiccommunicationProviderRunbooks"
+      "nodicsDocsNodePageengagementUnifiedOperations",
+      "nodicsDocsNodePageengagementGovernedAutomation",
+      "nodicsDocsNodePagecommunicationProviderRunbooks"
     ],
     "locale": "en",
     "channel": "web",
     "active": true
   },
   "record165": {
-    "code": "nodicsDocsNodeTopicprocessWorkflowBpmSourceMap",
+    "code": "nodicsDocsNodePageprocessWorkflowBpmSourceMap",
     "product": "nodicsDocumentationProduct",
     "navigation": "nodicsDocumentationNavigation",
     "parentNode": "nodicsDocsNodeSecprocessAndWorkflowAutomation",
-    "nodeLevel": "TOPIC",
+    "nodeLevel": "PAGE_LINK",
     "nodeType": "PAGE",
     "nodeTitle": "Workflow and BPM Source Map",
     "nodeSummary": "How workflow definitions, transitions, human tasks, action adapters, callbacks, history, incidents, and operator visibility fit together.",
@@ -14107,21 +14107,21 @@ module.exports = {
       "process"
     ],
     "relatedNodes": [
-      "nodicsDocsNodeTopicprocessOverview",
-      "nodicsDocsNodeTopicprocessFirstWorkflow",
-      "nodicsDocsNodeTopicprocessFirstHumanTask",
-      "nodicsDocsNodeTopicprocessActionAdapters"
+      "nodicsDocsNodePageprocessOverview",
+      "nodicsDocsNodePageprocessFirstWorkflow",
+      "nodicsDocsNodePageprocessFirstHumanTask",
+      "nodicsDocsNodePageprocessActionAdapters"
     ],
     "locale": "en",
     "channel": "web",
     "active": true
   },
   "record166": {
-    "code": "nodicsDocsNodeTopicprocessCronjobDataAuthoring",
+    "code": "nodicsDocsNodePageprocessCronjobDataAuthoring",
     "product": "nodicsDocumentationProduct",
     "navigation": "nodicsDocumentationNavigation",
     "parentNode": "nodicsDocsNodeSeccronAndScheduledAutomation",
-    "nodeLevel": "TOPIC",
+    "nodeLevel": "PAGE_LINK",
     "nodeType": "PAGE",
     "nodeTitle": "CronJob Data Authoring",
     "nodeSummary": "How CronJob records, headers, schedules, execution policy, retry, idempotency, and Process server ownership are authored and verified.",
@@ -14187,20 +14187,20 @@ module.exports = {
       "idempotency"
     ],
     "relatedNodes": [
-      "nodicsDocsNodeTopiccronOperations",
-      "nodicsDocsNodeTopicprocessProcessCronRuntime",
-      "nodicsDocsNodeTopiccronProjectCustomization"
+      "nodicsDocsNodePagecronOperations",
+      "nodicsDocsNodePageprocessProcessCronRuntime",
+      "nodicsDocsNodePagecronProjectCustomization"
     ],
     "locale": "en",
     "channel": "web",
     "active": true
   },
   "record167": {
-    "code": "nodicsDocsNodeTopicframeworkReleaseUpgradeCompatibility",
+    "code": "nodicsDocsNodePageframeworkReleaseUpgradeCompatibility",
     "product": "nodicsDocumentationProduct",
     "navigation": "nodicsDocumentationNavigation",
     "parentNode": "nodicsDocsNodeSecreleaseStagingAndPublication",
-    "nodeLevel": "TOPIC",
+    "nodeLevel": "PAGE_LINK",
     "nodeType": "PAGE",
     "nodeTitle": "Release and Upgrade Compatibility",
     "nodeSummary": "How data release folders, generated manifests, immutable baselines, upgrades, rollback, checksum drift, and customer extensions are governed.",
@@ -14266,20 +14266,20 @@ module.exports = {
       "data-folder"
     ],
     "relatedNodes": [
-      "nodicsDocsNodeTopicdataImportExportMigration",
-      "nodicsDocsNodeTopicdocsDocumentationPublishingRunbook",
-      "nodicsDocsNodeTopicframeworkRuntimeReleaseRollback"
+      "nodicsDocsNodePagedataImportExportMigration",
+      "nodicsDocsNodePagedocsDocumentationPublishingRunbook",
+      "nodicsDocsNodePageframeworkRuntimeReleaseRollback"
     ],
     "locale": "en",
     "channel": "web",
     "active": true
   },
   "record168": {
-    "code": "nodicsDocsNodeTopiccommerceFulfillmentCoreSourceMap",
+    "code": "nodicsDocsNodePagecommerceFulfillmentCoreSourceMap",
     "product": "nodicsDocumentationProduct",
     "navigation": "nodicsDocumentationNavigation",
     "parentNode": "nodicsDocsNodeSecshippingAndFulfillment",
-    "nodeLevel": "TOPIC",
+    "nodeLevel": "PAGE_LINK",
     "nodeType": "PAGE",
     "nodeTitle": "Fulfillment Core Source Map",
     "nodeSummary": "Exact source map for fulfillment execution, carrier adapters, return execution, integration readiness, customer policy, operator evidence, and recovery.",
@@ -14345,20 +14345,20 @@ module.exports = {
       "operator"
     ],
     "relatedNodes": [
-      "nodicsDocsNodeTopicfulfillmentShippingManagement",
-      "nodicsDocsNodeTopiccommerceDataAuthoringFulfillment",
-      "nodicsDocsNodeTopiccommercePaymentProviderBoundaries"
+      "nodicsDocsNodePagefulfillmentShippingManagement",
+      "nodicsDocsNodePagecommerceDataAuthoringFulfillment",
+      "nodicsDocsNodePagecommercePaymentProviderBoundaries"
     ],
     "locale": "en",
     "channel": "web",
     "active": true
   },
   "record169": {
-    "code": "nodicsDocsNodeTopicacceleratorsDomainCommerceSourceMap",
+    "code": "nodicsDocsNodePageacceleratorsDomainCommerceSourceMap",
     "product": "nodicsDocumentationProduct",
     "navigation": "nodicsDocumentationNavigation",
     "parentNode": "nodicsDocsNodeSecacceleratorsAndIndustrySolutionTemplates",
-    "nodeLevel": "TOPIC",
+    "nodeLevel": "PAGE_LINK",
     "nodeType": "PAGE",
     "nodeTitle": "Domain Commerce Accelerator Source Map",
     "nodeSummary": "How domain commerce, electronics product, telco catalog, and telco subscription accelerators extend Commerce without becoming duplicate authorities.",
@@ -14424,20 +14424,20 @@ module.exports = {
       "subscription"
     ],
     "relatedNodes": [
-      "nodicsDocsNodeTopicacceleratorsAgoraIndustryTemplates",
-      "nodicsDocsNodeTopicacceleratorsAgoraApparelProductDataAuthoring",
-      "nodicsDocsNodeTopiccommerceSearchGuide"
+      "nodicsDocsNodePageacceleratorsAgoraIndustryTemplates",
+      "nodicsDocsNodePageacceleratorsAgoraApparelProductDataAuthoring",
+      "nodicsDocsNodePagecommerceSearchGuide"
     ],
     "locale": "en",
     "channel": "web",
     "active": true
   },
   "record170": {
-    "code": "nodicsDocsNodeTopicfoundationToolingRuntimeContracts",
+    "code": "nodicsDocsNodePagefoundationToolingRuntimeContracts",
     "product": "nodicsDocumentationProduct",
     "navigation": "nodicsDocumentationNavigation",
     "parentNode": "nodicsDocsNodeSecaiAndDeveloperTooling",
-    "nodeLevel": "TOPIC",
+    "nodeLevel": "PAGE_LINK",
     "nodeType": "PAGE",
     "nodeTitle": "Tooling Runtime Contracts",
     "nodeSummary": "How Nodics tooling commands, generated manifests, documentation validation, AI context, application builder contracts, and qualification gates are governed.",
@@ -14503,20 +14503,20 @@ module.exports = {
       "ai-context"
     ],
     "relatedNodes": [
-      "nodicsDocsNodeTopictoolingAiDeveloperEnablement",
-      "nodicsDocsNodeTopicframeworkReleaseUpgradeCompatibility",
-      "nodicsDocsNodeTopicreferenceSourceBackedDocumentationCoverageAudit"
+      "nodicsDocsNodePagetoolingAiDeveloperEnablement",
+      "nodicsDocsNodePageframeworkReleaseUpgradeCompatibility",
+      "nodicsDocsNodePagereferenceSourceBackedDocumentationCoverageAudit"
     ],
     "locale": "en",
     "channel": "web",
     "active": true
   },
   "record171": {
-    "code": "nodicsDocsNodeTopicfoundationEmsRuntimeClientRunbook",
+    "code": "nodicsDocsNodePagefoundationEmsRuntimeClientRunbook",
     "product": "nodicsDocumentationProduct",
     "navigation": "nodicsDocumentationNavigation",
     "parentNode": "nodicsDocsNodeSeceventAndMessagingManagement",
-    "nodeLevel": "TOPIC",
+    "nodeLevel": "PAGE_LINK",
     "nodeType": "PAGE",
     "nodeTitle": "EMS Runtime and Client Runbook",
     "nodeSummary": "How EMS runtime, EMS Client, broker providers, tenant resolution, retries, event processing, and operator evidence are governed.",
@@ -14582,20 +14582,20 @@ module.exports = {
       "tenant-resolution"
     ],
     "relatedNodes": [
-      "nodicsDocsNodeTopiceventsMessagingClusterCoordination",
-      "nodicsDocsNodeTopiccommunicationProviderRunbooks",
-      "nodicsDocsNodeTopicprocessWorkflowBpmSourceMap"
+      "nodicsDocsNodePageeventsMessagingClusterCoordination",
+      "nodicsDocsNodePagecommunicationProviderRunbooks",
+      "nodicsDocsNodePageprocessWorkflowBpmSourceMap"
     ],
     "locale": "en",
     "channel": "web",
     "active": true
   },
   "record172": {
-    "code": "nodicsDocsNodeTopicreferenceInternalSourceBoundaryRegister",
+    "code": "nodicsDocsNodePagereferenceInternalSourceBoundaryRegister",
     "product": "nodicsDocumentationProduct",
     "navigation": "nodicsDocumentationNavigation",
     "parentNode": "nodicsDocsNodeSecreference",
-    "nodeLevel": "TOPIC",
+    "nodeLevel": "PAGE_LINK",
     "nodeType": "PAGE",
     "nodeTitle": "Internal Source Boundary Register",
     "nodeSummary": "Owner mapping for internal provider and utility modules that are covered by broader business capability pages instead of standalone product pages.",
@@ -14661,21 +14661,21 @@ module.exports = {
       "reference"
     ],
     "relatedNodes": [
-      "nodicsDocsNodeTopicreferenceSourceBackedDocumentationCoverageAudit",
-      "nodicsDocsNodeTopicreferenceDocumentationGapBacklog",
-      "nodicsDocsNodeTopiccommercePaymentProviderBoundaries",
-      "nodicsDocsNodeTopicdiscoverySearchIndexing"
+      "nodicsDocsNodePagereferenceSourceBackedDocumentationCoverageAudit",
+      "nodicsDocsNodePagereferenceDocumentationGapBacklog",
+      "nodicsDocsNodePagecommercePaymentProviderBoundaries",
+      "nodicsDocsNodePagediscoverySearchIndexing"
     ],
     "locale": "en",
     "channel": "web",
     "active": true
   },
   "record173": {
-    "code": "nodicsDocsNodeTopictoolingAiDeveloperEnablement",
+    "code": "nodicsDocsNodePagetoolingAiDeveloperEnablement",
     "product": "nodicsDocumentationProduct",
     "navigation": "nodicsDocumentationNavigation",
     "parentNode": "nodicsDocsNodeSecaiAndDeveloperTooling",
-    "nodeLevel": "TOPIC",
+    "nodeLevel": "PAGE_LINK",
     "nodeType": "PAGE",
     "nodeTitle": "AI and Developer Tooling",
     "nodeSummary": "How AI tools, developers, and reviewers use contracts, source maps, generated context, quality gates, and documentation principles safely.",
@@ -14739,20 +14739,20 @@ module.exports = {
       "ai-and-developer-tooling"
     ],
     "relatedNodes": [
-      "nodicsDocsNodeTopicframeworkCapabilityDocumentationMaturityPattern",
-      "nodicsDocsNodeTopicdocsDocumentationRoadmap",
-      "nodicsDocsNodeTopicpipelineBusinessLogicOrchestration"
+      "nodicsDocsNodePageframeworkCapabilityDocumentationMaturityPattern",
+      "nodicsDocsNodePagedocsDocumentationRoadmap",
+      "nodicsDocsNodePagepipelineBusinessLogicOrchestration"
     ],
     "locale": "en",
     "channel": "web",
     "active": true
   },
   "record174": {
-    "code": "nodicsDocsNodeTopicreferenceSourceMapGlossary",
+    "code": "nodicsDocsNodePagereferenceSourceMapGlossary",
     "product": "nodicsDocumentationProduct",
     "navigation": "nodicsDocumentationNavigation",
     "parentNode": "nodicsDocsNodeSecreference",
-    "nodeLevel": "TOPIC",
+    "nodeLevel": "PAGE_LINK",
     "nodeType": "PAGE",
     "nodeTitle": "Reference Source Map and Glossary",
     "nodeSummary": "Business-friendly names, technical source owners, module identifiers, common terms, and navigation-to-code references for documentation readers.",
@@ -14816,20 +14816,20 @@ module.exports = {
       "reference-source-map-and-glossary"
     ],
     "relatedNodes": [
-      "nodicsDocsNodeTopicdocsDocumentationRoadmap",
-      "nodicsDocsNodeTopicplatformModuleRegistry",
-      "nodicsDocsNodeTopicframeworkCustomizationGuide"
+      "nodicsDocsNodePagedocsDocumentationRoadmap",
+      "nodicsDocsNodePageplatformModuleRegistry",
+      "nodicsDocsNodePageframeworkCustomizationGuide"
     ],
     "locale": "en",
     "channel": "web",
     "active": true
   },
   "record175": {
-    "code": "nodicsDocsNodeTopicreferenceSourceBackedDocumentationCoverageAudit",
+    "code": "nodicsDocsNodePagereferenceSourceBackedDocumentationCoverageAudit",
     "product": "nodicsDocumentationProduct",
     "navigation": "nodicsDocumentationNavigation",
     "parentNode": "nodicsDocsNodeSecreference",
-    "nodeLevel": "TOPIC",
+    "nodeLevel": "PAGE_LINK",
     "nodeType": "PAGE",
     "nodeTitle": "Source-Backed Documentation Coverage Audit",
     "nodeSummary": "Code-to-documentation coverage audit contract for finding missing or shallow Nodics functionality documentation across framework, projects, data, assets, and applications.",
@@ -14896,21 +14896,21 @@ module.exports = {
       "coverage-matrix"
     ],
     "relatedNodes": [
-      "nodicsDocsNodeTopicframeworkCapabilityDocumentationMaturityPattern",
-      "nodicsDocsNodeTopicdocsReaderJourneyAndCoverage",
-      "nodicsDocsNodeTopicdataImportExportMigration",
-      "nodicsDocsNodeTopicacceleratorsAgoraApparelProductDataAuthoring"
+      "nodicsDocsNodePageframeworkCapabilityDocumentationMaturityPattern",
+      "nodicsDocsNodePagedocsReaderJourneyAndCoverage",
+      "nodicsDocsNodePagedataImportExportMigration",
+      "nodicsDocsNodePageacceleratorsAgoraApparelProductDataAuthoring"
     ],
     "locale": "en",
     "channel": "web",
     "active": true
   },
   "record176": {
-    "code": "nodicsDocsNodeTopicreferenceDocumentationGapBacklog",
+    "code": "nodicsDocsNodePagereferenceDocumentationGapBacklog",
     "product": "nodicsDocumentationProduct",
     "navigation": "nodicsDocumentationNavigation",
     "parentNode": "nodicsDocsNodeSecreference",
-    "nodeLevel": "TOPIC",
+    "nodeLevel": "PAGE_LINK",
     "nodeType": "PAGE",
     "nodeTitle": "Documentation Gap Backlog",
     "nodeSummary": "Classified backlog for closing source-backed documentation gaps across runtime capabilities, data releases, media, applications, operations, and validation.",
@@ -14976,10 +14976,10 @@ module.exports = {
       "missing-docs"
     ],
     "relatedNodes": [
-      "nodicsDocsNodeTopicreferenceSourceBackedDocumentationCoverageAudit",
-      "nodicsDocsNodeTopicreferenceSourceMapGlossary",
-      "nodicsDocsNodeTopicframeworkCapabilityDocumentationMaturityPattern",
-      "nodicsDocsNodeTopicdataImportExportMigration"
+      "nodicsDocsNodePagereferenceSourceBackedDocumentationCoverageAudit",
+      "nodicsDocsNodePagereferenceSourceMapGlossary",
+      "nodicsDocsNodePageframeworkCapabilityDocumentationMaturityPattern",
+      "nodicsDocsNodePagedataImportExportMigration"
     ],
     "locale": "en",
     "channel": "web",

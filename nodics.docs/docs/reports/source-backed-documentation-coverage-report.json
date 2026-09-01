@@ -17,9 +17,10 @@
     "nodics.exp"
   ],
   "summary": {
-    "totalModules": 179,
+    "totalModules": 185,
     "documents": 128,
-    "needs-page-or-owner-mapping": 3,
+    "needs-page-or-owner-mapping": 6,
+    "internal-only-candidate": 3,
     "covered": 176
   },
   "policy": {
@@ -283,6 +284,96 @@
   ],
   "rows": [
     {
+      "name": "waste",
+      "kind": "group",
+      "runtimeModule": true,
+      "path": "nodics.ai/nodics.accelerators/modules/waste",
+      "packageJsonPath": "nodics.ai/nodics.accelerators/modules/waste/package.json",
+      "priorityScore": 107,
+      "classification": "needs-page-or-owner-mapping",
+      "matchedDocuments": [],
+      "counts": {
+        "schemas": 0,
+        "services": 2,
+        "controllers": 0,
+        "routers": 0,
+        "dataHeaders": 2,
+        "dataRecords": 23,
+        "assets": 0,
+        "tests": 13,
+        "frontends": 0
+      },
+      "examples": {
+        "schemas": [],
+        "services": [
+          "nodics.ai/nodics.accelerators/modules/waste/modules/circa.eWaste/src/service/defaultCircaEWasteApplicationContractService.js",
+          "nodics.ai/nodics.accelerators/modules/waste/modules/wasteRecycling/src/service/defaultWasteRecyclingHandoffContractService.js"
+        ],
+        "controllers": [],
+        "routers": [],
+        "dataHeaders": [
+          "nodics.ai/nodics.accelerators/modules/waste/modules/eWaste/data/core-v001/headers/waste/eWastePresetHeader.js",
+          "nodics.ai/nodics.accelerators/modules/waste/test/fixtures/partnerOverlay/data/project-v001/headers/waste/partnerWasteOverlayHeader.js"
+        ],
+        "dataRecords": [
+          "nodics.ai/nodics.accelerators/modules/waste/modules/eWaste/data/core-v001/records/waste/eWasteAcceptanceRuleData.js",
+          "nodics.ai/nodics.accelerators/modules/waste/modules/eWaste/data/core-v001/records/waste/eWasteAssetCreationPolicyData.js",
+          "nodics.ai/nodics.accelerators/modules/waste/modules/eWaste/data/core-v001/records/waste/eWasteAssetTransferPolicyData.js",
+          "nodics.ai/nodics.accelerators/modules/waste/modules/eWaste/data/core-v001/records/waste/eWasteAssetTypeData.js"
+        ],
+        "assets": [],
+        "tests": [
+          "nodics.ai/nodics.accelerators/modules/waste/modules/circa.eWaste/test/circaEWasteApplicationContract.test.js",
+          "nodics.ai/nodics.accelerators/modules/waste/modules/circa.eWaste/test/circaEWasteModuleContract.test.js",
+          "nodics.ai/nodics.accelerators/modules/waste/modules/eWaste/test/eWasteDataManifestContract.test.js",
+          "nodics.ai/nodics.accelerators/modules/waste/modules/eWaste/test/eWastePresetDataContract.test.js"
+        ],
+        "frontends": []
+      }
+    },
+    {
+      "name": "eWaste",
+      "kind": "capability",
+      "runtimeModule": true,
+      "path": "nodics.ai/nodics.accelerators/modules/waste/modules/eWaste",
+      "packageJsonPath": "nodics.ai/nodics.accelerators/modules/waste/modules/eWaste/package.json",
+      "priorityScore": 64,
+      "classification": "needs-page-or-owner-mapping",
+      "matchedDocuments": [],
+      "counts": {
+        "schemas": 0,
+        "services": 0,
+        "controllers": 0,
+        "routers": 0,
+        "dataHeaders": 1,
+        "dataRecords": 19,
+        "assets": 0,
+        "tests": 2,
+        "frontends": 0
+      },
+      "examples": {
+        "schemas": [],
+        "services": [],
+        "controllers": [],
+        "routers": [],
+        "dataHeaders": [
+          "nodics.ai/nodics.accelerators/modules/waste/modules/eWaste/data/core-v001/headers/waste/eWastePresetHeader.js"
+        ],
+        "dataRecords": [
+          "nodics.ai/nodics.accelerators/modules/waste/modules/eWaste/data/core-v001/records/waste/eWasteAcceptanceRuleData.js",
+          "nodics.ai/nodics.accelerators/modules/waste/modules/eWaste/data/core-v001/records/waste/eWasteAssetCreationPolicyData.js",
+          "nodics.ai/nodics.accelerators/modules/waste/modules/eWaste/data/core-v001/records/waste/eWasteAssetTransferPolicyData.js",
+          "nodics.ai/nodics.accelerators/modules/waste/modules/eWaste/data/core-v001/records/waste/eWasteAssetTypeData.js"
+        ],
+        "assets": [],
+        "tests": [
+          "nodics.ai/nodics.accelerators/modules/waste/modules/eWaste/test/eWasteDataManifestContract.test.js",
+          "nodics.ai/nodics.accelerators/modules/waste/modules/eWaste/test/eWastePresetDataContract.test.js"
+        ],
+        "frontends": []
+      }
+    },
+    {
       "name": "wcmsExperience",
       "kind": "capability",
       "runtimeModule": true,
@@ -421,12 +512,158 @@
       }
     },
     {
+      "name": "kickoffWaste",
+      "kind": "capability",
+      "runtimeModule": true,
+      "path": "nodics.kickoff/modules/kickoffWaste",
+      "packageJsonPath": "nodics.kickoff/modules/kickoffWaste/package.json",
+      "priorityScore": 17,
+      "classification": "needs-page-or-owner-mapping",
+      "matchedDocuments": [],
+      "counts": {
+        "schemas": 0,
+        "services": 0,
+        "controllers": 0,
+        "routers": 0,
+        "dataHeaders": 1,
+        "dataRecords": 4,
+        "assets": 0,
+        "tests": 1,
+        "frontends": 0
+      },
+      "examples": {
+        "schemas": [],
+        "services": [],
+        "controllers": [],
+        "routers": [],
+        "dataHeaders": [
+          "nodics.kickoff/modules/kickoffWaste/data/core-v001/headers/waste/kickoffWasteOverlayHeader.js"
+        ],
+        "dataRecords": [
+          "nodics.kickoff/modules/kickoffWaste/data/core-v001/records/waste/kickoffWasteAcceptanceRuleData.js",
+          "nodics.kickoff/modules/kickoffWaste/data/core-v001/records/waste/kickoffWasteCategoryData.js",
+          "nodics.kickoff/modules/kickoffWaste/data/core-v001/records/waste/kickoffWasteCollectionPresetData.js",
+          "nodics.kickoff/modules/kickoffWaste/data/core-v001/records/waste/kickoffWasteImpactProfileData.js"
+        ],
+        "assets": [],
+        "tests": [
+          "nodics.kickoff/modules/kickoffWaste/test/kickoffWasteOverlayContract.test.js"
+        ],
+        "frontends": []
+      }
+    },
+    {
+      "name": "circa.eWaste",
+      "kind": "capability",
+      "runtimeModule": true,
+      "path": "nodics.ai/nodics.accelerators/modules/waste/modules/circa.eWaste",
+      "packageJsonPath": "nodics.ai/nodics.accelerators/modules/waste/modules/circa.eWaste/package.json",
+      "priorityScore": 7,
+      "classification": "internal-only-candidate",
+      "matchedDocuments": [],
+      "counts": {
+        "schemas": 0,
+        "services": 1,
+        "controllers": 0,
+        "routers": 0,
+        "dataHeaders": 0,
+        "dataRecords": 0,
+        "assets": 0,
+        "tests": 2,
+        "frontends": 0
+      },
+      "examples": {
+        "schemas": [],
+        "services": [
+          "nodics.ai/nodics.accelerators/modules/waste/modules/circa.eWaste/src/service/defaultCircaEWasteApplicationContractService.js"
+        ],
+        "controllers": [],
+        "routers": [],
+        "dataHeaders": [],
+        "dataRecords": [],
+        "assets": [],
+        "tests": [
+          "nodics.ai/nodics.accelerators/modules/waste/modules/circa.eWaste/test/circaEWasteApplicationContract.test.js",
+          "nodics.ai/nodics.accelerators/modules/waste/modules/circa.eWaste/test/circaEWasteModuleContract.test.js"
+        ],
+        "frontends": []
+      }
+    },
+    {
+      "name": "wasteRecycling",
+      "kind": "capability",
+      "runtimeModule": true,
+      "path": "nodics.ai/nodics.accelerators/modules/waste/modules/wasteRecycling",
+      "packageJsonPath": "nodics.ai/nodics.accelerators/modules/waste/modules/wasteRecycling/package.json",
+      "priorityScore": 5,
+      "classification": "internal-only-candidate",
+      "matchedDocuments": [],
+      "counts": {
+        "schemas": 0,
+        "services": 1,
+        "controllers": 0,
+        "routers": 0,
+        "dataHeaders": 0,
+        "dataRecords": 0,
+        "assets": 0,
+        "tests": 1,
+        "frontends": 0
+      },
+      "examples": {
+        "schemas": [],
+        "services": [
+          "nodics.ai/nodics.accelerators/modules/waste/modules/wasteRecycling/src/service/defaultWasteRecyclingHandoffContractService.js"
+        ],
+        "controllers": [],
+        "routers": [],
+        "dataHeaders": [],
+        "dataRecords": [],
+        "assets": [],
+        "tests": [
+          "nodics.ai/nodics.accelerators/modules/waste/modules/wasteRecycling/test/wasteRecyclingHandoffContract.test.js"
+        ],
+        "frontends": []
+      }
+    },
+    {
+      "name": "wasteServer",
+      "kind": "server",
+      "runtimeModule": true,
+      "path": "nodics.kickoff/envs/kickoffLocal/wasteServer",
+      "packageJsonPath": "nodics.kickoff/envs/kickoffLocal/wasteServer/package.json",
+      "priorityScore": 0,
+      "classification": "internal-only-candidate",
+      "matchedDocuments": [],
+      "counts": {
+        "schemas": 0,
+        "services": 0,
+        "controllers": 0,
+        "routers": 0,
+        "dataHeaders": 0,
+        "dataRecords": 0,
+        "assets": 0,
+        "tests": 0,
+        "frontends": 0
+      },
+      "examples": {
+        "schemas": [],
+        "services": [],
+        "controllers": [],
+        "routers": [],
+        "dataHeaders": [],
+        "dataRecords": [],
+        "assets": [],
+        "tests": [],
+        "frontends": []
+      }
+    },
+    {
       "name": "nodics.foundation",
       "kind": "group",
       "runtimeModule": true,
       "path": "nodics.ai/nodics.foundation",
       "packageJsonPath": "nodics.ai/nodics.foundation/package.json",
-      "priorityScore": 4190,
+      "priorityScore": 4265,
       "classification": "covered",
       "matchedDocuments": [
         "framework.what-is-nodics",
@@ -438,7 +675,7 @@
       ],
       "counts": {
         "schemas": 40,
-        "services": 596,
+        "services": 621,
         "controllers": 255,
         "routers": 86,
         "dataHeaders": 3,
@@ -498,7 +735,7 @@
       "runtimeModule": false,
       "path": "nodics.kickoff/modules",
       "packageJsonPath": "nodics.kickoff/modules/package.json",
-      "priorityScore": 1014,
+      "priorityScore": 1031,
       "classification": "covered",
       "matchedDocuments": [
         "framework.what-is-nodics",
@@ -513,10 +750,10 @@
         "services": 1,
         "controllers": 0,
         "routers": 0,
-        "dataHeaders": 15,
-        "dataRecords": 108,
+        "dataHeaders": 16,
+        "dataRecords": 112,
         "assets": 320,
-        "tests": 1,
+        "tests": 2,
         "frontends": 0
       },
       "examples": {
@@ -545,6 +782,7 @@
           "nodics.kickoff/modules/agora.apparel/data/sample-v001/content/assets/agora-cms-media/files/agora-owned-collection-accessories.jpg"
         ],
         "tests": [
+          "nodics.kickoff/modules/kickoffWaste/test/kickoffWasteOverlayContract.test.js",
           "nodics.kickoff/modules/nexus.web/test/expectedOnlineProjections/nexusEditorialOnlineArticleData.js"
         ],
         "frontends": []
@@ -602,7 +840,7 @@
       "runtimeModule": true,
       "path": "nodics.ai/nodics.foundation/modules/nService",
       "packageJsonPath": "nodics.ai/nodics.foundation/modules/nService/package.json",
-      "priorityScore": 797,
+      "priorityScore": 872,
       "classification": "covered",
       "matchedDocuments": [
         "framework.what-is-nodics",
@@ -614,7 +852,7 @@
       ],
       "counts": {
         "schemas": 1,
-        "services": 252,
+        "services": 277,
         "controllers": 0,
         "routers": 2,
         "dataHeaders": 0,
@@ -1343,6 +1581,73 @@
       }
     },
     {
+      "name": "nodics.accelerators",
+      "kind": "group",
+      "runtimeModule": true,
+      "path": "nodics.ai/nodics.accelerators",
+      "packageJsonPath": "nodics.ai/nodics.accelerators/package.json",
+      "priorityScore": 268,
+      "classification": "covered",
+      "matchedDocuments": [
+        "framework.what-is-nodics",
+        "framework.adoption-and-first-journey",
+        "docs.reader-journey-and-coverage",
+        "framework.modular-architecture",
+        "accelerators.agora-industry-templates",
+        "accelerators.agora-apparel-product-data-authoring"
+      ],
+      "counts": {
+        "schemas": 6,
+        "services": 13,
+        "controllers": 0,
+        "routers": 12,
+        "dataHeaders": 2,
+        "dataRecords": 23,
+        "assets": 0,
+        "tests": 32,
+        "frontends": 0
+      },
+      "examples": {
+        "schemas": [
+          "nodics.ai/nodics.accelerators/modules/apparel/modules/apparelProduct/src/schemas/schemas.js",
+          "nodics.ai/nodics.accelerators/modules/domainCommerceCore/src/schemas/schemas.js",
+          "nodics.ai/nodics.accelerators/modules/electronics/modules/electronicsProduct/src/schemas/schemas.js",
+          "nodics.ai/nodics.accelerators/modules/telco/modules/telcoCatalog/src/schemas/schemas.js"
+        ],
+        "services": [
+          "nodics.ai/nodics.accelerators/modules/apparel/modules/apparelProduct/src/service/defaultApparelProductProjectionService.js",
+          "nodics.ai/nodics.accelerators/modules/apparel/modules/apparelProduct/src/service/defaultApparelProductSearchEnrichmentService.js",
+          "nodics.ai/nodics.accelerators/modules/apparel/modules/apparelProduct/src/service/defaultApparelProductValidationService.js",
+          "nodics.ai/nodics.accelerators/modules/domainCommerceCore/src/service/defaultDomainCommerceCorePolicyService.js"
+        ],
+        "controllers": [],
+        "routers": [
+          "nodics.ai/nodics.accelerators/modules/apparel/modules/apparelProduct/src/router/appConfig.js",
+          "nodics.ai/nodics.accelerators/modules/apparel/modules/apparelProduct/src/router/routers.js",
+          "nodics.ai/nodics.accelerators/modules/domainCommerceCore/src/router/appConfig.js",
+          "nodics.ai/nodics.accelerators/modules/domainCommerceCore/src/router/routers.js"
+        ],
+        "dataHeaders": [
+          "nodics.ai/nodics.accelerators/modules/waste/modules/eWaste/data/core-v001/headers/waste/eWastePresetHeader.js",
+          "nodics.ai/nodics.accelerators/modules/waste/test/fixtures/partnerOverlay/data/project-v001/headers/waste/partnerWasteOverlayHeader.js"
+        ],
+        "dataRecords": [
+          "nodics.ai/nodics.accelerators/modules/waste/modules/eWaste/data/core-v001/records/waste/eWasteAcceptanceRuleData.js",
+          "nodics.ai/nodics.accelerators/modules/waste/modules/eWaste/data/core-v001/records/waste/eWasteAssetCreationPolicyData.js",
+          "nodics.ai/nodics.accelerators/modules/waste/modules/eWaste/data/core-v001/records/waste/eWasteAssetTransferPolicyData.js",
+          "nodics.ai/nodics.accelerators/modules/waste/modules/eWaste/data/core-v001/records/waste/eWasteAssetTypeData.js"
+        ],
+        "assets": [],
+        "tests": [
+          "nodics.ai/nodics.accelerators/modules/apparel/modules/apparelProduct/test/apparelProductContract.test.js",
+          "nodics.ai/nodics.accelerators/modules/apparel/modules/apparelProduct/test/gen/schema/apparelFitProfileSchemaContract.test.js",
+          "nodics.ai/nodics.accelerators/modules/apparel/modules/apparelProduct/test/gen/schema/apparelSizeSystemSchemaContract.test.js",
+          "nodics.ai/nodics.accelerators/modules/apparel/modules/apparelProduct/test/gen/schema/apparelStyleSchemaContract.test.js"
+        ],
+        "frontends": []
+      }
+    },
+    {
       "name": "cms",
       "kind": "capability",
       "runtimeModule": true,
@@ -1825,65 +2130,6 @@
           "nodics.ai/nodics.foundation/modules/nDynamo/test/classConfigurationServiceContract.test.js",
           "nodics.ai/nodics.foundation/modules/nDynamo/test/common/commonTest.js",
           "nodics.ai/nodics.foundation/modules/nDynamo/test/dynamoRouteContract.test.js"
-        ],
-        "frontends": []
-      }
-    },
-    {
-      "name": "nodics.accelerators",
-      "kind": "group",
-      "runtimeModule": true,
-      "path": "nodics.ai/nodics.accelerators",
-      "packageJsonPath": "nodics.ai/nodics.accelerators/package.json",
-      "priorityScore": 161,
-      "classification": "covered",
-      "matchedDocuments": [
-        "framework.what-is-nodics",
-        "framework.adoption-and-first-journey",
-        "docs.reader-journey-and-coverage",
-        "framework.modular-architecture",
-        "accelerators.agora-industry-templates",
-        "accelerators.agora-apparel-product-data-authoring"
-      ],
-      "counts": {
-        "schemas": 6,
-        "services": 11,
-        "controllers": 0,
-        "routers": 12,
-        "dataHeaders": 0,
-        "dataRecords": 0,
-        "assets": 0,
-        "tests": 19,
-        "frontends": 0
-      },
-      "examples": {
-        "schemas": [
-          "nodics.ai/nodics.accelerators/modules/apparel/modules/apparelProduct/src/schemas/schemas.js",
-          "nodics.ai/nodics.accelerators/modules/domainCommerceCore/src/schemas/schemas.js",
-          "nodics.ai/nodics.accelerators/modules/electronics/modules/electronicsProduct/src/schemas/schemas.js",
-          "nodics.ai/nodics.accelerators/modules/telco/modules/telcoCatalog/src/schemas/schemas.js"
-        ],
-        "services": [
-          "nodics.ai/nodics.accelerators/modules/apparel/modules/apparelProduct/src/service/defaultApparelProductProjectionService.js",
-          "nodics.ai/nodics.accelerators/modules/apparel/modules/apparelProduct/src/service/defaultApparelProductSearchEnrichmentService.js",
-          "nodics.ai/nodics.accelerators/modules/apparel/modules/apparelProduct/src/service/defaultApparelProductValidationService.js",
-          "nodics.ai/nodics.accelerators/modules/domainCommerceCore/src/service/defaultDomainCommerceCorePolicyService.js"
-        ],
-        "controllers": [],
-        "routers": [
-          "nodics.ai/nodics.accelerators/modules/apparel/modules/apparelProduct/src/router/appConfig.js",
-          "nodics.ai/nodics.accelerators/modules/apparel/modules/apparelProduct/src/router/routers.js",
-          "nodics.ai/nodics.accelerators/modules/domainCommerceCore/src/router/appConfig.js",
-          "nodics.ai/nodics.accelerators/modules/domainCommerceCore/src/router/routers.js"
-        ],
-        "dataHeaders": [],
-        "dataRecords": [],
-        "assets": [],
-        "tests": [
-          "nodics.ai/nodics.accelerators/modules/apparel/modules/apparelProduct/test/apparelProductContract.test.js",
-          "nodics.ai/nodics.accelerators/modules/apparel/modules/apparelProduct/test/gen/schema/apparelFitProfileSchemaContract.test.js",
-          "nodics.ai/nodics.accelerators/modules/apparel/modules/apparelProduct/test/gen/schema/apparelSizeSystemSchemaContract.test.js",
-          "nodics.ai/nodics.accelerators/modules/apparel/modules/apparelProduct/test/gen/schema/apparelStyleSchemaContract.test.js"
         ],
         "frontends": []
       }

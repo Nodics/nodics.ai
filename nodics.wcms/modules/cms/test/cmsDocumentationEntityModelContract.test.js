@@ -76,9 +76,6 @@ assert.strictEqual(
 
 assert.deepStrictEqual(schemas.cmsDocumentationNode.definition.nodeLevel.enum, [
   "SECTION",
-  "GROUP",
-  "SUBGROUP",
-  "TOPIC",
   "PAGE_LINK",
 ]);
 assert.deepStrictEqual(schemas.cmsDocumentationNode.definition.nodeType.enum, [
@@ -180,7 +177,7 @@ assert.deepStrictEqual(
 
 assert.deepStrictEqual(
   schemas.cmsDocumentationDashboard.definition.ownerType.enum,
-  ["PRODUCT", "NAVIGATION", "SECTION", "GROUP", "SUBGROUP", "TOPIC"],
+  ["PRODUCT", "NAVIGATION", "SECTION", "PAGE_LINK"],
 );
 assert.strictEqual(
   schemas.cmsDocumentationDashboard.definition.summary.description.includes(

@@ -149,7 +149,7 @@ function assertCatalogueShape() {
     if (!/\bbusiness\b/i.test(body) || !/\bdevelopers?\b/i.test(body) || !/\b(beginner|beginners)\b/i.test(body) || !/\b(operator|production|devops)\b/i.test(body)) fail(`Page lacks audience balance: ${document.id}`);
     if (!(/\bbusiness\b/i.test(body) && /\b(problem|context|solves|value|journey|decision)\b/i.test(body))) fail(`Page lacks business problem/context: ${document.id}`);
     if (!/(customization and extension|customization model|developer journey|extension guidance|customize|extension)/i.test(body)) fail(`Page lacks customization or extension guidance: ${document.id}`);
-    if ((document.visualRequirements || []).includes('configuration-table') && !/\bconfiguration\b/i.test(body)) fail(`Configuration-topic page lacks configuration behavior detail: ${document.id}`);
+    if ((document.visualRequirements || []).includes('configuration-table') && !/\bconfiguration\b/i.test(body)) fail(`Configuration page lacks configuration behavior detail: ${document.id}`);
     if (!/^## Common mistakes\b/im.test(body) || !/^## Verification\b/im.test(body)) fail(`Page lacks common mistakes or verification: ${document.id}`);
   }
   for (const section of catalogue.navigationSections || []) {
@@ -171,7 +171,7 @@ function assertGeneratedData() {
   const search = loadGeneratedRecords('data/core-v001/records/documentation/nodicsDocumentationSearchMetadataData.js');
   const pages = loadGeneratedRecords('data/core-v001/records/documentation/nodicsDocumentationPageMetadataData.js');
   const policies = loadGeneratedRecords('data/core-v001/records/documentation/nodicsDocumentationAccessPolicyData.js');
-  if (!nodes.every(node => node.expandable === true || node.nodeLevel === 'TOPIC')) fail('Container navigation nodes must be expandable');
+  if (!nodes.every(node => node.expandable === true || node.nodeLevel === 'PAGE_LINK')) fail('Container navigation nodes must be expandable');
   if (!nodes.every(node => node.nodeSummary && node.nodeContentArea)) fail('Every navigation node requires summary and content-area metadata');
   if (!nodes.every(node => node.accessPolicy && node.workflowRequired === true && Array.isArray(node.workflowTriggers) && node.workflowTriggers.length)) fail('Every navigation node requires access policy and workflow triggers');
   if (!dashboards.every(dashboard => dashboard.summary && dashboard.contentArea && Array.isArray(dashboard.cards))) fail('Dashboard records require summary, content area, and cards');
@@ -183,8 +183,8 @@ function assertGeneratedData() {
   if (!publications.every(item => item.validationResult && item.validationResult.publicationPath === 'STAGED_REVIEW_APPROVAL_ONLINE' && Object.prototype.hasOwnProperty.call(item, 'author') && Object.prototype.hasOwnProperty.call(item, 'reviewer') && Object.prototype.hasOwnProperty.call(item, 'approver') && Object.prototype.hasOwnProperty.call(item, 'publisher'))) fail('Publication state records require actor evidence and Staged review approval Online path');
   if (!search.every(item => item.searchText && item.indexState === 'INDEX_READY' && item.accessPolicy && item.lifecycleState && Array.isArray(item.keywords) && item.facets && item.workflowRequired === true)) fail('Search metadata must be index-ready with access, lifecycle, keywords, facets, and workflow metadata');
   for (const page of pages) {
-    const topicNodes = nodes.filter(node => node.nodeLevel === 'TOPIC' && node.targetDocumentationPage === page.code);
-    if (topicNodes.length !== 1) fail(`Page must belong to exactly one topic node: ${page.documentId}`);
+    const pageLinkNodes = nodes.filter(node => node.nodeLevel === 'PAGE_LINK' && node.targetDocumentationPage === page.code);
+    if (pageLinkNodes.length !== 1) fail(`Page must belong to exactly one page-link node: ${page.documentId}`);
   }
 }
 

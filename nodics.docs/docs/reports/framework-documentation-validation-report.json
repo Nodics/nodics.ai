@@ -105,7 +105,7 @@
       "passed": true,
       "target": "cmsDocumentationNode.parentNode",
       "message": "Every child node must reference an existing parent node.",
-      "remediation": "Create the missing parent node or move the child under an existing section/group/subgroup."
+      "remediation": "Create the missing parent node or move the child under an existing section."
     },
     {
       "id": "circular-navigation-hierarchy",
@@ -124,7 +124,7 @@
       "remediation": "Break the loop by assigning one node to an ancestor-free parent."
     },
     {
-      "id": "page-topic-cardinality",
+      "id": "page-link-cardinality",
       "category": "hierarchy",
       "severity": "error",
       "owner": "nodics.docs",
@@ -136,11 +136,11 @@
       ],
       "passed": true,
       "target": "cmsDocumentationPage",
-      "message": "Every documentation page must belong to exactly one topic node.",
-      "remediation": "Create one topic node for the page, or remove duplicate topic nodes pointing to the same page."
+      "message": "Every documentation page must belong to exactly one page-link node.",
+      "remediation": "Create one page-link node for the page, or remove duplicate page-link nodes pointing to the same page."
     },
     {
-      "id": "topic-page-target",
+      "id": "page-link-target",
       "category": "rendering",
       "severity": "error",
       "owner": "nodics.docs",
@@ -152,7 +152,7 @@
       ],
       "passed": true,
       "target": "cmsDocumentationNode.targetDocumentationPage",
-      "message": "Every topic node must point to an existing documentation page metadata record.",
+      "message": "Every page-link node must point to an existing documentation page metadata record.",
       "remediation": "Assign targetDocumentationPage to an existing page metadata record."
     },
     {
@@ -185,7 +185,7 @@
       "passed": true,
       "target": "cmsDocumentationNode.nodeDashboard",
       "message": "Container nodes must expose dashboard/content-area metadata.",
-      "remediation": "Attach a dashboard and nodeContentArea to every section, group, and subgroup node."
+      "remediation": "Attach a dashboard and nodeContentArea to every section container node."
     },
     {
       "id": "page-route-component-reference",
@@ -455,7 +455,7 @@
     "readinessScore": 100
   },
   "integrity": {
-    "checksum": "c75abe3b589e52239d5e767d2e778278a0938d6104f3b4d26f05067de7055e8e",
+    "checksum": "14484fcdcc0ca716c739beefb8043f3124868199ffffa8be3765093a6e7d3a06",
     "meaning": "Deterministic digest for validation-report integrity; it is not a production approval signature."
   }
 }

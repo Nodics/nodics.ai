@@ -204,7 +204,7 @@ const exportedService = {
         const policies = new Map(accessPolicyRecords.map(item => [item.code, item]));
         const publicationByTarget = new Map(publicationStateRecords.map(item => [this.key(item.targetType, item.targetCode), item]));
         const searchByTarget = new Map(searchMetadataRecords.map(item => [this.key(item.targetType, item.targetCode), item]));
-        const topicCountByPage = new Map();
+        const pageLinkCountByPage = new Map();
 
         this.addCheck(report, {
             id: 'product-content-catalog-alignment',
@@ -247,7 +247,7 @@ const exportedService = {
             passed: missingParents.length === 0,
             target: missingParents.map(node => node.code).join(', ') || 'cmsDocumentationNode.parentNode',
             message: 'Every child node must reference an existing parent node.',
-            remediation: 'Create the missing parent node or move the child under an existing section/group/subgroup.',
+            remediation: 'Create the missing parent node or move the child under an existing section.',
         });
 
         let hasCycle = false;
@@ -272,26 +272,26 @@ const exportedService = {
             remediation: 'Break the loop by assigning one node to an ancestor-free parent.',
         });
 
-        for (const node of nodeRecords.filter(item => item.nodeLevel === 'TOPIC')) {
-            topicCountByPage.set(node.targetDocumentationPage, (topicCountByPage.get(node.targetDocumentationPage) || 0) + 1);
+        for (const node of nodeRecords.filter(item => item.nodeLevel === 'PAGE_LINK')) {
+            pageLinkCountByPage.set(node.targetDocumentationPage, (pageLinkCountByPage.get(node.targetDocumentationPage) || 0) + 1);
         }
-        const pagesWithoutOneTopic = pageMetadataRecords.filter(page => topicCountByPage.get(page.code) !== 1);
+        const pagesWithoutOnePageLink = pageMetadataRecords.filter(page => pageLinkCountByPage.get(page.code) !== 1);
         this.addCheck(report, {
-            id: 'page-topic-cardinality',
+            id: 'page-link-cardinality',
             category: 'hierarchy',
-            passed: pagesWithoutOneTopic.length === 0,
-            target: pagesWithoutOneTopic.map(page => page.documentId || page.code).join(', ') || 'cmsDocumentationPage',
-            message: 'Every documentation page must belong to exactly one topic node.',
-            remediation: 'Create one topic node for the page, or remove duplicate topic nodes pointing to the same page.',
+            passed: pagesWithoutOnePageLink.length === 0,
+            target: pagesWithoutOnePageLink.map(page => page.documentId || page.code).join(', ') || 'cmsDocumentationPage',
+            message: 'Every documentation page must belong to exactly one page-link node.',
+            remediation: 'Create one page-link node for the page, or remove duplicate page-link nodes pointing to the same page.',
         });
 
-        const brokenTopicTargets = nodeRecords.filter(node => node.nodeLevel === 'TOPIC' && (!node.targetDocumentationPage || !pages.has(node.targetDocumentationPage)));
+        const brokenPageLinkTargets = nodeRecords.filter(node => node.nodeLevel === 'PAGE_LINK' && (!node.targetDocumentationPage || !pages.has(node.targetDocumentationPage)));
         this.addCheck(report, {
-            id: 'topic-page-target',
+            id: 'page-link-target',
             category: 'rendering',
-            passed: brokenTopicTargets.length === 0,
-            target: brokenTopicTargets.map(node => node.code).join(', ') || 'cmsDocumentationNode.targetDocumentationPage',
-            message: 'Every topic node must point to an existing documentation page metadata record.',
+            passed: brokenPageLinkTargets.length === 0,
+            target: brokenPageLinkTargets.map(node => node.code).join(', ') || 'cmsDocumentationNode.targetDocumentationPage',
+            message: 'Every page-link node must point to an existing documentation page metadata record.',
             remediation: 'Assign targetDocumentationPage to an existing page metadata record.',
         });
 
@@ -312,7 +312,7 @@ const exportedService = {
             passed: missingNodeDashboards.length === 0,
             target: missingNodeDashboards.map(node => node.code).join(', ') || 'cmsDocumentationNode.nodeDashboard',
             message: 'Container nodes must expose dashboard/content-area metadata.',
-            remediation: 'Attach a dashboard and nodeContentArea to every section, group, and subgroup node.',
+            remediation: 'Attach a dashboard and nodeContentArea to every section container node.',
         });
 
         const missingRenderRecords = pageMetadataRecords.filter(page => !cmsPages.has(page.targetPage) || !routes.has(page.targetRoute) || !components.has(page.articleComponent));

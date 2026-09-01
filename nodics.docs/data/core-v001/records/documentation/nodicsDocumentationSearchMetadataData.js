@@ -2099,10 +2099,10 @@ module.exports = {
     "active": true
   },
   "record51": {
-    "code": "nodicsDocsSearchnodenodicsdocsnodetopicframeworkwhatisnodics",
+    "code": "nodicsDocsSearchnodenodicsdocsnodepageframeworkwhatisnodics",
     "product": "nodicsDocumentationProduct",
     "targetType": "NODE",
-    "targetCode": "nodicsDocsNodeTopicframeworkWhatIsNodics",
+    "targetCode": "nodicsDocsNodePageframeworkWhatIsNodics",
     "title": "What is Nodics?",
     "summary": "Introductory definition of Nodics, its enterprise purpose, and the first mental model for business, developer, and operator readers.",
     "searchText": "What is Nodics? Introductory definition of Nodics, its enterprise purpose, and the first mental model for business, developer, and operator readers. nodics-framework framework-value-and-adoption what-is-nodics enterprise-framework",
@@ -2113,7 +2113,7 @@ module.exports = {
       "enterprise-framework"
     ],
     "facets": {
-      "nodeLevel": "TOPIC",
+      "nodeLevel": "PAGE_LINK",
       "nodeType": "PAGE",
       "audience": [
         "business",
@@ -2142,10 +2142,10 @@ module.exports = {
     "active": true
   },
   "record52": {
-    "code": "nodicsDocsSearchnodenodicsdocsnodetopicframeworkwhynodicsexists",
+    "code": "nodicsDocsSearchnodenodicsdocsnodepageframeworkwhynodicsexists",
     "product": "nodicsDocumentationProduct",
     "targetType": "NODE",
-    "targetCode": "nodicsDocsNodeTopicframeworkWhyNodicsExists",
+    "targetCode": "nodicsDocsNodePageframeworkWhyNodicsExists",
     "title": "Why Nodics Exists",
     "summary": "Industry problems, business value, and why Nodics turns fast delivery into governed enterprise software.",
     "searchText": "Why Nodics Exists Industry problems, business value, and why Nodics turns fast delivery into governed enterprise software. nodics-framework framework-value-and-adoption why-nodics-exists business-value enterprise-problems",
@@ -2157,7 +2157,7 @@ module.exports = {
       "enterprise-problems"
     ],
     "facets": {
-      "nodeLevel": "TOPIC",
+      "nodeLevel": "PAGE_LINK",
       "nodeType": "PAGE",
       "audience": [
         "business",
@@ -2186,10 +2186,10 @@ module.exports = {
     "active": true
   },
   "record53": {
-    "code": "nodicsDocsSearchnodenodicsdocsnodetopicframeworkhownodicsworks",
+    "code": "nodicsDocsSearchnodenodicsdocsnodepageframeworkhownodicsworks",
     "product": "nodicsDocumentationProduct",
     "targetType": "NODE",
-    "targetCode": "nodicsDocsNodeTopicframeworkHowNodicsWorks",
+    "targetCode": "nodicsDocsNodePageframeworkHowNodicsWorks",
     "title": "How Nodics Works",
     "summary": "Mental model for framework modules, customer projects, Axis, public applications, runtime ownership, and customization.",
     "searchText": "How Nodics Works Mental model for framework modules, customer projects, Axis, public applications, runtime ownership, and customization. nodics-framework framework-value-and-adoption how-nodics-works runtime-model backend-driven-experience",
@@ -2201,7 +2201,7 @@ module.exports = {
       "backend-driven-experience"
     ],
     "facets": {
-      "nodeLevel": "TOPIC",
+      "nodeLevel": "PAGE_LINK",
       "nodeType": "PAGE",
       "audience": [
         "business",
@@ -2230,10 +2230,10 @@ module.exports = {
     "active": true
   },
   "record54": {
-    "code": "nodicsDocsSearchnodenodicsdocsnodetopicframeworkadoptionandfirstjourney",
+    "code": "nodicsDocsSearchnodenodicsdocsnodepageframeworkadoptionandfirstjourney",
     "product": "nodicsDocumentationProduct",
     "targetType": "NODE",
-    "targetCode": "nodicsDocsNodeTopicframeworkAdoptionAndFirstJourney",
+    "targetCode": "nodicsDocsNodePageframeworkAdoptionAndFirstJourney",
     "title": "Adoption and First Journey",
     "summary": "The first business, developer, and operator path through setup, capability registration, imports, publishing, and browser verification.",
     "searchText": "Adoption and First Journey The first business, developer, and operator path through setup, capability registration, imports, publishing, and browser verification. nodics-framework framework-value-and-adoption adoption first-journey fresh-schema-setup",
@@ -2245,7 +2245,7 @@ module.exports = {
       "fresh-schema-setup"
     ],
     "facets": {
-      "nodeLevel": "TOPIC",
+      "nodeLevel": "PAGE_LINK",
       "nodeType": "PAGE",
       "audience": [
         "business",
@@ -2274,10 +2274,10 @@ module.exports = {
     "active": true
   },
   "record55": {
-    "code": "nodicsDocsSearchnodenodicsdocsnodetopicdocsdocumentationroadmap",
+    "code": "nodicsDocsSearchnodenodicsdocsnodepagedocsdocumentationroadmap",
     "product": "nodicsDocumentationProduct",
     "targetType": "NODE",
-    "targetCode": "nodicsDocsNodeTopicdocsDocumentationRoadmap",
+    "targetCode": "nodicsDocsNodePagedocsDocumentationRoadmap",
     "title": "Documentation Roadmap",
     "summary": "How the Nodics documentation product is organized and how readers choose the right path through the enterprise hierarchy.",
     "searchText": "Documentation Roadmap How the Nodics documentation product is organized and how readers choose the right path through the enterprise hierarchy. documentation-roadmap documentation-organization reader-navigation",
@@ -2287,7 +2287,7 @@ module.exports = {
       "reader-navigation"
     ],
     "facets": {
-      "nodeLevel": "TOPIC",
+      "nodeLevel": "PAGE_LINK",
       "nodeType": "PAGE",
       "audience": [
         "business",
@@ -2316,10 +2316,10 @@ module.exports = {
     "active": true
   },
   "record56": {
-    "code": "nodicsDocsSearchnodenodicsdocsnodetopicdocsdocumentationprinciples",
+    "code": "nodicsDocsSearchnodenodicsdocsnodepagedocsdocumentationprinciples",
     "product": "nodicsDocumentationProduct",
     "targetType": "NODE",
-    "targetCode": "nodicsDocsNodeTopicdocsDocumentationPrinciples",
+    "targetCode": "nodicsDocsNodePagedocsDocumentationPrinciples",
     "title": "Documentation Principles",
     "summary": "Framework-level documentation rules for README thinness, detailed docs depth, visual evidence, customization, publishing, and access.",
     "searchText": "Documentation Principles Framework-level documentation rules for README thinness, detailed docs depth, visual evidence, customization, publishing, and access. documentation-roadmap reader-journey-and-coverage-map documentation-principles readme-contract visual-contract",
@@ -2331,7 +2331,7 @@ module.exports = {
       "visual-contract"
     ],
     "facets": {
-      "nodeLevel": "TOPIC",
+      "nodeLevel": "PAGE_LINK",
       "nodeType": "PAGE",
       "audience": [
         "business",
@@ -2360,10 +2360,10 @@ module.exports = {
     "active": true
   },
   "record57": {
-    "code": "nodicsDocsSearchnodenodicsdocsnodetopicdocsreaderjourneyandcoverage",
+    "code": "nodicsDocsSearchnodenodicsdocsnodepagedocsreaderjourneyandcoverage",
     "product": "nodicsDocumentationProduct",
     "targetType": "NODE",
-    "targetCode": "nodicsDocsNodeTopicdocsReaderJourneyAndCoverage",
+    "targetCode": "nodicsDocsNodePagedocsReaderJourneyAndCoverage",
     "title": "Reader Journey and Coverage",
     "summary": "How business users, developers, operators, QA owners, administrators, and AI tools navigate capability documentation.",
     "searchText": "Reader Journey and Coverage How business users, developers, operators, QA owners, administrators, and AI tools navigate capability documentation. documentation-roadmap reader-journey-and-coverage-map reader-journey coverage-map audience-paths",
@@ -2375,7 +2375,7 @@ module.exports = {
       "audience-paths"
     ],
     "facets": {
-      "nodeLevel": "TOPIC",
+      "nodeLevel": "PAGE_LINK",
       "nodeType": "PAGE",
       "audience": [
         "business",
@@ -2404,10 +2404,10 @@ module.exports = {
     "active": true
   },
   "record58": {
-    "code": "nodicsDocsSearchnodenodicsdocsnodetopicdocsdocumentationpublishingmodel",
+    "code": "nodicsDocsSearchnodenodicsdocsnodepagedocsdocumentationpublishingmodel",
     "product": "nodicsDocumentationProduct",
     "targetType": "NODE",
-    "targetCode": "nodicsDocsNodeTopicdocsDocumentationPublishingModel",
+    "targetCode": "nodicsDocsNodePagedocsDocumentationPublishingModel",
     "title": "Documentation Publishing Model",
     "summary": "How documentation source becomes content catalog data, Staged records, approval tasks, Online pages, and public or authenticated delivery.",
     "searchText": "Documentation Publishing Model How documentation source becomes content catalog data, Staged records, approval tasks, Online pages, and public or authenticated delivery. documentation-roadmap reader-journey-and-coverage-map documentation-publishing content-catalog staged-online",
@@ -2419,7 +2419,7 @@ module.exports = {
       "staged-online"
     ],
     "facets": {
-      "nodeLevel": "TOPIC",
+      "nodeLevel": "PAGE_LINK",
       "nodeType": "PAGE",
       "audience": [
         "business",
@@ -2448,10 +2448,10 @@ module.exports = {
     "active": true
   },
   "record59": {
-    "code": "nodicsDocsSearchnodenodicsdocsnodetopicframeworkmodulararchitecture",
+    "code": "nodicsDocsSearchnodenodicsdocsnodepageframeworkmodulararchitecture",
     "product": "nodicsDocumentationProduct",
     "targetType": "NODE",
-    "targetCode": "nodicsDocsNodeTopicframeworkModularArchitecture",
+    "targetCode": "nodicsDocsNodePageframeworkModularArchitecture",
     "title": "Modular architecture and ownership",
     "summary": "How functional modules, technical modules, runtime servers, and customer projects fit together.",
     "searchText": "Modular architecture and ownership How functional modules, technical modules, runtime servers, and customer projects fit together. framework-architecture-and-design modularity-and-ownership modular-architecture-and-ownership",
@@ -2461,7 +2461,7 @@ module.exports = {
       "modular-architecture-and-ownership"
     ],
     "facets": {
-      "nodeLevel": "TOPIC",
+      "nodeLevel": "PAGE_LINK",
       "nodeType": "PAGE",
       "audience": [
         "business",
@@ -2490,10 +2490,10 @@ module.exports = {
     "active": true
   },
   "record60": {
-    "code": "nodicsDocsSearchnodenodicsdocsnodetopicframeworkruntimeservercomposition",
+    "code": "nodicsDocsSearchnodenodicsdocsnodepageframeworkruntimeservercomposition",
     "product": "nodicsDocumentationProduct",
     "targetType": "NODE",
-    "targetCode": "nodicsDocsNodeTopicframeworkRuntimeServerComposition",
+    "targetCode": "nodicsDocsNodePageframeworkRuntimeServerComposition",
     "title": "Runtime Server Composition",
     "summary": "How project topology composes framework modules into Platform, WCMS, Process, and other runtime servers.",
     "searchText": "Runtime Server Composition How project topology composes framework modules into Platform, WCMS, Process, and other runtime servers. runtime-server-composition server-topology platform-wcms-process",
@@ -2503,7 +2503,7 @@ module.exports = {
       "platform-wcms-process"
     ],
     "facets": {
-      "nodeLevel": "TOPIC",
+      "nodeLevel": "PAGE_LINK",
       "nodeType": "PAGE",
       "audience": [
         "business",
@@ -2532,10 +2532,10 @@ module.exports = {
     "active": true
   },
   "record61": {
-    "code": "nodicsDocsSearchnodenodicsdocsnodetopicframeworkmoduleloadingserviceprecedence",
+    "code": "nodicsDocsSearchnodenodicsdocsnodepageframeworkmoduleloadingserviceprecedence",
     "product": "nodicsDocumentationProduct",
     "targetType": "NODE",
-    "targetCode": "nodicsDocsNodeTopicframeworkModuleLoadingServicePrecedence",
+    "targetCode": "nodicsDocsNodePageframeworkModuleLoadingServicePrecedence",
     "title": "Module Loading and Service Precedence",
     "summary": "How runtime loading order, service overrides, and project layers decide which implementation is active.",
     "searchText": "Module Loading and Service Precedence How runtime loading order, service overrides, and project layers decide which implementation is active. module-loading service-precedence override-order",
@@ -2545,7 +2545,7 @@ module.exports = {
       "override-order"
     ],
     "facets": {
-      "nodeLevel": "TOPIC",
+      "nodeLevel": "PAGE_LINK",
       "nodeType": "PAGE",
       "audience": [
         "business",
@@ -2574,10 +2574,10 @@ module.exports = {
     "active": true
   },
   "record62": {
-    "code": "nodicsDocsSearchnodenodicsdocsnodetopicframeworkarchitecturedecisionguide",
+    "code": "nodicsDocsSearchnodenodicsdocsnodepageframeworkarchitecturedecisionguide",
     "product": "nodicsDocumentationProduct",
     "targetType": "NODE",
-    "targetCode": "nodicsDocsNodeTopicframeworkArchitectureDecisionGuide",
+    "targetCode": "nodicsDocsNodePageframeworkArchitectureDecisionGuide",
     "title": "Architecture Decision Guide",
     "summary": "Decision path for choosing framework, project, content, provider, service, pipeline, schema, route, or renderer ownership.",
     "searchText": "Architecture Decision Guide Decision path for choosing framework, project, content, provider, service, pipeline, schema, route, or renderer ownership. architecture-decision-guide ownership-decision where-change-belongs",
@@ -2587,7 +2587,7 @@ module.exports = {
       "where-change-belongs"
     ],
     "facets": {
-      "nodeLevel": "TOPIC",
+      "nodeLevel": "PAGE_LINK",
       "nodeType": "PAGE",
       "audience": [
         "business",
@@ -2616,10 +2616,10 @@ module.exports = {
     "active": true
   },
   "record63": {
-    "code": "nodicsDocsSearchnodenodicsdocsnodetopicplatformmoduleregistry",
+    "code": "nodicsDocsSearchnodenodicsdocsnodepageplatformmoduleregistry",
     "product": "nodicsDocumentationProduct",
     "targetType": "NODE",
-    "targetCode": "nodicsDocsNodeTopicplatformModuleRegistry",
+    "targetCode": "nodicsDocsNodePageplatformModuleRegistry",
     "title": "Functional module registry",
     "summary": "Durable project registration and runtime observation rules.",
     "searchText": "Functional module registry Durable project registration and runtime observation rules. capability-registry-and-lifecycle-management functional-module-registry functional-module-registry",
@@ -2629,7 +2629,7 @@ module.exports = {
       "functional-module-registry"
     ],
     "facets": {
-      "nodeLevel": "TOPIC",
+      "nodeLevel": "PAGE_LINK",
       "nodeType": "PAGE",
       "audience": [
         "business",
@@ -2658,10 +2658,10 @@ module.exports = {
     "active": true
   },
   "record64": {
-    "code": "nodicsDocsSearchnodenodicsdocsnodetopicfoundationoverview",
+    "code": "nodicsDocsSearchnodenodicsdocsnodepagefoundationoverview",
     "product": "nodicsDocumentationProduct",
     "targetType": "NODE",
-    "targetCode": "nodicsDocsNodeTopicfoundationOverview",
+    "targetCode": "nodicsDocsNodePagefoundationOverview",
     "title": "Foundation overview",
     "summary": "Beginner, developer, and operations guide to the Foundation runtime, request path, cache, events, configuration, and quality rules.",
     "searchText": "Foundation overview Beginner, developer, and operations guide to the Foundation runtime, request path, cache, events, configuration, and quality rules. foundation-runtime-services runtime-foundation foundation-overview",
@@ -2671,7 +2671,7 @@ module.exports = {
       "foundation-overview"
     ],
     "facets": {
-      "nodeLevel": "TOPIC",
+      "nodeLevel": "PAGE_LINK",
       "nodeType": "PAGE",
       "audience": [
         "business",
@@ -2700,10 +2700,10 @@ module.exports = {
     "active": true
   },
   "record65": {
-    "code": "nodicsDocsSearchnodenodicsdocsnodetopicapplicationssuite",
+    "code": "nodicsDocsSearchnodenodicsdocsnodepageapplicationssuite",
     "product": "nodicsDocumentationProduct",
     "targetType": "NODE",
-    "targetCode": "nodicsDocsNodeTopicapplicationsSuite",
+    "targetCode": "nodicsDocsNodePageapplicationsSuite",
     "title": "Nodics Application Suite",
     "summary": "Business and technical overview of Axis, Nexus, and Kickoff as application experiences built on the Nodics Framework.",
     "searchText": "Nodics Application Suite Business and technical overview of Axis, Nexus, and Kickoff as application experiences built on the Nodics Framework. nodics-application-suite axis nexus kickoff",
@@ -2714,7 +2714,7 @@ module.exports = {
       "kickoff"
     ],
     "facets": {
-      "nodeLevel": "TOPIC",
+      "nodeLevel": "PAGE_LINK",
       "nodeType": "PAGE",
       "audience": [
         "business",
@@ -2743,10 +2743,10 @@ module.exports = {
     "active": true
   },
   "record66": {
-    "code": "nodicsDocsSearchnodenodicsdocsnodetopicsolutionstaskexecutionengine",
+    "code": "nodicsDocsSearchnodenodicsdocsnodepagesolutionstaskexecutionengine",
     "product": "nodicsDocumentationProduct",
     "targetType": "NODE",
-    "targetCode": "nodicsDocsNodeTopicsolutionsTaskExecutionEngine",
+    "targetCode": "nodicsDocsNodePagesolutionsTaskExecutionEngine",
     "title": "Task Execution Engine",
     "summary": "How customers use Nodics Process, Cron, Pipelines, Events, and governed runtime change to build a Task Execution Engine.",
     "searchText": "Task Execution Engine How customers use Nodics Process, Cron, Pipelines, Events, and governed runtime change to build a Task Execution Engine. solution-use-cases task-execution-engine tee cron process pipeline runtime-change",
@@ -2760,7 +2760,7 @@ module.exports = {
       "runtime-change"
     ],
     "facets": {
-      "nodeLevel": "TOPIC",
+      "nodeLevel": "PAGE_LINK",
       "nodeType": "PAGE",
       "audience": [
         "business",
@@ -2789,10 +2789,10 @@ module.exports = {
     "active": true
   },
   "record67": {
-    "code": "nodicsDocsSearchnodenodicsdocsnodetopicsolutionsdataengineeringanalyticsplatform",
+    "code": "nodicsDocsSearchnodenodicsdocsnodepagesolutionsdataengineeringanalyticsplatform",
     "product": "nodicsDocumentationProduct",
     "targetType": "NODE",
-    "targetCode": "nodicsDocsNodeTopicsolutionsDataEngineeringAnalyticsPlatform",
+    "targetCode": "nodicsDocsNodePagesolutionsDataEngineeringAnalyticsPlatform",
     "title": "Data Engineering and Analytics Platform",
     "summary": "How customers use Nodics import, export, discovery, provider, event, pipeline, and publishing capabilities to build governed data platforms.",
     "searchText": "Data Engineering and Analytics Platform How customers use Nodics import, export, discovery, provider, event, pipeline, and publishing capabilities to build governed data platforms. solution-use-cases data-engineering-and-analytics-platform deap import export discovery analytics data-pipeline",
@@ -2807,7 +2807,7 @@ module.exports = {
       "data-pipeline"
     ],
     "facets": {
-      "nodeLevel": "TOPIC",
+      "nodeLevel": "PAGE_LINK",
       "nodeType": "PAGE",
       "audience": [
         "business",
@@ -2836,10 +2836,10 @@ module.exports = {
     "active": true
   },
   "record68": {
-    "code": "nodicsDocsSearchnodenodicsdocsnodetopicacceleratorsagoraindustrytemplates",
+    "code": "nodicsDocsSearchnodenodicsdocsnodepageacceleratorsagoraindustrytemplates",
     "product": "nodicsDocumentationProduct",
     "targetType": "NODE",
-    "targetCode": "nodicsDocsNodeTopicacceleratorsAgoraIndustryTemplates",
+    "targetCode": "nodicsDocsNodePageacceleratorsAgoraIndustryTemplates",
     "title": "Accelerators and Industry Solution Templates",
     "summary": "Agora accelerator family overview for Apparel, Electronics, and Telco customer commerce storefronts.",
     "searchText": "Accelerators and Industry Solution Templates Agora accelerator family overview for Apparel, Electronics, and Telco customer commerce storefronts. accelerators industry-solution-templates agora-apparel agora-electronics agora-telco",
@@ -2851,7 +2851,7 @@ module.exports = {
       "agora-telco"
     ],
     "facets": {
-      "nodeLevel": "TOPIC",
+      "nodeLevel": "PAGE_LINK",
       "nodeType": "PAGE",
       "audience": [
         "business",
@@ -2880,10 +2880,10 @@ module.exports = {
     "active": true
   },
   "record69": {
-    "code": "nodicsDocsSearchnodenodicsdocsnodetopicacceleratorsagoraapparelproductdataauthoring",
+    "code": "nodicsDocsSearchnodenodicsdocsnodepageacceleratorsagoraapparelproductdataauthoring",
     "product": "nodicsDocumentationProduct",
     "targetType": "NODE",
-    "targetCode": "nodicsDocsNodeTopicacceleratorsAgoraApparelProductDataAuthoring",
+    "targetCode": "nodicsDocsNodePageacceleratorsAgoraApparelProductDataAuthoring",
     "title": "Agora Apparel Product Data Authoring",
     "summary": "Step-by-step source-backed guide for adding Agora Apparel product, price, inventory, content, media, and search data through project release folders.",
     "searchText": "Agora Apparel Product Data Authoring Step-by-step source-backed guide for adding Agora Apparel product, price, inventory, content, media, and search data through project release folders. agora-apparel product-data release-data media-assets commerce-staged product-import sample-v001",
@@ -2897,7 +2897,7 @@ module.exports = {
       "sample-v001"
     ],
     "facets": {
-      "nodeLevel": "TOPIC",
+      "nodeLevel": "PAGE_LINK",
       "nodeType": "PAGE",
       "audience": [
         "business",
@@ -2926,10 +2926,10 @@ module.exports = {
     "active": true
   },
   "record70": {
-    "code": "nodicsDocsSearchnodenodicsdocsnodetopicframeworklocalquickstart",
+    "code": "nodicsDocsSearchnodenodicsdocsnodepageframeworklocalquickstart",
     "product": "nodicsDocumentationProduct",
     "targetType": "NODE",
-    "targetCode": "nodicsDocsNodeTopicframeworkLocalQuickStart",
+    "targetCode": "nodicsDocsNodePageframeworkLocalQuickStart",
     "title": "Local quick start with Kickoff and Axis",
     "summary": "Beginner-friendly steps to configure the framework, start local servers, log in to Axis, and open documentation.",
     "searchText": "Local quick start with Kickoff and Axis Beginner-friendly steps to configure the framework, start local servers, log in to Axis, and open documentation. nodics-installer-and-workspace-setup local-workspace-setup local-quick-start-with-kickoff-and-axis",
@@ -2939,7 +2939,7 @@ module.exports = {
       "local-quick-start-with-kickoff-and-axis"
     ],
     "facets": {
-      "nodeLevel": "TOPIC",
+      "nodeLevel": "PAGE_LINK",
       "nodeType": "PAGE",
       "audience": [
         "business",
@@ -2968,10 +2968,10 @@ module.exports = {
     "active": true
   },
   "record71": {
-    "code": "nodicsDocsSearchnodenodicsdocsnodetopicframeworkfreshschemasetupjourney",
+    "code": "nodicsDocsSearchnodenodicsdocsnodepageframeworkfreshschemasetupjourney",
     "product": "nodicsDocumentationProduct",
     "targetType": "NODE",
-    "targetCode": "nodicsDocsNodeTopicframeworkFreshSchemaSetupJourney",
+    "targetCode": "nodicsDocsNodePageframeworkFreshSchemaSetupJourney",
     "title": "Fresh Schema Setup Journey",
     "summary": "Required order for initializing Axis, registering capabilities, importing app packs, publishing Online, and verifying browsers.",
     "searchText": "Fresh Schema Setup Journey Required order for initializing Axis, registering capabilities, importing app packs, publishing Online, and verifying browsers. fresh-schema setup-journey axis-nexus-agora-initialization",
@@ -2981,7 +2981,7 @@ module.exports = {
       "axis-nexus-agora-initialization"
     ],
     "facets": {
-      "nodeLevel": "TOPIC",
+      "nodeLevel": "PAGE_LINK",
       "nodeType": "PAGE",
       "audience": [
         "business",
@@ -3010,10 +3010,10 @@ module.exports = {
     "active": true
   },
   "record72": {
-    "code": "nodicsDocsSearchnodenodicsdocsnodetopicframeworklocalruntimetroubleshooting",
+    "code": "nodicsDocsSearchnodenodicsdocsnodepageframeworklocalruntimetroubleshooting",
     "product": "nodicsDocumentationProduct",
     "targetType": "NODE",
-    "targetCode": "nodicsDocsNodeTopicframeworkLocalRuntimeTroubleshooting",
+    "targetCode": "nodicsDocsNodePageframeworkLocalRuntimeTroubleshooting",
     "title": "Local Runtime Troubleshooting",
     "summary": "Practical troubleshooting for ports, stale topology state, schema import failures, publication state, and missing navigation.",
     "searchText": "Local Runtime Troubleshooting Practical troubleshooting for ports, stale topology state, schema import failures, publication state, and missing navigation. local-runtime-troubleshooting ports fresh-schema-errors",
@@ -3023,7 +3023,7 @@ module.exports = {
       "fresh-schema-errors"
     ],
     "facets": {
-      "nodeLevel": "TOPIC",
+      "nodeLevel": "PAGE_LINK",
       "nodeType": "PAGE",
       "audience": [
         "business",
@@ -3052,10 +3052,10 @@ module.exports = {
     "active": true
   },
   "record73": {
-    "code": "nodicsDocsSearchnodenodicsdocsnodetopicinstallerinstalledruntimeapplicationbuilder",
+    "code": "nodicsDocsSearchnodenodicsdocsnodepageinstallerinstalledruntimeapplicationbuilder",
     "product": "nodicsDocumentationProduct",
     "targetType": "NODE",
-    "targetCode": "nodicsDocsNodeTopicinstallerInstalledRuntimeApplicationBuilder",
+    "targetCode": "nodicsDocsNodePageinstallerInstalledRuntimeApplicationBuilder",
     "title": "Installed Runtime Installer and Application Builder APIs",
     "summary": "Safe read-only runtime API model for installed workspace inspection, setup planning, operation catalogue, and redacted evidence.",
     "searchText": "Installed Runtime Installer and Application Builder APIs Safe read-only runtime API model for installed workspace inspection, setup planning, operation catalogue, and redacted evidence. installer application-builder workspace-readiness setup-plan evidence",
@@ -3067,7 +3067,7 @@ module.exports = {
       "evidence"
     ],
     "facets": {
-      "nodeLevel": "TOPIC",
+      "nodeLevel": "PAGE_LINK",
       "nodeType": "PAGE",
       "audience": [
         "business",
@@ -3096,10 +3096,10 @@ module.exports = {
     "active": true
   },
   "record74": {
-    "code": "nodicsDocsSearchnodenodicsdocsnodetopicbuilderworkspacegeneration",
+    "code": "nodicsDocsSearchnodenodicsdocsnodepagebuilderworkspacegeneration",
     "product": "nodicsDocumentationProduct",
     "targetType": "NODE",
-    "targetCode": "nodicsDocsNodeTopicbuilderWorkspaceGeneration",
+    "targetCode": "nodicsDocsNodePagebuilderWorkspaceGeneration",
     "title": "Application Builder and Workspace Generation",
     "summary": "How the installed runtime exposes governed workspace discovery, readiness, setup planning, and accelerator selection for Axis-driven application building.",
     "searchText": "Application Builder and Workspace Generation How the installed runtime exposes governed workspace discovery, readiness, setup planning, and accelerator selection for Axis-driven application building. application-builder-and-workspace-generation workspace-generation-journey application-builder-and-workspace-generation",
@@ -3109,7 +3109,7 @@ module.exports = {
       "application-builder-and-workspace-generation"
     ],
     "facets": {
-      "nodeLevel": "TOPIC",
+      "nodeLevel": "PAGE_LINK",
       "nodeType": "PAGE",
       "audience": [
         "business",
@@ -3138,10 +3138,10 @@ module.exports = {
     "active": true
   },
   "record75": {
-    "code": "nodicsDocsSearchnodenodicsdocsnodetopicprocessvisualdesigner",
+    "code": "nodicsDocsSearchnodenodicsdocsnodepageprocessvisualdesigner",
     "product": "nodicsDocumentationProduct",
     "targetType": "NODE",
-    "targetCode": "nodicsDocsNodeTopicprocessVisualDesigner",
+    "targetCode": "nodicsDocsNodePageprocessVisualDesigner",
     "title": "Visual Workflow Designer Contract",
     "summary": "Describe the backend-owned graph contract, Axis editor projection, and validation workflow for the visual designer.",
     "searchText": "Visual Workflow Designer Contract Describe the backend-owned graph contract, Axis editor projection, and validation workflow for the visual designer. axis-and-backoffice-operations visual-workflow-designer visual-workflow-designer-contract",
@@ -3151,7 +3151,7 @@ module.exports = {
       "visual-workflow-designer-contract"
     ],
     "facets": {
-      "nodeLevel": "TOPIC",
+      "nodeLevel": "PAGE_LINK",
       "nodeType": "PAGE",
       "audience": [
         "business",
@@ -3180,10 +3180,10 @@ module.exports = {
     "active": true
   },
   "record76": {
-    "code": "nodicsDocsSearchnodenodicsdocsnodetopicaxisbusinesscustomization",
+    "code": "nodicsDocsSearchnodenodicsdocsnodepageaxisbusinesscustomization",
     "product": "nodicsDocumentationProduct",
     "targetType": "NODE",
-    "targetCode": "nodicsDocsNodeTopicaxisBusinessCustomization",
+    "targetCode": "nodicsDocsNodePageaxisBusinessCustomization",
     "title": "Business Customization in Axis",
     "summary": "How Axis lets authorized users manage navigation, content areas, documentation pages, runtime configuration, and capability-specific business data.",
     "searchText": "Business Customization in Axis How Axis lets authorized users manage navigation, content areas, documentation pages, runtime configuration, and capability-specific business data. business-customization-in-axis axis-customization-workspace business-customization-in-axis",
@@ -3193,7 +3193,7 @@ module.exports = {
       "business-customization-in-axis"
     ],
     "facets": {
-      "nodeLevel": "TOPIC",
+      "nodeLevel": "PAGE_LINK",
       "nodeType": "PAGE",
       "audience": [
         "business",
@@ -3222,10 +3222,10 @@ module.exports = {
     "active": true
   },
   "record77": {
-    "code": "nodicsDocsSearchnodenodicsdocsnodetopicplatformoverview",
+    "code": "nodicsDocsSearchnodenodicsdocsnodepageplatformoverview",
     "product": "nodicsDocumentationProduct",
     "targetType": "NODE",
-    "targetCode": "nodicsDocsNodeTopicplatformOverview",
+    "targetCode": "nodicsDocsNodePageplatformOverview",
     "title": "Platform overview",
     "summary": "How Platform, Profile, BackOffice, authentication, authorization, Axis backend content, and module governance fit together.",
     "searchText": "Platform overview How Platform, Profile, BackOffice, authentication, authorization, Axis backend content, and module governance fit together. user-enterprise-and-tenant-management platform-and-profile-foundations platform-overview",
@@ -3235,7 +3235,7 @@ module.exports = {
       "platform-overview"
     ],
     "facets": {
-      "nodeLevel": "TOPIC",
+      "nodeLevel": "PAGE_LINK",
       "nodeType": "PAGE",
       "audience": [
         "business",
@@ -3264,10 +3264,10 @@ module.exports = {
     "active": true
   },
   "record78": {
-    "code": "nodicsDocsSearchnodenodicsdocsnodetopicsecurityidentityaccessgovernance",
+    "code": "nodicsDocsSearchnodenodicsdocsnodepagesecurityidentityaccessgovernance",
     "product": "nodicsDocumentationProduct",
     "targetType": "NODE",
-    "targetCode": "nodicsDocsNodeTopicsecurityIdentityAccessGovernance",
+    "targetCode": "nodicsDocsNodePagesecurityIdentityAccessGovernance",
     "title": "Security, Identity, and Access Governance",
     "summary": "Authentication, authorization, groups, documentation authoring roles, read-only Axis access, tenant isolation, and audit responsibilities.",
     "searchText": "Security, Identity, and Access Governance Authentication, authorization, groups, documentation authoring roles, read-only Axis access, tenant isolation, and audit responsibilities. security-governance-and-compliance identity-and-access-governance security-identity-and-access-governance",
@@ -3277,7 +3277,7 @@ module.exports = {
       "security-identity-and-access-governance"
     ],
     "facets": {
-      "nodeLevel": "TOPIC",
+      "nodeLevel": "PAGE_LINK",
       "nodeType": "PAGE",
       "audience": [
         "business",
@@ -3306,10 +3306,10 @@ module.exports = {
     "active": true
   },
   "record79": {
-    "code": "nodicsDocsSearchnodenodicsdocsnodetopicconfigurationruntimebehaviormanagement",
+    "code": "nodicsDocsSearchnodenodicsdocsnodepageconfigurationruntimebehaviormanagement",
     "product": "nodicsDocumentationProduct",
     "targetType": "NODE",
-    "targetCode": "nodicsDocsNodeTopicconfigurationRuntimeBehaviorManagement",
+    "targetCode": "nodicsDocsNodePageconfigurationRuntimeBehaviorManagement",
     "title": "Application Configuration and Runtime Behavior Management",
     "summary": "How configuration layers, provider choices, runtime settings, and project overrides change Nodics behavior safely.",
     "searchText": "Application Configuration and Runtime Behavior Management How configuration layers, provider choices, runtime settings, and project overrides change Nodics behavior safely. application-configuration-and-runtime-behavior-management configuration-layers-and-behavior application-configuration-and-runtime-behavior-management",
@@ -3319,7 +3319,7 @@ module.exports = {
       "application-configuration-and-runtime-behavior-management"
     ],
     "facets": {
-      "nodeLevel": "TOPIC",
+      "nodeLevel": "PAGE_LINK",
       "nodeType": "PAGE",
       "audience": [
         "business",
@@ -3348,10 +3348,10 @@ module.exports = {
     "active": true
   },
   "record80": {
-    "code": "nodicsDocsSearchnodenodicsdocsnodetopicconfigurationframeworkstartuplifecycle",
+    "code": "nodicsDocsSearchnodenodicsdocsnodepageconfigurationframeworkstartuplifecycle",
     "product": "nodicsDocumentationProduct",
     "targetType": "NODE",
-    "targetCode": "nodicsDocsNodeTopicconfigurationFrameworkStartupLifecycle",
+    "targetCode": "nodicsDocsNodePageconfigurationFrameworkStartupLifecycle",
     "title": "Framework Startup Lifecycle",
     "summary": "Step-by-step startup path from runtime launch through nConfig module discovery, configuration loading, lifecycle hooks, init data import, identity bootstrap, and server readiness.",
     "searchText": "Framework Startup Lifecycle Step-by-step startup path from runtime launch through nConfig module discovery, configuration loading, lifecycle hooks, init data import, identity bootstrap, and server readiness. framework-startup nConfig prepareStart module-discovery module-index activeModules properties prescripts postscripts nodics.js initRequired init-v001 mandatoryBootstrapServices startServers",
@@ -3372,7 +3372,7 @@ module.exports = {
       "startServers"
     ],
     "facets": {
-      "nodeLevel": "TOPIC",
+      "nodeLevel": "PAGE_LINK",
       "nodeType": "PAGE",
       "audience": [
         "business",
@@ -3401,10 +3401,10 @@ module.exports = {
     "active": true
   },
   "record81": {
-    "code": "nodicsDocsSearchnodenodicsdocsnodetopicroutingapigovernance",
+    "code": "nodicsDocsSearchnodenodicsdocsnodepageroutingapigovernance",
     "product": "nodicsDocumentationProduct",
     "targetType": "NODE",
-    "targetCode": "nodicsDocsNodeTopicroutingApiGovernance",
+    "targetCode": "nodicsDocsNodePageroutingApiGovernance",
     "title": "Routing and API Governance",
     "summary": "How Nodics owns route metadata, generated CRUD routes, security, permissions, request context, and runtime API behavior.",
     "searchText": "Routing and API Governance How Nodics owns route metadata, generated CRUD routes, security, permissions, request context, and runtime API behavior. routing api-governance router route-security generated-crud",
@@ -3416,7 +3416,7 @@ module.exports = {
       "generated-crud"
     ],
     "facets": {
-      "nodeLevel": "TOPIC",
+      "nodeLevel": "PAGE_LINK",
       "nodeType": "PAGE",
       "audience": [
         "business",
@@ -3445,10 +3445,10 @@ module.exports = {
     "active": true
   },
   "record82": {
-    "code": "nodicsDocsSearchnodenodicsdocsnodetopicroutingapirequestlifecycle",
+    "code": "nodicsDocsSearchnodenodicsdocsnodepageroutingapirequestlifecycle",
     "product": "nodicsDocumentationProduct",
     "targetType": "NODE",
-    "targetCode": "nodicsDocsNodeTopicroutingApiRequestLifecycle",
+    "targetCode": "nodicsDocsNodePageroutingApiRequestLifecycle",
     "title": "API Request Lifecycle and Handler Pipeline",
     "summary": "How each Nodics HTTP request moves from Express route binding through request context, exposure checks, authentication branches, cache lookup, controller dispatch, response handlers, and safe customization.",
     "searchText": "API Request Lifecycle and Handler Pipeline How each Nodics HTTP request moves from Express route binding through request context, exposure checks, authentication branches, cache lookup, controller dispatch, response handlers, and safe customization. request lifecycle handler pipeline requestHandlerPipeline nRouter controller dispatch response handler",
@@ -3461,7 +3461,7 @@ module.exports = {
       "response handler"
     ],
     "facets": {
-      "nodeLevel": "TOPIC",
+      "nodeLevel": "PAGE_LINK",
       "nodeType": "PAGE",
       "audience": [
         "business",
@@ -3490,10 +3490,10 @@ module.exports = {
     "active": true
   },
   "record83": {
-    "code": "nodicsDocsSearchnodenodicsdocsnodetopicfoundationerrorhandlingstatuscodes",
+    "code": "nodicsDocsSearchnodenodicsdocsnodepagefoundationerrorhandlingstatuscodes",
     "product": "nodicsDocumentationProduct",
     "targetType": "NODE",
-    "targetCode": "nodicsDocsNodeTopicfoundationErrorHandlingStatusCodes",
+    "targetCode": "nodicsDocsNodePagefoundationErrorHandlingStatusCodes",
     "title": "Error Handling and Status Codes",
     "summary": "How Nodics errors, status definitions, response handlers, HTTP status codes, localization metadata, safe public messages, and project overrides work.",
     "searchText": "Error Handling and Status Codes How Nodics errors, status definitions, response handlers, HTTP status codes, localization metadata, safe public messages, and project overrides work. error-handling status-codes NodicsError DefaultStatusService responseCode HTTP status DefaultJsonResponseHandlerService statusDefinitions messageKey publicError",
@@ -3510,7 +3510,7 @@ module.exports = {
       "publicError"
     ],
     "facets": {
-      "nodeLevel": "TOPIC",
+      "nodeLevel": "PAGE_LINK",
       "nodeType": "PAGE",
       "audience": [
         "business",
@@ -3539,10 +3539,10 @@ module.exports = {
     "active": true
   },
   "record84": {
-    "code": "nodicsDocsSearchnodenodicsdocsnodetopicruntimegovernedchange",
+    "code": "nodicsDocsSearchnodenodicsdocsnodepageruntimegovernedchange",
     "product": "nodicsDocumentationProduct",
     "targetType": "NODE",
-    "targetCode": "nodicsDocsNodeTopicruntimeGovernedChange",
+    "targetCode": "nodicsDocsNodePageruntimeGovernedChange",
     "title": "Governed Runtime Change Capability",
     "summary": "How Nodics handles runtime configuration and business behavior changes across clustered nodes through governed APIs and event propagation.",
     "searchText": "Governed Runtime Change Capability How Nodics handles runtime configuration and business behavior changes across clustered nodes through governed APIs and event propagation. runtime-governance-and-dynamic-change-management governed-runtime-change governed-runtime-change-capability",
@@ -3552,7 +3552,7 @@ module.exports = {
       "governed-runtime-change-capability"
     ],
     "facets": {
-      "nodeLevel": "TOPIC",
+      "nodeLevel": "PAGE_LINK",
       "nodeType": "PAGE",
       "audience": [
         "business",
@@ -3581,10 +3581,10 @@ module.exports = {
     "active": true
   },
   "record85": {
-    "code": "nodicsDocsSearchnodenodicsdocsnodetopiclocalizationinternationalization",
+    "code": "nodicsDocsSearchnodenodicsdocsnodepagelocalizationinternationalization",
     "product": "nodicsDocumentationProduct",
     "targetType": "NODE",
-    "targetCode": "nodicsDocsNodeTopiclocalizationInternationalization",
+    "targetCode": "nodicsDocsNodePagelocalizationInternationalization",
     "title": "Localization and Internationalization",
     "summary": "Locales, translations, fallback behavior, localized content, project overrides, and release validation for multilingual customer experiences.",
     "searchText": "Localization and Internationalization Locales, translations, fallback behavior, localized content, project overrides, and release validation for multilingual customer experiences. localization-and-internationalization localized-experience-management localization-and-internationalization",
@@ -3594,7 +3594,7 @@ module.exports = {
       "localization-and-internationalization"
     ],
     "facets": {
-      "nodeLevel": "TOPIC",
+      "nodeLevel": "PAGE_LINK",
       "nodeType": "PAGE",
       "audience": [
         "business",
@@ -3623,10 +3623,10 @@ module.exports = {
     "active": true
   },
   "record86": {
-    "code": "nodicsDocsSearchnodenodicsdocsnodetopicschemadatamodelingmanagement",
+    "code": "nodicsDocsSearchnodenodicsdocsnodepageschemadatamodelingmanagement",
     "product": "nodicsDocumentationProduct",
     "targetType": "NODE",
-    "targetCode": "nodicsDocsNodeTopicschemaDataModelingManagement",
+    "targetCode": "nodicsDocsNodePageschemaDataModelingManagement",
     "title": "Data Modeling and Schema Management",
     "summary": "How schemas define model behavior, generated services, API contracts, validation, and project-layer property extension.",
     "searchText": "Data Modeling and Schema Management How schemas define model behavior, generated services, API contracts, validation, and project-layer property extension. data-modeling-and-schema-management schema-and-model-extension data-modeling-and-schema-management",
@@ -3636,7 +3636,7 @@ module.exports = {
       "data-modeling-and-schema-management"
     ],
     "facets": {
-      "nodeLevel": "TOPIC",
+      "nodeLevel": "PAGE_LINK",
       "nodeType": "PAGE",
       "audience": [
         "business",
@@ -3665,10 +3665,10 @@ module.exports = {
     "active": true
   },
   "record87": {
-    "code": "nodicsDocsSearchnodenodicsdocsnodetopicpersistenceproviderdataaccesslayer",
+    "code": "nodicsDocsSearchnodenodicsdocsnodepagepersistenceproviderdataaccesslayer",
     "product": "nodicsDocumentationProduct",
     "targetType": "NODE",
-    "targetCode": "nodicsDocsNodeTopicpersistenceProviderDataAccessLayer",
+    "targetCode": "nodicsDocsNodePagepersistenceProviderDataAccessLayer",
     "title": "Provider and Data Access Layer",
     "summary": "How the Nodics data access layer uses MongoDB today while preserving provider seams for additional database providers.",
     "searchText": "Provider and Data Access Layer How the Nodics data access layer uses MongoDB today while preserving provider seams for additional database providers. database-and-persistence-management provider-and-data-access-layer provider-and-data-access-layer",
@@ -3678,7 +3678,7 @@ module.exports = {
       "provider-and-data-access-layer"
     ],
     "facets": {
-      "nodeLevel": "TOPIC",
+      "nodeLevel": "PAGE_LINK",
       "nodeType": "PAGE",
       "audience": [
         "business",
@@ -3707,10 +3707,10 @@ module.exports = {
     "active": true
   },
   "record88": {
-    "code": "nodicsDocsSearchnodenodicsdocsnodetopiccacheruntimestatemanagement",
+    "code": "nodicsDocsSearchnodenodicsdocsnodepagecacheruntimestatemanagement",
     "product": "nodicsDocumentationProduct",
     "targetType": "NODE",
-    "targetCode": "nodicsDocsNodeTopiccacheRuntimeStateManagement",
+    "targetCode": "nodicsDocsNodePagecacheRuntimeStateManagement",
     "title": "Caching and Runtime State Management",
     "summary": "How local node cache, Redis-style providers, invalidation, runtime state, and diagnostics influence application behavior.",
     "searchText": "Caching and Runtime State Management How local node cache, Redis-style providers, invalidation, runtime state, and diagnostics influence application behavior. caching-and-runtime-state-management cache-providers-and-invalidation caching-and-runtime-state-management",
@@ -3720,7 +3720,7 @@ module.exports = {
       "caching-and-runtime-state-management"
     ],
     "facets": {
-      "nodeLevel": "TOPIC",
+      "nodeLevel": "PAGE_LINK",
       "nodeType": "PAGE",
       "audience": [
         "business",
@@ -3749,10 +3749,10 @@ module.exports = {
     "active": true
   },
   "record89": {
-    "code": "nodicsDocsSearchnodenodicsdocsnodetopicframeworkcustomizationguide",
+    "code": "nodicsDocsSearchnodenodicsdocsnodepageframeworkcustomizationguide",
     "product": "nodicsDocumentationProduct",
     "targetType": "NODE",
-    "targetCode": "nodicsDocsNodeTopicframeworkCustomizationGuide",
+    "targetCode": "nodicsDocsNodePageframeworkCustomizationGuide",
     "title": "Customization and extension guide",
     "summary": "How customer projects customize Nodics safely without forking framework authority.",
     "searchText": "Customization and extension guide How customer projects customize Nodics safely without forking framework authority. developer-extension-and-project-customization project-layer-customization customization-and-extension-guide",
@@ -3762,7 +3762,7 @@ module.exports = {
       "customization-and-extension-guide"
     ],
     "facets": {
-      "nodeLevel": "TOPIC",
+      "nodeLevel": "PAGE_LINK",
       "nodeType": "PAGE",
       "audience": [
         "business",
@@ -3791,10 +3791,10 @@ module.exports = {
     "active": true
   },
   "record90": {
-    "code": "nodicsDocsSearchnodenodicsdocsnodetopicframeworkbackendextensionpatterns",
+    "code": "nodicsDocsSearchnodenodicsdocsnodepageframeworkbackendextensionpatterns",
     "product": "nodicsDocumentationProduct",
     "targetType": "NODE",
-    "targetCode": "nodicsDocsNodeTopicframeworkBackendExtensionPatterns",
+    "targetCode": "nodicsDocsNodePageframeworkBackendExtensionPatterns",
     "title": "Backend Extension Patterns",
     "summary": "How projects extend behavior through configuration, provider adapters, services, validators, pipelines, schemas, and events.",
     "searchText": "Backend Extension Patterns How projects extend behavior through configuration, provider adapters, services, validators, pipelines, schemas, and events. backend-extension-patterns service-override provider-adapter pipeline-extension",
@@ -3805,7 +3805,7 @@ module.exports = {
       "pipeline-extension"
     ],
     "facets": {
-      "nodeLevel": "TOPIC",
+      "nodeLevel": "PAGE_LINK",
       "nodeType": "PAGE",
       "audience": [
         "business",
@@ -3834,10 +3834,10 @@ module.exports = {
     "active": true
   },
   "record91": {
-    "code": "nodicsDocsSearchnodenodicsdocsnodetopicframeworkaxiscontentcustomization",
+    "code": "nodicsDocsSearchnodenodicsdocsnodepageframeworkaxiscontentcustomization",
     "product": "nodicsDocumentationProduct",
     "targetType": "NODE",
-    "targetCode": "nodicsDocsNodeTopicframeworkAxisContentCustomization",
+    "targetCode": "nodicsDocsNodePageframeworkAxisContentCustomization",
     "title": "Axis Content Customization",
     "summary": "How business users customize backend-owned content, navigation, visibility, setup records, and publishing decisions from Axis.",
     "searchText": "Axis Content Customization How business users customize backend-owned content, navigation, visibility, setup records, and publishing decisions from Axis. axis-content-customization business-user-customization backend-owned-navigation",
@@ -3847,7 +3847,7 @@ module.exports = {
       "backend-owned-navigation"
     ],
     "facets": {
-      "nodeLevel": "TOPIC",
+      "nodeLevel": "PAGE_LINK",
       "nodeType": "PAGE",
       "audience": [
         "business",
@@ -3876,10 +3876,10 @@ module.exports = {
     "active": true
   },
   "record92": {
-    "code": "nodicsDocsSearchnodenodicsdocsnodetopicprocessdevelopercustomization",
+    "code": "nodicsDocsSearchnodenodicsdocsnodepageprocessdevelopercustomization",
     "product": "nodicsDocumentationProduct",
     "targetType": "NODE",
-    "targetCode": "nodicsDocsNodeTopicprocessDeveloperCustomization",
+    "targetCode": "nodicsDocsNodePageprocessDeveloperCustomization",
     "title": "Developer Customization Guide",
     "summary": "Show where developers extend Process behavior, where domain actions belong, and how customer modules customize safely.",
     "searchText": "Developer Customization Guide Show where developers extend Process behavior, where domain actions belong, and how customer modules customize safely. developer-extension-and-project-customization process-customization developer-customization-guide",
@@ -3889,7 +3889,7 @@ module.exports = {
       "developer-customization-guide"
     ],
     "facets": {
-      "nodeLevel": "TOPIC",
+      "nodeLevel": "PAGE_LINK",
       "nodeType": "PAGE",
       "audience": [
         "business",
@@ -3918,10 +3918,10 @@ module.exports = {
     "active": true
   },
   "record93": {
-    "code": "nodicsDocsSearchnodenodicsdocsnodetopicprocesscustomprojectextension",
+    "code": "nodicsDocsSearchnodenodicsdocsnodepageprocesscustomprojectextension",
     "product": "nodicsDocumentationProduct",
     "targetType": "NODE",
-    "targetCode": "nodicsDocsNodeTopicprocessCustomProjectExtension",
+    "targetCode": "nodicsDocsNodePageprocessCustomProjectExtension",
     "title": "Custom Project Extension Guide",
     "summary": "Explain how customer overlays customize Process behavior while preserving functional module identity and backend governance.",
     "searchText": "Custom Project Extension Guide Explain how customer overlays customize Process behavior while preserving functional module identity and backend governance. developer-extension-and-project-customization customer-project-extensions custom-project-extension-guide",
@@ -3931,7 +3931,7 @@ module.exports = {
       "custom-project-extension-guide"
     ],
     "facets": {
-      "nodeLevel": "TOPIC",
+      "nodeLevel": "PAGE_LINK",
       "nodeType": "PAGE",
       "audience": [
         "business",
@@ -3960,10 +3960,10 @@ module.exports = {
     "active": true
   },
   "record94": {
-    "code": "nodicsDocsSearchnodenodicsdocsnodetopiccommercebasefoundations",
+    "code": "nodicsDocsSearchnodenodicsdocsnodepagecommercebasefoundations",
     "product": "nodicsDocumentationProduct",
     "targetType": "NODE",
-    "targetCode": "nodicsDocsNodeTopiccommerceBaseFoundations",
+    "targetCode": "nodicsDocsNodePagecommerceBaseFoundations",
     "title": "Base Commerce foundations",
     "summary": "Beginner-to-operator guide for Store, Product, Pricing, Tax, Promotion, Inventory, exact decisions, publication, recovery, and customization.",
     "searchText": "Base Commerce foundations Beginner-to-operator guide for Store, Product, Pricing, Tax, Promotion, Inventory, exact decisions, publication, recovery, and customization. store-market-site-and-channel-management commerce-foundations base-commerce-foundations",
@@ -3973,7 +3973,7 @@ module.exports = {
       "base-commerce-foundations"
     ],
     "facets": {
-      "nodeLevel": "TOPIC",
+      "nodeLevel": "PAGE_LINK",
       "nodeType": "PAGE",
       "audience": [
         "business",
@@ -4002,10 +4002,10 @@ module.exports = {
     "active": true
   },
   "record95": {
-    "code": "nodicsDocsSearchnodenodicsdocsnodetopicwcmsoverview",
+    "code": "nodicsDocsSearchnodenodicsdocsnodepagewcmsoverview",
     "product": "nodicsDocumentationProduct",
     "targetType": "NODE",
-    "targetCode": "nodicsDocsNodeTopicwcmsOverview",
+    "targetCode": "nodicsDocsNodePagewcmsOverview",
     "title": "WCMS content management",
     "summary": "How Nodics manages sites, catalogs, pages, components, routes, and delivery through the WCMS runtime.",
     "searchText": "WCMS content management How Nodics manages sites, catalogs, pages, components, routes, and delivery through the WCMS runtime. wcms-and-content-management content-model-and-delivery wcms-content-management",
@@ -4015,7 +4015,7 @@ module.exports = {
       "wcms-content-management"
     ],
     "facets": {
-      "nodeLevel": "TOPIC",
+      "nodeLevel": "PAGE_LINK",
       "nodeType": "PAGE",
       "audience": [
         "business",
@@ -4044,10 +4044,10 @@ module.exports = {
     "active": true
   },
   "record96": {
-    "code": "nodicsDocsSearchnodenodicsdocsnodetopicwcmscontentcatalogmodel",
+    "code": "nodicsDocsSearchnodenodicsdocsnodepagewcmscontentcatalogmodel",
     "product": "nodicsDocumentationProduct",
     "targetType": "NODE",
-    "targetCode": "nodicsDocsNodeTopicwcmsContentCatalogModel",
+    "targetCode": "nodicsDocsNodePagewcmsContentCatalogModel",
     "title": "Content Catalog Model",
     "summary": "How sites, catalogs, pages, components, media, routes, access policy, and publication state drive public content.",
     "searchText": "Content Catalog Model How sites, catalogs, pages, components, media, routes, access policy, and publication state drive public content. content-catalog-model cms-page-component-route online-content",
@@ -4057,7 +4057,7 @@ module.exports = {
       "online-content"
     ],
     "facets": {
-      "nodeLevel": "TOPIC",
+      "nodeLevel": "PAGE_LINK",
       "nodeType": "PAGE",
       "audience": [
         "business",
@@ -4086,10 +4086,10 @@ module.exports = {
     "active": true
   },
   "record97": {
-    "code": "nodicsDocsSearchnodenodicsdocsnodetopicwcmspagedesignercomponents",
+    "code": "nodicsDocsSearchnodenodicsdocsnodepagewcmspagedesignercomponents",
     "product": "nodicsDocumentationProduct",
     "targetType": "NODE",
-    "targetCode": "nodicsDocsNodeTopicwcmsPageDesignerComponents",
+    "targetCode": "nodicsDocsNodePagewcmsPageDesignerComponents",
     "title": "Page Designer and Components",
     "summary": "How Axis-managed content areas, components, renderer metadata, sequence, validation, and publishing work together.",
     "searchText": "Page Designer and Components How Axis-managed content areas, components, renderer metadata, sequence, validation, and publishing work together. page-designer component-renderer content-area",
@@ -4099,7 +4099,7 @@ module.exports = {
       "content-area"
     ],
     "facets": {
-      "nodeLevel": "TOPIC",
+      "nodeLevel": "PAGE_LINK",
       "nodeType": "PAGE",
       "audience": [
         "business",
@@ -4128,10 +4128,10 @@ module.exports = {
     "active": true
   },
   "record98": {
-    "code": "nodicsDocsSearchnodenodicsdocsnodetopicwcmssitepublicationvisibility",
+    "code": "nodicsDocsSearchnodenodicsdocsnodepagewcmssitepublicationvisibility",
     "product": "nodicsDocumentationProduct",
     "targetType": "NODE",
-    "targetCode": "nodicsDocsNodeTopicwcmsSitePublicationVisibility",
+    "targetCode": "nodicsDocsNodePagewcmsSitePublicationVisibility",
     "title": "Site Publication and Visibility",
     "summary": "How Staged, approval, Online, access policy, maintenance pages, and public delivery determine what users see.",
     "searchText": "Site Publication and Visibility How Staged, approval, Online, access policy, maintenance pages, and public delivery determine what users see. site-publication visibility maintenance-page online-only",
@@ -4142,7 +4142,7 @@ module.exports = {
       "online-only"
     ],
     "facets": {
-      "nodeLevel": "TOPIC",
+      "nodeLevel": "PAGE_LINK",
       "nodeType": "PAGE",
       "audience": [
         "business",
@@ -4171,10 +4171,10 @@ module.exports = {
     "active": true
   },
   "record99": {
-    "code": "nodicsDocsSearchnodenodicsdocsnodetopiccatalogproductdiscoverymanagement",
+    "code": "nodicsDocsSearchnodenodicsdocsnodepagecatalogproductdiscoverymanagement",
     "product": "nodicsDocumentationProduct",
     "targetType": "NODE",
-    "targetCode": "nodicsDocsNodeTopiccatalogProductDiscoveryManagement",
+    "targetCode": "nodicsDocsNodePagecatalogProductDiscoveryManagement",
     "title": "Product Catalog and Discovery Management",
     "summary": "Products, categories, variants, localized attributes, catalog publication, discovery projections, and project customization.",
     "searchText": "Product Catalog and Discovery Management Products, categories, variants, localized attributes, catalog publication, discovery projections, and project customization. product-catalog-and-discovery catalog-model-and-publication product-catalog-and-discovery-management",
@@ -4184,7 +4184,7 @@ module.exports = {
       "product-catalog-and-discovery-management"
     ],
     "facets": {
-      "nodeLevel": "TOPIC",
+      "nodeLevel": "PAGE_LINK",
       "nodeType": "PAGE",
       "audience": [
         "business",
@@ -4213,10 +4213,10 @@ module.exports = {
     "active": true
   },
   "record100": {
-    "code": "nodicsDocsSearchnodenodicsdocsnodetopicdiscoverysearchindexing",
+    "code": "nodicsDocsSearchnodenodicsdocsnodepagediscoverysearchindexing",
     "product": "nodicsDocumentationProduct",
     "targetType": "NODE",
-    "targetCode": "nodicsDocsNodeTopicdiscoverySearchIndexing",
+    "targetCode": "nodicsDocsNodePagediscoverySearchIndexing",
     "title": "Search, Indexing, and Discovery",
     "summary": "Elasticsearch, Solr, provider adapters, catalog/content indexing, ranking, query profiles, and search metadata governance.",
     "searchText": "Search, Indexing, and Discovery Elasticsearch, Solr, provider adapters, catalog/content indexing, ranking, query profiles, and search metadata governance. search-and-discovery search-providers-and-indexing search-indexing-and-discovery",
@@ -4226,7 +4226,7 @@ module.exports = {
       "search-indexing-and-discovery"
     ],
     "facets": {
-      "nodeLevel": "TOPIC",
+      "nodeLevel": "PAGE_LINK",
       "nodeType": "PAGE",
       "audience": [
         "business",
@@ -4255,10 +4255,10 @@ module.exports = {
     "active": true
   },
   "record101": {
-    "code": "nodicsDocsSearchnodenodicsdocsnodetopicwcmsmediamanagement",
+    "code": "nodicsDocsSearchnodenodicsdocsnodepagewcmsmediamanagement",
     "product": "nodicsDocumentationProduct",
     "targetType": "NODE",
-    "targetCode": "nodicsDocsNodeTopicwcmsMediaManagement",
+    "targetCode": "nodicsDocsNodePagewcmsMediaManagement",
     "title": "Media management",
     "summary": "Governed upload, storage policy, media metadata, source contexts, and safe frontend boundaries.",
     "searchText": "Media management Governed upload, storage policy, media metadata, source contexts, and safe frontend boundaries. media-management media-lifecycle-and-storage media-management",
@@ -4268,7 +4268,7 @@ module.exports = {
       "media-management"
     ],
     "facets": {
-      "nodeLevel": "TOPIC",
+      "nodeLevel": "PAGE_LINK",
       "nodeType": "PAGE",
       "audience": [
         "business",
@@ -4297,10 +4297,10 @@ module.exports = {
     "active": true
   },
   "record102": {
-    "code": "nodicsDocsSearchnodenodicsdocsnodetopicwcmsmediastoragedelivery",
+    "code": "nodicsDocsSearchnodenodicsdocsnodepagewcmsmediastoragedelivery",
     "product": "nodicsDocumentationProduct",
     "targetType": "NODE",
-    "targetCode": "nodicsDocsNodeTopicwcmsMediaStorageDelivery",
+    "targetCode": "nodicsDocsNodePagewcmsMediaStorageDelivery",
     "title": "Media Storage and Delivery",
     "summary": "Provider, access, URL, cache, and browser delivery model for media used by content and storefront experiences.",
     "searchText": "Media Storage and Delivery Provider, access, URL, cache, and browser delivery model for media used by content and storefront experiences. media-management media-lifecycle-and-storage media-management",
@@ -4310,7 +4310,7 @@ module.exports = {
       "media-management"
     ],
     "facets": {
-      "nodeLevel": "TOPIC",
+      "nodeLevel": "PAGE_LINK",
       "nodeType": "PAGE",
       "audience": [
         "business",
@@ -4339,10 +4339,10 @@ module.exports = {
     "active": true
   },
   "record103": {
-    "code": "nodicsDocsSearchnodenodicsdocsnodetopicwcmsmediaimportpublication",
+    "code": "nodicsDocsSearchnodenodicsdocsnodepagewcmsmediaimportpublication",
     "product": "nodicsDocumentationProduct",
     "targetType": "NODE",
-    "targetCode": "nodicsDocsNodeTopicwcmsMediaImportPublication",
+    "targetCode": "nodicsDocsNodePagewcmsMediaImportPublication",
     "title": "Media Import and Publication",
     "summary": "Complete content-pack preparation for media assets, media records, page references, and Online publication.",
     "searchText": "Media Import and Publication Complete content-pack preparation for media assets, media records, page references, and Online publication. media-management media-lifecycle-and-storage media-management",
@@ -4352,7 +4352,7 @@ module.exports = {
       "media-management"
     ],
     "facets": {
-      "nodeLevel": "TOPIC",
+      "nodeLevel": "PAGE_LINK",
       "nodeType": "PAGE",
       "audience": [
         "business",
@@ -4381,10 +4381,10 @@ module.exports = {
     "active": true
   },
   "record104": {
-    "code": "nodicsDocsSearchnodenodicsdocsnodetopicinventorystockmanagement",
+    "code": "nodicsDocsSearchnodenodicsdocsnodepageinventorystockmanagement",
     "product": "nodicsDocumentationProduct",
     "targetType": "NODE",
-    "targetCode": "nodicsDocsNodeTopicinventoryStockManagement",
+    "targetCode": "nodicsDocsNodePageinventoryStockManagement",
     "title": "Inventory and Stock Management",
     "summary": "Inventory balances, stock movements, reservations, warehouse relationships, availability summaries, and checkout protection.",
     "searchText": "Inventory and Stock Management Inventory balances, stock movements, reservations, warehouse relationships, availability summaries, and checkout protection. inventory-and-stock-management stock-availability-and-reservation inventory-and-stock-management",
@@ -4394,7 +4394,7 @@ module.exports = {
       "inventory-and-stock-management"
     ],
     "facets": {
-      "nodeLevel": "TOPIC",
+      "nodeLevel": "PAGE_LINK",
       "nodeType": "PAGE",
       "audience": [
         "business",
@@ -4423,10 +4423,10 @@ module.exports = {
     "active": true
   },
   "record105": {
-    "code": "nodicsDocsSearchnodenodicsdocsnodetopicpricingpromotionstaxmanagement",
+    "code": "nodicsDocsSearchnodenodicsdocsnodepagepricingpromotionstaxmanagement",
     "product": "nodicsDocumentationProduct",
     "targetType": "NODE",
-    "targetCode": "nodicsDocsNodeTopicpricingPromotionsTaxManagement",
+    "targetCode": "nodicsDocsNodePagepricingPromotionsTaxManagement",
     "title": "Pricing, Promotions, and Tax Management",
     "summary": "Price books, price rows, promotion decisions, coupon behavior, tax policies, calculation evidence, and extension boundaries.",
     "searchText": "Pricing, Promotions, and Tax Management Price books, price rows, promotion decisions, coupon behavior, tax policies, calculation evidence, and extension boundaries. pricing-promotions-and-tax commercial-decisioning pricing-promotions-and-tax-management",
@@ -4436,7 +4436,7 @@ module.exports = {
       "pricing-promotions-and-tax-management"
     ],
     "facets": {
-      "nodeLevel": "TOPIC",
+      "nodeLevel": "PAGE_LINK",
       "nodeType": "PAGE",
       "audience": [
         "business",
@@ -4465,10 +4465,10 @@ module.exports = {
     "active": true
   },
   "record106": {
-    "code": "nodicsDocsSearchnodenodicsdocsnodetopiccommerceoverview",
+    "code": "nodicsDocsSearchnodenodicsdocsnodepagecommerceoverview",
     "product": "nodicsDocumentationProduct",
     "targetType": "NODE",
-    "targetCode": "nodicsDocsNodeTopiccommerceOverview",
+    "targetCode": "nodicsDocsNodePagecommerceOverview",
     "title": "Commerce overview",
     "summary": "Beginner orientation to the Commerce journey, ownership map, capability state, security baseline, verification, and safe customization.",
     "searchText": "Commerce overview Beginner orientation to the Commerce journey, ownership map, capability state, security baseline, verification, and safe customization. commerce-cart-and-checkout commerce-journey-overview commerce-overview",
@@ -4478,7 +4478,7 @@ module.exports = {
       "commerce-overview"
     ],
     "facets": {
-      "nodeLevel": "TOPIC",
+      "nodeLevel": "PAGE_LINK",
       "nodeType": "PAGE",
       "audience": [
         "business",
@@ -4507,10 +4507,10 @@ module.exports = {
     "active": true
   },
   "record107": {
-    "code": "nodicsDocsSearchnodenodicsdocsnodetopiccommercecartorder",
+    "code": "nodicsDocsSearchnodenodicsdocsnodepagecommercecartorder",
     "product": "nodicsDocumentationProduct",
     "targetType": "NODE",
-    "targetCode": "nodicsDocsNodeTopiccommerceCartOrder",
+    "targetCode": "nodicsDocsNodePagecommerceCartOrder",
     "title": "Cart, checkout, and order placement",
     "summary": "Customer, developer, and operator journey for exact calculation, placement, idempotency, compensation, immutable Orders, and recovery.",
     "searchText": "Cart, checkout, and order placement Customer, developer, and operator journey for exact calculation, placement, idempotency, compensation, immutable Orders, and recovery. commerce-cart-and-checkout cart-and-order-placement cart-checkout-and-order-placement",
@@ -4520,7 +4520,7 @@ module.exports = {
       "cart-checkout-and-order-placement"
     ],
     "facets": {
-      "nodeLevel": "TOPIC",
+      "nodeLevel": "PAGE_LINK",
       "nodeType": "PAGE",
       "audience": [
         "business",
@@ -4549,10 +4549,10 @@ module.exports = {
     "active": true
   },
   "record108": {
-    "code": "nodicsDocsSearchnodenodicsdocsnodetopiccommercepaymentfulfillment",
+    "code": "nodicsDocsSearchnodenodicsdocsnodepagecommercepaymentfulfillment",
     "product": "nodicsDocumentationProduct",
     "targetType": "NODE",
-    "targetCode": "nodicsDocsNodeTopiccommercePaymentFulfillment",
+    "targetCode": "nodicsDocsNodePagecommercePaymentFulfillment",
     "title": "Payment and fulfillment operations",
     "summary": "Provider-safe payment and fulfillment guide covering methods, adapters, callbacks, reconciliation, shipment, tracking, warehouse work, and returns.",
     "searchText": "Payment and fulfillment operations Provider-safe payment and fulfillment guide covering methods, adapters, callbacks, reconciliation, shipment, tracking, warehouse work, and returns. payment-management payment-and-fulfillment-boundary payment-and-fulfillment-operations",
@@ -4562,7 +4562,7 @@ module.exports = {
       "payment-and-fulfillment-operations"
     ],
     "facets": {
-      "nodeLevel": "TOPIC",
+      "nodeLevel": "PAGE_LINK",
       "nodeType": "PAGE",
       "audience": [
         "business",
@@ -4591,10 +4591,10 @@ module.exports = {
     "active": true
   },
   "record109": {
-    "code": "nodicsDocsSearchnodenodicsdocsnodetopicfulfillmentshippingmanagement",
+    "code": "nodicsDocsSearchnodenodicsdocsnodepagefulfillmentshippingmanagement",
     "product": "nodicsDocumentationProduct",
     "targetType": "NODE",
-    "targetCode": "nodicsDocsNodeTopicfulfillmentShippingManagement",
+    "targetCode": "nodicsDocsNodePagefulfillmentShippingManagement",
     "title": "Shipping and Fulfillment Management",
     "summary": "Shipping methods, fulfillment policy, consignments, warehouse handoff, shipment tracking, and provider integration boundaries.",
     "searchText": "Shipping and Fulfillment Management Shipping methods, fulfillment policy, consignments, warehouse handoff, shipment tracking, and provider integration boundaries. shipping-and-fulfillment shipping-and-fulfillment-flow shipping-and-fulfillment-management",
@@ -4604,7 +4604,7 @@ module.exports = {
       "shipping-and-fulfillment-management"
     ],
     "facets": {
-      "nodeLevel": "TOPIC",
+      "nodeLevel": "PAGE_LINK",
       "nodeType": "PAGE",
       "audience": [
         "business",
@@ -4633,10 +4633,10 @@ module.exports = {
     "active": true
   },
   "record110": {
-    "code": "nodicsDocsSearchnodenodicsdocsnodetopicordermanagementlifecycle",
+    "code": "nodicsDocsSearchnodenodicsdocsnodepageordermanagementlifecycle",
     "product": "nodicsDocumentationProduct",
     "targetType": "NODE",
-    "targetCode": "nodicsDocsNodeTopicorderManagementLifecycle",
+    "targetCode": "nodicsDocsNodePageorderManagementLifecycle",
     "title": "Order Management Lifecycle",
     "summary": "Order state, operational ownership, fulfillment coordination, lifecycle requests, history, reversals, and support visibility.",
     "searchText": "Order Management Lifecycle Order state, operational ownership, fulfillment coordination, lifecycle requests, history, reversals, and support visibility. order-management order-state-and-operations order-management-lifecycle",
@@ -4646,7 +4646,7 @@ module.exports = {
       "order-management-lifecycle"
     ],
     "facets": {
-      "nodeLevel": "TOPIC",
+      "nodeLevel": "PAGE_LINK",
       "nodeType": "PAGE",
       "audience": [
         "business",
@@ -4675,10 +4675,10 @@ module.exports = {
     "active": true
   },
   "record111": {
-    "code": "nodicsDocsSearchnodenodicsdocsnodetopiccommercereturnsrefunds",
+    "code": "nodicsDocsSearchnodenodicsdocsnodepagecommercereturnsrefunds",
     "product": "nodicsDocumentationProduct",
     "targetType": "NODE",
-    "targetCode": "nodicsDocsNodeTopiccommerceReturnsRefunds",
+    "targetCode": "nodicsDocsNodePagecommerceReturnsRefunds",
     "title": "Cancellation, return, and refund lifecycle",
     "summary": "Structured self-service and operator journey for policy, maker-checker approval, owner intents, checkpoints, recovery, and final Order evidence.",
     "searchText": "Cancellation, return, and refund lifecycle Structured self-service and operator journey for policy, maker-checker approval, owner intents, checkpoints, recovery, and final Order evidence. cancellations-returns-and-refunds reverse-order-lifecycle cancellation-return-and-refund-lifecycle",
@@ -4688,7 +4688,7 @@ module.exports = {
       "cancellation-return-and-refund-lifecycle"
     ],
     "facets": {
-      "nodeLevel": "TOPIC",
+      "nodeLevel": "PAGE_LINK",
       "nodeType": "PAGE",
       "audience": [
         "business",
@@ -4717,10 +4717,10 @@ module.exports = {
     "active": true
   },
   "record112": {
-    "code": "nodicsDocsSearchnodenodicsdocsnodetopicengagementcustomerreviews",
+    "code": "nodicsDocsSearchnodenodicsdocsnodepageengagementcustomerreviews",
     "product": "nodicsDocumentationProduct",
     "targetType": "NODE",
-    "targetCode": "nodicsDocsNodeTopicengagementCustomerReviews",
+    "targetCode": "nodicsDocsNodePageengagementCustomerReviews",
     "title": "Customer reviews and ratings",
     "summary": "Beginner-to-operator journey for review submission, moderation, publication, rating aggregates, recovery, APIs, and safe customization.",
     "searchText": "Customer reviews and ratings Beginner-to-operator journey for review submission, moderation, publication, rating aggregates, recovery, APIs, and safe customization. customer-engagement-and-feedback reviews-and-ratings customer-reviews-and-ratings",
@@ -4730,7 +4730,7 @@ module.exports = {
       "customer-reviews-and-ratings"
     ],
     "facets": {
-      "nodeLevel": "TOPIC",
+      "nodeLevel": "PAGE_LINK",
       "nodeType": "PAGE",
       "audience": [
         "business",
@@ -4759,10 +4759,10 @@ module.exports = {
     "active": true
   },
   "record113": {
-    "code": "nodicsDocsSearchnodenodicsdocsnodetopicengagementreviewmoderationgovernance",
+    "code": "nodicsDocsSearchnodenodicsdocsnodepageengagementreviewmoderationgovernance",
     "product": "nodicsDocumentationProduct",
     "targetType": "NODE",
-    "targetCode": "nodicsDocsNodeTopicengagementReviewModerationGovernance",
+    "targetCode": "nodicsDocsNodePageengagementReviewModerationGovernance",
     "title": "Review Moderation and Governance",
     "summary": "Axis moderation queues, approval and rejection decisions, permissions, state transitions, and audit expectations.",
     "searchText": "Review Moderation and Governance Axis moderation queues, approval and rejection decisions, permissions, state transitions, and audit expectations. customer-engagement-and-feedback reviews-and-ratings customer-reviews-and-ratings",
@@ -4772,7 +4772,7 @@ module.exports = {
       "customer-reviews-and-ratings"
     ],
     "facets": {
-      "nodeLevel": "TOPIC",
+      "nodeLevel": "PAGE_LINK",
       "nodeType": "PAGE",
       "audience": [
         "business",
@@ -4801,10 +4801,10 @@ module.exports = {
     "active": true
   },
   "record114": {
-    "code": "nodicsDocsSearchnodenodicsdocsnodetopicengagementreviewaggregationrecovery",
+    "code": "nodicsDocsSearchnodenodicsdocsnodepageengagementreviewaggregationrecovery",
     "product": "nodicsDocumentationProduct",
     "targetType": "NODE",
-    "targetCode": "nodicsDocsNodeTopicengagementReviewAggregationRecovery",
+    "targetCode": "nodicsDocsNodePageengagementReviewAggregationRecovery",
     "title": "Review Aggregation and Recovery",
     "summary": "Rating aggregate correctness, recalculation, event recovery, and product or discovery visibility after review changes.",
     "searchText": "Review Aggregation and Recovery Rating aggregate correctness, recalculation, event recovery, and product or discovery visibility after review changes. customer-engagement-and-feedback reviews-and-ratings customer-reviews-and-ratings",
@@ -4814,7 +4814,7 @@ module.exports = {
       "customer-reviews-and-ratings"
     ],
     "facets": {
-      "nodeLevel": "TOPIC",
+      "nodeLevel": "PAGE_LINK",
       "nodeType": "PAGE",
       "audience": [
         "business",
@@ -4843,10 +4843,10 @@ module.exports = {
     "active": true
   },
   "record115": {
-    "code": "nodicsDocsSearchnodenodicsdocsnodetopicengagementcustomerfeedback",
+    "code": "nodicsDocsSearchnodenodicsdocsnodepageengagementcustomerfeedback",
     "product": "nodicsDocumentationProduct",
     "targetType": "NODE",
-    "targetCode": "nodicsDocsNodeTopicengagementCustomerFeedback",
+    "targetCode": "nodicsDocsNodePageengagementCustomerFeedback",
     "title": "Customer feedback, complaints, and closed-loop action",
     "summary": "Beginner-to-operator journey for feedback intake, triage, follow-up, resolution, handoffs, surveys, insights, recovery, and safe customization.",
     "searchText": "Customer feedback, complaints, and closed-loop action Beginner-to-operator journey for feedback intake, triage, follow-up, resolution, handoffs, surveys, insights, recovery, and safe customization. customer-engagement-and-feedback feedback-and-complaints customer-feedback-complaints-and-closed-loop-action",
@@ -4856,7 +4856,7 @@ module.exports = {
       "customer-feedback-complaints-and-closed-loop-action"
     ],
     "facets": {
-      "nodeLevel": "TOPIC",
+      "nodeLevel": "PAGE_LINK",
       "nodeType": "PAGE",
       "audience": [
         "business",
@@ -4885,10 +4885,10 @@ module.exports = {
     "active": true
   },
   "record116": {
-    "code": "nodicsDocsSearchnodenodicsdocsnodetopicengagementunifiedoperations",
+    "code": "nodicsDocsSearchnodenodicsdocsnodepageengagementunifiedoperations",
     "product": "nodicsDocumentationProduct",
     "targetType": "NODE",
-    "targetCode": "nodicsDocsNodeTopicengagementUnifiedOperations",
+    "targetCode": "nodicsDocsNodePageengagementUnifiedOperations",
     "title": "Unified engagement operations",
     "summary": "Beginner-to-operator journey for unified queues, dashboards, batch previews, repair evidence, bounded exports, authority boundaries, and recovery.",
     "searchText": "Unified engagement operations Beginner-to-operator journey for unified queues, dashboards, batch previews, repair evidence, bounded exports, authority boundaries, and recovery. customer-engagement-and-feedback unified-engagement-operations unified-engagement-operations",
@@ -4898,7 +4898,7 @@ module.exports = {
       "unified-engagement-operations"
     ],
     "facets": {
-      "nodeLevel": "TOPIC",
+      "nodeLevel": "PAGE_LINK",
       "nodeType": "PAGE",
       "audience": [
         "business",
@@ -4927,10 +4927,10 @@ module.exports = {
     "active": true
   },
   "record117": {
-    "code": "nodicsDocsSearchnodenodicsdocsnodetopicengagementgovernedautomation",
+    "code": "nodicsDocsSearchnodenodicsdocsnodepageengagementgovernedautomation",
     "product": "nodicsDocumentationProduct",
     "targetType": "NODE",
-    "targetCode": "nodicsDocsNodeTopicengagementGovernedAutomation",
+    "targetCode": "nodicsDocsNodePageengagementGovernedAutomation",
     "title": "Governed automation and AI",
     "summary": "Beginner-to-operator journey for optional AI proposals, deterministic fallback, evidence, evaluation, human review, overrides, monitoring, and safe extension.",
     "searchText": "Governed automation and AI Beginner-to-operator journey for optional AI proposals, deterministic fallback, evidence, evaluation, human review, overrides, monitoring, and safe extension. customer-engagement-and-feedback governed-automation-and-ai governed-automation-and-ai",
@@ -4940,7 +4940,7 @@ module.exports = {
       "governed-automation-and-ai"
     ],
     "facets": {
-      "nodeLevel": "TOPIC",
+      "nodeLevel": "PAGE_LINK",
       "nodeType": "PAGE",
       "audience": [
         "business",
@@ -4969,10 +4969,10 @@ module.exports = {
     "active": true
   },
   "record118": {
-    "code": "nodicsDocsSearchnodenodicsdocsnodetopicengagemententerpriseoperations",
+    "code": "nodicsDocsSearchnodenodicsdocsnodepageengagemententerpriseoperations",
     "product": "nodicsDocumentationProduct",
     "targetType": "NODE",
-    "targetCode": "nodicsDocsNodeTopicengagementEnterpriseOperations",
+    "targetCode": "nodicsDocsNodePageengagementEnterpriseOperations",
     "title": "Enterprise scale, resilience, and ecosystem operations",
     "summary": "Beginner-to-operator journey for capacity, regional residency, provider delivery, backpressure, recovery, compatibility, accessibility, security, and release acceptance.",
     "searchText": "Enterprise scale, resilience, and ecosystem operations Beginner-to-operator journey for capacity, regional residency, provider delivery, backpressure, recovery, compatibility, accessibility, security, and release acceptance. customer-engagement-and-feedback enterprise-engagement-operations enterprise-scale-resilience-and-ecosystem-operations",
@@ -4982,7 +4982,7 @@ module.exports = {
       "enterprise-scale-resilience-and-ecosystem-operations"
     ],
     "facets": {
-      "nodeLevel": "TOPIC",
+      "nodeLevel": "PAGE_LINK",
       "nodeType": "PAGE",
       "audience": [
         "business",
@@ -5011,10 +5011,10 @@ module.exports = {
     "active": true
   },
   "record119": {
-    "code": "nodicsDocsSearchnodenodicsdocsnodetopiccommunicationoverview",
+    "code": "nodicsDocsSearchnodenodicsdocsnodepagecommunicationoverview",
     "product": "nodicsDocumentationProduct",
     "targetType": "NODE",
-    "targetCode": "nodicsDocsNodeTopiccommunicationOverview",
+    "targetCode": "nodicsDocsNodePagecommunicationOverview",
     "title": "Communication, delivery, and verification",
     "summary": "Beginner-to-operator journey for templates, intent, consent, suppression, verification, provider delivery, callbacks, retry, inbox, recovery, and domain integration.",
     "searchText": "Communication, delivery, and verification Beginner-to-operator journey for templates, intent, consent, suppression, verification, provider delivery, callbacks, retry, inbox, recovery, and domain integration. communication-and-notifications communication-delivery-and-verification communication-delivery-and-verification",
@@ -5024,7 +5024,7 @@ module.exports = {
       "communication-delivery-and-verification"
     ],
     "facets": {
-      "nodeLevel": "TOPIC",
+      "nodeLevel": "PAGE_LINK",
       "nodeType": "PAGE",
       "audience": [
         "business",
@@ -5053,10 +5053,10 @@ module.exports = {
     "active": true
   },
   "record120": {
-    "code": "nodicsDocsSearchnodenodicsdocsnodetopiceventsmessagingclustercoordination",
+    "code": "nodicsDocsSearchnodenodicsdocsnodepageeventsmessagingclustercoordination",
     "product": "nodicsDocumentationProduct",
     "targetType": "NODE",
-    "targetCode": "nodicsDocsNodeTopiceventsMessagingClusterCoordination",
+    "targetCode": "nodicsDocsNodePageeventsMessagingClusterCoordination",
     "title": "Events, Messaging, and Cluster Coordination",
     "summary": "Event publishing, event splitting, cluster propagation, node responsibility transfer, runtime refresh, and provider extension.",
     "searchText": "Events, Messaging, and Cluster Coordination Event publishing, event splitting, cluster propagation, node responsibility transfer, runtime refresh, and provider extension. event-and-messaging-management events-and-cluster-coordination events-messaging-and-cluster-coordination",
@@ -5066,7 +5066,7 @@ module.exports = {
       "events-messaging-and-cluster-coordination"
     ],
     "facets": {
-      "nodeLevel": "TOPIC",
+      "nodeLevel": "PAGE_LINK",
       "nodeType": "PAGE",
       "audience": [
         "business",
@@ -5095,10 +5095,10 @@ module.exports = {
     "active": true
   },
   "record121": {
-    "code": "nodicsDocsSearchnodenodicsdocsnodetopicprocessoverview",
+    "code": "nodicsDocsSearchnodenodicsdocsnodepageprocessoverview",
     "product": "nodicsDocumentationProduct",
     "targetType": "NODE",
-    "targetCode": "nodicsDocsNodeTopicprocessOverview",
+    "targetCode": "nodicsDocsNodePageprocessOverview",
     "title": "Business Process and Automation Overview",
     "summary": "Understand why nodics.process exists, how it helps business users, developers, and operators, and where it fits with Core, Cron, Platform, Axis, and customer modules.",
     "searchText": "Business Process and Automation Overview Understand why nodics.process exists, how it helps business users, developers, and operators, and where it fits with Core, Cron, Platform, Axis, and customer modules. process-and-workflow-automation process-overview business-process-and-automation-overview",
@@ -5108,7 +5108,7 @@ module.exports = {
       "business-process-and-automation-overview"
     ],
     "facets": {
-      "nodeLevel": "TOPIC",
+      "nodeLevel": "PAGE_LINK",
       "nodeType": "PAGE",
       "audience": [
         "business",
@@ -5137,10 +5137,10 @@ module.exports = {
     "active": true
   },
   "record122": {
-    "code": "nodicsDocsSearchnodenodicsdocsnodetopicprocessruntimelifecycle",
+    "code": "nodicsDocsSearchnodenodicsdocsnodepageprocessruntimelifecycle",
     "product": "nodicsDocumentationProduct",
     "targetType": "NODE",
-    "targetCode": "nodicsDocsNodeTopicprocessRuntimeLifecycle",
+    "targetCode": "nodicsDocsNodePageprocessRuntimeLifecycle",
     "title": "Runtime Instance and Task Lifecycle",
     "summary": "Learn the backend-owned lifecycle for definitions, versions, instances, tasks, audit events, and scheduled trigger relationships.",
     "searchText": "Runtime Instance and Task Lifecycle Learn the backend-owned lifecycle for definitions, versions, instances, tasks, audit events, and scheduled trigger relationships. process-and-workflow-automation runtime-lifecycle runtime-instance-and-task-lifecycle",
@@ -5150,7 +5150,7 @@ module.exports = {
       "runtime-instance-and-task-lifecycle"
     ],
     "facets": {
-      "nodeLevel": "TOPIC",
+      "nodeLevel": "PAGE_LINK",
       "nodeType": "PAGE",
       "audience": [
         "business",
@@ -5179,10 +5179,10 @@ module.exports = {
     "active": true
   },
   "record123": {
-    "code": "nodicsDocsSearchnodenodicsdocsnodetopicprocessworkfloworchestrationpatterns",
+    "code": "nodicsDocsSearchnodenodicsdocsnodepageprocessworkfloworchestrationpatterns",
     "product": "nodicsDocumentationProduct",
     "targetType": "NODE",
-    "targetCode": "nodicsDocsNodeTopicprocessWorkflowOrchestrationPatterns",
+    "targetCode": "nodicsDocsNodePageprocessWorkflowOrchestrationPatterns",
     "title": "Workflow Orchestration Patterns",
     "summary": "How Process workflows govern long-running business lifecycle with product export aggregation, filters, multi-target branching, ACTION adapters, retry, and recovery.",
     "searchText": "Workflow Orchestration Patterns How Process workflows govern long-running business lifecycle with product export aggregation, filters, multi-target branching, ACTION adapters, retry, and recovery. workflow process product-export multi-target-export target-branching action-adapter processDefinition processInstance processTask processIncident data-export filters aggregation",
@@ -5202,7 +5202,7 @@ module.exports = {
       "aggregation"
     ],
     "facets": {
-      "nodeLevel": "TOPIC",
+      "nodeLevel": "PAGE_LINK",
       "nodeType": "PAGE",
       "audience": [
         "business",
@@ -5231,10 +5231,10 @@ module.exports = {
     "active": true
   },
   "record124": {
-    "code": "nodicsDocsSearchnodenodicsdocsnodetopicprocessfirstworkflow",
+    "code": "nodicsDocsSearchnodenodicsdocsnodepageprocessfirstworkflow",
     "product": "nodicsDocumentationProduct",
     "targetType": "NODE",
-    "targetCode": "nodicsDocsNodeTopicprocessFirstWorkflow",
+    "targetCode": "nodicsDocsNodePageprocessFirstWorkflow",
     "title": "Build Your First Workflow",
     "summary": "Create a first Process workflow from START through TASK, DECISION, ACTION, TIMER, SUB_PROCESS, and END with beginner-safe examples.",
     "searchText": "Build Your First Workflow Create a first Process workflow from START through TASK, DECISION, ACTION, TIMER, SUB_PROCESS, and END with beginner-safe examples. process-and-workflow-automation workflow-getting-started build-your-first-workflow",
@@ -5244,7 +5244,7 @@ module.exports = {
       "build-your-first-workflow"
     ],
     "facets": {
-      "nodeLevel": "TOPIC",
+      "nodeLevel": "PAGE_LINK",
       "nodeType": "PAGE",
       "audience": [
         "business",
@@ -5273,10 +5273,10 @@ module.exports = {
     "active": true
   },
   "record125": {
-    "code": "nodicsDocsSearchnodenodicsdocsnodetopicprocessfirsthumantask",
+    "code": "nodicsDocsSearchnodenodicsdocsnodepageprocessfirsthumantask",
     "product": "nodicsDocumentationProduct",
     "targetType": "NODE",
-    "targetCode": "nodicsDocsNodeTopicprocessFirstHumanTask",
+    "targetCode": "nodicsDocsNodePageprocessFirstHumanTask",
     "title": "Build Your First Human Task Flow",
     "summary": "Understand task lifecycle, assignment, Axis presentation, and customer customization for human workflow steps.",
     "searchText": "Build Your First Human Task Flow Understand task lifecycle, assignment, Axis presentation, and customer customization for human workflow steps. process-and-workflow-automation human-task-flow build-your-first-human-task-flow",
@@ -5286,7 +5286,7 @@ module.exports = {
       "build-your-first-human-task-flow"
     ],
     "facets": {
-      "nodeLevel": "TOPIC",
+      "nodeLevel": "PAGE_LINK",
       "nodeType": "PAGE",
       "audience": [
         "business",
@@ -5315,10 +5315,10 @@ module.exports = {
     "active": true
   },
   "record126": {
-    "code": "nodicsDocsSearchnodenodicsdocsnodetopicprocessbusinessvalue",
+    "code": "nodicsDocsSearchnodenodicsdocsnodepageprocessbusinessvalue",
     "product": "nodicsDocumentationProduct",
     "targetType": "NODE",
-    "targetCode": "nodicsDocsNodeTopicprocessBusinessValue",
+    "targetCode": "nodicsDocsNodePageprocessBusinessValue",
     "title": "Business Value and Adoption Model",
     "summary": "Explain the business problems Process solves, how it lowers operating cost, and how business users should think about automation governance.",
     "searchText": "Business Value and Adoption Model Explain the business problems Process solves, how it lowers operating cost, and how business users should think about automation governance. process-and-workflow-automation business-value-and-adoption business-value-and-adoption-model",
@@ -5328,7 +5328,7 @@ module.exports = {
       "business-value-and-adoption-model"
     ],
     "facets": {
-      "nodeLevel": "TOPIC",
+      "nodeLevel": "PAGE_LINK",
       "nodeType": "PAGE",
       "audience": [
         "business",
@@ -5357,10 +5357,10 @@ module.exports = {
     "active": true
   },
   "record127": {
-    "code": "nodicsDocsSearchnodenodicsdocsnodetopicpipelinebusinesslogicorchestration",
+    "code": "nodicsDocsSearchnodenodicsdocsnodepagepipelinebusinesslogicorchestration",
     "product": "nodicsDocumentationProduct",
     "targetType": "NODE",
-    "targetCode": "nodicsDocsNodeTopicpipelineBusinessLogicOrchestration",
+    "targetCode": "nodicsDocsNodePagepipelineBusinessLogicOrchestration",
     "title": "Pipeline and Business Logic Orchestration",
     "summary": "How Nodics pipelines compose validation, enrichment, decisioning, side effects, events, and project-layer business logic.",
     "searchText": "Pipeline and Business Logic Orchestration How Nodics pipelines compose validation, enrichment, decisioning, side effects, events, and project-layer business logic. pipeline-and-business-logic-orchestration pipeline-execution-model pipeline-and-business-logic-orchestration PipelineHead PipelineNode DefaultPipelineService.start startNode process.nextSuccess process.stop process.error response.targetNode hardStop nested pipeline",
@@ -5380,7 +5380,7 @@ module.exports = {
       "nested pipeline"
     ],
     "facets": {
-      "nodeLevel": "TOPIC",
+      "nodeLevel": "PAGE_LINK",
       "nodeType": "PAGE",
       "audience": [
         "business",
@@ -5409,10 +5409,10 @@ module.exports = {
     "active": true
   },
   "record128": {
-    "code": "nodicsDocsSearchnodenodicsdocsnodetopiccronoperations",
+    "code": "nodicsDocsSearchnodenodicsdocsnodepagecronoperations",
     "product": "nodicsDocumentationProduct",
     "targetType": "NODE",
-    "targetCode": "nodicsDocsNodeTopiccronOperations",
+    "targetCode": "nodicsDocsNodePagecronOperations",
     "title": "Cron operations",
     "summary": "Scheduled job ownership, runtime placement, lifecycle commands, resilience, and production safety.",
     "searchText": "Cron operations Scheduled job ownership, runtime placement, lifecycle commands, resilience, and production safety. cron-and-scheduled-automation cron-operations cron-operations",
@@ -5422,7 +5422,7 @@ module.exports = {
       "cron-operations"
     ],
     "facets": {
-      "nodeLevel": "TOPIC",
+      "nodeLevel": "PAGE_LINK",
       "nodeType": "PAGE",
       "audience": [
         "business",
@@ -5451,10 +5451,10 @@ module.exports = {
     "active": true
   },
   "record129": {
-    "code": "nodicsDocsSearchnodenodicsdocsnodetopiccronnoderesponsibilitytee",
+    "code": "nodicsDocsSearchnodenodicsdocsnodepagecronnoderesponsibilitytee",
     "product": "nodicsDocumentationProduct",
     "targetType": "NODE",
-    "targetCode": "nodicsDocsNodeTopiccronNodeResponsibilityTee",
+    "targetCode": "nodicsDocsNodePagecronNodeResponsibilityTee",
     "title": "Cron Node Responsibility and TEE",
     "summary": "How scheduled work ownership, failover, responsibility transfer, recovery, and TEE references should be documented.",
     "searchText": "Cron Node Responsibility and TEE How scheduled work ownership, failover, responsibility transfer, recovery, and TEE references should be documented. cron-node-responsibility tee task-execution-engine cluster-failover",
@@ -5465,7 +5465,7 @@ module.exports = {
       "cluster-failover"
     ],
     "facets": {
-      "nodeLevel": "TOPIC",
+      "nodeLevel": "PAGE_LINK",
       "nodeType": "PAGE",
       "audience": [
         "business",
@@ -5494,10 +5494,10 @@ module.exports = {
     "active": true
   },
   "record130": {
-    "code": "nodicsDocsSearchnodenodicsdocsnodetopiccronprojectcustomization",
+    "code": "nodicsDocsSearchnodenodicsdocsnodepagecronprojectcustomization",
     "product": "nodicsDocumentationProduct",
     "targetType": "NODE",
-    "targetCode": "nodicsDocsNodeTopiccronProjectCustomization",
+    "targetCode": "nodicsDocsNodePagecronProjectCustomization",
     "title": "Project Cron Customization",
     "summary": "How customer projects add scheduled business work with job definitions, triggers, permissions, retry, audit, and tests.",
     "searchText": "Project Cron Customization How customer projects add scheduled business work with job definitions, triggers, permissions, retry, audit, and tests. project-cron-customization scheduled-job-extension cron-project-module",
@@ -5507,7 +5507,7 @@ module.exports = {
       "cron-project-module"
     ],
     "facets": {
-      "nodeLevel": "TOPIC",
+      "nodeLevel": "PAGE_LINK",
       "nodeType": "PAGE",
       "audience": [
         "business",
@@ -5536,10 +5536,10 @@ module.exports = {
     "active": true
   },
   "record131": {
-    "code": "nodicsDocsSearchnodenodicsdocsnodetopicprocessprocesscronruntime",
+    "code": "nodicsDocsSearchnodenodicsdocsnodepageprocessprocesscronruntime",
     "product": "nodicsDocumentationProduct",
     "targetType": "NODE",
-    "targetCode": "nodicsDocsNodeTopicprocessProcessCronRuntime",
+    "targetCode": "nodicsDocsNodePageprocessProcessCronRuntime",
     "title": "Process and Cronjob Shared Runtime",
     "summary": "Clarify how processServer can include workflow and cronjob while each module keeps a separate ownership boundary.",
     "searchText": "Process and Cronjob Shared Runtime Clarify how processServer can include workflow and cronjob while each module keeps a separate ownership boundary. cron-and-scheduled-automation process-and-cron-runtime-boundary process-and-cronjob-shared-runtime",
@@ -5549,7 +5549,7 @@ module.exports = {
       "process-and-cronjob-shared-runtime"
     ],
     "facets": {
-      "nodeLevel": "TOPIC",
+      "nodeLevel": "PAGE_LINK",
       "nodeType": "PAGE",
       "audience": [
         "business",
@@ -5578,10 +5578,10 @@ module.exports = {
     "active": true
   },
   "record132": {
-    "code": "nodicsDocsSearchnodenodicsdocsnodetopicprocessscheduledautomation",
+    "code": "nodicsDocsSearchnodenodicsdocsnodepageprocessscheduledautomation",
     "product": "nodicsDocumentationProduct",
     "targetType": "NODE",
-    "targetCode": "nodicsDocsNodeTopicprocessScheduledAutomation",
+    "targetCode": "nodicsDocsNodePageprocessScheduledAutomation",
     "title": "Scheduled Automation and Cron Triggers",
     "summary": "Show how active Process triggers are executed by Cron or another authorized scheduler with correlation and audit evidence.",
     "searchText": "Scheduled Automation and Cron Triggers Show how active Process triggers are executed by Cron or another authorized scheduler with correlation and audit evidence. cron-and-scheduled-automation scheduled-automation-triggers scheduled-automation-and-cron-triggers",
@@ -5591,7 +5591,7 @@ module.exports = {
       "scheduled-automation-and-cron-triggers"
     ],
     "facets": {
-      "nodeLevel": "TOPIC",
+      "nodeLevel": "PAGE_LINK",
       "nodeType": "PAGE",
       "audience": [
         "business",
@@ -5620,10 +5620,10 @@ module.exports = {
     "active": true
   },
   "record133": {
-    "code": "nodicsDocsSearchnodenodicsdocsnodetopicdataimportexportmigration",
+    "code": "nodicsDocsSearchnodenodicsdocsnodepagedataimportexportmigration",
     "product": "nodicsDocumentationProduct",
     "targetType": "NODE",
-    "targetCode": "nodicsDocsNodeTopicdataImportExportMigration",
+    "targetCode": "nodicsDocsNodePagedataImportExportMigration",
     "title": "Data Import, Export, and Migration",
     "summary": "Import definitions, data installation, exports, migration registers, release evidence, rollback boundaries, and customer onboarding.",
     "searchText": "Data Import, Export, and Migration Import definitions, data installation, exports, migration registers, release evidence, rollback boundaries, and customer onboarding. data-import-export-and-migration data-movement-and-migration data-import-export-and-migration",
@@ -5633,7 +5633,7 @@ module.exports = {
       "data-import-export-and-migration"
     ],
     "facets": {
-      "nodeLevel": "TOPIC",
+      "nodeLevel": "PAGE_LINK",
       "nodeType": "PAGE",
       "audience": [
         "business",
@@ -5662,10 +5662,10 @@ module.exports = {
     "active": true
   },
   "record134": {
-    "code": "nodicsDocsSearchnodenodicsdocsnodetopicprocessactionadapters",
+    "code": "nodicsDocsSearchnodenodicsdocsnodepageprocessactionadapters",
     "product": "nodicsDocumentationProduct",
     "targetType": "NODE",
-    "targetCode": "nodicsDocsNodeTopicprocessActionAdapters",
+    "targetCode": "nodicsDocsNodePageprocessActionAdapters",
     "title": "Action Adapter Contract",
     "summary": "Learn why ACTION nodes use registered declarative adapters and how customer and domain modules own business execution.",
     "searchText": "Action Adapter Contract Learn why ACTION nodes use registered declarative adapters and how customer and domain modules own business execution. system-integration-and-external-connectivity action-adapter-integration action-adapter-contract",
@@ -5675,7 +5675,7 @@ module.exports = {
       "action-adapter-contract"
     ],
     "facets": {
-      "nodeLevel": "TOPIC",
+      "nodeLevel": "PAGE_LINK",
       "nodeType": "PAGE",
       "audience": [
         "business",
@@ -5704,10 +5704,10 @@ module.exports = {
     "active": true
   },
   "record135": {
-    "code": "nodicsDocsSearchnodenodicsdocsnodetopicframeworkdevopsruntime",
+    "code": "nodicsDocsSearchnodenodicsdocsnodepageframeworkdevopsruntime",
     "product": "nodicsDocumentationProduct",
     "targetType": "NODE",
-    "targetCode": "nodicsDocsNodeTopicframeworkDevopsRuntime",
+    "targetCode": "nodicsDocsNodePageframeworkDevopsRuntime",
     "title": "Runtime and DevOps operations",
     "summary": "Runtime topology, dependencies, public and private properties, deployment, monitoring, and recovery guidance.",
     "searchText": "Runtime and DevOps operations Runtime topology, dependencies, public and private properties, deployment, monitoring, and recovery guidance. operations-monitoring-and-recovery runtime-and-devops runtime-and-devops-operations",
@@ -5717,7 +5717,7 @@ module.exports = {
       "runtime-and-devops-operations"
     ],
     "facets": {
-      "nodeLevel": "TOPIC",
+      "nodeLevel": "PAGE_LINK",
       "nodeType": "PAGE",
       "audience": [
         "business",
@@ -5746,10 +5746,10 @@ module.exports = {
     "active": true
   },
   "record136": {
-    "code": "nodicsDocsSearchnodenodicsdocsnodetopicframeworkruntimereleaserollback",
+    "code": "nodicsDocsSearchnodenodicsdocsnodepageframeworkruntimereleaserollback",
     "product": "nodicsDocumentationProduct",
     "targetType": "NODE",
-    "targetCode": "nodicsDocsNodeTopicframeworkRuntimeReleaseRollback",
+    "targetCode": "nodicsDocsNodePageframeworkRuntimeReleaseRollback",
     "title": "Runtime Release and Rollback",
     "summary": "Release and rollback guidance for code, configuration, content, data import, generated contracts, and browser evidence.",
     "searchText": "Runtime Release and Rollback Release and rollback guidance for code, configuration, content, data import, generated contracts, and browser evidence. operations-monitoring-and-recovery runtime-and-devops runtime-and-devops-operations",
@@ -5759,7 +5759,7 @@ module.exports = {
       "runtime-and-devops-operations"
     ],
     "facets": {
-      "nodeLevel": "TOPIC",
+      "nodeLevel": "PAGE_LINK",
       "nodeType": "PAGE",
       "audience": [
         "business",
@@ -5788,10 +5788,10 @@ module.exports = {
     "active": true
   },
   "record137": {
-    "code": "nodicsDocsSearchnodenodicsdocsnodetopicframeworklocalbrowseracceptancejourney",
+    "code": "nodicsDocsSearchnodenodicsdocsnodepageframeworklocalbrowseracceptancejourney",
     "product": "nodicsDocumentationProduct",
     "targetType": "NODE",
-    "targetCode": "nodicsDocsNodeTopicframeworkLocalBrowserAcceptanceJourney",
+    "targetCode": "nodicsDocsNodePageframeworkLocalBrowserAcceptanceJourney",
     "title": "Local Browser Acceptance Journey",
     "summary": "Fresh-schema browser acceptance path for Axis, documentation, Nexus, Agora, setup actions, and unpublished states.",
     "searchText": "Local Browser Acceptance Journey Fresh-schema browser acceptance path for Axis, documentation, Nexus, Agora, setup actions, and unpublished states. operations-monitoring-and-recovery local-verification-and-acceptance local-verification-and-acceptance-checklist",
@@ -5801,7 +5801,7 @@ module.exports = {
       "local-verification-and-acceptance-checklist"
     ],
     "facets": {
-      "nodeLevel": "TOPIC",
+      "nodeLevel": "PAGE_LINK",
       "nodeType": "PAGE",
       "audience": [
         "business",
@@ -5830,10 +5830,10 @@ module.exports = {
     "active": true
   },
   "record138": {
-    "code": "nodicsDocsSearchnodenodicsdocsnodetopicframeworklocalverificationchecklist",
+    "code": "nodicsDocsSearchnodenodicsdocsnodepageframeworklocalverificationchecklist",
     "product": "nodicsDocumentationProduct",
     "targetType": "NODE",
-    "targetCode": "nodicsDocsNodeTopicframeworkLocalVerificationChecklist",
+    "targetCode": "nodicsDocsNodePageframeworkLocalVerificationChecklist",
     "title": "Local verification and acceptance checklist",
     "summary": "How to prove the local framework, customer-project servers, Axis, documentation, registry, imports, WCMS, and Cron are healthy.",
     "searchText": "Local verification and acceptance checklist How to prove the local framework, customer-project servers, Axis, documentation, registry, imports, WCMS, and Cron are healthy. operations-monitoring-and-recovery local-verification-and-acceptance local-verification-and-acceptance-checklist",
@@ -5843,7 +5843,7 @@ module.exports = {
       "local-verification-and-acceptance-checklist"
     ],
     "facets": {
-      "nodeLevel": "TOPIC",
+      "nodeLevel": "PAGE_LINK",
       "nodeType": "PAGE",
       "audience": [
         "business",
@@ -5872,10 +5872,10 @@ module.exports = {
     "active": true
   },
   "record139": {
-    "code": "nodicsDocsSearchnodenodicsdocsnodetopiccommerceenterpriseoperations",
+    "code": "nodicsDocsSearchnodenodicsdocsnodepagecommerceenterpriseoperations",
     "product": "nodicsDocumentationProduct",
     "targetType": "NODE",
-    "targetCode": "nodicsDocsNodeTopiccommerceEnterpriseOperations",
+    "targetCode": "nodicsDocsNodePagecommerceEnterpriseOperations",
     "title": "Commerce enterprise operations and migration",
     "summary": "Capacity, backpressure, providers, recovery, compatibility, tenant migration, rollback, legacy retirement, and production qualification guidance.",
     "searchText": "Commerce enterprise operations and migration Capacity, backpressure, providers, recovery, compatibility, tenant migration, rollback, legacy retirement, and production qualification guidance. operations-monitoring-and-recovery commerce-enterprise-operations commerce-enterprise-operations-and-migration",
@@ -5885,7 +5885,7 @@ module.exports = {
       "commerce-enterprise-operations-and-migration"
     ],
     "facets": {
-      "nodeLevel": "TOPIC",
+      "nodeLevel": "PAGE_LINK",
       "nodeType": "PAGE",
       "audience": [
         "business",
@@ -5914,10 +5914,10 @@ module.exports = {
     "active": true
   },
   "record140": {
-    "code": "nodicsDocsSearchnodenodicsdocsnodetopicprocessincidentrecovery",
+    "code": "nodicsDocsSearchnodenodicsdocsnodepageprocessincidentrecovery",
     "product": "nodicsDocumentationProduct",
     "targetType": "NODE",
-    "targetCode": "nodicsDocsNodeTopicprocessIncidentRecovery",
+    "targetCode": "nodicsDocsNodePageprocessIncidentRecovery",
     "title": "Incident, Retry, and Compensation Operations",
     "summary": "Operate failed ACTION nodes through Process-owned incidents, bounded retries, dead-letter handling, and declarative domain-owned compensation.",
     "searchText": "Incident, Retry, and Compensation Operations Operate failed ACTION nodes through Process-owned incidents, bounded retries, dead-letter handling, and declarative domain-owned compensation. operations-monitoring-and-recovery process-incident-recovery incident-retry-and-compensation-operations",
@@ -5927,7 +5927,7 @@ module.exports = {
       "incident-retry-and-compensation-operations"
     ],
     "facets": {
-      "nodeLevel": "TOPIC",
+      "nodeLevel": "PAGE_LINK",
       "nodeType": "PAGE",
       "audience": [
         "business",
@@ -5956,10 +5956,10 @@ module.exports = {
     "active": true
   },
   "record141": {
-    "code": "nodicsDocsSearchnodenodicsdocsnodetopicprocessdevopstopology",
+    "code": "nodicsDocsSearchnodenodicsdocsnodepageprocessdevopstopology",
     "product": "nodicsDocumentationProduct",
     "targetType": "NODE",
-    "targetCode": "nodicsDocsNodeTopicprocessDevopsTopology",
+    "targetCode": "nodicsDocsNodePageprocessDevopsTopology",
     "title": "DevOps and Runtime Topology",
     "summary": "Explain deployment topology, observability, fresh bootstrap evidence, and production sustainability for Process runtimes.",
     "searchText": "DevOps and Runtime Topology Explain deployment topology, observability, fresh bootstrap evidence, and production sustainability for Process runtimes. operations-monitoring-and-recovery process-runtime-topology devops-and-runtime-topology",
@@ -5969,7 +5969,7 @@ module.exports = {
       "devops-and-runtime-topology"
     ],
     "facets": {
-      "nodeLevel": "TOPIC",
+      "nodeLevel": "PAGE_LINK",
       "nodeType": "PAGE",
       "audience": [
         "business",
@@ -5998,10 +5998,10 @@ module.exports = {
     "active": true
   },
   "record142": {
-    "code": "nodicsDocsSearchnodenodicsdocsnodetopicprocessqaregressionguide",
+    "code": "nodicsDocsSearchnodenodicsdocsnodepageprocessqaregressionguide",
     "product": "nodicsDocumentationProduct",
     "targetType": "NODE",
-    "targetCode": "nodicsDocsNodeTopicprocessQaRegressionGuide",
+    "targetCode": "nodicsDocsNodePageprocessQaRegressionGuide",
     "title": "Process QA and Regression Guide",
     "summary": "Define backend, fresh database, Axis smoke, and negative regression checks for Process and Cron automation.",
     "searchText": "Process QA and Regression Guide Define backend, fresh database, Axis smoke, and negative regression checks for Process and Cron automation. quality-testing-and-certification process-regression-evidence process-qa-and-regression-guide",
@@ -6011,7 +6011,7 @@ module.exports = {
       "process-qa-and-regression-guide"
     ],
     "facets": {
-      "nodeLevel": "TOPIC",
+      "nodeLevel": "PAGE_LINK",
       "nodeType": "PAGE",
       "audience": [
         "business",
@@ -6040,10 +6040,10 @@ module.exports = {
     "active": true
   },
   "record143": {
-    "code": "nodicsDocsSearchnodenodicsdocsnodetopicframeworkcapabilitydocumentationmaturitypattern",
+    "code": "nodicsDocsSearchnodenodicsdocsnodepageframeworkcapabilitydocumentationmaturitypattern",
     "product": "nodicsDocumentationProduct",
     "targetType": "NODE",
-    "targetCode": "nodicsDocsNodeTopicframeworkCapabilityDocumentationMaturityPattern",
+    "targetCode": "nodicsDocsNodePageframeworkCapabilityDocumentationMaturityPattern",
     "title": "Capability documentation maturity pattern",
     "summary": "How to document concept, design-contract, partial, and operational capabilities without creating false runtime authority.",
     "searchText": "Capability documentation maturity pattern How to document concept, design-contract, partial, and operational capabilities without creating false runtime authority. documentation-management documentation-contract-and-quality capability-documentation-maturity-pattern",
@@ -6053,7 +6053,7 @@ module.exports = {
       "capability-documentation-maturity-pattern"
     ],
     "facets": {
-      "nodeLevel": "TOPIC",
+      "nodeLevel": "PAGE_LINK",
       "nodeType": "PAGE",
       "audience": [
         "business",
@@ -6082,10 +6082,10 @@ module.exports = {
     "active": true
   },
   "record144": {
-    "code": "nodicsDocsSearchnodenodicsdocsnodetopicdocsoverview",
+    "code": "nodicsDocsSearchnodenodicsdocsnodepagedocsoverview",
     "product": "nodicsDocumentationProduct",
     "targetType": "NODE",
-    "targetCode": "nodicsDocsNodeTopicdocsOverview",
+    "targetCode": "nodicsDocsNodePagedocsOverview",
     "title": "Docs overview",
     "summary": "How Nodics framework documentation is authored, generated, validated, imported, rendered, and kept separate from Axis and customer project documentation.",
     "searchText": "Docs overview How Nodics framework documentation is authored, generated, validated, imported, rendered, and kept separate from Axis and customer project documentation. documentation-management documentation-runtime-and-publishing docs-overview",
@@ -6095,7 +6095,7 @@ module.exports = {
       "docs-overview"
     ],
     "facets": {
-      "nodeLevel": "TOPIC",
+      "nodeLevel": "PAGE_LINK",
       "nodeType": "PAGE",
       "audience": [
         "business",
@@ -6124,10 +6124,10 @@ module.exports = {
     "active": true
   },
   "record145": {
-    "code": "nodicsDocsSearchnodenodicsdocsnodetopicwcmspublishinglifecycle",
+    "code": "nodicsDocsSearchnodenodicsdocsnodepagewcmspublishinglifecycle",
     "product": "nodicsDocumentationProduct",
     "targetType": "NODE",
-    "targetCode": "nodicsDocsNodeTopicwcmsPublishingLifecycle",
+    "targetCode": "nodicsDocsNodePagewcmsPublishingLifecycle",
     "title": "Staged-to-Online publishing lifecycle",
     "summary": "Author, approve, deploy, recover, and customize immutable WCMS releases across physically separated Staged and Online runtimes.",
     "searchText": "Staged-to-Online publishing lifecycle Author, approve, deploy, recover, and customize immutable WCMS releases across physically separated Staged and Online runtimes. release-staging-and-publication content-publication-lifecycle staged-to-online-publishing-lifecycle",
@@ -6137,7 +6137,7 @@ module.exports = {
       "staged-to-online-publishing-lifecycle"
     ],
     "facets": {
-      "nodeLevel": "TOPIC",
+      "nodeLevel": "PAGE_LINK",
       "nodeType": "PAGE",
       "audience": [
         "business",
@@ -6166,10 +6166,10 @@ module.exports = {
     "active": true
   },
   "record146": {
-    "code": "nodicsDocsSearchnodenodicsdocsnodetopicapplicationsnexusdatacontentguide",
+    "code": "nodicsDocsSearchnodenodicsdocsnodepageapplicationsnexusdatacontentguide",
     "product": "nodicsDocumentationProduct",
     "targetType": "NODE",
-    "targetCode": "nodicsDocsNodeTopicapplicationsNexusDataContentGuide",
+    "targetCode": "nodicsDocsNodePageapplicationsNexusDataContentGuide",
     "title": "Nexus Data and Content Guide",
     "summary": "How Nexus corporate content, media, editorial, engagement, Staged publication, Online delivery, and browser validation are authored from project data releases.",
     "searchText": "Nexus Data and Content Guide How Nexus corporate content, media, editorial, engagement, Staged publication, Online delivery, and browser validation are authored from project data releases. nexus corporate-site content-pack media-assets online-delivery",
@@ -6181,7 +6181,7 @@ module.exports = {
       "online-delivery"
     ],
     "facets": {
-      "nodeLevel": "TOPIC",
+      "nodeLevel": "PAGE_LINK",
       "nodeType": "PAGE",
       "audience": [
         "business",
@@ -6210,10 +6210,10 @@ module.exports = {
     "active": true
   },
   "record147": {
-    "code": "nodicsDocsSearchnodenodicsdocsnodetopicapplicationsaxissetuperrorcontracts",
+    "code": "nodicsDocsSearchnodenodicsdocsnodepageapplicationsaxissetuperrorcontracts",
     "product": "nodicsDocumentationProduct",
     "targetType": "NODE",
-    "targetCode": "nodicsDocsNodeTopicapplicationsAxisSetupErrorContracts",
+    "targetCode": "nodicsDocsNodePageapplicationsAxisSetupErrorContracts",
     "title": "Axis Setup and User-Safe Error Contracts",
     "summary": "How Axis presents setup, retry, blocker, and initialization errors with safe business messages while preserving technical evidence for operators.",
     "searchText": "Axis Setup and User-Safe Error Contracts How Axis presents setup, retry, blocker, and initialization errors with safe business messages while preserving technical evidence for operators. axis setup accelerator safe-error backoffice",
@@ -6225,7 +6225,7 @@ module.exports = {
       "backoffice"
     ],
     "facets": {
-      "nodeLevel": "TOPIC",
+      "nodeLevel": "PAGE_LINK",
       "nodeType": "PAGE",
       "audience": [
         "business",
@@ -6254,10 +6254,10 @@ module.exports = {
     "active": true
   },
   "record148": {
-    "code": "nodicsDocsSearchnodenodicsdocsnodetopicwcmscmssourcemapauthoringcontract",
+    "code": "nodicsDocsSearchnodenodicsdocsnodepagewcmscmssourcemapauthoringcontract",
     "product": "nodicsDocumentationProduct",
     "targetType": "NODE",
-    "targetCode": "nodicsDocsNodeTopicwcmsCmsSourceMapAuthoringContract",
+    "targetCode": "nodicsDocsNodePagewcmsCmsSourceMapAuthoringContract",
     "title": "CMS Source Map and Authoring Contract",
     "summary": "Exact CMS implementation map for sites, routes, pages, components, renderers, migration, publication manifests, delivery cache, and governance.",
     "searchText": "CMS Source Map and Authoring Contract Exact CMS implementation map for sites, routes, pages, components, renderers, migration, publication manifests, delivery cache, and governance. cms source-map authoring publication-manifest delivery-cache",
@@ -6269,7 +6269,7 @@ module.exports = {
       "delivery-cache"
     ],
     "facets": {
-      "nodeLevel": "TOPIC",
+      "nodeLevel": "PAGE_LINK",
       "nodeType": "PAGE",
       "audience": [
         "business",
@@ -6298,10 +6298,10 @@ module.exports = {
     "active": true
   },
   "record149": {
-    "code": "nodicsDocsSearchnodenodicsdocsnodetopicwcmsmediaoperationsrunbook",
+    "code": "nodicsDocsSearchnodenodicsdocsnodepagewcmsmediaoperationsrunbook",
     "product": "nodicsDocumentationProduct",
     "targetType": "NODE",
-    "targetCode": "nodicsDocsNodeTopicwcmsMediaOperationsRunbook",
+    "targetCode": "nodicsDocsNodePagewcmsMediaOperationsRunbook",
     "title": "Media Operations Runbook",
     "summary": "Operational contract for media import hydration, storage providers, publication transfer, DR replication, cleanup lifecycle, and browser delivery evidence.",
     "searchText": "Media Operations Runbook Operational contract for media import hydration, storage providers, publication transfer, DR replication, cleanup lifecycle, and browser delivery evidence. media storage-provider publication-transfer asset-hydration disaster-recovery",
@@ -6313,7 +6313,7 @@ module.exports = {
       "disaster-recovery"
     ],
     "facets": {
-      "nodeLevel": "TOPIC",
+      "nodeLevel": "PAGE_LINK",
       "nodeType": "PAGE",
       "audience": [
         "business",
@@ -6342,10 +6342,10 @@ module.exports = {
     "active": true
   },
   "record150": {
-    "code": "nodicsDocsSearchnodenodicsdocsnodetopicdataimportexportproviderguides",
+    "code": "nodicsDocsSearchnodenodicsdocsnodepagedataimportexportproviderguides",
     "product": "nodicsDocumentationProduct",
     "targetType": "NODE",
-    "targetCode": "nodicsDocsNodeTopicdataImportExportProviderGuides",
+    "targetCode": "nodicsDocsNodePagedataImportExportProviderGuides",
     "title": "Import and Export Provider Guides",
     "summary": "Provider-level guide for JavaScript, JSON, CSV, and Excel import/export behavior, masking, parser rules, diagnostics, and extension boundaries.",
     "searchText": "Import and Export Provider Guides Provider-level guide for JavaScript, JSON, CSV, and Excel import/export behavior, masking, parser rules, diagnostics, and extension boundaries. import export provider javascript-data csv excel",
@@ -6358,7 +6358,7 @@ module.exports = {
       "excel"
     ],
     "facets": {
-      "nodeLevel": "TOPIC",
+      "nodeLevel": "PAGE_LINK",
       "nodeType": "PAGE",
       "audience": [
         "business",
@@ -6387,10 +6387,10 @@ module.exports = {
     "active": true
   },
   "record151": {
-    "code": "nodicsDocsSearchnodenodicsdocsnodetopiccommercedataauthoringfulfillment",
+    "code": "nodicsDocsSearchnodenodicsdocsnodepagecommercedataauthoringfulfillment",
     "product": "nodicsDocumentationProduct",
     "targetType": "NODE",
-    "targetCode": "nodicsDocsNodeTopiccommerceDataAuthoringFulfillment",
+    "targetCode": "nodicsDocsNodePagecommerceDataAuthoringFulfillment",
     "title": "Commerce Data Authoring and Fulfillment",
     "summary": "How product, category, price, inventory, search, order, fulfillment, return, and refund data are authored, imported, published, and verified.",
     "searchText": "Commerce Data Authoring and Fulfillment How product, category, price, inventory, search, order, fulfillment, return, and refund data are authored, imported, published, and verified. commerce product price inventory fulfillment agora",
@@ -6403,7 +6403,7 @@ module.exports = {
       "agora"
     ],
     "facets": {
-      "nodeLevel": "TOPIC",
+      "nodeLevel": "PAGE_LINK",
       "nodeType": "PAGE",
       "audience": [
         "business",
@@ -6432,10 +6432,10 @@ module.exports = {
     "active": true
   },
   "record152": {
-    "code": "nodicsDocsSearchnodenodicsdocsnodetopicdocsdocumentationpublishingrunbook",
+    "code": "nodicsDocsSearchnodenodicsdocsnodepagedocsdocumentationpublishingrunbook",
     "product": "nodicsDocumentationProduct",
     "targetType": "NODE",
-    "targetCode": "nodicsDocsNodeTopicdocsDocumentationPublishingRunbook",
+    "targetCode": "nodicsDocsNodePagedocsDocumentationPublishingRunbook",
     "title": "Documentation Publishing Runbook",
     "summary": "Runbook for authored Markdown, catalogue metadata, generated WCMS records, Staged review, Online activation, rollback evidence, and consumer rendering.",
     "searchText": "Documentation Publishing Runbook Runbook for authored Markdown, catalogue metadata, generated WCMS records, Staged review, Online activation, rollback evidence, and consumer rendering. documentation publishing staged online content-pack",
@@ -6447,7 +6447,7 @@ module.exports = {
       "content-pack"
     ],
     "facets": {
-      "nodeLevel": "TOPIC",
+      "nodeLevel": "PAGE_LINK",
       "nodeType": "PAGE",
       "audience": [
         "business",
@@ -6476,10 +6476,10 @@ module.exports = {
     "active": true
   },
   "record153": {
-    "code": "nodicsDocsSearchnodenodicsdocsnodetopicplatformmoduleregistryjourney",
+    "code": "nodicsDocsSearchnodenodicsdocsnodepageplatformmoduleregistryjourney",
     "product": "nodicsDocumentationProduct",
     "targetType": "NODE",
-    "targetCode": "nodicsDocsNodeTopicplatformModuleRegistryJourney",
+    "targetCode": "nodicsDocsNodePageplatformModuleRegistryJourney",
     "title": "Module Registry Journey",
     "summary": "How installed modules become registered, activated, dependency-checked, and visible to Axis as governed business capabilities.",
     "searchText": "Module Registry Journey How installed modules become registered, activated, dependency-checked, and visible to Axis as governed business capabilities. module-registry backoffice activation dependency axis",
@@ -6491,7 +6491,7 @@ module.exports = {
       "axis"
     ],
     "facets": {
-      "nodeLevel": "TOPIC",
+      "nodeLevel": "PAGE_LINK",
       "nodeType": "PAGE",
       "audience": [
         "business",
@@ -6520,10 +6520,10 @@ module.exports = {
     "active": true
   },
   "record154": {
-    "code": "nodicsDocsSearchnodenodicsdocsnodetopiccommercesearchguide",
+    "code": "nodicsDocsSearchnodenodicsdocsnodepagecommercesearchguide",
     "product": "nodicsDocumentationProduct",
     "targetType": "NODE",
-    "targetCode": "nodicsDocsNodeTopiccommerceSearchGuide",
+    "targetCode": "nodicsDocsNodePagecommerceSearchGuide",
     "title": "Commerce Search Guide",
     "summary": "How commerce search projections, ranking rules, index freshness, rebuild evidence, and storefront discovery are governed.",
     "searchText": "Commerce Search Guide How commerce search projections, ranking rules, index freshness, rebuild evidence, and storefront discovery are governed. commerce-search projection ranking index agora",
@@ -6535,7 +6535,7 @@ module.exports = {
       "agora"
     ],
     "facets": {
-      "nodeLevel": "TOPIC",
+      "nodeLevel": "PAGE_LINK",
       "nodeType": "PAGE",
       "audience": [
         "business",
@@ -6564,10 +6564,10 @@ module.exports = {
     "active": true
   },
   "record155": {
-    "code": "nodicsDocsSearchnodenodicsdocsnodetopiclocalizationruntimeauthoring",
+    "code": "nodicsDocsSearchnodenodicsdocsnodepagelocalizationruntimeauthoring",
     "product": "nodicsDocumentationProduct",
     "targetType": "NODE",
-    "targetCode": "nodicsDocsNodeTopiclocalizationRuntimeAuthoring",
+    "targetCode": "nodicsDocsNodePagelocalizationRuntimeAuthoring",
     "title": "Localization Runtime Authoring",
     "summary": "How localized records, fallback behavior, content and product translation, import data, and runtime API boundaries work.",
     "searchText": "Localization Runtime Authoring How localized records, fallback behavior, content and product translation, import data, and runtime API boundaries work. localization fallback locale translation authoring",
@@ -6579,7 +6579,7 @@ module.exports = {
       "authoring"
     ],
     "facets": {
-      "nodeLevel": "TOPIC",
+      "nodeLevel": "PAGE_LINK",
       "nodeType": "PAGE",
       "audience": [
         "business",
@@ -6608,10 +6608,10 @@ module.exports = {
     "active": true
   },
   "record156": {
-    "code": "nodicsDocsSearchnodenodicsdocsnodetopiccommercepaymentproviderboundaries",
+    "code": "nodicsDocsSearchnodenodicsdocsnodepagecommercepaymentproviderboundaries",
     "product": "nodicsDocumentationProduct",
     "targetType": "NODE",
-    "targetCode": "nodicsDocsNodeTopiccommercePaymentProviderBoundaries",
+    "targetCode": "nodicsDocsNodePagecommercePaymentProviderBoundaries",
     "title": "Payment Core and Provider Boundaries",
     "summary": "How Payment Core, payment methods, gateway providers, safe payloads, reconciliation, refunds, and provider extension boundaries work.",
     "searchText": "Payment Core and Provider Boundaries How Payment Core, payment methods, gateway providers, safe payloads, reconciliation, refunds, and provider extension boundaries work. payment provider method reconciliation refund",
@@ -6623,7 +6623,7 @@ module.exports = {
       "refund"
     ],
     "facets": {
-      "nodeLevel": "TOPIC",
+      "nodeLevel": "PAGE_LINK",
       "nodeType": "PAGE",
       "audience": [
         "business",
@@ -6652,10 +6652,10 @@ module.exports = {
     "active": true
   },
   "record157": {
-    "code": "nodicsDocsSearchnodenodicsdocsnodetopicloyaltywalletsrewardsledger",
+    "code": "nodicsDocsSearchnodenodicsdocsnodepageloyaltywalletsrewardsledger",
     "product": "nodicsDocumentationProduct",
     "targetType": "NODE",
-    "targetCode": "nodicsDocsNodeTopicloyaltyWalletsRewardsLedger",
+    "targetCode": "nodicsDocsNodePageloyaltyWalletsRewardsLedger",
     "title": "Loyalty Wallets, Rewards, and Ledger",
     "summary": "Business, developer, operator, and customization guidance for reward wallets, balances, reservations, redemptions, ledger evidence, and Commerce reward payment provider integration.",
     "searchText": "Loyalty Wallets, Rewards, and Ledger Business, developer, operator, and customization guidance for reward wallets, balances, reservations, redemptions, ledger evidence, and Commerce reward payment provider integration. loyalty reward wallet points ledger reservation redemption checkout payment-provider",
@@ -6671,7 +6671,7 @@ module.exports = {
       "payment-provider"
     ],
     "facets": {
-      "nodeLevel": "TOPIC",
+      "nodeLevel": "PAGE_LINK",
       "nodeType": "PAGE",
       "audience": [
         "business",
@@ -6700,10 +6700,10 @@ module.exports = {
     "active": true
   },
   "record158": {
-    "code": "nodicsDocsSearchnodenodicsdocsnodetopiccommerceshoppinglistcommerceboundary",
+    "code": "nodicsDocsSearchnodenodicsdocsnodepagecommerceshoppinglistcommerceboundary",
     "product": "nodicsDocumentationProduct",
     "targetType": "NODE",
-    "targetCode": "nodicsDocsNodeTopiccommerceShoppingListCommerceBoundary",
+    "targetCode": "nodicsDocsNodePagecommerceShoppingListCommerceBoundary",
     "title": "Shopping List Commerce Boundary",
     "summary": "Why wishlist, compare, and save-for-later belong to Commerce while Profile remains the identity authority.",
     "searchText": "Shopping List Commerce Boundary Why wishlist, compare, and save-for-later belong to Commerce while Profile remains the identity authority. shopping-list wishlist compare save-for-later profile commerce-boundary identity",
@@ -6717,7 +6717,7 @@ module.exports = {
       "identity"
     ],
     "facets": {
-      "nodeLevel": "TOPIC",
+      "nodeLevel": "PAGE_LINK",
       "nodeType": "PAGE",
       "audience": [
         "business",
@@ -6746,10 +6746,10 @@ module.exports = {
     "active": true
   },
   "record159": {
-    "code": "nodicsDocsSearchnodenodicsdocsnodetopicfoundationnmsruntimemonitoring",
+    "code": "nodicsDocsSearchnodenodicsdocsnodepagefoundationnmsruntimemonitoring",
     "product": "nodicsDocumentationProduct",
     "targetType": "NODE",
-    "targetCode": "nodicsDocsNodeTopicfoundationNmsRuntimeMonitoring",
+    "targetCode": "nodicsDocsNodePagefoundationNmsRuntimeMonitoring",
     "title": "NMS Runtime Monitoring",
     "summary": "How NMS captures node health, runtime roles, responsibility, capability state, degraded conditions, and operator recovery evidence.",
     "searchText": "NMS Runtime Monitoring How NMS captures node health, runtime roles, responsibility, capability state, degraded conditions, and operator recovery evidence. nms monitoring node runtime-health operator",
@@ -6761,7 +6761,7 @@ module.exports = {
       "operator"
     ],
     "facets": {
-      "nodeLevel": "TOPIC",
+      "nodeLevel": "PAGE_LINK",
       "nodeType": "PAGE",
       "audience": [
         "business",
@@ -6790,10 +6790,10 @@ module.exports = {
     "active": true
   },
   "record160": {
-    "code": "nodicsDocsSearchnodenodicsdocsnodetopicfoundationserviceruntimeoverrides",
+    "code": "nodicsDocsSearchnodenodicsdocsnodepagefoundationserviceruntimeoverrides",
     "product": "nodicsDocumentationProduct",
     "targetType": "NODE",
-    "targetCode": "nodicsDocsNodeTopicfoundationServiceRuntimeOverrides",
+    "targetCode": "nodicsDocsNodePagefoundationServiceRuntimeOverrides",
     "title": "Service Runtime and Override Precedence",
     "summary": "How generated services, virtual services, module graph resolution, customer overrides, fallback behavior, and extension safety work.",
     "searchText": "Service Runtime and Override Precedence How generated services, virtual services, module graph resolution, customer overrides, fallback behavior, and extension safety work. nService vService override service-runtime module-graph",
@@ -6805,7 +6805,7 @@ module.exports = {
       "module-graph"
     ],
     "facets": {
-      "nodeLevel": "TOPIC",
+      "nodeLevel": "PAGE_LINK",
       "nodeType": "PAGE",
       "audience": [
         "business",
@@ -6834,10 +6834,10 @@ module.exports = {
     "active": true
   },
   "record161": {
-    "code": "nodicsDocsSearchnodenodicsdocsnodetopicfoundationmoduletomodulecommunication",
+    "code": "nodicsDocsSearchnodenodicsdocsnodepagefoundationmoduletomodulecommunication",
     "product": "nodicsDocumentationProduct",
     "targetType": "NODE",
-    "targetCode": "nodicsDocsNodeTopicfoundationModuleToModuleCommunication",
+    "targetCode": "nodicsDocsNodePagefoundationModuleToModuleCommunication",
     "title": "Module-to-Module Communication",
     "summary": "How DefaultModuleService invokes local services or remote module APIs through target authority, Runtime Registry, static endpoints, internal auth, retries, circuit breakers, and bounded external HTTP calls.",
     "searchText": "Module-to-Module Communication How DefaultModuleService invokes local services or remote module APIs through target authority, Runtime Registry, static endpoints, internal auth, retries, circuit breakers, and bounded external HTTP calls. DefaultModuleService module communication invokeModule targetAuthority runtime registry internal auth circuit breaker",
@@ -6851,7 +6851,7 @@ module.exports = {
       "circuit breaker"
     ],
     "facets": {
-      "nodeLevel": "TOPIC",
+      "nodeLevel": "PAGE_LINK",
       "nodeType": "PAGE",
       "audience": [
         "business",
@@ -6880,10 +6880,10 @@ module.exports = {
     "active": true
   },
   "record162": {
-    "code": "nodicsDocsSearchnodenodicsdocsnodetopicfoundationcacheproviderrunbooks",
+    "code": "nodicsDocsSearchnodenodicsdocsnodepagefoundationcacheproviderrunbooks",
     "product": "nodicsDocumentationProduct",
     "targetType": "NODE",
-    "targetCode": "nodicsDocsNodeTopicfoundationCacheProviderRunbooks",
+    "targetCode": "nodicsDocsNodePagefoundationCacheProviderRunbooks",
     "title": "Cache Provider Runbooks",
     "summary": "Redis, Hazelcast, node cache, key strategy, invalidation, provider health, fallback behavior, and production cache recovery guidance.",
     "searchText": "Cache Provider Runbooks Redis, Hazelcast, node cache, key strategy, invalidation, provider health, fallback behavior, and production cache recovery guidance. cache redis hazelcast node-cache invalidation",
@@ -6895,7 +6895,7 @@ module.exports = {
       "invalidation"
     ],
     "facets": {
-      "nodeLevel": "TOPIC",
+      "nodeLevel": "PAGE_LINK",
       "nodeType": "PAGE",
       "audience": [
         "business",
@@ -6924,10 +6924,10 @@ module.exports = {
     "active": true
   },
   "record163": {
-    "code": "nodicsDocsSearchnodenodicsdocsnodetopicfoundationdatabaseproviderboundaries",
+    "code": "nodicsDocsSearchnodenodicsdocsnodepagefoundationdatabaseproviderboundaries",
     "product": "nodicsDocumentationProduct",
     "targetType": "NODE",
-    "targetCode": "nodicsDocsNodeTopicfoundationDatabaseProviderBoundaries",
+    "targetCode": "nodicsDocsNodePagefoundationDatabaseProviderBoundaries",
     "title": "Database Provider Boundaries",
     "summary": "How MongoDB, virtual DB, Cassandra, Elasticsearch, schemas, query translation, indexes, migration, and provider validation are separated.",
     "searchText": "Database Provider Boundaries How MongoDB, virtual DB, Cassandra, Elasticsearch, schemas, query translation, indexes, migration, and provider validation are separated. database mongodb cassandra elasticsearch provider",
@@ -6939,7 +6939,7 @@ module.exports = {
       "provider"
     ],
     "facets": {
-      "nodeLevel": "TOPIC",
+      "nodeLevel": "PAGE_LINK",
       "nodeType": "PAGE",
       "audience": [
         "business",
@@ -6968,10 +6968,10 @@ module.exports = {
     "active": true
   },
   "record164": {
-    "code": "nodicsDocsSearchnodenodicsdocsnodetopicsecurityotpsecurityflow",
+    "code": "nodicsDocsSearchnodenodicsdocsnodepagesecurityotpsecurityflow",
     "product": "nodicsDocumentationProduct",
     "targetType": "NODE",
-    "targetCode": "nodicsDocsNodeTopicsecurityOtpSecurityFlow",
+    "targetCode": "nodicsDocsNodePagesecurityOtpSecurityFlow",
     "title": "OTP and Security Flow",
     "summary": "OTP generation, delivery intent, verification, expiry, retry, throttling, lockout, audit, and secure frontend message behavior.",
     "searchText": "OTP and Security Flow OTP generation, delivery intent, verification, expiry, retry, throttling, lockout, audit, and secure frontend message behavior. otp verification security throttling audit",
@@ -6983,7 +6983,7 @@ module.exports = {
       "audit"
     ],
     "facets": {
-      "nodeLevel": "TOPIC",
+      "nodeLevel": "PAGE_LINK",
       "nodeType": "PAGE",
       "audience": [
         "business",
@@ -7012,10 +7012,10 @@ module.exports = {
     "active": true
   },
   "record165": {
-    "code": "nodicsDocsSearchnodenodicsdocsnodetopiccommunicationproviderrunbooks",
+    "code": "nodicsDocsSearchnodenodicsdocsnodepagecommunicationproviderrunbooks",
     "product": "nodicsDocumentationProduct",
     "targetType": "NODE",
-    "targetCode": "nodicsDocsNodeTopiccommunicationProviderRunbooks",
+    "targetCode": "nodicsDocsNodePagecommunicationProviderRunbooks",
     "title": "Communication Provider Runbooks",
     "summary": "SMTP and SMS provider delivery, template, locale, suppression, retry, callback, receipt, privacy, and failure evidence guidance.",
     "searchText": "Communication Provider Runbooks SMTP and SMS provider delivery, template, locale, suppression, retry, callback, receipt, privacy, and failure evidence guidance. communication smtp sms delivery retry",
@@ -7027,7 +7027,7 @@ module.exports = {
       "retry"
     ],
     "facets": {
-      "nodeLevel": "TOPIC",
+      "nodeLevel": "PAGE_LINK",
       "nodeType": "PAGE",
       "audience": [
         "business",
@@ -7056,10 +7056,10 @@ module.exports = {
     "active": true
   },
   "record166": {
-    "code": "nodicsDocsSearchnodenodicsdocsnodetopicengagementcontactsubmissionoperations",
+    "code": "nodicsDocsSearchnodenodicsdocsnodepageengagementcontactsubmissionoperations",
     "product": "nodicsDocumentationProduct",
     "targetType": "NODE",
-    "targetCode": "nodicsDocsNodeTopicengagementContactSubmissionOperations",
+    "targetCode": "nodicsDocsNodePageengagementContactSubmissionOperations",
     "title": "Contact Submission Operations",
     "summary": "How contact forms, submissions, validation, moderation, workflow routing, notifications, retention, audit, and recovery work.",
     "searchText": "Contact Submission Operations How contact forms, submissions, validation, moderation, workflow routing, notifications, retention, audit, and recovery work. contact-submission engagement moderation workflow notification",
@@ -7071,7 +7071,7 @@ module.exports = {
       "notification"
     ],
     "facets": {
-      "nodeLevel": "TOPIC",
+      "nodeLevel": "PAGE_LINK",
       "nodeType": "PAGE",
       "audience": [
         "business",
@@ -7100,10 +7100,10 @@ module.exports = {
     "active": true
   },
   "record167": {
-    "code": "nodicsDocsSearchnodenodicsdocsnodetopicprocessworkflowbpmsourcemap",
+    "code": "nodicsDocsSearchnodenodicsdocsnodepageprocessworkflowbpmsourcemap",
     "product": "nodicsDocumentationProduct",
     "targetType": "NODE",
-    "targetCode": "nodicsDocsNodeTopicprocessWorkflowBpmSourceMap",
+    "targetCode": "nodicsDocsNodePageprocessWorkflowBpmSourceMap",
     "title": "Workflow and BPM Source Map",
     "summary": "How workflow definitions, transitions, human tasks, action adapters, callbacks, history, incidents, and operator visibility fit together.",
     "searchText": "Workflow and BPM Source Map How workflow definitions, transitions, human tasks, action adapters, callbacks, history, incidents, and operator visibility fit together. workflow bpm human-task callback process",
@@ -7115,7 +7115,7 @@ module.exports = {
       "process"
     ],
     "facets": {
-      "nodeLevel": "TOPIC",
+      "nodeLevel": "PAGE_LINK",
       "nodeType": "PAGE",
       "audience": [
         "business",
@@ -7144,10 +7144,10 @@ module.exports = {
     "active": true
   },
   "record168": {
-    "code": "nodicsDocsSearchnodenodicsdocsnodetopicprocesscronjobdataauthoring",
+    "code": "nodicsDocsSearchnodenodicsdocsnodepageprocesscronjobdataauthoring",
     "product": "nodicsDocumentationProduct",
     "targetType": "NODE",
-    "targetCode": "nodicsDocsNodeTopicprocessCronjobDataAuthoring",
+    "targetCode": "nodicsDocsNodePageprocessCronjobDataAuthoring",
     "title": "CronJob Data Authoring",
     "summary": "How CronJob records, headers, schedules, execution policy, retry, idempotency, and Process server ownership are authored and verified.",
     "searchText": "CronJob Data Authoring How CronJob records, headers, schedules, execution policy, retry, idempotency, and Process server ownership are authored and verified. cronjob scheduled-job data-authoring retry idempotency",
@@ -7159,7 +7159,7 @@ module.exports = {
       "idempotency"
     ],
     "facets": {
-      "nodeLevel": "TOPIC",
+      "nodeLevel": "PAGE_LINK",
       "nodeType": "PAGE",
       "audience": [
         "business",
@@ -7188,10 +7188,10 @@ module.exports = {
     "active": true
   },
   "record169": {
-    "code": "nodicsDocsSearchnodenodicsdocsnodetopicframeworkreleaseupgradecompatibility",
+    "code": "nodicsDocsSearchnodenodicsdocsnodepageframeworkreleaseupgradecompatibility",
     "product": "nodicsDocumentationProduct",
     "targetType": "NODE",
-    "targetCode": "nodicsDocsNodeTopicframeworkReleaseUpgradeCompatibility",
+    "targetCode": "nodicsDocsNodePageframeworkReleaseUpgradeCompatibility",
     "title": "Release and Upgrade Compatibility",
     "summary": "How data release folders, generated manifests, immutable baselines, upgrades, rollback, checksum drift, and customer extensions are governed.",
     "searchText": "Release and Upgrade Compatibility How data release folders, generated manifests, immutable baselines, upgrades, rollback, checksum drift, and customer extensions are governed. release upgrade manifest compatibility data-folder",
@@ -7203,7 +7203,7 @@ module.exports = {
       "data-folder"
     ],
     "facets": {
-      "nodeLevel": "TOPIC",
+      "nodeLevel": "PAGE_LINK",
       "nodeType": "PAGE",
       "audience": [
         "business",
@@ -7232,10 +7232,10 @@ module.exports = {
     "active": true
   },
   "record170": {
-    "code": "nodicsDocsSearchnodenodicsdocsnodetopiccommercefulfillmentcoresourcemap",
+    "code": "nodicsDocsSearchnodenodicsdocsnodepagecommercefulfillmentcoresourcemap",
     "product": "nodicsDocumentationProduct",
     "targetType": "NODE",
-    "targetCode": "nodicsDocsNodeTopiccommerceFulfillmentCoreSourceMap",
+    "targetCode": "nodicsDocsNodePagecommerceFulfillmentCoreSourceMap",
     "title": "Fulfillment Core Source Map",
     "summary": "Exact source map for fulfillment execution, carrier adapters, return execution, integration readiness, customer policy, operator evidence, and recovery.",
     "searchText": "Fulfillment Core Source Map Exact source map for fulfillment execution, carrier adapters, return execution, integration readiness, customer policy, operator evidence, and recovery. fulfillment-core carrier return-execution readiness operator",
@@ -7247,7 +7247,7 @@ module.exports = {
       "operator"
     ],
     "facets": {
-      "nodeLevel": "TOPIC",
+      "nodeLevel": "PAGE_LINK",
       "nodeType": "PAGE",
       "audience": [
         "business",
@@ -7276,10 +7276,10 @@ module.exports = {
     "active": true
   },
   "record171": {
-    "code": "nodicsDocsSearchnodenodicsdocsnodetopicacceleratorsdomaincommercesourcemap",
+    "code": "nodicsDocsSearchnodenodicsdocsnodepageacceleratorsdomaincommercesourcemap",
     "product": "nodicsDocumentationProduct",
     "targetType": "NODE",
-    "targetCode": "nodicsDocsNodeTopicacceleratorsDomainCommerceSourceMap",
+    "targetCode": "nodicsDocsNodePageacceleratorsDomainCommerceSourceMap",
     "title": "Domain Commerce Accelerator Source Map",
     "summary": "How domain commerce, electronics product, telco catalog, and telco subscription accelerators extend Commerce without becoming duplicate authorities.",
     "searchText": "Domain Commerce Accelerator Source Map How domain commerce, electronics product, telco catalog, and telco subscription accelerators extend Commerce without becoming duplicate authorities. accelerator domain-commerce electronics telco subscription",
@@ -7291,7 +7291,7 @@ module.exports = {
       "subscription"
     ],
     "facets": {
-      "nodeLevel": "TOPIC",
+      "nodeLevel": "PAGE_LINK",
       "nodeType": "PAGE",
       "audience": [
         "business",
@@ -7320,10 +7320,10 @@ module.exports = {
     "active": true
   },
   "record172": {
-    "code": "nodicsDocsSearchnodenodicsdocsnodetopicfoundationtoolingruntimecontracts",
+    "code": "nodicsDocsSearchnodenodicsdocsnodepagefoundationtoolingruntimecontracts",
     "product": "nodicsDocumentationProduct",
     "targetType": "NODE",
-    "targetCode": "nodicsDocsNodeTopicfoundationToolingRuntimeContracts",
+    "targetCode": "nodicsDocsNodePagefoundationToolingRuntimeContracts",
     "title": "Tooling Runtime Contracts",
     "summary": "How Nodics tooling commands, generated manifests, documentation validation, AI context, application builder contracts, and qualification gates are governed.",
     "searchText": "Tooling Runtime Contracts How Nodics tooling commands, generated manifests, documentation validation, AI context, application builder contracts, and qualification gates are governed. tooling application-builder manifest validation ai-context",
@@ -7335,7 +7335,7 @@ module.exports = {
       "ai-context"
     ],
     "facets": {
-      "nodeLevel": "TOPIC",
+      "nodeLevel": "PAGE_LINK",
       "nodeType": "PAGE",
       "audience": [
         "business",
@@ -7364,10 +7364,10 @@ module.exports = {
     "active": true
   },
   "record173": {
-    "code": "nodicsDocsSearchnodenodicsdocsnodetopicfoundationemsruntimeclientrunbook",
+    "code": "nodicsDocsSearchnodenodicsdocsnodepagefoundationemsruntimeclientrunbook",
     "product": "nodicsDocumentationProduct",
     "targetType": "NODE",
-    "targetCode": "nodicsDocsNodeTopicfoundationEmsRuntimeClientRunbook",
+    "targetCode": "nodicsDocsNodePagefoundationEmsRuntimeClientRunbook",
     "title": "EMS Runtime and Client Runbook",
     "summary": "How EMS runtime, EMS Client, broker providers, tenant resolution, retries, event processing, and operator evidence are governed.",
     "searchText": "EMS Runtime and Client Runbook How EMS runtime, EMS Client, broker providers, tenant resolution, retries, event processing, and operator evidence are governed. ems ems-client events broker tenant-resolution",
@@ -7379,7 +7379,7 @@ module.exports = {
       "tenant-resolution"
     ],
     "facets": {
-      "nodeLevel": "TOPIC",
+      "nodeLevel": "PAGE_LINK",
       "nodeType": "PAGE",
       "audience": [
         "business",
@@ -7408,10 +7408,10 @@ module.exports = {
     "active": true
   },
   "record174": {
-    "code": "nodicsDocsSearchnodenodicsdocsnodetopicreferenceinternalsourceboundaryregister",
+    "code": "nodicsDocsSearchnodenodicsdocsnodepagereferenceinternalsourceboundaryregister",
     "product": "nodicsDocumentationProduct",
     "targetType": "NODE",
-    "targetCode": "nodicsDocsNodeTopicreferenceInternalSourceBoundaryRegister",
+    "targetCode": "nodicsDocsNodePagereferenceInternalSourceBoundaryRegister",
     "title": "Internal Source Boundary Register",
     "summary": "Owner mapping for internal provider and utility modules that are covered by broader business capability pages instead of standalone product pages.",
     "searchText": "Internal Source Boundary Register Owner mapping for internal provider and utility modules that are covered by broader business capability pages instead of standalone product pages. internal-source owner-mapping provider source-coverage reference",
@@ -7423,7 +7423,7 @@ module.exports = {
       "reference"
     ],
     "facets": {
-      "nodeLevel": "TOPIC",
+      "nodeLevel": "PAGE_LINK",
       "nodeType": "PAGE",
       "audience": [
         "business",
@@ -7452,10 +7452,10 @@ module.exports = {
     "active": true
   },
   "record175": {
-    "code": "nodicsDocsSearchnodenodicsdocsnodetopictoolingaideveloperenablement",
+    "code": "nodicsDocsSearchnodenodicsdocsnodepagetoolingaideveloperenablement",
     "product": "nodicsDocumentationProduct",
     "targetType": "NODE",
-    "targetCode": "nodicsDocsNodeTopictoolingAiDeveloperEnablement",
+    "targetCode": "nodicsDocsNodePagetoolingAiDeveloperEnablement",
     "title": "AI and Developer Tooling",
     "summary": "How AI tools, developers, and reviewers use contracts, source maps, generated context, quality gates, and documentation principles safely.",
     "searchText": "AI and Developer Tooling How AI tools, developers, and reviewers use contracts, source maps, generated context, quality gates, and documentation principles safely. ai-and-developer-tooling ai-and-developer-enablement ai-and-developer-tooling",
@@ -7465,7 +7465,7 @@ module.exports = {
       "ai-and-developer-tooling"
     ],
     "facets": {
-      "nodeLevel": "TOPIC",
+      "nodeLevel": "PAGE_LINK",
       "nodeType": "PAGE",
       "audience": [
         "business",
@@ -7494,10 +7494,10 @@ module.exports = {
     "active": true
   },
   "record176": {
-    "code": "nodicsDocsSearchnodenodicsdocsnodetopicreferencesourcemapglossary",
+    "code": "nodicsDocsSearchnodenodicsdocsnodepagereferencesourcemapglossary",
     "product": "nodicsDocumentationProduct",
     "targetType": "NODE",
-    "targetCode": "nodicsDocsNodeTopicreferenceSourceMapGlossary",
+    "targetCode": "nodicsDocsNodePagereferenceSourceMapGlossary",
     "title": "Reference Source Map and Glossary",
     "summary": "Business-friendly names, technical source owners, module identifiers, common terms, and navigation-to-code references for documentation readers.",
     "searchText": "Reference Source Map and Glossary Business-friendly names, technical source owners, module identifiers, common terms, and navigation-to-code references for documentation readers. reference source-map-and-glossary reference-source-map-and-glossary",
@@ -7507,7 +7507,7 @@ module.exports = {
       "reference-source-map-and-glossary"
     ],
     "facets": {
-      "nodeLevel": "TOPIC",
+      "nodeLevel": "PAGE_LINK",
       "nodeType": "PAGE",
       "audience": [
         "business",
@@ -7536,10 +7536,10 @@ module.exports = {
     "active": true
   },
   "record177": {
-    "code": "nodicsDocsSearchnodenodicsdocsnodetopicreferencesourcebackeddocumentationcoverageaudit",
+    "code": "nodicsDocsSearchnodenodicsdocsnodepagereferencesourcebackeddocumentationcoverageaudit",
     "product": "nodicsDocumentationProduct",
     "targetType": "NODE",
-    "targetCode": "nodicsDocsNodeTopicreferenceSourceBackedDocumentationCoverageAudit",
+    "targetCode": "nodicsDocsNodePagereferenceSourceBackedDocumentationCoverageAudit",
     "title": "Source-Backed Documentation Coverage Audit",
     "summary": "Code-to-documentation coverage audit contract for finding missing or shallow Nodics functionality documentation across framework, projects, data, assets, and applications.",
     "searchText": "Source-Backed Documentation Coverage Audit Code-to-documentation coverage audit contract for finding missing or shallow Nodics functionality documentation across framework, projects, data, assets, and applications. documentation-coverage source-backed code-audit missing-docs coverage-matrix",
@@ -7551,7 +7551,7 @@ module.exports = {
       "coverage-matrix"
     ],
     "facets": {
-      "nodeLevel": "TOPIC",
+      "nodeLevel": "PAGE_LINK",
       "nodeType": "PAGE",
       "audience": [
         "business",
@@ -7580,10 +7580,10 @@ module.exports = {
     "active": true
   },
   "record178": {
-    "code": "nodicsDocsSearchnodenodicsdocsnodetopicreferencedocumentationgapbacklog",
+    "code": "nodicsDocsSearchnodenodicsdocsnodepagereferencedocumentationgapbacklog",
     "product": "nodicsDocumentationProduct",
     "targetType": "NODE",
-    "targetCode": "nodicsDocsNodeTopicreferenceDocumentationGapBacklog",
+    "targetCode": "nodicsDocsNodePagereferenceDocumentationGapBacklog",
     "title": "Documentation Gap Backlog",
     "summary": "Classified backlog for closing source-backed documentation gaps across runtime capabilities, data releases, media, applications, operations, and validation.",
     "searchText": "Documentation Gap Backlog Classified backlog for closing source-backed documentation gaps across runtime capabilities, data releases, media, applications, operations, and validation. documentation-gap-backlog source-backed coverage-closure documentation-workflow missing-docs",
@@ -7595,7 +7595,7 @@ module.exports = {
       "missing-docs"
     ],
     "facets": {
-      "nodeLevel": "TOPIC",
+      "nodeLevel": "PAGE_LINK",
       "nodeType": "PAGE",
       "audience": [
         "business",

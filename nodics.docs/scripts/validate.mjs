@@ -294,18 +294,18 @@ for (const document of catalogue.documents) {
   ) {
     throw new Error(`Documentation page metadata must preserve visual requirements: ${document.id}`);
   }
-  const topicNodes = nodeRecords.filter((node) =>
-    node.nodeLevel === 'TOPIC' &&
+  const pageLinkNodes = nodeRecords.filter((node) =>
+    node.nodeLevel === 'PAGE_LINK' &&
     node.targetDocumentationPage === metadata.code &&
     node.targetPage === metadata.targetPage &&
     node.targetRoute === metadata.targetRoute
   );
-  if (topicNodes.length !== 1) {
-    throw new Error(`Documentation page must belong to exactly one topic node: ${document.id}`);
+  if (pageLinkNodes.length !== 1) {
+    throw new Error(`Documentation page must belong to exactly one page-link node: ${document.id}`);
   }
-  const topicNode = topicNodes[0];
-  if (!topicNode.accessPolicy || topicNode.workflowRequired !== true || !(topicNode.workflowTriggers || []).includes('NAVIGATION_CHANGE')) {
-    throw new Error(`Documentation topic node lacks access policy or workflow triggers: ${document.id}`);
+  const pageLinkNode = pageLinkNodes[0];
+  if (!pageLinkNode.accessPolicy || pageLinkNode.workflowRequired !== true || !(pageLinkNode.workflowTriggers || []).includes('NAVIGATION_CHANGE')) {
+    throw new Error(`Documentation page-link node lacks access policy or workflow triggers: ${document.id}`);
   }
   if (!publicationByTarget.has(`PAGE:${metadata.code}`)) {
     throw new Error(`Documentation page lacks publication state: ${document.id}`);

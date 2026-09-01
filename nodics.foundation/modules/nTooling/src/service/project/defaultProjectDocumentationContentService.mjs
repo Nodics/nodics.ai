@@ -307,15 +307,15 @@ const navigationItems = sourcePages.map((document, index) => ({
   section: document.navigationSectionCode || 'nodics-kickoff',
   sectionTitle: document.navigationSection || 'Nodics Kickoff',
   sectionOrder: document.navigationSectionOrder || sections.find((section) => section.code === document.navigationSectionCode)?.order || 10,
-  group: document.navigationGroupCode || document.navigationSectionCode || 'nodics-kickoff',
-  groupTitle: document.navigationGroup || document.navigationSection || 'Nodics Kickoff',
-  groupOrder: document.navigationGroupOrder || document.navigationOrder || (index + 1) * 10,
-  subgroup: document.navigationSubgroupCode || null,
-  subgroupTitle: document.navigationSubgroup || null,
+  group: document.navigationSectionCode || 'nodics-kickoff',
+  groupTitle: document.navigationSection || 'Nodics Kickoff',
+  groupOrder: document.navigationSectionOrder || sections.find((section) => section.code === document.navigationSectionCode)?.order || 10,
+  subgroup: null,
+  subgroupTitle: null,
   order: document.navigationOrder || (index + 1) * 10,
-  parentId: document.parentId || null,
-  hierarchyPath: document.hierarchyPath || ['Nodics Kickoff', document.title],
-  hierarchyDepth: document.hierarchyDepth || 2,
+  parentId: document.navigationSectionCode || 'nodics-kickoff',
+  hierarchyPath: [document.navigationSection || 'Nodics Kickoff', document.title],
+  hierarchyDepth: 2,
   documentType: document.documentType || 'overview',
   audience: document.audience || ['architect', 'developer', 'operator'],
   businessAudience: document.businessAudience || [],
@@ -463,8 +463,6 @@ const productRecords = {
 };
 
 const sectionNodeCodes = new Map();
-const groupNodeCodes = new Map();
-const subgroupNodeCodes = new Map();
 const nodeRecords = [];
 const dashboardRecords = [];
 
@@ -549,14 +547,10 @@ sections.forEach((section) => {
   const sectionNodeCode = boundedCode('kickoffDocsNodeSec', [section.code]);
   sectionNodeCodes.set(section.code, sectionNodeCode);
   const sectionPages = sourcePages.filter((document) => (document.navigationSectionCode || 'nodics-kickoff') === section.code);
-  const groups = [...new Map(sectionPages.map((document) => [
-    document.navigationGroupCode || document.navigationSectionCode || 'nodics-kickoff',
-    {
-      code: document.navigationGroupCode || document.navigationSectionCode || 'nodics-kickoff',
-      title: document.navigationGroup || document.navigationSection || 'Nodics Kickoff',
-      order: document.navigationGroupOrder || 100,
-    },
-  ])).values()].sort((left, right) => left.order - right.order || left.title.localeCompare(right.title));
+  const orderedPages = [...sectionPages].sort((left, right) =>
+    (left.navigationOrder || 100) - (right.navigationOrder || 100) ||
+    String(left.title).localeCompare(String(right.title))
+  );
   const dashboardCode = boundedCode('kickoffDocsDashboardSec', [section.code]);
   pushDashboard({
     code: dashboardCode,
@@ -568,18 +562,18 @@ sections.forEach((section) => {
       businessPurpose: section.summary,
       technicalPurpose: 'Project documentation section managed as backend content-catalog data with publication lifecycle and access metadata.',
     },
-    cards: groups.map((group) => ({
-      code: group.code,
-      title: group.title,
-      summary: `Open ${group.title} topics and implementation guidance.`,
-      order: group.order,
+    cards: orderedPages.map((document) => ({
+      code: document.id,
+      title: document.title,
+      summary: document.summary,
+      order: document.navigationOrder || 100,
     })),
-    journeyLinks: sectionPages.slice(0, 6).map((document) => ({
+    journeyLinks: orderedPages.slice(0, 6).map((document) => ({
       label: document.title,
       targetPage: document.id,
       route: document.route,
     })),
-    statusSummary: { pages: sectionPages.length, groups: groups.length },
+    statusSummary: { pages: sectionPages.length },
     accessMode: section.accessMode || 'PUBLIC',
     lifecycleState: section.lifecycleState || defaultLifecycle,
   });
@@ -594,17 +588,18 @@ sections.forEach((section) => {
     nodeSummary: section.summary,
     nodeContentArea: { dashboard: dashboardCode, pages: sectionPages.map((document) => document.id) },
     nodeDashboard: dashboardCode,
-    childSummaryCards: groups.map((group) => ({
-      code: group.code,
-      title: group.title,
-      order: group.order,
+    childSummaryCards: orderedPages.map((document) => ({
+      code: document.id,
+      title: document.title,
+      summary: document.summary,
+      order: document.navigationOrder || 100,
     })),
-    childJourneyLinks: sectionPages.slice(0, 6).map((document) => ({
+    childJourneyLinks: orderedPages.slice(0, 6).map((document) => ({
       label: document.title,
       targetPage: document.id,
       route: document.route,
     })),
-    childStatusSummary: { childCount: groups.length, pages: sectionPages.length },
+    childStatusSummary: { childCount: sectionPages.length, pages: sectionPages.length },
     nodeOrder: section.order,
     expandable: true,
     expandedByDefault: false,
@@ -628,131 +623,12 @@ sections.forEach((section) => {
 
 sourcePages.forEach((document) => {
   const sectionCode = document.navigationSectionCode || 'nodics-kickoff';
-  const groupCode = document.navigationGroupCode || document.navigationSectionCode || 'nodics-kickoff';
-  const groupKey = `${sectionCode}:${groupCode}`;
-  if (!groupNodeCodes.has(groupKey)) {
-    const groupNodeCode = boundedCode('kickoffDocsNodeGrp', [sectionCode, groupCode]);
-    const groupPages = sourcePages.filter((page) =>
-      (page.navigationSectionCode || 'nodics-kickoff') === sectionCode &&
-      (page.navigationGroupCode || page.navigationSectionCode || 'nodics-kickoff') === groupCode
-    );
-    const dashboardCode = boundedCode('kickoffDocsDashboardGrp', [sectionCode, groupCode]);
-    groupNodeCodes.set(groupKey, groupNodeCode);
-    pushDashboard({
-      code: dashboardCode,
-      ownerType: 'GROUP',
-      ownerCode: groupNodeCode,
-      title: document.navigationGroup || document.navigationSection || 'Nodics Kickoff',
-      summary: `Detailed landing content for ${document.navigationGroup || document.navigationSection || 'Nodics Kickoff'}, including business purpose, customization behavior, and validation evidence.`,
-      contentArea: {
-        businessPurpose: 'Group customer-project documentation by the journey users recognize.',
-        technicalPurpose: 'Keep project documentation navigation backend-owned and publication-governed.',
-      },
-      cards: groupPages.map((page) => ({
-        code: page.id,
-        title: page.title,
-        summary: page.summary,
-        order: page.navigationOrder,
-      })),
-      journeyLinks: groupPages.map((page) => ({
-        label: page.title,
-        targetPage: page.id,
-        route: page.route,
-      })),
-      statusSummary: { pages: groupPages.length },
-      accessMode: document.accessMode || 'PUBLIC',
-      lifecycleState: document.lifecycleState || defaultLifecycle,
-    });
-    nodeRecords.push({
-      code: groupNodeCode,
-      product: productCode,
-      navigation: navigationCode,
-      parentNode: sectionNodeCodes.get(sectionCode),
-      nodeLevel: 'GROUP',
-      nodeType: 'CONTAINER',
-      nodeTitle: document.navigationGroup || document.navigationSection || 'Nodics Kickoff',
-      nodeSummary: `Business-friendly group for ${document.navigationGroup || document.navigationSection || 'Nodics Kickoff'} topics.`,
-      nodeContentArea: { dashboard: dashboardCode, pages: groupPages.map((page) => page.id) },
-      nodeDashboard: dashboardCode,
-      childSummaryCards: groupPages.map((page) => ({
-        code: page.id,
-        title: page.title,
-        summary: page.summary,
-        order: page.navigationOrder,
-      })),
-      childJourneyLinks: groupPages.map((page) => ({
-        label: page.title,
-        targetPage: page.id,
-        route: page.route,
-      })),
-      childStatusSummary: { childCount: groupPages.length },
-      nodeOrder: document.navigationGroupOrder || document.navigationOrder || 100,
-      expandable: true,
-      expandedByDefault: false,
-      nodeIcon: 'folder-open',
-      nodeAudience: document.audience || ['architect', 'developer', 'operator'],
-      accessPolicy: accessPolicyFor(document),
-      accessMode: document.accessMode || 'PUBLIC',
-      allowedRoles: document.allowedRoles || [],
-      allowedGroups: document.allowedGroups || [],
-      allowedPermissions: document.allowedPermissions || [],
-      ...workflowMetadata('NODE'),
-      lifecycleState: document.lifecycleState || defaultLifecycle,
-      maturityState: schemaMaturity(document.maturityState),
-      searchKeywords: document.searchKeywords || [],
-      relatedNodes: [],
-      locale: document.locale || 'en',
-      channel: 'web',
-      active: true,
-    });
-  }
-  let parentNode = groupNodeCodes.get(groupKey);
-  if (document.navigationSubgroupCode) {
-    const subgroupKey = `${groupKey}:${document.navigationSubgroupCode}`;
-    if (!subgroupNodeCodes.has(subgroupKey)) {
-      const subgroupNodeCode = boundedCode('kickoffDocsNodeSub', [sectionCode, groupCode, document.navigationSubgroupCode]);
-      subgroupNodeCodes.set(subgroupKey, subgroupNodeCode);
-      nodeRecords.push({
-        code: subgroupNodeCode,
-        product: productCode,
-        navigation: navigationCode,
-        parentNode,
-        nodeLevel: 'SUBGROUP',
-        nodeType: 'CONTAINER',
-        nodeTitle: document.navigationSubgroup,
-        nodeSummary: `Subgroup for ${document.navigationSubgroup} customer-project documentation topics.`,
-        nodeContentArea: { pages: sourcePages.filter((page) => page.navigationSubgroupCode === document.navigationSubgroupCode).map((page) => page.id) },
-        childSummaryCards: [],
-        childJourneyLinks: [],
-        childStatusSummary: { childCount: 0 },
-        nodeOrder: document.navigationOrder || 100,
-        expandable: true,
-        expandedByDefault: false,
-        nodeIcon: 'list-tree',
-        nodeAudience: document.audience || ['architect', 'developer', 'operator'],
-        accessPolicy: accessPolicyFor(document),
-        accessMode: document.accessMode || 'PUBLIC',
-        allowedRoles: document.allowedRoles || [],
-        allowedGroups: document.allowedGroups || [],
-        allowedPermissions: document.allowedPermissions || [],
-        ...workflowMetadata('NODE'),
-        lifecycleState: document.lifecycleState || defaultLifecycle,
-        maturityState: schemaMaturity(document.maturityState),
-        searchKeywords: document.searchKeywords || [],
-        relatedNodes: [],
-        locale: document.locale || 'en',
-        channel: 'web',
-        active: true,
-      });
-    }
-    parentNode = subgroupNodeCodes.get(subgroupKey);
-  }
   nodeRecords.push({
-    code: boundedCode('kickoffDocsNodeTopic', [document.id]),
+    code: boundedCode('kickoffDocsNodePage', [document.id]),
     product: productCode,
     navigation: navigationCode,
-    parentNode,
-    nodeLevel: 'TOPIC',
+    parentNode: sectionNodeCodes.get(sectionCode),
+    nodeLevel: 'PAGE_LINK',
     nodeType: 'PAGE',
     nodeTitle: document.title,
     nodeSummary: document.summary,
@@ -777,7 +653,7 @@ sourcePages.forEach((document) => {
     lifecycleState: document.lifecycleState || defaultLifecycle,
     maturityState: schemaMaturity(document.maturityState),
     searchKeywords: document.searchKeywords || [],
-    relatedNodes: (document.relatedPages || []).map((relatedPage) => boundedCode('kickoffDocsNodeTopic', [relatedPage])),
+    relatedNodes: (document.relatedPages || []).map((relatedPage) => boundedCode('kickoffDocsNodePage', [relatedPage])),
     locale: document.locale || 'en',
     channel: 'web',
     active: true,
@@ -936,7 +812,7 @@ const searchTargets = [
     keywords: [...(document.searchKeywords || []), ...(document.topicKeywords || [])],
     facets: {
       section: document.navigationSectionCode || 'nodics-kickoff',
-      group: document.navigationGroupCode || document.navigationSectionCode || 'nodics-kickoff',
+      group: document.navigationSectionCode || 'nodics-kickoff',
       documentType: document.documentType,
       audience: document.audience || ['architect', 'developer', 'operator'],
     },
@@ -1032,11 +908,11 @@ const articleComponents = Object.fromEntries(
         route: document.route,
         section: document.navigationSectionCode || 'nodics-kickoff',
         sectionTitle: document.navigationSection || 'Nodics Kickoff',
-        group: document.navigationGroupCode || document.navigationSectionCode || 'nodics-kickoff',
-        groupTitle: document.navigationGroup || document.navigationSection || 'Nodics Kickoff',
-        parentId: document.parentId || null,
-        hierarchyPath: document.hierarchyPath || ['Nodics Kickoff', document.title],
-        hierarchyDepth: document.hierarchyDepth || 2,
+        group: document.navigationSectionCode || 'nodics-kickoff',
+        groupTitle: document.navigationSection || 'Nodics Kickoff',
+        parentId: document.navigationSectionCode || 'nodics-kickoff',
+        hierarchyPath: [document.navigationSection || 'Nodics Kickoff', document.title],
+        hierarchyDepth: 2,
         documentType: document.documentType || 'overview',
         audience: document.audience || ['architect', 'developer', 'operator'],
         businessAudience: document.businessAudience || [],
@@ -1147,6 +1023,16 @@ const files = {
     'Generated Nodics Kickoff documentation hierarchy dashboards.',
     dashboardRecordMap,
   ),
+  'data/core-v001/records/documentation/kickoffDocumentationLegacyNavigationCleanupData.js': jsModule(
+    'Nodics Kickoff documentation legacy hierarchy cleanup marker.',
+    {
+      record0: {
+        code: 'kickoffDocumentationLegacyNavigationCleanup',
+        reason: 'Remove generated multi-level navigation nodes before importing the two-level section and page-link hierarchy.',
+        active: true,
+      },
+    },
+  ),
   'data/core-v001/records/documentation/kickoffDocumentationNodeData.js': jsModule(
     'Generated Nodics Kickoff documentation hierarchy nodes.',
     nodeRecordMap,
@@ -1204,7 +1090,7 @@ const files = {
     'Generated Nodics Kickoff documentation routes.',
     routeRecords,
   ),
-  'data/core-v001/headers/kickoffDocumentationContentPackHeader.js': `${copyrightHeader}'use strict';\n\n/** @description Nodics Kickoff core-import header for project documentation. */\nmodule.exports = {\n  cms: {\n    kickoffDocumentationSiteData: { options: { enabled: true, schemaName: 'cmsSite', operation: 'saveAll', dataFilePrefix: 'kickoffDocumentationSiteData' }, query: { code: '$code' } },\n    kickoffDocumentationProductData: { options: { enabled: true, schemaName: 'cmsDocumentationProduct', operation: 'saveAll', dataFilePrefix: 'kickoffDocumentationProductData' }, query: { code: '$code' } },\n    kickoffDocumentationAccessPolicyData: { options: { enabled: true, schemaName: 'cmsDocumentationAccessPolicy', operation: 'saveAll', dataFilePrefix: 'kickoffDocumentationAccessPolicyData' }, query: { code: '$code' } },\n    kickoffDocumentationNavigationData: { options: { enabled: true, schemaName: 'cmsDocumentationNavigation', operation: 'saveAll', dataFilePrefix: 'kickoffDocumentationNavigationData' }, query: { code: '$code' } },\n    kickoffDocumentationDashboardData: { options: { enabled: true, schemaName: 'cmsDocumentationDashboard', operation: 'saveAll', dataFilePrefix: 'kickoffDocumentationDashboardData' }, query: { code: '$code' } },\n    kickoffDocumentationNodeData: { options: { enabled: true, schemaName: 'cmsDocumentationNode', operation: 'saveAll', dataFilePrefix: 'kickoffDocumentationNodeData' }, query: { code: '$code' } },\n    kickoffDocumentationPageMetadataData: { options: { enabled: true, schemaName: 'cmsDocumentationPage', operation: 'saveAll', dataFilePrefix: 'kickoffDocumentationPageMetadataData' }, query: { code: '$code' } },\n    kickoffDocumentationPublicationStateData: { options: { enabled: true, schemaName: 'cmsDocumentationPublicationState', operation: 'saveAll', dataFilePrefix: 'kickoffDocumentationPublicationStateData' }, query: { code: '$code' } },\n    kickoffDocumentationSearchMetadataData: { options: { enabled: true, schemaName: 'cmsDocumentationSearchMetadata', operation: 'saveAll', dataFilePrefix: 'kickoffDocumentationSearchMetadataData' }, query: { code: '$code' } },\n    kickoffDocumentationTypeCodeData: { options: { enabled: true, schemaName: 'cmsTypeCode', operation: 'saveAll', dataFilePrefix: 'kickoffDocumentationTypeCodeData' }, query: { code: '$code' } },\n    kickoffDocumentationRendererData: { options: { enabled: true, schemaName: 'cmsTypeCode2Renderer', operation: 'saveAll', dataFilePrefix: 'kickoffDocumentationRendererData' }, query: { code: '$code' } },\n    kickoffDocumentationTemplateData: { options: { enabled: true, schemaName: 'cmsPageTemplate', operation: 'saveAll', dataFilePrefix: 'kickoffDocumentationTemplateData' }, query: { code: '$code' } },\n    kickoffDocumentationSlotData: { options: { enabled: true, schemaName: 'cmsSlotDefinition', operation: 'saveAll', dataFilePrefix: 'kickoffDocumentationSlotData' }, query: { code: '$code' } },\n    kickoffDocumentationComponentData: { options: { enabled: true, schemaName: 'cmsComponent', operation: 'saveAll', dataFilePrefix: 'kickoffDocumentationComponentData' }, query: { code: '$code' } },\n    kickoffDocumentationPageData: { options: { enabled: true, schemaName: 'cmsPage', operation: 'saveAll', dataFilePrefix: 'kickoffDocumentationPageData' }, query: { code: '$code' } },\n    kickoffDocumentationRouteData: { options: { enabled: true, schemaName: 'cmsPageRoute', operation: 'saveAll', dataFilePrefix: 'kickoffDocumentationRouteData' }, query: { code: '$code' } },\n  },\n};\n`,
+  'data/core-v001/headers/kickoffDocumentationContentPackHeader.js': `${copyrightHeader}'use strict';\n\n/** @description Nodics Kickoff core-import header for project documentation. */\nmodule.exports = {\n  cms: {\n    kickoffDocumentationSiteData: { options: { enabled: true, schemaName: 'cmsSite', operation: 'saveAll', dataFilePrefix: 'kickoffDocumentationSiteData' }, query: { code: '$code' } },\n    kickoffDocumentationProductData: { options: { enabled: true, schemaName: 'cmsDocumentationProduct', operation: 'saveAll', dataFilePrefix: 'kickoffDocumentationProductData' }, query: { code: '$code' } },\n    kickoffDocumentationAccessPolicyData: { options: { enabled: true, schemaName: 'cmsDocumentationAccessPolicy', operation: 'saveAll', dataFilePrefix: 'kickoffDocumentationAccessPolicyData' }, query: { code: '$code' } },\n    kickoffDocumentationNavigationData: { options: { enabled: true, schemaName: 'cmsDocumentationNavigation', operation: 'saveAll', dataFilePrefix: 'kickoffDocumentationNavigationData' }, query: { code: '$code' } },\n    kickoffDocumentationDashboardData: { options: { enabled: true, schemaName: 'cmsDocumentationDashboard', operation: 'saveAll', dataFilePrefix: 'kickoffDocumentationDashboardData' }, query: { code: '$code' } },\n    kickoffDocumentationLegacyNavigationCleanupData: { options: { enabled: true, schemaName: 'cmsDocumentationNode', operation: 'remove', dataFilePrefix: 'kickoffDocumentationLegacyNavigationCleanupData' }, query: { product: '${productCode}', navigation: '${navigationCode}', nodeLevel: { $in: ['GROUP', 'SUBGROUP', 'TOPIC'] } } },\n    kickoffDocumentationNodeData: { options: { enabled: true, schemaName: 'cmsDocumentationNode', operation: 'saveAll', dataFilePrefix: 'kickoffDocumentationNodeData' }, query: { code: '$code' } },\n    kickoffDocumentationPageMetadataData: { options: { enabled: true, schemaName: 'cmsDocumentationPage', operation: 'saveAll', dataFilePrefix: 'kickoffDocumentationPageMetadataData' }, query: { code: '$code' } },\n    kickoffDocumentationPublicationStateData: { options: { enabled: true, schemaName: 'cmsDocumentationPublicationState', operation: 'saveAll', dataFilePrefix: 'kickoffDocumentationPublicationStateData' }, query: { code: '$code' } },\n    kickoffDocumentationSearchMetadataData: { options: { enabled: true, schemaName: 'cmsDocumentationSearchMetadata', operation: 'saveAll', dataFilePrefix: 'kickoffDocumentationSearchMetadataData' }, query: { code: '$code' } },\n    kickoffDocumentationTypeCodeData: { options: { enabled: true, schemaName: 'cmsTypeCode', operation: 'saveAll', dataFilePrefix: 'kickoffDocumentationTypeCodeData' }, query: { code: '$code' } },\n    kickoffDocumentationRendererData: { options: { enabled: true, schemaName: 'cmsTypeCode2Renderer', operation: 'saveAll', dataFilePrefix: 'kickoffDocumentationRendererData' }, query: { code: '$code' } },\n    kickoffDocumentationTemplateData: { options: { enabled: true, schemaName: 'cmsPageTemplate', operation: 'saveAll', dataFilePrefix: 'kickoffDocumentationTemplateData' }, query: { code: '$code' } },\n    kickoffDocumentationSlotData: { options: { enabled: true, schemaName: 'cmsSlotDefinition', operation: 'saveAll', dataFilePrefix: 'kickoffDocumentationSlotData' }, query: { code: '$code' } },\n    kickoffDocumentationComponentData: { options: { enabled: true, schemaName: 'cmsComponent', operation: 'saveAll', dataFilePrefix: 'kickoffDocumentationComponentData' }, query: { code: '$code' } },\n    kickoffDocumentationPageData: { options: { enabled: true, schemaName: 'cmsPage', operation: 'saveAll', dataFilePrefix: 'kickoffDocumentationPageData' }, query: { code: '$code' } },\n    kickoffDocumentationRouteData: { options: { enabled: true, schemaName: 'cmsPageRoute', operation: 'saveAll', dataFilePrefix: 'kickoffDocumentationRouteData' }, query: { code: '$code' } },\n  },\n};\n`,
 };
 
 for (const [relativePath, content] of Object.entries(files)) {

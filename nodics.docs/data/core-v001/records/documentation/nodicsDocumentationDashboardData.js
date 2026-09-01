@@ -20,7 +20,7 @@ module.exports = {
     "title": "Nodics Documentation",
     "summary": "Detailed landing content for the full Nodics documentation catalogue, including framework, application-suite, business capability, operations, publication, AI tooling, and reference journeys.",
     "contentArea": {
-      "intent": "Help every reader choose the correct business or technical documentation journey before opening detailed topic pages."
+      "intent": "Help every reader choose the correct business or technical documentation journey before opening detailed pages."
     },
     "cards": [
       {
