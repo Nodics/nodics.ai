@@ -3040,15 +3040,15 @@
       ],
       "sourceOwner": "nodics.foundation",
       "sourcePath": "docs/pages/nodics.foundation/routing-api-governance.md",
-      "visibility": "authenticated",
+      "visibility": "public",
       "channel": [
         "axis",
         "nexus",
         "web"
       ],
-      "accessMode": "AUTHENTICATED",
-      "publiclyAvailable": false,
-      "requiresAuthentication": true,
+      "accessMode": "PUBLIC",
+      "publiclyAvailable": true,
+      "requiresAuthentication": false,
       "allowedRoles": [
         "admin",
         "documentationAuthor",
@@ -3157,15 +3157,15 @@
       ],
       "sourceOwner": "nodics.foundation",
       "sourcePath": "docs/pages/nodics.foundation/api-request-lifecycle-handler-pipeline.md",
-      "visibility": "authenticated",
+      "visibility": "public",
       "channel": [
         "axis",
         "nexus",
         "web"
       ],
-      "accessMode": "AUTHENTICATED",
-      "publiclyAvailable": false,
-      "requiresAuthentication": true,
+      "accessMode": "PUBLIC",
+      "publiclyAvailable": true,
+      "requiresAuthentication": false,
       "allowedRoles": [
         "admin",
         "documentationAuthor",
@@ -3274,15 +3274,15 @@
       ],
       "sourceOwner": "nodics.foundation",
       "sourcePath": "docs/pages/nodics.foundation/error-handling-and-status-codes.md",
-      "visibility": "authenticated",
+      "visibility": "public",
       "channel": [
         "axis",
         "nexus",
         "web"
       ],
-      "accessMode": "AUTHENTICATED",
-      "publiclyAvailable": false,
-      "requiresAuthentication": true,
+      "accessMode": "PUBLIC",
+      "publiclyAvailable": true,
+      "requiresAuthentication": false,
       "allowedRoles": [
         "admin",
         "documentationAuthor",

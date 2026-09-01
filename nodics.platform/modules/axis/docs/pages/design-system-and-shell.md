@@ -143,7 +143,7 @@ destinations are disabled and degraded destinations remain visible with a
 warning state. A navigation item with permissions not covered by its already
 authorized module contribution is rejected rather than displayed.
 
-When the authorized `aiAssistant` contribution contains its `assistant`
+When the authorized `copilotApi` contribution contains its `assistant`
 navigation item, the same backend-provided label, route, icon key, and
 availability also drive the top-bar shortcut. The shortcut is absent when the
 employee has no contribution, enabled for `UP` and `DEGRADED`, and disabled for

@@ -3825,8 +3825,8 @@ module.exports = {
       "ACCESS_POLICY_CHANGE",
       "SOURCE_EVIDENCE_CHANGE"
     ],
-    "accessPolicy": "nodicsDocsAccessAuthenticated",
-    "accessMode": "AUTHENTICATED",
+    "accessPolicy": "nodicsDocsAccessPublic",
+    "accessMode": "PUBLIC",
     "lifecycleState": "ONLINE",
     "maturityState": "IMPLEMENTED",
     "active": true
@@ -3966,8 +3966,8 @@ module.exports = {
       "ACCESS_POLICY_CHANGE",
       "SOURCE_EVIDENCE_CHANGE"
     ],
-    "accessPolicy": "nodicsDocsAccessAuthenticated",
-    "accessMode": "AUTHENTICATED",
+    "accessPolicy": "nodicsDocsAccessPublic",
+    "accessMode": "PUBLIC",
     "lifecycleState": "ONLINE",
     "maturityState": "IMPLEMENTED",
     "active": true
@@ -4141,8 +4141,8 @@ module.exports = {
       "ACCESS_POLICY_CHANGE",
       "SOURCE_EVIDENCE_CHANGE"
     ],
-    "accessPolicy": "nodicsDocsAccessAuthenticated",
-    "accessMode": "AUTHENTICATED",
+    "accessPolicy": "nodicsDocsAccessPublic",
+    "accessMode": "PUBLIC",
     "lifecycleState": "ONLINE",
     "maturityState": "IMPLEMENTED",
     "active": true

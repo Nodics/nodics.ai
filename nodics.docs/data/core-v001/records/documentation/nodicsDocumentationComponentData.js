@@ -3113,10 +3113,10 @@ module.exports = {
             "ai tool"
           ],
           "summary": "How Nodics owns route metadata, generated CRUD routes, security, permissions, request context, and runtime API behavior.",
-          "visibility": "authenticated",
-          "accessMode": "AUTHENTICATED",
-          "publiclyAvailable": false,
-          "requiresAuthentication": true,
+          "visibility": "public",
+          "accessMode": "PUBLIC",
+          "publiclyAvailable": true,
+          "requiresAuthentication": false,
           "allowedRoles": [
             "admin",
             "documentationAuthor",
@@ -3197,10 +3197,10 @@ module.exports = {
             "ai tool"
           ],
           "summary": "How each Nodics HTTP request moves from Express route binding through request context, exposure checks, authentication branches, cache lookup, controller dispatch, response handlers, and safe customization.",
-          "visibility": "authenticated",
-          "accessMode": "AUTHENTICATED",
-          "publiclyAvailable": false,
-          "requiresAuthentication": true,
+          "visibility": "public",
+          "accessMode": "PUBLIC",
+          "publiclyAvailable": true,
+          "requiresAuthentication": false,
           "allowedRoles": [
             "admin",
             "documentationAuthor",
@@ -3281,10 +3281,10 @@ module.exports = {
             "ai tool"
           ],
           "summary": "How Nodics errors, status definitions, response handlers, HTTP status codes, localization metadata, safe public messages, and project overrides work.",
-          "visibility": "authenticated",
-          "accessMode": "AUTHENTICATED",
-          "publiclyAvailable": false,
-          "requiresAuthentication": true,
+          "visibility": "public",
+          "accessMode": "PUBLIC",
+          "publiclyAvailable": true,
+          "requiresAuthentication": false,
           "allowedRoles": [
             "admin",
             "documentationAuthor",
@@ -21534,10 +21534,10 @@ module.exports = {
         "ai tool"
       ],
       "summary": "How Nodics owns route metadata, generated CRUD routes, security, permissions, request context, and runtime API behavior.",
-      "visibility": "authenticated",
-      "accessMode": "AUTHENTICATED",
-      "publiclyAvailable": false,
-      "requiresAuthentication": true,
+      "visibility": "public",
+      "accessMode": "PUBLIC",
+      "publiclyAvailable": true,
+      "requiresAuthentication": false,
       "allowedRoles": [
         "admin",
         "documentationAuthor",
@@ -22017,10 +22017,10 @@ module.exports = {
         "ai tool"
       ],
       "summary": "How each Nodics HTTP request moves from Express route binding through request context, exposure checks, authentication branches, cache lookup, controller dispatch, response handlers, and safe customization.",
-      "visibility": "authenticated",
-      "accessMode": "AUTHENTICATED",
-      "publiclyAvailable": false,
-      "requiresAuthentication": true,
+      "visibility": "public",
+      "accessMode": "PUBLIC",
+      "publiclyAvailable": true,
+      "requiresAuthentication": false,
       "allowedRoles": [
         "admin",
         "documentationAuthor",
@@ -22600,10 +22600,10 @@ module.exports = {
         "ai tool"
       ],
       "summary": "How Nodics errors, status definitions, response handlers, HTTP status codes, localization metadata, safe public messages, and project overrides work.",
-      "visibility": "authenticated",
-      "accessMode": "AUTHENTICATED",
-      "publiclyAvailable": false,
-      "requiresAuthentication": true,
+      "visibility": "public",
+      "accessMode": "PUBLIC",
+      "publiclyAvailable": true,
+      "requiresAuthentication": false,
       "allowedRoles": [
         "admin",
         "documentationAuthor",

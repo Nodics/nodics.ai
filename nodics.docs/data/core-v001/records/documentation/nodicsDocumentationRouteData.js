@@ -394,7 +394,7 @@ module.exports = {
     "page": "nodicsDocsPageroutingApiGovernance",
     "routeType": "PAGE",
     "deliveryState": "ONLINE",
-    "accessMode": "AUTHENTICATED",
+    "accessMode": "PUBLIC",
     "active": true
   },
   "record32": {
@@ -406,7 +406,7 @@ module.exports = {
     "page": "nodicsDocsPageroutingApiRequestLifecycle",
     "routeType": "PAGE",
     "deliveryState": "ONLINE",
-    "accessMode": "AUTHENTICATED",
+    "accessMode": "PUBLIC",
     "active": true
   },
   "record33": {
@@ -418,7 +418,7 @@ module.exports = {
     "page": "nodicsDocsPagefoundationErrorHandlingStatusCodes",
     "routeType": "PAGE",
     "deliveryState": "ONLINE",
-    "accessMode": "AUTHENTICATED",
+    "accessMode": "PUBLIC",
     "active": true
   },
   "record34": {

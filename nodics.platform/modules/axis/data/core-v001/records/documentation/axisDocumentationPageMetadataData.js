@@ -471,7 +471,7 @@ module.exports = {
     ],
     "sourceRepository": "nodics.platform",
     "sourcePath": "docs/pages/design-system-and-shell.md",
-    "sourceChecksum": "5bc37f01fed84e1b15a3aac31bc77c23c6946161debfb26ef32366b8327f31d1",
+    "sourceChecksum": "01c5524ba7d6d685d8c1cf68a1964821763cf7cafd659eef69335e479dd48d6e",
     "sourceWordCount": 2062,
     "audience": [
       "designer",
@@ -898,7 +898,7 @@ module.exports = {
     ],
     "sourceRepository": "nodics.platform",
     "sourcePath": "docs/pages/assistant-frontend.md",
-    "sourceChecksum": "199da4f778cd70a0ed82ebc5f91a6dc36a48df4de16ce896afd75791c28841c5",
+    "sourceChecksum": "cf632cd0dc0b6421ba4ba62ccf3602a667bd33f1527d48570baa0089b4eb21fa",
     "sourceWordCount": 2099,
     "audience": [
       "business-user",

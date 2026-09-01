@@ -291,16 +291,24 @@ assert(
 assert(
   nodeRecords.some((node) => node.code === 'axisDocsNodeRoot') &&
     nodeRecords.some((node) => node.nodeLevel === 'SECTION') &&
-    nodeRecords.some((node) => node.nodeLevel === 'GROUP') &&
-    nodeRecords.some((node) => node.nodeLevel === 'TOPIC') &&
+    nodeRecords.some((node) => node.nodeLevel === 'PAGE_LINK') &&
     nodeRecords.every(
       (node) =>
         node.product === productRecords[0].code &&
         node.navigation === navigationMetadataRecords[0].code &&
         node.nodeSummary &&
         node.nodeContentArea,
+    ) &&
+    nodeRecords
+      .filter((node) => node.nodeLevel === 'PAGE_LINK')
+      .every(
+        (node) =>
+          node.nodeType === 'PAGE' &&
+          node.parentNode &&
+          node.targetPage &&
+          node.targetRoute,
     ),
-  'Axis documentation must generate editable navigation hierarchy nodes',
+  'Axis documentation must generate editable two-level navigation hierarchy nodes',
 );
 assert(
   pageMetadataRecords.length === navigation.pages.length &&

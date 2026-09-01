@@ -7489,8 +7489,8 @@ module.exports = {
       "qa",
       "ai-tool"
     ],
-    "accessPolicy": "nodicsDocsAccessAuthenticated",
-    "accessMode": "AUTHENTICATED",
+    "accessPolicy": "nodicsDocsAccessPublic",
+    "accessMode": "PUBLIC",
     "allowedRoles": [
       "admin",
       "documentationAuthor",
@@ -7581,8 +7581,8 @@ module.exports = {
       "qa",
       "ai-tool"
     ],
-    "accessPolicy": "nodicsDocsAccessAuthenticated",
-    "accessMode": "AUTHENTICATED",
+    "accessPolicy": "nodicsDocsAccessPublic",
+    "accessMode": "PUBLIC",
     "allowedRoles": [
       "admin",
       "documentationAuthor",
@@ -7673,8 +7673,8 @@ module.exports = {
       "qa",
       "ai-tool"
     ],
-    "accessPolicy": "nodicsDocsAccessAuthenticated",
-    "accessMode": "AUTHENTICATED",
+    "accessPolicy": "nodicsDocsAccessPublic",
+    "accessMode": "PUBLIC",
     "allowedRoles": [
       "admin",
       "documentationAuthor",

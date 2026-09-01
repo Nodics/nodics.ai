@@ -32,7 +32,7 @@ approval, or audit decisions in the browser.
 
 ## Authority and request flow
 
-1. BackOffice authenticated bootstrap advertises the authorized `aiAssistant`
+1. BackOffice authenticated bootstrap advertises the authorized `copilotApi`
    capability, navigation entry, availability, and client-callable module
    leases.
 2. Axis validates those values and selects only an `UP` or `DEGRADED`
@@ -43,7 +43,7 @@ approval, or audit decisions in the browser.
 4. The CMS logical renderer keys map to allowlisted Axis-owned React
    implementations.
 5. The typed Assistant client sends the employee bearer directly to the
-   discovered `aiAssistant` module endpoint.
+   discovered `copilotApi` module endpoint.
 6. Nodics owns authorization, validation, persistence, provider selection,
    token governance, tools, Workflow handoff, and audit.
 
@@ -159,7 +159,7 @@ It holds no provider credentials and does not reproduce backend validation.
 
 On authenticated entry, the controller loads a bounded employee-owned
 conversation page. Selecting a conversation loads its durable turn/message and
-structured-interaction projection from `aiAssistant`; it does not reconstruct
+structured-interaction projection from `copilotApi`; it does not reconstruct
 long-term history from short-lived SSE events. Clarification, tool state, safe
 usage, citations, and confirmation lifecycle therefore survive reload. Older
 conversation and turn pages are merged without changing chronological order or
