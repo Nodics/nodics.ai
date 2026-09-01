@@ -21,7 +21,7 @@ module.exports = {
     /** Builds a common operator reason input. */
     reasonInput:function(){return {name:'reason',label:'Reason',type:'MULTILINE',required:false,maximumLength:512};},
     /** Builds the backend operation route for one lifecycle action code. */
-    actionRoute:function(actionCode){return '/operator/order-lifecycle/:requestCode/actions/'+actionCode;},
+    actionRoute:function(actionCode){return '/order-lifecycle/:requestCode/actions/'+actionCode;},
     /** Builds one Order-owned operator action definition. */
     action:function(options){let actionCode=options.actionCode;let model=Object.assign({permission:'commerce.lifecycle.act',ownerModule:'order',handlerAction:actionCode,operationRoute:this.actionRoute(actionCode),inputFields:[this.requestCodeInput(),this.reasonInput()],targetStatuses:['SUBMITTED','APPROVED','RETRY_PENDING','RECONCILING'],featureState:'ACTIVE'},options);delete model.actionCode;return model;},
     /** Returns standard operator lifecycle action definitions. */
@@ -37,7 +37,7 @@ module.exports = {
             this.action({id:'mark-inspected',label:'Mark inspected',intent:'OTHER',actionCode:'MARK_INSPECTED',summary:'Record return inspection through Fulfillment-owned services.',order:60,inputFields:[this.requestCodeInput(),{name:'rmaCode',label:'RMA code',type:'TEXT',required:false,valueFromRecord:'evidence.rmaCode',maximumLength:128},{name:'disposition',label:'Disposition',type:'SELECT',required:true,options:['RESTOCK','REFURBISH','SCRAP','REJECT_RETURN'],defaultValue:'RESTOCK',maximumLength:32},this.reasonInput()]}),
             this.action({id:'record-disposition',label:'Record disposition',intent:'OTHER',actionCode:'DISPOSITION',summary:'Record inventory disposition and refund eligibility after inspection.',order:70,inputFields:[this.requestCodeInput(),{name:'rmaCode',label:'RMA code',type:'TEXT',required:false,valueFromRecord:'evidence.rmaCode',maximumLength:128},{name:'disposition',label:'Disposition',type:'SELECT',required:true,options:['RESTOCK','REFURBISH','SCRAP','REJECT_RETURN'],defaultValue:'RESTOCK',maximumLength:32},this.reasonInput()]})
         ]);
-        if(scope==='REFUND') actions=actions.map(action=>action.id==='approve'?Object.assign({},action,{inputFields:[this.requestCodeInput(),{name:'refundAmount',label:'Refund amount',type:'TEXT',required:false,valueFromRecord:'evidence.refundPreview.amount',maximumLength:32},{name:'currency',label:'Currency',type:'TEXT',required:false,valueFromRecord:'evidence.refundPreview.currency',maximumLength:8},this.reasonInput()]}):action);
+        if(scope==='REFUND'||scope==='CANCELLATION') actions=actions.map(action=>action.id==='approve'||action.id==='reconcile'?Object.assign({},action,{inputFields:[this.requestCodeInput(),{name:'refundAmount',label:'Refund amount',type:'TEXT',required:false,valueFromRecord:'evidence.refundPreview.amount',maximumLength:32},{name:'currency',label:'Currency',type:'TEXT',required:false,valueFromRecord:'evidence.refundPreview.currency',maximumLength:8},this.reasonInput()]}):action);
         return actions;
     },
     /** Returns the Order-owned BackOffice capability contract. */

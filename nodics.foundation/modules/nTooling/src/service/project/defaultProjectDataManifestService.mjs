@@ -20,7 +20,7 @@ const domains = [
   { code: 'telco', title: 'Telco', module: 'agora.telco' },
 ];
 const domainReleaseVersions = {
-  'agora.apparel': '0.0.2'
+  'agora.apparel': '0.0.5'
 };
 const releaseRoot = 'sample-v001';
 const digest = file => crypto.createHash('sha256').update(fs.readFileSync(file)).digest('hex');

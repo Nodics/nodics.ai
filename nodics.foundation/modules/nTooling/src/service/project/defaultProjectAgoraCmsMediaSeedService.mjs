@@ -14,6 +14,7 @@ import fs from "node:fs/promises";
 import { existsSync } from "node:fs";
 import path from "node:path";
 import { createRequire } from "node:module";
+import { readProjectEnvironmentComposition } from "./defaultProjectEnvironmentProfileService.mjs";
 
 const require = createRequire(import.meta.url);
 const projectRoot = path.resolve(process.env.NODICS_PROJECT_ROOT || process.cwd());
@@ -23,7 +24,7 @@ const axisOrigin = process.env.AXIS_ORIGIN || process.env.AXIS_URL || "http://12
 const enterpriseCode = process.env.AXIS_ENTERPRISE || process.env.NODICS_ENTERPRISE_CODE || "default";
 const loginId = process.env.AXIS_LOGIN_ID || "admin";
 const password = process.env.AXIS_PASSWORD || "adminPassword";
-const composition = require(path.join(projectRoot, "config", "agora-domain-composition.js")).resolve();
+const composition = readProjectEnvironmentComposition(projectRoot);
 const supportedPacks = Object.freeze(["agora.apparel", "agora.electronics", "agora.telco"]);
 
 function log(message) {

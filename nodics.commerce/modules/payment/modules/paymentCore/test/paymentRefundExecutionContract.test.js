@@ -35,6 +35,10 @@ function installGlobals() {
         DefaultPaymentExecutionService: execution,
         DefaultPaymentRefundExecutionService: refund,
         DefaultStripeSandboxAdapterService: stripe,
+        DefaultLoyaltyRewardPaymentProviderService: {
+            code: 'loyalty-reward-points',
+            execute: async request => ({ status: 'REFUNDED', reference: request.reversalOfEntryCode || request.providerReference, loyalty: { walletCode: request.walletCode } })
+        },
         DefaultPaymentTransactionService: {
             get: async request => ({ result: transactions.filter(item => item.tenant === request.query.tenant && item.idempotencyKey === request.query.idempotencyKey && item.operation === request.query.operation) }),
             save: async request => {
@@ -120,4 +124,24 @@ test('Payment refund execution converts provider failure into action-required re
     assert.equal(result.status, 'REFUND_FAILED');
     assert.equal(reconciliations[0].status, 'ACTION_REQUIRED');
     assert.equal(reconciliations[0].evidence.reason, 'PROVIDER_REJECTED_REFUND');
+});
+
+test('Payment refund execution routes Loyalty reward refunds to the Loyalty reward provider', async () => {
+    const result = await refund.executeRefund({
+        tenant: 'default',
+        ownerId: 'customer-1',
+        orderCode: 'order-1',
+        providerCode: 'loyalty-reward-points',
+        walletCode: 'wallet-1',
+        reversalOfEntryCode: 'ledger-capture-1',
+        idempotencyKey: 'order-1:refund:loyalty',
+        payload: { amount: '25.00', currency: 'POINTS', methodCode: 'LOYALTY_REWARD' },
+        correlationId: 'corr-refund-5'
+    });
+
+    assert.equal(result.status, 'REFUND_SUCCEEDED');
+    assert.equal(transactions[0].providerCode, 'loyalty-reward-points');
+    assert.equal(transactions[0].methodCode, 'LOYALTY_REWARD');
+    assert.equal(transactions[0].providerReference, 'ledger-capture-1');
+    assert.equal(transactions[0].evidence.walletCode, 'wallet-1');
 });

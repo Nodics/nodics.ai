@@ -1,0 +1,18 @@
+{
+    "name": "wasteReceipt",
+    "index": "92.76",
+    "description": "Reusable Waste receipt confirmation contracts.",
+    "main": "nodics.js",
+    "version": "0.0.0",
+    "private": true,
+    "license": "SEE LICENSE IN LICENSE",
+    "nodics": {
+        "kind": "capability",
+        "displayName": "Waste Receipt",
+        "runtimeModule": true,
+        "loadableByNodicsModuleLoader": true,
+        "owns": ["configuration", "schema", "service", "utility", "test", "llm"],
+        "runtime": { "router": false, "publish": false, "web": false }
+    },
+    "scripts": {}
+}

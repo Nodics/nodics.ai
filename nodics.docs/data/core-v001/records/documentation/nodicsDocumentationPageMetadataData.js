@@ -12586,63 +12586,121 @@ module.exports = {
     "active": true
   },
   "record106": {
-    "code": "nodicsDocsMetadatacommerceCustomerListProfileBoundary",
+    "code": "nodicsDocsMetadataloyaltyWalletsRewardsLedger",
     "product": "nodicsDocumentationProduct",
-    "documentId": "commerce.customer-list-profile-boundary",
-    "title": "Customer List and Profile Commerce Boundary",
-    "summary": "Why customer lists belong to Commerce while person, address, authentication, permission, and organization identity stay under Profile.",
-    "businessSummary": "Customer List and Profile Commerce Boundary explains the business purpose, supported decisions, operational impact, and controls for the Customer Data and Identity journey.",
-    "technicalSummary": "Customer List and Profile Commerce Boundary records owning module nodics.commerce, technical module customerList, source path docs/pages/nodics.commerce/customer-list-profile-boundary.md, extension points, validation, and troubleshooting evidence.",
-    "ownerFunctionalModule": "nodics.commerce",
-    "technicalModule": "customerList",
-    "targetPage": "nodicsDocsPagecommerceCustomerListProfileBoundary",
-    "targetRoute": "nodicsDocsRoutecommerceCustomerListProfileBoundary",
-    "articleComponent": "nodicsDocsComponentcommerceCustomerListProfileBoundary",
+    "documentId": "loyalty.wallets-rewards-ledger",
+    "title": "Loyalty Wallets, Rewards, and Ledger",
+    "summary": "Business, developer, operator, and customization guidance for reward wallets, balances, reservations, redemptions, ledger evidence, and Commerce reward payment provider integration.",
+    "businessSummary": "Loyalty Wallets, Rewards, and Ledger explains the business purpose, supported decisions, operational impact, and controls for the Loyalty Foundations journey.",
+    "technicalSummary": "Loyalty Wallets, Rewards, and Ledger records owning module nodics.loyalty, technical module loyaltyWallet, source path docs/pages/nodics.loyalty/loyalty-wallets-rewards-and-ledger.md, extension points, validation, and troubleshooting evidence.",
+    "ownerFunctionalModule": "nodics.loyalty",
+    "technicalModule": "loyaltyWallet",
+    "targetPage": "nodicsDocsPageloyaltyWalletsRewardsLedger",
+    "targetRoute": "nodicsDocsRouteloyaltyWalletsRewardsLedger",
+    "articleComponent": "nodicsDocsComponentloyaltyWalletsRewardsLedger",
     "template": "nodicsDocumentationArticleTemplate",
-    "searchMetadata": "nodicsDocsSearchpagenodicsdocsmetadatacommercecustomerlistprofileboundary",
+    "searchMetadata": "nodicsDocsSearchpagenodicsdocsmetadataloyaltywalletsrewardsledger",
     "headings": [
       {
+        "text": "Beginner mental model",
+        "anchor": "loyaltyWalletsRewardsLedger-1-beginner-mental-model",
+        "level": 2
+      },
+      {
+        "text": "Business problem",
+        "anchor": "loyaltyWalletsRewardsLedger-2-business-problem",
+        "level": 2
+      },
+      {
         "text": "Source map",
-        "anchor": "commerceCustomerListProfileBoundary-1-source-map",
+        "anchor": "loyaltyWalletsRewardsLedger-3-source-map",
         "level": 2
       },
       {
-        "text": "Ownership model",
-        "anchor": "commerceCustomerListProfileBoundary-2-ownership-model",
+        "text": "Owner model",
+        "anchor": "loyaltyWalletsRewardsLedger-4-owner-model",
         "level": 2
       },
       {
-        "text": "Contract",
-        "anchor": "commerceCustomerListProfileBoundary-3-contract",
+        "text": "Runtime topology",
+        "anchor": "loyaltyWalletsRewardsLedger-5-runtime-topology",
         "level": 2
       },
       {
-        "text": "Customization and extension guidance",
-        "anchor": "commerceCustomerListProfileBoundary-4-customization-and-extension-guidance",
+        "text": "Business journeys",
+        "anchor": "loyaltyWalletsRewardsLedger-6-business-journeys",
         "level": 2
       },
       {
-        "text": "Implementation handoff",
-        "anchor": "commerceCustomerListProfileBoundary-5-implementation-handoff",
+        "text": "Earn",
+        "anchor": "loyaltyWalletsRewardsLedger-7-earn",
+        "level": 3
+      },
+      {
+        "text": "Reserve",
+        "anchor": "loyaltyWalletsRewardsLedger-8-reserve",
+        "level": 3
+      },
+      {
+        "text": "Capture",
+        "anchor": "loyaltyWalletsRewardsLedger-9-capture",
+        "level": 3
+      },
+      {
+        "text": "Release",
+        "anchor": "loyaltyWalletsRewardsLedger-10-release",
+        "level": 3
+      },
+      {
+        "text": "Reverse",
+        "anchor": "loyaltyWalletsRewardsLedger-11-reverse",
+        "level": 3
+      },
+      {
+        "text": "Reward payment provider checkout pattern",
+        "anchor": "loyaltyWalletsRewardsLedger-12-reward-payment-provider-checkout-pattern",
         "level": 2
       },
       {
-        "text": "Evidence checklist",
-        "anchor": "commerceCustomerListProfileBoundary-6-evidence-checklist",
+        "text": "Developer guidance",
+        "anchor": "loyaltyWalletsRewardsLedger-13-developer-guidance",
         "level": 2
       },
       {
-        "text": "Common mistakes",
-        "anchor": "commerceCustomerListProfileBoundary-7-common-mistakes",
+        "text": "Customization guidance",
+        "anchor": "loyaltyWalletsRewardsLedger-14-customization-guidance",
+        "level": 2
+      },
+      {
+        "text": "Security and governance",
+        "anchor": "loyaltyWalletsRewardsLedger-15-security-and-governance",
+        "level": 2
+      },
+      {
+        "text": "Operational evidence",
+        "anchor": "loyaltyWalletsRewardsLedger-16-operational-evidence",
         "level": 2
       },
       {
         "text": "Verification",
-        "anchor": "commerceCustomerListProfileBoundary-8-verification",
+        "anchor": "loyaltyWalletsRewardsLedger-17-verification",
+        "level": 2
+      },
+      {
+        "text": "Common mistakes",
+        "anchor": "loyaltyWalletsRewardsLedger-18-common-mistakes",
+        "level": 2
+      },
+      {
+        "text": "Reader checklist",
+        "anchor": "loyaltyWalletsRewardsLedger-19-reader-checklist",
         "level": 2
       }
     ],
     "diagrams": [
+      {
+        "language": "mermaid"
+      },
       {
         "language": "mermaid"
       }
@@ -12651,23 +12709,36 @@ module.exports = {
       {
         "kind": "table",
         "title": "Area, Source location"
+      },
+      {
+        "kind": "table",
+        "title": "Journey part, Owner"
+      },
+      {
+        "kind": "table",
+        "title": "Change, Put it here"
+      },
+      {
+        "kind": "table",
+        "title": "Evidence, Why it matters"
       }
     ],
     "visualRequirements": [
       "diagram",
       "table",
       "code-example",
-      "troubleshooting-matrix"
+      "command-example"
     ],
     "relatedPages": [
-      "security.identity-access-governance",
-      "commerce.cart-order",
-      "commerce.payment-provider-boundaries"
+      "commerce.payment-provider-boundaries",
+      "commerce.payment-fulfillment",
+      "framework.customization-guide",
+      "framework.local-browser-acceptance-journey"
     ],
     "sourceRepository": "nodics.docs",
-    "sourcePath": "docs/pages/nodics.commerce/customer-list-profile-boundary.md",
-    "sourceChecksum": "c8a054a000f579059fbf0774a967d4aa1386844f61a89195fd210c2918dcbdfd",
-    "sourceWordCount": 537,
+    "sourcePath": "docs/pages/nodics.loyalty/loyalty-wallets-rewards-and-ledger.md",
+    "sourceChecksum": "0bf2b29ebcd0290f7bc326d3b323d475c1d5376e3cab4806ee8f15ab6c889eef",
+    "sourceWordCount": 1542,
     "audience": [
       "business",
       "architect",
@@ -12694,6 +12765,123 @@ module.exports = {
     "active": true
   },
   "record107": {
+    "code": "nodicsDocsMetadatacommerceShoppingListCommerceBoundary",
+    "product": "nodicsDocumentationProduct",
+    "documentId": "commerce.shopping-list-commerce-boundary",
+    "title": "Shopping List Commerce Boundary",
+    "summary": "Why wishlist, compare, and save-for-later belong to Commerce while Profile remains the identity authority.",
+    "businessSummary": "Shopping List Commerce Boundary explains the business purpose, supported decisions, operational impact, and controls for the Customer Data and Identity journey.",
+    "technicalSummary": "Shopping List Commerce Boundary records owning module nodics.commerce, technical module shoppingList, source path docs/pages/nodics.commerce/shopping-list-commerce-boundary.md, extension points, validation, and troubleshooting evidence.",
+    "ownerFunctionalModule": "nodics.commerce",
+    "technicalModule": "shoppingList",
+    "targetPage": "nodicsDocsPagecommerceShoppingListCommerceBoundary",
+    "targetRoute": "nodicsDocsRoutecommerceShoppingListCommerceBoundary",
+    "articleComponent": "nodicsDocsComponentcommerceShoppingListCommerceBoundary",
+    "template": "nodicsDocumentationArticleTemplate",
+    "searchMetadata": "nodicsDocsSearchpagenodicsdocsmetadatacommerceshoppinglistcommerceboundary",
+    "headings": [
+      {
+        "text": "Source map",
+        "anchor": "commerceShoppingListCommerceBoundary-1-source-map",
+        "level": 2
+      },
+      {
+        "text": "Ownership model",
+        "anchor": "commerceShoppingListCommerceBoundary-2-ownership-model",
+        "level": 2
+      },
+      {
+        "text": "Contract",
+        "anchor": "commerceShoppingListCommerceBoundary-3-contract",
+        "level": 2
+      },
+      {
+        "text": "Business configuration guidance",
+        "anchor": "commerceShoppingListCommerceBoundary-4-business-configuration-guidance",
+        "level": 2
+      },
+      {
+        "text": "Developer extension guidance",
+        "anchor": "commerceShoppingListCommerceBoundary-5-developer-extension-guidance",
+        "level": 2
+      },
+      {
+        "text": "Extending product-keeping journeys",
+        "anchor": "commerceShoppingListCommerceBoundary-6-extending-product-keeping-journeys",
+        "level": 2
+      },
+      {
+        "text": "Common mistakes",
+        "anchor": "commerceShoppingListCommerceBoundary-7-common-mistakes",
+        "level": 2
+      },
+      {
+        "text": "Migration principle",
+        "anchor": "commerceShoppingListCommerceBoundary-8-migration-principle",
+        "level": 2
+      },
+      {
+        "text": "Verification",
+        "anchor": "commerceShoppingListCommerceBoundary-9-verification",
+        "level": 2
+      }
+    ],
+    "diagrams": [
+      {
+        "language": "mermaid"
+      }
+    ],
+    "visualAssets": [
+      {
+        "kind": "table",
+        "title": "Area, Source location"
+      },
+      {
+        "kind": "table",
+        "title": "Use case, Suggested list type, Why it fits Shopping List"
+      }
+    ],
+    "visualRequirements": [
+      "diagram",
+      "table",
+      "code-example",
+      "troubleshooting-matrix"
+    ],
+    "relatedPages": [
+      "security.identity-access-governance",
+      "commerce.cart-order",
+      "commerce.payment-provider-boundaries"
+    ],
+    "sourceRepository": "nodics.docs",
+    "sourcePath": "docs/pages/nodics.commerce/shopping-list-commerce-boundary.md",
+    "sourceChecksum": "2adf3d91cabe9afdeb6856fbf9250519cbf98dd659e1263f4861404e4d5ee3b8",
+    "sourceWordCount": 1093,
+    "audience": [
+      "business",
+      "architect",
+      "administrator",
+      "developer",
+      "operator",
+      "qa",
+      "ai-tool"
+    ],
+    "managedInAxis": true,
+    "axisAuthoringPermissions": [
+      "documentation.draft.update"
+    ],
+    "workflowRequired": true,
+    "workflowTriggers": [
+      "CONTENT_CHANGE",
+      "ACCESS_POLICY_CHANGE",
+      "SOURCE_EVIDENCE_CHANGE"
+    ],
+    "accessPolicy": "nodicsDocsAccessPublic",
+    "accessMode": "PUBLIC",
+    "lifecycleState": "ONLINE",
+    "maturityState": "IMPLEMENTED",
+    "active": true
+  },
+  "record108": {
     "code": "nodicsDocsMetadatafoundationNmsRuntimeMonitoring",
     "product": "nodicsDocumentationProduct",
     "documentId": "foundation.nms-runtime-monitoring",
@@ -12799,7 +12987,7 @@ module.exports = {
     "maturityState": "IMPLEMENTED",
     "active": true
   },
-  "record108": {
+  "record109": {
     "code": "nodicsDocsMetadatafoundationServiceRuntimeOverrides",
     "product": "nodicsDocumentationProduct",
     "documentId": "foundation.service-runtime-overrides",
@@ -12922,7 +13110,7 @@ module.exports = {
     "maturityState": "IMPLEMENTED",
     "active": true
   },
-  "record109": {
+  "record110": {
     "code": "nodicsDocsMetadatafoundationModuleToModuleCommunication",
     "product": "nodicsDocumentationProduct",
     "documentId": "foundation.module-to-module-communication",
@@ -13069,7 +13257,7 @@ module.exports = {
     "maturityState": "IMPLEMENTED",
     "active": true
   },
-  "record110": {
+  "record111": {
     "code": "nodicsDocsMetadatafoundationCacheProviderRunbooks",
     "product": "nodicsDocumentationProduct",
     "documentId": "foundation.cache-provider-runbooks",
@@ -13175,7 +13363,7 @@ module.exports = {
     "maturityState": "IMPLEMENTED",
     "active": true
   },
-  "record111": {
+  "record112": {
     "code": "nodicsDocsMetadatafoundationDatabaseProviderBoundaries",
     "product": "nodicsDocumentationProduct",
     "documentId": "foundation.database-provider-boundaries",
@@ -13282,7 +13470,7 @@ module.exports = {
     "maturityState": "IMPLEMENTED",
     "active": true
   },
-  "record112": {
+  "record113": {
     "code": "nodicsDocsMetadatasecurityOtpSecurityFlow",
     "product": "nodicsDocumentationProduct",
     "documentId": "security.otp-security-flow",
@@ -13398,7 +13586,7 @@ module.exports = {
     "maturityState": "IMPLEMENTED",
     "active": true
   },
-  "record113": {
+  "record114": {
     "code": "nodicsDocsMetadatacommunicationProviderRunbooks",
     "product": "nodicsDocumentationProduct",
     "documentId": "communication.provider-runbooks",
@@ -13506,7 +13694,7 @@ module.exports = {
     "maturityState": "IMPLEMENTED",
     "active": true
   },
-  "record114": {
+  "record115": {
     "code": "nodicsDocsMetadataengagementContactSubmissionOperations",
     "product": "nodicsDocumentationProduct",
     "documentId": "engagement.contact-submission-operations",
@@ -13614,7 +13802,7 @@ module.exports = {
     "maturityState": "IMPLEMENTED",
     "active": true
   },
-  "record115": {
+  "record116": {
     "code": "nodicsDocsMetadataprocessWorkflowBpmSourceMap",
     "product": "nodicsDocumentationProduct",
     "documentId": "process.workflow-bpm-source-map",
@@ -13723,7 +13911,7 @@ module.exports = {
     "maturityState": "IMPLEMENTED",
     "active": true
   },
-  "record116": {
+  "record117": {
     "code": "nodicsDocsMetadataprocessCronjobDataAuthoring",
     "product": "nodicsDocumentationProduct",
     "documentId": "process.cronjob-data-authoring",
@@ -13831,7 +14019,7 @@ module.exports = {
     "maturityState": "IMPLEMENTED",
     "active": true
   },
-  "record117": {
+  "record118": {
     "code": "nodicsDocsMetadataframeworkReleaseUpgradeCompatibility",
     "product": "nodicsDocumentationProduct",
     "documentId": "framework.release-upgrade-compatibility",
@@ -13948,7 +14136,7 @@ module.exports = {
     "maturityState": "IMPLEMENTED",
     "active": true
   },
-  "record118": {
+  "record119": {
     "code": "nodicsDocsMetadatacommerceFulfillmentCoreSourceMap",
     "product": "nodicsDocumentationProduct",
     "documentId": "commerce.fulfillment-core-source-map",
@@ -14056,7 +14244,7 @@ module.exports = {
     "maturityState": "IMPLEMENTED",
     "active": true
   },
-  "record119": {
+  "record120": {
     "code": "nodicsDocsMetadataacceleratorsDomainCommerceSourceMap",
     "product": "nodicsDocumentationProduct",
     "documentId": "accelerators.domain-commerce-source-map",
@@ -14164,7 +14352,7 @@ module.exports = {
     "maturityState": "IMPLEMENTED",
     "active": true
   },
-  "record120": {
+  "record121": {
     "code": "nodicsDocsMetadatafoundationToolingRuntimeContracts",
     "product": "nodicsDocumentationProduct",
     "documentId": "foundation.tooling-runtime-contracts",
@@ -14272,7 +14460,7 @@ module.exports = {
     "maturityState": "IMPLEMENTED",
     "active": true
   },
-  "record121": {
+  "record122": {
     "code": "nodicsDocsMetadatafoundationEmsRuntimeClientRunbook",
     "product": "nodicsDocumentationProduct",
     "documentId": "foundation.ems-runtime-client-runbook",
@@ -14380,7 +14568,7 @@ module.exports = {
     "maturityState": "IMPLEMENTED",
     "active": true
   },
-  "record122": {
+  "record123": {
     "code": "nodicsDocsMetadatareferenceInternalSourceBoundaryRegister",
     "product": "nodicsDocumentationProduct",
     "documentId": "reference.internal-source-boundary-register",
@@ -14488,7 +14676,7 @@ module.exports = {
     "maturityState": "IMPLEMENTED",
     "active": true
   },
-  "record123": {
+  "record124": {
     "code": "nodicsDocsMetadatatoolingAiDeveloperEnablement",
     "product": "nodicsDocumentationProduct",
     "documentId": "tooling.ai-developer-enablement",
@@ -14607,7 +14795,7 @@ module.exports = {
     "maturityState": "IMPLEMENTED",
     "active": true
   },
-  "record124": {
+  "record125": {
     "code": "nodicsDocsMetadatareferenceSourceMapGlossary",
     "product": "nodicsDocumentationProduct",
     "documentId": "reference.source-map-glossary",
@@ -14735,7 +14923,7 @@ module.exports = {
     "maturityState": "IMPLEMENTED",
     "active": true
   },
-  "record125": {
+  "record126": {
     "code": "nodicsDocsMetadatareferenceSourceBackedDocumentationCoverageAudit",
     "product": "nodicsDocumentationProduct",
     "documentId": "reference.source-backed-documentation-coverage-audit",
@@ -14911,7 +15099,7 @@ module.exports = {
     "maturityState": "IMPLEMENTED",
     "active": true
   },
-  "record126": {
+  "record127": {
     "code": "nodicsDocsMetadatareferenceDocumentationGapBacklog",
     "product": "nodicsDocumentationProduct",
     "documentId": "reference.documentation-gap-backlog",
@@ -15005,7 +15193,7 @@ module.exports = {
     ],
     "sourceRepository": "nodics.docs",
     "sourcePath": "docs/pages/reference/documentation-gap-backlog.md",
-    "sourceChecksum": "9b67337d84c98f60119a393dc0a26ab4adb153dd04fddde5b2459b71c9b5b5eb",
+    "sourceChecksum": "2ff6c0d573938eee55b1f505f30cf337ab99fed8d74c19dfcc2c0f31560c5ac2",
     "sourceWordCount": 1452,
     "audience": [
       "business",

@@ -21,6 +21,8 @@ module.exports = {
     list: request => SERVICE.DefaultSchemaWorkbenchService.list(request),
     get: request => SERVICE.DefaultSchemaWorkbenchService.get(request),
     search: request => SERVICE.DefaultSchemaWorkbenchService.search(request),
+    createRecord: request => SERVICE.DefaultSchemaWorkbenchService.createRecord(request),
+    updateRecord: request => SERVICE.DefaultSchemaWorkbenchService.updateRecord(request),
     previewDeleteImpact: request =>
         SERVICE.DefaultSchemaWorkbenchService.previewDeleteImpact(request),
     bulk: request => SERVICE.DefaultSchemaWorkbenchService.bulk(request),

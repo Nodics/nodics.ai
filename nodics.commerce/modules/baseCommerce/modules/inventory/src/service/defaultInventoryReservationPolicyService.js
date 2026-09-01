@@ -16,5 +16,5 @@ module.exports = { prepare: function (request, balance, exactAmountService) {
     if (!request || !balance || request.tenant !== balance.tenant) throw new Error('Tenant-scoped balance is required');
     const quantity = exactAmountService.normalize(request.quantity);
     if (quantity.startsWith('-') || quantity === '0') throw new Error('Reservation quantity must be positive');
-    return Object.freeze({ tenant: request.tenant, warehouseCode: balance.warehouseCode, sku: balance.sku, ownerType: request.ownerType, ownerCode: request.ownerCode, quantity, status: 'ACTIVE', idempotencyKey: request.idempotencyKey, correlationId: request.correlationId, expectedBalanceRevision: balance.revision });
+    return Object.freeze({ tenant: request.tenant, enterpriseCode: request.enterpriseCode || balance.enterpriseCode, warehouseCode: balance.warehouseCode, sku: balance.sku, ownerType: request.ownerType, ownerCode: request.ownerCode, quantity, status: 'ACTIVE', idempotencyKey: request.idempotencyKey, correlationId: request.correlationId, expectedBalanceRevision: balance.revision });
 } };

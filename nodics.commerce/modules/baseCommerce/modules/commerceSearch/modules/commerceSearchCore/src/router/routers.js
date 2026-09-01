@@ -11,7 +11,7 @@
 
 'use strict';
 
-/** @module commerceSearchCore/router/routers @description Declares Commerce Search operator publication route. @layer router @owner commerceSearchCore */
+/** @module commerceSearchCore/router/routers @description Declares Commerce Search publication route with management access enforced by route metadata. @layer router @owner commerceSearchCore */
 module.exports = { commerceSearchCore: { operatorPublication: {
     publish: {
         secured: true,
@@ -19,7 +19,7 @@ module.exports = { commerceSearchCore: { operatorPublication: {
         accessGroups: ['employeeUserGroup'],
         permission: 'commerce.search.publish',
         apiExposure: 'commerceManagement',
-        key: '/operator/commerce-search/publication/rules',
+        key: '/commerce-search/publication/rules',
         method: 'POST',
         controller: 'DefaultCommerceSearchPublicationController',
         operation: 'publish'

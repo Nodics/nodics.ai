@@ -13,10 +13,19 @@
 'use strict';
 /** @module cart/src/facade/defaultCartCustomerFacade @description Enforces authenticated Cart ownership context. @layer facade @owner cart */
 module.exports = {
+    /** Resolves enterprise-owned business context while leaving tenant as runtime/schema context. @param {Object} request Nodics request. @returns {Object} Context. */
+    enterpriseContext: function (request) {
+        const auth = request.authData || {}, payload = request.payload || {};
+        const enterpriseCode = auth.enterpriseCode || auth.entCode || request.enterpriseCode || request.entCode || payload.enterpriseCode || payload.entCode;
+        const tenants = (typeof CONFIG !== 'undefined' && CONFIG.get && (CONFIG.get('commerce') || {}).enterpriseTenants) || {};
+        return { enterpriseCode, tenant: auth.tenant || request.tenant || tenants[enterpriseCode] };
+    },
     /** Applies authenticated customer context. @param {Object} request Nodics request. @returns {Object} Request. */
     applyContext: function (request) {
         const auth = request.authData || {};
-        request.tenant = auth.tenant || request.tenant;
+        const context = this.enterpriseContext(request);
+        request.enterpriseCode = context.enterpriseCode;
+        request.tenant = context.tenant;
         request.ownerId = auth.principalId || auth.code || auth.loginId || request.ownerId;
         if (!request.tenant || !request.ownerId) throw new Error('Authenticated tenant and customer are required');
         return request;

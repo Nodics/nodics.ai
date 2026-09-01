@@ -67,6 +67,8 @@ const profileModule = {
                     primary: true,
                     searchOptions: { enabled: true },
                 },
+                tenant: { type: 'string', required: true },
+                enterpriseCode: { type: 'string' },
                 password: { type: 'string' },
                 accessGroups: { type: 'array' },
                 created: { type: 'date', required: true },
@@ -212,6 +214,8 @@ global.CONFIG = {
     },
 };
 let lastSearchInput;
+let lastSaveInput;
+let lastUpdateInput;
 global.SERVICE = {
     DefaultSchemaSafeQueryService: require('../src/service/schema/defaultSchemaSafeQueryService'),
     DefaultSchemaAccessHandlerService: {
@@ -223,6 +227,18 @@ global.SERVICE = {
             return Promise.resolve({
                 count: 1,
                 result: [{ code: 'DXB-OFFICE', type: 'OFFICE' }],
+            });
+        },
+        save: (input) => {
+            lastSaveInput = input;
+            return Promise.resolve({
+                result: [input.model],
+            });
+        },
+        update: (input) => {
+            lastUpdateInput = input;
+            return Promise.resolve({
+                models: [Object.assign({}, input.query, input.model)],
             });
         },
     },
@@ -308,18 +324,20 @@ global.SERVICE.DefaultSchemaWorkbenchService = service;
         'Generated delete-impact Swagger/help text must warn developers that it is not a business lifecycle API',
     );
     let workbenchRoutes = routerDefinitions.common.schemaWorkbench;
-    let allowedWorkbenchRouteKeys = [
-        '/schema/workbench',
-        '/schema/workbench/:schema',
-        '/schema/workbench/:schema/records',
-        '/schema/workbench/:schema/delete-impact',
-        '/schema/workbench/:schema/record',
-        '/schema/workbench/:schema/bulk',
-        '/schema/workbench/:schema/aggregate',
+    let allowedWorkbenchRoutes = [
+        'GET /schema/workbench',
+        'GET /schema/workbench/:schema',
+        'POST /schema/workbench/:schema/records',
+        'POST /schema/workbench/:schema/record',
+        'PATCH /schema/workbench/:schema/record',
+        'POST /schema/workbench/:schema/delete-impact',
+        'DELETE /schema/workbench/:schema/record',
+        'POST /schema/workbench/:schema/bulk',
+        'POST /schema/workbench/:schema/aggregate',
     ];
     assert.deepStrictEqual(
-        Object.values(workbenchRoutes).map((route) => route.key).sort(),
-        allowedWorkbenchRouteKeys.slice().sort(),
+        Object.values(workbenchRoutes).map((route) => route.method + ' ' + route.key).sort(),
+        allowedWorkbenchRoutes.slice().sort(),
         'Schema Workbench must not grow screen-specific or schema-specific API routes without an explicit architecture decision',
     );
     assert(
@@ -353,11 +371,25 @@ global.SERVICE.DefaultSchemaWorkbenchService = service;
     assert.deepStrictEqual(descriptor.displayProperties, ['code']);
     assert.deepStrictEqual(descriptor.queryCapabilities, {
         searchableFields: ['code'],
-        sortableFields: ['code', 'created', 'type'],
+        sortableFields: ['code', 'tenant', 'enterpriseCode', 'created', 'type'],
         filterFields: [
             {
                 field: 'code',
                 label: 'Code',
+                type: 'string',
+                operators: ['EQUALS', 'NOT_EQUALS', 'CONTAINS', 'STARTS_WITH'],
+                enum: undefined,
+            },
+            {
+                field: 'tenant',
+                label: 'Tenant',
+                type: 'string',
+                operators: ['EQUALS', 'NOT_EQUALS', 'CONTAINS', 'STARTS_WITH'],
+                enum: undefined,
+            },
+            {
+                field: 'enterpriseCode',
+                label: 'Enterprise Code',
                 type: 'string',
                 operators: ['EQUALS', 'NOT_EQUALS', 'CONTAINS', 'STARTS_WITH'],
                 enum: undefined,
@@ -549,11 +581,74 @@ global.SERVICE.DefaultSchemaWorkbenchService = service;
         {
             _id: 0,
             code: 1,
+            tenant: 1,
+            enterpriseCode: 1,
             created: 1,
             type: 1,
             contacts: 1,
         },
         'record search must project only descriptor-safe Workbench fields',
+    );
+    let created = await service.createRecord(
+        Object.assign({}, request, {
+            tenant: 'default',
+            authData: { userGroups: ['adminGroup'], enterpriseCode: 'agora' },
+            httpRequest: {
+                params: { schema: 'address' },
+                body: {
+                    code: 'AXIS-QA-PRODUCT',
+                    tenant: 'typed-by-operator',
+                    enterpriseCode: 'typed-by-operator',
+                    type: 'OFFICE',
+                },
+                headers: { 'idempotency-key': 'axis-create-0001' },
+            },
+        }),
+    );
+    assert.deepStrictEqual(created.data, {
+        code: 'AXIS-QA-PRODUCT',
+        tenant: 'default',
+        enterpriseCode: 'agora',
+        type: 'OFFICE',
+    });
+    assert.strictEqual(lastSaveInput.tenant, 'default');
+    assert.strictEqual(lastSaveInput.idempotencyKey, 'axis-create-0001');
+    assert.deepStrictEqual(
+        lastSaveInput.model,
+        {
+            code: 'AXIS-QA-PRODUCT',
+            tenant: 'default',
+            enterpriseCode: 'agora',
+            type: 'OFFICE',
+        },
+        'Workbench create must fill runtime scope from the request instead of trusting operator-entered tenant or enterprise',
+    );
+    let updated = await service.updateRecord(
+        Object.assign({}, request, {
+            tenant: 'default',
+            entCode: 'agora',
+            httpRequest: {
+                params: { schema: 'address' },
+                body: {
+                    identity: { code: 'AXIS-QA-PRODUCT' },
+                    model: { type: 'HOME', tenant: 'wrong', enterpriseCode: 'wrong' },
+                },
+                headers: { 'idempotency-key': 'axis-update-0001' },
+            },
+        }),
+    );
+    assert.deepStrictEqual(updated.data, {
+        code: 'AXIS-QA-PRODUCT',
+        tenant: 'default',
+        enterpriseCode: 'agora',
+        type: 'HOME',
+    });
+    assert.strictEqual(lastUpdateInput.idempotencyKey, 'axis-update-0001');
+    assert.deepStrictEqual(lastUpdateInput.query, { code: 'AXIS-QA-PRODUCT' });
+    assert.deepStrictEqual(
+        lastUpdateInput.model,
+        { type: 'HOME', tenant: 'default', enterpriseCode: 'agora' },
+        'Workbench update must preserve owner identity while filling runtime scope',
     );
     let employeeDescriptor = (
         await service.get(

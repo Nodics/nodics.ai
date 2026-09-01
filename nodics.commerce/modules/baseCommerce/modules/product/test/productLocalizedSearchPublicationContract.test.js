@@ -56,7 +56,7 @@ global.SERVICE = {
     }
 };
 
-const request = { tenant: 'default', correlationId: 'corr-search-1', authData: { groups: ['adminGroup'] },
+const request = { tenant: 'default', enterpriseCode: 'sampleEnterprise', correlationId: 'corr-search-1', authData: { groups: ['adminGroup'] },
     now: '2026-08-10T00:00:00.000Z' };
 const product = sampleProducts.record0;
 const localizations = Object.values(sampleLocalizations);
@@ -84,7 +84,7 @@ test('sample release publishes one isolated nSearch document for English and Ara
     assert.deepEqual(Object.fromEntries(indexed.map(item => [item.model.locale, item.searchOptions.analyzer])), {
         en: 'standard', ar: 'arabic'
     });
-    assert(indexed.every(item => item.model.tenant === 'default' && item.model.storeCode === 'sampleStore'));
+    assert(indexed.every(item => item.model.tenant === 'default' && item.model.enterpriseCode === 'sampleEnterprise' && item.model.storeCode === 'sampleStore'));
     assert(indexed.every(item => item.model.payload.sku === undefined && item.model.payload.inventory === undefined));
     assert(indexed.every(item => item.model.payload.variantSkuMap.sampleRunningShoeBlue42 === 'SAMPLE-RUN-BLUE-42'));
     assert(indexed.every(item => item.model.payload.price.currency === 'USD' && item.model.payload.price.unitAmount === '89.00'));

@@ -24,13 +24,18 @@ module.exports = {
         return (!record.validFrom || new Date(record.validFrom).getTime() <= time) && (!record.validTo || new Date(record.validTo).getTime() > time);
     },
 
+    /** Returns whether a business-owned record is visible for the requested enterprise. */
+    sameEnterprise: function (request, record) {
+        return !request.enterpriseCode || record.enterpriseCode === request.enterpriseCode;
+    },
+
     /** Selects the most specific quantity tier and explains every rejected row. */
     select: function (request, books, rows, exact) {
         if (!request || !request.tenant || !request.productCode || !request.currency) throw new Error('Tenant, product, and currency are required');
         let quantity = exact.normalize(request.quantity || '1');
-        let activeBooks = (books || []).filter(book => book.tenant === request.tenant && book.currency === request.currency && book.status === 'ACTIVE' && this.effective(book, request.now));
+        let activeBooks = (books || []).filter(book => book.tenant === request.tenant && this.sameEnterprise(request, book) && book.currency === request.currency && book.status === 'ACTIVE' && this.effective(book, request.now));
         let activeCodes = new Set(activeBooks.map(book => book.code));
-        let considered = (rows || []).filter(row => row.tenant === request.tenant && row.productCode === request.productCode);
+        let considered = (rows || []).filter(row => row.tenant === request.tenant && this.sameEnterprise(request, row) && row.productCode === request.productCode);
         let eligible = considered.filter(row => activeCodes.has(row.priceBookCode) && row.currency === request.currency && this.effective(row, request.now) && exact.compare(row.minQuantity || '1', quantity) <= 0);
         eligible.sort((left, right) => exact.compare(right.minQuantity || '1', left.minQuantity || '1') || String(left.code).localeCompare(String(right.code)));
         if (!eligible[0]) return { selected: undefined, quantity: quantity, conflicts: [], explanation: considered.map(row => ({ rowCode: row.code, eligible: false, reason: activeCodes.has(row.priceBookCode) ? 'QUANTITY_OR_WINDOW' : 'PRICE_BOOK_INACTIVE' })) };

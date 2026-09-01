@@ -33,6 +33,20 @@ module.exports = {
                 status: { enabled: true, type: 'keyword' },
                 sourceHash: { enabled: true, type: 'keyword' },
                 projectedAt: { enabled: true, type: 'date' },
+                site: { enabled: true, type: 'keyword' },
+                pageType: { enabled: true, type: 'keyword' },
+                slot: { enabled: true, type: 'keyword' },
+                targetType: { enabled: true, type: 'keyword' },
+                targetCode: { enabled: true, type: 'keyword' },
+                channel: { enabled: true, type: 'keyword' },
+                device: { enabled: true, type: 'keyword' },
+                region: { enabled: true, type: 'keyword' },
+                publicationStatus: { enabled: true, type: 'keyword' },
+                deliveryStatus: { enabled: true, type: 'keyword' },
+                specificity: { enabled: true, type: 'integer' },
+                priority: { enabled: true, type: 'integer' },
+                release: { enabled: true, type: 'keyword' },
+                indexVersion: { enabled: true, type: 'keyword' },
                 payload: { enabled: true, type: 'object' }
             }
         }

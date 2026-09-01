@@ -837,6 +837,93 @@ module.exports = {
           "searchText": "Axis Page Designer Use the governed catalog-first Designer flow for sites, templates, dynamic slots, sections, components, media, routes, navigation, and publish readiness. # Axis Page Designer\n\nAxis Page Designer is the business-user workspace for creating and maintaining\nWCMS page composition without asking users to open every low-level schema table\nfirst. It is designed for people who think in terms of sites, pages, sections,\ncomponents, text, images, routes, and navigation. It still stays inside the\nbackend-owned Nodics contract.\n\nThe important sentence is this: Page Designer is a guided authoring client, not\na second CMS engine.\n\n## Why Page Designer exists\n\nLow-level schema workspaces are powerful, but they are not a friendly first\nexperience for most business users. A content author normally does not want to\nstart by understanding `cmsPage`, `cmsComponentDetail`,\n`cmsComponentMedia`, route records, navigation nodes, renderer mappings, and\nslot cardinality. They want to create a useful page safely.\n\nPage Designer gives that user a smoother path:\n\n1. choose the content universe;\n2. choose the site;\n3. choose a page template;\n4. see the template's available slots;\n5. create sections;\n6. add text or component records;\n7. attach governed media;\n8. assign a route and navigation entry;\n9. validate the draft before publishing.\n\nThat improves adoption because beginners see the business process first and\nthe underlying records second. Developers and operators still get the same\ngovernance, permissions, audit, generated schema services, media authority,\nand publication boundaries.\n\n## Catalog-first model\n\nThe Designer follows the WCMS catalog-first model. The Content Catalog sits at\nthe top. A Site belongs to or is governed by that catalog. Pages belong to the\nSite. Reusable definitions such as page templates, slot definitions,\ncomponent types, and renderer mappings live inside the same governed content\nuniverse.\n\n```mermaid\nflowchart TD\n  Catalog[\"Content Catalog\"]\n  Site[\"Site\"]\n  Template[\"Page Template\"]\n  Page[\"Page\"]\n  Slots[\"Template Slots: any number\"]\n  Sections[\"Page Sections\"]\n  Components[\"Component Instances\"]\n  Media[\"Governed Media\"]\n  Route[\"Page Route\"]\n  Nav[\"Navigation Node\"]\n\n  Catalog --> Site\n  Catalog --> Template\n  Site --> Page\n  Template --> Page\n  Page --> Slots\n  Slots --> Sections\n  Sections --> Components\n  Components --> Media\n  Page --> Route\n  Route --> Nav\n```\n\nDo not read the diagram as “every page has three slots.” Slot count and slot\nnames are defined by the selected backend template. One template might expose\nonly `article`; another may expose `navigation`, `article`, and\n`relatedResources`; a customer landing page may expose `hero`, `body`,\n`gallery`, `pricing`, and `footerPromo`. Axis reads the backend contract and\nrenders that structure.\n\n## What Axis owns\n\nAxis owns the browser experience:\n\n- the route `/content/designer`;\n- cards, checklist, wizard panels, preview tree, and visible flow;\n- typed API clients that call CMS Designer APIs;\n- optimistic form state before a user saves;\n- accessibility, responsive layout, loading, empty, failure, and recovery\n  states;\n- tests proving the UI follows backend authority.\n\nAxis does not own:\n\n- catalog records;\n- CMS Site records;\n- page, template, slot, component, route, navigation, or media records;\n- documentation or importable CMS data;\n- media storage keys, upload policy, delivery URLs, or provider settings;\n- publish lifecycle or staged-to-online activation;\n- business permissions.\n\n## Backend authority\n\nThe backend owns the actual operation through secured CMS Designer\nComposition APIs. Those APIs are exposed by the CMS module under the\n`cmsAuthoring` API exposure category. A delivery-only server may disable that\ncategory at server or environment level, but the reusable WCMS module owns the\ndefault authoring contract.\n\n```mermaid\nsequenceDiagram\n  participant User as Business user\n  participant Axis as Axis Page Designer\n  participant CMS as CMS Designer Composition API\n  participant Catalog as Catalog service\n  participant Media as nMedia\n  participant Publish as nPublish\n\n  User->>Axis: Enter page intent\n  Axis->>CMS: Validate draft composition\n  CMS->>Catalog: Verify Content Catalog\n  CMS->>CMS: Verify Site, Template, Slots, Types\n  CMS->>Media: Validate media references\n  CMS-->>Axis: Validation evidence and warnings\n  User->>Axis: Save draft\n  Axis->>CMS: Save draft composition\n  CMS->>CMS: Save Page, Details, Components, Route, Navigation\n  CMS-->>Axis: Draft saved evidence\n  Axis->>CMS: Validate publish readiness\n  CMS->>Publish: Hand off only when publication is enabled\n```\n\nThe browser never calculates release checksums, never writes directly to a\ndatabase, never stores page data as local truth, and never bypasses the media\nor publication contracts.\n\n## Business-user flow\n\nThe friendly Designer flow should feel like this:\n\n| Step | User language | Backend authority |\n| --- | --- | --- |\n| Select catalog | “Which content area am I working in?” | `catalog.catalog` with `catalogType = CONTENT` |\n| Select site | “Which website or workspace gets this page?” | `cms.cmsSite` |\n| Select template | “What kind of page structure do I need?” | `cms.cmsPageTemplate` |\n| Review slots | “Where can I place content?” | `cms.cmsSlotDefinition` |\n| Create page | “What is the page called?” | `cms.cmsPage` |\n| Add sections | “Which parts of the page exist?” | `cms.cmsComponentDetail` placement |\n| Add components | “What text, card, banner, list, article, or widget appears?” | `cms.cmsComponent` |\n| Attach media | “Which governed image/document/video is used?” | `cms.cmsComponentMedia` plus `media` validation |\n| Assign route | “Which URL opens the page?” | `cms.cmsPageRoute` |\n| Assign navigation | “Where does this page appear in menus?” | `cms.cmsNavigationNode` |\n| Publish readiness | “Is this safe to make visible?” | CMS validation and nPublish |\n\n## Developer guidance\n\nWhen a developer adds Designer behavior, start from the backend contract. If a\nnew component type is needed, add a CMS type code, renderer mapping, property\nschema, media schema, template/slot rule, and Axis renderer. Do not add a\nhardcoded “component kind” that exists only in the browser.\n\nWhen a new operation is needed, check whether an existing generated schema\noperation or CMS Designer Composition operation already owns it. Add a typed\nclient method in Axis only after the backend operation exists. Keep every\nclient method bounded: explicit endpoint, explicit response parsing, timeout,\nno credentials in URLs, no redirects, and no local persistence of content.\n\n## Customize and extend safely\n\nThe safest customization path is backend-first and configuration-first. A\ncustomer project can add a new content experience by providing a content\ncatalog, site, page template, slot definitions, component type codes, renderer\nmappings, sample pages, and media policies in its own backend-owned data pack.\nAxis should then discover those capabilities from WCMS and render the same\nDesigner workflow. The project should not fork Axis just to add a new slot name\nor page type.\n\nFor example, a customer documentation portal may define a\n`partnerDocsTemplate` with `hero`, `article`, `videoWalkthrough`, and\n`relatedLinks` slots. The Designer must allow those four slots because the\ntemplate owns the structure. Axis can improve the experience with clearer\nlabels, hints, and preview grouping, but WCMS still decides whether the slots,\ncomponent types, media references, and route are valid.\n\nWhen code customization is required, keep the seam narrow:\n\n- add backend CMS contracts first;\n- expose the operation through a secured authoring API category;\n- add or reuse an Axis typed client;\n- add a renderer only for presentation;\n- add tests proving that Axis does not become the content authority;\n- document the business journey, developer extension point, and operations\n  controls in the owning backend documentation pack.\n\nThis keeps customer extensions upgradeable. A partner can replace or extend a\ncomponent renderer, create a new template, or add a custom authoring panel\nwithout changing the meaning of Catalog, Site, Page, Slot, Component, Media,\nRoute, Navigation, or Publish.\n\n## DevOps and operations guidance\n\nOperators should treat Designer authoring as a mutable CMS capability. It\nrequires WCMS, Catalog, Media, Profile, BackOffice, and sometimes Publishing\nto be available. If a production topology separates authoring from delivery,\nenable `cmsAuthoring` only on the authoring runtime. A delivery-only runtime\ncan still resolve published CMS pages without allowing users to save drafts.\n\nFor troubleshooting, start with the backend chain:\n\n1. Is the user authorized for `cms.backoffice.view` and\n   `cms.backoffice.manage`?\n2. Is the `cmsAuthoring` API exposure category enabled?\n3. Does the selected Site belong to the selected Content Catalog?\n4. Does the selected Template expose the slots the user is editing?\n5. Are component type and component type group rules satisfied?\n6. Are media references valid in nMedia?\n7. Is the route unique for site, path, locale, and channel?\n8. Is publishing enabled, and is the draft ready for that lifecycle?\n\n## Common mistakes\n\n- Creating a frontend-only page model because it is faster than learning the\n  CMS schema chain.\n- Assuming every page has `header`, `main`, and `footer` slots. Slots are\n  template-owned and can be any number.\n- Letting Axis store media paths, provider keys, or delivery URLs.\n- Treating a visual preview as publish authority.\n- Saving a route before checking uniqueness per site, locale, and channel.\n- Adding component types in TypeScript without backend type codes and renderer\n  mappings.\n- Hiding backend validation errors behind generic browser errors.\n\n## Verification\n\nDesigner work is acceptable when:\n\n1. `/content/designer` loads only from authorized backend navigation.\n2. The page explains catalog-first ownership and arbitrary template slots.\n3. The typed client can retrieve the backend authoring model.\n4. Draft validation rejects wrong catalog/site, unknown template, unknown slot,\n   disallowed component type, invalid media reference, and duplicate route.\n5. Draft save calls CMS-owned APIs and does not persist content in browser\n   storage.\n6. Media associations go through `cmsComponentMedia` and nMedia validation.\n7. Publish readiness does not activate content without CMS/nPublish authority.\n8. Axis tests, backend CMS tests, live smoke, and fresh local acceptance pass.\n"
         },
         {
+          "code": "axis.experience-studio",
+          "title": "Axis Experience Studio and Targeted CMS Experiences",
+          "route": "/docs/nodics-axis/experience-studio",
+          "section": "axis-capabilities",
+          "sectionTitle": "Axis Capabilities",
+          "sectionOrder": 30,
+          "group": "axis-workspaces-and-operations",
+          "groupTitle": "Axis Workspaces and Operations",
+          "groupOrder": 97,
+          "order": 97,
+          "parentId": "axis-capabilities.axis-workspaces-and-operations",
+          "hierarchyPath": [
+            "Nodics Axis Documentation",
+            "Axis Capabilities",
+            "Axis Workspaces and Operations",
+            "Axis Experience Studio and Targeted CMS Experiences"
+          ],
+          "hierarchyDepth": 4,
+          "documentType": "how-to",
+          "audience": [
+            "business-user",
+            "merchandiser",
+            "administrator",
+            "developer",
+            "operator"
+          ],
+          "businessAudience": [
+            "business-user",
+            "merchandiser",
+            "administrator"
+          ],
+          "technicalAudience": [
+            "developer",
+            "operator"
+          ],
+          "summary": "Configure targeted CMS components for collection, category, brand, and fallback journeys through backend-owned WCMS Experience contracts.",
+          "visibility": "public",
+          "accessMode": "PUBLIC",
+          "publiclyAvailable": true,
+          "requiresAuthentication": false,
+          "allowedRoles": [],
+          "allowedGroups": [],
+          "allowedPermissions": [],
+          "lifecycleState": "ONLINE",
+          "maturityState": "operational",
+          "implementationState": "current",
+          "visualRequirements": [
+            "architecture-diagram",
+            "configuration-table",
+            "troubleshooting-matrix",
+            "table"
+          ],
+          "relatedPages": [
+            "axis.page-designer",
+            "axis.cms-renderers",
+            "axis.documentation-content"
+          ],
+          "searchKeywords": [
+            "axis-capabilities",
+            "axis-workspaces-and-operations",
+            "axis-experience-studio",
+            "targeted-cms-experiences",
+            "collection-journey",
+            "brand-journey",
+            "default-fallback",
+            "business-user",
+            "merchandiser",
+            "administrator",
+            "developer",
+            "operator"
+          ],
+          "topicKeywords": [
+            "Axis Capabilities",
+            "Axis Workspaces and Operations",
+            "Axis Experience Studio and Targeted CMS Experiences",
+            "collection journey",
+            "brand journey",
+            "default fallback",
+            "business-user",
+            "merchandiser",
+            "administrator",
+            "developer",
+            "operator"
+          ],
+          "searchText": "Axis Experience Studio and Targeted CMS Experiences Configure targeted CMS components for collection, category, brand, and fallback journeys through backend-owned WCMS Experience contracts. # Axis Experience Studio and Targeted CMS Experiences\n\nAxis Experience Studio is the business workspace for deciding which published\nCMS components appear for a specific storefront journey. It does not replace\nPage Designer, Product Search, Commerce, or Publishing. It gives business\nusers a governed way to say:\n\n“When a shopper is on this kind of page, with this journey context, show these\nhero banners, editorial strips, featured product rails, and supporting\nmessages.”\n\nThe important boundary is this: the component is still content, and the rule is\nnot a component. A component remains a renderable CMS record. An experience\nplacement is backend configuration that resolves one or more components for a\nruntime context.\n\n## Why this exists\n\nStorefront pages are rarely one-size-fits-all. The product listing page for\n`/shop` might need a broad seasonal banner. The listing reached from a\ncollection tile might need a collection-specific hero. A brand journey might\nneed a brand story, campaign image, featured product rail, and trust message.\nLater, the same mechanism can support customer segment, region, device,\nlanguage, loyalty tier, or campaign personalization.\n\nWithout Experience Studio, teams usually choose one of two weak patterns:\n\n- create many hardcoded pages that duplicate layout logic;\n- put conditional frontend code in the storefront for every campaign.\n\nBoth approaches become expensive. Experience Studio keeps the decision in the\nbackend-owned WCMS experience capability and lets the frontend ask for the\nresolved experience for the current request.\n\n## Ownership model\n\n| Area | Owner | Notes |\n| --- | --- | --- |\n| CMS components | WCMS | Hero banners, rich text, image cards, promo strips, product rails, and containers stay normal content records. |\n| Experience placements | `wcmsExperience` | A placement decides where, when, and for whom components are eligible. |\n| Publication lifecycle | `nPublish` | Draft/Staged/Online promotion remains governed by publishing. |\n| Content indexing | Discovery / Elasticsearch projection | Published placements and component projections are indexed for fast delivery. |\n| Storefront rendering | Agora Apparel or another consumer site | The site renders the returned components with registered renderer keys. |\n| Axis authoring | Axis Experience Studio | Axis provides the business UI, preview tools, and index-status visibility. |\n\nAxis is not the system of record for experience data. It is the control room.\n\n## End-to-end flow\n\n```mermaid\nflowchart LR\n  Business[\"Business user\"]\n  Axis[\"Axis Experience Studio\"]\n  Staged[\"WCMS Staged\"]\n  Publish[\"nPublish\"]\n  Online[\"WCMS Online\"]\n  Outbox[\"CMS_ONLINE_CHANGED outbox event\"]\n  Indexer[\"wcmsExperience index projection\"]\n  Discovery[\"Discovery / Elasticsearch\"]\n  Storefront[\"Agora Apparel storefront\"]\n\n  Business --> Axis\n  Axis --> Staged\n  Staged --> Publish\n  Publish --> Online\n  Online --> Outbox\n  Outbox --> Indexer\n  Indexer --> Discovery\n  Storefront --> Discovery\n```\n\nAt runtime the storefront should not scan thousands of CMS records or execute\nevery rule in memory. It calls the delivery API with a compact context, and the\nbackend resolves from the indexed placement projection.\n\n## Axis screens\n\nExperience Studio starts with four practical views.\n\n```text\nExperience Studio\n├─ Overview\n│  ├─ explains the flow\n│  ├─ shows the required permissions\n│  └─ links to Page Designer and schema workspaces\n├─ Placements\n│  └─ opens the governed schema workspace for wcmsExperience.cmsExperiencePlacement\n├─ Preview\n│  ├─ page type\n│  ├─ route path\n│  ├─ slot\n│  ├─ target type and target code\n│  └─ resolved components grouped by slot\n└─ Index Status\n   ├─ projection health\n   ├─ indexed placement count\n   └─ last refresh / lag diagnostics\n```\n\nThe Placements screen is deliberately schema-backed. That keeps the first slice\nsafe and consistent with Nodics module contracts. Later, Experience Studio can\nadd a richer visual placement wizard on top of the same backend entity.\n\nFor beginners, the safest mental model is simple: create the content first,\nthen create the placement that decides when that content appears. If the\npreview looks wrong, check the target type, target code, slot, and publication\nstate before changing storefront code.\n\n## Placement fields\n\nThese are the fields a business user or developer should understand before\ncreating a targeted experience.\n\n| Field | Purpose | Example |\n| --- | --- | --- |\n| Site | Which storefront or channel owns the placement | `agora-apparel` |\n| Page type | Which type of page is being targeted | `PRODUCT_LISTING`, `COLLECTIONS`, `BRAND` |\n| Slot | Where the component should render | `hero`, `promo-strip`, `featured-products` |\n| Target type | Which journey key controls the match | `DEFAULT`, `CATEGORY`, `COLLECTION`, `BRAND` |\n| Target code | The specific target value | `clothing`, `new-arrivals`, `atelier-minimal` |\n| Component code | Published CMS component to render | `agora.collection.clothing.hero` |\n| Renderer key | Storefront renderer contract | `commerce.hero.banner`, `commerce.product.carousel` |\n| Priority | Ordering among competing matches | `100` |\n| Specificity | Tie-breaker for more precise rules | `BRAND` beats `DEFAULT` |\n| Locale / channel | Optional delivery constraints | `en`, `web` |\n| Region / device | Optional personalization constraints | `AE`, `desktop` |\n| Valid from / valid to | Campaign timing | Back-to-school week |\n| Publication status | Authoring lifecycle | `STAGED`, `ONLINE` |\n| Delivery status | Whether delivery may use the placement | `ACTIVE` |\n\n## Runtime request examples\n\nA normal product listing can use a default placement:\n\n```text\n/shop?page=1&pageSize=10\n```\n\nA category listing adds category context:\n\n```text\n/shop?category=clothing&page=1&pageSize=10\n```\n\nA collection journey adds collection context:\n\n```text\n/shop?collection=new-arrivals&page=1&pageSize=10\n```\n\nA brand journey adds brand context:\n\n```text\n/shop?brand=atelier-minimal&page=1&pageSize=10\n```\n\nThe product result set is still returned by Commerce/Search. The page-level\nexperience components are resolved by WCMS Experience for the same request\ncontext. This creates a mixed page: search results plus targeted CMS content.\n\n## Collection journey example\n\nGoal: when a shopper clicks the “New arrivals” collection tile, the listing\npage should show a collection-specific hero, a small editorial message, and a\nfeatured product carousel chosen by the business team.\n\n1. In Page Designer or the component workspace, create or update the hero\n   component.\n   - Component: `agora.collection.new-arrivals.hero`\n   - Renderer: `commerce.hero.banner`\n   - Title: `Fresh silhouettes, just landed`\n   - Image: a governed media record, not a hardcoded frontend asset\n   - CTA: `/shop?collection=new-arrivals`\n\n2. Create the editorial strip component.\n   - Component: `agora.collection.new-arrivals.strip`\n   - Renderer: `commerce.promo.strip`\n   - Message: `Soft layers, modern neutrals, and refined everyday shapes`\n\n3. Create the featured carousel component.\n   - Component: `agora.collection.new-arrivals.featured`\n   - Renderer: `commerce.product.carousel`\n   - Query: `collection=new-arrivals&featured=true`\n   - Limit: `8`\n\n4. In Experience Studio, open Placements and create three placements.\n\n| Slot | Target type | Target code | Component | Priority |\n| --- | --- | --- | --- | --- |\n| `hero` | `COLLECTION` | `new-arrivals` | `agora.collection.new-arrivals.hero` | `100` |\n| `promo-strip` | `COLLECTION` | `new-arrivals` | `agora.collection.new-arrivals.strip` | `90` |\n| `featured-products` | `COLLECTION` | `new-arrivals` | `agora.collection.new-arrivals.featured` | `80` |\n\n5. Open Preview.\n   - Page type: `PRODUCT_LISTING`\n   - Route path: `/shop`\n   - Target type: `COLLECTION`\n   - Target code: `new-arrivals`\n   - Expected result: three resolved slots.\n\n6. Publish through the normal CMS publication flow.\n\n7. Check Index Status.\n   - The projection must show the latest published placement revision.\n   - If the projection is stale, the storefront should continue using the last\n     active Online state rather than a draft.\n\n8. Verify in the storefront.\n   - Open `/shop?collection=new-arrivals&page=1&pageSize=10`.\n   - Confirm the hero, strip, carousel, filters, sort, and product cards align\n     with the header content width.\n\n## Brand journey example\n\nGoal: when a shopper opens an Atelier Minimal brand page, show brand-specific\nstorytelling before the product grid.\n\n1. Create brand content components.\n   - `agora.brand.atelier-minimal.hero`\n   - `agora.brand.atelier-minimal.story`\n   - `agora.brand.atelier-minimal.featured-products`\n\n2. Create placements.\n\n| Slot | Target type | Target code | Component | Renderer |\n| --- | --- | --- | --- | --- |\n| `hero` | `BRAND` | `atelier-minimal` | `agora.brand.atelier-minimal.hero` | `commerce.hero.banner` |\n| `brand-story` | `BRAND` | `atelier-minimal` | `agora.brand.atelier-minimal.story` | `commerce.editorial.story` |\n| `featured-products` | `BRAND` | `atelier-minimal` | `agora.brand.atelier-minimal.featured-products` | `commerce.product.carousel` |\n\n3. Preview with:\n\n```text\npageType=PRODUCT_LISTING\nroutePath=/shop\ntargetType=BRAND\ntargetCode=atelier-minimal\n```\n\n4. Publish and verify:\n\n```text\n/shop?brand=atelier-minimal&page=1&pageSize=10\n```\n\nThe product cards should come from the search query `brand=atelier-minimal`.\nThe banner, story, and carousel should come from the resolved WCMS experience.\n\n## Default fallback example\n\nGoal: when no collection, brand, or category-specific experience exists, show a\nsafe default listing experience.\n\n1. Create a default hero.\n   - Component: `agora.shop.default.hero`\n   - Renderer: `commerce.hero.banner`\n   - Message: `Explore refined everyday apparel`\n\n2. Create a default promo strip.\n   - Component: `agora.shop.default.promo`\n   - Renderer: `commerce.promo.strip`\n   - Message: `Free shipping, easy returns, and secure checkout`\n\n3. Create placements.\n\n| Slot | Target type | Target code | Component | Priority |\n| --- | --- | --- | --- | --- |\n| `hero` | `DEFAULT` | `*` | `agora.shop.default.hero` | `10` |\n| `promo-strip` | `DEFAULT` | `*` | `agora.shop.default.promo` | `10` |\n\n4. Preview with no target code or with `DEFAULT/*`.\n\n5. Verify `/shop?page=1&pageSize=10`.\n\nFallback content must never hide more specific content. A collection, brand, or\ncategory placement with matching context should override the default placement\nfor the same slot.\n\n## Resolution precedence\n\nWhen several placements match one request, the resolver must choose a stable\nand explainable result.\n\n```mermaid\nflowchart TD\n  Request[\"Runtime context\"]\n  Brand[\"Brand placement\"]\n  Collection[\"Collection placement\"]\n  Category[\"Category placement\"]\n  Default[\"Default placement\"]\n  Sort[\"Sort by specificity, priority, validity, and deterministic code\"]\n  Slots[\"Return slot groups\"]\n\n  Request --> Brand\n  Request --> Collection\n  Request --> Category\n  Request --> Default\n  Brand --> Sort\n  Collection --> Sort\n  Category --> Sort\n  Default --> Sort\n  Sort --> Slots\n```\n\nThe exact specificity order is a backend contract. The important operational\nrule is that the result must be deterministic. Two users with the same site,\npage type, locale, channel, target, and time window must get the same ordered\ncomponent list unless a personalization attribute intentionally changes it.\n\n## Performance contract\n\nExperience targeting must be fast enough for storefront delivery.\n\n- Published content is indexed after Online activation.\n- Runtime delivery resolves from the indexed projection.\n- The resolver should filter by site, page type, slot, target type, target\n  code, locale, channel, validity, and delivery status before ranking.\n- The frontend should request only the slots it can render.\n- `wcmsExperience.resolver.maxComponents` protects against oversized responses.\n- Product grids remain paginated by Search/Commerce. Agora Apparel currently\n  uses page size `10` for listing pagination.\n- Preview APIs may return extra debug evidence, but public delivery must not.\n\nIf the index is stale, the system should prefer the last known Online\nprojection over executing broad rule scans on every storefront request.\n\n## Security and preview boundary\n\nExperience Studio uses authoring APIs. Public storefront delivery uses delivery\nAPIs. Do not mix the two.\n\n| API type | Caller | Preview mode | Notes |\n| --- | --- | --- | --- |\n| Authoring preview | Axis user with permission | Allowed | Can include diagnostic evidence. |\n| Public delivery | Storefront runtime | Forced off | Must not expose draft or staged content. |\n| Index status | Axis user with permission | Not applicable | Operational visibility only. |\n\nRecommended permissions:\n\n- `WCMS_EXPERIENCE_VIEW`\n- `WCMS_EXPERIENCE_EDIT`\n- `WCMS_EXPERIENCE_PREVIEW`\n- `WCMS_EXPERIENCE_PUBLISH_STATUS`\n\nBusiness users can manage content safely only when these permissions are\npaired with normal CMS authoring and publishing permissions.\n\n## Troubleshooting\n\n| Symptom | Check first | Likely fix |\n| --- | --- | --- |\n| Preview returns no components | Target type/code and page type | Create a matching placement or default fallback. |\n| Storefront shows old banner | Index Status | Republish or wait for the Online change projection to refresh. |\n| Draft content appears in Axis but not storefront | API boundary | This is expected until publish. |\n| Wrong component appears | Priority and specificity | Raise the specific placement priority or fix overlapping defaults. |\n| Image missing | Media reference | Confirm the CMS component uses a published governed media record. |\n| Renderer missing | Renderer key | Register the renderer in the consuming storefront. |\n| Too many components | Slot query and max components | Tighten target rules or reduce slot response limit. |\n\n## Relationship with Page Designer\n\nPage Designer creates and manages the page and component structure. Experience\nStudio decides when those components should appear for a journey context.\n\nFor example, Page Designer may create a reusable `commerce.hero.banner`\ncomponent. Experience Studio can then place that component for:\n\n- all shop listings;\n- only the New arrivals collection;\n- only the Atelier Minimal brand;\n- only the Clothing category;\n- a future customer segment or region.\n\nThis is why Experience Studio can later become part of Page Designer without\nchanging the backend contract. The authoring experience can merge visually, but\nthe data model should stay clear: content is content; placement rules resolve\ncontent.\n\n## Customize and extend safely\n\nStart with configuration before code. A business team should be able to change\nlabels, campaign copy, hero images, product carousel queries, placement order,\nvalidity dates, and fallback messages from backend-owned WCMS records and\nExperience Studio placements.\n\nWhen a new journey type is needed, add the backend contract first. For example,\nif the business wants loyalty-tier targeting, add the allowed context key,\ndelivery validation, indexing projection, preview evidence, and security rules\ninside `wcmsExperience`. Then expose it in Axis as another governed field or\nguided selector. Do not add a hidden storefront-only condition.\n\nWhen a new visual block is needed, add a CMS component type and renderer key\nfirst. Then implement the renderer in the consuming storefront. This lets the\nsame component appear on `/shop`, category pages, brand pages, collection\npages, or campaign pages without duplicating business data.\n\nWhen project-level customization is needed, keep it in the project module. The\nframework module should provide reusable capability and contracts. Agora\nApparel can provide customer-agnostic sample placements and content data, but a\nreal customer project should customize its own components, media, placement\nrecords, and publication lifecycle.\n\n## Common mistakes\n\n- Treating an experience placement as the component itself. The placement only\n  decides eligibility and order; the component owns renderable content.\n- Reading draft content on a public storefront. Public delivery must resolve\n  only Online, delivery-active projections.\n- Hardcoding banner images in the frontend. Images should be governed media\n  records attached to CMS components.\n- Creating separate frontend routes for every collection or brand when a query\n  plus targeted CMS components would solve the journey.\n- Running broad in-memory rule scans at request time. Published placements\n  should be projected into Discovery or Elasticsearch for fast lookup.\n- Forgetting fallback placements. Every page type should have a safe default\n  so a shopper never sees an empty experience area.\n- Letting two equal-priority placements compete without deterministic ordering.\n\n## Verification\n\nUse three levels of verification before calling an experience ready.\n\n1. Backend contract verification\n   - The placement schema is wrapped under the module name.\n   - Required fields validate at import time.\n   - Public delivery forces preview mode off.\n   - Authoring preview requires the correct Axis user permission.\n   - Online publication emits the indexing event.\n\n2. Axis verification\n   - Experience Studio appears in the Content area.\n   - Placements opens `wcmsExperience.cmsExperiencePlacement`.\n   - Preview resolves collection, brand, category, and fallback examples.\n   - Index Status shows enough evidence for an operator to diagnose stale\n     projections.\n\n3. Storefront verification\n   - `/shop?page=1&pageSize=10` shows default content and ten products per page.\n   - `/shop?collection=new-arrivals&page=1&pageSize=10` shows collection content.\n   - `/shop?brand=atelier-minimal&page=1&pageSize=10` shows brand content.\n   - Filters, sort, pagination, hero banner, promo strips, and product cards\n     align with the header content width.\n   - Desktop, tablet, and mobile layouts remain visually balanced.\n\n## Business-user checklist\n\nBefore publishing a targeted experience, confirm:\n\n- the component exists and uses the right renderer;\n- images and product associations are governed backend data;\n- the placement target matches the intended URL query;\n- a default fallback exists for the page type;\n- preview resolves exactly the expected slots;\n- index status is healthy after publish;\n- storefront visual QA passes on desktop, tablet, and mobile.\n\nThis workflow gives business users control without making the storefront a rule\nengine and without forcing developers to release code for every campaign.\n"
+        },
+        {
           "code": "axis.module-health",
           "title": "Module Health",
           "route": "/docs/nodics-axis/module-health",
@@ -5980,13 +6067,1104 @@ module.exports = {
         "route": "/docs/nodics-axis/schema-workbench"
       },
       "next": {
+        "title": "Axis Experience Studio and Targeted CMS Experiences",
+        "route": "/docs/nodics-axis/experience-studio"
+      }
+    },
+    "active": true
+  },
+  "record11": {
+    "code": "axisDocsComponentexperiencestudio",
+    "typeCode": "axisDocumentationArticleComponentType",
+    "renderer": "documentation.component.article",
+    "accessMode": "PUBLIC",
+    "properties": {
+      "code": "axis.experience-studio",
+      "title": "Axis Experience Studio and Targeted CMS Experiences",
+      "route": "/docs/nodics-axis/experience-studio",
+      "section": "axis-capabilities",
+      "sectionTitle": "Axis Capabilities",
+      "group": "axis-workspaces-and-operations",
+      "groupTitle": "Axis Workspaces and Operations",
+      "parentId": "axis-capabilities.axis-workspaces-and-operations",
+      "hierarchyPath": [
+        "Nodics Axis Documentation",
+        "Axis Capabilities",
+        "Axis Workspaces and Operations",
+        "Axis Experience Studio and Targeted CMS Experiences"
+      ],
+      "hierarchyDepth": 4,
+      "documentType": "how-to",
+      "category": "Axis Capabilities",
+      "audience": [
+        "business-user",
+        "merchandiser",
+        "administrator",
+        "developer",
+        "operator"
+      ],
+      "businessAudience": [
+        "business-user",
+        "merchandiser",
+        "administrator"
+      ],
+      "technicalAudience": [
+        "developer",
+        "operator"
+      ],
+      "summary": "Configure targeted CMS components for collection, category, brand, and fallback journeys through backend-owned WCMS Experience contracts.",
+      "visibility": "public",
+      "accessMode": "PUBLIC",
+      "publiclyAvailable": true,
+      "requiresAuthentication": false,
+      "allowedRoles": [],
+      "allowedGroups": [],
+      "allowedPermissions": [],
+      "lifecycleState": "ONLINE",
+      "version": "0.0.0",
+      "maturityState": "operational",
+      "implementationState": "current",
+      "renderingComponent": "documentation.component.article",
+      "relatedPages": [
+        "axis.page-designer",
+        "axis.cms-renderers",
+        "axis.documentation-content"
+      ],
+      "sourceEvidence": [
+        "docs/catalogue.json",
+        "docs/pages/experience-studio.md"
+      ],
+      "visualRequirements": [
+        "architecture-diagram",
+        "configuration-table",
+        "troubleshooting-matrix",
+        "table"
+      ],
+      "searchKeywords": [
+        "axis-capabilities",
+        "axis-workspaces-and-operations",
+        "axis-experience-studio",
+        "targeted-cms-experiences",
+        "collection-journey",
+        "brand-journey",
+        "default-fallback",
+        "business-user",
+        "merchandiser",
+        "administrator",
+        "developer",
+        "operator"
+      ],
+      "topicKeywords": [
+        "Axis Capabilities",
+        "Axis Workspaces and Operations",
+        "Axis Experience Studio and Targeted CMS Experiences",
+        "collection journey",
+        "brand journey",
+        "default fallback",
+        "business-user",
+        "merchandiser",
+        "administrator",
+        "developer",
+        "operator"
+      ],
+      "headings": [
+        {
+          "text": "Why this exists",
+          "anchor": "experience-studio-1-why-this-exists",
+          "level": 2
+        },
+        {
+          "text": "Ownership model",
+          "anchor": "experience-studio-2-ownership-model",
+          "level": 2
+        },
+        {
+          "text": "End-to-end flow",
+          "anchor": "experience-studio-3-end-to-end-flow",
+          "level": 2
+        },
+        {
+          "text": "Axis screens",
+          "anchor": "experience-studio-4-axis-screens",
+          "level": 2
+        },
+        {
+          "text": "Placement fields",
+          "anchor": "experience-studio-5-placement-fields",
+          "level": 2
+        },
+        {
+          "text": "Runtime request examples",
+          "anchor": "experience-studio-6-runtime-request-examples",
+          "level": 2
+        },
+        {
+          "text": "Collection journey example",
+          "anchor": "experience-studio-7-collection-journey-example",
+          "level": 2
+        },
+        {
+          "text": "Brand journey example",
+          "anchor": "experience-studio-8-brand-journey-example",
+          "level": 2
+        },
+        {
+          "text": "Default fallback example",
+          "anchor": "experience-studio-9-default-fallback-example",
+          "level": 2
+        },
+        {
+          "text": "Resolution precedence",
+          "anchor": "experience-studio-10-resolution-precedence",
+          "level": 2
+        },
+        {
+          "text": "Performance contract",
+          "anchor": "experience-studio-11-performance-contract",
+          "level": 2
+        },
+        {
+          "text": "Security and preview boundary",
+          "anchor": "experience-studio-12-security-and-preview-boundary",
+          "level": 2
+        },
+        {
+          "text": "Troubleshooting",
+          "anchor": "experience-studio-13-troubleshooting",
+          "level": 2
+        },
+        {
+          "text": "Relationship with Page Designer",
+          "anchor": "experience-studio-14-relationship-with-page-designer",
+          "level": 2
+        },
+        {
+          "text": "Customize and extend safely",
+          "anchor": "experience-studio-15-customize-and-extend-safely",
+          "level": 2
+        },
+        {
+          "text": "Common mistakes",
+          "anchor": "experience-studio-16-common-mistakes",
+          "level": 2
+        },
+        {
+          "text": "Verification",
+          "anchor": "experience-studio-17-verification",
+          "level": 2
+        },
+        {
+          "text": "Business-user checklist",
+          "anchor": "experience-studio-18-business-user-checklist",
+          "level": 2
+        }
+      ],
+      "blocks": [
+        {
+          "kind": "paragraph",
+          "text": "Axis Experience Studio is the business workspace for deciding which published CMS components appear for a specific storefront journey. It does not replace Page Designer, Product Search, Commerce, or Publishing. It gives business users a governed way to say:"
+        },
+        {
+          "kind": "paragraph",
+          "text": "“When a shopper is on this kind of page, with this journey context, show these hero banners, editorial strips, featured product rails, and supporting messages.”"
+        },
+        {
+          "kind": "paragraph",
+          "text": "The important boundary is this: the component is still content, and the rule is not a component. A component remains a renderable CMS record. An experience placement is backend configuration that resolves one or more components for a runtime context."
+        },
+        {
+          "kind": "heading",
+          "level": 2,
+          "text": "Why this exists",
+          "anchor": "experience-studio-1-why-this-exists"
+        },
+        {
+          "kind": "paragraph",
+          "text": "Storefront pages are rarely one-size-fits-all. The product listing page for `/shop` might need a broad seasonal banner. The listing reached from a collection tile might need a collection-specific hero. A brand journey might need a brand story, campaign image, featured product rail, and trust message. Later, the same mechanism can support customer segment, region, device, language, loyalty tier, or campaign personalization."
+        },
+        {
+          "kind": "paragraph",
+          "text": "Without Experience Studio, teams usually choose one of two weak patterns:"
+        },
+        {
+          "kind": "unordered-list",
+          "items": [
+            "create many hardcoded pages that duplicate layout logic;",
+            "put conditional frontend code in the storefront for every campaign."
+          ]
+        },
+        {
+          "kind": "paragraph",
+          "text": "Both approaches become expensive. Experience Studio keeps the decision in the backend-owned WCMS experience capability and lets the frontend ask for the resolved experience for the current request."
+        },
+        {
+          "kind": "heading",
+          "level": 2,
+          "text": "Ownership model",
+          "anchor": "experience-studio-2-ownership-model"
+        },
+        {
+          "kind": "table",
+          "headers": [
+            "Area",
+            "Owner",
+            "Notes"
+          ],
+          "rows": [
+            [
+              "CMS components",
+              "WCMS",
+              "Hero banners, rich text, image cards, promo strips, product rails, and containers stay normal content records."
+            ],
+            [
+              "Experience placements",
+              "`wcmsExperience`",
+              "A placement decides where, when, and for whom components are eligible."
+            ],
+            [
+              "Publication lifecycle",
+              "`nPublish`",
+              "Draft/Staged/Online promotion remains governed by publishing."
+            ],
+            [
+              "Content indexing",
+              "Discovery / Elasticsearch projection",
+              "Published placements and component projections are indexed for fast delivery."
+            ],
+            [
+              "Storefront rendering",
+              "Agora Apparel or another consumer site",
+              "The site renders the returned components with registered renderer keys."
+            ],
+            [
+              "Axis authoring",
+              "Axis Experience Studio",
+              "Axis provides the business UI, preview tools, and index-status visibility."
+            ]
+          ]
+        },
+        {
+          "kind": "paragraph",
+          "text": "Axis is not the system of record for experience data. It is the control room."
+        },
+        {
+          "kind": "heading",
+          "level": 2,
+          "text": "End-to-end flow",
+          "anchor": "experience-studio-3-end-to-end-flow"
+        },
+        {
+          "kind": "diagram",
+          "language": "mermaid",
+          "text": "flowchart LR\n  Business[\"Business user\"]\n  Axis[\"Axis Experience Studio\"]\n  Staged[\"WCMS Staged\"]\n  Publish[\"nPublish\"]\n  Online[\"WCMS Online\"]\n  Outbox[\"CMS_ONLINE_CHANGED outbox event\"]\n  Indexer[\"wcmsExperience index projection\"]\n  Discovery[\"Discovery / Elasticsearch\"]\n  Storefront[\"Agora Apparel storefront\"]\n\n  Business --> Axis\n  Axis --> Staged\n  Staged --> Publish\n  Publish --> Online\n  Online --> Outbox\n  Outbox --> Indexer\n  Indexer --> Discovery\n  Storefront --> Discovery"
+        },
+        {
+          "kind": "paragraph",
+          "text": "At runtime the storefront should not scan thousands of CMS records or execute every rule in memory. It calls the delivery API with a compact context, and the backend resolves from the indexed placement projection."
+        },
+        {
+          "kind": "heading",
+          "level": 2,
+          "text": "Axis screens",
+          "anchor": "experience-studio-4-axis-screens"
+        },
+        {
+          "kind": "paragraph",
+          "text": "Experience Studio starts with four practical views."
+        },
+        {
+          "kind": "code",
+          "language": "text",
+          "text": "Experience Studio\n├─ Overview\n│  ├─ explains the flow\n│  ├─ shows the required permissions\n│  └─ links to Page Designer and schema workspaces\n├─ Placements\n│  └─ opens the governed schema workspace for wcmsExperience.cmsExperiencePlacement\n├─ Preview\n│  ├─ page type\n│  ├─ route path\n│  ├─ slot\n│  ├─ target type and target code\n│  └─ resolved components grouped by slot\n└─ Index Status\n   ├─ projection health\n   ├─ indexed placement count\n   └─ last refresh / lag diagnostics"
+        },
+        {
+          "kind": "paragraph",
+          "text": "The Placements screen is deliberately schema-backed. That keeps the first slice safe and consistent with Nodics module contracts. Later, Experience Studio can add a richer visual placement wizard on top of the same backend entity."
+        },
+        {
+          "kind": "paragraph",
+          "text": "For beginners, the safest mental model is simple: create the content first, then create the placement that decides when that content appears. If the preview looks wrong, check the target type, target code, slot, and publication state before changing storefront code."
+        },
+        {
+          "kind": "heading",
+          "level": 2,
+          "text": "Placement fields",
+          "anchor": "experience-studio-5-placement-fields"
+        },
+        {
+          "kind": "paragraph",
+          "text": "These are the fields a business user or developer should understand before creating a targeted experience."
+        },
+        {
+          "kind": "table",
+          "headers": [
+            "Field",
+            "Purpose",
+            "Example"
+          ],
+          "rows": [
+            [
+              "Site",
+              "Which storefront or channel owns the placement",
+              "`agora-apparel`"
+            ],
+            [
+              "Page type",
+              "Which type of page is being targeted",
+              "`PRODUCT_LISTING`, `COLLECTIONS`, `BRAND`"
+            ],
+            [
+              "Slot",
+              "Where the component should render",
+              "`hero`, `promo-strip`, `featured-products`"
+            ],
+            [
+              "Target type",
+              "Which journey key controls the match",
+              "`DEFAULT`, `CATEGORY`, `COLLECTION`, `BRAND`"
+            ],
+            [
+              "Target code",
+              "The specific target value",
+              "`clothing`, `new-arrivals`, `atelier-minimal`"
+            ],
+            [
+              "Component code",
+              "Published CMS component to render",
+              "`agora.collection.clothing.hero`"
+            ],
+            [
+              "Renderer key",
+              "Storefront renderer contract",
+              "`commerce.hero.banner`, `commerce.product.carousel`"
+            ],
+            [
+              "Priority",
+              "Ordering among competing matches",
+              "`100`"
+            ],
+            [
+              "Specificity",
+              "Tie-breaker for more precise rules",
+              "`BRAND` beats `DEFAULT`"
+            ],
+            [
+              "Locale / channel",
+              "Optional delivery constraints",
+              "`en`, `web`"
+            ],
+            [
+              "Region / device",
+              "Optional personalization constraints",
+              "`AE`, `desktop`"
+            ],
+            [
+              "Valid from / valid to",
+              "Campaign timing",
+              "Back-to-school week"
+            ],
+            [
+              "Publication status",
+              "Authoring lifecycle",
+              "`STAGED`, `ONLINE`"
+            ],
+            [
+              "Delivery status",
+              "Whether delivery may use the placement",
+              "`ACTIVE`"
+            ]
+          ]
+        },
+        {
+          "kind": "heading",
+          "level": 2,
+          "text": "Runtime request examples",
+          "anchor": "experience-studio-6-runtime-request-examples"
+        },
+        {
+          "kind": "paragraph",
+          "text": "A normal product listing can use a default placement:"
+        },
+        {
+          "kind": "code",
+          "language": "text",
+          "text": "/shop?page=1&pageSize=10"
+        },
+        {
+          "kind": "paragraph",
+          "text": "A category listing adds category context:"
+        },
+        {
+          "kind": "code",
+          "language": "text",
+          "text": "/shop?category=clothing&page=1&pageSize=10"
+        },
+        {
+          "kind": "paragraph",
+          "text": "A collection journey adds collection context:"
+        },
+        {
+          "kind": "code",
+          "language": "text",
+          "text": "/shop?collection=new-arrivals&page=1&pageSize=10"
+        },
+        {
+          "kind": "paragraph",
+          "text": "A brand journey adds brand context:"
+        },
+        {
+          "kind": "code",
+          "language": "text",
+          "text": "/shop?brand=atelier-minimal&page=1&pageSize=10"
+        },
+        {
+          "kind": "paragraph",
+          "text": "The product result set is still returned by Commerce/Search. The page-level experience components are resolved by WCMS Experience for the same request context. This creates a mixed page: search results plus targeted CMS content."
+        },
+        {
+          "kind": "heading",
+          "level": 2,
+          "text": "Collection journey example",
+          "anchor": "experience-studio-7-collection-journey-example"
+        },
+        {
+          "kind": "paragraph",
+          "text": "Goal: when a shopper clicks the “New arrivals” collection tile, the listing page should show a collection-specific hero, a small editorial message, and a featured product carousel chosen by the business team."
+        },
+        {
+          "kind": "ordered-list",
+          "items": [
+            "In Page Designer or the component workspace, create or update the hero component."
+          ]
+        },
+        {
+          "kind": "unordered-list",
+          "items": [
+            "Component: `agora.collection.new-arrivals.hero`",
+            "Renderer: `commerce.hero.banner`",
+            "Title: `Fresh silhouettes, just landed`",
+            "Image: a governed media record, not a hardcoded frontend asset",
+            "CTA: `/shop?collection=new-arrivals`"
+          ]
+        },
+        {
+          "kind": "ordered-list",
+          "items": [
+            "Create the editorial strip component."
+          ]
+        },
+        {
+          "kind": "unordered-list",
+          "items": [
+            "Component: `agora.collection.new-arrivals.strip`",
+            "Renderer: `commerce.promo.strip`",
+            "Message: `Soft layers, modern neutrals, and refined everyday shapes`"
+          ]
+        },
+        {
+          "kind": "ordered-list",
+          "items": [
+            "Create the featured carousel component."
+          ]
+        },
+        {
+          "kind": "unordered-list",
+          "items": [
+            "Component: `agora.collection.new-arrivals.featured`",
+            "Renderer: `commerce.product.carousel`",
+            "Query: `collection=new-arrivals&featured=true`",
+            "Limit: `8`"
+          ]
+        },
+        {
+          "kind": "ordered-list",
+          "items": [
+            "In Experience Studio, open Placements and create three placements."
+          ]
+        },
+        {
+          "kind": "table",
+          "headers": [
+            "Slot",
+            "Target type",
+            "Target code",
+            "Component",
+            "Priority"
+          ],
+          "rows": [
+            [
+              "`hero`",
+              "`COLLECTION`",
+              "`new-arrivals`",
+              "`agora.collection.new-arrivals.hero`",
+              "`100`"
+            ],
+            [
+              "`promo-strip`",
+              "`COLLECTION`",
+              "`new-arrivals`",
+              "`agora.collection.new-arrivals.strip`",
+              "`90`"
+            ],
+            [
+              "`featured-products`",
+              "`COLLECTION`",
+              "`new-arrivals`",
+              "`agora.collection.new-arrivals.featured`",
+              "`80`"
+            ]
+          ]
+        },
+        {
+          "kind": "ordered-list",
+          "items": [
+            "Open Preview."
+          ]
+        },
+        {
+          "kind": "unordered-list",
+          "items": [
+            "Page type: `PRODUCT_LISTING`",
+            "Route path: `/shop`",
+            "Target type: `COLLECTION`",
+            "Target code: `new-arrivals`",
+            "Expected result: three resolved slots."
+          ]
+        },
+        {
+          "kind": "ordered-list",
+          "items": [
+            "Publish through the normal CMS publication flow."
+          ]
+        },
+        {
+          "kind": "ordered-list",
+          "items": [
+            "Check Index Status."
+          ]
+        },
+        {
+          "kind": "unordered-list",
+          "items": [
+            "The projection must show the latest published placement revision.",
+            "If the projection is stale, the storefront should continue using the last active Online state rather than a draft."
+          ]
+        },
+        {
+          "kind": "ordered-list",
+          "items": [
+            "Verify in the storefront."
+          ]
+        },
+        {
+          "kind": "unordered-list",
+          "items": [
+            "Open `/shop?collection=new-arrivals&page=1&pageSize=10`.",
+            "Confirm the hero, strip, carousel, filters, sort, and product cards align with the header content width."
+          ]
+        },
+        {
+          "kind": "heading",
+          "level": 2,
+          "text": "Brand journey example",
+          "anchor": "experience-studio-8-brand-journey-example"
+        },
+        {
+          "kind": "paragraph",
+          "text": "Goal: when a shopper opens an Atelier Minimal brand page, show brand-specific storytelling before the product grid."
+        },
+        {
+          "kind": "ordered-list",
+          "items": [
+            "Create brand content components."
+          ]
+        },
+        {
+          "kind": "unordered-list",
+          "items": [
+            "`agora.brand.atelier-minimal.hero`",
+            "`agora.brand.atelier-minimal.story`",
+            "`agora.brand.atelier-minimal.featured-products`"
+          ]
+        },
+        {
+          "kind": "ordered-list",
+          "items": [
+            "Create placements."
+          ]
+        },
+        {
+          "kind": "table",
+          "headers": [
+            "Slot",
+            "Target type",
+            "Target code",
+            "Component",
+            "Renderer"
+          ],
+          "rows": [
+            [
+              "`hero`",
+              "`BRAND`",
+              "`atelier-minimal`",
+              "`agora.brand.atelier-minimal.hero`",
+              "`commerce.hero.banner`"
+            ],
+            [
+              "`brand-story`",
+              "`BRAND`",
+              "`atelier-minimal`",
+              "`agora.brand.atelier-minimal.story`",
+              "`commerce.editorial.story`"
+            ],
+            [
+              "`featured-products`",
+              "`BRAND`",
+              "`atelier-minimal`",
+              "`agora.brand.atelier-minimal.featured-products`",
+              "`commerce.product.carousel`"
+            ]
+          ]
+        },
+        {
+          "kind": "ordered-list",
+          "items": [
+            "Preview with:"
+          ]
+        },
+        {
+          "kind": "code",
+          "language": "text",
+          "text": "pageType=PRODUCT_LISTING\nroutePath=/shop\ntargetType=BRAND\ntargetCode=atelier-minimal"
+        },
+        {
+          "kind": "ordered-list",
+          "items": [
+            "Publish and verify:"
+          ]
+        },
+        {
+          "kind": "code",
+          "language": "text",
+          "text": "/shop?brand=atelier-minimal&page=1&pageSize=10"
+        },
+        {
+          "kind": "paragraph",
+          "text": "The product cards should come from the search query `brand=atelier-minimal`. The banner, story, and carousel should come from the resolved WCMS experience."
+        },
+        {
+          "kind": "heading",
+          "level": 2,
+          "text": "Default fallback example",
+          "anchor": "experience-studio-9-default-fallback-example"
+        },
+        {
+          "kind": "paragraph",
+          "text": "Goal: when no collection, brand, or category-specific experience exists, show a safe default listing experience."
+        },
+        {
+          "kind": "ordered-list",
+          "items": [
+            "Create a default hero."
+          ]
+        },
+        {
+          "kind": "unordered-list",
+          "items": [
+            "Component: `agora.shop.default.hero`",
+            "Renderer: `commerce.hero.banner`",
+            "Message: `Explore refined everyday apparel`"
+          ]
+        },
+        {
+          "kind": "ordered-list",
+          "items": [
+            "Create a default promo strip."
+          ]
+        },
+        {
+          "kind": "unordered-list",
+          "items": [
+            "Component: `agora.shop.default.promo`",
+            "Renderer: `commerce.promo.strip`",
+            "Message: `Free shipping, easy returns, and secure checkout`"
+          ]
+        },
+        {
+          "kind": "ordered-list",
+          "items": [
+            "Create placements."
+          ]
+        },
+        {
+          "kind": "table",
+          "headers": [
+            "Slot",
+            "Target type",
+            "Target code",
+            "Component",
+            "Priority"
+          ],
+          "rows": [
+            [
+              "`hero`",
+              "`DEFAULT`",
+              "`*`",
+              "`agora.shop.default.hero`",
+              "`10`"
+            ],
+            [
+              "`promo-strip`",
+              "`DEFAULT`",
+              "`*`",
+              "`agora.shop.default.promo`",
+              "`10`"
+            ]
+          ]
+        },
+        {
+          "kind": "ordered-list",
+          "items": [
+            "Preview with no target code or with `DEFAULT/*`."
+          ]
+        },
+        {
+          "kind": "ordered-list",
+          "items": [
+            "Verify `/shop?page=1&pageSize=10`."
+          ]
+        },
+        {
+          "kind": "paragraph",
+          "text": "Fallback content must never hide more specific content. A collection, brand, or category placement with matching context should override the default placement for the same slot."
+        },
+        {
+          "kind": "heading",
+          "level": 2,
+          "text": "Resolution precedence",
+          "anchor": "experience-studio-10-resolution-precedence"
+        },
+        {
+          "kind": "paragraph",
+          "text": "When several placements match one request, the resolver must choose a stable and explainable result."
+        },
+        {
+          "kind": "diagram",
+          "language": "mermaid",
+          "text": "flowchart TD\n  Request[\"Runtime context\"]\n  Brand[\"Brand placement\"]\n  Collection[\"Collection placement\"]\n  Category[\"Category placement\"]\n  Default[\"Default placement\"]\n  Sort[\"Sort by specificity, priority, validity, and deterministic code\"]\n  Slots[\"Return slot groups\"]\n\n  Request --> Brand\n  Request --> Collection\n  Request --> Category\n  Request --> Default\n  Brand --> Sort\n  Collection --> Sort\n  Category --> Sort\n  Default --> Sort\n  Sort --> Slots"
+        },
+        {
+          "kind": "paragraph",
+          "text": "The exact specificity order is a backend contract. The important operational rule is that the result must be deterministic. Two users with the same site, page type, locale, channel, target, and time window must get the same ordered component list unless a personalization attribute intentionally changes it."
+        },
+        {
+          "kind": "heading",
+          "level": 2,
+          "text": "Performance contract",
+          "anchor": "experience-studio-11-performance-contract"
+        },
+        {
+          "kind": "paragraph",
+          "text": "Experience targeting must be fast enough for storefront delivery."
+        },
+        {
+          "kind": "unordered-list",
+          "items": [
+            "Published content is indexed after Online activation.",
+            "Runtime delivery resolves from the indexed projection.",
+            "The resolver should filter by site, page type, slot, target type, target code, locale, channel, validity, and delivery status before ranking.",
+            "The frontend should request only the slots it can render.",
+            "`wcmsExperience.resolver.maxComponents` protects against oversized responses.",
+            "Product grids remain paginated by Search/Commerce. Agora Apparel currently uses page size `10` for listing pagination.",
+            "Preview APIs may return extra debug evidence, but public delivery must not."
+          ]
+        },
+        {
+          "kind": "paragraph",
+          "text": "If the index is stale, the system should prefer the last known Online projection over executing broad rule scans on every storefront request."
+        },
+        {
+          "kind": "heading",
+          "level": 2,
+          "text": "Security and preview boundary",
+          "anchor": "experience-studio-12-security-and-preview-boundary"
+        },
+        {
+          "kind": "paragraph",
+          "text": "Experience Studio uses authoring APIs. Public storefront delivery uses delivery APIs. Do not mix the two."
+        },
+        {
+          "kind": "table",
+          "headers": [
+            "API type",
+            "Caller",
+            "Preview mode",
+            "Notes"
+          ],
+          "rows": [
+            [
+              "Authoring preview",
+              "Axis user with permission",
+              "Allowed",
+              "Can include diagnostic evidence."
+            ],
+            [
+              "Public delivery",
+              "Storefront runtime",
+              "Forced off",
+              "Must not expose draft or staged content."
+            ],
+            [
+              "Index status",
+              "Axis user with permission",
+              "Not applicable",
+              "Operational visibility only."
+            ]
+          ]
+        },
+        {
+          "kind": "paragraph",
+          "text": "Recommended permissions:"
+        },
+        {
+          "kind": "unordered-list",
+          "items": [
+            "`WCMS_EXPERIENCE_VIEW`",
+            "`WCMS_EXPERIENCE_EDIT`",
+            "`WCMS_EXPERIENCE_PREVIEW`",
+            "`WCMS_EXPERIENCE_PUBLISH_STATUS`"
+          ]
+        },
+        {
+          "kind": "paragraph",
+          "text": "Business users can manage content safely only when these permissions are paired with normal CMS authoring and publishing permissions."
+        },
+        {
+          "kind": "heading",
+          "level": 2,
+          "text": "Troubleshooting",
+          "anchor": "experience-studio-13-troubleshooting"
+        },
+        {
+          "kind": "table",
+          "headers": [
+            "Symptom",
+            "Check first",
+            "Likely fix"
+          ],
+          "rows": [
+            [
+              "Preview returns no components",
+              "Target type/code and page type",
+              "Create a matching placement or default fallback."
+            ],
+            [
+              "Storefront shows old banner",
+              "Index Status",
+              "Republish or wait for the Online change projection to refresh."
+            ],
+            [
+              "Draft content appears in Axis but not storefront",
+              "API boundary",
+              "This is expected until publish."
+            ],
+            [
+              "Wrong component appears",
+              "Priority and specificity",
+              "Raise the specific placement priority or fix overlapping defaults."
+            ],
+            [
+              "Image missing",
+              "Media reference",
+              "Confirm the CMS component uses a published governed media record."
+            ],
+            [
+              "Renderer missing",
+              "Renderer key",
+              "Register the renderer in the consuming storefront."
+            ],
+            [
+              "Too many components",
+              "Slot query and max components",
+              "Tighten target rules or reduce slot response limit."
+            ]
+          ]
+        },
+        {
+          "kind": "heading",
+          "level": 2,
+          "text": "Relationship with Page Designer",
+          "anchor": "experience-studio-14-relationship-with-page-designer"
+        },
+        {
+          "kind": "paragraph",
+          "text": "Page Designer creates and manages the page and component structure. Experience Studio decides when those components should appear for a journey context."
+        },
+        {
+          "kind": "paragraph",
+          "text": "For example, Page Designer may create a reusable `commerce.hero.banner` component. Experience Studio can then place that component for:"
+        },
+        {
+          "kind": "unordered-list",
+          "items": [
+            "all shop listings;",
+            "only the New arrivals collection;",
+            "only the Atelier Minimal brand;",
+            "only the Clothing category;",
+            "a future customer segment or region."
+          ]
+        },
+        {
+          "kind": "paragraph",
+          "text": "This is why Experience Studio can later become part of Page Designer without changing the backend contract. The authoring experience can merge visually, but the data model should stay clear: content is content; placement rules resolve content."
+        },
+        {
+          "kind": "heading",
+          "level": 2,
+          "text": "Customize and extend safely",
+          "anchor": "experience-studio-15-customize-and-extend-safely"
+        },
+        {
+          "kind": "paragraph",
+          "text": "Start with configuration before code. A business team should be able to change labels, campaign copy, hero images, product carousel queries, placement order, validity dates, and fallback messages from backend-owned WCMS records and Experience Studio placements."
+        },
+        {
+          "kind": "paragraph",
+          "text": "When a new journey type is needed, add the backend contract first. For example, if the business wants loyalty-tier targeting, add the allowed context key, delivery validation, indexing projection, preview evidence, and security rules inside `wcmsExperience`. Then expose it in Axis as another governed field or guided selector. Do not add a hidden storefront-only condition."
+        },
+        {
+          "kind": "paragraph",
+          "text": "When a new visual block is needed, add a CMS component type and renderer key first. Then implement the renderer in the consuming storefront. This lets the same component appear on `/shop`, category pages, brand pages, collection pages, or campaign pages without duplicating business data."
+        },
+        {
+          "kind": "paragraph",
+          "text": "When project-level customization is needed, keep it in the project module. The framework module should provide reusable capability and contracts. Agora Apparel can provide customer-agnostic sample placements and content data, but a real customer project should customize its own components, media, placement records, and publication lifecycle."
+        },
+        {
+          "kind": "heading",
+          "level": 2,
+          "text": "Common mistakes",
+          "anchor": "experience-studio-16-common-mistakes"
+        },
+        {
+          "kind": "unordered-list",
+          "items": [
+            "Treating an experience placement as the component itself. The placement only decides eligibility and order; the component owns renderable content.",
+            "Reading draft content on a public storefront. Public delivery must resolve only Online, delivery-active projections.",
+            "Hardcoding banner images in the frontend. Images should be governed media records attached to CMS components.",
+            "Creating separate frontend routes for every collection or brand when a query plus targeted CMS components would solve the journey.",
+            "Running broad in-memory rule scans at request time. Published placements should be projected into Discovery or Elasticsearch for fast lookup.",
+            "Forgetting fallback placements. Every page type should have a safe default so a shopper never sees an empty experience area.",
+            "Letting two equal-priority placements compete without deterministic ordering."
+          ]
+        },
+        {
+          "kind": "heading",
+          "level": 2,
+          "text": "Verification",
+          "anchor": "experience-studio-17-verification"
+        },
+        {
+          "kind": "paragraph",
+          "text": "Use three levels of verification before calling an experience ready."
+        },
+        {
+          "kind": "ordered-list",
+          "items": [
+            "Backend contract verification"
+          ]
+        },
+        {
+          "kind": "unordered-list",
+          "items": [
+            "The placement schema is wrapped under the module name.",
+            "Required fields validate at import time.",
+            "Public delivery forces preview mode off.",
+            "Authoring preview requires the correct Axis user permission.",
+            "Online publication emits the indexing event."
+          ]
+        },
+        {
+          "kind": "ordered-list",
+          "items": [
+            "Axis verification"
+          ]
+        },
+        {
+          "kind": "unordered-list",
+          "items": [
+            "Experience Studio appears in the Content area.",
+            "Placements opens `wcmsExperience.cmsExperiencePlacement`.",
+            "Preview resolves collection, brand, category, and fallback examples.",
+            "Index Status shows enough evidence for an operator to diagnose stale projections."
+          ]
+        },
+        {
+          "kind": "ordered-list",
+          "items": [
+            "Storefront verification"
+          ]
+        },
+        {
+          "kind": "unordered-list",
+          "items": [
+            "`/shop?page=1&pageSize=10` shows default content and ten products per page.",
+            "`/shop?collection=new-arrivals&page=1&pageSize=10` shows collection content.",
+            "`/shop?brand=atelier-minimal&page=1&pageSize=10` shows brand content.",
+            "Filters, sort, pagination, hero banner, promo strips, and product cards align with the header content width.",
+            "Desktop, tablet, and mobile layouts remain visually balanced."
+          ]
+        },
+        {
+          "kind": "heading",
+          "level": 2,
+          "text": "Business-user checklist",
+          "anchor": "experience-studio-18-business-user-checklist"
+        },
+        {
+          "kind": "paragraph",
+          "text": "Before publishing a targeted experience, confirm:"
+        },
+        {
+          "kind": "unordered-list",
+          "items": [
+            "the component exists and uses the right renderer;",
+            "images and product associations are governed backend data;",
+            "the placement target matches the intended URL query;",
+            "a default fallback exists for the page type;",
+            "preview resolves exactly the expected slots;",
+            "index status is healthy after publish;",
+            "storefront visual QA passes on desktop, tablet, and mobile."
+          ]
+        },
+        {
+          "kind": "paragraph",
+          "text": "This workflow gives business users control without making the storefront a rule engine and without forcing developers to release code for every campaign."
+        }
+      ],
+      "searchText": "Axis Experience Studio and Targeted CMS Experiences Configure targeted CMS components for collection, category, brand, and fallback journeys through backend-owned WCMS Experience contracts. # Axis Experience Studio and Targeted CMS Experiences\n\nAxis Experience Studio is the business workspace for deciding which published\nCMS components appear for a specific storefront journey. It does not replace\nPage Designer, Product Search, Commerce, or Publishing. It gives business\nusers a governed way to say:\n\n“When a shopper is on this kind of page, with this journey context, show these\nhero banners, editorial strips, featured product rails, and supporting\nmessages.”\n\nThe important boundary is this: the component is still content, and the rule is\nnot a component. A component remains a renderable CMS record. An experience\nplacement is backend configuration that resolves one or more components for a\nruntime context.\n\n## Why this exists\n\nStorefront pages are rarely one-size-fits-all. The product listing page for\n`/shop` might need a broad seasonal banner. The listing reached from a\ncollection tile might need a collection-specific hero. A brand journey might\nneed a brand story, campaign image, featured product rail, and trust message.\nLater, the same mechanism can support customer segment, region, device,\nlanguage, loyalty tier, or campaign personalization.\n\nWithout Experience Studio, teams usually choose one of two weak patterns:\n\n- create many hardcoded pages that duplicate layout logic;\n- put conditional frontend code in the storefront for every campaign.\n\nBoth approaches become expensive. Experience Studio keeps the decision in the\nbackend-owned WCMS experience capability and lets the frontend ask for the\nresolved experience for the current request.\n\n## Ownership model\n\n| Area | Owner | Notes |\n| --- | --- | --- |\n| CMS components | WCMS | Hero banners, rich text, image cards, promo strips, product rails, and containers stay normal content records. |\n| Experience placements | `wcmsExperience` | A placement decides where, when, and for whom components are eligible. |\n| Publication lifecycle | `nPublish` | Draft/Staged/Online promotion remains governed by publishing. |\n| Content indexing | Discovery / Elasticsearch projection | Published placements and component projections are indexed for fast delivery. |\n| Storefront rendering | Agora Apparel or another consumer site | The site renders the returned components with registered renderer keys. |\n| Axis authoring | Axis Experience Studio | Axis provides the business UI, preview tools, and index-status visibility. |\n\nAxis is not the system of record for experience data. It is the control room.\n\n## End-to-end flow\n\n```mermaid\nflowchart LR\n  Business[\"Business user\"]\n  Axis[\"Axis Experience Studio\"]\n  Staged[\"WCMS Staged\"]\n  Publish[\"nPublish\"]\n  Online[\"WCMS Online\"]\n  Outbox[\"CMS_ONLINE_CHANGED outbox event\"]\n  Indexer[\"wcmsExperience index projection\"]\n  Discovery[\"Discovery / Elasticsearch\"]\n  Storefront[\"Agora Apparel storefront\"]\n\n  Business --> Axis\n  Axis --> Staged\n  Staged --> Publish\n  Publish --> Online\n  Online --> Outbox\n  Outbox --> Indexer\n  Indexer --> Discovery\n  Storefront --> Discovery\n```\n\nAt runtime the storefront should not scan thousands of CMS records or execute\nevery rule in memory. It calls the delivery API with a compact context, and the\nbackend resolves from the indexed placement projection.\n\n## Axis screens\n\nExperience Studio starts with four practical views.\n\n```text\nExperience Studio\n├─ Overview\n│  ├─ explains the flow\n│  ├─ shows the required permissions\n│  └─ links to Page Designer and schema workspaces\n├─ Placements\n│  └─ opens the governed schema workspace for wcmsExperience.cmsExperiencePlacement\n├─ Preview\n│  ├─ page type\n│  ├─ route path\n│  ├─ slot\n│  ├─ target type and target code\n│  └─ resolved components grouped by slot\n└─ Index Status\n   ├─ projection health\n   ├─ indexed placement count\n   └─ last refresh / lag diagnostics\n```\n\nThe Placements screen is deliberately schema-backed. That keeps the first slice\nsafe and consistent with Nodics module contracts. Later, Experience Studio can\nadd a richer visual placement wizard on top of the same backend entity.\n\nFor beginners, the safest mental model is simple: create the content first,\nthen create the placement that decides when that content appears. If the\npreview looks wrong, check the target type, target code, slot, and publication\nstate before changing storefront code.\n\n## Placement fields\n\nThese are the fields a business user or developer should understand before\ncreating a targeted experience.\n\n| Field | Purpose | Example |\n| --- | --- | --- |\n| Site | Which storefront or channel owns the placement | `agora-apparel` |\n| Page type | Which type of page is being targeted | `PRODUCT_LISTING`, `COLLECTIONS`, `BRAND` |\n| Slot | Where the component should render | `hero`, `promo-strip`, `featured-products` |\n| Target type | Which journey key controls the match | `DEFAULT`, `CATEGORY`, `COLLECTION`, `BRAND` |\n| Target code | The specific target value | `clothing`, `new-arrivals`, `atelier-minimal` |\n| Component code | Published CMS component to render | `agora.collection.clothing.hero` |\n| Renderer key | Storefront renderer contract | `commerce.hero.banner`, `commerce.product.carousel` |\n| Priority | Ordering among competing matches | `100` |\n| Specificity | Tie-breaker for more precise rules | `BRAND` beats `DEFAULT` |\n| Locale / channel | Optional delivery constraints | `en`, `web` |\n| Region / device | Optional personalization constraints | `AE`, `desktop` |\n| Valid from / valid to | Campaign timing | Back-to-school week |\n| Publication status | Authoring lifecycle | `STAGED`, `ONLINE` |\n| Delivery status | Whether delivery may use the placement | `ACTIVE` |\n\n## Runtime request examples\n\nA normal product listing can use a default placement:\n\n```text\n/shop?page=1&pageSize=10\n```\n\nA category listing adds category context:\n\n```text\n/shop?category=clothing&page=1&pageSize=10\n```\n\nA collection journey adds collection context:\n\n```text\n/shop?collection=new-arrivals&page=1&pageSize=10\n```\n\nA brand journey adds brand context:\n\n```text\n/shop?brand=atelier-minimal&page=1&pageSize=10\n```\n\nThe product result set is still returned by Commerce/Search. The page-level\nexperience components are resolved by WCMS Experience for the same request\ncontext. This creates a mixed page: search results plus targeted CMS content.\n\n## Collection journey example\n\nGoal: when a shopper clicks the “New arrivals” collection tile, the listing\npage should show a collection-specific hero, a small editorial message, and a\nfeatured product carousel chosen by the business team.\n\n1. In Page Designer or the component workspace, create or update the hero\n   component.\n   - Component: `agora.collection.new-arrivals.hero`\n   - Renderer: `commerce.hero.banner`\n   - Title: `Fresh silhouettes, just landed`\n   - Image: a governed media record, not a hardcoded frontend asset\n   - CTA: `/shop?collection=new-arrivals`\n\n2. Create the editorial strip component.\n   - Component: `agora.collection.new-arrivals.strip`\n   - Renderer: `commerce.promo.strip`\n   - Message: `Soft layers, modern neutrals, and refined everyday shapes`\n\n3. Create the featured carousel component.\n   - Component: `agora.collection.new-arrivals.featured`\n   - Renderer: `commerce.product.carousel`\n   - Query: `collection=new-arrivals&featured=true`\n   - Limit: `8`\n\n4. In Experience Studio, open Placements and create three placements.\n\n| Slot | Target type | Target code | Component | Priority |\n| --- | --- | --- | --- | --- |\n| `hero` | `COLLECTION` | `new-arrivals` | `agora.collection.new-arrivals.hero` | `100` |\n| `promo-strip` | `COLLECTION` | `new-arrivals` | `agora.collection.new-arrivals.strip` | `90` |\n| `featured-products` | `COLLECTION` | `new-arrivals` | `agora.collection.new-arrivals.featured` | `80` |\n\n5. Open Preview.\n   - Page type: `PRODUCT_LISTING`\n   - Route path: `/shop`\n   - Target type: `COLLECTION`\n   - Target code: `new-arrivals`\n   - Expected result: three resolved slots.\n\n6. Publish through the normal CMS publication flow.\n\n7. Check Index Status.\n   - The projection must show the latest published placement revision.\n   - If the projection is stale, the storefront should continue using the last\n     active Online state rather than a draft.\n\n8. Verify in the storefront.\n   - Open `/shop?collection=new-arrivals&page=1&pageSize=10`.\n   - Confirm the hero, strip, carousel, filters, sort, and product cards align\n     with the header content width.\n\n## Brand journey example\n\nGoal: when a shopper opens an Atelier Minimal brand page, show brand-specific\nstorytelling before the product grid.\n\n1. Create brand content components.\n   - `agora.brand.atelier-minimal.hero`\n   - `agora.brand.atelier-minimal.story`\n   - `agora.brand.atelier-minimal.featured-products`\n\n2. Create placements.\n\n| Slot | Target type | Target code | Component | Renderer |\n| --- | --- | --- | --- | --- |\n| `hero` | `BRAND` | `atelier-minimal` | `agora.brand.atelier-minimal.hero` | `commerce.hero.banner` |\n| `brand-story` | `BRAND` | `atelier-minimal` | `agora.brand.atelier-minimal.story` | `commerce.editorial.story` |\n| `featured-products` | `BRAND` | `atelier-minimal` | `agora.brand.atelier-minimal.featured-products` | `commerce.product.carousel` |\n\n3. Preview with:\n\n```text\npageType=PRODUCT_LISTING\nroutePath=/shop\ntargetType=BRAND\ntargetCode=atelier-minimal\n```\n\n4. Publish and verify:\n\n```text\n/shop?brand=atelier-minimal&page=1&pageSize=10\n```\n\nThe product cards should come from the search query `brand=atelier-minimal`.\nThe banner, story, and carousel should come from the resolved WCMS experience.\n\n## Default fallback example\n\nGoal: when no collection, brand, or category-specific experience exists, show a\nsafe default listing experience.\n\n1. Create a default hero.\n   - Component: `agora.shop.default.hero`\n   - Renderer: `commerce.hero.banner`\n   - Message: `Explore refined everyday apparel`\n\n2. Create a default promo strip.\n   - Component: `agora.shop.default.promo`\n   - Renderer: `commerce.promo.strip`\n   - Message: `Free shipping, easy returns, and secure checkout`\n\n3. Create placements.\n\n| Slot | Target type | Target code | Component | Priority |\n| --- | --- | --- | --- | --- |\n| `hero` | `DEFAULT` | `*` | `agora.shop.default.hero` | `10` |\n| `promo-strip` | `DEFAULT` | `*` | `agora.shop.default.promo` | `10` |\n\n4. Preview with no target code or with `DEFAULT/*`.\n\n5. Verify `/shop?page=1&pageSize=10`.\n\nFallback content must never hide more specific content. A collection, brand, or\ncategory placement with matching context should override the default placement\nfor the same slot.\n\n## Resolution precedence\n\nWhen several placements match one request, the resolver must choose a stable\nand explainable result.\n\n```mermaid\nflowchart TD\n  Request[\"Runtime context\"]\n  Brand[\"Brand placement\"]\n  Collection[\"Collection placement\"]\n  Category[\"Category placement\"]\n  Default[\"Default placement\"]\n  Sort[\"Sort by specificity, priority, validity, and deterministic code\"]\n  Slots[\"Return slot groups\"]\n\n  Request --> Brand\n  Request --> Collection\n  Request --> Category\n  Request --> Default\n  Brand --> Sort\n  Collection --> Sort\n  Category --> Sort\n  Default --> Sort\n  Sort --> Slots\n```\n\nThe exact specificity order is a backend contract. The important operational\nrule is that the result must be deterministic. Two users with the same site,\npage type, locale, channel, target, and time window must get the same ordered\ncomponent list unless a personalization attribute intentionally changes it.\n\n## Performance contract\n\nExperience targeting must be fast enough for storefront delivery.\n\n- Published content is indexed after Online activation.\n- Runtime delivery resolves from the indexed projection.\n- The resolver should filter by site, page type, slot, target type, target\n  code, locale, channel, validity, and delivery status before ranking.\n- The frontend should request only the slots it can render.\n- `wcmsExperience.resolver.maxComponents` protects against oversized responses.\n- Product grids remain paginated by Search/Commerce. Agora Apparel currently\n  uses page size `10` for listing pagination.\n- Preview APIs may return extra debug evidence, but public delivery must not.\n\nIf the index is stale, the system should prefer the last known Online\nprojection over executing broad rule scans on every storefront request.\n\n## Security and preview boundary\n\nExperience Studio uses authoring APIs. Public storefront delivery uses delivery\nAPIs. Do not mix the two.\n\n| API type | Caller | Preview mode | Notes |\n| --- | --- | --- | --- |\n| Authoring preview | Axis user with permission | Allowed | Can include diagnostic evidence. |\n| Public delivery | Storefront runtime | Forced off | Must not expose draft or staged content. |\n| Index status | Axis user with permission | Not applicable | Operational visibility only. |\n\nRecommended permissions:\n\n- `WCMS_EXPERIENCE_VIEW`\n- `WCMS_EXPERIENCE_EDIT`\n- `WCMS_EXPERIENCE_PREVIEW`\n- `WCMS_EXPERIENCE_PUBLISH_STATUS`\n\nBusiness users can manage content safely only when these permissions are\npaired with normal CMS authoring and publishing permissions.\n\n## Troubleshooting\n\n| Symptom | Check first | Likely fix |\n| --- | --- | --- |\n| Preview returns no components | Target type/code and page type | Create a matching placement or default fallback. |\n| Storefront shows old banner | Index Status | Republish or wait for the Online change projection to refresh. |\n| Draft content appears in Axis but not storefront | API boundary | This is expected until publish. |\n| Wrong component appears | Priority and specificity | Raise the specific placement priority or fix overlapping defaults. |\n| Image missing | Media reference | Confirm the CMS component uses a published governed media record. |\n| Renderer missing | Renderer key | Register the renderer in the consuming storefront. |\n| Too many components | Slot query and max components | Tighten target rules or reduce slot response limit. |\n\n## Relationship with Page Designer\n\nPage Designer creates and manages the page and component structure. Experience\nStudio decides when those components should appear for a journey context.\n\nFor example, Page Designer may create a reusable `commerce.hero.banner`\ncomponent. Experience Studio can then place that component for:\n\n- all shop listings;\n- only the New arrivals collection;\n- only the Atelier Minimal brand;\n- only the Clothing category;\n- a future customer segment or region.\n\nThis is why Experience Studio can later become part of Page Designer without\nchanging the backend contract. The authoring experience can merge visually, but\nthe data model should stay clear: content is content; placement rules resolve\ncontent.\n\n## Customize and extend safely\n\nStart with configuration before code. A business team should be able to change\nlabels, campaign copy, hero images, product carousel queries, placement order,\nvalidity dates, and fallback messages from backend-owned WCMS records and\nExperience Studio placements.\n\nWhen a new journey type is needed, add the backend contract first. For example,\nif the business wants loyalty-tier targeting, add the allowed context key,\ndelivery validation, indexing projection, preview evidence, and security rules\ninside `wcmsExperience`. Then expose it in Axis as another governed field or\nguided selector. Do not add a hidden storefront-only condition.\n\nWhen a new visual block is needed, add a CMS component type and renderer key\nfirst. Then implement the renderer in the consuming storefront. This lets the\nsame component appear on `/shop`, category pages, brand pages, collection\npages, or campaign pages without duplicating business data.\n\nWhen project-level customization is needed, keep it in the project module. The\nframework module should provide reusable capability and contracts. Agora\nApparel can provide customer-agnostic sample placements and content data, but a\nreal customer project should customize its own components, media, placement\nrecords, and publication lifecycle.\n\n## Common mistakes\n\n- Treating an experience placement as the component itself. The placement only\n  decides eligibility and order; the component owns renderable content.\n- Reading draft content on a public storefront. Public delivery must resolve\n  only Online, delivery-active projections.\n- Hardcoding banner images in the frontend. Images should be governed media\n  records attached to CMS components.\n- Creating separate frontend routes for every collection or brand when a query\n  plus targeted CMS components would solve the journey.\n- Running broad in-memory rule scans at request time. Published placements\n  should be projected into Discovery or Elasticsearch for fast lookup.\n- Forgetting fallback placements. Every page type should have a safe default\n  so a shopper never sees an empty experience area.\n- Letting two equal-priority placements compete without deterministic ordering.\n\n## Verification\n\nUse three levels of verification before calling an experience ready.\n\n1. Backend contract verification\n   - The placement schema is wrapped under the module name.\n   - Required fields validate at import time.\n   - Public delivery forces preview mode off.\n   - Authoring preview requires the correct Axis user permission.\n   - Online publication emits the indexing event.\n\n2. Axis verification\n   - Experience Studio appears in the Content area.\n   - Placements opens `wcmsExperience.cmsExperiencePlacement`.\n   - Preview resolves collection, brand, category, and fallback examples.\n   - Index Status shows enough evidence for an operator to diagnose stale\n     projections.\n\n3. Storefront verification\n   - `/shop?page=1&pageSize=10` shows default content and ten products per page.\n   - `/shop?collection=new-arrivals&page=1&pageSize=10` shows collection content.\n   - `/shop?brand=atelier-minimal&page=1&pageSize=10` shows brand content.\n   - Filters, sort, pagination, hero banner, promo strips, and product cards\n     align with the header content width.\n   - Desktop, tablet, and mobile layouts remain visually balanced.\n\n## Business-user checklist\n\nBefore publishing a targeted experience, confirm:\n\n- the component exists and uses the right renderer;\n- images and product associations are governed backend data;\n- the placement target matches the intended URL query;\n- a default fallback exists for the page type;\n- preview resolves exactly the expected slots;\n- index status is healthy after publish;\n- storefront visual QA passes on desktop, tablet, and mobile.\n\nThis workflow gives business users control without making the storefront a rule\nengine and without forcing developers to release code for every campaign.\n",
+      "source": {
+        "repository": "nodics.platform",
+        "module": "axis",
+        "owner": "nodics.platform/modules/axis",
+        "sourcePath": "docs/pages/experience-studio.md",
+        "path": "modules/axis/docs/pages/experience-studio.md",
+        "evidence": "docs/pages/experience-studio.md",
+        "hash": "4d37836941b657db225baeb37fdf84b4ad50b3ff2aa0fee81a6b524c6a5018a1",
+        "version": "0.0.2"
+      },
+      "previous": {
+        "title": "Axis Page Designer",
+        "route": "/docs/nodics-axis/page-designer"
+      },
+      "next": {
         "title": "Module Health",
         "route": "/docs/nodics-axis/module-health"
       }
     },
     "active": true
   },
-  "record11": {
+  "record12": {
     "code": "axisDocsComponentmodulehealth",
     "typeCode": "axisDocumentationArticleComponentType",
     "renderer": "documentation.component.article",
@@ -6532,8 +7710,8 @@ module.exports = {
         "version": "0.0.2"
       },
       "previous": {
-        "title": "Axis Page Designer",
-        "route": "/docs/nodics-axis/page-designer"
+        "title": "Axis Experience Studio and Targeted CMS Experiences",
+        "route": "/docs/nodics-axis/experience-studio"
       },
       "next": {
         "title": "Imports and Exports Workspace",
@@ -6542,7 +7720,7 @@ module.exports = {
     },
     "active": true
   },
-  "record12": {
+  "record13": {
     "code": "axisDocsComponentimportsexports",
     "typeCode": "axisDocumentationArticleComponentType",
     "renderer": "documentation.component.article",
@@ -6926,7 +8104,7 @@ module.exports = {
     },
     "active": true
   },
-  "record13": {
+  "record14": {
     "code": "axisDocsComponentmediamanagement",
     "typeCode": "axisDocumentationArticleComponentType",
     "renderer": "documentation.component.article",
@@ -7564,7 +8742,7 @@ module.exports = {
     },
     "active": true
   },
-  "record14": {
+  "record15": {
     "code": "axisDocsComponentcustomerengagement",
     "typeCode": "axisDocumentationArticleComponentType",
     "renderer": "documentation.component.article",
@@ -7986,7 +9164,7 @@ module.exports = {
     },
     "active": true
   },
-  "record15": {
+  "record16": {
     "code": "axisDocsComponentopenapireference",
     "typeCode": "axisDocumentationArticleComponentType",
     "renderer": "documentation.component.article",
@@ -8286,7 +9464,7 @@ module.exports = {
     },
     "active": true
   },
-  "record16": {
+  "record17": {
     "code": "axisDocsComponentfeaturedelivery",
     "typeCode": "axisDocumentationArticleComponentType",
     "renderer": "documentation.component.article",
@@ -8745,7 +9923,7 @@ module.exports = {
     },
     "active": true
   },
-  "record17": {
+  "record18": {
     "code": "axisDocsComponentimplementationcontract",
     "typeCode": "axisDocumentationArticleComponentType",
     "renderer": "documentation.component.article",

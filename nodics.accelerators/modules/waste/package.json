@@ -1,0 +1,46 @@
+{
+    "name": "waste",
+    "index": "92.79",
+    "description": "Reusable Waste Management accelerator composition boundary.",
+    "main": "nodics.js",
+    "requiredModules": [
+        "wasteCore",
+        "wasteMaterial",
+        "wasteCollection",
+        "wasteSubmission",
+        "wasteVerification",
+        "wasteReceipt",
+        "wasteImpact",
+        "wasteMovement",
+        "wasteCompliance",
+        "wasteApi"
+    ],
+    "version": "0.0.0",
+    "private": true,
+    "license": "SEE LICENSE IN LICENSE",
+    "nodics": {
+        "kind": "group",
+        "displayName": "Waste",
+        "runtimeModule": true,
+        "loadableByNodicsModuleLoader": true,
+        "owns": [
+            "composition",
+            "configuration",
+            "llm",
+            "test"
+        ],
+        "runtime": {
+            "router": false,
+            "publish": false,
+            "web": false
+        },
+        "extends": [
+            "nodics.foundation"
+        ]
+    },
+    "scripts": {
+        "check:syntax": "find . -name '*.js' -not -path './node_modules/*' -print0 | xargs -0 -n 50 node --check",
+        "test:contract": "for file in test/*.test.js modules/*/test/*.test.js; do node \"$file\" || exit 1; done",
+        "test": "npm run check:syntax && npm run test:contract"
+    }
+}

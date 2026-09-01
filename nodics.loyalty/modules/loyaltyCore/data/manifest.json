@@ -1,0 +1,29 @@
+{
+    "contractVersion": 2,
+    "module": "loyaltyCore",
+    "sections": {
+        "core-reference": {
+            "kind": "DATA_RELEASE",
+            "dataType": "core",
+            "version": "0.0.0",
+            "displayName": "Loyalty Operation Policy Reference",
+            "description": "Default policy records for points earn, reserve, capture, release, and reverse operations.",
+            "owningDomain": "loyalty",
+            "lifecycle": "REFERENCE",
+            "destinationRole": "LOYALTY",
+            "environmentScope": [
+                "ALL"
+            ],
+            "sensitivity": "INTERNAL",
+            "versioningPolicy": "NONE",
+            "publicationPolicy": "NONE",
+            "initialPublicationPolicy": "NONE",
+            "removalPolicy": "RETAIN",
+            "files": {
+                "core-v001/records/loyalty/loyaltyOperationPolicyCoreData.js": "d507c655a6064d9081c5dbfff49c86a6d430a9d7f7b9de108df4c65054a2881c",
+                "core-v001/headers/loyalty/loyaltyOperationPolicyCoreHeader.js": "21555856f2a357e13f6d6bae5b4ac07c19b56fde2a90c69352eac2d907fba00a"
+            },
+            "sourceRoot": "core-v001"
+        }
+    }
+}

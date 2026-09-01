@@ -15,6 +15,23 @@ const crypto = require('node:crypto');
 
 /** @module discoveryProjection/service/defaultDiscoveryDocumentBuilderService @description Builds normalized generic Discovery document projections from safe domain payloads. @layer service @owner discoveryProjection */
 module.exports = {
+    queryMetadataFields: [
+        'site',
+        'pageType',
+        'slot',
+        'targetType',
+        'targetCode',
+        'channel',
+        'device',
+        'region',
+        'publicationStatus',
+        'deliveryStatus',
+        'specificity',
+        'priority',
+        'release',
+        'indexVersion'
+    ],
+
     /** Hashes a payload deterministically. @param {Object} payload Payload. @returns {string} Hash. */
     hash: function (payload) {
         return crypto.createHash('sha256').update(JSON.stringify(payload || {})).digest('hex');
@@ -24,7 +41,7 @@ module.exports = {
     build: function (request) {
         let now = request.projectedAt || new Date();
         let payload = request.payload || {};
-        return {
+        let document = {
             code: request.code || [request.ownerType, request.ownerCode, request.indexConfigurationCode, request.storeCode, request.locale].filter(Boolean).join('|'),
             tenant: request.tenant,
             ownerType: request.ownerType,
@@ -40,5 +57,11 @@ module.exports = {
             created: request.created || now,
             updated: request.updated || now
         };
+        this.queryMetadataFields.forEach(field => {
+            if (request[field] !== undefined && request[field] !== null) {
+                document[field] = request[field];
+            }
+        });
+        return document;
     }
 };

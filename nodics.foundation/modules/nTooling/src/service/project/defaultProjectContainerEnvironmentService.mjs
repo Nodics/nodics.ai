@@ -12,7 +12,7 @@
 
 /**
  * @module nTooling/service/project/defaultProjectContainerEnvironmentService
- * @description Operates manifest-declared container environment profiles from framework tooling.
+ * @description Operates environment-owned container profiles from framework tooling.
  * @layer tooling
  * @owner nTooling
  */
@@ -22,34 +22,21 @@ import crypto from 'node:crypto';
 import fs from 'node:fs';
 import net from 'node:net';
 import path from 'node:path';
+import { readContainerEnvironmentProfile } from './defaultProjectContainerProfileService.mjs';
 
 const projectRoot = process.cwd();
 const workspaceRoot = path.resolve(projectRoot, '..');
 
-function readProjectManifest() {
-  return JSON.parse(fs.readFileSync(path.join(projectRoot, 'nodics.project.json'), 'utf8'));
-}
-
-function resolveTemplate(value) {
-  return String(value || '')
-    .replaceAll('{projectRoot}', projectRoot)
-    .replaceAll('{workspaceRoot}', workspaceRoot);
-}
-
 function readProfile(profileCode) {
-  const manifest = readProjectManifest();
-  const profiles = manifest.containerEnvironments || {};
-  const profile = profiles[profileCode];
-  if (!profile) throw new Error(`Unknown container environment profile: ${profileCode}`);
-  const generatedRoot = path.resolve(projectRoot, resolveTemplate(profile.generatedDirectory || `envs/${profile.environment}/generated`));
+  const profile = readContainerEnvironmentProfile(projectRoot, profileCode);
   return {
-    code: profileCode,
-    environment: profile.environment || profileCode,
+    code: profile.code,
+    environment: profile.environment,
     qualificationClass: profile.qualificationClass || 'LOCAL_PRODUCTION_SIMULATION',
     composeProjectName: profile.composeProjectName || `nodics-${profileCode}`,
-    composePath: path.resolve(projectRoot, resolveTemplate(profile.composeFile)),
-    generatedRoot,
-    environmentPath: path.join(generatedRoot, profile.environmentFile || 'docker.env'),
+    composePath: profile.composePath,
+    generatedRoot: profile.generatedRoot,
+    environmentPath: profile.environmentPath,
     hostPorts: profile.hostPorts || [],
     nativeIsolationPorts: profile.nativeIsolationPorts || [],
     replicaSet: profile.replicaSet || 'nodicsContainerEnvironment',

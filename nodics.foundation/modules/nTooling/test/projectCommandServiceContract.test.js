@@ -22,7 +22,7 @@ const os = require('os');
 const path = require('path');
 const service = require('../src/service/command/defaultProjectCommandService');
 
-function createProject(manifestOverrides = {}) {
+function createProject(manifestOverrides = {}, packageOverrides = {}) {
     const root = fs.mkdtempSync(path.join(os.tmpdir(), 'nodics-project-contract-'));
     fs.mkdirSync(path.join(root, 'scripts'), { recursive: true });
     fs.writeFileSync(
@@ -31,8 +31,6 @@ function createProject(manifestOverrides = {}) {
     );
     const manifest = Object.assign(
         {
-            contractVersion: 0,
-            projectCode: 'duShop',
             tooling: {
                 scriptOwnership: {
                     projectOwned: ['scripts/hello.js'],
@@ -45,7 +43,11 @@ function createProject(manifestOverrides = {}) {
         },
         manifestOverrides
     );
-    fs.writeFileSync(path.join(root, 'nodics.project.json'), JSON.stringify(manifest, null, 2));
+    const packageJson = Object.assign({ name: 'duShop', version: '0.0.0', private: true }, packageOverrides);
+    fs.writeFileSync(path.join(root, 'package.json'), JSON.stringify(packageJson, null, 2));
+    if (manifestOverrides !== false) {
+        fs.writeFileSync(path.join(root, 'nodics.project.json'), JSON.stringify(manifest, null, 2));
+    }
     return root;
 }
 
@@ -54,9 +56,59 @@ const validManifest = service.readManifest(validRoot);
 service.validateManifest(validRoot, validManifest);
 assert.equal(service.runProjectCommand(validRoot, validManifest, 'hello', []), true);
 
+const minimalRoot = createProject(false, { name: 'acme.startio' });
+const minimalManifest = service.readManifest(minimalRoot);
+service.validateManifest(minimalRoot, minimalManifest);
+assert.equal(service.resolveProjectCode(minimalRoot, minimalManifest), 'acme.startio');
+assert.equal(service.resolveCommands(minimalManifest)['start:platform'].command, 'project:runtime-start');
+assert.deepEqual(service.resolveCommands(minimalManifest)['docker-local:preflight'].args, ['dockerLocal', 'preflight']);
+assert.equal(service.resolveCommands(minimalManifest)['acceptance:nexus-cms-media-seed'].command, 'project:nexus-cms-media-seed');
+
+const descriptorProjectCodeRoot = createProject({
+    projectCode: 'right.shop',
+    tooling: undefined
+}, { name: 'right.shop' });
+assert.throws(
+    () => service.validateManifest(descriptorProjectCodeRoot, service.readManifest(descriptorProjectCodeRoot)),
+    /must not declare projectCode/
+);
+
+const descriptorContractVersionRoot = createProject({
+    contractVersion: 1,
+    tooling: undefined
+}, { name: 'right.shop' });
+assert.throws(
+    () => service.validateManifest(descriptorContractVersionRoot, service.readManifest(descriptorContractVersionRoot)),
+    /must not declare contractVersion/
+);
+
+const emptyDescriptorRoot = createProject({
+    tooling: undefined
+}, { name: 'right.shop' });
+assert.deepEqual(service.readManifest(emptyDescriptorRoot), {});
+assert.throws(
+    () => service.validateManifest(emptyDescriptorRoot, service.readManifest(emptyDescriptorRoot)),
+    /Unnecessary nodics\.project\.json/
+);
+
+const misplacedTopologyRoot = createProject({
+    topology: { environment: 'rightLocal' },
+    tooling: undefined
+}, { name: 'right.shop' });
+assert.throws(
+    () => service.validateManifest(misplacedTopologyRoot, service.readManifest(misplacedTopologyRoot)),
+    /Unsupported nodics\.project\.json property `topology`/
+);
+
+const emptyToolingRoot = createProject({
+    tooling: {}
+}, { name: 'right.shop' });
+assert.throws(
+    () => service.validateManifest(emptyToolingRoot, service.readManifest(emptyToolingRoot)),
+    /remove empty override sections/
+);
+
 const forbiddenRoot = createProject({
-    contractVersion: 0,
-    projectCode: 'duShop',
     tooling: {
         scriptOwnership: {
             projectOwned: ['scripts/local-security-boundary-qualification.mjs'],
@@ -74,8 +126,6 @@ assert.throws(
 );
 
 const forbiddenDirectoryRoot = createProject({
-    contractVersion: 0,
-    projectCode: 'duShop',
     tooling: {
         scriptOwnership: {
             projectOwned: ['scripts/hello.js'],

@@ -32,8 +32,8 @@ test.beforeEach(() => {
 });
 
 test('Fulfillment customer routes expose shipping and return methods as customer-safe policy', () => {
-    assert.equal(routers.fulfillmentCore.customer.shippingMethods.key, '/customer/shipping/methods');
-    assert.equal(routers.fulfillmentCore.customer.returnMethods.key, '/customer/returns/methods');
+    assert.equal(routers.fulfillmentCore.customer.shippingMethods.key, '/shipping/methods');
+    assert.equal(routers.fulfillmentCore.customer.returnMethods.key, '/returns/methods');
     assert.equal(routers.fulfillmentCore.customer.shippingMethods.secured, false);
     assert.equal(routers.fulfillmentCore.customer.shippingMethods.publicAccess, true);
     assert.deepEqual(routers.fulfillmentCore.customer.shippingMethods.accessGroups, ['userGroup']);

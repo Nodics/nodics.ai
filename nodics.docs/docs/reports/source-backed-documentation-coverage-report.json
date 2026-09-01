@@ -17,9 +17,10 @@
     "nodics.exp"
   ],
   "summary": {
-    "totalModules": 172,
-    "documents": 127,
-    "covered": 172
+    "totalModules": 179,
+    "documents": 128,
+    "needs-page-or-owner-mapping": 3,
+    "covered": 176
   },
   "policy": {
     "blocking": false,
@@ -153,13 +154,13 @@
     },
     {
       "priority": "P1",
-      "item": "Customer List and Profile-Commerce boundary",
+      "item": "Shopping List Commerce boundary",
       "classification": "needs-page-or-owner-mapping",
       "sourceAreas": [
-        "nodics.commerce/modules/checkout/modules/customerList",
+        "nodics.commerce/modules/baseCommerce/modules/shoppingList",
         "nodics.platform/modules/profile"
       ],
-      "action": "Document why customer list exists in Commerce and what Profile owns.",
+      "action": "Document why shopping-intent lists belong to Base Commerce and what Profile owns.",
       "status": "closed-by-p1-docs-batch"
     },
     {
@@ -282,12 +283,150 @@
   ],
   "rows": [
     {
+      "name": "wcmsExperience",
+      "kind": "capability",
+      "runtimeModule": true,
+      "path": "nodics.ai/nodics.wcms/modules/wcmsExperience",
+      "packageJsonPath": "nodics.ai/nodics.wcms/modules/wcmsExperience/package.json",
+      "priorityScore": 54,
+      "classification": "needs-page-or-owner-mapping",
+      "matchedDocuments": [],
+      "counts": {
+        "schemas": 1,
+        "services": 5,
+        "controllers": 2,
+        "routers": 2,
+        "dataHeaders": 0,
+        "dataRecords": 0,
+        "assets": 0,
+        "tests": 8,
+        "frontends": 0
+      },
+      "examples": {
+        "schemas": [
+          "nodics.ai/nodics.wcms/modules/wcmsExperience/src/schemas/schemas.js"
+        ],
+        "services": [
+          "nodics.ai/nodics.wcms/modules/wcmsExperience/src/service/defaultWcmsExperienceBackofficeCapabilityService.js",
+          "nodics.ai/nodics.wcms/modules/wcmsExperience/src/service/defaultWcmsExperienceIndexStatusService.js",
+          "nodics.ai/nodics.wcms/modules/wcmsExperience/src/service/defaultWcmsExperienceProjectionService.js",
+          "nodics.ai/nodics.wcms/modules/wcmsExperience/src/service/defaultWcmsExperiencePublicationIndexingService.js"
+        ],
+        "controllers": [
+          "nodics.ai/nodics.wcms/modules/wcmsExperience/src/controller/defaultWcmsExperienceAuthoringController.js",
+          "nodics.ai/nodics.wcms/modules/wcmsExperience/src/controller/defaultWcmsExperienceDeliveryController.js"
+        ],
+        "routers": [
+          "nodics.ai/nodics.wcms/modules/wcmsExperience/src/router/appConfig.js",
+          "nodics.ai/nodics.wcms/modules/wcmsExperience/src/router/routers.js"
+        ],
+        "dataHeaders": [],
+        "dataRecords": [],
+        "assets": [],
+        "tests": [
+          "nodics.ai/nodics.wcms/modules/wcmsExperience/test/wcmsExperienceDocumentationContract.test.js",
+          "nodics.ai/nodics.wcms/modules/wcmsExperience/test/wcmsExperienceFallbackContract.test.js",
+          "nodics.ai/nodics.wcms/modules/wcmsExperience/test/wcmsExperienceGovernanceContract.test.js",
+          "nodics.ai/nodics.wcms/modules/wcmsExperience/test/wcmsExperienceModuleContract.test.js"
+        ],
+        "frontends": []
+      }
+    },
+    {
+      "name": "digitalCommerce",
+      "kind": "group",
+      "runtimeModule": true,
+      "path": "nodics.ai/nodics.commerce/modules/digitalCommerce",
+      "packageJsonPath": "nodics.ai/nodics.commerce/modules/digitalCommerce/package.json",
+      "priorityScore": 27,
+      "classification": "needs-page-or-owner-mapping",
+      "matchedDocuments": [],
+      "counts": {
+        "schemas": 1,
+        "services": 2,
+        "controllers": 1,
+        "routers": 2,
+        "dataHeaders": 0,
+        "dataRecords": 0,
+        "assets": 0,
+        "tests": 1,
+        "frontends": 0
+      },
+      "examples": {
+        "schemas": [
+          "nodics.ai/nodics.commerce/modules/digitalCommerce/modules/digitalCore/src/schemas/schemas.js"
+        ],
+        "services": [
+          "nodics.ai/nodics.commerce/modules/digitalCommerce/modules/digitalCore/src/service/defaultDigitalCommerceCheckoutService.js",
+          "nodics.ai/nodics.commerce/modules/digitalCommerce/modules/digitalCore/src/service/defaultDigitalCommerceEntitlementService.js"
+        ],
+        "controllers": [
+          "nodics.ai/nodics.commerce/modules/digitalCommerce/modules/digitalCore/src/controller/defaultDigitalCommerceCustomerController.js"
+        ],
+        "routers": [
+          "nodics.ai/nodics.commerce/modules/digitalCommerce/modules/digitalCore/src/router/appConfig.js",
+          "nodics.ai/nodics.commerce/modules/digitalCommerce/modules/digitalCore/src/router/routers.js"
+        ],
+        "dataHeaders": [],
+        "dataRecords": [],
+        "assets": [],
+        "tests": [
+          "nodics.ai/nodics.commerce/modules/digitalCommerce/modules/digitalCore/test/digitalCommerceCheckoutContract.test.js"
+        ],
+        "frontends": []
+      }
+    },
+    {
+      "name": "digitalCore",
+      "kind": "capability",
+      "runtimeModule": true,
+      "path": "nodics.ai/nodics.commerce/modules/digitalCommerce/modules/digitalCore",
+      "packageJsonPath": "nodics.ai/nodics.commerce/modules/digitalCommerce/modules/digitalCore/package.json",
+      "priorityScore": 27,
+      "classification": "needs-page-or-owner-mapping",
+      "matchedDocuments": [],
+      "counts": {
+        "schemas": 1,
+        "services": 2,
+        "controllers": 1,
+        "routers": 2,
+        "dataHeaders": 0,
+        "dataRecords": 0,
+        "assets": 0,
+        "tests": 1,
+        "frontends": 0
+      },
+      "examples": {
+        "schemas": [
+          "nodics.ai/nodics.commerce/modules/digitalCommerce/modules/digitalCore/src/schemas/schemas.js"
+        ],
+        "services": [
+          "nodics.ai/nodics.commerce/modules/digitalCommerce/modules/digitalCore/src/service/defaultDigitalCommerceCheckoutService.js",
+          "nodics.ai/nodics.commerce/modules/digitalCommerce/modules/digitalCore/src/service/defaultDigitalCommerceEntitlementService.js"
+        ],
+        "controllers": [
+          "nodics.ai/nodics.commerce/modules/digitalCommerce/modules/digitalCore/src/controller/defaultDigitalCommerceCustomerController.js"
+        ],
+        "routers": [
+          "nodics.ai/nodics.commerce/modules/digitalCommerce/modules/digitalCore/src/router/appConfig.js",
+          "nodics.ai/nodics.commerce/modules/digitalCommerce/modules/digitalCore/src/router/routers.js"
+        ],
+        "dataHeaders": [],
+        "dataRecords": [],
+        "assets": [],
+        "tests": [
+          "nodics.ai/nodics.commerce/modules/digitalCommerce/modules/digitalCore/test/digitalCommerceCheckoutContract.test.js"
+        ],
+        "frontends": []
+      }
+    },
+    {
       "name": "nodics.foundation",
       "kind": "group",
       "runtimeModule": true,
       "path": "nodics.ai/nodics.foundation",
       "packageJsonPath": "nodics.ai/nodics.foundation/package.json",
-      "priorityScore": 4130,
+      "priorityScore": 4190,
       "classification": "covered",
       "matchedDocuments": [
         "framework.what-is-nodics",
@@ -299,13 +438,13 @@
       ],
       "counts": {
         "schemas": 40,
-        "services": 588,
-        "controllers": 247,
+        "services": 596,
+        "controllers": 255,
         "routers": 86,
         "dataHeaders": 3,
         "dataRecords": 3,
         "assets": 0,
-        "tests": 368,
+        "tests": 370,
         "frontends": 0
       },
       "examples": {
@@ -359,7 +498,7 @@
       "runtimeModule": false,
       "path": "nodics.kickoff/modules",
       "packageJsonPath": "nodics.kickoff/modules/package.json",
-      "priorityScore": 1000,
+      "priorityScore": 1014,
       "classification": "covered",
       "matchedDocuments": [
         "framework.what-is-nodics",
@@ -375,8 +514,8 @@
         "controllers": 0,
         "routers": 0,
         "dataHeaders": 15,
-        "dataRecords": 104,
-        "assets": 319,
+        "dataRecords": 108,
+        "assets": 320,
         "tests": 1,
         "frontends": 0
       },
@@ -396,8 +535,8 @@
         "dataRecords": [
           "nodics.kickoff/modules/agora.apparel/data/sample-v001/commerce/records/agoraApparelCategoryData.js",
           "nodics.kickoff/modules/agora.apparel/data/sample-v001/commerce/records/agoraApparelCategoryLocalizationData.js",
-          "nodics.kickoff/modules/agora.apparel/data/sample-v001/commerce/records/agoraApparelInventoryBalanceData.js",
-          "nodics.kickoff/modules/agora.apparel/data/sample-v001/commerce/records/agoraApparelPriceBookData.js"
+          "nodics.kickoff/modules/agora.apparel/data/sample-v001/commerce/records/agoraApparelCouponBatchData.js",
+          "nodics.kickoff/modules/agora.apparel/data/sample-v001/commerce/records/agoraApparelCouponData.js"
         ],
         "assets": [
           "nodics.kickoff/modules/agora.apparel/data/sample-v001/content/assets/agora-cms-media/assetManifest.js",
@@ -417,7 +556,7 @@
       "runtimeModule": true,
       "path": "nodics.ai/nodics.foundation/modules/nController",
       "packageJsonPath": "nodics.ai/nodics.foundation/modules/nController/package.json",
-      "priorityScore": 902,
+      "priorityScore": 934,
       "classification": "covered",
       "matchedDocuments": [
         "framework.modular-architecture",
@@ -430,7 +569,7 @@
       "counts": {
         "schemas": 0,
         "services": 0,
-        "controllers": 225,
+        "controllers": 233,
         "routers": 0,
         "dataHeaders": 0,
         "dataRecords": 0,
@@ -463,7 +602,7 @@
       "runtimeModule": true,
       "path": "nodics.ai/nodics.foundation/modules/nService",
       "packageJsonPath": "nodics.ai/nodics.foundation/modules/nService/package.json",
-      "priorityScore": 773,
+      "priorityScore": 797,
       "classification": "covered",
       "matchedDocuments": [
         "framework.what-is-nodics",
@@ -475,7 +614,7 @@
       ],
       "counts": {
         "schemas": 1,
-        "services": 244,
+        "services": 252,
         "controllers": 0,
         "routers": 2,
         "dataHeaders": 0,
@@ -517,7 +656,7 @@
       "runtimeModule": true,
       "path": "nodics.ai/nodics.wcms",
       "packageJsonPath": "nodics.ai/nodics.wcms/package.json",
-      "priorityScore": 591,
+      "priorityScore": 647,
       "classification": "covered",
       "matchedDocuments": [
         "framework.what-is-nodics",
@@ -528,14 +667,14 @@
         "framework.modular-architecture"
       ],
       "counts": {
-        "schemas": 5,
-        "services": 71,
-        "controllers": 13,
-        "routers": 8,
+        "schemas": 6,
+        "services": 76,
+        "controllers": 15,
+        "routers": 10,
         "dataHeaders": 25,
         "dataRecords": 26,
         "assets": 0,
-        "tests": 53,
+        "tests": 62,
         "frontends": 0
       },
       "examples": {
@@ -591,7 +730,7 @@
       "runtimeModule": true,
       "path": "nodics.ai/nodics.commerce",
       "packageJsonPath": "nodics.ai/nodics.commerce/package.json",
-      "priorityScore": 570,
+      "priorityScore": 620,
       "classification": "covered",
       "matchedDocuments": [
         "framework.what-is-nodics",
@@ -602,14 +741,14 @@
         "framework.runtime-server-composition"
       ],
       "counts": {
-        "schemas": 13,
-        "services": 72,
-        "controllers": 14,
-        "routers": 22,
+        "schemas": 14,
+        "services": 79,
+        "controllers": 15,
+        "routers": 24,
         "dataHeaders": 2,
         "dataRecords": 9,
         "assets": 0,
-        "tests": 43,
+        "tests": 48,
         "frontends": 0
       },
       "examples": {
@@ -663,7 +802,7 @@
       "runtimeModule": true,
       "path": "nodics.ai/nodics.platform",
       "packageJsonPath": "nodics.ai/nodics.platform/package.json",
-      "priorityScore": 524,
+      "priorityScore": 526,
       "classification": "covered",
       "matchedDocuments": [
         "framework.what-is-nodics",
@@ -681,7 +820,7 @@
         "dataHeaders": 11,
         "dataRecords": 34,
         "assets": 0,
-        "tests": 49,
+        "tests": 50,
         "frontends": 0
       },
       "examples": {
@@ -722,10 +861,10 @@
         ],
         "assets": [],
         "tests": [
+          "nodics.ai/nodics.platform/modules/axis/test/axisExperienceStudioDocumentation.test.js",
           "nodics.ai/nodics.platform/modules/axis/test/axisInitializationService.test.js",
           "nodics.ai/nodics.platform/modules/backoffice/test/axisNavigationLockedHierarchyContract.test.js",
-          "nodics.ai/nodics.platform/modules/backoffice/test/backofficeAdministrativeSecurityService.test.js",
-          "nodics.ai/nodics.platform/modules/backoffice/test/backofficeApiContract.test.js"
+          "nodics.ai/nodics.platform/modules/backoffice/test/backofficeAdministrativeSecurityService.test.js"
         ],
         "frontends": []
       }
@@ -800,7 +939,7 @@
       "runtimeModule": true,
       "path": "nodics.ai/nodics.commerce/modules/baseCommerce",
       "packageJsonPath": "nodics.ai/nodics.commerce/modules/baseCommerce/package.json",
-      "priorityScore": 306,
+      "priorityScore": 336,
       "classification": "covered",
       "matchedDocuments": [
         "accelerators.agora-apparel-product-data-authoring",
@@ -811,14 +950,14 @@
         "commerce.data-authoring-fulfillment"
       ],
       "counts": {
-        "schemas": 7,
-        "services": 36,
-        "controllers": 8,
-        "routers": 12,
+        "schemas": 8,
+        "services": 39,
+        "controllers": 9,
+        "routers": 14,
         "dataHeaders": 2,
         "dataRecords": 9,
         "assets": 0,
-        "tests": 18,
+        "tests": 19,
         "frontends": 0
       },
       "examples": {
@@ -863,6 +1002,59 @@
           "nodics.ai/nodics.commerce/modules/baseCommerce/modules/inventory/test/customerAvailabilitySummaryContract.test.js",
           "nodics.ai/nodics.commerce/modules/baseCommerce/modules/inventory/test/inventoryAxisProjectionContract.test.js"
         ],
+        "frontends": []
+      }
+    },
+    {
+      "name": "agora.apparel",
+      "kind": "content-pack",
+      "runtimeModule": true,
+      "path": "nodics.kickoff/modules/agora.apparel",
+      "packageJsonPath": "nodics.kickoff/modules/agora.apparel/package.json",
+      "priorityScore": 306,
+      "classification": "covered",
+      "matchedDocuments": [
+        "accelerators.agora-industry-templates",
+        "accelerators.agora-apparel-product-data-authoring",
+        "framework.local-quick-start",
+        "process.workflow-orchestration-patterns",
+        "pipeline.business-logic-orchestration",
+        "data.import-export-provider-guides"
+      ],
+      "counts": {
+        "schemas": 0,
+        "services": 0,
+        "controllers": 0,
+        "routers": 0,
+        "dataHeaders": 3,
+        "dataRecords": 33,
+        "assets": 99,
+        "tests": 0,
+        "frontends": 0
+      },
+      "examples": {
+        "schemas": [],
+        "services": [],
+        "controllers": [],
+        "routers": [],
+        "dataHeaders": [
+          "nodics.kickoff/modules/agora.apparel/data/sample-v001/commerce/headers/agoraApparelCatalogHeader.js",
+          "nodics.kickoff/modules/agora.apparel/data/sample-v001/commerce/headers/commerceSearch/agoraApparelCommerceSearchHeader.js",
+          "nodics.kickoff/modules/agora.apparel/data/sample-v001/content/headers/agoraApparelContentHeader.js"
+        ],
+        "dataRecords": [
+          "nodics.kickoff/modules/agora.apparel/data/sample-v001/commerce/records/agoraApparelCategoryData.js",
+          "nodics.kickoff/modules/agora.apparel/data/sample-v001/commerce/records/agoraApparelCategoryLocalizationData.js",
+          "nodics.kickoff/modules/agora.apparel/data/sample-v001/commerce/records/agoraApparelCouponBatchData.js",
+          "nodics.kickoff/modules/agora.apparel/data/sample-v001/commerce/records/agoraApparelCouponData.js"
+        ],
+        "assets": [
+          "nodics.kickoff/modules/agora.apparel/data/sample-v001/content/assets/agora-cms-media/assetManifest.js",
+          "nodics.kickoff/modules/agora.apparel/data/sample-v001/content/assets/agora-cms-media/files/agora-owned-avatar-mark.jpg",
+          "nodics.kickoff/modules/agora.apparel/data/sample-v001/content/assets/agora-cms-media/files/agora-owned-avatar-sybil.jpg",
+          "nodics.kickoff/modules/agora.apparel/data/sample-v001/content/assets/agora-cms-media/files/agora-owned-collection-accessories.jpg"
+        ],
+        "tests": [],
         "frontends": []
       }
     },
@@ -986,59 +1178,6 @@
           "nodics.ai/nodics.engagement/modules/contactSubmission/test/contactSubmissionVerticalContract.test.js",
           "nodics.ai/nodics.engagement/modules/contactSubmission/test/helpdeskSandboxProviderContract.test.js"
         ],
-        "frontends": []
-      }
-    },
-    {
-      "name": "agora.apparel",
-      "kind": "content-pack",
-      "runtimeModule": true,
-      "path": "nodics.kickoff/modules/agora.apparel",
-      "packageJsonPath": "nodics.kickoff/modules/agora.apparel/package.json",
-      "priorityScore": 292,
-      "classification": "covered",
-      "matchedDocuments": [
-        "accelerators.agora-industry-templates",
-        "accelerators.agora-apparel-product-data-authoring",
-        "framework.local-quick-start",
-        "process.workflow-orchestration-patterns",
-        "pipeline.business-logic-orchestration",
-        "data.import-export-provider-guides"
-      ],
-      "counts": {
-        "schemas": 0,
-        "services": 0,
-        "controllers": 0,
-        "routers": 0,
-        "dataHeaders": 3,
-        "dataRecords": 29,
-        "assets": 98,
-        "tests": 0,
-        "frontends": 0
-      },
-      "examples": {
-        "schemas": [],
-        "services": [],
-        "controllers": [],
-        "routers": [],
-        "dataHeaders": [
-          "nodics.kickoff/modules/agora.apparel/data/sample-v001/commerce/headers/agoraApparelCatalogHeader.js",
-          "nodics.kickoff/modules/agora.apparel/data/sample-v001/commerce/headers/commerceSearch/agoraApparelCommerceSearchHeader.js",
-          "nodics.kickoff/modules/agora.apparel/data/sample-v001/content/headers/agoraApparelContentHeader.js"
-        ],
-        "dataRecords": [
-          "nodics.kickoff/modules/agora.apparel/data/sample-v001/commerce/records/agoraApparelCategoryData.js",
-          "nodics.kickoff/modules/agora.apparel/data/sample-v001/commerce/records/agoraApparelCategoryLocalizationData.js",
-          "nodics.kickoff/modules/agora.apparel/data/sample-v001/commerce/records/agoraApparelInventoryBalanceData.js",
-          "nodics.kickoff/modules/agora.apparel/data/sample-v001/commerce/records/agoraApparelPriceBookData.js"
-        ],
-        "assets": [
-          "nodics.kickoff/modules/agora.apparel/data/sample-v001/content/assets/agora-cms-media/assetManifest.js",
-          "nodics.kickoff/modules/agora.apparel/data/sample-v001/content/assets/agora-cms-media/files/agora-owned-avatar-mark.jpg",
-          "nodics.kickoff/modules/agora.apparel/data/sample-v001/content/assets/agora-cms-media/files/agora-owned-avatar-sybil.jpg",
-          "nodics.kickoff/modules/agora.apparel/data/sample-v001/content/assets/agora-cms-media/files/agora-owned-collection-accessories.jpg"
-        ],
-        "tests": [],
         "frontends": []
       }
     },
@@ -1209,7 +1348,7 @@
       "runtimeModule": true,
       "path": "nodics.ai/nodics.wcms/modules/cms",
       "packageJsonPath": "nodics.ai/nodics.wcms/modules/cms/package.json",
-      "priorityScore": 244,
+      "priorityScore": 246,
       "classification": "covered",
       "matchedDocuments": [
         "framework.what-is-nodics",
@@ -1227,7 +1366,7 @@
         "dataHeaders": 14,
         "dataRecords": 15,
         "assets": 0,
-        "tests": 19,
+        "tests": 20,
         "frontends": 0
       },
       "examples": {
@@ -1347,10 +1486,11 @@
       "runtimeModule": false,
       "path": "nodics.ai/nodics.foundation/modules/nTooling",
       "packageJsonPath": "nodics.ai/nodics.foundation/modules/nTooling/package.json",
-      "priorityScore": 238,
+      "priorityScore": 240,
       "classification": "covered",
       "matchedDocuments": [
         "foundation.overview",
+        "loyalty.wallets-rewards-ledger",
         "foundation.tooling-runtime-contracts",
         "tooling.ai-developer-enablement",
         "reference.documentation-gap-backlog"
@@ -1363,7 +1503,7 @@
         "dataHeaders": 0,
         "dataRecords": 0,
         "assets": 0,
-        "tests": 47,
+        "tests": 48,
         "frontends": 0
       },
       "examples": {
@@ -1919,70 +2059,6 @@
       }
     },
     {
-      "name": "checkout",
-      "kind": "group",
-      "runtimeModule": true,
-      "path": "nodics.ai/nodics.commerce/modules/checkout",
-      "packageJsonPath": "nodics.ai/nodics.commerce/modules/checkout/package.json",
-      "priorityScore": 153,
-      "classification": "covered",
-      "matchedDocuments": [
-        "framework.how-nodics-works",
-        "docs.reader-journey-and-coverage",
-        "framework.modular-architecture",
-        "framework.runtime-server-composition",
-        "platform.module-registry",
-        "accelerators.agora-industry-templates"
-      ],
-      "counts": {
-        "schemas": 4,
-        "services": 19,
-        "controllers": 5,
-        "routers": 8,
-        "dataHeaders": 0,
-        "dataRecords": 0,
-        "assets": 0,
-        "tests": 8,
-        "frontends": 0
-      },
-      "examples": {
-        "schemas": [
-          "nodics.ai/nodics.commerce/modules/checkout/modules/cart/src/schemas/schemas.js",
-          "nodics.ai/nodics.commerce/modules/checkout/modules/checkoutCore/src/schemas/schemas.js",
-          "nodics.ai/nodics.commerce/modules/checkout/modules/customerList/src/schemas/schemas.js",
-          "nodics.ai/nodics.commerce/modules/checkout/modules/order/src/schemas/schemas.js"
-        ],
-        "services": [
-          "nodics.ai/nodics.commerce/modules/checkout/modules/cart/src/service/defaultCartBackofficeCapabilityService.js",
-          "nodics.ai/nodics.commerce/modules/checkout/modules/cart/src/service/defaultCartCalculationEngineService.js",
-          "nodics.ai/nodics.commerce/modules/checkout/modules/cart/src/service/defaultCartLocalizationContributionService.js",
-          "nodics.ai/nodics.commerce/modules/checkout/modules/cart/src/service/defaultCartOperationService.js"
-        ],
-        "controllers": [
-          "nodics.ai/nodics.commerce/modules/checkout/modules/cart/src/controller/defaultCartCustomerController.js",
-          "nodics.ai/nodics.commerce/modules/checkout/modules/checkoutCore/src/controller/defaultCheckoutCustomerController.js",
-          "nodics.ai/nodics.commerce/modules/checkout/modules/customerList/src/controller/defaultCustomerListCustomerController.js",
-          "nodics.ai/nodics.commerce/modules/checkout/modules/order/src/controller/defaultOrderCustomerController.js"
-        ],
-        "routers": [
-          "nodics.ai/nodics.commerce/modules/checkout/modules/cart/src/router/appConfig.js",
-          "nodics.ai/nodics.commerce/modules/checkout/modules/cart/src/router/routers.js",
-          "nodics.ai/nodics.commerce/modules/checkout/modules/checkoutCore/src/router/appConfig.js",
-          "nodics.ai/nodics.commerce/modules/checkout/modules/checkoutCore/src/router/routers.js"
-        ],
-        "dataHeaders": [],
-        "dataRecords": [],
-        "assets": [],
-        "tests": [
-          "nodics.ai/nodics.commerce/modules/checkout/modules/cart/test/cartCustomerApiContract.test.js",
-          "nodics.ai/nodics.commerce/modules/checkout/modules/checkoutCore/test/checkoutCustomerApiContract.test.js",
-          "nodics.ai/nodics.commerce/modules/checkout/modules/checkoutCore/test/checkoutPaymentMethodSelectionContract.test.js",
-          "nodics.ai/nodics.commerce/modules/checkout/modules/checkoutCore/test/orderPlacementContract.test.js"
-        ],
-        "frontends": []
-      }
-    },
-    {
       "name": "media",
       "kind": "capability",
       "runtimeModule": true,
@@ -2100,6 +2176,69 @@
           "nodics.ai/nodics.platform/modules/backoffice/test/backofficeAdministrativeSecurityService.test.js",
           "nodics.ai/nodics.platform/modules/backoffice/test/backofficeApiContract.test.js",
           "nodics.ai/nodics.platform/modules/backoffice/test/backofficeApplicationInitializationContract.test.js"
+        ],
+        "frontends": []
+      }
+    },
+    {
+      "name": "checkout",
+      "kind": "group",
+      "runtimeModule": true,
+      "path": "nodics.ai/nodics.commerce/modules/checkout",
+      "packageJsonPath": "nodics.ai/nodics.commerce/modules/checkout/package.json",
+      "priorityScore": 134,
+      "classification": "covered",
+      "matchedDocuments": [
+        "framework.how-nodics-works",
+        "docs.reader-journey-and-coverage",
+        "framework.modular-architecture",
+        "framework.runtime-server-composition",
+        "platform.module-registry",
+        "accelerators.agora-industry-templates"
+      ],
+      "counts": {
+        "schemas": 3,
+        "services": 19,
+        "controllers": 4,
+        "routers": 6,
+        "dataHeaders": 0,
+        "dataRecords": 0,
+        "assets": 0,
+        "tests": 8,
+        "frontends": 0
+      },
+      "examples": {
+        "schemas": [
+          "nodics.ai/nodics.commerce/modules/checkout/modules/cart/src/schemas/schemas.js",
+          "nodics.ai/nodics.commerce/modules/checkout/modules/checkoutCore/src/schemas/schemas.js",
+          "nodics.ai/nodics.commerce/modules/checkout/modules/order/src/schemas/schemas.js"
+        ],
+        "services": [
+          "nodics.ai/nodics.commerce/modules/checkout/modules/cart/src/service/defaultCartBackofficeCapabilityService.js",
+          "nodics.ai/nodics.commerce/modules/checkout/modules/cart/src/service/defaultCartCalculationEngineService.js",
+          "nodics.ai/nodics.commerce/modules/checkout/modules/cart/src/service/defaultCartLocalizationContributionService.js",
+          "nodics.ai/nodics.commerce/modules/checkout/modules/cart/src/service/defaultCartOperationService.js"
+        ],
+        "controllers": [
+          "nodics.ai/nodics.commerce/modules/checkout/modules/cart/src/controller/defaultCartCustomerController.js",
+          "nodics.ai/nodics.commerce/modules/checkout/modules/checkoutCore/src/controller/defaultCheckoutCustomerController.js",
+          "nodics.ai/nodics.commerce/modules/checkout/modules/order/src/controller/defaultOrderCustomerController.js",
+          "nodics.ai/nodics.commerce/modules/checkout/modules/order/src/controller/defaultOrderLifecycleController.js"
+        ],
+        "routers": [
+          "nodics.ai/nodics.commerce/modules/checkout/modules/cart/src/router/appConfig.js",
+          "nodics.ai/nodics.commerce/modules/checkout/modules/cart/src/router/routers.js",
+          "nodics.ai/nodics.commerce/modules/checkout/modules/checkoutCore/src/router/appConfig.js",
+          "nodics.ai/nodics.commerce/modules/checkout/modules/checkoutCore/src/router/routers.js"
+        ],
+        "dataHeaders": [],
+        "dataRecords": [],
+        "assets": [],
+        "tests": [
+          "nodics.ai/nodics.commerce/modules/checkout/modules/cart/test/cartCustomerApiContract.test.js",
+          "nodics.ai/nodics.commerce/modules/checkout/modules/checkoutCore/test/checkoutCustomerApiContract.test.js",
+          "nodics.ai/nodics.commerce/modules/checkout/modules/checkoutCore/test/checkoutLoyaltyRewardJourneyContract.test.js",
+          "nodics.ai/nodics.commerce/modules/checkout/modules/checkoutCore/test/checkoutPaymentMethodSelectionContract.test.js"
         ],
         "frontends": []
       }
@@ -2464,6 +2603,59 @@
       }
     },
     {
+      "name": "axis",
+      "kind": "capability",
+      "runtimeModule": true,
+      "path": "nodics.ai/nodics.platform/modules/axis",
+      "packageJsonPath": "nodics.ai/nodics.platform/modules/axis/package.json",
+      "priorityScore": 91,
+      "classification": "covered",
+      "matchedDocuments": [
+        "framework.what-is-nodics",
+        "framework.why-nodics-exists",
+        "framework.how-nodics-works",
+        "framework.adoption-and-first-journey",
+        "docs.documentation-roadmap",
+        "docs.documentation-principles"
+      ],
+      "counts": {
+        "schemas": 0,
+        "services": 2,
+        "controllers": 0,
+        "routers": 0,
+        "dataHeaders": 2,
+        "dataRecords": 25,
+        "assets": 0,
+        "tests": 2,
+        "frontends": 0
+      },
+      "examples": {
+        "schemas": [],
+        "services": [
+          "nodics.ai/nodics.platform/modules/axis/src/service/defaultAxisBackofficeCapabilityService.js",
+          "nodics.ai/nodics.platform/modules/axis/src/service/defaultAxisInitializationService.js"
+        ],
+        "controllers": [],
+        "routers": [],
+        "dataHeaders": [
+          "nodics.ai/nodics.platform/modules/axis/data/core-v001/headers/axisDocumentationContentPackHeader.js",
+          "nodics.ai/nodics.platform/modules/axis/data/init-v001/headers/axis/axisContentCatalogHeader.js"
+        ],
+        "dataRecords": [
+          "nodics.ai/nodics.platform/modules/axis/data/core-v001/records/documentation/axisDocumentationAccessPolicyData.js",
+          "nodics.ai/nodics.platform/modules/axis/data/core-v001/records/documentation/axisDocumentationComponentData.js",
+          "nodics.ai/nodics.platform/modules/axis/data/core-v001/records/documentation/axisDocumentationDashboardData.js",
+          "nodics.ai/nodics.platform/modules/axis/data/core-v001/records/documentation/axisDocumentationNavigationData.js"
+        ],
+        "assets": [],
+        "tests": [
+          "nodics.ai/nodics.platform/modules/axis/test/axisExperienceStudioDocumentation.test.js",
+          "nodics.ai/nodics.platform/modules/axis/test/axisInitializationService.test.js"
+        ],
+        "frontends": []
+      }
+    },
+    {
       "name": "product",
       "kind": "capability",
       "runtimeModule": true,
@@ -2528,64 +2720,12 @@
       }
     },
     {
-      "name": "axis",
-      "kind": "capability",
-      "runtimeModule": true,
-      "path": "nodics.ai/nodics.platform/modules/axis",
-      "packageJsonPath": "nodics.ai/nodics.platform/modules/axis/package.json",
-      "priorityScore": 89,
-      "classification": "covered",
-      "matchedDocuments": [
-        "framework.what-is-nodics",
-        "framework.why-nodics-exists",
-        "framework.how-nodics-works",
-        "framework.adoption-and-first-journey",
-        "docs.documentation-roadmap",
-        "docs.documentation-principles"
-      ],
-      "counts": {
-        "schemas": 0,
-        "services": 2,
-        "controllers": 0,
-        "routers": 0,
-        "dataHeaders": 2,
-        "dataRecords": 25,
-        "assets": 0,
-        "tests": 1,
-        "frontends": 0
-      },
-      "examples": {
-        "schemas": [],
-        "services": [
-          "nodics.ai/nodics.platform/modules/axis/src/service/defaultAxisBackofficeCapabilityService.js",
-          "nodics.ai/nodics.platform/modules/axis/src/service/defaultAxisInitializationService.js"
-        ],
-        "controllers": [],
-        "routers": [],
-        "dataHeaders": [
-          "nodics.ai/nodics.platform/modules/axis/data/core-v001/headers/axisDocumentationContentPackHeader.js",
-          "nodics.ai/nodics.platform/modules/axis/data/init-v001/headers/axis/axisContentCatalogHeader.js"
-        ],
-        "dataRecords": [
-          "nodics.ai/nodics.platform/modules/axis/data/core-v001/records/documentation/axisDocumentationAccessPolicyData.js",
-          "nodics.ai/nodics.platform/modules/axis/data/core-v001/records/documentation/axisDocumentationComponentData.js",
-          "nodics.ai/nodics.platform/modules/axis/data/core-v001/records/documentation/axisDocumentationDashboardData.js",
-          "nodics.ai/nodics.platform/modules/axis/data/core-v001/records/documentation/axisDocumentationNavigationData.js"
-        ],
-        "assets": [],
-        "tests": [
-          "nodics.ai/nodics.platform/modules/axis/test/axisInitializationService.test.js"
-        ],
-        "frontends": []
-      }
-    },
-    {
       "name": "router",
       "kind": "capability",
       "runtimeModule": true,
       "path": "nodics.ai/nodics.foundation/modules/nRouter",
       "packageJsonPath": "nodics.ai/nodics.foundation/modules/nRouter/package.json",
-      "priorityScore": 82,
+      "priorityScore": 84,
       "classification": "covered",
       "matchedDocuments": [
         "docs.documentation-roadmap",
@@ -2603,7 +2743,7 @@
         "dataHeaders": 0,
         "dataRecords": 0,
         "assets": 0,
-        "tests": 13,
+        "tests": 14,
         "frontends": 0
       },
       "examples": {
@@ -2625,8 +2765,8 @@
         "tests": [
           "nodics.ai/nodics.foundation/modules/nRouter/test/apiMethodStandardRouteContract.test.js",
           "nodics.ai/nodics.foundation/modules/nRouter/test/authHeaderNormalization.test.js",
-          "nodics.ai/nodics.foundation/modules/nRouter/test/controlPlaneRouteContract.test.js",
-          "nodics.ai/nodics.foundation/modules/nRouter/test/fileDownloadResponseHandlerContract.test.js"
+          "nodics.ai/nodics.foundation/modules/nRouter/test/commerceRouteResourceShapeContract.test.js",
+          "nodics.ai/nodics.foundation/modules/nRouter/test/controlPlaneRouteContract.test.js"
         ],
         "frontends": []
       }
@@ -2637,7 +2777,7 @@
       "runtimeModule": true,
       "path": "nodics.ai/nodics.discovery",
       "packageJsonPath": "nodics.ai/nodics.discovery/package.json",
-      "priorityScore": 80,
+      "priorityScore": 83,
       "classification": "covered",
       "matchedDocuments": [
         "framework.how-nodics-works",
@@ -2649,7 +2789,7 @@
       ],
       "counts": {
         "schemas": 5,
-        "services": 9,
+        "services": 10,
         "controllers": 0,
         "routers": 0,
         "dataHeaders": 0,
@@ -3522,6 +3662,57 @@
       }
     },
     {
+      "name": "payment",
+      "kind": "group",
+      "runtimeModule": true,
+      "path": "nodics.ai/nodics.commerce/modules/payment",
+      "packageJsonPath": "nodics.ai/nodics.commerce/modules/payment/package.json",
+      "priorityScore": 53,
+      "classification": "covered",
+      "matchedDocuments": [
+        "docs.reader-journey-and-coverage",
+        "framework.modular-architecture",
+        "framework.architecture-decision-guide",
+        "accelerators.agora-industry-templates",
+        "commerce.base-foundations",
+        "commerce.overview"
+      ],
+      "counts": {
+        "schemas": 1,
+        "services": 12,
+        "controllers": 0,
+        "routers": 0,
+        "dataHeaders": 0,
+        "dataRecords": 0,
+        "assets": 0,
+        "tests": 5,
+        "frontends": 0
+      },
+      "examples": {
+        "schemas": [
+          "nodics.ai/nodics.commerce/modules/payment/modules/paymentCore/src/schemas/schemas.js"
+        ],
+        "services": [
+          "nodics.ai/nodics.commerce/modules/payment/modules/paymentCore/src/service/defaultPaymentCoreBackofficeCapabilityService.js",
+          "nodics.ai/nodics.commerce/modules/payment/modules/paymentCore/src/service/defaultPaymentExecutionService.js",
+          "nodics.ai/nodics.commerce/modules/payment/modules/paymentCore/src/service/defaultPaymentIntegrationReadinessService.js",
+          "nodics.ai/nodics.commerce/modules/payment/modules/paymentCore/src/service/defaultPaymentRefundExecutionService.js"
+        ],
+        "controllers": [],
+        "routers": [],
+        "dataHeaders": [],
+        "dataRecords": [],
+        "assets": [],
+        "tests": [
+          "nodics.ai/nodics.commerce/modules/payment/modules/paymentCore/test/paymentIntegrationReadinessContract.test.js",
+          "nodics.ai/nodics.commerce/modules/payment/modules/paymentCore/test/paymentRefundExecutionContract.test.js",
+          "nodics.ai/nodics.commerce/modules/payment/modules/paymentMethods/modules/loyaltyRewardPayment/test/loyaltyRewardPaymentMethodContract.test.js",
+          "nodics.ai/nodics.commerce/modules/payment/modules/paymentProviders/modules/loyaltyRewardProvider/test/loyaltyRewardPaymentAcceptanceContract.test.js"
+        ],
+        "frontends": []
+      }
+    },
+    {
       "name": "customerReview",
       "kind": "capability",
       "runtimeModule": true,
@@ -4017,26 +4208,79 @@
       }
     },
     {
-      "name": "payment",
-      "kind": "group",
+      "name": "cart",
+      "kind": "capability",
       "runtimeModule": true,
-      "path": "nodics.ai/nodics.commerce/modules/payment",
-      "packageJsonPath": "nodics.ai/nodics.commerce/modules/payment/package.json",
-      "priorityScore": 41,
+      "path": "nodics.ai/nodics.commerce/modules/checkout/modules/cart",
+      "packageJsonPath": "nodics.ai/nodics.commerce/modules/checkout/modules/cart/package.json",
+      "priorityScore": 42,
       "classification": "covered",
       "matchedDocuments": [
         "docs.reader-journey-and-coverage",
         "framework.modular-architecture",
-        "framework.architecture-decision-guide",
         "accelerators.agora-industry-templates",
+        "accelerators.agora-apparel-product-data-authoring",
         "commerce.base-foundations",
-        "commerce.overview"
+        "inventory.stock-management"
       ],
       "counts": {
         "schemas": 1,
-        "services": 10,
-        "controllers": 0,
-        "routers": 0,
+        "services": 7,
+        "controllers": 1,
+        "routers": 2,
+        "dataHeaders": 0,
+        "dataRecords": 0,
+        "assets": 0,
+        "tests": 1,
+        "frontends": 0
+      },
+      "examples": {
+        "schemas": [
+          "nodics.ai/nodics.commerce/modules/checkout/modules/cart/src/schemas/schemas.js"
+        ],
+        "services": [
+          "nodics.ai/nodics.commerce/modules/checkout/modules/cart/src/service/defaultCartBackofficeCapabilityService.js",
+          "nodics.ai/nodics.commerce/modules/checkout/modules/cart/src/service/defaultCartCalculationEngineService.js",
+          "nodics.ai/nodics.commerce/modules/checkout/modules/cart/src/service/defaultCartLocalizationContributionService.js",
+          "nodics.ai/nodics.commerce/modules/checkout/modules/cart/src/service/defaultCartOperationService.js"
+        ],
+        "controllers": [
+          "nodics.ai/nodics.commerce/modules/checkout/modules/cart/src/controller/defaultCartCustomerController.js"
+        ],
+        "routers": [
+          "nodics.ai/nodics.commerce/modules/checkout/modules/cart/src/router/appConfig.js",
+          "nodics.ai/nodics.commerce/modules/checkout/modules/cart/src/router/routers.js"
+        ],
+        "dataHeaders": [],
+        "dataRecords": [],
+        "assets": [],
+        "tests": [
+          "nodics.ai/nodics.commerce/modules/checkout/modules/cart/test/cartCustomerApiContract.test.js"
+        ],
+        "frontends": []
+      }
+    },
+    {
+      "name": "promotion",
+      "kind": "capability",
+      "runtimeModule": true,
+      "path": "nodics.ai/nodics.commerce/modules/baseCommerce/modules/promotion",
+      "packageJsonPath": "nodics.ai/nodics.commerce/modules/baseCommerce/modules/promotion/package.json",
+      "priorityScore": 41,
+      "classification": "covered",
+      "matchedDocuments": [
+        "accelerators.agora-industry-templates",
+        "localization.internationalization",
+        "commerce.base-foundations",
+        "pricing.promotions-tax-management",
+        "commerce.overview",
+        "commerce.cart-order"
+      ],
+      "counts": {
+        "schemas": 1,
+        "services": 6,
+        "controllers": 1,
+        "routers": 2,
         "dataHeaders": 0,
         "dataRecords": 0,
         "assets": 0,
@@ -4045,22 +4289,27 @@
       },
       "examples": {
         "schemas": [
-          "nodics.ai/nodics.commerce/modules/payment/modules/paymentCore/src/schemas/schemas.js"
+          "nodics.ai/nodics.commerce/modules/baseCommerce/modules/promotion/src/schemas/schemas.js"
         ],
         "services": [
-          "nodics.ai/nodics.commerce/modules/payment/modules/paymentCore/src/service/defaultPaymentCoreBackofficeCapabilityService.js",
-          "nodics.ai/nodics.commerce/modules/payment/modules/paymentCore/src/service/defaultPaymentExecutionService.js",
-          "nodics.ai/nodics.commerce/modules/payment/modules/paymentCore/src/service/defaultPaymentIntegrationReadinessService.js",
-          "nodics.ai/nodics.commerce/modules/payment/modules/paymentCore/src/service/defaultPaymentRefundExecutionService.js"
+          "nodics.ai/nodics.commerce/modules/baseCommerce/modules/promotion/src/service/defaultCouponSecureRevealService.js",
+          "nodics.ai/nodics.commerce/modules/baseCommerce/modules/promotion/src/service/defaultPromotionBackofficeCapabilityService.js",
+          "nodics.ai/nodics.commerce/modules/baseCommerce/modules/promotion/src/service/defaultPromotionDecisionService.js",
+          "nodics.ai/nodics.commerce/modules/baseCommerce/modules/promotion/src/service/defaultPromotionOperationService.js"
         ],
-        "controllers": [],
-        "routers": [],
+        "controllers": [
+          "nodics.ai/nodics.commerce/modules/baseCommerce/modules/promotion/src/controller/defaultPromotionController.js"
+        ],
+        "routers": [
+          "nodics.ai/nodics.commerce/modules/baseCommerce/modules/promotion/src/router/appConfig.js",
+          "nodics.ai/nodics.commerce/modules/baseCommerce/modules/promotion/src/router/routers.js"
+        ],
         "dataHeaders": [],
         "dataRecords": [],
         "assets": [],
         "tests": [
-          "nodics.ai/nodics.commerce/modules/payment/modules/paymentCore/test/paymentIntegrationReadinessContract.test.js",
-          "nodics.ai/nodics.commerce/modules/payment/modules/paymentCore/test/paymentRefundExecutionContract.test.js"
+          "nodics.ai/nodics.commerce/modules/baseCommerce/modules/promotion/test/promotionCustomerApiContract.test.js",
+          "nodics.ai/nodics.commerce/modules/baseCommerce/modules/promotion/test/promotionSimulationContract.test.js"
         ],
         "frontends": []
       }
@@ -4169,54 +4418,53 @@
       }
     },
     {
-      "name": "cart",
+      "name": "checkoutCore",
       "kind": "capability",
       "runtimeModule": true,
-      "path": "nodics.ai/nodics.commerce/modules/checkout/modules/cart",
-      "packageJsonPath": "nodics.ai/nodics.commerce/modules/checkout/modules/cart/package.json",
+      "path": "nodics.ai/nodics.commerce/modules/checkout/modules/checkoutCore",
+      "packageJsonPath": "nodics.ai/nodics.commerce/modules/checkout/modules/checkoutCore/package.json",
       "priorityScore": 39,
       "classification": "covered",
       "matchedDocuments": [
-        "docs.reader-journey-and-coverage",
-        "framework.modular-architecture",
-        "accelerators.agora-industry-templates",
-        "accelerators.agora-apparel-product-data-authoring",
-        "commerce.base-foundations",
-        "inventory.stock-management"
+        "commerce.enterprise-operations",
+        "commerce.payment-provider-boundaries"
       ],
       "counts": {
         "schemas": 1,
-        "services": 6,
+        "services": 4,
         "controllers": 1,
         "routers": 2,
         "dataHeaders": 0,
         "dataRecords": 0,
         "assets": 0,
-        "tests": 1,
+        "tests": 4,
         "frontends": 0
       },
       "examples": {
         "schemas": [
-          "nodics.ai/nodics.commerce/modules/checkout/modules/cart/src/schemas/schemas.js"
+          "nodics.ai/nodics.commerce/modules/checkout/modules/checkoutCore/src/schemas/schemas.js"
         ],
         "services": [
-          "nodics.ai/nodics.commerce/modules/checkout/modules/cart/src/service/defaultCartBackofficeCapabilityService.js",
-          "nodics.ai/nodics.commerce/modules/checkout/modules/cart/src/service/defaultCartCalculationEngineService.js",
-          "nodics.ai/nodics.commerce/modules/checkout/modules/cart/src/service/defaultCartLocalizationContributionService.js",
-          "nodics.ai/nodics.commerce/modules/checkout/modules/cart/src/service/defaultCartOperationService.js"
+          "nodics.ai/nodics.commerce/modules/checkout/modules/checkoutCore/src/service/defaultCheckoutOperationService.js",
+          "nodics.ai/nodics.commerce/modules/checkout/modules/checkoutCore/src/service/defaultCheckoutPlacementPortsService.js",
+          "nodics.ai/nodics.commerce/modules/checkout/modules/checkoutCore/src/service/defaultCommerceOperationsService.js",
+          "nodics.ai/nodics.commerce/modules/checkout/modules/checkoutCore/src/service/defaultOrderPlacementService.js"
         ],
         "controllers": [
-          "nodics.ai/nodics.commerce/modules/checkout/modules/cart/src/controller/defaultCartCustomerController.js"
+          "nodics.ai/nodics.commerce/modules/checkout/modules/checkoutCore/src/controller/defaultCheckoutCustomerController.js"
         ],
         "routers": [
-          "nodics.ai/nodics.commerce/modules/checkout/modules/cart/src/router/appConfig.js",
-          "nodics.ai/nodics.commerce/modules/checkout/modules/cart/src/router/routers.js"
+          "nodics.ai/nodics.commerce/modules/checkout/modules/checkoutCore/src/router/appConfig.js",
+          "nodics.ai/nodics.commerce/modules/checkout/modules/checkoutCore/src/router/routers.js"
         ],
         "dataHeaders": [],
         "dataRecords": [],
         "assets": [],
         "tests": [
-          "nodics.ai/nodics.commerce/modules/checkout/modules/cart/test/cartCustomerApiContract.test.js"
+          "nodics.ai/nodics.commerce/modules/checkout/modules/checkoutCore/test/checkoutCustomerApiContract.test.js",
+          "nodics.ai/nodics.commerce/modules/checkout/modules/checkoutCore/test/checkoutLoyaltyRewardJourneyContract.test.js",
+          "nodics.ai/nodics.commerce/modules/checkout/modules/checkoutCore/test/checkoutPaymentMethodSelectionContract.test.js",
+          "nodics.ai/nodics.commerce/modules/checkout/modules/checkoutCore/test/orderPlacementContract.test.js"
         ],
         "frontends": []
       }
@@ -4317,57 +4565,6 @@
           "nodics.ai/nodics.engagement/modules/engagementApi/test/engagementApiFacadeContract.test.js",
           "nodics.ai/nodics.engagement/modules/engagementApi/test/engagementApiRouteContract.test.js",
           "nodics.ai/nodics.engagement/modules/engagementApi/test/engagementApiSecurityContract.test.js"
-        ],
-        "frontends": []
-      }
-    },
-    {
-      "name": "checkoutCore",
-      "kind": "capability",
-      "runtimeModule": true,
-      "path": "nodics.ai/nodics.commerce/modules/checkout/modules/checkoutCore",
-      "packageJsonPath": "nodics.ai/nodics.commerce/modules/checkout/modules/checkoutCore/package.json",
-      "priorityScore": 37,
-      "classification": "covered",
-      "matchedDocuments": [
-        "commerce.enterprise-operations",
-        "commerce.payment-provider-boundaries"
-      ],
-      "counts": {
-        "schemas": 1,
-        "services": 4,
-        "controllers": 1,
-        "routers": 2,
-        "dataHeaders": 0,
-        "dataRecords": 0,
-        "assets": 0,
-        "tests": 3,
-        "frontends": 0
-      },
-      "examples": {
-        "schemas": [
-          "nodics.ai/nodics.commerce/modules/checkout/modules/checkoutCore/src/schemas/schemas.js"
-        ],
-        "services": [
-          "nodics.ai/nodics.commerce/modules/checkout/modules/checkoutCore/src/service/defaultCheckoutOperationService.js",
-          "nodics.ai/nodics.commerce/modules/checkout/modules/checkoutCore/src/service/defaultCheckoutPlacementPortsService.js",
-          "nodics.ai/nodics.commerce/modules/checkout/modules/checkoutCore/src/service/defaultCommerceOperationsService.js",
-          "nodics.ai/nodics.commerce/modules/checkout/modules/checkoutCore/src/service/defaultOrderPlacementService.js"
-        ],
-        "controllers": [
-          "nodics.ai/nodics.commerce/modules/checkout/modules/checkoutCore/src/controller/defaultCheckoutCustomerController.js"
-        ],
-        "routers": [
-          "nodics.ai/nodics.commerce/modules/checkout/modules/checkoutCore/src/router/appConfig.js",
-          "nodics.ai/nodics.commerce/modules/checkout/modules/checkoutCore/src/router/routers.js"
-        ],
-        "dataHeaders": [],
-        "dataRecords": [],
-        "assets": [],
-        "tests": [
-          "nodics.ai/nodics.commerce/modules/checkout/modules/checkoutCore/test/checkoutCustomerApiContract.test.js",
-          "nodics.ai/nodics.commerce/modules/checkout/modules/checkoutCore/test/checkoutPaymentMethodSelectionContract.test.js",
-          "nodics.ai/nodics.commerce/modules/checkout/modules/checkoutCore/test/orderPlacementContract.test.js"
         ],
         "frontends": []
       }
@@ -4677,60 +4874,6 @@
         "tests": [
           "nodics.ai/nodics.commerce/modules/baseCommerce/modules/commerceSearch/modules/commerceSearchCore/test/commerceSearchPublicationContract.test.js",
           "nodics.ai/nodics.commerce/modules/baseCommerce/modules/commerceSearch/modules/commerceSearchCore/test/commerceSearchRankingContract.test.js"
-        ],
-        "frontends": []
-      }
-    },
-    {
-      "name": "promotion",
-      "kind": "capability",
-      "runtimeModule": true,
-      "path": "nodics.ai/nodics.commerce/modules/baseCommerce/modules/promotion",
-      "packageJsonPath": "nodics.ai/nodics.commerce/modules/baseCommerce/modules/promotion/package.json",
-      "priorityScore": 35,
-      "classification": "covered",
-      "matchedDocuments": [
-        "accelerators.agora-industry-templates",
-        "localization.internationalization",
-        "commerce.base-foundations",
-        "pricing.promotions-tax-management",
-        "commerce.overview",
-        "commerce.cart-order"
-      ],
-      "counts": {
-        "schemas": 1,
-        "services": 4,
-        "controllers": 1,
-        "routers": 2,
-        "dataHeaders": 0,
-        "dataRecords": 0,
-        "assets": 0,
-        "tests": 2,
-        "frontends": 0
-      },
-      "examples": {
-        "schemas": [
-          "nodics.ai/nodics.commerce/modules/baseCommerce/modules/promotion/src/schemas/schemas.js"
-        ],
-        "services": [
-          "nodics.ai/nodics.commerce/modules/baseCommerce/modules/promotion/src/service/defaultPromotionBackofficeCapabilityService.js",
-          "nodics.ai/nodics.commerce/modules/baseCommerce/modules/promotion/src/service/defaultPromotionDecisionService.js",
-          "nodics.ai/nodics.commerce/modules/baseCommerce/modules/promotion/src/service/defaultPromotionOperationService.js",
-          "nodics.ai/nodics.commerce/modules/baseCommerce/modules/promotion/src/service/defaultPromotionSimulationService.js"
-        ],
-        "controllers": [
-          "nodics.ai/nodics.commerce/modules/baseCommerce/modules/promotion/src/controller/defaultPromotionController.js"
-        ],
-        "routers": [
-          "nodics.ai/nodics.commerce/modules/baseCommerce/modules/promotion/src/router/appConfig.js",
-          "nodics.ai/nodics.commerce/modules/baseCommerce/modules/promotion/src/router/routers.js"
-        ],
-        "dataHeaders": [],
-        "dataRecords": [],
-        "assets": [],
-        "tests": [
-          "nodics.ai/nodics.commerce/modules/baseCommerce/modules/promotion/test/promotionCustomerApiContract.test.js",
-          "nodics.ai/nodics.commerce/modules/baseCommerce/modules/promotion/test/promotionSimulationContract.test.js"
         ],
         "frontends": []
       }
@@ -5899,15 +6042,15 @@
       }
     },
     {
-      "name": "customerList",
+      "name": "shoppingList",
       "kind": "capability",
       "runtimeModule": true,
-      "path": "nodics.ai/nodics.commerce/modules/checkout/modules/customerList",
-      "packageJsonPath": "nodics.ai/nodics.commerce/modules/checkout/modules/customerList/package.json",
+      "path": "nodics.ai/nodics.commerce/modules/baseCommerce/modules/shoppingList",
+      "packageJsonPath": "nodics.ai/nodics.commerce/modules/baseCommerce/modules/shoppingList/package.json",
       "priorityScore": 24,
       "classification": "covered",
       "matchedDocuments": [
-        "commerce.customer-list-profile-boundary",
+        "commerce.shopping-list-commerce-boundary",
         "reference.documentation-gap-backlog"
       ],
       "counts": {
@@ -5923,23 +6066,23 @@
       },
       "examples": {
         "schemas": [
-          "nodics.ai/nodics.commerce/modules/checkout/modules/customerList/src/schemas/schemas.js"
+          "nodics.ai/nodics.commerce/modules/baseCommerce/modules/shoppingList/src/schemas/schemas.js"
         ],
         "services": [
-          "nodics.ai/nodics.commerce/modules/checkout/modules/customerList/src/service/defaultCustomerListOperationService.js"
+          "nodics.ai/nodics.commerce/modules/baseCommerce/modules/shoppingList/src/service/defaultShoppingListOperationService.js"
         ],
         "controllers": [
-          "nodics.ai/nodics.commerce/modules/checkout/modules/customerList/src/controller/defaultCustomerListCustomerController.js"
+          "nodics.ai/nodics.commerce/modules/baseCommerce/modules/shoppingList/src/controller/defaultShoppingListCustomerController.js"
         ],
         "routers": [
-          "nodics.ai/nodics.commerce/modules/checkout/modules/customerList/src/router/appConfig.js",
-          "nodics.ai/nodics.commerce/modules/checkout/modules/customerList/src/router/routers.js"
+          "nodics.ai/nodics.commerce/modules/baseCommerce/modules/shoppingList/src/router/appConfig.js",
+          "nodics.ai/nodics.commerce/modules/baseCommerce/modules/shoppingList/src/router/routers.js"
         ],
         "dataHeaders": [],
         "dataRecords": [],
         "assets": [],
         "tests": [
-          "nodics.ai/nodics.commerce/modules/checkout/modules/customerList/test/customerListCustomerApiContract.test.js"
+          "nodics.ai/nodics.commerce/modules/baseCommerce/modules/shoppingList/test/shoppingListCustomerApiContract.test.js"
         ],
         "frontends": []
       }
@@ -6468,6 +6611,49 @@
       }
     },
     {
+      "name": "paymentMethods",
+      "kind": "group",
+      "runtimeModule": true,
+      "path": "nodics.ai/nodics.commerce/modules/payment/modules/paymentMethods",
+      "packageJsonPath": "nodics.ai/nodics.commerce/modules/payment/modules/paymentMethods/package.json",
+      "priorityScore": 17,
+      "classification": "covered",
+      "matchedDocuments": [
+        "commerce.payment-provider-boundaries",
+        "reference.internal-source-boundary-register",
+        "reference.documentation-gap-backlog"
+      ],
+      "counts": {
+        "schemas": 0,
+        "services": 5,
+        "controllers": 0,
+        "routers": 0,
+        "dataHeaders": 0,
+        "dataRecords": 0,
+        "assets": 0,
+        "tests": 1,
+        "frontends": 0
+      },
+      "examples": {
+        "schemas": [],
+        "services": [
+          "nodics.ai/nodics.commerce/modules/payment/modules/paymentMethods/modules/bankTransferPayment/src/service/defaultBankTransferPaymentMethodService.js",
+          "nodics.ai/nodics.commerce/modules/payment/modules/paymentMethods/modules/cardPayment/src/service/defaultCardPaymentMethodService.js",
+          "nodics.ai/nodics.commerce/modules/payment/modules/paymentMethods/modules/cashOnDeliveryPayment/src/service/defaultCashOnDeliveryPaymentMethodService.js",
+          "nodics.ai/nodics.commerce/modules/payment/modules/paymentMethods/modules/loyaltyRewardPayment/src/service/defaultLoyaltyRewardPaymentMethodService.js"
+        ],
+        "controllers": [],
+        "routers": [],
+        "dataHeaders": [],
+        "dataRecords": [],
+        "assets": [],
+        "tests": [
+          "nodics.ai/nodics.commerce/modules/payment/modules/paymentMethods/modules/loyaltyRewardPayment/test/loyaltyRewardPaymentMethodContract.test.js"
+        ],
+        "frontends": []
+      }
+    },
+    {
       "name": "commsApi",
       "kind": "capability",
       "runtimeModule": true,
@@ -6553,6 +6739,49 @@
       }
     },
     {
+      "name": "discoveryProjection",
+      "kind": "capability",
+      "runtimeModule": true,
+      "path": "nodics.ai/nodics.discovery/modules/discoveryProjection",
+      "packageJsonPath": "nodics.ai/nodics.discovery/modules/discoveryProjection/package.json",
+      "priorityScore": 15,
+      "classification": "covered",
+      "matchedDocuments": [
+        "accelerators.agora-apparel-product-data-authoring",
+        "catalog.product-discovery-management",
+        "foundation.database-provider-boundaries"
+      ],
+      "counts": {
+        "schemas": 1,
+        "services": 2,
+        "controllers": 0,
+        "routers": 0,
+        "dataHeaders": 0,
+        "dataRecords": 0,
+        "assets": 0,
+        "tests": 1,
+        "frontends": 0
+      },
+      "examples": {
+        "schemas": [
+          "nodics.ai/nodics.discovery/modules/discoveryProjection/src/schemas/schemas.js"
+        ],
+        "services": [
+          "nodics.ai/nodics.discovery/modules/discoveryProjection/src/service/defaultDiscoveryDocumentBuilderService.js",
+          "nodics.ai/nodics.discovery/modules/discoveryProjection/src/service/defaultDiscoveryDocumentProjectionService.js"
+        ],
+        "controllers": [],
+        "routers": [],
+        "dataHeaders": [],
+        "dataRecords": [],
+        "assets": [],
+        "tests": [
+          "nodics.ai/nodics.discovery/modules/discoveryProjection/test/discoveryProjectionContract.test.js"
+        ],
+        "frontends": []
+      }
+    },
+    {
       "name": "store",
       "kind": "capability",
       "runtimeModule": true,
@@ -6597,43 +6826,47 @@
       }
     },
     {
-      "name": "paymentMethods",
+      "name": "paymentProviders",
       "kind": "group",
       "runtimeModule": true,
-      "path": "nodics.ai/nodics.commerce/modules/payment/modules/paymentMethods",
-      "packageJsonPath": "nodics.ai/nodics.commerce/modules/payment/modules/paymentMethods/package.json",
-      "priorityScore": 12,
+      "path": "nodics.ai/nodics.commerce/modules/payment/modules/paymentProviders",
+      "packageJsonPath": "nodics.ai/nodics.commerce/modules/payment/modules/paymentProviders/package.json",
+      "priorityScore": 13,
       "classification": "covered",
       "matchedDocuments": [
+        "commerce.overview",
+        "commerce.payment-fulfillment",
         "commerce.payment-provider-boundaries",
-        "reference.internal-source-boundary-register",
-        "reference.documentation-gap-backlog"
+        "loyalty.wallets-rewards-ledger",
+        "reference.internal-source-boundary-register"
       ],
       "counts": {
         "schemas": 0,
-        "services": 4,
+        "services": 3,
         "controllers": 0,
         "routers": 0,
         "dataHeaders": 0,
         "dataRecords": 0,
         "assets": 0,
-        "tests": 0,
+        "tests": 2,
         "frontends": 0
       },
       "examples": {
         "schemas": [],
         "services": [
-          "nodics.ai/nodics.commerce/modules/payment/modules/paymentMethods/modules/bankTransferPayment/src/service/defaultBankTransferPaymentMethodService.js",
-          "nodics.ai/nodics.commerce/modules/payment/modules/paymentMethods/modules/cardPayment/src/service/defaultCardPaymentMethodService.js",
-          "nodics.ai/nodics.commerce/modules/payment/modules/paymentMethods/modules/cashOnDeliveryPayment/src/service/defaultCashOnDeliveryPaymentMethodService.js",
-          "nodics.ai/nodics.commerce/modules/payment/modules/paymentMethods/modules/walletPayment/src/service/defaultWalletPaymentMethodService.js"
+          "nodics.ai/nodics.commerce/modules/payment/modules/paymentProviders/modules/loyaltyRewardProvider/src/service/defaultLoyaltyRewardPaymentProviderService.js",
+          "nodics.ai/nodics.commerce/modules/payment/modules/paymentProviders/modules/paymentProviderCore/src/service/defaultPaymentCallbackSecurityService.js",
+          "nodics.ai/nodics.commerce/modules/payment/modules/paymentProviders/modules/stripeProvider/src/service/defaultStripeSandboxAdapterService.js"
         ],
         "controllers": [],
         "routers": [],
         "dataHeaders": [],
         "dataRecords": [],
         "assets": [],
-        "tests": [],
+        "tests": [
+          "nodics.ai/nodics.commerce/modules/payment/modules/paymentProviders/modules/loyaltyRewardProvider/test/loyaltyRewardPaymentAcceptanceContract.test.js",
+          "nodics.ai/nodics.commerce/modules/payment/modules/paymentProviders/modules/loyaltyRewardProvider/test/loyaltyRewardPaymentProviderContract.test.js"
+        ],
         "frontends": []
       }
     },
@@ -6673,48 +6906,6 @@
         "assets": [],
         "tests": [
           "nodics.ai/nodics.discovery/modules/discoveryMapping/test/discoveryMappingContract.test.js"
-        ],
-        "frontends": []
-      }
-    },
-    {
-      "name": "discoveryProjection",
-      "kind": "capability",
-      "runtimeModule": true,
-      "path": "nodics.ai/nodics.discovery/modules/discoveryProjection",
-      "packageJsonPath": "nodics.ai/nodics.discovery/modules/discoveryProjection/package.json",
-      "priorityScore": 12,
-      "classification": "covered",
-      "matchedDocuments": [
-        "accelerators.agora-apparel-product-data-authoring",
-        "catalog.product-discovery-management",
-        "foundation.database-provider-boundaries"
-      ],
-      "counts": {
-        "schemas": 1,
-        "services": 1,
-        "controllers": 0,
-        "routers": 0,
-        "dataHeaders": 0,
-        "dataRecords": 0,
-        "assets": 0,
-        "tests": 1,
-        "frontends": 0
-      },
-      "examples": {
-        "schemas": [
-          "nodics.ai/nodics.discovery/modules/discoveryProjection/src/schemas/schemas.js"
-        ],
-        "services": [
-          "nodics.ai/nodics.discovery/modules/discoveryProjection/src/service/defaultDiscoveryDocumentBuilderService.js"
-        ],
-        "controllers": [],
-        "routers": [],
-        "dataHeaders": [],
-        "dataRecords": [],
-        "assets": [],
-        "tests": [
-          "nodics.ai/nodics.discovery/modules/discoveryProjection/test/discoveryProjectionContract.test.js"
         ],
         "frontends": []
       }
@@ -6888,6 +7079,45 @@
       }
     },
     {
+      "name": "loyaltyRewardProvider",
+      "kind": "capability",
+      "runtimeModule": true,
+      "path": "nodics.ai/nodics.commerce/modules/payment/modules/paymentProviders/modules/loyaltyRewardProvider",
+      "packageJsonPath": "nodics.ai/nodics.commerce/modules/payment/modules/paymentProviders/modules/loyaltyRewardProvider/package.json",
+      "priorityScore": 7,
+      "classification": "covered",
+      "matchedDocuments": [
+        "loyalty.wallets-rewards-ledger"
+      ],
+      "counts": {
+        "schemas": 0,
+        "services": 1,
+        "controllers": 0,
+        "routers": 0,
+        "dataHeaders": 0,
+        "dataRecords": 0,
+        "assets": 0,
+        "tests": 2,
+        "frontends": 0
+      },
+      "examples": {
+        "schemas": [],
+        "services": [
+          "nodics.ai/nodics.commerce/modules/payment/modules/paymentProviders/modules/loyaltyRewardProvider/src/service/defaultLoyaltyRewardPaymentProviderService.js"
+        ],
+        "controllers": [],
+        "routers": [],
+        "dataHeaders": [],
+        "dataRecords": [],
+        "assets": [],
+        "tests": [
+          "nodics.ai/nodics.commerce/modules/payment/modules/paymentProviders/modules/loyaltyRewardProvider/test/loyaltyRewardPaymentAcceptanceContract.test.js",
+          "nodics.ai/nodics.commerce/modules/payment/modules/paymentProviders/modules/loyaltyRewardProvider/test/loyaltyRewardPaymentProviderContract.test.js"
+        ],
+        "frontends": []
+      }
+    },
+    {
       "name": "commsSchema",
       "kind": "capability",
       "runtimeModule": true,
@@ -6924,42 +7154,40 @@
       }
     },
     {
-      "name": "paymentProviders",
-      "kind": "group",
+      "name": "loyaltyRewardPayment",
+      "kind": "capability",
       "runtimeModule": true,
-      "path": "nodics.ai/nodics.commerce/modules/payment/modules/paymentProviders",
-      "packageJsonPath": "nodics.ai/nodics.commerce/modules/payment/modules/paymentProviders/package.json",
-      "priorityScore": 6,
+      "path": "nodics.ai/nodics.commerce/modules/payment/modules/paymentMethods/modules/loyaltyRewardPayment",
+      "packageJsonPath": "nodics.ai/nodics.commerce/modules/payment/modules/paymentMethods/modules/loyaltyRewardPayment/package.json",
+      "priorityScore": 5,
       "classification": "covered",
       "matchedDocuments": [
-        "commerce.overview",
-        "commerce.payment-fulfillment",
-        "commerce.payment-provider-boundaries",
-        "reference.internal-source-boundary-register"
+        "loyalty.wallets-rewards-ledger"
       ],
       "counts": {
         "schemas": 0,
-        "services": 2,
+        "services": 1,
         "controllers": 0,
         "routers": 0,
         "dataHeaders": 0,
         "dataRecords": 0,
         "assets": 0,
-        "tests": 0,
+        "tests": 1,
         "frontends": 0
       },
       "examples": {
         "schemas": [],
         "services": [
-          "nodics.ai/nodics.commerce/modules/payment/modules/paymentProviders/modules/paymentProviderCore/src/service/defaultPaymentCallbackSecurityService.js",
-          "nodics.ai/nodics.commerce/modules/payment/modules/paymentProviders/modules/stripeProvider/src/service/defaultStripeSandboxAdapterService.js"
+          "nodics.ai/nodics.commerce/modules/payment/modules/paymentMethods/modules/loyaltyRewardPayment/src/service/defaultLoyaltyRewardPaymentMethodService.js"
         ],
         "controllers": [],
         "routers": [],
         "dataHeaders": [],
         "dataRecords": [],
         "assets": [],
-        "tests": [],
+        "tests": [
+          "nodics.ai/nodics.commerce/modules/payment/modules/paymentMethods/modules/loyaltyRewardPayment/test/loyaltyRewardPaymentMethodContract.test.js"
+        ],
         "frontends": []
       }
     },
@@ -7731,6 +7959,7 @@
       "classification": "covered",
       "matchedDocuments": [
         "wcms.publishing-lifecycle",
+        "loyalty.wallets-rewards-ledger",
         "reference.internal-source-boundary-register"
       ],
       "counts": {
@@ -8152,6 +8381,40 @@
       }
     },
     {
+      "name": "loyaltyServer",
+      "kind": "server",
+      "runtimeModule": true,
+      "path": "nodics.kickoff/envs/kickoffDockerLocal/loyaltyServer",
+      "packageJsonPath": "nodics.kickoff/envs/kickoffDockerLocal/loyaltyServer/package.json",
+      "priorityScore": 0,
+      "classification": "covered",
+      "matchedDocuments": [
+        "loyalty.wallets-rewards-ledger"
+      ],
+      "counts": {
+        "schemas": 0,
+        "services": 0,
+        "controllers": 0,
+        "routers": 0,
+        "dataHeaders": 0,
+        "dataRecords": 0,
+        "assets": 0,
+        "tests": 0,
+        "frontends": 0
+      },
+      "examples": {
+        "schemas": [],
+        "services": [],
+        "controllers": [],
+        "routers": [],
+        "dataHeaders": [],
+        "dataRecords": [],
+        "assets": [],
+        "tests": [],
+        "frontends": []
+      }
+    },
+    {
       "name": "platformServer",
       "kind": "server",
       "runtimeModule": true,
@@ -8378,6 +8641,40 @@
         "engagement.unified-operations",
         "engagement.governed-automation",
         "communication.overview"
+      ],
+      "counts": {
+        "schemas": 0,
+        "services": 0,
+        "controllers": 0,
+        "routers": 0,
+        "dataHeaders": 0,
+        "dataRecords": 0,
+        "assets": 0,
+        "tests": 0,
+        "frontends": 0
+      },
+      "examples": {
+        "schemas": [],
+        "services": [],
+        "controllers": [],
+        "routers": [],
+        "dataHeaders": [],
+        "dataRecords": [],
+        "assets": [],
+        "tests": [],
+        "frontends": []
+      }
+    },
+    {
+      "name": "loyaltyServer",
+      "kind": "server",
+      "runtimeModule": true,
+      "path": "nodics.kickoff/envs/kickoffLocal/loyaltyServer",
+      "packageJsonPath": "nodics.kickoff/envs/kickoffLocal/loyaltyServer/package.json",
+      "priorityScore": 0,
+      "classification": "covered",
+      "matchedDocuments": [
+        "loyalty.wallets-rewards-ledger"
       ],
       "counts": {
         "schemas": 0,

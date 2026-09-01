@@ -1,0 +1,29 @@
+{
+    "contractVersion": 2,
+    "module": "loyaltyProgram",
+    "sections": {
+        "core-reference": {
+            "kind": "DATA_RELEASE",
+            "dataType": "core",
+            "version": "0.0.0",
+            "displayName": "Loyalty Program Reference",
+            "description": "Default Loyalty program record for operational wallet flows.",
+            "owningDomain": "loyalty",
+            "lifecycle": "REFERENCE",
+            "destinationRole": "LOYALTY",
+            "environmentScope": [
+                "ALL"
+            ],
+            "sensitivity": "INTERNAL",
+            "versioningPolicy": "NONE",
+            "publicationPolicy": "NONE",
+            "initialPublicationPolicy": "NONE",
+            "removalPolicy": "RETAIN",
+            "files": {
+                "core-v001/records/loyalty/loyaltyProgramCoreData.js": "25392aa9ca3bb4d563fd1bbb9c9229a3f61e3be5dcd607c4ad8204e702d2dda9",
+                "core-v001/headers/loyalty/loyaltyProgramCoreHeader.js": "51b374650587987afacb828f28a2d36a95d15404fb37f0bcbfabfe662154a091"
+            },
+            "sourceRoot": "core-v001"
+        }
+    }
+}

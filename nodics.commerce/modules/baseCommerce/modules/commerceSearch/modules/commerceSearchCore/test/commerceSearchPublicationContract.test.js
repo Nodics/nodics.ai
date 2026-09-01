@@ -96,7 +96,7 @@ test('Commerce Search exposes only secured operator publication route', () => {
     assert.equal(route.accessGroups[0], 'employeeUserGroup');
     assert.equal(route.permission, 'commerce.search.publish');
     assert.equal(route.apiExposure, 'commerceManagement');
-    assert.equal(route.key, '/operator/commerce-search/publication/rules');
+    assert.equal(route.key, '/commerce-search/publication/rules');
 });
 
 test('Commerce Search publishes approved rules to persisted and indexed projections', async () => {

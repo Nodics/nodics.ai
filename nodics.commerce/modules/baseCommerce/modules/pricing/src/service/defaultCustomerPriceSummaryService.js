@@ -46,6 +46,7 @@ module.exports = {
     serviceAuthData: function (request) {
         return Object.assign({}, request.authData || {}, {
             tenant: request.tenant,
+            enterpriseCode: request.enterpriseCode,
             loginId: 'productSearchPublication',
             principalType: 'service',
             userGroups: ['serviceAccountUserGroup'],
@@ -56,10 +57,12 @@ module.exports = {
     /** Loads active Price Books for a currency. @param {Object} request Request. @param {string} currency Currency. @returns {Promise<Array>} Price books. */
     loadPriceBooks: async function (request, currency) {
         if (!SERVICE.DefaultPriceBookService || typeof SERVICE.DefaultPriceBookService.get !== 'function') return [];
+        const query = { tenant: request.tenant, currency: currency, status: 'ACTIVE' };
+        if (request.enterpriseCode) query.enterpriseCode = request.enterpriseCode;
         return this.records(await SERVICE.DefaultPriceBookService.get({
             tenant: request.tenant,
             authData: this.serviceAuthData(request),
-            query: { tenant: request.tenant, currency: currency, status: 'ACTIVE' },
+            query,
             searchOptions: { pageSize: 100, pageNumber: 1 }
         }));
     },
@@ -67,10 +70,12 @@ module.exports = {
     /** Loads Price Rows for requested Product codes. @param {Object} request Request. @param {Array} productCodes Product codes. @param {string} currency Currency. @returns {Promise<Array>} Price rows. */
     loadPriceRows: async function (request, productCodes, currency) {
         if (!SERVICE.DefaultPriceRowService || typeof SERVICE.DefaultPriceRowService.get !== 'function' || productCodes.length === 0) return [];
+        const query = { tenant: request.tenant, productCode: { $in: productCodes }, currency: currency };
+        if (request.enterpriseCode) query.enterpriseCode = request.enterpriseCode;
         return this.records(await SERVICE.DefaultPriceRowService.get({
             tenant: request.tenant,
             authData: this.serviceAuthData(request),
-            query: { tenant: request.tenant, productCode: { $in: productCodes }, currency: currency },
+            query,
             searchOptions: { pageSize: productCodes.length * 20, pageNumber: 1 }
         }));
     },

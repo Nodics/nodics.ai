@@ -25,5 +25,8 @@ global.SERVICE = {
 runtime.search({ tenant: 'default', ownerType: 'PRODUCT', query: { tenant: 'default' } }).then(records => {
     assert.equal(records[0].code, 'doc1');
     assert.equal(requestSeen.indexName, 'genericindex');
+    assert.deepEqual(runtime.records({ hits: { hits: [{ _source: { code: 'doc-from-hit' } }] } }), [{ code: 'doc-from-hit' }]);
+    assert.deepEqual(runtime.records({ body: { hits: { hits: [{ _source: { code: 'doc-from-body-hit' } }] } } }), [{ code: 'doc-from-body-hit' }]);
+    assert.deepEqual(runtime.records({ result: { body: { hits: { hits: [{ _source: { code: 'doc-from-wrapped-hit' } }] } } } }), [{ code: 'doc-from-wrapped-hit' }]);
     console.log('Discovery runtime contract validated');
 });

@@ -1,0 +1,29 @@
+{
+  "name": "shoppingList",
+  "version": "0.0.0",
+  "index": "70.17",
+  "private": true,
+  "main": "nodics.js",
+  "description": "Commerce shopping-list capability for wishlist, compare, and save-for-later intent.",
+  "nodics": {
+    "kind": "capability",
+    "displayName": "Shopping List",
+    "runtimeModule": true,
+    "loadableByNodicsModuleLoader": true,
+    "owns": [
+      "configuration",
+      "schema",
+      "router",
+      "controller",
+      "facade",
+      "service",
+      "test",
+      "llm"
+    ],
+    "runtime": {
+      "router": true,
+      "publish": false,
+      "web": false
+    }
+  }
+}

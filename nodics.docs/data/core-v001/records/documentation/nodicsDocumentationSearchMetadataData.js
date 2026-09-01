@@ -1361,6 +1361,47 @@ module.exports = {
     "active": true
   },
   "record33": {
+    "code": "nodicsDocsSearchnodenodicsdocsnodesecloyaltyandrewards",
+    "product": "nodicsDocumentationProduct",
+    "targetType": "NODE",
+    "targetCode": "nodicsDocsNodeSecloyaltyAndRewards",
+    "title": "Loyalty and Rewards",
+    "summary": "Reward programs, reward types, owner wallets, balances, reservations, redemptions, ledger evidence, and reward-based checkout integration.",
+    "searchText": "Loyalty and Rewards Reward programs, reward types, owner wallets, balances, reservations, redemptions, ledger evidence, and reward-based checkout integration. loyalty-and-rewards Loyalty and Rewards",
+    "keywords": [
+      "loyalty-and-rewards",
+      "Loyalty and Rewards"
+    ],
+    "facets": {
+      "nodeLevel": "SECTION",
+      "nodeType": "CONTAINER",
+      "audience": [
+        "business",
+        "architect",
+        "administrator",
+        "developer",
+        "operator",
+        "qa",
+        "ai-tool"
+      ]
+    },
+    "managedInAxis": true,
+    "axisAuthoringPermissions": [
+      "documentation.search.preview"
+    ],
+    "workflowRequired": true,
+    "workflowTriggers": [
+      "SEARCH_METADATA_CHANGE"
+    ],
+    "locale": "en",
+    "channel": "web",
+    "accessPolicy": "nodicsDocsAccessPublic",
+    "accessMode": "PUBLIC",
+    "lifecycleState": "ONLINE",
+    "indexState": "INDEX_READY",
+    "active": true
+  },
+  "record34": {
     "code": "nodicsDocsSearchnodenodicsdocsnodesecshippingandfulfillment",
     "product": "nodicsDocumentationProduct",
     "targetType": "NODE",
@@ -1401,7 +1442,7 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record34": {
+  "record35": {
     "code": "nodicsDocsSearchnodenodicsdocsnodesecordermanagement",
     "product": "nodicsDocumentationProduct",
     "targetType": "NODE",
@@ -1442,7 +1483,7 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record35": {
+  "record36": {
     "code": "nodicsDocsSearchnodenodicsdocsnodeseccancellationsreturnsandrefunds",
     "product": "nodicsDocumentationProduct",
     "targetType": "NODE",
@@ -1483,7 +1524,7 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record36": {
+  "record37": {
     "code": "nodicsDocsSearchnodenodicsdocsnodeseccustomerengagementandfeedback",
     "product": "nodicsDocumentationProduct",
     "targetType": "NODE",
@@ -1524,7 +1565,7 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record37": {
+  "record38": {
     "code": "nodicsDocsSearchnodenodicsdocsnodeseccommunicationandnotifications",
     "product": "nodicsDocumentationProduct",
     "targetType": "NODE",
@@ -1565,7 +1606,7 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record38": {
+  "record39": {
     "code": "nodicsDocsSearchnodenodicsdocsnodeseceventandmessagingmanagement",
     "product": "nodicsDocumentationProduct",
     "targetType": "NODE",
@@ -1606,7 +1647,7 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record39": {
+  "record40": {
     "code": "nodicsDocsSearchnodenodicsdocsnodesecprocessandworkflowautomation",
     "product": "nodicsDocumentationProduct",
     "targetType": "NODE",
@@ -1647,7 +1688,7 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record40": {
+  "record41": {
     "code": "nodicsDocsSearchnodenodicsdocsnodesecpipelineandbusinesslogicorchestration",
     "product": "nodicsDocumentationProduct",
     "targetType": "NODE",
@@ -1688,7 +1729,7 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record41": {
+  "record42": {
     "code": "nodicsDocsSearchnodenodicsdocsnodeseccronandscheduledautomation",
     "product": "nodicsDocumentationProduct",
     "targetType": "NODE",
@@ -1729,7 +1770,7 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record42": {
+  "record43": {
     "code": "nodicsDocsSearchnodenodicsdocsnodesecdataimportexportandmigration",
     "product": "nodicsDocumentationProduct",
     "targetType": "NODE",
@@ -1770,7 +1811,7 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record43": {
+  "record44": {
     "code": "nodicsDocsSearchnodenodicsdocsnodesecsystemintegrationandexternalconnectivity",
     "product": "nodicsDocumentationProduct",
     "targetType": "NODE",
@@ -1811,7 +1852,7 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record44": {
+  "record45": {
     "code": "nodicsDocsSearchnodenodicsdocsnodesecoperationsmonitoringandrecovery",
     "product": "nodicsDocumentationProduct",
     "targetType": "NODE",
@@ -1852,7 +1893,7 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record45": {
+  "record46": {
     "code": "nodicsDocsSearchnodenodicsdocsnodesecqualitytestingandcertification",
     "product": "nodicsDocumentationProduct",
     "targetType": "NODE",
@@ -1893,7 +1934,7 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record46": {
+  "record47": {
     "code": "nodicsDocsSearchnodenodicsdocsnodesecdocumentationmanagement",
     "product": "nodicsDocumentationProduct",
     "targetType": "NODE",
@@ -1934,7 +1975,7 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record47": {
+  "record48": {
     "code": "nodicsDocsSearchnodenodicsdocsnodesecreleasestagingandpublication",
     "product": "nodicsDocumentationProduct",
     "targetType": "NODE",
@@ -1975,7 +2016,7 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record48": {
+  "record49": {
     "code": "nodicsDocsSearchnodenodicsdocsnodesecaianddevelopertooling",
     "product": "nodicsDocumentationProduct",
     "targetType": "NODE",
@@ -2016,7 +2057,7 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record49": {
+  "record50": {
     "code": "nodicsDocsSearchnodenodicsdocsnodesecreference",
     "product": "nodicsDocumentationProduct",
     "targetType": "NODE",
@@ -2057,7 +2098,7 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record50": {
+  "record51": {
     "code": "nodicsDocsSearchnodenodicsdocsnodetopicframeworkwhatisnodics",
     "product": "nodicsDocumentationProduct",
     "targetType": "NODE",
@@ -2100,7 +2141,7 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record51": {
+  "record52": {
     "code": "nodicsDocsSearchnodenodicsdocsnodetopicframeworkwhynodicsexists",
     "product": "nodicsDocumentationProduct",
     "targetType": "NODE",
@@ -2144,7 +2185,7 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record52": {
+  "record53": {
     "code": "nodicsDocsSearchnodenodicsdocsnodetopicframeworkhownodicsworks",
     "product": "nodicsDocumentationProduct",
     "targetType": "NODE",
@@ -2188,7 +2229,7 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record53": {
+  "record54": {
     "code": "nodicsDocsSearchnodenodicsdocsnodetopicframeworkadoptionandfirstjourney",
     "product": "nodicsDocumentationProduct",
     "targetType": "NODE",
@@ -2232,7 +2273,7 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record54": {
+  "record55": {
     "code": "nodicsDocsSearchnodenodicsdocsnodetopicdocsdocumentationroadmap",
     "product": "nodicsDocumentationProduct",
     "targetType": "NODE",
@@ -2274,7 +2315,7 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record55": {
+  "record56": {
     "code": "nodicsDocsSearchnodenodicsdocsnodetopicdocsdocumentationprinciples",
     "product": "nodicsDocumentationProduct",
     "targetType": "NODE",
@@ -2318,7 +2359,7 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record56": {
+  "record57": {
     "code": "nodicsDocsSearchnodenodicsdocsnodetopicdocsreaderjourneyandcoverage",
     "product": "nodicsDocumentationProduct",
     "targetType": "NODE",
@@ -2362,7 +2403,7 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record57": {
+  "record58": {
     "code": "nodicsDocsSearchnodenodicsdocsnodetopicdocsdocumentationpublishingmodel",
     "product": "nodicsDocumentationProduct",
     "targetType": "NODE",
@@ -2406,7 +2447,7 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record58": {
+  "record59": {
     "code": "nodicsDocsSearchnodenodicsdocsnodetopicframeworkmodulararchitecture",
     "product": "nodicsDocumentationProduct",
     "targetType": "NODE",
@@ -2448,7 +2489,7 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record59": {
+  "record60": {
     "code": "nodicsDocsSearchnodenodicsdocsnodetopicframeworkruntimeservercomposition",
     "product": "nodicsDocumentationProduct",
     "targetType": "NODE",
@@ -2490,7 +2531,7 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record60": {
+  "record61": {
     "code": "nodicsDocsSearchnodenodicsdocsnodetopicframeworkmoduleloadingserviceprecedence",
     "product": "nodicsDocumentationProduct",
     "targetType": "NODE",
@@ -2532,7 +2573,7 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record61": {
+  "record62": {
     "code": "nodicsDocsSearchnodenodicsdocsnodetopicframeworkarchitecturedecisionguide",
     "product": "nodicsDocumentationProduct",
     "targetType": "NODE",
@@ -2574,7 +2615,7 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record62": {
+  "record63": {
     "code": "nodicsDocsSearchnodenodicsdocsnodetopicplatformmoduleregistry",
     "product": "nodicsDocumentationProduct",
     "targetType": "NODE",
@@ -2616,7 +2657,7 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record63": {
+  "record64": {
     "code": "nodicsDocsSearchnodenodicsdocsnodetopicfoundationoverview",
     "product": "nodicsDocumentationProduct",
     "targetType": "NODE",
@@ -2658,7 +2699,7 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record64": {
+  "record65": {
     "code": "nodicsDocsSearchnodenodicsdocsnodetopicapplicationssuite",
     "product": "nodicsDocumentationProduct",
     "targetType": "NODE",
@@ -2701,7 +2742,7 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record65": {
+  "record66": {
     "code": "nodicsDocsSearchnodenodicsdocsnodetopicsolutionstaskexecutionengine",
     "product": "nodicsDocumentationProduct",
     "targetType": "NODE",
@@ -2747,7 +2788,7 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record66": {
+  "record67": {
     "code": "nodicsDocsSearchnodenodicsdocsnodetopicsolutionsdataengineeringanalyticsplatform",
     "product": "nodicsDocumentationProduct",
     "targetType": "NODE",
@@ -2794,7 +2835,7 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record67": {
+  "record68": {
     "code": "nodicsDocsSearchnodenodicsdocsnodetopicacceleratorsagoraindustrytemplates",
     "product": "nodicsDocumentationProduct",
     "targetType": "NODE",
@@ -2838,7 +2879,7 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record68": {
+  "record69": {
     "code": "nodicsDocsSearchnodenodicsdocsnodetopicacceleratorsagoraapparelproductdataauthoring",
     "product": "nodicsDocumentationProduct",
     "targetType": "NODE",
@@ -2884,7 +2925,7 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record69": {
+  "record70": {
     "code": "nodicsDocsSearchnodenodicsdocsnodetopicframeworklocalquickstart",
     "product": "nodicsDocumentationProduct",
     "targetType": "NODE",
@@ -2926,7 +2967,7 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record70": {
+  "record71": {
     "code": "nodicsDocsSearchnodenodicsdocsnodetopicframeworkfreshschemasetupjourney",
     "product": "nodicsDocumentationProduct",
     "targetType": "NODE",
@@ -2968,7 +3009,7 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record71": {
+  "record72": {
     "code": "nodicsDocsSearchnodenodicsdocsnodetopicframeworklocalruntimetroubleshooting",
     "product": "nodicsDocumentationProduct",
     "targetType": "NODE",
@@ -3010,7 +3051,7 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record72": {
+  "record73": {
     "code": "nodicsDocsSearchnodenodicsdocsnodetopicinstallerinstalledruntimeapplicationbuilder",
     "product": "nodicsDocumentationProduct",
     "targetType": "NODE",
@@ -3054,7 +3095,7 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record73": {
+  "record74": {
     "code": "nodicsDocsSearchnodenodicsdocsnodetopicbuilderworkspacegeneration",
     "product": "nodicsDocumentationProduct",
     "targetType": "NODE",
@@ -3096,7 +3137,7 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record74": {
+  "record75": {
     "code": "nodicsDocsSearchnodenodicsdocsnodetopicprocessvisualdesigner",
     "product": "nodicsDocumentationProduct",
     "targetType": "NODE",
@@ -3138,7 +3179,7 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record75": {
+  "record76": {
     "code": "nodicsDocsSearchnodenodicsdocsnodetopicaxisbusinesscustomization",
     "product": "nodicsDocumentationProduct",
     "targetType": "NODE",
@@ -3180,7 +3221,7 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record76": {
+  "record77": {
     "code": "nodicsDocsSearchnodenodicsdocsnodetopicplatformoverview",
     "product": "nodicsDocumentationProduct",
     "targetType": "NODE",
@@ -3222,7 +3263,7 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record77": {
+  "record78": {
     "code": "nodicsDocsSearchnodenodicsdocsnodetopicsecurityidentityaccessgovernance",
     "product": "nodicsDocumentationProduct",
     "targetType": "NODE",
@@ -3264,7 +3305,7 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record78": {
+  "record79": {
     "code": "nodicsDocsSearchnodenodicsdocsnodetopicconfigurationruntimebehaviormanagement",
     "product": "nodicsDocumentationProduct",
     "targetType": "NODE",
@@ -3306,7 +3347,7 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record79": {
+  "record80": {
     "code": "nodicsDocsSearchnodenodicsdocsnodetopicconfigurationframeworkstartuplifecycle",
     "product": "nodicsDocumentationProduct",
     "targetType": "NODE",
@@ -3359,7 +3400,7 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record80": {
+  "record81": {
     "code": "nodicsDocsSearchnodenodicsdocsnodetopicroutingapigovernance",
     "product": "nodicsDocumentationProduct",
     "targetType": "NODE",
@@ -3403,7 +3444,7 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record81": {
+  "record82": {
     "code": "nodicsDocsSearchnodenodicsdocsnodetopicroutingapirequestlifecycle",
     "product": "nodicsDocumentationProduct",
     "targetType": "NODE",
@@ -3448,7 +3489,7 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record82": {
+  "record83": {
     "code": "nodicsDocsSearchnodenodicsdocsnodetopicfoundationerrorhandlingstatuscodes",
     "product": "nodicsDocumentationProduct",
     "targetType": "NODE",
@@ -3497,7 +3538,7 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record83": {
+  "record84": {
     "code": "nodicsDocsSearchnodenodicsdocsnodetopicruntimegovernedchange",
     "product": "nodicsDocumentationProduct",
     "targetType": "NODE",
@@ -3539,7 +3580,7 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record84": {
+  "record85": {
     "code": "nodicsDocsSearchnodenodicsdocsnodetopiclocalizationinternationalization",
     "product": "nodicsDocumentationProduct",
     "targetType": "NODE",
@@ -3581,7 +3622,7 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record85": {
+  "record86": {
     "code": "nodicsDocsSearchnodenodicsdocsnodetopicschemadatamodelingmanagement",
     "product": "nodicsDocumentationProduct",
     "targetType": "NODE",
@@ -3623,7 +3664,7 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record86": {
+  "record87": {
     "code": "nodicsDocsSearchnodenodicsdocsnodetopicpersistenceproviderdataaccesslayer",
     "product": "nodicsDocumentationProduct",
     "targetType": "NODE",
@@ -3665,7 +3706,7 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record87": {
+  "record88": {
     "code": "nodicsDocsSearchnodenodicsdocsnodetopiccacheruntimestatemanagement",
     "product": "nodicsDocumentationProduct",
     "targetType": "NODE",
@@ -3707,7 +3748,7 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record88": {
+  "record89": {
     "code": "nodicsDocsSearchnodenodicsdocsnodetopicframeworkcustomizationguide",
     "product": "nodicsDocumentationProduct",
     "targetType": "NODE",
@@ -3749,7 +3790,7 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record89": {
+  "record90": {
     "code": "nodicsDocsSearchnodenodicsdocsnodetopicframeworkbackendextensionpatterns",
     "product": "nodicsDocumentationProduct",
     "targetType": "NODE",
@@ -3792,7 +3833,7 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record90": {
+  "record91": {
     "code": "nodicsDocsSearchnodenodicsdocsnodetopicframeworkaxiscontentcustomization",
     "product": "nodicsDocumentationProduct",
     "targetType": "NODE",
@@ -3834,7 +3875,7 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record91": {
+  "record92": {
     "code": "nodicsDocsSearchnodenodicsdocsnodetopicprocessdevelopercustomization",
     "product": "nodicsDocumentationProduct",
     "targetType": "NODE",
@@ -3876,7 +3917,7 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record92": {
+  "record93": {
     "code": "nodicsDocsSearchnodenodicsdocsnodetopicprocesscustomprojectextension",
     "product": "nodicsDocumentationProduct",
     "targetType": "NODE",
@@ -3918,7 +3959,7 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record93": {
+  "record94": {
     "code": "nodicsDocsSearchnodenodicsdocsnodetopiccommercebasefoundations",
     "product": "nodicsDocumentationProduct",
     "targetType": "NODE",
@@ -3960,7 +4001,7 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record94": {
+  "record95": {
     "code": "nodicsDocsSearchnodenodicsdocsnodetopicwcmsoverview",
     "product": "nodicsDocumentationProduct",
     "targetType": "NODE",
@@ -4002,7 +4043,7 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record95": {
+  "record96": {
     "code": "nodicsDocsSearchnodenodicsdocsnodetopicwcmscontentcatalogmodel",
     "product": "nodicsDocumentationProduct",
     "targetType": "NODE",
@@ -4044,7 +4085,7 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record96": {
+  "record97": {
     "code": "nodicsDocsSearchnodenodicsdocsnodetopicwcmspagedesignercomponents",
     "product": "nodicsDocumentationProduct",
     "targetType": "NODE",
@@ -4086,7 +4127,7 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record97": {
+  "record98": {
     "code": "nodicsDocsSearchnodenodicsdocsnodetopicwcmssitepublicationvisibility",
     "product": "nodicsDocumentationProduct",
     "targetType": "NODE",
@@ -4129,7 +4170,7 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record98": {
+  "record99": {
     "code": "nodicsDocsSearchnodenodicsdocsnodetopiccatalogproductdiscoverymanagement",
     "product": "nodicsDocumentationProduct",
     "targetType": "NODE",
@@ -4171,7 +4212,7 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record99": {
+  "record100": {
     "code": "nodicsDocsSearchnodenodicsdocsnodetopicdiscoverysearchindexing",
     "product": "nodicsDocumentationProduct",
     "targetType": "NODE",
@@ -4213,7 +4254,7 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record100": {
+  "record101": {
     "code": "nodicsDocsSearchnodenodicsdocsnodetopicwcmsmediamanagement",
     "product": "nodicsDocumentationProduct",
     "targetType": "NODE",
@@ -4255,7 +4296,7 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record101": {
+  "record102": {
     "code": "nodicsDocsSearchnodenodicsdocsnodetopicwcmsmediastoragedelivery",
     "product": "nodicsDocumentationProduct",
     "targetType": "NODE",
@@ -4297,7 +4338,7 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record102": {
+  "record103": {
     "code": "nodicsDocsSearchnodenodicsdocsnodetopicwcmsmediaimportpublication",
     "product": "nodicsDocumentationProduct",
     "targetType": "NODE",
@@ -4339,7 +4380,7 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record103": {
+  "record104": {
     "code": "nodicsDocsSearchnodenodicsdocsnodetopicinventorystockmanagement",
     "product": "nodicsDocumentationProduct",
     "targetType": "NODE",
@@ -4381,7 +4422,7 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record104": {
+  "record105": {
     "code": "nodicsDocsSearchnodenodicsdocsnodetopicpricingpromotionstaxmanagement",
     "product": "nodicsDocumentationProduct",
     "targetType": "NODE",
@@ -4423,7 +4464,7 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record105": {
+  "record106": {
     "code": "nodicsDocsSearchnodenodicsdocsnodetopiccommerceoverview",
     "product": "nodicsDocumentationProduct",
     "targetType": "NODE",
@@ -4465,7 +4506,7 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record106": {
+  "record107": {
     "code": "nodicsDocsSearchnodenodicsdocsnodetopiccommercecartorder",
     "product": "nodicsDocumentationProduct",
     "targetType": "NODE",
@@ -4507,7 +4548,7 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record107": {
+  "record108": {
     "code": "nodicsDocsSearchnodenodicsdocsnodetopiccommercepaymentfulfillment",
     "product": "nodicsDocumentationProduct",
     "targetType": "NODE",
@@ -4549,7 +4590,7 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record108": {
+  "record109": {
     "code": "nodicsDocsSearchnodenodicsdocsnodetopicfulfillmentshippingmanagement",
     "product": "nodicsDocumentationProduct",
     "targetType": "NODE",
@@ -4591,7 +4632,7 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record109": {
+  "record110": {
     "code": "nodicsDocsSearchnodenodicsdocsnodetopicordermanagementlifecycle",
     "product": "nodicsDocumentationProduct",
     "targetType": "NODE",
@@ -4633,7 +4674,7 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record110": {
+  "record111": {
     "code": "nodicsDocsSearchnodenodicsdocsnodetopiccommercereturnsrefunds",
     "product": "nodicsDocumentationProduct",
     "targetType": "NODE",
@@ -4675,7 +4716,7 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record111": {
+  "record112": {
     "code": "nodicsDocsSearchnodenodicsdocsnodetopicengagementcustomerreviews",
     "product": "nodicsDocumentationProduct",
     "targetType": "NODE",
@@ -4717,7 +4758,7 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record112": {
+  "record113": {
     "code": "nodicsDocsSearchnodenodicsdocsnodetopicengagementreviewmoderationgovernance",
     "product": "nodicsDocumentationProduct",
     "targetType": "NODE",
@@ -4759,7 +4800,7 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record113": {
+  "record114": {
     "code": "nodicsDocsSearchnodenodicsdocsnodetopicengagementreviewaggregationrecovery",
     "product": "nodicsDocumentationProduct",
     "targetType": "NODE",
@@ -4801,7 +4842,7 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record114": {
+  "record115": {
     "code": "nodicsDocsSearchnodenodicsdocsnodetopicengagementcustomerfeedback",
     "product": "nodicsDocumentationProduct",
     "targetType": "NODE",
@@ -4843,7 +4884,7 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record115": {
+  "record116": {
     "code": "nodicsDocsSearchnodenodicsdocsnodetopicengagementunifiedoperations",
     "product": "nodicsDocumentationProduct",
     "targetType": "NODE",
@@ -4885,7 +4926,7 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record116": {
+  "record117": {
     "code": "nodicsDocsSearchnodenodicsdocsnodetopicengagementgovernedautomation",
     "product": "nodicsDocumentationProduct",
     "targetType": "NODE",
@@ -4927,7 +4968,7 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record117": {
+  "record118": {
     "code": "nodicsDocsSearchnodenodicsdocsnodetopicengagemententerpriseoperations",
     "product": "nodicsDocumentationProduct",
     "targetType": "NODE",
@@ -4969,7 +5010,7 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record118": {
+  "record119": {
     "code": "nodicsDocsSearchnodenodicsdocsnodetopiccommunicationoverview",
     "product": "nodicsDocumentationProduct",
     "targetType": "NODE",
@@ -5011,7 +5052,7 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record119": {
+  "record120": {
     "code": "nodicsDocsSearchnodenodicsdocsnodetopiceventsmessagingclustercoordination",
     "product": "nodicsDocumentationProduct",
     "targetType": "NODE",
@@ -5053,7 +5094,7 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record120": {
+  "record121": {
     "code": "nodicsDocsSearchnodenodicsdocsnodetopicprocessoverview",
     "product": "nodicsDocumentationProduct",
     "targetType": "NODE",
@@ -5095,7 +5136,7 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record121": {
+  "record122": {
     "code": "nodicsDocsSearchnodenodicsdocsnodetopicprocessruntimelifecycle",
     "product": "nodicsDocumentationProduct",
     "targetType": "NODE",
@@ -5137,7 +5178,7 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record122": {
+  "record123": {
     "code": "nodicsDocsSearchnodenodicsdocsnodetopicprocessworkfloworchestrationpatterns",
     "product": "nodicsDocumentationProduct",
     "targetType": "NODE",
@@ -5189,7 +5230,7 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record123": {
+  "record124": {
     "code": "nodicsDocsSearchnodenodicsdocsnodetopicprocessfirstworkflow",
     "product": "nodicsDocumentationProduct",
     "targetType": "NODE",
@@ -5231,7 +5272,7 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record124": {
+  "record125": {
     "code": "nodicsDocsSearchnodenodicsdocsnodetopicprocessfirsthumantask",
     "product": "nodicsDocumentationProduct",
     "targetType": "NODE",
@@ -5273,7 +5314,7 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record125": {
+  "record126": {
     "code": "nodicsDocsSearchnodenodicsdocsnodetopicprocessbusinessvalue",
     "product": "nodicsDocumentationProduct",
     "targetType": "NODE",
@@ -5315,7 +5356,7 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record126": {
+  "record127": {
     "code": "nodicsDocsSearchnodenodicsdocsnodetopicpipelinebusinesslogicorchestration",
     "product": "nodicsDocumentationProduct",
     "targetType": "NODE",
@@ -5367,7 +5408,7 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record127": {
+  "record128": {
     "code": "nodicsDocsSearchnodenodicsdocsnodetopiccronoperations",
     "product": "nodicsDocumentationProduct",
     "targetType": "NODE",
@@ -5409,7 +5450,7 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record128": {
+  "record129": {
     "code": "nodicsDocsSearchnodenodicsdocsnodetopiccronnoderesponsibilitytee",
     "product": "nodicsDocumentationProduct",
     "targetType": "NODE",
@@ -5452,7 +5493,7 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record129": {
+  "record130": {
     "code": "nodicsDocsSearchnodenodicsdocsnodetopiccronprojectcustomization",
     "product": "nodicsDocumentationProduct",
     "targetType": "NODE",
@@ -5494,7 +5535,7 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record130": {
+  "record131": {
     "code": "nodicsDocsSearchnodenodicsdocsnodetopicprocessprocesscronruntime",
     "product": "nodicsDocumentationProduct",
     "targetType": "NODE",
@@ -5536,7 +5577,7 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record131": {
+  "record132": {
     "code": "nodicsDocsSearchnodenodicsdocsnodetopicprocessscheduledautomation",
     "product": "nodicsDocumentationProduct",
     "targetType": "NODE",
@@ -5578,7 +5619,7 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record132": {
+  "record133": {
     "code": "nodicsDocsSearchnodenodicsdocsnodetopicdataimportexportmigration",
     "product": "nodicsDocumentationProduct",
     "targetType": "NODE",
@@ -5620,7 +5661,7 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record133": {
+  "record134": {
     "code": "nodicsDocsSearchnodenodicsdocsnodetopicprocessactionadapters",
     "product": "nodicsDocumentationProduct",
     "targetType": "NODE",
@@ -5662,7 +5703,7 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record134": {
+  "record135": {
     "code": "nodicsDocsSearchnodenodicsdocsnodetopicframeworkdevopsruntime",
     "product": "nodicsDocumentationProduct",
     "targetType": "NODE",
@@ -5704,7 +5745,7 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record135": {
+  "record136": {
     "code": "nodicsDocsSearchnodenodicsdocsnodetopicframeworkruntimereleaserollback",
     "product": "nodicsDocumentationProduct",
     "targetType": "NODE",
@@ -5746,7 +5787,7 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record136": {
+  "record137": {
     "code": "nodicsDocsSearchnodenodicsdocsnodetopicframeworklocalbrowseracceptancejourney",
     "product": "nodicsDocumentationProduct",
     "targetType": "NODE",
@@ -5788,7 +5829,7 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record137": {
+  "record138": {
     "code": "nodicsDocsSearchnodenodicsdocsnodetopicframeworklocalverificationchecklist",
     "product": "nodicsDocumentationProduct",
     "targetType": "NODE",
@@ -5830,7 +5871,7 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record138": {
+  "record139": {
     "code": "nodicsDocsSearchnodenodicsdocsnodetopiccommerceenterpriseoperations",
     "product": "nodicsDocumentationProduct",
     "targetType": "NODE",
@@ -5872,7 +5913,7 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record139": {
+  "record140": {
     "code": "nodicsDocsSearchnodenodicsdocsnodetopicprocessincidentrecovery",
     "product": "nodicsDocumentationProduct",
     "targetType": "NODE",
@@ -5914,7 +5955,7 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record140": {
+  "record141": {
     "code": "nodicsDocsSearchnodenodicsdocsnodetopicprocessdevopstopology",
     "product": "nodicsDocumentationProduct",
     "targetType": "NODE",
@@ -5956,7 +5997,7 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record141": {
+  "record142": {
     "code": "nodicsDocsSearchnodenodicsdocsnodetopicprocessqaregressionguide",
     "product": "nodicsDocumentationProduct",
     "targetType": "NODE",
@@ -5998,7 +6039,7 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record142": {
+  "record143": {
     "code": "nodicsDocsSearchnodenodicsdocsnodetopicframeworkcapabilitydocumentationmaturitypattern",
     "product": "nodicsDocumentationProduct",
     "targetType": "NODE",
@@ -6040,7 +6081,7 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record143": {
+  "record144": {
     "code": "nodicsDocsSearchnodenodicsdocsnodetopicdocsoverview",
     "product": "nodicsDocumentationProduct",
     "targetType": "NODE",
@@ -6082,7 +6123,7 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record144": {
+  "record145": {
     "code": "nodicsDocsSearchnodenodicsdocsnodetopicwcmspublishinglifecycle",
     "product": "nodicsDocumentationProduct",
     "targetType": "NODE",
@@ -6124,7 +6165,7 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record145": {
+  "record146": {
     "code": "nodicsDocsSearchnodenodicsdocsnodetopicapplicationsnexusdatacontentguide",
     "product": "nodicsDocumentationProduct",
     "targetType": "NODE",
@@ -6168,7 +6209,7 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record146": {
+  "record147": {
     "code": "nodicsDocsSearchnodenodicsdocsnodetopicapplicationsaxissetuperrorcontracts",
     "product": "nodicsDocumentationProduct",
     "targetType": "NODE",
@@ -6212,7 +6253,7 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record147": {
+  "record148": {
     "code": "nodicsDocsSearchnodenodicsdocsnodetopicwcmscmssourcemapauthoringcontract",
     "product": "nodicsDocumentationProduct",
     "targetType": "NODE",
@@ -6256,7 +6297,7 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record148": {
+  "record149": {
     "code": "nodicsDocsSearchnodenodicsdocsnodetopicwcmsmediaoperationsrunbook",
     "product": "nodicsDocumentationProduct",
     "targetType": "NODE",
@@ -6300,7 +6341,7 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record149": {
+  "record150": {
     "code": "nodicsDocsSearchnodenodicsdocsnodetopicdataimportexportproviderguides",
     "product": "nodicsDocumentationProduct",
     "targetType": "NODE",
@@ -6345,7 +6386,7 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record150": {
+  "record151": {
     "code": "nodicsDocsSearchnodenodicsdocsnodetopiccommercedataauthoringfulfillment",
     "product": "nodicsDocumentationProduct",
     "targetType": "NODE",
@@ -6390,7 +6431,7 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record151": {
+  "record152": {
     "code": "nodicsDocsSearchnodenodicsdocsnodetopicdocsdocumentationpublishingrunbook",
     "product": "nodicsDocumentationProduct",
     "targetType": "NODE",
@@ -6434,7 +6475,7 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record152": {
+  "record153": {
     "code": "nodicsDocsSearchnodenodicsdocsnodetopicplatformmoduleregistryjourney",
     "product": "nodicsDocumentationProduct",
     "targetType": "NODE",
@@ -6478,7 +6519,7 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record153": {
+  "record154": {
     "code": "nodicsDocsSearchnodenodicsdocsnodetopiccommercesearchguide",
     "product": "nodicsDocumentationProduct",
     "targetType": "NODE",
@@ -6522,7 +6563,7 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record154": {
+  "record155": {
     "code": "nodicsDocsSearchnodenodicsdocsnodetopiclocalizationruntimeauthoring",
     "product": "nodicsDocumentationProduct",
     "targetType": "NODE",
@@ -6566,7 +6607,7 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record155": {
+  "record156": {
     "code": "nodicsDocsSearchnodenodicsdocsnodetopiccommercepaymentproviderboundaries",
     "product": "nodicsDocumentationProduct",
     "targetType": "NODE",
@@ -6610,19 +6651,69 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record156": {
-    "code": "nodicsDocsSearchnodenodicsdocsnodetopiccommercecustomerlistprofileboundary",
+  "record157": {
+    "code": "nodicsDocsSearchnodenodicsdocsnodetopicloyaltywalletsrewardsledger",
     "product": "nodicsDocumentationProduct",
     "targetType": "NODE",
-    "targetCode": "nodicsDocsNodeTopiccommerceCustomerListProfileBoundary",
-    "title": "Customer List and Profile Commerce Boundary",
-    "summary": "Why customer lists belong to Commerce while person, address, authentication, permission, and organization identity stay under Profile.",
-    "searchText": "Customer List and Profile Commerce Boundary Why customer lists belong to Commerce while person, address, authentication, permission, and organization identity stay under Profile. customer-list profile commerce-boundary eligibility identity",
+    "targetCode": "nodicsDocsNodeTopicloyaltyWalletsRewardsLedger",
+    "title": "Loyalty Wallets, Rewards, and Ledger",
+    "summary": "Business, developer, operator, and customization guidance for reward wallets, balances, reservations, redemptions, ledger evidence, and Commerce reward payment provider integration.",
+    "searchText": "Loyalty Wallets, Rewards, and Ledger Business, developer, operator, and customization guidance for reward wallets, balances, reservations, redemptions, ledger evidence, and Commerce reward payment provider integration. loyalty reward wallet points ledger reservation redemption checkout payment-provider",
     "keywords": [
-      "customer-list",
+      "loyalty",
+      "reward",
+      "wallet",
+      "points",
+      "ledger",
+      "reservation",
+      "redemption",
+      "checkout",
+      "payment-provider"
+    ],
+    "facets": {
+      "nodeLevel": "TOPIC",
+      "nodeType": "PAGE",
+      "audience": [
+        "business",
+        "architect",
+        "administrator",
+        "developer",
+        "operator",
+        "qa",
+        "ai-tool"
+      ]
+    },
+    "managedInAxis": true,
+    "axisAuthoringPermissions": [
+      "documentation.search.preview"
+    ],
+    "workflowRequired": true,
+    "workflowTriggers": [
+      "SEARCH_METADATA_CHANGE"
+    ],
+    "locale": "en",
+    "channel": "web",
+    "accessPolicy": "nodicsDocsAccessPublic",
+    "accessMode": "PUBLIC",
+    "lifecycleState": "ONLINE",
+    "indexState": "INDEX_READY",
+    "active": true
+  },
+  "record158": {
+    "code": "nodicsDocsSearchnodenodicsdocsnodetopiccommerceshoppinglistcommerceboundary",
+    "product": "nodicsDocumentationProduct",
+    "targetType": "NODE",
+    "targetCode": "nodicsDocsNodeTopiccommerceShoppingListCommerceBoundary",
+    "title": "Shopping List Commerce Boundary",
+    "summary": "Why wishlist, compare, and save-for-later belong to Commerce while Profile remains the identity authority.",
+    "searchText": "Shopping List Commerce Boundary Why wishlist, compare, and save-for-later belong to Commerce while Profile remains the identity authority. shopping-list wishlist compare save-for-later profile commerce-boundary identity",
+    "keywords": [
+      "shopping-list",
+      "wishlist",
+      "compare",
+      "save-for-later",
       "profile",
       "commerce-boundary",
-      "eligibility",
       "identity"
     ],
     "facets": {
@@ -6654,7 +6745,7 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record157": {
+  "record159": {
     "code": "nodicsDocsSearchnodenodicsdocsnodetopicfoundationnmsruntimemonitoring",
     "product": "nodicsDocumentationProduct",
     "targetType": "NODE",
@@ -6698,7 +6789,7 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record158": {
+  "record160": {
     "code": "nodicsDocsSearchnodenodicsdocsnodetopicfoundationserviceruntimeoverrides",
     "product": "nodicsDocumentationProduct",
     "targetType": "NODE",
@@ -6742,7 +6833,7 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record159": {
+  "record161": {
     "code": "nodicsDocsSearchnodenodicsdocsnodetopicfoundationmoduletomodulecommunication",
     "product": "nodicsDocumentationProduct",
     "targetType": "NODE",
@@ -6788,7 +6879,7 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record160": {
+  "record162": {
     "code": "nodicsDocsSearchnodenodicsdocsnodetopicfoundationcacheproviderrunbooks",
     "product": "nodicsDocumentationProduct",
     "targetType": "NODE",
@@ -6832,7 +6923,7 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record161": {
+  "record163": {
     "code": "nodicsDocsSearchnodenodicsdocsnodetopicfoundationdatabaseproviderboundaries",
     "product": "nodicsDocumentationProduct",
     "targetType": "NODE",
@@ -6876,7 +6967,7 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record162": {
+  "record164": {
     "code": "nodicsDocsSearchnodenodicsdocsnodetopicsecurityotpsecurityflow",
     "product": "nodicsDocumentationProduct",
     "targetType": "NODE",
@@ -6920,7 +7011,7 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record163": {
+  "record165": {
     "code": "nodicsDocsSearchnodenodicsdocsnodetopiccommunicationproviderrunbooks",
     "product": "nodicsDocumentationProduct",
     "targetType": "NODE",
@@ -6964,7 +7055,7 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record164": {
+  "record166": {
     "code": "nodicsDocsSearchnodenodicsdocsnodetopicengagementcontactsubmissionoperations",
     "product": "nodicsDocumentationProduct",
     "targetType": "NODE",
@@ -7008,7 +7099,7 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record165": {
+  "record167": {
     "code": "nodicsDocsSearchnodenodicsdocsnodetopicprocessworkflowbpmsourcemap",
     "product": "nodicsDocumentationProduct",
     "targetType": "NODE",
@@ -7052,7 +7143,7 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record166": {
+  "record168": {
     "code": "nodicsDocsSearchnodenodicsdocsnodetopicprocesscronjobdataauthoring",
     "product": "nodicsDocumentationProduct",
     "targetType": "NODE",
@@ -7096,7 +7187,7 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record167": {
+  "record169": {
     "code": "nodicsDocsSearchnodenodicsdocsnodetopicframeworkreleaseupgradecompatibility",
     "product": "nodicsDocumentationProduct",
     "targetType": "NODE",
@@ -7140,7 +7231,7 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record168": {
+  "record170": {
     "code": "nodicsDocsSearchnodenodicsdocsnodetopiccommercefulfillmentcoresourcemap",
     "product": "nodicsDocumentationProduct",
     "targetType": "NODE",
@@ -7184,7 +7275,7 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record169": {
+  "record171": {
     "code": "nodicsDocsSearchnodenodicsdocsnodetopicacceleratorsdomaincommercesourcemap",
     "product": "nodicsDocumentationProduct",
     "targetType": "NODE",
@@ -7228,7 +7319,7 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record170": {
+  "record172": {
     "code": "nodicsDocsSearchnodenodicsdocsnodetopicfoundationtoolingruntimecontracts",
     "product": "nodicsDocumentationProduct",
     "targetType": "NODE",
@@ -7272,7 +7363,7 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record171": {
+  "record173": {
     "code": "nodicsDocsSearchnodenodicsdocsnodetopicfoundationemsruntimeclientrunbook",
     "product": "nodicsDocumentationProduct",
     "targetType": "NODE",
@@ -7316,7 +7407,7 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record172": {
+  "record174": {
     "code": "nodicsDocsSearchnodenodicsdocsnodetopicreferenceinternalsourceboundaryregister",
     "product": "nodicsDocumentationProduct",
     "targetType": "NODE",
@@ -7360,7 +7451,7 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record173": {
+  "record175": {
     "code": "nodicsDocsSearchnodenodicsdocsnodetopictoolingaideveloperenablement",
     "product": "nodicsDocumentationProduct",
     "targetType": "NODE",
@@ -7402,7 +7493,7 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record174": {
+  "record176": {
     "code": "nodicsDocsSearchnodenodicsdocsnodetopicreferencesourcemapglossary",
     "product": "nodicsDocumentationProduct",
     "targetType": "NODE",
@@ -7444,7 +7535,7 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record175": {
+  "record177": {
     "code": "nodicsDocsSearchnodenodicsdocsnodetopicreferencesourcebackeddocumentationcoverageaudit",
     "product": "nodicsDocumentationProduct",
     "targetType": "NODE",
@@ -7488,7 +7579,7 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record176": {
+  "record178": {
     "code": "nodicsDocsSearchnodenodicsdocsnodetopicreferencedocumentationgapbacklog",
     "product": "nodicsDocumentationProduct",
     "targetType": "NODE",
@@ -7532,7 +7623,7 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record177": {
+  "record179": {
     "code": "nodicsDocsSearchdashboardnodicsdocsdashboardproduct",
     "product": "nodicsDocumentationProduct",
     "targetType": "DASHBOARD",
@@ -7565,7 +7656,7 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record178": {
+  "record180": {
     "code": "nodicsDocsSearchdashboardnodicsdocsdashboardnavigation",
     "product": "nodicsDocumentationProduct",
     "targetType": "DASHBOARD",
@@ -7598,7 +7689,7 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record179": {
+  "record181": {
     "code": "nodicsDocsSearchdashboardnodicsdocsdashboardsecnodicsframework",
     "product": "nodicsDocumentationProduct",
     "targetType": "DASHBOARD",
@@ -7631,7 +7722,7 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record180": {
+  "record182": {
     "code": "nodicsDocsSearchdashboardnodicsdocsdashboardsecdocumentationroadmap",
     "product": "nodicsDocumentationProduct",
     "targetType": "DASHBOARD",
@@ -7664,7 +7755,7 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record181": {
+  "record183": {
     "code": "nodicsDocsSearchdashboardnodicsdocsdashboardsecframeworkarchitectureanddesign",
     "product": "nodicsDocumentationProduct",
     "targetType": "DASHBOARD",
@@ -7697,7 +7788,7 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record182": {
+  "record184": {
     "code": "nodicsDocsSearchdashboardnodicsdocsdashboardseccapabilityregistryandlifecyclemanagement",
     "product": "nodicsDocumentationProduct",
     "targetType": "DASHBOARD",
@@ -7730,7 +7821,7 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record183": {
+  "record185": {
     "code": "nodicsDocsSearchdashboardnodicsdocsdashboardsecfoundationruntimeservices",
     "product": "nodicsDocumentationProduct",
     "targetType": "DASHBOARD",
@@ -7763,7 +7854,7 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record184": {
+  "record186": {
     "code": "nodicsDocsSearchdashboardnodicsdocsdashboardsecnodicsapplicationsuite",
     "product": "nodicsDocumentationProduct",
     "targetType": "DASHBOARD",
@@ -7796,7 +7887,7 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record185": {
+  "record187": {
     "code": "nodicsDocsSearchdashboardnodicsdocsdashboardsecsolutionusecases",
     "product": "nodicsDocumentationProduct",
     "targetType": "DASHBOARD",
@@ -7829,7 +7920,7 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record186": {
+  "record188": {
     "code": "nodicsDocsSearchdashboardnodicsdocsdashboardsecacceleratorsandindustrysolutiontemplates",
     "product": "nodicsDocumentationProduct",
     "targetType": "DASHBOARD",
@@ -7862,7 +7953,7 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record187": {
+  "record189": {
     "code": "nodicsDocsSearchdashboardnodicsdocsdashboardsecnodicsinstallerandworkspacesetup",
     "product": "nodicsDocumentationProduct",
     "targetType": "DASHBOARD",
@@ -7895,7 +7986,7 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record188": {
+  "record190": {
     "code": "nodicsDocsSearchdashboardnodicsdocsdashboardsecapplicationbuilderandworkspacegeneration",
     "product": "nodicsDocumentationProduct",
     "targetType": "DASHBOARD",
@@ -7928,7 +8019,7 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record189": {
+  "record191": {
     "code": "nodicsDocsSearchdashboardnodicsdocsdashboardsecaxisandbackofficeoperations",
     "product": "nodicsDocumentationProduct",
     "targetType": "DASHBOARD",
@@ -7961,7 +8052,7 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record190": {
+  "record192": {
     "code": "nodicsDocsSearchdashboardnodicsdocsdashboardsecbusinesscustomizationinaxis",
     "product": "nodicsDocumentationProduct",
     "targetType": "DASHBOARD",
@@ -7994,7 +8085,7 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record191": {
+  "record193": {
     "code": "nodicsDocsSearchdashboardnodicsdocsdashboardsecuserenterpriseandtenantmanagement",
     "product": "nodicsDocumentationProduct",
     "targetType": "DASHBOARD",
@@ -8027,7 +8118,7 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record192": {
+  "record194": {
     "code": "nodicsDocsSearchdashboardnodicsdocsdashboardsecsecuritygovernanceandcompliance",
     "product": "nodicsDocumentationProduct",
     "targetType": "DASHBOARD",
@@ -8060,7 +8151,7 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record193": {
+  "record195": {
     "code": "nodicsDocsSearchdashboardnodicsdocsdashboardsecapplicationconfigurationandruntimebehaviormanagement",
     "product": "nodicsDocumentationProduct",
     "targetType": "DASHBOARD",
@@ -8093,7 +8184,7 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record194": {
+  "record196": {
     "code": "nodicsDocsSearchdashboardnodicsdocsdashboardsecruntimegovernanceanddynamicchangemanagement",
     "product": "nodicsDocumentationProduct",
     "targetType": "DASHBOARD",
@@ -8126,7 +8217,7 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record195": {
+  "record197": {
     "code": "nodicsDocsSearchdashboardnodicsdocsdashboardseclocalizationandinternationalization",
     "product": "nodicsDocumentationProduct",
     "targetType": "DASHBOARD",
@@ -8159,7 +8250,7 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record196": {
+  "record198": {
     "code": "nodicsDocsSearchdashboardnodicsdocsdashboardsecdatamodelingandschemamanagement",
     "product": "nodicsDocumentationProduct",
     "targetType": "DASHBOARD",
@@ -8192,7 +8283,7 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record197": {
+  "record199": {
     "code": "nodicsDocsSearchdashboardnodicsdocsdashboardsecdatabaseandpersistencemanagement",
     "product": "nodicsDocumentationProduct",
     "targetType": "DASHBOARD",
@@ -8225,7 +8316,7 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record198": {
+  "record200": {
     "code": "nodicsDocsSearchdashboardnodicsdocsdashboardseccachingandruntimestatemanagement",
     "product": "nodicsDocumentationProduct",
     "targetType": "DASHBOARD",
@@ -8258,7 +8349,7 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record199": {
+  "record201": {
     "code": "nodicsDocsSearchdashboardnodicsdocsdashboardsecdeveloperextensionandprojectcustomization",
     "product": "nodicsDocumentationProduct",
     "targetType": "DASHBOARD",
@@ -8291,7 +8382,7 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record200": {
+  "record202": {
     "code": "nodicsDocsSearchdashboardnodicsdocsdashboardsecstoremarketsiteandchannelmanagement",
     "product": "nodicsDocumentationProduct",
     "targetType": "DASHBOARD",
@@ -8324,7 +8415,7 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record201": {
+  "record203": {
     "code": "nodicsDocsSearchdashboardnodicsdocsdashboardsecwcmsandcontentmanagement",
     "product": "nodicsDocumentationProduct",
     "targetType": "DASHBOARD",
@@ -8357,7 +8448,7 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record202": {
+  "record204": {
     "code": "nodicsDocsSearchdashboardnodicsdocsdashboardsecproductcataloganddiscovery",
     "product": "nodicsDocumentationProduct",
     "targetType": "DASHBOARD",
@@ -8390,7 +8481,7 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record203": {
+  "record205": {
     "code": "nodicsDocsSearchdashboardnodicsdocsdashboardsecsearchanddiscovery",
     "product": "nodicsDocumentationProduct",
     "targetType": "DASHBOARD",
@@ -8423,7 +8514,7 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record204": {
+  "record206": {
     "code": "nodicsDocsSearchdashboardnodicsdocsdashboardsecmediamanagement",
     "product": "nodicsDocumentationProduct",
     "targetType": "DASHBOARD",
@@ -8456,7 +8547,7 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record205": {
+  "record207": {
     "code": "nodicsDocsSearchdashboardnodicsdocsdashboardsecinventoryandstockmanagement",
     "product": "nodicsDocumentationProduct",
     "targetType": "DASHBOARD",
@@ -8489,7 +8580,7 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record206": {
+  "record208": {
     "code": "nodicsDocsSearchdashboardnodicsdocsdashboardsecpricingpromotionsandtax",
     "product": "nodicsDocumentationProduct",
     "targetType": "DASHBOARD",
@@ -8522,7 +8613,7 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record207": {
+  "record209": {
     "code": "nodicsDocsSearchdashboardnodicsdocsdashboardseccommercecartandcheckout",
     "product": "nodicsDocumentationProduct",
     "targetType": "DASHBOARD",
@@ -8555,7 +8646,7 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record208": {
+  "record210": {
     "code": "nodicsDocsSearchdashboardnodicsdocsdashboardsecpaymentmanagement",
     "product": "nodicsDocumentationProduct",
     "targetType": "DASHBOARD",
@@ -8588,7 +8679,40 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record209": {
+  "record211": {
+    "code": "nodicsDocsSearchdashboardnodicsdocsdashboardsecloyaltyandrewards",
+    "product": "nodicsDocumentationProduct",
+    "targetType": "DASHBOARD",
+    "targetCode": "nodicsDocsDashboardSecloyaltyAndRewards",
+    "title": "Loyalty and Rewards",
+    "summary": "Reward programs, reward types, owner wallets, balances, reservations, redemptions, ledger evidence, and reward-based checkout integration.",
+    "searchText": "Loyalty and Rewards Reward programs, reward types, owner wallets, balances, reservations, redemptions, ledger evidence, and reward-based checkout integration.",
+    "keywords": [
+      "SECTION",
+      "nodicsDocsNodeSecloyaltyAndRewards",
+      "Loyalty and Rewards"
+    ],
+    "facets": {
+      "ownerType": "SECTION",
+      "ownerCode": "nodicsDocsNodeSecloyaltyAndRewards"
+    },
+    "managedInAxis": true,
+    "axisAuthoringPermissions": [
+      "documentation.search.preview"
+    ],
+    "workflowRequired": true,
+    "workflowTriggers": [
+      "SEARCH_METADATA_CHANGE"
+    ],
+    "locale": "en",
+    "channel": "web",
+    "accessPolicy": "nodicsDocsAccessPublic",
+    "accessMode": "PUBLIC",
+    "lifecycleState": "ONLINE",
+    "indexState": "INDEX_READY",
+    "active": true
+  },
+  "record212": {
     "code": "nodicsDocsSearchdashboardnodicsdocsdashboardsecshippingandfulfillment",
     "product": "nodicsDocumentationProduct",
     "targetType": "DASHBOARD",
@@ -8621,7 +8745,7 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record210": {
+  "record213": {
     "code": "nodicsDocsSearchdashboardnodicsdocsdashboardsecordermanagement",
     "product": "nodicsDocumentationProduct",
     "targetType": "DASHBOARD",
@@ -8654,7 +8778,7 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record211": {
+  "record214": {
     "code": "nodicsDocsSearchdashboardnodicsdocsdashboardseccancellationsreturnsandrefunds",
     "product": "nodicsDocumentationProduct",
     "targetType": "DASHBOARD",
@@ -8687,7 +8811,7 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record212": {
+  "record215": {
     "code": "nodicsDocsSearchdashboardnodicsdocsdashboardseccustomerengagementandfeedback",
     "product": "nodicsDocumentationProduct",
     "targetType": "DASHBOARD",
@@ -8720,7 +8844,7 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record213": {
+  "record216": {
     "code": "nodicsDocsSearchdashboardnodicsdocsdashboardseccommunicationandnotifications",
     "product": "nodicsDocumentationProduct",
     "targetType": "DASHBOARD",
@@ -8753,7 +8877,7 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record214": {
+  "record217": {
     "code": "nodicsDocsSearchdashboardnodicsdocsdashboardseceventandmessagingmanagement",
     "product": "nodicsDocumentationProduct",
     "targetType": "DASHBOARD",
@@ -8786,7 +8910,7 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record215": {
+  "record218": {
     "code": "nodicsDocsSearchdashboardnodicsdocsdashboardsecprocessandworkflowautomation",
     "product": "nodicsDocumentationProduct",
     "targetType": "DASHBOARD",
@@ -8819,7 +8943,7 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record216": {
+  "record219": {
     "code": "nodicsDocsSearchdashboardnodicsdocsdashboardsecpipelineandbusinesslogicorchestration",
     "product": "nodicsDocumentationProduct",
     "targetType": "DASHBOARD",
@@ -8852,7 +8976,7 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record217": {
+  "record220": {
     "code": "nodicsDocsSearchdashboardnodicsdocsdashboardseccronandscheduledautomation",
     "product": "nodicsDocumentationProduct",
     "targetType": "DASHBOARD",
@@ -8885,7 +9009,7 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record218": {
+  "record221": {
     "code": "nodicsDocsSearchdashboardnodicsdocsdashboardsecdataimportexportandmigration",
     "product": "nodicsDocumentationProduct",
     "targetType": "DASHBOARD",
@@ -8918,7 +9042,7 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record219": {
+  "record222": {
     "code": "nodicsDocsSearchdashboardnodicsdocsdashboardsecsystemintegrationandexternalconnectivity",
     "product": "nodicsDocumentationProduct",
     "targetType": "DASHBOARD",
@@ -8951,7 +9075,7 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record220": {
+  "record223": {
     "code": "nodicsDocsSearchdashboardnodicsdocsdashboardsecoperationsmonitoringandrecovery",
     "product": "nodicsDocumentationProduct",
     "targetType": "DASHBOARD",
@@ -8984,7 +9108,7 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record221": {
+  "record224": {
     "code": "nodicsDocsSearchdashboardnodicsdocsdashboardsecqualitytestingandcertification",
     "product": "nodicsDocumentationProduct",
     "targetType": "DASHBOARD",
@@ -9017,7 +9141,7 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record222": {
+  "record225": {
     "code": "nodicsDocsSearchdashboardnodicsdocsdashboardsecdocumentationmanagement",
     "product": "nodicsDocumentationProduct",
     "targetType": "DASHBOARD",
@@ -9050,7 +9174,7 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record223": {
+  "record226": {
     "code": "nodicsDocsSearchdashboardnodicsdocsdashboardsecreleasestagingandpublication",
     "product": "nodicsDocumentationProduct",
     "targetType": "DASHBOARD",
@@ -9083,7 +9207,7 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record224": {
+  "record227": {
     "code": "nodicsDocsSearchdashboardnodicsdocsdashboardsecaianddevelopertooling",
     "product": "nodicsDocumentationProduct",
     "targetType": "DASHBOARD",
@@ -9116,7 +9240,7 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record225": {
+  "record228": {
     "code": "nodicsDocsSearchdashboardnodicsdocsdashboardsecreference",
     "product": "nodicsDocumentationProduct",
     "targetType": "DASHBOARD",
@@ -9149,7 +9273,7 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record226": {
+  "record229": {
     "code": "nodicsDocsSearchpagenodicsdocsmetadataframeworkoverview",
     "product": "nodicsDocumentationProduct",
     "targetType": "PAGE",
@@ -9199,7 +9323,7 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record227": {
+  "record230": {
     "code": "nodicsDocsSearchpagenodicsdocsmetadataframeworkwhynodicsexists",
     "product": "nodicsDocumentationProduct",
     "targetType": "PAGE",
@@ -9249,7 +9373,7 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record228": {
+  "record231": {
     "code": "nodicsDocsSearchpagenodicsdocsmetadataframeworkhownodicsworks",
     "product": "nodicsDocumentationProduct",
     "targetType": "PAGE",
@@ -9299,7 +9423,7 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record229": {
+  "record232": {
     "code": "nodicsDocsSearchpagenodicsdocsmetadataframeworkadoptionandfirstjourney",
     "product": "nodicsDocumentationProduct",
     "targetType": "PAGE",
@@ -9349,7 +9473,7 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record230": {
+  "record233": {
     "code": "nodicsDocsSearchpagenodicsdocsmetadatadocsdocumentationroadmap",
     "product": "nodicsDocumentationProduct",
     "targetType": "PAGE",
@@ -9397,7 +9521,7 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record231": {
+  "record234": {
     "code": "nodicsDocsSearchpagenodicsdocsmetadatadocsdocumentationprinciples",
     "product": "nodicsDocumentationProduct",
     "targetType": "PAGE",
@@ -9447,7 +9571,7 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record232": {
+  "record235": {
     "code": "nodicsDocsSearchpagenodicsdocsmetadatadocsreaderjourneyandcoverage",
     "product": "nodicsDocumentationProduct",
     "targetType": "PAGE",
@@ -9497,7 +9621,7 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record233": {
+  "record236": {
     "code": "nodicsDocsSearchpagenodicsdocsmetadatadocsdocumentationpublishingmodel",
     "product": "nodicsDocumentationProduct",
     "targetType": "PAGE",
@@ -9547,7 +9671,7 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record234": {
+  "record237": {
     "code": "nodicsDocsSearchpagenodicsdocsmetadataframeworkmodulararchitecture",
     "product": "nodicsDocumentationProduct",
     "targetType": "PAGE",
@@ -9595,7 +9719,7 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record235": {
+  "record238": {
     "code": "nodicsDocsSearchpagenodicsdocsmetadataframeworkruntimeservercomposition",
     "product": "nodicsDocumentationProduct",
     "targetType": "PAGE",
@@ -9643,7 +9767,7 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record236": {
+  "record239": {
     "code": "nodicsDocsSearchpagenodicsdocsmetadataframeworkmoduleloadingserviceprecedence",
     "product": "nodicsDocumentationProduct",
     "targetType": "PAGE",
@@ -9691,7 +9815,7 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record237": {
+  "record240": {
     "code": "nodicsDocsSearchpagenodicsdocsmetadataframeworkarchitecturedecisionguide",
     "product": "nodicsDocumentationProduct",
     "targetType": "PAGE",
@@ -9739,7 +9863,7 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record238": {
+  "record241": {
     "code": "nodicsDocsSearchpagenodicsdocsmetadataplatformmoduleregistry",
     "product": "nodicsDocumentationProduct",
     "targetType": "PAGE",
@@ -9787,7 +9911,7 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record239": {
+  "record242": {
     "code": "nodicsDocsSearchpagenodicsdocsmetadatafoundationoverview",
     "product": "nodicsDocumentationProduct",
     "targetType": "PAGE",
@@ -9835,7 +9959,7 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record240": {
+  "record243": {
     "code": "nodicsDocsSearchpagenodicsdocsmetadataapplicationssuite",
     "product": "nodicsDocumentationProduct",
     "targetType": "PAGE",
@@ -9885,7 +10009,7 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record241": {
+  "record244": {
     "code": "nodicsDocsSearchpagenodicsdocsmetadatasolutionstaskexecutionengine",
     "product": "nodicsDocumentationProduct",
     "targetType": "PAGE",
@@ -9938,7 +10062,7 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record242": {
+  "record245": {
     "code": "nodicsDocsSearchpagenodicsdocsmetadatasolutionsdataengineeringanalyticsplatform",
     "product": "nodicsDocumentationProduct",
     "targetType": "PAGE",
@@ -9992,7 +10116,7 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record243": {
+  "record246": {
     "code": "nodicsDocsSearchpagenodicsdocsmetadataacceleratorsagoraindustrytemplates",
     "product": "nodicsDocumentationProduct",
     "targetType": "PAGE",
@@ -10043,7 +10167,7 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record244": {
+  "record247": {
     "code": "nodicsDocsSearchpagenodicsdocsmetadataacceleratorsagoraapparelproductdataauthoring",
     "product": "nodicsDocumentationProduct",
     "targetType": "PAGE",
@@ -10097,7 +10221,7 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record245": {
+  "record248": {
     "code": "nodicsDocsSearchpagenodicsdocsmetadataframeworklocalquickstart",
     "product": "nodicsDocumentationProduct",
     "targetType": "PAGE",
@@ -10145,7 +10269,7 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record246": {
+  "record249": {
     "code": "nodicsDocsSearchpagenodicsdocsmetadataframeworkfreshschemasetupjourney",
     "product": "nodicsDocumentationProduct",
     "targetType": "PAGE",
@@ -10193,7 +10317,7 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record247": {
+  "record250": {
     "code": "nodicsDocsSearchpagenodicsdocsmetadataframeworklocalruntimetroubleshooting",
     "product": "nodicsDocumentationProduct",
     "targetType": "PAGE",
@@ -10241,7 +10365,7 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record248": {
+  "record251": {
     "code": "nodicsDocsSearchpagenodicsdocsmetadatainstallerinstalledruntimeapplicationbuilder",
     "product": "nodicsDocumentationProduct",
     "targetType": "PAGE",
@@ -10291,7 +10415,7 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record249": {
+  "record252": {
     "code": "nodicsDocsSearchpagenodicsdocsmetadatabuilderworkspacegeneration",
     "product": "nodicsDocumentationProduct",
     "targetType": "PAGE",
@@ -10339,7 +10463,7 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record250": {
+  "record253": {
     "code": "nodicsDocsSearchpagenodicsdocsmetadataprocessvisualdesigner",
     "product": "nodicsDocumentationProduct",
     "targetType": "PAGE",
@@ -10387,7 +10511,7 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record251": {
+  "record254": {
     "code": "nodicsDocsSearchpagenodicsdocsmetadataaxisbusinesscustomization",
     "product": "nodicsDocumentationProduct",
     "targetType": "PAGE",
@@ -10435,7 +10559,7 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record252": {
+  "record255": {
     "code": "nodicsDocsSearchpagenodicsdocsmetadataplatformoverview",
     "product": "nodicsDocumentationProduct",
     "targetType": "PAGE",
@@ -10483,7 +10607,7 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record253": {
+  "record256": {
     "code": "nodicsDocsSearchpagenodicsdocsmetadatasecurityidentityaccessgovernance",
     "product": "nodicsDocumentationProduct",
     "targetType": "PAGE",
@@ -10531,7 +10655,7 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record254": {
+  "record257": {
     "code": "nodicsDocsSearchpagenodicsdocsmetadataconfigurationruntimebehaviormanagement",
     "product": "nodicsDocumentationProduct",
     "targetType": "PAGE",
@@ -10579,7 +10703,7 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record255": {
+  "record258": {
     "code": "nodicsDocsSearchpagenodicsdocsmetadataconfigurationframeworkstartuplifecycle",
     "product": "nodicsDocumentationProduct",
     "targetType": "PAGE",
@@ -10639,7 +10763,7 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record256": {
+  "record259": {
     "code": "nodicsDocsSearchpagenodicsdocsmetadataroutingapigovernance",
     "product": "nodicsDocumentationProduct",
     "targetType": "PAGE",
@@ -10691,7 +10815,7 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record257": {
+  "record260": {
     "code": "nodicsDocsSearchpagenodicsdocsmetadataroutingapirequestlifecycle",
     "product": "nodicsDocumentationProduct",
     "targetType": "PAGE",
@@ -10744,7 +10868,7 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record258": {
+  "record261": {
     "code": "nodicsDocsSearchpagenodicsdocsmetadatafoundationerrorhandlingstatuscodes",
     "product": "nodicsDocumentationProduct",
     "targetType": "PAGE",
@@ -10800,7 +10924,7 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record259": {
+  "record262": {
     "code": "nodicsDocsSearchpagenodicsdocsmetadataruntimegovernedchange",
     "product": "nodicsDocumentationProduct",
     "targetType": "PAGE",
@@ -10848,7 +10972,7 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record260": {
+  "record263": {
     "code": "nodicsDocsSearchpagenodicsdocsmetadatalocalizationinternationalization",
     "product": "nodicsDocumentationProduct",
     "targetType": "PAGE",
@@ -10896,7 +11020,7 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record261": {
+  "record264": {
     "code": "nodicsDocsSearchpagenodicsdocsmetadataschemadatamodelingmanagement",
     "product": "nodicsDocumentationProduct",
     "targetType": "PAGE",
@@ -10944,7 +11068,7 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record262": {
+  "record265": {
     "code": "nodicsDocsSearchpagenodicsdocsmetadatapersistenceproviderdataaccesslayer",
     "product": "nodicsDocumentationProduct",
     "targetType": "PAGE",
@@ -10992,7 +11116,7 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record263": {
+  "record266": {
     "code": "nodicsDocsSearchpagenodicsdocsmetadatacacheruntimestatemanagement",
     "product": "nodicsDocumentationProduct",
     "targetType": "PAGE",
@@ -11040,7 +11164,7 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record264": {
+  "record267": {
     "code": "nodicsDocsSearchpagenodicsdocsmetadataframeworkcustomizationguide",
     "product": "nodicsDocumentationProduct",
     "targetType": "PAGE",
@@ -11088,7 +11212,7 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record265": {
+  "record268": {
     "code": "nodicsDocsSearchpagenodicsdocsmetadataframeworkbackendextensionpatterns",
     "product": "nodicsDocumentationProduct",
     "targetType": "PAGE",
@@ -11137,7 +11261,7 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record266": {
+  "record269": {
     "code": "nodicsDocsSearchpagenodicsdocsmetadataframeworkaxiscontentcustomization",
     "product": "nodicsDocumentationProduct",
     "targetType": "PAGE",
@@ -11185,7 +11309,7 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record267": {
+  "record270": {
     "code": "nodicsDocsSearchpagenodicsdocsmetadataprocessdevelopercustomization",
     "product": "nodicsDocumentationProduct",
     "targetType": "PAGE",
@@ -11233,7 +11357,7 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record268": {
+  "record271": {
     "code": "nodicsDocsSearchpagenodicsdocsmetadataprocesscustomprojectextension",
     "product": "nodicsDocumentationProduct",
     "targetType": "PAGE",
@@ -11281,7 +11405,7 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record269": {
+  "record272": {
     "code": "nodicsDocsSearchpagenodicsdocsmetadatacommercebasefoundations",
     "product": "nodicsDocumentationProduct",
     "targetType": "PAGE",
@@ -11329,7 +11453,7 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record270": {
+  "record273": {
     "code": "nodicsDocsSearchpagenodicsdocsmetadatawcmsoverview",
     "product": "nodicsDocumentationProduct",
     "targetType": "PAGE",
@@ -11377,7 +11501,7 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record271": {
+  "record274": {
     "code": "nodicsDocsSearchpagenodicsdocsmetadatawcmscontentcatalogmodel",
     "product": "nodicsDocumentationProduct",
     "targetType": "PAGE",
@@ -11425,7 +11549,7 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record272": {
+  "record275": {
     "code": "nodicsDocsSearchpagenodicsdocsmetadatawcmspagedesignercomponents",
     "product": "nodicsDocumentationProduct",
     "targetType": "PAGE",
@@ -11473,7 +11597,7 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record273": {
+  "record276": {
     "code": "nodicsDocsSearchpagenodicsdocsmetadatawcmssitepublicationvisibility",
     "product": "nodicsDocumentationProduct",
     "targetType": "PAGE",
@@ -11522,7 +11646,7 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record274": {
+  "record277": {
     "code": "nodicsDocsSearchpagenodicsdocsmetadatacatalogproductdiscoverymanagement",
     "product": "nodicsDocumentationProduct",
     "targetType": "PAGE",
@@ -11570,7 +11694,7 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record275": {
+  "record278": {
     "code": "nodicsDocsSearchpagenodicsdocsmetadatadiscoverysearchindexing",
     "product": "nodicsDocumentationProduct",
     "targetType": "PAGE",
@@ -11618,7 +11742,7 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record276": {
+  "record279": {
     "code": "nodicsDocsSearchpagenodicsdocsmetadatawcmsmediamanagement",
     "product": "nodicsDocumentationProduct",
     "targetType": "PAGE",
@@ -11666,7 +11790,7 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record277": {
+  "record280": {
     "code": "nodicsDocsSearchpagenodicsdocsmetadatawcmsmediastoragedelivery",
     "product": "nodicsDocumentationProduct",
     "targetType": "PAGE",
@@ -11714,7 +11838,7 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record278": {
+  "record281": {
     "code": "nodicsDocsSearchpagenodicsdocsmetadatawcmsmediaimportpublication",
     "product": "nodicsDocumentationProduct",
     "targetType": "PAGE",
@@ -11762,7 +11886,7 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record279": {
+  "record282": {
     "code": "nodicsDocsSearchpagenodicsdocsmetadatainventorystockmanagement",
     "product": "nodicsDocumentationProduct",
     "targetType": "PAGE",
@@ -11810,7 +11934,7 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record280": {
+  "record283": {
     "code": "nodicsDocsSearchpagenodicsdocsmetadatapricingpromotionstaxmanagement",
     "product": "nodicsDocumentationProduct",
     "targetType": "PAGE",
@@ -11858,7 +11982,7 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record281": {
+  "record284": {
     "code": "nodicsDocsSearchpagenodicsdocsmetadatacommerceoverview",
     "product": "nodicsDocumentationProduct",
     "targetType": "PAGE",
@@ -11906,7 +12030,7 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record282": {
+  "record285": {
     "code": "nodicsDocsSearchpagenodicsdocsmetadatacommercecartorder",
     "product": "nodicsDocumentationProduct",
     "targetType": "PAGE",
@@ -11954,7 +12078,7 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record283": {
+  "record286": {
     "code": "nodicsDocsSearchpagenodicsdocsmetadatacommercepaymentfulfillment",
     "product": "nodicsDocumentationProduct",
     "targetType": "PAGE",
@@ -12002,7 +12126,7 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record284": {
+  "record287": {
     "code": "nodicsDocsSearchpagenodicsdocsmetadatafulfillmentshippingmanagement",
     "product": "nodicsDocumentationProduct",
     "targetType": "PAGE",
@@ -12050,7 +12174,7 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record285": {
+  "record288": {
     "code": "nodicsDocsSearchpagenodicsdocsmetadataordermanagementlifecycle",
     "product": "nodicsDocumentationProduct",
     "targetType": "PAGE",
@@ -12098,7 +12222,7 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record286": {
+  "record289": {
     "code": "nodicsDocsSearchpagenodicsdocsmetadatacommercereturnsrefunds",
     "product": "nodicsDocumentationProduct",
     "targetType": "PAGE",
@@ -12146,7 +12270,7 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record287": {
+  "record290": {
     "code": "nodicsDocsSearchpagenodicsdocsmetadataengagementcustomerreviews",
     "product": "nodicsDocumentationProduct",
     "targetType": "PAGE",
@@ -12194,7 +12318,7 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record288": {
+  "record291": {
     "code": "nodicsDocsSearchpagenodicsdocsmetadataengagementreviewmoderationgovernance",
     "product": "nodicsDocumentationProduct",
     "targetType": "PAGE",
@@ -12242,7 +12366,7 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record289": {
+  "record292": {
     "code": "nodicsDocsSearchpagenodicsdocsmetadataengagementreviewaggregationrecovery",
     "product": "nodicsDocumentationProduct",
     "targetType": "PAGE",
@@ -12290,7 +12414,7 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record290": {
+  "record293": {
     "code": "nodicsDocsSearchpagenodicsdocsmetadataengagementcustomerfeedback",
     "product": "nodicsDocumentationProduct",
     "targetType": "PAGE",
@@ -12338,7 +12462,7 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record291": {
+  "record294": {
     "code": "nodicsDocsSearchpagenodicsdocsmetadataengagementunifiedoperations",
     "product": "nodicsDocumentationProduct",
     "targetType": "PAGE",
@@ -12386,7 +12510,7 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record292": {
+  "record295": {
     "code": "nodicsDocsSearchpagenodicsdocsmetadataengagementgovernedautomation",
     "product": "nodicsDocumentationProduct",
     "targetType": "PAGE",
@@ -12434,7 +12558,7 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record293": {
+  "record296": {
     "code": "nodicsDocsSearchpagenodicsdocsmetadataengagemententerpriseoperations",
     "product": "nodicsDocumentationProduct",
     "targetType": "PAGE",
@@ -12482,7 +12606,7 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record294": {
+  "record297": {
     "code": "nodicsDocsSearchpagenodicsdocsmetadatacommunicationoverview",
     "product": "nodicsDocumentationProduct",
     "targetType": "PAGE",
@@ -12530,7 +12654,7 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record295": {
+  "record298": {
     "code": "nodicsDocsSearchpagenodicsdocsmetadataeventsmessagingclustercoordination",
     "product": "nodicsDocumentationProduct",
     "targetType": "PAGE",
@@ -12578,7 +12702,7 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record296": {
+  "record299": {
     "code": "nodicsDocsSearchpagenodicsdocsmetadataprocessoverview",
     "product": "nodicsDocumentationProduct",
     "targetType": "PAGE",
@@ -12626,7 +12750,7 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record297": {
+  "record300": {
     "code": "nodicsDocsSearchpagenodicsdocsmetadataprocessruntimelifecycle",
     "product": "nodicsDocumentationProduct",
     "targetType": "PAGE",
@@ -12674,7 +12798,7 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record298": {
+  "record301": {
     "code": "nodicsDocsSearchpagenodicsdocsmetadataprocessworkfloworchestrationpatterns",
     "product": "nodicsDocumentationProduct",
     "targetType": "PAGE",
@@ -12733,7 +12857,7 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record299": {
+  "record302": {
     "code": "nodicsDocsSearchpagenodicsdocsmetadataprocessfirstworkflow",
     "product": "nodicsDocumentationProduct",
     "targetType": "PAGE",
@@ -12781,7 +12905,7 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record300": {
+  "record303": {
     "code": "nodicsDocsSearchpagenodicsdocsmetadataprocessfirsthumantask",
     "product": "nodicsDocumentationProduct",
     "targetType": "PAGE",
@@ -12829,7 +12953,7 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record301": {
+  "record304": {
     "code": "nodicsDocsSearchpagenodicsdocsmetadataprocessbusinessvalue",
     "product": "nodicsDocumentationProduct",
     "targetType": "PAGE",
@@ -12877,7 +13001,7 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record302": {
+  "record305": {
     "code": "nodicsDocsSearchpagenodicsdocsmetadatapipelinebusinesslogicorchestration",
     "product": "nodicsDocumentationProduct",
     "targetType": "PAGE",
@@ -12935,7 +13059,7 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record303": {
+  "record306": {
     "code": "nodicsDocsSearchpagenodicsdocsmetadatacronoperations",
     "product": "nodicsDocumentationProduct",
     "targetType": "PAGE",
@@ -12983,7 +13107,7 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record304": {
+  "record307": {
     "code": "nodicsDocsSearchpagenodicsdocsmetadatacronnoderesponsibilitytee",
     "product": "nodicsDocumentationProduct",
     "targetType": "PAGE",
@@ -13032,7 +13156,7 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record305": {
+  "record308": {
     "code": "nodicsDocsSearchpagenodicsdocsmetadatacronprojectcustomization",
     "product": "nodicsDocumentationProduct",
     "targetType": "PAGE",
@@ -13080,7 +13204,7 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record306": {
+  "record309": {
     "code": "nodicsDocsSearchpagenodicsdocsmetadataprocessprocesscronruntime",
     "product": "nodicsDocumentationProduct",
     "targetType": "PAGE",
@@ -13128,7 +13252,7 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record307": {
+  "record310": {
     "code": "nodicsDocsSearchpagenodicsdocsmetadataprocessscheduledautomation",
     "product": "nodicsDocumentationProduct",
     "targetType": "PAGE",
@@ -13176,7 +13300,7 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record308": {
+  "record311": {
     "code": "nodicsDocsSearchpagenodicsdocsmetadatadataimportexportmigration",
     "product": "nodicsDocumentationProduct",
     "targetType": "PAGE",
@@ -13224,7 +13348,7 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record309": {
+  "record312": {
     "code": "nodicsDocsSearchpagenodicsdocsmetadataprocessactionadapters",
     "product": "nodicsDocumentationProduct",
     "targetType": "PAGE",
@@ -13272,7 +13396,7 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record310": {
+  "record313": {
     "code": "nodicsDocsSearchpagenodicsdocsmetadataframeworkdevopsruntime",
     "product": "nodicsDocumentationProduct",
     "targetType": "PAGE",
@@ -13320,7 +13444,7 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record311": {
+  "record314": {
     "code": "nodicsDocsSearchpagenodicsdocsmetadataframeworkruntimereleaserollback",
     "product": "nodicsDocumentationProduct",
     "targetType": "PAGE",
@@ -13368,7 +13492,7 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record312": {
+  "record315": {
     "code": "nodicsDocsSearchpagenodicsdocsmetadataframeworklocalbrowseracceptancejourney",
     "product": "nodicsDocumentationProduct",
     "targetType": "PAGE",
@@ -13416,7 +13540,7 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record313": {
+  "record316": {
     "code": "nodicsDocsSearchpagenodicsdocsmetadataframeworklocalverificationchecklist",
     "product": "nodicsDocumentationProduct",
     "targetType": "PAGE",
@@ -13464,7 +13588,7 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record314": {
+  "record317": {
     "code": "nodicsDocsSearchpagenodicsdocsmetadatacommerceenterpriseoperations",
     "product": "nodicsDocumentationProduct",
     "targetType": "PAGE",
@@ -13512,7 +13636,7 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record315": {
+  "record318": {
     "code": "nodicsDocsSearchpagenodicsdocsmetadataprocessincidentrecovery",
     "product": "nodicsDocumentationProduct",
     "targetType": "PAGE",
@@ -13560,7 +13684,7 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record316": {
+  "record319": {
     "code": "nodicsDocsSearchpagenodicsdocsmetadataprocessdevopstopology",
     "product": "nodicsDocumentationProduct",
     "targetType": "PAGE",
@@ -13608,7 +13732,7 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record317": {
+  "record320": {
     "code": "nodicsDocsSearchpagenodicsdocsmetadataprocessqaregressionguide",
     "product": "nodicsDocumentationProduct",
     "targetType": "PAGE",
@@ -13656,7 +13780,7 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record318": {
+  "record321": {
     "code": "nodicsDocsSearchpagenodicsdocsmetadataframeworkcapabilitydocumentationmaturitypattern",
     "product": "nodicsDocumentationProduct",
     "targetType": "PAGE",
@@ -13704,7 +13828,7 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record319": {
+  "record322": {
     "code": "nodicsDocsSearchpagenodicsdocsmetadatadocsoverview",
     "product": "nodicsDocumentationProduct",
     "targetType": "PAGE",
@@ -13752,7 +13876,7 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record320": {
+  "record323": {
     "code": "nodicsDocsSearchpagenodicsdocsmetadatawcmspublishinglifecycle",
     "product": "nodicsDocumentationProduct",
     "targetType": "PAGE",
@@ -13800,7 +13924,7 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record321": {
+  "record324": {
     "code": "nodicsDocsSearchpagenodicsdocsmetadataapplicationsnexusdatacontentguide",
     "product": "nodicsDocumentationProduct",
     "targetType": "PAGE",
@@ -13850,7 +13974,7 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record322": {
+  "record325": {
     "code": "nodicsDocsSearchpagenodicsdocsmetadataapplicationsaxissetuperrorcontracts",
     "product": "nodicsDocumentationProduct",
     "targetType": "PAGE",
@@ -13900,7 +14024,7 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record323": {
+  "record326": {
     "code": "nodicsDocsSearchpagenodicsdocsmetadatawcmscmssourcemapauthoringcontract",
     "product": "nodicsDocumentationProduct",
     "targetType": "PAGE",
@@ -13950,7 +14074,7 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record324": {
+  "record327": {
     "code": "nodicsDocsSearchpagenodicsdocsmetadatawcmsmediaoperationsrunbook",
     "product": "nodicsDocumentationProduct",
     "targetType": "PAGE",
@@ -14000,7 +14124,7 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record325": {
+  "record328": {
     "code": "nodicsDocsSearchpagenodicsdocsmetadatadataimportexportproviderguides",
     "product": "nodicsDocumentationProduct",
     "targetType": "PAGE",
@@ -14051,7 +14175,7 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record326": {
+  "record329": {
     "code": "nodicsDocsSearchpagenodicsdocsmetadatacommercedataauthoringfulfillment",
     "product": "nodicsDocumentationProduct",
     "targetType": "PAGE",
@@ -14102,7 +14226,7 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record327": {
+  "record330": {
     "code": "nodicsDocsSearchpagenodicsdocsmetadatadocsdocumentationpublishingrunbook",
     "product": "nodicsDocumentationProduct",
     "targetType": "PAGE",
@@ -14152,7 +14276,7 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record328": {
+  "record331": {
     "code": "nodicsDocsSearchpagenodicsdocsmetadataplatformmoduleregistryjourney",
     "product": "nodicsDocumentationProduct",
     "targetType": "PAGE",
@@ -14202,7 +14326,7 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record329": {
+  "record332": {
     "code": "nodicsDocsSearchpagenodicsdocsmetadatacommercesearchguide",
     "product": "nodicsDocumentationProduct",
     "targetType": "PAGE",
@@ -14252,7 +14376,7 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record330": {
+  "record333": {
     "code": "nodicsDocsSearchpagenodicsdocsmetadatalocalizationruntimeauthoring",
     "product": "nodicsDocumentationProduct",
     "targetType": "PAGE",
@@ -14302,7 +14426,7 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record331": {
+  "record334": {
     "code": "nodicsDocsSearchpagenodicsdocsmetadatacommercepaymentproviderboundaries",
     "product": "nodicsDocumentationProduct",
     "targetType": "PAGE",
@@ -14352,23 +14476,79 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record332": {
-    "code": "nodicsDocsSearchpagenodicsdocsmetadatacommercecustomerlistprofileboundary",
+  "record335": {
+    "code": "nodicsDocsSearchpagenodicsdocsmetadataloyaltywalletsrewardsledger",
     "product": "nodicsDocumentationProduct",
     "targetType": "PAGE",
-    "targetCode": "nodicsDocsMetadatacommerceCustomerListProfileBoundary",
-    "title": "Customer List and Profile Commerce Boundary",
-    "summary": "Why customer lists belong to Commerce while person, address, authentication, permission, and organization identity stay under Profile.",
-    "searchText": "Customer List and Profile Commerce Boundary Why customer lists belong to Commerce while person, address, authentication, permission, and organization identity stay under Profile. # Customer List and Profile Commerce Boundary\n\nCustomer List is a Commerce capability for grouping customers in commercial\ncontexts such as eligibility, promotions, account buying, or targeted\noperations. Profile remains the authority for person, address, authentication,\npermission, and organization identity. For beginners, Profile answers \"who is\nthis customer?\" and Customer List answers \"which commercial group is this\ncustomer part of for this commerce operation?\"\n\n## Source map\n\n| Area | Source location |\n| --- | --- |\n| Customer List module | `../nodics.commerce/modules/checkout/modules/customerList/package.json` |\n| Checkout module | `../nodics.commerce/modules/checkout/package.json` |\n| Profile module | `../nodics.platform/modules/profile/package.json` |\n| Security docs | `docs/pages/nodics.platform/security-identity-access.md` |\n| Commerce operations | `docs/pages/nodics.commerce/cart-order.md` |\n\n## Ownership model\n\n```mermaid\nflowchart LR\n  Profile[\"Profile identity\"] --> CustomerList[\"Commerce customer list\"]\n  CustomerList --> Promotion[\"Promotion eligibility\"]\n  CustomerList --> Checkout[\"Checkout decision\"]\n  Profile --> Auth[\"Authentication and permissions\"]\n```\n\nThe business problem is targeted commerce without identity duplication.\nBusiness users need groups like VIP customers, wholesale buyers, or launch\naudiences. Developers need a boundary that prevents Commerce from becoming a\nparallel identity system. Operators need to trace eligibility decisions in\nproduction without exposing personal data unnecessarily.\n\n## Contract\n\nCustomer List records should reference stable profile or organization codes,\nlist codes, lifecycle state, source reason, and validity dates where needed.\nThey should not copy passwords, credentials, full identity payloads, or\npermission ownership.\n\n```js\nmodule.exports = {\n  vipCustomerMembership: {\n    code: 'vipCustomerMembership',\n    listCode: 'vipCustomers',\n    customerCode: 'customer001',\n    active: true\n  }\n};\n```\n\n## Customization and extension guidance\n\nDevelopers can add eligibility services, import mappers, segmentation rules,\npromotion integrations, and audit views. Business users should manage lists\nthrough Axis when available. AI tools should inspect Profile and Commerce\nschemas before adding references. Operators should verify that commercial\ngrouping works without broad identity export.\n\n## Implementation handoff\n\nEach customer-list customization should name the Profile reference key,\nCommerce list schema, eligibility service, promotion or checkout consumer,\npermission rule, retention rule, and audit evidence. Business users then\nunderstand the journey, developers preserve the identity boundary, operators\ncan investigate production eligibility, and QA owners can prove that removing\na customer from a list changes commerce behavior without corrupting Profile.\n\n## Evidence checklist\n\nMembership evidence should include list code, referenced customer or\norganization code, source reason, actor, validity window, lifecycle state, and\nlast eligibility decision. Do not expose more Profile detail than the business\njourney requires. Operators should be able to prove why a customer received or\ndid not receive a commercial treatment, while developers keep identity,\nauthentication, address, and permission fields under Profile authority.\n\nThis evidence also protects production support from over-collecting identity\ndata. The support answer should be about eligibility and commerce treatment,\nnot a full customer profile export.\n\nProduction support should also prove expiry and removal. When a customer loses\nmembership, the next checkout or promotion decision must respect that change\nwithout deleting the underlying Profile record.\n\n## Common mistakes\n\n- Copying Profile authority into Commerce records.\n- Using email address as the only customer list key.\n- Applying promotions without list lifecycle checks.\n- Exposing list membership without permission checks.\n- Forgetting removal, expiry, and audit behavior.\n\n## Verification\n\nImport profile and customer list data into a fresh schema. Validate list\nmembership, checkout eligibility, promotion behavior, removal behavior, and\npermission-filtered Axis visibility. Production readiness requires business\napproval, developer boundary tests, operator audit evidence, and QA proof that\nProfile remains the identity authority.\n",
+    "targetCode": "nodicsDocsMetadataloyaltyWalletsRewardsLedger",
+    "title": "Loyalty Wallets, Rewards, and Ledger",
+    "summary": "Business, developer, operator, and customization guidance for reward wallets, balances, reservations, redemptions, ledger evidence, and Commerce reward payment provider integration.",
+    "searchText": "Loyalty Wallets, Rewards, and Ledger Business, developer, operator, and customization guidance for reward wallets, balances, reservations, redemptions, ledger evidence, and Commerce reward payment provider integration. # Loyalty Wallets, Rewards, and Ledger\n\nMaturity: operational first slice.\n\nNodics Loyalty gives a project a reusable way to reward people or business\nactors for approved behavior, hold that value in a wallet, reserve it for a\nbusiness transaction, capture it when the transaction succeeds, release it when\nthe transaction fails, and explain every movement through an append-only ledger.\n\nThe business idea is simple: a customer may earn points for an order, an\nemployee may earn credits for a task, a partner may receive reward value for a\ncampaign, or an enterprise may hold a wallet for a shared program. Each wallet\nhas an owner type and owner code. The reward itself can be points, credits,\nstamps, tokens, or a project-defined unit.\n\n## Beginner mental model\n\nFor beginners, think of Loyalty as a bank passbook for non-cash reward value.\nThe wallet says who owns the value. The balance says how much of each reward\ntype is available, reserved, or spent. The ledger explains every movement so a\nteam can answer what happened later. Commerce, Engagement, Process, or a\nproject module may decide why a reward should move, but Loyalty records the\nmovement consistently.\n\n## Business problem\n\nMany implementations start with one points column on the customer profile.\nThat becomes painful as soon as the business needs multiple reward types,\nexpiry, coupon purchase, reversals, reservation during checkout, employee\nrewards, or audit evidence. A single balance field cannot answer who changed\nthe balance, which program produced it, whether it is reserved, whether it was\nspent correctly, or how to reverse a mistake.\n\nLoyalty solves this by making the wallet a reusable value container and the\nledger the permanent explanation of change. Commerce, Engagement, Process,\nor a customer project may decide why rewards are earned or spent, but Loyalty\nowns the balance, reservation, redemption, and ledger evidence.\n\n## Source map\n\n| Area | Source location |\n| --- | --- |\n| Functional module group | `../nodics.loyalty/package.json` |\n| Module ownership guide | `../nodics.loyalty/README.md` |\n| Shared policy and enums | `../nodics.loyalty/modules/loyaltyCore/src/schemas/schemas.js` |\n| Programs | `../nodics.loyalty/modules/loyaltyProgram/src/schemas/schemas.js` |\n| Reward types | `../nodics.loyalty/modules/loyaltyRewardType/src/schemas/schemas.js` |\n| Wallets and balances | `../nodics.loyalty/modules/loyaltyWallet/src/schemas/schemas.js` |\n| Reward operation service | `../nodics.loyalty/modules/loyaltyWallet/src/service/defaultLoyaltyRewardOperationService.js` |\n| Ledger schema and posting | `../nodics.loyalty/modules/loyaltyLedger/src/schemas/schemas.js` |\n| Reservation schema | `../nodics.loyalty/modules/loyaltyReservation/src/schemas/schemas.js` |\n| Redemption schema | `../nodics.loyalty/modules/loyaltyRedemption/src/schemas/schemas.js` |\n| Internal API routes | `../nodics.loyalty/modules/loyaltyApi/src/router/routers.js` |\n| Commerce reward payment provider | `../nodics.commerce/modules/payment/modules/paymentProviders/modules/loyaltyRewardProvider/README.md` |\n| Live checkout acceptance | `../nodics.foundation/modules/nTooling/src/service/project/defaultProjectLoyaltyRewardCheckoutAcceptanceService.mjs` |\n\n## Owner model\n\n```mermaid\nflowchart LR\n  Actor[\"Customer, employee, partner, enterprise, or system\"] --> Wallet[\"Loyalty wallet\"]\n  Wallet --> Balance[\"Program + reward type balance\"]\n  Balance --> Reservation[\"Reservation\"]\n  Reservation --> Capture[\"Capture / redemption\"]\n  Balance --> Ledger[\"Append-only reward ledger\"]\n  Capture --> Ledger\n  Reservation --> Ledger\n```\n\nThe wallet owner is stored as `ownerType` and `ownerCode`. This allows a wallet\nto belong to a customer, employee, enterprise, partner, or system actor without\nturning Loyalty into a customer-profile table.\n\nTenant and enterprise schema selection comes from the authenticated runtime\ncontext. Do not add `tenant`, `enterpriseCode`, raw token, request payload, or\nHTTP context fields to Loyalty wallet, balance, ledger, reservation, or\nredemption rows.\n\n## Runtime topology\n\nLoyalty can run in the same local topology as the rest of Nodics or as a\nseparate microservice. In the Kickoff local topology, `loyaltyServer` runs the\nframework-owned `nodics.loyalty` module group. Commerce can run on its own\nserver and call the Loyalty internal API through the configured server graph.\n\nThis is the important dependency direction:\n\n| Journey part | Owner |\n| --- | --- |\n| Reward balance and ledger | `nodics.loyalty` |\n| Coupon product, cart, checkout, order, payment transaction, entitlement, delivery | `nodics.commerce` |\n| Buying a coupon with reward points | Commerce payment method and payment provider |\n| Project earning rule or customer-specific reward policy | Project module or configuration |\n| Runtime schema selection | Authenticated request context |\n\n## Business journeys\n\n### Earn\n\nAn approved business event grants reward value. The earning reason can come\nfrom Commerce, Engagement, Process, or a project-specific module, but the\nbalance movement belongs to Loyalty. The ledger entry type is `EARN`.\n\n### Reserve\n\nBefore a reward value is spent, Loyalty can reserve it. Reservation moves value\nfrom available to reserved so a checkout or external process can continue\nwithout double-spending the same points. The ledger entry type is `RESERVE`.\n\n### Capture\n\nWhen the downstream business journey succeeds, the reservation is captured.\nReserved value becomes spent value, a redemption record is created, and the\nledger receives a `CAPTURE` entry.\n\n### Release\n\nIf the downstream journey fails or is cancelled before capture, the reservation\nis released. Reserved value returns to available value, and the ledger receives\nrelease evidence.\n\n### Reverse\n\nCorrections and refunds are compensating movements. Historical ledger rows\nremain append-only; a new `REVERSE` entry explains the correction.\n\n## Reward payment provider checkout pattern\n\nBuying a coupon with points is not Loyalty module behavior. It is a Commerce\ncheckout journey using Loyalty as the reward-balance authority.\n\n```mermaid\nsequenceDiagram\n  participant Customer\n  participant Commerce\n  participant Payment as Loyalty reward payment provider\n  participant Loyalty\n  Customer->>Commerce: Place order with LOYALTY_REWARD\n  Commerce->>Payment: Authorize reward payment\n  Payment->>Loyalty: Reserve reward amount\n  Commerce->>Payment: Capture after order placement\n  Payment->>Loyalty: Capture reservation\n  Commerce->>Commerce: Persist order, payment, entitlement, delivery\n```\n\nUse `paymentMethod: \"LOYALTY_REWARD\"` when checkout should pay for a product\nwith reward value. Commerce decides that the product can be bought, calculates\nthe cart, owns payment transaction evidence, creates the order, and delivers\nthe coupon or digital entitlement. Loyalty only owns the wallet balance,\nreservation, redemption, and ledger.\n\n## Developer guidance\n\nDevelopers should start from the owner before adding code:\n\n| Change | Put it here |\n| --- | --- |\n| New reward unit such as points, credits, or stamps | `loyaltyRewardType` data or project data |\n| New program such as VIP rewards | `loyaltyProgram` data or project data |\n| Balance mutation behavior used by every project | `loyaltyWallet` service contract |\n| Ledger posting behavior | `loyaltyLedger` |\n| Reserve, capture, release, reverse API | `loyaltyApi` |\n| Coupon purchase with points | Commerce payment method/provider |\n| Project-specific earn policy | Customer project extension module |\n| Storefront labels and customer messaging | Project frontend or content data |\n\nUse string decimal amounts for reward balances. Do not use floating point\narithmetic for points or credits. Use idempotency keys and correlation IDs for\nmutating operations so retries do not double-spend rewards.\n\n## Customization guidance\n\nCustomize Loyalty from the outside first:\n\n1. Configure reward programs, reward types, expiry windows, and spend policies.\n2. Add project-owned data packs for customer-specific reward catalogs.\n3. Add a project extension module when a customer has unique earning,\n   validation, expiry, or eligibility rules.\n4. Add Commerce payment providers or payment-method configuration when reward\n   value can buy products, subscriptions, coupons, or services.\n5. Change the reusable framework module only when all projects need a new\n   Loyalty contract.\n\nProject customization must keep standard owner names stable. A customer project\nmay extend Loyalty behavior, but it should not rename the framework capability\nor create a parallel wallet authority.\n\n## Security and governance\n\nLoyalty internal mutation APIs are service-to-service contracts. Customer or\nadmin tokens may read authorized wallet views when such routes are exposed, but\nreserve, capture, release, and reverse operations should be called by trusted\nservices such as Commerce payment providers.\n\nPermissions must be explicit. Service accounts need the Loyalty internal\npermissions used by payment-provider handoff. Browser responses and logs must\nnot expose raw tokens, API keys, customer secrets, or provider payloads.\n\n## Operational evidence\n\nAn operator needs enough evidence to decide whether a reward spend succeeded,\nfailed, or needs compensation:\n\n| Evidence | Why it matters |\n| --- | --- |\n| Wallet balance | Shows available, reserved, and spent reward value |\n| Reservation | Shows value was held for a target order or process |\n| Ledger entries | Shows append-only movement history |\n| Redemption | Shows captured reward usage |\n| Payment transaction | Shows Commerce payment lifecycle |\n| Order evidence | Shows checkout selected the Loyalty reward provider |\n| Entitlement or delivery | Shows the product or coupon was actually fulfilled |\n\n## Verification\n\nFor framework changes, run the focused Loyalty tests:\n\n```sh\nnode nodics.loyalty/modules/loyaltyApi/test/loyaltyApiRouteContract.test.js\nnode nodics.loyalty/modules/loyaltyWallet/test/loyaltyRewardOperationContract.test.js\nnode nodics.loyalty/modules/loyaltyLedger/test/loyaltyLedgerContract.test.js\n```\n\nFor Commerce checkout integration, run the provider test and the Kickoff live\nacceptance:\n\n```sh\nnode nodics.commerce/modules/payment/modules/paymentProviders/modules/loyaltyRewardProvider/test/loyaltyRewardPaymentProviderContract.test.js\ncd ../nodics.kickoff\nnpm run acceptance:loyalty-reward-checkout\n```\n\nThe live acceptance starts Platform, Loyalty, and Commerce, places an HTTP\ncheckout using `LOYALTY_REWARD`, verifies Mongo evidence across Loyalty and\nCommerce models, and writes a browser-readable report to\n`.nodics/tmp/loyalty-reward-checkout-live/index.html`.\n\nWhen a journey is customer-visible, complete a browser pass as well. The page\nor journey should show business-safe status, readable balance/payment evidence,\nand no broken layout at desktop and mobile widths.\n\n## Common mistakes\n\n- Treating coupon purchase as Loyalty instead of Commerce payment behavior.\n- Storing tenant or enterprise fields in Loyalty business rows.\n- Moving balances without ledger evidence.\n- Editing old ledger entries instead of posting reversals.\n- Letting a project-specific reward policy become the framework default.\n- Using floating point math for reward amounts.\n- Calling internal mutation APIs directly from a public browser journey.\n\n## Reader checklist\n\nBusiness readers should leave this page knowing what reward wallets do and why\nledger evidence matters. Developers should know which module owns each change.\nOperators should know which runtime and evidence to inspect. Project teams\nshould know how to customize reward programs and checkout spend behavior\nwithout forking the standard Loyalty framework.\n",
     "keywords": [
-      "customer-list",
+      "loyalty",
+      "reward",
+      "wallet",
+      "points",
+      "ledger",
+      "reservation",
+      "redemption",
+      "checkout",
+      "payment-provider",
+      "Loyalty and Rewards",
+      "Loyalty Foundations",
+      "Loyalty Wallets, Rewards, and Ledger"
+    ],
+    "facets": {
+      "section": "loyalty-and-rewards",
+      "group": "loyalty-and-rewards",
+      "navigationDepth": 2,
+      "documentType": "contract",
+      "audience": [
+        "business",
+        "architect",
+        "administrator",
+        "developer",
+        "operator",
+        "qa",
+        "ai-tool"
+      ],
+      "maturityState": "operational"
+    },
+    "managedInAxis": true,
+    "axisAuthoringPermissions": [
+      "documentation.search.preview"
+    ],
+    "workflowRequired": true,
+    "workflowTriggers": [
+      "SEARCH_METADATA_CHANGE"
+    ],
+    "locale": "en",
+    "channel": "web",
+    "accessPolicy": "nodicsDocsAccessPublic",
+    "accessMode": "PUBLIC",
+    "lifecycleState": "ONLINE",
+    "indexState": "INDEX_READY",
+    "active": true
+  },
+  "record336": {
+    "code": "nodicsDocsSearchpagenodicsdocsmetadatacommerceshoppinglistcommerceboundary",
+    "product": "nodicsDocumentationProduct",
+    "targetType": "PAGE",
+    "targetCode": "nodicsDocsMetadatacommerceShoppingListCommerceBoundary",
+    "title": "Shopping List Commerce Boundary",
+    "summary": "Why wishlist, compare, and save-for-later belong to Commerce while Profile remains the identity authority.",
+    "searchText": "Shopping List Commerce Boundary Why wishlist, compare, and save-for-later belong to Commerce while Profile remains the identity authority. # Shopping List Commerce Boundary\n\nShopping List is a Commerce capability for customer shopping-intent lists such\nas wishlist, compare, and save-for-later. It belongs under Base Commerce\nbecause these lists are used across discovery, product cards, cart, checkout,\nand later channel journeys. Profile remains the authority for person,\nauthentication, permissions, addresses, and organization identity.\n\nFor beginners, Profile answers \"who is this actor?\" Shopping List answers\n\"which products has this authenticated shopper intentionally saved for a\ncommerce journey?\"\n\n## Source map\n\n| Area | Source location |\n| --- | --- |\n| Shopping List module | `../nodics.commerce/modules/baseCommerce/modules/shoppingList/package.json` |\n| Shopping List schemas | `../nodics.commerce/modules/baseCommerce/modules/shoppingList/src/schemas/schemas.js` |\n| Shopping List routes | `../nodics.commerce/modules/baseCommerce/modules/shoppingList/src/router/routers.js` |\n| Shopping List service | `../nodics.commerce/modules/baseCommerce/modules/shoppingList/src/service/defaultShoppingListOperationService.js` |\n| Commerce composition | `../nodics.commerce/modules/baseCommerce/package.json` |\n| Profile security groups | `../nodics.platform/modules/profile/data/init-v001/records/groups/defaultBootstrapUserGroupsData.js` |\n| Agora storefront client | `../../nodics.exp/nodics.agora.apparel/src/api/commerceClient.ts` |\n\n## Ownership model\n\n```mermaid\nflowchart LR\n  Profile[\"Profile identity and auth\"] --> Token[\"Authenticated customer token\"]\n  Token --> ShoppingList[\"Commerce Shopping List\"]\n  ShoppingList --> Wishlist[\"Wishlist\"]\n  ShoppingList --> Compare[\"Compare\"]\n  ShoppingList --> SaveForLater[\"Save for later\"]\n  ShoppingList --> Cart[\"Cart and checkout journey\"]\n  ShoppingList --> Storefront[\"Agora product cards and quick actions\"]\n```\n\nThe business purpose is simple: a shopper can express purchase intent before\ncheckout without turning Profile into a commerce data store. Wishlist, compare,\nand save-for-later are not profile preferences; they are commerce actions over\nproducts, variants, stores, prices, availability, and storefront context.\n\n## Contract\n\nShopping List records must be owned by Commerce and scoped to the authenticated\ncustomer. They may reference customer identity by stable owner code from the\nauth context, but they must not copy credentials, addresses, permission state,\nor full Profile payloads.\n\nSupported list types are:\n\n- `WISHLIST`\n- `COMPARE`\n- `SAVE_FOR_LATER`\n\nThe customer API route family is:\n\n```text\nGET    /nodics/shoppingList/v0/lists/:listType\nPOST   /nodics/shoppingList/v0/lists/:listType/entries\nDELETE /nodics/shoppingList/v0/lists/:listType/entries/:entryCode\n```\n\nAll customer operations require `commerce.shoppingList.own` and must derive the\nowner from the authenticated customer token, not from browser-supplied owner\nfields.\n\n```js\nmodule.exports = {\n  savedTopForLater: {\n    code: 'shoppingList_customer001_SAVE_FOR_LATER_agoraRibbedTankTop',\n    ownerId: 'customer001',\n    listType: 'SAVE_FOR_LATER',\n    productCode: 'agoraRibbedTankTop',\n    variantCode: 'agoraRibbedTankTopIvoryS',\n    storeCode: 'agoraMainStore',\n    locale: 'en',\n    active: true\n  }\n};\n```\n\n## Business configuration guidance\n\nBusiness users should think of Shopping List as reusable commerce behavior that\nstorefront components can expose in different ways:\n\n- Product cards can offer wishlist and compare quick actions.\n- Quick-view or quick-add panels can add wishlist, compare, and save-for-later.\n- Cart can offer save-for-later instead of removing an item permanently.\n- Account pages can show saved products without owning the commerce schema.\n\nConfiguration should control limits and supported list types at the commerce\nmodule level. Project modules may customize text, placement, and UI behavior,\nbut they should not redefine the underlying owner or route contract.\n\n## Developer extension guidance\n\nDevelopers may extend Shopping List with recommendation signals, expiration\nrules, merchandising analytics, stock alerts, or business-specific list types\nonly when the list remains a product-intent list. If a feature groups people for\neligibility, segmentation, loyalty, or account buying, it should not be added to\nShopping List without a separate commerce capability decision.\n\nSafe extension points include:\n\n- list type policy,\n- maximum item limits,\n- duplicate/idempotency rules,\n- product and variant validation,\n- customer-safe projection fields,\n- Axis visibility for business support,\n- storefront component integration.\n\n## Extending product-keeping journeys\n\nThe easiest and safest way to extend Shopping List is to add a new commerce\nlist type when the business need is \"keep these products for a later product\njourney.\" The module already owns the common mechanics: authenticated owner,\nproduct reference, variant reference, store context, locale, idempotent add,\nbounded list size, read, and remove.\n\nGood examples are:\n\n| Use case | Suggested list type | Why it fits Shopping List |\n| --- | --- | --- |\n| Save an item from cart for later | `SAVE_FOR_LATER` | The shopper is keeping a product instead of buying now. |\n| Build a comparison set | `COMPARE` | The shopper is keeping a short product set for decision support. |\n| Wishlist future purchases | `WISHLIST` | The shopper is keeping products for later discovery or purchase. |\n| Keep outfit ideas | `OUTFIT_IDEA` | The shopper is grouping product references for a shopping intent. |\n| Keep replenishment candidates | `REPLENISHMENT` | The shopper is remembering products they may buy again. |\n| Keep gift ideas | `GIFT_IDEA` | The shopper is saving product references for a future occasion. |\n\nTo add a new product-keeping journey:\n\n1. Add the list type to the Shopping List policy, for example\n   `OUTFIT_IDEA`.\n2. Define a clear item limit for that type. Small decision lists such as compare\n   should stay low; open-ended saved lists can be higher.\n3. Reuse the existing customer API route family by passing the new `listType`.\n4. Store only `productCode`, optional `variantCode`, `storeCode`, `locale`, and\n   lightweight intent metadata such as note, source component, or occasion.\n5. Render the journey in the project storefront or Axis using business-managed\n   component text, placement, labels, and icons.\n6. Add contract tests for ownership, idempotency, limit enforcement, and\n   unsupported type rejection.\n\n```js\n// Example project-level policy extension\nshoppingList: {\n  supportedListTypes: [\n    'WISHLIST',\n    'COMPARE',\n    'SAVE_FOR_LATER',\n    'OUTFIT_IDEA',\n    'GIFT_IDEA'\n  ],\n  maximumWishlistItems: 100,\n  maximumCompareItems: 4,\n  maximumSaveForLaterItems: 100,\n  maximumOutfitIdeaItems: 40,\n  maximumGiftIdeaItems: 60\n}\n```\n\nDo not create a separate module for every saved-product journey unless the\njourney has a different owner or materially different lifecycle. If it is still\nan authenticated shopper keeping product references, extend Shopping List.\n\nUnsafe extensions include:\n\n- copying Profile credentials or address payloads,\n- accepting owner identity from browser payloads,\n- placing Shopping List under Checkout only,\n- keeping old `customerList` route or permission aliases,\n- using wishlist as a generic customer segmentation feature.\n\n## Common mistakes\n\n- Treating wishlist, compare, or save-for-later as Profile data.\n- Keeping compatibility aliases for `/nodics/customerList/v0`.\n- Checking list ownership from request payload instead of authenticated token.\n- Placing Shopping List under Checkout even though product cards and PDP need it\n  before cart or checkout starts.\n- Forgetting to migrate persisted customer groups to `commerce.shoppingList.own`.\n- Adding new list types without clear commerce ownership, limits, and\n  idempotency behavior.\n\n## Migration principle\n\nThere is no compatibility alias for the old `customerList` boundary. The correct\nruntime name is `shoppingList`, the correct permission is\n`commerce.shoppingList.own`, and the correct module owner is Base Commerce.\n\nExisting runtime identity records should be reconciled by the Profile identity\ngovernance migration APIs so persisted customer groups receive\n`commerce.shoppingList.own` through an audited change set.\n\n## Verification\n\nProduction readiness requires these checks:\n\n- Base Commerce loads `shoppingList` before Checkout and order journeys.\n- The old `checkout/modules/customerList` module is absent.\n- Customer tokens include `commerce.shoppingList.own`.\n- Wishlist, compare, and save-for-later add/read/remove calls are owner-scoped.\n- Agora product cards and quick panels call `/nodics/shoppingList/v0`.\n- Non-owned list entries cannot be read or mutated.\n- `npm run test:commerce`, `npm run validate:root`, Agora frontend verify, and\n  live Agora commerce acceptance pass.\n",
+    "keywords": [
+      "shopping-list",
+      "wishlist",
+      "compare",
+      "save-for-later",
       "profile",
       "commerce-boundary",
-      "eligibility",
       "identity",
       "User, Enterprise, and Tenant Management",
       "Customer Data and Identity",
-      "Customer List and Profile Commerce Boundary"
+      "Shopping List Commerce Boundary"
     ],
     "facets": {
       "section": "user-enterprise-and-tenant-management",
@@ -14402,7 +14582,7 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record333": {
+  "record337": {
     "code": "nodicsDocsSearchpagenodicsdocsmetadatafoundationnmsruntimemonitoring",
     "product": "nodicsDocumentationProduct",
     "targetType": "PAGE",
@@ -14452,7 +14632,7 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record334": {
+  "record338": {
     "code": "nodicsDocsSearchpagenodicsdocsmetadatafoundationserviceruntimeoverrides",
     "product": "nodicsDocumentationProduct",
     "targetType": "PAGE",
@@ -14502,7 +14682,7 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record335": {
+  "record339": {
     "code": "nodicsDocsSearchpagenodicsdocsmetadatafoundationmoduletomodulecommunication",
     "product": "nodicsDocumentationProduct",
     "targetType": "PAGE",
@@ -14556,7 +14736,7 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record336": {
+  "record340": {
     "code": "nodicsDocsSearchpagenodicsdocsmetadatafoundationcacheproviderrunbooks",
     "product": "nodicsDocumentationProduct",
     "targetType": "PAGE",
@@ -14606,7 +14786,7 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record337": {
+  "record341": {
     "code": "nodicsDocsSearchpagenodicsdocsmetadatafoundationdatabaseproviderboundaries",
     "product": "nodicsDocumentationProduct",
     "targetType": "PAGE",
@@ -14656,7 +14836,7 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record338": {
+  "record342": {
     "code": "nodicsDocsSearchpagenodicsdocsmetadatasecurityotpsecurityflow",
     "product": "nodicsDocumentationProduct",
     "targetType": "PAGE",
@@ -14706,7 +14886,7 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record339": {
+  "record343": {
     "code": "nodicsDocsSearchpagenodicsdocsmetadatacommunicationproviderrunbooks",
     "product": "nodicsDocumentationProduct",
     "targetType": "PAGE",
@@ -14756,7 +14936,7 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record340": {
+  "record344": {
     "code": "nodicsDocsSearchpagenodicsdocsmetadataengagementcontactsubmissionoperations",
     "product": "nodicsDocumentationProduct",
     "targetType": "PAGE",
@@ -14806,7 +14986,7 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record341": {
+  "record345": {
     "code": "nodicsDocsSearchpagenodicsdocsmetadataprocessworkflowbpmsourcemap",
     "product": "nodicsDocumentationProduct",
     "targetType": "PAGE",
@@ -14856,7 +15036,7 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record342": {
+  "record346": {
     "code": "nodicsDocsSearchpagenodicsdocsmetadataprocesscronjobdataauthoring",
     "product": "nodicsDocumentationProduct",
     "targetType": "PAGE",
@@ -14906,7 +15086,7 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record343": {
+  "record347": {
     "code": "nodicsDocsSearchpagenodicsdocsmetadataframeworkreleaseupgradecompatibility",
     "product": "nodicsDocumentationProduct",
     "targetType": "PAGE",
@@ -14956,7 +15136,7 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record344": {
+  "record348": {
     "code": "nodicsDocsSearchpagenodicsdocsmetadatacommercefulfillmentcoresourcemap",
     "product": "nodicsDocumentationProduct",
     "targetType": "PAGE",
@@ -15006,7 +15186,7 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record345": {
+  "record349": {
     "code": "nodicsDocsSearchpagenodicsdocsmetadataacceleratorsdomaincommercesourcemap",
     "product": "nodicsDocumentationProduct",
     "targetType": "PAGE",
@@ -15056,7 +15236,7 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record346": {
+  "record350": {
     "code": "nodicsDocsSearchpagenodicsdocsmetadatafoundationtoolingruntimecontracts",
     "product": "nodicsDocumentationProduct",
     "targetType": "PAGE",
@@ -15106,7 +15286,7 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record347": {
+  "record351": {
     "code": "nodicsDocsSearchpagenodicsdocsmetadatafoundationemsruntimeclientrunbook",
     "product": "nodicsDocumentationProduct",
     "targetType": "PAGE",
@@ -15156,7 +15336,7 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record348": {
+  "record352": {
     "code": "nodicsDocsSearchpagenodicsdocsmetadatareferenceinternalsourceboundaryregister",
     "product": "nodicsDocumentationProduct",
     "targetType": "PAGE",
@@ -15206,7 +15386,7 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record349": {
+  "record353": {
     "code": "nodicsDocsSearchpagenodicsdocsmetadatatoolingaideveloperenablement",
     "product": "nodicsDocumentationProduct",
     "targetType": "PAGE",
@@ -15254,7 +15434,7 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record350": {
+  "record354": {
     "code": "nodicsDocsSearchpagenodicsdocsmetadatareferencesourcemapglossary",
     "product": "nodicsDocumentationProduct",
     "targetType": "PAGE",
@@ -15302,7 +15482,7 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record351": {
+  "record355": {
     "code": "nodicsDocsSearchpagenodicsdocsmetadatareferencesourcebackeddocumentationcoverageaudit",
     "product": "nodicsDocumentationProduct",
     "targetType": "PAGE",
@@ -15353,14 +15533,14 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record352": {
+  "record356": {
     "code": "nodicsDocsSearchpagenodicsdocsmetadatareferencedocumentationgapbacklog",
     "product": "nodicsDocumentationProduct",
     "targetType": "PAGE",
     "targetCode": "nodicsDocsMetadatareferenceDocumentationGapBacklog",
     "title": "Documentation Gap Backlog",
     "summary": "Classified backlog for closing source-backed documentation gaps across runtime capabilities, data releases, media, applications, operations, and validation.",
-    "searchText": "Documentation Gap Backlog Classified backlog for closing source-backed documentation gaps across runtime capabilities, data releases, media, applications, operations, and validation. # Documentation Gap Backlog\n\nThis backlog turns the source-backed coverage audit into executable\ndocumentation work. It captures the remaining categories that must be closed so\nNodics documentation explains not only what the product is, but how developers,\nbusiness users, operators, QA owners, and AI tools can safely work with the\nframework.\n\nFor beginners, the mental model is simple: the coverage report tells us where\nthe source is richer than the documentation, and this backlog tells us what to\ndo next. A source boundary may need a new page, a deeper section in an existing\npage, an explicit owner mapping, or an internal-only decision. The backlog is\nnot a marketing roadmap. It is a release-quality checklist for source-backed\ndocumentation.\n\n## Backlog flow\n\n```mermaid\nflowchart LR\n  Report[\"Generated coverage report\"] --> Classify[\"Classify each gap\"]\n  Classify --> Page[\"New page\"]\n  Classify --> Deepen[\"Deeper section\"]\n  Classify --> Map[\"Owner mapping\"]\n  Classify --> Internal[\"Internal-only decision\"]\n  Page --> Generate[\"Regenerate docs data\"]\n  Deepen --> Generate\n  Map --> Generate\n  Internal --> Generate\n  Generate --> Test[\"Docs tests and source evidence\"]\n  Test --> Publish[\"Staged approval and Online publication\"]\n```\n\n## Classification policy\n\n| Classification | Meaning | Required action |\n| --- | --- | --- |\n| `needs-page` | A user-visible or developer-extensible capability has no clear page. | Create authored Markdown, catalogue metadata, source evidence, generated records, and validation. |\n| `needs-deeper-section` | A page exists, but it lacks exact source map, data, service, operation, or validation detail. | Extend the existing page with how-to, how-it-works, customization, errors, and tests. |\n| `needs-page-or-owner-mapping` | The source is significant, but ownership may belong under a broader page. | Decide owner, then either create a page or add explicit mapping to the owning page. |\n| `internal-only-candidate` | The module is likely a utility or provider implementation. | Document the owner page that covers it, or mark it internal with justification. |\n| `covered` | Existing docs and source evidence are sufficient for the current maturity state. | Keep validation and browser evidence current when behavior changes. |\n\n## P0 closure items\n\n| Status | Item | Source areas | Documentation outcome |\n| --- | --- | --- | --- |\n| Closed by P0 docs batch | Nexus data and content guide | `nodics.kickoff/modules/nexus.web` | Covered by `applications.nexus-data-content-guide` with Nexus project content, media assets, headers, records, publication, Online delivery, and browser validation. |\n| Closed by P0 docs batch | Axis setup and user-safe error contracts | `nodics.platform/modules/backoffice`, `nodics.platform/modules/axis`, `nodics.exp/nodics.axis` | Covered by `applications.axis-setup-error-contracts` with setup states, blockers, retry behavior, required capability checks, technical evidence, and customer-safe messages. |\n| Closed by P0 docs batch | CMS exact source map | `nodics.wcms/modules/cms` | Covered by `wcms.cms-source-map-authoring-contract` with page, route, component, slot, template, renderer, publication manifest, migration, delivery cache, and documentation governance details. |\n| Closed by P0 docs batch | Media operations runbook | `nodics.wcms/modules/media`, `nodics.foundation/modules/nData/nImport/import/src/service/media` | Covered by `wcms.media-operations-runbook` with upload, import hydration, storage providers, cleanup, replication queue, delivery failures, and DR evidence. |\n| Closed by P0 docs batch | Import/export provider guides | `nodics.foundation/modules/nData/nImport`, `nodics.foundation/modules/nData/nExport` | Covered by `data.import-export-provider-guides` with JavaScript, JSON, CSV, Excel, generated exports, parsers, field allow-lists, masking, and rollback boundaries. |\n| Closed by P0 docs batch | Commerce authoring and fulfillment | `nodics.commerce/modules/baseCommerce`, `nodics.commerce/modules/fulfillment` | Covered by `commerce.data-authoring-fulfillment` with product, price, inventory, search projection, fulfillment execution, consignments, exceptions, return receipts, and browser proof. |\n| Closed by P0 docs batch | Documentation publishing runbook | `nodics.docs`, `nodics.wcms/modules/cms`, `nodics.process/modules/nPublish` | Covered by `docs.documentation-publishing-runbook` with Markdown source, generated content-pack data, Staged import, review, Online activation, rollback, and Axis/Nexus rendering. |\n\n## P1 closure items\n\n| Status | Item | Source areas | Documentation outcome |\n| --- | --- | --- | --- |\n| Closed by P1 docs batch | Module Registry journey | `nodics.platform/modules/backoffice`, registry-related Platform services | Covered by `platform.module-registry-journey` with registration, activation, dependency state, required capability checks, and Axis visibility. |\n| Closed by P1 docs batch | Commerce Search guide | `nodics.commerce/modules/baseCommerce/modules/commerceSearch` | Covered by `commerce.search-guide` with ranking rules, projections, publish flow, index ownership, storefront effect, and recovery. |\n| Closed by P1 docs batch | Localization depth | `nodics.localization/modules/localizationCore`, `nodics.localization/modules/localizationApi` | Covered by `localization.runtime-authoring` with locale records, fallback, content/product localization, import data, API boundaries, and browser proof. |\n| Closed by P1 docs batch | Payment Core and provider split | `nodics.commerce/modules/payment` | Covered by `commerce.payment-provider-boundaries` with payment decisions, method/provider separation, reconciliation, safe customer payload, and provider extension. |\n| Closed by P1 docs batch | Customer List and Profile-Commerce boundary | `nodics.commerce/modules/checkout/modules/customerList`, `nodics.platform/modules/profile` | Covered by `commerce.customer-list-profile-boundary` with why customer list exists in Commerce and what Profile continues to own. |\n| Closed by P1 docs batch | NMS runtime monitoring | `nodics.foundation/modules/nNms` | Covered by `foundation.nms-runtime-monitoring` with node monitoring, topology, health, operational evidence, and recovery actions. |\n| Closed by P1 docs batch | Service runtime and overrides | `nodics.foundation/modules/nService`, `nodics.foundation/modules/nService/vService` | Covered by `foundation.service-runtime-overrides` with service discovery, virtual services, generated services, override precedence, and extension safety. |\n| Closed by P1 docs batch | Cache provider runbooks | `nodics.foundation/modules/nCache`, Redis, Hazelcast, Node cache | Covered by `foundation.cache-provider-runbooks` with provider boundaries, cache key strategy, invalidation, failure behavior, and production configuration. |\n| Closed by P1 docs batch | Database provider boundaries | `nodics.foundation/modules/nDatabase` | Covered by `foundation.database-provider-boundaries` with MongoDB, virtual DB, Cassandra, Elasticsearch, provider contracts, configuration, and validation. |\n| Closed by P1 docs batch | OTP and security flow | `nodics.foundation/modules/nOtp` | Covered by `security.otp-security-flow` with OTP generation, verification, expiry, retry, throttling, audit, and security controls. |\n| Closed by P1 docs batch | Communication providers | `nodics.communication/modules/smtpCommsProvider`, `nodics.communication/modules/smsCommsProvider` | Covered by `communication.provider-runbooks` with SMTP/SMS provider behavior, templates, retries, failed delivery evidence, and extension rules. |\n| Closed by P1 docs batch | Engagement and contact submission | `nodics.engagement/modules/contactSubmission` | Covered by `engagement.contact-submission-operations` with contact forms, moderation, workflow, notification, audit, and recovery. |\n| Closed by P1 docs batch | Workflow and BPM source map | `nodics.foundation/modules/nbpm`, `nodics.process` | Covered by `process.workflow-bpm-source-map` with workflow definitions, transitions, tasks, callbacks, history, and operator visibility. |\n| Closed by P1 docs batch | Cron job data authoring | `nodics.process/modules/cronjob` | Covered by `process.cronjob-data-authoring` with job records, schedules, execution policy, retry, idempotency, and Process server ownership. |\n| Closed by P1 docs batch | Release and upgrade compatibility | `nodics.foundation/modules/nSetup`, all module data folders | Covered by `framework.release-upgrade-compatibility` with version freeze, upgrade path, rollback, checksum drift, generated manifests, and extension compatibility. |\n\n## P2 closure items\n\n| Status | Item | Source areas | Documentation outcome |\n| --- | --- | --- | --- |\n| Closed by P2 docs batch | Fulfillment Core owner mapping | `nodics.commerce/modules/fulfillment/modules/fulfillmentCore` | Covered by `commerce.fulfillment-core-source-map`, plus explicit source evidence on fulfillment and data-authoring pages. |\n| Closed by P2 docs batch | Domain Commerce accelerator owner mapping | `domainCommerceCore`, electronics product, telco catalog, telco subscription | Covered by `accelerators.domain-commerce-source-map` with accelerator ownership, Commerce boundary, sample data, and validation. |\n| Closed by P2 docs batch | Tooling runtime depth | `nodics.foundation/modules/nTooling` | Covered by `foundation.tooling-runtime-contracts` with command, manifest, application-builder, AI-context, and quality-gate contracts. |\n| Closed by P2 docs batch | EMS runtime and client depth | `nodics.foundation/modules/nEms`, `emsClient`, broker providers | Covered by `foundation.ems-runtime-client-runbook` with broker runtime, client, tenant, retry, and operator evidence. |\n| Closed by P2 docs batch | Internal-only register | Discovery internals, payment methods/providers, NMS runtime, Kickoff environment/runtime packages | Covered by `reference.internal-source-boundary-register` with owner mappings and promotion rules. |\n\n## Closure workflow\n\n1. Start from the generated source coverage report.\n2. Pick the highest-priority open item.\n3. Inspect source files, schemas, services, routers, data, assets, tests, and\n   frontend consumers.\n4. Decide whether the work is a new page, deeper section, owner mapping, or\n   internal-only classification.\n5. Update authored Markdown and catalogue metadata.\n6. Regenerate documentation data and source coverage reports.\n7. Run docs tests and any owning module tests needed for the behavior.\n8. For runtime-visible changes, import into Staged, publish Online, and verify\n   Axis, Nexus, or Agora from the browser.\n9. Commit the smallest coherent documentation batch.\n\n## Common mistakes\n\n- Treating this backlog as optional once a high-level overview exists.\n- Closing a source gap without reading the current source files and tests.\n- Creating public documentation for a module that should be an internal utility\n  without explaining the broader owner.\n- Forgetting business users when writing deep developer detail.\n- Forgetting developers when writing a business-friendly page.\n- Forgetting operators and QA owners when documenting publishable or\n  production-visible behavior.\n- Showing external references as source design instead of industry-standard\n  expectation checks.\n\n## Verification\n\nRun the documentation gates after each closure batch:\n\n```bash\nnpm --prefix nodics.docs run audit:source-coverage\nnpm --prefix nodics.docs run docs:generate\nnpm --prefix nodics.docs test\ngit -C nodics.ai diff --check\n```\n\nThe backlog is healthy when the generated report, this page, catalogue\nmetadata, generated WCMS records, and runtime evidence agree. Business users\nshould see clear journeys, developers should see exact source paths and\nextension points, operators should see evidence and recovery steps, QA owners\nshould see validation commands, and AI tools should see boundaries that prevent\nunsafe source or data changes.\n",
+    "searchText": "Documentation Gap Backlog Classified backlog for closing source-backed documentation gaps across runtime capabilities, data releases, media, applications, operations, and validation. # Documentation Gap Backlog\n\nThis backlog turns the source-backed coverage audit into executable\ndocumentation work. It captures the remaining categories that must be closed so\nNodics documentation explains not only what the product is, but how developers,\nbusiness users, operators, QA owners, and AI tools can safely work with the\nframework.\n\nFor beginners, the mental model is simple: the coverage report tells us where\nthe source is richer than the documentation, and this backlog tells us what to\ndo next. A source boundary may need a new page, a deeper section in an existing\npage, an explicit owner mapping, or an internal-only decision. The backlog is\nnot a marketing roadmap. It is a release-quality checklist for source-backed\ndocumentation.\n\n## Backlog flow\n\n```mermaid\nflowchart LR\n  Report[\"Generated coverage report\"] --> Classify[\"Classify each gap\"]\n  Classify --> Page[\"New page\"]\n  Classify --> Deepen[\"Deeper section\"]\n  Classify --> Map[\"Owner mapping\"]\n  Classify --> Internal[\"Internal-only decision\"]\n  Page --> Generate[\"Regenerate docs data\"]\n  Deepen --> Generate\n  Map --> Generate\n  Internal --> Generate\n  Generate --> Test[\"Docs tests and source evidence\"]\n  Test --> Publish[\"Staged approval and Online publication\"]\n```\n\n## Classification policy\n\n| Classification | Meaning | Required action |\n| --- | --- | --- |\n| `needs-page` | A user-visible or developer-extensible capability has no clear page. | Create authored Markdown, catalogue metadata, source evidence, generated records, and validation. |\n| `needs-deeper-section` | A page exists, but it lacks exact source map, data, service, operation, or validation detail. | Extend the existing page with how-to, how-it-works, customization, errors, and tests. |\n| `needs-page-or-owner-mapping` | The source is significant, but ownership may belong under a broader page. | Decide owner, then either create a page or add explicit mapping to the owning page. |\n| `internal-only-candidate` | The module is likely a utility or provider implementation. | Document the owner page that covers it, or mark it internal with justification. |\n| `covered` | Existing docs and source evidence are sufficient for the current maturity state. | Keep validation and browser evidence current when behavior changes. |\n\n## P0 closure items\n\n| Status | Item | Source areas | Documentation outcome |\n| --- | --- | --- | --- |\n| Closed by P0 docs batch | Nexus data and content guide | `nodics.kickoff/modules/nexus.web` | Covered by `applications.nexus-data-content-guide` with Nexus project content, media assets, headers, records, publication, Online delivery, and browser validation. |\n| Closed by P0 docs batch | Axis setup and user-safe error contracts | `nodics.platform/modules/backoffice`, `nodics.platform/modules/axis`, `nodics.exp/nodics.axis` | Covered by `applications.axis-setup-error-contracts` with setup states, blockers, retry behavior, required capability checks, technical evidence, and customer-safe messages. |\n| Closed by P0 docs batch | CMS exact source map | `nodics.wcms/modules/cms` | Covered by `wcms.cms-source-map-authoring-contract` with page, route, component, slot, template, renderer, publication manifest, migration, delivery cache, and documentation governance details. |\n| Closed by P0 docs batch | Media operations runbook | `nodics.wcms/modules/media`, `nodics.foundation/modules/nData/nImport/import/src/service/media` | Covered by `wcms.media-operations-runbook` with upload, import hydration, storage providers, cleanup, replication queue, delivery failures, and DR evidence. |\n| Closed by P0 docs batch | Import/export provider guides | `nodics.foundation/modules/nData/nImport`, `nodics.foundation/modules/nData/nExport` | Covered by `data.import-export-provider-guides` with JavaScript, JSON, CSV, Excel, generated exports, parsers, field allow-lists, masking, and rollback boundaries. |\n| Closed by P0 docs batch | Commerce authoring and fulfillment | `nodics.commerce/modules/baseCommerce`, `nodics.commerce/modules/fulfillment` | Covered by `commerce.data-authoring-fulfillment` with product, price, inventory, search projection, fulfillment execution, consignments, exceptions, return receipts, and browser proof. |\n| Closed by P0 docs batch | Documentation publishing runbook | `nodics.docs`, `nodics.wcms/modules/cms`, `nodics.process/modules/nPublish` | Covered by `docs.documentation-publishing-runbook` with Markdown source, generated content-pack data, Staged import, review, Online activation, rollback, and Axis/Nexus rendering. |\n\n## P1 closure items\n\n| Status | Item | Source areas | Documentation outcome |\n| --- | --- | --- | --- |\n| Closed by P1 docs batch | Module Registry journey | `nodics.platform/modules/backoffice`, registry-related Platform services | Covered by `platform.module-registry-journey` with registration, activation, dependency state, required capability checks, and Axis visibility. |\n| Closed by P1 docs batch | Commerce Search guide | `nodics.commerce/modules/baseCommerce/modules/commerceSearch` | Covered by `commerce.search-guide` with ranking rules, projections, publish flow, index ownership, storefront effect, and recovery. |\n| Closed by P1 docs batch | Localization depth | `nodics.localization/modules/localizationCore`, `nodics.localization/modules/localizationApi` | Covered by `localization.runtime-authoring` with locale records, fallback, content/product localization, import data, API boundaries, and browser proof. |\n| Closed by P1 docs batch | Payment Core and provider split | `nodics.commerce/modules/payment` | Covered by `commerce.payment-provider-boundaries` with payment decisions, method/provider separation, reconciliation, safe customer payload, and provider extension. |\n| Closed by P1 docs batch | Shopping List Commerce boundary | `nodics.commerce/modules/baseCommerce/modules/shoppingList`, `nodics.platform/modules/profile` | Covered by `commerce.shopping-list-commerce-boundary` with why shopping-intent lists belong to Base Commerce and what Profile continues to own. |\n| Closed by P1 docs batch | NMS runtime monitoring | `nodics.foundation/modules/nNms` | Covered by `foundation.nms-runtime-monitoring` with node monitoring, topology, health, operational evidence, and recovery actions. |\n| Closed by P1 docs batch | Service runtime and overrides | `nodics.foundation/modules/nService`, `nodics.foundation/modules/nService/vService` | Covered by `foundation.service-runtime-overrides` with service discovery, virtual services, generated services, override precedence, and extension safety. |\n| Closed by P1 docs batch | Cache provider runbooks | `nodics.foundation/modules/nCache`, Redis, Hazelcast, Node cache | Covered by `foundation.cache-provider-runbooks` with provider boundaries, cache key strategy, invalidation, failure behavior, and production configuration. |\n| Closed by P1 docs batch | Database provider boundaries | `nodics.foundation/modules/nDatabase` | Covered by `foundation.database-provider-boundaries` with MongoDB, virtual DB, Cassandra, Elasticsearch, provider contracts, configuration, and validation. |\n| Closed by P1 docs batch | OTP and security flow | `nodics.foundation/modules/nOtp` | Covered by `security.otp-security-flow` with OTP generation, verification, expiry, retry, throttling, audit, and security controls. |\n| Closed by P1 docs batch | Communication providers | `nodics.communication/modules/smtpCommsProvider`, `nodics.communication/modules/smsCommsProvider` | Covered by `communication.provider-runbooks` with SMTP/SMS provider behavior, templates, retries, failed delivery evidence, and extension rules. |\n| Closed by P1 docs batch | Engagement and contact submission | `nodics.engagement/modules/contactSubmission` | Covered by `engagement.contact-submission-operations` with contact forms, moderation, workflow, notification, audit, and recovery. |\n| Closed by P1 docs batch | Workflow and BPM source map | `nodics.foundation/modules/nbpm`, `nodics.process` | Covered by `process.workflow-bpm-source-map` with workflow definitions, transitions, tasks, callbacks, history, and operator visibility. |\n| Closed by P1 docs batch | Cron job data authoring | `nodics.process/modules/cronjob` | Covered by `process.cronjob-data-authoring` with job records, schedules, execution policy, retry, idempotency, and Process server ownership. |\n| Closed by P1 docs batch | Release and upgrade compatibility | `nodics.foundation/modules/nSetup`, all module data folders | Covered by `framework.release-upgrade-compatibility` with version freeze, upgrade path, rollback, checksum drift, generated manifests, and extension compatibility. |\n\n## P2 closure items\n\n| Status | Item | Source areas | Documentation outcome |\n| --- | --- | --- | --- |\n| Closed by P2 docs batch | Fulfillment Core owner mapping | `nodics.commerce/modules/fulfillment/modules/fulfillmentCore` | Covered by `commerce.fulfillment-core-source-map`, plus explicit source evidence on fulfillment and data-authoring pages. |\n| Closed by P2 docs batch | Domain Commerce accelerator owner mapping | `domainCommerceCore`, electronics product, telco catalog, telco subscription | Covered by `accelerators.domain-commerce-source-map` with accelerator ownership, Commerce boundary, sample data, and validation. |\n| Closed by P2 docs batch | Tooling runtime depth | `nodics.foundation/modules/nTooling` | Covered by `foundation.tooling-runtime-contracts` with command, manifest, application-builder, AI-context, and quality-gate contracts. |\n| Closed by P2 docs batch | EMS runtime and client depth | `nodics.foundation/modules/nEms`, `emsClient`, broker providers | Covered by `foundation.ems-runtime-client-runbook` with broker runtime, client, tenant, retry, and operator evidence. |\n| Closed by P2 docs batch | Internal-only register | Discovery internals, payment methods/providers, NMS runtime, Kickoff environment/runtime packages | Covered by `reference.internal-source-boundary-register` with owner mappings and promotion rules. |\n\n## Closure workflow\n\n1. Start from the generated source coverage report.\n2. Pick the highest-priority open item.\n3. Inspect source files, schemas, services, routers, data, assets, tests, and\n   frontend consumers.\n4. Decide whether the work is a new page, deeper section, owner mapping, or\n   internal-only classification.\n5. Update authored Markdown and catalogue metadata.\n6. Regenerate documentation data and source coverage reports.\n7. Run docs tests and any owning module tests needed for the behavior.\n8. For runtime-visible changes, import into Staged, publish Online, and verify\n   Axis, Nexus, or Agora from the browser.\n9. Commit the smallest coherent documentation batch.\n\n## Common mistakes\n\n- Treating this backlog as optional once a high-level overview exists.\n- Closing a source gap without reading the current source files and tests.\n- Creating public documentation for a module that should be an internal utility\n  without explaining the broader owner.\n- Forgetting business users when writing deep developer detail.\n- Forgetting developers when writing a business-friendly page.\n- Forgetting operators and QA owners when documenting publishable or\n  production-visible behavior.\n- Showing external references as source design instead of industry-standard\n  expectation checks.\n\n## Verification\n\nRun the documentation gates after each closure batch:\n\n```bash\nnpm --prefix nodics.docs run audit:source-coverage\nnpm --prefix nodics.docs run docs:generate\nnpm --prefix nodics.docs test\ngit -C nodics.ai diff --check\n```\n\nThe backlog is healthy when the generated report, this page, catalogue\nmetadata, generated WCMS records, and runtime evidence agree. Business users\nshould see clear journeys, developers should see exact source paths and\nextension points, operators should see evidence and recovery steps, QA owners\nshould see validation commands, and AI tools should see boundaries that prevent\nunsafe source or data changes.\n",
     "keywords": [
       "documentation-gap-backlog",
       "source-backed",

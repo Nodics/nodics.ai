@@ -13,7 +13,7 @@
 
 /**
  * @module product/router/routers
- * @description Declares Product-owned customer discovery/PDP APIs and operator publication orchestration routes.
+ * @description Declares Product-owned discovery/PDP APIs and publication orchestration routes.
  * @layer router
  * @owner product
  * @override Later Product extension modules may add routes or replace handlers while preserving tenant, Store, and locale isolation.
@@ -23,13 +23,13 @@ module.exports = {
         customer: {
             list: {
                 secured: false, publicAccess: true, accessGroups: ['userGroup'], apiExposure: 'commerceCustomer',
-                key: '/customer/products/discovery', method: 'GET',
+                key: '/products/discovery', method: 'GET',
                 controller: 'DefaultProductDiscoveryController', operation: 'list',
                 help: { requestType: 'public', message: 'Lists customer-safe Product cards from the Product search projection.' }
             },
             detail: {
                 secured: false, publicAccess: true, accessGroups: ['userGroup'], apiExposure: 'commerceCustomer',
-                key: '/customer/products/:productCode', method: 'GET',
+                key: '/products/:productCode', method: 'GET',
                 controller: 'DefaultProductDiscoveryController', operation: 'detail',
                 help: { requestType: 'public', message: 'Resolves one customer-safe Product detail projection.' }
             }
@@ -38,7 +38,7 @@ module.exports = {
             publishSearch: {
                 secured: true, authTokenTypes: ['access'], accessGroups: ['employeeUserGroup'],
                 permission: 'commerce.product.publish', apiExposure: 'commerceManagement',
-                key: '/operator/products/publication/search', method: 'POST',
+                key: '/products/publication/search', method: 'POST',
                 controller: 'DefaultProductPublicationController', operation: 'publishSearch',
                 help: { requestType: 'secured', message: 'Publishes persisted Staged Product records into Product search projections.' }
             },

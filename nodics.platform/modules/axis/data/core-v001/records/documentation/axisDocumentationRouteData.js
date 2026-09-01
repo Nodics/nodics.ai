@@ -134,6 +134,18 @@ module.exports = {
     "active": true
   },
   "record10": {
+    "code": "axisDocsRouteexperiencestudio",
+    "site": "axisDocumentationSite",
+    "path": "/docs/nodics-axis/experience-studio",
+    "locale": "en",
+    "channel": "web",
+    "page": "axisDocsPageexperiencestudio",
+    "routeType": "PAGE",
+    "deliveryState": "ONLINE",
+    "accessMode": "PUBLIC",
+    "active": true
+  },
+  "record11": {
     "code": "axisDocsRoutemodulehealth",
     "site": "axisDocumentationSite",
     "path": "/docs/nodics-axis/module-health",
@@ -145,7 +157,7 @@ module.exports = {
     "accessMode": "PUBLIC",
     "active": true
   },
-  "record11": {
+  "record12": {
     "code": "axisDocsRouteimportsexports",
     "site": "axisDocumentationSite",
     "path": "/docs/nodics-axis/imports-exports",
@@ -157,7 +169,7 @@ module.exports = {
     "accessMode": "PUBLIC",
     "active": true
   },
-  "record12": {
+  "record13": {
     "code": "axisDocsRoutemediamanagement",
     "site": "axisDocumentationSite",
     "path": "/docs/nodics-axis/media",
@@ -169,7 +181,7 @@ module.exports = {
     "accessMode": "PUBLIC",
     "active": true
   },
-  "record13": {
+  "record14": {
     "code": "axisDocsRoutecustomerengagement",
     "site": "axisDocumentationSite",
     "path": "/docs/nodics-axis/customer-engagement",
@@ -181,7 +193,7 @@ module.exports = {
     "accessMode": "PUBLIC",
     "active": true
   },
-  "record14": {
+  "record15": {
     "code": "axisDocsRouteopenapireference",
     "site": "axisDocumentationSite",
     "path": "/docs/nodics-axis/openapi-reference",
@@ -193,7 +205,7 @@ module.exports = {
     "accessMode": "PUBLIC",
     "active": true
   },
-  "record15": {
+  "record16": {
     "code": "axisDocsRoutefeaturedelivery",
     "site": "axisDocumentationSite",
     "path": "/docs/nodics-axis/feature-delivery",
@@ -205,7 +217,7 @@ module.exports = {
     "accessMode": "PUBLIC",
     "active": true
   },
-  "record16": {
+  "record17": {
     "code": "axisDocsRouteimplementationcontract",
     "site": "axisDocumentationSite",
     "path": "/docs/nodics-axis/implementation-contract",

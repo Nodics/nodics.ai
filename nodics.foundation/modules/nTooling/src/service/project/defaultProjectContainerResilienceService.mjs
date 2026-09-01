@@ -12,7 +12,7 @@
 
 /**
  * @module nTooling/service/project/defaultProjectContainerResilienceService
- * @description Backs up, verifies, and restores manifest-declared container environment state from framework tooling.
+ * @description Backs up, verifies, and restores environment-owned container state from framework tooling.
  * @layer tooling
  * @owner nTooling
  */
@@ -21,33 +21,21 @@ import { spawnSync } from 'node:child_process';
 import crypto from 'node:crypto';
 import fs from 'node:fs';
 import path from 'node:path';
+import { readContainerEnvironmentProfile, resolveTemplate } from './defaultProjectContainerProfileService.mjs';
 
 const projectRoot = process.cwd();
 const workspaceRoot = path.resolve(projectRoot, '..');
 
-function readProjectManifest() {
-  return JSON.parse(fs.readFileSync(path.join(projectRoot, 'nodics.project.json'), 'utf8'));
-}
-
-function resolveTemplate(value) {
-  return String(value || '')
-    .replaceAll('{projectRoot}', projectRoot)
-    .replaceAll('{workspaceRoot}', workspaceRoot);
-}
-
 function readProfile(profileCode) {
-  const manifest = readProjectManifest();
-  const profile = (manifest.containerEnvironments || {})[profileCode];
-  if (!profile) throw new Error(`Unknown container environment profile: ${profileCode}`);
-  const generatedRoot = path.resolve(projectRoot, resolveTemplate(profile.generatedDirectory || `envs/${profile.environment}/generated`));
+  const profile = readContainerEnvironmentProfile(projectRoot, profileCode);
   const resilience = profile.resilience || {};
   return {
-    code: profileCode,
-    environment: profile.environment || profileCode,
-    composePath: path.resolve(projectRoot, resolveTemplate(profile.composeFile)),
-    generatedRoot,
-    environmentPath: path.join(generatedRoot, profile.environmentFile || 'docker.env'),
-    backupRoot: path.resolve(projectRoot, resolveTemplate(resilience.backupDirectory || `${path.relative(projectRoot, generatedRoot)}/backups`)),
+    code: profile.code,
+    environment: profile.environment,
+    composePath: profile.composePath,
+    generatedRoot: profile.generatedRoot,
+    environmentPath: profile.environmentPath,
+    backupRoot: path.resolve(projectRoot, resolveTemplate(projectRoot, resilience.backupDirectory || `${path.relative(projectRoot, profile.generatedRoot)}/backups`)),
     confirmationToken: resilience.restoreConfirmationToken || '--confirm-replace-container-environment-data',
     containers: resilience.containers || {},
     volumes: resilience.volumes || {}

@@ -17,6 +17,7 @@ import { createRequire } from "node:module";
 import { setTimeout as delay } from "node:timers/promises";
 import path from "node:path";
 import { pathToFileURL } from "node:url";
+import { readProjectEnvironmentComposition } from "./defaultProjectEnvironmentProfileService.mjs";
 
 const require = createRequire(import.meta.url);
 const projectRoot = process.env.NODICS_PROJECT_ROOT || process.cwd();
@@ -26,7 +27,7 @@ const commerceOnlineUrl = process.env.NODICS_COMMERCE_ONLINE_URL || process.env.
 const wcmsOnlineUrl = process.env.NODICS_WCMS_ONLINE_URL || "http://127.0.0.1:4314";
 const axisOrigin = process.env.AXIS_ORIGIN || "http://127.0.0.1:3100";
 const managed = [];
-const composition = require(path.join(projectRoot, "config", "agora-domain-composition.js")).resolve();
+const composition = readProjectEnvironmentComposition(projectRoot);
 const domainByPack = Object.freeze({
   "agora.apparel": { folder: "apparel", prefix: "agoraApparel" },
   "agora.electronics": { folder: "electronics", prefix: "agoraElectronics" },
@@ -230,7 +231,7 @@ async function validatePublicationContract(headers) {
   const stagedContract = await request(commerceStagedUrl, "/nodics/system/v0/contract/openapi", { headers });
   const stagedPaths = stagedContract?.paths || stagedContract?.openapi?.paths || {};
   const stagedRequired = {
-    "/nodics/product/v0/operator/products/publication/search": "post",
+    "/nodics/product/v0/products/publication/search": "post",
   };
   const stagedMissing = Object.entries(stagedRequired).filter(([route, method]) => !stagedPaths[route]?.[method]);
   if (stagedMissing.length > 0) {
@@ -243,10 +244,11 @@ async function validatePublicationContract(headers) {
   const onlineRequired = {
     "/nodics/product/v0/internal/products/publication/search/restore": "post",
     "/nodics/pricing/v0/internal/pricing/publication/operational/restore": "post",
+    "/nodics/promotion/v0/internal/promotions/publication/operational/restore": "post",
     "/nodics/inventory/v0/internal/inventory/publication/operational/restore": "post",
     "/nodics/tax/v0/internal/tax/publication/operational/restore": "post",
-    "/nodics/product/v0/customer/products/discovery": "get",
-    "/nodics/product/v0/customer/products/{productCode}": "get",
+    "/nodics/product/v0/products/discovery": "get",
+    "/nodics/product/v0/products/{productCode}": "get",
   };
   const onlineMissing = Object.entries(onlineRequired).filter(([route, method]) => !onlinePaths[route]?.[method]);
   if (onlineMissing.length > 0) {
@@ -261,7 +263,7 @@ async function publishSearch(headers) {
   const catalogVersions = selectedCatalogVersions();
   const summaries = [];
   for (const catalogVersion of catalogVersions) {
-    const body = await request(commerceStagedUrl, "/nodics/product/v0/operator/products/publication/search", {
+  const body = await request(commerceStagedUrl, "/nodics/product/v0/products/publication/search", {
       method: "POST",
       headers,
       body: JSON.stringify({ catalogVersion, storeCode, includeProjectionSnapshots: true }),
@@ -308,11 +310,19 @@ async function restoreOperationalOnline(headers) {
   const priceRows = await domainDataRecords("PriceRowData.js");
   const warehouses = await domainDataRecords("WarehouseData.js");
   const inventoryBalances = await domainDataRecords("InventoryBalanceData.js");
+  const promotions = await domainDataRecords("PromotionData.js");
+  const couponBatches = await domainDataRecords("CouponBatchData.js");
+  const coupons = await domainDataRecords("CouponData.js");
   const taxPolicies = await domainDataRecords("TaxPolicyData.js");
   const pricing = await request(commerceOnlineUrl, "/nodics/pricing/v0/internal/pricing/publication/operational/restore", {
     method: "POST",
     headers,
     body: JSON.stringify({ priceBooks, priceRows }),
+  });
+  const promotion = await request(commerceOnlineUrl, "/nodics/promotion/v0/internal/promotions/publication/operational/restore", {
+    method: "POST",
+    headers,
+    body: JSON.stringify({ promotions, couponBatches, coupons }),
   });
   const inventory = await request(commerceOnlineUrl, "/nodics/inventory/v0/internal/inventory/publication/operational/restore", {
     method: "POST",
@@ -325,12 +335,13 @@ async function restoreOperationalOnline(headers) {
     body: JSON.stringify({ taxPolicies }),
   });
   const pricingCount = Number((pricing?.data || pricing?.result || pricing)?.restored || 0);
+  const promotionCount = Number((promotion?.data || promotion?.result || promotion)?.restored || 0);
   const inventoryCount = Number((inventory?.data || inventory?.result || inventory)?.restored || 0);
   const taxCount = Number((tax?.data || tax?.result || tax)?.restored || 0);
-  if (pricingCount <= 0 || inventoryCount <= 0 || taxCount <= 0) {
-    throw new Error(`Commerce Online operational restoration was incomplete: ${JSON.stringify({ pricing, inventory, tax })}`);
+  if (pricingCount <= 0 || promotionCount <= 0 || inventoryCount <= 0 || taxCount <= 0) {
+    throw new Error(`Commerce Online operational restoration was incomplete: ${JSON.stringify({ pricing, promotion, inventory, tax })}`);
   }
-  log(`restored Online operational Pricing (${pricingCount}), Inventory (${inventoryCount}), and Tax (${taxCount}) records`);
+  log(`restored Online operational Pricing (${pricingCount}), Promotion (${promotionCount}), Inventory (${inventoryCount}), and Tax (${taxCount}) records`);
 }
 
 function absoluteDeliveryUrl(deliveryUrl) {
@@ -444,7 +455,7 @@ async function publishProductMedia(deliveryHeaders, publicationHeaders, products
 
 async function validateDiscovery(headers, serviceHeaders, storeCode) {
   const locale = process.env.NODICS_STOREFRONT_LOCALE || "en";
-  const body = await request(commerceOnlineUrl, `/nodics/product/v0/customer/products/discovery?storeCode=${encodeURIComponent(storeCode)}&locale=${encodeURIComponent(locale)}&pageSize=12`, {
+  const body = await request(commerceOnlineUrl, `/nodics/product/v0/products/discovery?storeCode=${encodeURIComponent(storeCode)}&locale=${encodeURIComponent(locale)}&pageSize=12`, {
     headers,
   });
   const data = body?.data || body?.result || body;
@@ -461,7 +472,7 @@ async function validateDiscovery(headers, serviceHeaders, storeCode) {
     throw new Error(`Product discovery returned cards without renderable media: ${missingMedia.map((product) => product.productCode).join(", ")}`);
   }
   await publishProductMedia(headers, serviceHeaders, products);
-  const detailBody = await request(commerceOnlineUrl, `/nodics/product/v0/customer/products/${encodeURIComponent(first.productCode)}?storeCode=${encodeURIComponent(storeCode)}&locale=${encodeURIComponent(locale)}`, {
+  const detailBody = await request(commerceOnlineUrl, `/nodics/product/v0/products/${encodeURIComponent(first.productCode)}?storeCode=${encodeURIComponent(storeCode)}&locale=${encodeURIComponent(locale)}`, {
     headers,
   });
   const detail = detailBody?.data?.product || detailBody?.product;

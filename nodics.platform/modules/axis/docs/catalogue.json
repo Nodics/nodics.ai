@@ -965,6 +965,115 @@
       ]
     },
     {
+      "code": "experience-studio",
+      "title": "Axis Experience Studio and Targeted CMS Experiences",
+      "route": "/docs/nodics-axis/experience-studio",
+      "section": "Axis Capabilities",
+      "sectionOrder": 30,
+      "order": 97,
+      "source": "pages/experience-studio.md",
+      "evidence": "docs/pages/experience-studio.md",
+      "summary": "Configure targeted CMS components for collection, category, brand, and fallback journeys through backend-owned WCMS Experience contracts.",
+      "audience": [
+        "business-user",
+        "merchandiser",
+        "administrator",
+        "developer",
+        "operator"
+      ],
+      "id": "axis.experience-studio",
+      "locale": "en",
+      "content": "docs/pages/experience-studio.md",
+      "slug": "experience-studio",
+      "parentId": "axis-capabilities.axis-workspaces-and-operations",
+      "hierarchyPath": [
+        "Nodics Axis Documentation",
+        "Axis Capabilities",
+        "Axis Workspaces and Operations",
+        "Axis Experience Studio and Targeted CMS Experiences"
+      ],
+      "hierarchyDepth": 4,
+      "navigationSection": "Axis Capabilities",
+      "navigationSectionCode": "axis-capabilities",
+      "navigationSectionOrder": 30,
+      "navigationGroup": "Axis Workspaces and Operations",
+      "navigationGroupCode": "axis-workspaces-and-operations",
+      "navigationGroupOrder": 97,
+      "navigationSubgroup": null,
+      "navigationSubgroupCode": null,
+      "navigationOrder": 97,
+      "documentType": "how-to",
+      "businessAudience": [
+        "business-user",
+        "merchandiser",
+        "administrator"
+      ],
+      "technicalAudience": [
+        "developer",
+        "operator"
+      ],
+      "sourceOwner": "nodics.platform/modules/axis",
+      "sourcePath": "docs/pages/experience-studio.md",
+      "visibility": "public",
+      "channel": [
+        "axis",
+        "web"
+      ],
+      "accessMode": "PUBLIC",
+      "publiclyAvailable": true,
+      "requiresAuthentication": false,
+      "allowedRoles": [],
+      "allowedGroups": [],
+      "allowedPermissions": [],
+      "lifecycleState": "ONLINE",
+      "version": "0.0.0",
+      "relatedPages": [
+        "axis.page-designer",
+        "axis.cms-renderers",
+        "axis.documentation-content"
+      ],
+      "sourceEvidence": [
+        "docs/catalogue.json",
+        "docs/pages/experience-studio.md"
+      ],
+      "maturityState": "operational",
+      "implementationState": "current",
+      "renderingComponent": "documentation.component.article",
+      "searchKeywords": [
+        "axis-capabilities",
+        "axis-workspaces-and-operations",
+        "axis-experience-studio",
+        "targeted-cms-experiences",
+        "collection-journey",
+        "brand-journey",
+        "default-fallback",
+        "business-user",
+        "merchandiser",
+        "administrator",
+        "developer",
+        "operator"
+      ],
+      "topicKeywords": [
+        "Axis Capabilities",
+        "Axis Workspaces and Operations",
+        "Axis Experience Studio and Targeted CMS Experiences",
+        "collection journey",
+        "brand journey",
+        "default fallback",
+        "business-user",
+        "merchandiser",
+        "administrator",
+        "developer",
+        "operator"
+      ],
+      "visualRequirements": [
+        "architecture-diagram",
+        "configuration-table",
+        "troubleshooting-matrix",
+        "table"
+      ]
+    },
+    {
       "code": "module-health",
       "title": "Module Health",
       "route": "/docs/nodics-axis/module-health",

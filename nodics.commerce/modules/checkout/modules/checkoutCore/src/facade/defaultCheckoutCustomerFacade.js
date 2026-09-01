@@ -14,6 +14,18 @@
 /** @module checkoutCore/src/facade/defaultCheckoutCustomerFacade @description Enforces customer tenant and ownership context for placement. @layer facade @owner checkoutCore */
 module.exports = {
     /**
+     * Resolves enterprise-owned business context and derived runtime tenant.
+     * @param {*} request Value defined by the owning module contract.
+     * @returns {*} Enterprise and tenant context.
+     * @override Later-loaded modules may replace this member through the standard merge contract.
+     */
+    enterpriseContext: function (request) {
+        const auth = request.authData || {}, payload = request.payload || {};
+        const enterpriseCode = auth.enterpriseCode || auth.entCode || request.enterpriseCode || request.entCode || payload.enterpriseCode || payload.entCode;
+        const tenants = (typeof CONFIG !== 'undefined' && CONFIG.get && (CONFIG.get('commerce') || {}).enterpriseTenants) || {};
+        return { enterpriseCode, tenant: auth.tenant || request.tenant || tenants[enterpriseCode] };
+    },
+    /**
      * Executes `applyContext` as a loader-visible operation owned by this module.
      * @param {*} request Value defined by the owning module contract.
      * @returns {*} Result defined by the owning module contract.
@@ -26,7 +38,9 @@ module.exports = {
         if (!auth.groups && Array.isArray(auth.userGroups)) auth.groups = auth.userGroups;
         auth.principalType = auth.principalType || 'customer';
         request.authData = auth;
-        request.tenant = auth.tenant || request.tenant;
+        const context = this.enterpriseContext(request);
+        request.enterpriseCode = context.enterpriseCode;
+        request.tenant = context.tenant;
         request.ownerId = auth.principalId || auth.code || auth.loginId || request.ownerId;
         request.correlationId = request.correlationId || request.requestId;
         if (!request.tenant || !request.ownerId) throw new Error('Authenticated tenant and customer are required');

@@ -28,6 +28,7 @@ module.exports = {
         if (conditions.minimumSubtotal !== undefined && Number(context.subtotal) < Number(conditions.minimumSubtotal)) return 'MINIMUM_SUBTOTAL';
         if (Array.isArray(conditions.customerGroups) && !conditions.customerGroups.includes(context.customerGroup)) return 'CUSTOMER_GROUP';
         if (Array.isArray(conditions.productCodes) && !(context.productCodes || []).some(code => conditions.productCodes.includes(code))) return 'PRODUCT';
+        if (conditions.couponRequired === true && !context.couponCode) return 'COUPON_REQUIRED';
         if (promotion.budget && Number(promotion.budget.spent || 0) >= Number(promotion.budget.limit || 0)) return 'BUDGET_EXHAUSTED';
         return 'ELIGIBLE';
     },

@@ -30,6 +30,7 @@ module.exports = {
     /** Builds service-account authorization context for internal Discovery configuration lookup. @param {Object} request Request. @returns {Object} Service authorization data. */
     serviceAuthData: function (request) {
         return Object.assign({}, request.authData || {}, {
+            entCode: request.entCode || request.enterprise && request.enterprise.code || request.authData && request.authData.entCode,
             tenant: request.tenant,
             loginId: 'productDiscovery',
             principalType: 'service',
@@ -142,9 +143,10 @@ module.exports = {
         if (searchIndexRecords.length > 0 || policy.projectionStoreFallback === false) return searchIndexRecords;
         request.discoveryServedFrom = 'PROJECTION_STORE_FALLBACK';
         let records = await this.projectionStoreRecords(Object.assign({}, searchRequest, {
-            query: this.projectionStoreQuery(query)
+            query: this.projectionStoreQuery(query),
+            searchOptions: query.text ? this.textSearchFallbackOptions(searchOptions) : searchOptions
         }));
-        return query.text ? this.filterByText(records, query.text) : records;
+        return query.text ? this.paginateRecords(this.filterByText(records, query.text), searchOptions) : records;
     },
 
     /** Uses the projection store when the search adapter returns a shorter page than requested. @param {Object} request Nodics request. @param {Object} searchRequest Search request. @param {Object} query Search query. @param {Array} records Search records. @param {Object} searchOptions Search options. @returns {Promise<Array>} Complete page candidates. */
@@ -153,12 +155,27 @@ module.exports = {
         if (!Array.isArray(records) || records.length === 0 || !requestedPageSize || records.length >= requestedPageSize) return records;
         if (((CONFIG.get('product') || {}).discovery || {}).projectionStoreFallback === false) return records;
         let fallbackRecords = await this.projectionStoreRecords(Object.assign({}, searchRequest, {
-            query: this.projectionStoreQuery(query)
+            query: this.projectionStoreQuery(query),
+            searchOptions: query.text ? this.textSearchFallbackOptions(searchOptions) : searchOptions
         }));
-        if (query.text) fallbackRecords = this.filterByText(fallbackRecords, query.text);
+        if (query.text) fallbackRecords = this.paginateRecords(this.filterByText(fallbackRecords, query.text), searchOptions);
         if (fallbackRecords.length <= records.length) return records;
         request.discoveryServedFrom = 'PROJECTION_STORE_FALLBACK';
         return fallbackRecords;
+    },
+
+    /** Expands only fallback text-search candidates before in-memory public text filtering. @param {Object} options Original page options. @returns {Object} Candidate options. */
+    textSearchFallbackOptions: function (options) {
+        let policy = this.policy(), maximum = Number(policy.textSearchFallbackCandidateLimit || policy.maximumPageSize || 100);
+        return Object.assign({}, options || {}, { pageSize: maximum, limit: maximum, pageNumber: 1, page: 1 });
+    },
+
+    /** Applies the original public page window after fallback text filtering. @param {Array} records Candidate records. @param {Object} options Original page options. @returns {Array} Paged records. */
+    paginateRecords: function (records, options) {
+        let pageSize = this.boundedInteger(options && (options.pageSize || options.limit), Number(this.policy().defaultPageSize || 24), 1, Number(this.policy().maximumPageSize || 100));
+        let pageNumber = this.boundedInteger(options && (options.pageNumber || options.page), 1, 1, 10000);
+        let start = (pageNumber - 1) * pageSize;
+        return (records || []).slice(start, start + pageSize);
     },
 
     /** Reads Product projections through the active nSearch model registry when generated service search is unavailable or empty. @param {Object} request Search request. @returns {Promise<Array>} Records. */
@@ -179,10 +196,26 @@ module.exports = {
         let values = [
             projection && projection.productCode, payload.code, payload.name, payload.description, payload.slug,
             payload.seo && payload.seo.title, payload.seo && payload.seo.description
-        ].concat(payload.categoryCodes || [], Object.keys(localizedAttributes).map(key => localizedAttributes[key]));
+        ].concat(
+            payload.categoryCodes || [],
+            payload.collectionCodes || [],
+            payload.variantCodes || [],
+            Object.keys(localizedAttributes).map(key => localizedAttributes[key]),
+            this.collectTextValues(payload.classificationValues),
+            this.collectTextValues(payload.fulfillment),
+            this.collectTextValues(payload.availability)
+        );
         let normalized = String(term || '').trim().toLowerCase();
         return !!normalized && values.filter(value => value !== undefined && value !== null)
             .some(value => String(value).toLowerCase().includes(normalized));
+    },
+    /** Recursively collects public scalar search values from projected metadata. @param {*} value Candidate value. @returns {Array} Text values. */
+    collectTextValues: function (value) {
+        if (value === undefined || value === null) return [];
+        if (['string', 'number', 'boolean'].includes(typeof value)) return [value];
+        if (Array.isArray(value)) return value.flatMap(item => this.collectTextValues(item));
+        if (typeof value === 'object') return Object.keys(value).flatMap(key => this.collectTextValues(value[key]));
+        return [];
     },
 
     /** Filters projection-store fallback records by public product text. @param {Array} records Projection records. @param {string} term Search term. @returns {Array} Filtered records. */
@@ -383,12 +416,15 @@ module.exports = {
     media: function (payload) {
         let productMedia = payload.media || {};
         let primary = this.mediaDescriptor(productMedia.primary || productMedia.primaryImage, 'primary', productMedia.primaryAlt || payload.name);
+        let secondary = this.mediaDescriptor(productMedia.secondary || productMedia.secondaryImage, 'secondary', productMedia.primaryAlt || payload.name);
         let gallery = (productMedia.gallery || [])
             .map(item => this.mediaDescriptor(item, 'gallery', productMedia.primaryAlt || payload.name))
             .filter(Boolean);
         if (primary && !gallery.some(item => item.mediaCode && item.mediaCode === primary.mediaCode)) gallery.unshift(primary);
+        if (secondary && !gallery.some(item => item.mediaCode && item.mediaCode === secondary.mediaCode)) gallery.push(secondary);
         return {
             primary: primary,
+            secondary: secondary,
             gallery: gallery
         };
     },

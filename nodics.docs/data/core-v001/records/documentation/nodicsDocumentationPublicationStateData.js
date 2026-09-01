@@ -1442,6 +1442,47 @@ module.exports = {
     "active": true
   },
   "record35": {
+    "code": "nodicsDocsPublicationnodenodicsdocsnodesecloyaltyandrewards",
+    "targetType": "NODE",
+    "targetCode": "nodicsDocsNodeSecloyaltyAndRewards",
+    "lifecycleState": "ONLINE",
+    "publicationCode": "nodicsDocumentation",
+    "workflowReference": "nodicsDocumentationReviewWorkflow",
+    "stagedVersion": "0.16.8",
+    "onlineVersion": "0.16.8",
+    "validationResult": {
+      "generated": true,
+      "sourceAuthority": "docs/catalogue.json",
+      "publicationPath": "STAGED_REVIEW_APPROVAL_ONLINE",
+      "nexusVisibleOnlyWhenOnlineAndPublic": true
+    },
+    "checksum": "cc4ae030056c73cc4f55ebb5d63fb2b73a3536f8b25913003380cb317c360c90",
+    "managedInAxis": true,
+    "axisAuthoringPermissions": [
+      "documentation.navigation.update"
+    ],
+    "workflowRequired": true,
+    "workflowTriggers": [
+      "NAVIGATION_CHANGE",
+      "DASHBOARD_CHANGE",
+      "ACCESS_POLICY_CHANGE"
+    ],
+    "decisionPolicy": {
+      "reviewPermission": "documentation.review",
+      "approvePermission": "documentation.approve",
+      "publishPermission": "documentation.publish",
+      "permissionEnforced": true,
+      "adminOverrideAudited": true
+    },
+    "actor": "nodics.docs.generator",
+    "author": "nodics.docs.generator",
+    "reviewer": "nodics.docs.generator",
+    "approver": "nodics.docs.generator",
+    "publisher": "nodics.docs.generator",
+    "auditTrail": [],
+    "active": true
+  },
+  "record36": {
     "code": "nodicsDocsPublicationnodenodicsdocsnodesecshippingandfulfillment",
     "targetType": "NODE",
     "targetCode": "nodicsDocsNodeSecshippingAndFulfillment",
@@ -1482,7 +1523,7 @@ module.exports = {
     "auditTrail": [],
     "active": true
   },
-  "record36": {
+  "record37": {
     "code": "nodicsDocsPublicationnodenodicsdocsnodesecordermanagement",
     "targetType": "NODE",
     "targetCode": "nodicsDocsNodeSecorderManagement",
@@ -1523,7 +1564,7 @@ module.exports = {
     "auditTrail": [],
     "active": true
   },
-  "record37": {
+  "record38": {
     "code": "nodicsDocsPublicationnodenodicsdocsnodeseccancellationsreturnsandrefunds",
     "targetType": "NODE",
     "targetCode": "nodicsDocsNodeSeccancellationsReturnsAndRefunds",
@@ -1564,7 +1605,7 @@ module.exports = {
     "auditTrail": [],
     "active": true
   },
-  "record38": {
+  "record39": {
     "code": "nodicsDocsPublicationnodenodicsdocsnodeseccustomerengagementandfeedback",
     "targetType": "NODE",
     "targetCode": "nodicsDocsNodeSeccustomerEngagementAndFeedback",
@@ -1605,7 +1646,7 @@ module.exports = {
     "auditTrail": [],
     "active": true
   },
-  "record39": {
+  "record40": {
     "code": "nodicsDocsPublicationnodenodicsdocsnodeseccommunicationandnotifications",
     "targetType": "NODE",
     "targetCode": "nodicsDocsNodeSeccommunicationAndNotifications",
@@ -1646,7 +1687,7 @@ module.exports = {
     "auditTrail": [],
     "active": true
   },
-  "record40": {
+  "record41": {
     "code": "nodicsDocsPublicationnodenodicsdocsnodeseceventandmessagingmanagement",
     "targetType": "NODE",
     "targetCode": "nodicsDocsNodeSeceventAndMessagingManagement",
@@ -1687,7 +1728,7 @@ module.exports = {
     "auditTrail": [],
     "active": true
   },
-  "record41": {
+  "record42": {
     "code": "nodicsDocsPublicationnodenodicsdocsnodesecprocessandworkflowautomation",
     "targetType": "NODE",
     "targetCode": "nodicsDocsNodeSecprocessAndWorkflowAutomation",
@@ -1728,7 +1769,7 @@ module.exports = {
     "auditTrail": [],
     "active": true
   },
-  "record42": {
+  "record43": {
     "code": "nodicsDocsPublicationnodenodicsdocsnodesecpipelineandbusinesslogicorchestration",
     "targetType": "NODE",
     "targetCode": "nodicsDocsNodeSecpipelineAndBusinessLogicOrchestration",
@@ -1769,7 +1810,7 @@ module.exports = {
     "auditTrail": [],
     "active": true
   },
-  "record43": {
+  "record44": {
     "code": "nodicsDocsPublicationnodenodicsdocsnodeseccronandscheduledautomation",
     "targetType": "NODE",
     "targetCode": "nodicsDocsNodeSeccronAndScheduledAutomation",
@@ -1810,7 +1851,7 @@ module.exports = {
     "auditTrail": [],
     "active": true
   },
-  "record44": {
+  "record45": {
     "code": "nodicsDocsPublicationnodenodicsdocsnodesecdataimportexportandmigration",
     "targetType": "NODE",
     "targetCode": "nodicsDocsNodeSecdataImportExportAndMigration",
@@ -1851,7 +1892,7 @@ module.exports = {
     "auditTrail": [],
     "active": true
   },
-  "record45": {
+  "record46": {
     "code": "nodicsDocsPublicationnodenodicsdocsnodesecsystemintegrationandexternalconnectivity",
     "targetType": "NODE",
     "targetCode": "nodicsDocsNodeSecsystemIntegrationAndExternalConnectivity",
@@ -1892,7 +1933,7 @@ module.exports = {
     "auditTrail": [],
     "active": true
   },
-  "record46": {
+  "record47": {
     "code": "nodicsDocsPublicationnodenodicsdocsnodesecoperationsmonitoringandrecovery",
     "targetType": "NODE",
     "targetCode": "nodicsDocsNodeSecoperationsMonitoringAndRecovery",
@@ -1933,7 +1974,7 @@ module.exports = {
     "auditTrail": [],
     "active": true
   },
-  "record47": {
+  "record48": {
     "code": "nodicsDocsPublicationnodenodicsdocsnodesecqualitytestingandcertification",
     "targetType": "NODE",
     "targetCode": "nodicsDocsNodeSecqualityTestingAndCertification",
@@ -1974,7 +2015,7 @@ module.exports = {
     "auditTrail": [],
     "active": true
   },
-  "record48": {
+  "record49": {
     "code": "nodicsDocsPublicationnodenodicsdocsnodesecdocumentationmanagement",
     "targetType": "NODE",
     "targetCode": "nodicsDocsNodeSecdocumentationManagement",
@@ -2015,7 +2056,7 @@ module.exports = {
     "auditTrail": [],
     "active": true
   },
-  "record49": {
+  "record50": {
     "code": "nodicsDocsPublicationnodenodicsdocsnodesecreleasestagingandpublication",
     "targetType": "NODE",
     "targetCode": "nodicsDocsNodeSecreleaseStagingAndPublication",
@@ -2056,7 +2097,7 @@ module.exports = {
     "auditTrail": [],
     "active": true
   },
-  "record50": {
+  "record51": {
     "code": "nodicsDocsPublicationnodenodicsdocsnodesecaianddevelopertooling",
     "targetType": "NODE",
     "targetCode": "nodicsDocsNodeSecaiAndDeveloperTooling",
@@ -2097,7 +2138,7 @@ module.exports = {
     "auditTrail": [],
     "active": true
   },
-  "record51": {
+  "record52": {
     "code": "nodicsDocsPublicationnodenodicsdocsnodesecreference",
     "targetType": "NODE",
     "targetCode": "nodicsDocsNodeSecreference",
@@ -2138,7 +2179,7 @@ module.exports = {
     "auditTrail": [],
     "active": true
   },
-  "record52": {
+  "record53": {
     "code": "nodicsDocsPublicationnodenodicsdocsnodetopicframeworkwhatisnodics",
     "targetType": "NODE",
     "targetCode": "nodicsDocsNodeTopicframeworkWhatIsNodics",
@@ -2179,7 +2220,7 @@ module.exports = {
     "auditTrail": [],
     "active": true
   },
-  "record53": {
+  "record54": {
     "code": "nodicsDocsPublicationnodenodicsdocsnodetopicframeworkwhynodicsexists",
     "targetType": "NODE",
     "targetCode": "nodicsDocsNodeTopicframeworkWhyNodicsExists",
@@ -2220,7 +2261,7 @@ module.exports = {
     "auditTrail": [],
     "active": true
   },
-  "record54": {
+  "record55": {
     "code": "nodicsDocsPublicationnodenodicsdocsnodetopicframeworkhownodicsworks",
     "targetType": "NODE",
     "targetCode": "nodicsDocsNodeTopicframeworkHowNodicsWorks",
@@ -2261,7 +2302,7 @@ module.exports = {
     "auditTrail": [],
     "active": true
   },
-  "record55": {
+  "record56": {
     "code": "nodicsDocsPublicationnodenodicsdocsnodetopicframeworkadoptionandfirstjourney",
     "targetType": "NODE",
     "targetCode": "nodicsDocsNodeTopicframeworkAdoptionAndFirstJourney",
@@ -2302,7 +2343,7 @@ module.exports = {
     "auditTrail": [],
     "active": true
   },
-  "record56": {
+  "record57": {
     "code": "nodicsDocsPublicationnodenodicsdocsnodetopicdocsdocumentationroadmap",
     "targetType": "NODE",
     "targetCode": "nodicsDocsNodeTopicdocsDocumentationRoadmap",
@@ -2343,7 +2384,7 @@ module.exports = {
     "auditTrail": [],
     "active": true
   },
-  "record57": {
+  "record58": {
     "code": "nodicsDocsPublicationnodenodicsdocsnodetopicdocsdocumentationprinciples",
     "targetType": "NODE",
     "targetCode": "nodicsDocsNodeTopicdocsDocumentationPrinciples",
@@ -2384,7 +2425,7 @@ module.exports = {
     "auditTrail": [],
     "active": true
   },
-  "record58": {
+  "record59": {
     "code": "nodicsDocsPublicationnodenodicsdocsnodetopicdocsreaderjourneyandcoverage",
     "targetType": "NODE",
     "targetCode": "nodicsDocsNodeTopicdocsReaderJourneyAndCoverage",
@@ -2425,7 +2466,7 @@ module.exports = {
     "auditTrail": [],
     "active": true
   },
-  "record59": {
+  "record60": {
     "code": "nodicsDocsPublicationnodenodicsdocsnodetopicdocsdocumentationpublishingmodel",
     "targetType": "NODE",
     "targetCode": "nodicsDocsNodeTopicdocsDocumentationPublishingModel",
@@ -2466,7 +2507,7 @@ module.exports = {
     "auditTrail": [],
     "active": true
   },
-  "record60": {
+  "record61": {
     "code": "nodicsDocsPublicationnodenodicsdocsnodetopicframeworkmodulararchitecture",
     "targetType": "NODE",
     "targetCode": "nodicsDocsNodeTopicframeworkModularArchitecture",
@@ -2507,7 +2548,7 @@ module.exports = {
     "auditTrail": [],
     "active": true
   },
-  "record61": {
+  "record62": {
     "code": "nodicsDocsPublicationnodenodicsdocsnodetopicframeworkruntimeservercomposition",
     "targetType": "NODE",
     "targetCode": "nodicsDocsNodeTopicframeworkRuntimeServerComposition",
@@ -2548,7 +2589,7 @@ module.exports = {
     "auditTrail": [],
     "active": true
   },
-  "record62": {
+  "record63": {
     "code": "nodicsDocsPublicationnodenodicsdocsnodetopicframeworkmoduleloadingserviceprecedence",
     "targetType": "NODE",
     "targetCode": "nodicsDocsNodeTopicframeworkModuleLoadingServicePrecedence",
@@ -2589,7 +2630,7 @@ module.exports = {
     "auditTrail": [],
     "active": true
   },
-  "record63": {
+  "record64": {
     "code": "nodicsDocsPublicationnodenodicsdocsnodetopicframeworkarchitecturedecisionguide",
     "targetType": "NODE",
     "targetCode": "nodicsDocsNodeTopicframeworkArchitectureDecisionGuide",
@@ -2630,7 +2671,7 @@ module.exports = {
     "auditTrail": [],
     "active": true
   },
-  "record64": {
+  "record65": {
     "code": "nodicsDocsPublicationnodenodicsdocsnodetopicplatformmoduleregistry",
     "targetType": "NODE",
     "targetCode": "nodicsDocsNodeTopicplatformModuleRegistry",
@@ -2671,7 +2712,7 @@ module.exports = {
     "auditTrail": [],
     "active": true
   },
-  "record65": {
+  "record66": {
     "code": "nodicsDocsPublicationnodenodicsdocsnodetopicfoundationoverview",
     "targetType": "NODE",
     "targetCode": "nodicsDocsNodeTopicfoundationOverview",
@@ -2712,7 +2753,7 @@ module.exports = {
     "auditTrail": [],
     "active": true
   },
-  "record66": {
+  "record67": {
     "code": "nodicsDocsPublicationnodenodicsdocsnodetopicapplicationssuite",
     "targetType": "NODE",
     "targetCode": "nodicsDocsNodeTopicapplicationsSuite",
@@ -2753,7 +2794,7 @@ module.exports = {
     "auditTrail": [],
     "active": true
   },
-  "record67": {
+  "record68": {
     "code": "nodicsDocsPublicationnodenodicsdocsnodetopicsolutionstaskexecutionengine",
     "targetType": "NODE",
     "targetCode": "nodicsDocsNodeTopicsolutionsTaskExecutionEngine",
@@ -2794,7 +2835,7 @@ module.exports = {
     "auditTrail": [],
     "active": true
   },
-  "record68": {
+  "record69": {
     "code": "nodicsDocsPublicationnodenodicsdocsnodetopicsolutionsdataengineeringanalyticsplatform",
     "targetType": "NODE",
     "targetCode": "nodicsDocsNodeTopicsolutionsDataEngineeringAnalyticsPlatform",
@@ -2835,7 +2876,7 @@ module.exports = {
     "auditTrail": [],
     "active": true
   },
-  "record69": {
+  "record70": {
     "code": "nodicsDocsPublicationnodenodicsdocsnodetopicacceleratorsagoraindustrytemplates",
     "targetType": "NODE",
     "targetCode": "nodicsDocsNodeTopicacceleratorsAgoraIndustryTemplates",
@@ -2876,7 +2917,7 @@ module.exports = {
     "auditTrail": [],
     "active": true
   },
-  "record70": {
+  "record71": {
     "code": "nodicsDocsPublicationnodenodicsdocsnodetopicacceleratorsagoraapparelproductdataauthoring",
     "targetType": "NODE",
     "targetCode": "nodicsDocsNodeTopicacceleratorsAgoraApparelProductDataAuthoring",
@@ -2917,7 +2958,7 @@ module.exports = {
     "auditTrail": [],
     "active": true
   },
-  "record71": {
+  "record72": {
     "code": "nodicsDocsPublicationnodenodicsdocsnodetopicframeworklocalquickstart",
     "targetType": "NODE",
     "targetCode": "nodicsDocsNodeTopicframeworkLocalQuickStart",
@@ -2958,7 +2999,7 @@ module.exports = {
     "auditTrail": [],
     "active": true
   },
-  "record72": {
+  "record73": {
     "code": "nodicsDocsPublicationnodenodicsdocsnodetopicframeworkfreshschemasetupjourney",
     "targetType": "NODE",
     "targetCode": "nodicsDocsNodeTopicframeworkFreshSchemaSetupJourney",
@@ -2999,7 +3040,7 @@ module.exports = {
     "auditTrail": [],
     "active": true
   },
-  "record73": {
+  "record74": {
     "code": "nodicsDocsPublicationnodenodicsdocsnodetopicframeworklocalruntimetroubleshooting",
     "targetType": "NODE",
     "targetCode": "nodicsDocsNodeTopicframeworkLocalRuntimeTroubleshooting",
@@ -3040,7 +3081,7 @@ module.exports = {
     "auditTrail": [],
     "active": true
   },
-  "record74": {
+  "record75": {
     "code": "nodicsDocsPublicationnodenodicsdocsnodetopicinstallerinstalledruntimeapplicationbuilder",
     "targetType": "NODE",
     "targetCode": "nodicsDocsNodeTopicinstallerInstalledRuntimeApplicationBuilder",
@@ -3081,7 +3122,7 @@ module.exports = {
     "auditTrail": [],
     "active": true
   },
-  "record75": {
+  "record76": {
     "code": "nodicsDocsPublicationnodenodicsdocsnodetopicbuilderworkspacegeneration",
     "targetType": "NODE",
     "targetCode": "nodicsDocsNodeTopicbuilderWorkspaceGeneration",
@@ -3122,7 +3163,7 @@ module.exports = {
     "auditTrail": [],
     "active": true
   },
-  "record76": {
+  "record77": {
     "code": "nodicsDocsPublicationnodenodicsdocsnodetopicprocessvisualdesigner",
     "targetType": "NODE",
     "targetCode": "nodicsDocsNodeTopicprocessVisualDesigner",
@@ -3163,7 +3204,7 @@ module.exports = {
     "auditTrail": [],
     "active": true
   },
-  "record77": {
+  "record78": {
     "code": "nodicsDocsPublicationnodenodicsdocsnodetopicaxisbusinesscustomization",
     "targetType": "NODE",
     "targetCode": "nodicsDocsNodeTopicaxisBusinessCustomization",
@@ -3204,7 +3245,7 @@ module.exports = {
     "auditTrail": [],
     "active": true
   },
-  "record78": {
+  "record79": {
     "code": "nodicsDocsPublicationnodenodicsdocsnodetopicplatformoverview",
     "targetType": "NODE",
     "targetCode": "nodicsDocsNodeTopicplatformOverview",
@@ -3245,7 +3286,7 @@ module.exports = {
     "auditTrail": [],
     "active": true
   },
-  "record79": {
+  "record80": {
     "code": "nodicsDocsPublicationnodenodicsdocsnodetopicsecurityidentityaccessgovernance",
     "targetType": "NODE",
     "targetCode": "nodicsDocsNodeTopicsecurityIdentityAccessGovernance",
@@ -3286,7 +3327,7 @@ module.exports = {
     "auditTrail": [],
     "active": true
   },
-  "record80": {
+  "record81": {
     "code": "nodicsDocsPublicationnodenodicsdocsnodetopicconfigurationruntimebehaviormanagement",
     "targetType": "NODE",
     "targetCode": "nodicsDocsNodeTopicconfigurationRuntimeBehaviorManagement",
@@ -3327,7 +3368,7 @@ module.exports = {
     "auditTrail": [],
     "active": true
   },
-  "record81": {
+  "record82": {
     "code": "nodicsDocsPublicationnodenodicsdocsnodetopicconfigurationframeworkstartuplifecycle",
     "targetType": "NODE",
     "targetCode": "nodicsDocsNodeTopicconfigurationFrameworkStartupLifecycle",
@@ -3368,7 +3409,7 @@ module.exports = {
     "auditTrail": [],
     "active": true
   },
-  "record82": {
+  "record83": {
     "code": "nodicsDocsPublicationnodenodicsdocsnodetopicroutingapigovernance",
     "targetType": "NODE",
     "targetCode": "nodicsDocsNodeTopicroutingApiGovernance",
@@ -3409,7 +3450,7 @@ module.exports = {
     "auditTrail": [],
     "active": true
   },
-  "record83": {
+  "record84": {
     "code": "nodicsDocsPublicationnodenodicsdocsnodetopicroutingapirequestlifecycle",
     "targetType": "NODE",
     "targetCode": "nodicsDocsNodeTopicroutingApiRequestLifecycle",
@@ -3450,7 +3491,7 @@ module.exports = {
     "auditTrail": [],
     "active": true
   },
-  "record84": {
+  "record85": {
     "code": "nodicsDocsPublicationnodenodicsdocsnodetopicfoundationerrorhandlingstatuscodes",
     "targetType": "NODE",
     "targetCode": "nodicsDocsNodeTopicfoundationErrorHandlingStatusCodes",
@@ -3491,7 +3532,7 @@ module.exports = {
     "auditTrail": [],
     "active": true
   },
-  "record85": {
+  "record86": {
     "code": "nodicsDocsPublicationnodenodicsdocsnodetopicruntimegovernedchange",
     "targetType": "NODE",
     "targetCode": "nodicsDocsNodeTopicruntimeGovernedChange",
@@ -3532,7 +3573,7 @@ module.exports = {
     "auditTrail": [],
     "active": true
   },
-  "record86": {
+  "record87": {
     "code": "nodicsDocsPublicationnodenodicsdocsnodetopiclocalizationinternationalization",
     "targetType": "NODE",
     "targetCode": "nodicsDocsNodeTopiclocalizationInternationalization",
@@ -3573,7 +3614,7 @@ module.exports = {
     "auditTrail": [],
     "active": true
   },
-  "record87": {
+  "record88": {
     "code": "nodicsDocsPublicationnodenodicsdocsnodetopicschemadatamodelingmanagement",
     "targetType": "NODE",
     "targetCode": "nodicsDocsNodeTopicschemaDataModelingManagement",
@@ -3614,7 +3655,7 @@ module.exports = {
     "auditTrail": [],
     "active": true
   },
-  "record88": {
+  "record89": {
     "code": "nodicsDocsPublicationnodenodicsdocsnodetopicpersistenceproviderdataaccesslayer",
     "targetType": "NODE",
     "targetCode": "nodicsDocsNodeTopicpersistenceProviderDataAccessLayer",
@@ -3655,7 +3696,7 @@ module.exports = {
     "auditTrail": [],
     "active": true
   },
-  "record89": {
+  "record90": {
     "code": "nodicsDocsPublicationnodenodicsdocsnodetopiccacheruntimestatemanagement",
     "targetType": "NODE",
     "targetCode": "nodicsDocsNodeTopiccacheRuntimeStateManagement",
@@ -3696,7 +3737,7 @@ module.exports = {
     "auditTrail": [],
     "active": true
   },
-  "record90": {
+  "record91": {
     "code": "nodicsDocsPublicationnodenodicsdocsnodetopicframeworkcustomizationguide",
     "targetType": "NODE",
     "targetCode": "nodicsDocsNodeTopicframeworkCustomizationGuide",
@@ -3737,7 +3778,7 @@ module.exports = {
     "auditTrail": [],
     "active": true
   },
-  "record91": {
+  "record92": {
     "code": "nodicsDocsPublicationnodenodicsdocsnodetopicframeworkbackendextensionpatterns",
     "targetType": "NODE",
     "targetCode": "nodicsDocsNodeTopicframeworkBackendExtensionPatterns",
@@ -3778,7 +3819,7 @@ module.exports = {
     "auditTrail": [],
     "active": true
   },
-  "record92": {
+  "record93": {
     "code": "nodicsDocsPublicationnodenodicsdocsnodetopicframeworkaxiscontentcustomization",
     "targetType": "NODE",
     "targetCode": "nodicsDocsNodeTopicframeworkAxisContentCustomization",
@@ -3819,7 +3860,7 @@ module.exports = {
     "auditTrail": [],
     "active": true
   },
-  "record93": {
+  "record94": {
     "code": "nodicsDocsPublicationnodenodicsdocsnodetopicprocessdevelopercustomization",
     "targetType": "NODE",
     "targetCode": "nodicsDocsNodeTopicprocessDeveloperCustomization",
@@ -3860,7 +3901,7 @@ module.exports = {
     "auditTrail": [],
     "active": true
   },
-  "record94": {
+  "record95": {
     "code": "nodicsDocsPublicationnodenodicsdocsnodetopicprocesscustomprojectextension",
     "targetType": "NODE",
     "targetCode": "nodicsDocsNodeTopicprocessCustomProjectExtension",
@@ -3901,7 +3942,7 @@ module.exports = {
     "auditTrail": [],
     "active": true
   },
-  "record95": {
+  "record96": {
     "code": "nodicsDocsPublicationnodenodicsdocsnodetopiccommercebasefoundations",
     "targetType": "NODE",
     "targetCode": "nodicsDocsNodeTopiccommerceBaseFoundations",
@@ -3942,7 +3983,7 @@ module.exports = {
     "auditTrail": [],
     "active": true
   },
-  "record96": {
+  "record97": {
     "code": "nodicsDocsPublicationnodenodicsdocsnodetopicwcmsoverview",
     "targetType": "NODE",
     "targetCode": "nodicsDocsNodeTopicwcmsOverview",
@@ -3983,7 +4024,7 @@ module.exports = {
     "auditTrail": [],
     "active": true
   },
-  "record97": {
+  "record98": {
     "code": "nodicsDocsPublicationnodenodicsdocsnodetopicwcmscontentcatalogmodel",
     "targetType": "NODE",
     "targetCode": "nodicsDocsNodeTopicwcmsContentCatalogModel",
@@ -4024,7 +4065,7 @@ module.exports = {
     "auditTrail": [],
     "active": true
   },
-  "record98": {
+  "record99": {
     "code": "nodicsDocsPublicationnodenodicsdocsnodetopicwcmspagedesignercomponents",
     "targetType": "NODE",
     "targetCode": "nodicsDocsNodeTopicwcmsPageDesignerComponents",
@@ -4065,7 +4106,7 @@ module.exports = {
     "auditTrail": [],
     "active": true
   },
-  "record99": {
+  "record100": {
     "code": "nodicsDocsPublicationnodenodicsdocsnodetopicwcmssitepublicationvisibility",
     "targetType": "NODE",
     "targetCode": "nodicsDocsNodeTopicwcmsSitePublicationVisibility",
@@ -4106,7 +4147,7 @@ module.exports = {
     "auditTrail": [],
     "active": true
   },
-  "record100": {
+  "record101": {
     "code": "nodicsDocsPublicationnodenodicsdocsnodetopiccatalogproductdiscoverymanagement",
     "targetType": "NODE",
     "targetCode": "nodicsDocsNodeTopiccatalogProductDiscoveryManagement",
@@ -4147,7 +4188,7 @@ module.exports = {
     "auditTrail": [],
     "active": true
   },
-  "record101": {
+  "record102": {
     "code": "nodicsDocsPublicationnodenodicsdocsnodetopicdiscoverysearchindexing",
     "targetType": "NODE",
     "targetCode": "nodicsDocsNodeTopicdiscoverySearchIndexing",
@@ -4188,7 +4229,7 @@ module.exports = {
     "auditTrail": [],
     "active": true
   },
-  "record102": {
+  "record103": {
     "code": "nodicsDocsPublicationnodenodicsdocsnodetopicwcmsmediamanagement",
     "targetType": "NODE",
     "targetCode": "nodicsDocsNodeTopicwcmsMediaManagement",
@@ -4229,7 +4270,7 @@ module.exports = {
     "auditTrail": [],
     "active": true
   },
-  "record103": {
+  "record104": {
     "code": "nodicsDocsPublicationnodenodicsdocsnodetopicwcmsmediastoragedelivery",
     "targetType": "NODE",
     "targetCode": "nodicsDocsNodeTopicwcmsMediaStorageDelivery",
@@ -4270,7 +4311,7 @@ module.exports = {
     "auditTrail": [],
     "active": true
   },
-  "record104": {
+  "record105": {
     "code": "nodicsDocsPublicationnodenodicsdocsnodetopicwcmsmediaimportpublication",
     "targetType": "NODE",
     "targetCode": "nodicsDocsNodeTopicwcmsMediaImportPublication",
@@ -4311,7 +4352,7 @@ module.exports = {
     "auditTrail": [],
     "active": true
   },
-  "record105": {
+  "record106": {
     "code": "nodicsDocsPublicationnodenodicsdocsnodetopicinventorystockmanagement",
     "targetType": "NODE",
     "targetCode": "nodicsDocsNodeTopicinventoryStockManagement",
@@ -4352,7 +4393,7 @@ module.exports = {
     "auditTrail": [],
     "active": true
   },
-  "record106": {
+  "record107": {
     "code": "nodicsDocsPublicationnodenodicsdocsnodetopicpricingpromotionstaxmanagement",
     "targetType": "NODE",
     "targetCode": "nodicsDocsNodeTopicpricingPromotionsTaxManagement",
@@ -4393,7 +4434,7 @@ module.exports = {
     "auditTrail": [],
     "active": true
   },
-  "record107": {
+  "record108": {
     "code": "nodicsDocsPublicationnodenodicsdocsnodetopiccommerceoverview",
     "targetType": "NODE",
     "targetCode": "nodicsDocsNodeTopiccommerceOverview",
@@ -4434,7 +4475,7 @@ module.exports = {
     "auditTrail": [],
     "active": true
   },
-  "record108": {
+  "record109": {
     "code": "nodicsDocsPublicationnodenodicsdocsnodetopiccommercecartorder",
     "targetType": "NODE",
     "targetCode": "nodicsDocsNodeTopiccommerceCartOrder",
@@ -4475,7 +4516,7 @@ module.exports = {
     "auditTrail": [],
     "active": true
   },
-  "record109": {
+  "record110": {
     "code": "nodicsDocsPublicationnodenodicsdocsnodetopiccommercepaymentfulfillment",
     "targetType": "NODE",
     "targetCode": "nodicsDocsNodeTopiccommercePaymentFulfillment",
@@ -4516,7 +4557,7 @@ module.exports = {
     "auditTrail": [],
     "active": true
   },
-  "record110": {
+  "record111": {
     "code": "nodicsDocsPublicationnodenodicsdocsnodetopicfulfillmentshippingmanagement",
     "targetType": "NODE",
     "targetCode": "nodicsDocsNodeTopicfulfillmentShippingManagement",
@@ -4557,7 +4598,7 @@ module.exports = {
     "auditTrail": [],
     "active": true
   },
-  "record111": {
+  "record112": {
     "code": "nodicsDocsPublicationnodenodicsdocsnodetopicordermanagementlifecycle",
     "targetType": "NODE",
     "targetCode": "nodicsDocsNodeTopicorderManagementLifecycle",
@@ -4598,7 +4639,7 @@ module.exports = {
     "auditTrail": [],
     "active": true
   },
-  "record112": {
+  "record113": {
     "code": "nodicsDocsPublicationnodenodicsdocsnodetopiccommercereturnsrefunds",
     "targetType": "NODE",
     "targetCode": "nodicsDocsNodeTopiccommerceReturnsRefunds",
@@ -4639,7 +4680,7 @@ module.exports = {
     "auditTrail": [],
     "active": true
   },
-  "record113": {
+  "record114": {
     "code": "nodicsDocsPublicationnodenodicsdocsnodetopicengagementcustomerreviews",
     "targetType": "NODE",
     "targetCode": "nodicsDocsNodeTopicengagementCustomerReviews",
@@ -4680,7 +4721,7 @@ module.exports = {
     "auditTrail": [],
     "active": true
   },
-  "record114": {
+  "record115": {
     "code": "nodicsDocsPublicationnodenodicsdocsnodetopicengagementreviewmoderationgovernance",
     "targetType": "NODE",
     "targetCode": "nodicsDocsNodeTopicengagementReviewModerationGovernance",
@@ -4721,7 +4762,7 @@ module.exports = {
     "auditTrail": [],
     "active": true
   },
-  "record115": {
+  "record116": {
     "code": "nodicsDocsPublicationnodenodicsdocsnodetopicengagementreviewaggregationrecovery",
     "targetType": "NODE",
     "targetCode": "nodicsDocsNodeTopicengagementReviewAggregationRecovery",
@@ -4762,7 +4803,7 @@ module.exports = {
     "auditTrail": [],
     "active": true
   },
-  "record116": {
+  "record117": {
     "code": "nodicsDocsPublicationnodenodicsdocsnodetopicengagementcustomerfeedback",
     "targetType": "NODE",
     "targetCode": "nodicsDocsNodeTopicengagementCustomerFeedback",
@@ -4803,7 +4844,7 @@ module.exports = {
     "auditTrail": [],
     "active": true
   },
-  "record117": {
+  "record118": {
     "code": "nodicsDocsPublicationnodenodicsdocsnodetopicengagementunifiedoperations",
     "targetType": "NODE",
     "targetCode": "nodicsDocsNodeTopicengagementUnifiedOperations",
@@ -4844,7 +4885,7 @@ module.exports = {
     "auditTrail": [],
     "active": true
   },
-  "record118": {
+  "record119": {
     "code": "nodicsDocsPublicationnodenodicsdocsnodetopicengagementgovernedautomation",
     "targetType": "NODE",
     "targetCode": "nodicsDocsNodeTopicengagementGovernedAutomation",
@@ -4885,7 +4926,7 @@ module.exports = {
     "auditTrail": [],
     "active": true
   },
-  "record119": {
+  "record120": {
     "code": "nodicsDocsPublicationnodenodicsdocsnodetopicengagemententerpriseoperations",
     "targetType": "NODE",
     "targetCode": "nodicsDocsNodeTopicengagementEnterpriseOperations",
@@ -4926,7 +4967,7 @@ module.exports = {
     "auditTrail": [],
     "active": true
   },
-  "record120": {
+  "record121": {
     "code": "nodicsDocsPublicationnodenodicsdocsnodetopiccommunicationoverview",
     "targetType": "NODE",
     "targetCode": "nodicsDocsNodeTopiccommunicationOverview",
@@ -4967,7 +5008,7 @@ module.exports = {
     "auditTrail": [],
     "active": true
   },
-  "record121": {
+  "record122": {
     "code": "nodicsDocsPublicationnodenodicsdocsnodetopiceventsmessagingclustercoordination",
     "targetType": "NODE",
     "targetCode": "nodicsDocsNodeTopiceventsMessagingClusterCoordination",
@@ -5008,7 +5049,7 @@ module.exports = {
     "auditTrail": [],
     "active": true
   },
-  "record122": {
+  "record123": {
     "code": "nodicsDocsPublicationnodenodicsdocsnodetopicprocessoverview",
     "targetType": "NODE",
     "targetCode": "nodicsDocsNodeTopicprocessOverview",
@@ -5049,7 +5090,7 @@ module.exports = {
     "auditTrail": [],
     "active": true
   },
-  "record123": {
+  "record124": {
     "code": "nodicsDocsPublicationnodenodicsdocsnodetopicprocessruntimelifecycle",
     "targetType": "NODE",
     "targetCode": "nodicsDocsNodeTopicprocessRuntimeLifecycle",
@@ -5090,7 +5131,7 @@ module.exports = {
     "auditTrail": [],
     "active": true
   },
-  "record124": {
+  "record125": {
     "code": "nodicsDocsPublicationnodenodicsdocsnodetopicprocessworkfloworchestrationpatterns",
     "targetType": "NODE",
     "targetCode": "nodicsDocsNodeTopicprocessWorkflowOrchestrationPatterns",
@@ -5131,7 +5172,7 @@ module.exports = {
     "auditTrail": [],
     "active": true
   },
-  "record125": {
+  "record126": {
     "code": "nodicsDocsPublicationnodenodicsdocsnodetopicprocessfirstworkflow",
     "targetType": "NODE",
     "targetCode": "nodicsDocsNodeTopicprocessFirstWorkflow",
@@ -5172,7 +5213,7 @@ module.exports = {
     "auditTrail": [],
     "active": true
   },
-  "record126": {
+  "record127": {
     "code": "nodicsDocsPublicationnodenodicsdocsnodetopicprocessfirsthumantask",
     "targetType": "NODE",
     "targetCode": "nodicsDocsNodeTopicprocessFirstHumanTask",
@@ -5213,7 +5254,7 @@ module.exports = {
     "auditTrail": [],
     "active": true
   },
-  "record127": {
+  "record128": {
     "code": "nodicsDocsPublicationnodenodicsdocsnodetopicprocessbusinessvalue",
     "targetType": "NODE",
     "targetCode": "nodicsDocsNodeTopicprocessBusinessValue",
@@ -5254,7 +5295,7 @@ module.exports = {
     "auditTrail": [],
     "active": true
   },
-  "record128": {
+  "record129": {
     "code": "nodicsDocsPublicationnodenodicsdocsnodetopicpipelinebusinesslogicorchestration",
     "targetType": "NODE",
     "targetCode": "nodicsDocsNodeTopicpipelineBusinessLogicOrchestration",
@@ -5295,7 +5336,7 @@ module.exports = {
     "auditTrail": [],
     "active": true
   },
-  "record129": {
+  "record130": {
     "code": "nodicsDocsPublicationnodenodicsdocsnodetopiccronoperations",
     "targetType": "NODE",
     "targetCode": "nodicsDocsNodeTopiccronOperations",
@@ -5336,7 +5377,7 @@ module.exports = {
     "auditTrail": [],
     "active": true
   },
-  "record130": {
+  "record131": {
     "code": "nodicsDocsPublicationnodenodicsdocsnodetopiccronnoderesponsibilitytee",
     "targetType": "NODE",
     "targetCode": "nodicsDocsNodeTopiccronNodeResponsibilityTee",
@@ -5377,7 +5418,7 @@ module.exports = {
     "auditTrail": [],
     "active": true
   },
-  "record131": {
+  "record132": {
     "code": "nodicsDocsPublicationnodenodicsdocsnodetopiccronprojectcustomization",
     "targetType": "NODE",
     "targetCode": "nodicsDocsNodeTopiccronProjectCustomization",
@@ -5418,7 +5459,7 @@ module.exports = {
     "auditTrail": [],
     "active": true
   },
-  "record132": {
+  "record133": {
     "code": "nodicsDocsPublicationnodenodicsdocsnodetopicprocessprocesscronruntime",
     "targetType": "NODE",
     "targetCode": "nodicsDocsNodeTopicprocessProcessCronRuntime",
@@ -5459,7 +5500,7 @@ module.exports = {
     "auditTrail": [],
     "active": true
   },
-  "record133": {
+  "record134": {
     "code": "nodicsDocsPublicationnodenodicsdocsnodetopicprocessscheduledautomation",
     "targetType": "NODE",
     "targetCode": "nodicsDocsNodeTopicprocessScheduledAutomation",
@@ -5500,7 +5541,7 @@ module.exports = {
     "auditTrail": [],
     "active": true
   },
-  "record134": {
+  "record135": {
     "code": "nodicsDocsPublicationnodenodicsdocsnodetopicdataimportexportmigration",
     "targetType": "NODE",
     "targetCode": "nodicsDocsNodeTopicdataImportExportMigration",
@@ -5541,7 +5582,7 @@ module.exports = {
     "auditTrail": [],
     "active": true
   },
-  "record135": {
+  "record136": {
     "code": "nodicsDocsPublicationnodenodicsdocsnodetopicprocessactionadapters",
     "targetType": "NODE",
     "targetCode": "nodicsDocsNodeTopicprocessActionAdapters",
@@ -5582,7 +5623,7 @@ module.exports = {
     "auditTrail": [],
     "active": true
   },
-  "record136": {
+  "record137": {
     "code": "nodicsDocsPublicationnodenodicsdocsnodetopicframeworkdevopsruntime",
     "targetType": "NODE",
     "targetCode": "nodicsDocsNodeTopicframeworkDevopsRuntime",
@@ -5623,7 +5664,7 @@ module.exports = {
     "auditTrail": [],
     "active": true
   },
-  "record137": {
+  "record138": {
     "code": "nodicsDocsPublicationnodenodicsdocsnodetopicframeworkruntimereleaserollback",
     "targetType": "NODE",
     "targetCode": "nodicsDocsNodeTopicframeworkRuntimeReleaseRollback",
@@ -5664,7 +5705,7 @@ module.exports = {
     "auditTrail": [],
     "active": true
   },
-  "record138": {
+  "record139": {
     "code": "nodicsDocsPublicationnodenodicsdocsnodetopicframeworklocalbrowseracceptancejourney",
     "targetType": "NODE",
     "targetCode": "nodicsDocsNodeTopicframeworkLocalBrowserAcceptanceJourney",
@@ -5705,7 +5746,7 @@ module.exports = {
     "auditTrail": [],
     "active": true
   },
-  "record139": {
+  "record140": {
     "code": "nodicsDocsPublicationnodenodicsdocsnodetopicframeworklocalverificationchecklist",
     "targetType": "NODE",
     "targetCode": "nodicsDocsNodeTopicframeworkLocalVerificationChecklist",
@@ -5746,7 +5787,7 @@ module.exports = {
     "auditTrail": [],
     "active": true
   },
-  "record140": {
+  "record141": {
     "code": "nodicsDocsPublicationnodenodicsdocsnodetopiccommerceenterpriseoperations",
     "targetType": "NODE",
     "targetCode": "nodicsDocsNodeTopiccommerceEnterpriseOperations",
@@ -5787,7 +5828,7 @@ module.exports = {
     "auditTrail": [],
     "active": true
   },
-  "record141": {
+  "record142": {
     "code": "nodicsDocsPublicationnodenodicsdocsnodetopicprocessincidentrecovery",
     "targetType": "NODE",
     "targetCode": "nodicsDocsNodeTopicprocessIncidentRecovery",
@@ -5828,7 +5869,7 @@ module.exports = {
     "auditTrail": [],
     "active": true
   },
-  "record142": {
+  "record143": {
     "code": "nodicsDocsPublicationnodenodicsdocsnodetopicprocessdevopstopology",
     "targetType": "NODE",
     "targetCode": "nodicsDocsNodeTopicprocessDevopsTopology",
@@ -5869,7 +5910,7 @@ module.exports = {
     "auditTrail": [],
     "active": true
   },
-  "record143": {
+  "record144": {
     "code": "nodicsDocsPublicationnodenodicsdocsnodetopicprocessqaregressionguide",
     "targetType": "NODE",
     "targetCode": "nodicsDocsNodeTopicprocessQaRegressionGuide",
@@ -5910,7 +5951,7 @@ module.exports = {
     "auditTrail": [],
     "active": true
   },
-  "record144": {
+  "record145": {
     "code": "nodicsDocsPublicationnodenodicsdocsnodetopicframeworkcapabilitydocumentationmaturitypattern",
     "targetType": "NODE",
     "targetCode": "nodicsDocsNodeTopicframeworkCapabilityDocumentationMaturityPattern",
@@ -5951,7 +5992,7 @@ module.exports = {
     "auditTrail": [],
     "active": true
   },
-  "record145": {
+  "record146": {
     "code": "nodicsDocsPublicationnodenodicsdocsnodetopicdocsoverview",
     "targetType": "NODE",
     "targetCode": "nodicsDocsNodeTopicdocsOverview",
@@ -5992,7 +6033,7 @@ module.exports = {
     "auditTrail": [],
     "active": true
   },
-  "record146": {
+  "record147": {
     "code": "nodicsDocsPublicationnodenodicsdocsnodetopicwcmspublishinglifecycle",
     "targetType": "NODE",
     "targetCode": "nodicsDocsNodeTopicwcmsPublishingLifecycle",
@@ -6033,7 +6074,7 @@ module.exports = {
     "auditTrail": [],
     "active": true
   },
-  "record147": {
+  "record148": {
     "code": "nodicsDocsPublicationnodenodicsdocsnodetopicapplicationsnexusdatacontentguide",
     "targetType": "NODE",
     "targetCode": "nodicsDocsNodeTopicapplicationsNexusDataContentGuide",
@@ -6074,7 +6115,7 @@ module.exports = {
     "auditTrail": [],
     "active": true
   },
-  "record148": {
+  "record149": {
     "code": "nodicsDocsPublicationnodenodicsdocsnodetopicapplicationsaxissetuperrorcontracts",
     "targetType": "NODE",
     "targetCode": "nodicsDocsNodeTopicapplicationsAxisSetupErrorContracts",
@@ -6115,7 +6156,7 @@ module.exports = {
     "auditTrail": [],
     "active": true
   },
-  "record149": {
+  "record150": {
     "code": "nodicsDocsPublicationnodenodicsdocsnodetopicwcmscmssourcemapauthoringcontract",
     "targetType": "NODE",
     "targetCode": "nodicsDocsNodeTopicwcmsCmsSourceMapAuthoringContract",
@@ -6156,7 +6197,7 @@ module.exports = {
     "auditTrail": [],
     "active": true
   },
-  "record150": {
+  "record151": {
     "code": "nodicsDocsPublicationnodenodicsdocsnodetopicwcmsmediaoperationsrunbook",
     "targetType": "NODE",
     "targetCode": "nodicsDocsNodeTopicwcmsMediaOperationsRunbook",
@@ -6197,7 +6238,7 @@ module.exports = {
     "auditTrail": [],
     "active": true
   },
-  "record151": {
+  "record152": {
     "code": "nodicsDocsPublicationnodenodicsdocsnodetopicdataimportexportproviderguides",
     "targetType": "NODE",
     "targetCode": "nodicsDocsNodeTopicdataImportExportProviderGuides",
@@ -6238,7 +6279,7 @@ module.exports = {
     "auditTrail": [],
     "active": true
   },
-  "record152": {
+  "record153": {
     "code": "nodicsDocsPublicationnodenodicsdocsnodetopiccommercedataauthoringfulfillment",
     "targetType": "NODE",
     "targetCode": "nodicsDocsNodeTopiccommerceDataAuthoringFulfillment",
@@ -6279,7 +6320,7 @@ module.exports = {
     "auditTrail": [],
     "active": true
   },
-  "record153": {
+  "record154": {
     "code": "nodicsDocsPublicationnodenodicsdocsnodetopicdocsdocumentationpublishingrunbook",
     "targetType": "NODE",
     "targetCode": "nodicsDocsNodeTopicdocsDocumentationPublishingRunbook",
@@ -6320,7 +6361,7 @@ module.exports = {
     "auditTrail": [],
     "active": true
   },
-  "record154": {
+  "record155": {
     "code": "nodicsDocsPublicationnodenodicsdocsnodetopicplatformmoduleregistryjourney",
     "targetType": "NODE",
     "targetCode": "nodicsDocsNodeTopicplatformModuleRegistryJourney",
@@ -6361,7 +6402,7 @@ module.exports = {
     "auditTrail": [],
     "active": true
   },
-  "record155": {
+  "record156": {
     "code": "nodicsDocsPublicationnodenodicsdocsnodetopiccommercesearchguide",
     "targetType": "NODE",
     "targetCode": "nodicsDocsNodeTopiccommerceSearchGuide",
@@ -6402,7 +6443,7 @@ module.exports = {
     "auditTrail": [],
     "active": true
   },
-  "record156": {
+  "record157": {
     "code": "nodicsDocsPublicationnodenodicsdocsnodetopiclocalizationruntimeauthoring",
     "targetType": "NODE",
     "targetCode": "nodicsDocsNodeTopiclocalizationRuntimeAuthoring",
@@ -6443,7 +6484,7 @@ module.exports = {
     "auditTrail": [],
     "active": true
   },
-  "record157": {
+  "record158": {
     "code": "nodicsDocsPublicationnodenodicsdocsnodetopiccommercepaymentproviderboundaries",
     "targetType": "NODE",
     "targetCode": "nodicsDocsNodeTopiccommercePaymentProviderBoundaries",
@@ -6484,10 +6525,10 @@ module.exports = {
     "auditTrail": [],
     "active": true
   },
-  "record158": {
-    "code": "nodicsDocsPublicationnodenodicsdocsnodetopiccommercecustomerlistprofileboundary",
+  "record159": {
+    "code": "nodicsDocsPublicationnodenodicsdocsnodetopicloyaltywalletsrewardsledger",
     "targetType": "NODE",
-    "targetCode": "nodicsDocsNodeTopiccommerceCustomerListProfileBoundary",
+    "targetCode": "nodicsDocsNodeTopicloyaltyWalletsRewardsLedger",
     "lifecycleState": "ONLINE",
     "publicationCode": "nodicsDocumentation",
     "workflowReference": "nodicsDocumentationReviewWorkflow",
@@ -6499,7 +6540,7 @@ module.exports = {
       "publicationPath": "STAGED_REVIEW_APPROVAL_ONLINE",
       "nexusVisibleOnlyWhenOnlineAndPublic": true
     },
-    "checksum": "3d31557766ce3f447e3a711c6f666c1dc856792446e01b41ba61b7d6f4de4822",
+    "checksum": "e69d3676f59804af2945d9ab2cca8bac23570a17752174c380af3d8699221abb",
     "managedInAxis": true,
     "axisAuthoringPermissions": [
       "documentation.navigation.update"
@@ -6525,7 +6566,48 @@ module.exports = {
     "auditTrail": [],
     "active": true
   },
-  "record159": {
+  "record160": {
+    "code": "nodicsDocsPublicationnodenodicsdocsnodetopiccommerceshoppinglistcommerceboundary",
+    "targetType": "NODE",
+    "targetCode": "nodicsDocsNodeTopiccommerceShoppingListCommerceBoundary",
+    "lifecycleState": "ONLINE",
+    "publicationCode": "nodicsDocumentation",
+    "workflowReference": "nodicsDocumentationReviewWorkflow",
+    "stagedVersion": "0.16.8",
+    "onlineVersion": "0.16.8",
+    "validationResult": {
+      "generated": true,
+      "sourceAuthority": "docs/catalogue.json",
+      "publicationPath": "STAGED_REVIEW_APPROVAL_ONLINE",
+      "nexusVisibleOnlyWhenOnlineAndPublic": true
+    },
+    "checksum": "8eb629ff9c9cda758fab46d17a58ecc1df919dbf50c4ac75c8b3cbba1986353e",
+    "managedInAxis": true,
+    "axisAuthoringPermissions": [
+      "documentation.navigation.update"
+    ],
+    "workflowRequired": true,
+    "workflowTriggers": [
+      "NAVIGATION_CHANGE",
+      "DASHBOARD_CHANGE",
+      "ACCESS_POLICY_CHANGE"
+    ],
+    "decisionPolicy": {
+      "reviewPermission": "documentation.review",
+      "approvePermission": "documentation.approve",
+      "publishPermission": "documentation.publish",
+      "permissionEnforced": true,
+      "adminOverrideAudited": true
+    },
+    "actor": "nodics.docs.generator",
+    "author": "nodics.docs.generator",
+    "reviewer": "nodics.docs.generator",
+    "approver": "nodics.docs.generator",
+    "publisher": "nodics.docs.generator",
+    "auditTrail": [],
+    "active": true
+  },
+  "record161": {
     "code": "nodicsDocsPublicationnodenodicsdocsnodetopicfoundationnmsruntimemonitoring",
     "targetType": "NODE",
     "targetCode": "nodicsDocsNodeTopicfoundationNmsRuntimeMonitoring",
@@ -6566,7 +6648,7 @@ module.exports = {
     "auditTrail": [],
     "active": true
   },
-  "record160": {
+  "record162": {
     "code": "nodicsDocsPublicationnodenodicsdocsnodetopicfoundationserviceruntimeoverrides",
     "targetType": "NODE",
     "targetCode": "nodicsDocsNodeTopicfoundationServiceRuntimeOverrides",
@@ -6607,7 +6689,7 @@ module.exports = {
     "auditTrail": [],
     "active": true
   },
-  "record161": {
+  "record163": {
     "code": "nodicsDocsPublicationnodenodicsdocsnodetopicfoundationmoduletomodulecommunication",
     "targetType": "NODE",
     "targetCode": "nodicsDocsNodeTopicfoundationModuleToModuleCommunication",
@@ -6648,7 +6730,7 @@ module.exports = {
     "auditTrail": [],
     "active": true
   },
-  "record162": {
+  "record164": {
     "code": "nodicsDocsPublicationnodenodicsdocsnodetopicfoundationcacheproviderrunbooks",
     "targetType": "NODE",
     "targetCode": "nodicsDocsNodeTopicfoundationCacheProviderRunbooks",
@@ -6689,7 +6771,7 @@ module.exports = {
     "auditTrail": [],
     "active": true
   },
-  "record163": {
+  "record165": {
     "code": "nodicsDocsPublicationnodenodicsdocsnodetopicfoundationdatabaseproviderboundaries",
     "targetType": "NODE",
     "targetCode": "nodicsDocsNodeTopicfoundationDatabaseProviderBoundaries",
@@ -6730,7 +6812,7 @@ module.exports = {
     "auditTrail": [],
     "active": true
   },
-  "record164": {
+  "record166": {
     "code": "nodicsDocsPublicationnodenodicsdocsnodetopicsecurityotpsecurityflow",
     "targetType": "NODE",
     "targetCode": "nodicsDocsNodeTopicsecurityOtpSecurityFlow",
@@ -6771,7 +6853,7 @@ module.exports = {
     "auditTrail": [],
     "active": true
   },
-  "record165": {
+  "record167": {
     "code": "nodicsDocsPublicationnodenodicsdocsnodetopiccommunicationproviderrunbooks",
     "targetType": "NODE",
     "targetCode": "nodicsDocsNodeTopiccommunicationProviderRunbooks",
@@ -6812,7 +6894,7 @@ module.exports = {
     "auditTrail": [],
     "active": true
   },
-  "record166": {
+  "record168": {
     "code": "nodicsDocsPublicationnodenodicsdocsnodetopicengagementcontactsubmissionoperations",
     "targetType": "NODE",
     "targetCode": "nodicsDocsNodeTopicengagementContactSubmissionOperations",
@@ -6853,7 +6935,7 @@ module.exports = {
     "auditTrail": [],
     "active": true
   },
-  "record167": {
+  "record169": {
     "code": "nodicsDocsPublicationnodenodicsdocsnodetopicprocessworkflowbpmsourcemap",
     "targetType": "NODE",
     "targetCode": "nodicsDocsNodeTopicprocessWorkflowBpmSourceMap",
@@ -6894,7 +6976,7 @@ module.exports = {
     "auditTrail": [],
     "active": true
   },
-  "record168": {
+  "record170": {
     "code": "nodicsDocsPublicationnodenodicsdocsnodetopicprocesscronjobdataauthoring",
     "targetType": "NODE",
     "targetCode": "nodicsDocsNodeTopicprocessCronjobDataAuthoring",
@@ -6935,7 +7017,7 @@ module.exports = {
     "auditTrail": [],
     "active": true
   },
-  "record169": {
+  "record171": {
     "code": "nodicsDocsPublicationnodenodicsdocsnodetopicframeworkreleaseupgradecompatibility",
     "targetType": "NODE",
     "targetCode": "nodicsDocsNodeTopicframeworkReleaseUpgradeCompatibility",
@@ -6976,7 +7058,7 @@ module.exports = {
     "auditTrail": [],
     "active": true
   },
-  "record170": {
+  "record172": {
     "code": "nodicsDocsPublicationnodenodicsdocsnodetopiccommercefulfillmentcoresourcemap",
     "targetType": "NODE",
     "targetCode": "nodicsDocsNodeTopiccommerceFulfillmentCoreSourceMap",
@@ -7017,7 +7099,7 @@ module.exports = {
     "auditTrail": [],
     "active": true
   },
-  "record171": {
+  "record173": {
     "code": "nodicsDocsPublicationnodenodicsdocsnodetopicacceleratorsdomaincommercesourcemap",
     "targetType": "NODE",
     "targetCode": "nodicsDocsNodeTopicacceleratorsDomainCommerceSourceMap",
@@ -7058,7 +7140,7 @@ module.exports = {
     "auditTrail": [],
     "active": true
   },
-  "record172": {
+  "record174": {
     "code": "nodicsDocsPublicationnodenodicsdocsnodetopicfoundationtoolingruntimecontracts",
     "targetType": "NODE",
     "targetCode": "nodicsDocsNodeTopicfoundationToolingRuntimeContracts",
@@ -7099,7 +7181,7 @@ module.exports = {
     "auditTrail": [],
     "active": true
   },
-  "record173": {
+  "record175": {
     "code": "nodicsDocsPublicationnodenodicsdocsnodetopicfoundationemsruntimeclientrunbook",
     "targetType": "NODE",
     "targetCode": "nodicsDocsNodeTopicfoundationEmsRuntimeClientRunbook",
@@ -7140,7 +7222,7 @@ module.exports = {
     "auditTrail": [],
     "active": true
   },
-  "record174": {
+  "record176": {
     "code": "nodicsDocsPublicationnodenodicsdocsnodetopicreferenceinternalsourceboundaryregister",
     "targetType": "NODE",
     "targetCode": "nodicsDocsNodeTopicreferenceInternalSourceBoundaryRegister",
@@ -7181,7 +7263,7 @@ module.exports = {
     "auditTrail": [],
     "active": true
   },
-  "record175": {
+  "record177": {
     "code": "nodicsDocsPublicationnodenodicsdocsnodetopictoolingaideveloperenablement",
     "targetType": "NODE",
     "targetCode": "nodicsDocsNodeTopictoolingAiDeveloperEnablement",
@@ -7222,7 +7304,7 @@ module.exports = {
     "auditTrail": [],
     "active": true
   },
-  "record176": {
+  "record178": {
     "code": "nodicsDocsPublicationnodenodicsdocsnodetopicreferencesourcemapglossary",
     "targetType": "NODE",
     "targetCode": "nodicsDocsNodeTopicreferenceSourceMapGlossary",
@@ -7263,7 +7345,7 @@ module.exports = {
     "auditTrail": [],
     "active": true
   },
-  "record177": {
+  "record179": {
     "code": "nodicsDocsPublicationnodenodicsdocsnodetopicreferencesourcebackeddocumentationcoverageaudit",
     "targetType": "NODE",
     "targetCode": "nodicsDocsNodeTopicreferenceSourceBackedDocumentationCoverageAudit",
@@ -7304,7 +7386,7 @@ module.exports = {
     "auditTrail": [],
     "active": true
   },
-  "record178": {
+  "record180": {
     "code": "nodicsDocsPublicationnodenodicsdocsnodetopicreferencedocumentationgapbacklog",
     "targetType": "NODE",
     "targetCode": "nodicsDocsNodeTopicreferenceDocumentationGapBacklog",
@@ -7345,7 +7427,7 @@ module.exports = {
     "auditTrail": [],
     "active": true
   },
-  "record179": {
+  "record181": {
     "code": "nodicsDocsPublicationdashboardnodicsdocsdashboardproduct",
     "targetType": "DASHBOARD",
     "targetCode": "nodicsDocsDashboardProduct",
@@ -7384,7 +7466,7 @@ module.exports = {
     "auditTrail": [],
     "active": true
   },
-  "record180": {
+  "record182": {
     "code": "nodicsDocsPublicationdashboardnodicsdocsdashboardnavigation",
     "targetType": "DASHBOARD",
     "targetCode": "nodicsDocsDashboardNavigation",
@@ -7423,7 +7505,7 @@ module.exports = {
     "auditTrail": [],
     "active": true
   },
-  "record181": {
+  "record183": {
     "code": "nodicsDocsPublicationdashboardnodicsdocsdashboardsecnodicsframework",
     "targetType": "DASHBOARD",
     "targetCode": "nodicsDocsDashboardSecnodicsFramework",
@@ -7462,7 +7544,7 @@ module.exports = {
     "auditTrail": [],
     "active": true
   },
-  "record182": {
+  "record184": {
     "code": "nodicsDocsPublicationdashboardnodicsdocsdashboardsecdocumentationroadmap",
     "targetType": "DASHBOARD",
     "targetCode": "nodicsDocsDashboardSecdocumentationRoadmap",
@@ -7501,7 +7583,7 @@ module.exports = {
     "auditTrail": [],
     "active": true
   },
-  "record183": {
+  "record185": {
     "code": "nodicsDocsPublicationdashboardnodicsdocsdashboardsecframeworkarchitectureanddesign",
     "targetType": "DASHBOARD",
     "targetCode": "nodicsDocsDashboardSecframeworkArchitectureAndDesign",
@@ -7540,7 +7622,7 @@ module.exports = {
     "auditTrail": [],
     "active": true
   },
-  "record184": {
+  "record186": {
     "code": "nodicsDocsPublicationdashboardnodicsdocsdashboardseccapabilityregistryandlifecyclemanagement",
     "targetType": "DASHBOARD",
     "targetCode": "nodicsDocsDashboardSeccapabilityRegistryAndLifecycleManagement",
@@ -7579,7 +7661,7 @@ module.exports = {
     "auditTrail": [],
     "active": true
   },
-  "record185": {
+  "record187": {
     "code": "nodicsDocsPublicationdashboardnodicsdocsdashboardsecfoundationruntimeservices",
     "targetType": "DASHBOARD",
     "targetCode": "nodicsDocsDashboardSecfoundationRuntimeServices",
@@ -7618,7 +7700,7 @@ module.exports = {
     "auditTrail": [],
     "active": true
   },
-  "record186": {
+  "record188": {
     "code": "nodicsDocsPublicationdashboardnodicsdocsdashboardsecnodicsapplicationsuite",
     "targetType": "DASHBOARD",
     "targetCode": "nodicsDocsDashboardSecnodicsApplicationSuite",
@@ -7657,7 +7739,7 @@ module.exports = {
     "auditTrail": [],
     "active": true
   },
-  "record187": {
+  "record189": {
     "code": "nodicsDocsPublicationdashboardnodicsdocsdashboardsecsolutionusecases",
     "targetType": "DASHBOARD",
     "targetCode": "nodicsDocsDashboardSecsolutionUseCases",
@@ -7696,7 +7778,7 @@ module.exports = {
     "auditTrail": [],
     "active": true
   },
-  "record188": {
+  "record190": {
     "code": "nodicsDocsPublicationdashboardnodicsdocsdashboardsecacceleratorsandindustrysolutiontemplates",
     "targetType": "DASHBOARD",
     "targetCode": "nodicsDocsDashboardSecacceleratorsAndIndustrySolutionTemplates",
@@ -7735,7 +7817,7 @@ module.exports = {
     "auditTrail": [],
     "active": true
   },
-  "record189": {
+  "record191": {
     "code": "nodicsDocsPublicationdashboardnodicsdocsdashboardsecnodicsinstallerandworkspacesetup",
     "targetType": "DASHBOARD",
     "targetCode": "nodicsDocsDashboardSecnodicsInstallerAndWorkspaceSetup",
@@ -7774,7 +7856,7 @@ module.exports = {
     "auditTrail": [],
     "active": true
   },
-  "record190": {
+  "record192": {
     "code": "nodicsDocsPublicationdashboardnodicsdocsdashboardsecapplicationbuilderandworkspacegeneration",
     "targetType": "DASHBOARD",
     "targetCode": "nodicsDocsDashboardSecapplicationBuilderAndWorkspaceGeneration",
@@ -7813,7 +7895,7 @@ module.exports = {
     "auditTrail": [],
     "active": true
   },
-  "record191": {
+  "record193": {
     "code": "nodicsDocsPublicationdashboardnodicsdocsdashboardsecaxisandbackofficeoperations",
     "targetType": "DASHBOARD",
     "targetCode": "nodicsDocsDashboardSecaxisAndBackofficeOperations",
@@ -7852,7 +7934,7 @@ module.exports = {
     "auditTrail": [],
     "active": true
   },
-  "record192": {
+  "record194": {
     "code": "nodicsDocsPublicationdashboardnodicsdocsdashboardsecbusinesscustomizationinaxis",
     "targetType": "DASHBOARD",
     "targetCode": "nodicsDocsDashboardSecbusinessCustomizationInAxis",
@@ -7891,7 +7973,7 @@ module.exports = {
     "auditTrail": [],
     "active": true
   },
-  "record193": {
+  "record195": {
     "code": "nodicsDocsPublicationdashboardnodicsdocsdashboardsecuserenterpriseandtenantmanagement",
     "targetType": "DASHBOARD",
     "targetCode": "nodicsDocsDashboardSecuserEnterpriseAndTenantManagement",
@@ -7930,7 +8012,7 @@ module.exports = {
     "auditTrail": [],
     "active": true
   },
-  "record194": {
+  "record196": {
     "code": "nodicsDocsPublicationdashboardnodicsdocsdashboardsecsecuritygovernanceandcompliance",
     "targetType": "DASHBOARD",
     "targetCode": "nodicsDocsDashboardSecsecurityGovernanceAndCompliance",
@@ -7969,7 +8051,7 @@ module.exports = {
     "auditTrail": [],
     "active": true
   },
-  "record195": {
+  "record197": {
     "code": "nodicsDocsPublicationdashboardnodicsdocsdashboardsecapplicationconfigurationandruntimebehaviormanagement",
     "targetType": "DASHBOARD",
     "targetCode": "nodicsDocsDashboardSecapplicationConfigurationAndRuntimeBehaviorManagement",
@@ -8008,7 +8090,7 @@ module.exports = {
     "auditTrail": [],
     "active": true
   },
-  "record196": {
+  "record198": {
     "code": "nodicsDocsPublicationdashboardnodicsdocsdashboardsecruntimegovernanceanddynamicchangemanagement",
     "targetType": "DASHBOARD",
     "targetCode": "nodicsDocsDashboardSecruntimeGovernanceAndDynamicChangeManagement",
@@ -8047,7 +8129,7 @@ module.exports = {
     "auditTrail": [],
     "active": true
   },
-  "record197": {
+  "record199": {
     "code": "nodicsDocsPublicationdashboardnodicsdocsdashboardseclocalizationandinternationalization",
     "targetType": "DASHBOARD",
     "targetCode": "nodicsDocsDashboardSeclocalizationAndInternationalization",
@@ -8086,7 +8168,7 @@ module.exports = {
     "auditTrail": [],
     "active": true
   },
-  "record198": {
+  "record200": {
     "code": "nodicsDocsPublicationdashboardnodicsdocsdashboardsecdatamodelingandschemamanagement",
     "targetType": "DASHBOARD",
     "targetCode": "nodicsDocsDashboardSecdataModelingAndSchemaManagement",
@@ -8125,7 +8207,7 @@ module.exports = {
     "auditTrail": [],
     "active": true
   },
-  "record199": {
+  "record201": {
     "code": "nodicsDocsPublicationdashboardnodicsdocsdashboardsecdatabaseandpersistencemanagement",
     "targetType": "DASHBOARD",
     "targetCode": "nodicsDocsDashboardSecdatabaseAndPersistenceManagement",
@@ -8164,7 +8246,7 @@ module.exports = {
     "auditTrail": [],
     "active": true
   },
-  "record200": {
+  "record202": {
     "code": "nodicsDocsPublicationdashboardnodicsdocsdashboardseccachingandruntimestatemanagement",
     "targetType": "DASHBOARD",
     "targetCode": "nodicsDocsDashboardSeccachingAndRuntimeStateManagement",
@@ -8203,7 +8285,7 @@ module.exports = {
     "auditTrail": [],
     "active": true
   },
-  "record201": {
+  "record203": {
     "code": "nodicsDocsPublicationdashboardnodicsdocsdashboardsecdeveloperextensionandprojectcustomization",
     "targetType": "DASHBOARD",
     "targetCode": "nodicsDocsDashboardSecdeveloperExtensionAndProjectCustomization",
@@ -8242,7 +8324,7 @@ module.exports = {
     "auditTrail": [],
     "active": true
   },
-  "record202": {
+  "record204": {
     "code": "nodicsDocsPublicationdashboardnodicsdocsdashboardsecstoremarketsiteandchannelmanagement",
     "targetType": "DASHBOARD",
     "targetCode": "nodicsDocsDashboardSecstoreMarketSiteAndChannelManagement",
@@ -8281,7 +8363,7 @@ module.exports = {
     "auditTrail": [],
     "active": true
   },
-  "record203": {
+  "record205": {
     "code": "nodicsDocsPublicationdashboardnodicsdocsdashboardsecwcmsandcontentmanagement",
     "targetType": "DASHBOARD",
     "targetCode": "nodicsDocsDashboardSecwcmsAndContentManagement",
@@ -8320,7 +8402,7 @@ module.exports = {
     "auditTrail": [],
     "active": true
   },
-  "record204": {
+  "record206": {
     "code": "nodicsDocsPublicationdashboardnodicsdocsdashboardsecproductcataloganddiscovery",
     "targetType": "DASHBOARD",
     "targetCode": "nodicsDocsDashboardSecproductCatalogAndDiscovery",
@@ -8359,7 +8441,7 @@ module.exports = {
     "auditTrail": [],
     "active": true
   },
-  "record205": {
+  "record207": {
     "code": "nodicsDocsPublicationdashboardnodicsdocsdashboardsecsearchanddiscovery",
     "targetType": "DASHBOARD",
     "targetCode": "nodicsDocsDashboardSecsearchAndDiscovery",
@@ -8398,7 +8480,7 @@ module.exports = {
     "auditTrail": [],
     "active": true
   },
-  "record206": {
+  "record208": {
     "code": "nodicsDocsPublicationdashboardnodicsdocsdashboardsecmediamanagement",
     "targetType": "DASHBOARD",
     "targetCode": "nodicsDocsDashboardSecmediaManagement",
@@ -8437,7 +8519,7 @@ module.exports = {
     "auditTrail": [],
     "active": true
   },
-  "record207": {
+  "record209": {
     "code": "nodicsDocsPublicationdashboardnodicsdocsdashboardsecinventoryandstockmanagement",
     "targetType": "DASHBOARD",
     "targetCode": "nodicsDocsDashboardSecinventoryAndStockManagement",
@@ -8476,7 +8558,7 @@ module.exports = {
     "auditTrail": [],
     "active": true
   },
-  "record208": {
+  "record210": {
     "code": "nodicsDocsPublicationdashboardnodicsdocsdashboardsecpricingpromotionsandtax",
     "targetType": "DASHBOARD",
     "targetCode": "nodicsDocsDashboardSecpricingPromotionsAndTax",
@@ -8515,7 +8597,7 @@ module.exports = {
     "auditTrail": [],
     "active": true
   },
-  "record209": {
+  "record211": {
     "code": "nodicsDocsPublicationdashboardnodicsdocsdashboardseccommercecartandcheckout",
     "targetType": "DASHBOARD",
     "targetCode": "nodicsDocsDashboardSeccommerceCartAndCheckout",
@@ -8554,7 +8636,7 @@ module.exports = {
     "auditTrail": [],
     "active": true
   },
-  "record210": {
+  "record212": {
     "code": "nodicsDocsPublicationdashboardnodicsdocsdashboardsecpaymentmanagement",
     "targetType": "DASHBOARD",
     "targetCode": "nodicsDocsDashboardSecpaymentManagement",
@@ -8593,7 +8675,46 @@ module.exports = {
     "auditTrail": [],
     "active": true
   },
-  "record211": {
+  "record213": {
+    "code": "nodicsDocsPublicationdashboardnodicsdocsdashboardsecloyaltyandrewards",
+    "targetType": "DASHBOARD",
+    "targetCode": "nodicsDocsDashboardSecloyaltyAndRewards",
+    "lifecycleState": "ONLINE",
+    "publicationCode": "nodicsDocumentation",
+    "workflowReference": "nodicsDocumentationReviewWorkflow",
+    "stagedVersion": "0.16.8",
+    "onlineVersion": "0.16.8",
+    "validationResult": {
+      "generated": true,
+      "sourceAuthority": "docs/catalogue.json",
+      "publicationPath": "STAGED_REVIEW_APPROVAL_ONLINE",
+      "nexusVisibleOnlyWhenOnlineAndPublic": true
+    },
+    "checksum": "ef8eb0e4f4a2328dfd893bab8044520791f18546db94578751e19bb2ca299912",
+    "managedInAxis": true,
+    "axisAuthoringPermissions": [
+      "documentation.dashboard.update"
+    ],
+    "workflowRequired": true,
+    "workflowTriggers": [
+      "DASHBOARD_CHANGE"
+    ],
+    "decisionPolicy": {
+      "reviewPermission": "documentation.review",
+      "approvePermission": "documentation.approve",
+      "publishPermission": "documentation.publish",
+      "permissionEnforced": true,
+      "adminOverrideAudited": true
+    },
+    "actor": "nodics.docs.generator",
+    "author": "nodics.docs.generator",
+    "reviewer": "nodics.docs.generator",
+    "approver": "nodics.docs.generator",
+    "publisher": "nodics.docs.generator",
+    "auditTrail": [],
+    "active": true
+  },
+  "record214": {
     "code": "nodicsDocsPublicationdashboardnodicsdocsdashboardsecshippingandfulfillment",
     "targetType": "DASHBOARD",
     "targetCode": "nodicsDocsDashboardSecshippingAndFulfillment",
@@ -8632,7 +8753,7 @@ module.exports = {
     "auditTrail": [],
     "active": true
   },
-  "record212": {
+  "record215": {
     "code": "nodicsDocsPublicationdashboardnodicsdocsdashboardsecordermanagement",
     "targetType": "DASHBOARD",
     "targetCode": "nodicsDocsDashboardSecorderManagement",
@@ -8671,7 +8792,7 @@ module.exports = {
     "auditTrail": [],
     "active": true
   },
-  "record213": {
+  "record216": {
     "code": "nodicsDocsPublicationdashboardnodicsdocsdashboardseccancellationsreturnsandrefunds",
     "targetType": "DASHBOARD",
     "targetCode": "nodicsDocsDashboardSeccancellationsReturnsAndRefunds",
@@ -8710,7 +8831,7 @@ module.exports = {
     "auditTrail": [],
     "active": true
   },
-  "record214": {
+  "record217": {
     "code": "nodicsDocsPublicationdashboardnodicsdocsdashboardseccustomerengagementandfeedback",
     "targetType": "DASHBOARD",
     "targetCode": "nodicsDocsDashboardSeccustomerEngagementAndFeedback",
@@ -8749,7 +8870,7 @@ module.exports = {
     "auditTrail": [],
     "active": true
   },
-  "record215": {
+  "record218": {
     "code": "nodicsDocsPublicationdashboardnodicsdocsdashboardseccommunicationandnotifications",
     "targetType": "DASHBOARD",
     "targetCode": "nodicsDocsDashboardSeccommunicationAndNotifications",
@@ -8788,7 +8909,7 @@ module.exports = {
     "auditTrail": [],
     "active": true
   },
-  "record216": {
+  "record219": {
     "code": "nodicsDocsPublicationdashboardnodicsdocsdashboardseceventandmessagingmanagement",
     "targetType": "DASHBOARD",
     "targetCode": "nodicsDocsDashboardSeceventAndMessagingManagement",
@@ -8827,7 +8948,7 @@ module.exports = {
     "auditTrail": [],
     "active": true
   },
-  "record217": {
+  "record220": {
     "code": "nodicsDocsPublicationdashboardnodicsdocsdashboardsecprocessandworkflowautomation",
     "targetType": "DASHBOARD",
     "targetCode": "nodicsDocsDashboardSecprocessAndWorkflowAutomation",
@@ -8866,7 +8987,7 @@ module.exports = {
     "auditTrail": [],
     "active": true
   },
-  "record218": {
+  "record221": {
     "code": "nodicsDocsPublicationdashboardnodicsdocsdashboardsecpipelineandbusinesslogicorchestration",
     "targetType": "DASHBOARD",
     "targetCode": "nodicsDocsDashboardSecpipelineAndBusinessLogicOrchestration",
@@ -8905,7 +9026,7 @@ module.exports = {
     "auditTrail": [],
     "active": true
   },
-  "record219": {
+  "record222": {
     "code": "nodicsDocsPublicationdashboardnodicsdocsdashboardseccronandscheduledautomation",
     "targetType": "DASHBOARD",
     "targetCode": "nodicsDocsDashboardSeccronAndScheduledAutomation",
@@ -8944,7 +9065,7 @@ module.exports = {
     "auditTrail": [],
     "active": true
   },
-  "record220": {
+  "record223": {
     "code": "nodicsDocsPublicationdashboardnodicsdocsdashboardsecdataimportexportandmigration",
     "targetType": "DASHBOARD",
     "targetCode": "nodicsDocsDashboardSecdataImportExportAndMigration",
@@ -8983,7 +9104,7 @@ module.exports = {
     "auditTrail": [],
     "active": true
   },
-  "record221": {
+  "record224": {
     "code": "nodicsDocsPublicationdashboardnodicsdocsdashboardsecsystemintegrationandexternalconnectivity",
     "targetType": "DASHBOARD",
     "targetCode": "nodicsDocsDashboardSecsystemIntegrationAndExternalConnectivity",
@@ -9022,7 +9143,7 @@ module.exports = {
     "auditTrail": [],
     "active": true
   },
-  "record222": {
+  "record225": {
     "code": "nodicsDocsPublicationdashboardnodicsdocsdashboardsecoperationsmonitoringandrecovery",
     "targetType": "DASHBOARD",
     "targetCode": "nodicsDocsDashboardSecoperationsMonitoringAndRecovery",
@@ -9061,7 +9182,7 @@ module.exports = {
     "auditTrail": [],
     "active": true
   },
-  "record223": {
+  "record226": {
     "code": "nodicsDocsPublicationdashboardnodicsdocsdashboardsecqualitytestingandcertification",
     "targetType": "DASHBOARD",
     "targetCode": "nodicsDocsDashboardSecqualityTestingAndCertification",
@@ -9100,7 +9221,7 @@ module.exports = {
     "auditTrail": [],
     "active": true
   },
-  "record224": {
+  "record227": {
     "code": "nodicsDocsPublicationdashboardnodicsdocsdashboardsecdocumentationmanagement",
     "targetType": "DASHBOARD",
     "targetCode": "nodicsDocsDashboardSecdocumentationManagement",
@@ -9139,7 +9260,7 @@ module.exports = {
     "auditTrail": [],
     "active": true
   },
-  "record225": {
+  "record228": {
     "code": "nodicsDocsPublicationdashboardnodicsdocsdashboardsecreleasestagingandpublication",
     "targetType": "DASHBOARD",
     "targetCode": "nodicsDocsDashboardSecreleaseStagingAndPublication",
@@ -9178,7 +9299,7 @@ module.exports = {
     "auditTrail": [],
     "active": true
   },
-  "record226": {
+  "record229": {
     "code": "nodicsDocsPublicationdashboardnodicsdocsdashboardsecaianddevelopertooling",
     "targetType": "DASHBOARD",
     "targetCode": "nodicsDocsDashboardSecaiAndDeveloperTooling",
@@ -9217,7 +9338,7 @@ module.exports = {
     "auditTrail": [],
     "active": true
   },
-  "record227": {
+  "record230": {
     "code": "nodicsDocsPublicationdashboardnodicsdocsdashboardsecreference",
     "targetType": "DASHBOARD",
     "targetCode": "nodicsDocsDashboardSecreference",
@@ -9256,7 +9377,7 @@ module.exports = {
     "auditTrail": [],
     "active": true
   },
-  "record228": {
+  "record231": {
     "code": "nodicsDocsPublicationpagenodicsdocsmetadataframeworkoverview",
     "targetType": "PAGE",
     "targetCode": "nodicsDocsMetadataframeworkOverview",
@@ -9297,7 +9418,7 @@ module.exports = {
     "auditTrail": [],
     "active": true
   },
-  "record229": {
+  "record232": {
     "code": "nodicsDocsPublicationpagenodicsdocsmetadataframeworkwhynodicsexists",
     "targetType": "PAGE",
     "targetCode": "nodicsDocsMetadataframeworkWhyNodicsExists",
@@ -9338,7 +9459,7 @@ module.exports = {
     "auditTrail": [],
     "active": true
   },
-  "record230": {
+  "record233": {
     "code": "nodicsDocsPublicationpagenodicsdocsmetadataframeworkhownodicsworks",
     "targetType": "PAGE",
     "targetCode": "nodicsDocsMetadataframeworkHowNodicsWorks",
@@ -9379,7 +9500,7 @@ module.exports = {
     "auditTrail": [],
     "active": true
   },
-  "record231": {
+  "record234": {
     "code": "nodicsDocsPublicationpagenodicsdocsmetadataframeworkadoptionandfirstjourney",
     "targetType": "PAGE",
     "targetCode": "nodicsDocsMetadataframeworkAdoptionAndFirstJourney",
@@ -9420,7 +9541,7 @@ module.exports = {
     "auditTrail": [],
     "active": true
   },
-  "record232": {
+  "record235": {
     "code": "nodicsDocsPublicationpagenodicsdocsmetadatadocsdocumentationroadmap",
     "targetType": "PAGE",
     "targetCode": "nodicsDocsMetadatadocsDocumentationRoadmap",
@@ -9461,7 +9582,7 @@ module.exports = {
     "auditTrail": [],
     "active": true
   },
-  "record233": {
+  "record236": {
     "code": "nodicsDocsPublicationpagenodicsdocsmetadatadocsdocumentationprinciples",
     "targetType": "PAGE",
     "targetCode": "nodicsDocsMetadatadocsDocumentationPrinciples",
@@ -9502,7 +9623,7 @@ module.exports = {
     "auditTrail": [],
     "active": true
   },
-  "record234": {
+  "record237": {
     "code": "nodicsDocsPublicationpagenodicsdocsmetadatadocsreaderjourneyandcoverage",
     "targetType": "PAGE",
     "targetCode": "nodicsDocsMetadatadocsReaderJourneyAndCoverage",
@@ -9543,7 +9664,7 @@ module.exports = {
     "auditTrail": [],
     "active": true
   },
-  "record235": {
+  "record238": {
     "code": "nodicsDocsPublicationpagenodicsdocsmetadatadocsdocumentationpublishingmodel",
     "targetType": "PAGE",
     "targetCode": "nodicsDocsMetadatadocsDocumentationPublishingModel",
@@ -9584,7 +9705,7 @@ module.exports = {
     "auditTrail": [],
     "active": true
   },
-  "record236": {
+  "record239": {
     "code": "nodicsDocsPublicationpagenodicsdocsmetadataframeworkmodulararchitecture",
     "targetType": "PAGE",
     "targetCode": "nodicsDocsMetadataframeworkModularArchitecture",
@@ -9625,7 +9746,7 @@ module.exports = {
     "auditTrail": [],
     "active": true
   },
-  "record237": {
+  "record240": {
     "code": "nodicsDocsPublicationpagenodicsdocsmetadataframeworkruntimeservercomposition",
     "targetType": "PAGE",
     "targetCode": "nodicsDocsMetadataframeworkRuntimeServerComposition",
@@ -9666,7 +9787,7 @@ module.exports = {
     "auditTrail": [],
     "active": true
   },
-  "record238": {
+  "record241": {
     "code": "nodicsDocsPublicationpagenodicsdocsmetadataframeworkmoduleloadingserviceprecedence",
     "targetType": "PAGE",
     "targetCode": "nodicsDocsMetadataframeworkModuleLoadingServicePrecedence",
@@ -9707,7 +9828,7 @@ module.exports = {
     "auditTrail": [],
     "active": true
   },
-  "record239": {
+  "record242": {
     "code": "nodicsDocsPublicationpagenodicsdocsmetadataframeworkarchitecturedecisionguide",
     "targetType": "PAGE",
     "targetCode": "nodicsDocsMetadataframeworkArchitectureDecisionGuide",
@@ -9748,7 +9869,7 @@ module.exports = {
     "auditTrail": [],
     "active": true
   },
-  "record240": {
+  "record243": {
     "code": "nodicsDocsPublicationpagenodicsdocsmetadataplatformmoduleregistry",
     "targetType": "PAGE",
     "targetCode": "nodicsDocsMetadataplatformModuleRegistry",
@@ -9789,7 +9910,7 @@ module.exports = {
     "auditTrail": [],
     "active": true
   },
-  "record241": {
+  "record244": {
     "code": "nodicsDocsPublicationpagenodicsdocsmetadatafoundationoverview",
     "targetType": "PAGE",
     "targetCode": "nodicsDocsMetadatafoundationOverview",
@@ -9830,7 +9951,7 @@ module.exports = {
     "auditTrail": [],
     "active": true
   },
-  "record242": {
+  "record245": {
     "code": "nodicsDocsPublicationpagenodicsdocsmetadataapplicationssuite",
     "targetType": "PAGE",
     "targetCode": "nodicsDocsMetadataapplicationsSuite",
@@ -9871,7 +9992,7 @@ module.exports = {
     "auditTrail": [],
     "active": true
   },
-  "record243": {
+  "record246": {
     "code": "nodicsDocsPublicationpagenodicsdocsmetadatasolutionstaskexecutionengine",
     "targetType": "PAGE",
     "targetCode": "nodicsDocsMetadatasolutionsTaskExecutionEngine",
@@ -9912,7 +10033,7 @@ module.exports = {
     "auditTrail": [],
     "active": true
   },
-  "record244": {
+  "record247": {
     "code": "nodicsDocsPublicationpagenodicsdocsmetadatasolutionsdataengineeringanalyticsplatform",
     "targetType": "PAGE",
     "targetCode": "nodicsDocsMetadatasolutionsDataEngineeringAnalyticsPlatform",
@@ -9953,7 +10074,7 @@ module.exports = {
     "auditTrail": [],
     "active": true
   },
-  "record245": {
+  "record248": {
     "code": "nodicsDocsPublicationpagenodicsdocsmetadataacceleratorsagoraindustrytemplates",
     "targetType": "PAGE",
     "targetCode": "nodicsDocsMetadataacceleratorsAgoraIndustryTemplates",
@@ -9994,7 +10115,7 @@ module.exports = {
     "auditTrail": [],
     "active": true
   },
-  "record246": {
+  "record249": {
     "code": "nodicsDocsPublicationpagenodicsdocsmetadataacceleratorsagoraapparelproductdataauthoring",
     "targetType": "PAGE",
     "targetCode": "nodicsDocsMetadataacceleratorsAgoraApparelProductDataAuthoring",
@@ -10035,7 +10156,7 @@ module.exports = {
     "auditTrail": [],
     "active": true
   },
-  "record247": {
+  "record250": {
     "code": "nodicsDocsPublicationpagenodicsdocsmetadataframeworklocalquickstart",
     "targetType": "PAGE",
     "targetCode": "nodicsDocsMetadataframeworkLocalQuickStart",
@@ -10076,7 +10197,7 @@ module.exports = {
     "auditTrail": [],
     "active": true
   },
-  "record248": {
+  "record251": {
     "code": "nodicsDocsPublicationpagenodicsdocsmetadataframeworkfreshschemasetupjourney",
     "targetType": "PAGE",
     "targetCode": "nodicsDocsMetadataframeworkFreshSchemaSetupJourney",
@@ -10117,7 +10238,7 @@ module.exports = {
     "auditTrail": [],
     "active": true
   },
-  "record249": {
+  "record252": {
     "code": "nodicsDocsPublicationpagenodicsdocsmetadataframeworklocalruntimetroubleshooting",
     "targetType": "PAGE",
     "targetCode": "nodicsDocsMetadataframeworkLocalRuntimeTroubleshooting",
@@ -10158,7 +10279,7 @@ module.exports = {
     "auditTrail": [],
     "active": true
   },
-  "record250": {
+  "record253": {
     "code": "nodicsDocsPublicationpagenodicsdocsmetadatainstallerinstalledruntimeapplicationbuilder",
     "targetType": "PAGE",
     "targetCode": "nodicsDocsMetadatainstallerInstalledRuntimeApplicationBuilder",
@@ -10199,7 +10320,7 @@ module.exports = {
     "auditTrail": [],
     "active": true
   },
-  "record251": {
+  "record254": {
     "code": "nodicsDocsPublicationpagenodicsdocsmetadatabuilderworkspacegeneration",
     "targetType": "PAGE",
     "targetCode": "nodicsDocsMetadatabuilderWorkspaceGeneration",
@@ -10240,7 +10361,7 @@ module.exports = {
     "auditTrail": [],
     "active": true
   },
-  "record252": {
+  "record255": {
     "code": "nodicsDocsPublicationpagenodicsdocsmetadataprocessvisualdesigner",
     "targetType": "PAGE",
     "targetCode": "nodicsDocsMetadataprocessVisualDesigner",
@@ -10281,7 +10402,7 @@ module.exports = {
     "auditTrail": [],
     "active": true
   },
-  "record253": {
+  "record256": {
     "code": "nodicsDocsPublicationpagenodicsdocsmetadataaxisbusinesscustomization",
     "targetType": "PAGE",
     "targetCode": "nodicsDocsMetadataaxisBusinessCustomization",
@@ -10322,7 +10443,7 @@ module.exports = {
     "auditTrail": [],
     "active": true
   },
-  "record254": {
+  "record257": {
     "code": "nodicsDocsPublicationpagenodicsdocsmetadataplatformoverview",
     "targetType": "PAGE",
     "targetCode": "nodicsDocsMetadataplatformOverview",
@@ -10363,7 +10484,7 @@ module.exports = {
     "auditTrail": [],
     "active": true
   },
-  "record255": {
+  "record258": {
     "code": "nodicsDocsPublicationpagenodicsdocsmetadatasecurityidentityaccessgovernance",
     "targetType": "PAGE",
     "targetCode": "nodicsDocsMetadatasecurityIdentityAccessGovernance",
@@ -10404,7 +10525,7 @@ module.exports = {
     "auditTrail": [],
     "active": true
   },
-  "record256": {
+  "record259": {
     "code": "nodicsDocsPublicationpagenodicsdocsmetadataconfigurationruntimebehaviormanagement",
     "targetType": "PAGE",
     "targetCode": "nodicsDocsMetadataconfigurationRuntimeBehaviorManagement",
@@ -10445,7 +10566,7 @@ module.exports = {
     "auditTrail": [],
     "active": true
   },
-  "record257": {
+  "record260": {
     "code": "nodicsDocsPublicationpagenodicsdocsmetadataconfigurationframeworkstartuplifecycle",
     "targetType": "PAGE",
     "targetCode": "nodicsDocsMetadataconfigurationFrameworkStartupLifecycle",
@@ -10486,7 +10607,7 @@ module.exports = {
     "auditTrail": [],
     "active": true
   },
-  "record258": {
+  "record261": {
     "code": "nodicsDocsPublicationpagenodicsdocsmetadataroutingapigovernance",
     "targetType": "PAGE",
     "targetCode": "nodicsDocsMetadataroutingApiGovernance",
@@ -10527,7 +10648,7 @@ module.exports = {
     "auditTrail": [],
     "active": true
   },
-  "record259": {
+  "record262": {
     "code": "nodicsDocsPublicationpagenodicsdocsmetadataroutingapirequestlifecycle",
     "targetType": "PAGE",
     "targetCode": "nodicsDocsMetadataroutingApiRequestLifecycle",
@@ -10568,7 +10689,7 @@ module.exports = {
     "auditTrail": [],
     "active": true
   },
-  "record260": {
+  "record263": {
     "code": "nodicsDocsPublicationpagenodicsdocsmetadatafoundationerrorhandlingstatuscodes",
     "targetType": "PAGE",
     "targetCode": "nodicsDocsMetadatafoundationErrorHandlingStatusCodes",
@@ -10609,7 +10730,7 @@ module.exports = {
     "auditTrail": [],
     "active": true
   },
-  "record261": {
+  "record264": {
     "code": "nodicsDocsPublicationpagenodicsdocsmetadataruntimegovernedchange",
     "targetType": "PAGE",
     "targetCode": "nodicsDocsMetadataruntimeGovernedChange",
@@ -10650,7 +10771,7 @@ module.exports = {
     "auditTrail": [],
     "active": true
   },
-  "record262": {
+  "record265": {
     "code": "nodicsDocsPublicationpagenodicsdocsmetadatalocalizationinternationalization",
     "targetType": "PAGE",
     "targetCode": "nodicsDocsMetadatalocalizationInternationalization",
@@ -10691,7 +10812,7 @@ module.exports = {
     "auditTrail": [],
     "active": true
   },
-  "record263": {
+  "record266": {
     "code": "nodicsDocsPublicationpagenodicsdocsmetadataschemadatamodelingmanagement",
     "targetType": "PAGE",
     "targetCode": "nodicsDocsMetadataschemaDataModelingManagement",
@@ -10732,7 +10853,7 @@ module.exports = {
     "auditTrail": [],
     "active": true
   },
-  "record264": {
+  "record267": {
     "code": "nodicsDocsPublicationpagenodicsdocsmetadatapersistenceproviderdataaccesslayer",
     "targetType": "PAGE",
     "targetCode": "nodicsDocsMetadatapersistenceProviderDataAccessLayer",
@@ -10773,7 +10894,7 @@ module.exports = {
     "auditTrail": [],
     "active": true
   },
-  "record265": {
+  "record268": {
     "code": "nodicsDocsPublicationpagenodicsdocsmetadatacacheruntimestatemanagement",
     "targetType": "PAGE",
     "targetCode": "nodicsDocsMetadatacacheRuntimeStateManagement",
@@ -10814,7 +10935,7 @@ module.exports = {
     "auditTrail": [],
     "active": true
   },
-  "record266": {
+  "record269": {
     "code": "nodicsDocsPublicationpagenodicsdocsmetadataframeworkcustomizationguide",
     "targetType": "PAGE",
     "targetCode": "nodicsDocsMetadataframeworkCustomizationGuide",
@@ -10855,7 +10976,7 @@ module.exports = {
     "auditTrail": [],
     "active": true
   },
-  "record267": {
+  "record270": {
     "code": "nodicsDocsPublicationpagenodicsdocsmetadataframeworkbackendextensionpatterns",
     "targetType": "PAGE",
     "targetCode": "nodicsDocsMetadataframeworkBackendExtensionPatterns",
@@ -10896,7 +11017,7 @@ module.exports = {
     "auditTrail": [],
     "active": true
   },
-  "record268": {
+  "record271": {
     "code": "nodicsDocsPublicationpagenodicsdocsmetadataframeworkaxiscontentcustomization",
     "targetType": "PAGE",
     "targetCode": "nodicsDocsMetadataframeworkAxisContentCustomization",
@@ -10937,7 +11058,7 @@ module.exports = {
     "auditTrail": [],
     "active": true
   },
-  "record269": {
+  "record272": {
     "code": "nodicsDocsPublicationpagenodicsdocsmetadataprocessdevelopercustomization",
     "targetType": "PAGE",
     "targetCode": "nodicsDocsMetadataprocessDeveloperCustomization",
@@ -10978,7 +11099,7 @@ module.exports = {
     "auditTrail": [],
     "active": true
   },
-  "record270": {
+  "record273": {
     "code": "nodicsDocsPublicationpagenodicsdocsmetadataprocesscustomprojectextension",
     "targetType": "PAGE",
     "targetCode": "nodicsDocsMetadataprocessCustomProjectExtension",
@@ -11019,7 +11140,7 @@ module.exports = {
     "auditTrail": [],
     "active": true
   },
-  "record271": {
+  "record274": {
     "code": "nodicsDocsPublicationpagenodicsdocsmetadatacommercebasefoundations",
     "targetType": "PAGE",
     "targetCode": "nodicsDocsMetadatacommerceBaseFoundations",
@@ -11060,7 +11181,7 @@ module.exports = {
     "auditTrail": [],
     "active": true
   },
-  "record272": {
+  "record275": {
     "code": "nodicsDocsPublicationpagenodicsdocsmetadatawcmsoverview",
     "targetType": "PAGE",
     "targetCode": "nodicsDocsMetadatawcmsOverview",
@@ -11101,7 +11222,7 @@ module.exports = {
     "auditTrail": [],
     "active": true
   },
-  "record273": {
+  "record276": {
     "code": "nodicsDocsPublicationpagenodicsdocsmetadatawcmscontentcatalogmodel",
     "targetType": "PAGE",
     "targetCode": "nodicsDocsMetadatawcmsContentCatalogModel",
@@ -11142,7 +11263,7 @@ module.exports = {
     "auditTrail": [],
     "active": true
   },
-  "record274": {
+  "record277": {
     "code": "nodicsDocsPublicationpagenodicsdocsmetadatawcmspagedesignercomponents",
     "targetType": "PAGE",
     "targetCode": "nodicsDocsMetadatawcmsPageDesignerComponents",
@@ -11183,7 +11304,7 @@ module.exports = {
     "auditTrail": [],
     "active": true
   },
-  "record275": {
+  "record278": {
     "code": "nodicsDocsPublicationpagenodicsdocsmetadatawcmssitepublicationvisibility",
     "targetType": "PAGE",
     "targetCode": "nodicsDocsMetadatawcmsSitePublicationVisibility",
@@ -11224,7 +11345,7 @@ module.exports = {
     "auditTrail": [],
     "active": true
   },
-  "record276": {
+  "record279": {
     "code": "nodicsDocsPublicationpagenodicsdocsmetadatacatalogproductdiscoverymanagement",
     "targetType": "PAGE",
     "targetCode": "nodicsDocsMetadatacatalogProductDiscoveryManagement",
@@ -11265,7 +11386,7 @@ module.exports = {
     "auditTrail": [],
     "active": true
   },
-  "record277": {
+  "record280": {
     "code": "nodicsDocsPublicationpagenodicsdocsmetadatadiscoverysearchindexing",
     "targetType": "PAGE",
     "targetCode": "nodicsDocsMetadatadiscoverySearchIndexing",
@@ -11306,7 +11427,7 @@ module.exports = {
     "auditTrail": [],
     "active": true
   },
-  "record278": {
+  "record281": {
     "code": "nodicsDocsPublicationpagenodicsdocsmetadatawcmsmediamanagement",
     "targetType": "PAGE",
     "targetCode": "nodicsDocsMetadatawcmsMediaManagement",
@@ -11347,7 +11468,7 @@ module.exports = {
     "auditTrail": [],
     "active": true
   },
-  "record279": {
+  "record282": {
     "code": "nodicsDocsPublicationpagenodicsdocsmetadatawcmsmediastoragedelivery",
     "targetType": "PAGE",
     "targetCode": "nodicsDocsMetadatawcmsMediaStorageDelivery",
@@ -11388,7 +11509,7 @@ module.exports = {
     "auditTrail": [],
     "active": true
   },
-  "record280": {
+  "record283": {
     "code": "nodicsDocsPublicationpagenodicsdocsmetadatawcmsmediaimportpublication",
     "targetType": "PAGE",
     "targetCode": "nodicsDocsMetadatawcmsMediaImportPublication",
@@ -11429,7 +11550,7 @@ module.exports = {
     "auditTrail": [],
     "active": true
   },
-  "record281": {
+  "record284": {
     "code": "nodicsDocsPublicationpagenodicsdocsmetadatainventorystockmanagement",
     "targetType": "PAGE",
     "targetCode": "nodicsDocsMetadatainventoryStockManagement",
@@ -11470,7 +11591,7 @@ module.exports = {
     "auditTrail": [],
     "active": true
   },
-  "record282": {
+  "record285": {
     "code": "nodicsDocsPublicationpagenodicsdocsmetadatapricingpromotionstaxmanagement",
     "targetType": "PAGE",
     "targetCode": "nodicsDocsMetadatapricingPromotionsTaxManagement",
@@ -11511,7 +11632,7 @@ module.exports = {
     "auditTrail": [],
     "active": true
   },
-  "record283": {
+  "record286": {
     "code": "nodicsDocsPublicationpagenodicsdocsmetadatacommerceoverview",
     "targetType": "PAGE",
     "targetCode": "nodicsDocsMetadatacommerceOverview",
@@ -11552,7 +11673,7 @@ module.exports = {
     "auditTrail": [],
     "active": true
   },
-  "record284": {
+  "record287": {
     "code": "nodicsDocsPublicationpagenodicsdocsmetadatacommercecartorder",
     "targetType": "PAGE",
     "targetCode": "nodicsDocsMetadatacommerceCartOrder",
@@ -11593,7 +11714,7 @@ module.exports = {
     "auditTrail": [],
     "active": true
   },
-  "record285": {
+  "record288": {
     "code": "nodicsDocsPublicationpagenodicsdocsmetadatacommercepaymentfulfillment",
     "targetType": "PAGE",
     "targetCode": "nodicsDocsMetadatacommercePaymentFulfillment",
@@ -11634,7 +11755,7 @@ module.exports = {
     "auditTrail": [],
     "active": true
   },
-  "record286": {
+  "record289": {
     "code": "nodicsDocsPublicationpagenodicsdocsmetadatafulfillmentshippingmanagement",
     "targetType": "PAGE",
     "targetCode": "nodicsDocsMetadatafulfillmentShippingManagement",
@@ -11675,7 +11796,7 @@ module.exports = {
     "auditTrail": [],
     "active": true
   },
-  "record287": {
+  "record290": {
     "code": "nodicsDocsPublicationpagenodicsdocsmetadataordermanagementlifecycle",
     "targetType": "PAGE",
     "targetCode": "nodicsDocsMetadataorderManagementLifecycle",
@@ -11716,7 +11837,7 @@ module.exports = {
     "auditTrail": [],
     "active": true
   },
-  "record288": {
+  "record291": {
     "code": "nodicsDocsPublicationpagenodicsdocsmetadatacommercereturnsrefunds",
     "targetType": "PAGE",
     "targetCode": "nodicsDocsMetadatacommerceReturnsRefunds",
@@ -11757,7 +11878,7 @@ module.exports = {
     "auditTrail": [],
     "active": true
   },
-  "record289": {
+  "record292": {
     "code": "nodicsDocsPublicationpagenodicsdocsmetadataengagementcustomerreviews",
     "targetType": "PAGE",
     "targetCode": "nodicsDocsMetadataengagementCustomerReviews",
@@ -11798,7 +11919,7 @@ module.exports = {
     "auditTrail": [],
     "active": true
   },
-  "record290": {
+  "record293": {
     "code": "nodicsDocsPublicationpagenodicsdocsmetadataengagementreviewmoderationgovernance",
     "targetType": "PAGE",
     "targetCode": "nodicsDocsMetadataengagementReviewModerationGovernance",
@@ -11839,7 +11960,7 @@ module.exports = {
     "auditTrail": [],
     "active": true
   },
-  "record291": {
+  "record294": {
     "code": "nodicsDocsPublicationpagenodicsdocsmetadataengagementreviewaggregationrecovery",
     "targetType": "PAGE",
     "targetCode": "nodicsDocsMetadataengagementReviewAggregationRecovery",
@@ -11880,7 +12001,7 @@ module.exports = {
     "auditTrail": [],
     "active": true
   },
-  "record292": {
+  "record295": {
     "code": "nodicsDocsPublicationpagenodicsdocsmetadataengagementcustomerfeedback",
     "targetType": "PAGE",
     "targetCode": "nodicsDocsMetadataengagementCustomerFeedback",
@@ -11921,7 +12042,7 @@ module.exports = {
     "auditTrail": [],
     "active": true
   },
-  "record293": {
+  "record296": {
     "code": "nodicsDocsPublicationpagenodicsdocsmetadataengagementunifiedoperations",
     "targetType": "PAGE",
     "targetCode": "nodicsDocsMetadataengagementUnifiedOperations",
@@ -11962,7 +12083,7 @@ module.exports = {
     "auditTrail": [],
     "active": true
   },
-  "record294": {
+  "record297": {
     "code": "nodicsDocsPublicationpagenodicsdocsmetadataengagementgovernedautomation",
     "targetType": "PAGE",
     "targetCode": "nodicsDocsMetadataengagementGovernedAutomation",
@@ -12003,7 +12124,7 @@ module.exports = {
     "auditTrail": [],
     "active": true
   },
-  "record295": {
+  "record298": {
     "code": "nodicsDocsPublicationpagenodicsdocsmetadataengagemententerpriseoperations",
     "targetType": "PAGE",
     "targetCode": "nodicsDocsMetadataengagementEnterpriseOperations",
@@ -12044,7 +12165,7 @@ module.exports = {
     "auditTrail": [],
     "active": true
   },
-  "record296": {
+  "record299": {
     "code": "nodicsDocsPublicationpagenodicsdocsmetadatacommunicationoverview",
     "targetType": "PAGE",
     "targetCode": "nodicsDocsMetadatacommunicationOverview",
@@ -12085,7 +12206,7 @@ module.exports = {
     "auditTrail": [],
     "active": true
   },
-  "record297": {
+  "record300": {
     "code": "nodicsDocsPublicationpagenodicsdocsmetadataeventsmessagingclustercoordination",
     "targetType": "PAGE",
     "targetCode": "nodicsDocsMetadataeventsMessagingClusterCoordination",
@@ -12126,7 +12247,7 @@ module.exports = {
     "auditTrail": [],
     "active": true
   },
-  "record298": {
+  "record301": {
     "code": "nodicsDocsPublicationpagenodicsdocsmetadataprocessoverview",
     "targetType": "PAGE",
     "targetCode": "nodicsDocsMetadataprocessOverview",
@@ -12167,7 +12288,7 @@ module.exports = {
     "auditTrail": [],
     "active": true
   },
-  "record299": {
+  "record302": {
     "code": "nodicsDocsPublicationpagenodicsdocsmetadataprocessruntimelifecycle",
     "targetType": "PAGE",
     "targetCode": "nodicsDocsMetadataprocessRuntimeLifecycle",
@@ -12208,7 +12329,7 @@ module.exports = {
     "auditTrail": [],
     "active": true
   },
-  "record300": {
+  "record303": {
     "code": "nodicsDocsPublicationpagenodicsdocsmetadataprocessworkfloworchestrationpatterns",
     "targetType": "PAGE",
     "targetCode": "nodicsDocsMetadataprocessWorkflowOrchestrationPatterns",
@@ -12249,7 +12370,7 @@ module.exports = {
     "auditTrail": [],
     "active": true
   },
-  "record301": {
+  "record304": {
     "code": "nodicsDocsPublicationpagenodicsdocsmetadataprocessfirstworkflow",
     "targetType": "PAGE",
     "targetCode": "nodicsDocsMetadataprocessFirstWorkflow",
@@ -12290,7 +12411,7 @@ module.exports = {
     "auditTrail": [],
     "active": true
   },
-  "record302": {
+  "record305": {
     "code": "nodicsDocsPublicationpagenodicsdocsmetadataprocessfirsthumantask",
     "targetType": "PAGE",
     "targetCode": "nodicsDocsMetadataprocessFirstHumanTask",
@@ -12331,7 +12452,7 @@ module.exports = {
     "auditTrail": [],
     "active": true
   },
-  "record303": {
+  "record306": {
     "code": "nodicsDocsPublicationpagenodicsdocsmetadataprocessbusinessvalue",
     "targetType": "PAGE",
     "targetCode": "nodicsDocsMetadataprocessBusinessValue",
@@ -12372,7 +12493,7 @@ module.exports = {
     "auditTrail": [],
     "active": true
   },
-  "record304": {
+  "record307": {
     "code": "nodicsDocsPublicationpagenodicsdocsmetadatapipelinebusinesslogicorchestration",
     "targetType": "PAGE",
     "targetCode": "nodicsDocsMetadatapipelineBusinessLogicOrchestration",
@@ -12413,7 +12534,7 @@ module.exports = {
     "auditTrail": [],
     "active": true
   },
-  "record305": {
+  "record308": {
     "code": "nodicsDocsPublicationpagenodicsdocsmetadatacronoperations",
     "targetType": "PAGE",
     "targetCode": "nodicsDocsMetadatacronOperations",
@@ -12454,7 +12575,7 @@ module.exports = {
     "auditTrail": [],
     "active": true
   },
-  "record306": {
+  "record309": {
     "code": "nodicsDocsPublicationpagenodicsdocsmetadatacronnoderesponsibilitytee",
     "targetType": "PAGE",
     "targetCode": "nodicsDocsMetadatacronNodeResponsibilityTee",
@@ -12495,7 +12616,7 @@ module.exports = {
     "auditTrail": [],
     "active": true
   },
-  "record307": {
+  "record310": {
     "code": "nodicsDocsPublicationpagenodicsdocsmetadatacronprojectcustomization",
     "targetType": "PAGE",
     "targetCode": "nodicsDocsMetadatacronProjectCustomization",
@@ -12536,7 +12657,7 @@ module.exports = {
     "auditTrail": [],
     "active": true
   },
-  "record308": {
+  "record311": {
     "code": "nodicsDocsPublicationpagenodicsdocsmetadataprocessprocesscronruntime",
     "targetType": "PAGE",
     "targetCode": "nodicsDocsMetadataprocessProcessCronRuntime",
@@ -12577,7 +12698,7 @@ module.exports = {
     "auditTrail": [],
     "active": true
   },
-  "record309": {
+  "record312": {
     "code": "nodicsDocsPublicationpagenodicsdocsmetadataprocessscheduledautomation",
     "targetType": "PAGE",
     "targetCode": "nodicsDocsMetadataprocessScheduledAutomation",
@@ -12618,7 +12739,7 @@ module.exports = {
     "auditTrail": [],
     "active": true
   },
-  "record310": {
+  "record313": {
     "code": "nodicsDocsPublicationpagenodicsdocsmetadatadataimportexportmigration",
     "targetType": "PAGE",
     "targetCode": "nodicsDocsMetadatadataImportExportMigration",
@@ -12659,7 +12780,7 @@ module.exports = {
     "auditTrail": [],
     "active": true
   },
-  "record311": {
+  "record314": {
     "code": "nodicsDocsPublicationpagenodicsdocsmetadataprocessactionadapters",
     "targetType": "PAGE",
     "targetCode": "nodicsDocsMetadataprocessActionAdapters",
@@ -12700,7 +12821,7 @@ module.exports = {
     "auditTrail": [],
     "active": true
   },
-  "record312": {
+  "record315": {
     "code": "nodicsDocsPublicationpagenodicsdocsmetadataframeworkdevopsruntime",
     "targetType": "PAGE",
     "targetCode": "nodicsDocsMetadataframeworkDevopsRuntime",
@@ -12741,7 +12862,7 @@ module.exports = {
     "auditTrail": [],
     "active": true
   },
-  "record313": {
+  "record316": {
     "code": "nodicsDocsPublicationpagenodicsdocsmetadataframeworkruntimereleaserollback",
     "targetType": "PAGE",
     "targetCode": "nodicsDocsMetadataframeworkRuntimeReleaseRollback",
@@ -12782,7 +12903,7 @@ module.exports = {
     "auditTrail": [],
     "active": true
   },
-  "record314": {
+  "record317": {
     "code": "nodicsDocsPublicationpagenodicsdocsmetadataframeworklocalbrowseracceptancejourney",
     "targetType": "PAGE",
     "targetCode": "nodicsDocsMetadataframeworkLocalBrowserAcceptanceJourney",
@@ -12823,7 +12944,7 @@ module.exports = {
     "auditTrail": [],
     "active": true
   },
-  "record315": {
+  "record318": {
     "code": "nodicsDocsPublicationpagenodicsdocsmetadataframeworklocalverificationchecklist",
     "targetType": "PAGE",
     "targetCode": "nodicsDocsMetadataframeworkLocalVerificationChecklist",
@@ -12864,7 +12985,7 @@ module.exports = {
     "auditTrail": [],
     "active": true
   },
-  "record316": {
+  "record319": {
     "code": "nodicsDocsPublicationpagenodicsdocsmetadatacommerceenterpriseoperations",
     "targetType": "PAGE",
     "targetCode": "nodicsDocsMetadatacommerceEnterpriseOperations",
@@ -12905,7 +13026,7 @@ module.exports = {
     "auditTrail": [],
     "active": true
   },
-  "record317": {
+  "record320": {
     "code": "nodicsDocsPublicationpagenodicsdocsmetadataprocessincidentrecovery",
     "targetType": "PAGE",
     "targetCode": "nodicsDocsMetadataprocessIncidentRecovery",
@@ -12946,7 +13067,7 @@ module.exports = {
     "auditTrail": [],
     "active": true
   },
-  "record318": {
+  "record321": {
     "code": "nodicsDocsPublicationpagenodicsdocsmetadataprocessdevopstopology",
     "targetType": "PAGE",
     "targetCode": "nodicsDocsMetadataprocessDevopsTopology",
@@ -12987,7 +13108,7 @@ module.exports = {
     "auditTrail": [],
     "active": true
   },
-  "record319": {
+  "record322": {
     "code": "nodicsDocsPublicationpagenodicsdocsmetadataprocessqaregressionguide",
     "targetType": "PAGE",
     "targetCode": "nodicsDocsMetadataprocessQaRegressionGuide",
@@ -13028,7 +13149,7 @@ module.exports = {
     "auditTrail": [],
     "active": true
   },
-  "record320": {
+  "record323": {
     "code": "nodicsDocsPublicationpagenodicsdocsmetadataframeworkcapabilitydocumentationmaturitypattern",
     "targetType": "PAGE",
     "targetCode": "nodicsDocsMetadataframeworkCapabilityDocumentationMaturityPattern",
@@ -13069,7 +13190,7 @@ module.exports = {
     "auditTrail": [],
     "active": true
   },
-  "record321": {
+  "record324": {
     "code": "nodicsDocsPublicationpagenodicsdocsmetadatadocsoverview",
     "targetType": "PAGE",
     "targetCode": "nodicsDocsMetadatadocsOverview",
@@ -13110,7 +13231,7 @@ module.exports = {
     "auditTrail": [],
     "active": true
   },
-  "record322": {
+  "record325": {
     "code": "nodicsDocsPublicationpagenodicsdocsmetadatawcmspublishinglifecycle",
     "targetType": "PAGE",
     "targetCode": "nodicsDocsMetadatawcmsPublishingLifecycle",
@@ -13151,7 +13272,7 @@ module.exports = {
     "auditTrail": [],
     "active": true
   },
-  "record323": {
+  "record326": {
     "code": "nodicsDocsPublicationpagenodicsdocsmetadataapplicationsnexusdatacontentguide",
     "targetType": "PAGE",
     "targetCode": "nodicsDocsMetadataapplicationsNexusDataContentGuide",
@@ -13192,7 +13313,7 @@ module.exports = {
     "auditTrail": [],
     "active": true
   },
-  "record324": {
+  "record327": {
     "code": "nodicsDocsPublicationpagenodicsdocsmetadataapplicationsaxissetuperrorcontracts",
     "targetType": "PAGE",
     "targetCode": "nodicsDocsMetadataapplicationsAxisSetupErrorContracts",
@@ -13233,7 +13354,7 @@ module.exports = {
     "auditTrail": [],
     "active": true
   },
-  "record325": {
+  "record328": {
     "code": "nodicsDocsPublicationpagenodicsdocsmetadatawcmscmssourcemapauthoringcontract",
     "targetType": "PAGE",
     "targetCode": "nodicsDocsMetadatawcmsCmsSourceMapAuthoringContract",
@@ -13274,7 +13395,7 @@ module.exports = {
     "auditTrail": [],
     "active": true
   },
-  "record326": {
+  "record329": {
     "code": "nodicsDocsPublicationpagenodicsdocsmetadatawcmsmediaoperationsrunbook",
     "targetType": "PAGE",
     "targetCode": "nodicsDocsMetadatawcmsMediaOperationsRunbook",
@@ -13315,7 +13436,7 @@ module.exports = {
     "auditTrail": [],
     "active": true
   },
-  "record327": {
+  "record330": {
     "code": "nodicsDocsPublicationpagenodicsdocsmetadatadataimportexportproviderguides",
     "targetType": "PAGE",
     "targetCode": "nodicsDocsMetadatadataImportExportProviderGuides",
@@ -13356,7 +13477,7 @@ module.exports = {
     "auditTrail": [],
     "active": true
   },
-  "record328": {
+  "record331": {
     "code": "nodicsDocsPublicationpagenodicsdocsmetadatacommercedataauthoringfulfillment",
     "targetType": "PAGE",
     "targetCode": "nodicsDocsMetadatacommerceDataAuthoringFulfillment",
@@ -13397,7 +13518,7 @@ module.exports = {
     "auditTrail": [],
     "active": true
   },
-  "record329": {
+  "record332": {
     "code": "nodicsDocsPublicationpagenodicsdocsmetadatadocsdocumentationpublishingrunbook",
     "targetType": "PAGE",
     "targetCode": "nodicsDocsMetadatadocsDocumentationPublishingRunbook",
@@ -13438,7 +13559,7 @@ module.exports = {
     "auditTrail": [],
     "active": true
   },
-  "record330": {
+  "record333": {
     "code": "nodicsDocsPublicationpagenodicsdocsmetadataplatformmoduleregistryjourney",
     "targetType": "PAGE",
     "targetCode": "nodicsDocsMetadataplatformModuleRegistryJourney",
@@ -13479,7 +13600,7 @@ module.exports = {
     "auditTrail": [],
     "active": true
   },
-  "record331": {
+  "record334": {
     "code": "nodicsDocsPublicationpagenodicsdocsmetadatacommercesearchguide",
     "targetType": "PAGE",
     "targetCode": "nodicsDocsMetadatacommerceSearchGuide",
@@ -13520,7 +13641,7 @@ module.exports = {
     "auditTrail": [],
     "active": true
   },
-  "record332": {
+  "record335": {
     "code": "nodicsDocsPublicationpagenodicsdocsmetadatalocalizationruntimeauthoring",
     "targetType": "PAGE",
     "targetCode": "nodicsDocsMetadatalocalizationRuntimeAuthoring",
@@ -13561,7 +13682,7 @@ module.exports = {
     "auditTrail": [],
     "active": true
   },
-  "record333": {
+  "record336": {
     "code": "nodicsDocsPublicationpagenodicsdocsmetadatacommercepaymentproviderboundaries",
     "targetType": "PAGE",
     "targetCode": "nodicsDocsMetadatacommercePaymentProviderBoundaries",
@@ -13602,10 +13723,10 @@ module.exports = {
     "auditTrail": [],
     "active": true
   },
-  "record334": {
-    "code": "nodicsDocsPublicationpagenodicsdocsmetadatacommercecustomerlistprofileboundary",
+  "record337": {
+    "code": "nodicsDocsPublicationpagenodicsdocsmetadataloyaltywalletsrewardsledger",
     "targetType": "PAGE",
-    "targetCode": "nodicsDocsMetadatacommerceCustomerListProfileBoundary",
+    "targetCode": "nodicsDocsMetadataloyaltyWalletsRewardsLedger",
     "lifecycleState": "ONLINE",
     "publicationCode": "nodicsDocumentation",
     "workflowReference": "nodicsDocumentationReviewWorkflow",
@@ -13617,7 +13738,7 @@ module.exports = {
       "publicationPath": "STAGED_REVIEW_APPROVAL_ONLINE",
       "nexusVisibleOnlyWhenOnlineAndPublic": true
     },
-    "checksum": "875e54c9a7d1a7d5af199e074df74312b6f5996e3dd688c2a03a5c8b6a4cb9b4",
+    "checksum": "88711f227aac976f23d693a72b8728af94d572a5214f6862d54953c441e90f0b",
     "managedInAxis": true,
     "axisAuthoringPermissions": [
       "documentation.draft.update"
@@ -13643,7 +13764,48 @@ module.exports = {
     "auditTrail": [],
     "active": true
   },
-  "record335": {
+  "record338": {
+    "code": "nodicsDocsPublicationpagenodicsdocsmetadatacommerceshoppinglistcommerceboundary",
+    "targetType": "PAGE",
+    "targetCode": "nodicsDocsMetadatacommerceShoppingListCommerceBoundary",
+    "lifecycleState": "ONLINE",
+    "publicationCode": "nodicsDocumentation",
+    "workflowReference": "nodicsDocumentationReviewWorkflow",
+    "stagedVersion": "0.16.8",
+    "onlineVersion": "0.16.8",
+    "validationResult": {
+      "generated": true,
+      "sourceAuthority": "docs/catalogue.json",
+      "publicationPath": "STAGED_REVIEW_APPROVAL_ONLINE",
+      "nexusVisibleOnlyWhenOnlineAndPublic": true
+    },
+    "checksum": "cb6367bffd4942d419464ae4165bd3e8d4362189e05d4371b085b0a407bd9902",
+    "managedInAxis": true,
+    "axisAuthoringPermissions": [
+      "documentation.draft.update"
+    ],
+    "workflowRequired": true,
+    "workflowTriggers": [
+      "CONTENT_CHANGE",
+      "ACCESS_POLICY_CHANGE",
+      "SOURCE_EVIDENCE_CHANGE"
+    ],
+    "decisionPolicy": {
+      "reviewPermission": "documentation.review",
+      "approvePermission": "documentation.approve",
+      "publishPermission": "documentation.publish",
+      "permissionEnforced": true,
+      "adminOverrideAudited": true
+    },
+    "actor": "nodics.docs.generator",
+    "author": "nodics.docs.generator",
+    "reviewer": "nodics.docs.generator",
+    "approver": "nodics.docs.generator",
+    "publisher": "nodics.docs.generator",
+    "auditTrail": [],
+    "active": true
+  },
+  "record339": {
     "code": "nodicsDocsPublicationpagenodicsdocsmetadatafoundationnmsruntimemonitoring",
     "targetType": "PAGE",
     "targetCode": "nodicsDocsMetadatafoundationNmsRuntimeMonitoring",
@@ -13684,7 +13846,7 @@ module.exports = {
     "auditTrail": [],
     "active": true
   },
-  "record336": {
+  "record340": {
     "code": "nodicsDocsPublicationpagenodicsdocsmetadatafoundationserviceruntimeoverrides",
     "targetType": "PAGE",
     "targetCode": "nodicsDocsMetadatafoundationServiceRuntimeOverrides",
@@ -13725,7 +13887,7 @@ module.exports = {
     "auditTrail": [],
     "active": true
   },
-  "record337": {
+  "record341": {
     "code": "nodicsDocsPublicationpagenodicsdocsmetadatafoundationmoduletomodulecommunication",
     "targetType": "PAGE",
     "targetCode": "nodicsDocsMetadatafoundationModuleToModuleCommunication",
@@ -13766,7 +13928,7 @@ module.exports = {
     "auditTrail": [],
     "active": true
   },
-  "record338": {
+  "record342": {
     "code": "nodicsDocsPublicationpagenodicsdocsmetadatafoundationcacheproviderrunbooks",
     "targetType": "PAGE",
     "targetCode": "nodicsDocsMetadatafoundationCacheProviderRunbooks",
@@ -13807,7 +13969,7 @@ module.exports = {
     "auditTrail": [],
     "active": true
   },
-  "record339": {
+  "record343": {
     "code": "nodicsDocsPublicationpagenodicsdocsmetadatafoundationdatabaseproviderboundaries",
     "targetType": "PAGE",
     "targetCode": "nodicsDocsMetadatafoundationDatabaseProviderBoundaries",
@@ -13848,7 +14010,7 @@ module.exports = {
     "auditTrail": [],
     "active": true
   },
-  "record340": {
+  "record344": {
     "code": "nodicsDocsPublicationpagenodicsdocsmetadatasecurityotpsecurityflow",
     "targetType": "PAGE",
     "targetCode": "nodicsDocsMetadatasecurityOtpSecurityFlow",
@@ -13889,7 +14051,7 @@ module.exports = {
     "auditTrail": [],
     "active": true
   },
-  "record341": {
+  "record345": {
     "code": "nodicsDocsPublicationpagenodicsdocsmetadatacommunicationproviderrunbooks",
     "targetType": "PAGE",
     "targetCode": "nodicsDocsMetadatacommunicationProviderRunbooks",
@@ -13930,7 +14092,7 @@ module.exports = {
     "auditTrail": [],
     "active": true
   },
-  "record342": {
+  "record346": {
     "code": "nodicsDocsPublicationpagenodicsdocsmetadataengagementcontactsubmissionoperations",
     "targetType": "PAGE",
     "targetCode": "nodicsDocsMetadataengagementContactSubmissionOperations",
@@ -13971,7 +14133,7 @@ module.exports = {
     "auditTrail": [],
     "active": true
   },
-  "record343": {
+  "record347": {
     "code": "nodicsDocsPublicationpagenodicsdocsmetadataprocessworkflowbpmsourcemap",
     "targetType": "PAGE",
     "targetCode": "nodicsDocsMetadataprocessWorkflowBpmSourceMap",
@@ -14012,7 +14174,7 @@ module.exports = {
     "auditTrail": [],
     "active": true
   },
-  "record344": {
+  "record348": {
     "code": "nodicsDocsPublicationpagenodicsdocsmetadataprocesscronjobdataauthoring",
     "targetType": "PAGE",
     "targetCode": "nodicsDocsMetadataprocessCronjobDataAuthoring",
@@ -14053,7 +14215,7 @@ module.exports = {
     "auditTrail": [],
     "active": true
   },
-  "record345": {
+  "record349": {
     "code": "nodicsDocsPublicationpagenodicsdocsmetadataframeworkreleaseupgradecompatibility",
     "targetType": "PAGE",
     "targetCode": "nodicsDocsMetadataframeworkReleaseUpgradeCompatibility",
@@ -14094,7 +14256,7 @@ module.exports = {
     "auditTrail": [],
     "active": true
   },
-  "record346": {
+  "record350": {
     "code": "nodicsDocsPublicationpagenodicsdocsmetadatacommercefulfillmentcoresourcemap",
     "targetType": "PAGE",
     "targetCode": "nodicsDocsMetadatacommerceFulfillmentCoreSourceMap",
@@ -14135,7 +14297,7 @@ module.exports = {
     "auditTrail": [],
     "active": true
   },
-  "record347": {
+  "record351": {
     "code": "nodicsDocsPublicationpagenodicsdocsmetadataacceleratorsdomaincommercesourcemap",
     "targetType": "PAGE",
     "targetCode": "nodicsDocsMetadataacceleratorsDomainCommerceSourceMap",
@@ -14176,7 +14338,7 @@ module.exports = {
     "auditTrail": [],
     "active": true
   },
-  "record348": {
+  "record352": {
     "code": "nodicsDocsPublicationpagenodicsdocsmetadatafoundationtoolingruntimecontracts",
     "targetType": "PAGE",
     "targetCode": "nodicsDocsMetadatafoundationToolingRuntimeContracts",
@@ -14217,7 +14379,7 @@ module.exports = {
     "auditTrail": [],
     "active": true
   },
-  "record349": {
+  "record353": {
     "code": "nodicsDocsPublicationpagenodicsdocsmetadatafoundationemsruntimeclientrunbook",
     "targetType": "PAGE",
     "targetCode": "nodicsDocsMetadatafoundationEmsRuntimeClientRunbook",
@@ -14258,7 +14420,7 @@ module.exports = {
     "auditTrail": [],
     "active": true
   },
-  "record350": {
+  "record354": {
     "code": "nodicsDocsPublicationpagenodicsdocsmetadatareferenceinternalsourceboundaryregister",
     "targetType": "PAGE",
     "targetCode": "nodicsDocsMetadatareferenceInternalSourceBoundaryRegister",
@@ -14299,7 +14461,7 @@ module.exports = {
     "auditTrail": [],
     "active": true
   },
-  "record351": {
+  "record355": {
     "code": "nodicsDocsPublicationpagenodicsdocsmetadatatoolingaideveloperenablement",
     "targetType": "PAGE",
     "targetCode": "nodicsDocsMetadatatoolingAiDeveloperEnablement",
@@ -14340,7 +14502,7 @@ module.exports = {
     "auditTrail": [],
     "active": true
   },
-  "record352": {
+  "record356": {
     "code": "nodicsDocsPublicationpagenodicsdocsmetadatareferencesourcemapglossary",
     "targetType": "PAGE",
     "targetCode": "nodicsDocsMetadatareferenceSourceMapGlossary",
@@ -14381,7 +14543,7 @@ module.exports = {
     "auditTrail": [],
     "active": true
   },
-  "record353": {
+  "record357": {
     "code": "nodicsDocsPublicationpagenodicsdocsmetadatareferencesourcebackeddocumentationcoverageaudit",
     "targetType": "PAGE",
     "targetCode": "nodicsDocsMetadatareferenceSourceBackedDocumentationCoverageAudit",
@@ -14422,7 +14584,7 @@ module.exports = {
     "auditTrail": [],
     "active": true
   },
-  "record354": {
+  "record358": {
     "code": "nodicsDocsPublicationpagenodicsdocsmetadatareferencedocumentationgapbacklog",
     "targetType": "PAGE",
     "targetCode": "nodicsDocsMetadatareferenceDocumentationGapBacklog",
@@ -14463,7 +14625,7 @@ module.exports = {
     "auditTrail": [],
     "active": true
   },
-  "record355": {
+  "record359": {
     "code": "nodicsDocsPublicationsearchmetadatanodicsdocssearchproductnodicsdocumentationproduct",
     "targetType": "SEARCH_METADATA",
     "targetCode": "nodicsDocsSearchproductnodicsdocumentationproduct",
@@ -14502,7 +14664,7 @@ module.exports = {
     "auditTrail": [],
     "active": true
   },
-  "record356": {
+  "record360": {
     "code": "nodicsDocsPublicationsearchmetadatanodicsdocssearchnavigationnodicsdocumentationnavigation",
     "targetType": "SEARCH_METADATA",
     "targetCode": "nodicsDocsSearchnavigationnodicsdocumentationnavigation",
@@ -14541,7 +14703,7 @@ module.exports = {
     "auditTrail": [],
     "active": true
   },
-  "record357": {
+  "record361": {
     "code": "nodicsDocsPublicationsearchmetadatanodicsdocssearchnodenodicsdocsnoderoot",
     "targetType": "SEARCH_METADATA",
     "targetCode": "nodicsDocsSearchnodenodicsdocsnoderoot",
@@ -14580,7 +14742,7 @@ module.exports = {
     "auditTrail": [],
     "active": true
   },
-  "record358": {
+  "record362": {
     "code": "nodicsDocsPublicationsearchmetadatanodicsdocssearchnodenodicsdocsnodesecnodicsframework",
     "targetType": "SEARCH_METADATA",
     "targetCode": "nodicsDocsSearchnodenodicsdocsnodesecnodicsframework",
@@ -14619,7 +14781,7 @@ module.exports = {
     "auditTrail": [],
     "active": true
   },
-  "record359": {
+  "record363": {
     "code": "nodicsDocsPublicationsearchmetadatanodicsdocssearchnodenodicsdocsnodesecdocumentationroadmap",
     "targetType": "SEARCH_METADATA",
     "targetCode": "nodicsDocsSearchnodenodicsdocsnodesecdocumentationroadmap",
@@ -14658,7 +14820,7 @@ module.exports = {
     "auditTrail": [],
     "active": true
   },
-  "record360": {
+  "record364": {
     "code": "nodicsDocsPublicationsearchmetadatanodicsdocssearchnodenodicsdocsnodesecframeworkarchitectureanddesign",
     "targetType": "SEARCH_METADATA",
     "targetCode": "nodicsDocsSearchnodenodicsdocsnodesecframeworkarchitectureanddesign",
@@ -14697,7 +14859,7 @@ module.exports = {
     "auditTrail": [],
     "active": true
   },
-  "record361": {
+  "record365": {
     "code": "nodicsDocsPublicationsearchmetadatanodicsdocssearchnodenodicsdocsnodeseccapabilityregistryandlifecyclemanagement",
     "targetType": "SEARCH_METADATA",
     "targetCode": "nodicsDocsSearchnodenodicsdocsnodeseccapabilityregistryandlifecyclemanagement",
@@ -14736,7 +14898,7 @@ module.exports = {
     "auditTrail": [],
     "active": true
   },
-  "record362": {
+  "record366": {
     "code": "nodicsDocsPublicationsearchmetadatanodicsdocssearchnodenodicsdocsnodesecfoundationruntimeservices",
     "targetType": "SEARCH_METADATA",
     "targetCode": "nodicsDocsSearchnodenodicsdocsnodesecfoundationruntimeservices",
@@ -14775,7 +14937,7 @@ module.exports = {
     "auditTrail": [],
     "active": true
   },
-  "record363": {
+  "record367": {
     "code": "nodicsDocsPublicationsearchmetadatanodicsdocssearchnodenodicsdocsnodesecnodicsapplicationsuite",
     "targetType": "SEARCH_METADATA",
     "targetCode": "nodicsDocsSearchnodenodicsdocsnodesecnodicsapplicationsuite",
@@ -14814,7 +14976,7 @@ module.exports = {
     "auditTrail": [],
     "active": true
   },
-  "record364": {
+  "record368": {
     "code": "nodicsDocsPublicationsearchmetadatanodicsdocssearchnodenodicsdocsnodesecsolutionusecases",
     "targetType": "SEARCH_METADATA",
     "targetCode": "nodicsDocsSearchnodenodicsdocsnodesecsolutionusecases",
@@ -14853,7 +15015,7 @@ module.exports = {
     "auditTrail": [],
     "active": true
   },
-  "record365": {
+  "record369": {
     "code": "nodicsDocsPublicationsearchmetadatanodicsdocssearchnodenodicsdocsnodesecacceleratorsandindustrysolutiontemplates",
     "targetType": "SEARCH_METADATA",
     "targetCode": "nodicsDocsSearchnodenodicsdocsnodesecacceleratorsandindustrysolutiontemplates",
@@ -14892,7 +15054,7 @@ module.exports = {
     "auditTrail": [],
     "active": true
   },
-  "record366": {
+  "record370": {
     "code": "nodicsDocsPublicationsearchmetadatanodicsdocssearchnodenodicsdocsnodesecnodicsinstallerandworkspacesetup",
     "targetType": "SEARCH_METADATA",
     "targetCode": "nodicsDocsSearchnodenodicsdocsnodesecnodicsinstallerandworkspacesetup",
@@ -14931,7 +15093,7 @@ module.exports = {
     "auditTrail": [],
     "active": true
   },
-  "record367": {
+  "record371": {
     "code": "nodicsDocsPublicationsearchmetadatanodicsdocssearchnodenodicsdocsnodesecapplicationbuilderandworkspacegeneration",
     "targetType": "SEARCH_METADATA",
     "targetCode": "nodicsDocsSearchnodenodicsdocsnodesecapplicationbuilderandworkspacegeneration",
@@ -14970,7 +15132,7 @@ module.exports = {
     "auditTrail": [],
     "active": true
   },
-  "record368": {
+  "record372": {
     "code": "nodicsDocsPublicationsearchmetadatanodicsdocssearchnodenodicsdocsnodesecaxisandbackofficeoperations",
     "targetType": "SEARCH_METADATA",
     "targetCode": "nodicsDocsSearchnodenodicsdocsnodesecaxisandbackofficeoperations",
@@ -15009,7 +15171,7 @@ module.exports = {
     "auditTrail": [],
     "active": true
   },
-  "record369": {
+  "record373": {
     "code": "nodicsDocsPublicationsearchmetadatanodicsdocssearchnodenodicsdocsnodesecbusinesscustomizationinaxis",
     "targetType": "SEARCH_METADATA",
     "targetCode": "nodicsDocsSearchnodenodicsdocsnodesecbusinesscustomizationinaxis",
@@ -15048,7 +15210,7 @@ module.exports = {
     "auditTrail": [],
     "active": true
   },
-  "record370": {
+  "record374": {
     "code": "nodicsDocsPublicationsearchmetadatanodicsdocssearchnodenodicsdocsnodesecuserenterpriseandtenantmanagement",
     "targetType": "SEARCH_METADATA",
     "targetCode": "nodicsDocsSearchnodenodicsdocsnodesecuserenterpriseandtenantmanagement",
@@ -15087,7 +15249,7 @@ module.exports = {
     "auditTrail": [],
     "active": true
   },
-  "record371": {
+  "record375": {
     "code": "nodicsDocsPublicationsearchmetadatanodicsdocssearchnodenodicsdocsnodesecsecuritygovernanceandcompliance",
     "targetType": "SEARCH_METADATA",
     "targetCode": "nodicsDocsSearchnodenodicsdocsnodesecsecuritygovernanceandcompliance",
@@ -15126,7 +15288,7 @@ module.exports = {
     "auditTrail": [],
     "active": true
   },
-  "record372": {
+  "record376": {
     "code": "nodicsDocsPublicationsearchmetadatanodicsdocssearchnodenodicsdocsnodesecapplicationconfiguration6f961ec8d84da002",
     "targetType": "SEARCH_METADATA",
     "targetCode": "nodicsDocsSearchnodenodicsdocsnodesecapplicationconfigurationandruntimebehaviormanagement",
@@ -15165,7 +15327,7 @@ module.exports = {
     "auditTrail": [],
     "active": true
   },
-  "record373": {
+  "record377": {
     "code": "nodicsDocsPublicationsearchmetadatanodicsdocssearchnodenodicsdocsnodesecruntimegovernanceanddynamicchangemanagement",
     "targetType": "SEARCH_METADATA",
     "targetCode": "nodicsDocsSearchnodenodicsdocsnodesecruntimegovernanceanddynamicchangemanagement",
@@ -15204,7 +15366,7 @@ module.exports = {
     "auditTrail": [],
     "active": true
   },
-  "record374": {
+  "record378": {
     "code": "nodicsDocsPublicationsearchmetadatanodicsdocssearchnodenodicsdocsnodeseclocalizationandinternationalization",
     "targetType": "SEARCH_METADATA",
     "targetCode": "nodicsDocsSearchnodenodicsdocsnodeseclocalizationandinternationalization",
@@ -15243,7 +15405,7 @@ module.exports = {
     "auditTrail": [],
     "active": true
   },
-  "record375": {
+  "record379": {
     "code": "nodicsDocsPublicationsearchmetadatanodicsdocssearchnodenodicsdocsnodesecdatamodelingandschemamanagement",
     "targetType": "SEARCH_METADATA",
     "targetCode": "nodicsDocsSearchnodenodicsdocsnodesecdatamodelingandschemamanagement",
@@ -15282,7 +15444,7 @@ module.exports = {
     "auditTrail": [],
     "active": true
   },
-  "record376": {
+  "record380": {
     "code": "nodicsDocsPublicationsearchmetadatanodicsdocssearchnodenodicsdocsnodesecdatabaseandpersistencemanagement",
     "targetType": "SEARCH_METADATA",
     "targetCode": "nodicsDocsSearchnodenodicsdocsnodesecdatabaseandpersistencemanagement",
@@ -15321,7 +15483,7 @@ module.exports = {
     "auditTrail": [],
     "active": true
   },
-  "record377": {
+  "record381": {
     "code": "nodicsDocsPublicationsearchmetadatanodicsdocssearchnodenodicsdocsnodeseccachingandruntimestatemanagement",
     "targetType": "SEARCH_METADATA",
     "targetCode": "nodicsDocsSearchnodenodicsdocsnodeseccachingandruntimestatemanagement",
@@ -15360,7 +15522,7 @@ module.exports = {
     "auditTrail": [],
     "active": true
   },
-  "record378": {
+  "record382": {
     "code": "nodicsDocsPublicationsearchmetadatanodicsdocssearchnodenodicsdocsnodesecdeveloperextensionandprojectcustomization",
     "targetType": "SEARCH_METADATA",
     "targetCode": "nodicsDocsSearchnodenodicsdocsnodesecdeveloperextensionandprojectcustomization",
@@ -15399,7 +15561,7 @@ module.exports = {
     "auditTrail": [],
     "active": true
   },
-  "record379": {
+  "record383": {
     "code": "nodicsDocsPublicationsearchmetadatanodicsdocssearchnodenodicsdocsnodesecstoremarketsiteandchannelmanagement",
     "targetType": "SEARCH_METADATA",
     "targetCode": "nodicsDocsSearchnodenodicsdocsnodesecstoremarketsiteandchannelmanagement",
@@ -15438,7 +15600,7 @@ module.exports = {
     "auditTrail": [],
     "active": true
   },
-  "record380": {
+  "record384": {
     "code": "nodicsDocsPublicationsearchmetadatanodicsdocssearchnodenodicsdocsnodesecwcmsandcontentmanagement",
     "targetType": "SEARCH_METADATA",
     "targetCode": "nodicsDocsSearchnodenodicsdocsnodesecwcmsandcontentmanagement",
@@ -15477,7 +15639,7 @@ module.exports = {
     "auditTrail": [],
     "active": true
   },
-  "record381": {
+  "record385": {
     "code": "nodicsDocsPublicationsearchmetadatanodicsdocssearchnodenodicsdocsnodesecproductcataloganddiscovery",
     "targetType": "SEARCH_METADATA",
     "targetCode": "nodicsDocsSearchnodenodicsdocsnodesecproductcataloganddiscovery",
@@ -15516,7 +15678,7 @@ module.exports = {
     "auditTrail": [],
     "active": true
   },
-  "record382": {
+  "record386": {
     "code": "nodicsDocsPublicationsearchmetadatanodicsdocssearchnodenodicsdocsnodesecsearchanddiscovery",
     "targetType": "SEARCH_METADATA",
     "targetCode": "nodicsDocsSearchnodenodicsdocsnodesecsearchanddiscovery",
@@ -15555,7 +15717,7 @@ module.exports = {
     "auditTrail": [],
     "active": true
   },
-  "record383": {
+  "record387": {
     "code": "nodicsDocsPublicationsearchmetadatanodicsdocssearchnodenodicsdocsnodesecmediamanagement",
     "targetType": "SEARCH_METADATA",
     "targetCode": "nodicsDocsSearchnodenodicsdocsnodesecmediamanagement",
@@ -15594,7 +15756,7 @@ module.exports = {
     "auditTrail": [],
     "active": true
   },
-  "record384": {
+  "record388": {
     "code": "nodicsDocsPublicationsearchmetadatanodicsdocssearchnodenodicsdocsnodesecinventoryandstockmanagement",
     "targetType": "SEARCH_METADATA",
     "targetCode": "nodicsDocsSearchnodenodicsdocsnodesecinventoryandstockmanagement",
@@ -15633,7 +15795,7 @@ module.exports = {
     "auditTrail": [],
     "active": true
   },
-  "record385": {
+  "record389": {
     "code": "nodicsDocsPublicationsearchmetadatanodicsdocssearchnodenodicsdocsnodesecpricingpromotionsandtax",
     "targetType": "SEARCH_METADATA",
     "targetCode": "nodicsDocsSearchnodenodicsdocsnodesecpricingpromotionsandtax",
@@ -15672,7 +15834,7 @@ module.exports = {
     "auditTrail": [],
     "active": true
   },
-  "record386": {
+  "record390": {
     "code": "nodicsDocsPublicationsearchmetadatanodicsdocssearchnodenodicsdocsnodeseccommercecartandcheckout",
     "targetType": "SEARCH_METADATA",
     "targetCode": "nodicsDocsSearchnodenodicsdocsnodeseccommercecartandcheckout",
@@ -15711,7 +15873,7 @@ module.exports = {
     "auditTrail": [],
     "active": true
   },
-  "record387": {
+  "record391": {
     "code": "nodicsDocsPublicationsearchmetadatanodicsdocssearchnodenodicsdocsnodesecpaymentmanagement",
     "targetType": "SEARCH_METADATA",
     "targetCode": "nodicsDocsSearchnodenodicsdocsnodesecpaymentmanagement",
@@ -15750,7 +15912,46 @@ module.exports = {
     "auditTrail": [],
     "active": true
   },
-  "record388": {
+  "record392": {
+    "code": "nodicsDocsPublicationsearchmetadatanodicsdocssearchnodenodicsdocsnodesecloyaltyandrewards",
+    "targetType": "SEARCH_METADATA",
+    "targetCode": "nodicsDocsSearchnodenodicsdocsnodesecloyaltyandrewards",
+    "lifecycleState": "ONLINE",
+    "publicationCode": "nodicsDocumentation",
+    "workflowReference": "nodicsDocumentationReviewWorkflow",
+    "stagedVersion": "0.16.8",
+    "onlineVersion": "0.16.8",
+    "validationResult": {
+      "generated": true,
+      "sourceAuthority": "docs/catalogue.json",
+      "publicationPath": "STAGED_REVIEW_APPROVAL_ONLINE",
+      "nexusVisibleOnlyWhenOnlineAndPublic": true
+    },
+    "checksum": "ab0f6618ccdfd119a472966307a8d55d8724695e047c2ac34a83a407bb392b27",
+    "managedInAxis": true,
+    "axisAuthoringPermissions": [
+      "documentation.search.preview"
+    ],
+    "workflowRequired": true,
+    "workflowTriggers": [
+      "SEARCH_METADATA_CHANGE"
+    ],
+    "decisionPolicy": {
+      "reviewPermission": "documentation.review",
+      "approvePermission": "documentation.approve",
+      "publishPermission": "documentation.publish",
+      "permissionEnforced": true,
+      "adminOverrideAudited": true
+    },
+    "actor": "nodics.docs.generator",
+    "author": "nodics.docs.generator",
+    "reviewer": "nodics.docs.generator",
+    "approver": "nodics.docs.generator",
+    "publisher": "nodics.docs.generator",
+    "auditTrail": [],
+    "active": true
+  },
+  "record393": {
     "code": "nodicsDocsPublicationsearchmetadatanodicsdocssearchnodenodicsdocsnodesecshippingandfulfillment",
     "targetType": "SEARCH_METADATA",
     "targetCode": "nodicsDocsSearchnodenodicsdocsnodesecshippingandfulfillment",
@@ -15789,7 +15990,7 @@ module.exports = {
     "auditTrail": [],
     "active": true
   },
-  "record389": {
+  "record394": {
     "code": "nodicsDocsPublicationsearchmetadatanodicsdocssearchnodenodicsdocsnodesecordermanagement",
     "targetType": "SEARCH_METADATA",
     "targetCode": "nodicsDocsSearchnodenodicsdocsnodesecordermanagement",
@@ -15828,7 +16029,7 @@ module.exports = {
     "auditTrail": [],
     "active": true
   },
-  "record390": {
+  "record395": {
     "code": "nodicsDocsPublicationsearchmetadatanodicsdocssearchnodenodicsdocsnodeseccancellationsreturnsandrefunds",
     "targetType": "SEARCH_METADATA",
     "targetCode": "nodicsDocsSearchnodenodicsdocsnodeseccancellationsreturnsandrefunds",
@@ -15867,7 +16068,7 @@ module.exports = {
     "auditTrail": [],
     "active": true
   },
-  "record391": {
+  "record396": {
     "code": "nodicsDocsPublicationsearchmetadatanodicsdocssearchnodenodicsdocsnodeseccustomerengagementandfeedback",
     "targetType": "SEARCH_METADATA",
     "targetCode": "nodicsDocsSearchnodenodicsdocsnodeseccustomerengagementandfeedback",
@@ -15906,7 +16107,7 @@ module.exports = {
     "auditTrail": [],
     "active": true
   },
-  "record392": {
+  "record397": {
     "code": "nodicsDocsPublicationsearchmetadatanodicsdocssearchnodenodicsdocsnodeseccommunicationandnotifications",
     "targetType": "SEARCH_METADATA",
     "targetCode": "nodicsDocsSearchnodenodicsdocsnodeseccommunicationandnotifications",
@@ -15945,7 +16146,7 @@ module.exports = {
     "auditTrail": [],
     "active": true
   },
-  "record393": {
+  "record398": {
     "code": "nodicsDocsPublicationsearchmetadatanodicsdocssearchnodenodicsdocsnodeseceventandmessagingmanagement",
     "targetType": "SEARCH_METADATA",
     "targetCode": "nodicsDocsSearchnodenodicsdocsnodeseceventandmessagingmanagement",
@@ -15984,7 +16185,7 @@ module.exports = {
     "auditTrail": [],
     "active": true
   },
-  "record394": {
+  "record399": {
     "code": "nodicsDocsPublicationsearchmetadatanodicsdocssearchnodenodicsdocsnodesecprocessandworkflowautomation",
     "targetType": "SEARCH_METADATA",
     "targetCode": "nodicsDocsSearchnodenodicsdocsnodesecprocessandworkflowautomation",
@@ -16023,7 +16224,7 @@ module.exports = {
     "auditTrail": [],
     "active": true
   },
-  "record395": {
+  "record400": {
     "code": "nodicsDocsPublicationsearchmetadatanodicsdocssearchnodenodicsdocsnodesecpipelineandbusinesslogicorchestration",
     "targetType": "SEARCH_METADATA",
     "targetCode": "nodicsDocsSearchnodenodicsdocsnodesecpipelineandbusinesslogicorchestration",
@@ -16062,7 +16263,7 @@ module.exports = {
     "auditTrail": [],
     "active": true
   },
-  "record396": {
+  "record401": {
     "code": "nodicsDocsPublicationsearchmetadatanodicsdocssearchnodenodicsdocsnodeseccronandscheduledautomation",
     "targetType": "SEARCH_METADATA",
     "targetCode": "nodicsDocsSearchnodenodicsdocsnodeseccronandscheduledautomation",
@@ -16101,7 +16302,7 @@ module.exports = {
     "auditTrail": [],
     "active": true
   },
-  "record397": {
+  "record402": {
     "code": "nodicsDocsPublicationsearchmetadatanodicsdocssearchnodenodicsdocsnodesecdataimportexportandmigration",
     "targetType": "SEARCH_METADATA",
     "targetCode": "nodicsDocsSearchnodenodicsdocsnodesecdataimportexportandmigration",
@@ -16140,7 +16341,7 @@ module.exports = {
     "auditTrail": [],
     "active": true
   },
-  "record398": {
+  "record403": {
     "code": "nodicsDocsPublicationsearchmetadatanodicsdocssearchnodenodicsdocsnodesecsystemintegrationandexternalconnectivity",
     "targetType": "SEARCH_METADATA",
     "targetCode": "nodicsDocsSearchnodenodicsdocsnodesecsystemintegrationandexternalconnectivity",
@@ -16179,7 +16380,7 @@ module.exports = {
     "auditTrail": [],
     "active": true
   },
-  "record399": {
+  "record404": {
     "code": "nodicsDocsPublicationsearchmetadatanodicsdocssearchnodenodicsdocsnodesecoperationsmonitoringandrecovery",
     "targetType": "SEARCH_METADATA",
     "targetCode": "nodicsDocsSearchnodenodicsdocsnodesecoperationsmonitoringandrecovery",
@@ -16218,7 +16419,7 @@ module.exports = {
     "auditTrail": [],
     "active": true
   },
-  "record400": {
+  "record405": {
     "code": "nodicsDocsPublicationsearchmetadatanodicsdocssearchnodenodicsdocsnodesecqualitytestingandcertification",
     "targetType": "SEARCH_METADATA",
     "targetCode": "nodicsDocsSearchnodenodicsdocsnodesecqualitytestingandcertification",
@@ -16257,7 +16458,7 @@ module.exports = {
     "auditTrail": [],
     "active": true
   },
-  "record401": {
+  "record406": {
     "code": "nodicsDocsPublicationsearchmetadatanodicsdocssearchnodenodicsdocsnodesecdocumentationmanagement",
     "targetType": "SEARCH_METADATA",
     "targetCode": "nodicsDocsSearchnodenodicsdocsnodesecdocumentationmanagement",
@@ -16296,7 +16497,7 @@ module.exports = {
     "auditTrail": [],
     "active": true
   },
-  "record402": {
+  "record407": {
     "code": "nodicsDocsPublicationsearchmetadatanodicsdocssearchnodenodicsdocsnodesecreleasestagingandpublication",
     "targetType": "SEARCH_METADATA",
     "targetCode": "nodicsDocsSearchnodenodicsdocsnodesecreleasestagingandpublication",
@@ -16335,7 +16536,7 @@ module.exports = {
     "auditTrail": [],
     "active": true
   },
-  "record403": {
+  "record408": {
     "code": "nodicsDocsPublicationsearchmetadatanodicsdocssearchnodenodicsdocsnodesecaianddevelopertooling",
     "targetType": "SEARCH_METADATA",
     "targetCode": "nodicsDocsSearchnodenodicsdocsnodesecaianddevelopertooling",
@@ -16374,7 +16575,7 @@ module.exports = {
     "auditTrail": [],
     "active": true
   },
-  "record404": {
+  "record409": {
     "code": "nodicsDocsPublicationsearchmetadatanodicsdocssearchnodenodicsdocsnodesecreference",
     "targetType": "SEARCH_METADATA",
     "targetCode": "nodicsDocsSearchnodenodicsdocsnodesecreference",
@@ -16413,7 +16614,7 @@ module.exports = {
     "auditTrail": [],
     "active": true
   },
-  "record405": {
+  "record410": {
     "code": "nodicsDocsPublicationsearchmetadatanodicsdocssearchnodenodicsdocsnodetopicframeworkwhatisnodics",
     "targetType": "SEARCH_METADATA",
     "targetCode": "nodicsDocsSearchnodenodicsdocsnodetopicframeworkwhatisnodics",
@@ -16452,7 +16653,7 @@ module.exports = {
     "auditTrail": [],
     "active": true
   },
-  "record406": {
+  "record411": {
     "code": "nodicsDocsPublicationsearchmetadatanodicsdocssearchnodenodicsdocsnodetopicframeworkwhynodicsexists",
     "targetType": "SEARCH_METADATA",
     "targetCode": "nodicsDocsSearchnodenodicsdocsnodetopicframeworkwhynodicsexists",
@@ -16491,7 +16692,7 @@ module.exports = {
     "auditTrail": [],
     "active": true
   },
-  "record407": {
+  "record412": {
     "code": "nodicsDocsPublicationsearchmetadatanodicsdocssearchnodenodicsdocsnodetopicframeworkhownodicsworks",
     "targetType": "SEARCH_METADATA",
     "targetCode": "nodicsDocsSearchnodenodicsdocsnodetopicframeworkhownodicsworks",
@@ -16530,7 +16731,7 @@ module.exports = {
     "auditTrail": [],
     "active": true
   },
-  "record408": {
+  "record413": {
     "code": "nodicsDocsPublicationsearchmetadatanodicsdocssearchnodenodicsdocsnodetopicframeworkadoptionandfirstjourney",
     "targetType": "SEARCH_METADATA",
     "targetCode": "nodicsDocsSearchnodenodicsdocsnodetopicframeworkadoptionandfirstjourney",
@@ -16569,7 +16770,7 @@ module.exports = {
     "auditTrail": [],
     "active": true
   },
-  "record409": {
+  "record414": {
     "code": "nodicsDocsPublicationsearchmetadatanodicsdocssearchnodenodicsdocsnodetopicdocsdocumentationroadmap",
     "targetType": "SEARCH_METADATA",
     "targetCode": "nodicsDocsSearchnodenodicsdocsnodetopicdocsdocumentationroadmap",
@@ -16608,7 +16809,7 @@ module.exports = {
     "auditTrail": [],
     "active": true
   },
-  "record410": {
+  "record415": {
     "code": "nodicsDocsPublicationsearchmetadatanodicsdocssearchnodenodicsdocsnodetopicdocsdocumentationprinciples",
     "targetType": "SEARCH_METADATA",
     "targetCode": "nodicsDocsSearchnodenodicsdocsnodetopicdocsdocumentationprinciples",
@@ -16647,7 +16848,7 @@ module.exports = {
     "auditTrail": [],
     "active": true
   },
-  "record411": {
+  "record416": {
     "code": "nodicsDocsPublicationsearchmetadatanodicsdocssearchnodenodicsdocsnodetopicdocsreaderjourneyandcoverage",
     "targetType": "SEARCH_METADATA",
     "targetCode": "nodicsDocsSearchnodenodicsdocsnodetopicdocsreaderjourneyandcoverage",
@@ -16686,7 +16887,7 @@ module.exports = {
     "auditTrail": [],
     "active": true
   },
-  "record412": {
+  "record417": {
     "code": "nodicsDocsPublicationsearchmetadatanodicsdocssearchnodenodicsdocsnodetopicdocsdocumentationpublishingmodel",
     "targetType": "SEARCH_METADATA",
     "targetCode": "nodicsDocsSearchnodenodicsdocsnodetopicdocsdocumentationpublishingmodel",
@@ -16725,7 +16926,7 @@ module.exports = {
     "auditTrail": [],
     "active": true
   },
-  "record413": {
+  "record418": {
     "code": "nodicsDocsPublicationsearchmetadatanodicsdocssearchnodenodicsdocsnodetopicframeworkmodulararchitecture",
     "targetType": "SEARCH_METADATA",
     "targetCode": "nodicsDocsSearchnodenodicsdocsnodetopicframeworkmodulararchitecture",
@@ -16764,7 +16965,7 @@ module.exports = {
     "auditTrail": [],
     "active": true
   },
-  "record414": {
+  "record419": {
     "code": "nodicsDocsPublicationsearchmetadatanodicsdocssearchnodenodicsdocsnodetopicframeworkruntimeservercomposition",
     "targetType": "SEARCH_METADATA",
     "targetCode": "nodicsDocsSearchnodenodicsdocsnodetopicframeworkruntimeservercomposition",
@@ -16803,7 +17004,7 @@ module.exports = {
     "auditTrail": [],
     "active": true
   },
-  "record415": {
+  "record420": {
     "code": "nodicsDocsPublicationsearchmetadatanodicsdocssearchnodenodicsdocsnodetopicframeworkmoduleloadingserviceprecedence",
     "targetType": "SEARCH_METADATA",
     "targetCode": "nodicsDocsSearchnodenodicsdocsnodetopicframeworkmoduleloadingserviceprecedence",
@@ -16842,7 +17043,7 @@ module.exports = {
     "auditTrail": [],
     "active": true
   },
-  "record416": {
+  "record421": {
     "code": "nodicsDocsPublicationsearchmetadatanodicsdocssearchnodenodicsdocsnodetopicframeworkarchitecturedecisionguide",
     "targetType": "SEARCH_METADATA",
     "targetCode": "nodicsDocsSearchnodenodicsdocsnodetopicframeworkarchitecturedecisionguide",
@@ -16881,7 +17082,7 @@ module.exports = {
     "auditTrail": [],
     "active": true
   },
-  "record417": {
+  "record422": {
     "code": "nodicsDocsPublicationsearchmetadatanodicsdocssearchnodenodicsdocsnodetopicplatformmoduleregistry",
     "targetType": "SEARCH_METADATA",
     "targetCode": "nodicsDocsSearchnodenodicsdocsnodetopicplatformmoduleregistry",
@@ -16920,7 +17121,7 @@ module.exports = {
     "auditTrail": [],
     "active": true
   },
-  "record418": {
+  "record423": {
     "code": "nodicsDocsPublicationsearchmetadatanodicsdocssearchnodenodicsdocsnodetopicfoundationoverview",
     "targetType": "SEARCH_METADATA",
     "targetCode": "nodicsDocsSearchnodenodicsdocsnodetopicfoundationoverview",
@@ -16959,7 +17160,7 @@ module.exports = {
     "auditTrail": [],
     "active": true
   },
-  "record419": {
+  "record424": {
     "code": "nodicsDocsPublicationsearchmetadatanodicsdocssearchnodenodicsdocsnodetopicapplicationssuite",
     "targetType": "SEARCH_METADATA",
     "targetCode": "nodicsDocsSearchnodenodicsdocsnodetopicapplicationssuite",
@@ -16998,7 +17199,7 @@ module.exports = {
     "auditTrail": [],
     "active": true
   },
-  "record420": {
+  "record425": {
     "code": "nodicsDocsPublicationsearchmetadatanodicsdocssearchnodenodicsdocsnodetopicsolutionstaskexecutionengine",
     "targetType": "SEARCH_METADATA",
     "targetCode": "nodicsDocsSearchnodenodicsdocsnodetopicsolutionstaskexecutionengine",
@@ -17037,7 +17238,7 @@ module.exports = {
     "auditTrail": [],
     "active": true
   },
-  "record421": {
+  "record426": {
     "code": "nodicsDocsPublicationsearchmetadatanodicsdocssearchnodenodicsdocsnodetopicsolutionsdataengineeringanalyticsplatform",
     "targetType": "SEARCH_METADATA",
     "targetCode": "nodicsDocsSearchnodenodicsdocsnodetopicsolutionsdataengineeringanalyticsplatform",
@@ -17076,7 +17277,7 @@ module.exports = {
     "auditTrail": [],
     "active": true
   },
-  "record422": {
+  "record427": {
     "code": "nodicsDocsPublicationsearchmetadatanodicsdocssearchnodenodicsdocsnodetopicacceleratorsagoraindustrytemplates",
     "targetType": "SEARCH_METADATA",
     "targetCode": "nodicsDocsSearchnodenodicsdocsnodetopicacceleratorsagoraindustrytemplates",
@@ -17115,7 +17316,7 @@ module.exports = {
     "auditTrail": [],
     "active": true
   },
-  "record423": {
+  "record428": {
     "code": "nodicsDocsPublicationsearchmetadatanodicsdocssearchnodenodicsdocsnodetopicacceleratorsagoraapparelproductdataauthoring",
     "targetType": "SEARCH_METADATA",
     "targetCode": "nodicsDocsSearchnodenodicsdocsnodetopicacceleratorsagoraapparelproductdataauthoring",
@@ -17154,7 +17355,7 @@ module.exports = {
     "auditTrail": [],
     "active": true
   },
-  "record424": {
+  "record429": {
     "code": "nodicsDocsPublicationsearchmetadatanodicsdocssearchnodenodicsdocsnodetopicframeworklocalquickstart",
     "targetType": "SEARCH_METADATA",
     "targetCode": "nodicsDocsSearchnodenodicsdocsnodetopicframeworklocalquickstart",
@@ -17193,7 +17394,7 @@ module.exports = {
     "auditTrail": [],
     "active": true
   },
-  "record425": {
+  "record430": {
     "code": "nodicsDocsPublicationsearchmetadatanodicsdocssearchnodenodicsdocsnodetopicframeworkfreshschemasetupjourney",
     "targetType": "SEARCH_METADATA",
     "targetCode": "nodicsDocsSearchnodenodicsdocsnodetopicframeworkfreshschemasetupjourney",
@@ -17232,7 +17433,7 @@ module.exports = {
     "auditTrail": [],
     "active": true
   },
-  "record426": {
+  "record431": {
     "code": "nodicsDocsPublicationsearchmetadatanodicsdocssearchnodenodicsdocsnodetopicframeworklocalruntimetroubleshooting",
     "targetType": "SEARCH_METADATA",
     "targetCode": "nodicsDocsSearchnodenodicsdocsnodetopicframeworklocalruntimetroubleshooting",
@@ -17271,7 +17472,7 @@ module.exports = {
     "auditTrail": [],
     "active": true
   },
-  "record427": {
+  "record432": {
     "code": "nodicsDocsPublicationsearchmetadatanodicsdocssearchnodenodicsdocsnodetopicinstallerinstalledruntimeapplicationbuilder",
     "targetType": "SEARCH_METADATA",
     "targetCode": "nodicsDocsSearchnodenodicsdocsnodetopicinstallerinstalledruntimeapplicationbuilder",
@@ -17310,7 +17511,7 @@ module.exports = {
     "auditTrail": [],
     "active": true
   },
-  "record428": {
+  "record433": {
     "code": "nodicsDocsPublicationsearchmetadatanodicsdocssearchnodenodicsdocsnodetopicbuilderworkspacegeneration",
     "targetType": "SEARCH_METADATA",
     "targetCode": "nodicsDocsSearchnodenodicsdocsnodetopicbuilderworkspacegeneration",
@@ -17349,7 +17550,7 @@ module.exports = {
     "auditTrail": [],
     "active": true
   },
-  "record429": {
+  "record434": {
     "code": "nodicsDocsPublicationsearchmetadatanodicsdocssearchnodenodicsdocsnodetopicprocessvisualdesigner",
     "targetType": "SEARCH_METADATA",
     "targetCode": "nodicsDocsSearchnodenodicsdocsnodetopicprocessvisualdesigner",
@@ -17388,7 +17589,7 @@ module.exports = {
     "auditTrail": [],
     "active": true
   },
-  "record430": {
+  "record435": {
     "code": "nodicsDocsPublicationsearchmetadatanodicsdocssearchnodenodicsdocsnodetopicaxisbusinesscustomization",
     "targetType": "SEARCH_METADATA",
     "targetCode": "nodicsDocsSearchnodenodicsdocsnodetopicaxisbusinesscustomization",
@@ -17427,7 +17628,7 @@ module.exports = {
     "auditTrail": [],
     "active": true
   },
-  "record431": {
+  "record436": {
     "code": "nodicsDocsPublicationsearchmetadatanodicsdocssearchnodenodicsdocsnodetopicplatformoverview",
     "targetType": "SEARCH_METADATA",
     "targetCode": "nodicsDocsSearchnodenodicsdocsnodetopicplatformoverview",
@@ -17466,7 +17667,7 @@ module.exports = {
     "auditTrail": [],
     "active": true
   },
-  "record432": {
+  "record437": {
     "code": "nodicsDocsPublicationsearchmetadatanodicsdocssearchnodenodicsdocsnodetopicsecurityidentityaccessgovernance",
     "targetType": "SEARCH_METADATA",
     "targetCode": "nodicsDocsSearchnodenodicsdocsnodetopicsecurityidentityaccessgovernance",
@@ -17505,7 +17706,7 @@ module.exports = {
     "auditTrail": [],
     "active": true
   },
-  "record433": {
+  "record438": {
     "code": "nodicsDocsPublicationsearchmetadatanodicsdocssearchnodenodicsdocsnodetopicconfigurationruntimebehaviormanagement",
     "targetType": "SEARCH_METADATA",
     "targetCode": "nodicsDocsSearchnodenodicsdocsnodetopicconfigurationruntimebehaviormanagement",
@@ -17544,7 +17745,7 @@ module.exports = {
     "auditTrail": [],
     "active": true
   },
-  "record434": {
+  "record439": {
     "code": "nodicsDocsPublicationsearchmetadatanodicsdocssearchnodenodicsdocsnodetopicconfigurationframeworkstartuplifecycle",
     "targetType": "SEARCH_METADATA",
     "targetCode": "nodicsDocsSearchnodenodicsdocsnodetopicconfigurationframeworkstartuplifecycle",
@@ -17583,7 +17784,7 @@ module.exports = {
     "auditTrail": [],
     "active": true
   },
-  "record435": {
+  "record440": {
     "code": "nodicsDocsPublicationsearchmetadatanodicsdocssearchnodenodicsdocsnodetopicroutingapigovernance",
     "targetType": "SEARCH_METADATA",
     "targetCode": "nodicsDocsSearchnodenodicsdocsnodetopicroutingapigovernance",
@@ -17622,7 +17823,7 @@ module.exports = {
     "auditTrail": [],
     "active": true
   },
-  "record436": {
+  "record441": {
     "code": "nodicsDocsPublicationsearchmetadatanodicsdocssearchnodenodicsdocsnodetopicroutingapirequestlifecycle",
     "targetType": "SEARCH_METADATA",
     "targetCode": "nodicsDocsSearchnodenodicsdocsnodetopicroutingapirequestlifecycle",
@@ -17661,7 +17862,7 @@ module.exports = {
     "auditTrail": [],
     "active": true
   },
-  "record437": {
+  "record442": {
     "code": "nodicsDocsPublicationsearchmetadatanodicsdocssearchnodenodicsdocsnodetopicfoundationerrorhandlingstatuscodes",
     "targetType": "SEARCH_METADATA",
     "targetCode": "nodicsDocsSearchnodenodicsdocsnodetopicfoundationerrorhandlingstatuscodes",
@@ -17700,7 +17901,7 @@ module.exports = {
     "auditTrail": [],
     "active": true
   },
-  "record438": {
+  "record443": {
     "code": "nodicsDocsPublicationsearchmetadatanodicsdocssearchnodenodicsdocsnodetopicruntimegovernedchange",
     "targetType": "SEARCH_METADATA",
     "targetCode": "nodicsDocsSearchnodenodicsdocsnodetopicruntimegovernedchange",
@@ -17739,7 +17940,7 @@ module.exports = {
     "auditTrail": [],
     "active": true
   },
-  "record439": {
+  "record444": {
     "code": "nodicsDocsPublicationsearchmetadatanodicsdocssearchnodenodicsdocsnodetopiclocalizationinternationalization",
     "targetType": "SEARCH_METADATA",
     "targetCode": "nodicsDocsSearchnodenodicsdocsnodetopiclocalizationinternationalization",
@@ -17778,7 +17979,7 @@ module.exports = {
     "auditTrail": [],
     "active": true
   },
-  "record440": {
+  "record445": {
     "code": "nodicsDocsPublicationsearchmetadatanodicsdocssearchnodenodicsdocsnodetopicschemadatamodelingmanagement",
     "targetType": "SEARCH_METADATA",
     "targetCode": "nodicsDocsSearchnodenodicsdocsnodetopicschemadatamodelingmanagement",
@@ -17817,7 +18018,7 @@ module.exports = {
     "auditTrail": [],
     "active": true
   },
-  "record441": {
+  "record446": {
     "code": "nodicsDocsPublicationsearchmetadatanodicsdocssearchnodenodicsdocsnodetopicpersistenceproviderdataaccesslayer",
     "targetType": "SEARCH_METADATA",
     "targetCode": "nodicsDocsSearchnodenodicsdocsnodetopicpersistenceproviderdataaccesslayer",
@@ -17856,7 +18057,7 @@ module.exports = {
     "auditTrail": [],
     "active": true
   },
-  "record442": {
+  "record447": {
     "code": "nodicsDocsPublicationsearchmetadatanodicsdocssearchnodenodicsdocsnodetopiccacheruntimestatemanagement",
     "targetType": "SEARCH_METADATA",
     "targetCode": "nodicsDocsSearchnodenodicsdocsnodetopiccacheruntimestatemanagement",
@@ -17895,7 +18096,7 @@ module.exports = {
     "auditTrail": [],
     "active": true
   },
-  "record443": {
+  "record448": {
     "code": "nodicsDocsPublicationsearchmetadatanodicsdocssearchnodenodicsdocsnodetopicframeworkcustomizationguide",
     "targetType": "SEARCH_METADATA",
     "targetCode": "nodicsDocsSearchnodenodicsdocsnodetopicframeworkcustomizationguide",
@@ -17934,7 +18135,7 @@ module.exports = {
     "auditTrail": [],
     "active": true
   },
-  "record444": {
+  "record449": {
     "code": "nodicsDocsPublicationsearchmetadatanodicsdocssearchnodenodicsdocsnodetopicframeworkbackendextensionpatterns",
     "targetType": "SEARCH_METADATA",
     "targetCode": "nodicsDocsSearchnodenodicsdocsnodetopicframeworkbackendextensionpatterns",
@@ -17973,7 +18174,7 @@ module.exports = {
     "auditTrail": [],
     "active": true
   },
-  "record445": {
+  "record450": {
     "code": "nodicsDocsPublicationsearchmetadatanodicsdocssearchnodenodicsdocsnodetopicframeworkaxiscontentcustomization",
     "targetType": "SEARCH_METADATA",
     "targetCode": "nodicsDocsSearchnodenodicsdocsnodetopicframeworkaxiscontentcustomization",
@@ -18012,7 +18213,7 @@ module.exports = {
     "auditTrail": [],
     "active": true
   },
-  "record446": {
+  "record451": {
     "code": "nodicsDocsPublicationsearchmetadatanodicsdocssearchnodenodicsdocsnodetopicprocessdevelopercustomization",
     "targetType": "SEARCH_METADATA",
     "targetCode": "nodicsDocsSearchnodenodicsdocsnodetopicprocessdevelopercustomization",
@@ -18051,7 +18252,7 @@ module.exports = {
     "auditTrail": [],
     "active": true
   },
-  "record447": {
+  "record452": {
     "code": "nodicsDocsPublicationsearchmetadatanodicsdocssearchnodenodicsdocsnodetopicprocesscustomprojectextension",
     "targetType": "SEARCH_METADATA",
     "targetCode": "nodicsDocsSearchnodenodicsdocsnodetopicprocesscustomprojectextension",
@@ -18090,7 +18291,7 @@ module.exports = {
     "auditTrail": [],
     "active": true
   },
-  "record448": {
+  "record453": {
     "code": "nodicsDocsPublicationsearchmetadatanodicsdocssearchnodenodicsdocsnodetopiccommercebasefoundations",
     "targetType": "SEARCH_METADATA",
     "targetCode": "nodicsDocsSearchnodenodicsdocsnodetopiccommercebasefoundations",
@@ -18129,7 +18330,7 @@ module.exports = {
     "auditTrail": [],
     "active": true
   },
-  "record449": {
+  "record454": {
     "code": "nodicsDocsPublicationsearchmetadatanodicsdocssearchnodenodicsdocsnodetopicwcmsoverview",
     "targetType": "SEARCH_METADATA",
     "targetCode": "nodicsDocsSearchnodenodicsdocsnodetopicwcmsoverview",
@@ -18168,7 +18369,7 @@ module.exports = {
     "auditTrail": [],
     "active": true
   },
-  "record450": {
+  "record455": {
     "code": "nodicsDocsPublicationsearchmetadatanodicsdocssearchnodenodicsdocsnodetopicwcmscontentcatalogmodel",
     "targetType": "SEARCH_METADATA",
     "targetCode": "nodicsDocsSearchnodenodicsdocsnodetopicwcmscontentcatalogmodel",
@@ -18207,7 +18408,7 @@ module.exports = {
     "auditTrail": [],
     "active": true
   },
-  "record451": {
+  "record456": {
     "code": "nodicsDocsPublicationsearchmetadatanodicsdocssearchnodenodicsdocsnodetopicwcmspagedesignercomponents",
     "targetType": "SEARCH_METADATA",
     "targetCode": "nodicsDocsSearchnodenodicsdocsnodetopicwcmspagedesignercomponents",
@@ -18246,7 +18447,7 @@ module.exports = {
     "auditTrail": [],
     "active": true
   },
-  "record452": {
+  "record457": {
     "code": "nodicsDocsPublicationsearchmetadatanodicsdocssearchnodenodicsdocsnodetopicwcmssitepublicationvisibility",
     "targetType": "SEARCH_METADATA",
     "targetCode": "nodicsDocsSearchnodenodicsdocsnodetopicwcmssitepublicationvisibility",
@@ -18285,7 +18486,7 @@ module.exports = {
     "auditTrail": [],
     "active": true
   },
-  "record453": {
+  "record458": {
     "code": "nodicsDocsPublicationsearchmetadatanodicsdocssearchnodenodicsdocsnodetopiccatalogproductdiscoverymanagement",
     "targetType": "SEARCH_METADATA",
     "targetCode": "nodicsDocsSearchnodenodicsdocsnodetopiccatalogproductdiscoverymanagement",
@@ -18324,7 +18525,7 @@ module.exports = {
     "auditTrail": [],
     "active": true
   },
-  "record454": {
+  "record459": {
     "code": "nodicsDocsPublicationsearchmetadatanodicsdocssearchnodenodicsdocsnodetopicdiscoverysearchindexing",
     "targetType": "SEARCH_METADATA",
     "targetCode": "nodicsDocsSearchnodenodicsdocsnodetopicdiscoverysearchindexing",
@@ -18363,7 +18564,7 @@ module.exports = {
     "auditTrail": [],
     "active": true
   },
-  "record455": {
+  "record460": {
     "code": "nodicsDocsPublicationsearchmetadatanodicsdocssearchnodenodicsdocsnodetopicwcmsmediamanagement",
     "targetType": "SEARCH_METADATA",
     "targetCode": "nodicsDocsSearchnodenodicsdocsnodetopicwcmsmediamanagement",
@@ -18402,7 +18603,7 @@ module.exports = {
     "auditTrail": [],
     "active": true
   },
-  "record456": {
+  "record461": {
     "code": "nodicsDocsPublicationsearchmetadatanodicsdocssearchnodenodicsdocsnodetopicwcmsmediastoragedelivery",
     "targetType": "SEARCH_METADATA",
     "targetCode": "nodicsDocsSearchnodenodicsdocsnodetopicwcmsmediastoragedelivery",
@@ -18441,7 +18642,7 @@ module.exports = {
     "auditTrail": [],
     "active": true
   },
-  "record457": {
+  "record462": {
     "code": "nodicsDocsPublicationsearchmetadatanodicsdocssearchnodenodicsdocsnodetopicwcmsmediaimportpublication",
     "targetType": "SEARCH_METADATA",
     "targetCode": "nodicsDocsSearchnodenodicsdocsnodetopicwcmsmediaimportpublication",
@@ -18480,7 +18681,7 @@ module.exports = {
     "auditTrail": [],
     "active": true
   },
-  "record458": {
+  "record463": {
     "code": "nodicsDocsPublicationsearchmetadatanodicsdocssearchnodenodicsdocsnodetopicinventorystockmanagement",
     "targetType": "SEARCH_METADATA",
     "targetCode": "nodicsDocsSearchnodenodicsdocsnodetopicinventorystockmanagement",
@@ -18519,7 +18720,7 @@ module.exports = {
     "auditTrail": [],
     "active": true
   },
-  "record459": {
+  "record464": {
     "code": "nodicsDocsPublicationsearchmetadatanodicsdocssearchnodenodicsdocsnodetopicpricingpromotionstaxmanagement",
     "targetType": "SEARCH_METADATA",
     "targetCode": "nodicsDocsSearchnodenodicsdocsnodetopicpricingpromotionstaxmanagement",
@@ -18558,7 +18759,7 @@ module.exports = {
     "auditTrail": [],
     "active": true
   },
-  "record460": {
+  "record465": {
     "code": "nodicsDocsPublicationsearchmetadatanodicsdocssearchnodenodicsdocsnodetopiccommerceoverview",
     "targetType": "SEARCH_METADATA",
     "targetCode": "nodicsDocsSearchnodenodicsdocsnodetopiccommerceoverview",
@@ -18597,7 +18798,7 @@ module.exports = {
     "auditTrail": [],
     "active": true
   },
-  "record461": {
+  "record466": {
     "code": "nodicsDocsPublicationsearchmetadatanodicsdocssearchnodenodicsdocsnodetopiccommercecartorder",
     "targetType": "SEARCH_METADATA",
     "targetCode": "nodicsDocsSearchnodenodicsdocsnodetopiccommercecartorder",
@@ -18636,7 +18837,7 @@ module.exports = {
     "auditTrail": [],
     "active": true
   },
-  "record462": {
+  "record467": {
     "code": "nodicsDocsPublicationsearchmetadatanodicsdocssearchnodenodicsdocsnodetopiccommercepaymentfulfillment",
     "targetType": "SEARCH_METADATA",
     "targetCode": "nodicsDocsSearchnodenodicsdocsnodetopiccommercepaymentfulfillment",
@@ -18675,7 +18876,7 @@ module.exports = {
     "auditTrail": [],
     "active": true
   },
-  "record463": {
+  "record468": {
     "code": "nodicsDocsPublicationsearchmetadatanodicsdocssearchnodenodicsdocsnodetopicfulfillmentshippingmanagement",
     "targetType": "SEARCH_METADATA",
     "targetCode": "nodicsDocsSearchnodenodicsdocsnodetopicfulfillmentshippingmanagement",
@@ -18714,7 +18915,7 @@ module.exports = {
     "auditTrail": [],
     "active": true
   },
-  "record464": {
+  "record469": {
     "code": "nodicsDocsPublicationsearchmetadatanodicsdocssearchnodenodicsdocsnodetopicordermanagementlifecycle",
     "targetType": "SEARCH_METADATA",
     "targetCode": "nodicsDocsSearchnodenodicsdocsnodetopicordermanagementlifecycle",
@@ -18753,7 +18954,7 @@ module.exports = {
     "auditTrail": [],
     "active": true
   },
-  "record465": {
+  "record470": {
     "code": "nodicsDocsPublicationsearchmetadatanodicsdocssearchnodenodicsdocsnodetopiccommercereturnsrefunds",
     "targetType": "SEARCH_METADATA",
     "targetCode": "nodicsDocsSearchnodenodicsdocsnodetopiccommercereturnsrefunds",
@@ -18792,7 +18993,7 @@ module.exports = {
     "auditTrail": [],
     "active": true
   },
-  "record466": {
+  "record471": {
     "code": "nodicsDocsPublicationsearchmetadatanodicsdocssearchnodenodicsdocsnodetopicengagementcustomerreviews",
     "targetType": "SEARCH_METADATA",
     "targetCode": "nodicsDocsSearchnodenodicsdocsnodetopicengagementcustomerreviews",
@@ -18831,7 +19032,7 @@ module.exports = {
     "auditTrail": [],
     "active": true
   },
-  "record467": {
+  "record472": {
     "code": "nodicsDocsPublicationsearchmetadatanodicsdocssearchnodenodicsdocsnodetopicengagementreviewmoderationgovernance",
     "targetType": "SEARCH_METADATA",
     "targetCode": "nodicsDocsSearchnodenodicsdocsnodetopicengagementreviewmoderationgovernance",
@@ -18870,7 +19071,7 @@ module.exports = {
     "auditTrail": [],
     "active": true
   },
-  "record468": {
+  "record473": {
     "code": "nodicsDocsPublicationsearchmetadatanodicsdocssearchnodenodicsdocsnodetopicengagementreviewaggregationrecovery",
     "targetType": "SEARCH_METADATA",
     "targetCode": "nodicsDocsSearchnodenodicsdocsnodetopicengagementreviewaggregationrecovery",
@@ -18909,7 +19110,7 @@ module.exports = {
     "auditTrail": [],
     "active": true
   },
-  "record469": {
+  "record474": {
     "code": "nodicsDocsPublicationsearchmetadatanodicsdocssearchnodenodicsdocsnodetopicengagementcustomerfeedback",
     "targetType": "SEARCH_METADATA",
     "targetCode": "nodicsDocsSearchnodenodicsdocsnodetopicengagementcustomerfeedback",
@@ -18948,7 +19149,7 @@ module.exports = {
     "auditTrail": [],
     "active": true
   },
-  "record470": {
+  "record475": {
     "code": "nodicsDocsPublicationsearchmetadatanodicsdocssearchnodenodicsdocsnodetopicengagementunifiedoperations",
     "targetType": "SEARCH_METADATA",
     "targetCode": "nodicsDocsSearchnodenodicsdocsnodetopicengagementunifiedoperations",
@@ -18987,7 +19188,7 @@ module.exports = {
     "auditTrail": [],
     "active": true
   },
-  "record471": {
+  "record476": {
     "code": "nodicsDocsPublicationsearchmetadatanodicsdocssearchnodenodicsdocsnodetopicengagementgovernedautomation",
     "targetType": "SEARCH_METADATA",
     "targetCode": "nodicsDocsSearchnodenodicsdocsnodetopicengagementgovernedautomation",
@@ -19026,7 +19227,7 @@ module.exports = {
     "auditTrail": [],
     "active": true
   },
-  "record472": {
+  "record477": {
     "code": "nodicsDocsPublicationsearchmetadatanodicsdocssearchnodenodicsdocsnodetopicengagemententerpriseoperations",
     "targetType": "SEARCH_METADATA",
     "targetCode": "nodicsDocsSearchnodenodicsdocsnodetopicengagemententerpriseoperations",
@@ -19065,7 +19266,7 @@ module.exports = {
     "auditTrail": [],
     "active": true
   },
-  "record473": {
+  "record478": {
     "code": "nodicsDocsPublicationsearchmetadatanodicsdocssearchnodenodicsdocsnodetopiccommunicationoverview",
     "targetType": "SEARCH_METADATA",
     "targetCode": "nodicsDocsSearchnodenodicsdocsnodetopiccommunicationoverview",
@@ -19104,7 +19305,7 @@ module.exports = {
     "auditTrail": [],
     "active": true
   },
-  "record474": {
+  "record479": {
     "code": "nodicsDocsPublicationsearchmetadatanodicsdocssearchnodenodicsdocsnodetopiceventsmessagingclustercoordination",
     "targetType": "SEARCH_METADATA",
     "targetCode": "nodicsDocsSearchnodenodicsdocsnodetopiceventsmessagingclustercoordination",
@@ -19143,7 +19344,7 @@ module.exports = {
     "auditTrail": [],
     "active": true
   },
-  "record475": {
+  "record480": {
     "code": "nodicsDocsPublicationsearchmetadatanodicsdocssearchnodenodicsdocsnodetopicprocessoverview",
     "targetType": "SEARCH_METADATA",
     "targetCode": "nodicsDocsSearchnodenodicsdocsnodetopicprocessoverview",
@@ -19182,7 +19383,7 @@ module.exports = {
     "auditTrail": [],
     "active": true
   },
-  "record476": {
+  "record481": {
     "code": "nodicsDocsPublicationsearchmetadatanodicsdocssearchnodenodicsdocsnodetopicprocessruntimelifecycle",
     "targetType": "SEARCH_METADATA",
     "targetCode": "nodicsDocsSearchnodenodicsdocsnodetopicprocessruntimelifecycle",
@@ -19221,7 +19422,7 @@ module.exports = {
     "auditTrail": [],
     "active": true
   },
-  "record477": {
+  "record482": {
     "code": "nodicsDocsPublicationsearchmetadatanodicsdocssearchnodenodicsdocsnodetopicprocessworkfloworchestrationpatterns",
     "targetType": "SEARCH_METADATA",
     "targetCode": "nodicsDocsSearchnodenodicsdocsnodetopicprocessworkfloworchestrationpatterns",
@@ -19260,7 +19461,7 @@ module.exports = {
     "auditTrail": [],
     "active": true
   },
-  "record478": {
+  "record483": {
     "code": "nodicsDocsPublicationsearchmetadatanodicsdocssearchnodenodicsdocsnodetopicprocessfirstworkflow",
     "targetType": "SEARCH_METADATA",
     "targetCode": "nodicsDocsSearchnodenodicsdocsnodetopicprocessfirstworkflow",
@@ -19299,7 +19500,7 @@ module.exports = {
     "auditTrail": [],
     "active": true
   },
-  "record479": {
+  "record484": {
     "code": "nodicsDocsPublicationsearchmetadatanodicsdocssearchnodenodicsdocsnodetopicprocessfirsthumantask",
     "targetType": "SEARCH_METADATA",
     "targetCode": "nodicsDocsSearchnodenodicsdocsnodetopicprocessfirsthumantask",
@@ -19338,7 +19539,7 @@ module.exports = {
     "auditTrail": [],
     "active": true
   },
-  "record480": {
+  "record485": {
     "code": "nodicsDocsPublicationsearchmetadatanodicsdocssearchnodenodicsdocsnodetopicprocessbusinessvalue",
     "targetType": "SEARCH_METADATA",
     "targetCode": "nodicsDocsSearchnodenodicsdocsnodetopicprocessbusinessvalue",
@@ -19377,7 +19578,7 @@ module.exports = {
     "auditTrail": [],
     "active": true
   },
-  "record481": {
+  "record486": {
     "code": "nodicsDocsPublicationsearchmetadatanodicsdocssearchnodenodicsdocsnodetopicpipelinebusinesslogicorchestration",
     "targetType": "SEARCH_METADATA",
     "targetCode": "nodicsDocsSearchnodenodicsdocsnodetopicpipelinebusinesslogicorchestration",
@@ -19416,7 +19617,7 @@ module.exports = {
     "auditTrail": [],
     "active": true
   },
-  "record482": {
+  "record487": {
     "code": "nodicsDocsPublicationsearchmetadatanodicsdocssearchnodenodicsdocsnodetopiccronoperations",
     "targetType": "SEARCH_METADATA",
     "targetCode": "nodicsDocsSearchnodenodicsdocsnodetopiccronoperations",
@@ -19455,7 +19656,7 @@ module.exports = {
     "auditTrail": [],
     "active": true
   },
-  "record483": {
+  "record488": {
     "code": "nodicsDocsPublicationsearchmetadatanodicsdocssearchnodenodicsdocsnodetopiccronnoderesponsibilitytee",
     "targetType": "SEARCH_METADATA",
     "targetCode": "nodicsDocsSearchnodenodicsdocsnodetopiccronnoderesponsibilitytee",
@@ -19494,7 +19695,7 @@ module.exports = {
     "auditTrail": [],
     "active": true
   },
-  "record484": {
+  "record489": {
     "code": "nodicsDocsPublicationsearchmetadatanodicsdocssearchnodenodicsdocsnodetopiccronprojectcustomization",
     "targetType": "SEARCH_METADATA",
     "targetCode": "nodicsDocsSearchnodenodicsdocsnodetopiccronprojectcustomization",
@@ -19533,7 +19734,7 @@ module.exports = {
     "auditTrail": [],
     "active": true
   },
-  "record485": {
+  "record490": {
     "code": "nodicsDocsPublicationsearchmetadatanodicsdocssearchnodenodicsdocsnodetopicprocessprocesscronruntime",
     "targetType": "SEARCH_METADATA",
     "targetCode": "nodicsDocsSearchnodenodicsdocsnodetopicprocessprocesscronruntime",
@@ -19572,7 +19773,7 @@ module.exports = {
     "auditTrail": [],
     "active": true
   },
-  "record486": {
+  "record491": {
     "code": "nodicsDocsPublicationsearchmetadatanodicsdocssearchnodenodicsdocsnodetopicprocessscheduledautomation",
     "targetType": "SEARCH_METADATA",
     "targetCode": "nodicsDocsSearchnodenodicsdocsnodetopicprocessscheduledautomation",
@@ -19611,7 +19812,7 @@ module.exports = {
     "auditTrail": [],
     "active": true
   },
-  "record487": {
+  "record492": {
     "code": "nodicsDocsPublicationsearchmetadatanodicsdocssearchnodenodicsdocsnodetopicdataimportexportmigration",
     "targetType": "SEARCH_METADATA",
     "targetCode": "nodicsDocsSearchnodenodicsdocsnodetopicdataimportexportmigration",
@@ -19650,7 +19851,7 @@ module.exports = {
     "auditTrail": [],
     "active": true
   },
-  "record488": {
+  "record493": {
     "code": "nodicsDocsPublicationsearchmetadatanodicsdocssearchnodenodicsdocsnodetopicprocessactionadapters",
     "targetType": "SEARCH_METADATA",
     "targetCode": "nodicsDocsSearchnodenodicsdocsnodetopicprocessactionadapters",
@@ -19689,7 +19890,7 @@ module.exports = {
     "auditTrail": [],
     "active": true
   },
-  "record489": {
+  "record494": {
     "code": "nodicsDocsPublicationsearchmetadatanodicsdocssearchnodenodicsdocsnodetopicframeworkdevopsruntime",
     "targetType": "SEARCH_METADATA",
     "targetCode": "nodicsDocsSearchnodenodicsdocsnodetopicframeworkdevopsruntime",
@@ -19728,7 +19929,7 @@ module.exports = {
     "auditTrail": [],
     "active": true
   },
-  "record490": {
+  "record495": {
     "code": "nodicsDocsPublicationsearchmetadatanodicsdocssearchnodenodicsdocsnodetopicframeworkruntimereleaserollback",
     "targetType": "SEARCH_METADATA",
     "targetCode": "nodicsDocsSearchnodenodicsdocsnodetopicframeworkruntimereleaserollback",
@@ -19767,7 +19968,7 @@ module.exports = {
     "auditTrail": [],
     "active": true
   },
-  "record491": {
+  "record496": {
     "code": "nodicsDocsPublicationsearchmetadatanodicsdocssearchnodenodicsdocsnodetopicframeworklocalbrowseracceptancejourney",
     "targetType": "SEARCH_METADATA",
     "targetCode": "nodicsDocsSearchnodenodicsdocsnodetopicframeworklocalbrowseracceptancejourney",
@@ -19806,7 +20007,7 @@ module.exports = {
     "auditTrail": [],
     "active": true
   },
-  "record492": {
+  "record497": {
     "code": "nodicsDocsPublicationsearchmetadatanodicsdocssearchnodenodicsdocsnodetopicframeworklocalverificationchecklist",
     "targetType": "SEARCH_METADATA",
     "targetCode": "nodicsDocsSearchnodenodicsdocsnodetopicframeworklocalverificationchecklist",
@@ -19845,7 +20046,7 @@ module.exports = {
     "auditTrail": [],
     "active": true
   },
-  "record493": {
+  "record498": {
     "code": "nodicsDocsPublicationsearchmetadatanodicsdocssearchnodenodicsdocsnodetopiccommerceenterpriseoperations",
     "targetType": "SEARCH_METADATA",
     "targetCode": "nodicsDocsSearchnodenodicsdocsnodetopiccommerceenterpriseoperations",
@@ -19884,7 +20085,7 @@ module.exports = {
     "auditTrail": [],
     "active": true
   },
-  "record494": {
+  "record499": {
     "code": "nodicsDocsPublicationsearchmetadatanodicsdocssearchnodenodicsdocsnodetopicprocessincidentrecovery",
     "targetType": "SEARCH_METADATA",
     "targetCode": "nodicsDocsSearchnodenodicsdocsnodetopicprocessincidentrecovery",
@@ -19923,7 +20124,7 @@ module.exports = {
     "auditTrail": [],
     "active": true
   },
-  "record495": {
+  "record500": {
     "code": "nodicsDocsPublicationsearchmetadatanodicsdocssearchnodenodicsdocsnodetopicprocessdevopstopology",
     "targetType": "SEARCH_METADATA",
     "targetCode": "nodicsDocsSearchnodenodicsdocsnodetopicprocessdevopstopology",
@@ -19962,7 +20163,7 @@ module.exports = {
     "auditTrail": [],
     "active": true
   },
-  "record496": {
+  "record501": {
     "code": "nodicsDocsPublicationsearchmetadatanodicsdocssearchnodenodicsdocsnodetopicprocessqaregressionguide",
     "targetType": "SEARCH_METADATA",
     "targetCode": "nodicsDocsSearchnodenodicsdocsnodetopicprocessqaregressionguide",
@@ -20001,7 +20202,7 @@ module.exports = {
     "auditTrail": [],
     "active": true
   },
-  "record497": {
+  "record502": {
     "code": "nodicsDocsPublicationsearchmetadatanodicsdocssearchnodenodicsdocsnodetopicframeworkcapabilitydoc9bf1121589285c83",
     "targetType": "SEARCH_METADATA",
     "targetCode": "nodicsDocsSearchnodenodicsdocsnodetopicframeworkcapabilitydocumentationmaturitypattern",
@@ -20040,7 +20241,7 @@ module.exports = {
     "auditTrail": [],
     "active": true
   },
-  "record498": {
+  "record503": {
     "code": "nodicsDocsPublicationsearchmetadatanodicsdocssearchnodenodicsdocsnodetopicdocsoverview",
     "targetType": "SEARCH_METADATA",
     "targetCode": "nodicsDocsSearchnodenodicsdocsnodetopicdocsoverview",
@@ -20079,7 +20280,7 @@ module.exports = {
     "auditTrail": [],
     "active": true
   },
-  "record499": {
+  "record504": {
     "code": "nodicsDocsPublicationsearchmetadatanodicsdocssearchnodenodicsdocsnodetopicwcmspublishinglifecycle",
     "targetType": "SEARCH_METADATA",
     "targetCode": "nodicsDocsSearchnodenodicsdocsnodetopicwcmspublishinglifecycle",
@@ -20118,7 +20319,7 @@ module.exports = {
     "auditTrail": [],
     "active": true
   },
-  "record500": {
+  "record505": {
     "code": "nodicsDocsPublicationsearchmetadatanodicsdocssearchnodenodicsdocsnodetopicapplicationsnexusdatacontentguide",
     "targetType": "SEARCH_METADATA",
     "targetCode": "nodicsDocsSearchnodenodicsdocsnodetopicapplicationsnexusdatacontentguide",
@@ -20157,7 +20358,7 @@ module.exports = {
     "auditTrail": [],
     "active": true
   },
-  "record501": {
+  "record506": {
     "code": "nodicsDocsPublicationsearchmetadatanodicsdocssearchnodenodicsdocsnodetopicapplicationsaxissetuperrorcontracts",
     "targetType": "SEARCH_METADATA",
     "targetCode": "nodicsDocsSearchnodenodicsdocsnodetopicapplicationsaxissetuperrorcontracts",
@@ -20196,7 +20397,7 @@ module.exports = {
     "auditTrail": [],
     "active": true
   },
-  "record502": {
+  "record507": {
     "code": "nodicsDocsPublicationsearchmetadatanodicsdocssearchnodenodicsdocsnodetopicwcmscmssourcemapauthoringcontract",
     "targetType": "SEARCH_METADATA",
     "targetCode": "nodicsDocsSearchnodenodicsdocsnodetopicwcmscmssourcemapauthoringcontract",
@@ -20235,7 +20436,7 @@ module.exports = {
     "auditTrail": [],
     "active": true
   },
-  "record503": {
+  "record508": {
     "code": "nodicsDocsPublicationsearchmetadatanodicsdocssearchnodenodicsdocsnodetopicwcmsmediaoperationsrunbook",
     "targetType": "SEARCH_METADATA",
     "targetCode": "nodicsDocsSearchnodenodicsdocsnodetopicwcmsmediaoperationsrunbook",
@@ -20274,7 +20475,7 @@ module.exports = {
     "auditTrail": [],
     "active": true
   },
-  "record504": {
+  "record509": {
     "code": "nodicsDocsPublicationsearchmetadatanodicsdocssearchnodenodicsdocsnodetopicdataimportexportproviderguides",
     "targetType": "SEARCH_METADATA",
     "targetCode": "nodicsDocsSearchnodenodicsdocsnodetopicdataimportexportproviderguides",
@@ -20313,7 +20514,7 @@ module.exports = {
     "auditTrail": [],
     "active": true
   },
-  "record505": {
+  "record510": {
     "code": "nodicsDocsPublicationsearchmetadatanodicsdocssearchnodenodicsdocsnodetopiccommercedataauthoringfulfillment",
     "targetType": "SEARCH_METADATA",
     "targetCode": "nodicsDocsSearchnodenodicsdocsnodetopiccommercedataauthoringfulfillment",
@@ -20352,7 +20553,7 @@ module.exports = {
     "auditTrail": [],
     "active": true
   },
-  "record506": {
+  "record511": {
     "code": "nodicsDocsPublicationsearchmetadatanodicsdocssearchnodenodicsdocsnodetopicdocsdocumentationpublishingrunbook",
     "targetType": "SEARCH_METADATA",
     "targetCode": "nodicsDocsSearchnodenodicsdocsnodetopicdocsdocumentationpublishingrunbook",
@@ -20391,7 +20592,7 @@ module.exports = {
     "auditTrail": [],
     "active": true
   },
-  "record507": {
+  "record512": {
     "code": "nodicsDocsPublicationsearchmetadatanodicsdocssearchnodenodicsdocsnodetopicplatformmoduleregistryjourney",
     "targetType": "SEARCH_METADATA",
     "targetCode": "nodicsDocsSearchnodenodicsdocsnodetopicplatformmoduleregistryjourney",
@@ -20430,7 +20631,7 @@ module.exports = {
     "auditTrail": [],
     "active": true
   },
-  "record508": {
+  "record513": {
     "code": "nodicsDocsPublicationsearchmetadatanodicsdocssearchnodenodicsdocsnodetopiccommercesearchguide",
     "targetType": "SEARCH_METADATA",
     "targetCode": "nodicsDocsSearchnodenodicsdocsnodetopiccommercesearchguide",
@@ -20469,7 +20670,7 @@ module.exports = {
     "auditTrail": [],
     "active": true
   },
-  "record509": {
+  "record514": {
     "code": "nodicsDocsPublicationsearchmetadatanodicsdocssearchnodenodicsdocsnodetopiclocalizationruntimeauthoring",
     "targetType": "SEARCH_METADATA",
     "targetCode": "nodicsDocsSearchnodenodicsdocsnodetopiclocalizationruntimeauthoring",
@@ -20508,7 +20709,7 @@ module.exports = {
     "auditTrail": [],
     "active": true
   },
-  "record510": {
+  "record515": {
     "code": "nodicsDocsPublicationsearchmetadatanodicsdocssearchnodenodicsdocsnodetopiccommercepaymentproviderboundaries",
     "targetType": "SEARCH_METADATA",
     "targetCode": "nodicsDocsSearchnodenodicsdocsnodetopiccommercepaymentproviderboundaries",
@@ -20547,10 +20748,10 @@ module.exports = {
     "auditTrail": [],
     "active": true
   },
-  "record511": {
-    "code": "nodicsDocsPublicationsearchmetadatanodicsdocssearchnodenodicsdocsnodetopiccommercecustomerlistprofileboundary",
+  "record516": {
+    "code": "nodicsDocsPublicationsearchmetadatanodicsdocssearchnodenodicsdocsnodetopicloyaltywalletsrewardsledger",
     "targetType": "SEARCH_METADATA",
-    "targetCode": "nodicsDocsSearchnodenodicsdocsnodetopiccommercecustomerlistprofileboundary",
+    "targetCode": "nodicsDocsSearchnodenodicsdocsnodetopicloyaltywalletsrewardsledger",
     "lifecycleState": "ONLINE",
     "publicationCode": "nodicsDocumentation",
     "workflowReference": "nodicsDocumentationReviewWorkflow",
@@ -20562,7 +20763,7 @@ module.exports = {
       "publicationPath": "STAGED_REVIEW_APPROVAL_ONLINE",
       "nexusVisibleOnlyWhenOnlineAndPublic": true
     },
-    "checksum": "20fde84ad6b1d3bf48ba669fb4f735a01d6575e9cc3f9c68df0b23b7457035eb",
+    "checksum": "593c3bfd6236bb09b01da79b8a12abbc08e25cc82b026cdff8a3c39c4042875e",
     "managedInAxis": true,
     "axisAuthoringPermissions": [
       "documentation.search.preview"
@@ -20586,7 +20787,46 @@ module.exports = {
     "auditTrail": [],
     "active": true
   },
-  "record512": {
+  "record517": {
+    "code": "nodicsDocsPublicationsearchmetadatanodicsdocssearchnodenodicsdocsnodetopiccommerceshoppinglistcommerceboundary",
+    "targetType": "SEARCH_METADATA",
+    "targetCode": "nodicsDocsSearchnodenodicsdocsnodetopiccommerceshoppinglistcommerceboundary",
+    "lifecycleState": "ONLINE",
+    "publicationCode": "nodicsDocumentation",
+    "workflowReference": "nodicsDocumentationReviewWorkflow",
+    "stagedVersion": "0.16.8",
+    "onlineVersion": "0.16.8",
+    "validationResult": {
+      "generated": true,
+      "sourceAuthority": "docs/catalogue.json",
+      "publicationPath": "STAGED_REVIEW_APPROVAL_ONLINE",
+      "nexusVisibleOnlyWhenOnlineAndPublic": true
+    },
+    "checksum": "2d9cb41a4b766a8480ce32e2907189ef361ef222f0402a1ecac918132677bede",
+    "managedInAxis": true,
+    "axisAuthoringPermissions": [
+      "documentation.search.preview"
+    ],
+    "workflowRequired": true,
+    "workflowTriggers": [
+      "SEARCH_METADATA_CHANGE"
+    ],
+    "decisionPolicy": {
+      "reviewPermission": "documentation.review",
+      "approvePermission": "documentation.approve",
+      "publishPermission": "documentation.publish",
+      "permissionEnforced": true,
+      "adminOverrideAudited": true
+    },
+    "actor": "nodics.docs.generator",
+    "author": "nodics.docs.generator",
+    "reviewer": "nodics.docs.generator",
+    "approver": "nodics.docs.generator",
+    "publisher": "nodics.docs.generator",
+    "auditTrail": [],
+    "active": true
+  },
+  "record518": {
     "code": "nodicsDocsPublicationsearchmetadatanodicsdocssearchnodenodicsdocsnodetopicfoundationnmsruntimemonitoring",
     "targetType": "SEARCH_METADATA",
     "targetCode": "nodicsDocsSearchnodenodicsdocsnodetopicfoundationnmsruntimemonitoring",
@@ -20625,7 +20865,7 @@ module.exports = {
     "auditTrail": [],
     "active": true
   },
-  "record513": {
+  "record519": {
     "code": "nodicsDocsPublicationsearchmetadatanodicsdocssearchnodenodicsdocsnodetopicfoundationserviceruntimeoverrides",
     "targetType": "SEARCH_METADATA",
     "targetCode": "nodicsDocsSearchnodenodicsdocsnodetopicfoundationserviceruntimeoverrides",
@@ -20664,7 +20904,7 @@ module.exports = {
     "auditTrail": [],
     "active": true
   },
-  "record514": {
+  "record520": {
     "code": "nodicsDocsPublicationsearchmetadatanodicsdocssearchnodenodicsdocsnodetopicfoundationmoduletomodulecommunication",
     "targetType": "SEARCH_METADATA",
     "targetCode": "nodicsDocsSearchnodenodicsdocsnodetopicfoundationmoduletomodulecommunication",
@@ -20703,7 +20943,7 @@ module.exports = {
     "auditTrail": [],
     "active": true
   },
-  "record515": {
+  "record521": {
     "code": "nodicsDocsPublicationsearchmetadatanodicsdocssearchnodenodicsdocsnodetopicfoundationcacheproviderrunbooks",
     "targetType": "SEARCH_METADATA",
     "targetCode": "nodicsDocsSearchnodenodicsdocsnodetopicfoundationcacheproviderrunbooks",
@@ -20742,7 +20982,7 @@ module.exports = {
     "auditTrail": [],
     "active": true
   },
-  "record516": {
+  "record522": {
     "code": "nodicsDocsPublicationsearchmetadatanodicsdocssearchnodenodicsdocsnodetopicfoundationdatabaseproviderboundaries",
     "targetType": "SEARCH_METADATA",
     "targetCode": "nodicsDocsSearchnodenodicsdocsnodetopicfoundationdatabaseproviderboundaries",
@@ -20781,7 +21021,7 @@ module.exports = {
     "auditTrail": [],
     "active": true
   },
-  "record517": {
+  "record523": {
     "code": "nodicsDocsPublicationsearchmetadatanodicsdocssearchnodenodicsdocsnodetopicsecurityotpsecurityflow",
     "targetType": "SEARCH_METADATA",
     "targetCode": "nodicsDocsSearchnodenodicsdocsnodetopicsecurityotpsecurityflow",
@@ -20820,7 +21060,7 @@ module.exports = {
     "auditTrail": [],
     "active": true
   },
-  "record518": {
+  "record524": {
     "code": "nodicsDocsPublicationsearchmetadatanodicsdocssearchnodenodicsdocsnodetopiccommunicationproviderrunbooks",
     "targetType": "SEARCH_METADATA",
     "targetCode": "nodicsDocsSearchnodenodicsdocsnodetopiccommunicationproviderrunbooks",
@@ -20859,7 +21099,7 @@ module.exports = {
     "auditTrail": [],
     "active": true
   },
-  "record519": {
+  "record525": {
     "code": "nodicsDocsPublicationsearchmetadatanodicsdocssearchnodenodicsdocsnodetopicengagementcontactsubmissionoperations",
     "targetType": "SEARCH_METADATA",
     "targetCode": "nodicsDocsSearchnodenodicsdocsnodetopicengagementcontactsubmissionoperations",
@@ -20898,7 +21138,7 @@ module.exports = {
     "auditTrail": [],
     "active": true
   },
-  "record520": {
+  "record526": {
     "code": "nodicsDocsPublicationsearchmetadatanodicsdocssearchnodenodicsdocsnodetopicprocessworkflowbpmsourcemap",
     "targetType": "SEARCH_METADATA",
     "targetCode": "nodicsDocsSearchnodenodicsdocsnodetopicprocessworkflowbpmsourcemap",
@@ -20937,7 +21177,7 @@ module.exports = {
     "auditTrail": [],
     "active": true
   },
-  "record521": {
+  "record527": {
     "code": "nodicsDocsPublicationsearchmetadatanodicsdocssearchnodenodicsdocsnodetopicprocesscronjobdataauthoring",
     "targetType": "SEARCH_METADATA",
     "targetCode": "nodicsDocsSearchnodenodicsdocsnodetopicprocesscronjobdataauthoring",
@@ -20976,7 +21216,7 @@ module.exports = {
     "auditTrail": [],
     "active": true
   },
-  "record522": {
+  "record528": {
     "code": "nodicsDocsPublicationsearchmetadatanodicsdocssearchnodenodicsdocsnodetopicframeworkreleaseupgradecompatibility",
     "targetType": "SEARCH_METADATA",
     "targetCode": "nodicsDocsSearchnodenodicsdocsnodetopicframeworkreleaseupgradecompatibility",
@@ -21015,7 +21255,7 @@ module.exports = {
     "auditTrail": [],
     "active": true
   },
-  "record523": {
+  "record529": {
     "code": "nodicsDocsPublicationsearchmetadatanodicsdocssearchnodenodicsdocsnodetopiccommercefulfillmentcoresourcemap",
     "targetType": "SEARCH_METADATA",
     "targetCode": "nodicsDocsSearchnodenodicsdocsnodetopiccommercefulfillmentcoresourcemap",
@@ -21054,7 +21294,7 @@ module.exports = {
     "auditTrail": [],
     "active": true
   },
-  "record524": {
+  "record530": {
     "code": "nodicsDocsPublicationsearchmetadatanodicsdocssearchnodenodicsdocsnodetopicacceleratorsdomaincommercesourcemap",
     "targetType": "SEARCH_METADATA",
     "targetCode": "nodicsDocsSearchnodenodicsdocsnodetopicacceleratorsdomaincommercesourcemap",
@@ -21093,7 +21333,7 @@ module.exports = {
     "auditTrail": [],
     "active": true
   },
-  "record525": {
+  "record531": {
     "code": "nodicsDocsPublicationsearchmetadatanodicsdocssearchnodenodicsdocsnodetopicfoundationtoolingruntimecontracts",
     "targetType": "SEARCH_METADATA",
     "targetCode": "nodicsDocsSearchnodenodicsdocsnodetopicfoundationtoolingruntimecontracts",
@@ -21132,7 +21372,7 @@ module.exports = {
     "auditTrail": [],
     "active": true
   },
-  "record526": {
+  "record532": {
     "code": "nodicsDocsPublicationsearchmetadatanodicsdocssearchnodenodicsdocsnodetopicfoundationemsruntimeclientrunbook",
     "targetType": "SEARCH_METADATA",
     "targetCode": "nodicsDocsSearchnodenodicsdocsnodetopicfoundationemsruntimeclientrunbook",
@@ -21171,7 +21411,7 @@ module.exports = {
     "auditTrail": [],
     "active": true
   },
-  "record527": {
+  "record533": {
     "code": "nodicsDocsPublicationsearchmetadatanodicsdocssearchnodenodicsdocsnodetopicreferenceinternalsourceboundaryregister",
     "targetType": "SEARCH_METADATA",
     "targetCode": "nodicsDocsSearchnodenodicsdocsnodetopicreferenceinternalsourceboundaryregister",
@@ -21210,7 +21450,7 @@ module.exports = {
     "auditTrail": [],
     "active": true
   },
-  "record528": {
+  "record534": {
     "code": "nodicsDocsPublicationsearchmetadatanodicsdocssearchnodenodicsdocsnodetopictoolingaideveloperenablement",
     "targetType": "SEARCH_METADATA",
     "targetCode": "nodicsDocsSearchnodenodicsdocsnodetopictoolingaideveloperenablement",
@@ -21249,7 +21489,7 @@ module.exports = {
     "auditTrail": [],
     "active": true
   },
-  "record529": {
+  "record535": {
     "code": "nodicsDocsPublicationsearchmetadatanodicsdocssearchnodenodicsdocsnodetopicreferencesourcemapglossary",
     "targetType": "SEARCH_METADATA",
     "targetCode": "nodicsDocsSearchnodenodicsdocsnodetopicreferencesourcemapglossary",
@@ -21288,7 +21528,7 @@ module.exports = {
     "auditTrail": [],
     "active": true
   },
-  "record530": {
+  "record536": {
     "code": "nodicsDocsPublicationsearchmetadatanodicsdocssearchnodenodicsdocsnodetopicreferencesourcebackeddd83bcb78bf2c41c8",
     "targetType": "SEARCH_METADATA",
     "targetCode": "nodicsDocsSearchnodenodicsdocsnodetopicreferencesourcebackeddocumentationcoverageaudit",
@@ -21327,7 +21567,7 @@ module.exports = {
     "auditTrail": [],
     "active": true
   },
-  "record531": {
+  "record537": {
     "code": "nodicsDocsPublicationsearchmetadatanodicsdocssearchnodenodicsdocsnodetopicreferencedocumentationgapbacklog",
     "targetType": "SEARCH_METADATA",
     "targetCode": "nodicsDocsSearchnodenodicsdocsnodetopicreferencedocumentationgapbacklog",
@@ -21366,7 +21606,7 @@ module.exports = {
     "auditTrail": [],
     "active": true
   },
-  "record532": {
+  "record538": {
     "code": "nodicsDocsPublicationsearchmetadatanodicsdocssearchdashboardnodicsdocsdashboardproduct",
     "targetType": "SEARCH_METADATA",
     "targetCode": "nodicsDocsSearchdashboardnodicsdocsdashboardproduct",
@@ -21405,7 +21645,7 @@ module.exports = {
     "auditTrail": [],
     "active": true
   },
-  "record533": {
+  "record539": {
     "code": "nodicsDocsPublicationsearchmetadatanodicsdocssearchdashboardnodicsdocsdashboardnavigation",
     "targetType": "SEARCH_METADATA",
     "targetCode": "nodicsDocsSearchdashboardnodicsdocsdashboardnavigation",
@@ -21444,7 +21684,7 @@ module.exports = {
     "auditTrail": [],
     "active": true
   },
-  "record534": {
+  "record540": {
     "code": "nodicsDocsPublicationsearchmetadatanodicsdocssearchdashboardnodicsdocsdashboardsecnodicsframework",
     "targetType": "SEARCH_METADATA",
     "targetCode": "nodicsDocsSearchdashboardnodicsdocsdashboardsecnodicsframework",
@@ -21483,7 +21723,7 @@ module.exports = {
     "auditTrail": [],
     "active": true
   },
-  "record535": {
+  "record541": {
     "code": "nodicsDocsPublicationsearchmetadatanodicsdocssearchdashboardnodicsdocsdashboardsecdocumentationroadmap",
     "targetType": "SEARCH_METADATA",
     "targetCode": "nodicsDocsSearchdashboardnodicsdocsdashboardsecdocumentationroadmap",
@@ -21522,7 +21762,7 @@ module.exports = {
     "auditTrail": [],
     "active": true
   },
-  "record536": {
+  "record542": {
     "code": "nodicsDocsPublicationsearchmetadatanodicsdocssearchdashboardnodicsdocsdashboardsecframeworkarchitectureanddesign",
     "targetType": "SEARCH_METADATA",
     "targetCode": "nodicsDocsSearchdashboardnodicsdocsdashboardsecframeworkarchitectureanddesign",
@@ -21561,7 +21801,7 @@ module.exports = {
     "auditTrail": [],
     "active": true
   },
-  "record537": {
+  "record543": {
     "code": "nodicsDocsPublicationsearchmetadatanodicsdocssearchdashboardnodicsdocsdashboardseccapabilityregi59b2338c6652d3a4",
     "targetType": "SEARCH_METADATA",
     "targetCode": "nodicsDocsSearchdashboardnodicsdocsdashboardseccapabilityregistryandlifecyclemanagement",
@@ -21600,7 +21840,7 @@ module.exports = {
     "auditTrail": [],
     "active": true
   },
-  "record538": {
+  "record544": {
     "code": "nodicsDocsPublicationsearchmetadatanodicsdocssearchdashboardnodicsdocsdashboardsecfoundationruntimeservices",
     "targetType": "SEARCH_METADATA",
     "targetCode": "nodicsDocsSearchdashboardnodicsdocsdashboardsecfoundationruntimeservices",
@@ -21639,7 +21879,7 @@ module.exports = {
     "auditTrail": [],
     "active": true
   },
-  "record539": {
+  "record545": {
     "code": "nodicsDocsPublicationsearchmetadatanodicsdocssearchdashboardnodicsdocsdashboardsecnodicsapplicationsuite",
     "targetType": "SEARCH_METADATA",
     "targetCode": "nodicsDocsSearchdashboardnodicsdocsdashboardsecnodicsapplicationsuite",
@@ -21678,7 +21918,7 @@ module.exports = {
     "auditTrail": [],
     "active": true
   },
-  "record540": {
+  "record546": {
     "code": "nodicsDocsPublicationsearchmetadatanodicsdocssearchdashboardnodicsdocsdashboardsecsolutionusecases",
     "targetType": "SEARCH_METADATA",
     "targetCode": "nodicsDocsSearchdashboardnodicsdocsdashboardsecsolutionusecases",
@@ -21717,7 +21957,7 @@ module.exports = {
     "auditTrail": [],
     "active": true
   },
-  "record541": {
+  "record547": {
     "code": "nodicsDocsPublicationsearchmetadatanodicsdocssearchdashboardnodicsdocsdashboardsecacceleratorsan332454bd061de3b5",
     "targetType": "SEARCH_METADATA",
     "targetCode": "nodicsDocsSearchdashboardnodicsdocsdashboardsecacceleratorsandindustrysolutiontemplates",
@@ -21756,7 +21996,7 @@ module.exports = {
     "auditTrail": [],
     "active": true
   },
-  "record542": {
+  "record548": {
     "code": "nodicsDocsPublicationsearchmetadatanodicsdocssearchdashboardnodicsdocsdashboardsecnodicsinstallerandworkspacesetup",
     "targetType": "SEARCH_METADATA",
     "targetCode": "nodicsDocsSearchdashboardnodicsdocsdashboardsecnodicsinstallerandworkspacesetup",
@@ -21795,7 +22035,7 @@ module.exports = {
     "auditTrail": [],
     "active": true
   },
-  "record543": {
+  "record549": {
     "code": "nodicsDocsPublicationsearchmetadatanodicsdocssearchdashboardnodicsdocsdashboardsecapplicationbuic838154b9cee235d",
     "targetType": "SEARCH_METADATA",
     "targetCode": "nodicsDocsSearchdashboardnodicsdocsdashboardsecapplicationbuilderandworkspacegeneration",
@@ -21834,7 +22074,7 @@ module.exports = {
     "auditTrail": [],
     "active": true
   },
-  "record544": {
+  "record550": {
     "code": "nodicsDocsPublicationsearchmetadatanodicsdocssearchdashboardnodicsdocsdashboardsecaxisandbackofficeoperations",
     "targetType": "SEARCH_METADATA",
     "targetCode": "nodicsDocsSearchdashboardnodicsdocsdashboardsecaxisandbackofficeoperations",
@@ -21873,7 +22113,7 @@ module.exports = {
     "auditTrail": [],
     "active": true
   },
-  "record545": {
+  "record551": {
     "code": "nodicsDocsPublicationsearchmetadatanodicsdocssearchdashboardnodicsdocsdashboardsecbusinesscustomizationinaxis",
     "targetType": "SEARCH_METADATA",
     "targetCode": "nodicsDocsSearchdashboardnodicsdocsdashboardsecbusinesscustomizationinaxis",
@@ -21912,7 +22152,7 @@ module.exports = {
     "auditTrail": [],
     "active": true
   },
-  "record546": {
+  "record552": {
     "code": "nodicsDocsPublicationsearchmetadatanodicsdocssearchdashboardnodicsdocsdashboardsecuserenterpriseandtenantmanagement",
     "targetType": "SEARCH_METADATA",
     "targetCode": "nodicsDocsSearchdashboardnodicsdocsdashboardsecuserenterpriseandtenantmanagement",
@@ -21951,7 +22191,7 @@ module.exports = {
     "auditTrail": [],
     "active": true
   },
-  "record547": {
+  "record553": {
     "code": "nodicsDocsPublicationsearchmetadatanodicsdocssearchdashboardnodicsdocsdashboardsecsecuritygovernanceandcompliance",
     "targetType": "SEARCH_METADATA",
     "targetCode": "nodicsDocsSearchdashboardnodicsdocsdashboardsecsecuritygovernanceandcompliance",
@@ -21990,7 +22230,7 @@ module.exports = {
     "auditTrail": [],
     "active": true
   },
-  "record548": {
+  "record554": {
     "code": "nodicsDocsPublicationsearchmetadatanodicsdocssearchdashboardnodicsdocsdashboardsecapplicationconecad26700bb28753",
     "targetType": "SEARCH_METADATA",
     "targetCode": "nodicsDocsSearchdashboardnodicsdocsdashboardsecapplicationconfigurationandruntimebehaviormanagement",
@@ -22029,7 +22269,7 @@ module.exports = {
     "auditTrail": [],
     "active": true
   },
-  "record549": {
+  "record555": {
     "code": "nodicsDocsPublicationsearchmetadatanodicsdocssearchdashboardnodicsdocsdashboardsecruntimegovernab68e75000f0b94ec",
     "targetType": "SEARCH_METADATA",
     "targetCode": "nodicsDocsSearchdashboardnodicsdocsdashboardsecruntimegovernanceanddynamicchangemanagement",
@@ -22068,7 +22308,7 @@ module.exports = {
     "auditTrail": [],
     "active": true
   },
-  "record550": {
+  "record556": {
     "code": "nodicsDocsPublicationsearchmetadatanodicsdocssearchdashboardnodicsdocsdashboardseclocalizationandinternationalization",
     "targetType": "SEARCH_METADATA",
     "targetCode": "nodicsDocsSearchdashboardnodicsdocsdashboardseclocalizationandinternationalization",
@@ -22107,7 +22347,7 @@ module.exports = {
     "auditTrail": [],
     "active": true
   },
-  "record551": {
+  "record557": {
     "code": "nodicsDocsPublicationsearchmetadatanodicsdocssearchdashboardnodicsdocsdashboardsecdatamodelingandschemamanagement",
     "targetType": "SEARCH_METADATA",
     "targetCode": "nodicsDocsSearchdashboardnodicsdocsdashboardsecdatamodelingandschemamanagement",
@@ -22146,7 +22386,7 @@ module.exports = {
     "auditTrail": [],
     "active": true
   },
-  "record552": {
+  "record558": {
     "code": "nodicsDocsPublicationsearchmetadatanodicsdocssearchdashboardnodicsdocsdashboardsecdatabaseandpersistencemanagement",
     "targetType": "SEARCH_METADATA",
     "targetCode": "nodicsDocsSearchdashboardnodicsdocsdashboardsecdatabaseandpersistencemanagement",
@@ -22185,7 +22425,7 @@ module.exports = {
     "auditTrail": [],
     "active": true
   },
-  "record553": {
+  "record559": {
     "code": "nodicsDocsPublicationsearchmetadatanodicsdocssearchdashboardnodicsdocsdashboardseccachingandruntimestatemanagement",
     "targetType": "SEARCH_METADATA",
     "targetCode": "nodicsDocsSearchdashboardnodicsdocsdashboardseccachingandruntimestatemanagement",
@@ -22224,7 +22464,7 @@ module.exports = {
     "auditTrail": [],
     "active": true
   },
-  "record554": {
+  "record560": {
     "code": "nodicsDocsPublicationsearchmetadatanodicsdocssearchdashboardnodicsdocsdashboardsecdeveloperexten377603b48ecfbf4b",
     "targetType": "SEARCH_METADATA",
     "targetCode": "nodicsDocsSearchdashboardnodicsdocsdashboardsecdeveloperextensionandprojectcustomization",
@@ -22263,7 +22503,7 @@ module.exports = {
     "auditTrail": [],
     "active": true
   },
-  "record555": {
+  "record561": {
     "code": "nodicsDocsPublicationsearchmetadatanodicsdocssearchdashboardnodicsdocsdashboardsecstoremarketsiteandchannelmanagement",
     "targetType": "SEARCH_METADATA",
     "targetCode": "nodicsDocsSearchdashboardnodicsdocsdashboardsecstoremarketsiteandchannelmanagement",
@@ -22302,7 +22542,7 @@ module.exports = {
     "auditTrail": [],
     "active": true
   },
-  "record556": {
+  "record562": {
     "code": "nodicsDocsPublicationsearchmetadatanodicsdocssearchdashboardnodicsdocsdashboardsecwcmsandcontentmanagement",
     "targetType": "SEARCH_METADATA",
     "targetCode": "nodicsDocsSearchdashboardnodicsdocsdashboardsecwcmsandcontentmanagement",
@@ -22341,7 +22581,7 @@ module.exports = {
     "auditTrail": [],
     "active": true
   },
-  "record557": {
+  "record563": {
     "code": "nodicsDocsPublicationsearchmetadatanodicsdocssearchdashboardnodicsdocsdashboardsecproductcataloganddiscovery",
     "targetType": "SEARCH_METADATA",
     "targetCode": "nodicsDocsSearchdashboardnodicsdocsdashboardsecproductcataloganddiscovery",
@@ -22380,7 +22620,7 @@ module.exports = {
     "auditTrail": [],
     "active": true
   },
-  "record558": {
+  "record564": {
     "code": "nodicsDocsPublicationsearchmetadatanodicsdocssearchdashboardnodicsdocsdashboardsecsearchanddiscovery",
     "targetType": "SEARCH_METADATA",
     "targetCode": "nodicsDocsSearchdashboardnodicsdocsdashboardsecsearchanddiscovery",
@@ -22419,7 +22659,7 @@ module.exports = {
     "auditTrail": [],
     "active": true
   },
-  "record559": {
+  "record565": {
     "code": "nodicsDocsPublicationsearchmetadatanodicsdocssearchdashboardnodicsdocsdashboardsecmediamanagement",
     "targetType": "SEARCH_METADATA",
     "targetCode": "nodicsDocsSearchdashboardnodicsdocsdashboardsecmediamanagement",
@@ -22458,7 +22698,7 @@ module.exports = {
     "auditTrail": [],
     "active": true
   },
-  "record560": {
+  "record566": {
     "code": "nodicsDocsPublicationsearchmetadatanodicsdocssearchdashboardnodicsdocsdashboardsecinventoryandstockmanagement",
     "targetType": "SEARCH_METADATA",
     "targetCode": "nodicsDocsSearchdashboardnodicsdocsdashboardsecinventoryandstockmanagement",
@@ -22497,7 +22737,7 @@ module.exports = {
     "auditTrail": [],
     "active": true
   },
-  "record561": {
+  "record567": {
     "code": "nodicsDocsPublicationsearchmetadatanodicsdocssearchdashboardnodicsdocsdashboardsecpricingpromotionsandtax",
     "targetType": "SEARCH_METADATA",
     "targetCode": "nodicsDocsSearchdashboardnodicsdocsdashboardsecpricingpromotionsandtax",
@@ -22536,7 +22776,7 @@ module.exports = {
     "auditTrail": [],
     "active": true
   },
-  "record562": {
+  "record568": {
     "code": "nodicsDocsPublicationsearchmetadatanodicsdocssearchdashboardnodicsdocsdashboardseccommercecartandcheckout",
     "targetType": "SEARCH_METADATA",
     "targetCode": "nodicsDocsSearchdashboardnodicsdocsdashboardseccommercecartandcheckout",
@@ -22575,7 +22815,7 @@ module.exports = {
     "auditTrail": [],
     "active": true
   },
-  "record563": {
+  "record569": {
     "code": "nodicsDocsPublicationsearchmetadatanodicsdocssearchdashboardnodicsdocsdashboardsecpaymentmanagement",
     "targetType": "SEARCH_METADATA",
     "targetCode": "nodicsDocsSearchdashboardnodicsdocsdashboardsecpaymentmanagement",
@@ -22614,7 +22854,46 @@ module.exports = {
     "auditTrail": [],
     "active": true
   },
-  "record564": {
+  "record570": {
+    "code": "nodicsDocsPublicationsearchmetadatanodicsdocssearchdashboardnodicsdocsdashboardsecloyaltyandrewards",
+    "targetType": "SEARCH_METADATA",
+    "targetCode": "nodicsDocsSearchdashboardnodicsdocsdashboardsecloyaltyandrewards",
+    "lifecycleState": "ONLINE",
+    "publicationCode": "nodicsDocumentation",
+    "workflowReference": "nodicsDocumentationReviewWorkflow",
+    "stagedVersion": "0.16.8",
+    "onlineVersion": "0.16.8",
+    "validationResult": {
+      "generated": true,
+      "sourceAuthority": "docs/catalogue.json",
+      "publicationPath": "STAGED_REVIEW_APPROVAL_ONLINE",
+      "nexusVisibleOnlyWhenOnlineAndPublic": true
+    },
+    "checksum": "3f84ac923b94c4c4dfb3df456559f7c6bee2d5377b545068bf1982a7a3cae29b",
+    "managedInAxis": true,
+    "axisAuthoringPermissions": [
+      "documentation.search.preview"
+    ],
+    "workflowRequired": true,
+    "workflowTriggers": [
+      "SEARCH_METADATA_CHANGE"
+    ],
+    "decisionPolicy": {
+      "reviewPermission": "documentation.review",
+      "approvePermission": "documentation.approve",
+      "publishPermission": "documentation.publish",
+      "permissionEnforced": true,
+      "adminOverrideAudited": true
+    },
+    "actor": "nodics.docs.generator",
+    "author": "nodics.docs.generator",
+    "reviewer": "nodics.docs.generator",
+    "approver": "nodics.docs.generator",
+    "publisher": "nodics.docs.generator",
+    "auditTrail": [],
+    "active": true
+  },
+  "record571": {
     "code": "nodicsDocsPublicationsearchmetadatanodicsdocssearchdashboardnodicsdocsdashboardsecshippingandfulfillment",
     "targetType": "SEARCH_METADATA",
     "targetCode": "nodicsDocsSearchdashboardnodicsdocsdashboardsecshippingandfulfillment",
@@ -22653,7 +22932,7 @@ module.exports = {
     "auditTrail": [],
     "active": true
   },
-  "record565": {
+  "record572": {
     "code": "nodicsDocsPublicationsearchmetadatanodicsdocssearchdashboardnodicsdocsdashboardsecordermanagement",
     "targetType": "SEARCH_METADATA",
     "targetCode": "nodicsDocsSearchdashboardnodicsdocsdashboardsecordermanagement",
@@ -22692,7 +22971,7 @@ module.exports = {
     "auditTrail": [],
     "active": true
   },
-  "record566": {
+  "record573": {
     "code": "nodicsDocsPublicationsearchmetadatanodicsdocssearchdashboardnodicsdocsdashboardseccancellationsreturnsandrefunds",
     "targetType": "SEARCH_METADATA",
     "targetCode": "nodicsDocsSearchdashboardnodicsdocsdashboardseccancellationsreturnsandrefunds",
@@ -22731,7 +23010,7 @@ module.exports = {
     "auditTrail": [],
     "active": true
   },
-  "record567": {
+  "record574": {
     "code": "nodicsDocsPublicationsearchmetadatanodicsdocssearchdashboardnodicsdocsdashboardseccustomerengagementandfeedback",
     "targetType": "SEARCH_METADATA",
     "targetCode": "nodicsDocsSearchdashboardnodicsdocsdashboardseccustomerengagementandfeedback",
@@ -22770,7 +23049,7 @@ module.exports = {
     "auditTrail": [],
     "active": true
   },
-  "record568": {
+  "record575": {
     "code": "nodicsDocsPublicationsearchmetadatanodicsdocssearchdashboardnodicsdocsdashboardseccommunicationandnotifications",
     "targetType": "SEARCH_METADATA",
     "targetCode": "nodicsDocsSearchdashboardnodicsdocsdashboardseccommunicationandnotifications",
@@ -22809,7 +23088,7 @@ module.exports = {
     "auditTrail": [],
     "active": true
   },
-  "record569": {
+  "record576": {
     "code": "nodicsDocsPublicationsearchmetadatanodicsdocssearchdashboardnodicsdocsdashboardseceventandmessagingmanagement",
     "targetType": "SEARCH_METADATA",
     "targetCode": "nodicsDocsSearchdashboardnodicsdocsdashboardseceventandmessagingmanagement",
@@ -22848,7 +23127,7 @@ module.exports = {
     "auditTrail": [],
     "active": true
   },
-  "record570": {
+  "record577": {
     "code": "nodicsDocsPublicationsearchmetadatanodicsdocssearchdashboardnodicsdocsdashboardsecprocessandworkflowautomation",
     "targetType": "SEARCH_METADATA",
     "targetCode": "nodicsDocsSearchdashboardnodicsdocsdashboardsecprocessandworkflowautomation",
@@ -22887,7 +23166,7 @@ module.exports = {
     "auditTrail": [],
     "active": true
   },
-  "record571": {
+  "record578": {
     "code": "nodicsDocsPublicationsearchmetadatanodicsdocssearchdashboardnodicsdocsdashboardsecpipelineandbusinesslogicorchestration",
     "targetType": "SEARCH_METADATA",
     "targetCode": "nodicsDocsSearchdashboardnodicsdocsdashboardsecpipelineandbusinesslogicorchestration",
@@ -22926,7 +23205,7 @@ module.exports = {
     "auditTrail": [],
     "active": true
   },
-  "record572": {
+  "record579": {
     "code": "nodicsDocsPublicationsearchmetadatanodicsdocssearchdashboardnodicsdocsdashboardseccronandscheduledautomation",
     "targetType": "SEARCH_METADATA",
     "targetCode": "nodicsDocsSearchdashboardnodicsdocsdashboardseccronandscheduledautomation",
@@ -22965,7 +23244,7 @@ module.exports = {
     "auditTrail": [],
     "active": true
   },
-  "record573": {
+  "record580": {
     "code": "nodicsDocsPublicationsearchmetadatanodicsdocssearchdashboardnodicsdocsdashboardsecdataimportexportandmigration",
     "targetType": "SEARCH_METADATA",
     "targetCode": "nodicsDocsSearchdashboardnodicsdocsdashboardsecdataimportexportandmigration",
@@ -23004,7 +23283,7 @@ module.exports = {
     "auditTrail": [],
     "active": true
   },
-  "record574": {
+  "record581": {
     "code": "nodicsDocsPublicationsearchmetadatanodicsdocssearchdashboardnodicsdocsdashboardsecsystemintegrat148bc853339dd915",
     "targetType": "SEARCH_METADATA",
     "targetCode": "nodicsDocsSearchdashboardnodicsdocsdashboardsecsystemintegrationandexternalconnectivity",
@@ -23043,7 +23322,7 @@ module.exports = {
     "auditTrail": [],
     "active": true
   },
-  "record575": {
+  "record582": {
     "code": "nodicsDocsPublicationsearchmetadatanodicsdocssearchdashboardnodicsdocsdashboardsecoperationsmonitoringandrecovery",
     "targetType": "SEARCH_METADATA",
     "targetCode": "nodicsDocsSearchdashboardnodicsdocsdashboardsecoperationsmonitoringandrecovery",
@@ -23082,7 +23361,7 @@ module.exports = {
     "auditTrail": [],
     "active": true
   },
-  "record576": {
+  "record583": {
     "code": "nodicsDocsPublicationsearchmetadatanodicsdocssearchdashboardnodicsdocsdashboardsecqualitytestingandcertification",
     "targetType": "SEARCH_METADATA",
     "targetCode": "nodicsDocsSearchdashboardnodicsdocsdashboardsecqualitytestingandcertification",
@@ -23121,7 +23400,7 @@ module.exports = {
     "auditTrail": [],
     "active": true
   },
-  "record577": {
+  "record584": {
     "code": "nodicsDocsPublicationsearchmetadatanodicsdocssearchdashboardnodicsdocsdashboardsecdocumentationmanagement",
     "targetType": "SEARCH_METADATA",
     "targetCode": "nodicsDocsSearchdashboardnodicsdocsdashboardsecdocumentationmanagement",
@@ -23160,7 +23439,7 @@ module.exports = {
     "auditTrail": [],
     "active": true
   },
-  "record578": {
+  "record585": {
     "code": "nodicsDocsPublicationsearchmetadatanodicsdocssearchdashboardnodicsdocsdashboardsecreleasestagingandpublication",
     "targetType": "SEARCH_METADATA",
     "targetCode": "nodicsDocsSearchdashboardnodicsdocsdashboardsecreleasestagingandpublication",
@@ -23199,7 +23478,7 @@ module.exports = {
     "auditTrail": [],
     "active": true
   },
-  "record579": {
+  "record586": {
     "code": "nodicsDocsPublicationsearchmetadatanodicsdocssearchdashboardnodicsdocsdashboardsecaianddevelopertooling",
     "targetType": "SEARCH_METADATA",
     "targetCode": "nodicsDocsSearchdashboardnodicsdocsdashboardsecaianddevelopertooling",
@@ -23238,7 +23517,7 @@ module.exports = {
     "auditTrail": [],
     "active": true
   },
-  "record580": {
+  "record587": {
     "code": "nodicsDocsPublicationsearchmetadatanodicsdocssearchdashboardnodicsdocsdashboardsecreference",
     "targetType": "SEARCH_METADATA",
     "targetCode": "nodicsDocsSearchdashboardnodicsdocsdashboardsecreference",
@@ -23277,7 +23556,7 @@ module.exports = {
     "auditTrail": [],
     "active": true
   },
-  "record581": {
+  "record588": {
     "code": "nodicsDocsPublicationsearchmetadatanodicsdocssearchpagenodicsdocsmetadataframeworkoverview",
     "targetType": "SEARCH_METADATA",
     "targetCode": "nodicsDocsSearchpagenodicsdocsmetadataframeworkoverview",
@@ -23316,7 +23595,7 @@ module.exports = {
     "auditTrail": [],
     "active": true
   },
-  "record582": {
+  "record589": {
     "code": "nodicsDocsPublicationsearchmetadatanodicsdocssearchpagenodicsdocsmetadataframeworkwhynodicsexists",
     "targetType": "SEARCH_METADATA",
     "targetCode": "nodicsDocsSearchpagenodicsdocsmetadataframeworkwhynodicsexists",
@@ -23355,7 +23634,7 @@ module.exports = {
     "auditTrail": [],
     "active": true
   },
-  "record583": {
+  "record590": {
     "code": "nodicsDocsPublicationsearchmetadatanodicsdocssearchpagenodicsdocsmetadataframeworkhownodicsworks",
     "targetType": "SEARCH_METADATA",
     "targetCode": "nodicsDocsSearchpagenodicsdocsmetadataframeworkhownodicsworks",
@@ -23394,7 +23673,7 @@ module.exports = {
     "auditTrail": [],
     "active": true
   },
-  "record584": {
+  "record591": {
     "code": "nodicsDocsPublicationsearchmetadatanodicsdocssearchpagenodicsdocsmetadataframeworkadoptionandfirstjourney",
     "targetType": "SEARCH_METADATA",
     "targetCode": "nodicsDocsSearchpagenodicsdocsmetadataframeworkadoptionandfirstjourney",
@@ -23433,7 +23712,7 @@ module.exports = {
     "auditTrail": [],
     "active": true
   },
-  "record585": {
+  "record592": {
     "code": "nodicsDocsPublicationsearchmetadatanodicsdocssearchpagenodicsdocsmetadatadocsdocumentationroadmap",
     "targetType": "SEARCH_METADATA",
     "targetCode": "nodicsDocsSearchpagenodicsdocsmetadatadocsdocumentationroadmap",
@@ -23472,7 +23751,7 @@ module.exports = {
     "auditTrail": [],
     "active": true
   },
-  "record586": {
+  "record593": {
     "code": "nodicsDocsPublicationsearchmetadatanodicsdocssearchpagenodicsdocsmetadatadocsdocumentationprinciples",
     "targetType": "SEARCH_METADATA",
     "targetCode": "nodicsDocsSearchpagenodicsdocsmetadatadocsdocumentationprinciples",
@@ -23511,7 +23790,7 @@ module.exports = {
     "auditTrail": [],
     "active": true
   },
-  "record587": {
+  "record594": {
     "code": "nodicsDocsPublicationsearchmetadatanodicsdocssearchpagenodicsdocsmetadatadocsreaderjourneyandcoverage",
     "targetType": "SEARCH_METADATA",
     "targetCode": "nodicsDocsSearchpagenodicsdocsmetadatadocsreaderjourneyandcoverage",
@@ -23550,7 +23829,7 @@ module.exports = {
     "auditTrail": [],
     "active": true
   },
-  "record588": {
+  "record595": {
     "code": "nodicsDocsPublicationsearchmetadatanodicsdocssearchpagenodicsdocsmetadatadocsdocumentationpublishingmodel",
     "targetType": "SEARCH_METADATA",
     "targetCode": "nodicsDocsSearchpagenodicsdocsmetadatadocsdocumentationpublishingmodel",
@@ -23589,7 +23868,7 @@ module.exports = {
     "auditTrail": [],
     "active": true
   },
-  "record589": {
+  "record596": {
     "code": "nodicsDocsPublicationsearchmetadatanodicsdocssearchpagenodicsdocsmetadataframeworkmodulararchitecture",
     "targetType": "SEARCH_METADATA",
     "targetCode": "nodicsDocsSearchpagenodicsdocsmetadataframeworkmodulararchitecture",
@@ -23628,7 +23907,7 @@ module.exports = {
     "auditTrail": [],
     "active": true
   },
-  "record590": {
+  "record597": {
     "code": "nodicsDocsPublicationsearchmetadatanodicsdocssearchpagenodicsdocsmetadataframeworkruntimeservercomposition",
     "targetType": "SEARCH_METADATA",
     "targetCode": "nodicsDocsSearchpagenodicsdocsmetadataframeworkruntimeservercomposition",
@@ -23667,7 +23946,7 @@ module.exports = {
     "auditTrail": [],
     "active": true
   },
-  "record591": {
+  "record598": {
     "code": "nodicsDocsPublicationsearchmetadatanodicsdocssearchpagenodicsdocsmetadataframeworkmoduleloadingserviceprecedence",
     "targetType": "SEARCH_METADATA",
     "targetCode": "nodicsDocsSearchpagenodicsdocsmetadataframeworkmoduleloadingserviceprecedence",
@@ -23706,7 +23985,7 @@ module.exports = {
     "auditTrail": [],
     "active": true
   },
-  "record592": {
+  "record599": {
     "code": "nodicsDocsPublicationsearchmetadatanodicsdocssearchpagenodicsdocsmetadataframeworkarchitecturedecisionguide",
     "targetType": "SEARCH_METADATA",
     "targetCode": "nodicsDocsSearchpagenodicsdocsmetadataframeworkarchitecturedecisionguide",
@@ -23745,7 +24024,7 @@ module.exports = {
     "auditTrail": [],
     "active": true
   },
-  "record593": {
+  "record600": {
     "code": "nodicsDocsPublicationsearchmetadatanodicsdocssearchpagenodicsdocsmetadataplatformmoduleregistry",
     "targetType": "SEARCH_METADATA",
     "targetCode": "nodicsDocsSearchpagenodicsdocsmetadataplatformmoduleregistry",
@@ -23784,7 +24063,7 @@ module.exports = {
     "auditTrail": [],
     "active": true
   },
-  "record594": {
+  "record601": {
     "code": "nodicsDocsPublicationsearchmetadatanodicsdocssearchpagenodicsdocsmetadatafoundationoverview",
     "targetType": "SEARCH_METADATA",
     "targetCode": "nodicsDocsSearchpagenodicsdocsmetadatafoundationoverview",
@@ -23823,7 +24102,7 @@ module.exports = {
     "auditTrail": [],
     "active": true
   },
-  "record595": {
+  "record602": {
     "code": "nodicsDocsPublicationsearchmetadatanodicsdocssearchpagenodicsdocsmetadataapplicationssuite",
     "targetType": "SEARCH_METADATA",
     "targetCode": "nodicsDocsSearchpagenodicsdocsmetadataapplicationssuite",
@@ -23862,7 +24141,7 @@ module.exports = {
     "auditTrail": [],
     "active": true
   },
-  "record596": {
+  "record603": {
     "code": "nodicsDocsPublicationsearchmetadatanodicsdocssearchpagenodicsdocsmetadatasolutionstaskexecutionengine",
     "targetType": "SEARCH_METADATA",
     "targetCode": "nodicsDocsSearchpagenodicsdocsmetadatasolutionstaskexecutionengine",
@@ -23901,7 +24180,7 @@ module.exports = {
     "auditTrail": [],
     "active": true
   },
-  "record597": {
+  "record604": {
     "code": "nodicsDocsPublicationsearchmetadatanodicsdocssearchpagenodicsdocsmetadatasolutionsdataengineeringanalyticsplatform",
     "targetType": "SEARCH_METADATA",
     "targetCode": "nodicsDocsSearchpagenodicsdocsmetadatasolutionsdataengineeringanalyticsplatform",
@@ -23940,7 +24219,7 @@ module.exports = {
     "auditTrail": [],
     "active": true
   },
-  "record598": {
+  "record605": {
     "code": "nodicsDocsPublicationsearchmetadatanodicsdocssearchpagenodicsdocsmetadataacceleratorsagoraindustrytemplates",
     "targetType": "SEARCH_METADATA",
     "targetCode": "nodicsDocsSearchpagenodicsdocsmetadataacceleratorsagoraindustrytemplates",
@@ -23979,7 +24258,7 @@ module.exports = {
     "auditTrail": [],
     "active": true
   },
-  "record599": {
+  "record606": {
     "code": "nodicsDocsPublicationsearchmetadatanodicsdocssearchpagenodicsdocsmetadataacceleratorsagoraapparelproductdataauthoring",
     "targetType": "SEARCH_METADATA",
     "targetCode": "nodicsDocsSearchpagenodicsdocsmetadataacceleratorsagoraapparelproductdataauthoring",
@@ -24018,7 +24297,7 @@ module.exports = {
     "auditTrail": [],
     "active": true
   },
-  "record600": {
+  "record607": {
     "code": "nodicsDocsPublicationsearchmetadatanodicsdocssearchpagenodicsdocsmetadataframeworklocalquickstart",
     "targetType": "SEARCH_METADATA",
     "targetCode": "nodicsDocsSearchpagenodicsdocsmetadataframeworklocalquickstart",
@@ -24057,7 +24336,7 @@ module.exports = {
     "auditTrail": [],
     "active": true
   },
-  "record601": {
+  "record608": {
     "code": "nodicsDocsPublicationsearchmetadatanodicsdocssearchpagenodicsdocsmetadataframeworkfreshschemasetupjourney",
     "targetType": "SEARCH_METADATA",
     "targetCode": "nodicsDocsSearchpagenodicsdocsmetadataframeworkfreshschemasetupjourney",
@@ -24096,7 +24375,7 @@ module.exports = {
     "auditTrail": [],
     "active": true
   },
-  "record602": {
+  "record609": {
     "code": "nodicsDocsPublicationsearchmetadatanodicsdocssearchpagenodicsdocsmetadataframeworklocalruntimetroubleshooting",
     "targetType": "SEARCH_METADATA",
     "targetCode": "nodicsDocsSearchpagenodicsdocsmetadataframeworklocalruntimetroubleshooting",
@@ -24135,7 +24414,7 @@ module.exports = {
     "auditTrail": [],
     "active": true
   },
-  "record603": {
+  "record610": {
     "code": "nodicsDocsPublicationsearchmetadatanodicsdocssearchpagenodicsdocsmetadatainstallerinstalledruntimeapplicationbuilder",
     "targetType": "SEARCH_METADATA",
     "targetCode": "nodicsDocsSearchpagenodicsdocsmetadatainstallerinstalledruntimeapplicationbuilder",
@@ -24174,7 +24453,7 @@ module.exports = {
     "auditTrail": [],
     "active": true
   },
-  "record604": {
+  "record611": {
     "code": "nodicsDocsPublicationsearchmetadatanodicsdocssearchpagenodicsdocsmetadatabuilderworkspacegeneration",
     "targetType": "SEARCH_METADATA",
     "targetCode": "nodicsDocsSearchpagenodicsdocsmetadatabuilderworkspacegeneration",
@@ -24213,7 +24492,7 @@ module.exports = {
     "auditTrail": [],
     "active": true
   },
-  "record605": {
+  "record612": {
     "code": "nodicsDocsPublicationsearchmetadatanodicsdocssearchpagenodicsdocsmetadataprocessvisualdesigner",
     "targetType": "SEARCH_METADATA",
     "targetCode": "nodicsDocsSearchpagenodicsdocsmetadataprocessvisualdesigner",
@@ -24252,7 +24531,7 @@ module.exports = {
     "auditTrail": [],
     "active": true
   },
-  "record606": {
+  "record613": {
     "code": "nodicsDocsPublicationsearchmetadatanodicsdocssearchpagenodicsdocsmetadataaxisbusinesscustomization",
     "targetType": "SEARCH_METADATA",
     "targetCode": "nodicsDocsSearchpagenodicsdocsmetadataaxisbusinesscustomization",
@@ -24291,7 +24570,7 @@ module.exports = {
     "auditTrail": [],
     "active": true
   },
-  "record607": {
+  "record614": {
     "code": "nodicsDocsPublicationsearchmetadatanodicsdocssearchpagenodicsdocsmetadataplatformoverview",
     "targetType": "SEARCH_METADATA",
     "targetCode": "nodicsDocsSearchpagenodicsdocsmetadataplatformoverview",
@@ -24330,7 +24609,7 @@ module.exports = {
     "auditTrail": [],
     "active": true
   },
-  "record608": {
+  "record615": {
     "code": "nodicsDocsPublicationsearchmetadatanodicsdocssearchpagenodicsdocsmetadatasecurityidentityaccessgovernance",
     "targetType": "SEARCH_METADATA",
     "targetCode": "nodicsDocsSearchpagenodicsdocsmetadatasecurityidentityaccessgovernance",
@@ -24369,7 +24648,7 @@ module.exports = {
     "auditTrail": [],
     "active": true
   },
-  "record609": {
+  "record616": {
     "code": "nodicsDocsPublicationsearchmetadatanodicsdocssearchpagenodicsdocsmetadataconfigurationruntimebehaviormanagement",
     "targetType": "SEARCH_METADATA",
     "targetCode": "nodicsDocsSearchpagenodicsdocsmetadataconfigurationruntimebehaviormanagement",
@@ -24408,7 +24687,7 @@ module.exports = {
     "auditTrail": [],
     "active": true
   },
-  "record610": {
+  "record617": {
     "code": "nodicsDocsPublicationsearchmetadatanodicsdocssearchpagenodicsdocsmetadataconfigurationframeworkstartuplifecycle",
     "targetType": "SEARCH_METADATA",
     "targetCode": "nodicsDocsSearchpagenodicsdocsmetadataconfigurationframeworkstartuplifecycle",
@@ -24447,7 +24726,7 @@ module.exports = {
     "auditTrail": [],
     "active": true
   },
-  "record611": {
+  "record618": {
     "code": "nodicsDocsPublicationsearchmetadatanodicsdocssearchpagenodicsdocsmetadataroutingapigovernance",
     "targetType": "SEARCH_METADATA",
     "targetCode": "nodicsDocsSearchpagenodicsdocsmetadataroutingapigovernance",
@@ -24486,7 +24765,7 @@ module.exports = {
     "auditTrail": [],
     "active": true
   },
-  "record612": {
+  "record619": {
     "code": "nodicsDocsPublicationsearchmetadatanodicsdocssearchpagenodicsdocsmetadataroutingapirequestlifecycle",
     "targetType": "SEARCH_METADATA",
     "targetCode": "nodicsDocsSearchpagenodicsdocsmetadataroutingapirequestlifecycle",
@@ -24525,7 +24804,7 @@ module.exports = {
     "auditTrail": [],
     "active": true
   },
-  "record613": {
+  "record620": {
     "code": "nodicsDocsPublicationsearchmetadatanodicsdocssearchpagenodicsdocsmetadatafoundationerrorhandlingstatuscodes",
     "targetType": "SEARCH_METADATA",
     "targetCode": "nodicsDocsSearchpagenodicsdocsmetadatafoundationerrorhandlingstatuscodes",
@@ -24564,7 +24843,7 @@ module.exports = {
     "auditTrail": [],
     "active": true
   },
-  "record614": {
+  "record621": {
     "code": "nodicsDocsPublicationsearchmetadatanodicsdocssearchpagenodicsdocsmetadataruntimegovernedchange",
     "targetType": "SEARCH_METADATA",
     "targetCode": "nodicsDocsSearchpagenodicsdocsmetadataruntimegovernedchange",
@@ -24603,7 +24882,7 @@ module.exports = {
     "auditTrail": [],
     "active": true
   },
-  "record615": {
+  "record622": {
     "code": "nodicsDocsPublicationsearchmetadatanodicsdocssearchpagenodicsdocsmetadatalocalizationinternationalization",
     "targetType": "SEARCH_METADATA",
     "targetCode": "nodicsDocsSearchpagenodicsdocsmetadatalocalizationinternationalization",
@@ -24642,7 +24921,7 @@ module.exports = {
     "auditTrail": [],
     "active": true
   },
-  "record616": {
+  "record623": {
     "code": "nodicsDocsPublicationsearchmetadatanodicsdocssearchpagenodicsdocsmetadataschemadatamodelingmanagement",
     "targetType": "SEARCH_METADATA",
     "targetCode": "nodicsDocsSearchpagenodicsdocsmetadataschemadatamodelingmanagement",
@@ -24681,7 +24960,7 @@ module.exports = {
     "auditTrail": [],
     "active": true
   },
-  "record617": {
+  "record624": {
     "code": "nodicsDocsPublicationsearchmetadatanodicsdocssearchpagenodicsdocsmetadatapersistenceproviderdataaccesslayer",
     "targetType": "SEARCH_METADATA",
     "targetCode": "nodicsDocsSearchpagenodicsdocsmetadatapersistenceproviderdataaccesslayer",
@@ -24720,7 +24999,7 @@ module.exports = {
     "auditTrail": [],
     "active": true
   },
-  "record618": {
+  "record625": {
     "code": "nodicsDocsPublicationsearchmetadatanodicsdocssearchpagenodicsdocsmetadatacacheruntimestatemanagement",
     "targetType": "SEARCH_METADATA",
     "targetCode": "nodicsDocsSearchpagenodicsdocsmetadatacacheruntimestatemanagement",
@@ -24759,7 +25038,7 @@ module.exports = {
     "auditTrail": [],
     "active": true
   },
-  "record619": {
+  "record626": {
     "code": "nodicsDocsPublicationsearchmetadatanodicsdocssearchpagenodicsdocsmetadataframeworkcustomizationguide",
     "targetType": "SEARCH_METADATA",
     "targetCode": "nodicsDocsSearchpagenodicsdocsmetadataframeworkcustomizationguide",
@@ -24798,7 +25077,7 @@ module.exports = {
     "auditTrail": [],
     "active": true
   },
-  "record620": {
+  "record627": {
     "code": "nodicsDocsPublicationsearchmetadatanodicsdocssearchpagenodicsdocsmetadataframeworkbackendextensionpatterns",
     "targetType": "SEARCH_METADATA",
     "targetCode": "nodicsDocsSearchpagenodicsdocsmetadataframeworkbackendextensionpatterns",
@@ -24837,7 +25116,7 @@ module.exports = {
     "auditTrail": [],
     "active": true
   },
-  "record621": {
+  "record628": {
     "code": "nodicsDocsPublicationsearchmetadatanodicsdocssearchpagenodicsdocsmetadataframeworkaxiscontentcustomization",
     "targetType": "SEARCH_METADATA",
     "targetCode": "nodicsDocsSearchpagenodicsdocsmetadataframeworkaxiscontentcustomization",
@@ -24876,7 +25155,7 @@ module.exports = {
     "auditTrail": [],
     "active": true
   },
-  "record622": {
+  "record629": {
     "code": "nodicsDocsPublicationsearchmetadatanodicsdocssearchpagenodicsdocsmetadataprocessdevelopercustomization",
     "targetType": "SEARCH_METADATA",
     "targetCode": "nodicsDocsSearchpagenodicsdocsmetadataprocessdevelopercustomization",
@@ -24915,7 +25194,7 @@ module.exports = {
     "auditTrail": [],
     "active": true
   },
-  "record623": {
+  "record630": {
     "code": "nodicsDocsPublicationsearchmetadatanodicsdocssearchpagenodicsdocsmetadataprocesscustomprojectextension",
     "targetType": "SEARCH_METADATA",
     "targetCode": "nodicsDocsSearchpagenodicsdocsmetadataprocesscustomprojectextension",
@@ -24954,7 +25233,7 @@ module.exports = {
     "auditTrail": [],
     "active": true
   },
-  "record624": {
+  "record631": {
     "code": "nodicsDocsPublicationsearchmetadatanodicsdocssearchpagenodicsdocsmetadatacommercebasefoundations",
     "targetType": "SEARCH_METADATA",
     "targetCode": "nodicsDocsSearchpagenodicsdocsmetadatacommercebasefoundations",
@@ -24993,7 +25272,7 @@ module.exports = {
     "auditTrail": [],
     "active": true
   },
-  "record625": {
+  "record632": {
     "code": "nodicsDocsPublicationsearchmetadatanodicsdocssearchpagenodicsdocsmetadatawcmsoverview",
     "targetType": "SEARCH_METADATA",
     "targetCode": "nodicsDocsSearchpagenodicsdocsmetadatawcmsoverview",
@@ -25032,7 +25311,7 @@ module.exports = {
     "auditTrail": [],
     "active": true
   },
-  "record626": {
+  "record633": {
     "code": "nodicsDocsPublicationsearchmetadatanodicsdocssearchpagenodicsdocsmetadatawcmscontentcatalogmodel",
     "targetType": "SEARCH_METADATA",
     "targetCode": "nodicsDocsSearchpagenodicsdocsmetadatawcmscontentcatalogmodel",
@@ -25071,7 +25350,7 @@ module.exports = {
     "auditTrail": [],
     "active": true
   },
-  "record627": {
+  "record634": {
     "code": "nodicsDocsPublicationsearchmetadatanodicsdocssearchpagenodicsdocsmetadatawcmspagedesignercomponents",
     "targetType": "SEARCH_METADATA",
     "targetCode": "nodicsDocsSearchpagenodicsdocsmetadatawcmspagedesignercomponents",
@@ -25110,7 +25389,7 @@ module.exports = {
     "auditTrail": [],
     "active": true
   },
-  "record628": {
+  "record635": {
     "code": "nodicsDocsPublicationsearchmetadatanodicsdocssearchpagenodicsdocsmetadatawcmssitepublicationvisibility",
     "targetType": "SEARCH_METADATA",
     "targetCode": "nodicsDocsSearchpagenodicsdocsmetadatawcmssitepublicationvisibility",
@@ -25149,7 +25428,7 @@ module.exports = {
     "auditTrail": [],
     "active": true
   },
-  "record629": {
+  "record636": {
     "code": "nodicsDocsPublicationsearchmetadatanodicsdocssearchpagenodicsdocsmetadatacatalogproductdiscoverymanagement",
     "targetType": "SEARCH_METADATA",
     "targetCode": "nodicsDocsSearchpagenodicsdocsmetadatacatalogproductdiscoverymanagement",
@@ -25188,7 +25467,7 @@ module.exports = {
     "auditTrail": [],
     "active": true
   },
-  "record630": {
+  "record637": {
     "code": "nodicsDocsPublicationsearchmetadatanodicsdocssearchpagenodicsdocsmetadatadiscoverysearchindexing",
     "targetType": "SEARCH_METADATA",
     "targetCode": "nodicsDocsSearchpagenodicsdocsmetadatadiscoverysearchindexing",
@@ -25227,7 +25506,7 @@ module.exports = {
     "auditTrail": [],
     "active": true
   },
-  "record631": {
+  "record638": {
     "code": "nodicsDocsPublicationsearchmetadatanodicsdocssearchpagenodicsdocsmetadatawcmsmediamanagement",
     "targetType": "SEARCH_METADATA",
     "targetCode": "nodicsDocsSearchpagenodicsdocsmetadatawcmsmediamanagement",
@@ -25266,7 +25545,7 @@ module.exports = {
     "auditTrail": [],
     "active": true
   },
-  "record632": {
+  "record639": {
     "code": "nodicsDocsPublicationsearchmetadatanodicsdocssearchpagenodicsdocsmetadatawcmsmediastoragedelivery",
     "targetType": "SEARCH_METADATA",
     "targetCode": "nodicsDocsSearchpagenodicsdocsmetadatawcmsmediastoragedelivery",
@@ -25305,7 +25584,7 @@ module.exports = {
     "auditTrail": [],
     "active": true
   },
-  "record633": {
+  "record640": {
     "code": "nodicsDocsPublicationsearchmetadatanodicsdocssearchpagenodicsdocsmetadatawcmsmediaimportpublication",
     "targetType": "SEARCH_METADATA",
     "targetCode": "nodicsDocsSearchpagenodicsdocsmetadatawcmsmediaimportpublication",
@@ -25344,7 +25623,7 @@ module.exports = {
     "auditTrail": [],
     "active": true
   },
-  "record634": {
+  "record641": {
     "code": "nodicsDocsPublicationsearchmetadatanodicsdocssearchpagenodicsdocsmetadatainventorystockmanagement",
     "targetType": "SEARCH_METADATA",
     "targetCode": "nodicsDocsSearchpagenodicsdocsmetadatainventorystockmanagement",
@@ -25383,7 +25662,7 @@ module.exports = {
     "auditTrail": [],
     "active": true
   },
-  "record635": {
+  "record642": {
     "code": "nodicsDocsPublicationsearchmetadatanodicsdocssearchpagenodicsdocsmetadatapricingpromotionstaxmanagement",
     "targetType": "SEARCH_METADATA",
     "targetCode": "nodicsDocsSearchpagenodicsdocsmetadatapricingpromotionstaxmanagement",
@@ -25422,7 +25701,7 @@ module.exports = {
     "auditTrail": [],
     "active": true
   },
-  "record636": {
+  "record643": {
     "code": "nodicsDocsPublicationsearchmetadatanodicsdocssearchpagenodicsdocsmetadatacommerceoverview",
     "targetType": "SEARCH_METADATA",
     "targetCode": "nodicsDocsSearchpagenodicsdocsmetadatacommerceoverview",
@@ -25461,7 +25740,7 @@ module.exports = {
     "auditTrail": [],
     "active": true
   },
-  "record637": {
+  "record644": {
     "code": "nodicsDocsPublicationsearchmetadatanodicsdocssearchpagenodicsdocsmetadatacommercecartorder",
     "targetType": "SEARCH_METADATA",
     "targetCode": "nodicsDocsSearchpagenodicsdocsmetadatacommercecartorder",
@@ -25500,7 +25779,7 @@ module.exports = {
     "auditTrail": [],
     "active": true
   },
-  "record638": {
+  "record645": {
     "code": "nodicsDocsPublicationsearchmetadatanodicsdocssearchpagenodicsdocsmetadatacommercepaymentfulfillment",
     "targetType": "SEARCH_METADATA",
     "targetCode": "nodicsDocsSearchpagenodicsdocsmetadatacommercepaymentfulfillment",
@@ -25539,7 +25818,7 @@ module.exports = {
     "auditTrail": [],
     "active": true
   },
-  "record639": {
+  "record646": {
     "code": "nodicsDocsPublicationsearchmetadatanodicsdocssearchpagenodicsdocsmetadatafulfillmentshippingmanagement",
     "targetType": "SEARCH_METADATA",
     "targetCode": "nodicsDocsSearchpagenodicsdocsmetadatafulfillmentshippingmanagement",
@@ -25578,7 +25857,7 @@ module.exports = {
     "auditTrail": [],
     "active": true
   },
-  "record640": {
+  "record647": {
     "code": "nodicsDocsPublicationsearchmetadatanodicsdocssearchpagenodicsdocsmetadataordermanagementlifecycle",
     "targetType": "SEARCH_METADATA",
     "targetCode": "nodicsDocsSearchpagenodicsdocsmetadataordermanagementlifecycle",
@@ -25617,7 +25896,7 @@ module.exports = {
     "auditTrail": [],
     "active": true
   },
-  "record641": {
+  "record648": {
     "code": "nodicsDocsPublicationsearchmetadatanodicsdocssearchpagenodicsdocsmetadatacommercereturnsrefunds",
     "targetType": "SEARCH_METADATA",
     "targetCode": "nodicsDocsSearchpagenodicsdocsmetadatacommercereturnsrefunds",
@@ -25656,7 +25935,7 @@ module.exports = {
     "auditTrail": [],
     "active": true
   },
-  "record642": {
+  "record649": {
     "code": "nodicsDocsPublicationsearchmetadatanodicsdocssearchpagenodicsdocsmetadataengagementcustomerreviews",
     "targetType": "SEARCH_METADATA",
     "targetCode": "nodicsDocsSearchpagenodicsdocsmetadataengagementcustomerreviews",
@@ -25695,7 +25974,7 @@ module.exports = {
     "auditTrail": [],
     "active": true
   },
-  "record643": {
+  "record650": {
     "code": "nodicsDocsPublicationsearchmetadatanodicsdocssearchpagenodicsdocsmetadataengagementreviewmoderationgovernance",
     "targetType": "SEARCH_METADATA",
     "targetCode": "nodicsDocsSearchpagenodicsdocsmetadataengagementreviewmoderationgovernance",
@@ -25734,7 +26013,7 @@ module.exports = {
     "auditTrail": [],
     "active": true
   },
-  "record644": {
+  "record651": {
     "code": "nodicsDocsPublicationsearchmetadatanodicsdocssearchpagenodicsdocsmetadataengagementreviewaggregationrecovery",
     "targetType": "SEARCH_METADATA",
     "targetCode": "nodicsDocsSearchpagenodicsdocsmetadataengagementreviewaggregationrecovery",
@@ -25773,7 +26052,7 @@ module.exports = {
     "auditTrail": [],
     "active": true
   },
-  "record645": {
+  "record652": {
     "code": "nodicsDocsPublicationsearchmetadatanodicsdocssearchpagenodicsdocsmetadataengagementcustomerfeedback",
     "targetType": "SEARCH_METADATA",
     "targetCode": "nodicsDocsSearchpagenodicsdocsmetadataengagementcustomerfeedback",
@@ -25812,7 +26091,7 @@ module.exports = {
     "auditTrail": [],
     "active": true
   },
-  "record646": {
+  "record653": {
     "code": "nodicsDocsPublicationsearchmetadatanodicsdocssearchpagenodicsdocsmetadataengagementunifiedoperations",
     "targetType": "SEARCH_METADATA",
     "targetCode": "nodicsDocsSearchpagenodicsdocsmetadataengagementunifiedoperations",
@@ -25851,7 +26130,7 @@ module.exports = {
     "auditTrail": [],
     "active": true
   },
-  "record647": {
+  "record654": {
     "code": "nodicsDocsPublicationsearchmetadatanodicsdocssearchpagenodicsdocsmetadataengagementgovernedautomation",
     "targetType": "SEARCH_METADATA",
     "targetCode": "nodicsDocsSearchpagenodicsdocsmetadataengagementgovernedautomation",
@@ -25890,7 +26169,7 @@ module.exports = {
     "auditTrail": [],
     "active": true
   },
-  "record648": {
+  "record655": {
     "code": "nodicsDocsPublicationsearchmetadatanodicsdocssearchpagenodicsdocsmetadataengagemententerpriseoperations",
     "targetType": "SEARCH_METADATA",
     "targetCode": "nodicsDocsSearchpagenodicsdocsmetadataengagemententerpriseoperations",
@@ -25929,7 +26208,7 @@ module.exports = {
     "auditTrail": [],
     "active": true
   },
-  "record649": {
+  "record656": {
     "code": "nodicsDocsPublicationsearchmetadatanodicsdocssearchpagenodicsdocsmetadatacommunicationoverview",
     "targetType": "SEARCH_METADATA",
     "targetCode": "nodicsDocsSearchpagenodicsdocsmetadatacommunicationoverview",
@@ -25968,7 +26247,7 @@ module.exports = {
     "auditTrail": [],
     "active": true
   },
-  "record650": {
+  "record657": {
     "code": "nodicsDocsPublicationsearchmetadatanodicsdocssearchpagenodicsdocsmetadataeventsmessagingclustercoordination",
     "targetType": "SEARCH_METADATA",
     "targetCode": "nodicsDocsSearchpagenodicsdocsmetadataeventsmessagingclustercoordination",
@@ -26007,7 +26286,7 @@ module.exports = {
     "auditTrail": [],
     "active": true
   },
-  "record651": {
+  "record658": {
     "code": "nodicsDocsPublicationsearchmetadatanodicsdocssearchpagenodicsdocsmetadataprocessoverview",
     "targetType": "SEARCH_METADATA",
     "targetCode": "nodicsDocsSearchpagenodicsdocsmetadataprocessoverview",
@@ -26046,7 +26325,7 @@ module.exports = {
     "auditTrail": [],
     "active": true
   },
-  "record652": {
+  "record659": {
     "code": "nodicsDocsPublicationsearchmetadatanodicsdocssearchpagenodicsdocsmetadataprocessruntimelifecycle",
     "targetType": "SEARCH_METADATA",
     "targetCode": "nodicsDocsSearchpagenodicsdocsmetadataprocessruntimelifecycle",
@@ -26085,7 +26364,7 @@ module.exports = {
     "auditTrail": [],
     "active": true
   },
-  "record653": {
+  "record660": {
     "code": "nodicsDocsPublicationsearchmetadatanodicsdocssearchpagenodicsdocsmetadataprocessworkfloworchestrationpatterns",
     "targetType": "SEARCH_METADATA",
     "targetCode": "nodicsDocsSearchpagenodicsdocsmetadataprocessworkfloworchestrationpatterns",
@@ -26124,7 +26403,7 @@ module.exports = {
     "auditTrail": [],
     "active": true
   },
-  "record654": {
+  "record661": {
     "code": "nodicsDocsPublicationsearchmetadatanodicsdocssearchpagenodicsdocsmetadataprocessfirstworkflow",
     "targetType": "SEARCH_METADATA",
     "targetCode": "nodicsDocsSearchpagenodicsdocsmetadataprocessfirstworkflow",
@@ -26163,7 +26442,7 @@ module.exports = {
     "auditTrail": [],
     "active": true
   },
-  "record655": {
+  "record662": {
     "code": "nodicsDocsPublicationsearchmetadatanodicsdocssearchpagenodicsdocsmetadataprocessfirsthumantask",
     "targetType": "SEARCH_METADATA",
     "targetCode": "nodicsDocsSearchpagenodicsdocsmetadataprocessfirsthumantask",
@@ -26202,7 +26481,7 @@ module.exports = {
     "auditTrail": [],
     "active": true
   },
-  "record656": {
+  "record663": {
     "code": "nodicsDocsPublicationsearchmetadatanodicsdocssearchpagenodicsdocsmetadataprocessbusinessvalue",
     "targetType": "SEARCH_METADATA",
     "targetCode": "nodicsDocsSearchpagenodicsdocsmetadataprocessbusinessvalue",
@@ -26241,7 +26520,7 @@ module.exports = {
     "auditTrail": [],
     "active": true
   },
-  "record657": {
+  "record664": {
     "code": "nodicsDocsPublicationsearchmetadatanodicsdocssearchpagenodicsdocsmetadatapipelinebusinesslogicorchestration",
     "targetType": "SEARCH_METADATA",
     "targetCode": "nodicsDocsSearchpagenodicsdocsmetadatapipelinebusinesslogicorchestration",
@@ -26280,7 +26559,7 @@ module.exports = {
     "auditTrail": [],
     "active": true
   },
-  "record658": {
+  "record665": {
     "code": "nodicsDocsPublicationsearchmetadatanodicsdocssearchpagenodicsdocsmetadatacronoperations",
     "targetType": "SEARCH_METADATA",
     "targetCode": "nodicsDocsSearchpagenodicsdocsmetadatacronoperations",
@@ -26319,7 +26598,7 @@ module.exports = {
     "auditTrail": [],
     "active": true
   },
-  "record659": {
+  "record666": {
     "code": "nodicsDocsPublicationsearchmetadatanodicsdocssearchpagenodicsdocsmetadatacronnoderesponsibilitytee",
     "targetType": "SEARCH_METADATA",
     "targetCode": "nodicsDocsSearchpagenodicsdocsmetadatacronnoderesponsibilitytee",
@@ -26358,7 +26637,7 @@ module.exports = {
     "auditTrail": [],
     "active": true
   },
-  "record660": {
+  "record667": {
     "code": "nodicsDocsPublicationsearchmetadatanodicsdocssearchpagenodicsdocsmetadatacronprojectcustomization",
     "targetType": "SEARCH_METADATA",
     "targetCode": "nodicsDocsSearchpagenodicsdocsmetadatacronprojectcustomization",
@@ -26397,7 +26676,7 @@ module.exports = {
     "auditTrail": [],
     "active": true
   },
-  "record661": {
+  "record668": {
     "code": "nodicsDocsPublicationsearchmetadatanodicsdocssearchpagenodicsdocsmetadataprocessprocesscronruntime",
     "targetType": "SEARCH_METADATA",
     "targetCode": "nodicsDocsSearchpagenodicsdocsmetadataprocessprocesscronruntime",
@@ -26436,7 +26715,7 @@ module.exports = {
     "auditTrail": [],
     "active": true
   },
-  "record662": {
+  "record669": {
     "code": "nodicsDocsPublicationsearchmetadatanodicsdocssearchpagenodicsdocsmetadataprocessscheduledautomation",
     "targetType": "SEARCH_METADATA",
     "targetCode": "nodicsDocsSearchpagenodicsdocsmetadataprocessscheduledautomation",
@@ -26475,7 +26754,7 @@ module.exports = {
     "auditTrail": [],
     "active": true
   },
-  "record663": {
+  "record670": {
     "code": "nodicsDocsPublicationsearchmetadatanodicsdocssearchpagenodicsdocsmetadatadataimportexportmigration",
     "targetType": "SEARCH_METADATA",
     "targetCode": "nodicsDocsSearchpagenodicsdocsmetadatadataimportexportmigration",
@@ -26514,7 +26793,7 @@ module.exports = {
     "auditTrail": [],
     "active": true
   },
-  "record664": {
+  "record671": {
     "code": "nodicsDocsPublicationsearchmetadatanodicsdocssearchpagenodicsdocsmetadataprocessactionadapters",
     "targetType": "SEARCH_METADATA",
     "targetCode": "nodicsDocsSearchpagenodicsdocsmetadataprocessactionadapters",
@@ -26553,7 +26832,7 @@ module.exports = {
     "auditTrail": [],
     "active": true
   },
-  "record665": {
+  "record672": {
     "code": "nodicsDocsPublicationsearchmetadatanodicsdocssearchpagenodicsdocsmetadataframeworkdevopsruntime",
     "targetType": "SEARCH_METADATA",
     "targetCode": "nodicsDocsSearchpagenodicsdocsmetadataframeworkdevopsruntime",
@@ -26592,7 +26871,7 @@ module.exports = {
     "auditTrail": [],
     "active": true
   },
-  "record666": {
+  "record673": {
     "code": "nodicsDocsPublicationsearchmetadatanodicsdocssearchpagenodicsdocsmetadataframeworkruntimereleaserollback",
     "targetType": "SEARCH_METADATA",
     "targetCode": "nodicsDocsSearchpagenodicsdocsmetadataframeworkruntimereleaserollback",
@@ -26631,7 +26910,7 @@ module.exports = {
     "auditTrail": [],
     "active": true
   },
-  "record667": {
+  "record674": {
     "code": "nodicsDocsPublicationsearchmetadatanodicsdocssearchpagenodicsdocsmetadataframeworklocalbrowseracceptancejourney",
     "targetType": "SEARCH_METADATA",
     "targetCode": "nodicsDocsSearchpagenodicsdocsmetadataframeworklocalbrowseracceptancejourney",
@@ -26670,7 +26949,7 @@ module.exports = {
     "auditTrail": [],
     "active": true
   },
-  "record668": {
+  "record675": {
     "code": "nodicsDocsPublicationsearchmetadatanodicsdocssearchpagenodicsdocsmetadataframeworklocalverificationchecklist",
     "targetType": "SEARCH_METADATA",
     "targetCode": "nodicsDocsSearchpagenodicsdocsmetadataframeworklocalverificationchecklist",
@@ -26709,7 +26988,7 @@ module.exports = {
     "auditTrail": [],
     "active": true
   },
-  "record669": {
+  "record676": {
     "code": "nodicsDocsPublicationsearchmetadatanodicsdocssearchpagenodicsdocsmetadatacommerceenterpriseoperations",
     "targetType": "SEARCH_METADATA",
     "targetCode": "nodicsDocsSearchpagenodicsdocsmetadatacommerceenterpriseoperations",
@@ -26748,7 +27027,7 @@ module.exports = {
     "auditTrail": [],
     "active": true
   },
-  "record670": {
+  "record677": {
     "code": "nodicsDocsPublicationsearchmetadatanodicsdocssearchpagenodicsdocsmetadataprocessincidentrecovery",
     "targetType": "SEARCH_METADATA",
     "targetCode": "nodicsDocsSearchpagenodicsdocsmetadataprocessincidentrecovery",
@@ -26787,7 +27066,7 @@ module.exports = {
     "auditTrail": [],
     "active": true
   },
-  "record671": {
+  "record678": {
     "code": "nodicsDocsPublicationsearchmetadatanodicsdocssearchpagenodicsdocsmetadataprocessdevopstopology",
     "targetType": "SEARCH_METADATA",
     "targetCode": "nodicsDocsSearchpagenodicsdocsmetadataprocessdevopstopology",
@@ -26826,7 +27105,7 @@ module.exports = {
     "auditTrail": [],
     "active": true
   },
-  "record672": {
+  "record679": {
     "code": "nodicsDocsPublicationsearchmetadatanodicsdocssearchpagenodicsdocsmetadataprocessqaregressionguide",
     "targetType": "SEARCH_METADATA",
     "targetCode": "nodicsDocsSearchpagenodicsdocsmetadataprocessqaregressionguide",
@@ -26865,7 +27144,7 @@ module.exports = {
     "auditTrail": [],
     "active": true
   },
-  "record673": {
+  "record680": {
     "code": "nodicsDocsPublicationsearchmetadatanodicsdocssearchpagenodicsdocsmetadataframeworkcapabilitydocumentationmaturitypattern",
     "targetType": "SEARCH_METADATA",
     "targetCode": "nodicsDocsSearchpagenodicsdocsmetadataframeworkcapabilitydocumentationmaturitypattern",
@@ -26904,7 +27183,7 @@ module.exports = {
     "auditTrail": [],
     "active": true
   },
-  "record674": {
+  "record681": {
     "code": "nodicsDocsPublicationsearchmetadatanodicsdocssearchpagenodicsdocsmetadatadocsoverview",
     "targetType": "SEARCH_METADATA",
     "targetCode": "nodicsDocsSearchpagenodicsdocsmetadatadocsoverview",
@@ -26943,7 +27222,7 @@ module.exports = {
     "auditTrail": [],
     "active": true
   },
-  "record675": {
+  "record682": {
     "code": "nodicsDocsPublicationsearchmetadatanodicsdocssearchpagenodicsdocsmetadatawcmspublishinglifecycle",
     "targetType": "SEARCH_METADATA",
     "targetCode": "nodicsDocsSearchpagenodicsdocsmetadatawcmspublishinglifecycle",
@@ -26982,7 +27261,7 @@ module.exports = {
     "auditTrail": [],
     "active": true
   },
-  "record676": {
+  "record683": {
     "code": "nodicsDocsPublicationsearchmetadatanodicsdocssearchpagenodicsdocsmetadataapplicationsnexusdatacontentguide",
     "targetType": "SEARCH_METADATA",
     "targetCode": "nodicsDocsSearchpagenodicsdocsmetadataapplicationsnexusdatacontentguide",
@@ -27021,7 +27300,7 @@ module.exports = {
     "auditTrail": [],
     "active": true
   },
-  "record677": {
+  "record684": {
     "code": "nodicsDocsPublicationsearchmetadatanodicsdocssearchpagenodicsdocsmetadataapplicationsaxissetuperrorcontracts",
     "targetType": "SEARCH_METADATA",
     "targetCode": "nodicsDocsSearchpagenodicsdocsmetadataapplicationsaxissetuperrorcontracts",
@@ -27060,7 +27339,7 @@ module.exports = {
     "auditTrail": [],
     "active": true
   },
-  "record678": {
+  "record685": {
     "code": "nodicsDocsPublicationsearchmetadatanodicsdocssearchpagenodicsdocsmetadatawcmscmssourcemapauthoringcontract",
     "targetType": "SEARCH_METADATA",
     "targetCode": "nodicsDocsSearchpagenodicsdocsmetadatawcmscmssourcemapauthoringcontract",
@@ -27099,7 +27378,7 @@ module.exports = {
     "auditTrail": [],
     "active": true
   },
-  "record679": {
+  "record686": {
     "code": "nodicsDocsPublicationsearchmetadatanodicsdocssearchpagenodicsdocsmetadatawcmsmediaoperationsrunbook",
     "targetType": "SEARCH_METADATA",
     "targetCode": "nodicsDocsSearchpagenodicsdocsmetadatawcmsmediaoperationsrunbook",
@@ -27138,7 +27417,7 @@ module.exports = {
     "auditTrail": [],
     "active": true
   },
-  "record680": {
+  "record687": {
     "code": "nodicsDocsPublicationsearchmetadatanodicsdocssearchpagenodicsdocsmetadatadataimportexportproviderguides",
     "targetType": "SEARCH_METADATA",
     "targetCode": "nodicsDocsSearchpagenodicsdocsmetadatadataimportexportproviderguides",
@@ -27177,7 +27456,7 @@ module.exports = {
     "auditTrail": [],
     "active": true
   },
-  "record681": {
+  "record688": {
     "code": "nodicsDocsPublicationsearchmetadatanodicsdocssearchpagenodicsdocsmetadatacommercedataauthoringfulfillment",
     "targetType": "SEARCH_METADATA",
     "targetCode": "nodicsDocsSearchpagenodicsdocsmetadatacommercedataauthoringfulfillment",
@@ -27216,7 +27495,7 @@ module.exports = {
     "auditTrail": [],
     "active": true
   },
-  "record682": {
+  "record689": {
     "code": "nodicsDocsPublicationsearchmetadatanodicsdocssearchpagenodicsdocsmetadatadocsdocumentationpublishingrunbook",
     "targetType": "SEARCH_METADATA",
     "targetCode": "nodicsDocsSearchpagenodicsdocsmetadatadocsdocumentationpublishingrunbook",
@@ -27255,7 +27534,7 @@ module.exports = {
     "auditTrail": [],
     "active": true
   },
-  "record683": {
+  "record690": {
     "code": "nodicsDocsPublicationsearchmetadatanodicsdocssearchpagenodicsdocsmetadataplatformmoduleregistryjourney",
     "targetType": "SEARCH_METADATA",
     "targetCode": "nodicsDocsSearchpagenodicsdocsmetadataplatformmoduleregistryjourney",
@@ -27294,7 +27573,7 @@ module.exports = {
     "auditTrail": [],
     "active": true
   },
-  "record684": {
+  "record691": {
     "code": "nodicsDocsPublicationsearchmetadatanodicsdocssearchpagenodicsdocsmetadatacommercesearchguide",
     "targetType": "SEARCH_METADATA",
     "targetCode": "nodicsDocsSearchpagenodicsdocsmetadatacommercesearchguide",
@@ -27333,7 +27612,7 @@ module.exports = {
     "auditTrail": [],
     "active": true
   },
-  "record685": {
+  "record692": {
     "code": "nodicsDocsPublicationsearchmetadatanodicsdocssearchpagenodicsdocsmetadatalocalizationruntimeauthoring",
     "targetType": "SEARCH_METADATA",
     "targetCode": "nodicsDocsSearchpagenodicsdocsmetadatalocalizationruntimeauthoring",
@@ -27372,7 +27651,7 @@ module.exports = {
     "auditTrail": [],
     "active": true
   },
-  "record686": {
+  "record693": {
     "code": "nodicsDocsPublicationsearchmetadatanodicsdocssearchpagenodicsdocsmetadatacommercepaymentproviderboundaries",
     "targetType": "SEARCH_METADATA",
     "targetCode": "nodicsDocsSearchpagenodicsdocsmetadatacommercepaymentproviderboundaries",
@@ -27411,10 +27690,10 @@ module.exports = {
     "auditTrail": [],
     "active": true
   },
-  "record687": {
-    "code": "nodicsDocsPublicationsearchmetadatanodicsdocssearchpagenodicsdocsmetadatacommercecustomerlistprofileboundary",
+  "record694": {
+    "code": "nodicsDocsPublicationsearchmetadatanodicsdocssearchpagenodicsdocsmetadataloyaltywalletsrewardsledger",
     "targetType": "SEARCH_METADATA",
-    "targetCode": "nodicsDocsSearchpagenodicsdocsmetadatacommercecustomerlistprofileboundary",
+    "targetCode": "nodicsDocsSearchpagenodicsdocsmetadataloyaltywalletsrewardsledger",
     "lifecycleState": "ONLINE",
     "publicationCode": "nodicsDocumentation",
     "workflowReference": "nodicsDocumentationReviewWorkflow",
@@ -27426,7 +27705,7 @@ module.exports = {
       "publicationPath": "STAGED_REVIEW_APPROVAL_ONLINE",
       "nexusVisibleOnlyWhenOnlineAndPublic": true
     },
-    "checksum": "34944a7f3ca92a6a6b65934f844f755c2c110c58f6b8f1ebf7e0d3a413aba965",
+    "checksum": "34020242dedf34dfe0f74df082498ed95fe3204efa3c8b4446c9eac5fce55287",
     "managedInAxis": true,
     "axisAuthoringPermissions": [
       "documentation.search.preview"
@@ -27450,7 +27729,46 @@ module.exports = {
     "auditTrail": [],
     "active": true
   },
-  "record688": {
+  "record695": {
+    "code": "nodicsDocsPublicationsearchmetadatanodicsdocssearchpagenodicsdocsmetadatacommerceshoppinglistcommerceboundary",
+    "targetType": "SEARCH_METADATA",
+    "targetCode": "nodicsDocsSearchpagenodicsdocsmetadatacommerceshoppinglistcommerceboundary",
+    "lifecycleState": "ONLINE",
+    "publicationCode": "nodicsDocumentation",
+    "workflowReference": "nodicsDocumentationReviewWorkflow",
+    "stagedVersion": "0.16.8",
+    "onlineVersion": "0.16.8",
+    "validationResult": {
+      "generated": true,
+      "sourceAuthority": "docs/catalogue.json",
+      "publicationPath": "STAGED_REVIEW_APPROVAL_ONLINE",
+      "nexusVisibleOnlyWhenOnlineAndPublic": true
+    },
+    "checksum": "06943de2c840605e2ba5cb3be958b6f15831c9bc628c493566acd02f50555fda",
+    "managedInAxis": true,
+    "axisAuthoringPermissions": [
+      "documentation.search.preview"
+    ],
+    "workflowRequired": true,
+    "workflowTriggers": [
+      "SEARCH_METADATA_CHANGE"
+    ],
+    "decisionPolicy": {
+      "reviewPermission": "documentation.review",
+      "approvePermission": "documentation.approve",
+      "publishPermission": "documentation.publish",
+      "permissionEnforced": true,
+      "adminOverrideAudited": true
+    },
+    "actor": "nodics.docs.generator",
+    "author": "nodics.docs.generator",
+    "reviewer": "nodics.docs.generator",
+    "approver": "nodics.docs.generator",
+    "publisher": "nodics.docs.generator",
+    "auditTrail": [],
+    "active": true
+  },
+  "record696": {
     "code": "nodicsDocsPublicationsearchmetadatanodicsdocssearchpagenodicsdocsmetadatafoundationnmsruntimemonitoring",
     "targetType": "SEARCH_METADATA",
     "targetCode": "nodicsDocsSearchpagenodicsdocsmetadatafoundationnmsruntimemonitoring",
@@ -27489,7 +27807,7 @@ module.exports = {
     "auditTrail": [],
     "active": true
   },
-  "record689": {
+  "record697": {
     "code": "nodicsDocsPublicationsearchmetadatanodicsdocssearchpagenodicsdocsmetadatafoundationserviceruntimeoverrides",
     "targetType": "SEARCH_METADATA",
     "targetCode": "nodicsDocsSearchpagenodicsdocsmetadatafoundationserviceruntimeoverrides",
@@ -27528,7 +27846,7 @@ module.exports = {
     "auditTrail": [],
     "active": true
   },
-  "record690": {
+  "record698": {
     "code": "nodicsDocsPublicationsearchmetadatanodicsdocssearchpagenodicsdocsmetadatafoundationmoduletomodulecommunication",
     "targetType": "SEARCH_METADATA",
     "targetCode": "nodicsDocsSearchpagenodicsdocsmetadatafoundationmoduletomodulecommunication",
@@ -27567,7 +27885,7 @@ module.exports = {
     "auditTrail": [],
     "active": true
   },
-  "record691": {
+  "record699": {
     "code": "nodicsDocsPublicationsearchmetadatanodicsdocssearchpagenodicsdocsmetadatafoundationcacheproviderrunbooks",
     "targetType": "SEARCH_METADATA",
     "targetCode": "nodicsDocsSearchpagenodicsdocsmetadatafoundationcacheproviderrunbooks",
@@ -27606,7 +27924,7 @@ module.exports = {
     "auditTrail": [],
     "active": true
   },
-  "record692": {
+  "record700": {
     "code": "nodicsDocsPublicationsearchmetadatanodicsdocssearchpagenodicsdocsmetadatafoundationdatabaseproviderboundaries",
     "targetType": "SEARCH_METADATA",
     "targetCode": "nodicsDocsSearchpagenodicsdocsmetadatafoundationdatabaseproviderboundaries",
@@ -27645,7 +27963,7 @@ module.exports = {
     "auditTrail": [],
     "active": true
   },
-  "record693": {
+  "record701": {
     "code": "nodicsDocsPublicationsearchmetadatanodicsdocssearchpagenodicsdocsmetadatasecurityotpsecurityflow",
     "targetType": "SEARCH_METADATA",
     "targetCode": "nodicsDocsSearchpagenodicsdocsmetadatasecurityotpsecurityflow",
@@ -27684,7 +28002,7 @@ module.exports = {
     "auditTrail": [],
     "active": true
   },
-  "record694": {
+  "record702": {
     "code": "nodicsDocsPublicationsearchmetadatanodicsdocssearchpagenodicsdocsmetadatacommunicationproviderrunbooks",
     "targetType": "SEARCH_METADATA",
     "targetCode": "nodicsDocsSearchpagenodicsdocsmetadatacommunicationproviderrunbooks",
@@ -27723,7 +28041,7 @@ module.exports = {
     "auditTrail": [],
     "active": true
   },
-  "record695": {
+  "record703": {
     "code": "nodicsDocsPublicationsearchmetadatanodicsdocssearchpagenodicsdocsmetadataengagementcontactsubmissionoperations",
     "targetType": "SEARCH_METADATA",
     "targetCode": "nodicsDocsSearchpagenodicsdocsmetadataengagementcontactsubmissionoperations",
@@ -27762,7 +28080,7 @@ module.exports = {
     "auditTrail": [],
     "active": true
   },
-  "record696": {
+  "record704": {
     "code": "nodicsDocsPublicationsearchmetadatanodicsdocssearchpagenodicsdocsmetadataprocessworkflowbpmsourcemap",
     "targetType": "SEARCH_METADATA",
     "targetCode": "nodicsDocsSearchpagenodicsdocsmetadataprocessworkflowbpmsourcemap",
@@ -27801,7 +28119,7 @@ module.exports = {
     "auditTrail": [],
     "active": true
   },
-  "record697": {
+  "record705": {
     "code": "nodicsDocsPublicationsearchmetadatanodicsdocssearchpagenodicsdocsmetadataprocesscronjobdataauthoring",
     "targetType": "SEARCH_METADATA",
     "targetCode": "nodicsDocsSearchpagenodicsdocsmetadataprocesscronjobdataauthoring",
@@ -27840,7 +28158,7 @@ module.exports = {
     "auditTrail": [],
     "active": true
   },
-  "record698": {
+  "record706": {
     "code": "nodicsDocsPublicationsearchmetadatanodicsdocssearchpagenodicsdocsmetadataframeworkreleaseupgradecompatibility",
     "targetType": "SEARCH_METADATA",
     "targetCode": "nodicsDocsSearchpagenodicsdocsmetadataframeworkreleaseupgradecompatibility",
@@ -27879,7 +28197,7 @@ module.exports = {
     "auditTrail": [],
     "active": true
   },
-  "record699": {
+  "record707": {
     "code": "nodicsDocsPublicationsearchmetadatanodicsdocssearchpagenodicsdocsmetadatacommercefulfillmentcoresourcemap",
     "targetType": "SEARCH_METADATA",
     "targetCode": "nodicsDocsSearchpagenodicsdocsmetadatacommercefulfillmentcoresourcemap",
@@ -27918,7 +28236,7 @@ module.exports = {
     "auditTrail": [],
     "active": true
   },
-  "record700": {
+  "record708": {
     "code": "nodicsDocsPublicationsearchmetadatanodicsdocssearchpagenodicsdocsmetadataacceleratorsdomaincommercesourcemap",
     "targetType": "SEARCH_METADATA",
     "targetCode": "nodicsDocsSearchpagenodicsdocsmetadataacceleratorsdomaincommercesourcemap",
@@ -27957,7 +28275,7 @@ module.exports = {
     "auditTrail": [],
     "active": true
   },
-  "record701": {
+  "record709": {
     "code": "nodicsDocsPublicationsearchmetadatanodicsdocssearchpagenodicsdocsmetadatafoundationtoolingruntimecontracts",
     "targetType": "SEARCH_METADATA",
     "targetCode": "nodicsDocsSearchpagenodicsdocsmetadatafoundationtoolingruntimecontracts",
@@ -27996,7 +28314,7 @@ module.exports = {
     "auditTrail": [],
     "active": true
   },
-  "record702": {
+  "record710": {
     "code": "nodicsDocsPublicationsearchmetadatanodicsdocssearchpagenodicsdocsmetadatafoundationemsruntimeclientrunbook",
     "targetType": "SEARCH_METADATA",
     "targetCode": "nodicsDocsSearchpagenodicsdocsmetadatafoundationemsruntimeclientrunbook",
@@ -28035,7 +28353,7 @@ module.exports = {
     "auditTrail": [],
     "active": true
   },
-  "record703": {
+  "record711": {
     "code": "nodicsDocsPublicationsearchmetadatanodicsdocssearchpagenodicsdocsmetadatareferenceinternalsourceboundaryregister",
     "targetType": "SEARCH_METADATA",
     "targetCode": "nodicsDocsSearchpagenodicsdocsmetadatareferenceinternalsourceboundaryregister",
@@ -28074,7 +28392,7 @@ module.exports = {
     "auditTrail": [],
     "active": true
   },
-  "record704": {
+  "record712": {
     "code": "nodicsDocsPublicationsearchmetadatanodicsdocssearchpagenodicsdocsmetadatatoolingaideveloperenablement",
     "targetType": "SEARCH_METADATA",
     "targetCode": "nodicsDocsSearchpagenodicsdocsmetadatatoolingaideveloperenablement",
@@ -28113,7 +28431,7 @@ module.exports = {
     "auditTrail": [],
     "active": true
   },
-  "record705": {
+  "record713": {
     "code": "nodicsDocsPublicationsearchmetadatanodicsdocssearchpagenodicsdocsmetadatareferencesourcemapglossary",
     "targetType": "SEARCH_METADATA",
     "targetCode": "nodicsDocsSearchpagenodicsdocsmetadatareferencesourcemapglossary",
@@ -28152,7 +28470,7 @@ module.exports = {
     "auditTrail": [],
     "active": true
   },
-  "record706": {
+  "record714": {
     "code": "nodicsDocsPublicationsearchmetadatanodicsdocssearchpagenodicsdocsmetadatareferencesourcebackeddocumentationcoverageaudit",
     "targetType": "SEARCH_METADATA",
     "targetCode": "nodicsDocsSearchpagenodicsdocsmetadatareferencesourcebackeddocumentationcoverageaudit",
@@ -28191,7 +28509,7 @@ module.exports = {
     "auditTrail": [],
     "active": true
   },
-  "record707": {
+  "record715": {
     "code": "nodicsDocsPublicationsearchmetadatanodicsdocssearchpagenodicsdocsmetadatareferencedocumentationgapbacklog",
     "targetType": "SEARCH_METADATA",
     "targetCode": "nodicsDocsSearchpagenodicsdocsmetadatareferencedocumentationgapbacklog",

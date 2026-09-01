@@ -59,7 +59,13 @@ const projections = [
             availability: { available: true, status: 'IN_STOCK', warehouseCode: 'internalWarehouse' }, inventory: { available: 12 }, sku: 'AGORA-DRESS-S' } },
     { code: 'agoraOxfordShirt|agoraMainStore|en', tenant: 'default', productCode: 'agoraOxfordShirt', storeCode: 'agoraMainStore', locale: 'en', status: 'CURRENT',
         payload: { code: 'agoraOxfordShirt', name: 'Oxford Shirt', description: 'Oxford shirt', slug: 'oxford-shirt', seo: { title: 'Oxford' },
-            localizedAttributes: { material: 'cotton' }, classificationValues: { domain: 'apparel' }, categoryCodes: ['agoraMen'], variantCodes: ['agoraOxfordShirtBlueM'] } }
+            localizedAttributes: { material: 'cotton' }, classificationValues: { domain: 'apparel' }, categoryCodes: ['agoraMen'], variantCodes: ['agoraOxfordShirtBlueM'] } },
+    { code: 'agoraStylePass5Coupon|agoraMainStore|en', tenant: 'default', productCode: 'agoraStylePass5Coupon', storeCode: 'agoraMainStore', locale: 'en', status: 'CURRENT',
+        payload: { code: 'agoraStylePass5Coupon', name: 'Agora Style Pass 5 Percent Coupon', description: 'A digital coupon product for buying one future-use 5 percent Agora Apparel discount code.', slug: 'agora-style-pass-5-percent-coupon', seo: { title: 'Agora coupon' },
+            localizedAttributes: { material: 'Digital coupon code' }, classificationValues: { domain: 'apparel', productType: 'DIGITAL', digitalDeliveryType: 'COUPON_CODE', inventoryStrategy: 'COUPON_CODE_POOL', couponBenefit: '5 percent discount' },
+            categoryCodes: ['agoraDigitalCoupons'], collectionCodes: ['agoraCouponMarketplace'], variantCodes: ['agoraStylePass5CouponDigital'],
+            price: { currency: 'USD', unitAmount: '5.00' },
+            availability: { available: true, status: 'IN_STOCK', inventoryStrategy: 'COUPON_CODE_POOL' } } }
 ];
 
 let searchRequests;
@@ -124,6 +130,7 @@ function installGlobals() {
             if (request.query.productCode) rows = rows.filter(item => item.productCode === request.query.productCode);
             if (request.query['payload.categoryCodes']) rows = rows.filter(item => item.payload.categoryCodes.includes(request.query['payload.categoryCodes']));
             if (request.query['payload.classificationValues.domain']) rows = rows.filter(item => item.payload.classificationValues && item.payload.classificationValues.domain === request.query['payload.classificationValues.domain']);
+            if (request.query.text) rows = rows.filter(item => discovery.textMatches(item, request.query.text));
                 return { result: rows };
             },
             save: async request => savedProjections.push(request),
@@ -185,7 +192,7 @@ test('Product exposes customer discovery/PDP routes and operator publication rou
     assert.equal(routers.product.customer.list.secured, false);
     assert.equal(routers.product.customer.list.publicAccess, true);
     assert.equal(routers.product.customer.list.apiExposure, 'commerceCustomer');
-    assert.equal(routers.product.customer.detail.key, '/customer/products/:productCode');
+    assert.equal(routers.product.customer.detail.key, '/products/:productCode');
     assert.equal(routers.product.operator.publishSearch.secured, true);
     assert.equal(routers.product.operator.publishSearch.permission, 'commerce.product.publish');
     assert.equal(routers.product.operator.publishSearch.apiExposure, 'commerceManagement');
@@ -198,6 +205,7 @@ test('Product exposes customer discovery/PDP routes and operator publication rou
 test('customer discovery lists Product cards with safe price and availability but no raw inventory or SKU leakage', async () => {
     let response = await discoveryController.list({
         tenant: 'default',
+        entCode: 'default',
         httpRequest: { query: { storeCode: 'agoraMainStore', locale: 'en', categoryCode: 'agoraWomen', domainCode: 'apparel', pageSize: '12' } }
     });
 
@@ -217,6 +225,7 @@ test('customer discovery lists Product cards with safe price and availability bu
     assert.equal(response.data.products[0].variantSkuMap, undefined);
     assert.equal(searchRequests[0].indexName, 'productLocalized');
     assert.equal(configurationRequests[0].ownerType, 'PRODUCT');
+    assert.equal(configurationRequests[0].authData.entCode, 'default');
     assert.equal(configurationRequests[0].authData.principalType, 'service');
     assert.equal(configurationRequests[0].authData.loginId, 'productDiscovery');
     assert.deepEqual(configurationRequests[0].authData.groups, ['serviceAccountUserGroup']);
@@ -347,6 +356,39 @@ test('customer discovery applies text search during projection-store fallback', 
     assert.equal(response.data.discovery.source, 'PROJECTION_STORE_FALLBACK');
 });
 
+test('customer discovery text fallback scans beyond the requested first page before filtering', async () => {
+    global.SERVICE.DefaultProductSearchProjectionService.doSearch = async request => {
+        searchRequests.push(request);
+        return { result: [] };
+    };
+    let response = await discoveryController.list({
+        tenant: 'default',
+        httpRequest: { query: { storeCode: 'agoraMainStore', locale: 'en', q: 'coupon', pageSize: '2' } }
+    });
+
+    assert.deepEqual(response.data.products.map(item => item.productCode), ['agoraStylePass5Coupon']);
+    assert.equal(response.data.discovery.source, 'PROJECTION_STORE_FALLBACK');
+});
+
+test('customer discovery finds coupon products by digital coupon projection metadata', async () => {
+    let response = await discoveryController.list({
+        tenant: 'default',
+        httpRequest: { query: { storeCode: 'agoraMainStore', locale: 'en', domainCode: 'apparel', q: 'coupon', pageSize: '12' } }
+    });
+
+    assert.deepEqual(response.data.products.map(item => item.productCode), ['agoraStylePass5Coupon']);
+    assert.equal(response.data.products[0].name, 'Agora Style Pass 5 Percent Coupon');
+    assert.equal(response.data.products[0].availability.status, 'IN_STOCK');
+    assert.deepEqual(searchRequests[0].query, {
+        tenant: 'default',
+        storeCode: 'agoraMainStore',
+        locale: 'en',
+        status: 'CURRENT',
+        'payload.classificationValues.domain': 'apparel',
+        text: 'coupon'
+    });
+});
+
 test('customer discovery extracts nested nSearch Elasticsearch hits', () => {
     let rows = discovery.records({ result: { hits: { hits: [{ _source: projections[0] }] } } });
     assert.equal(rows.length, 1);
@@ -365,7 +407,7 @@ test('customer discovery delegates customer-safe result ordering to Commerce Sea
         httpRequest: { query: { storeCode: 'agoraMainStore', locale: 'en', pageSize: '12' } }
     });
 
-    assert.deepEqual(response.data.products.map(item => item.productCode), ['agoraOxfordShirt', 'agoraLinenWrapDress']);
+    assert.deepEqual(response.data.products.map(item => item.productCode), ['agoraStylePass5Coupon', 'agoraOxfordShirt', 'agoraLinenWrapDress']);
     assert.equal(rankingRequests.length, 1);
     assert.equal(rankingRequests[0].request.storeCode, 'agoraMainStore');
     assert.equal(rankingRequests[0].products[0].sku, undefined);

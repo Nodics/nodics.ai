@@ -15,7 +15,7 @@ module.exports = { discoveryConfig: {
         code: { type: 'string', required: true },
         tenant: { type: 'string', required: true },
         name: { type: 'string', required: true },
-        ownerType: { type: 'string', required: true, enum: ['PRODUCT', 'CONTENT', 'PAGE', 'MEDIA', 'DOCUMENTATION'] },
+        ownerType: { type: 'string', required: true, enum: ['PRODUCT', 'CONTENT', 'PAGE', 'MEDIA', 'DOCUMENTATION', 'WCMS_EXPERIENCE'] },
         indexType: { type: 'string', required: true, enum: ['SEARCH', 'SUGGEST', 'DETAIL', 'FACET'] },
         engine: { type: 'string', required: true },
         indexName: { type: 'string', required: true },

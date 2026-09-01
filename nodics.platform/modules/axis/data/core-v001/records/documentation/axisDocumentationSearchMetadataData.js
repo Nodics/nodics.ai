@@ -850,6 +850,55 @@ module.exports = {
     "active": true
   },
   "record20": {
+    "code": "axisDocsSearchnodeaxisdocsnodetopicaxisexperiencestudio",
+    "product": "axisDocumentationProduct",
+    "targetType": "NODE",
+    "targetCode": "axisDocsNodeTopicaxisExperienceStudio",
+    "title": "Axis Experience Studio and Targeted CMS Experiences",
+    "summary": "Configure targeted CMS components for collection, category, brand, and fallback journeys through backend-owned WCMS Experience contracts.",
+    "searchText": "Axis Experience Studio and Targeted CMS Experiences Configure targeted CMS components for collection, category, brand, and fallback journeys through backend-owned WCMS Experience contracts. axis-capabilities axis-workspaces-and-operations axis-experience-studio targeted-cms-experiences collection-journey brand-journey default-fallback business-user merchandiser administrator developer operator",
+    "keywords": [
+      "axis-capabilities",
+      "axis-workspaces-and-operations",
+      "axis-experience-studio",
+      "targeted-cms-experiences",
+      "collection-journey",
+      "brand-journey",
+      "default-fallback",
+      "business-user",
+      "merchandiser",
+      "administrator",
+      "developer",
+      "operator"
+    ],
+    "facets": {
+      "nodeLevel": "TOPIC",
+      "nodeType": "PAGE",
+      "audience": [
+        "business-user",
+        "merchandiser",
+        "administrator",
+        "developer",
+        "operator"
+      ]
+    },
+    "managedInAxis": true,
+    "axisAuthoringPermissions": [
+      "documentation.search.preview"
+    ],
+    "workflowRequired": true,
+    "workflowTriggers": [
+      "SEARCH_METADATA_CHANGE"
+    ],
+    "locale": "en",
+    "channel": "web",
+    "accessPolicy": "axisDocsAccessPublic",
+    "accessMode": "PUBLIC",
+    "lifecycleState": "ONLINE",
+    "indexState": "INDEX_READY",
+    "active": true
+  },
+  "record21": {
     "code": "axisDocsSearchnodeaxisdocsnodetopicaxismodulehealth",
     "product": "axisDocumentationProduct",
     "targetType": "NODE",
@@ -892,7 +941,7 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record21": {
+  "record22": {
     "code": "axisDocsSearchnodeaxisdocsnodetopicaxisimportsexports",
     "product": "axisDocumentationProduct",
     "targetType": "NODE",
@@ -935,7 +984,7 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record22": {
+  "record23": {
     "code": "axisDocsSearchnodeaxisdocsnodetopicaxismediamanagement",
     "product": "axisDocumentationProduct",
     "targetType": "NODE",
@@ -978,7 +1027,7 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record23": {
+  "record24": {
     "code": "axisDocsSearchnodeaxisdocsnodetopicaxiscustomerengagement",
     "product": "axisDocumentationProduct",
     "targetType": "NODE",
@@ -1021,7 +1070,7 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record24": {
+  "record25": {
     "code": "axisDocsSearchnodeaxisdocsnodetopicaxisopenapireference",
     "product": "axisDocumentationProduct",
     "targetType": "NODE",
@@ -1066,7 +1115,7 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record25": {
+  "record26": {
     "code": "axisDocsSearchnodeaxisdocsnodegrpcontributetoaxisaxiscontributionandgovernance",
     "product": "axisDocumentationProduct",
     "targetType": "NODE",
@@ -1109,7 +1158,7 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record26": {
+  "record27": {
     "code": "axisDocsSearchnodeaxisdocsnodetopicaxisfeaturedelivery",
     "product": "axisDocumentationProduct",
     "targetType": "NODE",
@@ -1152,7 +1201,7 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record27": {
+  "record28": {
     "code": "axisDocsSearchnodeaxisdocsnodetopicaxisimplementationcontract",
     "product": "axisDocumentationProduct",
     "targetType": "NODE",
@@ -1195,7 +1244,7 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record28": {
+  "record29": {
     "code": "axisDocsSearchdashboardaxisdocsdashboardproduct",
     "product": "axisDocumentationProduct",
     "targetType": "DASHBOARD",
@@ -1228,7 +1277,7 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record29": {
+  "record30": {
     "code": "axisDocsSearchdashboardaxisdocsdashboardnavigation",
     "product": "axisDocumentationProduct",
     "targetType": "DASHBOARD",
@@ -1261,7 +1310,7 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record30": {
+  "record31": {
     "code": "axisDocsSearchdashboardaxisdocsdashboardsecdiscoveraxis",
     "product": "axisDocumentationProduct",
     "targetType": "DASHBOARD",
@@ -1294,7 +1343,7 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record31": {
+  "record32": {
     "code": "axisDocsSearchdashboardaxisdocsdashboardsecbuildandoperateaxis",
     "product": "axisDocumentationProduct",
     "targetType": "DASHBOARD",
@@ -1327,7 +1376,7 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record32": {
+  "record33": {
     "code": "axisDocsSearchdashboardaxisdocsdashboardsecaxiscapabilities",
     "product": "axisDocumentationProduct",
     "targetType": "DASHBOARD",
@@ -1360,7 +1409,7 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record33": {
+  "record34": {
     "code": "axisDocsSearchdashboardaxisdocsdashboardseccontributetoaxis",
     "product": "axisDocumentationProduct",
     "targetType": "DASHBOARD",
@@ -1393,7 +1442,7 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record34": {
+  "record35": {
     "code": "axisDocsSearchdashboardaxisdocsdashboardgrpdiscoveraxisaxisoverviewandarchitecture",
     "product": "axisDocumentationProduct",
     "targetType": "DASHBOARD",
@@ -1426,7 +1475,7 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record35": {
+  "record36": {
     "code": "axisDocsSearchdashboardaxisdocsdashboardgrpbuildandoperateaxisaxisbuildandruntime",
     "product": "axisDocumentationProduct",
     "targetType": "DASHBOARD",
@@ -1459,7 +1508,7 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record36": {
+  "record37": {
     "code": "axisDocsSearchdashboardaxisdocsdashboardgrpaxiscapabilitiesaxisworkspacesandoperations",
     "product": "axisDocumentationProduct",
     "targetType": "DASHBOARD",
@@ -1492,7 +1541,7 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record37": {
+  "record38": {
     "code": "axisDocsSearchdashboardaxisdocsdashboardgrpcontributetoaxisaxiscontributionandgovernance",
     "product": "axisDocumentationProduct",
     "targetType": "DASHBOARD",
@@ -1525,7 +1574,7 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record38": {
+  "record39": {
     "code": "axisDocsSearchpageaxisdocsmetadataoverview",
     "product": "axisDocumentationProduct",
     "targetType": "PAGE",
@@ -1577,7 +1626,7 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record39": {
+  "record40": {
     "code": "axisDocsSearchpageaxisdocsmetadataarchitecture",
     "product": "axisDocumentationProduct",
     "targetType": "PAGE",
@@ -1629,7 +1678,7 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record40": {
+  "record41": {
     "code": "axisDocsSearchpageaxisdocsmetadatatechnologystack",
     "product": "axisDocumentationProduct",
     "targetType": "PAGE",
@@ -1681,7 +1730,7 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record41": {
+  "record42": {
     "code": "axisDocsSearchpageaxisdocsmetadatadesignsystem",
     "product": "axisDocumentationProduct",
     "targetType": "PAGE",
@@ -1733,7 +1782,7 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record42": {
+  "record43": {
     "code": "axisDocsSearchpageaxisdocsmetadatacmsrenderers",
     "product": "axisDocumentationProduct",
     "targetType": "PAGE",
@@ -1785,7 +1834,7 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record43": {
+  "record44": {
     "code": "axisDocsSearchpageaxisdocsmetadatadocumentationcontent",
     "product": "axisDocumentationProduct",
     "targetType": "PAGE",
@@ -1837,7 +1886,7 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record44": {
+  "record45": {
     "code": "axisDocsSearchpageaxisdocsmetadataemployeeaccess",
     "product": "axisDocumentationProduct",
     "targetType": "PAGE",
@@ -1889,7 +1938,7 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record45": {
+  "record46": {
     "code": "axisDocsSearchpageaxisdocsmetadataassistant",
     "product": "axisDocumentationProduct",
     "targetType": "PAGE",
@@ -1941,7 +1990,7 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record46": {
+  "record47": {
     "code": "axisDocsSearchpageaxisdocsmetadataschemaworkbench",
     "product": "axisDocumentationProduct",
     "targetType": "PAGE",
@@ -1993,7 +2042,7 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record47": {
+  "record48": {
     "code": "axisDocsSearchpageaxisdocsmetadatapagedesigner",
     "product": "axisDocumentationProduct",
     "targetType": "PAGE",
@@ -2045,7 +2094,69 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record48": {
+  "record49": {
+    "code": "axisDocsSearchpageaxisdocsmetadataexperiencestudio",
+    "product": "axisDocumentationProduct",
+    "targetType": "PAGE",
+    "targetCode": "axisDocsMetadataexperiencestudio",
+    "title": "Axis Experience Studio and Targeted CMS Experiences",
+    "summary": "Configure targeted CMS components for collection, category, brand, and fallback journeys through backend-owned WCMS Experience contracts.",
+    "searchText": "Axis Experience Studio and Targeted CMS Experiences Configure targeted CMS components for collection, category, brand, and fallback journeys through backend-owned WCMS Experience contracts. # Axis Experience Studio and Targeted CMS Experiences\n\nAxis Experience Studio is the business workspace for deciding which published\nCMS components appear for a specific storefront journey. It does not replace\nPage Designer, Product Search, Commerce, or Publishing. It gives business\nusers a governed way to say:\n\n“When a shopper is on this kind of page, with this journey context, show these\nhero banners, editorial strips, featured product rails, and supporting\nmessages.”\n\nThe important boundary is this: the component is still content, and the rule is\nnot a component. A component remains a renderable CMS record. An experience\nplacement is backend configuration that resolves one or more components for a\nruntime context.\n\n## Why this exists\n\nStorefront pages are rarely one-size-fits-all. The product listing page for\n`/shop` might need a broad seasonal banner. The listing reached from a\ncollection tile might need a collection-specific hero. A brand journey might\nneed a brand story, campaign image, featured product rail, and trust message.\nLater, the same mechanism can support customer segment, region, device,\nlanguage, loyalty tier, or campaign personalization.\n\nWithout Experience Studio, teams usually choose one of two weak patterns:\n\n- create many hardcoded pages that duplicate layout logic;\n- put conditional frontend code in the storefront for every campaign.\n\nBoth approaches become expensive. Experience Studio keeps the decision in the\nbackend-owned WCMS experience capability and lets the frontend ask for the\nresolved experience for the current request.\n\n## Ownership model\n\n| Area | Owner | Notes |\n| --- | --- | --- |\n| CMS components | WCMS | Hero banners, rich text, image cards, promo strips, product rails, and containers stay normal content records. |\n| Experience placements | `wcmsExperience` | A placement decides where, when, and for whom components are eligible. |\n| Publication lifecycle | `nPublish` | Draft/Staged/Online promotion remains governed by publishing. |\n| Content indexing | Discovery / Elasticsearch projection | Published placements and component projections are indexed for fast delivery. |\n| Storefront rendering | Agora Apparel or another consumer site | The site renders the returned components with registered renderer keys. |\n| Axis authoring | Axis Experience Studio | Axis provides the business UI, preview tools, and index-status visibility. |\n\nAxis is not the system of record for experience data. It is the control room.\n\n## End-to-end flow\n\n```mermaid\nflowchart LR\n  Business[\"Business user\"]\n  Axis[\"Axis Experience Studio\"]\n  Staged[\"WCMS Staged\"]\n  Publish[\"nPublish\"]\n  Online[\"WCMS Online\"]\n  Outbox[\"CMS_ONLINE_CHANGED outbox event\"]\n  Indexer[\"wcmsExperience index projection\"]\n  Discovery[\"Discovery / Elasticsearch\"]\n  Storefront[\"Agora Apparel storefront\"]\n\n  Business --> Axis\n  Axis --> Staged\n  Staged --> Publish\n  Publish --> Online\n  Online --> Outbox\n  Outbox --> Indexer\n  Indexer --> Discovery\n  Storefront --> Discovery\n```\n\nAt runtime the storefront should not scan thousands of CMS records or execute\nevery rule in memory. It calls the delivery API with a compact context, and the\nbackend resolves from the indexed placement projection.\n\n## Axis screens\n\nExperience Studio starts with four practical views.\n\n```text\nExperience Studio\n├─ Overview\n│  ├─ explains the flow\n│  ├─ shows the required permissions\n│  └─ links to Page Designer and schema workspaces\n├─ Placements\n│  └─ opens the governed schema workspace for wcmsExperience.cmsExperiencePlacement\n├─ Preview\n│  ├─ page type\n│  ├─ route path\n│  ├─ slot\n│  ├─ target type and target code\n│  └─ resolved components grouped by slot\n└─ Index Status\n   ├─ projection health\n   ├─ indexed placement count\n   └─ last refresh / lag diagnostics\n```\n\nThe Placements screen is deliberately schema-backed. That keeps the first slice\nsafe and consistent with Nodics module contracts. Later, Experience Studio can\nadd a richer visual placement wizard on top of the same backend entity.\n\nFor beginners, the safest mental model is simple: create the content first,\nthen create the placement that decides when that content appears. If the\npreview looks wrong, check the target type, target code, slot, and publication\nstate before changing storefront code.\n\n## Placement fields\n\nThese are the fields a business user or developer should understand before\ncreating a targeted experience.\n\n| Field | Purpose | Example |\n| --- | --- | --- |\n| Site | Which storefront or channel owns the placement | `agora-apparel` |\n| Page type | Which type of page is being targeted | `PRODUCT_LISTING`, `COLLECTIONS`, `BRAND` |\n| Slot | Where the component should render | `hero`, `promo-strip`, `featured-products` |\n| Target type | Which journey key controls the match | `DEFAULT`, `CATEGORY`, `COLLECTION`, `BRAND` |\n| Target code | The specific target value | `clothing`, `new-arrivals`, `atelier-minimal` |\n| Component code | Published CMS component to render | `agora.collection.clothing.hero` |\n| Renderer key | Storefront renderer contract | `commerce.hero.banner`, `commerce.product.carousel` |\n| Priority | Ordering among competing matches | `100` |\n| Specificity | Tie-breaker for more precise rules | `BRAND` beats `DEFAULT` |\n| Locale / channel | Optional delivery constraints | `en`, `web` |\n| Region / device | Optional personalization constraints | `AE`, `desktop` |\n| Valid from / valid to | Campaign timing | Back-to-school week |\n| Publication status | Authoring lifecycle | `STAGED`, `ONLINE` |\n| Delivery status | Whether delivery may use the placement | `ACTIVE` |\n\n## Runtime request examples\n\nA normal product listing can use a default placement:\n\n```text\n/shop?page=1&pageSize=10\n```\n\nA category listing adds category context:\n\n```text\n/shop?category=clothing&page=1&pageSize=10\n```\n\nA collection journey adds collection context:\n\n```text\n/shop?collection=new-arrivals&page=1&pageSize=10\n```\n\nA brand journey adds brand context:\n\n```text\n/shop?brand=atelier-minimal&page=1&pageSize=10\n```\n\nThe product result set is still returned by Commerce/Search. The page-level\nexperience components are resolved by WCMS Experience for the same request\ncontext. This creates a mixed page: search results plus targeted CMS content.\n\n## Collection journey example\n\nGoal: when a shopper clicks the “New arrivals” collection tile, the listing\npage should show a collection-specific hero, a small editorial message, and a\nfeatured product carousel chosen by the business team.\n\n1. In Page Designer or the component workspace, create or update the hero\n   component.\n   - Component: `agora.collection.new-arrivals.hero`\n   - Renderer: `commerce.hero.banner`\n   - Title: `Fresh silhouettes, just landed`\n   - Image: a governed media record, not a hardcoded frontend asset\n   - CTA: `/shop?collection=new-arrivals`\n\n2. Create the editorial strip component.\n   - Component: `agora.collection.new-arrivals.strip`\n   - Renderer: `commerce.promo.strip`\n   - Message: `Soft layers, modern neutrals, and refined everyday shapes`\n\n3. Create the featured carousel component.\n   - Component: `agora.collection.new-arrivals.featured`\n   - Renderer: `commerce.product.carousel`\n   - Query: `collection=new-arrivals&featured=true`\n   - Limit: `8`\n\n4. In Experience Studio, open Placements and create three placements.\n\n| Slot | Target type | Target code | Component | Priority |\n| --- | --- | --- | --- | --- |\n| `hero` | `COLLECTION` | `new-arrivals` | `agora.collection.new-arrivals.hero` | `100` |\n| `promo-strip` | `COLLECTION` | `new-arrivals` | `agora.collection.new-arrivals.strip` | `90` |\n| `featured-products` | `COLLECTION` | `new-arrivals` | `agora.collection.new-arrivals.featured` | `80` |\n\n5. Open Preview.\n   - Page type: `PRODUCT_LISTING`\n   - Route path: `/shop`\n   - Target type: `COLLECTION`\n   - Target code: `new-arrivals`\n   - Expected result: three resolved slots.\n\n6. Publish through the normal CMS publication flow.\n\n7. Check Index Status.\n   - The projection must show the latest published placement revision.\n   - If the projection is stale, the storefront should continue using the last\n     active Online state rather than a draft.\n\n8. Verify in the storefront.\n   - Open `/shop?collection=new-arrivals&page=1&pageSize=10`.\n   - Confirm the hero, strip, carousel, filters, sort, and product cards align\n     with the header content width.\n\n## Brand journey example\n\nGoal: when a shopper opens an Atelier Minimal brand page, show brand-specific\nstorytelling before the product grid.\n\n1. Create brand content components.\n   - `agora.brand.atelier-minimal.hero`\n   - `agora.brand.atelier-minimal.story`\n   - `agora.brand.atelier-minimal.featured-products`\n\n2. Create placements.\n\n| Slot | Target type | Target code | Component | Renderer |\n| --- | --- | --- | --- | --- |\n| `hero` | `BRAND` | `atelier-minimal` | `agora.brand.atelier-minimal.hero` | `commerce.hero.banner` |\n| `brand-story` | `BRAND` | `atelier-minimal` | `agora.brand.atelier-minimal.story` | `commerce.editorial.story` |\n| `featured-products` | `BRAND` | `atelier-minimal` | `agora.brand.atelier-minimal.featured-products` | `commerce.product.carousel` |\n\n3. Preview with:\n\n```text\npageType=PRODUCT_LISTING\nroutePath=/shop\ntargetType=BRAND\ntargetCode=atelier-minimal\n```\n\n4. Publish and verify:\n\n```text\n/shop?brand=atelier-minimal&page=1&pageSize=10\n```\n\nThe product cards should come from the search query `brand=atelier-minimal`.\nThe banner, story, and carousel should come from the resolved WCMS experience.\n\n## Default fallback example\n\nGoal: when no collection, brand, or category-specific experience exists, show a\nsafe default listing experience.\n\n1. Create a default hero.\n   - Component: `agora.shop.default.hero`\n   - Renderer: `commerce.hero.banner`\n   - Message: `Explore refined everyday apparel`\n\n2. Create a default promo strip.\n   - Component: `agora.shop.default.promo`\n   - Renderer: `commerce.promo.strip`\n   - Message: `Free shipping, easy returns, and secure checkout`\n\n3. Create placements.\n\n| Slot | Target type | Target code | Component | Priority |\n| --- | --- | --- | --- | --- |\n| `hero` | `DEFAULT` | `*` | `agora.shop.default.hero` | `10` |\n| `promo-strip` | `DEFAULT` | `*` | `agora.shop.default.promo` | `10` |\n\n4. Preview with no target code or with `DEFAULT/*`.\n\n5. Verify `/shop?page=1&pageSize=10`.\n\nFallback content must never hide more specific content. A collection, brand, or\ncategory placement with matching context should override the default placement\nfor the same slot.\n\n## Resolution precedence\n\nWhen several placements match one request, the resolver must choose a stable\nand explainable result.\n\n```mermaid\nflowchart TD\n  Request[\"Runtime context\"]\n  Brand[\"Brand placement\"]\n  Collection[\"Collection placement\"]\n  Category[\"Category placement\"]\n  Default[\"Default placement\"]\n  Sort[\"Sort by specificity, priority, validity, and deterministic code\"]\n  Slots[\"Return slot groups\"]\n\n  Request --> Brand\n  Request --> Collection\n  Request --> Category\n  Request --> Default\n  Brand --> Sort\n  Collection --> Sort\n  Category --> Sort\n  Default --> Sort\n  Sort --> Slots\n```\n\nThe exact specificity order is a backend contract. The important operational\nrule is that the result must be deterministic. Two users with the same site,\npage type, locale, channel, target, and time window must get the same ordered\ncomponent list unless a personalization attribute intentionally changes it.\n\n## Performance contract\n\nExperience targeting must be fast enough for storefront delivery.\n\n- Published content is indexed after Online activation.\n- Runtime delivery resolves from the indexed projection.\n- The resolver should filter by site, page type, slot, target type, target\n  code, locale, channel, validity, and delivery status before ranking.\n- The frontend should request only the slots it can render.\n- `wcmsExperience.resolver.maxComponents` protects against oversized responses.\n- Product grids remain paginated by Search/Commerce. Agora Apparel currently\n  uses page size `10` for listing pagination.\n- Preview APIs may return extra debug evidence, but public delivery must not.\n\nIf the index is stale, the system should prefer the last known Online\nprojection over executing broad rule scans on every storefront request.\n\n## Security and preview boundary\n\nExperience Studio uses authoring APIs. Public storefront delivery uses delivery\nAPIs. Do not mix the two.\n\n| API type | Caller | Preview mode | Notes |\n| --- | --- | --- | --- |\n| Authoring preview | Axis user with permission | Allowed | Can include diagnostic evidence. |\n| Public delivery | Storefront runtime | Forced off | Must not expose draft or staged content. |\n| Index status | Axis user with permission | Not applicable | Operational visibility only. |\n\nRecommended permissions:\n\n- `WCMS_EXPERIENCE_VIEW`\n- `WCMS_EXPERIENCE_EDIT`\n- `WCMS_EXPERIENCE_PREVIEW`\n- `WCMS_EXPERIENCE_PUBLISH_STATUS`\n\nBusiness users can manage content safely only when these permissions are\npaired with normal CMS authoring and publishing permissions.\n\n## Troubleshooting\n\n| Symptom | Check first | Likely fix |\n| --- | --- | --- |\n| Preview returns no components | Target type/code and page type | Create a matching placement or default fallback. |\n| Storefront shows old banner | Index Status | Republish or wait for the Online change projection to refresh. |\n| Draft content appears in Axis but not storefront | API boundary | This is expected until publish. |\n| Wrong component appears | Priority and specificity | Raise the specific placement priority or fix overlapping defaults. |\n| Image missing | Media reference | Confirm the CMS component uses a published governed media record. |\n| Renderer missing | Renderer key | Register the renderer in the consuming storefront. |\n| Too many components | Slot query and max components | Tighten target rules or reduce slot response limit. |\n\n## Relationship with Page Designer\n\nPage Designer creates and manages the page and component structure. Experience\nStudio decides when those components should appear for a journey context.\n\nFor example, Page Designer may create a reusable `commerce.hero.banner`\ncomponent. Experience Studio can then place that component for:\n\n- all shop listings;\n- only the New arrivals collection;\n- only the Atelier Minimal brand;\n- only the Clothing category;\n- a future customer segment or region.\n\nThis is why Experience Studio can later become part of Page Designer without\nchanging the backend contract. The authoring experience can merge visually, but\nthe data model should stay clear: content is content; placement rules resolve\ncontent.\n\n## Customize and extend safely\n\nStart with configuration before code. A business team should be able to change\nlabels, campaign copy, hero images, product carousel queries, placement order,\nvalidity dates, and fallback messages from backend-owned WCMS records and\nExperience Studio placements.\n\nWhen a new journey type is needed, add the backend contract first. For example,\nif the business wants loyalty-tier targeting, add the allowed context key,\ndelivery validation, indexing projection, preview evidence, and security rules\ninside `wcmsExperience`. Then expose it in Axis as another governed field or\nguided selector. Do not add a hidden storefront-only condition.\n\nWhen a new visual block is needed, add a CMS component type and renderer key\nfirst. Then implement the renderer in the consuming storefront. This lets the\nsame component appear on `/shop`, category pages, brand pages, collection\npages, or campaign pages without duplicating business data.\n\nWhen project-level customization is needed, keep it in the project module. The\nframework module should provide reusable capability and contracts. Agora\nApparel can provide customer-agnostic sample placements and content data, but a\nreal customer project should customize its own components, media, placement\nrecords, and publication lifecycle.\n\n## Common mistakes\n\n- Treating an experience placement as the component itself. The placement only\n  decides eligibility and order; the component owns renderable content.\n- Reading draft content on a public storefront. Public delivery must resolve\n  only Online, delivery-active projections.\n- Hardcoding banner images in the frontend. Images should be governed media\n  records attached to CMS components.\n- Creating separate frontend routes for every collection or brand when a query\n  plus targeted CMS components would solve the journey.\n- Running broad in-memory rule scans at request time. Published placements\n  should be projected into Discovery or Elasticsearch for fast lookup.\n- Forgetting fallback placements. Every page type should have a safe default\n  so a shopper never sees an empty experience area.\n- Letting two equal-priority placements compete without deterministic ordering.\n\n## Verification\n\nUse three levels of verification before calling an experience ready.\n\n1. Backend contract verification\n   - The placement schema is wrapped under the module name.\n   - Required fields validate at import time.\n   - Public delivery forces preview mode off.\n   - Authoring preview requires the correct Axis user permission.\n   - Online publication emits the indexing event.\n\n2. Axis verification\n   - Experience Studio appears in the Content area.\n   - Placements opens `wcmsExperience.cmsExperiencePlacement`.\n   - Preview resolves collection, brand, category, and fallback examples.\n   - Index Status shows enough evidence for an operator to diagnose stale\n     projections.\n\n3. Storefront verification\n   - `/shop?page=1&pageSize=10` shows default content and ten products per page.\n   - `/shop?collection=new-arrivals&page=1&pageSize=10` shows collection content.\n   - `/shop?brand=atelier-minimal&page=1&pageSize=10` shows brand content.\n   - Filters, sort, pagination, hero banner, promo strips, and product cards\n     align with the header content width.\n   - Desktop, tablet, and mobile layouts remain visually balanced.\n\n## Business-user checklist\n\nBefore publishing a targeted experience, confirm:\n\n- the component exists and uses the right renderer;\n- images and product associations are governed backend data;\n- the placement target matches the intended URL query;\n- a default fallback exists for the page type;\n- preview resolves exactly the expected slots;\n- index status is healthy after publish;\n- storefront visual QA passes on desktop, tablet, and mobile.\n\nThis workflow gives business users control without making the storefront a rule\nengine and without forcing developers to release code for every campaign.\n",
+    "keywords": [
+      "axis-capabilities",
+      "axis-workspaces-and-operations",
+      "axis-experience-studio",
+      "targeted-cms-experiences",
+      "collection-journey",
+      "brand-journey",
+      "default-fallback",
+      "business-user",
+      "merchandiser",
+      "administrator",
+      "developer",
+      "operator",
+      "Axis Capabilities",
+      "Axis Workspaces and Operations",
+      "Axis Experience Studio and Targeted CMS Experiences",
+      "collection journey",
+      "brand journey",
+      "default fallback",
+      "business-user",
+      "merchandiser",
+      "administrator",
+      "developer",
+      "operator"
+    ],
+    "facets": {
+      "section": "axis-capabilities",
+      "group": "axis-workspaces-and-operations",
+      "documentType": "how-to",
+      "audience": [
+        "business-user",
+        "merchandiser",
+        "administrator",
+        "developer",
+        "operator"
+      ],
+      "maturityState": "operational"
+    },
+    "managedInAxis": true,
+    "axisAuthoringPermissions": [
+      "documentation.search.preview"
+    ],
+    "workflowRequired": true,
+    "workflowTriggers": [
+      "SEARCH_METADATA_CHANGE"
+    ],
+    "locale": "en",
+    "channel": "web",
+    "accessPolicy": "axisDocsAccessPublic",
+    "accessMode": "PUBLIC",
+    "lifecycleState": "ONLINE",
+    "indexState": "INDEX_READY",
+    "active": true
+  },
+  "record50": {
     "code": "axisDocsSearchpageaxisdocsmetadatamodulehealth",
     "product": "axisDocumentationProduct",
     "targetType": "PAGE",
@@ -2097,7 +2208,7 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record49": {
+  "record51": {
     "code": "axisDocsSearchpageaxisdocsmetadataimportsexports",
     "product": "axisDocumentationProduct",
     "targetType": "PAGE",
@@ -2149,7 +2260,7 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record50": {
+  "record52": {
     "code": "axisDocsSearchpageaxisdocsmetadatamediamanagement",
     "product": "axisDocumentationProduct",
     "targetType": "PAGE",
@@ -2201,7 +2312,7 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record51": {
+  "record53": {
     "code": "axisDocsSearchpageaxisdocsmetadatacustomerengagement",
     "product": "axisDocumentationProduct",
     "targetType": "PAGE",
@@ -2253,7 +2364,7 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record52": {
+  "record54": {
     "code": "axisDocsSearchpageaxisdocsmetadataopenapireference",
     "product": "axisDocumentationProduct",
     "targetType": "PAGE",
@@ -2308,7 +2419,7 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record53": {
+  "record55": {
     "code": "axisDocsSearchpageaxisdocsmetadatafeaturedelivery",
     "product": "axisDocumentationProduct",
     "targetType": "PAGE",
@@ -2360,7 +2471,7 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record54": {
+  "record56": {
     "code": "axisDocsSearchpageaxisdocsmetadataimplementationcontract",
     "product": "axisDocumentationProduct",
     "targetType": "PAGE",

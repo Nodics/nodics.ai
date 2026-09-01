@@ -16,7 +16,7 @@ module.exports = {
     /** Resolves the configured refund provider adapter. @param {Object} request Refund request. @returns {Object} Provider adapter. */
     adapter: function (request) {
         const providerCode = request.providerCode || (request.payload && request.payload.providerCode) || 'stripe-sandbox';
-        const adapters = { 'stripe-sandbox': SERVICE.DefaultStripeSandboxAdapterService };
+        const adapters = { 'stripe-sandbox': SERVICE.DefaultStripeSandboxAdapterService, 'loyalty-reward-points': SERVICE.DefaultLoyaltyRewardPaymentProviderService };
         const adapter = adapters[providerCode];
         if (!adapter || typeof adapter.execute !== 'function') throw new Error('Refund provider adapter is unavailable');
         return adapter;
@@ -106,10 +106,15 @@ module.exports = {
         if (!request.tenant || !request.orderCode || !amount || !request.idempotencyKey) throw new Error('Tenant order refund amount and idempotency key are required');
         const transaction = await SERVICE.DefaultPaymentExecutionService.execute(Object.assign({}, request, {
             operation: 'REFUND',
+            methodCode: payload.methodCode || request.methodCode,
             amount,
             currency: payload.currency || request.currency || 'USD',
             providerToken: payload.providerToken || request.providerToken || 'tok_test_refund',
-            providerReference: payload.providerReference || request.providerReference
+            providerReference: payload.providerReference || request.providerReference,
+            walletCode: payload.walletCode || request.walletCode,
+            programCode: payload.programCode || request.programCode,
+            rewardTypeCode: payload.rewardTypeCode || request.rewardTypeCode,
+            reversalOfEntryCode: payload.reversalOfEntryCode || request.reversalOfEntryCode
         }), this.adapter(request), this.repository(request));
         const reconciliation = await this.recordReconciliation(request, transaction);
         return Object.freeze({ transaction, reconciliation, status: transaction.status, reconciliationRequired: transaction.reconciliationRequired === true });

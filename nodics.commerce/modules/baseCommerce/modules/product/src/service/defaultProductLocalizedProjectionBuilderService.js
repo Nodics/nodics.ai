@@ -36,11 +36,12 @@ module.exports = {
         if (input.customerSummaries && input.customerSummaries.price) payload.price = input.customerSummaries.price;
         if (input.customerSummaries && input.customerSummaries.availability) payload.availability = input.customerSummaries.availability;
         if (input.customerSummaries) Object.keys(input.customerSummaries).filter(key => !['price', 'availability'].includes(key)).forEach(key => { payload[key] = input.customerSummaries[key]; });
-        let source = { tenant: request.tenant, productCode: input.product.code, storeCode: input.storeCode,
+        let enterpriseCode = request.enterpriseCode || input.product.enterpriseCode;
+        let source = { tenant: request.tenant, enterpriseCode: enterpriseCode, productCode: input.product.code, storeCode: input.storeCode,
             locale: resolved.resolvedLocale, productRevision: input.product.revision,
             localizationRevision: localized.revision, payload: payload };
         return { code: [input.product.code, input.storeCode, resolved.resolvedLocale].join('|'),
-            tenant: request.tenant, productCode: input.product.code, storeCode: input.storeCode,
+            tenant: request.tenant, enterpriseCode: enterpriseCode, productCode: input.product.code, storeCode: input.storeCode,
             locale: resolved.resolvedLocale, payload: Object.freeze(payload),
             sourceHash: crypto.createHash('sha256').update(JSON.stringify(source)).digest('hex'),
             status: 'CURRENT', projectedAt: projectedAt,

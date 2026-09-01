@@ -204,6 +204,12 @@ module.exports = {
         "order": 300
       },
       {
+        "code": "loyalty-and-rewards",
+        "title": "Loyalty and Rewards",
+        "summary": "Reward programs, reward types, owner wallets, balances, reservations, redemptions, ledger evidence, and reward-based checkout integration.",
+        "order": 305
+      },
+      {
         "code": "shipping-and-fulfillment",
         "title": "Shipping and Fulfillment",
         "summary": "Shipping methods, fulfillment flow, warehouse handoff, shipment, tracking, and provider integration.",
@@ -321,8 +327,8 @@ module.exports = {
       }
     ],
     "statusSummary": {
-      "sections": 47,
-      "pages": 127,
+      "sections": 48,
+      "pages": 128,
       "lifecycleState": "ONLINE"
     },
     "product": "nodicsDocumentationProduct",
@@ -530,6 +536,12 @@ module.exports = {
         "order": 300
       },
       {
+        "code": "loyalty-and-rewards",
+        "title": "Loyalty and Rewards",
+        "summary": "Reward programs, reward types, owner wallets, balances, reservations, redemptions, ledger evidence, and reward-based checkout integration.",
+        "order": 305
+      },
+      {
         "code": "shipping-and-fulfillment",
         "title": "Shipping and Fulfillment",
         "summary": "Shipping methods, fulfillment flow, warehouse handoff, shipment, tracking, and provider integration.",
@@ -643,8 +655,8 @@ module.exports = {
       }
     ],
     "statusSummary": {
-      "sections": 47,
-      "pages": 127,
+      "sections": 48,
+      "pages": 128,
       "searchable": true,
       "expandable": true
     },
@@ -1388,9 +1400,9 @@ module.exports = {
     },
     "cards": [
       {
-        "code": "commerce.customer-list-profile-boundary",
-        "title": "Customer List and Profile Commerce Boundary",
-        "summary": "Why customer lists belong to Commerce while person, address, authentication, permission, and organization identity stay under Profile.",
+        "code": "commerce.shopping-list-commerce-boundary",
+        "title": "Shopping List Commerce Boundary",
+        "summary": "Why wishlist, compare, and save-for-later belong to Commerce while Profile remains the identity authority.",
         "order": 10
       },
       {
@@ -1402,9 +1414,9 @@ module.exports = {
     ],
     "journeyLinks": [
       {
-        "label": "Customer List and Profile Commerce Boundary",
-        "targetPage": "commerce.customer-list-profile-boundary",
-        "route": "/docs/framework/commerce-customer-list-profile-boundary"
+        "label": "Shopping List Commerce Boundary",
+        "targetPage": "commerce.shopping-list-commerce-boundary",
+        "route": "/docs/framework/commerce-shopping-list-commerce-boundary"
       },
       {
         "label": "Platform overview",
@@ -2415,6 +2427,49 @@ module.exports = {
     "active": true
   },
   "record32": {
+    "code": "nodicsDocsDashboardSecloyaltyAndRewards",
+    "ownerType": "SECTION",
+    "ownerCode": "nodicsDocsNodeSecloyaltyAndRewards",
+    "title": "Loyalty and Rewards",
+    "summary": "Reward programs, reward types, owner wallets, balances, reservations, redemptions, ledger evidence, and reward-based checkout integration.",
+    "contentArea": {
+      "businessPurpose": "Reward programs, reward types, owner wallets, balances, reservations, redemptions, ledger evidence, and reward-based checkout integration.",
+      "technicalPurpose": "This section is a backend documentation node with direct page links, search metadata, access policy, and publication lifecycle state."
+    },
+    "cards": [
+      {
+        "code": "loyalty.wallets-rewards-ledger",
+        "title": "Loyalty Wallets, Rewards, and Ledger",
+        "summary": "Business, developer, operator, and customization guidance for reward wallets, balances, reservations, redemptions, ledger evidence, and Commerce reward payment provider integration.",
+        "order": 10
+      }
+    ],
+    "journeyLinks": [
+      {
+        "label": "Loyalty Wallets, Rewards, and Ledger",
+        "targetPage": "loyalty.wallets-rewards-ledger",
+        "route": "/docs/framework/loyalty-wallets-rewards-ledger"
+      }
+    ],
+    "statusSummary": {
+      "pages": 1,
+      "navigationDepth": 2
+    },
+    "accessMode": "PUBLIC",
+    "lifecycleState": "ONLINE",
+    "product": "nodicsDocumentationProduct",
+    "accessPolicy": "nodicsDocsAccessPublic",
+    "managedInAxis": true,
+    "axisAuthoringPermissions": [
+      "documentation.dashboard.update"
+    ],
+    "workflowRequired": true,
+    "workflowTriggers": [
+      "DASHBOARD_CHANGE"
+    ],
+    "active": true
+  },
+  "record33": {
     "code": "nodicsDocsDashboardSecshippingAndFulfillment",
     "ownerType": "SECTION",
     "ownerCode": "nodicsDocsNodeSecshippingAndFulfillment",
@@ -2468,7 +2523,7 @@ module.exports = {
     ],
     "active": true
   },
-  "record33": {
+  "record34": {
     "code": "nodicsDocsDashboardSecorderManagement",
     "ownerType": "SECTION",
     "ownerCode": "nodicsDocsNodeSecorderManagement",
@@ -2511,7 +2566,7 @@ module.exports = {
     ],
     "active": true
   },
-  "record34": {
+  "record35": {
     "code": "nodicsDocsDashboardSeccancellationsReturnsAndRefunds",
     "ownerType": "SECTION",
     "ownerCode": "nodicsDocsNodeSeccancellationsReturnsAndRefunds",
@@ -2554,7 +2609,7 @@ module.exports = {
     ],
     "active": true
   },
-  "record35": {
+  "record36": {
     "code": "nodicsDocsDashboardSeccustomerEngagementAndFeedback",
     "ownerType": "SECTION",
     "ownerCode": "nodicsDocsNodeSeccustomerEngagementAndFeedback",
@@ -2664,7 +2719,7 @@ module.exports = {
     ],
     "active": true
   },
-  "record36": {
+  "record37": {
     "code": "nodicsDocsDashboardSeccommunicationAndNotifications",
     "ownerType": "SECTION",
     "ownerCode": "nodicsDocsNodeSeccommunicationAndNotifications",
@@ -2718,7 +2773,7 @@ module.exports = {
     ],
     "active": true
   },
-  "record37": {
+  "record38": {
     "code": "nodicsDocsDashboardSeceventAndMessagingManagement",
     "ownerType": "SECTION",
     "ownerCode": "nodicsDocsNodeSeceventAndMessagingManagement",
@@ -2772,7 +2827,7 @@ module.exports = {
     ],
     "active": true
   },
-  "record38": {
+  "record39": {
     "code": "nodicsDocsDashboardSecprocessAndWorkflowAutomation",
     "ownerType": "SECTION",
     "ownerCode": "nodicsDocsNodeSecprocessAndWorkflowAutomation",
@@ -2876,7 +2931,7 @@ module.exports = {
     ],
     "active": true
   },
-  "record39": {
+  "record40": {
     "code": "nodicsDocsDashboardSecpipelineAndBusinessLogicOrchestration",
     "ownerType": "SECTION",
     "ownerCode": "nodicsDocsNodeSecpipelineAndBusinessLogicOrchestration",
@@ -2941,7 +2996,7 @@ module.exports = {
     ],
     "active": true
   },
-  "record40": {
+  "record41": {
     "code": "nodicsDocsDashboardSeccronAndScheduledAutomation",
     "ownerType": "SECTION",
     "ownerCode": "nodicsDocsNodeSeccronAndScheduledAutomation",
@@ -3039,7 +3094,7 @@ module.exports = {
     ],
     "active": true
   },
-  "record41": {
+  "record42": {
     "code": "nodicsDocsDashboardSecdataImportExportAndMigration",
     "ownerType": "SECTION",
     "ownerCode": "nodicsDocsNodeSecdataImportExportAndMigration",
@@ -3093,7 +3148,7 @@ module.exports = {
     ],
     "active": true
   },
-  "record42": {
+  "record43": {
     "code": "nodicsDocsDashboardSecsystemIntegrationAndExternalConnectivity",
     "ownerType": "SECTION",
     "ownerCode": "nodicsDocsNodeSecsystemIntegrationAndExternalConnectivity",
@@ -3136,7 +3191,7 @@ module.exports = {
     ],
     "active": true
   },
-  "record43": {
+  "record44": {
     "code": "nodicsDocsDashboardSecoperationsMonitoringAndRecovery",
     "ownerType": "SECTION",
     "ownerCode": "nodicsDocsNodeSecoperationsMonitoringAndRecovery",
@@ -3246,7 +3301,7 @@ module.exports = {
     ],
     "active": true
   },
-  "record44": {
+  "record45": {
     "code": "nodicsDocsDashboardSecqualityTestingAndCertification",
     "ownerType": "SECTION",
     "ownerCode": "nodicsDocsNodeSecqualityTestingAndCertification",
@@ -3289,7 +3344,7 @@ module.exports = {
     ],
     "active": true
   },
-  "record45": {
+  "record46": {
     "code": "nodicsDocsDashboardSecdocumentationManagement",
     "ownerType": "SECTION",
     "ownerCode": "nodicsDocsNodeSecdocumentationManagement",
@@ -3354,7 +3409,7 @@ module.exports = {
     ],
     "active": true
   },
-  "record46": {
+  "record47": {
     "code": "nodicsDocsDashboardSecreleaseStagingAndPublication",
     "ownerType": "SECTION",
     "ownerCode": "nodicsDocsNodeSecreleaseStagingAndPublication",
@@ -3408,7 +3463,7 @@ module.exports = {
     ],
     "active": true
   },
-  "record47": {
+  "record48": {
     "code": "nodicsDocsDashboardSecaiAndDeveloperTooling",
     "ownerType": "SECTION",
     "ownerCode": "nodicsDocsNodeSecaiAndDeveloperTooling",
@@ -3462,7 +3517,7 @@ module.exports = {
     ],
     "active": true
   },
-  "record48": {
+  "record49": {
     "code": "nodicsDocsDashboardSecreference",
     "ownerType": "SECTION",
     "ownerCode": "nodicsDocsNodeSecreference",

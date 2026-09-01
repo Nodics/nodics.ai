@@ -29,14 +29,27 @@ test('Pricing operational restoration saves tenant-bound price books and rows', 
         DefaultPriceBookService: { save: async request => { saves.push({ service: 'book', request }); return { result: request.model }; } },
         DefaultPriceRowService: { save: async request => { saves.push({ service: 'row', request }); return { result: request.model }; } }
     };
-    const result = await service.restoreOperational({ tenant: 'default', authData: { tenant: 'default' } }, {
+    const result = await service.restoreOperational({ tenant: 'default', enterpriseCode: 'enterprise-a', authData: { tenant: 'default', enterpriseCode: 'enterprise-a' } }, {
         priceBooks: [{ code: 'retail', tenant: 'default', currency: 'USD', status: 'ACTIVE', validFrom: '2026-01-01T00:00:00.000Z', revision: 1 }],
         priceRows: [{ code: 'dress', tenant: 'default', priceBookCode: 'retail', productCode: 'agoraDress', unitAmount: '129.00', currency: 'USD', minQuantity: '1', validFrom: '2026-01-01T00:00:00.000Z', revision: 1 }]
     });
     assert.equal(result.restored, 2);
+    assert.equal(result.enterpriseCode, 'enterprise-a');
     assert.deepEqual(saves.map(item => item.service), ['book', 'row']);
     assert(saves.every(item => item.request.model.active === true));
+    assert(saves.every(item => item.request.model.enterpriseCode === 'enterprise-a'));
     assert(saves.every(item => item.request.model.created instanceof Date));
     assert(saves.every(item => item.request.model.updated instanceof Date));
     assert(saves.every(item => item.request.model.validFrom instanceof Date));
+});
+
+test('Pricing operational restoration rejects records from another enterprise', async () => {
+    global.SERVICE = {
+        DefaultPriceBookService: { save: async request => request.model },
+        DefaultPriceRowService: { save: async request => request.model }
+    };
+    await assert.rejects(service.restoreOperational({ tenant: 'default', enterpriseCode: 'enterprise-a', authData: { tenant: 'default' } }, {
+        priceBooks: [{ code: 'retail', tenant: 'default', enterpriseCode: 'enterprise-b', currency: 'USD', status: 'ACTIVE', validFrom: '2026-01-01T00:00:00.000Z', revision: 1 }],
+        priceRows: [{ code: 'dress', tenant: 'default', priceBookCode: 'retail', productCode: 'agoraDress', unitAmount: '129.00', currency: 'USD', minQuantity: '1', validFrom: '2026-01-01T00:00:00.000Z', revision: 1 }]
+    }), /enterprise boundary/);
 });

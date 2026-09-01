@@ -1,0 +1,29 @@
+{
+    "contractVersion": 2,
+    "module": "loyaltyRedemption",
+    "sections": {
+        "sample-lifecycle": {
+            "kind": "DATA_RELEASE",
+            "dataType": "sample",
+            "version": "0.0.0",
+            "displayName": "Loyalty Redemption Lifecycle Sample",
+            "description": "Local captured redemption evidence for reward payment flows.",
+            "owningDomain": "loyalty",
+            "lifecycle": "REFERENCE",
+            "destinationRole": "LOYALTY",
+            "environmentScope": [
+                "LOCAL"
+            ],
+            "sensitivity": "INTERNAL",
+            "versioningPolicy": "NONE",
+            "publicationPolicy": "NONE",
+            "initialPublicationPolicy": "NONE",
+            "removalPolicy": "RETAIN",
+            "files": {
+                "sample-v001/records/loyalty/loyaltyRedemptionLifecycleData.js": "99fe6c29a3cf1bb8b19c681f5a6be1eea3a269e8458ae4e0c48ac9708d253c6e",
+                "sample-v001/headers/loyalty/loyaltyRedemptionLifecycleHeader.js": "1b14ff25ed5f995668442b3118394699eb72a035893b955dbac20c05e44c4a23"
+            },
+            "sourceRoot": "sample-v001"
+        }
+    }
+}

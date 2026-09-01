@@ -14,11 +14,13 @@
 
 import fs from 'node:fs';
 import path from 'node:path';
+import { readProjectEnvironmentProfile } from './defaultProjectEnvironmentProfileService.mjs';
 
 const projectRoot = process.env.NODICS_PROJECT_ROOT || process.cwd();
 const manifestPath = path.join(projectRoot, 'nodics.project.json');
 const manifest = fs.existsSync(manifestPath) ? JSON.parse(fs.readFileSync(manifestPath, 'utf8')) : {};
-const config = manifest.acceptance?.guidedInitialization || {};
+const environmentProfile = readProjectEnvironmentProfile(projectRoot, process.env.ENV || '');
+const config = environmentProfile.acceptance?.guidedInitialization || manifest.acceptance?.guidedInitialization || {};
 const platformUrl = process.env.NODICS_PLATFORM_URL || 'http://127.0.0.1:4300';
 const processUrl = process.env.NODICS_PROCESS_URL || 'http://127.0.0.1:4330';
 const origin = process.env.AXIS_ORIGIN || 'http://localhost:3100';

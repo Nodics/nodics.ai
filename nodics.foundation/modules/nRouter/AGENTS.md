@@ -19,3 +19,9 @@ This file gives AI coding agents mandatory guidance for this Nodics module or pa
 - Generated files must be recreated from source definitions; do not hand-maintain generated artifacts as source of truth.
 - Route permissions that projects may customize should use `permissionConfig`
   paths into layered properties instead of hardcoded permission literals.
+- Module route keys must be resource/capability paths relative to the generated
+  `/<contextRoot>/<modulePrefix>/<apiVersion>` base URL. Do not encode human
+  audience, client shell, or access channel prefixes such as `/customer`,
+  `/employee`, `/operator`, or `/backoffice` in `route.key`; enforce those
+  concerns through `secured`, `authTokenTypes`, `accessGroups`, `permission`,
+  `permissionConfig`, `apiExposure`, and ownership checks.

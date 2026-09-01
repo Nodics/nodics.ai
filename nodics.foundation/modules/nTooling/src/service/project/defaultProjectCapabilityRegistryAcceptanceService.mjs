@@ -13,15 +13,17 @@
 import assert from 'node:assert/strict';
 import fs from 'node:fs';
 import path from 'node:path';
+import { readProjectEnvironmentProfile } from './defaultProjectEnvironmentProfileService.mjs';
 
 const projectRoot = process.env.NODICS_PROJECT_ROOT || process.cwd();
 const manifestPath = path.join(projectRoot, 'nodics.project.json');
 const manifest = fs.existsSync(manifestPath) ? JSON.parse(fs.readFileSync(manifestPath, 'utf8')) : {};
-const config = manifest.acceptance?.capabilityRegistry || {};
+const environmentProfile = readProjectEnvironmentProfile(projectRoot, process.env.ENV || '');
+const config = environmentProfile.acceptance?.capabilityRegistry || manifest.acceptance?.capabilityRegistry || {};
 const platformUrl = process.env.AXIS_PLATFORM_URL || 'http://127.0.0.1:4300';
 const axisUrl = process.env.AXIS_URL || 'http://127.0.0.1:3100';
 const enterprise = process.env.AXIS_ENTERPRISE || 'default';
-const project = process.env.AXIS_PROJECT || manifest.projectCode || 'nodics.kickoff';
+const project = process.env.AXIS_PROJECT || environmentProfile.projectCode;
 const loginId = process.env.AXIS_LOGIN_ID || 'admin';
 const password = process.env.AXIS_PASSWORD || 'adminPassword';
 const functionalModule = config.functionalModule || 'nodics.process';

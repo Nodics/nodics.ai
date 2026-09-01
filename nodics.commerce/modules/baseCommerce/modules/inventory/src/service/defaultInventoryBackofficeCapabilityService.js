@@ -36,7 +36,7 @@ module.exports = {
         return { name: 'referenceCode', label: 'Reference code', type: 'TEXT', required: false, valueFromRecord: 'code', maximumLength: 160 };
     },
     /** Builds the Inventory operation route for a governed stock action code. */
-    actionRoute: function (actionCode) { return '/operator/inventory/balances/:balanceCode/actions/' + actionCode; },
+    actionRoute: function (actionCode) { return '/inventory/balances/:balanceCode/actions/' + actionCode; },
     /** Builds one governed Inventory stock lifecycle action descriptor. */
     stockAction: function (options) {
         const actionCode = options.actionCode;

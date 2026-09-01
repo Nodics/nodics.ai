@@ -1,0 +1,30 @@
+{
+    "contractVersion": 2,
+    "module": "loyaltyWallet",
+    "sections": {
+        "sample-lifecycle": {
+            "kind": "DATA_RELEASE",
+            "dataType": "sample",
+            "version": "0.0.0",
+            "displayName": "Loyalty Wallet Lifecycle Sample",
+            "description": "Local sample wallet and balance projection after earn, reserve, and capture operations.",
+            "owningDomain": "loyalty",
+            "lifecycle": "REFERENCE",
+            "destinationRole": "LOYALTY",
+            "environmentScope": [
+                "LOCAL"
+            ],
+            "sensitivity": "INTERNAL",
+            "versioningPolicy": "NONE",
+            "publicationPolicy": "NONE",
+            "initialPublicationPolicy": "NONE",
+            "removalPolicy": "RETAIN",
+            "files": {
+                "sample-v001/records/loyalty/loyaltyWalletLifecycleData.js": "26e30dde94fc6ea6d78c3f45ccb3e2d1e5a6a86625f9759c3f5b1525f68e6b24",
+                "sample-v001/records/loyalty/loyaltyWalletRewardBalanceLifecycleData.js": "c225c36e2554b51ae982ee2b406bf9b5974ef507750bd9651dd0b9ccf3779ed2",
+                "sample-v001/headers/loyalty/loyaltyWalletLifecycleHeader.js": "d435fd5b293161427af6a552a82d3e53a3a2b6ebc12a052eb563824dd2451d39"
+            },
+            "sourceRoot": "sample-v001"
+        }
+    }
+}

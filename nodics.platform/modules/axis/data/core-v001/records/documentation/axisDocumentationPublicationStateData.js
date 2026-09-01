@@ -1041,6 +1041,53 @@ module.exports = {
     "active": true
   },
   "record22": {
+    "code": "axisDocsPublicationnodeaxisdocsnodetopicaxisexperiencestudio",
+    "targetType": "NODE",
+    "targetCode": "axisDocsNodeTopicaxisExperienceStudio",
+    "lifecycleState": "ONLINE",
+    "publicationCode": "axisDocumentation",
+    "workflowReference": "axisDocumentationReviewWorkflow",
+    "stagedVersion": "0.0.2",
+    "onlineVersion": "0.0.2",
+    "previousOnlineVersion": "",
+    "validationResult": {
+      "generated": true,
+      "sourceAuthority": "docs/catalogue.json",
+      "publicationPath": "STAGED_REVIEW_APPROVAL_ONLINE",
+      "nexusVisibleOnlyWhenOnlineAndPublic": true
+    },
+    "checksum": "554b51d79c7ae332dc84b71ca6c141faaadeea4c29796963144d065283a3ebc3",
+    "managedInAxis": true,
+    "axisAuthoringPermissions": [
+      "documentation.navigation.update"
+    ],
+    "workflowRequired": true,
+    "workflowTriggers": [
+      "NAVIGATION_CHANGE",
+      "DASHBOARD_CHANGE",
+      "ACCESS_POLICY_CHANGE"
+    ],
+    "decisionPolicy": {
+      "reviewPermission": "documentation.review",
+      "approvePermission": "documentation.approve",
+      "publishPermission": "documentation.publish",
+      "permissionEnforced": true,
+      "adminOverrideAudited": true
+    },
+    "actor": "nodics.platform.axis.generator",
+    "author": "nodics.platform.axis.generator",
+    "submittedBy": "",
+    "submittedAt": "",
+    "reviewer": "",
+    "reviewedAt": "",
+    "approver": "",
+    "approvedAt": "",
+    "publisher": "",
+    "publishedAt": "",
+    "auditTrail": [],
+    "active": true
+  },
+  "record23": {
     "code": "axisDocsPublicationnodeaxisdocsnodetopicaxismodulehealth",
     "targetType": "NODE",
     "targetCode": "axisDocsNodeTopicaxisModuleHealth",
@@ -1087,7 +1134,7 @@ module.exports = {
     "auditTrail": [],
     "active": true
   },
-  "record23": {
+  "record24": {
     "code": "axisDocsPublicationnodeaxisdocsnodetopicaxisimportsexports",
     "targetType": "NODE",
     "targetCode": "axisDocsNodeTopicaxisImportsExports",
@@ -1134,7 +1181,7 @@ module.exports = {
     "auditTrail": [],
     "active": true
   },
-  "record24": {
+  "record25": {
     "code": "axisDocsPublicationnodeaxisdocsnodetopicaxismediamanagement",
     "targetType": "NODE",
     "targetCode": "axisDocsNodeTopicaxisMediaManagement",
@@ -1181,7 +1228,7 @@ module.exports = {
     "auditTrail": [],
     "active": true
   },
-  "record25": {
+  "record26": {
     "code": "axisDocsPublicationnodeaxisdocsnodetopicaxiscustomerengagement",
     "targetType": "NODE",
     "targetCode": "axisDocsNodeTopicaxisCustomerEngagement",
@@ -1228,7 +1275,7 @@ module.exports = {
     "auditTrail": [],
     "active": true
   },
-  "record26": {
+  "record27": {
     "code": "axisDocsPublicationnodeaxisdocsnodetopicaxisopenapireference",
     "targetType": "NODE",
     "targetCode": "axisDocsNodeTopicaxisOpenapiReference",
@@ -1275,7 +1322,7 @@ module.exports = {
     "auditTrail": [],
     "active": true
   },
-  "record27": {
+  "record28": {
     "code": "axisDocsPublicationnodeaxisdocsnodegrpcontributetoaxisaxiscontributionandgovernance",
     "targetType": "NODE",
     "targetCode": "axisDocsNodeGrpcontributeToAxisaxisContributionAndGovernance",
@@ -1322,7 +1369,7 @@ module.exports = {
     "auditTrail": [],
     "active": true
   },
-  "record28": {
+  "record29": {
     "code": "axisDocsPublicationnodeaxisdocsnodetopicaxisfeaturedelivery",
     "targetType": "NODE",
     "targetCode": "axisDocsNodeTopicaxisFeatureDelivery",
@@ -1369,7 +1416,7 @@ module.exports = {
     "auditTrail": [],
     "active": true
   },
-  "record29": {
+  "record30": {
     "code": "axisDocsPublicationnodeaxisdocsnodetopicaxisimplementationcontract",
     "targetType": "NODE",
     "targetCode": "axisDocsNodeTopicaxisImplementationContract",
@@ -1416,7 +1463,7 @@ module.exports = {
     "auditTrail": [],
     "active": true
   },
-  "record30": {
+  "record31": {
     "code": "axisDocsPublicationdashboardaxisdocsdashboardproduct",
     "targetType": "DASHBOARD",
     "targetCode": "axisDocsDashboardProduct",
@@ -1461,7 +1508,7 @@ module.exports = {
     "auditTrail": [],
     "active": true
   },
-  "record31": {
+  "record32": {
     "code": "axisDocsPublicationdashboardaxisdocsdashboardnavigation",
     "targetType": "DASHBOARD",
     "targetCode": "axisDocsDashboardNavigation",
@@ -1506,7 +1553,7 @@ module.exports = {
     "auditTrail": [],
     "active": true
   },
-  "record32": {
+  "record33": {
     "code": "axisDocsPublicationdashboardaxisdocsdashboardsecdiscoveraxis",
     "targetType": "DASHBOARD",
     "targetCode": "axisDocsDashboardSecdiscoverAxis",
@@ -1551,7 +1598,7 @@ module.exports = {
     "auditTrail": [],
     "active": true
   },
-  "record33": {
+  "record34": {
     "code": "axisDocsPublicationdashboardaxisdocsdashboardsecbuildandoperateaxis",
     "targetType": "DASHBOARD",
     "targetCode": "axisDocsDashboardSecbuildAndOperateAxis",
@@ -1596,7 +1643,7 @@ module.exports = {
     "auditTrail": [],
     "active": true
   },
-  "record34": {
+  "record35": {
     "code": "axisDocsPublicationdashboardaxisdocsdashboardsecaxiscapabilities",
     "targetType": "DASHBOARD",
     "targetCode": "axisDocsDashboardSecaxisCapabilities",
@@ -1641,7 +1688,7 @@ module.exports = {
     "auditTrail": [],
     "active": true
   },
-  "record35": {
+  "record36": {
     "code": "axisDocsPublicationdashboardaxisdocsdashboardseccontributetoaxis",
     "targetType": "DASHBOARD",
     "targetCode": "axisDocsDashboardSeccontributeToAxis",
@@ -1686,7 +1733,7 @@ module.exports = {
     "auditTrail": [],
     "active": true
   },
-  "record36": {
+  "record37": {
     "code": "axisDocsPublicationdashboardaxisdocsdashboardgrpdiscoveraxisaxisoverviewandarchitecture",
     "targetType": "DASHBOARD",
     "targetCode": "axisDocsDashboardGrpdiscoverAxisaxisOverviewAndArchitecture",
@@ -1731,7 +1778,7 @@ module.exports = {
     "auditTrail": [],
     "active": true
   },
-  "record37": {
+  "record38": {
     "code": "axisDocsPublicationdashboardaxisdocsdashboardgrpbuildandoperateaxisaxisbuildandruntime",
     "targetType": "DASHBOARD",
     "targetCode": "axisDocsDashboardGrpbuildAndOperateAxisaxisBuildAndRuntime",
@@ -1776,7 +1823,7 @@ module.exports = {
     "auditTrail": [],
     "active": true
   },
-  "record38": {
+  "record39": {
     "code": "axisDocsPublicationdashboardaxisdocsdashboardgrpaxiscapabilitiesaxisworkspacesandoperations",
     "targetType": "DASHBOARD",
     "targetCode": "axisDocsDashboardGrpaxisCapabilitiesaxisWorkspacesAndOperations",
@@ -1821,7 +1868,7 @@ module.exports = {
     "auditTrail": [],
     "active": true
   },
-  "record39": {
+  "record40": {
     "code": "axisDocsPublicationdashboardaxisdocsdashboardgrpcontributetoaxisaxiscontributionandgovernance",
     "targetType": "DASHBOARD",
     "targetCode": "axisDocsDashboardGrpcontributeToAxisaxisContributionAndGovernance",
@@ -1866,7 +1913,7 @@ module.exports = {
     "auditTrail": [],
     "active": true
   },
-  "record40": {
+  "record41": {
     "code": "axisDocsPublicationpageaxisdocsmetadataoverview",
     "targetType": "PAGE",
     "targetCode": "axisDocsMetadataoverview",
@@ -1913,7 +1960,7 @@ module.exports = {
     "auditTrail": [],
     "active": true
   },
-  "record41": {
+  "record42": {
     "code": "axisDocsPublicationpageaxisdocsmetadataarchitecture",
     "targetType": "PAGE",
     "targetCode": "axisDocsMetadataarchitecture",
@@ -1960,7 +2007,7 @@ module.exports = {
     "auditTrail": [],
     "active": true
   },
-  "record42": {
+  "record43": {
     "code": "axisDocsPublicationpageaxisdocsmetadatatechnologystack",
     "targetType": "PAGE",
     "targetCode": "axisDocsMetadatatechnologystack",
@@ -2007,7 +2054,7 @@ module.exports = {
     "auditTrail": [],
     "active": true
   },
-  "record43": {
+  "record44": {
     "code": "axisDocsPublicationpageaxisdocsmetadatadesignsystem",
     "targetType": "PAGE",
     "targetCode": "axisDocsMetadatadesignsystem",
@@ -2054,7 +2101,7 @@ module.exports = {
     "auditTrail": [],
     "active": true
   },
-  "record44": {
+  "record45": {
     "code": "axisDocsPublicationpageaxisdocsmetadatacmsrenderers",
     "targetType": "PAGE",
     "targetCode": "axisDocsMetadatacmsrenderers",
@@ -2101,7 +2148,7 @@ module.exports = {
     "auditTrail": [],
     "active": true
   },
-  "record45": {
+  "record46": {
     "code": "axisDocsPublicationpageaxisdocsmetadatadocumentationcontent",
     "targetType": "PAGE",
     "targetCode": "axisDocsMetadatadocumentationcontent",
@@ -2148,7 +2195,7 @@ module.exports = {
     "auditTrail": [],
     "active": true
   },
-  "record46": {
+  "record47": {
     "code": "axisDocsPublicationpageaxisdocsmetadataemployeeaccess",
     "targetType": "PAGE",
     "targetCode": "axisDocsMetadataemployeeaccess",
@@ -2195,7 +2242,7 @@ module.exports = {
     "auditTrail": [],
     "active": true
   },
-  "record47": {
+  "record48": {
     "code": "axisDocsPublicationpageaxisdocsmetadataassistant",
     "targetType": "PAGE",
     "targetCode": "axisDocsMetadataassistant",
@@ -2242,7 +2289,7 @@ module.exports = {
     "auditTrail": [],
     "active": true
   },
-  "record48": {
+  "record49": {
     "code": "axisDocsPublicationpageaxisdocsmetadataschemaworkbench",
     "targetType": "PAGE",
     "targetCode": "axisDocsMetadataschemaworkbench",
@@ -2289,7 +2336,7 @@ module.exports = {
     "auditTrail": [],
     "active": true
   },
-  "record49": {
+  "record50": {
     "code": "axisDocsPublicationpageaxisdocsmetadatapagedesigner",
     "targetType": "PAGE",
     "targetCode": "axisDocsMetadatapagedesigner",
@@ -2336,7 +2383,54 @@ module.exports = {
     "auditTrail": [],
     "active": true
   },
-  "record50": {
+  "record51": {
+    "code": "axisDocsPublicationpageaxisdocsmetadataexperiencestudio",
+    "targetType": "PAGE",
+    "targetCode": "axisDocsMetadataexperiencestudio",
+    "lifecycleState": "ONLINE",
+    "publicationCode": "axisDocumentation",
+    "workflowReference": "axisDocumentationReviewWorkflow",
+    "stagedVersion": "0.0.2",
+    "onlineVersion": "0.0.2",
+    "previousOnlineVersion": "",
+    "validationResult": {
+      "generated": true,
+      "sourceAuthority": "docs/catalogue.json",
+      "publicationPath": "STAGED_REVIEW_APPROVAL_ONLINE",
+      "nexusVisibleOnlyWhenOnlineAndPublic": true
+    },
+    "checksum": "dde2fdd0a3274c4e0fa023a7fc89df2ddce39a999f7ac709e6b86b685f25565d",
+    "managedInAxis": true,
+    "axisAuthoringPermissions": [
+      "documentation.draft.update"
+    ],
+    "workflowRequired": true,
+    "workflowTriggers": [
+      "CONTENT_CHANGE",
+      "ACCESS_POLICY_CHANGE",
+      "SOURCE_EVIDENCE_CHANGE"
+    ],
+    "decisionPolicy": {
+      "reviewPermission": "documentation.review",
+      "approvePermission": "documentation.approve",
+      "publishPermission": "documentation.publish",
+      "permissionEnforced": true,
+      "adminOverrideAudited": true
+    },
+    "actor": "nodics.platform.axis.generator",
+    "author": "nodics.platform.axis.generator",
+    "submittedBy": "",
+    "submittedAt": "",
+    "reviewer": "",
+    "reviewedAt": "",
+    "approver": "",
+    "approvedAt": "",
+    "publisher": "",
+    "publishedAt": "",
+    "auditTrail": [],
+    "active": true
+  },
+  "record52": {
     "code": "axisDocsPublicationpageaxisdocsmetadatamodulehealth",
     "targetType": "PAGE",
     "targetCode": "axisDocsMetadatamodulehealth",
@@ -2383,7 +2477,7 @@ module.exports = {
     "auditTrail": [],
     "active": true
   },
-  "record51": {
+  "record53": {
     "code": "axisDocsPublicationpageaxisdocsmetadataimportsexports",
     "targetType": "PAGE",
     "targetCode": "axisDocsMetadataimportsexports",
@@ -2430,7 +2524,7 @@ module.exports = {
     "auditTrail": [],
     "active": true
   },
-  "record52": {
+  "record54": {
     "code": "axisDocsPublicationpageaxisdocsmetadatamediamanagement",
     "targetType": "PAGE",
     "targetCode": "axisDocsMetadatamediamanagement",
@@ -2477,7 +2571,7 @@ module.exports = {
     "auditTrail": [],
     "active": true
   },
-  "record53": {
+  "record55": {
     "code": "axisDocsPublicationpageaxisdocsmetadatacustomerengagement",
     "targetType": "PAGE",
     "targetCode": "axisDocsMetadatacustomerengagement",
@@ -2524,7 +2618,7 @@ module.exports = {
     "auditTrail": [],
     "active": true
   },
-  "record54": {
+  "record56": {
     "code": "axisDocsPublicationpageaxisdocsmetadataopenapireference",
     "targetType": "PAGE",
     "targetCode": "axisDocsMetadataopenapireference",
@@ -2571,7 +2665,7 @@ module.exports = {
     "auditTrail": [],
     "active": true
   },
-  "record55": {
+  "record57": {
     "code": "axisDocsPublicationpageaxisdocsmetadatafeaturedelivery",
     "targetType": "PAGE",
     "targetCode": "axisDocsMetadatafeaturedelivery",
@@ -2618,7 +2712,7 @@ module.exports = {
     "auditTrail": [],
     "active": true
   },
-  "record56": {
+  "record58": {
     "code": "axisDocsPublicationpageaxisdocsmetadataimplementationcontract",
     "targetType": "PAGE",
     "targetCode": "axisDocsMetadataimplementationcontract",
@@ -2665,7 +2759,7 @@ module.exports = {
     "auditTrail": [],
     "active": true
   },
-  "record57": {
+  "record59": {
     "code": "axisDocsPublicationsearchmetadataaxisdocssearchproductaxisdocumentationproduct",
     "targetType": "SEARCH_METADATA",
     "targetCode": "axisDocsSearchproductaxisdocumentationproduct",
@@ -2710,7 +2804,7 @@ module.exports = {
     "auditTrail": [],
     "active": true
   },
-  "record58": {
+  "record60": {
     "code": "axisDocsPublicationsearchmetadataaxisdocssearchnavigationaxisdocumentationnavigationmetadata",
     "targetType": "SEARCH_METADATA",
     "targetCode": "axisDocsSearchnavigationaxisdocumentationnavigationmetadata",
@@ -2755,7 +2849,7 @@ module.exports = {
     "auditTrail": [],
     "active": true
   },
-  "record59": {
+  "record61": {
     "code": "axisDocsPublicationsearchmetadataaxisdocssearchnodeaxisdocsnoderoot",
     "targetType": "SEARCH_METADATA",
     "targetCode": "axisDocsSearchnodeaxisdocsnoderoot",
@@ -2800,7 +2894,7 @@ module.exports = {
     "auditTrail": [],
     "active": true
   },
-  "record60": {
+  "record62": {
     "code": "axisDocsPublicationsearchmetadataaxisdocssearchnodeaxisdocsnodesecdiscoveraxis",
     "targetType": "SEARCH_METADATA",
     "targetCode": "axisDocsSearchnodeaxisdocsnodesecdiscoveraxis",
@@ -2845,7 +2939,7 @@ module.exports = {
     "auditTrail": [],
     "active": true
   },
-  "record61": {
+  "record63": {
     "code": "axisDocsPublicationsearchmetadataaxisdocssearchnodeaxisdocsnodesecbuildandoperateaxis",
     "targetType": "SEARCH_METADATA",
     "targetCode": "axisDocsSearchnodeaxisdocsnodesecbuildandoperateaxis",
@@ -2890,7 +2984,7 @@ module.exports = {
     "auditTrail": [],
     "active": true
   },
-  "record62": {
+  "record64": {
     "code": "axisDocsPublicationsearchmetadataaxisdocssearchnodeaxisdocsnodesecaxiscapabilities",
     "targetType": "SEARCH_METADATA",
     "targetCode": "axisDocsSearchnodeaxisdocsnodesecaxiscapabilities",
@@ -2935,7 +3029,7 @@ module.exports = {
     "auditTrail": [],
     "active": true
   },
-  "record63": {
+  "record65": {
     "code": "axisDocsPublicationsearchmetadataaxisdocssearchnodeaxisdocsnodeseccontributetoaxis",
     "targetType": "SEARCH_METADATA",
     "targetCode": "axisDocsSearchnodeaxisdocsnodeseccontributetoaxis",
@@ -2980,7 +3074,7 @@ module.exports = {
     "auditTrail": [],
     "active": true
   },
-  "record64": {
+  "record66": {
     "code": "axisDocsPublicationsearchmetadataaxisdocssearchnodeaxisdocsnodegrpdiscoveraxisaxisoverviewandarchitecture",
     "targetType": "SEARCH_METADATA",
     "targetCode": "axisDocsSearchnodeaxisdocsnodegrpdiscoveraxisaxisoverviewandarchitecture",
@@ -3025,7 +3119,7 @@ module.exports = {
     "auditTrail": [],
     "active": true
   },
-  "record65": {
+  "record67": {
     "code": "axisDocsPublicationsearchmetadataaxisdocssearchnodeaxisdocsnodetopicaxisoverview",
     "targetType": "SEARCH_METADATA",
     "targetCode": "axisDocsSearchnodeaxisdocsnodetopicaxisoverview",
@@ -3070,7 +3164,7 @@ module.exports = {
     "auditTrail": [],
     "active": true
   },
-  "record66": {
+  "record68": {
     "code": "axisDocsPublicationsearchmetadataaxisdocssearchnodeaxisdocsnodetopicaxisarchitecture",
     "targetType": "SEARCH_METADATA",
     "targetCode": "axisDocsSearchnodeaxisdocsnodetopicaxisarchitecture",
@@ -3115,7 +3209,7 @@ module.exports = {
     "auditTrail": [],
     "active": true
   },
-  "record67": {
+  "record69": {
     "code": "axisDocsPublicationsearchmetadataaxisdocssearchnodeaxisdocsnodegrpbuildandoperateaxisaxisbuildandruntime",
     "targetType": "SEARCH_METADATA",
     "targetCode": "axisDocsSearchnodeaxisdocsnodegrpbuildandoperateaxisaxisbuildandruntime",
@@ -3160,7 +3254,7 @@ module.exports = {
     "auditTrail": [],
     "active": true
   },
-  "record68": {
+  "record70": {
     "code": "axisDocsPublicationsearchmetadataaxisdocssearchnodeaxisdocsnodetopicaxistechnologystack",
     "targetType": "SEARCH_METADATA",
     "targetCode": "axisDocsSearchnodeaxisdocsnodetopicaxistechnologystack",
@@ -3205,7 +3299,7 @@ module.exports = {
     "auditTrail": [],
     "active": true
   },
-  "record69": {
+  "record71": {
     "code": "axisDocsPublicationsearchmetadataaxisdocssearchnodeaxisdocsnodetopicaxisdesignsystem",
     "targetType": "SEARCH_METADATA",
     "targetCode": "axisDocsSearchnodeaxisdocsnodetopicaxisdesignsystem",
@@ -3250,7 +3344,7 @@ module.exports = {
     "auditTrail": [],
     "active": true
   },
-  "record70": {
+  "record72": {
     "code": "axisDocsPublicationsearchmetadataaxisdocssearchnodeaxisdocsnodetopicaxiscmsrenderers",
     "targetType": "SEARCH_METADATA",
     "targetCode": "axisDocsSearchnodeaxisdocsnodetopicaxiscmsrenderers",
@@ -3295,7 +3389,7 @@ module.exports = {
     "auditTrail": [],
     "active": true
   },
-  "record71": {
+  "record73": {
     "code": "axisDocsPublicationsearchmetadataaxisdocssearchnodeaxisdocsnodetopicaxisdocumentationcontent",
     "targetType": "SEARCH_METADATA",
     "targetCode": "axisDocsSearchnodeaxisdocsnodetopicaxisdocumentationcontent",
@@ -3340,7 +3434,7 @@ module.exports = {
     "auditTrail": [],
     "active": true
   },
-  "record72": {
+  "record74": {
     "code": "axisDocsPublicationsearchmetadataaxisdocssearchnodeaxisdocsnodegrpaxiscapabilitiesaxisworkspacesandoperations",
     "targetType": "SEARCH_METADATA",
     "targetCode": "axisDocsSearchnodeaxisdocsnodegrpaxiscapabilitiesaxisworkspacesandoperations",
@@ -3385,7 +3479,7 @@ module.exports = {
     "auditTrail": [],
     "active": true
   },
-  "record73": {
+  "record75": {
     "code": "axisDocsPublicationsearchmetadataaxisdocssearchnodeaxisdocsnodetopicaxisemployeeaccess",
     "targetType": "SEARCH_METADATA",
     "targetCode": "axisDocsSearchnodeaxisdocsnodetopicaxisemployeeaccess",
@@ -3430,7 +3524,7 @@ module.exports = {
     "auditTrail": [],
     "active": true
   },
-  "record74": {
+  "record76": {
     "code": "axisDocsPublicationsearchmetadataaxisdocssearchnodeaxisdocsnodetopicaxisassistant",
     "targetType": "SEARCH_METADATA",
     "targetCode": "axisDocsSearchnodeaxisdocsnodetopicaxisassistant",
@@ -3475,7 +3569,7 @@ module.exports = {
     "auditTrail": [],
     "active": true
   },
-  "record75": {
+  "record77": {
     "code": "axisDocsPublicationsearchmetadataaxisdocssearchnodeaxisdocsnodetopicaxisschemaworkbench",
     "targetType": "SEARCH_METADATA",
     "targetCode": "axisDocsSearchnodeaxisdocsnodetopicaxisschemaworkbench",
@@ -3520,7 +3614,7 @@ module.exports = {
     "auditTrail": [],
     "active": true
   },
-  "record76": {
+  "record78": {
     "code": "axisDocsPublicationsearchmetadataaxisdocssearchnodeaxisdocsnodetopicaxispagedesigner",
     "targetType": "SEARCH_METADATA",
     "targetCode": "axisDocsSearchnodeaxisdocsnodetopicaxispagedesigner",
@@ -3565,7 +3659,52 @@ module.exports = {
     "auditTrail": [],
     "active": true
   },
-  "record77": {
+  "record79": {
+    "code": "axisDocsPublicationsearchmetadataaxisdocssearchnodeaxisdocsnodetopicaxisexperiencestudio",
+    "targetType": "SEARCH_METADATA",
+    "targetCode": "axisDocsSearchnodeaxisdocsnodetopicaxisexperiencestudio",
+    "lifecycleState": "ONLINE",
+    "publicationCode": "axisDocumentation",
+    "workflowReference": "axisDocumentationReviewWorkflow",
+    "stagedVersion": "0.0.2",
+    "onlineVersion": "0.0.2",
+    "previousOnlineVersion": "",
+    "validationResult": {
+      "generated": true,
+      "sourceAuthority": "docs/catalogue.json",
+      "publicationPath": "STAGED_REVIEW_APPROVAL_ONLINE",
+      "nexusVisibleOnlyWhenOnlineAndPublic": true
+    },
+    "checksum": "f226596d266da9bac58ed72834ae7b145a4bb4ce93695c1dd923cb94b0951cc7",
+    "managedInAxis": true,
+    "axisAuthoringPermissions": [
+      "documentation.search.preview"
+    ],
+    "workflowRequired": true,
+    "workflowTriggers": [
+      "SEARCH_METADATA_CHANGE"
+    ],
+    "decisionPolicy": {
+      "reviewPermission": "documentation.review",
+      "approvePermission": "documentation.approve",
+      "publishPermission": "documentation.publish",
+      "permissionEnforced": true,
+      "adminOverrideAudited": true
+    },
+    "actor": "nodics.platform.axis.generator",
+    "author": "nodics.platform.axis.generator",
+    "submittedBy": "",
+    "submittedAt": "",
+    "reviewer": "",
+    "reviewedAt": "",
+    "approver": "",
+    "approvedAt": "",
+    "publisher": "",
+    "publishedAt": "",
+    "auditTrail": [],
+    "active": true
+  },
+  "record80": {
     "code": "axisDocsPublicationsearchmetadataaxisdocssearchnodeaxisdocsnodetopicaxismodulehealth",
     "targetType": "SEARCH_METADATA",
     "targetCode": "axisDocsSearchnodeaxisdocsnodetopicaxismodulehealth",
@@ -3610,7 +3749,7 @@ module.exports = {
     "auditTrail": [],
     "active": true
   },
-  "record78": {
+  "record81": {
     "code": "axisDocsPublicationsearchmetadataaxisdocssearchnodeaxisdocsnodetopicaxisimportsexports",
     "targetType": "SEARCH_METADATA",
     "targetCode": "axisDocsSearchnodeaxisdocsnodetopicaxisimportsexports",
@@ -3655,7 +3794,7 @@ module.exports = {
     "auditTrail": [],
     "active": true
   },
-  "record79": {
+  "record82": {
     "code": "axisDocsPublicationsearchmetadataaxisdocssearchnodeaxisdocsnodetopicaxismediamanagement",
     "targetType": "SEARCH_METADATA",
     "targetCode": "axisDocsSearchnodeaxisdocsnodetopicaxismediamanagement",
@@ -3700,7 +3839,7 @@ module.exports = {
     "auditTrail": [],
     "active": true
   },
-  "record80": {
+  "record83": {
     "code": "axisDocsPublicationsearchmetadataaxisdocssearchnodeaxisdocsnodetopicaxiscustomerengagement",
     "targetType": "SEARCH_METADATA",
     "targetCode": "axisDocsSearchnodeaxisdocsnodetopicaxiscustomerengagement",
@@ -3745,7 +3884,7 @@ module.exports = {
     "auditTrail": [],
     "active": true
   },
-  "record81": {
+  "record84": {
     "code": "axisDocsPublicationsearchmetadataaxisdocssearchnodeaxisdocsnodetopicaxisopenapireference",
     "targetType": "SEARCH_METADATA",
     "targetCode": "axisDocsSearchnodeaxisdocsnodetopicaxisopenapireference",
@@ -3790,7 +3929,7 @@ module.exports = {
     "auditTrail": [],
     "active": true
   },
-  "record82": {
+  "record85": {
     "code": "axisDocsPublicationsearchmetadataaxisdocssearchnodeaxisdocsnodegrpcontributetoaxisaxiscontributionandgovernance",
     "targetType": "SEARCH_METADATA",
     "targetCode": "axisDocsSearchnodeaxisdocsnodegrpcontributetoaxisaxiscontributionandgovernance",
@@ -3835,7 +3974,7 @@ module.exports = {
     "auditTrail": [],
     "active": true
   },
-  "record83": {
+  "record86": {
     "code": "axisDocsPublicationsearchmetadataaxisdocssearchnodeaxisdocsnodetopicaxisfeaturedelivery",
     "targetType": "SEARCH_METADATA",
     "targetCode": "axisDocsSearchnodeaxisdocsnodetopicaxisfeaturedelivery",
@@ -3880,7 +4019,7 @@ module.exports = {
     "auditTrail": [],
     "active": true
   },
-  "record84": {
+  "record87": {
     "code": "axisDocsPublicationsearchmetadataaxisdocssearchnodeaxisdocsnodetopicaxisimplementationcontract",
     "targetType": "SEARCH_METADATA",
     "targetCode": "axisDocsSearchnodeaxisdocsnodetopicaxisimplementationcontract",
@@ -3925,7 +4064,7 @@ module.exports = {
     "auditTrail": [],
     "active": true
   },
-  "record85": {
+  "record88": {
     "code": "axisDocsPublicationsearchmetadataaxisdocssearchdashboardaxisdocsdashboardproduct",
     "targetType": "SEARCH_METADATA",
     "targetCode": "axisDocsSearchdashboardaxisdocsdashboardproduct",
@@ -3970,7 +4109,7 @@ module.exports = {
     "auditTrail": [],
     "active": true
   },
-  "record86": {
+  "record89": {
     "code": "axisDocsPublicationsearchmetadataaxisdocssearchdashboardaxisdocsdashboardnavigation",
     "targetType": "SEARCH_METADATA",
     "targetCode": "axisDocsSearchdashboardaxisdocsdashboardnavigation",
@@ -4015,7 +4154,7 @@ module.exports = {
     "auditTrail": [],
     "active": true
   },
-  "record87": {
+  "record90": {
     "code": "axisDocsPublicationsearchmetadataaxisdocssearchdashboardaxisdocsdashboardsecdiscoveraxis",
     "targetType": "SEARCH_METADATA",
     "targetCode": "axisDocsSearchdashboardaxisdocsdashboardsecdiscoveraxis",
@@ -4060,7 +4199,7 @@ module.exports = {
     "auditTrail": [],
     "active": true
   },
-  "record88": {
+  "record91": {
     "code": "axisDocsPublicationsearchmetadataaxisdocssearchdashboardaxisdocsdashboardsecbuildandoperateaxis",
     "targetType": "SEARCH_METADATA",
     "targetCode": "axisDocsSearchdashboardaxisdocsdashboardsecbuildandoperateaxis",
@@ -4105,7 +4244,7 @@ module.exports = {
     "auditTrail": [],
     "active": true
   },
-  "record89": {
+  "record92": {
     "code": "axisDocsPublicationsearchmetadataaxisdocssearchdashboardaxisdocsdashboardsecaxiscapabilities",
     "targetType": "SEARCH_METADATA",
     "targetCode": "axisDocsSearchdashboardaxisdocsdashboardsecaxiscapabilities",
@@ -4150,7 +4289,7 @@ module.exports = {
     "auditTrail": [],
     "active": true
   },
-  "record90": {
+  "record93": {
     "code": "axisDocsPublicationsearchmetadataaxisdocssearchdashboardaxisdocsdashboardseccontributetoaxis",
     "targetType": "SEARCH_METADATA",
     "targetCode": "axisDocsSearchdashboardaxisdocsdashboardseccontributetoaxis",
@@ -4195,7 +4334,7 @@ module.exports = {
     "auditTrail": [],
     "active": true
   },
-  "record91": {
+  "record94": {
     "code": "axisDocsPublicationsearchmetadataaxisdocssearchdashboardaxisdocsdashboardgrpdiscoveraxisaxisoverviewandarchitecture",
     "targetType": "SEARCH_METADATA",
     "targetCode": "axisDocsSearchdashboardaxisdocsdashboardgrpdiscoveraxisaxisoverviewandarchitecture",
@@ -4240,7 +4379,7 @@ module.exports = {
     "auditTrail": [],
     "active": true
   },
-  "record92": {
+  "record95": {
     "code": "axisDocsPublicationsearchmetadataaxisdocssearchdashboardaxisdocsdashboardgrpbuildandoperateaxisaxisbuildandruntime",
     "targetType": "SEARCH_METADATA",
     "targetCode": "axisDocsSearchdashboardaxisdocsdashboardgrpbuildandoperateaxisaxisbuildandruntime",
@@ -4285,7 +4424,7 @@ module.exports = {
     "auditTrail": [],
     "active": true
   },
-  "record93": {
+  "record96": {
     "code": "axisDocsPublicationsearchmetadataaxisdocssearchdashboardaxisdocsdashboardgrpaxiscapabilitiesaxisworkspacesandoperations",
     "targetType": "SEARCH_METADATA",
     "targetCode": "axisDocsSearchdashboardaxisdocsdashboardgrpaxiscapabilitiesaxisworkspacesandoperations",
@@ -4330,7 +4469,7 @@ module.exports = {
     "auditTrail": [],
     "active": true
   },
-  "record94": {
+  "record97": {
     "code": "axisDocsPublicationsearchmetadataaxisdocssearchdashboardaxisdocsdashboardgrpcontributetoaxisaxis39cb895b4ecbc510",
     "targetType": "SEARCH_METADATA",
     "targetCode": "axisDocsSearchdashboardaxisdocsdashboardgrpcontributetoaxisaxiscontributionandgovernance",
@@ -4375,7 +4514,7 @@ module.exports = {
     "auditTrail": [],
     "active": true
   },
-  "record95": {
+  "record98": {
     "code": "axisDocsPublicationsearchmetadataaxisdocssearchpageaxisdocsmetadataoverview",
     "targetType": "SEARCH_METADATA",
     "targetCode": "axisDocsSearchpageaxisdocsmetadataoverview",
@@ -4420,7 +4559,7 @@ module.exports = {
     "auditTrail": [],
     "active": true
   },
-  "record96": {
+  "record99": {
     "code": "axisDocsPublicationsearchmetadataaxisdocssearchpageaxisdocsmetadataarchitecture",
     "targetType": "SEARCH_METADATA",
     "targetCode": "axisDocsSearchpageaxisdocsmetadataarchitecture",
@@ -4465,7 +4604,7 @@ module.exports = {
     "auditTrail": [],
     "active": true
   },
-  "record97": {
+  "record100": {
     "code": "axisDocsPublicationsearchmetadataaxisdocssearchpageaxisdocsmetadatatechnologystack",
     "targetType": "SEARCH_METADATA",
     "targetCode": "axisDocsSearchpageaxisdocsmetadatatechnologystack",
@@ -4510,7 +4649,7 @@ module.exports = {
     "auditTrail": [],
     "active": true
   },
-  "record98": {
+  "record101": {
     "code": "axisDocsPublicationsearchmetadataaxisdocssearchpageaxisdocsmetadatadesignsystem",
     "targetType": "SEARCH_METADATA",
     "targetCode": "axisDocsSearchpageaxisdocsmetadatadesignsystem",
@@ -4555,7 +4694,7 @@ module.exports = {
     "auditTrail": [],
     "active": true
   },
-  "record99": {
+  "record102": {
     "code": "axisDocsPublicationsearchmetadataaxisdocssearchpageaxisdocsmetadatacmsrenderers",
     "targetType": "SEARCH_METADATA",
     "targetCode": "axisDocsSearchpageaxisdocsmetadatacmsrenderers",
@@ -4600,7 +4739,7 @@ module.exports = {
     "auditTrail": [],
     "active": true
   },
-  "record100": {
+  "record103": {
     "code": "axisDocsPublicationsearchmetadataaxisdocssearchpageaxisdocsmetadatadocumentationcontent",
     "targetType": "SEARCH_METADATA",
     "targetCode": "axisDocsSearchpageaxisdocsmetadatadocumentationcontent",
@@ -4645,7 +4784,7 @@ module.exports = {
     "auditTrail": [],
     "active": true
   },
-  "record101": {
+  "record104": {
     "code": "axisDocsPublicationsearchmetadataaxisdocssearchpageaxisdocsmetadataemployeeaccess",
     "targetType": "SEARCH_METADATA",
     "targetCode": "axisDocsSearchpageaxisdocsmetadataemployeeaccess",
@@ -4690,7 +4829,7 @@ module.exports = {
     "auditTrail": [],
     "active": true
   },
-  "record102": {
+  "record105": {
     "code": "axisDocsPublicationsearchmetadataaxisdocssearchpageaxisdocsmetadataassistant",
     "targetType": "SEARCH_METADATA",
     "targetCode": "axisDocsSearchpageaxisdocsmetadataassistant",
@@ -4735,7 +4874,7 @@ module.exports = {
     "auditTrail": [],
     "active": true
   },
-  "record103": {
+  "record106": {
     "code": "axisDocsPublicationsearchmetadataaxisdocssearchpageaxisdocsmetadataschemaworkbench",
     "targetType": "SEARCH_METADATA",
     "targetCode": "axisDocsSearchpageaxisdocsmetadataschemaworkbench",
@@ -4780,7 +4919,7 @@ module.exports = {
     "auditTrail": [],
     "active": true
   },
-  "record104": {
+  "record107": {
     "code": "axisDocsPublicationsearchmetadataaxisdocssearchpageaxisdocsmetadatapagedesigner",
     "targetType": "SEARCH_METADATA",
     "targetCode": "axisDocsSearchpageaxisdocsmetadatapagedesigner",
@@ -4825,7 +4964,52 @@ module.exports = {
     "auditTrail": [],
     "active": true
   },
-  "record105": {
+  "record108": {
+    "code": "axisDocsPublicationsearchmetadataaxisdocssearchpageaxisdocsmetadataexperiencestudio",
+    "targetType": "SEARCH_METADATA",
+    "targetCode": "axisDocsSearchpageaxisdocsmetadataexperiencestudio",
+    "lifecycleState": "ONLINE",
+    "publicationCode": "axisDocumentation",
+    "workflowReference": "axisDocumentationReviewWorkflow",
+    "stagedVersion": "0.0.2",
+    "onlineVersion": "0.0.2",
+    "previousOnlineVersion": "",
+    "validationResult": {
+      "generated": true,
+      "sourceAuthority": "docs/catalogue.json",
+      "publicationPath": "STAGED_REVIEW_APPROVAL_ONLINE",
+      "nexusVisibleOnlyWhenOnlineAndPublic": true
+    },
+    "checksum": "fc726786fb7e9a8149e0e80308881a9bb9d94c32066cc9921cf7e2ffbfc24e64",
+    "managedInAxis": true,
+    "axisAuthoringPermissions": [
+      "documentation.search.preview"
+    ],
+    "workflowRequired": true,
+    "workflowTriggers": [
+      "SEARCH_METADATA_CHANGE"
+    ],
+    "decisionPolicy": {
+      "reviewPermission": "documentation.review",
+      "approvePermission": "documentation.approve",
+      "publishPermission": "documentation.publish",
+      "permissionEnforced": true,
+      "adminOverrideAudited": true
+    },
+    "actor": "nodics.platform.axis.generator",
+    "author": "nodics.platform.axis.generator",
+    "submittedBy": "",
+    "submittedAt": "",
+    "reviewer": "",
+    "reviewedAt": "",
+    "approver": "",
+    "approvedAt": "",
+    "publisher": "",
+    "publishedAt": "",
+    "auditTrail": [],
+    "active": true
+  },
+  "record109": {
     "code": "axisDocsPublicationsearchmetadataaxisdocssearchpageaxisdocsmetadatamodulehealth",
     "targetType": "SEARCH_METADATA",
     "targetCode": "axisDocsSearchpageaxisdocsmetadatamodulehealth",
@@ -4870,7 +5054,7 @@ module.exports = {
     "auditTrail": [],
     "active": true
   },
-  "record106": {
+  "record110": {
     "code": "axisDocsPublicationsearchmetadataaxisdocssearchpageaxisdocsmetadataimportsexports",
     "targetType": "SEARCH_METADATA",
     "targetCode": "axisDocsSearchpageaxisdocsmetadataimportsexports",
@@ -4915,7 +5099,7 @@ module.exports = {
     "auditTrail": [],
     "active": true
   },
-  "record107": {
+  "record111": {
     "code": "axisDocsPublicationsearchmetadataaxisdocssearchpageaxisdocsmetadatamediamanagement",
     "targetType": "SEARCH_METADATA",
     "targetCode": "axisDocsSearchpageaxisdocsmetadatamediamanagement",
@@ -4960,7 +5144,7 @@ module.exports = {
     "auditTrail": [],
     "active": true
   },
-  "record108": {
+  "record112": {
     "code": "axisDocsPublicationsearchmetadataaxisdocssearchpageaxisdocsmetadatacustomerengagement",
     "targetType": "SEARCH_METADATA",
     "targetCode": "axisDocsSearchpageaxisdocsmetadatacustomerengagement",
@@ -5005,7 +5189,7 @@ module.exports = {
     "auditTrail": [],
     "active": true
   },
-  "record109": {
+  "record113": {
     "code": "axisDocsPublicationsearchmetadataaxisdocssearchpageaxisdocsmetadataopenapireference",
     "targetType": "SEARCH_METADATA",
     "targetCode": "axisDocsSearchpageaxisdocsmetadataopenapireference",
@@ -5050,7 +5234,7 @@ module.exports = {
     "auditTrail": [],
     "active": true
   },
-  "record110": {
+  "record114": {
     "code": "axisDocsPublicationsearchmetadataaxisdocssearchpageaxisdocsmetadatafeaturedelivery",
     "targetType": "SEARCH_METADATA",
     "targetCode": "axisDocsSearchpageaxisdocsmetadatafeaturedelivery",
@@ -5095,7 +5279,7 @@ module.exports = {
     "auditTrail": [],
     "active": true
   },
-  "record111": {
+  "record115": {
     "code": "axisDocsPublicationsearchmetadataaxisdocssearchpageaxisdocsmetadataimplementationcontract",
     "targetType": "SEARCH_METADATA",
     "targetCode": "axisDocsSearchpageaxisdocsmetadataimplementationcontract",

@@ -27,6 +27,8 @@ const pipelines = require('../src/pipelines/pipelines');
 const controller = require('../src/controller/defaultCartCustomerController');
 const facade = require('../src/facade/defaultCartCustomerFacade');
 const service = require('../src/service/defaultCartOperationService');
+const validationService = require('../src/service/defaultCartValidationService');
+const calculationEngine = require('../src/service/defaultCartCalculationEngineService');
 const calculationPipelineService = require('../src/service/pipelines/defaultCartCalculationPipelineService');
 const calculationPorts = require('../src/service/defaultCommerceCalculationPortsService');
 const exact = require('../../../../baseCommerce/modules/pricing/src/service/defaultExactAmountService');
@@ -47,9 +49,17 @@ function installGlobals() {
     productVariantLookups = [];
     productProjectionLookups = [];
     delete global.CLASSES;
-    global.CONFIG = { get: key => key === 'cart' ? properties.cart : undefined };
+    global.CONFIG = { get: key => key === 'cart' ? properties.cart : key === 'commerce' ? { enterpriseTenants: { enterpriseX: 'default' } } : undefined };
     global.SERVICE = {
         DefaultCartOperationService: service,
+        DefaultCartValidationService: validationService,
+        DefaultCartCalculationEngineService: calculationEngine,
+        DefaultExactAmountService: exact,
+        DefaultPricingDecisionService: pricingDecision,
+        DefaultPriceSelectionService: priceSelection,
+        DefaultInventorySourcingService: inventorySourcing,
+        DefaultPromotionDecisionService: promotionDecision,
+        DefaultTaxDecisionEngineService: taxDecision,
         DefaultCartService: {
             save: async request => {
                 let existing = carts.find(item => item.code === request.model.code);
@@ -57,7 +67,7 @@ function installGlobals() {
                 else carts.push(Object.assign({}, request.model));
                 return { result: Object.assign({}, request.model) };
             },
-            get: async request => ({ result: carts.filter(item => item.tenant === request.query.tenant && item.ownerId === request.query.ownerId && (!request.query.code || item.code === request.query.code)) })
+            get: async request => ({ result: carts.filter(item => item.tenant === request.query.tenant && item.ownerId === request.query.ownerId && (!request.query.code || item.code === request.query.code) && (!request.query.enterpriseCode || item.enterpriseCode === request.query.enterpriseCode)) })
         },
         DefaultCartEntryService: {
             save: async request => {
@@ -71,7 +81,25 @@ function installGlobals() {
                 if (existing) Object.assign(existing, request.model);
                 return { result: Object.assign({}, existing) };
             },
-            get: async request => ({ result: entries.filter(item => item.tenant === request.query.tenant && item.ownerId === request.query.ownerId && item.cartCode === request.query.cartCode && (!request.query.status || item.status === request.query.status)) })
+            get: async request => ({ result: entries.filter(item => item.tenant === request.query.tenant && item.ownerId === request.query.ownerId && item.cartCode === request.query.cartCode && (!request.query.status || item.status === request.query.status) && (!request.query.enterpriseCode || item.enterpriseCode === request.query.enterpriseCode)) })
+        },
+        DefaultCartCalculationService: {
+            save: async request => ({ result: request.model })
+        },
+        DefaultPriceBookService: {
+            get: async request => ({ result: [{ tenant: request.tenant, enterpriseCode: request.query.enterpriseCode, code: 'retailUsd', currency: 'USD', status: 'ACTIVE' }] })
+        },
+        DefaultPriceRowService: {
+            get: async request => ({ result: [{ tenant: request.tenant, enterpriseCode: request.query.enterpriseCode, code: 'active-price-' + request.query.productCode, priceBookCode: 'retailUsd', productCode: request.query.productCode, unitAmount: '10.00', currency: request.query.currency || 'USD', minQuantity: '1', status: 'ACTIVE' }] })
+        },
+        DefaultInventoryBalanceService: {
+            get: async request => ({ result: [{ tenant: request.tenant, enterpriseCode: request.query.enterpriseCode, warehouseCode: 'main', sku: request.query.sku, available: '25', priority: 1, revision: 1 }] })
+        },
+        DefaultPromotionService: {
+            get: async () => ({ result: [] })
+        },
+        DefaultTaxPolicyService: {
+            get: async request => ({ result: [{ tenant: request.tenant, enterpriseCode: request.query.enterpriseCode, taxCode: 'zero', jurisdiction: 'US', status: 'ACTIVE', rate: '0', revision: 1 }] })
         },
         DefaultProductVariantService: {
             get: async request => {
@@ -109,9 +137,9 @@ function installGlobals() {
 test.beforeEach(installGlobals);
 
 test('Cart customer routes expose create read entry mutation and calculation through secured customer permission', () => {
-    assert.equal(routers.cart.customer.create.key, '/customer/carts');
-    assert.equal(routers.cart.customer.read.key, '/customer/carts/:cartCode');
-    assert.equal(routers.cart.customer.addEntry.key, '/customer/carts/:cartCode/entries');
+    assert.equal(routers.cart.customer.create.key, '/carts');
+    assert.equal(routers.cart.customer.read.key, '/carts/:cartCode');
+    assert.equal(routers.cart.customer.addEntry.key, '/carts/:cartCode/entries');
     assert.equal(routers.cart.customer.updateEntry.method, 'PATCH');
     assert.equal(routers.cart.customer.removeEntry.method, 'DELETE');
     assert.equal(routers.cart.customer.calculate.permission, 'commerce.cart.own');
@@ -230,12 +258,19 @@ test('Cart customer API creates a cart and manages active entries for the authen
     assert.equal(added.data.entries.length, 1);
     assert.equal(added.data.entries[0].status, 'ACTIVE');
     assert.equal(added.data.entries[0].active, true);
+    assert.equal(added.data.validation.status, 'VALID');
+    assert.equal(added.data.calculation.cartCode, 'cart1');
+    assert.equal(added.data.calculation.entries.length, 1);
 
     let updated = await controller.updateEntry({ authData, httpRequest: { params: { cartCode: 'cart1', entryCode: 'cart1|agoraLinenWrapDress|AGORA-DRESS-S' }, body: { quantity: '3' } } });
     assert.equal(updated.data.entries[0].quantity, '3');
+    assert.equal(updated.data.validation.status, 'VALID');
+    assert.equal(updated.data.calculation.entries[0].quantity, '3');
 
     let removed = await controller.removeEntry({ authData, httpRequest: { params: { cartCode: 'cart1', entryCode: 'cart1|agoraLinenWrapDress|AGORA-DRESS-S' } } });
     assert.equal(removed.data.entries.length, 0);
+    assert.equal(removed.data.validation.status, 'VALID');
+    assert.equal(removed.data.calculation.entries.length, 0);
 });
 
 test('Cart customer API accepts Product variant identity and resolves internal SKU server-side', async () => {
@@ -258,6 +293,18 @@ test('Cart customer API accepts Product variant identity and resolves internal S
     assert.equal(productVariantLookups[0].authData.principalType, 'service');
     assert.deepEqual(productVariantLookups[0].authData.userGroups, ['serviceAccountUserGroup']);
     assert.deepEqual(productVariantLookups[0].authData.groups, ['serviceAccountUserGroup']);
+});
+
+test('Cart customer API derives runtime tenant from enterprise and scopes business reads by enterpriseCode', async () => {
+    const authData = { enterpriseCode: 'enterpriseX', principalId: 'customer-1' };
+    const created = await controller.create({ authData, httpRequest: { body: { cartCode: 'cartEnterprise', storeCode: 'agoraMainStore' } } });
+    const added = await controller.addEntry({ authData, httpRequest: { params: { cartCode: 'cartEnterprise' }, body: { productCode: 'agoraLinenWrapDress', sku: 'AGORA-DRESS-S', quantity: '1' } } });
+
+    assert.equal(created.data.cart.tenant, 'default');
+    assert.equal(created.data.cart.enterpriseCode, 'enterpriseX');
+    assert.equal(added.data.entries[0].enterpriseCode, 'enterpriseX');
+    assert.equal(added.data.validation.enterpriseCode, 'enterpriseX');
+    assert.equal(added.data.calculation.enterpriseCode, 'enterpriseX');
 });
 
 test('Cart customer API resolves SKU from internal Product search projection when raw variants are unavailable online', async () => {
@@ -338,6 +385,55 @@ test('Cart calculation ports read owner services with internal service groups', 
         assert.deepEqual(item.request.authData.userGroups, ['serviceAccountUserGroup']);
         assert.deepEqual(item.request.authData.groups, ['serviceAccountUserGroup']);
     }
+});
+
+test('Cart customer calculation forwards coupon context through the Promotion owner quote', async () => {
+    let promotionQuoteRequest;
+    global.SERVICE.DefaultExactAmountService = exact;
+    global.SERVICE.DefaultCartCalculationEngineService = calculationEngine;
+    global.SERVICE.DefaultPricingDecisionService = pricingDecision;
+    global.SERVICE.DefaultPriceSelectionService = priceSelection;
+    global.SERVICE.DefaultInventorySourcingService = inventorySourcing;
+    global.SERVICE.DefaultTaxDecisionEngineService = taxDecision;
+    global.SERVICE.DefaultPriceBookService = {
+        get: async () => ({ result: [{ tenant: 'default', code: 'retailUsd', currency: 'USD', status: 'ACTIVE' }] })
+    };
+    global.SERVICE.DefaultPriceRowService = {
+        get: async () => ({ result: [{ tenant: 'default', code: 'active-price', priceBookCode: 'retailUsd', productCode: 'agoraDress', unitAmount: '100.00', currency: 'USD', minQuantity: '1', status: 'ACTIVE' }] })
+    };
+    global.SERVICE.DefaultInventoryBalanceService = {
+        get: async () => ({ result: [{ tenant: 'default', warehouseCode: 'main', sku: 'AGORA-DRESS-S', available: '5', priority: 1, revision: 3 }] })
+    };
+    global.SERVICE.DefaultPromotionOperationService = {
+        quote: async request => {
+            promotionQuoteRequest = request;
+            return { promotionCode: 'coupon10', couponCode: 'coupon-row-1', discountAmount: '10.00', currency: request.currency, reasonCode: 'COUPON10', sourceHash: 'quote-hash', mutationPerformed: false };
+        }
+    };
+    global.SERVICE.DefaultTaxPolicyService = {
+        get: async () => ({ result: [{ tenant: 'default', taxCode: 'vat', jurisdiction: 'AE', status: 'ACTIVE', rate: '0.05', revision: 1 }] })
+    };
+    global.SERVICE.DefaultCartCalculationService = {
+        save: async request => ({ result: request.model })
+    };
+    carts.push({ code: 'cartCoupon', tenant: 'default', ownerId: 'customer-1', storeCode: 'agoraMainStore', jurisdiction: 'AE', revision: 2, currency: 'USD' });
+    entries.push({ code: 'entry-1', tenant: 'default', ownerId: 'customer-1', cartCode: 'cartCoupon', productCode: 'agoraDress', sku: 'AGORA-DRESS-S', quantity: '1', status: 'ACTIVE' });
+
+    const calculated = await service.calculateDirect({
+        tenant: 'default',
+        ownerId: 'customer-1',
+        cartCode: 'cartCoupon',
+        authData: { tenant: 'default', principalId: 'customer-1' },
+        payload: { expectedRevision: 2, couponCode: 'SAVE10', customerGroup: 'VIP', idempotencyKey: 'cart-coupon-1' }
+    });
+
+    assert.equal(calculated.discountAmount, '10');
+    assert.equal(calculated.totalAmount, '94.5');
+    assert.equal(promotionQuoteRequest.couponCode, 'SAVE10');
+    assert.equal(promotionQuoteRequest.customerGroup, 'VIP');
+    assert.deepEqual(promotionQuoteRequest.productCodes, ['agoraDress']);
+    assert.equal(promotionQuoteRequest.idempotencyKey, 'cart-coupon-1');
+    assert.equal(promotionQuoteRequest.authData.principalType, 'service');
 });
 
 test('Cart customer API rejects unauthenticated ownership context', async () => {

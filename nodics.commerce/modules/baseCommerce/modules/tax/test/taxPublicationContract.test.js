@@ -28,9 +28,20 @@ test('Tax operational restoration saves tenant-bound active policies', async () 
     global.SERVICE = {
         DefaultTaxPolicyService: { save: async request => { saves.push(request); return { result: request.model }; } }
     };
-    const result = await service.restoreOperational({ tenant: 'default', authData: { tenant: 'default' } }, {
+    const result = await service.restoreOperational({ tenant: 'default', enterpriseCode: 'enterprise-a', authData: { tenant: 'default', enterpriseCode: 'enterprise-a' } }, {
         taxPolicies: [{ code: 'vat', tenant: 'default', jurisdiction: 'AE', taxCode: 'VAT', rate: '0.05', status: 'ACTIVE', revision: 1 }]
     });
     assert.equal(result.restored, 1);
+    assert.equal(result.enterpriseCode, 'enterprise-a');
     assert.equal(saves[0].model.active, true);
+    assert.equal(saves[0].model.enterpriseCode, 'enterprise-a');
+});
+
+test('Tax operational restoration rejects records from another enterprise', async () => {
+    global.SERVICE = {
+        DefaultTaxPolicyService: { save: async request => request.model }
+    };
+    await assert.rejects(service.restoreOperational({ tenant: 'default', enterpriseCode: 'enterprise-a', authData: { tenant: 'default' } }, {
+        taxPolicies: [{ code: 'vat', tenant: 'default', enterpriseCode: 'enterprise-b', jurisdiction: 'AE', taxCode: 'VAT', rate: '0.05', status: 'ACTIVE', revision: 1 }]
+    }), /enterprise boundary/);
 });

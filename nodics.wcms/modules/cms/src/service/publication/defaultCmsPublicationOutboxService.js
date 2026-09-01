@@ -89,6 +89,10 @@ module.exports = {
             await SERVICE.DefaultCmsDeliveryCacheInvalidationService.invalidate(Object.assign({}, request, {
                 publicationEvent: event
             }));
+            if (SERVICE.DefaultWcmsExperiencePublicationIndexingService &&
+                typeof SERVICE.DefaultWcmsExperiencePublicationIndexingService.handlePublicationEvent === 'function') {
+                await SERVICE.DefaultWcmsExperiencePublicationIndexingService.handlePublicationEvent(event, request);
+            }
             await SERVICE.DefaultCmsPublicationEventOutboxService.update({ tenant: request.tenant, authData: request.authData,
                 query: { code: event.code, status: 'PROCESSING', leaseToken: leaseToken }, model: {
                     status: 'DELIVERED', attempts: attempts, lastAttemptAt: new Date().toISOString(),

@@ -63,6 +63,26 @@ module.exports = {
                 controller: 'DefaultSchemaWorkbenchController',
                 operation: 'search'
             },
+            createRecord: {
+                secured: true,
+                accessGroups: ['userGroup'],
+                permission: 'system.schema.workbench.manage',
+                apiExposure: 'schemaWorkbench',
+                key: '/schema/workbench/:schema/record',
+                method: 'POST',
+                controller: 'DefaultSchemaWorkbenchController',
+                operation: 'createRecord'
+            },
+            updateRecord: {
+                secured: true,
+                accessGroups: ['userGroup'],
+                permission: 'system.schema.workbench.manage',
+                apiExposure: 'schemaWorkbench',
+                key: '/schema/workbench/:schema/record',
+                method: 'PATCH',
+                controller: 'DefaultSchemaWorkbenchController',
+                operation: 'updateRecord'
+            },
             previewDeleteImpact: {
                 secured: true,
                 accessGroups: ['userGroup'],

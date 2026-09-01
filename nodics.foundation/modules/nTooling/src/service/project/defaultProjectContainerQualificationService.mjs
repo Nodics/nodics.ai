@@ -12,7 +12,7 @@
 
 /**
  * @module nTooling/service/project/defaultProjectContainerQualificationService
- * @description Runs manifest-declared container acceptance, qualification, resilience, and soak evidence without project-owned engine scripts.
+ * @description Runs environment-owned container acceptance, qualification, resilience, and soak evidence without project-owned engine scripts.
  * @layer tooling
  * @owner nTooling
  */
@@ -20,27 +20,18 @@
 import { spawnSync } from 'node:child_process';
 import fs from 'node:fs';
 import path from 'node:path';
+import { readContainerEnvironmentProfile } from './defaultProjectContainerProfileService.mjs';
 
 const projectRoot = process.cwd();
 const workspaceRoot = path.resolve(projectRoot, '..');
 
-function manifest() {
-  return JSON.parse(fs.readFileSync(path.join(projectRoot, 'nodics.project.json'), 'utf8'));
-}
-
-function template(value) {
-  return String(value || '').replaceAll('{projectRoot}', projectRoot).replaceAll('{workspaceRoot}', workspaceRoot);
-}
-
 function profile(code) {
-  const selected = (manifest().containerEnvironments || {})[code];
-  if (!selected) throw new Error(`Unknown container environment profile: ${code}`);
-  const generatedRoot = path.resolve(projectRoot, template(selected.generatedDirectory || `envs/${selected.environment}/generated`));
+  const selected = readContainerEnvironmentProfile(projectRoot, code);
   return {
-    code,
+    code: selected.code,
     ...selected,
-    generatedRoot,
-    environmentPath: path.join(generatedRoot, selected.environmentFile || 'docker.env'),
+    generatedRoot: selected.generatedRoot,
+    environmentPath: selected.environmentPath,
     qualification: selected.qualification || {},
     acceptance: selected.acceptance || {},
     soak: selected.soak || {},

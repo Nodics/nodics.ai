@@ -11,12 +11,12 @@
 
 /* Copyright (c) 2026 Nodics. Governed by the root LICENSE. */
 'use strict';
-/** @module cart/src/router/routers @description Declares secured customer Cart calculation API. @layer router @owner cart */
+/** @module cart/src/router/routers @description Declares secured Cart APIs with ownership enforced by token/session permissions. @layer router @owner cart */
 module.exports = { cart: { customer: {
-    create: { secured: true, authTokenTypes: ['access'], accessGroups: ['customerUserGroup'], permission: 'commerce.cart.own', apiExposure: 'commerceCustomer', key: '/customer/carts', method: 'POST', controller: 'DefaultCartCustomerController', operation: 'create' },
-    read: { secured: true, authTokenTypes: ['access'], accessGroups: ['customerUserGroup'], permission: 'commerce.cart.own', apiExposure: 'commerceCustomer', key: '/customer/carts/:cartCode', method: 'GET', controller: 'DefaultCartCustomerController', operation: 'read' },
-    addEntry: { secured: true, authTokenTypes: ['access'], accessGroups: ['customerUserGroup'], permission: 'commerce.cart.own', apiExposure: 'commerceCustomer', key: '/customer/carts/:cartCode/entries', method: 'POST', controller: 'DefaultCartCustomerController', operation: 'addEntry' },
-    updateEntry: { secured: true, authTokenTypes: ['access'], accessGroups: ['customerUserGroup'], permission: 'commerce.cart.own', apiExposure: 'commerceCustomer', key: '/customer/carts/:cartCode/entries/:entryCode', method: 'PATCH', controller: 'DefaultCartCustomerController', operation: 'updateEntry' },
-    removeEntry: { secured: true, authTokenTypes: ['access'], accessGroups: ['customerUserGroup'], permission: 'commerce.cart.own', apiExposure: 'commerceCustomer', key: '/customer/carts/:cartCode/entries/:entryCode', method: 'DELETE', controller: 'DefaultCartCustomerController', operation: 'removeEntry' },
-    calculate: { secured: true, authTokenTypes: ['access'], accessGroups: ['customerUserGroup'], permission: 'commerce.cart.own', apiExposure: 'commerceCustomer', key: '/customer/carts/:cartCode/calculations', method: 'POST', controller: 'DefaultCartCustomerController', operation: 'calculate' }
+    create: { secured: true, authTokenTypes: ['access'], accessGroups: ['customerUserGroup'], permission: 'commerce.cart.own', apiExposure: 'commerceCustomer', key: '/carts', method: 'POST', controller: 'DefaultCartCustomerController', operation: 'create' },
+    read: { secured: true, authTokenTypes: ['access'], accessGroups: ['customerUserGroup'], permission: 'commerce.cart.own', apiExposure: 'commerceCustomer', key: '/carts/:cartCode', method: 'GET', controller: 'DefaultCartCustomerController', operation: 'read' },
+    addEntry: { secured: true, authTokenTypes: ['access'], accessGroups: ['customerUserGroup'], permission: 'commerce.cart.own', apiExposure: 'commerceCustomer', key: '/carts/:cartCode/entries', method: 'POST', controller: 'DefaultCartCustomerController', operation: 'addEntry' },
+    updateEntry: { secured: true, authTokenTypes: ['access'], accessGroups: ['customerUserGroup'], permission: 'commerce.cart.own', apiExposure: 'commerceCustomer', key: '/carts/:cartCode/entries/:entryCode', method: 'PATCH', controller: 'DefaultCartCustomerController', operation: 'updateEntry' },
+    removeEntry: { secured: true, authTokenTypes: ['access'], accessGroups: ['customerUserGroup'], permission: 'commerce.cart.own', apiExposure: 'commerceCustomer', key: '/carts/:cartCode/entries/:entryCode', method: 'DELETE', controller: 'DefaultCartCustomerController', operation: 'removeEntry' },
+    calculate: { secured: true, authTokenTypes: ['access'], accessGroups: ['customerUserGroup'], permission: 'commerce.cart.own', apiExposure: 'commerceCustomer', key: '/carts/:cartCode/calculations', method: 'POST', controller: 'DefaultCartCustomerController', operation: 'calculate' }
 } } };

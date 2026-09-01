@@ -120,9 +120,10 @@ module.exports = {
         return Boolean(manifest && manifest.snapshot && manifest.snapshot.bundleType === 'SITE_INDEX');
     },
     /** Computes the integrity hash for one manifest content model. */
-    contentHash: function (dependencies, snapshot, mediaAssets) {
+    contentHash: function (dependencies, snapshot, mediaAssets, cmsExperiencePlacements) {
         let contentModel = { dependencies: dependencies, snapshot: snapshot };
         if (mediaAssets && mediaAssets.length) contentModel.mediaAssets = mediaAssets;
+        if (cmsExperiencePlacements && cmsExperiencePlacements.length) contentModel.cmsExperiencePlacements = cmsExperiencePlacements;
         return crypto.createHash('sha256').update(JSON.stringify(contentModel)).digest('hex');
     },
     /** Persists a prebuilt immutable manifest and returns it with transient media bytes attached. */
@@ -222,6 +223,23 @@ module.exports = {
         });
         return Array.from(codes).sort();
     },
+    /** Loads optional experience placements that belong to the same site publication. */
+    publicationExperiencePlacements: async function (publication, snapshot, request) {
+        if (!SERVICE.DefaultCmsExperiencePlacementService || typeof SERVICE.DefaultCmsExperiencePlacementService.get !== 'function') return [];
+        let site = snapshot && snapshot.site || snapshot && snapshot.bundleType === 'SITE_INDEX' && snapshot.site;
+        if (!site && snapshot && snapshot.bundleType === 'SITE' && Array.isArray(snapshot.routes) && snapshot.routes[0]) site = snapshot.routes[0].site;
+        if (!site && snapshot && snapshot.path) site = snapshot.site;
+        if (!site) return [];
+        let response = await SERVICE.DefaultCmsExperiencePlacementService.get({ tenant: request.tenant, authData: request.authData,
+            transactionContext: request.transactionContext, query: { active: true, site: site }, searchOptions: { limit: 500 } });
+        return this.items(response).map(placement => {
+            let safe = Object.assign({}, placement);
+            delete safe._id;
+            delete safe.created;
+            delete safe.updated;
+            return safe;
+        }).sort((left, right) => String(left.code).localeCompare(String(right.code)));
+    },
     /** Removes transfer-only bytes before manifests are stored in Mongo. */
     redactMediaAssets: function (mediaAssets) {
         return [].concat(mediaAssets || []).map(asset => {
@@ -248,11 +266,12 @@ module.exports = {
     /** Persists one deterministic immutable publication manifest idempotently. */
     persist: async function (publication, request) {
         let snapshot = await this.buildSnapshot(publication, request);
+        let cmsExperiencePlacements = await this.publicationExperiencePlacements(publication, snapshot, request);
         let mediaCodes = this.publicationMediaCodes(publication, snapshot);
         let code = [publication.code, publication.sourceVersion, Number(publication.revision || 0)].join('_');
         let mediaRequest = Object.assign({}, request, { publicationCode: publication.code, manifestCode: code });
         let mediaAssets = mediaCodes.length ? await SERVICE.DefaultMediaPublicationTransferService.exportReferenced(mediaCodes, mediaRequest) : [];
-        let contentHash = this.contentHash(publication.dependencies, snapshot, mediaAssets);
+        let contentHash = this.contentHash(publication.dependencies, snapshot, mediaAssets, cmsExperiencePlacements);
         let persistedMediaAssets = this.redactMediaAssets(mediaAssets);
         let model = { code: code, active: true, publicationCode: publication.code, rootType: publication.rootType,
             rootCode: publication.rootCode, sourceVersion: publication.sourceVersion, dependencies: publication.dependencies,
@@ -260,12 +279,16 @@ module.exports = {
                 request.authData && (request.authData.principalId || request.authData.code),
             correlationId: request.correlationId || request.requestId };
         if (persistedMediaAssets.length) model.mediaAssets = persistedMediaAssets;
+        if (cmsExperiencePlacements.length) model.cmsExperiencePlacements = cmsExperiencePlacements;
         return this.saveManifestModel(model, mediaAssets, request);
     },
     /** Imports one integrity-checked immutable manifest into the target CMS repository idempotently. */
     importManifest: async function (manifest, request) {
         let contentModel = { dependencies: manifest.dependencies, snapshot: manifest.snapshot };
         if (Object.prototype.hasOwnProperty.call(manifest, 'mediaAssets')) contentModel.mediaAssets = manifest.mediaAssets;
+        if (Object.prototype.hasOwnProperty.call(manifest, 'cmsExperiencePlacements')) {
+            contentModel.cmsExperiencePlacements = manifest.cmsExperiencePlacements;
+        }
         let content = JSON.stringify(contentModel);
         let hash = crypto.createHash('sha256').update(content).digest('hex');
         if (!manifest.contentHash || hash !== manifest.contentHash) throw new CLASSES.NodicsError('CMS_PUBLICATION_MANIFEST_INTEGRITY', 'CMS publication manifest integrity validation failed');
@@ -279,6 +302,9 @@ module.exports = {
             snapshot: manifest.snapshot, contentHash: manifest.contentHash, createdBy: manifest.createdBy,
             correlationId: request.correlationId || request.requestId || manifest.correlationId };
         if (Object.prototype.hasOwnProperty.call(manifest, 'mediaAssets')) safe.mediaAssets = this.redactMediaAssets(manifest.mediaAssets);
+        if (Object.prototype.hasOwnProperty.call(manifest, 'cmsExperiencePlacements')) {
+            safe.cmsExperiencePlacements = manifest.cmsExperiencePlacements;
+        }
         let response = await SERVICE.DefaultCmsPublicationManifestService.save({ tenant: request.tenant, authData: request.authData,
             transactionContext: request.transactionContext, model: safe });
         return this.withTransferMediaAssets(this.items(response)[0] || response.result || safe, manifest.mediaAssets);

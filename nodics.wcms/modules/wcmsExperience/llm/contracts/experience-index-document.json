@@ -1,0 +1,37 @@
+{
+  "code": "wcmsExperience|agoraApparelSite|PRODUCT_LISTING|hero|COLLECTION|summer-edit|en-US|web|manifest-v12",
+  "tenant": "default",
+  "ownerType": "WCMS_EXPERIENCE",
+  "ownerCode": "summer-edit-hero",
+  "indexConfigurationCode": "cmsExperiencePlacement",
+  "storeCode": "agoraApparelSite",
+  "locale": "en-US",
+  "status": "CURRENT",
+  "active": true,
+  "sourceHash": "sha256-of-payload",
+  "projectedAt": "2026-08-31T10:15:00.000Z",
+  "payload": {
+    "code": "summer-edit-hero",
+    "site": "agoraApparelSite",
+    "pageType": "PRODUCT_LISTING",
+    "slot": "hero",
+    "targetType": "COLLECTION",
+    "targetCode": "summer-edit",
+    "locale": "en-US",
+    "channel": "web",
+    "priority": 100,
+    "specificity": 60,
+    "componentCode": "summerEditHero",
+    "rendererKey": "heroBanner",
+    "contractVersion": 1,
+    "publicationStatus": "ONLINE",
+    "deliveryStatus": "ACTIVE",
+    "release": "cmsBaseline_agora_apparel_0_0_12",
+    "indexVersion": "manifest-v12",
+    "properties": {
+      "eyebrow": "Summer edit",
+      "title": "Light layers for warm days"
+    },
+    "media": []
+  }
+}

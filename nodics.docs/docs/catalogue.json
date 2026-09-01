@@ -10097,20 +10097,129 @@
       ]
     },
     {
-      "id": "commerce.customer-list-profile-boundary",
-      "functionalModule": "nodics.commerce",
-      "technicalModule": "customerList",
-      "title": "Customer List and Profile Commerce Boundary",
-      "summary": "Why customer lists belong to Commerce while person, address, authentication, permission, and organization identity stay under Profile.",
+      "id": "loyalty.wallets-rewards-ledger",
+      "functionalModule": "nodics.loyalty",
+      "technicalModule": "loyaltyWallet",
+      "title": "Loyalty Wallets, Rewards, and Ledger",
+      "summary": "Business, developer, operator, and customization guidance for reward wallets, balances, reservations, redemptions, ledger evidence, and Commerce reward payment provider integration.",
       "locale": "en",
-      "content": "docs/pages/nodics.commerce/customer-list-profile-boundary.md",
-      "slug": "commerce-customer-list-profile-boundary",
+      "content": "docs/pages/nodics.loyalty/loyalty-wallets-rewards-and-ledger.md",
+      "slug": "loyalty-wallets-rewards-and-ledger",
+      "parentId": "loyalty-and-rewards.loyalty-foundations",
+      "hierarchyPath": [
+        "Nodics Documentation",
+        "Loyalty and Rewards",
+        "Loyalty Foundations",
+        "Loyalty Wallets, Rewards, and Ledger"
+      ],
+      "hierarchyDepth": 4,
+      "navigationSection": "Loyalty and Rewards",
+      "navigationSectionCode": "loyalty-and-rewards",
+      "navigationSectionOrder": 305,
+      "navigationGroup": "Loyalty Foundations",
+      "navigationGroupCode": "loyalty-foundations",
+      "navigationGroupOrder": 10,
+      "navigationSubgroup": null,
+      "navigationSubgroupCode": null,
+      "navigationOrder": 10,
+      "documentType": "contract",
+      "audience": [
+        "business",
+        "architect",
+        "administrator",
+        "developer",
+        "operator",
+        "qa",
+        "ai-tool"
+      ],
+      "businessAudience": [
+        "business user",
+        "administrator",
+        "implementation partner"
+      ],
+      "technicalAudience": [
+        "architect",
+        "developer",
+        "operator",
+        "qa engineer",
+        "ai tool"
+      ],
+      "sourceOwner": "nodics.loyalty",
+      "sourcePath": "docs/pages/nodics.loyalty/loyalty-wallets-rewards-and-ledger.md",
+      "visibility": "public",
+      "channel": [
+        "axis",
+        "web"
+      ],
+      "accessMode": "PUBLIC",
+      "publiclyAvailable": true,
+      "requiresAuthentication": false,
+      "allowedRoles": [],
+      "allowedGroups": [],
+      "allowedPermissions": [],
+      "lifecycleState": "ONLINE",
+      "version": "0.16.8",
+      "relatedPages": [
+        "commerce.payment-provider-boundaries",
+        "commerce.payment-fulfillment",
+        "framework.customization-guide",
+        "framework.local-browser-acceptance-journey"
+      ],
+      "sourceEvidence": [
+        "docs/catalogue.json",
+        "docs/pages/nodics.loyalty/loyalty-wallets-rewards-and-ledger.md",
+        "../nodics.loyalty/package.json",
+        "../nodics.loyalty/README.md",
+        "../nodics.loyalty/modules/loyaltyWallet/src/schemas/schemas.js",
+        "../nodics.loyalty/modules/loyaltyWallet/src/service/defaultLoyaltyRewardOperationService.js",
+        "../nodics.loyalty/modules/loyaltyLedger/src/schemas/schemas.js",
+        "../nodics.loyalty/modules/loyaltyReservation/src/schemas/schemas.js",
+        "../nodics.loyalty/modules/loyaltyRedemption/src/schemas/schemas.js",
+        "../nodics.loyalty/modules/loyaltyApi/src/router/routers.js",
+        "../nodics.commerce/modules/payment/modules/paymentProviders/modules/loyaltyRewardProvider/README.md",
+        "../nodics.foundation/modules/nTooling/src/service/project/defaultProjectLoyaltyRewardCheckoutAcceptanceService.mjs"
+      ],
+      "maturityState": "operational",
+      "implementationState": "current",
+      "renderingComponent": "documentation.component.article",
+      "searchKeywords": [
+        "loyalty",
+        "reward",
+        "wallet",
+        "points",
+        "ledger",
+        "reservation",
+        "redemption",
+        "checkout",
+        "payment-provider"
+      ],
+      "topicKeywords": [
+        "Loyalty and Rewards",
+        "Loyalty Foundations",
+        "Loyalty Wallets, Rewards, and Ledger"
+      ],
+      "visualRequirements": [
+        "diagram",
+        "table",
+        "code-example",
+        "command-example"
+      ]
+    },
+    {
+      "id": "commerce.shopping-list-commerce-boundary",
+      "functionalModule": "nodics.commerce",
+      "technicalModule": "shoppingList",
+      "title": "Shopping List Commerce Boundary",
+      "summary": "Why wishlist, compare, and save-for-later belong to Commerce while Profile remains the identity authority.",
+      "locale": "en",
+      "content": "docs/pages/nodics.commerce/shopping-list-commerce-boundary.md",
+      "slug": "commerce-shopping-list-commerce-boundary",
       "parentId": "user-enterprise-and-tenant-management.customer-data-and-identity",
       "hierarchyPath": [
         "Nodics Documentation",
         "User, Enterprise, and Tenant Management",
         "Customer Data and Identity",
-        "Customer List and Profile Commerce Boundary"
+        "Shopping List Commerce Boundary"
       ],
       "hierarchyDepth": 4,
       "navigationSection": "User, Enterprise, and Tenant Management",
@@ -10145,7 +10254,7 @@
         "ai tool"
       ],
       "sourceOwner": "nodics.commerce",
-      "sourcePath": "docs/pages/nodics.commerce/customer-list-profile-boundary.md",
+      "sourcePath": "docs/pages/nodics.commerce/shopping-list-commerce-boundary.md",
       "visibility": "public",
       "channel": [
         "axis",
@@ -10166,25 +10275,29 @@
       ],
       "sourceEvidence": [
         "docs/catalogue.json",
-        "docs/pages/nodics.commerce/customer-list-profile-boundary.md",
-        "../nodics.commerce/modules/checkout/modules/customerList/package.json",
-        "../nodics.commerce/modules/checkout/package.json",
-        "../nodics.platform/modules/profile/package.json"
+        "docs/pages/nodics.commerce/shopping-list-commerce-boundary.md",
+        "../nodics.commerce/modules/baseCommerce/modules/shoppingList/package.json",
+        "../nodics.commerce/modules/baseCommerce/modules/shoppingList/src/router/routers.js",
+        "../nodics.commerce/modules/baseCommerce/modules/shoppingList/src/service/defaultShoppingListOperationService.js",
+        "../nodics.commerce/modules/baseCommerce/package.json",
+        "../nodics.platform/modules/profile/data/init-v001/records/groups/defaultBootstrapUserGroupsData.js"
       ],
       "maturityState": "operational",
       "implementationState": "current",
       "renderingComponent": "documentation.component.article",
       "searchKeywords": [
-        "customer-list",
+        "shopping-list",
+        "wishlist",
+        "compare",
+        "save-for-later",
         "profile",
         "commerce-boundary",
-        "eligibility",
         "identity"
       ],
       "topicKeywords": [
         "User, Enterprise, and Tenant Management",
         "Customer Data and Identity",
-        "Customer List and Profile Commerce Boundary"
+        "Shopping List Commerce Boundary"
       ],
       "visualRequirements": [
         "diagram",
@@ -12757,6 +12870,26 @@
       "title": "Payment Management",
       "order": 300,
       "summary": "Payment methods, providers, authorization, callbacks, capture, reconciliation, risk, and payment operations.",
+      "audience": [
+        "business",
+        "architect",
+        "administrator",
+        "developer",
+        "operator",
+        "qa",
+        "ai-tool"
+      ],
+      "visibility": "public",
+      "accessMode": "PUBLIC",
+      "publiclyAvailable": true,
+      "requiresAuthentication": false,
+      "lifecycleState": "ONLINE"
+    },
+    {
+      "code": "loyalty-and-rewards",
+      "title": "Loyalty and Rewards",
+      "order": 305,
+      "summary": "Reward programs, reward types, owner wallets, balances, reservations, redemptions, ledger evidence, and reward-based checkout integration.",
       "audience": [
         "business",
         "architect",

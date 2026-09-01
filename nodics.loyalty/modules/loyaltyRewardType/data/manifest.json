@@ -1,0 +1,29 @@
+{
+    "contractVersion": 2,
+    "module": "loyaltyRewardType",
+    "sections": {
+        "core-reference": {
+            "kind": "DATA_RELEASE",
+            "dataType": "core",
+            "version": "0.0.0",
+            "displayName": "Loyalty Reward Type Reference",
+            "description": "Provider-neutral reward unit types available to Loyalty programs and wallets.",
+            "owningDomain": "loyalty",
+            "lifecycle": "REFERENCE",
+            "destinationRole": "LOYALTY",
+            "environmentScope": [
+                "ALL"
+            ],
+            "sensitivity": "INTERNAL",
+            "versioningPolicy": "NONE",
+            "publicationPolicy": "NONE",
+            "initialPublicationPolicy": "NONE",
+            "removalPolicy": "RETAIN",
+            "files": {
+                "core-v001/records/loyalty/loyaltyRewardTypeCoreData.js": "6f93a63f6f810d5b594bc9ff29c73a2dc32cf5d158d3c48785ba757c2e4faaf5",
+                "core-v001/headers/loyalty/loyaltyRewardTypeCoreHeader.js": "18b7f12c0d4e1c2bf09c4bd4049b8944889158457bd254a1aeddd1890c1ead4c"
+            },
+            "sourceRoot": "core-v001"
+        }
+    }
+}

@@ -72,6 +72,23 @@ module.exports = {
                                         mediaCode: { type: 'keyword' },
                                         altText: { type: 'text' }
                                     }
+                                },
+                                secondaryImage: {
+                                    type: 'object',
+                                    dynamic: false,
+                                    properties: {
+                                        mediaCode: { type: 'keyword' },
+                                        altText: { type: 'text' }
+                                    }
+                                },
+                                gallery: {
+                                    type: 'object',
+                                    dynamic: false,
+                                    properties: {
+                                        mediaCode: { type: 'keyword' },
+                                        altText: { type: 'text' },
+                                        role: { type: 'keyword' }
+                                    }
                                 }
                             }
                         },

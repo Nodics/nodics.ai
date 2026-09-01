@@ -14,5 +14,5 @@
 /** @module inventory/src/service/defaultInventorySourcingService @description Selects tenant-safe warehouse candidates without mutating stock. @layer service @owner inventory */
 module.exports = { source: function (request, balances) {
     if (!request || !Array.isArray(balances)) throw new Error('Request and balances are required');
-    return Object.freeze(balances.filter(item => item.tenant === request.tenant && item.sku === request.sku && item.available !== '0').sort((a, b) => Number(a.priority || 0) - Number(b.priority || 0)).map(item => Object.freeze({ warehouseCode: item.warehouseCode, sku: item.sku, available: item.available, revision: item.revision })));
+    return Object.freeze(balances.filter(item => item.tenant === request.tenant && (!request.enterpriseCode || item.enterpriseCode === request.enterpriseCode) && item.sku === request.sku && item.available !== '0').sort((a, b) => Number(a.priority || 0) - Number(b.priority || 0)).map(item => Object.freeze({ warehouseCode: item.warehouseCode, sku: item.sku, available: item.available, revision: item.revision })));
 } };

@@ -1,0 +1,12 @@
+{
+  "site": "agora-apparel",
+  "pageType": "PRODUCT_LISTING",
+  "targetType": "COLLECTION",
+  "targetCode": "summer-edit",
+  "locale": "en-US",
+  "region": "AE",
+  "channel": "web",
+  "device": "desktop",
+  "customerSegments": ["anonymous"],
+  "previewMode": false
+}

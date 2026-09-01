@@ -188,6 +188,31 @@ test('reverse lifecycle facade resolves customer ownership from authenticated lo
     assert.equal(captured.tenant, 'default');
 });
 
+test('reverse lifecycle facade keeps operator action actor separate from customer owner', async () => {
+    let captured;
+    global.SERVICE = {
+        DefaultOrderLifecycleOperationService: {
+            action: async request => {
+                captured = request;
+                return { actorId: request.actorId, ownerId: request.ownerId };
+            }
+        }
+    };
+
+    const result = await facade.action({
+        tenant: 'default',
+        authData: { tenant: 'default', loginId: 'operator@example.com' },
+        ownerId: 'customer@example.com',
+        requestCode: 'order-1:cancellation:1',
+        actionCode: 'APPROVE',
+        payload: { refundAmount: '5.00' }
+    });
+
+    assert.equal(result.actorId, 'operator@example.com');
+    assert.equal(result.ownerId, 'customer@example.com');
+    assert.equal(captured.actorId, 'operator@example.com');
+});
+
 test('reverse lifecycle operator approve executes Payment-owned refund and records downstream evidence', async () => {
     let refundRequest;
     storedLifecycle = [{
@@ -221,6 +246,91 @@ test('reverse lifecycle operator approve executes Payment-owned refund and recor
     assert.equal(refundRequest.orderCode, 'order-1');
     assert.equal(refundRequest.payload.amount, '12.00');
     assert.equal(lifecycleUpdates[0].evidence.downstream.payment.status, 'REFUND_SUCCEEDED');
+});
+
+test('reverse lifecycle operator cancellation approval executes refund when amount is confirmed', async () => {
+    let refundRequest;
+    let digitalRequest;
+    storedLifecycle = [{
+        code: 'order-1:cancellation:1',
+        tenant: 'default',
+        enterpriseCode: 'enterpriseX',
+        ownerId: 'customer-1',
+        orderCode: 'order-1',
+        requestType: 'CANCELLATION',
+        status: 'SUBMITTED',
+        revision: 0,
+        evidence: { refundPreview: { amount: 'PENDING_CALCULATION', currency: 'USD' } }
+    }];
+    global.SERVICE.DefaultDigitalCommerceEntitlementService = {
+        revokeForOrderLifecycle: async request => {
+            digitalRequest = request;
+            return [{ entitlementCode: 'entitlement-1', policyDecision: 'REVOKE_AND_REFUND' }];
+        }
+    };
+    global.SERVICE.DefaultPaymentRefundExecutionService = {
+        executeRefund: async request => {
+            refundRequest = request;
+            return { status: 'REFUND_SUCCEEDED', refundCode: 'refund-1' };
+        }
+    };
+
+    const result = await service.action({
+        tenant: 'default',
+        enterpriseCode: 'enterpriseX',
+        actorId: 'operator-1',
+        requestCode: 'order-1:cancellation:1',
+        actionCode: 'APPROVE',
+        payload: { refundAmount: '5.00', currency: 'USD' },
+        authData: { groups: ['employeeUserGroup'] },
+        correlationId: 'corr-cancellation-approve'
+    });
+
+    assert.equal(result.status, 'APPROVED');
+    assert.equal(digitalRequest.payload.requestType, 'CANCELLATION');
+    assert.equal(refundRequest.orderCode, 'order-1');
+    assert.equal(refundRequest.payload.amount, '5.00');
+    assert.equal(result.evidence.downstream.digitalCommerce[0].policyDecision, 'REVOKE_AND_REFUND');
+    assert.equal(result.evidence.downstream.payment.status, 'REFUND_SUCCEEDED');
+});
+
+test('reverse lifecycle refund approval calls Digital Commerce entitlement revocation policy', async () => {
+    let digitalRequest;
+    storedLifecycle = [{
+        code: 'order-1:refund-digital:1',
+        tenant: 'default',
+        enterpriseCode: 'enterpriseX',
+        ownerId: 'customer-1',
+        orderCode: 'order-1',
+        requestType: 'REFUND',
+        status: 'SUBMITTED',
+        revision: 0,
+        evidence: { refundPreview: { amount: '5.00', currency: 'USD' } }
+    }];
+    global.SERVICE.DefaultDigitalCommerceEntitlementService = {
+        revokeForOrderLifecycle: async request => {
+            digitalRequest = request;
+            return [{ entitlementCode: 'entitlement-1', policyDecision: 'REVOKE_AND_REFUND' }];
+        }
+    };
+    global.SERVICE.DefaultPaymentRefundExecutionService = {
+        executeRefund: async () => ({ status: 'REFUND_SUCCEEDED' })
+    };
+
+    const result = await service.action({
+        tenant: 'default',
+        enterpriseCode: 'enterpriseX',
+        actorId: 'operator-1',
+        requestCode: 'order-1:refund-digital:1',
+        actionCode: 'APPROVE',
+        payload: {},
+        authData: { groups: ['employeeUserGroup'] },
+        correlationId: 'corr-approve-digital-refund'
+    });
+
+    assert.equal(digitalRequest.enterpriseCode, 'enterpriseX');
+    assert.equal(digitalRequest.payload.requestType, 'REFUND');
+    assert.equal(result.evidence.downstream.digitalCommerce[0].policyDecision, 'REVOKE_AND_REFUND');
 });
 
 test('reverse lifecycle operator return actions call Fulfillment-owned receipt and inspection services', async () => {
@@ -322,9 +432,11 @@ test('Order BackOffice capability declares operator actions for cancellation ret
     };
 
     const capability = backofficeCapability.getCapability();
+    const cancellations = capability.navigation.find(item => item.id === 'order-cancellations');
     const returns = capability.navigation.find(item => item.id === 'order-returns');
     const refunds = capability.navigation.find(item => item.id === 'order-refunds');
 
+    assert(cancellations.lifecycleActions.some(action => action.id === 'approve' && action.inputFields.some(field => field.name === 'refundAmount')));
     assert(returns.lifecycleActions.some(action => action.id === 'mark-received' && action.operationRoute.includes('MARK_RECEIVED')));
     assert(returns.lifecycleActions.some(action => action.id === 'record-disposition' && action.inputFields.some(field => field.name === 'disposition' && field.type === 'SELECT')));
     assert(refunds.lifecycleActions.some(action => action.id === 'approve' && action.inputFields.some(field => field.name === 'refundAmount')));

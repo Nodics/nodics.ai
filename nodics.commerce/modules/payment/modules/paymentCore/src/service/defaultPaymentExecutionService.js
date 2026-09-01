@@ -37,6 +37,7 @@ module.exports = {
             orderCode: request.orderCode,
             cartCode: request.cartCode,
             operation: request.operation,
+            methodCode: request.methodCode,
             amount: String(request.amount),
             totalAmount: String(request.amount),
             currency: request.currency,
@@ -48,10 +49,14 @@ module.exports = {
             reconciliationRequired: outcome.reconciliationRequired,
             evidence: {
                 operation: request.operation,
+                methodCode: request.methodCode,
                 providerCode: adapter.code,
                 providerReference: response && response.reference,
                 providerStatus: response && response.status,
-                sandbox: response && response.sandbox === true
+                sandbox: response && response.sandbox === true,
+                walletCode: request.walletCode,
+                programCode: request.programCode,
+                rewardTypeCode: request.rewardTypeCode
             }
         });
     },
@@ -62,7 +67,30 @@ module.exports = {
         if (inFlight.has(key)) return inFlight.get(key);
         const execution = (async () => {
             const existing = await repository.find(request.tenant, request.idempotencyKey); if (existing) return existing;
-            const response = await adapter.execute(Object.freeze({ tenant: request.tenant, operation: request.operation, amount: request.amount, currency: request.currency, providerToken: request.providerToken, providerReference: request.providerReference, idempotencyKey: request.idempotencyKey, correlationId: request.correlationId }));
+            const response = await adapter.execute(Object.freeze({
+                tenant: request.tenant,
+                authData: request.authData,
+                ownerId: request.ownerId,
+                orderCode: request.orderCode,
+                cartCode: request.cartCode,
+                paymentTransactionCode: request.paymentTransactionCode,
+                operation: request.operation,
+                methodCode: request.methodCode,
+                amount: request.amount,
+                currency: request.currency,
+                providerToken: request.providerToken,
+                providerReference: request.providerReference,
+                walletCode: request.walletCode,
+                programCode: request.programCode,
+                rewardTypeCode: request.rewardTypeCode,
+                reversalOfEntryCode: request.reversalOfEntryCode,
+                sourceCode: request.sourceCode,
+                targetType: request.targetType,
+                targetCode: request.targetCode,
+                payload: request.payload,
+                idempotencyKey: request.idempotencyKey,
+                correlationId: request.correlationId
+            }));
             return repository.record(this.transactionModel(request, adapter, response));
         })();
         inFlight.set(key, execution);

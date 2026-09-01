@@ -20,6 +20,7 @@ const routers = require('../src/router/routers');
 const controller = require('../src/controller/defaultPromotionController');
 const facade = require('../src/facade/defaultPromotionFacade');
 const service = require('../src/service/defaultPromotionOperationService');
+const publicationService = require('../src/service/defaultPromotionPublicationService');
 const backofficeCapability = require('../src/service/defaultPromotionBackofficeCapabilityService');
 const simulation = require('../src/service/defaultPromotionSimulationService');
 const decision = require('../src/service/defaultPromotionDecisionService');
@@ -46,6 +47,7 @@ function installGlobals() {
     budgetLedger = [];
     global.SERVICE = {
         DefaultPromotionOperationService: service,
+        DefaultPromotionPublicationService: publicationService,
         DefaultBackofficeCapabilityDefinitionService: {
             capability: value => value,
             workbench: value => value
@@ -56,7 +58,7 @@ function installGlobals() {
         DefaultPromotionService: {
             get: async request => {
                 promotionRequests.push(request);
-                return { result: promotions.filter(item => item.tenant === request.query.tenant && (!request.query.status || item.status === request.query.status) && (!request.query.code || item.code === request.query.code)) };
+                return { result: promotions.filter(item => item.tenant === request.query.tenant && (!request.query.enterpriseCode || item.enterpriseCode === request.query.enterpriseCode) && (!request.query.status || item.status === request.query.status) && (!request.query.code || item.code === request.query.code)) };
             },
             save: async request => {
                 promotions.push(request.model);
@@ -69,7 +71,7 @@ function installGlobals() {
             }
         },
         DefaultCouponService: {
-            get: async request => ({ result: coupons.filter(item => item.tenant === request.query.tenant && (!request.query.code || item.code === request.query.code) && (!request.query.promotionCode || item.promotionCode === request.query.promotionCode) && (!request.query.batchCode || item.batchCode === request.query.batchCode) && (!request.query.tokenHash || item.tokenHash === request.query.tokenHash)) }),
+            get: async request => ({ result: coupons.filter(item => item.tenant === request.query.tenant && (!request.query.enterpriseCode || item.enterpriseCode === request.query.enterpriseCode) && (!request.query.code || item.code === request.query.code) && (!request.query.promotionCode || item.promotionCode === request.query.promotionCode) && (!request.query.batchCode || item.batchCode === request.query.batchCode) && (!request.query.tokenHash || item.tokenHash === request.query.tokenHash) && (!request.query.idempotencyKey || item.idempotencyKey === request.query.idempotencyKey)) }),
             save: async request => {
                 coupons.push(request.model);
                 return { result: request.model };
@@ -85,7 +87,7 @@ function installGlobals() {
                 couponBatches.push(request.model);
                 return { result: request.model };
             },
-            get: async request => ({ result: couponBatches.filter(item => item.tenant === request.query.tenant && (!request.query.code || item.code === request.query.code)) }),
+            get: async request => ({ result: couponBatches.filter(item => item.tenant === request.query.tenant && (!request.query.enterpriseCode || item.enterpriseCode === request.query.enterpriseCode) && (!request.query.code || item.code === request.query.code)) }),
             update: async request => {
                 const index = couponBatches.findIndex(item => item.code === request.query.code && item.tenant === request.query.tenant);
                 if (index >= 0) couponBatches[index] = request.model;
@@ -124,7 +126,7 @@ function installGlobals() {
 test.beforeEach(installGlobals);
 
 test('Promotion customer routes expose secured preview and apply permissions', () => {
-    assert.equal(routers.promotion.customer.preview.key, '/customer/promotions/preview');
+    assert.equal(routers.promotion.customer.preview.key, '/promotions/preview');
     assert.equal(routers.promotion.customer.preview.controller, 'DefaultPromotionController');
     assert.equal(routers.promotion.customer.preview.operation, 'preview');
     assert.deepEqual(routers.promotion.customer.preview.authTokenTypes, ['access']);
@@ -138,13 +140,51 @@ test('Promotion customer routes expose secured preview and apply permissions', (
     assert.deepEqual(routers.promotion.internal.reverse.authTokenTypes, ['internal']);
     assert.deepEqual(routers.promotion.internal.reverse.accessGroups, ['serviceAccountUserGroup']);
     assert.equal(routers.promotion.internal.reverse.permission, 'commerce.promotion.redeem');
-    assert.equal(routers.promotion.backoffice.saveDraft.key, '/backoffice/promotions/drafts');
+    assert.equal(routers.promotion.internal.restoreOperational.key, '/internal/promotions/publication/operational/restore');
+    assert.equal(routers.promotion.internal.restoreOperational.apiExposure, 'commercePublicationIngestion');
+    assert.equal(routers.promotion.internal.restoreOperational.operation, 'restoreOperational');
+    assert.equal(routers.promotion.backoffice.saveDraft.key, '/promotions/drafts');
     assert.equal(routers.promotion.backoffice.saveDraft.permission, 'commerce.promotion.manage');
     assert.equal(routers.promotion.backoffice.approve.permission, 'commerce.promotion.approve');
-    assert.equal(routers.promotion.backoffice.createCouponBatch.key, '/backoffice/promotions/:promotionCode/coupon-batches');
-    assert.equal(routers.promotion.backoffice.reserveCouponBatch.key, '/backoffice/promotions/coupon-batches/:batchCode/reserve');
+    assert.equal(routers.promotion.backoffice.createCouponBatch.key, '/promotions/:promotionCode/coupon-batches');
+    assert.equal(routers.promotion.backoffice.reserveCouponBatch.key, '/promotions/coupon-batches/:batchCode/reserve');
     assert.equal(routers.promotion.backoffice.budgetLedger.method, 'GET');
     assert.equal(routers.promotion.backoffice.analytics.apiExposure, 'commerceManagement');
+});
+
+test('Promotion operational publication restoration saves rules batches and coupon rows', async () => {
+    const result = await controller.restoreOperational({
+        enterpriseCode: 'enterprise-a',
+        authData: { tenant: 'default', enterpriseCode: 'enterprise-a', principalId: 'operator-1' },
+        httpRequest: {
+            body: {
+                promotions: [{ tenant: 'default', code: 'market5', name: 'Market 5', status: 'ACTIVE', priority: 10, conditions: { couponRequired: true }, actions: { discountAmount: '5.00' }, revision: 1 }],
+                couponBatches: [{ tenant: 'default', code: 'market5-batch', promotionCode: 'market5', status: 'ACTIVE', issuedCount: 1, reservedCount: 0, tokenHashPolicy: 'TENANT_UPPERCASE_SHA256', revision: 1 }],
+                coupons: [{ tenant: 'default', code: 'market5-row-1', promotionCode: 'market5', batchCode: 'market5-batch', tokenHash: service.hashToken('default', 'MARKET5-0001'), status: 'ACTIVE', maxUses: 1, usedCount: 0, revision: 1 }]
+            }
+        }
+    });
+
+    assert.equal(result.data.restored, 3);
+    assert.equal(result.data.enterpriseCode, 'enterprise-a');
+    assert.equal(promotions.some(item => item.code === 'market5'), true);
+    assert.equal(couponBatches.some(item => item.code === 'market5-batch'), true);
+    assert.equal(coupons.some(item => item.code === 'market5-row-1'), true);
+    assert(promotions.find(item => item.code === 'market5').enterpriseCode === 'enterprise-a');
+    assert(couponBatches.find(item => item.code === 'market5-batch').enterpriseCode === 'enterprise-a');
+    assert(coupons.find(item => item.code === 'market5-row-1').enterpriseCode === 'enterprise-a');
+});
+
+test('Promotion operational publication rejects records from another enterprise', async () => {
+    await assert.rejects(controller.restoreOperational({
+        enterpriseCode: 'enterprise-a',
+        authData: { tenant: 'default', principalId: 'operator-1' },
+        httpRequest: {
+            body: {
+                promotions: [{ tenant: 'default', enterpriseCode: 'enterprise-b', code: 'market5-other', name: 'Market 5', status: 'ACTIVE', priority: 10, conditions: { couponRequired: true }, actions: { discountAmount: '5.00' }, revision: 1 }]
+            }
+        }
+    }), /enterprise boundary/);
 });
 
 test('Promotion BackOffice capability exposes builder lifecycle coupon budget and analytics routes', () => {
@@ -156,11 +196,11 @@ test('Promotion BackOffice capability exposes builder lifecycle coupon budget an
     assert.equal(builder.permission, 'commerce.promotion.manage');
     assert.equal(builder.moduleName, 'promotion');
     assert.equal(builder.schemaName, 'promotion');
-    assert.equal(action('saveDraft').operationRoute, '/backoffice/promotions/drafts/:promotionCode');
+    assert.equal(action('saveDraft').operationRoute, '/promotions/drafts/:promotionCode');
     assert.equal(action('saveDraft').httpMethod, 'PATCH');
     assert.equal(action('approvePromotion').permission, 'commerce.promotion.approve');
     assert.equal(action('approvePromotion').inputFields.some(field => field.name === 'checklist' && field.type === 'JSON'), true);
-    assert.equal(action('createCouponBatch').operationRoute, '/backoffice/promotions/:promotionCode/coupon-batches');
+    assert.equal(action('createCouponBatch').operationRoute, '/promotions/:promotionCode/coupon-batches');
     assert.equal(action('createCouponBatch').inputFields.some(field => field.name === 'couponCodes' && field.type === 'JSON'), true);
     assert.equal(action('budgetLedger').intent, 'VALIDATE');
     assert.equal(action('budgetLedger').httpMethod, 'GET');
@@ -224,11 +264,13 @@ test('Promotion apply consumes coupon and budget state with idempotency evidence
 
     const result = await controller.apply({
         authData: { tenant: 'default', principalId: 'customer-1' },
-        httpRequest: { body: { cartCode: 'cart1', subtotal: '129.00', productCodes: ['agoraLinenWrapDress'], currency: 'USD', couponCode: 'SAVE10', idempotencyKey: 'idem-1' } }
+        httpRequest: { body: { cartCode: 'cart1', orderCode: 'order-1', subtotal: '129.00', productCodes: ['agoraLinenWrapDress'], currency: 'USD', couponCode: 'SAVE10', idempotencyKey: 'idem-1' } }
     });
 
     assert.equal(result.data.applied, true);
     assert.equal(result.data.redemption.couponCode, 'coupon-row-1');
+    assert.equal(result.data.redemption.cartCode, 'cart1');
+    assert.equal(result.data.redemption.orderCode, 'order-1');
     assert.equal(result.data.redemption.idempotencyKey, 'idem-1');
     assert.equal(coupons[0].usedCount, 1);
     assert.equal(coupons[0].status, 'ACTIVE');
@@ -237,6 +279,157 @@ test('Promotion apply consumes coupon and budget state with idempotency evidence
     assert.equal(budgetLedger[0].mutationType, 'COMMIT');
     assert.equal(budgetLedger[0].beforeSpent, '5');
     assert.equal(budgetLedger[0].afterSpent, '15');
+});
+
+test('Promotion apply selects the eligible promotion bound to the supplied coupon', async () => {
+    promotions = [
+        {
+            tenant: 'default',
+            code: 'automatic20',
+            status: 'ACTIVE',
+            priority: 50,
+            revision: 1,
+            conditions: { minimumSubtotal: '100.00' },
+            actions: { discountAmount: '20.00', reasonCode: 'AUTO20' }
+        },
+        {
+            tenant: 'default',
+            code: 'coupon10',
+            status: 'ACTIVE',
+            priority: 20,
+            revision: 1,
+            conditions: { minimumSubtotal: '100.00', couponRequired: true },
+            actions: { discountAmount: '10.00', reasonCode: 'COUPON10' }
+        }
+    ];
+    coupons = [{
+        code: 'coupon-row-1',
+        tenant: 'default',
+        promotionCode: 'coupon10',
+        tokenHash: service.hashToken('default', 'SAVE10'),
+        status: 'ACTIVE',
+        maxUses: 1,
+        usedCount: 0,
+        revision: 0
+    }];
+
+    const result = await controller.apply({
+        authData: { tenant: 'default', principalId: 'customer-1' },
+        httpRequest: { body: { cartCode: 'cart1', subtotal: '129.00', productCodes: ['agoraLinenWrapDress'], currency: 'USD', couponCode: 'SAVE10', idempotencyKey: 'coupon-idem-1' } }
+    });
+
+    assert.equal(result.data.applied, true);
+    assert.equal(result.data.decisions[0].promotionCode, 'coupon10');
+    assert.equal(result.data.redemption.couponCode, 'coupon-row-1');
+    assert.equal(coupons[0].status, 'REDEEMED');
+    assert.equal(coupons[0].usedCount, 1);
+});
+
+test('Promotion apply rejects unsold marketplace coupon code when customer ownership is required', async () => {
+    promotions = [{
+        tenant: 'default',
+        code: 'coupon10',
+        status: 'ACTIVE',
+        priority: 20,
+        revision: 1,
+        conditions: { minimumSubtotal: '100.00', couponRequired: true, customerOwnsCouponCode: true },
+        actions: { discountAmount: '10.00', reasonCode: 'COUPON10' }
+    }];
+    coupons = [{
+        code: 'coupon-row-1',
+        tenant: 'default',
+        promotionCode: 'coupon10',
+        tokenHash: service.hashToken('default', 'SAVE10'),
+        status: 'ACTIVE',
+        maxUses: 1,
+        usedCount: 0,
+        revision: 0
+    }];
+
+    await assert.rejects(() => controller.apply({
+        authData: { tenant: 'default', principalId: 'customer-1' },
+        httpRequest: { body: { cartCode: 'cart1', subtotal: '129.00', productCodes: ['agoraLinenWrapDress'], currency: 'USD', couponCode: 'SAVE10', idempotencyKey: 'coupon-idem-1' } }
+    }), /Coupon is invalid for eligible promotions/);
+});
+
+test('Promotion quote returns coupon-bound discount without redemption mutation', async () => {
+    promotions = [{
+        tenant: 'default',
+        code: 'coupon10',
+        status: 'ACTIVE',
+        priority: 20,
+        revision: 1,
+        conditions: { minimumSubtotal: '100.00', couponRequired: true },
+        actions: { discountAmount: '10.00', reasonCode: 'COUPON10' }
+    }];
+    coupons = [{
+        code: 'coupon-row-1',
+        tenant: 'default',
+        promotionCode: 'coupon10',
+        tokenHash: service.hashToken('default', 'SAVE10'),
+        status: 'ACTIVE',
+        maxUses: 1,
+        usedCount: 0,
+        revision: 0
+    }];
+
+    const result = await service.quote({
+        tenant: 'default',
+        ownerId: 'customer-1',
+        cartCode: 'cart1',
+        subtotal: '129.00',
+        productCodes: ['agoraLinenWrapDress'],
+        currency: 'USD',
+        couponCode: 'SAVE10',
+        correlationId: 'quote-1'
+    });
+
+    assert.equal(result.promotionCode, 'coupon10');
+    assert.equal(result.discountAmount, '10');
+    assert.equal(result.couponCode, 'coupon-row-1');
+    assert.equal(result.mutationPerformed, false);
+    assert.equal(coupons[0].status, 'ACTIVE');
+    assert.equal(coupons[0].usedCount, 0);
+    assert.equal(redemptions.length, 0);
+});
+
+test('Promotion quote resolves percentage coupon amount from cart subtotal', async () => {
+    promotions = [{
+        tenant: 'default',
+        code: 'coupon5Percent',
+        status: 'ACTIVE',
+        priority: 20,
+        revision: 1,
+        conditions: { minimumSubtotal: '100.00', couponRequired: true },
+        actions: { discountType: 'PERCENT', discountValue: '5', reasonCode: 'COUPON5' }
+    }];
+    coupons = [{
+        code: 'coupon-row-1',
+        tenant: 'default',
+        promotionCode: 'coupon5Percent',
+        tokenHash: service.hashToken('default', 'SAVE5'),
+        status: 'ACTIVE',
+        maxUses: 1,
+        usedCount: 0,
+        revision: 0
+    }];
+
+    const result = await service.quote({
+        tenant: 'default',
+        ownerId: 'customer-1',
+        cartCode: 'cart1',
+        subtotal: '129.00',
+        productCodes: ['agoraLinenWrapDress'],
+        currency: 'USD',
+        couponCode: 'SAVE5',
+        correlationId: 'quote-percent-1'
+    });
+
+    assert.equal(result.promotionCode, 'coupon5Percent');
+    assert.equal(result.discountAmount, '6.45');
+    assert.equal(result.couponCode, 'coupon-row-1');
+    assert.equal(result.mutationPerformed, false);
+    assert.equal(coupons[0].usedCount, 0);
 });
 
 test('Promotion coupon batch operations generate reserve and release coupon rows', async () => {
@@ -273,6 +466,136 @@ test('Promotion coupon batch operations generate reserve and release coupon rows
     }, 'ACTIVE');
     assert.equal(released.batch.status, 'RELEASED');
     assert(coupons.every(coupon => coupon.status === 'ACTIVE'));
+});
+
+test('Promotion coupon batch generation supports count-based enterprise-owned code pools', async () => {
+    const created = await service.createCouponBatch({
+        tenant: 'default',
+        enterpriseCode: 'enterpriseX',
+        ownerId: 'operator-1',
+        payload: {
+            promotionCode: 'coupon5',
+            batchCode: 'coupon5-batch-100',
+            quantity: 100,
+            prefix: 'AGORA5',
+            seed: 'enterprise-x-style-pass'
+        },
+        authData: { principalId: 'operator-1' },
+        idempotencyKey: 'batch-100-idem'
+    });
+
+    assert.equal(created.batch.enterpriseCode, 'enterpriseX');
+    assert.equal(created.batch.issuedCount, 100);
+    assert.equal(created.coupons.length, 100);
+    assert.equal(created.coupons[0].enterpriseCode, 'enterpriseX');
+    assert.match(created.coupons[0].tokenHash, /^[a-f0-9]{64}$/);
+    assert.equal(JSON.stringify(created.coupons).includes('AGORA5-00001'), false);
+});
+
+test('Promotion owns coupon-code marketplace sale claim redeem and release lifecycle', async () => {
+    coupons = [
+        { code: 'coupon-row-1', tenant: 'default', promotionCode: 'coupon10', batchCode: 'batch-1', tokenHash: service.hashToken('default', 'SAVE10-1'), status: 'ACTIVE', maxUses: 1, usedCount: 0, revision: 0 },
+        { code: 'coupon-row-2', tenant: 'default', promotionCode: 'coupon10', batchCode: 'batch-1', tokenHash: service.hashToken('default', 'SAVE10-2'), status: 'ACTIVE', maxUses: 1, usedCount: 0, revision: 0 }
+    ];
+
+    const availability = await service.couponPoolAvailability({ tenant: 'default', payload: { batchCode: 'batch-1', quantity: '2' } });
+    const reserved = await service.reserveCouponCodeForCheckout({
+        tenant: 'default',
+        ownerId: 'customer-1',
+        idempotencyKey: 'checkout-1:digital:entry-1:0',
+        payload: { batchCode: 'batch-1', orderCode: 'order-1', cartCode: 'cart-1', entryCode: 'entry-1', productCode: 'coupon-product', sku: 'COUPON-SKU' }
+    });
+    const sameReservation = await service.reserveCouponCodeForCheckout({
+        tenant: 'default',
+        ownerId: 'customer-1',
+        idempotencyKey: 'checkout-1:digital:entry-1:0',
+        payload: { batchCode: 'batch-1', orderCode: 'order-1' }
+    });
+    const sold = await service.confirmCouponCodeSale({ tenant: 'default', ownerId: 'customer-1', payload: { couponCode: reserved.code, orderCode: 'order-1' } });
+    const delivered = await service.deliverCouponCodeSale({ tenant: 'default', ownerId: 'customer-1', payload: { couponCode: reserved.code, orderCode: 'order-1' } });
+    const claimed = await service.claimPurchasedCouponCode({ tenant: 'default', ownerId: 'customer-1', payload: { couponCode: reserved.code } });
+    const redeemed = await service.redeemClaimedCouponCode({ tenant: 'default', ownerId: 'customer-1', payload: { couponCode: reserved.code } });
+
+    assert.equal(availability.available, true);
+    assert.equal(availability.availableQuantity, '2');
+    assert.equal(reserved.code, 'coupon-row-1');
+    assert.equal(sameReservation.code, reserved.code);
+    assert.equal(reserved.status, 'RESERVED');
+    assert.equal(reserved.reservedFor, 'customer-1');
+    assert.equal(reserved.orderCode, 'order-1');
+    assert.equal(sold.status, 'SOLD');
+    assert.equal(sold.soldTo, 'customer-1');
+    assert.equal(delivered.status, 'DELIVERED');
+    assert.equal(delivered.benefitStatus, 'UNCLAIMED');
+    assert.equal(claimed.status, 'CLAIMED');
+    assert.equal(claimed.benefitStatus, 'CLAIMED');
+    assert.equal(redeemed.status, 'REDEEMED');
+    assert.equal(redeemed.benefitStatus, 'REDEEMED');
+
+    const second = await service.reserveCouponCodeForCheckout({ tenant: 'default', ownerId: 'customer-2', idempotencyKey: 'checkout-2:digital:entry-1:0', payload: { batchCode: 'batch-1', orderCode: 'order-2' } });
+    await assert.rejects(() => service.releaseCouponCodeReservation({ tenant: 'default', ownerId: 'customer-3', payload: { couponCode: second.code } }), /another customer/);
+    const released = await service.releaseCouponCodeReservation({ tenant: 'default', ownerId: 'customer-2', payload: { couponCode: second.code } });
+    assert.equal(second.status, 'RESERVED');
+    assert.equal(released.status, 'ACTIVE');
+    assert.equal(released.reservedFor, undefined);
+});
+
+test('Promotion coupon reservation returns concrete fallback model when optimistic update returns no row', async () => {
+    coupons = [
+        { code: 'coupon-row-1', tenant: 'default', promotionCode: 'coupon10', batchCode: 'batch-1', tokenHash: service.hashToken('default', 'SAVE10-1'), status: 'ACTIVE', maxUses: 1, usedCount: 0, revision: 0 }
+    ];
+    SERVICE.DefaultCouponService.update = async () => ({ result: undefined });
+
+    const reserved = await service.reserveCouponCodeForCheckout({
+        tenant: 'default',
+        ownerId: 'customer-1',
+        idempotencyKey: 'checkout-1:digital:entry-1:0',
+        payload: { batchCode: 'batch-1', orderCode: 'order-1', cartCode: 'cart-1', entryCode: 'entry-1', productCode: 'coupon-product', sku: 'COUPON-SKU' }
+    });
+
+    assert.equal(reserved.code, 'coupon-row-1');
+    assert.equal(reserved.status, 'RESERVED');
+    assert.equal(reserved.reservedFor, 'customer-1');
+});
+
+test('Promotion coupon reservation returns concrete fallback model when generated update returns metadata', async () => {
+    coupons = [
+        { code: 'coupon-row-1', tenant: 'default', promotionCode: 'coupon10', batchCode: 'batch-1', tokenHash: service.hashToken('default', 'SAVE10-1'), status: 'ACTIVE', maxUses: 1, usedCount: 0, revision: 0 }
+    ];
+    SERVICE.DefaultCouponService.update = async request => {
+        coupons[0] = request.model;
+        return { result: { acknowledged: true, matchedCount: 1, modifiedCount: 1 } };
+    };
+
+    const reserved = await service.reserveCouponCodeForCheckout({
+        tenant: 'default',
+        ownerId: 'customer-1',
+        idempotencyKey: 'checkout-1:digital:entry-1:0',
+        payload: { batchCode: 'batch-1', orderCode: 'order-1', cartCode: 'cart-1', entryCode: 'entry-1', productCode: 'coupon-product', sku: 'COUPON-SKU' }
+    });
+
+    assert.equal(reserved.code, 'coupon-row-1');
+    assert.equal(reserved.status, 'RESERVED');
+    assert.equal(coupons[0].status, 'RESERVED');
+});
+
+test('Promotion coupon pool reservation is scoped by enterpriseCode inside a shared tenant', async () => {
+    coupons = [
+        { code: 'coupon-enterprise-x', tenant: 'default', enterpriseCode: 'enterpriseX', promotionCode: 'coupon10', batchCode: 'shared-batch', tokenHash: service.hashToken('default', 'SAVE-X'), status: 'ACTIVE', maxUses: 1, usedCount: 0, revision: 0 },
+        { code: 'coupon-enterprise-y', tenant: 'default', enterpriseCode: 'enterpriseY', promotionCode: 'coupon10', batchCode: 'shared-batch', tokenHash: service.hashToken('default', 'SAVE-Y'), status: 'ACTIVE', maxUses: 1, usedCount: 0, revision: 0 }
+    ];
+
+    const reserved = await service.reserveCouponCodeForCheckout({
+        tenant: 'default',
+        enterpriseCode: 'enterpriseX',
+        ownerId: 'customer-1',
+        idempotencyKey: 'enterprise-x-checkout',
+        payload: { batchCode: 'shared-batch', orderCode: 'order-x' }
+    });
+
+    assert.equal(reserved.code, 'coupon-enterprise-x');
+    assert.equal(reserved.enterpriseCode, 'enterpriseX');
+    assert.equal(coupons.find(coupon => coupon.code === 'coupon-enterprise-y').status, 'ACTIVE');
 });
 
 test('Promotion Builder operator workflow saves approves schedules coupons and analytics', async () => {

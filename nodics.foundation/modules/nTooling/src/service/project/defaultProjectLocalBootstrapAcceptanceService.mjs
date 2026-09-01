@@ -37,7 +37,8 @@ const loginId = process.env.AXIS_LOGIN_ID || "admin";
 const password = process.env.AXIS_PASSWORD || "adminPassword";
 const clientContractVersion = process.env.AXIS_CLIENT_CONTRACT_VERSION || "1";
 const projectDescriptor = readProjectDescriptor();
-const projectCode = process.env.AXIS_PROJECT || projectDescriptor.projectCode || "nodics.kickoff";
+const packageDescriptor = readProjectPackageDescriptor();
+const projectCode = process.env.AXIS_PROJECT || resolveProjectCode(projectDescriptor, packageDescriptor);
 const runtimeMode = process.env.NODICS_ACCEPTANCE_RUNTIME || "kickoffLocal";
 const managedStartupEnabled = runtimeMode === "kickoffLocal";
 const nexusUrl = process.env.NEXUS_URL || "http://127.0.0.1:3200";
@@ -110,6 +111,26 @@ function readProjectDescriptor() {
   const descriptorPath = resolve(projectRoot, "nodics.project.json");
   if (!existsSync(descriptorPath)) return {};
   return JSON.parse(readFileSync(descriptorPath, "utf8"));
+}
+
+function readProjectPackageDescriptor() {
+  const packagePath = resolve(projectRoot, "package.json");
+  if (!existsSync(packagePath)) throw new Error(`Missing package.json in project root: ${projectRoot}`);
+  return JSON.parse(readFileSync(packagePath, "utf8"));
+}
+
+function resolveProjectCode(descriptor, packageDescriptor) {
+  const packageName = packageDescriptor.name;
+  if (!packageName || !/^[a-zA-Z][a-zA-Z0-9._-]*$/.test(packageName)) {
+    throw new Error("package.json requires a stable Nodics project name");
+  }
+  if (Object.prototype.hasOwnProperty.call(descriptor, "contractVersion")) {
+    throw new Error("nodics.project.json must not declare contractVersion");
+  }
+  if (Object.prototype.hasOwnProperty.call(descriptor, "projectCode")) {
+    throw new Error("nodics.project.json must not declare projectCode; use package.json.name");
+  }
+  return packageName;
 }
 
 function validateLocalBootstrapCapabilities(capabilities) {

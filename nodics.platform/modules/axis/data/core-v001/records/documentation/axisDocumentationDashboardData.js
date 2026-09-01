@@ -64,7 +64,7 @@ module.exports = {
     ],
     "statusSummary": {
       "sections": 4,
-      "pages": 17,
+      "pages": 18,
       "lifecycleState": "ONLINE"
     },
     "product": "axisDocumentationProduct",
@@ -150,7 +150,7 @@ module.exports = {
     ],
     "statusSummary": {
       "sections": 4,
-      "pages": 17,
+      "pages": 18,
       "searchable": true,
       "expandable": true
     },
@@ -314,18 +314,18 @@ module.exports = {
         "route": "/docs/nodics-axis/page-designer"
       },
       {
+        "label": "Axis Experience Studio and Targeted CMS Experiences",
+        "targetPage": "axis.experience-studio",
+        "route": "/docs/nodics-axis/experience-studio"
+      },
+      {
         "label": "Module Health",
         "targetPage": "axis.module-health",
         "route": "/docs/nodics-axis/module-health"
-      },
-      {
-        "label": "Imports and Exports Workspace",
-        "targetPage": "axis.imports-exports",
-        "route": "/docs/nodics-axis/imports-exports"
       }
     ],
     "statusSummary": {
-      "pages": 9,
+      "pages": 10,
       "groups": 1
     },
     "accessMode": "PUBLIC",
@@ -556,6 +556,12 @@ module.exports = {
         "order": 95
       },
       {
+        "code": "axis.experience-studio",
+        "title": "Axis Experience Studio and Targeted CMS Experiences",
+        "summary": "Configure targeted CMS components for collection, category, brand, and fallback journeys through backend-owned WCMS Experience contracts.",
+        "order": 97
+      },
+      {
         "code": "axis.module-health",
         "title": "Module Health",
         "summary": "Monitor backend-governed module registration and runtime health evidence without creating a browser-side health authority.",
@@ -608,6 +614,11 @@ module.exports = {
         "route": "/docs/nodics-axis/page-designer"
       },
       {
+        "label": "Axis Experience Studio and Targeted CMS Experiences",
+        "targetPage": "axis.experience-studio",
+        "route": "/docs/nodics-axis/experience-studio"
+      },
+      {
         "label": "Module Health",
         "targetPage": "axis.module-health",
         "route": "/docs/nodics-axis/module-health"
@@ -634,7 +645,7 @@ module.exports = {
       }
     ],
     "statusSummary": {
-      "pages": 9,
+      "pages": 10,
       "subgroups": 0
     },
     "accessMode": "PUBLIC",

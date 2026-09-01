@@ -556,27 +556,27 @@ module.exports = {
                 operation: 'validate'
             },
             'project:run': {
-                description: 'Run a project-declared command through nodics.project.json without encoding script paths in package aliases.',
+                description: 'Run a framework-owned project command alias with optional project manifest overrides.',
                 handler: '@nTooling/project',
                 operation: 'run'
             },
             'project:topology': {
-                description: 'Run a manifest-declared project local topology command from framework-owned tooling.',
+                description: 'Run an environment-declared project local topology command from framework-owned tooling.',
                 handler: 'src/service/command/defaultNodeScriptCommandService.js',
                 script: 'src/service/project/defaultProjectTopologyService.mjs'
             },
             'project:container': {
-                description: 'Run a manifest-declared project container environment profile from framework-owned tooling.',
+                description: 'Run an environment-owned project container profile from framework-owned tooling.',
                 handler: 'src/service/command/defaultNodeScriptCommandService.js',
                 script: 'src/service/project/defaultProjectContainerEnvironmentService.mjs'
             },
             'project:container-resilience': {
-                description: 'Run manifest-declared backup, verification, and restore operations for a project container environment.',
+                description: 'Run environment-owned backup, verification, and restore operations for a project container environment.',
                 handler: 'src/service/command/defaultNodeScriptCommandService.js',
                 script: 'src/service/project/defaultProjectContainerResilienceService.mjs'
             },
             'project:container-qualification': {
-                description: 'Run manifest-declared container acceptance, qualification, resilience, and soak evidence.',
+                description: 'Run environment-owned container acceptance, qualification, resilience, and soak evidence.',
                 handler: 'src/service/command/defaultNodeScriptCommandService.js',
                 script: 'src/service/project/defaultProjectContainerQualificationService.mjs'
             },
@@ -629,6 +629,11 @@ module.exports = {
                 description: 'Run project Agora commerce customer journey acceptance through framework-owned tooling.',
                 handler: 'src/service/command/defaultNodeScriptCommandService.js',
                 script: 'src/service/project/defaultProjectAgoraCommerceAcceptanceService.mjs'
+            },
+            'project:loyalty-reward-checkout-acceptance': {
+                description: 'Run project Loyalty reward checkout acceptance through Platform, Commerce, and Loyalty module servers.',
+                handler: 'src/service/command/defaultNodeScriptCommandService.js',
+                script: 'src/service/project/defaultProjectLoyaltyRewardCheckoutAcceptanceService.mjs'
             },
             'project:agora-commerce-data-acceptance': {
                 description: 'Run project Agora commerce staged data acceptance through framework-owned tooling.',

@@ -61,10 +61,10 @@ function installGlobals() {
 test.beforeEach(installGlobals);
 
 test('Order customer routes expose customer-owned order read without catalog lifecycle leakage', () => {
-    assert.equal(routers.order.customer.read.key, '/customer/orders/:orderCode');
+    assert.equal(routers.order.customer.read.key, '/orders/:orderCode');
     assert.equal(routers.order.customer.read.controller, 'DefaultOrderCustomerController');
     assert.equal(routers.order.customer.read.permission, 'commerce.order.own.read');
-    assert.equal(routers.order.customer.listOwnOrders.key, '/customer/orders');
+    assert.equal(routers.order.customer.listOwnOrders.key, '/orders');
     assert(!routers.order.customer.read.key.includes('/catalog'));
 });
 

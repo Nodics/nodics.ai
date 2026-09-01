@@ -117,10 +117,10 @@ const documentationBacklog = [
   },
   {
     priority: 'P1',
-    item: 'Customer List and Profile-Commerce boundary',
+    item: 'Shopping List Commerce boundary',
     classification: 'needs-page-or-owner-mapping',
-    sourceAreas: ['nodics.commerce/modules/checkout/modules/customerList', 'nodics.platform/modules/profile'],
-    action: 'Document why customer list exists in Commerce and what Profile owns.',
+    sourceAreas: ['nodics.commerce/modules/baseCommerce/modules/shoppingList', 'nodics.platform/modules/profile'],
+    action: 'Document why shopping-intent lists belong to Base Commerce and what Profile owns.',
   },
   {
     priority: 'P1',

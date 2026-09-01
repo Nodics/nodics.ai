@@ -12,7 +12,7 @@
 
 /**
  * @module nTooling/service/project/defaultProjectTopologyService
- * @description Supervises manifest-declared project local topology from framework tooling.
+ * @description Supervises environment-declared project local topology from framework tooling.
  * @layer tooling
  * @owner nTooling
  */
@@ -22,34 +22,28 @@ import fs from 'node:fs';
 import net from 'node:net';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
+import {
+  readProjectEnvironmentProfile,
+} from './defaultProjectEnvironmentProfileService.mjs';
+import { resolveTemplate } from './defaultProjectContainerProfileService.mjs';
 
 export const projectRoot = process.cwd();
 export const workspaceRoot = path.resolve(projectRoot, '..');
 
-function readProjectManifest() {
-  return JSON.parse(fs.readFileSync(path.join(projectRoot, 'nodics.project.json'), 'utf8'));
-}
-
-function resolveTemplate(value) {
-  return String(value || '')
-    .replaceAll('{projectRoot}', projectRoot)
-    .replaceAll('{workspaceRoot}', workspaceRoot);
-}
-
 function readTopology() {
-  const manifest = readProjectManifest();
-  const topology = manifest.topology || {};
-  const environment = topology.environment || 'local';
-  const stateDirectory = path.resolve(projectRoot, resolveTemplate(topology.stateDirectory || `envs/${environment}/generated/local-topology`));
+  const profile = readProjectEnvironmentProfile(projectRoot, process.env.ENV || '');
+  const topology = profile.topology || {};
+  const environment = profile.environment || 'local';
+  const stateDirectory = profile.stateDirectory || path.resolve(projectRoot, resolveTemplate(projectRoot, topology.stateDirectory || `envs/${environment}/generated/local-topology`));
   const backendRuntimes = Object.freeze([].concat((topology.groups || {}).backends || []).map(normalizeRuntime));
   const frontendRuntimes = Object.freeze([].concat((topology.groups || {}).frontends || []).map(normalizeRuntime));
-  return { manifest, topology, environment, stateDirectory, statePath: path.join(stateDirectory, 'processes.json'), backendRuntimes, frontendRuntimes };
+  return { manifest: profile, topology, environment, stateDirectory, statePath: path.join(stateDirectory, 'processes.json'), backendRuntimes, frontendRuntimes };
 }
 
 function normalizeRuntime(runtime) {
   return {
     ...runtime,
-    cwd: runtime.cwd ? path.resolve(resolveTemplate(runtime.cwd)) : projectRoot,
+    cwd: runtime.cwd ? path.resolve(resolveTemplate(projectRoot, runtime.cwd)) : projectRoot,
     readyPath: runtime.readyPath || '/nodics/system/v0/health/ready',
     env: normalizeRuntimeEnvironment(runtime.env)
   };
@@ -59,7 +53,7 @@ function normalizeRuntimeEnvironment(environment) {
   if (!environment || typeof environment !== 'object' || Array.isArray(environment)) return {};
   return Object.fromEntries(Object.entries(environment)
     .filter(([, value]) => value !== undefined && value !== null)
-    .map(([key, value]) => [key, resolveTemplate(value)]));
+    .map(([key, value]) => [key, resolveTemplate(projectRoot, value)]));
 }
 
 function runtimeEnvironment(runtime) {

@@ -48,4 +48,10 @@ for (const item of navigation) {
     assert(item.workbenchPresentation.defaultColumns.length > 0, item.id + ' must publish useful columns');
 }
 
+const products = navigation.find(item => item.id === 'products');
+assert(products.workbenchPresentation.editableFields.includes('fulfillmentStrategy'), 'Products workspace must expose business digital/physical fulfillment choice');
+assert(products.workbenchPresentation.editableFields.includes('digitalDeliveryType'), 'Products workspace must expose digital delivery type for coupon-code products');
+assert(products.workbenchPresentation.forbiddenFields.includes('tenant'), 'Products workspace must not ask business users to author tenant ownership');
+assert(products.workbenchPresentation.forbiddenFields.includes('enterpriseCode'), 'Products workspace must derive enterprise ownership from request context');
+
 console.log('Commerce Axis owner connection contract validated');

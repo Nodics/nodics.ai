@@ -86,7 +86,13 @@ const data = {
     ],
     templates: [{ code: 'main', versionId: 1, active: true, name: 'Main', renderer: 'template.main', contractVersion: 0 }],
     slots: [{ code: 'main-main', versionId: 1, active: true, template: 'main', name: 'main' }],
-    manifests: [], pointers: [], receipts: [], outbox: []
+    manifests: [], pointers: [], receipts: [], outbox: [],
+    experiencePlacements: [
+        { code: 'site-a-home-hero-experience', active: true, site: 'site-a', pageType: 'PRODUCT_LISTING',
+            slot: 'hero', targetType: 'DEFAULT', targetCode: '*', component: 'hero', rendererKey: 'component.hero',
+            publicationStatus: 'STAGED', deliveryStatus: 'ACTIVE', locale: 'en', channel: 'web',
+            created: '2026-08-31T00:00:00.000Z', updated: '2026-08-31T00:00:00.000Z' }
+    ]
 };
 for (let index = 1; index < 12; index += 1) {
     data.details.push({ code: 'home-section-' + index, versionId: 1, active: true,
@@ -134,6 +140,7 @@ global.SERVICE = {
     DefaultCmsOnlinePublicationPointerService: generated(data.pointers),
     DefaultCmsPublicationDeploymentReceiptService: generated(data.receipts),
     DefaultCmsPublicationEventOutboxService: generated(data.outbox),
+    DefaultCmsExperiencePlacementService: generated(data.experiencePlacements),
     DefaultMediaPublicationTransferService: {
         exportReferenced: async codes => codes.map(code => ({ code: code, checksum: code + '-checksum', checksumAlgorithm: 'sha256',
             sizeBytes: 1, contentBase64: 'eA==' })),
@@ -227,6 +234,13 @@ const request = { tenant: 'tenant-a', authData: { principalId: 'publisher-a' }, 
         'deployment payload must retain media bytes for the target import call');
     assert.strictEqual(data.manifests[0].mediaAssets[0].contentBase64, undefined,
         'durable manifests must store media metadata only, not transfer bytes');
+    assert.strictEqual(manifest.cmsExperiencePlacements.length, 1,
+        'site-targeted experience placements must publish with the CMS release for Online indexing');
+    assert.strictEqual(manifest.cmsExperiencePlacements[0].code, 'site-a-home-hero-experience');
+    assert.strictEqual(manifest.cmsExperiencePlacements[0].updated, undefined,
+        'durable experience placement snapshots must not carry generated-service mutation metadata');
+    assert.strictEqual(data.manifests[0].cmsExperiencePlacements.length, 1,
+        'durable manifests must include experience placements for target import and outbox indexing');
     assert.strictEqual(manifest.snapshot.page.rendererContractVersion, 1);
     assert.deepStrictEqual(manifest.snapshot.page.rendererChannels, ['web']);
     assert.strictEqual(manifest.snapshot.page.rendererDeprecated, false);
@@ -243,6 +257,14 @@ const request = { tenant: 'tenant-a', authData: { principalId: 'publisher-a' }, 
     assert.strictEqual(replayManifest.code, manifest.code, 'manifest persistence must be idempotent');
     assert.strictEqual(replayManifest.mediaAssets[0].contentBase64, 'eA==',
         'idempotent deployment retries must reattach freshly exported media bytes');
+
+    let importedManifest = await manifests.importManifest(manifest, request);
+    assert.strictEqual(importedManifest.cmsExperiencePlacements.length, 1,
+        'Online manifest import must preserve experience placements for post-commit indexing');
+    await assert.rejects(manifests.importManifest(Object.assign({}, manifest, { code: 'tampered-experience-manifest',
+        cmsExperiencePlacements: manifest.cmsExperiencePlacements.concat({ code: 'unexpected', active: true }) }), request),
+        error => error.code === 'CMS_PUBLICATION_MANIFEST_INTEGRITY',
+        'manifest integrity must include experience placements');
 
     let activated = await provider.activate(publication, request);
     assert.strictEqual(activated.version, manifest.code);

@@ -1,0 +1,29 @@
+{
+    "contractVersion": 2,
+    "module": "loyaltyLedger",
+    "sections": {
+        "sample-lifecycle": {
+            "kind": "DATA_RELEASE",
+            "dataType": "sample",
+            "version": "0.0.0",
+            "displayName": "Loyalty Ledger Lifecycle Sample",
+            "description": "Local append-only ledger evidence for earn, reserve, and capture operations.",
+            "owningDomain": "loyalty",
+            "lifecycle": "REFERENCE",
+            "destinationRole": "LOYALTY",
+            "environmentScope": [
+                "LOCAL"
+            ],
+            "sensitivity": "INTERNAL",
+            "versioningPolicy": "NONE",
+            "publicationPolicy": "NONE",
+            "initialPublicationPolicy": "NONE",
+            "removalPolicy": "RETAIN",
+            "files": {
+                "sample-v001/records/loyalty/loyaltyLedgerLifecycleData.js": "0c160123a6a634c3bf2a6731893852c1309012d16f382ef2999cd90c6e90d976",
+                "sample-v001/headers/loyalty/loyaltyLedgerLifecycleHeader.js": "8095de3f7d97f192ce24ec925354f49e58fb8c28e830523168e2263e826e22ff"
+            },
+            "sourceRoot": "sample-v001"
+        }
+    }
+}

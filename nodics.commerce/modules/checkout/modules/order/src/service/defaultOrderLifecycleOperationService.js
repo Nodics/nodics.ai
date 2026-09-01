@@ -18,6 +18,7 @@ module.exports = {
     /** Builds service credentials for owner-bounded operational lifecycle persistence. @param {Object} request Request. @returns {Object} Service auth data. */
     serviceAuthData: function (request) {
         return Object.assign({}, request.authData || {}, {
+            enterpriseCode: request.enterpriseCode,
             principalId: 'commerceOrderLifecycleOperationService',
             code: 'commerceOrderLifecycleOperationService',
             loginId: 'commerceOrderLifecycleOperationService',
@@ -40,7 +41,7 @@ module.exports = {
                 itemSelectionRequired: true,
                 quantitySelectionRequired: true,
                 rejectionAppealSupported: true,
-                downstreamOwners: ['order', 'payment', 'inventory', 'fulfillment', 'workflow']
+                downstreamOwners: ['order', 'payment', 'inventory', 'fulfillment', 'digitalCommerce', 'workflow']
             },
             RETURN: {
                 eligible: true,
@@ -60,7 +61,7 @@ module.exports = {
                 refundPreviewRequired: true,
                 reconciliationSupported: true,
                 rejectionAppealSupported: true,
-                downstreamOwners: ['order', 'payment', 'workflow']
+                downstreamOwners: ['order', 'payment', 'digitalCommerce', 'workflow']
             },
             EXCHANGE: {
                 eligible: true,
@@ -141,6 +142,7 @@ module.exports = {
         const plan = [];
         if (requestType === 'CANCELLATION') {
             plan.push({ step: 'reservation-release', owner: 'inventory', trigger: 'before fulfillment release', customerVisibleState: 'Cancellation requested' });
+            plan.push({ step: 'digital-revocation', owner: 'digitalCommerce', trigger: 'digital entitlement policy', customerVisibleState: 'Digital purchase review' });
         }
         if (['RETURN', 'EXCHANGE', 'REPLACEMENT'].includes(requestType)) {
             plan.push({ step: 'return-logistics', owner: 'fulfillment', trigger: evidence.returnMethod || 'RETURN_METHOD_REQUIRED', customerVisibleState: 'Return method selected' });
@@ -152,6 +154,9 @@ module.exports = {
         }
         if (['RETURN', 'REFUND', 'EXCHANGE'].includes(requestType)) {
             plan.push({ step: 'refund-reconciliation', owner: 'payment', trigger: evidence.refundMethod || 'ORIGINAL_PAYMENT', customerVisibleState: 'Refund review in progress' });
+        }
+        if (['CANCELLATION', 'RETURN', 'REFUND'].includes(requestType)) {
+            plan.push({ step: 'digital-reversal-policy', owner: 'digitalCommerce', trigger: 'claim and redemption state', customerVisibleState: 'Digital eligibility checked' });
         }
         if (requestType === 'APPEAL' || policy.rejectionAppealSupported === true) {
             plan.push({ step: 'appeal-sla-review', owner: 'workflow+order', trigger: evidence.appealReferenceCode || 'REJECTION_OR_DELAY', customerVisibleState: requestType === 'APPEAL' ? 'Appeal submitted' : 'Appeal available if rejected' });
@@ -167,6 +172,7 @@ module.exports = {
         const requiresRma = ['RETURN', 'EXCHANGE', 'REPLACEMENT'].includes(request.payload.requestType);
         const preview = {
             tenant: request.tenant,
+            enterpriseCode: request.enterpriseCode,
             ownerId: request.ownerId,
             orderCode: request.orderCode,
             requestType: request.payload.requestType,
@@ -215,10 +221,36 @@ module.exports = {
     actionStatus: function (actionCode) {
         return { APPROVE: 'APPROVED', REJECT: 'REJECTED', RETRY: 'RETRY_PENDING', RECONCILE: 'RECONCILING', MARK_RECEIVED: 'RETURN_RECEIVED', MARK_INSPECTED: 'INSPECTED', DISPOSITION: 'DISPOSITION_RECORDED' }[actionCode];
     },
+    /** Resolves an operator-confirmed refundable amount for cancellation/refund execution. @param {Object} payload Operator payload. @param {Object} recordEvidence Persisted evidence. @returns {string|undefined} Refund amount. */
+    refundAmount: function (payload, recordEvidence) {
+        const amount = payload.refundAmount || (recordEvidence.refundPreview && recordEvidence.refundPreview.amount);
+        if (!amount || amount === 'PENDING_CALCULATION') return undefined;
+        return String(amount);
+    },
+    /** Returns whether the lifecycle request should execute Payment-owned refund. @param {Object} request Operator request. @param {Object} record Lifecycle record. @param {Object} payload Payload. @param {Object} recordEvidence Evidence. @returns {boolean} Eligibility. */
+    shouldExecuteRefund: function (request, record, payload, recordEvidence) {
+        if (!['APPROVE', 'RECONCILE'].includes(request.actionCode)) return false;
+        if (!['CANCELLATION', 'REFUND'].includes(record.requestType)) return false;
+        return !!this.refundAmount(payload, recordEvidence);
+    },
     /** Invokes downstream owner services for approved operator lifecycle actions. @param {Object} request Operator request. @param {Object} record Lifecycle record. @returns {Promise<Object>} Downstream evidence. */
     downstreamActionEvidence: async function (request, record) {
         const evidence = {}, payload = request.payload || {}, recordEvidence = record.evidence || {};
-        if (record.requestType === 'REFUND' && ['APPROVE', 'RECONCILE'].includes(request.actionCode) && SERVICE.DefaultPaymentRefundExecutionService && typeof SERVICE.DefaultPaymentRefundExecutionService.executeRefund === 'function') {
+        if (['CANCELLATION', 'RETURN', 'REFUND'].includes(record.requestType) && ['APPROVE', 'RECONCILE'].includes(request.actionCode) && SERVICE.DefaultDigitalCommerceEntitlementService && typeof SERVICE.DefaultDigitalCommerceEntitlementService.revokeForOrderLifecycle === 'function') {
+            evidence.digitalCommerce = await SERVICE.DefaultDigitalCommerceEntitlementService.revokeForOrderLifecycle({
+                tenant: request.tenant,
+                enterpriseCode: request.enterpriseCode || record.enterpriseCode,
+                ownerId: record.ownerId,
+                orderCode: record.orderCode,
+                cartCode: record.cartCode,
+                actorId: request.actorId,
+                idempotencyKey: payload.digitalIdempotencyKey || [record.code, request.actionCode, 'digital'].join(':'),
+                payload: Object.assign({}, payload, { requestType: record.requestType }),
+                correlationId: request.correlationId || request.requestId,
+                authData: request.authData
+            });
+        }
+        if (this.shouldExecuteRefund(request, record, payload, recordEvidence) && SERVICE.DefaultPaymentRefundExecutionService && typeof SERVICE.DefaultPaymentRefundExecutionService.executeRefund === 'function') {
             evidence.payment = await SERVICE.DefaultPaymentRefundExecutionService.executeRefund({
                 tenant: request.tenant,
                 ownerId: record.ownerId,
@@ -226,7 +258,7 @@ module.exports = {
                 cartCode: record.cartCode,
                 idempotencyKey: payload.refundIdempotencyKey || [record.code, request.actionCode, 'refund'].join(':'),
                 payload: {
-                    amount: payload.refundAmount || (recordEvidence.refundPreview && recordEvidence.refundPreview.amount),
+                    amount: this.refundAmount(payload, recordEvidence),
                     currency: payload.currency || (recordEvidence.refundPreview && recordEvidence.refundPreview.currency),
                     providerToken: payload.providerToken || 'tok_test_refund'
                 },

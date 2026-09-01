@@ -1,0 +1,29 @@
+{
+    "contractVersion": 2,
+    "module": "loyaltyReservation",
+    "sections": {
+        "sample-lifecycle": {
+            "kind": "DATA_RELEASE",
+            "dataType": "sample",
+            "version": "0.0.0",
+            "displayName": "Loyalty Reservation Lifecycle Sample",
+            "description": "Local captured reservation evidence for reward payment flows.",
+            "owningDomain": "loyalty",
+            "lifecycle": "REFERENCE",
+            "destinationRole": "LOYALTY",
+            "environmentScope": [
+                "LOCAL"
+            ],
+            "sensitivity": "INTERNAL",
+            "versioningPolicy": "NONE",
+            "publicationPolicy": "NONE",
+            "initialPublicationPolicy": "NONE",
+            "removalPolicy": "RETAIN",
+            "files": {
+                "sample-v001/records/loyalty/loyaltyReservationLifecycleData.js": "58fc1c4c7f6e47a48ce59c66d7ab78c518bad9d2483eef1e71a2f1181590833b",
+                "sample-v001/headers/loyalty/loyaltyReservationLifecycleHeader.js": "003881ec8b8b90a1eb0ff593a6280e7da267c9654784bcb781d9e167a0e02157"
+            },
+            "sourceRoot": "sample-v001"
+        }
+    }
+}

@@ -137,6 +137,9 @@ let documentationAuthorGroup = Object.values(userGroupsData).find(
 let customerGroup = Object.values(userGroupsData).find(
   (group) => group.code === "customerUserGroup",
 );
+let serviceAccountGroup = Object.values(userGroupsData).find(
+  (group) => group.code === "serviceAccountUserGroup",
+);
 assert(
   runtimeAdminGroup,
   "Default runtime config admin group should be seeded",
@@ -145,17 +148,36 @@ assert(
   customerGroup,
   "Default customer group should be seeded",
 );
+assert(
+  serviceAccountGroup,
+  "Default service account group should be seeded",
+);
 [
   "commerce.cart.own",
   "commerce.checkout.place",
   "commerce.order.own.read",
-  "commerce.customerList.own",
+  "commerce.shoppingList.own",
   "commerce.promotion.own",
+  "commerce.digital.own.read",
+  "commerce.digital.own.reveal",
   "commerce.lifecycle.own.create",
 ].forEach((permission) =>
   assert(
     customerGroup.permissions.includes(permission),
     "Default customers must include Agora Commerce ownership permission: " +
+      permission,
+  ),
+);
+[
+  "loyalty.wallet.read",
+  "loyalty.rewards.reserve",
+  "loyalty.rewards.capture",
+  "loyalty.rewards.release",
+  "loyalty.rewards.reverse",
+].forEach((permission) =>
+  assert(
+    serviceAccountGroup.permissions.includes(permission),
+    "Default service accounts must include Loyalty internal payment permission: " +
       permission,
   ),
 );

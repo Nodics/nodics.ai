@@ -12,6 +12,15 @@ This module turns backend-owned route definitions into effective runtime APIs wi
 - Keep authentication, permission, tenant, and request-context behavior explicit.
 - Use project-layer route overrides for customer-specific policy changes.
 - Do not make Axis or Nexus the authority for API availability.
+- Keep module route keys relative to the framework base path
+  `/<contextRoot>/<modulePrefix>/<apiVersion>`. A route key should describe the
+  resource or capability, not the caller audience or UI shell. For example, use
+  `/carts/:cartCode`, `/products/:productCode`, and `/promotions/preview`
+  instead of `/customer/carts/:cartCode`, `/customer/products/:productCode`, or
+  `/backoffice/promotions/preview`.
+- Treat access as route metadata and runtime policy: use `secured`,
+  `authTokenTypes`, `accessGroups`, `permission`, `permissionConfig`,
+  `apiExposure`, and token/session ownership checks rather than URL prefixes.
 
 ## Documentation
 

@@ -10,7 +10,7 @@
  */
 
 /** @module checkoutCore/src/schemas/schemas @description Defines Checkout and cross-domain Commerce operational evidence. @layer schema @owner checkoutCore */
-const common = { code: { type: 'string', required: true }, tenant: { type: 'string', required: true }, status: { type: 'string', required: true }, revision: { type: 'int', required: true }, correlationId: { type: 'string', required: true } };
+const common = { code: { type: 'string', required: true }, tenant: { type: 'string', required: true }, enterpriseCode: { type: 'string', required: false }, status: { type: 'string', required: true }, revision: { type: 'int', required: true }, correlationId: { type: 'string', required: true } };
 module.exports = { checkoutCore: {
     checkoutSession: Object.assign({ super: 'base', model: true, schemaPolicies: ['customerOwned'], service: { enabled: true }, router: { enabled: false }, cache: { enabled: false }, event: { enabled: false }, search: { enabled: false } }, { definition: Object.assign({}, common, { ownerId: { type: 'string', required: true }, cartCode: { type: 'string', required: true }, expiresAt: { type: 'date', required: true } }) }),
     checkoutCheckpoint: Object.assign({ super: 'base', model: true, schemaPolicies: ['customerOwned'], service: { enabled: true }, router: { enabled: false }, cache: { enabled: false }, event: { enabled: false }, search: { enabled: false } }, { definition: Object.assign({}, common, { ownerId: { type: 'string', required: true }, cartCode: { type: 'string', required: false }, orderCode: { type: 'string', required: false }, idempotencyKey: { type: 'string', required: true }, evidence: { type: 'object', required: true }, occurredAt: { type: 'date', required: false } }) }),

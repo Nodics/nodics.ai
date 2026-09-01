@@ -11,7 +11,7 @@
 
 /* Copyright (c) 2026 Nodics. Governed by the root LICENSE. */
 'use strict';
-/** @module checkoutCore/src/router/routers @description Declares secured idempotent customer placement API. @layer router @owner checkoutCore */
+/** @module checkoutCore/src/router/routers @description Declares secured idempotent checkout placement API. @layer router @owner checkoutCore */
 module.exports = { checkoutCore: { customer: {
-    place: { secured: true, authTokenTypes: ['access'], accessGroups: ['customerUserGroup'], permission: 'commerce.checkout.place', apiExposure: 'commerceCustomer', key: '/customer/checkouts/place', method: 'POST', controller: 'DefaultCheckoutCustomerController', operation: 'place' }
+    place: { secured: true, authTokenTypes: ['access'], accessGroups: ['customerUserGroup'], permission: 'commerce.checkout.place', apiExposure: 'commerceCustomer', key: '/checkouts/place', method: 'POST', controller: 'DefaultCheckoutCustomerController', operation: 'place' }
 } } };

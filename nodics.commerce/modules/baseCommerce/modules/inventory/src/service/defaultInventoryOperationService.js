@@ -20,6 +20,7 @@ module.exports = {
     serviceAuthData: function (request) {
         return Object.assign({}, request.authData || {}, {
             tenant: request.tenant,
+            enterpriseCode: request.enterpriseCode,
             principalId: 'inventoryOperationService',
             code: 'inventoryOperationService',
             loginId: 'inventoryOperationService',
@@ -47,7 +48,7 @@ module.exports = {
         const result = this.unwrap(await SERVICE.DefaultInventoryBalanceService.get({
             tenant: request.tenant,
             authData: this.serviceAuthData(request),
-            query: { tenant: request.tenant, code: request.balanceCode },
+            query: Object.assign({ tenant: request.tenant, code: request.balanceCode }, request.enterpriseCode ? { enterpriseCode: request.enterpriseCode } : {}),
             pageSize: 1
         }));
         const balance = Array.isArray(result) ? result[0] : result;
@@ -57,7 +58,7 @@ module.exports = {
     /** Persists a balance through the generated schema service. @param {Object} request Request. @param {Object} balance Balance. @returns {Promise<Object>} Saved balance. */
     saveBalance: async function (request, balance) {
         const service = SERVICE.DefaultInventoryBalanceService;
-        const payload = { tenant: request.tenant, authData: this.serviceAuthData(request), query: { tenant: request.tenant, code: balance.code }, model: balance };
+        const payload = { tenant: request.tenant, authData: this.serviceAuthData(request), query: Object.assign({ tenant: request.tenant, code: balance.code }, request.enterpriseCode ? { enterpriseCode: request.enterpriseCode } : {}), model: Object.assign({}, balance, request.enterpriseCode ? { enterpriseCode: request.enterpriseCode } : {}) };
         if (service.update) return this.unwrap(await service.update(payload));
         if (service.save) return this.unwrap(await service.save(payload));
         throw new Error('Inventory balance persistence is not available');
@@ -98,6 +99,7 @@ module.exports = {
         const movement = {
             code: ['inventoryMovement', crypto.createHash('sha1').update([request.tenant, balance.code, request.actionCode, idempotencyKey].join('|')).digest('hex')].join(':'),
             tenant: request.tenant,
+            enterpriseCode: request.enterpriseCode || balance.enterpriseCode,
             warehouseCode: balance.warehouseCode,
             sku: balance.sku,
             quantity: this.stockValue(delta.onHandDelta),

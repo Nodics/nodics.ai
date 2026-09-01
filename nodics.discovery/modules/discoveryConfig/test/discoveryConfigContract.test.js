@@ -24,7 +24,7 @@ assert(schemas.discoveryConfig.discoveryQueryProfile);
 assert(schemas.discoveryConfig.discoveryFacetProfile);
 assert(schemas.discoveryConfig.discoveryRankingProfile);
 assert(schemas.discoveryConfig.discoveryPublicationPolicy);
-assert.deepEqual(schemas.discoveryConfig.discoveryIndexConfiguration.definition.ownerType.enum, ['PRODUCT', 'CONTENT', 'PAGE', 'MEDIA', 'DOCUMENTATION']);
+assert.deepEqual(schemas.discoveryConfig.discoveryIndexConfiguration.definition.ownerType.enum, ['PRODUCT', 'CONTENT', 'PAGE', 'MEDIA', 'DOCUMENTATION', 'WCMS_EXPERIENCE']);
 
 global.CONFIG = { get: key => key === 'discovery' ? { runtime: { profiles: { PRODUCT: { indexConfiguration: { code: 'productIndex', indexName: 'productlocalized' } } } } } : undefined };
 global.SERVICE = {};

@@ -1,0 +1,25 @@
+{
+  "name": "loyaltyRewardPayment",
+  "version": "0.0.0",
+  "index": "70.32.5",
+  "private": true,
+  "main": "nodics.js",
+  "description": "Nodics Commerce Loyalty Reward Payment method capability.",
+  "nodics": {
+    "kind": "capability",
+    "displayName": "Loyalty Reward Payment",
+    "runtimeModule": true,
+    "loadableByNodicsModuleLoader": true,
+    "owns": [
+      "configuration",
+      "service",
+      "test",
+      "llm"
+    ],
+    "runtime": {
+      "router": false,
+      "publish": false,
+      "web": false
+    }
+  }
+}

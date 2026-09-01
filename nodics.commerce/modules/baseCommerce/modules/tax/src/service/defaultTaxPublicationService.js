@@ -19,9 +19,12 @@ module.exports = {
      * @returns {*} Result defined by the owning module contract.
      * @override Later-loaded modules may replace this member through the standard merge contract.
      */
-    persistenceModel: function (record) {
+    persistenceModel: function (record, request) {
         let now = new Date();
+        const auth = request && request.authData || {};
+        const enterpriseCode = record.enterpriseCode || request && (request.enterpriseCode || request.entCode) || auth.enterpriseCode || auth.entCode;
         return Object.assign({}, record, {
+            enterpriseCode: enterpriseCode,
             active: record.active !== undefined ? record.active : true,
             created: record.created instanceof Date ? record.created : now,
             updated: now
@@ -40,10 +43,12 @@ module.exports = {
         let restored = [];
         for (let record of taxPolicies) {
             if (!record || record.tenant !== request.tenant || !record.code) throw new Error('Tax restoration record escaped its tenant boundary');
-            let model = this.persistenceModel(record);
+            const requestEnterpriseCode = request.enterpriseCode || request.entCode || request.authData && (request.authData.enterpriseCode || request.authData.entCode);
+            if (record.enterpriseCode && requestEnterpriseCode && record.enterpriseCode !== requestEnterpriseCode) throw new Error('Tax restoration record escaped its enterprise boundary');
+            let model = this.persistenceModel(record, request);
             await SERVICE.DefaultTaxPolicyService.save({ tenant: request.tenant, authData: request.authData, model }).then(response => response && Object.prototype.hasOwnProperty.call(response, 'result') ? response.result : response);
             restored.push(model.code);
         }
-        return { tenant: request.tenant, restored: restored.length, taxPolicies: restored };
+        return { tenant: request.tenant, enterpriseCode: request.enterpriseCode || request.entCode || request.authData && (request.authData.enterpriseCode || request.authData.entCode), restored: restored.length, taxPolicies: restored };
     }
 };

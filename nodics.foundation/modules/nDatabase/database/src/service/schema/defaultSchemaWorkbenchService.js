@@ -111,6 +111,66 @@ module.exports = {
     },
 
     /**
+     * Creates one authorized schema record through the owning generated save
+     * service. Runtime-owned fields are filled from request context so operators
+     * do not have to author tenant/schema mechanics in business workspaces.
+     * @param {Object} request Authenticated Workbench request.
+     * @returns {Promise<Object>} Created record evidence.
+     */
+    createRecord: function (request) {
+        let schemaModule = this.resolveSchemaModule(request.moduleName);
+        let schemaName = request.httpRequest && request.httpRequest.params ? request.httpRequest.params.schema : undefined;
+        let descriptor = this.buildDescriptor(request, schemaModule.moduleObject, schemaName, schemaModule.moduleName);
+        if (!descriptor || !descriptor.operations.includes('create')) {
+            return Promise.reject(new CLASSES.NodicsError('ERR_DBS_00004', 'Schema create is not available to Schema Workbench'));
+        }
+        let body = (request.httpRequest && request.httpRequest.body) || {};
+        let model = this.buildMutationModel(body.model || body, descriptor, request);
+        let service = this.getGeneratedService(schemaName);
+        return service
+            .save({
+                tenant: request.tenant,
+                authData: request.authData,
+                model: model,
+                idempotencyKey: this.getIdempotencyKey(request),
+            })
+            .then((result) => {
+                return { code: 'SUC_DBS_00000', data: this.extractMutationRecord(result, model) };
+            });
+    },
+
+    /**
+     * Updates one authorized schema record through the owning generated update
+     * service using the same identity rules as delete-impact/delete.
+     * @param {Object} request Authenticated Workbench request.
+     * @returns {Promise<Object>} Updated record evidence.
+     */
+    updateRecord: function (request) {
+        let schemaModule = this.resolveSchemaModule(request.moduleName);
+        let schemaName = request.httpRequest && request.httpRequest.params ? request.httpRequest.params.schema : undefined;
+        let descriptor = this.buildDescriptor(request, schemaModule.moduleObject, schemaName, schemaModule.moduleName);
+        if (!descriptor || !descriptor.operations.includes('update')) {
+            return Promise.reject(new CLASSES.NodicsError('ERR_DBS_00004', 'Schema update is not available to Schema Workbench'));
+        }
+        let body = (request.httpRequest && request.httpRequest.body) || {};
+        let identity = this.buildIdentityQuery(body.identity || body.query, descriptor);
+        let model = this.buildMutationModel(body.model || {}, descriptor, request);
+        let service = this.getGeneratedService(schemaName);
+        return service
+            .update({
+                tenant: request.tenant,
+                authData: request.authData,
+                query: identity,
+                model: model,
+                options: { recursive: false, returnModified: true },
+                idempotencyKey: this.getIdempotencyKey(request),
+            })
+            .then((result) => {
+                return { code: 'SUC_DBS_00000', data: this.extractMutationRecord(result, Object.assign({}, identity, model)) };
+            });
+    },
+
+    /**
      * Resolves the shared safe-query translator used by Schema Workbench.
      * Workbench must not own a separate browser query framework; generated CRUD
      * and schema-driven BackOffice screens should converge on this reusable
@@ -387,6 +447,56 @@ module.exports = {
         let headers = request.headers || (request.httpRequest && request.httpRequest.headers) || {};
         let value = headers['idempotency-key'] || headers['Idempotency-Key'];
         return typeof value === 'string' && /^[A-Za-z0-9._:-]{8,128}$/.test(value) ? value : undefined;
+    },
+
+    /** Returns the enterprise context supplied by secured request processing. */
+    getEnterpriseCode: function (request) {
+        let headers = request.headers || (request.httpRequest && request.httpRequest.headers) || {};
+        let authData = request.authData || {};
+        let value = request.enterpriseCode || request.entCode || authData.enterpriseCode || authData.entCode ||
+            headers['x-enterprise-code'] || headers['X-Enterprise-Code'] || headers.entCode;
+        return typeof value === 'string' && value.trim() ? value.trim() : undefined;
+    },
+
+    /** Builds a mutation model from editable schema fields plus runtime scope. */
+    buildMutationModel: function (input, descriptor, request) {
+        if (!input || typeof input !== 'object' || Array.isArray(input)) {
+            throw new CLASSES.NodicsError('ERR_DBS_00003', 'Workbench mutation model is invalid');
+        }
+        let fieldNames = new Set(descriptor.fields.map((field) => field.name));
+        let model = {};
+        Object.keys(input).forEach((field) => {
+            if (fieldNames.has(field)) {
+                model[field] = input[field];
+            }
+        });
+        if (fieldNames.has('tenant')) {
+            model.tenant = request.tenant;
+        }
+        if (fieldNames.has('enterpriseCode')) {
+            let enterpriseCode = this.getEnterpriseCode(request);
+            if (enterpriseCode) {
+                model.enterpriseCode = enterpriseCode;
+            }
+        }
+        return model;
+    },
+
+    /** Extracts one concrete record from common generated mutation envelopes. */
+    extractMutationRecord: function (result, fallback) {
+        if (result && Array.isArray(result.result) && result.result.length === 1) {
+            return result.result[0];
+        }
+        if (result && Array.isArray(result.models) && result.models.length === 1) {
+            return result.models[0];
+        }
+        if (Array.isArray(result) && result.length === 1) {
+            return result[0];
+        }
+        if (result && typeof result === 'object' && !Array.isArray(result) && result.code && !result.result && !result.models) {
+            return result;
+        }
+        return fallback;
     },
 
     /** Builds an allowlisted primary-identity query. */

@@ -565,6 +565,24 @@ module.exports = {
           "lifecycleState": "ONLINE"
         },
         {
+          "code": "loyalty-and-rewards",
+          "title": "Loyalty and Rewards",
+          "order": 305,
+          "summary": "Reward programs, reward types, owner wallets, balances, reservations, redemptions, ledger evidence, and reward-based checkout integration.",
+          "audience": [
+            "business",
+            "architect",
+            "administrator",
+            "developer",
+            "operator",
+            "qa",
+            "ai-tool"
+          ],
+          "visibility": "public",
+          "accessMode": "PUBLIC",
+          "lifecycleState": "ONLINE"
+        },
+        {
           "code": "shipping-and-fulfillment",
           "title": "Shipping and Fulfillment",
           "order": 310,
@@ -8164,20 +8182,20 @@ module.exports = {
           "searchText": "Payment Core and Provider Boundaries How Payment Core, payment methods, gateway providers, safe payloads, reconciliation, refunds, and provider extension boundaries work. # Payment Core and Provider Boundaries\n\nPayment in Nodics separates business payment decisions from provider-specific\nexecution. Payment Core owns method selection, authorization intent,\ncapture/refund lifecycle, reconciliation, and safe customer payloads. Provider\nmodules such as Stripe, PayPal, Visa, CyberSource, wallets, cards, bank\ntransfer, and cash on delivery implement integration details. For beginners,\nPayment Core decides what should happen; providers perform it with an external\nnetwork or offline method.\n\n## Source map\n\n| Area | Source location |\n| --- | --- |\n| Payment group | `../nodics.commerce/modules/payment/package.json` |\n| Payment Core | `../nodics.commerce/modules/payment/modules/paymentCore/package.json` |\n| Payment methods | `../nodics.commerce/modules/payment/modules/paymentMethods/package.json` |\n| Payment providers | `../nodics.commerce/modules/payment/modules/paymentProviders/package.json` |\n| Stripe provider | `../nodics.commerce/modules/payment/modules/paymentProviders/modules/stripeProvider/package.json` |\n| Payment operations docs | `docs/pages/nodics.commerce/payment-fulfillment.md` |\n\n## Boundary model\n\n```mermaid\nflowchart LR\n  Checkout[\"Checkout\"] --> Core[\"Payment Core\"]\n  Core --> Method[\"Payment method\"]\n  Core --> Provider[\"Payment provider\"]\n  Provider --> Gateway[\"External gateway\"]\n  Gateway --> Core\n  Core --> Order[\"Order lifecycle\"]\n```\n\nThe business problem is secure payment confidence. Business users need to know\nwhich payment methods are available and whether money movement is complete.\nDevelopers need provider contracts that avoid leaking gateway details into\ncheckout. Operators need reconciliation, retry, and failure evidence for\nproduction.\n\n## Safe payload contract\n\nPayment responses shown to customers should contain status, amount, currency,\nmethod label, recoverable action, and safe reference. They should not expose\nprovider secrets, raw gateway payloads, card data, credentials, or internal\nstack traces.\n\n```js\nconst paymentResult = {\n  status: 'AUTHORIZED',\n  amount: 12900,\n  currency: 'USD',\n  methodCode: 'card',\n  providerReference: 'safe-reference'\n};\n```\n\n## Customization and extension guidance\n\nDevelopers can add methods, providers, adapters, reconciliation jobs, refund\nhandlers, and risk checks. Keep provider secrets in secure configuration and\nnever in data files or docs examples. Business users should configure\navailability and policy through Axis where enabled. Operators should see\nauthorization, capture, refund, settlement, retry, and reconciliation evidence.\n\n## Implementation handoff\n\nEvery payment provider handoff should identify supported operations, safe\npayload fields, retryability, idempotency keys, reconciliation schedule,\nconfiguration requirements, and unavailable-state messaging. That gives\nbusiness users confidence about payment availability, developers a provider\ncontract, operators production recovery evidence, and QA owners a way to test\nsuccess, decline, timeout, refund, and reconciliation cases.\n\n## Evidence checklist\n\nPayment evidence should include order reference, payment intent, method,\nprovider, amount, currency, lifecycle state, safe external reference,\ncorrelation id, and reconciliation result. Sensitive values must remain\noutside logs, release data, and browser payloads. Operators should be able to\ndecide whether to retry, cancel, refund, or escalate without reading raw\ngateway responses in the main business UI.\n\nProduction readiness also needs negative-path evidence. A declined card,\nprovider timeout, duplicate callback, partial capture, and failed refund should\nall return controlled states that the business can understand and developers\ncan trace.\n\n## Common mistakes\n\n- Letting provider-specific payloads leak into checkout responses.\n- Treating a payment method as a gateway provider.\n- Storing credentials in release data.\n- Completing fulfillment before payment state allows it.\n- Hiding failed reconciliation from operators.\n\n## Verification\n\nRun payment method and provider contract tests. In a fresh schema, place a\ncontrolled order, authorize payment, capture or mark offline payment, issue a\ntest refund, and inspect reconciliation evidence. Production readiness\nrequires business-safe status, developer provider tests, operator audit\nrecords, and QA proof that failures do not expose sensitive data.\n"
         },
         {
-          "code": "commerce.customer-list-profile-boundary",
-          "title": "Customer List and Profile Commerce Boundary",
-          "route": "/docs/framework/commerce-customer-list-profile-boundary",
-          "section": "user-enterprise-and-tenant-management",
-          "sectionTitle": "User, Enterprise, and Tenant Management",
-          "sectionOrder": 130,
-          "group": "user-enterprise-and-tenant-management",
-          "groupTitle": "User, Enterprise, and Tenant Management",
-          "groupOrder": 130,
+          "code": "loyalty.wallets-rewards-ledger",
+          "title": "Loyalty Wallets, Rewards, and Ledger",
+          "route": "/docs/framework/loyalty-wallets-rewards-ledger",
+          "section": "loyalty-and-rewards",
+          "sectionTitle": "Loyalty and Rewards",
+          "sectionOrder": 305,
+          "group": "loyalty-and-rewards",
+          "groupTitle": "Loyalty and Rewards",
+          "groupOrder": 305,
           "order": 10,
-          "parentId": "user-enterprise-and-tenant-management",
+          "parentId": "loyalty-and-rewards",
           "hierarchyPath": [
-            "User, Enterprise, and Tenant Management",
-            "Customer List and Profile Commerce Boundary"
+            "Loyalty and Rewards",
+            "Loyalty Wallets, Rewards, and Ledger"
           ],
           "hierarchyDepth": 2,
           "documentType": "contract",
@@ -8202,7 +8220,81 @@ module.exports = {
             "qa engineer",
             "ai tool"
           ],
-          "summary": "Why customer lists belong to Commerce while person, address, authentication, permission, and organization identity stay under Profile.",
+          "summary": "Business, developer, operator, and customization guidance for reward wallets, balances, reservations, redemptions, ledger evidence, and Commerce reward payment provider integration.",
+          "visibility": "public",
+          "accessMode": "PUBLIC",
+          "publiclyAvailable": true,
+          "requiresAuthentication": false,
+          "allowedRoles": [],
+          "allowedGroups": [],
+          "allowedPermissions": [],
+          "lifecycleState": "ONLINE",
+          "maturityState": "operational",
+          "implementationState": "current",
+          "relatedPages": [
+            "commerce.payment-provider-boundaries",
+            "commerce.payment-fulfillment",
+            "framework.customization-guide",
+            "framework.local-browser-acceptance-journey"
+          ],
+          "searchKeywords": [
+            "loyalty",
+            "reward",
+            "wallet",
+            "points",
+            "ledger",
+            "reservation",
+            "redemption",
+            "checkout",
+            "payment-provider"
+          ],
+          "topicKeywords": [
+            "Loyalty and Rewards",
+            "Loyalty Foundations",
+            "Loyalty Wallets, Rewards, and Ledger"
+          ],
+          "searchText": "Loyalty Wallets, Rewards, and Ledger Business, developer, operator, and customization guidance for reward wallets, balances, reservations, redemptions, ledger evidence, and Commerce reward payment provider integration. # Loyalty Wallets, Rewards, and Ledger\n\nMaturity: operational first slice.\n\nNodics Loyalty gives a project a reusable way to reward people or business\nactors for approved behavior, hold that value in a wallet, reserve it for a\nbusiness transaction, capture it when the transaction succeeds, release it when\nthe transaction fails, and explain every movement through an append-only ledger.\n\nThe business idea is simple: a customer may earn points for an order, an\nemployee may earn credits for a task, a partner may receive reward value for a\ncampaign, or an enterprise may hold a wallet for a shared program. Each wallet\nhas an owner type and owner code. The reward itself can be points, credits,\nstamps, tokens, or a project-defined unit.\n\n## Beginner mental model\n\nFor beginners, think of Loyalty as a bank passbook for non-cash reward value.\nThe wallet says who owns the value. The balance says how much of each reward\ntype is available, reserved, or spent. The ledger explains every movement so a\nteam can answer what happened later. Commerce, Engagement, Process, or a\nproject module may decide why a reward should move, but Loyalty records the\nmovement consistently.\n\n## Business problem\n\nMany implementations start with one points column on the customer profile.\nThat becomes painful as soon as the business needs multiple reward types,\nexpiry, coupon purchase, reversals, reservation during checkout, employee\nrewards, or audit evidence. A single balance field cannot answer who changed\nthe balance, which program produced it, whether it is reserved, whether it was\nspent correctly, or how to reverse a mistake.\n\nLoyalty solves this by making the wallet a reusable value container and the\nledger the permanent explanation of change. Commerce, Engagement, Process,\nor a customer project may decide why rewards are earned or spent, but Loyalty\nowns the balance, reservation, redemption, and ledger evidence.\n\n## Source map\n\n| Area | Source location |\n| --- | --- |\n| Functional module group | `../nodics.loyalty/package.json` |\n| Module ownership guide | `../nodics.loyalty/README.md` |\n| Shared policy and enums | `../nodics.loyalty/modules/loyaltyCore/src/schemas/schemas.js` |\n| Programs | `../nodics.loyalty/modules/loyaltyProgram/src/schemas/schemas.js` |\n| Reward types | `../nodics.loyalty/modules/loyaltyRewardType/src/schemas/schemas.js` |\n| Wallets and balances | `../nodics.loyalty/modules/loyaltyWallet/src/schemas/schemas.js` |\n| Reward operation service | `../nodics.loyalty/modules/loyaltyWallet/src/service/defaultLoyaltyRewardOperationService.js` |\n| Ledger schema and posting | `../nodics.loyalty/modules/loyaltyLedger/src/schemas/schemas.js` |\n| Reservation schema | `../nodics.loyalty/modules/loyaltyReservation/src/schemas/schemas.js` |\n| Redemption schema | `../nodics.loyalty/modules/loyaltyRedemption/src/schemas/schemas.js` |\n| Internal API routes | `../nodics.loyalty/modules/loyaltyApi/src/router/routers.js` |\n| Commerce reward payment provider | `../nodics.commerce/modules/payment/modules/paymentProviders/modules/loyaltyRewardProvider/README.md` |\n| Live checkout acceptance | `../nodics.foundation/modules/nTooling/src/service/project/defaultProjectLoyaltyRewardCheckoutAcceptanceService.mjs` |\n\n## Owner model\n\n```mermaid\nflowchart LR\n  Actor[\"Customer, employee, partner, enterprise, or system\"] --> Wallet[\"Loyalty wallet\"]\n  Wallet --> Balance[\"Program + reward type balance\"]\n  Balance --> Reservation[\"Reservation\"]\n  Reservation --> Capture[\"Capture / redemption\"]\n  Balance --> Ledger[\"Append-only reward ledger\"]\n  Capture --> Ledger\n  Reservation --> Ledger\n```\n\nThe wallet owner is stored as `ownerType` and `ownerCode`. This allows a wallet\nto belong to a customer, employee, enterprise, partner, or system actor without\nturning Loyalty into a customer-profile table.\n\nTenant and enterprise schema selection comes from the authenticated runtime\ncontext. Do not add `tenant`, `enterpriseCode`, raw token, request payload, or\nHTTP context fields to Loyalty wallet, balance, ledger, reservation, or\nredemption rows.\n\n## Runtime topology\n\nLoyalty can run in the same local topology as the rest of Nodics or as a\nseparate microservice. In the Kickoff local topology, `loyaltyServer` runs the\nframework-owned `nodics.loyalty` module group. Commerce can run on its own\nserver and call the Loyalty internal API through the configured server graph.\n\nThis is the important dependency direction:\n\n| Journey part | Owner |\n| --- | --- |\n| Reward balance and ledger | `nodics.loyalty` |\n| Coupon product, cart, checkout, order, payment transaction, entitlement, delivery | `nodics.commerce` |\n| Buying a coupon with reward points | Commerce payment method and payment provider |\n| Project earning rule or customer-specific reward policy | Project module or configuration |\n| Runtime schema selection | Authenticated request context |\n\n## Business journeys\n\n### Earn\n\nAn approved business event grants reward value. The earning reason can come\nfrom Commerce, Engagement, Process, or a project-specific module, but the\nbalance movement belongs to Loyalty. The ledger entry type is `EARN`.\n\n### Reserve\n\nBefore a reward value is spent, Loyalty can reserve it. Reservation moves value\nfrom available to reserved so a checkout or external process can continue\nwithout double-spending the same points. The ledger entry type is `RESERVE`.\n\n### Capture\n\nWhen the downstream business journey succeeds, the reservation is captured.\nReserved value becomes spent value, a redemption record is created, and the\nledger receives a `CAPTURE` entry.\n\n### Release\n\nIf the downstream journey fails or is cancelled before capture, the reservation\nis released. Reserved value returns to available value, and the ledger receives\nrelease evidence.\n\n### Reverse\n\nCorrections and refunds are compensating movements. Historical ledger rows\nremain append-only; a new `REVERSE` entry explains the correction.\n\n## Reward payment provider checkout pattern\n\nBuying a coupon with points is not Loyalty module behavior. It is a Commerce\ncheckout journey using Loyalty as the reward-balance authority.\n\n```mermaid\nsequenceDiagram\n  participant Customer\n  participant Commerce\n  participant Payment as Loyalty reward payment provider\n  participant Loyalty\n  Customer->>Commerce: Place order with LOYALTY_REWARD\n  Commerce->>Payment: Authorize reward payment\n  Payment->>Loyalty: Reserve reward amount\n  Commerce->>Payment: Capture after order placement\n  Payment->>Loyalty: Capture reservation\n  Commerce->>Commerce: Persist order, payment, entitlement, delivery\n```\n\nUse `paymentMethod: \"LOYALTY_REWARD\"` when checkout should pay for a product\nwith reward value. Commerce decides that the product can be bought, calculates\nthe cart, owns payment transaction evidence, creates the order, and delivers\nthe coupon or digital entitlement. Loyalty only owns the wallet balance,\nreservation, redemption, and ledger.\n\n## Developer guidance\n\nDevelopers should start from the owner before adding code:\n\n| Change | Put it here |\n| --- | --- |\n| New reward unit such as points, credits, or stamps | `loyaltyRewardType` data or project data |\n| New program such as VIP rewards | `loyaltyProgram` data or project data |\n| Balance mutation behavior used by every project | `loyaltyWallet` service contract |\n| Ledger posting behavior | `loyaltyLedger` |\n| Reserve, capture, release, reverse API | `loyaltyApi` |\n| Coupon purchase with points | Commerce payment method/provider |\n| Project-specific earn policy | Customer project extension module |\n| Storefront labels and customer messaging | Project frontend or content data |\n\nUse string decimal amounts for reward balances. Do not use floating point\narithmetic for points or credits. Use idempotency keys and correlation IDs for\nmutating operations so retries do not double-spend rewards.\n\n## Customization guidance\n\nCustomize Loyalty from the outside first:\n\n1. Configure reward programs, reward types, expiry windows, and spend policies.\n2. Add project-owned data packs for customer-specific reward catalogs.\n3. Add a project extension module when a customer has unique earning,\n   validation, expiry, or eligibility rules.\n4. Add Commerce payment providers or payment-method configuration when reward\n   value can buy products, subscriptions, coupons, or services.\n5. Change the reusable framework module only when all projects need a new\n   Loyalty contract.\n\nProject customization must keep standard owner names stable. A customer project\nmay extend Loyalty behavior, but it should not rename the framework capability\nor create a parallel wallet authority.\n\n## Security and governance\n\nLoyalty internal mutation APIs are service-to-service contracts. Customer or\nadmin tokens may read authorized wallet views when such routes are exposed, but\nreserve, capture, release, and reverse operations should be called by trusted\nservices such as Commerce payment providers.\n\nPermissions must be explicit. Service accounts need the Loyalty internal\npermissions used by payment-provider handoff. Browser responses and logs must\nnot expose raw tokens, API keys, customer secrets, or provider payloads.\n\n## Operational evidence\n\nAn operator needs enough evidence to decide whether a reward spend succeeded,\nfailed, or needs compensation:\n\n| Evidence | Why it matters |\n| --- | --- |\n| Wallet balance | Shows available, reserved, and spent reward value |\n| Reservation | Shows value was held for a target order or process |\n| Ledger entries | Shows append-only movement history |\n| Redemption | Shows captured reward usage |\n| Payment transaction | Shows Commerce payment lifecycle |\n| Order evidence | Shows checkout selected the Loyalty reward provider |\n| Entitlement or delivery | Shows the product or coupon was actually fulfilled |\n\n## Verification\n\nFor framework changes, run the focused Loyalty tests:\n\n```sh\nnode nodics.loyalty/modules/loyaltyApi/test/loyaltyApiRouteContract.test.js\nnode nodics.loyalty/modules/loyaltyWallet/test/loyaltyRewardOperationContract.test.js\nnode nodics.loyalty/modules/loyaltyLedger/test/loyaltyLedgerContract.test.js\n```\n\nFor Commerce checkout integration, run the provider test and the Kickoff live\nacceptance:\n\n```sh\nnode nodics.commerce/modules/payment/modules/paymentProviders/modules/loyaltyRewardProvider/test/loyaltyRewardPaymentProviderContract.test.js\ncd ../nodics.kickoff\nnpm run acceptance:loyalty-reward-checkout\n```\n\nThe live acceptance starts Platform, Loyalty, and Commerce, places an HTTP\ncheckout using `LOYALTY_REWARD`, verifies Mongo evidence across Loyalty and\nCommerce models, and writes a browser-readable report to\n`.nodics/tmp/loyalty-reward-checkout-live/index.html`.\n\nWhen a journey is customer-visible, complete a browser pass as well. The page\nor journey should show business-safe status, readable balance/payment evidence,\nand no broken layout at desktop and mobile widths.\n\n## Common mistakes\n\n- Treating coupon purchase as Loyalty instead of Commerce payment behavior.\n- Storing tenant or enterprise fields in Loyalty business rows.\n- Moving balances without ledger evidence.\n- Editing old ledger entries instead of posting reversals.\n- Letting a project-specific reward policy become the framework default.\n- Using floating point math for reward amounts.\n- Calling internal mutation APIs directly from a public browser journey.\n\n## Reader checklist\n\nBusiness readers should leave this page knowing what reward wallets do and why\nledger evidence matters. Developers should know which module owns each change.\nOperators should know which runtime and evidence to inspect. Project teams\nshould know how to customize reward programs and checkout spend behavior\nwithout forking the standard Loyalty framework.\n"
+        },
+        {
+          "code": "commerce.shopping-list-commerce-boundary",
+          "title": "Shopping List Commerce Boundary",
+          "route": "/docs/framework/commerce-shopping-list-commerce-boundary",
+          "section": "user-enterprise-and-tenant-management",
+          "sectionTitle": "User, Enterprise, and Tenant Management",
+          "sectionOrder": 130,
+          "group": "user-enterprise-and-tenant-management",
+          "groupTitle": "User, Enterprise, and Tenant Management",
+          "groupOrder": 130,
+          "order": 10,
+          "parentId": "user-enterprise-and-tenant-management",
+          "hierarchyPath": [
+            "User, Enterprise, and Tenant Management",
+            "Shopping List Commerce Boundary"
+          ],
+          "hierarchyDepth": 2,
+          "documentType": "contract",
+          "audience": [
+            "business",
+            "architect",
+            "administrator",
+            "developer",
+            "operator",
+            "qa",
+            "ai-tool"
+          ],
+          "businessAudience": [
+            "business user",
+            "administrator",
+            "implementation partner"
+          ],
+          "technicalAudience": [
+            "architect",
+            "developer",
+            "operator",
+            "qa engineer",
+            "ai tool"
+          ],
+          "summary": "Why wishlist, compare, and save-for-later belong to Commerce while Profile remains the identity authority.",
           "visibility": "public",
           "accessMode": "PUBLIC",
           "publiclyAvailable": true,
@@ -8219,18 +8311,20 @@ module.exports = {
             "commerce.payment-provider-boundaries"
           ],
           "searchKeywords": [
-            "customer-list",
+            "shopping-list",
+            "wishlist",
+            "compare",
+            "save-for-later",
             "profile",
             "commerce-boundary",
-            "eligibility",
             "identity"
           ],
           "topicKeywords": [
             "User, Enterprise, and Tenant Management",
             "Customer Data and Identity",
-            "Customer List and Profile Commerce Boundary"
+            "Shopping List Commerce Boundary"
           ],
-          "searchText": "Customer List and Profile Commerce Boundary Why customer lists belong to Commerce while person, address, authentication, permission, and organization identity stay under Profile. # Customer List and Profile Commerce Boundary\n\nCustomer List is a Commerce capability for grouping customers in commercial\ncontexts such as eligibility, promotions, account buying, or targeted\noperations. Profile remains the authority for person, address, authentication,\npermission, and organization identity. For beginners, Profile answers \"who is\nthis customer?\" and Customer List answers \"which commercial group is this\ncustomer part of for this commerce operation?\"\n\n## Source map\n\n| Area | Source location |\n| --- | --- |\n| Customer List module | `../nodics.commerce/modules/checkout/modules/customerList/package.json` |\n| Checkout module | `../nodics.commerce/modules/checkout/package.json` |\n| Profile module | `../nodics.platform/modules/profile/package.json` |\n| Security docs | `docs/pages/nodics.platform/security-identity-access.md` |\n| Commerce operations | `docs/pages/nodics.commerce/cart-order.md` |\n\n## Ownership model\n\n```mermaid\nflowchart LR\n  Profile[\"Profile identity\"] --> CustomerList[\"Commerce customer list\"]\n  CustomerList --> Promotion[\"Promotion eligibility\"]\n  CustomerList --> Checkout[\"Checkout decision\"]\n  Profile --> Auth[\"Authentication and permissions\"]\n```\n\nThe business problem is targeted commerce without identity duplication.\nBusiness users need groups like VIP customers, wholesale buyers, or launch\naudiences. Developers need a boundary that prevents Commerce from becoming a\nparallel identity system. Operators need to trace eligibility decisions in\nproduction without exposing personal data unnecessarily.\n\n## Contract\n\nCustomer List records should reference stable profile or organization codes,\nlist codes, lifecycle state, source reason, and validity dates where needed.\nThey should not copy passwords, credentials, full identity payloads, or\npermission ownership.\n\n```js\nmodule.exports = {\n  vipCustomerMembership: {\n    code: 'vipCustomerMembership',\n    listCode: 'vipCustomers',\n    customerCode: 'customer001',\n    active: true\n  }\n};\n```\n\n## Customization and extension guidance\n\nDevelopers can add eligibility services, import mappers, segmentation rules,\npromotion integrations, and audit views. Business users should manage lists\nthrough Axis when available. AI tools should inspect Profile and Commerce\nschemas before adding references. Operators should verify that commercial\ngrouping works without broad identity export.\n\n## Implementation handoff\n\nEach customer-list customization should name the Profile reference key,\nCommerce list schema, eligibility service, promotion or checkout consumer,\npermission rule, retention rule, and audit evidence. Business users then\nunderstand the journey, developers preserve the identity boundary, operators\ncan investigate production eligibility, and QA owners can prove that removing\na customer from a list changes commerce behavior without corrupting Profile.\n\n## Evidence checklist\n\nMembership evidence should include list code, referenced customer or\norganization code, source reason, actor, validity window, lifecycle state, and\nlast eligibility decision. Do not expose more Profile detail than the business\njourney requires. Operators should be able to prove why a customer received or\ndid not receive a commercial treatment, while developers keep identity,\nauthentication, address, and permission fields under Profile authority.\n\nThis evidence also protects production support from over-collecting identity\ndata. The support answer should be about eligibility and commerce treatment,\nnot a full customer profile export.\n\nProduction support should also prove expiry and removal. When a customer loses\nmembership, the next checkout or promotion decision must respect that change\nwithout deleting the underlying Profile record.\n\n## Common mistakes\n\n- Copying Profile authority into Commerce records.\n- Using email address as the only customer list key.\n- Applying promotions without list lifecycle checks.\n- Exposing list membership without permission checks.\n- Forgetting removal, expiry, and audit behavior.\n\n## Verification\n\nImport profile and customer list data into a fresh schema. Validate list\nmembership, checkout eligibility, promotion behavior, removal behavior, and\npermission-filtered Axis visibility. Production readiness requires business\napproval, developer boundary tests, operator audit evidence, and QA proof that\nProfile remains the identity authority.\n"
+          "searchText": "Shopping List Commerce Boundary Why wishlist, compare, and save-for-later belong to Commerce while Profile remains the identity authority. # Shopping List Commerce Boundary\n\nShopping List is a Commerce capability for customer shopping-intent lists such\nas wishlist, compare, and save-for-later. It belongs under Base Commerce\nbecause these lists are used across discovery, product cards, cart, checkout,\nand later channel journeys. Profile remains the authority for person,\nauthentication, permissions, addresses, and organization identity.\n\nFor beginners, Profile answers \"who is this actor?\" Shopping List answers\n\"which products has this authenticated shopper intentionally saved for a\ncommerce journey?\"\n\n## Source map\n\n| Area | Source location |\n| --- | --- |\n| Shopping List module | `../nodics.commerce/modules/baseCommerce/modules/shoppingList/package.json` |\n| Shopping List schemas | `../nodics.commerce/modules/baseCommerce/modules/shoppingList/src/schemas/schemas.js` |\n| Shopping List routes | `../nodics.commerce/modules/baseCommerce/modules/shoppingList/src/router/routers.js` |\n| Shopping List service | `../nodics.commerce/modules/baseCommerce/modules/shoppingList/src/service/defaultShoppingListOperationService.js` |\n| Commerce composition | `../nodics.commerce/modules/baseCommerce/package.json` |\n| Profile security groups | `../nodics.platform/modules/profile/data/init-v001/records/groups/defaultBootstrapUserGroupsData.js` |\n| Agora storefront client | `../../nodics.exp/nodics.agora.apparel/src/api/commerceClient.ts` |\n\n## Ownership model\n\n```mermaid\nflowchart LR\n  Profile[\"Profile identity and auth\"] --> Token[\"Authenticated customer token\"]\n  Token --> ShoppingList[\"Commerce Shopping List\"]\n  ShoppingList --> Wishlist[\"Wishlist\"]\n  ShoppingList --> Compare[\"Compare\"]\n  ShoppingList --> SaveForLater[\"Save for later\"]\n  ShoppingList --> Cart[\"Cart and checkout journey\"]\n  ShoppingList --> Storefront[\"Agora product cards and quick actions\"]\n```\n\nThe business purpose is simple: a shopper can express purchase intent before\ncheckout without turning Profile into a commerce data store. Wishlist, compare,\nand save-for-later are not profile preferences; they are commerce actions over\nproducts, variants, stores, prices, availability, and storefront context.\n\n## Contract\n\nShopping List records must be owned by Commerce and scoped to the authenticated\ncustomer. They may reference customer identity by stable owner code from the\nauth context, but they must not copy credentials, addresses, permission state,\nor full Profile payloads.\n\nSupported list types are:\n\n- `WISHLIST`\n- `COMPARE`\n- `SAVE_FOR_LATER`\n\nThe customer API route family is:\n\n```text\nGET    /nodics/shoppingList/v0/lists/:listType\nPOST   /nodics/shoppingList/v0/lists/:listType/entries\nDELETE /nodics/shoppingList/v0/lists/:listType/entries/:entryCode\n```\n\nAll customer operations require `commerce.shoppingList.own` and must derive the\nowner from the authenticated customer token, not from browser-supplied owner\nfields.\n\n```js\nmodule.exports = {\n  savedTopForLater: {\n    code: 'shoppingList_customer001_SAVE_FOR_LATER_agoraRibbedTankTop',\n    ownerId: 'customer001',\n    listType: 'SAVE_FOR_LATER',\n    productCode: 'agoraRibbedTankTop',\n    variantCode: 'agoraRibbedTankTopIvoryS',\n    storeCode: 'agoraMainStore',\n    locale: 'en',\n    active: true\n  }\n};\n```\n\n## Business configuration guidance\n\nBusiness users should think of Shopping List as reusable commerce behavior that\nstorefront components can expose in different ways:\n\n- Product cards can offer wishlist and compare quick actions.\n- Quick-view or quick-add panels can add wishlist, compare, and save-for-later.\n- Cart can offer save-for-later instead of removing an item permanently.\n- Account pages can show saved products without owning the commerce schema.\n\nConfiguration should control limits and supported list types at the commerce\nmodule level. Project modules may customize text, placement, and UI behavior,\nbut they should not redefine the underlying owner or route contract.\n\n## Developer extension guidance\n\nDevelopers may extend Shopping List with recommendation signals, expiration\nrules, merchandising analytics, stock alerts, or business-specific list types\nonly when the list remains a product-intent list. If a feature groups people for\neligibility, segmentation, loyalty, or account buying, it should not be added to\nShopping List without a separate commerce capability decision.\n\nSafe extension points include:\n\n- list type policy,\n- maximum item limits,\n- duplicate/idempotency rules,\n- product and variant validation,\n- customer-safe projection fields,\n- Axis visibility for business support,\n- storefront component integration.\n\n## Extending product-keeping journeys\n\nThe easiest and safest way to extend Shopping List is to add a new commerce\nlist type when the business need is \"keep these products for a later product\njourney.\" The module already owns the common mechanics: authenticated owner,\nproduct reference, variant reference, store context, locale, idempotent add,\nbounded list size, read, and remove.\n\nGood examples are:\n\n| Use case | Suggested list type | Why it fits Shopping List |\n| --- | --- | --- |\n| Save an item from cart for later | `SAVE_FOR_LATER` | The shopper is keeping a product instead of buying now. |\n| Build a comparison set | `COMPARE` | The shopper is keeping a short product set for decision support. |\n| Wishlist future purchases | `WISHLIST` | The shopper is keeping products for later discovery or purchase. |\n| Keep outfit ideas | `OUTFIT_IDEA` | The shopper is grouping product references for a shopping intent. |\n| Keep replenishment candidates | `REPLENISHMENT` | The shopper is remembering products they may buy again. |\n| Keep gift ideas | `GIFT_IDEA` | The shopper is saving product references for a future occasion. |\n\nTo add a new product-keeping journey:\n\n1. Add the list type to the Shopping List policy, for example\n   `OUTFIT_IDEA`.\n2. Define a clear item limit for that type. Small decision lists such as compare\n   should stay low; open-ended saved lists can be higher.\n3. Reuse the existing customer API route family by passing the new `listType`.\n4. Store only `productCode`, optional `variantCode`, `storeCode`, `locale`, and\n   lightweight intent metadata such as note, source component, or occasion.\n5. Render the journey in the project storefront or Axis using business-managed\n   component text, placement, labels, and icons.\n6. Add contract tests for ownership, idempotency, limit enforcement, and\n   unsupported type rejection.\n\n```js\n// Example project-level policy extension\nshoppingList: {\n  supportedListTypes: [\n    'WISHLIST',\n    'COMPARE',\n    'SAVE_FOR_LATER',\n    'OUTFIT_IDEA',\n    'GIFT_IDEA'\n  ],\n  maximumWishlistItems: 100,\n  maximumCompareItems: 4,\n  maximumSaveForLaterItems: 100,\n  maximumOutfitIdeaItems: 40,\n  maximumGiftIdeaItems: 60\n}\n```\n\nDo not create a separate module for every saved-product journey unless the\njourney has a different owner or materially different lifecycle. If it is still\nan authenticated shopper keeping product references, extend Shopping List.\n\nUnsafe extensions include:\n\n- copying Profile credentials or address payloads,\n- accepting owner identity from browser payloads,\n- placing Shopping List under Checkout only,\n- keeping old `customerList` route or permission aliases,\n- using wishlist as a generic customer segmentation feature.\n\n## Common mistakes\n\n- Treating wishlist, compare, or save-for-later as Profile data.\n- Keeping compatibility aliases for `/nodics/customerList/v0`.\n- Checking list ownership from request payload instead of authenticated token.\n- Placing Shopping List under Checkout even though product cards and PDP need it\n  before cart or checkout starts.\n- Forgetting to migrate persisted customer groups to `commerce.shoppingList.own`.\n- Adding new list types without clear commerce ownership, limits, and\n  idempotency behavior.\n\n## Migration principle\n\nThere is no compatibility alias for the old `customerList` boundary. The correct\nruntime name is `shoppingList`, the correct permission is\n`commerce.shoppingList.own`, and the correct module owner is Base Commerce.\n\nExisting runtime identity records should be reconciled by the Profile identity\ngovernance migration APIs so persisted customer groups receive\n`commerce.shoppingList.own` through an audited change set.\n\n## Verification\n\nProduction readiness requires these checks:\n\n- Base Commerce loads `shoppingList` before Checkout and order journeys.\n- The old `checkout/modules/customerList` module is absent.\n- Customer tokens include `commerce.shoppingList.own`.\n- Wishlist, compare, and save-for-later add/read/remove calls are owner-scoped.\n- Agora product cards and quick panels call `/nodics/shoppingList/v0`.\n- Non-owned list entries cannot be read or mutated.\n- `npm run test:commerce`, `npm run validate:root`, Agora frontend verify, and\n  live Agora commerce acceptance pass.\n"
         },
         {
           "code": "foundation.nms-runtime-monitoring",
@@ -9621,7 +9715,7 @@ module.exports = {
             "Documentation Gap Backlog",
             "Coverage Closure"
           ],
-          "searchText": "Documentation Gap Backlog Classified backlog for closing source-backed documentation gaps across runtime capabilities, data releases, media, applications, operations, and validation. # Documentation Gap Backlog\n\nThis backlog turns the source-backed coverage audit into executable\ndocumentation work. It captures the remaining categories that must be closed so\nNodics documentation explains not only what the product is, but how developers,\nbusiness users, operators, QA owners, and AI tools can safely work with the\nframework.\n\nFor beginners, the mental model is simple: the coverage report tells us where\nthe source is richer than the documentation, and this backlog tells us what to\ndo next. A source boundary may need a new page, a deeper section in an existing\npage, an explicit owner mapping, or an internal-only decision. The backlog is\nnot a marketing roadmap. It is a release-quality checklist for source-backed\ndocumentation.\n\n## Backlog flow\n\n```mermaid\nflowchart LR\n  Report[\"Generated coverage report\"] --> Classify[\"Classify each gap\"]\n  Classify --> Page[\"New page\"]\n  Classify --> Deepen[\"Deeper section\"]\n  Classify --> Map[\"Owner mapping\"]\n  Classify --> Internal[\"Internal-only decision\"]\n  Page --> Generate[\"Regenerate docs data\"]\n  Deepen --> Generate\n  Map --> Generate\n  Internal --> Generate\n  Generate --> Test[\"Docs tests and source evidence\"]\n  Test --> Publish[\"Staged approval and Online publication\"]\n```\n\n## Classification policy\n\n| Classification | Meaning | Required action |\n| --- | --- | --- |\n| `needs-page` | A user-visible or developer-extensible capability has no clear page. | Create authored Markdown, catalogue metadata, source evidence, generated records, and validation. |\n| `needs-deeper-section` | A page exists, but it lacks exact source map, data, service, operation, or validation detail. | Extend the existing page with how-to, how-it-works, customization, errors, and tests. |\n| `needs-page-or-owner-mapping` | The source is significant, but ownership may belong under a broader page. | Decide owner, then either create a page or add explicit mapping to the owning page. |\n| `internal-only-candidate` | The module is likely a utility or provider implementation. | Document the owner page that covers it, or mark it internal with justification. |\n| `covered` | Existing docs and source evidence are sufficient for the current maturity state. | Keep validation and browser evidence current when behavior changes. |\n\n## P0 closure items\n\n| Status | Item | Source areas | Documentation outcome |\n| --- | --- | --- | --- |\n| Closed by P0 docs batch | Nexus data and content guide | `nodics.kickoff/modules/nexus.web` | Covered by `applications.nexus-data-content-guide` with Nexus project content, media assets, headers, records, publication, Online delivery, and browser validation. |\n| Closed by P0 docs batch | Axis setup and user-safe error contracts | `nodics.platform/modules/backoffice`, `nodics.platform/modules/axis`, `nodics.exp/nodics.axis` | Covered by `applications.axis-setup-error-contracts` with setup states, blockers, retry behavior, required capability checks, technical evidence, and customer-safe messages. |\n| Closed by P0 docs batch | CMS exact source map | `nodics.wcms/modules/cms` | Covered by `wcms.cms-source-map-authoring-contract` with page, route, component, slot, template, renderer, publication manifest, migration, delivery cache, and documentation governance details. |\n| Closed by P0 docs batch | Media operations runbook | `nodics.wcms/modules/media`, `nodics.foundation/modules/nData/nImport/import/src/service/media` | Covered by `wcms.media-operations-runbook` with upload, import hydration, storage providers, cleanup, replication queue, delivery failures, and DR evidence. |\n| Closed by P0 docs batch | Import/export provider guides | `nodics.foundation/modules/nData/nImport`, `nodics.foundation/modules/nData/nExport` | Covered by `data.import-export-provider-guides` with JavaScript, JSON, CSV, Excel, generated exports, parsers, field allow-lists, masking, and rollback boundaries. |\n| Closed by P0 docs batch | Commerce authoring and fulfillment | `nodics.commerce/modules/baseCommerce`, `nodics.commerce/modules/fulfillment` | Covered by `commerce.data-authoring-fulfillment` with product, price, inventory, search projection, fulfillment execution, consignments, exceptions, return receipts, and browser proof. |\n| Closed by P0 docs batch | Documentation publishing runbook | `nodics.docs`, `nodics.wcms/modules/cms`, `nodics.process/modules/nPublish` | Covered by `docs.documentation-publishing-runbook` with Markdown source, generated content-pack data, Staged import, review, Online activation, rollback, and Axis/Nexus rendering. |\n\n## P1 closure items\n\n| Status | Item | Source areas | Documentation outcome |\n| --- | --- | --- | --- |\n| Closed by P1 docs batch | Module Registry journey | `nodics.platform/modules/backoffice`, registry-related Platform services | Covered by `platform.module-registry-journey` with registration, activation, dependency state, required capability checks, and Axis visibility. |\n| Closed by P1 docs batch | Commerce Search guide | `nodics.commerce/modules/baseCommerce/modules/commerceSearch` | Covered by `commerce.search-guide` with ranking rules, projections, publish flow, index ownership, storefront effect, and recovery. |\n| Closed by P1 docs batch | Localization depth | `nodics.localization/modules/localizationCore`, `nodics.localization/modules/localizationApi` | Covered by `localization.runtime-authoring` with locale records, fallback, content/product localization, import data, API boundaries, and browser proof. |\n| Closed by P1 docs batch | Payment Core and provider split | `nodics.commerce/modules/payment` | Covered by `commerce.payment-provider-boundaries` with payment decisions, method/provider separation, reconciliation, safe customer payload, and provider extension. |\n| Closed by P1 docs batch | Customer List and Profile-Commerce boundary | `nodics.commerce/modules/checkout/modules/customerList`, `nodics.platform/modules/profile` | Covered by `commerce.customer-list-profile-boundary` with why customer list exists in Commerce and what Profile continues to own. |\n| Closed by P1 docs batch | NMS runtime monitoring | `nodics.foundation/modules/nNms` | Covered by `foundation.nms-runtime-monitoring` with node monitoring, topology, health, operational evidence, and recovery actions. |\n| Closed by P1 docs batch | Service runtime and overrides | `nodics.foundation/modules/nService`, `nodics.foundation/modules/nService/vService` | Covered by `foundation.service-runtime-overrides` with service discovery, virtual services, generated services, override precedence, and extension safety. |\n| Closed by P1 docs batch | Cache provider runbooks | `nodics.foundation/modules/nCache`, Redis, Hazelcast, Node cache | Covered by `foundation.cache-provider-runbooks` with provider boundaries, cache key strategy, invalidation, failure behavior, and production configuration. |\n| Closed by P1 docs batch | Database provider boundaries | `nodics.foundation/modules/nDatabase` | Covered by `foundation.database-provider-boundaries` with MongoDB, virtual DB, Cassandra, Elasticsearch, provider contracts, configuration, and validation. |\n| Closed by P1 docs batch | OTP and security flow | `nodics.foundation/modules/nOtp` | Covered by `security.otp-security-flow` with OTP generation, verification, expiry, retry, throttling, audit, and security controls. |\n| Closed by P1 docs batch | Communication providers | `nodics.communication/modules/smtpCommsProvider`, `nodics.communication/modules/smsCommsProvider` | Covered by `communication.provider-runbooks` with SMTP/SMS provider behavior, templates, retries, failed delivery evidence, and extension rules. |\n| Closed by P1 docs batch | Engagement and contact submission | `nodics.engagement/modules/contactSubmission` | Covered by `engagement.contact-submission-operations` with contact forms, moderation, workflow, notification, audit, and recovery. |\n| Closed by P1 docs batch | Workflow and BPM source map | `nodics.foundation/modules/nbpm`, `nodics.process` | Covered by `process.workflow-bpm-source-map` with workflow definitions, transitions, tasks, callbacks, history, and operator visibility. |\n| Closed by P1 docs batch | Cron job data authoring | `nodics.process/modules/cronjob` | Covered by `process.cronjob-data-authoring` with job records, schedules, execution policy, retry, idempotency, and Process server ownership. |\n| Closed by P1 docs batch | Release and upgrade compatibility | `nodics.foundation/modules/nSetup`, all module data folders | Covered by `framework.release-upgrade-compatibility` with version freeze, upgrade path, rollback, checksum drift, generated manifests, and extension compatibility. |\n\n## P2 closure items\n\n| Status | Item | Source areas | Documentation outcome |\n| --- | --- | --- | --- |\n| Closed by P2 docs batch | Fulfillment Core owner mapping | `nodics.commerce/modules/fulfillment/modules/fulfillmentCore` | Covered by `commerce.fulfillment-core-source-map`, plus explicit source evidence on fulfillment and data-authoring pages. |\n| Closed by P2 docs batch | Domain Commerce accelerator owner mapping | `domainCommerceCore`, electronics product, telco catalog, telco subscription | Covered by `accelerators.domain-commerce-source-map` with accelerator ownership, Commerce boundary, sample data, and validation. |\n| Closed by P2 docs batch | Tooling runtime depth | `nodics.foundation/modules/nTooling` | Covered by `foundation.tooling-runtime-contracts` with command, manifest, application-builder, AI-context, and quality-gate contracts. |\n| Closed by P2 docs batch | EMS runtime and client depth | `nodics.foundation/modules/nEms`, `emsClient`, broker providers | Covered by `foundation.ems-runtime-client-runbook` with broker runtime, client, tenant, retry, and operator evidence. |\n| Closed by P2 docs batch | Internal-only register | Discovery internals, payment methods/providers, NMS runtime, Kickoff environment/runtime packages | Covered by `reference.internal-source-boundary-register` with owner mappings and promotion rules. |\n\n## Closure workflow\n\n1. Start from the generated source coverage report.\n2. Pick the highest-priority open item.\n3. Inspect source files, schemas, services, routers, data, assets, tests, and\n   frontend consumers.\n4. Decide whether the work is a new page, deeper section, owner mapping, or\n   internal-only classification.\n5. Update authored Markdown and catalogue metadata.\n6. Regenerate documentation data and source coverage reports.\n7. Run docs tests and any owning module tests needed for the behavior.\n8. For runtime-visible changes, import into Staged, publish Online, and verify\n   Axis, Nexus, or Agora from the browser.\n9. Commit the smallest coherent documentation batch.\n\n## Common mistakes\n\n- Treating this backlog as optional once a high-level overview exists.\n- Closing a source gap without reading the current source files and tests.\n- Creating public documentation for a module that should be an internal utility\n  without explaining the broader owner.\n- Forgetting business users when writing deep developer detail.\n- Forgetting developers when writing a business-friendly page.\n- Forgetting operators and QA owners when documenting publishable or\n  production-visible behavior.\n- Showing external references as source design instead of industry-standard\n  expectation checks.\n\n## Verification\n\nRun the documentation gates after each closure batch:\n\n```bash\nnpm --prefix nodics.docs run audit:source-coverage\nnpm --prefix nodics.docs run docs:generate\nnpm --prefix nodics.docs test\ngit -C nodics.ai diff --check\n```\n\nThe backlog is healthy when the generated report, this page, catalogue\nmetadata, generated WCMS records, and runtime evidence agree. Business users\nshould see clear journeys, developers should see exact source paths and\nextension points, operators should see evidence and recovery steps, QA owners\nshould see validation commands, and AI tools should see boundaries that prevent\nunsafe source or data changes.\n"
+          "searchText": "Documentation Gap Backlog Classified backlog for closing source-backed documentation gaps across runtime capabilities, data releases, media, applications, operations, and validation. # Documentation Gap Backlog\n\nThis backlog turns the source-backed coverage audit into executable\ndocumentation work. It captures the remaining categories that must be closed so\nNodics documentation explains not only what the product is, but how developers,\nbusiness users, operators, QA owners, and AI tools can safely work with the\nframework.\n\nFor beginners, the mental model is simple: the coverage report tells us where\nthe source is richer than the documentation, and this backlog tells us what to\ndo next. A source boundary may need a new page, a deeper section in an existing\npage, an explicit owner mapping, or an internal-only decision. The backlog is\nnot a marketing roadmap. It is a release-quality checklist for source-backed\ndocumentation.\n\n## Backlog flow\n\n```mermaid\nflowchart LR\n  Report[\"Generated coverage report\"] --> Classify[\"Classify each gap\"]\n  Classify --> Page[\"New page\"]\n  Classify --> Deepen[\"Deeper section\"]\n  Classify --> Map[\"Owner mapping\"]\n  Classify --> Internal[\"Internal-only decision\"]\n  Page --> Generate[\"Regenerate docs data\"]\n  Deepen --> Generate\n  Map --> Generate\n  Internal --> Generate\n  Generate --> Test[\"Docs tests and source evidence\"]\n  Test --> Publish[\"Staged approval and Online publication\"]\n```\n\n## Classification policy\n\n| Classification | Meaning | Required action |\n| --- | --- | --- |\n| `needs-page` | A user-visible or developer-extensible capability has no clear page. | Create authored Markdown, catalogue metadata, source evidence, generated records, and validation. |\n| `needs-deeper-section` | A page exists, but it lacks exact source map, data, service, operation, or validation detail. | Extend the existing page with how-to, how-it-works, customization, errors, and tests. |\n| `needs-page-or-owner-mapping` | The source is significant, but ownership may belong under a broader page. | Decide owner, then either create a page or add explicit mapping to the owning page. |\n| `internal-only-candidate` | The module is likely a utility or provider implementation. | Document the owner page that covers it, or mark it internal with justification. |\n| `covered` | Existing docs and source evidence are sufficient for the current maturity state. | Keep validation and browser evidence current when behavior changes. |\n\n## P0 closure items\n\n| Status | Item | Source areas | Documentation outcome |\n| --- | --- | --- | --- |\n| Closed by P0 docs batch | Nexus data and content guide | `nodics.kickoff/modules/nexus.web` | Covered by `applications.nexus-data-content-guide` with Nexus project content, media assets, headers, records, publication, Online delivery, and browser validation. |\n| Closed by P0 docs batch | Axis setup and user-safe error contracts | `nodics.platform/modules/backoffice`, `nodics.platform/modules/axis`, `nodics.exp/nodics.axis` | Covered by `applications.axis-setup-error-contracts` with setup states, blockers, retry behavior, required capability checks, technical evidence, and customer-safe messages. |\n| Closed by P0 docs batch | CMS exact source map | `nodics.wcms/modules/cms` | Covered by `wcms.cms-source-map-authoring-contract` with page, route, component, slot, template, renderer, publication manifest, migration, delivery cache, and documentation governance details. |\n| Closed by P0 docs batch | Media operations runbook | `nodics.wcms/modules/media`, `nodics.foundation/modules/nData/nImport/import/src/service/media` | Covered by `wcms.media-operations-runbook` with upload, import hydration, storage providers, cleanup, replication queue, delivery failures, and DR evidence. |\n| Closed by P0 docs batch | Import/export provider guides | `nodics.foundation/modules/nData/nImport`, `nodics.foundation/modules/nData/nExport` | Covered by `data.import-export-provider-guides` with JavaScript, JSON, CSV, Excel, generated exports, parsers, field allow-lists, masking, and rollback boundaries. |\n| Closed by P0 docs batch | Commerce authoring and fulfillment | `nodics.commerce/modules/baseCommerce`, `nodics.commerce/modules/fulfillment` | Covered by `commerce.data-authoring-fulfillment` with product, price, inventory, search projection, fulfillment execution, consignments, exceptions, return receipts, and browser proof. |\n| Closed by P0 docs batch | Documentation publishing runbook | `nodics.docs`, `nodics.wcms/modules/cms`, `nodics.process/modules/nPublish` | Covered by `docs.documentation-publishing-runbook` with Markdown source, generated content-pack data, Staged import, review, Online activation, rollback, and Axis/Nexus rendering. |\n\n## P1 closure items\n\n| Status | Item | Source areas | Documentation outcome |\n| --- | --- | --- | --- |\n| Closed by P1 docs batch | Module Registry journey | `nodics.platform/modules/backoffice`, registry-related Platform services | Covered by `platform.module-registry-journey` with registration, activation, dependency state, required capability checks, and Axis visibility. |\n| Closed by P1 docs batch | Commerce Search guide | `nodics.commerce/modules/baseCommerce/modules/commerceSearch` | Covered by `commerce.search-guide` with ranking rules, projections, publish flow, index ownership, storefront effect, and recovery. |\n| Closed by P1 docs batch | Localization depth | `nodics.localization/modules/localizationCore`, `nodics.localization/modules/localizationApi` | Covered by `localization.runtime-authoring` with locale records, fallback, content/product localization, import data, API boundaries, and browser proof. |\n| Closed by P1 docs batch | Payment Core and provider split | `nodics.commerce/modules/payment` | Covered by `commerce.payment-provider-boundaries` with payment decisions, method/provider separation, reconciliation, safe customer payload, and provider extension. |\n| Closed by P1 docs batch | Shopping List Commerce boundary | `nodics.commerce/modules/baseCommerce/modules/shoppingList`, `nodics.platform/modules/profile` | Covered by `commerce.shopping-list-commerce-boundary` with why shopping-intent lists belong to Base Commerce and what Profile continues to own. |\n| Closed by P1 docs batch | NMS runtime monitoring | `nodics.foundation/modules/nNms` | Covered by `foundation.nms-runtime-monitoring` with node monitoring, topology, health, operational evidence, and recovery actions. |\n| Closed by P1 docs batch | Service runtime and overrides | `nodics.foundation/modules/nService`, `nodics.foundation/modules/nService/vService` | Covered by `foundation.service-runtime-overrides` with service discovery, virtual services, generated services, override precedence, and extension safety. |\n| Closed by P1 docs batch | Cache provider runbooks | `nodics.foundation/modules/nCache`, Redis, Hazelcast, Node cache | Covered by `foundation.cache-provider-runbooks` with provider boundaries, cache key strategy, invalidation, failure behavior, and production configuration. |\n| Closed by P1 docs batch | Database provider boundaries | `nodics.foundation/modules/nDatabase` | Covered by `foundation.database-provider-boundaries` with MongoDB, virtual DB, Cassandra, Elasticsearch, provider contracts, configuration, and validation. |\n| Closed by P1 docs batch | OTP and security flow | `nodics.foundation/modules/nOtp` | Covered by `security.otp-security-flow` with OTP generation, verification, expiry, retry, throttling, audit, and security controls. |\n| Closed by P1 docs batch | Communication providers | `nodics.communication/modules/smtpCommsProvider`, `nodics.communication/modules/smsCommsProvider` | Covered by `communication.provider-runbooks` with SMTP/SMS provider behavior, templates, retries, failed delivery evidence, and extension rules. |\n| Closed by P1 docs batch | Engagement and contact submission | `nodics.engagement/modules/contactSubmission` | Covered by `engagement.contact-submission-operations` with contact forms, moderation, workflow, notification, audit, and recovery. |\n| Closed by P1 docs batch | Workflow and BPM source map | `nodics.foundation/modules/nbpm`, `nodics.process` | Covered by `process.workflow-bpm-source-map` with workflow definitions, transitions, tasks, callbacks, history, and operator visibility. |\n| Closed by P1 docs batch | Cron job data authoring | `nodics.process/modules/cronjob` | Covered by `process.cronjob-data-authoring` with job records, schedules, execution policy, retry, idempotency, and Process server ownership. |\n| Closed by P1 docs batch | Release and upgrade compatibility | `nodics.foundation/modules/nSetup`, all module data folders | Covered by `framework.release-upgrade-compatibility` with version freeze, upgrade path, rollback, checksum drift, generated manifests, and extension compatibility. |\n\n## P2 closure items\n\n| Status | Item | Source areas | Documentation outcome |\n| --- | --- | --- | --- |\n| Closed by P2 docs batch | Fulfillment Core owner mapping | `nodics.commerce/modules/fulfillment/modules/fulfillmentCore` | Covered by `commerce.fulfillment-core-source-map`, plus explicit source evidence on fulfillment and data-authoring pages. |\n| Closed by P2 docs batch | Domain Commerce accelerator owner mapping | `domainCommerceCore`, electronics product, telco catalog, telco subscription | Covered by `accelerators.domain-commerce-source-map` with accelerator ownership, Commerce boundary, sample data, and validation. |\n| Closed by P2 docs batch | Tooling runtime depth | `nodics.foundation/modules/nTooling` | Covered by `foundation.tooling-runtime-contracts` with command, manifest, application-builder, AI-context, and quality-gate contracts. |\n| Closed by P2 docs batch | EMS runtime and client depth | `nodics.foundation/modules/nEms`, `emsClient`, broker providers | Covered by `foundation.ems-runtime-client-runbook` with broker runtime, client, tenant, retry, and operator evidence. |\n| Closed by P2 docs batch | Internal-only register | Discovery internals, payment methods/providers, NMS runtime, Kickoff environment/runtime packages | Covered by `reference.internal-source-boundary-register` with owner mappings and promotion rules. |\n\n## Closure workflow\n\n1. Start from the generated source coverage report.\n2. Pick the highest-priority open item.\n3. Inspect source files, schemas, services, routers, data, assets, tests, and\n   frontend consumers.\n4. Decide whether the work is a new page, deeper section, owner mapping, or\n   internal-only classification.\n5. Update authored Markdown and catalogue metadata.\n6. Regenerate documentation data and source coverage reports.\n7. Run docs tests and any owning module tests needed for the behavior.\n8. For runtime-visible changes, import into Staged, publish Online, and verify\n   Axis, Nexus, or Agora from the browser.\n9. Commit the smallest coherent documentation batch.\n\n## Common mistakes\n\n- Treating this backlog as optional once a high-level overview exists.\n- Closing a source gap without reading the current source files and tests.\n- Creating public documentation for a module that should be an internal utility\n  without explaining the broader owner.\n- Forgetting business users when writing deep developer detail.\n- Forgetting developers when writing a business-friendly page.\n- Forgetting operators and QA owners when documenting publishable or\n  production-visible behavior.\n- Showing external references as source design instead of industry-standard\n  expectation checks.\n\n## Verification\n\nRun the documentation gates after each closure batch:\n\n```bash\nnpm --prefix nodics.docs run audit:source-coverage\nnpm --prefix nodics.docs run docs:generate\nnpm --prefix nodics.docs test\ngit -C nodics.ai diff --check\n```\n\nThe backlog is healthy when the generated report, this page, catalogue\nmetadata, generated WCMS records, and runtime evidence agree. Business users\nshould see clear journeys, developers should see exact source paths and\nextension points, operators should see evidence and recovery steps, QA owners\nshould see validation commands, and AI tools should see boundaries that prevent\nunsafe source or data changes.\n"
         }
       ]
     },
@@ -49149,8 +49243,8 @@ module.exports = {
         "route": "/docs/framework/localization-runtime-authoring"
       },
       "next": {
-        "title": "Customer List and Profile Commerce Boundary",
-        "route": "/docs/framework/commerce-customer-list-profile-boundary"
+        "title": "Loyalty Wallets, Rewards, and Ledger",
+        "route": "/docs/framework/loyalty-wallets-rewards-ledger"
       },
       "source": {
         "repository": "nodics.docs",
@@ -49166,22 +49260,22 @@ module.exports = {
     "active": true
   },
   "record107": {
-    "code": "nodicsDocsComponentcommerceCustomerListProfileBoundary",
+    "code": "nodicsDocsComponentloyaltyWalletsRewardsLedger",
     "typeCode": "nodicsDocumentationArticleComponentType",
     "renderer": "documentation.component.article",
     "accessMode": "PUBLIC",
     "properties": {
-      "code": "commerce.customer-list-profile-boundary",
-      "title": "Customer List and Profile Commerce Boundary",
-      "route": "/docs/framework/commerce-customer-list-profile-boundary",
-      "section": "user-enterprise-and-tenant-management",
-      "sectionTitle": "User, Enterprise, and Tenant Management",
-      "group": "user-enterprise-and-tenant-management",
-      "groupTitle": "User, Enterprise, and Tenant Management",
-      "parentId": "user-enterprise-and-tenant-management",
+      "code": "loyalty.wallets-rewards-ledger",
+      "title": "Loyalty Wallets, Rewards, and Ledger",
+      "route": "/docs/framework/loyalty-wallets-rewards-ledger",
+      "section": "loyalty-and-rewards",
+      "sectionTitle": "Loyalty and Rewards",
+      "group": "loyalty-and-rewards",
+      "groupTitle": "Loyalty and Rewards",
+      "parentId": "loyalty-and-rewards",
       "hierarchyPath": [
-        "User, Enterprise, and Tenant Management",
-        "Customer List and Profile Commerce Boundary"
+        "Loyalty and Rewards",
+        "Loyalty Wallets, Rewards, and Ledger"
       ],
       "hierarchyDepth": 2,
       "documentType": "contract",
@@ -49206,7 +49300,664 @@ module.exports = {
         "qa engineer",
         "ai tool"
       ],
-      "summary": "Why customer lists belong to Commerce while person, address, authentication, permission, and organization identity stay under Profile.",
+      "summary": "Business, developer, operator, and customization guidance for reward wallets, balances, reservations, redemptions, ledger evidence, and Commerce reward payment provider integration.",
+      "visibility": "public",
+      "accessMode": "PUBLIC",
+      "publiclyAvailable": true,
+      "requiresAuthentication": false,
+      "allowedRoles": [],
+      "allowedGroups": [],
+      "allowedPermissions": [],
+      "lifecycleState": "ONLINE",
+      "version": "0.16.8",
+      "maturityState": "operational",
+      "implementationState": "current",
+      "renderingComponent": "documentation.component.article",
+      "relatedPages": [
+        "commerce.payment-provider-boundaries",
+        "commerce.payment-fulfillment",
+        "framework.customization-guide",
+        "framework.local-browser-acceptance-journey"
+      ],
+      "sourceEvidence": [
+        "docs/catalogue.json",
+        "docs/pages/nodics.loyalty/loyalty-wallets-rewards-and-ledger.md",
+        "../nodics.loyalty/package.json",
+        "../nodics.loyalty/README.md",
+        "../nodics.loyalty/modules/loyaltyWallet/src/schemas/schemas.js",
+        "../nodics.loyalty/modules/loyaltyWallet/src/service/defaultLoyaltyRewardOperationService.js",
+        "../nodics.loyalty/modules/loyaltyLedger/src/schemas/schemas.js",
+        "../nodics.loyalty/modules/loyaltyReservation/src/schemas/schemas.js",
+        "../nodics.loyalty/modules/loyaltyRedemption/src/schemas/schemas.js",
+        "../nodics.loyalty/modules/loyaltyApi/src/router/routers.js",
+        "../nodics.commerce/modules/payment/modules/paymentProviders/modules/loyaltyRewardProvider/README.md",
+        "../nodics.foundation/modules/nTooling/src/service/project/defaultProjectLoyaltyRewardCheckoutAcceptanceService.mjs"
+      ],
+      "visualRequirements": [
+        "diagram",
+        "table",
+        "code-example",
+        "command-example"
+      ],
+      "searchKeywords": [
+        "loyalty",
+        "reward",
+        "wallet",
+        "points",
+        "ledger",
+        "reservation",
+        "redemption",
+        "checkout",
+        "payment-provider"
+      ],
+      "topicKeywords": [
+        "Loyalty and Rewards",
+        "Loyalty Foundations",
+        "Loyalty Wallets, Rewards, and Ledger"
+      ],
+      "headings": [
+        {
+          "text": "Beginner mental model",
+          "anchor": "loyaltyWalletsRewardsLedger-1-beginner-mental-model",
+          "level": 2
+        },
+        {
+          "text": "Business problem",
+          "anchor": "loyaltyWalletsRewardsLedger-2-business-problem",
+          "level": 2
+        },
+        {
+          "text": "Source map",
+          "anchor": "loyaltyWalletsRewardsLedger-3-source-map",
+          "level": 2
+        },
+        {
+          "text": "Owner model",
+          "anchor": "loyaltyWalletsRewardsLedger-4-owner-model",
+          "level": 2
+        },
+        {
+          "text": "Runtime topology",
+          "anchor": "loyaltyWalletsRewardsLedger-5-runtime-topology",
+          "level": 2
+        },
+        {
+          "text": "Business journeys",
+          "anchor": "loyaltyWalletsRewardsLedger-6-business-journeys",
+          "level": 2
+        },
+        {
+          "text": "Earn",
+          "anchor": "loyaltyWalletsRewardsLedger-7-earn",
+          "level": 3
+        },
+        {
+          "text": "Reserve",
+          "anchor": "loyaltyWalletsRewardsLedger-8-reserve",
+          "level": 3
+        },
+        {
+          "text": "Capture",
+          "anchor": "loyaltyWalletsRewardsLedger-9-capture",
+          "level": 3
+        },
+        {
+          "text": "Release",
+          "anchor": "loyaltyWalletsRewardsLedger-10-release",
+          "level": 3
+        },
+        {
+          "text": "Reverse",
+          "anchor": "loyaltyWalletsRewardsLedger-11-reverse",
+          "level": 3
+        },
+        {
+          "text": "Reward payment provider checkout pattern",
+          "anchor": "loyaltyWalletsRewardsLedger-12-reward-payment-provider-checkout-pattern",
+          "level": 2
+        },
+        {
+          "text": "Developer guidance",
+          "anchor": "loyaltyWalletsRewardsLedger-13-developer-guidance",
+          "level": 2
+        },
+        {
+          "text": "Customization guidance",
+          "anchor": "loyaltyWalletsRewardsLedger-14-customization-guidance",
+          "level": 2
+        },
+        {
+          "text": "Security and governance",
+          "anchor": "loyaltyWalletsRewardsLedger-15-security-and-governance",
+          "level": 2
+        },
+        {
+          "text": "Operational evidence",
+          "anchor": "loyaltyWalletsRewardsLedger-16-operational-evidence",
+          "level": 2
+        },
+        {
+          "text": "Verification",
+          "anchor": "loyaltyWalletsRewardsLedger-17-verification",
+          "level": 2
+        },
+        {
+          "text": "Common mistakes",
+          "anchor": "loyaltyWalletsRewardsLedger-18-common-mistakes",
+          "level": 2
+        },
+        {
+          "text": "Reader checklist",
+          "anchor": "loyaltyWalletsRewardsLedger-19-reader-checklist",
+          "level": 2
+        }
+      ],
+      "blocks": [
+        {
+          "kind": "paragraph",
+          "text": "Maturity: operational first slice."
+        },
+        {
+          "kind": "paragraph",
+          "text": "Nodics Loyalty gives a project a reusable way to reward people or business actors for approved behavior, hold that value in a wallet, reserve it for a business transaction, capture it when the transaction succeeds, release it when the transaction fails, and explain every movement through an append-only ledger."
+        },
+        {
+          "kind": "paragraph",
+          "text": "The business idea is simple: a customer may earn points for an order, an employee may earn credits for a task, a partner may receive reward value for a campaign, or an enterprise may hold a wallet for a shared program. Each wallet has an owner type and owner code. The reward itself can be points, credits, stamps, tokens, or a project-defined unit."
+        },
+        {
+          "kind": "heading",
+          "level": 2,
+          "text": "Beginner mental model",
+          "anchor": "loyaltyWalletsRewardsLedger-1-beginner-mental-model"
+        },
+        {
+          "kind": "paragraph",
+          "text": "For beginners, think of Loyalty as a bank passbook for non-cash reward value. The wallet says who owns the value. The balance says how much of each reward type is available, reserved, or spent. The ledger explains every movement so a team can answer what happened later. Commerce, Engagement, Process, or a project module may decide why a reward should move, but Loyalty records the movement consistently."
+        },
+        {
+          "kind": "heading",
+          "level": 2,
+          "text": "Business problem",
+          "anchor": "loyaltyWalletsRewardsLedger-2-business-problem"
+        },
+        {
+          "kind": "paragraph",
+          "text": "Many implementations start with one points column on the customer profile. That becomes painful as soon as the business needs multiple reward types, expiry, coupon purchase, reversals, reservation during checkout, employee rewards, or audit evidence. A single balance field cannot answer who changed the balance, which program produced it, whether it is reserved, whether it was spent correctly, or how to reverse a mistake."
+        },
+        {
+          "kind": "paragraph",
+          "text": "Loyalty solves this by making the wallet a reusable value container and the ledger the permanent explanation of change. Commerce, Engagement, Process, or a customer project may decide why rewards are earned or spent, but Loyalty owns the balance, reservation, redemption, and ledger evidence."
+        },
+        {
+          "kind": "heading",
+          "level": 2,
+          "text": "Source map",
+          "anchor": "loyaltyWalletsRewardsLedger-3-source-map"
+        },
+        {
+          "kind": "table",
+          "headers": [
+            "Area",
+            "Source location"
+          ],
+          "rows": [
+            [
+              "Functional module group",
+              "`../nodics.loyalty/package.json`"
+            ],
+            [
+              "Module ownership guide",
+              "`../nodics.loyalty/README.md`"
+            ],
+            [
+              "Shared policy and enums",
+              "`../nodics.loyalty/modules/loyaltyCore/src/schemas/schemas.js`"
+            ],
+            [
+              "Programs",
+              "`../nodics.loyalty/modules/loyaltyProgram/src/schemas/schemas.js`"
+            ],
+            [
+              "Reward types",
+              "`../nodics.loyalty/modules/loyaltyRewardType/src/schemas/schemas.js`"
+            ],
+            [
+              "Wallets and balances",
+              "`../nodics.loyalty/modules/loyaltyWallet/src/schemas/schemas.js`"
+            ],
+            [
+              "Reward operation service",
+              "`../nodics.loyalty/modules/loyaltyWallet/src/service/defaultLoyaltyRewardOperationService.js`"
+            ],
+            [
+              "Ledger schema and posting",
+              "`../nodics.loyalty/modules/loyaltyLedger/src/schemas/schemas.js`"
+            ],
+            [
+              "Reservation schema",
+              "`../nodics.loyalty/modules/loyaltyReservation/src/schemas/schemas.js`"
+            ],
+            [
+              "Redemption schema",
+              "`../nodics.loyalty/modules/loyaltyRedemption/src/schemas/schemas.js`"
+            ],
+            [
+              "Internal API routes",
+              "`../nodics.loyalty/modules/loyaltyApi/src/router/routers.js`"
+            ],
+            [
+              "Commerce reward payment provider",
+              "`../nodics.commerce/modules/payment/modules/paymentProviders/modules/loyaltyRewardProvider/README.md`"
+            ],
+            [
+              "Live checkout acceptance",
+              "`../nodics.foundation/modules/nTooling/src/service/project/defaultProjectLoyaltyRewardCheckoutAcceptanceService.mjs`"
+            ]
+          ]
+        },
+        {
+          "kind": "heading",
+          "level": 2,
+          "text": "Owner model",
+          "anchor": "loyaltyWalletsRewardsLedger-4-owner-model"
+        },
+        {
+          "kind": "diagram",
+          "language": "mermaid",
+          "text": "flowchart LR\n  Actor[\"Customer, employee, partner, enterprise, or system\"] --> Wallet[\"Loyalty wallet\"]\n  Wallet --> Balance[\"Program + reward type balance\"]\n  Balance --> Reservation[\"Reservation\"]\n  Reservation --> Capture[\"Capture / redemption\"]\n  Balance --> Ledger[\"Append-only reward ledger\"]\n  Capture --> Ledger\n  Reservation --> Ledger"
+        },
+        {
+          "kind": "paragraph",
+          "text": "The wallet owner is stored as `ownerType` and `ownerCode`. This allows a wallet to belong to a customer, employee, enterprise, partner, or system actor without turning Loyalty into a customer-profile table."
+        },
+        {
+          "kind": "paragraph",
+          "text": "Tenant and enterprise schema selection comes from the authenticated runtime context. Do not add `tenant`, `enterpriseCode`, raw token, request payload, or HTTP context fields to Loyalty wallet, balance, ledger, reservation, or redemption rows."
+        },
+        {
+          "kind": "heading",
+          "level": 2,
+          "text": "Runtime topology",
+          "anchor": "loyaltyWalletsRewardsLedger-5-runtime-topology"
+        },
+        {
+          "kind": "paragraph",
+          "text": "Loyalty can run in the same local topology as the rest of Nodics or as a separate microservice. In the Kickoff local topology, `loyaltyServer` runs the framework-owned `nodics.loyalty` module group. Commerce can run on its own server and call the Loyalty internal API through the configured server graph."
+        },
+        {
+          "kind": "paragraph",
+          "text": "This is the important dependency direction:"
+        },
+        {
+          "kind": "table",
+          "headers": [
+            "Journey part",
+            "Owner"
+          ],
+          "rows": [
+            [
+              "Reward balance and ledger",
+              "`nodics.loyalty`"
+            ],
+            [
+              "Coupon product, cart, checkout, order, payment transaction, entitlement, delivery",
+              "`nodics.commerce`"
+            ],
+            [
+              "Buying a coupon with reward points",
+              "Commerce payment method and payment provider"
+            ],
+            [
+              "Project earning rule or customer-specific reward policy",
+              "Project module or configuration"
+            ],
+            [
+              "Runtime schema selection",
+              "Authenticated request context"
+            ]
+          ]
+        },
+        {
+          "kind": "heading",
+          "level": 2,
+          "text": "Business journeys",
+          "anchor": "loyaltyWalletsRewardsLedger-6-business-journeys"
+        },
+        {
+          "kind": "heading",
+          "level": 3,
+          "text": "Earn",
+          "anchor": "loyaltyWalletsRewardsLedger-7-earn"
+        },
+        {
+          "kind": "paragraph",
+          "text": "An approved business event grants reward value. The earning reason can come from Commerce, Engagement, Process, or a project-specific module, but the balance movement belongs to Loyalty. The ledger entry type is `EARN`."
+        },
+        {
+          "kind": "heading",
+          "level": 3,
+          "text": "Reserve",
+          "anchor": "loyaltyWalletsRewardsLedger-8-reserve"
+        },
+        {
+          "kind": "paragraph",
+          "text": "Before a reward value is spent, Loyalty can reserve it. Reservation moves value from available to reserved so a checkout or external process can continue without double-spending the same points. The ledger entry type is `RESERVE`."
+        },
+        {
+          "kind": "heading",
+          "level": 3,
+          "text": "Capture",
+          "anchor": "loyaltyWalletsRewardsLedger-9-capture"
+        },
+        {
+          "kind": "paragraph",
+          "text": "When the downstream business journey succeeds, the reservation is captured. Reserved value becomes spent value, a redemption record is created, and the ledger receives a `CAPTURE` entry."
+        },
+        {
+          "kind": "heading",
+          "level": 3,
+          "text": "Release",
+          "anchor": "loyaltyWalletsRewardsLedger-10-release"
+        },
+        {
+          "kind": "paragraph",
+          "text": "If the downstream journey fails or is cancelled before capture, the reservation is released. Reserved value returns to available value, and the ledger receives release evidence."
+        },
+        {
+          "kind": "heading",
+          "level": 3,
+          "text": "Reverse",
+          "anchor": "loyaltyWalletsRewardsLedger-11-reverse"
+        },
+        {
+          "kind": "paragraph",
+          "text": "Corrections and refunds are compensating movements. Historical ledger rows remain append-only; a new `REVERSE` entry explains the correction."
+        },
+        {
+          "kind": "heading",
+          "level": 2,
+          "text": "Reward payment provider checkout pattern",
+          "anchor": "loyaltyWalletsRewardsLedger-12-reward-payment-provider-checkout-pattern"
+        },
+        {
+          "kind": "paragraph",
+          "text": "Buying a coupon with points is not Loyalty module behavior. It is a Commerce checkout journey using Loyalty as the reward-balance authority."
+        },
+        {
+          "kind": "diagram",
+          "language": "mermaid",
+          "text": "sequenceDiagram\n  participant Customer\n  participant Commerce\n  participant Payment as Loyalty reward payment provider\n  participant Loyalty\n  Customer->>Commerce: Place order with LOYALTY_REWARD\n  Commerce->>Payment: Authorize reward payment\n  Payment->>Loyalty: Reserve reward amount\n  Commerce->>Payment: Capture after order placement\n  Payment->>Loyalty: Capture reservation\n  Commerce->>Commerce: Persist order, payment, entitlement, delivery"
+        },
+        {
+          "kind": "paragraph",
+          "text": "Use `paymentMethod: \"LOYALTY_REWARD\"` when checkout should pay for a product with reward value. Commerce decides that the product can be bought, calculates the cart, owns payment transaction evidence, creates the order, and delivers the coupon or digital entitlement. Loyalty only owns the wallet balance, reservation, redemption, and ledger."
+        },
+        {
+          "kind": "heading",
+          "level": 2,
+          "text": "Developer guidance",
+          "anchor": "loyaltyWalletsRewardsLedger-13-developer-guidance"
+        },
+        {
+          "kind": "paragraph",
+          "text": "Developers should start from the owner before adding code:"
+        },
+        {
+          "kind": "table",
+          "headers": [
+            "Change",
+            "Put it here"
+          ],
+          "rows": [
+            [
+              "New reward unit such as points, credits, or stamps",
+              "`loyaltyRewardType` data or project data"
+            ],
+            [
+              "New program such as VIP rewards",
+              "`loyaltyProgram` data or project data"
+            ],
+            [
+              "Balance mutation behavior used by every project",
+              "`loyaltyWallet` service contract"
+            ],
+            [
+              "Ledger posting behavior",
+              "`loyaltyLedger`"
+            ],
+            [
+              "Reserve, capture, release, reverse API",
+              "`loyaltyApi`"
+            ],
+            [
+              "Coupon purchase with points",
+              "Commerce payment method/provider"
+            ],
+            [
+              "Project-specific earn policy",
+              "Customer project extension module"
+            ],
+            [
+              "Storefront labels and customer messaging",
+              "Project frontend or content data"
+            ]
+          ]
+        },
+        {
+          "kind": "paragraph",
+          "text": "Use string decimal amounts for reward balances. Do not use floating point arithmetic for points or credits. Use idempotency keys and correlation IDs for mutating operations so retries do not double-spend rewards."
+        },
+        {
+          "kind": "heading",
+          "level": 2,
+          "text": "Customization guidance",
+          "anchor": "loyaltyWalletsRewardsLedger-14-customization-guidance"
+        },
+        {
+          "kind": "paragraph",
+          "text": "Customize Loyalty from the outside first:"
+        },
+        {
+          "kind": "ordered-list",
+          "items": [
+            "Configure reward programs, reward types, expiry windows, and spend policies.",
+            "Add project-owned data packs for customer-specific reward catalogs.",
+            "Add a project extension module when a customer has unique earning, validation, expiry, or eligibility rules.",
+            "Add Commerce payment providers or payment-method configuration when reward value can buy products, subscriptions, coupons, or services.",
+            "Change the reusable framework module only when all projects need a new Loyalty contract."
+          ]
+        },
+        {
+          "kind": "paragraph",
+          "text": "Project customization must keep standard owner names stable. A customer project may extend Loyalty behavior, but it should not rename the framework capability or create a parallel wallet authority."
+        },
+        {
+          "kind": "heading",
+          "level": 2,
+          "text": "Security and governance",
+          "anchor": "loyaltyWalletsRewardsLedger-15-security-and-governance"
+        },
+        {
+          "kind": "paragraph",
+          "text": "Loyalty internal mutation APIs are service-to-service contracts. Customer or admin tokens may read authorized wallet views when such routes are exposed, but reserve, capture, release, and reverse operations should be called by trusted services such as Commerce payment providers."
+        },
+        {
+          "kind": "paragraph",
+          "text": "Permissions must be explicit. Service accounts need the Loyalty internal permissions used by payment-provider handoff. Browser responses and logs must not expose raw tokens, API keys, customer secrets, or provider payloads."
+        },
+        {
+          "kind": "heading",
+          "level": 2,
+          "text": "Operational evidence",
+          "anchor": "loyaltyWalletsRewardsLedger-16-operational-evidence"
+        },
+        {
+          "kind": "paragraph",
+          "text": "An operator needs enough evidence to decide whether a reward spend succeeded, failed, or needs compensation:"
+        },
+        {
+          "kind": "table",
+          "headers": [
+            "Evidence",
+            "Why it matters"
+          ],
+          "rows": [
+            [
+              "Wallet balance",
+              "Shows available, reserved, and spent reward value"
+            ],
+            [
+              "Reservation",
+              "Shows value was held for a target order or process"
+            ],
+            [
+              "Ledger entries",
+              "Shows append-only movement history"
+            ],
+            [
+              "Redemption",
+              "Shows captured reward usage"
+            ],
+            [
+              "Payment transaction",
+              "Shows Commerce payment lifecycle"
+            ],
+            [
+              "Order evidence",
+              "Shows checkout selected the Loyalty reward provider"
+            ],
+            [
+              "Entitlement or delivery",
+              "Shows the product or coupon was actually fulfilled"
+            ]
+          ]
+        },
+        {
+          "kind": "heading",
+          "level": 2,
+          "text": "Verification",
+          "anchor": "loyaltyWalletsRewardsLedger-17-verification"
+        },
+        {
+          "kind": "paragraph",
+          "text": "For framework changes, run the focused Loyalty tests:"
+        },
+        {
+          "kind": "code",
+          "language": "sh",
+          "text": "node nodics.loyalty/modules/loyaltyApi/test/loyaltyApiRouteContract.test.js\nnode nodics.loyalty/modules/loyaltyWallet/test/loyaltyRewardOperationContract.test.js\nnode nodics.loyalty/modules/loyaltyLedger/test/loyaltyLedgerContract.test.js"
+        },
+        {
+          "kind": "paragraph",
+          "text": "For Commerce checkout integration, run the provider test and the Kickoff live acceptance:"
+        },
+        {
+          "kind": "code",
+          "language": "sh",
+          "text": "node nodics.commerce/modules/payment/modules/paymentProviders/modules/loyaltyRewardProvider/test/loyaltyRewardPaymentProviderContract.test.js\ncd ../nodics.kickoff\nnpm run acceptance:loyalty-reward-checkout"
+        },
+        {
+          "kind": "paragraph",
+          "text": "The live acceptance starts Platform, Loyalty, and Commerce, places an HTTP checkout using `LOYALTY_REWARD`, verifies Mongo evidence across Loyalty and Commerce models, and writes a browser-readable report to `.nodics/tmp/loyalty-reward-checkout-live/index.html`."
+        },
+        {
+          "kind": "paragraph",
+          "text": "When a journey is customer-visible, complete a browser pass as well. The page or journey should show business-safe status, readable balance/payment evidence, and no broken layout at desktop and mobile widths."
+        },
+        {
+          "kind": "heading",
+          "level": 2,
+          "text": "Common mistakes",
+          "anchor": "loyaltyWalletsRewardsLedger-18-common-mistakes"
+        },
+        {
+          "kind": "unordered-list",
+          "items": [
+            "Treating coupon purchase as Loyalty instead of Commerce payment behavior.",
+            "Storing tenant or enterprise fields in Loyalty business rows.",
+            "Moving balances without ledger evidence.",
+            "Editing old ledger entries instead of posting reversals.",
+            "Letting a project-specific reward policy become the framework default.",
+            "Using floating point math for reward amounts.",
+            "Calling internal mutation APIs directly from a public browser journey."
+          ]
+        },
+        {
+          "kind": "heading",
+          "level": 2,
+          "text": "Reader checklist",
+          "anchor": "loyaltyWalletsRewardsLedger-19-reader-checklist"
+        },
+        {
+          "kind": "paragraph",
+          "text": "Business readers should leave this page knowing what reward wallets do and why ledger evidence matters. Developers should know which module owns each change. Operators should know which runtime and evidence to inspect. Project teams should know how to customize reward programs and checkout spend behavior without forking the standard Loyalty framework."
+        }
+      ],
+      "searchText": "Loyalty Wallets, Rewards, and Ledger Business, developer, operator, and customization guidance for reward wallets, balances, reservations, redemptions, ledger evidence, and Commerce reward payment provider integration. # Loyalty Wallets, Rewards, and Ledger\n\nMaturity: operational first slice.\n\nNodics Loyalty gives a project a reusable way to reward people or business\nactors for approved behavior, hold that value in a wallet, reserve it for a\nbusiness transaction, capture it when the transaction succeeds, release it when\nthe transaction fails, and explain every movement through an append-only ledger.\n\nThe business idea is simple: a customer may earn points for an order, an\nemployee may earn credits for a task, a partner may receive reward value for a\ncampaign, or an enterprise may hold a wallet for a shared program. Each wallet\nhas an owner type and owner code. The reward itself can be points, credits,\nstamps, tokens, or a project-defined unit.\n\n## Beginner mental model\n\nFor beginners, think of Loyalty as a bank passbook for non-cash reward value.\nThe wallet says who owns the value. The balance says how much of each reward\ntype is available, reserved, or spent. The ledger explains every movement so a\nteam can answer what happened later. Commerce, Engagement, Process, or a\nproject module may decide why a reward should move, but Loyalty records the\nmovement consistently.\n\n## Business problem\n\nMany implementations start with one points column on the customer profile.\nThat becomes painful as soon as the business needs multiple reward types,\nexpiry, coupon purchase, reversals, reservation during checkout, employee\nrewards, or audit evidence. A single balance field cannot answer who changed\nthe balance, which program produced it, whether it is reserved, whether it was\nspent correctly, or how to reverse a mistake.\n\nLoyalty solves this by making the wallet a reusable value container and the\nledger the permanent explanation of change. Commerce, Engagement, Process,\nor a customer project may decide why rewards are earned or spent, but Loyalty\nowns the balance, reservation, redemption, and ledger evidence.\n\n## Source map\n\n| Area | Source location |\n| --- | --- |\n| Functional module group | `../nodics.loyalty/package.json` |\n| Module ownership guide | `../nodics.loyalty/README.md` |\n| Shared policy and enums | `../nodics.loyalty/modules/loyaltyCore/src/schemas/schemas.js` |\n| Programs | `../nodics.loyalty/modules/loyaltyProgram/src/schemas/schemas.js` |\n| Reward types | `../nodics.loyalty/modules/loyaltyRewardType/src/schemas/schemas.js` |\n| Wallets and balances | `../nodics.loyalty/modules/loyaltyWallet/src/schemas/schemas.js` |\n| Reward operation service | `../nodics.loyalty/modules/loyaltyWallet/src/service/defaultLoyaltyRewardOperationService.js` |\n| Ledger schema and posting | `../nodics.loyalty/modules/loyaltyLedger/src/schemas/schemas.js` |\n| Reservation schema | `../nodics.loyalty/modules/loyaltyReservation/src/schemas/schemas.js` |\n| Redemption schema | `../nodics.loyalty/modules/loyaltyRedemption/src/schemas/schemas.js` |\n| Internal API routes | `../nodics.loyalty/modules/loyaltyApi/src/router/routers.js` |\n| Commerce reward payment provider | `../nodics.commerce/modules/payment/modules/paymentProviders/modules/loyaltyRewardProvider/README.md` |\n| Live checkout acceptance | `../nodics.foundation/modules/nTooling/src/service/project/defaultProjectLoyaltyRewardCheckoutAcceptanceService.mjs` |\n\n## Owner model\n\n```mermaid\nflowchart LR\n  Actor[\"Customer, employee, partner, enterprise, or system\"] --> Wallet[\"Loyalty wallet\"]\n  Wallet --> Balance[\"Program + reward type balance\"]\n  Balance --> Reservation[\"Reservation\"]\n  Reservation --> Capture[\"Capture / redemption\"]\n  Balance --> Ledger[\"Append-only reward ledger\"]\n  Capture --> Ledger\n  Reservation --> Ledger\n```\n\nThe wallet owner is stored as `ownerType` and `ownerCode`. This allows a wallet\nto belong to a customer, employee, enterprise, partner, or system actor without\nturning Loyalty into a customer-profile table.\n\nTenant and enterprise schema selection comes from the authenticated runtime\ncontext. Do not add `tenant`, `enterpriseCode`, raw token, request payload, or\nHTTP context fields to Loyalty wallet, balance, ledger, reservation, or\nredemption rows.\n\n## Runtime topology\n\nLoyalty can run in the same local topology as the rest of Nodics or as a\nseparate microservice. In the Kickoff local topology, `loyaltyServer` runs the\nframework-owned `nodics.loyalty` module group. Commerce can run on its own\nserver and call the Loyalty internal API through the configured server graph.\n\nThis is the important dependency direction:\n\n| Journey part | Owner |\n| --- | --- |\n| Reward balance and ledger | `nodics.loyalty` |\n| Coupon product, cart, checkout, order, payment transaction, entitlement, delivery | `nodics.commerce` |\n| Buying a coupon with reward points | Commerce payment method and payment provider |\n| Project earning rule or customer-specific reward policy | Project module or configuration |\n| Runtime schema selection | Authenticated request context |\n\n## Business journeys\n\n### Earn\n\nAn approved business event grants reward value. The earning reason can come\nfrom Commerce, Engagement, Process, or a project-specific module, but the\nbalance movement belongs to Loyalty. The ledger entry type is `EARN`.\n\n### Reserve\n\nBefore a reward value is spent, Loyalty can reserve it. Reservation moves value\nfrom available to reserved so a checkout or external process can continue\nwithout double-spending the same points. The ledger entry type is `RESERVE`.\n\n### Capture\n\nWhen the downstream business journey succeeds, the reservation is captured.\nReserved value becomes spent value, a redemption record is created, and the\nledger receives a `CAPTURE` entry.\n\n### Release\n\nIf the downstream journey fails or is cancelled before capture, the reservation\nis released. Reserved value returns to available value, and the ledger receives\nrelease evidence.\n\n### Reverse\n\nCorrections and refunds are compensating movements. Historical ledger rows\nremain append-only; a new `REVERSE` entry explains the correction.\n\n## Reward payment provider checkout pattern\n\nBuying a coupon with points is not Loyalty module behavior. It is a Commerce\ncheckout journey using Loyalty as the reward-balance authority.\n\n```mermaid\nsequenceDiagram\n  participant Customer\n  participant Commerce\n  participant Payment as Loyalty reward payment provider\n  participant Loyalty\n  Customer->>Commerce: Place order with LOYALTY_REWARD\n  Commerce->>Payment: Authorize reward payment\n  Payment->>Loyalty: Reserve reward amount\n  Commerce->>Payment: Capture after order placement\n  Payment->>Loyalty: Capture reservation\n  Commerce->>Commerce: Persist order, payment, entitlement, delivery\n```\n\nUse `paymentMethod: \"LOYALTY_REWARD\"` when checkout should pay for a product\nwith reward value. Commerce decides that the product can be bought, calculates\nthe cart, owns payment transaction evidence, creates the order, and delivers\nthe coupon or digital entitlement. Loyalty only owns the wallet balance,\nreservation, redemption, and ledger.\n\n## Developer guidance\n\nDevelopers should start from the owner before adding code:\n\n| Change | Put it here |\n| --- | --- |\n| New reward unit such as points, credits, or stamps | `loyaltyRewardType` data or project data |\n| New program such as VIP rewards | `loyaltyProgram` data or project data |\n| Balance mutation behavior used by every project | `loyaltyWallet` service contract |\n| Ledger posting behavior | `loyaltyLedger` |\n| Reserve, capture, release, reverse API | `loyaltyApi` |\n| Coupon purchase with points | Commerce payment method/provider |\n| Project-specific earn policy | Customer project extension module |\n| Storefront labels and customer messaging | Project frontend or content data |\n\nUse string decimal amounts for reward balances. Do not use floating point\narithmetic for points or credits. Use idempotency keys and correlation IDs for\nmutating operations so retries do not double-spend rewards.\n\n## Customization guidance\n\nCustomize Loyalty from the outside first:\n\n1. Configure reward programs, reward types, expiry windows, and spend policies.\n2. Add project-owned data packs for customer-specific reward catalogs.\n3. Add a project extension module when a customer has unique earning,\n   validation, expiry, or eligibility rules.\n4. Add Commerce payment providers or payment-method configuration when reward\n   value can buy products, subscriptions, coupons, or services.\n5. Change the reusable framework module only when all projects need a new\n   Loyalty contract.\n\nProject customization must keep standard owner names stable. A customer project\nmay extend Loyalty behavior, but it should not rename the framework capability\nor create a parallel wallet authority.\n\n## Security and governance\n\nLoyalty internal mutation APIs are service-to-service contracts. Customer or\nadmin tokens may read authorized wallet views when such routes are exposed, but\nreserve, capture, release, and reverse operations should be called by trusted\nservices such as Commerce payment providers.\n\nPermissions must be explicit. Service accounts need the Loyalty internal\npermissions used by payment-provider handoff. Browser responses and logs must\nnot expose raw tokens, API keys, customer secrets, or provider payloads.\n\n## Operational evidence\n\nAn operator needs enough evidence to decide whether a reward spend succeeded,\nfailed, or needs compensation:\n\n| Evidence | Why it matters |\n| --- | --- |\n| Wallet balance | Shows available, reserved, and spent reward value |\n| Reservation | Shows value was held for a target order or process |\n| Ledger entries | Shows append-only movement history |\n| Redemption | Shows captured reward usage |\n| Payment transaction | Shows Commerce payment lifecycle |\n| Order evidence | Shows checkout selected the Loyalty reward provider |\n| Entitlement or delivery | Shows the product or coupon was actually fulfilled |\n\n## Verification\n\nFor framework changes, run the focused Loyalty tests:\n\n```sh\nnode nodics.loyalty/modules/loyaltyApi/test/loyaltyApiRouteContract.test.js\nnode nodics.loyalty/modules/loyaltyWallet/test/loyaltyRewardOperationContract.test.js\nnode nodics.loyalty/modules/loyaltyLedger/test/loyaltyLedgerContract.test.js\n```\n\nFor Commerce checkout integration, run the provider test and the Kickoff live\nacceptance:\n\n```sh\nnode nodics.commerce/modules/payment/modules/paymentProviders/modules/loyaltyRewardProvider/test/loyaltyRewardPaymentProviderContract.test.js\ncd ../nodics.kickoff\nnpm run acceptance:loyalty-reward-checkout\n```\n\nThe live acceptance starts Platform, Loyalty, and Commerce, places an HTTP\ncheckout using `LOYALTY_REWARD`, verifies Mongo evidence across Loyalty and\nCommerce models, and writes a browser-readable report to\n`.nodics/tmp/loyalty-reward-checkout-live/index.html`.\n\nWhen a journey is customer-visible, complete a browser pass as well. The page\nor journey should show business-safe status, readable balance/payment evidence,\nand no broken layout at desktop and mobile widths.\n\n## Common mistakes\n\n- Treating coupon purchase as Loyalty instead of Commerce payment behavior.\n- Storing tenant or enterprise fields in Loyalty business rows.\n- Moving balances without ledger evidence.\n- Editing old ledger entries instead of posting reversals.\n- Letting a project-specific reward policy become the framework default.\n- Using floating point math for reward amounts.\n- Calling internal mutation APIs directly from a public browser journey.\n\n## Reader checklist\n\nBusiness readers should leave this page knowing what reward wallets do and why\nledger evidence matters. Developers should know which module owns each change.\nOperators should know which runtime and evidence to inspect. Project teams\nshould know how to customize reward programs and checkout spend behavior\nwithout forking the standard Loyalty framework.\n",
+      "previous": {
+        "title": "Payment Core and Provider Boundaries",
+        "route": "/docs/framework/commerce-payment-provider-boundaries"
+      },
+      "next": {
+        "title": "Shopping List Commerce Boundary",
+        "route": "/docs/framework/commerce-shopping-list-commerce-boundary"
+      },
+      "source": {
+        "repository": "nodics.docs",
+        "functionalModule": "nodics.loyalty",
+        "technicalModule": "loyaltyWallet",
+        "owner": "nodics.loyalty",
+        "sourcePath": "docs/pages/nodics.loyalty/loyalty-wallets-rewards-and-ledger.md",
+        "path": "docs/pages/nodics.loyalty/loyalty-wallets-rewards-and-ledger.md",
+        "wordCount": 1542,
+        "checksum": "0bf2b29ebcd0290f7bc326d3b323d475c1d5376e3cab4806ee8f15ab6c889eef"
+      }
+    },
+    "active": true
+  },
+  "record108": {
+    "code": "nodicsDocsComponentcommerceShoppingListCommerceBoundary",
+    "typeCode": "nodicsDocumentationArticleComponentType",
+    "renderer": "documentation.component.article",
+    "accessMode": "PUBLIC",
+    "properties": {
+      "code": "commerce.shopping-list-commerce-boundary",
+      "title": "Shopping List Commerce Boundary",
+      "route": "/docs/framework/commerce-shopping-list-commerce-boundary",
+      "section": "user-enterprise-and-tenant-management",
+      "sectionTitle": "User, Enterprise, and Tenant Management",
+      "group": "user-enterprise-and-tenant-management",
+      "groupTitle": "User, Enterprise, and Tenant Management",
+      "parentId": "user-enterprise-and-tenant-management",
+      "hierarchyPath": [
+        "User, Enterprise, and Tenant Management",
+        "Shopping List Commerce Boundary"
+      ],
+      "hierarchyDepth": 2,
+      "documentType": "contract",
+      "audience": [
+        "business",
+        "architect",
+        "administrator",
+        "developer",
+        "operator",
+        "qa",
+        "ai-tool"
+      ],
+      "businessAudience": [
+        "business user",
+        "administrator",
+        "implementation partner"
+      ],
+      "technicalAudience": [
+        "architect",
+        "developer",
+        "operator",
+        "qa engineer",
+        "ai tool"
+      ],
+      "summary": "Why wishlist, compare, and save-for-later belong to Commerce while Profile remains the identity authority.",
       "visibility": "public",
       "accessMode": "PUBLIC",
       "publiclyAvailable": true,
@@ -49226,10 +49977,12 @@ module.exports = {
       ],
       "sourceEvidence": [
         "docs/catalogue.json",
-        "docs/pages/nodics.commerce/customer-list-profile-boundary.md",
-        "../nodics.commerce/modules/checkout/modules/customerList/package.json",
-        "../nodics.commerce/modules/checkout/package.json",
-        "../nodics.platform/modules/profile/package.json"
+        "docs/pages/nodics.commerce/shopping-list-commerce-boundary.md",
+        "../nodics.commerce/modules/baseCommerce/modules/shoppingList/package.json",
+        "../nodics.commerce/modules/baseCommerce/modules/shoppingList/src/router/routers.js",
+        "../nodics.commerce/modules/baseCommerce/modules/shoppingList/src/service/defaultShoppingListOperationService.js",
+        "../nodics.commerce/modules/baseCommerce/package.json",
+        "../nodics.platform/modules/profile/data/init-v001/records/groups/defaultBootstrapUserGroupsData.js"
       ],
       "visualRequirements": [
         "diagram",
@@ -49238,69 +49991,80 @@ module.exports = {
         "troubleshooting-matrix"
       ],
       "searchKeywords": [
-        "customer-list",
+        "shopping-list",
+        "wishlist",
+        "compare",
+        "save-for-later",
         "profile",
         "commerce-boundary",
-        "eligibility",
         "identity"
       ],
       "topicKeywords": [
         "User, Enterprise, and Tenant Management",
         "Customer Data and Identity",
-        "Customer List and Profile Commerce Boundary"
+        "Shopping List Commerce Boundary"
       ],
       "headings": [
         {
           "text": "Source map",
-          "anchor": "commerceCustomerListProfileBoundary-1-source-map",
+          "anchor": "commerceShoppingListCommerceBoundary-1-source-map",
           "level": 2
         },
         {
           "text": "Ownership model",
-          "anchor": "commerceCustomerListProfileBoundary-2-ownership-model",
+          "anchor": "commerceShoppingListCommerceBoundary-2-ownership-model",
           "level": 2
         },
         {
           "text": "Contract",
-          "anchor": "commerceCustomerListProfileBoundary-3-contract",
+          "anchor": "commerceShoppingListCommerceBoundary-3-contract",
           "level": 2
         },
         {
-          "text": "Customization and extension guidance",
-          "anchor": "commerceCustomerListProfileBoundary-4-customization-and-extension-guidance",
+          "text": "Business configuration guidance",
+          "anchor": "commerceShoppingListCommerceBoundary-4-business-configuration-guidance",
           "level": 2
         },
         {
-          "text": "Implementation handoff",
-          "anchor": "commerceCustomerListProfileBoundary-5-implementation-handoff",
+          "text": "Developer extension guidance",
+          "anchor": "commerceShoppingListCommerceBoundary-5-developer-extension-guidance",
           "level": 2
         },
         {
-          "text": "Evidence checklist",
-          "anchor": "commerceCustomerListProfileBoundary-6-evidence-checklist",
+          "text": "Extending product-keeping journeys",
+          "anchor": "commerceShoppingListCommerceBoundary-6-extending-product-keeping-journeys",
           "level": 2
         },
         {
           "text": "Common mistakes",
-          "anchor": "commerceCustomerListProfileBoundary-7-common-mistakes",
+          "anchor": "commerceShoppingListCommerceBoundary-7-common-mistakes",
+          "level": 2
+        },
+        {
+          "text": "Migration principle",
+          "anchor": "commerceShoppingListCommerceBoundary-8-migration-principle",
           "level": 2
         },
         {
           "text": "Verification",
-          "anchor": "commerceCustomerListProfileBoundary-8-verification",
+          "anchor": "commerceShoppingListCommerceBoundary-9-verification",
           "level": 2
         }
       ],
       "blocks": [
         {
           "kind": "paragraph",
-          "text": "Customer List is a Commerce capability for grouping customers in commercial contexts such as eligibility, promotions, account buying, or targeted operations. Profile remains the authority for person, address, authentication, permission, and organization identity. For beginners, Profile answers \"who is this customer?\" and Customer List answers \"which commercial group is this customer part of for this commerce operation?\""
+          "text": "Shopping List is a Commerce capability for customer shopping-intent lists such as wishlist, compare, and save-for-later. It belongs under Base Commerce because these lists are used across discovery, product cards, cart, checkout, and later channel journeys. Profile remains the authority for person, authentication, permissions, addresses, and organization identity."
+        },
+        {
+          "kind": "paragraph",
+          "text": "For beginners, Profile answers \"who is this actor?\" Shopping List answers \"which products has this authenticated shopper intentionally saved for a commerce journey?\""
         },
         {
           "kind": "heading",
           "level": 2,
           "text": "Source map",
-          "anchor": "commerceCustomerListProfileBoundary-1-source-map"
+          "anchor": "commerceShoppingListCommerceBoundary-1-source-map"
         },
         {
           "kind": "table",
@@ -49310,24 +50074,32 @@ module.exports = {
           ],
           "rows": [
             [
-              "Customer List module",
-              "`../nodics.commerce/modules/checkout/modules/customerList/package.json`"
+              "Shopping List module",
+              "`../nodics.commerce/modules/baseCommerce/modules/shoppingList/package.json`"
             ],
             [
-              "Checkout module",
-              "`../nodics.commerce/modules/checkout/package.json`"
+              "Shopping List schemas",
+              "`../nodics.commerce/modules/baseCommerce/modules/shoppingList/src/schemas/schemas.js`"
             ],
             [
-              "Profile module",
-              "`../nodics.platform/modules/profile/package.json`"
+              "Shopping List routes",
+              "`../nodics.commerce/modules/baseCommerce/modules/shoppingList/src/router/routers.js`"
             ],
             [
-              "Security docs",
-              "`docs/pages/nodics.platform/security-identity-access.md`"
+              "Shopping List service",
+              "`../nodics.commerce/modules/baseCommerce/modules/shoppingList/src/service/defaultShoppingListOperationService.js`"
             ],
             [
-              "Commerce operations",
-              "`docs/pages/nodics.commerce/cart-order.md`"
+              "Commerce composition",
+              "`../nodics.commerce/modules/baseCommerce/package.json`"
+            ],
+            [
+              "Profile security groups",
+              "`../nodics.platform/modules/profile/data/init-v001/records/groups/defaultBootstrapUserGroupsData.js`"
+            ],
+            [
+              "Agora storefront client",
+              "`../../nodics.exp/nodics.agora.apparel/src/api/commerceClient.ts`"
             ]
           ]
         },
@@ -49335,101 +50107,256 @@ module.exports = {
           "kind": "heading",
           "level": 2,
           "text": "Ownership model",
-          "anchor": "commerceCustomerListProfileBoundary-2-ownership-model"
+          "anchor": "commerceShoppingListCommerceBoundary-2-ownership-model"
         },
         {
           "kind": "diagram",
           "language": "mermaid",
-          "text": "flowchart LR\n  Profile[\"Profile identity\"] --> CustomerList[\"Commerce customer list\"]\n  CustomerList --> Promotion[\"Promotion eligibility\"]\n  CustomerList --> Checkout[\"Checkout decision\"]\n  Profile --> Auth[\"Authentication and permissions\"]"
+          "text": "flowchart LR\n  Profile[\"Profile identity and auth\"] --> Token[\"Authenticated customer token\"]\n  Token --> ShoppingList[\"Commerce Shopping List\"]\n  ShoppingList --> Wishlist[\"Wishlist\"]\n  ShoppingList --> Compare[\"Compare\"]\n  ShoppingList --> SaveForLater[\"Save for later\"]\n  ShoppingList --> Cart[\"Cart and checkout journey\"]\n  ShoppingList --> Storefront[\"Agora product cards and quick actions\"]"
         },
         {
           "kind": "paragraph",
-          "text": "The business problem is targeted commerce without identity duplication. Business users need groups like VIP customers, wholesale buyers, or launch audiences. Developers need a boundary that prevents Commerce from becoming a parallel identity system. Operators need to trace eligibility decisions in production without exposing personal data unnecessarily."
+          "text": "The business purpose is simple: a shopper can express purchase intent before checkout without turning Profile into a commerce data store. Wishlist, compare, and save-for-later are not profile preferences; they are commerce actions over products, variants, stores, prices, availability, and storefront context."
         },
         {
           "kind": "heading",
           "level": 2,
           "text": "Contract",
-          "anchor": "commerceCustomerListProfileBoundary-3-contract"
+          "anchor": "commerceShoppingListCommerceBoundary-3-contract"
         },
         {
           "kind": "paragraph",
-          "text": "Customer List records should reference stable profile or organization codes, list codes, lifecycle state, source reason, and validity dates where needed. They should not copy passwords, credentials, full identity payloads, or permission ownership."
-        },
-        {
-          "kind": "code",
-          "language": "js",
-          "text": "module.exports = {\n  vipCustomerMembership: {\n    code: 'vipCustomerMembership',\n    listCode: 'vipCustomers',\n    customerCode: 'customer001',\n    active: true\n  }\n};"
-        },
-        {
-          "kind": "heading",
-          "level": 2,
-          "text": "Customization and extension guidance",
-          "anchor": "commerceCustomerListProfileBoundary-4-customization-and-extension-guidance"
+          "text": "Shopping List records must be owned by Commerce and scoped to the authenticated customer. They may reference customer identity by stable owner code from the auth context, but they must not copy credentials, addresses, permission state, or full Profile payloads."
         },
         {
           "kind": "paragraph",
-          "text": "Developers can add eligibility services, import mappers, segmentation rules, promotion integrations, and audit views. Business users should manage lists through Axis when available. AI tools should inspect Profile and Commerce schemas before adding references. Operators should verify that commercial grouping works without broad identity export."
-        },
-        {
-          "kind": "heading",
-          "level": 2,
-          "text": "Implementation handoff",
-          "anchor": "commerceCustomerListProfileBoundary-5-implementation-handoff"
-        },
-        {
-          "kind": "paragraph",
-          "text": "Each customer-list customization should name the Profile reference key, Commerce list schema, eligibility service, promotion or checkout consumer, permission rule, retention rule, and audit evidence. Business users then understand the journey, developers preserve the identity boundary, operators can investigate production eligibility, and QA owners can prove that removing a customer from a list changes commerce behavior without corrupting Profile."
-        },
-        {
-          "kind": "heading",
-          "level": 2,
-          "text": "Evidence checklist",
-          "anchor": "commerceCustomerListProfileBoundary-6-evidence-checklist"
-        },
-        {
-          "kind": "paragraph",
-          "text": "Membership evidence should include list code, referenced customer or organization code, source reason, actor, validity window, lifecycle state, and last eligibility decision. Do not expose more Profile detail than the business journey requires. Operators should be able to prove why a customer received or did not receive a commercial treatment, while developers keep identity, authentication, address, and permission fields under Profile authority."
-        },
-        {
-          "kind": "paragraph",
-          "text": "This evidence also protects production support from over-collecting identity data. The support answer should be about eligibility and commerce treatment, not a full customer profile export."
-        },
-        {
-          "kind": "paragraph",
-          "text": "Production support should also prove expiry and removal. When a customer loses membership, the next checkout or promotion decision must respect that change without deleting the underlying Profile record."
-        },
-        {
-          "kind": "heading",
-          "level": 2,
-          "text": "Common mistakes",
-          "anchor": "commerceCustomerListProfileBoundary-7-common-mistakes"
+          "text": "Supported list types are:"
         },
         {
           "kind": "unordered-list",
           "items": [
-            "Copying Profile authority into Commerce records.",
-            "Using email address as the only customer list key.",
-            "Applying promotions without list lifecycle checks.",
-            "Exposing list membership without permission checks.",
-            "Forgetting removal, expiry, and audit behavior."
+            "`WISHLIST`",
+            "`COMPARE`",
+            "`SAVE_FOR_LATER`"
+          ]
+        },
+        {
+          "kind": "paragraph",
+          "text": "The customer API route family is:"
+        },
+        {
+          "kind": "code",
+          "language": "text",
+          "text": "GET    /nodics/shoppingList/v0/lists/:listType\nPOST   /nodics/shoppingList/v0/lists/:listType/entries\nDELETE /nodics/shoppingList/v0/lists/:listType/entries/:entryCode"
+        },
+        {
+          "kind": "paragraph",
+          "text": "All customer operations require `commerce.shoppingList.own` and must derive the owner from the authenticated customer token, not from browser-supplied owner fields."
+        },
+        {
+          "kind": "code",
+          "language": "js",
+          "text": "module.exports = {\n  savedTopForLater: {\n    code: 'shoppingList_customer001_SAVE_FOR_LATER_agoraRibbedTankTop',\n    ownerId: 'customer001',\n    listType: 'SAVE_FOR_LATER',\n    productCode: 'agoraRibbedTankTop',\n    variantCode: 'agoraRibbedTankTopIvoryS',\n    storeCode: 'agoraMainStore',\n    locale: 'en',\n    active: true\n  }\n};"
+        },
+        {
+          "kind": "heading",
+          "level": 2,
+          "text": "Business configuration guidance",
+          "anchor": "commerceShoppingListCommerceBoundary-4-business-configuration-guidance"
+        },
+        {
+          "kind": "paragraph",
+          "text": "Business users should think of Shopping List as reusable commerce behavior that storefront components can expose in different ways:"
+        },
+        {
+          "kind": "unordered-list",
+          "items": [
+            "Product cards can offer wishlist and compare quick actions.",
+            "Quick-view or quick-add panels can add wishlist, compare, and save-for-later.",
+            "Cart can offer save-for-later instead of removing an item permanently.",
+            "Account pages can show saved products without owning the commerce schema."
+          ]
+        },
+        {
+          "kind": "paragraph",
+          "text": "Configuration should control limits and supported list types at the commerce module level. Project modules may customize text, placement, and UI behavior, but they should not redefine the underlying owner or route contract."
+        },
+        {
+          "kind": "heading",
+          "level": 2,
+          "text": "Developer extension guidance",
+          "anchor": "commerceShoppingListCommerceBoundary-5-developer-extension-guidance"
+        },
+        {
+          "kind": "paragraph",
+          "text": "Developers may extend Shopping List with recommendation signals, expiration rules, merchandising analytics, stock alerts, or business-specific list types only when the list remains a product-intent list. If a feature groups people for eligibility, segmentation, loyalty, or account buying, it should not be added to Shopping List without a separate commerce capability decision."
+        },
+        {
+          "kind": "paragraph",
+          "text": "Safe extension points include:"
+        },
+        {
+          "kind": "unordered-list",
+          "items": [
+            "list type policy,",
+            "maximum item limits,",
+            "duplicate/idempotency rules,",
+            "product and variant validation,",
+            "customer-safe projection fields,",
+            "Axis visibility for business support,",
+            "storefront component integration."
           ]
         },
         {
           "kind": "heading",
           "level": 2,
-          "text": "Verification",
-          "anchor": "commerceCustomerListProfileBoundary-8-verification"
+          "text": "Extending product-keeping journeys",
+          "anchor": "commerceShoppingListCommerceBoundary-6-extending-product-keeping-journeys"
         },
         {
           "kind": "paragraph",
-          "text": "Import profile and customer list data into a fresh schema. Validate list membership, checkout eligibility, promotion behavior, removal behavior, and permission-filtered Axis visibility. Production readiness requires business approval, developer boundary tests, operator audit evidence, and QA proof that Profile remains the identity authority."
+          "text": "The easiest and safest way to extend Shopping List is to add a new commerce list type when the business need is \"keep these products for a later product journey.\" The module already owns the common mechanics: authenticated owner, product reference, variant reference, store context, locale, idempotent add, bounded list size, read, and remove."
+        },
+        {
+          "kind": "paragraph",
+          "text": "Good examples are:"
+        },
+        {
+          "kind": "table",
+          "headers": [
+            "Use case",
+            "Suggested list type",
+            "Why it fits Shopping List"
+          ],
+          "rows": [
+            [
+              "Save an item from cart for later",
+              "`SAVE_FOR_LATER`",
+              "The shopper is keeping a product instead of buying now."
+            ],
+            [
+              "Build a comparison set",
+              "`COMPARE`",
+              "The shopper is keeping a short product set for decision support."
+            ],
+            [
+              "Wishlist future purchases",
+              "`WISHLIST`",
+              "The shopper is keeping products for later discovery or purchase."
+            ],
+            [
+              "Keep outfit ideas",
+              "`OUTFIT_IDEA`",
+              "The shopper is grouping product references for a shopping intent."
+            ],
+            [
+              "Keep replenishment candidates",
+              "`REPLENISHMENT`",
+              "The shopper is remembering products they may buy again."
+            ],
+            [
+              "Keep gift ideas",
+              "`GIFT_IDEA`",
+              "The shopper is saving product references for a future occasion."
+            ]
+          ]
+        },
+        {
+          "kind": "paragraph",
+          "text": "To add a new product-keeping journey:"
+        },
+        {
+          "kind": "ordered-list",
+          "items": [
+            "Add the list type to the Shopping List policy, for example `OUTFIT_IDEA`.",
+            "Define a clear item limit for that type. Small decision lists such as compare should stay low; open-ended saved lists can be higher.",
+            "Reuse the existing customer API route family by passing the new `listType`.",
+            "Store only `productCode`, optional `variantCode`, `storeCode`, `locale`, and lightweight intent metadata such as note, source component, or occasion.",
+            "Render the journey in the project storefront or Axis using business-managed component text, placement, labels, and icons.",
+            "Add contract tests for ownership, idempotency, limit enforcement, and unsupported type rejection."
+          ]
+        },
+        {
+          "kind": "code",
+          "language": "js",
+          "text": "// Example project-level policy extension\nshoppingList: {\n  supportedListTypes: [\n    'WISHLIST',\n    'COMPARE',\n    'SAVE_FOR_LATER',\n    'OUTFIT_IDEA',\n    'GIFT_IDEA'\n  ],\n  maximumWishlistItems: 100,\n  maximumCompareItems: 4,\n  maximumSaveForLaterItems: 100,\n  maximumOutfitIdeaItems: 40,\n  maximumGiftIdeaItems: 60\n}"
+        },
+        {
+          "kind": "paragraph",
+          "text": "Do not create a separate module for every saved-product journey unless the journey has a different owner or materially different lifecycle. If it is still an authenticated shopper keeping product references, extend Shopping List."
+        },
+        {
+          "kind": "paragraph",
+          "text": "Unsafe extensions include:"
+        },
+        {
+          "kind": "unordered-list",
+          "items": [
+            "copying Profile credentials or address payloads,",
+            "accepting owner identity from browser payloads,",
+            "placing Shopping List under Checkout only,",
+            "keeping old `customerList` route or permission aliases,",
+            "using wishlist as a generic customer segmentation feature."
+          ]
+        },
+        {
+          "kind": "heading",
+          "level": 2,
+          "text": "Common mistakes",
+          "anchor": "commerceShoppingListCommerceBoundary-7-common-mistakes"
+        },
+        {
+          "kind": "unordered-list",
+          "items": [
+            "Treating wishlist, compare, or save-for-later as Profile data.",
+            "Keeping compatibility aliases for `/nodics/customerList/v0`.",
+            "Checking list ownership from request payload instead of authenticated token.",
+            "Placing Shopping List under Checkout even though product cards and PDP need it before cart or checkout starts.",
+            "Forgetting to migrate persisted customer groups to `commerce.shoppingList.own`.",
+            "Adding new list types without clear commerce ownership, limits, and idempotency behavior."
+          ]
+        },
+        {
+          "kind": "heading",
+          "level": 2,
+          "text": "Migration principle",
+          "anchor": "commerceShoppingListCommerceBoundary-8-migration-principle"
+        },
+        {
+          "kind": "paragraph",
+          "text": "There is no compatibility alias for the old `customerList` boundary. The correct runtime name is `shoppingList`, the correct permission is `commerce.shoppingList.own`, and the correct module owner is Base Commerce."
+        },
+        {
+          "kind": "paragraph",
+          "text": "Existing runtime identity records should be reconciled by the Profile identity governance migration APIs so persisted customer groups receive `commerce.shoppingList.own` through an audited change set."
+        },
+        {
+          "kind": "heading",
+          "level": 2,
+          "text": "Verification",
+          "anchor": "commerceShoppingListCommerceBoundary-9-verification"
+        },
+        {
+          "kind": "paragraph",
+          "text": "Production readiness requires these checks:"
+        },
+        {
+          "kind": "unordered-list",
+          "items": [
+            "Base Commerce loads `shoppingList` before Checkout and order journeys.",
+            "The old `checkout/modules/customerList` module is absent.",
+            "Customer tokens include `commerce.shoppingList.own`.",
+            "Wishlist, compare, and save-for-later add/read/remove calls are owner-scoped.",
+            "Agora product cards and quick panels call `/nodics/shoppingList/v0`.",
+            "Non-owned list entries cannot be read or mutated.",
+            "`npm run test:commerce`, `npm run validate:root`, Agora frontend verify, and live Agora commerce acceptance pass."
+          ]
         }
       ],
-      "searchText": "Customer List and Profile Commerce Boundary Why customer lists belong to Commerce while person, address, authentication, permission, and organization identity stay under Profile. # Customer List and Profile Commerce Boundary\n\nCustomer List is a Commerce capability for grouping customers in commercial\ncontexts such as eligibility, promotions, account buying, or targeted\noperations. Profile remains the authority for person, address, authentication,\npermission, and organization identity. For beginners, Profile answers \"who is\nthis customer?\" and Customer List answers \"which commercial group is this\ncustomer part of for this commerce operation?\"\n\n## Source map\n\n| Area | Source location |\n| --- | --- |\n| Customer List module | `../nodics.commerce/modules/checkout/modules/customerList/package.json` |\n| Checkout module | `../nodics.commerce/modules/checkout/package.json` |\n| Profile module | `../nodics.platform/modules/profile/package.json` |\n| Security docs | `docs/pages/nodics.platform/security-identity-access.md` |\n| Commerce operations | `docs/pages/nodics.commerce/cart-order.md` |\n\n## Ownership model\n\n```mermaid\nflowchart LR\n  Profile[\"Profile identity\"] --> CustomerList[\"Commerce customer list\"]\n  CustomerList --> Promotion[\"Promotion eligibility\"]\n  CustomerList --> Checkout[\"Checkout decision\"]\n  Profile --> Auth[\"Authentication and permissions\"]\n```\n\nThe business problem is targeted commerce without identity duplication.\nBusiness users need groups like VIP customers, wholesale buyers, or launch\naudiences. Developers need a boundary that prevents Commerce from becoming a\nparallel identity system. Operators need to trace eligibility decisions in\nproduction without exposing personal data unnecessarily.\n\n## Contract\n\nCustomer List records should reference stable profile or organization codes,\nlist codes, lifecycle state, source reason, and validity dates where needed.\nThey should not copy passwords, credentials, full identity payloads, or\npermission ownership.\n\n```js\nmodule.exports = {\n  vipCustomerMembership: {\n    code: 'vipCustomerMembership',\n    listCode: 'vipCustomers',\n    customerCode: 'customer001',\n    active: true\n  }\n};\n```\n\n## Customization and extension guidance\n\nDevelopers can add eligibility services, import mappers, segmentation rules,\npromotion integrations, and audit views. Business users should manage lists\nthrough Axis when available. AI tools should inspect Profile and Commerce\nschemas before adding references. Operators should verify that commercial\ngrouping works without broad identity export.\n\n## Implementation handoff\n\nEach customer-list customization should name the Profile reference key,\nCommerce list schema, eligibility service, promotion or checkout consumer,\npermission rule, retention rule, and audit evidence. Business users then\nunderstand the journey, developers preserve the identity boundary, operators\ncan investigate production eligibility, and QA owners can prove that removing\na customer from a list changes commerce behavior without corrupting Profile.\n\n## Evidence checklist\n\nMembership evidence should include list code, referenced customer or\norganization code, source reason, actor, validity window, lifecycle state, and\nlast eligibility decision. Do not expose more Profile detail than the business\njourney requires. Operators should be able to prove why a customer received or\ndid not receive a commercial treatment, while developers keep identity,\nauthentication, address, and permission fields under Profile authority.\n\nThis evidence also protects production support from over-collecting identity\ndata. The support answer should be about eligibility and commerce treatment,\nnot a full customer profile export.\n\nProduction support should also prove expiry and removal. When a customer loses\nmembership, the next checkout or promotion decision must respect that change\nwithout deleting the underlying Profile record.\n\n## Common mistakes\n\n- Copying Profile authority into Commerce records.\n- Using email address as the only customer list key.\n- Applying promotions without list lifecycle checks.\n- Exposing list membership without permission checks.\n- Forgetting removal, expiry, and audit behavior.\n\n## Verification\n\nImport profile and customer list data into a fresh schema. Validate list\nmembership, checkout eligibility, promotion behavior, removal behavior, and\npermission-filtered Axis visibility. Production readiness requires business\napproval, developer boundary tests, operator audit evidence, and QA proof that\nProfile remains the identity authority.\n",
+      "searchText": "Shopping List Commerce Boundary Why wishlist, compare, and save-for-later belong to Commerce while Profile remains the identity authority. # Shopping List Commerce Boundary\n\nShopping List is a Commerce capability for customer shopping-intent lists such\nas wishlist, compare, and save-for-later. It belongs under Base Commerce\nbecause these lists are used across discovery, product cards, cart, checkout,\nand later channel journeys. Profile remains the authority for person,\nauthentication, permissions, addresses, and organization identity.\n\nFor beginners, Profile answers \"who is this actor?\" Shopping List answers\n\"which products has this authenticated shopper intentionally saved for a\ncommerce journey?\"\n\n## Source map\n\n| Area | Source location |\n| --- | --- |\n| Shopping List module | `../nodics.commerce/modules/baseCommerce/modules/shoppingList/package.json` |\n| Shopping List schemas | `../nodics.commerce/modules/baseCommerce/modules/shoppingList/src/schemas/schemas.js` |\n| Shopping List routes | `../nodics.commerce/modules/baseCommerce/modules/shoppingList/src/router/routers.js` |\n| Shopping List service | `../nodics.commerce/modules/baseCommerce/modules/shoppingList/src/service/defaultShoppingListOperationService.js` |\n| Commerce composition | `../nodics.commerce/modules/baseCommerce/package.json` |\n| Profile security groups | `../nodics.platform/modules/profile/data/init-v001/records/groups/defaultBootstrapUserGroupsData.js` |\n| Agora storefront client | `../../nodics.exp/nodics.agora.apparel/src/api/commerceClient.ts` |\n\n## Ownership model\n\n```mermaid\nflowchart LR\n  Profile[\"Profile identity and auth\"] --> Token[\"Authenticated customer token\"]\n  Token --> ShoppingList[\"Commerce Shopping List\"]\n  ShoppingList --> Wishlist[\"Wishlist\"]\n  ShoppingList --> Compare[\"Compare\"]\n  ShoppingList --> SaveForLater[\"Save for later\"]\n  ShoppingList --> Cart[\"Cart and checkout journey\"]\n  ShoppingList --> Storefront[\"Agora product cards and quick actions\"]\n```\n\nThe business purpose is simple: a shopper can express purchase intent before\ncheckout without turning Profile into a commerce data store. Wishlist, compare,\nand save-for-later are not profile preferences; they are commerce actions over\nproducts, variants, stores, prices, availability, and storefront context.\n\n## Contract\n\nShopping List records must be owned by Commerce and scoped to the authenticated\ncustomer. They may reference customer identity by stable owner code from the\nauth context, but they must not copy credentials, addresses, permission state,\nor full Profile payloads.\n\nSupported list types are:\n\n- `WISHLIST`\n- `COMPARE`\n- `SAVE_FOR_LATER`\n\nThe customer API route family is:\n\n```text\nGET    /nodics/shoppingList/v0/lists/:listType\nPOST   /nodics/shoppingList/v0/lists/:listType/entries\nDELETE /nodics/shoppingList/v0/lists/:listType/entries/:entryCode\n```\n\nAll customer operations require `commerce.shoppingList.own` and must derive the\nowner from the authenticated customer token, not from browser-supplied owner\nfields.\n\n```js\nmodule.exports = {\n  savedTopForLater: {\n    code: 'shoppingList_customer001_SAVE_FOR_LATER_agoraRibbedTankTop',\n    ownerId: 'customer001',\n    listType: 'SAVE_FOR_LATER',\n    productCode: 'agoraRibbedTankTop',\n    variantCode: 'agoraRibbedTankTopIvoryS',\n    storeCode: 'agoraMainStore',\n    locale: 'en',\n    active: true\n  }\n};\n```\n\n## Business configuration guidance\n\nBusiness users should think of Shopping List as reusable commerce behavior that\nstorefront components can expose in different ways:\n\n- Product cards can offer wishlist and compare quick actions.\n- Quick-view or quick-add panels can add wishlist, compare, and save-for-later.\n- Cart can offer save-for-later instead of removing an item permanently.\n- Account pages can show saved products without owning the commerce schema.\n\nConfiguration should control limits and supported list types at the commerce\nmodule level. Project modules may customize text, placement, and UI behavior,\nbut they should not redefine the underlying owner or route contract.\n\n## Developer extension guidance\n\nDevelopers may extend Shopping List with recommendation signals, expiration\nrules, merchandising analytics, stock alerts, or business-specific list types\nonly when the list remains a product-intent list. If a feature groups people for\neligibility, segmentation, loyalty, or account buying, it should not be added to\nShopping List without a separate commerce capability decision.\n\nSafe extension points include:\n\n- list type policy,\n- maximum item limits,\n- duplicate/idempotency rules,\n- product and variant validation,\n- customer-safe projection fields,\n- Axis visibility for business support,\n- storefront component integration.\n\n## Extending product-keeping journeys\n\nThe easiest and safest way to extend Shopping List is to add a new commerce\nlist type when the business need is \"keep these products for a later product\njourney.\" The module already owns the common mechanics: authenticated owner,\nproduct reference, variant reference, store context, locale, idempotent add,\nbounded list size, read, and remove.\n\nGood examples are:\n\n| Use case | Suggested list type | Why it fits Shopping List |\n| --- | --- | --- |\n| Save an item from cart for later | `SAVE_FOR_LATER` | The shopper is keeping a product instead of buying now. |\n| Build a comparison set | `COMPARE` | The shopper is keeping a short product set for decision support. |\n| Wishlist future purchases | `WISHLIST` | The shopper is keeping products for later discovery or purchase. |\n| Keep outfit ideas | `OUTFIT_IDEA` | The shopper is grouping product references for a shopping intent. |\n| Keep replenishment candidates | `REPLENISHMENT` | The shopper is remembering products they may buy again. |\n| Keep gift ideas | `GIFT_IDEA` | The shopper is saving product references for a future occasion. |\n\nTo add a new product-keeping journey:\n\n1. Add the list type to the Shopping List policy, for example\n   `OUTFIT_IDEA`.\n2. Define a clear item limit for that type. Small decision lists such as compare\n   should stay low; open-ended saved lists can be higher.\n3. Reuse the existing customer API route family by passing the new `listType`.\n4. Store only `productCode`, optional `variantCode`, `storeCode`, `locale`, and\n   lightweight intent metadata such as note, source component, or occasion.\n5. Render the journey in the project storefront or Axis using business-managed\n   component text, placement, labels, and icons.\n6. Add contract tests for ownership, idempotency, limit enforcement, and\n   unsupported type rejection.\n\n```js\n// Example project-level policy extension\nshoppingList: {\n  supportedListTypes: [\n    'WISHLIST',\n    'COMPARE',\n    'SAVE_FOR_LATER',\n    'OUTFIT_IDEA',\n    'GIFT_IDEA'\n  ],\n  maximumWishlistItems: 100,\n  maximumCompareItems: 4,\n  maximumSaveForLaterItems: 100,\n  maximumOutfitIdeaItems: 40,\n  maximumGiftIdeaItems: 60\n}\n```\n\nDo not create a separate module for every saved-product journey unless the\njourney has a different owner or materially different lifecycle. If it is still\nan authenticated shopper keeping product references, extend Shopping List.\n\nUnsafe extensions include:\n\n- copying Profile credentials or address payloads,\n- accepting owner identity from browser payloads,\n- placing Shopping List under Checkout only,\n- keeping old `customerList` route or permission aliases,\n- using wishlist as a generic customer segmentation feature.\n\n## Common mistakes\n\n- Treating wishlist, compare, or save-for-later as Profile data.\n- Keeping compatibility aliases for `/nodics/customerList/v0`.\n- Checking list ownership from request payload instead of authenticated token.\n- Placing Shopping List under Checkout even though product cards and PDP need it\n  before cart or checkout starts.\n- Forgetting to migrate persisted customer groups to `commerce.shoppingList.own`.\n- Adding new list types without clear commerce ownership, limits, and\n  idempotency behavior.\n\n## Migration principle\n\nThere is no compatibility alias for the old `customerList` boundary. The correct\nruntime name is `shoppingList`, the correct permission is\n`commerce.shoppingList.own`, and the correct module owner is Base Commerce.\n\nExisting runtime identity records should be reconciled by the Profile identity\ngovernance migration APIs so persisted customer groups receive\n`commerce.shoppingList.own` through an audited change set.\n\n## Verification\n\nProduction readiness requires these checks:\n\n- Base Commerce loads `shoppingList` before Checkout and order journeys.\n- The old `checkout/modules/customerList` module is absent.\n- Customer tokens include `commerce.shoppingList.own`.\n- Wishlist, compare, and save-for-later add/read/remove calls are owner-scoped.\n- Agora product cards and quick panels call `/nodics/shoppingList/v0`.\n- Non-owned list entries cannot be read or mutated.\n- `npm run test:commerce`, `npm run validate:root`, Agora frontend verify, and\n  live Agora commerce acceptance pass.\n",
       "previous": {
-        "title": "Payment Core and Provider Boundaries",
-        "route": "/docs/framework/commerce-payment-provider-boundaries"
+        "title": "Loyalty Wallets, Rewards, and Ledger",
+        "route": "/docs/framework/loyalty-wallets-rewards-ledger"
       },
       "next": {
         "title": "NMS Runtime Monitoring",
@@ -49438,17 +50365,17 @@ module.exports = {
       "source": {
         "repository": "nodics.docs",
         "functionalModule": "nodics.commerce",
-        "technicalModule": "customerList",
+        "technicalModule": "shoppingList",
         "owner": "nodics.commerce",
-        "sourcePath": "docs/pages/nodics.commerce/customer-list-profile-boundary.md",
-        "path": "docs/pages/nodics.commerce/customer-list-profile-boundary.md",
-        "wordCount": 537,
-        "checksum": "c8a054a000f579059fbf0774a967d4aa1386844f61a89195fd210c2918dcbdfd"
+        "sourcePath": "docs/pages/nodics.commerce/shopping-list-commerce-boundary.md",
+        "path": "docs/pages/nodics.commerce/shopping-list-commerce-boundary.md",
+        "wordCount": 1093,
+        "checksum": "2adf3d91cabe9afdeb6856fbf9250519cbf98dd659e1263f4861404e4d5ee3b8"
       }
     },
     "active": true
   },
-  "record108": {
+  "record109": {
     "code": "nodicsDocsComponentfoundationNmsRuntimeMonitoring",
     "typeCode": "nodicsDocumentationArticleComponentType",
     "renderer": "documentation.component.article",
@@ -49720,8 +50647,8 @@ module.exports = {
       ],
       "searchText": "NMS Runtime Monitoring How NMS captures node health, runtime roles, responsibility, capability state, degraded conditions, and operator recovery evidence. # NMS Runtime Monitoring\n\nNMS runtime monitoring gives Nodics a source-backed view of nodes, runtime\nstate, health checks, topology, and recovery evidence. Axis may display this\ninformation, but the monitoring capability owns the data collection and\nstatus contract. For beginners, NMS answers three questions: which nodes are\nrunning, what are they responsible for, and what needs operator attention.\n\n## Source map\n\n| Area | Source location |\n| --- | --- |\n| NMS module | `../nodics.foundation/modules/nNms/package.json` |\n| Runtime configuration | `docs/pages/nodics.foundation/runtime-configuration.md` |\n| DevOps runtime | `docs/pages/framework/devops-runtime.md` |\n| Local verification | `docs/pages/framework/local-verification-checklist.md` |\n| Process runtime evidence | `docs/pages/nodics.process/runtime-lifecycle.md` |\n\n## Monitoring model\n\n```mermaid\nflowchart TD\n  Node[\"Runtime node\"] --> Heartbeat[\"Heartbeat\"]\n  Node --> Capability[\"Capability status\"]\n  Node --> Responsibility[\"Execution responsibility\"]\n  Heartbeat --> Nms[\"NMS status\"]\n  Capability --> Nms\n  Responsibility --> Nms\n  Nms --> Axis[\"Axis operations view\"]\n```\n\nThe business problem is operational trust. A business administrator does not\nneed raw process logs, but they need to know whether setup, imports,\npublishing, scheduled jobs, and storefront delivery are healthy. Developers\nneed a contract for contributing health checks. Operators need correlation\nids, node ids, runtime roles, last heartbeat, dependency state, and recovery\nactions for production incidents.\n\n## Health contract\n\n| Signal | Meaning | Consumer |\n| --- | --- | --- |\n| Node identity | Which runtime is reporting. | Operator and registry. |\n| Runtime role | Commerce, CMS Staged, CMS Online, Process, or other role. | Axis and support. |\n| Heartbeat | Last known liveness. | Monitoring dashboard. |\n| Capability health | Whether module checks pass. | Business setup pages. |\n| Responsibility | Which node owns scheduled work. | Process operations. |\n| Recovery hint | Suggested safe action. | Operator runbook. |\n\n## Customization and extension guidance\n\nDevelopers can add health contributors for new modules, dependency checks,\nqueue checks, provider checks, and publication target checks. Health checks\nshould be bounded and safe to call repeatedly. Business users should see\nsimple statuses such as online, degraded, blocked, or needs attention.\nOperators should have detail panels for technical evidence.\n\n## Implementation handoff\n\nA monitoring contribution should declare what it checks, how often it can be\ncalled, which runtime role owns it, what status values mean, and what recovery\naction is safe. The handoff should also identify the business journey affected\nby the signal. A failed CMS Online check, for example, affects public content\ndelivery differently from a failed Process node that only affects scheduled\nautomation.\n\nProduction readiness should include both healthy and degraded snapshots. A\nnode that is alive but missing a required dependency should not be shown as\nfully online. A node that lost scheduled-job responsibility should surface the\nhandoff state so operators know whether another node has accepted the work.\nMetrics should include enough history to distinguish a startup delay from a\nreal outage.\n\n## Common mistakes\n\n- Treating a running process as proof that every capability is healthy.\n- Showing raw dependency exceptions to business users.\n- Adding expensive health checks that harm production traffic.\n- Hiding node responsibility for scheduled jobs.\n- Failing to carry correlation ids through setup or publication errors.\n\n## Verification\n\nStart a fresh local topology, inspect NMS status for each runtime, stop or\nbreak one dependency, and confirm Axis shows a safe degraded state with\noperator evidence. Run module health tests and browser checks for setup pages\nthat consume monitoring state before production release.\n",
       "previous": {
-        "title": "Customer List and Profile Commerce Boundary",
-        "route": "/docs/framework/commerce-customer-list-profile-boundary"
+        "title": "Shopping List Commerce Boundary",
+        "route": "/docs/framework/commerce-shopping-list-commerce-boundary"
       },
       "next": {
         "title": "Service Runtime and Override Precedence",
@@ -49740,7 +50667,7 @@ module.exports = {
     },
     "active": true
   },
-  "record109": {
+  "record110": {
     "code": "nodicsDocsComponentfoundationServiceRuntimeOverrides",
     "typeCode": "nodicsDocumentationArticleComponentType",
     "renderer": "documentation.component.article",
@@ -50073,7 +51000,7 @@ module.exports = {
     },
     "active": true
   },
-  "record110": {
+  "record111": {
     "code": "nodicsDocsComponentfoundationModuleToModuleCommunication",
     "typeCode": "nodicsDocumentationArticleComponentType",
     "renderer": "documentation.component.article",
@@ -50657,7 +51584,7 @@ module.exports = {
     },
     "active": true
   },
-  "record111": {
+  "record112": {
     "code": "nodicsDocsComponentfoundationCacheProviderRunbooks",
     "typeCode": "nodicsDocumentationArticleComponentType",
     "renderer": "documentation.component.article",
@@ -50952,7 +51879,7 @@ module.exports = {
     },
     "active": true
   },
-  "record112": {
+  "record113": {
     "code": "nodicsDocsComponentfoundationDatabaseProviderBoundaries",
     "typeCode": "nodicsDocumentationArticleComponentType",
     "renderer": "documentation.component.article",
@@ -51263,7 +52190,7 @@ module.exports = {
     },
     "active": true
   },
-  "record113": {
+  "record114": {
     "code": "nodicsDocsComponentsecurityOtpSecurityFlow",
     "typeCode": "nodicsDocumentationArticleComponentType",
     "renderer": "documentation.component.article",
@@ -51573,7 +52500,7 @@ module.exports = {
     },
     "active": true
   },
-  "record114": {
+  "record115": {
     "code": "nodicsDocsComponentcommunicationProviderRunbooks",
     "typeCode": "nodicsDocumentationArticleComponentType",
     "renderer": "documentation.component.article",
@@ -51857,7 +52784,7 @@ module.exports = {
     },
     "active": true
   },
-  "record115": {
+  "record116": {
     "code": "nodicsDocsComponentengagementContactSubmissionOperations",
     "typeCode": "nodicsDocumentationArticleComponentType",
     "renderer": "documentation.component.article",
@@ -52139,7 +53066,7 @@ module.exports = {
     },
     "active": true
   },
-  "record116": {
+  "record117": {
     "code": "nodicsDocsComponentprocessWorkflowBpmSourceMap",
     "typeCode": "nodicsDocumentationArticleComponentType",
     "renderer": "documentation.component.article",
@@ -52421,7 +53348,7 @@ module.exports = {
     },
     "active": true
   },
-  "record117": {
+  "record118": {
     "code": "nodicsDocsComponentprocessCronjobDataAuthoring",
     "typeCode": "nodicsDocumentationArticleComponentType",
     "renderer": "documentation.component.article",
@@ -52705,7 +53632,7 @@ module.exports = {
     },
     "active": true
   },
-  "record118": {
+  "record119": {
     "code": "nodicsDocsComponentframeworkReleaseUpgradeCompatibility",
     "typeCode": "nodicsDocumentationArticleComponentType",
     "renderer": "documentation.component.article",
@@ -53025,7 +53952,7 @@ module.exports = {
     },
     "active": true
   },
-  "record119": {
+  "record120": {
     "code": "nodicsDocsComponentcommerceFulfillmentCoreSourceMap",
     "typeCode": "nodicsDocumentationArticleComponentType",
     "renderer": "documentation.component.article",
@@ -53309,7 +54236,7 @@ module.exports = {
     },
     "active": true
   },
-  "record120": {
+  "record121": {
     "code": "nodicsDocsComponentacceleratorsDomainCommerceSourceMap",
     "typeCode": "nodicsDocumentationArticleComponentType",
     "renderer": "documentation.component.article",
@@ -53594,7 +54521,7 @@ module.exports = {
     },
     "active": true
   },
-  "record121": {
+  "record122": {
     "code": "nodicsDocsComponentfoundationToolingRuntimeContracts",
     "typeCode": "nodicsDocumentationArticleComponentType",
     "renderer": "documentation.component.article",
@@ -53874,7 +54801,7 @@ module.exports = {
     },
     "active": true
   },
-  "record122": {
+  "record123": {
     "code": "nodicsDocsComponentfoundationEmsRuntimeClientRunbook",
     "typeCode": "nodicsDocumentationArticleComponentType",
     "renderer": "documentation.component.article",
@@ -54154,7 +55081,7 @@ module.exports = {
     },
     "active": true
   },
-  "record123": {
+  "record124": {
     "code": "nodicsDocsComponentreferenceInternalSourceBoundaryRegister",
     "typeCode": "nodicsDocumentationArticleComponentType",
     "renderer": "documentation.component.article",
@@ -54516,7 +55443,7 @@ module.exports = {
     },
     "active": true
   },
-  "record124": {
+  "record125": {
     "code": "nodicsDocsComponenttoolingAiDeveloperEnablement",
     "typeCode": "nodicsDocumentationArticleComponentType",
     "renderer": "documentation.component.article",
@@ -54905,7 +55832,7 @@ module.exports = {
     },
     "active": true
   },
-  "record125": {
+  "record126": {
     "code": "nodicsDocsComponentreferenceSourceMapGlossary",
     "typeCode": "nodicsDocumentationArticleComponentType",
     "renderer": "documentation.component.article",
@@ -55626,7 +56553,7 @@ module.exports = {
     },
     "active": true
   },
-  "record126": {
+  "record127": {
     "code": "nodicsDocsComponentreferenceSourceBackedDocumentationCoverageAudit",
     "typeCode": "nodicsDocumentationArticleComponentType",
     "renderer": "documentation.component.article",
@@ -56397,7 +57324,7 @@ module.exports = {
     },
     "active": true
   },
-  "record127": {
+  "record128": {
     "code": "nodicsDocsComponentreferenceDocumentationGapBacklog",
     "typeCode": "nodicsDocumentationArticleComponentType",
     "renderer": "documentation.component.article",
@@ -56687,9 +57614,9 @@ module.exports = {
             ],
             [
               "Closed by P1 docs batch",
-              "Customer List and Profile-Commerce boundary",
-              "`nodics.commerce/modules/checkout/modules/customerList`, `nodics.platform/modules/profile`",
-              "Covered by `commerce.customer-list-profile-boundary` with why customer list exists in Commerce and what Profile continues to own."
+              "Shopping List Commerce boundary",
+              "`nodics.commerce/modules/baseCommerce/modules/shoppingList`, `nodics.platform/modules/profile`",
+              "Covered by `commerce.shopping-list-commerce-boundary` with why shopping-intent lists belong to Base Commerce and what Profile continues to own."
             ],
             [
               "Closed by P1 docs batch",
@@ -56858,7 +57785,7 @@ module.exports = {
           "text": "The backlog is healthy when the generated report, this page, catalogue metadata, generated WCMS records, and runtime evidence agree. Business users should see clear journeys, developers should see exact source paths and extension points, operators should see evidence and recovery steps, QA owners should see validation commands, and AI tools should see boundaries that prevent unsafe source or data changes."
         }
       ],
-      "searchText": "Documentation Gap Backlog Classified backlog for closing source-backed documentation gaps across runtime capabilities, data releases, media, applications, operations, and validation. # Documentation Gap Backlog\n\nThis backlog turns the source-backed coverage audit into executable\ndocumentation work. It captures the remaining categories that must be closed so\nNodics documentation explains not only what the product is, but how developers,\nbusiness users, operators, QA owners, and AI tools can safely work with the\nframework.\n\nFor beginners, the mental model is simple: the coverage report tells us where\nthe source is richer than the documentation, and this backlog tells us what to\ndo next. A source boundary may need a new page, a deeper section in an existing\npage, an explicit owner mapping, or an internal-only decision. The backlog is\nnot a marketing roadmap. It is a release-quality checklist for source-backed\ndocumentation.\n\n## Backlog flow\n\n```mermaid\nflowchart LR\n  Report[\"Generated coverage report\"] --> Classify[\"Classify each gap\"]\n  Classify --> Page[\"New page\"]\n  Classify --> Deepen[\"Deeper section\"]\n  Classify --> Map[\"Owner mapping\"]\n  Classify --> Internal[\"Internal-only decision\"]\n  Page --> Generate[\"Regenerate docs data\"]\n  Deepen --> Generate\n  Map --> Generate\n  Internal --> Generate\n  Generate --> Test[\"Docs tests and source evidence\"]\n  Test --> Publish[\"Staged approval and Online publication\"]\n```\n\n## Classification policy\n\n| Classification | Meaning | Required action |\n| --- | --- | --- |\n| `needs-page` | A user-visible or developer-extensible capability has no clear page. | Create authored Markdown, catalogue metadata, source evidence, generated records, and validation. |\n| `needs-deeper-section` | A page exists, but it lacks exact source map, data, service, operation, or validation detail. | Extend the existing page with how-to, how-it-works, customization, errors, and tests. |\n| `needs-page-or-owner-mapping` | The source is significant, but ownership may belong under a broader page. | Decide owner, then either create a page or add explicit mapping to the owning page. |\n| `internal-only-candidate` | The module is likely a utility or provider implementation. | Document the owner page that covers it, or mark it internal with justification. |\n| `covered` | Existing docs and source evidence are sufficient for the current maturity state. | Keep validation and browser evidence current when behavior changes. |\n\n## P0 closure items\n\n| Status | Item | Source areas | Documentation outcome |\n| --- | --- | --- | --- |\n| Closed by P0 docs batch | Nexus data and content guide | `nodics.kickoff/modules/nexus.web` | Covered by `applications.nexus-data-content-guide` with Nexus project content, media assets, headers, records, publication, Online delivery, and browser validation. |\n| Closed by P0 docs batch | Axis setup and user-safe error contracts | `nodics.platform/modules/backoffice`, `nodics.platform/modules/axis`, `nodics.exp/nodics.axis` | Covered by `applications.axis-setup-error-contracts` with setup states, blockers, retry behavior, required capability checks, technical evidence, and customer-safe messages. |\n| Closed by P0 docs batch | CMS exact source map | `nodics.wcms/modules/cms` | Covered by `wcms.cms-source-map-authoring-contract` with page, route, component, slot, template, renderer, publication manifest, migration, delivery cache, and documentation governance details. |\n| Closed by P0 docs batch | Media operations runbook | `nodics.wcms/modules/media`, `nodics.foundation/modules/nData/nImport/import/src/service/media` | Covered by `wcms.media-operations-runbook` with upload, import hydration, storage providers, cleanup, replication queue, delivery failures, and DR evidence. |\n| Closed by P0 docs batch | Import/export provider guides | `nodics.foundation/modules/nData/nImport`, `nodics.foundation/modules/nData/nExport` | Covered by `data.import-export-provider-guides` with JavaScript, JSON, CSV, Excel, generated exports, parsers, field allow-lists, masking, and rollback boundaries. |\n| Closed by P0 docs batch | Commerce authoring and fulfillment | `nodics.commerce/modules/baseCommerce`, `nodics.commerce/modules/fulfillment` | Covered by `commerce.data-authoring-fulfillment` with product, price, inventory, search projection, fulfillment execution, consignments, exceptions, return receipts, and browser proof. |\n| Closed by P0 docs batch | Documentation publishing runbook | `nodics.docs`, `nodics.wcms/modules/cms`, `nodics.process/modules/nPublish` | Covered by `docs.documentation-publishing-runbook` with Markdown source, generated content-pack data, Staged import, review, Online activation, rollback, and Axis/Nexus rendering. |\n\n## P1 closure items\n\n| Status | Item | Source areas | Documentation outcome |\n| --- | --- | --- | --- |\n| Closed by P1 docs batch | Module Registry journey | `nodics.platform/modules/backoffice`, registry-related Platform services | Covered by `platform.module-registry-journey` with registration, activation, dependency state, required capability checks, and Axis visibility. |\n| Closed by P1 docs batch | Commerce Search guide | `nodics.commerce/modules/baseCommerce/modules/commerceSearch` | Covered by `commerce.search-guide` with ranking rules, projections, publish flow, index ownership, storefront effect, and recovery. |\n| Closed by P1 docs batch | Localization depth | `nodics.localization/modules/localizationCore`, `nodics.localization/modules/localizationApi` | Covered by `localization.runtime-authoring` with locale records, fallback, content/product localization, import data, API boundaries, and browser proof. |\n| Closed by P1 docs batch | Payment Core and provider split | `nodics.commerce/modules/payment` | Covered by `commerce.payment-provider-boundaries` with payment decisions, method/provider separation, reconciliation, safe customer payload, and provider extension. |\n| Closed by P1 docs batch | Customer List and Profile-Commerce boundary | `nodics.commerce/modules/checkout/modules/customerList`, `nodics.platform/modules/profile` | Covered by `commerce.customer-list-profile-boundary` with why customer list exists in Commerce and what Profile continues to own. |\n| Closed by P1 docs batch | NMS runtime monitoring | `nodics.foundation/modules/nNms` | Covered by `foundation.nms-runtime-monitoring` with node monitoring, topology, health, operational evidence, and recovery actions. |\n| Closed by P1 docs batch | Service runtime and overrides | `nodics.foundation/modules/nService`, `nodics.foundation/modules/nService/vService` | Covered by `foundation.service-runtime-overrides` with service discovery, virtual services, generated services, override precedence, and extension safety. |\n| Closed by P1 docs batch | Cache provider runbooks | `nodics.foundation/modules/nCache`, Redis, Hazelcast, Node cache | Covered by `foundation.cache-provider-runbooks` with provider boundaries, cache key strategy, invalidation, failure behavior, and production configuration. |\n| Closed by P1 docs batch | Database provider boundaries | `nodics.foundation/modules/nDatabase` | Covered by `foundation.database-provider-boundaries` with MongoDB, virtual DB, Cassandra, Elasticsearch, provider contracts, configuration, and validation. |\n| Closed by P1 docs batch | OTP and security flow | `nodics.foundation/modules/nOtp` | Covered by `security.otp-security-flow` with OTP generation, verification, expiry, retry, throttling, audit, and security controls. |\n| Closed by P1 docs batch | Communication providers | `nodics.communication/modules/smtpCommsProvider`, `nodics.communication/modules/smsCommsProvider` | Covered by `communication.provider-runbooks` with SMTP/SMS provider behavior, templates, retries, failed delivery evidence, and extension rules. |\n| Closed by P1 docs batch | Engagement and contact submission | `nodics.engagement/modules/contactSubmission` | Covered by `engagement.contact-submission-operations` with contact forms, moderation, workflow, notification, audit, and recovery. |\n| Closed by P1 docs batch | Workflow and BPM source map | `nodics.foundation/modules/nbpm`, `nodics.process` | Covered by `process.workflow-bpm-source-map` with workflow definitions, transitions, tasks, callbacks, history, and operator visibility. |\n| Closed by P1 docs batch | Cron job data authoring | `nodics.process/modules/cronjob` | Covered by `process.cronjob-data-authoring` with job records, schedules, execution policy, retry, idempotency, and Process server ownership. |\n| Closed by P1 docs batch | Release and upgrade compatibility | `nodics.foundation/modules/nSetup`, all module data folders | Covered by `framework.release-upgrade-compatibility` with version freeze, upgrade path, rollback, checksum drift, generated manifests, and extension compatibility. |\n\n## P2 closure items\n\n| Status | Item | Source areas | Documentation outcome |\n| --- | --- | --- | --- |\n| Closed by P2 docs batch | Fulfillment Core owner mapping | `nodics.commerce/modules/fulfillment/modules/fulfillmentCore` | Covered by `commerce.fulfillment-core-source-map`, plus explicit source evidence on fulfillment and data-authoring pages. |\n| Closed by P2 docs batch | Domain Commerce accelerator owner mapping | `domainCommerceCore`, electronics product, telco catalog, telco subscription | Covered by `accelerators.domain-commerce-source-map` with accelerator ownership, Commerce boundary, sample data, and validation. |\n| Closed by P2 docs batch | Tooling runtime depth | `nodics.foundation/modules/nTooling` | Covered by `foundation.tooling-runtime-contracts` with command, manifest, application-builder, AI-context, and quality-gate contracts. |\n| Closed by P2 docs batch | EMS runtime and client depth | `nodics.foundation/modules/nEms`, `emsClient`, broker providers | Covered by `foundation.ems-runtime-client-runbook` with broker runtime, client, tenant, retry, and operator evidence. |\n| Closed by P2 docs batch | Internal-only register | Discovery internals, payment methods/providers, NMS runtime, Kickoff environment/runtime packages | Covered by `reference.internal-source-boundary-register` with owner mappings and promotion rules. |\n\n## Closure workflow\n\n1. Start from the generated source coverage report.\n2. Pick the highest-priority open item.\n3. Inspect source files, schemas, services, routers, data, assets, tests, and\n   frontend consumers.\n4. Decide whether the work is a new page, deeper section, owner mapping, or\n   internal-only classification.\n5. Update authored Markdown and catalogue metadata.\n6. Regenerate documentation data and source coverage reports.\n7. Run docs tests and any owning module tests needed for the behavior.\n8. For runtime-visible changes, import into Staged, publish Online, and verify\n   Axis, Nexus, or Agora from the browser.\n9. Commit the smallest coherent documentation batch.\n\n## Common mistakes\n\n- Treating this backlog as optional once a high-level overview exists.\n- Closing a source gap without reading the current source files and tests.\n- Creating public documentation for a module that should be an internal utility\n  without explaining the broader owner.\n- Forgetting business users when writing deep developer detail.\n- Forgetting developers when writing a business-friendly page.\n- Forgetting operators and QA owners when documenting publishable or\n  production-visible behavior.\n- Showing external references as source design instead of industry-standard\n  expectation checks.\n\n## Verification\n\nRun the documentation gates after each closure batch:\n\n```bash\nnpm --prefix nodics.docs run audit:source-coverage\nnpm --prefix nodics.docs run docs:generate\nnpm --prefix nodics.docs test\ngit -C nodics.ai diff --check\n```\n\nThe backlog is healthy when the generated report, this page, catalogue\nmetadata, generated WCMS records, and runtime evidence agree. Business users\nshould see clear journeys, developers should see exact source paths and\nextension points, operators should see evidence and recovery steps, QA owners\nshould see validation commands, and AI tools should see boundaries that prevent\nunsafe source or data changes.\n",
+      "searchText": "Documentation Gap Backlog Classified backlog for closing source-backed documentation gaps across runtime capabilities, data releases, media, applications, operations, and validation. # Documentation Gap Backlog\n\nThis backlog turns the source-backed coverage audit into executable\ndocumentation work. It captures the remaining categories that must be closed so\nNodics documentation explains not only what the product is, but how developers,\nbusiness users, operators, QA owners, and AI tools can safely work with the\nframework.\n\nFor beginners, the mental model is simple: the coverage report tells us where\nthe source is richer than the documentation, and this backlog tells us what to\ndo next. A source boundary may need a new page, a deeper section in an existing\npage, an explicit owner mapping, or an internal-only decision. The backlog is\nnot a marketing roadmap. It is a release-quality checklist for source-backed\ndocumentation.\n\n## Backlog flow\n\n```mermaid\nflowchart LR\n  Report[\"Generated coverage report\"] --> Classify[\"Classify each gap\"]\n  Classify --> Page[\"New page\"]\n  Classify --> Deepen[\"Deeper section\"]\n  Classify --> Map[\"Owner mapping\"]\n  Classify --> Internal[\"Internal-only decision\"]\n  Page --> Generate[\"Regenerate docs data\"]\n  Deepen --> Generate\n  Map --> Generate\n  Internal --> Generate\n  Generate --> Test[\"Docs tests and source evidence\"]\n  Test --> Publish[\"Staged approval and Online publication\"]\n```\n\n## Classification policy\n\n| Classification | Meaning | Required action |\n| --- | --- | --- |\n| `needs-page` | A user-visible or developer-extensible capability has no clear page. | Create authored Markdown, catalogue metadata, source evidence, generated records, and validation. |\n| `needs-deeper-section` | A page exists, but it lacks exact source map, data, service, operation, or validation detail. | Extend the existing page with how-to, how-it-works, customization, errors, and tests. |\n| `needs-page-or-owner-mapping` | The source is significant, but ownership may belong under a broader page. | Decide owner, then either create a page or add explicit mapping to the owning page. |\n| `internal-only-candidate` | The module is likely a utility or provider implementation. | Document the owner page that covers it, or mark it internal with justification. |\n| `covered` | Existing docs and source evidence are sufficient for the current maturity state. | Keep validation and browser evidence current when behavior changes. |\n\n## P0 closure items\n\n| Status | Item | Source areas | Documentation outcome |\n| --- | --- | --- | --- |\n| Closed by P0 docs batch | Nexus data and content guide | `nodics.kickoff/modules/nexus.web` | Covered by `applications.nexus-data-content-guide` with Nexus project content, media assets, headers, records, publication, Online delivery, and browser validation. |\n| Closed by P0 docs batch | Axis setup and user-safe error contracts | `nodics.platform/modules/backoffice`, `nodics.platform/modules/axis`, `nodics.exp/nodics.axis` | Covered by `applications.axis-setup-error-contracts` with setup states, blockers, retry behavior, required capability checks, technical evidence, and customer-safe messages. |\n| Closed by P0 docs batch | CMS exact source map | `nodics.wcms/modules/cms` | Covered by `wcms.cms-source-map-authoring-contract` with page, route, component, slot, template, renderer, publication manifest, migration, delivery cache, and documentation governance details. |\n| Closed by P0 docs batch | Media operations runbook | `nodics.wcms/modules/media`, `nodics.foundation/modules/nData/nImport/import/src/service/media` | Covered by `wcms.media-operations-runbook` with upload, import hydration, storage providers, cleanup, replication queue, delivery failures, and DR evidence. |\n| Closed by P0 docs batch | Import/export provider guides | `nodics.foundation/modules/nData/nImport`, `nodics.foundation/modules/nData/nExport` | Covered by `data.import-export-provider-guides` with JavaScript, JSON, CSV, Excel, generated exports, parsers, field allow-lists, masking, and rollback boundaries. |\n| Closed by P0 docs batch | Commerce authoring and fulfillment | `nodics.commerce/modules/baseCommerce`, `nodics.commerce/modules/fulfillment` | Covered by `commerce.data-authoring-fulfillment` with product, price, inventory, search projection, fulfillment execution, consignments, exceptions, return receipts, and browser proof. |\n| Closed by P0 docs batch | Documentation publishing runbook | `nodics.docs`, `nodics.wcms/modules/cms`, `nodics.process/modules/nPublish` | Covered by `docs.documentation-publishing-runbook` with Markdown source, generated content-pack data, Staged import, review, Online activation, rollback, and Axis/Nexus rendering. |\n\n## P1 closure items\n\n| Status | Item | Source areas | Documentation outcome |\n| --- | --- | --- | --- |\n| Closed by P1 docs batch | Module Registry journey | `nodics.platform/modules/backoffice`, registry-related Platform services | Covered by `platform.module-registry-journey` with registration, activation, dependency state, required capability checks, and Axis visibility. |\n| Closed by P1 docs batch | Commerce Search guide | `nodics.commerce/modules/baseCommerce/modules/commerceSearch` | Covered by `commerce.search-guide` with ranking rules, projections, publish flow, index ownership, storefront effect, and recovery. |\n| Closed by P1 docs batch | Localization depth | `nodics.localization/modules/localizationCore`, `nodics.localization/modules/localizationApi` | Covered by `localization.runtime-authoring` with locale records, fallback, content/product localization, import data, API boundaries, and browser proof. |\n| Closed by P1 docs batch | Payment Core and provider split | `nodics.commerce/modules/payment` | Covered by `commerce.payment-provider-boundaries` with payment decisions, method/provider separation, reconciliation, safe customer payload, and provider extension. |\n| Closed by P1 docs batch | Shopping List Commerce boundary | `nodics.commerce/modules/baseCommerce/modules/shoppingList`, `nodics.platform/modules/profile` | Covered by `commerce.shopping-list-commerce-boundary` with why shopping-intent lists belong to Base Commerce and what Profile continues to own. |\n| Closed by P1 docs batch | NMS runtime monitoring | `nodics.foundation/modules/nNms` | Covered by `foundation.nms-runtime-monitoring` with node monitoring, topology, health, operational evidence, and recovery actions. |\n| Closed by P1 docs batch | Service runtime and overrides | `nodics.foundation/modules/nService`, `nodics.foundation/modules/nService/vService` | Covered by `foundation.service-runtime-overrides` with service discovery, virtual services, generated services, override precedence, and extension safety. |\n| Closed by P1 docs batch | Cache provider runbooks | `nodics.foundation/modules/nCache`, Redis, Hazelcast, Node cache | Covered by `foundation.cache-provider-runbooks` with provider boundaries, cache key strategy, invalidation, failure behavior, and production configuration. |\n| Closed by P1 docs batch | Database provider boundaries | `nodics.foundation/modules/nDatabase` | Covered by `foundation.database-provider-boundaries` with MongoDB, virtual DB, Cassandra, Elasticsearch, provider contracts, configuration, and validation. |\n| Closed by P1 docs batch | OTP and security flow | `nodics.foundation/modules/nOtp` | Covered by `security.otp-security-flow` with OTP generation, verification, expiry, retry, throttling, audit, and security controls. |\n| Closed by P1 docs batch | Communication providers | `nodics.communication/modules/smtpCommsProvider`, `nodics.communication/modules/smsCommsProvider` | Covered by `communication.provider-runbooks` with SMTP/SMS provider behavior, templates, retries, failed delivery evidence, and extension rules. |\n| Closed by P1 docs batch | Engagement and contact submission | `nodics.engagement/modules/contactSubmission` | Covered by `engagement.contact-submission-operations` with contact forms, moderation, workflow, notification, audit, and recovery. |\n| Closed by P1 docs batch | Workflow and BPM source map | `nodics.foundation/modules/nbpm`, `nodics.process` | Covered by `process.workflow-bpm-source-map` with workflow definitions, transitions, tasks, callbacks, history, and operator visibility. |\n| Closed by P1 docs batch | Cron job data authoring | `nodics.process/modules/cronjob` | Covered by `process.cronjob-data-authoring` with job records, schedules, execution policy, retry, idempotency, and Process server ownership. |\n| Closed by P1 docs batch | Release and upgrade compatibility | `nodics.foundation/modules/nSetup`, all module data folders | Covered by `framework.release-upgrade-compatibility` with version freeze, upgrade path, rollback, checksum drift, generated manifests, and extension compatibility. |\n\n## P2 closure items\n\n| Status | Item | Source areas | Documentation outcome |\n| --- | --- | --- | --- |\n| Closed by P2 docs batch | Fulfillment Core owner mapping | `nodics.commerce/modules/fulfillment/modules/fulfillmentCore` | Covered by `commerce.fulfillment-core-source-map`, plus explicit source evidence on fulfillment and data-authoring pages. |\n| Closed by P2 docs batch | Domain Commerce accelerator owner mapping | `domainCommerceCore`, electronics product, telco catalog, telco subscription | Covered by `accelerators.domain-commerce-source-map` with accelerator ownership, Commerce boundary, sample data, and validation. |\n| Closed by P2 docs batch | Tooling runtime depth | `nodics.foundation/modules/nTooling` | Covered by `foundation.tooling-runtime-contracts` with command, manifest, application-builder, AI-context, and quality-gate contracts. |\n| Closed by P2 docs batch | EMS runtime and client depth | `nodics.foundation/modules/nEms`, `emsClient`, broker providers | Covered by `foundation.ems-runtime-client-runbook` with broker runtime, client, tenant, retry, and operator evidence. |\n| Closed by P2 docs batch | Internal-only register | Discovery internals, payment methods/providers, NMS runtime, Kickoff environment/runtime packages | Covered by `reference.internal-source-boundary-register` with owner mappings and promotion rules. |\n\n## Closure workflow\n\n1. Start from the generated source coverage report.\n2. Pick the highest-priority open item.\n3. Inspect source files, schemas, services, routers, data, assets, tests, and\n   frontend consumers.\n4. Decide whether the work is a new page, deeper section, owner mapping, or\n   internal-only classification.\n5. Update authored Markdown and catalogue metadata.\n6. Regenerate documentation data and source coverage reports.\n7. Run docs tests and any owning module tests needed for the behavior.\n8. For runtime-visible changes, import into Staged, publish Online, and verify\n   Axis, Nexus, or Agora from the browser.\n9. Commit the smallest coherent documentation batch.\n\n## Common mistakes\n\n- Treating this backlog as optional once a high-level overview exists.\n- Closing a source gap without reading the current source files and tests.\n- Creating public documentation for a module that should be an internal utility\n  without explaining the broader owner.\n- Forgetting business users when writing deep developer detail.\n- Forgetting developers when writing a business-friendly page.\n- Forgetting operators and QA owners when documenting publishable or\n  production-visible behavior.\n- Showing external references as source design instead of industry-standard\n  expectation checks.\n\n## Verification\n\nRun the documentation gates after each closure batch:\n\n```bash\nnpm --prefix nodics.docs run audit:source-coverage\nnpm --prefix nodics.docs run docs:generate\nnpm --prefix nodics.docs test\ngit -C nodics.ai diff --check\n```\n\nThe backlog is healthy when the generated report, this page, catalogue\nmetadata, generated WCMS records, and runtime evidence agree. Business users\nshould see clear journeys, developers should see exact source paths and\nextension points, operators should see evidence and recovery steps, QA owners\nshould see validation commands, and AI tools should see boundaries that prevent\nunsafe source or data changes.\n",
       "previous": {
         "title": "Source-Backed Documentation Coverage Audit",
         "route": "/docs/framework/reference-source-backed-documentation-coverage-audit"
@@ -56871,7 +57798,7 @@ module.exports = {
         "sourcePath": "docs/pages/reference/documentation-gap-backlog.md",
         "path": "docs/pages/reference/documentation-gap-backlog.md",
         "wordCount": 1452,
-        "checksum": "9b67337d84c98f60119a393dc0a26ab4adb153dd04fddde5b2459b71c9b5b5eb"
+        "checksum": "2ff6c0d573938eee55b1f505f30cf337ab99fed8d74c19dfcc2c0f31560c5ac2"
       }
     },
     "active": true

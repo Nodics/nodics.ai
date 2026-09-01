@@ -11,13 +11,13 @@
 
 /** @module cart/src/schemas/schemas @description Defines Cart intent, entries, immutable calculation evidence, and diagnostics. @layer schema @owner cart */
 const evidence = {
-    code: { type: 'string', required: true }, tenant: { type: 'string', required: true },
+    code: { type: 'string', required: true }, tenant: { type: 'string', required: true }, enterpriseCode: { type: 'string', required: false },
     ownerId: { type: 'string', required: true }, cartCode: { type: 'string', required: true },
     revision: { type: 'int', required: true }, correlationId: { type: 'string', required: true }
 };
 module.exports = { cart: {
     cart: Object.assign({ super: 'base', model: true, schemaPolicies: ['customerOwned'], service: { enabled: true }, router: { enabled: false }, cache: { enabled: false }, event: { enabled: false }, search: { enabled: false } }, { definition: {
-        code: { type: 'string', required: true }, tenant: { type: 'string', required: true },
+        code: { type: 'string', required: true }, tenant: { type: 'string', required: true }, enterpriseCode: { type: 'string', required: false },
         ownerId: { type: 'string', required: true }, storeCode: { type: 'string', required: true },
         channelCode: { type: 'string', required: true }, locale: { type: 'string', required: true },
         jurisdiction: { type: 'string', required: true }, currency: { type: 'string', required: true },

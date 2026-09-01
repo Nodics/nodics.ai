@@ -13,6 +13,7 @@
   "requiredModules": [
     "baseCommerce",
     "checkout",
+    "digitalCommerce",
     "payment",
     "fulfillment"
   ],

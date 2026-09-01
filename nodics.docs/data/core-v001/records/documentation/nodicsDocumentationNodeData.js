@@ -208,6 +208,12 @@ module.exports = {
         "order": 300
       },
       {
+        "code": "loyalty-and-rewards",
+        "title": "Loyalty and Rewards",
+        "summary": "Reward programs, reward types, owner wallets, balances, reservations, redemptions, ledger evidence, and reward-based checkout integration.",
+        "order": 305
+      },
+      {
         "code": "shipping-and-fulfillment",
         "title": "Shipping and Fulfillment",
         "summary": "Shipping methods, fulfillment flow, warehouse handoff, shipment, tracking, and provider integration.",
@@ -312,8 +318,8 @@ module.exports = {
     ],
     "childJourneyLinks": [],
     "childStatusSummary": {
-      "childCount": 47,
-      "pages": 127
+      "childCount": 48,
+      "pages": 128
     },
     "nodeOrder": 10,
     "expandable": true,
@@ -1484,16 +1490,16 @@ module.exports = {
       "dashboard": "nodicsDocsDashboardSecuserEnterpriseAndTenantManagement",
       "navigationDepth": 2,
       "pages": [
-        "commerce.customer-list-profile-boundary",
+        "commerce.shopping-list-commerce-boundary",
         "platform.overview"
       ]
     },
     "nodeDashboard": "nodicsDocsDashboardSecuserEnterpriseAndTenantManagement",
     "childSummaryCards": [
       {
-        "code": "commerce.customer-list-profile-boundary",
-        "title": "Customer List and Profile Commerce Boundary",
-        "summary": "Why customer lists belong to Commerce while person, address, authentication, permission, and organization identity stay under Profile.",
+        "code": "commerce.shopping-list-commerce-boundary",
+        "title": "Shopping List Commerce Boundary",
+        "summary": "Why wishlist, compare, and save-for-later belong to Commerce while Profile remains the identity authority.",
         "order": 10
       },
       {
@@ -1505,9 +1511,9 @@ module.exports = {
     ],
     "childJourneyLinks": [
       {
-        "label": "Customer List and Profile Commerce Boundary",
-        "targetPage": "commerce.customer-list-profile-boundary",
-        "route": "/docs/framework/commerce-customer-list-profile-boundary"
+        "label": "Shopping List Commerce Boundary",
+        "targetPage": "commerce.shopping-list-commerce-boundary",
+        "route": "/docs/framework/commerce-shopping-list-commerce-boundary"
       },
       {
         "label": "Platform overview",
@@ -3110,6 +3116,81 @@ module.exports = {
     "active": true
   },
   "record31": {
+    "code": "nodicsDocsNodeSecloyaltyAndRewards",
+    "product": "nodicsDocumentationProduct",
+    "navigation": "nodicsDocumentationNavigation",
+    "parentNode": "nodicsDocsNodeRoot",
+    "nodeLevel": "SECTION",
+    "nodeType": "CONTAINER",
+    "nodeTitle": "Loyalty and Rewards",
+    "nodeSummary": "Reward programs, reward types, owner wallets, balances, reservations, redemptions, ledger evidence, and reward-based checkout integration.",
+    "nodeContentArea": {
+      "dashboard": "nodicsDocsDashboardSecloyaltyAndRewards",
+      "navigationDepth": 2,
+      "pages": [
+        "loyalty.wallets-rewards-ledger"
+      ]
+    },
+    "nodeDashboard": "nodicsDocsDashboardSecloyaltyAndRewards",
+    "childSummaryCards": [
+      {
+        "code": "loyalty.wallets-rewards-ledger",
+        "title": "Loyalty Wallets, Rewards, and Ledger",
+        "summary": "Business, developer, operator, and customization guidance for reward wallets, balances, reservations, redemptions, ledger evidence, and Commerce reward payment provider integration.",
+        "order": 10
+      }
+    ],
+    "childJourneyLinks": [
+      {
+        "label": "Loyalty Wallets, Rewards, and Ledger",
+        "targetPage": "loyalty.wallets-rewards-ledger",
+        "route": "/docs/framework/loyalty-wallets-rewards-ledger"
+      }
+    ],
+    "childStatusSummary": {
+      "childCount": 1,
+      "pages": 1
+    },
+    "nodeOrder": 305,
+    "expandable": true,
+    "expandedByDefault": false,
+    "nodeIcon": "folder",
+    "nodeAudience": [
+      "business",
+      "architect",
+      "administrator",
+      "developer",
+      "operator",
+      "qa",
+      "ai-tool"
+    ],
+    "accessPolicy": "nodicsDocsAccessPublic",
+    "accessMode": "PUBLIC",
+    "allowedRoles": [],
+    "allowedGroups": [],
+    "allowedPermissions": [],
+    "managedInAxis": true,
+    "axisAuthoringPermissions": [
+      "documentation.navigation.update"
+    ],
+    "workflowRequired": true,
+    "workflowTriggers": [
+      "NAVIGATION_CHANGE",
+      "DASHBOARD_CHANGE",
+      "ACCESS_POLICY_CHANGE"
+    ],
+    "lifecycleState": "ONLINE",
+    "maturityState": "IMPLEMENTED",
+    "searchKeywords": [
+      "loyalty-and-rewards",
+      "Loyalty and Rewards"
+    ],
+    "relatedNodes": [],
+    "locale": "en",
+    "channel": "web",
+    "active": true
+  },
+  "record32": {
     "code": "nodicsDocsNodeSecshippingAndFulfillment",
     "product": "nodicsDocumentationProduct",
     "navigation": "nodicsDocumentationNavigation",
@@ -3196,7 +3277,7 @@ module.exports = {
     "channel": "web",
     "active": true
   },
-  "record32": {
+  "record33": {
     "code": "nodicsDocsNodeSecorderManagement",
     "product": "nodicsDocumentationProduct",
     "navigation": "nodicsDocumentationNavigation",
@@ -3271,7 +3352,7 @@ module.exports = {
     "channel": "web",
     "active": true
   },
-  "record33": {
+  "record34": {
     "code": "nodicsDocsNodeSeccancellationsReturnsAndRefunds",
     "product": "nodicsDocumentationProduct",
     "navigation": "nodicsDocumentationNavigation",
@@ -3346,7 +3427,7 @@ module.exports = {
     "channel": "web",
     "active": true
   },
-  "record34": {
+  "record35": {
     "code": "nodicsDocsNodeSeccustomerEngagementAndFeedback",
     "product": "nodicsDocumentationProduct",
     "navigation": "nodicsDocumentationNavigation",
@@ -3495,7 +3576,7 @@ module.exports = {
     "channel": "web",
     "active": true
   },
-  "record35": {
+  "record36": {
     "code": "nodicsDocsNodeSeccommunicationAndNotifications",
     "product": "nodicsDocumentationProduct",
     "navigation": "nodicsDocumentationNavigation",
@@ -3582,7 +3663,7 @@ module.exports = {
     "channel": "web",
     "active": true
   },
-  "record36": {
+  "record37": {
     "code": "nodicsDocsNodeSeceventAndMessagingManagement",
     "product": "nodicsDocumentationProduct",
     "navigation": "nodicsDocumentationNavigation",
@@ -3669,7 +3750,7 @@ module.exports = {
     "channel": "web",
     "active": true
   },
-  "record37": {
+  "record38": {
     "code": "nodicsDocsNodeSecprocessAndWorkflowAutomation",
     "product": "nodicsDocumentationProduct",
     "navigation": "nodicsDocumentationNavigation",
@@ -3811,7 +3892,7 @@ module.exports = {
     "channel": "web",
     "active": true
   },
-  "record38": {
+  "record39": {
     "code": "nodicsDocsNodeSecpipelineAndBusinessLogicOrchestration",
     "product": "nodicsDocumentationProduct",
     "navigation": "nodicsDocumentationNavigation",
@@ -3910,7 +3991,7 @@ module.exports = {
     "channel": "web",
     "active": true
   },
-  "record39": {
+  "record40": {
     "code": "nodicsDocsNodeSeccronAndScheduledAutomation",
     "product": "nodicsDocumentationProduct",
     "navigation": "nodicsDocumentationNavigation",
@@ -4045,7 +4126,7 @@ module.exports = {
     "channel": "web",
     "active": true
   },
-  "record40": {
+  "record41": {
     "code": "nodicsDocsNodeSecdataImportExportAndMigration",
     "product": "nodicsDocumentationProduct",
     "navigation": "nodicsDocumentationNavigation",
@@ -4132,7 +4213,7 @@ module.exports = {
     "channel": "web",
     "active": true
   },
-  "record41": {
+  "record42": {
     "code": "nodicsDocsNodeSecsystemIntegrationAndExternalConnectivity",
     "product": "nodicsDocumentationProduct",
     "navigation": "nodicsDocumentationNavigation",
@@ -4207,7 +4288,7 @@ module.exports = {
     "channel": "web",
     "active": true
   },
-  "record42": {
+  "record43": {
     "code": "nodicsDocsNodeSecoperationsMonitoringAndRecovery",
     "product": "nodicsDocumentationProduct",
     "navigation": "nodicsDocumentationNavigation",
@@ -4356,7 +4437,7 @@ module.exports = {
     "channel": "web",
     "active": true
   },
-  "record43": {
+  "record44": {
     "code": "nodicsDocsNodeSecqualityTestingAndCertification",
     "product": "nodicsDocumentationProduct",
     "navigation": "nodicsDocumentationNavigation",
@@ -4431,7 +4512,7 @@ module.exports = {
     "channel": "web",
     "active": true
   },
-  "record44": {
+  "record45": {
     "code": "nodicsDocsNodeSecdocumentationManagement",
     "product": "nodicsDocumentationProduct",
     "navigation": "nodicsDocumentationNavigation",
@@ -4530,7 +4611,7 @@ module.exports = {
     "channel": "web",
     "active": true
   },
-  "record45": {
+  "record46": {
     "code": "nodicsDocsNodeSecreleaseStagingAndPublication",
     "product": "nodicsDocumentationProduct",
     "navigation": "nodicsDocumentationNavigation",
@@ -4617,7 +4698,7 @@ module.exports = {
     "channel": "web",
     "active": true
   },
-  "record46": {
+  "record47": {
     "code": "nodicsDocsNodeSecaiAndDeveloperTooling",
     "product": "nodicsDocumentationProduct",
     "navigation": "nodicsDocumentationNavigation",
@@ -4704,7 +4785,7 @@ module.exports = {
     "channel": "web",
     "active": true
   },
-  "record47": {
+  "record48": {
     "code": "nodicsDocsNodeSecreference",
     "product": "nodicsDocumentationProduct",
     "navigation": "nodicsDocumentationNavigation",
@@ -4815,7 +4896,7 @@ module.exports = {
     "channel": "web",
     "active": true
   },
-  "record48": {
+  "record49": {
     "code": "nodicsDocsNodeTopicframeworkWhatIsNodics",
     "product": "nodicsDocumentationProduct",
     "navigation": "nodicsDocumentationNavigation",
@@ -4896,7 +4977,7 @@ module.exports = {
     "channel": "web",
     "active": true
   },
-  "record49": {
+  "record50": {
     "code": "nodicsDocsNodeTopicframeworkWhyNodicsExists",
     "product": "nodicsDocumentationProduct",
     "navigation": "nodicsDocumentationNavigation",
@@ -4976,7 +5057,7 @@ module.exports = {
     "channel": "web",
     "active": true
   },
-  "record50": {
+  "record51": {
     "code": "nodicsDocsNodeTopicframeworkHowNodicsWorks",
     "product": "nodicsDocumentationProduct",
     "navigation": "nodicsDocumentationNavigation",
@@ -5056,7 +5137,7 @@ module.exports = {
     "channel": "web",
     "active": true
   },
-  "record51": {
+  "record52": {
     "code": "nodicsDocsNodeTopicframeworkAdoptionAndFirstJourney",
     "product": "nodicsDocumentationProduct",
     "navigation": "nodicsDocumentationNavigation",
@@ -5136,7 +5217,7 @@ module.exports = {
     "channel": "web",
     "active": true
   },
-  "record52": {
+  "record53": {
     "code": "nodicsDocsNodeTopicdocsDocumentationRoadmap",
     "product": "nodicsDocumentationProduct",
     "navigation": "nodicsDocumentationNavigation",
@@ -5216,7 +5297,7 @@ module.exports = {
     "channel": "web",
     "active": true
   },
-  "record53": {
+  "record54": {
     "code": "nodicsDocsNodeTopicdocsDocumentationPrinciples",
     "product": "nodicsDocumentationProduct",
     "navigation": "nodicsDocumentationNavigation",
@@ -5296,7 +5377,7 @@ module.exports = {
     "channel": "web",
     "active": true
   },
-  "record54": {
+  "record55": {
     "code": "nodicsDocsNodeTopicdocsReaderJourneyAndCoverage",
     "product": "nodicsDocumentationProduct",
     "navigation": "nodicsDocumentationNavigation",
@@ -5376,7 +5457,7 @@ module.exports = {
     "channel": "web",
     "active": true
   },
-  "record55": {
+  "record56": {
     "code": "nodicsDocsNodeTopicdocsDocumentationPublishingModel",
     "product": "nodicsDocumentationProduct",
     "navigation": "nodicsDocumentationNavigation",
@@ -5456,7 +5537,7 @@ module.exports = {
     "channel": "web",
     "active": true
   },
-  "record56": {
+  "record57": {
     "code": "nodicsDocsNodeTopicframeworkModularArchitecture",
     "product": "nodicsDocumentationProduct",
     "navigation": "nodicsDocumentationNavigation",
@@ -5536,7 +5617,7 @@ module.exports = {
     "channel": "web",
     "active": true
   },
-  "record57": {
+  "record58": {
     "code": "nodicsDocsNodeTopicframeworkRuntimeServerComposition",
     "product": "nodicsDocumentationProduct",
     "navigation": "nodicsDocumentationNavigation",
@@ -5613,7 +5694,7 @@ module.exports = {
     "channel": "web",
     "active": true
   },
-  "record58": {
+  "record59": {
     "code": "nodicsDocsNodeTopicframeworkModuleLoadingServicePrecedence",
     "product": "nodicsDocumentationProduct",
     "navigation": "nodicsDocumentationNavigation",
@@ -5692,7 +5773,7 @@ module.exports = {
     "channel": "web",
     "active": true
   },
-  "record59": {
+  "record60": {
     "code": "nodicsDocsNodeTopicframeworkArchitectureDecisionGuide",
     "product": "nodicsDocumentationProduct",
     "navigation": "nodicsDocumentationNavigation",
@@ -5769,7 +5850,7 @@ module.exports = {
     "channel": "web",
     "active": true
   },
-  "record60": {
+  "record61": {
     "code": "nodicsDocsNodeTopicplatformModuleRegistry",
     "product": "nodicsDocumentationProduct",
     "navigation": "nodicsDocumentationNavigation",
@@ -5846,7 +5927,7 @@ module.exports = {
     "channel": "web",
     "active": true
   },
-  "record61": {
+  "record62": {
     "code": "nodicsDocsNodeTopicfoundationOverview",
     "product": "nodicsDocumentationProduct",
     "navigation": "nodicsDocumentationNavigation",
@@ -5922,7 +6003,7 @@ module.exports = {
     "channel": "web",
     "active": true
   },
-  "record62": {
+  "record63": {
     "code": "nodicsDocsNodeTopicapplicationsSuite",
     "product": "nodicsDocumentationProduct",
     "navigation": "nodicsDocumentationNavigation",
@@ -6001,7 +6082,7 @@ module.exports = {
     "channel": "web",
     "active": true
   },
-  "record63": {
+  "record64": {
     "code": "nodicsDocsNodeTopicsolutionsTaskExecutionEngine",
     "product": "nodicsDocumentationProduct",
     "navigation": "nodicsDocumentationNavigation",
@@ -6085,7 +6166,7 @@ module.exports = {
     "channel": "web",
     "active": true
   },
-  "record64": {
+  "record65": {
     "code": "nodicsDocsNodeTopicsolutionsDataEngineeringAnalyticsPlatform",
     "product": "nodicsDocumentationProduct",
     "navigation": "nodicsDocumentationNavigation",
@@ -6170,7 +6251,7 @@ module.exports = {
     "channel": "web",
     "active": true
   },
-  "record65": {
+  "record66": {
     "code": "nodicsDocsNodeTopicacceleratorsAgoraIndustryTemplates",
     "product": "nodicsDocumentationProduct",
     "navigation": "nodicsDocumentationNavigation",
@@ -6251,7 +6332,7 @@ module.exports = {
     "channel": "web",
     "active": true
   },
-  "record66": {
+  "record67": {
     "code": "nodicsDocsNodeTopicacceleratorsAgoraApparelProductDataAuthoring",
     "product": "nodicsDocumentationProduct",
     "navigation": "nodicsDocumentationNavigation",
@@ -6336,7 +6417,7 @@ module.exports = {
     "channel": "web",
     "active": true
   },
-  "record67": {
+  "record68": {
     "code": "nodicsDocsNodeTopicframeworkLocalQuickStart",
     "product": "nodicsDocumentationProduct",
     "navigation": "nodicsDocumentationNavigation",
@@ -6415,7 +6496,7 @@ module.exports = {
     "channel": "web",
     "active": true
   },
-  "record68": {
+  "record69": {
     "code": "nodicsDocsNodeTopicframeworkFreshSchemaSetupJourney",
     "product": "nodicsDocumentationProduct",
     "navigation": "nodicsDocumentationNavigation",
@@ -6492,7 +6573,7 @@ module.exports = {
     "channel": "web",
     "active": true
   },
-  "record69": {
+  "record70": {
     "code": "nodicsDocsNodeTopicframeworkLocalRuntimeTroubleshooting",
     "product": "nodicsDocumentationProduct",
     "navigation": "nodicsDocumentationNavigation",
@@ -6569,7 +6650,7 @@ module.exports = {
     "channel": "web",
     "active": true
   },
-  "record70": {
+  "record71": {
     "code": "nodicsDocsNodeTopicinstallerInstalledRuntimeApplicationBuilder",
     "product": "nodicsDocumentationProduct",
     "navigation": "nodicsDocumentationNavigation",
@@ -6649,7 +6730,7 @@ module.exports = {
     "channel": "web",
     "active": true
   },
-  "record71": {
+  "record72": {
     "code": "nodicsDocsNodeTopicbuilderWorkspaceGeneration",
     "product": "nodicsDocumentationProduct",
     "navigation": "nodicsDocumentationNavigation",
@@ -6726,7 +6807,7 @@ module.exports = {
     "channel": "web",
     "active": true
   },
-  "record72": {
+  "record73": {
     "code": "nodicsDocsNodeTopicprocessVisualDesigner",
     "product": "nodicsDocumentationProduct",
     "navigation": "nodicsDocumentationNavigation",
@@ -6802,7 +6883,7 @@ module.exports = {
     "channel": "web",
     "active": true
   },
-  "record73": {
+  "record74": {
     "code": "nodicsDocsNodeTopicaxisBusinessCustomization",
     "product": "nodicsDocumentationProduct",
     "navigation": "nodicsDocumentationNavigation",
@@ -6879,7 +6960,7 @@ module.exports = {
     "channel": "web",
     "active": true
   },
-  "record74": {
+  "record75": {
     "code": "nodicsDocsNodeTopicplatformOverview",
     "product": "nodicsDocumentationProduct",
     "navigation": "nodicsDocumentationNavigation",
@@ -6955,7 +7036,7 @@ module.exports = {
     "channel": "web",
     "active": true
   },
-  "record75": {
+  "record76": {
     "code": "nodicsDocsNodeTopicsecurityIdentityAccessGovernance",
     "product": "nodicsDocumentationProduct",
     "navigation": "nodicsDocumentationNavigation",
@@ -7032,7 +7113,7 @@ module.exports = {
     "channel": "web",
     "active": true
   },
-  "record76": {
+  "record77": {
     "code": "nodicsDocsNodeTopicconfigurationRuntimeBehaviorManagement",
     "product": "nodicsDocumentationProduct",
     "navigation": "nodicsDocumentationNavigation",
@@ -7112,7 +7193,7 @@ module.exports = {
     "channel": "web",
     "active": true
   },
-  "record77": {
+  "record78": {
     "code": "nodicsDocsNodeTopicconfigurationFrameworkStartupLifecycle",
     "product": "nodicsDocumentationProduct",
     "navigation": "nodicsDocumentationNavigation",
@@ -7204,7 +7285,7 @@ module.exports = {
     "channel": "web",
     "active": true
   },
-  "record78": {
+  "record79": {
     "code": "nodicsDocsNodeTopicroutingApiGovernance",
     "product": "nodicsDocumentationProduct",
     "navigation": "nodicsDocumentationNavigation",
@@ -7296,7 +7377,7 @@ module.exports = {
     "channel": "web",
     "active": true
   },
-  "record79": {
+  "record80": {
     "code": "nodicsDocsNodeTopicroutingApiRequestLifecycle",
     "product": "nodicsDocumentationProduct",
     "navigation": "nodicsDocumentationNavigation",
@@ -7388,7 +7469,7 @@ module.exports = {
     "channel": "web",
     "active": true
   },
-  "record80": {
+  "record81": {
     "code": "nodicsDocsNodeTopicfoundationErrorHandlingStatusCodes",
     "product": "nodicsDocumentationProduct",
     "navigation": "nodicsDocumentationNavigation",
@@ -7485,7 +7566,7 @@ module.exports = {
     "channel": "web",
     "active": true
   },
-  "record81": {
+  "record82": {
     "code": "nodicsDocsNodeTopicruntimeGovernedChange",
     "product": "nodicsDocumentationProduct",
     "navigation": "nodicsDocumentationNavigation",
@@ -7562,7 +7643,7 @@ module.exports = {
     "channel": "web",
     "active": true
   },
-  "record82": {
+  "record83": {
     "code": "nodicsDocsNodeTopiclocalizationInternationalization",
     "product": "nodicsDocumentationProduct",
     "navigation": "nodicsDocumentationNavigation",
@@ -7639,7 +7720,7 @@ module.exports = {
     "channel": "web",
     "active": true
   },
-  "record83": {
+  "record84": {
     "code": "nodicsDocsNodeTopicschemaDataModelingManagement",
     "product": "nodicsDocumentationProduct",
     "navigation": "nodicsDocumentationNavigation",
@@ -7716,7 +7797,7 @@ module.exports = {
     "channel": "web",
     "active": true
   },
-  "record84": {
+  "record85": {
     "code": "nodicsDocsNodeTopicpersistenceProviderDataAccessLayer",
     "product": "nodicsDocumentationProduct",
     "navigation": "nodicsDocumentationNavigation",
@@ -7793,7 +7874,7 @@ module.exports = {
     "channel": "web",
     "active": true
   },
-  "record85": {
+  "record86": {
     "code": "nodicsDocsNodeTopiccacheRuntimeStateManagement",
     "product": "nodicsDocumentationProduct",
     "navigation": "nodicsDocumentationNavigation",
@@ -7870,7 +7951,7 @@ module.exports = {
     "channel": "web",
     "active": true
   },
-  "record86": {
+  "record87": {
     "code": "nodicsDocsNodeTopicframeworkCustomizationGuide",
     "product": "nodicsDocumentationProduct",
     "navigation": "nodicsDocumentationNavigation",
@@ -7949,7 +8030,7 @@ module.exports = {
     "channel": "web",
     "active": true
   },
-  "record87": {
+  "record88": {
     "code": "nodicsDocsNodeTopicframeworkBackendExtensionPatterns",
     "product": "nodicsDocumentationProduct",
     "navigation": "nodicsDocumentationNavigation",
@@ -8029,7 +8110,7 @@ module.exports = {
     "channel": "web",
     "active": true
   },
-  "record88": {
+  "record89": {
     "code": "nodicsDocsNodeTopicframeworkAxisContentCustomization",
     "product": "nodicsDocumentationProduct",
     "navigation": "nodicsDocumentationNavigation",
@@ -8106,7 +8187,7 @@ module.exports = {
     "channel": "web",
     "active": true
   },
-  "record89": {
+  "record90": {
     "code": "nodicsDocsNodeTopicprocessDeveloperCustomization",
     "product": "nodicsDocumentationProduct",
     "navigation": "nodicsDocumentationNavigation",
@@ -8182,7 +8263,7 @@ module.exports = {
     "channel": "web",
     "active": true
   },
-  "record90": {
+  "record91": {
     "code": "nodicsDocsNodeTopicprocessCustomProjectExtension",
     "product": "nodicsDocumentationProduct",
     "navigation": "nodicsDocumentationNavigation",
@@ -8258,7 +8339,7 @@ module.exports = {
     "channel": "web",
     "active": true
   },
-  "record91": {
+  "record92": {
     "code": "nodicsDocsNodeTopiccommerceBaseFoundations",
     "product": "nodicsDocumentationProduct",
     "navigation": "nodicsDocumentationNavigation",
@@ -8334,7 +8415,7 @@ module.exports = {
     "channel": "web",
     "active": true
   },
-  "record92": {
+  "record93": {
     "code": "nodicsDocsNodeTopicwcmsOverview",
     "product": "nodicsDocumentationProduct",
     "navigation": "nodicsDocumentationNavigation",
@@ -8414,7 +8495,7 @@ module.exports = {
     "channel": "web",
     "active": true
   },
-  "record93": {
+  "record94": {
     "code": "nodicsDocsNodeTopicwcmsContentCatalogModel",
     "product": "nodicsDocumentationProduct",
     "navigation": "nodicsDocumentationNavigation",
@@ -8491,7 +8572,7 @@ module.exports = {
     "channel": "web",
     "active": true
   },
-  "record94": {
+  "record95": {
     "code": "nodicsDocsNodeTopicwcmsPageDesignerComponents",
     "product": "nodicsDocumentationProduct",
     "navigation": "nodicsDocumentationNavigation",
@@ -8568,7 +8649,7 @@ module.exports = {
     "channel": "web",
     "active": true
   },
-  "record95": {
+  "record96": {
     "code": "nodicsDocsNodeTopicwcmsSitePublicationVisibility",
     "product": "nodicsDocumentationProduct",
     "navigation": "nodicsDocumentationNavigation",
@@ -8646,7 +8727,7 @@ module.exports = {
     "channel": "web",
     "active": true
   },
-  "record96": {
+  "record97": {
     "code": "nodicsDocsNodeTopiccatalogProductDiscoveryManagement",
     "product": "nodicsDocumentationProduct",
     "navigation": "nodicsDocumentationNavigation",
@@ -8723,7 +8804,7 @@ module.exports = {
     "channel": "web",
     "active": true
   },
-  "record97": {
+  "record98": {
     "code": "nodicsDocsNodeTopicdiscoverySearchIndexing",
     "product": "nodicsDocumentationProduct",
     "navigation": "nodicsDocumentationNavigation",
@@ -8800,7 +8881,7 @@ module.exports = {
     "channel": "web",
     "active": true
   },
-  "record98": {
+  "record99": {
     "code": "nodicsDocsNodeTopicwcmsMediaManagement",
     "product": "nodicsDocumentationProduct",
     "navigation": "nodicsDocumentationNavigation",
@@ -8878,7 +8959,7 @@ module.exports = {
     "channel": "web",
     "active": true
   },
-  "record99": {
+  "record100": {
     "code": "nodicsDocsNodeTopicwcmsMediaStorageDelivery",
     "product": "nodicsDocumentationProduct",
     "navigation": "nodicsDocumentationNavigation",
@@ -8953,7 +9034,7 @@ module.exports = {
     "channel": "web",
     "active": true
   },
-  "record100": {
+  "record101": {
     "code": "nodicsDocsNodeTopicwcmsMediaImportPublication",
     "product": "nodicsDocumentationProduct",
     "navigation": "nodicsDocumentationNavigation",
@@ -9028,7 +9109,7 @@ module.exports = {
     "channel": "web",
     "active": true
   },
-  "record101": {
+  "record102": {
     "code": "nodicsDocsNodeTopicinventoryStockManagement",
     "product": "nodicsDocumentationProduct",
     "navigation": "nodicsDocumentationNavigation",
@@ -9105,7 +9186,7 @@ module.exports = {
     "channel": "web",
     "active": true
   },
-  "record102": {
+  "record103": {
     "code": "nodicsDocsNodeTopicpricingPromotionsTaxManagement",
     "product": "nodicsDocumentationProduct",
     "navigation": "nodicsDocumentationNavigation",
@@ -9182,7 +9263,7 @@ module.exports = {
     "channel": "web",
     "active": true
   },
-  "record103": {
+  "record104": {
     "code": "nodicsDocsNodeTopiccommerceOverview",
     "product": "nodicsDocumentationProduct",
     "navigation": "nodicsDocumentationNavigation",
@@ -9259,7 +9340,7 @@ module.exports = {
     "channel": "web",
     "active": true
   },
-  "record104": {
+  "record105": {
     "code": "nodicsDocsNodeTopiccommerceCartOrder",
     "product": "nodicsDocumentationProduct",
     "navigation": "nodicsDocumentationNavigation",
@@ -9336,7 +9417,7 @@ module.exports = {
     "channel": "web",
     "active": true
   },
-  "record105": {
+  "record106": {
     "code": "nodicsDocsNodeTopiccommercePaymentFulfillment",
     "product": "nodicsDocumentationProduct",
     "navigation": "nodicsDocumentationNavigation",
@@ -9412,7 +9493,7 @@ module.exports = {
     "channel": "web",
     "active": true
   },
-  "record106": {
+  "record107": {
     "code": "nodicsDocsNodeTopicfulfillmentShippingManagement",
     "product": "nodicsDocumentationProduct",
     "navigation": "nodicsDocumentationNavigation",
@@ -9489,7 +9570,7 @@ module.exports = {
     "channel": "web",
     "active": true
   },
-  "record107": {
+  "record108": {
     "code": "nodicsDocsNodeTopicorderManagementLifecycle",
     "product": "nodicsDocumentationProduct",
     "navigation": "nodicsDocumentationNavigation",
@@ -9566,7 +9647,7 @@ module.exports = {
     "channel": "web",
     "active": true
   },
-  "record108": {
+  "record109": {
     "code": "nodicsDocsNodeTopiccommerceReturnsRefunds",
     "product": "nodicsDocumentationProduct",
     "navigation": "nodicsDocumentationNavigation",
@@ -9642,7 +9723,7 @@ module.exports = {
     "channel": "web",
     "active": true
   },
-  "record109": {
+  "record110": {
     "code": "nodicsDocsNodeTopicengagementCustomerReviews",
     "product": "nodicsDocumentationProduct",
     "navigation": "nodicsDocumentationNavigation",
@@ -9720,7 +9801,7 @@ module.exports = {
     "channel": "web",
     "active": true
   },
-  "record110": {
+  "record111": {
     "code": "nodicsDocsNodeTopicengagementReviewModerationGovernance",
     "product": "nodicsDocumentationProduct",
     "navigation": "nodicsDocumentationNavigation",
@@ -9795,7 +9876,7 @@ module.exports = {
     "channel": "web",
     "active": true
   },
-  "record111": {
+  "record112": {
     "code": "nodicsDocsNodeTopicengagementReviewAggregationRecovery",
     "product": "nodicsDocumentationProduct",
     "navigation": "nodicsDocumentationNavigation",
@@ -9870,7 +9951,7 @@ module.exports = {
     "channel": "web",
     "active": true
   },
-  "record112": {
+  "record113": {
     "code": "nodicsDocsNodeTopicengagementCustomerFeedback",
     "product": "nodicsDocumentationProduct",
     "navigation": "nodicsDocumentationNavigation",
@@ -9946,7 +10027,7 @@ module.exports = {
     "channel": "web",
     "active": true
   },
-  "record113": {
+  "record114": {
     "code": "nodicsDocsNodeTopicengagementUnifiedOperations",
     "product": "nodicsDocumentationProduct",
     "navigation": "nodicsDocumentationNavigation",
@@ -10022,7 +10103,7 @@ module.exports = {
     "channel": "web",
     "active": true
   },
-  "record114": {
+  "record115": {
     "code": "nodicsDocsNodeTopicengagementGovernedAutomation",
     "product": "nodicsDocumentationProduct",
     "navigation": "nodicsDocumentationNavigation",
@@ -10098,7 +10179,7 @@ module.exports = {
     "channel": "web",
     "active": true
   },
-  "record115": {
+  "record116": {
     "code": "nodicsDocsNodeTopicengagementEnterpriseOperations",
     "product": "nodicsDocumentationProduct",
     "navigation": "nodicsDocumentationNavigation",
@@ -10174,7 +10255,7 @@ module.exports = {
     "channel": "web",
     "active": true
   },
-  "record116": {
+  "record117": {
     "code": "nodicsDocsNodeTopiccommunicationOverview",
     "product": "nodicsDocumentationProduct",
     "navigation": "nodicsDocumentationNavigation",
@@ -10250,7 +10331,7 @@ module.exports = {
     "channel": "web",
     "active": true
   },
-  "record117": {
+  "record118": {
     "code": "nodicsDocsNodeTopiceventsMessagingClusterCoordination",
     "product": "nodicsDocumentationProduct",
     "navigation": "nodicsDocumentationNavigation",
@@ -10327,7 +10408,7 @@ module.exports = {
     "channel": "web",
     "active": true
   },
-  "record118": {
+  "record119": {
     "code": "nodicsDocsNodeTopicprocessOverview",
     "product": "nodicsDocumentationProduct",
     "navigation": "nodicsDocumentationNavigation",
@@ -10405,7 +10486,7 @@ module.exports = {
     "channel": "web",
     "active": true
   },
-  "record119": {
+  "record120": {
     "code": "nodicsDocsNodeTopicprocessRuntimeLifecycle",
     "product": "nodicsDocumentationProduct",
     "navigation": "nodicsDocumentationNavigation",
@@ -10482,7 +10563,7 @@ module.exports = {
     "channel": "web",
     "active": true
   },
-  "record120": {
+  "record121": {
     "code": "nodicsDocsNodeTopicprocessWorkflowOrchestrationPatterns",
     "product": "nodicsDocumentationProduct",
     "navigation": "nodicsDocumentationNavigation",
@@ -10575,7 +10656,7 @@ module.exports = {
     "channel": "web",
     "active": true
   },
-  "record121": {
+  "record122": {
     "code": "nodicsDocsNodeTopicprocessFirstWorkflow",
     "product": "nodicsDocumentationProduct",
     "navigation": "nodicsDocumentationNavigation",
@@ -10652,7 +10733,7 @@ module.exports = {
     "channel": "web",
     "active": true
   },
-  "record122": {
+  "record123": {
     "code": "nodicsDocsNodeTopicprocessFirstHumanTask",
     "product": "nodicsDocumentationProduct",
     "navigation": "nodicsDocumentationNavigation",
@@ -10728,7 +10809,7 @@ module.exports = {
     "channel": "web",
     "active": true
   },
-  "record123": {
+  "record124": {
     "code": "nodicsDocsNodeTopicprocessBusinessValue",
     "product": "nodicsDocumentationProduct",
     "navigation": "nodicsDocumentationNavigation",
@@ -10804,7 +10885,7 @@ module.exports = {
     "channel": "web",
     "active": true
   },
-  "record124": {
+  "record125": {
     "code": "nodicsDocsNodeTopicpipelineBusinessLogicOrchestration",
     "product": "nodicsDocumentationProduct",
     "navigation": "nodicsDocumentationNavigation",
@@ -10894,7 +10975,7 @@ module.exports = {
     "channel": "web",
     "active": true
   },
-  "record125": {
+  "record126": {
     "code": "nodicsDocsNodeTopiccronOperations",
     "product": "nodicsDocumentationProduct",
     "navigation": "nodicsDocumentationNavigation",
@@ -10972,7 +11053,7 @@ module.exports = {
     "channel": "web",
     "active": true
   },
-  "record126": {
+  "record127": {
     "code": "nodicsDocsNodeTopiccronNodeResponsibilityTee",
     "product": "nodicsDocumentationProduct",
     "navigation": "nodicsDocumentationNavigation",
@@ -11049,7 +11130,7 @@ module.exports = {
     "channel": "web",
     "active": true
   },
-  "record127": {
+  "record128": {
     "code": "nodicsDocsNodeTopiccronProjectCustomization",
     "product": "nodicsDocumentationProduct",
     "navigation": "nodicsDocumentationNavigation",
@@ -11125,7 +11206,7 @@ module.exports = {
     "channel": "web",
     "active": true
   },
-  "record128": {
+  "record129": {
     "code": "nodicsDocsNodeTopicprocessProcessCronRuntime",
     "product": "nodicsDocumentationProduct",
     "navigation": "nodicsDocumentationNavigation",
@@ -11201,7 +11282,7 @@ module.exports = {
     "channel": "web",
     "active": true
   },
-  "record129": {
+  "record130": {
     "code": "nodicsDocsNodeTopicprocessScheduledAutomation",
     "product": "nodicsDocumentationProduct",
     "navigation": "nodicsDocumentationNavigation",
@@ -11277,7 +11358,7 @@ module.exports = {
     "channel": "web",
     "active": true
   },
-  "record130": {
+  "record131": {
     "code": "nodicsDocsNodeTopicdataImportExportMigration",
     "product": "nodicsDocumentationProduct",
     "navigation": "nodicsDocumentationNavigation",
@@ -11354,7 +11435,7 @@ module.exports = {
     "channel": "web",
     "active": true
   },
-  "record131": {
+  "record132": {
     "code": "nodicsDocsNodeTopicprocessActionAdapters",
     "product": "nodicsDocumentationProduct",
     "navigation": "nodicsDocumentationNavigation",
@@ -11430,7 +11511,7 @@ module.exports = {
     "channel": "web",
     "active": true
   },
-  "record132": {
+  "record133": {
     "code": "nodicsDocsNodeTopicframeworkDevopsRuntime",
     "product": "nodicsDocumentationProduct",
     "navigation": "nodicsDocumentationNavigation",
@@ -11510,7 +11591,7 @@ module.exports = {
     "channel": "web",
     "active": true
   },
-  "record133": {
+  "record134": {
     "code": "nodicsDocsNodeTopicframeworkRuntimeReleaseRollback",
     "product": "nodicsDocumentationProduct",
     "navigation": "nodicsDocumentationNavigation",
@@ -11585,7 +11666,7 @@ module.exports = {
     "channel": "web",
     "active": true
   },
-  "record134": {
+  "record135": {
     "code": "nodicsDocsNodeTopicframeworkLocalBrowserAcceptanceJourney",
     "product": "nodicsDocumentationProduct",
     "navigation": "nodicsDocumentationNavigation",
@@ -11660,7 +11741,7 @@ module.exports = {
     "channel": "web",
     "active": true
   },
-  "record135": {
+  "record136": {
     "code": "nodicsDocsNodeTopicframeworkLocalVerificationChecklist",
     "product": "nodicsDocumentationProduct",
     "navigation": "nodicsDocumentationNavigation",
@@ -11740,7 +11821,7 @@ module.exports = {
     "channel": "web",
     "active": true
   },
-  "record136": {
+  "record137": {
     "code": "nodicsDocsNodeTopiccommerceEnterpriseOperations",
     "product": "nodicsDocumentationProduct",
     "navigation": "nodicsDocumentationNavigation",
@@ -11816,7 +11897,7 @@ module.exports = {
     "channel": "web",
     "active": true
   },
-  "record137": {
+  "record138": {
     "code": "nodicsDocsNodeTopicprocessIncidentRecovery",
     "product": "nodicsDocumentationProduct",
     "navigation": "nodicsDocumentationNavigation",
@@ -11892,7 +11973,7 @@ module.exports = {
     "channel": "web",
     "active": true
   },
-  "record138": {
+  "record139": {
     "code": "nodicsDocsNodeTopicprocessDevopsTopology",
     "product": "nodicsDocumentationProduct",
     "navigation": "nodicsDocumentationNavigation",
@@ -11968,7 +12049,7 @@ module.exports = {
     "channel": "web",
     "active": true
   },
-  "record139": {
+  "record140": {
     "code": "nodicsDocsNodeTopicprocessQaRegressionGuide",
     "product": "nodicsDocumentationProduct",
     "navigation": "nodicsDocumentationNavigation",
@@ -12044,7 +12125,7 @@ module.exports = {
     "channel": "web",
     "active": true
   },
-  "record140": {
+  "record141": {
     "code": "nodicsDocsNodeTopicframeworkCapabilityDocumentationMaturityPattern",
     "product": "nodicsDocumentationProduct",
     "navigation": "nodicsDocumentationNavigation",
@@ -12120,7 +12201,7 @@ module.exports = {
     "channel": "web",
     "active": true
   },
-  "record141": {
+  "record142": {
     "code": "nodicsDocsNodeTopicdocsOverview",
     "product": "nodicsDocumentationProduct",
     "navigation": "nodicsDocumentationNavigation",
@@ -12199,7 +12280,7 @@ module.exports = {
     "channel": "web",
     "active": true
   },
-  "record142": {
+  "record143": {
     "code": "nodicsDocsNodeTopicwcmsPublishingLifecycle",
     "product": "nodicsDocumentationProduct",
     "navigation": "nodicsDocumentationNavigation",
@@ -12275,7 +12356,7 @@ module.exports = {
     "channel": "web",
     "active": true
   },
-  "record143": {
+  "record144": {
     "code": "nodicsDocsNodeTopicapplicationsNexusDataContentGuide",
     "product": "nodicsDocumentationProduct",
     "navigation": "nodicsDocumentationNavigation",
@@ -12355,7 +12436,7 @@ module.exports = {
     "channel": "web",
     "active": true
   },
-  "record144": {
+  "record145": {
     "code": "nodicsDocsNodeTopicapplicationsAxisSetupErrorContracts",
     "product": "nodicsDocumentationProduct",
     "navigation": "nodicsDocumentationNavigation",
@@ -12435,7 +12516,7 @@ module.exports = {
     "channel": "web",
     "active": true
   },
-  "record145": {
+  "record146": {
     "code": "nodicsDocsNodeTopicwcmsCmsSourceMapAuthoringContract",
     "product": "nodicsDocumentationProduct",
     "navigation": "nodicsDocumentationNavigation",
@@ -12515,7 +12596,7 @@ module.exports = {
     "channel": "web",
     "active": true
   },
-  "record146": {
+  "record147": {
     "code": "nodicsDocsNodeTopicwcmsMediaOperationsRunbook",
     "product": "nodicsDocumentationProduct",
     "navigation": "nodicsDocumentationNavigation",
@@ -12595,7 +12676,7 @@ module.exports = {
     "channel": "web",
     "active": true
   },
-  "record147": {
+  "record148": {
     "code": "nodicsDocsNodeTopicdataImportExportProviderGuides",
     "product": "nodicsDocumentationProduct",
     "navigation": "nodicsDocumentationNavigation",
@@ -12675,7 +12756,7 @@ module.exports = {
     "channel": "web",
     "active": true
   },
-  "record148": {
+  "record149": {
     "code": "nodicsDocsNodeTopiccommerceDataAuthoringFulfillment",
     "product": "nodicsDocumentationProduct",
     "navigation": "nodicsDocumentationNavigation",
@@ -12756,7 +12837,7 @@ module.exports = {
     "channel": "web",
     "active": true
   },
-  "record149": {
+  "record150": {
     "code": "nodicsDocsNodeTopicdocsDocumentationPublishingRunbook",
     "product": "nodicsDocumentationProduct",
     "navigation": "nodicsDocumentationNavigation",
@@ -12836,7 +12917,7 @@ module.exports = {
     "channel": "web",
     "active": true
   },
-  "record150": {
+  "record151": {
     "code": "nodicsDocsNodeTopicplatformModuleRegistryJourney",
     "product": "nodicsDocumentationProduct",
     "navigation": "nodicsDocumentationNavigation",
@@ -12915,7 +12996,7 @@ module.exports = {
     "channel": "web",
     "active": true
   },
-  "record151": {
+  "record152": {
     "code": "nodicsDocsNodeTopiccommerceSearchGuide",
     "product": "nodicsDocumentationProduct",
     "navigation": "nodicsDocumentationNavigation",
@@ -12994,7 +13075,7 @@ module.exports = {
     "channel": "web",
     "active": true
   },
-  "record152": {
+  "record153": {
     "code": "nodicsDocsNodeTopiclocalizationRuntimeAuthoring",
     "product": "nodicsDocumentationProduct",
     "navigation": "nodicsDocumentationNavigation",
@@ -13073,7 +13154,7 @@ module.exports = {
     "channel": "web",
     "active": true
   },
-  "record153": {
+  "record154": {
     "code": "nodicsDocsNodeTopiccommercePaymentProviderBoundaries",
     "product": "nodicsDocumentationProduct",
     "navigation": "nodicsDocumentationNavigation",
@@ -13152,17 +13233,17 @@ module.exports = {
     "channel": "web",
     "active": true
   },
-  "record154": {
-    "code": "nodicsDocsNodeTopiccommerceCustomerListProfileBoundary",
+  "record155": {
+    "code": "nodicsDocsNodeTopicloyaltyWalletsRewardsLedger",
     "product": "nodicsDocumentationProduct",
     "navigation": "nodicsDocumentationNavigation",
-    "parentNode": "nodicsDocsNodeSecuserEnterpriseAndTenantManagement",
+    "parentNode": "nodicsDocsNodeSecloyaltyAndRewards",
     "nodeLevel": "TOPIC",
     "nodeType": "PAGE",
-    "nodeTitle": "Customer List and Profile Commerce Boundary",
-    "nodeSummary": "Why customer lists belong to Commerce while person, address, authentication, permission, and organization identity stay under Profile.",
+    "nodeTitle": "Loyalty Wallets, Rewards, and Ledger",
+    "nodeSummary": "Business, developer, operator, and customization guidance for reward wallets, balances, reservations, redemptions, ledger evidence, and Commerce reward payment provider integration.",
     "nodeContentArea": {
-      "route": "/docs/framework/commerce-customer-list-profile-boundary",
+      "route": "/docs/framework/loyalty-wallets-rewards-ledger",
       "documentType": "contract",
       "businessAudience": [
         "business user",
@@ -13182,9 +13263,9 @@ module.exports = {
     "childStatusSummary": {
       "childCount": 0
     },
-    "targetDocumentationPage": "nodicsDocsMetadatacommerceCustomerListProfileBoundary",
-    "targetPage": "nodicsDocsPagecommerceCustomerListProfileBoundary",
-    "targetRoute": "nodicsDocsRoutecommerceCustomerListProfileBoundary",
+    "targetDocumentationPage": "nodicsDocsMetadataloyaltyWalletsRewardsLedger",
+    "targetPage": "nodicsDocsPageloyaltyWalletsRewardsLedger",
+    "targetRoute": "nodicsDocsRouteloyaltyWalletsRewardsLedger",
     "nodeOrder": 10010,
     "expandable": false,
     "expandedByDefault": false,
@@ -13216,10 +13297,96 @@ module.exports = {
     "lifecycleState": "ONLINE",
     "maturityState": "IMPLEMENTED",
     "searchKeywords": [
-      "customer-list",
+      "loyalty",
+      "reward",
+      "wallet",
+      "points",
+      "ledger",
+      "reservation",
+      "redemption",
+      "checkout",
+      "payment-provider"
+    ],
+    "relatedNodes": [
+      "nodicsDocsNodeTopiccommercePaymentProviderBoundaries",
+      "nodicsDocsNodeTopiccommercePaymentFulfillment",
+      "nodicsDocsNodeTopicframeworkCustomizationGuide",
+      "nodicsDocsNodeTopicframeworkLocalBrowserAcceptanceJourney"
+    ],
+    "locale": "en",
+    "channel": "web",
+    "active": true
+  },
+  "record156": {
+    "code": "nodicsDocsNodeTopiccommerceShoppingListCommerceBoundary",
+    "product": "nodicsDocumentationProduct",
+    "navigation": "nodicsDocumentationNavigation",
+    "parentNode": "nodicsDocsNodeSecuserEnterpriseAndTenantManagement",
+    "nodeLevel": "TOPIC",
+    "nodeType": "PAGE",
+    "nodeTitle": "Shopping List Commerce Boundary",
+    "nodeSummary": "Why wishlist, compare, and save-for-later belong to Commerce while Profile remains the identity authority.",
+    "nodeContentArea": {
+      "route": "/docs/framework/commerce-shopping-list-commerce-boundary",
+      "documentType": "contract",
+      "businessAudience": [
+        "business user",
+        "administrator",
+        "implementation partner"
+      ],
+      "technicalAudience": [
+        "architect",
+        "developer",
+        "operator",
+        "qa engineer",
+        "ai tool"
+      ]
+    },
+    "childSummaryCards": [],
+    "childJourneyLinks": [],
+    "childStatusSummary": {
+      "childCount": 0
+    },
+    "targetDocumentationPage": "nodicsDocsMetadatacommerceShoppingListCommerceBoundary",
+    "targetPage": "nodicsDocsPagecommerceShoppingListCommerceBoundary",
+    "targetRoute": "nodicsDocsRoutecommerceShoppingListCommerceBoundary",
+    "nodeOrder": 10010,
+    "expandable": false,
+    "expandedByDefault": false,
+    "nodeIcon": "file-text",
+    "nodeAudience": [
+      "business",
+      "architect",
+      "administrator",
+      "developer",
+      "operator",
+      "qa",
+      "ai-tool"
+    ],
+    "accessPolicy": "nodicsDocsAccessPublic",
+    "accessMode": "PUBLIC",
+    "allowedRoles": [],
+    "allowedGroups": [],
+    "allowedPermissions": [],
+    "managedInAxis": true,
+    "axisAuthoringPermissions": [
+      "documentation.navigation.update"
+    ],
+    "workflowRequired": true,
+    "workflowTriggers": [
+      "NAVIGATION_CHANGE",
+      "DASHBOARD_CHANGE",
+      "ACCESS_POLICY_CHANGE"
+    ],
+    "lifecycleState": "ONLINE",
+    "maturityState": "IMPLEMENTED",
+    "searchKeywords": [
+      "shopping-list",
+      "wishlist",
+      "compare",
+      "save-for-later",
       "profile",
       "commerce-boundary",
-      "eligibility",
       "identity"
     ],
     "relatedNodes": [
@@ -13231,7 +13398,7 @@ module.exports = {
     "channel": "web",
     "active": true
   },
-  "record155": {
+  "record157": {
     "code": "nodicsDocsNodeTopicfoundationNmsRuntimeMonitoring",
     "product": "nodicsDocumentationProduct",
     "navigation": "nodicsDocumentationNavigation",
@@ -13310,7 +13477,7 @@ module.exports = {
     "channel": "web",
     "active": true
   },
-  "record156": {
+  "record158": {
     "code": "nodicsDocsNodeTopicfoundationServiceRuntimeOverrides",
     "product": "nodicsDocumentationProduct",
     "navigation": "nodicsDocumentationNavigation",
@@ -13391,7 +13558,7 @@ module.exports = {
     "channel": "web",
     "active": true
   },
-  "record157": {
+  "record159": {
     "code": "nodicsDocsNodeTopicfoundationModuleToModuleCommunication",
     "product": "nodicsDocumentationProduct",
     "navigation": "nodicsDocumentationNavigation",
@@ -13474,7 +13641,7 @@ module.exports = {
     "channel": "web",
     "active": true
   },
-  "record158": {
+  "record160": {
     "code": "nodicsDocsNodeTopicfoundationCacheProviderRunbooks",
     "product": "nodicsDocumentationProduct",
     "navigation": "nodicsDocumentationNavigation",
@@ -13553,7 +13720,7 @@ module.exports = {
     "channel": "web",
     "active": true
   },
-  "record159": {
+  "record161": {
     "code": "nodicsDocsNodeTopicfoundationDatabaseProviderBoundaries",
     "product": "nodicsDocumentationProduct",
     "navigation": "nodicsDocumentationNavigation",
@@ -13632,7 +13799,7 @@ module.exports = {
     "channel": "web",
     "active": true
   },
-  "record160": {
+  "record162": {
     "code": "nodicsDocsNodeTopicsecurityOtpSecurityFlow",
     "product": "nodicsDocumentationProduct",
     "navigation": "nodicsDocumentationNavigation",
@@ -13711,7 +13878,7 @@ module.exports = {
     "channel": "web",
     "active": true
   },
-  "record161": {
+  "record163": {
     "code": "nodicsDocsNodeTopiccommunicationProviderRunbooks",
     "product": "nodicsDocumentationProduct",
     "navigation": "nodicsDocumentationNavigation",
@@ -13790,7 +13957,7 @@ module.exports = {
     "channel": "web",
     "active": true
   },
-  "record162": {
+  "record164": {
     "code": "nodicsDocsNodeTopicengagementContactSubmissionOperations",
     "product": "nodicsDocumentationProduct",
     "navigation": "nodicsDocumentationNavigation",
@@ -13869,7 +14036,7 @@ module.exports = {
     "channel": "web",
     "active": true
   },
-  "record163": {
+  "record165": {
     "code": "nodicsDocsNodeTopicprocessWorkflowBpmSourceMap",
     "product": "nodicsDocumentationProduct",
     "navigation": "nodicsDocumentationNavigation",
@@ -13949,7 +14116,7 @@ module.exports = {
     "channel": "web",
     "active": true
   },
-  "record164": {
+  "record166": {
     "code": "nodicsDocsNodeTopicprocessCronjobDataAuthoring",
     "product": "nodicsDocumentationProduct",
     "navigation": "nodicsDocumentationNavigation",
@@ -14028,7 +14195,7 @@ module.exports = {
     "channel": "web",
     "active": true
   },
-  "record165": {
+  "record167": {
     "code": "nodicsDocsNodeTopicframeworkReleaseUpgradeCompatibility",
     "product": "nodicsDocumentationProduct",
     "navigation": "nodicsDocumentationNavigation",
@@ -14107,7 +14274,7 @@ module.exports = {
     "channel": "web",
     "active": true
   },
-  "record166": {
+  "record168": {
     "code": "nodicsDocsNodeTopiccommerceFulfillmentCoreSourceMap",
     "product": "nodicsDocumentationProduct",
     "navigation": "nodicsDocumentationNavigation",
@@ -14186,7 +14353,7 @@ module.exports = {
     "channel": "web",
     "active": true
   },
-  "record167": {
+  "record169": {
     "code": "nodicsDocsNodeTopicacceleratorsDomainCommerceSourceMap",
     "product": "nodicsDocumentationProduct",
     "navigation": "nodicsDocumentationNavigation",
@@ -14265,7 +14432,7 @@ module.exports = {
     "channel": "web",
     "active": true
   },
-  "record168": {
+  "record170": {
     "code": "nodicsDocsNodeTopicfoundationToolingRuntimeContracts",
     "product": "nodicsDocumentationProduct",
     "navigation": "nodicsDocumentationNavigation",
@@ -14344,7 +14511,7 @@ module.exports = {
     "channel": "web",
     "active": true
   },
-  "record169": {
+  "record171": {
     "code": "nodicsDocsNodeTopicfoundationEmsRuntimeClientRunbook",
     "product": "nodicsDocumentationProduct",
     "navigation": "nodicsDocumentationNavigation",
@@ -14423,7 +14590,7 @@ module.exports = {
     "channel": "web",
     "active": true
   },
-  "record170": {
+  "record172": {
     "code": "nodicsDocsNodeTopicreferenceInternalSourceBoundaryRegister",
     "product": "nodicsDocumentationProduct",
     "navigation": "nodicsDocumentationNavigation",
@@ -14503,7 +14670,7 @@ module.exports = {
     "channel": "web",
     "active": true
   },
-  "record171": {
+  "record173": {
     "code": "nodicsDocsNodeTopictoolingAiDeveloperEnablement",
     "product": "nodicsDocumentationProduct",
     "navigation": "nodicsDocumentationNavigation",
@@ -14580,7 +14747,7 @@ module.exports = {
     "channel": "web",
     "active": true
   },
-  "record172": {
+  "record174": {
     "code": "nodicsDocsNodeTopicreferenceSourceMapGlossary",
     "product": "nodicsDocumentationProduct",
     "navigation": "nodicsDocumentationNavigation",
@@ -14657,7 +14824,7 @@ module.exports = {
     "channel": "web",
     "active": true
   },
-  "record173": {
+  "record175": {
     "code": "nodicsDocsNodeTopicreferenceSourceBackedDocumentationCoverageAudit",
     "product": "nodicsDocumentationProduct",
     "navigation": "nodicsDocumentationNavigation",
@@ -14738,7 +14905,7 @@ module.exports = {
     "channel": "web",
     "active": true
   },
-  "record174": {
+  "record176": {
     "code": "nodicsDocsNodeTopicreferenceDocumentationGapBacklog",
     "product": "nodicsDocumentationProduct",
     "navigation": "nodicsDocumentationNavigation",

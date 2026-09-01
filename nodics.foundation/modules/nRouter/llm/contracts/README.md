@@ -23,6 +23,25 @@ Use these files for rules that are more specific than root `AGENTS.md` and the m
 - Leave `authTokenTypes` absent only when the route intentionally supports the
   normal authenticated credential types.
 
+## Resource-oriented route keys
+
+- `nRouter` exposes configured routes as
+  `/<contextRoot>/<modulePrefix>/<apiVersion><route.key>`. Because the module
+  prefix is already part of the public URL, `route.key` must start with the
+  resource, schema, or capability owned by that module.
+- Do not place human audience, client shell, or access-channel markers such as
+  `/customer`, `/employee`, `/operator`, or `/backoffice` at the start of a
+  module route key. These terms are not ownership boundaries and create stale
+  coupling when the same capability is used by storefronts, Axis, employees,
+  service agents, automation, or integrations.
+- Encode audience/security through `secured`, `authTokenTypes`, `accessGroups`,
+  `permission`, `permissionConfig`, `apiExposure`, request context, and
+  token/session ownership checks.
+- Acceptable examples: `/carts`, `/carts/:cartCode`, `/products/discovery`,
+  `/products/:productCode`, `/promotions/preview`, `/promotions/:promotionCode/approve`.
+- Avoid examples: `/customer/carts`, `/customer/products/:productCode`,
+  `/operator/products/publication/search`, `/backoffice/promotions/drafts`.
+
 ## HTTP boundary defaults
 
 - Keep CORS closed in framework defaults and declare exact browser origins in

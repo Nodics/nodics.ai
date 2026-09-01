@@ -1,0 +1,29 @@
+{
+  "name": "digitalCore",
+  "version": "0.0.0",
+  "index": "70.16",
+  "private": true,
+  "main": "nodics.js",
+  "description": "Digital Commerce checkout availability and reservation bridge.",
+  "nodics": {
+    "kind": "capability",
+    "displayName": "Digital Core",
+    "runtimeModule": true,
+    "loadableByNodicsModuleLoader": true,
+    "owns": [
+      "configuration",
+      "controller",
+      "facade",
+      "router",
+      "schema",
+      "service",
+      "test",
+      "llm"
+    ],
+    "runtime": {
+      "router": true,
+      "publish": false,
+      "web": false
+    }
+  }
+}

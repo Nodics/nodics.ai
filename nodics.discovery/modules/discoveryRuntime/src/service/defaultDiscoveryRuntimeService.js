@@ -19,7 +19,20 @@ module.exports = {
         if (response && Array.isArray(response.result)) return response.result;
         if (response && response.data && Array.isArray(response.data)) return response.data;
         if (response && response.data && Array.isArray(response.data.result)) return response.data.result;
+        let hits = this.findHits(response, 0);
+        if (hits) return hits.hits.map(hit => hit && (hit._source || hit.source || hit.fields || hit)).filter(Boolean);
         return [];
+    },
+
+    /** Finds an Elasticsearch-compatible hits envelope within wrapped nSearch responses. @param {*} value Candidate value. @param {number} depth Current recursion depth. @returns {Object|undefined} Hits envelope. */
+    findHits: function (value, depth) {
+        if (!value || depth > 6 || typeof value !== 'object') return undefined;
+        if (value.hits && Array.isArray(value.hits.hits)) return value.hits;
+        for (let key of ['result', 'data', 'body', 'response', 'payload']) {
+            let found = this.findHits(value[key], depth + 1);
+            if (found) return found;
+        }
+        return undefined;
     },
 
     /** Executes a configured discovery search. @param {Object} request Discovery search request. @returns {Promise<Array>} Records. */

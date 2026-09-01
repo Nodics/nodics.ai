@@ -1152,6 +1152,189 @@ module.exports = {
     "active": true
   },
   "record10": {
+    "code": "axisDocsMetadataexperiencestudio",
+    "product": "axisDocumentationProduct",
+    "documentId": "axis.experience-studio",
+    "title": "Axis Experience Studio and Targeted CMS Experiences",
+    "summary": "Configure targeted CMS components for collection, category, brand, and fallback journeys through backend-owned WCMS Experience contracts.",
+    "businessSummary": "Axis Experience Studio and Targeted CMS Experiences explains the business purpose, supported user decisions, operational effect, and Axis-facing controls for the Axis Workspaces and Operations journey.",
+    "technicalSummary": "Axis Experience Studio and Targeted CMS Experiences records Platform axis ownership, source path docs/pages/experience-studio.md, renderer contract, extension path, validation, and troubleshooting evidence.",
+    "ownerFunctionalModule": "nodics.platform.axis",
+    "technicalModule": "axis",
+    "targetPage": "axisDocsPageexperiencestudio",
+    "targetRoute": "axisDocsRouteexperiencestudio",
+    "articleComponent": "axisDocsComponentexperiencestudio",
+    "template": "axisDocumentationArticleTemplate",
+    "searchMetadata": "axisDocsSearchpageaxisdocsmetadataexperiencestudio",
+    "headings": [
+      {
+        "text": "Why this exists",
+        "anchor": "experience-studio-1-why-this-exists",
+        "level": 2
+      },
+      {
+        "text": "Ownership model",
+        "anchor": "experience-studio-2-ownership-model",
+        "level": 2
+      },
+      {
+        "text": "End-to-end flow",
+        "anchor": "experience-studio-3-end-to-end-flow",
+        "level": 2
+      },
+      {
+        "text": "Axis screens",
+        "anchor": "experience-studio-4-axis-screens",
+        "level": 2
+      },
+      {
+        "text": "Placement fields",
+        "anchor": "experience-studio-5-placement-fields",
+        "level": 2
+      },
+      {
+        "text": "Runtime request examples",
+        "anchor": "experience-studio-6-runtime-request-examples",
+        "level": 2
+      },
+      {
+        "text": "Collection journey example",
+        "anchor": "experience-studio-7-collection-journey-example",
+        "level": 2
+      },
+      {
+        "text": "Brand journey example",
+        "anchor": "experience-studio-8-brand-journey-example",
+        "level": 2
+      },
+      {
+        "text": "Default fallback example",
+        "anchor": "experience-studio-9-default-fallback-example",
+        "level": 2
+      },
+      {
+        "text": "Resolution precedence",
+        "anchor": "experience-studio-10-resolution-precedence",
+        "level": 2
+      },
+      {
+        "text": "Performance contract",
+        "anchor": "experience-studio-11-performance-contract",
+        "level": 2
+      },
+      {
+        "text": "Security and preview boundary",
+        "anchor": "experience-studio-12-security-and-preview-boundary",
+        "level": 2
+      },
+      {
+        "text": "Troubleshooting",
+        "anchor": "experience-studio-13-troubleshooting",
+        "level": 2
+      },
+      {
+        "text": "Relationship with Page Designer",
+        "anchor": "experience-studio-14-relationship-with-page-designer",
+        "level": 2
+      },
+      {
+        "text": "Customize and extend safely",
+        "anchor": "experience-studio-15-customize-and-extend-safely",
+        "level": 2
+      },
+      {
+        "text": "Common mistakes",
+        "anchor": "experience-studio-16-common-mistakes",
+        "level": 2
+      },
+      {
+        "text": "Verification",
+        "anchor": "experience-studio-17-verification",
+        "level": 2
+      },
+      {
+        "text": "Business-user checklist",
+        "anchor": "experience-studio-18-business-user-checklist",
+        "level": 2
+      }
+    ],
+    "diagrams": [
+      {
+        "language": "mermaid"
+      },
+      {
+        "language": "mermaid"
+      }
+    ],
+    "visualAssets": [
+      {
+        "kind": "table",
+        "title": "Area, Owner, Notes"
+      },
+      {
+        "kind": "table",
+        "title": "Field, Purpose, Example"
+      },
+      {
+        "kind": "table",
+        "title": "Slot, Target type, Target code, Component, Priority"
+      },
+      {
+        "kind": "table",
+        "title": "Slot, Target type, Target code, Component, Renderer"
+      },
+      {
+        "kind": "table",
+        "title": "Slot, Target type, Target code, Component, Priority"
+      },
+      {
+        "kind": "table",
+        "title": "API type, Caller, Preview mode, Notes"
+      },
+      {
+        "kind": "table",
+        "title": "Symptom, Check first, Likely fix"
+      }
+    ],
+    "visualRequirements": [
+      "architecture-diagram",
+      "configuration-table",
+      "troubleshooting-matrix",
+      "table"
+    ],
+    "relatedPages": [
+      "axis.page-designer",
+      "axis.cms-renderers",
+      "axis.documentation-content"
+    ],
+    "sourceRepository": "nodics.platform",
+    "sourcePath": "docs/pages/experience-studio.md",
+    "sourceChecksum": "4d37836941b657db225baeb37fdf84b4ad50b3ff2aa0fee81a6b524c6a5018a1",
+    "sourceWordCount": 2370,
+    "audience": [
+      "business-user",
+      "merchandiser",
+      "administrator",
+      "developer",
+      "operator"
+    ],
+    "managedInAxis": true,
+    "axisAuthoringPermissions": [
+      "documentation.draft.update"
+    ],
+    "workflowRequired": true,
+    "workflowTriggers": [
+      "CONTENT_CHANGE",
+      "ACCESS_POLICY_CHANGE",
+      "SOURCE_EVIDENCE_CHANGE"
+    ],
+    "accessPolicy": "axisDocsAccessPublic",
+    "accessMode": "PUBLIC",
+    "lifecycleState": "ONLINE",
+    "maturityState": "IMPLEMENTED",
+    "active": true
+  },
+  "record11": {
     "code": "axisDocsMetadatamodulehealth",
     "product": "axisDocumentationProduct",
     "documentId": "axis.module-health",
@@ -1291,7 +1474,7 @@ module.exports = {
     "maturityState": "IMPLEMENTED",
     "active": true
   },
-  "record11": {
+  "record12": {
     "code": "axisDocsMetadataimportsexports",
     "product": "axisDocumentationProduct",
     "documentId": "axis.imports-exports",
@@ -1393,7 +1576,7 @@ module.exports = {
     "maturityState": "IMPLEMENTED",
     "active": true
   },
-  "record12": {
+  "record13": {
     "code": "axisDocsMetadatamediamanagement",
     "product": "axisDocumentationProduct",
     "documentId": "axis.media-management",
@@ -1500,7 +1683,7 @@ module.exports = {
     "maturityState": "IMPLEMENTED",
     "active": true
   },
-  "record13": {
+  "record14": {
     "code": "axisDocsMetadatacustomerengagement",
     "product": "axisDocumentationProduct",
     "documentId": "axis.customer-engagement",
@@ -1627,7 +1810,7 @@ module.exports = {
     "maturityState": "IMPLEMENTED",
     "active": true
   },
-  "record14": {
+  "record15": {
     "code": "axisDocsMetadataopenapireference",
     "product": "axisDocumentationProduct",
     "documentId": "axis.openapi-reference",
@@ -1719,7 +1902,7 @@ module.exports = {
     "maturityState": "IMPLEMENTED",
     "active": true
   },
-  "record15": {
+  "record16": {
     "code": "axisDocsMetadatafeaturedelivery",
     "product": "axisDocumentationProduct",
     "documentId": "axis.feature-delivery",
@@ -1831,7 +2014,7 @@ module.exports = {
     "maturityState": "IMPLEMENTED",
     "active": true
   },
-  "record16": {
+  "record17": {
     "code": "axisDocsMetadataimplementationcontract",
     "product": "axisDocumentationProduct",
     "documentId": "axis.implementation-contract",

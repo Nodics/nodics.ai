@@ -1,0 +1,25 @@
+{
+  "name": "loyaltyRewardProvider",
+  "version": "0.0.0",
+  "index": "70.41",
+  "private": true,
+  "main": "nodics.js",
+  "description": "Commerce payment provider adapter for paying with Loyalty reward balances.",
+  "nodics": {
+    "kind": "capability",
+    "displayName": "Loyalty Reward Provider",
+    "runtimeModule": true,
+    "loadableByNodicsModuleLoader": true,
+    "owns": [
+      "configuration",
+      "service",
+      "test",
+      "llm"
+    ],
+    "runtime": {
+      "router": false,
+      "publish": false,
+      "web": false
+    }
+  }
+}

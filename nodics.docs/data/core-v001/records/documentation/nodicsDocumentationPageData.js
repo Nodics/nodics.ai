@@ -2664,8 +2664,8 @@ module.exports = {
     "active": true
   },
   "record106": {
-    "code": "nodicsDocsPagecommerceCustomerListProfileBoundary",
-    "name": "Customer List and Profile Commerce Boundary",
+    "code": "nodicsDocsPageloyaltyWalletsRewardsLedger",
+    "name": "Loyalty Wallets, Rewards, and Ledger",
     "cmsSite": [
       "nodicsDocumentationSite"
     ],
@@ -2680,7 +2680,7 @@ module.exports = {
         "active": true
       },
       {
-        "target": "nodicsDocsComponentcommerceCustomerListProfileBoundary",
+        "target": "nodicsDocsComponentloyaltyWalletsRewardsLedger",
         "slot": "article",
         "index": 10,
         "active": true
@@ -2689,6 +2689,31 @@ module.exports = {
     "active": true
   },
   "record107": {
+    "code": "nodicsDocsPagecommerceShoppingListCommerceBoundary",
+    "name": "Shopping List Commerce Boundary",
+    "cmsSite": [
+      "nodicsDocumentationSite"
+    ],
+    "typeCode": "nodicsDocumentationArticlePageType",
+    "template": "nodicsDocumentationArticleTemplate",
+    "renderer": "documentation.page.article",
+    "cmsComponents": [
+      {
+        "target": "nodicsDocumentationNavigation",
+        "slot": "navigation",
+        "index": 5,
+        "active": true
+      },
+      {
+        "target": "nodicsDocsComponentcommerceShoppingListCommerceBoundary",
+        "slot": "article",
+        "index": 10,
+        "active": true
+      }
+    ],
+    "active": true
+  },
+  "record108": {
     "code": "nodicsDocsPagefoundationNmsRuntimeMonitoring",
     "name": "NMS Runtime Monitoring",
     "cmsSite": [
@@ -2713,7 +2738,7 @@ module.exports = {
     ],
     "active": true
   },
-  "record108": {
+  "record109": {
     "code": "nodicsDocsPagefoundationServiceRuntimeOverrides",
     "name": "Service Runtime and Override Precedence",
     "cmsSite": [
@@ -2738,7 +2763,7 @@ module.exports = {
     ],
     "active": true
   },
-  "record109": {
+  "record110": {
     "code": "nodicsDocsPagefoundationModuleToModuleCommunication",
     "name": "Module-to-Module Communication",
     "cmsSite": [
@@ -2763,7 +2788,7 @@ module.exports = {
     ],
     "active": true
   },
-  "record110": {
+  "record111": {
     "code": "nodicsDocsPagefoundationCacheProviderRunbooks",
     "name": "Cache Provider Runbooks",
     "cmsSite": [
@@ -2788,7 +2813,7 @@ module.exports = {
     ],
     "active": true
   },
-  "record111": {
+  "record112": {
     "code": "nodicsDocsPagefoundationDatabaseProviderBoundaries",
     "name": "Database Provider Boundaries",
     "cmsSite": [
@@ -2813,7 +2838,7 @@ module.exports = {
     ],
     "active": true
   },
-  "record112": {
+  "record113": {
     "code": "nodicsDocsPagesecurityOtpSecurityFlow",
     "name": "OTP and Security Flow",
     "cmsSite": [
@@ -2838,7 +2863,7 @@ module.exports = {
     ],
     "active": true
   },
-  "record113": {
+  "record114": {
     "code": "nodicsDocsPagecommunicationProviderRunbooks",
     "name": "Communication Provider Runbooks",
     "cmsSite": [
@@ -2863,7 +2888,7 @@ module.exports = {
     ],
     "active": true
   },
-  "record114": {
+  "record115": {
     "code": "nodicsDocsPageengagementContactSubmissionOperations",
     "name": "Contact Submission Operations",
     "cmsSite": [
@@ -2888,7 +2913,7 @@ module.exports = {
     ],
     "active": true
   },
-  "record115": {
+  "record116": {
     "code": "nodicsDocsPageprocessWorkflowBpmSourceMap",
     "name": "Workflow and BPM Source Map",
     "cmsSite": [
@@ -2913,7 +2938,7 @@ module.exports = {
     ],
     "active": true
   },
-  "record116": {
+  "record117": {
     "code": "nodicsDocsPageprocessCronjobDataAuthoring",
     "name": "CronJob Data Authoring",
     "cmsSite": [
@@ -2938,7 +2963,7 @@ module.exports = {
     ],
     "active": true
   },
-  "record117": {
+  "record118": {
     "code": "nodicsDocsPageframeworkReleaseUpgradeCompatibility",
     "name": "Release and Upgrade Compatibility",
     "cmsSite": [
@@ -2963,7 +2988,7 @@ module.exports = {
     ],
     "active": true
   },
-  "record118": {
+  "record119": {
     "code": "nodicsDocsPagecommerceFulfillmentCoreSourceMap",
     "name": "Fulfillment Core Source Map",
     "cmsSite": [
@@ -2988,7 +3013,7 @@ module.exports = {
     ],
     "active": true
   },
-  "record119": {
+  "record120": {
     "code": "nodicsDocsPageacceleratorsDomainCommerceSourceMap",
     "name": "Domain Commerce Accelerator Source Map",
     "cmsSite": [
@@ -3013,7 +3038,7 @@ module.exports = {
     ],
     "active": true
   },
-  "record120": {
+  "record121": {
     "code": "nodicsDocsPagefoundationToolingRuntimeContracts",
     "name": "Tooling Runtime Contracts",
     "cmsSite": [
@@ -3038,7 +3063,7 @@ module.exports = {
     ],
     "active": true
   },
-  "record121": {
+  "record122": {
     "code": "nodicsDocsPagefoundationEmsRuntimeClientRunbook",
     "name": "EMS Runtime and Client Runbook",
     "cmsSite": [
@@ -3063,7 +3088,7 @@ module.exports = {
     ],
     "active": true
   },
-  "record122": {
+  "record123": {
     "code": "nodicsDocsPagereferenceInternalSourceBoundaryRegister",
     "name": "Internal Source Boundary Register",
     "cmsSite": [
@@ -3088,7 +3113,7 @@ module.exports = {
     ],
     "active": true
   },
-  "record123": {
+  "record124": {
     "code": "nodicsDocsPagetoolingAiDeveloperEnablement",
     "name": "AI and Developer Tooling",
     "cmsSite": [
@@ -3113,7 +3138,7 @@ module.exports = {
     ],
     "active": true
   },
-  "record124": {
+  "record125": {
     "code": "nodicsDocsPagereferenceSourceMapGlossary",
     "name": "Reference Source Map and Glossary",
     "cmsSite": [
@@ -3138,7 +3163,7 @@ module.exports = {
     ],
     "active": true
   },
-  "record125": {
+  "record126": {
     "code": "nodicsDocsPagereferenceSourceBackedDocumentationCoverageAudit",
     "name": "Source-Backed Documentation Coverage Audit",
     "cmsSite": [
@@ -3163,7 +3188,7 @@ module.exports = {
     ],
     "active": true
   },
-  "record126": {
+  "record127": {
     "code": "nodicsDocsPagereferenceDocumentationGapBacklog",
     "name": "Documentation Gap Backlog",
     "cmsSite": [

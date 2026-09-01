@@ -55,7 +55,7 @@ module.exports = {
     "childJourneyLinks": [],
     "childStatusSummary": {
       "childCount": 4,
-      "pages": 17
+      "pages": 18
     },
     "nodeOrder": 10,
     "expandable": true,
@@ -290,6 +290,7 @@ module.exports = {
         "axis.assistant",
         "axis.schema-workbench",
         "axis.page-designer",
+        "axis.experience-studio",
         "axis.module-health",
         "axis.imports-exports",
         "axis.media-management",
@@ -327,19 +328,19 @@ module.exports = {
         "route": "/docs/nodics-axis/page-designer"
       },
       {
+        "label": "Axis Experience Studio and Targeted CMS Experiences",
+        "targetPage": "axis.experience-studio",
+        "route": "/docs/nodics-axis/experience-studio"
+      },
+      {
         "label": "Module Health",
         "targetPage": "axis.module-health",
         "route": "/docs/nodics-axis/module-health"
-      },
-      {
-        "label": "Imports and Exports Workspace",
-        "targetPage": "axis.imports-exports",
-        "route": "/docs/nodics-axis/imports-exports"
       }
     ],
     "childStatusSummary": {
       "childCount": 1,
-      "pages": 9
+      "pages": 10
     },
     "nodeOrder": 30,
     "expandable": true,
@@ -1117,6 +1118,7 @@ module.exports = {
         "axis.assistant",
         "axis.schema-workbench",
         "axis.page-designer",
+        "axis.experience-studio",
         "axis.module-health",
         "axis.imports-exports",
         "axis.media-management",
@@ -1150,6 +1152,12 @@ module.exports = {
         "title": "Axis Page Designer",
         "summary": "Use the governed catalog-first Designer flow for sites, templates, dynamic slots, sections, components, media, routes, navigation, and publish readiness.",
         "order": 95
+      },
+      {
+        "code": "axis.experience-studio",
+        "title": "Axis Experience Studio and Targeted CMS Experiences",
+        "summary": "Configure targeted CMS components for collection, category, brand, and fallback journeys through backend-owned WCMS Experience contracts.",
+        "order": 97
       },
       {
         "code": "axis.module-health",
@@ -1204,6 +1212,11 @@ module.exports = {
         "route": "/docs/nodics-axis/page-designer"
       },
       {
+        "label": "Axis Experience Studio and Targeted CMS Experiences",
+        "targetPage": "axis.experience-studio",
+        "route": "/docs/nodics-axis/experience-studio"
+      },
+      {
         "label": "Module Health",
         "targetPage": "axis.module-health",
         "route": "/docs/nodics-axis/module-health"
@@ -1230,7 +1243,7 @@ module.exports = {
       }
     ],
     "childStatusSummary": {
-      "childCount": 9,
+      "childCount": 10,
       "subgroups": 0
     },
     "nodeOrder": 70,
@@ -1567,6 +1580,87 @@ module.exports = {
     "active": true
   },
   "record18": {
+    "code": "axisDocsNodeTopicaxisExperienceStudio",
+    "product": "axisDocumentationProduct",
+    "navigation": "axisDocumentationNavigationMetadata",
+    "parentNode": "axisDocsNodeGrpaxisCapabilitiesaxisWorkspacesAndOperations",
+    "nodeLevel": "TOPIC",
+    "nodeType": "PAGE",
+    "nodeTitle": "Axis Experience Studio and Targeted CMS Experiences",
+    "nodeSummary": "Configure targeted CMS components for collection, category, brand, and fallback journeys through backend-owned WCMS Experience contracts.",
+    "nodeContentArea": {
+      "route": "/docs/nodics-axis/experience-studio",
+      "documentType": "how-to",
+      "businessAudience": [
+        "business-user",
+        "merchandiser",
+        "administrator"
+      ],
+      "technicalAudience": [
+        "developer",
+        "operator"
+      ]
+    },
+    "childSummaryCards": [],
+    "childJourneyLinks": [],
+    "childStatusSummary": {
+      "childCount": 0
+    },
+    "targetDocumentationPage": "axisDocsMetadataexperiencestudio",
+    "targetPage": "axisDocsPageexperiencestudio",
+    "targetRoute": "axisDocsRouteexperiencestudio",
+    "nodeOrder": 97,
+    "expandable": false,
+    "expandedByDefault": false,
+    "nodeIcon": "file-text",
+    "nodeAudience": [
+      "business-user",
+      "merchandiser",
+      "administrator",
+      "developer",
+      "operator"
+    ],
+    "accessPolicy": "axisDocsAccessPublic",
+    "accessMode": "PUBLIC",
+    "allowedRoles": [],
+    "allowedGroups": [],
+    "allowedPermissions": [],
+    "managedInAxis": true,
+    "axisAuthoringPermissions": [
+      "documentation.navigation.update"
+    ],
+    "workflowRequired": true,
+    "workflowTriggers": [
+      "NAVIGATION_CHANGE",
+      "DASHBOARD_CHANGE",
+      "ACCESS_POLICY_CHANGE"
+    ],
+    "lifecycleState": "ONLINE",
+    "maturityState": "IMPLEMENTED",
+    "searchKeywords": [
+      "axis-capabilities",
+      "axis-workspaces-and-operations",
+      "axis-experience-studio",
+      "targeted-cms-experiences",
+      "collection-journey",
+      "brand-journey",
+      "default-fallback",
+      "business-user",
+      "merchandiser",
+      "administrator",
+      "developer",
+      "operator"
+    ],
+    "relatedNodes": [
+      "axisDocsNodeTopicaxisPageDesigner",
+      "axisDocsNodeTopicaxisCmsRenderers",
+      "axisDocsNodeTopicaxisDocumentationContent"
+    ],
+    "locale": "en",
+    "channel": "web",
+    "active": true
+  },
+  "record19": {
     "code": "axisDocsNodeTopicaxisModuleHealth",
     "product": "axisDocumentationProduct",
     "navigation": "axisDocumentationNavigationMetadata",
@@ -1639,7 +1733,7 @@ module.exports = {
     "channel": "web",
     "active": true
   },
-  "record19": {
+  "record20": {
     "code": "axisDocsNodeTopicaxisImportsExports",
     "product": "axisDocumentationProduct",
     "navigation": "axisDocumentationNavigationMetadata",
@@ -1712,7 +1806,7 @@ module.exports = {
     "channel": "web",
     "active": true
   },
-  "record20": {
+  "record21": {
     "code": "axisDocsNodeTopicaxisMediaManagement",
     "product": "axisDocumentationProduct",
     "navigation": "axisDocumentationNavigationMetadata",
@@ -1785,7 +1879,7 @@ module.exports = {
     "channel": "web",
     "active": true
   },
-  "record21": {
+  "record22": {
     "code": "axisDocsNodeTopicaxisCustomerEngagement",
     "product": "axisDocumentationProduct",
     "navigation": "axisDocumentationNavigationMetadata",
@@ -1858,7 +1952,7 @@ module.exports = {
     "channel": "web",
     "active": true
   },
-  "record22": {
+  "record23": {
     "code": "axisDocsNodeTopicaxisOpenapiReference",
     "product": "axisDocumentationProduct",
     "navigation": "axisDocumentationNavigationMetadata",
@@ -1934,7 +2028,7 @@ module.exports = {
     "channel": "web",
     "active": true
   },
-  "record23": {
+  "record24": {
     "code": "axisDocsNodeGrpcontributeToAxisaxisContributionAndGovernance",
     "product": "axisDocumentationProduct",
     "navigation": "axisDocumentationNavigationMetadata",
@@ -2023,7 +2117,7 @@ module.exports = {
     "channel": "web",
     "active": true
   },
-  "record24": {
+  "record25": {
     "code": "axisDocsNodeTopicaxisFeatureDelivery",
     "product": "axisDocumentationProduct",
     "navigation": "axisDocumentationNavigationMetadata",
@@ -2095,7 +2189,7 @@ module.exports = {
     "channel": "web",
     "active": true
   },
-  "record25": {
+  "record26": {
     "code": "axisDocsNodeTopicaxisImplementationContract",
     "product": "axisDocumentationProduct",
     "navigation": "axisDocumentationNavigationMetadata",

@@ -15,12 +15,14 @@ import { randomUUID } from "node:crypto";
 import fs from "node:fs";
 import path from "node:path";
 import { promisify } from "node:util";
+import { readProjectEnvironmentProfile } from "./defaultProjectEnvironmentProfileService.mjs";
 
 const execFileAsync = promisify(execFile);
 const projectRoot = process.env.NODICS_PROJECT_ROOT || process.cwd();
 const manifestPath = path.join(projectRoot, "nodics.project.json");
 const manifest = fs.existsSync(manifestPath) ? JSON.parse(fs.readFileSync(manifestPath, "utf8")) : {};
-const config = manifest.acceptance?.functionalJourney || {};
+const environmentProfile = readProjectEnvironmentProfile(projectRoot, process.env.ENV || "");
+const config = environmentProfile.acceptance?.functionalJourney || manifest.acceptance?.functionalJourney || {};
 const enterprise = process.env.AXIS_ENTERPRISE || "default";
 const platformUrl = process.env.AXIS_PLATFORM_URL || "http://127.0.0.1:4300";
 const engagementUrl = process.env.NODICS_ENGAGEMENT_URL || "http://127.0.0.1:4340";
@@ -187,9 +189,9 @@ async function exerciseCommerceContract(headers) {
   });
   const paths = contract?.paths || contract?.openapi?.paths || {};
   const required = [
-    "/nodics/cart/v0/customer/carts/{cartCode}/calculations",
-    "/nodics/checkoutCore/v0/customer/checkouts/place",
-    "/nodics/order/v0/customer/orders/{orderCode}/lifecycle/preview",
+    "/nodics/cart/v0/carts/{cartCode}/calculations",
+    "/nodics/checkoutCore/v0/checkouts/place",
+    "/nodics/order/v0/orders/{orderCode}/lifecycle/preview",
     "/nodics/process/v0/incidents",
     "/nodics/process/v0/instances/{instanceCode}/retry",
     "/nodics/process/v0/instances/{instanceCode}/compensate",

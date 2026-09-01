@@ -46,7 +46,7 @@ assert.deepEqual(navigation.filter(item => item.featureState === 'DISABLED').map
 assert.deepEqual(navigation.map(item => item.workbenchTarget.schemaName), ['inventoryBalance', 'inventoryBalance', 'inventoryBalance', 'inventoryMovement', 'inventoryMovement', 'warehouse', 'inventoryMovement', 'inventoryReservation', 'inventoryBalance', 'inventoryMovement', 'inventoryMovement', 'inventoryMovement', 'inventoryMovement', 'inventoryBalance']);
 assert(navigation.every(item => item.workbenchTarget.moduleName === 'inventory'));
 assert(navigation.every(item => item.workbenchPresentation.defaultColumns.length >= 5));
-assert(navigation.find(item => item.id === 'inventory-operations').lifecycleActions.some(action => action.id === 'receive-stock' && action.operationRoute === '/operator/inventory/balances/:balanceCode/actions/RECEIVE'));
+assert(navigation.find(item => item.id === 'inventory-operations').lifecycleActions.some(action => action.id === 'receive-stock' && action.operationRoute === '/inventory/balances/:balanceCode/actions/RECEIVE'));
 assert(navigation.find(item => item.id === 'inventory-balances').lifecycleActions.some(action => action.id === 'adjust-stock' && action.ownerModule === 'inventory'));
 assert(navigation.find(item => item.id === 'inventory-balances').lifecycleActions.every(action => action.permission === 'commerce.inventory.operate'));
 assert.equal(navigation.find(item => item.id === 'inventory-warehouses').lifecycleActions, undefined);

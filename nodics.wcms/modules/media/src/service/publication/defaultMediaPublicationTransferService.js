@@ -71,7 +71,7 @@ module.exports = {
         for (let code of codes) {
             let media = this.items(await SERVICE.DefaultMediaService.get({ tenant: request.tenant, authData: request.authData,
                 query: { code: code, active: true, status: 'READY' }, searchOptions: { limit: 2 } }));
-            if (media.length !== 1) throw new CLASSES.NodicsError('ERR_MED_00013', 'Referenced media is unavailable or ambiguous');
+            if (media.length !== 1) throw new CLASSES.NodicsError('ERR_MED_00013', 'Referenced media is unavailable or ambiguous: ' + code);
             media = media[0];
             let maximumAsset = Number(policy.maximumAssetBytes || 52428800);
             let buffer = await SERVICE.DefaultMediaStorageProviderRegistryService.read({ providerCode: media.providerCode,

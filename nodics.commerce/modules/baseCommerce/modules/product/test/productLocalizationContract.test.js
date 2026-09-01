@@ -36,7 +36,7 @@ const sampleHeader = require('../data/sample-v001/headers/product/sampleProductL
 global.CONFIG = { get: key => key === 'product' ? properties.product : undefined };
 global.SERVICE = { DefaultProductLocalizationPolicyService: localization };
 
-const request = { tenant: 'tenant-a', correlationId: 'corr-1', now: '2026-08-10T00:00:00.000Z' };
+const request = { tenant: 'tenant-a', enterpriseCode: 'enterprise-a', correlationId: 'corr-1', now: '2026-08-10T00:00:00.000Z' };
 const product = { code: 'shoe', tenant: 'tenant-a', name: 'Legacy shoe', status: 'ACTIVE', catalogVersion: 'summer', revision: 3 };
 const variants = [
     { code: 'shoe-en', tenant: 'tenant-a', productCode: 'shoe', locale: 'en', name: 'Running shoe', description: 'Light shoe', status: 'READY', revision: 2 },
@@ -75,6 +75,7 @@ test('search projection is deterministic, locale-specific, and excludes shared c
     let second = projection.build(request, { product: product, localizations: variants, storeCode: 'uae', locale: 'ar',
         categoryCodes: ['footwear'], variantCodes: ['shoe-red-42'] });
     assert.equal(first.code, 'shoe|uae|ar');
+    assert.equal(first.enterpriseCode, 'enterprise-a');
     assert.equal(first.payload.name, 'حذاء للجري');
     assert.equal(first.sourceHash, second.sourceHash);
     assert.equal(first.payload.sku, undefined);

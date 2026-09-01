@@ -12,8 +12,8 @@
 /**
  * @module database/controller/schema/DefaultSchemaWorkbenchController
  * @description Maps secured Schema Workbench discovery requests to the owning
- * facade. This controller exposes metadata only; generated CRUD and domain
- * operations remain the sole mutation paths.
+ * facade. Generated CRUD and domain operations remain the sole mutation paths;
+ * Workbench mutation calls are bounded delegations into those owner services.
  * @layer controller
  * @owner nDatabase
  * @override Projects may replace this controller through normal layered
@@ -60,6 +60,14 @@ module.exports = {
      */
     search: function (request, callback) {
         return this.execute('search', request, callback);
+    },
+    /** Creates one authorized schema record through the generated owner service. */
+    createRecord: function (request, callback) {
+        return this.execute('createRecord', request, callback);
+    },
+    /** Updates one authorized schema record through the generated owner service. */
+    updateRecord: function (request, callback) {
+        return this.execute('updateRecord', request, callback);
     },
     /** Returns the authorized dependency impact before deleting records. */
     previewDeleteImpact: function (request, callback) {

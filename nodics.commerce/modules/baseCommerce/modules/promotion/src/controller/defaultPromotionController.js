@@ -64,6 +64,13 @@ module.exports = {
      */
     reverse: function (request, callback) { return this.invoke(request, 'reverse', callback); },
     /**
+     * Executes `restoreOperational` as a loader-visible operation owned by this module.
+     * @param {*} request Value defined by the owning module contract.
+     * @returns {*} Result defined by the owning module contract.
+     * @override Later-loaded modules may replace this member through the standard merge contract.
+     */
+    restoreOperational: function (request, callback) { return this.invoke(request, 'restoreOperational', callback); },
+    /**
      * Executes `saveDraft` as a loader-visible operation owned by this module.
      * @param {*} request Value defined by the owning module contract.
      * @returns {*} Result defined by the owning module contract.

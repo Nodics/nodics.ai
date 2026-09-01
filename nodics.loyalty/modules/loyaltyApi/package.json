@@ -1,0 +1,28 @@
+{
+    "name": "loyaltyApi",
+    "index": "80.80",
+    "description": "Service-to-service Loyalty API boundary.",
+    "main": "nodics.js",
+    "version": "0.0.0",
+    "private": true,
+    "license": "SEE LICENSE IN LICENSE",
+    "nodics": {
+        "kind": "capability",
+        "displayName": "Loyalty API",
+        "runtimeModule": true,
+        "loadableByNodicsModuleLoader": true,
+        "owns": [
+            "router",
+            "controller",
+            "facade",
+            "test",
+            "llm"
+        ],
+        "runtime": {
+            "router": true,
+            "publish": false,
+            "web": false
+        }
+    },
+    "scripts": {}
+}

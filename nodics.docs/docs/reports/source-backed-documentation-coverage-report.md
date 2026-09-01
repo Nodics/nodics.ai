@@ -6,11 +6,11 @@ This generated report maps current source boundaries to published documentation 
 
 | Metric | Count |
 | --- | --- |
-| Catalogue documents | 127 |
-| Source boundaries scanned | 172 |
-| Needs page or owner mapping | 0 |
+| Catalogue documents | 128 |
+| Source boundaries scanned | 179 |
+| Needs page or owner mapping | 3 |
 | Needs deeper section | 0 |
-| Covered | 172 |
+| Covered | 176 |
 | Internal-only candidate | 0 |
 | Classified backlog items | 23 |
 
@@ -29,7 +29,7 @@ This generated report maps current source boundaries to published documentation 
 | P1 | closed-by-p1-docs-batch | Commerce Search guide | needs-deeper-section | `nodics.commerce/modules/baseCommerce/modules/commerceSearch` | Document ranking rules, projections, publishing, index ownership, and storefront impact. |
 | P1 | closed-by-p1-docs-batch | Localization depth | needs-page-or-deeper-section | `nodics.localization/modules/localizationCore`<br/>`nodics.localization/modules/localizationApi` | Document locale records, fallback behavior, content and product localization, import data, and API boundary. |
 | P1 | closed-by-p1-docs-batch | Payment Core and provider split | needs-page-or-owner-mapping | `nodics.commerce/modules/payment` | Document payment decisions, method/provider separation, reconciliation, and safe customer payloads. |
-| P1 | closed-by-p1-docs-batch | Customer List and Profile-Commerce boundary | needs-page-or-owner-mapping | `nodics.commerce/modules/checkout/modules/customerList`<br/>`nodics.platform/modules/profile` | Document why customer list exists in Commerce and what Profile owns. |
+| P1 | closed-by-p1-docs-batch | Shopping List Commerce boundary | needs-page-or-owner-mapping | `nodics.commerce/modules/baseCommerce/modules/shoppingList`<br/>`nodics.platform/modules/profile` | Document why shopping-intent lists belong to Base Commerce and what Profile owns. |
 | P1 | closed-by-p1-docs-batch | NMS runtime monitoring | needs-page-or-owner-mapping | `nodics.foundation/modules/nNms` | Document node monitoring, topology, health checks, runtime evidence, and operator recovery. |
 | P1 | closed-by-p1-docs-batch | Service runtime and override precedence | needs-page-or-owner-mapping | `nodics.foundation/modules/nService`<br/>`nodics.foundation/modules/nService/vService` | Document generated services, virtual service behavior, override precedence, and extension safety. |
 | P1 | closed-by-p1-docs-batch | Cache provider runbooks | needs-page-or-owner-mapping | `nodics.foundation/modules/nCache`<br/>`nodics.foundation/modules/nCache/redisCache`<br/>`nodics.foundation/modules/nCache/hazelcastCache` | Document Redis, Hazelcast, Node cache, key strategy, invalidation, and production behavior. |
@@ -46,6 +46,9 @@ This generated report maps current source boundaries to published documentation 
 
 | Classification | Score | Source boundary | Current matches | Key signals |
 | --- | ---: | --- | --- | --- |
+| needs-page-or-owner-mapping | 54 | `nodics.ai/nodics.wcms/modules/wcmsExperience` | None | schemas:1, services:5, controllers:2, routers:2, tests:8 |
+| needs-page-or-owner-mapping | 27 | `nodics.ai/nodics.commerce/modules/digitalCommerce` | None | schemas:1, services:2, controllers:1, routers:2, tests:1 |
+| needs-page-or-owner-mapping | 27 | `nodics.ai/nodics.commerce/modules/digitalCommerce/modules/digitalCore` | None | schemas:1, services:2, controllers:1, routers:2, tests:1 |
 
 ## Verification
 

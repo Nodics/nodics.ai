@@ -53,6 +53,16 @@ module.exports = {
         return SERVICE.DefaultPromotionOperationService.reverse(Object.assign({}, request, { tenant, authData }));
     },
     /**
+     * Executes `restoreOperational` as a loader-visible operation owned by this module.
+     * @param {*} request Value defined by the owning module contract.
+     * @returns {*} Result defined by the owning module contract.
+     * @override Later-loaded modules may replace this member through the standard merge contract.
+     */
+    restoreOperational: function (request) {
+        const input = this.applyOperatorContext(request);
+        return SERVICE.DefaultPromotionPublicationService.restoreOperational(input, input.payload || {});
+    },
+    /**
      * Executes `applyOperatorContext` as a loader-visible operation owned by this module.
      * @param {*} request Value defined by the owning module contract.
      * @returns {*} Result defined by the owning module contract.

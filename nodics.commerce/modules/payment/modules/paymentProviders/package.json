@@ -8,6 +8,7 @@
   "requiredModules": [
     "paymentProviderCore",
     "stripeProvider",
+    "loyaltyRewardProvider",
     "paypalProvider",
     "cyberSourceProvider",
     "visaProvider"

@@ -13,10 +13,10 @@
 
 /**
  * @module nTooling/service/project/defaultProjectRuntimeStartService
- * @description Starts a project-declared Nodics runtime server from manifest facts while keeping startup mechanics in framework tooling.
+ * @description Starts a project Nodics runtime server from discoverable server metadata while keeping startup mechanics in framework tooling.
  * @layer tooling
  * @owner nTooling
- * @override Projects customize runtime server facts in nodics.project.json; framework tooling owns package resolution and start execution.
+ * @override Projects customize runtime server folders and package metadata; framework tooling owns package resolution and start execution.
  */
 
 const fs = require('node:fs');
@@ -24,16 +24,62 @@ const path = require('node:path');
 
 module.exports = {
     /**
-     * Reads the project runtime contract.
+     * Reads optional project runtime overrides.
      * @param {string} projectRoot Project root.
      * @returns {Object} Project manifest.
      */
     readManifest: function (projectRoot) {
         const manifestPath = path.join(projectRoot, 'nodics.project.json');
-        if (!fs.existsSync(manifestPath)) {
-            throw new Error('Missing nodics.project.json in project root: ' + projectRoot);
-        }
+        if (!fs.existsSync(manifestPath)) return {};
         return JSON.parse(fs.readFileSync(manifestPath, 'utf8'));
+    },
+
+    /**
+     * Reads the project package metadata.
+     * @param {string} projectRoot Project root.
+     * @returns {Object} Parsed package metadata.
+     */
+    readProjectPackage: function (projectRoot) {
+        const packagePath = path.join(projectRoot, 'package.json');
+        if (!fs.existsSync(packagePath)) {
+            throw new Error('Missing package.json in project root: ' + projectRoot);
+        }
+        return JSON.parse(fs.readFileSync(packagePath, 'utf8'));
+    },
+
+    /**
+     * Resolves canonical project identity from package.json.name.
+     * @param {string} projectRoot Project root.
+     * @param {Object} manifest Project manifest.
+     * @returns {string} Canonical project code.
+     */
+    resolveProjectCode: function (projectRoot, manifest) {
+        const projectCode = this.readProjectPackage(projectRoot).name;
+        if (!projectCode || !/^[a-zA-Z][a-zA-Z0-9._-]*$/.test(projectCode)) {
+            throw new Error('package.json requires a stable Nodics project name');
+        }
+        if (Object.prototype.hasOwnProperty.call(manifest, 'contractVersion')) {
+            throw new Error('nodics.project.json must not declare contractVersion');
+        }
+        if (Object.prototype.hasOwnProperty.call(manifest, 'projectCode')) {
+            throw new Error('nodics.project.json must not declare projectCode; use package.json.name');
+        }
+        return projectCode;
+    },
+
+    /**
+     * Builds the conventional local environment name for a project.
+     * @param {string} projectRoot Project root.
+     * @param {Object} manifest Project manifest.
+     * @returns {string} Local environment name.
+     */
+    conventionalLocalEnvironmentName: function (projectRoot, manifest) {
+        if (typeof projectRoot !== 'string') {
+            manifest = projectRoot || {};
+            projectRoot = process.cwd();
+        }
+        const projectSegment = String(this.resolveProjectCode(projectRoot, manifest)).split('.').filter(Boolean).pop() || 'project';
+        return projectSegment + 'Local';
     },
 
     /**
@@ -72,6 +118,79 @@ module.exports = {
     },
 
     /**
+     * Reads one server package metadata file.
+     * @param {string} packagePath Server package path.
+     * @returns {Object} Package metadata.
+     */
+    readPackage: function (packagePath) {
+        return JSON.parse(fs.readFileSync(packagePath, 'utf8'));
+    },
+
+    /**
+     * Builds a useful retirement message from server package metadata.
+     * @param {string} serverCode Runtime server code.
+     * @param {Object} metadata Server package metadata.
+     * @returns {string} Retirement message.
+     */
+    retiredMessage: function (serverCode, metadata) {
+        const nodics = metadata.nodics || {};
+        const replacements = [].concat(nodics.replacementServers || []);
+        return [
+            'Project runtime server is retired: ' + serverCode + '.',
+            replacements.length ? 'Use ' + replacements.join(' or ') + ' instead.' : ''
+        ].filter(Boolean).join(' ');
+    },
+
+    /**
+     * Discovers one runtime server from the selected environment folder.
+     * @param {string} projectRoot Project root.
+     * @param {string} environmentName Environment name.
+     * @param {string} serverCode Runtime server code.
+     * @returns {Object} Server declaration.
+     */
+    discoverServer: function (projectRoot, environmentName, serverCode) {
+        const environmentRoot = path.join(projectRoot, 'envs', environmentName);
+        const candidates = [
+            serverCode,
+            serverCode.endsWith('Server') ? serverCode : serverCode + 'Server'
+        ].filter((candidate, index, values) => values.indexOf(candidate) === index);
+        for (const candidate of candidates) {
+            const packagePath = path.join(environmentRoot, candidate, 'package.json');
+            if (!fs.existsSync(packagePath)) continue;
+            const metadata = this.readPackage(packagePath);
+            const nodics = metadata.nodics || {};
+            if (nodics.retired) throw new Error(this.retiredMessage(serverCode, metadata));
+            if (nodics.kind !== 'server') {
+                throw new Error('Discovered project runtime is not a server: ' + candidate);
+            }
+            return {
+                environment: environmentName,
+                server: candidate,
+                moduleRoots: ['nodics.foundation'].concat(nodics.extends || [], ['{project}'])
+            };
+        }
+        throw new Error('Unknown project runtime server `' + serverCode + '` in envs/' + environmentName);
+    },
+
+    /**
+     * Resolves the selected environment before server metadata is loaded.
+     * @param {string} projectRoot Project root.
+     * @param {Object} manifest Project manifest.
+     * @param {Object} environment Environment values.
+     * @returns {string} Environment name.
+     */
+    resolveEnvironmentName: function (projectRoot, manifest, environment) {
+        if (typeof projectRoot !== 'string') {
+            environment = manifest || {};
+            manifest = projectRoot || {};
+            projectRoot = process.cwd();
+        }
+        return environment.ENV ||
+            (manifest.topology && manifest.topology.environment) ||
+            this.conventionalLocalEnvironmentName(projectRoot, manifest);
+    },
+
+    /**
      * Resolves effective module roots for one project runtime server.
      * @param {string} projectRoot Project root.
      * @param {string} frameworkRoot Framework root.
@@ -79,7 +198,11 @@ module.exports = {
      * @returns {string[]} Runtime module roots.
      */
     resolveModuleRoots: function (projectRoot, frameworkRoot, server) {
-        const moduleRoots = [].concat(server.moduleRoots || []).map(moduleName => {
+        const declaredRoots = [].concat(server.moduleRoots || []);
+        const normalizedRoots = declaredRoots.includes('nodics.foundation')
+            ? declaredRoots
+            : ['nodics.foundation'].concat(declaredRoots);
+        const moduleRoots = normalizedRoots.map(moduleName => {
             if (moduleName === '{project}') return projectRoot;
             return this.packageRoot(frameworkRoot, moduleName);
         });
@@ -89,24 +212,26 @@ module.exports = {
 
     /**
      * Resolves a server declaration and protects retired runtime aliases.
+     * Existing manifests with `runtime.servers` remain supported, but normalized
+     * projects can rely on `envs/<environment>/<server>Server/package.json`.
+     * @param {string} projectRoot Project root.
      * @param {Object} manifest Project manifest.
      * @param {string} serverCode Runtime server code.
+     * @param {Object} environment Environment values.
      * @returns {Object} Runtime server declaration.
      */
-    resolveServer: function (manifest, serverCode) {
+    resolveServer: function (projectRoot, manifest, serverCode, environment) {
         const servers = manifest.runtime && manifest.runtime.servers
             ? manifest.runtime.servers
             : {};
         const server = servers[serverCode];
-        if (!server) {
-            throw new Error('Unknown project runtime server in nodics.project.json: ' + serverCode);
-        }
-        if (server.retired) {
+        if (server && server.retired) {
             throw new Error([].concat(
                 server.retiredMessage || ['Project runtime server is retired: ' + serverCode]
             ).join(' '));
         }
-        return server;
+        if (server) return server;
+        return this.discoverServer(projectRoot, this.resolveEnvironmentName(projectRoot, manifest, environment), serverCode);
     },
 
     /**
@@ -121,7 +246,7 @@ module.exports = {
         const projectRoot = path.resolve(options.projectRoot || process.cwd());
         const environment = options.environment || process.env;
         const manifest = this.readManifest(projectRoot);
-        const server = this.resolveServer(manifest, options.serverCode);
+        const server = this.resolveServer(projectRoot, manifest, options.serverCode, environment);
         const frameworkRoot = this.resolveFrameworkRoot(projectRoot, environment);
         const foundationRoot = this.packageRoot(frameworkRoot, 'nodics.foundation');
         const foundation = require(foundationRoot);
@@ -133,8 +258,7 @@ module.exports = {
             MODULE_ROOTS: Object.freeze(moduleRoots),
             defaultEnvironment: environment.ENV ||
                 server.environment ||
-                manifest.topology?.environment ||
-                'local',
+                this.resolveEnvironmentName(projectRoot, manifest, environment),
             defaultServer: environment.SERVER || server.server
         }));
     },

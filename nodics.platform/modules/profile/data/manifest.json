@@ -25,7 +25,7 @@
                 "init-v001/records/address/defaultTenantContactsData.js": "ec1a1fd5c7011a37ddaab2e5328575b3dcfab7927ab41031ec9844b91917629b",
                 "init-v001/records/enterprise/defaultEnterpriseData.js": "7db95f99ed1e0020131b016a065b58affeb3597bcd9133f21cdd6dbd77bc0b7b",
                 "init-v001/records/enterprise/defaultTenantsData.js": "2855a833d2b24a6b4005d9c6772e9c8d0c6f5da0863dfc8912d8fa7c5dd9f83e",
-                "init-v001/records/groups/defaultBootstrapUserGroupsData.js": "282be5808925cf2c2b2e9ab62112cd33e26c66af051af2cbcf856bac5b9ad267",
+                "init-v001/records/groups/defaultBootstrapUserGroupsData.js": "e68c11b10a65702711462021a0bf178bd4c5ef103d43bd6b06549d1c5a715fdf",
                 "init-v001/records/user/defaultCutomerData.js": "fdbcd52c7188c370aabe614477e06d67fe1b94972325d5dfdda67679556adb21",
                 "init-v001/records/user/defaultEmployeeData.js": "7d8429cc81110810acad6b8a56ce593734b9ccb20538dd2182c920e50bb6134c",
                 "init-v001/headers/address/defaultAddressesHeader.js": "234ff8f38ed73b22cbe6a36eaa63b18e177ca33af1650a2d40a15b45c737cf0a",

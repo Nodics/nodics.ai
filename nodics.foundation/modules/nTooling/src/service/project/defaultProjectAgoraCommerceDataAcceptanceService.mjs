@@ -14,6 +14,7 @@ import { spawn } from "node:child_process";
 import { setTimeout as delay } from "node:timers/promises";
 import { createRequire } from "node:module";
 import path from "node:path";
+import { readProjectEnvironmentComposition } from "./defaultProjectEnvironmentProfileService.mjs";
 
 const projectRoot = process.env.NODICS_PROJECT_ROOT || process.cwd();
 const platformUrl = process.env.NODICS_PLATFORM_URL || "http://127.0.0.1:4300";
@@ -22,7 +23,7 @@ const axisOrigin = process.env.AXIS_ORIGIN || "http://127.0.0.1:3100";
 const executeInstall = process.env.NODICS_STOREFRONT_COMMERCE_DATA_EXECUTE === "true";
 const managed = [];
 const require = createRequire(import.meta.url);
-const composition = require(path.join(projectRoot, "config", "agora-domain-composition.js")).resolve();
+const composition = readProjectEnvironmentComposition(projectRoot);
 const supportedPacks = Object.freeze(["agora.apparel", "agora.electronics", "agora.telco"]);
 const storefrontPacks = Object.freeze([...composition.projectPacks]);
 const requiredReleaseCodes = Object.freeze(storefrontPacks.flatMap((pack) => {

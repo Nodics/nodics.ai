@@ -40,6 +40,7 @@ module.exports = {
     serviceAuthData: function (request) {
         return Object.assign({}, request.authData || {}, {
             tenant: request.tenant,
+            enterpriseCode: request.enterpriseCode,
             loginId: 'productSearchPublication',
             principalType: 'service',
             userGroups: ['serviceAccountUserGroup'],
@@ -59,10 +60,12 @@ module.exports = {
     /** Loads inventory balances for SKUs. @param {Object} request Request. @param {Array} skus SKUs. @returns {Promise<Array>} Balances. */
     loadBalances: async function (request, skus) {
         if (!SERVICE.DefaultInventoryBalanceService || typeof SERVICE.DefaultInventoryBalanceService.get !== 'function' || skus.length === 0) return [];
+        const query = { tenant: request.tenant, sku: { $in: skus } };
+        if (request.enterpriseCode) query.enterpriseCode = request.enterpriseCode;
         return this.records(await SERVICE.DefaultInventoryBalanceService.get({
             tenant: request.tenant,
             authData: this.serviceAuthData(request),
-            query: { tenant: request.tenant, sku: { $in: skus } },
+            query,
             searchOptions: { pageSize: skus.length * 10, pageNumber: 1 }
         }));
     },
@@ -82,6 +85,7 @@ module.exports = {
         for (let product of products) {
             let candidates = product.skus.flatMap(sku => SERVICE.DefaultInventorySourcingService.source({
                 tenant: request.tenant,
+                enterpriseCode: request.enterpriseCode,
                 sku: sku
             }, balances));
             let available = candidates.length > 0;

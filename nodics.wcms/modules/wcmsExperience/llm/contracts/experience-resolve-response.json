@@ -1,0 +1,35 @@
+{
+  "site": "agora-apparel",
+  "pageType": "PRODUCT_LISTING",
+  "release": "cmsBaseline_agora_apparel_0_0_12",
+  "indexVersion": "2026-08-31T10:15:00.000Z",
+  "slots": {
+    "hero": [
+      {
+        "placementCode": "summer-edit-hero",
+        "componentCode": "summerEditHero",
+        "rendererKey": "heroBanner",
+        "contractVersion": 1,
+        "properties": {
+          "eyebrow": "Summer edit",
+          "title": "Light layers for warm days",
+          "subtitle": "Curated apparel for warm-weather movement.",
+          "ctaLabel": "Shop the edit",
+          "ctaHref": "/shop?collection=summer-edit"
+        },
+        "media": [
+          {
+            "role": "desktop",
+            "url": "/media/agora/summer-edit-hero.webp",
+            "alt": "Summer edit apparel hero"
+          }
+        ]
+      }
+    ]
+  },
+  "diagnostics": {
+    "matched": true,
+    "fallbackUsed": false,
+    "placementCount": 1
+  }
+}

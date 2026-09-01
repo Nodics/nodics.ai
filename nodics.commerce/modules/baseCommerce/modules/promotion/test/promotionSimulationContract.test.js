@@ -23,4 +23,9 @@ assert.strictEqual(result.mutationPerformed, false);
 assert.strictEqual(result.explanation.find(item => item.promotionCode === 'general').reason, 'EXCLUDED_BY_HIGHER_PRIORITY');
 assert.strictEqual(result.explanation.find(item => item.promotionCode === 'spent').reason, 'BUDGET_EXHAUSTED');
 assert.strictEqual(result.explanation.some(item => item.promotionCode === 'foreign'), false);
+const couponMissing = simulation.simulate({ tenant: 't1', context: { subtotal: 100 } }, [
+    { code: 'couponOnly', tenant: 't1', status: 'ACTIVE', priority: 1, conditions: { couponRequired: true }, actions: {} }
+]);
+assert.deepStrictEqual(couponMissing.selected, []);
+assert.strictEqual(couponMissing.explanation[0].reason, 'COUPON_REQUIRED');
 console.log('Promotion simulation and explainability contract passed');
