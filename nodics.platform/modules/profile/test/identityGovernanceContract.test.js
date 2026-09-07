@@ -104,7 +104,19 @@ assert.strictEqual(registrationRequest.model.ownerType, 'customer');
 assert.strictEqual(registrationRequest.model.apiKey, undefined);
 assert.strictEqual(registrationRequest.model.permissions, undefined);
 
-['tenant', 'address', 'contact', 'enterprise', 'userState', 'userGroup', 'password', 'employee', 'customer'].forEach(schemaName => {
+[
+    'tenant',
+    'address',
+    'contact',
+    'enterprise',
+    'userState',
+    'userGroup',
+    'password',
+    'employee',
+    'customer',
+    'principalScopeAssignment',
+    'enterpriseAccessAssignment'
+].forEach(schemaName => {
     assert(profileSchemas[schemaName].accessGroups, schemaName + ' must define explicit access groups');
     assert.strictEqual(profileSchemas[schemaName].accessGroups.adminGroup, 10);
     assert.strictEqual(profileSchemas[schemaName].accessGroups.serviceAccountUserGroup, 10);

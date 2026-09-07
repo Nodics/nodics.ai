@@ -37,8 +37,11 @@ global.CONFIG = {
     get: key => ({
         profileModuleName: 'profile',
         defaultTenant: 'default'
-    }[key])
+    }[key]),
+    getProperties: () => ({}),
+    setProperties: function () {}
 };
+global._ = { merge: Object.assign };
 global.SERVICE = {
     DefaultIdentityGovernanceService: {
         getSystemAuthData: () => ({
@@ -92,6 +95,74 @@ const handler = Object.assign({}, require('../src/service/enterprise/defaultEnte
     });
     assert.deepStrictEqual(calls[1].requestBody, {});
     assert.strictEqual(calls[1].header.recursive, true);
+
+    let activeTenants = [];
+    let employeeGets = [];
+    let importRequest;
+    let issuedTokenRequest;
+    global.NODICS = {
+        addActiveEnterprise: function () {},
+        removeActiveEnterprise: function () {},
+        getActiveTenants: () => activeTenants,
+        addActiveTenant: tenant => activeTenants.push(tenant),
+        isModuleActive: () => true,
+        getActiveModules: () => ['profile'],
+        getModules: () => ({ profile: {} }),
+        getSelectedEnvironmentName: () => 'local',
+        getServerName: () => 'platformServer',
+        getNodeName: () => 'default',
+        addInternalAuthToken: function () {}
+    };
+    global.SERVICE.DefaultDatabaseConnectionHandlerService = {
+        createDatabaseConnection: () => Promise.resolve(true)
+    };
+    global.SERVICE.DefaultDatabaseModelHandlerService = {
+        buildModelsForTenant: () => Promise.resolve(true)
+    };
+    global.SERVICE.DefaultEmployeeService = {
+        get: request => {
+            employeeGets.push(request);
+            return Promise.resolve(employeeGets.length === 1 ? {
+                success: true,
+                result: []
+            } : {
+                success: true,
+                result: [{
+                    loginId: 'apiAdmin',
+                    authVersion: 1,
+                    userGroupCodes: ['serviceAccountUserGroup'],
+                    userGroupPermissions: ['auth.internal.token.read']
+                }]
+            });
+        }
+    };
+    global.SERVICE.DefaultImportService = {
+        importInitData: request => {
+            importRequest = request;
+            return Promise.resolve({ success: true });
+        }
+    };
+    global.SERVICE.DefaultServiceTokenService = {
+        issue: request => {
+            issuedTokenRequest = request;
+            return Promise.resolve('service-token');
+        }
+    };
+    handler.LOG.debug = function () {};
+    await handler.buildEnterprise([{
+        code: 'enterprise-b',
+        active: true,
+        tenant: { code: 'tenant-b', active: true, properties: {} }
+    }]);
+    assert.deepStrictEqual(employeeGets.map(item => item.authData), [
+        { isSystem: true, userGroups: ['serviceAccountUserGroup'] },
+        { isSystem: true, userGroups: ['serviceAccountUserGroup'] }
+    ]);
+    assert.deepStrictEqual(importRequest.authData, {
+        isSystem: true,
+        userGroups: ['serviceAccountUserGroup']
+    });
+    assert.strictEqual(issuedTokenRequest.tenant, 'tenant-b');
 
     console.log('Profile enterprise module invocation contract validated');
 })().catch(error => {

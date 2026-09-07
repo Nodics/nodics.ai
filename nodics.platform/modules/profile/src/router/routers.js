@@ -75,7 +75,7 @@ module.exports = {
             searchEnterprises: {
                 secured: true,
                 authTokenTypes: ['access'],
-                accessGroups: ['runtimeConfigAdminUserGroup'],
+                accessGroups: ['runtimeConfigAdminUserGroup', 'adminGroup'],
                 permission: 'profile.enterprise.search',
                 apiExposure: 'profileManagement',
                 key: '/enterprises/search',
@@ -97,7 +97,7 @@ module.exports = {
             },
             createEnterprise: {
                 secured: true, authTokenTypes: ['access'],
-                accessGroups: ['runtimeConfigAdminUserGroup'],
+                accessGroups: ['runtimeConfigAdminUserGroup', 'adminGroup'],
                 permission: 'profile.enterprise.create', apiExposure: 'profileManagement',
                 key: '/enterprises', method: 'POST',
                 controller: 'DefaultEnterpriseManagementController', operation: 'create',
@@ -109,10 +109,117 @@ module.exports = {
                         code: { type: 'string', maxLength: 128 }, name: { type: 'string', maxLength: 256 },
                         tenantCode: { type: 'string', maxLength: 128 },
                         superEnterpriseCode: { type: 'string', maxLength: 128 },
+                        roleCodes: {
+                            type: 'array',
+                            items: {
+                                type: 'string',
+                                enum: ['PLATFORM_OWNER', 'PROGRAM_OPERATOR', 'SERVICE_PROVIDER', 'MARKETPLACE_VENDOR', 'ISSUER', 'ASSET_OWNER', 'BUSINESS_PARTNER']
+                            }
+                        },
                         active: { type: 'boolean' }, idempotencyKey: { type: 'string', minLength: 8, maxLength: 256 }
                     }
                 } } } },
                 responses: { '200': { description: 'Created client-safe enterprise result' } }
+            },
+            searchEnterpriseAccessAssignments: {
+                secured: true,
+                authTokenTypes: ['access'],
+                accessGroups: ['runtimeConfigAdminUserGroup', 'adminGroup'],
+                permission: 'profile.enterpriseAccess.search',
+                apiExposure: 'profileManagement',
+                key: '/enterprises/access-assignments',
+                method: 'GET',
+                controller: 'DefaultEnterpriseManagementController',
+                operation: 'searchAccessAssignments',
+                summary: 'Search enterprise user pre-assignments through a bounded Profile projection',
+                description: 'Returns safe pre-assignment metadata for platform administrators or the caller enterprise.',
+                parameters: [
+                    { name: 'email', in: 'query', required: false, schema: { type: 'string', maxLength: 320 } },
+                    { name: 'enterpriseCode', in: 'query', required: false, schema: { type: 'string', maxLength: 128 } },
+                    { name: 'tenantCode', in: 'query', required: false, schema: { type: 'string', maxLength: 128 } },
+                    { name: 'roleCode', in: 'query', required: false, schema: { type: 'string', maxLength: 128 } },
+                    { name: 'status', in: 'query', required: false, schema: { type: 'string', enum: ['PENDING', 'ACTIVE', 'REGISTERED', 'EXPIRED', 'REVOKED'] } },
+                    { name: 'page', in: 'query', required: false, schema: { type: 'integer', minimum: 1 } },
+                    { name: 'limit', in: 'query', required: false, schema: { type: 'integer', minimum: 1, maximum: 100 } }
+                ],
+                responses: { '200': { description: 'Bounded enterprise access-assignment search result' } }
+            },
+            preAssignEnterpriseAccess: {
+                secured: true,
+                authTokenTypes: ['access'],
+                accessGroups: ['runtimeConfigAdminUserGroup', 'adminGroup'],
+                permission: 'profile.enterpriseAccess.assign',
+                apiExposure: 'profileManagement',
+                key: '/enterprises/:enterpriseCode/access-assignments',
+                method: 'POST',
+                controller: 'DefaultEnterpriseManagementController',
+                operation: 'preAssignAccess',
+                summary: 'Pre-assign one email address for enterprise employee registration',
+                description: 'Creates governed invite state. Platform admins can assign any enterprise; enterprise admins are bounded to their own enterprise.',
+                requestBody: { required: true, content: { 'application/json': { schema: {
+                    type: 'object', additionalProperties: false, required: ['email', 'roleCode', 'idempotencyKey'],
+                    properties: {
+                        enterpriseCode: { type: 'string', maxLength: 128 },
+                        email: { type: 'string', maxLength: 320 },
+                        roleCode: { type: 'string', enum: ['ENTERPRISE_ADMIN', 'CONTENT_MANAGER', 'OPERATOR', 'VIEWER'] },
+                        message: { type: 'string', maxLength: 1000 },
+                        expiresAt: { type: 'string', format: 'date-time' },
+                        idempotencyKey: { type: 'string', minLength: 8, maxLength: 256 }
+                    }
+                } } } },
+                responses: { '200': { description: 'Created client-safe enterprise access assignment' } }
+            },
+            resolvePreAssignedEnterpriseAccess: {
+                secured: false,
+                accessGroups: ['userGroup'],
+                apiExposure: 'profileRegistration',
+                key: '/enterprise-access/resolve',
+                method: 'GET',
+                controller: 'DefaultEnterpriseManagementController',
+                operation: 'resolvePreAssignedAccess',
+                summary: 'Resolve whether an email has pre-assigned enterprise access',
+                description: 'Supports Axis pre-registration without creating an employee account.',
+                parameters: [
+                    { name: 'enterpriseCode', in: 'query', required: true, schema: { type: 'string', maxLength: 128 } },
+                    { name: 'email', in: 'query', required: true, schema: { type: 'string', maxLength: 320 } }
+                ],
+                responses: { '200': { description: 'Pre-assigned access resolution' } }
+            },
+            getPreAssignedEnterpriseAccessWorkspace: {
+                secured: false,
+                accessGroups: ['userGroup'],
+                apiExposure: 'profileRegistration',
+                key: '/enterprise-access/workspace',
+                method: 'GET',
+                controller: 'DefaultEnterpriseManagementController',
+                operation: 'getPublicAccessWorkspace',
+                summary: 'Return the backend-driven public enterprise registration workspace',
+                description: 'Publishes only public registration components from the Profile enterprise-access workspace contract.',
+                responses: { '200': { description: 'Public enterprise registration workspace contract' } }
+            },
+            registerPreAssignedEnterpriseEmployee: {
+                secured: false,
+                accessGroups: ['userGroup'],
+                apiExposure: 'profileRegistration',
+                key: '/enterprise-access/register',
+                method: 'POST',
+                controller: 'DefaultEnterpriseManagementController',
+                operation: 'registerPreAssignedEmployee',
+                summary: 'Register one pre-approved enterprise employee',
+                description: 'Creates the employee identity, assigns configured groups, grants enterprise scope, and closes the access assignment.',
+                requestBody: { required: true, content: { 'application/json': { schema: {
+                    type: 'object', additionalProperties: false,
+                    required: ['enterpriseCode', 'email', 'firstName', 'lastName', 'password', 'idempotencyKey'],
+                    properties: {
+                        enterpriseCode: { type: 'string', maxLength: 128 },
+                        email: { type: 'string', maxLength: 320 },
+                        firstName: { type: 'string', maxLength: 128 },
+                        lastName: { type: 'string', maxLength: 128 },
+                        password: { type: 'string', maxLength: 256 },
+                        idempotencyKey: { type: 'string', minLength: 8, maxLength: 256 }
+                    }
+                } } } },
+                responses: { '200': { description: 'Registered enterprise employee result' } }
             }
         },
 

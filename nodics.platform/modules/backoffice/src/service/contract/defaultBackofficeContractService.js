@@ -434,6 +434,186 @@ module.exports = {
       return true;
     });
   },
+  /** Validates one backend-driven Axis workspace option. */
+  validateBackendWorkspaceOption: function (option) {
+    return (
+      option &&
+      typeof option === "object" &&
+      !Array.isArray(option) &&
+      !Object.keys(option).some((key) => !["value", "label"].includes(key)) &&
+      typeof option.value === "string" &&
+      option.value.length <= 128 &&
+      this.isString(option.label, 128)
+    );
+  },
+  /** Validates one backend-driven Axis workspace field declaration. */
+  validateBackendWorkspaceField: function (field) {
+    let fieldTypes = [
+      "TEXT",
+      "EMAIL",
+      "PASSWORD",
+      "MULTILINE",
+      "SELECT",
+      "MULTISELECT",
+      "CHECKBOX",
+      "HIDDEN",
+      "IDEMPOTENCY",
+    ];
+    return (
+      field &&
+      typeof field === "object" &&
+      !Array.isArray(field) &&
+      !Object.keys(field).some(
+        (key) =>
+          ![
+            "name",
+            "label",
+            "type",
+            "required",
+            "maximumLength",
+            "defaultValue",
+            "bindToPath",
+            "options",
+          ].includes(key),
+      ) &&
+      this.isString(field.name, 128) &&
+      /^[A-Za-z][A-Za-z0-9._-]{0,127}$/.test(field.name) &&
+      this.isString(field.label, 128) &&
+      fieldTypes.includes(field.type) &&
+      (field.required === undefined || typeof field.required === "boolean") &&
+      (field.maximumLength === undefined ||
+        (Number.isInteger(field.maximumLength) &&
+          field.maximumLength >= 1 &&
+          field.maximumLength <= 4000)) &&
+      (field.bindToPath === undefined || typeof field.bindToPath === "boolean") &&
+      (field.options === undefined ||
+        (Array.isArray(field.options) &&
+          field.options.length <= 64 &&
+          field.options.every((option) =>
+            this.validateBackendWorkspaceOption(option),
+          ))) &&
+      (!["SELECT", "MULTISELECT"].includes(field.type) ||
+        (Array.isArray(field.options) && field.options.length > 0))
+    );
+  },
+  /** Validates one backend-driven Axis workspace endpoint. */
+  validateBackendWorkspaceEndpoint: function (endpoint) {
+    return (
+      endpoint &&
+      typeof endpoint === "object" &&
+      !Array.isArray(endpoint) &&
+      !Object.keys(endpoint).some(
+        (key) => !["method", "path", "resultPath"].includes(key),
+      ) &&
+      ["GET", "POST", "PUT", "PATCH", "DELETE"].includes(endpoint.method) &&
+      this.isSafePath(endpoint.path) &&
+      (endpoint.resultPath === undefined ||
+        this.isString(endpoint.resultPath, 256))
+    );
+  },
+  /** Validates one backend-driven Axis workspace section. */
+  validateBackendWorkspaceSection: function (section) {
+    if (!section || typeof section !== "object" || Array.isArray(section))
+      return false;
+    if (
+      Object.keys(section).some(
+        (key) =>
+          ![
+            "id",
+            "type",
+            "title",
+            "submitLabel",
+            "public",
+            "endpoint",
+            "columns",
+            "filters",
+            "fields",
+          ].includes(key),
+      ) ||
+      !this.isString(section.id, 128) ||
+      !["listing", "form"].includes(section.type) ||
+      !this.isString(section.title, 160) ||
+      (section.submitLabel !== undefined &&
+        !this.isString(section.submitLabel, 128)) ||
+      (section.public !== undefined && typeof section.public !== "boolean") ||
+      !this.validateBackendWorkspaceEndpoint(section.endpoint)
+    )
+      return false;
+    if (
+      section.columns !== undefined &&
+      (!Array.isArray(section.columns) ||
+        section.columns.length > 32 ||
+        section.columns.some(
+          (column) =>
+            !column ||
+            typeof column !== "object" ||
+            Array.isArray(column) ||
+            !this.isString(column.field, 128) ||
+            !this.isString(column.label, 128),
+        ))
+    )
+      return false;
+    return ["filters", "fields"].every(
+      (key) =>
+        section[key] === undefined ||
+        (Array.isArray(section[key]) &&
+          section[key].length <= 32 &&
+          section[key].every((field) => this.validateBackendWorkspaceField(field))),
+    );
+  },
+  /** Validates a bounded backend-driven Axis workspace. */
+  validateBackendWorkspace: function (workspace) {
+    if (!workspace || typeof workspace !== "object" || Array.isArray(workspace))
+      return false;
+    if (
+      Object.keys(workspace).some(
+        (key) =>
+          ![
+            "contractVersion",
+            "title",
+            "description",
+            "renderer",
+            "defaultTab",
+            "tabs",
+          ].includes(key),
+      ) ||
+      !Number.isInteger(workspace.contractVersion) ||
+      workspace.contractVersion < 0 ||
+      !this.isString(workspace.title, 160) ||
+      (workspace.description !== undefined &&
+        !this.isString(workspace.description, 512)) ||
+      workspace.renderer !== "axis.workspace.backend-operations" ||
+      (workspace.defaultTab !== undefined &&
+        !this.isString(workspace.defaultTab, 128)) ||
+      !Array.isArray(workspace.tabs) ||
+      workspace.tabs.length === 0 ||
+      workspace.tabs.length > 12
+    )
+      return false;
+    let tabIds = workspace.tabs.map((tab) => tab && tab.id);
+    if (
+      tabIds.some((id) => !this.isString(id, 128)) ||
+      new Set(tabIds).size !== tabIds.length
+    )
+      return false;
+    return workspace.tabs.every(
+      (tab) =>
+        tab &&
+        typeof tab === "object" &&
+        !Array.isArray(tab) &&
+        !Object.keys(tab).some(
+          (key) => !["id", "label", "icon", "sections"].includes(key),
+        ) &&
+        this.isString(tab.label, 128) &&
+        (tab.icon === undefined || this.isString(tab.icon, 64)) &&
+        Array.isArray(tab.sections) &&
+        tab.sections.length > 0 &&
+        tab.sections.length <= 12 &&
+        tab.sections.every((section) =>
+          this.validateBackendWorkspaceSection(section),
+        ),
+    );
+  },
   /** Validates bounded module-owned navigation metadata and hierarchy. */
   validateNavigation: function (navigation) {
     if (!Array.isArray(navigation) || navigation.length > 64) return false;
@@ -473,6 +653,7 @@ module.exports = {
                 "featureState",
                 "badgeProvider",
                 "workbenchTarget",
+                "backendWorkspace",
                 "detailPanels",
                 "workbenchPresentation",
                 "help",
@@ -507,6 +688,8 @@ module.exports = {
             this.validateNavigationBadgeProvider(item.badgeProvider)) &&
           (item.workbenchTarget === undefined ||
             this.validateNavigationWorkbenchTarget(item.workbenchTarget)) &&
+          (item.backendWorkspace === undefined ||
+            this.validateBackendWorkspace(item.backendWorkspace)) &&
           (item.detailPanels === undefined ||
             this.validateNavigationDetailPanels(item.detailPanels)) &&
           (item.workbenchPresentation === undefined ||
@@ -823,6 +1006,7 @@ module.exports = {
           ["STANDARD", "EXTENSION"].includes(registration.functionalModule.type) &&
           typeof registration.functionalModule.protected === "boolean")) &&
       this.validateAuthorityClaims(registration.authorityClaims, registration.moduleName) &&
+      this.validateActivationDataPackages(registration.activationDataPackages) &&
       this.validateBackofficeMetadata(registration.backoffice)
     );
   },
@@ -843,6 +1027,39 @@ module.exports = {
       modulePattern.test(claim.moduleName || "") &&
       claimPattern.test(claim.claimName || "") &&
       claimPattern.test(claim.authorityContext || ""));
+  },
+  /** Validates bounded module-owned activation data package descriptors. */
+  validateActivationDataPackages: function (packages) {
+    if (packages === undefined) return true;
+    if (!Array.isArray(packages) || packages.length > 128) return false;
+    let modulePattern = new RegExp(contracts.moduleName.pattern);
+    return packages.every((item) =>
+      item &&
+      typeof item === "object" &&
+      !Array.isArray(item) &&
+      !Object.keys(item).some((key) =>
+        ![
+          "code",
+          "classification",
+          "owner",
+          "required",
+          "trigger",
+          "targetModule",
+          "targetServer",
+          "targetDatabase",
+          "operation",
+          "dataType",
+        ].includes(key)) &&
+      this.isString(item.code, 256) &&
+      this.isString(item.classification, 64) &&
+      modulePattern.test(item.owner || "") &&
+      typeof item.required === "boolean" &&
+      ["ACTIVATION", "USER"].includes(item.trigger) &&
+      (item.targetModule === undefined || modulePattern.test(item.targetModule || "")) &&
+      (item.targetServer === undefined || item.targetServer === "" || this.isString(item.targetServer, 128)) &&
+      (item.targetDatabase === undefined || item.targetDatabase === "" || this.isString(item.targetDatabase, 128)) &&
+      this.isString(item.operation, 64) &&
+      ["init", "core", "sample"].includes(item.dataType));
   },
   /** Validates one bounded runtime registration batch and its stable instance identity. */
   validateRegistrationBatch: function (batch, limit) {

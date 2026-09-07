@@ -21,6 +21,7 @@ const registered = [];
 
 global.SERVICE = {
     DefaultBackofficeCapabilityDefinitionService: require(path.join(repositoryRoot, 'nodics.foundation/modules/nService/src/service/module/defaultBackofficeCapabilityDefinitionService.js')),
+    DefaultBackofficeCapabilityDataService: require(path.join(repositoryRoot, 'nodics.foundation/modules/nService/src/service/module/defaultBackofficeCapabilityDataService.js')),
     DefaultModuleRegistrationAgentService: {
         registerBackofficeCapabilityProvider: function (moduleName, provider) {
             registered.push({ moduleName, provider });
@@ -29,9 +30,13 @@ global.SERVICE = {
 };
 
 const contract = require(path.join(repositoryRoot, 'nodics.platform/modules/backoffice/src/service/contract/defaultBackofficeContractService.js'));
+const capabilityData = require('../modules/wasteCore/data/core-v001/records/backoffice/wasteCoreBackofficeCapabilityData');
 const provider = require('../modules/wasteCore/src/service/defaultWasteBackofficeCapabilityService.js');
 const capability = provider.getCapability();
 
+assert.strictEqual(provider.capabilityData(), capabilityData);
+assert.equal(capabilityData.capability.capabilityId, 'waste-management');
+assert.equal(capabilityData.navigation.length, 25);
 const initResult = provider.init();
 assert.equal(typeof initResult.then, 'function', 'init returns a Promise contract');
 assert.equal(registered.length, 1);

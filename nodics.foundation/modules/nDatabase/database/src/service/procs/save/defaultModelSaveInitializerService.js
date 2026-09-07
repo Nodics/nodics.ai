@@ -117,6 +117,22 @@ module.exports = {
         return schemaOptions[request.tenant] || {};
     },
     /**
+     * Reads defaults declared directly on the effective schema definition.
+     *
+     * @param {Object} request Nodics save request.
+     * @returns {Object} Default values keyed by model property.
+     */
+    getRawSchemaDefaultValues: function (request) {
+        let definition = request.schemaModel.rawSchema.definition || {};
+        return Object.keys(definition).reduce((defaults, property) => {
+            let descriptor = definition[property] || {};
+            if (Object.prototype.hasOwnProperty.call(descriptor, 'default')) {
+                defaults[property] = descriptor.default;
+            }
+            return defaults;
+        }, {});
+    },
+    /**
      * Applies schema configured default values before persistence.
      *
      * @param {Object} request Nodics save request.
@@ -127,7 +143,9 @@ module.exports = {
      */
     applyDefaultValues: function (request, response, process) {
         this.LOG.debug('Applying default values to the model');
-        let defaultValues = this.getTenantSchemaOptions(request).defaultValues;
+        let defaultValues = Object.assign({},
+            this.getRawSchemaDefaultValues(request),
+            this.getTenantSchemaOptions(request).defaultValues || {});
         if (defaultValues && !UTILS.isBlank(defaultValues)) {
             _.each(defaultValues, (value, property) => {
                 request.model = this.resolveDefaultProperty(property.split('.'), request.model, value);
@@ -148,7 +166,8 @@ module.exports = {
             let prop = properties.shift();
             if (!model[prop]) model[prop] = {};
             model[prop] = this.resolveDefaultProperty(properties, model[prop], value);
-        } else if (properties && properties.length === 1 && !model[properties[0]]) {
+        } else if (properties && properties.length === 1 &&
+            (model[properties[0]] === undefined || model[properties[0]] === null)) {
             try {
                 let serviceName = value.substring(0, value.indexOf('.'));
                 let functionName = value.substring(value.indexOf('.') + 1, value.length);

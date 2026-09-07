@@ -31,6 +31,13 @@ const expectedRoutes = [
     { key: '/identity/migration/apply', method: 'POST', controller: 'DefaultIdentityGovernanceController', operation: 'applyMigration', secured: true, permission: 'identity.migration.apply' },
     { key: '/identity/migration/rollback', method: 'POST', controller: 'DefaultIdentityGovernanceController', operation: 'rollbackMigration', secured: true, permission: 'identity.migration.rollback' },
     { key: '/identity/credential/rotate', method: 'POST', controller: 'DefaultIdentityGovernanceController', operation: 'rotateServiceKey', secured: true, permission: 'identity.credential.rotate' },
+    { key: '/enterprises/search', method: 'GET', controller: 'DefaultEnterpriseManagementController', operation: 'search', secured: true, permission: 'profile.enterprise.search' },
+    { key: '/enterprises', method: 'POST', controller: 'DefaultEnterpriseManagementController', operation: 'create', secured: true, permission: 'profile.enterprise.create' },
+    { key: '/enterprises/access-assignments', method: 'GET', controller: 'DefaultEnterpriseManagementController', operation: 'searchAccessAssignments', secured: true, permission: 'profile.enterpriseAccess.search' },
+    { key: '/enterprises/:enterpriseCode/access-assignments', method: 'POST', controller: 'DefaultEnterpriseManagementController', operation: 'preAssignAccess', secured: true, permission: 'profile.enterpriseAccess.assign' },
+    { key: '/enterprise-access/resolve', method: 'GET', controller: 'DefaultEnterpriseManagementController', operation: 'resolvePreAssignedAccess', secured: false },
+    { key: '/enterprise-access/workspace', method: 'GET', controller: 'DefaultEnterpriseManagementController', operation: 'getPublicAccessWorkspace', secured: false },
+    { key: '/enterprise-access/register', method: 'POST', controller: 'DefaultEnterpriseManagementController', operation: 'registerPreAssignedEmployee', secured: false },
     { key: '/customer/exist', method: 'POST', controller: 'DefaultCustomerController', operation: 'isCustomerExist', secured: true },
     { key: '/customer/signup', method: 'POST', controller: 'DefaultCustomerController', operation: 'signUp', secured: true }
 ];

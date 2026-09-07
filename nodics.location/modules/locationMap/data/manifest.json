@@ -1,0 +1,56 @@
+{
+    "contractVersion": 2,
+    "module": "locationMap",
+    "sections": {
+        "core-map-reference": {
+            "kind": "DATA_RELEASE",
+            "dataType": "core",
+            "version": "0.0.0",
+            "displayName": "Location Map Reference Data",
+            "description": "Reusable map provider, usage, style, and control reference records owned by Location Map.",
+            "owningDomain": "location",
+            "lifecycle": "REFERENCE",
+            "destinationRole": "LOCATION",
+            "environmentScope": [
+                "ALL"
+            ],
+            "sensitivity": "INTERNAL",
+            "versioningPolicy": "NONE",
+            "publicationPolicy": "NONE",
+            "initialPublicationPolicy": "NONE",
+            "removalPolicy": "RETAIN",
+            "files": {
+                "core-v001/headers/location/locationMapConfigurationHeader.js": "9fa5aa610c79c41a41a746582d64dbbb25b58a51e458b57831379e87d1699ad6",
+                "core-v001/records/backoffice/locationMapBackofficeCapabilityData.js": "642b0ab70bb0c6c9dda23ea4055f73370f3123a78ecefd16b7f3e0415b823490",
+                "core-v001/records/location/locationMapProviderData.js": "e12babf84a1a28bb89a33b26651c8b4f2e2c1e84adab1c555db8d931f215673b",
+                "core-v001/records/location/locationMapUsageData.js": "ef9344832b65d1af7debc51f2ce9b0c56a0a53aeb087220a4ffcb6e78e22b75c",
+                "core-v001/records/location/locationMapStylePresetData.js": "717444afd6124447d8f33c4d4de051768db1d3e0dc900788214a9eec960617f2",
+                "core-v001/records/location/locationMapControlPresetData.js": "9aefb9385a04972127388d2c4a45dc2cb457be58e24d41d28b78100634bacd9c"
+            },
+            "sourceRoot": "core-v001"
+        },
+        "init-v001": {
+            "kind": "DATA_RELEASE",
+            "dataType": "init",
+            "sourceRoot": "init-v001",
+            "version": "0.0.0",
+            "displayName": "Location Map Initial Configuration",
+            "description": "Startup Location Map provider configurations for Axis map consumers.",
+            "owningDomain": "location",
+            "lifecycle": "REFERENCE",
+            "destinationRole": "LOCATION",
+            "environmentScope": [
+                "ALL"
+            ],
+            "sensitivity": "INTERNAL",
+            "versioningPolicy": "NONE",
+            "publicationPolicy": "NONE",
+            "initialPublicationPolicy": "NONE",
+            "removalPolicy": "RETAIN",
+            "files": {
+                "init-v001/headers/location/defaultLocationMapProviderConfigurationHeader.js": "a033bb127f621ff3e65f7668b6c71a9f0ac598a8b46bb1ec07d19c5a12f860eb",
+                "init-v001/records/location/defaultLocationMapProviderConfigurationData.js": "accda7689c3c0c817618da48ef5a288775fc335524b9e7659ad70de4857694c3"
+            }
+        }
+    }
+}

@@ -17,9 +17,34 @@
  * @override Project registration agents must preserve startup isolation and service identity boundaries.
  */
 const assert = require('assert');
+const fs = require('fs');
+const os = require('os');
+const path = require('path');
 
 let contributor;
 let requests = [];
+let fixtureModuleRoot = fs.mkdtempSync(path.join(os.tmpdir(), 'nodics-registration-agent-'));
+fs.mkdirSync(path.join(fixtureModuleRoot, 'data'), { recursive: true });
+fs.writeFileSync(path.join(fixtureModuleRoot, 'data', 'manifest.json'), JSON.stringify({
+    contractVersion: 2,
+    module: 'cms',
+    sections: {
+        'core-reference': {
+            kind: 'DATA_RELEASE',
+            dataType: 'core',
+            sourceRoot: 'core-v001',
+            lifecycle: 'REFERENCE',
+            initialPublicationPolicy: 'NONE'
+        },
+        'sample-demo': {
+            kind: 'DATA_RELEASE',
+            dataType: 'sample',
+            sourceRoot: 'sample-v001',
+            lifecycle: 'SAMPLE',
+            initialPublicationPolicy: 'NONE'
+        }
+    }
+}), 'utf8');
 global.CONFIG = { get: key => ({
     backofficeRegistration: { enabled: true, moduleName: 'backoffice', heartbeatIntervalMs: 10000,
         retryIntervalMs: 5000, maxModulesPerRegistration: 512, requestTimeoutMs: 20,
@@ -32,6 +57,7 @@ global.CONFIG = { get: key => ({
 global.NODICS = {
     getActiveModules: () => ['cms', 'utility'],
     getRawModule: name => ({ parent: 'nodics.wcms', canonicalIdentity: 'nodics.wcms/modules/' + name,
+        path: name === 'cms' ? fixtureModuleRoot : undefined,
         rawSchema: name === 'cms' ? {
             cmsPage: { model: true, service: { enabled: true }, authorityContext: 'wcms.content' },
             cmsHelper: { model: false, service: { enabled: false } }
@@ -76,7 +102,12 @@ async function run() {
     assert.strictEqual(requests[0].requestBody.registrations[0].displayName, 'Content Management');
     assert.strictEqual(requests[0].requestBody.registrations[0].parentModule, 'nodics.wcms');
     assert.strictEqual(requests[0].requestBody.registrations[0].canonicalIdentity, 'nodics.wcms/modules/cms');
-    assert.strictEqual(requests[0].requestBody.registrations[0].backoffice.capabilityId, 'content-management');
+    assert.strictEqual(requests[0].requestBody.registrations[0].backoffice, undefined,
+        'legacy configuration must not synthesize BackOffice navigation without a module-owned provider');
+    assert.deepStrictEqual(requests[0].requestBody.registrations[0].activationDataPackages.map(item => item.code),
+        ['cms:core-reference', 'cms:sample-demo']);
+    assert.strictEqual(requests[0].requestBody.registrations[0].activationDataPackages[0].trigger, 'ACTIVATION');
+    assert.strictEqual(requests[0].requestBody.registrations[0].activationDataPackages[1].trigger, 'USER');
     assert.deepStrictEqual(requests[0].requestBody.registrations[0].authorityClaims, [{
         kind: 'schema',
         moduleName: 'cms',

@@ -990,6 +990,55 @@ async function run() {
     "ACTIVE",
     "documentation product links must unlock once their publication source is Online-ready",
   );
+  let governedWorkspaceRequest = {
+    tenant: "compositionTenant",
+    _projectCode: "compositionProject",
+    authData: { enterpriseCode: "default" },
+  };
+  service.getNavigationCompositionState(governedWorkspaceRequest).published = {
+    composition: {
+      groups: [{ id: "profile", label: "Profile", order: 100 }],
+      navigation: [
+        {
+          id: "enterprises",
+          label: "Enterprises",
+          route: "/profile/enterprises",
+          moduleName: "profile",
+          group: { id: "profile", label: "Profile", order: 100 },
+          featureState: "ACTIVE",
+        },
+      ],
+    },
+  };
+  let workspaceComposition = service.buildEffectiveNavigationComposition(
+    {
+      profile: {
+        navigation: [
+          {
+            id: "enterprises",
+            label: "Enterprises",
+            route: "/profile/enterprises",
+            group: { id: "profile", label: "Profile", order: 100 },
+            featureState: "ACTIVE",
+            backendWorkspace: {
+              contractVersion: 0,
+              title: "Enterprise and User Management",
+              renderer: "axis.workspace.backend-operations",
+              tabs: [{ id: "enterprises", label: "Enterprises", sections: [] }],
+            },
+          },
+        ],
+      },
+    },
+    { profile: { state: "UP" } },
+    { permissions: [], enterpriseCode: "default" },
+    governedWorkspaceRequest,
+    {},
+  );
+  assert(
+    workspaceComposition.navigation[0].backendWorkspace,
+    "published navigation must inherit the module-owned backend workspace unless business metadata overrides it",
+  );
   await assert.rejects(() =>
     Promise.resolve().then(() =>
       service.bootstrap({

@@ -109,6 +109,49 @@ function assertNoTenantOptionsDoNotFail() {
     });
 }
 
+function assertRawSchemaDefaultsApplyBeforeSave() {
+    let now = new Date('2026-09-07T00:00:00.000Z');
+    global.SERVICE.DefaultPropertyInitialValueProviderService = {
+        getCurrentTimestamp: function () {
+            return now;
+        }
+    };
+    let request = createRequest({ code: 'product-raw-defaults', active: false });
+    request.schemaModel.rawSchema = {
+        definition: {
+            active: { type: 'bool', default: true },
+            created: { type: 'date', default: 'DefaultPropertyInitialValueProviderService.getCurrentTimestamp' },
+            updated: { type: 'date', default: 'DefaultPropertyInitialValueProviderService.getCurrentTimestamp' },
+            revision: { type: 'int', default: 0 }
+        },
+        schemaOptions: {
+            electronics: {
+                defaultValues: {
+                    revision: 1
+                }
+            }
+        }
+    };
+    return new Promise((resolve, reject) => {
+        singleSaveService.applyDefaultValues(request, {}, {
+            nextSuccess: function () {
+                try {
+                    assert.strictEqual(request.model.active, false);
+                    assert.strictEqual(request.model.created, now);
+                    assert.strictEqual(request.model.updated, now);
+                    assert.strictEqual(request.model.revision, 1);
+                    resolve(true);
+                } catch (error) {
+                    reject(error);
+                }
+            },
+            error: function (req, res, error) {
+                reject(error);
+            }
+        });
+    });
+}
+
 function assertValidatorFailureStopsPipeline() {
     let nextSuccessCalled = false;
     global.SERVICE.DefaultSkuValidatorService = {
@@ -226,6 +269,8 @@ assertValidationError(undefined).then(() => {
     return assertValidationError([]);
 }).then(() => {
     return assertNoTenantOptionsDoNotFail();
+}).then(() => {
+    return assertRawSchemaDefaultsApplyBeforeSave();
 }).then(() => {
     return assertValidatorFailureStopsPipeline();
 }).then(() => {

@@ -37,6 +37,7 @@ module.exports = {
                 required: { type: 'bool', required: true, default: false, description: 'Whether the project protects this functional module from disablement or deregistration' },
                 runtimeState: { type: 'string', required: true, description: 'Observed ACTIVE, OFFLINE, DEGRADED, or INCOMPATIBLE state' },
                 technicalModules: { type: 'array', required: true, description: 'Effective runtime descendants aggregated beneath the functional module' },
+                activationDataPackages: { type: 'array', required: false, description: 'Module-owned nImport data-release packages required or offered during activation' },
                 observedServers: { type: 'array', required: true, description: 'Stable environment/server/node coordinates currently serving the functional module' },
                 catalogueRevision: { type: 'int', required: true, default: 1, description: 'Optimistic durable catalogue revision' },
                 registeredAt: { type: 'date', required: true, description: 'First governed project registration time' },

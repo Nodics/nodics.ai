@@ -41,8 +41,14 @@ const batch = {
         { moduleName: 'backoffice', parentModule: 'nodics.platform' },
         { moduleName: 'nodics.wcms', parentModule: 'nodics.foundation', version: '0.0.0', moduleIndex: '80.99', functionalModule: {
             identity: 'nodics.wcms', displayName: 'WCMS', type: 'STANDARD', protected: true } },
-        { moduleName: 'cms', parentModule: 'nodics.wcms' },
-        { moduleName: 'media', parentModule: 'nodics.wcms' },
+        { moduleName: 'cms', parentModule: 'nodics.wcms', activationDataPackages: [{
+            code: 'cms:core-reference', classification: 'reference', owner: 'cms', required: true,
+            trigger: 'ACTIVATION', targetModule: 'cms', operation: 'IMPORT', dataType: 'core'
+        }] },
+        { moduleName: 'media', parentModule: 'nodics.wcms', activationDataPackages: [{
+            code: 'media:sample-demo', classification: 'sample', owner: 'media', required: false,
+            trigger: 'USER', targetModule: 'media', operation: 'IMPORT', dataType: 'sample'
+        }] },
         { moduleName: 'wcms', parentModule: 'nodics.wcms' },
         { moduleName: 'example.project', parentModule: undefined },
         { moduleName: 'projectCore', parentModule: 'example.project' }
@@ -61,6 +67,9 @@ async function run() {
     assert.deepStrictEqual(observations[1].technicalModules, ['backoffice', 'profile']);
     assert.deepStrictEqual(observations[2].technicalModules, ['cms', 'media', 'wcms']);
     assert.strictEqual(observations[2].required, true, 'WCMS is an Axis prerequisite and must be default-registered');
+    assert.deepStrictEqual(observations[2].activationDataPackages.map(item => [item.code, item.trigger]),
+        [['cms:core-reference', 'ACTIVATION'], ['media:sample-demo', 'USER']],
+        'technical-module data releases must roll up to their functional activation plan');
     assert(!observations.some(item => item.functionalModule === 'example.project'));
     let leaseIndex = service.buildLeaseFunctionalModuleIndex(batch);
     assert.strictEqual(leaseIndex.profile, 'nodics.platform');
@@ -164,6 +173,16 @@ async function run() {
     assert.deepStrictEqual(eligibility.eligibleModules, ['backoffice', 'nodics.platform', 'profile']);
     assert(eligibility.governedModules.includes('cronjob'));
     assert(!eligibility.eligibleModules.includes('workflow'));
+
+    let activationPlan = service.buildActivationDataPlan({
+        projectCode: 'example.project', functionalModule: 'nodics.wcms',
+        registrationState: 'REGISTERED', runtimeState: 'ACTIVE',
+        activationDataPackages: observations[2].activationDataPackages
+    }, 'activate', {});
+    assert.deepStrictEqual(activationPlan.packages.map(item => item.code),
+        ['cms:core-reference', 'media:sample-demo']);
+    assert.strictEqual(activationPlan.receipts[0].status, 'PENDING_IMPORT');
+    assert.strictEqual(activationPlan.receipts[1].status, 'SKIPPED_USER_TRIGGERED');
 
     let runtimeRecords = [{ code: 'example.project::nodics.process', projectCode: 'example.project',
         functionalModule: 'nodics.process', runtimeState: 'ACTIVE', observedServers: ['local:oldServer:default'],

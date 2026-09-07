@@ -14,6 +14,8 @@ This module provides the identity and access foundation used by Axis, Nexus, bac
 - Add project-specific users, groups, and permissions through profile data/configuration, not frontend shortcuts.
 - Preserve tenant and enterprise isolation.
 - Keep documentation author and view-only Axis responsibilities aligned with profile roles/groups.
+- Manage enterprise creation, enterprise role codes, email pre-assignment, and pre-approved employee registration through Profile `enterpriseManagement` services, schemas, routes, and layered configuration.
+- Keep Axis enterprise/user-management screens backend-component driven through the Profile BackOffice workspace contract; business users should customize labels, tabs, forms, roles, columns, and endpoints in configuration/published metadata rather than hardcoding Axis pages.
 
 ## Documentation
 

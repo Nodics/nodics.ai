@@ -378,7 +378,7 @@ const navigationWorkbenchQuickFilter = {
     id: { type: "string", minLength: 1, maxLength: 128 },
     label: { type: "string", minLength: 1, maxLength: 128 },
     field: { type: "string", minLength: 1, maxLength: 128 },
-    value: { type: "string", minLength: 1, maxLength: 128 },
+    value: { type: "string", maxLength: 128 },
     values: {
       type: "array",
       uniqueItems: true,
@@ -570,6 +570,132 @@ const navigationLifecycleAction = {
     order: { type: "integer" },
   },
 };
+const backendWorkspaceOption = {
+  type: "object",
+  additionalProperties: false,
+  required: ["value", "label"],
+  properties: {
+    value: { type: "string", minLength: 1, maxLength: 128 },
+    label: { type: "string", minLength: 1, maxLength: 128 },
+  },
+};
+const backendWorkspaceField = {
+  type: "object",
+  additionalProperties: false,
+  required: ["name", "label", "type"],
+  properties: {
+    name: { type: "string", pattern: "^[A-Za-z][A-Za-z0-9._-]{0,127}$" },
+    label: { type: "string", minLength: 1, maxLength: 128 },
+    type: {
+      enum: [
+        "TEXT",
+        "EMAIL",
+        "PASSWORD",
+        "MULTILINE",
+        "SELECT",
+        "MULTISELECT",
+        "CHECKBOX",
+        "HIDDEN",
+        "IDEMPOTENCY",
+      ],
+    },
+    required: { type: "boolean" },
+    maximumLength: { type: "integer", minimum: 1, maximum: 4000 },
+    defaultValue: {},
+    bindToPath: { type: "boolean" },
+    options: {
+      type: "array",
+      uniqueItems: true,
+      maxItems: 64,
+      items: backendWorkspaceOption,
+    },
+  },
+};
+const backendWorkspaceEndpoint = {
+  type: "object",
+  additionalProperties: false,
+  required: ["method", "path"],
+  properties: {
+    method: { enum: ["GET", "POST", "PUT", "PATCH", "DELETE"] },
+    path: { type: "string", pattern: "^/(?!/)", maxLength: 512 },
+    resultPath: { type: "string", minLength: 1, maxLength: 256 },
+  },
+};
+const backendWorkspaceColumn = {
+  type: "object",
+  additionalProperties: false,
+  required: ["field", "label"],
+  properties: {
+    field: { type: "string", minLength: 1, maxLength: 128 },
+    label: { type: "string", minLength: 1, maxLength: 128 },
+  },
+};
+const backendWorkspaceSection = {
+  type: "object",
+  additionalProperties: false,
+  required: ["id", "type", "title", "endpoint"],
+  properties: {
+    id: { type: "string", minLength: 1, maxLength: 128 },
+    type: { enum: ["listing", "form"] },
+    title: { type: "string", minLength: 1, maxLength: 160 },
+    submitLabel: { type: "string", minLength: 1, maxLength: 128 },
+    public: { type: "boolean" },
+    endpoint: backendWorkspaceEndpoint,
+    columns: {
+      type: "array",
+      uniqueItems: true,
+      maxItems: 32,
+      items: backendWorkspaceColumn,
+    },
+    filters: {
+      type: "array",
+      uniqueItems: true,
+      maxItems: 24,
+      items: backendWorkspaceField,
+    },
+    fields: {
+      type: "array",
+      uniqueItems: true,
+      maxItems: 32,
+      items: backendWorkspaceField,
+    },
+  },
+};
+const backendWorkspace = {
+  type: "object",
+  additionalProperties: false,
+  required: ["contractVersion", "title", "renderer", "tabs"],
+  properties: {
+    contractVersion: { type: "integer", minimum: 0 },
+    title: { type: "string", minLength: 1, maxLength: 160 },
+    description: { type: "string", minLength: 1, maxLength: 512 },
+    renderer: { enum: ["axis.workspace.backend-operations"] },
+    defaultTab: { type: "string", minLength: 1, maxLength: 128 },
+    tabs: {
+      type: "array",
+      uniqueItems: true,
+      minItems: 1,
+      maxItems: 12,
+      items: {
+        type: "object",
+        additionalProperties: false,
+        required: ["id", "label", "sections"],
+        properties: {
+          id: { type: "string", minLength: 1, maxLength: 128 },
+          label: { type: "string", minLength: 1, maxLength: 128 },
+          icon: { type: "string", minLength: 1, maxLength: 64 },
+          sections: {
+            type: "array",
+            uniqueItems: true,
+            minItems: 1,
+            maxItems: 12,
+            items: backendWorkspaceSection,
+          },
+        },
+      },
+    },
+  },
+};
 const backofficeMetadata = {
   type: "object",
   additionalProperties: false,
@@ -623,6 +749,7 @@ const backofficeMetadata = {
           featureState: { enum: ["ACTIVE", "PREVIEW", "DISABLED", "HIDDEN"] },
           badgeProvider: navigationBadgeProvider,
           workbenchTarget: navigationWorkbenchTarget,
+          backendWorkspace: backendWorkspace,
           workbenchPresentation: navigationWorkbenchPresentation,
           detailPanels: {
             type: "array",
@@ -656,6 +783,23 @@ const authorityClaim = {
     moduleName: moduleName,
     claimName: { type: "string", minLength: 1, maxLength: 256 },
     authorityContext: { type: "string", minLength: 1, maxLength: 256 },
+  },
+};
+const activationDataPackage = {
+  type: "object",
+  additionalProperties: false,
+  required: ["code", "classification", "owner", "required", "trigger", "operation", "dataType"],
+  properties: {
+    code: { type: "string", minLength: 1, maxLength: 256 },
+    classification: { type: "string", minLength: 1, maxLength: 64 },
+    owner: moduleName,
+    required: { type: "boolean" },
+    trigger: { enum: ["ACTIVATION", "USER"] },
+    targetModule: moduleName,
+    targetServer: { type: "string", maxLength: 128 },
+    targetDatabase: { type: "string", maxLength: 128 },
+    operation: { type: "string", minLength: 1, maxLength: 64 },
+    dataType: { enum: ["init", "core", "sample"] },
   },
 };
 const registration = {
@@ -712,6 +856,11 @@ const registration = {
       maxItems: 512,
       items: authorityClaim,
     },
+    activationDataPackages: {
+      type: "array",
+      maxItems: 128,
+      items: activationDataPackage,
+    },
   },
 };
 const functionalModuleRegistration = {
@@ -729,6 +878,11 @@ const functionalModuleRegistration = {
     required: { type: "boolean" },
     runtimeState: { enum: ["ACTIVE", "OFFLINE", "DEGRADED", "INCOMPATIBLE"] },
     technicalModules: { type: "array", uniqueItems: true, items: moduleName },
+    activationDataPackages: {
+      type: "array",
+      maxItems: 512,
+      items: activationDataPackage,
+    },
     observedServers: { type: "array", uniqueItems: true, items: { type: "string" } },
     catalogueRevision: { type: "integer", minimum: 1 },
     registeredAt: { type: "string", format: "date-time" },
@@ -877,6 +1031,7 @@ module.exports = {
   navigationWorkbenchTarget: navigationWorkbenchTarget,
   navigationDetailPanel: navigationDetailPanel,
   navigationHelp: navigationHelp,
+  backendWorkspace: backendWorkspace,
   contractHistorySnapshot: contractHistorySnapshot,
   contractActivation: contractActivation,
   contractCurrentData: {
@@ -930,6 +1085,7 @@ module.exports = {
     },
   },
   backofficeMetadata: backofficeMetadata,
+  activationDataPackage: activationDataPackage,
   registration: registration,
   functionalModuleRegistration: functionalModuleRegistration,
   functionalModuleLifecycleDecision: functionalModuleLifecycleDecision,

@@ -2,11 +2,11 @@
     "contractVersion": 2,
     "module": "validator",
     "sections": {
-        "init-v001": {
+        "sample-v001": {
             "kind": "DATA_RELEASE",
-            "dataType": "init",
+            "dataType": "sample",
             "version": "0.0.0",
-            "description": "Validation init data",
+            "description": "Validation sample data",
             "owningDomain": "validator",
             "lifecycle": "REFERENCE",
             "destinationRole": "PLATFORM",
@@ -21,10 +21,10 @@
             "initialPublicationPolicy": "NONE",
             "removalPolicy": "DELETE_EXPLICIT",
             "files": {
-                "init-v001/records/validator/defaultSampleValidatorData.js": "7ab30dd46b462ff9748bf9e91c711ea7ff1a968fac3b92322766731031d5a277",
-                "init-v001/headers/validator/defaultSampleValidatorHeader.js": "208ae18192076927791af2ca4aeaaab5053e439fd070876013eea4649466a68c"
+                "sample-v001/records/validator/defaultSampleValidatorData.js": "c395aba554302b79448491b0e5784e50c55e3866ded112725047736f5995bb46",
+                "sample-v001/headers/validator/defaultSampleValidatorHeader.js": "759e31ee098ed5e6bf78251f280b4240fa8a5670e3c6a2a7d11fe08f106074db"
             },
-            "sourceRoot": "init-v001"
+            "sourceRoot": "sample-v001"
         }
     }
 }

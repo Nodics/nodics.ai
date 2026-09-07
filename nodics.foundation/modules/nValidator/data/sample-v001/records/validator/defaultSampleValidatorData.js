@@ -10,17 +10,15 @@
  */
 
 /**
- * @module nodics.foundation/modules/nValidator/data/init-v001/records/validator/defaultSampleValidatorData
- * @description Provides nValidator initializer or sample data consumed by the import layer.
+ * @module nodics.foundation/modules/nValidator/data/sample-v001/records/validator/defaultSampleValidatorData
+ * @description Provides sample validator records for local validation demonstrations.
  * @layer data
  * @owner nValidator
- * @override Projects may override or extend this initializer data through layered import data rather than editing out-of-the-box framework records.
  */
 module.exports = {
     record0: {
         code: 'sampleDefaultValidator',
         type: 'schema',
-        //item: 'customer', // not required, because it should be common
         trigger: 'preSave',
         active: true,
         index: 0,
@@ -30,7 +28,7 @@ module.exports = {
     record1: {
         code: 'sampleAddressValidator',
         type: 'schema',
-        item: 'address', // not required, because it should be common
+        item: 'address',
         trigger: 'preSave',
         active: true,
         index: 0,

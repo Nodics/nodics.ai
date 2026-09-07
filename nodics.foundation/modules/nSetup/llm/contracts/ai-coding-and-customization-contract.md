@@ -179,6 +179,49 @@ renderers and recovery UI. Backend modules own CMS records, documentation
 records, initialization records, schema records, permission records, and import
 manifests.
 
+## Axis Capability Data
+
+Axis-visible navigation, content areas, workspaces, lifecycle actions,
+permissions, presentation hints, route ownership, and component descriptors are
+backend capability data. They must be owned by the functional module that owns
+the business behavior, not by the Axis frontend or a customer-specific shortcut.
+
+An Axis route or renderer may exist before a module is active, but it must not
+make the capability visible. Visibility begins only when the owning module is
+registered and activated, its BackOffice capability provider contributes the
+module-owned data, BackOffice permission-filters that data for the employee, and
+Axis receives it through authenticated bootstrap. If the module is absent,
+inactive, disabled, or not authorized, Axis must render no left-navigation item
+and no functional content area for that capability.
+
+Put reusable Axis capability data under the owning module's `data/...` tree or a
+module-owned generated source definition. Use a service only as the activation
+hook and normalizer that publishes this data through
+`DefaultModuleRegistrationAgentService`; do not hardcode menu trees, workspace
+schemas, or business actions directly in Axis. Later customer, project,
+environment, or partner layers may extend or replace the module-owned data
+through the standard module hierarchy without editing out-of-the-box Axis.
+
+Strict implementation rules:
+
+- do not add local `AxisNavigationItem` constants, preview-only navigation
+  items, keyword/category navigation grouping, or hardcoded module menus in Axis
+  for business capabilities;
+- do not infer business group, order, permission, workbench target, lifecycle
+  action, badge, route ownership, or content-area membership from route text,
+  module name, category, or UI-side keywords;
+- direct browser routes may exist as renderers, but they must show functional
+  capability content only when authenticated bootstrap includes the matching
+  backend navigation item and the owning module connection is available when the
+  item declares a workbench or backend target;
+- `CONFIG.backofficeCapabilities` may disable a module-owned provider for a
+  runtime, but it must not create, replace, or repair capability metadata;
+- initial/default capability data must be published from the owning module's
+  `data/manifest.json` as `init` or `core` `DATA_RELEASE` sections and imported
+  through nImport when the functional module is activated;
+- `sample` data remains user-triggered unless an owning contract explicitly
+  promotes it to required activation data.
+
 ## Configuration-First Does Not Mean Everything Is Configuration
 
 AI tools must use a configuration-first approach for legitimate variation

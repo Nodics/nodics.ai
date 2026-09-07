@@ -314,6 +314,29 @@ domain aggregate, not direct tenant fields. Add a role-specific enterprise
 reference only when that role is required by the record itself; otherwise expose
 reverse navigation through indexed queries, domain APIs, or BackOffice
 relationship views.
+
+## Axis Capability Implementation Contract
+
+When implementing or updating an Axis-visible module capability, developers and
+AI tools must treat backend module data as the source of truth:
+
+1. Put navigation, workspace, content-area, lifecycle-action, route-ownership,
+   permission, grouping, ordering, and presentation metadata in the owning
+   backend module or its business anchor module.
+2. Publish that metadata through a module-owned BackOffice capability provider
+   registered by `DefaultModuleRegistrationAgentService`.
+3. Declare required activation records as `init` or `core` `DATA_RELEASE`
+   sections in the owning module's `data/manifest.json`; keep demo/sample data
+   user-triggered unless an owning contract promotes it.
+4. Gate Axis rendering by authenticated backend bootstrap and by the declared
+   module connection for workbench or backend-targeted journeys.
+5. Do not create local Axis navigation constants, preview-only business menu
+   items, frontend fallback catalogues, keyword/category grouping, or
+   route-name inference to expose module functionality.
+6. Use deployment configuration only for intentional runtime enable/disable
+   decisions. Configuration must not synthesize capability metadata when the
+   owning module did not publish it.
+
 Project, environment, server, and node `properties.js` files are override
 layers only. They must contain only intentional deltas for their boundary:
 topology, local coordinates, environment-specific values, secret references,

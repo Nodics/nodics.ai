@@ -918,6 +918,166 @@ module.exports = {
       },
     },
 
+    enterpriseAccessAssignment: {
+      super: "base",
+      schemaPolicies: ["administrative"],
+      backoffice: {
+        enabled: true,
+        label: "Enterprise Access Assignment",
+        displayProperty: "email",
+        displayProperties: [
+          "code",
+          "email",
+          "enterpriseCode",
+          "roleCode",
+          "status",
+        ],
+        searchableFields: [
+          "code",
+          "email",
+          "normalizedEmail",
+          "enterpriseCode",
+          "tenantCode",
+          "roleCode",
+          "status",
+        ],
+        sortableFields: [
+          "code",
+          "email",
+          "enterpriseCode",
+          "roleCode",
+          "status",
+          "created",
+          "updated",
+        ],
+        filterFields: [
+          "enterpriseCode",
+          "tenantCode",
+          "roleCode",
+          "status",
+        ],
+        defaultSortField: "created",
+        defaultSortDirection: "DESC",
+      },
+      model: true,
+      service: {
+        enabled: true,
+      },
+      router: {
+        enabled: false,
+      },
+      cache: {
+        enabled: true,
+        ttl: 60,
+      },
+      definition: {
+        email: {
+          type: "string",
+          required: true,
+          description:
+            "Email address pre-approved for enterprise employee registration",
+          searchOptions: {
+            enabled: true,
+          },
+        },
+        normalizedEmail: {
+          type: "string",
+          required: true,
+          description:
+            "Lower-case normalized email used for invite lookup and registration matching",
+          searchOptions: {
+            enabled: true,
+          },
+        },
+        enterpriseCode: {
+          type: "string",
+          required: true,
+          description: "Enterprise receiving the employee registration",
+          searchOptions: {
+            enabled: true,
+          },
+        },
+        tenantCode: {
+          type: "string",
+          required: true,
+          description:
+            "Tenant where the registered employee identity will be stored",
+          searchOptions: {
+            enabled: true,
+          },
+        },
+        roleCode: {
+          type: "string",
+          required: true,
+          description:
+            "Configured enterprise-user role selected by the inviting administrator",
+          searchOptions: {
+            enabled: true,
+          },
+        },
+        groupCodes: {
+          type: "array",
+          required: true,
+          description:
+            "User groups assigned when the pre-approved employee completes registration",
+        },
+        scopeType: {
+          type: "string",
+          required: true,
+          default: "ENTERPRISE",
+          description: "Scope type applied to the registered employee",
+        },
+        scopeCode: {
+          type: "string",
+          required: true,
+          description: "Stable scope code applied to the registered employee",
+        },
+        status: {
+          type: "string",
+          required: true,
+          default: "PENDING",
+          description: "PENDING, ACTIVE, REGISTERED, EXPIRED, or REVOKED",
+          searchOptions: {
+            enabled: true,
+          },
+        },
+        expiresAt: {
+          type: "date",
+          required: false,
+          description: "Optional expiry timestamp for this pre-assigned registration",
+        },
+        invitedBy: {
+          type: "string",
+          required: false,
+          description: "Authenticated principal that created this assignment",
+        },
+        message: {
+          type: "string",
+          required: false,
+          description: "Optional operator-facing note for the invited user",
+        },
+        registeredLoginId: {
+          type: "string",
+          required: false,
+          description: "Employee login id created from this assignment",
+        },
+        registeredAt: {
+          type: "date",
+          required: false,
+          description: "Registration completion timestamp",
+        },
+      },
+      indexes: {
+        individual: {
+          normalizedEmail: { name: "normalizedEmail", enabled: true },
+          enterpriseCode: { name: "enterpriseCode", enabled: true },
+          tenantCode: { name: "tenantCode", enabled: true },
+          roleCode: { name: "roleCode", enabled: true },
+          status: { name: "status", enabled: true },
+        },
+      },
+    },
+
     identityMigrationAudit: {
       super: "base",
       schemaPolicies: ["administrative"],

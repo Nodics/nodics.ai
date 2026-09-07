@@ -119,6 +119,11 @@ assert(
 );
 assert(
   contracts.backofficeMetadata.properties.navigation.items.properties
+    .backendWorkspace,
+  "navigation must expose bounded backend-driven Axis workspace metadata",
+);
+assert(
+  contracts.backofficeMetadata.properties.navigation.items.properties
     .detailPanels,
   "navigation must expose bounded reusable schema detail panel metadata for Axis workspaces",
 );
@@ -250,6 +255,31 @@ assert(
         featureState: "ACTIVE",
         badgeProvider: { moduleName: "cms", operationId: "cms.pending.count" },
         workbenchTarget: { moduleName: "cms", schemaName: "cmsPage" },
+        backendWorkspace: {
+          contractVersion: 0,
+          title: "Backend Workspace",
+          renderer: "axis.workspace.backend-operations",
+          tabs: [
+            {
+              id: "records",
+              label: "Records",
+              sections: [
+                {
+                  id: "record-list",
+                  type: "listing",
+                  title: "Records",
+                  endpoint: {
+                    method: "GET",
+                    path: "/records/search",
+                    resultPath: "data.items",
+                  },
+                  columns: [{ field: "code", label: "Code" }],
+                  filters: [{ name: "code", label: "Code", type: "TEXT" }],
+                },
+              ],
+            },
+          ],
+        },
         workbenchPresentation: {
           defaultColumns: ["code", "name", "status"],
           hiddenFields: ["internalNotes"],
@@ -316,6 +346,41 @@ assert(
       },
     ],
   }),
+);
+assert.strictEqual(
+  service.validateBackofficeMetadata({
+    enabled: true,
+    capabilityId: "invalid-backend-workspace-contract",
+    navigation: [
+      {
+        id: "records",
+        label: "Records",
+        backendWorkspace: {
+          contractVersion: 0,
+          title: "Bad Workspace",
+          renderer: "axis.workspace.backend-operations",
+          tabs: [
+            {
+              id: "records",
+              label: "Records",
+              sections: [
+                {
+                  id: "bad",
+                  type: "form",
+                  title: "Bad",
+                  endpoint: {
+                    method: "POST",
+                    path: "https://example.invalid/unsafe",
+                  },
+                },
+              ],
+            },
+          ],
+        },
+      },
+    ],
+  }),
+  false,
 );
 assert(
   service.validateBackofficeMetadata({
@@ -613,6 +678,33 @@ let registration = {
   backoffice: capabilities[1],
 };
 assert(service.validateRegistration(registration));
+assert(service.validateRegistration(Object.assign({}, registration, {
+  activationDataPackages: [{
+    code: "cms:core-reference",
+    classification: "reference",
+    owner: "cms",
+    required: true,
+    trigger: "ACTIVATION",
+    targetModule: "cms",
+    operation: "IMPORT",
+    dataType: "core",
+  }],
+})));
+assert.strictEqual(
+  service.validateRegistration(Object.assign({}, registration, {
+    activationDataPackages: [{
+      code: "cms:core-reference",
+      classification: "reference",
+      owner: "cms",
+      required: true,
+      trigger: "AUTO",
+      operation: "IMPORT",
+      dataType: "core",
+    }],
+  })),
+  false,
+  "activation package descriptors must fail closed when trigger semantics are not bounded",
+);
 assert.deepStrictEqual(
   service.getContractFieldNames(contracts.registration).sort(),
   Object.keys(contracts.registration.properties).sort(),

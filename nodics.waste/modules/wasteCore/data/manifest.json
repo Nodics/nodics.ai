@@ -21,6 +21,7 @@
             "removalPolicy": "RETAIN",
             "files": {
                 "core-v001/headers/profile/wasteCoreEnterpriseCoreHeader.js": "a0372a3a16b570e2f0e6e3eb6ee1bc2e1a978eebca5d4aa1842dedb9349fb8b7",
+                "core-v001/records/backoffice/wasteCoreBackofficeCapabilityData.js": "bcae2000b3017de3e8a1f82cc5b1024cab073b88b64b241c701e7c26e6d825d8",
                 "core-v001/records/profile/wasteCoreEnterpriseCoreData.js": "19f77ddb72d0f0c5931038eeb91399f1cfffea444652bbba9e003ecb9ac5135a"
             },
             "sourceRoot": "core-v001"

@@ -207,8 +207,10 @@ module.exports = {
                                     }, 3000);
                                 }
                                 if (NODICS.isModuleActive(CONFIG.get('profileModuleName'))) {
+                                    let tenantBootstrapAuth = { isSystem: true, userGroups: ['serviceAccountUserGroup'] };
                                     SERVICE.DefaultEmployeeService.get({
                                         tenant: enterprise.tenant.code,
+                                        authData: tenantBootstrapAuth,
                                         query: {
                                             code: 'apiAdmin'
                                         }
@@ -216,10 +218,12 @@ module.exports = {
                                         if (success.success && success.result.length <= 0) {
                                             SERVICE.DefaultImportService.importInitData({
                                                 tenant: enterprise.tenant.code,
+                                                authData: tenantBootstrapAuth,
                                                 modules: NODICS.getActiveModules()
                                             }).then(success => {
                                                 SERVICE.DefaultEmployeeService.get({
                                                     tenant: enterprise.tenant.code,
+                                                    authData: tenantBootstrapAuth,
                                                     query: {
                                                         code: 'apiAdmin'
                                                     }

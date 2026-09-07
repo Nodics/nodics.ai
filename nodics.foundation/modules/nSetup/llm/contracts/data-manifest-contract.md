@@ -115,6 +115,27 @@ owning runtime and never enters Staged-to-Online publication. `REFERENCE` data
 has neither a publishing lifecycle nor artificial business versioning unless
 its owning contract explicitly promotes it to another class.
 
+## Activation Data Contract
+
+Module activation data is declared by module-owned `data/manifest.json`
+`DATA_RELEASE` sections. BackOffice and Axis must not create a second activation
+data catalogue.
+
+`init` and `core` releases are activation candidates when their lifecycle and
+initial publication policy allow direct import. The runtime that observes and
+registers the owning module advertises those packages to BackOffice, and
+BackOffice executes required activation packages through nImport on the
+registered target runtime when a human activates the functional module.
+
+`sample` releases are optional demo or accelerator data and must remain
+user-triggered unless the owning module contract explicitly classifies the
+release as required activation data.
+
+For functional module groups, common records belong in the business anchor
+module's `data/` tree, normally the `*Core` child module. If the records are
+persisted by another schema authority, the anchor module still owns the source
+release and the import header must target that authority explicitly.
+
 Destination-qualified contributions may be selected for another runtime only
 through an explicit manifest contract resolved by nImport. Selection must not
 activate the source module's runtime behavior, scan arbitrary packages, or

@@ -37,3 +37,7 @@ This file gives AI coding agents mandatory guidance for this Nodics module or pa
   protected, action-permissioned, bounded, and explicitly projected. Reuse the
   generated enterprise service; do not expose generic schema CRUD to an AI
   tool, add a parallel search/index path, or return recursive identity data.
+- Enterprise/user-management Axis workspaces must be backend component driven.
+  Publish labels, tabs, form fields, listings, role choices, and endpoints from
+  Profile configuration/BackOffice capability metadata; Axis may add generic
+  renderers and transport plumbing, but must not hardcode the business journey.

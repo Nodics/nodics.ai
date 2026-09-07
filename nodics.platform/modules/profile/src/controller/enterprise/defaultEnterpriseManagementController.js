@@ -30,5 +30,41 @@ module.exports = {
         let promise = FACADE.DefaultEnterpriseManagementFacade.create(request)
             .then(data => ({ code: 'SUC_PRFL_00000', data: data }));
         return callback ? promise.then(value => callback(null, value)).catch(callback) : promise;
+    },
+    /** Lists pre-assigned enterprise access records through the Profile-owned management facade. */
+    searchAccessAssignments: function (request, callback) {
+        request.query = request.httpRequest && request.httpRequest.query || request.query || {};
+        let promise = FACADE.DefaultEnterpriseManagementFacade.searchAccessAssignments(request)
+            .then(data => ({ code: 'SUC_PRFL_00000', data: data }));
+        return callback ? promise.then(value => callback(null, value)).catch(callback) : promise;
+    },
+    /** Creates one enterprise user pre-assignment through the Profile-owned management facade. */
+    preAssignAccess: function (request, callback) {
+        request.body = request.httpRequest && request.httpRequest.body || request.body || {};
+        request.params = request.httpRequest && request.httpRequest.params || request.params || {};
+        let promise = FACADE.DefaultEnterpriseManagementFacade.preAssignAccess(request)
+            .then(data => ({ code: 'SUC_PRFL_00000', data: data }));
+        return callback ? promise.then(value => callback(null, value)).catch(callback) : promise;
+    },
+    /** Resolves a public pre-assignment for Axis registration. */
+    resolvePreAssignedAccess: function (request, callback) {
+        request.query = request.httpRequest && request.httpRequest.query || request.query || {};
+        let promise = FACADE.DefaultEnterpriseManagementFacade.resolvePreAssignedAccess(request)
+            .then(data => ({ code: 'SUC_PRFL_00000', data: data }));
+        return callback ? promise.then(value => callback(null, value)).catch(callback) : promise;
+    },
+    /** Completes pre-approved enterprise employee registration. */
+    registerPreAssignedEmployee: function (request, callback) {
+        request.body = request.httpRequest && request.httpRequest.body || request.body || {};
+        let promise = FACADE.DefaultEnterpriseManagementFacade.registerPreAssignedEmployee(request)
+            .then(data => ({ code: 'SUC_PRFL_00000', data: data }));
+        return callback ? promise.then(value => callback(null, value)).catch(callback) : promise;
+    },
+    /** Returns the public backend-driven registration workspace contract. */
+    getPublicAccessWorkspace: function (request, callback) {
+        request.publicOnly = true;
+        let promise = FACADE.DefaultEnterpriseManagementFacade.getAccessWorkspace(request)
+            .then(data => ({ code: 'SUC_PRFL_00000', data: data }));
+        return callback ? promise.then(value => callback(null, value)).catch(callback) : promise;
     }
 };

@@ -17,6 +17,71 @@
  * @override Later active modules may extend or replace this registry through Nodics layering.
  */
 module.exports = { locationMap: {
+    locationMapProvider: Object.assign({ super: 'base', model: true, schemaPolicies: ['operational'], service: { enabled: true }, router: { enabled: false }, cache: { enabled: false }, event: { enabled: false }, search: { enabled: false } }, { definition: {
+        code: { type: 'string', required: true },
+        name: { type: 'object', required: true },
+        providerType: { type: 'string', required: true, enum: ['MAPBOX', 'OSM', 'GOOGLE_MAPS', 'HERE', 'ESRI', 'CUSTOM'] },
+        rendererCode: { type: 'string', required: true },
+        rendererType: { type: 'string', required: true, enum: ['MAPBOX_GL', 'XYZ_TILE', 'EXTERNAL_ADAPTER', 'CUSTOM'] },
+        requiresPublicAccessToken: { type: 'bool', required: true, default: false },
+        frontendSafeTokenPrefix: { type: 'string', required: false },
+        endpointPolicy: { type: 'object', required: false },
+        status: { type: 'string', required: true, enum: ['ACTIVE', 'INACTIVE', 'DEPRECATED', 'ARCHIVED'] },
+        revision: { type: 'int', required: true, default: 0 },
+        metadata: { type: 'object', required: false }
+    } }),
+    locationMapUsage: Object.assign({ super: 'base', model: true, schemaPolicies: ['operational'], service: { enabled: true }, router: { enabled: false }, cache: { enabled: false }, event: { enabled: false }, search: { enabled: false } }, { definition: {
+        code: { type: 'string', required: true },
+        name: { type: 'object', required: true },
+        surfaceCodes: { type: 'array', required: false },
+        description: { type: 'object', required: false },
+        status: { type: 'string', required: true, enum: ['ACTIVE', 'INACTIVE', 'DEPRECATED', 'ARCHIVED'] },
+        revision: { type: 'int', required: true, default: 0 },
+        metadata: { type: 'object', required: false }
+    } }),
+    locationMapStylePreset: Object.assign({ super: 'base', model: true, schemaPolicies: ['operational'], service: { enabled: true }, router: { enabled: false }, cache: { enabled: false }, event: { enabled: false }, search: { enabled: false } }, { definition: {
+        code: { type: 'string', required: true },
+        providerCode: { type: 'string', required: true },
+        name: { type: 'object', required: true },
+        styleUrl: { type: 'string', required: true },
+        attribution: { type: 'string', required: false },
+        status: { type: 'string', required: true, enum: ['ACTIVE', 'INACTIVE', 'DEPRECATED', 'ARCHIVED'] },
+        revision: { type: 'int', required: true, default: 0 },
+        metadata: { type: 'object', required: false }
+    } }),
+    locationMapControlPreset: Object.assign({ super: 'base', model: true, schemaPolicies: ['operational'], service: { enabled: true }, router: { enabled: false }, cache: { enabled: false }, event: { enabled: false }, search: { enabled: false } }, { definition: {
+        code: { type: 'string', required: true },
+        name: { type: 'object', required: true },
+        enabledControls: { type: 'array', required: false },
+        status: { type: 'string', required: true, enum: ['ACTIVE', 'INACTIVE', 'DEPRECATED', 'ARCHIVED'] },
+        revision: { type: 'int', required: true, default: 0 },
+        metadata: { type: 'object', required: false }
+    } }),
+    locationMapProviderConfiguration: Object.assign({ super: 'base', model: true, schemaPolicies: ['operational'], service: { enabled: true }, router: { enabled: false }, cache: { enabled: false }, event: { enabled: false }, search: { enabled: false } }, { definition: {
+        code: { type: 'string', required: true },
+        name: { type: 'object', required: true },
+        providerCode: { type: 'string', required: true },
+        surfaceCode: { type: 'string', required: true },
+        usageCode: { type: 'string', required: true },
+        stylePresetCode: { type: 'string', required: false },
+        styleUrl: { type: 'string', required: false },
+        publicAccessToken: { type: 'string', required: false },
+        tokenReference: { type: 'string', required: false },
+        fallbackProviderCode: { type: 'string', required: false },
+        fallbackPolicy: { type: 'string', required: true, enum: ['NONE', 'SETUP_REQUIRED', 'ALLOW_BASIC_MAP', 'NON_PRODUCTION_ONLY'] },
+        defaultCenterLatitude: { type: 'number', required: true },
+        defaultCenterLongitude: { type: 'number', required: true },
+        defaultZoom: { type: 'number', required: true },
+        minimumZoom: { type: 'number', required: false },
+        maximumZoom: { type: 'number', required: false },
+        controlPresetCode: { type: 'string', required: false },
+        enabledControls: { type: 'array', required: false },
+        frontendSafe: { type: 'bool', required: true, default: true },
+        setupStatus: { type: 'string', required: true, enum: ['SETUP_REQUIRED', 'ACTIVE', 'INACTIVE', 'INVALID', 'ARCHIVED'] },
+        status: { type: 'string', required: true, enum: ['DRAFT', 'ACTIVE', 'INACTIVE', 'ARCHIVED'] },
+        revision: { type: 'int', required: true, default: 0 },
+        metadata: { type: 'object', required: false }
+    } }),
     locationMapLayer: Object.assign({ super: 'base', model: true, schemaPolicies: ['operational'], service: { enabled: true }, router: { enabled: false }, cache: { enabled: false }, event: { enabled: false }, search: { enabled: false } }, { definition: {
         code: { type: 'string', required: true },
         name: { type: 'object', required: true },

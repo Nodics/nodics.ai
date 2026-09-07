@@ -106,23 +106,35 @@ module.exports = {
     },
     /** Returns stable sorted unique string values. */
     uniqueSorted: function (values) { return Array.from(new Set((values || []).map(String))).sort(); },
+    /** Returns stable module-owned activation package descriptors without allowing duplicate release codes. */
+    normalizeActivationDataPackages: function (packages, ownerFallback) {
+        let byCode = {};
+        [].concat(packages || []).forEach(item => {
+            if (!item || !item.code) return;
+            let normalized = {
+                code: String(item.code || ''),
+                classification: String(item.classification || item.kind || 'core'),
+                owner: String(item.owner || ownerFallback || ''),
+                required: item.required !== false,
+                trigger: String(item.trigger || (item.required === false ? 'USER' : 'ACTIVATION')),
+                operation: String(item.operation || 'IMPORT'),
+                dataType: String(item.dataType || this.inferActivationDataType(item))
+            };
+            if (item.targetModule) normalized.targetModule = String(item.targetModule);
+            if (item.targetServer) normalized.targetServer = String(item.targetServer);
+            if (item.targetDatabase) normalized.targetDatabase = String(item.targetDatabase);
+            if (normalized.code) byCode[normalized.code] = normalized;
+        });
+        return Object.keys(byCode).sort().map(code => byCode[code]);
+    },
     /** Returns module activation-data configuration contributed through normal configuration layering. */
     getActivationDataConfiguration: function () { return CONFIG.get('backofficeFunctionalModuleActivationData') || {}; },
     /** Returns configured package descriptors for one functional module. */
-    getActivationDataPackages: function (functionalModule) {
+    getActivationDataPackages: function (functionalModule, record) {
         let modules = this.getActivationDataConfiguration().modules || {};
-        return [].concat((modules[this.normalizeFunctionalModule(functionalModule)] || {}).dataPackages || []).map(item => ({
-            code: String(item.code || ''),
-            classification: String(item.classification || item.kind || 'core'),
-            owner: String(item.owner || functionalModule),
-            required: item.required !== false,
-            trigger: String(item.trigger || (item.required === false ? 'USER' : 'ACTIVATION')),
-            targetModule: String(item.targetModule || ''),
-            targetServer: String(item.targetServer || ''),
-            targetDatabase: String(item.targetDatabase || ''),
-            operation: String(item.operation || 'IMPORT'),
-            dataType: String(item.dataType || this.inferActivationDataType(item))
-        })).filter(item => item.code);
+        let configured = [].concat((modules[this.normalizeFunctionalModule(functionalModule)] || {}).dataPackages || []);
+        let observed = [].concat(record && record.activationDataPackages || []);
+        return this.normalizeActivationDataPackages(configured.concat(observed), functionalModule);
     },
     /** Returns existing functional-module activation prerequisites. */
     getActivationDependencies: function (functionalModule) {
@@ -210,7 +222,7 @@ module.exports = {
     /** Builds the client-safe activation-data plan and receipt projection for the current lifecycle action. */
     buildActivationDataPlan: function (record, action, context) {
         context = context || {};
-        let packages = this.getActivationDataPackages(record.functionalModule);
+        let packages = this.getActivationDataPackages(record.functionalModule, record);
         let receiptMap = context.receiptMap || {};
         let dependencyStates = [].concat(context.dependencyStates || []);
         let dependencies = this.getActivationDependencies(record.functionalModule);
@@ -269,6 +281,11 @@ module.exports = {
     },
     /** Returns whether two string lists represent the same governed value. */
     sameList: function (left, right) { return JSON.stringify(this.uniqueSorted(left)) === JSON.stringify(this.uniqueSorted(right)); },
+    /** Returns whether two activation package lists represent the same governed value. */
+    sameActivationDataPackages: function (left, right) {
+        return JSON.stringify(this.normalizeActivationDataPackages(left)) ===
+            JSON.stringify(this.normalizeActivationDataPackages(right));
+    },
     /** Resolves the nearest functional root for one observed runtime module. */
     resolveFunctionalRoot: function (registration, registrationsByName) {
         let current = registration;
@@ -289,6 +306,9 @@ module.exports = {
             let identity = this.normalizeFunctionalModule(root.functionalModule.identity);
             let technicalModules = registrations.filter(item => item.moduleName !== root.moduleName &&
                 this.resolveFunctionalRoot(item, registrationsByName) === root).map(item => item.moduleName);
+            let activationDataPackages = registrations.filter(item => item === root ||
+                this.resolveFunctionalRoot(item, registrationsByName) === root)
+                .flatMap(item => item.activationDataPackages || []);
             return {
                 projectCode: batch.project,
                 functionalModule: identity,
@@ -297,6 +317,7 @@ module.exports = {
                 moduleIndex: root.moduleIndex,
                 required: root.functionalModule.protected === true,
                 technicalModules: this.uniqueSorted(technicalModules),
+                activationDataPackages: this.normalizeActivationDataPackages(activationDataPackages, root.moduleName),
                 observedServer: [batch.environment, batch.server, batch.node || 'default'].join(':')
             };
         });
@@ -386,6 +407,7 @@ module.exports = {
             existing.displayName !== observation.displayName || existing.moduleIndex !== observation.moduleIndex ||
             existing.required !== observation.required ||
             !this.sameList(existing.technicalModules, observation.technicalModules) ||
+            !this.sameActivationDataPackages(existing.activationDataPackages, observation.activationDataPackages) ||
             !this.sameList(existing.observedServers, observedServers);
         let model = {
             code: canonicalCode, functionalModule: observation.functionalModule,
@@ -393,6 +415,7 @@ module.exports = {
             displayName: observation.displayName, registeredVersion: observation.registeredVersion,
             moduleIndex: observation.moduleIndex,
             required: observation.required, technicalModules: observation.technicalModules,
+            activationDataPackages: observation.activationDataPackages,
             observedServers: observedServers, catalogueRevision: Number(existing.catalogueRevision || 1) + (changed ? 1 : 0),
             updatedAt: changed ? now : existing.updatedAt, updatedBy: changed ? 'runtime-reconciler' : existing.updatedBy,
             lastObservedAt: now
@@ -451,6 +474,7 @@ module.exports = {
             required: record.required === true,
             runtimeState: record.runtimeState,
             technicalModules: this.uniqueSorted(record.technicalModules),
+            activationDataPackages: this.normalizeActivationDataPackages(record.activationDataPackages, record.functionalModule),
             observedServers: this.uniqueSorted(record.observedServers),
             catalogueRevision: Number(record.catalogueRevision || 1),
             registeredAt: record.registeredAt,
@@ -588,7 +612,7 @@ module.exports = {
     },
     /** Executes required activation data packages through the existing nImport data-release executor. */
     executeRequiredActivationData: async function (record, context, request) {
-        let packages = this.getActivationDataPackages(record.functionalModule)
+        let packages = this.getActivationDataPackages(record.functionalModule, record)
             .filter(pack => pack.required === true && pack.trigger === 'ACTIVATION');
         if (!packages.length) return true;
         let grouped = packages.reduce((result, pack) => {
@@ -701,7 +725,7 @@ module.exports = {
     },
     /** Records deactivation/deregistration data semantics without deleting imported data. */
     recordDataLeftIntact: async function (record, context, request) {
-        let packages = this.getActivationDataPackages(record.functionalModule);
+        let packages = this.getActivationDataPackages(record.functionalModule, record);
         await Promise.all(packages.map(pack => this.upsertActivationReceipt(record, pack, 'DATA_LEFT_INTACT',
             Object.assign({}, context, { request: request }), {
                 executionMode: pack.required && pack.trigger === 'ACTIVATION' ? 'NIMPORT_RELEASE' : 'USER_TRIGGERED',

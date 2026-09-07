@@ -1659,8 +1659,8 @@ module.exports = {
     ],
     "sourceRepository": "nodics.platform",
     "sourcePath": "docs/pages/media-management.md",
-    "sourceChecksum": "2710d3266b059252555d1055c049171f699d7f2d681ad773738d40def6a96e20",
-    "sourceWordCount": 4436,
+    "sourceChecksum": "7d4741881f39665e69485c2864e03278b1880ad13bf52a42bd4ffd4e89464ef4",
+    "sourceWordCount": 4462,
     "audience": [
       "administrator",
       "operator",

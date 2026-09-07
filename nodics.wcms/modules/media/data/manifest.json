@@ -51,8 +51,7 @@
             "sourceRoot": "init-v001"
         },
         "mediaDataPackStandard": {
-            "kind": "DATA_RELEASE",
-            "dataType": "init",
+            "kind": "SOURCE_CONTRIBUTION",
             "version": "0.0.0",
             "displayName": "Media Data-Pack Standard",
             "description": "Standard path-free media package structure and non-publishable artifact policy for content, product, docs, and accelerators.",
@@ -72,7 +71,7 @@
                 "standard/data-pack-media-structure.md": "dccd5a5ecaa57ef3efddf726d1e1f3d5cf0e31dc83700d74959b0b13a7498d7d",
                 "standard/non-publishable-media-policy.json": "c393f8c190b31bc3b5418f561869e64f1674b805d54da3cd9aff4aa4d46b6a1d"
             },
-            "sourceRoot": "init-v001"
+            "sourceRoot": "standard"
         }
     }
 }

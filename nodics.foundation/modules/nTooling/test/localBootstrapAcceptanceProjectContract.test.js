@@ -75,5 +75,30 @@ assert(
     !source.includes('documentation publication skipped: oversized documentation bundles remain Staged'),
   'fresh-schema acceptance must publish documentation packs now that CMS supports chunked site publication'
 );
+assert(
+  source.includes('const locationUrl = process.env.AXIS_LOCATION_URL || "http://127.0.0.1:4380";') &&
+    source.includes('"start:location"'),
+  'fresh-schema acceptance must include the Location runtime when the local reset provider owns Location data'
+);
+assert(
+  source.includes('function resolveExpectedResetProviderCount(status)') &&
+    !source.includes('result.providerCount !== 4'),
+  'fresh-schema acceptance must verify the configured reset provider count instead of freezing a four-provider topology'
+);
+assert(
+  source.includes('function isExpectedAcceptanceBackendNoise(message)') &&
+    source.includes('message.includes("ERR_DBS_00004")') &&
+    source.includes('message.includes("Module schemas are not available")') &&
+    source.includes('.filter((message) => !isExpectedAcceptanceBackendNoise(message))'),
+  'fresh-schema acceptance may ignore only explicit Schema Workbench module-discovery misses from Axis smoke, not all backend errors'
+);
+assert(
+  source.includes('await ensureInitializationProfileCurrent(headers, platformUrl, "localPlatformFoundation", "Platform foundation");') &&
+    source.includes('await ensureInitializationProfileCurrent(headers, locationUrl, "localLocationFoundation", "Location foundation");') &&
+    source.includes('await verifyLocationMapDefaults(headers);') &&
+    source.includes('/nodics/import/v0/initialization-profiles') &&
+    source.includes('/nodics/locationMap/v0/location/maps/configurations/effective?surfaceCode=AXIS&usageCode=COLLECTION_CENTRE_MAP'),
+  'fresh-schema acceptance must install the Platform and Location foundation profiles and prove the effective Axis map configuration'
+);
 
 console.log('local bootstrap acceptance project contract passed');

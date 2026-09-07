@@ -96,7 +96,15 @@ async function run() {
     assert.strictEqual(routes.createEnterprise.method, 'POST');
     assert.strictEqual(routes.createEnterprise.permission, 'profile.enterprise.create');
     assert.strictEqual(routes.createEnterprise.requestBody.content['application/json'].schema.additionalProperties, false);
+    assert.strictEqual(routes.searchEnterpriseAccessAssignments.method, 'GET');
+    assert.strictEqual(routes.searchEnterpriseAccessAssignments.permission, 'profile.enterpriseAccess.search');
+    assert.strictEqual(routes.preAssignEnterpriseAccess.method, 'POST');
+    assert.strictEqual(routes.preAssignEnterpriseAccess.permission, 'profile.enterpriseAccess.assign');
+    assert.strictEqual(routes.resolvePreAssignedEnterpriseAccess.secured, false);
+    assert.strictEqual(routes.getPreAssignedEnterpriseAccessWorkspace.secured, false);
+    assert.strictEqual(routes.registerPreAssignedEnterpriseEmployee.secured, false);
     assert(service.create.toString().includes('DefaultEnterpriseService.save'));
+    assert(service.registerPreAssignedEmployee.toString().includes('DefaultPrincipalScopeAssignmentService.save'));
 
     let mappedRequest;
     global.FACADE = {
@@ -183,7 +191,13 @@ async function run() {
     }), error => error.code === 'ERR_PRFL_00003');
 
     let createQueries = [];
+    let tenantQueries = [];
+    let savedTenantRequest;
     let savedRequest;
+    let activatedEnterprises;
+    global.NODICS = {
+        getActiveTenants: () => ['default']
+    };
     global.SERVICE.DefaultEnterpriseService = {
         get: request => {
             createQueries.push(request);
@@ -196,26 +210,214 @@ async function run() {
             return Promise.resolve({ result: request.model });
         }
     };
+    global.SERVICE.DefaultEnterpriseHandlerService = {
+        buildEnterprise: enterprises => {
+            activatedEnterprises = enterprises;
+            return Promise.resolve(true);
+        }
+    };
+    global.SERVICE.DefaultTenantService = {
+        get: request => {
+            tenantQueries.push(request);
+            return Promise.resolve({ result: [] });
+        },
+        save: request => {
+            savedTenantRequest = request;
+            return Promise.resolve({ result: request.model });
+        }
+    };
     const createRequest = {
-        authData: { tokenType: 'access', principalId: 'admin' },
+        authData: {
+            tokenType: 'access',
+            principalId: 'admin',
+            entCode: 'default',
+            userGroups: ['adminGroup']
+        },
         body: { code: 'acme-new', name: 'Acme New', tenantCode: 'availableTenant' }
     };
     const created = await service.create(createRequest);
     assert.deepStrictEqual(createQueries.map(item => item.query), [
         { code: 'acme-new' }, { tenant: 'availableTenant' }
     ]);
+    assert.deepStrictEqual(tenantQueries.map(item => item.query), [
+        { code: 'availableTenant' }
+    ]);
+    assert.strictEqual(savedTenantRequest.tenant, 'default');
+    assert.deepStrictEqual(savedTenantRequest.model, {
+        code: 'availableTenant', active: true, description: 'Tenant for Acme New'
+    });
     assert.strictEqual(savedRequest.tenant, 'default');
     assert.deepStrictEqual(savedRequest.model, {
         code: 'acme-new', name: 'Acme New', tenant: 'availableTenant', active: true
     });
+    assert.strictEqual(activatedEnterprises[0].tenant.code, 'availableTenant');
     assert.deepStrictEqual(created, {
         code: 'acme-new', name: 'Acme New', tenantCode: 'availableTenant', active: true
     });
     await assert.rejects(service.create({
-        authData: { tokenType: 'access', principalId: 'admin' },
+        authData: {
+            tokenType: 'access',
+            principalId: 'enterprise-admin',
+            entCode: 'acme-new',
+            userGroups: ['adminGroup']
+        },
+        body: { code: 'blocked', name: 'Blocked', tenantCode: 'blockedTenant' }
+    }), error => error.code === 'ERR_PRFL_00003' &&
+        error.message === 'Enterprise creation is limited to the Platform Owner enterprise');
+    await assert.rejects(service.create({
+        authData: {
+            tokenType: 'access',
+            principalId: 'admin',
+            entCode: 'default',
+            userGroups: ['adminGroup']
+        },
         body: { code: 'second-owner', name: 'Second Owner', tenantCode: 'assignedTenant' }
     }), error => error.code === 'ERR_PRFL_00003' &&
         error.message === 'Enterprise tenant is already assigned');
+
+    let assignmentGets = [];
+    let assignmentSaves = [];
+    global.SERVICE.DefaultEnterpriseService = {
+        retrieveEnterprise: code => Promise.resolve({
+            code: code,
+            active: true,
+            tenant: { code: code + 'Tenant' }
+        })
+    };
+    global.SERVICE.DefaultEnterpriseAccessAssignmentService = {
+        get: request => {
+            assignmentGets.push(request);
+            return Promise.resolve({ result: [] });
+        },
+        save: request => {
+            assignmentSaves.push(request);
+            return Promise.resolve({ result: request.model });
+        }
+    };
+    const assigned = await service.preAssignAccess({
+        params: { enterpriseCode: 'du-shop' },
+        authData: {
+            tokenType: 'access',
+            loginId: 'owner@example.test',
+            entCode: 'default',
+            userGroups: ['adminGroup'],
+            permissions: ['profile.enterpriseAccess.assign']
+        },
+        body: {
+            email: 'DuShop@DU.AE',
+            roleCode: 'ENTERPRISE_ADMIN',
+            idempotencyKey: 'invite-du-shop-admin'
+        }
+    });
+    assert.strictEqual(assignmentGets[0].tenant, 'default',
+        'Access assignments stay in the Profile authority tenant');
+    assert.strictEqual(assignmentSaves[0].tenant, 'default');
+    assert.strictEqual(assignmentSaves[0].model.normalizedEmail, 'dushop@du.ae');
+    assert.strictEqual(assignmentSaves[0].model.tenantCode, 'du-shopTenant');
+    assert.strictEqual(assigned.roleCode, 'ENTERPRISE_ADMIN');
+    assert.deepStrictEqual(assigned.groupCodes, ['adminGroup', 'axisViewerUserGroup']);
+
+    await assert.rejects(service.preAssignAccess({
+        params: { enterpriseCode: 'other-ent' },
+        authData: {
+            tokenType: 'access',
+            loginId: 'enterprise-admin@example.test',
+            userGroups: ['adminGroup', 'axisViewerUserGroup'],
+            entCode: 'my-ent',
+            permissions: ['profile.enterpriseAccess.assign']
+        },
+        body: {
+            email: 'user@example.test',
+            roleCode: 'VIEWER',
+            idempotencyKey: 'invite-other-user'
+        }
+    }), error => error.code === 'ERR_PRFL_00003' &&
+        error.message === 'Enterprise access assignment is limited to the caller enterprise');
+
+    assignmentGets = [];
+    assignmentSaves = [];
+    global.SERVICE.DefaultEnterpriseAccessAssignmentService = {
+        get: request => {
+            assignmentGets.push(request);
+            return Promise.resolve({ result: [{
+                code: 'enterpriseAccess_du_shop_dushop_du_ae',
+                email: 'dushop@du.ae',
+                normalizedEmail: 'dushop@du.ae',
+                enterpriseCode: 'du-shop',
+                tenantCode: 'du-shopTenant',
+                roleCode: 'ENTERPRISE_ADMIN',
+                groupCodes: ['adminGroup', 'axisViewerUserGroup'],
+                scopeType: 'ENTERPRISE',
+                scopeCode: 'du-shop',
+                status: 'PENDING'
+            }] });
+        },
+        save: request => {
+            assignmentSaves.push(request);
+            return Promise.resolve({ result: request.model });
+        }
+    };
+    const savedEmployees = [];
+    const savedPasswords = [];
+    const savedScopes = [];
+    global.SERVICE.DefaultEmployeeService = {
+        get: request => {
+            assert.strictEqual(request.tenant, 'du-shopTenant');
+            assert.deepStrictEqual(request.query, { loginId: 'dushop@du.ae' });
+            return Promise.resolve({ result: [] });
+        },
+        save: request => {
+            savedEmployees.push(request);
+            return Promise.resolve({ result: request.model });
+        }
+    };
+    global.SERVICE.DefaultPasswordService = {
+        save: request => {
+            savedPasswords.push(request);
+            return Promise.resolve({ result: Object.assign({ code: 'pw_dushop' }, request.model) });
+        }
+    };
+    global.SERVICE.DefaultPrincipalScopeAssignmentService = {
+        save: request => {
+            savedScopes.push(request);
+            return Promise.resolve({ result: request.model });
+        }
+    };
+    const registration = await service.registerPreAssignedEmployee({
+        body: {
+            enterpriseCode: 'du-shop',
+            email: 'dushop@du.ae',
+            firstName: 'Du',
+            lastName: 'Admin',
+            password: 'adminPassword',
+            idempotencyKey: 'register-du-shop-admin'
+        }
+    });
+    assert.strictEqual(assignmentGets[0].tenant, 'default');
+    assert.strictEqual(savedPasswords[0].tenant, 'du-shopTenant');
+    assert.strictEqual(savedEmployees[0].tenant, 'du-shopTenant');
+    assert.deepStrictEqual(savedEmployees[0].model.userGroups, ['adminGroup', 'axisViewerUserGroup']);
+    assert.strictEqual(savedScopes[0].tenant, 'du-shopTenant');
+    assert.strictEqual(savedScopes[0].model.scopeType, 'ENTERPRISE');
+    assert.strictEqual(savedScopes[0].model.scopeCode, 'du-shop');
+    assert.strictEqual(assignmentSaves[0].tenant, 'default');
+    assert.strictEqual(assignmentSaves[0].model.status, 'REGISTERED');
+    assert.deepStrictEqual(registration, {
+        status: 'REGISTERED',
+        loginId: 'dushop@du.ae',
+        enterpriseCode: 'du-shop',
+        tenantCode: 'du-shopTenant',
+        employeeCode: 'dushop@du.ae'
+    });
+
+    const workspace = service.getAccessWorkspace({});
+    assert.strictEqual(workspace.renderer, 'axis.workspace.backend-operations');
+    assert(workspace.tabs.some(tab => tab.id === 'users' &&
+        tab.sections.some(section => section.id === 'assign-user')));
+    const publicWorkspace = service.getAccessWorkspace({ publicOnly: true });
+    assert.strictEqual(publicWorkspace.tabs.length, 1);
+    assert.strictEqual(publicWorkspace.tabs[0].id, 'registration');
+    assert(publicWorkspace.tabs[0].sections.every(section => section.public === true));
 
     const assertPolicy = policy => {
         const tool = policy.record0.approvedOperations.find(item =>

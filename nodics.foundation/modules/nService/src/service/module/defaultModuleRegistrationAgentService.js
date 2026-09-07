@@ -87,7 +87,7 @@ module.exports = {
         return true;
     },
 
-    /** Resolves module-owned capability metadata, retaining configuration only as bounded migration compatibility. */
+    /** Resolves module-owned capability metadata, retaining configuration only as a disable switch. */
     getBackofficeCapability: function (moduleName, context) {
         let legacy = (CONFIG.get('backofficeCapabilities') || {})[moduleName];
         if (legacy && legacy.enabled === false) return undefined;
@@ -96,7 +96,6 @@ module.exports = {
         if (capability && typeof capability.then === 'function') {
             throw new Error('BackOffice capability providers must return synchronously during registration');
         }
-        if (!capability) capability = legacy;
         if (!capability || capability.enabled === false) return undefined;
         return JSON.parse(JSON.stringify(capability));
     },
@@ -143,6 +142,46 @@ module.exports = {
         return claims;
     },
 
+    /** Returns module-owned activation data packages declared in this module's data manifest. */
+    buildActivationDataPackages: function (moduleName, rawModule) {
+        if (!rawModule || !rawModule.path) return [];
+        let fs = require('fs');
+        let path = require('path');
+        let manifestPath = path.join(rawModule.path, 'data', 'manifest.json');
+        if (!fs.existsSync(manifestPath)) return [];
+        let manifest = JSON.parse(fs.readFileSync(manifestPath, 'utf8'));
+        let sections = manifest && manifest.sections || {};
+        return Object.keys(sections).sort().map(sectionCode => {
+            let section = sections[sectionCode] || {};
+            if (section.kind !== 'DATA_RELEASE') return undefined;
+            let dataType = String(section.dataType || this.inferActivationDataType(section, sectionCode));
+            let isActivationRequired = dataType !== 'sample' &&
+                section.initialPublicationPolicy !== 'ADMIN_INITIATED';
+            let pack = {
+                code: String((manifest.module || moduleName) + ':' + sectionCode),
+                classification: String(dataType === 'sample' ? 'sample' : section.lifecycle || dataType || 'core').toLowerCase(),
+                owner: String(moduleName),
+                required: isActivationRequired,
+                trigger: isActivationRequired ? 'ACTIVATION' : 'USER',
+                targetModule: String(moduleName),
+                operation: 'IMPORT',
+                dataType: dataType
+            };
+            let targetServer = typeof NODICS !== 'undefined' && NODICS.getServerName ? String(NODICS.getServerName() || '') : '';
+            if (targetServer) pack.targetServer = targetServer;
+            return pack;
+        }).filter(Boolean);
+    },
+
+    /** Infers a release type for activation package descriptors from manifest metadata. */
+    inferActivationDataType: function (section, sectionCode) {
+        let sourceRoot = String(section.sourceRoot || sectionCode || '').toLowerCase();
+        let code = String(sectionCode || '').toLowerCase();
+        if (sourceRoot.startsWith('sample') || code.includes('sample')) return 'sample';
+        if (sourceRoot.startsWith('init') || code.includes('init')) return 'init';
+        return 'core';
+    },
+
     /** Builds a bounded module registration payload from authoritative runtime metadata. */
     buildRegistration: function (moduleName) {
         let rawModule = NODICS.getRawModule(moduleName) || {};
@@ -168,7 +207,8 @@ module.exports = {
             },
             healthPath: config.healthPath,
             leaseTtlMs: config.leaseTtlMs,
-            authorityClaims: this.buildAuthorityClaims(moduleName, rawModule)
+            authorityClaims: this.buildAuthorityClaims(moduleName, rawModule),
+            activationDataPackages: this.buildActivationDataPackages(moduleName, rawModule)
         };
         if (nodicsMetadata.functionalModule) {
             registration.functionalModule = JSON.parse(JSON.stringify(nodicsMetadata.functionalModule));

@@ -10,11 +10,10 @@
  */
 
 /**
- * @module nodics.foundation/modules/nValidator/data/init-v001/headers/validator/defaultSampleValidatorHeader
- * @description Provides nValidator initializer or sample data consumed by the import layer.
- * @layer data
+ * @module nodics.foundation/modules/nValidator/data/sample-v001/headers/validator/defaultSampleValidatorHeader
+ * @description Imports sample validator records for local validation demonstrations.
+ * @layer data-header
  * @owner nValidator
- * @override Projects may override or extend this initializer data through layered import data rather than editing out-of-the-box framework records.
  */
 module.exports = {
     validator: {

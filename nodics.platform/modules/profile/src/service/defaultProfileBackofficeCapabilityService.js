@@ -644,6 +644,13 @@ const capability = {
     ]
 };
 
+function getEnterpriseManagementConfig() {
+    if (typeof CONFIG !== "undefined" && CONFIG && CONFIG.get) {
+        return CONFIG.get('enterpriseManagement') || {};
+    }
+    return require('../../config/properties').enterpriseManagement || {};
+}
+
 module.exports = {
     /** Registers this module BackOffice capability provider. */
     init: function () {
@@ -653,5 +660,40 @@ module.exports = {
     /** Completes provider lifecycle initialization. */
     postInit: function () { return Promise.resolve(true); },
     /** Returns this module owned BackOffice capability contract. */
-    getCapability: function () { return JSON.parse(JSON.stringify(capability)); }
+    getCapability: function () {
+        let effective = JSON.parse(JSON.stringify(capability));
+        let workspace = getEnterpriseManagementConfig().workspace;
+        if (workspace) {
+            let enterpriseWorkspaceIds = {
+                "organisations-business-accounts": true,
+                "employees-teams": true,
+                "roles-access": true,
+                "enterprises": true,
+                "employees": true,
+                "roles": true,
+                "permission-groups": true
+            };
+            effective.requiredPermissions = Array.from(new Set(
+                (effective.requiredPermissions || []).concat([
+                    "profile.enterprise.search",
+                    "profile.enterpriseAccess.search",
+                    "profile.enterpriseAccess.assign"
+                ])));
+            effective.navigation.forEach(item => {
+                if (!enterpriseWorkspaceIds[item.id]) return;
+                item.featureState = "ACTIVE";
+                item.backendWorkspace = workspace;
+                item.requiredPermissions = Array.from(new Set(
+                    (item.requiredPermissions || ["profile.backoffice.view"]).concat([
+                        "profile.enterprise.search",
+                        "profile.enterpriseAccess.search"
+                    ])));
+                if (item.id === "enterprises") {
+                    item.label = "Enterprises and Users";
+                    item.icon = "organization";
+                }
+            });
+        }
+        return effective;
+    }
 };

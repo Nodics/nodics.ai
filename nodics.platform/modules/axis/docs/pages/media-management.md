@@ -30,7 +30,9 @@ private, while approved CMS or product assets may become public or signed later.
 ## Navigation
 
 The left navigation group is **Media Management**. It is published by nMedia
-through `backofficeCapabilities.media.navigation`, not hardcoded in Axis. The
+through module-owned BackOffice capability data after the owning functional
+module is registered, activated, live, and authorized for the employee. It is
+not hardcoded in Axis and it is not synthesized from Axis route code. The
 current first slice exposes these entries:
 
 - **Media** for uploaded media records.

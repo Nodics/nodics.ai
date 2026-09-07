@@ -33,8 +33,8 @@ for (const [moduleName, index] of expectedModules) {
     assert.strictEqual(modulePackage.nodics.kind, 'capability');
     assert.strictEqual(modulePackage.nodics.runtimeModule, true);
     assert.strictEqual(modulePackage.nodics.loadableByNodicsModuleLoader, true);
-    if (moduleName === 'locationCore') {
-        assert.strictEqual(modulePackage.nodics.runtime.router, true, 'Location Core must expose generated admin Workbench routes when composed into locationServer');
+    if (['locationCore', 'locationMap'].includes(moduleName)) {
+        assert.strictEqual(modulePackage.nodics.runtime.router, true, moduleName + ' must expose Location-owned routes when composed into locationServer');
     }
     assert(fs.existsSync(path.join(locationRoot, 'modules', moduleName, 'src', 'schemas', 'schemas.js')));
 }

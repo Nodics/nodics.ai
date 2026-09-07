@@ -247,6 +247,32 @@ Client catalogue metadata is optional module-owned metadata. Aggregators may
 validate and filter it but must not duplicate it as configuration or use it to
 replace the target module's API authorization.
 
+### Backend-Driven Axis Capability Visibility
+
+Axis is a renderer, not a module catalogue. Left navigation, grouped menu
+placement, workbench targets, backend workspaces, lifecycle actions, route
+ownership, presentation hints, permissions, and capability content areas must
+come from module-owned backend capability data.
+
+A capability becomes visible in Axis only after the owning functional module is
+registered, activated, live in an observed runtime, and authorized for the
+employee. A frontend route may exist before activation as implementation
+support, but it must not expose business functionality without the matching
+authenticated backend capability item.
+
+Functional modules own their capability metadata and their activation data.
+Required startup/default records must be imported from module-owned
+`data/manifest.json` `init` or `core` `DATA_RELEASE` sections during module
+activation. For a functional module group, shared reference data belongs to the
+business anchor module, normally the `*Core` child module. Leaf modules own only
+their capability-local data.
+
+Deployment configuration may disable a module-owned capability provider for a
+runtime. It must not create navigation, workspaces, actions, or content-area
+definitions. Axis must not implement fallback catalogues, local business
+navigation constants, keyword grouping, or route/category inference to make
+inactive capabilities visible.
+
 BackOffice capability discovery consumes the effective contracts already owned
 by target modules and Nodics System. Normalized hashes and snapshots are
 observations, not editable authority; breaking candidates must not displace the

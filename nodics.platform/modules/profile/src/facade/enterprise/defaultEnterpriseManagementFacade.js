@@ -24,5 +24,25 @@ module.exports = {
     /** Delegates confirmed enterprise creation to the authoritative Profile service. */
     create: function (request) {
         return SERVICE.DefaultEnterpriseManagementService.create(request);
+    },
+    /** Delegates bounded enterprise access-assignment search to the authoritative Profile service. */
+    searchAccessAssignments: function (request) {
+        return SERVICE.DefaultEnterpriseManagementService.searchAccessAssignments(request);
+    },
+    /** Delegates governed enterprise access pre-assignment to the authoritative Profile service. */
+    preAssignAccess: function (request) {
+        return SERVICE.DefaultEnterpriseManagementService.preAssignAccess(request);
+    },
+    /** Delegates public access-assignment resolution to the authoritative Profile service. */
+    resolvePreAssignedAccess: function (request) {
+        return SERVICE.DefaultEnterpriseManagementService.resolvePreAssignedAccess(request);
+    },
+    /** Delegates pre-approved enterprise employee registration to the authoritative Profile service. */
+    registerPreAssignedEmployee: function (request) {
+        return SERVICE.DefaultEnterpriseManagementService.registerPreAssignedEmployee(request);
+    },
+    /** Delegates backend-driven workspace delivery to the authoritative Profile service. */
+    getAccessWorkspace: function (request) {
+        return Promise.resolve(SERVICE.DefaultEnterpriseManagementService.getAccessWorkspace(request));
     }
 };

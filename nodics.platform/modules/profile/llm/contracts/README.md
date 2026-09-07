@@ -41,6 +41,27 @@ Use these files for rules that are more specific than root `AGENTS.md` and the m
   rediscover its current method, path, and permission through BackOffice before
   every call and forward the employee bearer to Profile.
 
+## Enterprise access assignments
+
+- Profile owns `enterpriseAccessAssignment` as the pre-approved employee
+  registration registry. Store assignment registry state in the configured
+  Profile authority tenant and create the employee/password/scope records in
+  the assigned enterprise tenant only after registration completes.
+- Platform administrators may create enterprises and pre-assign users for any
+  enterprise. Enterprise administrators may pre-assign users only for their own
+  authenticated enterprise context.
+- `profile.enterpriseAccess.search` and `profile.enterpriseAccess.assign`
+  protect authenticated management routes. Public registration routes may
+  resolve and complete only a matching, active pre-assignment and must not
+  expose recursive identity data.
+- Registration must create an employee, save the password through Profile's
+  password service, assign configured user groups from layered role policy, and
+  create a Profile `principalScopeAssignment` with `scopeType: ENTERPRISE`.
+- Axis enterprise/user-management components must be driven by the Profile
+  BackOffice `backendWorkspace` contract or the public
+  `/enterprise-access/workspace` contract. Do not hardcode role labels, fields,
+  tabs, columns, or operation endpoints into an enterprise-specific Axis page.
+
 ## Principal authorization scopes
 
 - Profile owns the `principalScopeAssignment` schema and

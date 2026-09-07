@@ -34,6 +34,7 @@ module.exports = {
                 active: {
                     type: 'bool',
                     required: true,
+                    default: true,
                     description: 'Flag to check if tenant is still active',
                     searchOptions: {
                         enabled: true, // default is false

@@ -853,6 +853,10 @@ module.exports = {
       });
     });
     let identities = new Set(items.map((item) => item.moduleName + ":" + item.id));
+    let moduleDefaultsByIdentity = {};
+    items.forEach((item) => {
+      moduleDefaultsByIdentity[item.moduleName + ":" + item.id] = item;
+    });
     items.forEach((item) => {
       if (item.parentId) {
         let parentKey = String(item.parentModuleName || item.moduleName) + ":" + String(item.parentId);
@@ -905,12 +909,15 @@ module.exports = {
       ? this.cloneNavigationComposition(state.published.composition)
       : undefined;
     if (published) {
-      items = (published.navigation || []).map((item, index) => this.applyDocumentationPublicationState(Object.assign({}, item, {
+      items = (published.navigation || []).map((item, index) => {
+        let identity = String(item.moduleName || "backoffice") + ":" + String(item.id || "");
+        let moduleDefault = moduleDefaultsByIdentity[identity];
+        let nextItem = Object.assign({}, item, {
           order: Number.isInteger(item.order) ? item.order : index,
           sourceTrace: Object.assign({
             sourceType: "governedOverride",
             ownerModule: item.moduleName || "backoffice",
-            stableIdentity: String(item.moduleName || "backoffice") + ":" + String(item.id || ""),
+            stableIdentity: identity,
             overrideApplied: true,
             editable: true,
             lifecycleState: "PUBLISHED",
@@ -924,7 +931,12 @@ module.exports = {
             ownerType: item.workbenchTarget ? "WORKBENCH" : String(item.route || "").indexOf("/docs") === 0 ? "CMS" : "NATIVE_AXIS",
             ownerModule: item.moduleName || "backoffice",
           },
-        }), documentationPublication));
+        });
+        if (nextItem.backendWorkspace === undefined && moduleDefault && moduleDefault.backendWorkspace !== undefined) {
+          nextItem.backendWorkspace = this.cloneNavigationComposition(moduleDefault.backendWorkspace);
+        }
+        return this.applyDocumentationPublicationState(nextItem, documentationPublication);
+      });
       groups = {};
       (published.groups || []).forEach((group) => {
         groups[group.id] = Object.assign({}, group, {

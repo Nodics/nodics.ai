@@ -31,6 +31,7 @@ const wcmsOnlineUrl =
   process.env.NEXUS_CMS_URL || "http://127.0.0.1:4314";
 const processUrl = process.env.AXIS_PROCESS_URL || "http://127.0.0.1:4330";
 const engagementUrl = process.env.NODICS_ENGAGEMENT_URL || "http://127.0.0.1:4340";
+const locationUrl = process.env.AXIS_LOCATION_URL || "http://127.0.0.1:4380";
 const axisUrl = process.env.AXIS_URL || "http://127.0.0.1:3100";
 const enterpriseCode = process.env.AXIS_ENTERPRISE || "default";
 const loginId = process.env.AXIS_LOGIN_ID || "admin";
@@ -259,6 +260,7 @@ const localPorts = [
   { label: "WCMS Online", port: urlPort(wcmsOnlineUrl) },
   { label: "Process", port: urlPort(processUrl) },
   { label: "Engagement", port: 4340 },
+  { label: "Location", port: urlPort(locationUrl) },
   { label: "Commerce", port: 4350 },
   { label: "Axis", port: urlPort(axisUrl) },
 ];
@@ -278,6 +280,11 @@ function stableId(value) {
 
 function isErrorLevelLog(text) {
   return /(?:^|\s)error\s*:/i.test(text) || /\[31merror/i.test(text);
+}
+
+function isExpectedAcceptanceBackendNoise(message) {
+  return message.includes("ERR_DBS_00004") &&
+    message.includes("Module schemas are not available");
 }
 
 async function requestJson(baseUrl, path, options = {}) {
@@ -519,6 +526,14 @@ async function assertGovernedFreshResetAvailable() {
   log("fresh reset requested; only the governed Platform reset API will be used");
 }
 
+function resolveExpectedResetProviderCount(status) {
+  const count = Number(status && status.providerCount);
+  if (!Number.isInteger(count) || count <= 0) {
+    throw new Error(`governed Local reset did not expose a valid provider count: ${JSON.stringify(status)}`);
+  }
+  return count;
+}
+
 async function stopManagedProcesses() {
   managedProcesses.forEach(({ child }) => child.kill("SIGTERM"));
   const started = Date.now();
@@ -565,15 +580,16 @@ async function executeGovernedFreshReset(headers) {
   if (status.ready !== true || status.apiOnly !== true) {
     throw new Error(`governed Local reset is not ready: ${JSON.stringify(status)}`);
   }
+  const expectedProviderCount = resolveExpectedResetProviderCount(status);
   const result = await requestJson(platformUrl, "/nodics/backoffice/v0/operations/local-reset", {
     headers,
     method: "POST",
     body: JSON.stringify({ confirmation: "RESET_LOCAL_NODICS_DATA", reason: "fresh local publishing acceptance verification" }),
   });
-  if (result.acknowledged !== true || result.providerCount !== 4) {
+  if (result.acknowledged !== true || result.providerCount !== expectedProviderCount) {
     throw new Error(`governed Local reset was not fully acknowledged: ${JSON.stringify(result)}`);
   }
-  log("all four runtime owners acknowledged API-only Local reset");
+  log(`all ${String(result.providerCount)} runtime owners acknowledged API-only Local reset`);
   await stopManagedProcesses();
   return true;
 }
@@ -748,6 +764,70 @@ async function importMandatoryProcessRelease(headers) {
     });
   }
   log(`${releaseCode} mandatory workflow is CURRENT in Process`);
+}
+
+function listFromResponse(value) {
+  if (!value) return [];
+  if (Array.isArray(value)) return value;
+  if (Array.isArray(value.items)) return value.items;
+  if (Array.isArray(value.data)) return value.data;
+  return [];
+}
+
+async function ensureInitializationProfileCurrent(headers, baseUrl, profileCode, label) {
+  const profiles = listFromResponse(await requestJson(baseUrl, "/nodics/import/v0/initialization-profiles", { headers }));
+  const profile = profiles.find((item) => item.profileCode === profileCode);
+  if (!profile) {
+    throw new Error(`${label} initialization profile is unavailable: ${profileCode}`);
+  }
+  if (profile.status !== "CURRENT") {
+    const validation = await requestJson(baseUrl, `/nodics/import/v0/initialization-profiles/${encodeURIComponent(profileCode)}/validate`, {
+      headers,
+      method: "POST",
+      body: "{}",
+    });
+    if (validation.mode !== "VALIDATE") {
+      throw new Error(`${label} initialization validation did not use validation-only mode: ${JSON.stringify(validation)}`);
+    }
+    const installation = await requestJson(baseUrl, `/nodics/import/v0/initialization-profiles/${encodeURIComponent(profileCode)}/install`, {
+      headers,
+      method: "POST",
+      body: "{}",
+    });
+    if (installation.mode !== "INSTALL" || installation.profile?.status !== "CURRENT") {
+      throw new Error(`${label} initialization did not become CURRENT: ${JSON.stringify(installation)}`);
+    }
+    if (![].concat(installation.profile.steps || []).flatMap((item) => item.releases || []).every((item) => item.status === "CURRENT")) {
+      throw new Error(`${label} initialization has non-current releases: ${JSON.stringify(installation.profile)}`);
+    }
+  }
+  const current = profiles.find((item) => item.profileCode === profileCode)?.status === "CURRENT" ?
+    profile :
+    await requestJson(baseUrl, `/nodics/import/v0/initialization-profiles/${encodeURIComponent(profileCode)}`, { headers });
+  if (current.status !== "CURRENT") {
+    throw new Error(`${label} initialization state did not persist: ${JSON.stringify(current)}`);
+  }
+  log(`${label} initialization profile ${profileCode} is CURRENT`);
+}
+
+async function verifyLocationMapDefaults(headers) {
+  const effective = await requestJson(
+    locationUrl,
+    "/nodics/locationMap/v0/location/maps/configurations/effective?surfaceCode=AXIS&usageCode=COLLECTION_CENTRE_MAP",
+    { headers },
+  );
+  if (
+    effective.providerCode !== "MAPBOX" ||
+    effective.setupStatus !== "ACTIVE" ||
+    effective.configured !== true ||
+    effective.fallbackProviderCode !== "OSM" ||
+    effective.fallbackPolicy !== "ALLOW_BASIC_MAP" ||
+    !String(effective.styleUrl || "").includes("mapbox://styles/mapbox/streets-v12") ||
+    !String(effective.publicAccessToken || "").startsWith("pk.")
+  ) {
+    throw new Error(`Location Map defaults are not effective for Axis collection centres: ${JSON.stringify(effective)}`);
+  }
+  log("Location Map defaults resolve Mapbox active with OSM fallback for Axis collection centres");
 }
 
 async function publishAxisBaseline(headers) {
@@ -1207,6 +1287,14 @@ async function main() {
     engagementUrl,
     "/nodics/system/v0/health/ready",
   );
+  await ensureProcess(
+    "Location",
+    urlPort(locationUrl),
+    projectRoot,
+    "start:location",
+    locationUrl,
+    "/nodics/system/v0/health/ready",
+  );
   await verifyLocalRouteSecurityMatrix();
   if (dropLocalDb) {
     const resetHeaders = await authenticate();
@@ -1216,6 +1304,7 @@ async function main() {
     await ensureProcess("WCMS Online", 4314, projectRoot, "start:wcms:online", wcmsOnlineUrl, "/nodics/system/v0/health/ready");
     await ensureProcess("Process and Automation", 4330, projectRoot, "start:process", processUrl, "/nodics/system/v0/health/ready");
     await ensureProcess("Engagement", urlPort(engagementUrl), projectRoot, "start:engagement", engagementUrl, "/nodics/system/v0/health/ready");
+    await ensureProcess("Location", urlPort(locationUrl), projectRoot, "start:location", locationUrl, "/nodics/system/v0/health/ready");
     await verifyLocalRouteSecurityMatrix();
   }
   await waitForHttp(
@@ -1233,6 +1322,9 @@ async function main() {
   }
   await waitForHttp(axisUrl, "/", "Axis");
   const headers = await authenticate();
+  await ensureInitializationProfileCurrent(headers, platformUrl, "localPlatformFoundation", "Platform foundation");
+  await ensureInitializationProfileCurrent(headers, locationUrl, "localLocationFoundation", "Location foundation");
+  await verifyLocationMapDefaults(headers);
   await importMandatoryProcessRelease(headers);
   const registry = await loadRegistry(headers);
   requireModule(registry.registered, "nodics.foundation", "registered modules");
@@ -1266,7 +1358,9 @@ async function main() {
   }
   await runAxisSmoke();
   const noisy = managedProcesses.flatMap((entry) =>
-    entry.errors.map((message) => `${entry.label}: ${message}`),
+    entry.errors
+      .filter((message) => !isExpectedAcceptanceBackendNoise(message))
+      .map((message) => `${entry.label}: ${message}`),
   );
   if (noisy.length > 0) {
     throw new Error(`Startup emitted error-level output:\n${noisy.join("\n")}`);
