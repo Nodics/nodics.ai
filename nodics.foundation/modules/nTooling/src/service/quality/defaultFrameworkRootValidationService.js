@@ -33,9 +33,11 @@ const expectedFrameworkWorkspaces = [
     'nodics.wcms',
     'nodics.docs',
     'nodics.discovery',
+    'nodics.location',
     'nodics.commerce',
     'nodics.communication',
-    'nodics.engagement'
+    'nodics.engagement',
+    'nodics.copilot'
 ];
 
 const requiredRootFiles = [

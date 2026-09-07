@@ -128,6 +128,16 @@ module.exports = {
           required: false,
           description: "Can be used for landmark or optional properties",
         },
+        landmarkHint: {
+          type: "string",
+          required: false,
+          description: "Reusable landmark hint for finding this address",
+        },
+        accessNotes: {
+          type: "string",
+          required: false,
+          description: "Reusable delivery or access notes for this address",
+        },
         locality: {
           type: "string",
           required: false,
@@ -147,6 +157,67 @@ module.exports = {
           type: "string",
           required: true,
           description: "PastalCode of the address",
+        },
+        countryCode: {
+          type: "string",
+          required: true,
+          description: "ISO country code of the address",
+        },
+        latitude: {
+          type: "number",
+          required: false,
+          description: "Latitude of the geocoded address when available",
+        },
+        longitude: {
+          type: "number",
+          required: false,
+          description: "Longitude of the geocoded address when available",
+        },
+        geocodingProvider: {
+          type: "string",
+          required: false,
+          description: "Provider used to geocode or normalize this address",
+        },
+        geocodingReference: {
+          type: "string",
+          required: false,
+          description: "Provider reference for the geocoded address",
+        },
+        geocodingPrecision: {
+          type: "string",
+          required: false,
+          description: "Precision level of the geocoded address",
+        },
+        geocodingConfidence: {
+          type: "number",
+          required: false,
+          description: "Normalized geocoding confidence from zero to one",
+        },
+        verificationStatus: {
+          type: "string",
+          required: false,
+          enum: ["UNVERIFIED", "PENDING", "VERIFIED", "REJECTED", "STALE"],
+          description: "Reusable address verification state",
+        },
+        verificationSource: {
+          type: "string",
+          required: false,
+          description: "Source that verified this address",
+        },
+        verifiedByRef: {
+          type: "object",
+          required: false,
+          description: "Actor or service reference that verified this address",
+        },
+        verifiedAt: {
+          type: "date",
+          required: false,
+          description: "Timestamp when this address was verified",
+        },
+        displayPolicy: {
+          type: "object",
+          required: false,
+          description: "Reusable privacy-safe display and redaction policy",
         },
         contacts: {
           type: "array",
@@ -316,6 +387,19 @@ module.exports = {
           searchOptions: {
             enabled: true, // default is false
           },
+        },
+        roleCodes: {
+          type: "array",
+          required: false,
+          description: "Business association roles this enterprise can play, such as PLATFORM_OWNER, PROGRAM_OPERATOR, SERVICE_PROVIDER, MARKETPLACE_VENDOR, ISSUER, ASSET_OWNER, or BUSINESS_PARTNER",
+          searchOptions: {
+            enabled: true,
+          },
+        },
+        capabilityScopes: {
+          type: "array",
+          required: false,
+          description: "Capability-owned role scope metadata contributed by functional anchor modules while Profile remains the Enterprise schema authority",
         },
       },
       indexes: {

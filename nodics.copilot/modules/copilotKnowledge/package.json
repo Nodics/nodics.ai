@@ -1,0 +1,39 @@
+{
+    "name": "copilotKnowledge",
+    "index": "78.60",
+    "description": "Evidence, citation, retrieval, and grounding over Nodics Discovery.",
+    "main": "nodics.js",
+    "version": "0.0.0",
+    "private": true,
+    "license": "SEE LICENSE IN LICENSE",
+    "requiredModules": [
+        "discoverySource",
+        "discoveryProjection",
+        "discoveryRuntime"
+    ],
+    "nodics": {
+        "kind": "capability",
+        "displayName": "Copilot Knowledge",
+        "runtimeModule": true,
+        "loadableByNodicsModuleLoader": true,
+        "owns": [
+            "configuration",
+            "schema",
+            "router",
+            "service",
+            "pipeline",
+            "interceptor",
+            "event",
+            "search",
+            "utility",
+            "test",
+            "llm"
+        ],
+        "runtime": {
+            "router": false,
+            "publish": false,
+            "web": false
+        }
+    },
+    "scripts": {}
+}

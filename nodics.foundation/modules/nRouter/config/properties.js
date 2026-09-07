@@ -101,7 +101,8 @@ module.exports = {
         superPermissions: ['*', 'runtime.config.*'],
         groupPermissions: {
             serviceAccountUserGroup: ['auth.internal.token.read', 'auth.internal.token.read.anyTenant',
-                'import.init.run', 'import.core.run', 'import.sample.run', 'import.release.validate']
+                'import.init.run', 'import.core.run', 'import.sample.run', 'import.release.validate',
+                'location.location.read', 'location.location.search']
         }
     },
     apiExposure: {

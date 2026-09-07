@@ -152,6 +152,19 @@ touching persistence, search, cache, imports, exports, files, events, jobs,
 permissions, audit, diagnostics, or runtime governance. Do not hardcode tenant
 placement details in feature code.
 
+Tenant is not business ownership. Domain schemas must not use direct `tenant`
+fields to model the business owner, operator, seller, issuer, venue, collection
+centre, branch, partner, or visibility owner. When business ownership or scoped
+business visibility is required, use the owning domain's enterprise association,
+such as `enterpriseRef`, `operatorEnterpriseRef`, `sellerEnterpriseRef`,
+`issuerEnterpriseRef`, or a more precise domain-owned enterprise reference.
+
+Direct tenant fields are allowed only for framework tenant records,
+runtime-governance records, import/export envelopes, audit/security envelopes,
+generated persistence keys, or documented isolation indexes where enterprise
+association is insufficient. Every exception must name the owning schema policy,
+service, or persistence contract and prove tenant isolation with focused tests.
+
 ## Layered Ownership
 
 Every feature must respect the layered module hierarchy.
@@ -198,6 +211,13 @@ manifest collections and per-data-type manifest files are not Nodics-owned
 authoring patterns. Apply `data-manifest-contract.md` for integrity,
 compatibility, generation, and compliance rules.
 
+Within a functional module group, shared/common reference data belongs to the
+functional module's business anchor module, normally the `*Core` child module.
+Leaf capability modules own only data that is local to their specific
+capability. If the common record is persisted by another authority, the anchor
+module still owns the contributing data files and import header, and the header
+must target the authority schema explicitly.
+
 ## Module-Centric Runtime Principle
 
 Modules are the unit of capability ownership, lifecycle contribution,
@@ -205,6 +225,17 @@ registration, discovery, and customization. A runtime instance is a process
 hosting an effective active-module set. Environment, server, and node modules
 compose processes, coordinates, and instance policy; they do not become
 alternate capability owners.
+
+Every runtime-capable module must be designed for both consolidated deployment
+and standalone micro-service runtime. A module may run in the same process as
+its collaborators, or in its own server process with required local dependencies
+active and other collaborators reached through declared APIs, events, providers,
+or internal service contracts. Module code must not depend on incidental
+co-location from a local consolidated topology.
+
+Cross-module behavior must preserve request, tenant, enterprise, permission,
+correlation, idempotency, audit, diagnostics, and failure/retry context across
+process boundaries.
 
 Registries identify `module + runtime instance`, including modules without HTTP
 routers. Callable endpoints are conditional metadata, not proof that a module

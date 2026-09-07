@@ -24,6 +24,29 @@
                 "core-v001/headers/loyalty/loyaltyOperationPolicyCoreHeader.js": "21555856f2a357e13f6d6bae5b4ac07c19b56fde2a90c69352eac2d907fba00a"
             },
             "sourceRoot": "core-v001"
+        },
+        "core-enterprise-reference": {
+            "kind": "DATA_RELEASE",
+            "dataType": "core",
+            "version": "0.0.0",
+            "displayName": "Loyalty Enterprise Reference",
+            "description": "Loyalty marketplace enterprise records contributed to the Profile enterprise authority.",
+            "owningDomain": "loyalty",
+            "lifecycle": "REFERENCE",
+            "destinationRole": "PLATFORM",
+            "environmentScope": [
+                "ALL"
+            ],
+            "sensitivity": "INTERNAL",
+            "versioningPolicy": "NONE",
+            "publicationPolicy": "NONE",
+            "initialPublicationPolicy": "NONE",
+            "removalPolicy": "RETAIN",
+            "files": {
+                "core-v001/headers/profile/loyaltyCoreEnterpriseCoreHeader.js": "f760357f5e6f6f607ae74ff20ebd3b1b6b7c4145632623ec8e8650490841f586",
+                "core-v001/records/profile/loyaltyCoreEnterpriseCoreData.js": "4f5f5dbb505bc046849a0f1205c3c50538409e09708162ecf73c436284f42dfb"
+            },
+            "sourceRoot": "core-v001"
         }
     }
 }

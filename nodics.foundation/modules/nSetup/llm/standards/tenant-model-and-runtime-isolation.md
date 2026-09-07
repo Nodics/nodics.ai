@@ -20,6 +20,46 @@ services own enterprise and tenant records. Runtime code may use enterprise
 context to resolve the tenant, but data access and tenant-sensitive behavior
 must operate against the resolved tenant.
 
+Tenant must not be used as the business-owner field in ordinary domain schemas.
+When a record needs business ownership, operating ownership, commercial party,
+partner, branch, venue, collection operator, or visibility scope, use the
+owning domain's enterprise association, such as `enterpriseRef`,
+`operatorEnterpriseRef`, `sellerEnterpriseRef`, `issuerEnterpriseRef`, or a
+better domain-specific enterprise reference. Tenant remains the resolved
+runtime isolation and placement envelope behind that business association.
+
+Enterprise associations must express the business role the record actually
+needs. Use `enterpriseRef` only when a generic owner is the natural aggregate
+relationship. Use role-specific references when the role is semantically
+important, for example `platformEnterpriseRef`, `operatorEnterpriseRef`,
+`serviceProviderEnterpriseRef`, `vendorEnterpriseRef`, `issuerEnterpriseRef`,
+`assetOwnerEnterpriseRef`, or `partnerEnterpriseRef`. Do not add every possible
+role field to every schema. A schema stores only the association needed for its
+own aggregate; reverse traversal is provided by indexed queries, domain APIs,
+or workbench relationship views.
+
+The standard enterprise role vocabulary is:
+
+- `PLATFORM_OWNER`: owns or offers the platform/application capability.
+- `PROGRAM_OPERATOR`: operates a program, service workflow, collection network,
+  campaign, or capability on behalf of itself or another enterprise.
+- `SERVICE_PROVIDER`: owns or operates service infrastructure, venues,
+  collection centres, bins, logistics, recycling, fulfillment, support, or
+  other delivered services.
+- `MARKETPLACE_VENDOR`: sells, redeems, fulfills, or commercially sponsors
+  marketplace offers such as coupons or rewards.
+- `ISSUER`: issues credits, rewards, certificates, coupons, documents, or
+  other governed entitlements.
+- `ASSET_OWNER`: owns physical or digital assets/infrastructure.
+- `BUSINESS_PARTNER`: participates in a partnership where the exact operational
+  role is module-specific or documented by a relationship record.
+
+Only framework-owned tenant records, runtime-governance records,
+import/export envelopes, audit/security envelopes, generated persistence keys,
+or explicitly documented isolation indexes may carry tenant directly. A retained
+direct tenant field must explain why enterprise association is insufficient and
+which schema policy, service, or persistence contract owns the exception.
+
 ## Shared Tenant And Dedicated Tenant
 
 Use a shared tenant when the business accepts the platform's shared data and
@@ -116,11 +156,13 @@ Before implementing a tenant-sensitive change:
 2. Identify where tenant context comes from: request, enterprise, token, active
    tenant registry, runtime governance, import header, job definition, or
    bootstrap default.
-3. Use the owning Nodics service, facade, pipeline, handler, generated model, or
+3. For business ownership or scoped business visibility, use enterprise
+   association instead of adding a direct tenant business field.
+4. Use the owning Nodics service, facade, pipeline, handler, generated model, or
    governed runtime path instead of direct cross-tenant shortcuts.
-4. Preserve tenant context in logs, audit, diagnostics, cache keys, search
+5. Preserve tenant context in logs, audit, diagnostics, cache keys, search
    indexes, import/export runs, events, jobs, and errors.
-5. Add tests proving that one tenant cannot read, mutate, cache, index, export,
+6. Add tests proving that one tenant cannot read, mutate, cache, index, export,
    govern, or authenticate as another tenant unless an explicit cross-tenant
    permission contract allows it.
 
@@ -130,6 +172,8 @@ Before advising or changing code, AI tools must identify:
 
 - affected tenant boundary;
 - tenant source and fallback behavior;
+- whether business ownership belongs to an enterprise association rather than a
+  direct tenant schema field;
 - owning module and extension point;
 - affected persistence, cache, search, event, cron, auth, import/export, and
   governance paths;

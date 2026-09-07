@@ -1,0 +1,34 @@
+{
+    "name": "locationSearch",
+    "index": "65.40",
+    "description": "LocationSearchAndNearbyQueryCapability",
+    "main": "nodics.js",
+    "version": "0.0.0",
+    "private": true,
+    "license": "SEE LICENSE IN LICENSE",
+    "nodics": {
+        "kind": "capability",
+        "displayName": "Location Search",
+        "runtimeModule": true,
+        "loadableByNodicsModuleLoader": true,
+        "owns": [
+            "configuration",
+            "schema",
+            "router",
+            "service",
+            "pipeline",
+            "interceptor",
+            "event",
+            "search",
+            "utility",
+            "test",
+            "llm"
+        ],
+        "runtime": {
+            "router": false,
+            "publish": false,
+            "web": false
+        }
+    },
+    "scripts": {}
+}

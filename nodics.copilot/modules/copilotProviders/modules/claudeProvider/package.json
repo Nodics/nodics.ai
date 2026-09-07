@@ -1,0 +1,26 @@
+{
+  "name": "claudeProvider",
+  "index": "78.24",
+  "description": "Anthropic Claude Messages API adapter for Nodics Copilot.",
+  "main": "nodics.js",
+  "version": "0.0.0",
+  "private": true,
+  "license": "SEE LICENSE IN LICENSE",
+  "nodics": {
+    "kind": "capability",
+    "displayName": "Claude Provider",
+    "runtimeModule": true,
+    "loadableByNodicsModuleLoader": true,
+    "owns": [
+      "configuration",
+      "service",
+      "llm"
+    ],
+    "runtime": {
+      "router": false,
+      "publish": false,
+      "web": false
+    }
+  },
+  "scripts": {}
+}

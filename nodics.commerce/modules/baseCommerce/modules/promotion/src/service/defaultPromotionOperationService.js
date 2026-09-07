@@ -47,6 +47,51 @@ module.exports = {
         return value ? new Date(value) : new Date();
     },
     /**
+     * Returns the enterprise code from a scalar or Profile enterprise reference.
+     * @param {*} value Candidate enterprise value.
+     * @returns {string|undefined} Enterprise code.
+     * @override Later-loaded modules may replace this member through the standard merge contract.
+     */
+    enterpriseCodeFrom: function (value) {
+        if (!value) return undefined;
+        if (typeof value === 'string') return value;
+        if (typeof value === 'object' && !Array.isArray(value)) return value.code || value.ref || value.id;
+        return undefined;
+    },
+    /**
+     * Builds a Profile enterprise reference for Promotion business association fields.
+     * @param {string} code Enterprise code.
+     * @param {string} roleCode Association role code.
+     * @returns {Object|undefined} Profile enterprise reference.
+     * @override Later-loaded modules may replace this member through the standard merge contract.
+     */
+    enterpriseRef: function (code, roleCode) {
+        if (!code) return undefined;
+        return { moduleName: 'profile', schemaName: 'enterprise', code: code, roleCode: roleCode };
+    },
+    /**
+     * Adds explicit enterprise references while preserving the legacy scalar code for current generated queries.
+     * @param {Object} model Persistence model.
+     * @param {Object} request Operation request.
+     * @returns {Object} Model with enterprise association references.
+     * @override Later-loaded modules may replace this member through the standard merge contract.
+     */
+    withEnterpriseAssociations: function (model, request) {
+        const enterpriseCode = this.enterpriseCodeFrom(model.enterpriseRef) ||
+            this.enterpriseCodeFrom(model.vendorEnterpriseRef) ||
+            this.enterpriseCodeFrom(model.issuerEnterpriseRef) ||
+            model.enterpriseCode ||
+            request && request.enterpriseCode;
+        const issuerCode = this.enterpriseCodeFrom(model.issuerEnterpriseRef) || model.issuerEnterpriseCode || enterpriseCode;
+        const vendorCode = this.enterpriseCodeFrom(model.vendorEnterpriseRef) || model.vendorEnterpriseCode || enterpriseCode;
+        let associations = {};
+        if (enterpriseCode) associations.enterpriseCode = enterpriseCode;
+        if (enterpriseCode) associations.enterpriseRef = model.enterpriseRef || this.enterpriseRef(enterpriseCode, 'BUSINESS_PARTNER');
+        if (issuerCode) associations.issuerEnterpriseRef = model.issuerEnterpriseRef || this.enterpriseRef(issuerCode, 'ISSUER');
+        if (vendorCode) associations.vendorEnterpriseRef = model.vendorEnterpriseRef || this.enterpriseRef(vendorCode, 'MARKETPLACE_VENDOR');
+        return Object.assign({}, model, associations);
+    },
+    /**
      * Applies generated-schema base fields for Promotion-owned persistence records.
      * @param {Object} model Persistence model.
      * @param {Object} request Operation request.
@@ -56,8 +101,7 @@ module.exports = {
     withSchemaBase: function (model, request) {
         const now = this.schemaDate(request && request.now);
         const created = model.created ? this.schemaDate(model.created) : now;
-        return Object.assign({}, model, {
-            enterpriseCode: model.enterpriseCode || request && request.enterpriseCode,
+        return Object.assign({}, this.withEnterpriseAssociations(model, request), {
             active: model.active !== undefined ? model.active : true,
             created,
             updated: now

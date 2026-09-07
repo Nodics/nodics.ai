@@ -62,3 +62,37 @@ Use these files for rules that are more specific than root `AGENTS.md` and the m
   parallel registry.
 - Validate changes with
   `node nodics.platform/modules/profile/test/principalAuthorizationScopeContract.test.js`.
+
+## Address and contact authority
+
+- Profile `address` is the canonical reusable address schema for customer,
+  employee, enterprise, billing, shipping, office, and reusable physical
+  addresses.
+- Reusable postal fields, address type/default flags, contact references,
+  landmark hints, access or delivery notes, address geocoding latitude and
+  longitude, geocoding confidence, verification metadata, and privacy-safe
+  display/redaction policy belong here.
+- Location may reference Profile address through `addressRef`, but must not
+  duplicate Profile address fields. Location keeps only its operational map
+  point as separate `latitude` and `longitude` because a place marker can differ
+  from the address geocode.
+- Business modules such as Store, Sales Channel, POS, and Waste Collection Point
+  should use `locationRef` or `primaryLocationRef` for physical-place behavior
+  and Profile `address`/`contact` references for address/contact authority.
+- Validate changes with
+  `node nodics.platform/modules/profile/test/profileAddressContract.test.js`.
+
+## Enterprise seed ownership
+
+- Profile init data owns only global enterprise seed records, including the
+  default platform owner enterprise.
+- Capability-specific enterprises must live in the owning module's `data`
+  folder and target Profile's `enterprise` schema through the import header.
+  Do not seed Waste, Loyalty, Commerce, or other capability demo enterprises in
+  Profile global init data.
+- Enterprise records may carry `roleCodes` and `capabilityScopes` so the
+  business graph can show what roles the enterprise can play without adding
+  every possible role reference to every business schema.
+- Keep Enterprise as the business graph authority. Business schemas should use
+  explicit enterprise association references when ownership, operation, issuer,
+  seller, partner, or visibility matters; do not use tenant as business owner.

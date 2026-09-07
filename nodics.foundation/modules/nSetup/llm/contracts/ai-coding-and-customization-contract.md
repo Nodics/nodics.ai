@@ -61,6 +61,15 @@ Then identify:
 6. the expected later-layer customization path;
 7. the tests and documentation affected.
 
+For any schema, source definition, DTO, import/export record, event payload, or
+API contract that appears to need `tenant`, first apply
+`standards/tenant-model-and-runtime-isolation.md`. Tenant is runtime isolation
+and data placement, not business ownership. Use enterprise association for
+business owner/operator/seller/issuer/partner/venue visibility when required,
+and add a direct tenant field only when a framework-owned envelope, generated
+persistence key, runtime-governance record, or documented isolation index owns
+that exception.
+
 If the AI cannot explain where the code belongs, it must not place the code
 arbitrarily. It must inspect the module contract, sibling modules, source
 patterns, and nSetup standards until ownership is clear. If ownership remains
@@ -309,6 +318,10 @@ For a coding change, choose proportionate tests from:
 - startup/restart/runtime topology tests;
 - regression tests for affected screens or APIs.
 
+Schema and API changes that touch business ownership or visibility must include
+evidence that enterprise association carries business scope and tenant isolation
+is enforced through runtime/schema policy context, not copied as domain meaning.
+
 A new or changed extension point is incomplete until at least one focused test
 or example proves how it is customized safely.
 
@@ -338,6 +351,8 @@ Reject these patterns during design and review:
 - writing business logic in an arbitrary folder;
 - hardcoding tenant, enterprise, environment, server, node, provider, URL,
   database, cache, index, queue, secret, permission, or status values;
+- adding direct `tenant` business fields where an enterprise association should
+  model owner, operator, issuer, seller, partner, venue, or business visibility;
 - placing status/error codes in properties;
 - placing configurable policy only in source constants;
 - adding a new config file when `config/properties.js` can own a namespaced

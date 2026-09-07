@@ -1,0 +1,85 @@
+{
+    "contractVersion": 2,
+    "module": "wasteCollection",
+    "sections": {
+        "sample-profile-addresses": {
+            "kind": "DATA_RELEASE",
+            "dataType": "sample",
+            "version": "0.0.0",
+            "displayName": "Collection Centre Address Sample",
+            "description": "Profile address sample records for demo Waste collection centres.",
+            "owningDomain": "waste",
+            "lifecycle": "REFERENCE",
+            "destinationRole": "PLATFORM",
+            "environmentScope": [
+                "LOCAL",
+                "DEVELOPMENT",
+                "TEST"
+            ],
+            "sensitivity": "INTERNAL",
+            "versioningPolicy": "NONE",
+            "publicationPolicy": "NONE",
+            "initialPublicationPolicy": "NONE",
+            "removalPolicy": "DELETE_EXPLICIT",
+            "files": {
+                "sample-v001/headers/profile/sampleCollectionCentreAddressHeader.js": "a06b01bd98e80a28ac03314bdaddf0cdebe4753840653bed15533858390b9871",
+                "sample-v001/records/profile/sampleCollectionCentreAddressData.js": "df01230598bd15db7e71d0a72af528ef6c1219834889a07e2bf785032d7a21c7"
+            },
+            "sourceRoot": "sample-v001"
+        },
+        "sample-locations": {
+            "kind": "DATA_RELEASE",
+            "dataType": "sample",
+            "version": "0.0.0",
+            "displayName": "Collection Centre Location Sample",
+            "description": "Location sample records for demo Waste collection centres.",
+            "owningDomain": "waste",
+            "lifecycle": "REFERENCE",
+            "destinationRole": "LOCATION",
+            "environmentScope": [
+                "LOCAL",
+                "DEVELOPMENT",
+                "TEST"
+            ],
+            "sensitivity": "INTERNAL",
+            "versioningPolicy": "NONE",
+            "publicationPolicy": "NONE",
+            "initialPublicationPolicy": "NONE",
+            "removalPolicy": "DELETE_EXPLICIT",
+            "files": {
+                "sample-v001/headers/location/sampleCollectionCentreLocationHeader.js": "832e3887929280103a0bde3c35b140fcf67ac455eade5973424c0fbf79b87b12",
+                "sample-v001/records/location/sampleCollectionCentreLocationCapabilityData.js": "066ac46b2cef4d97c2c24006afc11d1dccaaca2f0fb941de1aae4d28f1f272e9",
+                "sample-v001/records/location/sampleCollectionCentreLocationCategoryData.js": "f11baadcbe5b72abee8bd4a4c6301c6c8be16e0dc0565a0f3fcb084255cc25c8",
+                "sample-v001/records/location/sampleCollectionCentreLocationData.js": "9fa301b0cee365750f4969400800be5315f6f663e0056364a807b21283347fdd",
+                "sample-v001/records/location/sampleCollectionCentreLocationTypeData.js": "8aa121cf5bd72bb9166b2c2f75e78b41ac720af1288edf7b20c96165781decea"
+            },
+            "sourceRoot": "sample-v001"
+        },
+        "sample-collection-points": {
+            "kind": "DATA_RELEASE",
+            "dataType": "sample",
+            "version": "0.0.0",
+            "displayName": "Collection Centre Sample",
+            "description": "Waste Collection sample records for demo collection centres.",
+            "owningDomain": "waste",
+            "lifecycle": "REFERENCE",
+            "destinationRole": "WASTE",
+            "environmentScope": [
+                "LOCAL",
+                "DEVELOPMENT",
+                "TEST"
+            ],
+            "sensitivity": "INTERNAL",
+            "versioningPolicy": "NONE",
+            "publicationPolicy": "NONE",
+            "initialPublicationPolicy": "NONE",
+            "removalPolicy": "DELETE_EXPLICIT",
+            "files": {
+                "sample-v001/headers/waste/sampleCollectionCentrePointHeader.js": "d51bb7ab7c61ec1f5839e0ba693a7a1183d605509c3e823c1d16869c4ea0481a",
+                "sample-v001/records/waste/sampleCollectionCentrePointData.js": "057a8118543788aa3ea9892b0d97c131d099486d196272b814e6c921e052723e",
+                "sample-v001/records/waste/sampleCollectionCentrePointTypeData.js": "9b49711d5f4a0d3123968d95c580876fdd3d060ba07952d3e62dfd67ecea68d0"
+            },
+            "sourceRoot": "sample-v001"
+        }
+    }
+}

@@ -26,8 +26,8 @@
         "owns": [
             "composition",
             "configuration",
-            "llm",
-            "test"
+            "test",
+            "llm"
         ],
         "runtime": {
             "router": false,

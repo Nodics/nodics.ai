@@ -13,6 +13,11 @@
 
 /** @module discoveryRuntime/service/defaultDiscoveryRuntimeService @description Executes generic Discovery search through resolved configuration and generated nSearch-backed services. @layer service @owner discoveryRuntime */
 module.exports = {
+    /** Identifies the provider-neutral nSearch request contract. @param {*} query Candidate query. @returns {boolean} True for structured search requests. */
+    isSearchRequest: function (query) {
+        return Boolean(query && typeof query === 'object' &&
+            (query.mode || query.text || query.vector || query.fields || query.filters));
+    },
     /** Extracts records from generated service and nSearch responses. @param {*} response Service response. @returns {Array} Records. */
     records: function (response) {
         if (Array.isArray(response)) return response;
@@ -20,7 +25,13 @@ module.exports = {
         if (response && response.data && Array.isArray(response.data)) return response.data;
         if (response && response.data && Array.isArray(response.data.result)) return response.data.result;
         let hits = this.findHits(response, 0);
-        if (hits) return hits.hits.map(hit => hit && (hit._source || hit.source || hit.fields || hit)).filter(Boolean);
+        if (hits) return hits.hits.map(hit => {
+            if (!hit) return undefined;
+            const record = hit._source || hit.source || hit.fields || hit;
+            if (!record || typeof record !== 'object') return record;
+            const rawScore = hit._score !== undefined ? hit._score : (hit.score !== undefined ? hit.score : record.score);
+            return rawScore === undefined ? record : Object.assign({}, record, { score: Number(rawScore) });
+        }).filter(Boolean);
         return [];
     },
 
@@ -41,14 +52,17 @@ module.exports = {
         if (!configuration) throw new Error('Discovery index configuration is required');
         let service = request.searchService || SERVICE.DefaultDiscoveryDocumentProjectionService;
         if (!service || typeof service.doSearch !== 'function') throw new Error('Discovery search service is unavailable');
-        return this.records(await service.doSearch({
+        let searchQuery = request.searchQuery || request.query || {};
+        let projectionRequest = {
             tenant: request.tenant,
             authData: request.authData,
             moduleName: request.moduleName || 'discoveryProjection',
             indexName: configuration.indexName,
-            query: request.searchQuery || request.query || {},
             searchOptions: request.searchOptions || {},
             options: {}
-        }));
+        };
+        if (this.isSearchRequest(searchQuery)) projectionRequest.searchRequest = searchQuery;
+        else projectionRequest.query = searchQuery;
+        return this.records(await service.doSearch(projectionRequest));
     }
 };

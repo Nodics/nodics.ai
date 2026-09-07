@@ -44,6 +44,17 @@ module.exports = {
         request.releaseRequest = request.httpRequest && request.httpRequest.body || {};
         return this.respond(FACADE.DefaultDataReleaseFacade.preflight(request), callback);
     },
+    /** Validates a route-owned Init release plan without persistence. */
+    preflightInit: function (request, callback) { return this.preflightType(request, callback, 'init'); },
+    /** Validates a route-owned Core release plan without persistence. */
+    preflightCore: function (request, callback) { return this.preflightType(request, callback, 'core'); },
+    /** Validates a route-owned Sample release plan without persistence. */
+    preflightSample: function (request, callback) { return this.preflightType(request, callback, 'sample'); },
+    /** Normalizes a fixed route-owned data type and delegates preflight. */
+    preflightType: function (request, callback, dataType) {
+        request.releaseRequest = Object.assign({}, request.httpRequest && request.httpRequest.body, { dataType: dataType });
+        return this.respond(FACADE.DefaultDataReleaseFacade.preflight(request), callback);
+    },
     /** Executes a governed Init release plan. */
     executeInit: function (request, callback) { return this.executeType(request, callback, 'init'); },
     /** Executes a governed Core release plan. */

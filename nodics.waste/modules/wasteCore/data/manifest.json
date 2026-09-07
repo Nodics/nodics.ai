@@ -1,0 +1,29 @@
+{
+    "contractVersion": 2,
+    "module": "wasteCore",
+    "sections": {
+        "core-reference": {
+            "kind": "DATA_RELEASE",
+            "dataType": "core",
+            "version": "0.0.0",
+            "displayName": "Waste Enterprise Reference",
+            "description": "Waste management enterprise records contributed to the Profile enterprise authority.",
+            "owningDomain": "waste",
+            "lifecycle": "REFERENCE",
+            "destinationRole": "PLATFORM",
+            "environmentScope": [
+                "ALL"
+            ],
+            "sensitivity": "INTERNAL",
+            "versioningPolicy": "NONE",
+            "publicationPolicy": "NONE",
+            "initialPublicationPolicy": "NONE",
+            "removalPolicy": "RETAIN",
+            "files": {
+                "core-v001/headers/profile/wasteCoreEnterpriseCoreHeader.js": "a0372a3a16b570e2f0e6e3eb6ee1bc2e1a978eebca5d4aa1842dedb9349fb8b7",
+                "core-v001/records/profile/wasteCoreEnterpriseCoreData.js": "19f77ddb72d0f0c5931038eeb91399f1cfffea444652bbba9e003ecb9ac5135a"
+            },
+            "sourceRoot": "core-v001"
+        }
+    }
+}

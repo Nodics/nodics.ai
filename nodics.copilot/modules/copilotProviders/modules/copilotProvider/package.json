@@ -1,0 +1,34 @@
+{
+    "name": "copilotProvider",
+    "index": "78.20",
+    "description": "Provider-neutral Copilot model selection, validation, routing, usage, resilience, and invocation capability.",
+    "main": "nodics.js",
+    "version": "0.0.0",
+    "private": true,
+    "license": "SEE LICENSE IN LICENSE",
+    "nodics": {
+        "kind": "capability",
+        "displayName": "Copilot Provider",
+        "runtimeModule": true,
+        "loadableByNodicsModuleLoader": true,
+        "owns": [
+            "configuration",
+            "schema",
+            "router",
+            "service",
+            "pipeline",
+            "interceptor",
+            "event",
+            "search",
+            "utility",
+            "test",
+            "llm"
+        ],
+        "runtime": {
+            "router": false,
+            "publish": false,
+            "web": false
+        }
+    },
+    "scripts": {}
+}

@@ -11,8 +11,19 @@
         "displayName": "Waste API",
         "runtimeModule": true,
         "loadableByNodicsModuleLoader": true,
-        "owns": ["configuration", "controller", "facade", "router", "test", "llm"],
-        "runtime": { "router": true, "publish": false, "web": false }
+        "owns": [
+            "configuration",
+            "router",
+            "controller",
+            "facade",
+            "test",
+            "llm"
+        ],
+        "runtime": {
+            "router": true,
+            "publish": false,
+            "web": false
+        }
     },
     "scripts": {}
 }

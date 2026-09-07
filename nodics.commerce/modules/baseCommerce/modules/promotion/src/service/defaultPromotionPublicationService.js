@@ -22,12 +22,27 @@ module.exports = {
         model[field] = new Date(model[field]);
         if (Number.isNaN(model[field].getTime())) delete model[field];
     },
+    enterpriseCodeFrom: function (value) {
+        if (!value) return undefined;
+        if (typeof value === 'string') return value;
+        if (typeof value === 'object' && !Array.isArray(value)) return value.code || value.ref || value.id;
+        return undefined;
+    },
+    enterpriseRef: function (code, roleCode) {
+        if (!code) return undefined;
+        return { moduleName: 'profile', schemaName: 'enterprise', code: code, roleCode: roleCode };
+    },
     persistenceModel: function (record, request) {
         const now = new Date();
         const auth = request && request.authData || {};
-        const enterpriseCode = record.enterpriseCode || request && (request.enterpriseCode || request.entCode) || auth.enterpriseCode || auth.entCode;
+        const enterpriseCode = this.enterpriseCodeFrom(record.enterpriseRef) || this.enterpriseCodeFrom(record.vendorEnterpriseRef) || this.enterpriseCodeFrom(record.issuerEnterpriseRef) || record.enterpriseCode || request && (request.enterpriseCode || request.entCode) || auth.enterpriseCode || auth.entCode;
+        const issuerCode = this.enterpriseCodeFrom(record.issuerEnterpriseRef) || record.issuerEnterpriseCode || enterpriseCode;
+        const vendorCode = this.enterpriseCodeFrom(record.vendorEnterpriseRef) || record.vendorEnterpriseCode || enterpriseCode;
         const model = Object.assign({}, record, {
             enterpriseCode: enterpriseCode,
+            enterpriseRef: record.enterpriseRef || this.enterpriseRef(enterpriseCode, 'BUSINESS_PARTNER'),
+            issuerEnterpriseRef: record.issuerEnterpriseRef || this.enterpriseRef(issuerCode, 'ISSUER'),
+            vendorEnterpriseRef: record.vendorEnterpriseRef || this.enterpriseRef(vendorCode, 'MARKETPLACE_VENDOR'),
             active: record.active !== undefined ? record.active : true,
             created: record.created instanceof Date ? record.created : now,
             updated: now

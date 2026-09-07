@@ -340,9 +340,11 @@
     "nodics.docs",
     "nodics.process",
     "nodics.discovery",
+    "nodics.location",
     "nodics.commerce",
     "nodics.communication",
-    "nodics.engagement"
+    "nodics.engagement",
+    "nodics.copilot"
   ],
   "scripts": {
     "check:syntax": "node nodics.foundation/modules/nTooling/bin/nodics-tool.js check:syntax",

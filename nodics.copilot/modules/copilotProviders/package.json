@@ -1,0 +1,34 @@
+{
+    "name": "copilotProviders",
+    "index": "78.29",
+    "description": "Copilot provider family composition group.",
+    "main": "nodics.js",
+    "version": "0.0.0",
+    "private": true,
+    "license": "SEE LICENSE IN LICENSE",
+    "requiredModules": [
+        "copilotProvider",
+        "mockProvider",
+        "openAiProvider",
+        "claudeProvider",
+        "geminiProvider"
+    ],
+    "nodics": {
+        "kind": "group",
+        "displayName": "Copilot Providers",
+        "runtimeModule": true,
+        "loadableByNodicsModuleLoader": true,
+        "owns": [
+            "composition",
+            "configuration",
+            "test",
+            "llm"
+        ],
+        "runtime": {
+            "router": false,
+            "publish": false,
+            "web": false
+        }
+    },
+    "scripts": {}
+}

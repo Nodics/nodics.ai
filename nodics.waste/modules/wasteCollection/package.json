@@ -11,8 +11,19 @@
         "displayName": "Waste Collection",
         "runtimeModule": true,
         "loadableByNodicsModuleLoader": true,
-        "owns": ["configuration", "schema", "service", "test", "llm"],
-        "runtime": { "router": false, "publish": false, "web": false }
+        "owns": [
+            "configuration",
+            "data",
+            "schema",
+            "service",
+            "test",
+            "llm"
+        ],
+        "runtime": {
+            "router": true,
+            "publish": false,
+            "web": false
+        }
     },
     "scripts": {}
 }

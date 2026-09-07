@@ -21,10 +21,15 @@ const assert = require('assert');
 const controller = require('../src/controller/release/defaultDataReleaseController');
 
 const observed = [];
+const preflight = [];
 global.FACADE = {
     DefaultDataReleaseFacade: {
         getCatalogue: request => {
             observed.push(request.dataType);
+            return Promise.resolve({ code: 'SUC_IMP_00000', data: [] });
+        },
+        preflight: request => {
+            preflight.push(request.releaseRequest);
             return Promise.resolve({ code: 'SUC_IMP_00000', data: [] });
         }
     }
@@ -35,8 +40,13 @@ global.FACADE = {
     await controller.getCoreCatalogue({ httpRequest: { query: {} } });
     await controller.getSampleCatalogue({ httpRequest: { query: {} } });
     await controller.getCatalogue({ httpRequest: { query: { dataType: 'core' } } });
+    await controller.preflightInit({ httpRequest: { body: { releaseCodes: ['module:init'] } } });
+    await controller.preflightCore({ httpRequest: { body: { releaseCodes: ['module:core'] } } });
+    await controller.preflightSample({ httpRequest: { body: { releaseCodes: ['module:sample'] } } });
 
     assert.deepStrictEqual(observed, ['init', 'core', 'sample', 'core']);
+    assert.deepStrictEqual(preflight.map(request => request.dataType), ['init', 'core', 'sample']);
+    assert.deepStrictEqual(preflight.map(request => request.releaseCodes[0]), ['module:init', 'module:core', 'module:sample']);
     console.log('Data release controller route type contract validated');
 })().catch(error => {
     console.error(error);

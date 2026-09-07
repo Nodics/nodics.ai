@@ -131,6 +131,18 @@ module.exports = {
                     presentation: this.presentation(['code', 'collectionPointType', 'receiptPolicyCode', 'status', 'revision'])
                 }),
                 this.entry({
+                    id: 'waste-collection-centres',
+                    parentId: 'waste-collections',
+                    parentModuleName: 'wasteCore',
+                    label: 'Collection Centres',
+                    route: '/waste/collection-centres',
+                    moduleName: 'wasteCollection',
+                    schemaName: 'wasteCollectionPoint',
+                    order: 1422,
+                    summary: 'Review operator-linked collection centres with Location coordinates and Profile address references.',
+                    presentation: this.presentation(['code', 'name', 'collectionPointType', 'locationRef', 'operatorEnterpriseRef', 'operatingStatus', 'publicVisibility', 'status'])
+                }),
+                this.entry({
                     id: 'waste-acceptance-rules',
                     parentId: 'waste-collections',
                     label: 'Acceptance Rules',

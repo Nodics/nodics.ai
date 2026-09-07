@@ -67,6 +67,21 @@ Nodics supports both:
 - consolidated runtime: one server runs many modules together.
 - modular runtime: modules run as separate applications/processes and communicate through APIs/events.
 
+Every runtime-capable framework or domain module must be designed so it can
+participate in either style. A module may run in a consolidated server with
+other modules, or in a standalone micro-service server process with only its
+required local dependencies active and all other collaborators reached through
+declared APIs, events, providers, or internal service contracts.
+
+A module must not assume that another functional module is loaded in the same
+process merely because the consolidated local topology does so. Cross-module
+calls must preserve request, tenant, enterprise, permission, correlation,
+idempotency, audit, and failure/retry context across the process boundary.
+Business ownership must travel as enterprise association context, not as a
+direct tenant shortcut. Domain APIs should accept role-aware enterprise filters
+and references where the business relationship matters, while the receiving
+runtime resolves tenant only as the technical isolation envelope.
+
 Keep local activation separate from endpoint coordinates. `activeModules.groups`
 and `activeModules.modules` decide which modules run inside the current process.
 `servers.*` entries describe how to reach local or remote module endpoints and
@@ -75,6 +90,8 @@ must not be treated as local activation. In modular runtime, a server may define
 remote process without loading that module locally.
 
 Testing should cover both styles when behavior depends on module communication.
+New capability design must include a minimal standalone-server activation story,
+even when first implementation is verified in consolidated runtime.
 
 Topology smoke tests should be configured from the active project/environment, not hardcoded in framework code. The local reference topology uses `test.runtimeTopology` to declare the consolidated server, modular servers, and communication checks. A project such as an eCommerce implementation should define its own topology in its own environment module.
 

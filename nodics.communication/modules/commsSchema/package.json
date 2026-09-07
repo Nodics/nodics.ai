@@ -13,7 +13,6 @@
     "owns": [
       "configuration",
       "schema",
-      "test",
       "llm"
     ],
     "runtime": {

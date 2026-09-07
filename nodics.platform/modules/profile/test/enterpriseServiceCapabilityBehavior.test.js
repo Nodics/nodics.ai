@@ -85,6 +85,7 @@ global.CLASSES = {
 
 const enterpriseService = require('../src/service/enterprise/defaultEnterpriseService');
 const profileSchemas = require('../src/schemas/schemas');
+const bootstrapUserGroups = require('../data/init-v001/records/groups/defaultBootstrapUserGroupsData');
 
 (async function () {
     let getCalls = [];
@@ -152,6 +153,12 @@ const profileSchemas = require('../src/schemas/schemas');
     let enterpriseSchema = profileSchemas.profile.enterprise;
     assert.strictEqual(enterpriseSchema.definition.tenant.required, true,
         'Enterprise must keep tenant as required scope');
+    assert.strictEqual(enterpriseSchema.definition.roleCodes.type, 'array',
+        'Enterprise records expose role codes for business association metadata');
+    assert.strictEqual(enterpriseSchema.definition.roleCodes.searchOptions.enabled, true,
+        'Enterprise role codes support business graph traversal');
+    assert.strictEqual(enterpriseSchema.definition.capabilityScopes.type, 'array',
+        'Enterprise records expose capability-scoped role metadata');
     assert.strictEqual(enterpriseSchema.indexes.individual.entTenant.name, 'tenant',
         'Enterprise tenant index supports tenant-scoped lookup');
     assert.notStrictEqual(
@@ -160,6 +167,10 @@ const profileSchemas = require('../src/schemas/schemas');
         true,
         'Tenant must not be unique because one tenant can own multiple enterprises'
     );
+    assert(bootstrapUserGroups.record1.permissions.includes('waste.collectionCentre.search'),
+        'Default admin group can read Waste collection-centre search for Axis maps');
+    assert(bootstrapUserGroups.record3.permissions.includes('waste.collectionCentre.search'),
+        'Default customer group can read public Waste collection-centre search');
 
     console.log('Profile enterprise service capability behavior validated');
 })().catch((error) => {

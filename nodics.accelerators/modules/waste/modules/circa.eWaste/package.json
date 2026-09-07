@@ -16,9 +16,8 @@
         "runtimeModule": true,
         "loadableByNodicsModuleLoader": true,
         "owns": [
-            "composition",
             "configuration",
-            "source",
+            "service",
             "test",
             "llm"
         ],

@@ -114,6 +114,30 @@ async function run() {
 
     NODICS.getInternalAuthToken = () => undefined;
     assert.strictEqual(await service.runRegistration(), false, 'missing service identity must not fail runtime startup');
+
+    // A BackOffice restart temporarily rejects registration. The same runtime
+    // must recover on its configured retry loop without restarting itself.
+    NODICS.getInternalAuthToken = () => 'service-token';
+    let recoveryAttempts = 0;
+    CONFIG.get = key => ({ backofficeRegistration: { enabled: true, moduleName: 'backoffice',
+        heartbeatIntervalMs: 20, retryIntervalMs: 5, maxModulesPerRegistration: 512,
+        requestTimeoutMs: 20, connectionName: 'default' }, backofficeCapabilities: {},
+        runtimeRole: { code: 'WCMS_STAGED', publication: 'STAGED' }, defaultTenant: 'default' }[key]);
+    SERVICE.DefaultModuleService.fetch = () => {
+        recoveryAttempts++;
+        return recoveryAttempts === 1 ? Promise.reject(new Error('BackOffice restarting')) : Promise.resolve({});
+    };
+    const recovering = Object.assign({}, definition, {
+        _timer: null, _running: false, _registered: [], _backofficeCapabilityProviders: new Map(),
+        _metrics: { attempts: 0, successes: 0, failures: 0, deregistrations: 0, lastSuccessAt: null, lastFailureAt: null },
+        LOG: { warn: function () {} }
+    });
+    assert.strictEqual(recovering.start(), true);
+    await new Promise(resolve => setTimeout(resolve, 16));
+    await recovering.stop(false);
+    assert(recoveryAttempts >= 2, 'registration must retry after BackOffice becomes available again');
+    assert(recovering._metrics.failures >= 1, 'the unavailable BackOffice attempt must remain observable');
+    assert(recovering._metrics.successes >= 1, 'the next retry must recover registration without a runtime restart');
     console.log('Module registration agent validated');
 }
 

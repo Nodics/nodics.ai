@@ -15,6 +15,9 @@ preserving a clean split from BackOffice API authority.
   an explicitly selected contribution on WCMS Staged, is never imported
   directly into WCMS Online, and requires an administrator-initiated normal
   publication workflow for its first Online baseline.
+- The immutable `axis:axisAssistantKnowledge` update release that adds the
+  governed Assistant knowledge-status presentation without modifying the
+  accepted baseline.
 - Axis-specific BackOffice documentation/navigation metadata.
 - Future Axis product seed, init, sample, and presentation metadata that must be
   imported into backend persistence.

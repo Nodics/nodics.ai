@@ -109,11 +109,22 @@ or Fulfillment. It connects them through explicit strategies and ports.
 
 ### Enterprise Owns Business Data
 
-Business ownership is enterprise-owned.
+Business ownership is enterprise-associated.
 
-Use `enterpriseCode` as the business owner for Commerce models such as product,
-price rows, promotions, coupon batches, coupon codes, carts, orders, payments,
-fulfillment evidence, and digital entitlements.
+Use role-aware Profile Enterprise references as the business owner, operator,
+seller, issuer, vendor, partner, or service-provider association for Commerce
+models such as product, price rows, promotions, coupon batches, coupon codes,
+carts, orders, payments, fulfillment evidence, and digital entitlements.
+Examples include `enterpriseRef`, `sellerEnterpriseRef`,
+`issuerEnterpriseRef`, `vendorEnterpriseRef`, and clearer domain-specific
+enterprise references where the aggregate needs them.
+
+`enterpriseCode` may appear in request, token, header, and transitional
+compatibility paths as the selected enterprise context, but it must not be
+introduced as the canonical persisted business-owner shortcut for new Commerce
+schemas. Persisted business relationships should use enterprise association
+objects so reverse traversal, role semantics, and future enterprise-to-tenant
+mapping remain explicit.
 
 Do not use `tenant` as business owner.
 
@@ -126,15 +137,15 @@ Required request flow:
 Request
   -> identify enterprise
   -> derive tenant/config/schema context from enterprise
-  -> execute business logic scoped by enterpriseCode
+  -> execute business logic scoped by role-aware enterprise association
 ```
 
-Business queries must scope by `enterpriseCode`:
+Business queries must scope by the owning role-aware enterprise association:
 
 ```js
-Coupon.find({ enterpriseCode, code });
-Promotion.find({ enterpriseCode, code: promotionCode });
-Product.find({ enterpriseCode, code: productCode });
+Coupon.find({ 'vendorEnterpriseRef.code': vendorEnterpriseCode, code });
+Promotion.find({ 'issuerEnterpriseRef.code': issuerEnterpriseCode, code: promotionCode });
+Product.find({ 'enterpriseRef.code': sellerEnterpriseCode, code: productCode });
 ```
 
 The framework may still pass a derived tenant context internally when the
@@ -996,14 +1007,16 @@ Acceptance:
 Goal:
 
 ```text
-business records are enterprise-owned;
+business records are enterprise-associated;
 tenant is derived runtime/config/schema context.
 ```
 
 Actions:
 
-- add or standardize `enterpriseCode` on Commerce business schemas;
-- update business queries and policies to scope by `enterpriseCode`;
+- add or standardize role-aware enterprise references on Commerce business schemas;
+- migrate scalar `enterpriseCode` persistence shortcuts to the appropriate enterprise association;
+- keep `enterpriseCode` only as request, token, header, or documented compatibility context while callers migrate;
+- update business queries and policies to scope by enterprise association fields;
 - update request-processing assumptions so API callers do not supply tenant as
   business owner;
 - derive tenant/config/schema context from enterprise before service execution;
@@ -1012,7 +1025,7 @@ Actions:
 Acceptance:
 
 - Product, Promotion, Coupon, Pricing, Cart, Order, Payment, Fulfillment, and
-  Digital Commerce records are scoped by `enterpriseCode`;
+  Digital Commerce records are scoped by role-aware enterprise associations;
 - tenant remains available only as derived runtime context where the framework
   requires it;
 - no customer/operator API treats tenant as the business owner.
@@ -1393,8 +1406,9 @@ Implementation must preserve:
 
 As of this planning contract, the current backend has these known gaps:
 
-- business models still commonly use `tenant` as persisted owner or query scope;
-- `enterpriseCode` ownership is not consistently modeled across Commerce;
+- some older Commerce records still use scalar `enterpriseCode` as transitional
+  request or persistence context while role-aware enterprise references are
+  adopted module by module;
 - `digitalCommerce` does not yet exist as a module group;
 - Product does not yet classify digital/coupon-code products as first-class
   sellable digital products;

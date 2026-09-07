@@ -12,6 +12,7 @@
         "runtimeModule": true,
         "loadableByNodicsModuleLoader": true,
         "owns": [
+            "configuration",
             "router",
             "controller",
             "facade",

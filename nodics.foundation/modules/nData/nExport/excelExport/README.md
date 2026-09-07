@@ -1,7 +1,8 @@
 # excelExport Module
 
-**Maturity: Placeholder or scaffold.** The module owns the future format
-boundary but does not yet provide a production writer.
+**Maturity: Implemented bounded renderer.** The module owns the spreadsheet
+format boundary and provides a deterministic in-memory XLSX renderer for rows
+that the shared export/capability authority has already authorized and bounded.
 
 `excelExport` provides spreadsheet-oriented export support for the `nData/nExport` family. It owns Excel-specific output conventions, workbook/sheet mapping behavior, and adapter wiring used by the shared export engine.
 
@@ -19,7 +20,10 @@ The module currently contributes standard Nodics structure for an Excel export a
 - common and environment-local smoke tests;
 - generated LLM context.
 
-It does not currently provide a complete workbook writer service. A production Excel exporter should be implemented through this module or a later active project/provider module.
+`DefaultExcelExportRenderService` creates one configured sheet, neutralizes
+formula-like cell input, freezes its header, and returns a workbook buffer.
+Source selection, field policy, file persistence, and download authorization
+remain outside this renderer and must be completed before it is called.
 
 ## Extension Path
 

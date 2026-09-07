@@ -73,3 +73,56 @@ configure these records and flows through data and policy.
 50. Define import/export requirements.
 51. Define permissions.
 52. Define observability, versioning, migration, idempotency, and rate limits.
+
+## Circa Customer Frontend Journey
+
+53. Define public Circa single-page content sections.
+54. Define public navigation contract for `Submit Waste`, `Find Collection Center`,
+    `Shop`, and `Help`.
+55. Define login-only gate for `Submit Waste` using username or email and
+    password.
+56. Define simplified customer registration with email, name, and password.
+57. Define register-and-login handoff behavior.
+58. Define conversational e-waste submission UI contract.
+59. Define pre-image location-confirmation step.
+60. Define nearby collection-center lookup and fallback message behavior.
+61. Define camera capture and file-upload image intake.
+62. Define AI image metadata extraction request and response contract.
+63. Define customer confirmation summary with generated item name, type,
+    reward estimate, carbon estimate, and benefit summary.
+64. Define submission creation after customer confirmation.
+65. Define under-approval customer message and notification expectation.
+
+## Axis Review And Approval Journey
+
+66. Define Axis waste review navigation section.
+67. Define `Pending Review`, `Approved Assets`, `Rejected Assets`, and
+    policy-enabled `Needs More Info` lists.
+68. Define submitted asset detail view for business users.
+69. Define immutable original evidence view.
+70. Define AI-suggested data view.
+71. Define customer-submitted data view.
+72. Define admin final verified data overlay.
+73. Define approve action contract.
+74. Define reject action contract with required reason.
+75. Define approval-created customer-owned asset behavior.
+76. Define approval wallet settlement trigger for rewards and carbon credits.
+77. Define approval and rejection notification contracts.
+78. Define admin audit history and final-data update history.
+
+## Customer Dashboard, Asset Detail, And Shop
+
+79. Define customer asset dashboard listing contract.
+80. Define customer asset filters for status, ownership, tradeability, family,
+    category, material, collection center, reward range, carbon range,
+    submission date, and verification result.
+81. Define customer asset card fields and primary action behavior.
+82. Define customer asset detail route and page contract.
+83. Define approved asset action matrix for trade, gift, donate, redeem,
+    history, wallet references, and certificate/evidence.
+84. Define trade/list action that creates Product/Commerce projection.
+85. Define listed asset lifecycle and marketplace visibility.
+86. Define Circa `Shop` listing source and card fields.
+87. Define buyer journey handoff to Product/Commerce.
+88. Define sale-completion callback behavior for Waste ownership lifecycle and
+    wallet/carbon settlement policy.

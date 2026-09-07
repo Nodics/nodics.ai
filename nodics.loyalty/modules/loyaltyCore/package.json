@@ -13,8 +13,8 @@
         "loadableByNodicsModuleLoader": true,
         "owns": [
             "configuration",
-            "schema",
             "data",
+            "schema",
             "service",
             "utility",
             "test",

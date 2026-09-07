@@ -12,8 +12,9 @@
         "runtimeModule": true,
         "loadableByNodicsModuleLoader": true,
         "owns": [
-            "schema",
+            "configuration",
             "data",
+            "schema",
             "service",
             "test",
             "llm"

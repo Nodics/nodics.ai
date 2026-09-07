@@ -147,6 +147,69 @@
       },
       "sourceRoot": "init-v001"
     },
+    "core-v002": {
+      "kind": "DATA_RELEASE",
+      "dataType": "core",
+      "version": "0.0.1",
+      "description": "Versioned Axis Assistant knowledge-status presentation update",
+      "owningDomain": "axis",
+      "lifecycle": "PUBLISHABLE",
+      "destinationRole": "WCMS_STAGED",
+      "environmentScope": [
+        "ALL"
+      ],
+      "sensitivity": "INTERNAL",
+      "versioningPolicy": "IMMUTABLE",
+      "publicationPolicy": "REQUIRED",
+      "initialPublicationPolicy": "ADMIN_INITIATED",
+      "removalPolicy": "UNPUBLISH_OR_RETIRE",
+      "publicationReview": {
+        "title": "Publish Axis Assistant knowledge status",
+        "summary": "Add governed knowledge-source status and refresh labels to the managed Axis Assistant workspace.",
+        "sourceRole": "WCMS_STAGED",
+        "targetRole": "WCMS_ONLINE",
+        "siteCode": "axisCmsSite",
+        "catalogCode": "axisContentCatalog",
+        "impactMessage": "Authorized Axis administrators can see indexed source counts, chunk totals, refresh time, and initiate a governed refresh.",
+        "rollbackMessage": "Restore the previously published Assistant component and type contract through the normal publication rollback lifecycle.",
+        "entities": [
+          {
+            "type": "cmsTypeCode",
+            "label": "Assistant component type",
+            "total": 1,
+            "added": 0,
+            "updated": 1,
+            "unchanged": 0,
+            "removed": 0
+          },
+          {
+            "type": "cmsComponent",
+            "label": "Assistant workspace component",
+            "total": 1,
+            "added": 0,
+            "updated": 1,
+            "unchanged": 0,
+            "removed": 0
+          }
+        ],
+        "postPublicationCapabilities": [
+          {
+            "title": "Review governed knowledge health",
+            "description": "See authorized source count, indexed chunk total, and most recent refresh time inside Axis Assistant."
+          },
+          {
+            "title": "Refresh authorized knowledge",
+            "description": "Administrators with source-management permission can request bounded source refresh without bypassing Copilot policy."
+          }
+        ]
+      },
+      "files": {
+        "core-v002/headers/axis/axisAssistantKnowledgeHeader.js": "fcce187bd082f2861beed93dba89c5aaa89957b188987885e2e6a2090def36f1",
+        "core-v002/records/axis/axisAssistantKnowledgeTypeCodeData.js": "120b2c4a1c41c6ebed3cac76ab1bb2aacc37fdc314db432bc5f436464db7f2e2",
+        "core-v002/records/axis/axisAssistantKnowledgeComponentData.js": "e9518c71549cf0f6769fbdf76267db04c44060290df9bc6ad765f7b6ae1a9730"
+      },
+      "sourceRoot": "core-v002"
+    },
     "documentation": {
       "kind": "CONTENT_PACK",
       "contentPath": "core-v001",

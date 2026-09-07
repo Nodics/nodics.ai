@@ -27,113 +27,127 @@ module.exports = {
         };
     },
 
+    /** Invokes a Waste facade operation through promise or callback transport. */
+    invoke: function (operation, request, callback) {
+        let promise = FACADE.DefaultWasteInternalFacade[operation](this.request(request)).then(function (data) {
+            return { data: data };
+        });
+        if (!callback) return promise;
+        promise.then(function (value) { callback(null, value); }).catch(callback);
+    },
+
     /** Checks collection acceptance. */
-    collectionAcceptanceCheck: function (request) {
-        return FACADE.DefaultWasteInternalFacade.collectionAcceptanceCheck(this.request(request)).then(function (data) { return { data: data }; });
+    collectionAcceptanceCheck: function (request, callback) {
+        return this.invoke('collectionAcceptanceCheck', request, callback);
+    },
+
+    /** Searches collection centres. */
+    searchCollectionCentres: function (request, callback) {
+        return this.invoke('searchCollectionCentres', request, callback);
     },
 
     /** Creates or submits a waste submission. */
-    submitWaste: function (request) {
-        return FACADE.DefaultWasteInternalFacade.submitWaste(this.request(request)).then(function (data) { return { data: data }; });
+    submitWaste: function (request, callback) {
+        return this.invoke('submitWaste', request, callback);
     },
 
     /** Transitions a waste submission. */
-    transitionSubmission: function (request) {
-        return FACADE.DefaultWasteInternalFacade.transitionSubmission(this.request(request)).then(function (data) { return { data: data }; });
+    transitionSubmission: function (request, callback) {
+        return this.invoke('transitionSubmission', request, callback);
     },
 
     /** Calculates a Waste impact result. */
-    calculateImpact: function (request) {
-        return FACADE.DefaultWasteInternalFacade.calculateImpact(this.request(request)).then(function (data) { return { data: data }; });
+    calculateImpact: function (request, callback) {
+        return this.invoke('calculateImpact', request, callback);
     },
 
     /** Creates a Waste asset contract from an approved submission. */
-    createAssetFromApprovedSubmission: function (request) {
-        return FACADE.DefaultWasteInternalFacade.createAssetFromApprovedSubmission(this.request(request)).then(function (data) { return { data: data }; });
+    createAssetFromApprovedSubmission: function (request, callback) {
+        return this.invoke('createAssetFromApprovedSubmission', request, callback);
     },
 
     /** Returns owner-scoped Waste asset records. */
-    ownedAssets: function (request) {
-        return FACADE.DefaultWasteInternalFacade.ownedAssets(this.request(request)).then(function (data) { return { data: data }; });
+    ownedAssets: function (request, callback) {
+        return this.invoke('ownedAssets', request, callback);
     },
 
     /** Requests a Commerce/Product projection for a Waste asset. */
-    requestMarketplaceProjection: function (request) {
-        return FACADE.DefaultWasteInternalFacade.requestMarketplaceProjection(this.request(request)).then(function (data) { return { data: data }; });
+    requestMarketplaceProjection: function (request, callback) {
+        return this.invoke('requestMarketplaceProjection', request, callback);
     },
 
     /** Completes a Waste asset marketplace projection. */
-    completeMarketplaceProjection: function (request) {
-        return FACADE.DefaultWasteInternalFacade.completeMarketplaceProjection(this.request(request)).then(function (data) { return { data: data }; });
+    completeMarketplaceProjection: function (request, callback) {
+        return this.invoke('completeMarketplaceProjection', request, callback);
     },
 
     /** Closes a Waste asset marketplace projection. */
-    closeMarketplaceProjection: function (request) {
-        return FACADE.DefaultWasteInternalFacade.closeMarketplaceProjection(this.request(request)).then(function (data) { return { data: data }; });
+    closeMarketplaceProjection: function (request, callback) {
+        return this.invoke('closeMarketplaceProjection', request, callback);
     },
 
     /** Reserves a Waste asset sale. */
-    reserveAssetSale: function (request) {
-        return FACADE.DefaultWasteInternalFacade.reserveAssetSale(this.request(request)).then(function (data) { return { data: data }; });
+    reserveAssetSale: function (request, callback) {
+        return this.invoke('reserveAssetSale', request, callback);
     },
 
     /** Completes a Waste asset sale. */
-    completeAssetSale: function (request) {
-        return FACADE.DefaultWasteInternalFacade.completeAssetSale(this.request(request)).then(function (data) { return { data: data }; });
+    completeAssetSale: function (request, callback) {
+        return this.invoke('completeAssetSale', request, callback);
     },
 
     /** Cancels a Waste asset sale. */
-    cancelAssetSale: function (request) {
-        return FACADE.DefaultWasteInternalFacade.cancelAssetSale(this.request(request)).then(function (data) { return { data: data }; });
+    cancelAssetSale: function (request, callback) {
+        return this.invoke('cancelAssetSale', request, callback);
     },
 
     /** Reverses a Waste asset sale. */
-    reverseAssetSale: function (request) {
-        return FACADE.DefaultWasteInternalFacade.reverseAssetSale(this.request(request)).then(function (data) { return { data: data }; });
+    reverseAssetSale: function (request, callback) {
+        return this.invoke('reverseAssetSale', request, callback);
     },
 
     /** Requests a Waste asset gift. */
-    requestAssetGift: function (request) {
-        return FACADE.DefaultWasteInternalFacade.requestAssetGift(this.request(request)).then(function (data) { return { data: data }; });
+    requestAssetGift: function (request, callback) {
+        return this.invoke('requestAssetGift', request, callback);
     },
 
     /** Accepts a Waste asset gift. */
-    acceptAssetGift: function (request) {
-        return FACADE.DefaultWasteInternalFacade.acceptAssetGift(this.request(request)).then(function (data) { return { data: data }; });
+    acceptAssetGift: function (request, callback) {
+        return this.invoke('acceptAssetGift', request, callback);
     },
 
     /** Cancels a Waste asset gift. */
-    cancelAssetGift: function (request) {
-        return FACADE.DefaultWasteInternalFacade.cancelAssetGift(this.request(request)).then(function (data) { return { data: data }; });
+    cancelAssetGift: function (request, callback) {
+        return this.invoke('cancelAssetGift', request, callback);
     },
 
     /** Requests a Waste asset coupon redemption. */
-    requestAssetCouponRedemption: function (request) {
-        return FACADE.DefaultWasteInternalFacade.requestAssetCouponRedemption(this.request(request)).then(function (data) { return { data: data }; });
+    requestAssetCouponRedemption: function (request, callback) {
+        return this.invoke('requestAssetCouponRedemption', request, callback);
     },
 
     /** Completes a Waste asset coupon redemption. */
-    completeAssetCouponRedemption: function (request) {
-        return FACADE.DefaultWasteInternalFacade.completeAssetCouponRedemption(this.request(request)).then(function (data) { return { data: data }; });
+    completeAssetCouponRedemption: function (request, callback) {
+        return this.invoke('completeAssetCouponRedemption', request, callback);
     },
 
     /** Cancels a Waste asset coupon redemption. */
-    cancelAssetCouponRedemption: function (request) {
-        return FACADE.DefaultWasteInternalFacade.cancelAssetCouponRedemption(this.request(request)).then(function (data) { return { data: data }; });
+    cancelAssetCouponRedemption: function (request, callback) {
+        return this.invoke('cancelAssetCouponRedemption', request, callback);
     },
 
     /** Requests a Waste asset donation or recycling transfer. */
-    requestAssetDonation: function (request) {
-        return FACADE.DefaultWasteInternalFacade.requestAssetDonation(this.request(request)).then(function (data) { return { data: data }; });
+    requestAssetDonation: function (request, callback) {
+        return this.invoke('requestAssetDonation', request, callback);
     },
 
     /** Completes a Waste asset donation or recycling transfer. */
-    completeAssetDonation: function (request) {
-        return FACADE.DefaultWasteInternalFacade.completeAssetDonation(this.request(request)).then(function (data) { return { data: data }; });
+    completeAssetDonation: function (request, callback) {
+        return this.invoke('completeAssetDonation', request, callback);
     },
 
     /** Cancels a Waste asset donation or recycling transfer. */
-    cancelAssetDonation: function (request) {
-        return FACADE.DefaultWasteInternalFacade.cancelAssetDonation(this.request(request)).then(function (data) { return { data: data }; });
+    cancelAssetDonation: function (request, callback) {
+        return this.invoke('cancelAssetDonation', request, callback);
     }
 };

@@ -180,6 +180,13 @@ gap and treat the work as framework-maintainer mode.
 Treat tenant as the data-placement, isolation, and runtime-governance context.
 It is not only a customer label.
 
+Tenant is not business ownership. Do not add direct `tenant` fields to ordinary
+business schemas, DTOs, events, imports, or APIs to represent owner, operator,
+seller, issuer, partner, branch, venue, collection centre, or business
+visibility. Use the owning domain's enterprise association, such as
+`enterpriseRef`, `operatorEnterpriseRef`, `sellerEnterpriseRef`,
+`issuerEnterpriseRef`, or a clearer domain-specific enterprise reference.
+
 When implementing data-owning behavior, resolve tenant context before touching:
 
 - schema persistence or DAO behavior;
@@ -203,6 +210,13 @@ configuration, provider modules, and Nodics tenant resolution services. Tests
 must prove tenant-specific behavior does not leak data, cache entries, search
 results, files, events, audit records, permissions, or runtime configuration
 across tenants.
+
+Direct tenant fields are valid only for framework tenant records,
+runtime-governance records, import/export envelopes, audit/security envelopes,
+generated persistence keys, or documented isolation indexes. When an
+implementation retains a direct tenant field, the schema or nearest contract must
+explain why enterprise association is not the business owner and which policy,
+service, or persistence boundary enforces isolation.
 
 Reusable policy names and operational defaults must also have one authority.
 Identity groups, roles, provider endpoints, retries, timeouts, cache locations,
@@ -289,6 +303,17 @@ The owning capability, provider, or functional module defines reusable defaults
 once. This applies to every property namespace, including `apiExposure`,
 import/export enablement, media management, provider settings, permissions,
 policy defaults, operational limits, discovery metadata, and tooling gates.
+Shared reference data follows the same ownership direction: common data for a
+functional module belongs in that functional module's business anchor module,
+normally the `*Core` child module, while leaf modules own only their own
+capability-local data. Anchor-owned data may target another module's schema
+authority through an explicit import header; do not move the source data to the
+target authority just because the target persists it.
+Business relationships must use enterprise association fields owned by the
+domain aggregate, not direct tenant fields. Add a role-specific enterprise
+reference only when that role is required by the record itself; otherwise expose
+reverse navigation through indexed queries, domain APIs, or BackOffice
+relationship views.
 Project, environment, server, and node `properties.js` files are override
 layers only. They must contain only intentional deltas for their boundary:
 topology, local coordinates, environment-specific values, secret references,
@@ -442,7 +467,8 @@ Each module guide should answer these questions for humans and AI tools:
 3. Which services, routers, processes, events, jobs, or tests are generated?
 4. Which extension points can later modules override?
 5. Which configuration properties affect behavior?
-6. How does tenant or request context affect behavior?
+6. How does tenant or request context affect behavior, and does business
+   ownership belong to enterprise association instead of a direct tenant field?
 7. Which security, access, validation, audit, rollback, diagnostics, and test
    contracts apply?
 8. What should a customer project do instead of editing framework code?

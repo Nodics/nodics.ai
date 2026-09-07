@@ -24,6 +24,7 @@ const publicationService = require('../src/service/defaultPromotionPublicationSe
 const backofficeCapability = require('../src/service/defaultPromotionBackofficeCapabilityService');
 const simulation = require('../src/service/defaultPromotionSimulationService');
 const decision = require('../src/service/defaultPromotionDecisionService');
+const schemas = require('../src/schemas/schemas');
 const exact = require('../../pricing/src/service/defaultExactAmountService');
 
 let promotionRequests;
@@ -152,6 +153,16 @@ test('Promotion customer routes expose secured preview and apply permissions', (
     assert.equal(routers.promotion.backoffice.analytics.apiExposure, 'commerceManagement');
 });
 
+test('Promotion schemas expose explicit enterprise association references', () => {
+    ['promotion', 'couponBatch', 'coupon', 'promotionRedemption'].forEach(schemaName => {
+        const definition = schemas.promotion[schemaName].definition;
+        assert.equal(definition.enterpriseRef.type, 'object');
+        assert.equal(definition.issuerEnterpriseRef.type, 'object');
+        assert.equal(definition.vendorEnterpriseRef.type, 'object');
+        assert.equal(definition.enterpriseCode.required, false);
+    });
+});
+
 test('Promotion operational publication restoration saves rules batches and coupon rows', async () => {
     const result = await controller.restoreOperational({
         enterpriseCode: 'enterprise-a',
@@ -173,6 +184,9 @@ test('Promotion operational publication restoration saves rules batches and coup
     assert(promotions.find(item => item.code === 'market5').enterpriseCode === 'enterprise-a');
     assert(couponBatches.find(item => item.code === 'market5-batch').enterpriseCode === 'enterprise-a');
     assert(coupons.find(item => item.code === 'market5-row-1').enterpriseCode === 'enterprise-a');
+    assert.equal(promotions.find(item => item.code === 'market5').issuerEnterpriseRef.code, 'enterprise-a');
+    assert.equal(couponBatches.find(item => item.code === 'market5-batch').vendorEnterpriseRef.code, 'enterprise-a');
+    assert.equal(coupons.find(item => item.code === 'market5-row-1').vendorEnterpriseRef.code, 'enterprise-a');
 });
 
 test('Promotion operational publication rejects records from another enterprise', async () => {
@@ -485,9 +499,13 @@ test('Promotion coupon batch generation supports count-based enterprise-owned co
     });
 
     assert.equal(created.batch.enterpriseCode, 'enterpriseX');
+    assert.equal(created.batch.issuerEnterpriseRef.code, 'enterpriseX');
+    assert.equal(created.batch.vendorEnterpriseRef.code, 'enterpriseX');
     assert.equal(created.batch.issuedCount, 100);
     assert.equal(created.coupons.length, 100);
     assert.equal(created.coupons[0].enterpriseCode, 'enterpriseX');
+    assert.equal(created.coupons[0].issuerEnterpriseRef.code, 'enterpriseX');
+    assert.equal(created.coupons[0].vendorEnterpriseRef.code, 'enterpriseX');
     assert.match(created.coupons[0].tokenHash, /^[a-f0-9]{64}$/);
     assert.equal(JSON.stringify(created.coupons).includes('AGORA5-00001'), false);
 });

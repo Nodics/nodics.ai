@@ -51,6 +51,8 @@ const collectionPoint = namespaces.wasteCollection.wasteCollectionPoint.definiti
 assert(namespaces.wasteCollection.wasteCollectionPointType, 'collection point type values must be schema-driven');
 assert(namespaces.wasteCollection.wasteCollectionPreset, 'collection preset values must be schema-driven');
 assert(namespaces.wasteCollection.wasteReceiptPolicy, 'receipt policy values must be schema-driven');
+assert.strictEqual(collectionPoint.operatorEnterpriseRef.required, true, 'collection points must be associated with an operating enterprise');
+assert.strictEqual(collectionPoint.assetOwnerEnterpriseRef.required, false, 'collection points may reference a separate infrastructure owner enterprise');
 assert.strictEqual(collectionPoint.collectionPointType.enum, undefined, 'collection point types must be added as schema data, not hardcoded enum values');
 assert(collectionPoint.acceptanceSummary, 'collection point may expose acceptanceSummary projection');
 assert.strictEqual(collectionPoint.acceptedFamilyCodes, undefined, 'collection point must not duplicate authoritative accepted families');

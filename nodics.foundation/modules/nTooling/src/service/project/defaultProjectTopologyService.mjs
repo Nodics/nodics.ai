@@ -45,6 +45,8 @@ function normalizeRuntime(runtime) {
     ...runtime,
     cwd: runtime.cwd ? path.resolve(resolveTemplate(projectRoot, runtime.cwd)) : projectRoot,
     readyPath: runtime.readyPath || '/nodics/system/v0/health/ready',
+    dependsOn: normalizeRuntimeDependencies(runtime.dependsOn),
+    readinessChecks: normalizeReadinessChecks(runtime.readinessChecks),
     env: normalizeRuntimeEnvironment(runtime.env)
   };
 }
@@ -56,6 +58,27 @@ function normalizeRuntimeEnvironment(environment) {
     .map(([key, value]) => [key, resolveTemplate(projectRoot, value)]));
 }
 
+function normalizeRuntimeDependencies(dependencies) {
+  return Object.freeze([].concat(dependencies || [])
+    .filter(value => typeof value === 'string' && value.trim())
+    .map(value => value.trim()));
+}
+
+function normalizeReadinessChecks(checks) {
+  return Object.freeze([].concat(checks || [])
+    .filter(check => check && typeof check === 'object' && !Array.isArray(check))
+    .map(check => Object.freeze({
+      label: String(check.label || check.path || check.url || 'readiness check'),
+      method: String(check.method || 'GET').toUpperCase(),
+      path: check.path ? String(check.path) : undefined,
+      url: check.url ? resolveTemplate(projectRoot, String(check.url)) : undefined,
+      headers: normalizeRuntimeEnvironment(check.headers),
+      expectedStatuses: Object.freeze([].concat(check.expectedStatuses || [])
+        .map(status => Number(status))
+        .filter(status => Number.isInteger(status) && status >= 100 && status <= 599))
+    })));
+}
+
 function runtimeEnvironment(runtime) {
   return Object.assign({}, process.env, runtime.env || {});
 }
@@ -65,6 +88,17 @@ export const frontendRuntimes = Object.freeze(readTopology().frontendRuntimes);
 
 const sleep = milliseconds => new Promise(resolve => setTimeout(resolve, milliseconds));
 const healthUrl = runtime => `http://127.0.0.1:${String(runtime.port)}${runtime.readyPath || '/nodics/system/v0/health/ready'}`;
+const readinessCheckUrl = (runtime, check) => check.url || `http://127.0.0.1:${String(runtime.port)}${check.path || runtime.readyPath || '/nodics/system/v0/health/ready'}`;
+
+/** Returns dependency-order violations for an environment-owned topology. */
+export function runtimeDependencyViolations(runtimes) {
+  const order = new Map(runtimes.map((runtime, index) => [runtime.code, index]));
+  return runtimes.flatMap((runtime, index) => (runtime.dependsOn || []).map(dependency => {
+    if (!order.has(dependency)) return `${runtime.code} depends on unknown runtime ${dependency}`;
+    if (order.get(dependency) >= index) return `${runtime.code} must be declared after dependency ${dependency}`;
+    return undefined;
+  }).filter(Boolean));
+}
 
 function signalRuntimeProcess(pid, signal) {
   if (!Number.isInteger(pid)) return false;
@@ -128,6 +162,8 @@ export async function preflight(includeFrontends = false) {
   const topology = readTopology();
   const runtimes = selectRuntimes(includeFrontends);
   const checks = [];
+  const dependencyViolations = runtimeDependencyViolations(runtimes);
+  checks.push({ id: 'runtime-dependencies', state: dependencyViolations.length ? 'FAILED' : 'PASSED', dependencies: dependencyViolations });
   for (const runtime of runtimes) {
     const cwd = runtime.cwd || projectRoot;
     checks.push({ id: `project:${runtime.code}`, state: fs.existsSync(path.join(cwd, 'package.json')) ? 'PASSED' : 'FAILED', path: cwd });
@@ -146,8 +182,25 @@ async function waitUntilReady(runtime, timeoutMs = 90000) {
   while (Date.now() - startedAt < timeoutMs) {
     try {
       const response = await fetch(healthUrl(runtime), { redirect: 'error' });
-      if (response.ok) return;
-      lastError = `HTTP ${String(response.status)}`;
+      if (response.ok) {
+        let ready = true;
+        for (const check of runtime.readinessChecks || []) {
+          const checkResponse = await fetch(readinessCheckUrl(runtime, check), {
+            method: check.method || 'GET',
+            headers: check.headers || {},
+            redirect: 'error'
+          });
+          const expectedStatuses = check.expectedStatuses && check.expectedStatuses.length ? check.expectedStatuses : undefined;
+          if (!(expectedStatuses ? expectedStatuses.includes(checkResponse.status) : checkResponse.ok)) {
+            ready = false;
+            lastError = `${check.label} HTTP ${String(checkResponse.status)}`;
+            break;
+          }
+        }
+        if (ready) return;
+      } else {
+        lastError = `HTTP ${String(response.status)}`;
+      }
     } catch (error) { lastError = error.message; }
     await sleep(1000);
   }
@@ -175,6 +228,8 @@ async function inspect(runtimes) {
 async function start(includeFrontends) {
   const topology = readTopology();
   const runtimes = selectRuntimes(includeFrontends);
+  const dependencyViolations = runtimeDependencyViolations(runtimes);
+  if (dependencyViolations.length) throw new Error(`Invalid runtime dependency order: ${dependencyViolations.join('; ')}`);
   const existing = readState();
   if (isOwnedSupervisor(existing)) throw new Error(`${topology.environment} topology is already supervised by PID ${String(existing.supervisorPid)}`);
   const busy = [];

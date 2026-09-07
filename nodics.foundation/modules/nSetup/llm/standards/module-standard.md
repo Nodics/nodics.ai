@@ -77,6 +77,13 @@ folders. Environment-owned init data belongs under that environment module,
 server-owned data belongs under that server module, and reusable framework data
 belongs under the capability module that owns the records.
 
+For a functional module group, common reference data that serves the whole
+business capability belongs to the business anchor module, normally the
+`*Core` child module. Leaf modules own only leaf-specific reference, sample, or
+operational data. When the anchor contributes a record to another module's
+schema authority, such as Profile `enterprise`, the data stays in the anchor
+module and the import header names the target authority explicitly.
+
 Only packages that explicitly declare `documentation` in
 `package.json.nodics.owns` may maintain a governed `docs/` source catalogue.
 Other module packages must not create a parallel `docs/` directory. Every
@@ -219,6 +226,8 @@ files are opened. Its maintained documentation must provide:
 - a source and authority map naming owned schemas, routers, controllers,
   facades, services, pipelines, events, data, configuration, and tests;
 - supported and prohibited dependency directions;
+- consolidated-runtime and standalone micro-service activation expectations,
+  including required local dependencies and remote collaborators;
 - business, operator, application-developer, framework-maintainer, and AI-tool
   guidance, or an explicit explanation when one audience is not applicable;
 - successful, rejected, boundary/scale, failure/recovery, and later-layer
@@ -243,6 +252,12 @@ after overrides. When a later layer changes a schema, route, permission, data
 contract, or validation rule, do not hand-edit generated framework tests or
 copy entire suites. Reuse Nodics test engines and regenerate or contribute
 layer-owned fixtures and assertions from the effective active definitions.
+
+When a capability communicates with another module, focused tests or topology
+evidence must prove that behavior does not rely on accidental same-process
+loading. Validate the consolidated path and the standalone micro-service path
+where the collaborator is reached through configured remote endpoint, event, or
+provider contract.
 
 ## Platform Contract
 

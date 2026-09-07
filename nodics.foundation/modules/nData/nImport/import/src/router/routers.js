@@ -211,7 +211,7 @@ module.exports = {
                 key: '/init/validate',
                 method: 'POST',
                 controller: 'DefaultDataReleaseController',
-                operation: 'preflight',
+                operation: 'preflightInit',
                 requestBody: releasePlanBody
             },
             preflightCore: {
@@ -223,7 +223,7 @@ module.exports = {
                 key: '/core/validate',
                 method: 'POST',
                 controller: 'DefaultDataReleaseController',
-                operation: 'preflight',
+                operation: 'preflightCore',
                 requestBody: releasePlanBody
             },
             preflightSample: {
@@ -235,7 +235,7 @@ module.exports = {
                 key: '/sample/validate',
                 method: 'POST',
                 controller: 'DefaultDataReleaseController',
-                operation: 'preflight',
+                operation: 'preflightSample',
                 requestBody: releasePlanBody
             },
             executeInit: {

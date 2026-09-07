@@ -22,6 +22,13 @@ module.exports = {
                 controller: 'DefaultWasteInternalController', operation: 'collectionAcceptanceCheck',
                 help: { requestType: 'secured', message: 'Checks whether submitted waste facts match authoritative collection acceptance rules.' }
             },
+            searchCollectionCentres: {
+                secured: true, authTokenTypes: ['access', 'service'], accessGroups: ['serviceAccountUserGroup', 'adminGroup', 'employeeUserGroup', 'customerUserGroup'],
+                permission: 'waste.collectionCentre.search', apiExposure: 'wasteInternal',
+                key: '/waste/collection-centres/search', method: 'POST',
+                controller: 'DefaultWasteInternalController', operation: 'searchCollectionCentres',
+                help: { requestType: 'secured', message: 'Searches Waste collection centres by operator enterprise, location reference, status, and visibility.' }
+            },
             submitWaste: {
                 secured: true, authTokenTypes: ['access', 'service'], accessGroups: ['serviceAccountUserGroup', 'employeeUserGroup', 'customerGroup'],
                 permission: 'waste.submission.create', apiExposure: 'wasteInternal',

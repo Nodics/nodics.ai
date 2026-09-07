@@ -400,7 +400,8 @@ assert.ok(employeeServiceSource.includes("status !== 'active'"));
 assert.deepStrictEqual(
     routerProperties.routeActionAuthorization.groupPermissions.serviceAccountUserGroup,
     ['auth.internal.token.read', 'auth.internal.token.read.anyTenant',
-        'import.init.run', 'import.core.run', 'import.sample.run', 'import.release.validate'],
+        'import.init.run', 'import.core.run', 'import.sample.run', 'import.release.validate',
+        'location.location.read', 'location.location.search'],
     'Service account group must satisfy secured internal-token route permission in modular startup'
 );
 global.CONFIG = configuration({ nodeId: 'node-test' });

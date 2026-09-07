@@ -28,5 +28,10 @@ runtime.search({ tenant: 'default', ownerType: 'PRODUCT', query: { tenant: 'defa
     assert.deepEqual(runtime.records({ hits: { hits: [{ _source: { code: 'doc-from-hit' } }] } }), [{ code: 'doc-from-hit' }]);
     assert.deepEqual(runtime.records({ body: { hits: { hits: [{ _source: { code: 'doc-from-body-hit' } }] } } }), [{ code: 'doc-from-body-hit' }]);
     assert.deepEqual(runtime.records({ result: { body: { hits: { hits: [{ _source: { code: 'doc-from-wrapped-hit' } }] } } } }), [{ code: 'doc-from-wrapped-hit' }]);
-    console.log('Discovery runtime contract validated');
+    const searchRequest = { mode: 'LEXICAL', text: 'Nodics', fields: ['title'], filters: { ownerType: 'COPILOT_KNOWLEDGE' }, size: 5 };
+    return runtime.search({ tenant: 'default', searchQuery: searchRequest }).then(() => {
+        assert.deepEqual(requestSeen.searchRequest, searchRequest);
+        assert.equal(Object.prototype.hasOwnProperty.call(requestSeen, 'query'), false);
+        console.log('Discovery runtime contract validated');
+    });
 });

@@ -12,6 +12,7 @@
 'use strict';
 
 const acceptanceService = require('../../../wasteCollection/src/service/defaultWasteAcceptancePolicyService');
+const collectionCentreService = require('../../../wasteCollection/src/service/defaultWasteCollectionCentreService');
 const lifecycleService = require('../../../wasteSubmission/src/service/defaultWasteSubmissionLifecycleService');
 const impactService = require('../../../wasteImpact/src/service/defaultWasteImpactCalculationService');
 const assetCreationService = require('../../../wasteCore/src/service/defaultWasteAssetCreationService');
@@ -41,6 +42,11 @@ module.exports = {
         let payload = request.payload || {};
         let collectionPoint = Object.assign({}, payload.collectionPoint || {}, { code: request.params && request.params.collectionPointCode || payload.collectionPointCode || payload.collectionPoint && payload.collectionPoint.code });
         return Promise.resolve(acceptanceService.evaluate({ collectionPoint: collectionPoint, rules: payload.rules || [], facts: payload.facts || payload.submission || {} }));
+    },
+
+    /** Searches Waste collection centres through role-aware business filters. */
+    searchCollectionCentres: function (request) {
+        return collectionCentreService.search(request);
     },
 
     /** Returns a sanitized generic submission payload for persistence by an owning generated service. */

@@ -1,0 +1,51 @@
+{
+    "name": "nodics.copilot",
+    "index": "78.99",
+    "description": "Provider-neutral governed conversational assistance and agent execution framework.",
+    "main": "nodics.js",
+    "version": "0.0.0",
+    "private": true,
+    "license": "SEE LICENSE IN LICENSE",
+    "requiredModules": [
+        "copilotCore",
+        "copilotProviders",
+        "copilotConversation",
+        "copilotCapability",
+        "excelExport",
+        "copilotPolicy",
+        "copilotKnowledge",
+        "copilotWorkbench",
+        "copilotEvaluation",
+        "copilotApi"
+    ],
+    "nodics": {
+        "kind": "group",
+        "displayName": "Nodics.Copilot",
+        "runtimeModule": true,
+        "loadableByNodicsModuleLoader": true,
+        "owns": [
+            "composition",
+            "configuration",
+            "test",
+            "llm"
+        ],
+        "runtime": {
+            "router": false,
+            "publish": false,
+            "web": false
+        },
+        "extends": [
+            "nodics.foundation"
+        ],
+        "functionalModule": {
+            "identity": "nodics.copilot",
+            "displayName": "Copilot",
+            "type": "STANDARD",
+            "protected": false
+        }
+    },
+    "scripts": {
+        "check:syntax": "find . -name '*.js' -not -path './node_modules/*' -print0 | xargs -0 -n 50 node --check",
+        "test": "npm run check:syntax && find test modules -name '*.test.js' -print0 | xargs -0 node --test"
+    }
+}

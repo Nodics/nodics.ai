@@ -47,13 +47,17 @@ dataModules.forEach(moduleName => {
     assert.equal(manifest.module, moduleName);
     Object.values(manifest.sections).forEach(section => {
         assert.equal(section.owningDomain, 'loyalty');
-        assert.equal(section.destinationRole, 'LOYALTY');
+        const targetsProfileEnterprise = Object.keys(section.files || {}).some(relativeFile => relativeFile.includes('/profile/'));
+        assert.equal(section.destinationRole, targetsProfileEnterprise ? 'PLATFORM' : 'LOYALTY');
         Object.entries(section.files).forEach(([relativeFile, expectedHash]) => {
             const absoluteFile = path.join(moduleRoot, 'data', relativeFile);
             assert.equal(sha256(absoluteFile), expectedHash, `${moduleName} manifest hash drift for ${relativeFile}`);
             if (relativeFile.includes('/records/')) {
                 recordsOf(absoluteFile).forEach(record => {
-                    assert.equal(record.tenant, undefined, `${moduleName}.${record.code} must not store tenant as Loyalty business data`);
+                    const targetsProfileEnterpriseRecord = relativeFile.includes('/records/profile/');
+                    if (!targetsProfileEnterpriseRecord) {
+                        assert.equal(record.tenant, undefined, `${moduleName}.${record.code} must not store tenant as Loyalty business data`);
+                    }
                     assert.equal(record.enterpriseCode, undefined, `${moduleName}.${record.code} must not store enterpriseCode`);
                 });
             }

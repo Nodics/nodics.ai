@@ -21,8 +21,14 @@ module.exports = {
         code: 'default',
         name: 'Default',
         active: true,
-        description: 'Default Enterprise',
+        description: 'Default platform owner enterprise',
         tenant: 'default:true',
+        roleCodes: ['PLATFORM_OWNER'],
+        capabilityScopes: [{
+            moduleName: 'profile',
+            roleCode: 'PLATFORM_OWNER',
+            scopeCode: 'GLOBAL'
+        }],
         addresses: ['defaultEntAddress'],
         contacts: ['defaultEntContact']
     }

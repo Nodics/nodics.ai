@@ -14,7 +14,6 @@
       "configuration",
       "schema",
       "service",
-      "test",
       "llm"
     ],
     "runtime": {

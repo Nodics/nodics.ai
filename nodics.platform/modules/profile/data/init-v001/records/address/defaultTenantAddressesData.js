@@ -27,7 +27,8 @@ module.exports = {
         street: '100 lake side',
         city: 'Bangalore',
         state: 'Karnataka',
-        postalCode: '560001'
+        postalCode: '560001',
+        countryCode: 'IN'
     },
     record1: {
         type: 'OFFICE',
@@ -39,6 +40,7 @@ module.exports = {
         street: '100 lake side',
         city: 'Bangalore',
         state: 'Karnataka',
-        postalCode: '560001'
+        postalCode: '560001',
+        countryCode: 'IN'
     },
 };

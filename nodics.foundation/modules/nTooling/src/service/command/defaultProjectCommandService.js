@@ -177,6 +177,7 @@ module.exports = {
             'start:commerce': runtimeStart('commerce'),
             'start:commerce:staged': runtimeStart('commerceStaged'),
             'start:engagement': runtimeStart('engagement'),
+            'start:location': runtimeStart('location'),
             'start:loyalty': runtimeStart('loyalty'),
             'start:process': runtimeStart('process'),
             'start:waste': runtimeStart('waste'),

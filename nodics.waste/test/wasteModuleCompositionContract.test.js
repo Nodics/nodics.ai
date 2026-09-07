@@ -51,6 +51,9 @@ expectedModules.forEach(function (item) {
     assert.strictEqual(modulePackage.name, moduleName);
     assert.strictEqual(modulePackage.index, expectedIndex);
     assert.strictEqual(modulePackage.nodics.kind, 'capability');
+    if (moduleName === 'wasteCollection') {
+        assert.strictEqual(modulePackage.nodics.runtime.router, true, 'Waste Collection must expose generated admin Workbench routes when composed into wasteServer');
+    }
     assert(!packageIndexes.has(modulePackage.index), 'Waste package indexes must be unique');
     packageIndexes.add(modulePackage.index);
 });

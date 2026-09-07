@@ -53,6 +53,7 @@ const byId = Object.fromEntries(capability.navigation.map(item => [item.id, item
     'waste-materials',
     'waste-evidence-policies',
     'waste-collections',
+    'waste-collection-centres',
     'waste-acceptance-rules',
     'waste-submissions',
     'waste-verification',
@@ -73,6 +74,10 @@ const byId = Object.fromEntries(capability.navigation.map(item => [item.id, item
 ].forEach(id => assert(byId[id], `${id} must be declared`));
 
 assert.equal(byId['waste-management'].group.id, 'sustainability-operations');
+assert.equal(byId['waste-collection-centres'].route, '/waste/collection-centres');
+assert.equal(byId['waste-collection-centres'].parentModuleName, 'wasteCore');
+assert.equal(byId['waste-collection-centres'].workbenchTarget.moduleName, 'wasteCollection');
+assert.equal(byId['waste-collection-centres'].workbenchTarget.schemaName, 'wasteCollectionPoint');
 assert.equal(byId['waste-submissions'].parentModuleName, 'wasteCore');
 assert.equal(byId['waste-submissions'].workbenchTarget.moduleName, 'wasteSubmission');
 assert.equal(byId['waste-submissions'].workbenchTarget.schemaName, 'wasteSubmission');

@@ -4,11 +4,13 @@ Profile owns identity, authentication, authorization, enterprise and tenant scop
 
 ## Responsibility
 
-This module provides the identity and access foundation used by Axis, Nexus, backend routes, documentation access policy, and customer-project authorization.
+This module provides the identity and access foundation used by Axis, Nexus, backend routes, documentation access policy, and customer-project authorization. Profile also owns reusable address and contact records for customers, employees, enterprises, billing, shipping, offices, and reusable physical addresses.
 
 ## Developer Notes
 
 - Keep route access, password handling, session restoration, and permission resolution inside profile-owned contracts.
+- Keep reusable address/contact facts in Profile. Location and business modules should reference Profile addresses and contacts instead of duplicating postal, geocoding, verification, access-note, or display-policy fields.
+- Keep global enterprise seed data in Profile. Capability-specific enterprises must be contributed from the owning module data folder into Profile enterprise authority, so inactive capabilities do not create their demo or reference enterprises.
 - Add project-specific users, groups, and permissions through profile data/configuration, not frontend shortcuts.
 - Preserve tenant and enterprise isolation.
 - Keep documentation author and view-only Axis responsibilities aligned with profile roles/groups.

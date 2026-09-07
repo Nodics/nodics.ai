@@ -27,6 +27,10 @@ Object.values(routes).forEach(function (route) {
 });
 
 assert.strictEqual(routes.collectionAcceptanceCheck.key, '/waste/collection-points/:collectionPointCode/acceptance-check');
+assert.strictEqual(routes.searchCollectionCentres.key, '/waste/collection-centres/search');
+assert.strictEqual(routes.searchCollectionCentres.permission, 'waste.collectionCentre.search');
+assert.deepStrictEqual(routes.searchCollectionCentres.authTokenTypes, ['access', 'service']);
+assert.deepStrictEqual(routes.searchCollectionCentres.accessGroups, ['serviceAccountUserGroup', 'adminGroup', 'employeeUserGroup', 'customerUserGroup']);
 assert.strictEqual(routes.submitWaste.key, '/waste/submissions');
 assert.strictEqual(routes.transitionSubmission.key, '/waste/submissions/:submissionCode/transitions');
 assert.strictEqual(routes.calculateImpact.key, '/waste/impact-results');
@@ -73,6 +77,10 @@ async function main() {
             submitWaste: function (request) {
                 calls.push(request);
                 return Promise.resolve({ idempotencyKey: request.idempotencyKey, correlationId: request.correlationId, tenant: request.tenant });
+            },
+            searchCollectionCentres: function (request) {
+                calls.push(request);
+                return Promise.resolve({ records: [{ code: 'WCP_001' }], tenant: request.tenant, filters: request.payload.filters });
             },
             createAssetFromApprovedSubmission: function (request) {
                 calls.push(request);
@@ -159,6 +167,32 @@ async function main() {
     assert.strictEqual(response.data.correlationId, 'corr-header-001');
     assert.strictEqual(response.data.tenant, 'runtimeTenantFromToken');
     assert.strictEqual(calls[0].payload.categoryCode, 'PHONE');
+
+    response = await controller.searchCollectionCentres({
+        authData: { tenant: 'runtimeTenantFromToken' },
+        httpRequest: {
+            headers: { 'X-Correlation-Id': 'corr-centres-001' },
+            body: { filters: { operatorEnterpriseCode: 'NODICS_WASTE_MANAGEMENT_CO' } }
+        }
+    });
+    assert.strictEqual(response.data.records[0].code, 'WCP_001');
+    assert.strictEqual(response.data.tenant, 'runtimeTenantFromToken');
+    assert.strictEqual(calls[1].payload.filters.operatorEnterpriseCode, 'NODICS_WASTE_MANAGEMENT_CO');
+
+    response = await new Promise(function (resolve, reject) {
+        controller.searchCollectionCentres({
+            authData: { tenant: 'runtimeTenantFromToken' },
+            httpRequest: {
+                headers: { 'X-Correlation-Id': 'corr-centres-callback-001' },
+                body: { filters: { status: 'ACTIVE' } }
+            }
+        }, function (error, success) {
+            if (error) reject(error);
+            else resolve(success);
+        });
+    });
+    assert.strictEqual(response.data.records[0].code, 'WCP_001');
+    assert.strictEqual(calls[2].payload.filters.status, 'ACTIVE');
 
     response = await controller.createAssetFromApprovedSubmission({
         authData: { tenant: 'runtimeTenantFromToken' },
