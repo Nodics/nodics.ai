@@ -75,12 +75,20 @@ assert.deepStrictEqual(expCompositionByCode.get('combined').domains, ['apparel',
 assert.deepStrictEqual(expCompositionByCode.get('combined').rendererKeys,
     catalogue.frontendCompositions.find(composition => composition.code === 'combined').rendererKeys,
     'Split nodics.exp apps must preserve combined renderer availability');
-assert(expCompositionByCode.get('apparel').sourcePackage === 'nodics.agora.apparel',
-    'Apparel composition must retain split app provenance');
-assert(expCompositionByCode.get('electronics').sourcePackage === 'nodics.agora.electronics',
-    'Electronics composition must retain split app provenance');
-assert(expCompositionByCode.get('telco').sourcePackage === 'nodics.agora.telco',
-    'Telco composition must retain split app provenance');
+if (expCatalogue.repositories.some(repository => repository.code === 'exp')) {
+    assert(expCompositionByCode.get('apparel').sourcePackage === 'nodics.agora.apparel',
+        'Apparel composition must retain split app provenance');
+    assert(expCompositionByCode.get('electronics').sourcePackage === 'nodics.agora.electronics',
+        'Electronics composition must retain split app provenance');
+    assert(expCompositionByCode.get('telco').sourcePackage === 'nodics.agora.telco',
+        'Telco composition must retain split app provenance');
+} else {
+    assert.deepStrictEqual(expCatalogue.frontendApps, [],
+        'Standalone CI discovery must not invent external app provenance');
+    assert(expCatalogue.frontendCompositions.every(composition =>
+        composition.path.startsWith('built-in/agora/') && !composition.sourcePackage),
+    'Standalone CI discovery must identify built-in composition descriptors');
+}
 assert.deepStrictEqual(expCatalogue.customerDataPacks, catalogue.customerDataPacks,
     'Using nodics.exp to resolve the same Agora app must keep Kickoff data-pack semantics');
 
