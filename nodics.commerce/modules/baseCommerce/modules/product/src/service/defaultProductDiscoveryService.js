@@ -445,6 +445,7 @@ module.exports = {
         let payload = projection.payload || {};
         return {
             productCode: projection.productCode || payload.code,
+            version: projection.sourceHash,
             name: payload.name,
             slug: payload.slug,
             summary: payload.description,

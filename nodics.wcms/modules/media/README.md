@@ -12,6 +12,9 @@ This module manages media metadata and storage policy. Product, CMS, engagement,
 - Keep folder, format, source context, delivery policy, and access decisions explicit.
 - Do not expose local storage roots or private provider paths through public documentation or APIs.
 - Use project-layer provider configuration for local, NAS, S3, Azure, or Google Cloud style deployments.
+- Customer photo orchestration may use bounded encoded intake after its own
+  analysis succeeds. Media retains upload policy, original filename, private
+  storage, owner identity and checksum-checked idempotent replay.
 
 ## Documentation
 

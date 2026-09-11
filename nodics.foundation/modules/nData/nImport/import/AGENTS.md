@@ -10,6 +10,12 @@ This file gives AI coding agents mandatory guidance for this Nodics module or pa
 
 ## Module Work Rules
 
+- For explicitly managed counters, `saveAll` imports capture original revisions
+  through the owning generated read service and retain them for retries of the
+  same model-import request. Source rows do not own these counters. Reject other
+  import operations for managed schemas; never turn a retry into an unconditional
+  overwrite or change business/publication/release versions.
+
 - Treat this directory as a layered Nodics module boundary when it contains `package.json`.
 - Keep capabilities stable and make implementations replaceable through the module hierarchy.
 - Do not hardcode project, environment, server, node, tenant, or customer behavior into reusable framework code.

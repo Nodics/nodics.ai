@@ -263,7 +263,10 @@ module.exports = {
      */
     executeQuery: function (request, response, process) {
         this.LOG.debug('Executing remove query');
-        request.schemaModel.removeItems(request).then(result => {
+        const concurrency = SERVICE.DefaultModelConcurrencyService;
+        const remove = concurrency && concurrency.getField(request.schemaModel.rawSchema)
+            ? concurrency.execute(request, 'remove') : request.schemaModel.removeItems(request);
+        remove.then(result => {
             response.success = {
                 code: 'SUC_DEL_00000',
                 result: result

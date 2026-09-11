@@ -124,6 +124,9 @@ module.exports = {
         if (!descriptor || !descriptor.operations.includes('create')) {
             return Promise.reject(new CLASSES.NodicsError('ERR_DBS_00004', 'Schema create is not available to Schema Workbench'));
         }
+        if (descriptor.form && descriptor.form.createOperation) {
+            return Promise.reject(new CLASSES.NodicsError('ERR_AUTH_00003', 'Create this record through its owning business setup operation.'));
+        }
         let body = (request.httpRequest && request.httpRequest.body) || {};
         let model = this.buildMutationModel(body.model || body, descriptor, request);
         let service = this.getGeneratedService(schemaName);
@@ -135,7 +138,7 @@ module.exports = {
                 idempotencyKey: this.getIdempotencyKey(request),
             })
             .then((result) => {
-                return { code: 'SUC_DBS_00000', data: this.extractMutationRecord(result, model) };
+                return { code: 'SUC_DBS_00000', data: this.extractMutationRecord(result) };
             });
     },
 
@@ -166,7 +169,7 @@ module.exports = {
                 idempotencyKey: this.getIdempotencyKey(request),
             })
             .then((result) => {
-                return { code: 'SUC_DBS_00000', data: this.extractMutationRecord(result, Object.assign({}, identity, model)) };
+                return { code: 'SUC_DBS_00000', data: this.extractMutationRecord(result) };
             });
     },
 
@@ -264,6 +267,7 @@ module.exports = {
             },
             explicitConfig || {},
         );
+        let authority = this.getAuthoringAuthority(schema);
         let operations = this.getAllowedOperations(request, schema, config);
         if (operations.length === 0) {
             return undefined;
@@ -278,15 +282,20 @@ module.exports = {
             schemaName: schemaName,
             label: config.label || this.humanize(schemaName),
             description: config.description || '',
+            origin: this.buildSchemaOrigin(moduleName, schema, config),
+            hierarchy: this.buildSchemaHierarchy(moduleName, schema, config),
             displayProperty: displayProperty,
             displayProperties: displayProperties,
             queryCapabilities: this.buildQueryCapabilities(schema, config, displayProperty),
-            bulkCapabilities: this.buildBulkCapabilities(config),
+            bulkCapabilities: this.buildBulkCapabilities(operations.includes('delete') ? config : Object.assign({}, config, { bulkOperations: [] })),
             concurrency: this.buildConcurrency(schema, config),
-            aggregateOperations: this.buildAggregateOperations(config),
-            mutationMode: config.mutationMode,
+            aggregateOperations: authority.authoringAllowed ? this.buildAggregateOperations(config) : [],
+            mutationMode: authority.authoringAllowed ? config.mutationMode : 'READ_ONLY',
+            mutationPolicy: this.buildMutationPolicy(config),
+            authoring: authority,
             operations: operations,
-            fields: this.buildFields(schema, config),
+            fields: this.buildFields(moduleName, schema, config),
+            form: this.buildForm(moduleName, schema, config),
             relationships: this.buildRelationships(moduleName, schema, config),
         };
     },
@@ -470,6 +479,11 @@ module.exports = {
                 model[field] = input[field];
             }
         });
+        descriptor.fields.forEach((field) => {
+            if (field.fixedValue !== undefined) {
+                model[field.name] = field.fixedValue;
+            }
+        });
         if (fieldNames.has('tenant')) {
             model.tenant = request.tenant;
         }
@@ -483,10 +497,11 @@ module.exports = {
     },
 
     /** Extracts one concrete record from common generated mutation envelopes. */
-    extractMutationRecord: function (result, fallback) {
-        if (result && Array.isArray(result.result) && result.result.length === 1) {
-            return result.result[0];
+    extractMutationRecord: function (result) {
+        if (result && result.matchedCount === 0) {
+            throw new CLASSES.NodicsError('ERR_CONCURRENCY_00001');
         }
+        if (result && result.result !== undefined) return this.extractMutationRecord(result.result);
         if (result && Array.isArray(result.models) && result.models.length === 1) {
             return result.models[0];
         }
@@ -496,7 +511,7 @@ module.exports = {
         if (result && typeof result === 'object' && !Array.isArray(result) && result.code && !result.result && !result.models) {
             return result;
         }
-        return fallback;
+        throw new CLASSES.NodicsError('ERR_DBS_00004', 'The write did not return a persisted record');
     },
 
     /** Builds an allowlisted primary-identity query. */
@@ -551,6 +566,7 @@ module.exports = {
             mode: 'COMPARE_AND_SET',
             field: field,
             required: configured.required !== false,
+            ...(configured.managed === true ? { managed: true } : {}),
         };
     },
 
@@ -578,6 +594,74 @@ module.exports = {
     },
 
     /**
+     * Projects the effective schema origin without becoming a second schema
+     * registry. Custom layers may provide richer origin evidence through
+     * backoffice metadata when available.
+     */
+    buildSchemaOrigin: function (moduleName, schema, config) {
+        let origin = config.origin || schema.origin || {};
+        return {
+            source: origin.source || config.source || 'MODULE',
+            moduleName: origin.moduleName || moduleName,
+            layer: origin.layer || config.layer || 'EFFECTIVE',
+            status: origin.status || 'EFFECTIVE',
+        };
+    },
+
+    /**
+     * Returns the optional schema contribution chain used by Axis definition
+     * views. The effective schema stays the executable source of truth.
+     */
+    buildSchemaHierarchy: function (moduleName, schema, config) {
+        let hierarchy = Array.isArray(config.hierarchy)
+            ? config.hierarchy
+            : Array.isArray(schema.hierarchy)
+              ? schema.hierarchy
+              : [];
+        if (hierarchy.length === 0) {
+            hierarchy = [{
+                source: 'MODULE',
+                moduleName: moduleName,
+                status: 'EFFECTIVE',
+            }];
+        }
+        return hierarchy
+            .filter((item) => item && typeof item === 'object')
+            .map((item) => {
+                return {
+                    source: item.source || 'MODULE',
+                    moduleName: item.moduleName || moduleName,
+                    schemaName: item.schemaName || undefined,
+                    layer: item.layer || '',
+                    status: item.status || 'EFFECTIVE',
+                };
+            });
+    },
+
+    /**
+     * Advertises mutation routing semantics for Axis. Backend services remain
+     * responsible for validation, versioning, publishing and persistence.
+     */
+    buildMutationPolicy: function (config) {
+        let policy = config.mutationPolicy || {};
+        return {
+            mode: policy.mode || config.mutationMode,
+            savePath: policy.savePath || config.savePath || config.mutationMode,
+            lifecycle: policy.lifecycle || config.lifecycle || 'DIRECT',
+            createStrategy: policy.createStrategy || 'TOP_LEVEL_WITH_REFERENCES',
+            updateStrategy: policy.updateStrategy || 'DIRECT_OR_REFERENCED',
+            deleteStrategy: policy.deleteStrategy || 'TOP_LEVEL_ONLY',
+            aggregateSave: policy.aggregateSave === true,
+            publishRequired: this.getAuthoringAuthority({ backoffice: config }).publishRequired,
+        };
+    },
+
+    /** Uses the shared authoring policy, including project service overrides. */
+    getAuthoringAuthority: function (schema) {
+        return (SERVICE.DefaultSchemaAuthoringPolicyService || require('./defaultSchemaAuthoringPolicyService')).describe(schema);
+    },
+
+    /**
      * Intersects configured operations with schema access points.
      * @param {Object} request Authenticated Nodics request.
      * @param {Object} schema Effective schema.
@@ -586,6 +670,9 @@ module.exports = {
      */
     getAllowedOperations: function (request, schema, config) {
         let requested = Array.isArray(config.operations) ? config.operations : ['read', 'search'];
+        if (!this.getAuthoringAuthority(schema).authoringAllowed) {
+            requested = requested.filter(operation => ['read', 'search'].includes(operation));
+        }
         let accessPoint = SERVICE.DefaultSchemaAccessHandlerService.getAccessPoint(request.authData, schema.accessGroups);
         let points = CONFIG.get('accessPoints');
         let allowed = [];
@@ -607,25 +694,39 @@ module.exports = {
      * @param {Object} config Schema Workbench configuration.
      * @returns {Object[]} Client-safe fields.
      */
-    buildFields: function (schema, config) {
+    buildFields: function (moduleName, schema, config) {
         let excluded = new Set((config.excludedFields || []).concat(['password', 'apiKey', 'apiKeyHash', 'accessGroups']));
         let managedFields = new Set(['created', 'updated', 'ownerId', 'ownerType', 'createdBy', 'updatedBy']);
+        if (config.concurrency && config.concurrency.managed === true) {
+            managedFields.add(config.concurrency.field || 'revision');
+        }
+        let fieldConfig = config.fields || {};
         return Object.keys(schema.definition || {})
             .filter((name) => !excluded.has(name))
             .map((name) => {
                 let property = schema.definition[name] || {};
-                return {
+                let override = fieldConfig[name] || {};
+                let fixedValue = this.resolveFixedValue(property, override);
+                let reference = this.buildRelationship(moduleName, schema, config, name);
+                let field = {
                     name: name,
-                    label: property.label || this.humanize(name),
+                    label: override.label || property.label || this.humanize(name),
                     type: property.type || (Array.isArray(property.enum) ? 'string' : 'object'),
                     required: property.required === true,
-                    readOnly: property.readOnly === true || managedFields.has(name),
+                    readOnly: property.readOnly === true || override.readOnly === true || managedFields.has(name) || fixedValue !== undefined,
                     primary: property.primary === true,
-                    description: property.description || '',
+                    description: override.description || property.description || '',
                     enum: Array.isArray(property.enum) ? property.enum.slice() : undefined,
+                    enumOptions: this.buildEnumOptions(property, override),
                     default: this.isSafeDefault(property.default) ? property.default : undefined,
+                    fixedValue: fixedValue,
+                    component: this.resolveFieldComponent(name, property, override, schema),
+                    validation: this.buildFieldValidation(property, override),
+                    origin: this.buildFieldOrigin(moduleName, name, property, override, schema, config),
                     searchable: !!(property.searchOptions && property.searchOptions.enabled === true),
                 };
+                if (reference) field.reference = reference;
+                return field;
             });
     },
 
@@ -637,39 +738,210 @@ module.exports = {
      * @returns {Object[]} Relationship descriptors.
      */
     buildRelationships: function (moduleName, schema, config) {
-        let relationshipConfig = config.relationships || {};
         return Object.keys(schema.refSchema || {})
             .filter((name) => {
                 return schema.refSchema[name] && schema.refSchema[name].enabled !== false;
             })
-            .map((name) => {
-                let reference = schema.refSchema[name];
-                let override = relationshipConfig[name] || {};
-                let property = schema.definition[name] || {};
-                return {
-                    field: name,
-                    label: override.label || property.label || this.humanize(name),
-                    description: override.description || property.description || '',
-                    targetModule: override.targetModule || reference.moduleName || moduleName,
-                    targetSchema: override.targetSchema || reference.schemaName,
-                    cardinality: reference.type === 'many' ? 'MANY' : 'ONE',
-                    referenceProperty: reference.propertyName || 'code',
-                    resolution: override.resolution || 'LOCAL_OR_REMOTE',
-                    actions: Array.isArray(override.actions)
-                        ? override.actions.slice()
-                        : Array.isArray(config.defaultRelationshipActions)
-                          ? config.defaultRelationshipActions.slice()
-                          : ['SELECT_EXISTING'],
-                    required: !!(schema.definition[name] && schema.definition[name].required),
-                    relationshipType: override.relationshipType || reference.relationshipType || 'ASSOCIATION',
-                    ownership: override.ownership || reference.ownership || 'SOURCE',
-                    inverseField: override.inverseField || reference.inverseField || '',
-                    onTargetDelete: String(reference.onTargetDelete || 'NONE').toUpperCase(),
-                    maximumDepth: Number.isSafeInteger(override.maximumDepth) ? override.maximumDepth : 3,
-                    cycleHandling: override.cycleHandling || 'SELECT_EXISTING',
-                    deleteImpactAvailable: String(reference.onTargetDelete || '').toUpperCase() === 'RESTRICT',
-                };
-            });
+            .map((name) => this.buildRelationship(moduleName, schema, config, name));
+    },
+
+    /**
+     * Builds a single schema relationship descriptor for both schema-level and
+     * field-level projections.
+     */
+    buildRelationship: function (moduleName, schema, config, name) {
+        let reference = schema.refSchema && schema.refSchema[name];
+        if (!reference || reference.enabled === false) return undefined;
+        let relationshipConfig = config.relationships || {};
+        let override = relationshipConfig[name] || {};
+        let property = schema.definition[name] || {};
+        return {
+            field: name,
+            label: override.label || property.label || this.humanize(name),
+            description: override.description || property.description || '',
+            targetModule: override.targetModule || reference.moduleName || moduleName,
+            targetSchema: override.targetSchema || reference.schemaName,
+            cardinality: reference.type === 'many' ? 'MANY' : 'ONE',
+            referenceProperty: reference.propertyName || 'code',
+            component: override.component || (reference.type === 'many' ? 'multiReferenceSelector' : 'referenceSelector'),
+            resolution: override.resolution || 'LOCAL_OR_REMOTE',
+            actions: Array.isArray(override.actions)
+                ? override.actions.slice()
+                : Array.isArray(config.defaultRelationshipActions)
+                  ? config.defaultRelationshipActions.slice()
+                  : ['SELECT_EXISTING'],
+            required: !!(schema.definition[name] && schema.definition[name].required),
+            relationshipType: override.relationshipType || reference.relationshipType || 'ASSOCIATION',
+            ownership: override.ownership || reference.ownership || 'SOURCE',
+            inverseField: override.inverseField || reference.inverseField || '',
+            onTargetDelete: String(reference.onTargetDelete || 'NONE').toUpperCase(),
+            maximumDepth: Number.isSafeInteger(override.maximumDepth) ? override.maximumDepth : 3,
+            cycleHandling: override.cycleHandling || 'SELECT_EXISTING',
+            deleteImpactAvailable: String(reference.onTargetDelete || '').toUpperCase() === 'RESTRICT',
+        };
+    },
+
+    /** Returns a safe fixed field value declared by schema or Workbench metadata. */
+    resolveFixedValue: function (property, override) {
+        let value = override.fixedValue !== undefined ? override.fixedValue : property.fixedValue !== undefined ? property.fixedValue : property.fixed;
+        return this.isSafeDefault(value) ? value : undefined;
+    },
+
+    /** Converts raw enum strings or richer option metadata into display options. */
+    buildEnumOptions: function (property, override) {
+        let options = Array.isArray(override.enumOptions)
+            ? override.enumOptions
+            : Array.isArray(property.enumOptions)
+              ? property.enumOptions
+              : undefined;
+        if (options) {
+            return options
+                .filter((item) => item && typeof item === 'object' && this.isSafeDefault(item.value))
+                .map((item) => {
+                    let value = item.value;
+                    return {
+                        value: value,
+                        label: typeof item.label === 'string' && item.label.trim() ? item.label : this.humanize(value),
+                        description: typeof item.description === 'string' ? item.description : '',
+                        disabled: item.disabled === true,
+                    };
+                });
+        }
+        if (!Array.isArray(property.enum)) {
+            return undefined;
+        }
+        return property.enum.map((value) => {
+            return {
+                value: value,
+                label: this.humanize(value),
+                description: '',
+                disabled: false,
+            };
+        });
+    },
+
+    /**
+     * Projects the existing backoffice.form metadata into a non-executable editor contract.
+     * Removed fields disappear and ungrouped project fields remain editable. Presentation
+     * cannot hide a required field unless the owning create operation manages it.
+     * @param {string} moduleName Effective owning module.
+     * @param {Object} schema Effective layered schema.
+     * @param {Object} config Effective backoffice metadata.
+     * @returns {Object} Safe labels, ordered sections and managed-create metadata.
+     */
+    buildForm: function (moduleName, schema, config) {
+        let defaults = (CONFIG.get('schemaWorkbench') || {}).form || {};
+        let form = config.form || {};
+        let fields = this.buildFields(moduleName, schema, config);
+        let names = new Set(fields.map(field => field.name));
+        let createOperation = this.buildAggregateOperations(config).find(operation =>
+            operation.name === form.createOperation && operation.purpose === 'CREATE');
+        let managed = createOperation && Array.isArray(form.managedCreateFields)
+            ? form.managedCreateFields.filter(name => names.has(name)) : [];
+        let hidden = (Array.isArray(form.hiddenFields) ? form.hiddenFields : []).filter(name =>
+            fields.some(field => field.name === name && !field.required));
+        let available = fields.filter(field => (!field.readOnly || field.fixedValue !== undefined) && !hidden.includes(field.name));
+        let assigned = new Set();
+        let sections = Object.entries(form.sections || {}).flatMap(([id, section]) => {
+            if (!section || section.enabled === false || typeof section.label !== 'string') return [];
+            let sectionFields = (Array.isArray(section.fields) ? section.fields : []).filter(name =>
+                available.some(field => field.name === name) && !assigned.has(name));
+            sectionFields.forEach(name => assigned.add(name));
+            return sectionFields.length ? [{ id, label: section.label, fields: sectionFields }] : [];
+        });
+        let remaining = available.filter(field => !assigned.has(field.name));
+        if (!sections.length) {
+            let direct = remaining.filter(field => !field.reference);
+            if (direct.length) sections.push({ id: 'details', label: defaults.detailsLabel || 'Details', fields: direct.map(field => field.name) });
+            let references = remaining.filter(field => field.reference);
+            if (references.length) sections.push({ id: 'relationships', label: defaults.relationshipsLabel || 'Related records', fields: references.map(field => field.name) });
+        } else if (remaining.length) {
+            sections.push({ id: 'additional', label: defaults.additionalLabel || 'Additional details', fields: remaining.map(field => field.name) });
+        }
+        let copy = {};
+        Object.keys(defaults).forEach(key => {
+            if (typeof defaults[key] === 'string') copy[key] = typeof form[key] === 'string' ? form[key] : defaults[key];
+        });
+        return {
+            contractVersion: 1, sections, hiddenFields: hidden, managedCreateFields: managed, copy,
+            createOperation: createOperation ? createOperation.name : undefined,
+            completionAction: form.completionAction && typeof form.completionAction.label === 'string' &&
+                typeof form.completionAction.path === 'string' && /^\/(?!\/)[^\\]*$/.test(form.completionAction.path)
+                ? { label: form.completionAction.label, path: form.completionAction.path } : undefined,
+            defaultColumns: (Array.isArray(form.defaultColumns) ? form.defaultColumns :
+                (config.displayProperties || ['name', config.displayProperty || 'code', 'description', 'active'])).filter(name => names.has(name)),
+        };
+    },
+
+    /** Chooses a backend-declared renderer component for Axis. */
+    resolveFieldComponent: function (name, property, override, schema) {
+        if (override.component) return override.component;
+        if (property.component) return property.component;
+        if (schema.refSchema && schema.refSchema[name]) {
+            return schema.refSchema[name].type === 'many' ? 'multiReferenceSelector' : 'referenceSelector';
+        }
+        if (Array.isArray(property.enum)) return 'select';
+        if (property.readOnly === true || property.fixedValue !== undefined || property.fixed !== undefined) return 'readonly';
+        if ((property.type || 'string') === 'object' && this.isLocalizedTextField(name)) {
+            return 'localizedText';
+        }
+        switch (property.type || 'string') {
+            case 'bool':
+            case 'boolean':
+                return 'checkbox';
+            case 'date':
+                return 'date';
+            case 'float':
+            case 'int':
+            case 'integer':
+            case 'number':
+                return 'number';
+            case 'array':
+                return 'array';
+            case 'object':
+                return 'json';
+            default:
+                return property.multiline === true ? 'textarea' : 'text';
+        }
+    },
+
+    /** Identifies structured business text fields that are localized by value. */
+    isLocalizedTextField: function (name) {
+        return ['name', 'description'].includes(name);
+    },
+
+    /** Projects common validation constraints as UI hints, not final authority. */
+    buildFieldValidation: function (property, override) {
+        let source = Object.assign({}, property.validation || {}, override.validation || {});
+        ['min', 'max', 'minLength', 'maxLength', 'precision'].forEach((name) => {
+            if (source[name] === undefined && property[name] !== undefined) source[name] = property[name];
+        });
+        ['pattern', 'format', 'message'].forEach((name) => {
+            if (source[name] === undefined && typeof property[name] === 'string') source[name] = property[name];
+        });
+        if (source.unique === undefined && property.unique !== undefined) source.unique = property.unique === true;
+        let validation = {};
+        ['min', 'max', 'minLength', 'maxLength', 'precision'].forEach((name) => {
+            if (typeof source[name] === 'number' && Number.isFinite(source[name])) validation[name] = source[name];
+        });
+        ['pattern', 'format', 'message'].forEach((name) => {
+            if (typeof source[name] === 'string' && source[name].trim()) validation[name] = source[name];
+        });
+        if (source.unique === true) validation.unique = true;
+        return validation;
+    },
+
+    /** Projects optional field contribution metadata for effective-schema review. */
+    buildFieldOrigin: function (moduleName, name, property, override, schema, config) {
+        let origins = config.fieldOrigins || schema.fieldOrigins || {};
+        let origin = override.origin || property.origin || origins[name] || {};
+        let schemaOrigin = config.origin || schema.origin || {};
+        return {
+            source: origin.source || 'MODULE',
+            moduleName: origin.moduleName || schemaOrigin.moduleName || moduleName,
+            layer: origin.layer || '',
+            status: origin.status || 'EFFECTIVE',
+        };
     },
 
     /**

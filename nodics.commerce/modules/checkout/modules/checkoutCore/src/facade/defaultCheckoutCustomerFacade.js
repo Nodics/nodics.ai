@@ -52,5 +52,8 @@ module.exports = {
      * @returns {*} Result defined by the owning module contract.
      * @override Later-loaded modules may replace this member through the standard merge contract.
      */
+    /** Reads a customer-owned completed checkout. */
+    status:function(request){return SERVICE.DefaultCheckoutOperationService.status(this.applyContext(request));},
+    /** Applies customer ownership context before invoking the loader-composed Checkout placement operation. */
     place: function (request) { return Promise.resolve().then(() => SERVICE.DefaultCheckoutOperationService.place(this.applyContext(request))); }
 };

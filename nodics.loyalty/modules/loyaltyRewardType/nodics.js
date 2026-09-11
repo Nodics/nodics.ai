@@ -11,9 +11,11 @@
 
 /** @module loyaltyRewardType @description Declares the lifecycle boundary for loyaltyRewardType. @layer module @owner loyaltyRewardType @override Later active modules may override lifecycle behavior without modifying this boundary. */
 module.exports = {
+    /** Completes the module initialization hook without creating business records. */
     init: function (options) {
         return Promise.resolve(true);
     },
+    /** Completes the post-initialization hook without starting an independent runtime. */
     postInit: function (options) {
         return Promise.resolve(true);
     }

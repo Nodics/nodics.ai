@@ -41,3 +41,11 @@ This file gives AI coding agents mandatory guidance for this Nodics module or pa
   Publish labels, tabs, form fields, listings, role choices, and endpoints from
   Profile configuration/BackOffice capability metadata; Axis may add generic
   renderers and transport plumbing, but must not hardcode the business journey.
+
+Application/domain modules own channel-entry policy and journey continuation.
+Profile owns generic proof, links and session issuance. Preserve the one-use
+browser handoff and cookie boundary; never let a domain route issue or relay
+refresh credentials. Generic account-form normalization and identity construction
+belong in the existing Profile registration service/pipeline.
+
+External launch proof freshness is checked at session issuance. Continuing a channel journey uses the Profile-issued opaque externalIdentityLinkCode claim plus live link/account validation; never extend proof age globally or trust body-supplied bindings.

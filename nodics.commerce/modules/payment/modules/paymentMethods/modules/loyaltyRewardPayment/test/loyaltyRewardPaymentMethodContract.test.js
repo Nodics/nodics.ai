@@ -30,6 +30,7 @@ test('Loyalty reward payment method prepares provider-neutral reward evidence', 
         cartCode: 'cart-1',
         walletCode: 'wallet-1',
         rewardAmount: '25.00',
+        amount:'25.00', currency:'POINTS',
         idempotencyKey: 'checkout-1:payment',
         correlationId: 'corr-1'
     });
@@ -44,5 +45,5 @@ test('Loyalty reward payment method prepares provider-neutral reward evidence', 
 
 test('Loyalty reward payment method requires wallet and amount', () => {
     assert.throws(() => method.prepare({ tenant: 'default', amount: '1.00' }), /walletCode is required/);
-    assert.throws(() => method.prepare({ tenant: 'default', walletCode: 'wallet-1' }), /rewardAmount is required/);
+    assert.throws(() => method.prepare({ tenant: 'default', walletCode: 'wallet-1' }), /calculated amount is required/);
 });

@@ -9,7 +9,7 @@
 
  */
 
-const _ = require('lodash');
+const _ = require("lodash");
 
 /**
  * @module nodics.platform/modules/profile/src/controller/customer/DefaultCustomerController
@@ -19,30 +19,44 @@ const _ = require('lodash');
  * @override Project modules may override this behavior through later active modules while preserving the published capability contract.
  */
 module.exports = {
-    /**
-     * Initializes  behavior for the module runtime.
-     *
-     * @param {*} options Method input.
-     * @returns {*} Method result.
-     */
-    init: function (options) {
-        return new Promise((resolve, reject) => {
-            resolve(true);
-        });
-    },
-    /**
-     * Runs post-initialization behavior after the module runtime is available.
-     *
-     * @param {*} options Method input.
-     * @returns {*} Method result.
-     */
-    postInit: function (options) {
-        return new Promise((resolve, reject) => {
-            resolve(true);
-        });
-    },
+  /** Registers an allowlisted account form through Profile normalization and its existing governed signup facade; returns no credential or recursive customer data. */
+  registerForm: function (request, callback) {
+    const promise = Promise.resolve()
+      .then(() => {
+        request.model = SERVICE.DefaultCustomerRegistrationService.formModel(
+          request.httpRequest.body || {},
+        );
+        return FACADE.DefaultCustomerFacade.signUp(request);
+      })
+      .then(() => ({ code: "SUC_PRFL_00000", result: { registered: true } }));
+    if (!callback) return promise;
+    promise.then((result) => callback(null, result)).catch(callback);
+  },
 
-    /**
+  /**
+   * Initializes  behavior for the module runtime.
+   *
+   * @param {*} options Method input.
+   * @returns {*} Method result.
+   */
+  init: function (options) {
+    return new Promise((resolve, reject) => {
+      resolve(true);
+    });
+  },
+  /**
+   * Runs post-initialization behavior after the module runtime is available.
+   *
+   * @param {*} options Method input.
+   * @returns {*} Method result.
+   */
+  postInit: function (options) {
+    return new Promise((resolve, reject) => {
+      resolve(true);
+    });
+  },
+
+  /**
 
      * Validates customer exist rules.
 
@@ -56,20 +70,22 @@ module.exports = {
 
      */
 
-    isCustomerExist: function (request, callback) {
-        request = _.merge(request, request.httpRequest.body || {});
-        if (callback) {
-            FACADE.DefaultCustomerFacade.isCustomerExist(request).then(success => {
-                callback(null, success);
-            }).catch(error => {
-                callback(error);
-            });
-        } else {
-            return FACADE.DefaultCustomerFacade.isCustomerExist(request);
-        }
-    },
+  isCustomerExist: function (request, callback) {
+    request = _.merge(request, request.httpRequest.body || {});
+    if (callback) {
+      FACADE.DefaultCustomerFacade.isCustomerExist(request)
+        .then((success) => {
+          callback(null, success);
+        })
+        .catch((error) => {
+          callback(error);
+        });
+    } else {
+      return FACADE.DefaultCustomerFacade.isCustomerExist(request);
+    }
+  },
 
-    /**
+  /**
 
      * Executes sign up behavior.
 
@@ -83,16 +99,18 @@ module.exports = {
 
      */
 
-    signUp: function (request, callback) {
-        request.model = request.httpRequest.body;
-        if (callback) {
-            FACADE.DefaultCustomerFacade.signUp(request).then(success => {
-                callback(null, success);
-            }).catch(error => {
-                callback(error);
-            });
-        } else {
-            return FACADE.DefaultCustomerFacade.signUp(request);
-        }
+  signUp: function (request, callback) {
+    request.model = request.httpRequest.body;
+    if (callback) {
+      FACADE.DefaultCustomerFacade.signUp(request)
+        .then((success) => {
+          callback(null, success);
+        })
+        .catch((error) => {
+          callback(error);
+        });
+    } else {
+      return FACADE.DefaultCustomerFacade.signUp(request);
     }
+  },
 };

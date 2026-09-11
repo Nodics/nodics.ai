@@ -139,6 +139,7 @@ module.exports = {
             cartCode: request.cartCode,
             productCode: payload.productCode,
             variantCode: payload.variantCode,
+            priceQuoteCode: payload.priceQuoteCode,
             sku: sku,
             quantity: String(payload.quantity),
             status: 'ACTIVE',

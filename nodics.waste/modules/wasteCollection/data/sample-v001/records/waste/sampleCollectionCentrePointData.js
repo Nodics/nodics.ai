@@ -26,7 +26,10 @@ const centres = [
     ['EFATE_RIGGAT_AL_BUTEEN', 'EFATE - Riggat Al Buteen'],
     ['EFATE_DUBAI_MARINA', 'EFATE - Dubai Marina'],
     ['EFATE_AL_QUOZ', 'EFATE - Al Quoz'],
-    ['EFATE_AL_QUOZ_1', 'EFATE - Al Quoz 1']
+    ['EFATE_AL_QUOZ_1', 'EFATE - Al Quoz 1'],
+    ['DU_TELECOM_DIAC', 'DU Telecom - Dubai International Academic City'],
+    ['DU_HQ_DUBAI_HILLS', 'DU HQ - Dubai Hills'],
+    ['AL_HAWAI_RESIDENCE_BARSHA_HEIGHTS', 'Al-Hawai Residence - Barsha Heights']
 ];
 
 const operatorEnterpriseRef = {

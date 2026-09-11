@@ -939,63 +939,133 @@ module.exports = {
     "searchMetadata": "axisDocsSearchpageaxisdocsmetadataschemaworkbench",
     "headings": [
       {
+        "text": "Guided Business Record Creation",
+        "anchor": "schema-workbench-1-guided-business-record-creation",
+        "level": 2
+      },
+      {
+        "text": "Enterprise, Addresses, Contacts and Users",
+        "anchor": "schema-workbench-2-enterprise-addresses-contacts-and-users",
+        "level": 3
+      },
+      {
+        "text": "Save, Retry and Cancellation",
+        "anchor": "schema-workbench-3-save-retry-and-cancellation",
+        "level": 3
+      },
+      {
+        "text": "Customize Form Layout in a Project",
+        "anchor": "schema-workbench-4-customize-form-layout-in-a-project",
+        "level": 3
+      },
+      {
+        "text": "Customize an Owning Create Operation",
+        "anchor": "schema-workbench-5-customize-an-owning-create-operation",
+        "level": 3
+      },
+      {
+        "text": "Customize the Follow-up Journey",
+        "anchor": "schema-workbench-6-customize-the-follow-up-journey",
+        "level": 3
+      },
+      {
+        "text": "Verification and Reference Patterns",
+        "anchor": "schema-workbench-7-verification-and-reference-patterns",
+        "level": 3
+      },
+      {
+        "text": "Staged Authoring and Online Inspection",
+        "anchor": "schema-workbench-8-staged-authoring-and-online-inspection",
+        "level": 2
+      },
+      {
+        "text": "Business-user Journey",
+        "anchor": "schema-workbench-9-business-user-journey",
+        "level": 3
+      },
+      {
+        "text": "Published Is Not Just an Online Collection",
+        "anchor": "schema-workbench-10-published-is-not-just-an-online-collection",
+        "level": 3
+      },
+      {
+        "text": "Customize and Extend Safely",
+        "anchor": "schema-workbench-11-customize-and-extend-safely",
+        "level": 3
+      },
+      {
         "text": "Implemented frontend behavior",
-        "anchor": "schema-workbench-1-implemented-frontend-behavior",
+        "anchor": "schema-workbench-12-implemented-frontend-behavior",
         "level": 2
       },
       {
         "text": "Request ownership",
-        "anchor": "schema-workbench-2-request-ownership",
+        "anchor": "schema-workbench-13-request-ownership",
         "level": 2
       },
       {
         "text": "Successful behavior",
-        "anchor": "schema-workbench-3-successful-behavior",
+        "anchor": "schema-workbench-14-successful-behavior",
         "level": 2
       },
       {
         "text": "Unauthorized or invalid behavior",
-        "anchor": "schema-workbench-4-unauthorized-or-invalid-behavior",
+        "anchor": "schema-workbench-15-unauthorized-or-invalid-behavior",
         "level": 2
       },
       {
         "text": "Boundary and responsive behavior",
-        "anchor": "schema-workbench-5-boundary-and-responsive-behavior",
+        "anchor": "schema-workbench-16-boundary-and-responsive-behavior",
         "level": 2
       },
       {
         "text": "Failure and recovery",
-        "anchor": "schema-workbench-6-failure-and-recovery",
+        "anchor": "schema-workbench-17-failure-and-recovery",
         "level": 2
       },
       {
         "text": "Customize and extend safely",
-        "anchor": "schema-workbench-7-customize-and-extend-safely",
+        "anchor": "schema-workbench-18-customize-and-extend-safely",
         "level": 2
       },
       {
         "text": "Notifications & Messaging workspace",
-        "anchor": "schema-workbench-8-notifications-messaging-workspace",
+        "anchor": "schema-workbench-19-notifications-messaging-workspace",
         "level": 2
       },
       {
         "text": "Compliance Management workspace",
-        "anchor": "schema-workbench-9-compliance-management-workspace",
+        "anchor": "schema-workbench-20-compliance-management-workspace",
         "level": 2
       },
       {
         "text": "Verification",
-        "anchor": "schema-workbench-10-verification",
+        "anchor": "schema-workbench-21-verification",
         "level": 2
       },
       {
         "text": "Common mistakes",
-        "anchor": "schema-workbench-11-common-mistakes",
+        "anchor": "schema-workbench-22-common-mistakes",
         "level": 2
       }
     ],
-    "diagrams": [],
+    "diagrams": [
+      {
+        "language": "mermaid"
+      },
+      {
+        "language": "mermaid"
+      }
+    ],
     "visualAssets": [
+      {
+        "kind": "table",
+        "title": "Situation, Result and business action"
+      },
+      {
+        "kind": "table",
+        "title": "Record class, Default selection, Generic mutation"
+      },
       {
         "kind": "table",
         "title": "Workbench area, Business purpose, Axis behavior, Backend authority"
@@ -1011,8 +1081,8 @@ module.exports = {
     ],
     "sourceRepository": "nodics.platform",
     "sourcePath": "docs/pages/schema-workbench.md",
-    "sourceChecksum": "ae0af42ccfd2d3f0c27062b1ac59344a8eb045efb72d05b8767c7fbd2deee6e4",
-    "sourceWordCount": 3065,
+    "sourceChecksum": "6f5cb80baa3d07b39abcab782ad12f69a0cdc1a1f63c207d0247e1569518b57b",
+    "sourceWordCount": 5155,
     "audience": [
       "business-user",
       "administrator",

@@ -11,14 +11,14 @@
 
 'use strict';
 
-/** @module locationMap/data/init-v001/records/location/defaultLocationMapProviderConfigurationData @description Provides default startup Location Map provider configuration records for Axis map consumers. @layer data @owner locationMap @override Projects may override or extend these initializer records through layered import data rather than editing framework defaults. */
+/** @module locationMap/data/init-v001/records/location/defaultLocationMapProviderConfigurationData @description Provides default startup Location Map provider configuration records for all application consumers. @layer data @owner locationMap @override Projects may override or extend these initializer records through layered import data rather than editing framework defaults. */
 module.exports = {
     record0: {
         active: true,
         code: 'AXIS_COLLECTION_CENTRE_MAPBOX_STREETS',
-        name: { en: 'Axis Collection Centre Mapbox Streets' },
+        name: { en: 'Shared Collection Centre Map' },
         providerCode: 'MAPBOX',
-        surfaceCode: 'AXIS',
+        surfaceCode: 'SHARED',
         usageCode: 'COLLECTION_CENTRE_MAP',
         stylePresetCode: 'MAPBOX_STREETS',
         styleUrl: 'mapbox://styles/mapbox/streets-v12',
@@ -48,7 +48,7 @@ module.exports = {
         code: 'AXIS_COLLECTION_CENTRE_OSM_HOT',
         name: { en: 'Axis Collection Centre OpenStreetMap Humanitarian' },
         providerCode: 'OSM',
-        surfaceCode: 'AXIS',
+        surfaceCode: 'FALLBACK',
         usageCode: 'COLLECTION_CENTRE_MAP',
         stylePresetCode: 'OSM_HOT',
         styleUrl: 'https://a.tile.openstreetmap.fr/hot/{z}/{x}/{y}.png',

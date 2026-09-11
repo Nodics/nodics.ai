@@ -1,19 +1,43 @@
-# eWaste Agents
+# eWaste agent contract
 
-Follow the root Nodics AI agent contract before changing this boundary:
+Follow the root-to-leaf contracts before editing:
 
-- Follow the repository agent contract: `../../../../../AGENTS.md`.
-- Follow the Waste accelerator umbrella contract: `../../AGENTS.md`.
-- Follow the common Waste framework contract: `../../../../../nodics.waste/AGENTS.md`.
-- Follow global AI guidance: `../../../../../nodics.foundation/modules/nSetup/llm/ai-enablement-index.md`.
+- Repository: `../../../../../AGENTS.md`.
+- Waste accelerator umbrella: `../../AGENTS.md`.
+- Common Waste framework: `../../../../../nodics.waste/AGENTS.md`.
+- Global guidance: `../../../../../nodics.foundation/modules/nSetup/llm/ai-enablement-index.md`.
 
-`eWaste` owns reusable electronic-waste preset data and guidance over
-`nodics.waste`. It contributes records into common Waste schemas such as
-`wasteFamily`, `wasteCategory`, `wasteItemType`, `wasteMaterialType`,
-`wasteEvidencePolicy`, `wasteImpactMetric`, `wasteImpactProfile`, and
-`wasteCollectionAcceptanceRule`.
+This is the single electronic-waste domain accelerator. It owns reusable e-waste
+preset data and journey orchestration over existing framework operations.
+Generic Waste schemas/lifecycles/persistence belong in nodics.waste. Do not create
+parallel submissions, assets, receipts, wallets, coupons or locations here.
 
-Do not create parallel schemas such as `eWasteSubmission`, `eWasteReceipt`,
-`eWasteReward`, or `eWasteCollectionCenter`. Do not define I2E rewards,
-`i2eCredits`, partner vendors, coupon marketplace behavior, Mapbox providers,
-or recycler/logistics adapters here.
+Keep app branding, page composition, app identity, site registration/contact
+adapters, sample valuation and project provider choices in later customer modules.
+Do not add an application-named accelerator beside eWaste for the same domain.
+Use CONFIG.eWaste for reusable defaults and configurable service/policy seams;
+never reference a customer-named service directly from reusable source.
+
+Retain authorization, trusted request context, revisions, idempotency and ledger
+references. Customer bodies cannot select a service or replace authenticated
+identity. Project controllers may reuse DefaultEWasteRequestService with a
+server-owned adapter name. Reward ledgers, Commerce records and media stay behind
+their owning operations. Reference data changes require manifest regeneration.
+
+Run module tests and umbrella composition tests. A route/module relocation also
+requires consumer updates, runtime discovery validation and connected acceptance.
+
+Partners customize their own project modules only. eWaste and nodics.waste source
+remain Nodics-owned dependencies; propose reusable enhancements through the
+separate Nodics contribution/request and release channel. Apply the universal
+`../../../../../nodics.foundation/modules/nSetup/llm/contracts/customer-project-mode-contract.md`.
+
+Channel-entry policy, account-form fallback, authenticated linking orchestration
+and origin-to-journey mapping belong here. Reuse Profile proof/link APIs and its
+one-use browser handoff; never issue tokens, duplicate identity persistence or
+place application codes in accelerator source. Keep generic registration rules
+in Profile and customer presentation/adapters in their project.
+
+Own Electronics BackOffice navigation and view properties here. Register the concrete eWaste provider and attach to `wasteCore:waste-operations`; do not copy the generic group or contribute Clothing placeholders. Shared renderer selection is declarative `backendWorkspace` data.
+
+WARM electronics is an optional provider over Waste Impact; see `llm/contracts/README.md`. Versioned factors, weight ranges and potential-treatment assumptions are saved. Operator history/reassessment/acceptance use Waste-owned operations; changing providers never overwrites an old assessment or reward.

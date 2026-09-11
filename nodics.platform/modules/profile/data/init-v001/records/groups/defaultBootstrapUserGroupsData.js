@@ -97,8 +97,17 @@ module.exports = {
       "commerce.fulfillment.read",
       "commerce.fulfillment.return",
       "waste.backoffice.view",
+      "media.customer.read",
       "waste.submission.create",
       "waste.submission.transition",
+      "profile.scope.read",
+      "waste.review.queue.read",
+      "waste.review.evidence.read",
+      "waste.verification.record",
+      "waste.review.approve",
+      "waste.audit.read",
+      "waste.marketplace.moderate",
+
       "waste.collectionPoint.acceptance.check",
       "waste.collectionCentre.search",
       "waste.impact.calculate",
@@ -153,6 +162,7 @@ module.exports = {
     active: true,
     parentGroups: ["userGroup"],
     permissions: [
+      "media.customer.upload",
       "engagement.customer.read",
       "engagement.testimonial.customer.read",
       "engagement.testimonial.customer.withdraw",
@@ -173,8 +183,10 @@ module.exports = {
       "commerce.promotion.own",
       "commerce.digital.own.read",
       "commerce.digital.own.reveal",
+      "commerce.digital.own.claim",
       "commerce.lifecycle.own.create",
       "waste.collectionCentre.search",
+      "media.customer.read",
       "waste.submission.create",
       "waste.asset.own.read",
       "waste.asset.marketplace.project",
@@ -404,6 +416,7 @@ module.exports = {
     active: true,
     parentGroups: ["userGroup"],
     permissions: [
+      "communication.request",
       "auth.internal.token.read",
       "auth.internal.token.read.anyTenant",
       "import.init.run",
@@ -414,6 +427,8 @@ module.exports = {
       "engagement.review.syndication.import",
       "communication.callback.receive",
       "commerce.payment.callback.receive",
+      "loyalty.wallet.open",
+      "loyalty.rewards.earn",
       "loyalty.wallet.read",
       "loyalty.rewards.reserve",
       "loyalty.rewards.capture",
@@ -421,8 +436,17 @@ module.exports = {
       "loyalty.rewards.reverse",
       "location.location.read",
       "location.location.search",
+      "media.customer.read",
       "waste.submission.create",
       "waste.submission.transition",
+      "profile.scope.read",
+      "waste.review.queue.read",
+      "waste.review.evidence.read",
+      "waste.verification.record",
+      "waste.review.approve",
+      "waste.audit.read",
+      "waste.marketplace.moderate",
+
       "waste.collectionPoint.acceptance.check",
       "waste.collectionCentre.search",
       "waste.impact.calculate",
@@ -509,8 +533,17 @@ module.exports = {
     permissions: [
       "waste.backoffice.view",
       "waste.collectionCentre.search",
+      "media.customer.read",
       "waste.submission.create",
       "waste.submission.transition",
+      "profile.scope.read",
+      "waste.review.queue.read",
+      "waste.review.evidence.read",
+      "waste.verification.record",
+      "waste.review.approve",
+      "waste.audit.read",
+      "waste.marketplace.moderate",
+
       "waste.collectionPoint.acceptance.check",
       "waste.impact.calculate",
       "waste.asset.create",
@@ -616,4 +649,23 @@ module.exports = {
       "publish.lifecycle.requestApproval",
     ],
   },
+};
+
+/** Appends granular operational groups from the canonical identity targets. */
+Object.values(require("./defaultWasteOperationalUserGroupsData")).forEach(
+  (group, index) => {
+    module.exports["wasteOperational" + index] = group;
+  },
+);
+
+/** Materializes the enterprise merchant role from canonical nAuth permissions. */
+const merchantTarget =
+  require("../../../../../../../nodics.foundation/modules/nAuth/config/properties")
+    .identityGovernance.migration.groupTargets.commerceMerchantUserGroup;
+module.exports.commerceMerchant = {
+  code: "commerceMerchantUserGroup",
+  name: "commerceMerchantUserGroup",
+  active: true,
+  parentGroups: merchantTarget.parentGroups,
+  permissions: merchantTarget.permissions,
 };

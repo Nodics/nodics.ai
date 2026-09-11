@@ -4,6 +4,15 @@ This folder keeps AI/developer contract reminders for the Media module. Public, 
 
 ## Contract Boundary
 
+`POST /photos/encoded` supports bounded customer-authenticated JSON intake for
+domain orchestration that validates an image before persistence. It accepts
+only image bytes, MIME type, original filename and an idempotency key. Media
+selects the owner, folder, storage key and generated identity. Replay is scoped
+to the resolved customer and checks the original content checksum. The route
+uses an explicit bounded JSON limit; storage still goes through the existing
+customer upload and provider services. No domain analysis or approval is owned
+by Media, and a failed domain analysis must not call this endpoint.
+
 Media owns asset metadata, source context, provider configuration, storage root resolution, generated storage keys, delivery access policy, publication transfer, reference lookup, and media-set contracts.
 
 ## AI Guidance
@@ -29,3 +38,10 @@ Run media contract tests and documentation validation after changing this contra
 npm --prefix nodics.docs test
 npm run quality:docs
 ```
+
+Internal evidence reads accept customer originals after domain authorization.
+They may also read non-customer PUBLIC media with an allowed
+`media.evidenceRead.publicPreviewMimeTypes` MIME type, returning bounded inline
+bytes and `previewType: PUBLIC_MEDIA`. This does not grant customer-photo routes
+access to application/private assets. Storage keys stay internal; callers
+render public SVG only as an image, never injected markup.

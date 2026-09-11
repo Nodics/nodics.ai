@@ -8,6 +8,12 @@ This module owns generic import mechanics. Functional modules own their data mea
 
 ## Developer Notes
 
+- Managed-counter `saveAll` data files omit technical revisions. The importer
+  captures each record's original token through generated reads and generated
+  CRUD initializes/increments it. Same-request retries retain that snapshot;
+  concurrent edits fail for review. Business versions and release checksum
+  rules remain unchanged. Other operations on managed schemas fail explicitly.
+
 - Add import headers, processors, validators, and adapters in the owning module or project layer.
 - Keep import runs idempotent and auditable.
 - Do not send local filesystem paths from Axis; use governed upload/media references.

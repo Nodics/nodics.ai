@@ -1,5 +1,8 @@
 # Digital Commerce Agents
 
+Follow the parent contract: `../../AGENTS.md`.
+Follow global guidance: `../../../nodics.foundation/modules/nSetup/llm/ai-enablement-index.md`.
+
 Digital Commerce adapts normal Commerce checkout for digital products. It must not own product catalog, price, payment, order, or promotion source data.
 
 - Product remains the sellable catalog authority.

@@ -21,6 +21,7 @@
  */
 
 const assert = require('assert');
+const workbenchDefaults = require('../config/properties').schemaWorkbench;
 const routerDefinitions = require('../src/router/routers');
 const generatedRouterDefinitions = require('../../../nRouter/src/router/routers');
 
@@ -72,7 +73,20 @@ const profileModule = {
                 password: { type: 'string' },
                 accessGroups: { type: 'array' },
                 created: { type: 'date', required: true },
-                type: { enum: ['HOME', 'OFFICE'], required: true },
+                type: {
+                    enum: ['HOME', 'OFFICE'],
+                    enumOptions: [
+                        { value: 'HOME', label: 'Home address' },
+                        { value: 'OFFICE', label: 'Office address', description: 'Business location' },
+                    ],
+                    required: true,
+                },
+                verificationStatus: {
+                    type: 'string',
+                    enum: ['UNVERIFIED', 'PENDING', 'VERIFIED', 'REJECTED', 'STALE'],
+                    default: 'UNVERIFIED',
+                    validation: { message: 'Choose the current address verification state' },
+                },
                 contacts: {
                     type: 'array',
                     label: 'Contact methods',
@@ -200,7 +214,7 @@ global.CONFIG = {
             return {
                 discoverModelsByDefault: true,
                 defaultModelOperations: ['search', 'read', 'create', 'update', 'delete'],
-                defaultRelationshipActions: ['SELECT_EXISTING', 'CREATE_RELATED'],
+                defaultRelationshipActions: workbenchDefaults.defaultRelationshipActions,
                 defaultMutationMode: 'GENERATED_CRUD',
                 defaultPageSize: 25,
                 allowedPageSizes: [10, 25, 50],
@@ -238,7 +252,8 @@ global.SERVICE = {
         update: (input) => {
             lastUpdateInput = input;
             return Promise.resolve({
-                models: [Object.assign({}, input.query, input.model)],
+                code: 'SUC_UPD_00000',
+                result: { matchedCount: 1, modifiedCount: 1, models: [Object.assign({}, input.query, input.model)] },
             });
         },
     },
@@ -368,10 +383,20 @@ global.SERVICE.DefaultSchemaWorkbenchService = service;
     assert(!descriptor.fields.some((field) => field.name === 'accessGroups'), 'access policy fields must not be projected');
     assert.strictEqual(descriptor.fields.find((field) => field.name === 'created').readOnly, true);
     assert.strictEqual(descriptor.fields.find((field) => field.name === 'type').type, 'string');
+    assert.strictEqual(
+        service.resolveFieldComponent('name', { type: 'object' }, {}, {}),
+        'localizedText',
+        'localized business text fields must not be advertised as generic JSON',
+    );
+    assert.strictEqual(
+        service.resolveFieldComponent('presentation', { type: 'object' }, {}, {}),
+        'json',
+        'generic structured object fields must still be advertised as JSON',
+    );
     assert.deepStrictEqual(descriptor.displayProperties, ['code']);
     assert.deepStrictEqual(descriptor.queryCapabilities, {
         searchableFields: ['code'],
-        sortableFields: ['code', 'tenant', 'enterpriseCode', 'created', 'type'],
+        sortableFields: ['code', 'tenant', 'enterpriseCode', 'created', 'type', 'verificationStatus'],
         filterFields: [
             {
                 field: 'code',
@@ -408,6 +433,13 @@ global.SERVICE.DefaultSchemaWorkbenchService = service;
                 operators: ['EQUALS', 'NOT_EQUALS', 'IN'],
                 enum: ['HOME', 'OFFICE'],
             },
+            {
+                field: 'verificationStatus',
+                label: 'Verification Status',
+                type: 'string',
+                operators: ['EQUALS', 'NOT_EQUALS', 'IN'],
+                enum: ['UNVERIFIED', 'PENDING', 'VERIFIED', 'REJECTED', 'STALE'],
+            },
         ],
         groupOperators: ['AND', 'OR'],
         textOperator: 'CONTAINS',
@@ -424,6 +456,7 @@ global.SERVICE.DefaultSchemaWorkbenchService = service;
         targetSchema: 'contact',
         cardinality: 'MANY',
         referenceProperty: 'code',
+        component: 'multiReferenceSelector',
         resolution: 'LOCAL_OR_REMOTE',
         actions: ['SELECT_EXISTING', 'CREATE_RELATED'],
         required: false,
@@ -435,6 +468,107 @@ global.SERVICE.DefaultSchemaWorkbenchService = service;
         cycleHandling: 'SELECT_EXISTING',
         deleteImpactAvailable: false,
     });
+    assert.deepStrictEqual(
+        descriptor.fields.find((field) => field.name === 'contacts').reference,
+        descriptor.relationships[0],
+        'object and array field descriptors must carry reference schema metadata for business guidance rendering',
+    );
+    assert.deepStrictEqual(
+        {
+            origin: descriptor.origin,
+            hierarchy: descriptor.hierarchy,
+            mutationPolicy: descriptor.mutationPolicy,
+        },
+        {
+            origin: {
+                source: 'MODULE',
+                moduleName: 'profile',
+                layer: 'EFFECTIVE',
+                status: 'EFFECTIVE',
+            },
+            hierarchy: [
+                {
+                    source: 'MODULE',
+                    moduleName: 'profile',
+                    schemaName: undefined,
+                    layer: '',
+                    status: 'EFFECTIVE',
+                },
+            ],
+            mutationPolicy: {
+                mode: 'GENERATED_CRUD',
+                savePath: 'GENERATED_CRUD',
+                lifecycle: 'DIRECT',
+                createStrategy: 'TOP_LEVEL_WITH_REFERENCES',
+                updateStrategy: 'DIRECT_OR_REFERENCED',
+                deleteStrategy: 'TOP_LEVEL_ONLY',
+                aggregateSave: false,
+                publishRequired: false,
+            },
+        },
+        'schema descriptor must advertise backend-owned origin and mutation policy metadata',
+    );
+    assert.deepStrictEqual(
+        descriptor.fields.find((field) => field.name === 'type'),
+        {
+            name: 'type',
+            label: 'Type',
+            type: 'string',
+            required: true,
+            readOnly: false,
+            primary: false,
+            description: '',
+            enum: ['HOME', 'OFFICE'],
+            enumOptions: [
+                { value: 'HOME', label: 'Home address', description: '', disabled: false },
+                { value: 'OFFICE', label: 'Office address', description: 'Business location', disabled: false },
+            ],
+            default: undefined,
+            fixedValue: undefined,
+            component: 'select',
+            validation: {},
+            origin: {
+                source: 'MODULE',
+                moduleName: 'profile',
+                layer: '',
+                status: 'EFFECTIVE',
+            },
+            searchable: false,
+        },
+        'enum fields must include backend component and option metadata for Axis dropdown rendering',
+    );
+    assert.deepStrictEqual(
+        descriptor.fields.find((field) => field.name === 'verificationStatus'),
+        {
+            name: 'verificationStatus',
+            label: 'Verification Status',
+            type: 'string',
+            required: false,
+            readOnly: false,
+            primary: false,
+            description: '',
+            enum: ['UNVERIFIED', 'PENDING', 'VERIFIED', 'REJECTED', 'STALE'],
+            enumOptions: [
+                { value: 'UNVERIFIED', label: 'UNVERIFIED', description: '', disabled: false },
+                { value: 'PENDING', label: 'PENDING', description: '', disabled: false },
+                { value: 'VERIFIED', label: 'VERIFIED', description: '', disabled: false },
+                { value: 'REJECTED', label: 'REJECTED', description: '', disabled: false },
+                { value: 'STALE', label: 'STALE', description: '', disabled: false },
+            ],
+            default: 'UNVERIFIED',
+            fixedValue: undefined,
+            component: 'select',
+            validation: { message: 'Choose the current address verification state' },
+            origin: {
+                source: 'MODULE',
+                moduleName: 'profile',
+                layer: '',
+                status: 'EFFECTIVE',
+            },
+            searchable: false,
+        },
+        'schema defaults and validation hints must be backend projected for Workbench forms',
+    );
     profileModule.rawSchema.enterprise.refSchema = {
         tenant: {
             enabled: true,
@@ -452,8 +586,8 @@ global.SERVICE.DefaultSchemaWorkbenchService = service;
     ).data;
     assert.deepStrictEqual(
         enterpriseDescriptor.relationships[0].actions,
-        ['SELECT_EXISTING', 'CREATE_RELATED'],
-        'relationships inherit configurable create-related support unless a schema narrows it',
+        ['SELECT_EXISTING', 'CREATE_RELATED', 'EDIT_RELATED', 'UNLINK'],
+        'relationships inherit editing and association removal while explicit schema overrides still narrow the actions',
     );
     assert.deepStrictEqual(descriptor.bulkCapabilities, {
         operations: ['DELETE'],
@@ -585,6 +719,7 @@ global.SERVICE.DefaultSchemaWorkbenchService = service;
             enterpriseCode: 1,
             created: 1,
             type: 1,
+            verificationStatus: 1,
             contacts: 1,
         },
         'record search must project only descriptor-safe Workbench fields',
@@ -649,6 +784,20 @@ global.SERVICE.DefaultSchemaWorkbenchService = service;
         lastUpdateInput.model,
         { type: 'HOME', tenant: 'default', enterpriseCode: 'agora' },
         'Workbench update must preserve owner identity while filling runtime scope',
+    );
+    assert.deepStrictEqual(
+        service.buildMutationModel(
+            { code: 'AXIS-FIXED', channel: 'operator-value' },
+            {
+                fields: [
+                    { name: 'code' },
+                    { name: 'channel', fixedValue: 'BACKOFFICE' },
+                ],
+            },
+            { tenant: 'default', authData: {} },
+        ),
+        { code: 'AXIS-FIXED', channel: 'BACKOFFICE' },
+        'Workbench mutation must enforce descriptor fixed values server-side instead of trusting browser input',
     );
     let employeeDescriptor = (
         await service.get(

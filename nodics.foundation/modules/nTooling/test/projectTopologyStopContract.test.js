@@ -53,7 +53,10 @@ function reservePort() {
 function createProject(port) {
     const projectRoot = fs.mkdtempSync(path.join(os.tmpdir(), 'nodics-topology-stop-'));
     fs.mkdirSync(path.join(projectRoot, 'generated/local-topology'), { recursive: true });
-    fs.writeFileSync(path.join(projectRoot, 'nodics.project.json'), JSON.stringify({
+    fs.writeFileSync(path.join(projectRoot, 'package.json'), JSON.stringify({ name: 'stop-test.project' }));
+    fs.mkdirSync(path.join(projectRoot, 'envs/local'), { recursive: true });
+    fs.writeFileSync(path.join(projectRoot, 'envs/local/nodics.environment.json'), JSON.stringify({
+        environment: 'testLocal',
         topology: {
             environment: 'testLocal',
             stateDirectory: 'generated/local-topology',

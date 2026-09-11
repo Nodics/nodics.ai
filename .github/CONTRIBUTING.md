@@ -3,6 +3,17 @@
 Before changing code, read `AGENTS.md` from root-to-leaf and then the nearest
 module `README.md`, `AGENTS.md`, and contract files under `modules/nSetup/llm`.
 
+## Partner and maintainer authority
+
+The [customer project contract](../nodics.foundation/modules/nSetup/llm/contracts/customer-project-mode-contract.md)
+applies to every partner implementation. Partners write only to customer-owned
+repositories and submit reusable framework or accelerator proposals through the
+separate Nodics contribution/request channel agreed for their engagement.
+Nodics owns review, generalization, implementation and release. This contributing
+guide does not grant a partner write access to `nodics.ai` or permission to patch
+installed framework source. Framework changes require an authorized Nodics
+maintainer scope.
+
 ## Pre-implementation readiness
 
 Every change must answer:

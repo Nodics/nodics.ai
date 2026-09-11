@@ -60,11 +60,16 @@ mode:
   scan, audit, modify, regenerate, or rerun framework-wide quality gates merely
   to re-prove Nodics principles.
 
-Application-developer mode may inspect or modify Nodics framework source only
-when the developer explicitly requests it. If the working mode is not stated,
-infer it from ownership of the requested change and keep the verification scope
-to the smallest owned boundary. This scope rule is mandatory for token and
-execution efficiency; it does not weaken validation of project code.
+Application-developer mode follows
+[customer-project-mode-contract.md](contracts/customer-project-mode-contract.md).
+Partners write only to customer-owned repositories and consume framework and
+accelerator source as immutable dependencies. Targeted read-only inspection of
+available source may explain a supported contract; it grants no write authority.
+Reusable enhancements go to Nodics through the separate contribution/request
+channel for Nodics-owned review and release. Framework-maintainer work requires
+an explicitly authorized Nodics task, separate from the partner application task.
+If the working mode is not stated, infer it from ownership of the requested
+change and keep verification scoped to the smallest owned boundary.
 
 Load detailed files only when their subject is affected:
 

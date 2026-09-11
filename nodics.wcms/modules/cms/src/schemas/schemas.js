@@ -200,6 +200,7 @@ module.exports = {
             refSchema: {
                 catalog: {
                     enabled: true,
+                    moduleName: "catalog",
                     schemaName: "catalog",
                     type: 'one',
                     propertyName: 'code',
@@ -787,7 +788,7 @@ module.exports = {
             cache: { enabled: true, ttl: 10000 },
             search: { enabled: false, idPropertyName: 'code' },
             refSchema: {
-                contentCatalog: { enabled: true, schemaName: 'catalog', type: 'one', propertyName: 'code', searchEnabled: true },
+                contentCatalog: { enabled: true, moduleName: 'catalog', schemaName: 'catalog', type: 'one', propertyName: 'code', searchEnabled: true },
                 site: { enabled: true, schemaName: 'cmsSite', type: 'one', propertyName: 'code', searchEnabled: true },
                 defaultNavigation: { enabled: true, schemaName: 'cmsDocumentationNavigation', type: 'one', propertyName: 'code', searchEnabled: true }
             },
@@ -1174,14 +1175,14 @@ module.exports = {
             router: { enabled: false },
             event: { enabled: false },
             definition: {
-                migrationVersion: { type: 'int', required: true },
-                status: { type: 'string', required: true },
-                tenant: { type: 'string', required: true },
-                requestedBy: { type: 'string', required: false },
-                preview: { type: 'object', required: false },
-                snapshot: { type: 'object', required: false },
-                result: { type: 'object', required: false },
-                correlationId: { type: 'string', required: false }
+                migrationVersion: { type: 'int', required: true , description: 'Stores the numeric migration version used by this record.'},
+                status: { type: 'string', required: true , description: 'Tracks the lifecycle state that controls whether this record can be used in business processes.'},
+                tenant: { type: 'string', required: true , description: 'Identifies the runtime tenant partition that scopes this record.'},
+                requestedBy: { type: 'string', required: false , description: 'Stores the requested by value used by this record.'},
+                preview: { type: 'object', required: false , description: 'Stores structured preview details used by this record.'},
+                snapshot: { type: 'object', required: false , description: 'Stores structured snapshot details used by this record.'},
+                result: { type: 'object', required: false , description: 'Stores structured result details used by this record.'},
+                correlationId: { type: 'string', required: false , description: 'Stores the correlation identifier used to correlate this record.'}
             }
         },
         cmsPublicationManifest: {
@@ -1194,15 +1195,15 @@ module.exports = {
             event: { enabled: false },
             definition: {
                 publicationCode: { type: 'string', required: true, description: 'Owning nPublish request identity' },
-                rootType: { type: 'string', required: true },
-                rootCode: { type: 'string', required: true },
-                sourceVersion: { type: 'string', required: true },
+                rootType: { type: 'string', required: true , description: 'Classifies this record by root type for validation and business handling.'},
+                rootCode: { type: 'string', required: true , description: 'Stores the root code used to classify, link, or resolve this record.'},
+                sourceVersion: { type: 'string', required: true , description: 'Stores the source version value used by this record.'},
                 dependencies: { type: 'array', required: true, description: 'Frozen schema, code, and version identities' },
                 snapshot: { type: 'object', required: true, description: 'Immutable client-safe CMS delivery graph' },
                 mediaAssets: { type: 'array', required: false, description: 'Checksum-verified referenced media metadata; transfer bytes are not persisted' },
                 contentHash: { type: 'string', required: true, description: 'Deterministic manifest integrity identifier' },
-                createdBy: { type: 'string', required: false },
-                correlationId: { type: 'string', required: false }
+                createdBy: { type: 'string', required: false , description: 'Identifies the principal that created this record.'},
+                correlationId: { type: 'string', required: false , description: 'Stores the correlation identifier used to correlate this record.'}
             }
         },
         cmsOnlinePublicationPointer: {
@@ -1215,16 +1216,16 @@ module.exports = {
             router: { enabled: false },
             event: { enabled: false },
             definition: {
-                site: { type: 'string', required: true },
-                path: { type: 'string', required: true },
-                locale: { type: 'string', required: true },
-                channel: { type: 'string', required: true },
-                accessMode: { type: 'string', required: true },
-                manifestCode: { type: 'string', required: true },
-                previousManifestCode: { type: 'string', required: false },
-                revision: { type: 'int', required: true, default: 0 },
-                activatedBy: { type: 'string', required: false },
-                correlationId: { type: 'string', required: false }
+                site: { type: 'string', required: true , description: 'Stores the site value used by this record.'},
+                path: { type: 'string', required: true , description: 'Stores the path value used by this record.'},
+                locale: { type: 'string', required: true , description: 'Stores the locale code used for language, formatting, and regional behavior.'},
+                channel: { type: 'string', required: true , description: 'Stores the channel value used by this record.'},
+                accessMode: { type: 'string', required: true , description: 'Stores the access mode value used by this record.'},
+                manifestCode: { type: 'string', required: true , description: 'Stores the manifest code used to classify, link, or resolve this record.'},
+                previousManifestCode: { type: 'string', required: false , description: 'Stores the previous manifest code used to classify, link, or resolve this record.'},
+                revision: { type: 'int', required: true, default: 0 , description: 'Tracks the business revision used for governance, review, and optimistic update checks.'},
+                activatedBy: { type: 'string', required: false , description: 'Stores the activated by value used by this record.'},
+                correlationId: { type: 'string', required: false , description: 'Stores the correlation identifier used to correlate this record.'}
             },
             indexes: {
                 composite: {
@@ -1245,15 +1246,15 @@ module.exports = {
             router: { enabled: false },
             event: { enabled: false },
             definition: {
-                publicationCode: { type: 'string', required: true },
-                manifestCode: { type: 'string', required: true },
-                sourceVersion: { type: 'string', required: true },
-                operation: { type: 'string', required: true, enum: ['DEPLOY', 'ROLLBACK', 'WITHDRAW'] },
-                status: { type: 'string', required: true, enum: ['ONLINE'] },
-                targetVersion: { type: 'string', required: true },
-                previousOnlineVersion: { type: 'string', required: false },
-                operationKey: { type: 'string', required: false },
-                correlationId: { type: 'string', required: false }
+                publicationCode: { type: 'string', required: true , description: 'Stores the publication code used to classify, link, or resolve this record.'},
+                manifestCode: { type: 'string', required: true , description: 'Stores the manifest code used to classify, link, or resolve this record.'},
+                sourceVersion: { type: 'string', required: true , description: 'Stores the source version value used by this record.'},
+                operation: { type: 'string', required: true, enum: ['DEPLOY', 'ROLLBACK', 'WITHDRAW'] , description: 'Selects the operation value used to drive validation, filtering, and business behavior.'},
+                status: { type: 'string', required: true, enum: ['ONLINE'] , description: 'Tracks the lifecycle state that controls whether this record can be used in business processes.'},
+                targetVersion: { type: 'string', required: true , description: 'Stores the target version value used by this record.'},
+                previousOnlineVersion: { type: 'string', required: false , description: 'Stores the previous online version value used by this record.'},
+                operationKey: { type: 'string', required: false , description: 'Stores the operation key value used by this record.'},
+                correlationId: { type: 'string', required: false , description: 'Stores the correlation identifier used to correlate this record.'}
             }
         },
         cmsPublicationEventOutbox: {
@@ -1265,21 +1266,34 @@ module.exports = {
             router: { enabled: false },
             event: { enabled: false },
             definition: {
-                publicationCode: { type: 'string', required: true },
-                manifestCode: { type: 'string', required: true },
-                operation: { type: 'string', required: true, enum: ['DEPLOY', 'ROLLBACK', 'WITHDRAW'] },
-                operationKey: { type: 'string', required: false },
-                sequence: { type: 'int', required: true, default: 0 },
-                eventType: { type: 'string', required: true },
-                status: { type: 'string', required: true, enum: ['PENDING', 'PROCESSING', 'DELIVERED', 'FAILED'] },
-                attempts: { type: 'int', required: true, default: 0 },
-                leaseToken: { type: 'string', required: false },
-                leaseUntil: { type: 'string', required: false },
-                correlationId: { type: 'string', required: false },
-                deliveredAt: { type: 'string', required: false },
-                lastAttemptAt: { type: 'string', required: false },
-                failureCode: { type: 'string', required: false }
+                publicationCode: { type: 'string', required: true , description: 'Stores the publication code used to classify, link, or resolve this record.'},
+                manifestCode: { type: 'string', required: true , description: 'Stores the manifest code used to classify, link, or resolve this record.'},
+                operation: { type: 'string', required: true, enum: ['DEPLOY', 'ROLLBACK', 'WITHDRAW'] , description: 'Selects the operation value used to drive validation, filtering, and business behavior.'},
+                operationKey: { type: 'string', required: false , description: 'Stores the operation key value used by this record.'},
+                sequence: { type: 'int', required: true, default: 0 , description: 'Stores the numeric sequence used by this record.'},
+                eventType: { type: 'string', required: true , description: 'Classifies this record by event type for validation and business handling.'},
+                status: { type: 'string', required: true, enum: ['PENDING', 'PROCESSING', 'DELIVERED', 'FAILED'] , description: 'Tracks the lifecycle state that controls whether this record can be used in business processes.'},
+                attempts: { type: 'int', required: true, default: 0 , description: 'Stores the numeric attempts used by this record.'},
+                leaseToken: { type: 'string', required: false , description: 'Stores the lease token value used by this record.'},
+                leaseUntil: { type: 'string', required: false , description: 'Stores the lease until value used by this record.'},
+                correlationId: { type: 'string', required: false , description: 'Stores the correlation identifier used to correlate this record.'},
+                deliveredAt: { type: 'string', required: false , description: 'Records when the delivered event or value applies.'},
+                lastAttemptAt: { type: 'string', required: false , description: 'Records when the last attempt event or value applies.'},
+                failureCode: { type: 'string', required: false , description: 'Stores the failure code used to classify, link, or resolve this record.'}
             }
         }
     }
 };
+
+// Effective schema metadata owns authoring eligibility; runtime names are not lifecycle rules.
+for (const name of ['cmsTypeCode', 'cmsTypeCode2Renderer', 'cmsComponentTypeGroup', 'cmsSite',
+    'cmsComponentDetail', 'cmsPage', 'cmsComponent', 'cmsComponentLocalization', 'cmsComponentMedia',
+    'cmsPageRoute', 'cmsNavigationNode', 'cmsPageTemplate', 'cmsSlotDefinition', 'cmsRestrictionType', 'cmsRestriction']) {
+    const schema = module.exports.cms[name];
+    schema.backoffice = Object.assign({}, schema.backoffice, {
+        mutationPolicy: { lifecycle: 'PUBLISHABLE', publishRequired: true },
+    });
+}
+for (const name of ['cmsPublicationManifest', 'cmsOnlinePublicationPointer', 'cmsPublicationDeploymentReceipt', 'cmsPublicationEventOutbox']) {
+    module.exports.cms[name].backoffice = { mutationMode: 'READ_ONLY', operations: ['search', 'read'] };
+}

@@ -84,11 +84,12 @@ module.exports = {
     },
 
     /** Publishes one Product through Product-owned search publication. @param {Object} request Nodics request. @param {Object} product Product. @param {Array} localizations Localizations. @param {Array} variants Variants. @param {string} storeCode Store code. @returns {Promise<Object>} Publication result. */
-    publishOne: function (request, product, localizations, variants, storeCode) {
+    publishOne: function (request, product, localizations, variants, storeCode, store) {
         return SERVICE.DefaultProductSearchPublicationService.publish(request, {
             product: product,
             localizations: localizations,
             storeCode: storeCode,
+            currency: store && store.defaultCurrency,
             categoryCodes: this.categoryCodes(localizations),
             variantCodes: variants.map(variant => variant.code),
             variants: variants
@@ -99,6 +100,11 @@ module.exports = {
     publishSearch: async function (request, input) {
         let policy = this.policy(), storeCode = input.storeCode || policy.defaultStoreCode;
         if (!storeCode) throw new Error('Store code is required for Product search publication');
+        let store;
+        if (SERVICE.DefaultStoreService && typeof SERVICE.DefaultStoreService.get === 'function') {
+            store = this.records(await SERVICE.DefaultStoreService.get({tenant:request.tenant,authData:request.authData,
+                query:{code:storeCode,status:'ACTIVE'},searchOptions:{pageSize:1,pageNumber:1}}))[0];
+        }
         let products = await this.loadProducts(request, input || {});
         let localizations = await this.loadLocalizations(request, products);
         let variants = await this.loadVariants(request, products);
@@ -106,7 +112,7 @@ module.exports = {
         for (let product of products) {
             let productLocalizations = localizations.filter(item => item.productCode === product.code);
             let productVariants = variants.filter(item => item.productCode === product.code);
-            results.push(await this.publishOne(request, product, productLocalizations, productVariants, storeCode));
+            results.push(await this.publishOne(request, product, productLocalizations, productVariants, storeCode, store));
         }
         let summary = {
             tenant: request.tenant, storeCode: storeCode,

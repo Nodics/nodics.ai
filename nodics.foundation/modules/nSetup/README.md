@@ -26,8 +26,7 @@ Current contents:
 
 - `llm/`: tool-neutral guidance taxonomy for AI-assisted Nodics development.
   Permanent rules live in `llm/contracts` and `llm/standards`; procedures live
-  in `llm/playbooks`; reusable rubrics live in `llm/templates`; historical
-  phase/refactor material lives in `llm/records`.
+  in `llm/playbooks`; reusable rubrics live in `llm/templates`.
 - `package.json`: machine-readable setup package metadata with runtime loading disabled.
 - `nodics.js`: no-op lifecycle file retained only for module-shape consistency.
 - `config/properties.js`, `config/prescripts.js`, `config/postscripts.js`: no-op config files retained only for module-shape consistency.
@@ -45,6 +44,14 @@ and templates before making code changes.
 
 If an AI tool automatically scans the repository, this folder should be treated as the canonical instruction source for Nodics development behavior.
 
+## Partner implementation contract
+
+Every partner and application team follows
+[the customer project contract](llm/contracts/customer-project-mode-contract.md).
+It defines framework, domain accelerator and customer ownership, project-only
+writes, supported customization, and the separate Nodics contribution and
+release process. nTooling's principle audit checks its discovery and core clauses.
+
 ## Runtime Boundary
 
 Do not add runtime module behavior here unless `nSetup` is intentionally promoted into the active module hierarchy with a clear startup contract.
@@ -54,3 +61,5 @@ Do not include `nSetup` in server/module startup lists.
 Do not place generated build artifacts in `nSetup`.
 
 The config module has a test that protects this rule: `modules/nConfig/test/nonRuntimePackageDiscovery.test.js`.
+
+UI and navigation ownership follows the [module contribution contract](llm/contracts/module-owned-ui-contribution-contract.md), including independent accelerator subtrees and typed native workspace bindings.

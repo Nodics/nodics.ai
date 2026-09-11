@@ -1,0 +1,36 @@
+{
+  "name": "bidding",
+  "version": "0.0.0",
+  "index": "70.23",
+  "private": true,
+  "main": "nodics.js",
+  "description": "Generic Commerce bid negotiation and accepted purchase terms.",
+  "nodics": {
+    "kind": "capability",
+    "displayName": "Bidding",
+    "runtimeModule": true,
+    "loadableByNodicsModuleLoader": true,
+    "owns": [
+      "configuration",
+      "schema",
+      "router",
+      "controller",
+      "service",
+      "test",
+      "llm"
+    ],
+    "runtime": {
+      "router": true,
+      "publish": false,
+      "web": false
+    }
+  },
+  "requiredModules": [
+    "product",
+    "pricing",
+    "checkoutCore"
+  ],
+  "scripts": {
+    "test": "node --test test/*.test.js"
+  }
+}

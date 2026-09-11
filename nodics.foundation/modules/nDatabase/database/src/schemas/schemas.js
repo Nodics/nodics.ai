@@ -35,7 +35,7 @@ module.exports = {
                     type: 'bool',
                     required: true,
                     default: true,
-                    description: 'Flag to check if tenant is still active',
+                    description: 'Indicates whether this record is active and available for use.',
                     searchOptions: {
                         enabled: true, // default is false
                     }
@@ -43,7 +43,7 @@ module.exports = {
                 description: {
                     type: 'string',
                     required: false,
-                    description: 'Description of the property',
+                    description: 'Explains the business purpose, usage, or administrative meaning of this record.',
                     searchOptions: {
                         enabled: true, // default is false
                     }
@@ -108,7 +108,7 @@ module.exports = {
                     type: 'string',
                     required: true,
                     primary: true,
-                    description: 'To uniquely identify a perticuller item',
+                    description: 'Uniquely identifies this record when it is linked from other records or used in imports and integrations.',
                     searchOptions: {
                         enabled: true, // default is false
                     }

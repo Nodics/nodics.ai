@@ -10,6 +10,23 @@ This file gives AI coding agents mandatory guidance for this Nodics module or pa
 
 ## Module Work Rules
 
+- Derive business form sections, copy and managed-create fields from the
+  effective schema's existing `backoffice.form`. Append project-added fields,
+  omit deleted fields and prohibit hiding required input without a declared
+  owning CREATE aggregate. Preserve generic-create enforcement and the contract
+  in `llm/contracts/schema-workbench-business-forms.md`.
+
+- Resolve generic publication authoring from effective `backoffice` lifecycle
+  metadata and the existing runtime role through `DefaultSchemaAuthoringPolicyService`.
+  Publishable sources require Staged; owner-managed projections are read-only to
+  generic APIs. Preserve owning publication/import service paths and the contract
+  in `llm/contracts/schema-authoring-authority.md`. Never infer from counters.
+
+- Generated CRUD owns technical counters only when effective
+  `backoffice.concurrency.managed` is true. Preserve original tokens, scoped
+  atomic provider writes, no-op behavior, and stable 409/428 errors. Never infer
+  managed ownership from a field name or take over `versionId`/domain counters.
+
 - Treat this directory as a layered Nodics module boundary when it contains `package.json`.
 - Keep capabilities stable and make implementations replaceable through the module hierarchy.
 - Do not hardcode project, environment, server, node, tenant, or customer behavior into reusable framework code.

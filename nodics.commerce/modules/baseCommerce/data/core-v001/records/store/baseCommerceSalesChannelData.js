@@ -20,7 +20,6 @@ module.exports = {
         name: 'Web Storefront',
         channelType: 'WEB',
         status: 'ACTIVE',
-        revision: 1,
         active: true
     }
 };

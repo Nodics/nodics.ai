@@ -225,6 +225,10 @@ module.exports = {
         ['code', 'collectionPointType', 'operatingStatus', 'publicVisibility', 'status'].forEach(field => {
             if (filters[field] !== undefined && filters[field] !== '') query[field] = filters[field];
         });
+        if (filters.active !== undefined) {
+            if (typeof filters.active !== 'boolean') this.fail('ERR_WASTE_COLLECTION_CENTRE_ACTIVE_FILTER_INVALID', 'Active must be a boolean');
+            query.active = filters.active;
+        }
         if (filters.operatorEnterpriseCode) query['operatorEnterpriseRef.code'] = filters.operatorEnterpriseCode;
         if (filters.assetOwnerEnterpriseCode) query['assetOwnerEnterpriseRef.code'] = filters.assetOwnerEnterpriseCode;
         if (filters.locationCode) query['locationRef.code'] = filters.locationCode;

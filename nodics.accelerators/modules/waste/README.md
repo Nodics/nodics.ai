@@ -9,13 +9,13 @@ recycling, circular economy, battery waste, textile waste, and industrial waste.
 Partner projects consume those presets and add their own policies, journeys,
 branding, provider adapters, reward formulas, and seed data.
 
-`eWaste` contributes reusable e-waste taxonomy and policy presets.
+`eWaste` contributes reusable e-waste taxonomy, policy presets and domain journey orchestration.
 `wasteRecycling` contributes provider-neutral recycler/logistics handoff
 contracts that connect Waste donation events to Movement and Compliance
 references without owning any concrete provider integration.
-`circa.eWaste` composes those contracts into the reusable Nodics Circa backend
-application layer. The matching reusable frontend will live in `nodics.exp` as
-`nodics.circa.eWaste`.
+Application branding, website composition and deployment-specific adapters belong
+in customer backend modules. Circa consumes eWaste through its customer module
+and the separate `nodics.circa.eWaste` frontend.
 
 ## Partner Customization
 
@@ -35,8 +35,7 @@ nodics.waste
   -> nodics.accelerators/modules/waste
     -> modules/eWaste
     -> modules/wasteRecycling
-    -> modules/circa.eWaste
-      -> project overlay such as kickoffWaste
+      -> customer backend overlay and application composition
 ```
 
 Runtime initialization must preserve that order. For Kickoff, the Waste server

@@ -1,5 +1,13 @@
 # Publication Authority Contract
 
+Generic authoring does not confer publication authority. Effective source schemas
+declare `backoffice.mutationPolicy.publishRequired` and generic mutation APIs
+require the existing runtime's STAGED publication role. Projection/pointer/receipt
+schemas declare read-only generic authoring. This is enforced by nDatabase and
+nController, without changing trusted nPublish provider writes. Online source
+collections are not an active Published view: consumers must inspect the owning
+domain's authoritative projection and activation evidence.
+
 `nPublish` is the sole generic authority for Staged/Online lifecycle states,
 transition validation, publication requests, publication audit, activation and
 rollback orchestration. Domain modules contribute adapters; versioned database

@@ -14,11 +14,13 @@ const UTILS = require('../../../loyaltyCore/src/utils/utils');
 
 /** @module loyaltyWallet/src/service/defaultLoyaltyWalletOwnerService @description Validates runtime-neutral wallet ownership identity. @layer service @owner loyaltyWallet @override Later modules may extend owner types while preserving ownerType/ownerCode contract. */
 module.exports = {
+    /** Throws the owning operation error and stops processing; callers retain responsibility for recovery. */
     fail: function (code, message) {
         let error = typeof CLASSES !== 'undefined' && CLASSES.NodicsError ? new CLASSES.NodicsError(code, message) : new Error(message);
         error.code = code;
         throw error;
     },
+    /** Validates supported wallet owner type and code while rejecting misplaced business/runtime ownership fields. */
     normalize: function (owner) {
         owner = owner || {};
         let ownerType = UTILS.normalizeCode(owner.ownerType);

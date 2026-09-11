@@ -933,7 +933,12 @@
       ],
       "sourceEvidence": [
         "docs/catalogue.json",
-        "docs/pages/framework/modular-architecture.md"
+        "docs/pages/framework/modular-architecture.md",
+        "../nodics.foundation/modules/nSetup/llm/contracts/module-group-participation-contract.md",
+        "../nodics.foundation/modules/nSetup/llm/contracts/nodics-principles.md",
+        "../nodics.foundation/modules/nTooling/test/functionalModuleOptionalityContract.test.js",
+        "../nodics.platform/modules/backoffice/config/properties.js",
+        "../nodics.platform/modules/backoffice/test/functionalModuleLifecyclePagination.test.js"
       ],
       "maturityState": "operational",
       "implementationState": "current",
@@ -9869,7 +9874,11 @@
         "../nodics.platform/modules/backoffice/src/service/registry/defaultBackofficeCapabilityRegistryService.js",
         "../nodics.platform/modules/backoffice/src/service/registry/defaultBackofficeRegistryStoreService.js",
         "../nodics.platform/modules/backoffice/src/service/discovery/defaultBackofficeDiscoveryService.js",
-        "../nodics.platform/modules/backoffice/test/backofficeRegistryRouteContract.test.js"
+        "../nodics.platform/modules/backoffice/test/backofficeRegistryRouteContract.test.js",
+        "../nodics.platform/modules/backoffice/src/service/registry/defaultFunctionalModuleCatalogueService.js",
+        "../nodics.platform/modules/backoffice/src/service/registry/defaultBackofficeRegistryService.js",
+        "../nodics.platform/modules/backoffice/test/navigationModuleAvailability.test.js",
+        "../nodics.waste/modules/wasteCore/src/service/defaultWasteBackofficeCapabilityService.js"
       ],
       "maturityState": "operational",
       "implementationState": "current",
@@ -11753,7 +11762,9 @@
         "../nodics.foundation/modules/nTooling/",
         "../nodics.foundation/modules/nTooling/bin/",
         "../nodics.foundation/modules/nTooling/contracts/applicationBuilder/",
-        "../nodics.foundation/modules/nTooling/test/"
+        "../nodics.foundation/modules/nTooling/test/",
+        "../nodics.foundation/modules/nTooling/src/service/project/defaultProjectTopologyService.mjs",
+        "../nodics.foundation/modules/nTooling/test/projectTopologyIsolationContract.test.js"
       ],
       "maturityState": "operational",
       "implementationState": "current",
@@ -12375,6 +12386,103 @@
         "configuration-table",
         "code-example",
         "troubleshooting-matrix"
+      ]
+    },
+    {
+      "id": "waste.impact-providers",
+      "functionalModule": "nodics.waste",
+      "technicalModule": "wasteImpact",
+      "title": "Waste impact providers and mock carbon estimates",
+      "summary": "Configure illustrative carbon calculations, preserve provenance, and replace the mock through the standard provider and configuration hierarchy.",
+      "locale": "en",
+      "content": "docs/pages/nodics.waste/impact-providers.md",
+      "slug": "waste-impact-providers",
+      "parentId": "framework-architecture-and-design.modularity-and-ownership",
+      "hierarchyPath": [
+        "Nodics Documentation",
+        "Framework Architecture and Design",
+        "Modularity and Ownership",
+        "Waste impact providers and mock carbon estimates"
+      ],
+      "hierarchyDepth": 4,
+      "navigationSection": "Framework Architecture and Design",
+      "navigationSectionCode": "framework-architecture-and-design",
+      "navigationSectionOrder": 30,
+      "navigationGroup": "Modularity and Ownership",
+      "navigationGroupCode": "modularity-and-ownership",
+      "navigationGroupOrder": 10,
+      "navigationSubgroup": null,
+      "navigationSubgroupCode": null,
+      "navigationOrder": 90,
+      "documentType": "how-to",
+      "audience": [
+        "business",
+        "architect",
+        "administrator",
+        "developer",
+        "operator",
+        "qa",
+        "ai-tool"
+      ],
+      "businessAudience": [
+        "business user",
+        "administrator",
+        "implementation partner"
+      ],
+      "technicalAudience": [
+        "architect",
+        "developer",
+        "operator",
+        "qa engineer",
+        "ai tool"
+      ],
+      "sourceOwner": "nodics.docs",
+      "sourcePath": "docs/pages/nodics.waste/impact-providers.md",
+      "visibility": "public",
+      "channel": [
+        "axis",
+        "nexus",
+        "web"
+      ],
+      "accessMode": "PUBLIC",
+      "publiclyAvailable": true,
+      "requiresAuthentication": false,
+      "allowedRoles": [],
+      "allowedGroups": [],
+      "allowedPermissions": [],
+      "lifecycleState": "ONLINE",
+      "version": "0.16.8",
+      "relatedPages": [
+        "framework.modular-architecture",
+        "framework.customization-guide"
+      ],
+      "sourceEvidence": [
+        "docs/pages/nodics.waste/impact-providers.md",
+        "../nodics.waste/modules/wasteImpact/config/properties.js",
+        "../nodics.waste/modules/wasteImpact/src/service/defaultWasteImpactCalculationService.js",
+        "../nodics.waste/modules/wasteImpact/src/service/defaultWasteImpactMockProviderService.js",
+        "../nodics.waste/modules/wasteImpact/test/wasteImpactProviderContract.test.js"
+      ],
+      "maturityState": "operational",
+      "implementationState": "current",
+      "renderingComponent": "documentation.component.article",
+      "searchKeywords": [
+        "waste",
+        "carbon",
+        "impact",
+        "provider",
+        "mock",
+        "configuration"
+      ],
+      "topicKeywords": [
+        "Waste",
+        "Carbon estimates",
+        "Impact providers"
+      ],
+      "visualRequirements": [
+        "architecture-diagram",
+        "table",
+        "diagram"
       ]
     }
   ],

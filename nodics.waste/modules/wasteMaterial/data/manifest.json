@@ -1,0 +1,32 @@
+{
+    "contractVersion": 2,
+    "module": "wasteMaterial",
+    "sections": {
+        "core-v001": {
+            "kind": "DATA_RELEASE",
+            "dataType": "core",
+            "sourceRoot": "core-v001",
+            "version": "0.0.0",
+            "description": "Waste Material core data",
+            "files": {
+                "core-v001/headers/material/wasteMaterialCoreHeader.js": "f2c58cc0ebb315d13ef005b4f45f686484b225a3580d26947e05669df79a992a",
+                "core-v001/records/material/wasteCategoryCoreData.js": "24274840c5398d2c75dd3bc32e5204489764968659d8dba5e6e3010c78d2b052",
+                "core-v001/records/material/wasteFamilyCoreData.js": "e75722b0c0eaefbdc8605a57e5dea62f6ba1a5d8469147ec3ead3f31eea851d4",
+                "core-v001/records/material/wasteItemTypeCoreData.js": "6e94c8be77fff399a77b9342610d210dcfd1503a49289f1acb992e031ed219d1",
+                "core-v001/records/material/wasteMaterialTypeCoreData.js": "d387c9bc6f56f6576371c9ca98f43d6e22efce5b9c4674b296422db30290ce52"
+            },
+            "displayName": "Generic Waste Taxonomy",
+            "owningDomain": "waste",
+            "lifecycle": "REFERENCE",
+            "destinationRole": "WASTE",
+            "environmentScope": [
+                "ALL"
+            ],
+            "sensitivity": "PUBLIC",
+            "versioningPolicy": "NONE",
+            "publicationPolicy": "NONE",
+            "initialPublicationPolicy": "NONE",
+            "removalPolicy": "RETAIN"
+        }
+    }
+}

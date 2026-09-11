@@ -35,13 +35,22 @@
                 "core-v001/records/waste/eWasteImpactProfileData.js": "40bc0e2e8cef4231d5e7d351603af7c043a0da724347ba407ed1b46ac26cae3c",
                 "core-v001/records/waste/eWasteItemTypeData.js": "b2c81dc3fc125c5c72500479016ace3912e3291c1070719fc1fda6c252701a4f",
                 "core-v001/records/waste/eWasteMarketplaceEligibilityPolicyData.js": "941361de90656a93927ccc96bf50da57c7250c1d7f0c943a74cb99f0ebd86054",
-                "core-v001/records/waste/eWasteMaterialTypeData.js": "cab02d21bade54da2e950a3defb1482ac778a430fc5c27f13fc41d5ec2c30a8e",
+                "core-v001/records/waste/eWasteMaterialTypeData.js": "dfef40493d2b1abde0fa8000f2f70848d605a2ab56896695080ead2f686e9fb5",
                 "core-v001/records/waste/eWasteReceiptPolicyData.js": "5d6002dc2805483ead98e1c05b0b740736f9a89e5681445897ad0a3fa643f19c",
                 "core-v001/records/waste/eWasteRewardSettlementPolicyData.js": "c3f606b22ae6dbaf31ae75d6fabd05c26ee5a0d41d58d71d7a21cbb9b0326023",
                 "core-v001/records/waste/eWasteVerificationPolicyData.js": "030e366068bf984e031b269190c41132a332e8c49488fcfb2063a69d49af07e5",
                 "core-v001/headers/waste/eWastePresetHeader.js": "395b31b52e07154c757b3c972b009ad5ca1e38f49ba613e689b26fafba287aa0"
             },
             "sourceRoot": "core-v001"
+        },
+        "backoffice-capability": {
+            "kind": "SOURCE_CONTRIBUTION",
+            "version": "0.0.0",
+            "description": "eWaste owned declarative BackOffice capability source; not an executable import.",
+            "sourceRoot": "backoffice",
+            "files": {
+                "backoffice/eWasteBackofficeCapabilityData.js": "eee55eee464aa87cfe893280be0552036b0b3549ce3128629ec9293803f3e8d9"
+            }
         }
     }
 }

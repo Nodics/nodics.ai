@@ -51,7 +51,7 @@ module.exports = {
     /** Returns a minimal projection safe for caller-module reference validation. */
     project: function (type, item) {
         if (type === 'MEDIA_SET') return { referenceType: type, code: item.code, mediaType: item.mediaType, businessPurpose: item.businessPurpose, status: item.status };
-        return { referenceType: type, code: item.code, folderCode: item.folderCode, formatCode: item.formatCode, providerCode: item.providerCode, access: item.access, mimeType: item.mimeType, extension: item.extension, sizeBytes: item.sizeBytes, businessPurpose: item.businessPurpose, enterpriseCode: item.enterpriseCode, ownerType: item.ownerType, ownerReference: item.ownerReference, reusable: item.reusable === true, retentionUntil: item.retentionUntil, legalHold: item.legalHold === true, status: item.status };
+        return { referenceType: type, code: item.code, folderCode: item.folderCode, formatCode: item.formatCode, providerCode: item.providerCode, access: item.access, mimeType: item.mimeType, extension: item.extension, sizeBytes: item.sizeBytes, businessPurpose: item.businessPurpose, enterpriseCode: item.enterpriseCode, ownerType: item.ownerType, ownerReference: item.ownerReference, checksum: item.checksum, originalFileName: item.originalFileName, reusable: item.reusable === true, retentionUntil: item.retentionUntil, legalHold: item.legalHold === true, status: item.status };
     },
     /** Performs local reference validation for co-hosted modules. */
     validateInternal: async function (request) {

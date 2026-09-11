@@ -11,6 +11,13 @@ This contract is the coding-specific companion to
 `ai-role-and-responsibility-contract.md`. The role contract defines how an AI
 tool thinks. This contract defines how it writes Nodics code.
 
+Apply [customer-project-mode-contract.md](customer-project-mode-contract.md)
+for every application or partner implementation. Partners edit customer-owned
+repositories only; Nodics owns framework and accelerator changes through the
+separate contribution/request and release process. Reuse potential does not
+change write authority. Classify capability, domain and application ownership
+before choosing an extension point.
+
 ## Core Rule
 
 Write code as if a partner will customize one small behavior tomorrow.
@@ -420,3 +427,7 @@ When coding work is complete, the AI must report:
 6. what tests were run;
 7. what documentation or AI guidance changed;
 8. any residual risk or missing validation.
+
+## Module-owned UI composition
+
+Apply [module-owned-ui-contribution-contract.md](module-owned-ui-contribution-contract.md) before placing navigation, component properties or workspace definitions. Generic owners publish shared anchors; accelerators contribute their own subtrees through existing registration. Visual placement never transfers data ownership.

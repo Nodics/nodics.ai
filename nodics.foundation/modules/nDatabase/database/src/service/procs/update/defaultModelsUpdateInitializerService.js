@@ -197,7 +197,10 @@ module.exports = {
      */
     executeQuery: function (request, response, process) {
         this.LOG.debug('Executing remove query');
-        request.schemaModel.updateItems(request).then(result => {
+        const concurrency = SERVICE.DefaultModelConcurrencyService;
+        const update = concurrency && concurrency.getField(request.schemaModel.rawSchema)
+            ? concurrency.execute(request, 'update') : request.schemaModel.updateItems(request);
+        update.then(result => {
             if (this.getAffectedCount(result) > 0) {
                 result.message = 'Items have been updated successfull';
             }
@@ -361,7 +364,8 @@ module.exports = {
         this.LOG.debug('Triggering event for modified model');
         try {
             let schemaModel = request.schemaModel;
-            if (response.success && response.success.result && response.success.result.models && response.success.result.models.length > 0 &&
+            if (response.success && response.success.result && this.getAffectedCount(response.success.result) > 0 &&
+                response.success.result.models && response.success.result.models.length > 0 &&
                 schemaModel.rawSchema.event && schemaModel.rawSchema.event.enabled) {
                 let event = {
                     tenant: request.tenant,

@@ -183,6 +183,7 @@ async function validateAsyncContracts() {
             }
         },
         DefaultUserStateService: {
+            findUserState: async () => ({locked: false}),
             save: function (request) {
                 persistedState = request.model;
                 return Promise.resolve(true);
@@ -228,7 +229,7 @@ async function validateAsyncContracts() {
     };
     global.SERVICE.DefaultEmployeeService = {
         findByLoginId: function () {
-            return Promise.resolve({ active: true, principalType: 'human', authVersion: 7, userGroupCodes: ['userGroup'], userGroupPermissions: ['profile.read'] });
+            return Promise.resolve({ active: true, password: {active: true}, principalType: 'human', authVersion: 7, userGroupCodes: ['userGroup'], userGroupPermissions: ['profile.read'] });
         }
     };
     global.CONFIG = configuration({ profileModuleName: 'profile', authSecurity: { refreshToken: { expiresInSeconds: 3600 } } });
@@ -425,3 +426,13 @@ validateAsyncContracts().then(() => {
     console.error(error);
     process.exitCode = 1;
 });
+
+// Only a bounded opaque customer binding may cross the access-token boundary.
+const externalLink = 'EID_' + 'a'.repeat(64);
+assert.strictEqual(authSecurity.buildPayload({principalType:'customer', externalIdentityLinkCode:externalLink}).externalIdentityLinkCode, externalLink);
+assert.strictEqual(authSecurity.buildPayload({principalType:'customer', proof:'private-launch', providerSubject:'42'}).externalIdentityLinkCode, undefined);
+for (const options of [
+    {principalType:'human'}, {principalType:'service'}, {principalType:'customer', tokenType:'service'},
+    {principalType:'customer', externalIdentityLinkCode:'https://untrusted.example'},
+    {principalType:'customer', externalIdentityLinkCode:'x'.repeat(129)},
+]) assert.throws(() => authSecurity.buildPayload({externalIdentityLinkCode:externalLink, ...options}), /External identity binding/);

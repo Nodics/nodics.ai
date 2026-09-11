@@ -32,7 +32,7 @@
       "identity": "nodics.process",
       "displayName": "Process",
       "type": "STANDARD",
-      "protected": true
+      "protected": false
     }
   },
   "scripts": {

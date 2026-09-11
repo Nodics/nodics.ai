@@ -54,6 +54,27 @@ module.exports = {
         request.schemaModel = this.getReceiptModel(request.tenant);
         return SERVICE.DefaultPipelineService.start('modelsGetInitializerPipeline', request, {});
     },
+    /** Reads all bounded pages before returning a catalogue or receipt projection; failures never return a partial result. */
+    getAllRecords: async function (request, receipts) {
+        let config = CONFIG.get('backofficeFunctionalModuleCatalogue') || {};
+        let pageSize = Number(config.eligibilityPageSize || CONFIG.get('defaultPageSize'));
+        if (!Number.isSafeInteger(pageSize) || pageSize < 1) {
+            throw new CLASSES.NodicsError('ERR_BOF_00000', 'Invalid functional-module eligibility page size');
+        }
+        let records = [];
+        let reader = receipts ? this.getReceiptRecords : this.getRecords;
+        for (let pageNumber = 1; ; pageNumber++) {
+            let response = await reader.call(this, Object.assign({}, request, {
+                searchOptions: { pageSize: pageSize, pageNumber: pageNumber,
+                    sort: receipts ? { packageCode: 1, code: 1 } : { functionalModule: 1, code: 1 } }
+            }));
+            if (!response || !Array.isArray(response.result)) {
+                throw new CLASSES.NodicsError('ERR_BOF_00000', 'Functional-module eligibility query failed');
+            }
+            records.push(...response.result);
+            if (response.result.length < pageSize) return records;
+        }
+    },
     /** Creates one private schema record through the standard model pipeline. */
     saveRecord: function (request) {
         request = Object.assign({}, request, { moduleName: 'backoffice' });
@@ -90,6 +111,13 @@ module.exports = {
         if (result.result) return this.getAffectedCount(result.result);
         return 0;
     },
+    /** Counts matched observations, including no-op writes with unchanged timestamps. */
+    getMatchedCount: function (response) {
+        let result = response && response.result !== undefined ? response.result : response;
+        if (result && typeof result.matchedCount === 'number') return result.matchedCount;
+        if (result && result.result) return this.getMatchedCount(result.result);
+        return this.getAffectedCount(response);
+    },
     /** Creates the stable project-scoped functional registration key. */
     getCode: function (project, functionalModule) { return String(project) + '::' + this.normalizeFunctionalModule(functionalModule); },
     /** Resolves deprecated functional identities to their canonical framework identity. */
@@ -106,7 +134,12 @@ module.exports = {
     },
     /** Returns stable sorted unique string values. */
     uniqueSorted: function (values) { return Array.from(new Set((values || []).map(String))).sort(); },
-    /** Returns stable module-owned activation package descriptors without allowing duplicate release codes. */
+    /** Identifies an activation release at its declared execution target. */
+    getActivationPackageKey: function (pack) {
+        return JSON.stringify([pack.code || pack.packageCode || '', pack.targetServer || '',
+            pack.targetModule || '', pack.targetDatabase || '']);
+    },
+    /** Deduplicates releases per execution target, not across independent runtimes. */
     normalizeActivationDataPackages: function (packages, ownerFallback) {
         let byCode = {};
         [].concat(packages || []).forEach(item => {
@@ -123,7 +156,7 @@ module.exports = {
             if (item.targetModule) normalized.targetModule = String(item.targetModule);
             if (item.targetServer) normalized.targetServer = String(item.targetServer);
             if (item.targetDatabase) normalized.targetDatabase = String(item.targetDatabase);
-            if (normalized.code) byCode[normalized.code] = normalized;
+            if (normalized.code) byCode[this.getActivationPackageKey(normalized)] = normalized;
         });
         return Object.keys(byCode).sort().map(code => byCode[code]);
     },
@@ -134,7 +167,9 @@ module.exports = {
         let modules = this.getActivationDataConfiguration().modules || {};
         let configured = [].concat((modules[this.normalizeFunctionalModule(functionalModule)] || {}).dataPackages || []);
         let observed = [].concat(record && record.activationDataPackages || []);
-        return this.normalizeActivationDataPackages(configured.concat(observed), functionalModule);
+        let configuredCodes = new Set(configured.map(pack => pack.code));
+        return this.normalizeActivationDataPackages(observed.filter(pack => !configuredCodes.has(pack.code))
+            .concat(configured), functionalModule);
     },
     /** Returns existing functional-module activation prerequisites. */
     getActivationDependencies: function (functionalModule) {
@@ -151,22 +186,27 @@ module.exports = {
         return 'core';
     },
     /** Creates the stable project-scoped activation receipt key. */
-    getReceiptKey: function (project, functionalModule, packageCode) {
-        return [String(project), this.normalizeFunctionalModule(functionalModule), String(packageCode)].join('::');
+    getReceiptKey: function (project, functionalModule, packageCode, pack) {
+        let key = [String(project), this.normalizeFunctionalModule(functionalModule), String(packageCode)].join('::');
+        if (!pack || ![pack.targetServer, pack.targetModule, pack.targetDatabase].some(Boolean)) return key;
+        return key + '::target::' + [pack.targetServer, pack.targetModule, pack.targetDatabase]
+            .map(value => encodeURIComponent(value || '')).join('::');
     },
     /** Loads durable receipt records for one project/module identity. */
     getActivationReceipts: async function (project, functionalModule, request) {
         let tenant = this.getTenant(request);
-        let response = await this.getReceiptRecords({ tenant: tenant,
+        return this.getAllRecords({ tenant: tenant,
             authData: this.getPersistenceAuthData(request && request.authData),
-            query: { projectCode: String(project), functionalModule: this.normalizeFunctionalModule(functionalModule) },
-            searchOptions: { limit: 256, sort: { packageCode: 1 } } });
-        return this.getItems(response);
+            query: { projectCode: String(project), functionalModule: this.normalizeFunctionalModule(functionalModule) } }, true);
     },
-    /** Loads durable receipts as a map by package code. */
+    /** Reads target-scoped receipts, including compatible historical unscoped record keys. */
     getActivationReceiptMap: async function (project, functionalModule, request) {
         let records = await this.getActivationReceipts(project, functionalModule, request).catch(() => []);
-        return Object.fromEntries(records.map(record => [record.packageCode, record]));
+        return records.reduce((map, record) => {
+            let key = this.getActivationPackageKey(Object.assign({}, record, { code: record.packageCode }));
+            if (!map[key] || new Date(record.lastAttemptAt || 0) >= new Date(map[key].lastAttemptAt || 0)) map[key] = record;
+            return map;
+        }, {});
     },
     /** Upserts one durable activation receipt without exposing nImport internals to Axis. */
     upsertActivationReceipt: async function (record, pack, status, context, details) {
@@ -174,9 +214,9 @@ module.exports = {
         let tenant = this.getTenant(context && context.request);
         let authData = this.getPersistenceAuthData(context && context.request && context.request.authData);
         let now = new Date();
-        let receiptKey = this.getReceiptKey(record.projectCode, record.functionalModule, pack.code);
+        let receiptKey = this.getReceiptKey(record.projectCode, record.functionalModule, pack.code, pack);
         let existing = await this.getReceiptRecords({ tenant: tenant, authData: authData, query: { code: receiptKey },
-            searchOptions: { limit: 1 } }).then(response => this.getItems(response)[0]).catch(() => undefined);
+            searchOptions: { pageSize: 1, pageNumber: 1 } }).then(response => this.getItems(response)[0]).catch(() => undefined);
         let model = {
             code: receiptKey, active: true, projectCode: record.projectCode,
             functionalModule: this.normalizeFunctionalModule(record.functionalModule), packageCode: pack.code,
@@ -195,18 +235,53 @@ module.exports = {
         let dependencies = this.getActivationDependencies(record.functionalModule);
         let states = [];
         for (let dependency of dependencies) {
-            let dependencyRecord = await this.getRecord(record.projectCode, dependency, request).catch(() => undefined);
-            states.push({
+            let lookupFailed = false;
+            let dependencyRecord = await this.getRecord(record.projectCode, dependency, request).catch(() => {
+                lookupFailed = true;
+                return undefined;
+            });
+            let state = {
                 functionalModule: dependency,
                 displayName: dependencyRecord && dependencyRecord.displayName || dependency,
-                registrationState: dependencyRecord && dependencyRecord.registrationState || 'UNAVAILABLE',
+                registrationState: dependencyRecord && dependencyRecord.registrationState || (lookupFailed ? 'UNKNOWN' : 'UNAVAILABLE'),
                 enabled: dependencyRecord && dependencyRecord.enabled === true,
                 runtimeState: dependencyRecord && dependencyRecord.runtimeState || 'OFFLINE',
-                satisfied: dependencyRecord && dependencyRecord.registrationState === 'REGISTERED' &&
-                    dependencyRecord.enabled === true && dependencyRecord.runtimeState === 'ACTIVE'
-            });
+                satisfied: Boolean(dependencyRecord && dependencyRecord.registrationState === 'REGISTERED' &&
+                    dependencyRecord.enabled === true && dependencyRecord.runtimeState === 'ACTIVE')
+            };
+            states.push(Object.assign(state, this.describeFunctionalDependency(state)));
         }
         return states;
+    },
+    /** Provides client-safe dependency reasons and recovery guidance; later layers may customize copy without changing eligibility. */
+    describeFunctionalDependency: function (state) {
+        let name = state.displayName;
+        if (state.satisfied) return { reason: 'Registered, activated, and running.', resolution: '' };
+        if (state.registrationState === 'UNKNOWN') return {
+            reason: 'The current status of ' + name + ' could not be checked.',
+            resolution: 'Retry the registry status check. If it still fails, ask an administrator to check the module registry.'
+        };
+        if (state.registrationState === 'UNAVAILABLE') return {
+            reason: name + ' has not been discovered in this project.',
+            resolution: 'Start the runtime that provides ' + name + ', then register and activate the module.'
+        };
+        let reasons = [];
+        let actions = [];
+        if (state.registrationState !== 'REGISTERED') {
+            reasons.push(name + ' is not registered.');
+            actions.push('Register and activate ' + name + '.');
+        } else if (!state.enabled) {
+            reasons.push(name + ' is registered but not activated.');
+            actions.push('Activate ' + name + '.');
+        }
+        if (state.runtimeState !== 'ACTIVE') {
+            let runtime = { OFFLINE: 'offline', DEGRADED: 'degraded', INCOMPATIBLE: 'incompatible' }[state.runtimeState] || 'not ready';
+            reasons.push('Its runtime is ' + runtime + '.');
+            actions.unshift(state.runtimeState === 'INCOMPATIBLE'
+                ? 'Ask an administrator to resolve the runtime compatibility issue.'
+                : 'Restore a healthy runtime for ' + name + '.');
+        }
+        return { reason: reasons.join(' '), resolution: actions.join(' ') };
     },
     /** Blocks activation when declared functional-module prerequisites are not active. */
     assertFunctionalDependenciesSatisfied: async function (record, request) {
@@ -233,7 +308,7 @@ module.exports = {
         if (['activate', 'dryRun'].includes(action) && record.runtimeState !== 'ACTIVE') blockedReasons.push('RUNTIME_NOT_ACTIVE');
         if (['activate', 'dryRun'].includes(action)) missingDependencies.forEach(item => blockedReasons.push('MISSING_DEPENDENCY:' + item));
         let receipts = packages.map(item => {
-            let persisted = receiptMap[item.code];
+            let persisted = receiptMap[this.getActivationPackageKey(item)];
             let status = persisted && persisted.status || 'NOT_APPLICABLE';
             let message = persisted && persisted.message;
             if (!persisted) {
@@ -248,7 +323,7 @@ module.exports = {
                 }
             }
             return Object.assign({}, item, {
-                receiptKey: this.getReceiptKey(record.projectCode, record.functionalModule, item.code),
+                receiptKey: this.getReceiptKey(record.projectCode, record.functionalModule, item.code, item),
                 status: status, idempotent: true,
                 executionMode: persisted && persisted.executionMode || (item.required && item.trigger === 'ACTIVATION' ? 'NIMPORT_RELEASE' : 'USER_TRIGGERED'),
                 releaseStatus: persisted && persisted.releaseStatus, importRunId: persisted && persisted.importRunId,
@@ -269,7 +344,7 @@ module.exports = {
         let requiredPending = receipts.some(item => item.required && item.status === 'PENDING_IMPORT');
         return {
             action: action, dryRun: dryRun, executionMode: receipts.some(item => item.executionMode === 'NIMPORT_RELEASE') ? 'NIMPORT_RELEASE' : 'USER_TRIGGERED',
-            readiness: blockedReasons.length ? 'BLOCKED' : failed ? 'DATA_FAILED' : running || requiredPending ? 'DATA_RUNNING' : 'READY',
+            readiness: blockedReasons.length || missingDependencies.length ? 'BLOCKED' : failed ? 'DATA_FAILED' : running || requiredPending ? 'DATA_RUNNING' : 'READY',
             preflight: { runtimeActive: record.runtimeState === 'ACTIVE', registered: record.registrationState === 'REGISTERED',
                 protectedModule: record.required === true, dependencies: dependencies, dependencyStates: dependencyStates,
                 missingDependencies: missingDependencies, blockedReasons: blockedReasons },
@@ -340,7 +415,7 @@ module.exports = {
         let tenant = this.getTenant(request);
         let response = await this.getRecords({ tenant: tenant,
             authData: this.getPersistenceAuthData(request && request.authData),
-            query: { code: String(project) + '::' + String(functionalModule) }, searchOptions: { limit: 1 } });
+            query: { code: String(project) + '::' + String(functionalModule) }, searchOptions: { pageSize: 1, pageNumber: 1 } });
         return this.getItems(response)[0];
     },
     /** Loads one durable functional-module record, including a deprecated identity during upgrade. */
@@ -374,7 +449,8 @@ module.exports = {
         return retired;
     },
     /** Reconciles one observed functional module without recreating durable registration on restart. */
-    reconcileObservation: async function (observation, request) {
+    reconcileObservation: async function (observation, request, attempt) {
+        let incoming = observation;
         let tenant = this.getTenant(request);
         let authData = this.getPersistenceAuthData(request && request.authData);
         let existing = await this.getRecord(observation.projectCode, observation.functionalModule, { tenant: tenant, authData: authData });
@@ -396,6 +472,10 @@ module.exports = {
         }
         await this.retireDuplicateLegacyRecords(observation.projectCode, observation.functionalModule,
             { tenant: tenant, authData: authData }, existing);
+        // One renewing runtime must not erase contributions from other live instances.
+        observation.technicalModules = this.uniqueSorted([].concat(existing.technicalModules || [], observation.technicalModules || []));
+        observation.activationDataPackages = this.normalizeActivationDataPackages(
+            [].concat(existing.activationDataPackages || [], observation.activationDataPackages || []), observation.functionalModule);
         let observedServers = this.uniqueSorted((existing.observedServers || []).concat([observation.observedServer]));
         let desiredRegistrationState = observation.required ? 'REGISTERED' :
             existing.registrationState === 'DEREGISTERED' ? 'AVAILABLE' : existing.registrationState;
@@ -409,18 +489,32 @@ module.exports = {
             !this.sameList(existing.technicalModules, observation.technicalModules) ||
             !this.sameActivationDataPackages(existing.activationDataPackages, observation.activationDataPackages) ||
             !this.sameList(existing.observedServers, observedServers);
+        // Runtime membership and display observations are not administrator decisions.
+        let decisionChanged = existing.code !== canonicalCode || existing.functionalModule !== observation.functionalModule ||
+            existing.registrationState !== desiredRegistrationState || existing.enabled !== desiredEnabled ||
+            existing.required !== observation.required || existing.registeredVersion !== observation.registeredVersion ||
+            !this.sameActivationDataPackages(existing.activationDataPackages, observation.activationDataPackages);
         let model = {
             code: canonicalCode, functionalModule: observation.functionalModule,
-            registrationState: desiredRegistrationState, enabled: desiredEnabled, runtimeState: 'ACTIVE',
+            runtimeState: 'ACTIVE',
             displayName: observation.displayName, registeredVersion: observation.registeredVersion,
             moduleIndex: observation.moduleIndex,
             required: observation.required, technicalModules: observation.technicalModules,
             activationDataPackages: observation.activationDataPackages,
-            observedServers: observedServers, catalogueRevision: Number(existing.catalogueRevision || 1) + (changed ? 1 : 0),
+            observedServers: observedServers,
             updatedAt: changed ? now : existing.updatedAt, updatedBy: changed ? 'runtime-reconciler' : existing.updatedBy,
             lastObservedAt: now
         };
-        await this.updateRecord({ tenant: tenant, authData: authData, query: { code: existing.code }, model: model });
+        if (decisionChanged) Object.assign(model, {
+            registrationState: desiredRegistrationState, enabled: desiredEnabled,
+            catalogueRevision: Number(existing.catalogueRevision || 1) + 1
+        });
+        let response = await this.updateRecord({ tenant: tenant, authData: authData,
+            query: { code: existing.code, catalogueRevision: existing.catalogueRevision }, model: model });
+        if (this.getMatchedCount(response) !== 1) {
+            if ((attempt || 0) < 2) return this.reconcileObservation(incoming, request, (attempt || 0) + 1);
+            throw new CLASSES.NodicsError('ERR_BOF_00000', 'Functional-module observation changed concurrently; retry registration');
+        }
         return Object.assign({}, existing, model);
     },
     /** Reconciles every explicitly declared functional root in one runtime batch. */
@@ -442,20 +536,24 @@ module.exports = {
         let authData = this.getPersistenceAuthData(request && request.authData);
         let changed = 0;
         for (let project of projects) {
-            let response = await this.getRecords({ tenant: tenant, authData: authData, query: { projectCode: project },
-                searchOptions: { limit: 256, sort: { functionalModule: 1 } } });
-            for (let record of this.getItems(response)) {
+            let records = await this.getAllRecords({ tenant: tenant, authData: authData, query: { projectCode: project } });
+            for (let record of records) {
                 let matching = activeLeases.filter(lease => lease.projectCode === project &&
                     lease.functionalModuleIdentity === record.functionalModule);
                 let observedServers = this.uniqueSorted(matching.map(lease =>
                     [lease.environment, lease.server, lease.node || 'default'].join(':')));
                 let runtimeState = matching.length > 0 ? 'ACTIVE' : 'OFFLINE';
-                if (record.runtimeState === runtimeState && this.sameList(record.observedServers, observedServers)) continue;
-                let model = { runtimeState: runtimeState, observedServers: observedServers,
-                    catalogueRevision: Number(record.catalogueRevision || 1) + 1,
+                let technicalModules = this.uniqueSorted(matching.map(lease => lease.moduleName)
+                    .filter(name => name && name !== record.functionalModule));
+                // Preserve last-known membership offline and for legacy leases without module names.
+                if (!matching.some(lease => lease.moduleName)) technicalModules = record.technicalModules || [];
+                if (record.runtimeState === runtimeState && this.sameList(record.observedServers, observedServers) &&
+                    this.sameList(record.technicalModules, technicalModules)) continue;
+                let model = { runtimeState: runtimeState, observedServers: observedServers, technicalModules: technicalModules,
                     updatedAt: new Date(), updatedBy: 'runtime-lease-reconciler' };
-                await this.updateRecord({ tenant: tenant, authData: authData, query: { code: record.code }, model: model });
-                changed++;
+                let response = await this.updateRecord({ tenant: tenant, authData: authData,
+                    query: { code: record.code, catalogueRevision: record.catalogueRevision }, model: model });
+                if (this.getMatchedCount(response) === 1) changed++;
             }
         }
         return changed;
@@ -499,10 +597,10 @@ module.exports = {
         let project = request && request.project || this.getQuery(request).project;
         if (!project) throw new CLASSES.NodicsError('ERR_BOF_00000', 'Functional-module project is required');
         let tenant = this.getTenant(request);
-        let response = await this.getRecords({ tenant: tenant, authData: this.getPersistenceAuthData(request.authData),
-            query: { projectCode: project, registrationState: registrationState }, searchOptions: { limit: 256, sort: { functionalModule: 1 } } });
+        let records = await this.getAllRecords({ tenant: tenant, authData: this.getPersistenceAuthData(request.authData),
+            query: { projectCode: project, registrationState: registrationState } });
         let items = [];
-        for (let item of this.getItems(response)) {
+        for (let item of records) {
             items.push(await this.projectClientSafeWithReceipts(item, {}, request));
         }
         return { code: code, data: { project: project, items: items } };
@@ -511,24 +609,23 @@ module.exports = {
     listAvailable: function (request) { return this.listByState(request, 'AVAILABLE', 'SUC_BOF_00017'); },
     /** Lists durable project functional-module registrations. */
     listRegistrations: function (request) { return this.listByState(request, 'REGISTERED', 'SUC_BOF_00018'); },
-    /** Returns governed technical-module presentation eligibility for one project. */
+    /** Reads every project-scoped catalogue page before returning eligibility; query failures propagate without a partial projection. */
     getPresentationEligibility: async function (request) {
         let query = this.getQuery(request);
         let project = request && request.project || query.project ||
             (typeof NODICS !== 'undefined' && NODICS.getEnvironmentName && NODICS.getEnvironmentName());
         if (!project) throw new CLASSES.NodicsError('ERR_BOF_00000', 'Functional-module project is required');
         let tenant = this.getTenant(request);
-        let response = await this.getRecords({ tenant: tenant,
-            authData: this.getPersistenceAuthData(request && request.authData), query: { projectCode: project },
-            searchOptions: { limit: 256, sort: { functionalModule: 1 } } });
+        let authData = this.getPersistenceAuthData(request && request.authData);
         let governed = new Set();
         let eligible = new Set();
-        this.getItems(response).forEach(record => {
-            let modules = [record.functionalModule].concat(record.technicalModules || []).filter(Boolean);
-            modules.forEach(moduleName => governed.add(moduleName));
-            if (record.runtimeState === 'ACTIVE' && record.registrationState === 'REGISTERED' && record.enabled === true) {
-                modules.forEach(moduleName => eligible.add(moduleName));
-            }
+        let records = await this.getAllRecords({ tenant: tenant, authData: authData, query: { projectCode: project } });
+        records.forEach(record => {
+                let modules = [record.functionalModule].concat(record.technicalModules || []).filter(Boolean);
+                modules.forEach(moduleName => governed.add(moduleName));
+                if (record.runtimeState === 'ACTIVE' && record.registrationState === 'REGISTERED' && record.enabled === true) {
+                    modules.forEach(moduleName => eligible.add(moduleName));
+                }
         });
         return { project: project, governedModules: Array.from(governed).sort(), eligibleModules: Array.from(eligible).sort() };
     },
@@ -599,8 +696,11 @@ module.exports = {
         if (['deactivate', 'deregister', 'rollback'].includes(action)) await this.recordDataLeftIntact(existing, context, request);
         let model = Object.assign({}, next, { catalogueRevision: context.expectedRevision + 1,
             updatedAt: new Date(), updatedBy: context.actor });
+        let query = { code: existing.code, catalogueRevision: context.expectedRevision };
+        // A runtime loss during an import must still prevent activation from committing.
+        if (action === 'activate') query.runtimeState = 'ACTIVE';
         let response = await this.updateRecord({ tenant: this.getTenant(request), authData: this.getPersistenceAuthData(request.authData),
-            query: { code: existing.code, catalogueRevision: context.expectedRevision }, model: model });
+            query: query, model: model });
         if (this.getAffectedCount(response) !== 1) throw new CLASSES.NodicsError('ERR_BOF_00000', 'Functional-module catalogue revision conflict');
         let result = Object.assign({}, existing, model);
         if (SERVICE.DefaultBackofficeAuditService) await SERVICE.DefaultBackofficeAuditService.record({

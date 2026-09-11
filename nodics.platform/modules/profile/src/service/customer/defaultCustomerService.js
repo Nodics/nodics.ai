@@ -83,6 +83,26 @@ module.exports = {
      * @param {*} request Method input.
      * @returns {*} Method result.
      */
+    /** Registers a bounded batch through the same customer registration pipeline; existing matching identities are preserved. */
+    signUpAll: async function (request) {
+        const models=request.models||[];
+        if(!Array.isArray(models)||models.length>100) throw new CLASSES.NodicsError('ERR_PRFL_00003','A bounded customer batch is required');
+        const result=[];
+        for(const model of models){
+            const response=await this.get({tenant:request.tenant,authData:request.authData,query:{loginId:model.loginId},options:{recursive:false}});
+            const existing=response&&response.result&&response.result[0];
+            if(existing){
+                if(model.code&&existing.code!==model.code) throw new CLASSES.NodicsError('ERR_PRFL_00003','Customer login is already registered under a different identity');
+                result.push({code:existing.code});
+            }else{
+                await this.signUp(Object.assign({},request,{model:Object.assign({},model)}));
+                result.push({code:model.code});
+            }
+        }
+        return {result:result};
+    },
+
+    /** Runs the customer registration pipeline with this composed service available to its existing extension steps. */
     signUp: function (request) {
         let _self = this;
         request.defaultCustomerService = _self;

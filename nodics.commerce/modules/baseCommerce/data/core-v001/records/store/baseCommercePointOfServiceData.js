@@ -20,7 +20,6 @@ module.exports = {
         name: 'Agora Online',
         status: 'ACTIVE',
         timezone: 'America/Chicago',
-        revision: 1,
         active: true
     }
 };

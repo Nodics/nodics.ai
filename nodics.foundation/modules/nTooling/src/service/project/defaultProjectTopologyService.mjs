@@ -119,7 +119,7 @@ async function findListeningPorts(ports) {
 }
 
 async function childrenStillActive(children) {
-  if (children.some(entry => entry.child.exitCode === null)) return true;
+  if (children.some(entry => entry.child.exitCode === null && entry.child.signalCode === null)) return true;
   const ports = children.map(entry => entry.runtime.port).filter(port => Number.isInteger(port));
   return (await findListeningPorts(ports)).length > 0;
 }
@@ -176,19 +176,23 @@ export async function preflight(includeFrontends = false) {
     ready: checks.every(check => !['FAILED', 'BUSY'].includes(check.state)) };
 }
 
-async function waitUntilReady(runtime, timeoutMs = 90000) {
+async function waitUntilReady(runtime, timeoutMs = 90000, child) {
   const startedAt = Date.now();
   let lastError = 'not reachable';
   while (Date.now() - startedAt < timeoutMs) {
+    if (child && (child.exitCode !== null || child.signalCode !== null)) {
+      throw new Error(`${runtime.label} exited before readiness`);
+    }
     try {
-      const response = await fetch(healthUrl(runtime), { redirect: 'error' });
+      const response = await fetch(healthUrl(runtime), { redirect: 'error', signal: AbortSignal.timeout(5000) });
       if (response.ok) {
         let ready = true;
         for (const check of runtime.readinessChecks || []) {
           const checkResponse = await fetch(readinessCheckUrl(runtime, check), {
             method: check.method || 'GET',
             headers: check.headers || {},
-            redirect: 'error'
+            redirect: 'error',
+            signal: AbortSignal.timeout(5000)
           });
           const expectedStatuses = check.expectedStatuses && check.expectedStatuses.length ? check.expectedStatuses : undefined;
           if (!(expectedStatuses ? expectedStatuses.includes(checkResponse.status) : checkResponse.ok)) {
@@ -216,11 +220,12 @@ async function inspect(runtimes) {
     const listening = await portListening(runtime.port);
     let ready = false;
     if (listening) {
-      try { ready = (await fetch(healthUrl(runtime), { redirect: 'error' })).ok; } catch { ready = false; }
+      try { ready = (await fetch(healthUrl(runtime), { redirect: 'error', signal: AbortSignal.timeout(5000) })).ok; } catch { ready = false; }
     }
     const recorded = state?.children?.find(child => child.code === runtime.code);
     entries.push({ code: runtime.code, label: runtime.label, port: runtime.port, listening, ready,
-      ownership: owned && recorded ? 'THIS_SUPERVISOR' : listening ? 'EXTERNAL_OR_UNKNOWN' : 'NONE' });
+      exited: Boolean(recorded && recorded.exited),
+      ownership: owned && recorded && !recorded.exited ? 'THIS_SUPERVISOR' : listening ? 'EXTERNAL_OR_UNKNOWN' : 'NONE' });
   }
   return { environment: topology.environment, supervisor: owned ? 'RUNNING' : 'NOT_RUNNING', supervisorPid: owned ? state.supervisorPid : null, runtimes: entries };
 }
@@ -239,17 +244,20 @@ async function start(includeFrontends) {
   fs.mkdirSync(topology.stateDirectory, { recursive: true });
   const children = [];
   let stopping = false;
+  let started = false;
   const persist = () => fs.writeFileSync(topology.statePath, JSON.stringify({ contractVersion: 0, environment: topology.environment, projectRoot,
-    supervisorPid: process.pid, startedAt: new Date().toISOString(), includeFrontends, children: children.map(entry => ({ code: entry.runtime.code, pid: entry.child.pid, port: entry.runtime.port })) }, null, 2) + '\n');
+    supervisorPid: process.pid, startedAt: new Date().toISOString(), includeFrontends, children: children.map(entry => ({ code: entry.runtime.code,
+      pid: entry.child.pid, port: entry.runtime.port, exited: entry.child.exitCode !== null || entry.child.signalCode !== null })) }, null, 2) + '\n');
 
   const stop = async signal => {
     if (stopping) return;
     stopping = true;
     process.stdout.write(`[topology] stopping ${topology.environment} after ${signal}\n`);
-    for (const entry of [...children].reverse()) signalRuntimeProcess(entry.child.pid, 'SIGTERM');
+    const terminating = children.filter(entry => entry.child.exitCode === null && entry.child.signalCode === null);
+    for (const entry of [...terminating].reverse()) signalRuntimeProcess(entry.child.pid, 'SIGTERM');
     const deadline = Date.now() + 15000;
     while (await childrenStillActive(children) && Date.now() < deadline) await sleep(250);
-    for (const entry of children) signalRuntimeProcess(entry.child.pid, 'SIGKILL');
+    for (const entry of terminating) signalRuntimeProcess(entry.child.pid, 'SIGKILL');
     const killDeadline = Date.now() + 5000;
     while (await childrenStillActive(children) && Date.now() < killDeadline) await sleep(250);
     const busyPorts = await findListeningPorts(children.map(entry => entry.runtime.port).filter(port => Number.isInteger(port)));
@@ -271,17 +279,25 @@ async function start(includeFrontends) {
       const logPath = path.join(topology.stateDirectory, `${runtime.code}.log`);
       const log = fs.openSync(logPath, 'a');
       const child = spawn(command, args, { cwd, env: runtimeEnvironment(runtime), stdio: ['ignore', log, log], detached: true });
+      fs.closeSync(log);
       children.push({ runtime, child });
       persist();
       child.once('exit', code => {
         if (!stopping) {
-          process.stderr.write(`[topology] ${runtime.label} exited unexpectedly with code ${String(code)}; stopping the remaining topology; log: ${logPath}\n`);
-          stop(`${runtime.label} exit`).then(() => process.exit(code === 0 ? 1 : code || 1));
+          if (!started) {
+            process.stderr.write(`[topology] ${runtime.label} exited during startup; log: ${logPath}\n`);
+            stop(`${runtime.label} startup exit`).then(() => process.exit(code === 0 ? 1 : code || 1));
+            return;
+          }
+          signalRuntimeProcess(child.pid, 'SIGTERM');
+          persist();
+          process.stderr.write(`[topology] ${runtime.label} exited with code ${String(code)}; other runtimes remain running; log: ${logPath}\n`);
         }
       });
-      await waitUntilReady(runtime);
+      await waitUntilReady(runtime, 90000, child);
       process.stdout.write(`[topology] READY ${runtime.label} http://127.0.0.1:${String(runtime.port)}\n`);
     }
+    started = true;
     persist();
     process.stdout.write(`[topology] ${topology.environment} is running under supervisor PID ${String(process.pid)}. Use npm run topology:stop or Ctrl+C.\n`);
     await new Promise(resolve => process.once('beforeExit', resolve));

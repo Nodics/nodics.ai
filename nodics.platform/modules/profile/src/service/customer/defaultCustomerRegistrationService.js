@@ -17,29 +17,92 @@
  * @override Project modules may override this behavior through later active modules while preserving the published capability contract.
  */
 module.exports = {
-    /**
-     * This function is used to initiate entity loader process. If there is any functionalities, required to be executed on entity loading. 
-     * defined it that with Promise way
-     * @param {*} options 
-     */
-    init: function (options) {
-        return new Promise((resolve, reject) => {
-            resolve(true);
-        });
-    },
+  /** Maps a public account form into the existing signup pipeline. Rejects invalid fields and ignores caller-supplied identity, roles and verification flags; later layers customize limits through Profile properties. */
+  formModel: function (payload) {
+    const policy = CONFIG.get("profileCustomerRegistrationForm") || {};
+    const email =
+      typeof payload.email === "string"
+        ? payload.email.trim().toLowerCase()
+        : "";
+    const name =
+      typeof payload.name === "string"
+        ? payload.name.trim().replace(/\s+/gu, " ")
+        : "";
+    const password = payload.password;
+    if (
+      !Number.isSafeInteger(policy.minimumPasswordCharacters) ||
+      policy.minimumPasswordCharacters < 1 ||
+      !Number.isSafeInteger(policy.maximumPasswordCharacters) ||
+      policy.maximumPasswordCharacters < policy.minimumPasswordCharacters ||
+      !Number.isSafeInteger(policy.maximumEmailCharacters) ||
+      !Number.isSafeInteger(policy.maximumNameCharacters) ||
+      !Number.isSafeInteger(policy.maximumNamePartCharacters)
+    ) {
+      throw new CLASSES.NodicsError("ERR_PROFILE_REGISTRATION_POLICY");
+    }
+    if (
+      !email ||
+      email.length > policy.maximumEmailCharacters ||
+      !/^[^\s@]+@[^\s@]+\.[^\s@]+$/u.test(email) ||
+      typeof password !== "string" ||
+      password.length < policy.minimumPasswordCharacters ||
+      password.length > policy.maximumPasswordCharacters ||
+      !name ||
+      name.length > policy.maximumNameCharacters
+    ) {
+      throw new CLASSES.NodicsError("ERR_PROFILE_REGISTRATION_FORM");
+    }
+    const [firstName, ...rest] = name.split(" "),
+      lastName = rest.join(" ");
+    if (
+      firstName.length > policy.maximumNamePartCharacters ||
+      lastName.length > policy.maximumNamePartCharacters
+    ) {
+      throw new CLASSES.NodicsError("ERR_PROFILE_REGISTRATION_FORM");
+    }
+    return {
+      code: this.formCustomerCode(email),
+      loginId: email,
+      name: { firstName, ...(lastName ? { lastName } : {}) },
+      password: { loginId: email, password, confirmPassword: password },
+    };
+  },
+  /** Derives the canonical new-account reference from normalized login identity; preserves existing reference-format compatibility. */
+  formCustomerCode: function (loginId) {
+    return (
+      "CUSTOMER_" +
+      require("node:crypto")
+        .createHash("sha256")
+        .update(loginId)
+        .digest("hex")
+        .slice(0, 24)
+        .toUpperCase()
+    );
+  },
 
-    /**
-     * This function is used to finalize entity loader process. If there is any functionalities, required to be executed after entity loading. 
-     * defined it that with Promise way
-     * @param {*} options 
-     */
-    postInit: function (options) {
-        return new Promise((resolve, reject) => {
-            resolve(true);
-        });
-    },
+  /**
+   * This function is used to initiate entity loader process. If there is any functionalities, required to be executed on entity loading.
+   * defined it that with Promise way
+   * @param {*} options
+   */
+  init: function (options) {
+    return new Promise((resolve, reject) => {
+      resolve(true);
+    });
+  },
 
-    /**
+  /**
+   * This function is used to finalize entity loader process. If there is any functionalities, required to be executed after entity loading.
+   * defined it that with Promise way
+   * @param {*} options
+   */
+  postInit: function (options) {
+    return new Promise((resolve, reject) => {
+      resolve(true);
+    });
+  },
+
+  /**
 
      * Validates request rules.
 
@@ -55,85 +118,152 @@ module.exports = {
 
      */
 
-    validateRequest: function (request, response, process) {
-        this.LOG.debug('Validating customer registration request');
-        if (!request.defaultCustomerService) {
-            process.error(request, response, new CLASSES.NodicsError('ERR_PRFL_00003', 'Invalid service detail to execute'));
-        } else if (!request.model) {
-            process.error(request, response, new CLASSES.NodicsError('ERR_PRFL_00003', 'Invalid customer detail to execute'));
-        } else {
-            let registration = CONFIG.get('identityGovernance') && CONFIG.get('identityGovernance').customerRegistration || {};
-            if (!registration.group || !registration.principalType) {
-                return process.error(request, response,
-                    new CLASSES.NodicsError('ERR_PRFL_00003', 'Customer registration policy is incomplete'));
-            }
-            request.model.userGroups = [registration.group];
-            request.model.principalType = registration.principalType;
-            request.model.ownerId = request.model.loginId;
-            request.model.ownerType = registration.principalType;
-            request.model.createdBy = request.model.loginId;
-            request.model.updatedBy = request.model.loginId;
-            request.model.active = registration.active === true;
-            request.model.accessGroups = [registration.group];
-            delete request.model.apiKey;
-            delete request.model.apiKeyStatus;
-            delete request.model.apiKeyScopes;
-            delete request.model.permissions;
-            process.nextSuccess(request, response);
-        }
-    },
-    /**
-     * Validates if customer exist rules.
-     *
-     * @param {*} request Method input.
-     * @param {*} response Method input.
-     * @param {*} process Method input.
-     * @returns {*} Method result.
-     */
-    validateIfCustomerExist: function (request, response, process) {
-        this.LOG.debug('Validating if customer exist');
-        request.defaultCustomerService.isCustomerExist({
-            tenant: request.tenant,
-            loginId: request.model.loginId
-        }).then(error => {
-            process.error(request, response, new CLASSES.NodicsError(error, null, 'ERR_PRFL_00007'));
-        }).catch(success => {
-            process.nextSuccess(request, response);
-        });
-    },
-    /**
-     * Validates confirm password rules.
-     *
-     * @param {*} request Method input.
-     * @param {*} response Method input.
-     * @param {*} process Method input.
-     * @returns {*} Method result.
-     */
-    validateConfirmPassword: function (request, response, process) {
-        this.LOG.debug('Validating confirmed password');
-        let model = request.model;
-        if (!model.password || !model.password.password || !model.password.confirmPassword || (model.password.password !== model.password.confirmPassword)) {
-            process.error(request, response, new CLASSES.NodicsError('ERR_PRFL_00003', 'Invalid customer password detail to execute'));
-        } else {
-            delete request.model.password.confirmPassword;
-            process.nextSuccess(request, response);
-        }
-    },
-    /**
-     * Updates customer information.
-     *
-     * @param {*} request Method input.
-     * @param {*} response Method input.
-     * @param {*} process Method input.
-     * @returns {*} Method result.
-     */
-    createCustomer: function (request, response, process) {
-        const gate = SERVICE.DefaultKycDecisionEnforcementService ? SERVICE.DefaultKycDecisionEnforcementService.enforce(request, 'ONBOARDING', { subjectType: 'CUSTOMER', subjectCode: request.model.loginId, enterpriseCode: request.model.entCode || request.authData && (request.authData.enterpriseCode || request.authData.entCode) }) : Promise.resolve({ eligible: true });
-        gate.then(kycDecision => { request.kycDecisionReference = kycDecision.decisionId; return request.defaultCustomerService.save(request); }).then(success => {
-            response.success = success;
-            process.nextSuccess(request, response);
-        }).catch(error => {
-            process.error(request, response, new CLASSES.NodicsError(error, null, 'ERR_PRFL_00006'));
-        })
+  validateRequest: function (request, response, process) {
+    this.LOG.debug("Validating customer registration request");
+    if (!request.defaultCustomerService) {
+      process.error(
+        request,
+        response,
+        new CLASSES.NodicsError(
+          "ERR_PRFL_00003",
+          "Invalid service detail to execute",
+        ),
+      );
+    } else if (!request.model) {
+      process.error(
+        request,
+        response,
+        new CLASSES.NodicsError(
+          "ERR_PRFL_00003",
+          "Invalid customer detail to execute",
+        ),
+      );
+    } else {
+      let registration =
+        (CONFIG.get("identityGovernance") &&
+          CONFIG.get("identityGovernance").customerRegistration) ||
+        {};
+      if (!registration.group || !registration.principalType) {
+        return process.error(
+          request,
+          response,
+          new CLASSES.NodicsError(
+            "ERR_PRFL_00003",
+            "Customer registration policy is incomplete",
+          ),
+        );
+      }
+      request.model.userGroups = [registration.group];
+      request.model.principalType = registration.principalType;
+      request.model.ownerId = request.model.loginId;
+      request.model.ownerType = registration.principalType;
+      request.model.createdBy = request.model.loginId;
+      request.model.updatedBy = request.model.loginId;
+      request.model.active = registration.active === true;
+      request.model.accessGroups = [registration.group];
+      delete request.model.apiKey;
+      delete request.model.apiKeyStatus;
+      delete request.model.apiKeyScopes;
+      delete request.model.permissions;
+      process.nextSuccess(request, response);
     }
+  },
+  /**
+   * Validates if customer exist rules.
+   *
+   * @param {*} request Method input.
+   * @param {*} response Method input.
+   * @param {*} process Method input.
+   * @returns {*} Method result.
+   */
+  validateIfCustomerExist: function (request, response, process) {
+    this.LOG.debug("Validating if customer exist");
+    request.defaultCustomerService
+      .isCustomerExist({
+        tenant: request.tenant,
+        loginId: request.model.loginId,
+      })
+      .then((error) => {
+        process.error(
+          request,
+          response,
+          new CLASSES.NodicsError(error, null, "ERR_PRFL_00007"),
+        );
+      })
+      .catch((success) => {
+        process.nextSuccess(request, response);
+      });
+  },
+  /**
+   * Validates confirm password rules.
+   *
+   * @param {*} request Method input.
+   * @param {*} response Method input.
+   * @param {*} process Method input.
+   * @returns {*} Method result.
+   */
+  validateConfirmPassword: function (request, response, process) {
+    this.LOG.debug("Validating confirmed password");
+    let model = request.model;
+    if (
+      !model.password ||
+      !model.password.password ||
+      !model.password.confirmPassword ||
+      model.password.password !== model.password.confirmPassword
+    ) {
+      process.error(
+        request,
+        response,
+        new CLASSES.NodicsError(
+          "ERR_PRFL_00003",
+          "Invalid customer password detail to execute",
+        ),
+      );
+    } else {
+      // Password identity is derived from the registered principal, never a separate caller value.
+      request.model.password.loginId = request.model.loginId;
+      delete request.model.password.confirmPassword;
+      process.nextSuccess(request, response);
+    }
+  },
+  /**
+   * Updates customer information.
+   *
+   * @param {*} request Method input.
+   * @param {*} response Method input.
+   * @param {*} process Method input.
+   * @returns {*} Method result.
+   */
+  createCustomer: function (request, response, process) {
+    const gate = SERVICE.DefaultKycDecisionEnforcementService
+      ? SERVICE.DefaultKycDecisionEnforcementService.enforce(
+          request,
+          "ONBOARDING",
+          {
+            subjectType: "CUSTOMER",
+            subjectCode: request.model.loginId,
+            enterpriseCode:
+              request.model.entCode ||
+              (request.authData &&
+                (request.authData.enterpriseCode || request.authData.entCode)),
+          },
+        )
+      : Promise.resolve({ eligible: true });
+    gate
+      .then((kycDecision) => {
+        request.kycDecisionReference = kycDecision.decisionId;
+        return request.defaultCustomerService.save(request);
+      })
+      .then((success) => {
+        response.success = success;
+        process.nextSuccess(request, response);
+      })
+      .catch((error) => {
+        process.error(
+          request,
+          response,
+          new CLASSES.NodicsError(error, null, "ERR_PRFL_00006"),
+        );
+      });
+  },
 };

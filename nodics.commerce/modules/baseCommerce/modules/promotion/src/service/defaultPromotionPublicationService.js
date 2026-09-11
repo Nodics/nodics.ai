@@ -13,6 +13,7 @@
 /** @module promotion/src/service/defaultPromotionPublicationService @description Restores Promotion operational records into Online runtime boundaries. @layer service @owner promotion */
 module.exports = {
     records: value => Array.isArray(value) ? value : value && typeof value === 'object' ? Object.values(value) : [],
+    /** Normalizes a publication date field in place; empty optional values are removed before persistence. */
     normalizeDateField: function (model, field) {
         if (!Object.prototype.hasOwnProperty.call(model, field) || model[field] instanceof Date) return;
         if (model[field] === undefined || model[field] === null || model[field] === '') {
@@ -22,16 +23,19 @@ module.exports = {
         model[field] = new Date(model[field]);
         if (Number.isNaN(model[field].getTime())) delete model[field];
     },
+    /** Extracts a stable enterprise code from supported string or reference envelopes. */
     enterpriseCodeFrom: function (value) {
         if (!value) return undefined;
         if (typeof value === 'string') return value;
         if (typeof value === 'object' && !Array.isArray(value)) return value.code || value.ref || value.id;
         return undefined;
     },
+    /** Builds a Profile enterprise reference without duplicating the enterprise record. */
     enterpriseRef: function (code, roleCode) {
         if (!code) return undefined;
-        return { moduleName: 'profile', schemaName: 'enterprise', code: code, roleCode: roleCode };
+        return { moduleName: 'profile', schemaName: 'enterprise', code: code };
     },
+    /** Builds the schema-compatible publication record with normalized references, dates and audit context. */
     persistenceModel: function (record, request) {
         const now = new Date();
         const auth = request && request.authData || {};
@@ -50,6 +54,7 @@ module.exports = {
         ['validFrom', 'validTo', 'reservedAt', 'reservedUntil', 'soldAt', 'deliveredAt', 'claimedAt', 'redeemedAt', 'revokedAt'].forEach(field => this.normalizeDateField(model, field));
         return model;
     },
+    /** Restores records through the owning generated service after rejecting tenant or enterprise scope escapes. */
     saveAll: async function (service, request, records, label) {
         const restored = [];
         for (const record of records) {
@@ -57,11 +62,12 @@ module.exports = {
             const requestEnterpriseCode = request.enterpriseCode || request.entCode || request.authData && (request.authData.enterpriseCode || request.authData.entCode);
             if (record.enterpriseCode && requestEnterpriseCode && record.enterpriseCode !== requestEnterpriseCode) throw new Error(label + ' restoration record escaped its enterprise boundary');
             const model = this.persistenceModel(record, request);
-            await service.save({ tenant: request.tenant, authData: request.authData, model }).then(response => response && Object.prototype.hasOwnProperty.call(response, 'result') ? response.result : response);
+            await service.save({ tenant: request.tenant, authData: request.authData, model, options: { recursive: false } }).then(response => response && Object.prototype.hasOwnProperty.call(response, 'result') ? response.result : response);
             restored.push(model.code);
         }
         return restored;
     },
+    /** Restores supplied promotion, coupon-batch and coupon operational snapshots through their owning services. */
     restoreOperational: async function (request, input) {
         const promotions = this.records(input.promotions);
         const couponBatches = this.records(input.couponBatches);

@@ -14,6 +14,8 @@ const fs = require('node:fs');
 const path = require('node:path');
 const contract = require('../src/service/contract/defaultBackofficeContractService');
 const root = path.resolve(__dirname, '../../../..');
+// Providers may read layered policy; an unconfigured policy keeps optional contributions disabled.
+global.CONFIG = { get: () => undefined };
 global.SERVICE = {
     DefaultBackofficeCapabilityDefinitionService: require('../../../../nodics.foundation/modules/nService/src/service/module/defaultBackofficeCapabilityDefinitionService')
 };

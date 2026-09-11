@@ -1,5 +1,206 @@
 # Data Modeling and Schema Management
 
+## Publication-aware Generic Authoring
+
+Canonical owner: Foundation's `nDatabase` resolves generic authoring policy;
+`nController` checks generated HTTP mutations before request-body mapping. The
+owning schema declares its lifecycle in existing `backoffice` metadata. The
+existing server-owned `runtimeRole.publication` supplies Staged/Online context.
+
+```js
+backoffice: {
+    mutationPolicy: { lifecycle: 'PUBLISHABLE', publishRequired: true }
+}
+```
+
+This source may be authored only where the runtime publication role is STAGED.
+ONLINE, OPERATIONAL, unknown and missing roles do not grant authoring. Read/search
+remain subject to normal access checks. Workbench removes write, bulk and
+aggregate capabilities; generated HTTP mutations reject before persistence,
+including saveAll and delete-by-code/id. A body field cannot override the role.
+
+For an owner-managed projection or receipt use:
+
+```js
+backoffice: { mutationMode: 'READ_ONLY', operations: ['search', 'read'] }
+```
+
+That denies generic HTTP and Workbench mutations, not the owning publication
+service. nPublish/domain providers and approved import workflows retain their
+existing generated-service paths, authentication, lifecycle and tenant checks.
+This boundary does not authorize arbitrary internal writes or replace approval.
+
+CMS content, Editorial sources, and Product/Category/Variant catalogue sources
+declare the publication rule. Their publication evidence and derived projections
+declare read-only generic authoring. Store/Point of Service remain operational.
+Do not infer publication from a module name, technical revision or native version
+field. Mixed-lifecycle modules are supported intentionally.
+
+```mermaid
+flowchart LR
+    A[Effective schema metadata] --> P[Shared authoring policy]
+    R[Existing runtime role] --> P
+    P --> W[Workbench descriptor and mutation checks]
+    P --> C[Generated HTTP mutation guard]
+    W --> S[Authorized source CRUD]
+    C --> S
+    D[Owning publication workflow] --> O[Online projection and activation]
+```
+
+### Customize and Extend Safely
+
+Add the fragment above to the owning custom module's
+`src/schemas/schemas.js`; retain normal fields, references and access groups.
+Use its existing environment `config/properties.js` to declare
+`runtimeRole: { code: 'PROJECT_STAGED', publication: 'STAGED' }`.
+Do not add a separate publication-schema registry or infer authority in Axis.
+A service override may extend `DefaultSchemaAuthoringPolicyService` but must
+preserve fail-closed Online/missing-role behavior and the existing writer owner.
+
+Example: promotional copy requires Staged authoring and publication, while an
+order in the same module remains operational. A publication receipt must be
+read-only in Workbench even for an administrator; changing its state manually is
+not publishing. Reclassifying an inherited source as operational requires
+removing all publication markers through schema composition and documenting a
+real change in ownership, not bypassing approval for convenience.
+
+Run `schemaAuthoringAuthorityContract.test.js`, `schemaWorkbenchContract.test.js`,
+the owning publication tests and Axis Workbench tests. Verify missing role,
+read-only targets, body spoofing, promise/callback errors, and no persistence on
+rejection. A full Published view must read active domain projections; these
+generic guards do not create a publication workflow or a source/Online diff UI.
+
+## Technical revisions without manual arithmetic
+
+Canonical owner: `nodics.foundation`, implemented by `nDatabase/database` and
+the MongoDB provider. A technical edit counter detects two people changing the
+same record. It is not a business version, a published content version, or a
+data-release version. The existing effective schema declares who manages it:
+
+```js
+backoffice: {
+    concurrency: { field: 'revision', managed: true }
+}
+```
+
+This is schema metadata, not a new configuration file, registry, or importer.
+The first migrated framework schemas are `store.store`, `store.salesChannel`,
+and `store.pointOfService`. Other schemas are not automatically migrated merely
+because they contain a property named `revision`.
+
+| Operation | Caller responsibility | Framework responsibility |
+| --- | --- | --- |
+| Create | Supply business fields and stable identity, no counter | Initialize counter to 1 |
+| Edit | Retain the original read token, send changed business fields | Compare original token atomically and increment once |
+| Save unchanged | Retain original token | Return current record without advancing counter or mutation events |
+| Delete | Retain original token and identity | Apply access/reference checks and conditional delete |
+| Import `saveAll` | Author ordinary data rows without counters | Read original tokens and use generated CRUD |
+| Concurrent change | Review newer data and resolve the user's intended edit | Reject stale write; never silently overwrite |
+
+```mermaid
+sequenceDiagram
+    participant A as Editor A
+    participant B as Editor B
+    participant G as Generated CRUD
+    participant D as Database provider
+    A->>G: Read record
+    G-->>A: Record with revision 7
+    B->>G: Read record
+    G-->>B: Record with revision 7
+    A->>G: Edit with original token 7
+    G->>D: Atomic match identity and revision 7
+    D-->>A: Persisted record with revision 8
+    B->>G: Edit with original token 7
+    G-->>B: 409 conflict, review latest record
+```
+
+### Developer service example
+
+Use the existing generated service inside an authorized module operation. The
+example assumes `tenant` and `authData` come from the authenticated request:
+
+```js
+const response = await SERVICE.DefaultPointOfServiceService.get({
+    tenant, authData, query: { code: 'project-web-pos' }
+});
+const original = response.result[0];
+const saved = await SERVICE.DefaultPointOfServiceService.update({
+    tenant, authData,
+    query: { code: original.code, revision: original.revision ?? 0 },
+    model: { name: 'Updated web service point' },
+    options: { returnModified: true }
+});
+const nextEditingSnapshot = saved.result.models[0];
+```
+
+Point of Service uses a string name. Other schemas may use localized objects;
+always follow the effective field type. Never write `revision + 1` in the caller.
+Axis carries the original token automatically and treats the returned record as
+the next editing snapshot. It excludes managed counters from editable payloads.
+
+### Conflict and recovery behavior
+
+| Response | Meaning | Recovery |
+| --- | --- | --- |
+| 409 / `ERR_CONCURRENCY_00001` | Record changed, disappeared, or identity raced during creation | Preserve draft, read latest through the owning service, review differences, deliberately resubmit |
+| 428 / `ERR_CONCURRENCY_00002` | Existing-record edit omitted original token | Fix caller to retain its read result; do not manufacture a token |
+| 400 / `ERR_CONCURRENCY_00003` | Invalid token, broad selector, operator patch, unsupported provider/schema | Correct the contract; do not disable concurrency to suppress the error |
+
+Legacy records with no counter use token 0 and a missing-field compare-and-set.
+Their first changed write creates counter 1. Existing populated counters never
+reset. An old token cannot succeed by supplying a newer number in the payload:
+the query token takes precedence. Audit timestamps alone do not count as edits.
+
+### Customize and extend safely
+
+Use your existing later-loaded project module's `src/schemas/schemas.js`, not a
+new revision configuration layer. For a project-owned non-versioned schema whose
+writes all use generated CRUD, declare a typed technical field and metadata:
+
+```js
+module.exports = {
+    projectOperations: {
+        serviceDesk: {
+            definition: {
+                code: { type: 'string', required: true, unique: true },
+                editCounter: {
+                    type: 'long', required: true, default: 1,
+                    description: 'Framework-managed counter used to detect concurrent edits.'
+                }
+            },
+            backoffice: { concurrency: { field: 'editCounter', managed: true } }
+        }
+    }
+};
+```
+
+Compose this fragment with the project's established model, access and ownership
+defaults. Keep a scalar unique primary identity. Audit every writer before
+migration: generated single-record save/update/delete supports plain field
+patches, not `$inc`, `$set`, dotted paths, or mass updates. Domain services already
+incrementing their own counters must retain that authority until deliberately
+migrated. `managed: false` leaves that existing behavior intact; it is not a
+concurrency bypass to apply to an already-managed shared schema.
+
+`versionId` and `isVersionedEnabled: true` cannot use this managed-counter path.
+The versioned provider and nPublish remain authoritative. A project cannot
+customize away access checks, tenant selection, atomic matching, original-token
+requirements, or genuine conflict rejection. Alternate providers must implement
+the same atomic `compareAndSetItem` boundary and return the persisted record.
+
+Test create, successive edits, no-op, stale/missing/malformed token, simultaneous
+writers, ownership denial, legacy missing counter, deletion restrictions, and
+project field-name overrides. Run `modelConcurrencyContract.test.js` under
+`nDatabase/database/test` and `mongodbManagedConcurrencyContract.test.js` under
+`nDatabase/mongodb/test`. In Axis, create a disposable Point of Service, edit it
+twice, and verify that the counter is read-only. Never delete real business data
+to test a revision migration.
+
+This mechanism protects one record. Nested model saves and import files can
+complete some writes before a later conflict; they are not transactions. Use the
+existing supported database transaction or owning workflow for atomic business
+operations. See the import documentation for retry and release boundaries.
+
 How schemas define model behavior, generated services, API contracts, validation, and project-layer property extension. This page is intentionally written for beginners, business users, developers, operators, architects, QA owners, and AI tools. It explains the business problem first, then the technical ownership model, then the exact customization and verification responsibilities so nobody has to guess where a change belongs.
 
 Customers need to add fields, validation, and domain records without bypassing generated services, route contracts, permissions, or publication behavior. Nodics uses schema metadata as the model authority. Generated controllers, services, validators, routes, and workbench screens derive from effective schema composition.

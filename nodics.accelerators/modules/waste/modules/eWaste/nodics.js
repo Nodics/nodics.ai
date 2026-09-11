@@ -9,7 +9,7 @@
 
  */
 
-/** @module eWaste/nodics @description Declares the eWaste preset accelerator lifecycle over nodics.waste. @layer module @owner eWaste @override Partner modules may add e-waste policy and seed extensions without changing this preset pack. */
+/** @module eWaste/nodics @description Declares the eWaste domain accelerator lifecycle over nodics.waste. @layer module @owner eWaste @override Partner modules may add e-waste policy and seed extensions without changing this domain accelerator. */
 module.exports = {
     /** Initializes this eWaste accelerator. */
     init: function (options) { return Promise.resolve(true); },

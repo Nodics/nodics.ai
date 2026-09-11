@@ -57,7 +57,7 @@ module.exports = {
         },
 
         /**
-         * This schema is used to update or create indexes definitions. 
+         * This schema is used to update or create indexes definitions.
          * Value defined here will replace all value defined once schema definition
          */
         index: {
@@ -93,7 +93,8 @@ module.exports = {
                 properties: {
                     type: 'object',
                     required: false
-                }
+                ,
+                    description: 'Stores structured properties details used by this record.'}
             }
         },
 
@@ -255,7 +256,7 @@ module.exports = {
                 enabled: true
             },
             refSchema: {
-                tenant: {
+                indexer: {
                     enabled: true,
                     schemaName: "indexer",
                     type: 'one',
@@ -267,7 +268,8 @@ module.exports = {
                 indexerCode: {
                     type: 'string',
                     required: true
-                },
+                ,
+                    description: 'Stores the indexer code used to classify, link, or resolve this record.'},
                 indexer: {
                     type: 'string',
                     required: true,

@@ -15,12 +15,34 @@
 module.exports = {
     loyaltyApi: {
         internal: {
+            openWallet: {
+                secured: true, authTokenTypes: ['service'], accessGroups: ['serviceAccountUserGroup'],
+                permission: 'loyalty.wallet.open', apiExposure: 'loyaltyInternal',
+                key: '/wallets', method: 'POST', controller: 'DefaultLoyaltyInternalController', operation: 'openWallet',
+                help: { requestType: 'secured', message: 'Performs a Loyalty-owned wallet operation for a trusted calling service.' }
+            },
+            ownerWalletProjection: {
+                secured: true, authTokenTypes: ['service'], accessGroups: ['serviceAccountUserGroup'],
+                permission: 'loyalty.wallet.read', apiExposure: 'loyaltyInternal',
+                key: '/wallet-projections', method: 'POST', controller: 'DefaultLoyaltyInternalController', operation: 'ownerWalletProjection',
+                help: { requestType: 'secured', message: 'Performs a Loyalty-owned wallet operation for a trusted calling service.' }
+            },
+            earnRewards: {
+                secured: true, authTokenTypes: ['service'], accessGroups: ['serviceAccountUserGroup'],
+                permission: 'loyalty.rewards.earn', apiExposure: 'loyaltyInternal',
+                key: '/reward-earnings', method: 'POST', controller: 'DefaultLoyaltyInternalController', operation: 'earnRewards',
+                help: { requestType: 'secured', message: 'Performs a Loyalty-owned wallet operation for a trusted calling service.' }
+            },
             wallet: {
                 secured: true, authTokenTypes: ['access', 'service'], accessGroups: ['serviceAccountUserGroup', 'employeeUserGroup'],
                 permission: 'loyalty.wallet.read', apiExposure: 'loyaltyInternal',
                 key: '/wallets/:walletCode', method: 'GET',
                 controller: 'DefaultLoyaltyInternalController', operation: 'wallet',
                 help: { requestType: 'secured', message: 'Reads a Loyalty wallet projection by wallet code.' }
+            },
+            transferRewards: {
+                secured:true, authTokenTypes:['service'], accessGroups:['serviceAccountUserGroup'], permission:'loyalty.rewards.reserve',apiExposure:'loyaltyInternal',
+                key:'/reward-transfers',method:'POST',controller:'DefaultLoyaltyInternalController',operation:'transferRewards'
             },
             reserveRewards: {
                 secured: true, authTokenTypes: ['service'], accessGroups: ['serviceAccountUserGroup'],

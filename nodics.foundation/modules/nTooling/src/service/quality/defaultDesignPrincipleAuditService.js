@@ -290,12 +290,33 @@ module.exports = exportedService = {
     auditPrincipleContracts: function (failures) {
         (this.requireClauses || exportedService.requireClauses).call(this, failures, (this.corePath || exportedService.corePath).call(this, 'modules/nSetup/llm/contracts/nodics-principles.md'), [
             'capabilities are sacred, implementations are negotiable',
+            'Framework, Accelerator And Partner Ownership',
+            'customer-project-mode-contract.md',
             'AI Role And Responsibility Boundary',
             'Pre-Implementation Framework Study Gate',
             'Strict Nodics Coding Principles',
             'provide default capabilities',
             'root `package.json` is the only npm dependency installation authority',
             'Security, access control, validation, audit, rollback, diagnostics, and test'
+        ]);
+        (this.requireClauses || exportedService.requireClauses).call(this, failures, (this.corePath || exportedService.corePath).call(this, 'modules/nSetup/llm/contracts/customer-project-mode-contract.md'), [
+            '## Partner Write Boundary',
+            'Partners write only to their customer-owned backend and frontend repositories.',
+            '## Ownership And Dependency Direction',
+            '## Schema Ownership And Data Contributions',
+            '## Supported Customization',
+            '## Separate Contribution And Release Channel',
+            'Promotion is never an automatic partner action.',
+            '## Acceptance Evidence'
+        ]);
+        ['ai-coding-and-customization-contract.md', 'developer-implementation-contract.md'].forEach(fileName => {
+            (this.requireClauses || exportedService.requireClauses).call(this, failures, (this.corePath || exportedService.corePath).call(this, 'modules/nSetup/llm/contracts/' + fileName), [
+                'customer-project-mode-contract.md'
+            ]);
+        });
+        (this.requireClauses || exportedService.requireClauses).call(this, failures, (this.corePath || exportedService.corePath).call(this, 'modules/nSetup/llm/ai-enablement-index.md'), [
+            'customer-project-mode-contract.md',
+            'Partners write only to customer-owned repositories'
         ]);
         (this.requireClauses || exportedService.requireClauses).call(this, failures, (this.corePath || exportedService.corePath).call(this, 'modules/nSetup/llm/standards/module-standard.md'), [
             'Module `package.json` files must not declare `dependencies` or',

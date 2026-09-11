@@ -155,11 +155,21 @@ test('Promotion customer routes expose secured preview and apply permissions', (
 
 test('Promotion schemas expose explicit enterprise association references', () => {
     ['promotion', 'couponBatch', 'coupon', 'promotionRedemption'].forEach(schemaName => {
-        const definition = schemas.promotion[schemaName].definition;
+        const schema = schemas.promotion[schemaName];
+        const definition = schema.definition;
         assert.equal(definition.enterpriseRef.type, 'object');
         assert.equal(definition.issuerEnterpriseRef.type, 'object');
         assert.equal(definition.vendorEnterpriseRef.type, 'object');
         assert.equal(definition.enterpriseCode.required, false);
+        ['enterpriseRef', 'issuerEnterpriseRef', 'vendorEnterpriseRef'].forEach(fieldName => {
+            assert.deepEqual(schema.refSchema[fieldName], {
+                enabled: true,
+                moduleName: 'profile',
+                schemaName: 'enterprise',
+                type: 'one',
+                propertyName: 'code'
+            });
+        });
     });
 });
 
@@ -758,4 +768,25 @@ test('Promotion reversal marks applied redemption as reversed idempotently', asy
 
 test('Promotion customer API rejects unauthenticated ownership context', async () => {
     await assert.rejects(() => controller.preview({ httpRequest: { body: { subtotal: '129.00' } } }), /Authenticated tenant and customer are required/);
+});
+
+test('POS coupon claim and redemption enforce campaign expiry and immutable target replay', async () => {
+    installGlobals();
+    global.CLASSES={NodicsError:class extends Error{constructor(code,message){super(message);this.code=code;}}};
+    promotions = [{tenant:'default',code:'merchantCampaign',active:true,status:'ACTIVE',validTo:new Date(Date.now()-60000).toISOString()}];
+    coupons = [{tenant:'default',code:'merchantCoupon',promotionCode:'merchantCampaign',status:'DELIVERED',soldTo:'buyer',revision:0}];
+    const request={tenant:'default',ownerId:'buyer',payload:{couponCode:'merchantCoupon',targetCode:'POS_REVIEWED_TARGET',targetType:'POS'}};
+    await assert.rejects(service.claimPurchasedCouponCode(request),/expired/);
+    assert.equal(coupons[0].status,'DELIVERED');
+    promotions[0].validTo=new Date(Date.now()+3600000).toISOString();
+    await service.claimPurchasedCouponCode(request);
+    await assert.rejects(service.claimPurchasedCouponCode({...request,payload:{...request.payload,targetCode:'ANOTHER_TARGET'}}),/another fulfillment/);
+    promotions[0].validTo=new Date(Date.now()-60000).toISOString();
+    await assert.rejects(service.redeemClaimedCouponCode(request),/expired/);
+    assert.equal(coupons[0].status,'CLAIMED');
+    promotions[0].validTo=new Date(Date.now()+3600000).toISOString();
+    const redeemed=await service.redeemClaimedCouponCode(request);
+    promotions[0].validTo=new Date(Date.now()-60000).toISOString();
+    assert.equal((await service.redeemClaimedCouponCode(request)).revision,redeemed.revision);
+    assert.equal(coupons[0].usedCount,1);
 });

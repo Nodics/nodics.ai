@@ -1,5 +1,13 @@
 # Product
 
+Generic authoring follows effective schema publication metadata and the existing
+runtime role: publishable sources are Staged-only; publication projections and
+receipts are read-only to Workbench/generated HTTP CRUD. Owning publication and
+approved import services retain their governed paths. Project customization and
+failure cases are documented in
+`nodics.foundation/modules/nDatabase/database/llm/contracts/schema-authoring-authority.md`
+and the canonical Foundation schema-data-modeling guide.
+
 Product owns tenant-scoped sellable Product, Variant, Category, publication,
 localized business content, and locale-specific search-projection contracts.
 It does not own price, tax, promotion, inventory, fulfillment, or Media asset

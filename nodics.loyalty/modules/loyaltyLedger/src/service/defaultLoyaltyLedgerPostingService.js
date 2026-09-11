@@ -15,11 +15,13 @@ const UTILS = require('../../../loyaltyCore/src/utils/utils');
 
 /** @module loyaltyLedger/src/service/defaultLoyaltyLedgerPostingService @description Builds append-only reward ledger entries without persistence side effects. @layer service @owner loyaltyLedger @override Later modules may add persistence while preserving append-only and idempotency contracts. */
 module.exports = {
+    /** Throws the owning operation error and stops processing; callers retain responsibility for recovery. */
     fail: function (code, message) {
         let error = typeof CLASSES !== 'undefined' && CLASSES.NodicsError ? new CLASSES.NodicsError(code, message) : new Error(message);
         error.code = code;
         throw error;
     },
+    /** Rejects update, patch and delete operations against ledger history; corrections require reversal entries. */
     assertAppendOnlyMutation: function (request) {
         let operation = UTILS.normalizeCode(request && request.operation);
         if (['UPDATE', 'PATCH', 'DELETE', 'REMOVE'].indexOf(operation) >= 0) {
@@ -27,6 +29,7 @@ module.exports = {
         }
         return true;
     },
+    /** Validates ledger type, required movement references and amount before building append-only reward evidence. */
     buildEntry: function (request) {
         request = request || {};
         this.assertAppendOnlyMutation(request);

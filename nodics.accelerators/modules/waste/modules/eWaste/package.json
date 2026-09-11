@@ -1,7 +1,7 @@
 {
     "name": "eWaste",
     "index": "92.71",
-    "description": "Electronic waste scenario accelerator presets for nodics.waste.",
+    "description": "Reusable electronic-waste taxonomy, policies and customer journey orchestration over nodics.waste.",
     "main": "nodics.js",
     "version": "0.0.0",
     "private": true,
@@ -15,10 +15,14 @@
             "configuration",
             "data",
             "test",
-            "llm"
+            "llm",
+            "composition",
+            "service",
+            "router",
+            "controller"
         ],
         "runtime": {
-            "router": false,
+            "router": true,
             "publish": false,
             "web": false
         },
@@ -26,5 +30,8 @@
             "nodics.waste"
         ]
     },
-    "scripts": {}
+    "scripts": {
+        "test:contract": "for file in test/*.test.js; do node \"$file\" || exit 1; done",
+        "test": "npm run test:contract"
+    }
 }

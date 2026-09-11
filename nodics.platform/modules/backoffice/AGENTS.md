@@ -11,6 +11,17 @@
 
 ## Capability Boundary
 
+- Keep runtime observations separate from revision-protected administrator
+  lifecycle writes. Do not let a heartbeat restore stale enabled/registration
+  state. Deduplicate activation releases and receipts by their execution target;
+  preserve existing project routing overrides and reject genuine decision races.
+
+- Apply the framework Optional Module Independence principle. Use existing
+  workbench targets and lifecycle-action owners with live authorized availability;
+  never add another dependency catalogue or let published presentation restore
+  an absent/unauthorized provider. Keep required operation enforcement in its
+  owning API and preserve complete project/tenant paging during reconciliation.
+
 - `backoffice` is the backend registry, discovery, catalogue, compatibility,
   availability-summary, and bootstrap capability for Nodics Axis.
 - Nodics Axis is a separate frontend application. Never add frontend source,
@@ -133,3 +144,5 @@
   create a production connection authority.
 - Every new extension point requires positive, negative, boundary, security,
   consolidated/modular topology, and later-loaded override tests as applicable.
+
+Native workspaces use the bounded `backendWorkspace` native variant with stable workspace/view codes, never component imports or executable properties. Cross-module orphan removal must cascade through local grandchildren, and effective cross-provider cycles must be rejected. Follow the global module-owned UI contribution contract.

@@ -18,7 +18,7 @@
  */
 const assert = require('assert');
 
-global.CONFIG = { get: key => key === 'defaultTenant' ? 'default' :
+global.CONFIG = { get: key => key === 'defaultPageSize' ? 10 : key === 'defaultTenant' ? 'default' :
     key === 'moduleIdentityAliases' ? { 'nodics.core': 'nodics.foundation' } : undefined };
 global.SERVICE = {};
 global.NODICS = { getEnvironmentName: () => 'example.project' };
@@ -260,6 +260,11 @@ async function run() {
     assert.deepStrictEqual(dependencyStates.map(item => item.functionalModule), ['nodics.commerce', 'nodics.discovery']);
     assert.strictEqual(dependencyStates[0].satisfied, true);
     assert.strictEqual(dependencyStates[1].satisfied, false);
+    assert.strictEqual(dependencyStates[1].reason, 'Discovery is not registered.');
+    assert.strictEqual(dependencyStates[1].resolution, 'Register and activate Discovery.');
+    assert.strictEqual(dependencyService.buildActivationDataPlan(acceleratorRecord, 'status', {
+        dependencyStates: dependencyStates
+    }).readiness, 'BLOCKED', 'status views must not report READY while dependencies are unmet');
     let dependencyPlan = dependencyService.buildActivationDataPlan(Object.assign({}, acceleratorRecord, {
         registrationState: 'REGISTERED', runtimeState: 'ACTIVE'
     }), 'dryRun', { dependencyStates: dependencyStates });
@@ -270,6 +275,31 @@ async function run() {
         registrationState: 'REGISTERED', enabled: true
     });
     await dependencyService.assertFunctionalDependenciesSatisfied(acceleratorRecord, {});
+    for (const [registrationState, enabled, runtimeState, reason, resolution] of [
+        ['REGISTERED', false, 'ACTIVE', 'registered but not activated', 'Activate Discovery.'],
+        ['REGISTERED', true, 'OFFLINE', 'runtime is offline', 'Restore a healthy runtime'],
+        ['REGISTERED', true, 'DEGRADED', 'runtime is degraded', 'Restore a healthy runtime'],
+        ['REGISTERED', true, 'INCOMPATIBLE', 'runtime is incompatible', 'resolve the runtime compatibility issue']
+    ]) {
+        Object.assign(dependencyRecords['nodics.discovery'], { registrationState, enabled, runtimeState });
+        let state = (await dependencyService.getFunctionalDependencyStates(acceleratorRecord, {}))[1];
+        assert.strictEqual(state.satisfied, false);
+        assert(state.reason.includes(reason));
+        assert(state.resolution.includes(resolution));
+    }
+    delete dependencyRecords['nodics.discovery'];
+    let unavailable = (await dependencyService.getFunctionalDependencyStates(acceleratorRecord, {}))[1];
+    assert.strictEqual(unavailable.satisfied, false, 'a missing record must serialize a boolean, not undefined');
+    assert(unavailable.reason.includes('has not been discovered'));
+    dependencyService.getRecord = async () => { throw new Error('private database details'); };
+    let unknown = (await dependencyService.getFunctionalDependencyStates(acceleratorRecord, {}))[0];
+    assert.strictEqual(unknown.registrationState, 'UNKNOWN');
+    assert.strictEqual(unknown.satisfied, false);
+    assert(unknown.reason.includes('could not be checked'));
+    assert(!JSON.stringify(unknown).includes('private database details'));
+    dependencyService.describeFunctionalDependency = () => ({ reason: 'Project guidance', resolution: 'Contact project operations' });
+    assert.strictEqual((await dependencyService.getFunctionalDependencyStates(acceleratorRecord, {}))[0].reason,
+        'Project guidance', 'later-layer presentation overrides must be honored');
     CONFIG.get = originalConfigGet;
 
     console.log('Functional-module catalogue service validated');

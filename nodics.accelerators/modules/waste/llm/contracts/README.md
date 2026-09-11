@@ -29,8 +29,8 @@ scenario accelerators:
 Scenario accelerators such as `eWaste` may provide reusable domain-specific
 families, categories, item types, materials, evidence policies, collection
 presets, acceptance rules, impact profiles, asset-policy defaults, transfer
-defaults, and coupon-redemption settlement defaults. They must remain
-project-neutral and schema-data driven.
+defaults, and coupon-redemption settlement defaults. They remain project-neutral; their services compose owning framework operations
+without defining duplicate schemas or ledgers.
 
 Scenario accelerators such as `wasteRecycling` may provide reusable
 provider-neutral handoff contracts for recycler/logistics journeys. They may
@@ -38,9 +38,7 @@ shape movement intents and donation-completion payloads, but provider adapters,
 credentials, tracking identifiers, certificates, and callbacks remain owned by
 project modules or later provider-specific accelerators.
 
-Application-composition accelerators such as `circa.eWaste` may compose eWaste
-presets, recycling handoff contracts, and `nodics.waste` APIs into reusable
-backend journeys for a named application. They must not create parallel Waste
-schemas, generated CRUD routers, wallet ledgers, Commerce products, coupon
-entitlements, Media files, Location provider state, or project branding. The
-matching reusable frontend module is `nodics.exp/nodics.circa.eWaste`.
+Keep one accelerator per domain. eWaste owns reusable electronic-waste journeys
+alongside its presets. Application identity, branded site composition, site-form
+adapters and deployment policy belong in customer modules above that accelerator.
+Do not create a sibling application-named accelerator for the same domain.

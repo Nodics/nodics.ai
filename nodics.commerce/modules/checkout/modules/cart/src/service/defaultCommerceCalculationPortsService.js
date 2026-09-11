@@ -74,6 +74,10 @@ module.exports = {
     },
     /** Selects a governed price row and returns replayable Pricing decision evidence. @param {Object} request Pricing request. @param {Object} cart Cart context. @param {Object} authData Internal auth data. @returns {Promise<Object>} Pricing decision. */
     price: async function (request, cart, authData) {
+        if (request.priceQuoteCode) {
+            if (!SERVICE.DefaultNegotiatedPriceService) throw new Error('Negotiated Pricing is unavailable');
+            return SERVICE.DefaultNegotiatedPriceService.decide({...request, correlationId:cart.correlationId});
+        }
         if (!SERVICE.DefaultPriceSelectionService) throw new Error('Price selection service is required');
         const exact = SERVICE.DefaultExactAmountService;
         const books = await this.loadPriceBooks(request, authData);

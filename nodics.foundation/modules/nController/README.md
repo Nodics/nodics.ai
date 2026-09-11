@@ -1,5 +1,13 @@
 # nController
 
+Generic authoring follows effective schema publication metadata and the existing
+runtime role: publishable sources are Staged-only; publication projections and
+receipts are read-only to Workbench/generated HTTP CRUD. Owning publication and
+approved import services retain their governed paths. Project customization and
+failure cases are documented in
+`nodics.foundation/modules/nDatabase/database/llm/contracts/schema-authoring-authority.md`
+and the canonical Foundation schema-data-modeling guide.
+
 `nController` owns the HTTP/controller boundary between routers and facades.
 
 Controllers translate inbound request data into Nodics request context and call

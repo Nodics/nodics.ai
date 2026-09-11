@@ -10,8 +10,13 @@
  */
 'use strict';
 /** @module commsApi/src/router/routers @description Declares secured Communication customer, operator, and provider callback routes. @layer router @owner commsApi @override Provider modules may add secured callback mappings without exposing generic schema CRUD. */
-module.exports = { communicationApi: {
+module.exports = { commsApi: {
     customer: { listInbox: { secured: true, authTokenTypes: ['access'], accessGroups: ['customerUserGroup'], permission: 'communication.customer.read', apiExposure: 'communicationCustomer', key: '/customer/communications', method: 'GET', controller: 'DefaultCommunicationApiController', operation: 'listInbox' } },
     operator: { retryDelivery: { secured: true, authTokenTypes: ['access'], accessGroups: ['employeeUserGroup'], permission: 'communication.delivery.retry', apiExposure: 'communicationManagement', key: '/operator/communications/:intentCode/retry', method: 'POST', controller: 'DefaultCommunicationApiController', operation: 'retryDelivery' } },
+    internal: {
+        resolveCommunication:{secured:true,authTokenTypes:['service'],accessGroups:['serviceAccountUserGroup'],permission:'communication.request',apiExposure:'communicationIntegration',key:'/internal/communications/:intentCode/resolution',method:'POST',controller:'DefaultCommunicationApiController',operation:'resolveDelivery'},
+        requestCommunication:{secured:true,authTokenTypes:['service'],accessGroups:['serviceAccountUserGroup'],permission:'communication.request',apiExposure:'communicationIntegration',key:'/internal/communications',method:'POST',controller:'DefaultCommunicationApiController',operation:'requestCommunication'},
+        retryCommunication:{secured:true,authTokenTypes:['service'],accessGroups:['serviceAccountUserGroup'],permission:'communication.request',apiExposure:'communicationIntegration',key:'/internal/communications/:intentCode/retry',method:'POST',controller:'DefaultCommunicationApiController',operation:'retryDelivery'}
+    },
     integration: { receiveCallback: { secured: true, authTokenTypes: ['service'], accessGroups: ['serviceAccountUserGroup'], permission: 'communication.callback.receive', apiExposure: 'communicationIntegration', key: '/integrations/:providerCode/communication-callback', method: 'POST', controller: 'DefaultCommunicationApiController', operation: 'receiveCallback' } }
 } };

@@ -8,7 +8,19 @@ This module provides the identity and access foundation used by Axis, Nexus, bac
 
 ## Developer Notes
 
+- Enterprise Workbench creation delegates to
+  `DefaultEnterpriseManagementService.createFromWorkbench` through the declared
+  `setupEnterprise` aggregate. Profile derives tenant assignment, retains allowed
+  effective project fields and activates the enterprise. Generic HTTP create is
+  not an alternative setup path. Updates retain their existing concurrency rules.
+- The setup command stores a principal-bound key and canonical input digest for
+  retrying interrupted activation without inserting another enterprise. These
+  fields are excluded from Workbench output. Nested Address/Contact saves remain
+  separate writes; a failed enterprise save does not roll them back. See the
+  Axis Schema Workbench guide for the full business journey and customization.
+
 - Keep route access, password handling, session restoration, and permission resolution inside profile-owned contracts.
+- External identity link/unlink and recipient resolution use authenticated controller routes. See [the external identity contract](llm/contracts/external-customer-identity.md); special handlers must not bypass bearer authentication.
 - Keep reusable address/contact facts in Profile. Location and business modules should reference Profile addresses and contacts instead of duplicating postal, geocoding, verification, access-note, or display-policy fields.
 - Keep global enterprise seed data in Profile. Capability-specific enterprises must be contributed from the owning module data folder into Profile enterprise authority, so inactive capabilities do not create their demo or reference enterprises.
 - Add project-specific users, groups, and permissions through profile data/configuration, not frontend shortcuts.
@@ -33,3 +45,11 @@ Run profile identity and access tests when behavior changes, then run:
 npm --prefix nodics.docs test
 npm run quality:docs
 ```
+
+Customer account forms are normalized and registered by Profile through its
+existing signup pipeline; see [account form registration](llm/contracts/customer-registration-form.md).
+External browser sign-in can use a one-use Profile auth-cache handoff so domain
+orchestrators never receive refresh credentials; see
+[external identity](llm/contracts/external-customer-identity.md).
+
+Established external customer sessions retain an opaque identity-link binding for journey continuation and refresh, with current link/account checks. Launch freshness remains bounded; see the [external identity contract](llm/contracts/external-customer-identity.md).

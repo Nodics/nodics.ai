@@ -207,3 +207,5 @@ redaction, and shared-state behavior.
 - Human and service principals: [profile](../../nodics.platform/modules/profile/README.md)
 - Generic token lifecycle: [nToken](../nToken/README.md)
 - HTTP authorization: [nRouter](../nRouter/README.md)
+
+Customer access tokens may carry Profile-issued `externalIdentityLinkCode`, a bounded opaque binding for verified channel sessions. Profile owns live link checks and refresh propagation; nAuth never verifies external provider proofs.

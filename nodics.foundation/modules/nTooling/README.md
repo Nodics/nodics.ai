@@ -45,6 +45,11 @@ function. The nTooling service merge keeps other default methods, such as
 handler is still possible, but it requires the normal explicit
 `$override.mode: 'replace'` governance.
 
+The `ai:principle-audit` command checks the canonical partner write boundary,
+framework/accelerator/project ownership clauses and their human/AI entry points.
+It detects guidance drift; repository ACLs and filesystem write controls remain
+separate operational responsibilities.
+
 ## Capability
 
 `nTooling` provides:
@@ -136,6 +141,23 @@ documentation is not accepted only because Markdown exists; it must be
 navigable, source-backed, publishable, access-controlled, and useful enough for
 business users, architects, administrators, developers, operators, QA owners,
 and AI tools.
+
+## Local Runtime Isolation
+
+The existing environment `nodics.environment.json` remains topology authority.
+`dependsOn` validates startup order, not a cascade-shutdown policy. Once all
+selected runtimes are ready, an unexpected child exit is recorded and logged
+without stopping its peers. Startup failure still fails and rolls back the
+requested launch; explicit `topology:stop` stops owned live processes.
+
+Inspect `topology:status` and the affected log before recovery. To restore a
+failed runtime independently, use its existing start command in a separate
+terminal; it is then operator-owned and must be stopped explicitly before a
+future supervised full launch. No automatic restart policy or second process
+registry is introduced. Test this with
+`test/projectTopologyIsolationContract.test.js`; its processes and ports are
+isolated from customer runtimes. Standard functional exceptions are tested by
+`test/functionalModuleOptionalityContract.test.js`.
 
 ## Command Contract
 

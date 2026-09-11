@@ -72,14 +72,23 @@ module.exports = {
         }));
     },
 
-    /** Calculates an impact result through the Waste Impact service. */
+    /**
+     * Calculates through the effective loader-owned Waste Impact service, honoring
+     * later-layer overrides and asynchronous providers. Standalone tests without a
+     * service registry may use the module export; an incomplete runtime fails closed.
+     * @returns {Promise<Object>} Assessment; no persistence or wallet posting occurs.
+     */
     calculateImpact: function (request) {
         request = request || {};
         let payload = request.payload || {};
-        return Promise.resolve(impactService.calculate(Object.assign({}, payload, {
+        const effectiveImpact = typeof SERVICE === 'undefined' ? impactService : SERVICE.DefaultWasteImpactCalculationService;
+        if (!effectiveImpact || typeof effectiveImpact.calculate !== 'function') {
+            this.fail('ERR_WASTE_00006', 'Waste Impact calculation service is unavailable');
+        }
+        return Promise.resolve(effectiveImpact.calculate(Object.assign({}, payload, {
             idempotencyKey: this.idempotencyKey(request),
             correlationId: request.correlationId || payload.correlationId
-        })));
+        }), { tenant: request.tenant }));
     },
 
     /** Builds an approved-submission asset creation contract without wallet or commerce side effects. */

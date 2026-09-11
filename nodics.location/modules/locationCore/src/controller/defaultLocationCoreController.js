@@ -13,6 +13,7 @@
 
 /** @module locationCore/src/controller/defaultLocationCoreController @description Maps secured Location HTTP requests to the Location facade. @layer controller @owner locationCore */
 module.exports = {
+    /** Maps HTTP values and authenticated context into the owning Location request; transport values do not replace identity. */
     request: function (request) {
         request = request || {};
         let httpRequest = request.httpRequest || {};
@@ -27,24 +28,29 @@ module.exports = {
         };
     },
 
+    /** Invokes the owning facade and maps its promise into the supported callback or response envelope. */
     invoke: function (operation, request, callback) {
         let promise = FACADE.DefaultLocationCoreFacade[operation](this.request(request)).then(data => ({ data: data }));
         if (!callback) return promise;
         promise.then(value => callback(null, value)).catch(callback);
     },
 
+    /** Delegates semantic-place creation to the Location owner while preserving trusted request context. */
     createLocation: function (request, callback) {
         return this.invoke('createLocation', request, callback);
     },
 
+    /** Delegates updates to the Location owner, which validates revisions, coordinates and supported fields. */
     updateLocation: function (request, callback) {
         return this.invoke('updateLocation', request, callback);
     },
 
+    /** Delegates the requested semantic-place read to the owning Location operation. */
     getLocation: function (request, callback) {
         return this.invoke('getLocation', request, callback);
     },
 
+    /** Delegates bounded semantic-place search to the owning Location operation. */
     searchLocations: function (request, callback) {
         return this.invoke('searchLocations', request, callback);
     }

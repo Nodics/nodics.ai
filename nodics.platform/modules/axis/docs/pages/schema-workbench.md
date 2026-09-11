@@ -1,5 +1,272 @@
 # Axis Schema Workbench
 
+## Guided Business Record Creation
+
+The default tab is **Records**. Business users work with Enterprise, Address and
+Contact records; **Schema** remains available for inspecting definitions and
+exporting JSON. Technical identifiers and operation badges are not repeated in
+the everyday Records header. The create icon has a descriptive hover label.
+
+The form reads the effective backend descriptor, including project extensions.
+It presents named sections followed by Review. Required fields are checked before
+advancing; review permits returning to a section without losing entered values.
+Boolean, date, number, enumeration and multiple-selection properties use typed
+controls. Localized names use language-specific text inputs. Unstructured objects
+without a declared business editor retain a validated structured editor; this
+fallback is not a substitute for modelling a business property properly.
+
+### Enterprise, Addresses, Contacts and Users
+
+1. Select Enterprise and create a record. Enter its business name and unique
+   code, then choose permitted business roles. Platform authority is not a role
+   that the generic creation form can grant.
+2. In Organisation, select an existing parent enterprise when applicable.
+   Tenant assignment is managed by the Profile setup operation; a business user
+   does not enter a tenant code in this form.
+3. In Addresses and contacts, choose existing records or use **Add Address** or
+   **Add Contact**. Each nested form has its own sections and review. Confirming
+   it adds an unsaved record to the parent draft, not an immediate database write.
+4. An address can itself select or create a contact. Closing the child returns
+   to the preceding form. Removing a draft association does not delete a record.
+5. Review the enterprise and its associations. Final confirmation saves related
+   records first, then invokes Profile's declared enterprise setup operation with
+   their proper reference values. It creates the enterprise's tenant and runs
+   the existing activation path; it is not a raw enterprise insert.
+6. After success, **Set up enterprise users** opens the existing Profile workspace
+   on its Users tab with the enterprise field prefilled. Creating or assigning a
+   user remains a separate, explicit, authorized action. No account, invitation
+   or permission is created simply by following this link.
+
+```mermaid
+flowchart TD
+    A[Enterprise details] --> B[Organisation]
+    B --> C[Addresses and contacts]
+    C --> D{Existing or new?}
+    D -->|Existing| E[Select authorized record]
+    D -->|New| F[Related form and review]
+    F --> G[Return unsaved draft to enterprise]
+    E --> H[Review enterprise]
+    G --> H
+    H --> I[Save children and preserve reference values]
+    I --> J[Profile enterprise setup and activation]
+    J --> K[Enterprise record]
+    K --> L[Explicit user setup with enterprise prefilled]
+```
+
+### Save, Retry and Cancellation
+
+| Situation | Result and business action |
+| --- | --- |
+| Required or invalid value | Stay in the affected section and correct it; no root save occurs. |
+| Cancel a changed form | Confirm discard or keep editing. |
+| Child form confirmed | It remains a draft until the root is confirmed. |
+| Child saved, another child or parent fails | Successful child references stay in the open form. Correct the failure and retry. |
+| Discard after partial save | Saved children remain. Discard is not rollback or deletion. |
+| Enterprise saved but activation interrupted | Retry the unchanged command; Profile recognizes the same actor/key/payload and resumes activation. |
+| Change payload after a partially completed enterprise setup | The original command identity cannot silently create a different enterprise; inspect the saved record and correct through its owning operation. |
+| Target absent or runtime ambiguous | Fail closed; do not choose an arbitrary connection. Restore availability or select the correct root context. |
+| Stale edited record | Preserve the draft and surface the conflict; do not automatically replace the original revision token. |
+
+Cross-module child saves are ordered writes, **not a distributed transaction**.
+Generic draft checkpoints live in the mounted form, not a durable browser or
+server draft store. Closing the tab, changing routes or reloading can lose draft
+state. A reload warns when the form is dirty, but route-level recovery is not
+provided. Domain workflows needing all-or-nothing persistence must declare an
+owning transactional operation with supported provider boundaries. The enterprise
+command's saved activation checkpoint does not make arbitrary child saves atomic.
+
+Existing references open in nested detail dialogs. Editing follows the target's
+permissions, concurrency and publication path. Deletion is offered only for the
+selected top-level record, never from a nested detail. Saved children can be
+managed independently through their own top-level record page.
+
+### Customize Form Layout in a Project
+
+Use the normal project schema contribution. Do not add a frontend schema list,
+new config loader or duplicate registration source. For example, a project that
+adds an Enterprise account reference can contribute:
+
+```javascript
+module.exports = {
+  profile: {
+  enterprise: {
+    definition: {
+      accountReference: {
+        type: 'string',
+        required: false,
+        description: 'Identifies the enterprise in the project accounting system.'
+      }
+    },
+    backoffice: {
+      fields: {
+        accountReference: { label: 'Accounting reference' }
+      },
+      form: {
+        sections: {
+          accounting: {
+            label: 'Accounting',
+            fields: ['accountReference']
+          }
+        },
+        defaultColumns: ['name', 'code', 'accountReference', 'active'],
+        copy: { reviewLabel: 'Review enterprise', nextLabel: 'Continue' }
+      }
+    }
+  }
+  }
+};
+```
+
+The snippet belongs in the later-loaded project's existing schema module. Keep
+the inherited enterprise setup command: it validates the effective writable
+fields and passes project additions through the owning service. Do not copy the
+framework Enterprise schema or bypass Profile authority with a custom HTTP insert.
+
+Sections are keyed so a later layer can extend them. Set a section's
+`enabled: false` to remove that grouping; its editable fields are appended to the
+remaining-fields section. Deleted effective schema properties are omitted.
+New properties not explicitly grouped are appended automatically. Required fields
+cannot be suppressed with `hiddenFields`; optional fields may be hidden for a
+cleaner journey. Hiding is not security: protected values require backend access
+and exclusion rules. Descriptions remain below property names in Schema view and
+as field help in forms; reference schemas and allowed values remain guidance.
+
+### Customize an Owning Create Operation
+
+For records requiring domain setup, declare an operation in the existing
+`backoffice.aggregateOperations`, then reference it from `backoffice.form`:
+
+```javascript
+backoffice: {
+  aggregateOperations: {
+    setupAccount: {
+      purpose: 'CREATE',
+      label: 'Set up account',
+      consistency: 'MODULE_OWNED',
+      service: 'DefaultAccountManagementService',
+      operation: 'createFromWorkbench',
+      confirmationRequired: true
+    }
+  },
+  form: {
+    createOperation: 'setupAccount',
+    managedCreateFields: ['accountPartition'],
+    sections: {
+      details: { label: 'Account details', fields: ['code', 'name'] }
+    }
+  }
+}
+```
+
+This is an illustrative project-owned account schema, not a new framework module.
+Its owning service must authenticate the human actor, enforce action permissions,
+validate the effective allowed inputs, derive managed values server-side, and
+implement idempotency and recovery. Axis sends `{model}` to the existing aggregate
+endpoint with a stable per-form command key. It does not receive executable
+service code or fall back to generated create after failure. Generic HTTP create
+and createAll reject bypassing a declared owning create command. Trusted imports
+and internal services retain their existing governance.
+
+### Customize the Follow-up Journey
+
+An existing `form.completionAction` may provide a business label and internal
+path, for example `/profile/enterprises?tab=users&enterpriseCode={code}`. Axis
+encodes substituted record values. Backend workspace TEXT fields can declare
+`defaultFromParameter: 'enterpriseCode'`; the value is a bounded editable default,
+not trusted authorization context. Other field types cannot opt into this binding.
+The destination service must still validate the enterprise and actor. Never pass
+credentials or privileges in a URL, and never treat navigation as an approval.
+
+### Verification and Reference Patterns
+
+Automated contracts cover effective-field grouping, project additions, managed
+create delegation, protected inputs, resumable enterprise activation, draft review,
+discard confirmation, reference checkpoints and runtime ambiguity. Browser
+acceptance should exercise both existing and new related records, a nested child,
+validation, retry, save, reopen and permitted edit, including narrow viewports.
+Do not call a journey production-qualified from unit tests alone.
+
+The interaction follows the established reference-editor and guided-creation
+patterns documented in SAP Commerce's
+[Default Reference Editor](https://help.sap.com/docs/SAP_COMMERCE/5c9ea0c629214e42b727bf08800d8dfa/8bad8ae286691014bf4ab06b9b99d7c6.html)
+and [Configurable Flow Wizard](https://help.sap.com/docs/SAP_COMMERCE/5c9ea0c629214e42b727bf08800d8dfa/8bd6b110866910149666f5b05fb95681.html).
+Nodics continues to own its metadata, module boundaries and persistence contracts.
+
+## Staged Authoring and Online Inspection
+
+The default schema browser is an authoring entry point. For a schema explicitly
+governed by publishing it shows the Staged source, not a second Online entry
+offering direct CRUD. Operational schemas may still appear on distinct runtimes:
+Point of Service, Store, and Sales Channel are currently operational master data,
+not automatically publishable because Commerce also has a Staged server.
+
+| Record class | Default selection | Generic mutation |
+| --- | --- | --- |
+| Publishable source with Staged available | Staged source | According to backend permissions |
+| Publishable source with only Online available | Not an authoring selection | Rejected; no fallback to Online |
+| Publication projection, pointer, receipt or outbox | Read-only inspection where authorized | Rejected on every runtime |
+| Operational schema | Explicit runtime-specific entry | Existing backend permissions and concurrency |
+
+CMS, Editorial and Product catalogue source definitions now declare this intent
+in their effective schema metadata. Publication-owned evidence/projection schemas
+in those domains are read-only for generic authoring. Other domains must declare
+their actual lifecycle; a schema's `revision` or `versionId` does not establish it.
+
+```mermaid
+flowchart TD
+    A[Find a schema] --> B{Backend says publishable source?}
+    B -->|Yes| C[Select Staged authority]
+    B -->|No| D[Select authorized operational runtime]
+    C --> E[Create or edit using generated services]
+    E --> F[Owning validation and publication workflow]
+    F --> G[Online active projection]
+    G --> H[Read-only inspection]
+    D --> I[Existing operational CRUD rules]
+```
+
+### Business-user Journey
+
+1. Search for Product or CMS Page. Choose the Staged result; Records opens by default.
+2. Create or edit the source record. Saving does not itself publish the change.
+3. Follow the owning module's validation/approval/publication journey to change
+   what Online consumers see. Use that journey for withdrawal and rollback too.
+4. Related records still open as separate details. A read-only target cannot be
+   edited or created through a nested form to bypass its authority.
+
+A missing Staged runtime cannot make Online editable. Restore the authorized
+Staged connection and retry discovery. A missing selected connection fails
+instead of sending the mutation to another runtime.
+
+### Published Is Not Just an Online Collection
+
+CMS publishes immutable manifests and active pointers; Editorial publishes
+Online article projections; Product publishes search projections and evidence.
+Those are not live copies of each source schema. This change does not add a
+Staged/Published comparison tab or present raw Online source records as published
+content. Such a view must consume each domain's authoritative active projection.
+Generic projection inspection is read-only and is not an approval/publish action.
+
+### Customize and Extend Safely
+
+In a project-owned `src/schemas/schemas.js`, extend the schema's existing
+`backoffice.mutationPolicy` with `lifecycle: 'PUBLISHABLE', publishRequired: true`.
+Set `runtimeRole.publication: 'STAGED'` through the existing environment
+configuration, not an Axis setting. Mark owner-managed projections with
+`backoffice.mutationMode: 'READ_ONLY'` and read/search operations only. No new
+configuration store or client schema-name list is needed.
+
+The shared authoring policy is enforced by Workbench and generated HTTP
+controllers before body fields are merged. Trusted publication/import service
+calls keep their existing governed path. A project must not override generic
+controllers to permit Online writes or treat a browser flag as approval.
+
+Test successful Staged editing, permission denial, absent Staged, missing
+connection, direct Online create/update/delete, bulk and aggregate rejection,
+nested read-only targets, and operational schemas in a mixed-lifecycle module.
+Axis tests protect selection and rendering; backend tests protect persistence
+boundaries. Source tests do not by themselves prove a domain's full publication
+deployment or rollback.
+
 Axis implements the presentation side of Nodics Schema Workbench. The owning
 backend module remains authoritative for schemas, allowed operations,
 relationships, generated CRUD, domain operations, validation, permissions,
@@ -50,6 +317,10 @@ The authenticated `/schema-workbench` route:
 - builds typed filters only from descriptor-advertised fields and operators;
 - supports bounded nested `AND`/`OR` groups with an inert JSON request preview;
 - keeps filter edits as a local draft until the employee applies them;
+- combines text search and Advanced search in one shared search panel; folding
+  advanced controls preserves the filter draft, while applied conditions and
+  backend-enforced scope remain visible; Clear all resets text and optional
+  conditions without changing fixed scope or granting broader access;
 - offers only backend-configured page sizes and shows the authoritative total;
 - cancels obsolete in-flight record requests when query state changes;
 - renders primary and searchable fields in a responsive record table;
@@ -174,6 +445,32 @@ first bounded page of Address records using labels supplied by the effective
 Profile schema. The employee can open Create Address, complete required fields,
 select an existing Contact or add a new Contact draft, and submit the complete
 draft directly to Profile.
+
+The Model tab keeps the record list collapsible above the selected record.
+Reference links open a dialog for the target record. Each dialog preserves its
+parent and can open the next reference; closing returns to the preceding level.
+Edit is available only when the relationship advertises `EDIT_RELATED` and the
+target schema allows Update. Delete is available only on the root record selected
+in the workbench, never inside a reference dialog.
+
+Nested Create supports selecting existing records or preparing new related
+drafts. For example, an Enterprise draft can contain an Address draft with a
+Contact draft. **Add to draft** performs no write. On final submission, Axis
+resolves descendants through their owning generated services, then places the
+returned backend-declared reference values into the parent payload. A failed
+parent save retains successful child references for retry while the form remains
+open. These ordered writes are not a transaction: a saved child remains saved
+if a later write fails or the operator abandons the parent. Browser reload loses
+unsaved drafts; it does not roll back saved children. Domain-owned aggregate or
+workflow operations remain necessary for atomic or durable multi-module work.
+
+Removing a selected association uses `UNLINK`; it does not delete the target.
+Required-reference validation still applies. The database module owns
+`schemaWorkbench.defaultRelationshipActions`; a schema's
+`backoffice.relationships.<field>.actions` can narrow these defaults. Target
+schema permissions and backend validation remain authoritative. Schema-specific
+versioning and publishing continue through the owning backend pipelines; saving
+in this workbench does not implicitly publish a record.
 
 For Update, the employee selects a record row, chooses **Edit** when
 permitted, changes ordinary fields or relationship references, and submits.

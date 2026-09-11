@@ -11,6 +11,11 @@ Do not audit or rerun checks across Nodics framework source unless the developer
 explicitly requests framework inspection. If mode is unstated, derive it from
 the owner of the requested change and use the smallest project-owned scope.
 
+Apply `../contracts/customer-project-mode-contract.md` to partner work: write
+only to customer-owned repositories. Send reusable framework or accelerator
+proposals through the separate Nodics contribution/request and release channel.
+A need for framework work does not authorize partner edits to its source.
+
 Before editing, answer the Nodics **what / where / how** gate. This is
 mandatory because many refactor mistakes start when an AI tool understands the
 requested outcome but writes the right idea into the wrong artifact.

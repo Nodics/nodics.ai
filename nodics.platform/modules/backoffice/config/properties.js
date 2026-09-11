@@ -23,6 +23,9 @@ module.exports = {
     backofficeFunctionalModuleActivationData: {
         modules: {}
     },
+    backofficeFunctionalModuleCatalogue: {
+        eligibilityPageSize: 256
+    },
     schemaPolicies: {
         backoffice: {
             contractReader: {
@@ -200,7 +203,7 @@ module.exports = {
             }
         },
         allowedSchemes: ['http', 'https'],
-        clientSafeMetadata: ['moduleName', 'displayName', 'parentModule', 'canonicalIdentity', 'instanceId',
+        clientSafeMetadata: ['moduleName', 'displayName', 'parentModule', 'canonicalIdentity', 'functionalModuleIdentity', 'instanceId',
             'environment', 'server', 'node', 'version', 'moduleKind',
             'runtimeRole', 'capabilities', 'clientCallable', 'endpoint', 'healthPath', 'state', 'lastSeenAt', 'backoffice']
     }

@@ -87,6 +87,29 @@ module or a later project module. Implementation evidence comes from store
 schemas, store data packs, store backoffice capability service, and generated
 schema contracts for Store, SalesChannel, and PointOfService.
 
+### Online and physical service points
+
+A PointOfService is a selling or service context, not necessarily a physical
+place. Its `locationRef` is an optional typed reference to
+`locationCore.location`. The Commerce core-reference release includes an online
+service point without a location; it must import while Location is absent.
+Store, tenant, lifecycle, and revision requirements still apply.
+
+For example, an online-only shop can register Commerce and activate its required
+core data without registering Location. A physical pickup operation must instead
+resolve a valid, authorized location before making a physical-place promise.
+Leaving the association optional does not qualify every physical operation for
+location-free execution. Do not insert an empty object or invented location
+code merely to satisfy validation.
+
+If activation reports record-level errors on a point of service, inspect the
+effective Store schema and import-run diagnostics. A legacy required
+`locationRef` can reject the online core record. After deploying the corrected
+schema, restart the owning Commerce runtimes through the normal topology
+workflow; database model initialization refreshes the collection validator.
+Retry activation through Module Registry. Keep existing records and import
+receipts; do not drop collections or manually mark the module enabled.
+
 ## Customization and extension
 
 Projects may extend Base Commerce by adding store attributes, channel rules,
@@ -95,3 +118,32 @@ calculation hooks in a later-loaded module. The extension must preserve the
 standard Store, SalesChannel, and PointOfService ownership model, keep
 tenant/store scope explicit, and prove that checkout, pricing, inventory,
 content, and fulfillment resolve the same selling context.
+
+For a physical-only project, a later-loaded module extending Store may strengthen
+the existing property:
+
+```js
+module.exports = {
+    store: {
+        pointOfService: {
+            definition: { locationRef: { required: true } }
+        }
+    }
+};
+```
+
+Keep the inherited object type and reference metadata. Supply a real location in
+the project's effective activation data through the existing data layers, and
+prove that missing references are rejected while valid authorized references
+work. Changing the property to required without adapting the online core record
+will intentionally prevent activation. No new module-dependency setting is
+needed. Mixed online/physical projects should keep the general property optional
+and enforce physical-place requirements in the operation that needs them.
+
+The focused Store core-reference contract checks required field coverage,
+retained reference metadata, and a stronger project overlay:
+
+```bash
+node --test nodics.commerce/modules/baseCommerce/modules/store/test/coreReferenceLocationContract.test.js
+node nodics.location/test/locationBusinessAssociationContract.test.js
+```

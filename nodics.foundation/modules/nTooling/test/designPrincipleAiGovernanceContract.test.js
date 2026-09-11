@@ -53,4 +53,56 @@ assert.deepStrictEqual(failures, [
     'AGENTS inheritance failure'
 ], 'principle audit must preserve AI-governance failures');
 
+const principleService = require('../src/service/quality/defaultDesignPrincipleAuditService');
+const path = require('path');
+const fs = require('fs');
+const foundationRoot = path.resolve(__dirname, '../../..');
+const partnerContract = 'modules/nSetup/llm/contracts/customer-project-mode-contract.md';
+const context = {
+    ...principleService,
+    /** Resolve canonical guidance independently of the shell's working directory. */
+    corePath(relativePath) { return relativePath; },
+    /** Read actual authored governance without booting or modifying a runtime. */
+    read(relativePath) { return fs.readFileSync(path.join(foundationRoot, relativePath), 'utf8'); }
+};
+const intactFailures = [];
+context.auditPrincipleContracts(intactFailures);
+assert.deepStrictEqual(intactFailures, [], 'authored principle contracts must pass');
+
+// Simulate lost source clauses without changing the checkout or generated data.
+[
+    [partnerContract, 'Partners write only to their customer-owned backend and frontend repositories.'],
+    [partnerContract, '## Ownership And Dependency Direction'],
+    [partnerContract, '## Schema Ownership And Data Contributions'],
+    [partnerContract, '## Separate Contribution And Release Channel'],
+    [partnerContract, 'Promotion is never an automatic partner action.'],
+    ['modules/nSetup/llm/contracts/ai-coding-and-customization-contract.md', 'customer-project-mode-contract.md'],
+    ['modules/nSetup/llm/contracts/developer-implementation-contract.md', 'customer-project-mode-contract.md'],
+    ['modules/nSetup/llm/ai-enablement-index.md', 'Partners write only to customer-owned repositories']
+].forEach(([targetPath, clause]) => {
+    const driftedFailures = [];
+    const drifted = {
+        ...context,
+        /** Model documentation drift at a single ownership or discovery boundary. */
+        read(relativePath) {
+            const content = context.read(relativePath);
+            return relativePath === targetPath ? content.split(clause).join('removed') : content;
+        }
+    };
+    drifted.auditPrincipleContracts(driftedFailures);
+    assert(driftedFailures.some(message => message.includes(targetPath) && message.includes(clause)),
+        'principle audit must reject a removed partner governance clause: ' + clause);
+});
+const missingFailures = [];
+context.auditPrincipleContracts.call({
+    ...context,
+    /** Model a missing canonical contract using the normal audit read boundary. */
+    read(relativePath) {
+        if (relativePath === partnerContract) throw new Error('missing contract');
+        return context.read(relativePath);
+    }
+}, missingFailures);
+assert(missingFailures.includes('Missing principle audit file: ' + partnerContract),
+    'principle audit must reject a missing partner contract');
+
 console.log('Design-principle AI-governance contract validated');

@@ -35,15 +35,16 @@ module.exports = {
             }
         },
         operator: {
+            createListing:{secured:true,authTokenTypes:['service'],accessGroups:['serviceAccountUserGroup'],permission:'commerce.product.publish',apiExposure:'commerceManagement',key:'/internal/products/listings',method:'POST',controller:'DefaultProductListingAuthoringController',operation:'create'},
             publishSearch: {
-                secured: true, authTokenTypes: ['access'], accessGroups: ['employeeUserGroup'],
+                secured: true, authTokenTypes: ['access','service'], accessGroups: ['employeeUserGroup','serviceAccountUserGroup'],
                 permission: 'commerce.product.publish', apiExposure: 'commerceManagement',
                 key: '/products/publication/search', method: 'POST',
                 controller: 'DefaultProductPublicationController', operation: 'publishSearch',
                 help: { requestType: 'secured', message: 'Publishes persisted Staged Product records into Product search projections.' }
             },
             restoreSearch: {
-                secured: true, authTokenTypes: ['access'], accessGroups: ['employeeUserGroup'],
+                secured: true, authTokenTypes: ['access','service'], accessGroups: ['employeeUserGroup','serviceAccountUserGroup'],
                 permission: 'commerce.product.publish', apiExposure: 'commercePublicationIngestion',
                 key: '/internal/products/publication/search/restore', method: 'POST',
                 controller: 'DefaultProductPublicationController', operation: 'restoreSearch',

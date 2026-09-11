@@ -24,3 +24,5 @@ Use these files for rules that are more specific than root `AGENTS.md` and the m
 - Cross-tenant internal-token access remains separately governed by
   `authSecurity.internalToken.crossTenantPermissions` and optional
   `crossTenantGroups`.
+
+- `externalIdentityLinkCode` is an optional bounded opaque customer access-token claim. Reject it on human/service credentials and reject executable or oversized values. Profile owns issuance from verified external proof, live link validation and refresh preservation. Never project raw provider identity, secrets or launch data into tokens.

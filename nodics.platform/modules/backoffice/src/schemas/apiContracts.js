@@ -603,6 +603,7 @@ const backendWorkspaceField = {
     maximumLength: { type: "integer", minimum: 1, maximum: 4000 },
     defaultValue: {},
     bindToPath: { type: "boolean" },
+    defaultFromParameter: { type: "string", pattern: "^[A-Za-z][A-Za-z0-9_-]{0,127}$", maxLength: 128 },
     options: {
       type: "array",
       uniqueItems: true,
@@ -661,7 +662,7 @@ const backendWorkspaceSection = {
     },
   },
 };
-const backendWorkspace = {
+const backendOperationsWorkspace = {
   type: "object",
   additionalProperties: false,
   required: ["contractVersion", "title", "renderer", "tabs"],
@@ -696,6 +697,16 @@ const backendWorkspace = {
     },
   },
 };
+const backendWorkspace = { oneOf: [backendOperationsWorkspace, {
+  type: 'object', additionalProperties: false,
+  required: ['contractVersion', 'renderer', 'workspaceCode', 'viewCode', 'title'],
+  properties: {
+    contractVersion: { enum: [1] }, renderer: { enum: ['axis.workspace.native'] },
+    workspaceCode: { type: 'string', maxLength: 128, pattern: '^[a-zA-Z][a-zA-Z0-9]*([._-][a-zA-Z0-9]+)*$' },
+    viewCode: { type: 'string', maxLength: 128, pattern: '^[a-zA-Z][a-zA-Z0-9]*([._-][a-zA-Z0-9]+)*$' },
+    title: { type: 'string', minLength: 1, maxLength: 160 }, description: { type: 'string', minLength: 1, maxLength: 512 }
+  }
+}] };
 const backofficeMetadata = {
   type: "object",
   additionalProperties: false,

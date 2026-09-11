@@ -23,13 +23,11 @@ const scenarioRoot = path.join(acceleratorRoot, 'modules', 'eWaste');
 const scenarioPackage = JSON.parse(fs.readFileSync(path.join(scenarioRoot, 'package.json'), 'utf8'));
 const recyclingRoot = path.join(acceleratorRoot, 'modules', 'wasteRecycling');
 const recyclingPackage = JSON.parse(fs.readFileSync(path.join(recyclingRoot, 'package.json'), 'utf8'));
-const circaRoot = path.join(acceleratorRoot, 'modules', 'circa.eWaste');
-const circaPackage = JSON.parse(fs.readFileSync(path.join(circaRoot, 'package.json'), 'utf8'));
 
 assert.strictEqual(acceleratorPackage.name, 'waste');
 assert.strictEqual(acceleratorPackage.index, '92.79');
 assert.strictEqual(acceleratorPackage.nodics.kind, 'group');
-assert.deepStrictEqual(acceleratorPackage.requiredModules, ['eWaste', 'wasteRecycling', 'circa.eWaste']);
+assert.deepStrictEqual(acceleratorPackage.requiredModules, ['eWaste', 'wasteRecycling']);
 assert.deepStrictEqual(acceleratorPackage.nodics.extends, ['nodics.waste']);
 assert.strictEqual(acceleratorPackage.nodics.runtime.router, false);
 assert.strictEqual(acceleratorPackage.nodics.runtime.publish, false);
@@ -40,8 +38,8 @@ assert.strictEqual(scenarioPackage.name, 'eWaste');
 assert.strictEqual(scenarioPackage.index, '92.71');
 assert.strictEqual(scenarioPackage.nodics.kind, 'capability');
 assert.deepStrictEqual(scenarioPackage.nodics.extends, ['nodics.waste']);
-assert.strictEqual(scenarioPackage.nodics.runtime.router, false);
-assert(!fs.existsSync(path.join(scenarioRoot, 'src')), 'Scenario accelerator must contribute presets, not alternate services');
+assert.strictEqual(scenarioPackage.nodics.runtime.router, true);
+assert(!fs.existsSync(path.join(scenarioRoot, 'src/schemas')), 'Domain orchestration must not duplicate Waste schemas');
 
 assert.strictEqual(recyclingPackage.name, 'wasteRecycling');
 assert.strictEqual(recyclingPackage.index, '92.72');
@@ -50,17 +48,6 @@ assert.deepStrictEqual(recyclingPackage.nodics.extends, ['nodics.waste']);
 assert.strictEqual(recyclingPackage.nodics.runtime.router, false);
 assert(fs.existsSync(path.join(recyclingRoot, 'src/service/defaultWasteRecyclingHandoffContractService.js')), 'Waste Recycling must own the reusable provider-neutral handoff contract');
 
-assert.strictEqual(circaPackage.name, 'circa.eWaste');
-assert.strictEqual(circaPackage.index, '92.73');
-assert.strictEqual(circaPackage.nodics.kind, 'capability');
-assert.deepStrictEqual(circaPackage.requiredModules, ['eWaste', 'wasteRecycling']);
-assert.deepStrictEqual(circaPackage.nodics.extends, ['eWaste', 'wasteRecycling']);
-assert.strictEqual(circaPackage.nodics.runtime.router, false);
-assert(circaPackage.nodics.owns.includes('composition'));
-assert(!fs.existsSync(path.join(circaRoot, 'src/schemas')), 'Circa eWaste must not define app-owned Waste schemas');
-assert(!fs.existsSync(path.join(circaRoot, 'src/router')), 'Circa eWaste must not expose app-owned routers');
-assert(fs.existsSync(path.join(circaRoot, 'src/service/defaultCircaEWasteApplicationContractService.js')), 'Circa eWaste must own reusable application composition service');
-
 const discovered = toolingCommandService.collectModules(path.resolve(acceleratorRoot, '../../..'), [])
     .filter(function (moduleObject) {
         return moduleObject.path === acceleratorRoot || moduleObject.path.startsWith(path.join(acceleratorRoot, 'modules'));
@@ -68,6 +55,6 @@ const discovered = toolingCommandService.collectModules(path.resolve(accelerator
     .map(function (moduleObject) { return moduleObject.name; })
     .sort();
 
-assert.deepStrictEqual(discovered, ['circa.eWaste', 'eWaste', 'waste', 'wasteRecycling']);
+assert.deepStrictEqual(discovered, ['eWaste', 'waste', 'wasteRecycling']);
 
 console.log('Waste accelerator composition contract validated');

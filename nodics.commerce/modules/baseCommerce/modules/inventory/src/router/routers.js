@@ -15,14 +15,14 @@ module.exports = {
     inventory: {
         operator: {
             balanceAction: {
-                secured: true, authTokenTypes: ['access'], accessGroups: ['employeeUserGroup'],
+                secured: true, authTokenTypes: ['access','service'], accessGroups: ['employeeUserGroup','serviceAccountUserGroup'],
                 permission: 'commerce.inventory.operate', apiExposure: 'commerceManagement',
                 key: '/inventory/balances/:balanceCode/actions/:actionCode', method: 'POST',
                 controller: 'DefaultInventoryOperationController', operation: 'balanceAction',
                 help: { requestType: 'secured', message: 'Executes Inventory-owned stock operations against a selected balance.' }
             },
             restoreOperational: {
-                secured: true, authTokenTypes: ['access'], accessGroups: ['employeeUserGroup'],
+                secured: true, authTokenTypes: ['access','service'], accessGroups: ['employeeUserGroup','serviceAccountUserGroup'],
                 permission: 'commerce.product.publish', apiExposure: 'commercePublicationIngestion',
                 key: '/internal/inventory/publication/operational/restore', method: 'POST',
                 controller: 'DefaultInventoryPublicationController', operation: 'restoreOperational',

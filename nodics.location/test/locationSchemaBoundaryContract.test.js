@@ -1,3 +1,14 @@
+/*
+    Nodics - Enterprice Micro-Services Management Framework
+
+    Copyright (c) 2026 Nodics All rights reserved.
+
+    This software is governed by the Nodics Source-Available Commercial License.
+    You may use, copy, modify, deploy, or distribute it only as permitted by the
+    root LICENSE file or a separate written agreement with Nodics.
+
+ */
+
 'use strict';
 
 const assert = require('node:assert/strict');
@@ -41,6 +52,16 @@ function assertNoCoordinateArray(definition, label) {
     }
 }
 
+function assertReference(schema, fieldName, targetModule, targetSchema, type = 'one') {
+    assert.deepStrictEqual(schema.refSchema[fieldName], {
+        enabled: true,
+        moduleName: targetModule,
+        schemaName: targetSchema,
+        type,
+        propertyName: 'code'
+    });
+}
+
 schemas().forEach(item => {
     const label = `${item.moduleName}.${item.schemaName}`;
     assert.notStrictEqual(item.schemaName, 'locationAddress', 'Location must not create a duplicate address schema while Profile address owns reusable address fields');
@@ -50,11 +71,17 @@ schemas().forEach(item => {
 });
 
 const location = loadNamespace('locationCore').location.definition;
+const locationSchema = loadNamespace('locationCore').location;
 assert.strictEqual(location.latitude.required, true);
 assert.strictEqual(location.longitude.required, true);
 assert.strictEqual(location.addressRef.required, true);
 assert.strictEqual(location.enterpriseRef.required, false);
 assert.strictEqual(location.sourceRef.required, true);
+assertReference(locationSchema, 'addressRef', 'profile', 'address');
+assertReference(locationSchema, 'contactRefs', 'profile', 'contact', 'many');
+assertReference(locationSchema, 'enterpriseRef', 'profile', 'enterprise');
+assertReference(locationSchema, 'operatorEnterpriseRef', 'profile', 'enterprise');
+assertReference(locationSchema, 'mediaRefs', 'media', 'media', 'many');
 
 [
     'flatNo',

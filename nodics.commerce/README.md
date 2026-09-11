@@ -2,7 +2,7 @@
 
 Nodics Commerce is the functional composition boundary for the
 implemented Store, Product, Pricing, Tax, Promotion, Inventory, Cart,
-Checkout, Order, Payment, Fulfillment, and reverse-lifecycle capabilities.
+Bidding, Checkout, Order, Payment, Fulfillment, and reverse-lifecycle capabilities.
 Concrete child modules own business schemas and behavior; this source-free root
 owns only functional identity, composition, declarative configuration,
 shared presentation metadata, and stable cross-capability policy.

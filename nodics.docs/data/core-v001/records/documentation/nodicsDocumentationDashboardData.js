@@ -334,7 +334,7 @@ module.exports = {
     ],
     "statusSummary": {
       "sections": 49,
-      "pages": 129,
+      "pages": 130,
       "lifecycleState": "ONLINE"
     },
     "product": "nodicsDocumentationProduct",
@@ -668,7 +668,7 @@ module.exports = {
     ],
     "statusSummary": {
       "sections": 49,
-      "pages": 129,
+      "pages": 130,
       "searchable": true,
       "expandable": true
     },
@@ -915,6 +915,12 @@ module.exports = {
         "title": "Architecture Decision Guide",
         "summary": "Decision path for choosing framework, project, content, provider, service, pipeline, schema, route, or renderer ownership.",
         "order": 40
+      },
+      {
+        "code": "waste.impact-providers",
+        "title": "Waste impact providers and mock carbon estimates",
+        "summary": "Configure illustrative carbon calculations, preserve provenance, and replace the mock through the standard provider and configuration hierarchy.",
+        "order": 50
       }
     ],
     "journeyLinks": [
@@ -937,10 +943,15 @@ module.exports = {
         "label": "Architecture Decision Guide",
         "targetPage": "framework.architecture-decision-guide",
         "route": "/docs/framework/framework-architecture-decision-guide"
+      },
+      {
+        "label": "Waste impact providers and mock carbon estimates",
+        "targetPage": "waste.impact-providers",
+        "route": "/docs/framework/waste-impact-providers"
       }
     ],
     "statusSummary": {
-      "pages": 4,
+      "pages": 5,
       "navigationDepth": 2
     },
     "accessMode": "PUBLIC",

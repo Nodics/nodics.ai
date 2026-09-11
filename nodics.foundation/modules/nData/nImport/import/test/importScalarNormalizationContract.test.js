@@ -45,7 +45,9 @@ const [model] = service.normalizeModelsForSchema(header, [{
 
 assert(model.validatedAt instanceof Date);
 assert.strictEqual(model.validatedAt.toISOString(), '2026-08-11T00:00:00.000Z');
-assert.strictEqual(model.version, 3);
+assert.strictEqual(model.version, 0);
+const [nonzeroVersion] = service.normalizeModelsForSchema(header, [{ version: '3' }]);
+assert.strictEqual(nonzeroVersion.version, 3, 'Scalar normalization preserves business versions rather than incrementing them');
 assert.strictEqual(model.enabled, true);
 assert.strictEqual(model.ratio, 1.5);
 assert.strictEqual(model.name, 'Nexus');

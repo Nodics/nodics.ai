@@ -473,6 +473,7 @@ module.exports = {
             "maximumLength",
             "defaultValue",
             "bindToPath",
+            "defaultFromParameter",
             "options",
           ].includes(key),
       ) &&
@@ -486,6 +487,10 @@ module.exports = {
           field.maximumLength >= 1 &&
           field.maximumLength <= 4000)) &&
       (field.bindToPath === undefined || typeof field.bindToPath === "boolean") &&
+      (field.defaultFromParameter === undefined ||
+        (field.type === "TEXT" &&
+          this.isString(field.defaultFromParameter, 128) &&
+          /^[A-Za-z][A-Za-z0-9_-]{0,127}$/.test(field.defaultFromParameter))) &&
       (field.options === undefined ||
         (Array.isArray(field.options) &&
           field.options.length <= 64 &&
@@ -562,9 +567,19 @@ module.exports = {
     );
   },
   /** Validates a bounded backend-driven Axis workspace. */
+  /** Accepts only versioned non-executable keys for a client-installed native workspace. */
+  validateNativeWorkspace: function (workspace) {
+    return workspace.contractVersion === 1 &&
+      !Object.keys(workspace).some(key => !['contractVersion', 'renderer', 'workspaceCode', 'viewCode', 'title', 'description'].includes(key)) &&
+      this.isString(workspace.title, 160) &&
+      (workspace.description === undefined || this.isString(workspace.description, 512)) &&
+      ['workspaceCode', 'viewCode'].every(key => this.isString(workspace[key], 128) && /^[a-z][a-z0-9]*(?:[._-][a-z0-9]+)*$/i.test(workspace[key]));
+  },
+  /** Validates the declarative native or form workspace before authenticated discovery exposes it. */
   validateBackendWorkspace: function (workspace) {
     if (!workspace || typeof workspace !== "object" || Array.isArray(workspace))
       return false;
+    if (workspace.renderer === 'axis.workspace.native') return this.validateNativeWorkspace(workspace);
     if (
       Object.keys(workspace).some(
         (key) =>

@@ -213,6 +213,15 @@ module.exports = {
         if (options.userGroups && options.userGroups.length > 0) payload.userGroups = options.userGroups;
         if (options.permissions && options.permissions.length > 0) payload.permissions = options.permissions;
         if (options.authVersion !== undefined) payload.authVersion = options.authVersion;
+        // Profile supplies this opaque binding only after external proof succeeds.
+        if (options.externalIdentityLinkCode !== undefined) {
+            if (tokenType !== 'access' || options.principalType !== 'customer' ||
+                typeof options.externalIdentityLinkCode !== 'string' ||
+                !/^[A-Za-z0-9_-]{1,128}$/.test(options.externalIdentityLinkCode)) {
+                throw new Error('External identity binding requires a customer access token and bounded link code');
+            }
+            payload.externalIdentityLinkCode = options.externalIdentityLinkCode;
+        }
         return payload;
     }
 };

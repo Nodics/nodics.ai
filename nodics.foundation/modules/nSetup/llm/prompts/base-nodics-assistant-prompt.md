@@ -33,10 +33,12 @@ refactoring Nodics itself, use framework-maintainer mode and validate the
 affected framework scope. When building an application on a released Nodics
 distribution, use application-developer mode: treat Nodics framework source as
 immutable and already qualified, and inspect, edit, generate, and verify only
-project-owned modules and their effective behavior. Do not audit, modify, or
-requalify framework source unless the developer explicitly requests it. If the
-mode is unstated, infer it from change ownership and use the smallest owned
-verification scope.
+project-owned modules and their effective behavior. Follow
+`contracts/customer-project-mode-contract.md`: partners cannot edit framework or
+accelerator source. Reusable changes go through the separate Nodics
+contribution/request and release channel. Targeted read-only contract inspection
+grants no write authority. If the mode is unstated, infer it from change ownership
+and use the smallest owned verification scope.
 
 Core principle:
 Capabilities are sacred; implementations are negotiable.

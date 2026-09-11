@@ -16,27 +16,37 @@
  * @owner generated
  * @override Later active modules may extend or replace this registry through Nodics layering.
  */
+function schemaRef(moduleName, schemaName, type) {
+    return { enabled: true, moduleName: moduleName, schemaName: schemaName, type: type || 'one', propertyName: 'code' };
+}
+
 module.exports = { locationCore: {
     location: Object.assign({ super: 'base', model: true, schemaPolicies: ['operational'], service: { enabled: true }, router: { enabled: false }, cache: { enabled: false }, event: { enabled: false }, search: { enabled: false } }, { definition: {
-        code: { type: 'string', required: true },
-        name: { type: 'object', required: true },
-        categoryCode: { type: 'string', required: true },
-        typeCode: { type: 'string', required: true },
-        status: { type: 'string', required: true, enum: ['DRAFT', 'PENDING_APPROVAL', 'ACTIVE', 'INACTIVE', 'REJECTED', 'ARCHIVED'] },
-        latitude: { type: 'number', required: true },
-        longitude: { type: 'number', required: true },
-        addressRef: { type: 'object', required: true },
-        contactRefs: { type: 'array', required: false },
-        openingHours: { type: 'object', required: false },
-        capabilityCodes: { type: 'array', required: false },
-        visibility: { type: 'object', required: true },
-        sourceRef: { type: 'object', required: true },
-        parentLocationCode: { type: 'string', required: false },
-        enterpriseRef: { type: 'object', required: false },
-        operatorEnterpriseRef: { type: 'object', required: false },
-        mediaRefs: { type: 'array', required: false },
-        presentation: { type: 'object', required: false },
-        quality: { type: 'object', required: false },
-        revision: { type: 'int', required: true, default: 0 }
+        code: { type: 'string', required: true , description: 'Uniquely identifies this record for references, APIs, imports, and business administration.'},
+        name: { type: 'object', required: true , description: 'Stores the business display name shown to administrators and related user journeys.'},
+        categoryCode: { type: 'string', required: true , description: 'Stores the category code used to classify, link, or resolve this record.'},
+        typeCode: { type: 'string', required: true , description: 'Stores the type code used to classify, link, or resolve this record.'},
+        status: { type: 'string', required: true, enum: ['DRAFT', 'PENDING_APPROVAL', 'ACTIVE', 'INACTIVE', 'REJECTED', 'ARCHIVED'] , description: 'Tracks the lifecycle state that controls whether this record can be used in business processes.'},
+        latitude: { type: 'number', required: true , description: 'Stores the numeric latitude used by this record.'},
+        longitude: { type: 'number', required: true , description: 'Stores the numeric longitude used by this record.'},
+        addressRef: { type: 'object', required: true , description: 'References the related address record used by this record.'},
+        contactRefs: { type: 'array', required: false , description: 'Lists related contact records used by this record.'},
+        openingHours: { type: 'object', required: false , description: 'Stores structured opening hours details used by this record.'},
+        capabilityCodes: { type: 'array', required: false , description: 'Lists capability codes used to classify, link, or resolve this record.'},
+        visibility: { type: 'object', required: true , description: 'Stores structured visibility details used by this record.'},
+        sourceRef: { type: 'object', required: true , description: 'References the related source record used by this record.'},
+        parentLocationCode: { type: 'string', required: false , description: 'Stores the parent location code used to classify, link, or resolve this record.'},
+        enterpriseRef: { type: 'object', required: false , description: 'References the related enterprise record used by this record.'},
+        operatorEnterpriseRef: { type: 'object', required: false , description: 'References the related operator enterprise record used by this record.'},
+        mediaRefs: { type: 'array', required: false , description: 'Lists related media records used by this record.'},
+        presentation: { type: 'object', required: false , description: 'Stores structured presentation details used by this record.'},
+        quality: { type: 'object', required: false , description: 'Stores structured quality details used by this record.'},
+        revision: { type: 'int', required: true, default: 0 , description: 'Tracks the business revision used for governance, review, and optimistic update checks.'}
+    }, refSchema: {
+        addressRef: schemaRef('profile', 'address'),
+        contactRefs: schemaRef('profile', 'contact', 'many'),
+        enterpriseRef: schemaRef('profile', 'enterprise'),
+        operatorEnterpriseRef: schemaRef('profile', 'enterprise'),
+        mediaRefs: schemaRef('media', 'media', 'many')
     } })
 } };

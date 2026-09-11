@@ -87,6 +87,7 @@ module.exports = {
     layerPrecedence: layerPrecedence.slice(),
     projectLayerKinds: layerPrecedence.slice(),
 
+    /** Requires enabled saveAll contributions to supported Waste schemas using stable code-based import queries. */
     validateHeader: function (header) {
         let entries = flattenHeaderEntries(header);
         if (!entries.length) fail('ERR_WASTE_DATA_CONTRIBUTION_EMPTY', 'Waste data contribution header must contain at least one import entry');
@@ -100,6 +101,7 @@ module.exports = {
         return entries;
     },
 
+    /** Requires a supported Waste DATA_RELEASE type and the WASTE runtime destination. */
     validateManifestSection: function (section) {
         if (!section || section.kind !== 'DATA_RELEASE') fail('ERR_WASTE_DATA_MANIFEST_KIND', 'Waste contribution section must be a DATA_RELEASE');
         if (section.destinationRole !== 'WASTE') fail('ERR_WASTE_DATA_MANIFEST_DESTINATION', 'Waste contribution section must target WASTE destination role');
@@ -107,6 +109,7 @@ module.exports = {
         return section;
     },
 
+    /** Requires a stable record code and supported layer while rejecting foreign capability and runtime-scope fields. */
     validateRecord: function (record, layerKind) {
         if (!record || !record.code) fail('ERR_WASTE_DATA_RECORD_CODE', 'Waste contribution records require a stable code');
         if (layerKind && !layerPrecedence.includes(layerKind)) fail('ERR_WASTE_DATA_LAYER_KIND', 'Waste contribution layer is not supported');
@@ -116,6 +119,7 @@ module.exports = {
         return record;
     },
 
+    /** Merges validated contributions in declared layer order and retains provenance for each effective code. */
     resolveByCode: function (contributions) {
         let effective = {};
         (contributions || []).slice().sort(function (left, right) {

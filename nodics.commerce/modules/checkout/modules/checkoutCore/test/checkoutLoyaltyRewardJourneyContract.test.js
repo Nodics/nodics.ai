@@ -71,7 +71,7 @@ async function setup(overrides) {
         DefaultRewardReservationService: reservationStore,
         DefaultRewardRedemptionService: redemptionStore,
         DefaultModuleService: {
-            invokeModule: options => loyaltyOperations[options.operationName](options.request)
+            invokeModule: options => options.moduleName === 'profile' ? Promise.resolve({data:[{code:'customer-1',loginId:'customer@example.test'}]}) : options.methodName === 'GET' ? Promise.resolve({data:{ownerType:'CUSTOMER',ownerCode:'customer-1'}}) : loyaltyOperations[options.operationName](options.request)
         },
         DefaultPaymentTransactionEntryService: paymentStore,
         DefaultCheckoutCheckpointService: checkoutCheckpointStore,
@@ -84,7 +84,7 @@ async function setup(overrides) {
             validateDirect: async () => ({ status: 'VALID' }),
             calculate: async request => ({
                 code: request.payload.calculationCode || 'calc-1',
-                currency: 'USD',
+                currency: 'POINTS',
                 subtotal: '25.00',
                 discountAmount: '0.00',
                 taxAmount: '0.00',
@@ -135,7 +135,7 @@ function checkoutRequest(code) {
     return {
         tenant: 'runtimeTenantFromToken',
         ownerId: 'customer-1',
-        authData: { tenant: 'runtimeTenantFromToken', principalId: 'customer-1', userGroups: ['customerUserGroup'] },
+        authData: { tenant: 'runtimeTenantFromToken', principalId: 'customer-1', principalType:'customer', loginId:'customer@example.test', userGroups: ['customerUserGroup'] },
         idempotencyKey: code + ':place',
         correlationId: code + ':corr',
         payload: {

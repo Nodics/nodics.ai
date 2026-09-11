@@ -18,3 +18,9 @@ three concrete domains that identical stable behavior has no better standard
 owner. Standard Nodics groups must never depend on accelerators.
 
 Before implementing non-trivial behavior here, record the business outcome, owning layer, studied sources, current implementation, extension path, security/tenant/data/API/release impact, intended files, and validation route.
+
+All domain accelerators follow the canonical partner write boundary in
+`../nodics.foundation/modules/nSetup/llm/contracts/customer-project-mode-contract.md`.
+Nodics owns accelerator source and reusable changes. Partners extend only their
+own projects; potential accelerator improvements go through the separate Nodics
+contribution/request, review and release channel.

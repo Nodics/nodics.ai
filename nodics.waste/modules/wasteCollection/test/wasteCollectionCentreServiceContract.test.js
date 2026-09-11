@@ -165,6 +165,9 @@ async function main() {
     assert.deepStrictEqual(modelCalls[0].options, { recursive: false, skipItemCache: true });
 
     assert.throws(() => service.query({ tenant: 'default' }), /Tenant is runtime context/);
+    assert.deepStrictEqual(service.query({ active: true }), { active: true });
+    assert.deepStrictEqual(service.query({ active: false }), { active: false });
+    assert.throws(() => service.query({ active: 'false' }), /Active must be a boolean/);
     delete global.NODICS;
     delete global.SERVICE;
     console.log('Waste Collection centre service contract validated');

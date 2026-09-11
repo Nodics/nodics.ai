@@ -15,9 +15,11 @@ Gate scope follows code ownership, not repository availability.
   rules to project-owned modules, overrides, configuration, generated output,
   and effective project behavior, but do not inspect, modify, regenerate, or
   requalify Nodics framework source by default.
-- Framework inspection or modification during application development requires
-  an explicit developer request. A project customization test may exercise the
-  public/effective framework behavior without opening a framework-wide audit.
+- Follow `../contracts/customer-project-mode-contract.md`: partners cannot edit
+  framework or accelerator source. Targeted read-only contract inspection grants
+  no write authority. Reusable enhancements go through the separate Nodics
+  contribution/request and release channel. Project tests may exercise effective
+  framework behavior without opening a framework-wide audit.
 - Never expand verification to the entire Nodics repository solely because its
   source is locally available. Select the smallest scope that proves the owned
   change safely.

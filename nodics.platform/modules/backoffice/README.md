@@ -10,6 +10,12 @@ groups remain authoritative.
 
 ## Responsibilities
 
+Functional lifecycle revisions protect administrator decisions and activation
+policy, not heartbeat timestamps or replica membership. Activation packages and
+receipts retain their execution targets, while existing project descriptors can
+override routing for a release. See `llm/contracts/capability-registry-contract.md`
+and `test/functionalModuleConcurrency.test.js` for concurrency guarantees.
+
 - Receive authenticated module self-registration and refresh requests.
 - Maintain environment-bound observed deployment registrations.
 - Discover and validate module identity, versions, capabilities, contracts, and
@@ -66,6 +72,46 @@ by BackOffice.
 Module registration uses the separate Nodics service-to-service identity path.
 Registration must be idempotent, environment-bound, auditable, retryable with
 bounded backoff, and safe when BackOffice is unavailable.
+
+Authenticated presentation, lifecycle listings, receipt reads and lease
+reconciliation read every page of the project/tenant functional
+catalogue using the model pipeline's `pageSize` and `pageNumber` contract.
+`backofficeFunctionalModuleCatalogue.eligibilityPageSize` controls each read,
+not the total eligible module count. A failed page aborts the projection.
+Leases retain their client-safe `functionalModuleIdentity`; a declared owner
+must be registered, enabled, and active before its capability is exposed,
+including when a durable record is missing. Validated lease ownership remains
+authoritative when different servers observe different technical members.
+Runtime observation alone never activates an optional module.
+
+Workbench navigation also checks its existing target module, and lifecycle
+actions check their existing owner. Missing targets disable only the affected
+feature/action with backend-owned guidance. Published menu overrides inherit
+module-owned execution metadata and cannot resurrect an unauthorized or absent
+provider. Current observations are projected without mutating provider defaults,
+so recovery restores eligible functionality. No additional dependency
+configuration is introduced. APIs retain their own validation and authorization.
+
+Replica membership is aggregated from active leases; a narrower renewal cannot
+erase another runtime's technical members. Last-known offline membership is
+diagnostic only. Validate paging/replicas with
+`test/functionalModuleLifecyclePagination.test.js` and feature isolation with
+`test/navigationModuleAvailability.test.js`.
+
+Activation dependency states also carry client-safe `reason` and `resolution`
+text. `describeFunctionalDependency` is the later-layer copy customization
+point; it does not change eligibility. Status projections report `BLOCKED`
+while required dependencies are unsatisfied, even without required data packs.
+Missing records and failed lookups remain distinct; neither satisfies a
+dependency. Internal lookup errors are never exposed to Axis.
+
+Later layers may tune the page size or override the existing catalogue service,
+but must preserve complete reads, tenant/project scope, and owner eligibility.
+Validate these boundaries with `test/functionalModuleEligibilityPagination.test.js`,
+`test/functionalModuleCatalogueService.test.js`, and
+`test/backofficeCapabilityRegistryService.test.js`. The paging regression uses
+the real model option normalizer, covers more than 256 records and page-size
+overrides, and rejects partial or malformed reads.
 
 The store defaults to process memory for local and single-instance operation.
 Production replicas configure `backofficeRegistry.store.mode` as `distributed`;
@@ -139,3 +185,5 @@ Backend modules may also contribute bounded, non-executable
 default columns, quick filters, and owner-action labels for reusable Axis schema
 workspaces. They do not grant permissions, execute operations, or transfer
 business authority away from the target module.
+
+The [module-owned UI contribution contract](../../../nodics.foundation/modules/nSetup/llm/contracts/module-owned-ui-contribution-contract.md) governs shared groups and accelerator subtrees. The existing registry composes them and withdraws complete orphaned branches; it does not become their data owner.

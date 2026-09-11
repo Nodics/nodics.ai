@@ -796,6 +796,40 @@ module.exports = {
       });
   },
 
+  /**
+   * Resolves feature availability from existing owner/target metadata.
+   * @param {Object} item Authorized module-owned navigation item.
+   * @param {string} moduleName Publishing module identity.
+   * @param {Object} availability Current authorized readiness projection.
+   * @returns {Object} Non-mutating projection with unavailable targets/actions disabled.
+   * @override Later layers may narrow usability, but must preserve owner eligibility and target authorization.
+   */
+  applyNavigationAvailability: function (item, moduleName, availability) {
+    let target = item.workbenchTarget && item.workbenchTarget.moduleName;
+    let owners = Array.from(new Set([moduleName, target].filter(Boolean)));
+    let usable = owner => ["UP", "DEGRADED"].includes((availability[owner] || {}).state);
+    let missing = owners.find(owner => !usable(owner));
+    let next = Object.assign({}, item, {
+      availability: missing ? (availability[missing] || {}).state || "UNKNOWN" :
+        owners.some(owner => availability[owner].state === "DEGRADED") ? "DEGRADED" : "UP",
+    });
+    if (missing && next.featureState !== "HIDDEN") {
+      next.featureState = "DISABLED";
+      next.help = Object.assign({}, next.help, {
+        summary: "This functionality requires an available, activated " + missing + " module.",
+      });
+    }
+    if (Array.isArray(next.lifecycleActions)) {
+      next.lifecycleActions = next.lifecycleActions.map(action => {
+        let owner = action.ownerModule || target || moduleName;
+        if ((!missing && usable(owner)) || action.featureState === "HIDDEN") return action;
+        return Object.assign({}, action, { featureState: "DISABLED",
+          summary: "This operation requires an available, activated " + (missing || owner) + " module." });
+      });
+    }
+    return next;
+  },
+
   /** Produces the current effective Axis navigation composition from module defaults plus governed fallback metadata. */
   buildEffectiveNavigationComposition: function (catalogue, availability, authData, request, documentationPublication) {
     let permissions = (authData && authData.permissions) || [];
@@ -932,9 +966,11 @@ module.exports = {
             ownerModule: item.moduleName || "backoffice",
           },
         });
-        if (nextItem.backendWorkspace === undefined && moduleDefault && moduleDefault.backendWorkspace !== undefined) {
-          nextItem.backendWorkspace = this.cloneNavigationComposition(moduleDefault.backendWorkspace);
-        }
+        ["backendWorkspace", "workbenchTarget", "lifecycleActions"].forEach(key => {
+          if (nextItem[key] === undefined && moduleDefault && moduleDefault[key] !== undefined) {
+            nextItem[key] = this.cloneNavigationComposition(moduleDefault[key]);
+          }
+        });
         return this.applyDocumentationPublicationState(nextItem, documentationPublication);
       });
       groups = {};
@@ -955,6 +991,14 @@ module.exports = {
         });
       });
     }
+    // Published presentation cannot override current runtime availability or provider permissions.
+    items = items.filter(item => {
+      let source = moduleDefaultsByIdentity[String(item.moduleName || "backoffice") + ":" + String(item.id || "")];
+      if (!source) return false;
+      let permissions = (authData && authData.permissions) || [];
+      let required = [].concat(item.requiredPermissions || [], source && source.requiredPermissions || []);
+      return permissions.includes("*") || required.every(permission => permissions.includes(permission));
+    }).map(item => this.applyNavigationAvailability(item, item.moduleName || "backoffice", availability || {}));
     let checksum = this.computeNavigationCompositionChecksum({
       groups: Object.values(groups),
       navigation: items,

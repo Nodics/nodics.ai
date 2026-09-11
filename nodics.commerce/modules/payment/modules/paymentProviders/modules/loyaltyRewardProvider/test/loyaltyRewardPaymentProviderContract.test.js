@@ -56,7 +56,7 @@ async function main() {
         currency: 'POINTS',
         idempotencyKey: 'pay-001',
         correlationId: 'corr-001',
-        authData: { tenant: 'runtimeTenantFromToken' }
+        authData: { tenant: 'runtimeTenantFromToken',principalType:'service',userGroups:['serviceAccountUserGroup'] }
     };
     const authorize = await provider.execute(Object.assign({}, base, { operation: 'AUTHORIZE' }));
     assert.equal(authorize.status, 'AUTHORIZED');

@@ -4,6 +4,30 @@ This folder contains module-specific AI/developer contracts for `nodics.foundati
 
 Use these files for rules that are more specific than root `AGENTS.md` and the module `AGENTS.md`, especially extension boundaries, override expectations, testing rules, security constraints, and generated-artifact responsibilities.
 
+## Managed-counter contract
+
+- Opt in through effective `backoffice.concurrency: { managed: true, field: 'revision' }`.
+  The declared field must be `int` or `long`; `versionId` and versioned schemas
+  are rejected. No automatic ownership inference from property names.
+- Create initializes at 1. Update/save-existing/delete require the original
+  nonnegative integer token, from the query or original model. Query takes
+  precedence. Defaults cannot manufacture a missing edit token.
+- Generated writes require a scalar primary-key selector, preserve ownership
+  filters and tenant-resolved model selection, and delegate to provider
+  `compareAndSetItem`. Reject update operators and dotted paths. Do not bypass
+  access, validation, reference integrity, or transaction-context enforcement.
+- Compare-and-set returns the persisted record. A missing match is 409;
+  missing edit token is 428; malformed/unsupported requests are 400.
+- Legacy records without a counter use original token 0 and an atomic
+  missing-field predicate. Never reset a populated counter.
+- Unchanged business fields do not increment the counter or emit post-write
+  mutation effects. Audit timestamps alone are not business changes.
+- This is single-record optimistic concurrency, not a multi-record transaction.
+  Audit all generated and domain writes before migrating a schema. Domain-owned
+  counters, operational observations and nPublish keep their own authorities.
+- Tests: `test/modelConcurrencyContract.test.js` and the MongoDB adapter's
+  `test/mongodbManagedConcurrencyContract.test.js`.
+
 ## Transaction contract
 
 - Use `DefaultDatabaseTransactionService`, never a driver session in business code.

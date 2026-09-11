@@ -14,7 +14,8 @@
 /** @module eWaste/data/core-v001/records/eWasteMaterialTypeData @description Provides reusable e-waste material seed records for nodics.waste. @layer data @owner eWaste */
 const material = (code, familyCode, name, unitOfMeasure, hazardClass) => ({
     code,
-    familyCode,
+    ...(['COPPER', 'ALUMINUM', 'CIRCUIT_BOARD'].includes(code) ? {} : { familyCode }),
+    materialKind: ['CIRCUIT_BOARD', 'LITHIUM_BATTERY'].includes(code) ? 'COMPONENT' : code === 'MIXED_ELECTRONIC_MATERIAL' ? 'MIXTURE' : 'MATERIAL',
     name: { en: name },
     hazardClass,
     unitOfMeasure,

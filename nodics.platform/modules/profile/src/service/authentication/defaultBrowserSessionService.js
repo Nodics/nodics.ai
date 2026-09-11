@@ -20,8 +20,9 @@ const crypto = require('crypto');
  */
 module.exports = {
     /** Returns and validates the effective browser-session configuration. */
-    config: function () {
-        let config = CONFIG.get('profileBrowserSession') || {};
+    config: function (request) {
+        const key = request && request.browserSessionPrincipalType === 'Customer' ? 'profileCustomerBrowserSession' : 'profileBrowserSession';
+        let config = CONFIG.get(key) || {};
         if (config.enabled !== true) {
             throw new CLASSES.NodicsError('ERR_AUTH_00001', 'Browser sessions are disabled');
         }
@@ -199,7 +200,7 @@ module.exports = {
 
     /** Starts a browser session after origin validation and token rotation. */
     start: function (request, tokens) {
-        let config = this.config();
+        let config = this.config(request);
         this.validateOrigin(request, config);
         if (!tokens || !tokens.authToken || !tokens.refreshToken) {
             throw new CLASSES.NodicsError('ERR_AUTH_00001', 'Browser session tokens are invalid');
@@ -218,7 +219,7 @@ module.exports = {
 
     /** Restores a browser session through the Profile-owned refresh contract. */
     restore: function (request) {
-        let config = this.config();
+        let config = this.config(request);
         this.validateOrigin(request, config);
         let cookies = this.cookies(request);
         this.validateCsrf(request, config, cookies);
@@ -227,7 +228,8 @@ module.exports = {
         }
         return SERVICE.DefaultAuthenticationProviderService.rotateRefreshToken({
             refreshToken: cookies[config.refreshCookieName],
-            entCode: request.entCode
+            entCode: request.entCode,
+            type: request.browserSessionPrincipalType || 'Employee'
         }).then(tokens => {
             let csrfToken = crypto.randomBytes(32).toString('base64url');
             this.write(request, tokens.refreshToken, csrfToken, config);
@@ -242,7 +244,7 @@ module.exports = {
 
     /** Revokes the refresh credential and clears the browser session. */
     logout: function (request) {
-        let config = this.config();
+        let config = this.config(request);
         this.validateOrigin(request, config);
         let cookies = this.cookies(request);
         this.validateCsrf(request, config, cookies);

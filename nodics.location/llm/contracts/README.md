@@ -50,8 +50,11 @@ contracts.
   `enterpriseRef` for business ownership when needed.
 - Sales Channel uses optional `locationRef` only when the channel has a physical
   or venue-specific place.
-- POS uses required `locationRef` for its operating place and optional
-  `operatorEnterpriseRef` when it differs from the parent store.
+- Point of Service uses optional `locationRef`: online service points need no
+  physical place. Physical-location operations must require and validate this
+  reference at their owning operation boundary. Location absence must not block
+  Commerce core-reference import or general activation. Optional
+  `operatorEnterpriseRef` identifies an operator differing from the parent store.
 - Waste Collection Point uses required `locationRef` and required
   `operatorEnterpriseRef`; accepted material policy remains Waste-owned. Legacy
   collection-centre imports should reference the Waste Core contributed

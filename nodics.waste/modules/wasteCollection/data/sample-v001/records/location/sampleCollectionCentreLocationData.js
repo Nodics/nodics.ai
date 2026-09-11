@@ -26,7 +26,10 @@ const centres = [
     ['EFATE_RIGGAT_AL_BUTEEN', 'EFATE - Riggat Al Buteen', 25.2595867, 55.3188193],
     ['EFATE_DUBAI_MARINA', 'EFATE - Dubai Marina', 25.0789633, 55.1378512],
     ['EFATE_AL_QUOZ', 'EFATE - Al Quoz', 25.1534157, 55.235164],
-    ['EFATE_AL_QUOZ_1', 'EFATE - Al Quoz 1', 25.1726536, 55.2435134]
+    ['EFATE_AL_QUOZ_1', 'EFATE - Al Quoz 1', 25.1726536, 55.2435134],
+    ['DU_TELECOM_DIAC', 'DU Telecom - Dubai International Academic City', 25.124214, 55.410174, 'USER_PROVIDED'],
+    ['DU_HQ_DUBAI_HILLS', 'DU HQ - Dubai Hills', 25.1066875, 55.2408125, 'USER_PROVIDED'],
+    ['AL_HAWAI_RESIDENCE_BARSHA_HEIGHTS', 'Al-Hawai Residence - Barsha Heights', 25.0981741, 55.1757884, 'USER_PROVIDED']
 ];
 
 module.exports = Object.fromEntries(centres.map((centre, index) => ['record' + index, {
@@ -57,7 +60,7 @@ module.exports = Object.fromEntries(centres.map((centre, index) => ['record' + i
     },
     quality: {
         verificationStatus: 'UNVERIFIED',
-        coordinateSource: 'SANITIZED_COLLECTION_CENTRE_EXPORT'
+        coordinateSource: centre[4] || 'SANITIZED_COLLECTION_CENTRE_EXPORT'
     },
     revision: 1,
     active: true

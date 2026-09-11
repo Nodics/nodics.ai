@@ -1,5 +1,13 @@
 # cms Module
 
+Generic authoring follows effective schema publication metadata and the existing
+runtime role: publishable sources are Staged-only; publication projections and
+receipts are read-only to Workbench/generated HTTP CRUD. Owning publication and
+approved import services retain their governed paths. Project customization and
+failure cases are documented in
+`nodics.foundation/modules/nDatabase/database/llm/contracts/schema-authoring-authority.md`
+and the canonical Foundation schema-data-modeling guide.
+
 CMS owns content sites, catalogs, routes, pages, templates, slots, components, renderer metadata, localized content, and resolved delivery behavior.
 
 ## Responsibility

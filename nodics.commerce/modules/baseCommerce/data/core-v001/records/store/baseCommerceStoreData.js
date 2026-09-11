@@ -21,7 +21,6 @@ module.exports = {
         defaultCurrency: 'USD',
         defaultLocale: 'en',
         timezone: 'America/Chicago',
-        revision: 1,
         active: true
     }
 };

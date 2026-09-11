@@ -52,9 +52,9 @@ assert.equal(pointHeader.wasteCollection.sampleCollectionCentrePointData.options
 const addressRecords = values(addresses);
 const locationRecords = values(locations);
 const pointRecords = values(points);
-assert.equal(addressRecords.length, 14);
-assert.equal(locationRecords.length, 14);
-assert.equal(pointRecords.length, 14);
+assert.equal(addressRecords.length, 17);
+assert.equal(locationRecords.length, 17);
+assert.equal(pointRecords.length, 17);
 assert.equal(values(locationCategories).length, 1);
 assert.equal(values(locationCapabilities).length, 2);
 assert.equal(values(locationTypes).length, 1);

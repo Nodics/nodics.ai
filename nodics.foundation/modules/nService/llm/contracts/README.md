@@ -24,3 +24,8 @@ Use these files for rules that are more specific than root `AGENTS.md` and the m
   state atomically. Failed refresh must preserve the last valid registry.
 - Later modules customize normalization or descriptor creation through exported
   service members, without restoring a `src/lib` container or parallel state.
+- Runtime self-registration must use the router's effective module options to
+  exclude `remoteOnly` consumers from local leases, authority claims and data
+  package claims. Active-module membership alone does not prove local hosting.
+
+Native business workspaces reuse the concrete module capability builder. `nativeWorkspace` projects the same common navigation fields while replacing the schema target with bounded, non-executable workspace/view keys. Ownership remains the publishing module; registration and BackOffice validation remain mandatory.

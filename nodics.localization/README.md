@@ -1,6 +1,11 @@
 # nodics.localization
 
-Standard protected functional-module group for the runtime localization authority. The group root is composition-only and extends `nodics.foundation`.
+Optional functional-module group for the runtime localization authority. The group root is composition-only and extends `nodics.foundation`.
+
+Foundation's stateless locale helpers remain independent. Authoritative bundles
+and management operations require the Localization authority; absence never
+weakens protected-key permissions. Existing registered/enabled installations
+retain their administrative state when adopting this optional classification.
 
 The active capability is split into two child boundaries:
 

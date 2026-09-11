@@ -22,7 +22,7 @@ const expected = new Map([
     ['promotion', '70.14'], ['inventory', '70.15'], ['digitalCore', '70.16'],
     ['shoppingList', '70.17'], ['digitalCommerce', '70.18'], ['commerceSearch', '76.17'],
     ['commerceSearchCore', '76.16'], ['checkout', '70.29'],
-    ['checkoutCore', '70.20'], ['cart', '70.21'], ['order', '70.22'],
+    ['bidding', '70.23'], ['checkoutCore', '70.20'], ['cart', '70.21'], ['order', '70.22'],
     ['payment', '70.49'], ['paymentCore', '70.30'], ['paymentMethods', '70.35'],
     ['cardPayment', '70.31'], ['walletPayment', '70.32'], ['loyaltyRewardPayment', '70.32.5'],
     ['cashOnDeliveryPayment', '70.33'], ['bankTransferPayment', '70.34'],
@@ -49,7 +49,7 @@ packages.forEach(({ folder, value }) => {
     assert.strictEqual(value.nodics.kind, value.name === 'nodics.commerce' || ['baseCommerce', 'digitalCommerce', 'commerceSearch', 'checkout', 'payment', 'paymentMethods', 'paymentProviders', 'fulfillment'].includes(value.name) ? 'group' : 'capability');
     ['README.md', 'AGENTS.md', 'nodics.js', 'config/properties.js', 'config/prescripts.js', 'config/postscripts.js', 'llm/contracts/README.md', 'llm/examples/README.md'].forEach(file => assert(fs.existsSync(path.join(folder, file)), value.name + ' missing ' + file));
 });
-assert.deepStrictEqual(packages[0].value.requiredModules, ['baseCommerce', 'checkout', 'digitalCommerce', 'payment', 'fulfillment']);
+assert.deepStrictEqual(packages[0].value.requiredModules, ['baseCommerce', 'checkout', 'bidding', 'digitalCommerce', 'payment', 'fulfillment']);
 assert.deepStrictEqual(packages.find(item => item.value.name === 'baseCommerce').value.requiredModules, ['store', 'product', 'pricing', 'tax', 'promotion', 'inventory', 'shoppingList']);
 assert.deepStrictEqual(packages.find(item => item.value.name === 'checkout').value.requiredModules, ['checkoutCore', 'cart', 'order']);
 assert(Number(packages.find(item => item.value.name === 'commerceSearch').value.index) > 75.99,

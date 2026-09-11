@@ -396,6 +396,7 @@ module.exports = {
    * @returns {*} Operation result, promise, or delegated service response.
    */
   getEffectiveScopes: function (request) {
+    const maximum = this.getPolicy().maximumAssignmentsPerPrincipal || 500;
     let authData = request.authData || {};
     let query = {
       status: "ACTIVE",
@@ -416,12 +417,14 @@ module.exports = {
       authData: SERVICE.DefaultIdentityGovernanceService.getSystemAuthData(),
       query: query,
       options: { recursive: false },
-    }).then((result) =>
-      this.resolveAssignments(
+      searchOptions: { pageSize: maximum + 1, pageNumber: 1 },
+    }).then((result) => {
+      if (((result && result.result) || []).length > maximum) throw new CLASSES.NodicsError("ERR_AUTH_00003", "Principal scope limit exceeded");
+      return this.resolveAssignments(
         authData,
         (result && result.result) || [],
         request.options,
-      ),
-    );
+      );
+    });
   },
 };

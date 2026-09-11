@@ -112,6 +112,20 @@ module.exports = {
         return Array.isArray(value) ? value : [value];
     },
 
+    /** Reads layered shared-map defaults without assigning application ownership. */
+    settings: function () { return SERVICE.DefaultLocationMapPresentationService.settings(); },
+
+    /** Selects one shared record, retaining the former Axis record as a migration source only. */
+    preferredConfiguration: function (configs) {
+        const shared = configs.filter(record => this.text(record.surfaceCode) === 'SHARED' && this.text(record.setupStatus) !== 'ARCHIVED');
+        if (shared.length > 1) this.fail('ERR_LOCATION_MAP_CONFIGURATION_AMBIGUOUS', 'More than one shared configuration exists for this map usage');
+        if (shared.length) return shared[0];
+        const legacy = configs.filter(record => this.text(record.surfaceCode) === 'AXIS' && this.text(record.setupStatus) !== 'ARCHIVED');
+        const primary = legacy.filter(record => this.text(record.fallbackProviderCode) && this.text(record.fallbackProviderCode) !== this.text(record.providerCode));
+        if (primary.length > 1) this.fail('ERR_LOCATION_MAP_CONFIGURATION_AMBIGUOUS', 'Multiple legacy primary configurations require resolution');
+        return primary[0] || legacy.find(record => this.text(record.setupStatus) === 'ACTIVE') || legacy[0];
+    },
+
     /** Resolves active provider metadata records when the provider schema is available. */
     providers: function (context) {
         let repository = this.providerRepository();
@@ -200,7 +214,7 @@ module.exports = {
             rendererType: rendererType,
             styleUrl: styleUrl,
             tileUrlTemplate: rendererType === 'XYZ_TILE' ? styleUrl : '',
-            attribution: this.text(provider && provider.metadata && provider.metadata.attribution),
+            attribution: this.text(provider && provider.metadata && provider.metadata.attribution || (this.settings().providerAttributions || {})[this.text(record && record.providerCode)]).replace(/[&<>"]/g, character => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' })[character]),
             publicAccessToken: this.publicAccessToken(record),
             endpointPolicy: provider && provider.endpointPolicy || {},
             frontendSafe: record && record.frontendSafe !== false
@@ -214,10 +228,19 @@ module.exports = {
         let setupStatus = this.text(record.setupStatus || (token ? 'ACTIVE' : 'SETUP_REQUIRED'));
         let providerRequiresToken = provider && provider.requiresPublicAccessToken === true || record.providerCode === 'MAPBOX';
         let renderer = this.renderDescriptor(record, provider);
+        const configured = record.status === 'ACTIVE' && record.frontendSafe !== false && setupStatus === 'ACTIVE' && Boolean(token || !providerRequiresToken) && this.text(record.styleUrl) !== '' && renderer.rendererCode !== 'axis.location.unsupported';
+        const fallbackAllowed = record.status === 'ACTIVE' && !['INACTIVE', 'INVALID', 'ARCHIVED'].includes(setupStatus) && record.frontendSafe !== false && (record.fallbackPolicy === 'ALLOW_BASIC_MAP' || (record.fallbackPolicy === 'NON_PRODUCTION_ONLY' && this.settings().allowNonProductionFallback === true));
         return {
             code: this.text(record.code),
             providerCode: this.text(record.providerCode),
-            surfaceCode: this.text(record.surfaceCode),
+            surfaceCode: 'SHARED',
+            configurationScope: 'SHARED',
+            contractVersion: 1,
+            revision: Number(record.revision || 0),
+            refreshIntervalMs: Math.max(5000, Math.min(60000, Number(this.settings().refreshIntervalMs) || 15000)),
+            frontendSafe: record.frontendSafe !== false,
+            presentation: SERVICE.DefaultLocationMapPresentationService.presentation(record.presentation),
+            interaction: SERVICE.DefaultLocationMapPresentationService.interaction(record.interaction),
             usageCode: this.text(record.usageCode),
             stylePresetCode: this.text(record.stylePresetCode),
             styleUrl: this.text(record.styleUrl),
@@ -233,7 +256,8 @@ module.exports = {
             maximumZoom: record.maximumZoom === undefined ? undefined : Number(record.maximumZoom),
             enabledControls: Array.isArray(record.enabledControls) ? record.enabledControls.filter(item => typeof item === 'string') : [],
             setupStatus: setupStatus,
-            configured: setupStatus === 'ACTIVE' && Boolean(token || !providerRequiresToken) && this.text(record.styleUrl) !== '' && renderer.rendererCode !== 'axis.location.unsupported',
+            configured: configured,
+            fallbackAllowed: fallbackAllowed,
             status: this.text(record.status),
             rendererCode: renderer.rendererCode,
             rendererType: renderer.rendererType,
@@ -249,7 +273,13 @@ module.exports = {
         return {
             code: 'AXIS_COLLECTION_CENTRE_MAPBOX_STREETS',
             providerCode: 'MAPBOX',
-            surfaceCode: query.surfaceCode,
+            surfaceCode: 'SHARED',
+            configurationScope: 'SHARED',
+            contractVersion: 1,
+            revision: 0,
+            refreshIntervalMs: Math.max(5000, Math.min(60000, Number(this.settings().refreshIntervalMs) || 15000)),
+            presentation: SERVICE.DefaultLocationMapPresentationService.presentation(),
+            interaction: SERVICE.DefaultLocationMapPresentationService.interaction(),
             usageCode: query.usageCode,
             stylePresetCode: 'MAPBOX_STREETS',
             styleUrl: 'mapbox://styles/mapbox/streets-v12',
@@ -310,14 +340,11 @@ module.exports = {
     query: function (request) {
         request = request || {};
         let source = Object.assign({}, request.query || {}, request.payload || {});
-        let surfaceCode = this.text(source.surfaceCode);
         let usageCode = this.text(source.usageCode);
-        if (!surfaceCode) this.fail('ERR_LOCATION_MAP_SURFACE_REQUIRED', 'surfaceCode is required');
         if (!usageCode) this.fail('ERR_LOCATION_MAP_USAGE_REQUIRED', 'usageCode is required');
         return {
-            surfaceCode: surfaceCode,
             usageCode: usageCode,
-            status: 'ACTIVE'
+            status: { $in: ['ACTIVE', 'DRAFT', 'INACTIVE'] }
         };
     },
 
@@ -475,7 +502,7 @@ module.exports = {
         let model = {
             code: this.requiredText(payload.code, 'code', 'AXIS_COLLECTION_CENTRE_MAPBOX_STREETS'),
             providerCode: providerCode,
-            surfaceCode: this.requiredText(payload.surfaceCode, 'surfaceCode'),
+            surfaceCode: 'SHARED',
             usageCode: this.requiredText(payload.usageCode, 'usageCode'),
             stylePresetCode: this.text(payload.stylePresetCode || 'MAPBOX_STREETS'),
             styleUrl: this.requiredText(payload.styleUrl, 'styleUrl', providerCode === 'MAPBOX' ? 'mapbox://styles/mapbox/streets-v12' : undefined),
@@ -491,6 +518,11 @@ module.exports = {
             setupStatus: this.text(payload.setupStatus || (payload.publicAccessToken ? 'ACTIVE' : 'SETUP_REQUIRED')),
             status: this.text(payload.status || 'ACTIVE')
         };
+        if (payload.presentation !== undefined) model.presentation = SERVICE.DefaultLocationMapPresentationService.presentation(payload.presentation);
+        if (payload.interaction !== undefined) model.interaction = SERVICE.DefaultLocationMapPresentationService.interaction(payload.interaction);
+        model.frontendSafe = true;
+        if (!['ACTIVE', 'DRAFT', 'INACTIVE'].includes(model.status)) this.fail('ERR_LOCATION_MAP_CONFIGURATION_INVALID', 'Unsupported map configuration status');
+        if (!['NONE', 'SETUP_REQUIRED', 'ALLOW_BASIC_MAP', 'NON_PRODUCTION_ONLY'].includes(model.fallbackPolicy)) this.fail('ERR_LOCATION_MAP_CONFIGURATION_INVALID', 'Unsupported map fallback policy');
         if (model.minimumZoom > model.maximumZoom) this.fail('ERR_LOCATION_MAP_ZOOM_RANGE_INVALID', 'minimumZoom must be less than or equal to maximumZoom');
         if (model.providerCode === 'MAPBOX' && model.setupStatus === 'ACTIVE' && !model.publicAccessToken) {
             this.fail('ERR_LOCATION_MAP_PUBLIC_TOKEN_REQUIRED', 'Mapbox publicAccessToken is required before setupStatus can be ACTIVE');
@@ -505,13 +537,13 @@ module.exports = {
         return Promise.all([
             this.repository().get(Object.assign({}, context, {
                 query: query,
-                searchOptions: { limit: 10, sort: { revision: -1, code: 1 } }
+                searchOptions: { limit: 100, sort: { revision: -1, code: 1 } }
             })),
             this.providers(context)
         ]).then(results => {
             let configs = this.records(results[0]).filter(record => this.text(record.setupStatus) !== 'ARCHIVED');
             let providers = results[1];
-            let preferred = configs.find(record => this.text(record.setupStatus) === 'ACTIVE') || configs[0];
+            let preferred = this.preferredConfiguration(configs);
             let provider = this.providerByCode(providers, preferred && preferred.providerCode);
             let fallback = this.fallbackSelection(configs, providers, preferred);
             return Object.assign(this.editableProjection(preferred, query, provider, fallback, providers), {
@@ -520,24 +552,42 @@ module.exports = {
         });
     },
 
-    /** Creates or updates an editable map provider configuration. */
-    saveConfiguration: function (request) {
-        let context = this.context(request);
-        let model = this.model(request);
-        return this.repository().get(Object.assign({}, context, {
-            query: { code: model.code },
-            searchOptions: { limit: 1 }
-        })).then(response => {
-            let existing = this.records(response)[0];
-            if (existing) {
-                return this.repository().update(Object.assign({}, context, {
-                    query: { code: model.code },
-                    model: { $set: model }
-                })).then(() => this.providers(context).then(providers => this.publicProjection(model, this.providerByCode(providers, model.providerCode), this.fallbackSelection([], providers, model))));
-            }
-            return this.repository().save(Object.assign({}, context, { model: model }))
-                .then(() => this.providers(context).then(providers => this.publicProjection(model, this.providerByCode(providers, model.providerCode), this.fallbackSelection([], providers, model))));
+    /** Saves the single shared configuration for a usage through generated persistence. */
+    saveConfiguration: async function (request) {
+        const context = this.context(request);
+        const model = this.model(request);
+        const rows = this.records(await this.repository().get(Object.assign({}, context, {
+            query: { usageCode: model.usageCode }, searchOptions: { limit: 100 }
+        })));
+        const current = this.preferredConfiguration(rows);
+        const existing = rows.find(record => record.code === model.code);
+        if (current && current.surfaceCode === 'SHARED' && current.code !== model.code) this.fail('ERR_LOCATION_MAP_CONFIGURATION_CONFLICT', 'Edit the existing shared configuration instead of creating a second configuration');
+        const expected = request.payload && request.payload.expectedRevision;
+        if (existing && expected !== undefined && Number(expected) !== Number(existing.revision)) this.fail('ERR_LOCATION_MAP_REVISION_CONFLICT', 'Map configuration changed; reload it before saving');
+        if (existing) {
+            await this.repository().update(Object.assign({}, context, {
+                query: { code: existing.code, revision: existing.revision },
+                model: Object.assign({}, model, { revision: existing.revision }),
+                options: { recursive: false }
+            }));
+        } else {
+            await this.repository().save(Object.assign({}, context, { query: { code: model.code }, model: model, options: { recursive: false } }));
+        }
+        return this.getConfiguration(Object.assign({}, request, { query: { usageCode: model.usageCode }, payload: {} }));
+    },
+
+    /** Exposes only opted-in, frontend-safe shared usage configuration to anonymous customers. */
+    getPublicConfiguration: async function (request) {
+        const usage = this.query(request).usageCode;
+        if (!(this.settings().publicUsageCodes || []).includes(usage)) this.fail('ERR_LOCATION_MAP_PUBLIC_USAGE_DENIED', 'This map usage is not available publicly');
+        const tenant = this.context(request).tenant;
+        const configuration = await this.getEffectiveConfiguration({
+            tenant: tenant,
+            authData: { tenant: tenant, principalId: 'locationMapPublicRead', principalType: 'service', loginId: 'locationMapPublicRead', userGroups: ['serviceAccountUserGroup'] },
+            query: { usageCode: usage }
         });
+        if (configuration.frontendSafe === false) this.fail('ERR_LOCATION_MAP_PUBLIC_USAGE_DENIED', 'This map configuration is not available publicly');
+        return configuration;
     },
 
     /** Resolves the active effective map provider configuration for a frontend surface and usage. */
@@ -547,13 +597,13 @@ module.exports = {
         return Promise.all([
             this.repository().get(Object.assign({}, context, {
                 query: query,
-                searchOptions: { limit: 10, sort: { revision: -1, code: 1 } }
+                searchOptions: { limit: 100, sort: { revision: -1, code: 1 } }
             })),
             this.providers(context)
         ]).then(results => {
             let configs = this.records(results[0]).filter(record => this.text(record.setupStatus) !== 'ARCHIVED');
             let providers = results[1];
-            let preferred = configs.find(record => this.text(record.setupStatus) === 'ACTIVE') || configs[0];
+            let preferred = this.preferredConfiguration(configs);
             let provider = this.providerByCode(providers, preferred && preferred.providerCode);
             let fallback = this.fallbackSelection(configs, providers, preferred);
             let projection = this.publicProjection(preferred, provider, fallback);
@@ -561,7 +611,13 @@ module.exports = {
             fallback = this.fallbackSelection([], providers, { fallbackProviderCode: 'OSM' });
             return {
                 providerCode: '',
-                surfaceCode: query.surfaceCode,
+                surfaceCode: 'SHARED',
+            configurationScope: 'SHARED',
+            contractVersion: 1,
+            revision: 0,
+            refreshIntervalMs: Math.max(5000, Math.min(60000, Number(this.settings().refreshIntervalMs) || 15000)),
+            presentation: SERVICE.DefaultLocationMapPresentationService.presentation(),
+            interaction: SERVICE.DefaultLocationMapPresentationService.interaction(),
                 usageCode: query.usageCode,
                 styleUrl: '',
                 publicAccessToken: '',

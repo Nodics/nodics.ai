@@ -29,3 +29,5 @@ This file gives AI coding agents mandatory guidance for this Nodics module or pa
   `authSecurity.internalToken.routePermission` and resolved by router metadata,
   not hardcoded into profile routers.
 - Preserve tenant isolation, replay protection, revocation, audit traceability, hashed secrets, scoped permissions, and distributed-cache correctness.
+
+Allow externalIdentityLinkCode only as a bounded opaque customer access-token claim supplied by Profile after verified channel authentication. Profile owns live identity-link validation and refresh preservation. No raw provider proof or identity belongs in this JWT claim.

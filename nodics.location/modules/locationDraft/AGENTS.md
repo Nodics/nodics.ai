@@ -1,5 +1,8 @@
 # locationDraft Agents
 
+Follow the parent contract: `../../AGENTS.md`.
+Follow global guidance: `../../../nodics.foundation/modules/nSetup/llm/ai-enablement-index.md`.
+
 Follow the root Nodics AI agent contract before changing this boundary:
 
 - root `README.md` explains the human/documentation route.

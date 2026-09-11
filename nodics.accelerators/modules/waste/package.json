@@ -5,8 +5,7 @@
     "main": "nodics.js",
     "requiredModules": [
         "eWaste",
-        "wasteRecycling",
-        "circa.eWaste"
+        "wasteRecycling"
     ],
     "version": "0.0.0",
     "private": true,

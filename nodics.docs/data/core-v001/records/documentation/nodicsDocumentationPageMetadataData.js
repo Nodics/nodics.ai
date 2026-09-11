@@ -997,32 +997,100 @@ module.exports = {
         "level": 2
       },
       {
+        "text": "Plug-and-play availability",
+        "anchor": "frameworkModularArchitecture-2-plug-and-play-availability",
+        "level": 2
+      },
+      {
+        "text": "Successful, rejected and recovery journeys",
+        "anchor": "frameworkModularArchitecture-3-successful-rejected-and-recovery-journeys",
+        "level": 3
+      },
+      {
+        "text": "Customization and verification overview",
+        "anchor": "frameworkModularArchitecture-4-customization-and-verification-overview",
+        "level": 3
+      },
+      {
+        "text": "Decide what kind of dependency you have",
+        "anchor": "frameworkModularArchitecture-5-decide-what-kind-of-dependency-you-have",
+        "level": 2
+      },
+      {
+        "text": "Worked module-selection examples",
+        "anchor": "frameworkModularArchitecture-6-worked-module-selection-examples",
+        "level": 2
+      },
+      {
+        "text": "Waste without Location",
+        "anchor": "frameworkModularArchitecture-7-waste-without-location",
+        "level": 3
+      },
+      {
+        "text": "Commerce with selected industry behavior",
+        "anchor": "frameworkModularArchitecture-8-commerce-with-selected-industry-behavior",
+        "level": 3
+      },
+      {
+        "text": "Optional Process does not mean optional approval",
+        "anchor": "frameworkModularArchitecture-9-optional-process-does-not-mean-optional-approval",
+        "level": 3
+      },
+      {
+        "text": "Customize and extend safely",
+        "anchor": "frameworkModularArchitecture-10-customize-and-extend-safely",
+        "level": 2
+      },
+      {
+        "text": "Project files and responsibilities",
+        "anchor": "frameworkModularArchitecture-11-project-files-and-responsibilities",
+        "level": 3
+      },
+      {
+        "text": "Smallest configuration customization",
+        "anchor": "frameworkModularArchitecture-12-smallest-configuration-customization",
+        "level": 3
+      },
+      {
+        "text": "Guarantees projects cannot override",
+        "anchor": "frameworkModularArchitecture-13-guarantees-projects-cannot-override",
+        "level": 3
+      },
+      {
+        "text": "Qualification matrix",
+        "anchor": "frameworkModularArchitecture-14-qualification-matrix",
+        "level": 2
+      },
+      {
         "text": "What to read next",
-        "anchor": "frameworkModularArchitecture-2-what-to-read-next",
+        "anchor": "frameworkModularArchitecture-15-what-to-read-next",
         "level": 2
       },
       {
         "text": "Business perspective",
-        "anchor": "frameworkModularArchitecture-3-business-perspective",
+        "anchor": "frameworkModularArchitecture-16-business-perspective",
         "level": 2
       },
       {
         "text": "Technical perspective",
-        "anchor": "frameworkModularArchitecture-4-technical-perspective",
+        "anchor": "frameworkModularArchitecture-17-technical-perspective",
         "level": 2
       },
       {
         "text": "Common mistakes",
-        "anchor": "frameworkModularArchitecture-5-common-mistakes",
+        "anchor": "frameworkModularArchitecture-18-common-mistakes",
         "level": 2
       },
       {
         "text": "Verification",
-        "anchor": "frameworkModularArchitecture-6-verification",
+        "anchor": "frameworkModularArchitecture-19-verification",
         "level": 2
       }
     ],
     "diagrams": [
+      {
+        "language": "mermaid"
+      },
       {
         "language": "mermaid"
       }
@@ -1031,6 +1099,22 @@ module.exports = {
       {
         "kind": "table",
         "title": "Layer, What it owns, Reader impact"
+      },
+      {
+        "kind": "table",
+        "title": "Module family, Standard boundary"
+      },
+      {
+        "kind": "table",
+        "title": "Question, Existing authority, What it does not mean"
+      },
+      {
+        "kind": "table",
+        "title": "Project-owned path, Supported change, Invariant"
+      },
+      {
+        "kind": "table",
+        "title": "Scenario, Expected evidence, Unsafe conclusion to avoid"
       }
     ],
     "visualRequirements": [
@@ -1048,8 +1132,8 @@ module.exports = {
     ],
     "sourceRepository": "nodics.docs",
     "sourcePath": "docs/pages/framework/modular-architecture.md",
-    "sourceChecksum": "8918b924ad914c2ef5fe04fb0da6ca3c9349b73f0539c4ffd9987298569ba2e0",
-    "sourceWordCount": 513,
+    "sourceChecksum": "e6ccf53dee6ec39a5060e44ee73777deb2557c3c08724d449d9f47c19a8a7975",
+    "sourceWordCount": 2309,
     "audience": [
       "business",
       "architect",
@@ -4414,47 +4498,91 @@ module.exports = {
     "searchMetadata": "nodicsDocsSearchpagenodicsdocsmetadataschemadatamodelingmanagement",
     "headings": [
       {
+        "text": "Publication-aware Generic Authoring",
+        "anchor": "schemaDataModelingManagement-1-publication-aware-generic-authoring",
+        "level": 2
+      },
+      {
+        "text": "Customize and Extend Safely",
+        "anchor": "schemaDataModelingManagement-2-customize-and-extend-safely",
+        "level": 3
+      },
+      {
+        "text": "Technical revisions without manual arithmetic",
+        "anchor": "schemaDataModelingManagement-3-technical-revisions-without-manual-arithmetic",
+        "level": 2
+      },
+      {
+        "text": "Developer service example",
+        "anchor": "schemaDataModelingManagement-4-developer-service-example",
+        "level": 3
+      },
+      {
+        "text": "Conflict and recovery behavior",
+        "anchor": "schemaDataModelingManagement-5-conflict-and-recovery-behavior",
+        "level": 3
+      },
+      {
+        "text": "Customize and extend safely",
+        "anchor": "schemaDataModelingManagement-6-customize-and-extend-safely",
+        "level": 3
+      },
+      {
         "text": "Business context",
-        "anchor": "schemaDataModelingManagement-1-business-context",
+        "anchor": "schemaDataModelingManagement-7-business-context",
         "level": 2
       },
       {
         "text": "Journey and ownership",
-        "anchor": "schemaDataModelingManagement-2-journey-and-ownership",
+        "anchor": "schemaDataModelingManagement-8-journey-and-ownership",
         "level": 2
       },
       {
         "text": "Data and configuration detail",
-        "anchor": "schemaDataModelingManagement-3-data-and-configuration-detail",
+        "anchor": "schemaDataModelingManagement-9-data-and-configuration-detail",
         "level": 2
       },
       {
         "text": "Customization and extension",
-        "anchor": "schemaDataModelingManagement-4-customization-and-extension",
+        "anchor": "schemaDataModelingManagement-10-customization-and-extension",
         "level": 2
       },
       {
         "text": "Operations and governance",
-        "anchor": "schemaDataModelingManagement-5-operations-and-governance",
+        "anchor": "schemaDataModelingManagement-11-operations-and-governance",
         "level": 2
       },
       {
         "text": "Common mistakes",
-        "anchor": "schemaDataModelingManagement-6-common-mistakes",
+        "anchor": "schemaDataModelingManagement-12-common-mistakes",
         "level": 2
       },
       {
         "text": "Verification",
-        "anchor": "schemaDataModelingManagement-7-verification",
+        "anchor": "schemaDataModelingManagement-13-verification",
         "level": 2
       }
     ],
     "diagrams": [
       {
         "language": "mermaid"
+      },
+      {
+        "language": "mermaid"
+      },
+      {
+        "language": "mermaid"
       }
     ],
     "visualAssets": [
+      {
+        "kind": "table",
+        "title": "Operation, Caller responsibility, Framework responsibility"
+      },
+      {
+        "kind": "table",
+        "title": "Response, Meaning, Recovery"
+      },
       {
         "kind": "table",
         "title": "Business question, Answer for this topic"
@@ -4489,8 +4617,8 @@ module.exports = {
     ],
     "sourceRepository": "nodics.docs",
     "sourcePath": "docs/pages/nodics.foundation/schema-data-modeling.md",
-    "sourceChecksum": "7d820135ba6f2cb1dfeb349e6c4836ea21fab3aaea7d7d50ca1513ebdd3f3714",
-    "sourceWordCount": 1074,
+    "sourceChecksum": "f0df5e6c7ce832c30dfb0675a70bdf9b4389e890c8d3f393643eaf306cf54774",
+    "sourceWordCount": 2315,
     "audience": [
       "business",
       "architect",
@@ -5330,8 +5458,13 @@ module.exports = {
         "level": 2
       },
       {
+        "text": "Online and physical service points",
+        "anchor": "commerceBaseFoundations-9-online-and-physical-service-points",
+        "level": 3
+      },
+      {
         "text": "Customization and extension",
-        "anchor": "commerceBaseFoundations-9-customization-and-extension",
+        "anchor": "commerceBaseFoundations-10-customization-and-extension",
         "level": 2
       }
     ],
@@ -5359,8 +5492,8 @@ module.exports = {
     ],
     "sourceRepository": "nodics.docs",
     "sourcePath": "docs/pages/nodics.commerce/base-commerce.md",
-    "sourceChecksum": "04c94da1041ed8830067cb584ef294a56490eb22e83e9f7be25583ee3212485a",
-    "sourceWordCount": 947,
+    "sourceChecksum": "e2c0dc29b3a4edf1c2eb0e5fc8b82298ca0fc4c1af5c3d436078ca0161b5dce0",
+    "sourceWordCount": 1269,
     "audience": [
       "business",
       "architect",
@@ -9921,102 +10054,120 @@ module.exports = {
     "searchMetadata": "nodicsDocsSearchpagenodicsdocsmetadatadataimportexportmigration",
     "headings": [
       {
+        "text": "Module data files and managed revisions",
+        "anchor": "dataImportExportMigration-1-module-data-files-and-managed-revisions",
+        "level": 2
+      },
+      {
+        "text": "Repeated import and failure recovery",
+        "anchor": "dataImportExportMigration-2-repeated-import-and-failure-recovery",
+        "level": 3
+      },
+      {
+        "text": "Customize and extend safely",
+        "anchor": "dataImportExportMigration-3-customize-and-extend-safely",
+        "level": 3
+      },
+      {
         "text": "Business context",
-        "anchor": "dataImportExportMigration-1-business-context",
+        "anchor": "dataImportExportMigration-4-business-context",
         "level": 2
       },
       {
         "text": "Journey and ownership",
-        "anchor": "dataImportExportMigration-2-journey-and-ownership",
+        "anchor": "dataImportExportMigration-5-journey-and-ownership",
         "level": 2
       },
       {
         "text": "Data and configuration detail",
-        "anchor": "dataImportExportMigration-3-data-and-configuration-detail",
+        "anchor": "dataImportExportMigration-6-data-and-configuration-detail",
         "level": 2
       },
       {
         "text": "Two data creation lanes",
-        "anchor": "dataImportExportMigration-4-two-data-creation-lanes",
+        "anchor": "dataImportExportMigration-7-two-data-creation-lanes",
         "level": 2
       },
       {
         "text": "Module release data authoring",
-        "anchor": "dataImportExportMigration-5-module-release-data-authoring",
+        "anchor": "dataImportExportMigration-8-module-release-data-authoring",
         "level": 2
       },
       {
         "text": "Header files",
-        "anchor": "dataImportExportMigration-6-header-files",
+        "anchor": "dataImportExportMigration-9-header-files",
         "level": 2
       },
       {
         "text": "Record files",
-        "anchor": "dataImportExportMigration-7-record-files",
+        "anchor": "dataImportExportMigration-10-record-files",
         "level": 2
       },
       {
         "text": "Generated files",
-        "anchor": "dataImportExportMigration-8-generated-files",
+        "anchor": "dataImportExportMigration-11-generated-files",
         "level": 2
       },
       {
         "text": "Release lifecycle",
-        "anchor": "dataImportExportMigration-9-release-lifecycle",
+        "anchor": "dataImportExportMigration-12-release-lifecycle",
         "level": 2
       },
       {
         "text": "Lifecycle and destination",
-        "anchor": "dataImportExportMigration-10-lifecycle-and-destination",
+        "anchor": "dataImportExportMigration-13-lifecycle-and-destination",
         "level": 2
       },
       {
         "text": "Developer workflow",
-        "anchor": "dataImportExportMigration-11-developer-workflow",
+        "anchor": "dataImportExportMigration-14-developer-workflow",
         "level": 2
       },
       {
         "text": "Guided initialization profiles",
-        "anchor": "dataImportExportMigration-12-guided-initialization-profiles",
+        "anchor": "dataImportExportMigration-15-guided-initialization-profiles",
         "level": 2
       },
       {
         "text": "Provider-specific documentation rule",
-        "anchor": "dataImportExportMigration-13-provider-specific-documentation-rule",
+        "anchor": "dataImportExportMigration-16-provider-specific-documentation-rule",
         "level": 2
       },
       {
         "text": "Media assets",
-        "anchor": "dataImportExportMigration-14-media-assets",
+        "anchor": "dataImportExportMigration-17-media-assets",
         "level": 2
       },
       {
         "text": "Customization and extension",
-        "anchor": "dataImportExportMigration-15-customization-and-extension",
+        "anchor": "dataImportExportMigration-18-customization-and-extension",
         "level": 2
       },
       {
         "text": "Operations and governance",
-        "anchor": "dataImportExportMigration-16-operations-and-governance",
+        "anchor": "dataImportExportMigration-19-operations-and-governance",
         "level": 2
       },
       {
         "text": "Common mistakes",
-        "anchor": "dataImportExportMigration-17-common-mistakes",
+        "anchor": "dataImportExportMigration-20-common-mistakes",
         "level": 2
       },
       {
         "text": "Verification",
-        "anchor": "dataImportExportMigration-18-verification",
+        "anchor": "dataImportExportMigration-21-verification",
         "level": 2
       },
       {
         "text": "Current implementation coverage",
-        "anchor": "dataImportExportMigration-19-current-implementation-coverage",
+        "anchor": "dataImportExportMigration-22-current-implementation-coverage",
         "level": 2
       }
     ],
     "diagrams": [
+      {
+        "language": "mermaid"
+      },
       {
         "language": "mermaid"
       },
@@ -10099,8 +10250,8 @@ module.exports = {
     ],
     "sourceRepository": "nodics.docs",
     "sourcePath": "docs/pages/nodics.foundation/data-import-export-migration.md",
-    "sourceChecksum": "8b7227a5e828b871dd0a5094fde890e3849c4664799c50537dd423e66066ceb8",
-    "sourceWordCount": 3553,
+    "sourceChecksum": "da9201e07032876d260bc9fb081b40b20b34d79b29d82f616b8d00fb39040303",
+    "sourceWordCount": 4075,
     "audience": [
       "business",
       "architect",
@@ -12294,22 +12445,75 @@ module.exports = {
         "level": 2
       },
       {
+        "text": "Read the registry without confusing its states",
+        "anchor": "platformModuleRegistryJourney-6-read-the-registry-without-confusing-its-states",
+        "level": 2
+      },
+      {
+        "text": "Axis administrator walkthrough",
+        "anchor": "platformModuleRegistryJourney-7-axis-administrator-walkthrough",
+        "level": 2
+      },
+      {
+        "text": "Example: unavailable target, independent action",
+        "anchor": "platformModuleRegistryJourney-8-example-unavailable-target-independent-action",
+        "level": 3
+      },
+      {
+        "text": "Customize and extend safely",
+        "anchor": "platformModuleRegistryJourney-9-customize-and-extend-safely",
+        "level": 2
+      },
+      {
+        "text": "Narrow an existing provider in a project overlay",
+        "anchor": "platformModuleRegistryJourney-10-narrow-an-existing-provider-in-a-project-overlay",
+        "level": 3
+      },
+      {
+        "text": "Tune catalogue page size without changing eligibility",
+        "anchor": "platformModuleRegistryJourney-11-tune-catalogue-page-size-without-changing-eligibility",
+        "level": 3
+      },
+      {
+        "text": "Non-customizable security and ownership",
+        "anchor": "platformModuleRegistryJourney-12-non-customizable-security-and-ownership",
+        "level": 3
+      },
+      {
+        "text": "Troubleshooting and recovery",
+        "anchor": "platformModuleRegistryJourney-13-troubleshooting-and-recovery",
+        "level": 2
+      },
+      {
+        "text": "Repeatable acceptance examples",
+        "anchor": "platformModuleRegistryJourney-14-repeatable-acceptance-examples",
+        "level": 2
+      },
+      {
+        "text": "Revision conflict during activation",
+        "anchor": "platformModuleRegistryJourney-15-revision-conflict-during-activation",
+        "level": 3
+      },
+      {
         "text": "Implementation handoff",
-        "anchor": "platformModuleRegistryJourney-6-implementation-handoff",
+        "anchor": "platformModuleRegistryJourney-16-implementation-handoff",
         "level": 2
       },
       {
         "text": "Common mistakes",
-        "anchor": "platformModuleRegistryJourney-7-common-mistakes",
+        "anchor": "platformModuleRegistryJourney-17-common-mistakes",
         "level": 2
       },
       {
         "text": "Verification",
-        "anchor": "platformModuleRegistryJourney-8-verification",
+        "anchor": "platformModuleRegistryJourney-18-verification",
         "level": 2
       }
     ],
     "diagrams": [
+      {
+        "language": "mermaid"
+      },
       {
         "language": "mermaid"
       }
@@ -12318,6 +12522,14 @@ module.exports = {
       {
         "kind": "table",
         "title": "Area, Source location"
+      },
+      {
+        "kind": "table",
+        "title": "Observation, Meaning, Next useful action"
+      },
+      {
+        "kind": "table",
+        "title": "Symptom, Check, Safe correction and proof"
       }
     ],
     "visualRequirements": [
@@ -12333,8 +12545,8 @@ module.exports = {
     ],
     "sourceRepository": "nodics.docs",
     "sourcePath": "docs/pages/nodics.platform/module-registry-journey.md",
-    "sourceChecksum": "cb9429ef5dfe31f92cec00aa6f9164390c15abf565540dc5e1d79a1832f69a37",
-    "sourceWordCount": 773,
+    "sourceChecksum": "f31b3884341075b6fdc370139024164e53f9a55c3448eeae0e6f7eaab3ae9e78",
+    "sourceWordCount": 2737,
     "audience": [
       "business",
       "architect",
@@ -14468,47 +14680,95 @@ module.exports = {
     "searchMetadata": "nodicsDocsSearchpagenodicsdocsmetadatafoundationtoolingruntimecontracts",
     "headings": [
       {
+        "text": "Independent local processes",
+        "anchor": "foundationToolingRuntimeContracts-1-independent-local-processes",
+        "level": 2
+      },
+      {
         "text": "Business problem",
-        "anchor": "foundationToolingRuntimeContracts-1-business-problem",
+        "anchor": "foundationToolingRuntimeContracts-2-business-problem",
         "level": 2
       },
       {
         "text": "Source map",
-        "anchor": "foundationToolingRuntimeContracts-2-source-map",
+        "anchor": "foundationToolingRuntimeContracts-3-source-map",
         "level": 2
       },
       {
         "text": "Tooling flow",
-        "anchor": "foundationToolingRuntimeContracts-3-tooling-flow",
+        "anchor": "foundationToolingRuntimeContracts-4-tooling-flow",
         "level": 2
       },
       {
         "text": "Contract",
-        "anchor": "foundationToolingRuntimeContracts-4-contract",
+        "anchor": "foundationToolingRuntimeContracts-5-contract",
         "level": 2
       },
       {
         "text": "Customization and extension guidance",
-        "anchor": "foundationToolingRuntimeContracts-5-customization-and-extension-guidance",
+        "anchor": "foundationToolingRuntimeContracts-6-customization-and-extension-guidance",
+        "level": 2
+      },
+      {
+        "text": "Local runtime lifecycle",
+        "anchor": "foundationToolingRuntimeContracts-7-local-runtime-lifecycle",
+        "level": 2
+      },
+      {
+        "text": "Customize and extend safely",
+        "anchor": "foundationToolingRuntimeContracts-8-customize-and-extend-safely",
+        "level": 2
+      },
+      {
+        "text": "Select a project-owned process layout",
+        "anchor": "foundationToolingRuntimeContracts-9-select-a-project-owned-process-layout",
+        "level": 3
+      },
+      {
+        "text": "Apply, verify and roll back a layout change",
+        "anchor": "foundationToolingRuntimeContracts-10-apply-verify-and-roll-back-a-layout-change",
+        "level": 3
+      },
+      {
+        "text": "Failure and independent recovery example",
+        "anchor": "foundationToolingRuntimeContracts-11-failure-and-independent-recovery-example",
+        "level": 3
+      },
+      {
+        "text": "Boundaries projects cannot replace",
+        "anchor": "foundationToolingRuntimeContracts-12-boundaries-projects-cannot-replace",
+        "level": 3
+      },
+      {
+        "text": "Troubleshooting matrix",
+        "anchor": "foundationToolingRuntimeContracts-13-troubleshooting-matrix",
+        "level": 2
+      },
+      {
+        "text": "Project regression examples",
+        "anchor": "foundationToolingRuntimeContracts-14-project-regression-examples",
         "level": 2
       },
       {
         "text": "Operating rules",
-        "anchor": "foundationToolingRuntimeContracts-6-operating-rules",
+        "anchor": "foundationToolingRuntimeContracts-15-operating-rules",
         "level": 2
       },
       {
         "text": "Common mistakes",
-        "anchor": "foundationToolingRuntimeContracts-7-common-mistakes",
+        "anchor": "foundationToolingRuntimeContracts-16-common-mistakes",
         "level": 2
       },
       {
         "text": "Verification",
-        "anchor": "foundationToolingRuntimeContracts-8-verification",
+        "anchor": "foundationToolingRuntimeContracts-17-verification",
         "level": 2
       }
     ],
     "diagrams": [
+      {
+        "language": "mermaid"
+      },
       {
         "language": "mermaid"
       }
@@ -14517,6 +14777,14 @@ module.exports = {
       {
         "kind": "table",
         "title": "Area, Source location"
+      },
+      {
+        "kind": "table",
+        "title": "Existing field, Behavior, Customization check"
+      },
+      {
+        "kind": "table",
+        "title": "Symptom, Cause to investigate, Expected recovery"
       }
     ],
     "visualRequirements": [
@@ -14532,8 +14800,8 @@ module.exports = {
     ],
     "sourceRepository": "nodics.docs",
     "sourcePath": "docs/pages/nodics.foundation/tooling-runtime-contracts.md",
-    "sourceChecksum": "68bbf0fbe03742b22d9b28adf6147f41d4e1f9c3a74dbf256fc01301593c0fdd",
-    "sourceWordCount": 521,
+    "sourceChecksum": "39174d29cd2e8b32f93a9e3db07268ed1c8a206c1e8fd7502758007a6325b554",
+    "sourceWordCount": 2090,
     "audience": [
       "business",
       "architect",
@@ -15294,6 +15562,112 @@ module.exports = {
     "sourcePath": "docs/pages/reference/documentation-gap-backlog.md",
     "sourceChecksum": "2ff6c0d573938eee55b1f505f30cf337ab99fed8d74c19dfcc2c0f31560c5ac2",
     "sourceWordCount": 1452,
+    "audience": [
+      "business",
+      "architect",
+      "administrator",
+      "developer",
+      "operator",
+      "qa",
+      "ai-tool"
+    ],
+    "managedInAxis": true,
+    "axisAuthoringPermissions": [
+      "documentation.draft.update"
+    ],
+    "workflowRequired": true,
+    "workflowTriggers": [
+      "CONTENT_CHANGE",
+      "ACCESS_POLICY_CHANGE",
+      "SOURCE_EVIDENCE_CHANGE"
+    ],
+    "accessPolicy": "nodicsDocsAccessPublic",
+    "accessMode": "PUBLIC",
+    "lifecycleState": "ONLINE",
+    "maturityState": "IMPLEMENTED",
+    "active": true
+  },
+  "record129": {
+    "code": "nodicsDocsMetadatawasteImpactProviders",
+    "product": "nodicsDocumentationProduct",
+    "documentId": "waste.impact-providers",
+    "title": "Waste impact providers and mock carbon estimates",
+    "summary": "Configure illustrative carbon calculations, preserve provenance, and replace the mock through the standard provider and configuration hierarchy.",
+    "businessSummary": "Waste impact providers and mock carbon estimates explains the business purpose, supported decisions, operational impact, and controls for the Modularity and Ownership journey.",
+    "technicalSummary": "Waste impact providers and mock carbon estimates records owning module nodics.waste, technical module wasteImpact, source path docs/pages/nodics.waste/impact-providers.md, extension points, validation, and troubleshooting evidence.",
+    "ownerFunctionalModule": "nodics.waste",
+    "technicalModule": "wasteImpact",
+    "targetPage": "nodicsDocsPagewasteImpactProviders",
+    "targetRoute": "nodicsDocsRoutewasteImpactProviders",
+    "articleComponent": "nodicsDocsComponentwasteImpactProviders",
+    "template": "nodicsDocumentationArticleTemplate",
+    "searchMetadata": "nodicsDocsSearchpagenodicsdocsmetadatawasteimpactproviders",
+    "headings": [
+      {
+        "text": "Purpose and ownership",
+        "anchor": "wasteImpactProviders-1-purpose-and-ownership",
+        "level": 2
+      },
+      {
+        "text": "Execution and prerequisites",
+        "anchor": "wasteImpactProviders-2-execution-and-prerequisites",
+        "level": 2
+      },
+      {
+        "text": "Customize and extend safely",
+        "anchor": "wasteImpactProviders-3-customize-and-extend-safely",
+        "level": 2
+      },
+      {
+        "text": "Replacing the mock with an authorized provider",
+        "anchor": "wasteImpactProviders-4-replacing-the-mock-with-an-authorized-provider",
+        "level": 2
+      },
+      {
+        "text": "Failure, recovery and operational evidence",
+        "anchor": "wasteImpactProviders-5-failure-recovery-and-operational-evidence",
+        "level": 2
+      },
+      {
+        "text": "Common mistakes",
+        "anchor": "wasteImpactProviders-6-common-mistakes",
+        "level": 2
+      },
+      {
+        "text": "Verification",
+        "anchor": "wasteImpactProviders-7-verification",
+        "level": 2
+      },
+      {
+        "text": "Environmental properties and credit status",
+        "anchor": "wasteImpactProviders-8-environmental-properties-and-credit-status",
+        "level": 2
+      }
+    ],
+    "diagrams": [
+      {
+        "language": "mermaid"
+      }
+    ],
+    "visualAssets": [
+      {
+        "kind": "table",
+        "title": "Setting under wasteImpact.calculation, Behavior"
+      }
+    ],
+    "visualRequirements": [
+      "architecture-diagram",
+      "table",
+      "diagram"
+    ],
+    "relatedPages": [
+      "framework.modular-architecture",
+      "framework.customization-guide"
+    ],
+    "sourceRepository": "nodics.docs",
+    "sourcePath": "docs/pages/nodics.waste/impact-providers.md",
+    "sourceChecksum": "fa32edfbbd359c92125406babba6ee498c17ece2af24fd47eb93c0062f3ca0d5",
+    "sourceWordCount": 1609,
     "audience": [
       "business",
       "architect",

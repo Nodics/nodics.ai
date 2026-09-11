@@ -325,7 +325,7 @@ module.exports = {
     "childJourneyLinks": [],
     "childStatusSummary": {
       "childCount": 49,
-      "pages": 129
+      "pages": 130
     },
     "nodeOrder": 10,
     "expandable": true,
@@ -679,7 +679,8 @@ module.exports = {
         "framework.modular-architecture",
         "framework.runtime-server-composition",
         "framework.module-loading-service-precedence",
-        "framework.architecture-decision-guide"
+        "framework.architecture-decision-guide",
+        "waste.impact-providers"
       ]
     },
     "nodeDashboard": "nodicsDocsDashboardSecframeworkArchitectureAndDesign",
@@ -707,6 +708,12 @@ module.exports = {
         "title": "Architecture Decision Guide",
         "summary": "Decision path for choosing framework, project, content, provider, service, pipeline, schema, route, or renderer ownership.",
         "order": 40
+      },
+      {
+        "code": "waste.impact-providers",
+        "title": "Waste impact providers and mock carbon estimates",
+        "summary": "Configure illustrative carbon calculations, preserve provenance, and replace the mock through the standard provider and configuration hierarchy.",
+        "order": 50
       }
     ],
     "childJourneyLinks": [
@@ -729,11 +736,16 @@ module.exports = {
         "label": "Architecture Decision Guide",
         "targetPage": "framework.architecture-decision-guide",
         "route": "/docs/framework/framework-architecture-decision-guide"
+      },
+      {
+        "label": "Waste impact providers and mock carbon estimates",
+        "targetPage": "waste.impact-providers",
+        "route": "/docs/framework/waste-impact-providers"
       }
     ],
     "childStatusSummary": {
-      "childCount": 4,
-      "pages": 4
+      "childCount": 5,
+      "pages": 5
     },
     "nodeOrder": 30,
     "expandable": true,
@@ -15138,6 +15150,85 @@ module.exports = {
       "nodicsDocsNodePagereferenceSourceMapGlossary",
       "nodicsDocsNodePageframeworkCapabilityDocumentationMaturityPattern",
       "nodicsDocsNodePagedataImportExportMigration"
+    ],
+    "locale": "en",
+    "channel": "web",
+    "active": true
+  },
+  "record179": {
+    "code": "nodicsDocsNodePagewasteImpactProviders",
+    "product": "nodicsDocumentationProduct",
+    "navigation": "nodicsDocumentationNavigation",
+    "parentNode": "nodicsDocsNodeSecframeworkArchitectureAndDesign",
+    "nodeLevel": "PAGE_LINK",
+    "nodeType": "PAGE",
+    "nodeTitle": "Waste impact providers and mock carbon estimates",
+    "nodeSummary": "Configure illustrative carbon calculations, preserve provenance, and replace the mock through the standard provider and configuration hierarchy.",
+    "nodeContentArea": {
+      "route": "/docs/framework/waste-impact-providers",
+      "documentType": "how-to",
+      "businessAudience": [
+        "business user",
+        "administrator",
+        "implementation partner"
+      ],
+      "technicalAudience": [
+        "architect",
+        "developer",
+        "operator",
+        "qa engineer",
+        "ai tool"
+      ]
+    },
+    "childSummaryCards": [],
+    "childJourneyLinks": [],
+    "childStatusSummary": {
+      "childCount": 0
+    },
+    "targetDocumentationPage": "nodicsDocsMetadatawasteImpactProviders",
+    "targetPage": "nodicsDocsPagewasteImpactProviders",
+    "targetRoute": "nodicsDocsRoutewasteImpactProviders",
+    "nodeOrder": 10050,
+    "expandable": false,
+    "expandedByDefault": false,
+    "nodeIcon": "file-text",
+    "nodeAudience": [
+      "business",
+      "architect",
+      "administrator",
+      "developer",
+      "operator",
+      "qa",
+      "ai-tool"
+    ],
+    "accessPolicy": "nodicsDocsAccessPublic",
+    "accessMode": "PUBLIC",
+    "allowedRoles": [],
+    "allowedGroups": [],
+    "allowedPermissions": [],
+    "managedInAxis": true,
+    "axisAuthoringPermissions": [
+      "documentation.navigation.update"
+    ],
+    "workflowRequired": true,
+    "workflowTriggers": [
+      "NAVIGATION_CHANGE",
+      "DASHBOARD_CHANGE",
+      "ACCESS_POLICY_CHANGE"
+    ],
+    "lifecycleState": "ONLINE",
+    "maturityState": "IMPLEMENTED",
+    "searchKeywords": [
+      "waste",
+      "carbon",
+      "impact",
+      "provider",
+      "mock",
+      "configuration"
+    ],
+    "relatedNodes": [
+      "nodicsDocsNodePageframeworkModularArchitecture",
+      "nodicsDocsNodePageframeworkCustomizationGuide"
     ],
     "locale": "en",
     "channel": "web",

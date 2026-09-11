@@ -117,7 +117,13 @@ module.exports = {
         const self = this;
         return {
             findPlacement: async request => (await self.get(SERVICE.DefaultCheckoutCheckpointService, request.tenant, Object.assign({ ownerId: request.ownerId, idempotencyKey: request.idempotencyKey, status: 'COMPLETED' }, request.enterpriseCode ? { enterpriseCode: request.enterpriseCode } : {}), request.authData, 1))[0],
-            validateCart: request => SERVICE.DefaultCartOperationService.validateDirect(Object.assign({}, request, { internalUse: true, cartCode: request.payload.cartCode, ownerId: request.ownerId, payload: { expectedRevision: request.payload.expectedCartRevision, couponCode: request.payload.couponCode, customerGroup: request.payload.customerGroup, idempotencyKey: request.idempotencyKey } })),
+            validateCart: async request => {
+                if (SERVICE.DefaultNegotiatedPriceService) {
+                    const cart = await SERVICE.DefaultCartOperationService.cartSnapshot({...request,cartCode:request.payload.cartCode});
+                    await SERVICE.DefaultNegotiatedPriceService.validateCheckout(request,cart);
+                }
+                return SERVICE.DefaultCartOperationService.validateDirect(Object.assign({}, request, { internalUse: true, cartCode: request.payload.cartCode, ownerId: request.ownerId, payload: { expectedRevision: request.payload.expectedCartRevision, couponCode: request.payload.couponCode, customerGroup: request.payload.customerGroup, idempotencyKey: request.idempotencyKey } }));
+            },
             calculateCart: request => SERVICE.DefaultCartOperationService.calculate(Object.assign({}, request, { internalUse: true, cartCode: request.payload.cartCode, ownerId: request.ownerId, payload: { expectedRevision: request.payload.expectedCartRevision, calculationCode: request.payload.calculationCode, couponCode: request.payload.couponCode, customerGroup: request.payload.customerGroup, idempotencyKey: request.idempotencyKey } })),
             reserveInventory: async (request, calculation) => {
                 const reservations = [];

@@ -36,3 +36,5 @@ module.exports = {
 
 If any activation flag is disabled, strict auth startup must fail before traffic
 is accepted.
+
+A Profile-issued customer session may pass a stable opaque externalIdentityLinkCode to buildPayload. Verify preservation in a signed access token, absence from ordinary password sessions, and rejection on service/human tokens. The same code must be revalidated by Profile before refresh.

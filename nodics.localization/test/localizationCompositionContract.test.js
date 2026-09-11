@@ -22,7 +22,8 @@ assert.strictEqual(group.nodics.kind, 'group');
 assert.deepStrictEqual(group.nodics.extends, ['nodics.foundation']);
 assert.deepStrictEqual(group.requiredModules, ['localizationCore', 'localizationApi']);
 assert.strictEqual(group.nodics.functionalModule.identity, 'nodics.localization');
-assert.strictEqual(group.nodics.functionalModule.protected, true);
+assert.strictEqual(group.nodics.functionalModule.protected, false,
+    'Localization is optional; protected translation keys are a separate security boundary');
 assert.strictEqual(core.index, '40.10');
 assert.strictEqual(api.index, '40.20');
 assert.strictEqual(fs.existsSync(path.join(groupRoot, 'src')), false);

@@ -34,7 +34,8 @@ module.exports = {
             definition: {
                 active: {
                     required: false
-                }
+                ,
+                    description: 'Indicates whether this record is active and available for normal use.'}
             }
         }
     }

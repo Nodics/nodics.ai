@@ -25,3 +25,5 @@ This file gives AI coding agents mandatory guidance for this Nodics module or pa
   require explicit idempotency before retry.
 - BackOffice self-registration must remain asynchronous control-plane work and
   use internal service identity rather than username/password authentication.
+
+Capability builders may project the bounded native `backendWorkspace` variant through the existing provider contract. They must not synthesize accelerator navigation under a generic provider or invent schema targets for native screens.

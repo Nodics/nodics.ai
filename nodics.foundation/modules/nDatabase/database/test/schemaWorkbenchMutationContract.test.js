@@ -137,7 +137,9 @@ const request = {
     assert.strictEqual(inspected.schemaModel, schemaModel);
     assert.deepStrictEqual(inspected.query, { code: 'DXB' });
 
-    await service.deleteRecord({
+    global.FACADE = { DefaultSchemaWorkbenchFacade: require('../src/facade/schema/defaultSchemaWorkbenchFacade') };
+    const controller = require('../src/controller/schema/defaultSchemaWorkbenchController');
+    await controller.deleteRecord({
         ...request,
         httpRequest: {
             params: { schema: 'address' },

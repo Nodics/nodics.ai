@@ -16,7 +16,24 @@
  * @owner profile
  * @override Later modules may tighten filters, bounds, or projection through layered configuration without creating another persistence path.
  */
+const crypto = require('node:crypto');
+
 module.exports = {
+    /** Canonicalizes command input for retry comparison without persisting personal input twice. */
+    commandDigest: function (value) {
+        const canonical = this.canonicalCommand(value);
+        return crypto.createHash('sha256').update(JSON.stringify(canonical)).digest('hex');
+    },
+
+    /** Returns stable JSON field ordering while retaining array order and scalar types. */
+    canonicalCommand: function (value) {
+        if (Array.isArray(value)) return value.map(item => this.canonicalCommand(item));
+        if (value && typeof value === 'object') return Object.keys(value).sort().reduce((result, key) => {
+            if (value[key] !== undefined) result[key] = this.canonicalCommand(value[key]);
+            return result;
+        }, {});
+        return value;
+    },
     /** Returns effective layered enterprise-search policy. */
     policy: function () {
         return (CONFIG.get('enterpriseManagement') || {}).search || {};
@@ -319,8 +336,48 @@ module.exports = {
         };
     },
 
-    /** Creates one enterprise through the generated Profile service after caller confirmation was enforced upstream. */
-    create: async function (request) {
+    /**
+     * Adapts the schema editor's declared CREATE aggregate to Profile enterprise setup.
+     * Tenant provisioning stays server-owned; later schema fields are accepted only
+     * when the effective descriptor declares them writable. No client service names
+     * or runtime coordinates are accepted.
+     * @param {Object} request Authenticated aggregate request with payload.model.
+     * @returns {Promise<Object>} Persisted enterprise, including reference identities.
+     */
+    createFromWorkbench: async function (request) {
+        this.authorize(request);
+        if (!this.isPlatformAdministrator(request.authData)) throw this.error('Enterprise creation is limited to the Platform Owner enterprise');
+        let workbench = SERVICE.DefaultSchemaWorkbenchService;
+        let moduleObject = NODICS.getModule('profile');
+        let descriptor = workbench.buildDescriptor(request, moduleObject, 'enterprise', 'profile');
+        let input = request.payload && request.payload.model;
+        if (!descriptor || !descriptor.operations.includes('create') || !input || typeof input !== 'object' || Array.isArray(input)) {
+            throw this.error('Enterprise creation input is invalid');
+        }
+        let writable = new Set(descriptor.fields.filter(field => !field.readOnly).map(field => field.name));
+        let reserved = new Set(['tenant', 'capabilityScopes']);
+        if (Object.keys(input).some(key => !writable.has(key) || reserved.has(key))) {
+            throw this.error('Enterprise creation contains a managed or unavailable field');
+        }
+        let { code, name, active, roleCodes, superEnterprise, ...additional } = input;
+        await this.create({ ...request, body: {
+            code, name, active, roleCodes, superEnterpriseCode: superEnterprise,
+            tenantCode: code, idempotencyKey: request.idempotencyKey,
+        } }, additional);
+        let result = await SERVICE.DefaultEnterpriseService.get({
+            tenant: CONFIG.get('defaultTenant') || 'default', authData: request.authData,
+            query: { code }, options: { recursive: false }, searchOptions: { pageSize: 1, pageNumber: 1 },
+        });
+        let saved = result && result.result && result.result[0];
+        if (!saved) throw this.error('Enterprise was created but could not be reloaded');
+        return descriptor.fields.reduce((record, field) => {
+            if (saved[field.name] !== undefined) record[field.name] = saved[field.name];
+            return record;
+        }, {});
+    },
+
+    /** Creates one enterprise; additionalModel is a server-only, descriptor-validated contribution. */
+    create: async function (request, additionalModel) {
         this.authorize(request);
         if (!this.isPlatformAdministrator(request.authData)) {
             throw this.error('Enterprise creation is limited to the Platform Owner enterprise');
@@ -336,6 +393,8 @@ module.exports = {
         let name = String(input.name || '').trim();
         let tenantCode = String(input.tenantCode || request.tenant || CONFIG.get('defaultTenant') || 'default').trim();
         let persistenceTenant = CONFIG.get('defaultTenant') || 'default';
+        let requestKey = input.idempotencyKey ? this.commandDigest([this.principalCode(request.authData), String(input.idempotencyKey)]) : undefined;
+        let requestHash = requestKey ? this.commandDigest({ input, additionalModel }) : undefined;
         if (!code || code.length > Number(policy.maximumCodeLength || 128) ||
             !/^[A-Za-z0-9][A-Za-z0-9._-]*$/.test(code) ||
             !name || name.length > Number(policy.maximumNameLength || 256) ||
@@ -347,6 +406,12 @@ module.exports = {
             searchOptions: { pageSize: 2, pageNumber: 1 }
         });
         if (existing && Array.isArray(existing.result) && existing.result.length) {
+            let saved = existing.result[0];
+            if (requestKey && saved.setupRequestKey === requestKey) {
+                if (saved.setupRequestHash !== requestHash) throw this.error('This setup request has changed. Open the existing enterprise before making further changes.');
+                await this.activateEnterpriseRuntime(saved, tenantCode);
+                return this.project(saved, policy.projectedFields || ['code', 'name', 'active', 'tenant']);
+            }
             throw this.error('Enterprise code already exists');
         }
         let tenantOwner = await SERVICE.DefaultEnterpriseService.get({
@@ -356,8 +421,8 @@ module.exports = {
         if (tenantOwner && Array.isArray(tenantOwner.result) && tenantOwner.result.length) {
             throw this.error('Enterprise tenant is already assigned');
         }
-        await this.ensureTenant(tenantCode, request, name);
-        let model = { code: code, name: name, tenant: tenantCode, active: input.active !== false };
+        let model = Object.assign({}, additionalModel || {}, { code: code, name: name, tenant: tenantCode, active: input.active !== false });
+        if (requestKey) { model.setupRequestKey = requestKey; model.setupRequestHash = requestHash; }
         if (input.superEnterpriseCode) model.superEnterprise = String(input.superEnterpriseCode);
         if (Array.isArray(input.roleCodes) && input.roleCodes.length) {
             let allowedRoles = Array.isArray(policy.allowedRoleCodes) ? policy.allowedRoleCodes : [];
@@ -368,6 +433,7 @@ module.exports = {
             }
             model.roleCodes = roleCodes;
         }
+        await this.ensureTenant(tenantCode, request, name);
         let response = await SERVICE.DefaultEnterpriseService.save({
             tenant: persistenceTenant, authData: request.authData, model: model,
             idempotencyKey: input.idempotencyKey

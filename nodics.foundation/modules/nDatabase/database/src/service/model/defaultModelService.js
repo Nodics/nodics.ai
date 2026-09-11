@@ -51,6 +51,32 @@ module.exports = {
     },
 
     /**
+     * Detects portable reference descriptors that should be stored as
+     * references, not treated as nested records to persist.
+     *
+     * @param {Object} model Candidate reference value.
+     * @param {Object} propertyObject Schema reference definition.
+     * @returns {boolean} True when the value is a lightweight reference.
+     */
+    isReferenceDescriptor: function (model, propertyObject) {
+        if (!model || typeof model !== 'object' || Array.isArray(model) ||
+            (UTILS.isObjectId && UTILS.isObjectId(model))) {
+            return false;
+        }
+        let referenceKey = propertyObject.propertyName || 'code';
+        if (model[referenceKey] === undefined || model[referenceKey] === null) return false;
+        // Both published source-reference shapes are references, never nested child models.
+        if (model.module && model.moduleName && model.module !== model.moduleName) return false;
+        if (model.schema && model.schemaName && model.schema !== model.schemaName) return false;
+        let moduleName = model.module || model.moduleName;
+        let schemaName = model.schema || model.schemaName;
+        if (moduleName && propertyObject.moduleName && moduleName !== propertyObject.moduleName) return false;
+        if (schemaName && propertyObject.schemaName && schemaName !== propertyObject.schemaName) return false;
+        let descriptorKeys = ['module', 'schema', 'moduleName', 'schemaName', 'tenant', referenceKey];
+        return Object.keys(model).every(key => descriptorKeys.includes(key));
+    },
+
+    /**
      * Traverses a model list and delegates reference processing to a callback.
      *
      * @param {Object} options Traversal options.
@@ -112,6 +138,14 @@ module.exports = {
                     let models = model[property];
                     if (propertyObject.enabled && models && ((UTILS.isObject(models) && !UTILS.isObjectId(models)) || UTILS.isArrayOfObject(models))) {
                         if (propertyObject.type === 'one') models = [models];
+                        if (models.every(item => SERVICE.DefaultModelService.isReferenceDescriptor(item, propertyObject))) {
+                            SERVICE.DefaultModelService.saveNestedModels(options).then(success => {
+                                resolve(true);
+                            }).catch(error => {
+                                reject(error);
+                            });
+                            return;
+                        }
                         if (request.options && request.options.allowCmsAssociationReplacement === true) {
                             models.forEach(item => {
                                 if (item && !Array.isArray(item.accessGroups)) {

@@ -11,7 +11,7 @@
 
 /** @module promotion/config/properties @description Defines Commerce capability and schema access policies. @layer config @owner promotion */
 module.exports = {
-    promotion: { enabled: true },
+    promotion: { enabled: true, legacyTokenHashPolicies: [] },
     schemaPolicies: { promotion: {
         operational: { accessGroups: { adminGroup: 10, commerceOperatorUserGroup: 10, serviceAccountUserGroup: 10 } },
         tenantOwned: { accessGroups: { adminGroup: 10, commerceOperatorUserGroup: 10, serviceAccountUserGroup: 10 } },

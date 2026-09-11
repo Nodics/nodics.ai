@@ -68,9 +68,10 @@ module.exports = {
         return true;
     },
 
-    /** Returns every active module hosted by this runtime instance. */
+    /** Returns active local modules, excluding remote-only dependencies using the router's effective topology. */
     getLocalModules: function () {
-        return (NODICS.getActiveModules() || []).slice();
+        return (NODICS.getActiveModules() || []).filter(moduleName =>
+            SERVICE.DefaultRouterService.getModuleServerConfig(moduleName).getOptions().remoteOnly !== true);
     },
 
     /** Registers one concrete module-owned BackOffice capability provider for this runtime instance. */

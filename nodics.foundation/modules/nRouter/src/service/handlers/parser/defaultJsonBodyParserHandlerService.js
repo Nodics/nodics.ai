@@ -62,6 +62,8 @@ module.exports = {
         let jsonOptions = SERVICE.DefaultHttpHardeningService
             ? SERVICE.DefaultHttpHardeningService.getJsonParserOptions()
             : {};
+        // Only a server-authored route may raise its bounded JSON intake limit.
+        if (router && router.jsonBodyLimit) jsonOptions = Object.assign({}, jsonOptions, { limit: router.jsonBodyLimit });
         return [
             bodyParser.urlencoded(urlencodedOptions),
             bodyParser.json(jsonOptions)

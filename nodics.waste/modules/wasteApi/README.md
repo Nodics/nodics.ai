@@ -19,3 +19,9 @@ callbacks, public collection discovery, and reward-trigger endpoints belong in
 later project or integration modules that extend this route set. They should
 reference Waste records by stable code or source reference instead of changing
 the framework API owner.
+
+Impact calculation awaits the effective `DefaultWasteImpactCalculationService`
+from `SERVICE`, including configured asynchronous providers. Trusted tenant
+context comes from the authenticated controller envelope; payload fields cannot
+select tenant configuration or adapters. See the
+[impact provider guide](../../../nodics.docs/docs/pages/nodics.waste/impact-providers.md).

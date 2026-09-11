@@ -1,16 +1,25 @@
 /*
     Nodics - Enterprice Micro-Services Management Framework
+
     Copyright (c) 2026 Nodics All rights reserved.
+
+    This software is governed by the Nodics Source-Available Commercial License.
+    You may use, copy, modify, deploy, or distribute it only as permitted by the
+    root LICENSE file or a separate written agreement with Nodics.
+
  */
+
 'use strict';
 
 /** @module excelExport/service/DefaultExcelExportRenderService @description Renders already-authorized bounded rows as XLSX without owning source queries or download storage. @layer service @owner excelExport @override Projects may customize workbook presentation while preserving formula neutralization and bounded inputs. */
 module.exports = {
+    /** Converts an authorized cell value to text and neutralizes spreadsheet formula prefixes. */
     safeValue: function (value) {
         if (value === null || value === undefined) return '';
         const text = typeof value === 'object' ? JSON.stringify(value) : String(value);
         return /^[=+\-@\t\r]/u.test(text) ? "'" + text : text;
     },
+    /** Renders bounded authorized rows to an XLSX buffer with neutralized cells; source queries and delivery remain outside this renderer. */
     render: async function (rows, options) {
         const values = Array.isArray(rows) ? rows : [];
         const maximumRows = Number(options && options.maximumRows || 10000);

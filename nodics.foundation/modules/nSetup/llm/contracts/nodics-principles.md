@@ -1,11 +1,59 @@
 # Nodics Principles Contract
 
+## Business Data Journeys
+
+- Business-facing creation and editing consume effective schema metadata and
+  owning domain commands. Reuse `backoffice.form` on the existing schema; never
+  introduce a second UI schema registry or a project-specific frontend loader.
+- Present business labels, typed values, related records, validation and review.
+  Keep schema inspection available separately from everyday record operations.
+- Required inputs cannot be hidden merely for presentation. A domain-owned
+  create command may explicitly manage system inputs, and generic create APIs
+  must not bypass that command. Existing authorization and publication rules apply.
+- Related drafts retain their hierarchy and runtime identity. Do not select the
+  first of ambiguous runtime copies or silently write to Online.
+- Ordered cross-module saves are not atomic. Preserve successful references on
+  retry and disclose partial success. Cancelling a form does not delete records
+  that have already been saved. Durable recovery requires an owning operation.
+
 This contract defines the base principles that every Nodics developer, AI
 assistant, module, project, and generated artifact must follow.
 
 Nodics is an enterprise application platform and application factory. It is not
 a lightweight API folder, a one-off service scaffold, or a place where each
 feature invents its own architecture.
+
+## Framework, Accelerator And Partner Ownership
+
+This principle applies to every domain, implementation partner, human developer
+and AI tool. Classify functionality and data by business meaning and stable
+assumptions, not by the first customer that uses them.
+
+- Framework functional modules own generic capabilities, schemas, lifecycle
+  invariants and standard reference data.
+- Domain accelerators own reusable domain-specific orchestration, presets and
+  reference data composed over those capabilities.
+- Customer project modules own application identity, customer-specific behavior,
+  policies, integrations, branding and data contributions. Customer frontends
+  own presentation and interaction against backend contracts.
+- Dependencies flow from customer project to domain accelerator to framework
+  capabilities; projects may also consume framework capabilities directly.
+  Lower layers must never depend on customer identity or implementation.
+- Schema ownership remains with the owning capability even when an accelerator
+  or project contributes records or supported schema extensions. Preserve one
+  canonical authority and each neighboring capability's lifecycle and storage.
+- Define defaults once, apply intentional later-layer overrides, and preserve
+  authorization, isolation, approval, lifecycle, idempotency and audit invariants.
+
+Partners write only to customer-owned repositories. Nodics owns framework and
+accelerator changes through a separate contribution/request channel, review and
+release. Potential reuse does not authorize a partner to edit or copy framework
+source. Nodics decides promotion and moves implementation, tests, documentation
+and data ownership together; partners adopt and validate the released change.
+
+The binding implementation scope, extension path, contribution process and
+reference example are in
+[customer-project-mode-contract.md](customer-project-mode-contract.md).
 
 ## AI Role And Responsibility Boundary
 
@@ -246,6 +294,55 @@ authorization.
 Client catalogue metadata is optional module-owned metadata. Aggregators may
 validate and filter it but must not duplicate it as configuration or use it to
 replace the target module's API authorization.
+
+### Optional Module Independence
+
+Optional modules are plug-and-play capabilities: absence, deactivation, or
+failure of one module must affect only operations that require its capability.
+Do not disable an entire unrelated functional module because one integration
+uses that optional module. This applies to every framework and domain group.
+
+The standard protected functional roots are Foundation (runtime substrate),
+Platform, and WCMS. Process and Localization are optional functional groups;
+an operation that requires approval, workflow, or an authoritative translation
+bundle must still reject safely when its authority is unavailable. Optionality
+never means bypassing security, validation, required references, or approval.
+
+Use existing authorities only:
+
+- package `requiredModules` and `nodics.extends` express genuine local
+  implementation composition, not remote reachability or presentation policy;
+- `activeModules` selects local ownership; configured endpoints do not activate
+  remote modules locally;
+- authenticated runtime leases and readiness observations describe availability;
+- functional registration/activation and permissions govern Axis eligibility;
+- module-owned workbench targets, action owners, providers, schemas and APIs
+  describe which functionality actually needs another capability.
+
+Do not introduce another dependency catalogue, configuration layer, availability
+scheduler, loader, or browser-owned module list. Scope optional integration
+behavior in its owning service/provider and project its existing capability
+contract. A required call fails with a bounded error before an invalid mutation;
+optional enrichment may return explicitly partial results only when its owning
+contract permits that behavior. Never swallow a failed mutation as success.
+
+Core activation data must be valid for the module's independent baseline use
+case. Do not turn an optional integration into a whole-module prerequisite by
+requiring its reference on every general-purpose record. For example, an online
+Commerce point of service needs no physical Location; physical-place operations
+must still enforce their genuine Location requirements. Projects strengthening
+the effective schema must supply matching activation data through existing
+schema and data layers, never fabricated references or disabled validators.
+
+Preserve durable registration and business records across runtime loss and
+recovery. Recompute availability from current observations rather than saving
+temporary unavailability into provider defaults. Registration is still an
+explicit administrative action, not an automatic consequence of installation.
+
+Verification must cover absence, availability, loss, recovery, authorization,
+later-layer customization and multi-instance behavior. Local supervision must
+not turn a post-start runtime exit into a shutdown of unrelated processes;
+startup validation and explicit operator shutdown remain separate contracts.
 
 ### Backend-Driven Axis Capability Visibility
 
@@ -604,6 +701,53 @@ Every change must:
   change.
 
 Code review must reject a change whose customization path is absent, undocumented, or untested.
+
+## Publication-Aware Authoring
+
+Classify publication at the effective schema boundary, not by a module name,
+server name, `revision`, or `versionId`. The existing
+`backoffice.mutationPolicy.publishRequired`/`lifecycle: 'PUBLISHABLE'` declares
+source authoring intent. The existing runtime `runtimeRole.publication` determines
+whether that source is Staged. Missing authority must not enable authoring.
+
+Axis lists publishable source schemas from Staged by default. Generic Workbench
+and generated HTTP CRUD must reject mutations on other runtimes, including bulk
+and nested requests. Publication-owned projections, pointers, receipts, and
+outboxes are read-only to generic authoring; their owning services retain writes.
+Operational schemas in the same module retain their declared authority. nPublish
+and its domain owners remain responsible for approval, activation, withdrawal,
+and rollback. A raw Online source collection is not a Published view: that view
+must read the owning domain's active publication projection.
+
+Do not add an Axis-only schema classification registry or another configuration
+layer. Project extensions use effective schema fragments and existing runtime
+role contributions, retaining backend enforcement and tenant/access checks.
+
+## Technical Concurrency Ownership
+
+Technical edit counters are not business versions, publication revisions, or
+release versions. For explicitly managed schemas, generated nDatabase CRUD owns
+counter initialization and atomic increments. Callers retain the original read
+token; they never calculate the next counter. Missing/stale tokens must not
+be replaced by a fresh read followed by an unconditional overwrite. No-op writes
+must not advance managed counters or emit mutation effects.
+
+Use the existing effective `backoffice.concurrency` schema contract with
+`managed: true`; do not add a separate revision configuration layer. Audit every
+domain writer before opting in. Domain-owned counters and versioned providers
+retain their existing authority. nImport prepares original tokens for managed
+`saveAll` imports, so module data files omit technical counters, while immutable
+release checks, authorization, tenant scope, and nPublish remain unchanged.
+
+## Module-Owned UI Contributions
+
+Visual nesting does not transfer business ownership. Shared modules own generic
+navigation anchors and views; accelerators own their domain subgroups, component
+properties and view defaults. Compose these through existing authenticated
+BackOffice providers with explicit cross-module parent identities. Keep future
+accelerator placeholders out of generic modules. Axis renders the authorized
+composition and does not become a second navigation or component-data authority.
+Follow the [module-owned UI contribution contract](module-owned-ui-contribution-contract.md).
 
 ## Completion Rule
 

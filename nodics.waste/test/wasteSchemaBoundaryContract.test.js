@@ -47,12 +47,27 @@ schemas.forEach(function (entry) {
     assert.strictEqual(entry.schema.router.enabled, false, entry.schemaCode + ' must not expose generated CRUD routers');
 });
 
+function assertReference(schema, fieldName, targetModule, targetSchema, type) {
+    assert.deepStrictEqual(schema.refSchema[fieldName], {
+        enabled: true,
+        moduleName: targetModule,
+        schemaName: targetSchema,
+        type: type || 'one',
+        propertyName: 'code'
+    });
+}
+
 const collectionPoint = namespaces.wasteCollection.wasteCollectionPoint.definition;
+const collectionPointReferences = namespaces.wasteCollection.wasteCollectionPoint.refSchema;
 assert(namespaces.wasteCollection.wasteCollectionPointType, 'collection point type values must be schema-driven');
 assert(namespaces.wasteCollection.wasteCollectionPreset, 'collection preset values must be schema-driven');
 assert(namespaces.wasteCollection.wasteReceiptPolicy, 'receipt policy values must be schema-driven');
 assert.strictEqual(collectionPoint.operatorEnterpriseRef.required, true, 'collection points must be associated with an operating enterprise');
 assert.strictEqual(collectionPoint.assetOwnerEnterpriseRef.required, false, 'collection points may reference a separate infrastructure owner enterprise');
+assert.deepStrictEqual(collectionPointReferences.locationRef, { enabled: true, moduleName: 'locationCore', schemaName: 'location', type: 'one', propertyName: 'code' });
+assert.deepStrictEqual(collectionPointReferences.operatorEnterpriseRef, { enabled: true, moduleName: 'profile', schemaName: 'enterprise', type: 'one', propertyName: 'code' });
+assert.deepStrictEqual(collectionPointReferences.assetOwnerEnterpriseRef, { enabled: true, moduleName: 'profile', schemaName: 'enterprise', type: 'one', propertyName: 'code' });
+assert.deepStrictEqual(collectionPointReferences.hostPlaceRef, { enabled: true, moduleName: 'locationCore', schemaName: 'location', type: 'one', propertyName: 'code' });
 assert.strictEqual(collectionPoint.collectionPointType.enum, undefined, 'collection point types must be added as schema data, not hardcoded enum values');
 assert(collectionPoint.acceptanceSummary, 'collection point may expose acceptanceSummary projection');
 assert.strictEqual(collectionPoint.acceptedFamilyCodes, undefined, 'collection point must not duplicate authoritative accepted families');
@@ -75,6 +90,25 @@ assert(namespaces.wasteImpact.wasteImpactResult.definition.calculationStatus, 'i
 assert(namespaces.wasteMovement.wasteBatch, 'batch tracking must be modeled when movement references batches');
 assert(namespaces.wasteCompliance.wasteComplianceProfile, 'compliance profile must be modeled');
 assert(namespaces.wasteCompliance.wasteComplianceEvidence, 'compliance evidence must be modeled');
+assertReference(namespaces.wasteSubmission.wasteSubmission, 'submitterRef', 'profile', 'customer');
+assertReference(namespaces.wasteSubmission.wasteSubmission, 'evidenceRefs', 'wasteSubmission', 'wasteEvidence', 'many');
+assertReference(namespaces.wasteSubmission.wasteSubmission, 'metadataSuggestionRefs', 'wasteSubmission', 'wasteMetadataSuggestion', 'many');
+assertReference(namespaces.wasteSubmission.wasteSubmission, 'verificationRef', 'wasteVerification', 'wasteVerification');
+assertReference(namespaces.wasteSubmission.wasteSubmission, 'receiptRef', 'wasteReceipt', 'wasteReceipt');
+assertReference(namespaces.wasteSubmission.wasteSubmission, 'impactRef', 'wasteImpact', 'wasteImpactResult');
+assertReference(namespaces.wasteSubmission.wasteEvidence, 'ownerRef', 'profile', 'customer');
+assertReference(namespaces.wasteSubmission.wasteEvidence, 'mediaRef', 'media', 'media');
+assertReference(namespaces.wasteSubmission.wasteEvidence, 'captureLocationRef', 'locationCore', 'location');
+assertReference(namespaces.wasteReceipt.wasteReceipt, 'receiptEvidenceRefs', 'wasteSubmission', 'wasteEvidence', 'many');
+assertReference(namespaces.wasteImpact.wasteImpactResult, 'evidenceRefs', 'wasteSubmission', 'wasteEvidence', 'many');
+assertReference(namespaces.wasteMovement.wasteBatch, 'sourceLocationRef', 'locationCore', 'location');
+assertReference(namespaces.wasteMovement.wasteBatch, 'currentLocationRef', 'locationCore', 'location');
+assertReference(namespaces.wasteMovement.wasteMovement, 'sourceLocationRef', 'locationCore', 'location');
+assertReference(namespaces.wasteMovement.wasteMovement, 'targetLocationRef', 'locationCore', 'location');
+assertReference(namespaces.wasteMovement.wasteMovement, 'operatorRef', 'profile', 'enterprise');
+assertReference(namespaces.wasteMovement.wasteMovement, 'evidenceRefs', 'wasteSubmission', 'wasteEvidence', 'many');
+assertReference(namespaces.wasteCompliance.wasteComplianceEvidence, 'evidenceRefs', 'wasteSubmission', 'wasteEvidence', 'many');
+assertReference(namespaces.wasteCompliance.wasteComplianceEvidence, 'chainOfCustodyRefs', 'wasteMovement', 'wasteMovement', 'many');
 
 const wasteCore = namespaces.wasteCore;
 [
@@ -104,6 +138,15 @@ assert(creationPolicy.assetCodeStrategy.enum.includes('SOURCE_SUBMISSION'));
 assert(creationPolicy.settlementReferenceFailureMode.enum.includes('LOCK_ASSET'));
 
 const asset = wasteCore.wasteAsset.definition;
+assertReference(wasteCore.wasteAsset, 'ownerRef', 'profile', 'customer');
+assertReference(wasteCore.wasteAsset, 'originalOwnerRef', 'profile', 'customer');
+assertReference(wasteCore.wasteAsset, 'physicalOwnerRef', 'profile', 'customer');
+assertReference(wasteCore.wasteAsset, 'digitalOwnerRef', 'profile', 'customer');
+assertReference(wasteCore.wasteAsset, 'verificationRef', 'wasteVerification', 'wasteVerification');
+assertReference(wasteCore.wasteAsset, 'receiptRef', 'wasteReceipt', 'wasteReceipt');
+assertReference(wasteCore.wasteAsset, 'impactRef', 'wasteImpact', 'wasteImpactResult');
+assertReference(wasteCore.wasteAsset, 'evidenceRefs', 'wasteSubmission', 'wasteEvidence', 'many');
+assertReference(wasteCore.wasteAsset, 'marketplaceProjectionRef', 'wasteCore', 'wasteAssetMarketplaceProjection');
 assert(asset.ownerRef, 'approved waste objects must become customer-owned asset records');
 assert(asset.originalOwnerRef, 'waste assets must preserve original owner provenance');
 assert(asset.rewardSettlementRefs, 'waste assets may reference wallet reward settlements without owning rewards');
@@ -132,6 +175,11 @@ assert.strictEqual(asset.logisticsAdapter, undefined, 'waste assets must not own
 assert.strictEqual(asset.trackingNumber, undefined, 'waste assets must not own logistics tracking numbers');
 
 const marketplaceProjection = wasteCore.wasteAssetMarketplaceProjection.definition;
+assertReference(wasteCore.wasteAssetMarketplaceProjection, 'ownerRef', 'profile', 'customer');
+assertReference(wasteCore.wasteAssetMarketplaceProjection, 'commerceProductRef', 'product', 'product');
+assertReference(wasteCore.wasteAssetMarketplaceProjection, 'commerceOrderRef', 'order', 'commerceOrder');
+assertReference(wasteCore.wasteAssetMarketplaceProjection, 'paymentRef', 'paymentCore', 'paymentTransaction');
+assertReference(wasteCore.wasteAssetMarketplaceProjection, 'evidenceRefs', 'wasteSubmission', 'wasteEvidence', 'many');
 assert(marketplaceProjection.commerceProductRef, 'Waste marketplace projection may reference Commerce/Product output');
 assert(marketplaceProjection.commerceListingRef, 'Waste marketplace projection may reference Commerce listing output');
 assert(marketplaceProjection.projectionStatus.enum.includes('REQUESTED'));
@@ -147,6 +195,14 @@ assert.strictEqual(marketplaceProjection.bidRules, undefined, 'Waste marketplace
 assert.strictEqual(marketplaceProjection.paymentAmount, undefined, 'Waste marketplace projection must not own payment amounts');
 
 const ownershipEvent = wasteCore.wasteAssetOwnershipEvent.definition;
+assertReference(wasteCore.wasteAssetOwnershipEvent, 'fromOwnerRef', 'profile', 'customer');
+assertReference(wasteCore.wasteAssetOwnershipEvent, 'toOwnerRef', 'profile', 'customer');
+assertReference(wasteCore.wasteAssetOwnershipEvent, 'commerceProjectionRef', 'wasteCore', 'wasteAssetMarketplaceProjection');
+assertReference(wasteCore.wasteAssetOwnershipEvent, 'commerceOrderRef', 'order', 'commerceOrder');
+assertReference(wasteCore.wasteAssetOwnershipEvent, 'paymentRef', 'paymentCore', 'paymentTransaction');
+assertReference(wasteCore.wasteAssetOwnershipEvent, 'movementRef', 'wasteMovement', 'wasteMovement');
+assertReference(wasteCore.wasteAssetOwnershipEvent, 'complianceEvidenceRef', 'wasteCompliance', 'wasteComplianceEvidence');
+assertReference(wasteCore.wasteAssetOwnershipEvent, 'evidenceRefs', 'wasteSubmission', 'wasteEvidence', 'many');
 assert(ownershipEvent.transferType.enum.includes('CREATE'));
 assert(ownershipEvent.transferType.enum.includes('SELL'));
 assert(ownershipEvent.transferType.enum.includes('GIFT'));
@@ -194,16 +250,19 @@ assert(marketplacePolicy.listingMode.enum.includes('BIDDING'));
 assert(marketplacePolicy.visibilityMode.enum.includes('PUBLIC_MARKETPLACE'));
 
 const rewardPolicy = wasteCore.wasteRewardSettlementPolicy.definition;
+assertReference(wasteCore.wasteRewardSettlementPolicy, 'sponsorRef', 'profile', 'enterprise');
 assert(rewardPolicy.triggerType.enum.includes('COUPON_PURCHASE'));
 assert(rewardPolicy.settlementMode.enum.includes('DEBIT_FULL_ELIGIBLE'));
 assert(rewardPolicy.settlementMode.enum.includes('POLICY_RESOLVED'));
 
 const carbonPolicy = wasteCore.wasteCarbonSettlementPolicy.definition;
+assertReference(wasteCore.wasteCarbonSettlementPolicy, 'receiverRef', 'profile', 'enterprise');
 assert(carbonPolicy.triggerType.enum.includes('GIFT'));
 assert(carbonPolicy.settlementMode.enum.includes('TRANSFER_TO_DEFAULT_ENTERPRISE'));
 assert(carbonPolicy.provenanceRequired, 'carbon settlement policies must carry provenance controls');
 
 const couponPolicy = wasteCore.wasteCouponRedemptionSettlementPolicy.definition;
+assertReference(wasteCore.wasteCouponRedemptionSettlementPolicy, 'defaultCarbonReceiverRef', 'profile', 'enterprise');
 assert(couponPolicy.eligibleAssetStatuses, 'coupon redemption policies must own asset-status eligibility');
 assert(couponPolicy.rewardDebitMode.enum.includes('FULL_ELIGIBLE_BALANCE'));
 assert(couponPolicy.carbonReceiverMode.enum.includes('DEFAULT_ENTERPRISE'));

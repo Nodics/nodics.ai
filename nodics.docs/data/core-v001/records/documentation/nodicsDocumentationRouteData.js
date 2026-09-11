@@ -1560,5 +1560,17 @@ module.exports = {
     "deliveryState": "ONLINE",
     "accessMode": "PUBLIC",
     "active": true
+  },
+  "record129": {
+    "code": "nodicsDocsRoutewasteImpactProviders",
+    "site": "nodicsDocumentationSite",
+    "path": "/docs/framework/waste-impact-providers",
+    "locale": "en",
+    "channel": "web",
+    "page": "nodicsDocsPagewasteImpactProviders",
+    "routeType": "PAGE",
+    "deliveryState": "ONLINE",
+    "accessMode": "PUBLIC",
+    "active": true
   }
 };

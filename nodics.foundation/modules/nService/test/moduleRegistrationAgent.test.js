@@ -55,7 +55,7 @@ global.CONFIG = { get: key => ({
     defaultTenant: 'default'
 }[key]) };
 global.NODICS = {
-    getActiveModules: () => ['cms', 'utility'],
+    getActiveModules: () => ['cms', 'utility', 'remoteProfile'],
     getRawModule: name => ({ parent: 'nodics.wcms', canonicalIdentity: 'nodics.wcms/modules/' + name,
         path: name === 'cms' ? fixtureModuleRoot : undefined,
         rawSchema: name === 'cms' ? {
@@ -70,7 +70,10 @@ global.NODICS = {
 };
 global.SERVICE = {
     DefaultRuntimeLifecycleService: { registerContributor: (name, value) => { contributor = value; } },
-    DefaultRouterService: { prepareUrl: options => 'http://localhost:3040/nodics/' + options.moduleName },
+    DefaultRouterService: {
+        prepareUrl: options => 'http://localhost:3040/nodics/' + options.moduleName,
+        getModuleServerConfig: moduleName => ({ getOptions: () => ({ remoteOnly: moduleName === 'remoteProfile' }) })
+    },
     DefaultModuleService: {
         buildRequest: options => options,
         fetch: request => { requests.push(request); return Promise.resolve({}); }
@@ -90,7 +93,7 @@ async function run() {
     assert(contributor, 'registration agent must use the central lifecycle');
     assert.strictEqual(contributor.ready(), true, 'ready hook must not await BackOffice network traffic');
     await new Promise(resolve => setTimeout(resolve, 5));
-    assert.strictEqual(requests.length, 1, 'one bounded runtime batch should register all active modules');
+    assert.strictEqual(requests.length, 1, 'one bounded runtime batch should register active locally hosted modules');
     assert.strictEqual(requests[0].connectionName, 'default',
         'registration agent must honor an explicit BackOffice connection without creating a duplicate server alias');
     assert.strictEqual(requests[0].header.Authorization, 'Bearer service-token');
@@ -98,6 +101,13 @@ async function run() {
     assert.deepStrictEqual(requests[0].requestBody.runtimeRole,
         { code: 'WCMS_STAGED', publication: 'STAGED' });
     assert.deepStrictEqual(requests[0].requestBody.registrations.map(item => item.moduleName), ['cms', 'utility']);
+    assert.deepStrictEqual(service._registered, ['cms', 'utility'],
+        'remote-only dependencies must not renew local leases or advertise foreign authority claims');
+    const remoteConfiguration = SERVICE.DefaultRouterService.getModuleServerConfig;
+    SERVICE.DefaultRouterService.getModuleServerConfig = () => ({ getOptions: () => ({ remoteOnly: false }) });
+    assert.deepStrictEqual(service.getLocalModules(), ['cms', 'utility', 'remoteProfile'],
+        'a later-layer topology override making a module local must make it eligible for registration');
+    SERVICE.DefaultRouterService.getModuleServerConfig = remoteConfiguration;
     assert.strictEqual(requests[0].requestBody.registrations[0].clientCallable, true);
     assert.strictEqual(requests[0].requestBody.registrations[0].displayName, 'Content Management');
     assert.strictEqual(requests[0].requestBody.registrations[0].parentModule, 'nodics.wcms');

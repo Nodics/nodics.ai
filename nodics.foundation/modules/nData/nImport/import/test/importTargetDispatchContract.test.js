@@ -270,6 +270,77 @@ async function insertModel(request) {
     assert.strictEqual(typeof global.SERVICE.DefaultEmployeeService.saveAll, 'function');
     assert.strictEqual(typeof global.SERVICE.DefaultEmployeeService.findByAPIKey, 'function');
 
+    let locationModule = {
+        rawSchema: {
+            location: {
+                refSchema: {
+                    addressRef: {
+                        enabled: true,
+                        moduleName: 'profile',
+                        schemaName: 'address',
+                        type: 'one',
+                        propertyName: 'code'
+                    },
+                    operatorEnterpriseRef: {
+                        enabled: true,
+                        moduleName: 'profile',
+                        schemaName: 'enterprise',
+                        type: 'one',
+                        propertyName: 'code'
+                    },
+                    mediaRefs: {
+                        enabled: true,
+                        moduleName: 'media',
+                        schemaName: 'media',
+                        type: 'many',
+                        propertyName: 'code'
+                    }
+                }
+            }
+        },
+        models: {
+            default: {}
+        }
+    };
+    global.NODICS = {
+        getModule: function (moduleName) {
+            return moduleName === 'locationCore' ? locationModule : undefined;
+        },
+        getModules: function () {
+            return { locationCore: locationModule };
+        },
+        getModels: function (moduleName, tenant) {
+            return this.getModule(moduleName).models[tenant] || {};
+        }
+    };
+    global.SERVICE.DefaultDatabaseModelHandlerService.buildModel = function (request) {
+        locationModule.models[request.tntCode][UTILS.createModelName(request.schemaName)] = {
+            schemaName: request.schemaName,
+            rawSchema: locationModule.rawSchema[request.schemaName]
+        };
+        return Promise.resolve(true);
+    };
+    await runtimeImporter.ensureLocalSchemaService({
+        tenant: 'default',
+        dataModel: {
+            code: 'LOC_SAMPLE_COLLECTION_CENTRE_YOU_AND_CO',
+            addressRef: { moduleName: 'profile', schemaName: 'address', code: 'ADDR_SAMPLE_COLLECTION_CENTRE_YOU_AND_CO' },
+            operatorEnterpriseRef: { moduleName: 'profile', schemaName: 'enterprise', code: 'NODICS_WASTE_MANAGEMENT_CO' },
+            mediaRefs: []
+        },
+        header: {
+            rawSchema: locationModule.rawSchema.location,
+            options: {
+                moduleName: 'locationCore',
+                schemaName: 'location',
+                operation: 'saveAll'
+            }
+        }
+    });
+    assert.strictEqual(typeof global.SERVICE.DefaultLocationService.saveAll, 'function');
+    assert.strictEqual(global.SERVICE.DefaultAddressService, undefined);
+    assert.strictEqual(global.SERVICE.DefaultMediaService, undefined);
+
     global.NODICS = {
         isModuleActive: function () {
             return true;

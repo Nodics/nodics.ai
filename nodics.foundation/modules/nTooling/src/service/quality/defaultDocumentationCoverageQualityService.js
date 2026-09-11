@@ -120,16 +120,19 @@ module.exports = exportedService = {
     return (this.relative || exportedService.relative).call(this, filePath, coverageRootDir).split(path.sep);
 },
 
-    /** Implements getModuleName as an overrideable service operation. */
+    /** Resolves the nearest package directory for scoped coverage across nested module layouts. */
     getModuleName: function (filePath, coverageRootDir) {
-    const parts = (this.pathParts || exportedService.pathParts).call(this, filePath, coverageRootDir);
-    if (parts.length < 2) {
+        const root = path.resolve(coverageRootDir || frameworkRootDir);
+        let directory = path.dirname(path.resolve(filePath));
+        while (directory === root || directory.startsWith(root + path.sep)) {
+            if (fs.existsSync(path.join(directory, 'package.json'))) {
+                // Gate filters name source folders (nConfig), not legacy npm aliases (config).
+                return path.basename(directory);
+            }
+            if (directory === root) break;
+            directory = path.dirname(directory);
+        }
         return '';
-    }
-    if (parts[1] && !['config', 'src', 'test', 'data', 'nodics.js'].includes(parts[1])) {
-        return parts[1];
-    }
-    return parts[0];
 },
 
     /** Implements getLayer as an overrideable service operation. */

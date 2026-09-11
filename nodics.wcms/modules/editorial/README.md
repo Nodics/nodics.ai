@@ -1,5 +1,13 @@
 # Editorial
 
+Generic authoring follows effective schema publication metadata and the existing
+runtime role: publishable sources are Staged-only; publication projections and
+receipts are read-only to Workbench/generated HTTP CRUD. Owning publication and
+approved import services retain their governed paths. Project customization and
+failure cases are documented in
+`nodics.foundation/modules/nDatabase/database/llm/contracts/schema-authoring-authority.md`
+and the canonical Foundation schema-data-modeling guide.
+
 Editorial is the WCMS-owned backend capability for News, Blog, and future governed article types. It owns authoring records, localization, authors, taxonomy, series, corrections, validation, and readiness evidence.
 
 Phases 0–7 add Process-owned review, nPublish orchestration, Cron-backed scheduling metadata, immutable Online projections, bounded delivery, discovery hooks, and standard Nexus renderer contracts while preserving each owning authority.

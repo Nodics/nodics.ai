@@ -10,6 +10,7 @@
  */
 
 const _ = require('lodash');
+const managedImportSnapshots = new WeakMap();
 
 /**
  * @module nodics.foundation/modules/nData/nImport/import/src/service/process/model/defaultModelImportProcessService
@@ -610,7 +611,9 @@ module.exports = {
         let header = request.header;
         models = this.normalizeModelsForSchema(header, models);
         return this.ensureLocalSchemaService(request).then(schemaService => {
-            return this.reconcileContentPackVersions(request, schemaService, models).then(reconciledModels => {
+            return this.reconcileContentPackVersions(request, schemaService, models)
+                .then(versionedModels => this.reconcileManagedRevisions(request, schemaService, versionedModels))
+                .then(reconciledModels => {
                 return {
                     schemaService: schemaService,
                     reconciledModels: reconciledModels
@@ -717,15 +720,15 @@ module.exports = {
         let moduleName = header.options.moduleName;
         let schemaName = header.options.schemaName;
         let modelName = UTILS.createModelName(schemaName);
-        let existingModels = NODICS.getModels(moduleName, request.tenant);
-        if (existingModels && existingModels[modelName]) {
-            return Promise.resolve(true);
-        }
         let moduleObject = NODICS.getModule(moduleName);
         if (!moduleObject || !moduleObject.rawSchema || !moduleObject.rawSchema[schemaName] ||
             !SERVICE.DefaultDatabaseModelHandlerService || !SERVICE.DefaultDatabaseConfigurationService) {
             return Promise.reject(new CLASSES.DataImportError('ERR_IMP_00003',
                 'Target schema model not available for import: ' + moduleName + '.' + schemaName));
+        }
+        let existingModels = this.getAvailableRuntimeModels(moduleName, request.tenant);
+        if (existingModels && existingModels[modelName]) {
+            return Promise.resolve(true);
         }
         if (!moduleObject.models) {
             moduleObject.models = {};
@@ -741,6 +744,39 @@ module.exports = {
             dataBase: SERVICE.DefaultDatabaseConfigurationService.getTenantDatabase(moduleName, request.tenant),
             schemas: [schemaName]
         });
+    },
+
+    /**
+     * Safely reads generated runtime models without leaking raw registry
+     * dereference errors when a module or tenant has not been initialized.
+     *
+     * @param {string} moduleName Owning module name.
+     * @param {string} tenant Tenant code.
+     * @returns {Object|null} Generated model map, when available.
+     */
+    getAvailableRuntimeModels: function (moduleName, tenant) {
+        let moduleObject = NODICS.getModule(moduleName);
+        if (!moduleObject || !moduleObject.models || !moduleObject.models[tenant]) return null;
+        try {
+            return NODICS.getModels(moduleName, tenant) || null;
+        } catch (error) {
+            return null;
+        }
+    },
+
+    /**
+     * Resolves one generated model or fails with a controlled import error.
+     *
+     * @param {string} moduleName Owning module name.
+     * @param {string} modelName Generated model registry key.
+     * @param {Object} request Generated service request.
+     * @returns {Object} Generated schema model.
+     */
+    requireRuntimeSchemaModel: function (moduleName, modelName, request) {
+        let models = this.getAvailableRuntimeModels(moduleName, request.tenant);
+        if (models && models[modelName]) return models[modelName];
+        throw new CLASSES.DataImportError('ERR_IMP_00003',
+            'Runtime schema model not available for import: ' + moduleName + '.' + modelName);
     },
 
     /**
@@ -783,9 +819,13 @@ module.exports = {
         let rawSchema = header.rawSchema || {};
         let refSchema = rawSchema.refSchema || {};
         let chain = Promise.resolve(true);
-        _.each(refSchema, propertyObject => {
+        _.each(refSchema, (propertyObject, referencePropertyName) => {
             chain = chain.then(() => {
                 if (!propertyObject || propertyObject.enabled === false || !propertyObject.schemaName) {
+                    return true;
+                }
+                if (request.dataModel !== undefined &&
+                    !this.hasPersistableNestedReference(request.dataModel, referencePropertyName, propertyObject)) {
                     return true;
                 }
                 let schemaName = propertyObject.schemaName;
@@ -822,6 +862,61 @@ module.exports = {
     },
 
     /**
+     * Detects whether import data carries nested records that require generated
+     * reference services. Lightweight descriptors are already portable refs.
+     *
+     * @param {Object|Object[]} dataModel Import data.
+     * @param {string} referencePropertyName RefSchema field name.
+     * @param {Object} propertyObject Schema reference definition.
+     * @returns {boolean} True when a nested record must be persisted.
+     */
+    hasPersistableNestedReference: function (dataModel, referencePropertyName, propertyObject) {
+        let models = Array.isArray(dataModel) ? dataModel : [dataModel];
+        let propertyName = propertyObject.propertyName || 'code';
+        return models.some(model => {
+            if (!model || typeof model !== 'object') return false;
+            let referenceValue = model[referencePropertyName];
+            return this.isPersistableNestedReferenceValue(referenceValue, propertyObject, propertyName);
+        });
+    },
+
+    /**
+     * Determines if a reference value is a full nested model rather than a
+     * lightweight `{ moduleName, schemaName, code }` descriptor.
+     *
+     * @param {*} value Candidate reference value.
+     * @param {Object} propertyObject Schema reference definition.
+     * @param {string} propertyName Reference key name.
+     * @returns {boolean} True when the value requires nested persistence.
+     */
+    isPersistableNestedReferenceValue: function (value, propertyObject, propertyName) {
+        if (!value) return false;
+        if (Array.isArray(value)) {
+            return value.some(item => this.isPersistableNestedReferenceValue(item, propertyObject, propertyName));
+        }
+        if (typeof value !== 'object' || (UTILS.isObjectId && UTILS.isObjectId(value))) return false;
+        if (this.isReferenceDescriptor(value, propertyObject, propertyName)) return false;
+        return true;
+    },
+
+    /**
+     * Detects portable reference descriptors contributed by data releases.
+     *
+     * @param {Object} value Candidate reference value.
+     * @param {Object} propertyObject Schema reference definition.
+     * @param {string} propertyName Reference key name.
+     * @returns {boolean} True when the value is a descriptor.
+     */
+    isReferenceDescriptor: function (value, propertyObject, propertyName) {
+        if (!value || typeof value !== 'object' || Array.isArray(value)) return false;
+        if (value[propertyName] === undefined || value[propertyName] === null) return false;
+        if (value.moduleName && propertyObject.moduleName && value.moduleName !== propertyObject.moduleName) return false;
+        if (value.schemaName && propertyObject.schemaName && value.schemaName !== propertyObject.schemaName) return false;
+        let descriptorKeys = ['moduleName', 'schemaName', 'tenant', propertyName];
+        return Object.keys(value).every(key => descriptorKeys.includes(key));
+    },
+
+    /**
      * Resolves the module that owns a referenced schema.
      *
      * @param {string} preferredModuleName Module declared by the active header.
@@ -852,6 +947,7 @@ module.exports = {
      * @returns {Object} Runtime schema service.
      */
     createRuntimeSchemaService: function (moduleName, modelName) {
+        let importService = this;
         return {
             /**
              * Executes generated get pipeline for an import-scoped runtime schema.
@@ -860,7 +956,7 @@ module.exports = {
              * @returns {Promise<Object>} Pipeline response.
              */
             get: function (request) {
-                request.schemaModel = NODICS.getModels(moduleName, request.tenant)[modelName];
+                request.schemaModel = importService.requireRuntimeSchemaModel(moduleName, modelName, request);
                 request.moduleName = request.moduleName || moduleName;
                 return SERVICE.DefaultPipelineService.start('modelsGetInitializerPipeline', request, {});
             },
@@ -871,7 +967,7 @@ module.exports = {
              * @returns {Promise<Object>} Pipeline response.
              */
             save: function (request) {
-                request.schemaModel = NODICS.getModels(moduleName, request.tenant)[modelName];
+                request.schemaModel = importService.requireRuntimeSchemaModel(moduleName, modelName, request);
                 request.moduleName = request.moduleName || moduleName;
                 return SERVICE.DefaultPipelineService.start('modelSaveInitializerPipeline', request, {});
             },
@@ -882,7 +978,7 @@ module.exports = {
              * @returns {Promise<Object>} Pipeline response.
              */
             saveAll: function (request) {
-                request.schemaModel = NODICS.getModels(moduleName, request.tenant)[modelName];
+                request.schemaModel = importService.requireRuntimeSchemaModel(moduleName, modelName, request);
                 request.moduleName = request.moduleName || moduleName;
                 return SERVICE.DefaultPipelineService.start('modelsSaveInitializerPipeline', request, {});
             },
@@ -893,7 +989,7 @@ module.exports = {
              * @returns {Promise<Object>} Pipeline response.
              */
             remove: function (request) {
-                request.schemaModel = NODICS.getModels(moduleName, request.tenant)[modelName];
+                request.schemaModel = importService.requireRuntimeSchemaModel(moduleName, modelName, request);
                 request.moduleName = request.moduleName || moduleName;
                 return SERVICE.DefaultPipelineService.start('modelsRemoveInitializerPipeline', request, {});
             }
@@ -945,6 +1041,49 @@ module.exports = {
                 return model;
             });
         }));
+    },
+
+    /**
+     * Captures technical revisions through the owning generated read service.
+     * Portable data files do not own these counters. A retry of the same import
+     * request retains its first snapshots, so it cannot hide a concurrent edit
+     * by fetching a newer token. Release checks and operation selection stay in nImport.
+     */
+    reconcileManagedRevisions: async function (request, schemaService, models) {
+        const header = request.header || {};
+        const concurrency = SERVICE.DefaultModelConcurrencyService;
+        const field = concurrency && concurrency.getField(header.rawSchema);
+        if (!field) return models;
+        if (!header.options || header.options.operation !== 'saveAll') {
+            throw new CLASSES.NodicsError('ERR_CONCURRENCY_00003', 'Managed-counter data imports require the saveAll operation');
+        }
+        if (!schemaService || typeof schemaService.get !== 'function') throw new CLASSES.NodicsError('ERR_CONCURRENCY_00003');
+        let snapshots = managedImportSnapshots.get(request);
+        if (!snapshots) {
+            snapshots = new Map();
+            managedImportSnapshots.set(request, snapshots);
+        }
+        for (const model of models) {
+            const query = this.resolveImportModelQuery(header.query || {}, model);
+            delete query[field];
+            if (Object.keys(query).length === 0 && typeof model.code === 'string') query.code = model.code;
+            if (Object.keys(query).length === 0 || Object.values(query).some(value => value === undefined)) {
+                throw new CLASSES.NodicsError('ERR_CONCURRENCY_00003');
+            }
+            const key = JSON.stringify([request.tenant, header.options.moduleName, header.options.schemaName, query]);
+            if (!snapshots.has(key)) {
+                const response = await schemaService.get({ tenant: request.tenant,
+                    authData: { userGroups: header.options.userGroups },
+                    query: query, searchOptions: { limit: 2 }, options: { recursive: false } });
+                const records = response && response.result;
+                if (!Array.isArray(records) || records.length > 1) throw new CLASSES.NodicsError('ERR_CONCURRENCY_00003');
+                const revision = records[0] && records[0][field] !== undefined ? records[0][field] : 0;
+                if (!Number.isSafeInteger(revision) || revision < 0) throw new CLASSES.NodicsError('ERR_CONCURRENCY_00003');
+                snapshots.set(key, revision);
+            }
+            model[field] = snapshots.get(key);
+        }
+        return models;
     },
 
     /**

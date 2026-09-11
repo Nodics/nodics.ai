@@ -1,5 +1,8 @@
 # Loyalty Reward Provider Agent Contract
 
+Follow the parent contract: `../../AGENTS.md`.
+Follow global guidance: `../../../../../../../nodics.foundation/modules/nSetup/llm/ai-enablement-index.md`.
+
 This module is a Commerce Payment provider adapter. It translates Commerce payment operations into Loyalty module calls, but it does not own Loyalty wallet, reward, ledger, reservation, redemption, coupon, product, cart, or order data.
 
 - Keep reward wallet movement in `nodics.loyalty`.

@@ -44,8 +44,8 @@ module.exports = {
                 workflowRef: { type: 'string', required: false, description: 'Existing workflow authority reference' },
                 previousOnlineVersion: { type: 'string', required: false, description: 'Rollback target captured before activation' },
                 recoveryFromState: { type: 'string', required: false, description: 'Terminal state that initiated the current governed recovery attempt' },
-                requestedBy: { type: 'string', required: false },
-                correlationId: { type: 'string', required: false }
+                requestedBy: { type: 'string', required: false , description: 'Stores the requested by value used by this record.'},
+                correlationId: { type: 'string', required: false , description: 'Stores the correlation identifier used to correlate this record.'}
             }
         },
         publicationAudit: {
@@ -62,14 +62,14 @@ module.exports = {
                 enabled: false
             },
             definition: {
-                publicationCode: { type: 'string', required: true },
-                fromState: { type: 'string', required: false },
-                toState: { type: 'string', required: true },
-                revision: { type: 'int', required: true },
-                actor: { type: 'string', required: false },
-                reason: { type: 'string', required: false },
+                publicationCode: { type: 'string', required: true , description: 'Stores the publication code used to classify, link, or resolve this record.'},
+                fromState: { type: 'string', required: false , description: 'Stores the from state value used by this record.'},
+                toState: { type: 'string', required: true , description: 'Stores the to state value used by this record.'},
+                revision: { type: 'int', required: true , description: 'Tracks the business revision used for governance, review, and optimistic update checks.'},
+                actor: { type: 'string', required: false , description: 'Stores the actor value used by this record.'},
+                reason: { type: 'string', required: false , description: 'Stores the reason value used by this record.'},
                 details: { type: 'object', required: false, description: 'Sanitized projection of authoritative transition evidence without content payloads or secrets' },
-                correlationId: { type: 'string', required: false }
+                correlationId: { type: 'string', required: false , description: 'Stores the correlation identifier used to correlate this record.'}
             }
         }
     }

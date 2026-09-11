@@ -117,3 +117,5 @@ Use these files for rules that are more specific than root `AGENTS.md` and the m
 - Keep Enterprise as the business graph authority. Business schemas should use
   explicit enterprise association references when ownership, operation, issuer,
   seller, partner, or visibility matters; do not use tenant as business owner.
+
+- [External customer identity](external-customer-identity.md)

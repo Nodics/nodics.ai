@@ -11,10 +11,48 @@
 
 /** @module digitalCore/config/properties @description Defines Digital Commerce capability and schema access policies. @layer config @owner digitalCore */
 module.exports = {
-    digitalCore: { enabled: true },
-    schemaPolicies: { digitalCore: {
-        operational: { accessGroups: { adminGroup: 10, commerceOperatorUserGroup: 10, serviceAccountUserGroup: 10 } },
-        tenantOwned: { accessGroups: { adminGroup: 10, commerceOperatorUserGroup: 10, serviceAccountUserGroup: 10 } },
-        customerOwned: { accessGroups: { adminGroup: 10, commerceOperatorUserGroup: 10, serviceAccountUserGroup: 10, customerUserGroup: 10 }, ownership: { enabled: true, ownerProperty: 'ownerId', bypassGroups: { adminGroup: true, commerceOperatorUserGroup: true, serviceAccountUserGroup: true }, subjectGroups: { customerUserGroup: true }, principalTypes: { customer: true } } }
-    } }
+  digitalCore: {
+    enabled: true,
+    merchantRedemption: {
+      enabled: false,
+      providerService: "DefaultDigitalCommerceMerchantScreenProviderService",
+    },
+  },
+  schemaPolicies: {
+    digitalCore: {
+      operational: {
+        accessGroups: {
+          adminGroup: 10,
+          commerceOperatorUserGroup: 10,
+          serviceAccountUserGroup: 10,
+        },
+      },
+      tenantOwned: {
+        accessGroups: {
+          adminGroup: 10,
+          commerceOperatorUserGroup: 10,
+          serviceAccountUserGroup: 10,
+        },
+      },
+      customerOwned: {
+        accessGroups: {
+          adminGroup: 10,
+          commerceOperatorUserGroup: 10,
+          serviceAccountUserGroup: 10,
+          customerUserGroup: 10,
+        },
+        ownership: {
+          enabled: true,
+          ownerProperty: "ownerId",
+          bypassGroups: {
+            adminGroup: true,
+            commerceOperatorUserGroup: true,
+            serviceAccountUserGroup: true,
+          },
+          subjectGroups: { customerUserGroup: true },
+          principalTypes: { customer: true },
+        },
+      },
+    },
+  },
 };

@@ -143,6 +143,12 @@ module.exports = {
      */
     applyDefaultValues: function (request, response, process) {
         this.LOG.debug('Applying default values to the model');
+        try {
+            if (SERVICE.DefaultModelConcurrencyService) SERVICE.DefaultModelConcurrencyService.initializeSave(request);
+        } catch (error) {
+            process.error(request, response, error);
+            return;
+        }
         let defaultValues = Object.assign({},
             this.getRawSchemaDefaultValues(request),
             this.getTenantSchemaOptions(request).defaultValues || {});
@@ -334,7 +340,10 @@ module.exports = {
      */
     saveModel: function (request, response, process) {
         this.LOG.debug('Saving model ');
-        request.schemaModel.saveItems(request).then(success => {
+        const concurrency = SERVICE.DefaultModelConcurrencyService;
+        const save = concurrency && concurrency.getField(request.schemaModel.rawSchema)
+            ? concurrency.execute(request, 'save') : request.schemaModel.saveItems(request);
+        save.then(success => {
             response.success = {
                 code: 'SUC_SAVE_00000',
                 result: success
@@ -420,6 +429,10 @@ module.exports = {
      * @returns {undefined}
      */
     applyPostInterceptors: function (request, response, process) {
+        if (SERVICE.DefaultModelConcurrencyService && SERVICE.DefaultModelConcurrencyService.wasUnchanged(request)) {
+            process.nextSuccess(request, response);
+            return;
+        }
         let schemaName = request.schemaModel.schemaName;
         let interceptors = SERVICE.DefaultDatabaseConfigurationService.getSchemaInterceptors(schemaName);
         if (interceptors && interceptors.postSave) {
@@ -442,6 +455,10 @@ module.exports = {
      * @returns {undefined}
      */
     invalidateRouterCache: function (request, response, process) {
+        if (SERVICE.DefaultModelConcurrencyService && SERVICE.DefaultModelConcurrencyService.wasUnchanged(request)) {
+            process.nextSuccess(request, response);
+            return;
+        }
         let invalidation = Promise.resolve();
         try {
             let schemaModel = request.schemaModel;
@@ -474,6 +491,10 @@ module.exports = {
      * @returns {undefined}
      */
     invalidateItemCache: function (request, response, process) {
+        if (SERVICE.DefaultModelConcurrencyService && SERVICE.DefaultModelConcurrencyService.wasUnchanged(request)) {
+            process.nextSuccess(request, response);
+            return;
+        }
         let invalidation = Promise.resolve();
         try {
             let schemaModel = request.schemaModel;
@@ -506,6 +527,10 @@ module.exports = {
      * @returns {undefined}
      */
     triggerModelChangeEvent: function (request, response, process) {
+        if (SERVICE.DefaultModelConcurrencyService && SERVICE.DefaultModelConcurrencyService.wasUnchanged(request)) {
+            process.nextSuccess(request, response);
+            return;
+        }
         try {
             let schemaModel = request.schemaModel;
             if (response.success.result && schemaModel.rawSchema.event && schemaModel.rawSchema.event.enabled) {

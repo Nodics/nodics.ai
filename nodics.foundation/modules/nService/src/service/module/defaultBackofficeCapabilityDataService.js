@@ -59,6 +59,9 @@ module.exports = {
             featureState: entry.featureState || defaults.featureState,
             presentation: this.presentation(defaults.presentation, entry)
         });
+        if (entry.backendWorkspace && entry.backendWorkspace.renderer === 'axis.workspace.native') {
+            return this.definitions().nativeWorkspace(base);
+        }
         if (this.isNormalizedNavigationItem(entry)) {
             delete base.presentation;
             return this.clone(base);

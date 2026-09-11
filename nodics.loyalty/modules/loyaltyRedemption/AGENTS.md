@@ -1,5 +1,8 @@
 # loyaltyRedemption
 
+Follow the parent contract: `../../AGENTS.md`.
+Follow global guidance: `../../../nodics.foundation/modules/nSetup/llm/ai-enablement-index.md`.
+
 Own reward redemption evidence. Redemptions prove captured reward usage but do not own the purchased product, coupon, order, or payment provider.
 
 Keep rewards marketplace enterprise seed data in `loyaltyCore/data`, because it

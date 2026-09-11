@@ -1,5 +1,80 @@
 # Data Import, Export, and Migration
 
+## Module data files and managed revisions
+
+Canonical owner: `nodics.foundation`, with nImport owning file execution and
+nDatabase owning managed technical counters. For schemas explicitly declaring
+`backoffice.concurrency.managed: true`, developers omit technical counters from
+`data/core-v001/records`, `data/init-v001/records`, and sample data. The existing
+header still declares the module, schema, `saveAll` operation and stable-code
+query. No new configuration layer or file format is needed.
+
+For example, a Point of Service record can retain its normal business fields:
+
+```js
+module.exports = {
+    record0: {
+        code: 'project-web-pos', tenant: 'default',
+        storeCode: 'project-store', name: 'Web service point',
+        status: 'ACTIVE', timezone: 'UTC', active: true
+    }
+};
+```
+
+Supply every other field required by the effective project schema. This example
+illustrates omission of `revision`, not a replacement for project validation.
+An old source `revision: 1` is ignored only for an explicitly managed field.
+Business `version`, publication `versionId`, release version and checksums are
+not interchangeable with that technical counter and are not stripped.
+
+```mermaid
+flowchart LR
+    Files["Module headers and records"] --> Release["Existing release validation and staging"]
+    Release --> Read["Owning generated read: original tokens"]
+    Read --> Save["Generated saveAll: access and validation"]
+    Save --> CAS["Atomic managed record write"]
+    CAS --> Result["Persisted record or explicit conflict"]
+```
+
+### Repeated import and failure recovery
+
+An absent record is created at revision 1. A changed existing record advances
+once from its observed counter. A row identical to persisted business fields is
+a no-op, so re-importing it does not advance the counter. If another writer edits
+after the import captures a token, the import fails that write with a conflict.
+Retries of the same model-import request retain the first snapshot, rather than
+fetching a new token to overwrite the intervening change.
+
+The snapshot cache is request-local, not a durable job ledger. A partially
+completed file is not atomic. Inspect existing import-run results and completed
+records before starting a deliberate new run; that new run captures fresh tokens
+under the existing release/update policy. Do not promise automatic rollback or
+unconditional retry. Non-`saveAll` import operations for managed schemas are
+explicitly rejected; use approved owning operations for deletion or bulk changes.
+
+Generated `data/manifest.json` checksum entries remain audit evidence. Runtime
+discovery derives current files/checksums from headers and source folders, so
+developers do not hand-edit hash maps. Changing an installed stable release
+still requires a new release version according to existing policy. Counter
+management does not bypass immutable release validation or publish content.
+
+### Customize and extend safely
+
+Use the existing project module's schema overlay, headers, processors and record
+files. A project-owned plain master-data model can select another integer/long
+counter through `backoffice.concurrency.field`; the importer reads that effective
+field automatically. Audit all writers before setting `managed: true` and keep
+tenant/authorization context on generated reads and writes. Domain-owned counters
+and versioned models retain their existing import contracts until separately
+reviewed; do not enable managed concurrency on `versionId`.
+
+Prove a fresh record, unchanged re-import, changed re-import, concurrent edit,
+legacy source counter, project-selected counter field, denied access, and stable
+release checksum rejection. The Store core-reference files and
+`nDatabase/database/test/modelConcurrencyContract.test.js` provide source-backed
+examples. Review per-record results rather than treating file dispatch as proof
+that all records were saved.
+
 Import definitions, data installation, exports, migration registers, release evidence, rollback boundaries, and customer onboarding. This page is intentionally written for beginners, business users, developers, operators, architects, QA owners, and AI tools. It explains the business problem first, then the technical ownership model, then the exact customization and verification responsibilities so nobody has to guess where a change belongs.
 
 A customer cannot trust a platform if data arrives through ad hoc scripts, undocumented dumps, or direct database writes with no validation or recovery evidence. Nodics treats data movement as governed operations: import definitions, staged validation, execution receipts, migration registers, redaction, and rollback boundaries are documented and tested.

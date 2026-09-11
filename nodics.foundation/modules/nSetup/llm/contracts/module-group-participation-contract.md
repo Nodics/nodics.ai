@@ -117,6 +117,21 @@ at the structural `envs` container. Runtime load order may include the project,
 concrete environment, server, and explicitly activated project modules. It must
 not include the structural `modules` or `envs` groups.
 
+## Optional Functional Groups
+
+Apply the Optional Module Independence principle in `nodics-principles.md`.
+Group containment must not introduce dependencies on unrelated optional groups.
+The Accelerators umbrella extends Foundation only; concrete industry groups
+retain their actual local composition dependencies. Indexed WCMS Experience
+and Copilot Knowledge retain their explicitly selected Discovery implementation
+dependencies; ordinary WCMS must not load Experience merely to satisfy them.
+
+`nodics.functionalModule.protected` describes a mandatory functional root, not
+whether its data is security-sensitive. Standard Process and Localization are
+optional. Protected translation keys and approval requirements remain enforced
+by their owning contracts. Existing registered/enabled state is preserved when
+a package changes from protected to optional; operators explicitly deactivate it.
+
 ## Validation Requirements
 
 Changes to discovery, topology, generation, registration, or module metadata

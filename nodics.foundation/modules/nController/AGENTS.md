@@ -10,6 +10,11 @@ This file gives AI coding agents mandatory guidance for this Nodics module or pa
 
 ## Module Work Rules
 
+- Generated mutation controllers must check shared schema authoring authority
+  before merging body values, using the compiled schema identity and route module.
+  Preserve rejection for Online publishable sources and read-only projections;
+  no body flag or callback variant may bypass the guard.
+
 - Treat this directory as a layered Nodics module boundary when it contains `package.json`.
 - Keep capabilities stable and make implementations replaceable through the module hierarchy.
 - Do not hardcode project, environment, server, node, tenant, or customer behavior into reusable framework code.

@@ -120,6 +120,17 @@ mode, business outcome, owning module/layer, studied sources, current behavior,
 reuse/extension path, affected contracts, security/tenant/data/UX/API/release
 impact, assumptions, contradictions, intended files, and validation route.
 
+## Partner implementation boundary
+
+Apply `nodics.foundation/modules/nSetup/llm/contracts/customer-project-mode-contract.md`
+to every partner/application implementation. Partners write only to customer-owned
+backend and frontend repositories. Framework and accelerator source remain
+immutable dependencies; a local checkout or application request grants no write
+authority. Nodics owns reusable changes through a separate contribution/request,
+review and release process. An explicitly authorized Nodics-maintainer task is a
+separate scope. Classify framework capability, domain accelerator and customer
+application ownership before placing code, data, tests or documentation.
+
 ## Repository boundary
 
 - Treat `nodics.ai` as the authoritative backend/framework repository root.
@@ -227,3 +238,4 @@ impact, assumptions, contradictions, intended files, and validation route.
 - Keep instructions portable and tool-neutral. Vendor adapters may reference
   root `AGENTS.md` and `nodics.foundation/modules/nSetup/llm`, but must not become
   the source of truth.
+- Apply `nodics.foundation/modules/nSetup/llm/contracts/module-owned-ui-contribution-contract.md` before placing navigation, component properties or workspace data. Visual nesting does not transfer business ownership.

@@ -11,6 +11,13 @@ Human developers and AI tools follow the same Nodics principles. AI tools do
 not get a separate shortcut path, and human developers should not bypass the
 same contracts expected from automation.
 
+Apply [customer-project-mode-contract.md](customer-project-mode-contract.md)
+for every application or partner implementation. Partners edit customer-owned
+repositories only; Nodics owns framework and accelerator changes through the
+separate contribution/request and release process. Reuse potential does not
+change write authority. Classify capability, domain and application ownership
+before choosing an extension point.
+
 ## AI Expert-Council Responsibility
 
 AI tools implementing Nodics changes must follow

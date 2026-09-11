@@ -23,6 +23,11 @@ const routers = require("../src/router/routers").backoffice;
 const statusDefinitions = require("../src/utils/statusDefinitions");
 const repositoryRoot = path.resolve(__dirname, "../../../..");
 
+const prefilledField = { name: "enterpriseCode", label: "Enterprise", type: "TEXT", defaultFromParameter: "enterpriseCode" };
+assert(service.validateBackendWorkspaceField(prefilledField));
+assert(!service.validateBackendWorkspaceField({ ...prefilledField, type: "PASSWORD" }));
+assert(!service.validateBackendWorkspaceField({ ...prefilledField, defaultFromParameter: "../enterprise" }));
+
 const capabilities = [
   require(path.join(repositoryRoot, "nodics.platform/modules/profile/src/service/defaultProfileBackofficeCapabilityService")).getCapability(),
   require(path.join(repositoryRoot, "nodics.wcms/modules/cms/src/service/defaultCmsBackofficeCapabilityService")).getCapability(),

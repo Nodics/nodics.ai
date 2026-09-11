@@ -21,3 +21,13 @@
 - `nodics.axis` owns executable documentation renderers only; it must not own
   CMS catalog, Site, page, component, route, or documentation content-pack data.
 - Do not refer to legacy source paths, repositories, or runtime assumptions.
+- Each independently navigable capability topic needs a dedicated
+  **Customize and extend safely** section with project-owned files, a worked
+  example, preserved guarantees, rejection/recovery behavior, and tests.
+  Explicitly explain non-customizable guarantees rather than inventing an
+  extension point. Follow the canonical documentation impact contract.
+- Use source-backed diagrams or screen flows for multi-step topics. Screenshots
+  must show real, sanitized UI with capture context; they are not mandatory when
+  a durable screen flow serves the reader better.
+- Report authored, generated/validated, visually reviewed, and published states
+  separately. Pack validation is not proof of complete detail across all pages.

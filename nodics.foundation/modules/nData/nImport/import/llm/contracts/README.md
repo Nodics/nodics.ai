@@ -4,6 +4,22 @@ This folder contains module-specific AI/developer contracts for `nodics.foundati
 
 Use these files for rules that are more specific than root `AGENTS.md` and the module `AGENTS.md`, especially extension boundaries, override expectations, testing rules, security constraints, and generated-artifact responsibilities.
 
+## Managed technical counters in module data
+
+- For effective schemas explicitly declaring managed concurrency, support
+  `saveAll` through the existing generated service. Reject other operations;
+  do not translate broad delete/update imports to unlocked mutations.
+- Read original tokens using the owning generated service, tenant and import
+  authorization. Ignore legacy source technical counters, including `revision: 1`.
+- Cache original snapshots for retries of the same model-import request. Never
+  fetch a newer token to hide a failed compare-and-set. This cache is not durable
+  run state and does not make partially completed files atomic.
+- New runs can read new snapshots under existing import/release policy. Keep
+  business versions, `versionId` reconciliation, immutable release identity,
+  checksum validation, source ownership, and publication authority unchanged.
+- Preserve generated defaults and actual persisted counters. An unchanged
+  `saveAll` row is a no-op, not a reason to increment or reset its counter.
+
 ## Guided initialization
 
 - Guided profiles are layered runtime configuration owned and executed by

@@ -146,6 +146,17 @@ BackOffice self-registration remains asynchronous control-plane work so module
 startup and high-volume request paths do not synchronously depend on registry
 availability.
 
+Registration uses the router's effective module configuration to exclude
+`remoteOnly` dependencies, even when they appear in the active module list.
+Remote consumers must not advertise the owner's endpoint, schemas, or activation
+packages under their own instance identity. Actual local replicas and distinct
+Staged/Online runtimes remain independent registrations. Projects customize this
+through layered `servers.<module>.remoteOnly` (or effective options), not through
+client-side schema deduplication. After correcting a running deployment, restart
+the affected runtime and let old leases drain or expire, then refresh Axis
+bootstrap. The focused `test/moduleRegistrationAgent.test.js` covers local,
+remote-only, later-layer override, and registration retry behavior.
+
 ## Observability, Performance, And Resilience
 
 - Keep timeouts bounded and connections reusable.

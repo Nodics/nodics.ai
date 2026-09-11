@@ -22,7 +22,7 @@ module.exports = {
     postInit: function () { return Promise.resolve(true); },
     /** Returns the module-owned declarative BackOffice capability data. */
     capabilityData: function () {
-        return require('../../data/core-v001/records/backoffice/wasteCoreBackofficeCapabilityData');
+        return require('../../data/backoffice/wasteCoreBackofficeCapabilityData');
     },
     /** Returns the effective shared BackOffice capability data builder. */
     capabilityDataService: function () {

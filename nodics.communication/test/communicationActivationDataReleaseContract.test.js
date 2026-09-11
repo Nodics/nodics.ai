@@ -38,11 +38,11 @@ Object.values(sections).forEach(section => {
 
 const runtimeTemplates = require(path.join(
     releaseRoot,
-    'core/data/communication/commsRuntimeDefaultTemplateData.js'
+    'core-v001/records/communication/commsRuntimeDefaultTemplateData.js'
 ));
 const sampleTemplates = require(path.join(
     releaseRoot,
-    'sample/data/communication/commsSampleTemplateData.js'
+    'sample-v001/records/communication/commsSampleTemplateData.js'
 ));
 
 assert.strictEqual(runtimeTemplates.record0.code, 'COMMUNICATION_RUNTIME_NOTICE');

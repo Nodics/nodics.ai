@@ -506,4 +506,22 @@ assert.deepStrictEqual(
   [],
 );
 
+// Resolve the actual imported role graph through the same recursive permission utility.
+const operationalGroups = new Map(Object.values(userGroupsData).map(group => [group.code, group]));
+/** Expands imported group references for the production permission utility and rejects broken inheritance. */
+function operationalGroupTree(code, ancestry = []) {
+  assert(!ancestry.includes(code), 'Operational group graph must be acyclic');
+  const group = operationalGroups.get(code);
+  assert(group, 'Missing imported operational group: ' + code);
+  return Object.assign({}, group, { parentGroups: (group.parentGroups || []).map(parent => operationalGroupTree(parent, ancestry.concat(code))) });
+}
+const operationalRoleCodes = ['wasteEnterpriseAdministratorUserGroup', 'wasteCentreOperatorUserGroup', 'wasteVerifierUserGroup', 'wasteApproverUserGroup', 'wasteCouponManagerUserGroup', 'wasteMarketplaceModeratorUserGroup', 'wasteAuditorUserGroup'];
+for (const code of operationalRoleCodes) {
+  const grants = global.UTILS.getUserGroupPermissions([operationalGroupTree(code)]);
+  for (const required of ['backoffice.bootstrap.view', 'backoffice.axis.initialization.view', 'backoffice.application.initialization.view', 'cms.delivery.authenticated.read']) assert(grants.includes(required), code + ' needs ' + required + ' to enter the published workspace');
+  for (const forbidden of ['*', 'backoffice.axis.initialization.initiate', 'profile.enterpriseAccess.assign', 'runtime.config.request.activate']) assert(!grants.includes(forbidden), code + ' must not gain platform administration');
+  if (code === 'wasteVerifierUserGroup') assert(!grants.includes('waste.review.approve'));
+  if (code === 'wasteApproverUserGroup') assert(!grants.includes('waste.verification.record'));
+  if (code === 'wasteAuditorUserGroup') assert(!grants.includes('waste.review.evidence.read') && !grants.includes('waste.review.approve'));
+}
 console.log("Profile user group permission resolution validated");

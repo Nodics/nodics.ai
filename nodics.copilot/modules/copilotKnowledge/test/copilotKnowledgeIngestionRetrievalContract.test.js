@@ -8,6 +8,13 @@
     root LICENSE file or a separate written agreement with Nodics.
 
  */
+/**
+ * @module copilotKnowledge/test/copilotKnowledgeIngestionRetrievalContract
+ * @description Proves ingestion, indexing, scoped retrieval and negative knowledge access contracts using isolated test state.
+ * @layer test
+ * @owner copilotKnowledge
+ * @override Extend provider fixtures while retaining owner filtering and ingestion/retrieval evidence.
+ */
 'use strict';
 
 const assert = require('node:assert/strict');

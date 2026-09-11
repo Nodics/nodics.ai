@@ -13,3 +13,7 @@ Waste Collection services.
 Collection-centre records must carry `operatorEnterpriseRef`; tenant remains
 runtime context only. Location coordinates and Profile address/contact facts
 stay referenced through `locationRef` and the Location/Profile APIs.
+
+Collection-centre search accepts a boolean `active` filter. Public discovery
+requires `active: true` in addition to public visibility and operating status.
+Authorized operational searches may explicitly request `active: false`.

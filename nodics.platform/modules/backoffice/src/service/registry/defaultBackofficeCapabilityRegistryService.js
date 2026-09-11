@@ -87,17 +87,25 @@ module.exports = {
         });
         this.removeCrossModuleOrphans(catalogue);
         this.validateUniqueNavigation(catalogue);
+        this.validateNavigationHierarchy(catalogue);
         this.inheritNavigationGroups(catalogue);
         return catalogue;
     },
 
     /** Removes governed technical modules whose functional module is not registered and active. */
     applyFunctionalModuleEligibility: function (modules, eligibility) {
-        if (!eligibility) return modules;
+        eligibility = eligibility || {};
         let governed = new Set(eligibility.governedModules || []);
         let eligible = new Set(eligibility.eligibleModules || []);
         return Object.keys(modules || {}).reduce((result, moduleName) => {
-            if (!governed.has(moduleName) || eligible.has(moduleName)) result[moduleName] = modules[moduleName];
+            let instances = modules[moduleName] || [];
+            let owners = instances.map(instance => instance.functionalModuleIdentity).filter(Boolean);
+            // A declared functional owner cannot become ungoverned when its durable record is missing.
+            if (owners.length) {
+                if (owners.every(owner => eligible.has(owner))) result[moduleName] = instances;
+            } else if (!governed.has(moduleName) || eligible.has(moduleName)) {
+                result[moduleName] = instances;
+            }
             return result;
         }, {});
     },
@@ -112,8 +120,8 @@ module.exports = {
                 (metadata.navigation || []).forEach(item => keys.add(moduleName + ':' + item.id)));
             Object.entries(catalogue).forEach(([moduleName, metadata]) => {
                 if (!Array.isArray(metadata.navigation)) return;
-                let filtered = metadata.navigation.filter(item => !item.parentId || !item.parentModuleName ||
-                    keys.has(item.parentModuleName + ':' + item.parentId));
+                let filtered = metadata.navigation.filter(item => !item.parentId ||
+                    keys.has((item.parentModuleName || moduleName) + ':' + item.parentId));
                 if (filtered.length !== metadata.navigation.length) {
                     catalogue[moduleName] = Object.assign({}, metadata, { navigation: filtered });
                     changed = true;
@@ -134,6 +142,26 @@ module.exports = {
                 }
                 owners.set(item.id, moduleName);
             }));
+        return true;
+    },
+
+    /** Rejects cycles that cross independently registered provider boundaries. */
+    validateNavigationHierarchy: function (catalogue) {
+        const parents = new Map();
+        Object.entries(catalogue).forEach(([moduleName, metadata]) =>
+            (metadata.navigation || []).forEach(item => parents.set(moduleName + ':' + item.id,
+                item.parentId ? (item.parentModuleName || moduleName) + ':' + item.parentId : undefined)));
+        const complete = new Set();
+        for (const key of parents.keys()) {
+            const visiting = new Set();
+            let current = key;
+            while (current && !complete.has(current)) {
+                if (visiting.has(current)) throw new CLASSES.NodicsError('ERR_BOF_00000', 'Cyclic BackOffice navigation hierarchy');
+                visiting.add(current);
+                current = parents.get(current);
+            }
+            visiting.forEach(value => complete.add(value));
+        }
         return true;
     },
 

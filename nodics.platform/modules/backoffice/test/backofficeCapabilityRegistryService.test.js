@@ -51,6 +51,30 @@ let gated = registry.applyFunctionalModuleEligibility(modules, {
     governedModules: ['product', 'pricing'], eligibleModules: ['product']
 });
 assert.deepEqual(Object.keys(gated), ['product'], 'inactive functional-module members must not enter the effective capability catalogue');
+const ownedModules = {
+    wasteCore: [{ functionalModuleIdentity: 'nodics.waste' }],
+    product: [{ functionalModuleIdentity: 'nodics.commerce' }],
+    projectUtility: [{}]
+};
+assert.deepEqual(Object.keys(registry.applyFunctionalModuleEligibility(ownedModules, {
+    governedModules: [], eligibleModules: []
+})), ['projectUtility'], 'missing durable records must not expose functional capabilities');
+assert.deepEqual(Object.keys(registry.applyFunctionalModuleEligibility(ownedModules)), ['projectUtility'],
+    'unavailable eligibility must not bypass declared functional ownership');
+assert.deepEqual(Object.keys(registry.applyFunctionalModuleEligibility(ownedModules, {
+    governedModules: ['product', 'nodics.commerce'], eligibleModules: ['product', 'nodics.commerce']
+})), ['product', 'projectUtility'], 'only the registered active functional owner is eligible');
+assert.deepEqual(Object.keys(registry.applyFunctionalModuleEligibility({
+    backoffice: [{ functionalModuleIdentity: 'nodics.platform' }],
+    profile: [{ functionalModuleIdentity: 'nodics.platform' }]
+}, { governedModules: ['nodics.platform', 'axis'], eligibleModules: ['nodics.platform', 'axis'] })),
+['backoffice', 'profile'], 'validated lease ownership survives a narrower technical-member list from another server');
+assert.deepEqual(Object.keys(registry.applyFunctionalModuleEligibility(ownedModules, {
+    eligibleModules: ['wasteCore']
+})), ['projectUtility'], 'an eligible member cannot bypass an ineligible functional owner');
+assert.deepEqual(Object.keys(registry.applyFunctionalModuleEligibility({
+    wasteCore: [{ functionalModuleIdentity: 'nodics.waste' }, { functionalModuleIdentity: 'nodics.other' }]
+}, { eligibleModules: ['wasteCore', 'nodics.waste'] })), [], 'all declared instance owners must be eligible');
 assert.throws(() => registry.buildCatalogue({ product: [{ backoffice: capability('one', []) },
     { backoffice: capability('two', []) }] }, 1, { permissions: ['*'] }), /Inconsistent BackOffice capability providers/);
 assert.throws(() => registry.buildCatalogue({ first: [{ backoffice: capability('first', [item('duplicate', undefined, undefined, 'read')]) }],

@@ -15,7 +15,7 @@ module.exports = {
     pricing: {
         operator: {
             restoreOperational: {
-                secured: true, authTokenTypes: ['access'], accessGroups: ['employeeUserGroup'],
+                secured: true, authTokenTypes: ['access','service'], accessGroups: ['employeeUserGroup','serviceAccountUserGroup'],
                 permission: 'commerce.product.publish', apiExposure: 'commercePublicationIngestion',
                 key: '/internal/pricing/publication/operational/restore', method: 'POST',
                 controller: 'DefaultPricingPublicationController', operation: 'restoreOperational',

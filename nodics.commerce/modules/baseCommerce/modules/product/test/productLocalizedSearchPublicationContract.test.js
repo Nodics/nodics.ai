@@ -162,15 +162,17 @@ test('publication uses active nSearch model registry when generated search servi
             assert.equal(moduleName, 'product');
             assert.equal(tenant, 'default');
             assert.equal(indexName, 'productLocalized');
-            return { doSave: async () => true, doRemoveByQuery: async () => true };
+            return { doSave: async () => true, doRemoveByQuery: async () => true, doRefresh: async () => true };
         }
     };
     try {
         let searchService = publication.searchService();
         await searchService.doSave({ tenant: 'default', moduleName: 'product', indexName: 'productLocalized' });
+        await searchService.doRefresh({ tenant: 'default', moduleName: 'product', indexName: 'productLocalized' });
         await searchService.doRemoveByQuery({ tenant: 'default', moduleName: 'product', indexName: 'productLocalized' });
         assert.deepEqual(pipelines.map(item => item.pipelineName), [
             'doSaveModelsInitializerPipeline',
+            'doRefreshIndexInitializerPipeline',
             'doRemoveModelsByQueryInitializerPipeline'
         ]);
     } finally {
@@ -199,4 +201,14 @@ test('Product contributes a provider-neutral tenant Store and locale partitioned
     assert.equal(definition.properties.payload.type, 'object');
     assert.equal(definition.properties.payload.dynamic, false);
     assert.equal(definition.properties.payload.properties.categoryCodes.type, 'keyword');
+});
+
+
+test('publication refreshes index visibility before invalidating cached search reads', async () => {
+    const calls = [], search = global.SERVICE.DefaultSearchService, cache = global.SERVICE.DefaultCacheService;
+    const priorRefresh = search.doRefresh;
+    search.doRefresh = async request => { calls.push('refresh:' + request.indexName); };
+    global.SERVICE.DefaultCacheService = { invalidateResource: async request => { calls.push('invalidate:' + request.resourceName); } };
+    try { await publication.refreshPublishedIndex({tenant:'default'}); assert.deepEqual(calls,['refresh:productLocalized','invalidate:productLocalized']); }
+    finally { if(priorRefresh)search.doRefresh=priorRefresh;else delete search.doRefresh;global.SERVICE.DefaultCacheService=cache; }
 });

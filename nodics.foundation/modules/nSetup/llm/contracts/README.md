@@ -53,5 +53,9 @@ permanent rule into a contract.
   preservation, generation, migration, distributed discovery, and updates
   required by behavior and contract changes.
 - `testing-and-release-contract.md`: testing and release expectations.
-- `customer-project-mode-contract.md`: scope rules for customer/project work on
-  top of released Nodics.
+- `customer-project-mode-contract.md`: mandatory partner write boundary,
+  framework/domain-accelerator/customer ownership, schema versus data
+  contributions, supported customization and separate Nodics contribution and
+  release channel across all domains.
+
+- [Module-owned UI contributions](module-owned-ui-contribution-contract.md): navigation, component-data ownership, cross-module composition and native workspace boundaries.

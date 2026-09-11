@@ -20,9 +20,9 @@
             "initialPublicationPolicy": "NONE",
             "removalPolicy": "RETAIN",
             "files": {
-                "core-v001/records/store/baseCommercePointOfServiceData.js": "728a6bd08d6dfe29f8069cc65381c742a8087794670afd151b695de2fbec397e",
-                "core-v001/records/store/baseCommerceSalesChannelData.js": "d02a45b7bf436bfd99601893bb624ed317cb9f463e7335a61e9f6f6e0c671f7a",
-                "core-v001/records/store/baseCommerceStoreData.js": "153bda4a79c0ee282cde4c0a61ad6296f937a7d7541ddb39bc379c53d3eb3b8d",
+                "core-v001/records/store/baseCommercePointOfServiceData.js": "6b07872b6961a635bb32680d00f5f14feac5129102575a44259d1f4def2684f8",
+                "core-v001/records/store/baseCommerceSalesChannelData.js": "0706f64ced621c99bfa67a5cf4a939f4c89aafba5a2a9885aef5a15c518fcf10",
+                "core-v001/records/store/baseCommerceStoreData.js": "923d66296d76d0254df39262a030f649c8c368362a1accdb30d9a7a07b521a1e",
                 "core-v001/headers/store/baseCommerceCoreReferenceHeader.js": "bcc5198975a6667322ee1b75727038ece06eb1640ac504808e1156cfee19b5a5"
             },
             "sourceRoot": "core-v001"

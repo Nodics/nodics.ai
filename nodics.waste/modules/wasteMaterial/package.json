@@ -16,7 +16,8 @@
             "schema",
             "service",
             "test",
-            "llm"
+            "llm",
+            "data"
         ],
         "runtime": {
             "router": false,

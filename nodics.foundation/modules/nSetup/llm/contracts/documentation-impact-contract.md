@@ -432,6 +432,35 @@ Before creating or changing canonical public documentation:
 
 ## Customization-First Documentation Rule
 
+### Per-topic completion evidence
+
+Apply this rule to each independently navigable capability topic, not only its
+module overview. Every topic needs a dedicated **Customize and extend safely**
+section. A link to a generic extension guide supplements that section; it does
+not replace the topic-specific owner, files, example, constraints, and tests.
+If a topic describes a non-customizable guarantee, state exactly what cannot
+change, why, and which surrounding project choices remain supported.
+
+For each worked example, identify its prerequisites, starting state, exact
+project-owned edit or authorized action, expected result, rejection behavior,
+and recovery or rollback. Label excerpts, illustrative values, and runnable
+examples accurately. Never describe a configuration fragment as a complete
+installable module or a pure unit test as live deployment qualification.
+
+Visual evidence must teach the topic: use a source-backed architecture diagram,
+sequence, state transition, or Axis screen flow as appropriate. Screenshots are
+optional when a screen-flow diagram explains the journey more durably. When
+screenshots are used, capture the actual implemented UI, remove sensitive
+information, record the capture context/version and date, provide meaningful
+alternative text, and keep assets with the backend documentation owner. Never
+use a mockup as evidence that an operational journey passed.
+
+Report authoring, generated-pack validation, rendered review, and governed
+publication separately. Updated principles or passing documentation generators
+do not prove every topic has sufficient detail or that new content is already
+visible in Axis/Nexus. An incomplete page or unaudited topic remains incomplete;
+do not mark the whole documentation set complete from a few enriched pages.
+
 The primary adoption outcome of Nodics documentation is that a partner,
 developer, or AI tool can understand an implemented capability and customize
 it safely without editing framework-owned source. Every capability and

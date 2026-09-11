@@ -1,5 +1,8 @@
 # nodics.loyalty
 
+Follow the parent contract: `../AGENTS.md`.
+Follow global guidance: `../nodics.foundation/modules/nSetup/llm/ai-enablement-index.md`.
+
 ## Ownership
 
 `nodics.loyalty` is the standard Loyalty functional module group. It owns loyalty composition and framework contracts for programs, reward types, wallets, reward balances, append-only ledger entries, reservations, and redemptions.

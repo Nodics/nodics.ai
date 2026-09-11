@@ -71,7 +71,7 @@ async function pay(request) {
 
 async function main() {
     const tenant = 'runtimeTenantFromToken';
-    const authData = { tenant, userGroups: ['serviceAccountUserGroup'] };
+    const authData = { tenant, principalType:'service', userGroups: ['serviceAccountUserGroup'] };
     const walletCode = 'acceptance-wallet-001';
     const base = { tenant, authData, walletCode, programCode: 'default', rewardTypeCode: 'points' };
 

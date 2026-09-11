@@ -285,6 +285,25 @@ module.exports = {
                     }
                 }
             },
+            uploadCustomerPhoto: {
+                secured: true, authTokenTypes: ['access'], accessGroups: ['customerUserGroup'],
+                permission: 'media.customer.upload', apiExposure: 'mediaManagement',
+                bodyParserHandler: 'mediaMultipartUploadBodyParserHandler',
+                key: '/customer/photos', method: 'POST', controller: 'DefaultCustomerMediaController', operation: 'upload',
+                help: { requestType:'secured', message:'Stores an immutable customer-owned photo.' }
+            },
+            uploadEncodedPhoto: {
+                secured: true, authTokenTypes: ['access'], accessGroups: ['customerUserGroup'],
+                permissionConfig: 'media.customerUploads.permission', apiExposure: 'mediaManagement', jsonBodyLimit: '8mb',
+                key: '/photos/encoded', method: 'POST', controller: 'DefaultCustomerMediaController', operation: 'uploadEncoded',
+            },
+            readInternalEvidencePhoto:{secured:true,authTokenTypes:['service'],accessGroups:['serviceAccountUserGroup'],permission:'media.evidence.read',apiExposure:'mediaManagement',key:'/internal/evidence/photos/:code',method:'GET',controller:'DefaultCustomerMediaController',operation:'readInternal'},
+            readCustomerPhoto: {
+                secured: true, authTokenTypes: ['access'], accessGroups: ['customerUserGroup','adminGroup','employeeUserGroup'],
+                permission: 'media.customer.read', apiExposure: 'mediaManagement',
+                key: '/customer/photos/:code', method: 'GET', controller: 'DefaultCustomerMediaController', operation: 'read',
+                help: { requestType:'secured', message:'Reads a photo for its owner or authorized reviewer.' }
+            },
             uploadMedia: {
                 secured: true,
                 accessGroups: ['userGroup'],

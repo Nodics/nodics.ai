@@ -8,3 +8,9 @@ those artifacts below their domain group.
 Standard framework groups never depend on this group. Customer projects may
 activate the complete group or one child domain group. Read `AGENTS.md`, then
 the selected domain and capability guidance before implementation.
+
+The umbrella extends Foundation only. It must not force Commerce or Discovery
+into every accelerator runtime. Apparel/Electronics (and Telco through
+Electronics) retain Commerce inheritance; Waste scenarios retain Waste
+inheritance. Required local schema/implementation dependencies belong to the
+selected concrete capability, not a blanket activation gate on Accelerators.

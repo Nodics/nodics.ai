@@ -75,6 +75,7 @@ const stampRegistrations = [];
 const lookups = [];
 
 const enterprise = {
+    active: true,
     code: 'electronics',
     tenant: {
         code: 'tenantA'

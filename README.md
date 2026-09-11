@@ -15,6 +15,12 @@ delivery, testing contracts, and a BackOffice experience through Axis.
 Nodics functional module groups used by customer projects and runtime servers.
 It is not itself a runtime functional module.
 
+Partner implementations follow the mandatory
+[customer project contract](nodics.foundation/modules/nSetup/llm/contracts/customer-project-mode-contract.md):
+partners customize their own backend and frontend repositories; Nodics maintains
+framework capabilities and domain accelerators. Reusable enhancements go through
+a separate Nodics contribution/request, review and release process.
+
 ## Why Nodics exists
 
 Most enterprise software does not fail because the first screen was difficult

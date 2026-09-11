@@ -22,6 +22,32 @@ const _ = require('lodash');
 module.exports = {
     default: {
         /**
+         * Performs a single managed record mutation atomically and returns the
+         * persisted document, never a reconstructed pre-write snapshot.
+         * The generated pipeline owns authorization and concurrency policy.
+         */
+        compareAndSetItem: async function (input) {
+            const options = this.transactionOptions(input, this);
+            try {
+                if (input.operation === 'create') {
+                    const model = this.normalizeModelForWrite(input.model);
+                    await SERVICE.DefaultModelValidatorService.validateMandate(model, this.rawSchema);
+                    await SERVICE.DefaultModelValidatorService.validateDataType(model, this.rawSchema);
+                    const result = await this.insertOne(model, options);
+                    if (!result.acknowledged && !(result.ops && result.ops.length)) throw new CLASSES.NodicsError('ERR_MDL_00005');
+                    return Object.assign({}, model, { _id: result.insertedId || result.ops[0]._id });
+                }
+                const result = input.operation === 'remove'
+                    ? await this.findOneAndDelete(input.query, Object.assign({}, options, { includeResultMetadata: true }))
+                    : await this.findOneAndUpdate(input.query, { $set: this.normalizeModelForWrite(input.model) },
+                        Object.assign({}, options, { upsert: false, returnDocument: 'after', includeResultMetadata: true }));
+                return result && Object.prototype.hasOwnProperty.call(result, 'value') ? result.value : result;
+            } catch (error) {
+                if (error && error.code === 11000) throw new CLASSES.NodicsError('ERR_CONCURRENCY_00001');
+                throw error;
+            }
+        },
+        /**
          * Builds transaction-aware MongoDB operation options.
          */
         transactionOptions: function (input, schemaModel) {

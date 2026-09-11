@@ -29,7 +29,7 @@
             "identity": "nodics.localization",
             "displayName": "Localization",
             "type": "STANDARD",
-            "protected": true
+            "protected": false
         }
     },
     "requiredModules": [

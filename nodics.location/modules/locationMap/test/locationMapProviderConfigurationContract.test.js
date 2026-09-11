@@ -74,7 +74,9 @@ let configurationRecords = [Object.assign({}, seedConfigurations.record0, {
     publicAccessToken: 'pk.test-public-token',
     setupStatus: 'ACTIVE'
 })];
+global.CONFIG = { get: key => require('../config/properties')[key] };
 global.SERVICE = {
+    DefaultLocationMapPresentationService: require('../src/service/defaultLocationMapPresentationService'),
     DefaultBackofficeCapabilityDefinitionService: require(path.join(repositoryRoot, 'nodics.foundation/modules/nService/src/service/module/defaultBackofficeCapabilityDefinitionService.js')),
     DefaultBackofficeCapabilityDataService: require(path.join(repositoryRoot, 'nodics.foundation/modules/nService/src/service/module/defaultBackofficeCapabilityDataService.js')),
     DefaultModuleRegistrationAgentService: {
@@ -100,9 +102,8 @@ global.SERVICE = {
                 assert.strictEqual(request.query.code, 'AXIS_COLLECTION_CENTRE_MAPBOX_STREETS');
             } else {
                 assert.deepStrictEqual(request.query, {
-                    surfaceCode: 'AXIS',
                     usageCode: 'COLLECTION_CENTRE_MAP',
-                    status: 'ACTIVE'
+                    ...(request.query.status ? {status: {$in:['ACTIVE','DRAFT','INACTIVE']}} : {})
                 });
             }
             return Promise.resolve({
@@ -112,8 +113,9 @@ global.SERVICE = {
         update: function (request) {
             repositoryCalls.push({ operation: 'update', request });
             assert.strictEqual(request.tenant, 'default');
-            assert.deepStrictEqual(request.query, { code: 'AXIS_COLLECTION_CENTRE_MAPBOX_STREETS' });
-            assert.strictEqual(request.model.$set.publicAccessToken, 'pk.updated-public-token');
+            assert.deepStrictEqual(request.query, { code: 'AXIS_COLLECTION_CENTRE_MAPBOX_STREETS', revision: configurationRecords[0].revision });
+            assert.strictEqual(request.model.publicAccessToken, 'pk.updated-public-token');
+            configurationRecords[0] = Object.assign({}, configurationRecords[0], request.model, {revision: (configurationRecords[0].revision || 0) + 1});
             return Promise.resolve({ updated: 1 });
         },
         save: function (request) {
@@ -209,6 +211,7 @@ service.getEffectiveConfiguration({
     }), /publicAccessToken is required/);
     providerRecords = [];
     configurationRecords = [Object.assign({}, seedConfigurations.record1, {
+        surfaceCode: 'SHARED',
         setupStatus: 'ACTIVE',
         status: 'ACTIVE'
     })];

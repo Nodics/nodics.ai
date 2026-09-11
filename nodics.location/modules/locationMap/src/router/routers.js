@@ -18,6 +18,14 @@
  */
 module.exports = {
     locationMap: {
+        public: {
+            getPublicMapConfiguration: {
+                secured: false, publicAccess: true, accessGroups: ['userGroup'], apiExposure: 'locationPublic',
+                key: '/location/maps/configurations/public', method: 'GET',
+                controller: 'DefaultLocationMapController', operation: 'getPublicConfiguration',
+                help: { requestType: 'public', message: 'Returns the shared browser-safe configuration for a publicly enabled map usage.' }
+            }
+        },
         internal: {
             getEffectiveMapConfiguration: {
                 secured: true, authTokenTypes: ['access', 'service'], accessGroups: ['serviceAccountUserGroup', 'adminGroup', 'employeeUserGroup'],

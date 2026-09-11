@@ -10,6 +10,8 @@ or future orchestration contracts that cannot live in one owner.
   business-managed rule publication contracts.
 - `checkout/cart/test`: customer cart, entry mutation, calculation, ownership,
   and leakage contracts.
+- `bidding/test`: generic offer negotiation, typed seller scopes, immutable quotes,
+  legacy acceptance recovery and variant isolation.
 - `checkout/checkoutCore/test`: checkout placement, payment method selection,
   and calculation handoff contracts.
 - `checkout/order/test`: customer order read/history, cancellation, return,

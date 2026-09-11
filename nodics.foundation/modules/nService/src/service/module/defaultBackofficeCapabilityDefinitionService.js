@@ -37,6 +37,15 @@ module.exports = {
         };
     },
 
+    /** Creates a bounded native workspace contribution without inventing a schema target. */
+    nativeWorkspace: function (options) {
+        const item = this.workbench(options);
+        delete item.workbenchTarget;
+        delete item.workbenchPresentation;
+        item.backendWorkspace = options.backendWorkspace;
+        return item;
+    },
+
     /** Creates one schema-workbench navigation contribution owned by a concrete module. */
     workbench: function (options) {
         let item = {

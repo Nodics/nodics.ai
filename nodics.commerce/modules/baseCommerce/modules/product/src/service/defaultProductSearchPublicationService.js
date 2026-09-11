@@ -60,6 +60,11 @@ module.exports = {
     searchOperationService: function () {
         let self = this;
         return {
+            /** Refreshes publication visibility through the active provider-neutral nSearch pipeline. */
+            doRefresh: function (request) {
+                self.searchModel(request, 'doRefresh');
+                return SERVICE.DefaultPipelineService.start('doRefreshIndexInitializerPipeline', request, {});
+            },
             /** Saves one Product projection through the active nSearch model pipeline. */
             doSave: function (request) {
                 self.searchModel(request, 'doSave');
@@ -71,6 +76,19 @@ module.exports = {
                 return SERVICE.DefaultPipelineService.start('doRemoveModelsByQueryInitializerPipeline', request, {});
             }
         };
+    },
+
+    /** Makes publication visible before releasing its acknowledgement and invalidates the search read cache. */
+    refreshPublishedIndex: async function (request) {
+        const service = this.searchService(), indexName = this.policy().searchIndexName || 'productLocalized';
+        if (typeof service.doRefresh === 'function') {
+            await service.doRefresh({ tenant: request.tenant, authData: request.authData,
+                moduleName: 'product', indexName: indexName });
+        }
+        if (SERVICE.DefaultCacheService && typeof SERVICE.DefaultCacheService.invalidateResource === 'function') {
+            await SERVICE.DefaultCacheService.invalidateResource({ tenant: request.tenant, authData: request.authData,
+                moduleName: 'product', cacheType: 'search', resourceName: indexName });
+        }
     },
 
     /** Returns the active nSearch service boundary for provider-neutral indexing operations. */
@@ -111,6 +129,7 @@ module.exports = {
             }
             throw error;
         }
+        await this.refreshPublishedIndex(request);
         return { publication: staged, projections: projections };
     },
 
@@ -129,8 +148,18 @@ module.exports = {
             await SERVICE.DefaultProductSearchProjectionService.save({ tenant: request.tenant, authData: request.authData, model: model });
             this.assertSearchSaveSucceeded(await this.searchService().doSave({ tenant: request.tenant, moduleName: 'product',
                 indexName: this.policy().searchIndexName, model: model, searchOptions: { analyzer: (this.policy().analyzerByLocale || {})[model.locale] } }), model);
+            // Verify the owning projection store before acknowledging cross-runtime publication.
+            if (typeof SERVICE.DefaultProductSearchProjectionService.get === 'function') {
+                const check = await SERVICE.DefaultProductSearchProjectionService.get({ tenant: request.tenant,
+                    authData: request.authData, query: { code: model.code }, searchOptions: { pageSize: 2 } });
+                const records = check && Array.isArray(check.result) ? check.result : [];
+                if (records.length !== 1 || records[0].status !== 'CURRENT' || records[0].sourceHash !== model.sourceHash) {
+                    throw new Error('Product publication persistence needs reconciliation: ' + model.code);
+                }
+            }
             restored.push(model);
         }
+        await this.refreshPublishedIndex(request);
         return restored;
     },
 

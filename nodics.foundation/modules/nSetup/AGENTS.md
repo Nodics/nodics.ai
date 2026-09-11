@@ -21,8 +21,14 @@ This file gives AI coding agents mandatory guidance for this Nodics module or pa
 - Generated files in other modules must be recreated from source definitions;
   do not hand-maintain generated artifacts as source of truth.
 
+- Preserve the universal partner write boundary and contribution process in
+  `llm/contracts/customer-project-mode-contract.md`; do not grant framework or
+  accelerator modification authority from a partner application request.
+
 ## nSetup Rules
 
 - Treat this module as the canonical home for Nodics AI guidance, governance contracts, templates, and validation metadata.
 - Do not put runtime application behavior in nSetup.
 - Keep AI contracts portable Markdown/JSON so Codex, Copilot, Cursor, Claude, Aider, and future tools can consume them.
+
+Apply [module-owned UI contributions](llm/contracts/module-owned-ui-contribution-contract.md) when placing navigation, component properties or workspace data. Visual nesting does not transfer business ownership; generic modules must not predeclare optional accelerator branches.

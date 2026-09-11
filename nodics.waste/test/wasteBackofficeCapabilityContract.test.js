@@ -30,13 +30,13 @@ global.SERVICE = {
 };
 
 const contract = require(path.join(repositoryRoot, 'nodics.platform/modules/backoffice/src/service/contract/defaultBackofficeContractService.js'));
-const capabilityData = require('../modules/wasteCore/data/core-v001/records/backoffice/wasteCoreBackofficeCapabilityData');
+const capabilityData = require('../modules/wasteCore/data/backoffice/wasteCoreBackofficeCapabilityData');
 const provider = require('../modules/wasteCore/src/service/defaultWasteBackofficeCapabilityService.js');
 const capability = provider.getCapability();
 
 assert.strictEqual(provider.capabilityData(), capabilityData);
 assert.equal(capabilityData.capability.capabilityId, 'waste-management');
-assert.equal(capabilityData.navigation.length, 25);
+assert.equal(capabilityData.navigation.length, 28);
 const initResult = provider.init();
 assert.equal(typeof initResult.then, 'function', 'init returns a Promise contract');
 assert.equal(registered.length, 1);
@@ -101,7 +101,7 @@ assert.equal(byId['waste-carbon-settlement-policies'].workbenchTarget.schemaName
 assert.equal(byId['waste-coupon-redemption-policies'].workbenchTarget.schemaName, 'wasteCouponRedemptionSettlementPolicy');
 assert.equal(byId['waste-movement'].featureState, 'PREVIEW');
 assert.equal(byId['waste-compliance'].featureState, 'PREVIEW');
-capability.navigation.forEach(item => {
+capability.navigation.filter(item => item.workbenchPresentation).forEach(item => {
     assert.equal(item.requiredPermissions.includes('waste.backoffice.view'), true, `${item.id} must be permission-filtered`);
     assert.equal(item.route.startsWith('/waste'), true, `${item.id} must stay in the Waste route namespace`);
     assert.equal(item.workbenchPresentation.forbiddenFields.includes('rewardFormula'), true, `${item.id} must not invite reward policy editing`);
@@ -116,3 +116,8 @@ capability.navigation.forEach(item => {
 });
 
 console.log('Waste BackOffice capability contract validated');
+
+assert.equal(byId['waste-electronics-operations'], undefined);
+assert.equal(byId['waste-clothing-operations'], undefined);
+assert.equal(byId['waste-assets'].route, '/waste/asset-configuration');
+assert.deepEqual(capability.navigation.filter(item => item.parentId === 'waste-operations').map(item => item.label), ['All submissions', 'Review queue']);

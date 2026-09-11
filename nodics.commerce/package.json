@@ -7,12 +7,13 @@
   "description": "Nodics Commerce module group.",
   "scripts": {
     "check:syntax": "find . -name '*.js' -not -path './node_modules/*' -print0 | xargs -0 -n 50 node --check",
-    "test:contract": "for file in test/*.test.js; do node \"$file\" || exit 1; done && node modules/baseCommerce/modules/pricing/test/pricingSelectionContract.test.js && node modules/baseCommerce/modules/promotion/test/promotionSimulationContract.test.js",
+    "test:contract": "for file in test/*.test.js; do node \"$file\" || exit 1; done && node modules/baseCommerce/modules/pricing/test/pricingSelectionContract.test.js && node modules/baseCommerce/modules/promotion/test/promotionSimulationContract.test.js && node --test modules/bidding/test/*.test.js",
     "test": "npm run check:syntax && npm run test:contract"
   },
   "requiredModules": [
     "baseCommerce",
     "checkout",
+    "bidding",
     "digitalCommerce",
     "payment",
     "fulfillment"

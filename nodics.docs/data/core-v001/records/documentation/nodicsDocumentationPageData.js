@@ -3237,5 +3237,30 @@ module.exports = {
       }
     ],
     "active": true
+  },
+  "record129": {
+    "code": "nodicsDocsPagewasteImpactProviders",
+    "name": "Waste impact providers and mock carbon estimates",
+    "cmsSite": [
+      "nodicsDocumentationSite"
+    ],
+    "typeCode": "nodicsDocumentationArticlePageType",
+    "template": "nodicsDocumentationArticleTemplate",
+    "renderer": "documentation.page.article",
+    "cmsComponents": [
+      {
+        "target": "nodicsDocumentationNavigation",
+        "slot": "navigation",
+        "index": 5,
+        "active": true
+      },
+      {
+        "target": "nodicsDocsComponentwasteImpactProviders",
+        "slot": "article",
+        "index": 10,
+        "active": true
+      }
+    ],
+    "active": true
   }
 };

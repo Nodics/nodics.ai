@@ -13,3 +13,8 @@ changed payload under the same version is rejected.
 
 Use [application-builder.md](application-builder.md) for read-only discovery,
 solution validation, and approval-required planning command examples.
+
+The focused `test/designPrincipleAiGovernanceContract.test.js` reads canonical
+guidance and simulates removed partner clauses through the audit's overridable
+read method. It proves missing write-boundary, ownership, contribution and
+navigation clauses fail without editing source files or starting a runtime.

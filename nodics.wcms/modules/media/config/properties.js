@@ -93,6 +93,8 @@ module.exports = {
                 }
             }
         },
+        customerUploads: { enabled: false, folderCode: 'customerPhotos', maximumBytes: 5242880, permission: 'media.customer.upload' },
+        evidenceRead: { maximumBytes: 5242880, publicPreviewMimeTypes: ['image/jpeg', 'image/png', 'image/webp', 'image/svg+xml'] },
         upload: {
             maximumFileSizeBytes: 52428800,
             maximumFiles: 1,
@@ -114,6 +116,7 @@ module.exports = {
             ]
         },
         folders: {
+            customerPhotos: { code:'customerPhotos', storagePrefix:'media/customer-photos', access:'PRIVATE', allowedExtensions:['jpg','jpeg','png','webp'], allowedMimeTypes:['image/jpeg','image/png','image/webp'], maximumFileSizeBytes:5242880, retentionDays:0 },
             default: {
                 code: 'default',
                 storagePrefix: 'media/utility',

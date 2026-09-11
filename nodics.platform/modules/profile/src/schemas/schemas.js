@@ -57,11 +57,21 @@ module.exports = {
         enabled: true,
         label: "Address",
         displayProperty: "code",
+        displayProperties: ["building", "street", "city", "countryCode", "code"],
+        form: {
+          sections: {
+            address: { label: "Address", fields: ["type", "flatNo", "building", "street", "addressLine1", "addressLine2", "locality", "city", "state", "postalCode", "countryCode", "isPrimery"] },
+            contacts: { label: "Contact details", fields: ["contacts", "landmarkHint", "accessNotes"] },
+            administration: { label: "Additional details", fields: ["code", "active", "description"] },
+          },
+          hiddenFields: ["geocodingProvider", "geocodingReference", "geocodingPrecision", "geocodingConfidence", "verificationSource", "verifiedByRef", "verifiedAt", "displayPolicy"],
+          defaultColumns: ["code", "type", "building", "city", "countryCode"],
+        },
         operations: ["search", "read", "create", "update", "delete"],
         relationships: {
           contacts: {
             targetModule: "profile",
-            actions: ["SELECT_EXISTING", "CREATE_RELATED"],
+            actions: ["SELECT_EXISTING", "CREATE_RELATED", "EDIT_RELATED", "UNLINK"],
           },
         },
       },
@@ -233,6 +243,14 @@ module.exports = {
         enabled: true,
         label: "Contact",
         displayProperty: "code",
+        displayProperties: ["value", "type", "code"],
+        form: {
+          sections: {
+            contact: { label: "Contact details", fields: ["type", "prefix", "value", "priority"] },
+            administration: { label: "Additional details", fields: ["code", "active", "description"] },
+          },
+          defaultColumns: ["value", "type", "priority", "active"],
+        },
         operations: ["search", "read", "create", "update", "delete"],
       },
       schemaPolicies: ["customerOwned"],
@@ -269,7 +287,8 @@ module.exports = {
           type: "int",
           required: true,
           default: 0,
-        },
+
+          description: 'Stores the numeric priority used by this record.'},
       },
     },
 
@@ -278,8 +297,47 @@ module.exports = {
       backoffice: {
         enabled: true,
         label: "Enterprise",
+        excludedFields: ["setupRequestKey", "setupRequestHash"],
         displayProperty: "code",
-        displayProperties: ["code", "description"],
+        displayProperties: ["name", "code"],
+        form: {
+          createOperation: "setupEnterprise",
+          completionAction: { label: "Set up enterprise users", path: "/profile/enterprises?tab=users&enterpriseCode={code}" },
+          managedCreateFields: ["tenant"],
+          sections: {
+            enterprise: { label: "Enterprise details", fields: ["name", "code", "active", "description", "roleCodes"] },
+            organisation: { label: "Organisation", fields: ["tenant", "superEnterprise", "subEnterprises"] },
+            relationships: { label: "Addresses and contacts", fields: ["addresses", "contacts"] },
+          },
+          hiddenFields: ["capabilityScopes"],
+          defaultColumns: ["name", "code", "active", "superEnterprise"],
+        },
+        aggregateOperations: {
+          setupEnterprise: {
+            enabled: true,
+            label: "Set up enterprise",
+            purpose: "CREATE",
+            consistency: "MODULE_OWNED",
+            confirmationRequired: true,
+            service: "DefaultEnterpriseManagementService",
+            operation: "createFromWorkbench",
+          },
+        },
+        fields: {
+          tenant: { readOnly: true },
+          roleCodes: {
+            label: "Business roles",
+            component: "multiselect",
+            enumOptions: [
+              { value: "PROGRAM_OPERATOR", label: "Program operator" },
+              { value: "SERVICE_PROVIDER", label: "Service provider" },
+              { value: "MARKETPLACE_VENDOR", label: "Marketplace vendor" },
+              { value: "ISSUER", label: "Issuer" },
+              { value: "ASSET_OWNER", label: "Asset owner" },
+              { value: "BUSINESS_PARTNER", label: "Business partner" },
+            ],
+          },
+        },
       },
       schemaPolicies: ["administrative"],
       model: true,
@@ -339,6 +397,8 @@ module.exports = {
         },
       },
       definition: {
+        setupRequestKey: { type: "string", required: false, readOnly: true, description: "Identifies the authenticated enterprise setup request so an interrupted activation can be resumed without creating another enterprise." },
+        setupRequestHash: { type: "string", required: false, readOnly: true, description: "Detects changes to an enterprise setup request before a retry can reuse its completed creation." },
         name: {
           type: "string",
           required: true,
@@ -426,7 +486,8 @@ module.exports = {
         personId: {
           type: "objectId",
           required: true,
-        },
+
+          description: 'Stores the person identifier used to correlate this record.'},
         loginId: {
           type: "string",
           required: true,
@@ -567,7 +628,8 @@ module.exports = {
         name: {
           type: "object",
           required: true,
-        },
+
+          description: 'Stores the business display name shown to administrators and related user journeys.'},
         "name.title": {
           type: "string",
           required: false,
@@ -717,11 +779,13 @@ module.exports = {
         apiKeyCreatedAt: {
           type: "date",
           required: false,
-        },
+
+          description: 'Records when the api key created event or value applies.'},
         apiKeyExpiresAt: {
           type: "date",
           required: false,
-        },
+
+          description: 'Records when the api key expires event or value applies.'},
         apiKeyScopes: {
           type: "array",
           required: false,
@@ -733,6 +797,7 @@ module.exports = {
 
     customer: {
       super: "user",
+      definition: { "name.lastName": { type: "string", required: false, description: "Family name when the customer has one; mononyms remain valid" } },
       schemaPolicies: ["customerOwned"],
       model: true,
       service: {
@@ -745,6 +810,26 @@ module.exports = {
         enabled: true,
         ttl: 20,
       },
+    },
+
+    externalIdentityLink: {
+      super: 'base', model: true, schemaPolicies: ['administrative'],
+      service: { enabled: true }, router: { enabled: false }, cache: { enabled: false }, search: { enabled: false }, event: { enabled: false },
+      backoffice: { enabled: false, concurrency: { managed: true, field: 'revision' } },
+      definition: {
+        code: { type: 'string', required: true, description: 'Stable hash of verified enterprise, provider, application and external subject' },
+        enterpriseCode: { type: 'string', required: true, description: 'Enterprise which owns this external identity integration' },
+        provider: { type: 'string', required: true, description: 'Configured trusted identity provider' },
+        applicationCode: { type: 'string', required: true, description: 'Configured application within the provider' },
+        applicationSubject: { type: 'string', required: true, description: 'Verified external application identifier' },
+        providerSubject: { type: 'string', required: true, description: 'Verified immutable external user identifier' },
+        principalCode: { type: 'string', required: true, description: 'Canonical Profile customer login identifier' },
+        authVersion: { type: 'string', required: true, description: 'Principal security stamp at explicit linking' },
+        allowsWrite: { type: 'bool', required: true, description: 'Verified provider permission to send direct outcome messages' },
+        revision: { type: 'int', required: true, description: 'Managed optimistic concurrency revision', default: 0 },
+        status: { type: 'string', required: true, enum: ['ACTIVE', 'REVOKED'], description: 'External identity link lifecycle' }
+      },
+      indexes: { individual: { externalIdentityKey: { name: 'code', enabled: true, options: { unique: true } } } }
     },
 
     principalScopeAssignment: {
@@ -1086,14 +1171,14 @@ module.exports = {
       event: { enabled: false },
       router: { enabled: false },
       definition: {
-        migrationVersion: { type: "int", required: true },
-        status: { type: "string", required: true },
-        tenant: { type: "string", required: true },
-        requestedBy: { type: "string", required: false },
-        preview: { type: "object", required: false },
-        snapshot: { type: "object", required: false },
-        result: { type: "object", required: false },
-        correlationId: { type: "string", required: false },
+        migrationVersion: { type: "int", required: true , description: 'Stores the numeric migration version used by this record.'},
+        status: { type: "string", required: true , description: 'Tracks the lifecycle state that controls whether this record can be used in business processes.'},
+        tenant: { type: "string", required: true , description: 'Identifies the runtime tenant partition that scopes this record.'},
+        requestedBy: { type: "string", required: false , description: 'Stores the requested by value used by this record.'},
+        preview: { type: "object", required: false , description: 'Stores structured preview details used by this record.'},
+        snapshot: { type: "object", required: false , description: 'Stores structured snapshot details used by this record.'},
+        result: { type: "object", required: false , description: 'Stores structured result details used by this record.'},
+        correlationId: { type: "string", required: false , description: 'Stores the correlation identifier used to correlate this record.'},
       },
     },
   },

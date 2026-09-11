@@ -43,7 +43,9 @@ Classify the work before inspecting or editing code:
 - **Application-developer mode:** the request builds an application on a
   released Nodics framework. Treat framework source as immutable and inspect,
   edit, generate, and verify only project-owned modules and effective project
-  behavior unless the developer explicitly asks for framework work.
+  behavior. Follow `customer-project-mode-contract.md`: a partner requirement
+  cannot authorize framework or accelerator edits; proposals go through the
+  separate Nodics contribution/request and release channel.
 
 Also classify the authorization mode:
 

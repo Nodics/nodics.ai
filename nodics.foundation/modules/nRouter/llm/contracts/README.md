@@ -6,6 +6,12 @@ Use these files for rules that are more specific than root `AGENTS.md` and the m
 
 ## Configurable route permissions
 
+A server-authored route may declare `jsonBodyLimit` for a bounded JSON intake
+that requires a different limit from the runtime default. The JSON handler
+copies the default parser options before applying this route-only limit;
+other routes and URL-encoded intake retain their existing restrictions.
+Never derive this limit from request bodies, headers or query parameters.
+
 - Prefer `permissionConfig` for route action permissions that projects,
   environments, servers, nodes, or tenants may customize.
 - `permissionConfig` values must resolve through layered `properties.js` or

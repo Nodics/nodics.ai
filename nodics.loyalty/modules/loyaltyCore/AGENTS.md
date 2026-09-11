@@ -1,5 +1,8 @@
 # loyaltyCore
 
+Follow the parent contract: `../../AGENTS.md`.
+Follow global guidance: `../../../nodics.foundation/modules/nSetup/llm/ai-enablement-index.md`.
+
 Own shared Loyalty enums, policies, validators, and service contracts. Do not place wallet balances, ledger history, reservation state, or Commerce payment behavior here.
 
 Common Loyalty reference data belongs here when it serves the whole Loyalty

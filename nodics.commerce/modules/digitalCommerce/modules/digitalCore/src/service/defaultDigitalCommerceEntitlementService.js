@@ -42,7 +42,7 @@ module.exports = {
     update: async function (service, request, existing, patch) {
         const model = Object.assign({}, existing, patch, { revision: Number(existing.revision || 0) + 1, updated: new Date() });
         if (!service || !service.update) return model;
-        const query = { tenant: request.tenant, code: existing.code };
+        const query = { tenant: request.tenant, code: existing.code, revision: existing.revision };
         if (request.enterpriseCode) query.enterpriseCode = request.enterpriseCode;
         return this.unwrap(await service.update({ tenant: request.tenant, authData: this.serviceAuthData(request), query, model }));
     },
@@ -70,6 +70,7 @@ module.exports = {
             providerOwner: entitlement.providerOwner,
             providerCode: entitlement.providerCode,
             claimStatus: entitlement.claimStatus,
+            revision: entitlement.revision,
             purchasedAt: entitlement.purchasedAt,
             deliveredAt: entitlement.deliveredAt,
             revokedAt: entitlement.revokedAt,
@@ -79,7 +80,7 @@ module.exports = {
     /** Lists customer-owned entitlements without exposing secret provider tokens. @param {Object} request Request. @returns {Promise<Object>} Entitlement response. */
     listOwn: async function (request) {
         const query = Object.assign({}, request.query || {}, { ownerId: request.ownerId });
-        if (!query.status) query.status = 'ACTIVE';
+        // History includes completed redemption and revocation; ownership still scopes every record.
         const entitlements = await this.listEntitlements(request, query);
         return { entitlements: entitlements.map(this.publicEntitlement) };
     },
@@ -175,6 +176,10 @@ module.exports = {
         const entitlement = (await this.listEntitlements(request, { code: payload.entitlementCode, ownerId: request.ownerId, status: 'ACTIVE' }))[0];
         if (!entitlement) throw new Error('Digital entitlement was not found');
         if (entitlement.claimStatus === 'REDEEMED') throw new Error('Digital entitlement is already redeemed');
+        if (entitlement.claimStatus === 'CLAIMED') {
+            if (entitlement.evidence?.claimTargetCode !== payload.targetCode || entitlement.evidence?.claimTargetType !== (payload.targetType || 'CART')) throw new Error('This entitlement is already claimed for a different target');
+            return {entitlement};
+        }
         if (entitlement.providerOwner !== 'promotion' || !SERVICE.DefaultPromotionOperationService || typeof SERVICE.DefaultPromotionOperationService.claimPurchasedCouponCode !== 'function') throw new Error('Coupon claim provider is required');
         const coupon = await SERVICE.DefaultPromotionOperationService.claimPurchasedCouponCode({
             tenant: request.tenant,

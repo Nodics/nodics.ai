@@ -8,7 +8,18 @@ This file gives AI coding agents mandatory guidance for this Nodics module or pa
 - Follow global AI/development guidance: `../nSetup/llm/ai-enablement-index.md`.
 - If a deeper child module has its own `AGENTS.md`, follow that file for changes inside the child module.
 
+## Partner governance
+
+Preserve the `ai:principle-audit` checks for the nSetup customer project contract.
+Project extensions may strengthen checks while preserving the canonical partner
+write boundary and the separate Nodics contribution and release process.
+
 ## Module Work Rules
+
+- Preserve post-start runtime failure isolation. Environment `dependsOn` is
+  startup ordering, not a cascade-shutdown policy. Startup rollback and explicit
+  operator stop remain separate from loss of an already-ready runtime. Validate
+  with disposable processes, never by terminating a user's live topology.
 
 - Treat this directory as a layered Nodics module boundary when it contains `package.json`.
 - Keep capabilities stable and make implementations replaceable through the module hierarchy.

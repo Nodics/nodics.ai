@@ -9,7 +9,7 @@ Follow the root Nodics AI agent contract before changing this boundary:
 
 Keep this group composition-only. `nodics.waste` owns common waste-management
 schemas, APIs, lifecycles, and services. Scenario modules under this group
-package reusable waste-industry presets and guidance over those common
+package reusable waste-industry presets, domain journeys and guidance over those common
 contracts.
 
 Do not duplicate `nodics.waste` schemas or common services here. Do not place

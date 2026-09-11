@@ -241,43 +241,7 @@ module.exports = {
                     } else {
                         UTILS.compareHash(options.request.password, options.person.password.password).then(match => {
                             if (match) {
-                                let userGroupCodes = options.person.userGroupCodes || UTILS.getUserGroupCodes(options.person.userGroups);
-                                let userGroupPermissions = options.person.userGroupPermissions || UTILS.getUserGroupPermissions(options.person.userGroups);
-                                state.attempts = 0;
-                                _self.updateAuthData({
-                                    state: state,
-                                    tenant: options.enterprise.tenant.code
-                                }).then(() => _self.createRefreshToken({
-                                    entCode: options.enterprise.code,
-                                    tenant: options.enterprise.tenant.code,
-                                    loginId: options.person.loginId,
-                                    type: options.type,
-                                    principalType: options.person.principalType,
-                                    authVersion: options.person.authVersion || 1,
-                                    userGroups: userGroupCodes,
-                                    permissions: userGroupPermissions
-                                })).then(refreshToken => {
-                                    let authToken = _self.generateAuthToken({
-                                        entCode: options.enterprise.code,
-                                        tenant: options.enterprise.tenant.code,
-                                        loginId: options.person.loginId,
-                                        principalType: options.person.principalType,
-                                        authVersion: options.person.authVersion || 1,
-                                        tokenLife: options.person.tokenLife,
-                                        userGroups: userGroupCodes,
-                                        permissions: userGroupPermissions
-                                    });
-                                    SERVICE.DefaultPrincipalSecurityStampService.register(options.enterprise.tenant.code, options.person.loginId, options.person.authVersion || 1).then(() => _self.recordAuthEvent({
-                                        eventType: 'password.authentication',
-                                        outcome: 'success',
-                                        tenant: options.enterprise.tenant.code,
-                                        entCode: options.enterprise.code,
-                                        principalId: options.person.loginId,
-                                        tokenType: 'access'
-                                    })).then(() => resolve({ authToken: authToken, refreshToken: refreshToken })).catch(reject);
-                                }).catch(error => {
-                                    reject(error);
-                                });
+                                _self.issueSession(options, state, 'password.authentication').then(resolve).catch(reject);
                             } else {
                                 _self.updateFailedAuthData({
                                     state: state,
@@ -308,6 +272,27 @@ module.exports = {
         });
     },
 
+    /** Issues tokens after an owning authentication method has verified proof and account eligibility. @param {object} options Fresh enterprise/person/type. @param {object} state Profile account state. @param {string} eventType Stable audit event. @returns {Promise<object>} Access/refresh pair; persists last attempt, refresh state, security stamp and audit. */
+    issueSession: async function (options, state, eventType) {
+        const person = options.person, enterprise = options.enterprise;
+        if (!enterprise.active || !enterprise.tenant || enterprise.tenant.active === false || !person.active || person.principalType === 'service' || state.locked || !person.password || person.password.active === false) throw new CLASSES.NodicsError('ERR_AUTH_00001');
+        const session = { entCode: enterprise.code, tenant: enterprise.tenant.code, loginId: person.loginId, type: options.type, principalType: person.principalType, authVersion: person.authVersion || 1, tokenLife: person.tokenLife, userGroups: person.userGroupCodes || UTILS.getUserGroupCodes(person.userGroups), permissions: person.userGroupPermissions || UTILS.getUserGroupPermissions(person.userGroups) };
+        if (options.externalIdentityLinkCode !== undefined) {
+            if (eventType !== 'external_identity.authentication' || session.principalType !== 'customer' || session.type !== 'Customer' ||
+                !/^EID_[a-f0-9]{64}$/.test(options.externalIdentityLinkCode)) throw new CLASSES.NodicsError('ERR_AUTH_00001');
+            session.externalIdentityLinkCode = options.externalIdentityLinkCode;
+        }
+        state.attempts = 0;
+        await this.updateAuthData({ state, tenant: session.tenant });
+        const refreshToken = await this.createRefreshToken(session);
+        try {
+            const authToken = this.generateAuthToken(session);
+            await SERVICE.DefaultPrincipalSecurityStampService.register(session.tenant, session.loginId, session.authVersion);
+            await this.recordAuthEvent({ eventType, outcome: 'success', tenant: session.tenant, entCode: session.entCode, principalId: session.loginId, tokenType: 'access' });
+            return { authToken, refreshToken };
+        } catch (error) { await this.removeToken(CONFIG.get('profileModuleName') || 'profile', refreshToken); throw error; }
+    },
+
     /**
 
      * Updates refresh token information.
@@ -336,7 +321,8 @@ module.exports = {
                     principalType: options.principalType,
                     authVersion: options.authVersion,
                     userGroups: options.userGroups,
-                    permissions: options.permissions
+                    permissions: options.permissions,
+                    ...(options.externalIdentityLinkCode ? { externalIdentityLinkCode: options.externalIdentityLinkCode } : {})
                 }, refreshPolicy.expiresInSeconds).then(success => {
                     resolve(refreshToken);
                 }).catch(error => {
@@ -368,7 +354,7 @@ module.exports = {
         }
         let moduleName = CONFIG.get('profileModuleName') || 'profile';
         return this.consumeToken(moduleName, refreshToken).then(session => {
-            if (!session || !session.tenant || !session.loginId) {
+            if (!session || !session.tenant || !session.loginId || request.type && request.type !== session.type) {
                 throw new CLASSES.NodicsError('ERR_AUTH_00001', 'Refresh session is invalid');
             }
             if (request.entCode && request.entCode !== session.entCode) {
@@ -382,12 +368,16 @@ module.exports = {
                 }
                 let finder = session.type === 'Customer' ? SERVICE.DefaultCustomerService : SERVICE.DefaultEmployeeService;
                 return finder.findByLoginId({ tenant: session.tenant, loginId: session.loginId });
-            }).then(person => {
-                if (!person.active || person.principalType === 'service') {
+            }).then(async person => {
+                const state = await SERVICE.DefaultUserStateService.findUserState({ tenant: session.tenant, loginId: person.loginId, _id: person._id });
+                if (state.locked || !person.password || person.password.active === false || !person.active || person.principalType === 'service') {
                     throw new CLASSES.NodicsError('ERR_AUTH_00001', 'Refresh principal is inactive or not eligible');
                 }
                 if (String(session.authVersion) !== String(person.authVersion || 1)) {
                     throw new CLASSES.NodicsError('ERR_AUTH_00001', 'Refresh session security stamp is stale');
+                }
+                if (session.externalIdentityLinkCode) {
+                    await SERVICE.DefaultExternalIdentityService.validateSessionBinding(session);
                 }
                 session.userGroups = person.userGroupCodes || UTILS.getUserGroupCodes(person.userGroups);
                 session.permissions = person.userGroupPermissions || UTILS.getUserGroupPermissions(person.userGroups);
@@ -402,7 +392,8 @@ module.exports = {
                         principalType: session.principalType,
                         authVersion: session.authVersion,
                         userGroups: session.userGroups,
-                        permissions: session.permissions
+                        permissions: session.permissions,
+                        ...(session.externalIdentityLinkCode ? { externalIdentityLinkCode: session.externalIdentityLinkCode } : {})
                     }),
                     refreshToken: nextRefreshToken,
                     loginId: session.loginId

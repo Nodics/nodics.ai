@@ -60,7 +60,8 @@ module.exports = {
                 },
                 accessGroups: {
                     default: ['contentUserGroup', 'employeeUserGroup']
-                },
+                ,
+                    description: 'Lists the access groups allowed to discover or administer this record.'},
             }
         }
     }

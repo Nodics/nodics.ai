@@ -6,6 +6,10 @@ nRouter owns Nodics route metadata, generated CRUD routes, API exposure, request
 
 This module turns backend-owned route definitions into effective runtime APIs with explicit method, controller, operation, security, access group, and generated-route behavior.
 
+Server-authored routes may declare `jsonBodyLimit` for bounded larger JSON
+intake. The override applies only to that route; runtime parser defaults and
+other routes remain unchanged.
+
 ## Developer Notes
 
 - Declare routes through backend configuration or generated model contracts.

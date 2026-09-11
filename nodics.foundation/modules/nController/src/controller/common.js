@@ -148,6 +148,11 @@ module.exports = {
      */
 
     remove: function (request, callback) {
+        return this.executeGenericMutation(request, callback, () => this.removeAuthorized(request));
+    },
+
+    /** Maps an authorized remove request after the immutable route identity is checked. */
+    removeAuthorized: function (request, callback) {
         request = _.merge(request, request.httpRequest.body || {});
         if (callback) {
             FACADE.dsdName.remove(request).then(success => {
@@ -196,6 +201,11 @@ module.exports = {
      */
 
     removeById: function (request, callback) {
+        return this.executeGenericMutation(request, callback, () => this.removeByIdAuthorized(request));
+    },
+
+    /** Maps an authorized ID-based remove request. */
+    removeByIdAuthorized: function (request, callback) {
         request.ids = [];
         if (request.httpRequest.params.id) {
             request.ids.push(ObjectId(request.httpRequest.params.id));
@@ -228,6 +238,11 @@ module.exports = {
      */
 
     removeByCode: function (request, callback) {
+        return this.executeGenericMutation(request, callback, () => this.removeByCodeAuthorized(request));
+    },
+
+    /** Maps an authorized code-based remove request. */
+    removeByCodeAuthorized: function (request, callback) {
         request.codes = [];
         if (request.httpRequest.params.code) {
             request.codes.push(request.httpRequest.params.code);
@@ -260,6 +275,11 @@ module.exports = {
      */
 
     save: function (request, callback) {
+        return this.executeGenericMutation(request, callback, () => this.saveAuthorized(request), 'create');
+    },
+
+    /** Maps an authorized save request. */
+    saveAuthorized: function (request, callback) {
         request.model = request.httpRequest.body;
         if (callback) {
             FACADE.dsdName.save(request).then(success => {
@@ -287,6 +307,11 @@ module.exports = {
      */
 
     saveAll: function (request, callback) {
+        return this.executeGenericMutation(request, callback, () => this.saveAllAuthorized(request), 'create');
+    },
+
+    /** Maps an authorized multi-save request. */
+    saveAllAuthorized: function (request, callback) {
         request.models = request.httpRequest.body;
         if (callback) {
             FACADE.dsdName.saveAll(request).then(success => {
@@ -314,6 +339,11 @@ module.exports = {
      */
 
     update: function (request, callback) {
+        return this.executeGenericMutation(request, callback, () => this.updateAuthorized(request));
+    },
+
+    /** Maps an authorized update request. */
+    updateAuthorized: function (request, callback) {
         request = _.merge(request, request.httpRequest.body || {});
         if (callback) {
             FACADE.dsdName.update(request).then(success => {
@@ -324,5 +354,18 @@ module.exports = {
         } else {
             return FACADE.dsdName.update(request);
         }
+    },
+
+    /** Checks server-owned schema authority before any request-body merge or persistence call. */
+    executeGenericMutation: function (request, callback, execute, operation) {
+        let result = Promise.resolve().then(() => {
+            SERVICE.DefaultSchemaAuthoringPolicyService.assertMutationAllowed(request.moduleName, 'schmanm', operation);
+            return execute();
+        });
+        if (callback) {
+            result.then(success => callback(null, success)).catch(error => callback(error));
+            return;
+        }
+        return result;
     }
 };

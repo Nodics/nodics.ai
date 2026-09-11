@@ -34,11 +34,13 @@ module.exports = {
             definition: {
                 active: {
                     required: false
-                },
+                ,
+                    description: 'Indicates whether this record is active and available for normal use.'},
                 jobCode: {
                     type: 'string',
                     required: true
-                }
+                ,
+                    description: 'Stores the job code used to classify, link, or resolve this record.'}
             }
         },
 
