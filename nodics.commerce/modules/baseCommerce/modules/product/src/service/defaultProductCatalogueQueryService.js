@@ -19,9 +19,11 @@
  * @override Large catalogues may replace this service with provider aggregation while preserving the public result contract.
  */
 module.exports = {
+  /** Initializes the catalogue query service without runtime side effects. */
   init: function () {
     return Promise.resolve(true);
   },
+  /** Completes catalogue query service initialization. */
   postInit: function () {
     return Promise.resolve(true);
   },
