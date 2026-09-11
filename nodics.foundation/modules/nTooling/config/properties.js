@@ -352,6 +352,7 @@ module.exports = {
                 { tool: ['test:generated'] }
             ],
             import: [
+                { node: 'nodics.foundation/modules/nData/nImport/jsonImport/test/jsonFileStreamingContract.test.js' },
                 { node: 'nodics.foundation/modules/nData/nImport/import/test/systemDataImportInitializerValidation.test.js' },
                 { node: 'nodics.foundation/modules/nData/nImport/import/test/importTenantPrecedence.test.js' },
                 { node: 'nodics.foundation/modules/nData/nImport/import/test/testTenantImportIsolation.test.js' },

@@ -16,7 +16,7 @@ The module contributes:
 - `jsonFileDataInitializerPipeline`;
 - `DefaultJsonFileDataProcessService`.
 
-JSON input is expected to be an array stream compatible with `stream-json/streamers/StreamArray`. Each array value becomes a model record.
+JSON input is expected to be an array stream compatible with `stream-json/streamers/stream-array.js`. Each array value becomes a model record.
 
 ## Runtime Flow
 
@@ -24,7 +24,7 @@ JSON input is expected to be an array stream compatible with `stream-json/stream
 2. `validateRequest` confirms `request.files` is an array and `request.outputPath` is present.
 3. `processDataChunk` delegates to `handleFiles`.
 4. Each JSON file is read as a stream.
-5. `StreamArray` emits one array element at a time.
+5. `streamArray.withParserAsStream()` emits one array element at a time.
 6. Records are accumulated until `data.readBufferSize` is exceeded.
 7. Each chunk is assigned to `request.models`.
 8. Import diagnostics increment `recordsRead` when diagnostics are active.
@@ -37,11 +37,11 @@ Default configuration:
 
 ```js
 module.exports = {
-    data: {
-        fileTypeProcess: {
-            json: 'jsonFileDataInitializerPipeline'
-        }
-    }
+  data: {
+    fileTypeProcess: {
+      json: "jsonFileDataInitializerPipeline",
+    },
+  },
 };
 ```
 
@@ -100,3 +100,8 @@ Define encoding, size, record-count, malformed-input, batching, and partial-fail
 - Shared engine: [import](../import/README.md)
 - Data processing: [dataCore](../../dataCore/README.md)
 - Public data guide: [How To Work With Data](https://github.com/Nodics/nodics.docs)
+
+The service loads the ESM streaming parser dynamically while preserving its
+CommonJS service export and Promise-based import contract on Node 22 and 24.
+The parser stream receives file bytes directly; chunk dispatch still pauses
+record consumption until the configured handler completes.

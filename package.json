@@ -393,10 +393,10 @@
   "optionalDependencies": {
     "@elastic/elasticsearch": "^8.19.2",
     "hazelcast-client": "^5.6.0",
+    "ioredis": "^5.7.0",
     "kafkajs": "^2.2.4",
     "node-cache": "^5.1.2",
     "redis": "^4.7.1",
-    "ioredis": "^5.7.0",
     "stompit": "^1.0.0",
     "winston-elasticsearch": "^0.19.0"
   },
@@ -423,7 +423,7 @@
     "node-fetch": "^2.7.0",
     "object-sizeof": "^1.6.3",
     "require-from-string": "^2.0.2",
-    "stream-json": "^1.9.1",
+    "stream-json": "^3.6.0",
     "swagger-ui-dist": "^5.32.9",
     "uuid": "^11.1.1",
     "winston": "^3.6.0",
