@@ -18,3 +18,10 @@ The focused `test/designPrincipleAiGovernanceContract.test.js` reads canonical
 guidance and simulates removed partner clauses through the audit's overridable
 read method. It proves missing write-boundary, ownership, contribution and
 navigation clauses fail without editing source files or starting a runtime.
+
+For a reference domain whose price book uses AED, configure its publication
+store and import that Store's AED default through the governed Staged release.
+The publication command loads current manifest-listed records, publishes Product
+projections for that store, restores operational records through their owners,
+and verifies discovery/PDP delivery. A checksum mismatch rejects the handoff;
+it must be repaired in a new source release, never bypassed or restored manually.

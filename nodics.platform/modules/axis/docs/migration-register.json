@@ -1,6 +1,6 @@
 {
   "pack": "nodics.platform.axis",
-  "version": "0.0.2",
+  "version": "0.0.3",
   "generatedAtPolicy": "deterministic-no-timestamp",
   "sources": [
     {
@@ -210,10 +210,11 @@
       "canonicalSource": "docs/pages/employee-login.md",
       "destinationRoute": "/docs/nodics-axis/employee-access",
       "disposition": "migrated",
-      "sourceHash": "5d072426a550384fc0a857e268cc2a9552ddbd7d286ae32cb365eae35a65f558",
-      "wordCount": 1437,
+      "sourceHash": "1791fde461832bac32175a23378124133466b07c8f9d3da8a1913c61d03f18d2",
+      "wordCount": 1567,
       "headings": [
         "Startup journey",
+        "First-run initialization",
         "Password recovery",
         "Idle screen lock",
         "Logout",

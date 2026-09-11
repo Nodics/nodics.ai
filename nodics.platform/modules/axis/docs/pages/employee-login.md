@@ -3,13 +3,13 @@
 Axis is an employee Back Office application. Customer credentials must not be
 submitted to its login flow.
 
-| Journey step | Business outcome | Axis responsibility | Backend owner |
-| --- | --- | --- | --- |
-| Public bootstrap | Find the correct employee login experience for the deployed project | Read public config and request safe discovery data | BackOffice publishes public Profile and CMS connection metadata |
-| Login | Verify an employee can enter the Back Office | Render CMS-composed form and send credentials directly to Profile | Profile authenticates, issues tokens, sets browser-session cookies, and owns CSRF |
-| Secured bootstrap | Show only authorized capabilities | Hold access token in memory and request authorized navigation | BackOffice filters modules, permissions, availability, and Axis policy |
-| Screen lock | Hide protected workspace during idle periods | Store only a bounded lock marker and ask for password again | Profile re-verifies the employee and rotates session state |
-| Logout | End the browser session honestly | Clear memory only after backend revocation succeeds | Profile revokes refresh state and expires session cookies |
+| Journey step      | Business outcome                                                    | Axis responsibility                                               | Backend owner                                                                     |
+| ----------------- | ------------------------------------------------------------------- | ----------------------------------------------------------------- | --------------------------------------------------------------------------------- |
+| Public bootstrap  | Find the correct employee login experience for the deployed project | Read public config and request safe discovery data                | BackOffice publishes public Profile and CMS connection metadata                   |
+| Login             | Verify an employee can enter the Back Office                        | Render CMS-composed form and send credentials directly to Profile | Profile authenticates, issues tokens, sets browser-session cookies, and owns CSRF |
+| Secured bootstrap | Show only authorized capabilities                                   | Hold access token in memory and request authorized navigation     | BackOffice filters modules, permissions, availability, and Axis policy            |
+| Screen lock       | Hide protected workspace during idle periods                        | Store only a bounded lock marker and ask for password again       | Profile re-verifies the employee and rotates session state                        |
+| Logout            | End the browser session honestly                                    | Clear memory only after backend revocation succeeds               | Profile revokes refresh state and expires session cookies                         |
 
 For beginners, the safest mental model is that Axis never owns a password and
 never becomes the identity system. It collects employee input, sends it to
@@ -52,6 +52,22 @@ control so employees can verify local typing mistakes before submission.
 Revealing a password changes only the current input presentation. Axis still
 sends the value only to Profile, never stores it, and never exposes it through
 BackOffice, CMS, URLs, logs, query cache, or browser storage.
+
+## First-run initialization
+
+When the managed Axis baseline is absent, the bundled recovery screen remains
+available after employee authentication. Choose **Prepare required modules**
+to open the existing Module Registry if your BackOffice permissions expose it.
+Register and activate Process, then choose **Return to Axis setup**. Process
+must be registered and active before its governed approval connection appears.
+The recovery route preserves module eligibility and backend action permissions.
+
+Choose **Initialize and submit**, inspect the immutable publication details,
+and choose **Approve and publish**. Import prepares Staged; Process owns the
+approval, and WCMS Online activates the approved baseline. Axis then opens its
+managed dashboard. If required data fails, inspect the registry receipt, fix the
+reported configuration or release problem, and retry activation. Refresh or
+retry does not grant approval or bypass an unavailable module.
 
 ## Password recovery
 

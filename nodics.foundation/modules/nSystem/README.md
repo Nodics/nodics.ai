@@ -206,3 +206,16 @@ unbounded diagnostic endpoint.
 - Router exposure and authorization: [nRouter](../nRouter/README.md)
 - Run and debug: [How To Run And Debug Nodics](https://github.com/Nodics/nodics.docs)
 - Production operations: [Production Operating Model](https://github.com/Nodics/nodics.docs)
+
+## Governed Local reset
+
+The disabled-by-default Local reset provider uses a server-owned model-service
+allowlist and may also declare `localResetProvider.searchIndexes` as
+`{ moduleName, indexName }` entries. The service-token and environment gates apply
+to both. It resolves all search targets from the existing nSearch registry before
+mutation, removes only the requested tenant through nSearch pipelines, refreshes
+visibility and invalidates the search cache before acknowledging completion.
+Missing targets and partial provider failures fail the reset. Request bodies
+cannot select indexes or provider endpoints. See
+[the Local reset contract](llm/contracts/local-reset.md) for configuration and
+recovery examples.

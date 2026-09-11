@@ -5,11 +5,16 @@ A later customer module contributes small deltas to `config/properties.js`:
 ```js
 module.exports = {
   eWaste: {
-    applicationCode: 'PARTNER_EWASTE',
-    rewardValuationService: 'PartnerRewardValuationService',
-    marketplace: { autoPublishListings: false, orderCodePrefix: 'PARTNER_ORDER_' },
-    conversation: { rewardGuidance: 'Rewards follow the published programme terms.' }
-  }
+    applicationCode: "PARTNER_EWASTE",
+    rewardValuationService: "PartnerRewardValuationService",
+    marketplace: {
+      autoPublishListings: false,
+      orderCodePrefix: "PARTNER_ORDER_",
+    },
+    conversation: {
+      rewardGuidance: "Rewards follow the published programme terms.",
+    },
+  },
 };
 ```
 
@@ -40,4 +45,4 @@ assessment rather than deriving water saved from image-recognition confidence.
 
 A later Nodics-owned extension can change the eWaste contribution label/order while retaining its provider identity and `wasteCore:waste-operations` parent. Use a new owner-qualified view key for an additional view. Do not replace the generic views map or copy another module's anchor. `eWasteBackofficeContributionContract.test.js` includes a future-accelerator fixture, absent/denied-parent cases and label customization. The fixture does not activate a clothing accelerator.
 
-WARM electronics is an optional provider over Waste Impact; see `llm/contracts/README.md`. Versioned factors, weight ranges and potential-treatment assumptions are saved. Operator history/reassessment/acceptance use Waste-owned operations; changing providers never overwrites an old assessment or reward.
+WARM electronics is an optional provider over Waste Impact; see `llm/contracts/e-waste-domain.md`. Versioned factors, weight ranges and potential-treatment assumptions are saved. Operator history/reassessment/acceptance use Waste-owned operations; changing providers never overwrites an old assessment or reward.

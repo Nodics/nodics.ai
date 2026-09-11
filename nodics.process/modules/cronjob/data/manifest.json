@@ -1,30 +1,28 @@
 {
-    "contractVersion": 2,
-    "module": "cronjob",
-    "sections": {
-        "core-v001": {
-            "kind": "DATA_RELEASE",
-            "dataType": "core",
-            "version": "0.0.0",
-            "description": "Scheduled Jobs core data",
-            "owningDomain": "cronjob",
-            "lifecycle": "OPERATIONAL_VERSIONED",
-            "destinationRole": "CRON",
-            "environmentScope": [
-                "ALL"
-            ],
-            "sensitivity": "INTERNAL",
-            "versioningPolicy": "IMMUTABLE",
-            "publicationPolicy": "NONE",
-            "initialPublicationPolicy": "NONE",
-            "removalPolicy": "RETAIN",
-            "files": {
-                "core-v001/records/indexer/defaultIndexerData.js": "a6537fc174448bbc22f472e15097d757938cd4706d93b72b9dcb4ea285b58553",
-                "core-v001/records/jobs/defaultIndexerJobsData.js": "8129b6a28c3759d7f158629f5f7a261066323223c1ce143fd29810bcd29659e1",
-                "core-v001/headers/indexer/defaultIndexerHeader.js": "08d6fed1a1435e877862ccfee2fb2ad48cf75214887d8d95b3b30d656eefa97a",
-                "core-v001/headers/jobs/defaultIndexerJobsHeader.js": "f59244ace8f61a34ca34fd8caac1f8329c38a71af9fb4fb48b37dc605d1fecb8"
-            },
-            "sourceRoot": "core-v001"
-        }
+  "contractVersion": 2,
+  "module": "cronjob",
+  "sections": {
+    "core-v001": {
+      "kind": "DATA_RELEASE",
+      "dataType": "core",
+      "version": "0.0.1",
+      "description": "Scheduled Jobs core data",
+      "owningDomain": "cronjob",
+      "lifecycle": "OPERATIONAL_VERSIONED",
+      "destinationRole": "PROCESS",
+      "environmentScope": ["ALL"],
+      "sensitivity": "INTERNAL",
+      "versioningPolicy": "IMMUTABLE",
+      "publicationPolicy": "NONE",
+      "initialPublicationPolicy": "NONE",
+      "removalPolicy": "RETAIN",
+      "files": {
+        "core-v001/records/indexer/defaultIndexerData.js": "a6537fc174448bbc22f472e15097d757938cd4706d93b72b9dcb4ea285b58553",
+        "core-v001/records/jobs/defaultIndexerJobsData.js": "8129b6a28c3759d7f158629f5f7a261066323223c1ce143fd29810bcd29659e1",
+        "core-v001/headers/indexer/defaultIndexerHeader.js": "08d6fed1a1435e877862ccfee2fb2ad48cf75214887d8d95b3b30d656eefa97a",
+        "core-v001/headers/jobs/defaultIndexerJobsHeader.js": "f59244ace8f61a34ca34fd8caac1f8329c38a71af9fb4fb48b37dc605d1fecb8"
+      },
+      "sourceRoot": "core-v001"
     }
+  }
 }

@@ -9,7 +9,7 @@
 
  */
 
-const _ = require('lodash');
+const _ = require("lodash");
 
 /**
  * @module database/service/procs/remove/DefaultModelsRemoveInitializerService
@@ -29,466 +29,651 @@ const _ = require('lodash');
  * @property {string[]} request.codes Optional codes to remove.
  */
 module.exports = {
+  /**
+   * This function is used to initiate entity loader process. If there is any functionalities, required to be executed on entity loading.
+   * defined it that with Promise way
+   * @param {*} options
+   */
+  init: function (options) {
+    return new Promise((resolve, reject) => {
+      resolve(true);
+    });
+  },
 
-    /**
-     * This function is used to initiate entity loader process. If there is any functionalities, required to be executed on entity loading. 
-     * defined it that with Promise way
-     * @param {*} options 
-     */
-    init: function (options) {
-        return new Promise((resolve, reject) => {
-            resolve(true);
-        });
-    },
+  /**
+   * This function is used to finalize entity loader process. If there is any functionalities, required to be executed after entity loading.
+   * defined it that with Promise way
+   * @param {*} options
+   */
+  postInit: function (options) {
+    return new Promise((resolve, reject) => {
+      resolve(true);
+    });
+  },
 
-    /**
-     * This function is used to finalize entity loader process. If there is any functionalities, required to be executed after entity loading. 
-     * defined it that with Promise way
-     * @param {*} options 
-     */
-    postInit: function (options) {
-        return new Promise((resolve, reject) => {
-            resolve(true);
-        });
-    },
-
-    /**
-     * Validates that the remove request identifies target records.
-     *
-     * @param {Object} request Nodics remove request.
-     * @param {Object} response Pipeline response accumulator.
-     * @param {Object} process Pipeline process controller.
-     * @returns {undefined}
-     */
-    validateRequest: function (request, response, process) {
-        this.LOG.debug('Validating remove request: ');
-        if ((request.query && !UTILS.isBlank(request.query)) ||
-            (Array.isArray(request.ids) && request.ids.length > 0) ||
-            (Array.isArray(request.codes) && request.codes.length > 0)) {
-            process.nextSuccess(request, response);
-        } else {
-            process.error(request, response, new CLASSES.NodicsError('ERR_DEL_00003', 'Invalid value for ids or codes'));
-        }
-
-    },
-    /**
-     * Checks remove access using schema access groups.
-     *
-     * @param {Object} request Nodics remove request.
-     * @param {Object} response Pipeline response accumulator.
-     * @param {Object} process Pipeline process controller.
-     * @returns {undefined}
-     */
-    checkAccess: function (request, response, process) {
-        this.LOG.debug('Checking model access');
-        if (SERVICE.DefaultLocalResetProviderService && SERVICE.DefaultLocalResetProviderService.authorizes(request)) {
-            process.nextSuccess(request, response);
-            return;
-        }
-        let rawSchema = request.schemaModel.rawSchema;
-        if (SERVICE.DefaultSchemaAccessHandlerService.getAccessPoint(request.authData, rawSchema.accessGroups) >= CONFIG.get('accessPoints').removeAccessPoint) {
-            SERVICE.DefaultRecordOwnershipPolicyService.enforce(request, 'remove').then(() => process.nextSuccess(request, response)).catch(error => process.error(request, response, error));
-        } else {
-            process.error(request, response, new CLASSES.NodicsError('ERR_AUTH_00003', 'current user do not have access to this resource'));
-        }
-    },
-    /**
-     * Enforces runtime schema-level delete policies before query construction.
-     *
-     * @param {Object} request Nodics remove request.
-     * @param {Object} response Pipeline response accumulator.
-     * @param {Object} process Pipeline process controller.
-     * @returns {undefined}
-     */
-    enforceDeleteAccessPolicies: function (request, response, process) {
-        this.LOG.debug('Applying delete access policies');
-        if (SERVICE.DefaultLocalResetProviderService && SERVICE.DefaultLocalResetProviderService.authorizes(request)) {
-            process.nextSuccess(request, response);
-            return;
-        }
-        if (!SERVICE.DefaultSchemaWriteAccessPolicyService ||
-            typeof SERVICE.DefaultSchemaWriteAccessPolicyService.enforceDeletePolicies !== 'function') {
-            process.nextSuccess(request, response);
-            return;
-        }
-        SERVICE.DefaultSchemaWriteAccessPolicyService.enforceDeletePolicies(request, response).then(success => {
-            process.nextSuccess(request, response);
-        }).catch(error => {
-            process.error(request, response, error);
-        });
-    },
-    /**
-     * Builds the remove query and search options.
-     *
-     * @param {Object} request Nodics remove request.
-     * @param {Object} response Pipeline response accumulator.
-     * @param {Object} process Pipeline process controller.
-     * @returns {undefined}
-     * @sideEffects Mutates `request.query` and `request.searchOptions`.
-     */
-    buildQuery: function (request, response, process) {
-        this.LOG.debug('Building search query & searchOptions');
-        request.options = request.options || {};
-        if (!request.query || UTILS.isBlank(request.query)) {
-            if (request.ids && request.ids.length > 0) {
-                let tmpIds = [];
-                request.ids.forEach(id => {
-                    tmpIds.push(SERVICE.DefaultDatabaseConfigurationService.toObjectId(request.schemaModel, id));
-                });
-                request.query = {
-                    _id: {
-                        $in: tmpIds
-                    }
-                };
-            } else if (request.codes && request.codes.length > 0) {
-                request.query = {
-                    code: {
-                        $in: request.codes
-                    }
-                };
-            }
-        }
-        let inputOptions = request.searchOptions || {};
-        inputOptions.explain = inputOptions.explain || false;
-        inputOptions.snapshot = inputOptions.snapshot || false;
-
-        if (inputOptions.timeout === true) {
-            inputOptions.timeout = true;
-            inputOptions.maxTimeMS = CONFIG.get('queryMaxTimeMS');
-        }
-        request.searchOptions = inputOptions;
-        process.nextSuccess(request, response);
-    },
-
-    /**
-     * Prevents removal when an effective schema relationship explicitly
-     * declares `onTargetDelete: 'RESTRICT'`.
-     *
-     * @param {Object} request Nodics remove request.
-     * @param {Object} response Pipeline response accumulator.
-     * @param {Object} process Pipeline process controller.
-     * @returns {undefined}
-     */
-    enforceReferenceIntegrity: function (request, response, process) {
-        if (SERVICE.DefaultLocalResetProviderService && SERVICE.DefaultLocalResetProviderService.authorizes(request)) {
-            process.nextSuccess(request, response);
-            return;
-        }
-        let service = SERVICE.DefaultReferenceIntegrityService;
-        if (!service || typeof service.enforceRemove !== 'function') {
-            let config = CONFIG.get('referenceIntegrity') || {};
-            if (config.enabled !== false && config.failClosed !== false) {
-                process.error(request, response, new CLASSES.NodicsError(
-                    'ERR_DEL_00008', 'Reference integrity service is unavailable'));
-            } else {
-                process.nextSuccess(request, response);
-            }
-            return;
-        }
-        service.enforceRemove(request).then(() => {
-            process.nextSuccess(request, response);
-        }).catch(error => {
-            process.error(request, response, error);
-        });
-    },
-
-    /**
-     * Resolves affected remove count from old and current database adapter result shapes.
-     *
-     * @param {Object} result Remove result payload.
-     * @returns {number} Number of removed records.
-     */
-    getAffectedCount: function (result) {
-        if (!result) return 0;
-        if (typeof result.n === 'number') return result.n;
-        if (typeof result.deletedCount === 'number') return result.deletedCount;
-        if (result.result) return this.getAffectedCount(result.result);
-        return 0;
-    },
-
-    /**
-     * Executes pre-remove schema interceptors.
-     *
-     * @param {Object} request Nodics remove request.
-     * @param {Object} response Pipeline response accumulator.
-     * @param {Object} process Pipeline process controller.
-     * @returns {undefined}
-     */
-    applyPreInterceptors: function (request, response, process) {
-        this.LOG.debug('Applying pre update model interceptors');
-        let schemaName = request.schemaModel.schemaName;
-        let interceptors = SERVICE.DefaultDatabaseConfigurationService.getSchemaInterceptors(schemaName);
-        if (interceptors && interceptors.preRemove) {
-            SERVICE.DefaultInterceptorService.executeInterceptors([].concat(interceptors.preRemove), request, response).then(success => {
-                process.nextSuccess(request, response);
-            }).catch(error => {
-                process.error(request, response, new CLASSES.NodicsError(error, null, 'ERR_DEL_00005'));
-            });
-        } else {
-            process.nextSuccess(request, response);
-        }
-    },
-
-    /**
-     * Executes pre-remove schema validators.
-     *
-     * @param {Object} request Nodics remove request.
-     * @param {Object} response Pipeline response accumulator.
-     * @param {Object} process Pipeline process controller.
-     * @returns {undefined}
-     */
-    applyPreValidators: function (request, response, process) {
-        this.LOG.debug('Applying pre model validator');
-        let schemaName = request.schemaModel.schemaName;
-        let validators = SERVICE.DefaultDatabaseConfigurationService.getSchemaValidators(request.tenant, schemaName);
-        if (validators && validators.preRemove) {
-            SERVICE.DefaultValidatorService.executeValidators([].concat(validators.preRemove), request, response).then(success => {
-                process.nextSuccess(request, response);
-            }).catch(error => {
-                process.error(request, response, new CLASSES.NodicsError(error, null, 'ERR_DEL_00005'));
-            });
-        } else {
-            process.nextSuccess(request, response);
-        }
-    },
-
-    /**
-     * Executes the generated model remove operation.
-     *
-     * @param {Object} request Nodics remove request.
-     * @param {Object} response Pipeline response accumulator.
-     * @param {Object} process Pipeline process controller.
-     * @returns {undefined}
-     * @sideEffects Writes `response.success`.
-     */
-    executeQuery: function (request, response, process) {
-        this.LOG.debug('Executing remove query');
-        const concurrency = SERVICE.DefaultModelConcurrencyService;
-        const remove = concurrency && concurrency.getField(request.schemaModel.rawSchema)
-            ? concurrency.execute(request, 'remove') : request.schemaModel.removeItems(request);
-        remove.then(result => {
-            response.success = {
-                code: 'SUC_DEL_00000',
-                result: result
-            };
-            process.nextSuccess(request, response);
-        }).catch(error => {
-            process.error(request, response, error);
-        });
-    },
-
-    /**
-     * Populates removed sub-models when recursive response loading is requested.
-     *
-     * @param {Object} request Nodics remove request.
-     * @param {Object} response Pipeline response accumulator.
-     * @param {Object} process Pipeline process controller.
-     * @returns {undefined}
-     */
-    populateSubModels: function (request, response, process) {
-        this.LOG.debug('Populating sub models');
-        if (response.success && response.success.result && this.getAffectedCount(response.success.result) > 0 &&
-            response.success.result.models && request.options && request.options.recursive) {
-            SERVICE.DefaultModelService.travelModels({
-                request: request,
-                response: response,
-                models: response.success.result.models,
-                index: 0,
-                callback: SERVICE.DefaultModelService.populateNestedModels
-            }).then(success => {
-                process.nextSuccess(request, response);
-            }).catch(error => {
-                process.error(request, response, new CLASSES.NodicsError(error, null, 'ERR_FIND_00003'));
-            });
-        } else {
-            process.nextSuccess(request, response);
-        }
-    },
-
-    /**
-     * Executes post-remove schema validators.
-     *
-     * @param {Object} request Nodics remove request.
-     * @param {Object} response Pipeline response accumulator.
-     * @param {Object} process Pipeline process controller.
-     * @returns {undefined}
-     */
-    applyPostValidators: function (request, response, process) {
-        this.LOG.debug('Applying post model validator');
-        let schemaName = request.schemaModel.schemaName;
-        let validators = SERVICE.DefaultDatabaseConfigurationService.getSchemaValidators(request.tenant, schemaName);
-        if (validators && validators.postRemove) {
-            SERVICE.DefaultValidatorService.executeValidators([].concat(validators.postRemove), request, response).then(success => {
-                process.nextSuccess(request, response);
-            }).catch(error => {
-                process.error(request, response, new CLASSES.NodicsError(error, null, 'ERR_DEL_00006'));
-            });
-        } else {
-            process.nextSuccess(request, response);
-        }
-    },
-
-    /**
-     * Executes post-remove schema interceptors when records were removed.
-     *
-     * @param {Object} request Nodics remove request.
-     * @param {Object} response Pipeline response accumulator.
-     * @param {Object} process Pipeline process controller.
-     * @returns {undefined}
-     */
-    applyPostInterceptors: function (request, response, process) {
-        this.LOG.debug('Applying post remove model interceptors');
-        if (response.success && response.success.result && this.getAffectedCount(response.success.result) > 0) {
-            let schemaName = request.schemaModel.schemaName;
-            let interceptors = SERVICE.DefaultDatabaseConfigurationService.getSchemaInterceptors(schemaName);
-            if (interceptors && interceptors.postRemove) {
-                SERVICE.DefaultInterceptorService.executeInterceptors([].concat(interceptors.postRemove), request, response).then(success => {
-                    process.nextSuccess(request, response);
-                }).catch(error => {
-                    process.error(request, response, new CLASSES.NodicsError(error, null, 'ERR_DEL_00006'));
-                });
-            } else {
-                process.nextSuccess(request, response);
-            }
-        } else {
-            process.nextSuccess(request, response);
-        }
-    },
-
-    /**
-     * Invalidates schema router cache after successful removal.
-     *
-     * @param {Object} request Nodics remove request.
-     * @param {Object} response Pipeline response accumulator.
-     * @param {Object} process Pipeline process controller.
-     * @returns {undefined}
-     */
-    invalidateRouterCache: function (request, response, process) {
-        this.LOG.debug('Invalidating router cache for removed model');
-        try {
-            let schemaModel = request.schemaModel;
-            if (response.success && response.success.result && this.getAffectedCount(response.success.result) > 0) {
-                SERVICE.DefaultCacheService.invalidateResource({
-                    tenant: request.tenant,
-                    authData: request.authData,
-                    moduleName: schemaModel.moduleName,
-                    cacheType: 'router',
-                    resourceName: schemaModel.schemaName
-                }).then(success => {
-                    this.LOG.debug('Cache for router: ' + schemaModel.schemaName + ' has been flushed cuccessfully');
-                }).catch(error => {
-                    this.LOG.error('Cache for router: ' + schemaModel.schemaName + ' has not been flushed cuccessfully');
-                    this.LOG.error(error);
-                });
-            }
-        } catch (error) {
-            this.LOG.error('Facing issue while invalidating router cache');
-            this.LOG.error(error);
-        }
-        process.nextSuccess(request, response);
-    },
-
-    /**
-     * Invalidates schema item cache after successful removal.
-     *
-     * @param {Object} request Nodics remove request.
-     * @param {Object} response Pipeline response accumulator.
-     * @param {Object} process Pipeline process controller.
-     * @returns {undefined}
-     */
-    invalidateItemCache: function (request, response, process) {
-        this.LOG.debug('Invalidating item cache for removed model');
-        try {
-            let schemaModel = request.schemaModel;
-            if (response.success && response.success.result && this.getAffectedCount(response.success.result) > 0 &&
-                schemaModel.rawSchema.cache && schemaModel.rawSchema.cache.enabled) {
-                SERVICE.DefaultCacheService.invalidateResource({
-                    tenant: request.tenant,
-                    authData: request.authData,
-                    moduleName: schemaModel.moduleName,
-                    cacheType: 'schema',
-                    resourceName: schemaModel.schemaName
-                }).then(success => {
-                    this.LOG.debug('Cache for schema: ' + schemaModel.schemaName + ' has been flushed cuccessfully');
-                }).catch(error => {
-                    this.LOG.error('Cache for schema: ' + schemaModel.schemaName + ' has not been flushed cuccessfully');
-                    this.LOG.error(error);
-                });
-            }
-        } catch (error) {
-            this.LOG.error('Facing issue while invalidating item cache ');
-            this.LOG.error(error);
-        }
-        process.nextSuccess(request, response);
-    },
-
-    /**
-     * Publishes schema remove events after successful removal.
-     *
-     * @param {Object} request Nodics remove request.
-     * @param {Object} response Pipeline response accumulator.
-     * @param {Object} process Pipeline process controller.
-     * @returns {undefined}
-     */
-    triggerModelChangeEvent: function (request, response, process) {
-        this.LOG.debug('Triggering event for removed models');
-        try {
-            let schemaModel = request.schemaModel;
-            if (response.success && response.success.result && schemaModel.rawSchema.event &&
-                schemaModel.rawSchema.event.enabled && response.success.result.models && response.success.result.models.length > 0) {
-                let event = {
-                    tenant: request.tenant,
-                    event: schemaModel.schemaName + 'Removed',
-                    sourceName: schemaModel.moduleName,
-                    sourceId: CONFIG.get('nodeId'),
-                    target: schemaModel.moduleName,
-                    state: "NEW",
-                    type: schemaModel.rawSchema.event.type || "ASYNC",
-                    targetType: schemaModel.rawSchema.event.targetType || ENUMS.TargetType.MODULE_NODES.key,
-                    active: true,
-                    data: {
-                        schemaName: schemaModel.schemaName,
-                        modelName: schemaModel.modelName,
-                        models: response.success.result.models
-                    }
-                };
-                this.LOG.debug('Pushing event for item created : ' + schemaModel.schemaName);
-                SERVICE.DefaultEventService.publish(event).then(success => {
-                    this.LOG.debug('Event successfully posted');
-                }).catch(error => {
-                    this.LOG.error('While posting model change event : ', error);
-                });
-            }
-        } catch (error) {
-            this.LOG.error('Facing issue while pushing save event : ', error);
-        }
-        process.nextSuccess(request, response);
-    },
-
-    /**
-     * Removes nested referenced models when deep-remove is requested.
-     *
-     * @param {Object} request Nodics remove request.
-     * @param {Object} response Pipeline response accumulator.
-     * @param {Object} process Pipeline process controller.
-     * @returns {undefined}
-     */
-    handleDeepRemove: function (request, response, process) {
-        this.LOG.debug('Request has been processed successfully');
-        if (request.options && request.options.deepRemove && response.success.result && response.success.result.models) {
-            SERVICE.DefaultModelService.travelModels({
-                request: request,
-                response: response,
-                models: response.success.result.models,
-                index: 0,
-                callback: SERVICE.DefaultModelService.removeNestedModels
-            }).then(success => {
-                process.nextSuccess(request, response);
-            }).catch(error => {
-                process.error(request, response, new CLASSES.NodicsError(error, null, 'ERR_FIND_00003'));
-            });
-        } else {
-            process.nextSuccess(request, response);
-        }
+  /**
+   * Validates that the remove request identifies target records.
+   *
+   * @param {Object} request Nodics remove request.
+   * @param {Object} response Pipeline response accumulator.
+   * @param {Object} process Pipeline process controller.
+   * @returns {undefined}
+   */
+  validateRequest: function (request, response, process) {
+    this.LOG.debug("Validating remove request: ");
+    if (
+      (request.query && !UTILS.isBlank(request.query)) ||
+      (Array.isArray(request.ids) && request.ids.length > 0) ||
+      (Array.isArray(request.codes) && request.codes.length > 0)
+    ) {
+      process.nextSuccess(request, response);
+    } else {
+      process.error(
+        request,
+        response,
+        new CLASSES.NodicsError(
+          "ERR_DEL_00003",
+          "Invalid value for ids or codes",
+        ),
+      );
     }
+  },
+  /**
+   * Checks remove access using schema access groups.
+   *
+   * @param {Object} request Nodics remove request.
+   * @param {Object} response Pipeline response accumulator.
+   * @param {Object} process Pipeline process controller.
+   * @returns {undefined}
+   */
+  checkAccess: function (request, response, process) {
+    this.LOG.debug("Checking model access");
+    if (
+      SERVICE.DefaultLocalResetProviderService &&
+      SERVICE.DefaultLocalResetProviderService.authorizes(request)
+    ) {
+      process.nextSuccess(request, response);
+      return;
+    }
+    let rawSchema = request.schemaModel.rawSchema;
+    if (
+      SERVICE.DefaultSchemaAccessHandlerService.getAccessPoint(
+        request.authData,
+        rawSchema.accessGroups,
+      ) >= CONFIG.get("accessPoints").removeAccessPoint
+    ) {
+      SERVICE.DefaultRecordOwnershipPolicyService.enforce(request, "remove")
+        .then(() => process.nextSuccess(request, response))
+        .catch((error) => process.error(request, response, error));
+    } else {
+      process.error(
+        request,
+        response,
+        new CLASSES.NodicsError(
+          "ERR_AUTH_00003",
+          "current user do not have access to this resource",
+        ),
+      );
+    }
+  },
+  /**
+   * Enforces runtime schema-level delete policies before query construction.
+   *
+   * @param {Object} request Nodics remove request.
+   * @param {Object} response Pipeline response accumulator.
+   * @param {Object} process Pipeline process controller.
+   * @returns {undefined}
+   */
+  enforceDeleteAccessPolicies: function (request, response, process) {
+    this.LOG.debug("Applying delete access policies");
+    if (
+      SERVICE.DefaultLocalResetProviderService &&
+      SERVICE.DefaultLocalResetProviderService.authorizes(request)
+    ) {
+      process.nextSuccess(request, response);
+      return;
+    }
+    if (
+      !SERVICE.DefaultSchemaWriteAccessPolicyService ||
+      typeof SERVICE.DefaultSchemaWriteAccessPolicyService
+        .enforceDeletePolicies !== "function"
+    ) {
+      process.nextSuccess(request, response);
+      return;
+    }
+    SERVICE.DefaultSchemaWriteAccessPolicyService.enforceDeletePolicies(
+      request,
+      response,
+    )
+      .then((success) => {
+        process.nextSuccess(request, response);
+      })
+      .catch((error) => {
+        process.error(request, response, error);
+      });
+  },
+  /**
+   * Builds the remove query and search options.
+   *
+   * @param {Object} request Nodics remove request.
+   * @param {Object} response Pipeline response accumulator.
+   * @param {Object} process Pipeline process controller.
+   * @returns {undefined}
+   * @sideEffects Mutates `request.query` and `request.searchOptions`.
+   */
+  buildQuery: function (request, response, process) {
+    this.LOG.debug("Building search query & searchOptions");
+    request.options = request.options || {};
+    if (!request.query || UTILS.isBlank(request.query)) {
+      if (request.ids && request.ids.length > 0) {
+        let tmpIds = [];
+        request.ids.forEach((id) => {
+          tmpIds.push(
+            SERVICE.DefaultDatabaseConfigurationService.toObjectId(
+              request.schemaModel,
+              id,
+            ),
+          );
+        });
+        request.query = {
+          _id: {
+            $in: tmpIds,
+          },
+        };
+      } else if (request.codes && request.codes.length > 0) {
+        request.query = {
+          code: {
+            $in: request.codes,
+          },
+        };
+      }
+    }
+    let inputOptions = request.searchOptions || {};
+    inputOptions.explain = inputOptions.explain || false;
+    inputOptions.snapshot = inputOptions.snapshot || false;
+
+    if (inputOptions.timeout === true) {
+      inputOptions.timeout = true;
+      inputOptions.maxTimeMS = CONFIG.get("queryMaxTimeMS");
+    }
+    request.searchOptions = inputOptions;
+    process.nextSuccess(request, response);
+  },
+
+  /**
+   * Prevents removal when an effective schema relationship explicitly
+   * declares `onTargetDelete: 'RESTRICT'`.
+   *
+   * @param {Object} request Nodics remove request.
+   * @param {Object} response Pipeline response accumulator.
+   * @param {Object} process Pipeline process controller.
+   * @returns {undefined}
+   */
+  enforceReferenceIntegrity: function (request, response, process) {
+    if (
+      SERVICE.DefaultLocalResetProviderService &&
+      SERVICE.DefaultLocalResetProviderService.authorizes(request)
+    ) {
+      process.nextSuccess(request, response);
+      return;
+    }
+    let service = SERVICE.DefaultReferenceIntegrityService;
+    if (!service || typeof service.enforceRemove !== "function") {
+      let config = CONFIG.get("referenceIntegrity") || {};
+      if (config.enabled !== false && config.failClosed !== false) {
+        process.error(
+          request,
+          response,
+          new CLASSES.NodicsError(
+            "ERR_DEL_00008",
+            "Reference integrity service is unavailable",
+          ),
+        );
+      } else {
+        process.nextSuccess(request, response);
+      }
+      return;
+    }
+    service
+      .enforceRemove(request)
+      .then(() => {
+        process.nextSuccess(request, response);
+      })
+      .catch((error) => {
+        process.error(request, response, error);
+      });
+  },
+
+  /**
+   * Resolves affected remove count from old and current database adapter result shapes.
+   *
+   * @param {Object} result Remove result payload.
+   * @returns {number} Number of removed records.
+   */
+  getAffectedCount: function (result) {
+    if (!result) return 0;
+    if (typeof result.n === "number") return result.n;
+    if (typeof result.deletedCount === "number") return result.deletedCount;
+    if (result.result) return this.getAffectedCount(result.result);
+    return 0;
+  },
+
+  /**
+   * Executes pre-remove schema interceptors.
+   *
+   * @param {Object} request Nodics remove request.
+   * @param {Object} response Pipeline response accumulator.
+   * @param {Object} process Pipeline process controller.
+   * @returns {undefined}
+   */
+  applyPreInterceptors: function (request, response, process) {
+    this.LOG.debug("Applying pre update model interceptors");
+    let schemaName = request.schemaModel.schemaName;
+    let interceptors =
+      SERVICE.DefaultDatabaseConfigurationService.getSchemaInterceptors(
+        schemaName,
+      );
+    if (interceptors && interceptors.preRemove) {
+      SERVICE.DefaultInterceptorService.executeInterceptors(
+        [].concat(interceptors.preRemove),
+        request,
+        response,
+      )
+        .then((success) => {
+          process.nextSuccess(request, response);
+        })
+        .catch((error) => {
+          process.error(
+            request,
+            response,
+            new CLASSES.NodicsError(error, null, "ERR_DEL_00005"),
+          );
+        });
+    } else {
+      process.nextSuccess(request, response);
+    }
+  },
+
+  /**
+   * Executes pre-remove schema validators.
+   *
+   * @param {Object} request Nodics remove request.
+   * @param {Object} response Pipeline response accumulator.
+   * @param {Object} process Pipeline process controller.
+   * @returns {undefined}
+   */
+  applyPreValidators: function (request, response, process) {
+    this.LOG.debug("Applying pre model validator");
+    let schemaName = request.schemaModel.schemaName;
+    let validators =
+      SERVICE.DefaultDatabaseConfigurationService.getSchemaValidators(
+        request.tenant,
+        schemaName,
+      );
+    if (validators && validators.preRemove) {
+      SERVICE.DefaultValidatorService.executeValidators(
+        [].concat(validators.preRemove),
+        request,
+        response,
+      )
+        .then((success) => {
+          process.nextSuccess(request, response);
+        })
+        .catch((error) => {
+          process.error(
+            request,
+            response,
+            new CLASSES.NodicsError(error, null, "ERR_DEL_00005"),
+          );
+        });
+    } else {
+      process.nextSuccess(request, response);
+    }
+  },
+
+  /**
+   * Executes the generated model remove operation.
+   *
+   * @param {Object} request Nodics remove request.
+   * @param {Object} response Pipeline response accumulator.
+   * @param {Object} process Pipeline process controller.
+   * @returns {undefined}
+   * @sideEffects Writes `response.success`.
+   */
+  executeQuery: function (request, response, process) {
+    this.LOG.debug("Executing remove query");
+    const concurrency = SERVICE.DefaultModelConcurrencyService;
+    // The configured Local reset already carries an opaque provider authority.
+    // It clears a runtime boundary rather than updating one caller revision.
+    const localReset =
+      SERVICE.DefaultLocalResetProviderService &&
+      SERVICE.DefaultLocalResetProviderService.authorizes(request);
+    const remove =
+      !localReset &&
+      concurrency &&
+      concurrency.getField(request.schemaModel.rawSchema)
+        ? concurrency.execute(request, "remove")
+        : request.schemaModel.removeItems(request);
+    remove
+      .then((result) => {
+        response.success = {
+          code: "SUC_DEL_00000",
+          result: result,
+        };
+        process.nextSuccess(request, response);
+      })
+      .catch((error) => {
+        process.error(request, response, error);
+      });
+  },
+
+  /**
+   * Populates removed sub-models when recursive response loading is requested.
+   *
+   * @param {Object} request Nodics remove request.
+   * @param {Object} response Pipeline response accumulator.
+   * @param {Object} process Pipeline process controller.
+   * @returns {undefined}
+   */
+  populateSubModels: function (request, response, process) {
+    this.LOG.debug("Populating sub models");
+    if (
+      response.success &&
+      response.success.result &&
+      this.getAffectedCount(response.success.result) > 0 &&
+      response.success.result.models &&
+      request.options &&
+      request.options.recursive
+    ) {
+      SERVICE.DefaultModelService.travelModels({
+        request: request,
+        response: response,
+        models: response.success.result.models,
+        index: 0,
+        callback: SERVICE.DefaultModelService.populateNestedModels,
+      })
+        .then((success) => {
+          process.nextSuccess(request, response);
+        })
+        .catch((error) => {
+          process.error(
+            request,
+            response,
+            new CLASSES.NodicsError(error, null, "ERR_FIND_00003"),
+          );
+        });
+    } else {
+      process.nextSuccess(request, response);
+    }
+  },
+
+  /**
+   * Executes post-remove schema validators.
+   *
+   * @param {Object} request Nodics remove request.
+   * @param {Object} response Pipeline response accumulator.
+   * @param {Object} process Pipeline process controller.
+   * @returns {undefined}
+   */
+  applyPostValidators: function (request, response, process) {
+    this.LOG.debug("Applying post model validator");
+    let schemaName = request.schemaModel.schemaName;
+    let validators =
+      SERVICE.DefaultDatabaseConfigurationService.getSchemaValidators(
+        request.tenant,
+        schemaName,
+      );
+    if (validators && validators.postRemove) {
+      SERVICE.DefaultValidatorService.executeValidators(
+        [].concat(validators.postRemove),
+        request,
+        response,
+      )
+        .then((success) => {
+          process.nextSuccess(request, response);
+        })
+        .catch((error) => {
+          process.error(
+            request,
+            response,
+            new CLASSES.NodicsError(error, null, "ERR_DEL_00006"),
+          );
+        });
+    } else {
+      process.nextSuccess(request, response);
+    }
+  },
+
+  /**
+   * Executes post-remove schema interceptors when records were removed.
+   *
+   * @param {Object} request Nodics remove request.
+   * @param {Object} response Pipeline response accumulator.
+   * @param {Object} process Pipeline process controller.
+   * @returns {undefined}
+   */
+  applyPostInterceptors: function (request, response, process) {
+    this.LOG.debug("Applying post remove model interceptors");
+    if (
+      response.success &&
+      response.success.result &&
+      this.getAffectedCount(response.success.result) > 0
+    ) {
+      let schemaName = request.schemaModel.schemaName;
+      let interceptors =
+        SERVICE.DefaultDatabaseConfigurationService.getSchemaInterceptors(
+          schemaName,
+        );
+      if (interceptors && interceptors.postRemove) {
+        SERVICE.DefaultInterceptorService.executeInterceptors(
+          [].concat(interceptors.postRemove),
+          request,
+          response,
+        )
+          .then((success) => {
+            process.nextSuccess(request, response);
+          })
+          .catch((error) => {
+            process.error(
+              request,
+              response,
+              new CLASSES.NodicsError(error, null, "ERR_DEL_00006"),
+            );
+          });
+      } else {
+        process.nextSuccess(request, response);
+      }
+    } else {
+      process.nextSuccess(request, response);
+    }
+  },
+
+  /**
+   * Invalidates schema router cache after successful removal.
+   *
+   * @param {Object} request Nodics remove request.
+   * @param {Object} response Pipeline response accumulator.
+   * @param {Object} process Pipeline process controller.
+   * @returns {undefined}
+   */
+  invalidateRouterCache: function (request, response, process) {
+    this.LOG.debug("Invalidating router cache for removed model");
+    try {
+      let schemaModel = request.schemaModel;
+      if (
+        response.success &&
+        response.success.result &&
+        this.getAffectedCount(response.success.result) > 0
+      ) {
+        SERVICE.DefaultCacheService.invalidateResource({
+          tenant: request.tenant,
+          authData: request.authData,
+          moduleName: schemaModel.moduleName,
+          cacheType: "router",
+          resourceName: schemaModel.schemaName,
+        })
+          .then((success) => {
+            this.LOG.debug(
+              "Cache for router: " +
+                schemaModel.schemaName +
+                " has been flushed cuccessfully",
+            );
+          })
+          .catch((error) => {
+            this.LOG.error(
+              "Cache for router: " +
+                schemaModel.schemaName +
+                " has not been flushed cuccessfully",
+            );
+            this.LOG.error(error);
+          });
+      }
+    } catch (error) {
+      this.LOG.error("Facing issue while invalidating router cache");
+      this.LOG.error(error);
+    }
+    process.nextSuccess(request, response);
+  },
+
+  /**
+   * Invalidates schema item cache after successful removal.
+   *
+   * @param {Object} request Nodics remove request.
+   * @param {Object} response Pipeline response accumulator.
+   * @param {Object} process Pipeline process controller.
+   * @returns {undefined}
+   */
+  invalidateItemCache: function (request, response, process) {
+    this.LOG.debug("Invalidating item cache for removed model");
+    try {
+      let schemaModel = request.schemaModel;
+      if (
+        response.success &&
+        response.success.result &&
+        this.getAffectedCount(response.success.result) > 0 &&
+        schemaModel.rawSchema.cache &&
+        schemaModel.rawSchema.cache.enabled
+      ) {
+        SERVICE.DefaultCacheService.invalidateResource({
+          tenant: request.tenant,
+          authData: request.authData,
+          moduleName: schemaModel.moduleName,
+          cacheType: "schema",
+          resourceName: schemaModel.schemaName,
+        })
+          .then((success) => {
+            this.LOG.debug(
+              "Cache for schema: " +
+                schemaModel.schemaName +
+                " has been flushed cuccessfully",
+            );
+          })
+          .catch((error) => {
+            this.LOG.error(
+              "Cache for schema: " +
+                schemaModel.schemaName +
+                " has not been flushed cuccessfully",
+            );
+            this.LOG.error(error);
+          });
+      }
+    } catch (error) {
+      this.LOG.error("Facing issue while invalidating item cache ");
+      this.LOG.error(error);
+    }
+    process.nextSuccess(request, response);
+  },
+
+  /**
+   * Publishes schema remove events after successful removal.
+   *
+   * @param {Object} request Nodics remove request.
+   * @param {Object} response Pipeline response accumulator.
+   * @param {Object} process Pipeline process controller.
+   * @returns {undefined}
+   */
+  triggerModelChangeEvent: function (request, response, process) {
+    this.LOG.debug("Triggering event for removed models");
+    try {
+      let schemaModel = request.schemaModel;
+      if (
+        response.success &&
+        response.success.result &&
+        schemaModel.rawSchema.event &&
+        schemaModel.rawSchema.event.enabled &&
+        response.success.result.models &&
+        response.success.result.models.length > 0
+      ) {
+        let event = {
+          tenant: request.tenant,
+          event: schemaModel.schemaName + "Removed",
+          sourceName: schemaModel.moduleName,
+          sourceId: CONFIG.get("nodeId"),
+          target: schemaModel.moduleName,
+          state: "NEW",
+          type: schemaModel.rawSchema.event.type || "ASYNC",
+          targetType:
+            schemaModel.rawSchema.event.targetType ||
+            ENUMS.TargetType.MODULE_NODES.key,
+          active: true,
+          data: {
+            schemaName: schemaModel.schemaName,
+            modelName: schemaModel.modelName,
+            models: response.success.result.models,
+          },
+        };
+        this.LOG.debug(
+          "Pushing event for item created : " + schemaModel.schemaName,
+        );
+        SERVICE.DefaultEventService.publish(event)
+          .then((success) => {
+            this.LOG.debug("Event successfully posted");
+          })
+          .catch((error) => {
+            this.LOG.error("While posting model change event : ", error);
+          });
+      }
+    } catch (error) {
+      this.LOG.error("Facing issue while pushing save event : ", error);
+    }
+    process.nextSuccess(request, response);
+  },
+
+  /**
+   * Removes nested referenced models when deep-remove is requested.
+   *
+   * @param {Object} request Nodics remove request.
+   * @param {Object} response Pipeline response accumulator.
+   * @param {Object} process Pipeline process controller.
+   * @returns {undefined}
+   */
+  handleDeepRemove: function (request, response, process) {
+    this.LOG.debug("Request has been processed successfully");
+    if (
+      request.options &&
+      request.options.deepRemove &&
+      response.success.result &&
+      response.success.result.models
+    ) {
+      SERVICE.DefaultModelService.travelModels({
+        request: request,
+        response: response,
+        models: response.success.result.models,
+        index: 0,
+        callback: SERVICE.DefaultModelService.removeNestedModels,
+      })
+        .then((success) => {
+          process.nextSuccess(request, response);
+        })
+        .catch((error) => {
+          process.error(
+            request,
+            response,
+            new CLASSES.NodicsError(error, null, "ERR_FIND_00003"),
+          );
+        });
+    } else {
+      process.nextSuccess(request, response);
+    }
+  },
 };

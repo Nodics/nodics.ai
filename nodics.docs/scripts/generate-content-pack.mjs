@@ -374,6 +374,32 @@ const routeFor = (document, index) => {
   }
   return route;
 };
+// Resolve authored Markdown references against the published catalogue. Exact
+// source paths win; historical slugs and unique basenames support moved pages.
+function normalizeDocumentationLinks(markdown, sourcePath) {
+  return markdown.replace(
+    /\[([^\]]+)\]\(([^)]+)\)/g,
+    (match, label, target) => {
+      const [file, anchor] = target.trim().split("#");
+      if (!file.endsWith(".md")) return match;
+      const resolved = path.posix.normalize(
+        path.posix.join(path.posix.dirname(sourcePath), file),
+      );
+      const exact = documents.find((document) => document.content === resolved);
+      const basename = path.posix.basename(file);
+      const candidates = exact
+        ? [exact]
+        : documents.filter(
+            (document) =>
+              document.slug === basename.slice(0, -3) ||
+              path.posix.basename(document.content) === basename,
+          );
+      if (candidates.length !== 1) return match;
+      const document = candidates[0];
+      return `[${label}](${routeFor(document, documents.indexOf(document))}${anchor ? `#${anchor}` : ""})`;
+    },
+  );
+}
 const sourcePages = documents.map((document, index) => {
   const markdown = fs.readFileSync(path.join(root, document.content), "utf8");
   const sectionTitle =
@@ -385,7 +411,21 @@ const sourcePages = documents.map((document, index) => {
     markdown,
     camel(recordIdentity),
     document.content,
-  );
+  ).map((block) => {
+    const normalize = (text) =>
+      normalizeDocumentationLinks(text, document.content);
+    if (["paragraph", "blockquote", "heading"].includes(block.kind))
+      return { ...block, text: normalize(block.text) };
+    if (["ordered-list", "unordered-list"].includes(block.kind))
+      return { ...block, items: block.items.map(normalize) };
+    if (block.kind === "table")
+      return {
+        ...block,
+        headers: block.headers.map(normalize),
+        rows: block.rows.map((row) => row.map(normalize)),
+      };
+    return block;
+  });
   const documentHeadings = blocks
     .filter((block) => block.kind === "heading")
     .map((block) => ({

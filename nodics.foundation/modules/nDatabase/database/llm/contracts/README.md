@@ -4,6 +4,15 @@ This folder contains module-specific AI/developer contracts for `nodics.foundati
 
 Use these files for rules that are more specific than root `AGENTS.md` and the module `AGENTS.md`, especially extension boundaries, override expectations, testing rules, security constraints, and generated-artifact responsibilities.
 
+## Governed Local reset
+
+The governed Local reset is a separate maintenance operation. Its existing
+provider-issued opaque authority permits bulk removal of configured local
+models, including managed-counter schemas, through the generated remove
+pipeline. Caller-supplied flags or lookalike authority objects cannot enable
+this path. Ordinary generated deletes still require a scalar identity and the
+original revision; no client or project may disable these checks for editing.
+
 ## Managed-counter contract
 
 - Opt in through effective `backoffice.concurrency: { managed: true, field: 'revision' }`.

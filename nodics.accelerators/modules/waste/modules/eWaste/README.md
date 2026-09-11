@@ -23,7 +23,7 @@ customer backend module. A separate application-named accelerator is unnecessary
 The 83 core reference records keep their `eWaste:core-reference` identity and
 Waste schema destinations. Run `npm test` for data integrity, authorization,
 application-neutral composition, configurable valuation and conversation checks.
-See [the contract](llm/contracts/README.md) and
+See [the contract](llm/contracts/e-waste-domain.md) and
 [customization example](llm/examples/README.md).
 
 Implementation partners change their own backend/frontend projects. Nodics owns
@@ -34,11 +34,11 @@ the separate contribution/request, review and release process defined by the
 The accelerator also owns channel-login orchestration over Profile: configured
 linked identities can sign in seamlessly; unlinked customers use the shared
 account form. Profile retains proof, links, registration and browser session
-issuance. See [channel account entry](llm/contracts/README.md#channel-account-entry).
+issuance. See [channel account entry](llm/contracts/e-waste-domain.md#channel-account-entry).
 
 Electronics navigation and keyed review-view properties are contributed by eWaste itself. Its concrete provider attaches the Electronics dashboard anchor and its Submissions and Review queue children beneath the generic Waste Management anchor. Without this active, authorized contribution, those links are absent.
 
 The Electronics navigation anchor opens its scoped dashboard. Its operational
 children are Submissions and Review queue; no duplicate Overview link is published.
 
-WARM electronics is an optional provider over Waste Impact; see `llm/contracts/README.md`. Versioned factors, weight ranges and potential-treatment assumptions are saved. Operator history/reassessment/acceptance use Waste-owned operations; changing providers never overwrites an old assessment or reward.
+WARM electronics is an optional provider over Waste Impact; see `llm/contracts/e-waste-domain.md`. Versioned factors, weight ranges and potential-treatment assumptions are saved. Operator history/reassessment/acceptance use Waste-owned operations; changing providers never overwrites an old assessment or reward.

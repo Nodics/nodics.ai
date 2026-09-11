@@ -232,3 +232,8 @@ Avoid:
 - creating mutation tools that write by default without explicit approval;
 - letting MCP become a hidden source of architecture or runtime configuration;
 - bypassing governance tests after changing command behavior.
+
+Commerce publication qualification reads the current manifest-listed operational
+records and supports environment-owned per-domain Store/catalog context. See the
+[module contract](llm/contracts/README.md) for publication configuration and
+checksum failure behavior.

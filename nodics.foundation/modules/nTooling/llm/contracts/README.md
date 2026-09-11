@@ -27,3 +27,11 @@ the explicit coverage root. A nested framework path must not be classified as
 `modules`, and a legacy npm alias must not hide the folder named by a gate.
 `test/documentationCoverageScopeContract.test.js` proves scoped failures against
 disposable framework, nested exporter and package-root layouts.
+
+Commerce publication acceptance resolves operational records from the selected
+Commerce Staged manifest section and verifies file checksums before restoration.
+A domain's environment-owned `publication` configuration may declare
+`releaseCode`, `recordPrefix`, `catalogVersion`, and `storeCode`. Group Online
+projection replacement by store so one domain cannot erase another store's
+catalogue. `NODICS_ENVIRONMENT` selects the environment profile and bootstrap
+credential source; explicit URL/token overrides remain supported.

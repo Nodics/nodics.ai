@@ -28,6 +28,13 @@ This module converts module schemas and configuration into runtime models, data 
 - Preserve save interceptors, schema versioning, reference checks, and model generation evidence.
 - Add future database providers through adapter contracts rather than direct caller changes.
 
+The governed Local reset is a separate maintenance operation. Its existing
+provider-issued opaque authority permits bulk removal of configured local
+models, including managed-counter schemas, through the generated remove
+pipeline. Caller-supplied flags or lookalike authority objects cannot enable
+this path. Ordinary generated deletes still require a scalar identity and the
+original revision; no client or project may disable these checks for editing.
+
 ## Documentation
 
 Deep documentation lives in:

@@ -14,12 +14,12 @@ and search metadata.
 
 ## Choose the right entry point
 
-| Entry point | Best reader | Use it when |
-| --- | --- | --- |
-| Framework | Business, architect, developer, operator | You need the core architecture, module ownership, extension model, runtime behavior, publishing rules, or governance contract. |
-| Nodics Axis | Administrator, author, operator | You need the authenticated BackOffice journey for setup, content operations, documentation management, process tasks, and publication. |
-| Nodics Kickoff | Beginner, implementation partner, QA | You need the reference customer-project path from fresh schema to working Nexus and Agora applications. |
-| Swagger and OpenAPI | Developer, tester, integrator | You need generated runtime API contracts. Swagger is generated from active backend routes and does not require documentation publication approval. |
+| Entry point                                                | Best reader                              | Use it when                                                                                                                                        |
+| ---------------------------------------------------------- | ---------------------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------- |
+| [Framework](/docs/framework)                               | Business, architect, developer, operator | You need the core architecture, module ownership, extension model, runtime behavior, publishing rules, or governance contract.                     |
+| [Nodics Axis](/docs/nodics-axis)                           | Administrator, author, operator          | You need the authenticated BackOffice journey for setup, content operations, documentation management, process tasks, and publication.             |
+| [Nodics Kickoff](/docs/nodics-kickoff)                     | Beginner, implementation partner, QA     | You need the reference customer-project path from fresh schema to working Nexus and Agora applications.                                            |
+| [Swagger and OpenAPI](/docs/nodics-axis/openapi-reference) | Developer, tester, integrator            | You need generated runtime API contracts. Swagger is generated from active backend routes and does not require documentation publication approval. |
 
 The first useful decision is not which page looks interesting. The first useful
 decision is what job the reader is trying to complete. A business reader should

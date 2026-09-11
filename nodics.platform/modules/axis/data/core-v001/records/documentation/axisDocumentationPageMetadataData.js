@@ -708,43 +708,48 @@ module.exports = {
         "level": 2
       },
       {
+        "text": "First-run initialization",
+        "anchor": "employee-access-2-first-run-initialization",
+        "level": 2
+      },
+      {
         "text": "Password recovery",
-        "anchor": "employee-access-2-password-recovery",
+        "anchor": "employee-access-3-password-recovery",
         "level": 2
       },
       {
         "text": "Idle screen lock",
-        "anchor": "employee-access-3-idle-screen-lock",
+        "anchor": "employee-access-4-idle-screen-lock",
         "level": 2
       },
       {
         "text": "Logout",
-        "anchor": "employee-access-4-logout",
+        "anchor": "employee-access-5-logout",
         "level": 2
       },
       {
         "text": "Configuration",
-        "anchor": "employee-access-5-configuration",
+        "anchor": "employee-access-6-configuration",
         "level": 2
       },
       {
         "text": "Failure behavior",
-        "anchor": "employee-access-6-failure-behavior",
+        "anchor": "employee-access-7-failure-behavior",
         "level": 2
       },
       {
         "text": "Customize and extend safely",
-        "anchor": "employee-access-7-customize-and-extend-safely",
+        "anchor": "employee-access-8-customize-and-extend-safely",
         "level": 2
       },
       {
         "text": "Verification",
-        "anchor": "employee-access-8-verification",
+        "anchor": "employee-access-9-verification",
         "level": 2
       },
       {
         "text": "Common mistakes",
-        "anchor": "employee-access-9-common-mistakes",
+        "anchor": "employee-access-10-common-mistakes",
         "level": 2
       }
     ],
@@ -765,8 +770,8 @@ module.exports = {
     ],
     "sourceRepository": "nodics.platform",
     "sourcePath": "docs/pages/employee-login.md",
-    "sourceChecksum": "5d072426a550384fc0a857e268cc2a9552ddbd7d286ae32cb365eae35a65f558",
-    "sourceWordCount": 1437,
+    "sourceChecksum": "1791fde461832bac32175a23378124133466b07c8f9d3da8a1913c61d03f18d2",
+    "sourceWordCount": 1567,
     "audience": [
       "business-user",
       "administrator",

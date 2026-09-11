@@ -18,3 +18,10 @@ raw payment credentials must never enter Nodics records, logs, documentation,
 Axis configuration, or source control.
 
 Archived gComm remains reference-only.
+
+Offline checkout probes use `tok_test_storefront_4242` for success,
+`tok_test_storefront_0002` for declined authorization, and
+`tok_test_storefront_0000` for customer cancellation. These tokens never contact a
+payment network. Payment Core persists each outcome; Checkout must reject every
+non-authorized outcome before creating an order. A retry uses a new checkout
+idempotency key while a replay preserves the prior attempt's outcome.

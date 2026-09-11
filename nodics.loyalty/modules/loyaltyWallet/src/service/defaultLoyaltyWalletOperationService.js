@@ -30,12 +30,17 @@ module.exports = {
       );
   },
   /** Returns generated records using the service-owned security envelope. */
-  list: async function (name, request, query) {
+  list: async function (name, request, query, sort) {
     const op = this.operations();
     const response = op.unwrap(
-      await SERVICE[name].get(
-        op.serviceRequest(request, { query: query, pageSize: 100 }),
-      ),
+      await SERVICE[name].get({
+        ...op.serviceRequest(request, { query: query }),
+        searchOptions: {
+          pageSize: 100,
+          pageNumber: 1,
+          ...(sort ? { sort } : {}),
+        },
+      }),
     );
     return response ? (Array.isArray(response) ? response : [response]) : [];
   },
@@ -95,9 +100,14 @@ module.exports = {
       this.list("DefaultLoyaltyWalletRewardBalanceService", request, {
         walletCode: wallet.code,
       }),
-      this.list("DefaultRewardLedgerEntryService", request, {
-        walletCode: wallet.code,
-      }),
+      this.list(
+        "DefaultRewardLedgerEntryService",
+        request,
+        {
+          walletCode: wallet.code,
+        },
+        { postedAt: -1, code: -1 },
+      ),
     ]);
     return { wallet: wallet, balances: balances, entries: entries };
   },

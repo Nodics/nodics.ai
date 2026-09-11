@@ -88,14 +88,14 @@ The first migrated framework schemas are `store.store`, `store.salesChannel`,
 and `store.pointOfService`. Other schemas are not automatically migrated merely
 because they contain a property named `revision`.
 
-| Operation | Caller responsibility | Framework responsibility |
-| --- | --- | --- |
-| Create | Supply business fields and stable identity, no counter | Initialize counter to 1 |
-| Edit | Retain the original read token, send changed business fields | Compare original token atomically and increment once |
-| Save unchanged | Retain original token | Return current record without advancing counter or mutation events |
-| Delete | Retain original token and identity | Apply access/reference checks and conditional delete |
-| Import `saveAll` | Author ordinary data rows without counters | Read original tokens and use generated CRUD |
-| Concurrent change | Review newer data and resolve the user's intended edit | Reject stale write; never silently overwrite |
+| Operation         | Caller responsibility                                        | Framework responsibility                                           |
+| ----------------- | ------------------------------------------------------------ | ------------------------------------------------------------------ |
+| Create            | Supply business fields and stable identity, no counter       | Initialize counter to 1                                            |
+| Edit              | Retain the original read token, send changed business fields | Compare original token atomically and increment once               |
+| Save unchanged    | Retain original token                                        | Return current record without advancing counter or mutation events |
+| Delete            | Retain original token and identity                           | Apply access/reference checks and conditional delete               |
+| Import `saveAll`  | Author ordinary data rows without counters                   | Read original tokens and use generated CRUD                        |
+| Concurrent change | Review newer data and resolve the user's intended edit       | Reject stale write; never silently overwrite                       |
 
 ```mermaid
 sequenceDiagram
@@ -121,14 +121,17 @@ example assumes `tenant` and `authData` come from the authenticated request:
 
 ```js
 const response = await SERVICE.DefaultPointOfServiceService.get({
-    tenant, authData, query: { code: 'project-web-pos' }
+  tenant,
+  authData,
+  query: { code: "project-web-pos" },
 });
 const original = response.result[0];
 const saved = await SERVICE.DefaultPointOfServiceService.update({
-    tenant, authData,
-    query: { code: original.code, revision: original.revision ?? 0 },
-    model: { name: 'Updated web service point' },
-    options: { returnModified: true }
+  tenant,
+  authData,
+  query: { code: original.code, revision: original.revision ?? 0 },
+  model: { name: "Updated web service point" },
+  options: { returnModified: true },
 });
 const nextEditingSnapshot = saved.result.models[0];
 ```
@@ -140,11 +143,11 @@ the next editing snapshot. It excludes managed counters from editable payloads.
 
 ### Conflict and recovery behavior
 
-| Response | Meaning | Recovery |
-| --- | --- | --- |
-| 409 / `ERR_CONCURRENCY_00001` | Record changed, disappeared, or identity raced during creation | Preserve draft, read latest through the owning service, review differences, deliberately resubmit |
-| 428 / `ERR_CONCURRENCY_00002` | Existing-record edit omitted original token | Fix caller to retain its read result; do not manufacture a token |
-| 400 / `ERR_CONCURRENCY_00003` | Invalid token, broad selector, operator patch, unsupported provider/schema | Correct the contract; do not disable concurrency to suppress the error |
+| Response                      | Meaning                                                                    | Recovery                                                                                          |
+| ----------------------------- | -------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------- |
+| 409 / `ERR_CONCURRENCY_00001` | Record changed, disappeared, or identity raced during creation             | Preserve draft, read latest through the owning service, review differences, deliberately resubmit |
+| 428 / `ERR_CONCURRENCY_00002` | Existing-record edit omitted original token                                | Fix caller to retain its read result; do not manufacture a token                                  |
+| 400 / `ERR_CONCURRENCY_00003` | Invalid token, broad selector, operator patch, unsupported provider/schema | Correct the contract; do not disable concurrency to suppress the error                            |
 
 Legacy records with no counter use token 0 and a missing-field compare-and-set.
 Their first changed write creates counter 1. Existing populated counters never
@@ -159,18 +162,21 @@ writes all use generated CRUD, declare a typed technical field and metadata:
 
 ```js
 module.exports = {
-    projectOperations: {
-        serviceDesk: {
-            definition: {
-                code: { type: 'string', required: true, unique: true },
-                editCounter: {
-                    type: 'long', required: true, default: 1,
-                    description: 'Framework-managed counter used to detect concurrent edits.'
-                }
-            },
-            backoffice: { concurrency: { field: 'editCounter', managed: true } }
-        }
-    }
+  projectOperations: {
+    serviceDesk: {
+      definition: {
+        code: { type: "string", required: true, unique: true },
+        editCounter: {
+          type: "long",
+          required: true,
+          default: 1,
+          description:
+            "Framework-managed counter used to detect concurrent edits.",
+        },
+      },
+      backoffice: { concurrency: { field: "editCounter", managed: true } },
+    },
+  },
 };
 ```
 
@@ -211,12 +217,12 @@ For a business user, this topic answers what decision can be made, which operati
 
 For beginners, the mental model is simple: the page title is the business capability, the table identifies who owns each part, and the diagram shows how a request or change flows. A reader should not need source-code knowledge to understand the journey, but the developer path is still available when customization is needed.
 
-| Business question | Answer for this topic |
-| --- | --- |
-| What problem does it solve? | Customers need to add fields, validation, and domain records without bypassing generated services, route contracts, permissions, or publication behavior. |
-| Who uses it? | Business users, administrators, developers, operators, QA owners, implementation partners, and AI-assisted delivery tools. |
+| Business question            | Answer for this topic                                                                                                                                                    |
+| ---------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
+| What problem does it solve?  | Customers need to add fields, validation, and domain records without bypassing generated services, route contracts, permissions, or publication behavior.                |
+| Who uses it?                 | Business users, administrators, developers, operators, QA owners, implementation partners, and AI-assisted delivery tools.                                               |
 | What changes can it support? | Nodics uses schema metadata as the model authority. Generated controllers, services, validators, routes, and workbench screens derive from effective schema composition. |
-| What must be governed? | Permissions, validation, source ownership, publication state, runtime impact, audit evidence, and rollback boundaries. |
+| What must be governed?       | Permissions, validation, source ownership, publication state, runtime impact, audit evidence, and rollback boundaries.                                                   |
 
 ## Journey and ownership
 
@@ -231,24 +237,24 @@ flowchart LR
   Runtime --> Evidence["Audit, validation, and support evidence"]
 ```
 
-| Responsibility | Owner | Notes |
-| --- | --- | --- |
+| Responsibility           | Owner                               | Notes                                                                                   |
+| ------------------------ | ----------------------------------- | --------------------------------------------------------------------------------------- |
 | Business capability name | Data Modeling and Schema Management | Used in navigation and dashboards so readers are not exposed to raw module names first. |
-| Source owner | nodics.foundation | Carries exact implementation, documentation, and validation evidence. |
-| Technical module | nSchema | Holds the relevant schema, service, router, data, or contract detail where applicable. |
-| Axis experience | Backend-declared workspace | Axis renders metadata and actions but does not become the authority. |
-| Public experience | Online content delivery | Nexus renders only records approved for public access. |
+| Source owner             | nodics.foundation                   | Carries exact implementation, documentation, and validation evidence.                   |
+| Technical module         | nSchema                             | Holds the relevant schema, service, router, data, or contract detail where applicable.  |
+| Axis experience          | Backend-declared workspace          | Axis renders metadata and actions but does not become the authority.                    |
+| Public experience        | Online content delivery             | Nexus renders only records approved for public access.                                  |
 
 ## Data and configuration detail
 
 Every topic must explain the data that changes behavior. Some topics are schema-driven, some are configuration-driven, some are publishable content, and some are operational records. The documentation must say which category applies before showing code. That keeps production operators and developers aligned on whether a change needs publication, restart, event propagation, approval, or only a project-layer override.
 
-| Detail area | What to document | Verification signal |
-| --- | --- | --- |
-| Model or record | Type code, catalog, tenant, enterprise, state, owner, and lifecycle. | Schema contract or generated model test. |
-| Configuration key | Default value, override location, environment scope, and runtime impact. | Config validation and runtime refresh evidence. |
-| API or event | Route/event name, payload boundary, permission, idempotency, and failure mode. | Route, service, event, and authorization tests. |
-| Publication and access | Staged/Online state, access mode, roles, groups, and permissions. | Content-pack validation and access-policy test. |
+| Detail area            | What to document                                                               | Verification signal                             |
+| ---------------------- | ------------------------------------------------------------------------------ | ----------------------------------------------- |
+| Model or record        | Type code, catalog, tenant, enterprise, state, owner, and lifecycle.           | Schema contract or generated model test.        |
+| Configuration key      | Default value, override location, environment scope, and runtime impact.       | Config validation and runtime refresh evidence. |
+| API or event           | Route/event name, payload boundary, permission, idempotency, and failure mode. | Route, service, event, and authorization tests. |
+| Publication and access | Staged/Online state, access mode, roles, groups, and permissions.              | Content-pack validation and access-policy test. |
 
 ```js
 schemaExtension: { typeCode: "Product", properties: { fit: { type: "String", localized: true } } }
@@ -258,23 +264,23 @@ schemaExtension: { typeCode: "Product", properties: { fit: { type: "String", loc
 
 Developers should customize from the project layer first. A customer project may add properties, services, validators, pipelines, renderers, data packs, or provider configuration when the extension respects the owning capability. Business users may update governed records in Axis when the record is designed for administration. Framework source changes are reserved for improving the reusable product capability itself.
 
-| Customization type | Recommended path | Avoid |
-| --- | --- | --- |
-| Business label, navigation, or content area | Axis-managed content catalog item with publication workflow. | Hardcoding labels or page trees in the frontend. |
-| Runtime setting | Module configuration with validation and governed runtime propagation. | Editing node-local files on each server by hand. |
-| Domain behavior | Extension service, validator, pipeline step, or provider adapter. | Forking the standard module for customer-only logic. |
-| Public visibility | Access policy with public/authenticated/role-based state. | Exposing internal or draft pages through Nexus. |
+| Customization type                          | Recommended path                                                       | Avoid                                                |
+| ------------------------------------------- | ---------------------------------------------------------------------- | ---------------------------------------------------- |
+| Business label, navigation, or content area | Axis-managed content catalog item with publication workflow.           | Hardcoding labels or page trees in the frontend.     |
+| Runtime setting                             | Module configuration with validation and governed runtime propagation. | Editing node-local files on each server by hand.     |
+| Domain behavior                             | Extension service, validator, pipeline step, or provider adapter.      | Forking the standard module for customer-only logic. |
+| Public visibility                           | Access policy with public/authenticated/role-based state.              | Exposing internal or draft pages through Nexus.      |
 
 ## Operations and governance
 
 Operators need production-safe evidence, not only implementation notes. Each page must call out logging, tracing, permission checks, event propagation, data import/export, publication status, rollback behavior, and troubleshooting. If a capability affects multiple nodes, the documentation must explain how changes reach every node and how a partial failure is detected.
 
-| Operational concern | Required documentation detail |
-| --- | --- |
-| Security | Authentication mode, permission code, role/group, tenant and enterprise isolation. |
-| Audit | Actor, timestamp, source record, checksum, approval, route/event, and result. |
-| Resilience | Retry, idempotency, compensation, fallback, cache invalidation, and rollback. |
-| Observability | Logs, metrics, dashboard cards, health checks, and support evidence. |
+| Operational concern | Required documentation detail                                                      |
+| ------------------- | ---------------------------------------------------------------------------------- |
+| Security            | Authentication mode, permission code, role/group, tenant and enterprise isolation. |
+| Audit               | Actor, timestamp, source record, checksum, approval, route/event, and result.      |
+| Resilience          | Retry, idempotency, compensation, fallback, cache invalidation, and rollback.      |
+| Observability       | Logs, metrics, dashboard cards, health checks, and support evidence.               |
 
 ## Common mistakes
 
@@ -291,3 +297,12 @@ Operators need production-safe evidence, not only implementation notes. Each pag
 Verification starts with the document itself: it must include business context, technical ownership, a visual flow, data or configuration tables, customization guidance, common mistakes, and validation evidence. Developers then run the documentation generator and content-pack validator so the page becomes backend-owned data with checksum, lifecycle, navigation, access policy, publication state, and search metadata.
 
 For implementation verification, run the owning module tests and any Axis or Nexus renderer tests that consume the page. Operators should confirm that production-like runtime behavior matches the documentation: permissions reject unauthorized access, Online pages do not expose Staged data, runtime changes propagate through governed events, and troubleshooting evidence is available without exposing secrets.
+
+### Governed local maintenance
+
+The governed Local reset is a separate maintenance operation. Its existing
+provider-issued opaque authority permits bulk removal of configured local
+models, including managed-counter schemas, through the generated remove
+pipeline. Caller-supplied flags or lookalike authority objects cannot enable
+this path. Ordinary generated deletes still require a scalar identity and the
+original revision; no client or project may disable these checks for editing.

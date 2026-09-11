@@ -68,3 +68,14 @@ Run `node --test nodics.commerce/modules/baseCommerce/modules/product/test/produ
 and `node --test nodics.commerce/modules/baseCommerce/modules/product/test/productLocalizedSearchPublicationContract.test.js`
 plus `productDiscoveryApiContract.test.js` and `productLocalizationPhase5Qualification.test.js`
 with the generated schema and nSearch pipeline tests after changes. Archived gComm is reference-only.
+
+For reference catalogues, `product.discovery.catalogue.enabled` opts into a
+bounded, complete Product projection query. It applies configured facet paths,
+price ranges, sale collections and stable sorting before pagination, and returns
+`total` plus whole-query facet counts. Configure `maximumCandidates` (default
+1000, hard ceiling 10000) and `readPageSize`; exceeding the bound or receiving
+duplicate pages fails instead of returning a truncated catalogue. The default
+remains provider-paged discovery. Larger deployments should replace
+`DefaultProductCatalogueQueryService` with their search provider's aggregation
+implementation. Published price summaries are used only for display ordering;
+checkout still resolves price, tax, stock and payment through their owners.

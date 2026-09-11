@@ -40,4 +40,4 @@ in Profile and customer presentation/adapters in their project.
 
 Own Electronics BackOffice navigation and view properties here. Register the concrete eWaste provider and attach to `wasteCore:waste-operations`; do not copy the generic group or contribute Clothing placeholders. Shared renderer selection is declarative `backendWorkspace` data.
 
-WARM electronics is an optional provider over Waste Impact; see `llm/contracts/README.md`. Versioned factors, weight ranges and potential-treatment assumptions are saved. Operator history/reassessment/acceptance use Waste-owned operations; changing providers never overwrites an old assessment or reward.
+WARM electronics is an optional provider over Waste Impact; see `llm/contracts/e-waste-domain.md`. Versioned factors, weight ranges and potential-treatment assumptions are saved. Operator history/reassessment/acceptance use Waste-owned operations; changing providers never overwrites an old assessment or reward.

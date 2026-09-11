@@ -7,13 +7,13 @@ the active tenant.
 
 ## Who Uses CronJob
 
-| Persona or caller | Typical workflow | Boundary |
-| --- | --- | --- |
-| Business operator | Inspect, run, pause, resume, or stop an allowed job | Secured command routes and tenant-scoped permissions |
-| Module or scheduled process | Execute work against another module | Tenant-bound internal token and target-module authorization |
-| Project developer | Add a project-specific schedule and handler | Later module definitions, services, pipelines, events, and tests |
-| Platform operator | Assign nodes, monitor runs, drain/restart processes, and recover failures | Environment/server/node configuration plus persisted CronJob state |
-| BackOffice client | Discover and invoke allowed CronJob operations | CronJob remains scheduler and route authority |
+| Persona or caller           | Typical workflow                                                          | Boundary                                                           |
+| --------------------------- | ------------------------------------------------------------------------- | ------------------------------------------------------------------ |
+| Business operator           | Inspect, run, pause, resume, or stop an allowed job                       | Secured command routes and tenant-scoped permissions               |
+| Module or scheduled process | Execute work against another module                                       | Tenant-bound internal token and target-module authorization        |
+| Project developer           | Add a project-specific schedule and handler                               | Later module definitions, services, pipelines, events, and tests   |
+| Platform operator           | Assign nodes, monitor runs, drain/restart processes, and recover failures | Environment/server/node configuration plus persisted CronJob state |
+| BackOffice client           | Discover and invoke allowed CronJob operations                            | CronJob remains scheduler and route authority                      |
 
 **Maturity: Production-ready capability.** Multi-node production scheduling
 still requires project-owned topology, node monitoring, job idempotency,
@@ -183,3 +183,7 @@ environment.
 - Messaging and events: [nEms](../../../nodics.foundation/modules/nEms/README.md)
 - Runtime module lifecycle: [nService](../../../nodics.foundation/modules/nService/README.md)
 - Capability maturity: [Provider And Capability Maturity Matrix](https://github.com/Nodics/nodics.docs)
+
+The versioned core release targets the `PROCESS` runtime, where Workflow and
+Scheduled Jobs are composed together. Import it through governed module
+activation or the secured data-release API; an unrelated destination is rejected.

@@ -600,7 +600,7 @@ module.exports = {
             "developer",
             "security-reviewer"
           ],
-          "searchText": "Employee Login, Recovery, Lock, and Dashboard Operate the employee-only authentication journey, recovery, persistent browser session, idle lock, logout, configuration, and safe failures. # Employee Login, Recovery, Screen Lock, and Dashboard\n\nAxis is an employee Back Office application. Customer credentials must not be\nsubmitted to its login flow.\n\n| Journey step | Business outcome | Axis responsibility | Backend owner |\n| --- | --- | --- | --- |\n| Public bootstrap | Find the correct employee login experience for the deployed project | Read public config and request safe discovery data | BackOffice publishes public Profile and CMS connection metadata |\n| Login | Verify an employee can enter the Back Office | Render CMS-composed form and send credentials directly to Profile | Profile authenticates, issues tokens, sets browser-session cookies, and owns CSRF |\n| Secured bootstrap | Show only authorized capabilities | Hold access token in memory and request authorized navigation | BackOffice filters modules, permissions, availability, and Axis policy |\n| Screen lock | Hide protected workspace during idle periods | Store only a bounded lock marker and ask for password again | Profile re-verifies the employee and rotates session state |\n| Logout | End the browser session honestly | Clear memory only after backend revocation succeeds | Profile revokes refresh state and expires session cookies |\n\nFor beginners, the safest mental model is that Axis never owns a password and\nnever becomes the identity system. It collects employee input, sends it to\nProfile, and then uses BackOffice to discover only the capabilities that the\nauthenticated employee may see.\n\nDevelopers should keep login, recovery, lock, restore, and logout changes on\nthe correct side of the boundary: Axis renders and validates browser-safe\ninteraction, while Profile and BackOffice own authentication, session\nrestoration, authorization, policy, and revocation.\n\nAn operator should use the visible login, restore, lock, and logout states to\nseparate browser configuration issues from Profile authentication, BackOffice\nauthorization, CMS delivery, or session-revocation failures.\n\n## Startup journey\n\n1. Axis reads public deployment configuration from `/axis-config.json`.\n2. Axis calls the BackOffice public bootstrap.\n3. BackOffice returns only active Profile/CMS endpoints and Axis CMS\n   composition identifiers.\n4. Axis loads `/login` directly from CMS public delivery.\n5. Axis sends entered employee credentials directly to Profile.\n6. Axis keeps the returned access token in memory only. Profile stores the\n   refresh credential in a scoped `HttpOnly` cookie that Axis cannot read.\n7. Axis calls secured BackOffice bootstrap with the access token.\n8. BackOffice returns the effective tenant-scoped Axis employee policy,\n   authorized module catalogue, navigation contributions, compatibility,\n   availability, and client-safe environment observations.\n9. Axis constructs its shell from the authenticated BackOffice bootstrap\n   navigation, including the backend-owned Dashboard entry and authorized\n   module-owned navigation.\n10. If authorized, Axis loads `/dashboard` from authenticated CMS delivery.\n\nA customer login is never used as a fallback. Authentication or authorization\nfailure keeps the employee outside the dashboard and displays a safe message.\n\nPassword fields on login and lock-screen pages include an accessible show/hide\ncontrol so employees can verify local typing mistakes before submission.\nRevealing a password changes only the current input presentation. Axis still\nsends the value only to Profile, never stores it, and never exposes it through\nBackOffice, CMS, URLs, logs, query cache, or browser storage.\n\n## Password recovery\n\nThe public `/forgot-password` page uses the same responsive authentication\nlayout as login, with CMS-owned introduction, identifier label, placeholder,\naction label, assistance, and legal text. Axis intentionally keeps submission\nunavailable today because Profile does not yet expose an approved employee\nself-recovery API.\n\nDo not simulate success, send identifiers to BackOffice or CMS, or build a\nfrontend-only reset path. The future Profile contract must be anti-enumeration,\nrate-limited, tenant-aware, auditable, and compatible with the existing OTP and\nnotification authorities before this form is connected.\n\n## Idle screen lock\n\nThe secured bootstrap returns `axisPolicy` after employee authentication.\nVersion 1 supports `screenLockEnabled`, `idleTimeoutSeconds` from 60 through\n86,400, the policy contract version and optimistic revision, and whether the\neffective policy came from layered defaults or persistence.\n\nAxis observes keyboard, pointer, touch, and wheel activity. Pointer movement is\nthrottled to one deadline update per second to avoid high-frequency work.\nBackground-tab timer throttling is handled by comparing the absolute deadline\nwhen the page becomes visible again.\n\nWhen the deadline passes, Axis:\n\n1. records a bounded lock marker and same-application return path in\n   `sessionStorage`;\n2. replaces it with `/lock-screen`;\n3. keeps tokens and the employee identifier in memory only;\n4. hides protected application content;\n5. asks only for the current employee password; and\n6. sends that password directly to Profile.\n\nA successful unlock receives fresh Profile tokens, reloads secured BackOffice\nbootstrap and policy, removes the lock marker, and returns to the prior\nprotected route. A failed unlock stays locked and shows a safe authentication\nerror. “Not you? Sign out” clears the marker and local session, asks Profile to\nrevoke it, and returns to `/login`.\n\nThe marker contains only `locked: true` and a validated relative return path.\nIt never contains a password, access token, refresh token, employee identifier,\nbackend response, or authorization data. External, malformed, authentication,\nand lock-screen return paths fall back to `/dashboard`.\n\nThe screen lock is presentation defense-in-depth. It never replaces bearer\nexpiry, revocation, Profile authentication, or target-module authorization.\n\nOn browser refresh, Axis reads only the non-secret CSRF cookie and calls the\nProfile browser restore endpoint with credentials included. Profile requires\nthe exact allowed Origin and matching `X-CSRF-Token`, consumes the refresh\ncredential once, rotates it, and returns a replacement access token and\nemployee identifier. Axis then reloads the secured BackOffice bootstrap and\nrestores the lock gate before protected routing. A session that was locked\nbefore refresh remains on `/lock-screen` until successful password\nre-verification; refresh cannot silently return it to the dashboard. An\nexpired, revoked, replayed, or otherwise invalid session returns to the public\nlogin experience.\n\n## Logout\n\nAxis sends the configured CSRF value to Profile, which revokes refresh state\nand expires both browser-session cookies. Only after Profile confirms that\noperation does Axis clear its in-memory access token and redirect to `/login`.\nIf Profile is unavailable, Axis keeps the secured session visible and reports\nthat logout was not completed; it never presents a false signed-out state while\nan HttpOnly refresh session remains active. The existing short-lived access\ntoken remains bounded by backend expiry and revocation policy.\n\n## Configuration\n\nThe root `.env` contains only public deployment values:\n\n```dotenv\nAXIS_BACKOFFICE_BASE_URL=http://localhost:4300\nAXIS_ENTERPRISE_CODE=default\nAXIS_PROJECT_CODE=nodics.kickoff\nAXIS_CLIENT_CONTRACT_VERSION=1\nAXIS_REQUEST_TIMEOUT_MS=10000\nAXIS_BROWSER_SESSION_CSRF_COOKIE_NAME=nodics_axis_csrf\n```\n\nThe CSRF cookie name is public protocol configuration and must equal Profile's\neffective `profileBrowserSession.csrfCookieName`. Do not add Profile or CMS\nURLs. BackOffice discovers them from module self-registration. Never place\npasswords or tokens in `.env`, browser storage, URLs, logs, or query-cache keys.\n\n## Failure behavior\n\n- Invalid configuration uses static configuration recovery.\n- BackOffice discovery failure uses static discovery recovery with retry.\n- Missing Profile or CMS registration fails public bootstrap closed.\n- CMS failure or incompatibility uses static CMS recovery with retry.\n- Invalid employee credentials produce a safe login error.\n- Missing BackOffice permission rejects the session before dashboard delivery.\n- Direct `/dashboard` navigation attempts Profile-owned session restoration;\n  absent or invalid refresh state redirects to `/login`.\n- Direct `/lock-screen` navigation without an authenticated locked session\n  redirects safely.\n- Refreshing a locked session restores the lock marker and requires password\n  verification before any protected route is rendered.\n- Invalid or incompatible Axis policy rejects authenticated bootstrap.\n- Persistent-policy read failure is handled by BackOffice using its safe\n  configured default.\n\nEmployee password recovery is not yet a Profile capability. The CMS page may\nexplain the process, but Axis keeps submission disabled until Profile provides\na governed, enumeration-safe recovery contract.\n\n## Customize and extend safely\n\nCustomize login, recovery, and lock-screen presentation through CMS component\nproperties and project-owned renderer composition. Add a new authentication\nview only as a focused renderer with a typed logical-key registration while\ncontinuing to use Profile's browser-session, CSRF, refresh, revocation, and\nemployee-only contracts.\n\nDo not replace Profile authentication, store tokens in browser storage, embed\ncredentials in configuration, infer authorization from the UI, or implement\npassword recovery locally. Test valid and invalid credentials, customer-user\nrejection, missing permissions, refresh restoration, locked-page refresh,\nCSRF rejection, idle boundaries, logout revocation, malformed CMS properties,\nresponsive layout, and rollback of the project renderer registration.\n\n## Verification\n\n```bash\nnpm run verify\n```\n\nTests cover low-disclosure discovery, policy validation, credential delivery\nto Profile, HttpOnly refresh restoration, CSRF transport, secured bootstrap\nbearer use, protected-route preservation after remount, invalid-session\nfallback, CMS authentication pages, inactivity boundaries, activity deadline\nreset, protected routing, and logout revocation.\n\nFor example, a wrong password should produce a low-disclosure failure message.\nAxis should not reveal whether the enterprise code, employee login, role, or\npermission exists. Profile owns the authentication decision, and Axis owns only\nthe safe presentation and retry flow.\n\n## Common mistakes\n\n- Treating Axis login as a standalone identity service. Axis presents the login\n  journey; Profile owns authentication, session restoration, revocation,\n  account policy, and recovery contracts.\n- Persisting access tokens, passwords, refresh tokens, CSRF material, or\n  employee profile details in browser storage.\n- Revealing whether an enterprise, employee account, or permission exists\n  through detailed pre-authentication errors.\n- Allowing customer-user authentication into the employee BackOffice workspace.\n- Making forgot-password look operational before the backend employee-recovery\n  API exists and is approved.\n"
+          "searchText": "Employee Login, Recovery, Lock, and Dashboard Operate the employee-only authentication journey, recovery, persistent browser session, idle lock, logout, configuration, and safe failures. # Employee Login, Recovery, Screen Lock, and Dashboard\n\nAxis is an employee Back Office application. Customer credentials must not be\nsubmitted to its login flow.\n\n| Journey step      | Business outcome                                                    | Axis responsibility                                               | Backend owner                                                                     |\n| ----------------- | ------------------------------------------------------------------- | ----------------------------------------------------------------- | --------------------------------------------------------------------------------- |\n| Public bootstrap  | Find the correct employee login experience for the deployed project | Read public config and request safe discovery data                | BackOffice publishes public Profile and CMS connection metadata                   |\n| Login             | Verify an employee can enter the Back Office                        | Render CMS-composed form and send credentials directly to Profile | Profile authenticates, issues tokens, sets browser-session cookies, and owns CSRF |\n| Secured bootstrap | Show only authorized capabilities                                   | Hold access token in memory and request authorized navigation     | BackOffice filters modules, permissions, availability, and Axis policy            |\n| Screen lock       | Hide protected workspace during idle periods                        | Store only a bounded lock marker and ask for password again       | Profile re-verifies the employee and rotates session state                        |\n| Logout            | End the browser session honestly                                    | Clear memory only after backend revocation succeeds               | Profile revokes refresh state and expires session cookies                         |\n\nFor beginners, the safest mental model is that Axis never owns a password and\nnever becomes the identity system. It collects employee input, sends it to\nProfile, and then uses BackOffice to discover only the capabilities that the\nauthenticated employee may see.\n\nDevelopers should keep login, recovery, lock, restore, and logout changes on\nthe correct side of the boundary: Axis renders and validates browser-safe\ninteraction, while Profile and BackOffice own authentication, session\nrestoration, authorization, policy, and revocation.\n\nAn operator should use the visible login, restore, lock, and logout states to\nseparate browser configuration issues from Profile authentication, BackOffice\nauthorization, CMS delivery, or session-revocation failures.\n\n## Startup journey\n\n1. Axis reads public deployment configuration from `/axis-config.json`.\n2. Axis calls the BackOffice public bootstrap.\n3. BackOffice returns only active Profile/CMS endpoints and Axis CMS\n   composition identifiers.\n4. Axis loads `/login` directly from CMS public delivery.\n5. Axis sends entered employee credentials directly to Profile.\n6. Axis keeps the returned access token in memory only. Profile stores the\n   refresh credential in a scoped `HttpOnly` cookie that Axis cannot read.\n7. Axis calls secured BackOffice bootstrap with the access token.\n8. BackOffice returns the effective tenant-scoped Axis employee policy,\n   authorized module catalogue, navigation contributions, compatibility,\n   availability, and client-safe environment observations.\n9. Axis constructs its shell from the authenticated BackOffice bootstrap\n   navigation, including the backend-owned Dashboard entry and authorized\n   module-owned navigation.\n10. If authorized, Axis loads `/dashboard` from authenticated CMS delivery.\n\nA customer login is never used as a fallback. Authentication or authorization\nfailure keeps the employee outside the dashboard and displays a safe message.\n\nPassword fields on login and lock-screen pages include an accessible show/hide\ncontrol so employees can verify local typing mistakes before submission.\nRevealing a password changes only the current input presentation. Axis still\nsends the value only to Profile, never stores it, and never exposes it through\nBackOffice, CMS, URLs, logs, query cache, or browser storage.\n\n## First-run initialization\n\nWhen the managed Axis baseline is absent, the bundled recovery screen remains\navailable after employee authentication. Choose **Prepare required modules**\nto open the existing Module Registry if your BackOffice permissions expose it.\nRegister and activate Process, then choose **Return to Axis setup**. Process\nmust be registered and active before its governed approval connection appears.\nThe recovery route preserves module eligibility and backend action permissions.\n\nChoose **Initialize and submit**, inspect the immutable publication details,\nand choose **Approve and publish**. Import prepares Staged; Process owns the\napproval, and WCMS Online activates the approved baseline. Axis then opens its\nmanaged dashboard. If required data fails, inspect the registry receipt, fix the\nreported configuration or release problem, and retry activation. Refresh or\nretry does not grant approval or bypass an unavailable module.\n\n## Password recovery\n\nThe public `/forgot-password` page uses the same responsive authentication\nlayout as login, with CMS-owned introduction, identifier label, placeholder,\naction label, assistance, and legal text. Axis intentionally keeps submission\nunavailable today because Profile does not yet expose an approved employee\nself-recovery API.\n\nDo not simulate success, send identifiers to BackOffice or CMS, or build a\nfrontend-only reset path. The future Profile contract must be anti-enumeration,\nrate-limited, tenant-aware, auditable, and compatible with the existing OTP and\nnotification authorities before this form is connected.\n\n## Idle screen lock\n\nThe secured bootstrap returns `axisPolicy` after employee authentication.\nVersion 1 supports `screenLockEnabled`, `idleTimeoutSeconds` from 60 through\n86,400, the policy contract version and optimistic revision, and whether the\neffective policy came from layered defaults or persistence.\n\nAxis observes keyboard, pointer, touch, and wheel activity. Pointer movement is\nthrottled to one deadline update per second to avoid high-frequency work.\nBackground-tab timer throttling is handled by comparing the absolute deadline\nwhen the page becomes visible again.\n\nWhen the deadline passes, Axis:\n\n1. records a bounded lock marker and same-application return path in\n   `sessionStorage`;\n2. replaces it with `/lock-screen`;\n3. keeps tokens and the employee identifier in memory only;\n4. hides protected application content;\n5. asks only for the current employee password; and\n6. sends that password directly to Profile.\n\nA successful unlock receives fresh Profile tokens, reloads secured BackOffice\nbootstrap and policy, removes the lock marker, and returns to the prior\nprotected route. A failed unlock stays locked and shows a safe authentication\nerror. “Not you? Sign out” clears the marker and local session, asks Profile to\nrevoke it, and returns to `/login`.\n\nThe marker contains only `locked: true` and a validated relative return path.\nIt never contains a password, access token, refresh token, employee identifier,\nbackend response, or authorization data. External, malformed, authentication,\nand lock-screen return paths fall back to `/dashboard`.\n\nThe screen lock is presentation defense-in-depth. It never replaces bearer\nexpiry, revocation, Profile authentication, or target-module authorization.\n\nOn browser refresh, Axis reads only the non-secret CSRF cookie and calls the\nProfile browser restore endpoint with credentials included. Profile requires\nthe exact allowed Origin and matching `X-CSRF-Token`, consumes the refresh\ncredential once, rotates it, and returns a replacement access token and\nemployee identifier. Axis then reloads the secured BackOffice bootstrap and\nrestores the lock gate before protected routing. A session that was locked\nbefore refresh remains on `/lock-screen` until successful password\nre-verification; refresh cannot silently return it to the dashboard. An\nexpired, revoked, replayed, or otherwise invalid session returns to the public\nlogin experience.\n\n## Logout\n\nAxis sends the configured CSRF value to Profile, which revokes refresh state\nand expires both browser-session cookies. Only after Profile confirms that\noperation does Axis clear its in-memory access token and redirect to `/login`.\nIf Profile is unavailable, Axis keeps the secured session visible and reports\nthat logout was not completed; it never presents a false signed-out state while\nan HttpOnly refresh session remains active. The existing short-lived access\ntoken remains bounded by backend expiry and revocation policy.\n\n## Configuration\n\nThe root `.env` contains only public deployment values:\n\n```dotenv\nAXIS_BACKOFFICE_BASE_URL=http://localhost:4300\nAXIS_ENTERPRISE_CODE=default\nAXIS_PROJECT_CODE=nodics.kickoff\nAXIS_CLIENT_CONTRACT_VERSION=1\nAXIS_REQUEST_TIMEOUT_MS=10000\nAXIS_BROWSER_SESSION_CSRF_COOKIE_NAME=nodics_axis_csrf\n```\n\nThe CSRF cookie name is public protocol configuration and must equal Profile's\neffective `profileBrowserSession.csrfCookieName`. Do not add Profile or CMS\nURLs. BackOffice discovers them from module self-registration. Never place\npasswords or tokens in `.env`, browser storage, URLs, logs, or query-cache keys.\n\n## Failure behavior\n\n- Invalid configuration uses static configuration recovery.\n- BackOffice discovery failure uses static discovery recovery with retry.\n- Missing Profile or CMS registration fails public bootstrap closed.\n- CMS failure or incompatibility uses static CMS recovery with retry.\n- Invalid employee credentials produce a safe login error.\n- Missing BackOffice permission rejects the session before dashboard delivery.\n- Direct `/dashboard` navigation attempts Profile-owned session restoration;\n  absent or invalid refresh state redirects to `/login`.\n- Direct `/lock-screen` navigation without an authenticated locked session\n  redirects safely.\n- Refreshing a locked session restores the lock marker and requires password\n  verification before any protected route is rendered.\n- Invalid or incompatible Axis policy rejects authenticated bootstrap.\n- Persistent-policy read failure is handled by BackOffice using its safe\n  configured default.\n\nEmployee password recovery is not yet a Profile capability. The CMS page may\nexplain the process, but Axis keeps submission disabled until Profile provides\na governed, enumeration-safe recovery contract.\n\n## Customize and extend safely\n\nCustomize login, recovery, and lock-screen presentation through CMS component\nproperties and project-owned renderer composition. Add a new authentication\nview only as a focused renderer with a typed logical-key registration while\ncontinuing to use Profile's browser-session, CSRF, refresh, revocation, and\nemployee-only contracts.\n\nDo not replace Profile authentication, store tokens in browser storage, embed\ncredentials in configuration, infer authorization from the UI, or implement\npassword recovery locally. Test valid and invalid credentials, customer-user\nrejection, missing permissions, refresh restoration, locked-page refresh,\nCSRF rejection, idle boundaries, logout revocation, malformed CMS properties,\nresponsive layout, and rollback of the project renderer registration.\n\n## Verification\n\n```bash\nnpm run verify\n```\n\nTests cover low-disclosure discovery, policy validation, credential delivery\nto Profile, HttpOnly refresh restoration, CSRF transport, secured bootstrap\nbearer use, protected-route preservation after remount, invalid-session\nfallback, CMS authentication pages, inactivity boundaries, activity deadline\nreset, protected routing, and logout revocation.\n\nFor example, a wrong password should produce a low-disclosure failure message.\nAxis should not reveal whether the enterprise code, employee login, role, or\npermission exists. Profile owns the authentication decision, and Axis owns only\nthe safe presentation and retry flow.\n\n## Common mistakes\n\n- Treating Axis login as a standalone identity service. Axis presents the login\n  journey; Profile owns authentication, session restoration, revocation,\n  account policy, and recovery contracts.\n- Persisting access tokens, passwords, refresh tokens, CSRF material, or\n  employee profile details in browser storage.\n- Revealing whether an enterprise, employee account, or permission exists\n  through detailed pre-authentication errors.\n- Allowing customer-user authentication into the employee BackOffice workspace.\n- Making forgot-password look operational before the backend employee-recovery\n  API exists and is approved.\n"
         },
         {
           "code": "axis.assistant",
@@ -1916,7 +1916,7 @@ module.exports = {
         "path": "modules/axis/docs/pages/project-overview.md",
         "evidence": "README.md",
         "hash": "8175d307de409b5df6c760f5f81f2e3010c230394647ea1fb4778370ec06868f",
-        "version": "0.0.2"
+        "version": "0.0.3"
       },
       "next": {
         "title": "Architecture and Repository Boundaries",
@@ -2447,7 +2447,7 @@ module.exports = {
         "path": "modules/axis/docs/pages/architecture-and-ownership.md",
         "evidence": "docs/architecture-and-ownership.md",
         "hash": "eee71ed4e3e3a40da29740508fca1ad7f3ab0deba558a4833b10bb097b299a2a",
-        "version": "0.0.2"
+        "version": "0.0.3"
       },
       "previous": {
         "title": "What Is Nodics Axis?",
@@ -2875,7 +2875,7 @@ module.exports = {
         "path": "modules/axis/docs/pages/frontend-technology-stack.md",
         "evidence": "docs/frontend-technology-stack.md",
         "hash": "30a69d3ecf89cd910f4a061f0747ec7e9c58fbfb8f5d3e8e3083274a65ecfeb3",
-        "version": "0.0.2"
+        "version": "0.0.3"
       },
       "previous": {
         "title": "Architecture and Repository Boundaries",
@@ -3332,7 +3332,7 @@ module.exports = {
         "path": "modules/axis/docs/pages/design-system-and-shell.md",
         "evidence": "docs/design-system-and-shell.md",
         "hash": "01c5524ba7d6d685d8c1cf68a1964821763cf7cafd659eef69335e479dd48d6e",
-        "version": "0.0.2"
+        "version": "0.0.3"
       },
       "previous": {
         "title": "Frontend Technology Stack",
@@ -3652,7 +3652,7 @@ module.exports = {
         "path": "modules/axis/docs/pages/cms-delivery-and-renderers.md",
         "evidence": "docs/cms-delivery-and-renderers.md",
         "hash": "3e4110bf8ca0e936ce783c4586aaefe41b0a342108992998d656f537049251c1",
-        "version": "0.0.2"
+        "version": "0.0.3"
       },
       "previous": {
         "title": "Design System and Application Shell",
@@ -4061,7 +4061,7 @@ module.exports = {
         "path": "modules/axis/docs/pages/documentation-content.md",
         "evidence": "docs/documentation-content.md",
         "hash": "d75ba0ab1416701c9307010534704e069d2b33f5d08e0e82bf892a3f81285e44",
-        "version": "0.0.2"
+        "version": "0.0.3"
       },
       "previous": {
         "title": "CMS Delivery and Renderer Integration",
@@ -4160,43 +4160,48 @@ module.exports = {
           "level": 2
         },
         {
+          "text": "First-run initialization",
+          "anchor": "employee-access-2-first-run-initialization",
+          "level": 2
+        },
+        {
           "text": "Password recovery",
-          "anchor": "employee-access-2-password-recovery",
+          "anchor": "employee-access-3-password-recovery",
           "level": 2
         },
         {
           "text": "Idle screen lock",
-          "anchor": "employee-access-3-idle-screen-lock",
+          "anchor": "employee-access-4-idle-screen-lock",
           "level": 2
         },
         {
           "text": "Logout",
-          "anchor": "employee-access-4-logout",
+          "anchor": "employee-access-5-logout",
           "level": 2
         },
         {
           "text": "Configuration",
-          "anchor": "employee-access-5-configuration",
+          "anchor": "employee-access-6-configuration",
           "level": 2
         },
         {
           "text": "Failure behavior",
-          "anchor": "employee-access-6-failure-behavior",
+          "anchor": "employee-access-7-failure-behavior",
           "level": 2
         },
         {
           "text": "Customize and extend safely",
-          "anchor": "employee-access-7-customize-and-extend-safely",
+          "anchor": "employee-access-8-customize-and-extend-safely",
           "level": 2
         },
         {
           "text": "Verification",
-          "anchor": "employee-access-8-verification",
+          "anchor": "employee-access-9-verification",
           "level": 2
         },
         {
           "text": "Common mistakes",
-          "anchor": "employee-access-9-common-mistakes",
+          "anchor": "employee-access-10-common-mistakes",
           "level": 2
         }
       ],
@@ -4290,8 +4295,22 @@ module.exports = {
         {
           "kind": "heading",
           "level": 2,
+          "text": "First-run initialization",
+          "anchor": "employee-access-2-first-run-initialization"
+        },
+        {
+          "kind": "paragraph",
+          "text": "When the managed Axis baseline is absent, the bundled recovery screen remains available after employee authentication. Choose **Prepare required modules** to open the existing Module Registry if your BackOffice permissions expose it. Register and activate Process, then choose **Return to Axis setup**. Process must be registered and active before its governed approval connection appears. The recovery route preserves module eligibility and backend action permissions."
+        },
+        {
+          "kind": "paragraph",
+          "text": "Choose **Initialize and submit**, inspect the immutable publication details, and choose **Approve and publish**. Import prepares Staged; Process owns the approval, and WCMS Online activates the approved baseline. Axis then opens its managed dashboard. If required data fails, inspect the registry receipt, fix the reported configuration or release problem, and retry activation. Refresh or retry does not grant approval or bypass an unavailable module."
+        },
+        {
+          "kind": "heading",
+          "level": 2,
           "text": "Password recovery",
-          "anchor": "employee-access-2-password-recovery"
+          "anchor": "employee-access-3-password-recovery"
         },
         {
           "kind": "paragraph",
@@ -4305,7 +4324,7 @@ module.exports = {
           "kind": "heading",
           "level": 2,
           "text": "Idle screen lock",
-          "anchor": "employee-access-3-idle-screen-lock"
+          "anchor": "employee-access-4-idle-screen-lock"
         },
         {
           "kind": "paragraph",
@@ -4350,7 +4369,7 @@ module.exports = {
           "kind": "heading",
           "level": 2,
           "text": "Logout",
-          "anchor": "employee-access-4-logout"
+          "anchor": "employee-access-5-logout"
         },
         {
           "kind": "paragraph",
@@ -4360,7 +4379,7 @@ module.exports = {
           "kind": "heading",
           "level": 2,
           "text": "Configuration",
-          "anchor": "employee-access-5-configuration"
+          "anchor": "employee-access-6-configuration"
         },
         {
           "kind": "paragraph",
@@ -4379,7 +4398,7 @@ module.exports = {
           "kind": "heading",
           "level": 2,
           "text": "Failure behavior",
-          "anchor": "employee-access-6-failure-behavior"
+          "anchor": "employee-access-7-failure-behavior"
         },
         {
           "kind": "unordered-list",
@@ -4405,7 +4424,7 @@ module.exports = {
           "kind": "heading",
           "level": 2,
           "text": "Customize and extend safely",
-          "anchor": "employee-access-7-customize-and-extend-safely"
+          "anchor": "employee-access-8-customize-and-extend-safely"
         },
         {
           "kind": "paragraph",
@@ -4419,7 +4438,7 @@ module.exports = {
           "kind": "heading",
           "level": 2,
           "text": "Verification",
-          "anchor": "employee-access-8-verification"
+          "anchor": "employee-access-9-verification"
         },
         {
           "kind": "code",
@@ -4438,7 +4457,7 @@ module.exports = {
           "kind": "heading",
           "level": 2,
           "text": "Common mistakes",
-          "anchor": "employee-access-9-common-mistakes"
+          "anchor": "employee-access-10-common-mistakes"
         },
         {
           "kind": "unordered-list",
@@ -4451,7 +4470,7 @@ module.exports = {
           ]
         }
       ],
-      "searchText": "Employee Login, Recovery, Lock, and Dashboard Operate the employee-only authentication journey, recovery, persistent browser session, idle lock, logout, configuration, and safe failures. # Employee Login, Recovery, Screen Lock, and Dashboard\n\nAxis is an employee Back Office application. Customer credentials must not be\nsubmitted to its login flow.\n\n| Journey step | Business outcome | Axis responsibility | Backend owner |\n| --- | --- | --- | --- |\n| Public bootstrap | Find the correct employee login experience for the deployed project | Read public config and request safe discovery data | BackOffice publishes public Profile and CMS connection metadata |\n| Login | Verify an employee can enter the Back Office | Render CMS-composed form and send credentials directly to Profile | Profile authenticates, issues tokens, sets browser-session cookies, and owns CSRF |\n| Secured bootstrap | Show only authorized capabilities | Hold access token in memory and request authorized navigation | BackOffice filters modules, permissions, availability, and Axis policy |\n| Screen lock | Hide protected workspace during idle periods | Store only a bounded lock marker and ask for password again | Profile re-verifies the employee and rotates session state |\n| Logout | End the browser session honestly | Clear memory only after backend revocation succeeds | Profile revokes refresh state and expires session cookies |\n\nFor beginners, the safest mental model is that Axis never owns a password and\nnever becomes the identity system. It collects employee input, sends it to\nProfile, and then uses BackOffice to discover only the capabilities that the\nauthenticated employee may see.\n\nDevelopers should keep login, recovery, lock, restore, and logout changes on\nthe correct side of the boundary: Axis renders and validates browser-safe\ninteraction, while Profile and BackOffice own authentication, session\nrestoration, authorization, policy, and revocation.\n\nAn operator should use the visible login, restore, lock, and logout states to\nseparate browser configuration issues from Profile authentication, BackOffice\nauthorization, CMS delivery, or session-revocation failures.\n\n## Startup journey\n\n1. Axis reads public deployment configuration from `/axis-config.json`.\n2. Axis calls the BackOffice public bootstrap.\n3. BackOffice returns only active Profile/CMS endpoints and Axis CMS\n   composition identifiers.\n4. Axis loads `/login` directly from CMS public delivery.\n5. Axis sends entered employee credentials directly to Profile.\n6. Axis keeps the returned access token in memory only. Profile stores the\n   refresh credential in a scoped `HttpOnly` cookie that Axis cannot read.\n7. Axis calls secured BackOffice bootstrap with the access token.\n8. BackOffice returns the effective tenant-scoped Axis employee policy,\n   authorized module catalogue, navigation contributions, compatibility,\n   availability, and client-safe environment observations.\n9. Axis constructs its shell from the authenticated BackOffice bootstrap\n   navigation, including the backend-owned Dashboard entry and authorized\n   module-owned navigation.\n10. If authorized, Axis loads `/dashboard` from authenticated CMS delivery.\n\nA customer login is never used as a fallback. Authentication or authorization\nfailure keeps the employee outside the dashboard and displays a safe message.\n\nPassword fields on login and lock-screen pages include an accessible show/hide\ncontrol so employees can verify local typing mistakes before submission.\nRevealing a password changes only the current input presentation. Axis still\nsends the value only to Profile, never stores it, and never exposes it through\nBackOffice, CMS, URLs, logs, query cache, or browser storage.\n\n## Password recovery\n\nThe public `/forgot-password` page uses the same responsive authentication\nlayout as login, with CMS-owned introduction, identifier label, placeholder,\naction label, assistance, and legal text. Axis intentionally keeps submission\nunavailable today because Profile does not yet expose an approved employee\nself-recovery API.\n\nDo not simulate success, send identifiers to BackOffice or CMS, or build a\nfrontend-only reset path. The future Profile contract must be anti-enumeration,\nrate-limited, tenant-aware, auditable, and compatible with the existing OTP and\nnotification authorities before this form is connected.\n\n## Idle screen lock\n\nThe secured bootstrap returns `axisPolicy` after employee authentication.\nVersion 1 supports `screenLockEnabled`, `idleTimeoutSeconds` from 60 through\n86,400, the policy contract version and optimistic revision, and whether the\neffective policy came from layered defaults or persistence.\n\nAxis observes keyboard, pointer, touch, and wheel activity. Pointer movement is\nthrottled to one deadline update per second to avoid high-frequency work.\nBackground-tab timer throttling is handled by comparing the absolute deadline\nwhen the page becomes visible again.\n\nWhen the deadline passes, Axis:\n\n1. records a bounded lock marker and same-application return path in\n   `sessionStorage`;\n2. replaces it with `/lock-screen`;\n3. keeps tokens and the employee identifier in memory only;\n4. hides protected application content;\n5. asks only for the current employee password; and\n6. sends that password directly to Profile.\n\nA successful unlock receives fresh Profile tokens, reloads secured BackOffice\nbootstrap and policy, removes the lock marker, and returns to the prior\nprotected route. A failed unlock stays locked and shows a safe authentication\nerror. “Not you? Sign out” clears the marker and local session, asks Profile to\nrevoke it, and returns to `/login`.\n\nThe marker contains only `locked: true` and a validated relative return path.\nIt never contains a password, access token, refresh token, employee identifier,\nbackend response, or authorization data. External, malformed, authentication,\nand lock-screen return paths fall back to `/dashboard`.\n\nThe screen lock is presentation defense-in-depth. It never replaces bearer\nexpiry, revocation, Profile authentication, or target-module authorization.\n\nOn browser refresh, Axis reads only the non-secret CSRF cookie and calls the\nProfile browser restore endpoint with credentials included. Profile requires\nthe exact allowed Origin and matching `X-CSRF-Token`, consumes the refresh\ncredential once, rotates it, and returns a replacement access token and\nemployee identifier. Axis then reloads the secured BackOffice bootstrap and\nrestores the lock gate before protected routing. A session that was locked\nbefore refresh remains on `/lock-screen` until successful password\nre-verification; refresh cannot silently return it to the dashboard. An\nexpired, revoked, replayed, or otherwise invalid session returns to the public\nlogin experience.\n\n## Logout\n\nAxis sends the configured CSRF value to Profile, which revokes refresh state\nand expires both browser-session cookies. Only after Profile confirms that\noperation does Axis clear its in-memory access token and redirect to `/login`.\nIf Profile is unavailable, Axis keeps the secured session visible and reports\nthat logout was not completed; it never presents a false signed-out state while\nan HttpOnly refresh session remains active. The existing short-lived access\ntoken remains bounded by backend expiry and revocation policy.\n\n## Configuration\n\nThe root `.env` contains only public deployment values:\n\n```dotenv\nAXIS_BACKOFFICE_BASE_URL=http://localhost:4300\nAXIS_ENTERPRISE_CODE=default\nAXIS_PROJECT_CODE=nodics.kickoff\nAXIS_CLIENT_CONTRACT_VERSION=1\nAXIS_REQUEST_TIMEOUT_MS=10000\nAXIS_BROWSER_SESSION_CSRF_COOKIE_NAME=nodics_axis_csrf\n```\n\nThe CSRF cookie name is public protocol configuration and must equal Profile's\neffective `profileBrowserSession.csrfCookieName`. Do not add Profile or CMS\nURLs. BackOffice discovers them from module self-registration. Never place\npasswords or tokens in `.env`, browser storage, URLs, logs, or query-cache keys.\n\n## Failure behavior\n\n- Invalid configuration uses static configuration recovery.\n- BackOffice discovery failure uses static discovery recovery with retry.\n- Missing Profile or CMS registration fails public bootstrap closed.\n- CMS failure or incompatibility uses static CMS recovery with retry.\n- Invalid employee credentials produce a safe login error.\n- Missing BackOffice permission rejects the session before dashboard delivery.\n- Direct `/dashboard` navigation attempts Profile-owned session restoration;\n  absent or invalid refresh state redirects to `/login`.\n- Direct `/lock-screen` navigation without an authenticated locked session\n  redirects safely.\n- Refreshing a locked session restores the lock marker and requires password\n  verification before any protected route is rendered.\n- Invalid or incompatible Axis policy rejects authenticated bootstrap.\n- Persistent-policy read failure is handled by BackOffice using its safe\n  configured default.\n\nEmployee password recovery is not yet a Profile capability. The CMS page may\nexplain the process, but Axis keeps submission disabled until Profile provides\na governed, enumeration-safe recovery contract.\n\n## Customize and extend safely\n\nCustomize login, recovery, and lock-screen presentation through CMS component\nproperties and project-owned renderer composition. Add a new authentication\nview only as a focused renderer with a typed logical-key registration while\ncontinuing to use Profile's browser-session, CSRF, refresh, revocation, and\nemployee-only contracts.\n\nDo not replace Profile authentication, store tokens in browser storage, embed\ncredentials in configuration, infer authorization from the UI, or implement\npassword recovery locally. Test valid and invalid credentials, customer-user\nrejection, missing permissions, refresh restoration, locked-page refresh,\nCSRF rejection, idle boundaries, logout revocation, malformed CMS properties,\nresponsive layout, and rollback of the project renderer registration.\n\n## Verification\n\n```bash\nnpm run verify\n```\n\nTests cover low-disclosure discovery, policy validation, credential delivery\nto Profile, HttpOnly refresh restoration, CSRF transport, secured bootstrap\nbearer use, protected-route preservation after remount, invalid-session\nfallback, CMS authentication pages, inactivity boundaries, activity deadline\nreset, protected routing, and logout revocation.\n\nFor example, a wrong password should produce a low-disclosure failure message.\nAxis should not reveal whether the enterprise code, employee login, role, or\npermission exists. Profile owns the authentication decision, and Axis owns only\nthe safe presentation and retry flow.\n\n## Common mistakes\n\n- Treating Axis login as a standalone identity service. Axis presents the login\n  journey; Profile owns authentication, session restoration, revocation,\n  account policy, and recovery contracts.\n- Persisting access tokens, passwords, refresh tokens, CSRF material, or\n  employee profile details in browser storage.\n- Revealing whether an enterprise, employee account, or permission exists\n  through detailed pre-authentication errors.\n- Allowing customer-user authentication into the employee BackOffice workspace.\n- Making forgot-password look operational before the backend employee-recovery\n  API exists and is approved.\n",
+      "searchText": "Employee Login, Recovery, Lock, and Dashboard Operate the employee-only authentication journey, recovery, persistent browser session, idle lock, logout, configuration, and safe failures. # Employee Login, Recovery, Screen Lock, and Dashboard\n\nAxis is an employee Back Office application. Customer credentials must not be\nsubmitted to its login flow.\n\n| Journey step      | Business outcome                                                    | Axis responsibility                                               | Backend owner                                                                     |\n| ----------------- | ------------------------------------------------------------------- | ----------------------------------------------------------------- | --------------------------------------------------------------------------------- |\n| Public bootstrap  | Find the correct employee login experience for the deployed project | Read public config and request safe discovery data                | BackOffice publishes public Profile and CMS connection metadata                   |\n| Login             | Verify an employee can enter the Back Office                        | Render CMS-composed form and send credentials directly to Profile | Profile authenticates, issues tokens, sets browser-session cookies, and owns CSRF |\n| Secured bootstrap | Show only authorized capabilities                                   | Hold access token in memory and request authorized navigation     | BackOffice filters modules, permissions, availability, and Axis policy            |\n| Screen lock       | Hide protected workspace during idle periods                        | Store only a bounded lock marker and ask for password again       | Profile re-verifies the employee and rotates session state                        |\n| Logout            | End the browser session honestly                                    | Clear memory only after backend revocation succeeds               | Profile revokes refresh state and expires session cookies                         |\n\nFor beginners, the safest mental model is that Axis never owns a password and\nnever becomes the identity system. It collects employee input, sends it to\nProfile, and then uses BackOffice to discover only the capabilities that the\nauthenticated employee may see.\n\nDevelopers should keep login, recovery, lock, restore, and logout changes on\nthe correct side of the boundary: Axis renders and validates browser-safe\ninteraction, while Profile and BackOffice own authentication, session\nrestoration, authorization, policy, and revocation.\n\nAn operator should use the visible login, restore, lock, and logout states to\nseparate browser configuration issues from Profile authentication, BackOffice\nauthorization, CMS delivery, or session-revocation failures.\n\n## Startup journey\n\n1. Axis reads public deployment configuration from `/axis-config.json`.\n2. Axis calls the BackOffice public bootstrap.\n3. BackOffice returns only active Profile/CMS endpoints and Axis CMS\n   composition identifiers.\n4. Axis loads `/login` directly from CMS public delivery.\n5. Axis sends entered employee credentials directly to Profile.\n6. Axis keeps the returned access token in memory only. Profile stores the\n   refresh credential in a scoped `HttpOnly` cookie that Axis cannot read.\n7. Axis calls secured BackOffice bootstrap with the access token.\n8. BackOffice returns the effective tenant-scoped Axis employee policy,\n   authorized module catalogue, navigation contributions, compatibility,\n   availability, and client-safe environment observations.\n9. Axis constructs its shell from the authenticated BackOffice bootstrap\n   navigation, including the backend-owned Dashboard entry and authorized\n   module-owned navigation.\n10. If authorized, Axis loads `/dashboard` from authenticated CMS delivery.\n\nA customer login is never used as a fallback. Authentication or authorization\nfailure keeps the employee outside the dashboard and displays a safe message.\n\nPassword fields on login and lock-screen pages include an accessible show/hide\ncontrol so employees can verify local typing mistakes before submission.\nRevealing a password changes only the current input presentation. Axis still\nsends the value only to Profile, never stores it, and never exposes it through\nBackOffice, CMS, URLs, logs, query cache, or browser storage.\n\n## First-run initialization\n\nWhen the managed Axis baseline is absent, the bundled recovery screen remains\navailable after employee authentication. Choose **Prepare required modules**\nto open the existing Module Registry if your BackOffice permissions expose it.\nRegister and activate Process, then choose **Return to Axis setup**. Process\nmust be registered and active before its governed approval connection appears.\nThe recovery route preserves module eligibility and backend action permissions.\n\nChoose **Initialize and submit**, inspect the immutable publication details,\nand choose **Approve and publish**. Import prepares Staged; Process owns the\napproval, and WCMS Online activates the approved baseline. Axis then opens its\nmanaged dashboard. If required data fails, inspect the registry receipt, fix the\nreported configuration or release problem, and retry activation. Refresh or\nretry does not grant approval or bypass an unavailable module.\n\n## Password recovery\n\nThe public `/forgot-password` page uses the same responsive authentication\nlayout as login, with CMS-owned introduction, identifier label, placeholder,\naction label, assistance, and legal text. Axis intentionally keeps submission\nunavailable today because Profile does not yet expose an approved employee\nself-recovery API.\n\nDo not simulate success, send identifiers to BackOffice or CMS, or build a\nfrontend-only reset path. The future Profile contract must be anti-enumeration,\nrate-limited, tenant-aware, auditable, and compatible with the existing OTP and\nnotification authorities before this form is connected.\n\n## Idle screen lock\n\nThe secured bootstrap returns `axisPolicy` after employee authentication.\nVersion 1 supports `screenLockEnabled`, `idleTimeoutSeconds` from 60 through\n86,400, the policy contract version and optimistic revision, and whether the\neffective policy came from layered defaults or persistence.\n\nAxis observes keyboard, pointer, touch, and wheel activity. Pointer movement is\nthrottled to one deadline update per second to avoid high-frequency work.\nBackground-tab timer throttling is handled by comparing the absolute deadline\nwhen the page becomes visible again.\n\nWhen the deadline passes, Axis:\n\n1. records a bounded lock marker and same-application return path in\n   `sessionStorage`;\n2. replaces it with `/lock-screen`;\n3. keeps tokens and the employee identifier in memory only;\n4. hides protected application content;\n5. asks only for the current employee password; and\n6. sends that password directly to Profile.\n\nA successful unlock receives fresh Profile tokens, reloads secured BackOffice\nbootstrap and policy, removes the lock marker, and returns to the prior\nprotected route. A failed unlock stays locked and shows a safe authentication\nerror. “Not you? Sign out” clears the marker and local session, asks Profile to\nrevoke it, and returns to `/login`.\n\nThe marker contains only `locked: true` and a validated relative return path.\nIt never contains a password, access token, refresh token, employee identifier,\nbackend response, or authorization data. External, malformed, authentication,\nand lock-screen return paths fall back to `/dashboard`.\n\nThe screen lock is presentation defense-in-depth. It never replaces bearer\nexpiry, revocation, Profile authentication, or target-module authorization.\n\nOn browser refresh, Axis reads only the non-secret CSRF cookie and calls the\nProfile browser restore endpoint with credentials included. Profile requires\nthe exact allowed Origin and matching `X-CSRF-Token`, consumes the refresh\ncredential once, rotates it, and returns a replacement access token and\nemployee identifier. Axis then reloads the secured BackOffice bootstrap and\nrestores the lock gate before protected routing. A session that was locked\nbefore refresh remains on `/lock-screen` until successful password\nre-verification; refresh cannot silently return it to the dashboard. An\nexpired, revoked, replayed, or otherwise invalid session returns to the public\nlogin experience.\n\n## Logout\n\nAxis sends the configured CSRF value to Profile, which revokes refresh state\nand expires both browser-session cookies. Only after Profile confirms that\noperation does Axis clear its in-memory access token and redirect to `/login`.\nIf Profile is unavailable, Axis keeps the secured session visible and reports\nthat logout was not completed; it never presents a false signed-out state while\nan HttpOnly refresh session remains active. The existing short-lived access\ntoken remains bounded by backend expiry and revocation policy.\n\n## Configuration\n\nThe root `.env` contains only public deployment values:\n\n```dotenv\nAXIS_BACKOFFICE_BASE_URL=http://localhost:4300\nAXIS_ENTERPRISE_CODE=default\nAXIS_PROJECT_CODE=nodics.kickoff\nAXIS_CLIENT_CONTRACT_VERSION=1\nAXIS_REQUEST_TIMEOUT_MS=10000\nAXIS_BROWSER_SESSION_CSRF_COOKIE_NAME=nodics_axis_csrf\n```\n\nThe CSRF cookie name is public protocol configuration and must equal Profile's\neffective `profileBrowserSession.csrfCookieName`. Do not add Profile or CMS\nURLs. BackOffice discovers them from module self-registration. Never place\npasswords or tokens in `.env`, browser storage, URLs, logs, or query-cache keys.\n\n## Failure behavior\n\n- Invalid configuration uses static configuration recovery.\n- BackOffice discovery failure uses static discovery recovery with retry.\n- Missing Profile or CMS registration fails public bootstrap closed.\n- CMS failure or incompatibility uses static CMS recovery with retry.\n- Invalid employee credentials produce a safe login error.\n- Missing BackOffice permission rejects the session before dashboard delivery.\n- Direct `/dashboard` navigation attempts Profile-owned session restoration;\n  absent or invalid refresh state redirects to `/login`.\n- Direct `/lock-screen` navigation without an authenticated locked session\n  redirects safely.\n- Refreshing a locked session restores the lock marker and requires password\n  verification before any protected route is rendered.\n- Invalid or incompatible Axis policy rejects authenticated bootstrap.\n- Persistent-policy read failure is handled by BackOffice using its safe\n  configured default.\n\nEmployee password recovery is not yet a Profile capability. The CMS page may\nexplain the process, but Axis keeps submission disabled until Profile provides\na governed, enumeration-safe recovery contract.\n\n## Customize and extend safely\n\nCustomize login, recovery, and lock-screen presentation through CMS component\nproperties and project-owned renderer composition. Add a new authentication\nview only as a focused renderer with a typed logical-key registration while\ncontinuing to use Profile's browser-session, CSRF, refresh, revocation, and\nemployee-only contracts.\n\nDo not replace Profile authentication, store tokens in browser storage, embed\ncredentials in configuration, infer authorization from the UI, or implement\npassword recovery locally. Test valid and invalid credentials, customer-user\nrejection, missing permissions, refresh restoration, locked-page refresh,\nCSRF rejection, idle boundaries, logout revocation, malformed CMS properties,\nresponsive layout, and rollback of the project renderer registration.\n\n## Verification\n\n```bash\nnpm run verify\n```\n\nTests cover low-disclosure discovery, policy validation, credential delivery\nto Profile, HttpOnly refresh restoration, CSRF transport, secured bootstrap\nbearer use, protected-route preservation after remount, invalid-session\nfallback, CMS authentication pages, inactivity boundaries, activity deadline\nreset, protected routing, and logout revocation.\n\nFor example, a wrong password should produce a low-disclosure failure message.\nAxis should not reveal whether the enterprise code, employee login, role, or\npermission exists. Profile owns the authentication decision, and Axis owns only\nthe safe presentation and retry flow.\n\n## Common mistakes\n\n- Treating Axis login as a standalone identity service. Axis presents the login\n  journey; Profile owns authentication, session restoration, revocation,\n  account policy, and recovery contracts.\n- Persisting access tokens, passwords, refresh tokens, CSRF material, or\n  employee profile details in browser storage.\n- Revealing whether an enterprise, employee account, or permission exists\n  through detailed pre-authentication errors.\n- Allowing customer-user authentication into the employee BackOffice workspace.\n- Making forgot-password look operational before the backend employee-recovery\n  API exists and is approved.\n",
       "source": {
         "repository": "nodics.platform",
         "module": "axis",
@@ -4459,8 +4478,8 @@ module.exports = {
         "sourcePath": "docs/pages/employee-login.md",
         "path": "modules/axis/docs/pages/employee-login.md",
         "evidence": "docs/employee-login.md",
-        "hash": "5d072426a550384fc0a857e268cc2a9552ddbd7d286ae32cb365eae35a65f558",
-        "version": "0.0.2"
+        "hash": "1791fde461832bac32175a23378124133466b07c8f9d3da8a1913c61d03f18d2",
+        "version": "0.0.3"
       },
       "previous": {
         "title": "Documentation Content in Axis",
@@ -5038,7 +5057,7 @@ module.exports = {
         "path": "modules/axis/docs/pages/assistant-frontend.md",
         "evidence": "docs/assistant-frontend.md",
         "hash": "cf632cd0dc0b6421ba4ba62ccf3602a667bd33f1527d48570baa0089b4eb21fa",
-        "version": "0.0.2"
+        "version": "0.0.3"
       },
       "previous": {
         "title": "Employee Login, Recovery, Lock, and Dashboard",
@@ -5868,7 +5887,7 @@ module.exports = {
         "path": "modules/axis/docs/pages/schema-workbench.md",
         "evidence": "docs/schema-workbench.md",
         "hash": "6f5cb80baa3d07b39abcab782ad12f69a0cdc1a1f63c207d0247e1569518b57b",
-        "version": "0.0.2"
+        "version": "0.0.3"
       },
       "previous": {
         "title": "Axis Assistant Frontend",
@@ -6329,7 +6348,7 @@ module.exports = {
         "path": "modules/axis/docs/pages/page-designer.md",
         "evidence": "docs/pages/page-designer.md",
         "hash": "8a4e1150ea79a10388a88b24e89847f6ecf2135db3ceb305939ef7b90379fb70",
-        "version": "0.0.2"
+        "version": "0.0.3"
       },
       "previous": {
         "title": "Axis Schema Workbench",
@@ -7418,7 +7437,7 @@ module.exports = {
         "path": "modules/axis/docs/pages/experience-studio.md",
         "evidence": "docs/pages/experience-studio.md",
         "hash": "4d37836941b657db225baeb37fdf84b4ad50b3ff2aa0fee81a6b524c6a5018a1",
-        "version": "0.0.2"
+        "version": "0.0.3"
       },
       "previous": {
         "title": "Axis Page Designer",
@@ -7972,7 +7991,7 @@ module.exports = {
         "path": "modules/axis/docs/pages/module-health.md",
         "evidence": "docs/module-health.md",
         "hash": "cc4a43b059168fa417dadf280cbe7e3a57b0b311d8185330af9c11e6ffc68478",
-        "version": "0.0.2"
+        "version": "0.0.3"
       },
       "previous": {
         "title": "Axis Experience Studio and Targeted CMS Experiences",
@@ -8354,7 +8373,7 @@ module.exports = {
         "path": "modules/axis/docs/pages/imports-and-exports.md",
         "evidence": "docs/imports-and-exports.md",
         "hash": "3276761777c6f2a21183ffa6fe4067ac46abaea66fa9e67a4195fc92ab989d19",
-        "version": "0.0.2"
+        "version": "0.0.3"
       },
       "previous": {
         "title": "Module Health",
@@ -8990,7 +9009,7 @@ module.exports = {
         "path": "modules/axis/docs/pages/media-management.md",
         "evidence": "docs/pages/media-management.md",
         "hash": "7d4741881f39665e69485c2864e03278b1880ad13bf52a42bd4ffd4e89464ef4",
-        "version": "0.0.2"
+        "version": "0.0.3"
       },
       "previous": {
         "title": "Imports and Exports Workspace",
@@ -9410,7 +9429,7 @@ module.exports = {
         "path": "modules/axis/docs/pages/customer-engagement.md",
         "evidence": "docs/pages/customer-engagement.md",
         "hash": "716dfa1de2edb29bf2894033f32cb20862148769aa48b234fb994859c7a86bfc",
-        "version": "0.0.2"
+        "version": "0.0.3"
       },
       "previous": {
         "title": "Media Management Workspace",
@@ -9708,7 +9727,7 @@ module.exports = {
         "path": "modules/axis/docs/pages/openapi-reference.md",
         "evidence": "docs/pages/openapi-reference.md",
         "hash": "43512fb8d6aa176e97ccf3a98db3dbfe932e6aec483462ab77fca53264aec2be",
-        "version": "0.0.2"
+        "version": "0.0.3"
       },
       "previous": {
         "title": "Customer Engagement Workspaces",
@@ -10165,7 +10184,7 @@ module.exports = {
         "path": "modules/axis/docs/pages/feature-delivery-checklist.md",
         "evidence": "docs/feature-delivery-checklist.md",
         "hash": "c3125712d4721150a0215cee15ad99ac0a4c8df3bf2daf584a0e8d98fd154284",
-        "version": "0.0.2"
+        "version": "0.0.3"
       },
       "previous": {
         "title": "Swagger and OpenAPI Reference",
@@ -10748,7 +10767,7 @@ module.exports = {
         "path": "modules/axis/docs/pages/implementation-and-documentation-contract.md",
         "evidence": "docs/implementation-and-documentation-contract.md",
         "hash": "f09a22ff6d47ec6e0229739914ede662baba3d40fb431d5eced1e57a0e47b5f5",
-        "version": "0.0.2"
+        "version": "0.0.3"
       },
       "previous": {
         "title": "Axis Feature Delivery Checklist",

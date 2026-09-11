@@ -9,7 +9,7 @@
 
  */
 
-'use strict';
+"use strict";
 
 /**
  * @module nodics.process/test/processModuleContract
@@ -17,18 +17,19 @@
  * @layer test
  * @owner nodics.process
  */
-const assert = require('assert');
-const fs = require('fs');
-const path = require('path');
+const assert = require("assert");
+const fs = require("fs");
+const path = require("path");
 
-const packageJson = require('../package.json');
-const properties = require('../config/properties');
-const cronjobPackage = require('../modules/cronjob/package.json');
-const workflowPackage = require('../modules/workflow/package.json');
+const packageJson = require("../package.json");
+const properties = require("../config/properties");
+const cronjobPackage = require("../modules/cronjob/package.json");
+const workflowPackage = require("../modules/workflow/package.json");
 
-const capability = require('../modules/workflow/src/service/defaultWorkflowBackofficeCapabilityService').getCapability();
-const rootDir = path.resolve(__dirname, '..');
-const frameworkRootDir = path.resolve(rootDir, '..');
+const capability =
+  require("../modules/workflow/src/service/defaultWorkflowBackofficeCapabilityService").getCapability();
+const rootDir = path.resolve(__dirname, "..");
+const frameworkRootDir = path.resolve(rootDir, "..");
 
 /**
  * Resolves a path under nodics.process.
@@ -37,137 +38,173 @@ const frameworkRootDir = path.resolve(rootDir, '..');
  * @returns {string} Absolute path.
  */
 function processPath(...segments) {
-    return path.join(rootDir, ...segments);
+  return path.join(rootDir, ...segments);
 }
 
 assert.deepStrictEqual(
-    packageJson.nodics.extends,
-    ['nodics.foundation'],
-    'nodics.process must extend nodics.foundation directly',
+  packageJson.nodics.extends,
+  ["nodics.foundation"],
+  "nodics.process must extend nodics.foundation directly",
 );
 assert.strictEqual(
-    packageJson.nodics.functionalModule.identity,
-    'nodics.process',
-    'functional module identity must remain nodics.process',
+  packageJson.nodics.functionalModule.identity,
+  "nodics.process",
+  "functional module identity must remain nodics.process",
 );
 assert.strictEqual(
-    packageJson.nodics.functionalModule.protected,
-    true,
-    'nodics.process must remain registered when present because publishing approval cannot bootstrap without Process',
+  packageJson.nodics.functionalModule.protected,
+  false,
+  "Process remains optional and requires explicit registration and enablement before publication approval",
 );
 assert.deepStrictEqual(
-    packageJson.requiredModules,
-    ['cronjob', 'workflow'],
-    'nodics.process group must compose cronjob and workflow instead of owning direct runtime code',
+  packageJson.requiredModules,
+  ["cronjob", "workflow"],
+  "nodics.process group must compose cronjob and workflow instead of owning direct runtime code",
 );
 assert(
-    !fs.existsSync(processPath('src')),
-    'nodics.process must not contain direct runtime src files; place runtime code under modules/workflow',
+  !fs.existsSync(processPath("src")),
+  "nodics.process must not contain direct runtime src files; place runtime code under modules/workflow",
 );
 assert.deepStrictEqual(
-    cronjobPackage.requiredModules || [],
-    [],
-    'cronjob must own scheduled-job artifacts directly without nested runtime modules',
+  cronjobPackage.requiredModules || [],
+  [],
+  "cronjob must own scheduled-job artifacts directly without nested runtime modules",
 );
 assert.deepStrictEqual(
-    workflowPackage.requiredModules || [],
-    [],
-    'workflow must own its process artifacts directly without nested flow* modules',
+  workflowPackage.requiredModules || [],
+  [],
+  "workflow must own its process artifacts directly without nested flow* modules",
 );
 assert.strictEqual(
-    workflowPackage.prefix,
-    'process',
-    'workflow must expose APIs under the /process route prefix',
+  workflowPackage.prefix,
+  "process",
+  "workflow must expose APIs under the /process route prefix",
 );
 assert.strictEqual(
-    workflowPackage.nodics.runtime.router,
-    true,
-    'workflow must own process HTTP routes',
+  workflowPackage.nodics.runtime.router,
+  true,
+  "workflow must own process HTTP routes",
 );
 assert(
-    !fs.existsSync(processPath('modules/workflow/modules')),
-    'workflow must not contain nested technical runtime modules',
+  !fs.existsSync(processPath("modules/workflow/modules")),
+  "workflow must not contain nested technical runtime modules",
 );
 [
-    'llm/contracts/process-module-contract.md',
-    'llm/contracts/process-ownership-and-designer-contract.md',
-    'modules/workflow/src/schemas/schemas.js',
-    'modules/workflow/src/utils/statusDefinitions.js',
-    'modules/workflow/src/service/designer/defaultProcessGraphValidationService.js',
-    'modules/workflow/src/service/definition/defaultProcessDefinitionLifecycleService.js',
-    'modules/workflow/src/router/routers.js',
-    'modules/workflow/src/controller/defaultProcessDefinitionController.js',
-    'modules/workflow/src/facade/defaultProcessDefinitionFacade.js'
+  "llm/contracts/process-module-contract.md",
+  "llm/contracts/process-ownership-and-designer-contract.md",
+  "modules/workflow/src/schemas/schemas.js",
+  "modules/workflow/src/utils/statusDefinitions.js",
+  "modules/workflow/src/service/designer/defaultProcessGraphValidationService.js",
+  "modules/workflow/src/service/definition/defaultProcessDefinitionLifecycleService.js",
+  "modules/workflow/src/router/routers.js",
+  "modules/workflow/src/controller/defaultProcessDefinitionController.js",
+  "modules/workflow/src/facade/defaultProcessDefinitionFacade.js",
 ].forEach((relativePath) => {
-    assert(
-        fs.existsSync(processPath(relativePath)),
-        `Expected process artifact to exist under correct workflow module: ${relativePath}`,
-    );
+  assert(
+    fs.existsSync(processPath(relativePath)),
+    `Expected process artifact to exist under correct workflow module: ${relativePath}`,
+  );
 });
 [
-    'ProcessDefinition',
-    'ProcessDefinitionVersion',
-    'ProcessInstance',
-    'ProcessTask',
-    'ProcessTrigger',
-    'ProcessIncident',
-    'ProcessAuditEvent'
+  "ProcessDefinition",
+  "ProcessDefinitionVersion",
+  "ProcessInstance",
+  "ProcessTask",
+  "ProcessTrigger",
+  "ProcessIncident",
+  "ProcessAuditEvent",
 ].forEach((schemaName) => {
-    [
-        path.join(frameworkRootDir, 'nodics.foundation/modules/nService/src/service/gen/Default' + schemaName + 'Service.js'),
-        path.join(frameworkRootDir, 'nodics.foundation/modules/nFacade/src/facade/gen/Default' + schemaName + 'Facade.js'),
-        path.join(frameworkRootDir, 'nodics.foundation/modules/nController/src/controller/gen/Default' + schemaName + 'Controller.js')
-    ].forEach((generatedPath) => {
-        const source = fs.readFileSync(generatedPath, 'utf8');
-        assert(
-            !source.includes('flowSchema') && !source.includes('flowApi') && !source.includes('flowCore'),
-            'Generated Process artifacts must not reference removed flow* modules: ' + generatedPath,
-        );
-        assert(
-            source.includes('@owner workflow') || source.includes("request.moduleName || 'workflow'"),
-            'Generated Process artifacts must be owned by the workflow module: ' + generatedPath,
-        );
-    });
+  [
+    path.join(
+      frameworkRootDir,
+      "nodics.foundation/modules/nService/src/service/gen/Default" +
+        schemaName +
+        "Service.js",
+    ),
+    path.join(
+      frameworkRootDir,
+      "nodics.foundation/modules/nFacade/src/facade/gen/Default" +
+        schemaName +
+        "Facade.js",
+    ),
+    path.join(
+      frameworkRootDir,
+      "nodics.foundation/modules/nController/src/controller/gen/Default" +
+        schemaName +
+        "Controller.js",
+    ),
+  ].forEach((generatedPath) => {
+    const source = fs.readFileSync(generatedPath, "utf8");
+    assert(
+      !source.includes("flowSchema") &&
+        !source.includes("flowApi") &&
+        !source.includes("flowCore"),
+      "Generated Process artifacts must not reference removed flow* modules: " +
+        generatedPath,
+    );
+    assert(
+      source.includes("@owner workflow") ||
+        source.includes("request.moduleName || 'workflow'"),
+      "Generated Process artifacts must be owned by the workflow module: " +
+        generatedPath,
+    );
+  });
 });
 assert.strictEqual(
-    capability.capabilityId,
-    'business-process-workflow',
-    'process capability id must remain stable for BackOffice',
+  capability.capabilityId,
+  "business-process-workflow",
+  "process capability id must remain stable for BackOffice",
 );
 assert(
-    capability.navigation.every((item) => item.route.startsWith('/process')),
-    'process navigation must stay under the /process route family',
+  capability.navigation.every((item) => item.route.startsWith("/process")),
+  "process navigation must stay under the /process route family",
 );
 assert.deepStrictEqual(
-    capability.navigation.map(item => item.label),
-    [
-        'Operations Workspace',
-        'Workflow Management',
-        'Pipeline Management',
-        'Triggers and Relationships',
-        'Automation Monitoring',
-        'Advanced Configuration',
-        'Process Definitions',
-        'My Tasks and Approvals',
-        'Manual, Event, and Scheduled Triggers',
-        'Process Designer'
-    ],
-    'Axis Process navigation must stay business-journey oriented for automation workspaces',
+  capability.navigation.map((item) => item.label),
+  [
+    "Operations Workspace",
+    "Workflow Management",
+    "Pipeline Management",
+    "Triggers and Relationships",
+    "Automation Monitoring",
+    "Advanced Configuration",
+    "Process Definitions",
+    "My Tasks and Approvals",
+    "Manual, Event, and Scheduled Triggers",
+    "Process Designer",
+  ],
+  "Axis Process navigation must stay business-journey oriented for automation workspaces",
 );
 assert(
-    capability.navigation.every((item) => item.group.id === 'process-and-automations' &&
-        item.group.label === 'Process and Automations'),
-    'process navigation must stay in the Process and Automations group',
+  capability.navigation.every(
+    (item) =>
+      item.group.id === "process-and-automations" &&
+      item.group.label === "Process and Automations",
+  ),
+  "process navigation must stay in the Process and Automations group",
 );
 assert.strictEqual(
-    properties.process.designer.enabled,
-    false,
-    'visual designer must stay disabled until process validation and persistence APIs exist',
+  properties.process.designer.enabled,
+  false,
+  "visual designer must stay disabled until process validation and persistence APIs exist",
 );
 assert.strictEqual(
-    properties.process.designer.provider,
-    'NODICS_NATIVE_GRAPH',
-    'initial designer provider must prefer the Nodics-native graph contract',
+  properties.process.designer.provider,
+  "NODICS_NATIVE_GRAPH",
+  "initial designer provider must prefer the Nodics-native graph contract",
 );
 
-console.log('Process module contract passed');
+const cronCoreRelease = require("../modules/cronjob/data/manifest.json")
+  .sections["core-v001"];
+assert.strictEqual(
+  cronCoreRelease.destinationRole,
+  "PROCESS",
+  "Scheduled Jobs core data must activate in the shared Process runtime",
+);
+assert.strictEqual(
+  cronCoreRelease.lifecycle,
+  "OPERATIONAL_VERSIONED",
+  "Scheduled Jobs remain operational data rather than a content publication",
+);
+
+console.log("Process module contract passed");

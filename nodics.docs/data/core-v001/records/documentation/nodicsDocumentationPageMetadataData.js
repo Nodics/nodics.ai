@@ -86,8 +86,8 @@ module.exports = {
     ],
     "sourceRepository": "nodics.docs",
     "sourcePath": "docs/pages/framework/documentation-gateway.md",
-    "sourceChecksum": "0e008661ea8abe0fb19248bdf60ec06bedbe83f6546558fdf840acbc55c6ee11",
-    "sourceWordCount": 921,
+    "sourceChecksum": "9d316bba3fcd9ca10e01ba7d7bf5c1e779353dbddb8f3eb7165e527fdbbfcb75",
+    "sourceWordCount": 930,
     "audience": [
       "business",
       "architect",
@@ -4561,6 +4561,11 @@ module.exports = {
         "text": "Verification",
         "anchor": "schemaDataModelingManagement-13-verification",
         "level": 2
+      },
+      {
+        "text": "Governed local maintenance",
+        "anchor": "schemaDataModelingManagement-14-governed-local-maintenance",
+        "level": 3
       }
     ],
     "diagrams": [
@@ -4617,8 +4622,8 @@ module.exports = {
     ],
     "sourceRepository": "nodics.docs",
     "sourcePath": "docs/pages/nodics.foundation/schema-data-modeling.md",
-    "sourceChecksum": "f0df5e6c7ce832c30dfb0675a70bdf9b4389e890c8d3f393643eaf306cf54774",
-    "sourceWordCount": 2315,
+    "sourceChecksum": "bcc42288b61f75b8da7aa38709c84d8f60ce5cd862cdf8e1127d64b2c23a257d",
+    "sourceWordCount": 2379,
     "audience": [
       "business",
       "architect",
@@ -15642,6 +15647,11 @@ module.exports = {
         "text": "Environmental properties and credit status",
         "anchor": "wasteImpactProviders-8-environmental-properties-and-credit-status",
         "level": 2
+      },
+      {
+        "text": "Immutable assessment history and acceptance",
+        "anchor": "wasteImpactProviders-9-immutable-assessment-history-and-acceptance",
+        "level": 2
       }
     ],
     "diagrams": [
@@ -15666,8 +15676,8 @@ module.exports = {
     ],
     "sourceRepository": "nodics.docs",
     "sourcePath": "docs/pages/nodics.waste/impact-providers.md",
-    "sourceChecksum": "fa32edfbbd359c92125406babba6ee498c17ece2af24fd47eb93c0062f3ca0d5",
-    "sourceWordCount": 1609,
+    "sourceChecksum": "db335dc67a05530ae7d5485b5fb7329f7049553bb2750bb5b85004369fcf268a",
+    "sourceWordCount": 1948,
     "audience": [
       "business",
       "architect",
