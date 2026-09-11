@@ -75,6 +75,8 @@ function packageImports(filePath, packageName) {
     const source = fs.readFileSync(filePath, 'utf8');
     return source.includes('require("' + packageName) ||
         source.includes("require('" + packageName) ||
+        source.includes('import("' + packageName) ||
+        source.includes("import('" + packageName) ||
         source.includes('from "' + packageName) ||
         source.includes("from '" + packageName);
 }
