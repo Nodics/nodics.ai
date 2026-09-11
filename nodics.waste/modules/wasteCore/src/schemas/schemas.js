@@ -10,9 +10,7 @@
  */
 
 /** @module wasteCore/src/schemas/schemas @description Defines shared Waste policy, asset, and extension-point schemas. @layer schema @owner wasteCore @override Later modules may add governed policies without moving child capability ownership. */
-function schemaRef(moduleName, schemaName, type) {
-    return { enabled: true, moduleName: moduleName, schemaName: schemaName, type: type || 'one', propertyName: 'code' };
-}
+
 
 module.exports = { wasteCore: {
     wasteLifecyclePolicy: Object.assign({ super: 'base', model: true, schemaPolicies: ['operational'], service: { enabled: true }, router: { enabled: false }, cache: { enabled: false }, event: { enabled: false }, search: { enabled: false } }, { definition: {
@@ -97,15 +95,15 @@ module.exports = { wasteCore: {
         revision: { type: 'int', required: true, default: 0 , description: 'Tracks the business revision used for governance, review, and optimistic update checks.'},
         metadata: { type: 'object', required: false , description: 'Stores additional structured metadata needed by extensions without changing the core schema contract.'}
     }, refSchema: {
-        ownerRef: schemaRef('profile', 'customer'),
-        originalOwnerRef: schemaRef('profile', 'customer'),
-        physicalOwnerRef: schemaRef('profile', 'customer'),
-        digitalOwnerRef: schemaRef('profile', 'customer'),
-        verificationRef: schemaRef('wasteVerification', 'wasteVerification'),
-        receiptRef: schemaRef('wasteReceipt', 'wasteReceipt'),
-        impactRef: schemaRef('wasteImpact', 'wasteImpactResult'),
-        evidenceRefs: schemaRef('wasteSubmission', 'wasteEvidence', 'many'),
-        marketplaceProjectionRef: schemaRef('wasteCore', 'wasteAssetMarketplaceProjection')
+        ownerRef: {"enabled":true,"moduleName":"profile","schemaName":"customer","type":"one","propertyName":"code"},
+        originalOwnerRef: {"enabled":true,"moduleName":"profile","schemaName":"customer","type":"one","propertyName":"code"},
+        physicalOwnerRef: {"enabled":true,"moduleName":"profile","schemaName":"customer","type":"one","propertyName":"code"},
+        digitalOwnerRef: {"enabled":true,"moduleName":"profile","schemaName":"customer","type":"one","propertyName":"code"},
+        verificationRef: {"enabled":true,"moduleName":"wasteVerification","schemaName":"wasteVerification","type":"one","propertyName":"code"},
+        receiptRef: {"enabled":true,"moduleName":"wasteReceipt","schemaName":"wasteReceipt","type":"one","propertyName":"code"},
+        impactRef: {"enabled":true,"moduleName":"wasteImpact","schemaName":"wasteImpactResult","type":"one","propertyName":"code"},
+        evidenceRefs: {"enabled":true,"moduleName":"wasteSubmission","schemaName":"wasteEvidence","type":"many","propertyName":"code"},
+        marketplaceProjectionRef: {"enabled":true,"moduleName":"wasteCore","schemaName":"wasteAssetMarketplaceProjection","type":"one","propertyName":"code"}
     } }),
     wasteAssetMarketplaceProjection: Object.assign({ super: 'base', model: true, backoffice: { concurrency: { managed: true, field: 'revision' } }, schemaPolicies: ['operational'], service: { enabled: true }, router: { enabled: false }, cache: { enabled: false }, event: { enabled: false }, search: { enabled: false } }, { definition: {
         code: { type: 'string', required: true , description: 'Uniquely identifies this record for references, APIs, imports, and business administration.'},
@@ -133,11 +131,11 @@ module.exports = { wasteCore: {
         revision: { type: 'int', required: true, default: 0 , description: 'Tracks the business revision used for governance, review, and optimistic update checks.'},
         metadata: { type: 'object', required: false , description: 'Stores additional structured metadata needed by extensions without changing the core schema contract.'}
     }, refSchema: {
-        ownerRef: schemaRef('profile', 'customer'),
-        commerceProductRef: schemaRef('product', 'product'),
-        commerceOrderRef: schemaRef('order', 'commerceOrder'),
-        paymentRef: schemaRef('paymentCore', 'paymentTransaction'),
-        evidenceRefs: schemaRef('wasteSubmission', 'wasteEvidence', 'many')
+        ownerRef: {"enabled":true,"moduleName":"profile","schemaName":"customer","type":"one","propertyName":"code"},
+        commerceProductRef: {"enabled":true,"moduleName":"product","schemaName":"product","type":"one","propertyName":"code"},
+        commerceOrderRef: {"enabled":true,"moduleName":"order","schemaName":"commerceOrder","type":"one","propertyName":"code"},
+        paymentRef: {"enabled":true,"moduleName":"paymentCore","schemaName":"paymentTransaction","type":"one","propertyName":"code"},
+        evidenceRefs: {"enabled":true,"moduleName":"wasteSubmission","schemaName":"wasteEvidence","type":"many","propertyName":"code"}
     } }),
     wasteAssetOwnershipEvent: Object.assign({ super: 'base', model: true, schemaPolicies: ['operational'], service: { enabled: true }, router: { enabled: false }, cache: { enabled: false }, event: { enabled: false }, search: { enabled: false } }, { definition: {
         code: { type: 'string', required: true , description: 'Uniquely identifies this record for references, APIs, imports, and business administration.'},
@@ -163,14 +161,14 @@ module.exports = { wasteCore: {
         revision: { type: 'int', required: true, default: 0 , description: 'Tracks the business revision used for governance, review, and optimistic update checks.'},
         metadata: { type: 'object', required: false , description: 'Stores additional structured metadata needed by extensions without changing the core schema contract.'}
     }, refSchema: {
-        fromOwnerRef: schemaRef('profile', 'customer'),
-        toOwnerRef: schemaRef('profile', 'customer'),
-        commerceProjectionRef: schemaRef('wasteCore', 'wasteAssetMarketplaceProjection'),
-        commerceOrderRef: schemaRef('order', 'commerceOrder'),
-        paymentRef: schemaRef('paymentCore', 'paymentTransaction'),
-        movementRef: schemaRef('wasteMovement', 'wasteMovement'),
-        complianceEvidenceRef: schemaRef('wasteCompliance', 'wasteComplianceEvidence'),
-        evidenceRefs: schemaRef('wasteSubmission', 'wasteEvidence', 'many')
+        fromOwnerRef: {"enabled":true,"moduleName":"profile","schemaName":"customer","type":"one","propertyName":"code"},
+        toOwnerRef: {"enabled":true,"moduleName":"profile","schemaName":"customer","type":"one","propertyName":"code"},
+        commerceProjectionRef: {"enabled":true,"moduleName":"wasteCore","schemaName":"wasteAssetMarketplaceProjection","type":"one","propertyName":"code"},
+        commerceOrderRef: {"enabled":true,"moduleName":"order","schemaName":"commerceOrder","type":"one","propertyName":"code"},
+        paymentRef: {"enabled":true,"moduleName":"paymentCore","schemaName":"paymentTransaction","type":"one","propertyName":"code"},
+        movementRef: {"enabled":true,"moduleName":"wasteMovement","schemaName":"wasteMovement","type":"one","propertyName":"code"},
+        complianceEvidenceRef: {"enabled":true,"moduleName":"wasteCompliance","schemaName":"wasteComplianceEvidence","type":"one","propertyName":"code"},
+        evidenceRefs: {"enabled":true,"moduleName":"wasteSubmission","schemaName":"wasteEvidence","type":"many","propertyName":"code"}
     } }),
     wasteAssetTransferPolicy: Object.assign({ super: 'base', model: true, schemaPolicies: ['operational'], service: { enabled: true }, router: { enabled: false }, cache: { enabled: false }, event: { enabled: false }, search: { enabled: false } }, { definition: {
         code: { type: 'string', required: true , description: 'Uniquely identifies this record for references, APIs, imports, and business administration.'},
@@ -232,7 +230,7 @@ module.exports = { wasteCore: {
         revision: { type: 'int', required: true, default: 0 , description: 'Tracks the business revision used for governance, review, and optimistic update checks.'},
         metadata: { type: 'object', required: false , description: 'Stores additional structured metadata needed by extensions without changing the core schema contract.'}
     }, refSchema: {
-        sponsorRef: schemaRef('profile', 'enterprise')
+        sponsorRef: {"enabled":true,"moduleName":"profile","schemaName":"enterprise","type":"one","propertyName":"code"}
     } }),
     wasteCarbonSettlementPolicy: Object.assign({ super: 'base', model: true, schemaPolicies: ['operational'], service: { enabled: true }, router: { enabled: false }, cache: { enabled: false }, event: { enabled: false }, search: { enabled: false } }, { definition: {
         code: { type: 'string', required: true , description: 'Uniquely identifies this record for references, APIs, imports, and business administration.'},
@@ -252,7 +250,7 @@ module.exports = { wasteCore: {
         revision: { type: 'int', required: true, default: 0 , description: 'Tracks the business revision used for governance, review, and optimistic update checks.'},
         metadata: { type: 'object', required: false , description: 'Stores additional structured metadata needed by extensions without changing the core schema contract.'}
     }, refSchema: {
-        receiverRef: schemaRef('profile', 'enterprise')
+        receiverRef: {"enabled":true,"moduleName":"profile","schemaName":"enterprise","type":"one","propertyName":"code"}
     } }),
     wasteCouponRedemptionSettlementPolicy: Object.assign({ super: 'base', model: true, schemaPolicies: ['operational'], service: { enabled: true }, router: { enabled: false }, cache: { enabled: false }, event: { enabled: false }, search: { enabled: false } }, { definition: {
         code: { type: 'string', required: true , description: 'Uniquely identifies this record for references, APIs, imports, and business administration.'},
@@ -276,6 +274,6 @@ module.exports = { wasteCore: {
         revision: { type: 'int', required: true, default: 0 , description: 'Tracks the business revision used for governance, review, and optimistic update checks.'},
         metadata: { type: 'object', required: false , description: 'Stores additional structured metadata needed by extensions without changing the core schema contract.'}
     }, refSchema: {
-        defaultCarbonReceiverRef: schemaRef('profile', 'enterprise')
+        defaultCarbonReceiverRef: {"enabled":true,"moduleName":"profile","schemaName":"enterprise","type":"one","propertyName":"code"}
     } })
 } };

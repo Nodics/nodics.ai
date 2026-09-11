@@ -88,6 +88,9 @@ module.exports = {
         }
     },
     remove: function (request, callback) {
+        return this.executeGenericMutation(request, callback, () => this.removeAuthorized(request));
+    },
+    removeAuthorized: function (request, callback) {
         request = _.merge(request, request.httpRequest.body || {});
         if (callback) {
             FACADE.DefaultDiscoveryPublicationPolicyFacade.remove(request).then(success => {
@@ -113,6 +116,9 @@ module.exports = {
         }
     },
     removeById: function (request, callback) {
+        return this.executeGenericMutation(request, callback, () => this.removeByIdAuthorized(request));
+    },
+    removeByIdAuthorized: function (request, callback) {
         request.ids = [];
         if (request.httpRequest.params.id) {
             request.ids.push(ObjectId(request.httpRequest.params.id));
@@ -130,6 +136,9 @@ module.exports = {
         }
     },
     removeByCode: function (request, callback) {
+        return this.executeGenericMutation(request, callback, () => this.removeByCodeAuthorized(request));
+    },
+    removeByCodeAuthorized: function (request, callback) {
         request.codes = [];
         if (request.httpRequest.params.code) {
             request.codes.push(request.httpRequest.params.code);
@@ -147,6 +156,9 @@ module.exports = {
         }
     },
     save: function (request, callback) {
+        return this.executeGenericMutation(request, callback, () => this.saveAuthorized(request), 'create');
+    },
+    saveAuthorized: function (request, callback) {
         request.model = request.httpRequest.body;
         if (callback) {
             FACADE.DefaultDiscoveryPublicationPolicyFacade.save(request).then(success => {
@@ -159,6 +171,9 @@ module.exports = {
         }
     },
     saveAll: function (request, callback) {
+        return this.executeGenericMutation(request, callback, () => this.saveAllAuthorized(request), 'create');
+    },
+    saveAllAuthorized: function (request, callback) {
         request.models = request.httpRequest.body;
         if (callback) {
             FACADE.DefaultDiscoveryPublicationPolicyFacade.saveAll(request).then(success => {
@@ -171,6 +186,9 @@ module.exports = {
         }
     },
     update: function (request, callback) {
+        return this.executeGenericMutation(request, callback, () => this.updateAuthorized(request));
+    },
+    updateAuthorized: function (request, callback) {
         request = _.merge(request, request.httpRequest.body || {});
         if (callback) {
             FACADE.DefaultDiscoveryPublicationPolicyFacade.update(request).then(success => {
@@ -181,5 +199,16 @@ module.exports = {
         } else {
             return FACADE.DefaultDiscoveryPublicationPolicyFacade.update(request);
         }
+    },
+    executeGenericMutation: function (request, callback, execute, operation) {
+        let result = Promise.resolve().then(() => {
+            SERVICE.DefaultSchemaAuthoringPolicyService.assertMutationAllowed(request.moduleName, 'discoveryPublicationPolicy', operation);
+            return execute();
+        });
+        if (callback) {
+            result.then(success => callback(null, success)).catch(error => callback(error));
+            return;
+        }
+        return result;
     }
 };

@@ -644,14 +644,15 @@ const capability = {
     ]
 };
 
-function getEnterpriseManagementConfig() {
-    if (typeof CONFIG !== "undefined" && CONFIG && CONFIG.get) {
-        return CONFIG.get('enterpriseManagement') || {};
-    }
-    return require('../../config/properties').enterpriseManagement || {};
-}
 
 module.exports = {
+    /** Resolves layered enterprise workspace configuration. */
+    getEnterpriseManagementConfig: function () {
+        if (typeof CONFIG !== "undefined" && CONFIG && CONFIG.get) {
+            return CONFIG.get('enterpriseManagement') || {};
+        }
+        return require('../../config/properties').enterpriseManagement || {};
+    },
     /** Registers this module BackOffice capability provider. */
     init: function () {
         SERVICE.DefaultModuleRegistrationAgentService.registerBackofficeCapabilityProvider('profile', this);
@@ -662,7 +663,7 @@ module.exports = {
     /** Returns this module owned BackOffice capability contract. */
     getCapability: function () {
         let effective = JSON.parse(JSON.stringify(capability));
-        let workspace = getEnterpriseManagementConfig().workspace;
+        let workspace = this.getEnterpriseManagementConfig().workspace;
         if (workspace) {
             let enterpriseWorkspaceIds = {
                 "organisations-business-accounts": true,

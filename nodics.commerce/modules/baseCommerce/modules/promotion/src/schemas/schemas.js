@@ -61,9 +61,7 @@ const enterpriseAssociationRefSchema = {
   },
 };
 
-function withEnterpriseAssociation(definition) {
-  return Object.assign({}, enterpriseAssociationDefinitions, definition);
-}
+
 
 module.exports = {
   promotion: {
@@ -79,7 +77,7 @@ module.exports = {
         search: { enabled: false },
       },
       {
-        definition: withEnterpriseAssociation({
+        definition: Object.assign({}, enterpriseAssociationDefinitions, {
           code: {
             type: "string",
             required: true,
@@ -181,7 +179,7 @@ module.exports = {
         search: { enabled: false },
       },
       {
-        definition: withEnterpriseAssociation({
+        definition: Object.assign({}, enterpriseAssociationDefinitions, {
           code: {
             type: "string",
             required: true,
@@ -260,7 +258,7 @@ module.exports = {
         search: { enabled: false },
       },
       {
-        definition: withEnterpriseAssociation({
+        definition: Object.assign({}, enterpriseAssociationDefinitions, {
           code: {
             type: "string",
             required: true,
@@ -521,7 +519,7 @@ module.exports = {
         search: { enabled: false },
       },
       {
-        definition: withEnterpriseAssociation({
+        definition: Object.assign({}, enterpriseAssociationDefinitions, {
           code: {
             type: "string",
             required: true,

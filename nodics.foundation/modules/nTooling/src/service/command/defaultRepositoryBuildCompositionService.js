@@ -114,7 +114,7 @@ module.exports = {
         this.writeModule(serverRoot, {
             packageJson: serverPackage,
             properties: {
-                activeModules: { groups: [], modules: ['nodics.repository-build', 'repositoryBuildEnvironment', 'repositoryBuildServer'] },
+                activeModules: { groups: [], modules: ['nTest', 'nodics.repository-build', 'repositoryBuildEnvironment', 'repositoryBuildServer'] },
                 servers: { default: { endpoint: { httpHost: '127.0.0.1', httpPort: 4399, httpsHost: '127.0.0.1', httpsPort: 4398 } } }
             }
         });

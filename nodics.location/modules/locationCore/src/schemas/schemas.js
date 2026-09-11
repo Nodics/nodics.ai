@@ -16,9 +16,7 @@
  * @owner generated
  * @override Later active modules may extend or replace this registry through Nodics layering.
  */
-function schemaRef(moduleName, schemaName, type) {
-    return { enabled: true, moduleName: moduleName, schemaName: schemaName, type: type || 'one', propertyName: 'code' };
-}
+
 
 module.exports = { locationCore: {
     location: Object.assign({ super: 'base', model: true, schemaPolicies: ['operational'], service: { enabled: true }, router: { enabled: false }, cache: { enabled: false }, event: { enabled: false }, search: { enabled: false } }, { definition: {
@@ -43,10 +41,10 @@ module.exports = { locationCore: {
         quality: { type: 'object', required: false , description: 'Stores structured quality details used by this record.'},
         revision: { type: 'int', required: true, default: 0 , description: 'Tracks the business revision used for governance, review, and optimistic update checks.'}
     }, refSchema: {
-        addressRef: schemaRef('profile', 'address'),
-        contactRefs: schemaRef('profile', 'contact', 'many'),
-        enterpriseRef: schemaRef('profile', 'enterprise'),
-        operatorEnterpriseRef: schemaRef('profile', 'enterprise'),
-        mediaRefs: schemaRef('media', 'media', 'many')
+        addressRef: {"enabled":true,"moduleName":"profile","schemaName":"address","type":"one","propertyName":"code"},
+        contactRefs: {"enabled":true,"moduleName":"profile","schemaName":"contact","type":"many","propertyName":"code"},
+        enterpriseRef: {"enabled":true,"moduleName":"profile","schemaName":"enterprise","type":"one","propertyName":"code"},
+        operatorEnterpriseRef: {"enabled":true,"moduleName":"profile","schemaName":"enterprise","type":"one","propertyName":"code"},
+        mediaRefs: {"enabled":true,"moduleName":"media","schemaName":"media","type":"many","propertyName":"code"}
     } })
 } };

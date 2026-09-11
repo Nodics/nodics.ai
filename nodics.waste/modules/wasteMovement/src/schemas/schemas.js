@@ -10,9 +10,7 @@
  */
 
 /** @module wasteMovement/src/schemas/schemas @description Defines reusable Waste batch and downstream movement schemas. @layer schema @owner wasteMovement @override Partner modules may add logistics integration fields without losing batch traceability. */
-function schemaRef(moduleName, schemaName, type) {
-    return { enabled: true, moduleName: moduleName, schemaName: schemaName, type: type || 'one', propertyName: 'code' };
-}
+
 
 module.exports = { wasteMovement: {
     wasteBatch: Object.assign({ super: 'base', model: true, schemaPolicies: ['operational'], service: { enabled: true }, router: { enabled: false }, cache: { enabled: false }, event: { enabled: false }, search: { enabled: false } }, { definition: {
@@ -27,8 +25,8 @@ module.exports = { wasteMovement: {
         revision: { type: 'int', required: true, default: 0 , description: 'Tracks the business revision used for governance, review, and optimistic update checks.'},
         metadata: { type: 'object', required: false , description: 'Stores additional structured metadata needed by extensions without changing the core schema contract.'}
     }, refSchema: {
-        sourceLocationRef: schemaRef('locationCore', 'location'),
-        currentLocationRef: schemaRef('locationCore', 'location')
+        sourceLocationRef: {"enabled":true,"moduleName":"locationCore","schemaName":"location","type":"one","propertyName":"code"},
+        currentLocationRef: {"enabled":true,"moduleName":"locationCore","schemaName":"location","type":"one","propertyName":"code"}
     } }),
     wasteMovement: Object.assign({ super: 'base', model: true, schemaPolicies: ['operational'], service: { enabled: true }, router: { enabled: false }, cache: { enabled: false }, event: { enabled: false }, search: { enabled: false } }, { definition: {
         code: { type: 'string', required: true , description: 'Uniquely identifies this record for references, APIs, imports, and business administration.'},
@@ -49,9 +47,9 @@ module.exports = { wasteMovement: {
         revision: { type: 'int', required: true, default: 0 , description: 'Tracks the business revision used for governance, review, and optimistic update checks.'},
         metadata: { type: 'object', required: false , description: 'Stores additional structured metadata needed by extensions without changing the core schema contract.'}
     }, refSchema: {
-        sourceLocationRef: schemaRef('locationCore', 'location'),
-        targetLocationRef: schemaRef('locationCore', 'location'),
-        operatorRef: schemaRef('profile', 'enterprise'),
-        evidenceRefs: schemaRef('wasteSubmission', 'wasteEvidence', 'many')
+        sourceLocationRef: {"enabled":true,"moduleName":"locationCore","schemaName":"location","type":"one","propertyName":"code"},
+        targetLocationRef: {"enabled":true,"moduleName":"locationCore","schemaName":"location","type":"one","propertyName":"code"},
+        operatorRef: {"enabled":true,"moduleName":"profile","schemaName":"enterprise","type":"one","propertyName":"code"},
+        evidenceRefs: {"enabled":true,"moduleName":"wasteSubmission","schemaName":"wasteEvidence","type":"many","propertyName":"code"}
     } })
 } };

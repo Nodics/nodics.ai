@@ -32,6 +32,9 @@ try {
         'Repository builds must regenerate Discovery schema artifacts after clean');
     assert(composition.root.startsWith(path.join(serverApprovedTmpRoot, 'scratch') + path.sep),
         'Composition must honor the configured server-approved scratch root');
+    const serverProperties = require(path.join(composition.serverRoot, 'config', 'properties.js'));
+    assert(serverProperties.activeModules.modules.includes('nTest'),
+        'Repository builds must activate nTest to generate module-owned test artifacts');
     assert.strictEqual(compositionService.validate(composition), true);
     const serverPackagePath = path.join(composition.serverRoot, 'package.json');
     const serverPackage = JSON.parse(fs.readFileSync(serverPackagePath, 'utf8'));

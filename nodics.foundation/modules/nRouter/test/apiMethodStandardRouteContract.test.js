@@ -47,7 +47,10 @@ const readOperationAllowList = new Set([
     'loadCartByCode',
     'loadCartByRefCode',
     'loadCartByToken',
-    'ping'
+    'ping',
+    // Read-only projections: saved drafts and current search-index health.
+    'resumeJourney',
+    'indexStatus'
 ]);
 
 function collectRouterFiles(currentPath, files = []) {

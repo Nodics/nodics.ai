@@ -16,9 +16,7 @@
  * @owner generated
  * @override Later active modules may extend or replace this registry through Nodics layering.
  */
-function schemaRef(moduleName, schemaName, type) {
-    return { enabled: true, moduleName: moduleName, schemaName: schemaName, type: type || 'one', propertyName: 'code' };
-}
+
 
 module.exports = { locationDraft: {
     locationDraft: Object.assign({ super: 'base', model: true, schemaPolicies: ['operational'], service: { enabled: true }, router: { enabled: false }, cache: { enabled: false }, event: { enabled: false }, search: { enabled: false } }, { definition: {
@@ -36,6 +34,6 @@ module.exports = { locationDraft: {
         resolvedAt: { type: 'date', required: false , description: 'Records when the resolved event or value applies.'},
         correlationId: { type: 'string', required: true , description: 'Stores the correlation identifier used to correlate this record.'}
     }, refSchema: {
-        enterpriseRef: schemaRef('profile', 'enterprise')
+        enterpriseRef: {"enabled":true,"moduleName":"profile","schemaName":"enterprise","type":"one","propertyName":"code"}
     } })
 } };

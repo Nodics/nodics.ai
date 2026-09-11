@@ -10,9 +10,7 @@
  */
 
 /** @module wasteCompliance/src/schemas/schemas @description Defines reusable Waste compliance profile and evidence schemas. @layer schema @owner wasteCompliance @override Partner modules may add jurisdiction-specific details without making unsupported legal claims. */
-function schemaRef(moduleName, schemaName, type) {
-    return { enabled: true, moduleName: moduleName, schemaName: schemaName, type: type || 'one', propertyName: 'code' };
-}
+
 
 module.exports = { wasteCompliance: {
     wasteComplianceProfile: Object.assign({ super: 'base', model: true, schemaPolicies: ['operational'], service: { enabled: true }, router: { enabled: false }, cache: { enabled: false }, event: { enabled: false }, search: { enabled: false } }, { definition: {
@@ -42,7 +40,7 @@ module.exports = { wasteCompliance: {
         revision: { type: 'int', required: true, default: 0 , description: 'Tracks the business revision used for governance, review, and optimistic update checks.'},
         metadata: { type: 'object', required: false , description: 'Stores additional structured metadata needed by extensions without changing the core schema contract.'}
     }, refSchema: {
-        evidenceRefs: schemaRef('wasteSubmission', 'wasteEvidence', 'many'),
-        chainOfCustodyRefs: schemaRef('wasteMovement', 'wasteMovement', 'many')
+        evidenceRefs: {"enabled":true,"moduleName":"wasteSubmission","schemaName":"wasteEvidence","type":"many","propertyName":"code"},
+        chainOfCustodyRefs: {"enabled":true,"moduleName":"wasteMovement","schemaName":"wasteMovement","type":"many","propertyName":"code"}
     } })
 } };

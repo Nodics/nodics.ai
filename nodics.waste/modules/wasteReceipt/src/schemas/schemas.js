@@ -10,9 +10,7 @@
  */
 
 /** @module wasteReceipt/src/schemas/schemas @description Defines reusable Waste physical receipt schemas. @layer schema @owner wasteReceipt @override Partner modules may tune receipt policies while keeping receipt separate from submission approval. */
-function schemaRef(moduleName, schemaName, type) {
-    return { enabled: true, moduleName: moduleName, schemaName: schemaName, type: type || 'one', propertyName: 'code' };
-}
+
 
 module.exports = { wasteReceipt: {
     wasteReceipt: Object.assign({ super: 'base', model: true, schemaPolicies: ['operational'], service: { enabled: true }, router: { enabled: false }, cache: { enabled: false }, event: { enabled: false }, search: { enabled: false } }, { definition: {
@@ -33,6 +31,6 @@ module.exports = { wasteReceipt: {
         revision: { type: 'int', required: true, default: 0 , description: 'Tracks the business revision used for governance, review, and optimistic update checks.'},
         metadata: { type: 'object', required: false , description: 'Stores additional structured metadata needed by extensions without changing the core schema contract.'}
     }, refSchema: {
-        receiptEvidenceRefs: schemaRef('wasteSubmission', 'wasteEvidence', 'many')
+        receiptEvidenceRefs: {"enabled":true,"moduleName":"wasteSubmission","schemaName":"wasteEvidence","type":"many","propertyName":"code"}
     } })
 } };

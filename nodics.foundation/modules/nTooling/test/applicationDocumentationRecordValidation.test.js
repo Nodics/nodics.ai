@@ -153,7 +153,7 @@ function fixture() {
         product: product.code,
         navigation: navigation.code,
         parentNode: rootNode.code,
-        nodeLevel: 'TOPIC',
+        nodeLevel: 'PAGE_LINK',
         nodeType: 'PAGE',
         nodeTitle: 'Topic',
         nodeSummary: 'Topic summary',

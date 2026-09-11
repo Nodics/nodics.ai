@@ -10,9 +10,7 @@
  */
 
 /** @module wasteImpact/src/schemas/schemas @description Defines reusable Waste impact metric, profile, and result schemas. @layer schema @owner wasteImpact @override Partner modules may add formulas and claim rules while preserving versioned evidence. */
-function schemaRef(moduleName, schemaName, type) {
-    return { enabled: true, moduleName: moduleName, schemaName: schemaName, type: type || 'one', propertyName: 'code' };
-}
+
 
 module.exports = { wasteImpact: {
     wasteImpactSelection: Object.assign({ super: 'base', model: true, backoffice: { mutationMode: 'READ_ONLY' }, schemaPolicies: ['operational'], service: { enabled: true }, router: { enabled: false }, cache: { enabled: false }, event: { enabled: false }, search: { enabled: false } }, { definition: {
@@ -27,7 +25,7 @@ module.exports = { wasteImpact: {
         idempotencyKey: { type: 'string', required: true, description: 'Original acceptance command reference.' },
         revision: { type: 'int', required: true, default: 0, description: 'Initial immutable event revision.' },
         metadata: { type: 'object', required: false, description: 'Command fingerprint for replay validation.' }
-    }, refSchema: { assessmentRef: schemaRef('wasteImpact', 'wasteImpactResult'), previousAssessmentRef: schemaRef('wasteImpact', 'wasteImpactResult') } }),
+    }, refSchema: { assessmentRef: {"enabled":true,"moduleName":"wasteImpact","schemaName":"wasteImpactResult","type":"one","propertyName":"code"}, previousAssessmentRef: {"enabled":true,"moduleName":"wasteImpact","schemaName":"wasteImpactResult","type":"one","propertyName":"code"} } }),
     wasteImpactMetric: Object.assign({ super: 'base', model: true, schemaPolicies: ['operational'], service: { enabled: true }, router: { enabled: false }, cache: { enabled: false }, event: { enabled: false }, search: { enabled: false } }, { definition: {
         code: { type: 'string', required: true , description: 'Uniquely identifies this record for references, APIs, imports, and business administration.'},
         name: { type: 'object', required: true , description: 'Stores the business display name shown to administrators and related user journeys.'},
@@ -66,6 +64,6 @@ module.exports = { wasteImpact: {
         revision: { type: 'int', required: true, default: 0 , description: 'Tracks the business revision used for governance, review, and optimistic update checks.'},
         metadata: { type: 'object', required: false , description: 'Stores additional structured metadata needed by extensions without changing the core schema contract.'}
     }, refSchema: {
-        evidenceRefs: schemaRef('wasteSubmission', 'wasteEvidence', 'many')
+        evidenceRefs: {"enabled":true,"moduleName":"wasteSubmission","schemaName":"wasteEvidence","type":"many","propertyName":"code"}
     } })
 } };

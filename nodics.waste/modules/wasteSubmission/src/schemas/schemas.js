@@ -10,9 +10,7 @@
  */
 
 /** @module wasteSubmission/src/schemas/schemas @description Defines reusable Waste submission, evidence-reference, and metadata suggestion schemas. @layer schema @owner wasteSubmission @override Partner modules may add journey fields while preserving advisory metadata and external media ownership. */
-function schemaRef(moduleName, schemaName, type) {
-    return { enabled: true, moduleName: moduleName, schemaName: schemaName, type: type || 'one', propertyName: 'code' };
-}
+
 
 module.exports = { wasteSubmission: {
     wasteSubmission: Object.assign({ super: 'base', model: true, backoffice: { concurrency: { managed: true, field: 'revision' } }, schemaPolicies: ['operational'], service: { enabled: true }, router: { enabled: false }, cache: { enabled: false }, event: { enabled: false }, search: { enabled: false } }, { definition: {
@@ -46,12 +44,12 @@ module.exports = { wasteSubmission: {
         revision: { type: 'int', required: true, default: 0 , description: 'Tracks the business revision used for governance, review, and optimistic update checks.'},
         metadata: { type: 'object', required: false , description: 'Stores additional structured metadata needed by extensions without changing the core schema contract.'}
     }, refSchema: {
-        submitterRef: schemaRef('profile', 'customer'),
-        evidenceRefs: schemaRef('wasteSubmission', 'wasteEvidence', 'many'),
-        metadataSuggestionRefs: schemaRef('wasteSubmission', 'wasteMetadataSuggestion', 'many'),
-        verificationRef: schemaRef('wasteVerification', 'wasteVerification'),
-        receiptRef: schemaRef('wasteReceipt', 'wasteReceipt'),
-        impactRef: schemaRef('wasteImpact', 'wasteImpactResult')
+        submitterRef: {"enabled":true,"moduleName":"profile","schemaName":"customer","type":"one","propertyName":"code"},
+        evidenceRefs: {"enabled":true,"moduleName":"wasteSubmission","schemaName":"wasteEvidence","type":"many","propertyName":"code"},
+        metadataSuggestionRefs: {"enabled":true,"moduleName":"wasteSubmission","schemaName":"wasteMetadataSuggestion","type":"many","propertyName":"code"},
+        verificationRef: {"enabled":true,"moduleName":"wasteVerification","schemaName":"wasteVerification","type":"one","propertyName":"code"},
+        receiptRef: {"enabled":true,"moduleName":"wasteReceipt","schemaName":"wasteReceipt","type":"one","propertyName":"code"},
+        impactRef: {"enabled":true,"moduleName":"wasteImpact","schemaName":"wasteImpactResult","type":"one","propertyName":"code"}
     } }),
     wasteEvidence: Object.assign({ super: 'base', model: true, schemaPolicies: ['operational'], service: { enabled: true }, router: { enabled: false }, cache: { enabled: false }, event: { enabled: false }, search: { enabled: false } }, { definition: {
         code: { type: 'string', required: true , description: 'Uniquely identifies this record for references, APIs, imports, and business administration.'},
@@ -67,9 +65,9 @@ module.exports = { wasteSubmission: {
         revision: { type: 'int', required: true, default: 0 , description: 'Tracks the business revision used for governance, review, and optimistic update checks.'},
         metadata: { type: 'object', required: false , description: 'Stores additional structured metadata needed by extensions without changing the core schema contract.'}
     }, refSchema: {
-        ownerRef: schemaRef('profile', 'customer'),
-        mediaRef: schemaRef('media', 'media'),
-        captureLocationRef: schemaRef('locationCore', 'location')
+        ownerRef: {"enabled":true,"moduleName":"profile","schemaName":"customer","type":"one","propertyName":"code"},
+        mediaRef: {"enabled":true,"moduleName":"media","schemaName":"media","type":"one","propertyName":"code"},
+        captureLocationRef: {"enabled":true,"moduleName":"locationCore","schemaName":"location","type":"one","propertyName":"code"}
     } }),
     wasteMetadataSuggestion: Object.assign({ super: 'base', model: true, schemaPolicies: ['operational'], service: { enabled: true }, router: { enabled: false }, cache: { enabled: false }, event: { enabled: false }, search: { enabled: false } }, { definition: {
         code: { type: 'string', required: true , description: 'Uniquely identifies this record for references, APIs, imports, and business administration.'},

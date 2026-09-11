@@ -67,21 +67,24 @@ const forbiddenRecordFields = [
 
 const layerPrecedence = ['FRAMEWORK', 'ACCELERATOR_UMBRELLA', 'SCENARIO_ACCELERATOR', 'ACCELERATOR', 'PROJECT', 'TENANT', 'ENVIRONMENT'];
 
-const flattenHeaderEntries = function (header) {
-    return Object.keys(header || {}).flatMap(function (sectionName) {
-        return Object.keys(header[sectionName] || {}).map(function (entryName) {
-            return Object.assign({ sectionName: sectionName, entryName: entryName }, header[sectionName][entryName]);
-        });
-    });
-};
-
-const fail = function (code, message) {
-    let error = typeof CLASSES !== 'undefined' && CLASSES.NodicsError ? new CLASSES.NodicsError(code, message) : new Error(message);
-    error.code = code;
-    throw error;
-};
-
 module.exports = {
+    /** Flattens import header entries for contribution validation. */
+    flattenHeaderEntries: function (header) {
+        return Object.keys(header || {}).flatMap(function (sectionName) {
+            return Object.keys(header[sectionName] || {}).map(function (entryName) {
+                return Object.assign({ sectionName: sectionName, entryName: entryName }, header[sectionName][entryName]);
+            });
+        });
+    },
+
+    /** Raises a contribution policy failure with its stable code. */
+    fail: function (code, message) {
+        let error = typeof CLASSES !== 'undefined' && CLASSES.NodicsError ? new CLASSES.NodicsError(code, message) : new Error(message);
+        error.code = code;
+        throw error;
+    },
+
+
     allowedSchemaNames: allowedSchemaNames.slice(),
     forbiddenRecordFields: forbiddenRecordFields.slice(),
     layerPrecedence: layerPrecedence.slice(),
@@ -89,32 +92,32 @@ module.exports = {
 
     /** Requires enabled saveAll contributions to supported Waste schemas using stable code-based import queries. */
     validateHeader: function (header) {
-        let entries = flattenHeaderEntries(header);
-        if (!entries.length) fail('ERR_WASTE_DATA_CONTRIBUTION_EMPTY', 'Waste data contribution header must contain at least one import entry');
-        entries.forEach(function (entry) {
-            if (!entry.options || entry.options.enabled !== true) fail('ERR_WASTE_DATA_CONTRIBUTION_DISABLED', entry.entryName + ' must be explicitly enabled');
-            if (entry.options.operation !== 'saveAll') fail('ERR_WASTE_DATA_CONTRIBUTION_OPERATION', entry.entryName + ' must use saveAll for idempotent code-based contribution');
-            if (!allowedSchemaNames.includes(entry.options.schemaName)) fail('ERR_WASTE_DATA_CONTRIBUTION_SCHEMA', entry.entryName + ' targets unsupported Waste schema ' + entry.options.schemaName);
-            if (entry.query && Object.prototype.hasOwnProperty.call(entry.query, 'tenant')) fail('ERR_WASTE_DATA_CONTRIBUTION_SCOPE', entry.entryName + ' must not scope imports by tenant');
-            if (!entry.query || entry.query.code !== '$code') fail('ERR_WASTE_DATA_CONTRIBUTION_QUERY', entry.entryName + ' must use code as the idempotent contribution key');
+        let entries = this.flattenHeaderEntries(header);
+        if (!entries.length) this.fail('ERR_WASTE_DATA_CONTRIBUTION_EMPTY', 'Waste data contribution header must contain at least one import entry');
+        entries.forEach((entry) => {
+            if (!entry.options || entry.options.enabled !== true) this.fail('ERR_WASTE_DATA_CONTRIBUTION_DISABLED', entry.entryName + ' must be explicitly enabled');
+            if (entry.options.operation !== 'saveAll') this.fail('ERR_WASTE_DATA_CONTRIBUTION_OPERATION', entry.entryName + ' must use saveAll for idempotent code-based contribution');
+            if (!allowedSchemaNames.includes(entry.options.schemaName)) this.fail('ERR_WASTE_DATA_CONTRIBUTION_SCHEMA', entry.entryName + ' targets unsupported Waste schema ' + entry.options.schemaName);
+            if (entry.query && Object.prototype.hasOwnProperty.call(entry.query, 'tenant')) this.fail('ERR_WASTE_DATA_CONTRIBUTION_SCOPE', entry.entryName + ' must not scope imports by tenant');
+            if (!entry.query || entry.query.code !== '$code') this.fail('ERR_WASTE_DATA_CONTRIBUTION_QUERY', entry.entryName + ' must use code as the idempotent contribution key');
         });
         return entries;
     },
 
     /** Requires a supported Waste DATA_RELEASE type and the WASTE runtime destination. */
     validateManifestSection: function (section) {
-        if (!section || section.kind !== 'DATA_RELEASE') fail('ERR_WASTE_DATA_MANIFEST_KIND', 'Waste contribution section must be a DATA_RELEASE');
-        if (section.destinationRole !== 'WASTE') fail('ERR_WASTE_DATA_MANIFEST_DESTINATION', 'Waste contribution section must target WASTE destination role');
-        if (!['core', 'sample', 'project', 'tenant'].includes(section.dataType)) fail('ERR_WASTE_DATA_MANIFEST_TYPE', 'Waste contribution dataType is not supported');
+        if (!section || section.kind !== 'DATA_RELEASE') this.fail('ERR_WASTE_DATA_MANIFEST_KIND', 'Waste contribution section must be a DATA_RELEASE');
+        if (section.destinationRole !== 'WASTE') this.fail('ERR_WASTE_DATA_MANIFEST_DESTINATION', 'Waste contribution section must target WASTE destination role');
+        if (!['core', 'sample', 'project', 'tenant'].includes(section.dataType)) this.fail('ERR_WASTE_DATA_MANIFEST_TYPE', 'Waste contribution dataType is not supported');
         return section;
     },
 
     /** Requires a stable record code and supported layer while rejecting foreign capability and runtime-scope fields. */
     validateRecord: function (record, layerKind) {
-        if (!record || !record.code) fail('ERR_WASTE_DATA_RECORD_CODE', 'Waste contribution records require a stable code');
-        if (layerKind && !layerPrecedence.includes(layerKind)) fail('ERR_WASTE_DATA_LAYER_KIND', 'Waste contribution layer is not supported');
-        forbiddenRecordFields.forEach(function (fieldName) {
-            if (Object.prototype.hasOwnProperty.call(record, fieldName)) fail('ERR_WASTE_DATA_RECORD_FIELD', 'Waste contribution record must not own ' + fieldName);
+        if (!record || !record.code) this.fail('ERR_WASTE_DATA_RECORD_CODE', 'Waste contribution records require a stable code');
+        if (layerKind && !layerPrecedence.includes(layerKind)) this.fail('ERR_WASTE_DATA_LAYER_KIND', 'Waste contribution layer is not supported');
+        forbiddenRecordFields.forEach((fieldName) => {
+            if (Object.prototype.hasOwnProperty.call(record, fieldName)) this.fail('ERR_WASTE_DATA_RECORD_FIELD', 'Waste contribution record must not own ' + fieldName);
         });
         return record;
     },

@@ -59,7 +59,8 @@ separate operational responsibilities.
 - explicit command override governance;
 - clean/build/lifecycle command wrappers;
 - an ephemeral framework repository build composition that covers every
-  standard runtime product group without depending on a customer project;
+  standard runtime product group without depending on a customer project, and
+  activates `nTest` so builds regenerate module-owned schema and API tests;
 - test-suite command orchestration;
 - documentation coverage and documentation gate checks;
 - application-owned `docs/` catalogue validation and immutable WCMS Staged

@@ -16,9 +16,7 @@
  * @owner generated
  * @override Later active modules may extend or replace this registry through Nodics layering.
  */
-function schemaRef(moduleName, schemaName, type) {
-    return { enabled: true, moduleName: moduleName, schemaName: schemaName, type: type || 'one', propertyName: 'code' };
-}
+
 
 module.exports = { locationSearch: {
     locationSearchProjection: Object.assign({ super: 'base', model: true, schemaPolicies: ['operational'], service: { enabled: true }, router: { enabled: false }, cache: { enabled: false }, event: { enabled: false }, search: { enabled: true, idPropertyName: 'code' } }, { definition: {
@@ -39,8 +37,8 @@ module.exports = { locationSearch: {
         projectedAt: { type: 'date', required: true , description: 'Records when the projected event or value applies.'},
         status: { type: 'string', required: true, enum: ['CURRENT', 'STALE', 'WITHDRAWN'] , description: 'Tracks the lifecycle state that controls whether this record can be used in business processes.'}
     }, refSchema: {
-        addressRef: schemaRef('profile', 'address'),
-        enterpriseRef: schemaRef('profile', 'enterprise'),
-        operatorEnterpriseRef: schemaRef('profile', 'enterprise')
+        addressRef: {"enabled":true,"moduleName":"profile","schemaName":"address","type":"one","propertyName":"code"},
+        enterpriseRef: {"enabled":true,"moduleName":"profile","schemaName":"enterprise","type":"one","propertyName":"code"},
+        operatorEnterpriseRef: {"enabled":true,"moduleName":"profile","schemaName":"enterprise","type":"one","propertyName":"code"}
     } })
 } };
