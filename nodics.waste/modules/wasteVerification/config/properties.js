@@ -11,6 +11,18 @@
 
 /** @module wasteVerification/config/properties @description Provides Waste Verification schema policy defaults. @layer config @owner wasteVerification @override Partner modules may tune review policy. */
 module.exports = {
+    // Inert inventory; an allowed local server must explicitly select this capability.
+    localResetProvider: {
+        "contributions": {
+            "wasteVerification": {
+                "serviceNames": {
+                    "DefaultWasteVerificationPolicyService": true,
+                    "DefaultWasteVerificationService": true
+                }
+            }
+        }
+    },
+
     waste: { reviewWorkspace: {
         descriptorOptions: require('../../wasteMaterial/src/utils/descriptorDefinitions'),
         defaultPageSize: 25, maximumPageSize: 100, maximumPage: 10000, maximumQueryLength: 120,

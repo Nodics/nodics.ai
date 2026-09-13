@@ -39,7 +39,7 @@ module.exports = {
                 contactName: this.text(payload.name || payload.contactName),
                 organization: this.text(payload.organization || payload.company),
                 role: this.text(payload.role),
-                sourcePage: this.text(payload.sourcePage || 'nexus-contact'),
+                sourcePage: this.text(payload.sourcePage),
                 channel: this.text(request.channel || payload.channel || 'WEB')
             },
             evidenceReferences: [],

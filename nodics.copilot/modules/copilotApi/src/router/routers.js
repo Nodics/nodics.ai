@@ -29,9 +29,8 @@ module.exports = {
             status: { secured: true, accessGroups: ['userGroup'], permission: 'copilot.knowledge.internal.read', apiExposure: 'copilotApi', key: '/knowledge/status', method: 'GET', controller: 'DefaultCopilotController', operation: 'getKnowledgeStatus' },
             refresh: { secured: true, accessGroups: ['userGroup'], permission: 'copilot.knowledge.source.manage', apiExposure: 'copilotApi', key: '/knowledge/sources/:sourceCode/refresh', method: 'POST', controller: 'DefaultCopilotController', operation: 'refreshKnowledgeSource' }
         },
-        workbench: {
-            prepareProducts: { secured: true, accessGroups: ['userGroup'], permission: 'copilot.mutation.prepare', apiExposure: 'copilotApi', key: '/workbench/products/prepare', method: 'POST', controller: 'DefaultCopilotController', operation: 'prepareProductPlan' },
-            executeProducts: { secured: true, accessGroups: ['userGroup'], permission: 'copilot.mutation.execute', apiExposure: 'copilotApi', key: '/workbench/products/:actionCode/execute', method: 'POST', controller: 'DefaultCopilotController', operation: 'executeProductPlan' }
+        productPlans: {
+            prepareProducts: { secured: true, accessGroups: ['userGroup'], permission: 'copilot.mutation.prepare', apiExposure: 'copilotApi', key: '/products/prepare', method: 'POST', controller: 'DefaultCopilotController', operation: 'prepareProductPlan' }
         },
         confirmations: {
             get: { secured: true, accessGroups: ['userGroup'], permission: 'copilot.mutation.prepare', apiExposure: 'copilotApi', key: '/confirmations/:confirmationCode', method: 'GET', controller: 'DefaultCopilotController', operation: 'getConfirmation' },

@@ -18,12 +18,12 @@ module.exports = {
         displayName: 'Location Map',
         category: 'operations',
         icon: 'location',
-        requiredPermissions: ['system.schema.workbench.view'],
+        requiredPermissions: ['system.schema.view'],
         discovery: { openApiPath: '/nodics/system/v0/contract/openapi/internal' }
     },
     defaults: {
         icon: 'location',
-        permission: 'system.schema.workbench.view',
+        permission: 'system.schema.view',
         group: { id: 'system-configuration', label: 'System Configuration', order: 90 },
         perspectives: ['configuration', 'operations', 'business'],
         contexts: ['environment', 'tenant'],

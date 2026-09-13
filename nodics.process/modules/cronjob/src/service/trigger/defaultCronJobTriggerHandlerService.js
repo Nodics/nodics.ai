@@ -107,7 +107,8 @@ module.exports = {
             this.LOG.debug('Applying pre job execution interceptors');
             SERVICE.DefaultInterceptorService.executeInterceptors([].concat(interceptors.preRun), {
                 job: request.job,
-                definition: request.definition
+                definition: request.definition,
+                authData: request.authData
             }, {}).then(success => {
                 process.nextSuccess(request, response);
             }).catch(error => {
@@ -133,7 +134,8 @@ module.exports = {
             this.LOG.debug('Applying job preRun execution validators');
             SERVICE.DefaultValidatorService.executeValidators([].concat(validators.preRun), {
                 job: request.job,
-                definition: request.definition
+                definition: request.definition,
+                authData: request.authData
             }, {}).then(success => {
                 process.nextSuccess(request, response);
             }).catch(error => {
@@ -153,11 +155,17 @@ module.exports = {
      * @param {Object} process Pipeline process controller.
      * @returns {void}
      */
-    triggerProcess: function (request, response, process) {
+    triggerProcess: async function (request, response, process) {
+        try {
+            request.authData = await SERVICE.DefaultCronJobService.assertOperational(request.definition.tenant);
+        } catch (error) {
+            process.error(request, response, error);
+            return;
+        }
         this.LOG.debug('Preparing output file path');
         let jobDetail = request.definition.jobDetail;
         if (jobDetail.processTrigger) {
-            this.executeProcessTriggerJob(request.definition, request.job).then(success => {
+            this.executeProcessTriggerJob(request.definition, request.job, request.authData).then(success => {
                 response.success = success;
                 process.nextSuccess(request, response);
             }).catch(error => {
@@ -168,7 +176,8 @@ module.exports = {
             let functionName = jobDetail.startNode.substring(jobDetail.startNode.indexOf('.') + 1, jobDetail.startNode.length);
             SERVICE[serviceName][functionName]({
                 job: request.job,
-                definition: request.definition
+                definition: request.definition,
+                authData: request.authData
             }).then(success => {
                 response.success = success;
                 process.nextSuccess(request, response);
@@ -214,7 +223,7 @@ module.exports = {
      * @throws {CLASSES.NodicsError} When Process runtime support or trigger
      * metadata is unavailable.
      */
-    executeProcessTriggerJob: function (definition, job) {
+    executeProcessTriggerJob: function (definition, job, authData) {
         let processTrigger = definition && definition.jobDetail && definition.jobDetail.processTrigger || {};
         let triggerCode = processTrigger.triggerCode || processTrigger.code;
         if (!triggerCode) {
@@ -233,11 +242,7 @@ module.exports = {
         return SERVICE.DefaultProcessRuntimeLifecycleService.executeTrigger({
             tenant: definition.tenant,
             triggerCode: triggerCode,
-            authData: {
-                serviceId: 'cronjob',
-                moduleName: 'cronjob',
-                code: definition.code
-            },
+            authData: authData,
             runtimeOperation: {
                 correlationId: correlationId,
                 instanceCode: processTrigger.instanceCode,
@@ -294,7 +299,8 @@ module.exports = {
             this.LOG.debug('Applying job postRun execution validators');
             SERVICE.DefaultValidatorService.executeValidators([].concat(validators.postRun), {
                 job: request.job,
-                definition: request.definition
+                definition: request.definition,
+                authData: request.authData
             }, {}).then(success => {
                 process.nextSuccess(request, response);
             }).catch(error => {
@@ -321,7 +327,8 @@ module.exports = {
             this.LOG.debug('Applying postRun job execution interceptors');
             SERVICE.DefaultInterceptorService.executeInterceptors([].concat(interceptors.postRun), {
                 job: request.job,
-                definition: request.definition
+                definition: request.definition,
+                authData: request.authData
             }, {}).then(success => {
                 process.nextSuccess(request, response);
             }).catch(error => {

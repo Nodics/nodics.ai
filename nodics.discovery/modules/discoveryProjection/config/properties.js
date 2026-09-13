@@ -10,4 +10,15 @@
  */
 
 /** @module discoveryProjection/config/properties @description Defines Discovery projection access policies. @layer config @owner discoveryProjection */
-module.exports = { schemaPolicies: { discoveryProjection: { operational: { accessGroups: { adminGroup: 10, runtimeConfigAdminUserGroup: 10, serviceAccountUserGroup: 10 } } } } };
+module.exports = {
+    // Inert inventory; an allowed local server must explicitly select this capability.
+    localResetProvider: {
+        "contributions": {
+            "discoveryProjection": {
+                "serviceNames": {
+                    "DefaultDiscoveryDocumentProjectionService": true
+                }
+            }
+        }
+    },
+ schemaPolicies: { discoveryProjection: { operational: { accessGroups: { adminGroup: 10, runtimeConfigAdminUserGroup: 10, serviceAccountUserGroup: 10 } } } } };

@@ -29,3 +29,6 @@ unassessed. Configure the mappings under
 `wasteImpact.calculation.environmentalAssessment`; see the contract above.
 
 Saved reassessments and explicit acceptance use `DefaultWasteImpactAssessmentService`; see the [provider and history contract](llm/contracts/README.md). Original approval evidence and reward settlements remain unchanged. Focused history tests cover replacement, stale/cross-scope commands, retry, concurrency and partial-persistence recovery.
+
+This capability declares an inert model-service inventory for [governed Local reset](../../../nodics.foundation/modules/nSystem/llm/contracts/local-reset.md).
+A server must explicitly select it; contributions never enable reset or bypass tenant, environment, confirmation or required-service checks.

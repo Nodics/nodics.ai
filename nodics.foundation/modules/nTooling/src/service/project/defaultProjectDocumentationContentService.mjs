@@ -14,7 +14,7 @@ import fs from 'node:fs';
 import path from 'node:path';
 import { createRequire } from 'node:module';
 
-const root = process.cwd();
+const root = path.resolve(process.env.NODICS_PROJECT_ROOT || process.cwd());
 const require = createRequire(import.meta.url);
 const applicationDocumentationContract = require('../defaultApplicationDocumentationContractService.js');
 const cataloguePath = path.join(root, 'docs/catalogue.json');
@@ -35,6 +35,19 @@ const copyrightHeader = `/*
 
 `;
 const catalogue = JSON.parse(fs.readFileSync(cataloguePath, 'utf8'));
+const project = JSON.parse(fs.readFileSync(path.join(root, 'package.json'), 'utf8'));
+const publication = catalogue.publication;
+if (!publication || !project.name || catalogue.pack !== project.name) throw new Error('Project documentation requires its owning package and catalogue publication metadata');
+for (const key of ['recordPrefix', 'codePrefix', 'sectionCode', 'owningDomain', 'keyword']) {
+  if (typeof publication[key] !== 'string' || !/^[A-Za-z][A-Za-z0-9._-]*$/.test(publication[key])) throw new Error('Invalid documentation publication identifier: ' + key);
+}
+for (const key of ['routeRoot', 'publicRootPath']) {
+  if (typeof publication[key] !== 'string' || !/^\/(?:[A-Za-z0-9_-]+\/?)+$/.test(publication[key])) throw new Error('Invalid documentation publication path: ' + key);
+}
+for (const key of ['label', 'shortLabel']) {
+  if (typeof publication[key] !== 'string' || !publication[key].trim() || /[<>\r\n]|\*\//.test(publication[key])) throw new Error('Invalid documentation publication label: ' + key);
+}
+if (!Array.isArray(publication.channels) || !publication.channels.length || publication.channels.some(channel => typeof channel !== 'string' || !/^[a-z][a-z0-9-]*$/.test(channel))) throw new Error('Documentation publication channels must be declared');
 const documents = catalogue.documents || [];
 applicationDocumentationContract.validateCatalogue({
   ownerRoot: root,
@@ -278,7 +291,7 @@ const sourcePages = documents.map((document, index) => {
     markdown,
     blocks,
     headings: documentHeadings,
-    route: index === 0 ? '/docs/nodics-kickoff' : `/docs/nodics-kickoff/${slug(document.id.replace(/\./g, '-'))}`,
+    route: index === 0 ? publication.routeRoot : `${publication.routeRoot}/${slug(document.id.replace(/\./g, '-'))}`,
     codeSuffix,
   };
 });
@@ -287,8 +300,8 @@ const sections = Array.isArray(catalogue.navigationSections)
   ? catalogue.navigationSections
   : [
       {
-        code: 'nodics-kickoff',
-        title: 'Nodics Kickoff',
+        code: publication.sectionCode,
+        title: publication.label,
         order: 10,
         summary: 'Reference customer project documentation.',
         audience: ['architect', 'developer', 'operator'],
@@ -304,17 +317,17 @@ const navigationItems = sourcePages.map((document, index) => ({
   code: document.id,
   title: document.title,
   route: document.route,
-  section: document.navigationSectionCode || 'nodics-kickoff',
-  sectionTitle: document.navigationSection || 'Nodics Kickoff',
+  section: document.navigationSectionCode || publication.sectionCode,
+  sectionTitle: document.navigationSection || publication.label,
   sectionOrder: document.navigationSectionOrder || sections.find((section) => section.code === document.navigationSectionCode)?.order || 10,
-  group: document.navigationSectionCode || 'nodics-kickoff',
-  groupTitle: document.navigationSection || 'Nodics Kickoff',
+  group: document.navigationSectionCode || publication.sectionCode,
+  groupTitle: document.navigationSection || publication.label,
   groupOrder: document.navigationSectionOrder || sections.find((section) => section.code === document.navigationSectionCode)?.order || 10,
   subgroup: null,
   subgroupTitle: null,
   order: document.navigationOrder || (index + 1) * 10,
-  parentId: document.navigationSectionCode || 'nodics-kickoff',
-  hierarchyPath: [document.navigationSection || 'Nodics Kickoff', document.title],
+  parentId: document.navigationSectionCode || publication.sectionCode,
+  hierarchyPath: [document.navigationSection || publication.label, document.title],
   hierarchyDepth: 2,
   documentType: document.documentType || 'overview',
   audience: document.audience || ['architect', 'developer', 'operator'],
@@ -352,27 +365,27 @@ function schemaMaturity(value) {
 }
 
 function pageCode(document) {
-  return `kickoffDocsPage${document.codeSuffix}`;
+  return `${publication.codePrefix}Page${document.codeSuffix}`;
 }
 
 function routeCode(document) {
-  return `kickoffDocsRoute${document.codeSuffix}`;
+  return `${publication.codePrefix}Route${document.codeSuffix}`;
 }
 
 function articleCode(document) {
-  return `kickoffDocsComponent${document.codeSuffix}`;
+  return `${publication.codePrefix}Component${document.codeSuffix}`;
 }
 
 function metadataPageCode(document) {
-  return `kickoffDocsMetadata${document.codeSuffix}`;
+  return `${publication.codePrefix}Metadata${document.codeSuffix}`;
 }
 
-const productCode = 'kickoffDocumentationProduct';
-const navigationCode = 'kickoffDocumentationNavigationTree';
-const rootNodeCode = 'kickoffDocsNodeRoot';
+const productCode = (publication.recordPrefix + "Product");
+const navigationCode = (publication.recordPrefix + "NavigationTree");
+const rootNodeCode = (publication.codePrefix + "NodeRoot");
 const defaultLifecycle = 'ONLINE';
-const publicAccessPolicyCode = 'kickoffDocsAccessPublic';
-const authenticatedAccessPolicyCode = 'kickoffDocsAccessAuthenticated';
+const publicAccessPolicyCode = (publication.codePrefix + "AccessPublic");
+const authenticatedAccessPolicyCode = (publication.codePrefix + "AccessAuthenticated");
 const authoringPermissionsByTargetType = {
   PRODUCT: ['documentation.draft.update'],
   NAVIGATION: ['documentation.navigation.update'],
@@ -409,7 +422,7 @@ function workflowMetadata(targetType) {
 const accessPolicyRecords = {
   record0: {
     code: publicAccessPolicyCode,
-    name: 'Public Kickoff documentation access',
+    name: ("Public " + publication.shortLabel + " documentation access"),
     targetType: 'PRODUCT',
     targetCode: productCode,
     accessMode: 'PUBLIC',
@@ -425,7 +438,7 @@ const accessPolicyRecords = {
   },
   record1: {
     code: authenticatedAccessPolicyCode,
-    name: 'Authenticated Kickoff documentation access',
+    name: ("Authenticated " + publication.shortLabel + " documentation access"),
     targetType: 'PRODUCT',
     targetCode: productCode,
     accessMode: 'AUTHENTICATED',
@@ -446,14 +459,14 @@ const accessPolicyFor = (item) =>
 const productRecords = {
   record0: {
     code: productCode,
-    name: 'Nodics Kickoff Documentation',
+    name: (publication.label + " Documentation"),
     description: 'Project-owned documentation for the reference customer workspace, local setup, publication, qualification, customization, and functional journeys.',
     contentCatalog: 'documentationContentCatalog',
-    site: 'kickoffDocumentationSite',
-    publicRootPath: '/docs/kickoff',
+    site: (publication.recordPrefix + "Site"),
+    publicRootPath: publication.publicRootPath,
     defaultLocale: 'en',
-    channels: ['axis', 'nexus', 'web'],
-    ownerFunctionalModule: 'nodics.kickoff',
+    channels: publication.channels,
+    ownerFunctionalModule: project.name,
     audience: ['business', 'architect', 'administrator', 'developer', 'operator', 'qa', 'ai-tool'],
     accessMode: 'PUBLIC',
     lifecycleState: defaultLifecycle,
@@ -479,11 +492,11 @@ function pushDashboard(record) {
 }
 
 pushDashboard({
-  code: 'kickoffDocsDashboardProduct',
+  code: (publication.codePrefix + "DashboardProduct"),
   ownerType: 'PRODUCT',
   ownerCode: productCode,
-  title: 'Nodics Kickoff Documentation',
-  summary: 'Landing content for the Kickoff customer-reference documentation catalogue, including setup, runtime, publication, qualification, customization, and functional journeys.',
+  title: (publication.label + " Documentation"),
+  summary: ("Landing content for the " + publication.shortLabel + " customer-reference documentation catalogue, including setup, runtime, publication, qualification, customization, and functional journeys."),
   contentArea: {
     intent: 'Help customer teams and implementation partners choose the correct project-owned journey before opening detailed implementation pages.',
   },
@@ -511,10 +524,10 @@ nodeRecords.push({
   navigation: navigationCode,
   nodeLevel: 'SECTION',
   nodeType: 'CONTAINER',
-  nodeTitle: 'Nodics Kickoff Documentation',
+  nodeTitle: (publication.label + " Documentation"),
   nodeSummary: 'Root node for customer project documentation rendered through backend-owned, Axis-manageable content-catalog records.',
-  nodeContentArea: { dashboard: 'kickoffDocsDashboardProduct' },
-  nodeDashboard: 'kickoffDocsDashboardProduct',
+  nodeContentArea: { dashboard: (publication.codePrefix + "DashboardProduct") },
+  nodeDashboard: (publication.codePrefix + "DashboardProduct"),
   childSummaryCards: sections.map((section) => ({
     code: section.code,
     title: section.title,
@@ -536,7 +549,7 @@ nodeRecords.push({
   ...workflowMetadata('NODE'),
   lifecycleState: defaultLifecycle,
   maturityState: 'IMPLEMENTED',
-  searchKeywords: ['kickoff', 'customer project', 'documentation'],
+  searchKeywords: [publication.keyword, 'customer project', 'documentation'],
   relatedNodes: [],
   locale: 'en',
   channel: 'web',
@@ -544,14 +557,14 @@ nodeRecords.push({
 });
 
 sections.forEach((section) => {
-  const sectionNodeCode = boundedCode('kickoffDocsNodeSec', [section.code]);
+  const sectionNodeCode = boundedCode((publication.codePrefix + "NodeSec"), [section.code]);
   sectionNodeCodes.set(section.code, sectionNodeCode);
-  const sectionPages = sourcePages.filter((document) => (document.navigationSectionCode || 'nodics-kickoff') === section.code);
+  const sectionPages = sourcePages.filter((document) => (document.navigationSectionCode || publication.sectionCode) === section.code);
   const orderedPages = [...sectionPages].sort((left, right) =>
     (left.navigationOrder || 100) - (right.navigationOrder || 100) ||
     String(left.title).localeCompare(String(right.title))
   );
-  const dashboardCode = boundedCode('kickoffDocsDashboardSec', [section.code]);
+  const dashboardCode = boundedCode((publication.codePrefix + "DashboardSec"), [section.code]);
   pushDashboard({
     code: dashboardCode,
     ownerType: 'SECTION',
@@ -622,9 +635,9 @@ sections.forEach((section) => {
 });
 
 sourcePages.forEach((document) => {
-  const sectionCode = document.navigationSectionCode || 'nodics-kickoff';
+  const sectionCode = document.navigationSectionCode || publication.sectionCode;
   nodeRecords.push({
-    code: boundedCode('kickoffDocsNodePage', [document.id]),
+    code: boundedCode((publication.codePrefix + "NodePage"), [document.id]),
     product: productCode,
     navigation: navigationCode,
     parentNode: sectionNodeCodes.get(sectionCode),
@@ -653,7 +666,7 @@ sourcePages.forEach((document) => {
     lifecycleState: document.lifecycleState || defaultLifecycle,
     maturityState: schemaMaturity(document.maturityState),
     searchKeywords: document.searchKeywords || [],
-    relatedNodes: (document.relatedPages || []).map((relatedPage) => boundedCode('kickoffDocsNodePage', [relatedPage])),
+    relatedNodes: (document.relatedPages || []).map((relatedPage) => boundedCode((publication.codePrefix + "NodePage"), [relatedPage])),
     locale: document.locale || 'en',
     channel: 'web',
     active: true,
@@ -664,11 +677,11 @@ const navigationRecords = {
   record0: {
     code: navigationCode,
     product: productCode,
-    name: 'Nodics Kickoff Documentation Navigation',
+    name: (publication.label + " Documentation Navigation"),
     renderer: 'documentation.component.navigation',
-    searchLabel: 'Search Kickoff documentation',
+    searchLabel: ("Search " + publication.shortLabel + " documentation"),
     searchPlaceholder: 'Search setup, runtime, modules, and customization',
-    emptyMessage: 'No Kickoff documentation matches your search.',
+    emptyMessage: ("No " + publication.shortLabel + " documentation matches your search."),
     expandable: true,
     accessMode: 'PUBLIC',
     lifecycleState: defaultLifecycle,
@@ -694,14 +707,14 @@ const pageMetadataRecords = Object.fromEntries(
       targetPage: pageCode(document),
       targetRoute: routeCode(document),
       articleComponent: articleCode(document),
-      template: 'kickoffDocumentationArticleTemplate',
-      searchMetadata: boundedCode('kickoffDocsSearch', ['PAGE', metadataPageCode(document)]),
+      template: (publication.recordPrefix + "ArticleTemplate"),
+      searchMetadata: boundedCode((publication.codePrefix + "Search"), ['PAGE', metadataPageCode(document)]),
       headings: document.headings,
       diagrams: document.blocks.filter((block) => block.kind === 'diagram').map((block) => ({ language: block.language })),
       visualAssets: document.blocks.filter((block) => block.kind === 'image' || block.kind === 'table').map((block) => ({ kind: block.kind })),
       visualRequirements: document.visualRequirements || [],
       relatedPages: document.relatedPages || [],
-      sourceRepository: 'nodics.kickoff',
+      sourceRepository: project.name,
       sourcePath: document.sourcePath || document.content,
       sourceChecksum: sha256(document.markdown),
       sourceWordCount: wordCount(document.markdown),
@@ -727,25 +740,25 @@ const publicationStateRecords = Object.fromEntries(
   publicationTargets.map((target, index) => [
     `record${index}`,
     {
-      code: boundedCode('kickoffDocsPublication', [target.type, target.code]),
+      code: boundedCode((publication.codePrefix + "Publication"), [target.type, target.code]),
       targetType: target.type,
       targetCode: target.code,
       lifecycleState: target.lifecycleState || defaultLifecycle,
-      publicationCode: 'kickoffDocumentation',
-      workflowReference: 'kickoffDocumentationReviewWorkflow',
+      publicationCode: publication.recordPrefix,
+      workflowReference: (publication.recordPrefix + "ReviewWorkflow"),
       stagedVersion: catalogue.release,
       ...(target.lifecycleState === 'ONLINE' ? { onlineVersion: catalogue.release } : {}),
       validationResult: {
         generated: true,
         sourceAuthority: 'docs/catalogue.json',
         publicationPath: 'STAGED_REVIEW_APPROVAL_ONLINE',
-        nexusVisibleOnlyWhenOnlineAndPublic: true,
+        publicVisibleOnlyWhenOnlineAndPublic: true,
       },
       checksum: sha256(`${target.type}:${target.code}:${target.lifecycleState || defaultLifecycle}:${catalogue.release}`),
       ...workflowMetadata(target.type),
       decisionPolicy: publicationDecisionPolicy,
-      actor: 'nodics.kickoff.generator',
-      author: 'nodics.kickoff.generator',
+      actor: (project.name + ".generator"),
+      author: (project.name + ".generator"),
       auditTrail: [],
       active: true,
     },
@@ -755,10 +768,10 @@ const searchTargets = [
   {
     targetType: 'PRODUCT',
     targetCode: productCode,
-    title: 'Nodics Kickoff Documentation',
+    title: (publication.label + " Documentation"),
     summary: productRecords.record0.description,
     searchText: `${productRecords.record0.name} ${productRecords.record0.description}`,
-    keywords: ['kickoff', 'documentation', 'customer project'],
+    keywords: [publication.keyword, 'documentation', 'customer project'],
     facets: { audience: productRecords.record0.audience, lifecycleState: defaultLifecycle },
     accessMode: 'PUBLIC',
     lifecycleState: defaultLifecycle,
@@ -811,8 +824,8 @@ const searchTargets = [
     searchText: `${document.title} ${document.summary} ${document.markdown}`,
     keywords: [...(document.searchKeywords || []), ...(document.topicKeywords || [])],
     facets: {
-      section: document.navigationSectionCode || 'nodics-kickoff',
-      group: document.navigationSectionCode || 'nodics-kickoff',
+      section: document.navigationSectionCode || publication.sectionCode,
+      group: document.navigationSectionCode || publication.sectionCode,
       documentType: document.documentType,
       audience: document.audience || ['architect', 'developer', 'operator'],
     },
@@ -824,7 +837,7 @@ const searchMetadataRecords = Object.fromEntries(
   searchTargets.map((target, index) => [
     `record${index}`,
     {
-      code: boundedCode('kickoffDocsSearch', [target.targetType, target.targetCode]),
+      code: boundedCode((publication.codePrefix + "Search"), [target.targetType, target.targetCode]),
       product: productCode,
       targetType: target.targetType,
       targetCode: target.targetCode,
@@ -850,25 +863,25 @@ Object.assign(
     Object.values(searchMetadataRecords).map((record, index) => [
       `record${publicationTargets.length + index}`,
       {
-        code: boundedCode('kickoffDocsPublication', ['SEARCH_METADATA', record.code]),
+        code: boundedCode((publication.codePrefix + "Publication"), ['SEARCH_METADATA', record.code]),
         targetType: 'SEARCH_METADATA',
         targetCode: record.code,
         lifecycleState: record.lifecycleState || defaultLifecycle,
-        publicationCode: 'kickoffDocumentation',
-        workflowReference: 'kickoffDocumentationReviewWorkflow',
+        publicationCode: publication.recordPrefix,
+        workflowReference: (publication.recordPrefix + "ReviewWorkflow"),
         stagedVersion: catalogue.release,
         ...(record.lifecycleState === 'ONLINE' ? { onlineVersion: catalogue.release } : {}),
         validationResult: {
           generated: true,
           sourceAuthority: 'docs/catalogue.json',
           publicationPath: 'STAGED_REVIEW_APPROVAL_ONLINE',
-          nexusVisibleOnlyWhenOnlineAndPublic: true,
+          publicVisibleOnlyWhenOnlineAndPublic: true,
         },
         checksum: sha256(`SEARCH_METADATA:${record.code}:${record.lifecycleState || defaultLifecycle}:${catalogue.release}`),
         ...workflowMetadata('SEARCH_METADATA'),
         decisionPolicy: publicationDecisionPolicy,
-        actor: 'nodics.kickoff.generator',
-        author: 'nodics.kickoff.generator',
+        actor: (project.name + ".generator"),
+        author: (project.name + ".generator"),
         auditTrail: [],
         active: true,
       },
@@ -878,15 +891,15 @@ Object.assign(
 
 const navigationComponent = {
   record0: {
-    code: 'kickoffDocumentationNavigation',
-    typeCode: 'kickoffDocumentationNavigationComponentType',
+    code: (publication.recordPrefix + "Navigation"),
+    typeCode: (publication.recordPrefix + "NavigationComponentType"),
     renderer: 'documentation.component.navigation',
     accessMode: 'PUBLIC',
     properties: {
-      title: 'Nodics Kickoff',
-      searchLabel: 'Search Kickoff documentation',
+      title: publication.label,
+      searchLabel: ("Search " + publication.shortLabel + " documentation"),
       searchPlaceholder: 'Search setup, runtime, modules, and customization',
-      emptyMessage: 'No Kickoff documentation matches your search.',
+      emptyMessage: ("No " + publication.shortLabel + " documentation matches your search."),
       sections,
       items: navigationItems,
     },
@@ -898,20 +911,20 @@ const articleComponents = Object.fromEntries(
   sourcePages.map((document, index) => [
     `record${index + 1}`,
     {
-      code: `kickoffDocsComponent${document.codeSuffix}`,
-      typeCode: 'kickoffDocumentationArticleComponentType',
+      code: `${publication.codePrefix}Component${document.codeSuffix}`,
+      typeCode: (publication.recordPrefix + "ArticleComponentType"),
       renderer: 'documentation.component.article',
       accessMode: 'PUBLIC',
       properties: {
         code: document.id,
         title: document.title,
         route: document.route,
-        section: document.navigationSectionCode || 'nodics-kickoff',
-        sectionTitle: document.navigationSection || 'Nodics Kickoff',
-        group: document.navigationSectionCode || 'nodics-kickoff',
-        groupTitle: document.navigationSection || 'Nodics Kickoff',
-        parentId: document.navigationSectionCode || 'nodics-kickoff',
-        hierarchyPath: [document.navigationSection || 'Nodics Kickoff', document.title],
+        section: document.navigationSectionCode || publication.sectionCode,
+        sectionTitle: document.navigationSection || publication.label,
+        group: document.navigationSectionCode || publication.sectionCode,
+        groupTitle: document.navigationSection || publication.label,
+        parentId: document.navigationSectionCode || publication.sectionCode,
+        hierarchyPath: [document.navigationSection || publication.label, document.title],
         hierarchyDepth: 2,
         documentType: document.documentType || 'overview',
         audience: document.audience || ['architect', 'developer', 'operator'],
@@ -944,7 +957,7 @@ const articleComponents = Object.fromEntries(
           route: sourcePages[index + 1].route,
         } : null,
         source: {
-          repository: 'nodics.kickoff',
+          repository: project.name,
           functionalModule: document.functionalModule,
           technicalModule: document.technicalModule || null,
           path: document.content,
@@ -962,15 +975,15 @@ const pageRecords = Object.fromEntries(
   sourcePages.map((document, index) => [
     `record${index}`,
     {
-      code: `kickoffDocsPage${document.codeSuffix}`,
+      code: `${publication.codePrefix}Page${document.codeSuffix}`,
       name: document.title,
-      cmsSite: ['kickoffDocumentationSite'],
-      typeCode: 'kickoffDocumentationArticlePageType',
-      template: 'kickoffDocumentationArticleTemplate',
+      cmsSite: [(publication.recordPrefix + "Site")],
+      typeCode: (publication.recordPrefix + "ArticlePageType"),
+      template: (publication.recordPrefix + "ArticleTemplate"),
       renderer: 'documentation.page.article',
       cmsComponents: [
-        { target: 'kickoffDocumentationNavigation', slot: 'navigation', index: 5, active: true },
-        { target: `kickoffDocsComponent${document.codeSuffix}`, slot: 'article', index: 10, active: true },
+        { target: (publication.recordPrefix + "Navigation"), slot: 'navigation', index: 5, active: true },
+        { target: `${publication.codePrefix}Component${document.codeSuffix}`, slot: 'article', index: 10, active: true },
       ],
       active: true,
     },
@@ -981,12 +994,12 @@ const routeRecords = Object.fromEntries(
   sourcePages.map((document, index) => [
     `record${index}`,
     {
-      code: `kickoffDocsRoute${document.codeSuffix}`,
-      site: 'kickoffDocumentationSite',
+      code: `${publication.codePrefix}Route${document.codeSuffix}`,
+      site: (publication.recordPrefix + "Site"),
       path: document.route,
       locale: document.locale || 'en',
       channel: 'web',
-      page: `kickoffDocsPage${document.codeSuffix}`,
+      page: `${publication.codePrefix}Page${document.codeSuffix}`,
       routeType: 'PAGE',
       deliveryState: 'ONLINE',
       accessMode: 'PUBLIC',
@@ -996,101 +1009,101 @@ const routeRecords = Object.fromEntries(
 );
 
 const files = {
-  'data/core-v001/records/documentation/kickoffDocumentationSiteData.js': jsModule(
-    'Nodics Kickoff documentation site.',
+  [("data/core-v001/records/documentation/" + publication.recordPrefix + "SiteData.js")]: jsModule(
+    (publication.label + " documentation site."),
     {
       record0: {
-        code: 'kickoffDocumentationSite',
-        name: 'Nodics Kickoff Documentation',
+        code: (publication.recordPrefix + "Site"),
+        name: (publication.label + " Documentation"),
         catalog: 'documentationContentCatalog',
         active: true,
       },
     },
   ),
-  'data/core-v001/records/documentation/kickoffDocumentationProductData.js': jsModule(
-    'Generated Nodics Kickoff documentation product catalogue metadata.',
+  [("data/core-v001/records/documentation/" + publication.recordPrefix + "ProductData.js")]: jsModule(
+    ("Generated " + publication.label + " documentation product catalogue metadata."),
     productRecords,
   ),
-  'data/core-v001/records/documentation/kickoffDocumentationAccessPolicyData.js': jsModule(
-    'Generated Nodics Kickoff documentation access policies.',
+  [("data/core-v001/records/documentation/" + publication.recordPrefix + "AccessPolicyData.js")]: jsModule(
+    ("Generated " + publication.label + " documentation access policies."),
     accessPolicyRecords,
   ),
-  'data/core-v001/records/documentation/kickoffDocumentationNavigationData.js': jsModule(
-    'Generated Nodics Kickoff documentation navigation catalogue metadata.',
+  [("data/core-v001/records/documentation/" + publication.recordPrefix + "NavigationData.js")]: jsModule(
+    ("Generated " + publication.label + " documentation navigation catalogue metadata."),
     navigationRecords,
   ),
-  'data/core-v001/records/documentation/kickoffDocumentationDashboardData.js': jsModule(
-    'Generated Nodics Kickoff documentation hierarchy dashboards.',
+  [("data/core-v001/records/documentation/" + publication.recordPrefix + "DashboardData.js")]: jsModule(
+    ("Generated " + publication.label + " documentation hierarchy dashboards."),
     dashboardRecordMap,
   ),
-  'data/core-v001/records/documentation/kickoffDocumentationLegacyNavigationCleanupData.js': jsModule(
-    'Nodics Kickoff documentation legacy hierarchy cleanup marker.',
+  [("data/core-v001/records/documentation/" + publication.recordPrefix + "LegacyNavigationCleanupData.js")]: jsModule(
+    (publication.label + " documentation legacy hierarchy cleanup marker."),
     {
       record0: {
-        code: 'kickoffDocumentationLegacyNavigationCleanup',
+        code: (publication.recordPrefix + "LegacyNavigationCleanup"),
         reason: 'Remove generated multi-level navigation nodes before importing the two-level section and page-link hierarchy.',
         active: true,
       },
     },
   ),
-  'data/core-v001/records/documentation/kickoffDocumentationNodeData.js': jsModule(
-    'Generated Nodics Kickoff documentation hierarchy nodes.',
+  [("data/core-v001/records/documentation/" + publication.recordPrefix + "NodeData.js")]: jsModule(
+    ("Generated " + publication.label + " documentation hierarchy nodes."),
     nodeRecordMap,
   ),
-  'data/core-v001/records/documentation/kickoffDocumentationPageMetadataData.js': jsModule(
-    'Generated Nodics Kickoff documentation page metadata.',
+  [("data/core-v001/records/documentation/" + publication.recordPrefix + "PageMetadataData.js")]: jsModule(
+    ("Generated " + publication.label + " documentation page metadata."),
     pageMetadataRecords,
   ),
-  'data/core-v001/records/documentation/kickoffDocumentationPublicationStateData.js': jsModule(
-    'Generated Nodics Kickoff documentation publication state metadata.',
+  [("data/core-v001/records/documentation/" + publication.recordPrefix + "PublicationStateData.js")]: jsModule(
+    ("Generated " + publication.label + " documentation publication state metadata."),
     publicationStateRecords,
   ),
-  'data/core-v001/records/documentation/kickoffDocumentationSearchMetadataData.js': jsModule(
-    'Generated Nodics Kickoff documentation search metadata.',
+  [("data/core-v001/records/documentation/" + publication.recordPrefix + "SearchMetadataData.js")]: jsModule(
+    ("Generated " + publication.label + " documentation search metadata."),
     searchMetadataRecords,
   ),
-  'data/core-v001/records/documentation/kickoffDocumentationTypeCodeData.js': jsModule(
-    'Nodics Kickoff documentation page and component types.',
+  [("data/core-v001/records/documentation/" + publication.recordPrefix + "TypeCodeData.js")]: jsModule(
+    (publication.label + " documentation page and component types."),
     {
-      record0: { code: 'kickoffDocumentationArticlePageType', kind: 'PAGE', contractVersion: 0, active: true },
-      record1: { code: 'kickoffDocumentationArticleComponentType', kind: 'COMPONENT', contractVersion: 0, active: true },
-      record2: { code: 'kickoffDocumentationNavigationComponentType', kind: 'COMPONENT', contractVersion: 0, active: true },
+      record0: { code: (publication.recordPrefix + "ArticlePageType"), kind: 'PAGE', contractVersion: 0, active: true },
+      record1: { code: (publication.recordPrefix + "ArticleComponentType"), kind: 'COMPONENT', contractVersion: 0, active: true },
+      record2: { code: (publication.recordPrefix + "NavigationComponentType"), kind: 'COMPONENT', contractVersion: 0, active: true },
     },
   ),
-  'data/core-v001/records/documentation/kickoffDocumentationRendererData.js': jsModule(
-    'Nodics Kickoff documentation renderer mappings consumed by Axis.',
+  [("data/core-v001/records/documentation/" + publication.recordPrefix + "RendererData.js")]: jsModule(
+    (publication.label + " documentation renderer mappings consumed by Axis."),
     {
-      record0: { code: 'kickoffDocumentationArticlePageType', renderer: 'documentation.page.article', contractVersion: 0, channels: ['web', 'mobile-webview'], deprecated: false, active: true },
-      record1: { code: 'kickoffDocumentationArticleComponentType', renderer: 'documentation.component.article', contractVersion: 0, channels: ['web', 'mobile-webview'], deprecated: false, active: true },
-      record2: { code: 'kickoffDocumentationNavigationComponentType', renderer: 'documentation.component.navigation', contractVersion: 0, channels: ['web', 'mobile-webview'], deprecated: false, active: true },
+      record0: { code: (publication.recordPrefix + "ArticlePageType"), renderer: 'documentation.page.article', contractVersion: 0, channels: ['web', 'mobile-webview'], deprecated: false, active: true },
+      record1: { code: (publication.recordPrefix + "ArticleComponentType"), renderer: 'documentation.component.article', contractVersion: 0, channels: ['web', 'mobile-webview'], deprecated: false, active: true },
+      record2: { code: (publication.recordPrefix + "NavigationComponentType"), renderer: 'documentation.component.navigation', contractVersion: 0, channels: ['web', 'mobile-webview'], deprecated: false, active: true },
     },
   ),
-  'data/core-v001/records/documentation/kickoffDocumentationSlotData.js': jsModule(
-    'Nodics Kickoff documentation template slots.',
+  [("data/core-v001/records/documentation/" + publication.recordPrefix + "SlotData.js")]: jsModule(
+    (publication.label + " documentation template slots."),
     {
-      record0: { code: 'kickoffDocumentationNavigationSlot', template: 'kickoffDocumentationArticleTemplate', name: 'navigation', minItems: 1, maxItems: 1, allowedComponentTypes: ['kickoffDocumentationNavigationComponentType'], active: true },
-      record1: { code: 'kickoffDocumentationArticleSlot', template: 'kickoffDocumentationArticleTemplate', name: 'article', minItems: 1, maxItems: 1, allowedComponentTypes: ['kickoffDocumentationArticleComponentType'], active: true },
+      record0: { code: (publication.recordPrefix + "NavigationSlot"), template: (publication.recordPrefix + "ArticleTemplate"), name: 'navigation', minItems: 1, maxItems: 1, allowedComponentTypes: [(publication.recordPrefix + "NavigationComponentType")], active: true },
+      record1: { code: (publication.recordPrefix + "ArticleSlot"), template: (publication.recordPrefix + "ArticleTemplate"), name: 'article', minItems: 1, maxItems: 1, allowedComponentTypes: [(publication.recordPrefix + "ArticleComponentType")], active: true },
     },
   ),
-  'data/core-v001/records/documentation/kickoffDocumentationTemplateData.js': jsModule(
-    'Nodics Kickoff documentation template.',
+  [("data/core-v001/records/documentation/" + publication.recordPrefix + "TemplateData.js")]: jsModule(
+    (publication.label + " documentation template."),
     {
-      record0: { code: 'kickoffDocumentationArticleTemplate', name: 'Nodics Kickoff Documentation Article', renderer: 'documentation.template.article', contractVersion: 0, slots: ['kickoffDocumentationNavigationSlot', 'kickoffDocumentationArticleSlot'], active: true },
+      record0: { code: (publication.recordPrefix + "ArticleTemplate"), name: (publication.label + " Documentation Article"), renderer: 'documentation.template.article', contractVersion: 0, slots: [(publication.recordPrefix + "NavigationSlot"), (publication.recordPrefix + "ArticleSlot")], active: true },
     },
   ),
-  'data/core-v001/records/documentation/kickoffDocumentationComponentData.js': jsModule(
-    'Generated Nodics Kickoff documentation navigation and article content.',
+  [("data/core-v001/records/documentation/" + publication.recordPrefix + "ComponentData.js")]: jsModule(
+    ("Generated " + publication.label + " documentation navigation and article content."),
     componentRecords,
   ),
-  'data/core-v001/records/documentation/kickoffDocumentationPageData.js': jsModule(
-    'Generated Nodics Kickoff documentation pages.',
+  [("data/core-v001/records/documentation/" + publication.recordPrefix + "PageData.js")]: jsModule(
+    ("Generated " + publication.label + " documentation pages."),
     pageRecords,
   ),
-  'data/core-v001/records/documentation/kickoffDocumentationRouteData.js': jsModule(
-    'Generated Nodics Kickoff documentation routes.',
+  [("data/core-v001/records/documentation/" + publication.recordPrefix + "RouteData.js")]: jsModule(
+    ("Generated " + publication.label + " documentation routes."),
     routeRecords,
   ),
-  'data/core-v001/headers/kickoffDocumentationContentPackHeader.js': `${copyrightHeader}'use strict';\n\n/** @description Nodics Kickoff core-import header for project documentation. */\nmodule.exports = {\n  cms: {\n    kickoffDocumentationSiteData: { options: { enabled: true, schemaName: 'cmsSite', operation: 'saveAll', dataFilePrefix: 'kickoffDocumentationSiteData' }, query: { code: '$code' } },\n    kickoffDocumentationProductData: { options: { enabled: true, schemaName: 'cmsDocumentationProduct', operation: 'saveAll', dataFilePrefix: 'kickoffDocumentationProductData' }, query: { code: '$code' } },\n    kickoffDocumentationAccessPolicyData: { options: { enabled: true, schemaName: 'cmsDocumentationAccessPolicy', operation: 'saveAll', dataFilePrefix: 'kickoffDocumentationAccessPolicyData' }, query: { code: '$code' } },\n    kickoffDocumentationNavigationData: { options: { enabled: true, schemaName: 'cmsDocumentationNavigation', operation: 'saveAll', dataFilePrefix: 'kickoffDocumentationNavigationData' }, query: { code: '$code' } },\n    kickoffDocumentationDashboardData: { options: { enabled: true, schemaName: 'cmsDocumentationDashboard', operation: 'saveAll', dataFilePrefix: 'kickoffDocumentationDashboardData' }, query: { code: '$code' } },\n    kickoffDocumentationLegacyNavigationCleanupData: { options: { enabled: true, schemaName: 'cmsDocumentationNode', operation: 'remove', dataFilePrefix: 'kickoffDocumentationLegacyNavigationCleanupData' }, query: { product: '${productCode}', navigation: '${navigationCode}', nodeLevel: { $in: ['GROUP', 'SUBGROUP', 'TOPIC'] } } },\n    kickoffDocumentationNodeData: { options: { enabled: true, schemaName: 'cmsDocumentationNode', operation: 'saveAll', dataFilePrefix: 'kickoffDocumentationNodeData' }, query: { code: '$code' } },\n    kickoffDocumentationPageMetadataData: { options: { enabled: true, schemaName: 'cmsDocumentationPage', operation: 'saveAll', dataFilePrefix: 'kickoffDocumentationPageMetadataData' }, query: { code: '$code' } },\n    kickoffDocumentationPublicationStateData: { options: { enabled: true, schemaName: 'cmsDocumentationPublicationState', operation: 'saveAll', dataFilePrefix: 'kickoffDocumentationPublicationStateData' }, query: { code: '$code' } },\n    kickoffDocumentationSearchMetadataData: { options: { enabled: true, schemaName: 'cmsDocumentationSearchMetadata', operation: 'saveAll', dataFilePrefix: 'kickoffDocumentationSearchMetadataData' }, query: { code: '$code' } },\n    kickoffDocumentationTypeCodeData: { options: { enabled: true, schemaName: 'cmsTypeCode', operation: 'saveAll', dataFilePrefix: 'kickoffDocumentationTypeCodeData' }, query: { code: '$code' } },\n    kickoffDocumentationRendererData: { options: { enabled: true, schemaName: 'cmsTypeCode2Renderer', operation: 'saveAll', dataFilePrefix: 'kickoffDocumentationRendererData' }, query: { code: '$code' } },\n    kickoffDocumentationTemplateData: { options: { enabled: true, schemaName: 'cmsPageTemplate', operation: 'saveAll', dataFilePrefix: 'kickoffDocumentationTemplateData' }, query: { code: '$code' } },\n    kickoffDocumentationSlotData: { options: { enabled: true, schemaName: 'cmsSlotDefinition', operation: 'saveAll', dataFilePrefix: 'kickoffDocumentationSlotData' }, query: { code: '$code' } },\n    kickoffDocumentationComponentData: { options: { enabled: true, schemaName: 'cmsComponent', operation: 'saveAll', dataFilePrefix: 'kickoffDocumentationComponentData' }, query: { code: '$code' } },\n    kickoffDocumentationPageData: { options: { enabled: true, schemaName: 'cmsPage', operation: 'saveAll', dataFilePrefix: 'kickoffDocumentationPageData' }, query: { code: '$code' } },\n    kickoffDocumentationRouteData: { options: { enabled: true, schemaName: 'cmsPageRoute', operation: 'saveAll', dataFilePrefix: 'kickoffDocumentationRouteData' }, query: { code: '$code' } },\n  },\n};\n`,
+  [("data/core-v001/headers/" + publication.recordPrefix + "ContentPackHeader.js")]: `${copyrightHeader}'use strict';\n\n/** @description ${publication.label} core-import header for project documentation. */\nmodule.exports = {\n  cms: {\n    ${publication.recordPrefix}SiteData: { options: { enabled: true, schemaName: 'cmsSite', operation: 'saveAll', dataFilePrefix: '${publication.recordPrefix}SiteData' }, query: { code: '$code' } },\n    ${publication.recordPrefix}ProductData: { options: { enabled: true, schemaName: 'cmsDocumentationProduct', operation: 'saveAll', dataFilePrefix: '${publication.recordPrefix}ProductData' }, query: { code: '$code' } },\n    ${publication.recordPrefix}AccessPolicyData: { options: { enabled: true, schemaName: 'cmsDocumentationAccessPolicy', operation: 'saveAll', dataFilePrefix: '${publication.recordPrefix}AccessPolicyData' }, query: { code: '$code' } },\n    ${publication.recordPrefix}NavigationData: { options: { enabled: true, schemaName: 'cmsDocumentationNavigation', operation: 'saveAll', dataFilePrefix: '${publication.recordPrefix}NavigationData' }, query: { code: '$code' } },\n    ${publication.recordPrefix}DashboardData: { options: { enabled: true, schemaName: 'cmsDocumentationDashboard', operation: 'saveAll', dataFilePrefix: '${publication.recordPrefix}DashboardData' }, query: { code: '$code' } },\n    ${publication.recordPrefix}LegacyNavigationCleanupData: { options: { enabled: true, schemaName: 'cmsDocumentationNode', operation: 'remove', dataFilePrefix: '${publication.recordPrefix}LegacyNavigationCleanupData' }, query: { product: '${productCode}', navigation: '${navigationCode}', nodeLevel: { $in: ['GROUP', 'SUBGROUP', 'TOPIC'] } } },\n    ${publication.recordPrefix}NodeData: { options: { enabled: true, schemaName: 'cmsDocumentationNode', operation: 'saveAll', dataFilePrefix: '${publication.recordPrefix}NodeData' }, query: { code: '$code' } },\n    ${publication.recordPrefix}PageMetadataData: { options: { enabled: true, schemaName: 'cmsDocumentationPage', operation: 'saveAll', dataFilePrefix: '${publication.recordPrefix}PageMetadataData' }, query: { code: '$code' } },\n    ${publication.recordPrefix}PublicationStateData: { options: { enabled: true, schemaName: 'cmsDocumentationPublicationState', operation: 'saveAll', dataFilePrefix: '${publication.recordPrefix}PublicationStateData' }, query: { code: '$code' } },\n    ${publication.recordPrefix}SearchMetadataData: { options: { enabled: true, schemaName: 'cmsDocumentationSearchMetadata', operation: 'saveAll', dataFilePrefix: '${publication.recordPrefix}SearchMetadataData' }, query: { code: '$code' } },\n    ${publication.recordPrefix}TypeCodeData: { options: { enabled: true, schemaName: 'cmsTypeCode', operation: 'saveAll', dataFilePrefix: '${publication.recordPrefix}TypeCodeData' }, query: { code: '$code' } },\n    ${publication.recordPrefix}RendererData: { options: { enabled: true, schemaName: 'cmsTypeCode2Renderer', operation: 'saveAll', dataFilePrefix: '${publication.recordPrefix}RendererData' }, query: { code: '$code' } },\n    ${publication.recordPrefix}TemplateData: { options: { enabled: true, schemaName: 'cmsPageTemplate', operation: 'saveAll', dataFilePrefix: '${publication.recordPrefix}TemplateData' }, query: { code: '$code' } },\n    ${publication.recordPrefix}SlotData: { options: { enabled: true, schemaName: 'cmsSlotDefinition', operation: 'saveAll', dataFilePrefix: '${publication.recordPrefix}SlotData' }, query: { code: '$code' } },\n    ${publication.recordPrefix}ComponentData: { options: { enabled: true, schemaName: 'cmsComponent', operation: 'saveAll', dataFilePrefix: '${publication.recordPrefix}ComponentData' }, query: { code: '$code' } },\n    ${publication.recordPrefix}PageData: { options: { enabled: true, schemaName: 'cmsPage', operation: 'saveAll', dataFilePrefix: '${publication.recordPrefix}PageData' }, query: { code: '$code' } },\n    ${publication.recordPrefix}RouteData: { options: { enabled: true, schemaName: 'cmsPageRoute', operation: 'saveAll', dataFilePrefix: '${publication.recordPrefix}RouteData' }, query: { code: '$code' } },\n  },\n};\n`,
 };
 
 for (const [relativePath, content] of Object.entries(files)) {
@@ -1107,11 +1120,11 @@ const documentationSection = applicationDocumentationContract.buildReleaseSectio
   catalogue,
   generatedHashes,
   contentPath: 'core-v001',
-  owningDomain: 'kickoff.documentation',
+  owningDomain: publication.owningDomain,
   environmentScope: ['ALL'],
   sensitivity: 'PUBLIC',
   sourceAuthority: 'docs/catalogue.json',
-  sites: ['kickoffDocumentationSite'],
+  sites: [(publication.recordPrefix + "Site")],
   accessMode: 'PUBLIC',
   pages: sourcePages.length,
   components: Object.keys(componentRecords).length,
@@ -1119,13 +1132,13 @@ const documentationSection = applicationDocumentationContract.buildReleaseSectio
 });
 const previousManifest = fs.existsSync(manifestPath)
   ? JSON.parse(fs.readFileSync(manifestPath, 'utf8'))
-  : { contractVersion: 2, module: 'nodics.kickoff', sections: {} };
+  : { contractVersion: 2, module: project.name, sections: {} };
 const manifest = {
   contractVersion: 2,
-  module: 'nodics.kickoff',
+  module: project.name,
   sections: { ...(previousManifest.sections || {}), documentation: documentationSection },
 };
 
 await writeOrCheck('data/manifest.json', `${JSON.stringify(manifest, null, 2)}\n`);
 
-console.log(`${checkOnly ? 'Validated' : 'Generated'} ${sourcePages.length} Kickoff documentation pages`);
+console.log(`${checkOnly ? 'Validated' : 'Generated'} ${sourcePages.length} ${publication.shortLabel} documentation pages`);

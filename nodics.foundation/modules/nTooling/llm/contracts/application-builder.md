@@ -17,18 +17,27 @@ journey.
 - Framework package metadata declares reusable capabilities and dependency
   hierarchy. Domain capabilities remain under `nodics.accelerators` and extend
   Commerce/Foundation through package metadata.
-- Agora source declares available frontend compositions, domain selections,
-  renderer keys, and renderer imports.
-- Kickoff packages declare customer-owned application data-pack boundaries.
-- A solution document records the explicit project choices. It cannot redefine
-  discovered capability ownership or dependency metadata.
+- The explicit customer root `package.json` declares
+  `nodics.applicationBuilder.presets`, `compositions`, and `frontends`.
+  These are application choices, not executable frontend discovery or proof that
+  an external renderer has been deployed. Catalogue entries identify their
+  evidence as `DECLARED_CUSTOMER_COMPOSITION`.
+- Customer data modules opt in with
+  `nodics.applicationBuilder.dataPack: true` in their own package metadata.
+  Package names carry no implicit data ownership, domain, or frontend policy.
+- A solution records project choices and cannot redefine backend dependency
+  ownership. `experience.rendererByDomain` and `data.packDomains` bind logical
+  rendering and data ownership explicitly; neither is inferred from a brand or
+  package-name suffix.
 
-The Builder must receive explicit Framework and Kickoff repository roots plus
-either a direct Agora repository root or a `nodics.exp` workspace root. When
-`nodics.exp` is supplied, Builder resolves Agora from `apps.json`, preferring a
-nested `nodics.exp/nodics.agora.apparel` repository and allowing the documented sibling
-fallback during transition. It must not infer undeclared sibling locations or
-treat generated context as an architecture authority.
+Pass explicit framework, `--frontend`, and `--customer` roots. Optionally use
+`--experience` with its existing `apps.json` and `--frontend-code` to select one
+frontend. A workspace with multiple storefronts requires explicit selection.
+Legacy `--agora`, `--kickoff`, and `--exp` spellings remain input aliases only;
+they provide no default source, project policy, or missing-repository fallback.
+Missing sources fail in CI exactly as they do locally. Package metadata and
+customer declarations participate in the catalogue digest. Tests create real
+isolated fixture repositories instead of depending on installed siblings.
 
 ## Beginner guided experience
 
@@ -97,9 +106,13 @@ stderr and structured JSON to stdout so automation can parse the result. The
 questionnaire must reuse `builder:answers-template` normalization and
 validation logic instead of maintaining a parallel preset map.
 
-For beginner usage, prefer `--exp=/path/to/nodics.exp` over requiring users to
-know the Agora repository path. Direct `--agora` remains valid for advanced
-automation and takes precedence when both are supplied.
+For beginner usage, select a customer-declared preset and explicit source roots.
+The preset owns market defaults, stores, catalogs, backend runtime roles,
+frontend selections, renderer mappings and data-pack choices. Frontend codes
+must be unique even when compared without case, because generated wiring uses
+lowercase paths. Unsupported preset, frontend, renderer, domain or pack choices
+must fail before generation. A declaration change invalidates the approved plan;
+rediscover, review and approve the changed plan before retrying generation.
 
 ## Template repository governance
 
@@ -153,7 +166,7 @@ safe extension points.
 - On failure, remove only the new root created by that generation invocation.
 - WP-B5 permits Electronics, Telco, and Combined generation after the same
   approval and containment checks. Backend capabilities must equal the resolved
-  dependency closure, while active Agora domains, renderer keys, and customer
+  dependency closure, while active frontend domains, renderer keys, and customer
   data packs must equal the selected experience rather than every backend
   dependency.
 - Telco activates the Telco experience and data pack while resolving Electronics
@@ -166,10 +179,10 @@ safe extension points.
 - Qualification must also write a human-readable Markdown summary beside the
   JSON report. The summary must identify state, scope, passed gates, failed
   gates with diagnostics, handoff artifacts, and next commands.
-- Generated-skeleton qualification proves the emitted graph, Agora composition,
+- Generated-skeleton qualification proves the emitted graph, frontend composition,
   customer-owned extension/data roots, secret-free backend-owned security
   boundary, generated handoff, and generated `npm test`.
-- Generated outputs include a self-contained backend HTTP runtime and Agora
+- Generated outputs include a self-contained backend HTTP runtime and a starter
   storefront HTTP runtime. Qualification may mark `FULL_GENERATED_APPLICATION`
   only when generated self-tests and generated runtime probes pass.
 - Generated outputs must include a beginner `README.md` and a
@@ -181,7 +194,7 @@ safe extension points.
 - The complete beginner journey must remain testable as: questionnaire,
   answers, dry-run, review pack, approval, generation, and qualification. Telco
   and Combined are the minimum end-to-end cases because they prove dependency
-  closure, selected-domain rendering, data-pack symmetry, and optional Nexus
+  closure, selected-domain rendering, data-pack symmetry, and optional supporting frontend
   participation.
 - A reference-workspace qualification can attach the separately recorded
   fresh-database nine-runtime evidence. That evidence complements generated
@@ -210,4 +223,26 @@ services through the normal nTooling service and command contracts. An override
 must retain explicit roots, schema and semantic validation, deterministic
 dependency resolution, read-only planning, approval requirements, and
 non-execution. Customer product/content catalogues and page/component data stay
-in their Kickoff data modules; nTooling owns only Builder contracts and tooling.
+in their customer-owned data modules; nTooling owns only Builder contracts and tooling.
+
+## Independent customer generation and evidence
+
+`storefront/generated/frontend-composition.ts` is the generated composition
+artifact. Earlier plans that target the removed application-labelled filename
+must be regenerated and approved; never silently reinterpret an old approved
+operation list. Wiring notes are emitted for each selected supporting frontend.
+Domain sample product behavior remains in the existing generator, using selected
+renderer mappings. `sampleData: false` emits empty product/price/inventory samples.
+
+Customer declarations describe intended wiring. `FULL_GENERATED_APPLICATION`
+means the generated standalone starter passed its own tests and HTTP probes.
+It does not prove production authentication, database imports, selected external
+frontend renderer execution, or the customer's deployed runtime. Operators must
+supply separate deployment evidence. Source declarations, starter tests, real
+provider tests and deployed-runtime checks are distinct acceptance levels.
+
+The independent-customer contract test uses unrelated codes for frontend,
+composition, renderer, store, catalog and data pack. It runs generation and
+starter HTTP qualification, rejects undeclared choices and missing CI sources,
+and proves metadata edits invalidate plan digests. Customizations must preserve
+these checks, dependency closure, approval, containment and existing-file safety.

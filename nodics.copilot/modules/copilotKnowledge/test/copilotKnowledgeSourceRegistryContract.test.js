@@ -20,7 +20,7 @@ const policyConfiguration = require('../../copilotPolicy/config/properties').cop
 const definition = overrides => Object.assign({
     code: 'nodics-public-docs', repository: 'nodics.docs', project: 'nodics', module: 'nodics.docs', owner: 'nodics.docs',
     version: 'main', sourceType: 'PUBLISHED_DOCUMENTATION', classification: 'PUBLIC', paths: ['data/online'],
-    public: true, lifecycle: 'ONLINE', allowedChannels: ['NEXUS_PUBLIC', 'NEXUS_CUSTOMER', 'AXIS_EMPLOYEE'],
+    public: true, lifecycle: 'ONLINE', allowedChannels: ['PUBLIC', 'CUSTOMER', 'EMPLOYEE'],
     secretScanPolicy: 'REQUIRED', enabled: true
 }, overrides || {});
 
@@ -49,16 +49,16 @@ test('registry is immutable, unique, and requires customer-project scope', () =>
 test('pre-retrieval scopes expose only sources authorized for the current channel and identity', () => {
     const sources = [
         definition(),
-        definition({ code: 'framework-readmes', sourceType: 'README', classification: 'INTERNAL', public: false, lifecycle: null, paths: ['**/README.md'], allowedChannels: ['AXIS_EMPLOYEE'], requiredPermissions: ['copilot.knowledge.internal.read'] }),
-        definition({ code: 'framework-agents', sourceType: 'AGENTS_CONTRACT', classification: 'RESTRICTED', public: false, lifecycle: null, paths: ['**/AGENTS.md'], allowedChannels: ['AXIS_EMPLOYEE'], requiredPermissions: ['copilot.knowledge.restricted.read'] }),
-        definition({ code: 'acme-project', sourceType: 'CUSTOMER_PROJECT', classification: 'CUSTOMER', public: false, lifecycle: null, project: 'acme', module: 'acme.platform', paths: ['README.md'], allowedChannels: ['NEXUS_CUSTOMER', 'AXIS_EMPLOYEE'], customerProjectScopes: ['acme'], tenantScopes: ['acmeTenant'], customerScopes: ['customer-1'] })
+        definition({ code: 'framework-readmes', sourceType: 'README', classification: 'INTERNAL', public: false, lifecycle: null, paths: ['**/README.md'], allowedChannels: ['EMPLOYEE'], requiredPermissions: ['copilot.knowledge.internal.read'] }),
+        definition({ code: 'framework-agents', sourceType: 'AGENTS_CONTRACT', classification: 'RESTRICTED', public: false, lifecycle: null, paths: ['**/AGENTS.md'], allowedChannels: ['EMPLOYEE'], requiredPermissions: ['copilot.knowledge.restricted.read'] }),
+        definition({ code: 'acme-project', sourceType: 'CUSTOMER_PROJECT', classification: 'CUSTOMER', public: false, lifecycle: null, project: 'acme', module: 'acme.platform', paths: ['README.md'], allowedChannels: ['CUSTOMER', 'EMPLOYEE'], customerProjectScopes: ['acme'], tenantScopes: ['acmeTenant'], customerScopes: ['customer-1'] })
     ];
     const registry = registryService.createRegistry(sources, knowledgeConfiguration, policy);
-    const publicContext = policy.normalizeSecurityContext({ channel: 'NEXUS_PUBLIC' }, policyConfiguration);
+    const publicContext = policy.normalizeSecurityContext({ channel: 'PUBLIC' }, policyConfiguration);
     const publicScope = registryService.buildQueryScope(registry, publicContext, policyConfiguration, policy);
     assert.deepEqual(publicScope.sourceCodes, ['nodics-public-docs']);
-    const axisAdmin = policy.normalizeSecurityContext({ channel: 'AXIS_EMPLOYEE', actor: 'admin', tenant: 'default', permissions: ['copilot.knowledge.internal.read', 'copilot.knowledge.restricted.read'] }, policyConfiguration);
+    const axisAdmin = policy.normalizeSecurityContext({ channel: 'EMPLOYEE', actor: 'admin', tenant: 'default', permissions: ['copilot.knowledge.internal.read', 'copilot.knowledge.restricted.read'] }, policyConfiguration);
     assert.deepEqual(registryService.buildQueryScope(registry, axisAdmin, policyConfiguration, policy).sourceCodes, ['nodics-public-docs', 'framework-readmes', 'framework-agents']);
-    const customer = policy.normalizeSecurityContext({ channel: 'NEXUS_CUSTOMER', actor: 'customer-1', customer: 'customer-1', tenant: 'acmeTenant', customerProject: 'acme' }, policyConfiguration);
+    const customer = policy.normalizeSecurityContext({ channel: 'CUSTOMER', actor: 'customer-1', customer: 'customer-1', tenant: 'acmeTenant', customerProject: 'acme' }, policyConfiguration);
     assert.deepEqual(registryService.buildQueryScope(registry, customer, policyConfiguration, policy).sourceCodes, ['nodics-public-docs', 'acme-project']);
 });

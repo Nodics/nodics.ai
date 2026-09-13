@@ -9,8 +9,6 @@
 
  */
 
-const _ = require('lodash');
-
 /**
  * @module nodics.platform/modules/profile/src/service/authentication/defaultInternalAuthenticationProviderService
  * @description Implements profile default internal authentication provider service business behavior and extension logic.
@@ -32,62 +30,9 @@ module.exports = {
 
      */
 
-    getInternalAuthToken: function (request) {
-        return new Promise((resolve, reject) => {
-            try {
-                let authData = request.authData || {};
-                let permissions = authData.permissions || [];
-                let groups = authData.userGroups || [];
-                let security = CONFIG.get('authSecurity') || {};
-                let policy = security.internalToken || {};
-                let crossTenantPermissions = policy.crossTenantPermissions || ['auth.internal.token.read.anyTenant'];
-                let crossTenantGroups = policy.crossTenantGroups || [];
-                let sameTenant = authData.tenant === request.tenant;
-                let crossTenantAllowed = permissions.includes('*') ||
-                    permissions.some(permission => crossTenantPermissions.includes(permission)) ||
-                    groups.some(group => crossTenantGroups.includes(group));
-                if (!sameTenant && !crossTenantAllowed) {
-                    reject(new CLASSES.NodicsError('ERR_AUTH_00003', 'Cross-tenant internal token access is not permitted'));
-                    return;
-                }
-                let headers = request.headers || request.httpRequest && request.httpRequest.headers || {};
-                let runtimeInstanceId = headers['x-nodics-runtime-instance'];
-                let requestedModules = String(headers['x-nodics-modules'] || '').split(',').map(value => value.trim()).filter(Boolean);
-                if (runtimeInstanceId && requestedModules.length > 0) {
-                    let uniqueModules = Array.from(new Set(requestedModules));
-                    let moduleNamePattern = new RegExp(policy.moduleNamePattern || '^[A-Za-z][A-Za-z0-9_-]{0,127}$');
-                    if (uniqueModules.length !== requestedModules.length || uniqueModules.length > Number(policy.maxDeclaredModules || 512) ||
-                        uniqueModules.some(moduleName => !moduleNamePattern.test(moduleName))) {
-                        reject(new CLASSES.NodicsError('ERR_AUTH_00003', 'Invalid module identity declaration'));
-                        return;
-                    }
-                    let principal = authData.person || {};
-                    SERVICE.DefaultServiceTokenService.issue({
-                        entCode: authData.entCode,
-                        tenant: request.tenant,
-                        serviceId: authData.serviceId || principal.loginId || principal.code || 'nodics-runtime',
-                        runtimeInstanceId: runtimeInstanceId,
-                        modules: uniqueModules,
-                        authVersion: authData.authVersion || principal.authVersion || 1,
-                        userGroups: authData.userGroups || [],
-                        permissions: authData.permissions || []
-                    }).then(authToken => resolve({ code: 'SUC_AUTH_00000', result: { authToken: authToken } })).catch(reject);
-                    return;
-                }
-                let authToken = NODICS.getInternalAuthToken(request.tenant);
-                if (!authToken) {
-                    reject(new CLASSES.NodicsError('ERR_AUTH_00001', 'Internal authentication token is unavailable'));
-                    return;
-                }
-                resolve({
-                    code: 'SUC_AUTH_00000',
-                    result: {
-                        authToken: authToken
-                    }
-                });
-            } catch (error) {
-                reject(new CLASSES.NodicsError(error));
-            }
-        });
+    getInternalAuthToken: async function (request) {
+        const options = await SERVICE.DefaultRuntimeAuthorizationService.authorize(request);
+        const authToken = await SERVICE.DefaultServiceTokenService.issue(options);
+        return { code: 'SUC_AUTH_00000', result: { authToken } };
     }
 };

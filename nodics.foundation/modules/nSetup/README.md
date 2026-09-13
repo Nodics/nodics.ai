@@ -46,6 +46,17 @@ If an AI tool automatically scans the repository, this folder should be treated 
 
 ## Partner implementation contract
 
+The [existing layers and project independence principle](llm/contracts/nodics-principles.md#existing-layers-and-project-independence)
+requires reuse of established Nodics authorities and capability-owned APIs.
+Project-specific configuration stays outside every framework and accelerator
+layer, including shared tooling and generators.
+
+[Safe API consolidation](llm/contracts/nodics-principles.md#capability-apis-and-safe-consolidation)
+preserves actual runtime availability, policy and operation outcomes.
+[Recurrence prevention](llm/contracts/ai-coding-and-customization-contract.md#corrective-changes-and-recurrence-prevention)
+requires each correction batch to update its existing contracts, owner guidance
+and relevant regression checks while retaining explicit evidence limits.
+
 Every partner and application team follows
 [the customer project contract](llm/contracts/customer-project-mode-contract.md).
 It defines framework, domain accelerator and customer ownership, project-only

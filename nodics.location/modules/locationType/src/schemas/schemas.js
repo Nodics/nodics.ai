@@ -17,7 +17,7 @@
  * @override Later active modules may extend or replace this registry through Nodics layering.
  */
 module.exports = { locationType: {
-    locationCategory: Object.assign({ super: 'base', model: true, schemaPolicies: ['operational'], service: { enabled: true }, router: { enabled: false }, cache: { enabled: false }, event: { enabled: false }, search: { enabled: false } }, { definition: {
+    locationCategory: Object.assign({ super: 'base', model: true, schemaPolicies: ['operational'], service: { enabled: true }, router: { groups: { schemaOperations: true }, enabled: true }, cache: { enabled: false }, event: { enabled: false }, search: { enabled: false } }, { definition: {
         code: { type: 'string', required: true , description: 'Uniquely identifies this record for references, APIs, imports, and business administration.'},
         name: { type: 'object', required: true , description: 'Stores the business display name shown to administrators and related user journeys.'},
         description: { type: 'object', required: false , description: 'Explains the business purpose, usage, or administrative meaning of this record.'},
@@ -26,7 +26,7 @@ module.exports = { locationType: {
         revision: { type: 'int', required: true, default: 0 , description: 'Tracks the business revision used for governance, review, and optimistic update checks.'},
         metadata: { type: 'object', required: false , description: 'Stores additional structured metadata needed by extensions without changing the core schema contract.'}
     } }),
-    locationType: Object.assign({ super: 'base', model: true, schemaPolicies: ['operational'], service: { enabled: true }, router: { enabled: false }, cache: { enabled: false }, event: { enabled: false }, search: { enabled: false } }, { definition: {
+    locationType: Object.assign({ super: 'base', model: true, schemaPolicies: ['operational'], service: { enabled: true }, router: { groups: { schemaOperations: true }, enabled: true }, cache: { enabled: false }, event: { enabled: false }, search: { enabled: false } }, { definition: {
         code: { type: 'string', required: true , description: 'Uniquely identifies this record for references, APIs, imports, and business administration.'},
         categoryCode: { type: 'string', required: true , description: 'Stores the category code used to classify, link, or resolve this record.'},
         name: { type: 'object', required: true , description: 'Stores the business display name shown to administrators and related user journeys.'},
@@ -38,7 +38,7 @@ module.exports = { locationType: {
         revision: { type: 'int', required: true, default: 0 , description: 'Tracks the business revision used for governance, review, and optimistic update checks.'},
         metadata: { type: 'object', required: false , description: 'Stores additional structured metadata needed by extensions without changing the core schema contract.'}
     } }),
-    locationCapability: Object.assign({ super: 'base', model: true, schemaPolicies: ['operational'], service: { enabled: true }, router: { enabled: false }, cache: { enabled: false }, event: { enabled: false }, search: { enabled: false } }, { definition: {
+    locationCapability: Object.assign({ super: 'base', model: true, schemaPolicies: ['operational'], service: { enabled: true }, router: { groups: { schemaOperations: true }, enabled: true }, cache: { enabled: false }, event: { enabled: false }, search: { enabled: false } }, { definition: {
         code: { type: 'string', required: true , description: 'Uniquely identifies this record for references, APIs, imports, and business administration.'},
         name: { type: 'object', required: true , description: 'Stores the business display name shown to administrators and related user journeys.'},
         description: { type: 'object', required: false , description: 'Explains the business purpose, usage, or administrative meaning of this record.'},

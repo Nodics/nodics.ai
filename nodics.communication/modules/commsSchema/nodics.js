@@ -9,4 +9,4 @@
 
  */
 /** @module commsSchema/nodics @description Declares Communication schema lifecycle. @layer module @owner commsSchema */
-module.exports = { /** Initializes this module. */ init: () => Promise.resolve(true), /** Finalizes this module. */ postInit: () => Promise.resolve(true) };
+module.exports = { /** Initializes this module. */ init: function () { return Promise.resolve(true); }, /** Finalizes this module. */ postInit: function () { return Promise.resolve(true); } };

@@ -21,16 +21,19 @@ const routers = require('../src/router/routers');
 const controller = require('../src/controller/defaultShoppingListCustomerController');
 const facade = require('../src/facade/defaultShoppingListCustomerFacade');
 const service = require('../src/service/defaultShoppingListOperationService');
+const storeContext = require('../../store/src/service/defaultStoreContextService');
 
 let lists;
 let entries;
 
 function installGlobals() {
+    delete global.CLASSES;
     lists = [];
     entries = [];
     global.CONFIG = { get: key => key === 'shoppingList' ? properties.shoppingList : undefined };
     global.SERVICE = {
         DefaultShoppingListOperationService: service,
+        DefaultStoreContextService: storeContext,
         DefaultShoppingListService: {
             save: async request => {
                 let existing = lists.find(item => item.code === request.model.code);
@@ -82,31 +85,31 @@ test('Shopping list routes expose secured wishlist, compare, and save-for-later 
 
 test('Shopping list API creates customer-owned wishlist entries idempotently', async () => {
     const authData = { tenant: 'default', principalId: 'customer-1' };
-    let added = await controller.addEntry({ authData, httpRequest: { params: { listType: 'wishlist' }, body: { productCode: 'agoraLinenWrapDress', variantCode: 'agoraLinenWrapDressNaturalS' } } });
+    let added = await controller.addEntry({ authData, httpRequest: { params: { listType: 'wishlist' }, body: { storeCode: 'storeOne', productCode: 'agoraLinenWrapDress', variantCode: 'agoraLinenWrapDressNaturalS' } } });
     assert.equal(added.data.list.ownerId, 'customer-1');
     assert.equal(added.data.list.listType, 'WISHLIST');
     assert.equal(added.data.entries.length, 1);
     assert.equal(added.data.entries[0].productCode, 'agoraLinenWrapDress');
 
-    await controller.addEntry({ authData, httpRequest: { params: { listType: 'wishlist' }, body: { productCode: 'agoraLinenWrapDress', variantCode: 'agoraLinenWrapDressNaturalS' } } });
-    let read = await controller.read({ authData, httpRequest: { params: { listType: 'wishlist' }, query: {} } });
+    await controller.addEntry({ authData, httpRequest: { params: { listType: 'wishlist' }, body: { storeCode: 'storeOne', productCode: 'agoraLinenWrapDress', variantCode: 'agoraLinenWrapDressNaturalS' } } });
+    let read = await controller.read({ authData, httpRequest: { params: { listType: 'wishlist' }, query: { storeCode: 'storeOne' } } });
     assert.equal(read.data.entries.length, 1);
 });
 
 test('Customer compare API enforces configured item bound', async () => {
     const authData = { tenant: 'default', principalId: 'customer-1' };
     for (const productCode of ['p1', 'p2', 'p3', 'p4']) {
-        await controller.addEntry({ authData, httpRequest: { params: { listType: 'compare' }, body: { productCode } } });
+        await controller.addEntry({ authData, httpRequest: { params: { listType: 'compare' }, body: { storeCode: 'storeOne', productCode } } });
     }
     await assert.rejects(
-        () => controller.addEntry({ authData, httpRequest: { params: { listType: 'compare' }, body: { productCode: 'p5' } } }),
+        () => controller.addEntry({ authData, httpRequest: { params: { listType: 'compare' }, body: { storeCode: 'storeOne', productCode: 'p5' } } }),
         /Shopping list item limit exceeded/
     );
 });
 
 test('Shopping list API creates save-for-later entries under the same commerce capability', async () => {
     const authData = { tenant: 'default', principalId: 'customer-1' };
-    const added = await controller.addEntry({ authData, httpRequest: { params: { listType: 'save_for_later' }, body: { productCode: 'agoraLeatherTote' } } });
+    const added = await controller.addEntry({ authData, httpRequest: { params: { listType: 'save_for_later' }, body: { storeCode: 'storeOne', productCode: 'agoraLeatherTote' } } });
     assert.equal(added.data.list.listType, 'SAVE_FOR_LATER');
     assert.equal(added.data.entries.length, 1);
 });
@@ -114,17 +117,71 @@ test('Shopping list API creates save-for-later entries under the same commerce c
 test('Shopping list API scopes read and remove to authenticated owner', async () => {
     const customerOne = { tenant: 'default', principalId: 'customer-1' };
     const customerTwo = { tenant: 'default', principalId: 'customer-2' };
-    let added = await controller.addEntry({ authData: customerOne, httpRequest: { params: { listType: 'wishlist' }, body: { productCode: 'agoraLeatherTote' } } });
+    let added = await controller.addEntry({ authData: customerOne, httpRequest: { params: { listType: 'wishlist' }, body: { storeCode: 'storeOne', productCode: 'agoraLeatherTote' } } });
     let entryCode = added.data.entries[0].code;
 
-    let otherRead = await controller.read({ authData: customerTwo, httpRequest: { params: { listType: 'wishlist' }, query: {} } });
+    let otherRead = await controller.read({ authData: customerTwo, httpRequest: { params: { listType: 'wishlist' }, query: { storeCode: 'storeOne' } } });
     assert.equal(otherRead.data.entries.length, 0);
 
-    let removed = await controller.removeEntry({ authData: customerOne, httpRequest: { params: { listType: 'wishlist', entryCode } } });
+    let removed = await controller.removeEntry({ authData: customerOne, httpRequest: { params: { listType: 'wishlist', entryCode }, query: { storeCode: 'storeOne' } } });
     assert.equal(removed.data.entries.length, 0);
 });
 
 test('Shopping list API rejects unauthenticated ownership context and unsupported list type', async () => {
-    await assert.rejects(() => controller.read({ httpRequest: { params: { listType: 'wishlist' }, query: {} } }), /Authenticated tenant and customer are required/);
-    await assert.rejects(() => controller.read({ authData: { tenant: 'default', principalId: 'customer-1' }, httpRequest: { params: { listType: 'recentlyViewed' }, query: {} } }), /Unsupported shopping list type/);
+    await assert.rejects(() => controller.read({ httpRequest: { params: { listType: 'wishlist' }, query: { storeCode: 'storeOne' } } }), /Authenticated tenant and customer are required/);
+    await assert.rejects(() => controller.read({ authData: { tenant: 'default', principalId: 'customer-1' }, httpRequest: { params: { listType: 'recentlyViewed' }, query: { storeCode: 'storeOne' } } }), /Unsupported shopping list type/);
+});
+
+test('Shopping List keeps payload, query and request store contexts on the same existing ID format', async () => {
+    const authData = { tenant: 'default', principalId: 'customer-1' };
+    for (const storeCode of ['duStore', 'independentStore']) {
+        const added = await controller.addEntry({ authData, httpRequest: { params: { listType: 'wishlist' }, body: { storeCode, productCode: 'productOne' } } });
+        assert.equal(added.data.list.code, ['shoppingList', 'default', 'customer-1', 'WISHLIST', storeCode].join(':'));
+        const fromContext = await controller.read({ authData, storeCode, httpRequest: { params: { listType: 'wishlist' } } });
+        const fromQuery = await controller.read({ authData, httpRequest: { params: { listType: 'wishlist' }, query: { storeCode } } });
+        assert.equal(fromContext.data.list.code, added.data.list.code);
+        assert.equal(fromQuery.data.list.code, added.data.list.code);
+        assert.equal(fromQuery.data.entries.length, 1);
+    }
+    assert.equal(lists.length, 2);
+    assert.notEqual(lists[0].code, lists[1].code);
+});
+
+test('Shopping List rejects missing malformed or contradictory store context instead of reading policy defaults', async () => {
+    assert.equal(properties.shoppingList.customerApi.defaultStoreCode, undefined);
+    global.CONFIG = { get: key => key === 'shoppingList' ? { customerApi: { defaultStoreCode: 'legacyStore' } } : undefined };
+    const authData = { tenant: 'default', principalId: 'customer-1' };
+    for (const storeCode of [undefined, null, '', ' ', 'storeOne ', 1, {}, []]) {
+        await assert.rejects(() => controller.read({ authData, httpRequest: { params: { listType: 'wishlist' }, query: { storeCode } } }), /Store code/);
+    }
+    await assert.rejects(() => controller.addEntry({ authData, storeCode: 'duStore', httpRequest: { params: { listType: 'wishlist' }, body: { productCode: 'p1', storeCode: 'otherStore' } } }), /Store context does not match/);
+    await assert.rejects(() => controller.addEntry({ authData, httpRequest: { params: { listType: 'wishlist' }, query: { storeCode: 'duStore' }, body: { productCode: 'p1', storeCode: 'otherStore' } } }), /Store context does not match/);
+    assert.equal(lists.length, 0);
+    assert.equal(entries.length, 0);
+});
+
+test('Shopping List preserves persisted records and rejects a legacy ID whose store context disagrees', async () => {
+    const authData = { tenant: 'default', principalId: 'customer-1' };
+    const request = { authData, httpRequest: { params: { listType: 'wishlist' }, query: { storeCode: 'duStore' } } };
+    const original = (await controller.read(request)).data.list;
+    original.revision = 6;
+    Object.assign(lists[0], original);
+    const snapshot = JSON.stringify(lists);
+    assert.equal((await controller.read(request)).data.list.revision, 6);
+    assert.equal(JSON.stringify(lists), snapshot);
+    const fromOtherTenant = await controller.read({ authData: { tenant: 'otherTenant', principalId: 'customer-1' }, httpRequest: { params: { listType: 'wishlist' }, query: { storeCode: 'duStore' } } });
+    assert.notEqual(fromOtherTenant.data.list.code, original.code);
+    lists[0].storeCode = 'otherStore';
+    await assert.rejects(() => controller.read(request), /Store context does not match/);
+    delete lists[0].storeCode;
+    await assert.rejects(() => controller.read(request), /Store code is required/);
+});
+
+test('Shopping List uses the effective Store context owner instead of an imported fallback', async () => {
+    const request = { authData: { tenant: 'default', principalId: 'customer-1' }, httpRequest: { params: { listType: 'wishlist' }, query: { storeCode: 'duStore' } } };
+    global.SERVICE.DefaultStoreContextService = { ...storeContext, resolveStoreCode: () => { throw new Error('Project store policy rejected'); } };
+    await assert.rejects(() => controller.read(request), /Project store policy rejected/);
+    delete global.SERVICE.DefaultStoreContextService;
+    await assert.rejects(() => controller.read(request), /Store context service is unavailable/);
+    assert.equal(lists.length, 0);
 });

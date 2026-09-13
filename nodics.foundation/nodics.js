@@ -70,21 +70,9 @@ module.exports = {
             }).then(() => {
                 return SERVICE.DefaultScriptsHandlerService.executePostScripts();
             }).then(() => {
-                return new Promise((resolve, reject) => {
-                    if (NODICS.isInitRequired()) {
-                        let defaultTenant = CONFIG.get('defaultTenant') || 'default';
-                        SERVICE.DefaultImportService.importInitData({
-                            tenant: defaultTenant,
-                            modules: NODICS.getActiveModules()
-                        }).then(success => {
-                            resolve(success);
-                        }).catch(error => {
-                            NODICS.LOG.error('Initial data import failed : ', error);
-                            reject(error);
-                        });
-                    } else {
-                        resolve(true);
-                    }
+                return SERVICE.DefaultDataReleaseService.installStartupReleases({
+                    tenant: CONFIG.get('defaultTenant') || 'default',
+                    modules: NODICS.getActiveModules()
                 });
             }).then(() => {
                 return this.executeMandatoryBootstrapServices();
@@ -108,49 +96,12 @@ module.exports = {
                     }
                 });
             }).then(() => {
-                return new Promise((resolve, reject) => {
-                    let defaultTenant = CONFIG.get('defaultTenant') || 'default';
-                    if (NODICS.isModuleActive(CONFIG.get('profileModuleName'))) {
-                        let defaultAuthDetail = CONFIG.get('defaultAuthDetail') || {};
-                        SERVICE.DefaultEmployeeService.findByAPIKey({
-                            tenant: defaultAuthDetail.tenant,
-                            apiKey: CONFIG.get('defaultAuthDetail').apiKey
-                        }).then(employee => {
-                            SERVICE.DefaultServiceTokenService.issue({
-                                entCode: defaultAuthDetail.entCode,
-                                tenant: defaultAuthDetail.tenant,
-                                serviceId: defaultAuthDetail.loginId || 'nodics-runtime',
-                                runtimeInstanceId: [NODICS.getSelectedEnvironmentName(), NODICS.getServerName(), NODICS.getNodeName() || 'default', process.pid].join(':'),
-                                modules: NODICS.getActiveModules(),
-                                authVersion: employee.authVersion || 1,
-                                userGroups: employee.userGroupCodes,
-                                permissions: employee.userGroupPermissions
-                            }).then(authToken => {
-                                NODICS.addInternalAuthToken(defaultTenant, authToken);
-                                resolve(true);
-                            }).catch(reject);
-                        }).catch(error => {
-                            reject(error);
-                        });
-                    } else {
-                        SERVICE.DefaultInternalAuthenticationProviderService.fetchInternalAuthToken(defaultTenant).then(success => {
-                            NODICS.addInternalAuthToken(defaultTenant, success.authToken);
-                            resolve(true);
-                        }).catch(error => {
-                            reject(error);
-                        });
-                    }
+                const tenant = CONFIG.get('defaultTenant') || 'default';
+                return SERVICE.DefaultInternalAuthenticationProviderService.fetchInternalAuthToken(tenant).then(issued => {
+                    NODICS.addInternalAuthToken(tenant, issued.authToken);
                 });
             }).then(() => {
-                return new Promise((resolve, reject) => {
-                    SERVICE.DefaultEnterpriseHandlerService.buildEnterprises().then(success => {
-                        resolve(true);
-                    }).catch(error => {
-                        NODICS.LOG.error('Either there are no tenants or not able to fectch');
-                        NODICS.LOG.error(error);
-                        resolve(true);
-                    });
-                });
+                return SERVICE.DefaultEnterpriseHandlerService.buildEnterprises();
             }).then(() => {
                 SERVICE.DefaultInternalAuthenticationProviderService.scheduleInternalAuthTokenRefresh();
                 resolve(true);
@@ -191,38 +142,39 @@ module.exports = {
             .map(item => item.service);
     },
 
-    /** Starts the configured Nodics server after the framework lifecycle completes. */
-    start: function (options) {
+    /**
+     * Starts the selected runtime and resolves only after initialization and listeners complete.
+     * On failure, close acquired resources through their existing lifecycle owners
+     * before rejecting with the original startup error.
+     * @param {Object} options Selected runtime options.
+     * @returns {Promise<boolean>} Completed startup.
+     */
+    start: async function (options) {
         options = this.resolveOptions(options);
-        this.initFramework(options).then(success => {
-            SERVICE.DefaultRouterService.startServers().then(success => {
-                if (CONFIG.get('activateNodePing')) {
-                    SERVICE.DefaultNodeManagerService.notifyNodeStarted().then(success => {
-                        SERVICE.DefaultNodeManagerService.checkActiveNodes();
-                    }).catch(error => {
-                        NODICS.LOG.error('Failed to notify nodes about current node:' + CONFIG.get('nodeId') + ' started');
-                    });
-                }
-                NODICS.setEndTime(new Date());
-                SERVICE.DefaultRuntimeLifecycleService.markStarted({ reason: 'startup' }).then(() => {
-                    NODICS.LOG.info('Nodics started successfully in (', NODICS.getStartDuration(), ') ms \n');
-                }).catch(error => {
-                    NODICS.LOG.error('Runtime ready contributor failed', error);
-                });
-                //this.initTestRuner();
-            }).catch(error => {
-                NODICS.LOG.error('Nodics server error : ', error);
-                SERVICE.DefaultRuntimeLifecycleService.transition('failed');
-                process.exit(CONFIG.get('errorExitCode'));
-            });
-        }).catch(error => {
-            console.error('Nodics server not started properly : ', error);
-            if (typeof SERVICE !== 'undefined' && SERVICE.DefaultRuntimeLifecycleService &&
-                NODICS.getServerState() !== 'failed') {
-                SERVICE.DefaultRuntimeLifecycleService.transition('failed');
+        try {
+            await this.initFramework(options);
+            await SERVICE.DefaultRouterService.startServers();
+            NODICS.setEndTime(new Date());
+            await SERVICE.DefaultRuntimeLifecycleService.markStarted({ reason: 'startup' });
+            if (CONFIG.get('activateNodePing')) {
+                SERVICE.DefaultNodeManagerService.notifyNodeStarted().then(() => {
+                    SERVICE.DefaultNodeManagerService.checkActiveNodes();
+                }).catch(error => NODICS.LOG.error('Failed to notify nodes about runtime startup', error));
             }
-            process.exit(1);
-        });
+            NODICS.LOG.info('Nodics started successfully in (', NODICS.getStartDuration(), ') ms \n');
+            return true;
+        } catch (error) {
+            const lifecycle = typeof SERVICE !== 'undefined' && SERVICE.DefaultRuntimeLifecycleService;
+            if (lifecycle && typeof lifecycle.requestShutdown === 'function') {
+                try {
+                    if (NODICS.getServerState() !== 'failed' && NODICS.getServerState() !== 'stopped') lifecycle.transition('failed');
+                    await lifecycle.requestShutdown({ reason: 'startup-failure' });
+                } catch (cleanupError) {
+                    lifecycle.logError(cleanupError);
+                }
+            }
+            throw error;
+        }
     },
 
     /** Runs the legacy application generator through the layered infrastructure service. */
@@ -325,23 +277,23 @@ module.exports = {
                 resolve(true);
             });
         }).then(() => {
-            return new Promise((resolve, reject) => {
-                let defaultTenant = CONFIG.get('defaultTenant') || 'default';
-                SERVICE.DefaultDatabaseConnectionHandlerService.createDatabaseConnection(defaultTenant, true).then(success => {
-                    SERVICE.DefaultDatabaseConnectionHandlerService.getRuntimeSchema().then(runtimeSchema => {
-                        SERVICE.DefaultDatabaseConfigurationService.setRawSchema(SERVICE.DefaultFilesLoaderService.mergeRuntimeSchemaFiles(
-                            SERVICE.DefaultDatabaseConfigurationService.getRawSchema(),
-                            runtimeSchema
-                        ));
-                        SERVICE.DefaultDatabaseConnectionHandlerService.closeConnection('default', defaultTenant);
-                        resolve(true);
-                    }).catch(error => {
-                        reject(error);
-                    });
-                }).catch(error => {
-                    reject(error);
-                });
-            });
+            return (async () => {
+                const defaultTenant = CONFIG.get('defaultTenant') || 'default';
+                let originalError;
+                try {
+                    await SERVICE.DefaultDatabaseConnectionHandlerService.createDatabaseConnection(defaultTenant, true);
+                    const runtimeSchema = await SERVICE.DefaultDatabaseConnectionHandlerService.getRuntimeSchema();
+                    SERVICE.DefaultDatabaseConfigurationService.setRawSchema(SERVICE.DefaultFilesLoaderService.mergeRuntimeSchemaFiles(
+                        SERVICE.DefaultDatabaseConfigurationService.getRawSchema(), runtimeSchema));
+                } catch (error) {
+                    originalError = error;
+                    throw error;
+                } finally {
+                    try { await SERVICE.DefaultDatabaseConnectionHandlerService.closeConnection('default', defaultTenant); }
+                    catch (cleanupError) { if (!originalError) throw cleanupError; else console.error('Build connection cleanup failed', cleanupError); }
+                }
+                return true;
+            })();
         }).then(() => {
             return SERVICE.DefaultDatabaseSchemaHandlerService.buildDatabaseSchema(SERVICE.DefaultDatabaseConfigurationService.getRawSchema());
         }).then(() => {

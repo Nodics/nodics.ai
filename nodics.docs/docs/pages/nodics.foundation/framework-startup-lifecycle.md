@@ -403,6 +403,12 @@ flowchart LR
   ProcessPipeline --> Models["Schema model writes"]
 ```
 
+Startup evaluates versioned Init releases on every boot through
+`DefaultDataReleaseService.installStartupReleases()`. Current releases are
+skipped and new deltas complete before readiness. `NODICS.isInitRequired()`
+still serves owning bootstrap/schema checks; it is not the release skip ledger.
+Editing an already applied Init release without a new version fails startup.
+
 The release data involved here lives under active module folders such as:
 
 ```text
@@ -479,8 +485,11 @@ SERVICE.DefaultRouterService.startServers().then(() => {
 });
 ```
 
-If listener startup fails, runtime lifecycle transitions to `failed` and the
-process exits with the configured error code.
+If listener startup fails, startup waits for sibling bind results and closes
+listeners that opened successfully. The runtime transitions to `failed`, drains
+and closes registered resources, then rejects with the original error. The
+launcher reports a nonzero process outcome after cleanup. `start()` returns a
+promise so callers and tests can await that entire outcome.
 
 ## Operations and governance
 
@@ -599,3 +608,34 @@ lifecycle hooks, add focused tests around `nConfig` and run the relevant
 runtime prepare/start path against a fresh schema. For changes that affect
 initial data, also run the import suite and manually verify Axis login,
 dashboard guidance, module registry, imports/exports, and publishing pages.
+
+## Proving completed startup and failure cleanup
+
+For an operator, readiness means required setup and configured listener binds
+completed. An informational log from an earlier phase does not establish that.
+For a module author, return the promise for each required operation and register
+resource cleanup through `DefaultRuntimeLifecycleService` before opening the
+resource. A project can customize deadlines and owner implementations through
+existing layers, while retaining this completion rule.
+
+Consider a runtime with HTTP and a database connection. HTTP binds successfully,
+but another configured listener fails because its port is occupied. Startup
+waits for pending sibling binds, closes opened listeners, drains other registered
+work and closes database handles. It reports the occupied-port error even if a
+cleanup hook also fails. The cleanup error remains diagnostic evidence.
+
+| Scenario | Expected result | Evidence |
+| --- | --- | --- |
+| Required async pre/post script pending | Later lifecycle stages wait. | Phase trace before and after promise completion. |
+| Required enterprise or search initialization fails | No ready state; registered resources close. | Original failure plus cleanup results. |
+| One listener opens after a sibling already failed | The late listener also closes. | Retained listener handles and closed state. |
+| Cleanup hook throws or exceeds its deadline | Later cleanup contributors still run. | Separate cleanup failure and subsequent close results. |
+| Token rotation is in flight at shutdown | No new refresh starts; drain awaits active refresh within its deadline. | Timer cleared and refresh settled. |
+| Tenant enables startup jobs | Job creation completes once through Cron. | Owning job service result; no enterprise-owned repeat timer. |
+
+For a failed required import, cleanup does not undo successful database writes.
+Retry safety belongs to the immutable release and owning import operation.
+Provider-specific cancellation and rollback must be qualified separately;
+a timeout cannot stop arbitrary code that does not cooperate with cancellation.
+The focused lifecycle tests exercise completion and failure ordering with
+controlled resources; they are not live authentication or database recovery proof.

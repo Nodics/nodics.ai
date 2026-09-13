@@ -13,6 +13,8 @@
 /** @module pricing/src/router/routers @description Declares internal Pricing publication ingestion APIs. @layer router @owner pricing */
 module.exports = {
     pricing: {
+        // Selective schema APIs reuse generated controllers; broad CRUD remains disabled.
+
         operator: {
             restoreOperational: {
                 secured: true, authTokenTypes: ['access','service'], accessGroups: ['employeeUserGroup','serviceAccountUserGroup'],

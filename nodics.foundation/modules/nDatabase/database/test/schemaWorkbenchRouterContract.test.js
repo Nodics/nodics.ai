@@ -10,7 +10,7 @@
  */
 
 /**
- * @module database/test/schemaWorkbenchRouterContract
+ * @module database/test/schemaApiRouterContract
  * @description Verifies that Schema Workbench discovery routes remain secured,
  * permissioned, exposure-governed, and metadata-only.
  * @layer test
@@ -21,29 +21,21 @@
 
 const assert = require('assert');
 const routers = require('../src/router/routers');
+const defaults = require('../config/properties');
+const security = require('../../../nRouter/src/service/request/defaultSecuredRequestPipelineService');
+global.CONFIG = { get: key => defaults[key] };
 
-const routes = routers.common.schemaWorkbench;
-['listSchemas', 'getSchema', 'searchRecords', 'previewDeleteImpact'].forEach(routeName => {
-    let route = routes[routeName];
+const routes = require('../../../nRouter/src/router/routers').default.schemaOperations;
+for (const [name, route] of Object.entries(routes)) {
     assert.strictEqual(route.secured, true);
-    assert.strictEqual(route.permission, 'system.schema.workbench.view');
-    assert.strictEqual(route.apiExposure, 'schemaWorkbench');
-    assert.strictEqual(route.controller, 'DefaultSchemaWorkbenchController');
-});
-assert.strictEqual(routes.listSchemas.method, 'GET');
-assert.strictEqual(routes.getSchema.key, '/schema/workbench/:schema');
-assert.strictEqual(routes.searchRecords.method, 'POST');
-assert.strictEqual(routes.searchRecords.key, '/schema/workbench/:schema/records');
-['deleteRecord', 'bulkRecords', 'aggregateOperation'].forEach(routeName => {
-    let route = routes[routeName];
-    assert.strictEqual(route.secured, true);
-    assert.strictEqual(route.permission, 'system.schema.workbench.manage');
-    assert.strictEqual(route.apiExposure, 'schemaWorkbench');
-    assert.strictEqual(route.controller, 'DefaultSchemaWorkbenchController');
-});
-assert.strictEqual(routes.deleteRecord.method, 'DELETE');
-assert.strictEqual(routes.deleteRecord.key, '/schema/workbench/:schema/record');
-assert.strictEqual(routes.bulkRecords.method, 'POST');
-assert.strictEqual(routes.aggregateOperation.method, 'POST');
-
-console.log('Schema Workbench router security contract validated');
+    assert.deepStrictEqual(route.accessGroups, ['userGroup']);
+    assert.deepStrictEqual(security.getRoutePermissions(route), [
+        ['safeSearch', 'capabilities', 'deleteImpact'].includes(name) ? 'system.schema.view' : 'system.schema.manage',
+    ]);
+    assert.strictEqual(route.apiExposure, 'schemaApi');
+    assert.strictEqual(route.controller, 'DefaultctrlName');
+    assert(!route.key.includes('workbench'));
+}
+assert.strictEqual(routers.common.schemaApi, undefined);
+assert.deepStrictEqual(Object.keys(routes).sort(), ['bulk', 'capabilities', 'deleteImpact', 'remove', 'safeSearch', 'save', 'update']);
+console.log('Canonical schema API router security contract validated');

@@ -18,8 +18,11 @@
  */
 module.exports = {
     _timer: null,
+    _started: false,
+    _registrationPromise: null,
     _running: false,
     _registered: [],
+    _operationalState: null,
     _backofficeCapabilityProviders: new Map(),
     _metrics: { attempts: 0, successes: 0, failures: 0, deregistrations: 0, lastSuccessAt: null, lastFailureAt: null },
 
@@ -45,7 +48,8 @@ module.exports = {
         if (config.enabled !== false && (!config.moduleName ||
             !Number.isSafeInteger(config.heartbeatIntervalMs) ||
             !Number.isSafeInteger(config.retryIntervalMs) ||
-            !Number.isSafeInteger(config.maxModulesPerRegistration))) {
+            !Number.isSafeInteger(config.maxModulesPerRegistration) ||
+            !Number.isSafeInteger(config.operationalStateTtlMs) || config.operationalStateTtlMs < 1000 || config.operationalStateTtlMs > 60000)) {
             throw new Error('BackOffice registration configuration is incomplete');
         }
         return config;
@@ -54,15 +58,22 @@ module.exports = {
     /** Starts asynchronous registration and lease renewal without blocking readiness. */
     start: function () {
         let config = this.getConfiguration();
-        if (config.enabled === false || this._timer) return false;
-        let schedule = () => this.runRegistration().then(success => {
-            let delay = Number(success ? config.heartbeatIntervalMs : config.retryIntervalMs);
-            this._timer = setTimeout(schedule, delay);
-            if (this._timer.unref) this._timer.unref();
-        }).catch(() => {
-            this._timer = setTimeout(schedule, Number(config.retryIntervalMs));
-            if (this._timer.unref) this._timer.unref();
-        });
+        if (config.enabled === false || this._started) return false;
+        this._started = true;
+        let schedule = () => {
+            if (!this._started) return;
+            this._timer = null;
+            this.runRegistration().then(success => {
+                if (!this._started) return;
+                let delay = Number(success ? config.heartbeatIntervalMs : config.retryIntervalMs);
+                this._timer = setTimeout(schedule, delay);
+                if (this._timer.unref) this._timer.unref();
+            }).catch(() => {
+                if (!this._started) return;
+                this._timer = setTimeout(schedule, Number(config.retryIntervalMs));
+                if (this._timer.unref) this._timer.unref();
+            });
+        };
         this._timer = setTimeout(schedule, 0);
         if (this._timer.unref) this._timer.unref();
         return true;
@@ -101,9 +112,9 @@ module.exports = {
         return JSON.parse(JSON.stringify(capability));
     },
 
-    /** Builds a process-unique instance identity from selected runtime coordinates. */
+    /** Reuses the explicitly enrolled instance identity carried by service credentials. */
     getInstanceId: function () {
-        return [NODICS.getSelectedEnvironmentName(), NODICS.getServerName(), NODICS.getNodeName() || 'default', process.pid].join(':');
+        return SERVICE.DefaultInternalAuthenticationProviderService.buildRuntimeIdentityHeaders()['x-nodics-runtime-instance'];
     },
 
     /** Returns a bounded authority context for a schema/service claim. */
@@ -237,7 +248,14 @@ module.exports = {
     },
 
     /** Registers or renews all locally served module leases in one bounded cycle. */
-    runRegistration: async function () {
+    runRegistration: function () {
+        if (this._registrationPromise) return Promise.resolve(false);
+        this._registrationPromise = this.performRegistration().finally(() => { this._registrationPromise = null; });
+        return this._registrationPromise;
+    },
+
+    /** Performs the single tracked registration operation and records its outcome. */
+    performRegistration: async function () {
         if (this._running) return false;
         this._running = true;
         this._metrics.attempts++;
@@ -247,7 +265,7 @@ module.exports = {
             let config = this.getConfiguration();
             let modules = this.getLocalModules();
             if (modules.length > Number(config.maxModulesPerRegistration)) throw new Error('Active module registration limit exceeded');
-            await SERVICE.DefaultModuleService.fetch(SERVICE.DefaultModuleService.buildRequest({
+            const response = await SERVICE.DefaultModuleService.fetch(SERVICE.DefaultModuleService.buildRequest({
                 moduleName: config.moduleName,
                 connectionName: config.connectionName,
                 apiName: '/registry/instances',
@@ -264,6 +282,7 @@ module.exports = {
                 },
                 timeoutMs: config.requestTimeoutMs
             }));
+            this.recordOperationalState(response, modules);
             this._registered = modules;
             this._metrics.successes++;
             this._metrics.lastSuccessAt = new Date().toISOString();
@@ -272,7 +291,7 @@ module.exports = {
             this._metrics.failures++;
             this._metrics.lastFailureAt = new Date().toISOString();
             this._metrics.lastFailureCode = error.code || error.name || 'REGISTRATION_FAILED';
-            this.LOG.warn('BackOffice registration is unavailable; runtime traffic remains enabled', {
+            this.LOG.warn('BackOffice registration is unavailable; protected workload admission requires fresh operational state', {
                 server: NODICS.getServerName(), code: this._metrics.lastFailureCode,
                 reason: String(error.message || 'Registration request failed').slice(0, 256)
             });
@@ -280,6 +299,46 @@ module.exports = {
         } finally {
             this._running = false;
         }
+    },
+
+    /** Keeps the authority response for a bounded period; observations never imply business activation. */
+    recordOperationalState: function (response, modules) {
+        const data = response && (response.data || response.result || response);
+        const state = data && data.operationalState;
+        if (!state || state.instanceId !== this.getInstanceId() || state.projectCode !== NODICS.getEnvironmentName() ||
+            !Number.isSafeInteger(state.expiresAt) || state.expiresAt <= Date.now() ||
+            !Array.isArray(state.modules) || state.modules.length !== modules.length ||
+            new Set(state.modules.map(item => item.moduleName)).size !== modules.length ||
+            state.modules.some(item => !modules.includes(item.moduleName) || typeof item.enabled !== 'boolean')) {
+            this._operationalState = null;
+            throw new Error('Registry operational state is missing or invalid');
+        }
+        this._operationalState = {
+            expiresAt: Math.min(state.expiresAt, Date.now() + this.getConfiguration().operationalStateTtlMs),
+            modules: new Map(state.modules.map(item => [item.moduleName, item.enabled]))
+        };
+    },
+
+    /** Checks bounded activation state and current runtime credentials before an owner accepts protected work. */
+    assertModuleOperational: async function (moduleName, tenant) {
+        const state = this._operationalState;
+        if (!state || Date.now() >= state.expiresAt || state.modules.get(moduleName) !== true) {
+            throw new CLASSES.NodicsError('ERR_AUTH_00003', 'Capability is inactive or its operational state is unavailable');
+        }
+        const token = NODICS.getInternalAuthToken(tenant);
+        if (!token) throw new CLASSES.NodicsError('ERR_AUTH_00003', 'Runtime credential is unavailable');
+        const verified = await SERVICE.DefaultAuthorizationProviderService.authorizeToken({ authToken: token });
+        const auth = verified && verified.result;
+        if (!auth || auth.tokenType !== 'service' || auth.tenant !== tenant || !auth.runtimeScope ||
+            auth.runtimeScope.instanceCode !== this.getInstanceId() || auth.runtimeScope.projectCode !== NODICS.getEnvironmentName() ||
+            auth.runtimeScope.environmentCode !== NODICS.getSelectedEnvironmentName() || auth.runtimeScope.serverCode !== NODICS.getServerName() ||
+            !Array.isArray(auth.modules) || !auth.modules.includes(moduleName)) {
+            throw new CLASSES.NodicsError('ERR_AUTH_00003', 'Runtime credential does not authorize this capability');
+        }
+        if (state !== this._operationalState || Date.now() >= state.expiresAt || state.modules.get(moduleName) !== true) {
+            throw new CLASSES.NodicsError('ERR_AUTH_00003', 'Capability operational state changed during admission');
+        }
+        return auth;
     },
 
     /** Attempts idempotent removal of locally registered leases during drain. */
@@ -305,8 +364,12 @@ module.exports = {
 
     /** Stops heartbeat scheduling and optionally deregisters observed instances. */
     stop: async function (deregister) {
-        if (this._timer) clearInterval(this._timer);
+        this._started = false;
+        this._operationalState = null;
+        if (this._timer) clearTimeout(this._timer);
         this._timer = null;
+        if (this._registrationPromise) await this._registrationPromise;
+        this._operationalState = null;
         if (deregister) await this.deregister();
         return true;
     },

@@ -14,7 +14,7 @@ validation, and runtime resolution.
 | Localization core | `../nodics.localization/modules/localizationCore/package.json` |
 | Localization module docs | `docs/pages/nodics.localization/localization-internationalization.md` |
 | CMS localization | `../nodics.wcms/modules/cms/src/service/localization/defaultCmsContentLocalizationService.js` |
-| Product localization example | `../../nodics.kickoff/modules/agora.apparel/data/sample-v001/commerce/records/` |
+| Product localization example | `../../nodics.kickoff/modules/agora.apparel/data/sample-v002/commerce/records/` |
 | Import runtime | `../nodics.foundation/modules/nData/nImport/import/src/service/import/defaultImportService.js` |
 
 ## Resolution model

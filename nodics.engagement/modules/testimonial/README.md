@@ -23,3 +23,6 @@ This capability depends on engagementCore, nPublish through an adapter, WCMS pla
 ## Verification
 
 Run `node test/testimonialBoundaryContract.test.js` and `node test/testimonialLifecycleContract.test.js`; the target build also generates four schema contracts. Release qualification additionally covers Engagement API, permission, Axis metadata, Kickoff runtime, LLM, and live acceptance checks.
+
+This capability declares an inert model-service inventory for [governed Local reset](../../../nodics.foundation/modules/nSystem/llm/contracts/local-reset.md).
+A server must explicitly select it; contributions never enable reset or bypass tenant, environment, confirmation or required-service checks.

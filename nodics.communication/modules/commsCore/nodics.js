@@ -9,4 +9,4 @@
 
  */
 /** @module commsCore/nodics @description Declares Communication core lifecycle. @layer module @owner commsCore */
-module.exports = { /** Initializes this module. */ init: () => Promise.resolve(true), /** Finalizes this module. */ postInit: () => Promise.resolve(true) };
+module.exports = { /** Initializes this module. */ init: function () { return Promise.resolve(true); }, /** Finalizes this module. */ postInit: function () { return Promise.resolve(true); } };

@@ -78,19 +78,12 @@ module.exports = {
      * @returns {Promise<boolean>} Resolves after all pre-scripts execute.
      * @throws Rejects when a pre-script fails.
      */
-    executePreScripts: function () {
-        return new Promise((resolve, reject) => {
-            try {
-                var preScripts = NODICS.getPreScripts();
-                var methods = utils.getAllMethods(preScripts);
-                methods.forEach(function (instance) {
-                    preScripts[instance]();
-                });
-                resolve(true);
-            } catch (error) {
-                reject(error);
-            }
-        });
+    executePreScripts: async function () {
+        const preScripts = NODICS.getPreScripts();
+        for (const method of utils.getAllMethods(preScripts)) {
+            await preScripts[method]();
+        }
+        return true;
     },
 
     /**
@@ -99,18 +92,11 @@ module.exports = {
      * @returns {Promise<boolean>} Resolves after all post-scripts execute.
      * @throws Rejects when a post-script fails.
      */
-    executePostScripts: function () {
-        return new Promise((resolve, reject) => {
-            try {
-                var postScripts = NODICS.getPostScripts();
-                var methods = utils.getAllMethods(postScripts);
-                methods.forEach(function (instance) {
-                    postScripts[instance]();
-                });
-                resolve(true);
-            } catch (error) {
-                reject(error);
-            }
-        });
+    executePostScripts: async function () {
+        const postScripts = NODICS.getPostScripts();
+        for (const method of utils.getAllMethods(postScripts)) {
+            await postScripts[method]();
+        }
+        return true;
     }
 };

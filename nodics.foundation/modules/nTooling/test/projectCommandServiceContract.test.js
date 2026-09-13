@@ -60,14 +60,10 @@ const minimalRoot = createProject(false, { name: 'acme.startio' });
 const minimalManifest = service.readManifest(minimalRoot);
 service.validateManifest(minimalRoot, minimalManifest);
 assert.equal(service.resolveProjectCode(minimalRoot, minimalManifest), 'acme.startio');
-assert.equal(service.resolveCommands(minimalManifest)['start:platform'].command, 'project:runtime-start');
-assert.deepEqual(service.resolveCommands(minimalManifest)['start:location'].args, ['location']);
-assert.deepEqual(service.resolveCommands(minimalManifest)['start:waste'].args, ['waste']);
-assert.equal(service.resolveCommands(minimalManifest)['start:wcms'], undefined);
-assert.equal(service.resolveCommands(minimalManifest)['acceptance:waste-management'].command, 'project:waste-management-acceptance');
-assert.equal(service.resolveCommands(minimalManifest)['acceptance:waste-backoffice-discovery'].command, 'project:waste-backoffice-discovery-acceptance');
-assert.deepEqual(service.resolveCommands(minimalManifest)['docker-local:preflight'].args, ['dockerLocal', 'preflight']);
-assert.equal(service.resolveCommands(minimalManifest)['acceptance:nexus-cms-media-seed'].command, 'project:nexus-cms-media-seed');
+assert.equal(service.resolveCommands(minimalManifest)['docs:generate'].command, 'project:documentation-content');
+assert.equal(service.resolveCommands(minimalManifest)['start:platform'], undefined);
+assert.equal(service.resolveCommands(minimalManifest)['docker-local:preflight'], undefined);
+assert.equal(Object.keys(service.defaultCommands()).some(name => /agora|nexus|kickoff/.test(name)), false);
 
 const descriptorProjectCodeRoot = createProject({
     projectCode: 'right.shop',

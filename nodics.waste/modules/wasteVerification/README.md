@@ -30,3 +30,6 @@ and export all use the existing owner query. The labels `advancedSearch`,
 available for correction while context/owner failures still hide the workspace.
 
 Review details require an explicit claim before any new verification or final decision. Axis shows a persistent assignment header and keeps properties/feedback read-only until the owner confirms assignment. Queue release and verification handoff restore read-only mode. Claim does not grant additional permissions or waive a separate-approver policy. See [review workspace contract](llm/contracts/review-workspace.md) for enforcement, recovery, labels and tests.
+
+This capability declares an inert model-service inventory for [governed Local reset](../../../nodics.foundation/modules/nSystem/llm/contracts/local-reset.md).
+A server must explicitly select it; contributions never enable reset or bypass tenant, environment, confirmation or required-service checks.

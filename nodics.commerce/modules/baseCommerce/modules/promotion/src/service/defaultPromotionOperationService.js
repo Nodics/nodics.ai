@@ -15,10 +15,10 @@ const crypto = require("node:crypto");
 
 /** @module promotion/src/service/defaultPromotionOperationService @description Provides bounded promotion eligibility, preview, redemption, reversal, lifecycle, coupon, budget, and analytics operations across caller contexts. @layer service @owner promotion */
 module.exports = {
-  unwrap: (response) =>
-    response && Object.prototype.hasOwnProperty.call(response, "result")
+  /** Unwraps a standard result envelope while preserving raw provider values. */
+  unwrap: function (response) { return response && Object.prototype.hasOwnProperty.call(response, "result")
       ? response.result
-      : response,
+      : response; },
   /**
    * Builds service-account authorization context for Promotion-owned internal reads and mutations.
    * Customer and BackOffice route permissions guard entry into this operation service; generated schema

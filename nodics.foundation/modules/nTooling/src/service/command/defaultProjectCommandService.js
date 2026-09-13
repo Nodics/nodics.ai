@@ -170,64 +170,84 @@ module.exports = {
      * @returns {Object} Command alias map.
      */
     defaultCommands: function () {
-        const runtimeStart = server => ({ type: 'frameworkCommand', command: 'project:runtime-start', home: 'project', args: [server] });
-        const framework = (command, args = []) => ({ type: 'frameworkCommand', command, home: 'project', ...(args.length ? { args } : {}) });
         return {
-            'start:platform': runtimeStart('platform'),
-            'start:commerce': runtimeStart('commerce'),
-            'start:commerce:staged': runtimeStart('commerceStaged'),
-            'start:engagement': runtimeStart('engagement'),
-            'start:location': runtimeStart('location'),
-            'start:loyalty': runtimeStart('loyalty'),
-            'start:process': runtimeStart('process'),
-            'start:waste': runtimeStart('waste'),
-            'start:wcms:staged': runtimeStart('wcmsStaged'),
-            'start:wcms:online': runtimeStart('wcmsOnline'),
-            'docs:generate': framework('project:documentation-content'),
-            'docs:check': framework('project:documentation-content', ['--check']),
-            'domains:manifests': framework('project:data-manifests'),
-            'topology:start': framework('project:topology', ['start']),
-            'topology:start:all': framework('project:topology', ['start', '--include-frontends']),
-            'topology:preflight': framework('project:topology', ['preflight', '--include-frontends']),
-            'topology:status': framework('project:topology', ['status', '--include-frontends']),
-            'topology:stop': framework('project:topology', ['stop']),
-            'docker-local:preflight': framework('project:container', ['dockerLocal', 'preflight']),
-            'docker-local:build': framework('project:container', ['dockerLocal', 'build']),
-            'docker-local:start': framework('project:container', ['dockerLocal', 'start']),
-            'docker-local:status': framework('project:container', ['dockerLocal', 'status']),
-            'docker-local:logs': framework('project:container', ['dockerLocal', 'logs']),
-            'docker-local:stop': framework('project:container', ['dockerLocal', 'stop']),
-            'docker-local:reset': framework('project:container', ['dockerLocal', 'reset', '--confirm-destroy-docker-local-data']),
-            'docker-local:acceptance': framework('project:container-qualification', ['dockerLocal', 'acceptance']),
-            'docker-local:qualify': framework('project:container-qualification', ['dockerLocal', 'qualification']),
-            'docker-local:backup': framework('project:container-resilience', ['dockerLocal', 'backup']),
-            'docker-local:verify': framework('project:container-resilience', ['dockerLocal', 'verify']),
-            'docker-local:restore': framework('project:container-resilience', ['dockerLocal', 'restore']),
-            'docker-local:resilience': framework('project:container-qualification', ['dockerLocal', 'resilience-qualification']),
-            'docker-local:soak': framework('project:container-qualification', ['dockerLocal', 'soak']),
-            'acceptance:local': framework('project:local-bootstrap-acceptance'),
-            'acceptance:local:fresh': framework('project:local-bootstrap-acceptance', ['--drop-local-db']),
-            'acceptance:functional': framework('project:functional-journey-acceptance'),
-            'acceptance:agora-commerce': framework('project:agora-commerce-acceptance'),
-            'acceptance:loyalty-reward-checkout': framework('project:loyalty-reward-checkout-acceptance'),
-            'acceptance:waste-management': framework('project:waste-management-acceptance'),
-            'acceptance:waste-backoffice-discovery': framework('project:waste-backoffice-discovery-acceptance'),
-            'acceptance:agora-commerce:docker': framework('project:container-qualification', ['dockerLocal', 'commerce-acceptance']),
-            'acceptance:agora-commerce-data': framework('project:agora-commerce-data-acceptance'),
-            'acceptance:agora-commerce-publication': framework('project:agora-commerce-publication-acceptance'),
-            'qualification:agora-commerce:live': framework('project:agora-commerce-live-qualification'),
-            'acceptance:agora-cms-media-seed': framework('project:agora-cms-media-seed'),
-            'acceptance:nexus-cms-media-seed': framework('project:nexus-cms-media-seed'),
-            'acceptance:editorial-live': framework('project:editorial-live-journey-acceptance'),
-            'acceptance:capability-registry': framework('project:capability-registry-acceptance'),
-            'acceptance:guided-initialization': framework('project:guided-initialization-acceptance'),
-            'acceptance:documentation:fresh-browser': framework('project:container-qualification', ['dockerLocal', 'acceptance', '--expect-documentation-not-installed']),
-            'qualification:deployment': framework('project:deployment-qualification'),
-            'qualification:deployment:local': framework('project:deployment-qualification', ['--execute-local']),
-            'qualification:security-boundary': { type: 'frameworkCommand', command: 'qualification:security-boundary' },
-            'qualification:publishing-capacity': { type: 'frameworkCommand', command: 'qualification:publishing-capacity' },
-            'qualification:publishing-soak': { type: 'frameworkCommand', command: 'qualification:publishing-soak' },
-            'qualification:publishing-interruption-contracts': { type: 'frameworkCommand', command: 'qualification:publishing-interruption-contracts' }
+            "docs:generate": {
+                "type": "frameworkCommand",
+                "command": "project:documentation-content",
+                "home": "project"
+            },
+            "docs:check": {
+                "type": "frameworkCommand",
+                "command": "project:documentation-content",
+                "home": "project",
+                "args": [
+                    "--check"
+                ]
+            },
+            "domains:manifests": {
+                "type": "frameworkCommand",
+                "command": "project:data-manifests",
+                "home": "project"
+            },
+            "topology:start": {
+                "type": "frameworkCommand",
+                "command": "project:topology",
+                "home": "project",
+                "args": [
+                    "start"
+                ]
+            },
+            "topology:start:all": {
+                "type": "frameworkCommand",
+                "command": "project:topology",
+                "home": "project",
+                "args": [
+                    "start",
+                    "--include-frontends"
+                ]
+            },
+            "topology:preflight": {
+                "type": "frameworkCommand",
+                "command": "project:topology",
+                "home": "project",
+                "args": [
+                    "preflight",
+                    "--include-frontends"
+                ]
+            },
+            "topology:status": {
+                "type": "frameworkCommand",
+                "command": "project:topology",
+                "home": "project",
+                "args": [
+                    "status",
+                    "--include-frontends"
+                ]
+            },
+            "topology:stop": {
+                "type": "frameworkCommand",
+                "command": "project:topology",
+                "home": "project",
+                "args": [
+                    "stop"
+                ]
+            },
+            "qualification:security-boundary": {
+                "type": "frameworkCommand",
+                "command": "qualification:security-boundary"
+            },
+            "qualification:publishing-capacity": {
+                "type": "frameworkCommand",
+                "command": "qualification:publishing-capacity"
+            },
+            "qualification:publishing-soak": {
+                "type": "frameworkCommand",
+                "command": "qualification:publishing-soak"
+            },
+            "qualification:publishing-interruption-contracts": {
+                "type": "frameworkCommand",
+                "command": "qualification:publishing-interruption-contracts"
+            }
         };
     },
 
@@ -382,6 +402,7 @@ module.exports = {
             cwd: projectRoot,
             env: Object.assign({}, process.env, {
                 NODICS_PROJECT_ROOT: projectRoot,
+                NODICS_FRAMEWORK_ROOT: this.resolveFrameworkRoot(),
                 NODICS_PROJECT_CODE: projectCode
             }),
             stdio: 'inherit'

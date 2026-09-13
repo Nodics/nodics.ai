@@ -36,7 +36,7 @@ module.exports = {
             enabled: true, failOnInvalidSource: true,
             allowedClassifications: ['PUBLIC', 'CUSTOMER', 'INTERNAL', 'RESTRICTED'],
             minimumClassificationByType: {
-                PUBLISHED_DOCUMENTATION: 'PUBLIC', AXIS_DOCUMENTATION: 'INTERNAL', README: 'INTERNAL',
+                PUBLISHED_DOCUMENTATION: 'PUBLIC', INTERNAL_DOCUMENTATION: 'INTERNAL', README: 'INTERNAL',
                 AGENTS_CONTRACT: 'RESTRICTED', LLM_CONTRACT: 'RESTRICTED', SOURCE_CODE: 'RESTRICTED',
                 CUSTOMER_PROJECT: 'CUSTOMER', CURATED_MEMORY: 'RESTRICTED'
             },
@@ -44,13 +44,13 @@ module.exports = {
                 {
                     code: 'nodics-framework-readmes', repository: 'nodics.ai', project: 'nodics', module: 'nodics.copilot',
                     owner: 'nodics.copilot', version: 'UNRESOLVED', sourceType: 'README', classification: 'INTERNAL',
-                    paths: ['README.md', '**/README.md'], allowedChannels: ['AXIS_EMPLOYEE'],
+                    paths: ['README.md', '**/README.md'], allowedChannels: ['EMPLOYEE'],
                     requiredPermissions: ['copilot.knowledge.internal.read'], secretScanPolicy: 'REQUIRED', enabled: false
                 },
                 {
                     code: 'nodics-framework-contracts', repository: 'nodics.ai', project: 'nodics', module: 'nodics.copilot',
                     owner: 'nodics.copilot', version: 'UNRESOLVED', sourceType: 'AGENTS_CONTRACT', classification: 'RESTRICTED',
-                    paths: ['AGENTS.md', '**/AGENTS.md', '**/llm/contracts/*.md'], allowedChannels: ['AXIS_EMPLOYEE'],
+                    paths: ['AGENTS.md', '**/AGENTS.md', '**/llm/contracts/*.md'], allowedChannels: ['EMPLOYEE'],
                     requiredPermissions: ['copilot.knowledge.restricted.read'], secretScanPolicy: 'REQUIRED', enabled: false
                 }
             ]

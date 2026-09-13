@@ -23,6 +23,103 @@ Nodics is an enterprise application platform and application factory. It is not
 a lightweight API folder, a one-off service scaffold, or a place where each
 feature invents its own architecture.
 
+## Existing Layers And Project Independence
+
+Use the established Nodics layers and their canonical owners. Do not invent an
+additional architectural layer, proxy, configuration authority, registry,
+loader, or consumer-specific API family to implement a feature or refactor.
+Extend the existing owning capability through its supported mechanisms. A new
+function or service inside an existing owner is not a new layer, but it must
+not duplicate an existing responsibility or become a parallel authority.
+
+Project-specific configuration is prohibited in every framework and accelerator
+layer, including Foundation, shared helpers, services, controllers, facades,
+routers, schemas, pipelines, tooling, templates and generated definitions.
+Customer identities, store/site/catalogue selections, deployment coordinates,
+application profiles and project data-package choices belong to the existing
+customer or deployment owner. Parameterized framework tools may consume those
+inputs; they must not embed, infer or silently substitute a reference project.
+Moving a value into another framework file or making it overridable does not
+correct misplaced ownership.
+
+APIs belong to capabilities. A Workbench, frontend, store or customer must use
+the same authorized owner operations; a new consumer does not justify duplicate
+routes. Required business context must be resolved and validated through the
+existing owner, never fabricated as a sample identity or a literal default
+store. Preserve token, permission, tenant, enterprise, ownership and lifecycle
+enforcement for every caller.
+
+Implementation and review must identify the existing owner, prove no parallel
+authority or customer dependency was introduced, and verify unrelated customer
+contexts through the same implementation. Existing violations are remediation
+work, not exceptions or precedents. A rename, smaller wrapper file, or passing
+legacy test does not prove compliance. Apply
+[Customer Configuration Classification](customer-config-classification-contract.md)
+and [AI Coding And Customization](ai-coding-and-customization-contract.md).
+
+## Capability APIs And Safe Consolidation
+
+Shared schema metadata belongs to the existing schema owner. Generated APIs,
+domain commands, administration screens and automation consume that same
+implementation; a domain must not depend on a screen-specific service to learn
+its own effective schema. Preserve domain-owned provisioning, confirmation,
+validation and recovery rather than replacing a business command with CRUD.
+
+Installed code, an active module, a generated service, a registered HTTP route,
+an OpenAPI operation and an authorized mutation are different facts. Prove the
+selected runtime's actual route before migrating a consumer. Preserve module
+ownership, schema aliases, API versions, token types, permissions, exposure,
+schema access, authoring stage, tenant/record scope and request/response behavior.
+OpenAPI must retain declared security/exposure metadata; its presence does not
+grant access. Disabled generated HTTP is not permission to enable broad CRUD.
+
+Consumers may receive inert operation routes derived from the prepared backend
+router; such projections must not become a second registry. Preserve disabled
+routes explicitly. Once a canonical operation is published, its failure must not
+trigger fallback to another interface. Validate relative paths and versions before
+attaching credentials, and keep transport migration separate from grant migration.
+
+Consolidate complete shared discovery entry points as well as field builders.
+Collection/detail adapters and generated capabilities must call the same effective
+owner, so an operation override cannot diverge between transports. Preserve the
+trusted request object; route-selected metadata identifiers are separate inputs.
+A canonical discovery failure must remain visible rather than selecting a legacy
+interface or another runtime as an authorization/authoring fallback.
+
+Remove a duplicated interface only after every supported consumer has a proven
+canonical replacement. Keep unique discovery, bounded bulk and domain lifecycle
+behavior with the existing owners. Do not merely rename an adapter, introduce
+another operation registry, weaken a gate or fabricate context to make a
+migration pass. Temporary compatibility delegates require an explicit removal
+condition and must not become a permanent second implementation.
+
+For an unreleased framework, do not invent compatibility obligations for old
+routes or exported adapters. Replace the interface and update current repository
+consumers together, then remove superseded entry points. Retain compatibility
+only when an actual released contract or explicitly identified external consumer
+requires it. Needed, unmigrated capabilities remain implementation work; they are
+not a reason to maintain obsolete routes after their replacement is complete.
+
+Selective schema APIs reuse the existing router template groups and generated
+persistence pipeline. They do not require a consumer-labelled service, grants or
+configuration namespace. Keep discovery/read/write policy with the shared owner,
+retain per-schema access and authoring, and validate the selected identity before
+mutation. A declared domain command resolves to its existing prepared owner API;
+never introduce a universal aggregate dispatcher. Unsupported provider guarantees
+must fail closed and remain absent from advertised capabilities.
+
+For a single-record editing contract, counts and acknowledgements are not a
+persisted record. Require the returned identity and usable original/next revision
+as defined by the owning concurrency contract. An invalid success response can
+follow an applied write: preserve recoverable client state and inspect the owning
+data before retrying. Never invent a record or revision, silently retry a mutation,
+or mistake idempotency-key forwarding for durable replay protection. Count-based
+and bulk APIs retain their own explicit outcome contracts.
+
+Exact route projection rules remain in
+[nRouter contracts](../../../nRouter/llm/contracts/README.md); schema/mutation
+rules remain in [database contracts](../../../nDatabase/database/llm/contracts/README.md).
+
 ## Framework, Accelerator And Partner Ownership
 
 This principle applies to every domain, implementation partner, human developer
@@ -755,3 +852,65 @@ A change is complete only when behavior, configuration, generated artifacts,
 tests, public documentation, module README guidance, AGENTS guidance, LLM
 contracts/examples, and generated LLM context are consistent for the affected
 capability.
+
+Every corrective batch must apply
+[Corrective Changes And Recurrence Prevention](ai-coding-and-customization-contract.md#corrective-changes-and-recurrence-prevention).
+Update the relevant principle or contract and its discoverable owner guidance
+alongside the correction; do not defer durable lessons until the entire refactor
+finishes. Existing unresolved violations remain explicitly open.
+
+## Server Generation And Lifecycle Completion
+
+The selected server owns generated services, facades, controllers and tests.
+Build its effective framework-plus-project schema and template composition; its
+nodes share that generated set. Load generated definitions before authored module
+contributions, once, and exclude generated folders from authored scans. Clean and
+failed-build cleanup affect only that server's generated output. Do not recreate
+missing generated services through a second runtime implementation; require a
+rebuild. Framework repository validation uses its own tooling composition derived
+from workspace runtime metadata, independent from customer build selection.
+
+Await each required pre-script, post-script and module lifecycle hook. Preserve
+contribution order and the original error; stop dependent work after failure.
+A returned promise is part of the lifecycle contract, not background work.
+
+## Source Identity And Activation Evidence
+
+Merge data definitions by stable exported key within the corresponding dataset
+and owning target. Business fields such as `code` do not choose source identity;
+import headers retain database operation/query authority. Later arrays replace
+source arrays. Release checksums and immutable deltas remain governed by nImport.
+Use keyed selection for independently overridable provider collections; keep
+explicit false removals and valid zero/false values meaningful.
+
+Required activation data is complete only after the owning importer confirms it.
+A running import, empty response or non-executable plan is not completion. Block
+activation until every required release is confirmed current and the existing
+runtime/readiness and catalogue-revision checks still pass.
+
+Startup returns its completion promise. A required initialization failure keeps
+readiness closed and invokes the existing lifecycle owner to drain and close
+acquired resources before propagating the original error. Cleanup failures are
+reported separately and must not replace that error. Resource owners register
+cleanup before opening resources. Await tenant search and job initialization;
+Cron owns recurring scheduling. Do not leave startup retry loops or untracked
+periodic work running after startup has failed.
+
+Versioned JS data composition uses current lower sources for matching dataset
+and target definitions, then selects only keys authored by the executing delta.
+Source inheritance is not permission to replay other previously installed rows.
+Apply each version directory in module-index order before the next version.
+Evaluate Init deltas on every startup; skip completed releases and reject edited
+same-version startup content, including mutable development baselines.
+
+Capability-owned initialization and maintenance declarations remain with their
+owning modules. Select categories and destinations through the existing nImport
+release policy; select reset inventories through nSystem's existing configuration.
+An inventory is not authorization, enablement or permission to discover and reset
+all runtime data. Deployment policy retains explicit scope and confirmation.
+
+Reusable tooling reads application names, documentation publication identities,
+frontend choices and deployment targets from owning metadata. Application-specific
+acceptance journeys, sample media seeding and release qualification compositions
+belong to the application and use the existing project-script command contract.
+Do not place those application policies in framework-wide default aliases.

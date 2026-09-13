@@ -80,4 +80,32 @@ assert.ok(failures[2].includes('invalidService.js:9 uses ESM function/default ob
 assert.ok(failures[3].includes('invalidService.js:13 uses arrow function member'),
     'style governance must reject arrow function members in governed CommonJS service files');
 
+const nestedFailures = [];
+designPrincipleAuditService.auditServiceExportStyle.call({
+    /** Supplies a fixture containing legal nested callbacks. */
+    readSourceForStyleGovernance: function () {
+        return 'module.exports = { run: function () { if (true) { return { callback: value => value, nestedMethod() { return true; } }; } } };';
+    },
+    /** Collects unexpected findings from the nested callback fixture. */
+    fail: function (target, message) { target.push(message); }
+}, nestedFailures, ['nestedCallbackService.js']);
+assert.deepStrictEqual(nestedFailures, [], 'nested callbacks and control flow are not exported method declarations');
+
+const fs = require('fs');
+const path = require('path');
+const os = require('os');
+const fixtureRoot = fs.mkdtempSync(path.join(os.tmpdir(), 'nodics-export-coverage-'));
+try {
+    const runtimeRoot = path.join(fixtureRoot, 'newCapability');
+    const toolingRoot = path.join(fixtureRoot, 'notRuntime');
+    for (const directory of [runtimeRoot, toolingRoot]) fs.mkdirSync(path.join(directory, 'src', 'service'), { recursive: true });
+    fs.writeFileSync(path.join(runtimeRoot, 'package.json'), JSON.stringify({ nodics: { runtimeModule: true, loadableByNodicsModuleLoader: true } }));
+    fs.writeFileSync(path.join(toolingRoot, 'package.json'), JSON.stringify({ nodics: { runtimeModule: false, loadableByNodicsModuleLoader: false } }));
+    fs.writeFileSync(path.join(runtimeRoot, 'src', 'service', 'newOwnerService.js'), 'module.exports = {};');
+    fs.writeFileSync(path.join(toolingRoot, 'src', 'service', 'toolService.js'), 'module.exports = {};');
+    fs.mkdirSync(path.join(runtimeRoot, 'src', 'service', 'gen'));
+    fs.writeFileSync(path.join(runtimeRoot, 'src', 'service', 'gen', 'generatedService.js'), 'module.exports = {};');
+    assert.deepStrictEqual(designPrincipleAuditService.getServiceExportStyleGovernancePaths(fixtureRoot), ['newCapability/src/service/newOwnerService.js']);
+} finally { fs.rmSync(fixtureRoot, { recursive: true, force: true }); }
+
 console.log('Service export style governance contract validated');

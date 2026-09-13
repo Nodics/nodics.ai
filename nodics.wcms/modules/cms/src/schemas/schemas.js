@@ -238,8 +238,8 @@ module.exports = {
                 enabled: true,
                 ttl: 10000
             },
-            router: {
-                enabled: false
+            router: { groups: { schemaOperations: true },
+                enabled: true
             },
             refSchema: {
                 target: {
@@ -711,7 +711,7 @@ module.exports = {
             isVersionedEnabled: false,
             model: true,
             service: { enabled: true },
-            router: { enabled: false },
+            router: { groups: { schemaOperations: true }, enabled: true },
             definition: {
                 template: { type: 'string', required: true, description: 'Owning page template code' },
                 name: { type: 'string', required: true, description: 'Stable logical slot name' },
@@ -1172,7 +1172,7 @@ module.exports = {
             super: 'base',
             model: true,
             service: { enabled: true },
-            router: { enabled: false },
+            router: { groups: { schemaOperations: true }, enabled: true },
             event: { enabled: false },
             definition: {
                 migrationVersion: { type: 'int', required: true , description: 'Stores the numeric migration version used by this record.'},
@@ -1191,7 +1191,7 @@ module.exports = {
             transaction: { enabled: true, sideEffects: 'none' },
             model: true,
             service: { enabled: true },
-            router: { enabled: false },
+            router: { groups: { schemaOperations: true }, enabled: true },
             event: { enabled: false },
             definition: {
                 publicationCode: { type: 'string', required: true, description: 'Owning nPublish request identity' },
@@ -1213,7 +1213,7 @@ module.exports = {
             transaction: { enabled: true, sideEffects: 'none' },
             model: true,
             service: { enabled: true },
-            router: { enabled: false },
+            router: { groups: { schemaOperations: true }, enabled: true },
             event: { enabled: false },
             definition: {
                 site: { type: 'string', required: true , description: 'Stores the site value used by this record.'},
@@ -1243,7 +1243,7 @@ module.exports = {
             transaction: { enabled: true, sideEffects: 'none' },
             model: true,
             service: { enabled: true },
-            router: { enabled: false },
+            router: { groups: { schemaOperations: true }, enabled: true },
             event: { enabled: false },
             definition: {
                 publicationCode: { type: 'string', required: true , description: 'Stores the publication code used to classify, link, or resolve this record.'},
@@ -1263,7 +1263,7 @@ module.exports = {
             transaction: { enabled: true, sideEffects: 'none' },
             model: true,
             service: { enabled: true },
-            router: { enabled: false },
+            router: { groups: { schemaOperations: true }, enabled: true },
             event: { enabled: false },
             definition: {
                 publicationCode: { type: 'string', required: true , description: 'Stores the publication code used to classify, link, or resolve this record.'},

@@ -28,8 +28,8 @@ module.exports = {
                 enabled: true,
                 type: 'SYNC'
             },
-            router: {
-                enabled: false
+            router: { groups: { schemaOperations: true },
+                enabled: true
             },
             tenants: ['default'],
             definition: {
@@ -150,8 +150,8 @@ module.exports = {
             event: {
                 enabled: false
             },
-            router: {
-                enabled: false
+            router: { groups: { schemaOperations: true },
+                enabled: true
             },
             tenants: ['default'],
             definition: {
@@ -252,8 +252,8 @@ module.exports = {
             event: {
                 enabled: false
             },
-            router: {
-                enabled: false
+            router: { groups: { schemaOperations: true },
+                enabled: true
             },
             tenants: ['default'],
             definition: {

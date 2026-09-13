@@ -22,7 +22,16 @@ module.exports = {
         environmentAllowlist: [],
         confirmation: 'RESET_LOCAL_NODICS_DATA',
         maximumServices: 128,
-        serviceNames: []
+        serviceNames: [],
+        contributions: {
+            "system": {
+                "serviceNames": {
+                    "DefaultConfigurationService": true,
+                    "DefaultEventListenerService": true,
+                    "DefaultInterceptorService": true
+                }
+            }
+        }
     },
     readiness: {
         contributorTimeoutMs: 1000,

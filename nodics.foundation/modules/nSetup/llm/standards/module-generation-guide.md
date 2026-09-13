@@ -371,3 +371,11 @@ A generated custom module is complete only when:
 - focused tests pass for the module's owned behavior and customization path.
 - README, AGENTS, canonical documentation references, LLM contracts/examples,
   and generated LLM context are current.
+
+## Minimal generated configuration
+
+Apply `../contracts/customer-config-classification-contract.md` to every new
+boundary. Generate empty extension points and only the requested differences;
+do not seed environment/server/node files with a framework default snapshot.
+Record the chosen defaults owner, active consumers and index order before
+moving shared configuration. Validate later overrides and unselected runtimes.

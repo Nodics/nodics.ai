@@ -4,3 +4,6 @@
 - Follow ancestor contracts and read local guidance.
 
 Preserve Commerce ownership, tenant security, exact evidence, idempotency, audit, and generation discipline. Implementations are active; read the current owning contracts before changes.
+
+This capability declares an inert model-service inventory for [governed Local reset](../../../../../nodics.foundation/modules/nSystem/llm/contracts/local-reset.md).
+A server must explicitly select it; contributions never enable reset or bypass tenant, environment, confirmation or required-service checks.

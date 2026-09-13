@@ -123,19 +123,28 @@ module.exports = {
         });
     },
 
-    /** Checks whether an access-token identifier has been revoked. */
+    /** Shares the configured authentication-state namespace with principal security stamps. */
+    getAuthStateCacheModuleName: function () {
+        const security = CONFIG.get('authSecurity') || {};
+        return (security.securityStamp || {}).cacheModuleName || CONFIG.get('profileModuleName') || 'profile';
+    },
+
+    /** Checks revocation; only an explicit cache miss proves no marker exists. */
     isTokenRevoked: function (jti) {
         if (!jti) return Promise.resolve(true);
-        return this.findToken(CONFIG.get('profileModuleName') || 'profile', 'revoked:' + jti)
+        return this.findToken(this.getAuthStateCacheModuleName(), 'revoked:' + jti)
             .then(() => true)
-            .catch(() => false);
+            .catch(error => {
+                if (error && error.code === 'ERR_CACHE_00001') return false;
+                throw error;
+            });
     },
 
     /** Persists a revocation marker for the remaining access-token lifetime. */
     revokeAccessToken: function (authData) {
         if (!authData || !authData.jti) return Promise.resolve(false);
         let ttl = authData.exp ? Math.max(1, authData.exp - Math.floor(Date.now() / 1000)) : undefined;
-        return this.addToken(CONFIG.get('profileModuleName') || 'profile', true, 'revoked:' + authData.jti, {
+        return this.addToken(this.getAuthStateCacheModuleName(), true, 'revoked:' + authData.jti, {
             tenant: authData.tenant,
             loginId: authData.loginId,
             revokedAt: new Date().toISOString()

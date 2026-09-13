@@ -187,3 +187,8 @@ environment.
 The versioned core release targets the `PROCESS` runtime, where Workflow and
 Scheduled Jobs are composed together. Import it through governed module
 activation or the secured data-release API; an unrelated destination is rejected.
+
+This capability declares an inert model-service inventory for [governed Local reset](../../../nodics.foundation/modules/nSystem/llm/contracts/local-reset.md).
+A server must explicitly select it; contributions never enable reset or bypass tenant, environment, confirmation or required-service checks.
+
+New job executions require fresh business activation and a current scoped runtime credential. Deactivation blocks new targets while admitted jobs retain their existing completion/recovery behavior.

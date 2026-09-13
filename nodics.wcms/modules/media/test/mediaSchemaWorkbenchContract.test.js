@@ -40,7 +40,7 @@ global.CONFIG = {
                 removeAccessPoint: 3,
             };
         }
-        if (key === 'schemaWorkbench') {
+        if (key === 'schemaApi') {
             return {
                 discoverModelsByDefault: true,
                 defaultModelOperations: ['search', 'read', 'create', 'update', 'delete'],
@@ -59,6 +59,7 @@ global.CONFIG = {
 };
 let lastMediaSearchInput;
 global.SERVICE = {
+    DefaultSchemaUtilityService: require(path.join(coreRoot, 'modules/nDatabase/database/src/service/schema/defaultSchemaUtilityService')),
     DefaultSchemaAccessHandlerService: {
         getAccessPoint: () => 10,
     },
@@ -95,7 +96,7 @@ global.CLASSES = {
     },
 };
 
-const service = require(path.join(coreRoot, 'modules/nDatabase/database/src/service/schema/defaultSchemaWorkbenchService'));
+const service = require(path.join(coreRoot, 'modules/nDatabase/database/test/helpers/schemaApiHarness'));
 
 (async function () {
     let request = {
@@ -104,7 +105,7 @@ const service = require(path.join(coreRoot, 'modules/nDatabase/database/src/serv
         authData: { userGroups: ['adminGroup'] },
         httpRequest: { params: { schema: 'media' } },
     };
-    let descriptor = (await service.get(request)).data;
+    let descriptor = (await SERVICE.DefaultSchemaUtilityService.getSchema(request, 'media')).data;
     assert(!descriptor.fields.some((field) => field.name === 'storageKey'), 'media Workbench descriptor must not expose storageKey');
     assert(!descriptor.fields.some((field) => field.name === 'fullPath'), 'media Workbench descriptor must not expose fullPath');
     assert(descriptor.queryCapabilities.searchableFields.includes('originalFileName'), 'media Workbench search must include originalFileName');

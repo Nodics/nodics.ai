@@ -219,3 +219,10 @@ Missing targets and partial provider failures fail the reset. Request bodies
 cannot select indexes or provider endpoints. See
 [the Local reset contract](llm/contracts/local-reset.md) for configuration and
 recovery examples.
+
+This capability declares an inert model-service inventory for [governed Local reset](llm/contracts/local-reset.md).
+A server must explicitly select it; contributions never enable reset or bypass tenant, environment, confirmation or required-service checks.
+
+The existing Local reset provider accepts inert capability-owned inventories and
+explicit server module selection. Preserve final-scope validation before mutation;
+see [Local reset](llm/contracts/local-reset.md#capability-owned-inventories).

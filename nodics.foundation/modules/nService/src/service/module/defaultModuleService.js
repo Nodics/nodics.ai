@@ -189,10 +189,15 @@ module.exports = {
      * Returns true when the requested target module is active in this process.
      *
      * @param {string} moduleName Target module name.
+     * @param {string} [connectionName] Effective topology connection alias.
      * @returns {boolean} True when local service invocation is allowed.
      */
-    isLocalModuleActive: function (moduleName) {
-        return Boolean(moduleName && (!NODICS.isModuleActive || NODICS.isModuleActive(moduleName)));
+    isLocalModuleActive: function (moduleName, connectionName) {
+        if (!moduleName || (NODICS.isModuleActive && !NODICS.isModuleActive(moduleName))) return false;
+        const router = SERVICE.DefaultRouterService;
+        if (!router || typeof router.getModuleServerConfig !== 'function') return true;
+        const topology = router.getModuleServerConfig(connectionName || moduleName);
+        return topology.getOptions().remoteOnly !== true;
     },
 
     /**
@@ -435,7 +440,7 @@ module.exports = {
             if (!options || !options.moduleName) {
                 throw new CLASSES.NodicsError('ERR_TNT_00003', 'Module invocation requires moduleName');
             }
-            if (this.isLocalModuleActive(options.moduleName) && options.local !== false &&
+            if (this.isLocalModuleActive(options.moduleName, this.getModuleConnectionName(options)) && options.local !== false &&
                 this.isCurrentRuntimeAuthority(options.targetAuthority)) {
                 return this.invokeLocalModule(options);
             }

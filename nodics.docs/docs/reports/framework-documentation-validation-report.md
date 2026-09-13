@@ -1,7 +1,7 @@
 # Documentation Validation Readiness Report
 
 Generated At: 2026-08-26T00:00:00.000Z
-Release: 0.16.11
+Release: 0.16.12
 Source: nodics.docs/docs/catalogue.json
 Owner: nodics.docs
 
@@ -35,4 +35,4 @@ No blocking or advisory issues were found.
 
 ## Integrity
 
-Checksum: c0e32862530b92901266720099da220f82e9b9781dcba81c6de1d2557167b7d6
+Checksum: 969b1b5ba5ac04ef4e094395331e7e3ad91c9fd2f8c42e329936891e7d5c6b90

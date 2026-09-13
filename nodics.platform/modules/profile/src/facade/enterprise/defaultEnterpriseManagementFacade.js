@@ -23,7 +23,7 @@ module.exports = {
     },
     /** Delegates confirmed enterprise creation to the authoritative Profile service. */
     create: function (request) {
-        return SERVICE.DefaultEnterpriseManagementService.create(request);
+        return SERVICE.DefaultEnterpriseManagementService.createFromModel(request);
     },
     /** Delegates bounded enterprise access-assignment search to the authoritative Profile service. */
     searchAccessAssignments: function (request) {

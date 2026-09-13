@@ -71,3 +71,16 @@ This file gives AI coding agents mandatory guidance for this Nodics module or pa
   preparation are proven. They must stop before `processDataImportPipeline`;
   they must not dispatch schema/search writes or report installation as
   complete.
+
+Release composition uses target-qualified headers and current lower JS sources;
+only executing-delta keys reach persistence. Evaluate Init deltas on every boot,
+skip current receipts, and reject running or same-version edited Init releases.
+See [layered composition](llm/contracts/README.md#layered-immutable-source-composition).
+
+This capability declares an inert model-service inventory for [governed Local reset](../../../nSystem/llm/contracts/local-reset.md).
+A server must explicitly select it; contributions never enable reset or bypass tenant, environment, confirmation or required-service checks.
+
+Release execution claims durable installation receipts through the existing
+managed-counter database contract. Require matching attempt identity for
+completion; never fail unstarted releases or take over a running attempt on a
+timeout. See [concurrent release execution](llm/contracts/README.md#concurrent-release-execution).

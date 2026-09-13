@@ -9,17 +9,17 @@
 
  */
 /**
- * @module database/test/schemaWorkbenchFormContract
+ * @module database/test/schemaApiFormContract
  * @description Protects effective-schema business forms and later-layer customization.
  * @layer test
  * @owner nDatabase
  */
 const assert = require('node:assert/strict');
 const test = require('node:test');
-const service = require('../src/service/schema/defaultSchemaWorkbenchService');
-const defaults = require('../config/properties').schemaWorkbench;
+const service = require('../src/service/schema/defaultSchemaUtilityService');
+const defaults = require('../config/properties').schemaApi;
 
-global.CONFIG = { get: name => name === 'schemaWorkbench' ? defaults : undefined };
+global.CONFIG = { get: name => name === 'schemaApi' ? defaults : undefined };
 const effective = Object.assign({}, service, {
     buildFields: (_moduleName, schema) => Object.entries(schema.definition).map(([name, field]) => ({ name, ...field })),
 });
@@ -38,10 +38,11 @@ test('project fields are appended, deleted fields disappear, and required fields
 });
 
 test('only an existing CREATE aggregate may manage required input fields', () => {
+    global.NODICS = { getRouters: () => ({}) };
     const schema = { definition: { tenant: { required: true } } };
     const config = { form: { createOperation: 'setup', managedCreateFields: ['tenant'] } };
     assert.deepEqual(effective.buildForm('example', schema, config).managedCreateFields, []);
-    config.aggregateOperations = { setup: { service: 'Owner', operation: 'setup', purpose: 'CREATE' } };
+    config.aggregateOperations = { setup: { controller: 'Owner', operation: 'setup', purpose: 'CREATE' } };
     const form = effective.buildForm('example', schema, config);
     assert.equal(form.createOperation, 'setup');
     assert.deepEqual(form.managedCreateFields, ['tenant']);

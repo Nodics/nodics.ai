@@ -13,7 +13,8 @@
 
 /** @module promotion/src/service/defaultCouponSecureRevealService @description Reveals purchased coupon-code secrets only through owner-checked provider boundary. @layer service @owner promotion */
 module.exports = {
-    unwrap: response => response && Object.prototype.hasOwnProperty.call(response, 'result') ? response.result : response,
+    /** Unwraps a standard result envelope while preserving raw provider values. */
+    unwrap: function (response) { return response && Object.prototype.hasOwnProperty.call(response, 'result') ? response.result : response; },
     /** Builds service credentials for Promotion-owned reveal reads. @param {Object} request Request. @returns {Object} Service auth. */
     serviceAuthData: function (request) {
         return Object.assign({}, request.authData || {}, {

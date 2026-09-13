@@ -6,6 +6,6 @@
 - Process executes workflow and task state; Editorial contributes one allow-listed revision-correlated action adapter.
 - Cron remains scheduler authority through Process trigger metadata.
 - nPublish owns validation, activation, rollback, and withdrawal transitions; Editorial supplies domain and version adapters.
-- Online schemas have no generated CRUD router and are exposed only through sanitized Editorial delivery services.
+- Online projections and publication receipts permit secured canonical schema inspection only; their read-only authoring metadata rejects every generated mutation. Public clients continue through sanitized Editorial delivery services.
 - Axis discovers authoring workspaces from `DefaultEditorialBackofficeCapabilityService`.
 - Nexus renderer keys are allow-listed executable frontend contracts; customer/project data packs own CMS composition records.

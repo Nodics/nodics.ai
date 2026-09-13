@@ -10,4 +10,4 @@
  */
 
 /** @module order/nodics @description Declares the Order capability lifecycle. @layer module @owner order */
-module.exports = { init: () => Promise.resolve(true), postInit: () => Promise.resolve(true) };
+module.exports = { init: function () { return Promise.resolve(true); }, postInit: function () { return Promise.resolve(true); } };

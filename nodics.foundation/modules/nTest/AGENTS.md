@@ -17,3 +17,7 @@ This file gives AI coding agents mandatory guidance for this Nodics module or pa
 - Update the concise `README.md`, canonical documentation content, `llm/contracts`, `llm/examples`, generated context, and tests whenever behavior or extension contracts change.
 - Use `llm/contracts` for exact module-local AI/developer rules, `llm/examples` for approved patterns, and `llm/generated` for source-derived facts. Do not add a module-local llm README file; this `AGENTS.md` is the AI navigation and behavior entrypoint for the module.
 - Generated files must be recreated from source definitions; do not hand-maintain generated artifacts as source of truth.
+
+Apply [server build and lifecycle ownership](../nConfig/llm/contracts/configuration-inheritance-contract.md#server-build-and-lifecycle-ownership).
+Keep generation, loading, cleanup and test discovery on the same selected server;
+prove authored override order, independent-server preservation and failure paths.

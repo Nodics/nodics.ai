@@ -11,7 +11,7 @@
 
 /** @module wasteMaterial/src/schemas/schemas @description Defines reusable Waste taxonomy and policy-reference schemas. @layer schema @owner wasteMaterial @override Accelerator and partner modules may extend taxonomy records and seed domain-specific categories without changing framework source. */
 module.exports = { wasteMaterial: {
-    wasteFamily: Object.assign({ super: 'base', model: true, schemaPolicies: ['operational'], service: { enabled: true }, router: { enabled: false }, cache: { enabled: false }, event: { enabled: false }, search: { enabled: false } }, { definition: {
+    wasteFamily: Object.assign({ super: 'base', model: true, schemaPolicies: ['operational'], service: { enabled: true }, router: { groups: { schemaOperations: true }, enabled: true }, cache: { enabled: false }, event: { enabled: false }, search: { enabled: false } }, { definition: {
         code: { type: 'string', required: true , description: 'Uniquely identifies this record for references, APIs, imports, and business administration.'},
         name: { type: 'object', required: true , description: 'Stores the business display name shown to administrators and related user journeys.'},
         description: { type: 'object', required: false , description: 'Explains the business purpose, usage, or administrative meaning of this record.'},
@@ -24,7 +24,7 @@ module.exports = { wasteMaterial: {
         revision: { type: 'int', required: true, default: 0 , description: 'Tracks the business revision used for governance, review, and optimistic update checks.'},
         metadata: { type: 'object', required: false , description: 'Stores additional structured metadata needed by extensions without changing the core schema contract.'}
     } }),
-    wasteCategory: Object.assign({ super: 'base', model: true, schemaPolicies: ['operational'], service: { enabled: true }, router: { enabled: false }, cache: { enabled: false }, event: { enabled: false }, search: { enabled: false } }, { definition: {
+    wasteCategory: Object.assign({ super: 'base', model: true, schemaPolicies: ['operational'], service: { enabled: true }, router: { groups: { schemaOperations: true }, enabled: true }, cache: { enabled: false }, event: { enabled: false }, search: { enabled: false } }, { definition: {
         code: { type: 'string', required: true , description: 'Uniquely identifies this record for references, APIs, imports, and business administration.'},
         familyCode: { type: 'string', required: true , description: 'Stores the family code used to classify, link, or resolve this record.'},
         name: { type: 'object', required: true , description: 'Stores the business display name shown to administrators and related user journeys.'},
@@ -40,7 +40,7 @@ module.exports = { wasteMaterial: {
         revision: { type: 'int', required: true, default: 0 , description: 'Tracks the business revision used for governance, review, and optimistic update checks.'},
         metadata: { type: 'object', required: false , description: 'Stores additional structured metadata needed by extensions without changing the core schema contract.'}
     } }),
-    wasteItemType: Object.assign({ super: 'base', model: true, schemaPolicies: ['operational'], service: { enabled: true }, router: { enabled: false }, cache: { enabled: false }, event: { enabled: false }, search: { enabled: false } }, { definition: {
+    wasteItemType: Object.assign({ super: 'base', model: true, schemaPolicies: ['operational'], service: { enabled: true }, router: { groups: { schemaOperations: true }, enabled: true }, cache: { enabled: false }, event: { enabled: false }, search: { enabled: false } }, { definition: {
         code: { type: 'string', required: true , description: 'Uniquely identifies this record for references, APIs, imports, and business administration.'},
         categoryCode: { type: 'string', required: true , description: 'Stores the category code used to classify, link, or resolve this record.'},
         name: { type: 'object', required: true , description: 'Stores the business display name shown to administrators and related user journeys.'},
@@ -57,7 +57,7 @@ module.exports = { wasteMaterial: {
         revision: { type: 'int', required: true, default: 0 , description: 'Tracks the business revision used for governance, review, and optimistic update checks.'},
         metadata: { type: 'object', required: false , description: 'Stores additional structured metadata needed by extensions without changing the core schema contract.'}
     } }),
-    wasteMaterialType: Object.assign({ super: 'base', model: true, schemaPolicies: ['operational'], service: { enabled: true }, router: { enabled: false }, cache: { enabled: false }, event: { enabled: false }, search: { enabled: false } }, { definition: {
+    wasteMaterialType: Object.assign({ super: 'base', model: true, schemaPolicies: ['operational'], service: { enabled: true }, router: { groups: { schemaOperations: true }, enabled: true }, cache: { enabled: false }, event: { enabled: false }, search: { enabled: false } }, { definition: {
         code: { type: 'string', required: true , description: 'Uniquely identifies this record for references, APIs, imports, and business administration.'},
         materialKind: { type: 'string', required: false, enum: ['MATERIAL', 'COMPONENT', 'MIXTURE'], description: 'Distinguishes a substance from a component or mixture without implying a measured composition.' },
         parentMaterialCode: { type: 'string', required: false, description: 'Optional canonical parent material reference for extensible material classification.' },
@@ -69,7 +69,7 @@ module.exports = { wasteMaterial: {
         revision: { type: 'int', required: true, default: 0 , description: 'Tracks the business revision used for governance, review, and optimistic update checks.'},
         metadata: { type: 'object', required: false , description: 'Stores additional structured metadata needed by extensions without changing the core schema contract.'}
     } }),
-    wasteConditionGrade: Object.assign({ super: 'base', model: true, schemaPolicies: ['operational'], service: { enabled: true }, router: { enabled: false }, cache: { enabled: false }, event: { enabled: false }, search: { enabled: false } }, { definition: {
+    wasteConditionGrade: Object.assign({ super: 'base', model: true, schemaPolicies: ['operational'], service: { enabled: true }, router: { groups: { schemaOperations: true }, enabled: true }, cache: { enabled: false }, event: { enabled: false }, search: { enabled: false } }, { definition: {
         code: { type: 'string', required: true , description: 'Uniquely identifies this record for references, APIs, imports, and business administration.'},
         name: { type: 'object', required: true , description: 'Stores the business display name shown to administrators and related user journeys.'},
         description: { type: 'object', required: false , description: 'Explains the business purpose, usage, or administrative meaning of this record.'},
@@ -78,7 +78,7 @@ module.exports = { wasteMaterial: {
         revision: { type: 'int', required: true, default: 0 , description: 'Tracks the business revision used for governance, review, and optimistic update checks.'},
         metadata: { type: 'object', required: false , description: 'Stores additional structured metadata needed by extensions without changing the core schema contract.'}
     } }),
-    wasteEvidencePolicy: Object.assign({ super: 'base', model: true, schemaPolicies: ['operational'], service: { enabled: true }, router: { enabled: false }, cache: { enabled: false }, event: { enabled: false }, search: { enabled: false } }, { definition: {
+    wasteEvidencePolicy: Object.assign({ super: 'base', model: true, schemaPolicies: ['operational'], service: { enabled: true }, router: { groups: { schemaOperations: true }, enabled: true }, cache: { enabled: false }, event: { enabled: false }, search: { enabled: false } }, { definition: {
         code: { type: 'string', required: true , description: 'Uniquely identifies this record for references, APIs, imports, and business administration.'},
         ownerModule: { type: 'string', required: false , description: 'Stores the owner module value used by this record.'},
         categoryCode: { type: 'string', required: false , description: 'Stores the category code used to classify, link, or resolve this record.'},

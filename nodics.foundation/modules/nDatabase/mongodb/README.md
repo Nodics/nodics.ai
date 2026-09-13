@@ -125,3 +125,6 @@ Avoid:
 - changing MongoDB model operation envelopes without generated service tests;
 - bypassing tenant database configuration validation;
 - editing generated CRUD artifacts manually.
+
+Use the keyed boolean `schemaProperties` contract; preserve zero/false constraints
+and reject malformed selections. See [constraint selection](llm/contracts/README.md#keyed-schema-constraints).

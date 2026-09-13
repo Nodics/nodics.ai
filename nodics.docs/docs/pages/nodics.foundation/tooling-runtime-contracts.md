@@ -308,3 +308,36 @@ builder qualification tests, and manifest generation checks. Production
 readiness requires business-readable reports, developer source evidence,
 operator command traceability, and QA proof that generated artifacts match the
 authored source and runtime contract.
+
+
+## Application Builder source and customer ownership
+
+Application Builder uses explicit frontend and customer source roots. A project
+administrator declares business presets, market choices, stores, catalogs,
+frontend selections and data-pack ownership under `nodics.applicationBuilder`
+in the existing customer package metadata. Each participating data module opts
+in with `applicationBuilder.dataPack: true`. Developers can choose unrelated
+frontend, renderer, composition and pack identifiers without changing nTooling.
+Framework package metadata continues to own backend dependencies.
+
+| Input or evidence | Meaning | Failure and recovery |
+| --- | --- | --- |
+| Customer composition declaration | Intended frontend/domain/renderer/data wiring | Correct the customer declaration, rediscover and review a new plan |
+| Explicit source roots | Repositories available to planning | Supply missing roots; CI cannot invent replacements |
+| Approved plan and source digest | Exact reviewed generation inputs | Regenerate and approve after any source metadata change |
+| Generated starter tests and HTTP probes | Standalone generated output works locally | Inspect the qualification report and repair the customer output or generator |
+| External deployment acceptance | Actual selected frontends, authentication, providers and imported data work together | Run the deployment's separate acceptance scenarios |
+
+A beginner chooses a declared preset and reviews the result before generation.
+A maintainer can use `--frontend`, `--customer`, or an explicit `--experience`
+workspace plus `--frontend-code`. Multiple available storefronts require a
+selection. A disabled sample-data choice produces empty product, price and
+inventory samples. Supporting frontend wiring is generated from the selected
+codes; source repositories retain their ownership.
+
+An existing approved plan cannot silently adopt changed customer metadata or
+renamed output files. Builder rejects stale bindings and existing protected
+output roots. The independent-customer contract test exercises another market,
+store, renderer and data module, rejects unsupported selections, and boots the
+generated starter on disposable local ports. These are source and starter
+checks; they do not establish deployment readiness for external applications.

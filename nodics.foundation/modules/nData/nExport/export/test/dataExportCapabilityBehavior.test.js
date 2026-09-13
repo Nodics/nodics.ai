@@ -180,10 +180,11 @@ const foundationPackage = require(path.join(__dirname, '../../../../../package.j
         },
     ]);
 
-    global.SERVICE.DefaultSchemaWorkbenchService = {
-        get: function (workbenchRequest) {
+    global.SERVICE.DefaultSchemaUtilityService = {
+        getSchema: function (workbenchRequest, schemaName) {
+            assert.strictEqual(schemaName, 'tenant');
             assert.strictEqual(workbenchRequest.moduleName, 'profile');
-            assert.strictEqual(workbenchRequest.httpRequest.params.schema, 'tenant');
+            assert.strictEqual(workbenchRequest.schemaName, 'tenant');
             return Promise.resolve({
                 data: {
                     label: 'Tenant',
@@ -202,10 +203,22 @@ const foundationPackage = require(path.join(__dirname, '../../../../../package.j
                 },
             });
         },
-        search: function (workbenchRequest) {
+    };
+    delete global.SERVICE.DefaultSchemaWorkbenchService;
+    const exportedDescriptor = await global.SERVICE.DataExportService.resolveSchemaDescriptor(
+        { tenant: 'default', authData: {} }, { moduleName: 'profile', schemaName: 'tenant' });
+    assert.strictEqual(exportedDescriptor.label, 'Tenant');
+    const schemaOwner = global.SERVICE.DefaultSchemaUtilityService;
+    delete global.SERVICE.DefaultSchemaUtilityService;
+    await assert.rejects(global.SERVICE.DataExportService.resolveSchemaDescriptor(
+        { tenant: 'default', authData: {} }, { moduleName: 'profile', schemaName: 'tenant' }),
+        error => error.code === 'ERR_EXP_00001');
+    global.SERVICE.DefaultSchemaUtilityService = schemaOwner;
+    global.SERVICE.DefaultSchemaSafeQueryService = {
+        searchGenerated: function (workbenchRequest) {
             assert.strictEqual(workbenchRequest.moduleName, 'profile');
-            assert.strictEqual(workbenchRequest.httpRequest.params.schema, 'tenant');
-            assert.strictEqual(workbenchRequest.httpRequest.body.pageSize, 10);
+            assert.strictEqual(workbenchRequest.schemaName, 'tenant');
+            assert.strictEqual(workbenchRequest.browserQuery.pageSize, 10);
             return Promise.resolve({
                 data: {
                     records: [

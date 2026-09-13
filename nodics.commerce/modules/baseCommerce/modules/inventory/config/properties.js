@@ -11,6 +11,20 @@
 
 /** @module inventory/config/properties @description Defines Commerce capability and schema access policies. @layer config @owner inventory */
 module.exports = {
+    // Inert inventory; an allowed local server must explicitly select this capability.
+    localResetProvider: {
+        "contributions": {
+            "inventory": {
+                "serviceNames": {
+                    "DefaultInventoryBalanceService": true,
+                    "DefaultInventoryMovementService": true,
+                    "DefaultInventoryReservationService": true,
+                    "DefaultWarehouseService": true
+                }
+            }
+        }
+    },
+
     inventory: {
         enabled: true,
         customerSummary: {

@@ -384,8 +384,8 @@ requireClauses('modules/nSetup/llm/contracts/module-structure-contract.md', [
     '`tooling.documentationGovernance`',
     'Do not add sibling config files like `config/tooling.js`',
     '`config/documentation-governance.json`',
-    'Project topology modules under `envs/` may resolve local environment values',
-    'This exception does not apply to framework or business capability modules'
+    'Project, environment, server and node `config/properties.js` files are declarative',
+    'Do not hide copied defaults or application policy inside an imported helper.'
 ]);
 
 requireClauses('modules/nSetup/llm/ai-enablement-index.md', [

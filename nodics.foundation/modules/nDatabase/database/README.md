@@ -14,6 +14,36 @@ Database owns Nodics model registration, provider-neutral data access, tenant/mo
 
 This module converts module schemas and configuration into runtime models, data access behavior, transaction semantics, cache coherence, and schema maintenance APIs.
 
+## Canonical schema APIs
+
+`DefaultSchemaUtilityService` owns discovery and safe effective metadata;
+`DefaultSchemaSafeQueryService` owns bounded query translation. Generated
+controller/facade/service templates own resource capabilities, search, create,
+update, delete-impact, delete and opt-in bulk. All Workbench HTTP routes and
+runtime adapters are removed; current clients use the canonical module APIs.
+
+Declare `router: { enabled: true, groups: { schemaOperations: true } }` to expose
+these selective operations without broad raw-query/by-ID APIs. Effective access,
+authoring and original-revision checks remain mandatory. `schemaApi` owns the
+shared configuration; discovery/read/write defaults use `system.schema.view`
+and `system.schema.manage`, with exposure category `schemaApi`.
+
+Customize schema `backoffice` metadata first, then existing Utility helpers through
+module inheritance when needed. No second schema registry or loader is permitted.
+Generated controllers protect the secured request and project writable fields.
+Selective update/delete accept one primary identity and its required revision.
+Missing/malformed/stale managed tokens keep 428/400/409 semantics. Counts are not
+saved records; clients validate persisted responses and never retry another API.
+
+Bulk DELETE is explicit, bounded, keyed and routed through generated removal;
+managed-counter multi-record CAS is unsupported and fails before dispatch.
+Enterprise setup remains Profile's `/enterprises` command. Copilot and other
+clients retain their domain confirmation, authorization and recovery boundaries.
+
+See `llm/contracts/README.md`, `llm/examples/README.md` and the canonical
+schema-data-modeling guide for migration, customization, API shapes and validation.
+No source migration rewrites stored records or refreshes persisted grants.
+
 ## Developer Notes
 
 - `DefaultModelConcurrencyService` owns opt-in technical counters through the
@@ -51,3 +81,26 @@ Run database, schema, and model-generation tests when behavior changes, then run
 npm --prefix nodics.docs test
 npm run quality:docs
 ```
+
+Schema descriptors also project selective generated API routes from the prepared
+router through `apiOperations`. See the [projection contract](llm/contracts/README.md#prepared-schema-api-projection).
+Axis follows published paths/versions once and preserves disabled declarations;
+legacy fallback remains only for operations without published routes.
+
+
+## Canonical discovery migration
+
+Axis uses the module-relative v0 collection/detail routes with no Workbench
+fallback. Explicitly advertised capability routes remain authoritative for detail
+reads, including disabled declarations. Deploy the backend API before the client.
+Move former Workbench `list` / `get` overrides to Schema Utility `listSchemas` /
+`getSchema`; metadata helpers remain with that same owner. See the
+[discovery contract](llm/contracts/README.md#canonical-schema-discovery) and
+[customization example](llm/examples/README.md#canonical-discovery-customization).
+No old discovery route is retained for backward compatibility in this unreleased
+framework. Governed exports also use this metadata owner. Remaining record/bulk
+and domain operations are outside this discovery migration.
+
+Require the selected server generated baseline after model preparation. Preserve
+composed custom methods; never synthesize missing services at startup. See
+[server build contract](llm/contracts/README.md#required-server-build).

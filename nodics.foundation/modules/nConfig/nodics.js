@@ -190,7 +190,7 @@ module.exports = {
      */
     prepareClean: function (options) {
         return new Promise((resolve, reject) => {
-            this.prepareStart(options).then(success => {
+            this.prepareStart(Object.assign({}, options, { lifecycleOperation: 'clean' })).then(success => {
                 resolve(true);
             }).catch(error => {
                 reject(error);
@@ -205,16 +205,10 @@ module.exports = {
      * @sideEffects Deletes generated source, test, distribution, and module build outputs owned by the clean contract.
      */
     cleanModules: function () {
-        return new Promise((resolve, reject) => {
-            infra.cleanEntities().then(success => {
-                infra.cleanModules().then(success => {
-                    resolve(true);
-                }).catch(error => {
-                    reject(error);
-                });
-            }).catch(error => {
-                reject(error);
-            });
+        return infra.withGeneratedArtifactLock(async () => {
+            await infra.cleanEntities();
+            await infra.cleanModules();
+            return true;
         });
     },
 
@@ -226,7 +220,7 @@ module.exports = {
      */
     prepareBuild: function (options) {
         return new Promise((resolve, reject) => {
-            this.prepareStart(options).then(success => {
+            this.prepareStart(Object.assign({}, options, { lifecycleOperation: 'build' })).then(success => {
                 resolve(true);
             }).catch(error => {
                 reject(error);
@@ -241,16 +235,15 @@ module.exports = {
      * @sideEffects Recreates services, facades, controllers, tests, and other generated module outputs from effective definitions.
      */
     buildModules: function () {
-        return new Promise((resolve, reject) => {
-            infra.buildEntities().then(success => {
-                infra.buildModules().then(success => {
-                    resolve(true);
-                }).catch(error => {
-                    reject(error);
-                });
-            }).catch(error => {
-                reject(error);
-            });
+        return infra.withGeneratedArtifactLock(async () => {
+            try {
+                await infra.buildEntities();
+                await infra.buildModules();
+                return infra.writeBuildManifest();
+            } catch (error) {
+                try { await infra.cleanEntities(); } catch (cleanupError) { infra.LOG.error('Build failure cleanup failed', cleanupError); }
+                throw error;
+            }
         });
     },
 };

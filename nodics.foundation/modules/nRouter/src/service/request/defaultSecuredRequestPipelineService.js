@@ -181,6 +181,11 @@ module.exports = {
      * @throws Emits `ERR_AUTH_00003` when the principal cannot access the route.
      */
     checkAccess: function (request, response, process) {
+        const auth = request.authData || {};
+        if (auth.runtimeScope && (auth.tokenType !== 'service' || !Array.isArray(auth.modules) || !auth.modules.includes(request.moduleName))) {
+            process.error(request, response, new CLASSES.NodicsError('ERR_AUTH_00003', 'Runtime credential does not authorize the requested module'));
+            return;
+        }
         if (!this.hasAcceptedTokenType(request)) {
             process.error(request, response, new CLASSES.NodicsError('ERR_AUTH_00003', 'authenticated token type cannot execute this action'));
             return;
@@ -217,6 +222,11 @@ module.exports = {
      * @returns {boolean} True when user has one allowed access group.
      */
     hasAccessGroup: function (request) {
+        if (request.authData && request.authData.runtimeScope) {
+            const policy = (CONFIG.get('authSecurity') || {}).internalToken || {};
+            const allowed = Array.isArray(policy.runtimeAccessGroups) ? policy.runtimeAccessGroups : [];
+            return (request.router && request.router.accessGroups || []).some(group => allowed.includes(group));
+        }
         let userGroups = request.authData && request.authData.userGroups ? request.authData.userGroups : [];
         let accessGroups = request.router && request.router.accessGroups ? request.router.accessGroups : [];
         let effectiveUserGroupCodes = this.getEffectiveUserGroupCodes(userGroups);
@@ -238,11 +248,12 @@ module.exports = {
             return true;
         }
         let config = this.getRouteActionAuthorizationConfig();
-        if (config.enabled === false) {
+        const runtimeBound = Boolean(request.authData && request.authData.runtimeScope);
+        if (config.enabled === false && !runtimeBound) {
             return true;
         }
         let grantedPermissions = this.getGrantedPermissions(request);
-        if (grantedPermissions.length === 0 && config.strict !== true) {
+        if (grantedPermissions.length === 0 && config.strict !== true && !runtimeBound) {
             return true;
         }
         return requiredPermissions.some(permission => this.isPermissionGranted(permission, grantedPermissions, config));
@@ -298,6 +309,7 @@ module.exports = {
      */
     getGrantedPermissions: function (request) {
         let authData = request.authData || {};
+        if (authData.runtimeScope) return this.normalizePermissions(authData.permissions);
         let permissions = [];
         ['permissions', 'userGroupPermissions', 'actionPermissions', 'authorities', 'scopes'].forEach(property => {
             if (Array.isArray(authData[property])) {

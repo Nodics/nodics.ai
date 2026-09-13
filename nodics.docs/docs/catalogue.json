@@ -1,6 +1,6 @@
 {
   "contract": "nodics.documentation/v1",
-  "release": "0.16.11",
+  "release": "0.16.12",
   "documents": [
     {
       "id": "docs.gateway",
@@ -95,7 +95,7 @@
       "functionalModule": "nodics.docs",
       "technicalModule": "documentation",
       "title": "What is Nodics?",
-      "summary": "Introductory definition of Nodics, its enterprise purpose, and the first mental model for business, developer, and operator readers.",
+      "summary": "What Nodics is, how it supports AI-assisted development with human ownership, and how teams understand, customize and operate enterprise applications.",
       "locale": "en",
       "content": "docs/pages/framework/what-is-nodics.md",
       "route": "/docs/framework",
@@ -150,7 +150,7 @@
       "allowedGroups": [],
       "allowedPermissions": [],
       "lifecycleState": "ONLINE",
-      "version": "0.16.5",
+      "version": "0.16.12",
       "relatedPages": [
         "framework.why-nodics-exists",
         "framework.how-nodics-works",
@@ -1771,7 +1771,7 @@
       "sourceEvidence": [
         "docs/catalogue.json",
         "docs/pages/accelerators/agora-apparel-product-data-authoring.md",
-        "../../nodics.kickoff/modules/agora.apparel/data/sample-v001/commerce/headers/agoraApparelCatalogHeader.js",
+        "../../nodics.kickoff/modules/agora.apparel/data/sample-v002/commerce/headers/agoraApparelCatalogHeader.js",
         "../../nodics.kickoff/modules/agora.apparel/data/sample-v001/content/headers/agoraApparelContentHeader.js",
         "../../nodics.kickoff/modules/agora.apparel/data/sample-v001/content/assets/agora-cms-media/assetManifest.js",
         "../nodics.commerce/modules/baseCommerce/modules/product/src/schemas/schemas.js",
@@ -9307,7 +9307,7 @@
         "../nodics.commerce/modules/baseCommerce/modules/commerceSearch/package.json",
         "../nodics.commerce/modules/baseCommerce/modules/commerceSearch/modules/commerceSearchCore/package.json",
         "../nodics.commerce/modules/baseCommerce/modules/product/package.json",
-        "../../nodics.kickoff/modules/agora.apparel/data/sample-v001/commerce/headers/commerceSearch"
+        "../../nodics.kickoff/modules/agora.apparel/data/sample-v002/commerce/headers/commerceSearch"
       ],
       "maturityState": "operational",
       "implementationState": "current",
@@ -9402,7 +9402,7 @@
         "../nodics.localization/modules/localizationCore/package.json",
         "../nodics.wcms/modules/cms/src/service/localization/defaultCmsContentLocalizationService.js",
         "../nodics.foundation/modules/nData/nImport/import/src/service/import/defaultImportService.js",
-        "../../nodics.kickoff/modules/agora.apparel/data/sample-v001/commerce/records"
+        "../../nodics.kickoff/modules/agora.apparel/data/sample-v002/commerce/records"
       ],
       "maturityState": "operational",
       "implementationState": "current",
@@ -9600,7 +9600,7 @@
         "../nodics.loyalty/modules/loyaltyRedemption/src/schemas/schemas.js",
         "../nodics.loyalty/modules/loyaltyApi/src/router/routers.js",
         "../nodics.commerce/modules/payment/modules/paymentProviders/modules/loyaltyRewardProvider/README.md",
-        "../nodics.foundation/modules/nTooling/src/service/project/defaultProjectLoyaltyRewardCheckoutAcceptanceService.mjs"
+        "../nodics.commerce/modules/payment/modules/paymentProviders/modules/loyaltyRewardProvider/test/loyaltyRewardPaymentProviderContract.test.js"
       ],
       "maturityState": "operational",
       "implementationState": "current",

@@ -11,6 +11,19 @@
 
 /** @module commerceSearchCore/config/properties @description Defines Commerce Search runtime policy and schema access. @layer config @owner commerceSearchCore */
 module.exports = {
+    // Inert inventory; an allowed local server must explicitly select this capability.
+    localResetProvider: {
+        "contributions": {
+            "commerceSearchCore": {
+                "serviceNames": {
+                    "DefaultCommerceSearchRuleProjectionService": true,
+                    "DefaultCommerceSearchRuleService": true,
+                    "DefaultCommerceSearchRuleVersionService": true
+                }
+            }
+        }
+    },
+
     commerceSearch: {
         enabled: true,
         ranking: {

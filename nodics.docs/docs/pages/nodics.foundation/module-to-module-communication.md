@@ -326,3 +326,33 @@ local to the caller, confirm Runtime Registry or static endpoint selection,
 inspect transport diagnostics, and prove the caller still receives a stable
 business response while the target module remains the data and behavior
 authority.
+
+### Local selection and independent deployment acceptance
+
+`requiredModules` declares essential local prerequisites. Endpoint entries under
+`servers` describe remote reachability and do not activate code. Selecting a
+complete functional group intentionally includes its configured defaults; a
+split runtime selects its concrete local capabilities through `activeModules`,
+while `runtimeModuleRoots` supplies the packages available for discovery.
+
+The framework selective-runtime contract prepares and loads actual Inventory,
+Commerce-with-remote-Inventory and CMS-only graphs. Inventory remains the same
+capability when separated; unselected Product, Process and Waste services do not
+load. CMS does not inherit Commerce infrastructure merely because its package
+is installed. Invoke remote work through `DefaultModuleService`, and keep a
+required remote startup call bounded. An optional absent capability must not
+create a connection or start work. Business activation prerequisites belong to
+the existing governed catalogue and are checked before activation.
+
+### Runtime credential failure and local regression checks
+
+A missing revocation marker is the canonical cache-miss result. Connection errors,
+disabled channels and malformed cached data reject authorization. A later stamp
+read succeeding cannot excuse an earlier failed revocation check.
+
+The explicit Redis integration verifies these owners across two processes and
+measures 1000 JWT verifications per process. Its default local p95 ceiling is
+25 ms with exactly two cache reads per verification; override the ceiling through
+`NODICS_AUTH_RUNTIME_P95_MAX_MS` for a qualified deployment. Report token bursts,
+CPU/RSS and failure/recovery alongside latency. These synthetic regression limits
+do not establish production load capacity or network-partition guarantees.

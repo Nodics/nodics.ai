@@ -17,5 +17,16 @@
  * @override Project, environment, server, node, tenant, or customer layers may override these defaults through Nodics configuration layering.
  */
 module.exports = {
+    // Inert inventory; an allowed local server must explicitly select this capability.
+    localResetProvider: {
+        "contributions": {
+            "validator": {
+                "serviceNames": {
+                    "DefaultValidatorService": true
+                }
+            }
+        }
+    },
+
 
 };

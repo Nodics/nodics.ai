@@ -25,14 +25,21 @@ module.exports = {
     buildClientConfig: function (engineConfig) {
         let options = Object.assign({}, engineConfig && engineConfig.options || {});
         if (!options.clusterName || !Array.isArray(options.clusterMembers) ||
-            options.clusterMembers.length === 0 || !Number.isSafeInteger(options.connectionTimeoutMs)) {
+            options.clusterMembers.length === 0 || !Number.isSafeInteger(options.connectionTimeoutMs) ||
+            options.connectionTimeoutMs < 1 || options.connectionTimeoutMs > 60000) {
             throw new Error('Hazelcast cache engine configuration is incomplete');
         }
         let config = { clusterName: options.clusterName, network: {
             clusterMembers: options.clusterMembers.slice(),
             connectionTimeout: Number(options.connectionTimeoutMs)
         } };
-        if (options.connectionStrategy) config.connectionStrategy = options.connectionStrategy;
+        config.connectionStrategy = Object.assign({}, options.connectionStrategy || {});
+        config.connectionStrategy.connectionRetry = Object.assign({ clusterConnectTimeoutMillis: options.connectionTimeoutMs },
+            config.connectionStrategy.connectionRetry || {});
+        const connectTimeout = config.connectionStrategy.connectionRetry.clusterConnectTimeoutMillis;
+        if (!Number.isSafeInteger(connectTimeout) || connectTimeout < 0 || connectTimeout > 60000) {
+            throw new Error('Hazelcast cluster connection attempts require a bounded timeout between 0 and 60000 ms');
+        }
         if (options.properties) config.properties = options.properties;
         if (options.security) config.security = options.security;
         if (options.ssl) config.network.ssl = options.ssl;

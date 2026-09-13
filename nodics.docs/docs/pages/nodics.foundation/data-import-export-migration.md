@@ -565,3 +565,85 @@ them, stages media, exports governed data, publishes searchable projections,
 or records migration evidence. This page explains the data movement contract;
 DEAP explains how several framework capabilities compose into a customer
 solution.
+
+## Stable JavaScript source keys
+
+Within one logical dataset and owning target, exported keys identify source
+records. A later project file can override only the fields it changes:
+
+```js
+// Base dataset
+module.exports = {
+  record0: { code: 'primary', name: 'Base name', tags: ['one', 'two'] }
+};
+// Later contribution to the same dataset and target
+module.exports = {
+  record0: { name: 'Project name', tags: ['three'] }
+};
+```
+
+The merged record inherits `code: 'primary'`, uses the new name, and replaces
+the complete tags array. Two different exported keys remain distinct even if
+they declare the same business code. Keep keys stable; new records get new keys.
+Changing a source code does not rename or delete persisted data. Header queries
+and operations retain database identity and mutation authority.
+
+The JavaScript processor merges its supplied ordered file list. System import
+qualifies header identity by target module and header name. It restricts each
+header to files from the release roots that contributed that header, so identical
+filenames and `record0` keys in Inventory and CMS do not collide. A later header
+may customize options but cannot silently change the schema/index of the same
+layered dataset. A contribution includes its explicit routing header; filenames
+alone do not authorize a target.
+
+## Framework and project release composition
+
+Release execution follows category, versioned directory order, module index and
+then section order. For example, base `core-v001`, project `core-v001`, base
+`core-v002`, project `core-v002` apply in that order on a fresh installation.
+A caller reversing release selectors does not reverse this dependency order.
+
+A project JavaScript delta inherits from current lower-module releases with the
+same release root, matching logical record filename and explicit header target.
+The lower release must already be current or be selected earlier in the same
+validated plan. Missing/running baselines and altered installed stable checksums
+block the override. Import headers retain operation and query authority.
+
+Only exported keys authored by the executing delta reach persistence. If the
+base file defines `record0` and `record1`, and the project overrides `record0`,
+`record1` is a source-only input and is not rewritten by the project release.
+This preserves unrelated application-managed changes. A changed `code` still
+does not rename an old database record; the declared header decides persistence.
+
+Each release receives its own installation result. Existing current releases
+are skipped on later runs. Different version directories remain separate delta
+executions; a new project delta must provide complete records or have a matching
+current lower release for that version. Custom installers and non-JavaScript
+formats retain their owning execution contracts and do not acquire implicit
+source-key inheritance.
+
+## Required startup releases and recovery
+
+Startup evaluates active-module `init` releases every time through nImport's
+release service. It skips current releases and applies new deltas before
+readiness, independently of whether an operator may invoke the Init route.
+`data.dataReleases.types.init.startupExecution` controls this startup trigger.
+Editing an applied Init release without changing its version fails startup;
+even a mutable development baseline is not silently replayed on restart.
+
+A running installation blocks another attempt. A failed release retains its
+failed receipt and may be retried through the existing operation; successful
+earlier releases remain current. Installation claims now use the database's
+managed revision and a unique attempt identity. Two runtimes cannot both claim
+the same absent or previously failed receipt, and a losing or stale attempt
+cannot record another attempt as failed or complete. Storage errors reject the
+operation before import rather than becoming an empty installation history.
+
+For example, if release A completes and release B fails, A remains current, B
+becomes failed, and release C has no new receipt. Retrying starts with B. If the
+process disappears while B is running, an operator must first establish that
+its importer has stopped before governed recovery changes B's state. There is
+no automatic timeout takeover. The receipt counter fences installation status;
+it does not cancel business writes already in flight or make partial data
+imports transactional. Provider-side atomic writes and crash recovery remain
+part of deployment qualification.

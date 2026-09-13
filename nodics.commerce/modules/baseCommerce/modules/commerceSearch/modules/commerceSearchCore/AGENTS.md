@@ -6,3 +6,6 @@
 - `nSearch` remains the generic search provider abstraction.
 - Axis-facing metadata must be provided by this module, not by group roots.
 - Customer APIs must not expose rule internals, operator evidence, or unpublished rules.
+
+This capability declares an inert model-service inventory for [governed Local reset](../../../../../../../nodics.foundation/modules/nSystem/llm/contracts/local-reset.md).
+A server must explicitly select it; contributions never enable reset or bypass tenant, environment, confirmation or required-service checks.

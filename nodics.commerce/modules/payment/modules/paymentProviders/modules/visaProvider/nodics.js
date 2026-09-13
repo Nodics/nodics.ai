@@ -10,4 +10,4 @@
  */
 
 /** @module visaProvider/nodics @description Declares the Visa Provider capability lifecycle. @layer module @owner visaProvider */
-module.exports = { init: () => Promise.resolve(true), postInit: () => Promise.resolve(true) };
+module.exports = { init: function () { return Promise.resolve(true); }, postInit: function () { return Promise.resolve(true); } };

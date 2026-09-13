@@ -19,7 +19,7 @@
 
 
 module.exports = { locationDraft: {
-    locationDraft: Object.assign({ super: 'base', model: true, schemaPolicies: ['operational'], service: { enabled: true }, router: { enabled: false }, cache: { enabled: false }, event: { enabled: false }, search: { enabled: false } }, { definition: {
+    locationDraft: Object.assign({ super: 'base', model: true, schemaPolicies: ['operational'], service: { enabled: true }, router: { groups: { schemaOperations: true }, enabled: true }, cache: { enabled: false }, event: { enabled: false }, search: { enabled: false } }, { definition: {
         code: { type: 'string', required: true , description: 'Uniquely identifies this record for references, APIs, imports, and business administration.'},
         draftType: { type: 'string', required: true, enum: ['CREATE', 'CORRECTION', 'DEACTIVATION'] , description: 'Classifies this record by draft type for validation and business handling.'},
         targetLocationCode: { type: 'string', required: false , description: 'Stores the target location code used to classify, link, or resolve this record.'},

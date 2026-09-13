@@ -26,3 +26,12 @@ This file gives AI coding agents mandatory guidance for this Nodics module or pa
 - Keep direct Redis SDK imports inside the redisCache ownership boundary.
   Cross-module live-provider tests use the test-only client factory; never
   promote that bridge into a production connection path.
+
+Versioned writes and advance must be atomic for the adapter scope, return the actual stored version, preserve tenant namespaces and TTL zero, and reject stale versions or overflow. See the [cache contract](../cache/llm/contracts/README.md).
+
+Configured cache event subscriptions are required startup work. Await them and
+retain returned subscriber clients on their existing channel objects. Readiness
+and central shutdown include engine clients and channel subscribers exactly
+once. Attempt every close even if another fails; preserve the original failure.
+A subscriber whose connection/subscription fails before registration must close
+at the Redis provider boundary. Never leave detached startup subscriptions.

@@ -11,7 +11,7 @@
 
 /** @module loyaltyRedemption/src/schemas/schemas @description Defines reward redemption evidence records. @layer schema @owner loyaltyRedemption @override Later modules may add governed evidence fields while preserving downstream target ownership. */
 module.exports = { loyaltyRedemption: {
-    rewardRedemption: Object.assign({ super: 'base', model: true, schemaPolicies: ['operational'], service: { enabled: true }, router: { enabled: false }, cache: { enabled: false }, event: { enabled: false }, search: { enabled: false } }, { definition: {
+    rewardRedemption: Object.assign({ super: 'base', model: true, schemaPolicies: ['operational'], service: { enabled: true }, router: { groups: { schemaOperations: true }, enabled: true }, cache: { enabled: false }, event: { enabled: false }, search: { enabled: false } }, { definition: {
         walletCode: { type: 'string', required: true , description: 'Stores the wallet code used to classify, link, or resolve this record.'},
         programCode: { type: 'string', required: true , description: 'Stores the program code used to classify, link, or resolve this record.'},
         rewardTypeCode: { type: 'string', required: true , description: 'Stores the reward type code used to classify, link, or resolve this record.'},

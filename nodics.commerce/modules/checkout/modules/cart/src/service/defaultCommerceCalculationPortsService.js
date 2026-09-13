@@ -13,7 +13,8 @@
 'use strict';
 /** @module cart/src/service/defaultCommerceCalculationPortsService @description Resolves Pricing, Promotion, Tax, and Inventory owner evidence for Cart. @layer service @owner cart */
 module.exports = {
-    unwrap: response => response && Object.prototype.hasOwnProperty.call(response, 'result') ? response.result : response,
+    /** Unwraps a standard result envelope while preserving raw provider values. */
+    unwrap: function (response) { return response && Object.prototype.hasOwnProperty.call(response, 'result') ? response.result : response; },
     /** Builds service authentication for calculation owner reads. @param {Object} cart Cart context. @returns {Object} Internal service auth data. */
     serviceAuthData: function (cart) {
         return {

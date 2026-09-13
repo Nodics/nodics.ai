@@ -10,4 +10,4 @@
  */
 
 /** @module checkoutCore/nodics @description Declares the Checkout Core capability lifecycle. @layer module @owner checkoutCore */
-module.exports = { init: () => Promise.resolve(true), postInit: () => Promise.resolve(true) };
+module.exports = { init: function () { return Promise.resolve(true); }, postInit: function () { return Promise.resolve(true); } };

@@ -41,7 +41,7 @@ function channel(client, engine) {
         channelName: 'auth',
         client: client,
         chennalOptions: { ttl: 60 },
-        engineOptions: { ttl: 60, options: { prefix: configuration.tenant }, distributed: engine === 'redis', atomicConsume: true }
+        engineOptions: { ttl: 60, options: { prefix: configuration.tenant }, distributed: engine === 'redis', atomicConsume: true, atomicVersionWrite: true }
     };
 }
 
@@ -84,21 +84,21 @@ async function run() {
             default: { engines: { [engineName]: Object.assign({}, engineDefinition, overrides.engine || {}) } }
         } : undefined };
     }
-    stampConfig('local', { distributed: false, atomicConsume: true }, false);
+    stampConfig('local', { distributed: false, atomicConsume: true, atomicVersionWrite: true }, false);
     await assert.rejects(stampService.validateConfiguration(), /distributed auth cache/);
     stampConfig('hazelcast', { distributed: false, atomicConsume: false }, false);
     await assert.rejects(stampService.validateConfiguration(), /distributed auth cache/);
-    stampConfig('redis', { distributed: true, atomicConsume: true }, true);
+    stampConfig('redis', { distributed: true, atomicConsume: true, atomicVersionWrite: true }, true);
     await assert.rejects(stampService.validateConfiguration(), /fallback disabled/);
-    stampConfig('redis', { distributed: true, atomicConsume: true }, false, { cacheEnabled: false });
+    stampConfig('redis', { distributed: true, atomicConsume: true, atomicVersionWrite: true }, false, { cacheEnabled: false });
     await assert.rejects(stampService.validateConfiguration(), /enabled distributed auth cache/);
-    stampConfig('redis', { distributed: true, atomicConsume: true }, false, { channel: { enabled: false } });
+    stampConfig('redis', { distributed: true, atomicConsume: true, atomicVersionWrite: true }, false, { channel: { enabled: false } });
     await assert.rejects(stampService.validateConfiguration(), /enabled distributed auth cache/);
-    stampConfig('redis', { distributed: true, atomicConsume: true }, false, { engine: { enabled: false } });
+    stampConfig('redis', { distributed: true, atomicConsume: true, atomicVersionWrite: true }, false, { engine: { enabled: false } });
     await assert.rejects(stampService.validateConfiguration(), /enabled distributed auth cache/);
-    stampConfig('redis', { distributed: true, atomicConsume: true }, false);
+    stampConfig('redis', { distributed: true, atomicConsume: true, atomicVersionWrite: true }, false);
     await stampService.validateConfiguration();
-    stampConfig('redis', { distributed: true, atomicConsume: true }, false, { cacheModuleName: 'projectAuthState' });
+    stampConfig('redis', { distributed: true, atomicConsume: true, atomicVersionWrite: true }, false, { cacheModuleName: 'projectAuthState' });
     assert.strictEqual(stampService.getCacheModuleName(), 'projectAuthState');
     await stampService.validateConfiguration();
 

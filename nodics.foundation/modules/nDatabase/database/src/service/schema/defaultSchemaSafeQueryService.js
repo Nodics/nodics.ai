@@ -62,23 +62,18 @@ module.exports = {
     },
 
     /**
-     * Resolves the effective schema descriptor used to advertise safe query
-     * capabilities. The descriptor builder should become shared metadata
-     * infrastructure; until then, the generated route reuses the existing
-     * descriptor authority instead of duplicating field/security rules.
+     * Resolves metadata through the existing shared schema utility owner.
      * @param {Object} request Authenticated request.
      * @param {string} moduleName Owning module name.
      * @param {string} schemaName Logical schema name.
      * @returns {Object|undefined} Client-safe schema descriptor.
      */
     resolveDescriptor: function (request, moduleName, schemaName) {
-        let schemaModule = SERVICE.DefaultSchemaWorkbenchService && typeof SERVICE.DefaultSchemaWorkbenchService.resolveSchemaModule === 'function'
-            ? SERVICE.DefaultSchemaWorkbenchService.resolveSchemaModule(moduleName)
-            : undefined;
-        if (!schemaModule || !schemaModule.moduleObject || !SERVICE.DefaultSchemaWorkbenchService || typeof SERVICE.DefaultSchemaWorkbenchService.buildDescriptor !== 'function') {
-            throw new CLASSES.NodicsError('ERR_DBS_00004', 'Generated safe search descriptor is not available');
+        const service = SERVICE.DefaultSchemaUtilityService;
+        if (!service || typeof service.resolveDescriptor !== 'function') {
+            throw new CLASSES.NodicsError('ERR_DBS_00004', 'Generated schema descriptor service is not available');
         }
-        return SERVICE.DefaultSchemaWorkbenchService.buildDescriptor(request, schemaModule.moduleObject, schemaName, schemaModule.moduleName);
+        return service.resolveDescriptor(request, moduleName, schemaName);
     },
 
     /**
@@ -90,7 +85,7 @@ module.exports = {
      */
     buildSearchInput: function (body, descriptor) {
         body = this.normalizeSearchBody(body);
-        let workbenchConfig = CONFIG.get('schemaWorkbench') || {};
+        let workbenchConfig = CONFIG.get('schemaApi') || {};
         let capabilities = descriptor.queryCapabilities;
         let search = typeof body.search === 'string' ? body.search.trim() : '';
         let maximumSearchLength = workbenchConfig.maximumSearchLength || 100;
@@ -207,7 +202,7 @@ module.exports = {
         if (filters === undefined || filters === null) {
             return undefined;
         }
-        let config = CONFIG.get('schemaWorkbench') || {};
+        let config = CONFIG.get('schemaApi') || {};
         let state = {
             count: 0,
             maximumCount: config.maximumFilterConditions || 20,

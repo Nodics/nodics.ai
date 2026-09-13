@@ -9,4 +9,4 @@
 
  */
 /** @module localCommsProvider/nodics @description Declares local provider lifecycle. @layer module @owner localCommsProvider */
-module.exports = { /** Initializes this module. */ init: () => Promise.resolve(true), /** Finalizes this module. */ postInit: () => Promise.resolve(true) };
+module.exports = { /** Initializes this module. */ init: function () { return Promise.resolve(true); }, /** Finalizes this module. */ postInit: function () { return Promise.resolve(true); } };

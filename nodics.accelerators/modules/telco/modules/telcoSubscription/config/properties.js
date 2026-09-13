@@ -16,6 +16,18 @@
  * @owner generated
  * @override Project, environment, server, node, tenant, or customer layers may override these defaults through Nodics configuration layering.
  */
-module.exports = { schemaPolicies: { telcoSubscription: {
+module.exports = {
+    // Inert inventory; an allowed local server must explicitly select this capability.
+    localResetProvider: {
+        "contributions": {
+            "telcoSubscription": {
+                "serviceNames": {
+                    "DefaultTelcoNumberIntentService": true,
+                    "DefaultTelcoSubscriptionService": true
+                }
+            }
+        }
+    },
+ schemaPolicies: { telcoSubscription: {
     tenantOwned: { accessGroups: { adminGroup: 10, commerceOperatorUserGroup: 10, serviceAccountUserGroup: 10 } }
 } } };

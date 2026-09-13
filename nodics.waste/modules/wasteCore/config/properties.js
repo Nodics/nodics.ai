@@ -11,6 +11,27 @@
 
 /** @module wasteCore/config/properties @description Provides shared Waste defaults. @layer config @owner wasteCore @override Partner modules may refine policy through configuration layering. */
 module.exports = {
+    // Inert inventory; an allowed local server must explicitly select this capability.
+    localResetProvider: {
+        "contributions": {
+            "wasteCore": {
+                "serviceNames": {
+                    "DefaultWasteAssetCreationPolicyService": true,
+                    "DefaultWasteAssetMarketplaceProjectionService": true,
+                    "DefaultWasteAssetOwnershipEventService": true,
+                    "DefaultWasteAssetService": true,
+                    "DefaultWasteAssetTransferPolicyService": true,
+                    "DefaultWasteAssetTypeService": true,
+                    "DefaultWasteCarbonSettlementPolicyService": true,
+                    "DefaultWasteCouponRedemptionSettlementPolicyService": true,
+                    "DefaultWasteLifecyclePolicyService": true,
+                    "DefaultWasteMarketplaceEligibilityPolicyService": true,
+                    "DefaultWasteRewardSettlementPolicyService": true
+                }
+            }
+        }
+    },
+
 
   enterpriseManagement: {
     accessAssignments: {

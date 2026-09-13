@@ -18,6 +18,42 @@
  */
 
 module.exports = {
+    /** Atomically compares and stores a JSON version using one Redis script. */
+    putVersioned: function (options) {
+        try {
+            const field = options.versionProperty || 'revision';
+            const version = options.value && options.value[field];
+            if (!Number.isSafeInteger(version) || version < 0) throw new Error('Invalid cache version');
+            const unversioned = JSON.stringify({ ...options.value, [field]: undefined });
+            const prefix = unversioned.slice(0, -1) + (unversioned.length > 2 ? ',' : '') + JSON.stringify(field) + ':';
+            const script = [
+                'local incoming = tonumber(ARGV[2])',
+                'local raw = redis.call("GET", KEYS[1])',
+                'if raw then',
+                ' local current = cjson.decode(raw)',
+                ' local version = current[ARGV[1]]',
+                ' if type(version) ~= "number" or version < 0 or version % 1 ~= 0 then return -1 end',
+                ' if ARGV[5] == "true" then incoming = math.max(incoming, version + 1) end',
+                ' if incoming < version then return -1 end',
+                'end',
+                'if incoming > 9007199254740991 then return -1 end',
+                'local value = ARGV[3]',
+                'if ARGV[5] == "true" then',
+                ' value = ARGV[6] .. string.format("%.0f", incoming) .. "}"',
+                'end',
+                'if tonumber(ARGV[4]) > 0 then redis.call("SET", KEYS[1], value, "EX", tonumber(ARGV[4]))',
+                'else redis.call("SET", KEYS[1], value) end',
+                'return incoming'
+            ].join('\n');
+            return Promise.resolve(options.channel.client.eval(script, {
+                keys: [this.getKey(options)], arguments: [field, String(version), JSON.stringify(options.value), String(this.getTtl(options)), String(options.advance === true), prefix]
+            })).then(accepted => {
+                if (!Number.isSafeInteger(Number(accepted)) || Number(accepted) < 0) throw new Error('Stale versioned cache write');
+                return { code: 'SUC_CACHE_00000', result: { ...options.value, [field]: Number(accepted) } };
+            }).catch(error => { throw new CLASSES.CacheError(error); });
+        } catch (error) { return Promise.reject(new CLASSES.CacheError(error)); }
+    },
+
     /**
      * This function is used to initiate entity loader process. If there is any functionalities, required to be executed on entity loading. 
      * defined it that with Promise way

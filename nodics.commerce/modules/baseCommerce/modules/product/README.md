@@ -79,3 +79,16 @@ remains provider-paged discovery. Larger deployments should replace
 `DefaultProductCatalogueQueryService` with their search provider's aggregation
 implementation. Published price summaries are used only for display ordering;
 checkout still resolves price, tax, stock and payment through their owners.
+
+## Selective source authoring APIs
+
+`GET /product/capabilities`, `POST /product/safe-search`, `PUT /product` and
+`PATCH /product` reuse the generated schema controllers. Broad generated CRUD,
+delete and bulk routes remain disabled. Source create/update requires Staged;
+Online publication/ingestion continues through the owning domain operation.
+The module prefix and API version come from the selected runtime.
+See [the authoring contract](llm/contracts/README.md#source-authoring-apis) and
+[customization example](llm/examples/README.md#source-authoring-customization).
+
+This capability declares an inert model-service inventory for [governed Local reset](../../../../../nodics.foundation/modules/nSystem/llm/contracts/local-reset.md).
+A server must explicitly select it; contributions never enable reset or bypass tenant, environment, confirmation or required-service checks.

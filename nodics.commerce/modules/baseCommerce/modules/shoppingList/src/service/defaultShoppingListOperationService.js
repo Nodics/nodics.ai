@@ -13,13 +13,20 @@ const crypto = require('node:crypto');
 
 /** @module shoppingList/src/service/defaultShoppingListOperationService @description Owns shopping-list wishlist, compare, and save-for-later operations across caller contexts. @layer service @owner shoppingList */
 module.exports = {
-    unwrap: response => response && Object.prototype.hasOwnProperty.call(response, 'result') ? response.result : response,
+    /** Unwraps a standard result envelope while preserving raw provider values. */
+    unwrap: function (response) { return response && Object.prototype.hasOwnProperty.call(response, 'result') ? response.result : response; },
     /**
      * Executes `policy` as a loader-visible operation owned by this module.
      * @returns {*} Result defined by the owning module contract.
      * @override Later-loaded modules may replace this member through the standard merge contract.
      */
     policy: function () { return ((CONFIG.get('shoppingList') || {}).customerApi) || {}; },
+    /** Delegates explicit store reference validation to its existing Store owner. @param {Object} request Caller context. @param {string} [persistedStoreCode] Owned list store. @returns {string} Store code. */
+    storeCode: function (request, persistedStoreCode) {
+        const service = SERVICE.DefaultStoreContextService;
+        if (!service || typeof service.resolveStoreCode !== 'function') throw new Error('Store context service is unavailable');
+        return service.resolveStoreCode(request, persistedStoreCode);
+    },
     /**
      * Executes `supportedTypes` as a loader-visible operation owned by this module.
      * @returns {*} Result defined by the owning module contract.
@@ -44,7 +51,7 @@ module.exports = {
      * @override Later-loaded modules may replace this member through the standard merge contract.
      */
     listCode: function (request) {
-        return ['shoppingList', request.tenant, request.ownerId, this.normalizeType(request.listType), request.payload && request.payload.storeCode || request.query && request.query.storeCode || this.policy().defaultStoreCode || 'default'].join(':');
+        return ['shoppingList', request.tenant, request.ownerId, this.normalizeType(request.listType), this.storeCode(request)].join(':');
     },
     /**
      * Executes `limit` as a loader-visible operation owned by this module.
@@ -81,7 +88,7 @@ module.exports = {
             tenant: request.tenant,
             ownerId: request.ownerId,
             listType,
-            storeCode: payload.storeCode || query.storeCode || this.policy().defaultStoreCode || 'agoraMainStore',
+            storeCode: this.storeCode(request),
             locale: payload.locale || query.locale || this.policy().defaultLocale || 'en',
             status: 'ACTIVE',
             active: true,
@@ -100,7 +107,11 @@ module.exports = {
         const response = await SERVICE.DefaultShoppingListService.get({ tenant: request.tenant, authData: request.authData, query: { tenant: request.tenant, ownerId: request.ownerId, code: listCode, status: 'ACTIVE' }, pageSize: 1 });
         const result = this.unwrap(response);
         const existing = Array.isArray(result) ? result[0] : result;
-        if (existing) return existing;
+        if (existing) {
+            this.storeCode({ storeCode: existing.storeCode });
+            this.storeCode(request, existing.storeCode);
+            return existing;
+        }
         return SERVICE.DefaultShoppingListService.save({ tenant: request.tenant, authData: request.authData, model: this.listModel(request) }).then(this.unwrap);
     },
     /**

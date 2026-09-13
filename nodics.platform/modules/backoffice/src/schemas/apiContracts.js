@@ -938,6 +938,30 @@ const moduleLease = {
 };
 
 module.exports = {
+  registrationResult: {
+    type: 'object', required: ['code', 'data'],
+    properties: {
+      code: { type: 'string' },
+      data: {
+        type: 'object', required: ['instanceId', 'registeredModules', 'operationalState'],
+        properties: {
+          instanceId: { type: 'string' }, registeredModules: { type: 'integer', minimum: 1 },
+          reconciledFunctionalModules: { type: 'integer', minimum: 0 },
+          operationalState: {
+            type: 'object', required: ['instanceId', 'projectCode', 'expiresAt', 'modules'],
+            properties: {
+              instanceId: { type: 'string' }, projectCode: { type: 'string' },
+              expiresAt: { type: 'integer', minimum: 1 },
+              modules: { type: 'array', maxItems: 512, items: {
+                type: 'object', required: ['moduleName', 'enabled', 'catalogueRevision'],
+                properties: { moduleName, enabled: { type: 'boolean' }, catalogueRevision: { type: 'integer', minimum: 0 } }
+              } }
+            }
+          }
+        }
+      }
+    }
+  },
   axisPolicy: axisPolicy,
   axisPolicyUpdate: axisPolicyUpdate,
   moduleName: moduleName,

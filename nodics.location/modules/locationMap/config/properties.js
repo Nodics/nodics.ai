@@ -17,6 +17,22 @@
  * @override Project, environment, server, node, tenant, or customer layers may override these defaults through Nodics configuration layering.
  */
 module.exports = {
+    // Inert inventory; an allowed local server must explicitly select this capability.
+    localResetProvider: {
+        "contributions": {
+            "locationMap": {
+                "serviceNames": {
+                    "DefaultLocationMapControlPresetService": true,
+                    "DefaultLocationMapLayerService": true,
+                    "DefaultLocationMapProviderConfigurationService": true,
+                    "DefaultLocationMapProviderService": true,
+                    "DefaultLocationMapStylePresetService": true,
+                    "DefaultLocationMapUsageService": true
+                }
+            }
+        }
+    },
+
     locationMapConfiguration: {
         refreshIntervalMs: 15000,
         providerAttributions: { MAPBOX: '© Mapbox · © OpenStreetMap contributors', OSM: '© OpenStreetMap contributors · Tiles: OpenStreetMap France' },

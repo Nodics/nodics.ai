@@ -17,6 +17,27 @@
  * @override Project, environment, server, node, tenant, or customer layers may override these defaults through Nodics configuration layering.
  */
 module.exports = {
+    // Inert inventory; an allowed local server must explicitly select this capability.
+    localResetProvider: {
+        "contributions": {
+            "profile": {
+                "serviceNames": {
+                    "DefaultAddressService": true,
+                    "DefaultContactService": true,
+                    "DefaultCustomerService": true,
+                    "DefaultEmployeeService": true,
+                    "DefaultEnterpriseService": true,
+                    "DefaultIdentityMigrationAuditService": true,
+                    "DefaultPasswordService": true,
+                    "DefaultPrincipalScopeAssignmentService": true,
+                    "DefaultTenantService": true,
+                    "DefaultUserGroupService": true,
+                    "DefaultUserStateService": true
+                }
+            }
+        }
+    },
+
   schemaPolicies: {
     profile: {
       administrative: {
@@ -529,6 +550,7 @@ module.exports = {
     effects: ["ALLOW", "DENY"],
     statuses: ["ACTIVE", "INACTIVE", "EXPIRED"],
     scopeTypes: [
+      "RUNTIME_DEPLOYMENT",
       "GLOBAL",
       "TENANT",
       "ENTERPRISE",

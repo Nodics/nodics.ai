@@ -25,3 +25,15 @@ The publication command loads current manifest-listed records, publishes Product
 projections for that store, restores operational records through their owners,
 and verifies discovery/PDP delivery. A checksum mismatch rejects the handoff;
 it must be repaired in a new source release, never bypassed or restored manually.
+
+Project command defaults contain reusable operations only. Application server and
+environment aliases, named customer acceptance journeys and media seeds are
+project-owned `nodics.project.json` tooling commands. Declare scripts under
+`tooling.scriptOwnership.projectOwned`; the existing executor supplies project and
+framework roots. Do not copy topology, release or configuration resolvers into the
+project. Project documentation generators read stable publication identifiers,
+routes, labels and channels from `docs/catalogue.json.publication`, validated
+before writing. The generic data-manifest command refreshes only explicitly
+declared development-baseline checksums; changed immutable releases fail before
+any manifest write. Environment composition selects an explicit code or the sole
+declared composition and reads only its declared environment variable.

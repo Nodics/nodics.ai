@@ -11,7 +11,7 @@
 
 /** @module discoveryMapping/src/schemas/schemas @description Defines generic Discovery mapping schemas. @layer schema @owner discoveryMapping */
 module.exports = { discoveryMapping: {
-    discoveryFieldMapping: Object.assign({ super: 'base', model: true, schemaPolicies: ['tenantOwned'], service: { enabled: true }, router: { enabled: false }, cache: { enabled: false }, event: { enabled: false }, search: { enabled: false } }, { definition: {
+    discoveryFieldMapping: Object.assign({ super: 'base', model: true, schemaPolicies: ['tenantOwned'], service: { enabled: true }, router: { groups: { schemaOperations: true }, enabled: true }, cache: { enabled: false }, event: { enabled: false }, search: { enabled: false } }, { definition: {
         code: { type: 'string', required: true , description: 'Uniquely identifies this record for references, APIs, imports, and business administration.'},
         tenant: { type: 'string', required: true , description: 'Identifies the runtime tenant partition that scopes this record.'},
         ownerType: { type: 'string', required: true , description: 'Classifies the type of owner responsible for this record.'},

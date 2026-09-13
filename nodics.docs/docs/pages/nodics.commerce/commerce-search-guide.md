@@ -15,7 +15,7 @@ rebuilt whenever the authoritative data changes.
 | Commerce Search core | `../nodics.commerce/modules/baseCommerce/modules/commerceSearch/modules/commerceSearchCore/package.json` |
 | Product catalogue | `../nodics.commerce/modules/baseCommerce/modules/product/package.json` |
 | Discovery docs | `docs/pages/nodics.discovery/search-indexing-discovery.md` |
-| Agora search data | `../../nodics.kickoff/modules/agora.apparel/data/sample-v001/commerce/headers/commerceSearch/` |
+| Agora search data | `../../nodics.kickoff/modules/agora.apparel/data/sample-v002/commerce/headers/commerceSearch/` |
 
 ## Projection flow
 

@@ -11,6 +11,7 @@
 
 const _ = require('lodash');
 const fs = require('fs');
+const path = require('path');
 
 /**
  * @module config/bin/NodicsRuntime
@@ -103,6 +104,46 @@ module.exports = function () {
             options.CUSTOM_HOME = process.env.CUSTOM_HOME || options.NODICS_HOME;
         }
         _customHome = options.CUSTOM_HOME;
+    };
+
+    /** Returns the active lifecycle phase without introducing another runtime identity. @returns {string} Phase. */
+    this.getLifecycleOperation = function () {
+        return _options.lifecycleOperation || 'start';
+    };
+
+    /**
+     * Resolves generated output owned by the selected server, shared by its nodes.
+     * @param {string} type Artifact type.
+     * @returns {string} Absolute output directory.
+     */
+    this.getGeneratedArtifactPath = function (type) {
+        if (!_serverPath) throw new Error('Select a server before resolving generated artifacts');
+        const locations = {
+            service: ['src', 'service', 'gen'], facade: ['src', 'facade', 'gen'],
+            controller: ['src', 'controller', 'gen'], test: ['test', 'gen'],
+            openapi: ['generated', 'openapi'], dist: ['src', 'dist'], buildManifest: ['generated', 'build.json']
+        };
+        if (!Object.prototype.hasOwnProperty.call(locations, type)) throw new Error('Unknown generated artifact type: ' + type);
+        const projectRoot = path.resolve(_customHome), serverRoot = path.resolve(_serverPath);
+        const relativeServer = path.relative(projectRoot, serverRoot);
+        if (path.isAbsolute(relativeServer) || relativeServer === '..' || relativeServer.startsWith('..' + path.sep)) {
+            throw new Error('Generated server output must stay inside the selected project');
+        }
+        const output = path.join(serverRoot, ...locations[type]);
+        // A project root may itself be a mounted/symlinked checkout. Beneath that
+        // explicit root, server/output symlinks cannot redirect writes or cleanup.
+        let current = projectRoot;
+        for (const part of path.relative(projectRoot, output).split(path.sep)) {
+            current = path.join(current, part);
+            try {
+                if (fs.lstatSync(current).isSymbolicLink()) {
+                    throw new Error('Generated server output must not traverse a symbolic link: ' + current);
+                }
+            } catch (error) {
+                if (error.code !== 'ENOENT') throw error;
+            }
+        }
+        return output;
     };
 
     this.initEnvironment = function (options) {

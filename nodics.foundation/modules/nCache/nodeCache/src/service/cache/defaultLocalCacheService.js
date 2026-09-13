@@ -20,6 +20,25 @@
 const _ = require('lodash');
 
 module.exports = {
+    /** Serializes version comparison and write in one local event-loop operation. */
+    putVersioned: function (options) {
+        try {
+            const key = SERVICE.DefaultCacheConfigurationService.createStorageKey(options);
+            const field = options.versionProperty || 'revision';
+            const incoming = options.value && options.value[field];
+            if (!Number.isSafeInteger(incoming) || incoming < 0) throw new Error('Invalid cache version');
+            const current = options.channel.client.get(key);
+            if (current && (!Number.isSafeInteger(current[field]) || current[field] < 0)) throw new Error('Invalid stored cache version');
+            const assigned = options.advance === true ? Math.max(incoming, current ? current[field] + 1 : incoming) : incoming;
+            if (!Number.isSafeInteger(assigned)) throw new Error('Cache version overflow');
+            if (current && assigned < current[field]) throw new Error('Stale versioned cache write');
+            const stored = _.cloneDeep(options.value);
+            stored[field] = assigned;
+            options.channel.client.set(key, stored, SERVICE.DefaultCacheConfigurationService.resolveTtl(options));
+            return Promise.resolve({ code: 'SUC_CACHE_00000', result: _.cloneDeep(stored) });
+        } catch (error) { return Promise.reject(new CLASSES.CacheError(error)); }
+    },
+
     /**
      * This function is used to initiate entity loader process. If there is any functionalities, required to be executed on entity loading. 
      * defined it that with Promise way

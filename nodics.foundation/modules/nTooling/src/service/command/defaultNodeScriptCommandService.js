@@ -33,7 +33,7 @@ module.exports = {
         }
         const result = spawnSync(process.execPath, [scriptPath].concat(context.command.arguments || [], context.args), {
             cwd: context.home,
-            env: Object.assign({}, process.env, { NODICS_HOME: context.home }),
+            env: Object.assign({}, process.env, { NODICS_HOME: context.home, NODICS_PROJECT_ROOT: context.home }),
             stdio: 'inherit'
         });
         if (result.error) {

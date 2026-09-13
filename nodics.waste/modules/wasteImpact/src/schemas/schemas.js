@@ -13,7 +13,7 @@
 
 
 module.exports = { wasteImpact: {
-    wasteImpactSelection: Object.assign({ super: 'base', model: true, backoffice: { mutationMode: 'READ_ONLY' }, schemaPolicies: ['operational'], service: { enabled: true }, router: { enabled: false }, cache: { enabled: false }, event: { enabled: false }, search: { enabled: false } }, { definition: {
+    wasteImpactSelection: Object.assign({ super: 'base', model: true, backoffice: { mutationMode: 'READ_ONLY' }, schemaPolicies: ['operational'], service: { enabled: true }, router: { groups: { schemaOperations: true }, enabled: true }, cache: { enabled: false }, event: { enabled: false }, search: { enabled: false } }, { definition: {
         code: { type: 'string', required: true, description: 'Immutable acceptance command identity.' },
         assetCode: { type: 'string', required: true, description: 'Asset whose accepted assessment changed.' },
         assessmentRef: { type: 'object', required: true, description: 'Explicitly accepted saved assessment.' },
@@ -26,7 +26,7 @@ module.exports = { wasteImpact: {
         revision: { type: 'int', required: true, default: 0, description: 'Initial immutable event revision.' },
         metadata: { type: 'object', required: false, description: 'Command fingerprint for replay validation.' }
     }, refSchema: { assessmentRef: {"enabled":true,"moduleName":"wasteImpact","schemaName":"wasteImpactResult","type":"one","propertyName":"code"}, previousAssessmentRef: {"enabled":true,"moduleName":"wasteImpact","schemaName":"wasteImpactResult","type":"one","propertyName":"code"} } }),
-    wasteImpactMetric: Object.assign({ super: 'base', model: true, schemaPolicies: ['operational'], service: { enabled: true }, router: { enabled: false }, cache: { enabled: false }, event: { enabled: false }, search: { enabled: false } }, { definition: {
+    wasteImpactMetric: Object.assign({ super: 'base', model: true, schemaPolicies: ['operational'], service: { enabled: true }, router: { groups: { schemaOperations: true }, enabled: true }, cache: { enabled: false }, event: { enabled: false }, search: { enabled: false } }, { definition: {
         code: { type: 'string', required: true , description: 'Uniquely identifies this record for references, APIs, imports, and business administration.'},
         name: { type: 'object', required: true , description: 'Stores the business display name shown to administrators and related user journeys.'},
         unitOfMeasure: { type: 'string', required: true , description: 'Stores the unit of measure value used by this record.'},
@@ -35,7 +35,7 @@ module.exports = { wasteImpact: {
         revision: { type: 'int', required: true, default: 0 , description: 'Tracks the business revision used for governance, review, and optimistic update checks.'},
         metadata: { type: 'object', required: false , description: 'Stores additional structured metadata needed by extensions without changing the core schema contract.'}
     } }),
-    wasteImpactProfile: Object.assign({ super: 'base', model: true, schemaPolicies: ['operational'], service: { enabled: true }, router: { enabled: false }, cache: { enabled: false }, event: { enabled: false }, search: { enabled: false } }, { definition: {
+    wasteImpactProfile: Object.assign({ super: 'base', model: true, schemaPolicies: ['operational'], service: { enabled: true }, router: { groups: { schemaOperations: true }, enabled: true }, cache: { enabled: false }, event: { enabled: false }, search: { enabled: false } }, { definition: {
         code: { type: 'string', required: true , description: 'Uniquely identifies this record for references, APIs, imports, and business administration.'},
         name: { type: 'object', required: true , description: 'Stores the business display name shown to administrators and related user journeys.'},
         categoryCode: { type: 'string', required: false , description: 'Stores the category code used to classify, link, or resolve this record.'},
@@ -49,7 +49,7 @@ module.exports = { wasteImpact: {
         revision: { type: 'int', required: true, default: 0 , description: 'Tracks the business revision used for governance, review, and optimistic update checks.'},
         metadata: { type: 'object', required: false , description: 'Stores additional structured metadata needed by extensions without changing the core schema contract.'}
     } }),
-    wasteImpactResult: Object.assign({ super: 'base', model: true, backoffice: { mutationMode: 'READ_ONLY' }, schemaPolicies: ['operational'], service: { enabled: true }, router: { enabled: false }, cache: { enabled: false }, event: { enabled: false }, search: { enabled: false } }, { definition: {
+    wasteImpactResult: Object.assign({ super: 'base', model: true, backoffice: { mutationMode: 'READ_ONLY' }, schemaPolicies: ['operational'], service: { enabled: true }, router: { groups: { schemaOperations: true }, enabled: true }, cache: { enabled: false }, event: { enabled: false }, search: { enabled: false } }, { definition: {
         code: { type: 'string', required: true , description: 'Uniquely identifies this record for references, APIs, imports, and business administration.'},
         sourceRef: { type: 'object', required: true , description: 'References the related source record used by this record.'},
         profileCode: { type: 'string', required: true , description: 'Stores the profile code used to classify, link, or resolve this record.'},

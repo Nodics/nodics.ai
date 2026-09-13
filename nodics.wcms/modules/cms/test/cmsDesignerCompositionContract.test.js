@@ -29,14 +29,10 @@ const profileGroups = require(path.join(root, '../nodics.platform/modules/profil
 
 assert.strictEqual(wcmsProperties.apiExposure.categories.cmsAuthoring.enabled, true,
     'WCMS must enable cmsAuthoring at module default so server config only carries topology deltas');
-assert.strictEqual(wcmsProperties.cms.designerAuthoring.draftDefaults.catalogCode, 'nexusContentCatalog',
-    'WCMS module default designer policy must point to an installed Nexus authoring catalog');
-assert.strictEqual(wcmsProperties.cms.designerAuthoring.draftDefaults.templateCode, 'nexusCorporatePageTemplate',
-    'WCMS module default designer policy must not point to stale documentation templates');
-assert.deepStrictEqual(wcmsProperties.cms.designerAuthoring.draftDefaults.slots, ['main'],
-    'WCMS module default designer policy must expose the Nexus template slot shape');
-assert(wcmsProperties.cms.designerAuthoring.componentKinds.some(kind => kind.typeCode === 'nexusPageHeroType'),
-    'WCMS module default designer policy must expose Nexus component kinds');
+assert.strictEqual(wcmsProperties.cms, undefined, 'WCMS group must not select a customer authoring application');
+const cmsProperties = require('../config/properties');
+assert.deepStrictEqual(cmsProperties.cms.designerAuthoring.draftDefaults, {});
+assert.deepStrictEqual(cmsProperties.cms.designerAuthoring.componentKinds, []);
 assert(authProperties.identityGovernance.permissionCatalog.includes('cms.backoffice.manage'),
     'cms.backoffice.manage must be in the governed permission catalog');
 assert(authProperties.identityGovernance.permissionCatalog.includes('cms.publication.emergencyOverride'),
@@ -180,10 +176,8 @@ const draft = {
     assert.strictEqual(model.result.rules.arbitrarySlots, true);
     assert.strictEqual(model.result.rules.frontendPersistence, false);
     assert(model.result.operations.includes('associateMedia'));
-    assert.strictEqual(model.result.defaults.draftDefaults.catalogCode, 'nexusContentCatalog',
-        'WCMS must publish designer draft defaults through the authoring model');
-    assert(model.result.defaults.componentKinds.some(kind => kind.typeCode === 'nexusPageHeroType'),
-        'WCMS must publish component-kind options instead of forcing Axis to own backend type codes');
+    assert.deepStrictEqual(model.result.defaults.draftDefaults, {}, 'An unconfigured runtime must not invent application references');
+    assert.deepStrictEqual(model.result.defaults.componentKinds, [], 'An unconfigured runtime must not invent renderer/type bindings');
     assert(model.result.metadata.contentCatalogs.some(catalog => catalog.code === 'nexusContentCatalog'),
         'WCMS must expose live content catalog references for Axis Designer selection');
     assert(model.result.metadata.sites.some(site => site.code === 'nexusCorporateSite' &&

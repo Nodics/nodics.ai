@@ -4,6 +4,14 @@ This folder contains examples that help AI agents and developers work correctly 
 
 Prefer small examples that show proper layered customization, configuration overrides, service extension, schema/router changes, tests, and documentation updates without modifying unrelated Nodics code.
 
+When adding an enterprise business field in a project schema, retain Profile's
+setup command and its principal-bound retry key. The effective Schema Utility
+descriptor controls whether the field may be submitted and returned. Verify the
+project field is retained, a managed tenant field is rejected, missing metadata
+cannot create an enterprise, and interrupted activation retries without another
+save. `test/enterpriseWorkbenchSetupContract.test.js` exercises these boundaries
+with the Workbench service absent. Do not copy the descriptor builder into Profile.
+
 For application-orchestrated sign-in, request the service-authenticated external
 browser handoff with configured application/proof and the original allowed
 browser origin. Return its opaque code to the browser, which completes it on

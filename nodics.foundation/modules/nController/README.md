@@ -67,6 +67,26 @@ When adding a controller:
 - add route/controller request-mapping tests;
 - update generated context after changes.
 
+## Generated schema request safety
+
+Generated read/update/remove envelopes now map only declared query/model/list/
+search inputs and boolean `recursive`/`returnModified` options. Bodies cannot
+replace secured principal, tenant, enterprise, module, trace, headers or
+transaction context. Create/update model filtering delegates to the existing
+nDatabase schema utility; original managed revisions remain available to CAS.
+
+Mutations resolve active schema aliases and check the compiled schema's Staged,
+read-only, business-create and explicit operation rules before mapping input.
+Validated idempotency headers are forwarded without claiming durable replay.
+The existing generic query/bulk APIs and outer response envelopes remain.
+Consumers needing a persisted update record request `returnModified: true`.
+
+Rebuild generated controllers when adopting this template change, then restart
+selected runtimes through the normal process. Review former Workbench mutation
+helper overrides and migrate them to `DefaultSchemaUtilityService`. Verify
+`nDatabase/database/test/generatedMutationParityContract.test.js` alongside
+schema access, concurrency, authoring, references and domain setup tests.
+
 ## Tests
 
 Run:

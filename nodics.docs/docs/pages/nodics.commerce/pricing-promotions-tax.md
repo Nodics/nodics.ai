@@ -128,3 +128,15 @@ Evidence is maintained through pricing selection tests, customer price summary
 tests, pricing publication tests, promotion simulation and customer API tests,
 promotion budget schema contracts, tax publication tests, and generated schema
 contracts for every financial decision record.
+
+## Source authoring APIs
+
+PriceRow source authoring uses selective capabilities/search/create/update APIs
+through the existing generated controller. Generic PriceRow writes now require
+Staged; Online/Operational/unassigned writes reject. PriceBook and other Pricing
+schema transports are outside this bounded migration. Publication ingestion keeps
+its existing domain-owned path.
+See [selective schema APIs](../nodics.foundation/schema-data-modeling.md#selective-module-apis-and-route-driven-clients)
+for payloads, authorization compatibility, route customization, deployment order
+and remaining acceptance. No live-authenticated acceptance is implied by the
+source and prepared-runtime tests.

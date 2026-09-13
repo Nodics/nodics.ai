@@ -116,3 +116,6 @@ Every media lifecycle change must update:
 - canonical documentation content when the behavior is visible to administrators, developers, operators, business users, or Axis.
 
 Tests must cover positive, negative, boundary, contract, integration-ready, and regression behavior without relying on production cloud services unless a live-provider test is explicitly marked and guarded.
+
+This capability declares an inert model-service inventory for [governed Local reset](../../../nodics.foundation/modules/nSystem/llm/contracts/local-reset.md).
+A server must explicitly select it; contributions never enable reset or bypass tenant, environment, confirmation or required-service checks.

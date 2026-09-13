@@ -135,6 +135,7 @@ module.exports = {
                     header.options.assetBaseRoots = this.resolveAssetBaseRoots(fileObj.list);
                     if (request.inputPath.fileType) {
                         request.files = fileObj.list;
+                        request.selectionFiles = fileObj.selectionFiles;
                         SERVICE.DefaultPipelineService.start('dataFinalizerInitPipeline', request, {}).then(success => {
                             _self.processFiles(request, response, options).then(success => {
                                 resolve(success);

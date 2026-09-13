@@ -209,3 +209,5 @@ redaction, and shared-state behavior.
 - HTTP authorization: [nRouter](../nRouter/README.md)
 
 Customer access tokens may carry Profile-issued `externalIdentityLinkCode`, a bounded opaque binding for verified channel sessions. Profile owns live link checks and refresh propagation; nAuth never verifies external provider proofs.
+
+Runtime JWTs carry a Profile-approved deployment scope; distributed atomic security stamps prevent stale issuance from reversing revocation.

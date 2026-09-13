@@ -11,6 +11,22 @@
 
 /** @module checkoutCore/config/properties @description Defines Commerce capability and schema access policies. @layer config @owner checkoutCore */
 module.exports = {
+    // Inert inventory; an allowed local server must explicitly select this capability.
+    localResetProvider: {
+        "contributions": {
+            "checkoutCore": {
+                "serviceNames": {
+                    "DefaultCheckoutCheckpointService": true,
+                    "DefaultCheckoutSessionService": true,
+                    "DefaultCommerceCapacityEvidenceService": true,
+                    "DefaultCommerceCompatibilityRecordService": true,
+                    "DefaultCommerceMigrationRecordService": true,
+                    "DefaultCommerceRecoveryCheckpointService": true
+                }
+            }
+        }
+    },
+
   checkoutCore: { enabled: true },
   schemaPolicies: {
     checkoutCore: {

@@ -11,6 +11,20 @@
 
 /** @module pricing/config/properties @description Defines Commerce capability and schema access policies. @layer config @owner pricing */
 module.exports = {
+    // Inert inventory; an allowed local server must explicitly select this capability.
+    localResetProvider: {
+        "contributions": {
+            "pricing": {
+                "serviceNames": {
+                    "DefaultPriceBookService": true,
+                    "DefaultPriceDecisionService": true,
+                    "DefaultPriceQuoteService": true,
+                    "DefaultPriceRowService": true
+                }
+            }
+        }
+    },
+
     pricing: {
         enabled: true,
         customerSummary: {

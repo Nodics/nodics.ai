@@ -56,7 +56,7 @@ module.exports = {
             try {
                 let modulePath = this.getModulePath(moduleObject);
                 if (modulePath) {
-                    UTILS.removeDir(path.join(modulePath, 'test', 'gen'));
+                    UTILS.removeDir(NODICS.getGeneratedArtifactPath('test'));
                 }
                 resolve(true);
             } catch (error) {
@@ -113,7 +113,7 @@ module.exports = {
                     return;
                 }
 
-                let generatedSchemaDir = path.join(modulePath, 'test', 'gen', 'schema');
+                let generatedSchemaDir = path.join(NODICS.getGeneratedArtifactPath('test'), 'schema', moduleName);
                 fs.mkdirSync(generatedSchemaDir, { recursive: true });
 
                 let effectiveModuleSchemas = this.resolveModuleSchemasForGeneration(moduleName, moduleSchemas);
@@ -259,7 +259,7 @@ module.exports = {
         }
 
         let modulePath = this.getModulePath(options.moduleObject);
-        let generatedApiDir = path.join(modulePath, 'test', 'gen', 'api');
+        let generatedApiDir = path.join(NODICS.getGeneratedArtifactPath('test'), 'api', options.moduleName);
         fs.mkdirSync(generatedApiDir, { recursive: true });
 
         let fileName = path.join(
@@ -281,7 +281,7 @@ module.exports = {
         }
 
         let modulePath = this.getModulePath(options.moduleObject);
-        let generatedScenarioDir = path.join(modulePath, 'test', 'gen', 'apiScenario');
+        let generatedScenarioDir = path.join(NODICS.getGeneratedArtifactPath('test'), 'apiScenario', options.moduleName);
         fs.mkdirSync(generatedScenarioDir, { recursive: true });
 
         let fileName = path.join(
@@ -303,7 +303,7 @@ module.exports = {
         }
 
         let modulePath = this.getModulePath(options.moduleObject);
-        let generatedCrudDir = path.join(modulePath, 'test', 'gen', 'crud');
+        let generatedCrudDir = path.join(NODICS.getGeneratedArtifactPath('test'), 'crud', options.moduleName);
         fs.mkdirSync(generatedCrudDir, { recursive: true });
 
         let fileName = path.join(

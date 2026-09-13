@@ -10,4 +10,4 @@
  */
 
 /** @module stripeProvider/nodics @description Declares the Stripe Provider capability lifecycle. @layer module @owner stripeProvider */
-module.exports = { init: () => Promise.resolve(true), postInit: () => Promise.resolve(true) };
+module.exports = { init: function () { return Promise.resolve(true); }, postInit: function () { return Promise.resolve(true); } };

@@ -17,10 +17,54 @@
  * @override Project modules may provide later property contributions for CMS rendering, data, and integration settings.
  */
 module.exports = {
+    // Inert inventory; an allowed local server must explicitly select this capability.
+    localResetProvider: {
+        "contributions": {
+            "cms": {
+                "serviceNames": {
+                    "DefaultCmsComponentDetailService": true,
+                    "DefaultCmsComponentLocalizationService": true,
+                    "DefaultCmsComponentMediaService": true,
+                    "DefaultCmsComponentService": true,
+                    "DefaultCmsComponentTypeGroupService": true,
+                    "DefaultCmsDocumentationAccessPolicyService": true,
+                    "DefaultCmsDocumentationDashboardService": true,
+                    "DefaultCmsDocumentationNavigationService": true,
+                    "DefaultCmsDocumentationNodeService": true,
+                    "DefaultCmsDocumentationPageService": true,
+                    "DefaultCmsDocumentationProductService": true,
+                    "DefaultCmsDocumentationPublicationStateService": true,
+                    "DefaultCmsDocumentationSearchMetadataService": true,
+                    "DefaultCmsMigrationAuditService": true,
+                    "DefaultCmsNavigationNodeService": true,
+                    "DefaultCmsOnlinePublicationPointerService": true,
+                    "DefaultCmsPageRouteService": true,
+                    "DefaultCmsPageService": true,
+                    "DefaultCmsPageTemplateService": true,
+                    "DefaultCmsPublicationDeploymentReceiptService": true,
+                    "DefaultCmsPublicationEventOutboxService": true,
+                    "DefaultCmsPublicationManifestService": true,
+                    "DefaultCmsRestrictionService": true,
+                    "DefaultCmsRestrictionTypeService": true,
+                    "DefaultCmsSiteService": true,
+                    "DefaultCmsSlotDefinitionService": true,
+                    "DefaultCmsTypeCode2RendererService": true,
+                    "DefaultCmsTypeCodeService": true
+                }
+            }
+        }
+    },
+
     bodyParserHandler: {
         cmsPublicationBodyParserHandler: 'DefaultCmsPublicationBodyParserHandlerService'
     },
     cms: {
+        designerAuthoring: {
+            maximumReferenceLookupItems: 100,
+            requireNavigationForPublish: false,
+            draftDefaults: {},
+            componentKinds: []
+        },
         referenceLookup: { requireServiceToken: true, maximumResultCount: 1 },
         delivery: {
             defaultLocale: 'default',

@@ -17,6 +17,26 @@
  * @override Project, environment, server, node, tenant, or customer layers may override these defaults through Nodics configuration layering.
  */
 module.exports = {
+    // Inert inventory; an allowed local server must explicitly select this capability.
+    localResetProvider: {
+        "contributions": {
+            "editorial": {
+                "serviceNames": {
+                    "DefaultEditorialArticleLocalizationService": true,
+                    "DefaultEditorialArticleService": true,
+                    "DefaultEditorialArticleTaxonomyService": true,
+                    "DefaultEditorialAuthorService": true,
+                    "DefaultEditorialContentTypeService": true,
+                    "DefaultEditorialCorrectionService": true,
+                    "DefaultEditorialOnlineArticleService": true,
+                    "DefaultEditorialPublicationReceiptService": true,
+                    "DefaultEditorialSeriesService": true,
+                    "DefaultEditorialTaxonomyTermService": true
+                }
+            }
+        }
+    },
+
     schemaPolicies: { editorial: {
         tenantOwned: { accessGroups: { adminGroup: 10, serviceAccountUserGroup: 10, employeeUserGroup: 10 } },
         operational: { accessGroups: { adminGroup: 10, serviceAccountUserGroup: 10, employeeUserGroup: 10 } }

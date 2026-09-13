@@ -11,7 +11,7 @@
 
 /** @module loyaltyReservation/src/schemas/schemas @description Defines reward reservation records used before capture or release. @layer schema @owner loyaltyReservation @override Later modules may add governed reservation evidence while preserving payment-provider handoff semantics. */
 module.exports = { loyaltyReservation: {
-    rewardReservation: Object.assign({ super: 'base', model: true, schemaPolicies: ['operational'], service: { enabled: true }, router: { enabled: false }, cache: { enabled: false }, event: { enabled: false }, search: { enabled: false } }, { definition: {
+    rewardReservation: Object.assign({ super: 'base', model: true, schemaPolicies: ['operational'], service: { enabled: true }, router: { groups: { schemaOperations: true }, enabled: true }, cache: { enabled: false }, event: { enabled: false }, search: { enabled: false } }, { definition: {
         walletCode: { type: 'string', required: true , description: 'Stores the wallet code used to classify, link, or resolve this record.'},
         programCode: { type: 'string', required: true , description: 'Stores the program code used to classify, link, or resolve this record.'},
         rewardTypeCode: { type: 'string', required: true , description: 'Stores the reward type code used to classify, link, or resolve this record.'},

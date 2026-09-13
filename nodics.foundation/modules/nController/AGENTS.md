@@ -10,6 +10,15 @@ This file gives AI coding agents mandatory guidance for this Nodics module or pa
 
 ## Module Work Rules
 
+- Generated request bodies map through declared transport fields only. Never
+  merge body-supplied auth, tenant, enterprise, module/schema, headers, trace or
+  transaction context into the secured request. Resolve active aliases through
+  the existing schema utility owner and apply explicit operation restrictions.
+- Use shared nDatabase model normalization for generated HTTP create/update;
+  preserve original counter input and validated idempotency headers. Internal
+  service/import behavior stays in its existing owner. Keep promise and callback
+  completion/rejection equivalent and fail closed on missing shared services.
+
 - Generated mutation controllers must check shared schema authoring authority
   before merging body values, using the compiled schema identity and route module.
   Preserve rejection for Online publishable sources and read-only projections;

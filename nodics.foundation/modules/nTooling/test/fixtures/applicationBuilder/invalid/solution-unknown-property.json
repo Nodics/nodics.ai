@@ -1,15 +1,79 @@
 {
   "contractVersion": 0,
-  "identity": { "solutionCode": "unknownProperty", "customerCode": "reference", "projectCode": "unknownProperty" },
-  "environment": { "mode": "WORKSPACE", "class": "LOCAL" },
-  "capabilities": { "selected": ["nodics.commerce"], "domains": [] },
-  "commerce": { "stores": ["mainStore"], "catalogs": ["mainCatalog"], "locales": ["en"], "currencies": ["USD"] },
-  "topology": { "backendRuntimes": ["PLATFORM", "COMMERCE"], "frontends": ["AGORA"] },
-  "experience": { "storefront": "AGORA", "composition": "commerce", "routes": ["/"], "rendererKeys": [] },
-  "security": { "authentication": "PASSWORD", "authorization": "BACKEND_OWNED", "session": "BEARER", "corsOrigins": [], "publicApiCategories": ["customer"] },
+  "identity": {
+    "solutionCode": "unknownProperty",
+    "customerCode": "reference",
+    "projectCode": "unknownProperty"
+  },
+  "environment": {
+    "mode": "WORKSPACE",
+    "class": "LOCAL"
+  },
+  "capabilities": {
+    "selected": [
+      "nodics.commerce"
+    ],
+    "domains": []
+  },
+  "commerce": {
+    "stores": [
+      "mainStore"
+    ],
+    "catalogs": [
+      "mainCatalog"
+    ],
+    "locales": [
+      "en"
+    ],
+    "currencies": [
+      "USD"
+    ]
+  },
+  "topology": {
+    "backendRuntimes": [
+      "PLATFORM",
+      "COMMERCE"
+    ],
+    "frontends": [
+      "AGORA"
+    ]
+  },
+  "experience": {
+    "storefront": "AGORA",
+    "composition": "commerce",
+    "routes": [
+      "/"
+    ],
+    "rendererKeys": [],
+    "rendererByDomain": {}
+  },
+  "security": {
+    "authentication": "PASSWORD",
+    "authorization": "BACKEND_OWNED",
+    "session": "BEARER",
+    "corsOrigins": [],
+    "publicApiCategories": [
+      "customer"
+    ]
+  },
   "integrations": [],
-  "data": { "packs": [], "customerOwnedRoots": [] },
-  "qualification": { "profile": "CONTRACT", "journeys": ["commerce.discovery"], "freshDatabaseRequired": false },
-  "decisions": { "unresolved": [], "assumptions": [] },
+  "data": {
+    "packs": [],
+    "customerOwnedRoots": [],
+    "packDomains": {
+      "nexus.web": "content"
+    }
+  },
+  "qualification": {
+    "profile": "CONTRACT",
+    "journeys": [
+      "commerce.discovery"
+    ],
+    "freshDatabaseRequired": false
+  },
+  "decisions": {
+    "unresolved": [],
+    "assumptions": []
+  },
   "generatedBusinessLogic": true
 }

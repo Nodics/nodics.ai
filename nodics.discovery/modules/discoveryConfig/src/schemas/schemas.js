@@ -11,7 +11,7 @@
 
 /** @module discoveryConfig/src/schemas/schemas @description Defines generic Discovery configuration schemas. @layer schema @owner discoveryConfig */
 module.exports = { discoveryConfig: {
-    discoveryIndexConfiguration: Object.assign({ super: 'base', model: true, schemaPolicies: ['tenantOwned'], service: { enabled: true }, router: { enabled: false }, cache: { enabled: false }, event: { enabled: false }, search: { enabled: false } }, { definition: {
+    discoveryIndexConfiguration: Object.assign({ super: 'base', model: true, schemaPolicies: ['tenantOwned'], service: { enabled: true }, router: { groups: { schemaOperations: true }, enabled: true }, cache: { enabled: false }, event: { enabled: false }, search: { enabled: false } }, { definition: {
         code: { type: 'string', required: true , description: 'Uniquely identifies this record for references, APIs, imports, and business administration.'},
         tenant: { type: 'string', required: true , description: 'Identifies the runtime tenant partition that scopes this record.'},
         name: { type: 'string', required: true , description: 'Stores the business display name shown to administrators and related user journeys.'},
@@ -30,7 +30,7 @@ module.exports = { discoveryConfig: {
         status: { type: 'string', required: true, enum: ['DRAFT', 'READY', 'APPROVED', 'CURRENT', 'RETIRED'] , description: 'Tracks the lifecycle state that controls whether this record can be used in business processes.'},
         revision: { type: 'int', required: true , description: 'Tracks the business revision used for governance, review, and optimistic update checks.'}
     } }),
-    discoverySourceMixConfiguration: Object.assign({ super: 'base', model: true, schemaPolicies: ['tenantOwned'], service: { enabled: true }, router: { enabled: false }, cache: { enabled: false }, event: { enabled: false }, search: { enabled: false } }, { definition: {
+    discoverySourceMixConfiguration: Object.assign({ super: 'base', model: true, schemaPolicies: ['tenantOwned'], service: { enabled: true }, router: { groups: { schemaOperations: true }, enabled: true }, cache: { enabled: false }, event: { enabled: false }, search: { enabled: false } }, { definition: {
         code: { type: 'string', required: true , description: 'Uniquely identifies this record for references, APIs, imports, and business administration.'},
         tenant: { type: 'string', required: true , description: 'Identifies the runtime tenant partition that scopes this record.'},
         ownerType: { type: 'string', required: true , description: 'Classifies the type of owner responsible for this record.'},
@@ -39,7 +39,7 @@ module.exports = { discoveryConfig: {
         status: { type: 'string', required: true, enum: ['DRAFT', 'READY', 'APPROVED', 'CURRENT', 'RETIRED'] , description: 'Tracks the lifecycle state that controls whether this record can be used in business processes.'},
         revision: { type: 'int', required: true , description: 'Tracks the business revision used for governance, review, and optimistic update checks.'}
     } }),
-    discoveryQueryProfile: Object.assign({ super: 'base', model: true, schemaPolicies: ['tenantOwned'], service: { enabled: true }, router: { enabled: false }, cache: { enabled: false }, event: { enabled: false }, search: { enabled: false } }, { definition: {
+    discoveryQueryProfile: Object.assign({ super: 'base', model: true, schemaPolicies: ['tenantOwned'], service: { enabled: true }, router: { groups: { schemaOperations: true }, enabled: true }, cache: { enabled: false }, event: { enabled: false }, search: { enabled: false } }, { definition: {
         code: { type: 'string', required: true , description: 'Uniquely identifies this record for references, APIs, imports, and business administration.'},
         tenant: { type: 'string', required: true , description: 'Identifies the runtime tenant partition that scopes this record.'},
         ownerType: { type: 'string', required: true , description: 'Classifies the type of owner responsible for this record.'},
@@ -51,7 +51,7 @@ module.exports = { discoveryConfig: {
         status: { type: 'string', required: true, enum: ['DRAFT', 'READY', 'APPROVED', 'CURRENT', 'RETIRED'] , description: 'Tracks the lifecycle state that controls whether this record can be used in business processes.'},
         revision: { type: 'int', required: true , description: 'Tracks the business revision used for governance, review, and optimistic update checks.'}
     } }),
-    discoveryFacetProfile: Object.assign({ super: 'base', model: true, schemaPolicies: ['tenantOwned'], service: { enabled: true }, router: { enabled: false }, cache: { enabled: false }, event: { enabled: false }, search: { enabled: false } }, { definition: {
+    discoveryFacetProfile: Object.assign({ super: 'base', model: true, schemaPolicies: ['tenantOwned'], service: { enabled: true }, router: { groups: { schemaOperations: true }, enabled: true }, cache: { enabled: false }, event: { enabled: false }, search: { enabled: false } }, { definition: {
         code: { type: 'string', required: true , description: 'Uniquely identifies this record for references, APIs, imports, and business administration.'},
         tenant: { type: 'string', required: true , description: 'Identifies the runtime tenant partition that scopes this record.'},
         ownerType: { type: 'string', required: true , description: 'Classifies the type of owner responsible for this record.'},
@@ -59,7 +59,7 @@ module.exports = { discoveryConfig: {
         status: { type: 'string', required: true, enum: ['DRAFT', 'READY', 'APPROVED', 'CURRENT', 'RETIRED'] , description: 'Tracks the lifecycle state that controls whether this record can be used in business processes.'},
         revision: { type: 'int', required: true , description: 'Tracks the business revision used for governance, review, and optimistic update checks.'}
     } }),
-    discoveryRankingProfile: Object.assign({ super: 'base', model: true, schemaPolicies: ['tenantOwned'], service: { enabled: true }, router: { enabled: false }, cache: { enabled: false }, event: { enabled: false }, search: { enabled: false } }, { definition: {
+    discoveryRankingProfile: Object.assign({ super: 'base', model: true, schemaPolicies: ['tenantOwned'], service: { enabled: true }, router: { groups: { schemaOperations: true }, enabled: true }, cache: { enabled: false }, event: { enabled: false }, search: { enabled: false } }, { definition: {
         code: { type: 'string', required: true , description: 'Uniquely identifies this record for references, APIs, imports, and business administration.'},
         tenant: { type: 'string', required: true , description: 'Identifies the runtime tenant partition that scopes this record.'},
         ownerType: { type: 'string', required: true , description: 'Classifies the type of owner responsible for this record.'},
@@ -68,7 +68,7 @@ module.exports = { discoveryConfig: {
         status: { type: 'string', required: true, enum: ['DRAFT', 'READY', 'APPROVED', 'CURRENT', 'RETIRED'] , description: 'Tracks the lifecycle state that controls whether this record can be used in business processes.'},
         revision: { type: 'int', required: true , description: 'Tracks the business revision used for governance, review, and optimistic update checks.'}
     } }),
-    discoveryPublicationPolicy: Object.assign({ super: 'base', model: true, schemaPolicies: ['tenantOwned'], service: { enabled: true }, router: { enabled: false }, cache: { enabled: false }, event: { enabled: false }, search: { enabled: false } }, { definition: {
+    discoveryPublicationPolicy: Object.assign({ super: 'base', model: true, schemaPolicies: ['tenantOwned'], service: { enabled: true }, router: { groups: { schemaOperations: true }, enabled: true }, cache: { enabled: false }, event: { enabled: false }, search: { enabled: false } }, { definition: {
         code: { type: 'string', required: true , description: 'Uniquely identifies this record for references, APIs, imports, and business administration.'},
         tenant: { type: 'string', required: true , description: 'Identifies the runtime tenant partition that scopes this record.'},
         ownerType: { type: 'string', required: true , description: 'Classifies the type of owner responsible for this record.'},

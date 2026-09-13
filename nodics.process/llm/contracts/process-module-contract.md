@@ -118,3 +118,14 @@ added.
 For workflow/cronjob topology, trigger ownership, visual-designer authority,
 and where-to-write rules, also follow
 `llm/contracts/process-ownership-and-designer-contract.md`.
+
+### Operational admission for new instances
+
+`startInstance` checks the existing registration agent's current `workflow`
+activation and local runtime credential before reading a definition or creating
+an instance. Direct API, scheduled trigger and publication-start paths share
+that method. Preserve the requesting principal for domain authorization and
+audit; the runtime proof does not replace caller permission checks. Business
+deactivation blocks new instances while existing instances retain their normal
+completion, cancellation and recovery contract. Missing/stale authority fails
+closed without a second activation registry.

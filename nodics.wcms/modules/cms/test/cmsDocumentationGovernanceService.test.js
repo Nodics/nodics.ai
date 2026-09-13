@@ -265,21 +265,21 @@ assert.strictEqual(
     'BLOCKED'
 );
 
-const nexusProjection = service.renderProjection({ documentation: { records: pack, channel: 'NEXUS' } });
-assert.strictEqual(nexusProjection.channel, 'NEXUS');
+const nexusProjection = service.renderProjection({ documentation: { records: pack, channel: 'PUBLIC' } });
+assert.strictEqual(nexusProjection.channel, 'PUBLIC');
 assert.deepStrictEqual(nexusProjection.pages.map(page => page.code), ['publicPage']);
 assert.deepStrictEqual(nexusProjection.navigation[0].children.map(node => node.code), ['publicPageLink']);
 
 const axisProjection = service.renderProjection({
     documentation: {
         records: pack,
-        channel: 'AXIS',
+        channel: 'EMPLOYEE',
         principal: { authenticated: true, permissions: ['axis.documentation.read'] }
     }
 });
 assert.deepStrictEqual(axisProjection.pages.map(page => page.code), ['publicPage', 'authorPage']);
 
-const publicSearch = service.search({ documentation: { records: pack, query: 'author', channel: 'NEXUS' } });
+const publicSearch = service.search({ documentation: { records: pack, query: 'author', channel: 'PUBLIC' } });
 assert.strictEqual(publicSearch.total, 0);
 assert(publicSearch.noResultGuidance.includes('configuration key'));
 
@@ -287,7 +287,7 @@ const authorSearch = service.search({
     documentation: {
         records: pack,
         query: 'author',
-        channel: 'AXIS',
+        channel: 'EMPLOYEE',
         principal: { authenticated: true, permissions: ['axis.documentation.read'] }
     }
 });

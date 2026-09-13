@@ -35,6 +35,8 @@ loader.recordArtifactContribution(serviceArtifact, {
     layer: 'service',
     sourceModule: 'catalog',
     action: 'create',
+    contribution: { init() {}, calculate() {} },
+    generatedBaseline: true,
     filePath: '/nodics/nodics.foundation/modules/nCatalog/src/service/DefaultCatalogService.js'
 });
 
@@ -43,6 +45,7 @@ loader.recordArtifactContribution(serviceArtifact, {
     layer: 'service',
     sourceModule: 'customerCatalog',
     action: 'override',
+    contribution: { calculate() {}, extra: true },
     filePath: '/nodics/customer/customerCatalog/src/service/DefaultCatalogService.js'
 });
 
@@ -52,4 +55,21 @@ assert.strictEqual(serviceArtifact.xNodics.overrideTrace[1].sourceModule, 'custo
 assert.strictEqual(serviceArtifact.xNodics.overrideTrace[1].action, 'override');
 assert.strictEqual(serviceArtifact.xNodics.overrideTrace[1].file, './customer/customerCatalog/src/service/DefaultCatalogService.js');
 
+assert.deepStrictEqual(serviceArtifact.xNodics.overrideTrace[0].members, ['init', 'calculate']);
+assert.equal(serviceArtifact.xNodics.overrideTrace[0].generatedBaseline, true);
+assert.equal(serviceArtifact.xNodics.memberOrigins.init.sourceModule, 'catalog');
+assert.equal(serviceArtifact.xNodics.memberOrigins.calculate.sourceModule, 'customerCatalog');
+assert.equal(serviceArtifact.xNodics.memberOrigins.calculate.firstSourceModule, 'catalog');
+assert.equal(serviceArtifact.xNodics.memberOrigins.calculate.contributionIndex, 1);
+assert.equal(serviceArtifact.xNodics.memberOrigins.calculate.kind, 'method');
+assert.equal(serviceArtifact.xNodics.memberOrigins.extra.kind, 'property');
+global.SERVICE = { DefaultCatalogService: serviceArtifact };
+global.FACADE = {}; global.CONTROLLER = {}; global.PIPELINE = {};
+const report = require('../../nDynamo/src/service/tooling/defaultGovernanceReportGeneratorService').collectArtifactSummary();
+assert.equal(report.length, 1);
+assert.equal(report[0].contributions[0].generatedBaseline, true);
+assert.equal(report[0].memberOrigins.init.sourceModule, 'catalog');
+assert.equal(report[0].memberOrigins.calculate.sourceModule, 'customerCatalog');
+assert.equal(report[0].finalSourceModule, 'customerCatalog');
+assert(!JSON.stringify(report).includes('function ()'), 'Reports must not serialize implementation bodies');
 console.log('Artifact override traceability validated');

@@ -123,12 +123,21 @@ module.exports = {
                 ? SERVICE.DefaultSentinelRedisClientAdapterService.createSentinelClient(sentinelOptions)
                 : redis.createClient(clientOptions);
             let settled = false;
+            const rejectStartup = async (error, message) => {
+                if (settled) return;
+                settled = true;
+                // A failed client has not entered the central engine registry yet.
+                // Stop its reconnect loop here before returning the original error.
+                try {
+                    if (typeof client.destroy === 'function') await client.destroy();
+                    else if (typeof client.disconnect === 'function') await client.disconnect();
+                    else if (typeof client.quit === 'function') await client.quit();
+                } catch (cleanupError) { /* Preserve the connection failure. */ }
+                reject(new CLASSES.CacheError(error, message));
+            };
             client.on('error', error => {
                 _self.LOG.error('Redis cache client error for module: ' + moduleName, error);
-                if (!settled) {
-                    settled = true;
-                    reject(new CLASSES.CacheError(error, 'While creating Redis cache client'));
-                }
+                if (!settled) void rejectStartup(error, 'While creating Redis cache client');
             });
             client.connect().then(() => {
                 if (!settled) {
@@ -136,12 +145,7 @@ module.exports = {
                     _self.LOG.debug('Redis cache client is ready for module: ' + moduleName);
                     resolve({ code: 'SUC_CACHE_00000', result: client });
                 }
-            }).catch(error => {
-                if (!settled) {
-                    settled = true;
-                    reject(new CLASSES.CacheError(error, 'While connecting Redis cache client'));
-                }
-            });
+            }).catch(error => rejectStartup(error, 'While connecting Redis cache client'));
         });
     },
 
@@ -208,15 +212,18 @@ module.exports = {
 
      */
 
-    registerEvents: function (options) {
-        let moduleObject = NODICS.getModule(options.moduleName);
-        let database = Number(options.cacheOptions.database !== undefined ? options.cacheOptions.database : options.cacheOptions.db || 0);
-        return options.publishClient.configSet('notify-keyspace-events', 'Ex').then(() => {
-            let subscriber = options.publishClient.duplicate();
-            return subscriber.connect().then(() => Promise.all(Object.keys(options.options.events || {}).map(event => {
-                let trigger = options.options.events[event];
-                let serviceName = trigger.substring(0, trigger.indexOf('.'));
-                let functionName = trigger.substring(trigger.indexOf('.') + 1);
+    registerEvents: async function (options) {
+        const moduleObject = NODICS.getModule(options.moduleName);
+        const database = Number(options.cacheOptions.database !== undefined ? options.cacheOptions.database : options.cacheOptions.db || 0);
+        await options.publishClient.configSet('notify-keyspace-events', 'Ex');
+        const subscriber = options.publishClient.duplicate();
+        subscriber.on('error', error => this.LOG.error('Redis cache event subscriber failed for module: ' + options.moduleName, error));
+        try {
+            await subscriber.connect();
+            await Promise.all(Object.keys(options.options.events || {}).map(event => {
+                const trigger = options.options.events[event];
+                const serviceName = trigger.substring(0, trigger.indexOf('.'));
+                const functionName = trigger.substring(trigger.indexOf('.') + 1);
                 return subscriber.subscribe('__keyevent@' + database + '__:' + event, key => {
                     if (key.startsWith('authToken_')) key = key.substring(10);
                     SERVICE[serviceName][functionName](key, null, {
@@ -224,7 +231,14 @@ module.exports = {
                         moduleObject: moduleObject
                     });
                 });
-            }))).then(() => subscriber);
-        });
+            }));
+            return subscriber;
+        } catch (error) {
+            try {
+                if (typeof subscriber.destroy === 'function') await subscriber.destroy();
+                else if (typeof subscriber.disconnect === 'function') await subscriber.disconnect();
+            } catch (cleanupError) { /* Preserve the subscription failure. */ }
+            throw error;
+        }
     }
 };

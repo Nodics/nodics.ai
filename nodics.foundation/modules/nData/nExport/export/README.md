@@ -37,7 +37,7 @@ Export Process Framework (canonical documentation: `capability.data-exchange.tec
 2. When an HTTP request is present, the controller copies the request body into `request.export`.
 3. HTTP query parameters are preserved under `request.export.query`.
 4. The facade delegates to `SERVICE.DataExportService.export`.
-5. The service resolves the schema descriptor through Schema Workbench.
+5. The service resolves the descriptor through `DefaultSchemaUtilityService.getSchema`.
 6. Records are collected through bounded Workbench search pages using the
    configured maximum export size.
 7. Export access-policy filtering runs against export-safe model copies so
@@ -118,3 +118,9 @@ Avoid:
 - Public data guide: [How To Work With Data](https://github.com/Nodics/nodics.docs)
 - Data access policy: [database](../../../nDatabase/database/README.md)
 - Maturity matrix: [Provider And Capability Maturity Matrix](https://github.com/Nodics/nodics.docs)
+
+
+Metadata lookup no longer depends on Workbench discovery. Missing Schema Utility
+fails with `ERR_EXP_00001`; it never falls back to raw schemas or removed routes.
+Bounded record collection continues through the existing Workbench search owner
+until its separate migration. See [the metadata contract](llm/contracts/README.md#schema-metadata-owner).

@@ -15,7 +15,8 @@ const crypto = require('node:crypto');
 
 /** @module inventory/src/service/defaultInventoryOperationService @description Owns explicit BackOffice stock operations while keeping balance and movement schemas read-only through generic CRUD. @layer service @owner inventory */
 module.exports = {
-    unwrap: response => response && Object.prototype.hasOwnProperty.call(response, 'result') ? response.result : response,
+    /** Unwraps a standard result envelope while preserving raw provider values. */
+    unwrap: function (response) { return response && Object.prototype.hasOwnProperty.call(response, 'result') ? response.result : response; },
     /** Builds service credentials for Inventory-owned persistence. @param {Object} request Request. @returns {Object} Service auth data. */
     serviceAuthData: function (request) {
         return Object.assign({}, request.authData || {}, {

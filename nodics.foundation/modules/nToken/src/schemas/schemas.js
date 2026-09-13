@@ -28,8 +28,8 @@ module.exports = {
                 enabled: false,
                 ttl: 1000
             },
-            router: {
-                enabled: false,
+            router: { groups: { schemaOperations: true },
+                enabled: true,
             },
             definition: {
                 key: {

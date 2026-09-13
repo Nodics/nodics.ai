@@ -23,3 +23,6 @@ This capability depends on engagementCore and engagementComms; Process orchestra
 ## Verification
 
 Verification covers accepted and rejected intake, malicious extra-field removal, idempotent replay/conflict, tenant ownership through Engagement API, routing fallback, SLA, Process outage/retry, internal-note filtering, lifecycle concurrency, and later-layer routing policy.
+
+This capability declares an inert model-service inventory for [governed Local reset](../../../nodics.foundation/modules/nSystem/llm/contracts/local-reset.md).
+A server must explicitly select it; contributions never enable reset or bypass tenant, environment, confirmation or required-service checks.

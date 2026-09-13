@@ -11,6 +11,22 @@
 
 /** @module discoveryConfig/config/properties @description Defines generic Discovery configuration defaults and schema access policies. @layer config @owner discoveryConfig */
 module.exports = {
+    // Inert inventory; an allowed local server must explicitly select this capability.
+    localResetProvider: {
+        "contributions": {
+            "discoveryConfig": {
+                "serviceNames": {
+                    "DefaultDiscoveryFacetProfileService": true,
+                    "DefaultDiscoveryIndexConfigurationService": true,
+                    "DefaultDiscoveryPublicationPolicyService": true,
+                    "DefaultDiscoveryQueryProfileService": true,
+                    "DefaultDiscoveryRankingProfileService": true,
+                    "DefaultDiscoverySourceMixConfigurationService": true
+                }
+            }
+        }
+    },
+
     discovery: {
         config: {
             defaultEngine: 'elastic',

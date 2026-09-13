@@ -11,4 +11,4 @@
 
 'use strict';
 /** @module smtpCommsProvider/nodics @description Declares the optional email provider lifecycle. @layer module @owner smtpCommsProvider */
-module.exports = { init: () => Promise.resolve(true), postInit: () => Promise.resolve(true) };
+module.exports = { init: function () { return Promise.resolve(true); }, postInit: function () { return Promise.resolve(true); } };

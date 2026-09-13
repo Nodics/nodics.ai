@@ -11,6 +11,7 @@
 
 const _ = require('lodash');
 const fse = require('fs-extra');
+const path = require('path');
 
 /**
  * @module nodics.foundation/modules/nData/nImport/import/src/service/system/defaultSystemDataImportInitializerService
@@ -422,59 +423,86 @@ module.exports = {
 
     buildHeaderInstances: function (request, response, process) {
         this.LOG.debug('Generating header instances from header files');
-        let internalHeaderObj = {};
-        if (request.data && request.data.headerFiles) {
-            _.each(request.data.headerFiles, (list, name) => {
-                list.forEach(element => {
-                    internalHeaderObj[name] = _.merge(internalHeaderObj[name] || {}, require(element));
-                });
-            });
-            _.each(internalHeaderObj, (headerFile, headerFileName) => {
-                _.each(headerFile, (moduleHeaders, moduleName) => {
-                    _.each(moduleHeaders, (header, headerName) => {
-                        let isTargetModuleActive = !NODICS.isModuleActive || NODICS.isModuleActive(moduleName);
-                        if (header.options.enabled && isTargetModuleActive) {
-                            if (!request.data.headers) {
-                                request.data.headers = {};
-                            }
-                            if (request.data.headers[headerName]) {
-                                this.addDuplicateHeader(request, headerName, moduleName, headerFileName);
-                            } else {
-                                request.data.headers[headerName] = {};
-                            }
-                            request.data.headers[headerName] = _.merge(request.data.headers[headerName], header);
-                            request.data.headers[headerName].options.moduleName = moduleName;
-                            request.data.headers[headerName].options.owningModule = header.options.owningModule || moduleName;
-                            request.data.headers[headerName].options.headerFileName = headerFileName;
-                            request.data.headers[headerName].options.userGroups = (request.authData) ? request.authData.userGroups : request.data.headers[headerName].options.userGroups;
-                            request.data.headers[headerName].dataFiles = {};
-                            request.data.headers[headerName].options.dataHandler = (request.data.headers[headerName].options.indexName) ? 'indexerDataHandlerPipeline' : 'schemaDataHandlerPipeline';
-                            request.data.headers[headerName].local = request.data.headers[headerName].local || {};
-                            if (request.data.headers[headerName].options.finalizeData === undefined) {
-                                request.data.headers[headerName].options.finalizeData = true;
-                            }
-                            if (request.importRun) {
-                                request.importRun.summary.enabledHeaders++;
-                                request.importRun.headers.push({
-                                    headerName: headerName,
-                                    owningModule: request.data.headers[headerName].options.owningModule,
-                                    targetModule: request.data.headers[headerName].options.moduleName,
-                                    schemaName: request.data.headers[headerName].options.schemaName,
-                                    indexName: request.data.headers[headerName].options.indexName,
-                                    operation: request.data.headers[headerName].options.operation,
-                                    dataFilePrefix: request.data.headers[headerName].options.dataFilePrefix || headerName,
-                                    headerFileName: headerFileName,
-                                    matchedDataFiles: []
-                                });
-                            }
-                        } else if (request.importRun) {
-                            request.importRun.summary.disabledHeaders++;
+        const definitions = {};
+        const sources = {};
+        _.each(request.data && request.data.headerFiles, (files, fileName) => {
+            definitions[fileName] = {};
+            sources[fileName] = {};
+            files.forEach(file => {
+                delete require.cache[require.resolve(file)];
+                const contribution = require(file);
+                _.each(contribution, (headers, moduleName) => _.each(headers, (header, headerName) => {
+                    const key = moduleName + ':' + headerName;
+                    const previous = definitions[fileName][moduleName] && definitions[fileName][moduleName][headerName];
+                    for (const field of ['schemaName', 'indexName']) {
+                        if (previous && previous.options && previous.options[field] && header.options &&
+                            header.options[field] && previous.options[field] !== header.options[field]) {
+                            throw new CLASSES.DataImportError('ERR_IMP_00003', 'A layered dataset cannot change its owning target: ' + key);
                         }
-                    });
+                    }
+                    if (!sources[fileName][key]) sources[fileName][key] = [];
+                    sources[fileName][key].push(this.getHeaderReleaseRoot(file, request));
+                }));
+                _.mergeWith(definitions[fileName], contribution, (current, incoming) =>
+                    Array.isArray(incoming) ? _.cloneDeep(incoming) : undefined);
+            });
+        });
+        _.each(definitions, (headerFile, headerFileName) => {
+            _.each(headerFile, (moduleHeaders, moduleName) => {
+                _.each(moduleHeaders, (header, sourceHeaderName) => {
+                    const headerName = moduleName + ':' + sourceHeaderName;
+                    const active = !NODICS.isModuleActive || NODICS.isModuleActive(moduleName);
+                    if (header.options && header.options.enabled && active) {
+                        request.data.headers = request.data.headers || {};
+                        if (request.data.headers[headerName]) this.addDuplicateHeader(request, headerName, moduleName, headerFileName);
+                        const instance = _.cloneDeep(header);
+                        instance.options.moduleName = moduleName;
+                        instance.options.owningModule = instance.options.owningModule || moduleName;
+                        instance.options.headerFileName = headerFileName;
+                        instance.options.dataFilePrefix = instance.options.dataFilePrefix || sourceHeaderName;
+                        if (request.authData) instance.options.userGroups = request.authData.userGroups;
+                        instance.options.dataHandler = instance.options.indexName ? 'indexerDataHandlerPipeline' : 'schemaDataHandlerPipeline';
+                        if (instance.options.finalizeData === undefined) instance.options.finalizeData = true;
+                        instance.local = instance.local || {};
+                        instance.dataFiles = {};
+                        instance.sourceRoots = [...new Set(sources[headerFileName][headerName])];
+                        request.data.headers[headerName] = instance;
+                        if (request.importRun) {
+                            request.importRun.summary.enabledHeaders++;
+                            request.importRun.headers.push({ headerName, owningModule: instance.options.owningModule,
+                                targetModule: moduleName, schemaName: instance.options.schemaName, indexName: instance.options.indexName,
+                                operation: instance.options.operation, dataFilePrefix: instance.options.dataFilePrefix,
+                                headerFileName, matchedDataFiles: [] });
+                        }
+                    } else if (request.importRun) request.importRun.summary.disabledHeaders++;
                 });
             });
-        }
+        });
         process.nextSuccess(request, response);
+    },
+
+    /**
+     * Resolves the declared release containing a header without broadening selected file membership.
+     * Source roots only qualify file ownership; nImport retains immutable-plan filtering.
+     * @param {string} file Header source file.
+     * @param {Object} request Selected import request.
+     * @returns {string} Owning physical release root.
+     */
+    getHeaderReleaseRoot: function (file, request) {
+        const utility = typeof SERVICE !== 'undefined' && SERVICE.DefaultImportUtilityService;
+        const roots = [];
+        if (utility && typeof utility.modulesForImport === 'function' && request.modules && request.inputPath) {
+            for (const owner of utility.modulesForImport(request.modules, request.dataReleasePlan)) {
+                roots.push(...utility.releaseRoots(owner, request.inputPath.dataType, request.dataReleasePlan));
+            }
+        }
+        const resolved = path.resolve(file);
+        const matching = roots.filter(root => resolved.startsWith(path.resolve(root) + path.sep))
+            .sort((left, right) => right.length - left.length);
+        if (matching.length) return path.resolve(matching[0]);
+        const marker = path.sep + 'headers' + path.sep;
+        const index = resolved.lastIndexOf(marker);
+        return index >= 0 ? resolved.slice(0, index) : path.dirname(resolved);
     },
 
     /**
@@ -582,11 +610,20 @@ module.exports = {
         this.LOG.debug('Associating data files with corresponding headers');
         if (request.data && request.data.headers) {
             let matchedFiles = {};
+            const selectedFiles = Array.isArray(request.dataReleasePlan) && request.dataReleasePlan.length > 0 ? new Set(
+                request.dataReleasePlan.filter(release => release.sourceOnly !== true).flatMap(release => {
+                    const owner = NODICS.getRawModule(release.moduleName);
+                    return (release.declaredFiles || []).map(file => path.resolve(owner.path, 'data', file));
+                })) : undefined;
             _.each(request.data.headers, (headerObject, headerName) => {
                 let dataPreFix = headerObject.options.dataFilePrefix || headerName;
                 _.each(request.data.dataFiles, (object, fileName) => {
                     if (fileName.startsWith(dataPreFix)) {
-                        headerObject.dataFiles[fileName] = object;
+                        const roots = headerObject.sourceRoots || [];
+                        const list = object.list.filter(file => roots.some(root => path.resolve(file).startsWith(root + path.sep)));
+                        const selectionFiles = selectedFiles ? list.filter(file => selectedFiles.has(path.resolve(file))) : undefined;
+                        if (list.length === 0 || selectionFiles && selectionFiles.length === 0) return;
+                        headerObject.dataFiles[fileName] = Object.assign({}, object, { list, selectionFiles, processedRecords: [] });
                         matchedFiles[fileName] = true;
                         if (request.importRun) {
                             let headerRun = request.importRun.headers.find(item => item.headerName === headerName);

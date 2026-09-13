@@ -21,7 +21,7 @@ module.exports = {
         clarifyAmbiguousRequests: true, confirmationTtlMs: 300000,
         mutationPermissions: ['copilot.mutation.prepare', 'copilot.mutation.execute'],
         redactFields: ['password', 'secret', 'token', 'authorization'],
-        channels: ['NEXUS_PUBLIC', 'NEXUS_CUSTOMER', 'AXIS_EMPLOYEE', 'SYSTEM'],
+        channels: ['PUBLIC', 'CUSTOMER', 'EMPLOYEE', 'SYSTEM'],
         classifications: ['PUBLIC', 'CUSTOMER', 'INTERNAL', 'RESTRICTED'],
         riskClasses: ['PUBLIC_READ', 'AUTHENTICATED_SELF_READ', 'INTERNAL_READ', 'SENSITIVE_READ', 'EXPORT', 'CREATE', 'UPDATE', 'DELETE', 'ADMINISTRATIVE'],
         permissions: {

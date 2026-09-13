@@ -107,3 +107,73 @@ into a fresh schema, publish where needed, and verify Axis, Nexus, or Agora in
 the browser. Production acceptance requires business release notes, developer
 source evidence, operator rollback instructions, and QA proof for both clean
 install and upgrade paths.
+
+## Code and contract compatibility
+
+Compatibility also covers partner code and running clients. Before changing an
+extension point, identify its consumers and write an old/new example. Validate
+the framework default and the actual partner override after regeneration and
+restart. A later file replaces matching methods; it does not replace every
+method of the service or acquire ownership of the capability.
+
+| Contract surface | Required compatibility evidence |
+| --- | --- |
+| Exported methods | Parameters, results, awaited completion, errors and side effects remain usable by inherited and overriding methods. |
+| Configuration | Owner, default, scope, merge behavior, disabled values, binding resolution and restart/refresh semantics are explicit. |
+| Schemas and APIs | Stable identity, validation, permissions, tenant isolation, response envelopes and supported operations match every migrated client. |
+| Events | Existing consumers understand payloads, delivery/retry behavior, deduplication and ordering limits. |
+| Cache/database providers | Isolation, serialization, expiry, atomic mutation, failure and cleanup match the owner contract. |
+| Persisted records | A governed migration covers existing values, replay, partial failure, audit and irreversible effects. |
+
+Do not infer compatibility from an unchanged method name or a new package
+version. A new optional field can still break a strict consumer. A changed
+permission can still remove an employee workflow. Removing a route requires
+migrating all known clients and rejecting the obsolete path explicitly.
+
+The current unreleased MongoDB `schemaProperties` conversion requires replacing
+arrays with keyed booleans. Arrays reject instead of silently dropping validation.
+For example, migrate `['enum', 'minimum']` to
+`{ enum: true, minimum: true }`; a later `{ minimum: false }` disables only that
+key. This does not change ordinary `properties.js` arrays, which merge by index,
+or the separately governed data-record array replacement contract.
+
+Source data keys remain stable within their owning dataset. A partner can
+change a field under an existing exported record key without restating its code.
+Changing the business code is a data migration decision, not a rename instruction
+inferred from source merging. Released manifests/checksums remain immutable;
+execute any upgrade through the existing import receipts and replay rules.
+
+## Security boundaries under customization
+
+A custom implementation must preserve authorization, tenant and enterprise
+isolation, domain validation, API contracts, required confirmation, idempotency
+and audit. Project JavaScript is trusted deployment code: Nodics extension seams
+do not make malicious overrides impossible. Qualification must exercise the
+effective override with forbidden identities, wrong tenant/module/instance,
+invalid data, duplicate requests, interrupted work and unavailable providers.
+
+For a cache change, retain atomic version allocation and fail-closed authentication
+state. For a Workflow change, refuse new work after deactivation while following
+the owning recovery contract for admitted work. For an Axis form change, retain
+backend permissions and validation even when the browser hides a control.
+
+## Explaining an effective runtime
+
+Use the selected server's existing governance report and its runtime coordinates.
+The report now reads `xNodics.overrideTrace` from the actual loaded artifacts.
+Generated baseline contributions precede authored layers; `memberOrigins` shows
+which contributor supplied each inherited or replaced method. The first source
+path is not necessarily the capability owner; retain the schema/module metadata
+as ownership authority. Nested property origins are not inferred from a
+whole-file winner.
+
+For configuration, follow indexed property contributions, external files and
+tenant overlays and inspect only the affected effective key in a trusted context.
+Never publish a raw configuration dump. A source/configuration edit follows its
+own build/restart path. A governed runtime schema/router/class change uses
+nDynamo preview, approval/activation, revision checks and audit. Provider selection
+and remote routing remain with the existing cache/database/router owners.
+
+A useful incident record names the runtime, capability owner, effective method
+or key, contributing layers, selected provider/remote authority, change mechanism
+and stable failure code. It contains no token, API key, password or function body.

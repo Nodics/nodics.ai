@@ -9,3 +9,6 @@ Apparel brand profile.
 
 The current WP-1A boundary is structural only. No Apparel schema or behavior is
 implemented until the scaffold discovery and activation contract passes.
+
+This capability declares an inert model-service inventory for [governed Local reset](../../../../../nodics.foundation/modules/nSystem/llm/contracts/local-reset.md).
+A server must explicitly select it; contributions never enable reset or bypass tenant, environment, confirmation or required-service checks.

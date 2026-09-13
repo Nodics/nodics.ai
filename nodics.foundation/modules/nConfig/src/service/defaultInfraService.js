@@ -10,6 +10,8 @@
  */
 
 const path = require('path');
+const fs = require('fs');
+const crypto = require('crypto');
 
 /**
  * @module config/service/DefaultInfraService
@@ -52,31 +54,13 @@ module.exports = {
     },
 
     /**
-     * Cleans generated artifacts for all indexed active modules.
+     * Cleans only the selected server generated artifacts; module hooks remain separate.
      *
      * @param {string[]} [modules] Module index values to clean.
      * @returns {Promise<boolean>} Resolves after generated entity cleanup completes.
      */
-    cleanEntities: function (modules = Array.from(NODICS.getIndexedModules().keys())) {
-        let _self = this;
-        return new Promise((resolve, reject) => {
-            if (modules && modules.length > 0) {
-                let moduleIndex = modules.shift();
-                let moduleName = NODICS.getIndexedModules().get(moduleIndex).name;
-                _self.cleanEntitie(moduleName).then(success => {
-                    _self.cleanEntities(modules).then(success => {
-                        resolve(true);
-                    }).catch(error => {
-                        reject(error);
-                    });
-                }).catch(error => {
-                    reject(error);
-                });
-
-            } else {
-                resolve(true);
-            }
-        });
+    cleanEntities: function () {
+        return this.cleanEntitie(NODICS.getServerName());
     },
 
     /**
@@ -90,6 +74,7 @@ module.exports = {
         return new Promise((resolve, reject) => {
             _self.LOG.debug('Starting process for module : ' + moduleName);
             let moduleObject = NODICS.getRawModule(moduleName);
+            _self.invalidateBuildManifest();
             _self.cleanServices(moduleObject).then(() => {
                 return _self.cleanFacades(moduleObject);
             }).then(() => {
@@ -118,7 +103,7 @@ module.exports = {
         return new Promise((resolve, reject) => {
             this.LOG.debug('Cleaning all SERVICE entities');
             try {
-                UTILS.removeDir(path.join(module.path + '/src/service/gen'));
+                UTILS.removeDir(NODICS.getGeneratedArtifactPath('service'));
                 resolve(true);
             } catch (error) {
                 reject(error);
@@ -136,7 +121,7 @@ module.exports = {
         return new Promise((resolve, reject) => {
             this.LOG.debug('Cleaning all facade entities');
             try {
-                UTILS.removeDir(path.join(module.path + '/src/facade/gen'));
+                UTILS.removeDir(NODICS.getGeneratedArtifactPath('facade'));
                 resolve(true);
             } catch (error) {
                 reject(error);
@@ -154,7 +139,7 @@ module.exports = {
         return new Promise((resolve, reject) => {
             this.LOG.debug('Cleaning all controller entities');
             try {
-                UTILS.removeDir(path.join(module.path + '/src/controller/gen'));
+                UTILS.removeDir(NODICS.getGeneratedArtifactPath('controller'));
                 resolve(true);
             } catch (error) {
                 reject(error);
@@ -174,13 +159,13 @@ module.exports = {
             try {
                 if (SERVICE.DefaultSchemaTestGeneratorService &&
                     typeof SERVICE.DefaultSchemaTestGeneratorService.cleanGeneratedTests === 'function') {
-                    SERVICE.DefaultSchemaTestGeneratorService.cleanGeneratedTests(module).then(() => {
+                    SERVICE.DefaultSchemaTestGeneratorService.cleanGeneratedTests(module || NODICS.getRawModule(NODICS.getServerName())).then(() => {
                         resolve(true);
                     }).catch(error => {
                         reject(error);
                     });
                 } else {
-                    UTILS.removeDir(path.join(module.path + '/test/gen'));
+                    UTILS.removeDir(NODICS.getGeneratedArtifactPath('test'));
                     resolve(true);
                 }
             } catch (error) {
@@ -199,7 +184,7 @@ module.exports = {
         return new Promise((resolve, reject) => {
             this.LOG.debug('Cleaning all dist entities');
             try {
-                UTILS.removeDir(path.join(module.path + '/src/dist'));
+                UTILS.removeDir(NODICS.getGeneratedArtifactPath('dist'));
                 resolve(true);
             } catch (error) {
                 reject(error);
@@ -217,7 +202,7 @@ module.exports = {
         return new Promise((resolve, reject) => {
             this.LOG.debug('Cleaning generated OpenAPI contracts');
             try {
-                UTILS.removeDir(path.join(module.path, 'generated', 'openapi'));
+                UTILS.removeDir(NODICS.getGeneratedArtifactPath('openapi'));
                 resolve(true);
             } catch (error) {
                 reject(error);
@@ -266,7 +251,7 @@ module.exports = {
             let moduleObject = NODICS.getRawModule(moduleName);
             let moduleFile = require(moduleObject.path + '/nodics.js');
             if (moduleFile.clean && typeof moduleFile.clean === 'function') {
-                moduleFile.clean(moduleObject).then(success => {
+                Promise.resolve(moduleFile.clean(moduleObject)).then(success => {
                     resolve(true);
                 }).catch(error => {
                     reject(error);
@@ -278,26 +263,122 @@ module.exports = {
     },
 
 
+    /** Returns deterministic hashes for authored or generated files without following directory links. */
+    hashBuildFiles: function (directory, prefix = '') {
+        const files = {};
+        if (!fs.existsSync(directory)) return files;
+        for (const entry of fs.readdirSync(directory, { withFileTypes: true }).sort((a, b) => a.name.localeCompare(b.name))) {
+            if (['gen', 'generated', 'dist', 'node_modules', '.git'].includes(entry.name)) continue;
+            const file = path.join(directory, entry.name);
+            const key = prefix ? prefix + '/' + entry.name : entry.name;
+            if (entry.isDirectory()) Object.assign(files, this.hashBuildFiles(file, key));
+            else if (entry.isFile()) files[key] = crypto.createHash('sha256').update(fs.readFileSync(file)).digest('hex');
+            else throw new Error('Generated build inputs must use regular files: ' + file);
+        }
+        return files;
+    },
+
+    /** Fingerprints selected source/configuration order while preserving node-shared generation. */
+    getBuildInputDigest: function () {
+        const inputs = [];
+        for (const module of NODICS.getIndexedModules().values()) {
+            const raw = NODICS.getRawModule(module.name);
+            if (raw && raw.metaData && raw.metaData.nodics && raw.metaData.nodics.kind === 'node') continue;
+            const packageFile = path.join(module.path, 'package.json');
+            inputs.push({ name: module.name, index: module.index, path: module.path,
+                metadata: fs.existsSync(packageFile) ? fs.readFileSync(packageFile, 'utf8') : '',
+                source: this.hashBuildFiles(path.join(module.path, 'src')),
+                config: this.hashBuildFiles(path.join(module.path, 'config')),
+                tests: this.hashBuildFiles(path.join(module.path, 'test', 'common')) });
+        }
+        return crypto.createHash('sha256').update(JSON.stringify(inputs)).digest('hex');
+    },
+
+    /**
+     * Excludes simultaneous writers for one server across processes before any cleanup.
+     * An interrupted writer leaves an explicit lock for operator recovery; it is never stolen by timeout.
+     * @param {Function} operation Complete selected-server build or clean operation.
+     * @returns {Promise<*>} Operation result after releasing the owned lock.
+     */
+    withGeneratedArtifactLock: async function (operation) {
+        for (const type of ['service', 'facade', 'controller', 'test', 'openapi', 'dist', 'buildManifest']) NODICS.getGeneratedArtifactPath(type);
+        const lock = NODICS.getGeneratedArtifactPath('buildManifest') + '.lock';
+        fs.mkdirSync(path.dirname(lock), { recursive: true });
+        try { fs.mkdirSync(lock); }
+        catch (error) {
+            if (error.code === 'EEXIST') throw new Error('Selected server build or clean is already locked: ' + lock);
+            throw error;
+        }
+        let originalError;
+        try { return await operation(); }
+        catch (error) { originalError = error; throw error; }
+        finally {
+            try { fs.rmdirSync(lock); }
+            catch (cleanupError) { if (!originalError) throw cleanupError; else this.LOG.error('Build lock cleanup failed', cleanupError); }
+        }
+    },
+
+    /** Invalidates build completion before cleaning or generating any output. */
+    invalidateBuildManifest: function () {
+        fs.rmSync(NODICS.getGeneratedArtifactPath('buildManifest'), { force: true });
+    },
+
+    /** Records completed selected-server outputs after all entity and module generators succeed. */
+    writeBuildManifest: function () {
+        const outputs = {};
+        for (const type of ['service', 'facade', 'controller', 'test']) {
+            outputs[type] = this.hashBuildFiles(NODICS.getGeneratedArtifactPath(type));
+        }
+        const file = NODICS.getGeneratedArtifactPath('buildManifest');
+        fs.mkdirSync(path.dirname(file), { recursive: true });
+        fs.writeFileSync(file, JSON.stringify({ contractVersion: 1, inputDigest: this.getBuildInputDigest(), outputs }, null, 2) + '\n');
+        return true;
+    },
+
+    /** Rejects missing, changed or stale server generation before runtime entities are loaded. */
+    validateBuildManifest: function () {
+        const file = NODICS.getGeneratedArtifactPath('buildManifest');
+        const rebuild = 'Run the selected project server build before startup';
+        if (fs.existsSync(file + '.lock')) throw new Error('Selected server generation is locked; startup requires a completed build');
+        if (!fs.existsSync(file)) throw new Error('Generated server build is missing or incomplete. ' + rebuild);
+        const manifest = JSON.parse(fs.readFileSync(file, 'utf8'));
+        if (manifest.contractVersion !== 1 || manifest.inputDigest !== this.getBuildInputDigest()) {
+            throw new Error('Generated server build inputs are stale. ' + rebuild);
+        }
+        for (const type of ['service', 'facade', 'controller', 'test']) {
+            if (JSON.stringify(manifest.outputs && manifest.outputs[type]) !== JSON.stringify(this.hashBuildFiles(NODICS.getGeneratedArtifactPath(type)))) {
+                throw new Error('Generated server ' + type + ' output is missing or changed. ' + rebuild);
+            }
+        }
+        return true;
+    },
+
     /**
      * Builds generated services, facades, controllers, and generated tests.
      *
      * @returns {Promise<boolean>} Resolves after generated entity build completes.
      */
-    buildEntities: function () {
-        let _self = this;
-        return new Promise((resolve, reject) => {
-            _self.buildServices().then(() => {
-                return _self.buildFacades();
-            }).then(() => {
-                return _self.buildControllers();
-            }).then(() => {
-                return _self.buildGeneratedTests();
-            }).then(() => {
-                resolve(true);
-            }).catch((error) => {
-                reject(error);
-            });
-        });
+    buildEntities: async function () {
+        this.invalidateBuildManifest();
+        const cleanGenerated = async () => {
+            await this.cleanServices();
+            await this.cleanFacades();
+            await this.cleanControllers();
+            await this.cleanGeneratedTests();
+        };
+        await cleanGenerated();
+        try {
+            await this.buildServices();
+            await this.buildFacades();
+            await this.buildControllers();
+            await this.buildGeneratedTests();
+            return true;
+        } catch (error) {
+            try { await cleanGenerated(); } catch (cleanupError) {
+                this.LOG.error('Generated build cleanup failed', cleanupError);
+            }
+            throw error;
+        }
     },
 
     /**
@@ -329,7 +410,7 @@ module.exports = {
         return new Promise((resolve, reject) => {
             let gVar = SERVICE.DefaultFilesLoaderService.getGlobalVariables('/src/service/common.js');
             let serviceCommon = SERVICE.DefaultFilesLoaderService.loadFiles('/src/service/common.js');
-            let genDir = path.join(NODICS.getModule('nService').modulePath + '/src/service/gen');
+            let genDir = NODICS.getGeneratedArtifactPath('service');
             UTILS.schemaWalkThrough({
                 commonDefinition: serviceCommon,
                 type: 'service',
@@ -353,7 +434,7 @@ module.exports = {
         return new Promise((resolve, reject) => {
             let gVar = SERVICE.DefaultFilesLoaderService.getGlobalVariables('/src/facade/common.js');
             let facadeCommon = SERVICE.DefaultFilesLoaderService.loadFiles('/src/facade/common.js');
-            let genDir = path.join(NODICS.getModule('nFacade').modulePath + '/src/facade/gen');
+            let genDir = NODICS.getGeneratedArtifactPath('facade');
             UTILS.schemaWalkThrough({
                 commonDefinition: facadeCommon,
                 type: 'service',
@@ -377,7 +458,7 @@ module.exports = {
         return new Promise((resolve, reject) => {
             let gVar = SERVICE.DefaultFilesLoaderService.getGlobalVariables('/src/controller/common.js');
             let controllerCommon = SERVICE.DefaultFilesLoaderService.loadFiles('/src/controller/common.js');
-            let genDir = path.join(NODICS.getModule('nController').modulePath + '/src/controller/gen');
+            let genDir = NODICS.getGeneratedArtifactPath('controller');
             UTILS.schemaWalkThrough({
                 commonDefinition: controllerCommon,
                 type: 'service',
@@ -433,7 +514,7 @@ module.exports = {
             let moduleObject = NODICS.getRawModule(moduleName);
             let moduleFile = require(moduleObject.path + '/nodics.js');
             if (moduleFile.build && typeof moduleFile.build === 'function') {
-                moduleFile.build(moduleObject).then(success => {
+                Promise.resolve(moduleFile.build(moduleObject)).then(success => {
                     resolve(true);
                 }).catch(error => {
                     reject(error);

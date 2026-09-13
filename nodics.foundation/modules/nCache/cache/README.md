@@ -29,3 +29,8 @@ Run cache-focused tests when behavior changes, then run:
 npm --prefix nodics.docs test
 npm run quality:docs
 ```
+
+Cache startup awaits configured event subscriptions. Subscriber clients belong
+to their channels and are closed by central shutdown, including failed runtime
+bootstrap. Redis closes a connection or subscriber that fails before registration
+so an unowned reconnect loop cannot keep a failed process alive.

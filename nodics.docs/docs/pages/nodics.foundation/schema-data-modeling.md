@@ -1,5 +1,217 @@
 # Data Modeling and Schema Management
 
+## Shared schema metadata for every API consumer
+
+A module owns its data and APIs. Axis, exports, Copilot and another application
+consume the same capability contracts. Foundation's existing `nDatabase` Schema
+Utility service describes the effective schema; Safe Query translates bounded
+search; generated controllers, facades and services retain the normal persistence
+pipeline. No Workbench service, parallel registry or extra architectural layer
+is required.
+
+For an operator, this means a field added through an authorized schema extension
+appears consistently in discovery, forms and search. It does not grant access to
+that field or authorize a business transition. Schema access, property rules,
+tenant/record ownership, publication and concurrency remain backend decisions.
+
+| Capability | Canonical interface relative to the module endpoint | Owner |
+| --- | --- | --- |
+| Schema collection | `GET /schemas` | Schema Utility `listSchemas` |
+| Schema detail | `GET /schemas/:schema` | Schema Utility `getSchema` |
+| Resource capabilities | `GET /<schema>/capabilities` | Generated transport to the same Utility owner |
+| Bounded search | `POST /<schema>/safe-search` | Safe Query and generated read |
+| Create | `PUT /<schema>` with a raw model | Generated save pipeline |
+| Update | `PATCH /<schema>` with query/model/options | Generated update pipeline |
+| Delete impact | `POST /<schema>/delete-impact` with an identity | Utility and Reference Integrity |
+| Delete | `DELETE /<schema>` with a query | Generated remove pipeline |
+| Explicit bounded bulk | `POST /<schema>/bulk` | Utility and generated remove |
+| Enterprise setup | `POST /enterprises` in Profile | Enterprise Management |
+
+### Customize and extend safely
+
+Declare fields in the owning schema through the existing module hierarchy.
+Use its `backoffice` metadata for client-safe fields, forms, relationships and
+permitted operations. For example:
+
+```javascript
+backoffice: {
+    excludedFields: ['internalNotes'],
+    form: {
+        sections: {
+            businessDetails: { label: 'Business details', fields: ['name', 'customerReference'] }
+        }
+    }
+}
+```
+
+The fields must exist in the effective schema. Preserve inherited exclusions
+when overriding an array. A deleted field disappears; ungrouped editable fields
+remain available. Form visibility cannot bypass required input or authorization.
+When metadata is insufficient, override the existing `DefaultSchemaUtilityService`
+helper through ordinary module service inheritance. Do not copy a base service,
+create another schema catalogue or place metadata authority in a UI.
+
+### Failure, compatibility and operational rollout
+
+The framework is unreleased. All `/schema/workbench` endpoints and their
+controller, facade and service are removed. The owning configuration is now
+`schemaApi`, with `system.schema.view` and `system.schema.manage` defaults.
+Current callers, configuration and bootstrap grants move together; there are no
+old-route aliases or second namespace defaults. Persisted grants from an earlier
+local database need the normal governed data update before authenticated use.
+This source migration does not rewrite stored records or permission documents.
+
+Unknown, inactive, excluded and inaccessible schemas fail closed. A missing owner
+is an error, not permission to load raw schema or another service implementation.
+Protected filters and unbounded searches fail before reads. Rebuild and restart
+affected runtimes, and verify allowed and denied identities against their actual
+policy. Source composition and mocked persistence checks do not establish live
+HTTP authentication, custom service overrides or persisted policy acceptance.
+
+### Validation and remaining route migration
+
+Canonical schema transport migration is complete in source. Contract tests cover
+compiled controller/facade/service templates, active aliases, effective overrides,
+field filtering, original revisions, tenant/owner scope, callbacks and no-write
+rejections. Axis tests cover the actual client requests and persisted responses.
+Prepared Local/Docker runtime checks inspect API coverage, permissions and OpenAPI
+metadata without binding a listener. Live signed-in acceptance remains separate.
+
+## Generated create, update and delete contracts
+
+Controllers map declared input instead of merging arbitrary body properties into
+the secured request. Authentication, tenant, enterprise, module/schema identity,
+transaction and trace context stay server-owned, including non-enumerable values.
+Unknown, protected and read-only top-level model fields are omitted; fixed schema
+values and trusted scope are applied. Nested validation stays with schema owners.
+Operator model patches such as `$set`, `$inc` and dotted paths are rejected.
+
+Selective schema APIs use one scalar primary identity for update/delete and keep
+the original revision when required. They cannot accept a broad operator query
+in place of the selected record. An explicit domain create command blocks generic
+create/createAll. Staged-only and read-only metadata reject writes independently
+of the client's form, the route's visibility or the presence of a manage grant.
+
+```json
+{
+  "query": { "code": "record-one", "revision": 4 },
+  "model": { "name": "Updated label" },
+  "options": { "recursive": false, "returnModified": true }
+}
+```
+
+For this update, the concurrency owner compares revision 4 and computes the next
+value. Missing, malformed and stale managed tokens retain the existing 428, 400
+and 409 contracts. Reload and review a conflict; never automatically replace its
+token with a freshly fetched revision. Advanced broad-query/by-ID interfaces,
+when explicitly exposed by the owning schema, retain their separate contracts.
+Internal domain/import calls use their existing policy and persistence pipeline.
+
+### Compatibility, errors and retries
+
+Keep the generated response envelope. A create/update client must receive one
+persisted record with its identity and usable managed revision: a direct record,
+a single-record array or the generated `models` result. A count, missing identity,
+empty/multiple models or unusable revision is an error for record editing.
+`modifiedCount: 0` can be a valid no-op when one persisted record is returned.
+An invalid success response may follow an applied write; retain user input and
+inspect/reload the data before retrying. Never synthesize success from form input.
+
+Generic idempotency-key forwarding is not a durable replay ledger. Domain commands
+retain their existing principal-bound key, input digest and recovery rules.
+Selected bulk deletion is schema-opted-in, bounded and keyed, and retains every
+identity's required revision in the remove query. It uses Reference Integrity and
+the normal generated remove pipeline. The current provider contract does not
+support managed-counter multi-record CAS, so those schemas do not advertise bulk
+DELETE and reject it before dispatch. They remain editable one record at a time.
+The governed Local reset has its separate provider-issued maintenance authority;
+a caller flag or lookalike object cannot activate it.
+
+### Canonical schema discovery
+
+`GET /schemas` returns `{ code, data: { moduleName, schemas } }`; detail and
+capabilities return `{ code, data: descriptor }`. An authorized empty module
+returns an empty list. An unavailable detail returns the existing unavailable
+error. Thin controller/facade adapters pass the original secured request and the
+route-selected schema separately to Utility `listSchemas/getSchema`.
+
+Discovery preserves active aliases, effective extensions, safe fields, authoring,
+form/reference/concurrency metadata and prepared API routes. Collection/detail
+use `schemaApi.discoveryPermission` (default `system.schema.view`), secured
+`userGroup` access and exposure category `schemaApi`. Tagged resource reads use
+`schemaApi.readPermission`; writes use `schemaApi.writePermission`. Change grants
+through the existing identity owner. Metadata and exposure never grant access.
+
+Axis uses the canonical collection and detail paths, or an advertised capability
+route for detail. Import/export, documentation, media and other schema screens
+share this typed client. Missing/disabled routes and authorization errors remain
+visible. No fallback selects Workbench, another runtime or Online authoring.
+Successful connections retain their identity when another connection fails.
+
+### Selective module APIs and route-driven clients
+
+An eligible model can opt into the existing nRouter template group without
+exposing broad raw-query, by-ID or unrestricted bulk-create routes:
+
+```javascript
+router: { enabled: true, groups: { schemaOperations: true } }
+```
+
+This group contains the seven resource operations above. Effective schema access
+and authoring determine which are usable. Product and PriceRow use this group;
+source writes require Staged. Editorial Online projections and publication
+receipts permit secured inspection while rejecting generated writes. Public
+Editorial delivery continues through its sanitized business APIs.
+
+`router.enabled: false` still disables generated routes. An explicit empty groups
+object selects none; `schemaOperations: false` removes an inherited group. Unknown
+groups and non-boolean entries fail configuration rather than enabling broad CRUD.
+Omitting `groups` preserves the schema's existing full default-group selection.
+Global module HTTP enablement remains independent; internal schema contributors
+do not acquire listeners or API hosts merely by declaring a model.
+
+`apiOperations` comes from prepared matching generated-controller routes. It is
+an inert projection, not another registry. Each operation declares `method`, a
+static relative `path`, `apiVersion` and `active`:
+
+```json
+{"create":{"method":"PUT","path":"/product","apiVersion":"v0","active":true}}
+```
+
+Axis validates and follows this path under the selected connection. Missing
+optional route metadata uses the standard canonical resource path; no response
+triggers a second transport. Disabled declarations send no request. Ambiguous
+routes, unsafe paths, unsupported methods or versions fail closed. Later modules
+can override the existing routes; use `active: false` to disable an inherited
+operation instead of introducing a competing endpoint.
+
+### Domain setup and confirmation
+
+Schema `aggregateOperations` can name an existing owning controller operation;
+Utility resolves its actual prepared route. Service names are not executable
+client metadata and there is no generic aggregate dispatcher. Profile's declared
+enterprise setup maps to `POST /enterprises` with `{ model: { ... } }` and a valid
+`Idempotency-Key` header. Profile validates writable fields, keeps tenant setup
+server-owned, preserves references and uses its existing activation retry logic.
+A generic enterprise PUT cannot replace that business operation.
+
+Copilot prepares Product actions at `/products/prepare` and executes through its
+confirmation API. The duplicate Product execution HTTP adapter is removed.
+Confirmed Product/PriceRow writes use canonical module PUT resources and retain
+fresh policy, connection/tenant/target scope and key forwarding. They do not
+create an automatic transaction or durable replay guarantee.
+
+### Rollout and verification
+
+Upgrade backend source, generated output, current clients and governed grants as
+one coordinated change. Existing metadata extensions move to Schema Utility;
+application identity stays in application contributions. Keep domain workflows,
+original revisions, policy rejection and response errors visible. Verify default
+and later-layer behavior, disabled groups/routes, allowed/denied identities,
+Staged/Online, aliases, tenant isolation, conflict recovery and missing owners.
+No migration silently rewrites stored data. Generated documentation and runtime
+preparation evidence complement, rather than replace, authenticated live checks.
+
 ## Publication-aware Generic Authoring
 
 Canonical owner: Foundation's `nDatabase` resolves generic authoring policy;

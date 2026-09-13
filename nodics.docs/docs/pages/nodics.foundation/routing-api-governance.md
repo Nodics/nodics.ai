@@ -94,6 +94,56 @@ Developers should customize routing from the project layer or the owning capabil
 
 ## Operations and governance
 
+### Reading the effective API policy
+
+OpenAPI describes registered contracts; it is not a grant to execute them. Each
+operation's `x-nodics` metadata preserves its route `accessGroups`, literal and
+configured permissions, accepted token types, and `apiExposure` declaration.
+The exposure value remains a string category or the authored object, for example:
+
+```js
+{
+  "x-nodics": {
+    "permissionConfig": "inventory.management.permission",
+    "apiExposure": { "category": "inventoryManagement" },
+    "authTokenTypes": ["service"]
+  }
+}
+```
+
+The existing request pipeline resolves that category against the selected
+runtime's `apiExposure.categories.inventoryManagement.enabled`, then the
+exposure default. It separately authenticates the caller and evaluates access
+groups, token type and permissions. Schema access, ownership, authoring stage,
+validation and concurrency still apply behind a generated route. An operation
+can therefore appear in OpenAPI and still reject a caller or be disabled for
+that runtime. An untagged route does not inherit another API's exposure gate.
+
+Before changing a consumer to a different route, compare the effective method,
+module prefix, version, schema alias, request and response shape, exposure,
+permissions and business owner. A generated service can exist while its schema's
+`router.enabled` is false; service availability is not HTTP availability. Do not
+enable broad generated CRUD merely to replace a consumer adapter when the module
+requires a narrower domain command.
+
+### Customize and extend safely: API policy metadata
+
+Author policy changes in the owning module or a project-owned
+`src/router/routers.js` contribution and layered `config/properties.js`. For
+example, a project can disable the `inventoryManagement` category for one server
+while retaining its routes and schemas for other servers. Preserve token-type,
+tenant, schema and domain checks; changing frontend visibility cannot replace
+them. Regenerate OpenAPI from the selected composition and verify both the
+allowed server and the rejecting server with the intended principal type.
+
+Generation rejects duplicate method/path declarations with conflicting exposure
+metadata. Correct the existing route contribution or its governed override;
+do not add an alias with weaker policy to make generation succeed. Run
+`nRouter/test/openapiContractGeneration.test.js` and the route authorization tests.
+Treat a source-composed contract, a contract including governed persisted
+overlays, and an authenticated live request as separate evidence. A stale
+deployed contract must be regenerated or refreshed through its existing owner.
+
 Operators need to know whether a route is missing, blocked by permission, failing in controller logic, or stale on only part of a cluster. Documentation must therefore include request path, security mode, expected status codes, error shape, logs, correlation id, tenant scope, and rollback behavior. When route changes are runtime-governed, the page must also explain which event refreshes local registries and how operators prove all nodes are aligned.
 
 | Failure mode | Symptom | Troubleshooting step |

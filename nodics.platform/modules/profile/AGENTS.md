@@ -37,6 +37,11 @@ This file gives AI coding agents mandatory guidance for this Nodics module or pa
   protected, action-permissioned, bounded, and explicitly projected. Reuse the
   generated enterprise service; do not expose generic schema CRUD to an AI
   tool, add a parallel search/index path, or return recursive identity data.
+- Enterprise setup resolves effective writable metadata through
+  `DefaultSchemaUtilityService`, independently of a Workbench service. Keep
+  provisioning, principal-bound retries and response projection in Profile;
+  missing or excluded metadata must fail before persistence. The existing
+  `createFromModel` adapter is not a generic insertion alternative.
 - Enterprise/user-management Axis workspaces must be backend component driven.
   Publish labels, tabs, form fields, listings, role choices, and endpoints from
   Profile configuration/BackOffice capability metadata; Axis may add generic
@@ -49,3 +54,27 @@ refresh credentials. Generic account-form normalization and identity constructio
 belong in the existing Profile registration service/pipeline.
 
 External launch proof freshness is checked at session issuance. Continuing a channel journey uses the Profile-issued opaque externalIdentityLinkCode claim plus live link/account validation; never extend proof age globally or trust body-supplied bindings.
+
+This capability declares an inert model-service inventory for [governed Local reset](../../../nodics.foundation/modules/nSystem/llm/contracts/local-reset.md).
+A server must explicitly select it; contributions never enable reset or bypass tenant, environment, confirmation or required-service checks.
+
+Runtime admission reuses direct RUNTIME_DEPLOYMENT principal scope assignments. Never infer approval from headers, topology, broad groups or cross-tenant permission. Scope mutations await existing principal invalidation; the pre-update hook owns atomic version allocation.
+
+Tenant preparation uses the existing governed Init release owner before mandatory identity reconciliation. It does not synthesize deployment grants or credentials from runtime topology; first authority provisioning remains trusted operator initializer data.
+
+Generated Profile reads return the canonical `{code, result}` envelope, with a
+success code and result array; they do not set a Boolean `success: true`. Runtime
+authorization/removal must validate that envelope and reject explicit failures.
+A runtime-scope mutation completes only after the existing Employee update
+acknowledges exactly one matched principal and its stamp hooks finish. Zero or
+multiple matches cannot count as successful credential invalidation.
+
+The existing `GET /enterprise/get` also serves scoped runtime bootstrap. Its
+service path requires `profile` module scope, `profile.enterprise.search`, and
+an exact match between authenticated enterprise/tenant and requested context.
+It returns one active enterprise with only code, active state and its tenant
+code/state/properties. The trusted Profile lookup stays inside Profile after
+authorization; runtime tokens gain no group-based generic CRUD access. Local
+startup may prepare its authority-owned tenant inventory; a remote runtime may
+only discover the enterprise authorized by its retained proof and deployment
+grant. Tenant properties are protected runtime configuration, not public data.

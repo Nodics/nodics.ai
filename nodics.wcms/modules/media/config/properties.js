@@ -17,6 +17,22 @@
  * @override Project, environment, server, node, tenant, or customer layers may override these defaults through Nodics configuration layering.
  */
 module.exports = {
+    // Inert inventory; an allowed local server must explicitly select this capability.
+    localResetProvider: {
+        "contributions": {
+            "media": {
+                "serviceNames": {
+                    "DefaultMediaFolderService": true,
+                    "DefaultMediaFormatService": true,
+                    "DefaultMediaReferenceService": true,
+                    "DefaultMediaService": true,
+                    "DefaultMediaSetEntryService": true,
+                    "DefaultMediaSetService": true
+                }
+            }
+        }
+    },
+
     bodyParserHandler: {
         mediaMultipartUploadBodyParserHandler: 'DefaultMediaMultipartUploadBodyParserHandlerService',
         mediaPublicationBodyParserHandler: 'DefaultMediaPublicationBodyParserHandlerService'

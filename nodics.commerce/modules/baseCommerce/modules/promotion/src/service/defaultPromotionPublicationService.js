@@ -12,7 +12,8 @@
 'use strict';
 /** @module promotion/src/service/defaultPromotionPublicationService @description Restores Promotion operational records into Online runtime boundaries. @layer service @owner promotion */
 module.exports = {
-    records: value => Array.isArray(value) ? value : value && typeof value === 'object' ? Object.values(value) : [],
+    /** Returns the available record collection from the owning persistence result without mutating it. */
+    records: function (value) { return Array.isArray(value) ? value : value && typeof value === 'object' ? Object.values(value) : []; },
     /** Normalizes a publication date field in place; empty optional values are removed before persistence. */
     normalizeDateField: function (model, field) {
         if (!Object.prototype.hasOwnProperty.call(model, field) || model[field] instanceof Date) return;

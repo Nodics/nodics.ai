@@ -23,3 +23,6 @@ Before implementing non-trivial behavior here, record the business outcome, owni
 - Process, Communication, and external case systems retain their own authority; store references and outcomes rather than copied runtime state.
 - Preserve one-way dependencies and keep generated artifacts derived from source definitions.
 - Update local contracts, examples, tests, README, and generated context together when behavior begins.
+
+This capability declares an inert model-service inventory for [governed Local reset](../../../nodics.foundation/modules/nSystem/llm/contracts/local-reset.md).
+A server must explicitly select it; contributions never enable reset or bypass tenant, environment, confirmation or required-service checks.

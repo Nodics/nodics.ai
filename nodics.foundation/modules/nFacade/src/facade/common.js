@@ -70,6 +70,11 @@ module.exports = {
         return SERVICE.srvcName.safeSearch(request);
     },
 
+    /** Delegates schema-explicit bounded bulk operations to the generated service. */
+    bulk: function (request) {
+        return SERVICE.srvcName.bulk(request);
+    },
+
     /**
      * Returns browser-safe generated schema capabilities.
      *

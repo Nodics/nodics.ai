@@ -200,22 +200,22 @@ module.exports = {
     },
 
     /**
-     * Resolves a client-safe schema descriptor from Schema Workbench.
+     * Resolves a client-safe descriptor from the existing shared Schema Utility owner.
      *
      * @param {Object} request Runtime request.
      * @param {Object} payload Normalized export payload.
-     * @returns {Promise<Object>} Workbench schema descriptor.
+     * @returns {Promise<Object>} Shared client-safe schema descriptor.
      */
     resolveSchemaDescriptor: async function (request, payload) {
-        if (!SERVICE.DefaultSchemaWorkbenchService || typeof SERVICE.DefaultSchemaWorkbenchService.get !== 'function') {
-            throw new CLASSES.NodicsError('ERR_EXP_00001', 'Schema Workbench service is required for governed exports');
+        if (!SERVICE.DefaultSchemaUtilityService || typeof SERVICE.DefaultSchemaUtilityService.getSchema !== 'function') {
+            throw new CLASSES.NodicsError('ERR_EXP_00001', 'Schema utility service is required for governed exports');
         }
-        let response = await SERVICE.DefaultSchemaWorkbenchService.get(this.buildWorkbenchRequest(request, payload, {}));
+        let response = await SERVICE.DefaultSchemaUtilityService.getSchema(this.buildSchemaRequest(request, payload, {}), payload.schemaName);
         return response.data || response.result || response;
     },
 
     /**
-     * Collects bounded records by reusing Schema Workbench search semantics.
+     * Collects bounded records through the same safe-query owner used by generated APIs.
      *
      * @param {Object} request Runtime request.
      * @param {Object} payload Normalized export payload.
@@ -224,16 +224,16 @@ module.exports = {
      * @returns {Promise<Object[]>} Export candidate records.
      */
     collectRecords: async function (request, payload, descriptor) {
-        if (!SERVICE.DefaultSchemaWorkbenchService || typeof SERVICE.DefaultSchemaWorkbenchService.search !== 'function') {
-            throw new CLASSES.NodicsError('ERR_EXP_00001', 'Schema Workbench search is required for governed exports');
+        if (!SERVICE.DefaultSchemaSafeQueryService || typeof SERVICE.DefaultSchemaSafeQueryService.searchGenerated !== 'function') {
+            throw new CLASSES.NodicsError('ERR_EXP_00001', 'Schema safe search is required for governed exports');
         }
         let records = [];
         let totalCount = 0;
         let pageNumber = 1;
         let pageSize = this.resolvePageSize(payload.pageSize, descriptor);
         while (records.length < payload.maximumRecords) {
-            let response = await SERVICE.DefaultSchemaWorkbenchService.search(
-                this.buildWorkbenchRequest(
+            let response = await SERVICE.DefaultSchemaSafeQueryService.searchGenerated(
+                this.buildSchemaRequest(
                     request,
                     payload,
                     Object.assign({}, payload.query, {
@@ -256,22 +256,20 @@ module.exports = {
     },
 
     /**
-     * Builds a module-scoped Workbench request without changing caller auth.
+     * Builds a schema-scoped safe-query request without changing caller authority.
      *
      * @param {Object} request Runtime request.
      * @param {Object} payload Normalized export payload.
-     * @param {Object} body Workbench body.
-     * @returns {Object} Workbench request.
+     * @param {Object} body Bounded query input.
+     * @returns {Object} Shared safe-query request.
      */
-    buildWorkbenchRequest: function (request, payload, body) {
-        return Object.assign({}, request, {
+    buildSchemaRequest: function (request, payload, body) {
+        const result = Object.defineProperties({}, Object.getOwnPropertyDescriptors(request));
+        return Object.assign(result, {
             moduleName: payload.moduleName,
-            httpRequest: {
-                params: {
-                    schema: payload.schemaName,
-                },
-                body: body || {},
-            },
+            schemaName: payload.schemaName,
+            generatedServiceName: 'Default' + payload.schemaName.charAt(0).toUpperCase() + payload.schemaName.slice(1) + 'Service',
+            browserQuery: body || {},
         });
     },
 

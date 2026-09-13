@@ -22,6 +22,15 @@ Never derive this limit from request bodies, headers or query parameters.
 
 ## Token-type boundaries
 
+OpenAPI is a projection of the effective route declarations, not an independent
+authorization registry. Preserve both string and object `apiExposure` values in
+operation `x-nodics` metadata. Keep absence distinct from an explicit category;
+never infer a Workbench, public or internal category from a schema or URL.
+Duplicate method/path declarations with different exposure metadata must fail
+generation rather than silently choose one security contract. Category presence
+does not prove it is enabled or that the current principal can use the route.
+Runtime exposure and permission checks remain in the existing request owners.
+
 - Use `authTokenTypes: ['service']` for module-to-module routes that must reject
   human access tokens and API-key identities.
 - Token-type acceptance is enforced independently from access groups and
@@ -61,3 +70,21 @@ Never derive this limit from request bodies, headers or query parameters.
   a named body-parser handler and a configured maximum.
 - Internal module routes require service-token metadata even when browser CORS
   would already block a caller; origin policy is not authentication.
+
+## Deployment-bound service access
+
+A runtime-bound service credential must name the requested module. Its route
+eligibility uses the configured `authSecurity.internalToken.runtimeAccessGroups`
+(default `userGroup`), while restricted groups and `authTokenTypes` continue to
+limit eligible routes. Issued runtime JWTs contain no identity groups; nRouter
+must not hydrate group permissions for them. Explicit route permissions are
+checked against the approved JWT permission list even when legacy action policy
+is disabled or permissive. Legacy routes without action permissions still require
+an approved module and permitted base access group. Do not use this mechanism to
+bypass a domain's principal-type, tenant, ownership or mutation checks.
+
+OpenAPI generation resolves the selected project environment and server through the
+existing runtime metadata owner. It loads schema/router metadata without invoking
+application service initialization hooks: static generation must not start runtime
+resources or require operational API-key proof. Runtime startup retains all of its
+credential checks. Persisted-schema reads remain an explicit generation option.

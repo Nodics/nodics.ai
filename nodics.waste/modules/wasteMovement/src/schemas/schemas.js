@@ -13,7 +13,7 @@
 
 
 module.exports = { wasteMovement: {
-    wasteBatch: Object.assign({ super: 'base', model: true, schemaPolicies: ['operational'], service: { enabled: true }, router: { enabled: false }, cache: { enabled: false }, event: { enabled: false }, search: { enabled: false } }, { definition: {
+    wasteBatch: Object.assign({ super: 'base', model: true, schemaPolicies: ['operational'], service: { enabled: true }, router: { groups: { schemaOperations: true }, enabled: true }, cache: { enabled: false }, event: { enabled: false }, search: { enabled: false } }, { definition: {
         code: { type: 'string', required: true , description: 'Uniquely identifies this record for references, APIs, imports, and business administration.'},
         batchType: { type: 'string', required: true, enum: ['CONTAINER', 'PALLET', 'SHIPMENT', 'PROCESSING_LOT', 'AUDIT_LOT'] , description: 'Classifies this record by batch type for validation and business handling.'},
         submissionCodes: { type: 'array', required: false , description: 'Lists submission codes used to classify, link, or resolve this record.'},
@@ -28,7 +28,7 @@ module.exports = { wasteMovement: {
         sourceLocationRef: {"enabled":true,"moduleName":"locationCore","schemaName":"location","type":"one","propertyName":"code"},
         currentLocationRef: {"enabled":true,"moduleName":"locationCore","schemaName":"location","type":"one","propertyName":"code"}
     } }),
-    wasteMovement: Object.assign({ super: 'base', model: true, schemaPolicies: ['operational'], service: { enabled: true }, router: { enabled: false }, cache: { enabled: false }, event: { enabled: false }, search: { enabled: false } }, { definition: {
+    wasteMovement: Object.assign({ super: 'base', model: true, schemaPolicies: ['operational'], service: { enabled: true }, router: { groups: { schemaOperations: true }, enabled: true }, cache: { enabled: false }, event: { enabled: false }, search: { enabled: false } }, { definition: {
         code: { type: 'string', required: true , description: 'Uniquely identifies this record for references, APIs, imports, and business administration.'},
         movementType: { type: 'string', required: true, enum: ['PICKUP', 'TRANSFER', 'WAREHOUSE_RECEIPT', 'PROCESSOR_TRANSFER', 'RECYCLER_RECEIPT', 'DISPOSAL'] , description: 'Classifies this record by movement type for validation and business handling.'},
         sourceLocationRef: { type: 'object', required: true , description: 'References the related source location record used by this record.'},

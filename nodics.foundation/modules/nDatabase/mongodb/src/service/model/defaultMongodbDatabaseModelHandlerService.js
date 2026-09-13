@@ -87,6 +87,11 @@ module.exports = {
         return new Promise((resolve, reject) => {
             try {
                 let schema = options.moduleObject.rawSchema[options.schemaName];
+                const configuredSchemaProperties = options.dataBase.master.getOptions().schemaProperties;
+                const schemaProperties = configuredSchemaProperties === undefined ? {} : configuredSchemaProperties;
+                if (!_.isPlainObject(schemaProperties) || Object.values(schemaProperties).some(enabled => typeof enabled !== 'boolean')) {
+                    throw new Error('MongoDB schemaProperties must be a keyed object of boolean selections');
+                }
                 let allIndexes = [];
                 let primaryKeys = [];
                 let indexedFields = [];
@@ -120,14 +125,11 @@ module.exports = {
                             validators[propertyName] = property.validator;
                             delete property.validator;
                         }
-                        let schemaProperties = options.dataBase.master.getOptions().schemaProperties;
-                        if (!UTILS.isBlank(property) && schemaProperties && schemaProperties.length) {
-                            schemaProperties.forEach(prop => {
-                                if (property[prop] && !UTILS.isBlank(property[prop])) {
-                                    jsonSchema.properties[propertyName][prop] = property[prop];
-                                }
-                            });
-                        }
+                        Object.entries(schemaProperties).forEach(([prop, enabled]) => {
+                            if (enabled && Object.prototype.hasOwnProperty.call(property, prop) && property[prop] !== undefined) {
+                                jsonSchema.properties[propertyName][prop] = property[prop];
+                            }
+                        });
                         if (!property.description) {
                             jsonSchema.properties[propertyName].description = 'must be a ' + jsonSchema.properties[propertyName].bsonType;
                             if (jsonSchema.required.includes(propertyName)) {

@@ -1,0 +1,436 @@
+{
+  "presets": {
+    "commerce": {
+      "label": "Commerce storefront",
+      "selected": [
+        "nodics.commerce"
+      ],
+      "domains": [],
+      "excluded": [
+        "apparel",
+        "electronics",
+        "telco"
+      ],
+      "composition": "commerce",
+      "routes": [
+        "/",
+        "/products"
+      ],
+      "renderers": [
+        "commerce.product.card"
+      ],
+      "catalogs": [
+        "mainProductCatalog",
+        "mainContentCatalog"
+      ],
+      "packs": [],
+      "journeys": [
+        "commerce.discovery",
+        "commerce.checkout"
+      ],
+      "explanation": "Base Commerce storefront with shared product discovery and checkout foundations.",
+      "storefront": "AGORA",
+      "frontends": [
+        "AGORA",
+        "AXIS"
+      ],
+      "stores": [
+        "mainStore"
+      ],
+      "backendRuntimes": [
+        "PLATFORM",
+        "WCMS_STAGED",
+        "WCMS_ONLINE",
+        "PROCESS",
+        "COMMERCE"
+      ],
+      "corsOrigins": [
+        "http://127.0.0.1:3300"
+      ],
+      "packDomains": {
+        "nexus.web": "content"
+      },
+      "rendererByDomain": {},
+      "market": {
+        "country": "AE",
+        "locale": "en-AE",
+        "currency": "AED"
+      }
+    },
+    "apparel": {
+      "label": "Apparel commerce storefront",
+      "selected": [
+        "nodics.commerce",
+        "apparel"
+      ],
+      "domains": [
+        "APPAREL"
+      ],
+      "excluded": [
+        "electronics",
+        "telco"
+      ],
+      "composition": "apparel",
+      "routes": [
+        "/",
+        "/apparel"
+      ],
+      "renderers": [
+        "agora.apparel.product-card"
+      ],
+      "catalogs": [
+        "apparelProductCatalog",
+        "apparelContentCatalog"
+      ],
+      "packs": [
+        "agora.apparel"
+      ],
+      "journeys": [
+        "apparel.size-colour-checkout"
+      ],
+      "explanation": "Apparel storefront with size, colour, style, brand, and fit-oriented product behavior.",
+      "storefront": "AGORA",
+      "frontends": [
+        "AGORA",
+        "AXIS"
+      ],
+      "stores": [
+        "mainStore"
+      ],
+      "backendRuntimes": [
+        "PLATFORM",
+        "WCMS_STAGED",
+        "WCMS_ONLINE",
+        "PROCESS",
+        "COMMERCE"
+      ],
+      "corsOrigins": [
+        "http://127.0.0.1:3300"
+      ],
+      "packDomains": {
+        "agora.apparel": "apparel",
+        "nexus.web": "content"
+      },
+      "rendererByDomain": {
+        "apparel": "agora.apparel.product-card"
+      },
+      "market": {
+        "country": "AE",
+        "locale": "en-AE",
+        "currency": "AED"
+      }
+    },
+    "electronics": {
+      "label": "Electronics commerce storefront",
+      "selected": [
+        "nodics.commerce",
+        "electronics"
+      ],
+      "domains": [
+        "ELECTRONICS"
+      ],
+      "excluded": [
+        "apparel",
+        "telco"
+      ],
+      "composition": "electronics",
+      "routes": [
+        "/",
+        "/electronics"
+      ],
+      "renderers": [
+        "agora.electronics.product-card"
+      ],
+      "catalogs": [
+        "electronicsProductCatalog",
+        "electronicsContentCatalog"
+      ],
+      "packs": [
+        "agora.electronics"
+      ],
+      "journeys": [
+        "electronics.warranty-checkout"
+      ],
+      "explanation": "Electronics storefront with device specification, compatibility, and warranty behavior.",
+      "storefront": "AGORA",
+      "frontends": [
+        "AGORA",
+        "AXIS"
+      ],
+      "stores": [
+        "mainStore"
+      ],
+      "backendRuntimes": [
+        "PLATFORM",
+        "WCMS_STAGED",
+        "WCMS_ONLINE",
+        "PROCESS",
+        "COMMERCE"
+      ],
+      "corsOrigins": [
+        "http://127.0.0.1:3300"
+      ],
+      "packDomains": {
+        "agora.electronics": "electronics",
+        "nexus.web": "content"
+      },
+      "rendererByDomain": {
+        "electronics": "agora.electronics.product-card"
+      },
+      "market": {
+        "country": "AE",
+        "locale": "en-AE",
+        "currency": "AED"
+      }
+    },
+    "telco": {
+      "label": "Telco commerce storefront",
+      "selected": [
+        "nodics.commerce",
+        "telco"
+      ],
+      "domains": [
+        "TELCO"
+      ],
+      "excluded": [
+        "apparel"
+      ],
+      "composition": "telco",
+      "routes": [
+        "/",
+        "/telco"
+      ],
+      "renderers": [
+        "agora.telco.product-card"
+      ],
+      "catalogs": [
+        "telcoProductCatalog",
+        "telcoContentCatalog"
+      ],
+      "packs": [
+        "agora.telco"
+      ],
+      "journeys": [
+        "telco.device-plan-provisioning"
+      ],
+      "integrations": [
+        {
+          "code": "localProvisioning",
+          "kind": "PROVISIONING",
+          "certificationState": "LOCAL_ADAPTER",
+          "required": true
+        }
+      ],
+      "explanation": "Telco storefront with device behavior plus subscription-plan and provisioning behavior.",
+      "storefront": "AGORA",
+      "frontends": [
+        "AGORA",
+        "AXIS"
+      ],
+      "stores": [
+        "mainStore"
+      ],
+      "backendRuntimes": [
+        "PLATFORM",
+        "WCMS_STAGED",
+        "WCMS_ONLINE",
+        "PROCESS",
+        "COMMERCE"
+      ],
+      "corsOrigins": [
+        "http://127.0.0.1:3300"
+      ],
+      "packDomains": {
+        "agora.telco": "telco",
+        "nexus.web": "content"
+      },
+      "rendererByDomain": {
+        "telco": "agora.telco.product-card"
+      },
+      "market": {
+        "country": "AE",
+        "locale": "en-AE",
+        "currency": "AED"
+      }
+    },
+    "combined": {
+      "label": "Combined domain commerce storefront",
+      "selected": [
+        "nodics.commerce",
+        "apparel",
+        "electronics",
+        "telco"
+      ],
+      "domains": [
+        "APPAREL",
+        "ELECTRONICS",
+        "TELCO"
+      ],
+      "excluded": [],
+      "composition": "combined",
+      "routes": [
+        "/",
+        "/apparel",
+        "/electronics",
+        "/telco"
+      ],
+      "renderers": [
+        "agora.apparel.product-card",
+        "agora.electronics.product-card",
+        "agora.telco.product-card"
+      ],
+      "catalogs": [
+        "apparelCatalog",
+        "electronicsCatalog",
+        "telcoCatalog",
+        "contentCatalog"
+      ],
+      "packs": [
+        "agora.apparel",
+        "agora.electronics",
+        "agora.telco"
+      ],
+      "journeys": [
+        "apparel.size-colour-checkout",
+        "electronics.warranty-checkout",
+        "telco.device-plan-provisioning",
+        "commerce.mixed-cart"
+      ],
+      "integrations": [
+        {
+          "code": "localProvisioning",
+          "kind": "PROVISIONING",
+          "certificationState": "LOCAL_ADAPTER",
+          "required": true
+        }
+      ],
+      "explanation": "One storefront combining Apparel, Electronics, and Telco customer journeys.",
+      "storefront": "AGORA",
+      "frontends": [
+        "AGORA",
+        "AXIS"
+      ],
+      "stores": [
+        "mainStore"
+      ],
+      "backendRuntimes": [
+        "PLATFORM",
+        "WCMS_STAGED",
+        "WCMS_ONLINE",
+        "PROCESS",
+        "COMMERCE"
+      ],
+      "corsOrigins": [
+        "http://127.0.0.1:3300"
+      ],
+      "packDomains": {
+        "agora.apparel": "apparel",
+        "agora.electronics": "electronics",
+        "agora.telco": "telco",
+        "nexus.web": "content"
+      },
+      "rendererByDomain": {
+        "apparel": "agora.apparel.product-card",
+        "electronics": "agora.electronics.product-card",
+        "telco": "agora.telco.product-card"
+      },
+      "market": {
+        "country": "AE",
+        "locale": "en-AE",
+        "currency": "AED"
+      }
+    }
+  },
+  "compositions": [
+    {
+      "code": "commerce",
+      "domains": [],
+      "rendererKeys": [
+        "commerce.product.card"
+      ],
+      "frontend": "AGORA",
+      "dataPacks": []
+    },
+    {
+      "code": "apparel",
+      "domains": [
+        "apparel"
+      ],
+      "rendererKeys": [
+        "commerce.product.card",
+        "agora.apparel.product-card"
+      ],
+      "frontend": "AGORA",
+      "dataPacks": [
+        "agora.apparel"
+      ]
+    },
+    {
+      "code": "electronics",
+      "domains": [
+        "electronics"
+      ],
+      "rendererKeys": [
+        "commerce.product.card",
+        "agora.electronics.product-card"
+      ],
+      "frontend": "AGORA",
+      "dataPacks": [
+        "agora.electronics"
+      ]
+    },
+    {
+      "code": "telco",
+      "domains": [
+        "telco"
+      ],
+      "rendererKeys": [
+        "commerce.product.card",
+        "agora.electronics.product-card",
+        "agora.telco.product-card"
+      ],
+      "frontend": "AGORA",
+      "dataPacks": [
+        "agora.telco"
+      ]
+    },
+    {
+      "code": "combined",
+      "domains": [
+        "apparel",
+        "electronics",
+        "telco"
+      ],
+      "rendererKeys": [
+        "commerce.product.card",
+        "agora.apparel.product-card",
+        "agora.electronics.product-card",
+        "agora.telco.product-card"
+      ],
+      "frontend": "AGORA",
+      "dataPacks": [
+        "agora.apparel",
+        "agora.electronics",
+        "agora.telco"
+      ]
+    }
+  ],
+  "frontends": [
+    {
+      "code": "AGORA",
+      "role": "Reference commerce storefront"
+    },
+    {
+      "code": "AXIS",
+      "role": "BackOffice administration"
+    },
+    {
+      "code": "NEXUS",
+      "role": "Reference corporate website",
+      "dataPacks": [
+        "nexus.web"
+      ]
+    }
+  ],
+  "defaultPreset": "commerce"
+}

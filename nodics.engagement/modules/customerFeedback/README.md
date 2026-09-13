@@ -26,3 +26,6 @@ Verification covers metadata, folder ownership, deterministic index order,
 documentation discovery, active behavior contracts, API security, lifecycle
 transitions, insight correction/deletion propagation, and configuration
 override boundaries.
+
+This capability declares an inert model-service inventory for [governed Local reset](../../../nodics.foundation/modules/nSystem/llm/contracts/local-reset.md).
+A server must explicitly select it; contributions never enable reset or bypass tenant, environment, confirmation or required-service checks.

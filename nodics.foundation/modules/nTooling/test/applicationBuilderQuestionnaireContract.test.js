@@ -16,19 +16,20 @@
  * @owner nTooling
  * @override Future UI or conversational Builder wrappers must preserve this questionnaire-to-answers-to-dry-run delegation contract.
  */
-const assert = require('assert');
-const childProcess = require('child_process');
-const fs = require('fs');
-const os = require('os');
-const path = require('path');
-const contractService = require('../src/service/applicationBuilder/defaultApplicationBuilderContractService');
-const guidedService = require('../src/service/applicationBuilder/defaultApplicationBuilderGuidedService');
-const toolingCommandService = require('../src/service/defaultToolingCommandService');
+const assert = require("assert");
+const childProcess = require("child_process");
+const fs = require("fs");
+const os = require("os");
+const path = require("path");
+const contractService = require("../src/service/applicationBuilder/defaultApplicationBuilderContractService");
+const guidedService = require("../src/service/applicationBuilder/defaultApplicationBuilderGuidedService");
+const toolingCommandService = require("../src/service/defaultToolingCommandService");
 
-const frameworkRoot = path.resolve(__dirname, '../../../..');
-const workspaceRoot = path.dirname(frameworkRoot);
-const expRoot = path.join(workspaceRoot, 'nodics.exp');
-const kickoffRoot = path.join(workspaceRoot, 'nodics.kickoff');
+const frameworkRoot = path.resolve(__dirname, "../../../..");
+const sourceWorkspace = require("./helpers/applicationBuilderWorkspace")();
+const workspaceRoot = sourceWorkspace.root;
+const expRoot = sourceWorkspace.experience;
+const kickoffRoot = sourceWorkspace.customer;
 
 /**
  * Runs the questionnaire service with in-memory input.
@@ -36,85 +37,178 @@ const kickoffRoot = path.join(workspaceRoot, 'nodics.kickoff');
  * @returns {Promise<Object>} Guided answers document.
  */
 async function collectAnswers(answers) {
-    return guidedService.runQuestionnaire({ scriptedAnswers: answers });
+  return guidedService.runQuestionnaire({
+    scriptedAnswers: answers,
+    catalogue:
+      require("../src/service/applicationBuilder/defaultApplicationBuilderCatalogueService").discover(
+        {
+          framework: frameworkRoot,
+          experience: expRoot,
+          customer: kickoffRoot,
+        },
+      ),
+  });
 }
 
 (async () => {
-    const answers = await collectAnswers([
-        'acmeMobile',
-        'acme',
-        'Acme Mobile',
-        'telco',
-        'AE',
-        'en-AE',
-        'AED',
-        'AGORA,AXIS',
-        'yes',
-        '/workspace/generated/acmeMobile',
-        'CHANGE-1234'
-    ]);
-    assert.strictEqual(contractService.validateDocument('guided', answers).valid, true,
-        'Questionnaire answers must produce a valid guided request');
-    assert.strictEqual(answers.project.projectCode, 'acmeMobile',
-        'Questionnaire must preserve typed project code');
-    assert.strictEqual(answers.preset, 'telco',
-        'Questionnaire must preserve typed preset');
-    assert.deepStrictEqual(answers.frontends, ['AGORA', 'AXIS'],
-        'Questionnaire must parse comma-separated frontends');
-    assert.strictEqual(answers.sampleData, true,
-        'Questionnaire must normalize yes/no sample-data answers');
+  const answers = await collectAnswers([
+    "acmeMobile",
+    "acme",
+    "Acme Mobile",
+    "telco",
+    "AE",
+    "en-AE",
+    "AED",
+    "AGORA,AXIS",
+    "yes",
+    "/workspace/generated/acmeMobile",
+    "CHANGE-1234",
+  ]);
+  assert.strictEqual(
+    contractService.validateDocument("guided", answers).valid,
+    true,
+    "Questionnaire answers must produce a valid guided request",
+  );
+  assert.strictEqual(
+    answers.project.projectCode,
+    "acmeMobile",
+    "Questionnaire must preserve typed project code",
+  );
+  assert.strictEqual(
+    answers.preset,
+    "telco",
+    "Questionnaire must preserve typed preset",
+  );
+  assert.deepStrictEqual(
+    answers.frontends,
+    ["AGORA", "AXIS"],
+    "Questionnaire must parse comma-separated frontends",
+  );
+  assert.strictEqual(
+    answers.sampleData,
+    true,
+    "Questionnaire must normalize yes/no sample-data answers",
+  );
 
-    const defaulted = await collectAnswers(['', '', '', '', '', '', '', '', '', '', '']);
-    assert.strictEqual(contractService.validateDocument('guided', defaulted).valid, true,
-        'Questionnaire defaults must produce a valid guided request');
-    assert.strictEqual(defaulted.preset, 'commerce',
-        'Questionnaire defaults must support a Commerce beginner path');
+  const defaulted = await collectAnswers([
+    "",
+    "",
+    "",
+    "",
+    "",
+    "",
+    "",
+    "",
+    "",
+    "",
+    "",
+  ]);
+  assert.strictEqual(
+    contractService.validateDocument("guided", defaulted).valid,
+    true,
+    "Questionnaire defaults must produce a valid guided request",
+  );
+  assert.strictEqual(
+    defaulted.preset,
+    "commerce",
+    "Questionnaire defaults must support a Commerce beginner path",
+  );
 
-    const tempParent = fs.mkdtempSync(path.join(os.tmpdir(), 'nodics-builder-questionnaire-'));
-    const cliAnswersPath = path.join(tempParent, 'acme-mobile-questionnaire.json');
-    const cli = path.join(frameworkRoot, 'nodics.foundation/modules/nTooling/bin/nodics-tool.js');
-    const input = [
-        'acmeMobile',
-        'acme',
-        'Acme Mobile',
-        'telco',
-        'AE',
-        'en-AE',
-        'AED',
-        'AGORA,AXIS',
-        'yes',
-        '/workspace/generated/acmeMobile',
-        'CHANGE-1234',
-        ''
-    ].join('\n');
-    const cliResult = JSON.parse(childProcess.execFileSync(process.execPath,
-        [cli, 'builder:questionnaire', '--exp=' + expRoot, '--kickoff=' + kickoffRoot,
-            '--output=' + cliAnswersPath, '--dry-run=true'],
-        { cwd: frameworkRoot, encoding: 'utf8', input: input }));
-    assert.strictEqual(cliResult.operation, 'questionnaire',
-        'Governed CLI must expose questionnaire operation');
-    assert.strictEqual(cliResult.writePerformed, true,
-        'Questionnaire CLI must write one answers file when --output is supplied');
-    assert.strictEqual(fs.existsSync(cliAnswersPath), true,
-        'Questionnaire CLI must create the requested answers file');
-    assert.strictEqual(contractService.validateDocument('guided',
-        JSON.parse(fs.readFileSync(cliAnswersPath, 'utf8'))).valid, true,
-    'Questionnaire persisted answers must satisfy the guided schema');
-    assert.strictEqual(cliResult.dryRunResult.dryRun, true,
-        'Questionnaire CLI must delegate to dry run when requested');
-    assert(cliResult.dryRunResult.dryRunPlan.selectedResult.transitiveBackendDependencies.includes('electronics'),
-        'Questionnaire Telco dry run must explain Electronics backend dependency');
-    assert.strictEqual(cliResult.dryRunResult.writePerformed, false,
-        'Questionnaire dry run must not generate application files');
+  const tempParent = fs.mkdtempSync(
+    path.join(os.tmpdir(), "nodics-builder-questionnaire-"),
+  );
+  const cliAnswersPath = path.join(
+    tempParent,
+    "acme-mobile-questionnaire.json",
+  );
+  const cli = path.join(
+    frameworkRoot,
+    "nodics.foundation/modules/nTooling/bin/nodics-tool.js",
+  );
+  const input = [
+    "acmeMobile",
+    "acme",
+    "Acme Mobile",
+    "telco",
+    "AE",
+    "en-AE",
+    "AED",
+    "AGORA,AXIS",
+    "yes",
+    "/workspace/generated/acmeMobile",
+    "CHANGE-1234",
+    "",
+  ].join("\n");
+  const cliResult = JSON.parse(
+    childProcess.execFileSync(
+      process.execPath,
+      [
+        cli,
+        "builder:questionnaire",
+        "--exp=" + expRoot,
+        "--kickoff=" + kickoffRoot,
+        "--output=" + cliAnswersPath,
+        "--dry-run=true",
+      ],
+      { cwd: frameworkRoot, encoding: "utf8", input: input },
+    ),
+  );
+  assert.strictEqual(
+    cliResult.operation,
+    "questionnaire",
+    "Governed CLI must expose questionnaire operation",
+  );
+  assert.strictEqual(
+    cliResult.writePerformed,
+    true,
+    "Questionnaire CLI must write one answers file when --output is supplied",
+  );
+  assert.strictEqual(
+    fs.existsSync(cliAnswersPath),
+    true,
+    "Questionnaire CLI must create the requested answers file",
+  );
+  assert.strictEqual(
+    contractService.validateDocument(
+      "guided",
+      JSON.parse(fs.readFileSync(cliAnswersPath, "utf8")),
+    ).valid,
+    true,
+    "Questionnaire persisted answers must satisfy the guided schema",
+  );
+  assert.strictEqual(
+    cliResult.dryRunResult.dryRun,
+    true,
+    "Questionnaire CLI must delegate to dry run when requested",
+  );
+  assert(
+    cliResult.dryRunResult.dryRunPlan.selectedResult.transitiveBackendDependencies.includes(
+      "electronics",
+    ),
+    "Questionnaire Telco dry run must explain Electronics backend dependency",
+  );
+  assert.strictEqual(
+    cliResult.dryRunResult.writePerformed,
+    false,
+    "Questionnaire dry run must not generate application files",
+  );
 
-    const commands = toolingCommandService.loadCommands(frameworkRoot);
-    assert.strictEqual(commands['builder:questionnaire'].operation, 'questionnaire',
-        'WP-B12 must expose beginner questionnaire operation');
-    assert.strictEqual(commands['builder:questionnaire'].handler, '@nTooling/application-builder',
-        'Builder questionnaire must use the governed application-builder adapter');
+  const commands = toolingCommandService.loadCommands(frameworkRoot);
+  assert.strictEqual(
+    commands["builder:questionnaire"].operation,
+    "questionnaire",
+    "WP-B12 must expose beginner questionnaire operation",
+  );
+  assert.strictEqual(
+    commands["builder:questionnaire"].handler,
+    "@nTooling/application-builder",
+    "Builder questionnaire must use the governed application-builder adapter",
+  );
 
-    console.log('Application Builder WP-B12 beginner questionnaire contract validated');
-})().catch(error => {
-    console.error(error && error.stack ? error.stack : error);
-    process.exitCode = 1;
+  console.log(
+    "Application Builder WP-B12 beginner questionnaire contract validated",
+  );
+})().catch((error) => {
+  console.error(error && error.stack ? error.stack : error);
+  process.exitCode = 1;
 });

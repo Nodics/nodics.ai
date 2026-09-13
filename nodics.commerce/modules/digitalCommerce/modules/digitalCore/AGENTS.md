@@ -9,3 +9,6 @@ Digital Core coordinates checkout-time digital unit allocation. Keep this layer 
 - Do not reserve digital units during add-to-cart or calculate-cart.
 - Reserve at checkout only, immediately before payment authorization.
 - Release reserved units during checkout compensation before returning a failure.
+
+This capability declares an inert model-service inventory for [governed Local reset](../../../../../nodics.foundation/modules/nSystem/llm/contracts/local-reset.md).
+A server must explicitly select it; contributions never enable reset or bypass tenant, environment, confirmation or required-service checks.

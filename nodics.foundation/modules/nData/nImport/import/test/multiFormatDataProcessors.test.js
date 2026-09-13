@@ -172,8 +172,8 @@ function runProcessor(processor, files) {
 
     pipelineCalls = [];
     let jsAppendedRequest = await runProcessor(jsProcessor, [jsFile, jsUpdatedFile]);
-    assert.deepStrictEqual(pipelineCalls.map(call => call.models.map(model => model.code)), [['jsOne', 'jsTwo', 'jsUpdated']]);
-    assert.strictEqual(jsAppendedRequest.importRun.summary.recordsRead, 3);
+    assert.deepStrictEqual(pipelineCalls.map(call => call.models.map(model => model.code)), [['jsUpdated', 'jsTwo']]);
+    assert.strictEqual(jsAppendedRequest.importRun.summary.recordsRead, 2);
 
     pipelineCalls = [];
     let jsArrayRefreshRequest = await runProcessor(jsProcessor, [jsArrayBaseFile, jsArrayUpdateFile]);

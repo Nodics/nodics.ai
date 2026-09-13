@@ -15,10 +15,16 @@ module.exports = {
     init: function () { return Promise.resolve(true); },
     /** Executes the documented bounded module operation. */
     postInit: function () { return Promise.resolve(true); },
-    status: (profileCode, request) => SERVICE.DefaultBackofficeApplicationInitializationService.status(profileCode, request),
-    contentPackStatus: (profileCode, request) => SERVICE.DefaultBackofficeApplicationInitializationService.contentPackStatus(profileCode, request),
-    installContentPack: (profileCode, request) => SERVICE.DefaultBackofficeApplicationInitializationService.installContentPack(profileCode, request),
-    initiate: (profileCode, request) => SERVICE.DefaultBackofficeApplicationInitializationService.initiate(profileCode, request),
-    rollback: (profileCode, request) => SERVICE.DefaultBackofficeApplicationInitializationService.rollback(profileCode, request),
-    retire: (profileCode, request) => SERVICE.DefaultBackofficeApplicationInitializationService.retire(profileCode, request)
+    /** Delegates read-only status discovery to the existing initialization or reset service. */
+    status: function (profileCode, request) { return SERVICE.DefaultBackofficeApplicationInitializationService.status(profileCode, request); },
+    /** Delegates content-pack status discovery to the owning application initialization service. */
+    contentPackStatus: function (profileCode, request) { return SERVICE.DefaultBackofficeApplicationInitializationService.contentPackStatus(profileCode, request); },
+    /** Delegates the governed content-pack installation request without changing its scope or authorization. */
+    installContentPack: function (profileCode, request) { return SERVICE.DefaultBackofficeApplicationInitializationService.installContentPack(profileCode, request); },
+    /** Delegates the requested initialization to the existing owner and returns its asynchronous result. */
+    initiate: function (profileCode, request) { return SERVICE.DefaultBackofficeApplicationInitializationService.initiate(profileCode, request); },
+    /** Delegates governed application rollback to the owning initialization service. */
+    rollback: function (profileCode, request) { return SERVICE.DefaultBackofficeApplicationInitializationService.rollback(profileCode, request); },
+    /** Delegates governed application retirement to the owning initialization service. */
+    retire: function (profileCode, request) { return SERVICE.DefaultBackofficeApplicationInitializationService.retire(profileCode, request); }
 };

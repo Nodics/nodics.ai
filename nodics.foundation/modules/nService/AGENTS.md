@@ -27,3 +27,42 @@ This file gives AI coding agents mandatory guidance for this Nodics module or pa
   use internal service identity rather than username/password authentication.
 
 Capability builders may project the bounded native `backendWorkspace` variant through the existing provider contract. They must not synthesize accelerator navigation under a generic provider or invent schema targets for native screens.
+
+## Tenant startup completion
+
+Enterprise discovery, tenant database/model creation, search setup and initial
+Cron job creation must complete before startup succeeds. Propagate required
+failures; do not launch background enterprise retry loops or a second job
+scheduler. Cron owns recurrence. Internal token refresh registers with the
+existing runtime lifecycle service, prevents overlapping refreshes, stops its
+timer and awaits active refresh work before transport/resource shutdown.
+
+Runtime instances require configured retained proof and explicit identity. Keep renewal and registration in their existing bounded loops. Protected-work owners use the agent operational snapshot plus current credential validation; stale state cannot authorize new work.
+
+Initial startup, tenant startup and renewal must use the same configured proof and Profile deployment-grant check. A local Profile host must never issue its own unscoped credential through a bootstrap shortcut. Profile owns tenant Init/identity preparation; no literal bootstrap employee or group belongs in the generic enterprise handler.
+
+Revocation lookup returns unrevoked only for the canonical `ERR_CACHE_00001`
+cache miss. Provider outage, disabled channel and malformed cached data must
+reject authorization even if a subsequent principal-stamp read could succeed.
+Do not turn arbitrary authentication-state errors into absent revocation markers.
+
+A separate runtime can request protected remote APIs through explicit
+`runtimeIdentity.remoteModules` (for example `['profile', 'inventory']`).
+The provider adds these bounded codes to its active-module request. This does
+not activate source modules or establish local ownership. Every requested code
+still requires the same Profile deployment grant and route permission. Configure
+remote endpoints through the existing server topology, including its abstract
+endpoint; an endpoint alone never grants capability access. Missing remote scope
+fails during protected calls rather than silently broadening the credential.
+
+`authSecurity.securityStamp.cacheModuleName` selects the shared authentication
+state namespace for both principal stamps and token revocation. Authority and
+consumer runtimes must use the same configured distributed channel. It can be
+the active Foundation `auth` module when Profile runs remotely; this never
+changes `profileModuleName` or identity ownership. The default remains Profile.
+
+Module invocation honors the router topology's effective `remoteOnly` option,
+including connection aliases, even when the module source is active locally.
+The selected remote endpoint or registry owner remains mandatory; removing the
+option restores ordinary local dispatch. Active source is not proof of local
+service ownership. See `test/moduleInvocationContract.test.js`.

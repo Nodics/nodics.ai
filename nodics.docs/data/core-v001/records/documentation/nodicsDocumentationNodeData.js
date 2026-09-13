@@ -465,7 +465,7 @@ module.exports = {
       {
         "code": "framework.what-is-nodics",
         "title": "What is Nodics?",
-        "summary": "Introductory definition of Nodics, its enterprise purpose, and the first mental model for business, developer, and operator readers.",
+        "summary": "What Nodics is, how it supports AI-assisted development with human ownership, and how teams understand, customize and operate enterprise applications.",
         "order": 10
       },
       {
@@ -5074,7 +5074,7 @@ module.exports = {
     "nodeLevel": "PAGE_LINK",
     "nodeType": "PAGE",
     "nodeTitle": "What is Nodics?",
-    "nodeSummary": "Introductory definition of Nodics, its enterprise purpose, and the first mental model for business, developer, and operator readers.",
+    "nodeSummary": "What Nodics is, how it supports AI-assisted development with human ownership, and how teams understand, customize and operate enterprise applications.",
     "nodeContentArea": {
       "route": "/docs/framework",
       "documentType": "overview",

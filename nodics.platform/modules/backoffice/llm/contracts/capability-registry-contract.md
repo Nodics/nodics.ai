@@ -145,3 +145,21 @@ last-known membership offline for diagnostics, never as live eligibility.
 ## Module-owned subtrees and native workspaces
 
 Apply the [global contribution contract](../../../../../nodics.foundation/modules/nSetup/llm/contracts/module-owned-ui-contribution-contract.md). Parent placement never transfers the contributor's ownership. Cross-module orphan removal includes local grandchildren, and cycles are rejected after effective aggregation. The existing `backendWorkspace` field accepts the version-1 `axis.workspace.native` variant with bounded `workspaceCode`, `viewCode`, title and optional description. No executable or additional properties are accepted. Published overrides preserve these source-owned targets.
+
+## Trusted instance binding and operational response
+
+Registry writes require a deployment-bound service JWT. Single and batch paths
+compare instance, project, environment, server and every announced module before
+writing leases. Stored coordinates come from approved scope even when optional
+body fields are absent. Caller declarations cannot broaden that scope. There is
+no configuration switch to disable this identity binding.
+
+The batch response projects business activation from the existing functional
+catalogue for each registered technical module; it does not create another
+activation authority. A registered, enabled functional record grants operational
+state for a bounded `backofficeRegistry.operationalStateTtlMs` (default 30000,
+1000–60000 milliseconds). Refresh uses the existing registration heartbeat.
+Deactivation propagation is bounded by this freshness window, not instantaneous;
+expired or absent state prevents new protected work. Lease removal leaves business
+registration/data intact. Cronjob owns enforcement at job execution and retains
+its existing handling of already-running jobs.

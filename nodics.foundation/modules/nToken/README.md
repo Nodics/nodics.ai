@@ -154,3 +154,6 @@ consumer capability's delivery and abuse policy.
 - Authentication boundary: [nAuth](../nAuth/README.md)
 - Public security guide: [How Users, Tenants, And Permissions Work](https://github.com/Nodics/nodics.docs)
 - Framework map: [nodics.foundation](../README.md)
+
+This capability declares an inert model-service inventory for [governed Local reset](../nSystem/llm/contracts/local-reset.md).
+A server must explicitly select it; contributions never enable reset or bypass tenant, environment, confirmation or required-service checks.

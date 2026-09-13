@@ -42,7 +42,6 @@ module.exports = {
     /** Invalidates every existing service token carrying the previous stamp. */
     revoke: function (tenant, serviceId) {
         if (!tenant || !serviceId) return Promise.reject(new CLASSES.NodicsError('ERR_AUTH_00003', 'Service token revocation requires tenant and serviceId'));
-        let nextVersion = Date.now();
-        return SERVICE.DefaultPrincipalSecurityStampService.register(tenant, serviceId, nextVersion).then(() => nextVersion);
+        return SERVICE.DefaultPrincipalSecurityStampService.revoke(tenant, serviceId);
     }
 };

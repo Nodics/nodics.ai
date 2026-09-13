@@ -96,3 +96,22 @@ verify connection configuration, tenant filters, indexes, migration status,
 backup and restore procedure, and failure mapping. A fresh-schema check should
 prove import, read, update, search projection, and rollback behavior through
 the selected provider.
+
+## Customizing MongoDB schema keyword selection
+
+The effective `database.default.mongodb.options.schemaProperties` value is a
+keyed boolean map. For example, a project can disable one inherited keyword:
+
+```js
+module.exports = {
+  database: { default: { mongodb: { options: {
+    schemaProperties: { pattern: false }
+  } } } }
+};
+```
+
+Other inherited enabled keywords remain selected. A schema minimum of `0` or a
+selected boolean value of `false` is copied as declared; truthiness must not drop
+it. An array, null, or a non-boolean selector is rejected during model preparation.
+This selection chooses which declared keywords reach the provider; it does not
+replace domain validation or authorize relaxing tenant/security guarantees.

@@ -11,10 +11,21 @@
 
 /** @module shoppingList/config/properties @description Defines customer-owned shopping-list policy for wishlist, compare, and save-for-later intent. @layer config @owner shoppingList */
 module.exports = {
+    // Inert inventory; an allowed local server must explicitly select this capability.
+    localResetProvider: {
+        "contributions": {
+            "shoppingList": {
+                "serviceNames": {
+                    "DefaultShoppingListEntryService": true,
+                    "DefaultShoppingListService": true
+                }
+            }
+        }
+    },
+
     shoppingList: {
         enabled: true,
         customerApi: {
-            defaultStoreCode: 'agoraMainStore',
             defaultLocale: 'en',
             maximumWishlistItems: 100,
             maximumCompareItems: 4,

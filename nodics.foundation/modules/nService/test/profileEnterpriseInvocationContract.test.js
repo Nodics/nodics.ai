@@ -74,7 +74,7 @@ const handler = Object.assign({}, require('../src/service/enterprise/defaultEnte
     assert.strictEqual(calls[0].moduleName, 'profile');
     assert.strictEqual(calls[0].serviceName, 'DefaultEnterpriseService');
     assert.strictEqual(calls[0].operationName, 'get');
-    assert.strictEqual(calls[0].apiName, '/enterprise');
+    assert.strictEqual(calls[0].apiName, '/enterprise/get');
     assert.deepStrictEqual(calls[0].request.authData, {
         isSystem: true,
         userGroups: ['serviceAccountUserGroup'],
@@ -88,7 +88,7 @@ const handler = Object.assign({}, require('../src/service/enterprise/defaultEnte
     assert.strictEqual(calls[1].moduleName, 'profile');
     assert.strictEqual(calls[1].serviceName, 'DefaultEnterpriseService');
     assert.strictEqual(calls[1].operationName, 'get');
-    assert.strictEqual(calls[1].apiName, '/enterprise');
+    assert.strictEqual(calls[1].apiName, '/enterprise/get');
     assert.deepStrictEqual(calls[1].request, {
         tenant: 'default',
         options: { recursive: true }
@@ -97,8 +97,7 @@ const handler = Object.assign({}, require('../src/service/enterprise/defaultEnte
     assert.strictEqual(calls[1].header.recursive, true);
 
     let activeTenants = [];
-    let employeeGets = [];
-    let importRequest;
+    let bootstrapRequest;
     let issuedTokenRequest;
     global.NODICS = {
         addActiveEnterprise: function () {},
@@ -119,33 +118,13 @@ const handler = Object.assign({}, require('../src/service/enterprise/defaultEnte
     global.SERVICE.DefaultDatabaseModelHandlerService = {
         buildModelsForTenant: () => Promise.resolve(true)
     };
-    global.SERVICE.DefaultEmployeeService = {
-        get: request => {
-            employeeGets.push(request);
-            return Promise.resolve(employeeGets.length === 1 ? {
-                success: true,
-                result: []
-            } : {
-                success: true,
-                result: [{
-                    loginId: 'apiAdmin',
-                    authVersion: 1,
-                    userGroupCodes: ['serviceAccountUserGroup'],
-                    userGroupPermissions: ['auth.internal.token.read']
-                }]
-            });
-        }
+    global.SERVICE.DefaultMandatoryIdentityBootstrapService = {
+        prepareTenant: async request => { bootstrapRequest = request; }
     };
-    global.SERVICE.DefaultImportService = {
-        importInitData: request => {
-            importRequest = request;
-            return Promise.resolve({ success: true });
-        }
-    };
-    global.SERVICE.DefaultServiceTokenService = {
-        issue: request => {
-            issuedTokenRequest = request;
-            return Promise.resolve('service-token');
+    global.SERVICE.DefaultInternalAuthenticationProviderService = {
+        fetchInternalAuthToken: tenant => {
+            issuedTokenRequest = { tenant };
+            return Promise.resolve({ authToken: 'service-token' });
         }
     };
     handler.LOG.debug = function () {};
@@ -154,13 +133,8 @@ const handler = Object.assign({}, require('../src/service/enterprise/defaultEnte
         active: true,
         tenant: { code: 'tenant-b', active: true, properties: {} }
     }]);
-    assert.deepStrictEqual(employeeGets.map(item => item.authData), [
-        { isSystem: true, userGroups: ['serviceAccountUserGroup'] },
-        { isSystem: true, userGroups: ['serviceAccountUserGroup'] }
-    ]);
-    assert.deepStrictEqual(importRequest.authData, {
-        isSystem: true,
-        userGroups: ['serviceAccountUserGroup']
+    assert.deepStrictEqual(bootstrapRequest, {
+        tenant: 'tenant-b', modules: ['profile'], source: 'tenant-startup'
     });
     assert.strictEqual(issuedTokenRequest.tenant, 'tenant-b');
 

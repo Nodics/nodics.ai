@@ -600,6 +600,11 @@ module.exports = {
      * @returns {Promise<Object>} Started instance and first task summary.
      */
     startInstance: async function (request) {
+        const admission = SERVICE.DefaultModuleRegistrationAgentService;
+        if (!admission || typeof admission.assertModuleOperational !== 'function') {
+            throw new CLASSES.NodicsError('ERR_PROCESS_00018', 'Process operational authority is unavailable');
+        }
+        await admission.assertModuleOperational('workflow', this.getTenant(request));
         let body = this.bodyOf(request);
         let version = await this.resolveStartVersion(request, body);
         let instanceModel = {

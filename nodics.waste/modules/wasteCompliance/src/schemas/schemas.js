@@ -13,7 +13,7 @@
 
 
 module.exports = { wasteCompliance: {
-    wasteComplianceProfile: Object.assign({ super: 'base', model: true, schemaPolicies: ['operational'], service: { enabled: true }, router: { enabled: false }, cache: { enabled: false }, event: { enabled: false }, search: { enabled: false } }, { definition: {
+    wasteComplianceProfile: Object.assign({ super: 'base', model: true, schemaPolicies: ['operational'], service: { enabled: true }, router: { groups: { schemaOperations: true }, enabled: true }, cache: { enabled: false }, event: { enabled: false }, search: { enabled: false } }, { definition: {
         code: { type: 'string', required: true , description: 'Uniquely identifies this record for references, APIs, imports, and business administration.'},
         name: { type: 'object', required: true , description: 'Stores the business display name shown to administrators and related user journeys.'},
         jurisdictionCode: { type: 'string', required: false , description: 'Stores the jurisdiction code used to classify, link, or resolve this record.'},
@@ -25,7 +25,7 @@ module.exports = { wasteCompliance: {
         revision: { type: 'int', required: true, default: 0 , description: 'Tracks the business revision used for governance, review, and optimistic update checks.'},
         metadata: { type: 'object', required: false , description: 'Stores additional structured metadata needed by extensions without changing the core schema contract.'}
     } }),
-    wasteComplianceEvidence: Object.assign({ super: 'base', model: true, schemaPolicies: ['operational'], service: { enabled: true }, router: { enabled: false }, cache: { enabled: false }, event: { enabled: false }, search: { enabled: false } }, { definition: {
+    wasteComplianceEvidence: Object.assign({ super: 'base', model: true, schemaPolicies: ['operational'], service: { enabled: true }, router: { groups: { schemaOperations: true }, enabled: true }, cache: { enabled: false }, event: { enabled: false }, search: { enabled: false } }, { definition: {
         code: { type: 'string', required: true , description: 'Uniquely identifies this record for references, APIs, imports, and business administration.'},
         sourceRef: { type: 'object', required: true , description: 'References the related source record used by this record.'},
         complianceProfileCode: { type: 'string', required: false , description: 'Stores the compliance profile code used to classify, link, or resolve this record.'},

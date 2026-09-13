@@ -14,7 +14,7 @@
  * @description Verifies nDynamo exposes only the intended runtime administration API surfaces and keeps activation request/log governance records internal to services.
  * @layer test
  * @owner nDynamo
- * @override Projects may add custom runtime governance APIs in later modules, but the base nDynamo surface must keep dynamic class routes secured and activation governance records non-routed by default.
+ * @override Projects may add custom runtime governance APIs in later modules, but the base nDynamo surface must keep dynamic class routes secured and canonical schema operations separate from explicit activation commands.
  */
 
 const assert = require('assert');
@@ -38,13 +38,16 @@ Object.keys(classRoutes).forEach(routeCode => {
     assert.strictEqual(classRoutes[routeCode].controller, 'DefaultClassConfigurationController');
 });
 
-assert.strictEqual(schemas.classConfiguration.router.enabled, false, 'classConfiguration uses explicit secured class routes, not generated CRUD routes');
+assert.strictEqual(schemas.classConfiguration.router.enabled, true, 'classConfiguration participates in canonical schema operations');
+assert.deepStrictEqual(schemas.classConfiguration.router.groups, { schemaOperations: true });
 assert.strictEqual(schemas.routerConfiguration.router.enabled, true, 'routerConfiguration is a generated runtime admin API');
 assert.strictEqual(schemas.schemaConfiguration.router.enabled, true, 'schemaConfiguration is a generated runtime admin API');
 assert.strictEqual(schemas.pipeline.router.enabled, true, 'pipeline is a generated runtime admin API');
 assert.strictEqual(schemas.schemaAccessPolicy.router.enabled, true, 'schemaAccessPolicy is a generated runtime admin API');
-assert.strictEqual(schemas.configurationActivationRequest.router.enabled, false, 'activation requests are governed by services and are not public generated routes by default');
-assert.strictEqual(schemas.configurationActivationLog.router.enabled, false, 'activation logs are audit records and are not public generated routes by default');
+for (const name of ['configurationActivationRequest', 'configurationActivationLog']) {
+    assert.strictEqual(schemas[name].router.enabled, true, name + ' participates in secured canonical schema operations');
+    assert.deepStrictEqual(schemas[name].router.groups, { schemaOperations: true }, name + ' excludes unrelated generated route groups');
+}
 
 [
     'routerConfiguration',

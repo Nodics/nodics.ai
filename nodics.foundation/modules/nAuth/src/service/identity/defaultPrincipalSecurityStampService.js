@@ -53,27 +53,47 @@ module.exports = {
         let defaultEngines = cache.default && cache.default.engines || {};
         let engine = profileEngines[channel.engine] || defaultEngines[channel.engine] || {};
         if (cache.enabled === false || channel.enabled === false || engine.enabled === false ||
-            !channel.engine || engine.distributed !== true || engine.atomicConsume !== true || channel.fallback === true) {
-            return Promise.reject(new CLASSES.NodicsError('ERR_AUTH_00001', 'Strict authentication state requires an enabled distributed auth cache with atomic consume and local fallback disabled'));
+            !channel.engine || engine.distributed !== true || engine.atomicConsume !== true || engine.atomicVersionWrite !== true || channel.fallback === true) {
+            return Promise.reject(new CLASSES.NodicsError('ERR_AUTH_00001', 'Strict authentication state requires an enabled distributed auth cache with atomic consume, atomic version writes and local fallback disabled'));
         }
         return Promise.resolve(true);
     },
     /** Registers the current principal stamp in the auth cache. */
     register: function (tenant, principalId, authVersion) {
         if (!principalId || authVersion === undefined) return Promise.resolve(false);
-        return SERVICE.DefaultAuthenticationProviderService.addToken(
-            this.getCacheModuleName(), false,
-            this.getKey(tenant, principalId),
-            { tenant: tenant, principalId: principalId, authVersion: authVersion }
-        );
+        const version = Number(authVersion);
+        if (!Number.isSafeInteger(version) || version < 0) return Promise.reject(new CLASSES.NodicsError('ERR_AUTH_00003', 'Principal security stamp requires a safe version'));
+        return SERVICE.DefaultCacheService.putVersioned({
+            moduleName: this.getCacheModuleName(), channelName: 'auth',
+            key: this.getKey(tenant, principalId), ttl: 0, versionProperty: 'authVersion',
+            value: { tenant, principalId, authVersion: version }
+        });
+    },
+    /** Reserves a unique tenant-wide version without invalidating a principal before persistence. */
+    reserveVersion: function (tenant, minimum = 1) {
+        return SERVICE.DefaultCacheService.putVersioned({
+            moduleName: this.getCacheModuleName(), channelName: 'auth',
+            key: 'securityStampSequence:' + tenant, ttl: 0,
+            versionProperty: 'authVersion', advance: true, value: { authVersion: minimum }
+        }).then(result => result.result.authVersion);
+    },
+    /** Advances the validation stamp atomically, so concurrent revocations remain distinct. */
+    revoke: function (tenant, principalId) {
+        return SERVICE.DefaultCacheService.putVersioned({
+            moduleName: this.getCacheModuleName(), channelName: 'auth',
+            key: this.getKey(tenant, principalId), ttl: 0,
+            versionProperty: 'authVersion', advance: true,
+            value: { tenant, principalId, authVersion: 1 }
+        }).then(result => result.result.authVersion);
     },
     /** Compares a decoded token stamp with the current shared-cache value. */
     validate: function (payload) {
         let policy = this.getPolicy();
-        if (policy.enabled === false) return Promise.resolve(true);
+        const runtimeBound = Boolean(payload.runtimeScope);
+        if (policy.enabled === false && !runtimeBound) return Promise.resolve(true);
         let principalId = payload.loginId || payload.serviceId || payload.sub;
         if (!principalId || payload.authVersion === undefined) {
-            return policy.allowMissingStamp === true ? Promise.resolve(true) : Promise.reject(new CLASSES.NodicsError('ERR_AUTH_00001', 'Token security stamp is required'));
+            return policy.allowMissingStamp === true && !runtimeBound ? Promise.resolve(true) : Promise.reject(new CLASSES.NodicsError('ERR_AUTH_00001', 'Token security stamp is required'));
         }
         return SERVICE.DefaultAuthenticationProviderService.findToken(
             this.getCacheModuleName(), this.getKey(payload.tenant, principalId)
@@ -81,7 +101,7 @@ module.exports = {
             if (!stamp || String(stamp.authVersion) !== String(payload.authVersion)) throw new CLASSES.NodicsError('ERR_AUTH_00001', 'Authentication token security stamp is stale');
             return true;
         }).catch(error => {
-            if (policy.failClosed === false || policy.allowMissingStamp === true) return true;
+            if (!runtimeBound && (policy.failClosed === false || policy.allowMissingStamp === true)) return true;
             throw error;
         });
     }

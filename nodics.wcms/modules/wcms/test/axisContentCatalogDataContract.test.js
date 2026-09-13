@@ -177,7 +177,7 @@ const assistantWorkspace = componentByCode.get('axisAssistantWorkspaceComponent'
         assert.strictEqual(typeof assistantWorkspace.properties[property], 'string');
         assert(assistantWorkspace.properties[property].length > 0);
     });
-const schemaWorkbench = componentByCode.get('axisSchemaWorkbenchComponent');
+const schemaApi = componentByCode.get('axisSchemaWorkbenchComponent');
 ['title', 'introduction', 'schemaSearchLabel', 'schemaSearchPlaceholder', 'schemasLabel',
     'recordsLabel', 'noSchemasLabel', 'noRecordsLabel', 'selectSchemaLabel', 'loadingLabel',
     'retryLabel', 'createLabel', 'cancelLabel', 'savingLabel', 'selectExistingLabel',
@@ -198,8 +198,8 @@ const schemaWorkbench = componentByCode.get('axisSchemaWorkbenchComponent');
     'selectRecordLabel', 'selectedRecordsLabel', 'bulkDeleteLabel',
     'bulkDeletingLabel', 'deleteImpactLoadingLabel', 'deleteImpactBlockedLabel',
     'deleteImpactClearLabel', 'editRelatedLabel'].forEach(property => {
-    assert.strictEqual(typeof schemaWorkbench.properties[property], 'string');
-    assert(schemaWorkbench.properties[property].length > 0);
+    assert.strictEqual(typeof schemaApi.properties[property], 'string');
+    assert(schemaApi.properties[property].length > 0);
 });
 const mediaManagement = componentByCode.get('axisMediaManagementWorkspaceComponent');
 ['title', 'introduction', 'backendAuthority', 'customizationBoundary'].forEach(property => {

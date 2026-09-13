@@ -56,8 +56,8 @@ module.exports = {
     prepareURL: function (input) {
         return SERVICE.DefaultModuleService.buildRequest({
             moduleName: CONFIG.get('profileModuleName') || 'profile',
-            methodName: 'POST',
-            apiName: '/enterprise',
+            methodName: 'GET',
+            apiName: '/enterprise/get',
             requestBody: {
                 options: {
                     recursive: true,
@@ -68,6 +68,7 @@ module.exports = {
             },
             responseType: true,
             header: {
+                'x-enterprise-code': input.entCode,
                 Authorization: 'Bearer ' + NODICS.getInternalAuthToken(CONFIG.get('defaultTenant') || 'default')
             }
         });
@@ -102,14 +103,15 @@ module.exports = {
                 moduleName: profileModuleName,
                 serviceName: 'DefaultEnterpriseService',
                 operationName: 'get',
-                apiName: '/enterprise',
-                methodName: 'POST',
+                apiName: '/enterprise/get',
+                methodName: 'GET',
                 request: lookupRequest,
                 requestBody: {
                     options: lookupRequest.options,
                     query: lookupRequest.query
                 },
-                responseType: true
+                responseType: true,
+                header: { 'x-enterprise-code': request.entCode }
             }).then(response => {
                 if (response.result && response.result.length > 0) {
                     resolve(response.result[0]);

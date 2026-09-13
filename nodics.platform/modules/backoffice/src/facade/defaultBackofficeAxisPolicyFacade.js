@@ -21,7 +21,7 @@ module.exports = {
     /** Completes Axis policy facade initialization. */
     postInit: function () { return Promise.resolve(true); },
     /** Returns the effective policy. */
-    get: request => SERVICE.DefaultAxisExperiencePolicyService.get(request),
+    get: function (request) { return SERVICE.DefaultAxisExperiencePolicyService.get(request); },
     /** Updates the persistent policy. */
-    update: request => SERVICE.DefaultAxisExperiencePolicyService.update(request)
+    update: function (request) { return SERVICE.DefaultAxisExperiencePolicyService.update(request); }
 };

@@ -20,3 +20,6 @@ This file gives AI coding agents mandatory guidance for this Nodics module or pa
 - Publication source reads, target deployment, receipts, reconciliation,
   rollback, migration, and verification must use owning Nodics services/APIs
   and generated DAO/provider boundaries. Never use direct database CRUD.
+
+This capability declares an inert model-service inventory for [governed Local reset](../nSystem/llm/contracts/local-reset.md).
+A server must explicitly select it; contributions never enable reset or bypass tenant, environment, confirmation or required-service checks.

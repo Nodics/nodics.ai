@@ -10,4 +10,4 @@
  */
 
 /** @module commerceSearch/nodics @description Declares the Commerce Search group lifecycle without owning business source. @layer module @owner commerceSearch */
-module.exports = { init: () => Promise.resolve(true), postInit: () => Promise.resolve(true) };
+module.exports = { init: function () { return Promise.resolve(true); }, postInit: function () { return Promise.resolve(true); } };

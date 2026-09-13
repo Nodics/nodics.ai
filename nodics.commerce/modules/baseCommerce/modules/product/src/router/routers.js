@@ -20,6 +20,8 @@
  */
 module.exports = {
     product: {
+        // Selective schema APIs reuse generated controllers; broad CRUD remains disabled.
+
         customer: {
             list: {
                 secured: false, publicAccess: true, accessGroups: ['userGroup'], apiExposure: 'commerceCustomer',

@@ -13,7 +13,7 @@
 
 
 module.exports = { wasteReceipt: {
-    wasteReceipt: Object.assign({ super: 'base', model: true, schemaPolicies: ['operational'], service: { enabled: true }, router: { enabled: false }, cache: { enabled: false }, event: { enabled: false }, search: { enabled: false } }, { definition: {
+    wasteReceipt: Object.assign({ super: 'base', model: true, schemaPolicies: ['operational'], service: { enabled: true }, router: { groups: { schemaOperations: true }, enabled: true }, cache: { enabled: false }, event: { enabled: false }, search: { enabled: false } }, { definition: {
         code: { type: 'string', required: true , description: 'Uniquely identifies this record for references, APIs, imports, and business administration.'},
         submissionCode: { type: 'string', required: true , description: 'Stores the submission code used to classify, link, or resolve this record.'},
         collectionPointCode: { type: 'string', required: true , description: 'Stores the collection point code used to classify, link, or resolve this record.'},

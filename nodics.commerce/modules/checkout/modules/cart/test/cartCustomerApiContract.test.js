@@ -27,6 +27,7 @@ const pipelines = require('../src/pipelines/pipelines');
 const controller = require('../src/controller/defaultCartCustomerController');
 const facade = require('../src/facade/defaultCartCustomerFacade');
 const service = require('../src/service/defaultCartOperationService');
+const storeContext = require('../../../../baseCommerce/modules/store/src/service/defaultStoreContextService');
 const validationService = require('../src/service/defaultCartValidationService');
 const calculationEngine = require('../src/service/defaultCartCalculationEngineService');
 const calculationPipelineService = require('../src/service/pipelines/defaultCartCalculationPipelineService');
@@ -52,6 +53,7 @@ function installGlobals() {
     global.CONFIG = { get: key => key === 'cart' ? properties.cart : key === 'commerce' ? { enterpriseTenants: { enterpriseX: 'default' } } : undefined };
     global.SERVICE = {
         DefaultCartOperationService: service,
+        DefaultStoreContextService: storeContext,
         DefaultCartValidationService: validationService,
         DefaultCartCalculationEngineService: calculationEngine,
         DefaultExactAmountService: exact,
@@ -223,7 +225,7 @@ test('Cart customer calculation creates stable snapshot code when browser payloa
     global.SERVICE.DefaultCartCalculationService = {
         save: async request => ({ result: request.model })
     };
-    carts.push({ code: 'cartPreview', tenant: 'default', ownerId: 'customer-1', revision: 2, currency: 'USD' });
+    carts.push({ code: 'cartPreview', tenant: 'default', ownerId: 'customer-1', storeCode: 'storeOne', revision: 2, currency: 'USD' });
     const calculated = await service.calculateDirect({
         tenant: 'default',
         ownerId: 'customer-1',
@@ -449,10 +451,73 @@ test('Cart customer API maps non-owned cart reads to access denied when Nodics e
             }
         }
     };
-    await controller.create({ authData: { tenant: 'default', principalId: 'customer-1' }, httpRequest: { body: { cartCode: 'cart1' } } });
+    await controller.create({ authData: { tenant: 'default', principalId: 'customer-1' }, httpRequest: { body: { cartCode: 'cart1', storeCode: 'storeOne' } } });
 
     await assert.rejects(
         () => controller.read({ authData: { tenant: 'default', principalId: 'customer-2' }, httpRequest: { params: { cartCode: 'cart1' } } }),
         error => error.code === 'ERR_AUTH_00003'
     );
+});
+
+test('Cart requires explicit store context even when a legacy configuration fallback exists', async () => {
+    assert.equal(properties.cart.customerApi.defaultStoreCode, undefined);
+    global.CONFIG = { get: key => key === 'cart' ? { customerApi: { defaultStoreCode: 'legacyStore' } } : undefined };
+    for (const storeCode of [undefined, null, '', ' ', ' storeOne', 42, {}, []]) {
+        await assert.rejects(() => controller.create({
+            authData: { tenant: 'default', principalId: 'customer-1' },
+            httpRequest: { body: { storeCode } }
+        }), /Store code/);
+    }
+    assert.equal(carts.length, 0);
+});
+
+test('Cart uses the same explicit store for payload, request context and generated identity', async () => {
+    const crypto = require('node:crypto');
+    const authData = { tenant: 'default', principalId: 'customer-1' };
+    const created = [];
+    for (const storeCode of ['duStore', 'independentStore']) {
+        const fromContext = await controller.create({ authData, storeCode, httpRequest: { body: {} } });
+        const fromPayload = await controller.create({ authData, httpRequest: { body: { storeCode } } });
+        const legacyExplicitCode = 'cart_' + crypto.createHash('sha1').update(['default', 'customer-1', storeCode].join('|')).digest('hex').slice(0, 16);
+        assert.equal(fromContext.data.cart.code, legacyExplicitCode);
+        assert.equal(fromPayload.data.cart.code, legacyExplicitCode);
+        assert.equal(fromPayload.data.cart.storeCode, storeCode);
+        created.push(fromContext.data.cart.code);
+    }
+    assert.notEqual(created[0], created[1]);
+    assert.equal(carts.length, 2);
+});
+
+test('Cart rejects conflicting store input and rebinding an existing cart before any save', async () => {
+    const authData = { tenant: 'default', principalId: 'customer-1' };
+    await controller.create({ authData, httpRequest: { body: { cartCode: 'existingCart', storeCode: 'duStore' } } });
+    const before = JSON.stringify(carts);
+    await assert.rejects(() => controller.create({ authData, storeCode: 'otherStore', httpRequest: { body: { storeCode: 'duStore' } } }), /Store context does not match/);
+    await assert.rejects(() => controller.create({ authData, httpRequest: { body: { cartCode: 'existingCart', storeCode: 'otherStore' } } }), /Store context does not match/);
+    await assert.rejects(() => controller.addEntry({ authData, storeCode: 'otherStore', httpRequest: { params: { cartCode: 'existingCart' }, body: { productCode: 'p1', sku: 'sku1', quantity: '1' } } }), /Store context does not match/);
+    assert.equal(JSON.stringify(carts), before);
+    assert.equal(entries.length, 0);
+});
+
+test('Existing owned Cart IDs keep persisted store context without rewriting legacy records', async () => {
+    const legacy = { code: 'legacyContextOnlyCart', tenant: 'default', ownerId: 'customer-1', storeCode: 'duStore', revision: 7, currency: 'AED' };
+    carts.push({ ...legacy });
+    const authData = { tenant: 'default', principalId: 'customer-1' };
+    const read = await controller.read({ authData, httpRequest: { params: { cartCode: legacy.code } } });
+    assert.deepEqual(read.data.cart, legacy);
+    assert.deepEqual(carts[0], legacy);
+    for (const auth of [{ tenant: 'otherTenant', principalId: 'customer-1' }, { tenant: 'default', principalId: 'otherCustomer' }]) {
+        await assert.rejects(() => controller.read({ authData: auth, httpRequest: { params: { cartCode: legacy.code } } }), /Customer Cart not found/);
+    }
+    delete carts[0].storeCode;
+    await assert.rejects(() => controller.read({ authData, storeCode: 'duStore', httpRequest: { params: { cartCode: legacy.code } } }), /Store code is required/);
+});
+
+test('Cart delegates context to the effective Store service and fails closed if it is unavailable', async () => {
+    const request = { authData: { tenant: 'default', principalId: 'customer-1' }, httpRequest: { body: { storeCode: 'duStore' } } };
+    global.SERVICE.DefaultStoreContextService = { ...storeContext, resolveStoreCode: () => { throw new Error('Project store policy rejected'); } };
+    await assert.rejects(() => controller.create(request), /Project store policy rejected/);
+    delete global.SERVICE.DefaultStoreContextService;
+    await assert.rejects(() => controller.create(request), /Store context service is unavailable/);
+    assert.equal(carts.length, 0);
 });

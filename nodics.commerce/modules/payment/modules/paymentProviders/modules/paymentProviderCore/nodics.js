@@ -10,4 +10,4 @@
  */
 
 /** @module paymentProviderCore/nodics @description Declares the Payment Provider Core capability lifecycle. @layer module @owner paymentProviderCore */
-module.exports = { init: () => Promise.resolve(true), postInit: () => Promise.resolve(true) };
+module.exports = { init: function () { return Promise.resolve(true); }, postInit: function () { return Promise.resolve(true); } };

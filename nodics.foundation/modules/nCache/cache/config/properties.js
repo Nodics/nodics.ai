@@ -93,10 +93,12 @@ module.exports = {
                     distributed: false,
                     atomicConsume: true,
                     atomicBoundedIncrement: true,
+                    atomicVersionWrite: true,
                     capabilities: {
                         distributed: false,
                         atomicConsume: true,
                         atomicBoundedIncrement: true,
+                        atomicVersionWrite: true,
                         ttl: true,
                         nonExpiringTtl: true,
                         prefixFlush: true,
@@ -119,10 +121,12 @@ module.exports = {
                     distributed: true,
                     atomicConsume: true,
                     atomicBoundedIncrement: true,
+                    atomicVersionWrite: true,
                     capabilities: {
                         distributed: true,
                         atomicConsume: true,
                         atomicBoundedIncrement: true,
+                        atomicVersionWrite: true,
                         ttl: true,
                         nonExpiringTtl: true,
                         prefixFlush: true,
@@ -143,10 +147,12 @@ module.exports = {
                     distributed: true,
                     atomicConsume: true,
                     atomicBoundedIncrement: true,
+                    atomicVersionWrite: true,
                     capabilities: {
                         distributed: true,
                         atomicConsume: true,
                         atomicBoundedIncrement: true,
+                        atomicVersionWrite: true,
                         ttl: true,
                         nonExpiringTtl: true,
                         prefixFlush: true,
@@ -159,6 +165,7 @@ module.exports = {
                         clusterName: 'dev',
                         clusterMembers: ['127.0.0.1:5701'],
                         connectionTimeoutMs: 5000,
+                        lockTimeoutMs: 5000,
                         mapNamePrefix: 'nodics'
                     }
                 }

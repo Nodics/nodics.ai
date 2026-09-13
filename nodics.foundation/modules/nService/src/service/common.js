@@ -80,6 +80,19 @@ module.exports = {
         return SERVICE.DefaultSchemaSafeQueryService.searchGenerated(request);
     },
 
+    /** Executes bounded bulk deletion through the shared schema owner and normal remove pipeline. */
+    bulk: function (request) {
+        const moduleName = request.moduleName || 'mdulnm';
+        request.schemaModel = (NODICS.getModels(moduleName, request.tenant) || {}).mdlnm;
+        request.moduleName = moduleName;
+        request.schemaName = 'schmanm';
+        request.generatedServiceName = 'srvcName';
+        if (!SERVICE.DefaultSchemaUtilityService || typeof SERVICE.DefaultSchemaUtilityService.bulkGenerated !== 'function') {
+            return Promise.reject(new CLASSES.NodicsError('ERR_DBS_00004', 'Schema utility service is unavailable'));
+        }
+        return SERVICE.DefaultSchemaUtilityService.bulkGenerated(request);
+    },
+
     /**
      * Returns browser-safe generated schema capabilities.
      *

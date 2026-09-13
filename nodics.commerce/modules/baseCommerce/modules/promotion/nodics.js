@@ -10,4 +10,4 @@
  */
 
 /** @module promotion/nodics @description Declares the Promotion capability lifecycle. @layer module @owner promotion */
-module.exports = { init: () => Promise.resolve(true), postInit: () => Promise.resolve(true) };
+module.exports = { init: function () { return Promise.resolve(true); }, postInit: function () { return Promise.resolve(true); } };

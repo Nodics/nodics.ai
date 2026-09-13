@@ -46,6 +46,7 @@ global.ENUMS = {
 
 global.SERVICE = {
     DefaultCronJobService: {
+        assertOperational: async () => ({ serviceId: "approved-cron-instance", tokenType: "service" }),
         update: function () {
             return Promise.resolve({ code: 'SUC_JOB_00000' });
         }
@@ -113,7 +114,7 @@ function processStub() {
     assert.strictEqual(executionRequests.length, 1, 'Process trigger executor should be called once');
     assert.strictEqual(executionRequests[0].tenant, 'default', 'Cron should preserve tenant when calling Process');
     assert.strictEqual(executionRequests[0].triggerCode, 'dailyContentApproval', 'Cron should pass Process trigger code');
-    assert.strictEqual(executionRequests[0].authData.serviceId, 'cronjob', 'Cron should use service identity for Process handoff');
+    assert.strictEqual(executionRequests[0].authData.serviceId, 'approved-cron-instance', 'Cron should use service identity for Process handoff');
     assert.strictEqual(executionRequests[0].runtimeOperation.instanceCode, 'dailyContentApproval-20260809', 'Cron should pass optional Process instance idempotency code');
     assert.strictEqual(executionRequests[0].runtimeOperation.context.cronJobCode, 'dailyContentApprovalJob', 'Cron job code should be included in Process context');
     assert.strictEqual(executionRequests[0].runtimeOperation.context.businessDate, '2026-08-09', 'Process context should include configured trigger context');

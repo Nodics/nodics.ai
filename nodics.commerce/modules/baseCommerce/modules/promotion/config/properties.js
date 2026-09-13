@@ -11,6 +11,22 @@
 
 /** @module promotion/config/properties @description Defines Commerce capability and schema access policies. @layer config @owner promotion */
 module.exports = {
+    // Inert inventory; an allowed local server must explicitly select this capability.
+    localResetProvider: {
+        "contributions": {
+            "promotion": {
+                "serviceNames": {
+                    "DefaultCouponBatchService": true,
+                    "DefaultCouponService": true,
+                    "DefaultDiscountDecisionService": true,
+                    "DefaultPromotionBudgetLedgerService": true,
+                    "DefaultPromotionRedemptionService": true,
+                    "DefaultPromotionService": true
+                }
+            }
+        }
+    },
+
     promotion: { enabled: true, legacyTokenHashPolicies: [] },
     schemaPolicies: { promotion: {
         operational: { accessGroups: { adminGroup: 10, commerceOperatorUserGroup: 10, serviceAccountUserGroup: 10 } },

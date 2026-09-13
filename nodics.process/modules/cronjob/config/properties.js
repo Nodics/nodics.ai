@@ -17,6 +17,18 @@
  * @override Project, environment, server, or node layers may override cronjob scheduling behavior without changing framework defaults.
  */
 module.exports = {
+    // Inert inventory; an allowed local server must explicitly select this capability.
+    localResetProvider: {
+        "contributions": {
+            "cronjob": {
+                "serviceNames": {
+                    "DefaultCronJobLogService": true,
+                    "DefaultCronJobService": true
+                }
+            }
+        }
+    },
+
 
     nodePingableModules: {
         cronjob: {

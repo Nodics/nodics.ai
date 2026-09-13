@@ -10,4 +10,4 @@
  */
 
 /** @module shoppingList/nodics @description Declares the Shopping List capability lifecycle. @layer module @owner shoppingList */
-module.exports = { init: () => Promise.resolve(true), postInit: () => Promise.resolve(true) };
+module.exports = { init: function () { return Promise.resolve(true); }, postInit: function () { return Promise.resolve(true); } };

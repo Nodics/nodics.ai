@@ -36,4 +36,10 @@ assert.equal(publication.stage({ tenant: 't1', correlationId: 'c1' }, { tenant: 
 assert.equal(tax.decide({ tenant: 't1', taxableAmount: '10.00', currency: 'USD', correlationId: 'c1' }, { tenant: 't1', status: 'ACTIVE', taxCode: 'VAT', jurisdiction: 'AE', rate: '0.05', revision: 1 }, exact).taxAmount, '0.5');
 assert.equal(promotion.decide({ tenant: 't1', discountAmount: '2.50', targetType: 'CART', targetCode: 'c1', currency: 'USD', reasonCode: 'WELCOME', correlationId: 'x' }, { tenant: 't1', code: 'promo', status: 'ACTIVE', revision: 1 }, exact).discountAmount, '2.5');
 assert.equal(sourcing.source({ tenant: 't1', sku: 'sku1' }, [{ tenant: 't2', sku: 'sku1', available: '9' }, { tenant: 't1', sku: 'sku1', warehouseCode: 'w1', available: '3', revision: 1 }]).length, 1);
+assert.equal(stores.resolveStoreCode({ storeCode: 'storeOne', payload: { storeCode: 'storeOne' }, query: { storeCode: 'storeOne' } }), 'storeOne');
+assert.equal(stores.resolveStoreCode({}, 'persistedStore'), 'persistedStore');
+assert.throws(() => stores.resolveStoreCode({ query: { storeCode: 'otherStore' } }, 'persistedStore'), /Store context does not match/);
+global.CLASSES = { NodicsError: class extends Error { constructor(code, message) { super(message); this.code = code; } } };
+assert.throws(() => stores.resolveStoreCode({}), error => error.code === 'ERR_SYS_00001');
+delete global.CLASSES;
 console.log('Commerce foundation contract validated');

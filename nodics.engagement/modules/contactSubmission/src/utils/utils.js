@@ -9,4 +9,4 @@
 
  */
 /** @module contactSubmission/src/utils/utils @description Provides side-effect-free contact normalization helpers. @layer utility @owner contactSubmission @override Later modules may extend without weakening bounds. */
-module.exports = { text: value => value === undefined || value === null ? '' : String(value).trim(), now: request => ((request && request.clock && request.clock.now ? request.clock.now() : new Date()).toISOString()) };
+module.exports = { text: function (value) { return value === undefined || value === null ? '' : String(value).trim(); }, now: function (request) { return (request && request.clock && request.clock.now ? request.clock.now() : new Date()).toISOString(); } };

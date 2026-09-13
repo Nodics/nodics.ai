@@ -567,16 +567,18 @@ module.exports = {
      * @param {Function} callback Callback invoked with each matching file path.
      * @returns {void}
      */
-    processFiles: function (filePath, filePostFix, callback) {
+    processFiles: function (filePath, filePostFix, callback, options = {}) {
         let _self = this;
         if (fs.existsSync(filePath)) {
-            let files = fs.readdirSync(filePath);
+            let files = fs.readdirSync(filePath).sort();
             if (files) {
                 files.map(function (file) {
                     return path.join(filePath, file);
                 }).filter(function (file) {
                     if (fs.statSync(file).isDirectory()) {
-                        _self.processFiles(file, filePostFix, callback);
+                        if (!(options.excludeGenerated && path.basename(file) === 'gen')) {
+                            _self.processFiles(file, filePostFix, callback, options);
+                        }
                     } else {
                         return fs.statSync(file).isFile();
                     }
@@ -607,11 +609,24 @@ module.exports = {
         }
         artifact.xNodics = artifact.xNodics || {};
         artifact.xNodics.overrideTrace = artifact.xNodics.overrideTrace || [];
+        const members = Object.keys(options.contribution || {}).filter(name => !['xNodics', 'LOG'].includes(name));
+        const contributionIndex = artifact.xNodics.overrideTrace.length;
+        artifact.xNodics.memberOrigins = artifact.xNodics.memberOrigins || {};
+        for (const member of members) {
+            const previous = artifact.xNodics.memberOrigins[member];
+            artifact.xNodics.memberOrigins[member] = {
+                firstSourceModule: previous ? previous.firstSourceModule : options.sourceModule,
+                sourceModule: options.sourceModule, contributionIndex,
+                kind: typeof options.contribution[member] === 'function' ? 'method' : 'property'
+            };
+        }
         artifact.xNodics.overrideTrace.push({
             name: options.name,
             layer: options.layer,
             sourceModule: options.sourceModule,
             action: options.action || 'merge',
+            generatedBaseline: options.generatedBaseline === true,
+            members: members,
             file: options.filePath ? options.filePath.replace(NODICS.getNodicsHome(), '.') : undefined
         });
     },
@@ -637,7 +652,10 @@ module.exports = {
                         let value = line.trim().split(' ');
                         if (!gVar[value[1]]) {
                             gVar[value[1]] = {
-                                value: line.trim()
+                                value: line.trim().replace(/require\((['"])([^'"]+)\1\)/g, (match, quote, specifier) => {
+                                    const resolved = require.resolve(specifier, { paths: [path.dirname(filePath)] });
+                                    return 'require(' + JSON.stringify(resolved) + ')';
+                                })
                             };
                         }
                     }

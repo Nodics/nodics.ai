@@ -36,6 +36,7 @@ global.CONFIG = {
     key === "backofficeApplicationInitialization"
       ? {
           projectCode: "example.project",
+          operatorOrigin: "https://operator.example.test",
           profiles: {
             nexus: {
               code: "nexus",
@@ -183,6 +184,15 @@ global.fetch = async () => {
 };
 
 (async () => {
+  assert.strictEqual(service.operatorOrigin({}), "https://operator.example.test");
+  assert.strictEqual(service.operatorOrigin({ httpRequest: { headers: { origin: "https://selected.example.test" } } }), "https://selected.example.test");
+  for (const origin of ["null", "javascript:alert(1)", "https://user:secret@example.test", "https://example.test/path", "https://example.test/"]) {
+    assert.throws(() => service.operatorOrigin({ httpRequest: { headers: { origin } } }), error => error.code === "ERR_BOF_00083");
+  }
+  const originalConfigGet = CONFIG.get;
+  CONFIG.get = key => key === "backofficeApplicationInitialization" ? {} : originalConfigGet(key);
+  assert.throws(() => service.operatorOrigin({}), error => error.code === "ERR_BOF_00083");
+  CONFIG.get = originalConfigGet;
   assert.deepStrictEqual(
     statusDefinitions.ERR_BOF_00084,
     {

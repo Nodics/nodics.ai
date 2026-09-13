@@ -12,3 +12,8 @@
 This generated capability boundary must preserve Nodics structure, layering, configuration-first behavior, override/customization contracts, tests, documentation, and generated-artifact discipline.
 
 Before implementing non-trivial behavior here, record the business outcome, owning layer, studied sources, current implementation, extension path, security/tenant/data/API/release impact, intended files, and validation route.
+
+- Confirmed Product/PriceRow creation uses the owning canonical schema PUT API
+  through `createOwnedSchemaRecord`; do not fallback to Workbench mutations.
+  Preserve remote target authority, tenant, confirmation, policy and idempotency
+  key forwarding. Forwarding does not provide durable replay protection.

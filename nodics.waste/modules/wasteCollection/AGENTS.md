@@ -19,3 +19,6 @@ split import manifest sections by target runtime authority: Profile addresses
 to `PLATFORM`, Location records to `LOCATION`, and collection-point records to
 `WASTE`. When creating sample data from any source export, clean the records
 before committing them so framework samples carry only Nodics-owned fields.
+
+This capability declares an inert model-service inventory for [governed Local reset](../../../nodics.foundation/modules/nSystem/llm/contracts/local-reset.md).
+A server must explicitly select it; contributions never enable reset or bypass tenant, environment, confirmation or required-service checks.

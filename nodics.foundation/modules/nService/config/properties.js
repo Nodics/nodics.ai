@@ -44,6 +44,7 @@ module.exports = {
         enabled: true,
         moduleName: 'backoffice',
         leaseTtlMs: 30000,
+        operationalStateTtlMs: 30000,
         heartbeatIntervalMs: 10000,
         retryIntervalMs: 5000,
         requestTimeoutMs: 2000,

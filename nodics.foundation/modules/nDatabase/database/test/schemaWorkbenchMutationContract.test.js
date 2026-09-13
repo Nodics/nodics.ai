@@ -10,7 +10,7 @@
  */
 
 /**
- * @module database/test/schemaWorkbenchMutationContract
+ * @module database/test/schemaApiMutationContract
  * @description Verifies opt-in bulk mutation, delete-impact inspection,
  * idempotency, bounded input, and aggregate delegation ownership.
  * @layer test
@@ -52,7 +52,7 @@ global.CONFIG = {
         if (key === 'accessPoints') {
             return { readAccessPoint: 1, writeAccessPoint: 2, removeAccessPoint: 3 };
         }
-        if (key === 'schemaWorkbench') {
+        if (key === 'schemaApi') {
             return {
                 discoverModelsByDefault: true,
                 defaultModelOperations: ['search', 'read'],
@@ -105,7 +105,7 @@ global.CLASSES = {
     }
 };
 
-const service = require('../src/service/schema/defaultSchemaWorkbenchService');
+const service = require('./helpers/schemaApiHarness');
 global.SERVICE.DefaultSchemaWorkbenchService = service;
 const request = {
     moduleName: 'profile',
@@ -137,15 +137,7 @@ const request = {
     assert.strictEqual(inspected.schemaModel, schemaModel);
     assert.deepStrictEqual(inspected.query, { code: 'DXB' });
 
-    global.FACADE = { DefaultSchemaWorkbenchFacade: require('../src/facade/schema/defaultSchemaWorkbenchFacade') };
-    const controller = require('../src/controller/schema/defaultSchemaWorkbenchController');
-    await controller.deleteRecord({
-        ...request,
-        httpRequest: {
-            params: { schema: 'address' },
-            body: { identity: { code: 'DXB' } }
-        }
-    });
+    await service.deleteRecord({ ...request, httpRequest: { params: { schema: 'address' }, body: { identity: { code: 'DXB' } } } });
     assert.deepStrictEqual(removed.query, { code: 'DXB' });
     assert.strictEqual(removed.idempotencyKey, 'axis-test-0001');
     assert.strictEqual(removed.tenant, 'default');
@@ -160,11 +152,11 @@ const request = {
             }
         }
     });
-    assert.deepStrictEqual(removed.query, { code: { $in: ['DXB', 'AUH'] } });
+    assert.deepStrictEqual(removed.query, { $or: [{ code: 'DXB' }, { code: 'AUH' }] });
     assert.strictEqual(removed.idempotencyKey, 'axis-test-0001');
     assert.strictEqual(removed.tenant, 'default');
 
-    assert.throws(() => service.bulk({
+    await assert.rejects(async () => service.bulk({
         ...request,
         headers: {},
         httpRequest: {
@@ -172,7 +164,7 @@ const request = {
             body: { operation: 'DELETE', identities: [{ code: 'DXB' }] }
         }
     }), error => error.code === 'ERR_DBS_00003');
-    assert.throws(() => service.bulk({
+    await assert.rejects(async () => service.bulk({
         ...request,
         httpRequest: {
             params: { schema: 'address' },
@@ -183,20 +175,9 @@ const request = {
         }
     }), error => error.code === 'ERR_DBS_00003');
 
-    let aggregate = await service.aggregate({
-        ...request,
-        httpRequest: {
-            params: { schema: 'address' },
-            body: {
-                operation: 'SAVE_WITH_RELATIONSHIPS',
-                payload: { code: 'DXB' }
-            }
-        }
-    });
-    assert.deepStrictEqual(aggregate.data, { code: 'DXB' });
-    assert.deepStrictEqual(aggregated.payload, { code: 'DXB' });
-    assert.strictEqual(aggregated.idempotencyKey, 'axis-test-0001');
-    assert.strictEqual(aggregated.tenant, 'default');
+    assert.strictEqual(service.aggregate, undefined, 'Domain commands are called through their owner API');
+    assert.deepStrictEqual(service.buildAggregateOperations(moduleObject.rawSchema.address.backoffice, 'profile'), [],
+        'A service name alone must not advertise a callable HTTP command');
 
     await service.previewDeleteImpact({
         ...request,
@@ -209,16 +190,11 @@ const request = {
     assert.strictEqual(inspected.tenant, 'tenant-two',
         'Workbench must forward the authenticated request tenant unchanged');
 
-    await assert.rejects(service.aggregate({
-        ...request,
-        httpRequest: {
-            params: { schema: 'address' },
-            body: {
-                operation: 'SAVE_WITH_RELATIONSHIPS',
-                payload: { content: 'x'.repeat(1100) }
-            }
-        }
-    }), error => error.code === 'ERR_DBS_00004');
+    moduleObject.rawSchema.address.backoffice.concurrency = { managed: true, field: 'revision' };
+    moduleObject.rawSchema.address.definition.revision = { type: 'int' };
+    assert.deepStrictEqual(service.buildDescriptor(request, moduleObject, 'address', 'profile').bulkCapabilities.operations, []);
+    await assert.rejects(async () => service.bulk({ ...request, httpRequest: { params: { schema: 'address' }, body: {
+        operation: 'DELETE', identities: [{ code: 'DXB', revision: 1 }] } } }), error => error.code === 'ERR_DBS_00004');
 
     console.log('Schema Workbench mutation contract tests passed');
 })().catch(error => {

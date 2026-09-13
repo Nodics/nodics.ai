@@ -182,7 +182,7 @@ assert(
   ),
 );
 assert(
-  platformAdminGroup.permissions.includes("system.schema.workbench.view"),
+  platformAdminGroup.permissions.includes("system.schema.view"),
   "Default platform administrators should be allowed to discover the governed Schema Workbench",
 );
 assert(

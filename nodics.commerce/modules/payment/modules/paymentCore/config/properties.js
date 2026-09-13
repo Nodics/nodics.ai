@@ -11,6 +11,20 @@
 
 /** @module paymentCore/config/properties @description Defines Commerce capability and schema access policies. @layer config @owner paymentCore */
 module.exports = {
+    // Inert inventory; an allowed local server must explicitly select this capability.
+    localResetProvider: {
+        "contributions": {
+            "paymentCore": {
+                "serviceNames": {
+                    "DefaultPaymentInstrumentReferenceService": true,
+                    "DefaultPaymentReconciliationService": true,
+                    "DefaultPaymentTransactionEntryService": true,
+                    "DefaultPaymentTransactionService": true
+                }
+            }
+        }
+    },
+
     paymentCore: { enabled: true },
     schemaPolicies: { paymentCore: {
         operational: { accessGroups: { adminGroup: 10, commerceOperatorUserGroup: 10, serviceAccountUserGroup: 10 } },

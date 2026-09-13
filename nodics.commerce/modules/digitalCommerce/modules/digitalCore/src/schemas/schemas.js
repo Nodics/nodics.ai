@@ -23,7 +23,7 @@ const common = {
 };
 
 module.exports = { digitalCore: {
-    digitalProductBinding: Object.assign({ super: 'base', model: true, schemaPolicies: ['tenantOwned'], service: { enabled: true }, router: { enabled: false }, cache: { enabled: false }, event: { enabled: false }, search: { enabled: false } }, { definition: Object.assign({}, common, {
+    digitalProductBinding: Object.assign({ super: 'base', model: true, schemaPolicies: ['tenantOwned'], service: { enabled: true }, router: { groups: { schemaOperations: true }, enabled: true }, cache: { enabled: false }, event: { enabled: false }, search: { enabled: false } }, { definition: Object.assign({}, common, {
         productCode: { type: 'string', required: true , description: 'Stores the product code used to classify, link, or resolve this record.'},
         variantCode: { type: 'string', required: false , description: 'Stores the variant code used to classify, link, or resolve this record.'},
         sku: { type: 'string', required: false , description: 'Stores the SKU used to identify the purchasable product or variant.'},
@@ -32,7 +32,7 @@ module.exports = { digitalCore: {
         providerOwner: { type: 'string', required: true , description: 'Identifies the provider owner responsible for fulfilling or managing this record.'},
         providerReference: { type: 'object', required: true , description: 'Stores provider-specific reference data needed to resolve this record.'}
     }) }),
-    digitalEntitlement: Object.assign({ super: 'base', model: true, schemaPolicies: ['customerOwned'], service: { enabled: true }, router: { enabled: false }, cache: { enabled: false }, event: { enabled: false }, search: { enabled: false } }, { definition: Object.assign({}, common, {
+    digitalEntitlement: Object.assign({ super: 'base', model: true, schemaPolicies: ['customerOwned'], service: { enabled: true }, router: { groups: { schemaOperations: true }, enabled: true }, cache: { enabled: false }, event: { enabled: false }, search: { enabled: false } }, { definition: Object.assign({}, common, {
         orderCode: { type: 'string', required: true , description: 'Stores the order code used to classify, link, or resolve this record.'},
         orderEntryCode: { type: 'string', required: false , description: 'Stores the order entry code used to classify, link, or resolve this record.'},
         cartCode: { type: 'string', required: false , description: 'Stores the cart code used to classify, link, or resolve this record.'},
@@ -47,7 +47,7 @@ module.exports = { digitalCore: {
         deliveredAt: { type: 'date', required: false , description: 'Records when the delivered event or value applies.'},
         revokedAt: { type: 'date', required: false , description: 'Records when the revoked event or value applies.'}
     }) }),
-    digitalDelivery: Object.assign({ super: 'base', model: true, schemaPolicies: ['customerOwned'], service: { enabled: true }, router: { enabled: false }, cache: { enabled: false }, event: { enabled: false }, search: { enabled: false } }, { definition: Object.assign({}, common, {
+    digitalDelivery: Object.assign({ super: 'base', model: true, schemaPolicies: ['customerOwned'], service: { enabled: true }, router: { groups: { schemaOperations: true }, enabled: true }, cache: { enabled: false }, event: { enabled: false }, search: { enabled: false } }, { definition: Object.assign({}, common, {
         entitlementCode: { type: 'string', required: true , description: 'Stores the entitlement code used to classify, link, or resolve this record.'},
         orderCode: { type: 'string', required: true , description: 'Stores the order code used to classify, link, or resolve this record.'},
         deliveryType: { type: 'string', required: true , description: 'Classifies this record by delivery type for validation and business handling.'},
@@ -57,7 +57,7 @@ module.exports = { digitalCore: {
         revealCount: { type: 'int', required: false , description: 'Counts how many times the protected digital value has been revealed.'},
         lastRevealedAt: { type: 'date', required: false , description: 'Records when the last revealed event or value applies.'}
     }) }),
-    digitalReversal: Object.assign({ super: 'base', model: true, schemaPolicies: ['operational'], service: { enabled: true }, router: { enabled: false }, cache: { enabled: false }, event: { enabled: false }, search: { enabled: false } }, { definition: Object.assign({}, common, {
+    digitalReversal: Object.assign({ super: 'base', model: true, schemaPolicies: ['operational'], service: { enabled: true }, router: { groups: { schemaOperations: true }, enabled: true }, cache: { enabled: false }, event: { enabled: false }, search: { enabled: false } }, { definition: Object.assign({}, common, {
         entitlementCode: { type: 'string', required: true , description: 'Stores the entitlement code used to classify, link, or resolve this record.'},
         orderCode: { type: 'string', required: true , description: 'Stores the order code used to classify, link, or resolve this record.'},
         requestType: { type: 'string', required: true , description: 'Classifies this record by request type for validation and business handling.'},

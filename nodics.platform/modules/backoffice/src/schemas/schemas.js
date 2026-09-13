@@ -24,7 +24,7 @@ module.exports = {
             model: true,
             service: { enabled: true },
             event: { enabled: false },
-            router: { enabled: false },
+            router: { groups: { schemaOperations: true }, enabled: true },
             tenants: ['default'],
             definition: {
                 projectCode: { type: 'string', required: true, description: 'Stable customer project identity' },
@@ -60,7 +60,7 @@ module.exports = {
             model: true,
             service: { enabled: true },
             event: { enabled: false },
-            router: { enabled: false },
+            router: { groups: { schemaOperations: true }, enabled: true },
             tenants: ['default'],
             definition: {
                 projectCode: { type: 'string', required: true, description: 'Stable customer project identity' },
@@ -101,7 +101,7 @@ module.exports = {
             model: true,
             service: { enabled: true },
             event: { enabled: false },
-            router: { enabled: false },
+            router: { groups: { schemaOperations: true }, enabled: true },
             tenants: ['default'],
             definition: {
                 moduleName: { type: 'string', required: true, description: 'Module that owns the observed source contract' },
@@ -133,7 +133,7 @@ module.exports = {
             model: true,
             service: { enabled: true },
             event: { enabled: false },
-            router: { enabled: false },
+            router: { groups: { schemaOperations: true }, enabled: true },
             tenants: ['default'],
             definition: {
                 moduleName: { type: 'string', required: true, description: 'Module whose active observed contract is selected' },
@@ -156,7 +156,7 @@ module.exports = {
             model: true,
             service: { enabled: true },
             event: { enabled: false },
-            router: { enabled: false },
+            router: { groups: { schemaOperations: true }, enabled: true },
             definition: {
                 contractVersion: { type: 'int', required: true, default: 1, description: 'Version of the client-safe Axis policy contract' },
                 screenLockEnabled: { type: 'bool', required: true, default: true, description: 'Whether authenticated Axis sessions lock after inactivity' },

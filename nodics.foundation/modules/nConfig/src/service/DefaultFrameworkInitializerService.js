@@ -18,6 +18,8 @@ const enumService = require('./defaultEnumService');
 const fileLoader = require('./defaultFilesLoaderService');
 const classesLoader = require('./defaultClassesHandlerService');
 const utils = require('../utils/utils');
+const infra = require('./defaultInfraService');
+const configurationBindings = require('./defaultConfigurationBindingService');
 
 /**
  * @module config/service/DefaultFrameworkInitializerService
@@ -218,7 +220,7 @@ module.exports = {
         this.getServerConfigurationLoadOrder().forEach(fileDescription => {
             let filePath = fileDescription.substring(fileDescription.indexOf(': ') + 2);
             if (fs.existsSync(filePath)) {
-                serverProperties = _.merge(serverProperties, require(filePath));
+                serverProperties = _.merge(serverProperties, this.readPropertyContribution(filePath, serverProperties));
             }
         });
         return serverProperties;
@@ -1088,6 +1090,39 @@ module.exports = {
         }
     },
 
+    /** Builds a transient binding context from the same selected runtime, without alternate topology discovery. @param {string} filePath Authored file. @returns {Object} Trusted coordinates and lazy composition metadata. */
+    getPropertyBindingContext: function (filePath) {
+        const runtime = typeof NODICS !== 'undefined' && NODICS || {};
+        const read = name => typeof runtime[name] === 'function' ? runtime[name]() : undefined;
+        const foundationRoot = read('getNodicsHome');
+        const context = {
+            roots: { project: read('getEnvironmentPath'), environment: read('getServerRootPath'),
+                server: read('getServerPath'), framework: foundationRoot && require('path').dirname(foundationRoot),
+                file: require('path').dirname(filePath) },
+            projectCode: read('getEnvironmentName'), environmentCode: read('getSelectedEnvironmentName'),
+            serverCode: read('getServerName'), nodeCode: read('getNodeName'),
+            environmentVariables: process.env
+        };
+        let compositions;
+        context.readCompositions = () => {
+            if (compositions) return compositions;
+            const environmentRoot = context.roots.environment;
+            if (!environmentRoot) throw new Error('Configuration composition requires a selected environment');
+            const profile = require('path').join(environmentRoot, 'nodics.environment.json');
+            if (!fs.existsSync(profile)) throw new Error('Selected environment composition profile is unavailable');
+            const metadata = JSON.parse(fs.readFileSync(profile, 'utf8'));
+            if (metadata.environment && metadata.environment !== context.environmentCode) throw new Error('Configuration composition environment does not match selected runtime');
+            compositions = metadata.composition || {};
+            return compositions;
+        };
+        return context;
+    },
+
+    /** Resolves explicit property bindings at the existing contribution boundary, before its normal layered merge. @param {string} filePath Existing source file. @param {Object} inherited Earlier properties. @returns {Object} Effective contribution. */
+    readPropertyContribution: function (filePath, inherited) {
+        return configurationBindings.resolve(require(filePath), inherited, this.getPropertyBindingContext(filePath));
+    },
+
     /**
      * Loads a concrete configuration file if it exists.
      *
@@ -1099,7 +1134,7 @@ module.exports = {
         let config = CONFIG.getProperties() || {};
         if (fs.existsSync(filePath)) {
             this.LOG.debug('Loading configuration file from : ' + filePath.replace(NODICS.getNodicsHome(), '.'));
-            var propertyFile = require(filePath);
+            var propertyFile = this.readPropertyContribution(filePath, config);
             CONFIG.setProperties(_.merge(config, propertyFile));
         }
     },
@@ -1120,7 +1155,7 @@ module.exports = {
                 if (fs.existsSync(filePath)) {
                     _self.LOG.debug('Loading configuration file from : ' + filePath.replace(NODICS.getNodicsHome(), '.'));
                     let props = tntCode ? CONFIG.getProperties(tntCode) || {} : CONFIG.getProperties() || {};
-                    CONFIG.setProperties(_.merge(props, require(filePath)), tntCode);
+                    CONFIG.setProperties(_.merge(props, _self.readPropertyContribution(filePath, props)), tntCode);
                 } else {
                     _self.LOG.warn('System cannot find configuration at : ' + filePath.replace(NODICS.getNodicsHome(), '.'));
                 }
@@ -1160,26 +1195,19 @@ module.exports = {
      * @returns {Promise<boolean>} Resolves after all modules are loaded.
      * @throws Rejects when any module load fails.
      */
-    loadModules: function (modules = Array.from(NODICS.getIndexedModules().keys())) {
-        let _self = this;
-        return new Promise((resolve, reject) => {
-            if (modules && modules.length > 0) {
-                let moduleIndex = modules.shift();
-                let moduleName = NODICS.getIndexedModules().get(moduleIndex).name;
-                _self.loadModule(moduleName).then(success => {
-                    _self.loadModules(modules).then(success => {
-                        resolve(true);
-                    }).catch(error => {
-                        reject(error);
-                    });
-                }).catch(error => {
-                    reject(error);
-                });
-
-            } else {
-                resolve(true);
+    loadModules: async function (modules) {
+        if (modules === undefined) {
+            if (NODICS.getLifecycleOperation() === 'start') infra.validateBuildManifest();
+            const generated = { name: NODICS.getServerName(), path: NODICS.getServerPath(), generatedBaseline: true };
+            for (const layer of ['Services', 'Facades', 'Controllers']) {
+                await this['load' + layer](generated);
             }
-        });
+            modules = Array.from(NODICS.getIndexedModules().keys());
+        }
+        for (const moduleIndex of modules) {
+            await this.loadModule(NODICS.getIndexedModules().get(moduleIndex).name);
+        }
+        return true;
     },
 
     /**
@@ -1198,7 +1226,7 @@ module.exports = {
             let moduleFile = require(moduleObject.path + '/nodics.js');
             if (moduleFile.init) {
                 moduleFile.LOG = logger.createLogger("Module-" + moduleName);
-                moduleFile.init(moduleObject).then(success => {
+                Promise.resolve(moduleFile.init(moduleObject)).then(success => {
                     _self.loadServices(moduleObject).then(() => {
                         return _self.loadPipelinesDefinition(moduleObject);
                     }).then(() => {
@@ -1243,11 +1271,15 @@ module.exports = {
         let _self = this;
         return new Promise((resolve, reject) => {
             _self.LOG.debug('  Loading all module services');
-            let path = module.path + '/src/service';
+            let path = module.generatedBaseline ? NODICS.getGeneratedArtifactPath('service') : module.path + '/src/service';
             try {
+                if (module.generatedBaseline && !fs.existsSync(path) && NODICS.getLifecycleOperation() === 'start') {
+                    throw new Error('Generated service artifacts are missing for server ' + module.name + '. Run the selected project server build before startup: ' + path);
+                }
                 fileLoader.processFiles(path, "Service.js", (file) => {
                     let serviceName = UTILS.getFileNameWithoutExtension(file);
-                    let artifact = require(file);
+                    if (module.generatedBaseline) delete require.cache[require.resolve(file)];
+                    let artifact = _.merge({}, require(file));
                     if (SERVICE[serviceName]) {
                         SERVICE[serviceName] = _.merge(SERVICE[serviceName], artifact);
                         fileLoader.recordArtifactContribution(SERVICE[serviceName], {
@@ -1255,7 +1287,9 @@ module.exports = {
                             layer: 'service',
                             sourceModule: module.name,
                             action: 'override',
-                            filePath: file
+                            filePath: file,
+                            contribution: artifact,
+                            generatedBaseline: module.generatedBaseline === true
                         });
                     } else {
                         SERVICE[serviceName] = artifact;
@@ -1265,10 +1299,12 @@ module.exports = {
                             layer: 'service',
                             sourceModule: module.name,
                             action: 'create',
-                            filePath: file
+                            filePath: file,
+                            contribution: artifact,
+                            generatedBaseline: module.generatedBaseline === true
                         });
                     }
-                });
+                }, { excludeGenerated: !module.generatedBaseline });
                 resolve(true);
             } catch (error) {
                 reject(error);
@@ -1299,7 +1335,9 @@ module.exports = {
                             layer: 'pipeline',
                             sourceModule: module.name,
                             action: 'override',
-                            filePath: file
+                            filePath: file,
+                            contribution: artifact,
+                            generatedBaseline: module.generatedBaseline === true
                         });
                     } else {
                         PIPELINE[processName] = artifact;
@@ -1308,7 +1346,9 @@ module.exports = {
                             layer: 'pipeline',
                             sourceModule: module.name,
                             action: 'create',
-                            filePath: file
+                            filePath: file,
+                            contribution: artifact,
+                            generatedBaseline: module.generatedBaseline === true
                         });
                     }
                 });
@@ -1324,7 +1364,8 @@ module.exports = {
                                 layer: 'pipeline',
                                 sourceModule: module.name,
                                 action: 'override',
-                                filePath: registryPath
+                                filePath: registryPath,
+                                contribution: artifact
                             });
                         } else {
                             PIPELINE[processName] = artifact;
@@ -1333,7 +1374,8 @@ module.exports = {
                                 layer: 'pipeline',
                                 sourceModule: module.name,
                                 action: 'create',
-                                filePath: registryPath
+                                filePath: registryPath,
+                                contribution: artifact
                             });
                         }
                     });
@@ -1356,11 +1398,15 @@ module.exports = {
         let _self = this;
         return new Promise((resolve, reject) => {
             _self.LOG.debug('  Loading all module facades');
-            let path = module.path + '/src/facade';
+            let path = module.generatedBaseline ? NODICS.getGeneratedArtifactPath('facade') : module.path + '/src/facade';
             try {
+                if (module.generatedBaseline && !fs.existsSync(path) && NODICS.getLifecycleOperation() === 'start') {
+                    throw new Error('Generated facade artifacts are missing for server ' + module.name + '. Run the selected project server build before startup: ' + path);
+                }
                 fileLoader.processFiles(path, "Facade.js", (file) => {
                     let facadeName = UTILS.getFileNameWithoutExtension(file);
-                    let artifact = require(file);
+                    if (module.generatedBaseline) delete require.cache[require.resolve(file)];
+                    let artifact = _.merge({}, require(file));
                     if (FACADE[facadeName]) {
                         FACADE[facadeName] = _.merge(FACADE[facadeName], artifact);
                         fileLoader.recordArtifactContribution(FACADE[facadeName], {
@@ -1368,7 +1414,9 @@ module.exports = {
                             layer: 'facade',
                             sourceModule: module.name,
                             action: 'override',
-                            filePath: file
+                            filePath: file,
+                            contribution: artifact,
+                            generatedBaseline: module.generatedBaseline === true
                         });
                     } else {
                         FACADE[facadeName] = artifact;
@@ -1378,10 +1426,12 @@ module.exports = {
                             layer: 'facade',
                             sourceModule: module.name,
                             action: 'create',
-                            filePath: file
+                            filePath: file,
+                            contribution: artifact,
+                            generatedBaseline: module.generatedBaseline === true
                         });
                     }
-                });
+                }, { excludeGenerated: !module.generatedBaseline });
                 resolve(true);
             } catch (error) {
                 reject(error);
@@ -1400,11 +1450,15 @@ module.exports = {
         let _self = this;
         return new Promise((resolve, reject) => {
             _self.LOG.debug('  Loading all module controllers');
-            let path = module.path + '/src/controller';
+            let path = module.generatedBaseline ? NODICS.getGeneratedArtifactPath('controller') : module.path + '/src/controller';
             try {
+                if (module.generatedBaseline && !fs.existsSync(path) && NODICS.getLifecycleOperation() === 'start') {
+                    throw new Error('Generated controller artifacts are missing for server ' + module.name + '. Run the selected project server build before startup: ' + path);
+                }
                 fileLoader.processFiles(path, "Controller.js", (file) => {
                     let controllerName = UTILS.getFileNameWithoutExtension(file);
-                    let artifact = require(file);
+                    if (module.generatedBaseline) delete require.cache[require.resolve(file)];
+                    let artifact = _.merge({}, require(file));
                     if (CONTROLLER[controllerName]) {
                         CONTROLLER[controllerName] = _.merge(CONTROLLER[controllerName], artifact);
                         fileLoader.recordArtifactContribution(CONTROLLER[controllerName], {
@@ -1412,7 +1466,9 @@ module.exports = {
                             layer: 'controller',
                             sourceModule: module.name,
                             action: 'override',
-                            filePath: file
+                            filePath: file,
+                            contribution: artifact,
+                            generatedBaseline: module.generatedBaseline === true
                         });
                     } else {
                         CONTROLLER[controllerName] = artifact;
@@ -1422,10 +1478,12 @@ module.exports = {
                             layer: 'controller',
                             sourceModule: module.name,
                             action: 'create',
-                            filePath: file
+                            filePath: file,
+                            contribution: artifact,
+                            generatedBaseline: module.generatedBaseline === true
                         });
                     }
-                });
+                }, { excludeGenerated: !module.generatedBaseline });
                 resolve(true);
             } catch (error) {
                 reject(error);
@@ -1694,7 +1752,7 @@ module.exports = {
             let moduleObject = NODICS.getRawModule(moduleName);
             let moduleFile = require(moduleObject.path + '/nodics.js');
             if (moduleFile.postInit && typeof moduleFile.postInit === 'function') {
-                moduleFile.postInit(moduleObject).then(success => {
+                Promise.resolve(moduleFile.postInit(moduleObject)).then(success => {
                     resolve(true);
                 }).catch(error => {
                     reject(error);

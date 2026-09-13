@@ -213,6 +213,7 @@ module.exports = {
         let plan = await this.preparePlan(request);
         let operationReleases = await this.operationReleases(plan, 'AVAILABLE');
         let executablePlan = this.executablePlan(plan, operationReleases);
+        for (const release of executablePlan.releases) await this.resolveCompositionSources(plan, release, true);
         let validation = {
             validationOnly: true,
             importExecuted: false,
@@ -232,28 +233,66 @@ module.exports = {
         };
     },
 
-    /** Executes one validated plan through the authoritative init/core/sample service operation. */
+    /** Executes an operator-selected plan through the existing release authority. */
     execute: async function (request) {
-        let plan = await this.preparePlan(request);
-        let operationReleases = await this.operationReleases(plan, 'AVAILABLE');
+        const plan = await this.preparePlan(request);
+        const typePolicy = (this.configuration().types || {})[plan.dataType] || {};
+        if (typePolicy.operatorExecution !== true) throw this.error('ERR_IMP_00002', 'Operator execution is disabled for this data release type');
+        return this.executePreparedPlan(request, plan);
+    },
+
+    /**
+     * Evaluates required init deltas on every startup, independent of operator import enablement.
+     * Already-current releases are never replayed merely because the process restarted.
+     * @param {Object} request Trusted startup tenant and active module scope.
+     * @returns {Promise<Object>} Completed init releases or an explicit no-op.
+     */
+    installStartupReleases: async function (request) {
+        const policy = (this.configuration().types || {}).init || {};
+        if (policy.enabled === false || policy.startupExecution === false) return { skipped: true, reason: 'INIT_DISABLED' };
+        const modules = new Set(request.modules || NODICS.getActiveModules());
+        const releases = this.discoverReleases('init').filter(release => modules.has(release.moduleName) &&
+            (release.invalidManifest || this.isDestinationCompatible(release)));
+        if (releases.length === 0) return { skipped: true, reason: 'NO_INIT_RELEASES' };
+        const operation = Object.assign({}, request, { releaseRequest: { dataType: 'init',
+            releaseCodes: releases.map(release => release.releaseCode) } });
+        const plan = await this.preparePlan(operation);
+        const states = await this.operationReleases(plan, 'AVAILABLE');
+        if (states.some(release => release.installedVersion === release.version && release.installedChecksum &&
+            release.installedChecksum !== release.checksum)) {
+            throw this.error('ERR_IMP_00003', 'Init release content changed without a new version; startup must not replay edited releases');
+        }
+        if (states.every(release => release.status === 'CURRENT')) return { skipped: true, reason: 'INIT_CURRENT' };
+        return this.executePreparedPlan(operation, plan);
+    },
+
+    /** Applies a trusted validated plan while preserving version ordering and installation receipts. */
+    executePreparedPlan: async function (request, plan) {
+        const operationReleases = await this.operationReleases(plan, 'AVAILABLE');
+        if (operationReleases.some(release => release.status === 'RUNNING')) {
+            throw this.error('ERR_IMP_00003', 'A selected data release is still running; establish completion before retry');
+        }
         plan = this.executablePlan(plan, operationReleases, request.releaseRequest && request.releaseRequest.forceCurrent === true);
         if (plan.releases.length === 0) throw this.error('ERR_IMP_00003', 'Selected data releases are already current');
-        let typePolicy = (this.configuration().types || {})[plan.dataType] || {};
-        if (typePolicy.operatorExecution !== true) throw this.error('ERR_IMP_00002', 'Operator execution is disabled for this data release type');
         let executionKey = plan.tenant + ':' + plan.dataType;
         if (this.activeExecutions.has(executionKey)) throw this.error('ERR_IMP_00003', 'A data release import is already running');
         this.activeExecutions.set(executionKey, true);
         let completed = [];
         let importRuns = [];
         let results = [];
+        let claimedRelease;
+        plan = Object.assign({}, plan, { executionId: crypto.randomUUID(),
+            forceCurrent: request.releaseRequest && request.releaseRequest.forceCurrent === true });
         try {
             for (let release of plan.releases) {
                 await this.recordInstallation(plan, release, undefined, 'RUNNING');
-                let releasePlan = Object.assign({}, plan, { releases: [release] });
+                claimedRelease = release;
+                let releasePlan = Object.assign({}, plan, { releases: await this.resolveCompositionSources(plan, release) });
                 let importRequest = this.createImportRequest(request, releasePlan, false);
                 let result = await this.invokeImport(importRequest, plan.dataType);
                 await this.recordInstallation(plan, release, importRequest.importRun, 'CURRENT');
                 completed.push(release);
+                claimedRelease = undefined;
                 if (importRequest.importRun) importRuns.push(importRequest.importRun);
                 results.push({ releaseCode: release.releaseCode, result: result, importRun: importRequest.importRun });
             }
@@ -270,8 +309,9 @@ module.exports = {
                 }
             };
         } catch (error) {
-            await Promise.all(plan.releases.filter(release => !completed.includes(release))
-                .map(release => this.recordInstallation(plan, release, undefined, 'FAILED'))).catch(() => false);
+            // Only the successful claimant may fail its current attempt. Unstarted
+            // releases and another runtime's receipts are never overwritten.
+            if (claimedRelease) await this.recordInstallation(plan, claimedRelease, undefined, 'FAILED').catch(() => false);
             throw error;
         } finally {
             this.activeExecutions.delete(executionKey);
@@ -316,7 +356,67 @@ module.exports = {
         let installations = await this.getInstallations(tenant);
         let installedByCode = Object.fromEntries(installations.map(item => [item.code, item]));
         releases.forEach(release => this.validateUpgradePolicy(release, installedByCode[this.installationCode(tenant, release)]));
-        return { dataType: dataType, tenant: tenant, releases: releases };
+        const requestedSet = new Set(releases.map(release => release.releaseCode));
+        releases = available.filter(release => requestedSet.has(release.releaseCode));
+        return { dataType: dataType, tenant: tenant, releases: releases, sourceReleases: available };
+    },
+
+    /**
+     * Resolves immutable lower-layer JS definitions as source-only inputs to one delta.
+     * Current lower releases supply inherited fields, never an automatic replay of
+     * their other rows. Versions and custom installers remain separate executions.
+     * @param {Object} plan Validated execution plan.
+     * @param {Object} release Selected release being applied.
+     * @returns {Promise<Object[]>} Ordered source-only inputs followed by the delta.
+     */
+    resolveCompositionSources: async function (plan, release, allowPlanned = false) {
+        if (release.installer) return [release];
+        const records = new Set((release.declaredFiles || []).filter(file =>
+            /(?:^|\/)(?:records|data)\/.+\.js$/.test(file)).map(file => path.basename(file)));
+        if (records.size === 0) return [release];
+        const targets = this.releaseDatasetTargets(release);
+        const candidates = (plan.sourceReleases || plan.releases).filter(candidate =>
+            !candidate.installer && !candidate.invalidManifest && candidate.moduleName !== release.moduleName &&
+            candidate.dataType === release.dataType && candidate.sourceRoot === release.sourceRoot &&
+            this.compareModuleIndex(candidate.moduleIndex, release.moduleIndex) < 0 &&
+            (candidate.declaredFiles || []).some(file => records.has(path.basename(file))))
+            .filter(candidate => this.releaseDatasetTargets(candidate).some(target => targets.includes(target)))
+            .sort((left, right) => this.compareModuleIndex(left.moduleIndex, right.moduleIndex));
+        if (candidates.length === 0) return [release];
+        const installed = new Map((await this.getInstallations(plan.tenant)).map(item => [item.code, item]));
+        const sources = [];
+        for (const candidate of candidates) {
+            this.validateDestination(candidate);
+            const state = installed.get(this.installationCode(plan.tenant, candidate));
+            this.validateUpgradePolicy(candidate, state);
+            const status = this.toCatalogueItem(candidate, state, false).status;
+            const planned = allowPlanned && ['NOT_INSTALLED', 'UPDATE_AVAILABLE', 'FAILED'].includes(status) &&
+                plan.releases.some(item => item.releaseCode === candidate.releaseCode);
+            if (status !== 'CURRENT' && !planned) {
+                throw this.error('ERR_IMP_00003', 'Install the matching lower-layer release before its override: ' + candidate.releaseCode);
+            }
+            sources.push(Object.assign({}, candidate, { sourceOnly: true }));
+        }
+        return sources.concat([release]);
+    },
+
+    /** Returns explicit header target identities without creating a second data identity store. */
+    releaseDatasetTargets: function (release) {
+        const owner = NODICS.getRawModule(release.moduleName);
+        const targets = [];
+        if (!owner || !owner.path) return targets;
+        for (const file of release.declaredFiles || []) {
+            if (!/(?:^|\/)headers\/.+\.js$/.test(file)) continue;
+            const headers = this.requireReleaseFile(path.resolve(owner.path, 'data', file));
+            for (const [moduleName, definitions] of Object.entries(headers || {})) {
+                for (const [headerName, header] of Object.entries(definitions || {})) {
+                    const options = header && header.options || {};
+                    const target = options.schemaName ? 'schema:' + options.schemaName : options.indexName ? 'index:' + options.indexName : '';
+                    if (target) targets.push([path.basename(file), moduleName, headerName, target, options.dataFilePrefix || headerName].join(':'));
+                }
+            }
+        }
+        return targets;
     },
 
     /** Prevents a qualified release from being installed into a runtime role or environment outside its manifest contract. */
@@ -437,8 +537,16 @@ module.exports = {
         });
         return releases.sort((first, second) =>
             first.dataType.localeCompare(second.dataType) ||
+            this.releaseSequence(first) - this.releaseSequence(second) ||
+            this.compareModuleIndex(first.moduleIndex, second.moduleIndex) ||
             first.discoveryOrder - second.discoveryOrder ||
             first.releaseCode.localeCompare(second.releaseCode));
+    },
+
+    /** Orders immutable directory deltas before layer precedence within each version. */
+    releaseSequence: function (release) {
+        const match = /^(?:init|core|sample)-v(\d{3})$/.exec(release.sourceRoot || '');
+        return match ? Number(match[1]) : 0;
     },
 
     /** Discovers conventional release folders when no generated manifest section owns them yet. */
@@ -818,7 +926,8 @@ module.exports = {
             options: Object.assign({}, request && request.options, { validateOnly: validationOnly }),
             dataReleasePlan: plan.releases.map(release => Object.assign(this.publicRelease(release), {
                 sourceRoot: release.sourceRoot,
-                declaredFiles: release.declaredFiles.slice()
+                declaredFiles: release.declaredFiles.slice(),
+                sourceOnly: release.sourceOnly === true
             }))
         });
         return next;
@@ -851,7 +960,9 @@ module.exports = {
     /** Returns durable current installation projections for one tenant. */
     getInstallations: async function (tenant) {
         let installationService = SERVICE.DefaultDataInstallationService;
-        if (!installationService || typeof installationService.get !== 'function') return [];
+        if (!installationService || typeof installationService.get !== 'function') {
+            throw this.error('ERR_IMP_00004', 'Durable data installation service is unavailable');
+        }
         let pageSize = 500;
         let pageNumber = 1;
         let installations = [];
@@ -861,7 +972,8 @@ module.exports = {
                 query: {},
                 searchOptions: { pageSize: pageSize, pageNumber: pageNumber }
             });
-            let page = result && result.result || [];
+            let page = result && result.result;
+            if (!Array.isArray(page)) throw this.error('ERR_IMP_00004', 'Data installation read did not return records');
             installations = installations.concat(page);
             if (page.length < pageSize) return installations;
             pageNumber += 1;
@@ -871,10 +983,26 @@ module.exports = {
     /** Records RUNNING, CURRENT, or FAILED state through the generated model service. */
     recordInstallation: async function (plan, release, importRun, status) {
         let service = SERVICE.DefaultDataInstallationService;
-        if (!service) return false;
+        if (!service || typeof service.get !== 'function' || typeof service.save !== 'function' || typeof service.update !== 'function') {
+            throw this.error('ERR_IMP_00004', 'Durable data installation service is unavailable');
+        }
+        if (!plan.executionId) throw this.error('ERR_IMP_00003', 'Installation writes require an execution identity');
         let code = this.installationCode(plan.tenant, release);
-        let existing = await service.get({ tenant: plan.tenant, query: { code: code }, searchOptions: { limit: 1 } })
-            .then(result => result && result.result && result.result[0]).catch(() => undefined);
+        const response = await service.get({ tenant: plan.tenant, query: { code: code }, searchOptions: { limit: 2 } });
+        if (!response || !Array.isArray(response.result) || response.result.length > 1) {
+            throw this.error('ERR_IMP_00004', 'Data installation receipt is unavailable or ambiguous');
+        }
+        let existing = response.result[0];
+        if (status === 'RUNNING') {
+            this.validateUpgradePolicy(release, existing);
+            const state = this.toCatalogueItem(release, existing, false).status;
+            if (!['NOT_INSTALLED', 'UPDATE_AVAILABLE', 'FAILED'].includes(state) &&
+                !(state === 'CURRENT' && plan.forceCurrent && this.isDevelopmentRelease(release.version))) {
+                throw this.error('ERR_IMP_00003', 'Data release is no longer available for execution: ' + state);
+            }
+        } else if (!existing || existing.status !== 'RUNNING' || existing.executionId !== plan.executionId) {
+            throw this.error('ERR_IMP_00003', 'Data release execution no longer owns its installation receipt');
+        }
         let model = {
             code: code, active: true, tenant: plan.tenant,
             environment: NODICS.getSelectedEnvironmentName(), moduleName: release.moduleName,
@@ -891,11 +1019,13 @@ module.exports = {
             removalPolicy: release.removalPolicy,
             runId: importRun && importRun.runId || existing && existing.runId,
             status: status,
+            executionId: plan.executionId,
             installedAt: status === 'CURRENT' ? new Date().toISOString() : existing && existing.installedAt,
             lastAttemptAt: new Date().toISOString()
         };
         if (existing && typeof service.update === 'function') {
-            return service.update({ tenant: plan.tenant, query: { code: code }, model: model });
+            return service.update({ tenant: plan.tenant, query: { code: code,
+                revision: existing.revision === undefined ? 0 : existing.revision }, model: model });
         }
         return service.save({ tenant: plan.tenant, model: model });
     },

@@ -20,17 +20,20 @@ module.exports = {
     import: {
         dataInstallation: {
             model: true,
+            backoffice: { concurrency: { managed: true, field: 'revision' } },
             service: {
                 enabled: true
             },
             event: {
                 enabled: false
             },
-            router: {
-                enabled: false
+            router: { groups: { schemaOperations: true },
+                enabled: true
             },
             tenants: ['default'],
             definition: {
+                revision: { type: 'int', required: true, default: 1, description: 'Database-managed counter fencing concurrent installation claims and completion' },
+                executionId: { type: 'string', required: false, description: 'Unique attempt identity that owns a running installation receipt' },
                 tenant: { type: 'string', required: true, description: 'Tenant owning the installed release state' },
                 environment: { type: 'string', required: true, description: 'Environment where the release was installed' },
                 moduleName: { type: 'string', required: true, description: 'Active module owning the data release' },

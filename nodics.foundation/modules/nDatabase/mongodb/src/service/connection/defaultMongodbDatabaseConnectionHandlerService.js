@@ -251,6 +251,6 @@ module.exports = {
      * @sideEffects Closes the underlying Mongo client.
      */
     closeConnection: function (connection) {
-        connection.getClient().close();
+        return connection.getClient().close();
     }
 };

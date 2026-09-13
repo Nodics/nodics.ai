@@ -50,7 +50,7 @@ global.CLASSES = { NodicsError };
 global.CONFIG = {
     get: key => {
         if (key === 'accessPoints') return { readAccessPoint: 1, writeAccessPoint: 2, removeAccessPoint: 3 };
-        if (key === 'schemaWorkbench') {
+        if (key === 'schemaApi') {
             return {
                 discoverModelsByDefault: true,
                 defaultModelOperations: ['search', 'read', 'create', 'update', 'delete'],
@@ -182,9 +182,9 @@ const mergedSchema = {
 
     modules.activeOwner.rawSchema = mergedSchema.activeOwner;
 
-    const workbenchService = require('../src/service/schema/defaultSchemaWorkbenchService');
+    global.SERVICE.DefaultSchemaUtilityService = require('../src/service/schema/defaultSchemaUtilityService');
     global.SERVICE.DefaultSchemaAccessHandlerService = { getAccessPoint: () => 10 };
-    assert.throws(() => workbenchService.list({
+    assert.throws(() => global.SERVICE.DefaultSchemaUtilityService.listSchemas({
         moduleName: 'inactiveOwner',
         authData: { userGroups: ['adminGroup'] }
     }), /Module schemas are not available/);

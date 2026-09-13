@@ -17,7 +17,7 @@
  * @override Later active modules may extend or replace this registry through Nodics layering.
  */
 module.exports = { locationApproval: {
-    locationApprovalRequest: Object.assign({ super: 'base', model: true, schemaPolicies: ['operational'], service: { enabled: true }, router: { enabled: false }, cache: { enabled: false }, event: { enabled: false }, search: { enabled: false } }, { definition: {
+    locationApprovalRequest: Object.assign({ super: 'base', model: true, schemaPolicies: ['operational'], service: { enabled: true }, router: { groups: { schemaOperations: true }, enabled: true }, cache: { enabled: false }, event: { enabled: false }, search: { enabled: false } }, { definition: {
         code: { type: 'string', required: true , description: 'Uniquely identifies this record for references, APIs, imports, and business administration.'},
         draftCode: { type: 'string', required: true , description: 'Stores the draft code used to classify, link, or resolve this record.'},
         targetLocationCode: { type: 'string', required: false , description: 'Stores the target location code used to classify, link, or resolve this record.'},

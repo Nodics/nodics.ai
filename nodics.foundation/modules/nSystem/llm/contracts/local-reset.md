@@ -20,3 +20,31 @@ reported as a fresh baseline. Restore provider readiness and repeat the governed
 reset, then verify empty catalogue/publication state through application APIs.
 A later server layer can extend the static allowlist; it must preserve tenant,
 service-token, confirmation, cache invalidation and failure acknowledgement rules.
+
+## Capability-owned inventories
+
+Each owning module may contribute a keyed inventory under
+`localResetProvider.contributions.<module>.serviceNames`. These declarations are
+inert. A later server selects its allowed capabilities through
+`localResetProvider.modules: { inventory: true, cms: false }`. Do not infer this
+selection from every loaded module or discover models/collections dynamically.
+
+The existing provider combines selected inventories and any explicit
+`serviceNames`, then applies keyed `serviceOverrides`. `false` removes one inherited
+service; `true` explicitly adds one. Unknown selected inventories and malformed
+maps fail before mutation. Resolved names are unique and sorted. Service ordering
+is not a dependency or transactional rollback contract; capabilities with dependent
+recovery must use their existing owning operation instead of assuming reset order.
+
+Keep `enabled`, `environmentAllowlist`, confirmation, service-token authentication,
+maximum size and `requiredServiceNames` checks on the final resolved inventory.
+Removing a required name is rejected before deletion. Adding an inventory never
+enables a reset. Request-body module names cannot expand server policy. Missing
+optional models follow the explicit existing `allowMissingModelServices` setting;
+that setting does not make a missing selected inventory valid.
+
+For example, an Inventory module declares its stock and adjustment model services.
+A Local server selects Inventory and can disable the optional adjustment service
+through a later keyed override. A Production server remains disabled. A selected
+CMS inventory is never inferred merely because the same repository contains CMS.
+Search projection targets retain their explicit module/index allowlist.

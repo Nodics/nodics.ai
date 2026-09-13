@@ -17,6 +17,19 @@
  * @override Projects enable and register remote sources and adapters in later configuration layers without changing framework defaults.
  */
 module.exports = {
+    // Inert inventory; an allowed local server must explicitly select this capability.
+    localResetProvider: {
+        "contributions": {
+            "import": {
+                "serviceNames": {
+                    "DefaultDataInstallationService": true,
+                    "DefaultImportDefinitionService": true,
+                    "DefaultImportRunService": true
+                }
+            }
+        }
+    },
+
     data: {
         dataImportPhasesLimit: 5,
         finalizeImportDataAsync: true,
@@ -51,6 +64,7 @@ module.exports = {
             types: {
                 init: {
                     enabled: true,
+                    startupExecution: true,
                     operatorExecution: true
                 },
                 core: {

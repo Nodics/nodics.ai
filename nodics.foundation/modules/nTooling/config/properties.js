@@ -218,9 +218,32 @@ module.exports = {
                 { node: 'nodics.foundation/modules/nOtp/test/otpCapabilityContract.test.js' }
             ],
             full: [
+                { node: 'nodics.commerce/modules/baseCommerce/modules/shoppingList/test/shoppingListCustomerApiContract.test.js' },
+                { node: 'nodics.commerce/modules/checkout/modules/cart/test/cartCustomerApiContract.test.js' },
+                { node: 'nodics.commerce/test/commercePhase2FoundationContract.test.js' },
+                { node: 'nodics.copilot/modules/copilotConversation/test/copilotCustomerGuidance.test.js' },
+                { node: 'nodics.copilot/modules/copilotKnowledge/test/copilotKnowledgeIngestionRetrievalContract.test.js' },
+                { node: 'nodics.copilot/modules/copilotKnowledge/test/copilotKnowledgeSourceRegistryContract.test.js' },
+                { node: 'nodics.copilot/modules/copilotPolicy/test/copilotPolicySecurityContract.test.js' },
+                { node: 'nodics.copilot/test/copilotPhasesAcceptance.test.js' },
+                { node: 'nodics.engagement/modules/testimonial/test/testimonialPublicIntakeContract.test.js' },
+                { node: 'nodics.location/modules/locationMap/test/locationMapProviderConfigurationContract.test.js' },
+                { node: 'nodics.wcms/modules/cms/test/cmsDesignerCompositionContract.test.js' },
+                { node: 'nodics.wcms/modules/cms/test/cmsDocumentationGovernanceService.test.js' },
+                { node: 'nodics.wcms/modules/editorial/test/editorialSchemaContract.test.js' },
+                { node: 'nodics.wcms/modules/media/test/mediaSchemaWorkbenchContract.test.js' },
+                { node: 'nodics.wcms/modules/wcms/test/axisContentCatalogDataContract.test.js' },
+                { node: 'nodics.commerce/test/commerceSchemaApiContract.test.js' },
+                { node: 'nodics.process/test/processRuntimeLifecycleService.test.js' },
+                { node: 'nodics.process/test/processApiRouteContract.test.js' },
                 { suite: 'basic' }
             ],
             config: [
+                { node: 'nodics.foundation/modules/nConfig/test/configurationBindingContract.test.js' },
+                { node: 'nodics.foundation/modules/nConfig/test/scriptsCompletionContract.test.js' },
+                { node: 'nodics.foundation/modules/nConfig/test/serverGeneratedArtifactContract.test.js' },
+                { node: 'nodics.foundation/modules/nConfig/test/startupFailureCleanupContract.test.js' },
+                { node: 'nodics.foundation/modules/nSystem/test/localResetContributionContract.test.js' },
                 { node: 'nodics.foundation/modules/nConfig/test/configurationValidation.test.js' },
                 { node: 'nodics.foundation/modules/nConfig/test/nonRuntimePackageDiscovery.test.js' },
                 { node: 'nodics.foundation/modules/nDatabase/database/test/tenantDatabaseConfigurationValidation.test.js' },
@@ -231,6 +254,17 @@ module.exports = {
                 { tool: ['llm:validate'] }
             ],
             tooling: [
+                { node: 'nodics.foundation/modules/nTooling/test/applicationBuilderProjectIndependenceContract.test.js' },
+                { node: 'nodics.foundation/modules/nTooling/test/projectBuildTargetContract.test.js' },
+                { node: 'nodics.foundation/modules/nTooling/test/projectSelectiveRuntimeContract.test.js' },
+                { node: 'nodics.foundation/modules/nTooling/test/projectRuntimeBootstrapLive.test.js' },
+                { node: 'nodics.foundation/modules/nTooling/test/projectCommandEntryContract.test.js' },
+                { node: 'nodics.foundation/modules/nTooling/test/projectDataManifestContract.test.js' },
+                { node: 'nodics.foundation/modules/nTooling/test/projectDocumentationIdentityContract.test.js' },
+                { node: 'nodics.foundation/modules/nTooling/test/extensibilityConfigurationBoundary.test.js' },
+                { node: 'nodics.foundation/modules/nTooling/test/serviceExportStyleGovernanceContract.test.js' },
+                { node: 'nodics.foundation/modules/nTooling/test/projectEnvironmentProfileContract.test.mjs' },
+                { node: 'nodics.foundation/modules/nTooling/test/projectContainerProfileContract.test.mjs' },
                 { node: 'nodics.foundation/modules/nTooling/test/toolingCommandOverride.test.js' },
                 { node: 'nodics.foundation/modules/nTooling/test/repositoryToolingBoundary.test.js' },
                 { node: 'nodics.foundation/modules/nTooling/test/repositoryGovernanceDocumentsContract.test.js' },
@@ -265,10 +299,21 @@ module.exports = {
                 { node: 'nodics.foundation/modules/nTooling/test/applicationBuilderQualificationContract.test.js' },
                 { node: 'nodics.foundation/modules/nTooling/test/applicationBuilderEndToEndJourneyContract.test.js' },
                 { node: 'nodics.foundation/modules/nTooling/test/applicationBuilderUpgradeContract.test.js' },
-                { node: 'nodics.foundation/modules/nTooling/test/applicationBuilderSafetyAcceptanceContract.test.js' },
-                { node: 'nodics.foundation/modules/nTooling/test/localBootstrapAcceptanceProjectContract.test.js' }
+                { node: 'nodics.foundation/modules/nTooling/test/applicationBuilderSafetyAcceptanceContract.test.js' }
             ],
             governance: [
+                { node: 'nodics.foundation/modules/nDatabase/database/test/generatedSchemaServiceStartupContract.test.js' },
+                { node: 'nodics.foundation/modules/nDatabase/database/test/localRuntimeAuthorityGate.test.js' },
+                { node: 'nodics.foundation/modules/nDatabase/database/test/modelConcurrencyContract.test.js' },
+                { node: 'nodics.foundation/modules/nDatabase/database/test/schemaAuthoringAuthorityContract.test.js' },
+                { node: 'nodics.foundation/modules/nDatabase/database/test/schemaWorkbenchContract.test.js' },
+                { node: 'nodics.foundation/modules/nDatabase/database/test/schemaWorkbenchFormContract.test.js' },
+                { node: 'nodics.foundation/modules/nDatabase/database/test/schemaWorkbenchMutationContract.test.js' },
+                { node: 'nodics.foundation/modules/nDatabase/database/test/schemaWorkbenchRouterContract.test.js' },
+                { node: 'nodics.foundation/modules/nDatabase/database/test/databaseShutdownCompletionContract.test.js' },
+                { node: 'nodics.foundation/modules/nDatabase/database/test/generatedMutationParityContract.test.js' },
+                { node: 'nodics.foundation/modules/nDatabase/database/test/schemaUtilityContract.test.js' },
+                { node: 'nodics.foundation/modules/nDatabase/mongodb/test/mongodbSchemaPropertySelectionContract.test.js' },
                 { node: 'nodics.foundation/modules/nConfig/test/layeredCustomizationContract.test.js' },
                 { node: 'nodics.foundation/modules/nConfig/test/configurationOwnershipContract.test.js' },
                 { node: 'nodics.foundation/modules/nConfig/test/schemaOverrideGovernance.test.js' },
@@ -315,6 +360,13 @@ module.exports = {
                 { node: 'nodics.foundation/modules/nCommon/test/executionLayerTraceability.test.js' }
             ],
             headers: [
+                { node: 'nodics.foundation/modules/nService/test/profileEnterpriseInvocationContract.test.js' },
+                { node: 'nodics.foundation/modules/nRouter/test/routerPartialStartupCleanupContract.test.js' },
+                { node: 'nodics.foundation/modules/nRouter/test/runtimeScopeRouteAdmissionContract.test.js' },
+                { node: 'nodics.foundation/modules/nRouter/test/schemaRouteGroupContract.test.js' },
+                { node: 'nodics.foundation/modules/nService/test/moduleRegistrationDrainContract.test.js' },
+                { node: 'nodics.foundation/modules/nService/test/runtimeCredentialLifecycleContract.test.js' },
+                { node: 'nodics.foundation/modules/nService/test/tenantStartupCompletionContract.test.js' },
                 { node: 'nodics.foundation/modules/nAuth/test/authSecurityContract.test.js' },
                 { node: 'nodics.foundation/modules/nAuth/test/integration/authDistributedSharedCacheContract.test.js' },
                 { node: 'nodics.foundation/modules/nAuth/test/integration/authIdentityIsolationContract.test.js' },
@@ -333,10 +385,12 @@ module.exports = {
                 { node: 'nodics.foundation/modules/nAuth/test/integration/authIdentityIsolationContract.test.js' },
                 { node: 'nodics.platform/modules/profile/test/identityGovernanceMigrationIntegration.test.js' },
                 { node: 'nodics.foundation/modules/nAuth/test/integration/authModularAuthorizationContract.test.js' },
-                { node: 'nodics.foundation/modules/nAuth/test/integration/authRedisLiveIntegration.test.js' }
+                { node: 'nodics.foundation/modules/nAuth/test/integration/authRedisLiveIntegration.test.js' },
+                { node: 'nodics.foundation/modules/nAuth/test/integration/authRuntimeRedisLive.test.js' }
             ],
             'auth-redis-live': [
-                { node: 'nodics.foundation/modules/nAuth/test/integration/authRedisLiveIntegration.test.js' }
+                { node: 'nodics.foundation/modules/nAuth/test/integration/authRedisLiveIntegration.test.js' },
+                { node: 'nodics.foundation/modules/nAuth/test/integration/authRuntimeRedisLive.test.js' }
             ],
             'route-contracts': [
                 { tool: ['test:route-contracts'] },
@@ -352,6 +406,11 @@ module.exports = {
                 { tool: ['test:generated'] }
             ],
             import: [
+                { node: 'nodics.foundation/modules/nData/nImport/import/test/dataReleaseConcurrencyContract.test.js' },
+                { node: 'nodics.foundation/modules/nData/nImport/import/test/jsSourceRecordIdentityContract.test.js' },
+                { node: 'nodics.foundation/modules/nData/nImport/import/test/layeredReleaseCompositionContract.test.js' },
+                { node: 'nodics.foundation/modules/nData/nImport/import/test/systemDatasetTargetIsolationContract.test.js' },
+                { node: 'nodics.foundation/modules/nData/nImport/jsImport/test/stableRecordKeyContract.test.js' },
                 { node: 'nodics.foundation/modules/nData/nImport/jsonImport/test/jsonFileStreamingContract.test.js' },
                 { node: 'nodics.foundation/modules/nData/nImport/import/test/systemDataImportInitializerValidation.test.js' },
                 { node: 'nodics.foundation/modules/nData/nImport/import/test/importTenantPrecedence.test.js' },
@@ -384,6 +443,9 @@ module.exports = {
                 { node: 'nodics.foundation/modules/nData/nExport/export/test/dataExportCapabilityBehavior.test.js' }
             ],
             profile: [
+                { node: 'nodics.platform/modules/profile/test/enterpriseWorkbenchSetupContract.test.js' },
+                { node: 'nodics.platform/modules/profile/test/profileExternalIdentity.test.js' },
+                { node: 'nodics.platform/modules/profile/test/runtimeScopeInvalidationContract.test.js' },
                 { node: 'nodics.platform/modules/profile/test/initRequiredFlag.test.js' },
                 { node: 'nodics.platform/modules/profile/test/profileInitRequiredDetection.test.js' },
                 { node: 'nodics.platform/modules/profile/test/mandatoryIdentityBootstrapService.test.js' },
@@ -395,6 +457,9 @@ module.exports = {
                 { tool: ['test:capability-behavior', '--area=profile'] }
             ],
             backoffice: [
+                { node: 'nodics.platform/modules/backoffice/test/backofficeApplicationInitializationContract.test.js' },
+                { node: 'nodics.platform/modules/backoffice/test/backofficeDocumentationNavigationContract.test.js' },
+                { node: 'nodics.platform/modules/backoffice/test/activationDataCompletionContract.test.js' },
                 { node: 'nodics.platform/modules/backoffice/test/backofficeCapabilityRegistryService.test.js' },
                 { node: 'nodics.platform/modules/backoffice/test/backofficeModuleBoundaryContract.test.js' },
                 { node: 'nodics.platform/modules/backoffice/test/backofficeRegistryRouteContract.test.js' },
@@ -416,12 +481,14 @@ module.exports = {
                 { node: 'nodics.foundation/modules/nService/test/moduleRegistrationAgent.test.js' }
             ],
             cache: [
+                { node: 'nodics.foundation/modules/nCache/cache/test/cacheVersionedWriteContract.test.js' },
                 { node: 'nodics.foundation/modules/nCache/cache/test/cacheIsolationAndCorrectnessContract.test.js' },
                 { node: 'nodics.foundation/modules/nCache/cache/test/cacheMutationSecurityContract.test.js' },
                 { node: 'nodics.foundation/modules/nCache/cache/test/cacheDiagnosticsContract.test.js' },
                 { node: 'nodics.foundation/modules/nCache/cache/test/cacheBenchmarkContract.test.js' },
                 { node: 'nodics.foundation/modules/nCache/cache/test/cachePolicyContract.test.js' },
                 { node: 'nodics.foundation/modules/nCache/cache/test/cacheAdapterContract.test.js' },
+                { node: 'nodics.foundation/modules/nCache/cache/test/cacheRuntimeLifecycleContract.test.js' },
                 { node: 'nodics.foundation/modules/nCache/cache/test/cacheInvalidationContract.test.js' },
                 { node: 'nodics.foundation/modules/nCache/redisCache/test/cacheRedisLive.test.js' }
             ],
@@ -429,6 +496,8 @@ module.exports = {
                 { node: 'nodics.foundation/modules/nCache/redisCache/test/cacheRedisLive.test.js' }
             ],
             cronjob: [
+                { node: 'nodics.process/modules/cronjob/test/cronJobProcessTriggerContract.test.js' },
+                { node: 'nodics.process/modules/cronjob/test/cronJobOperationalAdmissionContract.test.js' },
                 { node: 'nodics.process/modules/cronjob/test/cronJobRouteContract.test.js' },
                 { node: 'nodics.process/modules/cronjob/test/cronJobControllerRequestMapping.test.js' },
                 { node: 'nodics.process/modules/cronjob/test/cronJobServiceLifecycleContract.test.js' },
@@ -490,6 +559,7 @@ module.exports = {
             clean: {
                 description: 'Clean generated Nodics artifacts through governed lifecycle steps.',
                 handler: 'src/service/command/defaultNodicsLifecycleCommandService.js',
+                projectSteps: [{ nodicsMethod: 'cleanAll' }],
                 steps: [
                     { tool: ['llm:clean'] },
                     { nodicsMethod: 'cleanAll' }
@@ -498,6 +568,14 @@ module.exports = {
             build: {
                 description: 'Build Nodics artifacts and run generated-artifact governance gates.',
                 handler: 'src/service/command/defaultNodicsLifecycleCommandService.js',
+                projectSteps: [
+                    { tool: ['project:validate'] },
+                    { tool: ['quality:ownership'] },
+                    { nodicsMethod: 'buildAll' },
+                    { tool: ['docs:openapi'] },
+                    { tool: ['llm:generate'] },
+                    { tool: ['docs:coverage', '--scope=generated', '--fail'] }
+                ],
                 steps: [
                     { tool: ['ai:validate'] },
                     { tool: ['quality:ownership'] },
@@ -592,92 +670,22 @@ module.exports = {
             'project:data-manifests': {
                 description: 'Generate project data-pack manifests from project-owned domain and pack facts.',
                 handler: 'src/service/command/defaultNodeScriptCommandService.js',
-                script: 'src/service/project/defaultProjectDataManifestService.mjs'
-            },
-            'project:functional-journey-acceptance': {
-                description: 'Run project functional journey acceptance using project manifest facts and framework-owned orchestration.',
-                handler: 'src/service/command/defaultNodeScriptCommandService.js',
-                script: 'src/service/project/defaultProjectFunctionalJourneyAcceptanceService.mjs'
-            },
-            'project:capability-registry-acceptance': {
-                description: 'Run project capability registry acceptance using project manifest facts and framework-owned assertions.',
-                handler: 'src/service/command/defaultNodeScriptCommandService.js',
-                script: 'src/service/project/defaultProjectCapabilityRegistryAcceptanceService.mjs'
-            },
-            'project:guided-initialization-acceptance': {
-                description: 'Run project guided initialization acceptance using project manifest facts and framework-owned assertions.',
-                handler: 'src/service/command/defaultNodeScriptCommandService.js',
-                script: 'src/service/project/defaultProjectGuidedInitializationAcceptanceService.mjs'
-            },
-            'project:deployment-qualification': {
-                description: 'Create or execute project deployment qualification evidence from framework-owned qualification orchestration.',
-                handler: 'src/service/command/defaultNodeScriptCommandService.js',
-                script: 'src/service/project/defaultProjectDeploymentQualificationService.mjs'
+                script: 'src/service/project/defaultProjectDataManifestService.js'
             },
             'project:configure-framework': {
                 description: 'Validate project framework-root wiring without creating project-local framework links.',
                 handler: 'src/service/command/defaultNodeScriptCommandService.js',
                 script: 'src/service/project/defaultProjectFrameworkLinkService.js'
             },
+            start: {
+                description: 'Start the selected project server and optional node through the existing runtime resolver.',
+                handler: 'src/service/command/defaultNodeScriptCommandService.js',
+                script: 'src/service/project/defaultProjectRuntimeStartService.js'
+            },
             'project:runtime-start': {
                 description: 'Start a project-declared Nodics runtime server using framework-owned startup mechanics.',
                 handler: 'src/service/command/defaultNodeScriptCommandService.js',
                 script: 'src/service/project/defaultProjectRuntimeStartService.js'
-            },
-            'project:local-bootstrap-acceptance': {
-                description: 'Run project local bootstrap acceptance using framework-owned orchestration and project facts.',
-                handler: 'src/service/command/defaultNodeScriptCommandService.js',
-                script: 'src/service/project/defaultProjectLocalBootstrapAcceptanceService.mjs'
-            },
-            'project:agora-commerce-acceptance': {
-                description: 'Run project Agora commerce customer journey acceptance through framework-owned tooling.',
-                handler: 'src/service/command/defaultNodeScriptCommandService.js',
-                script: 'src/service/project/defaultProjectAgoraCommerceAcceptanceService.mjs'
-            },
-            'project:loyalty-reward-checkout-acceptance': {
-                description: 'Run project Loyalty reward checkout acceptance through Platform, Commerce, and Loyalty module servers.',
-                handler: 'src/service/command/defaultNodeScriptCommandService.js',
-                script: 'src/service/project/defaultProjectLoyaltyRewardCheckoutAcceptanceService.mjs'
-            },
-            'project:waste-management-acceptance': {
-                description: 'Run project Waste Management acceptance through the project-owned Waste server composition.',
-                handler: 'src/service/command/defaultNodeScriptCommandService.js',
-                script: 'src/service/project/defaultProjectWasteManagementAcceptanceService.mjs'
-            },
-            'project:waste-backoffice-discovery-acceptance': {
-                description: 'Run live Waste BackOffice discovery acceptance through Platform and the project-owned Waste server.',
-                handler: 'src/service/command/defaultNodeScriptCommandService.js',
-                script: 'src/service/project/defaultProjectWasteBackofficeDiscoveryAcceptanceService.mjs'
-            },
-            'project:agora-commerce-data-acceptance': {
-                description: 'Run project Agora commerce staged data acceptance through framework-owned tooling.',
-                handler: 'src/service/command/defaultNodeScriptCommandService.js',
-                script: 'src/service/project/defaultProjectAgoraCommerceDataAcceptanceService.mjs'
-            },
-            'project:agora-commerce-publication-acceptance': {
-                description: 'Run project Agora commerce staged-to-online publication acceptance through framework-owned tooling.',
-                handler: 'src/service/command/defaultNodeScriptCommandService.js',
-                script: 'src/service/project/defaultProjectAgoraCommercePublicationAcceptanceService.mjs'
-            },
-            'project:agora-commerce-live-qualification': {
-                description: 'Run the project Agora commerce live qualification chain through framework-owned tooling.',
-                handler: 'src/service/command/defaultNodeScriptCommandService.js',
-                script: 'src/service/project/defaultProjectAgoraCommerceLiveQualificationService.mjs'
-            },
-            'project:agora-cms-media-seed': {
-                description: 'Seed project Agora CMS and product media assets into WCMS Staged through media-owned upload APIs.',
-                handler: 'src/service/command/defaultNodeScriptCommandService.js',
-                script: 'src/service/project/defaultProjectAgoraCmsMediaSeedService.mjs'
-            },
-            'project:nexus-cms-media-seed': {
-                description: 'Seed project Nexus CMS, Editorial, and testimonial media assets into WCMS Staged through media-owned upload APIs.',
-                handler: 'src/service/command/defaultNodeScriptCommandService.js',
-                script: 'src/service/project/defaultProjectNexusCmsMediaSeedService.mjs'
-            },
-            'project:editorial-live-journey-acceptance': {
-                description: 'Run project editorial live journey acceptance through framework-owned tooling.',
-                handler: 'src/service/command/defaultNodeScriptCommandService.js',
-                script: 'src/service/project/defaultProjectEditorialLiveJourneyAcceptanceService.mjs'
             },
             'test:suite': {
                 description: 'Run a configured Nodics test suite by name from tooling-owned suite configuration.',

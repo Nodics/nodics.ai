@@ -11,6 +11,8 @@
 
 /** @module bidding/nodics @description Declares the Bidding capability lifecycle. @layer module @owner bidding */
 module.exports = {
-  init: () => Promise.resolve(true),
-  postInit: () => Promise.resolve(true),
+  /** Completes initialization without opening an additional resource. */
+  init: function () { return Promise.resolve(true); },
+  /** Completes post-initialization after dependencies are available. */
+  postInit: function () { return Promise.resolve(true); },
 };

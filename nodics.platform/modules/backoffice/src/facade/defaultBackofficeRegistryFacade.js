@@ -22,61 +22,61 @@ module.exports = {
     /** Finalizes registry facade initialization. */
     postInit: function () { return Promise.resolve(true); },
     /** Delegates module registration. */
-    register: request => SERVICE.DefaultBackofficeRegistryService.register(request),
+    register: function (request) { return SERVICE.DefaultBackofficeRegistryService.register(request); },
     /** Delegates module deregistration. */
-    deregister: request => SERVICE.DefaultBackofficeRegistryService.deregister(request),
+    deregister: function (request) { return SERVICE.DefaultBackofficeRegistryService.deregister(request); },
     /** Delegates client-safe discovery. */
-    list: request => SERVICE.DefaultBackofficeRegistryService.list(request),
+    list: function (request) { return SERVICE.DefaultBackofficeRegistryService.list(request); },
     /** Delegates secured Runtime Registry owner snapshot projection. */
-    getRuntimeRegistrySnapshot: request => SERVICE.DefaultBackofficeRegistryService.runtimeRegistrySnapshot(request),
+    getRuntimeRegistrySnapshot: function (request) { return SERVICE.DefaultBackofficeRegistryService.runtimeRegistrySnapshot(request); },
     /** Delegates durable functional-module catalogue discovery. */
-    availableFunctionalModules: request => SERVICE.DefaultFunctionalModuleCatalogueService.listAvailable(request),
+    availableFunctionalModules: function (request) { return SERVICE.DefaultFunctionalModuleCatalogueService.listAvailable(request); },
     /** Delegates durable registered functional-module catalogue discovery. */
-    functionalModuleRegistrations: request => SERVICE.DefaultFunctionalModuleCatalogueService.listRegistrations(request),
+    functionalModuleRegistrations: function (request) { return SERVICE.DefaultFunctionalModuleCatalogueService.listRegistrations(request); },
     /** Delegates durable functional-module registration detail discovery. */
-    functionalModuleDetail: request => SERVICE.DefaultFunctionalModuleCatalogueService.detail(request),
+    functionalModuleDetail: function (request) { return SERVICE.DefaultFunctionalModuleCatalogueService.detail(request); },
     /** Delegates optional functional-module project registration. */
-    registerFunctionalModule: request => SERVICE.DefaultFunctionalModuleCatalogueService.register(request),
+    registerFunctionalModule: function (request) { return SERVICE.DefaultFunctionalModuleCatalogueService.register(request); },
     /** Delegates registered functional-module Axis activation. */
-    activateFunctionalModule: request => SERVICE.DefaultFunctionalModuleCatalogueService.activate(request),
+    activateFunctionalModule: function (request) { return SERVICE.DefaultFunctionalModuleCatalogueService.activate(request); },
     /** Delegates optional functional-module Axis deactivation. */
-    deactivateFunctionalModule: request => SERVICE.DefaultFunctionalModuleCatalogueService.deactivate(request),
+    deactivateFunctionalModule: function (request) { return SERVICE.DefaultFunctionalModuleCatalogueService.deactivate(request); },
     /** Delegates optional functional-module activation rollback. */
-    rollbackFunctionalModule: request => SERVICE.DefaultFunctionalModuleCatalogueService.rollback(request),
+    rollbackFunctionalModule: function (request) { return SERVICE.DefaultFunctionalModuleCatalogueService.rollback(request); },
     /** Delegates optional functional-module project deregistration. */
-    deregisterFunctionalModule: request => SERVICE.DefaultFunctionalModuleCatalogueService.deregister(request),
+    deregisterFunctionalModule: function (request) { return SERVICE.DefaultFunctionalModuleCatalogueService.deregister(request); },
     /** Delegates low-disclosure pre-authentication Axis discovery. */
-    publicBootstrap: request => SERVICE.DefaultBackofficeRegistryService.publicBootstrap(request),
+    publicBootstrap: function (request) { return SERVICE.DefaultBackofficeRegistryService.publicBootstrap(request); },
     /** Delegates authorized BackOffice client bootstrap. */
-    bootstrap: request => SERVICE.DefaultBackofficeRegistryService.bootstrap(request),
+    bootstrap: function (request) { return SERVICE.DefaultBackofficeRegistryService.bootstrap(request); },
     /** Delegates authorized effective Axis navigation composition. */
-    effectiveNavigationComposition: request => SERVICE.DefaultBackofficeRegistryService.effectiveNavigationComposition(request),
+    effectiveNavigationComposition: function (request) { return SERVICE.DefaultBackofficeRegistryService.effectiveNavigationComposition(request); },
     /** Delegates navigation composition authoring status. */
-    navigationCompositionAuthoringStatus: request => SERVICE.DefaultBackofficeRegistryService.navigationCompositionAuthoringStatus(request),
+    navigationCompositionAuthoringStatus: function (request) { return SERVICE.DefaultBackofficeRegistryService.navigationCompositionAuthoringStatus(request); },
     /** Delegates safe navigation composition preview validation. */
-    previewNavigationComposition: request => SERVICE.DefaultBackofficeRegistryService.previewNavigationComposition(request),
+    previewNavigationComposition: function (request) { return SERVICE.DefaultBackofficeRegistryService.previewNavigationComposition(request); },
     /** Delegates effective navigation composition export. */
-    exportNavigationComposition: request => SERVICE.DefaultBackofficeRegistryService.exportNavigationComposition(request),
+    exportNavigationComposition: function (request) { return SERVICE.DefaultBackofficeRegistryService.exportNavigationComposition(request); },
     /** Delegates effective navigation composition snapshot. */
-    getNavigationCompositionSnapshot: request => SERVICE.DefaultBackofficeRegistryService.getNavigationCompositionSnapshot(request),
+    getNavigationCompositionSnapshot: function (request) { return SERVICE.DefaultBackofficeRegistryService.getNavigationCompositionSnapshot(request); },
     /** Delegates import payload validation without persistence. */
-    validateNavigationCompositionImport: request => SERVICE.DefaultBackofficeRegistryService.validateNavigationCompositionImport(request),
+    validateNavigationCompositionImport: function (request) { return SERVICE.DefaultBackofficeRegistryService.validateNavigationCompositionImport(request); },
     /** Delegates governed navigation composition draft creation. */
-    createNavigationCompositionDraft: request => SERVICE.DefaultBackofficeRegistryService.createNavigationCompositionDraft(request),
+    createNavigationCompositionDraft: function (request) { return SERVICE.DefaultBackofficeRegistryService.createNavigationCompositionDraft(request); },
     /** Delegates governed navigation composition draft submission. */
-    submitNavigationCompositionDraft: request => SERVICE.DefaultBackofficeRegistryService.submitNavigationCompositionDraft(request),
+    submitNavigationCompositionDraft: function (request) { return SERVICE.DefaultBackofficeRegistryService.submitNavigationCompositionDraft(request); },
     /** Delegates governed navigation composition draft approval. */
-    approveNavigationCompositionDraft: request => SERVICE.DefaultBackofficeRegistryService.approveNavigationCompositionDraft(request),
+    approveNavigationCompositionDraft: function (request) { return SERVICE.DefaultBackofficeRegistryService.approveNavigationCompositionDraft(request); },
     /** Delegates governed navigation composition draft publication. */
-    publishNavigationCompositionDraft: request => SERVICE.DefaultBackofficeRegistryService.publishNavigationCompositionDraft(request),
+    publishNavigationCompositionDraft: function (request) { return SERVICE.DefaultBackofficeRegistryService.publishNavigationCompositionDraft(request); },
     /** Delegates governed navigation composition rollback. */
-    rollbackNavigationComposition: request => SERVICE.DefaultBackofficeRegistryService.rollbackNavigationComposition(request),
+    rollbackNavigationComposition: function (request) { return SERVICE.DefaultBackofficeRegistryService.rollbackNavigationComposition(request); },
     /** Delegates secured registry diagnostics. */
-    diagnostics: request => SERVICE.DefaultBackofficeRegistryService.diagnostics(request),
+    diagnostics: function (request) { return SERVICE.DefaultBackofficeRegistryService.diagnostics(request); },
     /** Delegates bounded administrative registry search. */
-    adminList: request => SERVICE.DefaultBackofficeRegistryService.adminList(request),
+    adminList: function (request) { return SERVICE.DefaultBackofficeRegistryService.adminList(request); },
     /** Delegates sanitized administrative module detail. */
-    adminDetail: request => SERVICE.DefaultBackofficeRegistryService.adminDetail(request),
+    adminDetail: function (request) { return SERVICE.DefaultBackofficeRegistryService.adminDetail(request); },
     /** Delegates an authorized observation refresh. */
-    refresh: request => SERVICE.DefaultBackofficeRegistryService.refresh(request)
+    refresh: function (request) { return SERVICE.DefaultBackofficeRegistryService.refresh(request); }
 };

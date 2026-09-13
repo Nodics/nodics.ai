@@ -90,3 +90,18 @@ Operators need production-safe evidence, not only implementation notes. Each pag
 Verification starts with the document itself: it must include business context, technical ownership, a visual flow, data or configuration tables, customization guidance, common mistakes, and validation evidence. Developers then run the documentation generator and content-pack validator so the page becomes backend-owned data with checksum, lifecycle, navigation, access policy, publication state, and search metadata.
 
 For implementation verification, run the owning module tests and any Axis or Nexus renderer tests that consume the page. Operators should confirm that production-like runtime behavior matches the documentation: permissions reject unauthorized access, Online pages do not expose Staged data, runtime changes propagate through governed events, and troubleshooting evidence is available without exposing secrets.
+
+### Subscription startup and shutdown
+
+A channel with configured events becomes ready only after subscription succeeds.
+Its subscriber client belongs to that channel, and central cache shutdown closes
+it alongside the publisher. Shared references close once. A failed subscription
+closes its unregistered client before returning the original failure; a failure
+closing one resource does not prevent attempts to close the others. These rules
+also apply when later runtime bootstrap fails after cache initialization.
+
+A Redis engine connection that fails before registration is also owned startup
+work: the adapter closes it before rejecting, so its reconnect timer cannot keep
+a failed process alive. Failed close attempts do not suppress the original
+startup error. Runtime revocation and principal stamps share
+`authSecurity.securityStamp.cacheModuleName`; Profile ownership is unchanged.

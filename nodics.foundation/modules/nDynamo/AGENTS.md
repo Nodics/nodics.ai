@@ -21,3 +21,7 @@ This file gives AI coding agents mandatory guidance for this Nodics module or pa
   nDatabase remains the validation and execution authority. Delegate validation
   to `DefaultDatabaseSchemaHandlerService`; do not duplicate transaction rules
   or database-provider logic in nDynamo.
+
+Governance reports use the loader's effective artifact trace and member origins.
+Preserve generated-before-authored order and inherited methods; do not infer a
+method winner from the last contributing filename.

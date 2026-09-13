@@ -15,7 +15,8 @@ const crypto = require('node:crypto');
 
 /** @module digitalCore/src/service/defaultDigitalCommerceEntitlementService @description Owns Digital Commerce entitlement, delivery, reveal, and revocation evidence. @layer service @owner digitalCore */
 module.exports = {
-    unwrap: response => response && Object.prototype.hasOwnProperty.call(response, 'result') ? response.result : response,
+    /** Unwraps a standard result envelope while preserving raw provider values. */
+    unwrap: function (response) { return response && Object.prototype.hasOwnProperty.call(response, 'result') ? response.result : response; },
     /** Builds service auth for generated digital records. @param {Object} request Request. @returns {Object} Service auth. */
     serviceAuthData: function (request) {
         return Object.assign({}, request.authData || {}, {

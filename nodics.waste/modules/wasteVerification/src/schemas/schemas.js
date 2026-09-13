@@ -11,7 +11,7 @@
 
 /** @module wasteVerification/src/schemas/schemas @description Defines reusable Waste verification result schemas. @layer schema @owner wasteVerification @override Partner modules may add reviewer policy without overwriting submitted facts. */
 module.exports = { wasteVerification: {
-    wasteVerificationPolicy: Object.assign({ super: 'base', model: true, schemaPolicies: ['operational'], service: { enabled: true }, router: { enabled: false }, cache: { enabled: false }, event: { enabled: false }, search: { enabled: false } }, { definition: {
+    wasteVerificationPolicy: Object.assign({ super: 'base', model: true, schemaPolicies: ['operational'], service: { enabled: true }, router: { groups: { schemaOperations: true }, enabled: true }, cache: { enabled: false }, event: { enabled: false }, search: { enabled: false } }, { definition: {
         code: { type: 'string', required: true , description: 'Uniquely identifies this record for references, APIs, imports, and business administration.'},
         name: { type: 'object', required: true , description: 'Stores the business display name shown to administrators and related user journeys.'},
         verificationRequired: { type: 'bool', required: true, default: true , description: 'Indicates whether verification is required for this record.'},
@@ -23,7 +23,7 @@ module.exports = { wasteVerification: {
         revision: { type: 'int', required: true, default: 0 , description: 'Tracks the business revision used for governance, review, and optimistic update checks.'},
         metadata: { type: 'object', required: false , description: 'Stores additional structured metadata needed by extensions without changing the core schema contract.'}
     } }),
-    wasteVerification: Object.assign({ super: 'base', model: true, schemaPolicies: ['operational'], service: { enabled: true }, router: { enabled: false }, cache: { enabled: false }, event: { enabled: false }, search: { enabled: false } }, { definition: {
+    wasteVerification: Object.assign({ super: 'base', model: true, schemaPolicies: ['operational'], service: { enabled: true }, router: { groups: { schemaOperations: true }, enabled: true }, cache: { enabled: false }, event: { enabled: false }, search: { enabled: false } }, { definition: {
         code: { type: 'string', required: true , description: 'Uniquely identifies this record for references, APIs, imports, and business administration.'},
         submissionCode: { type: 'string', required: true , description: 'Stores the submission code used to classify, link, or resolve this record.'},
         verifiedBy: { type: 'object', required: true , description: 'Stores structured verified by details used by this record.'},

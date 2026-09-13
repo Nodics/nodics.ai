@@ -10,4 +10,4 @@
  */
 
 /** @module paypalProvider/nodics @description Declares the PayPal Provider capability lifecycle. @layer module @owner paypalProvider */
-module.exports = { init: () => Promise.resolve(true), postInit: () => Promise.resolve(true) };
+module.exports = { init: function () { return Promise.resolve(true); }, postInit: function () { return Promise.resolve(true); } };

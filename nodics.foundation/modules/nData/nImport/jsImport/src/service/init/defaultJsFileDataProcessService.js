@@ -31,7 +31,7 @@ module.exports = {
     mergeModel: function (current, incoming) {
         return _.mergeWith(current || {}, incoming || {}, function (targetValue, sourceValue) {
             if (Array.isArray(sourceValue)) {
-                return sourceValue;
+                return _.cloneDeep(sourceValue);
             }
             return undefined;
         });
@@ -40,35 +40,26 @@ module.exports = {
     /**
      * Adds one JavaScript file export into the accumulated import map.
      *
-     * Export keys such as `record0` are local to each file. Different files may
-     * reuse the same key for different business records, so duplicate keys must
-     * append unless both records declare the same business `code`.
+     * Export keys identify records within the selected logical data-file dataset.
+     * The same key in a later layer overrides that record even when its business
+     * code changes. Different keys never merge merely because codes match.
+     * Persistence identity and deletion remain controlled by the import header.
      *
      * @param {Object} current Existing merged models.
      * @param {Object} incoming Models exported by the next data file.
      * @returns {Object} Merged model map.
      */
     mergeModels: function (current, incoming) {
-        let result = current || {};
-        Object.keys(incoming || {}).forEach(key => {
-            let model = incoming[key];
-            let existingCodeKey = model && model.code ? Object.keys(result).find(existingKey =>
-                result[existingKey] && result[existingKey].code === model.code) : undefined;
-            if (existingCodeKey) {
-                result[existingCodeKey] = this.mergeModel(result[existingCodeKey], model);
-                return;
+        if (!_.isPlainObject(incoming) || current !== undefined && !_.isPlainObject(current)) {
+            throw new Error('JavaScript import records must be exported as a keyed object');
+        }
+        const result = current || {};
+        Object.keys(incoming).forEach(key => {
+            if (['__proto__', 'constructor', 'prototype'].includes(key) || !_.isPlainObject(incoming[key])) {
+                throw new Error('Invalid JavaScript import record key or model: ' + key);
             }
-            if (!result[key]) {
-                result[key] = model;
-                return;
-            }
-            let nextKey = key;
-            let index = 1;
-            while (result[nextKey]) {
-                nextKey = key + '_' + index;
-                index++;
-            }
-            result[nextKey] = model;
+            const existing = Object.prototype.hasOwnProperty.call(result, key) ? result[key] : {};
+            result[key] = this.mergeModel(existing, incoming[key]);
         });
         return result;
     },
@@ -141,6 +132,7 @@ module.exports = {
     processDataChunk: function (request, response, process) {
         this.LOG.debug('Starting processing data chunks');
         this.handleFiles(request, response, [].concat(request.files)).then(models => {
+            if (Array.isArray(request.selectionFiles)) models = this.selectSourceModels(models, request.selectionFiles);
             let dataHandler = request.header.options.dataHandler;
             if (models && Object.keys(models).length > 0) {
                 request.models = [];
@@ -163,6 +155,17 @@ module.exports = {
         }).catch(error => {
             process.error(request, response, new CLASSES.DataImportError(error));
         });
+    },
+
+    /**
+     * Selects only keys authored by the executing delta after lower source fields merge.
+     * @param {Object} models Composed keyed records.
+     * @param {string[]} files Executing release files, excluding source-only baselines.
+     * @returns {Object} Delta records without unrelated baseline replay.
+     */
+    selectSourceModels: function (models, files) {
+        const selected = new Set(files.flatMap(file => Object.keys(require(file))));
+        return Object.fromEntries(Object.entries(models).filter(([key]) => selected.has(key)));
     },
 
     /**

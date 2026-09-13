@@ -208,6 +208,17 @@ module.exports = {
         if (options.loginId) payload.loginId = options.loginId;
         if (options.serviceId) payload.serviceId = options.serviceId;
         if (options.runtimeInstanceId) payload.runtimeInstanceId = options.runtimeInstanceId;
+        if (options.runtimeScope) {
+            if (tokenType !== 'service' || !options.runtimeInstanceId || options.runtimeScope.instanceCode !== options.runtimeInstanceId) {
+                throw new Error('Runtime scope requires a bound service instance');
+            }
+            const keys = ['projectCode', 'environmentCode', 'serverCode', 'instanceCode', 'assignmentCode'];
+            if (Object.keys(options.runtimeScope).length !== keys.length || keys.some(key =>
+                typeof options.runtimeScope[key] !== 'string' || !/^[A-Za-z][A-Za-z0-9_.:-]{0,191}$/.test(options.runtimeScope[key]))) {
+                throw new Error('Runtime scope requires bounded approved coordinates');
+            }
+            payload.runtimeScope = Object.fromEntries(keys.map(key => [key, options.runtimeScope[key]]));
+        }
         if (Array.isArray(options.modules) && options.modules.length > 0) payload.modules = options.modules.slice();
         if (options.principalType) payload.principalType = options.principalType;
         if (options.userGroups && options.userGroups.length > 0) payload.userGroups = options.userGroups;

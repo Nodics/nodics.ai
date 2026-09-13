@@ -95,6 +95,19 @@ async function run() {
     assert.strictEqual(service.getDiagnostics().failures, 2);
     assert.strictEqual(service.reconcileActiveModules([]), 1, 'orphaned process discovery state must be removed');
     assert.strictEqual(service.getSnapshot('cms'), undefined);
+    let observedRequests = [];
+    const reportingPrincipal = { tokenType: 'service', serviceId: 'runtime-1', runtimeScope: {}, userGroups: [] };
+    const ownerAuth = { isSystem: true, userGroups: ['configuredOwnerGroup'] };
+    SERVICE.DefaultBackofficeContractRepositoryService = {
+        getReconciliationRequest: request => ({ tenant: request.tenant, authData: ownerAuth }),
+        getActiveSnapshot: async (_module, request) => { observedRequests.push(request); return undefined; },
+        recordDiscovery: async (_snapshot, request) => { observedRequests.push(request); return { state: 'ACTIVE' }; }
+    };
+    await service.discover(registration, document({ '/nodics/cms/v0/page': { get: operation('cms_page_get', 'get') } }), { authData: reportingPrincipal });
+    assert.equal(observedRequests.length, 2);
+    assert(observedRequests.every(request => request.tenant === 'default' && request.authData === ownerAuth));
+    assert.deepStrictEqual(reportingPrincipal.userGroups, [], 'Background persistence must not add groups to the reporting token');
+    assert.equal(observedRequests[1].sourceInstanceId, 'runtime-1');
     console.log('BackOffice discovery service validated');
 }
 

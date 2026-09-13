@@ -24,3 +24,6 @@ This file gives AI coding agents mandatory guidance for this Nodics module or pa
   `startSession`.
 - Preserve snapshot reads, majority writes, bounded commit time, session
   cleanup, and session propagation to every operation.
+
+Use the keyed boolean `schemaProperties` contract; preserve zero/false constraints
+and reject malformed selections. See [constraint selection](llm/contracts/README.md#keyed-schema-constraints).

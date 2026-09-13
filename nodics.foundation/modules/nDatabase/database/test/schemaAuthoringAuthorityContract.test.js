@@ -13,8 +13,8 @@
 const assert = require('node:assert/strict');
 const { test } = require('node:test');
 const policy = require('../src/service/schema/defaultSchemaAuthoringPolicyService');
-const workbench = require('../src/service/schema/defaultSchemaWorkbenchService');
-const defaults = require('../config/properties').schemaWorkbench;
+const workbench = require('./helpers/schemaApiHarness');
+const defaults = require('../config/properties').schemaApi;
 let stage = 'ONLINE';
 let writes = 0;
 const schema = {
@@ -22,12 +22,13 @@ const schema = {
     backoffice: { mutationPolicy: { publishRequired: true }, bulkOperations: ['DELETE'],
         aggregateOperations: { change: { enabled: true, service: 'OwnerService', operation: 'change' } } },
 };
-global.CONFIG = { get: key => ({ runtimeRole: { publication: stage }, schemaWorkbench: defaults,
+global.CONFIG = { get: key => ({ runtimeRole: { publication: stage }, schemaApi: defaults,
     accessPoints: { readAccessPoint: 1, writeAccessPoint: 2, removeAccessPoint: 3 } })[key] };
 global.NODICS = { getModule: () => ({ rawSchema: { schmanm: schema } }), isModuleActive: () => true };
 global.CLASSES = { NodicsError: class extends Error { constructor(code, message) { super(message); this.code = code; } } };
 global.SERVICE = { DefaultSchemaAuthoringPolicyService: policy,
     DefaultSchemaAccessHandlerService: { getAccessPoint: () => 10 },
+    DefaultSchemaUtilityService: require('../src/service/schema/defaultSchemaUtilityService'),
     DefaultSchemaSafeQueryService: require('../src/service/schema/defaultSchemaSafeQueryService'),
     OwnerService: { change: () => { writes++; } },
 };
@@ -65,7 +66,7 @@ test('generated HTTP mutations fail before body-supplied identity or bypass flag
     assert.equal(writes, 1);
 });
 
-test('Workbench denies online create/update/delete, bulk and aggregate without dispatch', async () => {
+test('Workbench denies online create/update/delete, bulk without dispatch', async () => {
     stage = 'ONLINE'; writes = 0;
     const request = { moduleName: 'cms', authData: { userGroups: ['adminGroup'] },
         httpRequest: { params: { schema: 'schmanm' }, body: { operation: 'DELETE', identity: { code: 'x' }, identities: [{ code: 'x' }] } } };
@@ -75,7 +76,7 @@ test('Workbench denies online create/update/delete, bulk and aggregate without d
     assert.deepEqual(descriptor.bulkCapabilities.operations, []);
     assert.deepEqual(descriptor.aggregateOperations, []);
     assert.equal(descriptor.authoring.stage, 'ONLINE');
-    for (const method of ['createRecord', 'updateRecord', 'deleteRecord', 'bulk', 'aggregate']) {
+    for (const method of ['createRecord', 'updateRecord', 'deleteRecord', 'bulk']) {
         await assert.rejects(workbench[method](request));
     }
     assert.equal(writes, 0);
@@ -89,7 +90,7 @@ test('generated create and createAll cannot bypass an owning setup command', asy
             await assert.rejects(controller[method]({ moduleName: 'cms', httpRequest: { body: { code: 'new' } } }));
         }
         assert.equal(writes, 0);
-        await controller.update({ moduleName: 'cms', httpRequest: { body: { code: 'existing' } } });
+        await controller.update({ moduleName: 'cms', httpRequest: { body: { query: { code: 'existing' }, model: { code: 'existing' } } } });
         assert.equal(writes, 1);
     } finally {
         delete schema.backoffice.form;

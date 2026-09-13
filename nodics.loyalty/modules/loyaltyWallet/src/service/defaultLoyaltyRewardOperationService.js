@@ -18,10 +18,10 @@ const UTILS = require("../../../loyaltyCore/src/utils/utils");
 
 /** @module loyaltyWallet/src/service/defaultLoyaltyRewardOperationService @description Coordinates reward earn, reserve, capture, release, and reverse operations against wallet balances and append-only ledger evidence. @layer service @owner loyaltyWallet @override Later modules may wrap persistence in stronger storage transactions while preserving ledger-backed balance semantics. */
 module.exports = {
-  unwrap: (response) =>
-    response && Object.prototype.hasOwnProperty.call(response, "result")
+  /** Unwraps a standard result envelope while preserving raw provider values. */
+  unwrap: function (response) { return response && Object.prototype.hasOwnProperty.call(response, "result")
       ? response.result
-      : response,
+      : response; },
   /** Throws the owning operation error and stops processing; callers retain responsibility for recovery. */
   fail: function (code, message) {
     let error =

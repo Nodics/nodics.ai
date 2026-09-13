@@ -54,3 +54,18 @@ Verify `schemaAuthoringAuthorityContract.test.js`, `schemaWorkbenchContract.test
 domain publication tests, and Axis renderer/client tests. Include missing role,
 Online, operational, Staged, read-only projection, body spoofing, callback and
 promise APIs, bulk/aggregate denial, missing Staged, and reference editing cases.
+
+## Explicit operation restrictions and transport scope
+
+Generated mutation controllers resolve the active schema owner from the trusted
+route module before checking the compiled schema. If `backoffice.operations` is
+an explicit list, a create/update/delete absent from that list is denied before
+body mapping or persistence. Preserve the declared business create operation and
+the existing Staged/read-only rules. `backoffice.enabled: false` remains metadata
+discovery exclusion; it does not invent an additional generic write policy.
+
+The controller maps only operation data, never body-supplied auth, tenant,
+enterprise, module/schema identity, transaction authority or trace context.
+Utility-owned model normalization applies the effective field contract; generated
+pipelines retain schema access, property policy, ownership, references and CAS.
+HTTP authoring gates do not remove authorized internal import/domain operations.

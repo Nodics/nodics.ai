@@ -9,4 +9,21 @@
 
  */
 /** @module commsSchema/config/properties @description Defines internal Communication schema access policies. @layer config @owner commsSchema @override Projects may narrow groups through layered configuration. */
-module.exports = { schemaPolicies: { commsSchema: { operational: { accessGroups: { adminGroup: 10, serviceAccountUserGroup: 10, employeeUserGroup: 10 } }, customerOwned: { accessGroups: { adminGroup: 10, serviceAccountUserGroup: 10, employeeUserGroup: 10, customerUserGroup: 10 }, ownership: { enabled: true, ownerProperty: 'recipientId', bypassGroups: { adminGroup: true, serviceAccountUserGroup: true, employeeUserGroup: true }, subjectGroups: { customerUserGroup: true }, principalTypes: { customer: true } } } } } };
+module.exports = {
+    // Inert inventory; an allowed local server must explicitly select this capability.
+    localResetProvider: {
+        "contributions": {
+            "commsSchema": {
+                "serviceNames": {
+                    "DefaultCommsDeliveryAttemptService": true,
+                    "DefaultCommsInboxMessageService": true,
+                    "DefaultCommsIntentService": true,
+                    "DefaultCommsSuppressionService": true,
+                    "DefaultCommsTemplateService": true,
+                    "DefaultCommsTemplateVersionService": true,
+                    "DefaultCommsVerificationChallengeService": true
+                }
+            }
+        }
+    },
+ schemaPolicies: { commsSchema: { operational: { accessGroups: { adminGroup: 10, serviceAccountUserGroup: 10, employeeUserGroup: 10 } }, customerOwned: { accessGroups: { adminGroup: 10, serviceAccountUserGroup: 10, employeeUserGroup: 10, customerUserGroup: 10 }, ownership: { enabled: true, ownerProperty: 'recipientId', bypassGroups: { adminGroup: true, serviceAccountUserGroup: true, employeeUserGroup: true }, subjectGroups: { customerUserGroup: true }, principalTypes: { customer: true } } } } } };

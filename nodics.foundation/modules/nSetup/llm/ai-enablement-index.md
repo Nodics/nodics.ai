@@ -309,3 +309,16 @@ Context existence is not the same as context quality. A useful module context mu
 Generated context reports source-derived facts and must never invent undocumented business intent. Each module's `generated/module-context.md` contains a file inventory that marks source documentation as `documented`, `partially-documented`, or `undocumented`; non-JavaScript files are `inventory-only`. The source fingerprint in `manifest.json` lets validation detect stale context after any owned file changes.
 
 Documentation completion is incremental and governed. Do not mark a module complete merely because its `llm` folder exists. Add an enforced documentation gate only after its file and method contracts have been reviewed for accuracy.
+
+## Minimal customer configuration
+
+Apply [Existing Layers And Project Independence](contracts/nodics-principles.md#existing-layers-and-project-independence):
+do not invent an architectural layer or parallel authority, duplicate APIs for
+a consumer, or embed project-specific configuration anywhere in framework or
+accelerator source, helpers, templates or tooling.
+
+Before configuration implementation, apply
+[Customer Configuration Classification](contracts/customer-config-classification-contract.md).
+Framework defaults, customer policy and deployment differences have distinct
+owners. Prove effective inheritance and preserve operational gates when moving
+values; include detailed customization, migration and verification guidance.

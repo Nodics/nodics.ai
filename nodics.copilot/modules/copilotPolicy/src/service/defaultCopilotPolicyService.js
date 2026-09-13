@@ -30,27 +30,27 @@ module.exports = {
     /** Normalizes one trusted caller context. @param {Object} input Trusted identity projection. @param {Object} configuration Effective policy configuration. @returns {Object} Immutable security context. */
     normalizeSecurityContext: function (input, configuration) {
         const source = input || {};
-        const allowedChannels = (configuration || {}).channels || ['NEXUS_PUBLIC', 'NEXUS_CUSTOMER', 'AXIS_EMPLOYEE', 'SYSTEM'];
+        const allowedChannels = (configuration || {}).channels || ['PUBLIC', 'CUSTOMER', 'EMPLOYEE', 'SYSTEM'];
         const channel = String(source.channel || '').trim().toUpperCase();
-        if (!allowedChannels.includes(channel)) throw new Error('COPILOT_SECURITY_CONTEXT_INVALID');
+        if (!['PUBLIC', 'CUSTOMER', 'EMPLOYEE', 'SYSTEM'].includes(channel) || !allowedChannels.includes(channel)) throw new Error('COPILOT_SECURITY_CONTEXT_INVALID');
         const actor = source.actor === undefined || source.actor === null ? null : String(source.actor).trim();
         const tenant = source.tenant === undefined || source.tenant === null ? null : String(source.tenant).trim();
         const customer = source.customer === undefined || source.customer === null ? null : String(source.customer).trim();
-        if (channel !== 'NEXUS_PUBLIC' && !actor) throw new Error('COPILOT_SECURITY_CONTEXT_INVALID');
-        if (['NEXUS_CUSTOMER', 'AXIS_EMPLOYEE'].includes(channel) && !tenant) throw new Error('COPILOT_SECURITY_CONTEXT_INVALID');
-        if (channel === 'NEXUS_CUSTOMER' && !customer) throw new Error('COPILOT_SECURITY_CONTEXT_INVALID');
+        if (channel !== 'PUBLIC' && !actor) throw new Error('COPILOT_SECURITY_CONTEXT_INVALID');
+        if (['CUSTOMER', 'EMPLOYEE'].includes(channel) && !tenant) throw new Error('COPILOT_SECURITY_CONTEXT_INVALID');
+        if (channel === 'CUSTOMER' && !customer) throw new Error('COPILOT_SECURITY_CONTEXT_INVALID');
         return this.deepFreeze({
             channel: channel,
             actor: actor || 'anonymous',
-            principalType: channel === 'NEXUS_PUBLIC' ? 'ANONYMOUS' : String(source.principalType || (channel === 'SYSTEM' ? 'SERVICE' : 'USER')).toUpperCase(),
+            principalType: channel === 'PUBLIC' ? 'ANONYMOUS' : String(source.principalType || (channel === 'SYSTEM' ? 'SERVICE' : 'USER')).toUpperCase(),
             tenant: tenant,
             enterprise: source.enterprise ? String(source.enterprise) : null,
             customer: customer,
             customerProject: source.customerProject ? String(source.customerProject) : null,
             environment: source.environment ? String(source.environment) : null,
-            permissions: channel === 'NEXUS_PUBLIC' ? [] : Array.from(new Set(Array.isArray(source.permissions) ? source.permissions.map(String) : [])).sort(),
-            roles: channel === 'NEXUS_PUBLIC' ? [] : Array.from(new Set(Array.isArray(source.roles) ? source.roles.map(String) : [])).sort(),
-            groups: channel === 'NEXUS_PUBLIC' ? [] : Array.from(new Set(Array.isArray(source.groups) ? source.groups.map(String) : [])).sort(),
+            permissions: channel === 'PUBLIC' ? [] : Array.from(new Set(Array.isArray(source.permissions) ? source.permissions.map(String) : [])).sort(),
+            roles: channel === 'PUBLIC' ? [] : Array.from(new Set(Array.isArray(source.roles) ? source.roles.map(String) : [])).sort(),
+            groups: channel === 'PUBLIC' ? [] : Array.from(new Set(Array.isArray(source.groups) ? source.groups.map(String) : [])).sort(),
             correlationId: source.correlationId ? String(source.correlationId) : null
         });
     },
@@ -77,15 +77,15 @@ module.exports = {
         if (!source || !source.classification || !context || !context.channel) return this.decision(false, 'SECURITY_METADATA_MISSING');
         const classification = String(source.classification).toUpperCase();
         if (!['PUBLIC', 'CUSTOMER', 'INTERNAL', 'RESTRICTED'].includes(classification)) return this.decision(false, 'CLASSIFICATION_INVALID');
-        if (context.channel === 'NEXUS_PUBLIC') {
+        if (context.channel === 'PUBLIC') {
             const publicAllowed = classification === 'PUBLIC' && source.public === true && source.lifecycle === 'ONLINE' && source.mutates !== true;
             if (!publicAllowed) return this.decision(false, 'PUBLIC_SOURCE_FORBIDDEN');
             const publicRestrictions = this.assessRestrictions(source, context);
             return publicRestrictions.allowed ? this.decision(true, 'PUBLIC_SOURCE_ALLOWED') : publicRestrictions;
         }
-        if (context.channel === 'NEXUS_CUSTOMER' && !['PUBLIC', 'CUSTOMER'].includes(classification)) return this.decision(false, 'CUSTOMER_SOURCE_FORBIDDEN');
+        if (context.channel === 'CUSTOMER' && !['PUBLIC', 'CUSTOMER'].includes(classification)) return this.decision(false, 'CUSTOMER_SOURCE_FORBIDDEN');
         const permissionNames = (configuration || {}).permissions || {};
-        if (classification === 'CUSTOMER' && context.channel === 'AXIS_EMPLOYEE' && !context.permissions.includes(permissionNames.customerKnowledge || 'copilot.knowledge.customer.read')) return this.decision(false, 'CUSTOMER_KNOWLEDGE_PERMISSION_REQUIRED');
+        if (classification === 'CUSTOMER' && context.channel === 'EMPLOYEE' && !context.permissions.includes(permissionNames.customerKnowledge || 'copilot.knowledge.customer.read')) return this.decision(false, 'CUSTOMER_KNOWLEDGE_PERMISSION_REQUIRED');
         if (classification === 'INTERNAL' && !context.permissions.includes(permissionNames.internalKnowledge || 'copilot.knowledge.internal.read') && context.channel !== 'SYSTEM') return this.decision(false, 'INTERNAL_KNOWLEDGE_PERMISSION_REQUIRED');
         if (classification === 'RESTRICTED' && !context.permissions.includes(permissionNames.restrictedKnowledge || 'copilot.knowledge.restricted.read') && context.channel !== 'SYSTEM') return this.decision(false, 'RESTRICTED_KNOWLEDGE_PERMISSION_REQUIRED');
         const restrictions = this.assessRestrictions(source, context);
@@ -98,11 +98,11 @@ module.exports = {
         if (!['PUBLIC_READ', 'AUTHENTICATED_SELF_READ', 'INTERNAL_READ', 'SENSITIVE_READ', 'EXPORT', 'CREATE', 'UPDATE', 'DELETE', 'ADMINISTRATIVE'].includes(riskClass)) return this.decision(false, 'CAPABILITY_RISK_CLASS_INVALID');
         if (riskClass === 'PUBLIC_READ' && capability.public !== true) return this.decision(false, 'PUBLIC_CAPABILITY_METADATA_INVALID');
         const mutating = capability.mutates === true || ['CREATE', 'UPDATE', 'DELETE', 'ADMINISTRATIVE'].includes(riskClass);
-        if (context.channel === 'NEXUS_PUBLIC') {
+        if (context.channel === 'PUBLIC') {
             const allowed = riskClass === 'PUBLIC_READ' && capability.public === true && !mutating && capability.export !== true;
             return this.decision(allowed, allowed ? 'PUBLIC_CAPABILITY_ALLOWED' : 'PUBLIC_CAPABILITY_FORBIDDEN');
         }
-        if (context.channel === 'NEXUS_CUSTOMER' && !['PUBLIC_READ', 'AUTHENTICATED_SELF_READ'].includes(riskClass)) return this.decision(false, 'CUSTOMER_CAPABILITY_FORBIDDEN');
+        if (context.channel === 'CUSTOMER' && !['PUBLIC_READ', 'AUTHENTICATED_SELF_READ'].includes(riskClass)) return this.decision(false, 'CUSTOMER_CAPABILITY_FORBIDDEN');
         if (capability.permission && !this.hasPermission(context, capability.permission)) return this.decision(false, 'CAPABILITY_PERMISSION_REQUIRED');
         if (riskClass !== 'PUBLIC_READ' && !capability.permission && context.channel !== 'SYSTEM') return this.decision(false, 'CAPABILITY_PERMISSION_MISSING');
         const restrictions = this.assessRestrictions(capability, context);

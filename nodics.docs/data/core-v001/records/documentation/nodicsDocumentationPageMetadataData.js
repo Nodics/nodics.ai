@@ -117,7 +117,7 @@ module.exports = {
     "product": "nodicsDocumentationProduct",
     "documentId": "framework.what-is-nodics",
     "title": "What is Nodics?",
-    "summary": "Introductory definition of Nodics, its enterprise purpose, and the first mental model for business, developer, and operator readers.",
+    "summary": "What Nodics is, how it supports AI-assisted development with human ownership, and how teams understand, customize and operate enterprise applications.",
     "businessSummary": "What is Nodics? explains the business purpose, supported decisions, operational impact, and controls for the Framework Value and Adoption journey.",
     "technicalSummary": "What is Nodics? records owning module nodics.docs, technical module documentation, source path docs/pages/framework/what-is-nodics.md, extension points, validation, and troubleshooting evidence.",
     "ownerFunctionalModule": "nodics.docs",
@@ -134,28 +134,33 @@ module.exports = {
         "level": 2
       },
       {
+        "text": "AI-assisted development with human ownership",
+        "anchor": "frameworkOverview-2-ai-assisted-development-with-human-ownership",
+        "level": 2
+      },
+      {
         "text": "Technical definition",
-        "anchor": "frameworkOverview-2-technical-definition",
+        "anchor": "frameworkOverview-3-technical-definition",
         "level": 2
       },
       {
         "text": "What teams can build",
-        "anchor": "frameworkOverview-3-what-teams-can-build",
+        "anchor": "frameworkOverview-4-what-teams-can-build",
         "level": 2
       },
       {
         "text": "Where to continue",
-        "anchor": "frameworkOverview-4-where-to-continue",
+        "anchor": "frameworkOverview-5-where-to-continue",
         "level": 2
       },
       {
         "text": "Common mistakes",
-        "anchor": "frameworkOverview-5-common-mistakes",
+        "anchor": "frameworkOverview-6-common-mistakes",
         "level": 2
       },
       {
         "text": "Verification",
-        "anchor": "frameworkOverview-6-verification",
+        "anchor": "frameworkOverview-7-verification",
         "level": 2
       }
     ],
@@ -168,6 +173,10 @@ module.exports = {
       {
         "kind": "table",
         "title": "Business question, Nodics answer"
+      },
+      {
+        "kind": "table",
+        "title": "Developer question, Nodics implementation discipline"
       }
     ],
     "visualRequirements": [
@@ -184,8 +193,8 @@ module.exports = {
     ],
     "sourceRepository": "nodics.docs",
     "sourcePath": "docs/pages/framework/what-is-nodics.md",
-    "sourceChecksum": "99e075a8f2ba041e252dcd30c8e32be2028193caa2c248fd3ba3d6c817265f11",
-    "sourceWordCount": 598,
+    "sourceChecksum": "8c43d5165d03c27f380dfef638f82894e46fb076d6bbcaaf7a995c4488c201c2",
+    "sourceWordCount": 1047,
     "audience": [
       "business",
       "architect",
@@ -432,47 +441,74 @@ module.exports = {
     "searchMetadata": "nodicsDocsSearchpagenodicsdocsmetadataframeworkadoptionandfirstjourney",
     "headings": [
       {
+        "text": "First visible framework success",
+        "anchor": "frameworkAdoptionAndFirstJourney-1-first-visible-framework-success",
+        "level": 2
+      },
+      {
+        "text": "Understand and customize the example",
+        "anchor": "frameworkAdoptionAndFirstJourney-2-understand-and-customize-the-example",
+        "level": 2
+      },
+      {
+        "text": "Add one new composition at a time",
+        "anchor": "frameworkAdoptionAndFirstJourney-3-add-one-new-composition-at-a-time",
+        "level": 2
+      },
+      {
+        "text": "Learning path and prerequisites",
+        "anchor": "frameworkAdoptionAndFirstJourney-4-learning-path-and-prerequisites",
+        "level": 2
+      },
+      {
         "text": "First reader sequence",
-        "anchor": "frameworkAdoptionAndFirstJourney-1-first-reader-sequence",
+        "anchor": "frameworkAdoptionAndFirstJourney-5-first-reader-sequence",
         "level": 2
       },
       {
         "text": "Business adoption journey",
-        "anchor": "frameworkAdoptionAndFirstJourney-2-business-adoption-journey",
+        "anchor": "frameworkAdoptionAndFirstJourney-6-business-adoption-journey",
         "level": 2
       },
       {
         "text": "Developer adoption journey",
-        "anchor": "frameworkAdoptionAndFirstJourney-3-developer-adoption-journey",
+        "anchor": "frameworkAdoptionAndFirstJourney-7-developer-adoption-journey",
         "level": 2
       },
       {
         "text": "Operator adoption journey",
-        "anchor": "frameworkAdoptionAndFirstJourney-4-operator-adoption-journey",
+        "anchor": "frameworkAdoptionAndFirstJourney-8-operator-adoption-journey",
         "level": 2
       },
       {
         "text": "Documentation entry points",
-        "anchor": "frameworkAdoptionAndFirstJourney-5-documentation-entry-points",
+        "anchor": "frameworkAdoptionAndFirstJourney-9-documentation-entry-points",
         "level": 2
       },
       {
         "text": "Common mistakes",
-        "anchor": "frameworkAdoptionAndFirstJourney-6-common-mistakes",
+        "anchor": "frameworkAdoptionAndFirstJourney-10-common-mistakes",
         "level": 2
       },
       {
         "text": "Verification",
-        "anchor": "frameworkAdoptionAndFirstJourney-7-verification",
+        "anchor": "frameworkAdoptionAndFirstJourney-11-verification",
         "level": 2
       }
     ],
     "diagrams": [
       {
         "language": "mermaid"
+      },
+      {
+        "language": "mermaid"
       }
     ],
     "visualAssets": [
+      {
+        "kind": "table",
+        "title": "Stage and topic, Prerequisite, Result to check, Continue with"
+      },
       {
         "kind": "table",
         "title": "Step, Reader action, Why it matters"
@@ -494,8 +530,8 @@ module.exports = {
     ],
     "sourceRepository": "nodics.docs",
     "sourcePath": "docs/pages/framework/adoption-and-first-journey.md",
-    "sourceChecksum": "783f2b3b93690a11f6c1fdf793a3413ae1c32247620cb3449b2bbe8b67be8ea0",
-    "sourceWordCount": 868,
+    "sourceChecksum": "b973061bfb199dff8c6b57caed2078be30aabec0afd5f13ed7dbb7c5877a312c",
+    "sourceWordCount": 1791,
     "audience": [
       "business",
       "architect",
@@ -1540,6 +1576,16 @@ module.exports = {
         "text": "Common mistakes",
         "anchor": "platformModuleRegistry-13-common-mistakes",
         "level": 2
+      },
+      {
+        "text": "Required data completion before activation",
+        "anchor": "platformModuleRegistry-14-required-data-completion-before-activation",
+        "level": 2
+      },
+      {
+        "text": "Runtime identity, activation and protected work",
+        "anchor": "platformModuleRegistry-15-runtime-identity-activation-and-protected-work",
+        "level": 2
       }
     ],
     "diagrams": [
@@ -1576,8 +1622,8 @@ module.exports = {
     ],
     "sourceRepository": "nodics.docs",
     "sourcePath": "docs/pages/nodics.platform/module-registry.md",
-    "sourceChecksum": "17b8b9c31521ce8f127a7ada88c305ffbd881d5dc88830cecbad2ff35fb8c2cb",
-    "sourceWordCount": 1513,
+    "sourceChecksum": "4f70a2363705d16dc9e64f9b81296b992c8553b7b30dc616b1edbe4b503a52d4",
+    "sourceWordCount": 2369,
     "audience": [
       "business",
       "architect",
@@ -2381,7 +2427,7 @@ module.exports = {
     ],
     "sourceRepository": "nodics.docs",
     "sourcePath": "docs/pages/accelerators/agora-apparel-product-data-authoring.md",
-    "sourceChecksum": "4b4d6133324e08e729976434251136627ffca3395ded1b50f68f1efd5e333b99",
+    "sourceChecksum": "840b5b8b582537ec38d15d8be686b6ae5decbd540083c61b60ac4548884d6192",
     "sourceWordCount": 1940,
     "audience": [
       "business",
@@ -3486,19 +3532,59 @@ module.exports = {
         "level": 2
       },
       {
+        "text": "Customize and extend safely",
+        "anchor": "configurationRuntimeBehaviorManagement-5-customize-and-extend-safely",
+        "level": 3
+      },
+      {
+        "text": "Rejected placement",
+        "anchor": "configurationRuntimeBehaviorManagement-6-rejected-placement",
+        "level": 3
+      },
+      {
         "text": "Operations and governance",
-        "anchor": "configurationRuntimeBehaviorManagement-5-operations-and-governance",
+        "anchor": "configurationRuntimeBehaviorManagement-7-operations-and-governance",
         "level": 2
       },
       {
+        "text": "Migration and rollback",
+        "anchor": "configurationRuntimeBehaviorManagement-8-migration-and-rollback",
+        "level": 3
+      },
+      {
         "text": "Common mistakes",
-        "anchor": "configurationRuntimeBehaviorManagement-6-common-mistakes",
+        "anchor": "configurationRuntimeBehaviorManagement-9-common-mistakes",
         "level": 2
       },
       {
         "text": "Verification",
-        "anchor": "configurationRuntimeBehaviorManagement-7-verification",
+        "anchor": "configurationRuntimeBehaviorManagement-10-verification",
         "level": 2
+      },
+      {
+        "text": "Capability inventories and project tooling",
+        "anchor": "configurationRuntimeBehaviorManagement-11-capability-inventories-and-project-tooling",
+        "level": 2
+      },
+      {
+        "text": "Installed project command",
+        "anchor": "configurationRuntimeBehaviorManagement-12-installed-project-command",
+        "level": 2
+      },
+      {
+        "text": "Declarative property bindings",
+        "anchor": "configurationRuntimeBehaviorManagement-13-declarative-property-bindings",
+        "level": 2
+      },
+      {
+        "text": "Build exclusion and interrupted-build recovery",
+        "anchor": "configurationRuntimeBehaviorManagement-14-build-exclusion-and-interrupted-build-recovery",
+        "level": 3
+      },
+      {
+        "text": "Generated output containment",
+        "anchor": "configurationRuntimeBehaviorManagement-15-generated-output-containment",
+        "level": 3
       }
     ],
     "diagrams": [
@@ -3509,23 +3595,19 @@ module.exports = {
     "visualAssets": [
       {
         "kind": "table",
-        "title": "Business question, Answer for this topic"
+        "title": "Reader, Start here"
       },
       {
         "kind": "table",
-        "title": "Responsibility, Owner, Notes"
+        "title": "Configuration or behavior, Authoritative home"
       },
       {
         "kind": "table",
-        "title": "Detail area, What to document, Verification signal"
+        "title": "Category, Customer action, Example"
       },
       {
         "kind": "table",
-        "title": "Customization type, Recommended path, Avoid"
-      },
-      {
-        "kind": "table",
-        "title": "Operational concern, Required documentation detail"
+        "title": "Symptom, Likely cause, Recovery"
       }
     ],
     "visualRequirements": [
@@ -3544,8 +3626,8 @@ module.exports = {
     ],
     "sourceRepository": "nodics.docs",
     "sourcePath": "docs/pages/nodics.foundation/runtime-configuration.md",
-    "sourceChecksum": "2169965597707258cb2dd01e6f6204076fb581df3d070d5fe1fd0768423aad36",
-    "sourceWordCount": 1137,
+    "sourceChecksum": "a1f479b4bc937c007fafd426576f59e6028d9d16beb454b5bdadce5e14545484",
+    "sourceWordCount": 2749,
     "audience": [
       "business",
       "architect",
@@ -3696,6 +3778,11 @@ module.exports = {
         "text": "Verification",
         "anchor": "configurationFrameworkStartupLifecycle-22-verification",
         "level": 2
+      },
+      {
+        "text": "Proving completed startup and failure cleanup",
+        "anchor": "configurationFrameworkStartupLifecycle-23-proving-completed-startup-and-failure-cleanup",
+        "level": 2
       }
     ],
     "diagrams": [
@@ -3738,6 +3825,10 @@ module.exports = {
       {
         "kind": "table",
         "title": "Symptom, Likely area, What to check"
+      },
+      {
+        "kind": "table",
+        "title": "Scenario, Expected result, Evidence"
       }
     ],
     "visualRequirements": [
@@ -3757,8 +3848,8 @@ module.exports = {
     ],
     "sourceRepository": "nodics.docs",
     "sourcePath": "docs/pages/nodics.foundation/framework-startup-lifecycle.md",
-    "sourceChecksum": "0a00af7e356086166a86b88e1e5c6ec7f6fcd5cf55064248150ec02b7f3f2bd1",
-    "sourceWordCount": 3140,
+    "sourceChecksum": "fbfe11b1adce886418d5d0210721b9b96af4a3e7eb4f50897d9c6d22173d4a42",
+    "sourceWordCount": 3528,
     "audience": [
       "business",
       "architect",
@@ -3831,13 +3922,23 @@ module.exports = {
         "level": 2
       },
       {
+        "text": "Reading the effective API policy",
+        "anchor": "routingApiGovernance-7-reading-the-effective-api-policy",
+        "level": 3
+      },
+      {
+        "text": "Customize and extend safely: API policy metadata",
+        "anchor": "routingApiGovernance-8-customize-and-extend-safely-api-policy-metadata",
+        "level": 3
+      },
+      {
         "text": "Common mistakes",
-        "anchor": "routingApiGovernance-7-common-mistakes",
+        "anchor": "routingApiGovernance-9-common-mistakes",
         "level": 2
       },
       {
         "text": "Verification",
-        "anchor": "routingApiGovernance-8-verification",
+        "anchor": "routingApiGovernance-10-verification",
         "level": 2
       }
     ],
@@ -3888,8 +3989,8 @@ module.exports = {
     ],
     "sourceRepository": "nodics.docs",
     "sourcePath": "docs/pages/nodics.foundation/routing-api-governance.md",
-    "sourceChecksum": "08ce35501fa66df1945c78dd596eac2363b56df1efdc431412fa0b5d65f106e0",
-    "sourceWordCount": 1374,
+    "sourceChecksum": "af7b20d2c9250c39718eaca9f5a225ff1934ad68749202c9bf0c8e0eb0f85681",
+    "sourceWordCount": 1726,
     "audience": [
       "business",
       "architect",
@@ -4498,73 +4599,123 @@ module.exports = {
     "searchMetadata": "nodicsDocsSearchpagenodicsdocsmetadataschemadatamodelingmanagement",
     "headings": [
       {
-        "text": "Publication-aware Generic Authoring",
-        "anchor": "schemaDataModelingManagement-1-publication-aware-generic-authoring",
+        "text": "Shared schema metadata for every API consumer",
+        "anchor": "schemaDataModelingManagement-1-shared-schema-metadata-for-every-api-consumer",
         "level": 2
       },
       {
-        "text": "Customize and Extend Safely",
+        "text": "Customize and extend safely",
         "anchor": "schemaDataModelingManagement-2-customize-and-extend-safely",
         "level": 3
       },
       {
+        "text": "Failure, compatibility and operational rollout",
+        "anchor": "schemaDataModelingManagement-3-failure-compatibility-and-operational-rollout",
+        "level": 3
+      },
+      {
+        "text": "Validation and remaining route migration",
+        "anchor": "schemaDataModelingManagement-4-validation-and-remaining-route-migration",
+        "level": 3
+      },
+      {
+        "text": "Generated create, update and delete contracts",
+        "anchor": "schemaDataModelingManagement-5-generated-create-update-and-delete-contracts",
+        "level": 2
+      },
+      {
+        "text": "Compatibility, errors and retries",
+        "anchor": "schemaDataModelingManagement-6-compatibility-errors-and-retries",
+        "level": 3
+      },
+      {
+        "text": "Canonical schema discovery",
+        "anchor": "schemaDataModelingManagement-7-canonical-schema-discovery",
+        "level": 3
+      },
+      {
+        "text": "Selective module APIs and route-driven clients",
+        "anchor": "schemaDataModelingManagement-8-selective-module-apis-and-route-driven-clients",
+        "level": 3
+      },
+      {
+        "text": "Domain setup and confirmation",
+        "anchor": "schemaDataModelingManagement-9-domain-setup-and-confirmation",
+        "level": 3
+      },
+      {
+        "text": "Rollout and verification",
+        "anchor": "schemaDataModelingManagement-10-rollout-and-verification",
+        "level": 3
+      },
+      {
+        "text": "Publication-aware Generic Authoring",
+        "anchor": "schemaDataModelingManagement-11-publication-aware-generic-authoring",
+        "level": 2
+      },
+      {
+        "text": "Customize and Extend Safely",
+        "anchor": "schemaDataModelingManagement-12-customize-and-extend-safely",
+        "level": 3
+      },
+      {
         "text": "Technical revisions without manual arithmetic",
-        "anchor": "schemaDataModelingManagement-3-technical-revisions-without-manual-arithmetic",
+        "anchor": "schemaDataModelingManagement-13-technical-revisions-without-manual-arithmetic",
         "level": 2
       },
       {
         "text": "Developer service example",
-        "anchor": "schemaDataModelingManagement-4-developer-service-example",
+        "anchor": "schemaDataModelingManagement-14-developer-service-example",
         "level": 3
       },
       {
         "text": "Conflict and recovery behavior",
-        "anchor": "schemaDataModelingManagement-5-conflict-and-recovery-behavior",
+        "anchor": "schemaDataModelingManagement-15-conflict-and-recovery-behavior",
         "level": 3
       },
       {
         "text": "Customize and extend safely",
-        "anchor": "schemaDataModelingManagement-6-customize-and-extend-safely",
+        "anchor": "schemaDataModelingManagement-16-customize-and-extend-safely",
         "level": 3
       },
       {
         "text": "Business context",
-        "anchor": "schemaDataModelingManagement-7-business-context",
+        "anchor": "schemaDataModelingManagement-17-business-context",
         "level": 2
       },
       {
         "text": "Journey and ownership",
-        "anchor": "schemaDataModelingManagement-8-journey-and-ownership",
+        "anchor": "schemaDataModelingManagement-18-journey-and-ownership",
         "level": 2
       },
       {
         "text": "Data and configuration detail",
-        "anchor": "schemaDataModelingManagement-9-data-and-configuration-detail",
+        "anchor": "schemaDataModelingManagement-19-data-and-configuration-detail",
         "level": 2
       },
       {
         "text": "Customization and extension",
-        "anchor": "schemaDataModelingManagement-10-customization-and-extension",
+        "anchor": "schemaDataModelingManagement-20-customization-and-extension",
         "level": 2
       },
       {
         "text": "Operations and governance",
-        "anchor": "schemaDataModelingManagement-11-operations-and-governance",
+        "anchor": "schemaDataModelingManagement-21-operations-and-governance",
         "level": 2
       },
       {
         "text": "Common mistakes",
-        "anchor": "schemaDataModelingManagement-12-common-mistakes",
+        "anchor": "schemaDataModelingManagement-22-common-mistakes",
         "level": 2
       },
       {
         "text": "Verification",
-        "anchor": "schemaDataModelingManagement-13-verification",
+        "anchor": "schemaDataModelingManagement-23-verification",
         "level": 2
       },
       {
         "text": "Governed local maintenance",
-        "anchor": "schemaDataModelingManagement-14-governed-local-maintenance",
+        "anchor": "schemaDataModelingManagement-24-governed-local-maintenance",
         "level": 3
       }
     ],
@@ -4580,6 +4731,10 @@ module.exports = {
       }
     ],
     "visualAssets": [
+      {
+        "kind": "table",
+        "title": "Capability, Canonical interface relative to the module endpoint, Owner"
+      },
       {
         "kind": "table",
         "title": "Operation, Caller responsibility, Framework responsibility"
@@ -4622,8 +4777,8 @@ module.exports = {
     ],
     "sourceRepository": "nodics.docs",
     "sourcePath": "docs/pages/nodics.foundation/schema-data-modeling.md",
-    "sourceChecksum": "bcc42288b61f75b8da7aa38709c84d8f60ce5cd862cdf8e1127d64b2c23a257d",
-    "sourceWordCount": 2379,
+    "sourceChecksum": "8cc382fd0ef851675ebe90f99fa93bedcd6291ab056ab3b939940a271f468f5e",
+    "sourceWordCount": 3922,
     "audience": [
       "business",
       "architect",
@@ -4814,6 +4969,11 @@ module.exports = {
         "text": "Verification",
         "anchor": "cacheRuntimeStateManagement-7-verification",
         "level": 2
+      },
+      {
+        "text": "Subscription startup and shutdown",
+        "anchor": "cacheRuntimeStateManagement-8-subscription-startup-and-shutdown",
+        "level": 3
       }
     ],
     "diagrams": [
@@ -4856,8 +5016,8 @@ module.exports = {
     ],
     "sourceRepository": "nodics.docs",
     "sourcePath": "docs/pages/nodics.foundation/cache-runtime-state.md",
-    "sourceChecksum": "c6cce78c2346dc16ff96e1c6ee5089022d2a5698b27d1479402ad417b6622c95",
-    "sourceWordCount": 1098,
+    "sourceChecksum": "c11916448e3781ddfadf0f77c10705602e09e088d47ad1168fefcd4b2be277c0",
+    "sourceWordCount": 1222,
     "audience": [
       "business",
       "architect",
@@ -5986,6 +6146,11 @@ module.exports = {
         "text": "Current implementation coverage",
         "anchor": "catalogProductDiscoveryManagement-8-current-implementation-coverage",
         "level": 2
+      },
+      {
+        "text": "Source authoring APIs",
+        "anchor": "catalogProductDiscoveryManagement-9-source-authoring-apis",
+        "level": 2
       }
     ],
     "diagrams": [
@@ -6035,8 +6200,8 @@ module.exports = {
     ],
     "sourceRepository": "nodics.docs",
     "sourcePath": "docs/pages/nodics.commerce/product-catalog-discovery.md",
-    "sourceChecksum": "b309c99219073bc15a0668bb86ef51c9189842f0d76876803ac8cffd47b1c1aa",
-    "sourceWordCount": 1391,
+    "sourceChecksum": "e4140fe464f9c9ccfcbe6ce8bde3583ed94e766a5003d41b663a10fc0712d27e",
+    "sourceWordCount": 1465,
     "audience": [
       "business",
       "architect",
@@ -6704,6 +6869,11 @@ module.exports = {
         "text": "Current implementation coverage",
         "anchor": "pricingPromotionsTaxManagement-8-current-implementation-coverage",
         "level": 2
+      },
+      {
+        "text": "Source authoring APIs",
+        "anchor": "pricingPromotionsTaxManagement-9-source-authoring-apis",
+        "level": 2
       }
     ],
     "diagrams": [
@@ -6753,8 +6923,8 @@ module.exports = {
     ],
     "sourceRepository": "nodics.docs",
     "sourcePath": "docs/pages/nodics.commerce/pricing-promotions-tax.md",
-    "sourceChecksum": "cb6a8db7c9489938730d41c45ae4ce6c7c0aab872856e2f2240909028c708b97",
-    "sourceWordCount": 1347,
+    "sourceChecksum": "3166d0e616421ee258a134a1ac060c6a665779df6b659aa49ab164522d67e553",
+    "sourceWordCount": 1425,
     "audience": [
       "business",
       "architect",
@@ -6936,6 +7106,26 @@ module.exports = {
         "text": "Verification",
         "anchor": "commerceCartOrder-7-verification",
         "level": 2
+      },
+      {
+        "text": "Explicit store context across applications",
+        "anchor": "commerceCartOrder-8-explicit-store-context-across-applications",
+        "level": 2
+      },
+      {
+        "text": "Customize and extend safely",
+        "anchor": "commerceCartOrder-9-customize-and-extend-safely",
+        "level": 3
+      },
+      {
+        "text": "Upgrade, failure and recovery",
+        "anchor": "commerceCartOrder-10-upgrade-failure-and-recovery",
+        "level": 3
+      },
+      {
+        "text": "Verification of context changes",
+        "anchor": "commerceCartOrder-11-verification-of-context-changes",
+        "level": 3
       }
     ],
     "diagrams": [],
@@ -6955,8 +7145,8 @@ module.exports = {
     ],
     "sourceRepository": "nodics.docs",
     "sourcePath": "docs/pages/nodics.commerce/cart-order.md",
-    "sourceChecksum": "e66c2d17bc9eed58575550c69573e8f653bb3ead76493eca204477aa36887ad7",
-    "sourceWordCount": 659,
+    "sourceChecksum": "7dcccf1ffb3dddde1dc3e11380ecfce3582fe1b68782bc50d3e3779ddb84db8f",
+    "sourceWordCount": 1100,
     "audience": [
       "business",
       "architect",
@@ -10167,6 +10357,21 @@ module.exports = {
         "text": "Current implementation coverage",
         "anchor": "dataImportExportMigration-22-current-implementation-coverage",
         "level": 2
+      },
+      {
+        "text": "Stable JavaScript source keys",
+        "anchor": "dataImportExportMigration-23-stable-javascript-source-keys",
+        "level": 2
+      },
+      {
+        "text": "Framework and project release composition",
+        "anchor": "dataImportExportMigration-24-framework-and-project-release-composition",
+        "level": 2
+      },
+      {
+        "text": "Required startup releases and recovery",
+        "anchor": "dataImportExportMigration-25-required-startup-releases-and-recovery",
+        "level": 2
       }
     ],
     "diagrams": [
@@ -10255,8 +10460,8 @@ module.exports = {
     ],
     "sourceRepository": "nodics.docs",
     "sourcePath": "docs/pages/nodics.foundation/data-import-export-migration.md",
-    "sourceChecksum": "da9201e07032876d260bc9fb081b40b20b34d79b29d82f616b8d00fb39040303",
-    "sourceWordCount": 4075,
+    "sourceChecksum": "7be9719139722339ccceebafd54c8ad50c34fc34aae4b54a1e6dac9766bc6823",
+    "sourceWordCount": 4722,
     "audience": [
       "business",
       "architect",
@@ -12658,7 +12863,7 @@ module.exports = {
     ],
     "sourceRepository": "nodics.docs",
     "sourcePath": "docs/pages/nodics.commerce/commerce-search-guide.md",
-    "sourceChecksum": "da569e961eaf20479d0d5f1e6c16b68cf010dd3e51d29173c1d110e269e4c4ce",
+    "sourceChecksum": "3877675346fc1201df436109bec050c4523e5d7bf7b79650f8b088888bb6bd6c",
     "sourceWordCount": 539,
     "audience": [
       "business",
@@ -12766,7 +12971,7 @@ module.exports = {
     ],
     "sourceRepository": "nodics.docs",
     "sourcePath": "docs/pages/nodics.localization/localization-runtime-authoring.md",
-    "sourceChecksum": "5e7a010a863fda0f09cbcf726557dd362b29541221ff150607b9e4ebd8e349a9",
+    "sourceChecksum": "a78169cb2b7e91d4c2f2fee0a040496c6dc7885c380baf46ecbd4e9226853280",
     "sourceWordCount": 517,
     "audience": [
       "business",
@@ -13053,8 +13258,8 @@ module.exports = {
     ],
     "sourceRepository": "nodics.docs",
     "sourcePath": "docs/pages/nodics.loyalty/loyalty-wallets-rewards-and-ledger.md",
-    "sourceChecksum": "0bf2b29ebcd0290f7bc326d3b323d475c1d5376e3cab4806ee8f15ab6c889eef",
-    "sourceWordCount": 1542,
+    "sourceChecksum": "ed630742b89d38f76890a1b5e8e4ace3ac71698ae341c63305e34c6ab1c76d30",
+    "sourceWordCount": 1550,
     "audience": [
       "business",
       "architect",
@@ -13140,6 +13345,11 @@ module.exports = {
         "text": "Verification",
         "anchor": "commerceShoppingListCommerceBoundary-9-verification",
         "level": 2
+      },
+      {
+        "text": "Store context and upgrade behavior",
+        "anchor": "commerceShoppingListCommerceBoundary-10-store-context-and-upgrade-behavior",
+        "level": 2
       }
     ],
     "diagrams": [
@@ -13170,8 +13380,8 @@ module.exports = {
     ],
     "sourceRepository": "nodics.docs",
     "sourcePath": "docs/pages/nodics.commerce/shopping-list-commerce-boundary.md",
-    "sourceChecksum": "2adf3d91cabe9afdeb6856fbf9250519cbf98dd659e1263f4861404e4d5ee3b8",
-    "sourceWordCount": 1093,
+    "sourceChecksum": "20c86082c39092e7689412e58c45de38b4832ab2af7c253f8d2181e2925b309f",
+    "sourceWordCount": 1252,
     "audience": [
       "business",
       "architect",
@@ -13363,6 +13573,16 @@ module.exports = {
         "text": "Verification",
         "anchor": "foundationServiceRuntimeOverrides-9-verification",
         "level": 2
+      },
+      {
+        "text": "Separate runtimes and Profile bootstrap",
+        "anchor": "foundationServiceRuntimeOverrides-10-separate-runtimes-and-profile-bootstrap",
+        "level": 2
+      },
+      {
+        "text": "Repeatable isolated runtime acceptance",
+        "anchor": "foundationServiceRuntimeOverrides-11-repeatable-isolated-runtime-acceptance",
+        "level": 3
       }
     ],
     "diagrams": [
@@ -13399,8 +13619,8 @@ module.exports = {
     ],
     "sourceRepository": "nodics.docs",
     "sourcePath": "docs/pages/nodics.foundation/service-runtime-overrides.md",
-    "sourceChecksum": "10b2b76efde639fa2f847cc550fa900c68860498a9e578e3ad7e49b2d8dd6634",
-    "sourceWordCount": 601,
+    "sourceChecksum": "8d35916c7b5f8549d4a7af2c7734422998ea56f39dddc8ae4cb859540c288ec6",
+    "sourceWordCount": 1321,
     "audience": [
       "business",
       "architect",
@@ -13506,6 +13726,16 @@ module.exports = {
         "text": "Verification",
         "anchor": "foundationModuleToModuleCommunication-13-verification",
         "level": 2
+      },
+      {
+        "text": "Local selection and independent deployment acceptance",
+        "anchor": "foundationModuleToModuleCommunication-14-local-selection-and-independent-deployment-acceptance",
+        "level": 3
+      },
+      {
+        "text": "Runtime credential failure and local regression checks",
+        "anchor": "foundationModuleToModuleCommunication-15-runtime-credential-failure-and-local-regression-checks",
+        "level": 3
       }
     ],
     "diagrams": [
@@ -13546,8 +13776,8 @@ module.exports = {
     ],
     "sourceRepository": "nodics.docs",
     "sourcePath": "docs/pages/nodics.foundation/module-to-module-communication.md",
-    "sourceChecksum": "5b1b931b80a4698b26a65f51964b26a7ccabfbc216771c5db45795a0e82eab70",
-    "sourceWordCount": 1786,
+    "sourceChecksum": "1346855b4c720222259e1b30e4b70cdfb5db0abcf837b64007f48dbb376a0114",
+    "sourceWordCount": 2018,
     "audience": [
       "business",
       "architect",
@@ -13623,6 +13853,11 @@ module.exports = {
         "text": "Verification",
         "anchor": "foundationCacheProviderRunbooks-7-verification",
         "level": 2
+      },
+      {
+        "text": "Hazelcast concurrent mutations and deadlines",
+        "anchor": "foundationCacheProviderRunbooks-8-hazelcast-concurrent-mutations-and-deadlines",
+        "level": 3
       }
     ],
     "diagrams": [
@@ -13652,8 +13887,8 @@ module.exports = {
     ],
     "sourceRepository": "nodics.docs",
     "sourcePath": "docs/pages/nodics.foundation/cache-provider-runbooks.md",
-    "sourceChecksum": "99859f8f38df2804ff39429814bb7108fc37fdcc0e4aa5e37b7711301329c663",
-    "sourceWordCount": 527,
+    "sourceChecksum": "1b320047a645d579b473a70b5e8fe69d197f60ab481293f8e897837749ab947e",
+    "sourceWordCount": 664,
     "audience": [
       "business",
       "architect",
@@ -13729,6 +13964,11 @@ module.exports = {
         "text": "Verification",
         "anchor": "foundationDatabaseProviderBoundaries-7-verification",
         "level": 2
+      },
+      {
+        "text": "Customizing MongoDB schema keyword selection",
+        "anchor": "foundationDatabaseProviderBoundaries-8-customizing-mongodb-schema-keyword-selection",
+        "level": 2
       }
     ],
     "diagrams": [
@@ -13759,8 +13999,8 @@ module.exports = {
     ],
     "sourceRepository": "nodics.docs",
     "sourcePath": "docs/pages/nodics.foundation/database-provider-boundaries.md",
-    "sourceChecksum": "1f14d3036b5542ebd0e35328a45d43e8b9ae2f8f76c6308ab3d3f413af68be70",
-    "sourceWordCount": 526,
+    "sourceChecksum": "f4f8286848fcae00629fd7802089c2dc3da610ca56df8fca3160fd78ad06e555",
+    "sourceWordCount": 623,
     "audience": [
       "business",
       "architect",
@@ -14395,6 +14635,21 @@ module.exports = {
         "text": "Verification",
         "anchor": "frameworkReleaseUpgradeCompatibility-9-verification",
         "level": 2
+      },
+      {
+        "text": "Code and contract compatibility",
+        "anchor": "frameworkReleaseUpgradeCompatibility-10-code-and-contract-compatibility",
+        "level": 2
+      },
+      {
+        "text": "Security boundaries under customization",
+        "anchor": "frameworkReleaseUpgradeCompatibility-11-security-boundaries-under-customization",
+        "level": 2
+      },
+      {
+        "text": "Explaining an effective runtime",
+        "anchor": "frameworkReleaseUpgradeCompatibility-12-explaining-an-effective-runtime",
+        "level": 2
       }
     ],
     "diagrams": [
@@ -14410,6 +14665,10 @@ module.exports = {
       {
         "kind": "table",
         "title": "Rule, Meaning"
+      },
+      {
+        "kind": "table",
+        "title": "Contract surface, Required compatibility evidence"
       }
     ],
     "visualRequirements": [
@@ -14425,8 +14684,8 @@ module.exports = {
     ],
     "sourceRepository": "nodics.docs",
     "sourcePath": "docs/pages/framework/release-upgrade-compatibility.md",
-    "sourceChecksum": "2cc031453c94eddde6fe28ebcedb0cc8fbf373841fb79765c725d39cd19924d6",
-    "sourceWordCount": 570,
+    "sourceChecksum": "f0185f8689fb447288a2c5ce108dab70eb39cf7408ddffd5a8e6a489de5c40b6",
+    "sourceWordCount": 1169,
     "audience": [
       "business",
       "architect",
@@ -14768,6 +15027,11 @@ module.exports = {
         "text": "Verification",
         "anchor": "foundationToolingRuntimeContracts-17-verification",
         "level": 2
+      },
+      {
+        "text": "Application Builder source and customer ownership",
+        "anchor": "foundationToolingRuntimeContracts-18-application-builder-source-and-customer-ownership",
+        "level": 2
       }
     ],
     "diagrams": [
@@ -14790,6 +15054,10 @@ module.exports = {
       {
         "kind": "table",
         "title": "Symptom, Cause to investigate, Expected recovery"
+      },
+      {
+        "kind": "table",
+        "title": "Input or evidence, Meaning, Failure and recovery"
       }
     ],
     "visualRequirements": [
@@ -14805,8 +15073,8 @@ module.exports = {
     ],
     "sourceRepository": "nodics.docs",
     "sourcePath": "docs/pages/nodics.foundation/tooling-runtime-contracts.md",
-    "sourceChecksum": "39174d29cd2e8b32f93a9e3db07268ed1c8a206c1e8fd7502758007a6325b554",
-    "sourceWordCount": 2090,
+    "sourceChecksum": "310bc618e731cbb5a86ca9378bb154fb6c6b2647e3d746bd9168f98e9ed9a829",
+    "sourceWordCount": 2376,
     "audience": [
       "business",
       "architect",

@@ -15,3 +15,6 @@ Map configuration is shared across applications and administered through Axis.
 Provider choice, viewport, controls, marker categories and wheel interaction come
 from the same Location-owned record. See the [shared configuration contract](llm/contracts/shared-map-configuration.md)
 for operator setup, public consumption, safe customization and validation.
+
+This capability declares an inert model-service inventory for [governed Local reset](../../../nodics.foundation/modules/nSystem/llm/contracts/local-reset.md).
+A server must explicitly select it; contributions never enable reset or bypass tenant, environment, confirmation or required-service checks.

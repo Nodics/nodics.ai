@@ -27,7 +27,7 @@ module.exports = {
                     schemaHandler: 'DefaultMongodbDatabaseSchemaHandlerService',
                     modelHandler: 'DefaultMongodbDatabaseModelHandlerService',
                     interceptorHandler: 'DefaultMongodbDatabaseInterceptorHandlerService',
-                    schemaProperties: ['enum', 'minimum', 'maximum', 'exclusiveMaximum', 'pattern'],
+                    schemaProperties: { enum: true, minimum: true, maximum: true, exclusiveMaximum: true, pattern: true },
                     defaultIndexes: ['_id'],
                     modelSaveOptions: {
                         upsert: true,

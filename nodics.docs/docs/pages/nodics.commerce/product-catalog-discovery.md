@@ -132,3 +132,14 @@ Implementation evidence is held in product schemas, product discovery API
 contracts, product localization contracts, domain enrichment tests, localized
 search publication tests, and generated schema contracts for Product,
 Category, Variant, Localization, Publication, and Search Projection.
+
+## Source authoring APIs
+
+Product source authoring is available through selective capabilities/search/create/update
+APIs using its existing generated controller. Broad CRUD stays disabled; writes
+require Staged. Axis follows the backend route projection and Copilot uses the
+canonical Product PUT API after confirmation.
+See [selective schema APIs](../nodics.foundation/schema-data-modeling.md#selective-module-apis-and-route-driven-clients)
+for payloads, authorization compatibility, route customization, deployment order
+and remaining acceptance. No live-authenticated acceptance is implied by the
+source and prepared-runtime tests.

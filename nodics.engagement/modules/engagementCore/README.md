@@ -23,3 +23,6 @@ This capability depends on Nodics Foundation contracts; it integrates with Proce
 ## Verification
 
 Run the module boundary and behavior tests, generated-artifact checks, structure audit, LLM validation, and repository basic suite. Release qualification requires all applicable checks to pass.
+
+This capability declares an inert model-service inventory for [governed Local reset](../../../nodics.foundation/modules/nSystem/llm/contracts/local-reset.md).
+A server must explicitly select it; contributions never enable reset or bypass tenant, environment, confirmation or required-service checks.

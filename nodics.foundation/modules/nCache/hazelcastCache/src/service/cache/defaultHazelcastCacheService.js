@@ -16,7 +16,63 @@
  * @owner nCache/hazelcastCache
  * @override Projects may replace map naming or serialization while preserving tenant keys, TTL, detached values, and invalidation semantics.
  */
+const { LockContext } = require('hazelcast-client');
+
 module.exports = {
+    /**
+     * Serializes one entry mutation across asynchronous tasks and client instances.
+     * A distinct public client lock context prevents same-client reentrant races.
+     * @param {Object} options Tenant/channel cache coordinates and lock policy.
+     * @param {Function} operation Operation receiving the locked map and storage key.
+     * @returns {Promise<*>} Operation result after releasing its own lock.
+     */
+    withEntryLock: async function (options, operation) {
+        if (!LockContext || typeof LockContext.run !== 'function') {
+            throw new CLASSES.CacheError('ERR_CACHE_00009', 'Hazelcast atomic mutations require client 5.7 or later');
+        }
+        const configured = options.channel && options.channel.engineOptions && options.channel.engineOptions.options || {};
+        const timeout = configured.lockTimeoutMs === undefined ? 5000 : configured.lockTimeoutMs;
+        if (!Number.isSafeInteger(timeout) || timeout < 1 || timeout > 60000) {
+            throw new CLASSES.CacheError('ERR_CACHE_00009', 'Hazelcast lockTimeoutMs must be between 1 and 60000');
+        }
+        let result;
+        await LockContext.run(async () => {
+            const map = await this.map(options), key = SERVICE.DefaultCacheConfigurationService.createStorageKey(options);
+            let locked = false, failure;
+            try {
+                locked = await map.tryLock(key, timeout);
+                if (!locked) throw new CLASSES.CacheError('ERR_CACHE_00009', 'Hazelcast mutation lock timed out');
+                result = await operation(map, key);
+            } catch (error) { failure = error; throw error; }
+            finally {
+                if (locked) {
+                    try { await map.unlock(key); }
+                    catch (error) { if (!failure) throw error; }
+                }
+            }
+        });
+        return result;
+    },
+
+    /** Uses a bounded entry lock and isolated async context to prevent version rollback. */
+    putVersioned: async function (options) {
+        try {
+            const field = options.versionProperty || 'revision', incoming = options.value && options.value[field];
+            if (!Number.isSafeInteger(incoming) || incoming < 0) throw new Error('Invalid cache version');
+            return await this.withEntryLock(options, async (map, key) => {
+                const raw = await map.get(key);
+                const current = typeof raw === 'string' ? JSON.parse(raw) : raw;
+                if (current && (!Number.isSafeInteger(current[field]) || current[field] < 0)) throw new Error('Invalid stored cache version');
+                const assigned = options.advance === true ? Math.max(incoming, current ? current[field] + 1 : incoming) : incoming;
+                if (!Number.isSafeInteger(assigned)) throw new Error('Cache version overflow');
+                if (current && assigned < current[field]) throw new Error('Stale versioned cache write');
+                const value = JSON.stringify({ ...options.value, [field]: assigned });
+                await map.set(key, value, SERVICE.DefaultCacheConfigurationService.resolveTtl(options) * 1000);
+                return { code: 'SUC_CACHE_00000', result: JSON.parse(value) };
+            });
+        } catch (error) { throw error instanceof CLASSES.CacheError ? error : new CLASSES.CacheError(error); }
+    },
+
     /** Initializes the adapter. */ init: function () { return Promise.resolve(true); },
     /** Completes adapter initialization. */ postInit: function () { return Promise.resolve(true); },
     /** Returns a deterministic cluster map name for one module and channel. */
@@ -49,30 +105,24 @@ module.exports = {
             return typeof value === 'string' ? JSON.parse(value) : JSON.parse(JSON.stringify(value));
         } catch (error) { throw error instanceof CLASSES.CacheError ? error : new CLASSES.CacheError(error); }
     },
-    /** Atomically increments a bounded distributed counter under a key lock. */
+    /** Atomically increments a bounded distributed counter under an isolated entry lock. */
     incrementBounded: async function (options) {
-        let map; let key; let locked = false;
         try {
-            map = await this.map(options); key = SERVICE.DefaultCacheConfigurationService.createStorageKey(options);
-            let amount = options.amount === undefined ? 1 : options.amount; let maximum = options.maximum;
-            let ttl = SERVICE.DefaultCacheConfigurationService.resolveTtl(options);
-            if (!Number.isSafeInteger(amount) || amount < 1 ||
-                !Number.isSafeInteger(maximum) || maximum < 1 || ttl < 1) {
+            const amount = options.amount === undefined ? 1 : options.amount, maximum = options.maximum;
+            const ttl = SERVICE.DefaultCacheConfigurationService.resolveTtl(options);
+            if (!Number.isSafeInteger(amount) || amount < 1 || !Number.isSafeInteger(maximum) || maximum < 1 || ttl < 1) {
                 throw new Error('Bounded increment requires positive amount, maximum, and TTL');
             }
-            await map.lock(key); locked = true;
-            let stored = await map.get(key); let current = stored === null || stored === undefined ? 0 : Number(stored);
-            let next = current + amount;
-            if (next > maximum) return { allowed: false, value: current, maximum: maximum };
-            await map.set(key, String(next), ttl * 1000);
-            return { allowed: true, value: next, maximum: maximum };
-        } catch (error) {
-            throw error instanceof CLASSES.CacheError ? error : new CLASSES.CacheError(error);
-        } finally {
-            if (map && key !== undefined && locked) {
-                try { await map.unlock(key); } catch (error) { /* lock may not have been acquired */ }
-            }
-        }
+            return await this.withEntryLock(options, async (map, key) => {
+                const stored = await map.get(key), current = stored === null || stored === undefined ? 0 : Number(stored);
+                if (!Number.isSafeInteger(current) || current < 0) throw new Error('Invalid stored bounded counter');
+                const next = current + amount;
+                if (!Number.isSafeInteger(next)) throw new Error('Bounded counter overflow');
+                if (next > maximum) return { allowed: false, value: current, maximum };
+                await map.set(key, String(next), ttl * 1000);
+                return { allowed: true, value: next, maximum };
+            });
+        } catch (error) { throw error instanceof CLASSES.CacheError ? error : new CLASSES.CacheError(error); }
     },
     /** Removes every tenant-partitioned key matching the governed logical prefix. */
     flushByPrefix: async function (options) {

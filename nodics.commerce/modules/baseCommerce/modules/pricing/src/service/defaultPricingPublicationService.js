@@ -12,7 +12,8 @@
 'use strict';
 /** @module pricing/src/service/defaultPricingPublicationService @description Restores Pricing operational records into Online runtime boundaries. @layer service @owner pricing */
 module.exports = {
-    records: value => Array.isArray(value) ? value : value && typeof value === 'object' ? Object.values(value) : [],
+    /** Returns the available record collection from the owning persistence result without mutating it. */
+    records: function (value) { return Array.isArray(value) ? value : value && typeof value === 'object' ? Object.values(value) : []; },
     /**
      * Executes `normalizeDateField` as a loader-visible operation owned by this module.
      * @param {*} model Value defined by the owning module contract.

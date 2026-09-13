@@ -11,6 +11,23 @@
 
 /** @module order/config/properties @description Defines Commerce capability and schema access policies. @layer config @owner order */
 module.exports = {
+    // Inert inventory; an allowed local server must explicitly select this capability.
+    localResetProvider: {
+        "contributions": {
+            "order": {
+                "serviceNames": {
+                    "DefaultCommerceOrderEntryService": true,
+                    "DefaultCommerceOrderService": true,
+                    "DefaultOrderHistoryService": true,
+                    "DefaultOrderLifecycleCheckpointService": true,
+                    "DefaultOrderLifecycleRequestService": true,
+                    "DefaultOrderLifecycleVersionService": true,
+                    "DefaultOrderReversalCalculationService": true
+                }
+            }
+        }
+    },
+
   order: {
     enabled: true,
     refunds: { enabled: false, orderCodePrefixes: [], ownerPorts: {} },

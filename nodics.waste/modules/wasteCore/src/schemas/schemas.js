@@ -13,7 +13,7 @@
 
 
 module.exports = { wasteCore: {
-    wasteLifecyclePolicy: Object.assign({ super: 'base', model: true, schemaPolicies: ['operational'], service: { enabled: true }, router: { enabled: false }, cache: { enabled: false }, event: { enabled: false }, search: { enabled: false } }, { definition: {
+    wasteLifecyclePolicy: Object.assign({ super: 'base', model: true, schemaPolicies: ['operational'], service: { enabled: true }, router: { groups: { schemaOperations: true }, enabled: true }, cache: { enabled: false }, event: { enabled: false }, search: { enabled: false } }, { definition: {
         code: { type: 'string', required: true , description: 'Uniquely identifies this record for references, APIs, imports, and business administration.'},
         ownerModule: { type: 'string', required: true , description: 'Stores the owner module value used by this record.'},
         lifecycleType: { type: 'string', required: true, enum: ['SUBMISSION', 'VERIFICATION', 'RECEIPT', 'IMPACT', 'MOVEMENT', 'COMPLIANCE', 'ASSET', 'ASSET_CREATION', 'TRANSFER', 'MARKETPLACE', 'REWARD_SETTLEMENT', 'CARBON_SETTLEMENT', 'COUPON_REDEMPTION'] , description: 'Classifies this record by lifecycle type for validation and business handling.'},
@@ -23,7 +23,7 @@ module.exports = { wasteCore: {
         revision: { type: 'int', required: true, default: 0 , description: 'Tracks the business revision used for governance, review, and optimistic update checks.'},
         metadata: { type: 'object', required: false , description: 'Stores additional structured metadata needed by extensions without changing the core schema contract.'}
     } }),
-    wasteAssetCreationPolicy: Object.assign({ super: 'base', model: true, schemaPolicies: ['operational'], service: { enabled: true }, router: { enabled: false }, cache: { enabled: false }, event: { enabled: false }, search: { enabled: false } }, { definition: {
+    wasteAssetCreationPolicy: Object.assign({ super: 'base', model: true, schemaPolicies: ['operational'], service: { enabled: true }, router: { groups: { schemaOperations: true }, enabled: true }, cache: { enabled: false }, event: { enabled: false }, search: { enabled: false } }, { definition: {
         code: { type: 'string', required: true , description: 'Uniquely identifies this record for references, APIs, imports, and business administration.'},
         name: { type: 'object', required: true , description: 'Stores the business display name shown to administrators and related user journeys.'},
         assetTypeCode: { type: 'string', required: false , description: 'Stores the asset type code used to classify, link, or resolve this record.'},
@@ -46,7 +46,7 @@ module.exports = { wasteCore: {
         revision: { type: 'int', required: true, default: 0 , description: 'Tracks the business revision used for governance, review, and optimistic update checks.'},
         metadata: { type: 'object', required: false , description: 'Stores additional structured metadata needed by extensions without changing the core schema contract.'}
     } }),
-    wasteAssetType: Object.assign({ super: 'base', model: true, schemaPolicies: ['operational'], service: { enabled: true }, router: { enabled: false }, cache: { enabled: false }, event: { enabled: false }, search: { enabled: false } }, { definition: {
+    wasteAssetType: Object.assign({ super: 'base', model: true, schemaPolicies: ['operational'], service: { enabled: true }, router: { groups: { schemaOperations: true }, enabled: true }, cache: { enabled: false }, event: { enabled: false }, search: { enabled: false } }, { definition: {
         code: { type: 'string', required: true , description: 'Uniquely identifies this record for references, APIs, imports, and business administration.'},
         name: { type: 'object', required: true , description: 'Stores the business display name shown to administrators and related user journeys.'},
         familyCode: { type: 'string', required: false , description: 'Stores the family code used to classify, link, or resolve this record.'},
@@ -66,7 +66,7 @@ module.exports = { wasteCore: {
         revision: { type: 'int', required: true, default: 0 , description: 'Tracks the business revision used for governance, review, and optimistic update checks.'},
         metadata: { type: 'object', required: false , description: 'Stores additional structured metadata needed by extensions without changing the core schema contract.'}
     } }),
-    wasteAsset: Object.assign({ super: 'base', model: true, backoffice: { mutationMode: 'READ_ONLY', concurrency: { managed: true, field: 'revision' } }, schemaPolicies: ['operational'], service: { enabled: true }, router: { enabled: false }, cache: { enabled: false }, event: { enabled: false }, search: { enabled: false } }, { definition: {
+    wasteAsset: Object.assign({ super: 'base', model: true, backoffice: { mutationMode: 'READ_ONLY', concurrency: { managed: true, field: 'revision' } }, schemaPolicies: ['operational'], service: { enabled: true }, router: { groups: { schemaOperations: true }, enabled: true }, cache: { enabled: false }, event: { enabled: false }, search: { enabled: false } }, { definition: {
         code: { type: 'string', required: true , description: 'Uniquely identifies this record for references, APIs, imports, and business administration.'},
         assetTypeCode: { type: 'string', required: true , description: 'Stores the asset type code used to classify, link, or resolve this record.'},
         sourceSubmissionCode: { type: 'string', required: true , description: 'Stores the source submission code used to classify, link, or resolve this record.'},
@@ -105,7 +105,7 @@ module.exports = { wasteCore: {
         evidenceRefs: {"enabled":true,"moduleName":"wasteSubmission","schemaName":"wasteEvidence","type":"many","propertyName":"code"},
         marketplaceProjectionRef: {"enabled":true,"moduleName":"wasteCore","schemaName":"wasteAssetMarketplaceProjection","type":"one","propertyName":"code"}
     } }),
-    wasteAssetMarketplaceProjection: Object.assign({ super: 'base', model: true, backoffice: { concurrency: { managed: true, field: 'revision' } }, schemaPolicies: ['operational'], service: { enabled: true }, router: { enabled: false }, cache: { enabled: false }, event: { enabled: false }, search: { enabled: false } }, { definition: {
+    wasteAssetMarketplaceProjection: Object.assign({ super: 'base', model: true, backoffice: { concurrency: { managed: true, field: 'revision' } }, schemaPolicies: ['operational'], service: { enabled: true }, router: { groups: { schemaOperations: true }, enabled: true }, cache: { enabled: false }, event: { enabled: false }, search: { enabled: false } }, { definition: {
         code: { type: 'string', required: true , description: 'Uniquely identifies this record for references, APIs, imports, and business administration.'},
         assetCode: { type: 'string', required: true , description: 'Stores the asset code used to classify, link, or resolve this record.'},
         ownerRef: { type: 'object', required: true , description: 'References the related owner record used by this record.'},
@@ -137,7 +137,7 @@ module.exports = { wasteCore: {
         paymentRef: {"enabled":true,"moduleName":"paymentCore","schemaName":"paymentTransaction","type":"one","propertyName":"code"},
         evidenceRefs: {"enabled":true,"moduleName":"wasteSubmission","schemaName":"wasteEvidence","type":"many","propertyName":"code"}
     } }),
-    wasteAssetOwnershipEvent: Object.assign({ super: 'base', model: true, schemaPolicies: ['operational'], service: { enabled: true }, router: { enabled: false }, cache: { enabled: false }, event: { enabled: false }, search: { enabled: false } }, { definition: {
+    wasteAssetOwnershipEvent: Object.assign({ super: 'base', model: true, schemaPolicies: ['operational'], service: { enabled: true }, router: { groups: { schemaOperations: true }, enabled: true }, cache: { enabled: false }, event: { enabled: false }, search: { enabled: false } }, { definition: {
         code: { type: 'string', required: true , description: 'Uniquely identifies this record for references, APIs, imports, and business administration.'},
         assetCode: { type: 'string', required: true , description: 'Stores the asset code used to classify, link, or resolve this record.'},
         fromOwnerRef: { type: 'object', required: false , description: 'References the related from owner record used by this record.'},
@@ -170,7 +170,7 @@ module.exports = { wasteCore: {
         complianceEvidenceRef: {"enabled":true,"moduleName":"wasteCompliance","schemaName":"wasteComplianceEvidence","type":"one","propertyName":"code"},
         evidenceRefs: {"enabled":true,"moduleName":"wasteSubmission","schemaName":"wasteEvidence","type":"many","propertyName":"code"}
     } }),
-    wasteAssetTransferPolicy: Object.assign({ super: 'base', model: true, schemaPolicies: ['operational'], service: { enabled: true }, router: { enabled: false }, cache: { enabled: false }, event: { enabled: false }, search: { enabled: false } }, { definition: {
+    wasteAssetTransferPolicy: Object.assign({ super: 'base', model: true, schemaPolicies: ['operational'], service: { enabled: true }, router: { groups: { schemaOperations: true }, enabled: true }, cache: { enabled: false }, event: { enabled: false }, search: { enabled: false } }, { definition: {
         code: { type: 'string', required: true , description: 'Uniquely identifies this record for references, APIs, imports, and business administration.'},
         name: { type: 'object', required: true , description: 'Stores the business display name shown to administrators and related user journeys.'},
         assetTypeCode: { type: 'string', required: false , description: 'Stores the asset type code used to classify, link, or resolve this record.'},
@@ -195,7 +195,7 @@ module.exports = { wasteCore: {
         revision: { type: 'int', required: true, default: 0 , description: 'Tracks the business revision used for governance, review, and optimistic update checks.'},
         metadata: { type: 'object', required: false , description: 'Stores additional structured metadata needed by extensions without changing the core schema contract.'}
     } }),
-    wasteMarketplaceEligibilityPolicy: Object.assign({ super: 'base', model: true, schemaPolicies: ['operational'], service: { enabled: true }, router: { enabled: false }, cache: { enabled: false }, event: { enabled: false }, search: { enabled: false } }, { definition: {
+    wasteMarketplaceEligibilityPolicy: Object.assign({ super: 'base', model: true, schemaPolicies: ['operational'], service: { enabled: true }, router: { groups: { schemaOperations: true }, enabled: true }, cache: { enabled: false }, event: { enabled: false }, search: { enabled: false } }, { definition: {
         code: { type: 'string', required: true , description: 'Uniquely identifies this record for references, APIs, imports, and business administration.'},
         name: { type: 'object', required: true , description: 'Stores the business display name shown to administrators and related user journeys.'},
         assetTypeCode: { type: 'string', required: false , description: 'Stores the asset type code used to classify, link, or resolve this record.'},
@@ -212,7 +212,7 @@ module.exports = { wasteCore: {
         revision: { type: 'int', required: true, default: 0 , description: 'Tracks the business revision used for governance, review, and optimistic update checks.'},
         metadata: { type: 'object', required: false , description: 'Stores additional structured metadata needed by extensions without changing the core schema contract.'}
     } }),
-    wasteRewardSettlementPolicy: Object.assign({ super: 'base', model: true, schemaPolicies: ['operational'], service: { enabled: true }, router: { enabled: false }, cache: { enabled: false }, event: { enabled: false }, search: { enabled: false } }, { definition: {
+    wasteRewardSettlementPolicy: Object.assign({ super: 'base', model: true, schemaPolicies: ['operational'], service: { enabled: true }, router: { groups: { schemaOperations: true }, enabled: true }, cache: { enabled: false }, event: { enabled: false }, search: { enabled: false } }, { definition: {
         code: { type: 'string', required: true , description: 'Uniquely identifies this record for references, APIs, imports, and business administration.'},
         name: { type: 'object', required: true , description: 'Stores the business display name shown to administrators and related user journeys.'},
         assetTypeCode: { type: 'string', required: false , description: 'Stores the asset type code used to classify, link, or resolve this record.'},
@@ -232,7 +232,7 @@ module.exports = { wasteCore: {
     }, refSchema: {
         sponsorRef: {"enabled":true,"moduleName":"profile","schemaName":"enterprise","type":"one","propertyName":"code"}
     } }),
-    wasteCarbonSettlementPolicy: Object.assign({ super: 'base', model: true, schemaPolicies: ['operational'], service: { enabled: true }, router: { enabled: false }, cache: { enabled: false }, event: { enabled: false }, search: { enabled: false } }, { definition: {
+    wasteCarbonSettlementPolicy: Object.assign({ super: 'base', model: true, schemaPolicies: ['operational'], service: { enabled: true }, router: { groups: { schemaOperations: true }, enabled: true }, cache: { enabled: false }, event: { enabled: false }, search: { enabled: false } }, { definition: {
         code: { type: 'string', required: true , description: 'Uniquely identifies this record for references, APIs, imports, and business administration.'},
         name: { type: 'object', required: true , description: 'Stores the business display name shown to administrators and related user journeys.'},
         assetTypeCode: { type: 'string', required: false , description: 'Stores the asset type code used to classify, link, or resolve this record.'},
@@ -252,7 +252,7 @@ module.exports = { wasteCore: {
     }, refSchema: {
         receiverRef: {"enabled":true,"moduleName":"profile","schemaName":"enterprise","type":"one","propertyName":"code"}
     } }),
-    wasteCouponRedemptionSettlementPolicy: Object.assign({ super: 'base', model: true, schemaPolicies: ['operational'], service: { enabled: true }, router: { enabled: false }, cache: { enabled: false }, event: { enabled: false }, search: { enabled: false } }, { definition: {
+    wasteCouponRedemptionSettlementPolicy: Object.assign({ super: 'base', model: true, schemaPolicies: ['operational'], service: { enabled: true }, router: { groups: { schemaOperations: true }, enabled: true }, cache: { enabled: false }, event: { enabled: false }, search: { enabled: false } }, { definition: {
         code: { type: 'string', required: true , description: 'Uniquely identifies this record for references, APIs, imports, and business administration.'},
         name: { type: 'object', required: true , description: 'Stores the business display name shown to administrators and related user journeys.'},
         assetTypeCode: { type: 'string', required: false , description: 'Stores the asset type code used to classify, link, or resolve this record.'},

@@ -23,3 +23,18 @@ This file gives AI coding agents mandatory guidance for this Nodics module or pa
 - Review router/API-response cache and DAO/schema/search cache together for behavior changes.
 - Cache activation must come only from layered configuration: cache.enabled, engine.enabled, and channel.enabled. Connection URLs are values, not activation switches.
 - Preserve tenant isolation, TTL semantics, response envelopes, invalidation, diagnostics, and fail-closed behavior for security-sensitive cache paths.
+
+Versioned writes and advance must be atomic for the adapter scope, return the actual stored version, preserve tenant namespaces and TTL zero, and reject stale versions or overflow. See the [cache contract](../cache/llm/contracts/README.md).
+
+Ordinary `put` preserves the supplied JSON shape, including arrays and scalar
+values; it never injects or advances a revision. Only `putVersioned` applies the
+explicit version field and atomic monotonic-write contract.
+
+Every atomic read-modify-write must use the public client `LockContext.run`
+with a distinct asynchronous context and bounded `tryLock`; otherwise concurrent
+operations on one client reenter the same lock and lose updates. Unlock only
+after acquisition, and preserve the original operation error if unlock fails.
+Keep client version 5.7 or later in package metadata and the lockfile. Cluster
+connection retries must have a finite configured deadline. Run the guarded live
+contract for same-client and multi-client contention; doubles alone cannot
+qualify lock semantics or deployment partition behavior.

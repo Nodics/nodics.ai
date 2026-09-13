@@ -26,9 +26,14 @@ module.exports = {
     },
     /** Creates one enterprise through the Profile-owned management facade. */
     create: function (request, callback) {
-        request.body = request.httpRequest && request.httpRequest.body || request.body || {};
-        let promise = FACADE.DefaultEnterpriseManagementFacade.create(request)
-            .then(data => ({ code: 'SUC_PRFL_00000', data: data }));
+        let promise = Promise.resolve().then(() => {
+            request.body = request.httpRequest && request.httpRequest.body || request.body || {};
+            request.payload = request.body;
+            const utility = SERVICE.DefaultSchemaUtilityService;
+            if (!utility || typeof utility.getIdempotencyKey !== 'function') throw new CLASSES.NodicsError('ERR_DBS_00004', 'Schema utility service is unavailable');
+            request.idempotencyKey = utility.getIdempotencyKey(request);
+            return FACADE.DefaultEnterpriseManagementFacade.create(request);
+        }).then(data => ({ code: 'SUC_PRFL_00000', data: data }));
         return callback ? promise.then(value => callback(null, value)).catch(callback) : promise;
     },
     /** Lists pre-assigned enterprise access records through the Profile-owned management facade. */

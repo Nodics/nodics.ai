@@ -17,5 +17,16 @@
  * @override Project, environment, server, node, tenant, or customer layers may override these defaults through Nodics configuration layering.
  */
 module.exports = {
+    // Inert inventory; an allowed local server must explicitly select this capability.
+    localResetProvider: {
+        "contributions": {
+            "locationProjection": {
+                "serviceNames": {
+                    "DefaultLocationMarkerProjectionService": true
+                }
+            }
+        }
+    },
+
     schemaPolicies: { locationProjection: { operational: { accessGroups: { adminGroup: 10, serviceAccountUserGroup: 10, employeeUserGroup: 10 } } } }
 };

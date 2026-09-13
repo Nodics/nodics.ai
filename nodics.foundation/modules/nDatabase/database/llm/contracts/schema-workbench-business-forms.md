@@ -2,10 +2,12 @@
 
 ## Authority
 
-`DefaultSchemaWorkbenchService.buildForm` projects the effective schema's
+`DefaultSchemaUtilityService.buildForm` projects the effective schema's
 `backoffice.form` into a version 1 client-safe descriptor. The existing schema
 merge is the only composition authority. Axis never discovers source files or
-implements domain-specific save rules.
+implements domain-specific save rules. Generated APIs and the existing Workbench
+adapter use the same effective utility owner. Move former Workbench metadata
+helper overrides to this service so all consumers see the customization.
 
 ## Metadata and Customization
 

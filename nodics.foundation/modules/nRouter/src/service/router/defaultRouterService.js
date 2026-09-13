@@ -232,6 +232,7 @@ module.exports = {
                         urlPrefix: urlPrefix,
                         alias: schemaObject.router.alias || schemaName,
                         schemaName: schemaName,
+                        schemaObject: schemaObject,
                         moduleName: moduleName,
                         moduleRouter: moduleRouter
                     });
@@ -251,6 +252,7 @@ module.exports = {
                             urlPrefix: urlPrefix,
                             alias: cSchemaObject.router.alias || cSchemaName,
                             schemaName: cSchemaName,
+                            schemaObject: cSchemaObject,
                             moduleName: moduleName,
                             moduleRouter: moduleRouter
                         });
@@ -301,6 +303,18 @@ module.exports = {
         return !Array.isArray(options.targetModules) || options.targetModules.includes(moduleName);
     },
 
+    /** Selects declared router groups without enabling undeclared broad CRUD or a disabled schema. */
+    selectDefaultRouterGroups: function (schema, routers) {
+        const available = Object.keys(routers.default || {}).filter(name => name !== 'options');
+        const selected = schema && schema.router && schema.router.groups;
+        if (selected === undefined) return available;
+        if (!selected || typeof selected !== 'object' || Array.isArray(selected) ||
+            Object.entries(selected).some(([name, enabled]) => !available.includes(name) || typeof enabled !== 'boolean')) {
+            throw new CLASSES.NodicsError('ERR_RTR_00003', 'Schema router groups must select existing groups with booleans');
+        }
+        return available.filter(name => selected[name] === true);
+    },
+
     /**
      * Creates CRUD-style default routers from a schema and default router template.
      *
@@ -316,8 +330,9 @@ module.exports = {
      */
     prepareDefaultRouter: function (options) {
         let _self = this;
+        let groups = this.selectDefaultRouterGroups(options.schemaObject, options.routers);
         _.each(options.routers.default, function (group, groupName) {
-            if (groupName !== 'options') {
+            if (groups.includes(groupName)) {
                 _.each(group, function (routerDef, routerName) {
                     if (routerName !== 'options' && _self.validateRouterDefinition(routerName, routerDef)) {
                         let definition = _.merge({}, routerDef);
@@ -328,6 +343,7 @@ module.exports = {
                         definition.url = '/' + CONFIG.get('servers').options.contextRoot + '/' + options.urlPrefix + '/' + definition.apiVersion + definition.key;
                         definition.active = (definition.active === undefined) ? true : definition.active;
                         definition.moduleName = options.moduleName;
+                        definition.schemaGoverned = groupName === 'schemaOperations' && Boolean(options.schemaObject && options.schemaObject.router && options.schemaObject.router.groups);
                         definition.prefix = options.schemaName + '_' + routerName;
                         definition.routerName = options.moduleName + '_' + options.schemaName + '_' + routerName;
                         definition.routerName = definition.routerName.toLowerCase();
@@ -396,9 +412,10 @@ module.exports = {
      * @sideEffects Attaches Express routers to apps, starts HTTP/HTTPS servers, and marks module server config as running.
      * @throws Rejects with startup errors not handled by listener events.
      */
-    startServers: function () {
+    startServers: async function () {
         let _self = this;
         let listeners = [];
+        this.registerLifecycleContributor();
         try {
             _.each(NODICS.getModules(), function (moduleObject, moduleName) {
                 if (UTILS.isRouterEnabled(moduleName)) {
@@ -423,27 +440,30 @@ module.exports = {
                         const httpPort = moduleConfig.getEndpoint().getHttpPort();
                         const httpsPort = moduleConfig.getEndpoint().getHttpsPort();
                         if (!httpPort) {
-                            _self.LOG.error('Please define listening PORT for module: ' + moduleName);
-                            process.exit(CONFIG.get('errorExitCode'));
+                            throw new Error('Please define listening PORT for module: ' + moduleName);
                         }
                         if (!moduleConfig.isServerRunning()) {
                             moduleConfig.setIsServerRunning(true);
                             listeners.push(_self.startListener(displayName, httpPort, false, http.createServer(app), moduleConfig));
-                            listeners.push(_self.startListener(displayName, httpsPort, true, https.createServer(app), moduleConfig));
+                            if (httpsPort) listeners.push(_self.startListener(displayName, httpsPort, true, https.createServer(app), moduleConfig));
                         }
                 }
             });
-            this.registerLifecycleContributor();
-            return Promise.all(listeners).then(() => true);
+            const results = await Promise.allSettled(listeners);
+            const failure = results.find(result => result.status === 'rejected');
+            if (failure) throw failure.reason;
+            return true;
         } catch (error) {
-            return Promise.reject(error);
+            await Promise.allSettled(listeners);
+            await this.closeRuntimeServers(true).catch(cleanupError => this.LOG.error(cleanupError));
+            throw error;
         }
     },
 
     /** Starts one listener and resolves only after the operating system accepts it. */
     startListener: function (moduleName, port, isSecure, server, moduleConfig) {
         let _self = this;
-        this.runtimeServers.push({ moduleName, port, isSecure, server });
+        this.runtimeServers.push({ moduleName, port, isSecure, server, moduleConfig });
         return new Promise((resolve, reject) => {
             server.once('error', error => {
                 moduleConfig.setIsServerRunning(false);
@@ -487,6 +507,7 @@ module.exports = {
             let complete = (error) => {
                 if (completed) return;
                 completed = true;
+                if (!error && runtimeServer.moduleConfig) runtimeServer.moduleConfig.setIsServerRunning(false);
                 if (timeout) clearTimeout(timeout);
                 if (error) reject(error);
                 else resolve(true);

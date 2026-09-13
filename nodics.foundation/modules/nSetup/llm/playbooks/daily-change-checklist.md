@@ -69,6 +69,9 @@ During implementation:
   `llm/examples/`, generated LLM context, and tests when behavior or extension
   guidance changes
 - run focused tests after changing the relevant behavior
+- for a correction, apply [recurrence prevention](../contracts/ai-coding-and-customization-contract.md#corrective-changes-and-recurrence-prevention):
+  update the existing rule, owner guidance and relevant source/generator checks
+  in this batch, and retain unresolved findings in the existing checklist
 
 Load detailed guidance only when relevant:
 

@@ -9,4 +9,4 @@
 
  */
 /** @module commsApi/nodics @description Declares Communication API lifecycle. @layer module @owner commsApi */
-module.exports = { /** Initializes this module. */ init: () => Promise.resolve(true), /** Finalizes this module. */ postInit: () => Promise.resolve(true) };
+module.exports = { /** Initializes this module. */ init: function () { return Promise.resolve(true); }, /** Finalizes this module. */ postInit: function () { return Promise.resolve(true); } };

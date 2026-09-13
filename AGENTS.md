@@ -131,6 +131,26 @@ review and release process. An explicitly authorized Nodics-maintainer task is a
 separate scope. Classify framework capability, domain accelerator and customer
 application ownership before placing code, data, tests or documentation.
 
+## Minimal configuration principle
+
+Apply [Existing Layers And Project Independence](nodics.foundation/modules/nSetup/llm/contracts/nodics-principles.md#existing-layers-and-project-independence)
+to every implementation and review. Do not invent another architectural layer
+or parallel authority. Project-specific configuration is prohibited throughout
+framework and accelerator layers, including helpers, tooling and generators.
+Reuse existing owners; APIs remain capability-owned for every consumer.
+
+Apply [Capability APIs And Safe Consolidation](nodics.foundation/modules/nSetup/llm/contracts/nodics-principles.md#capability-apis-and-safe-consolidation)
+and [Corrective Changes And Recurrence Prevention](nodics.foundation/modules/nSetup/llm/contracts/ai-coding-and-customization-contract.md#corrective-changes-and-recurrence-prevention).
+Each corrective batch updates its existing principle/contract, nearest owner
+guidance and meaningful regression coverage before it is reported complete.
+
+Apply `nodics.foundation/modules/nSetup/llm/contracts/customer-config-classification-contract.md`
+for every configuration change. Inherit tested capability defaults and declare
+only intentional customer, environment, server or node differences. Prove
+activation and index order before moving values; preserve secret, authority,
+feature-enablement and destructive-operation boundaries. Small wrapper files
+around copied defaults do not satisfy this principle.
+
 ## Repository boundary
 
 - Treat `nodics.ai` as the authoritative backend/framework repository root.

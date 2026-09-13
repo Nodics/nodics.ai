@@ -15,3 +15,6 @@ Phases 0–7 add Process-owned review, nPublish orchestration, Cron-backed sched
 Authoring endpoints include validation, readiness, workflow submission/inspection, scheduling, and withdrawal. Public delivery includes bounded listing, detail, structured projection, RSS, and sitemap routes. Validation and readiness remain side-effect free.
 
 Editorial owns editorial truth and readiness. Process owns workflow execution and task state. CMS owns page/component composition, Media owns binaries, and Nexus owns customer-facing renderer implementations.
+
+This capability declares an inert model-service inventory for [governed Local reset](../../../nodics.foundation/modules/nSystem/llm/contracts/local-reset.md).
+A server must explicitly select it; contributions never enable reset or bypass tenant, environment, confirmation or required-service checks.

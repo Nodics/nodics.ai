@@ -20,10 +20,24 @@ The release form fails when the live dependency is absent:
 NODICS_AUTH_REDIS_LIVE_URL=redis://127.0.0.1:6379 npm run test:auth:redis:release
 ```
 
-`hazelcast` is not a supported distributed auth engine yet. The current module
-is an explicitly non-distributed compatibility placeholder and strict auth
-startup rejects it. A future project or framework adapter may enable it only
-after providing a real distributed client and atomic take/consume semantics.
+The live suite also runs actual JWT issuance/verification, nService revocation,
+principal stamps and operational admission in two separate processes with
+independent Redis clients. It checks token and principal revocation, stale
+issuers, tenant/module/instance scope, inactive and expired activation state,
+expired tokens, client disconnect/reconnect and a 64-token issuance burst.
+
+Each process measures 1000 verifications and requires exactly two cache reads
+per verification. The default local p95 regression ceiling is 25 ms; deployments
+can set `NODICS_AUTH_RUNTIME_P95_MAX_MS` to their approved positive budget. CPU,
+RSS and latency are reported without credentials. This synthetic local workload
+does not provision Profile deployment grants, qualify production topology, or
+replace full runtime/Axis acceptance. Missing providers are explicitly reported
+and `--require-live` fails instead of skipping.
+
+Hazelcast uses the real distributed adapter. Its own guarded contract checks
+concurrent atomic version writes and counters on client 5.7 or later. Run it
+against the intended deployment topology before choosing Hazelcast for strict
+authentication state; single-member evidence does not prove partition behavior.
 
 Project and environment modules may supply different safe test tenant,
 database, cache, and topology values through environment configuration without

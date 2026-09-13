@@ -19,6 +19,20 @@
  * emissions coefficient. Disable the default fallback factor by setting it to null.
  */
 module.exports = {
+    // Inert inventory; an allowed local server must explicitly select this capability.
+    localResetProvider: {
+        "contributions": {
+            "wasteImpact": {
+                "serviceNames": {
+                    "DefaultWasteImpactMetricService": true,
+                    "DefaultWasteImpactProfileService": true,
+                    "DefaultWasteImpactResultService": true,
+                    "DefaultWasteImpactSelectionService": true
+                }
+            }
+        }
+    },
+
     schemaPolicies: { wasteImpact: { operational: { accessGroups: { adminGroup: 10, serviceAccountUserGroup: 10, employeeUserGroup: 10 } } } },
     wasteImpact: {
         assessments: { presentation: {

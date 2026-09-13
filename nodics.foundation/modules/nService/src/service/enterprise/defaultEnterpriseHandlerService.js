@@ -68,8 +68,8 @@ module.exports = {
                     moduleName: profileModuleName,
                     serviceName: 'DefaultEnterpriseService',
                     operationName: 'get',
-                    apiName: '/enterprise',
-                    methodName: 'POST',
+                    apiName: '/enterprise/get',
+                    methodName: 'GET',
                     request: {
                         tenant: defaultTenant,
                         options: {
@@ -79,7 +79,8 @@ module.exports = {
                     requestBody: {},
                     responseType: true,
                     header: {
-                        recursive: true
+                        recursive: true,
+                        'x-enterprise-code': (CONFIG.get('defaultAuthDetail', defaultTenant) || {}).entCode
                     }
                 }).then(success => {
                     if (success.success || success.result.length > 0) {
@@ -98,214 +99,48 @@ module.exports = {
     },
 
     /**
-     * Fetches and builds all active enterprises.
-     *
-     * @returns {Promise<Object>} Success response after enterprise runtime state is built.
-     * @sideEffects May schedule retry when profile service is unavailable during startup.
+     * Loads required enterprise state before readiness; failure remains a startup failure.
+     * @returns {Promise<Object>} Completed enterprise preparation.
      */
-    buildEnterprises: function () {
-        let _self = this;
-        return new Promise((resolve, reject) => {
-            try {
-                _self.fetchEnterprise().then(success => {
-                    _self.buildEnterprise(success).then(success => {
-                        resolve({
-                            code: 'SUC_SYS_00000'
-                        });
-                    }).catch(error => {
-                        reject(error);
-                    });
-                }).catch(error => {
-                    reject(error);
-                    if (error.code && error.code === 'ERR_DBS_00001') {
-                        _self.LOG.error('While connecting tenant server to fetch all active tenants');
-                        _self.LOG.error('Please check if PROFILE module is running and have proper PORT configured');
-                        setTimeout(() => {
-                            _self.handleEnterpriseLoadFailure();
-                        }, CONFIG.get('profileModuleReconnectTimeout') || 2000);
-                    }
+    buildEnterprises: async function () {
+        await this.buildEnterprise(await this.fetchEnterprise());
+        return { code: 'SUC_SYS_00000' };
+    },
+
+    /**
+     * Builds selected tenants sequentially and awaits their owning resource services.
+     * Cron owns scheduling; tenant initialization requests job creation once.
+     * @param {Object[]} enterprises Enterprise records to prepare.
+     * @returns {Promise<boolean>} Completed preparation.
+     */
+    buildEnterprise: async function (enterprises) {
+        for (const enterprise of enterprises || []) {
+            if (enterprise.active) NODICS.addActiveEnterprise(enterprise.code, enterprise.tenant.code);
+            else NODICS.removeActiveEnterprise(enterprise.code);
+            if (!enterprise.active || !enterprise.tenant || !enterprise.tenant.active ||
+                NODICS.getActiveTenants().includes(enterprise.tenant.code)) continue;
+            const tenant = enterprise.tenant.code;
+            NODICS.addActiveTenant(tenant);
+            CONFIG.setProperties(_.merge({}, CONFIG.getProperties(), enterprise.tenant.properties), tenant);
+            await SERVICE.DefaultDatabaseConnectionHandlerService.createDatabaseConnection(tenant);
+            await SERVICE.DefaultDatabaseModelHandlerService.buildModelsForTenant(tenant);
+            if (SERVICE.DefaultSearchEngineConnectionHandlerService) {
+                await SERVICE.DefaultSearchEngineConnectionHandlerService.createTenantsSearchEngines([tenant]);
+                await SERVICE.DefaultSearchSchemaHandlerService.prepareSearchSchema([tenant]);
+                await SERVICE.DefaultSearchModelHandlerService.prepareSearchModels(Object.keys(NODICS.getModules()), [tenant]);
+                await SERVICE.DefaultSearchModelHandlerService.updateIndexesSchema();
+            }
+            if (SERVICE.DefaultCronJobService && CONFIG.get('cronjob') && CONFIG.get('cronjob').runOnStartup) {
+                await SERVICE.DefaultCronJobService.createAllJobs([tenant]);
+            }
+            if (NODICS.isModuleActive(CONFIG.get('profileModuleName') || 'profile')) {
+                await SERVICE.DefaultMandatoryIdentityBootstrapService.prepareTenant({
+                    tenant, modules: NODICS.getActiveModules(), source: 'tenant-startup'
                 });
-            } catch (error) {
-                reject(error);
             }
-        });
-    },
-
-    /**
-     * Retries enterprise loading after profile module connectivity failure.
-     *
-     * @returns {undefined}
-     * @sideEffects Schedules repeated retry using `profileModuleReconnectTimeout`.
-     */
-    handleEnterpriseLoadFailure: function () {
-        let _self = this;
-        _self.fetchEnterprise().then(success => {
-            _self.buildEnterprise(success).then(success => {
-                _self.LOG.info('Active tenants loaded successfully');
-            }).catch(error => {
-                _self.LOG.error('Failed while building tenant enviroment', error);
-            });
-        }).catch(error => {
-            if (error.code && error.code === 'ERR_DBS_00001') {
-                _self.LOG.error('While connecting tenant server to fetch all active tenants');
-                _self.LOG.error('Please check if PROFILE module is running and have proper PORT configured');
-                setTimeout(() => {
-                    _self.handleEnterpriseLoadFailure();
-                }, CONFIG.get('profileModuleReconnectTimeout') || 2000);
-            }
-        });
-    },
-
-    /**
-     * Builds runtime state for each enterprise and active tenant.
-     *
-     * @param {Object[]} enterprises Mutable enterprise list to process.
-     * @returns {Promise<boolean>} Resolves after all enterprises are processed.
-     * @sideEffects Mutates NODICS enterprise/tenant registries, tenant config,
-     * database connections, generated models, search models, cron jobs, and
-     * internal auth tokens.
-     */
-    buildEnterprise: function (enterprises) {
-        let _self = this;
-        return new Promise((resolve, reject) => {
-            try {
-                if (enterprises && enterprises.length > 0) {
-                    let enterprise = enterprises.shift();
-                    if (enterprise.active) {
-                        NODICS.addActiveEnterprise(enterprise.code, enterprise.tenant.code);
-                    } else {
-                        NODICS.removeActiveEnterprise(enterprise.code);
-                    }
-                    if (enterprise.active && enterprise.tenant && enterprise.tenant.active && !NODICS.getActiveTenants().includes(enterprise.tenant.code)) {
-                        NODICS.addActiveTenant(enterprise.tenant.code);
-                        let tntConfig = _.merge({}, CONFIG.getProperties());
-                        tntConfig = _.merge(tntConfig, enterprise.tenant.properties);
-                        CONFIG.setProperties(tntConfig, enterprise.tenant.code);
-                        SERVICE.DefaultDatabaseConnectionHandlerService.createDatabaseConnection(enterprise.tenant.code).then(success => {
-                            SERVICE.DefaultDatabaseModelHandlerService.buildModelsForTenant(enterprise.tenant.code).then(success => {
-                                if (SERVICE.DefaultSearchEngineConnectionHandlerService) {
-                                    SERVICE.DefaultSearchEngineConnectionHandlerService.createTenantsSearchEngines([enterprise.tenant.code]).then(success => {
-                                        SERVICE.DefaultSearchSchemaHandlerService.prepareSearchSchema([enterprise.tenant.code]);
-                                        SERVICE.DefaultSearchModelHandlerService.prepareSearchModels(Object.keys(NODICS.getModules()), [enterprise.tenant.code]);
-                                        SERVICE.DefaultSearchModelHandlerService.updateIndexesSchema();
-                                        this.LOG.debug('Search connections has been established successfully');
-                                    }).catch(error => {
-                                        this.LOG.error('Failed establishing connections with search engine');
-                                        this.LOG.error(error);
-                                    });
-                                }
-                                if (SERVICE.DefaultCronJobService && CONFIG.get('cronjob') && CONFIG.get('cronjob').runOnStartup) {
-                                    setInterval(function () {
-                                        _self.LOG.info('Starting active jobs for tenant: ' + enterprise.tenant.code);
-                                        SERVICE.DefaultCronJobService.createAllJobs([enterprise.tenant.code]).then(success => {
-                                            _self.LOG.debug('Following job has been started');
-                                            _self.LOG.debug(success);
-                                        }).catch(error => {
-                                            _self.LOG.error('Failed starting jobs for tenant: ' + enterprise.tenant.code);
-                                            _self.LOG.error(error);
-                                        });
-                                    }, 3000);
-                                }
-                                if (NODICS.isModuleActive(CONFIG.get('profileModuleName'))) {
-                                    let tenantBootstrapAuth = { isSystem: true, userGroups: ['serviceAccountUserGroup'] };
-                                    SERVICE.DefaultEmployeeService.get({
-                                        tenant: enterprise.tenant.code,
-                                        authData: tenantBootstrapAuth,
-                                        query: {
-                                            code: 'apiAdmin'
-                                        }
-                                    }).then(success => {
-                                        if (success.success && success.result.length <= 0) {
-                                            SERVICE.DefaultImportService.importInitData({
-                                                tenant: enterprise.tenant.code,
-                                                authData: tenantBootstrapAuth,
-                                                modules: NODICS.getActiveModules()
-                                            }).then(success => {
-                                                SERVICE.DefaultEmployeeService.get({
-                                                    tenant: enterprise.tenant.code,
-                                                    authData: tenantBootstrapAuth,
-                                                    query: {
-                                                        code: 'apiAdmin'
-                                                    }
-                                                }).then(success => {
-                                                    if (success.success && success.result.length > 0) {
-                                                        return SERVICE.DefaultServiceTokenService.issue({
-                                                            entCode: enterprise.code,
-                                                            tenant: enterprise.tenant.code,
-                                                            serviceId: success.result[0].loginId || 'nodics-runtime',
-                                                            runtimeInstanceId: [NODICS.getSelectedEnvironmentName(), NODICS.getServerName(), NODICS.getNodeName() || 'default', process.pid].join(':'),
-                                                            modules: NODICS.getActiveModules(),
-                                                            authVersion: success.result[0].authVersion || 1,
-                                                            userGroups: success.result[0].userGroupCodes,
-                                                            permissions: success.result[0].userGroupPermissions
-                                                        }).then(authToken => {
-                                                            NODICS.addInternalAuthToken(enterprise.tenant.code, authToken);
-                                                            return _self.buildEnterprise(enterprises);
-                                                        }).then(() => resolve(true)).catch(reject);
-                                                    } else {
-                                                        reject(new CLASSES.NodicsError('ERR_SYS_00000', 'Could not load default API key for tenant: ' + enterprise.tenant.code));
-                                                    }
-                                                }).catch(error => {
-                                                    reject(error);
-                                                });
-                                            }).catch(error => {
-                                                NODICS.LOG.error('Initial data import failed');
-                                                reject(error);
-                                            });
-                                        } else {
-                                            SERVICE.DefaultServiceTokenService.issue({
-                                                entCode: enterprise.code,
-                                                tenant: enterprise.tenant.code,
-                                                serviceId: success.result[0].loginId || 'nodics-runtime',
-                                                runtimeInstanceId: [NODICS.getSelectedEnvironmentName(), NODICS.getServerName(), NODICS.getNodeName() || 'default', process.pid].join(':'),
-                                                modules: NODICS.getActiveModules(),
-                                                authVersion: success.result[0].authVersion || 1,
-                                                userGroups: success.result[0].userGroupCodes,
-                                                permissions: success.result[0].userGroupPermissions
-                                            }).then(authToken => {
-                                                NODICS.addInternalAuthToken(enterprise.tenant.code, authToken);
-                                                return _self.buildEnterprise(enterprises);
-                                            }).then(() => resolve(true)).catch(reject);
-                                        }
-                                    }).catch(error => {
-                                        _self.LOG.error('Failed loading tenant: ' + enterprise.tenant.code);
-                                        _self.LOG.error(error);
-                                        reject(error);
-                                    });
-                                } else {
-                                    SERVICE.DefaultInternalAuthenticationProviderService.fetchInternalAuthToken(enterprise.tenant.code).then(success => {
-                                        NODICS.addInternalAuthToken(enterprise.tenant.code, success.authToken);
-                                        _self.buildEnterprise(enterprises).then(success => {
-                                            resolve(true);
-                                        }).catch(error => {
-                                            reject(error);
-                                        });
-                                    }).catch(error => {
-                                        reject(error);
-                                    });
-                                }
-                            }).catch(error => {
-                                reject(error);
-                            });
-                        }).catch(error => {
-                            reject(error);
-                        });
-                    } else {
-                        if (enterprise.code != 'default') {
-                            _self.LOG.info('Enterprise: ' + enterprise.code + ' is not active or already running');
-                        }
-                        _self.buildEnterprise(enterprises).then(success => {
-                            resolve(true);
-                        }).catch(error => {
-                            reject(error);
-                        });
-                    }
-                } else {
-                    resolve(true);
-                }
-            } catch (error) {
-                reject(error);
-            }
-        });
+            const issued = await SERVICE.DefaultInternalAuthenticationProviderService.fetchInternalAuthToken(tenant);
+            NODICS.addInternalAuthToken(tenant, issued.authToken);
+        }
+        return true;
     }
 };

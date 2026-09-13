@@ -32,7 +32,11 @@ module.exports = {
         maximumTargetRecords: 100,
         maximumRelationships: 100
     },
-    schemaWorkbench: {
+    schemaApi: {
+        // Capability-owned read/write grants; no client application identity.
+        discoveryPermission: 'system.schema.view',
+        readPermission: 'system.schema.view',
+        writePermission: 'system.schema.manage',
         form: {
             recordsLabel: 'Records',
             schemaLabel: 'Schema',

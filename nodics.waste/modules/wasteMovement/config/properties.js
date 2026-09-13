@@ -10,4 +10,16 @@
  */
 
 /** @module wasteMovement/config/properties @description Provides Waste Movement schema policy defaults. @layer config @owner wasteMovement @override Partner modules may tune movement policy or provider bridges. */
-module.exports = { schemaPolicies: { wasteMovement: { operational: { accessGroups: { adminGroup: 10, serviceAccountUserGroup: 10, employeeUserGroup: 10 } } } } };
+module.exports = {
+    // Inert inventory; an allowed local server must explicitly select this capability.
+    localResetProvider: {
+        "contributions": {
+            "wasteMovement": {
+                "serviceNames": {
+                    "DefaultWasteBatchService": true,
+                    "DefaultWasteMovementService": true
+                }
+            }
+        }
+    },
+ schemaPolicies: { wasteMovement: { operational: { accessGroups: { adminGroup: 10, serviceAccountUserGroup: 10, employeeUserGroup: 10 } } } } };

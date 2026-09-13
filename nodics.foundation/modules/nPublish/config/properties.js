@@ -17,6 +17,18 @@
  * @override Project modules may provide later properties for customer publishing behavior.
  */
 module.exports = {
+    // Inert inventory; an allowed local server must explicitly select this capability.
+    localResetProvider: {
+        "contributions": {
+            "publish": {
+                "serviceNames": {
+                    "DefaultPublicationAuditService": true,
+                    "DefaultPublicationRequestService": true
+                }
+            }
+        }
+    },
+
     publish: {
         lifecycle: {
             initialState: 'STAGED',

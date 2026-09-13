@@ -46,6 +46,21 @@ global.SERVICE = { DefaultCacheConfigurationService: configurationService };
         client
     };
     try {
+        const versioned = { tenant: 'test-tenant', channel, key: 'stamp', ttl: 0, versionProperty: 'authVersion', value: { authVersion: 10 } };
+        await service.putVersioned(versioned);
+        const writes = await Promise.allSettled([25, 3, 19, 26, 1].map(version => service.putVersioned({ ...versioned, value: { authVersion: version } })));
+        assert(writes.some(result => result.status === 'rejected'));
+        assert.strictEqual((await service.get(versioned)).authVersion, 26);
+        await assert.rejects(service.putVersioned(versioned), /Stale/);
+        await service.putVersioned({ ...versioned, value: { authVersion: 26 } });
+        const allocated = await Promise.all(Array.from({ length: 64 }, () => service.putVersioned({ ...versioned, advance: true, value: { authVersion: 1, items: [], metadata: { nested: [] } } })));
+        assert.deepStrictEqual(allocated.map(row => row.result.authVersion).sort((a, b) => a - b), Array.from({ length: 64 }, (_, index) => 27 + index));
+        assert.deepStrictEqual((await service.get(versioned)).metadata, { nested: [] });
+        assert.deepStrictEqual((await service.get(versioned)).items, []);
+        const otherTenant = { ...versioned, tenant: 'another-tenant', value: { authVersion: 1 } };
+        await service.putVersioned(otherTenant);
+        assert.strictEqual((await service.get(otherTenant)).authVersion, 1);
+        await service.flushByKeys({ ...otherTenant, keys: ['stamp'] });
         await service.put({ tenant: 'test-tenant', channel, key: 'read', value: { result: 'ok' }, ttl: 10 });
         assert.strictEqual((await service.get({ tenant: 'test-tenant', channel, key: 'read' })).result, 'ok');
         assert.strictEqual((await service.consume({ tenant: 'test-tenant', channel, key: 'read' })).result, 'ok');

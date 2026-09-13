@@ -51,6 +51,15 @@ module.exports = {
         return null;
     },
 
+    /** Authorizes a new job execution through the existing runtime registration and authentication owners. */
+    assertOperational: async function (tenant) {
+        const rejection = this.assertAcceptingWork();
+        if (rejection) await rejection;
+        const owner = SERVICE.DefaultModuleRegistrationAgentService;
+        if (!owner || typeof owner.assertModuleOperational !== 'function') throw new CLASSES.NodicsError('ERR_JOB_00000', 'Cronjob operational authority is unavailable');
+        return owner.assertModuleOperational('cronjob', tenant);
+    },
+
     /** Stops accepting cron work and stops every process-owned schedule. */
     drainWorkload: function () {
         this.acceptingWork = false;

@@ -11,7 +11,7 @@
 
 /** @module loyaltyCore/src/schemas/schemas @description Defines shared Loyalty policy schema contracts. @layer schema @owner loyaltyCore @override Later modules may add governed fields while preserving operation semantics. */
 module.exports = { loyaltyCore: {
-    loyaltyOperationPolicy: Object.assign({ super: 'base', model: true, schemaPolicies: ['operational'], service: { enabled: true }, router: { enabled: false }, cache: { enabled: false }, event: { enabled: false }, search: { enabled: false } }, { definition: {
+    loyaltyOperationPolicy: Object.assign({ super: 'base', model: true, schemaPolicies: ['operational'], service: { enabled: true }, router: { groups: { schemaOperations: true }, enabled: true }, cache: { enabled: false }, event: { enabled: false }, search: { enabled: false } }, { definition: {
         programCode: { type: 'string', required: true , description: 'Stores the program code used to classify, link, or resolve this record.'},
         rewardTypeCode: { type: 'string', required: true , description: 'Stores the reward type code used to classify, link, or resolve this record.'},
         operationType: { type: 'string', required: true, enum: ['EARN', 'RESERVE', 'CAPTURE', 'RELEASE', 'EXPIRE', 'ADJUST', 'REVERSE'] , description: 'Classifies this record by operation type for validation and business handling.'},

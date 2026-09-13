@@ -24,6 +24,7 @@ global.CONFIG = {
     key === "backofficeRegistry"
       ? {
           leaseTtlMs: 20,
+          operationalStateTtlMs: 30000,
           sweepIntervalMs: 1000,
           allowedSchemes: ["http", "https"],
           requireBoundServiceIdentity: true,
@@ -261,6 +262,7 @@ async function run() {
   let identity = {
     tokenType: "service",
     runtimeInstanceId: "cms-1",
+      runtimeScope: { projectCode: "default", environmentCode: "kickoffLocal", serverCode: "wcmsOnlineServer", instanceCode: "cms-1", assignmentCode: "scope-cms-1" },
     modules: ["cms"],
     userGroups: ["serviceAccountUserGroup"],
   };
@@ -274,7 +276,13 @@ async function run() {
     moduleName: "cms",
     targetAuthority: { server: "wcmsOnlineServer" },
   });
-  assert.strictEqual(resolvedOwner, undefined, "uncoordinated direct registrations must not satisfy a server authority they did not publish");
+  assert.strictEqual(resolvedOwner.server, identity.runtimeScope.serverCode, "Signed deployment scope supplies canonical coordinates for direct registrations");
+  const beforeRejection = store._instances.size;
+  for (const coordinates of [{ project: 'unapproved' }, { environment: 'unapproved' }, { server: 'unapproved' }]) {
+    await assert.rejects(service.register({ body: { ...registration, ...coordinates }, authData: identity }), /ERR_AUTH_00003/);
+    await assert.rejects(service.registerBatch({ instanceId: registration.instanceId, registrations: [registration], ...coordinates }, identity), /ERR_BOF_00000/);
+  }
+  assert.strictEqual(store._instances.size, beforeRejection, "Rejected coordinates cannot write leases");
   await service.register({
     body: registration,
     authData: identity,
@@ -345,6 +353,7 @@ async function run() {
       authData: {
         tokenType: "service",
         runtimeInstanceId: "bad",
+      runtimeScope: { projectCode: "default", environmentCode: "kickoffLocal", serverCode: "platformServer", instanceCode: "bad", assignmentCode: "scope-bad" },
         modules: ["cms"],
       },
     }),
@@ -360,6 +369,7 @@ async function run() {
       authData: {
         tokenType: "service",
         runtimeInstanceId: "bad",
+      runtimeScope: { projectCode: "default", environmentCode: "kickoffLocal", serverCode: "platformServer", instanceCode: "bad", assignmentCode: "scope-bad" },
         modules: ["cms"],
       },
     }),
@@ -371,6 +381,7 @@ async function run() {
       authData: {
         tokenType: "service",
         runtimeInstanceId: "other",
+      runtimeScope: { projectCode: "default", environmentCode: "kickoffLocal", serverCode: "platformServer", instanceCode: "other", assignmentCode: "scope-other" },
         modules: ["cms"],
       },
     }),
@@ -382,6 +393,7 @@ async function run() {
       authData: {
         tokenType: "service",
         runtimeInstanceId: "other",
+      runtimeScope: { projectCode: "default", environmentCode: "kickoffLocal", serverCode: "platformServer", instanceCode: "other", assignmentCode: "scope-other" },
       },
     }),
   );
@@ -412,6 +424,7 @@ async function run() {
     authData: {
       tokenType: "service",
       runtimeInstanceId: "profile-1",
+      runtimeScope: { projectCode: "default", environmentCode: "kickoffLocal", serverCode: "platformServer", instanceCode: "profile-1", assignmentCode: "scope-profile-1" },
       modules: ["profile"],
       userGroups: ["serviceAccountUserGroup"],
     },
@@ -430,6 +443,7 @@ async function run() {
     authData: {
       tokenType: "service",
       runtimeInstanceId: "engagement-1",
+      runtimeScope: { projectCode: "default", environmentCode: "kickoffLocal", serverCode: "platformServer", instanceCode: "engagement-1", assignmentCode: "scope-engagement-1" },
       modules: ["engagementApi"],
       userGroups: ["serviceAccountUserGroup"],
     },
@@ -445,7 +459,7 @@ async function run() {
         authorityContext: "wcms.content.staged",
       }],
     }),
-    authData: Object.assign({}, identity, { runtimeInstanceId: "cms-staged-1" }),
+    authData: Object.assign({}, identity, { runtimeInstanceId: "cms-staged-1", runtimeScope: { ...identity.runtimeScope, instanceCode: "cms-staged-1", serverCode: "wcmsStagedServer" } }),
     _runtimeCoordinates: { environment: "kickoffLocal", server: "wcmsStagedServer", node: "default" },
   });
   let publicBootstrap = await service.publicBootstrap({
@@ -570,6 +584,7 @@ async function run() {
     authData: {
       tokenType: "service",
       runtimeInstanceId: "runtime-1",
+      runtimeScope: { projectCode: "default", environmentCode: "local", serverCode: "cms-server", instanceCode: "runtime-1", assignmentCode: "scope-runtime-1" },
       modules: ["nodics.wcms", "cms", "nodics.process", "workflow", "media"],
       userGroups: ["serviceAccountUserGroup"],
     },
@@ -799,12 +814,12 @@ async function run() {
     navigation: [
       {
         id: "administration",
-        requiredPermissions: ["system.schema.workbench.view"],
+        requiredPermissions: ["system.schema.view"],
       },
       {
         id: "workbench",
         parentId: "administration",
-        requiredPermissions: ["system.schema.workbench.view"],
+        requiredPermissions: ["system.schema.view"],
       },
       { id: "registry", requiredPermissions: ["backoffice.registry.view"] },
       { id: "hidden", featureState: "HIDDEN" },
@@ -816,7 +831,7 @@ async function run() {
     },
     1,
     {
-      permissions: ["backoffice.registry.view", "system.schema.workbench.view"],
+      permissions: ["backoffice.registry.view", "system.schema.view"],
     },
   );
   assert.deepStrictEqual(
@@ -1063,6 +1078,7 @@ async function run() {
     authData: {
       tokenType: "service",
       runtimeInstanceId: "cms-authority-owner-1",
+      runtimeScope: { projectCode: "default", environmentCode: "kickoffLocal", serverCode: "authorityOwnerServer", instanceCode: "cms-authority-owner-1", assignmentCode: "scope-cms-authority-owner-1" },
       modules: ["cms"],
       userGroups: ["serviceAccountUserGroup"],
     },
@@ -1074,6 +1090,7 @@ async function run() {
       authData: {
         tokenType: "service",
         runtimeInstanceId: "cms-2",
+      runtimeScope: { projectCode: "default", environmentCode: "kickoffLocal", serverCode: "otherWcmsServer", instanceCode: "cms-2", assignmentCode: "scope-cms-2" },
         modules: ["cms"],
         userGroups: ["serviceAccountUserGroup"],
       },

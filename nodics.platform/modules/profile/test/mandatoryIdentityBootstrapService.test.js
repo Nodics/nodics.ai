@@ -179,3 +179,26 @@ const service = require('../src/service/identity/defaultMandatoryIdentityBootstr
     console.error(error);
     process.exit(1);
 });
+
+
+require('node:test')('tenant bootstrap awaits governed Init and rejects before identity reconciliation on failure', async () => {
+    const source = require('../src/service/identity/defaultMandatoryIdentityBootstrapService');
+    const calls = [];
+    let finish;
+    SERVICE.DefaultDataReleaseService = { installStartupReleases: request => {
+        assert.strictEqual(request.tenant, 'other-tenant');
+        assert.deepStrictEqual(request.modules, ['profile']);
+        assert.strictEqual(request.authData.isSystem, true);
+        return new Promise(resolve => { finish = resolve; });
+    } };
+    const instance = { ...source, reconcile: async () => { calls.push('reconcile'); return { status: 'NO_CHANGES' }; } };
+    const pending = instance.prepareTenant({ tenant: 'other-tenant', modules: ['profile'] });
+    await Promise.resolve();
+    assert.deepStrictEqual(calls, []);
+    finish();
+    await pending;
+    assert.deepStrictEqual(calls, ['reconcile']);
+    SERVICE.DefaultDataReleaseService.installStartupReleases = async () => { throw new Error('Init is RUNNING'); };
+    await assert.rejects(instance.prepareTenant({ tenant: 'other-tenant' }), /Init is RUNNING/);
+    assert.deepStrictEqual(calls, ['reconcile']);
+});

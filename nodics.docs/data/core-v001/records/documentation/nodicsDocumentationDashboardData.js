@@ -743,7 +743,7 @@ module.exports = {
       {
         "code": "framework.what-is-nodics",
         "title": "What is Nodics?",
-        "summary": "Introductory definition of Nodics, its enterprise purpose, and the first mental model for business, developer, and operator readers.",
+        "summary": "What Nodics is, how it supports AI-assisted development with human ownership, and how teams understand, customize and operate enterprise applications.",
         "order": 10
       },
       {

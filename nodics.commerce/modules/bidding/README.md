@@ -15,3 +15,6 @@ and trusted identity/offer services. The default is disabled. Read the
 [contract](llm/contracts/README.md) and [examples](llm/examples/README.md).
 Run `npm test` in this module for participant isolation, generic products,
 enterprise scopes, retries, legacy records and negotiated-price checkout tests.
+
+This capability declares an inert model-service inventory for [governed Local reset](../../../nodics.foundation/modules/nSystem/llm/contracts/local-reset.md).
+A server must explicitly select it; contributions never enable reset or bypass tenant, environment, confirmation or required-service checks.

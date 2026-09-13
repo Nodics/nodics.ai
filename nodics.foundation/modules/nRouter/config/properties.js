@@ -116,7 +116,7 @@ module.exports = {
             schemaMaintenance: {
                 enabled: true
             },
-            schemaWorkbench: {
+            schemaApi: {
                 enabled: true
             },
             openApiContract: {

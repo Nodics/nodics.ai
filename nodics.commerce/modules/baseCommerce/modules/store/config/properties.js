@@ -11,6 +11,19 @@
 
 /** @module store/config/properties @description Defines Commerce capability and schema access policies. @layer config @owner store */
 module.exports = {
+    // Inert inventory; an allowed local server must explicitly select this capability.
+    localResetProvider: {
+        "contributions": {
+            "store": {
+                "serviceNames": {
+                    "DefaultPointOfServiceService": true,
+                    "DefaultSalesChannelService": true,
+                    "DefaultStoreService": true
+                }
+            }
+        }
+    },
+
     store: { enabled: true },
     schemaPolicies: { store: {
         operational: { accessGroups: { adminGroup: 10, commerceOperatorUserGroup: 10, serviceAccountUserGroup: 10 } },

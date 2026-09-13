@@ -5,7 +5,18 @@
   "description": "Reproducibility, provenance and last-qualification record for a generated customer application.",
   "type": "object",
   "additionalProperties": false,
-  "required": ["contractVersion", "solutionDigest", "planDigest", "builder", "packages", "templates", "artifacts", "effectiveGraphs", "dataPacks", "qualification"],
+  "required": [
+    "contractVersion",
+    "solutionDigest",
+    "planDigest",
+    "builder",
+    "packages",
+    "templates",
+    "artifacts",
+    "effectiveGraphs",
+    "dataPacks",
+    "qualification"
+  ],
   "properties": {
     "contractVersion": { "const": 1 },
     "solutionDigest": { "$ref": "#/$defs/sha256" },
@@ -30,7 +41,9 @@
         "required": ["path", "ownership", "digest"],
         "properties": {
           "path": { "$ref": "#/$defs/safeRelativePath" },
-          "ownership": { "enum": ["GENERATED", "GENERATED_EXTENSIBLE", "CUSTOMER_OWNED"] },
+          "ownership": {
+            "enum": ["GENERATED", "GENERATED_EXTENSIBLE", "CUSTOMER_OWNED"]
+          },
           "digest": { "$ref": "#/$defs/sha256" },
           "generatedRegionDigest": { "$ref": "#/$defs/sha256" }
         }
@@ -66,17 +79,39 @@
         "state": { "enum": ["NOT_RUN", "PASSED", "FAILED", "STALE"] },
         "verifiedAt": { "type": "string", "format": "date-time" },
         "evidenceDigest": { "$ref": "#/$defs/sha256" },
-        "gates": { "type": "array", "minItems": 1, "uniqueItems": true, "items": { "$ref": "#/$defs/capabilityCode" } },
-        "scope": { "enum": ["GENERATED_SKELETON", "REFERENCE_WORKSPACE", "FULL_GENERATED_APPLICATION"] },
+        "gates": {
+          "type": "array",
+          "minItems": 1,
+          "uniqueItems": true,
+          "items": { "$ref": "#/$defs/capabilityCode" }
+        },
+        "scope": {
+          "enum": [
+            "GENERATED_SKELETON",
+            "REFERENCE_WORKSPACE",
+            "FULL_GENERATED_APPLICATION"
+          ]
+        },
         "reportPath": { "$ref": "#/$defs/safeRelativePath" }
       }
     }
   },
   "$defs": {
-    "capabilityCode": { "type": "string", "pattern": "^[a-z][A-Za-z0-9._-]{1,127}$" },
-    "version": { "type": "string", "pattern": "^[0-9]+\\.[0-9]+\\.[0-9]+(?:-[0-9A-Za-z.-]+)?$" },
+    "capabilityCode": {
+      "type": "string",
+      "pattern": "^[a-z][A-Za-z0-9._-]{1,127}$"
+    },
+    "version": {
+      "type": "string",
+      "pattern": "^[0-9]+\\.[0-9]+\\.[0-9]+(?:-[0-9A-Za-z.-]+)?$"
+    },
     "sha256": { "type": "string", "pattern": "^sha256:[a-f0-9]{64}$" },
-    "safeRelativePath": { "type": "string", "minLength": 1, "maxLength": 512, "pattern": "^(?!/)(?!.*(?:^|/)\\.\\.(?:/|$))(?!.*\\\\)[A-Za-z0-9._/-]+$" },
+    "safeRelativePath": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 512,
+      "pattern": "^(?!/)(?!.*(?:^|/)\\.\\.(?:/|$))(?!.*\\\\)[A-Za-z0-9._/-]+$"
+    },
     "lockedCoordinates": {
       "type": "array",
       "minItems": 1,
@@ -97,7 +132,11 @@
       "additionalProperties": false,
       "required": ["nodes", "digest"],
       "properties": {
-        "nodes": { "type": "array", "uniqueItems": true, "items": { "$ref": "#/$defs/capabilityCode" } },
+        "nodes": {
+          "type": "array",
+          "uniqueItems": true,
+          "items": { "$ref": "#/$defs/capabilityCode" }
+        },
         "digest": { "$ref": "#/$defs/sha256" }
       }
     }

@@ -57,12 +57,27 @@ module.exports = exportedService = {
 },
 
     /** Implements resolveRuntimeRoots as an overrideable service operation. */
-    resolveRuntimeRoots: function () {
+    resolveRuntimeRoots: function (args = []) {
     const commandHome = path.resolve(process.env.NODICS_HOME || process.cwd());
     const customHome = process.env.CUSTOM_HOME ? path.resolve(process.env.CUSTOM_HOME) : commandHome;
     const packagePath = path.join(commandHome, 'package.json');
     if (fs.existsSync(packagePath)) {
         const packageJson = require(packagePath);
+        if (packageJson.nodics && packageJson.nodics.kind === 'application') {
+            const runtime = require(path.join(frameworkRootDir, 'nTooling/src/service/project/defaultProjectRuntimeStartService'));
+            const environment = Object.assign({}, process.env);
+            const selectedEnvironment = this.readOption(args, '--environment',
+                this.readOption(args, '--env', environment.ENV || environment.E));
+            if (selectedEnvironment) { environment.ENV = selectedEnvironment; environment.E = selectedEnvironment; }
+            const serverCode = this.readOption(args, '--server', environment.S);
+            if (!serverCode) throw new Error('Select --server for project OpenAPI generation');
+            const manifest = runtime.readManifest(commandHome);
+            const server = runtime.resolveServer(commandHome, manifest, serverCode, environment);
+            const framework = runtime.resolveFrameworkRoot(commandHome, environment);
+            return { NODICS_HOME: runtime.packageRoot(framework, 'nodics.foundation'), CUSTOM_HOME: commandHome,
+                MODULE_ROOTS: runtime.resolveModuleRoots(commandHome, framework, server) };
+        }
+
         if (packageJson.name === 'nodics.ai' && Array.isArray(packageJson.workspaces)) {
             const workspaceRoots = packageJson.workspaces.map(workspaceName => path.resolve(commandHome, workspaceName));
             return {
@@ -399,7 +414,9 @@ module.exports = exportedService = {
             existingMetadata.permission === incomingMetadata.permission &&
             JSON.stringify(existingMetadata.permissions || []) === JSON.stringify(incomingMetadata.permissions || []) &&
             JSON.stringify(existingMetadata.permissionConfig || []) === JSON.stringify(incomingMetadata.permissionConfig || []) &&
-            JSON.stringify(existingMetadata.authTokenTypes || []) === JSON.stringify(incomingMetadata.authTokenTypes || []);
+            JSON.stringify(existingMetadata.apiExposure) === JSON.stringify(incomingMetadata.apiExposure) &&
+            JSON.stringify(existingMetadata.authTokenTypes || []) === JSON.stringify(incomingMetadata.authTokenTypes || []) &&
+            Boolean(existingMetadata.schemaGoverned) === Boolean(incomingMetadata.schemaGoverned);
         if (equivalent) {
             existingMetadata.duplicateDeclarations = existingMetadata.duplicateDeclarations || [];
             existingMetadata.duplicateDeclarations.push({
@@ -427,6 +444,7 @@ module.exports = exportedService = {
     definition.url = '/' + options.contextRoot + '/' + options.urlPrefix + '/' + definition.apiVersion + definition.key;
     definition.active = definition.active === undefined ? true : definition.active;
     definition.moduleName = options.moduleName;
+    definition.schemaGoverned = options.groupName === 'schemaOperations' && Boolean(schemaObject.router && schemaObject.router.groups);
     definition.prefix = schemaName + '_' + options.routerName;
     definition.routerName = (options.moduleName + '_' + schemaName + '_' + options.routerName).toLowerCase();
     definition.cache = _.merge({}, definition.cache || {});
@@ -435,6 +453,7 @@ module.exports = exportedService = {
     }
     definition['x-nodics'] = {
         source: 'schema-generated',
+        schemaGoverned: definition.schemaGoverned,
         moduleName: options.moduleName,
         schemaOwner: options.schemaOwner,
         schemaName: schemaName,
@@ -448,6 +467,7 @@ module.exports = exportedService = {
         permission: definition.permission,
         permissions: definition.permissions || [],
         permissionConfig: definition.permissionConfig || [],
+        apiExposure: definition.apiExposure,
         authTokenTypes: definition.authTokenTypes || [],
         routerAlias: schemaObject.router && schemaObject.router.alias
     };
@@ -492,6 +512,7 @@ module.exports = exportedService = {
         permission: definition.permission,
         permissions: definition.permissions || [],
         permissionConfig: definition.permissionConfig || [],
+        apiExposure: definition.apiExposure,
         authTokenTypes: definition.authTokenTypes || [],
         responseHandler: definition.responseHandler,
         publicProbe: definition.publicProbe === true,
@@ -502,7 +523,8 @@ module.exports = exportedService = {
 
     /** Implements addDefaultRoutes as an overrideable service operation. */
     addDefaultRoutes: function (paths, options) {
-    Object.keys(options.routers.default || {}).forEach(groupName => {
+    const routerOwner = typeof SERVICE !== 'undefined' && SERVICE.DefaultRouterService || require('../router/defaultRouterService');
+    routerOwner.selectDefaultRouterGroups(options.schemaObject, options.routers).forEach(groupName => {
         if (groupName === 'options') {
             return;
         }
@@ -513,7 +535,8 @@ module.exports = exportedService = {
             (this.isValidRoute || exportedService.isValidRoute).call(this, routerName, options.routers.default[groupName][routerName]);
             (this.addRoute || exportedService.addRoute).call(this, paths, this.prepareDefaultRoute(Object.assign({}, options, {
                 routerDef: options.routers.default[groupName][routerName],
-                routerName: routerName
+                routerName: routerName,
+                groupName: groupName
             })));
         });
     });
@@ -712,7 +735,6 @@ module.exports = exportedService = {
     await config.prepareBuild(options);
     await config.initUtilities(options);
     await config.loadModules();
-    await config.initEntities();
     if (SERVICE.DefaultStatusService && SERVICE.DefaultStatusService.loadStatusDefinitions) {
         SERVICE.DefaultStatusService.loadStatusDefinitions();
     }
@@ -817,7 +839,7 @@ module.exports = exportedService = {
     (this.ensureRuntimeArgument || exportedService.ensureRuntimeArgument).call(this, 'E', environmentName);
     (this.ensureRuntimeArgument || exportedService.ensureRuntimeArgument).call(this, 'S', serverName);
     (this.ensureRuntimeArgument || exportedService.ensureRuntimeArgument).call(this, 'NODE', nodeName);
-    return Object.assign((this.resolveRuntimeRoots || exportedService.resolveRuntimeRoots).call(this, ), {
+    return Object.assign((this.resolveRuntimeRoots || exportedService.resolveRuntimeRoots).call(this, args), {
         defaultEnvironment: environmentName || env.defaultOptions.defaultEnvironment,
         defaultServer: serverName || env.defaultOptions.defaultServer,
         includeRuntimeSchemas: (this.readBooleanOption || exportedService.readBooleanOption).call(this, args, '--runtime-schemas', false),

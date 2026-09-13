@@ -138,3 +138,8 @@ those contracts but must not become another mutation authority.
 - Configuration guide: [How Configuration Works](https://github.com/Nodics/nodics.docs)
 - Operations: [Production Operating Model](https://github.com/Nodics/nodics.docs)
 - Framework map: [nodics.foundation](../README.md)
+
+Artifact diagnostics now read effective loader traces and show per-member
+origins. The last file to contribute an artifact does not necessarily supply
+every method. Reports retain the selected server and node coordinates without
+embedding function bodies or secret configuration values.

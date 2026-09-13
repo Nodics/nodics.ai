@@ -9,4 +9,4 @@
 
  */
 /** @module fulfillment/nodics @description Declares the Fulfillment composition lifecycle without owning business source. @layer module @owner fulfillment */
-module.exports = { /** Initializes the group. */ init: () => Promise.resolve(true), /** Finalizes the group. */ postInit: () => Promise.resolve(true) };
+module.exports = { /** Initializes the group. */ init: function () { return Promise.resolve(true); }, /** Finalizes the group. */ postInit: function () { return Promise.resolve(true); } };

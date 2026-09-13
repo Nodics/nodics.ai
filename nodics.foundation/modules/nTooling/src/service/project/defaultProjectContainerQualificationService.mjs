@@ -131,11 +131,13 @@ function acceptanceEnvironment(selected, kind = 'platform') {
     ...base,
     AXIS_PLATFORM_URL: urls.platform,
     AXIS_WCMS_URL: urls.wcmsStaged,
-    NEXUS_CMS_URL: urls.wcmsOnline,
     AXIS_PROCESS_URL: urls.process,
     NODICS_ENGAGEMENT_URL: urls.engagement,
     AXIS_URL: urls.axis,
-    NEXUS_URL: urls.nexus
+    ...Object.fromEntries(Object.entries(selected.acceptance.environmentUrls || {}).map(([name, key]) => {
+      if (!/^[A-Z][A-Z0-9_]*$/.test(name) || !Object.prototype.hasOwnProperty.call(urls, key)) throw new Error('Invalid acceptance environment URL mapping');
+      return [name, urls[key]];
+    }))
   };
 }
 
@@ -155,21 +157,22 @@ function runCommerceAcceptance(selected) {
   const env = acceptanceEnvironment(selected, 'commerce');
   const commands = [
     {
-      command: selected.acceptance.commerceDataCommand || 'acceptance:agora-commerce-data',
+      command: selected.acceptance.commerceDataCommand,
       env: {
         ...env,
         NODICS_STOREFRONT_COMMERCE_DATA_EXECUTE: process.env.NODICS_STOREFRONT_COMMERCE_DATA_EXECUTE || 'true',
       },
     },
     {
-      command: selected.acceptance.commercePublicationCommand || 'acceptance:agora-commerce-publication',
+      command: selected.acceptance.commercePublicationCommand,
       env,
     },
     {
-      command: selected.acceptance.commerceCommand || 'acceptance:agora-commerce',
+      command: selected.acceptance.commerceCommand,
       env,
     },
   ];
+  if (commands.some(step => typeof step.command !== 'string' || !step.command)) throw new Error('Declare the environment commerce acceptance commands');
   for (const step of commands) {
     const result = spawnSync('npm', ['run', step.command], {
       cwd: projectRoot,
@@ -224,9 +227,9 @@ async function runQualification(selected) {
     }
   });
   await check(evidence, 'network-separation', () => {
-    const nexus = JSON.parse(run(docker, ['inspect', q.networkSeparation.publicContainer], { env: dockerEnv }))[0].NetworkSettings.Networks;
+    const publicNetworks = JSON.parse(run(docker, ['inspect', q.networkSeparation.publicContainer], { env: dockerEnv }))[0].NetworkSettings.Networks;
     const staged = JSON.parse(run(docker, ['inspect', q.networkSeparation.applicationContainer], { env: dockerEnv }))[0].NetworkSettings.Networks;
-    if (Object.keys(nexus).some(name => name.includes('application') || name.includes('data')) || Object.keys(staged).some(name => name.includes('public'))) {
+    if (Object.keys(publicNetworks).some(name => name.includes('application') || name.includes('data')) || Object.keys(staged).some(name => name.includes('public'))) {
       throw new Error('public and application/data network boundaries overlap');
     }
   });

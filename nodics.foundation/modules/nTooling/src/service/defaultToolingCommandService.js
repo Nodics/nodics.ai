@@ -25,6 +25,27 @@ const toolingModulePath = path.resolve(__dirname, '../..');
  * @override Projects extend commands through `config/properties.js` under `tooling.commands`; changing an existing handler requires `$override.mode: 'replace'` so customization remains intentional and traceable.
  */
 module.exports = {
+    /** Normalizes public target options without creating a second command registry. @param {string[]} args User arguments. @returns {string[]} Existing command arguments. */
+    normalizeArguments: function (args = []) {
+        const aliases = { '--env': '--environment', '--project': '--home' };
+        const options = new Set(['--env', '--environment', '--project', '--home', '--server', '--node']);
+        const result = [];
+        const seen = new Set();
+        for (let index = 0; index < args.length; index++) {
+            const argument = args[index];
+            const separator = argument.indexOf('=');
+            const name = separator === -1 ? argument : argument.slice(0, separator);
+            if (!options.has(name)) { result.push(argument); continue; }
+            const value = separator === -1 ? args[++index] : argument.slice(separator + 1);
+            const canonical = aliases[name] || name;
+            if (!value || value.startsWith('--')) throw new Error('Missing value for ' + name);
+            if (seen.has(canonical)) throw new Error('Duplicate target option: ' + canonical);
+            seen.add(canonical);
+            result.push(canonical + '=' + value);
+        }
+        return result;
+    },
+
     /**
      * Reads a `--name=value` command-line option.
      * @param {string[]} args Command arguments.
@@ -421,6 +442,7 @@ module.exports = {
      * @returns {Promise<*>} Command result.
      */
     run: async function (args) {
+        args = this.normalizeArguments(args);
         const home = this.resolveHome(args);
         const registry = this.loadCommands(home);
         const commandName = (args || []).find(arg => !arg.startsWith('-'));

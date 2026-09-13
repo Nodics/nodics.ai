@@ -220,6 +220,13 @@ module.exports = {
         "Invalid module registration",
       );
     }
+    const scope = request.authData.runtimeScope;
+    request._projectCode = scope.projectCode;
+    request._runtimeCoordinates = {
+      ...request._runtimeCoordinates,
+      environment: scope.environmentCode,
+      server: scope.serverCode
+    };
     let key = registration.moduleName + ":" + registration.instanceId;
     let store = this.getStore();
     let existing = await store.get(key);
@@ -296,8 +303,20 @@ module.exports = {
     return { code: "SUC_BOF_00000", data: this.projectClientSafe(observed) };
   },
 
+  /** Bounds the lifetime of replicated business activation decisions. */
+  getOperationalStateTtlMs: function () {
+    const ttl = this.getConfiguration().operationalStateTtlMs;
+    if (!Number.isSafeInteger(ttl) || ttl < 1000 || ttl > 60000) throw new Error('Registry operational state TTL must be between 1000 and 60000 milliseconds');
+    return ttl;
+  },
+
   /** Registers one bounded runtime-instance batch while preserving per-module leases. */
   registerBatch: function (batch, authData) {
+    if (!this.validateServiceIdentity({ authData }, batch)) {
+      this._metrics.rejected++;
+      return Promise.reject(new CLASSES.NodicsError('ERR_BOF_00000', 'Runtime registration exceeds approved deployment scope'));
+    }
+    const operationalStateTtlMs = this.getOperationalStateTtlMs();
     let registrations = batch.registrations || [];
     let limit = Number(
       this.getConfiguration().maxModulesPerRegistration || 512,
@@ -379,6 +398,16 @@ module.exports = {
           instanceId: batch.instanceId,
           registeredModules: results.length,
           reconciledFunctionalModules: functionalModules.length,
+          operationalState: {
+            instanceId: authData.runtimeScope.instanceCode,
+            projectCode: authData.runtimeScope.projectCode,
+            expiresAt: Date.now() + operationalStateTtlMs,
+            modules: registrations.map(item => {
+              const record = functionalModules.find(value => value.functionalModule === functionalModuleIndex[item.moduleName]);
+              return { moduleName: item.moduleName, enabled: Boolean(record && record.registrationState === 'REGISTERED' && record.enabled === true),
+                catalogueRevision: record ? Number(record.catalogueRevision || 0) : 0 };
+            })
+          },
         },
       }));
     });
@@ -444,18 +473,21 @@ module.exports = {
 
   /** Validates that a service token is bound to the runtime instance and every declared module. */
   validateServiceIdentity: function (request, registration) {
-    if (this.getConfiguration().requireBoundServiceIdentity === false)
-      return true;
     let authData = request.authData || {};
     let registrations = registration.registrations || [registration];
     let instanceId =
       registration.instanceId ||
       (registrations[0] && registrations[0].instanceId);
-    return (
-      authData.tokenType === "service" &&
-      authData.runtimeInstanceId === instanceId &&
+    const scope = authData.runtimeScope;
+    const coordinates = request._runtimeCoordinates || {};
+    return Boolean(
+      authData.tokenType === "service" && scope && scope.assignmentCode &&
+      authData.runtimeInstanceId === instanceId && scope.instanceCode === instanceId &&
+      (registration.project || request._projectCode || scope.projectCode) === scope.projectCode &&
+      (registration.environment || coordinates.environment || scope.environmentCode) === scope.environmentCode &&
+      (registration.server || coordinates.server || scope.serverCode) === scope.serverCode &&
       Array.isArray(authData.modules) &&
-      registrations.every((item) => authData.modules.includes(item.moduleName))
+      registrations.every(item => item.instanceId === instanceId && authData.modules.includes(item.moduleName))
     );
   },
 
@@ -466,10 +498,10 @@ module.exports = {
     let moduleName =
       (request.body && request.body.moduleName) || request.moduleName;
     if (
-      this.getConfiguration().requireBoundServiceIdentity !== false &&
-      (!request.authData ||
-        request.authData.tokenType !== "service" ||
-        request.authData.runtimeInstanceId !== instanceId)
+      !request.authData || request.authData.tokenType !== "service" ||
+      !request.authData.runtimeScope || request.authData.runtimeScope.instanceCode !== instanceId ||
+      request.authData.runtimeInstanceId !== instanceId ||
+      (moduleName && !(request.authData.modules || []).includes(moduleName))
     ) {
       this._metrics.rejected++;
       await this.audit({

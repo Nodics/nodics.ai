@@ -16,7 +16,21 @@
  * @owner generated
  * @override Project, environment, server, node, tenant, or customer layers may override these defaults through Nodics configuration layering.
  */
-module.exports = { electronicsProduct: {
+module.exports = {
+    // Inert inventory; an allowed local server must explicitly select this capability.
+    localResetProvider: {
+        "contributions": {
+            "electronicsProduct": {
+                "serviceNames": {
+                    "DefaultElectronicsCompatibilityProfileService": true,
+                    "DefaultElectronicsDeviceIdentityPolicyService": true,
+                    "DefaultElectronicsSpecificationProfileService": true,
+                    "DefaultElectronicsWarrantyProfileService": true
+                }
+            }
+        }
+    },
+ electronicsProduct: {
     identifierTypes: ['SERIAL', 'IMEI', 'MEID', 'MAC'],
     warrantyUnits: ['DAY', 'MONTH', 'YEAR'],
     requireActiveSpecificationForProjection: true

@@ -47,7 +47,6 @@ module.exports = {
     /** Gets governed knowledge status. */ getKnowledgeStatus: function (request, callback) { return this.invoke('getKnowledgeStatus', request, callback); },
     /** Refreshes one governed knowledge source. */ refreshKnowledgeSource: function (request, callback) { return this.invoke('refreshKnowledgeSource', request, callback); }
     ,/** Prepares a governed product plan. */ prepareProductPlan: function (request, callback) { return this.invoke('prepareProductPlan', request, callback); }
-    ,/** Executes an explicitly confirmed product plan. */ executeProductPlan: function (request, callback) { return this.invoke('executeProductPlan', request, callback); }
     ,/** Gets a confirmation. */ getConfirmation: function (request, callback) { return this.invoke('getConfirmation', request, callback); }
     ,/** Approves a confirmation. */ approveConfirmation: function (request, callback) { return this.invoke('approveConfirmation', request, callback); }
     ,/** Rejects a confirmation. */ rejectConfirmation: function (request, callback) { return this.invoke('rejectConfirmation', request, callback); }

@@ -39,9 +39,8 @@ beforeEach(() => {
         DefaultTelegramIdentityProviderService: telegram,
         DefaultEnterpriseService: { retrieveEnterprise: async code => ({ code, active: true, tenant: { code: 'tenant-a', active: true } }) },
         DefaultIdentityGovernanceService: { getSystemAuthData: () => ({ principalType: 'service' }) },
-        DefaultCustomerService: { findByLoginId: async ({loginId}) => customers[loginId], update: async ({query,model}) => Object.assign(customers[query.loginId],model.$set) },
+        DefaultCustomerService: { findByLoginId: async ({loginId}) => customers[loginId], update: async ({query,model}) => Object.assign(customers[query.loginId],model.$set,{ authVersion: customers[query.loginId].authVersion + 1 }) },
         DefaultUserStateService: { findUserState: async () => ({ locked }) },
-        DefaultPrincipalSecurityStampGovernanceService: { nextVersion: () => 2 },
         DefaultExternalIdentityLinkService: {
             get: async ({tenant,query,options}) => { assert.equal(options.skipItemCache,true); const row = records.get(tenant+'|'+query.code); return { result: row ? [structuredClone(row)] : [] }; },
             save: async ({tenant,model}) => { const key=tenant+'|'+model.code; if(records.has(key)) throw Error('duplicate'); records.set(key,{...model,revision:1}); },

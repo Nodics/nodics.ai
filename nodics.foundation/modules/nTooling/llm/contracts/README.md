@@ -35,3 +35,103 @@ A domain's environment-owned `publication` configuration may declare
 projection replacement by store so one domain cannot erase another store's
 catalogue. `NODICS_ENVIRONMENT` selects the environment profile and bootstrap
 credential source; explicit URL/token overrides remain supported.
+
+## Project and repository build targeting
+
+Project `clean` and `build` retain the project command home and reuse the runtime
+startup resolver for framework roots, environment and server metadata. Select
+`--server=<code>` and optionally `--environment=<name>`; omission fails with an
+actionable selection message. Never substitute a framework-only composition.
+The selected server contributes project schemas, common templates and lifecycle
+hooks. No default all-server mutation is implied.
+
+Framework builds derive loadable groups from workspace package metadata. Their
+tooling-owned server lives under `.nodics/tmp/repository-build` so generated
+output survives between build, documentation and test commands. Customer builds
+never use this validation server. Temporary test compositions are still removed.
+
+## Complete export governance
+
+`ai:principle-audit` discovers runtime source, configuration and lifecycle files
+from package metadata; it does not maintain a runtime file-name sample. Acorn
+checks exported methods and top-level behavior helpers structurally, including
+assignment/identifier exports. It excludes generated/data/test/context output
+and the documented `src/lib` constructor category. Keep existing non-runtime
+command-boundary coverage explicit. Nested callbacks and control-flow statements
+must not be mistaken for exported shorthand methods.
+
+Project command defaults contain reusable operations only. Application server and
+environment aliases, named customer acceptance journeys and media seeds are
+project-owned `nodics.project.json` tooling commands. Declare scripts under
+`tooling.scriptOwnership.projectOwned`; the existing executor supplies project and
+framework roots. Do not copy topology, release or configuration resolvers into the
+project. Project documentation generators read stable publication identifiers,
+routes, labels and channels from `docs/catalogue.json.publication`, validated
+before writing. The generic data-manifest command refreshes only explicitly
+declared development-baseline checksums; changed immutable releases fail before
+any manifest write. Environment composition selects an explicit code or the sole
+declared composition and reads only its declared environment variable.
+
+## Installed project command
+
+Foundation's package `bin.nodics` points to the existing nTooling project bridge.
+A declared compatible Foundation dependency installs `node_modules/.bin/nodics`;
+normal npm scripts resolve it automatically. The bridge reads the chosen project's
+`.env`, resolves its configured framework checkout or its own checkout, and dispatches
+to the existing tooling registry. No project-owned JavaScript launcher is required.
+Local checkout dependencies remain explicit `file:` references in package/lockfiles;
+this is not an unpinned package fetch or a claim of a published npm release.
+
+```sh
+npm exec -- nodics start --env qa --server jobs --node worker1
+npm exec -- nodics build --env qa --server jobs
+npm exec -- nodics clean --env qa --server jobs
+npm exec -- nodics project:validate
+```
+
+`--env` aliases `--environment`; `--project` aliases `--home`. Target options accept
+both `--name=value` and `--name value`. Duplicate or missing target values fail.
+Start resolves the explicit server through its existing package topology; optional
+nodes use nConfig's existing node selector. Build/clean require a server and retain
+server-owned output shared by nodes. They do not infer an environment-wide build.
+CLI targets take precedence over environment-file defaults. Selection is restored
+after an awaited runtime lifecycle, including failure. Credentials stay in the
+existing external/environment/secret authority and are never CLI examples.
+
+The same registry still accepts its existing command names. Customer acceptance
+aliases remain opt-in `project:run` commands. Qualification/release commands retain
+the framework home established by the project bridge. Changing command packaging
+does not imply permission to run a deployment, release, reset or live acceptance.
+
+Project lifecycle commands use their declared `projectSteps`: validate the project
+manifest/script boundary, ownership language, selected runtime generation,
+OpenAPI, LLM context and generated documentation. Framework authoring keeps the
+existing complete `steps`, including framework governance documents, principles
+and Nodics legal headers. Do not require customers to copy those files or label
+their own source with Nodics copyright. A customer may add its own legal and
+documentation gates through the existing command override. Project clean only
+cleans the selected server; it does not erase project-wide LLM context.
+
+## Disposable runtime acceptance
+
+`test/projectRuntimeBootstrapLive.test.js --require-live` starts private local
+MongoDB/Redis and selected Foundation, Inventory, Commerce, CMS Online or Process
+runtimes. Its test-only initializer provisions fixture principals and direct
+Profile grants through generated services. It must never connect to existing
+business storage or publish fixtures as installer defaults. Keep cleanup bounded,
+retain original failures, redact proof/token output, and distinguish startup
+acceptance from domain business operations and external deployment qualification.
+
+The Process composition exercises persisted registration, revision-protected
+admin lifecycle HTTP decisions, actual required core import, Workflow admission
+and Cron deactivation while previously admitted work completes. Every composition
+then deactivates its persisted Profile deployment assignment and verifies old
+token rejection and denied renewal on the separate runtime. The BackOffice
+fixture receives explicit import scopes and API exposure; ordinary framework
+service accounts retain their existing restricted defaults.
+
+The `cluster` composition starts two nodes concurrently from one built server,
+with distinct configuration and Profile principals/grants. Assert shared generated
+paths and independent instance scope. Every composition performs real project-only
+generated-service persistence; reuse fresh request contexts between operations.
+Clean up child runtimes as well as their provider processes on failure.

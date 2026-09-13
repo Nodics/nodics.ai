@@ -31,6 +31,53 @@ extend, test, and upgrade the platform.
 | What does it reduce? | Repeated architecture work, customer forks, hidden configuration, unclear ownership, and fragile runtime changes. |
 | What does it enable? | Faster setup, governed customization, publishable content, reusable capability modules, and clearer production support. |
 
+## AI-assisted development with human ownership
+
+Nodics is designed to let a team use AI without surrendering its ability to
+understand, change and operate the software. Faster code generation is useful
+only when the people responsible for the application can review the result,
+maintain it and recover when something goes wrong.
+
+Engineers moving from established enterprise systems bring valuable experience
+with services, validation, transactions, deployment and support. Adopting AI
+should build on that experience. Teams need a clear answer to what code should
+be written, where it belongs and how it becomes part of the running application.
+Nodics addresses this through module ownership, source definitions, supported
+extension points, layered configuration and shared implementation contracts.
+
+Manual development remains a first-class way of working. A developer can write
+a feature, ask AI to help extend it, review the changes and maintain it later
+through the same source files and contracts. Human-written and AI-generated
+changes have the same obligations: explicit ownership, understandable code,
+security, validation, documentation and appropriate tests. The maintained
+application must not depend on access to the original coding conversation.
+
+For example, when a customer needs a different validation rule, first identify
+the capability that owns validation and inspect its supported extension point.
+Put the customer-specific change in the customer project, document the inherited
+behavior and test both the new rule and the guarantees it must preserve. This
+path applies whether a developer or an AI tool writes the implementation.
+
+| Developer question | Nodics implementation discipline |
+| --- | --- |
+| What should change? | Define the business outcome and reuse the capability that already owns it. |
+| Where should it be written? | Identify the owning repository, module, layer and authoritative source file. |
+| How should it be customized? | Use supported properties, source definitions or loader-visible extension points; change the authoritative definitions and regenerate their outputs. |
+| What will run? | Inspect active modules, load order, effective configuration and the selected implementation for the intended runtime. |
+| How can another engineer maintain it? | Preserve purpose, extension guidance, focused tests and sanitized diagnostic and recovery information with the implementation. |
+
+AI-assisted coding and AI used inside an application are separate decisions.
+Using an AI coding tool does not require every business operation to call a
+model. When a feature does use AI at runtime, the provider boundary and failure
+handling must be explicit; Nodics security and owning domain services retain
+authorization, validation and execution authority.
+
+These are engineering responsibilities, not a guarantee that generated code is
+correct or that every deployment is production-ready. A practical review is to
+ask an engineer who did not build the feature to explain it, make a supported
+change and diagnose a failure using the repository, documentation and governed
+tools. Missing explanations or tests are gaps to address before acceptance.
+
 ## Technical definition
 
 Technically, Nodics is a layered runtime. Framework modules live in

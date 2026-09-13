@@ -33,9 +33,7 @@ module.exports = {
                 operation: 'register',
                 requestBody: { required: true, content: { 'application/json': { schema: contracts.registrationBatch } } },
                 responses: { '200': { description: 'Runtime module leases registered', content: { 'application/json': {
-                    schema: ({ type: 'object', required: ['code', 'data'], properties: { code: { type: 'string' }, data: { type: 'object', required: ['instanceId', 'registeredModules'], properties: {
-                        instanceId: { type: 'string' }, registeredModules: { type: 'integer', minimum: 1 }
-                    } } } })
+                    schema: contracts.registrationResult
                 } } } }
             },
             deregister: {

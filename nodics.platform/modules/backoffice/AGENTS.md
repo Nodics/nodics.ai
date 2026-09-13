@@ -146,3 +146,23 @@
   consolidated/modular topology, and later-loaded override tests as applicable.
 
 Native workspaces use the bounded `backendWorkspace` native variant with stable workspace/view codes, never component imports or executable properties. Cross-module orphan removal must cascade through local grandchildren, and effective cross-provider cycles must be rejected. Follow the global module-owned UI contribution contract.
+
+Required data permits activation only after confirmed CURRENT release status.
+Preserve running/incomplete receipts and reject before catalogue activation. See
+[completion gate](llm/contracts/README.md#required-data-completion-before-activation).
+
+Required activation data must be confirmed current by nImport. Never convert
+running, queued, missing or non-executable results to imported receipts. Preserve
+incomplete receipts, fail activation, and retain catalogue revision/runtime gates.
+
+This capability declares an inert model-service inventory for [governed Local reset](../../../nodics.foundation/modules/nSystem/llm/contracts/local-reset.md).
+A server must explicitly select it; contributions never enable reset or bypass tenant, environment, confirmation or required-service checks.
+
+Observed registration requires signed approved deployment scope. The batch operational response projects existing functional catalogue activation with bounded expiry; it must not create a second activation registry.
+
+Background contract discovery uses the existing repository-owned system context
+for normalized observation persistence. The runtime reporting a validated lease
+retains its group-free, scoped credential; discovery must not give it generic
+BackOffice schema rights. Preserve source-instance evidence and existing bounded
+normalization, compatibility classification, approval and revision checks. Human
+contract decisions retain their authenticated actor and permission gates.

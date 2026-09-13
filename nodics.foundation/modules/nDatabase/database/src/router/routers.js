@@ -22,106 +22,32 @@
  *
  * @property {Object} common.schemaIndexes Schema index refresh routes.
  * @property {Object} common.schemaValidation Schema validator refresh routes.
- * @property {Object} common.schemaWorkbench Client-safe schema discovery routes.
+ * @property {Object} common.schemaDiscovery Canonical client-safe collection/detail discovery.
  *
- * @note Schema Workbench routes must remain generic safety/projection
- * contracts. Do not add screen-specific or schema-specific routes such as
- * `/schema/workbench/catalog/records`; Axis should use generated CRUD and
- * domain APIs by default, with Workbench routes only filling generic browser
- * safety gaps.
+ * @note Record operations are generated once under each owning schema.
  */
 module.exports = {
     common: {
-        schemaWorkbench: {
+        schemaDiscovery: {
             listSchemas: {
                 secured: true,
                 accessGroups: ['userGroup'],
-                permission: 'system.schema.workbench.view',
-                apiExposure: 'schemaWorkbench',
-                key: '/schema/workbench',
+                permissionConfig: 'schemaApi.discoveryPermission',
+                apiExposure: 'schemaApi',
+                key: '/schemas',
                 method: 'GET',
-                controller: 'DefaultSchemaWorkbenchController',
+                controller: 'DefaultSchemaUtilityController',
                 operation: 'list'
             },
             getSchema: {
                 secured: true,
                 accessGroups: ['userGroup'],
-                permission: 'system.schema.workbench.view',
-                apiExposure: 'schemaWorkbench',
-                key: '/schema/workbench/:schema',
+                permissionConfig: 'schemaApi.discoveryPermission',
+                apiExposure: 'schemaApi',
+                key: '/schemas/:schema',
                 method: 'GET',
-                controller: 'DefaultSchemaWorkbenchController',
+                controller: 'DefaultSchemaUtilityController',
                 operation: 'get'
-            },
-            searchRecords: {
-                secured: true,
-                accessGroups: ['userGroup'],
-                permission: 'system.schema.workbench.view',
-                apiExposure: 'schemaWorkbench',
-                key: '/schema/workbench/:schema/records',
-                method: 'POST',
-                controller: 'DefaultSchemaWorkbenchController',
-                operation: 'search'
-            },
-            createRecord: {
-                secured: true,
-                accessGroups: ['userGroup'],
-                permission: 'system.schema.workbench.manage',
-                apiExposure: 'schemaWorkbench',
-                key: '/schema/workbench/:schema/record',
-                method: 'POST',
-                controller: 'DefaultSchemaWorkbenchController',
-                operation: 'createRecord'
-            },
-            updateRecord: {
-                secured: true,
-                accessGroups: ['userGroup'],
-                permission: 'system.schema.workbench.manage',
-                apiExposure: 'schemaWorkbench',
-                key: '/schema/workbench/:schema/record',
-                method: 'PATCH',
-                controller: 'DefaultSchemaWorkbenchController',
-                operation: 'updateRecord'
-            },
-            previewDeleteImpact: {
-                secured: true,
-                accessGroups: ['userGroup'],
-                permission: 'system.schema.workbench.view',
-                apiExposure: 'schemaWorkbench',
-                key: '/schema/workbench/:schema/delete-impact',
-                method: 'POST',
-                controller: 'DefaultSchemaWorkbenchController',
-                operation: 'previewDeleteImpact'
-            },
-            deleteRecord: {
-                secured: true,
-                accessGroups: ['userGroup'],
-                permission: 'system.schema.workbench.manage',
-                apiExposure: 'schemaWorkbench',
-                key: '/schema/workbench/:schema/record',
-                method: 'DELETE',
-                controller: 'DefaultSchemaWorkbenchController',
-                operation: 'deleteRecord'
-            },
-            bulkRecords: {
-                secured: true,
-                accessGroups: ['userGroup'],
-                permission: 'system.schema.workbench.manage',
-                apiExposure: 'schemaWorkbench',
-                key: '/schema/workbench/:schema/bulk',
-                method: 'POST',
-                controller: 'DefaultSchemaWorkbenchController',
-                operation: 'bulk'
-            },
-            aggregateOperation: {
-                secured: true,
-                accessGroups: ['userGroup'],
-                permission: 'system.schema.workbench.manage',
-                apiExposure: 'schemaWorkbench',
-                key: '/schema/workbench/:schema/aggregate',
-                method: 'POST',
-                controller: 'DefaultSchemaWorkbenchController',
-                operation: 'aggregate'
             }
         },
         schemaIndexes: {

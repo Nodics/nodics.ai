@@ -344,12 +344,15 @@ module.exports = {
      * @param {Object} request Authenticated aggregate request with payload.model.
      * @returns {Promise<Object>} Persisted enterprise, including reference identities.
      */
-    createFromWorkbench: async function (request) {
+    createFromModel: async function (request) {
         this.authorize(request);
         if (!this.isPlatformAdministrator(request.authData)) throw this.error('Enterprise creation is limited to the Platform Owner enterprise');
-        let workbench = SERVICE.DefaultSchemaWorkbenchService;
+        let schemaUtility = SERVICE.DefaultSchemaUtilityService;
+        if (!schemaUtility || typeof schemaUtility.buildDescriptor !== 'function') {
+            throw this.error('Schema metadata is unavailable for enterprise setup');
+        }
         let moduleObject = NODICS.getModule('profile');
-        let descriptor = workbench.buildDescriptor(request, moduleObject, 'enterprise', 'profile');
+        let descriptor = schemaUtility.buildDescriptor(request, moduleObject, 'enterprise', 'profile');
         let input = request.payload && request.payload.model;
         if (!descriptor || !descriptor.operations.includes('create') || !input || typeof input !== 'object' || Array.isArray(input)) {
             throw this.error('Enterprise creation input is invalid');
@@ -359,10 +362,12 @@ module.exports = {
         if (Object.keys(input).some(key => !writable.has(key) || reserved.has(key))) {
             throw this.error('Enterprise creation contains a managed or unavailable field');
         }
+        const idempotencyKey = schemaUtility.getIdempotencyKey(request);
+        if (!idempotencyKey) throw this.error('Enterprise setup requires a valid Idempotency-Key');
         let { code, name, active, roleCodes, superEnterprise, ...additional } = input;
         await this.create({ ...request, body: {
             code, name, active, roleCodes, superEnterpriseCode: superEnterprise,
-            tenantCode: code, idempotencyKey: request.idempotencyKey,
+            tenantCode: code, idempotencyKey,
         } }, additional);
         let result = await SERVICE.DefaultEnterpriseService.get({
             tenant: CONFIG.get('defaultTenant') || 'default', authData: request.authData,

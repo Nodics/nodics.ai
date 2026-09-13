@@ -9,4 +9,4 @@
 
  */
 /** @module digitalCore/nodics @description Declares Digital Core lifecycle. @layer module @owner digitalCore */
-module.exports = { /** Initializes the capability. */ init: () => Promise.resolve(true), /** Finalizes the capability. */ postInit: () => Promise.resolve(true) };
+module.exports = { /** Initializes the capability. */ init: function () { return Promise.resolve(true); }, /** Finalizes the capability. */ postInit: function () { return Promise.resolve(true); } };

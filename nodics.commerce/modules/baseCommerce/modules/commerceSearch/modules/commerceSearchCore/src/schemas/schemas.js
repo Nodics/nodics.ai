@@ -11,7 +11,7 @@
 
 /** @module commerceSearchCore/src/schemas/schemas @description Defines Commerce Search rule and projection persistence. @layer schema @owner commerceSearchCore */
 module.exports = { commerceSearchCore: {
-    commerceSearchRule: Object.assign({ super: 'base', model: true, schemaPolicies: ['tenantOwned'], service: { enabled: true }, router: { enabled: false }, cache: { enabled: false }, event: { enabled: false }, search: { enabled: false } }, { definition: {
+    commerceSearchRule: Object.assign({ super: 'base', model: true, schemaPolicies: ['tenantOwned'], service: { enabled: true }, router: { groups: { schemaOperations: true }, enabled: true }, cache: { enabled: false }, event: { enabled: false }, search: { enabled: false } }, { definition: {
         code: { type: 'string', required: true , description: 'Uniquely identifies this record for references, APIs, imports, and business administration.'},
         tenant: { type: 'string', required: true , description: 'Identifies the runtime tenant partition that scopes this record.'},
         name: { type: 'string', required: true , description: 'Stores the business display name shown to administrators and related user journeys.'},
@@ -28,7 +28,7 @@ module.exports = { commerceSearchCore: {
         revision: { type: 'int', required: true , description: 'Tracks the business revision used for governance, review, and optimistic update checks.'},
         evidence: { type: 'object', required: false , description: 'Stores structured evidence details used by this record.'}
     } }),
-    commerceSearchRuleVersion: Object.assign({ super: 'base', model: true, schemaPolicies: ['operational'], service: { enabled: true }, router: { enabled: false }, cache: { enabled: false }, event: { enabled: false }, search: { enabled: false } }, { definition: {
+    commerceSearchRuleVersion: Object.assign({ super: 'base', model: true, schemaPolicies: ['operational'], service: { enabled: true }, router: { groups: { schemaOperations: true }, enabled: true }, cache: { enabled: false }, event: { enabled: false }, search: { enabled: false } }, { definition: {
         code: { type: 'string', required: true , description: 'Uniquely identifies this record for references, APIs, imports, and business administration.'},
         tenant: { type: 'string', required: true , description: 'Identifies the runtime tenant partition that scopes this record.'},
         ruleCode: { type: 'string', required: true , description: 'Stores the rule code used to classify, link, or resolve this record.'},
@@ -39,7 +39,7 @@ module.exports = { commerceSearchCore: {
         revision: { type: 'int', required: true , description: 'Tracks the business revision used for governance, review, and optimistic update checks.'},
         evidence: { type: 'object', required: false , description: 'Stores structured evidence details used by this record.'}
     } }),
-    commerceSearchRuleProjection: Object.assign({ super: 'base', model: true, schemaPolicies: ['operational'], service: { enabled: true }, router: { enabled: false }, cache: { enabled: false }, event: { enabled: false }, search: { enabled: false } }, { search: { enabled: true, idPropertyName: 'code' }, definition: {
+    commerceSearchRuleProjection: Object.assign({ super: 'base', model: true, schemaPolicies: ['operational'], service: { enabled: true }, router: { groups: { schemaOperations: true }, enabled: true }, cache: { enabled: false }, event: { enabled: false }, search: { enabled: false } }, { search: { enabled: true, idPropertyName: 'code' }, definition: {
         code: { type: 'string', required: true , description: 'Uniquely identifies this record for references, APIs, imports, and business administration.'},
         tenant: { type: 'string', required: true , description: 'Identifies the runtime tenant partition that scopes this record.'},
         storeCode: { type: 'string', required: true , description: 'Stores the store code used to classify, link, or resolve this record.'},

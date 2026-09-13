@@ -24,8 +24,8 @@ module.exports = {
             service: {
                 enabled: true
             },
-            router: {
-                enabled: false
+            router: { groups: { schemaOperations: true },
+                enabled: true
             },
             event: {
                 enabled: true,

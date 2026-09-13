@@ -100,6 +100,11 @@ async function validateOwnership() {
 async function validateSecurityStamp() {
     let cache = {};
     global.SERVICE = {
+        DefaultCacheService: { putVersioned: async options => {
+            if (cache[options.key] && cache[options.key].authVersion > options.value.authVersion) throw new Error('Stale cache write');
+            cache[options.key] = options.value;
+            return { result: options.value };
+        } },
         DefaultAuthenticationProviderService: {
             addToken: (moduleName, expirable, key, value) => { cache[key] = value; return Promise.resolve(true); },
             findToken: (moduleName, key) => cache[key] ? Promise.resolve(cache[key]) : Promise.reject(new Error('missing'))
@@ -115,22 +120,22 @@ async function validateSecurityStamp() {
     values.cache = {
         enabled: false,
         profile: { channels: { auth: { engine: 'redis', fallback: false } } },
-        default: { engines: { redis: { distributed: true, atomicConsume: true } } }
+        default: { engines: { redis: { distributed: true, atomicConsume: true, atomicVersionWrite: true } } }
     };
     await assert.rejects(stamp.validateConfiguration(), /enabled distributed auth cache/);
     values.cache = {
         profile: { channels: { auth: { engine: 'redis', fallback: false, enabled: false } } },
-        default: { engines: { redis: { distributed: true, atomicConsume: true } } }
+        default: { engines: { redis: { distributed: true, atomicConsume: true, atomicVersionWrite: true } } }
     };
     await assert.rejects(stamp.validateConfiguration(), /enabled distributed auth cache/);
     values.cache = {
         profile: { channels: { auth: { engine: 'redis', fallback: false } } },
-        default: { engines: { redis: { distributed: true, atomicConsume: true, enabled: false } } }
+        default: { engines: { redis: { distributed: true, atomicConsume: true, atomicVersionWrite: true, enabled: false } } }
     };
     await assert.rejects(stamp.validateConfiguration(), /enabled distributed auth cache/);
     values.cache = {
         profile: { channels: { auth: { engine: 'redis', fallback: false } } },
-        default: { engines: { redis: { distributed: true, atomicConsume: true } } }
+        default: { engines: { redis: { distributed: true, atomicConsume: true, atomicVersionWrite: true } } }
     };
     await stamp.validateConfiguration();
     delete values.cache;
@@ -161,6 +166,7 @@ async function validateStableAndTransitiveStamping() {
     global.SERVICE = {
         DefaultIdentityGovernanceService: { getSystemAuthData: () => ({ isSystem: true }) },
         DefaultPrincipalSecurityStampService: {
+            reserveVersion: async (_tenant, minimum) => minimum,
             register: (tenant, principalId, version) => { registered.push({ tenant, principalId, version }); return Promise.resolve(true); }
         },
         DefaultEmployeeService: {

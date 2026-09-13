@@ -95,6 +95,7 @@ const defaultRoutes = {
             save: {
                 secured: true,
                 accessGroups: ['userGroup'],
+                apiExposure: { category: 'sampleAuthoring' },
                 key: '/schemaName',
                 method: 'PUT',
                 controller: 'DefaultctrlName',
@@ -116,6 +117,7 @@ const defaultRoutes = {
             reconcile: {
                 secured: true,
                 accessGroups: ['userGroup'],
+                apiExposure: 'sampleAdministration',
                 key: '/administration/reconcile',
                 method: 'POST',
                 controller: 'DefaultAdministrationController',
@@ -202,6 +204,9 @@ assert.strictEqual(document.paths['/nodics/sample/v0/item/all'].put.requestBody.
 assert.strictEqual(document.paths['/nodics/sample/v0/item'].put['x-nodics'].source, 'schema-generated');
 assert.strictEqual(document.paths['/nodics/sample/v0/item'].put['x-nodics'].moduleName, 'sample');
 assert.strictEqual(document.paths['/nodics/sample/v0/item'].put['x-nodics'].schemaName, 'item');
+assert.deepStrictEqual(document.paths['/nodics/sample/v0/item'].put['x-nodics'].apiExposure, { category: 'sampleAuthoring' });
+assert.strictEqual(document.paths['/nodics/sample/v0/administration/reconcile'].post['x-nodics'].apiExposure, 'sampleAdministration');
+assert.strictEqual(document.paths['/nodics/sample/v0/contract/openapi'].get['x-nodics'].apiExposure, 'openApiContract');
 assert.strictEqual(document.paths['/nodics/sample/v0/item'].put['x-nodics'].schemaComponentName, 'sample_item');
 
 const configured = document.paths['/nodics/sample/v0/contract'].post;
@@ -243,6 +248,16 @@ const aliases = {};
 generator.addRoute(aliases, { url: '/alias', method: 'GET', routerName: 'first', moduleName: 'sample', controller: 'SharedController', operation: 'shared', 'x-nodics': { moduleName: 'one', controller: 'SharedController', operation: 'shared' } });
 generator.addRoute(aliases, { url: '/alias', method: 'GET', routerName: 'second', moduleName: 'sample', controller: 'SharedController', operation: 'shared', 'x-nodics': { moduleName: 'two', controller: 'SharedController', operation: 'shared' } });
 assert.strictEqual(aliases['/alias'].get['x-nodics'].duplicateDeclarations.length, 1);
+
+// Identical transport shapes do not make different runtime exposure gates equivalent.
+for (const alternate of ['differentCategory', undefined, { category: 'differentCategory' }]) {
+    assert.throws(() => {
+        const paths = {};
+        const shared = { url: '/policy-conflict', method: 'GET', moduleName: 'sample', controller: 'SharedController', operation: 'shared' };
+        generator.addRoute(paths, Object.assign({}, shared, { routerName: 'first', 'x-nodics': { apiExposure: 'sampleAuthoring' } }));
+        generator.addRoute(paths, Object.assign({}, shared, { routerName: 'second', 'x-nodics': { apiExposure: alternate } }));
+    }, /Duplicate effective route/);
+}
 
 assert.throws(() => generator.validateDocument({
     openapi: '3.0.3',

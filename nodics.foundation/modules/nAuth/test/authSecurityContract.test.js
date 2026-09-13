@@ -274,15 +274,15 @@ async function validateAsyncContracts() {
     const internalProviderPath = path.join(repositoryRoot, 'nodics.platform/modules/profile/src/service/authentication/defaultInternalAuthenticationProviderService');
     delete require.cache[require.resolve(internalProviderPath)];
     const internalProvider = require(internalProviderPath);
+    global.SERVICE.DefaultRuntimeAuthorizationService = require(path.join(repositoryRoot, 'nodics.platform/modules/profile/src/service/identity/defaultRuntimeAuthorizationService'));
     await assert.rejects(
         internalProvider.getInternalAuthToken({ tenant: 'tenant-b', authData: { tenant: 'tenant-a', permissions: [] } }),
         error => error.code === 'ERR_AUTH_00003'
     );
-    const allowed = await internalProvider.getInternalAuthToken({
+    await assert.rejects(internalProvider.getInternalAuthToken({
         tenant: 'tenant-b',
         authData: { tenant: 'tenant-a', permissions: ['auth.internal.token.read.anyTenant'] }
-    });
-    assert.strictEqual(allowed.result.authToken, 'internal-token');
+    }), error => error.code === 'ERR_AUTH_00003');
 
     global.CONFIG = secureConfiguration;
     global.CLASSES = {

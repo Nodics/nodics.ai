@@ -17,3 +17,8 @@ This file gives AI coding agents mandatory guidance for this Nodics module or pa
 - Update the concise `README.md`, canonical documentation content, `llm/contracts`, `llm/examples`, generated context, and tests whenever behavior or extension contracts change.
 - Use `llm/contracts` for exact module-local AI/developer rules, `llm/examples` for approved patterns, and `llm/generated` for source-derived facts. Do not add a module-local llm README file; this `AGENTS.md` is the AI navigation and behavior entrypoint for the module.
 - Generated files must be recreated from source definitions; do not hand-maintain generated artifacts as source of truth.
+
+This capability declares an inert model-service inventory for [governed Local reset](../../../nodics.foundation/modules/nSystem/llm/contracts/local-reset.md).
+A server must explicitly select it; contributions never enable reset or bypass tenant, environment, confirmation or required-service checks.
+
+New job target execution requires current operational admission. Forward the authenticated runtime principal to Process; preserve already-running job completion/recovery on business deactivation.

@@ -100,7 +100,7 @@ createService().buildHeaderInstances(headerRequest, {}, {
 });
 
 assert.strictEqual(buildHeaderState.success, true);
-assert.deepStrictEqual(Object.keys(headerRequest.data.headers), ['activeData']);
+assert.deepStrictEqual(Object.keys(headerRequest.data.headers), ['activeTarget:activeData']);
 assert.strictEqual(headerRequest.importRun.summary.enabledHeaders, 1);
 assert.strictEqual(headerRequest.importRun.summary.disabledHeaders, 1);
 assert.strictEqual(headerRequest.importRun.headers[0].targetModule, 'activeTarget');

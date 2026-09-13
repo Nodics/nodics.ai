@@ -9,3 +9,6 @@ functional module. Do not place material records, submissions, receipts, impact
 results, movement, or partner policy here.
 
 Waste Core owns only the generic Waste Management dashboard anchor and its All submissions and Review queue links. Accelerator subgroups and family-specific view properties belong to their accelerator. Apply `../../../nodics.foundation/modules/nSetup/llm/contracts/module-owned-ui-contribution-contract.md`; never add placeholders for future accelerators.
+
+This capability declares an inert model-service inventory for [governed Local reset](../../../nodics.foundation/modules/nSystem/llm/contracts/local-reset.md).
+A server must explicitly select it; contributions never enable reset or bypass tenant, environment, confirmation or required-service checks.

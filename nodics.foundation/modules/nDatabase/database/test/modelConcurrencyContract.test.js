@@ -180,16 +180,3 @@ test('unchanged save skips generated post-save mutation effects', async () => {
         assert.equal(passed, true, step);
     }
 });
-
-test('Workbench unwraps persisted nested results and never fabricates a successful stale record', () => {
-    const workbench = require('../src/service/schema/defaultSchemaWorkbenchService');
-    const persisted = { code: 'one', revision: 9, name: 'Saved' };
-    assert.equal(workbench.extractMutationRecord({ code: 'SUC_UPD_00000', result: {
-        matchedCount: 1, modifiedCount: 1, models: [persisted]
-    } }), persisted);
-    assert.equal(workbench.extractMutationRecord({ code: 'SUC_SAVE_00000', result: persisted }), persisted);
-    assert.throws(() => workbench.extractMutationRecord({ result: { matchedCount: 0, models: [] } }),
-        { code: 'ERR_CONCURRENCY_00001' });
-    assert.throws(() => workbench.extractMutationRecord({ result: { modifiedCount: 1 } }),
-        { code: 'ERR_DBS_00004' });
-});

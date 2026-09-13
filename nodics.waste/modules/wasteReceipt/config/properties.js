@@ -10,4 +10,15 @@
  */
 
 /** @module wasteReceipt/config/properties @description Provides Waste Receipt schema policy defaults. @layer config @owner wasteReceipt @override Partner modules may tune receipt policy. */
-module.exports = { schemaPolicies: { wasteReceipt: { operational: { accessGroups: { adminGroup: 10, serviceAccountUserGroup: 10, employeeUserGroup: 10 } } } } };
+module.exports = {
+    // Inert inventory; an allowed local server must explicitly select this capability.
+    localResetProvider: {
+        "contributions": {
+            "wasteReceipt": {
+                "serviceNames": {
+                    "DefaultWasteReceiptService": true
+                }
+            }
+        }
+    },
+ schemaPolicies: { wasteReceipt: { operational: { accessGroups: { adminGroup: 10, serviceAccountUserGroup: 10, employeeUserGroup: 10 } } } } };

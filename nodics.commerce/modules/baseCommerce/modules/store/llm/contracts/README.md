@@ -23,3 +23,22 @@ references in its effective activation data and prove both rejection without a
 reference and acceptance with one. Use existing schema/data layers, not a new
 dependency configuration or direct database writes. Runtime restart refreshes
 the generated collection validator without dropping records.
+
+## Explicit store reference resolution
+
+`DefaultStoreContextService.resolveStoreCode(request, persistedStoreCode?)`
+validates store identifiers used by Cart and Shopping List without a new layer.
+It accepts a non-empty string from request context, payload or query; a supplied
+persisted reference comes from an already-authorized record. All values must
+agree. Missing, non-string, blank and surrounding-whitespace values fail with
+Foundation validation code `ERR_SYS_00001` when Nodics errors are available.
+There is no configuration fallback or customer identity in this resolver.
+
+This operation only validates identifier shape and agreement. Existing `resolve`
+validates supplied active tenant-scoped Store/Channel master records. Neither
+operation grants permissions, invents records or fetches them with elevated
+credentials. Later layers may tighten the effective exported methods; Cart and
+Shopping List resolve this service through the normal service registry.
+
+Test the Commerce foundation and Cart/Shopping List customer API contracts,
+including missing context, mismatches, independent stores and persisted IDs.

@@ -25,17 +25,7 @@ const fs = require('fs');
 const path = require('path');
 const { spawnSync } = require('child_process');
 
-const supportedCommands = new Set([
-    'clean',
-    'build',
-    'release:check',
-    'qualification:security-boundary',
-    'qualification:publishing-capacity',
-    'qualification:publishing-soak',
-    'qualification:publishing-interruption-contracts',
-    'project:validate',
-    'project:run'
-]);
+const toolingCommandService = require('../src/service/defaultToolingCommandService');
 
 function readEnvFile(filePath) {
     if (!fs.existsSync(filePath)) return {};
@@ -97,39 +87,37 @@ function normalizeCommand(command) {
     return command;
 }
 
-function resolveCommandHome(command, projectRoot, frameworkRoot) {
-    if (command.indexOf('project:') === 0) {
-        return projectRoot;
-    }
-    return frameworkRoot;
+function resolveCommandHome(command, projectRoot) {
+    return projectRoot;
 }
 
 function main() {
-    const projectRoot = process.cwd();
+    const normalized = toolingCommandService.normalizeArguments(process.argv.slice(2));
+    const projectRoot = toolingCommandService.resolveHome(normalized);
     const projectEnv = readEnvFile(path.join(projectRoot, '.env'));
-    const command = normalizeCommand(process.argv[2] || 'help');
-    if (!supportedCommands.has(command)) {
-        console.error('Usage: node nodics-project.js <clean|build|release:check|qualification:security-boundary|qualification:publishing-capacity|qualification:publishing-soak|qualification:publishing-interruption-contracts|project:validate|project:run> [args...]');
-        process.exitCode = 1;
-        return;
-    }
+    const command = normalizeCommand(normalized.find(argument => !argument.startsWith('-')) || 'help');
     const frameworkRoot = resolveFrameworkRoot(projectRoot, projectEnv);
     const toolPath = assertFrameworkRoot(frameworkRoot);
     const commandHome = resolveCommandHome(command, projectRoot, frameworkRoot);
-    const args = [toolPath, command, '--home=' + commandHome].concat(process.argv.slice(3));
+    const args = [toolPath, command, '--home=' + commandHome].concat(normalized.filter(argument =>
+        argument !== command && argument !== 'release-check' && !argument.startsWith('--home=')));
+    const environment = Object.assign({}, projectEnv, process.env);
+    for (const key of ['NODICS_REPOSITORY_BUILD_TMPDIR', 'NODICS_TOOLING_TMPDIR']) {
+        if (environment[key] && !path.isAbsolute(environment[key])) environment[key] = path.resolve(projectRoot, environment[key]);
+    }
     console.log('[nodics-project] project: ' + projectRoot);
     console.log('[nodics-project] framework: ' + frameworkRoot);
     console.log('[nodics-project] command: ' + command);
     const result = spawnSync(process.execPath, args, {
         cwd: projectRoot,
-        env: Object.assign({}, projectEnv, process.env, {
+        env: Object.assign({}, environment, {
             NODICS_PROJECT_ROOT: projectRoot,
             NODICS_FRAMEWORK_ROOT: frameworkRoot
         }),
         stdio: 'inherit'
     });
     if (result.error) throw result.error;
-    process.exitCode = result.status || 0;
+    process.exitCode = result.status === null ? 1 : result.status;
 }
 
 try {

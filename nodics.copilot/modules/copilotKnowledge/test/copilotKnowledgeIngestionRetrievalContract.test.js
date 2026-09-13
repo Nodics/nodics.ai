@@ -53,7 +53,7 @@ test('module lifecycle registers only non-public repository source types with Di
 const source = overrides => Object.assign({
     code: 'framework-readmes', repository: 'test-repository', project: 'nodics', module: 'nodics.copilot', owner: 'nodics.copilot',
     version: 'commit-1', sourceType: 'README', classification: 'INTERNAL', paths: ['**/*.md'],
-    allowedChannels: ['AXIS_EMPLOYEE'], requiredPermissions: ['copilot.knowledge.internal.read'],
+    allowedChannels: ['EMPLOYEE'], requiredPermissions: ['copilot.knowledge.internal.read'],
     secretScanPolicy: 'REQUIRED', enabled: true
 }, overrides || {});
 
@@ -120,7 +120,7 @@ test('repository partitions narrow extensions, exclusions, and file limits witho
 
 test('retrieval filters before Discovery and reauthorizes every returned result', async () => {
     const registry = registryService.createRegistry([
-        source({ code: 'public-docs', repository: 'nodics.docs', sourceType: 'PUBLISHED_DOCUMENTATION', classification: 'PUBLIC', paths: ['online'], public: true, lifecycle: 'ONLINE', allowedChannels: ['NEXUS_PUBLIC', 'AXIS_EMPLOYEE'], requiredPermissions: [] }),
+        source({ code: 'public-docs', repository: 'nodics.docs', sourceType: 'PUBLISHED_DOCUMENTATION', classification: 'PUBLIC', paths: ['online'], public: true, lifecycle: 'ONLINE', allowedChannels: ['PUBLIC', 'EMPLOYEE'], requiredPermissions: [] }),
         source(),
         source({ code: 'framework-agents', sourceType: 'AGENTS_CONTRACT', classification: 'RESTRICTED', paths: ['**/AGENTS.md'], requiredPermissions: ['copilot.knowledge.restricted.read'] })
     ], knowledgeConfiguration.sourceRegistry, policy);
@@ -138,12 +138,12 @@ test('retrieval filters before Discovery and reauthorizes every returned result'
         discoveryRuntimeService: { search: async request => { searches.push(request); return records; } }
     };
     const retrievalConfig = Object.assign({}, knowledgeConfiguration.retrieval, { enabled: true });
-    const publicContext = policy.normalizeSecurityContext({ channel: 'NEXUS_PUBLIC' }, policyConfiguration);
+    const publicContext = policy.normalizeSecurityContext({ channel: 'PUBLIC' }, policyConfiguration);
     const publicResult = await retrieval.search({ query: 'What is Nodics?', indexTenant: 'default', registry: registry, securityContext: publicContext, policyConfiguration: policyConfiguration, configuration: retrievalConfig, indexConfiguration: { indexName: 'copilotKnowledge' } }, dependencies);
     assert.deepEqual(searches[0].searchQuery.filters['payload.sourceCode.keyword'], ['public-docs']);
     assert.deepEqual(publicResult.evidence.map(item => item.provenance.sourceCode), ['public-docs']);
     assert.equal(publicResult.evidence.some(item => item.provenance.sourceCode === 'framework-agents'), false);
-    const axisContext = policy.normalizeSecurityContext({ channel: 'AXIS_EMPLOYEE', actor: 'admin', tenant: 'default', permissions: ['copilot.knowledge.internal.read'] }, policyConfiguration);
+    const axisContext = policy.normalizeSecurityContext({ channel: 'EMPLOYEE', actor: 'admin', tenant: 'default', permissions: ['copilot.knowledge.internal.read'] }, policyConfiguration);
     const axisResult = await retrieval.search({ query: 'Explain the framework', indexTenant: 'default', registry: registry, securityContext: axisContext, policyConfiguration: policyConfiguration, configuration: retrievalConfig, indexConfiguration: { indexName: 'copilotKnowledge' } }, dependencies);
     assert.deepEqual(searches[1].searchQuery.filters['payload.sourceCode.keyword'], ['public-docs', 'framework-readmes']);
     assert.deepEqual(axisResult.evidence.map(item => item.provenance.sourceCode), ['public-docs', 'framework-readmes']);
@@ -153,7 +153,7 @@ test('retrieval filters before Discovery and reauthorizes every returned result'
 
 test('retrieval does not call Discovery when no source is authorized', async () => {
     const registry = registryService.createRegistry([source()], knowledgeConfiguration.sourceRegistry, policy);
-    const publicContext = policy.normalizeSecurityContext({ channel: 'NEXUS_PUBLIC' }, policyConfiguration);
+    const publicContext = policy.normalizeSecurityContext({ channel: 'PUBLIC' }, policyConfiguration);
     let called = false;
     const result = await retrieval.search({ query: 'internal details', indexTenant: 'default', registry: registry, securityContext: publicContext, policyConfiguration: policyConfiguration, configuration: Object.assign({}, knowledgeConfiguration.retrieval, { enabled: true }), indexConfiguration: { indexName: 'copilotKnowledge' } }, {
         registryService: registryService, policyService: policy, knowledgeService: knowledgeService,

@@ -40,6 +40,10 @@ module.exports = {
         if (operation === 'create' && schema.backoffice && schema.backoffice.form && schema.backoffice.form.createOperation) {
             throw new CLASSES.NodicsError('ERR_AUTH_00003', 'Create this record through its owning business setup operation.');
         }
+        let operations = schema.backoffice && schema.backoffice.operations;
+        if (Array.isArray(operations) && operation && !operations.includes(operation)) {
+            throw new CLASSES.NodicsError('ERR_AUTH_00003', 'This schema does not allow the requested generic operation.');
+        }
         let authority = this.describe(schema);
         if (!authority.authoringAllowed) {
             throw new CLASSES.NodicsError('ERR_AUTH_00003', authority.publishRequired

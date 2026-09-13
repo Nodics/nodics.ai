@@ -10,7 +10,7 @@
  */
 
 /**
- * @module database/test/schemaWorkbenchContract
+ * @module database/test/schemaApiContract
  * @description Verifies safe default model discovery, explicit exclusion,
  * permission filtering, field projection, managed-field protection, and
  * relationship discovery.
@@ -21,7 +21,7 @@
  */
 
 const assert = require('assert');
-const workbenchDefaults = require('../config/properties').schemaWorkbench;
+const workbenchDefaults = require('../config/properties').schemaApi;
 const routerDefinitions = require('../src/router/routers');
 const generatedRouterDefinitions = require('../../../nRouter/src/router/routers');
 
@@ -185,7 +185,7 @@ const paymentCoreModule = {
     metaData: {
         name: 'paymentCore',
         nodics: {
-            schemaWorkbench: {
+            schemaApi: {
                 schemaModule: 'workflow',
             },
         },
@@ -210,7 +210,7 @@ global.CONFIG = {
                 removeAccessPoint: 3,
             };
         }
-        if (key === 'schemaWorkbench') {
+        if (key === 'schemaApi') {
             return {
                 discoverModelsByDefault: true,
                 defaultModelOperations: ['search', 'read', 'create', 'update', 'delete'],
@@ -231,6 +231,7 @@ let lastSearchInput;
 let lastSaveInput;
 let lastUpdateInput;
 global.SERVICE = {
+    DefaultSchemaUtilityService: require('../src/service/schema/defaultSchemaUtilityService'),
     DefaultSchemaSafeQueryService: require('../src/service/schema/defaultSchemaSafeQueryService'),
     DefaultSchemaAccessHandlerService: {
         getAccessPoint: (authData) => (authData.userGroups.includes('adminGroup') ? 10 : 0),
@@ -276,19 +277,24 @@ global.CLASSES = {
     },
 };
 
-const service = require('../src/service/schema/defaultSchemaWorkbenchService');
+const service = require('./helpers/schemaApiHarness');
 global.SERVICE.DefaultSchemaWorkbenchService = service;
+const discovery = require('../src/controller/schema/defaultSchemaUtilityController');
+global.FACADE = Object.assign({}, global.FACADE, {
+    DefaultSchemaUtilityFacade: require('../src/facade/schema/defaultSchemaUtilityFacade'),
+});
+
 
 (async function () {
     assert(
-        generatedRouterDefinitions.default.commonGetterOperation.safeSearch,
+        generatedRouterDefinitions.default.schemaOperations.safeSearch,
         'Generated schema CRUD must expose a browser-safe search route template',
     );
     assert.deepStrictEqual(
         {
-            key: generatedRouterDefinitions.default.commonGetterOperation.safeSearch.key,
-            method: generatedRouterDefinitions.default.commonGetterOperation.safeSearch.method,
-            operation: generatedRouterDefinitions.default.commonGetterOperation.safeSearch.operation,
+            key: generatedRouterDefinitions.default.schemaOperations.safeSearch.key,
+            method: generatedRouterDefinitions.default.schemaOperations.safeSearch.method,
+            operation: generatedRouterDefinitions.default.schemaOperations.safeSearch.operation,
         },
         {
             key: '/schemaName/safe-search',
@@ -298,15 +304,15 @@ global.SERVICE.DefaultSchemaWorkbenchService = service;
         'Generated schema CRUD safe search must be generic per schema and must not use Workbench-specific or screen-specific route patterns',
     );
     assert(
-        generatedRouterDefinitions.default.commonGetterOperation.safeSearch.help.message.includes('generic admin/schema-driven tooling only')
-        && generatedRouterDefinitions.default.commonGetterOperation.safeSearch.help.message.includes('Use module-owned domain APIs for business journeys'),
+        generatedRouterDefinitions.default.schemaOperations.safeSearch.help.message.includes('generic admin/schema-driven tooling only')
+        && generatedRouterDefinitions.default.schemaOperations.safeSearch.help.message.includes('Use module-owned domain APIs for business journeys'),
         'Generated safe-search Swagger/help text must warn developers that it is not a business API',
     );
     assert.deepStrictEqual(
         {
-            key: generatedRouterDefinitions.default.commonGetterOperation.capabilities.key,
-            method: generatedRouterDefinitions.default.commonGetterOperation.capabilities.method,
-            operation: generatedRouterDefinitions.default.commonGetterOperation.capabilities.operation,
+            key: generatedRouterDefinitions.default.schemaOperations.capabilities.key,
+            method: generatedRouterDefinitions.default.schemaOperations.capabilities.method,
+            operation: generatedRouterDefinitions.default.schemaOperations.capabilities.operation,
         },
         {
             key: '/schemaName/capabilities',
@@ -316,15 +322,15 @@ global.SERVICE.DefaultSchemaWorkbenchService = service;
         'Generated schema CRUD utility APIs must expose capabilities generically per schema, not through Schema Workbench route sprawl',
     );
     assert(
-        generatedRouterDefinitions.default.commonGetterOperation.capabilities.help.message.includes('generic admin/schema-driven tooling only')
-        && generatedRouterDefinitions.default.commonGetterOperation.capabilities.help.message.includes('use module-owned domain APIs for business journeys'),
+        generatedRouterDefinitions.default.schemaOperations.capabilities.help.message.includes('generic admin/schema-driven tooling only')
+        && generatedRouterDefinitions.default.schemaOperations.capabilities.help.message.includes('use module-owned domain APIs for business journeys'),
         'Generated capabilities Swagger/help text must warn developers that it is not a business API',
     );
     assert.deepStrictEqual(
         {
-            key: generatedRouterDefinitions.default.commonRemoveOperations.deleteImpact.key,
-            method: generatedRouterDefinitions.default.commonRemoveOperations.deleteImpact.method,
-            operation: generatedRouterDefinitions.default.commonRemoveOperations.deleteImpact.operation,
+            key: generatedRouterDefinitions.default.schemaOperations.deleteImpact.key,
+            method: generatedRouterDefinitions.default.schemaOperations.deleteImpact.method,
+            operation: generatedRouterDefinitions.default.schemaOperations.deleteImpact.operation,
         },
         {
             key: '/schemaName/delete-impact',
@@ -334,37 +340,17 @@ global.SERVICE.DefaultSchemaWorkbenchService = service;
         'Generated schema CRUD utility APIs must expose delete-impact generically per schema, not through Schema Workbench route sprawl',
     );
     assert(
-        generatedRouterDefinitions.default.commonRemoveOperations.deleteImpact.help.message.includes('generic admin/schema-driven tooling only')
-        && generatedRouterDefinitions.default.commonRemoveOperations.deleteImpact.help.message.includes('use module-owned lifecycle APIs'),
+        generatedRouterDefinitions.default.schemaOperations.deleteImpact.help.message.includes('generic admin/schema-driven tooling only')
+        && generatedRouterDefinitions.default.schemaOperations.deleteImpact.help.message.includes('use module-owned lifecycle APIs'),
         'Generated delete-impact Swagger/help text must warn developers that it is not a business lifecycle API',
     );
-    let workbenchRoutes = routerDefinitions.common.schemaWorkbench;
-    let allowedWorkbenchRoutes = [
-        'GET /schema/workbench',
-        'GET /schema/workbench/:schema',
-        'POST /schema/workbench/:schema/records',
-        'POST /schema/workbench/:schema/record',
-        'PATCH /schema/workbench/:schema/record',
-        'POST /schema/workbench/:schema/delete-impact',
-        'DELETE /schema/workbench/:schema/record',
-        'POST /schema/workbench/:schema/bulk',
-        'POST /schema/workbench/:schema/aggregate',
-    ];
-    assert.deepStrictEqual(
-        Object.values(workbenchRoutes).map((route) => route.method + ' ' + route.key).sort(),
-        allowedWorkbenchRoutes.slice().sort(),
-        'Schema Workbench must not grow screen-specific or schema-specific API routes without an explicit architecture decision',
-    );
-    assert(
-        Object.values(workbenchRoutes).every((route) => /^\/schema\/workbench(\/:schema)?(\/(records|delete-impact|record|bulk|aggregate))?$/.test(route.key)),
-        'Schema Workbench route keys must remain generic by schema placeholder; custom projects must not inherit per-screen route sprawl',
-    );
+    assert.strictEqual(routerDefinitions.common.schemaApi, undefined);
     let request = {
         moduleName: 'profile',
         authData: { userGroups: ['adminGroup'] },
         httpRequest: { params: { schema: 'address' } },
     };
-    let listed = await service.list(request);
+    let listed = await discovery.list(request);
     assert.deepStrictEqual(listed.data.schemas.map((schema) => schema.schemaName).sort(), ['address', 'employee', 'enterprise'], 'all authorized model schemas must be searchable by default');
     assert.deepStrictEqual(
         listed.data.schemas.find((schema) => schema.schemaName === 'enterprise').operations,
@@ -376,7 +362,7 @@ global.SERVICE.DefaultSchemaWorkbenchService = service;
         ['code', 'description'],
         'all models should expose the stable identity followed by description',
     );
-    let descriptor = (await service.get(request)).data;
+    let descriptor = (await discovery.get(request)).data;
     assert.strictEqual(descriptor.schemaName, 'address');
     assert.deepStrictEqual(descriptor.operations, ['search', 'read', 'create', 'update', 'delete']);
     assert(!descriptor.fields.some((field) => field.name === 'password'), 'secret fields must never be projected');
@@ -384,12 +370,12 @@ global.SERVICE.DefaultSchemaWorkbenchService = service;
     assert.strictEqual(descriptor.fields.find((field) => field.name === 'created').readOnly, true);
     assert.strictEqual(descriptor.fields.find((field) => field.name === 'type').type, 'string');
     assert.strictEqual(
-        service.resolveFieldComponent('name', { type: 'object' }, {}, {}),
+        global.SERVICE.DefaultSchemaUtilityService.resolveFieldComponent('name', { type: 'object' }, {}, {}),
         'localizedText',
         'localized business text fields must not be advertised as generic JSON',
     );
     assert.strictEqual(
-        service.resolveFieldComponent('presentation', { type: 'object' }, {}, {}),
+        global.SERVICE.DefaultSchemaUtilityService.resolveFieldComponent('presentation', { type: 'object' }, {}, {}),
         'json',
         'generic structured object fields must still be advertised as JSON',
     );
@@ -578,7 +564,7 @@ global.SERVICE.DefaultSchemaWorkbenchService = service;
         },
     };
     let enterpriseDescriptor = (
-        await service.get(
+        await discovery.get(
             Object.assign({}, request, {
                 httpRequest: { params: { schema: 'enterprise' } },
             }),
@@ -601,13 +587,13 @@ global.SERVICE.DefaultSchemaWorkbenchService = service;
         required: false,
     });
     assert.deepStrictEqual(descriptor.aggregateOperations, []);
-    let denied = await service.list(
+    let denied = await discovery.list(
         Object.assign({}, request, {
             authData: { userGroups: ['employeeUserGroup'] },
         }),
     );
     assert.deepStrictEqual(denied.data.schemas, [], 'schemas without effective read access must not be disclosed');
-    let workflowListedThroughApiModule = await service.list({
+    let workflowListedThroughApiModule = await discovery.list({
         moduleName: 'workflow',
         authData: { userGroups: ['adminGroup'] },
         httpRequest: {},
@@ -623,7 +609,7 @@ global.SERVICE.DefaultSchemaWorkbenchService = service;
         'Workbench must discover model schemas contributed to the workflow hierarchy through a prefixed API module',
     );
     let workflowActionThroughApiModule = (
-        await service.get({
+        await discovery.get({
             moduleName: 'workflow',
             authData: { userGroups: ['adminGroup'] },
             httpRequest: { params: { schema: 'workflowAction' } },
@@ -634,7 +620,7 @@ global.SERVICE.DefaultSchemaWorkbenchService = service;
         'workflow',
         'Workbench descriptors must keep workflow as the schema-owning module when reached through a prefixed workflow API surface',
     );
-    let workflowListedThroughExplicitAlias = await service.list({
+    let workflowListedThroughExplicitAlias = await discovery.list({
         moduleName: 'paymentCore',
         authData: { userGroups: ['adminGroup'] },
         httpRequest: {},
@@ -645,7 +631,7 @@ global.SERVICE.DefaultSchemaWorkbenchService = service;
         'Workbench must support explicit schemaModule aliases without reusing router URL prefixes',
     );
     await assert.rejects(
-        service.get(
+        discovery.get(
             Object.assign({}, request, {
                 httpRequest: { params: { schema: 'hidden' } },
             }),
@@ -800,7 +786,7 @@ global.SERVICE.DefaultSchemaWorkbenchService = service;
         'Workbench mutation must enforce descriptor fixed values server-side instead of trusting browser input',
     );
     let employeeDescriptor = (
-        await service.get(
+        await discovery.get(
             Object.assign({}, request, {
                 httpRequest: { params: { schema: 'employee' } },
             }),

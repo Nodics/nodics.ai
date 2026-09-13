@@ -19,8 +19,8 @@ module.exports.bidding.checkoutBid = {
   service: {
     enabled: true,
   },
-  router: {
-    enabled: false,
+  router: { groups: { schemaOperations: true },
+    enabled: true,
   },
   cache: {
     enabled: false,

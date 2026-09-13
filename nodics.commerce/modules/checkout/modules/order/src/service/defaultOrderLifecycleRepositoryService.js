@@ -13,7 +13,8 @@
 'use strict';
 /** @module order/src/service/defaultOrderLifecycleRepositoryService @description Adapts generated Order lifecycle persistence to bounded tenant operations. @layer service @owner order */
 module.exports = {
-    unwrap: response => response && Object.prototype.hasOwnProperty.call(response, 'result') ? response.result : response,
+    /** Unwraps a standard result envelope while preserving raw provider values. */
+    unwrap: function (response) { return response && Object.prototype.hasOwnProperty.call(response, 'result') ? response.result : response; },
     /** Lists bounded lifecycle records. @param {string} tenant Tenant. @param {Object} query Query. @param {Object} authData Auth context. @param {number} limit Limit. @returns {Promise<Array>} Records. */
     list: function (tenant, query, authData, limit) { return SERVICE.DefaultOrderLifecycleRequestService.get({ tenant, authData, query: Object.assign({ tenant }, query), pageSize: Math.min(Number(limit || 50), 100) }).then(this.unwrap); },
     /** Gets one lifecycle record. @param {string} tenant Tenant. @param {string} code Code. @param {Object} authData Auth context. @returns {Promise<Object>} Record. */

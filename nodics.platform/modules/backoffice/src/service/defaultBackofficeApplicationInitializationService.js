@@ -775,14 +775,22 @@ module.exports = {
     let requestHeaders = (request && request.headers) || {};
     let configured = (CONFIG.get("backofficeApplicationInitialization") || {})
       .operatorOrigin;
-    return (
+    let origin = (
       httpHeaders.origin ||
       httpHeaders.Origin ||
       requestHeaders.origin ||
       requestHeaders.Origin ||
-      configured ||
-      "http://localhost:3100"
+      configured
     );
+    if (typeof origin !== "string" || !origin)
+      throw new CLASSES.NodicsError("ERR_BOF_00083", "An explicit operator origin is required for governed media preparation");
+    let parsed;
+    try { parsed = new URL(origin); } catch {
+      throw new CLASSES.NodicsError("ERR_BOF_00083", "Operator origin is invalid");
+    }
+    if (!["http:", "https:"].includes(parsed.protocol) || parsed.origin !== origin || parsed.username || parsed.password)
+      throw new CLASSES.NodicsError("ERR_BOF_00083", "Operator origin must be an HTTP origin");
+    return parsed.origin;
   },
   /** Resolves a configured server connection into an HTTP base URL. */
   serverBaseUrl: function (serverCode) {

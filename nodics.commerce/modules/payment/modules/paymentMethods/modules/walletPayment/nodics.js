@@ -10,4 +10,4 @@
  */
 
 /** @module walletPayment/nodics @description Declares the Wallet Payment capability lifecycle. @layer module @owner walletPayment */
-module.exports = { init: () => Promise.resolve(true), postInit: () => Promise.resolve(true) };
+module.exports = { init: function () { return Promise.resolve(true); }, postInit: function () { return Promise.resolve(true); } };

@@ -10,6 +10,21 @@ This file gives AI coding agents mandatory guidance for this Nodics module or pa
 
 ## Module Work Rules
 
+- Share generic HTTP/Workbench mutation-field normalization through the existing
+  schema utility owner. Filter unknown/protected/read-only top-level fields,
+  retain original managed counters, apply fixed values and trusted scope, and
+  leave nested validation, access, ownership and persistence with their owners.
+  Explicit schema operation restrictions apply to generated HTTP mutations.
+  Idempotency-key forwarding is not a durable replay guarantee.
+
+- `DefaultSchemaUtilityService` owns shared effective schema metadata. Keep
+  generated capabilities/safe-search/delete-impact independent of Workbench.
+  Workbench delegates remaining record-operation metadata to the effective utility
+  service; collection/detail routes and entry points have been retired. Extend metadata helpers there so all consumers receive the same
+  access-filtered fields, forms, relationships and authoring capabilities.
+  Preserve the existing schema composition and configuration inputs; never
+  introduce a screen-specific metadata registry or duplicate builder.
+
 - Derive business form sections, copy and managed-create fields from the
   effective schema's existing `backoffice.form`. Append project-added fields,
   omit deleted fields and prohibit hiding required input without a declared
@@ -69,6 +84,32 @@ This file gives AI coding agents mandatory guidance for this Nodics module or pa
   permissioned, idempotency-keyed, and delegated to generated CRUD or an
   owning domain service. Do not create a second mutation path.
 - Derive relationship, delete-impact, concurrency, and aggregate metadata from
-  effective schemas. Aggregate execution only delegates to the declared owning
-  service; same-database atomic work uses `DefaultDatabaseTransactionService`
+  effective schemas. Aggregate metadata resolves the declared owning controller operation to its
+  prepared API; no generic aggregate dispatcher exists; same-database atomic work uses `DefaultDatabaseTransactionService`
   and cross-module consistency uses an owning Workflow or saga.
+
+- Derive inert `apiOperations` from prepared matching generated-controller routes;
+  do not create a second registration/configuration authority. Preserve module
+  aliases, static relative paths, API versions and disabled declarations. Reject
+  ambiguous operations. A projected route is neither a grant nor live validation.
+
+- Canonical `/schemas` discovery uses the existing Schema Utility owner through
+  controller/facade adapters. Keep `listSchemas` and `getSchema` authoritative for
+  generated capabilities and canonical transports; never copy traversal or
+  descriptor logic into the adapters. Pass the original secured request unchanged.
+- Canonical collection/detail routes use `schemaApi.discoveryPermission`
+  and the existing exposure gate. Retired discovery routes must not be restored. Keep
+  permission/namespace migration explicit. Axis must not retry old discovery on
+  missing routes, access rejection or invalid metadata. New backends precede clients.
+
+- All Workbench runtime adapters/routes are removed. Use the canonical schema
+  template group and existing domain APIs; no old-route fallback or second
+  configuration namespace is permitted. The shared namespace/exposure is
+  `schemaApi`, with `system.schema.view/manage` defaults.
+- Selective update/delete must validate one primary identity and its original
+  revision, preserving trusted request scope. Managed-counter bulk is unsupported
+  and must fail before dispatch; keep ordinary schema-opted-in bulk bounded.
+
+Require the selected server generated baseline after model preparation. Preserve
+composed custom methods; never synthesize missing services at startup. See
+[server build contract](llm/contracts/README.md#required-server-build).

@@ -103,6 +103,7 @@ const incidents = [];
 const triggers = [{ code: 'dailyContentApproval', definitionCode: 'contentApproval', triggerType: 'CRON', cronJobCode: 'dailyContentApprovalJob', status: 'ACTIVE' }];
 
 global.SERVICE = {
+    DefaultModuleRegistrationAgentService: { assertModuleOperational: async (moduleName, tenant) => { assert.strictEqual(moduleName, 'workflow'); assert(tenant); } },
     DefaultProcessDefinitionService: createGeneratedService(definitions),
     DefaultProcessDefinitionVersionService: createGeneratedService(versions),
     DefaultProcessInstanceService: createGeneratedService(instances),
@@ -420,4 +421,20 @@ const runtimeService = require('../modules/workflow/src/service/operation/defaul
 })().catch(error => {
     console.error(error);
     process.exit(1);
+});
+
+
+require('node:test')('process start denies inactive or missing runtime authority before loading or writing records', async () => {
+    const source = require('../modules/workflow/src/service/operation/defaultProcessRuntimeLifecycleService');
+    const instance = { ...source, resolveStartVersion: async () => assert.fail('denied start must not load a definition') };
+    const previous = SERVICE.DefaultModuleRegistrationAgentService;
+    try {
+        delete SERVICE.DefaultModuleRegistrationAgentService;
+        await assert.rejects(instance.startInstance({ tenant: 'other' }), /operational authority is unavailable/);
+        const failure = new Error('capability inactive');
+        SERVICE.DefaultModuleRegistrationAgentService = { assertModuleOperational: async (moduleName, tenant) => {
+            assert.strictEqual(moduleName, 'workflow'); assert.strictEqual(tenant, 'other'); throw failure;
+        } };
+        await assert.rejects(instance.startInstance({ tenant: 'other' }), error => error === failure);
+    } finally { SERVICE.DefaultModuleRegistrationAgentService = previous; }
 });

@@ -11,6 +11,24 @@
 
 /** @module product/config/properties @description Defines Commerce capability and schema access policies. @layer config @owner product */
 module.exports = {
+    // Inert inventory; an allowed local server must explicitly select this capability.
+    localResetProvider: {
+        "contributions": {
+            "product": {
+                "serviceNames": {
+                    "DefaultCategoryLocalizationService": true,
+                    "DefaultCategoryService": true,
+                    "DefaultProductLocalizationService": true,
+                    "DefaultProductPublicationService": true,
+                    "DefaultProductSearchProjectionService": true,
+                    "DefaultProductService": true,
+                    "DefaultProductVariantLocalizationService": true,
+                    "DefaultProductVariantService": true
+                }
+            }
+        }
+    },
+
   product: {
     enabled: true,
     localization: {

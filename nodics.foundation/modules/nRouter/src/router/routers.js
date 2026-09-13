@@ -40,6 +40,144 @@ const path = require('path');
  */
 module.exports = {
     default: {
+        schemaOperations: {
+            safeSearch: {
+                secured: true,
+                permissionConfig: 'schemaApi.readPermission',
+                apiExposure: 'schemaApi',
+                accessGroups: ['userGroup'],
+                cache: {
+                    enabled: false,
+                    ttl: 20
+                },
+                key: '/schemaName/safe-search',
+                method: 'POST',
+                controller: 'DefaultctrlName',
+                operation: 'safeSearch',
+                help: {
+                    requestType: 'secured',
+                    message: 'Generated schema utility API for generic admin/schema-driven tooling only. Use module-owned domain APIs for business journeys; do not use this as a product, order, checkout, payment, fulfillment, promotion, engagement, or content lifecycle API.',
+                    method: 'POST',
+                    url: 'http://host:port/nodics/{moduleName}/schemaName/safe-search',
+                    body: {
+                        search: 'optional bounded text search',
+                        filters: 'optional bounded browser-safe filter group',
+                        pageNumber: 'optional page number, default is 1',
+                        pageSize: 'optional page size constrained by schema metadata',
+                        sort: 'optional { field, direction } using advertised sortable fields'
+                    }
+                }
+            },
+            capabilities: {
+                secured: true,
+                permissionConfig: 'schemaApi.readPermission',
+                apiExposure: 'schemaApi',
+                accessGroups: ['userGroup'],
+                cache: {
+                    enabled: false,
+                    ttl: 60
+                },
+                key: '/schemaName/capabilities',
+                method: 'GET',
+                controller: 'DefaultctrlName',
+                operation: 'capabilities',
+                help: {
+                    requestType: 'secured',
+                    message: 'Generated schema utility API for generic admin/schema-driven tooling only. Returns browser-safe schema capabilities without exposing raw database contracts; use module-owned domain APIs for business journeys.',
+                    method: 'GET',
+                    url: 'http://host:port/nodics/{moduleName}/schemaName/capabilities',
+                }
+            },
+            remove: {
+                secured: true,
+                permissionConfig: 'schemaApi.writePermission',
+                apiExposure: 'schemaApi',
+                accessGroups: ['userGroup'],
+                key: '/schemaName',
+                method: 'DELETE',
+                controller: 'DefaultctrlName',
+                operation: 'remove',
+                help: {
+                    requestType: 'secured',
+                    message: 'Authorization: Bearer <token> header is preferred; legacy authToken header is deprecated',
+                    method: 'DELETE',
+                    url: 'http://host:port/nodics/{moduleName}/schemaName/id/:id',
+                    body: {
+                        options: {
+                            returnModified: 'true/false'
+                        },
+                        query: 'query object'
+                    }
+                }
+            },
+            deleteImpact: {
+                secured: true,
+                permissionConfig: 'schemaApi.readPermission',
+                apiExposure: 'schemaApi',
+                accessGroups: ['userGroup'],
+                key: '/schemaName/delete-impact',
+                method: 'POST',
+                controller: 'DefaultctrlName',
+                operation: 'deleteImpact',
+                help: {
+                    requestType: 'secured',
+                    message: 'Generated schema utility API for generic admin/schema-driven tooling only. Previews technical reference impact before generated delete; use module-owned lifecycle APIs for business cancellation, return, refund, deactivation, publishing, or other governed business operations.',
+                    method: 'POST',
+                    url: 'http://host:port/nodics/{moduleName}/schemaName/delete-impact',
+                    body: {
+                        identity: 'Required safe record identity using the schema primary/display field and optional concurrency field'
+                    }
+                }
+            },
+            save: {
+                secured: true,
+                permissionConfig: 'schemaApi.writePermission',
+                apiExposure: 'schemaApi',
+                accessGroups: ['userGroup'],
+                key: '/schemaName',
+                method: 'PUT',
+                controller: 'DefaultctrlName',
+                operation: 'save',
+                help: {
+                    requestType: 'secured',
+                    message: 'Authorization: Bearer <token> header is preferred; legacy authToken header is deprecated',
+                    method: 'PUT',
+                    url: 'http://host:port/nodics/{moduleName}/schemaName',
+                    body: '{ complete model object }'
+                }
+            },
+            update: {
+                secured: true,
+                permissionConfig: 'schemaApi.writePermission',
+                apiExposure: 'schemaApi',
+                accessGroups: ['userGroup'],
+                key: '/schemaName',
+                method: 'PATCH',
+                controller: 'DefaultctrlName',
+                operation: 'update',
+                help: {
+                    requestType: 'secured',
+                    message: 'Authorization: Bearer <token> header is preferred; legacy authToken header is deprecated',
+                    method: 'PATCH',
+                    url: 'http://host:port/nodics/{moduleName}/schemaName',
+                    body: {
+                        query: 'Required selector; include the original revision for managed counters',
+                        model: 'Required object of editable schema fields',
+                        options: { recursive: 'optional boolean', returnModified: 'optional boolean; true returns persisted records' }
+                    }
+                }
+            },
+            bulk: {
+                secured: true,
+                accessGroups: ['userGroup'],
+                permissionConfig: 'schemaApi.writePermission',
+                apiExposure: 'schemaApi',
+                key: '/schemaName/bulk',
+                method: 'POST',
+                controller: 'DefaultctrlName',
+                operation: 'bulk'
+            }
+        },
         commonGetterOperation: {
             get: {
                 secured: true,
@@ -85,49 +223,8 @@ module.exports = {
                     }
                 }
             },
-            safeSearch: {
-                secured: true,
-                accessGroups: ['userGroup'],
-                cache: {
-                    enabled: false,
-                    ttl: 20
-                },
-                key: '/schemaName/safe-search',
-                method: 'POST',
-                controller: 'DefaultctrlName',
-                operation: 'safeSearch',
-                help: {
-                    requestType: 'secured',
-                    message: 'Generated schema utility API for generic admin/schema-driven tooling only. Use module-owned domain APIs for business journeys; do not use this as a product, order, checkout, payment, fulfillment, promotion, engagement, or content lifecycle API.',
-                    method: 'POST',
-                    url: 'http://host:port/nodics/{moduleName}/schemaName/safe-search',
-                    body: {
-                        search: 'optional bounded text search',
-                        filters: 'optional bounded browser-safe filter group',
-                        pageNumber: 'optional page number, default is 1',
-                        pageSize: 'optional page size constrained by schema metadata',
-                        sort: 'optional { field, direction } using advertised sortable fields'
-                    }
-                }
-            },
-            capabilities: {
-                secured: true,
-                accessGroups: ['userGroup'],
-                cache: {
-                    enabled: false,
-                    ttl: 60
-                },
-                key: '/schemaName/capabilities',
-                method: 'GET',
-                controller: 'DefaultctrlName',
-                operation: 'capabilities',
-                help: {
-                    requestType: 'secured',
-                    message: 'Generated schema utility API for generic admin/schema-driven tooling only. Returns browser-safe schema capabilities without exposing raw database contracts; use module-owned domain APIs for business journeys.',
-                    method: 'GET',
-                    url: 'http://host:port/nodics/{moduleName}/schemaName/capabilities',
-                }
-            },
+
+
             getById: {
                 secured: true,
                 accessGroups: ['userGroup'],
@@ -166,43 +263,8 @@ module.exports = {
             }
         },
         commonRemoveOperations: {
-            remove: {
-                secured: true,
-                accessGroups: ['userGroup'],
-                key: '/schemaName',
-                method: 'DELETE',
-                controller: 'DefaultctrlName',
-                operation: 'remove',
-                help: {
-                    requestType: 'secured',
-                    message: 'Authorization: Bearer <token> header is preferred; legacy authToken header is deprecated',
-                    method: 'DELETE',
-                    url: 'http://host:port/nodics/{moduleName}/schemaName/id/:id',
-                    body: {
-                        options: {
-                            returnModified: 'true/false'
-                        },
-                        query: 'query object'
-                    }
-                }
-            },
-            deleteImpact: {
-                secured: true,
-                accessGroups: ['userGroup'],
-                key: '/schemaName/delete-impact',
-                method: 'POST',
-                controller: 'DefaultctrlName',
-                operation: 'deleteImpact',
-                help: {
-                    requestType: 'secured',
-                    message: 'Generated schema utility API for generic admin/schema-driven tooling only. Previews technical reference impact before generated delete; use module-owned lifecycle APIs for business cancellation, return, refund, deactivation, publishing, or other governed business operations.',
-                    method: 'POST',
-                    url: 'http://host:port/nodics/{moduleName}/schemaName/delete-impact',
-                    body: {
-                        identity: 'Required safe record identity using the schema primary/display field and optional concurrency field'
-                    }
-                }
-            },
+
+
             removeById: {
                 secured: true,
                 accessGroups: ['userGroup'],
@@ -273,21 +335,7 @@ module.exports = {
             }
         },
         commonSaveOperations: {
-            save: {
-                secured: true,
-                accessGroups: ['userGroup'],
-                key: '/schemaName',
-                method: 'PUT',
-                controller: 'DefaultctrlName',
-                operation: 'save',
-                help: {
-                    requestType: 'secured',
-                    message: 'Authorization: Bearer <token> header is preferred; legacy authToken header is deprecated',
-                    method: 'PUT',
-                    url: 'http://host:port/nodics/{moduleName}/schemaName',
-                    body: '{ complete model object }'
-                }
-            },
+
             saveAll: {
                 secured: true,
                 accessGroups: ['userGroup'],
@@ -305,21 +353,7 @@ module.exports = {
             }
         },
         commonUpdateOperations: {
-            update: {
-                secured: true,
-                accessGroups: ['userGroup'],
-                key: '/schemaName',
-                method: 'PATCH',
-                controller: 'DefaultctrlName',
-                operation: 'update',
-                help: {
-                    requestType: 'secured',
-                    message: 'Authorization: Bearer <token> header is preferred; legacy authToken header is deprecated',
-                    method: 'PATCH',
-                    url: 'http://host:port/nodics/{moduleName}/schemaName',
-                    body: '{ complete model object } or [{}, {}] array of models'
-                }
-            }
+
         }
     },
     common: {
@@ -336,7 +370,11 @@ module.exports = {
                     message: 'Authorization: Bearer <token> header is preferred; legacy authToken header is deprecated',
                     method: 'GET',
                     url: 'http://host:port/nodics/{moduleName}/ping',
-                    body: '{ complete model object } or [{}, {}] array of models'
+                    body: {
+                        query: 'Required selector; include the original revision for managed counters',
+                        model: 'Required object of editable schema fields',
+                        options: { recursive: 'optional boolean', returnModified: 'optional boolean; true returns persisted records' }
+                    }
                 }
             }
         },

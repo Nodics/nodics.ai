@@ -16,7 +16,21 @@
  * @owner generated
  * @override Project, environment, server, node, tenant, or customer layers may override these defaults through Nodics configuration layering.
  */
-module.exports = { apparelProduct: {
+module.exports = {
+    // Inert inventory; an allowed local server must explicitly select this capability.
+    localResetProvider: {
+        "contributions": {
+            "apparelProduct": {
+                "serviceNames": {
+                    "DefaultApparelFitProfileService": true,
+                    "DefaultApparelSizeSystemService": true,
+                    "DefaultApparelStyleService": true,
+                    "DefaultApparelVariantProfileService": true
+                }
+            }
+        }
+    },
+ apparelProduct: {
     sizeSystems: ['ALPHA', 'EU', 'UK', 'US', 'AGE', 'ONE_SIZE'],
     compositionTotal: 100,
     requireActiveStyleForProjection: true

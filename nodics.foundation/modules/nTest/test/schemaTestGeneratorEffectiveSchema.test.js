@@ -44,6 +44,7 @@ fs.mkdirSync(profileModulePath, { recursive: true });
 fs.mkdirSync(projectModulePath, { recursive: true });
 
 global.NODICS = {
+    getGeneratedArtifactPath: () => path.join(projectModulePath, 'test', 'gen'),
     getModule: function (moduleName) {
         if (moduleName === 'profile') {
             return {
@@ -95,10 +96,10 @@ global.SERVICE = {
 const generator = require('../src/service/generator/defaultSchemaTestGeneratorService');
 
 generator.buildGeneratedTests().then(() => {
-    const generatedProfileTest = path.join(profileModulePath, 'test', 'gen', 'schema', 'tenantSchemaContract.test.js');
+    const generatedProfileTest = path.join(projectModulePath, 'test', 'gen', 'schema', 'profile', 'tenantSchemaContract.test.js');
     const generatedProjectTest = path.join(projectModulePath, 'test', 'gen', 'schema', 'tenantSchemaContract.test.js');
 
-    assert(fs.existsSync(generatedProfileTest), 'Effective profile.tenant schema test should be generated under profile module');
+    assert(fs.existsSync(generatedProfileTest), 'Effective profile.tenant schema test should be generated under the selected server and logical owner');
     assert(!fs.existsSync(generatedProjectTest), 'Logical profile schema test should not be generated under the physical project module');
 
     const generatedContent = fs.readFileSync(generatedProfileTest, 'utf8');

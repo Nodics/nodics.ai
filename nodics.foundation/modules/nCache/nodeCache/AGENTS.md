@@ -23,3 +23,5 @@ This file gives AI coding agents mandatory guidance for this Nodics module or pa
 - Review router/API-response cache and DAO/schema/search cache together for behavior changes.
 - Cache activation must come only from layered configuration: cache.enabled, engine.enabled, and channel.enabled. Connection URLs are values, not activation switches.
 - Preserve tenant isolation, TTL semantics, response envelopes, invalidation, diagnostics, and fail-closed behavior for security-sensitive cache paths.
+
+Versioned writes and advance must be atomic for the adapter scope, return the actual stored version, preserve tenant namespaces and TTL zero, and reject stale versions or overflow. See the [cache contract](../cache/llm/contracts/README.md).

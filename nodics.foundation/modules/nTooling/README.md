@@ -85,44 +85,28 @@ separate operational responsibilities.
 
 Tooling is non-runtime. It can inspect, generate, validate, and report, but application startup must not depend on the tooling module being loaded as a runtime capability.
 
-The Application Builder must be approachable for a new developer who does not
-know Nodics module names, repository boundaries, or runtime topology. Its
-guided mode should ask business-facing questions first, explain what will be
-created before writing, choose sensible Commerce/domain presets, produce
-copy-pasteable next commands, and keep advanced graph, lock, and repository
-details available as evidence rather than as required beginner knowledge.
-`builder:guide` may optionally write a review-only workspace with the answers,
-solution, approval-required plan, beginner summary, and guide report; it must
-not generate backend/frontend application files or bypass approval.
-`builder:answers-template` creates the guided answers JSON from simple flags so
-a beginner does not need to hand-author schema-shaped input before dry-run or
-guide review.
-`builder:questionnaire` asks the same beginner questions one at a time and then
-delegates to the same answer-template and dry-run path.
-`builder:dry-run` uses the same beginner answers and source-backed catalogue to
-show backend capabilities, selected frontends, active domains, renderer keys,
-data packs, customer-owned outputs, ownership boundaries, validation gates, and
-approval state without writing review or generated application files.
-Approved generation produces a self-contained backend and Agora storefront
-runtime that can be verified through `npm test` and `npm run verify:runtime`.
-Generated outputs include a beginner `README.md` and machine-readable
-`builder-handoff.json` so the user can see selected capabilities, ownership
-boundaries, safe customization roots, and next commands after generation.
-Qualification writes both the schema-validated JSON evidence report and a
-human-readable Markdown summary covering passed and failed gates, handoff
-state, and next commands.
-Registry/upgrade mode creates local digest-bound release manifests and compares
-existing solution locks to approved target releases without mutating the
-generated application.
-When a `nodics.exp` workspace is available, Builder commands may use
-`--exp=/path/to/nodics.exp` and resolve Agora from `apps.json`; direct
-`--agora=/path/to/nodics.agora.apparel` remains available for explicit automation.
-The `nodics.exp` catalogue is a Nodics-owned template governance rule for
-framework/reference experience apps published under the Nodics organization.
-It must not be treated as a mandatory repository layout for real
-customer-owned projects; customers may keep generated applications in their own
-Git organization, monorepo/polyrepo structure, CI, and release model while
-preserving Nodics runtime contracts and extension boundaries.
+Application Builder asks business questions through the customer-selected presets.
+`builder:answers-template` and `builder:questionnaire` feed the same guide/dry-run
+path. Review the resolved capabilities, frontends, renderers, data packs and
+customer-owned outputs before approving generation. Guide output is review data;
+only approved generation writes the standalone backend/storefront starter.
+Qualification produces JSON and Markdown evidence, with a beginner README and
+`builder-handoff.json` explaining customization roots and next commands.
+Release manifests bind content digests; upgrade planning does not mutate the
+application. Detailed command and approval semantics live in the existing
+[Builder contract](llm/contracts/application-builder.md).
+Builder takes `--frontend=/path/to/frontend` and
+`--customer=/path/to/customer`. Customer package metadata declares presets,
+frontend choices, compositions and data-pack participation. Optional
+`--experience` uses the workspace's existing `apps.json`; multiple storefronts
+require `--frontend-code`. Missing repositories are errors, including in CI.
+See [Builder contracts](llm/contracts/application-builder.md) and the
+[declaration example](llm/examples/application-builder.md).
+
+A declared composition records intended customer wiring. Generated runtime
+qualification exercises the standalone starter. External frontend rendering,
+backend deployments, authentication and database imports need separate live
+acceptance evidence.
 
 Application documentation generators should reuse
 `defaultApplicationDocumentationContractService` for source containment,
@@ -201,17 +185,6 @@ node nodics.foundation/modules/nTooling/test/moduleStructure.test.js
 node nodics.foundation/modules/nTooling/test/documentationNavigationQuality.test.js
 node nodics.foundation/modules/nTooling/test/applicationDocumentationContract.test.js
 node nodics.foundation/modules/nTooling/test/mcpReadOnlyGovernanceContract.test.js
-node nodics.foundation/modules/nTooling/test/applicationBuilderSchemaContract.test.js
-node nodics.foundation/modules/nTooling/test/applicationBuilderGuidedContract.test.js
-node nodics.foundation/modules/nTooling/test/applicationBuilderAnswersTemplateContract.test.js
-node nodics.foundation/modules/nTooling/test/applicationBuilderQuestionnaireContract.test.js
-node nodics.foundation/modules/nTooling/test/applicationBuilderDryRunContract.test.js
-node nodics.foundation/modules/nTooling/test/applicationBuilderPlanningContract.test.js
-node nodics.foundation/modules/nTooling/test/applicationBuilderGenerationContract.test.js
-node nodics.foundation/modules/nTooling/test/applicationBuilderMultiDomainGenerationContract.test.js
-node nodics.foundation/modules/nTooling/test/applicationBuilderQualificationContract.test.js
-node nodics.foundation/modules/nTooling/test/applicationBuilderEndToEndJourneyContract.test.js
-node nodics.foundation/modules/nTooling/test/applicationBuilderUpgradeContract.test.js
 ```
 
 The documentation quality gate validates source documentation coverage and
@@ -237,3 +210,24 @@ Commerce publication qualification reads the current manifest-listed operational
 records and supports environment-owned per-domain Store/catalog context. See the
 [module contract](llm/contracts/README.md) for publication configuration and
 checksum failure behavior.
+
+Project clean/build use explicit server selection and startup metadata. Framework
+validation derives runtime groups from workspaces and retains its own generated
+server between gates. See [build targeting](llm/contracts/README.md#project-and-repository-build-targeting).
+
+Project command defaults contain reusable operations only. Application server and
+environment aliases, named customer acceptance journeys and media seeds are
+project-owned `nodics.project.json` tooling commands. Declare scripts under
+`tooling.scriptOwnership.projectOwned`; the existing executor supplies project and
+framework roots. Do not copy topology, release or configuration resolvers into the
+project. Project documentation generators read stable publication identifiers,
+routes, labels and channels from `docs/catalogue.json.publication`, validated
+before writing. The generic data-manifest command refreshes only explicitly
+declared development-baseline checksums; changed immutable releases fail before
+any manifest write. Environment composition selects an explicit code or the sole
+declared composition and reads only its declared environment variable.
+
+Foundation exposes the existing project bridge as the installed `nodics` command.
+Keep command normalization, registry dispatch and startup resolution framework-owned;
+projects bind a compatible dependency and declare only optional aliases. See
+[installed project command](llm/contracts/README.md#installed-project-command).

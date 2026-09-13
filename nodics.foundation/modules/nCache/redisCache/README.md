@@ -169,3 +169,8 @@ prefix cleanup, and restart/failover using an isolated environment.
 - Release qualification: [Provider And Capability Maturity Matrix](https://github.com/Nodics/nodics.docs)
 - Authentication use: [nAuth](../../nAuth/README.md)
 - Public guide: [How Cache Works](https://github.com/Nodics/nodics.docs)
+
+Cache startup awaits configured event subscriptions. Subscriber clients belong
+to their channels and are closed by central shutdown, including failed runtime
+bootstrap. Redis closes a connection or subscriber that fails before registration
+so an unowned reconnect loop cannot keep a failed process alive.

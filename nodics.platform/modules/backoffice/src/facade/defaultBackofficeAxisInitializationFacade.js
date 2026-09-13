@@ -15,6 +15,8 @@ module.exports = {
     init: function () { return Promise.resolve(true); },
     /** Executes the documented bounded module operation. */
     postInit: function () { return Promise.resolve(true); },
-    status: request => SERVICE.DefaultAxisInitializationService.status(request),
-    initiate: request => SERVICE.DefaultAxisInitializationService.initiate(request)
+    /** Delegates read-only status discovery to the existing initialization or reset service. */
+    status: function (request) { return SERVICE.DefaultAxisInitializationService.status(request); },
+    /** Delegates the requested initialization to the existing owner and returns its asynchronous result. */
+    initiate: function (request) { return SERVICE.DefaultAxisInitializationService.initiate(request); }
 };

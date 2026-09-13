@@ -32,6 +32,13 @@ module.exports = {
         return ((CONFIG.get('cart') || {}).customerApi) || {};
     },
 
+    /** Delegates explicit store reference validation to its existing Store owner. @param {Object} request Caller context. @param {string} [persistedStoreCode] Owned cart store. @returns {string} Store code. */
+    storeCode: function (request, persistedStoreCode) {
+        const service = SERVICE.DefaultStoreContextService;
+        if (!service || typeof service.resolveStoreCode !== 'function') throw new Error('Store context service is unavailable');
+        return service.resolveStoreCode(request, persistedStoreCode);
+    },
+
     /** Builds a customer-safe access denial without leaking cart ownership. @returns {Error} Access denial. */
     accessDeniedError: function () {
         return typeof CLASSES !== 'undefined' && CLASSES.NodicsError ?
@@ -53,18 +60,19 @@ module.exports = {
 
     /** Creates a stable cart code. @param {Object} request Request. @returns {string} Cart code. */
     cartCode: function (request) {
-        return request.payload.cartCode || 'cart_' + crypto.createHash('sha1').update([request.tenant, request.ownerId, request.payload.storeCode || this.policy().defaultStoreCode || 'default'].join('|')).digest('hex').slice(0, 16);
+        const storeCode = this.storeCode(request);
+        return (request.payload || {}).cartCode || 'cart_' + crypto.createHash('sha1').update([request.tenant, request.ownerId, storeCode].join('|')).digest('hex').slice(0, 16);
     },
 
     /** Builds a Cart model from a caller-scoped request. @param {Object} request Request. @returns {Object} Cart model. */
     cartModel: function (request) {
-        let policy = this.policy(), payload = request.payload || {};
+        let policy = this.policy(), payload = request.payload || {}, storeCode = this.storeCode(request);
         return {
             code: this.cartCode(request),
             tenant: request.tenant,
             enterpriseCode: request.enterpriseCode || payload.enterpriseCode,
             ownerId: request.ownerId,
-            storeCode: payload.storeCode || request.storeCode || policy.defaultStoreCode || 'agoraMainStore',
+            storeCode: storeCode,
             channelCode: payload.channelCode || policy.defaultChannelCode || 'web',
             locale: payload.locale || request.locale || policy.defaultLocale || 'en',
             jurisdiction: payload.jurisdiction || policy.defaultJurisdiction || 'US',
@@ -149,14 +157,21 @@ module.exports = {
         };
     },
 
-    /** Loads one owned Cart. @param {Object} request Request. @returns {Promise<Object>} Cart. */
-    loadCart: async function (request) {
+    /** Finds an owned Cart without inventing or migrating its identity. @param {Object} request Request. @returns {Promise<Object|undefined>} Cart when present. */
+    findCart: async function (request) {
         let query = { tenant: request.tenant, code: request.cartCode, ownerId: request.ownerId };
         if (request.enterpriseCode) query.enterpriseCode = request.enterpriseCode;
         let response = await SERVICE.DefaultCartService.get({ tenant: request.tenant, authData: request.authData, query, pageSize: 1 });
         let result = this.unwrap(response);
-        let cart = Array.isArray(result) ? result[0] : result;
+        return Array.isArray(result) ? result[0] : result;
+    },
+
+    /** Loads an owned Cart and rejects conflicting store references before operations. @param {Object} request Request. @returns {Promise<Object>} Cart. */
+    loadCart: async function (request) {
+        let cart = await this.findCart(request);
         if (!cart) throw this.accessDeniedError();
+        this.storeCode({ storeCode: cart.storeCode });
+        request.storeCode = this.storeCode(request, cart.storeCode);
         return cart;
     },
 
@@ -205,9 +220,14 @@ module.exports = {
         return { cart, entries: cart.entries, validation, calculation };
     },
 
-    /** Creates or replaces an active Cart shell. @param {Object} request Request. @returns {Promise<Object>} Cart response. */
+    /** Creates or replaces an owned Cart shell without rebinding an existing cart to another store. @param {Object} request Request. @returns {Promise<Object>} Cart response. */
     create: async function (request) {
         let model = this.cartModel(request);
+        let existing = await this.findCart(Object.assign({}, request, { cartCode: model.code }));
+        if (existing) {
+            this.storeCode({ storeCode: existing.storeCode });
+            this.storeCode(request, existing.storeCode);
+        }
         let saved = await SERVICE.DefaultCartService.save({ tenant: request.tenant, authData: request.authData, model }).then(this.unwrap);
         return this.response(Object.assign({}, request, { cartCode: saved.code }), saved);
     },

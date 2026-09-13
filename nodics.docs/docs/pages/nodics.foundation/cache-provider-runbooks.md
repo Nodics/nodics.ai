@@ -84,3 +84,19 @@ In a fresh schema, import data, warm the cache, change or publish the source
 record, and prove invalidation refreshes the browser or API result. Operators
 should see provider health, key scope, hit or miss evidence, and safe fallback
 behavior.
+
+### Hazelcast concurrent mutations and deadlines
+
+Version allocation and bounded admission use an independent public asynchronous
+lock context for each operation. Use official Node.js client 5.7 or later.
+A shared client without independent contexts can reenter its own map lock and
+lose concurrent updates. `lockTimeoutMs` defaults to 5000 ms and accepts 1–60000;
+failed acquisition leaves the entry unchanged. Cluster connection retry defaults
+to `connectionTimeoutMs`; any explicit retry deadline must remain finite and no
+more than 60000 ms. Later configuration layers can shorten these deadlines.
+
+Run the guarded provider contract with `--require-live` against an isolated
+member. It checks concurrent updates from one and three clients, bounded counters,
+TTL, tenant isolation, lock contention/recovery and failed connection attempts.
+Then qualify the actual deployment's member-loss and split-brain policy. The
+local single-member result does not establish production partition guarantees.

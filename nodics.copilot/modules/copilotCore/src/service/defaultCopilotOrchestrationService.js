@@ -55,7 +55,7 @@ module.exports = {
         const auth = request.authData || {};
         const core = configuration && configuration.core || {};
         return {
-            channel: 'AXIS_EMPLOYEE',
+            channel: 'EMPLOYEE',
             actor: auth.loginId,
             principalType: 'USER',
             tenant: request.tenant,
@@ -140,19 +140,19 @@ module.exports = {
     },
     /** Executes an approved confirmation through its owning governed API. */
     executeConfirmation: async function (request) { request.actionCode = request.confirmationCode; request.confirmed = true; return this.executeProductPlan(request); },
-    /** Creates one record through the schema owner's remote, permissioned Workbench API. */
-    createOwnedWorkbenchRecord: function (request, target, moduleName, schema, model, idempotencyKey) {
+    /** Creates one record through the schema owner's remote, permissioned generated API. */
+    createOwnedSchemaRecord: function (request, target, moduleName, schema, model, idempotencyKey) {
         return SERVICE.DefaultModuleService.invokeModule({
             moduleName: moduleName,
             connectionName: target.connectionName,
             tenant: request.tenant,
             local: false,
             targetAuthority: target.targetAuthority,
-            apiName: '/schema/workbench/' + schema + '/record',
-            methodName: 'POST',
+            apiName: '/' + schema.toLowerCase(),
+            methodName: 'PUT',
             idempotencyKey: idempotencyKey,
             header: { 'Idempotency-Key': idempotencyKey },
-            request: { model: model }
+            request: model
         });
     },
     /** Executes a previously persisted product plan only after explicit confirmation and fresh policy authorization. */
@@ -166,8 +166,8 @@ module.exports = {
             const target = configuration.workbench && configuration.workbench.target;
             if (!target || !target.productModule || !target.pricingModule || !target.connectionName) throw new Error('COPILOT_WORKBENCH_TARGET_REQUIRED');
             const results = [];
-            for (const model of payload.records) results.push(await this.createOwnedWorkbenchRecord(request, target, target.productModule, 'product', model, payload.idempotencyKey + ':' + model.code));
-            for (const model of plan.relatedRecords.pricing.records) results.push(await this.createOwnedWorkbenchRecord(request, target, target.pricingModule, 'priceRow', model, payload.idempotencyKey + ':' + model.code));
+            for (const model of payload.records) results.push(await this.createOwnedSchemaRecord(request, target, target.productModule, 'product', model, payload.idempotencyKey + ':' + model.code));
+            for (const model of plan.relatedRecords.pricing.records) results.push(await this.createOwnedSchemaRecord(request, target, target.pricingModule, 'priceRow', model, payload.idempotencyKey + ':' + model.code));
             return { recordsCreated: results.length, productsCreated: payload.records.length, results: results };
         };
         const executed = await SERVICE.DefaultCopilotWorkbenchService.execute(plan, confirmation, context, submit, SERVICE.DefaultCopilotPolicyService);

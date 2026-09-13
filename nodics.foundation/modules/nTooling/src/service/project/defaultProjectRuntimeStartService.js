@@ -242,7 +242,7 @@ module.exports = {
      * @param {Object} options.environment Environment values.
      * @returns {void}
      */
-    start: function (options) {
+    start: async function (options) {
         const projectRoot = path.resolve(options.projectRoot || process.cwd());
         const environment = options.environment || process.env;
         const manifest = this.readManifest(projectRoot);
@@ -252,15 +252,56 @@ module.exports = {
         const foundation = require(foundationRoot);
         const moduleRoots = this.resolveModuleRoots(projectRoot, frameworkRoot, server);
 
-        foundation.start(Object.freeze({
-            NODICS_HOME: foundationRoot,
-            CUSTOM_HOME: projectRoot,
-            MODULE_ROOTS: Object.freeze(moduleRoots),
-            defaultEnvironment: environment.ENV ||
-                server.environment ||
-                this.resolveEnvironmentName(projectRoot, manifest, environment),
-            defaultServer: environment.SERVER || server.server
-        }));
+        const previous = { S: process.env.S, E: process.env.E, NODICS_NODE: process.env.NODICS_NODE };
+        process.env.S = server.server;
+        process.env.E = server.environment || this.resolveEnvironmentName(projectRoot, manifest, environment);
+        if (environment.NODICS_NODE) process.env.NODICS_NODE = environment.NODICS_NODE;
+        try {
+            return await foundation.start(Object.freeze({
+                NODICS_HOME: foundationRoot, CUSTOM_HOME: projectRoot,
+                MODULE_ROOTS: Object.freeze(moduleRoots),
+                defaultEnvironment: process.env.E, defaultServer: server.server
+            }));
+        } finally {
+            for (const key of Object.keys(previous)) {
+                if (previous[key] === undefined) delete process.env[key]; else process.env[key] = previous[key];
+            }
+        }
+    },
+
+    /**
+     * Executes a selected project server clean/build through startup's topology authority.
+     * @param {Object} options Project, server and lifecycle coordinates.
+     * @returns {Promise<boolean>} Lifecycle result.
+     */
+    lifecycle: async function (options) {
+        if (!['cleanAll', 'buildAll'].includes(options.method)) throw new Error('Unsupported project lifecycle method: ' + options.method);
+        const projectRoot = path.resolve(options.projectRoot || process.cwd());
+        const environment = options.environment || process.env;
+        const manifest = this.readManifest(projectRoot);
+        const serverCode = options.serverCode || environment.S || environment.SERVER;
+        if (!serverCode) throw new Error('Select a server with --server=<code> or SERVER before project clean/build');
+        const server = this.resolveServer(projectRoot, manifest, serverCode, environment);
+        const frameworkRoot = this.resolveFrameworkRoot(projectRoot, environment);
+        const foundationRoot = this.packageRoot(frameworkRoot, 'nodics.foundation');
+        // Lifecycle commands run in their own process. Match nConfig's environment
+        // selection to the topology already resolved by this command, then restore it.
+        const previous = { S: process.env.S, E: process.env.E, NODICS_NODE: process.env.NODICS_NODE };
+        process.env.S = server.server;
+        process.env.E = server.environment || environment.E || environment.ENV;
+        if (environment.NODICS_NODE) process.env.NODICS_NODE = environment.NODICS_NODE;
+        try {
+            return await require(foundationRoot)[options.method]({
+                NODICS_HOME: foundationRoot, CUSTOM_HOME: projectRoot,
+                MODULE_ROOTS: this.resolveModuleRoots(projectRoot, frameworkRoot, server),
+                defaultEnvironment: server.environment || environment.E || environment.ENV,
+                defaultServer: server.server
+            });
+        } finally {
+            for (const key of Object.keys(previous)) {
+                if (previous[key] === undefined) delete process.env[key]; else process.env[key] = previous[key];
+            }
+        }
     },
 
     /**
@@ -270,21 +311,26 @@ module.exports = {
      * @returns {void}
      */
     runCli: function (args = process.argv.slice(2), environment = process.env) {
-        const serverCode = args[0];
-        if (!serverCode) {
-            throw new Error('Usage: project:runtime-start <serverCode>');
-        }
-        this.start({
+        const selected = args.find(value => value.startsWith('--server='));
+        const environmentArg = args.find(value => value.startsWith('--environment='));
+        const nodeArg = args.find(value => value.startsWith('--node='));
+        const effectiveEnvironment = Object.assign({}, environment,
+            environmentArg ? { E: environmentArg.slice('--environment='.length), ENV: environmentArg.slice('--environment='.length) } : {},
+            nodeArg ? { NODICS_NODE: nodeArg.slice('--node='.length) } : {});
+        const lifecycle = args.find(value => value.startsWith('--lifecycle='));
+        const serverCode = selected ? selected.slice('--server='.length) : args.find(value => !value.startsWith('-')) || environment.S || environment.SERVER;
+        if (lifecycle) return this.lifecycle({
             projectRoot: environment.NODICS_PROJECT_ROOT || process.cwd(),
-            serverCode,
-            environment
+            method: lifecycle.slice('--lifecycle='.length), serverCode, environment: effectiveEnvironment
         });
+        if (!serverCode) throw new Error('Select a server with --server=<code> or SERVER');
+        return this.start({ projectRoot: environment.NODICS_PROJECT_ROOT || process.cwd(), serverCode, environment: effectiveEnvironment });
     }
 };
 
 if (require.main === module) {
     try {
-        module.exports.runCli();
+        Promise.resolve(module.exports.runCli()).catch(error => { console.error(error); process.exitCode = 1; });
     } catch (error) {
         console.error(error && error.stack ? error.stack : error);
         process.exitCode = 1;

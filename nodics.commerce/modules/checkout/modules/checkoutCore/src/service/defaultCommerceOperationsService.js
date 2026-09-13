@@ -14,7 +14,8 @@
 const crypto = require('node:crypto');
 /** @module checkoutCore/src/service/defaultCommerceOperationsService @description Creates bounded capacity, retry, recovery, compatibility, and migration evidence. @layer service @owner checkoutCore */
 module.exports = {
-    pageSize: (requested, maximum) => Math.max(1, Math.min(Number(requested || 50), Number(maximum || 100))),
+    /** Clamps the requested page size to the configured operation limit. */
+    pageSize: function (requested, maximum) { return Math.max(1, Math.min(Number(requested || 50), Number(maximum || 100))); },
     /** Calculates a bounded exponential retry decision. @param {number} attempt Attempt number. @param {Object} policy Retry policy. @returns {Object} Retry evidence. */
     retry: function (attempt, policy) { const maximum = Number(policy.maximumAttempts || 5); return { attempt, retryable: attempt < maximum, delayMs: attempt < maximum ? Math.min(Number(policy.baseDelayMs || 250) * (2 ** Math.max(0, attempt - 1)), Number(policy.maximumDelayMs || 30000)) : undefined }; },
     /** Creates a hashed recovery checkpoint. @param {Object} request Workload position. @returns {Object} Immutable checkpoint. */

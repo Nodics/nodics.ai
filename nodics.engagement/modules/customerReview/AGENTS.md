@@ -25,3 +25,6 @@ Before implementing non-trivial behavior here, record the business outcome, owni
 - Treat archived CRES as read-only mapping evidence; clean cutover is default and dual-write remains disabled unless separately approved.
 - Preserve one-way dependencies and keep generated artifacts derived from source definitions.
 - Update local contracts, examples, tests, README, generated context, APIs, permissions, Axis metadata, and migration documentation together when behavior changes.
+
+This capability declares an inert model-service inventory for [governed Local reset](../../../nodics.foundation/modules/nSystem/llm/contracts/local-reset.md).
+A server must explicitly select it; contributions never enable reset or bypass tenant, environment, confirmation or required-service checks.

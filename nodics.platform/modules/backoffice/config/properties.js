@@ -17,6 +17,20 @@
  * @override Project, environment, server, node, tenant, or customer layers may override these defaults through Nodics configuration layering.
  */
 module.exports = {
+    // Inert inventory; an allowed local server must explicitly select this capability.
+    localResetProvider: {
+        "contributions": {
+            "backoffice": {
+                "serviceNames": {
+                    "DefaultBackofficeAxisPolicyService": true,
+                    "DefaultBackofficeContractActivationService": true,
+                    "DefaultBackofficeContractSnapshotService": true,
+                    "DefaultBackofficeFunctionalModuleRegistrationService": true
+                }
+            }
+        }
+    },
+
     backofficeApplicationInitialization: {
         profiles: {}
     },
@@ -66,9 +80,9 @@ module.exports = {
     backofficeRegistry: {
         enabled: true,
         leaseTtlMs: 30000,
+        operationalStateTtlMs: 30000,
         sweepIntervalMs: 5000,
         maxModulesPerRegistration: 512,
-        requireBoundServiceIdentity: true,
         store: {
             mode: 'memory',
             moduleName: 'backoffice',

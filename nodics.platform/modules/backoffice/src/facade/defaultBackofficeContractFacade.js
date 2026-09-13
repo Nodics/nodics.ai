@@ -22,15 +22,15 @@ module.exports = {
     /** Completes facade initialization. */
     postInit: function () { return Promise.resolve(true); },
     /** Delegates current lookup. */
-    current: request => SERVICE.DefaultBackofficeContractLifecycleService.current(request),
+    current: function (request) { return SERVICE.DefaultBackofficeContractLifecycleService.current(request); },
     /** Delegates history lookup. */
-    history: request => SERVICE.DefaultBackofficeContractLifecycleService.history(request),
+    history: function (request) { return SERVICE.DefaultBackofficeContractLifecycleService.history(request); },
     /** Delegates comparison. */
-    compare: request => SERVICE.DefaultBackofficeContractLifecycleService.compare(request),
+    compare: function (request) { return SERVICE.DefaultBackofficeContractLifecycleService.compare(request); },
     /** Delegates approval. */
-    approve: request => SERVICE.DefaultBackofficeContractLifecycleService.approve(request),
+    approve: function (request) { return SERVICE.DefaultBackofficeContractLifecycleService.approve(request); },
     /** Delegates rejection. */
-    reject: request => SERVICE.DefaultBackofficeContractLifecycleService.reject(request),
+    reject: function (request) { return SERVICE.DefaultBackofficeContractLifecycleService.reject(request); },
     /** Delegates rollback. */
-    rollback: request => SERVICE.DefaultBackofficeContractLifecycleService.rollback(request)
+    rollback: function (request) { return SERVICE.DefaultBackofficeContractLifecycleService.rollback(request); }
 };

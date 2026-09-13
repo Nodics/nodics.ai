@@ -79,7 +79,7 @@ module.exports = {
                 code: request.httpRequest.params.code
             };
         } else if (!UTILS.isBlank(request.httpRequest.body)) {
-            request = _.merge(request, request.httpRequest.body || {});
+            request = this.mapRequestBody(request, ['query', 'searchOptions', 'pageSize', 'pageNumber', 'sort', 'select', 'options']);
         }
         if (callback) {
             FACADE.dsdName.get(request).then(success => {
@@ -112,6 +112,15 @@ module.exports = {
         } else {
             return FACADE.dsdName.safeSearch(request);
         }
+    },
+
+    /** Executes bounded schema bulk operations without accepting caller request authority. */
+    bulk: function (request, callback) {
+        return this.executeGenericMutation(request, callback, () => {
+            request.utilityBody = request.httpRequest.body || {};
+            request.schemaName = 'schmanm';
+            return FACADE.dsdName.bulk(request);
+        }, 'delete');
     },
 
     /**
@@ -148,12 +157,12 @@ module.exports = {
      */
 
     remove: function (request, callback) {
-        return this.executeGenericMutation(request, callback, () => this.removeAuthorized(request));
+        return this.executeGenericMutation(request, callback, () => this.removeAuthorized(request), 'delete');
     },
 
     /** Maps an authorized remove request after the immutable route identity is checked. */
     removeAuthorized: function (request, callback) {
-        request = _.merge(request, request.httpRequest.body || {});
+        request = this.mapRequestBody(request, ['query', 'options']);
         if (callback) {
             FACADE.dsdName.remove(request).then(success => {
                 callback(null, success);
@@ -201,7 +210,7 @@ module.exports = {
      */
 
     removeById: function (request, callback) {
-        return this.executeGenericMutation(request, callback, () => this.removeByIdAuthorized(request));
+        return this.executeGenericMutation(request, callback, () => this.removeByIdAuthorized(request), 'delete');
     },
 
     /** Maps an authorized ID-based remove request. */
@@ -210,7 +219,7 @@ module.exports = {
         if (request.httpRequest.params.id) {
             request.ids.push(ObjectId(request.httpRequest.params.id));
         } else {
-            request = _.merge(request, request.httpRequest.body || {});
+            request = this.mapRequestBody(request, ['ids', 'query', 'options']);
         }
         if (callback) {
             FACADE.dsdName.removeById(request).then(success => {
@@ -238,7 +247,7 @@ module.exports = {
      */
 
     removeByCode: function (request, callback) {
-        return this.executeGenericMutation(request, callback, () => this.removeByCodeAuthorized(request));
+        return this.executeGenericMutation(request, callback, () => this.removeByCodeAuthorized(request), 'delete');
     },
 
     /** Maps an authorized code-based remove request. */
@@ -247,7 +256,7 @@ module.exports = {
         if (request.httpRequest.params.code) {
             request.codes.push(request.httpRequest.params.code);
         } else {
-            request = _.merge(request, request.httpRequest.body || {});
+            request = this.mapRequestBody(request, ['codes', 'query', 'options']);
         }
         if (callback) {
             FACADE.dsdName.removeByCode(request).then(success => {
@@ -280,7 +289,7 @@ module.exports = {
 
     /** Maps an authorized save request. */
     saveAuthorized: function (request, callback) {
-        request.model = request.httpRequest.body;
+        request.model = SERVICE.DefaultSchemaUtilityService.buildGeneratedMutationModel(request.httpRequest.body, request, 'schmanm');
         if (callback) {
             FACADE.dsdName.save(request).then(success => {
                 callback(null, success);
@@ -312,7 +321,8 @@ module.exports = {
 
     /** Maps an authorized multi-save request. */
     saveAllAuthorized: function (request, callback) {
-        request.models = request.httpRequest.body;
+        if (!Array.isArray(request.httpRequest.body)) throw new CLASSES.NodicsError('ERR_DBS_00003', 'Schema models must be an array');
+        request.models = request.httpRequest.body.map(model => SERVICE.DefaultSchemaUtilityService.buildGeneratedMutationModel(model, request, 'schmanm'));
         if (callback) {
             FACADE.dsdName.saveAll(request).then(success => {
                 callback(null, success);
@@ -339,12 +349,13 @@ module.exports = {
      */
 
     update: function (request, callback) {
-        return this.executeGenericMutation(request, callback, () => this.updateAuthorized(request));
+        return this.executeGenericMutation(request, callback, () => this.updateAuthorized(request), 'update');
     },
 
     /** Maps an authorized update request. */
     updateAuthorized: function (request, callback) {
-        request = _.merge(request, request.httpRequest.body || {});
+        request = this.mapRequestBody(request, ['query', 'model', 'options']);
+        request.model = SERVICE.DefaultSchemaUtilityService.buildGeneratedMutationModel(request.model, request, 'schmanm');
         if (callback) {
             FACADE.dsdName.update(request).then(success => {
                 callback(null, success);
@@ -356,10 +367,57 @@ module.exports = {
         }
     },
 
+    /**
+     * Maps declared transport fields without accepting body-supplied authentication,
+     * module, tenant, enterprise, transaction or trace authority.
+     * @param {Object} request Secured request.
+     * @param {string[]} fields Allowed operation input keys.
+     * @returns {Object} Request with narrow client input and original trusted context.
+     */
+    mapRequestBody: function (request, fields) {
+        let body = request.httpRequest.body || {};
+        if (typeof body !== 'object' || Array.isArray(body)) throw new CLASSES.NodicsError('ERR_DBS_00003', 'Schema request body is invalid');
+        let mapped = request;
+        fields.forEach(field => {
+            if (!Object.prototype.hasOwnProperty.call(body, field)) return;
+            if (field === 'options') {
+                mapped.options = Object.assign({}, request.options || {});
+                ['recursive', 'returnModified'].forEach(option => {
+                    if (typeof body.options?.[option] === 'boolean') mapped.options[option] = body.options[option];
+                });
+            } else {
+                mapped[field] = body[field];
+            }
+        });
+        if (request.router && request.router.schemaGoverned === true && request.schemaApiDescriptor && fields.includes('query')) {
+            mapped.query = SERVICE.DefaultSchemaUtilityService.buildIdentityQuery(mapped.query, request.schemaApiDescriptor);
+        }
+        return mapped;
+    },
+
+    /** Resolves required shared mutation helpers and rejects stale or missing runtime services. @returns {Object} Effective schema utility service. */
+    schemaUtilityService: function () {
+        const service = SERVICE.DefaultSchemaUtilityService;
+        if (!service || ['resolveSchemaModule', 'buildGeneratedMutationModel', 'getIdempotencyKey'].some(name => typeof service[name] !== 'function')) {
+            throw new CLASSES.NodicsError('ERR_DBS_00004', 'Schema mutation utility service is unavailable');
+        }
+        return service;
+    },
+
     /** Checks server-owned schema authority before any request-body merge or persistence call. */
     executeGenericMutation: function (request, callback, execute, operation) {
         let result = Promise.resolve().then(() => {
-            SERVICE.DefaultSchemaAuthoringPolicyService.assertMutationAllowed(request.moduleName, 'schmanm', operation);
+            const utility = this.schemaUtilityService();
+            const owner = utility.resolveSchemaModule(request.moduleName);
+            SERVICE.DefaultSchemaAuthoringPolicyService.assertMutationAllowed(owner.moduleName, 'schmanm', operation);
+            if (request.router && request.router.schemaGoverned === true) {
+                const descriptor = utility.resolveDescriptor(request, owner.moduleName, 'schmanm');
+                if (!descriptor || !descriptor.operations.includes(operation)) throw new CLASSES.NodicsError('ERR_AUTH_00003', 'Schema operation is unavailable');
+                request.schemaApiDescriptor = descriptor;
+                if (operation === 'create' && descriptor.form && descriptor.form.createOperation) throw new CLASSES.NodicsError('ERR_AUTH_00003', 'Use the owning business setup operation');
+            }
+            request.moduleName = owner.moduleName;
+            request.idempotencyKey = utility.getIdempotencyKey(request);
             return execute();
         });
         if (callback) {

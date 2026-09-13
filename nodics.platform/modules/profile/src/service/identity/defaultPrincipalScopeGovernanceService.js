@@ -17,6 +17,31 @@
  * @override Project modules may extend scope types, effects, and resolver behavior through configuration and later-layer services.
  */
 module.exports = {
+  /** Captures the principals whose previously issued runtime credentials must expire after a scope write. */
+  captureRuntimeScopePrincipals: function (request, assignments) {
+    const codes = (assignments || []).filter(item => item.scopeType === 'RUNTIME_DEPLOYMENT').map(item => item.principalCode);
+    request.runtimeScopePrincipalCodes = [...new Set([...(request.runtimeScopePrincipalCodes || []), ...codes])];
+    return true;
+  },
+  /** Reads removed assignments before deletion, preserving the existing Profile identity authority. */
+  prepareRuntimeScopeRemoval: async function (request) {
+    const result = await SERVICE.DefaultPrincipalScopeAssignmentService.get({ tenant: request.tenant,
+      authData: SERVICE.DefaultIdentityGovernanceService.getSystemAuthData(), query: request.query || {}, options: { recursive: false } });
+    if (!result || result.success === false || !/^SUC_/.test(result.code || '') ||
+      (result.errors && result.errors.length) || !Array.isArray(result.result)) throw new CLASSES.NodicsError('ERR_AUTH_00003', 'Scope removal requires authoritative assignment reads');
+    return this.captureRuntimeScopePrincipals(request, result.result);
+  },
+  /** Invalidates service credentials after an acknowledged scope change using existing employee/stamp governance. */
+  invalidateRuntimeScopeCredentials: async function (request) {
+    for (const principalCode of request.runtimeScopePrincipalCodes || []) {
+      const result = await SERVICE.DefaultEmployeeService.update({ tenant: request.tenant,
+        authData: SERVICE.DefaultIdentityGovernanceService.getSystemAuthData(), query: { loginId: principalCode },
+        model: { $set: { authVersion: 1 } } });
+      if (!result || result.success === false || !/^SUC_/.test(result.code || '') ||
+        (result.errors && result.errors.length) || !result.result || result.result.acknowledged !== true || result.result.matchedCount !== 1) throw new CLASSES.NodicsError('ERR_AUTH_00003', 'Runtime scope credential invalidation did not complete');
+    }
+    return true;
+  },
   /**
    * Executes the get policy contract for this module surface.
    *
@@ -226,6 +251,9 @@ module.exports = {
       );
     }
     this.assertDateOrder(normalized);
+    if (normalized.scopeType === 'RUNTIME_DEPLOYMENT') {
+      SERVICE.DefaultRuntimeAuthorizationService.validateAssignment(normalized);
+    }
     return normalized;
   },
   /**
@@ -235,9 +263,8 @@ module.exports = {
    * @returns {*} Operation result, promise, or delegated service response.
    */
   validateSave: function (request) {
-    this.normalizeModels(request.model).forEach((model) =>
-      this.validateAssignment(model),
-    );
+    const assignments = this.normalizeModels(request.model).map(model => this.validateAssignment(model));
+    this.captureRuntimeScopePrincipals(request, assignments);
     return true;
   },
   /**
@@ -264,9 +291,8 @@ module.exports = {
           "ERR_AUTH_00003",
           "Principal scope assignment update requires an existing record",
         );
-      existing
-        .map((assignment) => this.applyUpdate(assignment, updates[0]))
-        .forEach((assignment) => this.validateAssignment(assignment));
+      const effective = existing.map(assignment => this.validateAssignment(this.applyUpdate(assignment, updates[0])));
+      this.captureRuntimeScopePrincipals(request, existing.concat(effective));
       return true;
     });
   },

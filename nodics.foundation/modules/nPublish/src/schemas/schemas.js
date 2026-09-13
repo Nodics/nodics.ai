@@ -26,8 +26,8 @@ module.exports = {
             service: {
                 enabled: true
             },
-            router: {
-                enabled: false
+            router: { groups: { schemaOperations: true },
+                enabled: true
             },
             definition: {
                 domain: { type: 'string', required: true, description: 'Owning domain adapter code' },
@@ -55,8 +55,8 @@ module.exports = {
             service: {
                 enabled: true
             },
-            router: {
-                enabled: false
+            router: { groups: { schemaOperations: true },
+                enabled: true
             },
             event: {
                 enabled: false

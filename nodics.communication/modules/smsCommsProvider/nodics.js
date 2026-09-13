@@ -11,4 +11,4 @@
 
 'use strict';
 /** @module smsCommsProvider/nodics @description Declares the optional SMS provider lifecycle. @layer module @owner smsCommsProvider */
-module.exports = { init: () => Promise.resolve(true), postInit: () => Promise.resolve(true) };
+module.exports = { init: function () { return Promise.resolve(true); }, postInit: function () { return Promise.resolve(true); } };

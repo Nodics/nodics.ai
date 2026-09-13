@@ -17,9 +17,12 @@
  * @override Storage providers may replace deletion mechanics while retaining purpose, hold, optimistic version, and safe result contracts.
  */
 module.exports = {
-    init: () => Promise.resolve(true),
-    postInit: () => Promise.resolve(true),
-    records: value => value && Array.isArray(value.result) ? value.result : [],
+    /** Completes initialization without opening an additional resource. */
+    init: function () { return Promise.resolve(true); },
+    /** Completes post-initialization after dependencies are available. */
+    postInit: function () { return Promise.resolve(true); },
+    /** Returns the available record collection from the owning persistence result without mutating it. */
+    records: function (value) { return value && Array.isArray(value.result) ? value.result : []; },
 
     /**
 

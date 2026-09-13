@@ -57,6 +57,14 @@ assert.strictEqual(engineService.validateEngineContract('redis', enabledRedisEng
 assert.strictEqual(engineService.validateEngineContract('hazelcast', enabledHazelcastEngine, 'schema').distributed, true);
 assert.throws(() => engineService.validateEngineContract('redis', Object.assign({}, enabledRedisEngine, { enabled: false }), 'schema'), error => error.code === 'ERR_CACHE_00008');
 
+const boundedHazelcastOptions = { options: { clusterName: 'contract', clusterMembers: ['127.0.0.1:5701'], connectionTimeoutMs: 5000 } };
+assert.strictEqual(hazelcastEngine.buildClientConfig(boundedHazelcastOptions).connectionStrategy.connectionRetry.clusterConnectTimeoutMillis, 5000);
+for (const timeout of [-1, 60001, Infinity, 1.5]) {
+    assert.throws(() => hazelcastEngine.buildClientConfig({ options: { ...boundedHazelcastOptions.options,
+        connectionStrategy: { connectionRetry: { clusterConnectTimeoutMillis: timeout } } } }), /bounded timeout/);
+}
+assert.strictEqual(boundedHazelcastOptions.options.connectionStrategy, undefined, 'Client configuration must not mutate inherited options');
+
 const ttlChannel = { channelOptions: { ttl: 12 }, engineOptions: { ttl: 20, options: { ttl: 30 } } };
 assert.strictEqual(configurationService.resolveTtl({ channel: ttlChannel }), 12);
 assert.strictEqual(configurationService.resolveTtl({ channel: ttlChannel, ttl: 4 }), 4);
@@ -206,6 +214,12 @@ function hazelcastClient() {
     await hazelcastService.flushByPrefix({ moduleName: 'profile', tenant: 'tenant-a', channel: hazelcastChannel, prefix: 'prefix' });
     assert.strictEqual(hazelcast.values.has('schema_profile_tenant-a_prefix-a'), false);
     assert.strictEqual(hazelcast.values.has('schema_profile_tenant-b_prefix-b'), true);
+
+    for (const [index, value] of [false, [1, 2], { revision: 4, result: 'unchanged' }].entries()) {
+        const request = { moduleName: 'profile', tenant: 'tenant-a', channel: hazelcastChannel, key: 'plain-' + index, value, ttl: 0 };
+        await hazelcastService.put(request);
+        assert.deepStrictEqual(await hazelcastService.get(request), value, 'Ordinary writes preserve JSON shape and do not allocate revisions');
+    }
 
     assert.throws(() => cacheService.assertCapability({ engineOptions: { capabilities: { atomicConsume: false } } }, 'atomicConsume'), error => error.code === 'ERR_CACHE_00009');
     console.log('Cache adapter contracts validated');

@@ -65,6 +65,13 @@ async function run() {
     const securedPipeline = require('../../../nRouter/src/service/request/defaultSecuredRequestPipelineService');
 
     global.SERVICE = {
+        DefaultCacheService: { putVersioned: async options => {
+            const existing = stamps.get(options.key);
+            if (options.advance) options = { ...options, value: { ...options.value, authVersion: Math.max(options.value.authVersion, existing ? existing.authVersion + 1 : 1) } };
+            if (existing && existing.authVersion > options.value.authVersion) throw new Error('Stale versioned cache write');
+            stamps.set(options.key, { ...options.value });
+            return { code: 'SUC_CACHE_00000', result: options.value };
+        } },
         DefaultAuthenticationProviderService: {
             generateAuthToken: options => jwtProvider.generateAuthToken(options),
             addToken: (moduleName, expirable, key, value) => { stamps.set(key, Object.assign({}, value)); return Promise.resolve(value); },
@@ -89,6 +96,8 @@ async function run() {
     assert.strictEqual((await authorization.authorizeToken({ authToken: serviceToken })).result.serviceId, 'service-a');
     await serviceTokenService.revoke(configuration.tenant, 'service-a');
     await assert.rejects(authorization.authorizeToken({ authToken: serviceToken }), /stale/);
+
+    await assert.rejects(serviceTokenService.issue({ tenant: configuration.tenant, serviceId: 'service-a', authVersion: 3 }), /Stale/);
 
     let apiKey = 'auth-distributed-client-generated-api-key-1234567890';
     let credential = credentialService.prepare(apiKey);

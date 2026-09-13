@@ -103,6 +103,7 @@ test('project environment profile resolves local topology from env-owned file', 
 
 test('domain composition resolver supports environment selections without project config files', () => {
   const compositionConfig = {
+    emptySelections: ['none', 'commerce'],
     selection: 'all',
     domains: [
       { code: 'apparel', frameworkGroup: 'apparel', projectPack: 'agora.apparel', productSearchContributor: { serviceName: 'DefaultApparelProductSearchEnrichmentService', required: true } },
@@ -152,4 +153,29 @@ test('project environment profile rejects root descriptor topology facts', () =>
     () => readProjectEnvironmentProfile(projectRoot),
     /Unsupported nodics\.project\.json property `topology`/
   );
+});
+
+
+test('composition selection uses only its declared environment variable and rejects ambiguous names', () => {
+  const config = { selection: 'all', environmentVariable: 'NODICS_TEST_COMPOSITION', domains: [
+    { code: 'warehouse', frameworkGroup: 'inventory', projectPack: 'example.warehouse' }
+  ] };
+  const before = process.env.NODICS_TEST_COMPOSITION;
+  try {
+    process.env.NODICS_TEST_COMPOSITION = 'none';
+    assert.deepEqual(resolveDomainComposition(config).domains, []);
+    assert.deepEqual(resolveDomainComposition({ ...config, environmentVariable: undefined }).domains, ['warehouse']);
+    assert.throws(() => resolveDomainComposition({ ...config, environmentVariable: 'invalid-name' }), /environmentVariable/);
+  } finally {
+    if (before === undefined) delete process.env.NODICS_TEST_COMPOSITION;
+    else process.env.NODICS_TEST_COMPOSITION = before;
+  }
+});
+
+test('an explicitly missing environment never falls back to a local profile', t => {
+  const root = fs.mkdtempSync(path.join(os.tmpdir(), 'nodics-profile-selection-'));
+  t.after(() => fs.rmSync(root, { recursive: true, force: true }));
+  writeJson(path.join(root, 'package.json'), { name: 'customer.application' });
+  writeJson(path.join(root, 'envs/applicationLocal/nodics.environment.json'), { environment: 'applicationLocal' });
+  assert.throws(() => readProjectEnvironmentProfile(root, 'production'), /Unknown project environment profile: production/);
 });

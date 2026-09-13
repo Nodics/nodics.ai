@@ -71,7 +71,7 @@ const expected = {
     'editorial-space': ['Editorial Workspace', 'Editorial Content', 'Article Editor', 'Editorial Review and Approval', 'Languages and Localization', 'Authors', 'Taxonomy', 'Series', 'Featured and Special Content', 'Corrections and Governance', 'Content Type Policies', 'Editorial Calendar', 'Editorial Preview and Distribution', 'Editorial History and Insights'],
     'process-and-automations': ['Operations Workspace', 'Workflow Management', 'Pipeline Management', 'Cron jobs', 'Triggers and Relationships', 'Automation Monitoring', 'Advanced Configuration'],
     'sustainability-operations': ['Waste Management', 'Waste Configuration'],
-    documentation: ['Dashboard', 'Documentation Designer', 'Framework', 'Swaggers', 'Nodics Axis', 'Nodics Kickoff'],
+    documentation: ['Dashboard', 'Documentation Designer', 'Framework', 'Swaggers', 'Nodics Axis'],
     publishing: ['Publishing Workspace', 'Publication Requests', 'Approval Queue', 'Staged-to-Online Operations', 'Publication Manifests', 'Publishing History', 'Publishing Audit', 'Scheduled Publications', 'Online Publications', 'Publication Dependencies', 'Failures & Recovery', 'Withdrawals & Rollbacks', 'Publishing Configuration', 'Setup & Accelerators']
 };
 

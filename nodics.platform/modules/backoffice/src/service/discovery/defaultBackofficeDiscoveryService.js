@@ -172,18 +172,20 @@ module.exports = {
             let repository = SERVICE.DefaultBackofficeContractRepositoryService;
             let historyPolicy = (CONFIG.get('backofficeRegistry') || {}).contractHistory || {};
             if (historyPolicy.enabled === true && !repository) throw new Error('Durable BackOffice contract repository is unavailable');
+            // Observations are BackOffice-owned records; the reporting runtime never
+            // receives generic persistence rights through its group-free token.
+            const persistenceRequest = repository ? repository.getReconciliationRequest({
+                tenant: CONFIG.get('defaultTenant') || 'default'
+            }) : undefined;
             if (!state.active && repository) {
-                state.active = this.fromPersistedSnapshot(await repository.getActiveSnapshot(registration.moduleName, {
-                    tenant: CONFIG.get('defaultTenant') || 'default', authData: context && context.authData
-                }));
+                state.active = this.fromPersistedSnapshot(await repository.getActiveSnapshot(registration.moduleName, persistenceRequest));
             }
             let classification = this.classifyChange(state.active, normalized);
             normalized.changeClassification = classification;
             let persisted;
-            if (repository) persisted = await repository.recordDiscovery(normalized, {
-                tenant: CONFIG.get('defaultTenant') || 'default', sourceInstanceId: registration.instanceId,
-                authData: context && context.authData
-            });
+            if (repository) persisted = await repository.recordDiscovery(normalized, Object.assign({}, persistenceRequest, {
+                sourceInstanceId: registration.instanceId
+            }));
             let requiresApproval = persisted ? persisted.state === 'PENDING_APPROVAL' :
                 ['POTENTIALLY_BREAKING', 'BREAKING'].includes(classification);
             if (requiresApproval) {

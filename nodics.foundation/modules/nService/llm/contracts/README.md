@@ -29,3 +29,61 @@ Use these files for rules that are more specific than root `AGENTS.md` and the m
   package claims. Active-module membership alone does not prove local hosting.
 
 Native business workspaces reuse the concrete module capability builder. `nativeWorkspace` projects the same common navigation fields while replacing the schema target with bounded, non-executable workspace/view keys. Ownership remains the publishing module; registration and BackOffice validation remain mandatory.
+
+## Tenant startup completion
+
+Enterprise discovery, tenant database/model creation, search setup and initial
+Cron job creation must complete before startup succeeds. Propagate required
+failures; do not launch background enterprise retry loops or a second job
+scheduler. Cron owns recurrence. Internal token refresh registers with the
+existing runtime lifecycle service, prevents overlapping refreshes, stops its
+timer and awaits active refresh work before transport/resource shutdown.
+
+## Runtime proof, renewal and operational admission
+
+`runtimeIdentity.instanceCode` is an explicit deployment value with a distinct
+Profile service principal and secret per replica. There is no process-ID identity
+fallback. `defaultAuthDetail` supplies tenant-scoped API-key proof and enterprise;
+local Profile and remote Profile issue through the same deployment authorization
+owner. Missing proof, instance or assignment fails closed.
+
+Internal-token renewal uses one non-overlapping asynchronous timer, bounded tenant
+concurrency, expiry-based jitter, outage backoff and awaited shutdown. The default
+maximum concurrency is four. Shutdown prevents late work from restarting timers.
+
+The existing batched registry response carries approved business activation for
+the registered technical modules. The registration agent holds that response for
+`operationalStateTtlMs` (default 30000, valid 1000–60000 milliseconds), limited by
+the authority expiry. Missing/inactive/expired state denies protected work;
+registration failure does not extend state. No new per-module polling loop is
+allowed. Owning modules call `assertModuleOperational` before accepting protected
+work; it also validates current JWT expiry, revocation, stamp, tenant, deployment
+and module scope through the existing authentication owner. This adds auth-cache
+checks, not a Profile/registry HTTP request per job. An already-admitted operation
+follows its owner's completion/cancellation/recovery contract.
+
+Revocation lookup returns unrevoked only for the canonical `ERR_CACHE_00001`
+cache miss. Provider outage, disabled channel and malformed cached data must
+reject authorization even if a subsequent principal-stamp read could succeed.
+Do not turn arbitrary authentication-state errors into absent revocation markers.
+
+A separate runtime can request protected remote APIs through explicit
+`runtimeIdentity.remoteModules` (for example `['profile', 'inventory']`).
+The provider adds these bounded codes to its active-module request. This does
+not activate source modules or establish local ownership. Every requested code
+still requires the same Profile deployment grant and route permission. Configure
+remote endpoints through the existing server topology, including its abstract
+endpoint; an endpoint alone never grants capability access. Missing remote scope
+fails during protected calls rather than silently broadening the credential.
+
+`authSecurity.securityStamp.cacheModuleName` selects the shared authentication
+state namespace for both principal stamps and token revocation. Authority and
+consumer runtimes must use the same configured distributed channel. It can be
+the active Foundation `auth` module when Profile runs remotely; this never
+changes `profileModuleName` or identity ownership. The default remains Profile.
+
+Module invocation honors the router topology's effective `remoteOnly` option,
+including connection aliases, even when the module source is active locally.
+The selected remote endpoint or registry owner remains mandatory; removing the
+option restores ordinary local dispatch. Active source is not proof of local
+service ownership. See `test/moduleInvocationContract.test.js`.

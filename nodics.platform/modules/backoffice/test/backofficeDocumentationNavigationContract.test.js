@@ -50,8 +50,7 @@ assert.deepStrictEqual(documentationLinks.map(item => item.id), [
     'documentation-source-evidence',
     'documentation-framework',
     'documentation-swaggers',
-    'documentation-nodics-axis',
-    'documentation-nodics-kickoff'
+    'documentation-nodics-axis'
 ]);
 assert.deepStrictEqual(documentationLinks.map(item => item.label), [
     'Dashboard',
@@ -65,8 +64,7 @@ assert.deepStrictEqual(documentationLinks.map(item => item.label), [
     'Source Evidence Review',
     'Framework',
     'Swaggers',
-    'Nodics Axis',
-    'Nodics Kickoff'
+    'Nodics Axis'
 ]);
 assert.deepStrictEqual(documentationLinks.map(item => item.route), [
     '/docs',
@@ -80,8 +78,7 @@ assert.deepStrictEqual(documentationLinks.map(item => item.route), [
     '/docs/designer/source-evidence',
     '/docs/framework',
     '/docs/swaggers',
-    '/docs/nodics-axis',
-    '/docs/nodics-kickoff'
+    '/docs/nodics-axis'
 ]);
 assert.deepStrictEqual(
     documentationLinks.find(item => item.id === 'documentation-management').requiredPermissions,

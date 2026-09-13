@@ -396,7 +396,7 @@ module.exports = {
     schemaWalkThrough: function (options) {
         return new Promise((resolve, reject) => {
             if (!fs.existsSync(options.currentDir)) {
-                fs.mkdirSync(options.currentDir);
+                fs.mkdirSync(options.currentDir, { recursive: true });
             }
             let allPromise = [];
             _.each(NODICS.getModules(), (moduleObject, moduleName) => {
@@ -445,7 +445,7 @@ module.exports = {
                     });
                     data = data + '\n';
                 }
-                data = data + 'module.exports = ' + UTILS.replacePlaceholders(options).replace(/\\n/gm, '\n').replaceAll("\"", "") + ';';
+                data = data + 'module.exports = ' + UTILS.replacePlaceholders(options) + ';';
                 fs.writeFile(fileName,
                     data,
                     'utf-8',
@@ -509,20 +509,36 @@ module.exports = {
     },
 
     /**
+     * Serializes template data and function source without removing JavaScript quotes or escapes.
+     * @param {*} value Common-template value.
+     * @returns {string} JavaScript expression preserving the authored value.
+     */
+    serializeTemplateValue: function (value) {
+        if (typeof value === 'function') {
+            let source = Function.prototype.toString.call(value);
+            if (/^(async\s+)?function\b/.test(source)) return '(' + source + ')';
+            if (/^async\s+\*?[A-Za-z_$][\w$]*\s*\(/.test(source)) source = source.replace(/^async\s+/, 'async function ');
+            else if (/^\*?[A-Za-z_$][\w$]*\s*\(/.test(source)) source = 'function ' + source;
+            return '(' + source + ')';
+        }
+        if (value === undefined) return 'undefined';
+        if (typeof value === 'bigint') return value.toString() + 'n';
+        if (value instanceof RegExp) return value.toString();
+        if (value instanceof Date) return 'new Date(' + JSON.stringify(value.toISOString()) + ')';
+        if (Array.isArray(value)) return '[' + value.map(item => UTILS.serializeTemplateValue(item)).join(', ') + ']';
+        if (value && typeof value === 'object') {
+            return '{\n' + Object.entries(value).map(([key, item]) => JSON.stringify(key) + ': ' + UTILS.serializeTemplateValue(item)).join(',\n') + '\n}';
+        }
+        return JSON.stringify(value);
+    },
+
+    /**
      * Serializes a common artifact template and replaces schema-specific placeholders.
      * @param {Object} options Generation options and common definition object.
      * @returns {string} JavaScript object source with module, model, schema, service, facade, controller, and context-root substitutions.
      */
     replacePlaceholders: function (options) {
-        var commonDefinitionString = JSON.stringify(options.commonDefinition, function (key, value) {
-            if (typeof value === 'function') {
-                return value.toString();
-            } else if (typeof value === 'string') {
-                return '\'' + value + '\'';
-            } else {
-                return value;
-            }
-        }, 4);
+        let commonDefinitionString = UTILS.serializeTemplateValue(options.commonDefinition);
         let contextRoot = CONFIG.get('servers').options.contextRoot;
         commonDefinitionString = commonDefinitionString.replaceAll('mdulnm', options.moduleName)
             .replaceAll('mdlnm', options.modelName + 'Model')

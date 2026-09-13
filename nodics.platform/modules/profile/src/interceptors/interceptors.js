@@ -81,6 +81,22 @@ module.exports = {
     index: -20,
     handler: "DefaultPrincipalScopeGovernanceService.validateUpdate",
   },
+  prepareRuntimeScopeRemoval: {
+    type: "schema", item: "principalScopeAssignment", trigger: "preRemove", active: "true", index: 20,
+    handler: "DefaultPrincipalScopeGovernanceService.prepareRuntimeScopeRemoval",
+  },
+  invalidateRuntimeScopeSave: {
+    type: "schema", item: "principalScopeAssignment", trigger: "postSave", active: "true", index: 20,
+    handler: "DefaultPrincipalScopeGovernanceService.invalidateRuntimeScopeCredentials",
+  },
+  invalidateRuntimeScopeUpdate: {
+    type: "schema", item: "principalScopeAssignment", trigger: "postUpdate", active: "true", index: 20,
+    handler: "DefaultPrincipalScopeGovernanceService.invalidateRuntimeScopeCredentials",
+  },
+  invalidateRuntimeScopeRemoval: {
+    type: "schema", item: "principalScopeAssignment", trigger: "postRemove", active: "true", index: 20,
+    handler: "DefaultPrincipalScopeGovernanceService.invalidateRuntimeScopeCredentials",
+  },
   prepareEmployeeSecurityStamp: {
     type: "schema",
     item: "employee",

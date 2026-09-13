@@ -11,6 +11,24 @@
 
 /** @module fulfillmentCore/config/properties @description Defines Commerce capability and schema access policies. @layer config @owner fulfillmentCore */
 module.exports = {
+    // Inert inventory; an allowed local server must explicitly select this capability.
+    localResetProvider: {
+        "contributions": {
+            "fulfillmentCore": {
+                "serviceNames": {
+                    "DefaultConsignmentService": true,
+                    "DefaultFulfillmentExceptionService": true,
+                    "DefaultFulfillmentReturnService": true,
+                    "DefaultReturnInspectionService": true,
+                    "DefaultReturnReceiptService": true,
+                    "DefaultShipmentService": true,
+                    "DefaultTrackingEventService": true,
+                    "DefaultWarehouseTaskService": true
+                }
+            }
+        }
+    },
+
     fulfillmentCore: {
         enabled: true,
         customerShipping: {

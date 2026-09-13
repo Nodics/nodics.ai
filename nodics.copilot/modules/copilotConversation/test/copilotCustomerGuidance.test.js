@@ -66,7 +66,7 @@ beforeEach(() => {
     DefaultCopilotKnowledgeRuntimeService: {
       search: async (input) => {
         retrievals++;
-        assert.equal(input.securityContext.channel, "NEXUS_CUSTOMER");
+        assert.equal(input.securityContext.channel, "CUSTOMER");
         return evidence;
       },
     },

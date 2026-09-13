@@ -62,9 +62,11 @@ module.exports = {
             ]);
             return;
         }
-        this.spawn(context, process.execPath, ['-e',
-            'Promise.resolve(require("./nodics").' + method + '()).catch(error => { console.error(error); process.exit(1); })'
-        ]);
+        if (!['cleanAll', 'buildAll'].includes(method)) throw new Error('Unsupported project lifecycle method: ' + method);
+        this.spawn(context, process.execPath, [
+            path.join(__dirname, '../project/defaultProjectRuntimeStartService.js'),
+            '--lifecycle=' + method
+        ].concat(context.args || []), { NODICS_PROJECT_ROOT: context.home, NODICS_FRAMEWORK_ROOT: context.frameworkHome });
     },
 
     /**
@@ -78,7 +80,7 @@ module.exports = {
         const toolPath = path.join(context.frameworkHome, 'nodics.foundation', 'modules', 'nTooling', 'bin', 'nodics-tool.js');
         if (this.isFrameworkRepository(context) && ['docs:openapi', 'governance:report'].includes(args[0])) {
             const compositionService = require('./defaultRepositoryBuildCompositionService');
-            const composition = compositionService.create();
+            const composition = compositionService.create(context.frameworkHome, { persistent: true });
             try {
                 this.spawn(context, process.execPath, [toolPath].concat(args), {
                     CUSTOM_HOME: composition.root,
@@ -90,7 +92,8 @@ module.exports = {
             }
             return;
         }
-        this.spawn(context, process.execPath, [toolPath].concat(args));
+        const toolArgs = args[0] === 'docs:openapi' ? args.concat(context.args || []) : args;
+        this.spawn(context, process.execPath, [toolPath].concat(toolArgs), { NODICS_FRAMEWORK_ROOT: context.frameworkHome });
     },
 
     /**
@@ -119,7 +122,8 @@ module.exports = {
      * @returns {Promise<boolean>} Resolves when the lifecycle command passes.
      */
     run: async function (context) {
-        const steps = context.command.steps || [];
+        const steps = !this.isFrameworkRepository(context) && context.command.projectSteps
+            ? context.command.projectSteps : context.command.steps || [];
         steps.forEach(step => this.runStep(context, step));
         return true;
     }

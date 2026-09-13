@@ -18,3 +18,17 @@ Use these files for rules that are more specific than root `AGENTS.md` and the m
 - Export responses may return safe media identity and summary fields, but must
   not expose provider paths, object keys, buckets, signed URL secrets,
   credentials, or backend-resolved full paths.
+
+
+## Schema metadata owner
+
+`DataExportService.resolveSchemaDescriptor` calls the existing Schema Utility
+`getSchema(request, schemaName)` with the normalized target module/schema and
+existing export request scope. Missing metadata owner rejects with `ERR_EXP_00001`.
+There is no raw-schema, Workbench discovery or old-route fallback. Protected-field
+projection and schema authorization remain with the shared owner. Export policy,
+record bounds, rendering and media storage remain unchanged; record collection
+still uses the current bounded Workbench search operation. Customize the existing
+export service or schema metadata through normal inheritance, preserving these
+boundaries. `dataExportCapabilityBehavior.test.js` proves metadata resolution with
+Workbench absent and rejection when the shared owner is missing.

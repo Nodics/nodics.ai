@@ -37,3 +37,24 @@ Validation:
 ```bash
 node nodics.platform/backoffice/test/backofficeAxisReusableComponentGovernanceContract.test.js
 ```
+
+## Required data completion before activation
+
+A required activation release is imported only when nImport reports `CURRENT`.
+Running, queued, pending, missing, invalid and incomplete execution results do
+not enable the capability. Preserve running receipts as running and reject the
+activation before its catalogue compare-and-set. Execute only unapplied/failed
+releases; merge confirmed current preflight entries with completed execution
+results so mixed groups remain complete without reimporting current releases.
+Runtime loss or a conflicting administrator revision still prevents activation.
+
+Required activation data must be confirmed current by nImport. Never convert
+running, queued, missing or non-executable results to imported receipts. Preserve
+incomplete receipts, fail activation, and retain catalogue revision/runtime gates.
+
+Background contract discovery uses the existing repository-owned system context
+for normalized observation persistence. The runtime reporting a validated lease
+retains its group-free, scoped credential; discovery must not give it generic
+BackOffice schema rights. Preserve source-instance evidence and existing bounded
+normalization, compatibility classification, approval and revision checks. Human
+contract decisions retain their authenticated actor and permission gates.

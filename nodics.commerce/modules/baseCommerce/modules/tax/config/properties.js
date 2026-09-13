@@ -11,6 +11,18 @@
 
 /** @module tax/config/properties @description Defines Commerce capability and schema access policies. @layer config @owner tax */
 module.exports = {
+    // Inert inventory; an allowed local server must explicitly select this capability.
+    localResetProvider: {
+        "contributions": {
+            "tax": {
+                "serviceNames": {
+                    "DefaultTaxDecisionService": true,
+                    "DefaultTaxPolicyService": true
+                }
+            }
+        }
+    },
+
     tax: { enabled: true },
     schemaPolicies: { tax: {
         operational: { accessGroups: { adminGroup: 10, commerceOperatorUserGroup: 10, serviceAccountUserGroup: 10 } },

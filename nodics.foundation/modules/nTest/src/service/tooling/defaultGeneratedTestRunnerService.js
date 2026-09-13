@@ -21,7 +21,6 @@ const { spawnSync } = require('child_process');
  * @override Projects may contribute generated tests or explicitly replace this command without bypassing destructive-test selection.
  */
 
-const rootPath = path.resolve(process.env.NODICS_HOME || process.cwd());
 const skippedDirectories = new Set(['.git', 'node_modules']);
 const destructiveTestTypes = new Set(['crud']);
 
@@ -51,6 +50,7 @@ module.exports = exportedService = {
 
     /** Implements collectGeneratedTests as an overrideable service operation. */
     collectGeneratedTests: function (currentPath, tests = [], options = {}) {
+    if (!fs.existsSync(currentPath)) return tests;
     const entries = fs.readdirSync(currentPath, { withFileTypes: true });
 
     entries.forEach((entry) => {
@@ -70,11 +70,39 @@ module.exports = exportedService = {
     return tests;
 },
 
+    /**
+     * Resolves generated-test ownership from an explicit root or selected runtime metadata.
+     * @param {string[]} args Command arguments.
+     * @param {Object} environment Environment values.
+     * @returns {string} Selected generated test root.
+     */
+    resolveTestRoot: function (args = process.argv.slice(2), environment = process.env) {
+        const rootArg = args.find(value => value.startsWith('--root='));
+        if (rootArg) return path.resolve(rootArg.slice('--root='.length));
+        const home = path.resolve(environment.CUSTOM_HOME || environment.NODICS_PROJECT_ROOT || environment.NODICS_HOME || process.cwd());
+        const metadataPath = path.join(home, 'package.json');
+        if (!fs.existsSync(metadataPath)) return home;
+        const metadata = JSON.parse(fs.readFileSync(metadataPath, 'utf8'));
+        if (metadata.nodics && metadata.nodics.kind === 'framework') {
+            const composition = require('../../../../nTooling/src/service/command/defaultRepositoryBuildCompositionService');
+            return path.join(composition.persistentCoordinates(home).serverRoot, 'test', 'gen');
+        }
+        const serverArg = args.find(value => value.startsWith('--server='));
+        const serverCode = serverArg ? serverArg.slice('--server='.length) : environment.S || environment.SERVER;
+        if (!serverCode) throw new Error('Select --server=<code> or --root=<generated-test-root> for generated tests');
+        const runtime = require('../../../../nTooling/src/service/project/defaultProjectRuntimeStartService');
+        const environmentArg = args.find(value => value.startsWith('--environment='));
+        const selectedEnvironment = Object.assign({}, environment, environmentArg ? { ENV: environmentArg.slice('--environment='.length) } : {});
+        const server = runtime.resolveServer(home, runtime.readManifest(home), serverCode, selectedEnvironment);
+        return path.join(home, 'envs', server.environment, server.server, 'test', 'gen');
+    },
+
     /** Implements runCli as an overrideable service operation. */
     runCli: function () {
+    const selectedRoot = this.resolveTestRoot();
     const typeArg = process.argv.find((arg) => arg.startsWith('--type='));
     const selectedType = typeArg ? typeArg.substring('--type='.length) : null;
-    const tests = (this.collectGeneratedTests || exportedService.collectGeneratedTests).call(this, rootPath, [], {
+    const tests = (this.collectGeneratedTests || exportedService.collectGeneratedTests).call(this, selectedRoot, [], {
         selectedType: selectedType,
         includeDestructive: !!selectedType
     }).sort();
@@ -86,10 +114,10 @@ module.exports = exportedService = {
     }
 
     tests.forEach((testPath) => {
-        const relativePath = path.relative(rootPath, testPath);
+        const relativePath = path.relative(selectedRoot, testPath);
         console.log(`\nRunning ${relativePath}`);
         const result = spawnSync(process.execPath, [testPath], {
-            cwd: rootPath,
+            cwd: selectedRoot,
             stdio: 'inherit'
         });
 

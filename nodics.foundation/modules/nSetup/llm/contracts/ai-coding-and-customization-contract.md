@@ -89,6 +89,21 @@ belongs, and how future tools will discover and apply it.
 
 ## Reuse, Customize, Then Create
 
+Apply [Existing Layers And Project Independence](nodics-principles.md#existing-layers-and-project-independence).
+The creation step below permits a missing capability within established Nodics
+ownership; it does not permit inventing another architectural layer or parallel
+authority. Reuse the current owner before extracting shared behavior, and move
+one implementation rather than copying it. If the architecture cannot express
+the requirement, record the precise design gap instead of silently adding a layer.
+
+Never place project-specific configuration or business identities in any
+framework/accelerator layer, including service fallbacks, route metadata,
+tooling and generators. Keep consumer choices in their existing customer or
+deployment owner. Workbench and other clients consume canonical owner APIs;
+do not introduce another CRUD facade or route family for a particular screen,
+application, store or customer. Preserve distinct domain lifecycle commands
+with their owners and their security, validation and recovery contracts.
+
 The implementation order is mandatory:
 
 1. **Reuse:** use an existing Nodics schema, service, facade, router, pipeline,
@@ -146,6 +161,11 @@ Constructor, prototype, and class implementations under an established
 explicit constructor/class compatibility review and must not be mechanically
 converted under this object-export rule.
 
+The standing source-export audit discovers runtime owners from package metadata
+and parses actual export syntax. A short file allowlist is not whole-framework
+coverage. Keep constructor/library exceptions explicit and preserve automatic
+coverage when a new runtime module is introduced.
+
 ## Artifact Placement
 
 Code must live in the folder that matches its responsibility.
@@ -164,7 +184,7 @@ Use these defaults:
 | Business behavior and provider-neutral services | `src/service/**/*Service.js` |
 | Provider-specific behavior | provider module or provider service under `src/service` |
 | Ordered runtime behavior | `src/pipelines/pipelines.js`, `src/interceptors/interceptors.js` |
-| Event declarations and listeners | `src/events/events.js`, `src/events/listeners.js` |
+| Event declarations and listeners | `src/event/events.js`, `src/event/listeners.js` |
 | Scheduled jobs | `src/jobs/jobs.js` or module-standard job registry |
 | Utility functions | `src/utils/utils.js` or focused utility files under `src/utils` |
 | Enums | `src/utils/enums.js` |
@@ -375,6 +395,47 @@ is enforced through runtime/schema policy context, not copied as domain meaning.
 A new or changed extension point is incomplete until at least one focused test
 or example proves how it is customized safely.
 
+## Corrective Changes And Recurrence Prevention
+
+When an agreed programme spans related owners, implement it continuously against
+its canonical checklist. Use internal dependency and regression checkpoints;
+do not turn every helper or route into another approval request. Pause only for
+an unresolved material decision or action whose authorization is actually absent.
+
+
+For unreleased framework changes, migrate current in-repository consumers and
+remove superseded routes/adapters in the same batch. Do not create compatibility
+aliases based on assumed external users. A real released contract or an explicit
+user requirement is necessary to justify backward-compatibility work. Preserve
+needed capabilities while replacing their implementation through existing owners.
+
+
+For each coherent correction or refactor batch:
+
+1. Identify the violated invariant and its existing canonical owner. When an
+   existing rule already covers the issue, improve its discoverability or
+   enforcement instead of creating a duplicate contract.
+2. Update the applicable principle/contract in the same batch. Keep universal
+   rules in nSetup and exact capability behavior in the owning module contract;
+   link them from the nearest README/AGENTS and examples. Do not leave the lesson
+   solely in a conversation, temporary audit or private memory.
+3. Correct the source definition and relevant generator/template so newly
+   generated code cannot reintroduce the issue. Regenerate derived artifacts;
+   never patch generated output as the permanent fix.
+4. Add or strengthen a proportionate regression check for the actual failure,
+   including rejection, boundary and later-layer customization cases where
+   relevant. Prefer demonstrating the failure before the fix. Do not add a
+   separate validator or brittle wording test merely because guidance changed.
+5. Record the owning rule, changed behavior, evidence and remaining gaps in the
+   existing actionable checklist. Distinguish source inspection, focused tests,
+   runtime preparation and authenticated live acceptance. Updating a rule or
+   passing a limited test does not close unresolved implementation findings.
+
+Apply [Capability APIs And Safe Consolidation](nodics-principles.md#capability-apis-and-safe-consolidation)
+when changing API ownership, shared metadata or consumer adapters. Preserve the
+existing policy and outcome contracts through the migration, with an explicit
+removal condition for temporary compatibility code.
+
 ## AI Memory And Decision Pattern
 
 AI tools must build practical working memory from repository authority, not
@@ -431,3 +492,35 @@ When coding work is complete, the AI must report:
 ## Module-owned UI composition
 
 Apply [module-owned-ui-contribution-contract.md](module-owned-ui-contribution-contract.md) before placing navigation, component properties or workspace definitions. Generic owners publish shared anchors; accelerators contribute their own subtrees through existing registration. Visual placement never transfers data ownership.
+
+## Compatibility and invariant-preserving extensions
+
+An exported implementation is replaceable; the capability's authorization,
+tenant and enterprise isolation, domain validation, API shape, confirmation,
+idempotency and audit requirements remain mandatory. Arbitrary project JavaScript
+is trusted deployment code, so these are extension/review/qualification guarantees,
+not a claim that the language prevents bypassing security. Test the effective
+later-layer implementation with positive and negative contract cases.
+
+Changing an exported method's parameters, result, async completion, error or
+side-effect contract requires consumer impact analysis and a documented migration.
+The same rule applies to configuration keys/defaults/merge rules, schema fields
+and identities, route permissions and envelopes, event payloads, provider atomicity,
+and partner source extension points. Additive changes are compatible only when
+existing behavior, validation and old consumers remain valid. A release number
+alone does not prove compatibility; use the repository's release governance and
+published compatibility matrix rather than inventing a new runtime version store.
+
+Preserve released dataset keys and immutable releases. Changed source identity
+or business code does not rename persisted records. Breaking persisted schema,
+audience, grant or channel-policy changes require an explicit owner migration,
+replay evidence and rollback limits. A code rollback does not undo data effects.
+This unreleased programme changes MongoDB `schemaProperties` to keyed booleans;
+legacy arrays reject and must be migrated explicitly. Other ordinary property
+arrays retain merge-by-index semantics; data-record array merging retains its
+separately tested replacement rule. Do not silently generalize either behavior.
+
+See the existing release/upgrade compatibility guide, owning provider contracts,
+and nConfig's effective behavior diagnostics. Record the affected consumers,
+old/new examples, tests, runtime adoption and remaining deployment gates in the
+single actionable record for the change.

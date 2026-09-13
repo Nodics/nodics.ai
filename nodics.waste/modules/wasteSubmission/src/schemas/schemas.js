@@ -13,7 +13,7 @@
 
 
 module.exports = { wasteSubmission: {
-    wasteSubmission: Object.assign({ super: 'base', model: true, backoffice: { concurrency: { managed: true, field: 'revision' } }, schemaPolicies: ['operational'], service: { enabled: true }, router: { enabled: false }, cache: { enabled: false }, event: { enabled: false }, search: { enabled: false } }, { definition: {
+    wasteSubmission: Object.assign({ super: 'base', model: true, backoffice: { concurrency: { managed: true, field: 'revision' } }, schemaPolicies: ['operational'], service: { enabled: true }, router: { groups: { schemaOperations: true }, enabled: true }, cache: { enabled: false }, event: { enabled: false }, search: { enabled: false } }, { definition: {
         code: { type: 'string', required: true , description: 'Uniquely identifies this record for references, APIs, imports, and business administration.'},
         submitterRef: { type: 'object', required: true , description: 'References the related submitter record used by this record.'},
         submissionChannel: { type: 'string', required: true , description: 'Stores the submission channel value used by this record.'},
@@ -51,7 +51,7 @@ module.exports = { wasteSubmission: {
         receiptRef: {"enabled":true,"moduleName":"wasteReceipt","schemaName":"wasteReceipt","type":"one","propertyName":"code"},
         impactRef: {"enabled":true,"moduleName":"wasteImpact","schemaName":"wasteImpactResult","type":"one","propertyName":"code"}
     } }),
-    wasteEvidence: Object.assign({ super: 'base', model: true, schemaPolicies: ['operational'], service: { enabled: true }, router: { enabled: false }, cache: { enabled: false }, event: { enabled: false }, search: { enabled: false } }, { definition: {
+    wasteEvidence: Object.assign({ super: 'base', model: true, schemaPolicies: ['operational'], service: { enabled: true }, router: { groups: { schemaOperations: true }, enabled: true }, cache: { enabled: false }, event: { enabled: false }, search: { enabled: false } }, { definition: {
         code: { type: 'string', required: true , description: 'Uniquely identifies this record for references, APIs, imports, and business administration.'},
         ownerRef: { type: 'object', required: true , description: 'References the related owner record used by this record.'},
         evidenceType: { type: 'string', required: true, enum: ['PHOTO', 'DOCUMENT', 'WEIGHT_SLIP', 'RECEIPT', 'SIGNATURE', 'AI_METADATA', 'OPERATOR_NOTE', 'CERTIFICATE'] , description: 'Classifies this record by evidence type for validation and business handling.'},
@@ -69,7 +69,7 @@ module.exports = { wasteSubmission: {
         mediaRef: {"enabled":true,"moduleName":"media","schemaName":"media","type":"one","propertyName":"code"},
         captureLocationRef: {"enabled":true,"moduleName":"locationCore","schemaName":"location","type":"one","propertyName":"code"}
     } }),
-    wasteMetadataSuggestion: Object.assign({ super: 'base', model: true, schemaPolicies: ['operational'], service: { enabled: true }, router: { enabled: false }, cache: { enabled: false }, event: { enabled: false }, search: { enabled: false } }, { definition: {
+    wasteMetadataSuggestion: Object.assign({ super: 'base', model: true, schemaPolicies: ['operational'], service: { enabled: true }, router: { groups: { schemaOperations: true }, enabled: true }, cache: { enabled: false }, event: { enabled: false }, search: { enabled: false } }, { definition: {
         code: { type: 'string', required: true , description: 'Uniquely identifies this record for references, APIs, imports, and business administration.'},
         submissionCode: { type: 'string', required: true , description: 'Stores the submission code used to classify, link, or resolve this record.'},
         sourceType: { type: 'string', required: true, enum: ['AI', 'BARCODE', 'OPERATOR', 'RULE', 'IMPORT'] , description: 'Classifies this record by source type for validation and business handling.'},

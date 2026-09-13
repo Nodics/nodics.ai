@@ -19,7 +19,7 @@
 module.exports = {
     copilotConversation: {
         copilotConversationRecord: {
-            super: 'base', model: true, service: { enabled: true }, router: { enabled: false }, event: { enabled: false },
+            super: 'base', model: true, service: { enabled: true }, router: { groups: { schemaOperations: true }, enabled: true }, event: { enabled: false },
             definition: {
                 definitionCode: { type: 'string', required: true , description: 'Stores the definition code used to classify, link, or resolve this record.'}, title: { type: 'string', required: false , description: 'Stores the title value used by this record.'},
                 tenantCode: { type: 'string', required: true , description: 'Stores the tenant code used to classify, link, or resolve this record.'}, principalCode: { type: 'string', required: true , description: 'Stores the principal code used to classify, link, or resolve this record.'},
@@ -33,7 +33,7 @@ module.exports = {
             } }
         },
         copilotTurn: {
-            super: 'base', model: true, service: { enabled: true }, router: { enabled: false }, event: { enabled: false },
+            super: 'base', model: true, service: { enabled: true }, router: { groups: { schemaOperations: true }, enabled: true }, event: { enabled: false },
             definition: {
                 conversationCode: { type: 'string', required: true , description: 'Stores the conversation code used to classify, link, or resolve this record.'}, idempotencyKey: { type: 'string', required: true , description: 'Stores the idempotency key value used by this record.'},
                 tenantCode: { type: 'string', required: true , description: 'Stores the tenant code used to classify, link, or resolve this record.'}, principalCode: { type: 'string', required: true , description: 'Stores the principal code used to classify, link, or resolve this record.'},
@@ -42,7 +42,7 @@ module.exports = {
             }
         },
         copilotMessage: {
-            super: 'base', model: true, service: { enabled: true }, router: { enabled: false }, event: { enabled: false },
+            super: 'base', model: true, service: { enabled: true }, router: { groups: { schemaOperations: true }, enabled: true }, event: { enabled: false },
             definition: {
                 conversationCode: { type: 'string', required: true , description: 'Stores the conversation code used to classify, link, or resolve this record.'}, turnCode: { type: 'string', required: true , description: 'Stores the turn code used to classify, link, or resolve this record.'},
                 tenantCode: { type: 'string', required: true , description: 'Stores the tenant code used to classify, link, or resolve this record.'}, role: { type: 'string', required: true , description: 'Stores the role value used by this record.'},
@@ -50,7 +50,7 @@ module.exports = {
             }
         },
         copilotEvent: {
-            super: 'base', model: true, service: { enabled: true }, router: { enabled: false }, event: { enabled: false },
+            super: 'base', model: true, service: { enabled: true }, router: { groups: { schemaOperations: true }, enabled: true }, event: { enabled: false },
             definition: {
                 contractVersion: { type: 'int', required: true , description: 'Stores the numeric contract version used by this record.'}, conversationCode: { type: 'string', required: true , description: 'Stores the conversation code used to classify, link, or resolve this record.'},
                 turnCode: { type: 'string', required: true , description: 'Stores the turn code used to classify, link, or resolve this record.'}, eventType: { type: 'string', required: true , description: 'Classifies this record by event type for validation and business handling.'},
@@ -58,7 +58,7 @@ module.exports = {
             }
         },
         copilotAction: {
-            super: 'base', model: true, service: { enabled: true }, router: { enabled: false }, event: { enabled: false },
+            super: 'base', model: true, service: { enabled: true }, router: { groups: { schemaOperations: true }, enabled: true }, event: { enabled: false },
             definition: {
                 conversationCode: { type: 'string', required: true , description: 'Stores the conversation code used to classify, link, or resolve this record.'}, tenantCode: { type: 'string', required: true , description: 'Stores the tenant code used to classify, link, or resolve this record.'},
                 principalCode: { type: 'string', required: true , description: 'Stores the principal code used to classify, link, or resolve this record.'}, capability: { type: 'string', required: true , description: 'Stores the capability value used by this record.'},

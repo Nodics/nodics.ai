@@ -6,14 +6,14 @@ The beginner path should feel like this:
 What are you building?            Telco commerce storefront
 Project name?                     acme-mobile
 Market, locale, currency?         AE, en-AE, AED
-Frontends?                        Agora storefront + Axis BackOffice
+Frontends?                        Selected storefront + administration
 Sample data?                      Yes, local demo catalogue
 Output folder?                    /workspace/generated/acme-mobile
 
 Builder explains:
 - Backend: Telco with Electronics, Commerce, and Foundation dependencies.
-- Storefront: Agora Telco composition.
-- Customer data: agora.telco.
+- Storefront: Customer-declared Telco composition.
+- Customer data: mobileData.
 - Qualification: generated skeleton first, reference runtime evidence optional.
 - Next command: create and review the plan.
 ```
@@ -22,8 +22,8 @@ For command-line automation, save those answers as JSON and run:
 
 ```bash
 node nodics.foundation/modules/nTooling/bin/nodics-tool.js builder:questionnaire \
-  --exp=/workspace/nodics.exp \
-  --kickoff=/workspace/nodics.kickoff \
+  --frontend=/workspace/customer-frontend \
+  --customer=/workspace/customer-backend \
   --output=/workspace/answers/acme-mobile.json \
   --dry-run=true
 ```
@@ -34,8 +34,8 @@ can still parse the structured result.
 
 ```bash
 node nodics.foundation/modules/nTooling/bin/nodics-tool.js builder:answers-template \
-  --exp=/workspace/nodics.exp \
-  --kickoff=/workspace/nodics.kickoff \
+  --frontend=/workspace/customer-frontend \
+  --customer=/workspace/customer-backend \
   --project-code=acmeMobile \
   --customer-code=acme \
   --display-name="Acme Mobile" \
@@ -43,7 +43,7 @@ node nodics.foundation/modules/nTooling/bin/nodics-tool.js builder:answers-templ
   --country=AE \
   --locale=en-AE \
   --currency=AED \
-  --frontends=AGORA,AXIS \
+  --frontends=STOREFRONT,ADMIN \
   --sample-data=true \
   --output=/workspace/answers/acme-mobile.json \
   --dry-run=true
@@ -57,8 +57,8 @@ After the answers are saved, create a review pack:
 
 ```bash
 node nodics.foundation/modules/nTooling/bin/nodics-tool.js builder:guide \
-  --exp=/workspace/nodics.exp \
-  --kickoff=/workspace/nodics.kickoff \
+  --frontend=/workspace/customer-frontend \
+  --customer=/workspace/customer-backend \
   --answers=/workspace/answers/acme-mobile.json \
   --workspace=/workspace/reviews/acme-mobile
 ```
@@ -80,32 +80,31 @@ Before approval or generation, a new user can ask for a no-write dry run:
 
 ```bash
 node nodics.foundation/modules/nTooling/bin/nodics-tool.js builder:dry-run \
-  --exp=/workspace/nodics.exp \
-  --kickoff=/workspace/nodics.kickoff \
+  --frontend=/workspace/customer-frontend \
+  --customer=/workspace/customer-backend \
   --answers=/workspace/answers/acme-mobile.json
 ```
 
 For a Telco preset, the dry run explains that Telco is the active customer
 experience, Electronics is resolved as backend behavior, and only
-`agora.telco` data pack is selected unless the user asks
+`mobileData` data pack is selected unless the user asks
 for Electronics or Combined.
 
 The low-level command path still exists for auditability. From the `nodics.ai`
-repository root, either use `--exp` to resolve Agora from the frontend workspace
-catalogue or pass `--agora` directly:
+repository root, provide explicit source roots:
 
 ```bash
 node nodics.foundation/modules/nTooling/bin/nodics-tool.js builder:discover \
-  --exp=/workspace/nodics.exp \
-  --kickoff=/workspace/nodics.kickoff
+  --frontend=/workspace/customer-frontend \
+  --customer=/workspace/customer-backend
 ```
 
 Validate a solution without changing any repository:
 
 ```bash
 node nodics.foundation/modules/nTooling/bin/nodics-tool.js builder:validate \
-  --agora=/workspace/nodics.exp/nodics.agora.apparel \
-  --kickoff=/workspace/nodics.kickoff \
+  --frontend=/workspace/customer-frontend \
+  --customer=/workspace/customer-backend \
   --solution=/workspace/solutions/acme-telco.json
 ```
 
@@ -113,21 +112,21 @@ Create an approval-required plan:
 
 ```bash
 node nodics.foundation/modules/nTooling/bin/nodics-tool.js builder:plan \
-  --agora=/workspace/nodics.exp/nodics.agora.apparel \
-  --kickoff=/workspace/nodics.kickoff \
+  --frontend=/workspace/customer-frontend \
+  --customer=/workspace/customer-backend \
   --solution=/workspace/solutions/acme-telco.json
 ```
 
 A Telco solution selects `telco`; discovery and planning resolve `electronics`,
-`nodics.commerce`, and `nodics.foundation` transitively. Its Agora composition
-and Kickoff data pack must also exist. The plan lists proposed relative
+`nodics.commerce`, and `nodics.foundation` transitively. Its declared composition
+and customer data pack must also exist. The plan lists proposed relative
 operations and writes nothing. Save that JSON, then bind an external approval
 reference:
 
 ```bash
 node nodics.foundation/modules/nTooling/bin/nodics-tool.js builder:approve \
-  --agora=/workspace/nodics.exp/nodics.agora.apparel \
-  --kickoff=/workspace/nodics.kickoff \
+  --frontend=/workspace/customer-frontend \
+  --customer=/workspace/customer-backend \
   --plan=/workspace/plans/commerce-plan.json \
   --approval-reference=CHANGE-1234
 ```
@@ -137,8 +136,8 @@ an absent absolute test root:
 
 ```bash
 node nodics.foundation/modules/nTooling/bin/nodics-tool.js builder:generate \
-  --agora=/workspace/nodics.exp/nodics.agora.apparel \
-  --kickoff=/workspace/nodics.kickoff \
+  --frontend=/workspace/customer-frontend \
+  --customer=/workspace/customer-backend \
   --solution=/workspace/solutions/commerce.json \
   --plan=/workspace/plans/commerce-approved.json \
   --output=/workspace/generated/reference-commerce
@@ -158,12 +157,12 @@ npm run verify:runtime
 machine-readable summary for future Builder, AI, or CI workflows.
 
 The same approved workflow supports Electronics, Telco, and Combined solutions.
-Telco resolves Electronics in its backend graph but generates the Telco Agora
+Telco resolves Electronics in its backend graph but generates the Telco frontend
 composition and Telco customer data pack. Combined generates the exact union of
 Apparel, Electronics, and Telco contributions.
 
 Generated output is self-contained enough to boot its generated backend and
-Agora storefront probes:
+starter storefront probes:
 
 ```bash
 cd /workspace/generated/reference-combined
@@ -175,12 +174,11 @@ Qualify a generated output after generation:
 
 ```bash
 node nodics.foundation/modules/nTooling/bin/nodics-tool.js builder:qualify \
-  --agora=/workspace/nodics.exp/nodics.agora.apparel \
-  --kickoff=/workspace/nodics.kickoff \
+  --frontend=/workspace/customer-frontend \
+  --customer=/workspace/customer-backend \
   --solution=/workspace/solutions/combined.json \
   --plan=/workspace/plans/combined-approved.json \
-  --output=/workspace/generated/reference-combined \
-  --reference-evidence=/workspace/actionsRepo/Agora/nodics-multi-domain-qualification-evidence-2026-08-15.md
+  --output=/workspace/generated/reference-combined
 ```
 
 Without `--reference-evidence`, the lock is qualified only as
@@ -197,8 +195,8 @@ Create a local digest-bound release manifest from an approved target plan:
 
 ```bash
 node nodics.foundation/modules/nTooling/bin/nodics-tool.js builder:release-manifest \
-  --agora=/workspace/nodics.exp/nodics.agora.apparel \
-  --kickoff=/workspace/nodics.kickoff \
+  --frontend=/workspace/customer-frontend \
+  --customer=/workspace/customer-backend \
   --solution=/workspace/solutions/apparel.json \
   --plan=/workspace/plans/apparel-approved.json \
   --release-channel=LOCAL_BUILDER
@@ -208,8 +206,8 @@ Plan an upgrade from an existing generated lock to that target release:
 
 ```bash
 node nodics.foundation/modules/nTooling/bin/nodics-tool.js builder:upgrade-plan \
-  --agora=/workspace/nodics.exp/nodics.agora.apparel \
-  --kickoff=/workspace/nodics.kickoff \
+  --frontend=/workspace/customer-frontend \
+  --customer=/workspace/customer-backend \
   --current-lock=/workspace/generated/reference-commerce/solution-lock.json \
   --release=/workspace/releases/apparel-release.json \
   --solution=/workspace/solutions/apparel.json \
@@ -219,3 +217,42 @@ node nodics.foundation/modules/nTooling/bin/nodics-tool.js builder:upgrade-plan 
 Upgrade planning is non-mutating. It compares locks, packages, data packs, and
 release digests, then emits the safe operations that a later approved upgrade
 executor would perform.
+
+## Customer declarations
+
+The commands above assume the selected customer has declared its presets. The
+following fields belong under the existing customer `package.json` `nodics`
+property. This example intentionally chooses its own frontend and pack codes.
+
+```json
+{
+  "applicationBuilder": {
+    "frontends": [{"code":"STOREFRONT","role":"Retail"},{"code":"ADMIN","role":"Operations"}],
+    "compositions": [{"code":"mobile","frontend":"STOREFRONT","domains":["telco"],"rendererKeys":["retail.mobile.card"],"dataPacks":["mobileData"]}],
+    "presets": {
+      "telco": {
+        "label":"Mobile retail", "explanation":"A customer-selected mobile retail starter.",
+        "selected":["nodics.commerce","telco"], "domains":["TELCO"], "excluded":["apparel"],
+        "storefront":"STOREFRONT", "frontends":["STOREFRONT","ADMIN"], "composition":"mobile",
+        "routes":["/","/mobile"], "renderers":["retail.mobile.card"],
+        "rendererByDomain":{"telco":"retail.mobile.card"},
+        "stores":["mobileStore"], "catalogs":["mobileCatalog"], "packs":["mobileData"],
+        "packDomains":{"mobileData":"telco"}, "journeys":["mobile.discovery"],
+        "backendRuntimes":["PLATFORM","COMMERCE"],
+        "market":{"country":"AE","locale":"en-AE","currency":"AED"}
+      }
+    }
+  }
+}
+```
+
+The customer data module `modules/mobileData/package.json` declares its own name
+`mobileData` and `nodics.applicationBuilder.dataPack: true`. Missing that module
+or selecting an undeclared renderer fails planning. Changing the module name
+requires changing the explicit declaration and solution; no suffix convention
+can substitute for that ownership mapping. Markets and stores in this example
+are customer choices and are not framework defaults.
+
+Run `applicationBuilderProjectIndependenceContract.test.js` for a complete second
+customer with unrelated names, a different market and actual disposable starter
+HTTP probes. The test does not contact deployed customer services.

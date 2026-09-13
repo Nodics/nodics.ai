@@ -14,3 +14,11 @@
   ideas, replenishment candidates, and saved cart candidates by adding explicit
   list types plus limits/tests; do not create parallel modules for the same
   saved-product lifecycle.
+
+- Require explicit store context and use the existing Store context service for
+  consistent identity/model validation. Do not use `defaultStoreCode` fallback
+  policy or introduce another context authority. Reject persisted/input mismatch
+  before writes and preserve existing IDs through explicit migration practices.
+
+This capability declares an inert model-service inventory for [governed Local reset](../../../../../nodics.foundation/modules/nSystem/llm/contracts/local-reset.md).
+A server must explicitly select it; contributions never enable reset or bypass tenant, environment, confirmation or required-service checks.

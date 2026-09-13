@@ -3,3 +3,6 @@
 Checkout Core is its named Commerce capability boundary. Reusable contracts and behavior belong to this named capability boundary. Archived gComm is reference-only.
 
 Bidding lifecycle belongs to [Bidding](../../../bidding/README.md). Checkout validates accepted Pricing quote bindings before normal reservation and payment.
+
+This capability declares an inert model-service inventory for [governed Local reset](../../../../../nodics.foundation/modules/nSystem/llm/contracts/local-reset.md).
+A server must explicitly select it; contributions never enable reset or bypass tenant, environment, confirmation or required-service checks.

@@ -11,6 +11,7 @@
 
 const fs = require('fs');
 const path = require('path');
+const acorn = require('acorn');
 const aiGovernanceValidationService = require('./defaultAiGovernanceValidationService');
 
 /**
@@ -163,24 +164,7 @@ const corePrefix = fs.existsSync(path.join(rootPath, 'nodics.foundation')) ? 'no
 
 
 
-const serviceExportStylePatterns = [
-    {
-        name: 'shorthand object method',
-        pattern: /^\s{4}[A-Za-z_$][A-Za-z0-9_$]*\s*\([^)]*\)\s*\{/
-    },
-    {
-        name: 'top-level named function',
-        pattern: /^function\s+[A-Za-z_$][A-Za-z0-9_$]*\s*\(/
-    },
-    {
-        name: 'arrow function member',
-        pattern: /\b[A-Za-z_$][A-Za-z0-9_$]*\s*:\s*(\([^)]*\)|[A-Za-z_$][A-Za-z0-9_$]*)\s*=>/
-    },
-    {
-        name: 'ESM function/default object export',
-        pattern: /^\s*export\s+(default\s+)?(async\s+)?function\s+|^\s*export\s+default\s+\{/
-    }
-];
+
 
 let exportedService;
 module.exports = exportedService = {
@@ -396,21 +380,34 @@ module.exports = exportedService = {
     },
 
     /** Implements getServiceExportStyleGovernancePaths as an overrideable service operation. */
-    getServiceExportStyleGovernancePaths: function () {
-        return [
+    getServiceExportStyleGovernancePaths: function (frameworkRoot = rootPath) {
+        const paths = new Set();
+        const excluded = new Set(['.git', 'node_modules', 'data', 'test', 'tests', 'llm', 'generated', 'gen', 'dist']);
+        const visit = (directory, runtime = false) => {
+            const packageFile = path.join(directory, 'package.json');
+            if (fs.existsSync(packageFile)) {
+                const metadata = JSON.parse(fs.readFileSync(packageFile, 'utf8'));
+                if (metadata.nodics) runtime = metadata.nodics.runtimeModule === true && metadata.nodics.loadableByNodicsModuleLoader === true;
+            }
+            for (const entry of fs.readdirSync(directory, { withFileTypes: true })) {
+                if (entry.name.startsWith('.') || excluded.has(entry.name)) continue;
+                const full = path.join(directory, entry.name);
+                if (entry.isDirectory()) { visit(full, runtime); continue; }
+                if (!runtime || !entry.name.endsWith('.js')) continue;
+                const relative = path.relative(frameworkRoot, full).split(path.sep).join('/');
+                if ((relative.includes('/src/') && !relative.includes('/src/lib/')) || relative.includes('/config/') || entry.name === 'nodics.js') paths.add(relative);
+            }
+        };
+        visit(frameworkRoot);
+        // Keep the existing non-runtime command boundary in addition to complete runtime coverage.
+        for (const relative of [
             'nodics.foundation/modules/nTooling/src/service/project/defaultProjectRuntimeStartService.js',
             'nodics.foundation/modules/nTooling/src/service/project/defaultProjectFrameworkLinkService.js',
             'nodics.foundation/modules/nTooling/src/service/command/defaultProjectCommandService.js',
             'nodics.foundation/modules/nTooling/src/service/quality/defaultDesignPrincipleAuditService.js',
-            'nodics.commerce/modules/baseCommerce/modules/commerceSearch/modules/commerceSearchCore/src/router/appConfig.js',
-            'nodics.commerce/modules/baseCommerce/modules/product/src/router/appConfig.js',
-            'nodics.commerce/modules/checkout/modules/cart/src/router/appConfig.js',
-            'nodics.commerce/modules/checkout/modules/checkoutCore/src/router/appConfig.js',
-            'nodics.commerce/modules/checkout/modules/order/src/router/appConfig.js',
-            'nodics.commerce/modules/fulfillment/modules/fulfillmentCore/src/router/appConfig.js',
-            'nodics.engagement/modules/engagementApi/src/router/appConfig.js',
             'nodics.js'
-        ];
+        ]) if (fs.existsSync(path.join(frameworkRoot, relative))) paths.add(relative);
+        return Array.from(paths).sort();
     },
 
     /** Implements readSourceForStyleGovernance as an overrideable service operation. */
@@ -422,20 +419,38 @@ module.exports = exportedService = {
     auditServiceExportStyle: function (failures, relativePaths) {
         const governedPaths = relativePaths || (this.getServiceExportStyleGovernancePaths || exportedService.getServiceExportStyleGovernancePaths).call(this);
         governedPaths.forEach(relativePath => {
-            let content = '';
+            let ast;
             try {
-                content = (this.readSourceForStyleGovernance || exportedService.readSourceForStyleGovernance).call(this, relativePath);
+                const content = (this.readSourceForStyleGovernance || exportedService.readSourceForStyleGovernance).call(this, relativePath);
+                ast = acorn.parse(content, { ecmaVersion: 'latest', sourceType: 'module', locations: true, allowReturnOutsideFunction: true });
             } catch (error) {
-                (this.fail || exportedService.fail).call(this, failures, 'Missing source export style governance file: ' + relativePath);
+                (this.fail || exportedService.fail).call(this, failures, 'Cannot parse source export governance file: ' + relativePath + ': ' + error.message);
                 return;
             }
-            content.split(/\r?\n/).forEach((line, index) => {
-                serviceExportStylePatterns.forEach(pattern => {
-                    if (pattern.pattern.test(line)) {
-                        (this.fail || exportedService.fail).call(this, failures, relativePath + ':' + (index + 1) + ' uses ' + pattern.name + '; use mergeable `methodName: function (...)` service members instead.');
-                    }
-                });
-            });
+            const report = (node, name) => (this.fail || exportedService.fail).call(this, failures,
+                relativePath + ':' + node.loc.start.line + ' uses ' + name + '; use mergeable `methodName: function (...)` service members instead.');
+            const declarations = new Map(ast.body.filter(node => node.type === 'VariableDeclaration')
+                .flatMap(node => node.declarations.map(item => [item.id.name, item.init])));
+            for (const statement of ast.body) {
+                if (statement.type === 'FunctionDeclaration') report(statement, 'top-level named function');
+                if (statement.type === 'VariableDeclaration') for (const item of statement.declarations) {
+                    if (['FunctionExpression', 'ArrowFunctionExpression'].includes(item.init && item.init.type)) report(item, 'top-level behavioral helper');
+                }
+                if (statement.type === 'ExportNamedDeclaration' || statement.type === 'ExportDefaultDeclaration') {
+                    if (['FunctionDeclaration', 'ObjectExpression'].includes(statement.declaration && statement.declaration.type)) report(statement, 'ESM function/default object export');
+                }
+                const expression = statement.type === 'ExpressionStatement' && statement.expression;
+                if (!expression || expression.type !== 'AssignmentExpression' || expression.left.type !== 'MemberExpression' ||
+                    expression.left.object.name !== 'module' || expression.left.property.name !== 'exports') continue;
+                let exported = expression.right;
+                while (exported.type === 'AssignmentExpression') exported = exported.right;
+                if (exported.type === 'Identifier') exported = declarations.get(exported.name) || exported;
+                if (exported.type !== 'ObjectExpression') continue;
+                for (const member of exported.properties) {
+                    if (member.method) report(member, 'shorthand object method');
+                    else if (member.value && member.value.type === 'ArrowFunctionExpression') report(member, 'arrow function member');
+                }
+            }
         });
     },
 

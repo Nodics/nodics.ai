@@ -19,6 +19,7 @@
 
 import fs from 'node:fs';
 import path from 'node:path';
+import configurationBindings from '../../../../nConfig/src/service/defaultConfigurationBindingService.js';
 import {
   conventionalEnvironmentName,
   readProjectManifest,
@@ -34,6 +35,7 @@ import {
  * @returns {string[]} Candidate files.
  */
 export function environmentProfileFileCandidates(projectRoot, environmentCode, manifest) {
+  if (environmentCode) return [path.join(projectRoot, 'envs', environmentCode, 'nodics.environment.json')];
   const candidates = [
     environmentCode && path.join(projectRoot, 'envs', environmentCode, 'nodics.environment.json'),
     path.join(projectRoot, 'envs', conventionalEnvironmentName(manifest, 'local', projectRoot), 'nodics.environment.json'),
@@ -83,32 +85,7 @@ export function readProjectEnvironmentProfile(projectRoot, environmentCode = '')
  * @returns {Object} Resolved domain composition descriptor.
  */
 export function resolveDomainComposition(compositionConfig = {}, value = '') {
-  const domainEntries = compositionConfig.domains || [];
-  const supported = Object.fromEntries(domainEntries.map(domain => [domain.code, domain]));
-  const selection = value || process.env.NODICS_AGORA_DOMAINS || compositionConfig.selection || 'all';
-  const requested = selection === 'all'
-    ? domainEntries.map(domain => domain.code)
-    : selection === 'commerce' || selection === 'none'
-      ? []
-      : selection.split(',').map(item => item.trim()).filter(Boolean);
-  const domains = [...new Set(requested)];
-  const unknown = domains.filter(domain => !supported[domain]);
-  if (unknown.length) throw new Error(`Unsupported domain composition selection: ${unknown.join(',')}`);
-  const contributorDomains = new Set(domains);
-  domains.forEach(domain => (supported[domain].impliedProductSearchContributorDomains || []).forEach(item => contributorDomains.add(item)));
-  return Object.freeze({
-    domains: Object.freeze(domains),
-    frameworkGroups: Object.freeze(domains.map(domain => supported[domain].frameworkGroup).filter(Boolean)),
-    sharedModules: Object.freeze((compositionConfig.sharedModules || [])
-      .filter(rule => domains.length >= Number(rule.minSelectedDomains || 0))
-      .map(rule => rule.module)
-      .filter(Boolean)),
-    projectPacks: Object.freeze(domains.map(domain => supported[domain].projectPack).filter(Boolean)),
-    productSearchContributors: Object.freeze(Object.fromEntries([...contributorDomains]
-      .sort()
-      .map(domain => [domain, supported[domain]?.productSearchContributor])
-      .filter(([, contributor]) => contributor)))
-  });
+  return configurationBindings.resolveDomainComposition(compositionConfig, value, process.env);
 }
 
 /**
@@ -118,7 +95,12 @@ export function resolveDomainComposition(compositionConfig = {}, value = '') {
  * @param {string} compositionCode Composition entry code.
  * @returns {Object} Resolved composition.
  */
-export function readProjectEnvironmentComposition(projectRoot, environmentCode = '', compositionCode = 'agora') {
+export function readProjectEnvironmentComposition(projectRoot, environmentCode = '', compositionCode = '') {
   const profile = readProjectEnvironmentProfile(projectRoot, environmentCode);
-  return resolveDomainComposition((profile.composition || {})[compositionCode] || {});
+  const compositions = profile.composition || {};
+  const selected = compositionCode || (Object.keys(compositions).length === 1 ? Object.keys(compositions)[0] : '');
+  if (!selected || !Object.prototype.hasOwnProperty.call(compositions, selected)) {
+    throw new Error('Select an available environment composition code');
+  }
+  return resolveDomainComposition(compositions[selected]);
 }

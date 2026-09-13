@@ -22,3 +22,6 @@ This file gives AI coding agents mandatory guidance for this Nodics module or pa
   Storefront introspection for the `cms` audience; never trust caller Site,
   tenant, enterprise, locale, or channel overrides and never copy Storefront
   context authority into CMS.
+
+This capability declares an inert model-service inventory for [governed Local reset](../../../nodics.foundation/modules/nSystem/llm/contracts/local-reset.md).
+A server must explicitly select it; contributions never enable reset or bypass tenant, environment, confirmation or required-service checks.

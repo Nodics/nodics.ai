@@ -20,6 +20,27 @@
 const _ = require('lodash');
 
 module.exports = {
+    /** Atomically stores a versioned value only when its version cannot move backwards. */
+    putVersioned: function (options) {
+        return this.observeCacheOperation('putVersioned', options, () => {
+            const field = options.versionProperty || 'revision';
+            if (!/^[A-Za-z][A-Za-z0-9_]{0,63}$/.test(field) || ['constructor', 'prototype', '__proto__'].includes(field) ||
+                (options.advance !== undefined && typeof options.advance !== 'boolean') ||
+                !options.value || typeof options.value !== 'object' || Array.isArray(options.value) || !Number.isSafeInteger(options.value[field]) || options.value[field] < 0) {
+                throw new CLASSES.CacheError('ERR_CACHE_00006', 'Versioned cache write requires a safe nonnegative integer');
+            }
+            const channel = SERVICE.DefaultCacheEngineService.getCacheEngine(options.moduleName, options.channelName);
+            if (!channel) throw new CLASSES.CacheError('ERR_CACHE_00006', 'Versioned cache channel is unavailable');
+            this.assertCapability(channel, 'atomicVersionWrite');
+            this.assertWriteCapabilities(channel, options.ttl);
+            const handler = SERVICE[channel.engineOptions.cacheHandler];
+            const specialized = options.channelName + 'PutVersioned';
+            const method = handler && typeof handler[specialized] === 'function' ? specialized : 'putVersioned';
+            if (!handler || typeof handler[method] !== 'function') throw new CLASSES.CacheError('ERR_CACHE_00006', 'Cache adapter does not support versioned writes');
+            return handler[method]({ ...options, versionProperty: field, channel });
+        }, 'Error while writing a versioned cache value');
+    },
+
     /**
      * In-memory diagnostics counters for cache operations.
      *

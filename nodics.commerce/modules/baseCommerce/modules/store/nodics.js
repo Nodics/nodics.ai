@@ -10,4 +10,4 @@
  */
 
 /** @module store/nodics @description Declares the Store capability lifecycle. @layer module @owner store */
-module.exports = { init: () => Promise.resolve(true), postInit: () => Promise.resolve(true) };
+module.exports = { init: function () { return Promise.resolve(true); }, postInit: function () { return Promise.resolve(true); } };

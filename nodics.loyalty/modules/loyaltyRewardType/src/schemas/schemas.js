@@ -11,7 +11,7 @@
 
 /** @module loyaltyRewardType/src/schemas/schemas @description Defines reward type records for Loyalty wallet balances. @layer schema @owner loyaltyRewardType @override Later modules may add reward metadata while preserving unit and precision semantics. */
 module.exports = { loyaltyRewardType: {
-    loyaltyRewardType: Object.assign({ super: 'base', model: true, schemaPolicies: ['operational'], service: { enabled: true }, router: { enabled: false }, cache: { enabled: false }, event: { enabled: false }, search: { enabled: false } }, { definition: {
+    loyaltyRewardType: Object.assign({ super: 'base', model: true, schemaPolicies: ['operational'], service: { enabled: true }, router: { groups: { schemaOperations: true }, enabled: true }, cache: { enabled: false }, event: { enabled: false }, search: { enabled: false } }, { definition: {
         name: { type: 'string', required: true , description: 'Stores the business display name shown to administrators and related user journeys.'},
         unitType: { type: 'string', required: true, enum: ['POINT', 'CREDIT', 'STAMP', 'TOKEN', 'CUSTOM'] , description: 'Classifies this record by unit type for validation and business handling.'},
         precision: { type: 'int', required: true, default: 2 , description: 'Stores the numeric precision used by this record.'},

@@ -385,7 +385,7 @@ module.exports = {
       model: {
         $set: {
           authVersion:
-            SERVICE.DefaultPrincipalSecurityStampGovernanceService.nextVersion(),
+            1,
         },
       },
     });

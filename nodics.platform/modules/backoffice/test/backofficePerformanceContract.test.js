@@ -111,6 +111,8 @@ async function run() {
         {
             tokenType: 'service',
             runtimeInstanceId: 'runtime-benchmark',
+            runtimeScope: { assignmentCode: 'benchmark-approved', projectCode: 'benchmark-project',
+                environmentCode: 'benchmark', serverCode: 'benchmark-server', instanceCode: 'runtime-benchmark' },
             modules,
         },
     );

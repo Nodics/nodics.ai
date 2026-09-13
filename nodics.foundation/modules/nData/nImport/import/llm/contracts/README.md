@@ -123,3 +123,47 @@ Use these files for rules that are more specific than root `AGENTS.md` and the m
   media folder policy, provider services, or remote adapters through later
   layers. Do not create a parallel upload table, parser, importer, or direct
   persistence path.
+
+## Layered immutable source composition
+
+System headers use target-module-qualified identities and select files only from
+contributing release roots. The same basename/key in unrelated targets cannot
+merge. Include an explicit matching header in each source contribution; changing
+an inherited dataset's schema/index target is rejected. Header arrays replace.
+
+Release plans execute version directories before later versions, and module
+indexes before later layers within each directory. A current lower JS release
+with the same source root, logical filename and explicit header target supplies
+source-only inherited fields. Apply only keys authored by the executing delta;
+never replay its baseline's other records. Validate baseline destination,
+installation state and immutable checksum. Missing or running baselines block
+execution; a selected predecessor may satisfy preflight once it is installed.
+Custom installers and non-JS formats do not receive JS source-key semantics.
+
+Startup evaluates Init deltas on each boot through this release authority,
+skips current receipts, and refuses same-version edited Init content rather
+than silently replaying it. Startup and operator triggers are separate type
+policy fields. Running receipts are not completion or safe retry proof; the
+in-process guard is supplemented by the durable claim contract below.
+
+## Concurrent release execution
+
+Installation receipts use the database owner's managed `revision` counter. Each
+execution claims a release as `RUNNING` with a unique `executionId`; first creation
+uses atomic insert and subsequent claims use compare-and-set. Completion/failure
+requires the same running attempt and its current revision. Missing storage,
+failed reads, conflicting claims and stale completion fail closed. This reuses
+`DefaultModelConcurrencyService` through generated services, with no parallel
+lock store or background renewal loop. Providers must support its atomic contract.
+
+Only the claimed release can become `FAILED`; later unstarted releases remain
+unchanged. Previously completed deltas remain current. A crashed attempt stays
+`RUNNING` until governed recovery establishes that the previous importer has
+stopped. There is no timeout takeover: a receipt counter fences receipt writes,
+not arbitrary business writes already in flight. Never clear a running receipt
+while its worker might still be writing. This mechanism does not make a sequence
+of business writes transactional or prove automatic crash-safe replay.
+
+Verification includes independent executors racing absent and existing receipts,
+stale completion, partial-plan failure and missing/failed storage. Provider and
+live multi-process behavior still require deployment qualification.

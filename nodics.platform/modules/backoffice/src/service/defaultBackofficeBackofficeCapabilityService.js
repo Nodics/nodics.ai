@@ -616,27 +616,6 @@ const capability = {
             "featureState": "ACTIVE"
         },
         {
-            "id": "documentation-nodics-kickoff",
-            "label": "Nodics Kickoff",
-            "route": "/docs/nodics-kickoff",
-            "icon": "content",
-            "order": 150,
-            "group": {
-                "id": "documentation",
-                "label": "Documentation",
-                "order": 1600
-            },
-            "perspectives": [
-                "operations"
-            ],
-            "contexts": [
-                "environment",
-                "tenant",
-                "enterprise"
-            ],
-            "featureState": "ACTIVE"
-        },
-        {
             "id": "runtime-operations",
             "label": "Runtime Operations",
             "route": "/system-integrations#runtime-operations",
@@ -785,7 +764,7 @@ const capability = {
             ],
             "featureState": "ACTIVE",
             "requiredPermissions": [
-                "system.schema.workbench.view"
+                "system.schema.view"
             ]
         },
         {
@@ -855,7 +834,7 @@ const capability = {
             },
             "featureState": "ACTIVE",
             "requiredPermissions": [
-                "system.schema.workbench.view"
+                "system.schema.view"
             ]
         },
         {

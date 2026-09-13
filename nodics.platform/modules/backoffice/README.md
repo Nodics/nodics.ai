@@ -187,3 +187,21 @@ workspaces. They do not grant permissions, execute operations, or transfer
 business authority away from the target module.
 
 The [module-owned UI contribution contract](../../../nodics.foundation/modules/nSetup/llm/contracts/module-owned-ui-contribution-contract.md) governs shared groups and accelerator subtrees. The existing registry composes them and withdraws complete orphaned branches; it does not become their data owner.
+
+Required data permits activation only after confirmed CURRENT release status.
+Preserve running/incomplete receipts and reject before catalogue activation. See
+[completion gate](llm/contracts/README.md#required-data-completion-before-activation).
+
+Required activation data must be confirmed current by nImport. Never convert
+running, queued, missing or non-executable results to imported receipts. Preserve
+incomplete receipts, fail activation, and retain catalogue revision/runtime gates.
+
+This capability declares an inert model-service inventory for [governed Local reset](../../../nodics.foundation/modules/nSystem/llm/contracts/local-reset.md).
+A server must explicitly select it; contributions never enable reset or bypass tenant, environment, confirmation or required-service checks.
+
+Background contract discovery uses the existing repository-owned system context
+for normalized observation persistence. The runtime reporting a validated lease
+retains its group-free, scoped credential; discovery must not give it generic
+BackOffice schema rights. Preserve source-instance evidence and existing bounded
+normalization, compatibility classification, approval and revision checks. Human
+contract decisions retain their authenticated actor and permission gates.

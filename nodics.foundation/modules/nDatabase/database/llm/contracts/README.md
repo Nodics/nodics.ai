@@ -61,28 +61,46 @@ original revision; no client or project may disable these checks for editing.
 - Do not implement cascade implicitly. Use a module-owned business operation
   with explicit transaction or compensation semantics.
 
-## Schema Workbench discovery contract
+## Canonical mutation and metadata ownership
 
-- Discover every eligible effective model with generated Search, Read, Create,
-  Update, and Delete by default.
-- Continue filtering descriptors through schema access groups and employee
-  authorization.
-- Exclude non-model schemas and models declaring `backoffice.enabled: false`.
-- Use explicit per-schema operations to narrow models that must be read-only.
-- Project only safe fields; never expose secrets, access policy internals,
-  service configuration, database configuration, interceptors, or validators.
-- Keep bulk operations disabled unless `backoffice.bulkOperations` explicitly
-  enables a supported operation.
-- Require the manage permission, configured item bound, and valid idempotency
-  key for every generic bulk mutation; execute through generated CRUD.
-- Derive delete impact from effective inbound `RESTRICT` relationships and
-  fail closed when a declared source cannot be inspected.
-- Advertise concurrency only from an effective revision field. Never infer it
-  from timestamps or browser state.
-- Keep aggregate service/method names private. The generic endpoint delegates
-  to an owning module service and never becomes a second unit-of-work engine.
-- Use `DefaultDatabaseTransactionService` for supported same-database atomic
-  work and an owning Workflow or saga for cross-module consistency.
+- Utility owns active schema resolution, safe descriptors, writable-field and
+  identity projection. Safe Query owns bounded query translation. Generated
+  controller/facade/service templates retain normal data access and integrity.
+- All Workbench HTTP routes and runtime adapters are removed. Current consumers
+  use canonical schema APIs or an existing domain command. Never restore an old
+  route, copied service or second registration layer for an unreleased interface.
+- Configure the existing `schemaApi` namespace. Discovery/read/write defaults use
+  `system.schema.view/manage`; exposure category is `schemaApi`. Update current
+  grants/configuration together; source edits do not refresh persisted grants.
+- Select `router.groups: { schemaOperations: true }` on an enabled model to expose
+  canonical resource operations without broad query/by-ID routes. Empty groups
+  select none; keyed false disables inheritance. Unknown/malformed groups fail.
+  Global module HTTP enablement and inactive-module checks remain independent.
+- Selective mutations intersect effective schema operations and require one
+  scalar primary identity with its original revision. Excluded/inaccessible
+  schemas, read-only/Online source writes and generic domain-setup substitutes
+  fail before persistence. Explicit broad-query APIs keep their own contract.
+- Allowlist transport fields; body values cannot replace secured tenant,
+  enterprise, principal, schema, transaction, trace or non-enumerable authority.
+  Apply fixed fields and safe writable metadata. Reject operator/dotted models.
+- Keep original managed tokens and existing 428/400/409 errors. Never fabricate
+  a returned record or revision. Clients validate single persisted responses;
+  invalid success does not authorize another request because a write may exist.
+- Bulk DELETE is schema-explicit, bounded and requires a valid idempotency key.
+  Preserve each identity/revision and delegate to generated removal/reference
+  protection. Managed-counter multi-record CAS is unsupported: do not advertise
+  it and fail before dispatch. Maintenance uses its distinct opaque authority.
+- Forwarding a key is not durable replay. Domain commands keep their existing
+  principal-bound key, input digest, transaction or recovery ownership.
+- Discover eligible models through effective access and operations; explicit
+  `backoffice.enabled: false` excludes a model. Project safe fields only.
+- Aggregate metadata names an existing controller/operation and resolves its
+  prepared route. No generic aggregate dispatcher or client-selected service
+  name is allowed. Profile provisioning remains the `/enterprises` domain API.
+- Use the existing transaction owner for supported local atomic work and the
+  owning Workflow/saga for cross-module consistency. Metadata grants no access.
+- Tests exercise real generated templates with persistence doubles and distinct
+  access/ownership/concurrency services. Prepared routes are not live auth proof.
 
 ## Named schema-policy composition
 
@@ -95,3 +113,33 @@ original revision; no client or project may disable these checks for editing.
   removes an inherited entry.
 - Reject unknown policy names and never call policy configuration directly
   from CRUD, authorization, ownership, Workbench, or frontend code.
+
+## Prepared schema API projection
+
+`buildApiOperations` projects capabilities/search/create/update/delete/deleteImpact/
+bulk from prepared matching generated controllers. Preserve active aliases,
+static relative paths, API versions and disabled declarations. Reject ambiguity
+and unsafe paths. Use canonical standard resource paths when optional metadata is
+absent; an error never triggers another API or runtime. Explicit inactive routes
+send no request. Customize existing routes and Utility, not a second registry.
+
+## Canonical schema discovery
+
+GET `/schemas` and `/schemas/:schema` use Utility `listSchemas/getSchema` through
+existing controller/facade layers. Generated capabilities and exports share this
+owner. Preserve trusted request identity and pass route-selected schema separately.
+Retain collection/detail envelopes, access filtering, aliases, authoring and
+callback behavior. Missing owners fail closed.
+
+Use `schemaApi.discoveryPermission`, secured `userGroup` access and the `schemaApi`
+exposure category. Axis never retries a removed route. See the detailed
+[schema API guide](../../../../../../nodics.docs/docs/pages/nodics.foundation/schema-data-modeling.md)
+for shapes, customization, provider limitations, rollout and verification.
+
+## Required server build
+
+Runtime model preparation requires the selected server's generated services.
+`ensureGeneratedSchemaServices` verifies the built baseline and preserves its
+already composed custom methods. It must not recreate a service from a copied
+runtime CRUD implementation. Missing baseline/service errors require rebuilding
+the selected server, including newly introduced runtime model definitions.

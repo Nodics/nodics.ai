@@ -10,4 +10,15 @@
  */
 
 /** @module discoveryMapping/config/properties @description Defines Discovery mapping access policies. @layer config @owner discoveryMapping */
-module.exports = { schemaPolicies: { discoveryMapping: { tenantOwned: { accessGroups: { adminGroup: 10, runtimeConfigAdminUserGroup: 10, serviceAccountUserGroup: 10 } } } } };
+module.exports = {
+    // Inert inventory; an allowed local server must explicitly select this capability.
+    localResetProvider: {
+        "contributions": {
+            "discoveryMapping": {
+                "serviceNames": {
+                    "DefaultDiscoveryFieldMappingService": true
+                }
+            }
+        }
+    },
+ schemaPolicies: { discoveryMapping: { tenantOwned: { accessGroups: { adminGroup: 10, runtimeConfigAdminUserGroup: 10, serviceAccountUserGroup: 10 } } } } };

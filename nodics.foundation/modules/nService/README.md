@@ -185,3 +185,29 @@ remote-only, later-layer override, and registration retry behavior.
 - Module communication and APIs: [How To Create APIs](https://github.com/Nodics/nodics.docs)
 - Service variant: [vService](vService/README.md)
 - Framework map: [nodics.foundation](../README.md)
+
+## Tenant startup completion
+
+Enterprise discovery, tenant database/model creation, search setup and initial
+Cron job creation must complete before startup succeeds. Propagate required
+failures; do not launch background enterprise retry loops or a second job
+scheduler. Cron owns recurrence. Internal token refresh registers with the
+existing runtime lifecycle service, prevents overlapping refreshes, stops its
+timer and awaits active refresh work before transport/resource shutdown.
+
+Runtime proof uses explicit instance configuration. Bounded asynchronous credential renewal and batched registration supply the owning modules with fresh operational admission.
+
+Initial, tenant and renewal credentials share the configured proof and approved Profile scope path. Local Profile tenant preparation awaits governed Init releases and identity reconciliation before requesting a token.
+
+Revocation checks distinguish a missing marker from an unavailable authority;
+cache failures reject authorization and never imply that a token is unrevoked.
+
+For split runtimes, `runtimeIdentity.remoteModules` requests additional permitted
+APIs through Profile deployment grants; it never loads their source. The router's
+`remoteOnly` option also forces remote dispatch for locally loaded modules and
+connection aliases. Authority and consumers share the configured
+`authSecurity.securityStamp.cacheModuleName` for stamps and revocation markers.
+
+See the [runtime contract](llm/contracts/README.md) and the
+[detailed configuration and acceptance guide](../../../nodics.docs/docs/pages/nodics.foundation/service-runtime-overrides.md)
+for proof, grants, tenant discovery, cache namespaces and live test commands.

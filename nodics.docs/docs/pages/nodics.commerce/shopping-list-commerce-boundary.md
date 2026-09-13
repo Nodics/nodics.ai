@@ -208,3 +208,22 @@ Production readiness requires these checks:
 - Non-owned list entries cannot be read or mutated.
 - `npm run test:commerce`, `npm run validate:root`, Agora frontend verify, and
   live Agora commerce acceptance pass.
+
+## Store context and upgrade behavior
+
+Every list operation supplies an explicit `storeCode`. Read/remove commonly use
+`?storeCode=duStore`; add-entry supplies `{ "storeCode": "duStore", "productCode": "productOne" }`.
+A different store uses the same module API. Request, payload and query values must
+agree. The existing Store context service validates identifier shape/agreement;
+Store master-data access and selling eligibility remain separate owner checks.
+
+`shoppingList.customerApi.defaultStoreCode` is no longer consumed. No sample or
+literal store is chosen when context is absent. Missing, malformed and conflicting
+context is rejected before list persistence. Configure application choices at the
+customer boundary and send them explicitly; do not introduce a new resolver layer.
+
+Existing tenant/owner/list-type/store identifiers remain unchanged for explicit
+requests. Reads reuse an owned list only when its stored reference agrees. Missing
+or contradictory persisted context needs governed repair, not silent reassignment
+or a guess at the first list. Test independent stores, owner/tenant rejection,
+missing context, migration references and later-loaded Store validation overrides.

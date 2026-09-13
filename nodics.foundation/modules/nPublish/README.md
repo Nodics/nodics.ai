@@ -106,3 +106,6 @@ Avoid:
 - putting one project's content/product approval rules into the framework module;
 - making publish activation non-auditable or non-revertible;
 - changing generated artifacts manually.
+
+This capability declares an inert model-service inventory for [governed Local reset](../nSystem/llm/contracts/local-reset.md).
+A server must explicitly select it; contributions never enable reset or bypass tenant, environment, confirmation or required-service checks.

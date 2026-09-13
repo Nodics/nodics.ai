@@ -17,6 +17,19 @@
  * @override Projects may replace this service or the configured mandatory-bootstrap service list while preserving idempotency, auditability, and fail-closed identity startup.
  */
 module.exports = {
+    /**
+     * Applies required tenant Init releases and existing identity reconciliation before runtime authentication.
+     * Provisioned credentials and deployment grants remain explicit operator-owned records.
+     * @param {Object} request Tenant and selected module context.
+     * @returns {Promise<Object>} Completed identity reconciliation.
+     */
+    prepareTenant: async function (request) {
+        await SERVICE.DefaultDataReleaseService.installStartupReleases(this.systemRequest(request, {
+            modules: request.modules, source: request.source
+        }));
+        return this.reconcile(request);
+    },
+
     /** Returns the effective layered migration policy. */
     getPolicy: function () {
         return CONFIG.get('identityGovernance') && CONFIG.get('identityGovernance').migration || {};

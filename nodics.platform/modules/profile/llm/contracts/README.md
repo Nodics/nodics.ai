@@ -8,9 +8,9 @@ Use these files for rules that are more specific than root `AGENTS.md` and the m
 
 - Internal authentication token retrieval must remain a permissioned service
   capability. The route should use `permissionConfig` to resolve
-  `authSecurity.internalToken.routePermission`; cross-tenant access must
-  additionally pass the configured internal-token cross-tenant policy, such as
-  `auth.internal.token.read.anyTenant`.
+  `authSecurity.internalToken.routePermission`. Runtime issuance additionally
+  requires matching authenticated tenant, enterprise and approved deployment;
+  a broad cross-tenant permission does not bypass that assignment.
 - Do not weaken profile authentication routes by relying on broad `userGroup`
   access alone. Use layered identity-governance configuration when a project
   needs different permission names or service-principal policies.
@@ -24,6 +24,15 @@ Use these files for rules that are more specific than root `AGENTS.md` and the m
   or internal-token flows.
 
 ## Enterprise management search
+
+Enterprise setup obtains effective writable fields from the existing
+`DefaultSchemaUtilityService`, not from a screen's service. Preserve Profile's
+authorization, tenant derivation, provisioning, principal-bound idempotency,
+additional-field validation and client-safe projection. Missing metadata fails
+before creation. Canonical POST `/enterprises` accepts `{ model }` and a validated
+`Idempotency-Key` header, then delegates to `createFromModel` through the existing
+facade. No Workbench adapter remains; never replace setup with a generic insert. Metadata customizations belong on the effective shared
+utility so generated and domain consumers receive one contract.
 
 - `profile_searchenterprises` is the stable operation identity for the bounded
   `GET /enterprises/search` management intent.
@@ -119,3 +128,49 @@ Use these files for rules that are more specific than root `AGENTS.md` and the m
   seller, partner, or visibility matters; do not use tenant as business owner.
 
 - [External customer identity](external-customer-identity.md)
+
+## Runtime deployment grants
+
+The existing `principalScopeAssignment` is the sole approved deployment store.
+`RUNTIME_DEPLOYMENT` requires a direct service principal, tenant, enterprise and
+`runtimeScope: { projectCode, environmentCode, serverCode, instanceCode, modules,
+permissions }`. A single principal cannot represent several active instance
+identities. Modules and permissions are bounded unique explicit values. Runtime
+headers request a scope; they never grant it. Issuance requires one effective
+ALLOW, rejects matching DENY/expiry/ambiguity, and intersects the request with
+approved modules and the principal's permissions. Issued groups are empty so
+group expansion cannot widen the approved credential.
+
+The built-in proof path uses existing Profile API-key authentication. Deployments
+provision a distinct principal and retained secret per instance, then approve its
+assignment through governed Profile records. The first Profile authority uses
+trusted initializer data or existing privileged setup; runtimes cannot enroll
+themselves by choosing headers. A single-use enrollment-grant provider is not
+implemented by this path. Restart and renewal reauthenticate retained proof and
+re-read the assignment; no second business registration is required.
+
+Assignment save/update/removal captures old and new affected principals and
+awaits their existing Employee update path. That path allocates the security
+version in `preparePrincipalUpdate` and registers it after persistence. Callers
+request invalidation through an Employee/Customer update containing authVersion;
+they do not allocate their own version or call a process-local clock. Assignment
+reads bypass item caching. Failed invalidation cannot be acknowledged as success.
+
+The initial authority and every tenant use the same proof/grant authorization as renewal. `DefaultMandatoryIdentityBootstrapService.prepareTenant` first awaits governed Init release completion and then reconciles existing identity metadata. It never derives approvals from requested modules or generates runtime credentials.
+
+Generated Profile reads return the canonical `{code, result}` envelope, with a
+success code and result array; they do not set a Boolean `success: true`. Runtime
+authorization/removal must validate that envelope and reject explicit failures.
+A runtime-scope mutation completes only after the existing Employee update
+acknowledges exactly one matched principal and its stamp hooks finish. Zero or
+multiple matches cannot count as successful credential invalidation.
+
+The existing `GET /enterprise/get` also serves scoped runtime bootstrap. Its
+service path requires `profile` module scope, `profile.enterprise.search`, and
+an exact match between authenticated enterprise/tenant and requested context.
+It returns one active enterprise with only code, active state and its tenant
+code/state/properties. The trusted Profile lookup stays inside Profile after
+authorization; runtime tokens gain no group-based generic CRUD access. Local
+startup may prepare its authority-owned tenant inventory; a remote runtime may
+only discover the enterprise authorized by its retained proof and deployment
+grant. Tenant properties are protected runtime configuration, not public data.

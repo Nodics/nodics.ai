@@ -28,8 +28,8 @@ module.exports = {
                 enabled: true,
                 type: 'SYNC'
             },
-            router: {
-                enabled: false
+            router: { groups: { schemaOperations: true },
+                enabled: true
             },
             definition: {
                 config: {

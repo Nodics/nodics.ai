@@ -10,4 +10,16 @@
  */
 
 /** @module wasteCompliance/config/properties @description Provides Waste Compliance schema policy defaults. @layer config @owner wasteCompliance @override Partner modules may add jurisdiction-specific profiles. */
-module.exports = { schemaPolicies: { wasteCompliance: { operational: { accessGroups: { adminGroup: 10, serviceAccountUserGroup: 10, employeeUserGroup: 10 } } } } };
+module.exports = {
+    // Inert inventory; an allowed local server must explicitly select this capability.
+    localResetProvider: {
+        "contributions": {
+            "wasteCompliance": {
+                "serviceNames": {
+                    "DefaultWasteComplianceEvidenceService": true,
+                    "DefaultWasteComplianceProfileService": true
+                }
+            }
+        }
+    },
+ schemaPolicies: { wasteCompliance: { operational: { accessGroups: { adminGroup: 10, serviceAccountUserGroup: 10, employeeUserGroup: 10 } } } } };

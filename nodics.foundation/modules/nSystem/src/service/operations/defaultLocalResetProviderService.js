@@ -28,7 +28,34 @@ module.exports = {
   },
   /** Executes the documented bounded module operation. */
   policy: function () {
-    return CONFIG.get("localResetProvider") || {};
+    const policy = CONFIG.get("localResetProvider") || {};
+    if (policy.modules === undefined) return policy;
+    const selected = this.booleanMap(policy.modules, "modules");
+    const contributions = policy.contributions || {};
+    const names = new Set([].concat(policy.serviceNames || []));
+    for (const [moduleName, enabled] of Object.entries(selected)) {
+      if (!enabled) continue;
+      const contribution = contributions[moduleName];
+      if (!contribution || typeof contribution !== "object" || Array.isArray(contribution)) {
+        throw new CLASSES.NodicsError("ERR_SYS_00123", "Local reset module inventory is unavailable: " + moduleName);
+      }
+      for (const [name, included] of Object.entries(this.booleanMap(contribution.serviceNames, "contribution serviceNames"))) {
+        if (included) names.add(name);
+      }
+    }
+    for (const [name, enabled] of Object.entries(this.booleanMap(policy.serviceOverrides || {}, "serviceOverrides"))) {
+      if (enabled) names.add(name); else names.delete(name);
+    }
+    return { ...policy, serviceNames: [...names].sort() };
+  },
+  /** Validates keyed contribution selection without inferring additional reset targets. */
+  booleanMap: function (value, label) {
+    if (!value || typeof value !== "object" || Array.isArray(value) ||
+        ![Object.prototype, null].includes(Object.getPrototypeOf(value)) ||
+        Object.entries(value).some(([key, enabled]) => (!/^[A-Za-z][A-Za-z0-9._-]*$/.test(key) || ["__proto__", "constructor", "prototype"].includes(key)) || typeof enabled !== "boolean")) {
+      throw new CLASSES.NodicsError("ERR_SYS_00123", "Local reset " + label + " must be a keyed boolean object");
+    }
+    return value;
   },
   /** Executes the documented bounded module operation. */
   environment: function () {
@@ -65,7 +92,8 @@ module.exports = {
         "Local reset provider confirmation is invalid",
       );
     }
-    if (!names.length || names.length > Number(policy.maximumServices || 128)) {
+    if (!names.length || names.length > Number(policy.maximumServices || 128) ||
+        requiredServiceNames.some(name => !names.includes(name))) {
       throw new CLASSES.NodicsError(
         "ERR_SYS_00123",
         "Local reset provider service boundary is invalid",

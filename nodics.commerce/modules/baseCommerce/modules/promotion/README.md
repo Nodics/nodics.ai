@@ -7,3 +7,6 @@ Promotion records use Profile Enterprise associations for business ownership:
 vendor or redemption provider, and `enterpriseRef` for the general business
 association. `enterpriseCode` remains only as a compatibility alias for current
 generated persistence queries until the recorded cleanup migration removes it.
+
+This capability declares an inert model-service inventory for [governed Local reset](../../../../../nodics.foundation/modules/nSystem/llm/contracts/local-reset.md).
+A server must explicitly select it; contributions never enable reset or bypass tenant, environment, confirmation or required-service checks.

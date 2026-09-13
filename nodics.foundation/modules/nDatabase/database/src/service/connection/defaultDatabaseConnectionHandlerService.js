@@ -78,12 +78,15 @@ module.exports = {
     },
 
     /** Closes all registered module and tenant database handles during shutdown. */
-    closeAllConnections: function () {
-        let modules = SERVICE.DefaultDatabaseConfigurationService.getDatabaseActiveModules();
-        let tenants = NODICS.getActiveTenants();
-        if (tenants.length === 0) tenants = [CONFIG.get('defaultTenant') || 'default'];
-        modules.forEach(moduleName => tenants.forEach(tenant => this.closeConnection(moduleName, tenant)));
-        return Promise.resolve(true);
+    closeAllConnections: async function () {
+        const modules = [...new Set(['default', ...SERVICE.DefaultDatabaseConfigurationService.getDatabaseActiveModules()])];
+        const tenants = [...new Set([CONFIG.get('defaultTenant') || 'default', ...NODICS.getActiveTenants()])];
+        const closed = new Set();
+        const results = await Promise.allSettled(modules.flatMap(moduleName => tenants.map(tenant =>
+            this.closeConnection(moduleName, tenant, closed))));
+        const failure = results.find(result => result.status === 'rejected');
+        if (failure) throw failure.reason;
+        return true;
     },
 
     /**
@@ -312,25 +315,24 @@ module.exports = {
      *
      * @param {string} moduleName Active module name.
      * @param {string} tntCode Tenant code.
-     * @returns {undefined}
+     * @returns {Promise<boolean>} Resolves after owned handles close.
      * @sideEffects Delegates connection closure to the configured connection handler.
      */
-    closeConnection: function (moduleName, tntCode) {
-        let dbConnection = SERVICE.DefaultDatabaseConfigurationService.getTenantDatabase(moduleName, tntCode);
-        if (dbConnection) {
-            let masterDatabase = dbConnection.master;
-            if (masterDatabase && SERVICE[masterDatabase.getOptions().connectionHandler] &&
-                SERVICE[masterDatabase.getOptions().connectionHandler].closeConnection &&
-                typeof SERVICE[masterDatabase.getOptions().connectionHandler].closeConnection === 'function') {
-                SERVICE[masterDatabase.getOptions().connectionHandler].closeConnection(masterDatabase);
-            }
-
-            let testDatabase = dbConnection.test;
-            if (testDatabase && SERVICE[testDatabase.getOptions().connectionHandler] &&
-                SERVICE[testDatabase.getOptions().connectionHandler].closeConnection &&
-                typeof SERVICE[testDatabase.getOptions().connectionHandler].closeConnection === 'function') {
-                SERVICE[testDatabase.getOptions().connectionHandler].closeConnection(testDatabase);
-            }
+    closeConnection: async function (moduleName, tntCode, closed = new Set()) {
+        const connection = SERVICE.DefaultDatabaseConfigurationService.getTenantDatabase(moduleName, tntCode);
+        const work = [];
+        for (const database of connection ? [connection.master, connection.test] : []) {
+            if (!database) continue;
+            const handle = typeof database.getClient === 'function' ? database.getClient() : database;
+            if (closed.has(handle)) continue;
+            const handler = SERVICE[database.getOptions().connectionHandler];
+            if (!handler || typeof handler.closeConnection !== 'function') continue;
+            closed.add(handle);
+            work.push(Promise.resolve().then(() => handler.closeConnection(database)));
         }
+        const results = await Promise.allSettled(work);
+        const failure = results.find(result => result.status === 'rejected');
+        if (failure) throw failure.reason;
+        return true;
     }
 };

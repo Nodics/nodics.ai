@@ -74,6 +74,28 @@ test('Phase 3-4: conversation records are tenant bound and API routes are secure
     assert.equal(routes.copilotApi.turns.stream.responseHandler, 'copilotSseResponseHandler');
 });
 
+test('confirmed mutations expose one execution transport and preserve execution authorization', async () => {
+    const routes = load('copilotApi/src/router/routers').copilotApi;
+    const definitions = Object.values(routes).flatMap(group => Object.values(group));
+    assert.equal(definitions.filter(route => route.operation === 'executeConfirmation').length, 1);
+    assert.equal(definitions.some(route => route.operation === 'executeProductPlan' || route.key.includes('/workbench/')), false);
+    assert.equal(routes.productPlans.prepareProducts.key, '/products/prepare');
+    assert.equal(routes.confirmations.execute.permission, 'copilot.mutation.execute');
+    assert.equal(routes.confirmations.execute.secured, true);
+    assert.equal(load('copilotApi/src/controller/defaultCopilotController').executeProductPlan, undefined);
+    assert.equal(load('copilotApi/src/facade/defaultCopilotFacade').executeProductPlan, undefined);
+    const orchestration = load('copilotCore/src/service/defaultCopilotOrchestrationService');
+    const runtime = Object.assign({}, orchestration, {
+        executeProductPlan: async request => {
+            assert.equal(request.actionCode, 'approved-action');
+            assert.equal(request.confirmed, true);
+            assert.equal(request.tenant, 'tenant-one');
+            return Promise.reject(new Error('CURRENT_POLICY_DENIED'));
+        }
+    });
+    await assert.rejects(runtime.executeConfirmation({ confirmationCode: 'approved-action', tenant: 'tenant-one' }), /CURRENT_POLICY_DENIED/);
+});
+
 test('conversation titles describe the first request without exposing internal identifiers', async () => {
     const conversations = load('copilotConversation/src/service/defaultCopilotConversationService');
     conversations.state = { conversations: new Map(), turns: new Map(), messages: new Map(), events: new Map(), idempotency: new Map() };
@@ -181,7 +203,7 @@ test('workbench mutations cross the runtime boundary through the owning secured 
         DefaultModuleService: { invokeModule: options => { invocation = options; return Promise.resolve({ code: 'SUC_DBS_00000' }); } }
     };
     try {
-        const result = await orchestration.createOwnedWorkbenchRecord(
+        const result = await orchestration.createOwnedSchemaRecord(
             { tenant: 'default' },
             { connectionName: 'commerceStaged', targetAuthority: { runtimeRole: 'COMMERCE_STAGED' } },
             'product', 'product', { code: 'IPM-001' }, 'plan-1:IPM-001'
@@ -190,14 +212,36 @@ test('workbench mutations cross the runtime boundary through the owning secured 
         assert.equal(invocation.local, false);
         assert.equal(invocation.moduleName, 'product');
         assert.equal(invocation.connectionName, 'commerceStaged');
-        assert.equal(invocation.apiName, '/schema/workbench/product/record');
-        assert.equal(invocation.methodName, 'POST');
+        assert.equal(invocation.apiName, '/product');
+        assert.equal(invocation.methodName, 'PUT');
         assert.equal(invocation.tenant, 'default');
         assert.equal(invocation.header['Idempotency-Key'], 'plan-1:IPM-001');
-        assert.deepEqual(invocation.request, { model: { code: 'IPM-001' } });
+        assert.deepEqual(invocation.request, { code: 'IPM-001' });
     } finally {
         global.SERVICE = originalService;
     }
+});
+
+test('PriceRow creation uses the canonical lowercase resource and propagates rejection without retry', async () => {
+    const orchestration = load('copilotCore/src/service/defaultCopilotOrchestrationService');
+    const originalService = global.SERVICE;
+    let calls = 0;
+    const rejection = new Error('STAGED_AUTHORITY_REQUIRED');
+    global.SERVICE = { DefaultModuleService: { invokeModule: async options => {
+        calls++;
+        assert.equal(options.moduleName, 'regionalPricing');
+        assert.equal(options.apiName, '/pricerow');
+        assert.equal(options.methodName, 'PUT');
+        assert.deepEqual(options.request, { code: 'ROW-ONE' });
+        assert.equal(options.targetAuthority.runtimeRole, 'COMMERCE_STAGED');
+        throw rejection;
+    } } };
+    try {
+        await assert.rejects(orchestration.createOwnedSchemaRecord({ tenant: 'tenant-one' },
+            { connectionName: 'selected', targetAuthority: { runtimeRole: 'COMMERCE_STAGED' } },
+            'regionalPricing', 'priceRow', { code: 'ROW-ONE' }, 'plan:row'), error => error === rejection);
+        assert.equal(calls, 1);
+    } finally { global.SERVICE = originalService; }
 });
 
 test('SSE waits for durable replay before writing versioned events', async () => {

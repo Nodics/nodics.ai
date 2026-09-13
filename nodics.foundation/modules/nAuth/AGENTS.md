@@ -31,3 +31,11 @@ This file gives AI coding agents mandatory guidance for this Nodics module or pa
 - Preserve tenant isolation, replay protection, revocation, audit traceability, hashed secrets, scoped permissions, and distributed-cache correctness.
 
 Allow externalIdentityLinkCode only as a bounded opaque customer access-token claim supplied by Profile after verified channel authentication. Profile owns live identity-link validation and refresh preservation. No raw provider proof or identity belongs in this JWT claim.
+
+Runtime JWTs require approved Profile deployment scope and a live security stamp. Strict auth state requires atomic version writes; no clock-only version allocator or stale issuer rollback is allowed.
+
+Use the guarded runtime Redis integration to qualify actual token/stamp/
+revocation/admission owners across independent processes. Keep token material on
+IPC, require explicit isolated provider configuration and clean only the test's
+unique cache namespace. Report synthetic local budgets separately from deployment
+acceptance. See [integration contract](test/integration/README.md).

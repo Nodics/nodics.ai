@@ -23,15 +23,30 @@ const crypto = require('crypto');
  * @owner nTooling
  */
 module.exports = {
-    runtimeGroups: Object.freeze([
-        'nodics.foundation', 'nodics.platform', 'nodics.process', 'nodics.wcms', 'nodics.localization',
-        'nodics.discovery', 'nodics.commerce', 'nodics.communication', 'nodics.engagement'
-    ]),
+    /**
+     * Resolves loadable runtime groups from framework workspace package metadata.
+     * @param {string} frameworkRoot Selected framework checkout.
+     * @returns {string[]} Group package names in workspace order.
+     */
+    runtimeGroups: function (frameworkRoot = path.resolve(__dirname, '../../../../../..')) {
+        const packageJson = JSON.parse(fs.readFileSync(path.join(frameworkRoot, 'package.json'), 'utf8'));
+        const groups = [];
+        for (const workspace of packageJson.workspaces || []) {
+            const metadata = JSON.parse(fs.readFileSync(path.join(frameworkRoot, workspace, 'package.json'), 'utf8'));
+            const nodics = metadata.nodics || {};
+            if (nodics.kind === 'group' && nodics.runtimeModule === true && nodics.loadableByNodicsModuleLoader === true) {
+                if (!metadata.name || groups.includes(metadata.name)) throw new Error('Repository runtime group names must be present and unique');
+                groups.push(metadata.name);
+            }
+        }
+        if (!groups.length) throw new Error('Repository build composition requires loadable workspace groups');
+        return groups;
+    },
 
     /** Writes one generated composition file. @param {string} filePath Target. @param {string|Object} value Content. @returns {void} */
     writeFile: function (filePath, value) {
         fs.mkdirSync(path.dirname(filePath), { recursive: true });
-        fs.writeFileSync(filePath, typeof value === 'string' ? value : JSON.stringify(value, null, 2) + '\n', 'utf8');
+        fs.writeFileSync(filePath, typeof value === 'string' ? value : JSON.stringify(value, null, 2) + '\n', { encoding: 'utf8', mode: 0o600 });
     },
 
     /** Creates one standard runtime package. @param {string} root Root. @param {Object} definition Definition. @returns {void} */
@@ -75,12 +90,30 @@ module.exports = {
         );
     },
 
-    /** Materializes the isolated repository build topology. @returns {Object} Composition coordinates. */
-    create: function () {
-        const root = fs.mkdtempSync(path.join(this.tempRoot(), 'nodics-repository-build-'));
-        const apiKeyPepper = crypto.randomBytes(32).toString('hex');
-        const jwtSecret = crypto.randomBytes(48).toString('hex');
+    /** Returns the retained repository validation server coordinates. @param {string} frameworkRoot Framework checkout. @returns {Object} Paths. */
+    persistentCoordinates: function (frameworkRoot) {
+        const root = path.join(frameworkRoot, '.nodics', 'tmp', 'repository-build');
         const environmentRoot = path.join(root, 'envs', 'repositoryBuildEnvironment');
+        return { root, environmentRoot, serverRoot: path.join(environmentRoot, 'repositoryBuildServer') };
+    },
+
+    /** Materializes the isolated repository build topology. @returns {Object} Composition coordinates. */
+    create: function (frameworkRoot = path.resolve(__dirname, '../../../../../..'), options = {}) {
+        const runtimeGroups = this.runtimeGroups(frameworkRoot);
+        const root = options.persistent ? this.persistentCoordinates(frameworkRoot).root :
+            fs.mkdtempSync(path.join(this.tempRoot(), 'nodics-repository-build-'));
+        fs.mkdirSync(root, { recursive: true, mode: 0o700 });
+        fs.chmodSync(root, 0o700);
+        const environmentRoot = path.join(root, 'envs', 'repositoryBuildEnvironment');
+        const existingProperties = path.join(environmentRoot, 'config', 'properties.js');
+        let existing = {};
+        if (options.persistent === true && fs.existsSync(existingProperties)) {
+            existing = JSON.parse(fs.readFileSync(existingProperties, 'utf8').replace(/^module.exports\s*=\s*/, '').trim().replace(/;$/, ''));
+        }
+        const existingPepper = existing.authSecurity && existing.authSecurity.apiKey && existing.authSecurity.apiKey.pepper;
+        const existingSecret = existing.authSecurity && existing.authSecurity.jwt && existing.authSecurity.jwt.secret;
+        const apiKeyPepper = typeof existingPepper === 'string' && existingPepper.length >= 32 ? existingPepper : crypto.randomBytes(32).toString('hex');
+        const jwtSecret = typeof existingSecret === 'string' && existingSecret.length >= 48 ? existingSecret : crypto.randomBytes(48).toString('hex');
         const serverRoot = path.join(environmentRoot, 'repositoryBuildServer');
         const metadata = (name, index, kind, displayName, extra) => Object.assign({
             name, version: '0.0.0', index, private: true, main: 'nodics.js',
@@ -110,7 +143,7 @@ module.exports = {
             }
         });
         const serverPackage = metadata('repositoryBuildServer', '9000.20', 'server', 'Repository Build Server');
-        serverPackage.nodics.extends = this.runtimeGroups.slice();
+        serverPackage.nodics.extends = runtimeGroups.slice();
         this.writeModule(serverRoot, {
             packageJson: serverPackage,
             properties: {
@@ -118,7 +151,7 @@ module.exports = {
                 servers: { default: { endpoint: { httpHost: '127.0.0.1', httpPort: 4399, httpsHost: '127.0.0.1', httpsPort: 4398 } } }
             }
         });
-        const composition = { root, environmentRoot, serverRoot, serverName: 'repositoryBuildServer', environmentName: 'repositoryBuildEnvironment' };
+        const composition = { persistent: options.persistent === true, frameworkRoot, root, environmentRoot, serverRoot, serverName: 'repositoryBuildServer', environmentName: 'repositoryBuildEnvironment' };
         this.validate(composition);
         return composition;
     },
@@ -129,7 +162,7 @@ module.exports = {
         if (!fs.existsSync(serverPackagePath)) throw new Error('Repository build composition is missing its server package');
         const serverPackage = JSON.parse(fs.readFileSync(serverPackagePath, 'utf8'));
         const actual = ((serverPackage.nodics || {}).extends || []).slice().sort();
-        const expected = this.runtimeGroups.slice().sort();
+        const expected = this.runtimeGroups(composition.frameworkRoot).sort();
         if (JSON.stringify(actual) !== JSON.stringify(expected)) {
             throw new Error('Repository build composition must extend every and only standard runtime group');
         }
@@ -138,7 +171,7 @@ module.exports = {
 
     /** Removes a materialized composition. @param {Object} composition Coordinates. @returns {void} */
     remove: function (composition) {
-        if (composition && composition.root) fs.rmSync(composition.root, { recursive: true, force: true });
+        if (composition && composition.root && !composition.persistent) fs.rmSync(composition.root, { recursive: true, force: true });
     },
 
     /** Rejects lifecycle methods that are unsafe for the repository composition. @param {string} method Method. @returns {boolean} True. */
@@ -150,7 +183,7 @@ module.exports = {
     /** Executes cleanAll or buildAll against the ephemeral composition. @param {string} frameworkRoot Framework root. @param {string} method Lifecycle method. @returns {Promise<boolean>} Result. */
     execute: async function (frameworkRoot, method) {
         this.validateMethod(method);
-        const composition = this.create();
+        const composition = this.create(frameworkRoot, { persistent: true });
         try {
             const frameworkPackage = require(path.join(frameworkRoot, 'package.json'));
             const moduleRoots = (frameworkPackage.workspaces || []).map(workspace => path.join(frameworkRoot, workspace)).concat([composition.root]);

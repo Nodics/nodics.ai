@@ -17,6 +17,22 @@
  * @override Project, environment, server, node, tenant, or customer layers may override these defaults through Nodics configuration layering.
  */
 module.exports = {
+    // Inert inventory; an allowed local server must explicitly select this capability.
+    localResetProvider: {
+        "contributions": {
+            "customerFeedback": {
+                "serviceNames": {
+                    "DefaultCustomerFeedbackClassificationService": true,
+                    "DefaultCustomerFeedbackFollowUpService": true,
+                    "DefaultCustomerFeedbackHandoffService": true,
+                    "DefaultCustomerFeedbackInsightService": true,
+                    "DefaultCustomerFeedbackResolutionService": true,
+                    "DefaultCustomerFeedbackService": true
+                }
+            }
+        }
+    },
+
     schemaPolicies: { customerFeedback: {
         customerOwned: { accessGroups: { adminGroup: 10, serviceAccountUserGroup: 10, employeeUserGroup: 10, customerUserGroup: 10 }, ownership: { enabled: true, ownerProperty: 'ownerId', bypassGroups: { adminGroup: true, serviceAccountUserGroup: true, employeeUserGroup: true }, subjectGroups: { customerUserGroup: true }, principalTypes: { customer: true } } },
         operational: { accessGroups: { adminGroup: 10, serviceAccountUserGroup: 10, employeeUserGroup: 10 } }

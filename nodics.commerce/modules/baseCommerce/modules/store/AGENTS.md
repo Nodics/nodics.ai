@@ -15,3 +15,11 @@ Keep general Point of Service location association optional: online service
 points must work without Location. Enforce genuine physical-location requirements
 in the owning operation or later-loaded project schema. Retain reference metadata;
 never fabricate a location or weaken tenant/security validation to import data.
+
+Store owns explicit store-reference validation through its existing context
+service. Keep identity and operation context consistent; no policy-selected
+fallback, fabricated record, second resolver authority or privileged read bypass.
+Identifier validation and master Store/Channel validation have distinct contracts.
+
+This capability declares an inert model-service inventory for [governed Local reset](../../../../../nodics.foundation/modules/nSystem/llm/contracts/local-reset.md).
+A server must explicitly select it; contributions never enable reset or bypass tenant, environment, confirmation or required-service checks.

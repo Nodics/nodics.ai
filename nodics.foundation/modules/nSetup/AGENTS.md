@@ -27,6 +27,15 @@ This file gives AI coding agents mandatory guidance for this Nodics module or pa
 
 ## nSetup Rules
 
+- Enforce [existing layers and project independence](llm/contracts/nodics-principles.md#existing-layers-and-project-independence).
+  Extend established authorities; never introduce an architectural layer or
+  duplicate consumer API. No framework or accelerator layer may embed
+  project-specific configuration, including tooling and templates.
+
+- Apply [corrective change and recurrence prevention](llm/contracts/ai-coding-and-customization-contract.md#corrective-changes-and-recurrence-prevention)
+  in every correction batch. Strengthen existing authorities and their discovery
+  paths; keep module-specific detail with its owner and unresolved findings open.
+
 - Treat this module as the canonical home for Nodics AI guidance, governance contracts, templates, and validation metadata.
 - Do not put runtime application behavior in nSetup.
 - Keep AI contracts portable Markdown/JSON so Codex, Copilot, Cursor, Claude, Aider, and future tools can consume them.

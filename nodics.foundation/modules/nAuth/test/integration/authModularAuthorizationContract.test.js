@@ -63,6 +63,13 @@ async function run() {
     let stamps = new Map();
     let capturedRequest;
     global.SERVICE = {
+        DefaultCacheService: { putVersioned: async options => {
+            const existing = stamps.get(options.key);
+            if (options.advance) options = { ...options, value: { ...options.value, authVersion: Math.max(options.value.authVersion, existing ? existing.authVersion + 1 : 1) } };
+            if (existing && existing.authVersion > options.value.authVersion) throw new Error('Stale versioned cache write');
+            stamps.set(options.key, { ...options.value });
+            return { code: 'SUC_CACHE_00000', result: options.value };
+        } },
         DefaultAuthenticationProviderService: {
             generateAuthToken: options => jwtProvider.generateAuthToken(options),
             addToken: (moduleName, expirable, key, value) => { stamps.set(key, value); return Promise.resolve(value); }
@@ -85,6 +92,9 @@ async function run() {
     await assert.rejects(runWorker({ token: issuedToken, secret: secret, issuer: 'nodics-p2', audience: 'nodics-p2-services', requestTenant: 'nodics_auth_other_test', permission: 'profile.read', authVersion: 5 }), /TOKEN_TENANT_MISMATCH/);
     await assert.rejects(runWorker({ token: issuedToken, secret: secret, issuer: 'nodics-p2', audience: 'nodics-p2-services', requestTenant: configuration.tenant, permission: 'runtime.config.activate', authVersion: 5 }), /TOKEN_PERMISSION_MISSING/);
 
+    values.runtimeIdentity = { instanceCode: 'profile-replica-one' };
+    global.NODICS = { getEnvironmentName: () => 'warehouse.project', getSelectedEnvironmentName: () => 'qa',
+        getServerName: () => 'profileServer', getActiveModules: () => ['profile'], isModuleActive: () => false };
     let fetched = await remoteProvider.fetchInternalAuthToken(configuration.tenant);
     assert.strictEqual(fetched.authToken, issuedToken);
     assert.strictEqual(capturedRequest.apiName, '/auth/token/' + configuration.tenant);

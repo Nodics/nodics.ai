@@ -17,6 +17,37 @@
  * @override Project, environment, server, node, tenant, or customer layers may override these defaults through Nodics configuration layering.
  */
 module.exports = {
+    // Inert inventory; an allowed local server must explicitly select this capability.
+    localResetProvider: {
+        "contributions": {
+            "engagementCore": {
+                "serviceNames": {
+                    "DefaultEngagementActivityService": true,
+                    "DefaultEngagementAssignmentService": true,
+                    "DefaultEngagementAutomationDecisionService": true,
+                    "DefaultEngagementAutomationEvaluationService": true,
+                    "DefaultEngagementBatchRunService": true,
+                    "DefaultEngagementClassificationService": true,
+                    "DefaultEngagementCompatibilityRecordService": true,
+                    "DefaultEngagementConsentService": true,
+                    "DefaultEngagementDashboardSnapshotService": true,
+                    "DefaultEngagementDeliveryAttemptService": true,
+                    "DefaultEngagementExportEvidenceService": true,
+                    "DefaultEngagementFormDefinitionService": true,
+                    "DefaultEngagementFormVersionService": true,
+                    "DefaultEngagementIntegrationReferenceService": true,
+                    "DefaultEngagementPrivacyCaseService": true,
+                    "DefaultEngagementPublicationReferenceService": true,
+                    "DefaultEngagementRecoveryCheckpointService": true,
+                    "DefaultEngagementRelationService": true,
+                    "DefaultEngagementRepairCaseService": true,
+                    "DefaultEngagementSubmissionService": true,
+                    "DefaultEngagementUnifiedQueueItemService": true
+                }
+            }
+        }
+    },
+
     schemaPolicies: {
         engagementCore: {
             customerOwned: {

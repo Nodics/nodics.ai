@@ -11,6 +11,17 @@
 
 /** @module discoveryRanking/config/properties @description Defines Discovery ranking defaults. @layer config @owner discoveryRanking */
 module.exports = {
+    // Inert inventory; an allowed local server must explicitly select this capability.
+    localResetProvider: {
+        "contributions": {
+            "discoveryRanking": {
+                "serviceNames": {
+                    "DefaultDiscoveryRankingActionService": true
+                }
+            }
+        }
+    },
+
     discovery: { ranking: { boostScore: 1000, buryScore: -1000 } },
     schemaPolicies: {
         discoveryRanking: {

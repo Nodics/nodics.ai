@@ -172,6 +172,30 @@ const bootstrapUserGroups = require('../data/init-v001/records/groups/defaultBoo
     assert(bootstrapUserGroups.record3.permissions.includes('waste.collectionCentre.search'),
         'Default customer group can read public Waste collection-centre search');
 
+    const runtimeAuth = { tokenType: 'service', runtimeScope: { instanceCode: 'worker-1' },
+        modules: ['profile'], permissions: ['profile.enterprise.search'], entCode: 'electronics', tenant: 'electronicsTenant' };
+    const runtimeRequest = { entCode: 'electronics', tenant: 'electronicsTenant', authData: runtimeAuth };
+    let runtimeLookups = 0;
+    const runtimeService = { ...enterpriseService, retrieveEnterprise: async code => {
+        runtimeLookups++; assert.strictEqual(code, 'electronics');
+        return { code, active: true, privateRecord: 'excluded', contacts: ['excluded'],
+            tenant: { code: 'electronicsTenant', active: true, properties: { deploymentSetting: true }, privateRecord: 'excluded' } };
+    } };
+    assert.deepStrictEqual(await runtimeService.getRuntimeEnterprise(runtimeRequest), {
+        code: 'SUC_FIND_00000', result: [{ code: 'electronics', active: true,
+            tenant: { code: 'electronicsTenant', active: true, properties: { deploymentSetting: true } } }]
+    });
+    for (const rejected of [
+        { ...runtimeRequest, entCode: 'another-enterprise' }, { ...runtimeRequest, tenant: 'another-tenant' },
+        { ...runtimeRequest, authData: { ...runtimeAuth, permissions: [] } },
+        { ...runtimeRequest, authData: { ...runtimeAuth, modules: ['inventory'] } },
+        { ...runtimeRequest, authData: { ...runtimeAuth, tokenType: 'access' } }
+    ]) await assert.rejects(runtimeService.getRuntimeEnterprise(rejected), error => error.code === 'ERR_AUTH_00003');
+    assert.strictEqual(runtimeLookups, 1, 'Denied scope must not perform a privileged record lookup');
+    for (const tenant of [{ code: 'another-tenant', active: true }, { code: 'electronicsTenant', active: false }]) {
+        runtimeService.retrieveEnterprise = async () => ({ code: 'electronics', active: true, tenant });
+        await assert.rejects(runtimeService.getRuntimeEnterprise(runtimeRequest), error => error.code === 'ERR_AUTH_00003');
+    }
     console.log('Profile enterprise service capability behavior validated');
 })().catch((error) => {
     console.error(error);

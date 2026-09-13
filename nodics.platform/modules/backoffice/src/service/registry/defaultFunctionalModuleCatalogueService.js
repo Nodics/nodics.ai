@@ -731,20 +731,24 @@ module.exports = {
                 let releaseRequest = { dataType: dataType, releaseCodes: packs.map(pack => pack.code) };
                 let preflight = await this.runActivationDataReleaseOperation('preflight', releaseRequest, packs[0], request);
                 let releases = preflight && preflight.data && preflight.data.releases || [];
-                let executable = releases.filter(release => ['NOT_INSTALLED', 'UPDATE_AVAILABLE', 'FAILED'].includes(release.status));
-                let result = executable.length === 0 ? preflight :
-                    await this.runActivationDataReleaseOperation('execute', releaseRequest, packs[0], request);
-                let releaseByCode = Object.fromEntries(((result && result.data && result.data.releases) || releases).map(release => [release.releaseCode, release]));
-                let importRunId = result && result.data && result.data.importRun && result.data.importRun.runId;
-                await Promise.all(packs.map(pack => {
-                    let release = releaseByCode[pack.code] || {};
-                    let status = ['CURRENT', 'RUNNING'].includes(release.status) || executable.length === 0 ? 'IMPORTED' : String(release.status || 'IMPORTED');
-                    return this.upsertActivationReceipt(record, pack, status, Object.assign({}, context, { request: request }), {
-                        message: executable.length === 0 ? 'Required activation data release is already current.' : 'Required activation data imported through nImport.',
-                        importRunId: importRunId, releaseStatus: release.status || 'CURRENT'
-                    });
-                }));
+                const preflightByCode = Object.fromEntries(releases.map(release => [release.releaseCode, release]));
+                const pending = packs.filter(pack => !['CURRENT', 'NOT_INSTALLED', 'UPDATE_AVAILABLE', 'FAILED']
+                    .includes((preflightByCode[pack.code] || {}).status));
+                if (pending.length) {
+                    await this.recordActivationDataCompletion(record, packs, preflightByCode, context, request);
+                }
+                const executable = packs.filter(pack => ['NOT_INSTALLED', 'UPDATE_AVAILABLE', 'FAILED']
+                    .includes((preflightByCode[pack.code] || {}).status));
+                const result = executable.length === 0 ? preflight :
+                    await this.runActivationDataReleaseOperation('execute', Object.assign({}, releaseRequest, {
+                        releaseCodes: executable.map(pack => pack.code)
+                    }), packs[0], request);
+                const releaseByCode = Object.assign({}, preflightByCode,
+                    Object.fromEntries(((result && result.data && result.data.releases) || []).map(release => [release.releaseCode, release])));
+                const importRunId = result && result.data && result.data.importRun && result.data.importRun.runId;
+                await this.recordActivationDataCompletion(record, packs, releaseByCode, context, request, importRunId);
             } catch (error) {
+                if (error.activationDataReceiptsRecorded === true) throw error;
                 await Promise.all(packs.map(pack => this.upsertActivationReceipt(record, pack, 'FAILED', Object.assign({}, context, { request: request }), {
                     message: error && error.message || 'Required activation data import failed.', releaseStatus: 'FAILED'
                 }))).catch(() => false);
@@ -753,6 +757,38 @@ module.exports = {
         }
         return true;
     },
+    /**
+     * Records only confirmed CURRENT releases as imported and rejects incomplete activation.
+     * @param {Object} record Catalogue record.
+     * @param {Object[]} packs Required activation releases.
+     * @param {Object} releases Releases keyed by release code.
+     * @param {Object} context Lifecycle context.
+     * @param {Object} request Secured request.
+     * @param {string} importRunId Optional completed import run.
+     * @returns {Promise<boolean>} True only when every required release is CURRENT.
+     */
+    recordActivationDataCompletion: async function (record, packs, releases, context, request, importRunId) {
+        const incomplete = [];
+        await Promise.all(packs.map(pack => {
+            const release = releases[pack.code] || {};
+            const current = release.status === 'CURRENT';
+            const running = ['RUNNING', 'QUEUED', 'PENDING_IMPORT'].includes(release.status);
+            if (!current) incomplete.push(pack.code);
+            return this.upsertActivationReceipt(record, pack, current ? 'IMPORTED' : running ? 'RUNNING' : 'FAILED',
+                Object.assign({}, context, { request }), {
+                    message: current ? 'Required activation data release is confirmed current.' :
+                        'Required activation data release is not complete; activation remains disabled.',
+                    importRunId, releaseStatus: release.status || 'MISSING'
+                });
+        }));
+        if (incomplete.length) {
+            const error = new CLASSES.NodicsError('ERR_BOF_00000', 'Required activation data is incomplete: ' + incomplete.join(', '));
+            error.activationDataReceiptsRecorded = true;
+            throw error;
+        }
+        return true;
+    },
+
     /** Runs one activation-data nImport operation on the package target runtime. */
     runActivationDataReleaseOperation: async function (mode, releaseRequest, pack, request) {
         if (this.isLocalActivationDataTarget(pack)) {

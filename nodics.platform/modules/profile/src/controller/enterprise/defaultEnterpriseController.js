@@ -33,6 +33,11 @@ module.exports = {
      */
 
     getEnterprise: function (request, callback) {
+        if (request.authData && request.authData.runtimeScope) {
+            const result = FACADE.DefaultEnterpriseFacade.getRuntimeEnterprise(request);
+            if (callback) { result.then(value => callback(null, value), callback); return; }
+            return result;
+        }
         if (UTILS.isBlank(request.entCode)) {
             let error = new CLASSES.NodicsError('ERR_PRFL_00003', 'Enterprise code can not be null or empty');
             if (callback) {

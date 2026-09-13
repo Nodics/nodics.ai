@@ -120,3 +120,6 @@ content as unrestricted telemetry.
 - Elasticsearch adapter: [elastic](../elastic/README.md)
 - Cache policy: [How Cache Works](https://github.com/Nodics/nodics.docs)
 - Data guide: [How To Work With Data](https://github.com/Nodics/nodics.docs)
+
+This capability declares an inert model-service inventory for [governed Local reset](../../nSystem/llm/contracts/local-reset.md).
+A server must explicitly select it; contributions never enable reset or bypass tenant, environment, confirmation or required-service checks.

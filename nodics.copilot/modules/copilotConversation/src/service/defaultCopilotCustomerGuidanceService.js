@@ -28,7 +28,7 @@ module.exports = {
     )
       throw new Error("COPILOT_CUSTOMER_CONTEXT_REQUIRED");
     return SERVICE.DefaultCopilotPolicyService.normalizeSecurityContext({
-      channel: "NEXUS_CUSTOMER",
+      channel: "CUSTOMER",
       actor: auth.code,
       principalType: "CUSTOMER",
       customer: auth.code,
@@ -60,7 +60,7 @@ module.exports = {
     const ownedRequest = {
       tenant: request.tenant,
       authData: Object.assign({}, request.authData, { loginId: identity }),
-      channel: "NEXUS_CUSTOMER",
+      channel: "CUSTOMER",
       definitionCode: settings.project + ":guidance",
     };
     const conversation = request.conversationCode
@@ -71,7 +71,7 @@ module.exports = {
         )
       : await conversations.create(ownedRequest, storage);
     if (
-      conversation.channel !== "NEXUS_CUSTOMER" ||
+      conversation.channel !== "CUSTOMER" ||
       conversation.definitionCode !== ownedRequest.definitionCode
     )
       throw new Error("COPILOT_CONVERSATION_NOT_FOUND");

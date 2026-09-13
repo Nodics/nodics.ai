@@ -31,6 +31,7 @@ let availableEndpoints = ['profile'];
 let capturedRequest;
 let fetchedRequest;
 let registryOwners = [];
+let remoteOnlyConnections = [];
 
 global.CLASSES = {
     NodicsError: NodicsError
@@ -64,6 +65,7 @@ global.SERVICE = {
         isAvailableModuleConfig: moduleName => availableEndpoints.includes(moduleName)
     },
     DefaultRouterService: {
+        getModuleServerConfig: connection => ({ getOptions: () => ({ remoteOnly: remoteOnlyConnections.includes(connection) }) }),
         prepareUrl: options => {
             capturedRequest = options;
             return 'http://remote.test/nodics/' + options.moduleName;
@@ -134,6 +136,19 @@ const service = Object.assign({}, definition, {
     assert.strictEqual(fetchedRequest.headers.Authorization, 'Bearer service-token');
     assert.strictEqual(fetchedRequest.uri, 'http://remote.test/nodics/profile/v0/enterprise');
 
+    activeModules = ['inventory'];
+    remoteOnlyConnections = ['inventoryRemote'];
+    availableEndpoints = ['inventoryRemote'];
+    const remoteOnly = await service.invokeModule({
+        moduleName: 'inventory', connectionName: 'inventoryRemote',
+        serviceName: 'DefaultInventoryService', operationName: 'reserve', apiName: '/inventory/reservations',
+        request: { tenant: 'default', sku: 'REMOTE-ONLY' }
+    });
+    assert.deepStrictEqual(remoteOnly, { result: [{ code: 'ENT' }] });
+    assert.equal(capturedRequest.connectionName, 'inventoryRemote');
+    remoteOnlyConnections = [];
+    assert.deepStrictEqual(await service.invokeModule({ moduleName: 'inventory', serviceName: 'DefaultInventoryService',
+        operationName: 'reserve', request: { sku: 'LOCAL-AGAIN' } }), { mode: 'local', sku: 'LOCAL-AGAIN' });
     availableEndpoints = [];
     await assert.rejects(() => service.invokeModule({
         moduleName: 'checkout',

@@ -47,7 +47,7 @@ fs.writeFileSync(path.join(fixtureModuleRoot, 'data', 'manifest.json'), JSON.str
 }), 'utf8');
 global.CONFIG = { get: key => ({
     backofficeRegistration: { enabled: true, moduleName: 'backoffice', heartbeatIntervalMs: 10000,
-        retryIntervalMs: 5000, maxModulesPerRegistration: 512, requestTimeoutMs: 20,
+        retryIntervalMs: 5000, operationalStateTtlMs: 30000, maxModulesPerRegistration: 512, requestTimeoutMs: 20,
         connectionName: 'default' },
     backofficeCapabilities: { cms: { enabled: true, capabilityId: 'content-management', contractVersion: 0,
         minimumClientContractVersion: 0, requiredPermissions: ['cms.backoffice.view'] } },
@@ -69,6 +69,7 @@ global.NODICS = {
     getInternalAuthToken: () => 'service-token'
 };
 global.SERVICE = {
+    DefaultInternalAuthenticationProviderService: { buildRuntimeIdentityHeaders: () => ({ 'x-nodics-runtime-instance': 'cms-instance' }) },
     DefaultRuntimeLifecycleService: { registerContributor: (name, value) => { contributor = value; } },
     DefaultRouterService: {
         prepareUrl: options => 'http://localhost:3040/nodics/' + options.moduleName,
@@ -76,7 +77,7 @@ global.SERVICE = {
     },
     DefaultModuleService: {
         buildRequest: options => options,
-        fetch: request => { requests.push(request); return Promise.resolve({}); }
+        fetch: request => { requests.push(request); return Promise.resolve({ data: { operationalState: { instanceId: 'cms-instance', projectCode: 'envs', expiresAt: Date.now() + 30000, modules: ['cms', 'utility'].map(moduleName => ({ moduleName, enabled: true })) } } }); }
     }
 };
 
@@ -140,7 +141,7 @@ async function run() {
     assert.throws(() => service.registerBackofficeCapabilityProvider('cms', { getCapability: () => ({}) }),
         /Duplicate BackOffice capability provider/);
     CONFIG.get = key => ({ backofficeRegistration: { enabled: true, moduleName: 'backoffice',
-        heartbeatIntervalMs: 10000, retryIntervalMs: 5000, maxModulesPerRegistration: 512 }, backofficeCapabilities: {
+        heartbeatIntervalMs: 10000, retryIntervalMs: 5000, operationalStateTtlMs: 30000, maxModulesPerRegistration: 512 }, backofficeCapabilities: {
         cms: { enabled: false, capabilityId: 'environment-disabled' }
     }, defaultTenant: 'default' }[key]);
     assert.strictEqual(service.buildRegistration('cms').backoffice, undefined,
@@ -161,12 +162,12 @@ async function run() {
     NODICS.getInternalAuthToken = () => 'service-token';
     let recoveryAttempts = 0;
     CONFIG.get = key => ({ backofficeRegistration: { enabled: true, moduleName: 'backoffice',
-        heartbeatIntervalMs: 20, retryIntervalMs: 5, maxModulesPerRegistration: 512,
+        heartbeatIntervalMs: 20, retryIntervalMs: 5, operationalStateTtlMs: 30000, maxModulesPerRegistration: 512,
         requestTimeoutMs: 20, connectionName: 'default' }, backofficeCapabilities: {},
         runtimeRole: { code: 'WCMS_STAGED', publication: 'STAGED' }, defaultTenant: 'default' }[key]);
     SERVICE.DefaultModuleService.fetch = () => {
         recoveryAttempts++;
-        return recoveryAttempts === 1 ? Promise.reject(new Error('BackOffice restarting')) : Promise.resolve({});
+        return recoveryAttempts === 1 ? Promise.reject(new Error('BackOffice restarting')) : Promise.resolve({ data: { operationalState: { instanceId: 'cms-instance', projectCode: 'envs', expiresAt: Date.now() + 30000, modules: ['cms', 'utility'].map(moduleName => ({ moduleName, enabled: true })) } } });
     };
     const recovering = Object.assign({}, definition, {
         _timer: null, _running: false, _registered: [], _backofficeCapabilityProviders: new Map(),

@@ -11,10 +11,23 @@
 
 /** @module cart/config/properties @description Defines Commerce capability and schema access policies. @layer config @owner cart */
 module.exports = {
+    // Inert inventory; an allowed local server must explicitly select this capability.
+    localResetProvider: {
+        "contributions": {
+            "cart": {
+                "serviceNames": {
+                    "DefaultCartCalculationService": true,
+                    "DefaultCartDiagnosticService": true,
+                    "DefaultCartEntryService": true,
+                    "DefaultCartService": true
+                }
+            }
+        }
+    },
+
     cart: {
         enabled: true,
         customerApi: {
-            defaultStoreCode: 'agoraMainStore',
             defaultChannelCode: 'web',
             defaultLocale: 'en',
             defaultJurisdiction: 'US',

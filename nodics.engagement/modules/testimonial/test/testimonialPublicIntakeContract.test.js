@@ -41,6 +41,7 @@ api.submitCandidate({
     assert.strictEqual(savedCandidate.sourceType, 'DIRECT');
     assert.strictEqual(savedCandidate.sourceModule, 'engagementApi');
     assert.strictEqual(savedCandidate.status, 'CANDIDATE');
+    assert.strictEqual(savedCandidate.provenance.sourcePage, '', 'Absent provenance must not invent an application page');
     assert.strictEqual(savedCandidate.originalText, 'Nodics helped us see a safer way to move from MVP to governed enterprise delivery.');
     assert(savedCandidate.ownerId.startsWith('public:'));
     assert(!('publicText' in savedCandidate));

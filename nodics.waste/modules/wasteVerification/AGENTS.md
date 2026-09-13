@@ -16,3 +16,6 @@ explicit evidence acknowledgement for approval, and audit it. Future automation
 must pass the same owner guard; payload flags cannot waive this requirement.
 
 New verification and review decisions require the authenticated employee to own the explicit review assignment. Preserve queue claim/release, revision conflicts and idempotent completed replay; never infer responsibility from opening a detail view or from permission alone. Keep assignment guidance configurable in the existing reviewWorkspace labels.
+
+This capability declares an inert model-service inventory for [governed Local reset](../../../nodics.foundation/modules/nSystem/llm/contracts/local-reset.md).
+A server must explicitly select it; contributions never enable reset or bypass tenant, environment, confirmation or required-service checks.

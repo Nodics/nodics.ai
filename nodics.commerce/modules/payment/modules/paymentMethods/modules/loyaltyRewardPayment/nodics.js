@@ -10,4 +10,4 @@
  */
 
 /** @module loyaltyRewardPayment/nodics @description Declares the Loyalty Reward Payment capability lifecycle. @layer module @owner loyaltyRewardPayment */
-module.exports = { init: () => Promise.resolve(true), postInit: () => Promise.resolve(true) };
+module.exports = { init: function () { return Promise.resolve(true); }, postInit: function () { return Promise.resolve(true); } };

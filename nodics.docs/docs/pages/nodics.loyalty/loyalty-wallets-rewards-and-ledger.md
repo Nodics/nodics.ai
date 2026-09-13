@@ -52,7 +52,7 @@ owns the balance, reservation, redemption, and ledger evidence.
 | Redemption schema | `../nodics.loyalty/modules/loyaltyRedemption/src/schemas/schemas.js` |
 | Internal API routes | `../nodics.loyalty/modules/loyaltyApi/src/router/routers.js` |
 | Commerce reward payment provider | `../nodics.commerce/modules/payment/modules/paymentProviders/modules/loyaltyRewardProvider/README.md` |
-| Live checkout acceptance | `../nodics.foundation/modules/nTooling/src/service/project/defaultProjectLoyaltyRewardCheckoutAcceptanceService.mjs` |
+| Payment-provider acceptance | `../nodics.commerce/modules/payment/modules/paymentProviders/modules/loyaltyRewardProvider/test/loyaltyRewardPaymentProviderContract.test.js` |
 
 ## Owner model
 
@@ -221,19 +221,17 @@ node nodics.loyalty/modules/loyaltyWallet/test/loyaltyRewardOperationContract.te
 node nodics.loyalty/modules/loyaltyLedger/test/loyaltyLedgerContract.test.js
 ```
 
-For Commerce checkout integration, run the provider test and the Kickoff live
-acceptance:
+For Commerce checkout integration, run the provider contract:
 
 ```sh
 node nodics.commerce/modules/payment/modules/paymentProviders/modules/loyaltyRewardProvider/test/loyaltyRewardPaymentProviderContract.test.js
-cd ../nodics.kickoff
-npm run acceptance:loyalty-reward-checkout
 ```
 
-The live acceptance starts Platform, Loyalty, and Commerce, places an HTTP
-checkout using `LOYALTY_REWARD`, verifies Mongo evidence across Loyalty and
-Commerce models, and writes a browser-readable report to
-`.nodics/tmp/loyalty-reward-checkout-live/index.html`.
+Customer-owned live acceptance must start the selected Platform, Loyalty and
+Commerce runtimes, place an authenticated checkout using `LOYALTY_REWARD`, and
+verify persisted evidence across Loyalty and Commerce models. Bind the checks
+to that project's explicitly provisioned identities, stores and deployment;
+the framework does not supply a fixed customer topology or live credentials.
 
 When a journey is customer-visible, complete a browser pass as well. The page
 or journey should show business-safe status, readable balance/payment evidence,

@@ -242,9 +242,10 @@ module.exports = {
     canView: function (record, policy, principal, channel) {
         const accessMode = record.accessMode || policy && policy.accessMode || 'AUTHENTICATED';
         const lifecycleState = record.lifecycleState || 'DRAFT';
-        const readerChannel = channel || 'AXIS';
+        const readerChannel = channel || 'EMPLOYEE';
         const user = principal || {};
-        if (readerChannel === 'NEXUS' && (accessMode !== 'PUBLIC' || lifecycleState !== 'ONLINE')) return false;
+        if (!['PUBLIC', 'EMPLOYEE'].includes(readerChannel)) return false;
+        if (readerChannel === 'PUBLIC' && (accessMode !== 'PUBLIC' || lifecycleState !== 'ONLINE')) return false;
         if (policy && Array.isArray(policy.lifecycleVisibility) && !policy.lifecycleVisibility.includes(lifecycleState)) return false;
         if (accessMode === 'PUBLIC') return lifecycleState === 'ONLINE';
         if (!user.authenticated) return false;
@@ -270,7 +271,7 @@ module.exports = {
     renderProjection: function (request) {
         const body = this.payload(request);
         const records = this.normalizeRecordPack(body.records || body);
-        const channel = body.channel || 'AXIS';
+        const channel = body.channel || 'EMPLOYEE';
         const principal = body.principal || request && request.authData || {};
         const visible = {
             products: records.products.filter(record => this.canView(record, this.policyFor(record, records), principal, channel)),
@@ -329,7 +330,7 @@ module.exports = {
         const body = this.payload(request);
         const records = this.normalizeRecordPack(body.records || body);
         const query = String(body.query || '').trim().toLowerCase();
-        const channel = body.channel || 'AXIS';
+        const channel = body.channel || 'EMPLOYEE';
         const principal = body.principal || request && request.authData || {};
         const results = records.searchMetadata
             .filter(record => !query || [record.title, record.summary, record.searchText, [].concat(record.keywords || []).join(' ')]

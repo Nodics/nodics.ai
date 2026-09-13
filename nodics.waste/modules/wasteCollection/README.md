@@ -14,3 +14,6 @@ Collection-centre demo samples live in `wasteCollection/data/sample-v001`.
 Their import releases are split by runtime authority: Profile address records
 target `PLATFORM`, Location map-point records target `LOCATION`, and
 `wasteCollectionPoint` records target `WASTE`.
+
+This capability declares an inert model-service inventory for [governed Local reset](../../../nodics.foundation/modules/nSystem/llm/contracts/local-reset.md).
+A server must explicitly select it; contributions never enable reset or bypass tenant, environment, confirmation or required-service checks.

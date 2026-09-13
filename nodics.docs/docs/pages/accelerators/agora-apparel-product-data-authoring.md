@@ -48,9 +48,9 @@ project:
 
 | Area | Source location |
 | --- | --- |
-| Commerce header | `nodics.kickoff/modules/agora.apparel/data/sample-v001/commerce/headers/agoraApparelCatalogHeader.js` |
-| Commerce records | `nodics.kickoff/modules/agora.apparel/data/sample-v001/commerce/records/` |
-| Search header and rules | `nodics.kickoff/modules/agora.apparel/data/sample-v001/commerce/headers/commerceSearch/` and `records/commerceSearch/` |
+| Commerce header | `nodics.kickoff/modules/agora.apparel/data/sample-v002/commerce/headers/agoraApparelCatalogHeader.js` |
+| Commerce records | `nodics.kickoff/modules/agora.apparel/data/sample-v002/commerce/records/` |
+| Search header and rules | `nodics.kickoff/modules/agora.apparel/data/sample-v002/commerce/headers/commerceSearch/` and `records/commerceSearch/` |
 | Content header | `nodics.kickoff/modules/agora.apparel/data/sample-v001/content/headers/agoraApparelContentHeader.js` |
 | Content records | `nodics.kickoff/modules/agora.apparel/data/sample-v001/content/records/` |
 | Physical media files | `nodics.kickoff/modules/agora.apparel/data/sample-v001/content/assets/agora-cms-media/files/` |

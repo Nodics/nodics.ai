@@ -21,3 +21,6 @@ Reject comma-separated coordinates and unlabeled coordinate arrays. Store `latit
 Reject reusable Profile address fields in Location records. Use `addressRef` and contact references for Profile-owned address/contact authority.
 
 Before implementing non-trivial behavior here, record the business outcome, owning layer, studied sources, current implementation, extension path, security/tenant/data/API/release impact, intended files, and validation route.
+
+This capability declares an inert model-service inventory for [governed Local reset](../../../nodics.foundation/modules/nSystem/llm/contracts/local-reset.md).
+A server must explicitly select it; contributions never enable reset or bypass tenant, environment, confirmation or required-service checks.

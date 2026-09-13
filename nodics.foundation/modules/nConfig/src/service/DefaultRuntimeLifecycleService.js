@@ -126,7 +126,7 @@ module.exports = {
         };
         let timeoutMs = Number(options.timeoutMs || this.getConfig().shutdownTimeoutMs || 30000);
         let shutdownWork = Promise.resolve().then(() => {
-            if (NODICS.getServerState() !== 'draining') this.transition('draining');
+            if (!['draining', 'failed'].includes(NODICS.getServerState())) this.transition('draining');
             return this.executePhase('drain', context);
         }).then(drainResults => {
             this.transition('stopping');
@@ -146,7 +146,13 @@ module.exports = {
             new Promise((resolve, reject) => {
                 deadline = setTimeout(() => reject(new Error('Runtime shutdown deadline exceeded after ' + timeoutMs + 'ms')), timeoutMs);
             })
-        ]).finally(() => clearTimeout(deadline));
+        ]).catch(error => {
+            if (!['failed', 'stopped'].includes(NODICS.getServerState())) this.transition('failed');
+            throw error;
+        }).finally(() => {
+            clearTimeout(deadline);
+            this.uninstallProcessHandlers();
+        });
         return this._shutdownPromise;
     },
 

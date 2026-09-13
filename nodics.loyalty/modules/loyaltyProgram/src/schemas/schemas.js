@@ -11,7 +11,7 @@
 
 /** @module loyaltyProgram/src/schemas/schemas @description Defines Loyalty program records. @layer schema @owner loyaltyProgram @override Later modules may add governed program attributes while preserving reward wallet boundaries. */
 module.exports = { loyaltyProgram: {
-    loyaltyProgram: Object.assign({ super: 'base', model: true, schemaPolicies: ['operational'], service: { enabled: true }, router: { enabled: false }, cache: { enabled: false }, event: { enabled: false }, search: { enabled: false } }, { definition: {
+    loyaltyProgram: Object.assign({ super: 'base', model: true, schemaPolicies: ['operational'], service: { enabled: true }, router: { groups: { schemaOperations: true }, enabled: true }, cache: { enabled: false }, event: { enabled: false }, search: { enabled: false } }, { definition: {
         name: { type: 'string', required: true , description: 'Stores the business display name shown to administrators and related user journeys.'},
         description: { type: 'string', required: false , description: 'Explains the business purpose, usage, or administrative meaning of this record.'},
         status: { type: 'string', required: true, enum: ['DRAFT', 'ACTIVE', 'PAUSED', 'RETIRED'] , description: 'Tracks the lifecycle state that controls whether this record can be used in business processes.'},

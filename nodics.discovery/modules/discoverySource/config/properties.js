@@ -10,4 +10,15 @@
  */
 
 /** @module discoverySource/config/properties @description Defines Discovery source-provider access policies. @layer config @owner discoverySource */
-module.exports = { schemaPolicies: { discoverySource: { tenantOwned: { accessGroups: { adminGroup: 10, runtimeConfigAdminUserGroup: 10, serviceAccountUserGroup: 10 } } } } };
+module.exports = {
+    // Inert inventory; an allowed local server must explicitly select this capability.
+    localResetProvider: {
+        "contributions": {
+            "discoverySource": {
+                "serviceNames": {
+                    "DefaultDiscoverySourceProviderService": true
+                }
+            }
+        }
+    },
+ schemaPolicies: { discoverySource: { tenantOwned: { accessGroups: { adminGroup: 10, runtimeConfigAdminUserGroup: 10, serviceAccountUserGroup: 10 } } } } };

@@ -46,9 +46,16 @@ function loadLocalEnv(cwd) {
     });
 }
 
-loadLocalEnv(process.cwd());
+let commandArgs;
+try {
+    commandArgs = toolingCommandService.normalizeArguments(process.argv.slice(2));
+    loadLocalEnv(toolingCommandService.resolveHome(commandArgs));
+} catch (error) {
+    console.error(error.message);
+    process.exitCode = 1;
+}
 
-toolingCommandService.run(process.argv.slice(2)).catch(error => {
+if (commandArgs && !process.exitCode) toolingCommandService.run(commandArgs).catch(error => {
     console.error(error && error.stack ? error.stack : error);
     process.exitCode = 1;
 });

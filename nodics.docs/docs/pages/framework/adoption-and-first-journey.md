@@ -13,6 +13,115 @@ This page describes the adoption path, not every implementation detail. The
 deep module pages explain specific schemas, APIs, providers, pipelines,
 workflows, and project-layer override paths.
 
+## First visible framework success
+
+Prerequisites: use the repository's supported Node/npm toolchain, install its
+locked dependencies, and make `mongod` and `redis-server` available on `PATH`.
+From the framework repository, run:
+
+```bash
+node nodics.foundation/modules/nTooling/test/projectRuntimeBootstrapLive.test.js --require-live --composition=foundation
+```
+
+This is a disposable learning and acceptance environment. It creates its own
+loopback databases, project, generated schema service, Profile principals and
+explicit deployment grants. It starts an authority and a separate Foundation
+runtime, creates/updates/reads/removes a project record, renews credentials,
+rejects revoked credentials, restarts, and checks failure cleanup. It removes
+its own temporary project and providers when finished.
+
+Success ends with `PROFILE_START_PASS foundation`,
+`PROFILE_RESTART_PASS foundation` and `PROFILE_FAILURE_PASS foundation`.
+The failure marker means an injected failure was correctly rejected and cleaned
+up. A missing provider binary or missing success marker is a failed exercise;
+inspect its bounded evidence log and correct the prerequisite before continuing.
+Use `NODICS_MONGOD_BINARY` or `NODICS_REDIS_BINARY` for explicit binary paths.
+
+The trusted initializer belongs only to this test fixture. Real projects must
+provision distinct runtime principals, retained proof and approved Profile scope
+through their operator/secret/data process before startup. Do not copy fixture
+credentials or bypass that step with a default account. See
+[Service Runtime Overrides](../nodics.foundation/service-runtime-overrides.md)
+for the implemented configuration and grant contract.
+
+## Understand and customize the example
+
+The generated service belongs to the temporary project schema, while Foundation
+owns generation, request pipelines, persistence and authentication mechanics.
+The service sends its operation through the existing database pipelines; the
+project does not create another model loader or identity store.
+
+For the complete layering exercise, run:
+
+```bash
+node --test nodics.foundation/modules/nConfig/test/serverGeneratedArtifactContract.test.js
+```
+
+The fixture creates framework, partner, project, environment and server modules.
+Its generated `DefaultItemService.value()` returns `generated`; the partner
+contributes `partner`; the project's matching method returns `authored`.
+Environment/server methods add separate behavior. Build and reload preserve the
+project value and all unrelated inherited methods. Changing one method does not
+require copying the generated service. The fixture verifies the same behavior
+for facades/controllers, records actual member origins, and removes its own files.
+
+Use this pattern in an existing project only after reading the real capability's
+contract. Add the matching exported method in the owning project layer, build
+the selected server with the installed shared command, restart it with its
+approved runtime identity, and run the capability's positive and rejection tests.
+Rollback removes or reverts that project contribution and repeats build/restart;
+it does not reverse any business data already changed by the customized method.
+
+## Add one new composition at a time
+
+Use the same live command with `--composition=inventory`, `commerce`, `cms`,
+`process` or `cluster`. Inventory runs separately; Commerce omits local Inventory;
+CMS is Online. Process exercises registration, required import, activation,
+deactivation and admitted-work completion. Cluster starts two node configurations
+and identities with one server-generated directory. These are framework
+acceptance examples; they do not demonstrate a production payment, storefront
+publication or provider failover.
+
+```mermaid
+flowchart TD
+  Framework["One shared framework checkout"] --> Project["Customer project: authored definitions"]
+  Project --> Environment["Environment: deployment differences"]
+  Environment --> Server["Server: capability composition and generated code"]
+  Server --> NodeA["Node A: port and instance credentials"]
+  Server --> NodeB["Node B: port and instance credentials"]
+  NodeA --> Generated["The same server-generated files"]
+  NodeB --> Generated
+```
+
+The server decides functionality. Nodes can supply configuration differences and
+separate identities; they do not own duplicate generated implementations.
+Continue with the reference application journey below when a team needs visible
+administration/content/storefront workflows and their publication prerequisites.
+
+## Learning path and prerequisites
+
+Use this path for the framework exercises above. Each row names the concept to
+learn first, the result to check and the next source of detail. A reader entering
+through search can start at the prerequisite column instead of guessing missing
+setup. Business readers can follow stages 1, 2 and 7; developers follow 1–6;
+operators continue through 8; experienced maintainers can enter stage 9 directly.
+
+| Stage and topic | Prerequisite | Result to check | Continue with |
+| --- | --- | --- | --- |
+| 1. Purpose and value | A business capability the team needs to deliver | Explain framework versus customer responsibility and the value of reusable capabilities | [Modular architecture](modular-architecture.md) |
+| 2. Runtime mental model | Framework/project ownership | Identify module, environment, server and node in the diagram above | [Runtime configuration](../nodics.foundation/runtime-configuration.md) |
+| 3. First visible success | Supported Node/npm, installed dependencies, MongoDB and Redis binaries | Run the Foundation exercise and recognize all three success markers | The working-example explanation above |
+| 4. Understand the request | Successful generated-record exercise | Trace the project schema through generated service and existing database pipelines | [Schema and data modeling](../nodics.foundation/schema-data-modeling.md) |
+| 5. One customization | Indexed module contributions | Run the five-layer example, identify the winning method and preserve unrelated inherited methods | [Service runtime overrides](../nodics.foundation/service-runtime-overrides.md) |
+| 6. Predict effective behavior | The customization example | Explain target-owned build/clean, inherited differences and required rebuild/restart | [Runtime configuration](../nodics.foundation/runtime-configuration.md) |
+| 7. Add business capabilities | A working baseline and approved runtime grants | Start separate Inventory, Commerce, CMS, Process and cluster examples with their stated limits | [Module communication](../nodics.foundation/module-to-module-communication.md) and [data import](../nodics.foundation/data-import-export-migration.md) |
+| 8. Operate and recover | Registration, activation, identity and provider ownership | Refuse unauthorized new work, distinguish admitted work, and verify startup-failure cleanup | [Startup lifecycle](../nodics.foundation/framework-startup-lifecycle.md) |
+| 9. Compatibility and reference | The effective contract being changed | Locate member origins, plan persisted migration and test the effective override's guarantees | [Release and upgrade compatibility](release-upgrade-compatibility.md) |
+
+The examples establish executable technical outcomes. Reader comprehension and
+the published browser experience require separate observation; passing an
+exercise does not prove that a first-time reader understood the explanation.
+
 ## First reader sequence
 
 The documentation should not force a new reader to open every framework module

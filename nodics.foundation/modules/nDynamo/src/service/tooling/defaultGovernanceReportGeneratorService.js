@@ -253,51 +253,26 @@ module.exports = exportedService = {
 
     /** Implements collectArtifactSummary as an overrideable service operation. */
     collectArtifactSummary: function () {
-    let layerDefinitions = [
-        { layer: 'service', folder: 'src/service', suffix: 'Service.js' },
-        { layer: 'facade', folder: 'src/facade', suffix: 'Facade.js' },
-        { layer: 'controller', folder: 'src/controller', suffix: 'Controller.js' }
-    ];
-    let artifacts = {};
-    function addArtifact(layer, name, moduleObject, filePath) {
-        let key = layer + ':' + name;
-        artifacts[key] = artifacts[key] || {
-            name: name,
-            layer: layer,
-            contributions: []
-        };
-        artifacts[key].contributions.push({
-            sourceModule: moduleObject.name,
-            file: (this.toRelative || exportedService.toRelative).call(this, filePath)
-        });
-    }
-    NODICS.getIndexedModules().forEach(moduleObject => {
-        layerDefinitions.forEach(layerDefinition => {
-            let directory = path.join(moduleObject.path, layerDefinition.folder);
-            (this.scanDirectory || exportedService.scanDirectory).call(this, directory, layerDefinition.suffix, filePath => {
-                let name = path.basename(filePath, '.js');
-                addArtifact(layerDefinition.layer, name, moduleObject, filePath);
-            });
-        });
-        let pipelineDirectory = path.join(moduleObject.path, 'src/pipelines');
-        (this.scanDirectory || exportedService.scanDirectory).call(this, pipelineDirectory, 'Definition.js', filePath => {
-            addArtifact('pipeline', path.basename(filePath, '.js'), moduleObject, filePath);
-        });
-        let pipelineRegistryPath = path.join(pipelineDirectory, 'pipelines.js');
-        if (fs.existsSync(pipelineRegistryPath)) {
-            Object.keys(require(pipelineRegistryPath)).forEach(name => {
-                addArtifact('pipeline', name, moduleObject, pipelineRegistryPath);
-            });
+        const registries = { service: SERVICE, facade: FACADE, controller: CONTROLLER, pipeline: PIPELINE };
+        const artifacts = [];
+        for (const [layer, registry] of Object.entries(registries)) {
+            for (const [name, artifact] of Object.entries(registry || {})) {
+                const metadata = artifact && artifact.xNodics;
+                const trace = metadata && metadata.overrideTrace;
+                if (!Array.isArray(trace) || trace.length === 0) continue;
+                artifacts.push({
+                    name, layer,
+                    contributions: trace.map(item => ({ sourceModule: item.sourceModule, file: item.file,
+                        action: item.action, generatedBaseline: item.generatedBaseline === true, members: (item.members || []).slice() })),
+                    firstSourceModule: trace[0].sourceModule,
+                    finalSourceModule: trace[trace.length - 1].sourceModule,
+                    memberOrigins: metadata.memberOrigins || {},
+                    overridden: trace.length > 1
+                });
+            }
         }
-    });
-    return Object.keys(artifacts).sort().map(key => {
-        let artifact = artifacts[key];
-        artifact.finalSourceModule = artifact.contributions.length ?
-            artifact.contributions[artifact.contributions.length - 1].sourceModule : undefined;
-        artifact.overridden = artifact.contributions.length > 1;
-        return artifact;
-    });
-},
+        return artifacts.sort((left, right) => (left.layer + ':' + left.name).localeCompare(right.layer + ':' + right.name));
+    },
 
     /** Implements collectGeneratedSummary as an overrideable service operation. */
     collectGeneratedSummary: function () {

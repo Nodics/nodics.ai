@@ -114,3 +114,7 @@ When a generated test fails, first identify which contract failed:
 Do not copy an entire framework test into a project just to remove one field.
 Override or regenerate the contract-specific fixture/assertion source in the
 project layer so the common Nodics test engine remains reusable.
+
+Generated tests use the selected server `test/gen/<type>/<module>` directory.
+Select a server or explicit root when running them; missing output fails. See
+[generated-test ownership](llm/contracts/README.md).

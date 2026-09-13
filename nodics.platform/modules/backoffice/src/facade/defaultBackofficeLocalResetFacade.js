@@ -15,6 +15,8 @@ module.exports = {
     init: function () { return Promise.resolve(true); },
     /** Executes the documented bounded module operation. */
     postInit: function () { return Promise.resolve(true); },
-    status: request => SERVICE.DefaultBackofficeLocalResetCoordinatorService.status(request),
-    execute: request => SERVICE.DefaultBackofficeLocalResetCoordinatorService.execute(request)
+    /** Delegates read-only status discovery to the existing initialization or reset service. */
+    status: function (request) { return SERVICE.DefaultBackofficeLocalResetCoordinatorService.status(request); },
+    /** Delegates the requested local reset to the existing owner, retaining confirmation and scope validation. */
+    execute: function (request) { return SERVICE.DefaultBackofficeLocalResetCoordinatorService.execute(request); }
 };

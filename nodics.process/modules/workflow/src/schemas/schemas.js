@@ -23,7 +23,7 @@ module.exports = {
             model: true,
             service: { enabled: true },
             cache: { enabled: false },
-            router: { enabled: false },
+            router: { groups: { schemaOperations: true }, enabled: true },
             search: { enabled: true, idPropertyName: 'code' },
             definition: {
                 description: {
@@ -97,7 +97,7 @@ module.exports = {
             model: true,
             service: { enabled: true },
             cache: { enabled: false },
-            router: { enabled: false },
+            router: { groups: { schemaOperations: true }, enabled: true },
             search: { enabled: true, idPropertyName: 'code' },
             definition: {
                 definitionCode: {
@@ -154,7 +154,7 @@ module.exports = {
             model: true,
             service: { enabled: true },
             cache: { enabled: false },
-            router: { enabled: false },
+            router: { groups: { schemaOperations: true }, enabled: true },
             search: { enabled: true, idPropertyName: 'code' },
             definition: {
                 definitionCode: { type: 'string', required: true, description: 'Process definition code used by this instance' },
@@ -175,7 +175,7 @@ module.exports = {
             model: true,
             service: { enabled: true },
             cache: { enabled: false },
-            router: { enabled: false },
+            router: { groups: { schemaOperations: true }, enabled: true },
             search: { enabled: true, idPropertyName: 'code' },
             definition: {
                 instanceCode: { type: 'string', required: true, description: 'Failed process instance owned by this incident' },
@@ -201,7 +201,7 @@ module.exports = {
             model: true,
             service: { enabled: true },
             cache: { enabled: false },
-            router: { enabled: false },
+            router: { groups: { schemaOperations: true }, enabled: true },
             search: { enabled: true, idPropertyName: 'code' },
             definition: {
                 instanceCode: { type: 'string', required: true, description: 'Owning process instance code' },
@@ -220,7 +220,7 @@ module.exports = {
             model: true,
             service: { enabled: true },
             cache: { enabled: false },
-            router: { enabled: false },
+            router: { groups: { schemaOperations: true }, enabled: true },
             search: { enabled: true, idPropertyName: 'code' },
             definition: {
                 definitionCode: { type: 'string', required: true, description: 'Process definition started by this scheduled trigger' },
@@ -238,7 +238,7 @@ module.exports = {
             model: true,
             service: { enabled: true },
             cache: { enabled: false },
-            router: { enabled: false },
+            router: { groups: { schemaOperations: true }, enabled: true },
             search: { enabled: true, idPropertyName: '_id' },
             definition: {
                 definitionCode: { type: 'string', required: false, description: 'Related process definition code' },

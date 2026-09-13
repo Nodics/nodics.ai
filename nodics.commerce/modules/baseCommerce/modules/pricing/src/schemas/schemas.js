@@ -18,7 +18,7 @@ module.exports = {
         model: true,
         schemaPolicies: ["tenantOwned"],
         service: { enabled: true },
-        router: { enabled: false },
+        router: { groups: { schemaOperations: true }, enabled: true },
         cache: { enabled: false },
         event: { enabled: false },
         search: { enabled: false },
@@ -81,7 +81,7 @@ module.exports = {
         model: true,
         schemaPolicies: ["tenantOwned"],
         service: { enabled: true },
-        router: { enabled: false },
+        router: { groups: { schemaOperations: true }, enabled: true },
         cache: { enabled: false },
         event: { enabled: false },
         search: { enabled: false },
@@ -161,7 +161,7 @@ module.exports = {
         model: true,
         schemaPolicies: ["operational"],
         service: { enabled: true },
-        router: { enabled: false },
+        router: { groups: { schemaOperations: true }, enabled: true },
         cache: { enabled: false },
         event: { enabled: false },
         search: { enabled: false },
@@ -258,6 +258,7 @@ module.exports = {
 module.exports.pricing.priceRow.backoffice = {
   operations: ["search", "read", "create", "update"],
   description: "Governed product price row.",
+  mutationPolicy: { lifecycle: "PUBLISHABLE", publishRequired: true },
 };
 
 /** Pricing owns private, order-bound negotiated prices. */
@@ -268,8 +269,8 @@ module.exports.pricing.priceQuote = {
   service: {
     enabled: true,
   },
-  router: {
-    enabled: false,
+  router: { groups: { schemaOperations: true },
+    enabled: true,
   },
   cache: {
     enabled: false,

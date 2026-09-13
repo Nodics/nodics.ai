@@ -9,102 +9,42 @@
 
  */
 
-/**
- * @module database/test/GeneratedSchemaServiceStartupContractTest
- * @description Verifies startup attaches generated schema service delegates
- * after rebuilding runtime models, while preserving same-name custom services.
- * @layer test
- * @owner nDatabase
- */
+/** @module database/test/GeneratedSchemaServiceStartupContractTest @description Requires built server service baselines and preserves custom services without runtime-generated substitutes. @layer test @owner nDatabase */
+const assert = require('node:assert/strict');
+const { test } = require('node:test');
+const fs = require('node:fs');
+const os = require('node:os');
+const path = require('node:path');
+const handler = require('../src/service/model/defaultDatabaseModelHandlerService');
 
-const assert = require('assert');
-
-if (!String.prototype.toUpperCaseFirstChar) {
-    String.prototype.toUpperCaseFirstChar = function () {
-        return this.charAt(0).toUpperCase() + this.slice(1);
+test('missing generated baseline fails and a built custom composition is preserved', async () => {
+    const root = fs.mkdtempSync(path.join(os.tmpdir(), 'nodics-required-service-'));
+    const old = { NODICS: global.NODICS, SERVICE: global.SERVICE, CLASSES: global.CLASSES };
+    const prior = String.prototype.toUpperCaseFirstChar;
+    String.prototype.toUpperCaseFirstChar = function () { return this[0].toUpperCase() + this.slice(1); };
+    const schema = { model: true, service: { enabled: true } };
+    global.NODICS = {
+        getGeneratedArtifactPath: () => root,
+        getActiveModules: () => ['profile'], isModuleActive: () => true,
+        getModule: () => ({ rawSchema: { employee: schema, internalAudit: { service: { enabled: false } } } })
     };
-}
-
-global.CLASSES = {
-    NodicsError: class NodicsError extends Error {
-        constructor(error, message, code) {
-            super(message || (error && error.message) || error || code);
-            this.code = code || error;
-        }
+    global.CLASSES = { NodicsError: class extends Error { constructor(error, message) { super(message, { cause: error }); } } };
+    const existing = { get: () => 'generated', findByAPIKey: () => 'custom' };
+    global.SERVICE = { DefaultEmployeeService: existing };
+    try {
+        await assert.rejects(handler.ensureGeneratedSchemaServices(), error => /selected project server build/.test(error.cause.message));
+        assert.equal(SERVICE.DefaultEmployeeService, existing);
+        fs.writeFileSync(path.join(root, 'DefaultEmployeeService.js'), 'module.exports = {};');
+        assert.equal(await handler.ensureGeneratedSchemaServices(), true);
+        assert.equal(SERVICE.DefaultEmployeeService, existing);
+        assert.equal(SERVICE.DefaultEmployeeService.findByAPIKey(), 'custom');
+        assert.equal(SERVICE.DefaultInternalAuditService, undefined);
+        delete SERVICE.DefaultEmployeeService;
+        await assert.rejects(handler.ensureGeneratedSchemaServices());
+        assert.equal(SERVICE.DefaultEmployeeService, undefined, 'no runtime substitute');
+    } finally {
+        Object.assign(global, old);
+        if (prior) String.prototype.toUpperCaseFirstChar = prior; else delete String.prototype.toUpperCaseFirstChar;
+        fs.rmSync(root, { recursive: true, force: true });
     }
-};
-
-global.UTILS = {
-    createModelName: schemaName => schemaName + 'Model'
-};
-
-const profileModule = {
-    rawSchema: {
-        userGroup: {
-            model: true,
-            service: { enabled: true }
-        },
-        employee: {
-            model: true,
-            service: { enabled: true }
-        },
-        internalAudit: {
-            model: true,
-            service: { enabled: false }
-        }
-    },
-    models: {
-        default: {
-            userGroupModel: { schemaName: 'userGroup' },
-            employeeModel: { schemaName: 'employee' }
-        }
-    }
-};
-
-global.NODICS = {
-    getActiveModules: () => ['profile'],
-    getModule: moduleName => moduleName === 'profile' ? profileModule : undefined,
-    isModuleActive: moduleName => moduleName === 'profile',
-    getModels: function (moduleName, tenant) {
-        assert.strictEqual(moduleName, 'profile');
-        return profileModule.models[tenant] || {};
-    }
-};
-
-const pipelineCalls = [];
-global.SERVICE = {
-    DefaultEmployeeService: {
-        findByAPIKey: function () {
-            return Promise.resolve({ code: 'apiAdmin' });
-        }
-    },
-    DefaultPipelineService: {
-        start: function (pipelineName, request) {
-            pipelineCalls.push({ pipelineName: pipelineName, request: request });
-            return Promise.resolve({ result: [] });
-        }
-    }
-};
-
-const modelHandler = require('../src/service/model/defaultDatabaseModelHandlerService');
-
-modelHandler.ensureGeneratedSchemaServices().then(() => {
-    assert.strictEqual(typeof global.SERVICE.DefaultUserGroupService.get, 'function');
-    assert.strictEqual(typeof global.SERVICE.DefaultUserGroupService.saveAll, 'function');
-    assert.strictEqual(typeof global.SERVICE.DefaultUserGroupService.update, 'function');
-    assert.strictEqual(global.SERVICE.DefaultInternalAuditService, undefined);
-    assert.strictEqual(typeof global.SERVICE.DefaultEmployeeService.get, 'function');
-    assert.strictEqual(typeof global.SERVICE.DefaultEmployeeService.findByAPIKey, 'function');
-    return global.SERVICE.DefaultUserGroupService.get({
-        tenant: 'default',
-        query: { code: 'adminGroup' }
-    });
-}).then(() => {
-    assert.strictEqual(pipelineCalls[0].pipelineName, 'modelsGetInitializerPipeline');
-    assert.strictEqual(pipelineCalls[0].request.moduleName, 'profile');
-    assert.strictEqual(pipelineCalls[0].request.schemaModel.schemaName, 'userGroup');
-    console.log('Generated schema service startup contract validated');
-}).catch(error => {
-    console.error(error);
-    process.exit(1);
 });

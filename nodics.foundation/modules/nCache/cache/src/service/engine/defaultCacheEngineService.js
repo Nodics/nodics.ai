@@ -74,29 +74,41 @@ module.exports = {
         }
     },
 
-    /** Reports readiness for initialized provider clients without probing disabled cache engines. */
-    getCacheReadiness: function () {
-        return Object.keys(this.engineClients).every(moduleName => Object.keys(this.engineClients[moduleName]).every(engineName => {
-            let client = this.engineClients[moduleName][engineName];
-            return !client || client.isReady === undefined || client.isReady === true;
-        }));
+    /** Returns each engine and channel-owned subscriber client exactly once. */
+    getInitializedClients: function () {
+        const clients = new Set();
+        for (const engines of Object.values(this.engineClients)) {
+            for (const client of Object.values(engines)) if (client) clients.add(client);
+        }
+        for (const channels of Object.values(this.cacheClients)) {
+            for (const channel of Object.values(channels)) if (channel && channel.eventClient && typeof channel.eventClient === 'object') clients.add(channel.eventClient);
+        }
+        return [...clients];
     },
 
-    /** Closes each unique initialized provider client during central runtime shutdown. */
+    /** Reports readiness for every initialized engine and owned subscriber without probing disabled providers. */
+    getCacheReadiness: function () {
+        return this.getInitializedClients().every(client => client.isReady === undefined || client.isReady === true);
+    },
+
+    /** Attempts every owned client close, preserving the first failure after all attempts settle. */
     closeEngineClients: async function () {
-        let clients = [];
-        Object.keys(this.engineClients).forEach(moduleName => Object.keys(this.engineClients[moduleName]).forEach(engineName => {
-            let client = this.engineClients[moduleName][engineName];
-            if (client && !clients.includes(client)) clients.push(client);
-        }));
-        await Promise.all(clients.map(client => {
-            if (typeof client.quit === 'function') return client.quit();
-            if (typeof client.disconnect === 'function') return client.disconnect();
-            if (typeof client.close === 'function') return client.close();
-            return true;
+        const outcomes = await Promise.allSettled(this.getInitializedClients().map(async client => {
+            try {
+                if (typeof client.quit === 'function') return await client.quit();
+                if (typeof client.disconnect === 'function') return await client.disconnect();
+                if (typeof client.close === 'function') return await client.close();
+                if (typeof client.shutdown === 'function') return await client.shutdown();
+                return true;
+            } catch (error) {
+                try { if (typeof client.destroy === 'function') await client.destroy(); } catch (cleanupError) { /* Preserve the close failure. */ }
+                throw error;
+            }
         }));
         this.cacheClients = {};
         this.engineClients = {};
+        const failure = outcomes.find(outcome => outcome.status === 'rejected');
+        if (failure) throw failure.reason;
         return true;
     },
 
@@ -270,17 +282,17 @@ module.exports = {
                         reject(new CLASSES.CacheError('ERR_CACHE_00008', 'Cache channel ' + channelName + ' requires disabled or uninitialized engine: ' + channelObj.engine));
                         return;
                     }
-                    _self.registerEvents(engineOptions, moduleName, engineClient, channelObj);
-                    resolve({
+                    Promise.resolve(_self.registerEvents(engineOptions, moduleName, engineClient, channelObj)).then(eventClient => resolve({
                         code: 'SUC_CACHE_00000',
                         result: {
                             chennalOptions: channelObj,
                             channelOptions: channelObj,
                             engineOptions: engineOptions,
                             client: engineClient,
+                            eventClient: eventClient && typeof eventClient === 'object' ? eventClient : null,
                             channelName: channelName
                         }
-                    });
+                    })).catch(reject);
                 } else {
                     reject(new CLASSES.CacheError('ERR_CACHE_00000', 'Invalid engine configuration for module: ' + moduleName + ', and channel: ' + channelName));
                 }
@@ -307,6 +319,7 @@ module.exports = {
         let capabilities = SERVICE.DefaultCacheConfigurationService.getEngineCapabilities(engineOptions);
         let required = ['put', 'get'];
         if (capabilities.atomicConsume === true) required.push('consume');
+        if (capabilities.atomicVersionWrite === true) required.push('putVersioned');
         if (capabilities.atomicBoundedIncrement === true) required.push('incrementBounded');
         if (capabilities.prefixFlush === true) required.push('flushByPrefix');
         if (capabilities.keyFlush === true) required.push('flushByKeys');
@@ -323,7 +336,7 @@ module.exports = {
     /** Registers configured cache lifecycle events through the selected connection handler. */
     registerEvents: function (engineOptions, moduleName, client, options) {
         if (!UTILS.isBlank(options.events)) {
-            SERVICE[engineOptions.connectionHandler].registerEvents({
+            return SERVICE[engineOptions.connectionHandler].registerEvents({
                 moduleName: moduleName,
                 cacheOptions: engineOptions.options,
                 options: options,

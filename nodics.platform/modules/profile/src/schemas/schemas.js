@@ -319,8 +319,8 @@ module.exports = {
             purpose: "CREATE",
             consistency: "MODULE_OWNED",
             confirmationRequired: true,
-            service: "DefaultEnterpriseManagementService",
-            operation: "createFromWorkbench",
+            controller: "DefaultEnterpriseManagementController",
+            operation: "create",
           },
         },
         fields: {
@@ -479,8 +479,8 @@ module.exports = {
       service: {
         enabled: true,
       },
-      router: {
-        enabled: false,
+      router: { groups: { schemaOperations: true },
+        enabled: true,
       },
       definition: {
         personId: {
@@ -554,8 +554,8 @@ module.exports = {
       service: {
         enabled: true,
       },
-      router: {
-        enabled: false,
+      router: { groups: { schemaOperations: true },
+        enabled: true,
       },
       definition: {
         loginId: {
@@ -885,7 +885,7 @@ module.exports = {
         enabled: true,
       },
       cache: {
-        enabled: true,
+        enabled: false,
         ttl: 120,
       },
       refSchema: {
@@ -985,6 +985,11 @@ module.exports = {
           required: false,
           description: "Optional end time for this assignment",
         },
+        runtimeScope: {
+          type: "object",
+          required: false,
+          description: "Direct RUNTIME_DEPLOYMENT assignment: approved projectCode, environmentCode, serverCode, instanceCode, modules and permissions. Profile governance validates this scope before storage and issuance.",
+        },
         reasonCode: {
           type: "string",
           required: false,
@@ -1048,8 +1053,8 @@ module.exports = {
       service: {
         enabled: true,
       },
-      router: {
-        enabled: false,
+      router: { groups: { schemaOperations: true },
+        enabled: true,
       },
       cache: {
         enabled: true,
@@ -1169,7 +1174,7 @@ module.exports = {
       model: true,
       service: { enabled: true },
       event: { enabled: false },
-      router: { enabled: false },
+      router: { groups: { schemaOperations: true }, enabled: true },
       definition: {
         migrationVersion: { type: "int", required: true , description: 'Stores the numeric migration version used by this record.'},
         status: { type: "string", required: true , description: 'Tracks the lifecycle state that controls whether this record can be used in business processes.'},

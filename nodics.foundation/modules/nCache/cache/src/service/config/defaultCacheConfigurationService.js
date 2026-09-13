@@ -71,6 +71,7 @@ module.exports = {
         return Object.assign({
             distributed: engineOptions.distributed === true,
             atomicConsume: engineOptions.atomicConsume === true,
+            atomicVersionWrite: engineOptions.atomicVersionWrite === true,
             ttl: true,
             nonExpiringTtl: true,
             prefixFlush: true,

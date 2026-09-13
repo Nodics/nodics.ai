@@ -96,3 +96,7 @@ Only trusted definitions from active modules may execute. Request payloads, uplo
 - Shared engine: [import](../import/README.md)
 - Data processing: [dataCore](../../dataCore/README.md)
 - Public data guide: [How To Work With Data](https://github.com/Nodics/nodics.docs)
+
+Merge source records by stable exported key within the owning dataset, never by
+business code. Keep persistence identity with import headers. See
+[source identity](llm/contracts/README.md#stable-source-record-identity).

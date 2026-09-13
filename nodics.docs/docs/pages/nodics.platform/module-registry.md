@@ -223,3 +223,121 @@ activated, deactivated, or deregistered.
 - Showing technical modules as first-class registry cards for business users.
 - Assuming deregistration stops a process. It changes project state; process
   lifecycle is still an operator/runtime concern.
+
+## Required data completion before activation
+
+When a capability declares required data releases, activation preflights them
+through nImport. Releases already current need no replay. Releases not installed,
+updated or previously failed are executed through the existing importer. Every
+required release must then be confirmed `CURRENT` before activation continues.
+A running, queued, missing or non-executable result blocks activation.
+
+For example, if Core import is still running when an administrator activates a
+capability, the activation receipt remains running and activation is refused.
+Wait for the owning import run to complete, inspect failures if present, then
+retry against the current catalogue revision. A refresh, accepted request or
+empty response is not import completion. This rule preserves the existing
+catalogue revision and runtime/readiness checks; it adds no new importer.
+
+## Runtime identity, activation and protected work
+
+A runtime declares what it wants to host; Profile decides what its authenticated
+service principal may host. Profile uses the existing `principalScopeAssignment`
+record with `scopeType: RUNTIME_DEPLOYMENT`. Each replica has a distinct principal,
+retained API-key proof and `runtimeIdentity.instanceCode`. The approved record
+binds tenant, enterprise, project, environment, server, instance, module names and
+explicit permissions. A business registration does not grant runtime identity.
+
+An operator may author a grant through the existing governed Profile data/API
+path. This example is an approval record, not a startup header or automatic
+self-enrollment request:
+
+```json
+{
+  "code": "warehouse-jobs-01",
+  "principalType": "service",
+  "principalCode": "warehouse-jobs-01",
+  "scopeType": "RUNTIME_DEPLOYMENT",
+  "scopeCode": "warehouse-jobs-01",
+  "tenantCode": "warehouse",
+  "enterpriseCode": "warehouseOperator",
+  "inheritanceMode": "DIRECT",
+  "status": "ACTIVE",
+  "effect": "ALLOW",
+  "runtimeScope": {
+    "projectCode": "warehouse",
+    "environmentCode": "production",
+    "serverCode": "jobsServer",
+    "instanceCode": "warehouse-jobs-01",
+    "modules": ["cronjob", "workflow"],
+    "permissions": ["auth.internal.token.read", "process.instance.start"]
+  }
+}
+```
+
+The module and permission arrays must describe the actual selected deployment,
+including its announced dependencies and required operations. The example is
+intentionally incomplete for a full server. Confirm permission names from the
+effective owning routers. The principal itself must hold every permission in the
+grant. Wildcard/group permissions do not propagate into the issued runtime JWT.
+A matching DENY, expired grant, mismatched coordinate or several matching ALLOW
+records rejects issuance. One service principal cannot represent multiple active
+instances.
+
+Provision the service principal and hashed API key through Profile's existing
+identity pipeline. For the first Profile authority, place approved records in
+trusted deployment initializer data; an existing authority can use its privileged
+management flow. Keep raw proof in deployment secret storage and resolve it via
+declarative environment/secret configuration. Do not commit it in a data pack or
+copy another replica's proof. Existing customer bootstrap admin credentials do
+not automatically become deployment approvals. A deployment must provision its
+records and runtime identity before adopting scoped startup.
+
+`defaultAuthDetail` supplies the instance's tenant-scoped proof and enterprise.
+`runtimeIdentity.instanceCode` supplies its explicit identity. Local and remote
+Profile issuance use the same authorization owner, including the initial authority
+startup. Tenant initialization awaits governed Init release completion before
+identity reconciliation and token issuance. A local Profile host has no direct
+token-issuance shortcut. Restart reuses securely retained
+proof and rechecks the grant; it does not repeat business registration. This
+built-in path uses Profile API-key authentication. It does not implement a
+single-use enrollment-grant provider.
+
+Credentials default to five minutes and cannot outlive their assignment. One
+asynchronous renewal loop refreshes before expiry with bounded concurrency and
+jitter/backoff; shutdown waits for in-flight renewal. Grant changes invalidate
+old credentials through Profile's existing principal update and shared security
+stamp. Atomic allocation prevents two Profile instances from choosing the same
+version, and atomic version writes prevent a stale issuer from reversing a
+revocation. Strict auth cache configuration requires a shared engine with atomic
+consume and atomic version writes, with local fallback disabled.
+
+Registration responses project activation from the existing functional catalogue.
+The registration agent refreshes this projection through its existing batched
+heartbeat. The default operational-state lifetime is 30 seconds, configurable
+from one to 60 seconds on both authority and runtime; the runtime uses the shorter
+lifetime. A failed heartbeat does not extend the last response. Deactivation
+therefore has bounded propagation, rather than an instantaneous cross-process
+promise. Expired or absent state denies new protected work.
+
+Cronjob checks this state and current JWT expiry/revocation/stamp immediately
+before invoking a job target. It forwards the verified runtime identity to a
+Process handoff and local target. A loaded schedule remains manageable while the
+business capability is inactive. New targets stop; an already-admitted job
+finishes or follows its existing recovery/cancellation contract. This performs
+existing authentication-cache checks per execution, without adding a Profile or
+registry HTTP round trip for each job. Performance acceptance must measure that
+cost; source-level tests are not throughput or production availability evidence.
+
+Process also checks its local `workflow` operational state before creating a new
+instance, including a start requested by Cronjob. Caller permissions and audit
+identity remain intact. Existing instances retain their task completion,
+cancellation and recovery rules after business deactivation.
+
+For HTTP calls, nRouter checks the requested module against the credential.
+Runtime tokens do not carry identity groups. Their base route eligibility comes
+from `authSecurity.internalToken.runtimeAccessGroups` (default `userGroup`), and
+explicit action permissions must match the approved token list. Restricted-group
+and human-only routes remain restricted. Legacy routes without an action
+permission require approved module scope and an eligible base access group;
+domain ownership and mutation checks still apply.
