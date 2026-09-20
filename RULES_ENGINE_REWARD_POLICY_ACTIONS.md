@@ -58,6 +58,11 @@ Estimated readiness before hardening:
    - Axis still does not evaluate rules, publish policies, resolve backend catalogues locally, or settle rewards.
    - Route-level and client tests prove version, audit, property-catalogue, and score-band calls stay on owner endpoints.
 
+4. Hardened Kickoff live Waste/Rules acceptance.
+   - Waste Management acceptance now loads the declared server `runtimeModuleRoots`, so the embedded acceptance runtime matches the real project server graph.
+   - Waste BackOffice discovery acceptance now reconciles the existing Profile-owned `RUNTIME_DEPLOYMENT` grant by preserving its approved scope and adding the missing Waste/Rules modules before starting Waste.
+   - Runtime discovery proved Waste starts with `wasteReward`, `rulesCore`, `rulesDefinition`, `rulesEvaluation`, `rulesApi`, and `nodics.rulesEngine`, and Platform discovers the Waste BackOffice capability through the live registry path.
+
 Validation evidence:
 
 - `npm test --prefix nodics.rulesEngine`: passed.
@@ -73,6 +78,11 @@ Validation evidence:
 - `npm run test:basic`: passed. Live runtime/provider checks were not executed by this suite and remain separate acceptance gates.
 - `npm run release:check -- --execute`: passed on the backend branch, including clean install, build, LLM validation, ownership, docs, and basic tests. Live runtime/provider checks were not executed by this suite and remain separate acceptance gates.
 - Axis `npm run verify`: passed after Rules workspace UX expansion, including format, lint, typecheck, 128 test files / 646 tests, and production build.
+- Circa eWaste `npm run verify`: passed, including typecheck, tests, and production build.
+- Kickoff `npm test`: passed.
+- Kickoff `npm run test:waste-runtime`: passed and proved the Waste server graph includes Waste Reward and Rules Engine modules.
+- Kickoff `npm run acceptance:waste-management`: passed against the project Waste runtime acceptance path.
+- Kickoff `npm run acceptance:waste-backoffice-discovery`: passed; Platform discovered `waste-management` via `wasteCore` with 28 navigation entries after governed runtime grant reconciliation.
 
 ## Immediate Fixes
 
@@ -129,8 +139,8 @@ Cross-repo gates:
 
 Live acceptance gates:
 
-- Start Kickoff topology with Rules Engine and Waste Reward active.
-- Confirm Rules API and Axis Rules Management bootstrap through BackOffice capability discovery.
+- Start Kickoff topology with Rules Engine and Waste Reward active. **Passed for the Waste runtime.**
+- Confirm Rules API and Axis Rules Management bootstrap through BackOffice capability discovery. **BackOffice discovery passed for Waste; browser-level Axis acceptance remains separate.**
 - Prepare draft -> validate -> simulate -> submit to Process approval -> publish.
 - Run eWaste estimated reward before approval.
 - Run confirmed reward after verification/asset confirmation.
