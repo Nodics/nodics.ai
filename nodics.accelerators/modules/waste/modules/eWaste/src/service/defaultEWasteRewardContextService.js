@@ -79,6 +79,24 @@ module.exports = {
         return path.split('.').reduce((value, key) => value && value[key], descriptor || {});
     },
 
+    rangeMidpoint: function (range) {
+        if (!range || typeof range !== 'object') return undefined;
+        let min = Number(range.min), max = Number(range.max);
+        return Number.isFinite(min) && Number.isFinite(max) && max >= min ? (min + max) / 2 : undefined;
+    },
+
+    observationValue: function (observation) {
+        if (observation && typeof observation === 'object' && Object.prototype.hasOwnProperty.call(observation, 'value'))
+            return observation.value === 'UNKNOWN' ? undefined : observation.value;
+        return observation === 'UNKNOWN' ? undefined : observation;
+    },
+
+    observationQuality: function (observation, fallback) {
+        let basis = observation && typeof observation === 'object' && observation.basis;
+        let normalized = this.provider().normalizeQuality(basis);
+        return normalized === 'UNAVAILABLE' ? fallback : normalized;
+    },
+
     build: function (request) {
         let submission = request.submission || {};
         let descriptor = request.descriptor || submission.metadata && submission.metadata.suggestion || {};
@@ -88,50 +106,63 @@ module.exports = {
         let factQuality = confirmed ? 'OPERATOR_VERIFIED' : 'CUSTOMER_CONFIRMED';
         let carbon = this.metric(impact, ['ESTIMATED_CO2E_SAVED_KG','NET_EMISSIONS_BENEFIT_KG_CO2E','AVOIDED_CO2E']);
         let landfill = this.metric(impact, ['DIVERTED_FROM_LANDFILL_KG']);
-        let approximateWeight = this.descriptorValue(descriptor, 'physical.approximateWeight.value') ||
-            this.descriptorValue(descriptor, 'approximateWeight.value') ||
-            this.descriptorValue(descriptor, 'approximateWeight');
-        if (approximateWeight && typeof approximateWeight === 'object') {
-            let min = Number(approximateWeight.min), max = Number(approximateWeight.max);
-            approximateWeight = Number.isFinite(min) && Number.isFinite(max) ? (min + max) / 2 : undefined;
-        }
-        let recordedWeight = facts.weight !== undefined ? Number(facts.weight) : undefined;
-        let materials = this.codes(facts.materialTypeCodes && facts.materialTypeCodes.length ? facts.materialTypeCodes : descriptor.materials);
-        let components = this.codes(descriptor.components);
-        let hazards = this.codes(descriptor.hazards || descriptor.environmental && descriptor.environmental.hazards);
-        let evidence = submission.metadata && submission.metadata.evidenceReview || {};
+        let suggestionFacts = descriptor.facts || {};
         let recognition = descriptor.recognition || {};
-        let unknownFields = this.codes(descriptor.unknownFields || recognition.unknownFields);
-        let lowConfidenceFields = this.codes(descriptor.lowConfidenceFields || recognition.lowConfidenceFields);
+        let environment = facts.environment || suggestionFacts.environment || {};
+        let approximateRange = facts.weightEstimate || suggestionFacts.weightEstimate ||
+            this.descriptorValue(descriptor, 'physical.approximateWeight') || descriptor.approximateWeight;
+        let approximateWeight = typeof approximateRange === 'number' ? approximateRange : this.rangeMidpoint(approximateRange);
+        let dimensions = facts.dimensionsEstimate || suggestionFacts.dimensionsEstimate || {};
+        let recordedWeight = facts.weight !== undefined ? Number(facts.weight) : undefined;
+        let materials = this.codes(
+            facts.materials && facts.materials.length ? facts.materials :
+            facts.materialTypeCodes && facts.materialTypeCodes.length ? facts.materialTypeCodes :
+            suggestionFacts.materials && suggestionFacts.materials.length ? suggestionFacts.materials :
+            recognition.materials
+        );
+        let components = this.codes(facts.components || suggestionFacts.components || recognition.components);
+        let hazards = this.codes(environment.hazards || facts.hazards || suggestionFacts.hazards);
+        let evidence = submission.metadata && submission.metadata.evidenceReview || {};
+        let descriptorOwner = typeof SERVICE !== 'undefined' && SERVICE.DefaultWasteItemDescriptorService;
+        let unknownFields = this.codes(
+            descriptor.unknownFields || recognition.unknownFields ||
+            (descriptorOwner && descriptorOwner.unknownFields ? descriptorOwner.unknownFields(facts) : [])
+        );
+        let lowConfidenceFields = this.codes(
+            descriptor.lowConfidenceFields || recognition.lowConfidenceFields ||
+            (descriptorOwner && descriptorOwner.lowConfidenceFields ? descriptorOwner.lowConfidenceFields(facts) : [])
+        );
         let qualityFlags = this.codes(evidence.qualityFlags || descriptor.qualityFlags || recognition.qualityFlags);
+        let completeness = descriptor.metadataCompleteness || descriptor.completenessScore;
+        if (!Number.isFinite(Number(completeness))) completeness = Math.max(0, 1 - unknownFields.length / 7);
         let properties = {
             'asset.domain': this.resolution('ELECTRONICS','REFERENCE_DEFAULT',1,'EWASTE_ACCELERATOR'),
             'asset.family': this.resolution(facts.familyCode || 'ELECTRONICS',factQuality,1,'FACTS'),
             'asset.category': this.resolution(facts.categoryCode, this.provenanceQuality(facts,'category',factQuality),1,'FACTS'),
             'asset.subCategory': this.resolution(facts.subCategoryCode, factQuality,1,'FACTS'),
             'asset.itemType': this.resolution(facts.itemTypeCode, this.provenanceQuality(facts,'itemType',factQuality),1,'FACTS'),
-            'asset.brand': this.resolution(facts.brand || descriptor.brand, facts.brand ? factQuality : 'AI_OBSERVED', descriptor.confidence, facts.brand ? 'FACTS':'IMAGE_AI'),
-            'asset.model': this.resolution(facts.model || descriptor.model, facts.model ? factQuality : 'AI_OBSERVED', descriptor.confidence, facts.model ? 'FACTS':'IMAGE_AI'),
-            'asset.condition': this.resolution(facts.conditionGrade || descriptor.condition, this.provenanceQuality(facts,'condition', facts.conditionGrade ? factQuality : 'AI_OBSERVED'), descriptor.confidence, facts.conditionGrade ? 'FACTS':'IMAGE_AI'),
-            'asset.quantity': this.resolution(facts.quantity || descriptor.quantity || 1, factQuality,1,'FACTS'),
-            'asset.handlingSize': this.resolution(facts.sizeClass || descriptor.handlingSize, this.provenanceQuality(facts,'size', facts.sizeClass ? factQuality : 'AI_INFERRED'), descriptor.confidence,'FACTS_OR_AI'),
+            'asset.brand': this.resolution(facts.brand || suggestionFacts.brand, facts.brand ? factQuality : 'AI_OBSERVED', descriptor.confidence, facts.brand ? 'FACTS':'IMAGE_AI'),
+            'asset.model': this.resolution(facts.model || suggestionFacts.model, facts.model ? factQuality : 'AI_OBSERVED', descriptor.confidence, facts.model ? 'FACTS':'IMAGE_AI'),
+            'asset.condition': this.resolution(facts.conditionGrade || suggestionFacts.conditionGrade, this.provenanceQuality(facts,'condition', facts.conditionGrade ? factQuality : 'AI_OBSERVED'), descriptor.confidence, facts.conditionGrade ? 'FACTS':'IMAGE_AI'),
+            'asset.quantity': this.resolution(facts.quantity || suggestionFacts.quantity || 1, factQuality,1,'FACTS'),
+            'asset.handlingSize': this.resolution(facts.sizeClass || suggestionFacts.sizeClass, this.provenanceQuality(facts,'size', facts.sizeClass ? factQuality : 'AI_INFERRED'), descriptor.confidence,'FACTS_OR_AI'),
             'asset.recordedWeight': this.resolution(recordedWeight, this.provenanceQuality(facts,'weight', confirmed ? 'VERIFIED_MEASUREMENT' : factQuality),1,'FACTS'),
             'asset.approximateWeight': this.resolution(Number(approximateWeight), 'AI_INFERRED', descriptor.confidence,'IMAGE_AI'),
-            'asset.length': this.resolution(Number(this.descriptorValue(descriptor,'physical.length.value')), 'AI_INFERRED',descriptor.confidence,'IMAGE_AI'),
-            'asset.width': this.resolution(Number(this.descriptorValue(descriptor,'physical.width.value')), 'AI_INFERRED',descriptor.confidence,'IMAGE_AI'),
-            'asset.height': this.resolution(Number(this.descriptorValue(descriptor,'physical.height.value')), 'AI_INFERRED',descriptor.confidence,'IMAGE_AI'),
+            'asset.length': this.resolution(this.rangeMidpoint(dimensions.length), 'AI_INFERRED',descriptor.confidence,'IMAGE_AI'),
+            'asset.width': this.resolution(this.rangeMidpoint(dimensions.width), 'AI_INFERRED',descriptor.confidence,'IMAGE_AI'),
+            'asset.height': this.resolution(this.rangeMidpoint(dimensions.height), 'AI_INFERRED',descriptor.confidence,'IMAGE_AI'),
             'environment.carbonImpact': this.resolution(this.metricValue(carbon), this.carbonQuality(impact,confirmed), impact.confidence,'WASTE_IMPACT'),
-            'environment.recyclability': this.resolution(this.descriptorValue(descriptor,'environmental.recyclability') || descriptor.recyclability,'AI_INFERRED',descriptor.confidence,'IMAGE_AI'),
+            'environment.recyclability': this.resolution(this.observationValue(environment.recyclability),this.observationQuality(environment.recyclability,'AI_INFERRED'),environment.recyclability && environment.recyclability.confidence || descriptor.confidence,'IMAGE_AI'),
             'environment.reusePotential': this.resolution(this.descriptorValue(descriptor,'environmental.reusePotential') || descriptor.reusePotential,'AI_INFERRED',descriptor.confidence,'IMAGE_AI'),
             'environment.refurbishmentPotential': this.resolution(this.descriptorValue(descriptor,'environmental.refurbishmentPotential') || descriptor.refurbishmentPotential,'AI_INFERRED',descriptor.confidence,'IMAGE_AI'),
-            'environment.recoveryPotential': this.resolution(this.descriptorValue(descriptor,'environmental.recoveryPotential') || descriptor.recoveryPotential,'AI_INFERRED',descriptor.confidence,'IMAGE_AI'),
+            'environment.recoveryPotential': this.resolution(this.observationValue(environment.recoveryPotential),this.observationQuality(environment.recoveryPotential,'AI_INFERRED'),environment.recoveryPotential && environment.recoveryPotential.confidence || descriptor.confidence,'IMAGE_AI'),
             'environment.landfillDiversion': this.resolution(this.metricValue(landfill), this.carbonQuality(impact,confirmed),impact.confidence,'WASTE_IMPACT'),
-            'environment.contamination': this.resolution(this.descriptorValue(descriptor,'environmental.contamination') || descriptor.contamination,'AI_OBSERVED',descriptor.confidence,'IMAGE_AI'),
+            'environment.contamination': this.resolution(this.observationValue(environment.contamination),this.observationQuality(environment.contamination,'AI_OBSERVED'),environment.contamination && environment.contamination.confidence || descriptor.confidence,'IMAGE_AI'),
             'materials': this.resolution(materials,'AI_INFERRED',descriptor.confidence,'IMAGE_AI_OR_FACTS'),
             'components': this.resolution(components,'AI_INFERRED',descriptor.confidence,'IMAGE_AI'),
             'hazards': this.resolution(hazards,'AI_OBSERVED',descriptor.confidence,'IMAGE_AI'),
             'metadata.overallConfidence': this.resolution(Number(descriptor.confidence),'AI_INFERRED',descriptor.confidence,'IMAGE_AI'),
-            'metadata.completenessScore': this.resolution(Number(descriptor.metadataCompleteness || descriptor.completenessScore),'AI_INFERRED',descriptor.confidence,'IMAGE_AI'),
+            'metadata.completenessScore': this.resolution(Number(completeness),'AI_INFERRED',descriptor.confidence,'SYSTEM_DERIVED'),
             'metadata.manualVerificationRequired': this.resolution(Boolean(evidence.manualApprovalRequired),'AI_OBSERVED',1,'EVIDENCE_POLICY'),
             'metadata.unknownFields': this.resolution(unknownFields,'AI_INFERRED',descriptor.confidence,'IMAGE_AI'),
             'metadata.lowConfidenceFields': this.resolution(lowConfidenceFields,'AI_INFERRED',descriptor.confidence,'IMAGE_AI'),
