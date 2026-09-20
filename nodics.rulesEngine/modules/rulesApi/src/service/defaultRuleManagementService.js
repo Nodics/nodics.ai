@@ -60,6 +60,24 @@ module.exports = {
         };
     },
 
+    propertyValues: async function (request) {
+        this.lifecycle().assertCode(request.propertyProviderCode);
+        this.lifecycle().assertCode(request.propertyCode);
+        let values = await SERVICE.DefaultRulePropertyCatalogueRegistryService.resolveAllowedValues(
+            request.propertyProviderCode,
+            {
+                propertyCode: request.propertyCode,
+                context: {
+                    request: request,
+                    tenant: request.tenant,
+                    consumerModule: request.query && request.query.consumerModule,
+                    filters: request.query || {}
+                }
+            }
+        );
+        return { code: 'RULE_PROPERTY_VALUES', data: values || [] };
+    },
+
     listBandSets: async function (request) {
         let response = await SERVICE.DefaultScoreBandSetService.get(this.serviceRequest(request, {
             query: request.query || {},
