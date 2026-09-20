@@ -24,7 +24,7 @@ module.exports = {
     capabilityDataService: function () {
         return typeof SERVICE !== 'undefined' && SERVICE.DefaultBackofficeCapabilityDataService
             ? SERVICE.DefaultBackofficeCapabilityDataService
-            : require('../../../../nodics.foundation/modules/nService/src/service/module/defaultBackofficeCapabilityDataService');
+            : require('../../../../../nodics.foundation/modules/nService/src/service/module/defaultBackofficeCapabilityDataService');
     },
     buildCapability: function (data) {
         return this.capabilityDataService().capability(data);
