@@ -110,8 +110,8 @@ module.exports = {
             rewardOutcome: scoreBand && scoreBand.outcome || null,
             outcomes: matchedOutcomes,
             groupResults: groupResults,
-            matchedRules: allGroupResults.filter(result => result.matched).map(result => result.groupCode),
-            skippedRules: allGroupResults.filter(result => !result.matched).map(result => result.groupCode),
+            matchedRules: allGroupResults.filter(result => result.matched && result.outcome).map(result => result.groupCode),
+            skippedRules: allGroupResults.filter(result => !result.matched && result.outcome).map(result => result.groupCode),
             correlationId: request.correlationId || null
         };
         evidence.sourceHash = crypto.createHash('sha256').update(JSON.stringify(evidence)).digest('hex');
