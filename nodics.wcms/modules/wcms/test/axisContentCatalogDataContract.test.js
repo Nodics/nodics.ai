@@ -30,12 +30,17 @@ const routes = records(load('axisCmsRouteData'));
 const header = require(path.join(axisModuleRoot, 'data/init-v001/headers/axis/axisContentCatalogHeader'));
 const axisDataSets = [catalog, sites, types, renderers, slots, templates, components, pages, routes];
 
-assert.strictEqual(wcmsProperties.apiExposure.categories.dataImport.enabled, true,
-    'WCMS must expose governed dataImport routes for documentation content-pack lifecycle');
-assert.strictEqual(wcmsProperties.apiExposure.categories.dataExport.enabled, true,
-    'WCMS must expose governed dataExport routes for content and media export lifecycle');
-assert.strictEqual(wcmsProperties.apiExposure.categories.mediaManagement.enabled, true,
-    'WCMS must expose governed mediaManagement routes because media is part of the WCMS functional module');
+const frameworkRoot = path.resolve(moduleRoot, '../../..');
+const importProperties = require(path.join(frameworkRoot, 'nodics.foundation/modules/nData/nImport/import/config/properties'));
+const exportProperties = require(path.join(frameworkRoot, 'nodics.foundation/modules/nData/nExport/export/config/properties'));
+const mediaProperties = require('../../media/config/properties');
+assert.strictEqual(importProperties.apiExposure.categories.dataImport.enabled, false,
+    'Import must remain closed until a deployment explicitly enables governed data imports');
+assert.strictEqual(exportProperties.apiExposure.categories.dataExport.enabled, false,
+    'Export must remain closed until a deployment explicitly enables governed data exports');
+assert.strictEqual(mediaProperties.apiExposure.categories.mediaManagement.enabled, true,
+    'Media must own its mediaManagement route default');
+assert.strictEqual(wcmsProperties.apiExposure, undefined, 'WCMS group must not duplicate capability route defaults');
 assert.strictEqual(wcmsProperties.data.contentPacks.enabled, true,
     'WCMS must enable documentation content packs because CMS owns documentation routes and pages');
 assert.deepStrictEqual(wcmsProperties.data.contentPacks.packs.axisDocumentation.source, {

@@ -27,8 +27,9 @@ const wcmsProperties = require(path.join(root, 'config/properties'));
 const authProperties = require(path.join(root, '../nodics.foundation/modules/nAuth/config/properties'));
 const profileGroups = require(path.join(root, '../nodics.platform/modules/profile/data/init-v001/records/groups/defaultBootstrapUserGroupsData'));
 
-assert.strictEqual(wcmsProperties.apiExposure.categories.cmsAuthoring.enabled, true,
-    'WCMS must enable cmsAuthoring at module default so server config only carries topology deltas');
+assert.strictEqual(require('../config/properties').apiExposure.categories.cmsAuthoring.enabled, true,
+    'CMS must own its cmsAuthoring route default so server config only carries intentional deltas');
+assert.strictEqual(wcmsProperties.apiExposure, undefined, 'WCMS group must not duplicate capability route defaults');
 assert.strictEqual(wcmsProperties.cms, undefined, 'WCMS group must not select a customer authoring application');
 const cmsProperties = require('../config/properties');
 assert.deepStrictEqual(cmsProperties.cms.designerAuthoring.draftDefaults, {});
