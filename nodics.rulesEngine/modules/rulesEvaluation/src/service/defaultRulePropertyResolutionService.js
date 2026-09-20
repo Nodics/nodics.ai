@@ -13,53 +13,70 @@
 
 /**
  * @module rulesEvaluation/src/service/defaultRulePropertyResolutionService
- * @description Resolves consumer-owned properties and bounded fallback candidates before generic condition evaluation.
+ * @description Resolves one consumer property and its approved fallback while enforcing normalized quality/confidence requirements.
  * @layer service
  * @owner rulesEvaluation
  */
 module.exports = {
-    available: function (resolved) {
-        return Boolean(resolved && resolved.available !== false && resolved.value !== undefined && resolved.value !== null && resolved.value !== '');
+    registry: function () {
+        return typeof SERVICE !== 'undefined' && SERVICE.DefaultRulePropertyCatalogueRegistryService
+            ? SERVICE.DefaultRulePropertyCatalogueRegistryService
+            : require('../../../rulesCore/src/service/defaultRulePropertyCatalogueRegistryService');
     },
 
-    resolvePrimary: async function (provider, condition, context) {
-        let result = await provider.resolveProperty({
+    quality: function () {
+        return typeof SERVICE !== 'undefined' && SERVICE.DefaultRuleQualityService
+            ? SERVICE.DefaultRuleQualityService
+            : require('./defaultRuleQualityService');
+    },
+
+    available: function (resolution) {
+        return Boolean(resolution && resolution.available === true &&
+            resolution.value !== undefined && resolution.value !== null && resolution.value !== '');
+    },
+
+    acceptable: function (resolution, condition) {
+        return this.available(resolution) &&
+            this.quality().meets(resolution.quality, condition.minimumInputQuality) &&
+            this.quality().confidenceMeets(resolution.confidence, condition.minimumConfidence);
+    },
+
+    primary: function (providerCode, condition, evaluationContext) {
+        return this.registry().resolveProperty(providerCode, {
             propertyCode: condition.propertyCode,
             condition: condition,
-            context: context
-        });
-        return Object.assign({
-            available: this.available(result),
-            propertyCode: condition.propertyCode,
-            fallbackUsed: false
-        }, result || {});
+            context: evaluationContext.input || {},
+            evaluationContext: evaluationContext
+        }) || { available: false, quality: 'UNAVAILABLE', source: 'UNAVAILABLE' };
     },
 
-    resolveFallback: async function (provider, condition, context, previous) {
-        if (typeof provider.resolveFallback !== 'function') return previous;
-        let result = await provider.resolveFallback({
+    fallback: function (providerCode, condition, evaluationContext, current) {
+        return this.registry().resolveFallback(providerCode, {
             propertyCode: condition.propertyCode,
             condition: condition,
-            context: context,
-            previous: previous
-        });
-        if (!result) return previous;
-        return Object.assign({
-            available: this.available(result),
-            propertyCode: condition.propertyCode,
-            fallbackUsed: true
-        }, result);
+            context: evaluationContext.input || {},
+            currentResolution: current,
+            minimumInputQuality: condition.minimumInputQuality,
+            minimumConfidence: condition.minimumConfidence,
+            evaluationContext: evaluationContext
+        }) || { available: false, quality: 'UNAVAILABLE', source: 'UNAVAILABLE' };
     },
 
-    resolve: async function (provider, condition, context, qualityService) {
-        let resolved = await this.resolvePrimary(provider, condition, context);
-        let usable = this.available(resolved) && qualityService.meets(resolved, condition);
-        if (usable || condition.missingValueBehavior !== 'FALLBACK_ALLOWED') {
-            return Object.assign({}, resolved, { usable: usable });
+    resolve: function (providerCode, condition, evaluationContext) {
+        let resolution = this.primary(providerCode, condition, evaluationContext);
+        let acceptable = this.acceptable(resolution, condition);
+        let fallbackUsed = false;
+
+        if (!acceptable && condition.missingValueBehavior === 'FALLBACK_ALLOWED') {
+            resolution = this.fallback(providerCode, condition, evaluationContext, resolution);
+            fallbackUsed = this.available(resolution);
+            acceptable = this.acceptable(resolution, condition);
         }
-        let fallback = await this.resolveFallback(provider, condition, context, resolved);
-        return Object.assign({}, fallback, {
-            usable: this.available(fallback) && qualityService.meets(fallback, condition)
-        });
+
+        return {
+            resolution: resolution,
+            acceptable: acceptable,
+            fallbackUsed: fallbackUsed
+        };
     }
 };
