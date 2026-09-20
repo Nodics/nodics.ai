@@ -82,6 +82,12 @@ module.exports = {
                 permission: 'rules.definition.read', apiExposure: 'rulesManagement',
                 key: '/property-catalogues/:propertyProviderCode', method: 'GET',
                 controller: 'DefaultRuleDefinitionController', operation: 'propertyCatalogue'
+            },
+            getPropertyValues: {
+                secured: true, authTokenTypes: ['access'], accessGroups: ['userGroup'],
+                permission: 'rules.definition.read', apiExposure: 'rulesManagement',
+                key: '/property-catalogues/:propertyProviderCode/properties/:propertyCode/values', method: 'GET',
+                controller: 'DefaultRuleDefinitionController', operation: 'propertyValues'
             }
         },
         processActions: {
