@@ -57,9 +57,14 @@ Validation evidence:
 - `npm test --prefix nodics.rulesEngine`: passed.
 - `npm test --prefix nodics.waste/modules/wasteReward`: passed.
 - `npm test --prefix nodics.accelerators/modules/waste/modules/eWaste`: passed.
+- `npm run llm:generate`: passed, generated module LLM context for 202 modules and left no tracked diff.
+- `npm run llm:validate`: passed, 202 generated modules validated.
+- `npm run validate:root`: passed, framework root validated with 12 backend workspaces.
 - `npm run module:metadata:validate`: passed, 204 packages validated.
 - `npm run quality:ownership`: passed, 7096 files checked, 0 findings.
 - `npm run check:syntax`: passed, 4934 files checked, 0 failures.
+- `npm run quality:docs`: passed.
+- `npm run test:basic`: passed. Live runtime/provider checks were not executed by this suite and remain separate acceptance gates.
 
 ## Immediate Fixes
 
@@ -85,7 +90,8 @@ Validation evidence:
 4. Run dependency-backed validation from a clean install.
    - Owner: release validation.
    - Problem: isolated worktree validation was blocked by missing installed dependencies (`lodash`, `flatted`).
-   - Expected fix: run `npm ci` in the feature worktree or validate in an already installed clean checkout, then rerun the gates below.
+   - Evidence: installed-checkout gates passed through `npm run test:basic`.
+   - Remaining: run `npm run release:check -- --execute` or an equivalent clean checkout validation before final merge approval.
 
 ## Framework Compliance Gates
 
@@ -99,6 +105,9 @@ Backend gates:
 - `npm run quality:ownership`
 - `npm run llm:generate`
 - `npm run llm:validate`
+- `npm run validate:root`
+- `npm run quality:docs`
+- `npm run test:basic`
 
 Cross-repo gates:
 
