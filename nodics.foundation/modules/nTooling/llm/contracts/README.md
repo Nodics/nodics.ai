@@ -1,5 +1,10 @@
 # nTooling AI Contracts
 
+Content-pack package identities may use dot-separated alphanumeric identifier
+segments, each starting with a letter. Preserve these identities when relocating
+governed data into an accelerator. Capability identifiers retain their existing
+single-segment rule; path separators and empty segments remain invalid.
+
 This folder contains module-specific AI/developer contracts for `nodics.foundation/modules/nTooling`.
 
 Use these files for rules that are more specific than root `AGENTS.md` and the module `AGENTS.md`, especially extension boundaries, override expectations, testing rules, security constraints, and generated-artifact responsibilities.

@@ -71,6 +71,19 @@ const generationTemplateNames = new Set(['common.js']);
 const runtimeNames = new Map();
 const modules = scanModules();
 
+/** Content packs preserve namespaced import identities when moved into an accelerator. */
+function validRuntimeName(packageJson) {
+    const kind = packageJson.nodics?.kind;
+    return /^[A-Za-z][A-Za-z0-9]*$/.test(packageJson.name) ||
+        (kind === 'group' && /^nodics\.[a-z][a-z0-9]*$/.test(packageJson.name)) ||
+        (kind === 'content-pack' && /^[A-Za-z][A-Za-z0-9]*(?:\.[A-Za-z][A-Za-z0-9]*)+$/.test(packageJson.name));
+}
+assert(validRuntimeName({ name: 'example.content', nodics: { kind: 'content-pack' } }));
+for (const name of ['../content', 'example..content', '.content', 'example/content']) {
+    assert(!validRuntimeName({ name, nodics: { kind: 'content-pack' } }));
+}
+assert(!validRuntimeName({ name: 'example.content', nodics: { kind: 'capability' } }));
+
 modules.forEach(moduleObject => {
     const packageJson = moduleObject.packageJson;
     const nodics = packageJson.nodics || {};
@@ -87,9 +100,7 @@ modules.forEach(moduleObject => {
     assert.deepStrictEqual(readmes, ['README.md'],
         'Module must contain exactly one canonical README.md: ' + moduleObject.relativePath);
 
-    const validRuntimeName = /^[A-Za-z][A-Za-z0-9]*$/.test(packageJson.name) ||
-        (nodics.kind === 'group' && /^nodics\.[a-z][a-z0-9]*$/.test(packageJson.name));
-    assert(validRuntimeName,
+    assert(validRuntimeName(packageJson),
         'Invalid package runtime name: ' + moduleObject.relativePath + ' -> ' + packageJson.name);
 
     if (nodics.kind !== 'template') {

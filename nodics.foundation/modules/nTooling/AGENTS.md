@@ -16,6 +16,10 @@ write boundary and the separate Nodics contribution and release process.
 
 ## Module Work Rules
 
+- Content-pack packages may retain dot-separated identifier segments so moving
+  governed reference data into an accelerator does not rename import identities.
+  This exception does not apply to capability names or permit paths/empty segments.
+
 - Preserve post-start runtime failure isolation. Environment `dependsOn` is
   startup ordering, not a cascade-shutdown policy. Startup rollback and explicit
   operator stop remain separate from loss of an already-ready runtime. Validate
