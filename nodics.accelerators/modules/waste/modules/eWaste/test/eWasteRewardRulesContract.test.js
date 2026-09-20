@@ -96,7 +96,7 @@ SERVICE.DefaultScoreBandSetVersionService = {
         ]
     }] })
 };
-SERVICE.DefaultEWasteRewardAssessmentService = {
+SERVICE.DefaultWasteRewardAssessmentService = {
     get: async request => ({ result:saved.filter(row => row.code === request.query.code) }),
     save: async request => { saved.push(request.model); return { result:request.model }; }
 };
