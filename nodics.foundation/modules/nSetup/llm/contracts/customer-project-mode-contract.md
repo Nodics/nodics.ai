@@ -4,6 +4,15 @@ This contract applies to every implementation partner, customer developer,
 Nodics application team, and AI tool building on Nodics, across all domains.
 It implements the ownership principle in [nodics-principles.md](nodics-principles.md).
 
+## Token Optimisation
+
+Every customer project and partner AI tool must follow
+[Token Optimisation And Proportionate Execution](nodics-principles.md#token-optimisation-and-proportionate-execution).
+Reference the framework principle from project guidance instead of copying it.
+Validate the affected project boundary and consumed dependency version; do not
+repeat framework-wide checks merely to commit customer-owned changes. Required
+project release, security and exact-commit CI gates still apply.
+
 ## Partner Write Boundary
 
 Partners write only to their customer-owned backend and frontend repositories.

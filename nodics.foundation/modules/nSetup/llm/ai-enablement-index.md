@@ -14,6 +14,11 @@ Read root README.md, root AGENTS.md, CONTRIBUTING.md when source or docs may cha
 
 ## Token-Efficient Reading Contract
 
+Apply [Token Optimisation And Proportionate Execution](contracts/nodics-principles.md#token-optimisation-and-proportionate-execution)
+across reading, implementation, validation and releases in every customer project.
+Required reading means establishing applicable context, not rereading unchanged
+files at every step. Reuse reliable task context and refresh on relevant change.
+
 Do not load the complete enablement pack for every small edit. Use progressive
 disclosure so AI-assisted development remains affordable without weakening the
 Nodics contract.
