@@ -46,6 +46,12 @@ module.exports = {
             : require('./defaultScoreBandResolutionService');
     },
 
+    outcomeRegistry: function () {
+        return typeof SERVICE !== 'undefined' && SERVICE.DefaultRuleOutcomeRegistryService
+            ? SERVICE.DefaultRuleOutcomeRegistryService
+            : require('../../../rulesCore/src/service/defaultRuleOutcomeRegistryService');
+    },
+
     evaluate: function (request) {
         if (!request || !request.ruleSet || !request.propertyProviderCode) {
             throw new Error('Rule-set snapshot and property provider are required');
@@ -64,6 +70,14 @@ module.exports = {
         let matchedOutcomes = groupResults
             .filter(result => result.matched && result.outcome)
             .map(result => ({ groupCode: result.groupCode, outcome: result.outcome }));
+        matchedOutcomes.forEach(result => {
+            let validation = this.outcomeRegistry().validate(result.outcome);
+            if (!validation || validation.valid !== true) {
+                let error = new Error('Rule outcome validation failed during evaluation');
+                error.issues = validation && validation.issues || [];
+                throw error;
+            }
+        });
         let calculatedScore = matchedOutcomes
             .reduce((total, result) => total + this.scoreFromOutcome(result.outcome), 0);
         let finalScore = this.clamp(calculatedScore, ruleSet.minimumScore, ruleSet.maximumScore);
