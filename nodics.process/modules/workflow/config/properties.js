@@ -73,6 +73,17 @@ module.exports = {
                         apiName: '/workflow/actions/publishApproved',
                     },
                 },
+                'rulesApi.applyDecision': {
+                    moduleName: 'rulesApi',
+                    operation: 'applyDecision',
+                    remote: {
+                        target: 'rulesApi',
+                        moduleName: 'rulesApi',
+                        runtimeRole: 'WASTE',
+                        apiName: '/workflow/actions/applyDecision',
+                        requiresCompletedTask: true,
+                    },
+                },
             },
         },
         remoteActions: {
