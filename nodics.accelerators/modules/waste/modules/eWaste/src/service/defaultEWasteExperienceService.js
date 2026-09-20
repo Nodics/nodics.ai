@@ -311,9 +311,51 @@ module.exports = {
     request.photo = this.unwrap(result);
     return SERVICE.DefaultWasteMetadataAnalysisService.suggest(request);
   },
-  /** Calculates advisory impact for explicit customer review. */
-  estimate: function (request) {
-    return SERVICE.DefaultWasteSubmissionOperationService.estimate(request);
+  /** Calculates advisory impact and, when a governed reward policy is active, persists an immutable estimated reward assessment. */
+  estimate: async function (request) {
+    let submission = await SERVICE.DefaultWasteSubmissionOperationService.estimate(request);
+    if (!SERVICE.DefaultEWasteRewardAssessmentOperationService) return submission;
+    try {
+      const assessment = await SERVICE.DefaultEWasteRewardAssessmentOperationService.assessEstimated({
+        ...request,
+        submission,
+        facts: submission.confirmedFacts || submission.submittedFacts || {},
+        descriptor: submission.metadata && submission.metadata.suggestion,
+        impact: submission.metadata && submission.metadata.estimate,
+        sourceRevision: submission.revision,
+        idempotencyKey: (request.idempotencyKey || submission.code) + ":estimated-reward",
+      });
+      if (!assessment || !assessment.code) return submission;
+      const summary = {
+        assessmentCode: assessment.code,
+        assessmentType: assessment.assessmentType,
+        rewardScore: assessment.finalScore,
+        scoreBandCode: assessment.scoreBandCode,
+        rewardTypeCode: assessment.rewardTypeCode,
+        rewardAmount: assessment.rewardAmount,
+        policyCode: assessment.policyCode,
+        policyVersion: assessment.policyVersion,
+        calculatedAt: assessment.calculatedAt,
+      };
+      submission = await this.store().update("wasteSubmission", request, submission, {
+        metadata: {
+          ...(submission.metadata || {}),
+          estimatedRewardAssessmentRef: {
+            module: "eWaste",
+            schema: "eWasteRewardAssessment",
+            code: assessment.code,
+          },
+          estimatedReward: summary,
+        },
+      });
+    } catch (error) {
+      // Reward configuration is optional for submission preparation. Environmental
+      // assessment remains authoritative and the customer can still submit the item.
+      submission.rewardAssessmentStatus = "UNAVAILABLE";
+      submission.rewardAssessmentMessage =
+        "A reward estimate is not available for the current programme configuration.";
+    }
+    return submission;
   },
   /** Confirms submission facts and preserves original evidence. */
   confirm: function (request) {
@@ -583,8 +625,70 @@ module.exports = {
   outcomeResolve:function(request){return SERVICE.DefaultEWasteOutcomeCommunicationService.resolve(request);},
   /** Retries only notification for a scope-authorized recorded decision through the Communication adapter. */
   outcomeRetry:function(request){return SERVICE.DefaultEWasteOutcomeCommunicationService.retry(request);},
-  /** Completes domain settlement after a persisted decision; later layers can decorate outcome delivery without owning the decision. */
+  /** Completes eWaste post-review orchestration. Confirmed reward assessment is recorded before the existing settlement seam is invoked. */
   finishReview: async function (request, result) {
+    if (result.asset && result.submission && SERVICE.DefaultEWasteRewardAssessmentOperationService) {
+      try {
+        const verificationCode =
+          result.submission.verificationRef && result.submission.verificationRef.code;
+        const verification = verificationCode
+          ? await this.store().one("wasteVerification", request, verificationCode)
+          : undefined;
+        const facts =
+          (result.submission.metadata && result.submission.metadata.reviewedFacts) ||
+          (verification && verification.verifiedFacts) ||
+          result.submission.confirmedFacts ||
+          result.submission.submittedFacts ||
+          {};
+        const assessment =
+          await SERVICE.DefaultEWasteRewardAssessmentOperationService.assessConfirmed({
+            ...request,
+            submission: result.submission,
+            asset: result.asset,
+            facts,
+            descriptor:
+              result.submission.metadata && result.submission.metadata.suggestion,
+            impact: result.impact ||
+              (result.submission.metadata && result.submission.metadata.approvedEstimate),
+            verification,
+            sourceRevision: result.submission.revision,
+            idempotencyKey:
+              (request.idempotencyKey || result.submission.code) +
+              ":confirmed-reward",
+          });
+        if (assessment && assessment.code) {
+          const summary = {
+            assessmentCode: assessment.code,
+            assessmentType: assessment.assessmentType,
+            rewardScore: assessment.finalScore,
+            scoreBandCode: assessment.scoreBandCode,
+            rewardTypeCode: assessment.rewardTypeCode,
+            rewardAmount: assessment.rewardAmount,
+            policyCode: assessment.policyCode,
+            policyVersion: assessment.policyVersion,
+            calculatedAt: assessment.calculatedAt,
+          };
+          result.asset = await this.store().update("wasteAsset", request, result.asset, {
+            metadata: {
+              ...(result.asset.metadata || {}),
+              confirmedRewardAssessmentRef: {
+                module: "eWaste",
+                schema: "eWasteRewardAssessment",
+                code: assessment.code,
+              },
+              confirmedReward: summary,
+            },
+          });
+          result.rewardAssessment = assessment;
+        }
+      } catch (error) {
+        // Approval remains authoritative even when a reward programme is not yet
+        // configured. Milestone 6 will settle only a persisted CONFIRMED assessment.
+        result.rewardAssessmentStatus = "PENDING";
+        result.rewardAssessmentMessage =
+          "Approval is saved. Confirmed reward assessment needs configuration or retry.";
+      }
+    }
     if (result.asset) {
       try {
         result.asset = await this.settle(request, result.asset);
