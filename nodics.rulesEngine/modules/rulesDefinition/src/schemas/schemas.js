@@ -17,9 +17,10 @@ module.exports = {
         ruleSet: {
             super: 'base',
             model: true,
+            schemaPolicies: ['operational'],
             service: { enabled: true },
             cache: { enabled: false },
-            router: { groups: { schemaOperations: true }, enabled: true },
+            router: { enabled: false },
             search: { enabled: true, idPropertyName: 'code' },
             definition: {
                 description: { type: 'string', required: false, description: 'Business-readable purpose of this governed rule set.' },
@@ -54,9 +55,10 @@ module.exports = {
             backoffice: { mutationMode: 'READ_ONLY', operations: ['search','read'] },
             super: 'base',
             model: true,
+            schemaPolicies: ['operational'],
             service: { enabled: true },
             cache: { enabled: false },
-            router: { groups: { schemaOperations: true }, enabled: true },
+            router: { enabled: false },
             search: { enabled: true, idPropertyName: 'code' },
             definition: {
                 ruleSetCode: { type: 'string', required: true, description: 'Owning stable rule-set code.' },
@@ -90,9 +92,10 @@ module.exports = {
         scoreBandSet: {
             super: 'base',
             model: true,
+            schemaPolicies: ['operational'],
             service: { enabled: true },
             cache: { enabled: false },
-            router: { groups: { schemaOperations: true }, enabled: true },
+            router: { enabled: false },
             search: { enabled: true, idPropertyName: 'code' },
             definition: {
                 description: { type: 'string', required: false, description: 'Business-readable purpose of the score-band mapping.' },
@@ -114,9 +117,10 @@ module.exports = {
             backoffice: { mutationMode: 'READ_ONLY', operations: ['search','read'] },
             super: 'base',
             model: true,
+            schemaPolicies: ['operational'],
             service: { enabled: true },
             cache: { enabled: false },
-            router: { groups: { schemaOperations: true }, enabled: true },
+            router: { enabled: false },
             search: { enabled: true, idPropertyName: 'code' },
             definition: {
                 bandSetCode: { type: 'string', required: true, description: 'Owning score-band-set code.' },
