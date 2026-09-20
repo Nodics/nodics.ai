@@ -33,6 +33,16 @@ module.exports = {
         return score;
     },
 
+    flattenGroups: function (groups) {
+        let result = [];
+        let visit = function (group) {
+            result.push(group);
+            (group.childGroups || []).forEach(visit);
+        };
+        (groups || []).forEach(visit);
+        return result;
+    },
+
     clamp: function (score, minimum, maximum) {
         let result = score;
         if (Number.isFinite(Number(minimum))) result = Math.max(result, Number(minimum));
@@ -67,7 +77,8 @@ module.exports = {
             .sort((left, right) => (left.sequence || 0) - (right.sequence || 0))
             .map(group => this.groupService().evaluate(group, evaluationContext, 1));
 
-        let matchedOutcomes = groupResults
+        let allGroupResults = this.flattenGroups(groupResults);
+        let matchedOutcomes = allGroupResults
             .filter(result => result.matched && result.outcome)
             .map(result => ({ groupCode: result.groupCode, outcome: result.outcome }));
         matchedOutcomes.forEach(result => {
@@ -99,8 +110,8 @@ module.exports = {
             rewardOutcome: scoreBand && scoreBand.outcome || null,
             outcomes: matchedOutcomes,
             groupResults: groupResults,
-            matchedRules: groupResults.filter(result => result.matched).map(result => result.groupCode),
-            skippedRules: groupResults.filter(result => !result.matched).map(result => result.groupCode),
+            matchedRules: allGroupResults.filter(result => result.matched).map(result => result.groupCode),
+            skippedRules: allGroupResults.filter(result => !result.matched).map(result => result.groupCode),
             correlationId: request.correlationId || null
         };
         evidence.sourceHash = crypto.createHash('sha256').update(JSON.stringify(evidence)).digest('hex');
