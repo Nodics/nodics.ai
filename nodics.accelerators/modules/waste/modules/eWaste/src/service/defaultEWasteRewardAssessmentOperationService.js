@@ -121,7 +121,7 @@ module.exports = {
     },
 
     existing: async function (request, code) {
-        let response = await SERVICE.DefaultEWasteRewardAssessmentService.get(this.serviceRequest(request, {
+        let response = await SERVICE.DefaultWasteRewardAssessmentService.get(this.serviceRequest(request, {
             query: { code: code },
             searchOptions: { limit: 1 }
         }));
@@ -221,7 +221,7 @@ module.exports = {
             sourceHash: evaluation.sourceHash,
             revision: 0
         };
-        let response = await SERVICE.DefaultEWasteRewardAssessmentService.save(this.serviceRequest(request, { model: model }));
+        let response = await SERVICE.DefaultWasteRewardAssessmentService.save(this.serviceRequest(request, { model: model }));
         return response && response.result || response;
     },
 
