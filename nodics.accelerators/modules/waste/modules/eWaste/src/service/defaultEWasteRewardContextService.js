@@ -25,14 +25,25 @@ module.exports = {
     },
 
     resolution: function (value, quality, confidence, source) {
-        let available = value !== undefined && value !== null && value !== '';
+        let available = value !== undefined && value !== null && value !== '' &&
+            !(typeof value === 'number' && !Number.isFinite(value));
         return {
             available: available,
-            value: value,
+            value: available ? value : undefined,
             quality: available ? quality : 'UNAVAILABLE',
-            confidence: confidence,
-            source: source
+            confidence: available ? confidence : undefined,
+            source: available ? source : 'UNAVAILABLE'
         };
+    },
+
+    codes: function (values) {
+        return (Array.isArray(values) ? values : values === undefined || values === null ? [] : [values])
+            .map(value => {
+                if (typeof value === 'string') return value;
+                if (value && typeof value === 'object') return value.code || value.materialCode || value.componentCode || value.hazardCode || value.name;
+                return undefined;
+            })
+            .filter(value => typeof value === 'string' && value.length > 0);
     },
 
     provenanceQuality: function (facts, key, defaultQuality) {
@@ -85,9 +96,9 @@ module.exports = {
             approximateWeight = Number.isFinite(min) && Number.isFinite(max) ? (min + max) / 2 : undefined;
         }
         let recordedWeight = facts.weight !== undefined ? Number(facts.weight) : undefined;
-        let materials = descriptor.materials || facts.materialTypeCodes || [];
-        let components = descriptor.components || [];
-        let hazards = descriptor.hazards || descriptor.environmental && descriptor.environmental.hazards || [];
+        let materials = this.codes(facts.materialTypeCodes && facts.materialTypeCodes.length ? facts.materialTypeCodes : descriptor.materials);
+        let components = this.codes(descriptor.components);
+        let hazards = this.codes(descriptor.hazards || descriptor.environmental && descriptor.environmental.hazards);
         let properties = {
             'asset.domain': this.resolution('ELECTRONICS','REFERENCE_DEFAULT',1,'EWASTE_ACCELERATOR'),
             'asset.family': this.resolution(facts.familyCode || 'ELECTRONICS',factQuality,1,'FACTS'),
