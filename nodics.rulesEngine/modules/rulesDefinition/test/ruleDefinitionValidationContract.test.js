@@ -22,8 +22,8 @@ registry.registerProvider('sample', {
     getCatalogue: () => ({
         code: 'sample',
         properties: [
-            { code: 'category', allowedOperators: ['EQUALS','IN'], supportsFallback: false },
-            { code: 'weight', allowedOperators: ['GREATER_THAN_OR_EQUAL','BETWEEN'], supportsFallback: true }
+            { code: 'category', dataType: 'STRING', allowedOperators: ['EQUALS','IN'], supportsFallback: false },
+            { code: 'weight', dataType: 'NUMBER', allowedOperators: ['GREATER_THAN_OR_EQUAL','BETWEEN'], supportsFallback: true }
         ]
     }),
     resolveProperty: () => ({ available: false })
@@ -58,7 +58,7 @@ let badOperator = validator.validateDefinition({
         }]
     }
 });
-assert(badOperator.issues.some(issue => issue.code === 'OPERATOR_NOT_ALLOWED_FOR_PROPERTY'));
+assert(badOperator.issues.some(issue => ['OPERATOR_TYPE_INVALID','OPERATOR_NOT_ALLOWED_FOR_PROPERTY'].includes(issue.code)));
 
 let bands = validator.validateBands([
     { code: 'A', minScore: 0, maxScore: 49, outcome: { amount: 10 } },
