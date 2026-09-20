@@ -57,6 +57,12 @@ module.exports = {
                 key: '/definitions/:ruleSetCode/draft/prepare', method: 'POST',
                 controller: 'DefaultRuleDefinitionController', operation: 'prepareNextDraft'
             },
+            submitForApproval: {
+                secured: true, authTokenTypes: ['access'], accessGroups: ['runtimeConfigAdminUserGroup'],
+                permission: 'rules.definition.submit', apiExposure: 'rulesManagement',
+                key: '/definitions/:ruleSetCode/draft/submit', method: 'POST',
+                controller: 'DefaultRuleDefinitionController', operation: 'submitForApproval'
+            },
             publishDraft: {
                 secured: true, authTokenTypes: ['access'], accessGroups: ['runtimeConfigAdminUserGroup'],
                 permission: 'rules.definition.publish', apiExposure: 'rulesManagement',
@@ -68,6 +74,20 @@ module.exports = {
                 permission: 'rules.definition.read', apiExposure: 'rulesManagement',
                 key: '/definitions/:ruleSetCode/versions', method: 'GET',
                 controller: 'DefaultRuleDefinitionController', operation: 'listVersions'
+            }
+        },
+        processActions: {
+            applyDecision: {
+                secured: true,
+                authTokenTypes: ['service'],
+                accessGroups: ['userGroup'],
+                permissionConfig: 'authSecurity.internalToken.routePermission',
+                apiExposure: 'moduleInternal',
+                key: '/workflow/actions/applyDecision',
+                method: 'POST',
+                controller: 'DefaultRuleProcessActionController',
+                operation: 'applyDecision',
+                cache: { enabled: false }
             }
         },
         scoreBandSets: {
