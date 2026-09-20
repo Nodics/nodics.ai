@@ -91,9 +91,77 @@ module.exports = {
         return resolution || { available:false, quality:'UNAVAILABLE', source:'UNAVAILABLE' };
     },
 
-    resolveAllowedValues: function (request) {
-        let property = this.getCatalogue().properties.find(item => item.code === request.propertyCode);
-        return property && property.allowedValues || [];
+    label: function (record) {
+        if (!record) return '';
+        if (typeof record.name === 'string') return record.name;
+        if (record.name && typeof record.name === 'object') {
+            return record.name.en || record.name['en-US'] || record.name['en-GB'] ||
+                Object.values(record.name).find(value => typeof value === 'string') || record.code;
+        }
+        return record.code;
+    },
+
+    values: function (records) {
+        return (records || []).map(record => ({
+            value: record.code,
+            label: this.label(record)
+        }));
+    },
+
+    resolveAllowedValues: async function (request) {
+        let propertyCode = request.propertyCode;
+        let property = this.getCatalogue().properties.find(item => item.code === propertyCode);
+        if (!property) return [];
+        if (Array.isArray(property.allowedValues)) {
+            return property.allowedValues.map(value => ({ value: value, label: value }));
+        }
+
+        let context = request.context || {};
+        let runtimeRequest = context.request;
+        let store = typeof SERVICE !== 'undefined' && SERVICE.DefaultWastePersistenceService;
+        let filters = context.filters || {};
+        if (store && runtimeRequest) {
+            if (propertyCode === 'asset.family') {
+                return this.values(await store.list('wasteFamily', runtimeRequest, { status: 'ACTIVE' }, 100));
+            }
+            if (propertyCode === 'asset.category') {
+                let query = { status: 'ACTIVE' };
+                if (filters.familyCode) query.familyCode = filters.familyCode;
+                return this.values(await store.list('wasteCategory', runtimeRequest, query, 500));
+            }
+            if (propertyCode === 'asset.itemType') {
+                let query = { status: 'ACTIVE' };
+                if (filters.categoryCode) query.categoryCode = filters.categoryCode;
+                return this.values(await store.list('wasteItemType', runtimeRequest, query, 500));
+            }
+            if (propertyCode === 'asset.condition') {
+                return this.values(await store.list('wasteConditionGrade', runtimeRequest, { status: 'ACTIVE' }, 100));
+            }
+            if (propertyCode === 'materials' || propertyCode === 'components') {
+                let query = { status: 'ACTIVE' };
+                if (propertyCode === 'components') query.materialKind = 'COMPONENT';
+                return this.values(await store.list('wasteMaterialType', runtimeRequest, query, 500));
+            }
+        }
+
+        let descriptor = require('../../../../../nodics.waste/modules/wasteMaterial/src/utils/descriptorDefinitions');
+        if (propertyCode === 'asset.handlingSize') {
+            return descriptor.sizeClasses.map(value => ({ value: value, label: value }));
+        }
+        if (propertyCode === 'environment.recyclability') {
+            return descriptor.recyclability.map(value => ({ value: value, label: value }));
+        }
+        if (propertyCode === 'environment.contamination') {
+            return descriptor.contamination.map(value => ({ value: value, label: value }));
+        }
+        if (propertyCode === 'hazards') {
+            return descriptor.hazards.map(value => ({ value: value, label: value }));
+        }
+        if (propertyCode === 'verification.status') {
+            return ['VERIFIED','APPROVED','REJECTED','CHANGES_REQUESTED','NEEDS_RECEIPT','NEEDS_INSPECTION']
+                .map(value => ({ value: value, label: value }));
+        }
+        return [];
     },
 
     resolveFallback: function (request) {
