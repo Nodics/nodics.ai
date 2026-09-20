@@ -112,8 +112,9 @@ module.exports = {
         let ruleSet = await this.lifecycle().requireRuleSet(request, request.ruleSetCode);
         if (ruleSet.status !== 'DRAFT') throw new Error('Simulation requires an editable draft');
         let validation = await this.lifecycle().validateRuleSetDraft(Object.assign({}, request, { ruleSetCode: ruleSet.code }));
-        let bandVersion = await this.lifecycle().currentBandVersion(request, ruleSet.scoreBandSetCode);
-        if (!bandVersion) throw new Error('Simulation requires a published score band set');
+        let bandVersion = ruleSet.scoreBandSetCode
+            ? await this.lifecycle().currentBandVersion(request, ruleSet.scoreBandSetCode)
+            : null;
         let provider = SERVICE.DefaultRulePropertyCatalogueRegistryService.getProvider(ruleSet.propertyProviderCode);
         let catalogue = provider.getCatalogue({ tenant: request.tenant, consumerModule: ruleSet.consumerModule }) || {};
         let simulationRequest = {
@@ -123,14 +124,14 @@ module.exports = {
                 minimumScore: ruleSet.minimumScore,
                 maximumScore: ruleSet.maximumScore,
                 groups: (ruleSet.definition && ruleSet.definition.groups) || [],
-                scoreBands: bandVersion.bands,
-                gapBehavior: bandVersion.gapBehavior || 'REJECT'
+                scoreBands: bandVersion ? bandVersion.bands : [],
+                gapBehavior: bandVersion ? bandVersion.gapBehavior || 'REJECT' : 'NO_OUTCOME'
             },
             propertyProviderCode: ruleSet.propertyProviderCode,
             propertyCatalogueCode: catalogue.code || ruleSet.propertyProviderCode,
             propertyCatalogueVersion: catalogue.version || ruleSet.propertyCatalogueVersion,
-            bandSetCode: bandVersion.bandSetCode,
-            bandSetVersion: bandVersion.version,
+            bandSetCode: bandVersion && bandVersion.bandSetCode,
+            bandSetVersion: bandVersion && bandVersion.version,
             input: request.model && request.model.input || request.input || {},
             correlationId: request.correlationId || request.requestId
         };
@@ -139,8 +140,8 @@ module.exports = {
             draftRevision: Number(ruleSet.draftRevision || 1),
             sourceHash: result.sourceHash,
             simulatedAt: new Date(),
-            bandSetCode: bandVersion.bandSetCode,
-            bandSetVersion: Number(bandVersion.version),
+            bandSetCode: bandVersion && bandVersion.bandSetCode,
+            bandSetVersion: bandVersion ? Number(bandVersion.version) : undefined,
             propertyCatalogueCode: simulationRequest.propertyCatalogueCode,
             propertyCatalogueVersion: String(simulationRequest.propertyCatalogueVersion || '')
         };
@@ -156,8 +157,8 @@ module.exports = {
                 outcome: 'SUCCESS',
                 metadata: {
                     sourceHash: result.sourceHash,
-                    bandSetCode: bandVersion.bandSetCode,
-                    bandSetVersion: Number(bandVersion.version),
+                    bandSetCode: bandVersion && bandVersion.bandSetCode,
+                    bandSetVersion: bandVersion ? Number(bandVersion.version) : undefined,
                     finalScore: result.finalScore,
                     scoreBandCode: result.scoreBandCode
                 }
