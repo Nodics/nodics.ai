@@ -42,3 +42,18 @@ Runtime initialization must preserve that order. For Kickoff, the Waste server
 loads Waste scenario accelerators first and `kickoffWaste:project-reference`
 second so schema-driven project values can extend or intentionally override
 accelerator presets.
+
+
+## Domain accelerator discovery
+
+Waste domain accelerators are ordinary Nodics capability modules discovered and
+composed through the existing module loader, `nodics.extends`, runtime module
+roots, and layered data releases. There is no separate Waste-specific accelerator
+registry.
+
+The generic `wasteFamily` taxonomy is the domain/family identity used by Waste
+records. Accelerator modules add owned presets, providers, policies, navigation
+and journey orchestration for selected families without creating duplicate
+schemas. Before adding a domain registry, domain schema, or accelerator discovery
+mechanism, review the existing Waste taxonomy and standard Nodics module
+composition and prove a concrete gap.
