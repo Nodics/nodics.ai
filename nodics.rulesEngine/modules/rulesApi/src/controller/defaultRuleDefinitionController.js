@@ -31,6 +31,7 @@ module.exports = {
     validateDraft: function (request, callback) { return this.invoke('validateDraft', request, callback); },
     simulateDraft: function (request, callback) { return this.invoke('simulateDraft', request, callback); },
     prepareNextDraft: function (request, callback) { return this.invoke('prepareNextDraft', request, callback); },
+    submitForApproval: function (request, callback) { return this.invoke('submitForApproval', request, callback); },
     publishDraft: function (request, callback) { return this.invoke('publishDraft', request, callback); },
     listVersions: function (request, callback) { return this.invoke('listVersions', request, callback); },
     createBandSet: function (request, callback) { return this.invoke('createBandSet', request, callback); },
