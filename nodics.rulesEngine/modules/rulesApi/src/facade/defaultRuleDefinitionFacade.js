@@ -20,6 +20,7 @@ module.exports = {
     validateDraft: function (request) { return SERVICE.DefaultRuleDefinitionLifecycleService.validateRuleSetDraft(request); },
     simulateDraft: function (request) { return SERVICE.DefaultRuleManagementService.simulateDraft(request); },
     prepareNextDraft: function (request) { return SERVICE.DefaultRuleDefinitionLifecycleService.prepareNextRuleSetDraft(request); },
+    submitForApproval: function (request) { return SERVICE.DefaultRuleApprovalService.submit(request); },
     publishDraft: function (request) { return SERVICE.DefaultRuleDefinitionLifecycleService.publishRuleSetDraft(request); },
     listVersions: function (request) { return SERVICE.DefaultRuleManagementService.listVersions(request); },
     createBandSet: function (request) { return SERVICE.DefaultRuleDefinitionLifecycleService.createBandSet(request); },
