@@ -67,11 +67,14 @@ module.exports = {
             .sort((left, right) => (left.sequence || 0) - (right.sequence || 0))
             .map(group => this.groupService().evaluate(group, evaluationContext, 1));
 
-        let calculatedScore = groupResults
-            .filter(result => result.matched)
+        let matchedOutcomes = groupResults
+            .filter(result => result.matched && result.outcome)
+            .map(result => ({ groupCode: result.groupCode, outcome: result.outcome }));
+        let calculatedScore = matchedOutcomes
             .reduce((total, result) => total + this.scoreFromOutcome(result.outcome), 0);
         let finalScore = this.clamp(calculatedScore, ruleSet.minimumScore, ruleSet.maximumScore);
-        let scoreBand = this.resolveBand(finalScore, ruleSet.scoreBands || []);
+        let scoreBands = ruleSet.scoreBands || [];
+        let scoreBand = scoreBands.length ? this.resolveBand(finalScore, scoreBands) : null;
 
         let evidence = {
             ruleSetCode: ruleSet.code,
@@ -80,8 +83,9 @@ module.exports = {
             propertyCatalogueVersion: request.propertyCatalogueVersion,
             calculatedScore: calculatedScore,
             finalScore: finalScore,
-            scoreBandCode: scoreBand.code,
-            rewardOutcome: scoreBand.outcome || null,
+            scoreBandCode: scoreBand && scoreBand.code,
+            rewardOutcome: scoreBand && scoreBand.outcome || null,
+            outcomes: matchedOutcomes,
             groupResults: groupResults,
             matchedRules: groupResults.filter(result => result.matched).map(result => result.groupCode),
             skippedRules: groupResults.filter(result => !result.matched).map(result => result.groupCode),
