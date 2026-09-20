@@ -43,6 +43,25 @@ module.exports = {
             : require('./defaultRuleDefinitionValidationService');
     },
 
+    auditService: function () {
+        return typeof SERVICE !== 'undefined' && SERVICE.DefaultRuleAuditService
+            ? SERVICE.DefaultRuleAuditService
+            : require('./defaultRuleAuditService');
+    },
+
+    assertCurrentSimulation: async function (request, ruleSet) {
+        let simulation = ruleSet.lastSimulation || {};
+        let bandVersion = await this.currentBandVersion(request, ruleSet.scoreBandSetCode);
+        if (!simulation.sourceHash ||
+            Number(simulation.draftRevision) !== Number(ruleSet.draftRevision || 1) ||
+            !bandVersion ||
+            simulation.bandSetCode !== bandVersion.bandSetCode ||
+            Number(simulation.bandSetVersion) !== Number(bandVersion.version)) {
+            throw new Error('Run a successful simulation for the current rule and reward-band versions before submission or publication');
+        }
+        return bandVersion;
+    },
+
     isCode: function (value) {
         return typeof value === 'string' && /^[A-Za-z0-9][A-Za-z0-9._-]{0,127}$/.test(value);
     },
@@ -110,11 +129,6 @@ module.exports = {
             propertyProviderCode: model.propertyProviderCode,
             context: request.validationContext
         });
-        if (!validation.valid) {
-            let error = new Error('Rule set validation failed');
-            error.issues = validation.issues;
-            throw error;
-        }
         let now = new Date();
         Object.assign(model, {
             status: 'DRAFT',
@@ -126,12 +140,21 @@ module.exports = {
             active: true
         });
         let response = await this.ruleSetService().save(this.serviceRequest(request, { model: model }));
+        await this.auditService().record(request, {
+            ruleSetCode: model.code,
+            draftRevision: model.draftRevision,
+            eventType: 'RULE_SET_CREATED',
+            outcome: 'SUCCESS',
+            metadata: { valid: validation.valid, issueCount: validation.issues.length }
+        });
         return { code: 'RULE_SET_CREATED', data: response.result || response };
     },
 
     updateRuleSetDraft: async function (request) {
         let current = await this.requireRuleSet(request, request.ruleSetCode);
         if (current.status !== 'DRAFT') throw new Error('Only draft rule sets can be updated');
+        if (current.approval && current.approval.status === 'PENDING')
+            throw new Error('This draft is awaiting approval and cannot be edited');
         let patch = Object.assign({}, this.modelOf(request));
         ['code','status','currentVersion','createdBy','createdAt','publishedAt'].forEach(key => delete patch[key]);
         let validation = this.validationService().validateDefinition({
@@ -141,10 +164,19 @@ module.exports = {
         });
         patch.validation = validation;
         patch.draftRevision = Number(current.draftRevision || 1) + 1;
+        patch.lastSimulation = null;
+        patch.approval = null;
         await this.ruleSetService().update(this.serviceRequest(request, {
             query: { code: current.code, status: 'DRAFT' },
             model: { $set: patch }
         }));
+        await this.auditService().record(request, {
+            ruleSetCode: current.code,
+            draftRevision: patch.draftRevision,
+            eventType: 'RULE_SET_DRAFT_UPDATED',
+            outcome: 'SUCCESS',
+            metadata: { valid: validation.valid, issueCount: validation.issues.length }
+        });
         return { code: 'RULE_SET_UPDATED', data: { code: current.code, draftRevision: patch.draftRevision, validation: validation } };
     },
 
@@ -173,7 +205,7 @@ module.exports = {
     currentBandVersion: async function (request, bandSetCode) {
         if (!bandSetCode) return null;
         let bandSet = await this.requireBandSet(request, bandSetCode);
-        if (Number(bandSet.currentVersion || 0) < 1 || bandSet.status === 'DRAFT') {
+        if (Number(bandSet.currentVersion || 0) < 1) {
             throw new Error('Referenced score band set has no published version');
         }
         let response = await this.bandSetVersionService().get(this.serviceRequest(request, {
@@ -189,7 +221,7 @@ module.exports = {
         let current = await this.requireRuleSet(request, request.ruleSetCode);
         if (current.status !== 'DRAFT') throw new Error('Only draft rule sets can be published');
         await this.validateRuleSetDraft(Object.assign({}, request, { ruleSetCode: current.code }));
-        let bandVersion = await this.currentBandVersion(request, current.scoreBandSetCode);
+        let bandVersion = await this.assertCurrentSimulation(request, current);
         let version = Number(current.currentVersion || 0) + 1;
         let now = new Date();
         let status = this.publishedStatus(current.effectiveFrom, current.effectiveTo, now);
@@ -229,6 +261,20 @@ module.exports = {
             query: { code: current.code, status: 'DRAFT' },
             model: { $set: { status: status, currentVersion: version, publishedAt: now, active: immutable.active } }
         }));
+        await this.auditService().record(request, {
+            ruleSetCode: current.code,
+            version: version,
+            draftRevision: current.draftRevision,
+            eventType: 'RULE_SET_PUBLISHED',
+            outcome: 'SUCCESS',
+            reason: request.changeReason,
+            metadata: {
+                status: status,
+                checksum: immutable.checksum,
+                bandSetCode: bandVersion && bandVersion.bandSetCode,
+                bandSetVersion: bandVersion && bandVersion.version
+            }
+        });
         return { code: 'RULE_SET_PUBLISHED', data: { code: current.code, version: version, status: status, checksum: immutable.checksum } };
     },
 
@@ -261,9 +307,18 @@ module.exports = {
                 effectiveTo: version.effectiveTo,
                 draftRevision: draftRevision,
                 preparedFromVersion: version.version,
-                validation: null
+                validation: null,
+                lastSimulation: null,
+                approval: null
             } }
         }));
+        await this.auditService().record(request, {
+            ruleSetCode: current.code,
+            draftRevision: draftRevision,
+            version: version.version,
+            eventType: 'RULE_SET_NEXT_DRAFT_PREPARED',
+            outcome: 'SUCCESS'
+        });
         return { code: 'RULE_SET_DRAFT_READY', data: { code: current.code, draftRevision: draftRevision, preparedFromVersion: version.version } };
     },
 
@@ -272,13 +327,15 @@ module.exports = {
         this.assertCode(model.code);
         if (await this.findBandSet(request, model.code)) throw new Error('Score band set already exists');
         let validation = this.validationService().validateBands(model.bands, model.gapBehavior || 'REJECT');
-        if (!validation.valid) {
-            let error = new Error('Score band validation failed');
-            error.issues = validation.issues;
-            throw error;
-        }
         Object.assign(model, { status: 'DRAFT', currentVersion: 0, draftRevision: 1, validation: validation, active: true });
         let response = await this.bandSetService().save(this.serviceRequest(request, { model: model }));
+        await this.auditService().record(request, {
+            bandSetCode: model.code,
+            draftRevision: model.draftRevision,
+            eventType: 'SCORE_BAND_SET_CREATED',
+            outcome: 'SUCCESS',
+            metadata: { valid: validation.valid, issueCount: validation.issues.length }
+        });
         return { code: 'SCORE_BAND_SET_CREATED', data: response.result || response };
     },
 
@@ -336,6 +393,52 @@ module.exports = {
             query: { code: current.code, status: 'DRAFT' },
             model: { $set: { status: status, currentVersion: version, validation: validation, active: immutable.active } }
         }));
+        await this.auditService().record(request, {
+            bandSetCode: current.code,
+            version: version,
+            draftRevision: current.draftRevision,
+            eventType: 'SCORE_BAND_SET_PUBLISHED',
+            outcome: 'SUCCESS',
+            metadata: { status: status, checksum: immutable.checksum }
+        });
         return { code: 'SCORE_BAND_SET_PUBLISHED', data: { code: current.code, version: version, status: status, checksum: immutable.checksum } };
+    },
+
+    prepareNextBandSetDraft: async function (request) {
+        let current = await this.requireBandSet(request, request.bandSetCode);
+        if (current.status === 'DRAFT') return { code: 'SCORE_BAND_SET_DRAFT_READY', data: current };
+        if (Number(current.currentVersion || 0) < 1) throw new Error('Published score-band version is required');
+        let response = await this.bandSetVersionService().get(this.serviceRequest(request, {
+            query: { bandSetCode: current.code, version: Number(current.currentVersion) },
+            searchOptions: { limit: 1 }
+        }));
+        let version = this.one(response);
+        if (!version) throw new Error('Published score-band version was not found');
+        let draftRevision = Number(current.draftRevision || 1) + 1;
+        await this.bandSetService().update(this.serviceRequest(request, {
+            query: { code: current.code },
+            model: { $set: {
+                status: 'DRAFT',
+                consumerModule: version.consumerModule,
+                outcomeType: version.outcomeType,
+                bands: version.bands,
+                gapBehavior: version.gapBehavior,
+                effectiveFrom: version.effectiveFrom,
+                effectiveTo: version.effectiveTo,
+                draftRevision: draftRevision,
+                validation: null
+            } }
+        }));
+        await this.auditService().record(request, {
+            bandSetCode: current.code,
+            version: version.version,
+            draftRevision: draftRevision,
+            eventType: 'SCORE_BAND_SET_NEXT_DRAFT_PREPARED',
+            outcome: 'SUCCESS'
+        });
+        return {
+            code: 'SCORE_BAND_SET_DRAFT_READY',
+            data: { code: current.code, draftRevision: draftRevision, preparedFromVersion: version.version }
+        };
     }
 };
