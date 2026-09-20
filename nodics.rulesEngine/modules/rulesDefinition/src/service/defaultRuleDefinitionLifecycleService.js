@@ -220,6 +220,7 @@ module.exports = {
             approvedAt: request.approvedAt,
             supersedesVersion: Number(current.currentVersion || 0) || undefined,
             changeReason: request.changeReason,
+            metadata: current.metadata,
             publishedAt: now
         };
         immutable.checksum = this.checksum(immutable);
