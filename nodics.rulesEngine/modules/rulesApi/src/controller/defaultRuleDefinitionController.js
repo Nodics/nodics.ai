@@ -22,7 +22,8 @@ module.exports = {
         request.propertyCode = httpRequest.params && httpRequest.params.propertyCode || request.propertyCode;
         request.model = httpRequest.body || request.model || {};
         request.query = httpRequest.query || request.query || {};
-        let promise = FACADE.DefaultRuleDefinitionFacade[operation](request);
+        let result = FACADE.DefaultRuleDefinitionFacade[operation](request);
+        let promise = Promise.resolve(result);
         if (!callback) return promise;
         promise.then(result => callback(null, result)).catch(callback);
     },

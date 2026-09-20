@@ -8,7 +8,7 @@
             "version": "1.0.0",
             "displayName": "Rules Policy Approval Workflow",
             "description": "Rules-owned reusable maker-checker workflow contribution",
-            "owningDomain": "rules",
+            "owningDomain": "rulesApi",
             "lifecycle": "OPERATIONAL_VERSIONED",
             "destinationRole": "PROCESS",
             "environmentScope": [

@@ -440,6 +440,44 @@ assert(
   !runtimeAdminGroup.permissions.includes("*"),
   "Runtime admin data should avoid broad wildcard permissions",
 );
+const runtimeAdminMigrationPermissions =
+  authProperties.identityGovernance.migration.groupTargets
+    .runtimeConfigAdminUserGroup.permissions;
+[
+  "backoffice.application.initialization.view",
+  "axis.view",
+  "axis.dashboard.view",
+  "axis.application.read",
+  "axis.documentation.read",
+  "system.schema.view",
+  "system.schema.manage",
+  "profile.enterprise.create",
+  "profile.enterpriseAccess.search",
+  "profile.enterpriseAccess.assign",
+  "profile.enterpriseAccess.register",
+  "rules.backoffice.view",
+  "rules.definition.read",
+  "rules.definition.create",
+  "rules.definition.update",
+  "rules.definition.validate",
+  "rules.definition.simulate",
+  "rules.definition.submit",
+  "rules.definition.approve",
+  "rules.definition.publish",
+  "rules.definition.schedule",
+  "rules.definition.disable",
+  "rules.definition.audit",
+  "rules.band.read",
+  "rules.band.create",
+  "rules.band.update",
+  "rules.band.publish",
+  "storefront.operations.read",
+].forEach((permission) => {
+  assert(
+    runtimeAdminMigrationPermissions.includes(permission),
+    "Runtime admin migration target must include " + permission,
+  );
+});
 const permissionCatalog = authProperties.identityGovernance.permissionCatalog;
 Object.values(userGroupsData).forEach((group) =>
   (group.permissions || []).forEach((permission) => {
