@@ -79,6 +79,14 @@ module.exports = {
                 this.property('metadata.overallConfidence','Metadata confidence','NUMBER',numeric),
                 this.property('metadata.completenessScore','Metadata completeness','NUMBER',numeric),
                 this.property('metadata.manualVerificationRequired','Manual verification required','BOOLEAN',['IS_TRUE','IS_FALSE','EQUALS','NOT_EQUALS']),
+                this.property('metadata.unknownFields','Unknown metadata fields','COLLECTION',collection),
+                this.property('metadata.lowConfidenceFields','Low-confidence metadata fields','COLLECTION',collection),
+                this.property('evidence.imageEvidenceType','Image evidence type','STRING',equality,{
+                    allowedValues:['ITEM_PHOTOGRAPH','PROMOTIONAL_GRAPHIC','ILLUSTRATION_OR_PAINTING','SCREENSHOT_OR_REPHOTO','SUSPECTED_GENERATED','UNCERTAIN']
+                }),
+                this.property('evidence.imageEvidenceConfidence','Image evidence confidence','NUMBER',numeric),
+                this.property('evidence.manualReviewRequired','Image manual review required','BOOLEAN',['IS_TRUE','IS_FALSE','EQUALS','NOT_EQUALS']),
+                this.property('evidence.qualityFlags','Image quality flags','COLLECTION',collection),
                 this.property('verification.status','Verification status','STRING',equality)
             ]
         };
@@ -156,6 +164,13 @@ module.exports = {
         }
         if (propertyCode === 'hazards') {
             return descriptor.hazards.map(value => ({ value: value, label: value }));
+        }
+        if (propertyCode === 'evidence.imageEvidenceType') {
+            return ['ITEM_PHOTOGRAPH','PROMOTIONAL_GRAPHIC','ILLUSTRATION_OR_PAINTING','SCREENSHOT_OR_REPHOTO','SUSPECTED_GENERATED','UNCERTAIN']
+                .map(value => ({ value: value, label: value }));
+        }
+        if (propertyCode === 'evidence.qualityFlags') {
+            return descriptor.qualityFlags.map(value => ({ value: value, label: value }));
         }
         if (propertyCode === 'verification.status') {
             return ['VERIFIED','APPROVED','REJECTED','CHANGES_REQUESTED','NEEDS_RECEIPT','NEEDS_INSPECTION']
