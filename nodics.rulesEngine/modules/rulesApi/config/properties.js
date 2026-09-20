@@ -39,7 +39,8 @@ module.exports = {
     apiExposure: {
         categories: {
             rulesManagement: { enabled: true },
-            rulesInternal: { enabled: true }
+            rulesInternal: { enabled: true },
+            moduleInternal: { enabled: true }
         }
     }
 };
