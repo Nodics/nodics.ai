@@ -164,11 +164,20 @@ module.exports = {
         return [];
     },
 
+    qualityService: function () {
+        return typeof SERVICE !== 'undefined' && SERVICE.DefaultRuleQualityService
+            ? SERVICE.DefaultRuleQualityService
+            : require('../../../../../../../nodics.rulesEngine/modules/rulesEvaluation/src/service/defaultRuleQualityService');
+    },
+
     resolveFallback: function (request) {
         let context = request && request.context || {};
         let fallback = context.fallbacks && context.fallbacks[request.propertyCode];
         if (!Array.isArray(fallback)) return { available:false, quality:'UNAVAILABLE', source:'UNAVAILABLE' };
-        return fallback.find(candidate => candidate && candidate.available === true) ||
+        let quality = this.qualityService();
+        return fallback.find(candidate => candidate && candidate.available === true &&
+            quality.meets(candidate.quality, request.minimumInputQuality) &&
+            quality.confidenceMeets(candidate.confidence, request.minimumConfidence)) ||
             { available:false, quality:'UNAVAILABLE', source:'UNAVAILABLE' };
     },
 
