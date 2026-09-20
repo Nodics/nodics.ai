@@ -45,5 +45,5 @@ jobs:
         run: npm run release:check -- --execute
 
       - name: Execute full release-candidate gate
-        if: github.ref == 'refs/heads/development' || github.ref == 'refs/heads/master'
+        if: github.event_name == 'pull_request' || github.ref == 'refs/heads/development' || github.ref == 'refs/heads/master'
         run: npm run release:check -- --execute --full
