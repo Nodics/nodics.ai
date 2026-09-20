@@ -13,7 +13,8 @@
       "lifecycle": "PUBLISHABLE",
       "destinationRole": "WCMS_STAGED",
       "environmentScope": [
-        "ALL"
+        "LOCAL",
+        "LOCAL_PRODUCTION_SIMULATION"
       ],
       "sensitivity": "PUBLIC",
       "versioningPolicy": "IMMUTABLE",
@@ -46,7 +47,8 @@
       "lifecycle": "PUBLISHABLE",
       "destinationRole": "WCMS_STAGED",
       "environmentScope": [
-        "ALL"
+        "LOCAL",
+        "LOCAL_PRODUCTION_SIMULATION"
       ],
       "sensitivity": "PUBLIC",
       "versioningPolicy": "IMMUTABLE",
@@ -69,7 +71,8 @@
       "lifecycle": "PUBLISHABLE",
       "destinationRole": "WCMS_STAGED",
       "environmentScope": [
-        "ALL"
+        "LOCAL",
+        "LOCAL_PRODUCTION_SIMULATION"
       ],
       "sensitivity": "PUBLIC",
       "versioningPolicy": "IMMUTABLE",
@@ -92,7 +95,8 @@
       "lifecycle": "PUBLISHABLE",
       "destinationRole": "WCMS_STAGED",
       "environmentScope": [
-        "ALL"
+        "LOCAL",
+        "LOCAL_PRODUCTION_SIMULATION"
       ],
       "sensitivity": "PUBLIC",
       "versioningPolicy": "IMMUTABLE",
@@ -115,7 +119,8 @@
       "lifecycle": "PUBLISHABLE",
       "destinationRole": "WCMS_STAGED",
       "environmentScope": [
-        "ALL"
+        "LOCAL",
+        "LOCAL_PRODUCTION_SIMULATION"
       ],
       "sensitivity": "PUBLIC",
       "versioningPolicy": "IMMUTABLE",
@@ -192,7 +197,8 @@
       "lifecycle": "PUBLISHABLE",
       "destinationRole": "WCMS_STAGED",
       "environmentScope": [
-        "ALL"
+        "LOCAL",
+        "LOCAL_PRODUCTION_SIMULATION"
       ],
       "sensitivity": "PUBLIC",
       "versioningPolicy": "IMMUTABLE",
