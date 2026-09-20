@@ -18,6 +18,7 @@ module.exports = {
         request.ruleSetCode = httpRequest.params && httpRequest.params.ruleSetCode || request.ruleSetCode;
         request.bandSetCode = httpRequest.params && httpRequest.params.bandSetCode || request.bandSetCode;
         request.propertyProviderCode = httpRequest.params && httpRequest.params.propertyProviderCode || request.propertyProviderCode;
+        request.propertyCode = httpRequest.params && httpRequest.params.propertyCode || request.propertyCode;
         request.model = httpRequest.body || request.model || {};
         request.query = httpRequest.query || request.query || {};
         let promise = FACADE.DefaultRuleDefinitionFacade[operation](request);
@@ -36,6 +37,7 @@ module.exports = {
     publishDraft: function (request, callback) { return this.invoke('publishDraft', request, callback); },
     listVersions: function (request, callback) { return this.invoke('listVersions', request, callback); },
     propertyCatalogue: function (request, callback) { return this.invoke('propertyCatalogue', request, callback); },
+    propertyValues: function (request, callback) { return this.invoke('propertyValues', request, callback); },
     listBandSets: function (request, callback) { return this.invoke('listBandSets', request, callback); },
     getBandSet: function (request, callback) { return this.invoke('getBandSet', request, callback); },
     listBandVersions: function (request, callback) { return this.invoke('listBandVersions', request, callback); },
