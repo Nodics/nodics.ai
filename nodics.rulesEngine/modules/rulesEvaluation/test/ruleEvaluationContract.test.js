@@ -98,6 +98,8 @@ const result = evaluator.evaluate({
     propertyProviderCode: 'sample',
     propertyCatalogueCode: 'sample',
     propertyCatalogueVersion: 1,
+    bandSetCode: 'sampleBands',
+    bandSetVersion: 1,
     input: input,
     correlationId: 'corr-001'
 });
@@ -108,6 +110,18 @@ assert.strictEqual(result.scoreBandCode, 'HIGH');
 assert.deepStrictEqual(result.matchedRules, ['BASE','CARBON','RECOVERY','HAZARD']);
 assert.strictEqual(result.groupResults[0].conditionResults[1].result, 'IGNORED');
 assert.strictEqual(result.groupResults[1].conditionResults[0].fallbackUsed, true);
+assert.strictEqual(result.bandSetCode, 'sampleBands');
+assert.strictEqual(result.bandSetVersion, 1);
+assert.strictEqual(evaluator.evaluate({
+    ruleSet: base,
+    propertyProviderCode: 'sample',
+    propertyCatalogueCode: 'sample',
+    propertyCatalogueVersion: 1,
+    bandSetCode: 'sampleBands',
+    bandSetVersion: 1,
+    input: input,
+    correlationId: 'corr-002'
+}).sourceHash, result.sourceHash, 'request correlation must not change deterministic business evidence hash');
 assert.strictEqual(evaluator.evaluate({
     ruleSet: Object.assign({}, base, { maximumScore: 60 }),
     propertyProviderCode: 'sample',

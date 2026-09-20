@@ -69,6 +69,26 @@ module.exports = {
             : require('../../../rulesCore/src/service/defaultRuleOutcomeRegistryService');
     },
 
+    /** Implements sourceHashEvidence as an overrideable service operation. */
+    sourceHashEvidence: function (evidence) {
+        return {
+            ruleSetCode: evidence.ruleSetCode,
+            ruleSetVersion: evidence.ruleSetVersion,
+            propertyCatalogueCode: evidence.propertyCatalogueCode,
+            propertyCatalogueVersion: evidence.propertyCatalogueVersion,
+            bandSetCode: evidence.bandSetCode,
+            bandSetVersion: evidence.bandSetVersion,
+            calculatedScore: evidence.calculatedScore,
+            finalScore: evidence.finalScore,
+            scoreBandCode: evidence.scoreBandCode,
+            rewardOutcome: evidence.rewardOutcome,
+            outcomes: evidence.outcomes,
+            groupResults: evidence.groupResults,
+            matchedRules: evidence.matchedRules,
+            skippedRules: evidence.skippedRules
+        };
+    },
+
     /** Implements evaluate as an overrideable service operation. */
     evaluate: function (request) {
         if (!request || !request.ruleSet || !request.propertyProviderCode) {
@@ -112,6 +132,8 @@ module.exports = {
             ruleSetVersion: ruleSet.version,
             propertyCatalogueCode: request.propertyCatalogueCode,
             propertyCatalogueVersion: request.propertyCatalogueVersion,
+            bandSetCode: request.bandSetCode || null,
+            bandSetVersion: request.bandSetVersion || null,
             calculatedScore: calculatedScore,
             finalScore: finalScore,
             scoreBandCode: scoreBand && scoreBand.code,
@@ -122,7 +144,7 @@ module.exports = {
             skippedRules: allGroupResults.filter(result => !result.matched && result.outcome).map(result => result.groupCode),
             correlationId: request.correlationId || null
         };
-        evidence.sourceHash = crypto.createHash('sha256').update(JSON.stringify(evidence)).digest('hex');
+        evidence.sourceHash = crypto.createHash('sha256').update(JSON.stringify(this.sourceHashEvidence(evidence))).digest('hex');
         return Object.freeze(evidence);
     }
 };

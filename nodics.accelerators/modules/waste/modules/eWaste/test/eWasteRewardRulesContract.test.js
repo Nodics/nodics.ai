@@ -149,10 +149,21 @@ SERVICE.DefaultWasteRewardAssessmentService = {
         facts:submission.confirmedFacts,
         impact,
         verification:{ code:'VER-1', verificationStatus:'APPROVED' },
-        correlationId:'corr-1'
+        correlationId:'corr-2'
     });
     assert.strictEqual(replay.code, assessment.code);
-    assert.strictEqual(saved.length, 2, 'assessment replay must be idempotent');
+    assert.strictEqual(replay.sourceHash, assessment.sourceHash);
+    assert.strictEqual(saved.length, 2, 'assessment replay must be idempotent across request correlation ids');
+
+    await assert.rejects(() => assessmentService.assessConfirmed({
+        tenant:'default',
+        submission,
+        facts:submission.confirmedFacts,
+        impact:Object.assign({}, impact, { metrics:[{ metricCode:'ESTIMATED_CO2E_SAVED_KG', value:'3.1' }] }),
+        verification:{ code:'VER-1', verificationStatus:'APPROVED' },
+        correlationId:'corr-3'
+    }), /Reward assessment replay conflicts/);
+    assert.strictEqual(saved.length, 2, 'changed business inputs must not create duplicate immutable assessment evidence');
 
     console.log('eWaste Rules property and reward assessment contracts validated');
 })().finally(() => {
