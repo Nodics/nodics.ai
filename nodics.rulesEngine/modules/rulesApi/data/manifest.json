@@ -24,6 +24,15 @@
                 "init-v001/records/process/rulesPolicyApprovalDefinitionData.js": "364058d5f33243619cb45fbb75ce56525726afed0c6b90842c5289c527f612f7"
             },
             "sourceRoot": "init-v001"
+        },
+        "backoffice-capability": {
+            "kind": "SOURCE_CONTRIBUTION",
+            "version": "0.0.0",
+            "description": "rulesApi owned declarative BackOffice capability source; not an executable import.",
+            "sourceRoot": "backoffice",
+            "files": {
+                "backoffice/rulesApiBackofficeCapabilityData.js": "8506674106bc5c6a1867b0a35974e5d3c50c20a3e63695e8c592357bf453721b"
+            }
         }
     }
 }
