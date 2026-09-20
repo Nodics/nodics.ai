@@ -40,16 +40,10 @@ module.exports = {
         return result;
     },
 
-    resolveBand: function (score, bands) {
-        let matches = (bands || []).filter(band => band.enabled !== false)
-            .filter(band => score >= Number(band.minScore) &&
-                (band.maxScore === undefined || band.maxScore === null || band.maxScore === '' || score <= Number(band.maxScore)));
-        if (matches.length !== 1) {
-            throw new Error(matches.length === 0
-                ? 'No score band matches the calculated score'
-                : 'More than one score band matches the calculated score');
-        }
-        return matches[0];
+    bandService: function () {
+        return typeof SERVICE !== 'undefined' && SERVICE.DefaultScoreBandResolutionService
+            ? SERVICE.DefaultScoreBandResolutionService
+            : require('./defaultScoreBandResolutionService');
     },
 
     evaluate: function (request) {
@@ -74,7 +68,11 @@ module.exports = {
             .reduce((total, result) => total + this.scoreFromOutcome(result.outcome), 0);
         let finalScore = this.clamp(calculatedScore, ruleSet.minimumScore, ruleSet.maximumScore);
         let scoreBands = ruleSet.scoreBands || [];
-        let scoreBand = scoreBands.length ? this.resolveBand(finalScore, scoreBands) : null;
+        let scoreBand = scoreBands.length ? this.bandService().resolve({
+            score: finalScore,
+            bands: scoreBands,
+            gapBehavior: ruleSet.gapBehavior || 'REJECT'
+        }) : null;
 
         let evidence = {
             ruleSetCode: ruleSet.code,
