@@ -45,6 +45,7 @@ module.exports = {
                 createdBy: { type: 'string', required: false, description: 'Authenticated creator identity.' },
                 createdAt: { type: 'date', required: false, description: 'Creation timestamp.' },
                 publishedAt: { type: 'date', required: false, description: 'Latest publication timestamp.' },
+                approval: { type: 'object', required: false, description: 'Process-owned maker-checker correlation and decision evidence; task lifecycle remains in nodics.process.' },
                 revision: { type: 'int', required: true, default: 0, description: 'Business revision used by governed lifecycle operations.' },
                 metadata: { type: 'object', required: false, description: 'Bounded extension metadata; executable behavior is prohibited.' }
             }
