@@ -47,6 +47,13 @@ module.exports = {
             : { available: false };
     },
 
+    resolveAllowedValues: function (code, request) {
+        let provider = this.getProvider(code);
+        return typeof provider.resolveAllowedValues === 'function'
+            ? provider.resolveAllowedValues(request || {})
+            : [];
+    },
+
     reset: function () {
         this.providers = {};
     }
