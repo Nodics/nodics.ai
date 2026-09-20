@@ -11,56 +11,54 @@
 
 'use strict';
 
-/** @module rulesEvaluation/src/service/defaultRuleConditionEvaluationService @description Resolves one consumer property, enforces quality/missing-value policy and applies a generic operator. @layer service @owner rulesEvaluation */
+/** @module rulesEvaluation/src/service/defaultRuleConditionEvaluationService @description Applies missing-value policy and one generic operator after centralized consumer property resolution. @layer service @owner rulesEvaluation */
 module.exports = {
-    service: function (name, fallback) {
-        return typeof SERVICE !== 'undefined' && SERVICE[name] ? SERVICE[name] : fallback;
+    resolutionService: function () {
+        return typeof SERVICE !== 'undefined' && SERVICE.DefaultRulePropertyResolutionService
+            ? SERVICE.DefaultRulePropertyResolutionService
+            : require('./defaultRulePropertyResolutionService');
+    },
+
+    operatorService: function () {
+        return typeof SERVICE !== 'undefined' && SERVICE.DefaultRuleOperatorService
+            ? SERVICE.DefaultRuleOperatorService
+            : require('../../../rulesCore/src/service/defaultRuleOperatorService');
+    },
+
+    availabilityOperator: function (operatorCode) {
+        return operatorCode === 'IS_AVAILABLE' || operatorCode === 'IS_NOT_AVAILABLE';
     },
 
     evaluate: function (condition, evaluationContext) {
         if (!condition || !condition.propertyCode || !condition.operatorCode) {
             throw new Error('Rule condition property and operator are required');
         }
-        let registry = this.service(
-            'DefaultRulePropertyCatalogueRegistryService',
-            require('../../../rulesCore/src/service/defaultRulePropertyCatalogueRegistryService')
-        );
-        let qualityService = this.service(
-            'DefaultRuleQualityService',
-            require('./defaultRuleQualityService')
-        );
-        let operatorService = this.service(
-            'DefaultRuleOperatorService',
-            require('../../../rulesCore/src/service/defaultRuleOperatorService')
-        );
-        let providerCode = evaluationContext.propertyProviderCode;
-        let resolution = registry.resolveProperty(providerCode, {
-            propertyCode: condition.propertyCode,
-            context: evaluationContext.input || {},
-            evaluationContext: evaluationContext
-        }) || { available: false };
 
-        let acceptable = resolution.available === true &&
-            qualityService.meets(resolution.quality, condition.minimumInputQuality) &&
-            qualityService.confidenceMeets(resolution.confidence, condition.minimumConfidence);
+        let resolved = this.resolutionService().resolve(
+            evaluationContext.propertyProviderCode,
+            condition,
+            evaluationContext
+        );
+        let resolution = resolved.resolution || { available: false, quality: 'UNAVAILABLE' };
 
-        let fallbackUsed = false;
-        if (!acceptable && condition.missingValueBehavior === 'FALLBACK_ALLOWED') {
-            resolution = registry.resolveFallback(providerCode, {
+        if (this.availabilityOperator(condition.operatorCode)) {
+            let availabilityMatch = this.operatorService().evaluate(
+                condition.operatorCode,
+                resolution.available === true ? resolution.value : undefined
+            );
+            return {
+                conditionCode: condition.code,
                 propertyCode: condition.propertyCode,
-                context: evaluationContext.input || {},
-                currentResolution: resolution,
-                minimumInputQuality: condition.minimumInputQuality,
-                minimumConfidence: condition.minimumConfidence,
-                evaluationContext: evaluationContext
-            }) || { available: false };
-            fallbackUsed = resolution.available === true;
-            acceptable = fallbackUsed &&
-                qualityService.meets(resolution.quality, condition.minimumInputQuality) &&
-                qualityService.confidenceMeets(resolution.confidence, condition.minimumConfidence);
+                operatorCode: condition.operatorCode,
+                result: availabilityMatch ? 'MATCHED' : 'NOT_MATCHED',
+                matched: availabilityMatch,
+                applicable: true,
+                fallbackUsed: false,
+                resolution: resolution
+            };
         }
 
-        if (!acceptable) {
+        if (!resolved.acceptable) {
             if (condition.missingValueBehavior === 'OPTIONAL') {
                 return {
                     conditionCode: condition.code,
@@ -69,6 +67,7 @@ module.exports = {
                     matched: false,
                     applicable: false,
                     reason: 'INPUT_UNAVAILABLE_OR_BELOW_QUALITY',
+                    fallbackUsed: resolved.fallbackUsed,
                     resolution: resolution
                 };
             }
@@ -79,11 +78,12 @@ module.exports = {
                 matched: false,
                 applicable: true,
                 reason: 'INPUT_UNAVAILABLE_OR_BELOW_QUALITY',
+                fallbackUsed: resolved.fallbackUsed,
                 resolution: resolution
             };
         }
 
-        let matched = operatorService.evaluate(
+        let matched = this.operatorService().evaluate(
             condition.operatorCode,
             resolution.value,
             condition.value,
@@ -98,7 +98,7 @@ module.exports = {
             result: matched ? 'MATCHED' : 'NOT_MATCHED',
             matched: matched,
             applicable: true,
-            fallbackUsed: fallbackUsed,
+            fallbackUsed: resolved.fallbackUsed,
             resolution: resolution
         };
     }
