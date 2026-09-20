@@ -13,7 +13,7 @@
 
 const assert = require('assert');
 const routers = require('../src/router/routers');
-const authProperties = require('../../../nodics.foundation/modules/nAuth/config/properties');
+const authProperties = require('../../../../nodics.foundation/modules/nAuth/config/properties');
 
 const catalog = new Set(authProperties.identityGovernance.permissionCatalog);
 const missing = [];
