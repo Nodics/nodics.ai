@@ -24,6 +24,7 @@ module.exports = {
     publishDraft: function (request) { return SERVICE.DefaultRuleDefinitionLifecycleService.publishRuleSetDraft(request); },
     listVersions: function (request) { return SERVICE.DefaultRuleManagementService.listVersions(request); },
     propertyCatalogue: function (request) { return SERVICE.DefaultRuleManagementService.propertyCatalogue(request); },
+    propertyValues: function (request) { return SERVICE.DefaultRuleManagementService.propertyValues(request); },
     listBandSets: function (request) { return SERVICE.DefaultRuleManagementService.listBandSets(request); },
     getBandSet: function (request) { return SERVICE.DefaultRuleManagementService.getBandSet(request); },
     listBandVersions: function (request) { return SERVICE.DefaultRuleManagementService.listBandVersions(request); },
