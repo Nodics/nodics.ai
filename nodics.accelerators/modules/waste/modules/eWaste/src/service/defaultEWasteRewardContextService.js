@@ -99,6 +99,11 @@ module.exports = {
         let materials = this.codes(facts.materialTypeCodes && facts.materialTypeCodes.length ? facts.materialTypeCodes : descriptor.materials);
         let components = this.codes(descriptor.components);
         let hazards = this.codes(descriptor.hazards || descriptor.environmental && descriptor.environmental.hazards);
+        let evidence = submission.metadata && submission.metadata.evidenceReview || {};
+        let recognition = descriptor.recognition || {};
+        let unknownFields = this.codes(descriptor.unknownFields || recognition.unknownFields);
+        let lowConfidenceFields = this.codes(descriptor.lowConfidenceFields || recognition.lowConfidenceFields);
+        let qualityFlags = this.codes(evidence.qualityFlags || descriptor.qualityFlags || recognition.qualityFlags);
         let properties = {
             'asset.domain': this.resolution('ELECTRONICS','REFERENCE_DEFAULT',1,'EWASTE_ACCELERATOR'),
             'asset.family': this.resolution(facts.familyCode || 'ELECTRONICS',factQuality,1,'FACTS'),
@@ -127,7 +132,13 @@ module.exports = {
             'hazards': this.resolution(hazards,'AI_OBSERVED',descriptor.confidence,'IMAGE_AI'),
             'metadata.overallConfidence': this.resolution(Number(descriptor.confidence),'AI_INFERRED',descriptor.confidence,'IMAGE_AI'),
             'metadata.completenessScore': this.resolution(Number(descriptor.metadataCompleteness || descriptor.completenessScore),'AI_INFERRED',descriptor.confidence,'IMAGE_AI'),
-            'metadata.manualVerificationRequired': this.resolution(Boolean(submission.metadata && submission.metadata.evidenceReview && submission.metadata.evidenceReview.manualApprovalRequired),'AI_OBSERVED',1,'EVIDENCE_POLICY'),
+            'metadata.manualVerificationRequired': this.resolution(Boolean(evidence.manualApprovalRequired),'AI_OBSERVED',1,'EVIDENCE_POLICY'),
+            'metadata.unknownFields': this.resolution(unknownFields,'AI_INFERRED',descriptor.confidence,'IMAGE_AI'),
+            'metadata.lowConfidenceFields': this.resolution(lowConfidenceFields,'AI_INFERRED',descriptor.confidence,'IMAGE_AI'),
+            'evidence.imageEvidenceType': this.resolution(evidence.sourceType || recognition.imageEvidence && recognition.imageEvidence.sourceType,'AI_OBSERVED',evidence.confidence || recognition.imageEvidence && recognition.imageEvidence.confidence,'EVIDENCE_POLICY'),
+            'evidence.imageEvidenceConfidence': this.resolution(Number(evidence.confidence !== undefined ? evidence.confidence : recognition.imageEvidence && recognition.imageEvidence.confidence),'AI_OBSERVED',1,'EVIDENCE_POLICY'),
+            'evidence.manualReviewRequired': this.resolution(Boolean(evidence.manualApprovalRequired),'AI_OBSERVED',1,'EVIDENCE_POLICY'),
+            'evidence.qualityFlags': this.resolution(qualityFlags,'AI_OBSERVED',1,'EVIDENCE_POLICY'),
             'verification.status': this.resolution(request.verification && request.verification.verificationStatus, confirmed ? 'OPERATOR_VERIFIED':'UNAVAILABLE',1,'WASTE_VERIFICATION')
         };
 
