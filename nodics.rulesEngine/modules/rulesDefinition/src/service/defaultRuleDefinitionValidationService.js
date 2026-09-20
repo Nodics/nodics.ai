@@ -58,6 +58,13 @@ module.exports = {
         let property = propertyMap[condition.propertyCode];
         if (!this.operatorService().operators().includes(condition.operatorCode)) {
             issues.push({ path: path, code: 'OPERATOR_UNSUPPORTED', operatorCode: condition.operatorCode });
+        } else if (property.dataType && !this.operatorService().supports(condition.operatorCode, property.dataType)) {
+            issues.push({
+                path: path,
+                code: 'OPERATOR_TYPE_INVALID',
+                operatorCode: condition.operatorCode,
+                dataType: property.dataType
+            });
         } else if (Array.isArray(property.allowedOperators) && !property.allowedOperators.includes(condition.operatorCode)) {
             issues.push({ path: path, code: 'OPERATOR_NOT_ALLOWED_FOR_PROPERTY', operatorCode: condition.operatorCode });
         }
