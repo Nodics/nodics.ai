@@ -1,6 +1,12 @@
 # nodics.rulesEngine Agent Contract
 
-Follow the repository root `AGENTS.md`, the nSetup role/coding contracts, and all applicable ancestor/leaf guidance before changing this functional module.
+## Inheritance
+
+- Follow the repository agent contract: `../AGENTS.md`.
+- Follow global AI/development guidance:
+  `../nodics.foundation/modules/nSetup/llm/ai-enablement-index.md`.
+- Follow the nSetup role and coding/customization contracts before changing this functional module.
+- Follow all applicable ancestor and child-module guidance before implementation.
 
 ## Ownership
 
