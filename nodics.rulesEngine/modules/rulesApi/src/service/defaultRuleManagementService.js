@@ -40,6 +40,47 @@ module.exports = {
         return { code: 'RULE_SET_VERSIONS', data: response.result || [] };
     },
 
+    propertyCatalogue: function (request) {
+        let code = request.propertyProviderCode;
+        this.lifecycle().assertCode(code);
+        let registry = SERVICE.DefaultRulePropertyCatalogueRegistryService;
+        let catalogue = registry.getCatalogue(code, {
+            tenant: request.tenant,
+            consumerModule: request.query && request.query.consumerModule,
+            policyType: request.query && request.query.policyType,
+            scopeType: request.query && request.query.scopeType,
+            scopeCode: request.query && request.query.scopeCode
+        });
+        return {
+            code: 'RULE_PROPERTY_CATALOGUE',
+            data: {
+                catalogue: catalogue,
+                operators: SERVICE.DefaultRuleOperatorService.operators()
+            }
+        };
+    },
+
+    listBandSets: async function (request) {
+        let response = await SERVICE.DefaultScoreBandSetService.get(this.serviceRequest(request, {
+            query: request.query || {},
+            searchOptions: Object.assign({ limit: 100 }, request.searchOptions || {})
+        }));
+        return { code: 'SCORE_BAND_SET_LIST', data: response.result || [] };
+    },
+
+    getBandSet: async function (request) {
+        return { code: 'SCORE_BAND_SET_DETAIL', data: await this.lifecycle().requireBandSet(request, request.bandSetCode) };
+    },
+
+    listBandVersions: async function (request) {
+        this.lifecycle().assertCode(request.bandSetCode);
+        let response = await SERVICE.DefaultScoreBandSetVersionService.get(this.serviceRequest(request, {
+            query: { bandSetCode: request.bandSetCode },
+            searchOptions: { limit: 100, sort: { version: -1 } }
+        }));
+        return { code: 'SCORE_BAND_SET_VERSIONS', data: response.result || [] };
+    },
+
     simulateDraft: async function (request) {
         let ruleSet = await this.lifecycle().requireRuleSet(request, request.ruleSetCode);
         if (ruleSet.status !== 'DRAFT') throw new Error('Simulation requires an editable draft');
