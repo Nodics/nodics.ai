@@ -23,6 +23,10 @@ module.exports = {
     submitForApproval: function (request) { return SERVICE.DefaultRuleApprovalService.submit(request); },
     publishDraft: function (request) { return SERVICE.DefaultRuleDefinitionLifecycleService.publishRuleSetDraft(request); },
     listVersions: function (request) { return SERVICE.DefaultRuleManagementService.listVersions(request); },
+    propertyCatalogue: function (request) { return SERVICE.DefaultRuleManagementService.propertyCatalogue(request); },
+    listBandSets: function (request) { return SERVICE.DefaultRuleManagementService.listBandSets(request); },
+    getBandSet: function (request) { return SERVICE.DefaultRuleManagementService.getBandSet(request); },
+    listBandVersions: function (request) { return SERVICE.DefaultRuleManagementService.listBandVersions(request); },
     createBandSet: function (request) { return SERVICE.DefaultRuleDefinitionLifecycleService.createBandSet(request); },
     updateBandSetDraft: function (request) { return SERVICE.DefaultRuleDefinitionLifecycleService.updateBandSetDraft(request); },
     publishBandSetDraft: function (request) { return SERVICE.DefaultRuleDefinitionLifecycleService.publishBandSetDraft(request); }
