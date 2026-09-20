@@ -1,0 +1,29 @@
+{
+    "contractVersion": 2,
+    "module": "rulesApi",
+    "sections": {
+        "rulesPolicyApproval": {
+            "kind": "DATA_RELEASE",
+            "dataType": "init",
+            "version": "1.0.0",
+            "displayName": "Rules Policy Approval Workflow",
+            "description": "Rules-owned reusable maker-checker workflow contribution",
+            "owningDomain": "rules",
+            "lifecycle": "OPERATIONAL_VERSIONED",
+            "destinationRole": "PROCESS",
+            "environmentScope": [
+                "ALL"
+            ],
+            "sensitivity": "INTERNAL",
+            "versioningPolicy": "IMMUTABLE",
+            "publicationPolicy": "NONE",
+            "initialPublicationPolicy": "NONE",
+            "removalPolicy": "RETAIN",
+            "installer": "PROCESS_DEFINITION",
+            "files": {
+                "init-v001/records/process/rulesPolicyApprovalDefinitionData.js": "364058d5f33243619cb45fbb75ce56525726afed0c6b90842c5289c527f612f7"
+            },
+            "sourceRoot": "init-v001"
+        }
+    }
+}
