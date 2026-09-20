@@ -20,6 +20,9 @@ assert.strictEqual(operators.evaluate('IN', 'A', ['A','B']), true);
 assert.strictEqual(operators.evaluate('BETWEEN', 5, 1, 10), true);
 assert.strictEqual(operators.evaluate('CONTAINS_ALL', ['A','B','C'], ['A','C']), true);
 assert.strictEqual(operators.evaluate('IS_NOT_AVAILABLE', undefined), true);
+assert.strictEqual(operators.supports('GREATER_THAN_OR_EQUAL', 'NUMBER'), true);
+assert.strictEqual(operators.supports('GREATER_THAN_OR_EQUAL', 'STRING'), false);
+assert.strictEqual(operators.supports('CONTAINS_ANY', 'COLLECTION'), true);
 assert.throws(() => operators.evaluate('SCRIPT', 1, 1), /Unsupported/);
 
 registry.reset();
