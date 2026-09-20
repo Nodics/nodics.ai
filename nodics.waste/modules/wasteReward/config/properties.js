@@ -11,6 +11,17 @@
 
 /** @module wasteReward/config/properties @description Configurable defaults for Waste reward assessment persistence. @layer config @owner wasteReward */
 module.exports = {
+    schemaPolicies: {
+        wasteReward: {
+            operational: {
+                accessGroups: {
+                    adminGroup: 10,
+                    serviceAccountUserGroup: 10,
+                    employeeUserGroup: 10
+                }
+            }
+        }
+    },
     localResetProvider: {
         contributions: {
             wasteReward: {
