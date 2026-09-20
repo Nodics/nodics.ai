@@ -40,6 +40,15 @@ module.exports = {
         return { code: 'RULE_SET_VERSIONS', data: response.result || [] };
     },
 
+    listAudit: async function (request) {
+        this.lifecycle().assertCode(request.ruleSetCode);
+        let response = await SERVICE.DefaultRuleAuditEventService.get(this.serviceRequest(request, {
+            query: { ruleSetCode: request.ruleSetCode },
+            searchOptions: { limit: 200, sort: { createdAt: -1 } }
+        }));
+        return { code: 'RULE_SET_AUDIT', data: response.result || [] };
+    },
+
     propertyCatalogue: function (request) {
         let code = request.propertyProviderCode;
         this.lifecycle().assertCode(code);
@@ -114,7 +123,8 @@ module.exports = {
                 minimumScore: ruleSet.minimumScore,
                 maximumScore: ruleSet.maximumScore,
                 groups: (ruleSet.definition && ruleSet.definition.groups) || [],
-                scoreBands: bandVersion.bands
+                scoreBands: bandVersion.bands,
+                gapBehavior: bandVersion.gapBehavior || 'REJECT'
             },
             propertyProviderCode: ruleSet.propertyProviderCode,
             propertyCatalogueCode: catalogue.code || ruleSet.propertyProviderCode,
@@ -125,6 +135,37 @@ module.exports = {
             correlationId: request.correlationId || request.requestId
         };
         let result = SERVICE.DefaultRuleSimulationService.simulate(simulationRequest);
-        return { code: 'RULE_SIMULATION', data: Object.assign({ validation: validation.data || validation }, result) };
+        let simulation = {
+            draftRevision: Number(ruleSet.draftRevision || 1),
+            sourceHash: result.sourceHash,
+            simulatedAt: new Date(),
+            bandSetCode: bandVersion.bandSetCode,
+            bandSetVersion: Number(bandVersion.version),
+            propertyCatalogueCode: simulationRequest.propertyCatalogueCode,
+            propertyCatalogueVersion: String(simulationRequest.propertyCatalogueVersion || '')
+        };
+        await SERVICE.DefaultRuleSetService.update(this.serviceRequest(request, {
+            query: { code: ruleSet.code, status: 'DRAFT', draftRevision: Number(ruleSet.draftRevision || 1) },
+            model: { $set: { lastSimulation: simulation } }
+        }));
+        if (SERVICE.DefaultRuleAuditService) {
+            await SERVICE.DefaultRuleAuditService.record(request, {
+                ruleSetCode: ruleSet.code,
+                draftRevision: Number(ruleSet.draftRevision || 1),
+                eventType: 'RULE_SET_SIMULATED',
+                outcome: 'SUCCESS',
+                metadata: {
+                    sourceHash: result.sourceHash,
+                    bandSetCode: bandVersion.bandSetCode,
+                    bandSetVersion: Number(bandVersion.version),
+                    finalScore: result.finalScore,
+                    scoreBandCode: result.scoreBandCode
+                }
+            });
+        }
+        return {
+            code: 'RULE_SIMULATION',
+            data: Object.assign({ validation: validation.data || validation, simulation: simulation }, result)
+        };
     }
 };
