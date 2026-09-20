@@ -74,6 +74,12 @@ module.exports = {
                 permission: 'rules.definition.read', apiExposure: 'rulesManagement',
                 key: '/definitions/:ruleSetCode/versions', method: 'GET',
                 controller: 'DefaultRuleDefinitionController', operation: 'listVersions'
+            },
+            listAudit: {
+                secured: true, authTokenTypes: ['access'], accessGroups: ['userGroup'],
+                permission: 'rules.definition.audit', apiExposure: 'rulesManagement',
+                key: '/definitions/:ruleSetCode/audit', method: 'GET',
+                controller: 'DefaultRuleDefinitionController', operation: 'listAudit'
             }
         },
         propertyCatalogues: {
@@ -134,6 +140,12 @@ module.exports = {
                 permission: 'rules.band.update', apiExposure: 'rulesManagement',
                 key: '/band-sets/:bandSetCode/draft', method: 'PATCH',
                 controller: 'DefaultRuleDefinitionController', operation: 'updateBandSetDraft'
+            },
+            prepareNextBandSetDraft: {
+                secured: true, authTokenTypes: ['access'], accessGroups: ['runtimeConfigAdminUserGroup'],
+                permission: 'rules.band.update', apiExposure: 'rulesManagement',
+                key: '/band-sets/:bandSetCode/draft/prepare', method: 'POST',
+                controller: 'DefaultRuleDefinitionController', operation: 'prepareNextBandSetDraft'
             },
             publishBandSetDraft: {
                 secured: true, authTokenTypes: ['access'], accessGroups: ['runtimeConfigAdminUserGroup'],
