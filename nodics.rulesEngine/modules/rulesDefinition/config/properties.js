@@ -11,6 +11,19 @@
 
 /** @module rulesDefinition/config/properties @description Configurable defaults for governed rule definitions. @layer config @owner rulesDefinition */
 module.exports = {
+    localResetProvider: {
+        contributions: {
+            rulesDefinition: {
+                serviceNames: {
+                    DefaultRuleSetService: true,
+                    DefaultRuleSetVersionService: true,
+                    DefaultScoreBandSetService: true,
+                    DefaultScoreBandSetVersionService: true,
+                    DefaultRuleAuditEventService: true
+                }
+            }
+        }
+    },
     schemaPolicies: {
         rulesDefinition: {
             operational: {
