@@ -13,13 +13,35 @@
 
 /** @module rulesCore/src/service/defaultRuleOperatorService @description Evaluates the generic type-safe operator catalogue used by Rules Engine conditions. @layer service @owner rulesCore */
 module.exports = {
+    definitions: function () {
+        return Object.freeze({
+            EQUALS: { dataTypes: ['STRING','NUMBER','BOOLEAN','DATE'] },
+            NOT_EQUALS: { dataTypes: ['STRING','NUMBER','BOOLEAN','DATE'] },
+            IN: { dataTypes: ['STRING','NUMBER','BOOLEAN','DATE'] },
+            NOT_IN: { dataTypes: ['STRING','NUMBER','BOOLEAN','DATE'] },
+            GREATER_THAN: { dataTypes: ['NUMBER','DATE'] },
+            GREATER_THAN_OR_EQUAL: { dataTypes: ['NUMBER','DATE'] },
+            LESS_THAN: { dataTypes: ['NUMBER','DATE'] },
+            LESS_THAN_OR_EQUAL: { dataTypes: ['NUMBER','DATE'] },
+            BETWEEN: { dataTypes: ['NUMBER','DATE'] },
+            IS_AVAILABLE: { dataTypes: ['STRING','NUMBER','BOOLEAN','DATE','COLLECTION','OBJECT'] },
+            IS_NOT_AVAILABLE: { dataTypes: ['STRING','NUMBER','BOOLEAN','DATE','COLLECTION','OBJECT'] },
+            IS_TRUE: { dataTypes: ['BOOLEAN'] },
+            IS_FALSE: { dataTypes: ['BOOLEAN'] },
+            CONTAINS: { dataTypes: ['COLLECTION'] },
+            DOES_NOT_CONTAIN: { dataTypes: ['COLLECTION'] },
+            CONTAINS_ANY: { dataTypes: ['COLLECTION'] },
+            CONTAINS_ALL: { dataTypes: ['COLLECTION'] }
+        });
+    },
+
     operators: function () {
-        return Object.freeze([
-            'EQUALS','NOT_EQUALS','IN','NOT_IN',
-            'GREATER_THAN','GREATER_THAN_OR_EQUAL','LESS_THAN','LESS_THAN_OR_EQUAL','BETWEEN',
-            'IS_AVAILABLE','IS_NOT_AVAILABLE','IS_TRUE','IS_FALSE',
-            'CONTAINS','DOES_NOT_CONTAIN','CONTAINS_ANY','CONTAINS_ALL'
-        ]);
+        return Object.freeze(Object.keys(this.definitions()));
+    },
+
+    supports: function (operator, dataType) {
+        let definition = this.definitions()[operator];
+        return Boolean(definition && definition.dataTypes.includes(String(dataType || '').toUpperCase()));
     },
 
     isAvailable: function (value) {
