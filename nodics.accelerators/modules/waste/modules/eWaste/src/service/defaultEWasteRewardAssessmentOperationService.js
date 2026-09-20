@@ -145,6 +145,11 @@ module.exports = {
             tenant: request.tenant,
             assessmentType: assessmentType
         });
+        if (policy.propertyCatalogueVersion !== undefined &&
+            policy.propertyCatalogueVersion !== null &&
+            String(policy.propertyCatalogueVersion) !== String(catalogue.version)) {
+            throw new Error('Effective eWaste reward policy references a different property-catalogue version');
+        }
 
         let evaluation = SERVICE.DefaultRuleEvaluationService.evaluate({
             ruleSet: {
@@ -153,7 +158,8 @@ module.exports = {
                 minimumScore: policy.minimumScore,
                 maximumScore: policy.maximumScore,
                 groups: policy.definition && policy.definition.groups || [],
-                scoreBands: bands.bands
+                scoreBands: bands.bands,
+                gapBehavior: bands.gapBehavior || 'REJECT'
             },
             propertyProviderCode: this.settings().propertyProviderCode || 'eWaste.reward',
             propertyCatalogueCode: catalogue.code,
@@ -170,7 +176,11 @@ module.exports = {
         let explanation = this.collectExplanation(evaluation.groupResults);
         let code = this.assessmentCode(request, assessmentType, policy);
         let existing = await this.existing(request, code);
-        if (existing) return existing;
+        if (existing) {
+            if (existing.sourceHash !== evaluation.sourceHash)
+                throw new Error('Reward assessment replay conflicts with previously recorded evaluation evidence');
+            return existing;
+        }
 
         let submission = request.submission;
         let sourceRevision = Number(request.sourceRevision !== undefined ? request.sourceRevision : submission.revision || 0);
