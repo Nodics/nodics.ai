@@ -13,6 +13,29 @@
 
 /** @module rulesApi/config/properties @description Rules API exposure defaults and BackOffice presentation settings. @layer config @owner rulesApi */
 module.exports = {
+    rulesEngine: {
+        approval: {
+            definitionCode: 'rulesPolicyApproval',
+            processTarget: {},
+            actionAuthority: {}
+        }
+    },
+    process: {
+        actionAdapters: {
+            definitions: {
+                'rulesApi.applyDecision': {
+                    moduleName: 'rulesApi',
+                    operation: 'applyDecision',
+                    remote: {
+                        target: 'rulesApi',
+                        moduleName: 'rulesApi',
+                        apiName: '/workflow/actions/applyDecision',
+                        requiresCompletedTask: true
+                    }
+                }
+            }
+        }
+    },
     apiExposure: {
         categories: {
             rulesManagement: { enabled: true },
