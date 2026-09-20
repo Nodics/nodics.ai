@@ -144,7 +144,7 @@ module.exports = {
             }
         }
 
-        let descriptor = require('../../../../../nodics.waste/modules/wasteMaterial/src/utils/descriptorDefinitions');
+        let descriptor = require('../../../../../../../nodics.waste/modules/wasteMaterial/src/utils/descriptorDefinitions');
         if (propertyCode === 'asset.handlingSize') {
             return descriptor.sizeClasses.map(value => ({ value: value, label: value }));
         }
