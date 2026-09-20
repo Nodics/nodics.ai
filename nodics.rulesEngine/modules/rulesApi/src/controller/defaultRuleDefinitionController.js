@@ -17,6 +17,7 @@ module.exports = {
         let httpRequest = request.httpRequest || {};
         request.ruleSetCode = httpRequest.params && httpRequest.params.ruleSetCode || request.ruleSetCode;
         request.bandSetCode = httpRequest.params && httpRequest.params.bandSetCode || request.bandSetCode;
+        request.propertyProviderCode = httpRequest.params && httpRequest.params.propertyProviderCode || request.propertyProviderCode;
         request.model = httpRequest.body || request.model || {};
         request.query = httpRequest.query || request.query || {};
         let promise = FACADE.DefaultRuleDefinitionFacade[operation](request);
@@ -34,6 +35,10 @@ module.exports = {
     submitForApproval: function (request, callback) { return this.invoke('submitForApproval', request, callback); },
     publishDraft: function (request, callback) { return this.invoke('publishDraft', request, callback); },
     listVersions: function (request, callback) { return this.invoke('listVersions', request, callback); },
+    propertyCatalogue: function (request, callback) { return this.invoke('propertyCatalogue', request, callback); },
+    listBandSets: function (request, callback) { return this.invoke('listBandSets', request, callback); },
+    getBandSet: function (request, callback) { return this.invoke('getBandSet', request, callback); },
+    listBandVersions: function (request, callback) { return this.invoke('listBandVersions', request, callback); },
     createBandSet: function (request, callback) { return this.invoke('createBandSet', request, callback); },
     updateBandSetDraft: function (request, callback) { return this.invoke('updateBandSetDraft', request, callback); },
     publishBandSetDraft: function (request, callback) { return this.invoke('publishBandSetDraft', request, callback); }
