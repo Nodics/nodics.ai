@@ -31,6 +31,8 @@ const catalogue = provider.getCatalogue();
 assert.strictEqual(catalogue.code, 'EWASTE_REWARD_PROPERTIES');
 assert(catalogue.properties.some(property => property.code === 'environment.carbonImpact'));
 assert(catalogue.properties.some(property => property.code === 'asset.recordedWeight' && property.supportsFallback));
+assert(catalogue.properties.some(property => property.code === 'evidence.imageEvidenceType'));
+assert(catalogue.properties.some(property => property.code === 'metadata.unknownFields'));
 
 const submission = {
     code: 'SUB-1',
@@ -67,6 +69,16 @@ const normalized = contextService.build({
 assert.strictEqual(normalized.properties['asset.recordedWeight'].quality, 'VERIFIED_MEASUREMENT');
 assert.strictEqual(normalized.properties['environment.carbonImpact'].value, 14.6);
 assert.strictEqual(normalized.properties['environment.carbonImpact'].quality, 'OPERATOR_VERIFIED');
+const fallback = provider.resolveFallback({
+    propertyCode:'asset.recordedWeight',
+    minimumInputQuality:'AI_INFERRED',
+    minimumConfidence:0.7,
+    context:{ fallbacks:{ 'asset.recordedWeight':[
+        { available:true, value:0.22, quality:'REFERENCE_DEFAULT', confidence:1, source:'ITEM_TYPE_DEFAULT' },
+        { available:true, value:0.21, quality:'AI_INFERRED', confidence:0.9, source:'IMAGE_AI' }
+    ] } }
+});
+assert.strictEqual(fallback.source, 'IMAGE_AI', 'fallback must skip candidates below the configured quality floor');
 
 const saved = [];
 global.CONFIG = {
@@ -102,6 +114,18 @@ SERVICE.DefaultWasteRewardAssessmentService = {
 };
 
 (async () => {
+    const estimated = await assessmentService.assessEstimated({
+        tenant:'default',
+        submission,
+        facts:submission.confirmedFacts,
+        impact,
+        correlationId:'corr-estimated'
+    });
+    assert.strictEqual(estimated.assessmentType, 'ESTIMATED');
+    assert.strictEqual(estimated.finalScore, 60);
+    assert.strictEqual(estimated.scoreBandCode, 'HIGH');
+    assert.strictEqual(saved.length, 1);
+
     const assessment = await assessmentService.assessConfirmed({
         tenant:'default',
         submission,
@@ -116,7 +140,8 @@ SERVICE.DefaultWasteRewardAssessmentService = {
     assert.strictEqual(assessment.rewardAmount, '200');
     assert.strictEqual(assessment.policyVersion, 1);
     assert.strictEqual(assessment.bandSetVersion, 1);
-    assert.strictEqual(saved.length, 1);
+    assert.strictEqual(saved.length, 2);
+    assert.notStrictEqual(estimated.code, assessment.code, 'estimated and confirmed assessments must remain separate evidence');
 
     const replay = await assessmentService.assessConfirmed({
         tenant:'default',
@@ -127,7 +152,7 @@ SERVICE.DefaultWasteRewardAssessmentService = {
         correlationId:'corr-1'
     });
     assert.strictEqual(replay.code, assessment.code);
-    assert.strictEqual(saved.length, 1, 'assessment replay must be idempotent');
+    assert.strictEqual(saved.length, 2, 'assessment replay must be idempotent');
 
     console.log('eWaste Rules property and reward assessment contracts validated');
 })().finally(() => {
