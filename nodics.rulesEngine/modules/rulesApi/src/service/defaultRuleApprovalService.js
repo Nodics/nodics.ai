@@ -67,6 +67,7 @@ module.exports = {
         let ruleSet = await lifecycle.requireRuleSet(request, request.ruleSetCode);
         if (ruleSet.status !== 'DRAFT') throw new Error('Only a draft rule set can be submitted for approval');
         await lifecycle.validateRuleSetDraft(Object.assign({}, request, { ruleSetCode: ruleSet.code }));
+        await lifecycle.assertCurrentSimulation(request, ruleSet);
 
         let draftRevision = Number(ruleSet.draftRevision || 1);
         let previous = ruleSet.approval || {};
@@ -110,6 +111,18 @@ module.exports = {
             query: { code: ruleSet.code, status: 'DRAFT', draftRevision: draftRevision },
             model: { $set: { approval: approval } }
         }));
+        if (SERVICE.DefaultRuleAuditService) {
+            await SERVICE.DefaultRuleAuditService.record(request, {
+                ruleSetCode: ruleSet.code,
+                draftRevision: draftRevision,
+                eventType: 'RULE_SET_SUBMITTED_FOR_APPROVAL',
+                outcome: 'SUCCESS',
+                metadata: {
+                    processDefinitionCode: runtimeOperation.definitionCode,
+                    processInstanceCode: actualInstanceCode
+                }
+            });
+        }
         return { code: 'RULE_APPROVAL_PENDING', data: approval };
     },
 
@@ -149,6 +162,17 @@ module.exports = {
                     reason: decision.reason
                 }) } }
             }));
+            if (SERVICE.DefaultRuleAuditService) {
+                await SERVICE.DefaultRuleAuditService.record(request, {
+                    ruleSetCode: ruleSet.code,
+                    draftRevision: Number(context.draftRevision),
+                    eventType: 'RULE_SET_APPROVAL_REJECTED',
+                    outcome: 'REJECTED',
+                    actor: actor,
+                    reason: decision.reason,
+                    metadata: { processInstanceCode: instance.code }
+                });
+            }
             return { status: 'COMPLETED', output: { ruleSetCode: ruleSet.code, policyStatus: 'DRAFT', decision: 'REJECTED' } };
         }
 
