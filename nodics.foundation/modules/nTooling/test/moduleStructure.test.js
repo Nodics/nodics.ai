@@ -75,7 +75,7 @@ const modules = scanModules();
 function validRuntimeName(packageJson) {
     const kind = packageJson.nodics?.kind;
     return /^[A-Za-z][A-Za-z0-9]*$/.test(packageJson.name) ||
-        (kind === 'group' && /^nodics\.[a-z][a-z0-9]*$/.test(packageJson.name)) ||
+        (kind === 'group' && /^nodics\.[a-z][A-Za-z0-9]*$/.test(packageJson.name)) ||
         (kind === 'content-pack' && /^[A-Za-z][A-Za-z0-9]*(?:\.[A-Za-z][A-Za-z0-9]*)+$/.test(packageJson.name));
 }
 assert(validRuntimeName({ name: 'example.content', nodics: { kind: 'content-pack' } }));
@@ -83,6 +83,10 @@ for (const name of ['../content', 'example..content', '.content', 'example/conte
     assert(!validRuntimeName({ name, nodics: { kind: 'content-pack' } }));
 }
 assert(!validRuntimeName({ name: 'example.content', nodics: { kind: 'capability' } }));
+assert(validRuntimeName({ name: 'nodics.rulesEngine', nodics: { kind: 'group' } }));
+for (const name of ['nodics.RulesEngine', 'nodics.rules-engine', 'nodics.rules.engine']) {
+    assert(!validRuntimeName({ name, nodics: { kind: 'group' } }));
+}
 
 modules.forEach(moduleObject => {
     const packageJson = moduleObject.packageJson;
