@@ -34,6 +34,12 @@ module.exports = {
             : require('../../../rulesCore/src/service/defaultRuleOperatorService');
     },
 
+    outcomeRegistry: function () {
+        return typeof SERVICE !== 'undefined' && SERVICE.DefaultRuleOutcomeRegistryService
+            ? SERVICE.DefaultRuleOutcomeRegistryService
+            : require('../../../rulesCore/src/service/defaultRuleOutcomeRegistryService');
+    },
+
     propertyMap: function (providerCode, context) {
         let catalogue = this.providerRegistry().getCatalogue(providerCode, context || {});
         let properties = catalogue && catalogue.properties || [];
@@ -89,6 +95,9 @@ module.exports = {
         children.forEach((child, index) => this.validateGroup(child, propertyMap, issues, path + '.childGroups[' + index + ']', depth + 1, seenCodes));
         if (!group || !group.outcome || !group.outcome.outcomeType) {
             if (depth === 1) issues.push({ path: path, code: 'TOP_LEVEL_OUTCOME_REQUIRED' });
+        } else {
+            let outcomeValidation = this.outcomeRegistry().validate(group.outcome);
+            (outcomeValidation.issues || []).forEach(issue => issues.push(Object.assign({ path: path + '.outcome' }, issue)));
         }
     },
 
