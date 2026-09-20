@@ -341,8 +341,8 @@ module.exports = {
         metadata: {
           ...(submission.metadata || {}),
           estimatedRewardAssessmentRef: {
-            module: "eWaste",
-            schema: "eWasteRewardAssessment",
+            module: "wasteReward",
+            schema: "wasteRewardAssessment",
             code: assessment.code,
           },
           estimatedReward: summary,
@@ -672,8 +672,8 @@ module.exports = {
             metadata: {
               ...(result.asset.metadata || {}),
               confirmedRewardAssessmentRef: {
-                module: "eWaste",
-                schema: "eWasteRewardAssessment",
+                module: "wasteReward",
+            schema: "wasteRewardAssessment",
                 code: assessment.code,
               },
               confirmedReward: summary,
