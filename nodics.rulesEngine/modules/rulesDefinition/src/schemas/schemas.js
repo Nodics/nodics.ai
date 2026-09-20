@@ -73,29 +73,7 @@ module.exports = {
                 inheritsFrom: { type: 'string', required: false, description: 'Published parent rule-set identity.' },
                 overridePolicy: { type: 'object', required: false, description: 'Published override policy snapshot.' },
                 scoreBandSetCode: { type: 'string', required: false, description: 'Score-band set selected by this version.' },
-                ruleAuditEvent: {
-            backoffice: { mutationMode: 'READ_ONLY', operations: ['search','read'] },
-            super: 'super',
-            model: true,
-            schemaPolicies: ['operational'],
-            service: { enabled: true },
-            cache: { enabled: false },
-            router: { enabled: false },
-            search: { enabled: true, idPropertyName: '_id' },
-            definition: {
-                ruleSetCode: { type: 'string', required: false, description: 'Related rule-set code when the event concerns a rule policy.' },
-                bandSetCode: { type: 'string', required: false, description: 'Related score-band-set code when the event concerns reward mapping.' },
-                version: { type: 'int', required: false, description: 'Related immutable published version.' },
-                draftRevision: { type: 'int', required: false, description: 'Related mutable draft revision.' },
-                eventType: { type: 'string', required: true, description: 'Stable lifecycle/governance event type.' },
-                outcome: { type: 'string', required: true, description: 'SUCCESS, REJECTED, DENIED, FAILED or INFORMATIONAL outcome.' },
-                actor: { type: 'string', required: false, description: 'Authenticated actor or service identity.' },
-                correlationId: { type: 'string', required: false, description: 'Cross-capability correlation identifier.' },
-                reason: { type: 'string', required: false, description: 'Business-readable reason when required by the action.' },
-                metadata: { type: 'object', required: false, description: 'Bounded redacted audit metadata; secrets and raw request bodies are prohibited.' }
-            }
-        },
-        scoreBandSetVersion: { type: 'int', required: false, description: 'Exact immutable score-band-set version selected by this version.' },
+                scoreBandSetVersion: { type: 'int', required: false, description: 'Exact immutable score-band-set version selected by this version.' },
                 minimumScore: { type: 'number', required: false, description: 'Published minimum score bound.' },
                 maximumScore: { type: 'number', required: false, description: 'Published maximum score bound.' },
                 definition: { type: 'object', required: true, description: 'Immutable backend-validated rule graph.' },
@@ -160,6 +138,30 @@ module.exports = {
                 publishedAt: { type: 'date', required: true, description: 'Publication timestamp.' },
                 metadata: { type: 'object', required: false, description: 'Bounded immutable extension evidence.' }
             }
+        },
+
+        ruleAuditEvent: {
+            backoffice: { mutationMode: 'READ_ONLY', operations: ['search','read'] },
+            super: 'super',
+            model: true,
+            schemaPolicies: ['operational'],
+            service: { enabled: true },
+            cache: { enabled: false },
+            router: { enabled: false },
+            search: { enabled: true, idPropertyName: '_id' },
+            definition: {
+                ruleSetCode: { type: 'string', required: false, description: 'Related rule-set code.' },
+                bandSetCode: { type: 'string', required: false, description: 'Related score-band-set code.' },
+                version: { type: 'int', required: false, description: 'Related immutable published version.' },
+                draftRevision: { type: 'int', required: false, description: 'Related mutable draft revision.' },
+                eventType: { type: 'string', required: true, description: 'Lifecycle or governance event type.' },
+                outcome: { type: 'string', required: true, description: 'Event outcome.' },
+                actor: { type: 'string', required: false, description: 'Authenticated actor or service identity.' },
+                correlationId: { type: 'string', required: false, description: 'Cross-capability correlation identifier.' },
+                reason: { type: 'string', required: false, description: 'Business-readable reason.' },
+                metadata: { type: 'object', required: false, description: 'Bounded audit metadata.' }
+            }
         }
+
     }
 };
