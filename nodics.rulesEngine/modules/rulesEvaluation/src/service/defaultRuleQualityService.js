@@ -33,11 +33,19 @@ module.exports = {
             ranks[actual] >= ranks[minimum];
     },
 
+    normalizeConfidence: function (value) {
+        if (value === undefined || value === null || value === '') return undefined;
+        let normalized = Number(value);
+        if (!Number.isFinite(normalized)) return undefined;
+        if (normalized > 1 && normalized <= 100) normalized = normalized / 100;
+        return normalized >= 0 && normalized <= 1 ? normalized : undefined;
+    },
+
     confidenceMeets: function (actual, minimum) {
         if (minimum === undefined || minimum === null || minimum === '') return true;
-        let required = Number(minimum);
-        let supplied = Number(actual);
-        if (!Number.isFinite(required)) throw new Error('Rule minimum confidence must be numeric');
-        return Number.isFinite(supplied) && supplied >= required;
+        let required = this.normalizeConfidence(minimum);
+        let supplied = this.normalizeConfidence(actual);
+        if (required === undefined) throw new Error('Rule minimum confidence must be between 0 and 1, or a percentage up to 100');
+        return supplied !== undefined && supplied >= required;
     }
 };
