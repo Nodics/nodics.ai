@@ -14,6 +14,7 @@
     "loadableByNodicsModuleLoader": true,
     "owns": [
       "configuration",
+      "data",
       "router",
       "controller",
       "facade",
