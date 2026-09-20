@@ -51,13 +51,17 @@ module.exports = {
 
     assertCurrentSimulation: async function (request, ruleSet) {
         let simulation = ruleSet.lastSimulation || {};
-        let bandVersion = await this.currentBandVersion(request, ruleSet.scoreBandSetCode);
+        let bandVersion = ruleSet.scoreBandSetCode
+            ? await this.currentBandVersion(request, ruleSet.scoreBandSetCode)
+            : null;
+        let bandMismatch = bandVersion
+            ? simulation.bandSetCode !== bandVersion.bandSetCode ||
+              Number(simulation.bandSetVersion) !== Number(bandVersion.version)
+            : Boolean(simulation.bandSetCode || simulation.bandSetVersion);
         if (!simulation.sourceHash ||
             Number(simulation.draftRevision) !== Number(ruleSet.draftRevision || 1) ||
-            !bandVersion ||
-            simulation.bandSetCode !== bandVersion.bandSetCode ||
-            Number(simulation.bandSetVersion) !== Number(bandVersion.version)) {
-            throw new Error('Run a successful simulation for the current rule and reward-band versions before submission or publication');
+            bandMismatch) {
+            throw new Error('Run a successful simulation for the current rule version and any selected score-band version before submission or publication');
         }
         return bandVersion;
     },
