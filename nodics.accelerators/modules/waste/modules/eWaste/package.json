@@ -29,7 +29,8 @@
       "web": false
     },
     "extends": [
-      "nodics.waste"
+      "nodics.waste",
+      "nodics.rulesEngine"
     ]
   },
   "scripts": {
