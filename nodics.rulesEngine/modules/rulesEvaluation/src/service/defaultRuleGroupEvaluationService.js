@@ -32,7 +32,7 @@ module.exports = {
 
         let applicable = conditionResults.filter(result => result.applicable !== false)
             .map(result => result.matched)
-            .concat(childResults.map(result => result.matched));
+            .concat(childResults.filter(result => result.applicable !== false).map(result => result.matched));
 
         let matched = applicable.length > 0 &&
             (group.operator === 'ALL' ? applicable.every(Boolean) : applicable.some(Boolean));
@@ -41,6 +41,7 @@ module.exports = {
             groupCode: group.code,
             name: group.name,
             operator: group.operator,
+            applicable: applicable.length > 0,
             matched: matched,
             applicableCount: applicable.length,
             conditionResults: conditionResults,
