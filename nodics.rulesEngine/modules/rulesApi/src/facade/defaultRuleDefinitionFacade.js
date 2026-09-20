@@ -23,6 +23,7 @@ module.exports = {
     submitForApproval: function (request) { return SERVICE.DefaultRuleApprovalService.submit(request); },
     publishDraft: function (request) { return SERVICE.DefaultRuleDefinitionLifecycleService.publishRuleSetDraft(request); },
     listVersions: function (request) { return SERVICE.DefaultRuleManagementService.listVersions(request); },
+    listAudit: function (request) { return SERVICE.DefaultRuleManagementService.listAudit(request); },
     propertyCatalogue: function (request) { return SERVICE.DefaultRuleManagementService.propertyCatalogue(request); },
     propertyValues: function (request) { return SERVICE.DefaultRuleManagementService.propertyValues(request); },
     listBandSets: function (request) { return SERVICE.DefaultRuleManagementService.listBandSets(request); },
@@ -30,5 +31,6 @@ module.exports = {
     listBandVersions: function (request) { return SERVICE.DefaultRuleManagementService.listBandVersions(request); },
     createBandSet: function (request) { return SERVICE.DefaultRuleDefinitionLifecycleService.createBandSet(request); },
     updateBandSetDraft: function (request) { return SERVICE.DefaultRuleDefinitionLifecycleService.updateBandSetDraft(request); },
+    prepareNextBandSetDraft: function (request) { return SERVICE.DefaultRuleDefinitionLifecycleService.prepareNextBandSetDraft(request); },
     publishBandSetDraft: function (request) { return SERVICE.DefaultRuleDefinitionLifecycleService.publishBandSetDraft(request); }
 };
