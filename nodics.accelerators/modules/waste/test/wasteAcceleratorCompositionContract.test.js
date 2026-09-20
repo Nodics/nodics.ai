@@ -37,9 +37,25 @@ assert(!fs.existsSync(path.join(acceleratorRoot, 'data')), 'Waste accelerator um
 assert.strictEqual(scenarioPackage.name, 'eWaste');
 assert.strictEqual(scenarioPackage.index, '92.71');
 assert.strictEqual(scenarioPackage.nodics.kind, 'capability');
-assert.deepStrictEqual(scenarioPackage.nodics.extends, ['nodics.waste']);
+assert.deepStrictEqual(scenarioPackage.nodics.extends, ['nodics.waste', 'nodics.rulesEngine']);
 assert.strictEqual(scenarioPackage.nodics.runtime.router, true);
 assert(!fs.existsSync(path.join(scenarioRoot, 'src/schemas')), 'Domain orchestration must not duplicate Waste schemas');
+
+const taxonomySchemas = require('../../../../nodics.waste/modules/wasteMaterial/src/schemas/schemas').wasteMaterial;
+assert(taxonomySchemas.wasteFamily, 'wasteFamily is the canonical reusable Waste domain/family boundary');
+assert(taxonomySchemas.wasteCategory, 'wasteCategory must remain the generic category layer below wasteFamily');
+assert(taxonomySchemas.wasteItemType, 'wasteItemType must remain the generic item-type layer below wasteCategory');
+assert.strictEqual(taxonomySchemas.resourceDomain, undefined, 'Do not introduce a parallel ResourceDomain schema when wasteFamily already owns domain classification');
+
+const genericFamilies = require('../../../../nodics.waste/modules/wasteMaterial/data/core-v001/records/material/wasteFamilyCoreData');
+const eWasteFamilies = require('../modules/eWaste/data/core-v001/records/waste/eWasteFamilyData');
+const genericFamilyCodes = Object.values(genericFamilies).map(function (record) { return record.code; });
+const eWasteFamilyCodes = Object.values(eWasteFamilies).map(function (record) { return record.code; });
+['ELECTRONICS', 'BATTERY', 'TEXTILES'].forEach(function (code) {
+    assert(genericFamilyCodes.includes(code), code + ' must remain reusable Waste family vocabulary');
+});
+assert.deepStrictEqual(eWasteFamilyCodes.sort(), ['BATTERY', 'ELECTRONICS'], 'eWaste must contribute only its owned family presets');
+
 
 assert.strictEqual(recyclingPackage.name, 'wasteRecycling');
 assert.strictEqual(recyclingPackage.index, '92.72');
