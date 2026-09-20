@@ -36,6 +36,7 @@ module.exports = {
     submitForApproval: function (request, callback) { return this.invoke('submitForApproval', request, callback); },
     publishDraft: function (request, callback) { return this.invoke('publishDraft', request, callback); },
     listVersions: function (request, callback) { return this.invoke('listVersions', request, callback); },
+    listAudit: function (request, callback) { return this.invoke('listAudit', request, callback); },
     propertyCatalogue: function (request, callback) { return this.invoke('propertyCatalogue', request, callback); },
     propertyValues: function (request, callback) { return this.invoke('propertyValues', request, callback); },
     listBandSets: function (request, callback) { return this.invoke('listBandSets', request, callback); },
@@ -43,5 +44,6 @@ module.exports = {
     listBandVersions: function (request, callback) { return this.invoke('listBandVersions', request, callback); },
     createBandSet: function (request, callback) { return this.invoke('createBandSet', request, callback); },
     updateBandSetDraft: function (request, callback) { return this.invoke('updateBandSetDraft', request, callback); },
+    prepareNextBandSetDraft: function (request, callback) { return this.invoke('prepareNextBandSetDraft', request, callback); },
     publishBandSetDraft: function (request, callback) { return this.invoke('publishBandSetDraft', request, callback); }
 };
