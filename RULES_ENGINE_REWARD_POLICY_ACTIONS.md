@@ -52,6 +52,12 @@ Estimated readiness before hardening:
 2. Added the missing `wasteReward` package test script.
    - `npm test --prefix nodics.waste/modules/wasteReward` now runs syntax and the existing reward-assessment contract test.
 
+3. Expanded Axis Rules Management without moving authority into the frontend.
+   - Axis now presents structured Rules workspace tabs for builder assistance, score-band draft editing, owner-backed simulation, local draft review, version history, and audit inspection.
+   - All reads and writes go through the discovered `rulesApi` owner client.
+   - Axis still does not evaluate rules, publish policies, resolve backend catalogues locally, or settle rewards.
+   - Route-level and client tests prove version, audit, property-catalogue, and score-band calls stay on owner endpoints.
+
 Validation evidence:
 
 - `npm test --prefix nodics.rulesEngine`: passed.
@@ -65,6 +71,8 @@ Validation evidence:
 - `npm run check:syntax`: passed, 4934 files checked, 0 failures.
 - `npm run quality:docs`: passed.
 - `npm run test:basic`: passed. Live runtime/provider checks were not executed by this suite and remain separate acceptance gates.
+- `npm run release:check -- --execute`: passed on the backend branch, including clean install, build, LLM validation, ownership, docs, and basic tests. Live runtime/provider checks were not executed by this suite and remain separate acceptance gates.
+- Axis `npm run verify`: passed after Rules workspace UX expansion, including format, lint, typecheck, 128 test files / 646 tests, and production build.
 
 ## Immediate Fixes
 
@@ -84,14 +92,18 @@ Validation evidence:
 3. Verify root package/workspace metadata for new modules. **Tooling gate passed; release packaging still needs final review.**
    - Owner: `nodics.ai` framework metadata.
    - Problem: `nodics.rulesEngine` and `nodics.waste` are runtime module groups but are not listed in root npm workspaces. Confirm whether this is intentional module-loader policy or a package governance gap.
-   - Evidence: `npm run module:metadata:validate` passed with 204 packages.
-   - Remaining: confirm release packaging and dependency-lock expectations before merge.
+   - Evidence: `npm run module:metadata:validate` passed with 204 packages, and `npm run release:check -- --execute` passed.
+   - Remaining: no tooling gap is currently proven; keep this as a release-review note only if packaging policy changes.
 
-4. Run dependency-backed validation from a clean install.
+4. Run dependency-backed validation from a clean install. **Done in release gate.**
    - Owner: release validation.
    - Problem: isolated worktree validation was blocked by missing installed dependencies (`lodash`, `flatted`).
-   - Evidence: installed-checkout gates passed through `npm run test:basic`.
-   - Remaining: run `npm run release:check -- --execute` or an equivalent clean checkout validation before final merge approval.
+   - Evidence: `npm run release:check -- --execute` passed on the backend branch.
+
+5. Complete Axis Rules workspace depth. **Done in Axis branch.**
+   - Owner: `nodics.axis`.
+   - Evidence: commit `a031b93` expands the Rules Management route and client tests; branch `feature/rules-engine-reward-policy` was pushed to origin.
+   - Validation: Axis `npm run verify` passed.
 
 ## Framework Compliance Gates
 
