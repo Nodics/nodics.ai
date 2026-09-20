@@ -20,7 +20,7 @@ module.exports = {
             model: true,
             schemaPolicies: ['operational'],
             service: { enabled: true },
-            router: { groups: { schemaOperations: true }, enabled: true },
+            router: { enabled: false },
             cache: { enabled: false },
             event: { enabled: false },
             search: { enabled: true, idPropertyName: 'code' },
