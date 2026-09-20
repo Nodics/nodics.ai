@@ -1,6 +1,6 @@
 {
   "contract": "nodics.documentation/v1",
-  "release": "0.16.12",
+  "release": "0.16.14",
   "documents": [
     {
       "id": "docs.gateway",
@@ -8463,10 +8463,10 @@
     },
     {
       "id": "applications.nexus-data-content-guide",
-      "functionalModule": "nodics.kickoff",
+      "functionalModule": "nodics.accelerators",
       "technicalModule": "nexus.web",
       "title": "Nexus Data and Content Guide",
-      "summary": "How Nexus corporate content, media, editorial, engagement, Staged publication, Online delivery, and browser validation are authored from project data releases.",
+      "summary": "How Nexus corporate content, media, editorial, engagement, Staged publication, Online delivery, and browser validation are authored from accelerator-owned reference releases and customer overlays.",
       "locale": "en",
       "content": "docs/pages/applications/nexus-data-content-guide.md",
       "slug": "applications-nexus-data-content-guide",
@@ -8530,10 +8530,10 @@
       "sourceEvidence": [
         "docs/catalogue.json",
         "docs/pages/applications/nexus-data-content-guide.md",
-        "../../nodics.kickoff/modules/nexus.web/package.json",
-        "../../nodics.kickoff/modules/nexus.web/data/manifest.json",
-        "../../nodics.kickoff/modules/nexus.web/data/sample-v001/content/assets/nexus-cms-media/assetManifest.js",
-        "../../nodics.kickoff/modules/nexus.web/test/nexusCorporateContentContract.test.mjs",
+        "../nodics.accelerators/modules/nexus/modules/nexus.web/package.json",
+        "../nodics.accelerators/modules/nexus/modules/nexus.web/data/manifest.json",
+        "../nodics.accelerators/modules/nexus/modules/nexus.web/data/sample-v001/content/assets/nexus-cms-media/assetManifest.js",
+        "../nodics.accelerators/modules/nexus/modules/nexus.web/test/nexusCorporateContentContract.test.mjs",
         "../../nodics.exp/nodics.nexus/package.json"
       ],
       "maturityState": "operational",
@@ -10456,7 +10456,7 @@
         "docs/catalogue.json",
         "docs/pages/nodics.engagement/contact-submission-operations.md",
         "../nodics.engagement/modules/contactSubmission/package.json",
-        "../../nodics.kickoff/modules/nexus.web/data/sample-v001/content/records/engagement"
+        "../nodics.accelerators/modules/nexus/modules/nexus.web/data/sample-v001/content/records/engagement"
       ],
       "maturityState": "operational",
       "implementationState": "current",

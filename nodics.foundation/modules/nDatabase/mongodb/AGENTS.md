@@ -27,3 +27,9 @@ This file gives AI coding agents mandatory guidance for this Nodics module or pa
 
 Use the keyed boolean `schemaProperties` contract; preserve zero/false constraints
 and reject malformed selections. See [constraint selection](llm/contracts/README.md#keyed-schema-constraints).
+
+MongoDB owns the framework connection-name defaults: `masterLocal` and `testLocal`
+under `database.default.mongodb.master/test.databaseName`. Local deployments
+inherit them; later layers declare only deliberate differences. Keep separate
+server and tenant databases where required for isolation. A default change must
+not rename, migrate, delete or reconnect existing databases automatically.

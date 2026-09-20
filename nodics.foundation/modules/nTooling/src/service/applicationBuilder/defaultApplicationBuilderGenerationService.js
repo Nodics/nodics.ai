@@ -1380,7 +1380,7 @@ module.exports = {
             code: code,
             version: "0.0.0",
             manifestDigest: catalogueService.digest(
-              (catalogue.customerDataPacks || []).find(
+              [...(catalogue.frameworkDataPacks || []), ...(catalogue.customerDataPacks || [])].find(
                 (pack) => pack.code === code,
               ),
             ),

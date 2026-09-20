@@ -108,3 +108,5 @@ tenant isolation, and cleanup in an isolated provider environment.
 - Provider selection: [nSearch](../README.md)
 - Maturity matrix: [Provider And Capability Maturity Matrix](https://github.com/Nodics/nodics.docs)
 - Public platform guide: [How Platform Capabilities Work](https://github.com/Nodics/nodics.docs)
+
+The Local Elasticsearch baseline is `http://localhost:9200` in this provider. Local customer properties inherit it. Other environments override only actual differences such as service DNS, TLS or authentication; do not copy the Local address into customer configuration.

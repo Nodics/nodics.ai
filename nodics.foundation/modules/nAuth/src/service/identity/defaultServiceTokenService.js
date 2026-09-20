@@ -22,26 +22,61 @@
  * revocation/version validation.
  */
 module.exports = {
+    /** Requires a router-verified runtime principal for an exact tenant and capability; this does not validate a raw JWT. */
+    requireRuntimePrincipal: function (request, moduleName) {
+        const auth = (request && request.authData) || {};
+        const scope = auth.runtimeScope || {};
+        if (
+            auth.tokenType !== 'service' ||
+            !auth.serviceId ||
+            typeof auth.entCode !== 'string' ||
+            !auth.entCode ||
+            !request.tenant ||
+            auth.tenant !== request.tenant ||
+            !auth.runtimeInstanceId ||
+            scope.instanceCode !== auth.runtimeInstanceId ||
+            !['projectCode', 'environmentCode', 'serverCode', 'assignmentCode'].every(
+                (key) => typeof scope[key] === 'string' && scope[key].length > 0,
+            ) ||
+            !Array.isArray(auth.modules) ||
+            !auth.modules.includes(moduleName)
+        ) {
+            throw new CLASSES.NodicsError(
+                'ERR_AUTH_00003',
+                'A scoped runtime principal for the capability and tenant is required',
+            );
+        }
+        return auth;
+    },
+
     /** Issues a bounded service JWT after persisting its current security stamp. */
     issue: function (options) {
         let tokenOptions = Object.assign({}, options || {}, {
             tokenType: 'service',
             principalType: 'service',
-            authVersion: options && options.authVersion !== undefined ? options.authVersion : 1
+            authVersion: options && options.authVersion !== undefined ? options.authVersion : 1,
         });
         if (!tokenOptions.tenant || !tokenOptions.serviceId) {
-            return Promise.reject(new CLASSES.NodicsError('ERR_AUTH_00003', 'Service token requires tenant and serviceId'));
+            return Promise.reject(
+                new CLASSES.NodicsError('ERR_AUTH_00003', 'Service token requires tenant and serviceId'),
+            );
         }
         return SERVICE.DefaultPrincipalSecurityStampService.register(
             tokenOptions.tenant,
             tokenOptions.serviceId,
-            tokenOptions.authVersion
+            tokenOptions.authVersion,
         ).then(() => SERVICE.DefaultAuthenticationProviderService.generateAuthToken(tokenOptions));
     },
 
     /** Invalidates every existing service token carrying the previous stamp. */
     revoke: function (tenant, serviceId) {
-        if (!tenant || !serviceId) return Promise.reject(new CLASSES.NodicsError('ERR_AUTH_00003', 'Service token revocation requires tenant and serviceId'));
+        if (!tenant || !serviceId)
+            return Promise.reject(
+                new CLASSES.NodicsError(
+                    'ERR_AUTH_00003',
+                    'Service token revocation requires tenant and serviceId',
+                ),
+            );
         return SERVICE.DefaultPrincipalSecurityStampService.revoke(tenant, serviceId);
-    }
+    },
 };

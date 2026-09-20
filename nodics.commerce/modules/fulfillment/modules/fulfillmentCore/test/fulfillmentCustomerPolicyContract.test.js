@@ -9,10 +9,10 @@
 
  */
 
-'use strict';
+"use strict";
 
-const assert = require('node:assert/strict');
-const test = require('node:test');
+const assert = require("node:assert/strict");
+const test = require("node:test");
 
 /**
  * @module fulfillmentCore/test/fulfillmentCustomerPolicyContract
@@ -21,31 +21,82 @@ const test = require('node:test');
  * @owner fulfillmentCore
  */
 
-const properties = require('../config/properties');
-const routers = require('../src/router/routers');
-const controller = require('../src/controller/defaultFulfillmentCustomerController');
-const service = require('../src/service/defaultFulfillmentOperationService');
+const properties = require("../config/properties");
+const routers = require("../src/router/routers");
+const controller = require("../src/controller/defaultFulfillmentCustomerController");
+const service = require("../src/service/defaultFulfillmentOperationService");
 
 test.beforeEach(() => {
-    global.CONFIG = { get: key => key === 'fulfillmentCore' ? properties.fulfillmentCore : undefined };
-    global.SERVICE = { DefaultFulfillmentOperationService: service };
+  global.CONFIG = {
+    get: (key) =>
+      key === "fulfillmentCore" ? properties.fulfillmentCore : undefined,
+  };
+  global.SERVICE = { DefaultFulfillmentOperationService: service };
 });
 
-test('Fulfillment customer routes expose shipping and return methods as customer-safe policy', () => {
-    assert.equal(routers.fulfillmentCore.customer.shippingMethods.key, '/shipping/methods');
-    assert.equal(routers.fulfillmentCore.customer.returnMethods.key, '/returns/methods');
-    assert.equal(routers.fulfillmentCore.customer.shippingMethods.secured, false);
-    assert.equal(routers.fulfillmentCore.customer.shippingMethods.publicAccess, true);
-    assert.deepEqual(routers.fulfillmentCore.customer.shippingMethods.accessGroups, ['userGroup']);
-    assert.equal(routers.fulfillmentCore.customer.shippingMethods.apiExposure, 'commerceCustomer');
+test("Fulfillment customer routes expose shipping and return methods as customer-safe policy", () => {
+  assert.equal(
+    routers.fulfillmentCore.customer.shippingMethods.key,
+    "/shipping/methods",
+  );
+  assert.equal(
+    routers.fulfillmentCore.customer.returnMethods.key,
+    "/returns/methods",
+  );
+  assert.equal(routers.fulfillmentCore.customer.shippingMethods.secured, false);
+  assert.equal(
+    routers.fulfillmentCore.customer.shippingMethods.publicAccess,
+    true,
+  );
+  assert.deepEqual(
+    routers.fulfillmentCore.customer.shippingMethods.accessGroups,
+    ["userGroup"],
+  );
+  assert.equal(
+    routers.fulfillmentCore.customer.shippingMethods.apiExposure,
+    "commerceCustomer",
+  );
 });
 
-test('Fulfillment customer API returns address and return eligibility metadata', async () => {
-    const shipping = await controller.shippingMethods({});
-    assert.deepEqual(shipping.data.methods.map(item => item.code), ['STANDARD', 'EXPRESS', 'STORE_PICKUP']);
-    assert.equal(shipping.data.methods.find(item => item.code === 'STORE_PICKUP').requiresAddress, false);
-    assert.equal(shipping.data.methods.every(item => item.returnEligible), true);
+test("Fulfillment never offers commercial methods without an explicit store policy", async () => {
+  assert.deepEqual((await controller.shippingMethods({})).data.methods, []);
+  assert.deepEqual((await controller.returnMethods({})).data.methods, []);
+});
 
-    const returns = await controller.returnMethods({});
-    assert.deepEqual(returns.data.methods.map(item => item.code), ['PICKUP', 'DROP_OFF', 'STORE_RETURN']);
+test("Fulfillment customer API returns only the configured store methods and eligibility metadata", async () => {
+  global.CONFIG = {
+    get: () => ({
+      customerShipping: {
+        methods: [
+          { code: "COURIER", requiresAddress: true, returnEligible: true },
+          {
+            code: "STORE_PICKUP",
+            requiresAddress: false,
+            returnEligible: true,
+          },
+        ],
+        returnMethods: [{ code: "STORE_RETURN", requiresAddress: false }],
+      },
+    }),
+  };
+  const shipping = await controller.shippingMethods({});
+  assert.deepEqual(
+    shipping.data.methods.map((item) => item.code),
+    ["COURIER", "STORE_PICKUP"],
+  );
+  assert.equal(
+    shipping.data.methods.find((item) => item.code === "STORE_PICKUP")
+      .requiresAddress,
+    false,
+  );
+  assert.equal(
+    shipping.data.methods.every((item) => item.returnEligible),
+    true,
+  );
+
+  const returns = await controller.returnMethods({});
+  assert.deepEqual(
+    returns.data.methods.map((item) => item.code),
+    ["STORE_RETURN"],
+  );
 });

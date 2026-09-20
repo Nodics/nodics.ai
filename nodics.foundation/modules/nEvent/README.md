@@ -113,3 +113,5 @@ chain.
 - Persisted event distribution: [nems](../../nodics.foundation/modules/nEms/README.md)
 - Public platform guide: [How Platform Capabilities Work](https://github.com/Nodics/nodics.docs)
 - Framework map: [nodics.foundation](../README.md)
+
+Remote publishing defaults to false. A distributed event deployment explicitly enables it; local delivery remains available.

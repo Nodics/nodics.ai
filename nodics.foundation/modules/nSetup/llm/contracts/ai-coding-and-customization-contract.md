@@ -395,6 +395,72 @@ is enforced through runtime/schema policy context, not copied as domain meaning.
 A new or changed extension point is incomplete until at least one focused test
 or example proves how it is customized safely.
 
+## Mandatory Ownership, Placement And Scope Review
+
+This is a required completion gate for every coherent implementation or
+corrective batch. Perform it after the implementation and before reporting
+completion, closing its checklist or moving to live acceptance, deployment,
+merge or release. Apply it to framework and accelerator changes in maintainer
+scope and to customer-owned changes in partner scope; installed dependencies
+are not automatically an authorized audit or write scope.
+
+Record the review in the existing canonical action/checklist record, with
+supporting evidence linked there. Do not create a parallel runtime registry,
+loader, validator or competing checklist for the review.
+
+1. **Scope and baseline:** record the agreed outcomes, repositories and starting
+   revisions or content hashes. Preserve and distinguish existing uncommitted
+   work. Include added, modified, renamed, deleted, untracked and generated
+   artifacts. Recheck the final state so changes after review are not silently
+   covered by stale evidence.
+2. **Complete change inventory:** account for every changed file. Map each to
+   an agreed requirement or an explicitly explained supporting correction.
+   List incidental repairs and formatting separately. A file count, diff stat
+   or passing test list is not a semantic review. Inspect the complete diff
+   with formatting noise removed while also retaining the original diff.
+3. **Placement and ownership:** identify the existing repository/module/layer,
+   artifact role, canonical path, loader/generator/consumer, and customization
+   contract. Review source, metadata, schemas, statuses, routes, services,
+   properties, data, tools, tests, docs and generated definitions. Check new
+   files and deleted consumers especially carefully; a correct directory name
+   alone does not establish correct responsibility.
+4. **Configuration:** inventory all authored configuration in the declared
+   scope and classify defaults, domain policy, customer choices, environment,
+   server and node differences. Inspect bindings/helpers and actual consumers;
+   verify activation/index order, shorter/empty/reordered collections, later
+   overrides and missing context. Explain retained equal values. State whether
+   external, tenant and persisted overrides were inspected or excluded.
+5. **Authority and behavior:** verify authentication, permission, tenant,
+   enterprise, business lifecycle, callback provenance, replay/idempotency and
+   failure behavior where affected. Identifiers, matching context and caller
+   authentication alone do not prove an owning workflow approved a mutation.
+   Use focused negative or bypass probes when boundary inspection raises a
+   concern; a happy-path fixture cannot establish those guarantees.
+6. **Scope control:** establish that no unagreed behavior, project dependency,
+   duplicated mechanism or architectural layer was introduced. Explain each
+   new API/service/extension against its existing owner and prior alternatives.
+   Record unrelated pre-existing defects separately; do not silently fix or
+   accept them as part of another scope.
+7. **Decision and evidence limits:** record PASS or FAIL, inspected files,
+   automated coverage, manual semantic review, focused evidence and unresolved
+   findings with owners. A full-repository placement claim requires every
+   tracked and relevant untracked path in that repository to be accounted for;
+   it does not imply every unchanged function was behaviorally audited.
+   Distinguish static inventory, source inspection, test execution, prepared
+   runtime, live operation and reader/browser evidence.
+
+Keep the gate at FAIL while a required ownership, placement, scope or authority
+finding is unresolved or coverage required for the claimed scope is missing.
+Correct the canonical checklist if later evidence invalidates a completion
+claim. Continuing an already authorized correction does not require repeated
+permission. Any actual scope change or residual-risk exception must be stated
+and supported by explicit authorization; never infer one from elapsed time.
+
+Reuse valid evidence while its source fingerprint is unchanged. Review new
+changes and affected dependencies, then rerun only relevant checks. The
+nTooling principle audit protects discovery of this contract; it cannot certify
+that a human or agent performed the semantic review or that a batch passed it.
+
 ## Corrective Changes And Recurrence Prevention
 
 When an agreed programme spans related owners, implement it continuously against
@@ -524,3 +590,9 @@ See the existing release/upgrade compatibility guide, owning provider contracts,
 and nConfig's effective behavior diagnostics. Record the affected consumers,
 old/new examples, tests, runtime adoption and remaining deployment gates in the
 single actionable record for the change.
+
+Apply the mandatory configuration ownership restrictions in
+`nodics.foundation/modules/nSetup/llm/contracts/customer-config-classification-contract.md`.
+Local provider defaults are framework-owned; customer layers declare only actual
+selection or deployment differences. No environment descriptor, copied secret,
+or duplicate endpoint/authentication authority may be introduced by code or generators.

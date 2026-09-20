@@ -1622,8 +1622,8 @@ module.exports = {
     ],
     "sourceRepository": "nodics.docs",
     "sourcePath": "docs/pages/nodics.platform/module-registry.md",
-    "sourceChecksum": "4f70a2363705d16dc9e64f9b81296b992c8553b7b30dc616b1edbe4b503a52d4",
-    "sourceWordCount": 2369,
+    "sourceChecksum": "8c8a3dbc924a918bc030fa4a49c008473c5c364980a11bc3acb7bfbbcd4d8559",
+    "sourceWordCount": 2408,
     "audience": [
       "business",
       "architect",
@@ -3468,8 +3468,8 @@ module.exports = {
     ],
     "sourceRepository": "nodics.docs",
     "sourcePath": "docs/pages/nodics.platform/security-identity-access.md",
-    "sourceChecksum": "08bdfbebd5f31af01a69e4fc92a07d4c5a00bdaab4473a40a99480b10102ee04",
-    "sourceWordCount": 1395,
+    "sourceChecksum": "c0fe4b44bb1687bb06be6a020c1a70e515d48a793385be1f51dfd665ebdf1f34",
+    "sourceWordCount": 1601,
     "audience": [
       "business",
       "architect",
@@ -3585,6 +3585,56 @@ module.exports = {
         "text": "Generated output containment",
         "anchor": "configurationRuntimeBehaviorManagement-15-generated-output-containment",
         "level": 3
+      },
+      {
+        "text": "Defaults that stay with their owners",
+        "anchor": "configurationRuntimeBehaviorManagement-16-defaults-that-stay-with-their-owners",
+        "level": 2
+      },
+      {
+        "text": "Customize and extend safely: exact collections",
+        "anchor": "configurationRuntimeBehaviorManagement-17-customize-and-extend-safely-exact-collections",
+        "level": 3
+      },
+      {
+        "text": "Runtime callback authority",
+        "anchor": "configurationRuntimeBehaviorManagement-18-runtime-callback-authority",
+        "level": 2
+      },
+      {
+        "text": "Minimal topology and shared deployment references",
+        "anchor": "configurationRuntimeBehaviorManagement-19-minimal-topology-and-shared-deployment-references",
+        "level": 2
+      },
+      {
+        "text": "Consumer defaults and property ownership",
+        "anchor": "configurationRuntimeBehaviorManagement-20-consumer-defaults-and-property-ownership",
+        "level": 3
+      },
+      {
+        "text": "Origins from configured frontend endpoints",
+        "anchor": "configurationRuntimeBehaviorManagement-21-origins-from-configured-frontend-endpoints",
+        "level": 2
+      },
+      {
+        "text": "Mandatory configuration ownership restrictions",
+        "anchor": "configurationRuntimeBehaviorManagement-22-mandatory-configuration-ownership-restrictions",
+        "level": 2
+      },
+      {
+        "text": "MongoDB default database names",
+        "anchor": "configurationRuntimeBehaviorManagement-23-mongodb-default-database-names",
+        "level": 2
+      },
+      {
+        "text": "Redis default prefix",
+        "anchor": "configurationRuntimeBehaviorManagement-24-redis-default-prefix",
+        "level": 2
+      },
+      {
+        "text": "Capability-owned acceptance tooling",
+        "anchor": "configurationRuntimeBehaviorManagement-25-capability-owned-acceptance-tooling",
+        "level": 2
       }
     ],
     "diagrams": [
@@ -3608,6 +3658,10 @@ module.exports = {
       {
         "kind": "table",
         "title": "Symptom, Likely cause, Recovery"
+      },
+      {
+        "kind": "table",
+        "title": "Configuration, Inherited owner behavior, Project or deployment choice"
       }
     ],
     "visualRequirements": [
@@ -3626,8 +3680,8 @@ module.exports = {
     ],
     "sourceRepository": "nodics.docs",
     "sourcePath": "docs/pages/nodics.foundation/runtime-configuration.md",
-    "sourceChecksum": "a1f479b4bc937c007fafd426576f59e6028d9d16beb454b5bdadce5e14545484",
-    "sourceWordCount": 2749,
+    "sourceChecksum": "b13c136c9a43056e8017b375cdf2ea8b043ec794d62524314ebbd51c0358f393",
+    "sourceWordCount": 4352,
     "audience": [
       "business",
       "architect",
@@ -3940,6 +3994,21 @@ module.exports = {
         "text": "Verification",
         "anchor": "routingApiGovernance-10-verification",
         "level": 2
+      },
+      {
+        "text": "Module identity and outbound API prefixes",
+        "anchor": "routingApiGovernance-11-module-identity-and-outbound-api-prefixes",
+        "level": 2
+      },
+      {
+        "text": "CORS header differences",
+        "anchor": "routingApiGovernance-12-cors-header-differences",
+        "level": 3
+      },
+      {
+        "text": "Origins from configured frontend endpoints",
+        "anchor": "routingApiGovernance-13-origins-from-configured-frontend-endpoints",
+        "level": 2
       }
     ],
     "diagrams": [
@@ -3989,8 +4058,8 @@ module.exports = {
     ],
     "sourceRepository": "nodics.docs",
     "sourcePath": "docs/pages/nodics.foundation/routing-api-governance.md",
-    "sourceChecksum": "af7b20d2c9250c39718eaca9f5a225ff1934ad68749202c9bf0c8e0eb0f85681",
-    "sourceWordCount": 1726,
+    "sourceChecksum": "5561f8dacd0e2574d46bdb068a9692b409d0a78030263b4cd84b90cd4ffd78d1",
+    "sourceWordCount": 2324,
     "audience": [
       "business",
       "architect",
@@ -6438,8 +6507,8 @@ module.exports = {
     ],
     "sourceRepository": "nodics.docs",
     "sourcePath": "docs/pages/nodics.wcms/media-management.md",
-    "sourceChecksum": "08efd60090733a0d838738f9813cf24e044fc15367a0c9774cb1efb6b313fe44",
-    "sourceWordCount": 568,
+    "sourceChecksum": "86042245aaeb51cbca3e18bdc91560806777072006cfd9e9b02f111c7a781e7e",
+    "sourceWordCount": 610,
     "audience": [
       "business",
       "architect",
@@ -10372,6 +10441,11 @@ module.exports = {
         "text": "Required startup releases and recovery",
         "anchor": "dataImportExportMigration-25-required-startup-releases-and-recovery",
         "level": 2
+      },
+      {
+        "text": "Content-pack configuration defaults",
+        "anchor": "dataImportExportMigration-26-content-pack-configuration-defaults",
+        "level": 2
       }
     ],
     "diagrams": [
@@ -10460,8 +10534,8 @@ module.exports = {
     ],
     "sourceRepository": "nodics.docs",
     "sourcePath": "docs/pages/nodics.foundation/data-import-export-migration.md",
-    "sourceChecksum": "7be9719139722339ccceebafd54c8ad50c34fc34aae4b54a1e6dac9766bc6823",
-    "sourceWordCount": 4722,
+    "sourceChecksum": "24c745ddb9be3d7cb4cfe6b1e8c1428813a91a66e7db37d0d52fb969bd134143",
+    "sourceWordCount": 4889,
     "audience": [
       "business",
       "architect",
@@ -11834,10 +11908,10 @@ module.exports = {
     "product": "nodicsDocumentationProduct",
     "documentId": "applications.nexus-data-content-guide",
     "title": "Nexus Data and Content Guide",
-    "summary": "How Nexus corporate content, media, editorial, engagement, Staged publication, Online delivery, and browser validation are authored from project data releases.",
+    "summary": "How Nexus corporate content, media, editorial, engagement, Staged publication, Online delivery, and browser validation are authored from accelerator-owned reference releases and customer overlays.",
     "businessSummary": "Nexus Data and Content Guide explains the business purpose, supported decisions, operational impact, and controls for the Application Overview journey.",
-    "technicalSummary": "Nexus Data and Content Guide records owning module nodics.kickoff, technical module nexus.web, source path docs/pages/applications/nexus-data-content-guide.md, extension points, validation, and troubleshooting evidence.",
-    "ownerFunctionalModule": "nodics.kickoff",
+    "technicalSummary": "Nexus Data and Content Guide records owning module nodics.accelerators, technical module nexus.web, source path docs/pages/applications/nexus-data-content-guide.md, extension points, validation, and troubleshooting evidence.",
+    "ownerFunctionalModule": "nodics.accelerators",
     "technicalModule": "nexus.web",
     "targetPage": "nodicsDocsPageapplicationsNexusDataContentGuide",
     "targetRoute": "nodicsDocsRouteapplicationsNexusDataContentGuide",
@@ -11884,6 +11958,11 @@ module.exports = {
         "text": "Verification",
         "anchor": "applicationsNexusDataContentGuide-8-verification",
         "level": 2
+      },
+      {
+        "text": "Source migration and independent consumers",
+        "anchor": "applicationsNexusDataContentGuide-9-source-migration-and-independent-consumers",
+        "level": 2
       }
     ],
     "diagrams": [
@@ -11915,8 +11994,8 @@ module.exports = {
     ],
     "sourceRepository": "nodics.docs",
     "sourcePath": "docs/pages/applications/nexus-data-content-guide.md",
-    "sourceChecksum": "a00f81961bbd87c0fe28dee3f17e90fc5fb902f41d73907b018028792a681706",
-    "sourceWordCount": 920,
+    "sourceChecksum": "934ead7e6dc20965e5b4194a3108092b62a3c8b0c344b2b0fbe3f32e52f1e567",
+    "sourceWordCount": 1073,
     "audience": [
       "business",
       "architect",
@@ -14331,8 +14410,8 @@ module.exports = {
     ],
     "sourceRepository": "nodics.docs",
     "sourcePath": "docs/pages/nodics.engagement/contact-submission-operations.md",
-    "sourceChecksum": "677f6f0b426f876ec4c5028db5cc936ebe0333a881fa499013e3f0f648cc240e",
-    "sourceWordCount": 520,
+    "sourceChecksum": "0e707b2e1c0b756bd1928f38d392548ab0e8e727a170c43515db6a45bb052bab",
+    "sourceWordCount": 522,
     "audience": [
       "business",
       "architect",
@@ -15366,6 +15445,11 @@ module.exports = {
         "text": "Verification",
         "anchor": "toolingAiDeveloperEnablement-7-verification",
         "level": 2
+      },
+      {
+        "text": "Final review before completion",
+        "anchor": "toolingAiDeveloperEnablement-8-final-review-before-completion",
+        "level": 2
       }
     ],
     "diagrams": [
@@ -15408,8 +15492,8 @@ module.exports = {
     ],
     "sourceRepository": "nodics.docs",
     "sourcePath": "docs/pages/nodics.foundation/ai-developer-tooling.md",
-    "sourceChecksum": "a8d94b8d7116c514556516279d8872a88996deee05988bc72c440ba675767a69",
-    "sourceWordCount": 1106,
+    "sourceChecksum": "625414c63967674cf4f91b5609d18024d62186be2e298be86baefb2677370607",
+    "sourceWordCount": 1295,
     "audience": [
       "business",
       "architect",
@@ -15653,6 +15737,11 @@ module.exports = {
         "text": "Verification",
         "anchor": "referenceSourceBackedDocumentationCoverageAudit-15-verification",
         "level": 2
+      },
+      {
+        "text": "Explicit repository scope",
+        "anchor": "referenceSourceBackedDocumentationCoverageAudit-16-explicit-repository-scope",
+        "level": 2
       }
     ],
     "diagrams": [
@@ -15712,8 +15801,8 @@ module.exports = {
     ],
     "sourceRepository": "nodics.docs",
     "sourcePath": "docs/pages/reference/source-backed-documentation-coverage-audit.md",
-    "sourceChecksum": "4d4752d26711b9614d199cbb7c9ba6ccafcc1f4ef54bd5ec02e8e55fca97b974",
-    "sourceWordCount": 2234,
+    "sourceChecksum": "be0c4f998261dfef6e8b6cd3f02175b36979f0a81e1d52134a17e46a9a556f89",
+    "sourceWordCount": 2391,
     "audience": [
       "business",
       "architect",
@@ -15833,8 +15922,8 @@ module.exports = {
     ],
     "sourceRepository": "nodics.docs",
     "sourcePath": "docs/pages/reference/documentation-gap-backlog.md",
-    "sourceChecksum": "2ff6c0d573938eee55b1f505f30cf337ab99fed8d74c19dfcc2c0f31560c5ac2",
-    "sourceWordCount": 1452,
+    "sourceChecksum": "594becbaf435b6222224a9ae380a20817862f0514490b577e3eb3b4d17971419",
+    "sourceWordCount": 1454,
     "audience": [
       "business",
       "architect",
@@ -15920,6 +16009,11 @@ module.exports = {
         "text": "Immutable assessment history and acceptance",
         "anchor": "wasteImpactProviders-9-immutable-assessment-history-and-acceptance",
         "level": 2
+      },
+      {
+        "text": "Sourced energy and prospective input metrics",
+        "anchor": "wasteImpactProviders-10-sourced-energy-and-prospective-input-metrics",
+        "level": 2
       }
     ],
     "diagrams": [
@@ -15944,8 +16038,8 @@ module.exports = {
     ],
     "sourceRepository": "nodics.docs",
     "sourcePath": "docs/pages/nodics.waste/impact-providers.md",
-    "sourceChecksum": "db335dc67a05530ae7d5485b5fb7329f7049553bb2750bb5b85004369fcf268a",
-    "sourceWordCount": 1948,
+    "sourceChecksum": "d7fa1aceff6138840b34a708eb21d12225af3ad3c1de82114b16ba844ff5a02c",
+    "sourceWordCount": 2235,
     "audience": [
       "business",
       "architect",

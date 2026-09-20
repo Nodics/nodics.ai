@@ -13,6 +13,7 @@ const crypto = require('crypto');
 const fs = require('fs');
 const fse = require('fs-extra');
 const path = require('path');
+const _ = require('lodash');
 
 /**
  * @module import/service/contentPack/DefaultContentPackService
@@ -175,6 +176,9 @@ module.exports = {
         if (!pack) {
             throw this.createError('ERR_IMP_00004', 'Content pack is not configured');
         }
+        // Resolve capability defaults first; later per-pack choices override individual fields.
+        // Never mutate nConfig's contribution or make an unselected pack discoverable.
+        pack = _.merge({}, configuration.defaults || {}, pack);
         return {
             code: packCode,
             enabled: configuration.enabled === true && pack.enabled !== false,
@@ -192,13 +196,16 @@ module.exports = {
         try {
             let repositoryPath = this.resolveRepositoryPath(context.source);
             let manifestPath = this.resolveContainedPath(repositoryPath, context.source.manifestPath, 'manifest');
-            let contentPath = this.resolveContainedPath(repositoryPath, context.source.contentPath, 'content');
-            if (!fs.existsSync(manifestPath) || !fs.existsSync(contentPath)) {
-                return { available: false };
-            }
+            if (!fs.existsSync(manifestPath)) return { available: false };
             let manifestDocument = JSON.parse(fs.readFileSync(manifestPath, 'utf8'));
             let manifest = this.resolveManifestSection(context, manifestDocument);
             let fileRoot = manifestDocument.sections ? path.dirname(manifestPath) : repositoryPath;
+            // Aggregate manifest paths are relative to their data directory. Existing explicit
+            // source paths remain repository-relative overrides for nonstandard layouts.
+            let contentPath = context.source.contentPath !== undefined
+                ? this.resolveContainedPath(repositoryPath, context.source.contentPath, 'content')
+                : this.resolveContainedPath(fileRoot, manifest.contentPath, 'content');
+            if (!fs.existsSync(contentPath)) return { available: false };
             this.validateManifest(context, manifest, fileRoot, repositoryPath);
             let checksum = this.createReleaseChecksum(manifest.generatedHashes);
             if (manifest.releaseChecksum && manifest.releaseChecksum !== checksum) {

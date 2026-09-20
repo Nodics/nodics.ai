@@ -1,5 +1,9 @@
 # openAiProvider Agents
 
+Web retrieval is profile-controlled and disabled unless selected. Preserve actual
+search/open-page sources separately from model text; do not treat model-written URLs
+as retrieval evidence. See the adapter contract for reasoning and search options.
+
 ## Inheritance
 
 - Follow the repository agent contract: `../../../../../AGENTS.md`.

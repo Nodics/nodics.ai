@@ -93,3 +93,37 @@ test("the configured valuation service is used and a missing one fails closed", 
     /ERR_EWASTE_VALUATION_UNAVAILABLE/,
   );
 });
+
+test("customer resolution preserves its bearer, authenticated login and Profile canonical code", async () => {
+  let calls = [];
+  global.CONFIG = { get: () => ({}) };
+  global.SERVICE = {
+    DefaultWastePersistenceService: { fail: (code) => { throw Error(code); } },
+    DefaultModuleService: { invokeModule: async input => { calls.push(input); return { data: [{ code: 'canonical-customer', loginId: 'self@example.test' }] }; } },
+  };
+  const request = { tenant: 'isolated', authorization: 'Bearer customer-token', authData: { principalType: 'customer', loginId: 'self@example.test' }, payload: { loginId: 'other@example.test', code: 'forged' } };
+  await xp.resolveCustomer(request);
+  assert.equal(request.authData.code, 'canonical-customer');
+  assert.equal(calls[0].header.Authorization, 'Bearer customer-token');
+  assert.deepEqual(calls[0].requestBody.query, { loginId: 'self@example.test' });
+  await assert.rejects(() => xp.resolveCustomer({ ...request, authorization: undefined }), /ERR_WASTE_CUSTOMER_REQUIRED/);
+  assert.equal(calls.length, 1);
+  await xp.remote(request, 'loyaltyApi', 'loyalty', '/wallet-projections', 'POST', { ownerCode: 'canonical-customer' });
+  assert.equal(calls[1].header.Authorization, undefined);
+});
+
+
+test("preparation automatically assesses both singles and bundles with the saved revision", async () => {
+ for (const submissionUnit of [undefined,"BUNDLE"]) {
+  const draft={code:"D",revision:7,submissionStatus:"METADATA_SUGGESTED",submittedFacts:{submissionUnit}};
+  global.SERVICE={DefaultEWasteSubmissionPreparationService:{prepare:async()=>draft}};
+  let calls=0;
+  const scoped={...xp,estimate:async request=>{calls++;assert.equal(request.code,"D");assert.equal(request.expectedRevision,7);assert.equal(request.tenant,"tenant");return {...draft,revision:8,metadata:{estimate:{}}}}};
+  assert.equal((await scoped.prepareSubmission({tenant:"tenant",expectedRevision:0})).revision,8);
+  assert.equal(calls,1);
+  scoped.estimate=async()=>{throw Error("provider unavailable")};
+  await assert.rejects(scoped.prepareSubmission({}),/provider unavailable/);
+  draft.submissionStatus="SUBMITTED";
+  assert.equal(await scoped.prepareSubmission({}),draft);
+ }
+});

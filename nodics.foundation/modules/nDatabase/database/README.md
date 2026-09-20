@@ -104,3 +104,6 @@ and domain operations are outside this discovery migration.
 Require the selected server generated baseline after model preparation. Preserve
 composed custom methods; never synthesize missing services at startup. See
 [server build contract](llm/contracts/README.md#required-server-build).
+
+Route-category defaults belong to this capability; deployments supply only intentional overrides.
+Preserve nRouter enforcement and independent route authorization. See [exposure ownership](../../nRouter/llm/contracts/README.md#capability-owned-exposure-defaults).

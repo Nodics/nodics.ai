@@ -42,6 +42,16 @@ try {
         'Plan-only topology command must not write project files');
     assert(planOnly.entries.some(entry => entry.kind === 'server' && entry.activeModules.includes('acmeCore')),
         'Topology plan must show server active module placement');
+    assert.deepStrictEqual(planOnly.entries.find(entry => entry.kind === 'server').activeModules,
+        ['acmeCore', 'acmeApi', 'oracleProvider'],
+        'Selected topology must not be copied into additional capability selections');
+    const secondPlan = topologyPlanService.createPlan(Object.assign({}, planOnlyOptions, {
+        envs: ['preview', 'production'], servers: ['worker'], modules: [], providers: []
+    }));
+    for (const entry of secondPlan.entries.filter(entry => entry.kind === 'server')) {
+        assert.deepStrictEqual(entry.activeModules, [],
+            'Empty optional composition must stay empty for every generated environment');
+    }
     assert(planOnly.validations.includes('npm run structure:audit -- --fail'),
         'Topology plan must include structure audit validation');
 
@@ -62,6 +72,10 @@ try {
         'Applied server topology must own activeModules in server config/properties.js');
     assert(serverProperties.includes('acmeCore'),
         'Applied server topology must include planned capability modules in activeModules');
+    assert.deepStrictEqual(require(path.join(projectHome,
+        'acme/envs/local/apiServer/config/properties.js')).activeModules.modules,
+        ['acmeCore', 'acmeApi', 'oracleProvider'],
+        'Generated properties must preserve optional composition without topology identities');
     assert(fs.existsSync(path.join(projectHome, 'acme/modules/oracleProvider/src/service/defaultSampleService.js')),
         'Applied topology must generate provider service scaffold');
 } finally {

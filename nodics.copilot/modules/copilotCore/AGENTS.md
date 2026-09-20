@@ -17,3 +17,5 @@ Before implementing non-trivial behavior here, record the business outcome, owni
   through `createOwnedSchemaRecord`; do not fallback to Workbench mutations.
   Preserve remote target authority, tenant, confirmation, policy and idempotency
   key forwarding. Forwarding does not provide durable replay protection.
+
+Use copilot.api.enabled as the sole conversation API switch; reject retired group/core flags and preserve independent provider, source and permission gates.

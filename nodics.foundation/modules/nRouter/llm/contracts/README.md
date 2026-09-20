@@ -59,8 +59,24 @@ Runtime exposure and permission checks remain in the existing request owners.
 
 ## HTTP boundary defaults
 
-- Keep CORS closed in framework defaults and declare exact browser origins in
-  the environment/server layer. Never use wildcard origins with credentials.
+`httpHardening.cors.allowedHeaderOverrides` and `exposedHeaderOverrides` default
+to empty maps. A true entry includes a header; false removes it from the resolved
+baseline. Matching against baseline names is case-insensitive. Use the same key
+spelling across layers: conflicting case variants reject rather than guessing
+merge order. Invalid token names, non-boolean choices and non-map values reject
+in the owning CORS consumer. The baseline arrays remain supported for intentional
+complete selections; ordinary nConfig array semantics do not change.
+
+Only the declared differences belong in deployment properties. Header additions
+never grant origin access, enable CORS, allow credentials or bypass request
+authorization. Empty overrides inherit; use explicit map replacement to clear
+inherited overrides, and keyed false to remove a previously included header.
+Test permitted/disallowed origins, later additions/removals, malformed input and
+unchanged source declarations. See `test/httpHardeningContract.test.js`.
+
+
+- Keep CORS closed in framework defaults. Select configured browser endpoints or
+  declare exact browser origins through environment/server properties. Never use wildcard origins with credentials.
 - Because layered origin arrays may merge, use server-layer `deniedOrigins` to
   subtract inherited origins. Explicit denial always takes precedence.
 - Default API responses to the standard CSP/clickjacking/nosniff/referrer
@@ -88,3 +104,62 @@ existing runtime metadata owner. It loads schema/router metadata without invokin
 application service initialization hooks: static generation must not start runtime
 resources or require operational API-key proof. Runtime startup retains all of its
 credential checks. Persisted-schema reads remain an explicit generation option.
+
+## Capability-owned exposure defaults
+
+Each route-owning capability declares a boolean `apiExposure.categories.<category>.enabled` default in its own properties. Loading another functional group must not be needed to obtain that category's policy. nRouter owns enforcement and the common `schemaApi` policy; category enablement never replaces authentication, token type, permission, tenant, runtime-role or record authorization.
+
+Unknown categories are denied by default. `apiExposure.unknown.enabled: true` is an explicit legacy compatibility exception. A named category with an explicit nonboolean enabled value is denied. Deployment/node/tenant category overrides remain authoritative. Declare customer categories in their actual customer capability. Do not copy every category into each project, infer categories from URLs, or enable all APIs when merely selecting internal provider/knowledge modules.
+
+OpenAPI options retain the canonical environment/server returned by nTooling runtime metadata resolution, including short aliases. Resolve before populating runtime E/S arguments; never pass an unresolved alias into nConfig. Invalid selected servers must fail rather than fall back to a different graph.
+
+Outbound module URLs use the existing discovered package `prefix`, matching route registration. Keep logical module identity and connection aliases unchanged; discover a remote capability source when its API prefix differs from its name.
+
+
+## Configured browser-origin construction
+
+nRouter owns `httpHardening.cors.originDefaults` (`protocol: 'http'`,
+`host: 'localhost'`), the six standard application `originEndpoints`, enabled CORS,
+and `originEndpointOverrides` (empty). Later layers may disable or replace this
+policy. Changing endpoints or headers does not override explicit disablement. No request Host/Origin/forwarded header, bound listener, filesystem
+scan, DNS result or running-process inspection can create an allowed endpoint.
+The configured sources are browser-facing frontend addresses, including the
+published port seen through a proxy or container mapping.
+
+`originEndpoints` accepts either a map keyed by frontend code or an array of
+objects with unique `code` values. A value is an exact HTTP(S) origin URL or an
+object with an integer `port` in 1..65535 and optional `host`/`protocol` overrides.
+Structured values inherit `originDefaults`; a full URL already supplies its own
+host, protocol and port. Standard ports normalize to an origin without a port.
+Wildcards, unspecified bind addresses, credentials, paths, query strings,
+fragments and malformed endpoints reject. Explicit legacy origin lists retain
+their existing matching behavior; the strict construction contract applies to
+configured endpoint sources.
+
+All configured endpoints are included by default. A known code mapped to false
+in `originEndpointOverrides` denies that endpoint, following its current address
+when the port or domain changes. True removes that code-specific denial; an
+explicit `deniedOrigins` entry still wins. Unknown codes, non-boolean overrides,
+duplicate codes and invalid collection shapes reject. Explicit `allowedOrigins`
+remain additive; derived and explicit denials override every allow entry.
+
+Inherit the standard origins and declare differences through the existing layered
+`httpHardening.cors` policy.
+Never derive API trust or CORS enablement from frontend lifecycle configuration.
+A frontend repository, process or health response is not required for backend
+startup, readiness or API acceptance. Frontends own rendering, outage/retry UI,
+and UI tests. Backend browser-session/CORS tests send HTTP requests directly.
+
+Use nConfig `replace` to replace an endpoint collection or clear inherited lists
+and override maps. Use `keyed` with key `code` for array endpoint updates. Removing
+an endpoint requires clearing any override entry that names it. This validation
+prevents a stale denial from silently ceasing to protect the selected frontend.
+
+Validation lives in `test/httpHardeningContract.test.js`: defaults/closure,
+Local ports, custom HTTPS hosts, port changes, negative frontend selection,
+explicit-origin compatibility, empty collections, normalization, malformed
+rejection, independent declarations and initialization rejection. This capability
+changes browser reachability only; request authorization remains independently
+enforced by the route/authentication owners.
+
+nRouter enables CORS by default for the standard Nodics localhost origins: Axis 3100, Nexus 3200, Agora Apparel 3300, Electronics 3400, Telco 3500 and Circa 3600. These shared API security defaults apply independently of Platform/accelerator activation and frontend health. Environments declare only different addresses or policy; server denials and explicit disablement remain supported. nRouter never reads a frontend launch catalogue. Exact origins, header policy and route authorization remain enforced.

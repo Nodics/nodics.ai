@@ -55,3 +55,6 @@ Mutating operations such as repair, backup, rollback, update-vendors, start, or
 initialize should require explicit permissions, environment allowlists,
 idempotency controls, bounded command execution, audit records, and sanitized
 evidence.
+
+Route-category defaults belong to this capability; deployments supply only intentional overrides.
+Preserve nRouter enforcement and independent route authorization. See [exposure ownership](../../../nodics.foundation/modules/nRouter/llm/contracts/README.md#capability-owned-exposure-defaults).

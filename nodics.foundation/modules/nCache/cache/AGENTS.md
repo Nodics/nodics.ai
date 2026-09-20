@@ -36,3 +36,5 @@ at the Redis provider boundary. Never leave detached startup subscriptions.
 Central cache shutdown includes the public Hazelcast client `shutdown()` method.
 Live provider qualification verifies the same central owner closes each client;
 a provider-specific test cleanup cannot stand in for runtime lifecycle coverage.
+
+Cross-node invalidation defaults to automatic selection from enabled remote event publishing. Explicit true/false remains supported. Shared distributed adapters skip duplicate broadcasts; single-node deployments do not emit unnecessary peer events. Strict authentication channels never gain local fallback.

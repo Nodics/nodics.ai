@@ -109,7 +109,7 @@ token with the current tenant-scoped principal stamp. Internal tokens must be
 issued through `DefaultServiceTokenService`, which registers the service stamp
 before publishing the bounded JWT. Local development layers may permit missing
 stamps only as explicit development/backward-compatibility exceptions.
-Strict deployments must configure the `profile.auth` cache channel with a
+Strict deployments must configure the `auth.auth` cache channel with a
 distributed engine whose metadata declares atomic consume support, must keep
 the global cache subsystem, auth channel, and selected engine enabled, and must
 disable local fallback; startup fails otherwise. A Redis URL or engine
@@ -151,7 +151,7 @@ marker.
 2. Configure strong JWT, API-key pepper, and bootstrap identity secrets through
    a later project, environment, server, node, external, or secret-manager
    layer.
-3. Configure the profile auth channel to use Redis with local fallback disabled.
+3. Configure the selected auth channel to use Redis with local fallback disabled.
 4. Run distributed authentication contracts and the required live Redis release test.
 5. Preview identity migration and retain its correlation identifier.
 6. Apply migration to one test tenant, inspect the redacted audit, and repeat to
@@ -211,3 +211,16 @@ redaction, and shared-state behavior.
 Customer access tokens may carry Profile-issued `externalIdentityLinkCode`, a bounded opaque binding for verified channel sessions. Profile owns live link checks and refresh propagation; nAuth never verifies external provider proofs.
 
 Runtime JWTs carry a Profile-approved deployment scope; distributed atomic security stamps prevent stale issuance from reversing revocation.
+
+For scoped runtime checks and action-proof boundaries, follow the
+[service-token contract](llm/contracts/README.md).
+
+Inherit authentication policy and bind deployment credentials through the existing
+nAuth/nService contract. Keep provisioning proof separate from retained runtime
+proof; preserve strict shared auth state and Profile grants. See the local contract.
+
+Scoped runtime route admission recognizes `userGroup` and
+`serviceAccountUserGroup` as base route classes. These labels do not become JWT
+groups or expand permissions. nRouter still enforces the approved module, explicit
+action permission, accepted token type and deployment exposure. Administrator and
+human-only groups remain ineligible; later deployment policy may narrow the list.

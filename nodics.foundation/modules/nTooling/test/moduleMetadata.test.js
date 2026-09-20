@@ -28,6 +28,7 @@ const {
 const validKinds = new Set([
     'application',
     'capability',
+    'content-pack',
     'environment',
     'framework',
     'group',
@@ -48,7 +49,7 @@ const validRuntimeKeys = new Set([
 ]);
 const validNodicsKeys = new Set([
     'kind', 'displayName', 'runtimeModule', 'loadableByNodicsModuleLoader', 'owns', 'runtime',
-    'entrypoints', 'dependencyGovernance', 'extends', 'functionalModule', 'runtimeModuleRoots'
+    'entrypoints', 'dependencyGovernance', 'extends', 'functionalModule', 'runtimeModuleRoots', 'applicationBuilder'
 ]);
 
 const rootPackage = JSON.parse(fs.readFileSync(path.join(rootPath, 'package.json'), 'utf8'));
@@ -80,6 +81,14 @@ modules.forEach(module => {
     assert.strictEqual(meta.tmpGroup, undefined, 'Obsolete tmpGroup metadata is forbidden: ' + module.relativePath);
     Object.keys(nodics).forEach(key => assert(validNodicsKeys.has(key),
         'Invalid package.json.nodics key `' + key + '` for package: ' + module.relativePath));
+    if (nodics.applicationBuilder !== undefined) {
+        assert.strictEqual(nodics.kind, 'content-pack', 'Framework Builder pack opt-in requires a content-pack owner: ' + module.relativePath);
+        assert(nodics.applicationBuilder && typeof nodics.applicationBuilder === 'object' && !Array.isArray(nodics.applicationBuilder));
+        assert.deepStrictEqual(Object.keys(nodics.applicationBuilder), ['dataPack'], 'Framework Builder metadata allows only the dataPack opt-in');
+        assert.strictEqual(typeof nodics.applicationBuilder.dataPack, 'boolean');
+        assert(nodics.owns.includes('data'), 'Framework content pack must own its data');
+        assert(fs.existsSync(path.join(module.path, 'data/manifest.json')), 'Framework content pack requires its owned release manifest');
+    }
     assert(nodics.kind, 'Missing nodics.kind for package: ' + module.relativePath);
     assert(typeof nodics.displayName === 'string' && nodics.displayName.trim() && nodics.displayName.length <= 160,
         'Missing or invalid nodics.displayName for package: ' + module.relativePath);

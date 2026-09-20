@@ -87,3 +87,10 @@ Load detailed guidance only when relevant:
 
 Evidence may be reused while the relevant files remain unchanged. Do not rerun
 or restate unchanged analysis merely to satisfy ceremony.
+
+Before calling the batch complete or going to live acceptance/release, perform
+[the mandatory final review](../contracts/ai-coding-and-customization-contract.md#mandatory-ownership-placement-and-scope-review).
+Account for every changed file and incidental repair, inspect semantic changes
+and configuration ownership, preserve existing work, and record PASS/FAIL and
+open findings in the existing checklist. Reopen an earlier completion claim if
+new evidence contradicts it.

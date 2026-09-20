@@ -132,8 +132,8 @@ assert.strictEqual(defaultReleasePolicy.types.init.enabled, true);
 assert.strictEqual(defaultReleasePolicy.types.init.operatorExecution, true);
 assert.strictEqual(defaultReleasePolicy.types.core.enabled, true);
 assert.strictEqual(defaultReleasePolicy.types.core.operatorExecution, true);
-assert.strictEqual(defaultReleasePolicy.types.sample.enabled, false);
-assert.strictEqual(defaultReleasePolicy.types.sample.operatorExecution, false);
+assert.strictEqual(defaultReleasePolicy.types.sample.enabled, true);
+assert.strictEqual(defaultReleasePolicy.types.sample.operatorExecution, true);
 
 assert.strictEqual(localProperties.data.dataReleases.types.sample.enabled, true);
 assert.strictEqual(localProperties.data.dataReleases.types.sample.operatorExecution, true);

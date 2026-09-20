@@ -14,3 +14,8 @@ into every accelerator runtime. Apparel/Electronics (and Telco through
 Electronics) retain Commerce inheritance; Waste scenarios retain Waste
 inheritance. Required local schema/implementation dependencies belong to the
 selected concrete capability, not a blanket activation gate on Accelerators.
+
+The `nexus` accelerator extends WCMS and separates inert `nexusCore` administration
+descriptors from the `nexus.web` reference content pack. Customer runtimes explicitly
+select their required contributions; the independent frontend remains outside this
+repository. Read [Nexus](modules/nexus/README.md).

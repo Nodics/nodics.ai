@@ -45,3 +45,8 @@ They may also read non-customer PUBLIC media with an allowed
 bytes and `previewType: PUBLIC_MEDIA`. This does not grant customer-photo routes
 access to application/private assets. Storage keys stay internal; callers
 render public SVG only as an image, never injected markup.
+
+Customer photo operations preserve the authenticated customer bearer header when
+resolving the canonical owner through Profile. Missing credentials or a tenant
+mismatch are rejected; request-body credentials are never trusted. Runtime
+service credentials must not substitute for the customer session in this lookup.

@@ -48,3 +48,21 @@ existing runtime metadata owner. It loads schema/router metadata without invokin
 application service initialization hooks: static generation must not start runtime
 resources or require operational API-key proof. Runtime startup retains all of its
 credential checks. Persisted-schema reads remain an explicit generation option.
+
+Route-category defaults belong to this capability; deployments supply only intentional overrides.
+Preserve nRouter enforcement and independent route authorization. See [exposure ownership](llm/contracts/README.md#capability-owned-exposure-defaults).
+
+OpenAPI options retain the canonical environment/server returned by nTooling runtime metadata resolution, including short aliases. Resolve before populating runtime E/S arguments; never pass an unresolved alias into nConfig. Invalid selected servers must fail rather than fall back to a different graph.
+
+Outbound module URLs use the existing discovered package `prefix`, matching route registration. Keep logical module identity and connection aliases unchanged; discover a remote capability source when its API prefix differs from its name.
+
+CORS header baselines remain framework-owned. Deployments use `allowedHeaderOverrides` and `exposedHeaderOverrides` boolean maps for additions/removals; header changes do not enable CORS or authorize origins. See the [HTTP boundary contract](llm/contracts/README.md#http-boundary-defaults).
+
+Construct browser origins from explicit CORS security endpoints through nRouter's
+`originDefaults`, `originEndpoints` and `originEndpointOverrides`; inherit HTTP
+and localhost defaults and select sources through existing nConfig layering.
+Keep frontend identity restrictions stable across address changes. See the
+[origin construction contract](llm/contracts/README.md#configured-browser-origin-construction)
+and [configuration examples](llm/examples/README.md#configure-browser-origins).
+
+nRouter enables CORS by default for the standard Nodics localhost origins: Axis 3100, Nexus 3200, Agora Apparel 3300, Electronics 3400, Telco 3500 and Circa 3600. These shared API security defaults apply independently of Platform/accelerator activation and frontend health. Environments declare only different addresses or policy; server denials and explicit disablement remain supported. nRouter never reads a frontend launch catalogue. Exact origins, header policy and route authorization remain enforced.

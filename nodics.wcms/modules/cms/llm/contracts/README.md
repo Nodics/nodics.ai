@@ -47,3 +47,8 @@ Use these files for rules that are more specific than root `AGENTS.md` and the m
   `node nodics.wcms/modules/cms/test/cmsDesignerCompositionContract.test.js`
   and
   `node nodics.wcms/modules/cms/test/cmsWcmsAuthoringSchemaContract.test.js`.
+
+CMS owns generic guided-publication acceptance defaults: select the WCMS_STAGED
+runtime and an enabled initialization profile using the framework `foundation`
+template. Application publication selections, Site identities and delivery probes
+belong to their accelerator or customer pack. Defaults never install or publish data.

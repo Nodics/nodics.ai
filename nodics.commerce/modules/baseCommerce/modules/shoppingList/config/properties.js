@@ -11,29 +11,56 @@
 
 /** @module shoppingList/config/properties @description Defines customer-owned shopping-list policy for wishlist, compare, and save-for-later intent. @layer config @owner shoppingList */
 module.exports = {
-    // Inert inventory; an allowed local server must explicitly select this capability.
-    localResetProvider: {
-        "contributions": {
-            "shoppingList": {
-                "serviceNames": {
-                    "DefaultShoppingListEntryService": true,
-                    "DefaultShoppingListService": true
-                }
-            }
-        }
+  // Inert inventory; an allowed local server must explicitly select this capability.
+  localResetProvider: {
+    contributions: {
+      shoppingList: {
+        serviceNames: {
+          DefaultShoppingListEntryService: true,
+          DefaultShoppingListService: true,
+        },
+      },
     },
+  },
 
-    shoppingList: {
-        enabled: true,
-        customerApi: {
-            defaultLocale: 'en',
-            maximumWishlistItems: 100,
-            maximumCompareItems: 4,
-            maximumSaveForLaterItems: 100,
-            supportedListTypes: ['WISHLIST', 'COMPARE', 'SAVE_FOR_LATER']
-        }
+  shoppingList: {
+    enabled: true,
+    customerApi: {
+      defaultLocale: "en",
+      maximumWishlistItems: 100,
+      maximumCompareItems: 4,
+      maximumSaveForLaterItems: 100,
+      supportedListTypes: ["WISHLIST", "COMPARE", "SAVE_FOR_LATER"],
     },
-    schemaPolicies: { shoppingList: {
-        customerOwned: { accessGroups: { adminGroup: 10, commerceOperatorUserGroup: 10, serviceAccountUserGroup: 10, customerUserGroup: 10 }, ownership: { enabled: true, ownerProperty: 'ownerId', bypassGroups: { adminGroup: true, commerceOperatorUserGroup: true, serviceAccountUserGroup: true }, subjectGroups: { customerUserGroup: true }, principalTypes: { customer: true } } }
-    } }
+  },
+  schemaPolicies: {
+    shoppingList: {
+      customerOwned: {
+        accessGroups: {
+          adminGroup: 10,
+          commerceOperatorUserGroup: 10,
+          serviceAccountUserGroup: 10,
+          customerUserGroup: 10,
+        },
+        ownership: {
+          enabled: true,
+          ownerProperty: "ownerId",
+          bypassGroups: {
+            adminGroup: true,
+            commerceOperatorUserGroup: true,
+            serviceAccountUserGroup: true,
+          },
+          subjectGroups: { customerUserGroup: true },
+          principalTypes: { customer: true },
+        },
+      },
+    },
+  },
+  apiExposure: {
+    categories: {
+      commerceCustomer: {
+        enabled: true,
+      },
+    },
+  },
 };

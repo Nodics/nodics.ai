@@ -39,12 +39,14 @@ module.exports = {
         if (normalized.remoteOnly === true) {
             normalized.options.remoteOnly = true;
         }
-        normalized.abstractEndpoint = normalized.abstractEndpoint || normalized.endpoint;
+        normalized.endpoint = _.merge({}, normalized.options.endpointDefaults || {}, normalized.endpoint);
+        normalized.abstractEndpoint = _.merge({}, normalized.endpoint, normalized.abstractEndpoint || {});
         if (UTILS.isBlank(normalized.nodes)) {
             normalized.nodes = {
                 node0: normalized.endpoint
             };
         }
+        normalized.nodes = Object.fromEntries(Object.entries(normalized.nodes).map(([name, endpoint]) => [name, _.merge({}, normalized.endpoint, endpoint)]));
         return normalized;
     },
 

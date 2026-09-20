@@ -73,3 +73,8 @@ Verify media by checking the physical asset, media record, usage relation,
 publication state, frontend URL, browser rendering, and missing-asset fallback.
 A beginner should understand why the image appears; a developer should know
 where it comes from; an operator should know how to diagnose it.
+
+Customer photo operations preserve the authenticated customer bearer header when
+resolving the canonical owner through Profile. Missing credentials or a tenant
+mismatch are rejected; request-body credentials are never trusted. Runtime
+service credentials must not substitute for the customer session in this lookup.

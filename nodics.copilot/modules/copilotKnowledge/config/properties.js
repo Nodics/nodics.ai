@@ -23,7 +23,8 @@ module.exports = {
             enabled: false, indexConfigurationCode: 'copilotKnowledge', indexName: 'discoveryDocumentProjection', maximumFilesPerSource: 5000,
             maximumFileBytes: 1048576, maximumSourceBytes: 52428800, chunkCharacters: 4000,
             chunkOverlapCharacters: 400, allowedExtensions: ['.md', '.txt', '.js', '.ts', '.tsx', '.json', '.yaml', '.yml'],
-            excludedSegments: ['.git', 'node_modules', 'coverage', 'dist', 'build', 'temp', 'llm/generated'],
+            excludedSegments: ['.git', 'node_modules', 'coverage', 'dist', 'build', 'temp', 'llm/generated',
+                'src/service/gen', 'src/controller/gen', 'src/facade/gen', 'generated'],
             requireSecretScan: true
         },
         retrieval: {

@@ -34,3 +34,5 @@ Cache startup awaits configured event subscriptions. Subscriber clients belong
 to their channels and are closed by central shutdown, including failed runtime
 bootstrap. Redis closes a connection or subscriber that fails before registration
 so an unowned reconnect loop cannot keep a failed process alive.
+
+Cross-node invalidation defaults to automatic selection from enabled remote event publishing. Explicit true/false remains supported. Shared distributed adapters skip duplicate broadcasts; single-node deployments do not emit unnecessary peer events. Strict authentication channels never gain local fallback.

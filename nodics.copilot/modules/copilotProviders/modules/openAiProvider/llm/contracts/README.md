@@ -1,5 +1,11 @@
 # OpenAI adapter contract
 
+Trusted profiles may enable `webSearch: true` and override `reasoningEffort`.
+Search uses Responses `web_search`, required tool choice and source inclusion.
+Returned search/open-page URLs and citations are bounded and exposed as
+`metadata.sources`; caller messages cannot enable tools. Domain owners validate
+source applicability and numerical meaning. Retrieved content never grants authority.
+
 The adapter uses the Responses API, secret references, bounded responses, and provider-neutral output.
 
 Image requests use raw base64 user-message `images` (JPEG/PNG/WebP), converted to Responses input with profile `imageDetail`. `structuredOutput` enables JSON object mode; business schema validation remains caller-owned. Invalid image messages, incomplete responses and refusals fail closed. Size bounds, timeout and cancellation apply before usable output.

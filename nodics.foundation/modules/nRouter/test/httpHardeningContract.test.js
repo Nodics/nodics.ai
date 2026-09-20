@@ -220,3 +220,120 @@ assert.deepStrictEqual(service.getJsonParserOptions(), policy.body.json, 'JSON p
 assert.deepStrictEqual(service.getTextParserOptions(), policy.body.text, 'Text parser options should come from httpHardening');
 
 console.log('HTTP hardening contract validated');
+
+// The owner supplies the baseline; unrelated deployments select only header differences.
+assert.deepStrictEqual(defaultPolicy.cors.allowedHeaderOverrides, {});
+assert.deepStrictEqual(defaultPolicy.cors.exposedHeaderOverrides, {});
+for (const [origin, additions, exposed] of [
+    ['https://warehouse.example', { 'X-Warehouse-Id': true }, { ETag: true }],
+    ['https://studio.example', { 'X-Studio-Id': true, authorization: false }, { 'X-Preview-Version': true }]
+]) {
+    const cors = Object.assign({}, defaultPolicy.cors, {
+        enabled: true, allowedOrigins: [origin], allowedHeaderOverrides: additions,
+        exposedHeaderOverrides: exposed
+    });
+    const res = createResponse();
+    assert.strictEqual(service.applyCors({ method: 'OPTIONS', headers: { origin } }, res, cors), true);
+    assert.strictEqual(res.statusCode, 204);
+    assert(res.headers['Access-Control-Allow-Headers'].includes(Object.keys(additions)[0]));
+    assert.strictEqual(res.headers['Access-Control-Allow-Credentials'], 'true');
+    assert(res.headers['Access-Control-Expose-Headers'].includes(Object.keys(exposed)[0]));
+    if (additions.authorization === false) assert(!res.headers['Access-Control-Allow-Headers'].includes('Authorization'));
+    const denied = createResponse();
+    service.applyCors({ method: 'OPTIONS', headers: { origin: 'https://unapproved.example' } }, denied, cors);
+    assert.strictEqual(denied.statusCode, 403);
+    assert.strictEqual(denied.headers['Access-Control-Allow-Headers'], undefined);
+}
+const originalHeaders = defaultPolicy.cors.allowedHeaders.slice();
+assert.deepStrictEqual(service.resolveCorsHeaderList(['Authorization'], { authorization: true }), ['Authorization']);
+assert.deepStrictEqual(service.resolveCorsHeaderList(['Authorization'], { authorization: false }), []);
+assert.deepStrictEqual(service.resolveCorsHeaderList([], { 'X-Trace': true }), ['X-Trace']);
+assert.deepStrictEqual(service.resolveCorsHeaderList([], {}), []);
+for (const invalid of [[], null, { 'X-Trace': 'true' }, { 'X-Bad\r\nInjected': true }, { 'X-Trace': true, 'x-trace': false }]) {
+    assert.throws(() => service.resolveCorsHeaderList(originalHeaders, invalid), /CORS header overrides/);
+}
+assert.deepStrictEqual(defaultPolicy.cors.allowedHeaders, originalHeaders);
+const closed = createResponse();
+service.applyCors({ method: 'OPTIONS', headers: { origin: 'https://warehouse.example' } }, closed,
+    Object.assign({}, defaultPolicy.cors, { enabled: false, allowedHeaderOverrides: { 'X-Warehouse-Id': true } }));
+assert.deepStrictEqual(closed.headers, {}, 'Header configuration must not enable CORS');
+
+
+// Structured endpoints are deployment inputs; host/protocol defaults remain framework-owned.
+const dynamicCors = {
+    ...structuredClone(defaultPolicy.cors), enabled: true, allowCredentials: true,
+    originEndpoints: [{ code: 'editor', port: 4400 }, { code: 'store', port: 4500 }],
+    originEndpointOverrides: { store: false }
+};
+const originalDynamic = structuredClone(dynamicCors);
+assert.strictEqual(service.resolveAllowedOrigin('http://localhost:4400', dynamicCors), 'http://localhost:4400');
+assert.strictEqual(service.resolveAllowedOrigin('http://localhost:4500', dynamicCors), undefined);
+assert.strictEqual(service.resolveAllowedOrigin('http://127.0.0.1:4400', dynamicCors), undefined);
+assert.strictEqual(service.resolveAllowedOrigin('http://localhost:4401', dynamicCors), undefined);
+assert.strictEqual(service.resolveAllowedOrigin(undefined, dynamicCors), undefined);
+assert.deepStrictEqual(dynamicCors, originalDynamic);
+const laterCors = structuredClone(dynamicCors);
+laterCors.originDefaults = { protocol: 'https', host: 'preview.customer.example' };
+laterCors.originEndpoints[0].port = 443;
+laterCors.originEndpoints[1].port = 8443;
+laterCors.allowedOrigins = ['https://preview.customer.example:8443'];
+assert.strictEqual(service.resolveAllowedOrigin('https://preview.customer.example', laterCors), 'https://preview.customer.example');
+assert.strictEqual(service.resolveAllowedOrigin('http://localhost:4400', laterCors), undefined);
+assert.strictEqual(service.resolveAllowedOrigin('https://preview.customer.example:8443', laterCors), undefined,
+    'A denied frontend follows its changed domain/port and defeats an explicit allow entry');
+const allowResponse = createResponse();
+service.applyCors({ method: 'OPTIONS', headers: { origin: 'https://preview.customer.example' } }, allowResponse, laterCors);
+assert.strictEqual(allowResponse.statusCode, 204);
+assert.strictEqual(allowResponse.headers['Access-Control-Allow-Origin'], 'https://preview.customer.example');
+assert.strictEqual(allowResponse.headers['Access-Control-Allow-Credentials'], 'true');
+const denyResponse = createResponse();
+service.applyCors({ method: 'OPTIONS', headers: { origin: 'https://preview.customer.example:8443' } }, denyResponse, laterCors);
+assert.strictEqual(denyResponse.statusCode, 403);
+const closedResponse = createResponse();
+assert.strictEqual(service.applyCors({ method: 'OPTIONS', headers: { origin: 'http://localhost:4400' } }, closedResponse,
+    { ...dynamicCors, enabled: false }), false);
+assert.strictEqual(closedResponse.headers['Access-Control-Allow-Origin'], undefined);
+assert.strictEqual(defaultPolicy.cors.enabled, true);
+assert.deepStrictEqual(service.resolveCorsOrigins(defaultPolicy.cors), {
+    allowedOrigins: [3100, 3200, 3300, 3400, 3500, 3600].map(port => `http://localhost:${port}`),
+    deniedOrigins: []
+});
+for (const port of [3100, 3200, 3300, 3400, 3500, 3600]) {
+    assert.strictEqual(service.resolveAllowedOrigin(`http://localhost:${port}`, defaultPolicy.cors), `http://localhost:${port}`);
+    assert.strictEqual(service.resolveAllowedOrigin(`http://127.0.0.1:${port}`, defaultPolicy.cors), undefined);
+}
+const urlsCors = { ...structuredClone(defaultPolicy.cors), originEndpoints: {
+    editor: 'https://editor.customer.example/', public: { host: 'public.customer.example', protocol: 'https', port: 443 }
+} };
+assert.deepStrictEqual(service.resolveCorsOrigins(urlsCors).allowedOrigins, ['https://editor.customer.example', 'https://public.customer.example']);
+assert.strictEqual(service.resolveAllowedOrigin('https://extra.customer.example', { ...urlsCors, allowedOrigins: ['https://extra.customer.example'] }), 'https://extra.customer.example');
+for (const endpoint of [
+    { port: 0 }, { port: 65536 }, { port: 4300.5 }, { port: '4300' }, {},
+    { port: 4300, host: '' }, { port: 4300, host: '0.0.0.0' }, { port: 4300, host: '*.example' },
+    { port: 4300, protocol: 'file' }, 'file:///tmp/data', 'https://name:password@example.com',
+    'https://exa\nmple.com', ' https://example.com', 'https://example.com/path', 'https://example.com?token=x', 'https://example.com#fragment', 'https://*.example'
+]) assert.throws(() => service.resolveCorsOrigins({ ...dynamicCors, originEndpoints: { bad: endpoint }, originEndpointOverrides: {} }), /CORS endpoint/);
+assert.throws(() => service.resolveCorsOrigins({ ...dynamicCors, originEndpoints: 42 }), /collections/);
+assert.throws(() => service.resolveCorsOrigins({ ...dynamicCors, originEndpoints: [{ code: 'same', port: 4400 }, { code: 'same', port: 4500 }] }), /distinct/);
+assert.throws(() => service.resolveCorsOrigins({ ...dynamicCors, originEndpointOverrides: { missing: false } }), /known codes/);
+assert.throws(() => service.resolveCorsOrigins({ ...dynamicCors, originEndpointOverrides: { editor: 'true' } }), /boolean/);
+require('node:test')('HTTP initialization rejects malformed configured origin sources before serving requests', async () => {
+    const invalid = { ...service, getPolicy: () => ({ cors: { ...dynamicCors, originEndpoints: { editor: { port: 0 } } } }) };
+    await assert.rejects(invalid.init({}), /valid numeric port/);
+    const valid = { ...service, getPolicy: () => ({ cors: dynamicCors }) };
+    assert.strictEqual(await valid.init({}), true);
+});
+
+
+require('node:test')('frontend launch metadata cannot enable CORS or grant API origins', () => {
+    const previous = global.CONFIG;
+    try {
+        global.CONFIG = { get: key => key === 'httpHardening' ? { ...structuredClone(defaultPolicy), cors: { ...structuredClone(defaultPolicy.cors), enabled: false, originEndpoints: {} } } : { editor: { port: 4400 } } };
+        const isolated = service.getPolicy();
+        assert.strictEqual(isolated.cors.enabled, false);
+        assert.deepStrictEqual(service.resolveCorsOrigins(isolated.cors), { allowedOrigins: [], deniedOrigins: [] });
+        isolated.cors.enabled = true;
+        isolated.cors.originEndpoints = null;
+        assert.deepStrictEqual(service.resolveCorsOrigins(isolated.cors), { allowedOrigins: [], deniedOrigins: [] });
+    } finally { global.CONFIG = previous; }
+});

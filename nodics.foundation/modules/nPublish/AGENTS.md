@@ -23,3 +23,13 @@ This file gives AI coding agents mandatory guidance for this Nodics module or pa
 
 This capability declares an inert model-service inventory for [governed Local reset](../nSystem/llm/contracts/local-reset.md).
 A server must explicitly select it; contributions never enable reset or bypass tenant, environment, confirmation or required-service checks.
+
+Route-category defaults belong to this capability; deployments supply only intentional overrides.
+Preserve nRouter enforcement and independent route authorization. See [exposure ownership](../nRouter/llm/contracts/README.md#capability-owned-exposure-defaults).
+
+`publicationRequest` and `publicationAudit` support secured generic read/search
+only. Their `backoffice` read-only contract denies generic HTTP mutations;
+authoritative lifecycle/repository services retain internal updates. Never let
+generic CRUD manufacture approval, Online state or transition evidence. Verify
+the existing authority test and lifecycle/atomicity suites when changing this
+boundary; a domain retry must read or reuse the existing publication authority.

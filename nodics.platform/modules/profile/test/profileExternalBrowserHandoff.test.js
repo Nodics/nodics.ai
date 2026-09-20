@@ -104,6 +104,7 @@ beforeEach(() => {
   global.CONFIG = { get: (key) => config[key] };
   global.CLASSES = { NodicsError: OwnerError };
   global.SERVICE = {
+    DefaultHttpHardeningService: require("../../../../nodics.foundation/modules/nRouter/src/service/defaultHttpHardeningService"),
     DefaultExternalIdentityService: identity,
     DefaultExternalBrowserHandoffService: handoff,
     DefaultBrowserSessionService: browser,

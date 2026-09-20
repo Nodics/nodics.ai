@@ -21,3 +21,8 @@ the original ownership event remains unchanged.
 `waste-operations` is the stable Waste Management anchor owned by `wasteCore`. It contains the three generic operational views. Domain subgroups must attach with `parentModuleName: wasteCore`; the contributor retains ownership. Generic keyed view defaults are under `waste.reviewWorkspace.views`. Core must not declare Electronics, Clothing or future accelerator views. Native renderer dispatch comes from the validated `backendWorkspace` contract; configuration routes keep real schema-workbench targets.
 
 The BackOffice capability source lives under `data/backoffice/`, declared as `SOURCE_CONTRIBUTION` in the module manifest. It is projected by the existing capability provider and is not part of an executable core import.
+
+Waste Core owns inert Waste acceptance defaults under `tooling.acceptance`.
+Resolve the WASTE and PLATFORM roles from the selected topology; do not copy
+customer environment names, server names, ports or initialization profile codes.
+The invoking project still owns its journey script and explicit execution.

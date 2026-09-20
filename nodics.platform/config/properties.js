@@ -9,7 +9,7 @@
 
  */
 
-'use strict';
+"use strict";
 
 /**
  * @module nodics.platform/config/properties
@@ -21,15 +21,4 @@
  * @owner nodics.platform
  * @override Customer projects may disable or narrow API categories from their server/environment configuration.
  */
-module.exports = {
-    apiExposure: {
-        categories: {
-            serviceRegistry: {
-                enabled: true
-            },
-            dataImport: {
-                enabled: true
-            }
-        }
-    }
-};
+module.exports = {};

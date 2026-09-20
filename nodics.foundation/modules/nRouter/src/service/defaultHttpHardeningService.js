@@ -38,7 +38,10 @@ module.exports = {
      * @returns {Promise<boolean>} Resolves when initialization is complete.
      */
     init: function (options) {
-        return Promise.resolve(true);
+        return Promise.resolve().then(() => {
+            this.resolveCorsOrigins(this.getPolicy().cors || {});
+            return true;
+        });
     },
 
     /**
@@ -57,7 +60,9 @@ module.exports = {
      * @returns {Object} Effective HTTP hardening policy.
      */
     getPolicy: function () {
-        return CONFIG.get('httpHardening') || {};
+        const policy = CONFIG.get('httpHardening') || {};
+        const cors = { ...(policy.cors || {}) };
+        return { ...policy, cors };
     },
 
     /**
@@ -141,13 +146,15 @@ module.exports = {
             res.setHeader('Vary', 'Origin');
         }
         if (allowedOrigin) {
+            const allowedHeaders = this.resolveCorsHeaderList(cors.allowedHeaders, cors.allowedHeaderOverrides);
+            const exposedHeaders = this.resolveCorsHeaderList(cors.exposedHeaders, cors.exposedHeaderOverrides);
             res.setHeader('Access-Control-Allow-Origin', allowedOrigin);
             if (cors.allowCredentials) {
                 res.setHeader('Access-Control-Allow-Credentials', 'true');
             }
             this.setHeaderFromList(res, 'Access-Control-Allow-Methods', cors.allowedMethods);
-            this.setHeaderFromList(res, 'Access-Control-Allow-Headers', cors.allowedHeaders);
-            this.setHeaderFromList(res, 'Access-Control-Expose-Headers', cors.exposedHeaders);
+            this.setHeaderFromList(res, 'Access-Control-Allow-Headers', allowedHeaders);
+            this.setHeaderFromList(res, 'Access-Control-Expose-Headers', exposedHeaders);
             if (cors.maxAge !== undefined && cors.maxAge !== null) {
                 res.setHeader('Access-Control-Max-Age', String(cors.maxAge));
             }
@@ -176,6 +183,117 @@ module.exports = {
     },
 
     /**
+     * Applies case-insensitive header additions/removals to an inherited CORS list.
+     * @param {string[]} headers Existing baseline; an explicit replacement remains supported.
+     * @param {Object<string,boolean>} overrides Header names mapped to true (include) or false (remove).
+     * @returns {string[]} A fresh resolved list; neither declaration is mutated.
+     * @throws {TypeError} When an override map contains invalid HTTP names or non-boolean choices.
+     */
+    resolveCorsHeaderList: function (headers, overrides) {
+        if (overrides === undefined) return Array.isArray(headers) ? headers.slice() : [];
+        if (!overrides || typeof overrides !== 'object' || Array.isArray(overrides) ||
+            ![Object.prototype, null].includes(Object.getPrototypeOf(overrides))) {
+            throw new TypeError('CORS header overrides must be a boolean map');
+        }
+        const entries = Object.entries(overrides);
+        const seen = new Set();
+        for (const [name, enabled] of entries) {
+            if (!/^[!#$%&'*+.^_`|~0-9A-Za-z-]+$/.test(name) || typeof enabled !== 'boolean') {
+                throw new TypeError('CORS header overrides require HTTP token names and boolean values');
+            }
+            if (seen.has(name.toLowerCase())) throw new TypeError('CORS header overrides contain duplicate case variants');
+            seen.add(name.toLowerCase());
+        }
+        let result = Array.isArray(headers) ? headers.slice() : [];
+        for (const [name, enabled] of entries) {
+            const normalized = name.toLowerCase();
+            if (!enabled) result = result.filter(value => String(value).toLowerCase() !== normalized);
+            else if (!result.some(value => String(value).toLowerCase() === normalized)) result.push(name);
+        }
+        return result;
+    },
+
+    /**
+     * Builds an exact browser origin from a configured endpoint and framework defaults.
+     * @param {string|Object} endpoint Full origin URL or host/protocol/port declaration.
+     * @param {Object} defaults Framework-owned host and protocol, extended by later layers.
+     * @returns {string} Canonical HTTP(S) origin, including a non-default port.
+     * @throws {TypeError} When the endpoint is not a concrete HTTP(S) browser origin.
+     */
+    createCorsOrigin: function (endpoint, defaults) {
+        let value = endpoint;
+        if (typeof endpoint !== 'string') {
+            if (!endpoint || typeof endpoint !== 'object' || Array.isArray(endpoint) ||
+                !Number.isInteger(endpoint.port) || endpoint.port < 1 || endpoint.port > 65535) {
+                throw new TypeError('CORS endpoint requires a valid numeric port');
+            }
+            const host = endpoint.host === undefined ? defaults.host : endpoint.host;
+            const protocol = endpoint.protocol === undefined ? defaults.protocol : endpoint.protocol;
+            if (typeof host !== 'string' || !host || host !== host.trim() ||
+                typeof protocol !== 'string' || !['http', 'https'].includes(protocol)) {
+                throw new TypeError('CORS endpoint requires a host and HTTP(S) protocol');
+            }
+            value = protocol + '://' + host + ':' + endpoint.port;
+        }
+        if (/[\u0000-\u0020\u007f]/.test(value)) {
+            throw new TypeError('CORS endpoint cannot contain whitespace or control characters');
+        }
+        let url;
+        try { url = new URL(value); } catch (error) {
+            throw new TypeError('CORS endpoint requires a valid origin URL');
+        }
+        if (!['http:', 'https:'].includes(url.protocol) || !url.hostname ||
+            url.hostname.includes('*') || ['0.0.0.0', '[::]'].includes(url.hostname) ||
+            url.username || url.password || url.pathname !== '/' || url.search || url.hash) {
+            throw new TypeError('CORS endpoint requires a concrete HTTP(S) origin without credentials or paths');
+        }
+        return url.origin;
+    },
+
+    /**
+     * Resolves configured CORS endpoints and explicit origin lists without discovery or request input.
+     * @param {Object} cors Effective layered CORS configuration.
+     * @returns {Object} Independent allowedOrigins and deniedOrigins arrays; denials take precedence.
+     * @throws {TypeError} When endpoint identities, overrides or origin declarations are malformed.
+     */
+    resolveCorsOrigins: function (cors) {
+        const endpoints = cors.originEndpoints || {};
+        const overrides = cors.originEndpointOverrides === undefined ? {} : cors.originEndpointOverrides;
+        const defaults = cors.originDefaults || {};
+        if (!endpoints || typeof endpoints !== 'object' ||
+            (!Array.isArray(endpoints) && ![Object.prototype, null].includes(Object.getPrototypeOf(endpoints))) ||
+            !overrides || typeof overrides !== 'object' || Array.isArray(overrides) ||
+            ![Object.prototype, null].includes(Object.getPrototypeOf(overrides))) {
+            throw new TypeError('CORS endpoints and overrides require configured collections');
+        }
+        const allowedOrigins = cors.allowedOrigins === undefined ? [] : cors.allowedOrigins;
+        const deniedOrigins = cors.deniedOrigins === undefined ? [] : cors.deniedOrigins;
+        if (![allowedOrigins, deniedOrigins].every(list => Array.isArray(list) && list.every(value => typeof value === 'string'))) {
+            throw new TypeError('CORS explicit origins must be string arrays');
+        }
+        const allowed = new Set(allowedOrigins), denied = new Set(deniedOrigins);
+        const entries = Array.isArray(endpoints) ? endpoints.map(endpoint => [endpoint && endpoint.code, endpoint]) : Object.entries(endpoints);
+        if (entries.length > 10000) throw new TypeError('CORS endpoint collection exceeds bounded limits');
+        const codes = new Set();
+        for (const [code, endpoint] of entries) {
+            if (typeof code !== 'string' || !/^[A-Za-z0-9][A-Za-z0-9_.-]*$/.test(code) ||
+                ['constructor', 'prototype', '__proto__'].includes(code) || codes.has(code)) {
+                throw new TypeError('CORS endpoints require distinct configured codes');
+            }
+            codes.add(code);
+            const origin = this.createCorsOrigin(endpoint, defaults);
+            if (overrides[code] === false) denied.add(origin);
+            else allowed.add(origin);
+        }
+        for (const [code, enabled] of Object.entries(overrides)) {
+            if (!codes.has(code) || typeof enabled !== 'boolean') {
+                throw new TypeError('CORS endpoint overrides require known codes and boolean values');
+            }
+        }
+        return { allowedOrigins: [...allowed], deniedOrigins: [...denied] };
+    },
+
+    /**
      * Echoes bounded request correlation values as response metadata.
      *
      * @param {Object} req Express request.
@@ -200,8 +318,7 @@ module.exports = {
      * @returns {string|undefined} Allowed origin header value.
      */
     resolveAllowedOrigin: function (requestOrigin, cors) {
-        let allowedOrigins = cors.allowedOrigins || [];
-        let deniedOrigins = cors.deniedOrigins || [];
+        const { allowedOrigins, deniedOrigins } = this.resolveCorsOrigins(cors);
         if (requestOrigin && deniedOrigins.indexOf(requestOrigin) >= 0) {
             return undefined;
         }

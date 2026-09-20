@@ -51,7 +51,7 @@ module.exports = function createBuilderWorkspace() {
     name: "fixture.customer",
     nodics: { applicationBuilder: metadata },
   });
-  ["agora.apparel", "agora.electronics", "agora.telco", "nexus.web"].forEach(
+  ["agora.apparel", "agora.electronics", "agora.telco"].forEach(
     (code) =>
       write(path.join(customer, "modules", code, "package.json"), {
         name: code,

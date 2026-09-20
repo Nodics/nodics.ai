@@ -59,10 +59,18 @@ fails during protected calls rather than silently broadening the credential.
 state namespace for both principal stamps and token revocation. Authority and
 consumer runtimes must use the same configured distributed channel. It can be
 the active Foundation `auth` module when Profile runs remotely; this never
-changes `profileModuleName` or identity ownership. The default remains Profile.
+changes `profileModuleName` or identity ownership. The logical cache namespace defaults to `auth`; Profile remains the identity authority.
 
 Module invocation honors the router topology's effective `remoteOnly` option,
 including connection aliases, even when the module source is active locally.
 The selected remote endpoint or registry owner remains mandatory; removing the
 option restores ordinary local dispatch. Active source is not proof of local
 service ownership. See `test/moduleInvocationContract.test.js`.
+
+Keep common authority contexts bounded to explicitly selected modules; schema overrides and Profile-issued scopes remain authoritative. See the local contract.
+
+A registry lease endpoint already names its canonical module API path and is preserved, including a prefix different from the logical module name. An origin-only endpoint uses the existing discovered package prefix or module name. Credentials, logical ownership and target-authority filtering remain unchanged.
+
+Inherit authentication policy and bind deployment credentials through the existing
+nAuth/nService contract. Keep provisioning proof separate from retained runtime
+proof; preserve strict shared auth state and Profile grants. See the local contract.

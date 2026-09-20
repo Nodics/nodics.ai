@@ -62,10 +62,13 @@ const suggest = () => service.suggest(request);
   const before = writes;
   parsed.name = '';
   await assert.rejects(suggest(), { code: 'ERR_WASTE_RECOGNITION_INVALID' });
-  parsed.name = 'Remote control';
+  parsed.name = 'Plastic bottle';
+  parsed.description = 'A bottle with a yellow cap.';
+  parsed.assessment = 'UNSUPPORTED';
+  await assert.rejects(suggest(), error => error.code === 'ERR_WASTE_ITEM_UNSUPPORTED' && /Plastic bottle/.test(error.message) && /yellow cap/.test(error.message) && /can’t accept/.test(error.message));
   for (const assessment of ['UNSUPPORTED', 'UNCERTAIN']) {
     parsed.assessment = assessment;
-    await assert.rejects(suggest(), { code: 'ERR_WASTE_RECOGNITION_INVALID' });
+    await assert.rejects(suggest(), { code: assessment === 'UNSUPPORTED' ? 'ERR_WASTE_ITEM_UNSUPPORTED' : 'ERR_WASTE_RECOGNITION_INVALID' });
   }
   parsed.assessment = 'SUPPORTED';
   for (const flag of ['BLURRY', 'MULTIPLE_ITEMS', 'MISMATCH']) {
@@ -83,5 +86,17 @@ const suggest = () => service.suggest(request);
   assert.equal(saved.metadata.suggestion.recognition.taxonomyMatch.kind, 'GENERIC_FALLBACK');
   settings.subjectLabel = 'recyclable packaging';
   assert(service.buildPrompt(items, [], settings).includes('foreground recyclable packaging'));
+  settings.allowBundles = true;
+  parsed.qualityFlags = ['MULTIPLE_ITEMS']; parsed.quantity = 8; parsed.itemTypeCode = 'PHONE';
+  parsed.weightEstimate = {min:.2,max:.5,unit:'KG',basis:'INFERRED',confidence:.7};
+  await suggest();
+  assert.equal(saved.metadata.suggestion.facts.submissionUnit, 'BUNDLE');
+  const operations=require('../src/service/defaultWasteSubmissionOperationService');
+  assert.equal(operations.facts(saved.metadata.suggestion.facts).submissionUnit,'BUNDLE');
+  assert.equal(operations.clearAnalysisFacts({submissionUnit:'BUNDLE'}).submissionUnit,undefined);
+  assert.equal(saved.metadata.suggestion.facts.quantity, 1);
+  assert.equal(saved.metadata.suggestion.facts.itemTypeCode, 'GENERIC_DEVICE');
+  assert.equal(saved.metadata.suggestion.facts.weightEstimate.max, .5);
+  assert(prompt.includes('Ignore non-domain objects'));
   console.log('Recognition recovery: configured taxonomy fallback, customization and rejection boundaries passed');
 })().catch(error => { console.error(error); process.exitCode = 1; });

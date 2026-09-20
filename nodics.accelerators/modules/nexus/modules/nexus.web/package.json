@@ -1,0 +1,37 @@
+{
+  "name": "nexus.web",
+  "version": "0.0.0",
+  "index": "92.82",
+  "private": true,
+  "description": "Reusable Nexus accelerator reference content and immutable data releases.",
+  "main": "nodics.js",
+  "scripts": {
+    "check": "npm test",
+    "test": "node test/nexusCorporateContentContract.test.mjs"
+  },
+  "nodics": {
+    "kind": "content-pack",
+    "runtimeModule": true,
+    "loadableByNodicsModuleLoader": true,
+    "owns": [
+      "composition",
+      "configuration",
+      "data",
+      "test",
+      "documentation",
+      "llm"
+    ],
+    "runtime": {
+      "router": false,
+      "publish": false,
+      "web": false
+    },
+    "displayName": "Nexus Website Content",
+    "extends": [
+      "nexus"
+    ],
+    "applicationBuilder": {
+      "dataPack": true
+    }
+  }
+}

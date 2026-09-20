@@ -47,6 +47,7 @@ module.exports = {
         defaultStatus: 'ESTIMATED',
         calculation: {
             providerService: 'DefaultWasteImpactMockProviderService',
+            fallbackProviderServices: [],
             timeoutMs: 5000,
             failureMode: 'ERROR',
             environmentalAssessment: { enabled: false, version: '1', indicators: {} },

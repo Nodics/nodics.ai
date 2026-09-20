@@ -17,27 +17,51 @@
  * @override Project, environment, server, node, tenant, or customer layers may override these defaults through Nodics configuration layering.
  */
 module.exports = {
-    schemaAccessPolicy: {
-        policyTenant: 'default'
+  schemaAccessPolicy: {
+    policyTenant: "default",
+  },
+  runtimePropertyGovernance: {
+    sensitivePathPatterns: [
+      "password",
+      "passwd",
+      "secret",
+      "token",
+      "api[-_]?key",
+      "private[-_]?key",
+      "credential",
+    ],
+  },
+  tooling: {
+    commands: {
+      "governance:report": {
+        description:
+          "Generate effective runtime configuration governance and override reports.",
+        handler: "@nTooling/node-script",
+        script:
+          "src/service/tooling/defaultGovernanceReportGeneratorService.js",
+      },
     },
-    runtimePropertyGovernance: {
-        sensitivePathPatterns: [
-            'password',
-            'passwd',
-            'secret',
-            'token',
-            'api[-_]?key',
-            'private[-_]?key',
-            'credential'
-        ]
+  },
+  apiExposure: {
+    categories: {
+      dynamicClass: {
+        enabled: false,
+      },
     },
-    tooling: {
-        commands: {
-            'governance:report': {
-                description: 'Generate effective runtime configuration governance and override reports.',
-                handler: '@nTooling/node-script',
-                script: 'src/service/tooling/defaultGovernanceReportGeneratorService.js'
-            }
-        }
-    }
+  },
+  localResetProvider: {
+    contributions: {
+      dynamo: {
+        serviceNames: {
+          DefaultClassConfigurationService: true,
+          DefaultConfigurationActivationLogService: true,
+          DefaultConfigurationActivationRequestService: true,
+          DefaultPipelineService: true,
+          DefaultRouterConfigurationService: true,
+          DefaultSchemaAccessPolicyService: true,
+          DefaultSchemaConfigurationService: true,
+        },
+      },
+    },
+  },
 };

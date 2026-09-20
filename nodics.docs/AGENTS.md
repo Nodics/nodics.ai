@@ -31,3 +31,10 @@
   a durable screen flow serves the reader better.
 - Report authored, generated/validated, visually reviewed, and published states
   separately. Pack validation is not proof of complete detail across all pages.
+
+Source coverage defaults to metadata-declared module roots within this framework
+checkout. It never auto-selects sibling customer/frontend repositories. To audit
+another owner, pass explicit `--source-root`, `--catalogue` and `--output-dir`;
+its report belongs to that owner and cannot overwrite Framework artifacts.
+See the source-backed documentation coverage guide for invocation and boundaries.
+`test/sourceCoverageScope.test.mjs` proves sibling independence and output isolation.

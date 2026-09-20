@@ -13,6 +13,19 @@ activate a content module simply to obtain its configuration. The selected
 project/environment/server/node chain must remain valid. A later node override
 must preserve inherited unrelated values.
 
+The selected environment/server/node is activated by `getActiveModules` from
+runtime metadata before additional capability selections. Do not repeat these
+identities in `activeModules.modules`. Keep optional capabilities explicit and
+verify both their presence and unrelated-module exclusion in the prepared graph.
+
+Shared environment connections remain inherited; server files declare actual
+exceptions such as isolated database names. Endpoint aliases use existing `ref`
+bindings to canonical deployment values, preserving protocol shape, advertised
+addresses and `remoteOnly` restrictions. References are resolved once per
+contribution. Later node/tenant changes target `servers.<alias>` directly; changing
+reference sources afterwards does not rebind earlier consumers. Missing and
+cyclic references reject before a contribution is installed.
+
 Current merge behavior is `lodash.merge`: object properties merge recursively,
 arrays merge by index, omitted properties inherit, and shorter arrays may keep
 inherited trailing elements. This refactor does not introduce replacement or
@@ -88,12 +101,12 @@ Use an explicit `$config` object only when a value needs resolution:
 - `ref`: `path` as an array of keys (preferred for keys containing dots), or a
   dotted path. Reads the current contribution plus earlier effective properties,
   returns an independent value, and rejects missing/cyclic/unsafe references.
-- `context`: one of `projectCode`, `environmentCode`, `serverCode`, `nodeCode`
-  from the selected runtime.
+- `context`: one of `projectCode`, `environmentCode`, `serverCode`, `nodeCode`, `projectVersion`, `frameworkVersion`
+  from the selected runtime and its existing package manifests.
 - `path`: a `base` of `project`, `framework`, `environment`, `server`, `file`,
   or a binding that resolves to an absolute path, plus a `relative` string.
   This supports explicit sibling checkout paths; it is not a filesystem sandbox.
-- `composition`: the selected environment profile's explicit composition `name`
+- `composition`: the effective `activeModules.compositions` entry named by `name`
   and optional `field`. Its declared `environmentVariable` chooses domains;
   `emptySelections` declares aliases, with only `none` supplied by default.
   No application identity or environment-variable name is inferred by nConfig.
@@ -166,3 +179,59 @@ The generated-artifact regression traverses framework, partner, project,
 environment and server contributions and verifies unchanged method origins.
 Live cluster acceptance uses distinct node configuration and credentials with
 one generated server directory; nodes do not define functional overrides.
+
+## Explicit collection changes
+
+Ordinary arrays retain positional merge compatibility. Ordered selections and security-sensitive scopes must state their intended semantics through the existing binding vocabulary:
+
+```js
+module.exports = {
+  sources: { $config: 'replace', value: [] },
+  methods: { $config: 'keyed', key: 'code', remove: ['pickup'], entries: [
+    { code: 'courier', enabled: true, paths: { $config: 'replace', value: ['approved.md'] } }
+  ] }
+};
+```
+
+`replace` accepts an object or array and discards the inherited value. `keyed` requires arrays of objects with unique, nonempty string identities; existing entries retain order, updates merge by identity, and new entries append in declared order. Removal is explicit and idempotent. An entry cannot be updated and removed together. Nested arrays remain positional unless explicitly replaced. Reordering an entire list uses replacement. Invalid or duplicate identities fail before the effective configuration changes; one contribution never mutates its predecessors.
+
+Normal, external and tenant updates use the same nConfig merge. A change applied to all configured tenants validates every candidate before publishing any of them. References to a keyed collection resolve its inherited and current entries. Bound declarations are limited by the existing depth/node limits and the keyed entry limit. No expressions, scripts, callbacks, filesystem discovery or provider calls are introduced.
+
+Bindings resolve at their contribution boundary. A node that changes an endpoint must override `servers.<alias>`; changing an earlier helper value does not re-evaluate prior bindings. Consumer-owned templates/defaults, such as nImport initialization profiles and BackOffice targets, resolve at consumption time when later deployment choices are needed. Do not reference framework templates during the earlier server-only activation discovery pass.
+
+
+## Runtime and property projections
+
+`{ $config: 'runtime', name: 'apiServer', path: 'servers.default.endpoint' }`
+projects a selected sibling server's authored endpoint through existing project,
+environment, server and optional `node` contributions. It does not start or activate
+that server. Metadata must identify each boundary and remain within the selected
+project. Missing/retired/escaping targets, unsafe paths and dependency cycles reject.
+
+Resolution projects only the selected property and its dependencies. Bidirectional
+peer connections do not recursively initialize entire runtimes. Every contribution
+resolves before the next one: later node overrides merge with an earlier resolved
+endpoint and cannot retroactively rebind its source. External/tenant runtime
+changes still target the actual consumer key; this is not live registry discovery.
+Runtime reference depth is bounded to 32; property projection preserves the
+64-level and 250,000-value bounds of nConfig. Tests cover binding timing, partial
+node overrides, independent results, cycles and boundary rejection.
+
+The `ref` operator also accepts optional `fields`: direct object keys or projected
+keys on each array item. It returns independent values, rejects missing/unsafe
+selections, and uses the same contribution timing. Capability owners validate
+endpoint, origin and credential meaning.
+
+The `profile` operator and `nodics.environment.json` are retired. Application
+composition resides in `activeModules.compositions`; browser deployments use
+`frontends`; explicit operator launch/acceptance/container inputs use `tooling`
+in the existing project/environment/server contribution. nTooling reads these
+through nConfig. Package-version context fields read only the selected project
+or framework `package.json`; they do not create a version registry.
+
+The existing pre-start `readDeploymentConfiguration` entrypoint accepts optional
+`inheritedProperties` from its owning tooling caller. Apply them before authored
+project/environment/server/node contributions through the same binding and merge
+sequence. This preserves explicit replacement/keyed semantics for framework-owned
+tooling defaults; never merge defaults back into already-resolved collections.
+This projection does not activate modules or alter runtime startup authority.

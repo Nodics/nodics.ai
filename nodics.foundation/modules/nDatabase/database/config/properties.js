@@ -17,77 +17,92 @@
  * @override Project, environment, server, node, tenant, or customer layers may override these defaults through Nodics configuration layering.
  */
 module.exports = {
+  defaultPageSize: 10,
+  defaultPageNumber: 1,
+  queryMaxTimeMS: 1000,
+  databaseTransactions: {
+    enabled: true,
+    failClosed: true,
+    maximumCommitTimeMs: 5000,
+  },
+  referenceIntegrity: {
+    enabled: true,
+    failClosed: true,
+    maximumTargetRecords: 100,
+    maximumRelationships: 100,
+  },
+  schemaApi: {
+    // Capability-owned read/write grants; no client application identity.
+    discoveryPermission: "system.schema.view",
+    readPermission: "system.schema.view",
+    writePermission: "system.schema.manage",
+    form: {
+      recordsLabel: "Records",
+      schemaLabel: "Schema",
+      createLabel: "Create record",
+      createRelatedLabel: "Add",
+      trueLabel: "Yes",
+      falseLabel: "No",
+      detailsLabel: "Details",
+      relationshipsLabel: "Related records",
+      additionalLabel: "Additional details",
+      reviewLabel: "Review",
+      nextLabel: "Continue",
+      backLabel: "Back",
+      editLabel: "Edit",
+      discardTitle: "Discard unsaved changes?",
+      discardMessage: "Your unsaved changes will be lost.",
+      discardLabel: "Discard changes",
+      keepEditingLabel: "Keep editing",
+      emptyValueLabel: "Not provided",
+      pendingLabel: "New",
+      savedRelatedMessage:
+        "Some related records have already been saved. Retry to finish, or keep their references before leaving. Discarding this form does not delete those records.",
+    },
+    moduleAliases: {},
+    discoverModelsByDefault: true,
+    defaultModelOperations: ["search", "read", "create", "update", "delete"],
+    defaultRelationshipActions: [
+      "SELECT_EXISTING",
+      "CREATE_RELATED",
+      "EDIT_RELATED",
+      "UNLINK",
+    ],
+    defaultMutationMode: "GENERATED_CRUD",
+    defaultPageSize: 25,
+    allowedPageSizes: [10, 25, 50],
+    maximumPageSize: 50,
+    maximumSearchLength: 100,
+    maximumFilterConditions: 20,
+    maximumFilterDepth: 3,
+    maximumBulkItems: 100,
+    maximumAggregatePayloadBytes: 50000,
+  },
+  schemaPolicies: {},
 
-    defaultPageSize: 10,
-    defaultPageNumber: 1,
-    queryMaxTimeMS: 1000,
-    databaseTransactions: {
+  externalSchemaLocation: "data/schema",
+  accessPoints: {
+    readAccessPoint: 1,
+    writeAccessPoint: 2,
+    removeAccessPoint: 3,
+    fullAccessPoint: 10,
+  },
+  database: {
+    default: {
+      options: {
+        databaseType: "mongodb", //for Cassandra use 'cassandra'
+        cleanOrphan: true,
+      },
+    },
+  },
+  apiExposure: {
+    categories: {
+      schemaApi: {
         enabled: true,
-        failClosed: true,
-        maximumCommitTimeMs: 5000
-    },
-    referenceIntegrity: {
+      },
+      schemaMaintenance: {
         enabled: true,
-        failClosed: true,
-        maximumTargetRecords: 100,
-        maximumRelationships: 100
+      },
     },
-    schemaApi: {
-        // Capability-owned read/write grants; no client application identity.
-        discoveryPermission: 'system.schema.view',
-        readPermission: 'system.schema.view',
-        writePermission: 'system.schema.manage',
-        form: {
-            recordsLabel: 'Records',
-            schemaLabel: 'Schema',
-            createLabel: 'Create record',
-            createRelatedLabel: 'Add',
-            trueLabel: 'Yes',
-            falseLabel: 'No',
-            detailsLabel: 'Details',
-            relationshipsLabel: 'Related records',
-            additionalLabel: 'Additional details',
-            reviewLabel: 'Review',
-            nextLabel: 'Continue',
-            backLabel: 'Back',
-            editLabel: 'Edit',
-            discardTitle: 'Discard unsaved changes?',
-            discardMessage: 'Your unsaved changes will be lost.',
-            discardLabel: 'Discard changes',
-            keepEditingLabel: 'Keep editing',
-            emptyValueLabel: 'Not provided',
-            pendingLabel: 'New',
-            savedRelatedMessage: 'Some related records have already been saved. Retry to finish, or keep their references before leaving. Discarding this form does not delete those records.',
-        },
-        moduleAliases: {},
-        discoverModelsByDefault: true,
-        defaultModelOperations: ['search', 'read', 'create', 'update', 'delete'],
-        defaultRelationshipActions: ['SELECT_EXISTING', 'CREATE_RELATED', 'EDIT_RELATED', 'UNLINK'],
-        defaultMutationMode: 'GENERATED_CRUD',
-        defaultPageSize: 25,
-        allowedPageSizes: [10, 25, 50],
-        maximumPageSize: 50,
-        maximumSearchLength: 100,
-        maximumFilterConditions: 20,
-        maximumFilterDepth: 3,
-        maximumBulkItems: 100,
-        maximumAggregatePayloadBytes: 50000
-    },
-    schemaPolicies: {},
-
-    externalSchemaLocation: 'data/schema',
-    accessPoints: {
-        readAccessPoint: 1,
-        writeAccessPoint: 2,
-        removeAccessPoint: 3,
-        fullAccessPoint: 10
-    },
-    database: {
-        default: {
-            options: {
-                databaseType: 'mongodb', //for Cassandra use 'cassandra'
-                cleanOrphan: true
-            },
-        }
-    }
+  },
 };

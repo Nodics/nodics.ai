@@ -184,6 +184,18 @@ global.fetch = async () => {
 };
 
 (async () => {
+  const importGroup = { targetServer: "wcmsStaged", targetRuntimeRole: "WCMS_STAGED", dataType: "sample", steps: [{ code: "example:sample" }] };
+  const operator = { tenant: "default", authData: { principalId: "admin" }, httpRequest: { headers: { authorization: "Bearer operator-token" } } };
+  const executed = await service.invokeDataReleaseOperation("execute", importGroup, operator);
+  assert.equal(executed.request.header.Authorization, "Bearer operator-token");
+  const checked = await service.invokeDataReleaseOperation("preflight", importGroup, operator);
+  assert.equal(checked.request.header.Authorization, "Bearer service-token");
+  for (const rejected of [
+    { ...operator, httpRequest: { headers: {} } },
+    { ...operator, httpRequest: { headers: { authorization: "Basic invalid" } } },
+    { ...operator, authData: { principalId: "service", tokenType: "service" } },
+    { ...operator, authData: {} },
+  ]) assert.throws(() => service.invokeDataReleaseOperation("execute", importGroup, rejected), error => error.code === "ERR_BOF_00082");
   assert.strictEqual(service.operatorOrigin({}), "https://operator.example.test");
   assert.strictEqual(service.operatorOrigin({ httpRequest: { headers: { origin: "https://selected.example.test" } } }), "https://selected.example.test");
   for (const origin of ["null", "javascript:alert(1)", "https://user:secret@example.test", "https://example.test/path", "https://example.test/"]) {
@@ -204,6 +216,7 @@ global.fetch = async () => {
   let status = await service.status("nexus", {
     tenant: "default",
     authData: { principalId: "admin" },
+    httpRequest: { headers: { authorization: "Bearer operator-token" } },
   });
   assert.strictEqual(status.owner, "nexus.web");
   assert.strictEqual(status.siteCode, "nexusCorporateSite");
@@ -261,6 +274,7 @@ global.fetch = async () => {
       reason: "Replay current development baseline",
     },
     authData: { principalId: "admin" },
+    httpRequest: { headers: { authorization: "Bearer operator-token" } },
   });
   assert.deepStrictEqual(initiateRequest.targetAuthority, {
     runtimeRole: "WCMS_STAGED",
@@ -306,6 +320,7 @@ global.fetch = async () => {
       reason: "Initialize complete Agora Apparel application bundle",
     },
     authData: { principalId: "admin" },
+    httpRequest: { headers: { authorization: "Bearer operator-token" } },
   });
   assert.deepStrictEqual(
     preparationCalls.map((call) => call.apiName),
@@ -388,6 +403,7 @@ global.fetch = async () => {
     tenant: "default",
     requestId: "request-agora-blocked",
     authData: { principalId: "admin" },
+    httpRequest: { headers: { authorization: "Bearer operator-token" } },
   });
   assert.strictEqual(
     blockedAgora.readiness,
@@ -434,6 +450,7 @@ global.fetch = async () => {
     tenant: "default",
     requestId: "request-agora-release-blocked",
     authData: { principalId: "admin" },
+    httpRequest: { headers: { authorization: "Bearer operator-token" } },
   });
   assert.strictEqual(blockedBySetupData.readiness, "BLOCKED");
   assert.strictEqual(
@@ -470,6 +487,7 @@ global.fetch = async () => {
       reason: "Initialize complete Agora Apparel application bundle",
     },
     authData: { principalId: "admin" },
+    httpRequest: { headers: { authorization: "Bearer operator-token" } },
   });
   assert.strictEqual(blockedInitiateBySetupData.readiness, "BLOCKED");
   assert(
@@ -494,6 +512,7 @@ global.fetch = async () => {
       await service.contentPackStatus("frameworkdocs", {
         tenant: "default",
         authData: { principalId: "admin" },
+    httpRequest: { headers: { authorization: "Bearer operator-token" } },
       })
     ).state,
     "NOT_INSTALLED",
@@ -512,6 +531,7 @@ global.fetch = async () => {
     tenant: "default",
     requestId: "request-1",
     authData: { principalId: "admin" },
+    httpRequest: { headers: { authorization: "Bearer operator-token" } },
   });
   assert.strictEqual(contentPackRequest.methodName, "POST");
   assert.strictEqual(
@@ -547,6 +567,7 @@ global.fetch = async () => {
       await service.status("nexus", {
         tenant: "default",
         authData: { principalId: "admin" },
+    httpRequest: { headers: { authorization: "Bearer operator-token" } },
       })
     ).allowedActions,
     ["INITIALIZE"],
@@ -565,6 +586,7 @@ global.fetch = async () => {
       await service.status("nexus", {
         tenant: "default",
         authData: { principalId: "admin" },
+    httpRequest: { headers: { authorization: "Bearer operator-token" } },
       })
     ).allowedActions,
     ["INITIALIZE"],
@@ -584,6 +606,7 @@ global.fetch = async () => {
       await service.status("frameworkdocs", {
         tenant: "default",
         authData: { principalId: "admin" },
+    httpRequest: { headers: { authorization: "Bearer operator-token" } },
       })
     ).allowedActions,
     [],
@@ -603,6 +626,7 @@ global.fetch = async () => {
       await service.status("nexus", {
         tenant: "default",
         authData: { principalId: "admin" },
+    httpRequest: { headers: { authorization: "Bearer operator-token" } },
       })
     ).allowedActions,
     ["INITIALIZE", "ROLLBACK", "RETIRE"],
@@ -621,6 +645,7 @@ global.fetch = async () => {
       await service.status("frameworkdocs", {
         tenant: "default",
         authData: { principalId: "admin" },
+    httpRequest: { headers: { authorization: "Bearer operator-token" } },
       })
     ).allowedActions,
     [],
@@ -655,6 +680,7 @@ global.fetch = async () => {
   let readyButMissingSetup = await service.status("nexusneedssetup", {
     tenant: "default",
     authData: { principalId: "admin" },
+    httpRequest: { headers: { authorization: "Bearer operator-token" } },
   });
   assert.deepStrictEqual(
     readyButMissingSetup.allowedActions,
@@ -682,6 +708,7 @@ global.fetch = async () => {
       tenant: "default",
       requestId: "request-2",
       authData: { principalId: "admin" },
+    httpRequest: { headers: { authorization: "Bearer operator-token" } },
     }),
     (error) => {
       assert.strictEqual(error.code, "ERR_BOF_00085");
@@ -717,6 +744,7 @@ global.fetch = async () => {
       tenant: "default",
       requestId: "request-running",
       authData: { principalId: "admin" },
+    httpRequest: { headers: { authorization: "Bearer operator-token" } },
     }),
     (error) => {
       assert.strictEqual(error.code, "ERR_BOF_00085");
@@ -745,6 +773,7 @@ global.fetch = async () => {
       tenant: "default",
       requestId: "request-3",
       authData: { principalId: "admin" },
+    httpRequest: { headers: { authorization: "Bearer operator-token" } },
     }),
     (error) => {
       assert.strictEqual(error.code, "ERR_BOF_00085");

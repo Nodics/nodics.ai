@@ -10,4 +10,13 @@
  */
 
 /** @module wasteApi/config/properties @description Provides Waste API exposure defaults. @layer config @owner wasteApi @override Partner modules may add external API surfaces through policy. */
-module.exports = { wasteApi: { exposure: { internal: 'wasteInternal' } } };
+module.exports = {
+  wasteApi: { exposure: { internal: "wasteInternal" } },
+  apiExposure: {
+    categories: {
+      wasteInternal: {
+        enabled: true,
+      },
+    },
+  },
+};

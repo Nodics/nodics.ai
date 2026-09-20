@@ -20,8 +20,10 @@ module.exports = {
     return SERVICE.DefaultWasteSubmissionOperationService.discardEmptyDraft(request);
   },
   /** Defers durable submission creation until image analysis succeeds. */
-  prepareSubmission: function (request) {
-    return SERVICE.DefaultEWasteSubmissionPreparationService.prepare(request);
+  prepareSubmission: async function (request) {
+    const draft = await SERVICE.DefaultEWasteSubmissionPreparationService.prepare(request);
+    if (!["METADATA_SUGGESTED", "AWAITING_SUBMITTER_CONFIRMATION"].includes(draft.submissionStatus)) return draft;
+    return this.estimate({ ...request, code: draft.code, expectedRevision: draft.revision });
   },
   /** Reads a paginated customer collection through the owner-scoped workspace. */
   accountItems: function (request) {
@@ -77,7 +79,7 @@ module.exports = {
     }
     return value;
   },
-  /** Invokes a named owning API using internal service authorization. */
+  /** Invokes a named owning API; a trusted explicit bearer preserves caller-owned Profile reads. */
   remote: async function (
     request,
     moduleName,
@@ -85,6 +87,7 @@ module.exports = {
     apiName,
     methodName,
     body,
+    authorization,
   ) {
     const result = await SERVICE.DefaultModuleService.invokeModule({
       local: false,
@@ -99,6 +102,7 @@ module.exports = {
       request: { tenant: request.tenant },
       requestBody: body || {},
       header: {
+        ...(authorization ? { Authorization: authorization } : {}),
         "X-Enterprise-Code":
           (request.authData && request.authData.entCode) || request.tenant,
         "Idempotency-Key": request.idempotencyKey,
@@ -136,6 +140,8 @@ module.exports = {
     const auth = request.authData;
     if (!auth || auth.principalType !== "customer" || !auth.loginId)
       return request;
+    if (typeof request.authorization !== "string" || !/^Bearer\s+\S+$/i.test(request.authorization))
+      this.store().fail("ERR_WASTE_CUSTOMER_REQUIRED", "Customer bearer authorization is required");
     const response = await this.remote(
       request,
       "profile",
@@ -147,6 +153,7 @@ module.exports = {
         options: { recursive: false },
         searchOptions: { pageSize: 1 },
       },
+      request.authorization,
     );
     const customer = Array.isArray(response) ? response[0] : response;
     if (!customer || !customer.code || customer.loginId !== auth.loginId)
@@ -369,6 +376,8 @@ module.exports = {
     if (!record) store.fail("ERR_WASTE_RECORD_NOT_FOUND", "Record not found");
     const photo = record.metadata && record.metadata.photo;
     if (!photo || !photo.code) return { url: photo && photo.url };
+    if (request.resourceType === "submission")
+      return this.remote(request, "media", "wcms", "/customer/photos/" + encodeURIComponent(photo.code), "GET", undefined, request.authorization);
     return this.remote(
       request,
       "media",

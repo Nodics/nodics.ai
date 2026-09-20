@@ -64,11 +64,11 @@ module.exports = {
                 },
                 master: {
                     URI: 'mongodb://127.0.0.1:27017',
-                    databaseName: 'nodicsMaster'
+                    databaseName: 'masterLocal'
                 },
                 test: {
                     URI: 'mongodb://127.0.0.1:27017',
-                    databaseName: 'nodicsTest'
+                    databaseName: 'testLocal'
                 }
             }
         }
@@ -128,3 +128,8 @@ Avoid:
 
 Use the keyed boolean `schemaProperties` contract; preserve zero/false constraints
 and reject malformed selections. See [constraint selection](llm/contracts/README.md#keyed-schema-constraints).
+
+The framework default database names are `masterLocal` and `testLocal`. An unchanged
+Local deployment inherits them without a project/environment database block.
+Explicit server, node and tenant names still override these defaults and preserve
+isolation. Changing a default never renames or migrates existing databases.

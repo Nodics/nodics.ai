@@ -23,6 +23,7 @@ const os = require('os');
 const path = require('path');
 
 const serviceDefinition = require('../src/service/contentPack/defaultContentPackService');
+const frameworkDefaults = require('../config/properties').data.contentPacks.defaults;
 
 function digest(value) {
     return crypto.createHash('sha256').update(value).digest('hex');
@@ -73,6 +74,7 @@ function createHarness(fixture, enabled) {
             dataDirName: 'temp',
             contentPacks: {
                 enabled: enabled,
+                defaults: structuredClone(frameworkDefaults),
                 allowedContractVersions: [1, 2],
                 cleanupStaging: true,
                 stagingDirectory: 'import/content-packs',
@@ -327,6 +329,72 @@ function createHarness(fixture, enabled) {
         } finally {
             require('fs-extra').remove = originalRemove;
             fs.rmSync(cleanupFixture.workspace, { recursive: true, force: true });
+        }
+
+        for (const [name, releaseFolder] of [['partner.alpha', 'docs-v17'], ['partner.beta', 'reference-v4']]) {
+            const minimalFixture = createFixture();
+            try {
+                const releasePath = path.join(minimalFixture.repository, 'data', releaseFolder);
+                fs.renameSync(path.join(minimalFixture.repository, 'data/core-v001'), releasePath);
+                fs.writeFileSync(path.join(minimalFixture.repository, 'package.json'), JSON.stringify({ name }));
+                const section = { ...minimalFixture.manifest, pack: name, contentPath: releaseFolder,
+                    generatedHashes: { [releaseFolder + '/headers/contentHeader.js']: digest(fs.readFileSync(path.join(releasePath, 'headers/contentHeader.js'))) } };
+                const manifestPath = path.join(minimalFixture.repository, 'data/manifest.json');
+                fs.writeFileSync(manifestPath, JSON.stringify({ contractVersion: 2, module: name, sections: { guide: section } }));
+                const minimal = createHarness(minimalFixture, true);
+                const settings = minimal.config.data.contentPacks;
+                settings.packs.customerProjectDocumentation = { source: { manifestSection: 'guide' }, presentation: { title: 'Partner guide' } };
+                const snapshot = structuredClone(settings);
+                const context = minimal.service.resolvePackContext('customerProjectDocumentation');
+                const release = minimal.service.inspectRelease(context);
+                assert.equal(release.available, true);
+                assert.equal(release.contentPath, releasePath);
+                assert.equal(minimal.service.resolveExpectedManifestPack(context, minimalFixture.repository), name);
+                assert.equal(context.pack.presentation.title, 'Partner guide');
+                assert.equal(context.pack.presentation.retryAction, frameworkDefaults.presentation.retryAction);
+                assert.deepStrictEqual(settings, snapshot, 'Default resolution must not mutate nConfig');
+                settings.defaults.presentation.retryAction = 'Retry partner import';
+                assert.equal(minimal.service.resolvePackContext('customerProjectDocumentation').pack.presentation.retryAction, 'Retry partner import');
+                settings.packs.customerProjectDocumentation.presentation.retryAction = 'Retry this pack';
+                assert.equal(minimal.service.resolvePackContext('customerProjectDocumentation').pack.presentation.retryAction, 'Retry this pack');
+                const alternateManifest = path.join(minimalFixture.repository, 'data/bundle.json');
+                fs.copyFileSync(manifestPath, alternateManifest);
+                settings.defaults.source.manifestPath = 'data/bundle.json';
+                assert.equal(minimal.service.inspectRelease(minimal.service.resolvePackContext('customerProjectDocumentation')).contentPath, releasePath);
+                settings.packs.customerProjectDocumentation.source.manifestPath = 'data/manifest.json';
+                assert.equal(minimal.service.resolvePackContext('customerProjectDocumentation').source.manifestPath, 'data/manifest.json');
+                fs.writeFileSync(manifestPath, JSON.stringify({ contractVersion: 2, module: name, sections: { guide: { ...section, pack: 'wrong.owner' } } }));
+                assert.throws(() => minimal.service.inspectRelease(context), /incompatible/);
+                fs.writeFileSync(manifestPath, JSON.stringify({ contractVersion: 2, module: name, sections: { guide: { ...section, generatedHashes: { [releaseFolder + '/headers/contentHeader.js']: 'tampered' } } } }));
+                assert.throws(() => minimal.service.inspectRelease(context), /checksum/);
+                fs.writeFileSync(manifestPath, JSON.stringify({ contractVersion: 2, module: name, sections: { guide: section } }));
+                const installed = { contentPackVersion: '2.0.0', contentPackChecksum: 'previous' };
+                assert.throws(() => minimal.service.validateUpdatePolicy(context, release, installed), /downgrade/);
+                settings.defaults.updatePolicy.allowDowngrade = true;
+                const override = minimal.service.resolvePackContext('customerProjectDocumentation');
+                assert.doesNotThrow(() => minimal.service.validateUpdatePolicy(override, release, installed));
+                assert.equal(override.pack.updatePolicy.sameVersionContentChange, 'REJECT');
+                settings.packs.customerProjectDocumentation.updatePolicy = { allowDowngrade: false };
+                assert.throws(() => minimal.service.validateUpdatePolicy(minimal.service.resolvePackContext('customerProjectDocumentation'), release, installed), /downgrade/);
+                assert.throws(() => minimal.service.validateUpdatePolicy(context, release, { contentPackVersion: release.version, contentPackChecksum: 'changed' }), /version change/);
+                for (const invalidPath of ['../outside', '/tmp/outside', '', null]) {
+                    fs.writeFileSync(manifestPath, JSON.stringify({ contractVersion: 2, module: name, sections: { guide: { ...section, contentPath: invalidPath } } }));
+                    assert.throws(() => minimal.service.inspectRelease(context), /content path/);
+                }
+                fs.writeFileSync(manifestPath, JSON.stringify({ contractVersion: 2, module: name, sections: { guide: section } }));
+                assert.throws(() => minimal.service.inspectRelease({ ...context, source: { ...context.source, manifestSection: 'missing' } }), /section/);
+                assert.throws(() => minimal.service.inspectRelease({ ...context, source: { ...context.source, contentPath: '../outside' } }), /content path/);
+                assert.equal(minimal.service.inspectRelease({ ...context, source: { ...context.source, contentPath: 'data/' + releaseFolder } }).contentPath, releasePath);
+                settings.enabled = false;
+                assert.equal((await minimal.service.getStatus({ packCode: 'customerProjectDocumentation' })).data.state, 'DISABLED');
+                await assert.rejects(minimal.service.importPack({ packCode: 'customerProjectDocumentation' }), /disabled/);
+                settings.enabled = true;
+                settings.packs.customerProjectDocumentation.enabled = false;
+                assert.equal((await minimal.service.getStatus({ packCode: 'customerProjectDocumentation' })).data.state, 'DISABLED');
+                console.log('Minimal manifest-backed pack and overrides validated:', name, releaseFolder);
+            } finally {
+                fs.rmSync(minimalFixture.workspace, { recursive: true, force: true });
+            }
         }
 
         console.log('Content-pack import and update contract validated');

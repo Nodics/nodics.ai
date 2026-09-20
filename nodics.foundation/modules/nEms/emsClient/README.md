@@ -119,3 +119,6 @@ replay needs authorization, audit, ordering, tenant, and side-effect controls.
 - Kafka provider: [kafka](../kafka/README.md)
 - ActiveMQ boundary: [activemq](../activemq/README.md)
 - Event execution: [nEvent](../../nEvent/README.md)
+
+This capability contributes an inert model-service inventory for [governed Local reset](../../nSystem/llm/contracts/local-reset.md).
+Deployment selection, environment and tenant checks, confirmation and required services remain mandatory.

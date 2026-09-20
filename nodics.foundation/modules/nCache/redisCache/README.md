@@ -44,6 +44,12 @@ Because all nodes share Redis, Nodics does not need redundant peer invalidation 
 
 Redis connection data must come from layered configuration or secret-backed runtime configuration. Do not hardcode Redis URLs, credentials, database numbers, TLS settings, or key prefixes in services.
 
+
+Redis provider properties own the default `cache.default.engines.redis.options.prefix`
+value `localRuntimeAuth`. Inherit it through nConfig; a Local environment enabling
+Redis declares only `enabled: true`. Later deployment layers may override the prefix
+for isolation. A prefix does not enable Redis or replace channel/module/tenant keying.
+
 Typical engine options:
 
 ```js

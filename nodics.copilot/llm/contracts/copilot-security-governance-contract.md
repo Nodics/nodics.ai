@@ -238,3 +238,9 @@ export, or action, the change must document:
 If any item is unresolved, the implementation must remain disabled or
 proposal-only. A customer, environment, server, node, or provider override may
 make policy stricter but must not weaken these invariants.
+
+## One conversation API enablement choice
+
+`copilot.api.enabled` is the explicit conversation API opt-in and defaults to false. The selected `copilotApi` capability owns its `copilotApi` exposure category; an advanced nRouter category deny still blocks access. `copilot.enabled` and `copilot.core.enabled` are retired ambiguous switches and the orchestration entry rejects their presence. Remove them from later overlays when migrating. Provider enablement, qualified credentials and knowledge-source selection remain separate controls; internal knowledge/provider compositions do not activate the conversation API. Group-level descriptive guardrail values are retired; actual Policy, Workbench, Provider and Knowledge consumers retain their owning limits.
+
+Knowledge source `definitions` and nested `paths` use explicit nConfig replacement or keyed changes. A shorter list must never inherit additional repository sources or filename patterns unintentionally. Replacing with `[]` selects none; keyed removal/disable retains explicit source identity, scope and permission checks. The standard framework root comes from nConfig's trusted path context, never a sibling-directory assumption.

@@ -163,3 +163,23 @@ test('retrieval does not call Discovery when no source is authorized', async () 
     assert.equal(result.insufficientEvidence, true);
     assert.deepEqual(result.evidence, []);
 });
+
+
+test('generated server copies never consume the authored repository source budget', async t => {
+    const root = fs.mkdtempSync(path.join(os.tmpdir(), 'nodics-generated-knowledge-'));
+    t.after(() => fs.rmSync(root, { recursive: true, force: true }));
+    const server = 'envs/selectedLocal/platformServer';
+    const authored = server + '/config/properties.js';
+    fs.mkdirSync(path.dirname(path.join(root, authored)), { recursive: true });
+    fs.writeFileSync(path.join(root, authored), 'module.exports = {};');
+    for (const directory of ['src/service/gen', 'src/controller/gen', 'src/facade/gen', 'generated/openapi']) {
+        fs.mkdirSync(path.join(root, server, directory), { recursive: true });
+        for (let index = 0; index < 3; index++) fs.writeFileSync(path.join(root, server, directory, index + '.js'), 'generated');
+    }
+    const partition = source({ sourceType: 'SOURCE_CODE', paths: [server + '/**/*.js'], allowedExtensions: ['.js'], limits: { maximumFiles: 1 } });
+    const options = { repositoryRoots: { 'test-repository': root }, configuration: knowledgeConfiguration.ingestion };
+    const files = await repositoryProvider.read(partition, options);
+    assert.deepEqual(files.map(file => file.relativePath), [authored]);
+    fs.writeFileSync(path.join(root, server, 'config', 'extra.js'), 'module.exports = {};');
+    await assert.rejects(repositoryProvider.read(partition, options), /COPILOT_KNOWLEDGE_SOURCE_FILE_LIMIT_EXCEEDED/);
+});

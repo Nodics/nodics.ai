@@ -13,3 +13,8 @@ The Waste Management business anchor opens the consolidated dashboard and expose
 
 This capability declares an inert model-service inventory for [governed Local reset](../../../nodics.foundation/modules/nSystem/llm/contracts/local-reset.md).
 A server must explicitly select it; contributions never enable reset or bypass tenant, environment, confirmation or required-service checks.
+
+Waste Core owns inert Waste acceptance defaults under `tooling.acceptance`.
+Resolve the WASTE and PLATFORM roles from the selected topology; do not copy
+customer environment names, server names, ports or initialization profile codes.
+The invoking project still owns its journey script and explicit execution.

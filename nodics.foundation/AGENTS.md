@@ -62,3 +62,10 @@
   configuration-precedence, failure, shutdown, and compatibility tests.
 - Do not create a parallel authority when a migrated Nodics contract already
   owns configuration, module discovery, security, lifecycle, or observability.
+
+Before reporting a change complete or progressing to live acceptance, deployment,
+merge or release, pass [the mandatory ownership, placement and scope review](modules/nSetup/llm/contracts/ai-coding-and-customization-contract.md#mandatory-ownership-placement-and-scope-review).
+Account for every changed file, inspect the semantic diff and effective
+configuration owners, distinguish pre-existing/incidental changes, and record
+PASS/FAIL with evidence limits in the existing canonical checklist. Tests and
+generated validations do not substitute for this review.

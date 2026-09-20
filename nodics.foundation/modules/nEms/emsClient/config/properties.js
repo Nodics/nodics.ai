@@ -17,21 +17,29 @@
  * @override Project, environment, server, node, tenant, or customer layers may override these defaults through Nodics configuration layering.
  */
 module.exports = {
-
-    nodePingableModules: {
-        emsClient: {
-            enabled: false,
-            nodeUpHandler: 'defaultEmsNodeUpHandlerPipeline',
-            nodeDownHandler: 'defaultEmsNodeDownHandlerPipeline'
-        }
-    },
-
+  nodePingableModules: {
     emsClient: {
-        logFailedMessages: false,
-        messageHandlers: {
-            jsonMessageHandler: 'jsonMessageHandlerPipeline',
-            xmlMessageHandler: 'xmlMessageHandlerPipeline',
-            textMessageHandler: 'textMessageHandlerPipeline',
-        }
-    }
+      enabled: false,
+      nodeUpHandler: "defaultEmsNodeUpHandlerPipeline",
+      nodeDownHandler: "defaultEmsNodeDownHandlerPipeline",
+    },
+  },
+
+  emsClient: {
+    logFailedMessages: false,
+    messageHandlers: {
+      jsonMessageHandler: "jsonMessageHandlerPipeline",
+      xmlMessageHandler: "xmlMessageHandlerPipeline",
+      textMessageHandler: "textMessageHandlerPipeline",
+    },
+  },
+  localResetProvider: {
+    contributions: {
+      emsClient: {
+        serviceNames: {
+          DefaultEmsFailedMessagesService: true,
+        },
+      },
+    },
+  },
 };

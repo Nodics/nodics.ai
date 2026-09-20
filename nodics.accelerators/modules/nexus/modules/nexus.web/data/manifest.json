@@ -1,0 +1,248 @@
+{
+  "contractVersion": 2,
+  "module": "nexus.web",
+  "sections": {
+    "nexusCorporateSite": {
+      "kind": "DATA_RELEASE",
+      "dataType": "sample",
+      "sourceRoot": "sample-v001",
+      "version": "0.0.21",
+      "displayName": "Nexus Corporate Site",
+      "description": "Nexus corporate Site and page composition source",
+      "owningDomain": "nexus.wcms",
+      "lifecycle": "PUBLISHABLE",
+      "destinationRole": "WCMS_STAGED",
+      "environmentScope": [
+        "ALL"
+      ],
+      "sensitivity": "PUBLIC",
+      "versioningPolicy": "IMMUTABLE",
+      "publicationPolicy": "REQUIRED",
+      "initialPublicationPolicy": "ADMIN_INITIATED",
+      "removalPolicy": "UNPUBLISH_OR_RETIRE",
+      "files": {
+        "sample-v001/content/headers/wcms/nexusCorporateContentHeader.js": "018a10d95031b4aecff83f02a3d4230da7d6961c19df1f5d29a78000cf1ab5c1",
+        "sample-v001/content/records/wcms/corporate/nexusCatalogData.js": "99682125076c6e0a417ff3f2e6c9756e2e1ea1198e88676e71bba6cfd2fa224a",
+        "sample-v001/content/records/wcms/corporate/nexusComponentData.js": "54035bc3ce822ed834b8daf8efc5f394cac55bc625723026e1efe0f07e4ea957",
+        "sample-v001/content/records/wcms/corporate/nexusComponentTypeGroupData.js": "d5a0bd164ea25c2328a7c137cddc722f131faee8c13f3ce9554a83533734343b",
+        "sample-v001/content/records/wcms/corporate/nexusNavigationData.js": "9bc49e123c206afe4a61c6ba5f22b6df19341e700b0d507310c4737d720c4c8b",
+        "sample-v001/content/records/wcms/corporate/nexusPageData.js": "b11328228d7a06f2cf6403dbc599d27ea006b453fc09c9ceab9d02db681d684b",
+        "sample-v001/content/records/wcms/corporate/nexusRendererData.js": "8b4eaa2e9831d99801514bf6397d1d5ef5c4d06df2872e859dc038fc942b70ed",
+        "sample-v001/content/records/wcms/corporate/nexusRouteData.js": "c48f5ae53d94354f75ae263d3921b568b65aa252885a8db5b614e6932f39f4bd",
+        "sample-v001/content/records/wcms/corporate/nexusSiteData.js": "3fcbf0df63a65b55bce2a87fa3fc28ed7c0db94262b342252987603e719d7a92",
+        "sample-v001/content/records/wcms/corporate/nexusSlotData.js": "479cf5dc45e425c73043a05999428aaeffdc307898d4e08a4019c303d7946efc",
+        "sample-v001/content/records/wcms/corporate/nexusTemplateData.js": "393e700914e78627cd4d7a0a66ca80bd70c6a957fad77e714a0253421035160c",
+        "sample-v001/content/records/wcms/corporate/nexusTypeCodeData.js": "40447a8f0207abbb9f3e53cef8f5870366924756cda2081532a5ab169339319e"
+      }
+    },
+    "nexusCorporateSiteUpdate": {
+      "kind": "DATA_RELEASE",
+      "dataType": "sample",
+      "sourceRoot": "sample-v001",
+      "version": "0.0.0",
+      "displayName": "Nexus Corporate Site Update",
+      "description": "Nexus corporate Site immutable v1.0.1 component delta",
+      "owningDomain": "nexus.wcms",
+      "lifecycle": "PUBLISHABLE",
+      "destinationRole": "WCMS_STAGED",
+      "environmentScope": [
+        "ALL"
+      ],
+      "sensitivity": "PUBLIC",
+      "versioningPolicy": "IMMUTABLE",
+      "publicationPolicy": "REQUIRED",
+      "initialPublicationPolicy": "ADMIN_INITIATED",
+      "removalPolicy": "UNPUBLISH_OR_RETIRE",
+      "files": {
+        "sample-v001/content/headers/wcmsUpdate/nexusCorporatePageUpdateHeader.js": "395a1b1b1675c4967abef7060bef2d35677d20e74754f3fd6875812d68c25dc8",
+        "sample-v001/content/records/wcmsUpdate/corporate/nexusPageUpdateData.js": "54637d35824de8c21caaa6664f96f02a513d8197c3ab80e7e5b4b5fa644975a5"
+      }
+    },
+    "nexusCorporateEcosystemComponentRepair": {
+      "kind": "DATA_RELEASE",
+      "dataType": "sample",
+      "sourceRoot": "sample-v001",
+      "version": "0.0.0",
+      "displayName": "Nexus Ecosystem Component Repair",
+      "description": "Nexus corporate Site immutable v1.0.2 ecosystem component graph repair",
+      "owningDomain": "nexus.wcms",
+      "lifecycle": "PUBLISHABLE",
+      "destinationRole": "WCMS_STAGED",
+      "environmentScope": [
+        "ALL"
+      ],
+      "sensitivity": "PUBLIC",
+      "versioningPolicy": "IMMUTABLE",
+      "publicationPolicy": "REQUIRED",
+      "initialPublicationPolicy": "ADMIN_INITIATED",
+      "removalPolicy": "UNPUBLISH_OR_RETIRE",
+      "files": {
+        "sample-v001/content/headers/wcmsUpdate/nexusEcosystemComponentRepairHeader.js": "eb148b12fdec05b82b2ff1a95e20e8db5223cc9a0cc3fc0333d4e81838f46052",
+        "sample-v001/content/records/wcmsUpdate/corporate/nexusEcosystemComponentRepairData.js": "875add5e8d49ff407f5eaf3bce44bac0aff4019e5dc954be4ddb664f2d8916b5"
+      }
+    },
+    "nexusCorporateIncrementalProof": {
+      "kind": "DATA_RELEASE",
+      "dataType": "sample",
+      "sourceRoot": "sample-v001",
+      "version": "0.0.0",
+      "displayName": "Nexus Corporate Incremental Proof",
+      "description": "Nexus corporate Site immutable v1.0.3 incremental text proof",
+      "owningDomain": "nexus.wcms",
+      "lifecycle": "PUBLISHABLE",
+      "destinationRole": "WCMS_STAGED",
+      "environmentScope": [
+        "ALL"
+      ],
+      "sensitivity": "PUBLIC",
+      "versioningPolicy": "IMMUTABLE",
+      "publicationPolicy": "REQUIRED",
+      "initialPublicationPolicy": "ADMIN_INITIATED",
+      "removalPolicy": "UNPUBLISH_OR_RETIRE",
+      "files": {
+        "sample-v001/content/headers/wcmsUpdate/nexusIncrementalProofHeader.js": "c8df9c24cf62a5beecdb9ee0ce64de40d3a4c13d067ffb2a71a1d38bbd12f9df",
+        "sample-v001/content/records/wcmsUpdate/corporate/nexusIncrementalProofData.js": "1f9db90672635144f0a38d263458cc0c5d8ec8c0fccd34e02e849e35569ddeee"
+      }
+    },
+    "nexusCorporateProfessionalCopyUpdate": {
+      "kind": "DATA_RELEASE",
+      "dataType": "sample",
+      "sourceRoot": "sample-v001",
+      "version": "0.0.0",
+      "displayName": "Nexus Corporate Professional Copy Update",
+      "description": "Nexus corporate Site immutable v1.0.4 professional hero copy update",
+      "owningDomain": "nexus.wcms",
+      "lifecycle": "PUBLISHABLE",
+      "destinationRole": "WCMS_STAGED",
+      "environmentScope": [
+        "ALL"
+      ],
+      "sensitivity": "PUBLIC",
+      "versioningPolicy": "IMMUTABLE",
+      "publicationPolicy": "REQUIRED",
+      "initialPublicationPolicy": "ADMIN_INITIATED",
+      "removalPolicy": "UNPUBLISH_OR_RETIRE",
+      "files": {
+        "sample-v001/content/headers/wcmsUpdate/nexusProfessionalCopyUpdateHeader.js": "a54a073641aa9a92c8b9a2031e3282e3ee53137b8bbc58998d643dade0142e93",
+        "sample-v001/content/records/wcmsUpdate/corporate/nexusProfessionalCopyUpdateData.js": "b85e42e3381c9b7b53c67bded9a0c1ce92e7652b4fe005a640d5241aa2d4cc88"
+      }
+    },
+    "nexusEditorialSource": {
+      "kind": "DATA_RELEASE",
+      "dataType": "sample",
+      "sourceRoot": "sample-v001",
+      "version": "0.0.1",
+      "displayName": "Nexus Editorial Source",
+      "description": "Local Nexus Editorial authoring source without Online projections",
+      "owningDomain": "nexus.editorial",
+      "lifecycle": "PUBLISHABLE",
+      "destinationRole": "WCMS_STAGED",
+      "environmentScope": [
+        "LOCAL",
+        "LOCAL_PRODUCTION_SIMULATION"
+      ],
+      "sensitivity": "INTERNAL",
+      "versioningPolicy": "IMMUTABLE",
+      "publicationPolicy": "REQUIRED",
+      "initialPublicationPolicy": "ADMIN_INITIATED",
+      "removalPolicy": "UNPUBLISH_OR_RETIRE",
+      "files": {
+        "sample-v001/content/headers/editorial/nexusEditorialSampleDataHeader.js": "21324874c0f8a7c75122e20b4243449ee9b659f3f0ce966af4121e01d254042e",
+        "sample-v001/content/records/editorial/nexusEditorialArticleData.js": "847ea2b83a258ed1f61cb531d9eaaf0568801592026d07e84a1e94b4b15d3ba3",
+        "sample-v001/content/records/editorial/nexusEditorialArticleLocalizationData.js": "7a57da0f213942fef2eebda2f2901b4b5aa101f59d6a44b667044f7879385e96",
+        "sample-v001/content/records/editorial/nexusEditorialArticleTaxonomyData.js": "d3663de4d72d2236a129e11d450fa44fe1136057be499a87c62988599cee12a8",
+        "sample-v001/content/records/editorial/nexusEditorialAuthorData.js": "9c8c7b59851fc248146d754af442cef7ba935245569dab0f78a09d0e145ceb18",
+        "sample-v001/content/records/editorial/nexusEditorialTaxonomyTermData.js": "ae4da76968416126f5374ea38824e2ae0bda98bc16e6a2c89789b696fbfb697a"
+      }
+    },
+    "nexusEngagementOperational": {
+      "kind": "DATA_RELEASE",
+      "dataType": "sample",
+      "sourceRoot": "sample-v001",
+      "version": "0.0.0",
+      "displayName": "Nexus Engagement Operational Data",
+      "description": "Local versioned Engagement form definitions and sanitized testimonial projections",
+      "owningDomain": "nexus.engagement",
+      "lifecycle": "OPERATIONAL_VERSIONED",
+      "destinationRole": "ENGAGEMENT",
+      "environmentScope": [
+        "LOCAL",
+        "LOCAL_PRODUCTION_SIMULATION"
+      ],
+      "sensitivity": "PUBLIC",
+      "versioningPolicy": "IMMUTABLE",
+      "publicationPolicy": "NONE",
+      "initialPublicationPolicy": "NONE",
+      "removalPolicy": "RETAIN",
+      "files": {
+        "sample-v001/content/headers/engagement/nexusExperienceConfigurationHeader.js": "8cf207eeccd5dfad3b3c4f3929f061fc733cefac3b142438c9356afdc618e282",
+        "sample-v001/content/records/engagement/nexusContactFormDefinitionData.js": "569098fce6666a37d56345e52ef9a35182472fa5a2031281ab9e67a1223c2148",
+        "sample-v001/content/records/engagement/nexusContactFormVersionData.js": "83827670b3ce283c2a3e39a79110897452ee05f5f9281a1cb835ed9271a20a85",
+        "sample-v001/content/records/engagement/nexusTestimonialProjectionData.js": "edbbe33251bb3ee8c6438f01238d5d1c2d192f6afd7af3f7b64347cf936e9fe9"
+      }
+    },
+    "nexusCorporateMediaReferences": {
+      "kind": "DATA_RELEASE",
+      "dataType": "sample",
+      "sourceRoot": "sample-v001",
+      "version": "0.0.4",
+      "displayName": "Nexus Corporate Media References",
+      "description": "Nexus corporate media reference records for backend-owned CMS and Editorial media delivery",
+      "owningDomain": "nexus.media",
+      "lifecycle": "PUBLISHABLE",
+      "destinationRole": "WCMS_STAGED",
+      "environmentScope": [
+        "ALL"
+      ],
+      "sensitivity": "PUBLIC",
+      "versioningPolicy": "IMMUTABLE",
+      "publicationPolicy": "REQUIRED",
+      "initialPublicationPolicy": "ADMIN_INITIATED",
+      "removalPolicy": "UNPUBLISH_OR_RETIRE",
+      "files": {
+        "sample-v001/content/assets/nexus-cms-media/assetManifest.js": "5ab1f364e1a3dc5b953c6ee7d0ef4d8781d1ace35c36c47c7abf3e31c68b094a",
+        "sample-v001/content/assets/nexus-cms-media/files/nexusBlogAxisOperations.png": "4329ba0ef6ef42eb7726d2b5b12ed0be9cd449380c0401ff008107cc8e6fb019",
+        "sample-v001/content/assets/nexus-cms-media/files/nexusBlogCustomerEngagement.png": "124fdb3c40c1b3e399276f465abe62732a9d3f7d3f081db9d96b3d27f938946e",
+        "sample-v001/content/assets/nexus-cms-media/files/nexusBlogEditorialPublication.png": "7db5044d450d3010f3a0b40ebc3a600d46b248d1c04ec7e8b7f27d6954fe9abc",
+        "sample-v001/content/assets/nexus-cms-media/files/nexusBlogRuntimeDiscovery.png": "ca06c0d067c947e88d4470e185cd12598ce5091d7ec4d4da134f05b37183d9a1",
+        "sample-v001/content/assets/nexus-cms-media/files/nexusNewsAxisRuntime.png": "f5098e8d3741da1698395d756ef5565aceeea4fbc4f2e755bdb936fa733486b4",
+        "sample-v001/content/assets/nexus-cms-media/files/nexusNewsEditorialRelease.png": "ae479a6569920629c210c0dfa989b17b1a8ff41c2d9e38f256df22bea2154c29",
+        "sample-v001/content/assets/nexus-cms-media/files/nexusNewsEngagementApi.png": "7b28d538dd320b5a0029b1045742f8229f2ec429c6284ec8038ca560f3fa2f55",
+        "sample-v001/content/assets/nexus-cms-media/files/nexusNewsPublicExperience.png": "7d03869a0006a0694fc05b76f702e6c5bcaf4389b4c34b85807840697a1ffec5",
+        "sample-v001/content/assets/nexus-cms-media/files/nexusTestimonialAarohi.png": "0d842adf2e0dc3c4695cc985133c28760ef8e91433fa58ed8900d6b5685fe347",
+        "sample-v001/content/assets/nexus-cms-media/files/nexusTestimonialDaniel.png": "3852e6eba8cf1dcee710e93b0ff9681175073f319cf72981b752d4cc23b4d413",
+        "sample-v001/content/assets/nexus-cms-media/files/nexusTestimonialMarcus.png": "7454f7e543d656c4630e0699e693632528fe838ab80fbeed44922ed9e1e0bb61",
+        "sample-v001/content/assets/nexus-cms-media/files/nodicsAboutArchitecture.png": "763799ae8f4f2d5dbc20303205908fe88997911ce2b8e15b03a00262efbac1e3",
+        "sample-v001/content/assets/nexus-cms-media/files/nodicsAboutCollaboration.png": "f9a3ad3976143649043e777a841d1c0a90c63e42eafea45010d439a9883444d1",
+        "sample-v001/content/assets/nexus-cms-media/files/nodicsAboutVerticalOperations.png": "54cb032023e11fa8a663f1267af550bb7e631d65d308c737e5f03acbddd07e57",
+        "sample-v001/content/assets/nexus-cms-media/files/nodicsAboutVerticalWorkshop.png": "63a8d3bbb7e84c67d9fbbca2e58713de2cfe3340cb7308b3b647cfe20db1a38d",
+        "sample-v001/content/assets/nexus-cms-media/files/nodicsContactArchitecture.png": "23e50debb6ac86c1c430b7f801ad918ae972a3764c292369123499b4ffdf6b9f",
+        "sample-v001/content/assets/nexus-cms-media/files/nodicsDeveloperContractWorkshop.png": "2e5fb86bcc0042c1209cd2165de517ccba3f476244311f2ef94431956b3b82c3",
+        "sample-v001/content/assets/nexus-cms-media/files/nodicsDeveloperExperience.png": "2e5fb86bcc0042c1209cd2165de517ccba3f476244311f2ef94431956b3b82c3",
+        "sample-v001/content/assets/nexus-cms-media/files/nodicsFeaturesArchitecture.png": "d47644a1f181f2a2800fc02554e7ce0740680177fd6e147317f0ce24dc879182",
+        "sample-v001/content/assets/nexus-cms-media/files/nodicsMicroservicesHero.png": "6793819589b27dbb8d775135cfcc00f0fca13ca7ffb8549156eb5f0618a6c7c3",
+        "sample-v001/content/assets/nexus-cms-media/files/nodicsModularHero.png": "e23eb5fc96ec6b69a65a9348c3ea8485717da0c4c6129161d1a1d965f03972c9",
+        "sample-v001/content/assets/nexus-cms-media/files/nodicsProductOperatingModel.png": "aed476d83bc9c2587495451f7ea7c3c3e86ec60df3d472300285356a7e07dd83",
+        "sample-v001/content/assets/nexus-cms-media/files/nodicsSecureHero.png": "c24d18f224dc1b408278c347888779861476e720e55139367b7ff8701f9cccc5",
+        "sample-v001/content/assets/nexus-cms-media/files/oxaviaHeroTwo.jpg": "730b287a38999e9048e9526c9363bd9135e51a21944885a9c2ec7c21f94a76c9",
+        "sample-v001/content/headers/media/nexusMediaReferenceHeader.js": "db5c6f1551dd4e5bb17702fdaddec94fb0e54a1eab8e58cbd3bcfd3323e046f9",
+        "sample-v001/content/records/media/nexusComponentMediaData.js": "41bec06910de2041ef1c36ee62a7936c79a1ba019f4b418aae5c573dbae587c8",
+        "sample-v001/content/records/media/nexusMediaData.js": "aef7d5269771e2ae7595ed1a14055d88cb995443c931e888efad16b50461cb79",
+        "sample-v001/content/records/media/nexusMediaReferenceData.js": "557bcdf73b49d8fc9183c98f6b4132d7369bf460b0b959a473e1263834359fef",
+        "sample-v001/content/assets/nexus-cms-media/files/nexusProduct-electronics-home.png": "d8e6e478ef8554aaf9156f12fcc7fc2777b932fe5a4fcbd7ac5ef21bfae0b891",
+        "sample-v001/content/assets/nexus-cms-media/files/nexusProduct-electronics-mobile.png": "79b09cea29549370245db8c5939d6422996c04378f629cf056aa3ec3e6119e7a",
+        "sample-v001/content/assets/nexus-cms-media/files/nexusProduct-electronics-shop.png": "95b128e937febaf4e9385bb20708f7e3c058eb03123b097151a836440e5bdcf3",
+        "sample-v001/content/assets/nexus-cms-media/files/nexusProduct-telco-home.png": "d005efa4923bfba191dfea0d57b077ddcacccb646b9df0a91e8f2a67ff1e76ab",
+        "sample-v001/content/assets/nexus-cms-media/files/nexusProduct-telco-mobile.png": "26b0d593dcb75ae0d2030e0ba9ec718b444d3dd7cf7370b3ff2773f18500e22b",
+        "sample-v001/content/assets/nexus-cms-media/files/nexusProduct-telco-shop.png": "b896bdc8d3ac9cb240ad62ae10371b14f305b46f42f6ba4681551b9f7bcd52d5",
+        "sample-v001/content/assets/nexus-cms-media/files/nexusProduct-waste-home.png": "2b935b72d0351a263b89cabd49bf6d1ffe601e9e4a650172b38a4e7fc28eca5c",
+        "sample-v001/content/assets/nexus-cms-media/files/nexusProduct-waste-mobile.png": "6a5a83e68f48608dd0046850c2ca3fe3566fa30aae462d0d0754d0ae6c709ec5",
+        "sample-v001/content/assets/nexus-cms-media/files/nexusProduct-waste-shop.png": "5e90422a1213378c6c271b3ac17896e08c73493e34263ccb0a1f26d37fc75d4b",
+        "sample-v001/content/assets/nexus-cms-media/files/nexusProduct-apparel-home-v2.png": "6909c41a83269571385df5bc9bf29f59f076ba951643d4c34f0655dbf6d94c86",
+        "sample-v001/content/assets/nexus-cms-media/files/nexusProduct-apparel-shop-v2.png": "5781ecc4976ba22e7320d9b777d569014ab8df60f48ce1fc5516a29a7d8ce192",
+        "sample-v001/content/assets/nexus-cms-media/files/nexusProduct-apparel-mobile-v2.png": "985e5bea5db82940a231742da1b2491a9b418a9e4e51e0d6381d78db960c00e1",
+        "sample-v001/content/assets/nexus-cms-media/files/nexusProduct-apparel-menu.png": "5723af1c5ec26906662e85ea8b9976525bd4294ff6e48f5f7c7506549d92d8ea"
+      }
+    }
+  }
+}

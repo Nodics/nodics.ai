@@ -17,55 +17,72 @@
  * @override Project modules may provide later properties for customer publishing behavior.
  */
 module.exports = {
-    // Inert inventory; an allowed local server must explicitly select this capability.
-    localResetProvider: {
-        "contributions": {
-            "publish": {
-                "serviceNames": {
-                    "DefaultPublicationAuditService": true,
-                    "DefaultPublicationRequestService": true
-                }
-            }
-        }
+  // Inert inventory; an allowed local server must explicitly select this capability.
+  localResetProvider: {
+    contributions: {
+      publish: {
+        serviceNames: {
+          DefaultPublicationAuditService: true,
+          DefaultPublicationRequestService: true,
+        },
+      },
     },
+  },
 
-    publish: {
-        lifecycle: {
-            initialState: 'STAGED',
-            onlineState: 'ONLINE',
-            terminalStates: ['ONLINE', 'WITHDRAWN', 'ROLLED_BACK', 'REJECTED', 'FAILED'],
-            transitions: {
-                STAGED: ['VALIDATING'],
-                VALIDATING: ['VALIDATED', 'FAILED'],
-                VALIDATED: ['PENDING_APPROVAL', 'APPROVED'],
-                PENDING_APPROVAL: ['APPROVED', 'REJECTED'],
-                APPROVED: ['ACTIVATING'],
-                ACTIVATING: ['ONLINE', 'FAILED'],
-                ONLINE: ['VALIDATING', 'ROLLING_BACK', 'WITHDRAWING'],
-                ROLLING_BACK: ['ROLLED_BACK', 'FAILED'],
-                WITHDRAWING: ['WITHDRAWN', 'FAILED'],
-                FAILED: ['VALIDATING'],
-                ROLLED_BACK: ['VALIDATING'],
-                WITHDRAWN: ['VALIDATING'],
-                REJECTED: ['VALIDATING']
-            },
-            maxDependencies: 10000,
-            requireExpectedRevision: true
-        },
-        reconciliation: {
-            batchSize: 100,
-            maxDurationMs: 5000,
-            stuckAfterMs: 300000,
-            alertFailureCount: 1,
-            correlationSearchLimit: 100
-        },
-        providers: {
-            domainAdapters: {},
-            repositoryProvider: 'DefaultPublicationRepositoryService',
-            versionProvider: null,
-            versionProviders: {},
-            workflowProvider: null
-        },
-        events: { activated: 'publicationActivated', rolledBack: 'publicationRolledBack', failed: 'publicationFailed' }
-    }
+  publish: {
+    lifecycle: {
+      initialState: "STAGED",
+      onlineState: "ONLINE",
+      terminalStates: [
+        "ONLINE",
+        "WITHDRAWN",
+        "ROLLED_BACK",
+        "REJECTED",
+        "FAILED",
+      ],
+      transitions: {
+        STAGED: ["VALIDATING"],
+        VALIDATING: ["VALIDATED", "FAILED"],
+        VALIDATED: ["PENDING_APPROVAL", "APPROVED"],
+        PENDING_APPROVAL: ["APPROVED", "REJECTED"],
+        APPROVED: ["ACTIVATING"],
+        ACTIVATING: ["ONLINE", "FAILED"],
+        ONLINE: ["VALIDATING", "ROLLING_BACK", "WITHDRAWING"],
+        ROLLING_BACK: ["ROLLED_BACK", "FAILED"],
+        WITHDRAWING: ["WITHDRAWN", "FAILED"],
+        FAILED: ["VALIDATING"],
+        ROLLED_BACK: ["VALIDATING"],
+        WITHDRAWN: ["VALIDATING"],
+        REJECTED: ["VALIDATING"],
+      },
+      maxDependencies: 10000,
+      requireExpectedRevision: true,
+    },
+    reconciliation: {
+      batchSize: 100,
+      maxDurationMs: 5000,
+      stuckAfterMs: 300000,
+      alertFailureCount: 1,
+      correlationSearchLimit: 100,
+    },
+    providers: {
+      domainAdapters: {},
+      repositoryProvider: "DefaultPublicationRepositoryService",
+      versionProvider: null,
+      versionProviders: {},
+      workflowProvider: null,
+    },
+    events: {
+      activated: "publicationActivated",
+      rolledBack: "publicationRolledBack",
+      failed: "publicationFailed",
+    },
+  },
+  apiExposure: {
+    categories: {
+      publicationLifecycle: {
+        enabled: true,
+      },
+    },
+  },
 };

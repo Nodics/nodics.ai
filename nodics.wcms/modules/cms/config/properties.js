@@ -17,147 +17,199 @@
  * @override Project modules may provide later property contributions for CMS rendering, data, and integration settings.
  */
 module.exports = {
-    // Inert inventory; an allowed local server must explicitly select this capability.
-    localResetProvider: {
-        "contributions": {
-            "cms": {
-                "serviceNames": {
-                    "DefaultCmsComponentDetailService": true,
-                    "DefaultCmsComponentLocalizationService": true,
-                    "DefaultCmsComponentMediaService": true,
-                    "DefaultCmsComponentService": true,
-                    "DefaultCmsComponentTypeGroupService": true,
-                    "DefaultCmsDocumentationAccessPolicyService": true,
-                    "DefaultCmsDocumentationDashboardService": true,
-                    "DefaultCmsDocumentationNavigationService": true,
-                    "DefaultCmsDocumentationNodeService": true,
-                    "DefaultCmsDocumentationPageService": true,
-                    "DefaultCmsDocumentationProductService": true,
-                    "DefaultCmsDocumentationPublicationStateService": true,
-                    "DefaultCmsDocumentationSearchMetadataService": true,
-                    "DefaultCmsMigrationAuditService": true,
-                    "DefaultCmsNavigationNodeService": true,
-                    "DefaultCmsOnlinePublicationPointerService": true,
-                    "DefaultCmsPageRouteService": true,
-                    "DefaultCmsPageService": true,
-                    "DefaultCmsPageTemplateService": true,
-                    "DefaultCmsPublicationDeploymentReceiptService": true,
-                    "DefaultCmsPublicationEventOutboxService": true,
-                    "DefaultCmsPublicationManifestService": true,
-                    "DefaultCmsRestrictionService": true,
-                    "DefaultCmsRestrictionTypeService": true,
-                    "DefaultCmsSiteService": true,
-                    "DefaultCmsSlotDefinitionService": true,
-                    "DefaultCmsTypeCode2RendererService": true,
-                    "DefaultCmsTypeCodeService": true
-                }
+  tooling: {
+        acceptance: {
+            "guidedInitialization": {
+                "runtime": {
+                    "role": "WCMS_STAGED"
+                },
+                "profileTemplate": "foundation"
             }
-        }
+        },
+  },
+  // Inert inventory; an allowed local server must explicitly select this capability.
+  localResetProvider: {
+    contributions: {
+      cms: {
+        serviceNames: {
+          DefaultCmsComponentDetailService: true,
+          DefaultCmsComponentLocalizationService: true,
+          DefaultCmsComponentMediaService: true,
+          DefaultCmsComponentService: true,
+          DefaultCmsComponentTypeGroupService: true,
+          DefaultCmsDocumentationAccessPolicyService: true,
+          DefaultCmsDocumentationDashboardService: true,
+          DefaultCmsDocumentationNavigationService: true,
+          DefaultCmsDocumentationNodeService: true,
+          DefaultCmsDocumentationPageService: true,
+          DefaultCmsDocumentationProductService: true,
+          DefaultCmsDocumentationPublicationStateService: true,
+          DefaultCmsDocumentationSearchMetadataService: true,
+          DefaultCmsMigrationAuditService: true,
+          DefaultCmsNavigationNodeService: true,
+          DefaultCmsOnlinePublicationPointerService: true,
+          DefaultCmsPageRouteService: true,
+          DefaultCmsPageService: true,
+          DefaultCmsPageTemplateService: true,
+          DefaultCmsPublicationDeploymentReceiptService: true,
+          DefaultCmsPublicationEventOutboxService: true,
+          DefaultCmsPublicationManifestService: true,
+          DefaultCmsRestrictionService: true,
+          DefaultCmsRestrictionTypeService: true,
+          DefaultCmsSiteService: true,
+          DefaultCmsSlotDefinitionService: true,
+          DefaultCmsTypeCode2RendererService: true,
+          DefaultCmsTypeCodeService: true,
+        },
+      },
     },
+  },
 
-    bodyParserHandler: {
-        cmsPublicationBodyParserHandler: 'DefaultCmsPublicationBodyParserHandlerService'
+  bodyParserHandler: {
+    cmsPublicationBodyParserHandler:
+      "DefaultCmsPublicationBodyParserHandlerService",
+  },
+  cms: {
+    designerAuthoring: {
+      maximumReferenceLookupItems: 100,
+      requireNavigationForPublish: false,
+      draftDefaults: {},
+      componentKinds: [],
     },
-    cms: {
-        designerAuthoring: {
-            maximumReferenceLookupItems: 100,
-            requireNavigationForPublish: false,
-            draftDefaults: {},
-            componentKinds: []
-        },
-        referenceLookup: { requireServiceToken: true, maximumResultCount: 1 },
-        delivery: {
-            defaultLocale: 'default',
-            defaultChannel: 'web',
-            maxDepth: 12,
-            maxComponents: 500,
-            cacheTtl: 30000,
-            mediaDeliveryBaseUrl: '/nodics/media/v0/content',
-            cacheResourceNames: ['resolvePublicPage', 'resolveAuthenticatedPage'],
-            publicAccessGroups: ['userGroup'],
-            authenticatedAccessGroups: ['userGroup'],
-            authenticatedPermission: 'cms.delivery.authenticated.read'
-        },
-        localization: {
-            enabled: true,
-            supportedLocales: ['en', 'ar'],
-            defaultLocale: 'en',
-            fallbackLocales: ['en'],
-            legacyRouteLocale: 'default',
-            allowLegacySharedProperties: true,
-            maximumLocalizedProperties: 100
-        },
-        storefrontContext: { headerName: 'x-nodics-storefront-context', moduleName: 'storefront', apiVersion: 'v0',
-            apiName: '/context/introspect', bootstrapTenant: 'default', preferLocal: true, requestTimeoutMs: 1000,
-            maximumAttempts: 1, maximumResponseBytes: 32768 },
-        renderer: {
-            keyPattern: '^[a-z][A-Za-z0-9]*(\\.[A-Za-z][A-Za-z0-9-]*)+$',
-            prohibitedSchemes: ['http:', 'https:', 'javascript:', 'data:', 'file:']
-        },
-        mediaReference: {
-            moduleName: 'media',
-            apiVersion: 'v0',
-            apiName: '/references/media/validate',
-            preferLocal: true,
-            requestTimeoutMs: 2000,
-            maximumAttempts: 2,
-            maximumReferencesPerComponent: 200,
-            mediaTypes: ['IMAGE', 'VIDEO', 'DOCUMENT', 'FILE', 'MIXED'],
-            roles: ['primary', 'background', 'thumbnail', 'icon', 'gallery', 'document', 'video', 'mobile', 'desktop'],
-            localePattern: '^[A-Za-z]{2,3}(?:[-_][A-Za-z0-9]{2,8})*$'
-        },
-        migration: {
-            version: 1,
-            rendererMappings: {
-                'pages/home/sampleHomePage.html': 'page.home',
-                'pages/product/sampleProductDetailPage.html': 'page.product-detail',
-                'pages/product/sampleProductListingPage.html': 'page.product-listing',
-                'pages/cart/sampleCartDetailPage.html': 'page.cart-detail',
-                'pages/components/sampleHeaderComponent.html': 'component.header'
-            },
-            routeMappings: [],
-            identifierMappings: []
-        },
-        publication: {
-            enabled: false,
-            maximumDeploymentRequestBytes: '64mb',
-            runtimeRole: 'UNASSIGNED',
-            maxDependencies: 500,
-            maxBundleDependencies: 10000,
-            maxDepth: 12,
-            maxBundleRoutes: 200,
-            siteBundleChunkThresholdBytes: 50331648,
-            manifestService: 'DefaultCmsPublicationManifestOrchestrationService',
-            targetTransportProvider: null,
-            transactionModuleName: 'cms',
-            outbox: {
-                batchSize: 100,
-                maximumAttempts: 10,
-                leaseMs: 30000,
-                startupReconciliation: true
-            },
-            mediaGarbageCollection: { maximumPointers: 1000, maximumProtectedManifests: 1000 },
-            baselines: {},
-            target: {
-                moduleName: null,
-                connectionName: null,
-                connectionType: 'abstract',
-                timeoutMs: 30000,
-                maxAttempts: 3,
-                maxManifestBytes: 67108864,
-                supportedContractVersions: [0, 1, 2, 3]
-            },
-            rootTypes: {
-                pageRoute: { schema: 'cmsPageRoute', service: 'DefaultCmsPageRouteService' },
-                site: { schema: 'cmsSite', service: 'DefaultCmsSiteService', bundle: true }
-            }
-        }
+    referenceLookup: { requireServiceToken: true, maximumResultCount: 1 },
+    delivery: {
+      defaultLocale: "default",
+      defaultChannel: "web",
+      maxDepth: 12,
+      maxComponents: 500,
+      cacheTtl: 30000,
+      mediaDeliveryBaseUrl: "/nodics/media/v0/content",
+      cacheResourceNames: ["resolvePublicPage", "resolveAuthenticatedPage"],
+      publicAccessGroups: ["userGroup"],
+      authenticatedAccessGroups: ["userGroup"],
+      authenticatedPermission: "cms.delivery.authenticated.read",
     },
-    publish: {
-        providers: {
-            domainAdapters: { cms: 'DefaultCmsPublicationAdapterService' },
-            versionProviders: { cms: 'DefaultCmsPublicationVersionProviderService' },
-            workflowProvider: 'DefaultCmsPublicationWorkflowService'
-        }
-    }
+    localization: {
+      enabled: true,
+      supportedLocales: ["en", "ar"],
+      defaultLocale: "en",
+      fallbackLocales: ["en"],
+      legacyRouteLocale: "default",
+      allowLegacySharedProperties: true,
+      maximumLocalizedProperties: 100,
+    },
+    storefrontContext: {
+      headerName: "x-nodics-storefront-context",
+      moduleName: "storefront",
+      apiVersion: "v0",
+      apiName: "/context/introspect",
+      bootstrapTenant: "default",
+      preferLocal: true,
+      requestTimeoutMs: 1000,
+      maximumAttempts: 1,
+      maximumResponseBytes: 32768,
+    },
+    renderer: {
+      keyPattern: "^[a-z][A-Za-z0-9]*(\\.[A-Za-z][A-Za-z0-9-]*)+$",
+      prohibitedSchemes: ["http:", "https:", "javascript:", "data:", "file:"],
+    },
+    mediaReference: {
+      moduleName: "media",
+      apiVersion: "v0",
+      apiName: "/references/media/validate",
+      preferLocal: true,
+      requestTimeoutMs: 2000,
+      maximumAttempts: 2,
+      maximumReferencesPerComponent: 200,
+      mediaTypes: ["IMAGE", "VIDEO", "DOCUMENT", "FILE", "MIXED"],
+      roles: [
+        "primary",
+        "background",
+        "thumbnail",
+        "icon",
+        "gallery",
+        "document",
+        "video",
+        "mobile",
+        "desktop",
+      ],
+      localePattern: "^[A-Za-z]{2,3}(?:[-_][A-Za-z0-9]{2,8})*$",
+    },
+    migration: {
+      version: 1,
+      rendererMappings: {
+        "pages/home/sampleHomePage.html": "page.home",
+        "pages/product/sampleProductDetailPage.html": "page.product-detail",
+        "pages/product/sampleProductListingPage.html": "page.product-listing",
+        "pages/cart/sampleCartDetailPage.html": "page.cart-detail",
+        "pages/components/sampleHeaderComponent.html": "component.header",
+      },
+      routeMappings: [],
+      identifierMappings: [],
+    },
+    publication: {
+      enabled: false,
+      maximumDeploymentRequestBytes: "64mb",
+      runtimeRole: "UNASSIGNED",
+      maxDependencies: 500,
+      maxBundleDependencies: 10000,
+      maxDepth: 12,
+      maxBundleRoutes: 200,
+      siteBundleChunkThresholdBytes: 50331648,
+      manifestService: "DefaultCmsPublicationManifestOrchestrationService",
+      targetTransportProvider: null,
+      transactionModuleName: "cms",
+      outbox: {
+        batchSize: 100,
+        maximumAttempts: 10,
+        leaseMs: 30000,
+        startupReconciliation: true,
+      },
+      mediaGarbageCollection: {
+        maximumPointers: 1000,
+        maximumProtectedManifests: 1000,
+      },
+      baselines: {},
+      target: {
+        moduleName: null,
+        connectionName: null,
+        connectionType: "abstract",
+        timeoutMs: 30000,
+        maxAttempts: 3,
+        maxManifestBytes: 67108864,
+        supportedContractVersions: [0, 1, 2, 3],
+      },
+      rootTypes: {
+        pageRoute: {
+          schema: "cmsPageRoute",
+          service: "DefaultCmsPageRouteService",
+        },
+        site: {
+          schema: "cmsSite",
+          service: "DefaultCmsSiteService",
+          bundle: true,
+        },
+      },
+    },
+  },
+  publish: {
+    providers: {
+      domainAdapters: { cms: "DefaultCmsPublicationAdapterService" },
+      versionProviders: { cms: "DefaultCmsPublicationVersionProviderService" },
+      workflowProvider: "DefaultCmsPublicationWorkflowService",
+    },
+  },
+  apiExposure: {
+    categories: {
+      cmsAuthoring: {
+        enabled: true,
+      },
+      cmsDelivery: {
+        enabled: true,
+      },
+      moduleInternal: {
+        enabled: true,
+      },
+    },
+  },
 };

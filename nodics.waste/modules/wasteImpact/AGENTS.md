@@ -1,5 +1,9 @@
 # wasteImpact Agents
 
+Ordered fallback uses the existing dispatcher and trusted `fallbackProviderServices`.
+Validate each candidate before accepting it, preserve attempt provenance and prohibit
+mock fallback. See the provider contract; there is no second registry or persistence owner.
+
 Follow the parent contract: `../../AGENTS.md`.
 Follow global guidance: `../../../nodics.foundation/modules/nSetup/llm/ai-enablement-index.md`.
 
@@ -35,3 +39,7 @@ Saved reassessments and explicit acceptance use `DefaultWasteImpactAssessmentSer
 
 This capability declares an inert model-service inventory for [governed Local reset](../../../nodics.foundation/modules/nSystem/llm/contracts/local-reset.md).
 A server must explicitly select it; contributions never enable reset or bypass tenant, environment, confirmation or required-service checks.
+
+Provider energy provenance is allowlisted alongside carbon provenance: energy
+factor, source unit, baseline/treatment coefficients, conversion and result bounds.
+The generic dispatcher preserves these scalars; domain providers own their formulas.

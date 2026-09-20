@@ -45,6 +45,7 @@ global.CLASSES = {
     }
 };
 global.SERVICE = {
+    DefaultHttpHardeningService: require('../../../../nodics.foundation/modules/nRouter/src/service/defaultHttpHardeningService'),
     DefaultAuthenticationProviderService: {
         consumeToken: (moduleName, token) => {
             assert.strictEqual(moduleName, 'profile');
@@ -102,6 +103,49 @@ function request(headers) {
 }
 
 (async function () {
+    const beforeGet = CONFIG.get;
+    const declaredCors = { enabled: true, allowCredentials: true,
+        originDefaults: { protocol: 'http', host: 'localhost' },
+        originEndpoints: { customer: { port: 3600 } } };
+    CONFIG.get = key => key === 'httpHardening' ? { cors: declaredCors } : beforeGet(key);
+    service.validateOrigin(request({ origin: 'http://localhost:3600' }), { secure: false });
+    declaredCors.originEndpointOverrides = { customer: false };
+    assert.throws(() => service.validateOrigin(request({ origin: 'http://localhost:3600' }), { secure: false }), /origin is not allowed/);
+    declaredCors.originEndpointOverrides.customer = true;
+    declaredCors.deniedOrigins = ['http://localhost:3600'];
+    assert.throws(() => service.validateOrigin(request({ origin: 'http://localhost:3600' }), { secure: false }), /origin is not allowed/);
+    delete declaredCors.deniedOrigins;
+    assert.throws(() => service.validateOrigin(request({ origin: 'http://localhost:3601' }), { secure: false }), /origin is not allowed/);
+    CONFIG.get = beforeGet;
+
+    const mixedPolicy = { ...beforeGet('profileBrowserSession'), allowInsecureLoopback: true };
+    const mixedOrigins = ['https://axis.example.com', 'http://localhost:3600', 'http://127.0.0.1:3600', 'http://[::1]:3600', 'http://public.example.com'];
+    CONFIG.get = key => key === 'profileBrowserSession' ? mixedPolicy : key === 'httpHardening' ? {
+        cors: { enabled: true, allowCredentials: true, allowedOrigins: mixedOrigins }
+    } : beforeGet(key);
+    for (const origin of mixedOrigins.slice(0, 4)) {
+        const mixedRequest = request({ origin });
+        const resolved = service.config(mixedRequest);
+        service.validateOrigin(mixedRequest, resolved);
+        service.write(mixedRequest, 'fixture-refresh', 'fixture-csrf', resolved);
+        assert.equal(resolved.secure, origin.startsWith('https:'));
+        assert(mixedRequest.responseHeaders['Set-Cookie'].every(cookie => cookie.includes('; Secure') === origin.startsWith('https:')));
+        assert.equal(mixedPolicy.secure, true, 'Loopback must not mutate shared HTTPS policy');
+    }
+    const publicHttp = request({ origin: 'http://public.example.com' });
+    assert.throws(() => service.validateOrigin(publicHttp, service.config(publicHttp)), /HTTPS origin/);
+    const deniedHttps = request({ origin: 'https://untrusted.example.com' });
+    assert.throws(() => service.validateOrigin(deniedHttps, service.config(deniedHttps)), /origin is not allowed/);
+    mixedPolicy.allowInsecureLoopback = false;
+    const localDenied = request({ origin: 'http://localhost:3600' });
+    assert.throws(() => service.validateOrigin(localDenied, service.config(localDenied)), /HTTPS origin/);
+    mixedPolicy.allowInsecureLoopback = 'true';
+    assert.throws(() => service.config(localDenied), /configuration is invalid/);
+    mixedPolicy.allowInsecureLoopback = true;
+    mixedPolicy.sameSite = 'None';
+    assert.throws(() => service.config(localDenied), /configuration is invalid/);
+    CONFIG.get = beforeGet;
+
     let started = request({ origin: 'https://axis.example.com' });
     let startResult = await service.start(started, {
         authToken: 'access',

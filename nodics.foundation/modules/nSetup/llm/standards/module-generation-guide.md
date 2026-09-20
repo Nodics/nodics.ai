@@ -379,3 +379,13 @@ boundary. Generate empty extension points and only the requested differences;
 do not seed environment/server/node files with a framework default snapshot.
 Record the chosen defaults owner, active consumers and index order before
 moving shared configuration. Validate later overrides and unselected runtimes.
+
+### Minimal generated environment/server properties
+
+Apply [structural facts and repeated deployment values](../contracts/customer-config-classification-contract.md#structural-facts-and-repeated-deployment-values).
+Do not generate selected environment/server/node identities into additional
+capability activation lists. Emit only requested capabilities/providers and
+intentional deployment differences; inherit framework defaults and unchanged
+environment connections. Keep explicit authority, protocol, secret and provider
+qualification boundaries. Correct the existing generator and its regression
+when an example or generated project repeats these values.

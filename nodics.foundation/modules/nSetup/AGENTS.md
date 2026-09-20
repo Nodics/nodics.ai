@@ -41,3 +41,8 @@ This file gives AI coding agents mandatory guidance for this Nodics module or pa
 - Keep AI contracts portable Markdown/JSON so Codex, Copilot, Cursor, Claude, Aider, and future tools can consume them.
 
 Apply [module-owned UI contributions](llm/contracts/module-owned-ui-contribution-contract.md) when placing navigation, component properties or workspace data. Visual nesting does not transfer business ownership; generic modules must not predeclare optional accelerator branches.
+
+Before completion or progression, enforce the
+[mandatory ownership, placement and scope review](llm/contracts/ai-coding-and-customization-contract.md#mandatory-ownership-placement-and-scope-review).
+Require a complete scoped inventory, semantic review, explicit evidence limits
+and a recorded PASS/FAIL; leave unresolved findings in the canonical checklist.

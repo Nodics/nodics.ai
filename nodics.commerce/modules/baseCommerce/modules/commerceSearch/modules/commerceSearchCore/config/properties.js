@@ -11,33 +11,54 @@
 
 /** @module commerceSearchCore/config/properties @description Defines Commerce Search runtime policy and schema access. @layer config @owner commerceSearchCore */
 module.exports = {
-    // Inert inventory; an allowed local server must explicitly select this capability.
-    localResetProvider: {
-        "contributions": {
-            "commerceSearchCore": {
-                "serviceNames": {
-                    "DefaultCommerceSearchRuleProjectionService": true,
-                    "DefaultCommerceSearchRuleService": true,
-                    "DefaultCommerceSearchRuleVersionService": true
-                }
-            }
-        }
+  // Inert inventory; an allowed local server must explicitly select this capability.
+  localResetProvider: {
+    contributions: {
+      commerceSearchCore: {
+        serviceNames: {
+          DefaultCommerceSearchRuleProjectionService: true,
+          DefaultCommerceSearchRuleService: true,
+          DefaultCommerceSearchRuleVersionService: true,
+        },
+      },
     },
+  },
 
-    commerceSearch: {
-        enabled: true,
-        ranking: {
-            enabled: true,
-            searchIndexName: 'commerceSearchRuleProjection',
-            maximumRulesPerRequest: 50,
-            maximumActionsPerRule: 200,
-            actionWeights: { BOOST: 1000, BURY: -1000 },
-            supportedActionTypes: ['PIN', 'BOOST', 'BURY'],
-            supportedScopeTypes: ['GLOBAL', 'CATEGORY', 'SEARCH_TERM']
-        }
+  commerceSearch: {
+    enabled: true,
+    ranking: {
+      enabled: true,
+      searchIndexName: "commerceSearchRuleProjection",
+      maximumRulesPerRequest: 50,
+      maximumActionsPerRule: 200,
+      actionWeights: { BOOST: 1000, BURY: -1000 },
+      supportedActionTypes: ["PIN", "BOOST", "BURY"],
+      supportedScopeTypes: ["GLOBAL", "CATEGORY", "SEARCH_TERM"],
     },
-    schemaPolicies: { commerceSearchCore: {
-        operational: { accessGroups: { adminGroup: 10, commerceOperatorUserGroup: 10, serviceAccountUserGroup: 10 } },
-        tenantOwned: { accessGroups: { adminGroup: 10, commerceOperatorUserGroup: 10, serviceAccountUserGroup: 10 } }
-    } }
+  },
+  schemaPolicies: {
+    commerceSearchCore: {
+      operational: {
+        accessGroups: {
+          adminGroup: 10,
+          commerceOperatorUserGroup: 10,
+          serviceAccountUserGroup: 10,
+        },
+      },
+      tenantOwned: {
+        accessGroups: {
+          adminGroup: 10,
+          commerceOperatorUserGroup: 10,
+          serviceAccountUserGroup: 10,
+        },
+      },
+    },
+  },
+  apiExposure: {
+    categories: {
+      commerceManagement: {
+        enabled: true,
+      },
+    },
+  },
 };

@@ -105,6 +105,9 @@ module.exports = {
         Object.entries(commands).forEach(([name, command]) => this.validateCommand(projectRoot, name, command));
         this.validateScriptOwnership(projectRoot, manifest, commands);
         this.validateProjectDirectoryBoundaries(projectRoot, manifest);
+        const configurationFailures = [];
+        require('../quality/defaultDesignPrincipleAuditService').auditConfigurationSources(configurationFailures, projectRoot, { customerProject: true });
+        if (configurationFailures.length) throw new Error('Configuration coding restrictions failed: ' + configurationFailures.join('; '));
     },
 
     /**
@@ -202,8 +205,7 @@ module.exports = {
                 "command": "project:topology",
                 "home": "project",
                 "args": [
-                    "start",
-                    "--include-frontends"
+                    "start"
                 ]
             },
             "topology:preflight": {
@@ -211,8 +213,7 @@ module.exports = {
                 "command": "project:topology",
                 "home": "project",
                 "args": [
-                    "preflight",
-                    "--include-frontends"
+                    "preflight"
                 ]
             },
             "topology:status": {
@@ -220,8 +221,7 @@ module.exports = {
                 "command": "project:topology",
                 "home": "project",
                 "args": [
-                    "status",
-                    "--include-frontends"
+                    "status"
                 ]
             },
             "topology:stop": {

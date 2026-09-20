@@ -11,3 +11,5 @@ schema PUT APIs through `DefaultModuleService.invokeModule`. See
 [the execution contract](llm/contracts/README.md#confirmed-source-record-execution).
 The existing confirmation, policy, tenant, remote connection and action audit
 remain authoritative; backend selective routes must be deployed before this caller.
+
+Use copilot.api.enabled as the sole conversation API switch; reject retired group/core flags and preserve independent provider, source and permission gates.

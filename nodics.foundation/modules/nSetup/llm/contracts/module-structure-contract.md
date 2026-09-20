@@ -134,3 +134,9 @@ metadata, active-module registration, layered configuration, source
 definitions, tests, documentation, and regenerated artifacts. Do not copy
 `nCommon/templates`; active scaffolding comes from maintained module-generation
 contracts.
+
+Final placement claims require the
+[mandatory ownership, placement and scope review](ai-coding-and-customization-contract.md#mandatory-ownership-placement-and-scope-review).
+Classify every path in the claimed scope and inspect each changed artifact's
+actual role. Separate generated runtime directories from authored source before
+interpreting structure warnings; unresolved authored gaps keep the gate open.

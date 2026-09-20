@@ -8,3 +8,6 @@ Follow the root Nodics AI agent contract before changing this boundary:
 - Read this module `README.md`, `llm/contracts`, `llm/examples`, and generated context.
 
 Preserve tenant isolation, idempotency, content-free events, provider neutrality, secured callbacks, and domain ownership. Do not use archived Notify code as authority. Update source, tests, documentation, and generated evidence together.
+
+Route-category defaults belong to this capability; deployments supply only intentional overrides.
+Preserve nRouter enforcement and independent route authorization. See [exposure ownership](../../../nodics.foundation/modules/nRouter/llm/contracts/README.md#capability-owned-exposure-defaults).

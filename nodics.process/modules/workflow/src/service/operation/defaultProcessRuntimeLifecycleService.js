@@ -26,7 +26,7 @@ module.exports = {
      * @returns {string} Tenant code.
      */
     getTenant: function (request) {
-        return request && request.tenant || CONFIG.get('defaultTenant') || 'default';
+        return (request && request.tenant) || CONFIG.get('defaultTenant') || 'default';
     },
 
     /**
@@ -36,7 +36,7 @@ module.exports = {
      * @returns {string|undefined} Actor identifier.
      */
     getActor: function (request) {
-        let auth = request && request.authData || {};
+        let auth = (request && request.authData) || {};
         return auth.loginId || auth.serviceId || auth.code || auth.userId;
     },
 
@@ -47,7 +47,7 @@ module.exports = {
      * @returns {Object} Body model.
      */
     bodyOf: function (request) {
-        return request && (request.runtimeOperation || request.model || request.body) || {};
+        return (request && (request.runtimeOperation || request.model || request.body)) || {};
     },
 
     /**
@@ -58,29 +58,48 @@ module.exports = {
      * @returns {Object} Generated-service request.
      */
     serviceRequest: function (request, additions) {
-        return Object.assign({
-            tenant: this.getTenant(request),
-            authData: request && request.authData,
-            options: { recursive: false }
-        }, additions || {});
+        return Object.assign(
+            {
+                tenant: this.getTenant(request),
+                authData: request && request.authData,
+                options: { recursive: false },
+            },
+            additions || {},
+        );
     },
 
     /** @returns {Object} Generated definition service. */
-    definitionService: function () { return SERVICE.DefaultProcessDefinitionService; },
+    definitionService: function () {
+        return SERVICE.DefaultProcessDefinitionService;
+    },
     /** @returns {Object} Generated definition-version service. */
-    versionService: function () { return SERVICE.DefaultProcessDefinitionVersionService; },
+    versionService: function () {
+        return SERVICE.DefaultProcessDefinitionVersionService;
+    },
     /** @returns {Object} Generated instance service. */
-    instanceService: function () { return SERVICE.DefaultProcessInstanceService; },
+    instanceService: function () {
+        return SERVICE.DefaultProcessInstanceService;
+    },
     /** @returns {Object} Generated task service. */
-    taskService: function () { return SERVICE.DefaultProcessTaskService; },
+    taskService: function () {
+        return SERVICE.DefaultProcessTaskService;
+    },
     /** @returns {Object} Generated recovery-incident service. */
-    incidentService: function () { return SERVICE.DefaultProcessIncidentService; },
+    incidentService: function () {
+        return SERVICE.DefaultProcessIncidentService;
+    },
     /** @returns {Object} Generated audit service. */
-    auditService: function () { return SERVICE.DefaultProcessAuditEventService; },
+    auditService: function () {
+        return SERVICE.DefaultProcessAuditEventService;
+    },
     /** @returns {Object|undefined} Generated trigger service when the schema is available. */
-    triggerService: function () { return SERVICE.DefaultProcessTriggerService; },
+    triggerService: function () {
+        return SERVICE.DefaultProcessTriggerService;
+    },
     /** @returns {Object|undefined} Process action adapter registry service. */
-    actionAdapterRegistryService: function () { return SERVICE.DefaultProcessActionAdapterRegistryService; },
+    actionAdapterRegistryService: function () {
+        return SERVICE.DefaultProcessActionAdapterRegistryService;
+    },
 
     /**
      * Resolves a bounded retry policy from the ACTION node and merged config.
@@ -90,12 +109,15 @@ module.exports = {
      */
     retryPolicy: function (node) {
         let configured = ((CONFIG.get('process') || {}).runtime || {}).retry || {};
-        let declared = node && node.retry || {};
+        let declared = (node && node.retry) || {};
         let maximumAttempts = Number(declared.maximumAttempts || configured.maximumAttempts || 3);
         let delayMs = Number(declared.delayMs || configured.delayMs || 0);
         return {
-            maximumAttempts: Math.max(1, Math.min(Number.isFinite(maximumAttempts) ? Math.floor(maximumAttempts) : 3, 10)),
-            delayMs: Math.max(0, Math.min(Number.isFinite(delayMs) ? Math.floor(delayMs) : 0, 86400000))
+            maximumAttempts: Math.max(
+                1,
+                Math.min(Number.isFinite(maximumAttempts) ? Math.floor(maximumAttempts) : 3, 10),
+            ),
+            delayMs: Math.max(0, Math.min(Number.isFinite(delayMs) ? Math.floor(delayMs) : 0, 86400000)),
         };
     },
 
@@ -140,7 +162,8 @@ module.exports = {
      * @throws {CLASSES.NodicsError} When the code is invalid.
      */
     assertCode: function (code) {
-        if (!this.isCode(code)) throw new CLASSES.NodicsError('ERR_PROCESS_00006', 'Process runtime code is invalid');
+        if (!this.isCode(code))
+            throw new CLASSES.NodicsError('ERR_PROCESS_00006', 'Process runtime code is invalid');
         return code;
     },
 
@@ -151,30 +174,38 @@ module.exports = {
      * @returns {string} Runtime code.
      */
     runtimeCode: function (prefix) {
-        return String(prefix || 'process').slice(0, 48) + '-' + Date.now().toString(36) + '-' + Math.random().toString(36).slice(2, 8);
+        return (
+            String(prefix || 'process').slice(0, 48) +
+            '-' +
+            Date.now().toString(36) +
+            '-' +
+            Math.random().toString(36).slice(2, 8)
+        );
     },
 
     /** Resolves policy attached to an immutable process version or task node. */
     policyOf: function (version, node) {
-        return Object.assign({}, version && version.policy || {}, node && node.policy || {});
+        return Object.assign({}, (version && version.policy) || {}, (node && node.policy) || {});
     },
 
     /** Builds task governance metadata from the immutable workflow policy. */
     taskGovernance: function (version, node, body) {
         let policy = this.policyOf(version, node);
         let now = body && body.now ? new Date(body.now) : new Date();
-        let slaHours = Number(policy.slaHours || node && node.slaHours || 0);
-        let dueAt = body && body.dueAt || node && node.dueAt ||
+        let slaHours = Number(policy.slaHours || (node && node.slaHours) || 0);
+        let dueAt =
+            (body && body.dueAt) ||
+            (node && node.dueAt) ||
             (slaHours > 0 ? new Date(now.getTime() + Math.min(slaHours, 8760) * 3600000) : undefined);
         return {
-            assignmentPolicy: policy.assignmentPolicy || node && node.assignmentPolicy || 'QUEUE',
-            escalationPolicy: policy.escalationPolicy || node && node.escalationPolicy || {},
+            assignmentPolicy: policy.assignmentPolicy || (node && node.assignmentPolicy) || 'QUEUE',
+            escalationPolicy: policy.escalationPolicy || (node && node.escalationPolicy) || {},
             approvalPolicy: {
                 requiredApprovals: Math.max(1, Math.min(Number(policy.requiredApprovals || 1), 25)),
                 emergencyOverridePermission: policy.emergencyOverridePermission,
-                requireReasonOnReject: policy.requireReasonOnReject === true
+                requireReasonOnReject: policy.requireReasonOnReject === true,
             },
-            dueAt: dueAt
+            dueAt: dueAt,
         };
     },
 
@@ -182,15 +213,21 @@ module.exports = {
     assertTaskCompletionPolicy: function (request, task, instance, version, node, body) {
         let actor = this.getActor(request);
         let policy = Object.assign({}, this.policyOf(version, node), task.approvalPolicy || {});
-        let decision = body && body.decision || {};
+        let decision = (body && body.decision) || {};
         let override = decision.emergencyOverride === true;
         if (override && !policy.emergencyOverridePermission) {
-            throw new CLASSES.NodicsError('ERR_PROCESS_00012', 'Emergency override is not allowed for this task');
+            throw new CLASSES.NodicsError(
+                'ERR_PROCESS_00012',
+                'Emergency override is not allowed for this task',
+            );
         }
         if (override && policy.emergencyOverridePermission) {
-            let permissions = [].concat(request && request.authData && request.authData.permissions || []);
+            let permissions = [].concat((request && request.authData && request.authData.permissions) || []);
             if (!permissions.includes(policy.emergencyOverridePermission)) {
-                throw new CLASSES.NodicsError('ERR_PROCESS_00012', 'Emergency override permission is required for this task');
+                throw new CLASSES.NodicsError(
+                    'ERR_PROCESS_00012',
+                    'Emergency override permission is required for this task',
+                );
             }
         }
         if (decision.approved === false && policy.requireReasonOnReject === true && !decision.reason) {
@@ -201,7 +238,12 @@ module.exports = {
         if (!override && requiredApprovals > 1 && approvals.length < requiredApprovals) {
             throw new CLASSES.NodicsError('ERR_PROCESS_00012', 'Workflow task requires multiple approvals');
         }
-        return { actor: actor, override: override, requiredApprovals: requiredApprovals, approvals: approvals.length };
+        return {
+            actor: actor,
+            override: override,
+            requiredApprovals: requiredApprovals,
+            approvals: approvals.length,
+        };
     },
 
     /**
@@ -212,12 +254,15 @@ module.exports = {
      * @returns {Promise<Object>} Process definition.
      */
     requireDefinition: async function (request, definitionCode) {
-        let response = await this.definitionService().get(this.serviceRequest(request, {
-            query: { code: this.assertCode(definitionCode) },
-            searchOptions: { limit: 1 }
-        }));
+        let response = await this.definitionService().get(
+            this.serviceRequest(request, {
+                query: { code: this.assertCode(definitionCode) },
+                searchOptions: { limit: 1 },
+            }),
+        );
         let definition = response && response.result && response.result[0];
-        if (!definition) throw new CLASSES.NodicsError('ERR_PROCESS_00002', 'Process definition was not found');
+        if (!definition)
+            throw new CLASSES.NodicsError('ERR_PROCESS_00002', 'Process definition was not found');
         return definition;
     },
 
@@ -229,11 +274,14 @@ module.exports = {
      * @returns {Promise<Object>} Trigger metadata.
      */
     requireTrigger: async function (request, triggerCode) {
-        if (!this.triggerService()) throw new CLASSES.NodicsError('ERR_PROCESS_00014', 'Process trigger service is unavailable');
-        let response = await this.triggerService().get(this.serviceRequest(request, {
-            query: { code: this.assertCode(triggerCode) },
-            searchOptions: { limit: 1 }
-        }));
+        if (!this.triggerService())
+            throw new CLASSES.NodicsError('ERR_PROCESS_00014', 'Process trigger service is unavailable');
+        let response = await this.triggerService().get(
+            this.serviceRequest(request, {
+                query: { code: this.assertCode(triggerCode) },
+                searchOptions: { limit: 1 },
+            }),
+        );
         let trigger = response && response.result && response.result[0];
         if (!trigger) throw new CLASSES.NodicsError('ERR_PROCESS_00016', 'Process trigger was not found');
         return trigger;
@@ -248,13 +296,18 @@ module.exports = {
      * @returns {Promise<Object>} Published version.
      */
     requireVersion: async function (request, definitionCode, version) {
-        let response = await this.versionService().get(this.serviceRequest(request, {
-            query: { definitionCode: this.assertCode(definitionCode), version: Number(version) },
-            searchOptions: { limit: 1 }
-        }));
+        let response = await this.versionService().get(
+            this.serviceRequest(request, {
+                query: { definitionCode: this.assertCode(definitionCode), version: Number(version) },
+                searchOptions: { limit: 1 },
+            }),
+        );
         let processVersion = response && response.result && response.result[0];
         if (!processVersion || processVersion.status !== 'PUBLISHED') {
-            throw new CLASSES.NodicsError('ERR_PROCESS_00011', 'Process definition is not published for runtime start');
+            throw new CLASSES.NodicsError(
+                'ERR_PROCESS_00011',
+                'Process definition is not published for runtime start',
+            );
         }
         return processVersion;
     },
@@ -271,7 +324,10 @@ module.exports = {
         let definition = await this.requireDefinition(request, definitionCode);
         let version = Number(body.version || request.version || definition.currentVersion || 0);
         if (definition.status !== 'PUBLISHED' || version < 1) {
-            throw new CLASSES.NodicsError('ERR_PROCESS_00011', 'Process definition is not published for runtime start');
+            throw new CLASSES.NodicsError(
+                'ERR_PROCESS_00011',
+                'Process definition is not published for runtime start',
+            );
         }
         return this.requireVersion(request, definition.code, version);
     },
@@ -284,7 +340,7 @@ module.exports = {
      * @returns {Object|undefined} Matching node.
      */
     findNode: function (graph, nodeCode) {
-        return (graph.nodes || []).find(node => node && node.code === nodeCode);
+        return (graph.nodes || []).find((node) => node && node.code === nodeCode);
     },
 
     /**
@@ -295,7 +351,7 @@ module.exports = {
      * @returns {Object[]} Outgoing transitions.
      */
     outgoingTransitions: function (graph, sourceNodeCode) {
-        return (graph.transitions || []).filter(item => item && item.source === sourceNodeCode);
+        return (graph.transitions || []).filter((item) => item && item.source === sourceNodeCode);
     },
 
     /**
@@ -311,20 +367,20 @@ module.exports = {
      */
     resolveTransition: function (graph, sourceNodeCode, body) {
         let transitions = this.outgoingTransitions(graph, sourceNodeCode);
-        let decision = body && body.decision || {};
+        let decision = (body && body.decision) || {};
         if (decision.transitionCode) {
-            return transitions.find(transition => transition.code === decision.transitionCode);
+            return transitions.find((transition) => transition.code === decision.transitionCode);
         }
         if (decision.targetNodeCode) {
-            return transitions.find(transition => transition.target === decision.targetNodeCode);
+            return transitions.find((transition) => transition.target === decision.targetNodeCode);
         }
-        let context = Object.assign({}, body && body.context || {}, decision);
-        let matched = transitions.find(transition => {
+        let context = Object.assign({}, (body && body.context) || {}, decision);
+        let matched = transitions.find((transition) => {
             let condition = transition.condition || {};
             if (!condition.field) return false;
             return context[condition.field] === condition.equals;
         });
-        return matched || transitions.find(transition => transition.default === true) || transitions[0];
+        return matched || transitions.find((transition) => transition.default === true) || transitions[0];
     },
 
     /**
@@ -347,7 +403,7 @@ module.exports = {
      * @returns {Object|undefined} First runtime node.
      */
     firstRuntimeNode: function (graph) {
-        let startNode = (graph.nodes || []).find(node => node && node.type === 'START');
+        let startNode = (graph.nodes || []).find((node) => node && node.type === 'START');
         return startNode ? this.nextNode(graph, startNode.code) : undefined;
     },
 
@@ -359,11 +415,14 @@ module.exports = {
      * @returns {Promise<Object>} Saved audit model.
      */
     audit: async function (request, model) {
-        let auditModel = Object.assign({
-            active: true,
-            actor: this.getActor(request),
-            outcome: 'success'
-        }, model || {});
+        let auditModel = Object.assign(
+            {
+                active: true,
+                actor: this.getActor(request),
+                outcome: 'success',
+            },
+            model || {},
+        );
         let response = await this.auditService().save(this.serviceRequest(request, { model: auditModel }));
         return response.result || response;
     },
@@ -390,16 +449,22 @@ module.exports = {
             dueAt: governance.dueAt,
             assignmentPolicy: governance.assignmentPolicy,
             escalationPolicy: governance.escalationPolicy,
-            approvalPolicy: governance.approvalPolicy
+            approvalPolicy: governance.approvalPolicy,
         };
         let response = await this.taskService().save(this.serviceRequest(request, { model: taskModel }));
         await this.audit(request, {
             definitionCode: instance.definitionCode,
             instanceCode: instance.code,
             eventType: 'process.task.created',
-            metadata: { taskCode: taskModel.code, nodeCode: node.code, assignee: taskModel.assignee,
-                assignmentPolicy: taskModel.assignmentPolicy, escalationPolicy: taskModel.escalationPolicy,
-                dueAt: taskModel.dueAt, approvalPolicy: taskModel.approvalPolicy }
+            metadata: {
+                taskCode: taskModel.code,
+                nodeCode: node.code,
+                assignee: taskModel.assignee,
+                assignmentPolicy: taskModel.assignmentPolicy,
+                escalationPolicy: taskModel.escalationPolicy,
+                dueAt: taskModel.dueAt,
+                approvalPolicy: taskModel.approvalPolicy,
+            },
         });
         return response.result || response;
     },
@@ -419,7 +484,10 @@ module.exports = {
             definitionCode: instance.definitionCode,
             instanceCode: instance.code,
             eventType: 'process.node.entered',
-            metadata: Object.assign({ version: version.version, nodeCode: node && node.code, nodeType: node && node.type }, metadata || {})
+            metadata: Object.assign(
+                { version: version.version, nodeCode: node && node.code, nodeType: node && node.type },
+                metadata || {},
+            ),
         });
     },
 
@@ -437,7 +505,10 @@ module.exports = {
     executeActionNode: async function (request, instance, version, node, body) {
         let registry = this.actionAdapterRegistryService();
         if (!registry || typeof registry.execute !== 'function') {
-            throw new CLASSES.NodicsError('ERR_PROCESS_00019', 'Process action adapter registry is unavailable');
+            throw new CLASSES.NodicsError(
+                'ERR_PROCESS_00019',
+                'Process action adapter registry is unavailable',
+            );
         }
         try {
             let result = await registry.execute(request, {
@@ -445,14 +516,18 @@ module.exports = {
                 version: version,
                 node: node,
                 context: instance.context || {},
-                decision: body && body.decision || {},
-                payload: body && (body.actionPayload || body.payload) || {}
+                decision: (body && body.decision) || {},
+                payload: (body && (body.actionPayload || body.payload)) || {},
             });
             await this.audit(request, {
                 definitionCode: instance.definitionCode,
                 instanceCode: instance.code,
                 eventType: 'process.action.executed',
-                metadata: { nodeCode: node.code, adapter: node.action && node.action.moduleName + '.' + node.action.operation, status: result && result.status }
+                metadata: {
+                    nodeCode: node.code,
+                    adapter: node.action && node.action.moduleName + '.' + node.action.operation,
+                    status: result && result.status,
+                },
             });
             return result;
         } catch (error) {
@@ -461,7 +536,7 @@ module.exports = {
                 instanceCode: instance.code,
                 eventType: 'process.action.failed',
                 outcome: 'failure',
-                metadata: { nodeCode: node.code, errorCode: error.code || 'ERR_PROCESS_00019' }
+                metadata: { nodeCode: node.code, errorCode: error.code || 'ERR_PROCESS_00019' },
             });
             throw error;
         }
@@ -494,25 +569,41 @@ module.exports = {
             errorCode: error.code || 'ERR_PROCESS_00019',
             attempt: 1,
             maximumAttempts: policy.maximumAttempts,
-            nextRetryAt: policy.maximumAttempts > 1 ? new Date(failedAt.getTime() + policy.delayMs) : undefined,
+            nextRetryAt:
+                policy.maximumAttempts > 1 ? new Date(failedAt.getTime() + policy.delayMs) : undefined,
             adapter: node.action || {},
             compensationAdapter: node.compensation || {},
             correlationId: body && body.correlationId,
             evidence: { failureStage: 'ACTION_EXECUTION' },
-            lastErrorAt: failedAt
+            lastErrorAt: failedAt,
         };
         let saved = await this.incidentService().save(this.serviceRequest(request, { model: incident }));
         incident = saved.result || saved;
-        await this.instanceService().update(this.serviceRequest(request, {
-            query: { code: instance.code },
-            model: { $set: { status: 'FAILED', currentNode: node.code, incidentCode: incident.code, failureCode: incident.errorCode, compensationStatus: node.compensation ? 'PENDING' : 'NONE' } }
-        }));
+        await this.instanceService().update(
+            this.serviceRequest(request, {
+                query: { code: instance.code },
+                model: {
+                    $set: {
+                        status: 'FAILED',
+                        currentNode: node.code,
+                        incidentCode: incident.code,
+                        failureCode: incident.errorCode,
+                        compensationStatus: node.compensation ? 'PENDING' : 'NONE',
+                    },
+                },
+            }),
+        );
         await this.audit(request, {
             definitionCode: instance.definitionCode,
             instanceCode: instance.code,
             eventType: 'process.incident.opened',
             outcome: 'failure',
-            metadata: { incidentCode: incident.code, nodeCode: node.code, errorCode: incident.errorCode, maximumAttempts: incident.maximumAttempts }
+            metadata: {
+                incidentCode: incident.code,
+                nodeCode: node.code,
+                errorCode: incident.errorCode,
+                maximumAttempts: incident.maximumAttempts,
+            },
         });
         return incident;
     },
@@ -530,38 +621,68 @@ module.exports = {
     enterNode: async function (request, instance, version, node, body) {
         if (!node || node.type === 'END') {
             let completedAt = new Date();
-            await this.instanceService().update(this.serviceRequest(request, {
-                query: { code: instance.code },
-                model: { $set: { status: 'COMPLETED', currentNode: node && node.code || instance.currentNode, completedAt: completedAt } }
-            }));
+            await this.instanceService().update(
+                this.serviceRequest(request, {
+                    query: { code: instance.code },
+                    model: {
+                        $set: {
+                            status: 'COMPLETED',
+                            currentNode: (node && node.code) || instance.currentNode,
+                            completedAt: completedAt,
+                        },
+                    },
+                }),
+            );
             await this.audit(request, {
                 definitionCode: instance.definitionCode,
                 instanceCode: instance.code,
                 eventType: 'process.instance.completed',
-                metadata: { version: version.version, nodeCode: node && node.code }
+                metadata: { version: version.version, nodeCode: node && node.code },
             });
-            return { instance: Object.assign({}, instance, { status: 'COMPLETED', currentNode: node && node.code || instance.currentNode, completedAt: completedAt }) };
+            return {
+                instance: Object.assign({}, instance, {
+                    status: 'COMPLETED',
+                    currentNode: (node && node.code) || instance.currentNode,
+                    completedAt: completedAt,
+                }),
+            };
         }
         await this.auditNodeEntered(request, instance, version, node);
         if (node.type === 'TASK') {
-            await this.instanceService().update(this.serviceRequest(request, {
-                query: { code: instance.code },
-                model: { $set: { status: 'WAITING', currentNode: node.code } }
-            }));
+            await this.instanceService().update(
+                this.serviceRequest(request, {
+                    query: { code: instance.code },
+                    model: { $set: { status: 'WAITING', currentNode: node.code } },
+                }),
+            );
             let updatedInstance = Object.assign({}, instance, { status: 'WAITING', currentNode: node.code });
             let task = await this.createTaskForNode(request, updatedInstance, node, body || {}, version);
             return { instance: updatedInstance, task: task };
         }
         if (node.type === 'DECISION') {
             let transition = this.resolveTransition(version.graph || {}, node.code, body || {});
-            if (!transition) throw new CLASSES.NodicsError('ERR_PROCESS_00021', 'Process decision could not resolve a transition');
+            if (!transition)
+                throw new CLASSES.NodicsError(
+                    'ERR_PROCESS_00021',
+                    'Process decision could not resolve a transition',
+                );
             await this.audit(request, {
                 definitionCode: instance.definitionCode,
                 instanceCode: instance.code,
                 eventType: 'process.decision.evaluated',
-                metadata: { nodeCode: node.code, transitionCode: transition.code, targetNodeCode: transition.target }
+                metadata: {
+                    nodeCode: node.code,
+                    transitionCode: transition.code,
+                    targetNodeCode: transition.target,
+                },
             });
-            return this.enterNode(request, instance, version, this.findNode(version.graph || {}, transition.target), body);
+            return this.enterNode(
+                request,
+                instance,
+                version,
+                this.findNode(version.graph || {}, transition.target),
+                body,
+            );
         }
         if (node.type === 'ACTION') {
             try {
@@ -570,25 +691,47 @@ module.exports = {
                 await this.openIncident(request, instance, version, node, error, body || {});
                 throw error;
             }
-            return this.enterNode(request, instance, version, this.nextNode(version.graph || {}, node.code, body), body);
+            return this.enterNode(
+                request,
+                instance,
+                version,
+                this.nextNode(version.graph || {}, node.code, body),
+                body,
+            );
         }
         if (node.type === 'TIMER') {
             await this.audit(request, {
                 definitionCode: instance.definitionCode,
                 instanceCode: instance.code,
                 eventType: 'process.timer.observed',
-                metadata: { nodeCode: node.code, timer: node.timer || {} }
+                metadata: { nodeCode: node.code, timer: node.timer || {} },
             });
-            return this.enterNode(request, instance, version, this.nextNode(version.graph || {}, node.code, body), body);
+            return this.enterNode(
+                request,
+                instance,
+                version,
+                this.nextNode(version.graph || {}, node.code, body),
+                body,
+            );
         }
         if (node.type === 'SUB_PROCESS') {
             await this.audit(request, {
                 definitionCode: instance.definitionCode,
                 instanceCode: instance.code,
                 eventType: 'process.subProcess.referenced',
-                metadata: { nodeCode: node.code, definitionCode: node.subProcessDefinitionCode || (node.subProcess && node.subProcess.definitionCode) }
+                metadata: {
+                    nodeCode: node.code,
+                    definitionCode:
+                        node.subProcessDefinitionCode || (node.subProcess && node.subProcess.definitionCode),
+                },
             });
-            return this.enterNode(request, instance, version, this.nextNode(version.graph || {}, node.code, body), body);
+            return this.enterNode(
+                request,
+                instance,
+                version,
+                this.nextNode(version.graph || {}, node.code, body),
+                body,
+            );
         }
         throw new CLASSES.NodicsError('ERR_PROCESS_00018', 'Unsupported process runtime node type');
     },
@@ -602,7 +745,10 @@ module.exports = {
     startInstance: async function (request) {
         const admission = SERVICE.DefaultModuleRegistrationAgentService;
         if (!admission || typeof admission.assertModuleOperational !== 'function') {
-            throw new CLASSES.NodicsError('ERR_PROCESS_00018', 'Process operational authority is unavailable');
+            throw new CLASSES.NodicsError(
+                'ERR_PROCESS_00018',
+                'Process operational authority is unavailable',
+            );
         }
         await admission.assertModuleOperational('workflow', this.getTenant(request));
         let body = this.bodyOf(request);
@@ -616,7 +762,7 @@ module.exports = {
             status: 'RUNNING',
             context: body.context || {},
             currentNode: 'start',
-            startedAt: new Date()
+            startedAt: new Date(),
         };
         let saved = await this.instanceService().save(this.serviceRequest(request, { model: instanceModel }));
         let instance = saved.result || saved;
@@ -624,9 +770,15 @@ module.exports = {
             definitionCode: instance.definitionCode,
             instanceCode: instance.code,
             eventType: 'process.instance.started',
-            metadata: { version: instance.version }
+            metadata: { version: instance.version },
         });
-        let entered = await this.enterNode(request, instance, version, this.firstRuntimeNode(version.graph || {}), body);
+        let entered = await this.enterNode(
+            request,
+            instance,
+            version,
+            this.firstRuntimeNode(version.graph || {}),
+            body,
+        );
         return { code: 'SUC_PROCESS_00007', data: entered };
     },
 
@@ -638,10 +790,12 @@ module.exports = {
      * @returns {Promise<Object>} Process task.
      */
     requireTask: async function (request, taskCode) {
-        let response = await this.taskService().get(this.serviceRequest(request, {
-            query: { code: this.assertCode(taskCode) },
-            searchOptions: { limit: 1 }
-        }));
+        let response = await this.taskService().get(
+            this.serviceRequest(request, {
+                query: { code: this.assertCode(taskCode) },
+                searchOptions: { limit: 1 },
+            }),
+        );
         let task = response && response.result && response.result[0];
         if (!task) throw new CLASSES.NodicsError('ERR_PROCESS_00008', 'Process task was not found');
         return task;
@@ -655,10 +809,12 @@ module.exports = {
      * @returns {Promise<Object>} Process instance.
      */
     requireInstance: async function (request, instanceCode) {
-        let response = await this.instanceService().get(this.serviceRequest(request, {
-            query: { code: this.assertCode(instanceCode) },
-            searchOptions: { limit: 1 }
-        }));
+        let response = await this.instanceService().get(
+            this.serviceRequest(request, {
+                query: { code: this.assertCode(instanceCode) },
+                searchOptions: { limit: 1 },
+            }),
+        );
         let instance = response && response.result && response.result[0];
         if (!instance) throw new CLASSES.NodicsError('ERR_PROCESS_00007', 'Process instance was not found');
         return instance;
@@ -666,11 +822,15 @@ module.exports = {
 
     /** Loads one Process-owned recovery incident. */
     requireIncident: async function (request, incidentCode) {
-        let response = await this.incidentService().get(this.serviceRequest(request, {
-            query: { code: this.assertCode(incidentCode) }, searchOptions: { limit: 1 }
-        }));
+        let response = await this.incidentService().get(
+            this.serviceRequest(request, {
+                query: { code: this.assertCode(incidentCode) },
+                searchOptions: { limit: 1 },
+            }),
+        );
         let incident = response && response.result && response.result[0];
-        if (!incident) throw new CLASSES.NodicsError('ERR_PROCESS_00022', 'Process recovery incident was not found');
+        if (!incident)
+            throw new CLASSES.NodicsError('ERR_PROCESS_00022', 'Process recovery incident was not found');
         return incident;
     },
 
@@ -678,36 +838,124 @@ module.exports = {
     retryInstance: async function (request) {
         let body = this.bodyOf(request);
         let instance = await this.requireInstance(request, request.instanceCode || body.instanceCode);
-        if (instance.status !== 'FAILED' || !instance.incidentCode) throw new CLASSES.NodicsError('ERR_PROCESS_00023', 'Process instance is not retryable');
+        if (instance.status !== 'FAILED' || !instance.incidentCode)
+            throw new CLASSES.NodicsError('ERR_PROCESS_00023', 'Process instance is not retryable');
         let incident = await this.requireIncident(request, instance.incidentCode);
-        if (!['OPEN', 'DEAD_LETTER'].includes(incident.status) || incident.attempt >= incident.maximumAttempts) {
+        if (
+            !['OPEN', 'DEAD_LETTER'].includes(incident.status) ||
+            incident.attempt >= incident.maximumAttempts
+        ) {
             throw new CLASSES.NodicsError('ERR_PROCESS_00023', 'Process incident retry policy is exhausted');
         }
         if (body.expectedAttempt !== undefined && Number(body.expectedAttempt) !== incident.attempt) {
-            throw new CLASSES.NodicsError('ERR_PROCESS_00024', 'Process incident changed; refresh before retrying');
+            throw new CLASSES.NodicsError(
+                'ERR_PROCESS_00024',
+                'Process incident changed; refresh before retrying',
+            );
         }
         let version = await this.requireVersion(request, instance.definitionCode, instance.version);
         let node = this.findNode(version.graph || {}, incident.nodeCode);
-        if (!node || node.type !== 'ACTION') throw new CLASSES.NodicsError('ERR_PROCESS_00023', 'Process incident ACTION node is unavailable');
+        if (!node || node.type !== 'ACTION')
+            throw new CLASSES.NodicsError('ERR_PROCESS_00023', 'Process incident ACTION node is unavailable');
         let nextAttempt = incident.attempt + 1;
-        let claimed = await this.incidentService().update(this.serviceRequest(request, { query: { code: incident.code, attempt: incident.attempt, status: incident.status }, model: { $set: { status: 'RETRYING', attempt: nextAttempt } } }));
-        let claimedCount = claimed && claimed.result && (claimed.result.nModified !== undefined ? claimed.result.nModified : claimed.result.n);
-        if (claimedCount === 0) throw new CLASSES.NodicsError('ERR_PROCESS_00024', 'Process incident changed; refresh before retrying');
-        await this.instanceService().update(this.serviceRequest(request, { query: { code: instance.code, status: 'FAILED' }, model: { $set: { status: 'RUNNING', retryCount: nextAttempt - 1 } } }));
+        let claimed = await this.incidentService().update(
+            this.serviceRequest(request, {
+                query: { code: incident.code, attempt: incident.attempt, status: incident.status },
+                model: { $set: { status: 'RETRYING', attempt: nextAttempt } },
+            }),
+        );
+        let claimedCount =
+            claimed &&
+            claimed.result &&
+            (claimed.result.nModified !== undefined ? claimed.result.nModified : claimed.result.n);
+        if (claimedCount === 0)
+            throw new CLASSES.NodicsError(
+                'ERR_PROCESS_00024',
+                'Process incident changed; refresh before retrying',
+            );
+        await this.instanceService().update(
+            this.serviceRequest(request, {
+                query: { code: instance.code, status: 'FAILED' },
+                model: { $set: { status: 'RUNNING', retryCount: nextAttempt - 1 } },
+            }),
+        );
         try {
             await this.executeActionNode(request, instance, version, node, body);
             let resolvedAt = new Date();
-            await this.incidentService().update(this.serviceRequest(request, { query: { code: incident.code, attempt: nextAttempt }, model: { $set: { status: 'RESOLVED', resolvedAt: resolvedAt, nextRetryAt: undefined } } }));
-            await this.audit(request, { definitionCode: instance.definitionCode, instanceCode: instance.code, eventType: 'process.incident.resolved', metadata: { incidentCode: incident.code, attempt: nextAttempt } });
-            let entered = await this.enterNode(request, Object.assign({}, instance, { status: 'RUNNING', retryCount: nextAttempt - 1 }), version, this.nextNode(version.graph || {}, node.code, body), body);
-            return { code: 'SUC_PROCESS_00012', data: Object.assign({ incident: Object.assign({}, incident, { status: 'RESOLVED', attempt: nextAttempt, resolvedAt: resolvedAt }) }, entered) };
+            await this.incidentService().update(
+                this.serviceRequest(request, {
+                    query: { code: incident.code, attempt: nextAttempt },
+                    model: { $set: { status: 'RESOLVED', resolvedAt: resolvedAt, nextRetryAt: undefined } },
+                }),
+            );
+            await this.audit(request, {
+                definitionCode: instance.definitionCode,
+                instanceCode: instance.code,
+                eventType: 'process.incident.resolved',
+                metadata: { incidentCode: incident.code, attempt: nextAttempt },
+            });
+            let entered = await this.enterNode(
+                request,
+                Object.assign({}, instance, { status: 'RUNNING', retryCount: nextAttempt - 1 }),
+                version,
+                this.nextNode(version.graph || {}, node.code, body),
+                body,
+            );
+            return {
+                code: 'SUC_PROCESS_00012',
+                data: Object.assign(
+                    {
+                        incident: Object.assign({}, incident, {
+                            status: 'RESOLVED',
+                            attempt: nextAttempt,
+                            resolvedAt: resolvedAt,
+                        }),
+                    },
+                    entered,
+                ),
+            };
         } catch (error) {
             let policy = this.retryPolicy(node);
             let exhausted = nextAttempt >= incident.maximumAttempts;
             let lastErrorAt = new Date();
-            await this.incidentService().update(this.serviceRequest(request, { query: { code: incident.code, attempt: nextAttempt }, model: { $set: { status: exhausted ? 'DEAD_LETTER' : 'OPEN', errorCode: error.code || 'ERR_PROCESS_00019', lastErrorAt: lastErrorAt, nextRetryAt: exhausted ? undefined : new Date(lastErrorAt.getTime() + policy.delayMs) } } }));
-            await this.instanceService().update(this.serviceRequest(request, { query: { code: instance.code }, model: { $set: { status: 'FAILED', failureCode: error.code || 'ERR_PROCESS_00019', retryCount: nextAttempt - 1 } } }));
-            await this.audit(request, { definitionCode: instance.definitionCode, instanceCode: instance.code, eventType: exhausted ? 'process.incident.deadLettered' : 'process.incident.retryFailed', outcome: 'failure', metadata: { incidentCode: incident.code, attempt: nextAttempt, errorCode: error.code || 'ERR_PROCESS_00019' } });
+            await this.incidentService().update(
+                this.serviceRequest(request, {
+                    query: { code: incident.code, attempt: nextAttempt },
+                    model: {
+                        $set: {
+                            status: exhausted ? 'DEAD_LETTER' : 'OPEN',
+                            errorCode: error.code || 'ERR_PROCESS_00019',
+                            lastErrorAt: lastErrorAt,
+                            nextRetryAt: exhausted
+                                ? undefined
+                                : new Date(lastErrorAt.getTime() + policy.delayMs),
+                        },
+                    },
+                }),
+            );
+            await this.instanceService().update(
+                this.serviceRequest(request, {
+                    query: { code: instance.code },
+                    model: {
+                        $set: {
+                            status: 'FAILED',
+                            failureCode: error.code || 'ERR_PROCESS_00019',
+                            retryCount: nextAttempt - 1,
+                        },
+                    },
+                }),
+            );
+            await this.audit(request, {
+                definitionCode: instance.definitionCode,
+                instanceCode: instance.code,
+                eventType: exhausted ? 'process.incident.deadLettered' : 'process.incident.retryFailed',
+                outcome: 'failure',
+                metadata: {
+                    incidentCode: incident.code,
+                    attempt: nextAttempt,
+                    errorCode: error.code || 'ERR_PROCESS_00019',
+                },
+            });
             throw error;
         }
     },
@@ -716,24 +964,87 @@ module.exports = {
     compensateInstance: async function (request) {
         let body = this.bodyOf(request);
         let instance = await this.requireInstance(request, request.instanceCode || body.instanceCode);
-        if (instance.status !== 'FAILED' || !instance.incidentCode) throw new CLASSES.NodicsError('ERR_PROCESS_00025', 'Process instance is not compensatable');
+        if (instance.status !== 'FAILED' || !instance.incidentCode)
+            throw new CLASSES.NodicsError('ERR_PROCESS_00025', 'Process instance is not compensatable');
         let incident = await this.requireIncident(request, instance.incidentCode);
         let version = await this.requireVersion(request, instance.definitionCode, instance.version);
         let node = this.findNode(version.graph || {}, incident.nodeCode);
-        if (!node || !node.compensation) throw new CLASSES.NodicsError('ERR_PROCESS_00025', 'Process node has no declarative compensation adapter');
-        await this.incidentService().update(this.serviceRequest(request, { query: { code: incident.code }, model: { $set: { status: 'COMPENSATING' } } }));
-        await this.instanceService().update(this.serviceRequest(request, { query: { code: instance.code }, model: { $set: { compensationStatus: 'IN_PROGRESS' } } }));
+        if (!node || !node.compensation)
+            throw new CLASSES.NodicsError(
+                'ERR_PROCESS_00025',
+                'Process node has no declarative compensation adapter',
+            );
+        await this.incidentService().update(
+            this.serviceRequest(request, {
+                query: { code: incident.code },
+                model: { $set: { status: 'COMPENSATING' } },
+            }),
+        );
+        await this.instanceService().update(
+            this.serviceRequest(request, {
+                query: { code: instance.code },
+                model: { $set: { compensationStatus: 'IN_PROGRESS' } },
+            }),
+        );
         try {
-            let result = await this.actionAdapterRegistryService().execute(request, { instance: instance, version: version, node: Object.assign({}, node, { action: node.compensation }), context: instance.context || {}, payload: body.payload || {} });
+            let result = await this.actionAdapterRegistryService().execute(request, {
+                instance: instance,
+                version: version,
+                node: Object.assign({}, node, { action: node.compensation }),
+                context: instance.context || {},
+                payload: body.payload || {},
+            });
             let compensatedAt = new Date();
-            await this.incidentService().update(this.serviceRequest(request, { query: { code: incident.code }, model: { $set: { status: 'COMPENSATED', compensatedAt: compensatedAt } } }));
-            await this.instanceService().update(this.serviceRequest(request, { query: { code: instance.code }, model: { $set: { compensationStatus: 'COMPLETED' } } }));
-            await this.audit(request, { definitionCode: instance.definitionCode, instanceCode: instance.code, eventType: 'process.incident.compensated', metadata: { incidentCode: incident.code, adapter: node.compensation.moduleName + '.' + node.compensation.operation } });
-            return { code: 'SUC_PROCESS_00013', data: { instanceCode: instance.code, incidentCode: incident.code, compensationStatus: 'COMPLETED', result: result } };
+            await this.incidentService().update(
+                this.serviceRequest(request, {
+                    query: { code: incident.code },
+                    model: { $set: { status: 'COMPENSATED', compensatedAt: compensatedAt } },
+                }),
+            );
+            await this.instanceService().update(
+                this.serviceRequest(request, {
+                    query: { code: instance.code },
+                    model: { $set: { compensationStatus: 'COMPLETED' } },
+                }),
+            );
+            await this.audit(request, {
+                definitionCode: instance.definitionCode,
+                instanceCode: instance.code,
+                eventType: 'process.incident.compensated',
+                metadata: {
+                    incidentCode: incident.code,
+                    adapter: node.compensation.moduleName + '.' + node.compensation.operation,
+                },
+            });
+            return {
+                code: 'SUC_PROCESS_00013',
+                data: {
+                    instanceCode: instance.code,
+                    incidentCode: incident.code,
+                    compensationStatus: 'COMPLETED',
+                    result: result,
+                },
+            };
         } catch (error) {
-            await this.incidentService().update(this.serviceRequest(request, { query: { code: incident.code }, model: { $set: { status: 'DEAD_LETTER', errorCode: error.code || 'ERR_PROCESS_00019' } } }));
-            await this.instanceService().update(this.serviceRequest(request, { query: { code: instance.code }, model: { $set: { compensationStatus: 'FAILED' } } }));
-            await this.audit(request, { definitionCode: instance.definitionCode, instanceCode: instance.code, eventType: 'process.incident.compensationFailed', outcome: 'failure', metadata: { incidentCode: incident.code, errorCode: error.code || 'ERR_PROCESS_00019' } });
+            await this.incidentService().update(
+                this.serviceRequest(request, {
+                    query: { code: incident.code },
+                    model: { $set: { status: 'DEAD_LETTER', errorCode: error.code || 'ERR_PROCESS_00019' } },
+                }),
+            );
+            await this.instanceService().update(
+                this.serviceRequest(request, {
+                    query: { code: instance.code },
+                    model: { $set: { compensationStatus: 'FAILED' } },
+                }),
+            );
+            await this.audit(request, {
+                definitionCode: instance.definitionCode,
+                instanceCode: instance.code,
+                eventType: 'process.incident.compensationFailed',
+                outcome: 'failure',
+                metadata: { incidentCode: incident.code, errorCode: error.code || 'ERR_PROCESS_00019' },
+            });
             throw error;
         }
     },
@@ -747,18 +1058,24 @@ module.exports = {
     claimTask: async function (request) {
         let body = this.bodyOf(request);
         let task = await this.requireTask(request, request.taskCode || body.taskCode);
-        if (task.status !== 'OPEN') throw new CLASSES.NodicsError('ERR_PROCESS_00012', 'Process task transition is not allowed');
+        if (task.status !== 'OPEN')
+            throw new CLASSES.NodicsError('ERR_PROCESS_00012', 'Process task transition is not allowed');
         let assignee = body.assignee || this.getActor(request);
-        await this.taskService().update(this.serviceRequest(request, {
-            query: { code: task.code, status: 'OPEN' },
-            model: { $set: { status: 'CLAIMED', assignee: assignee } }
-        }));
+        await this.taskService().update(
+            this.serviceRequest(request, {
+                query: { code: task.code, status: 'OPEN' },
+                model: { $set: { status: 'CLAIMED', assignee: assignee } },
+            }),
+        );
         await this.audit(request, {
             instanceCode: task.instanceCode,
             eventType: 'process.task.claimed',
-            metadata: { taskCode: task.code, assignee: assignee }
+            metadata: { taskCode: task.code, assignee: assignee },
         });
-        return { code: 'SUC_PROCESS_00008', data: Object.assign({}, task, { status: 'CLAIMED', assignee: assignee }) };
+        return {
+            code: 'SUC_PROCESS_00008',
+            data: Object.assign({}, task, { status: 'CLAIMED', assignee: assignee }),
+        };
     },
 
     /**
@@ -770,17 +1087,20 @@ module.exports = {
     assignTask: async function (request) {
         let body = this.bodyOf(request);
         let task = await this.requireTask(request, request.taskCode || body.taskCode);
-        if (!['OPEN', 'CLAIMED', 'ESCALATED'].includes(task.status)) throw new CLASSES.NodicsError('ERR_PROCESS_00012', 'Process task transition is not allowed');
+        if (!['OPEN', 'CLAIMED', 'ESCALATED'].includes(task.status))
+            throw new CLASSES.NodicsError('ERR_PROCESS_00012', 'Process task transition is not allowed');
         let assignee = body.assignee;
         this.assertCode(assignee);
-        await this.taskService().update(this.serviceRequest(request, {
-            query: { code: task.code },
-            model: { $set: { assignee: assignee } }
-        }));
+        await this.taskService().update(
+            this.serviceRequest(request, {
+                query: { code: task.code },
+                model: { $set: { assignee: assignee } },
+            }),
+        );
         await this.audit(request, {
             instanceCode: task.instanceCode,
             eventType: 'process.task.assigned',
-            metadata: { taskCode: task.code, assignee: assignee }
+            metadata: { taskCode: task.code, assignee: assignee },
         });
         return { code: 'SUC_PROCESS_00008', data: Object.assign({}, task, { assignee: assignee }) };
     },
@@ -794,26 +1114,56 @@ module.exports = {
     completeTask: async function (request) {
         let body = this.bodyOf(request);
         let task = await this.requireTask(request, request.taskCode || body.taskCode);
-        if (!['OPEN', 'CLAIMED', 'ESCALATED'].includes(task.status)) throw new CLASSES.NodicsError('ERR_PROCESS_00012', 'Process task transition is not allowed');
+        if (!['OPEN', 'CLAIMED', 'ESCALATED'].includes(task.status))
+            throw new CLASSES.NodicsError('ERR_PROCESS_00012', 'Process task transition is not allowed');
         let instance = await this.requireInstance(request, task.instanceCode);
-        if (!['RUNNING', 'WAITING'].includes(instance.status)) throw new CLASSES.NodicsError('ERR_PROCESS_00013', 'Process instance transition is not allowed');
+        if (!['RUNNING', 'WAITING'].includes(instance.status))
+            throw new CLASSES.NodicsError('ERR_PROCESS_00013', 'Process instance transition is not allowed');
         let version = await this.requireVersion(request, instance.definitionCode, instance.version);
         let currentNode = this.findNode(version.graph || {}, task.nodeCode);
-        let policyEvidence = this.assertTaskCompletionPolicy(request, task, instance, version, currentNode, body);
+        let policyEvidence = this.assertTaskCompletionPolicy(
+            request,
+            task,
+            instance,
+            version,
+            currentNode,
+            body,
+        );
         let nextNode = currentNode ? this.nextNode(version.graph || {}, currentNode.code, body) : undefined;
         let completedAt = new Date();
-        await this.taskService().update(this.serviceRequest(request, {
-            query: { code: task.code },
-            model: { $set: { status: 'COMPLETED', decision: body.decision || {}, completedAt: completedAt, completedBy: this.getActor(request) } }
-        }));
+        const completed = await this.taskService().update(
+            this.serviceRequest(request, {
+                query: { code: task.code, status: task.status },
+                model: {
+                    $set: {
+                        status: 'COMPLETED',
+                        decision: body.decision || {},
+                        completedAt: completedAt,
+                        completedBy: this.getActor(request),
+                    },
+                },
+            }),
+        );
+        if (SERVICE.DefaultModelsUpdateInitializerService.getAffectedCount(completed) !== 1) {
+            throw new CLASSES.NodicsError(
+                'ERR_PROCESS_00012',
+                'Process task was completed or changed concurrently',
+            );
+        }
         await this.audit(request, {
             definitionCode: instance.definitionCode,
             instanceCode: instance.code,
             eventType: 'process.task.completed',
-            metadata: { taskCode: task.code, nodeCode: task.nodeCode, approvalPolicy: policyEvidence }
+            metadata: { taskCode: task.code, nodeCode: task.nodeCode, approvalPolicy: policyEvidence },
         });
         let nextState = await this.enterNode(request, instance, version, nextNode, body);
-        return { code: 'SUC_PROCESS_00008', data: Object.assign({ task: Object.assign({}, task, { status: 'COMPLETED', completedAt: completedAt }) }, nextState) };
+        return {
+            code: 'SUC_PROCESS_00008',
+            data: Object.assign(
+                { task: Object.assign({}, task, { status: 'COMPLETED', completedAt: completedAt }) },
+                nextState,
+            ),
+        };
     },
 
     /**
@@ -825,15 +1175,25 @@ module.exports = {
     cancelTask: async function (request) {
         let body = this.bodyOf(request);
         let task = await this.requireTask(request, request.taskCode || body.taskCode);
-        if (['COMPLETED', 'CANCELLED'].includes(task.status)) throw new CLASSES.NodicsError('ERR_PROCESS_00012', 'Process task transition is not allowed');
-        await this.taskService().update(this.serviceRequest(request, {
-            query: { code: task.code },
-            model: { $set: { status: 'CANCELLED', cancellationReason: body.reason, cancelledAt: new Date(), cancelledBy: this.getActor(request) } }
-        }));
+        if (['COMPLETED', 'CANCELLED'].includes(task.status))
+            throw new CLASSES.NodicsError('ERR_PROCESS_00012', 'Process task transition is not allowed');
+        await this.taskService().update(
+            this.serviceRequest(request, {
+                query: { code: task.code },
+                model: {
+                    $set: {
+                        status: 'CANCELLED',
+                        cancellationReason: body.reason,
+                        cancelledAt: new Date(),
+                        cancelledBy: this.getActor(request),
+                    },
+                },
+            }),
+        );
         await this.audit(request, {
             instanceCode: task.instanceCode,
             eventType: 'process.task.cancelled',
-            metadata: { taskCode: task.code, reason: body.reason }
+            metadata: { taskCode: task.code, reason: body.reason },
         });
         return { code: 'SUC_PROCESS_00008', data: Object.assign({}, task, { status: 'CANCELLED' }) };
     },
@@ -847,24 +1207,40 @@ module.exports = {
     cancelInstance: async function (request) {
         let body = this.bodyOf(request);
         let instance = await this.requireInstance(request, request.instanceCode || body.instanceCode);
-        if (!['CREATED', 'RUNNING', 'WAITING'].includes(instance.status)) throw new CLASSES.NodicsError('ERR_PROCESS_00013', 'Process instance transition is not allowed');
+        if (!['CREATED', 'RUNNING', 'WAITING'].includes(instance.status))
+            throw new CLASSES.NodicsError('ERR_PROCESS_00013', 'Process instance transition is not allowed');
         let cancelledAt = new Date();
-        await this.instanceService().update(this.serviceRequest(request, {
-            query: { code: instance.code },
-            model: { $set: { status: 'CANCELLED', completedAt: cancelledAt, cancellationReason: body.reason } }
-        }));
-        await this.taskService().update(this.serviceRequest(request, {
-            query: { instanceCode: instance.code, status: 'OPEN' },
-            model: { $set: { status: 'CANCELLED', cancelledAt: cancelledAt, cancellationReason: 'INSTANCE_CANCELLED' } },
-            options: { recursive: true }
-        }));
+        await this.instanceService().update(
+            this.serviceRequest(request, {
+                query: { code: instance.code },
+                model: {
+                    $set: { status: 'CANCELLED', completedAt: cancelledAt, cancellationReason: body.reason },
+                },
+            }),
+        );
+        await this.taskService().update(
+            this.serviceRequest(request, {
+                query: { instanceCode: instance.code, status: 'OPEN' },
+                model: {
+                    $set: {
+                        status: 'CANCELLED',
+                        cancelledAt: cancelledAt,
+                        cancellationReason: 'INSTANCE_CANCELLED',
+                    },
+                },
+                options: { recursive: true },
+            }),
+        );
         await this.audit(request, {
             definitionCode: instance.definitionCode,
             instanceCode: instance.code,
             eventType: 'process.instance.cancelled',
-            metadata: { reason: body.reason }
+            metadata: { reason: body.reason },
         });
-        return { code: 'SUC_PROCESS_00009', data: Object.assign({}, instance, { status: 'CANCELLED', completedAt: cancelledAt }) };
+        return {
+            code: 'SUC_PROCESS_00009',
+            data: Object.assign({}, instance, { status: 'CANCELLED', completedAt: cancelledAt }),
+        };
     },
 
     /**
@@ -875,10 +1251,12 @@ module.exports = {
      */
     listTriggers: async function (request) {
         if (!this.triggerService()) return { code: 'SUC_PROCESS_00010', data: [] };
-        let response = await this.triggerService().get(this.serviceRequest(request, {
-            query: request.query || {},
-            searchOptions: { limit: 100, sort: { code: 1 } }
-        }));
+        let response = await this.triggerService().get(
+            this.serviceRequest(request, {
+                query: request.query || {},
+                searchOptions: { limit: 100, sort: { code: 1 } },
+            }),
+        );
         return { code: 'SUC_PROCESS_00010', data: response.result || [] };
     },
 
@@ -891,7 +1269,8 @@ module.exports = {
      */
     createTrigger: async function (request) {
         let body = this.bodyOf(request);
-        if (!this.triggerService()) throw new CLASSES.NodicsError('ERR_PROCESS_00014', 'Process trigger service is unavailable');
+        if (!this.triggerService())
+            throw new CLASSES.NodicsError('ERR_PROCESS_00014', 'Process trigger service is unavailable');
         let definitionCode = this.assertCode(body.definitionCode);
         let definition = await this.requireDefinition(request, definitionCode);
         let triggerModel = {
@@ -905,16 +1284,22 @@ module.exports = {
             cronJobCode: body.cronJobCode,
             status: this.assertTriggerStatus(body.status || 'DRAFT'),
             schedule: body.schedule || {},
-            lastObservedAt: new Date()
+            lastObservedAt: new Date(),
         };
         this.assertCode(triggerModel.code);
         if (triggerModel.cronJobCode) this.assertCode(triggerModel.cronJobCode);
-        let response = await this.triggerService().save(this.serviceRequest(request, { model: triggerModel }));
+        let response = await this.triggerService().save(
+            this.serviceRequest(request, { model: triggerModel }),
+        );
         let trigger = response.result || response;
         await this.audit(request, {
             definitionCode: definitionCode,
             eventType: 'process.trigger.created',
-            metadata: { triggerCode: trigger.code, triggerType: trigger.triggerType, cronJobCode: trigger.cronJobCode }
+            metadata: {
+                triggerCode: trigger.code,
+                triggerType: trigger.triggerType,
+                cronJobCode: trigger.cronJobCode,
+            },
         });
         return { code: 'SUC_PROCESS_00010', data: trigger };
     },
@@ -929,24 +1314,28 @@ module.exports = {
     updateTrigger: async function (request) {
         let body = this.bodyOf(request);
         let triggerCode = this.assertCode(request.triggerCode || body.code);
-        if (!this.triggerService()) throw new CLASSES.NodicsError('ERR_PROCESS_00014', 'Process trigger service is unavailable');
+        if (!this.triggerService())
+            throw new CLASSES.NodicsError('ERR_PROCESS_00014', 'Process trigger service is unavailable');
         let allowed = ['name', 'version', 'triggerType', 'cronJobCode', 'status', 'schedule', 'active'];
         let update = {};
-        allowed.forEach(key => {
+        allowed.forEach((key) => {
             if (Object.prototype.hasOwnProperty.call(body, key)) update[key] = body[key];
         });
         let existingTrigger = await this.requireTrigger(request, triggerCode);
-        if (existingTrigger.status === 'ARCHIVED') throw new CLASSES.NodicsError('ERR_PROCESS_00017', 'Archived process trigger cannot be updated');
+        if (existingTrigger.status === 'ARCHIVED')
+            throw new CLASSES.NodicsError('ERR_PROCESS_00017', 'Archived process trigger cannot be updated');
         if (update.cronJobCode) this.assertCode(update.cronJobCode);
         if (update.status) this.assertTriggerStatus(update.status);
         update.lastObservedAt = new Date();
-        await this.triggerService().update(this.serviceRequest(request, {
-            query: { code: triggerCode },
-            model: { $set: update }
-        }));
+        await this.triggerService().update(
+            this.serviceRequest(request, {
+                query: { code: triggerCode },
+                model: { $set: update },
+            }),
+        );
         await this.audit(request, {
             eventType: 'process.trigger.updated',
-            metadata: { triggerCode: triggerCode, status: update.status, cronJobCode: update.cronJobCode }
+            metadata: { triggerCode: triggerCode, status: update.status, cronJobCode: update.cronJobCode },
         });
         return { code: 'SUC_PROCESS_00010', data: Object.assign({ code: triggerCode }, update) };
     },
@@ -962,15 +1351,20 @@ module.exports = {
         let triggerCode = this.assertCode(request.triggerCode || this.bodyOf(request).code);
         let existingTrigger = await this.requireTrigger(request, triggerCode);
         let archivedAt = new Date();
-        await this.triggerService().update(this.serviceRequest(request, {
-            query: { code: triggerCode },
-            model: { $set: { active: false, status: 'ARCHIVED', archivedAt: archivedAt } }
-        }));
+        await this.triggerService().update(
+            this.serviceRequest(request, {
+                query: { code: triggerCode },
+                model: { $set: { active: false, status: 'ARCHIVED', archivedAt: archivedAt } },
+            }),
+        );
         await this.audit(request, {
             eventType: 'process.trigger.archived',
-            metadata: { triggerCode: triggerCode, previousStatus: existingTrigger.status }
+            metadata: { triggerCode: triggerCode, previousStatus: existingTrigger.status },
         });
-        return { code: 'SUC_PROCESS_00010', data: { code: triggerCode, active: false, status: 'ARCHIVED', archivedAt: archivedAt } };
+        return {
+            code: 'SUC_PROCESS_00010',
+            data: { code: triggerCode, active: false, status: 'ARCHIVED', archivedAt: archivedAt },
+        };
     },
 
     /**
@@ -987,45 +1381,56 @@ module.exports = {
         if (trigger.active === false || trigger.status !== 'ACTIVE') {
             throw new CLASSES.NodicsError('ERR_PROCESS_00020', 'Process trigger is not active');
         }
-        let correlationId = body.correlationId || body.idempotencyKey || this.runtimeCode(trigger.code + '-correlation');
+        let correlationId =
+            body.correlationId || body.idempotencyKey || this.runtimeCode(trigger.code + '-correlation');
         await this.audit(request, {
             definitionCode: trigger.definitionCode,
             eventType: 'process.trigger.execution.requested',
             metadata: {
                 triggerCode: trigger.code,
                 cronJobCode: trigger.cronJobCode,
-                correlationId: correlationId
-            }
+                correlationId: correlationId,
+            },
         });
         try {
-            let started = await this.startInstance(Object.assign({}, request, {
-                runtimeOperation: Object.assign({}, body.runtimeOperation || {}, {
-                    definitionCode: trigger.definitionCode,
-                    version: body.version || trigger.version,
-                    instanceCode: body.instanceCode,
-                    context: Object.assign({}, body.context || {}, {
-                        triggerCode: trigger.code,
-                        cronJobCode: trigger.cronJobCode,
-                        correlationId: correlationId
-                    })
-                })
-            }));
+            let started = await this.startInstance(
+                Object.assign({}, request, {
+                    runtimeOperation: Object.assign({}, body.runtimeOperation || {}, {
+                        definitionCode: trigger.definitionCode,
+                        version: body.version || trigger.version,
+                        instanceCode: body.instanceCode,
+                        context: Object.assign({}, body.context || {}, {
+                            triggerCode: trigger.code,
+                            cronJobCode: trigger.cronJobCode,
+                            correlationId: correlationId,
+                        }),
+                    }),
+                }),
+            );
             await this.audit(request, {
                 definitionCode: trigger.definitionCode,
                 eventType: 'process.trigger.execution.completed',
                 metadata: {
                     triggerCode: trigger.code,
                     correlationId: correlationId,
-                    instanceCode: started && started.data && started.data.instance && started.data.instance.code
-                }
+                    instanceCode:
+                        started && started.data && started.data.instance && started.data.instance.code,
+                },
             });
-            return { code: 'SUC_PROCESS_00011', data: { trigger: trigger, correlationId: correlationId, execution: started.data } };
+            return {
+                code: 'SUC_PROCESS_00011',
+                data: { trigger: trigger, correlationId: correlationId, execution: started.data },
+            };
         } catch (error) {
             await this.audit(request, {
                 definitionCode: trigger.definitionCode,
                 eventType: 'process.trigger.execution.failed',
                 outcome: 'failure',
-                metadata: { triggerCode: trigger.code, correlationId: correlationId, errorCode: error.code || 'ERR_PROCESS_00020' }
+                metadata: {
+                    triggerCode: trigger.code,
+                    correlationId: correlationId,
+                    errorCode: error.code || 'ERR_PROCESS_00020',
+                },
             });
             throw error;
         }
@@ -1039,21 +1444,25 @@ module.exports = {
      */
     getInstanceDetail: async function (request) {
         let instance = await this.requireInstance(request, request.instanceCode);
-        let tasks = await this.taskService().get(this.serviceRequest(request, {
-            query: { instanceCode: instance.code },
-            searchOptions: { limit: 100, sort: { createdAt: 1 } }
-        }));
-        let auditEvents = await this.auditService().get(this.serviceRequest(request, {
-            query: { instanceCode: instance.code },
-            searchOptions: { limit: 100, sort: { createdAt: 1 } }
-        }));
+        let tasks = await this.taskService().get(
+            this.serviceRequest(request, {
+                query: { instanceCode: instance.code },
+                searchOptions: { limit: 100, sort: { createdAt: 1 } },
+            }),
+        );
+        let auditEvents = await this.auditService().get(
+            this.serviceRequest(request, {
+                query: { instanceCode: instance.code },
+                searchOptions: { limit: 100, sort: { createdAt: 1 } },
+            }),
+        );
         return {
             code: 'SUC_PROCESS_00000',
             data: {
                 instance: instance,
                 tasks: tasks.result || [],
-                auditEvents: auditEvents.result || []
-            }
+                auditEvents: auditEvents.result || [],
+            },
         };
-    }
+    },
 };

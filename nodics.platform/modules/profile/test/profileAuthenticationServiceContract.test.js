@@ -197,6 +197,31 @@ function resetCalls() {
 }
 
 (async function run() {
+    // Exercise real module bindings and the cache consumer before mocked authentication.
+    const previousConfig = global.CONFIG, previousNodics = global.NODICS, previousLodash = global._;
+    try {
+        global._ = require('lodash');
+        const binding = require('../../../../nodics.foundation/modules/nConfig/src/service/defaultConfigurationBindingService');
+        const cacheDefaults = require('../../../../nodics.foundation/modules/nCache/cache/config/properties');
+        const authDefaults = require('../../../../nodics.foundation/modules/nAuth/config/properties');
+        const profileDefaults = require('../config/properties');
+        const inherited = binding.merge(cacheDefaults, { cache: authDefaults.cache });
+        const resolved = binding.merge(inherited, binding.resolve({ cache: profileDefaults.cache }, inherited));
+        global.CONFIG = { get: key => resolved[key] };
+        global.NODICS = { getModules: () => ({ profile: { name: 'profile' } }) };
+        const owner = require('../../../../nodics.foundation/modules/nCache/cache/src/service/config/defaultCacheConfigurationService');
+        const consumer = { ...owner, channels: {}, engines: {} };
+        await consumer.loadCacheConfiguration();
+        assert.strictEqual(consumer.channels.profile.auth.engine, 'redis');
+        assert.strictEqual(consumer.channels.profile.auth.enabled, true);
+        assert.strictEqual(consumer.channels.profile.auth.fallback, false);
+        assert.strictEqual(consumer.engines.profile.redis.enabled, false, 'Module contribution must not enable the deployment provider');
+        resolved.cache.profile.channels.auth.ttl = 75;
+        await consumer.loadCacheConfiguration();
+        assert.strictEqual(consumer.channels.profile.auth.ttl, 75, 'Later module channel overrides remain effective');
+        assert.strictEqual(resolved.cache.auth.channels.auth.ttl, 0, 'Profile overrides must not mutate nAuth defaults');
+    } finally { global.CONFIG = previousConfig; global.NODICS = previousNodics; global._ = previousLodash; }
+
     resetCalls();
     const employeeResult = await service.authenticateEmployee({
         entCode: 'electronics',

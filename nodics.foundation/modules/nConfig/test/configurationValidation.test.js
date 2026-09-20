@@ -280,7 +280,7 @@ global.NODICS = {
 };
 
 initService.loadServerProperties = () => ({
-    activeModules: { groups: [], modules: ['activationServer', 'localFeature', 'partnerContentPack'] }
+    activeModules: { groups: [], modules: ['localFeature', 'partnerContentPack'] }
 });
 let moduleLevelModules = initService.getActiveModules();
 assert(moduleLevelModules.includes('activationServer'), 'module-level activation must keep the selected server active');

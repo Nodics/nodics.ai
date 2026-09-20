@@ -16,7 +16,8 @@ const { test } = require('node:test');
 const owner = require('../src/service/request/defaultSecuredRequestPipelineService');
 global.CLASSES = { NodicsError: class extends Error { constructor(code, message) { super(message || code); } } };
 global.UTILS = { getUserGroupPermissions: () => ['*'], getUserGroupCodes: groups => groups };
-global.CONFIG = { get: key => key === 'authSecurity' ? { internalToken: { runtimeAccessGroups: ['userGroup'] } } : undefined };
+const authDefaults = require('../../nAuth/config/properties').authSecurity;
+global.CONFIG = { get: key => key === 'authSecurity' ? authDefaults : undefined };
 const route = { accessGroups: ['userGroup'], permission: 'jobs.execute' };
 const scope = { assignmentCode: 'deployment-1' };
 const service = { ...owner, getRouteActionAuthorizationConfig: () => ({ enabled: false, strict: false }), getGroupPermissions: () => ['*'] };
@@ -37,4 +38,15 @@ test('human-only routes and restricted access groups retain their independent bo
     assert.notEqual(admit({ router: { ...route, authTokenTypes: ['access'] } }), true);
     assert.notEqual(admit({ router: { ...route, accessGroups: ['adminGroup'] } }), true);
     assert.equal(admit({ router: { accessGroups: ['userGroup'] } }), true);
+});
+
+test('canonical service-only routes admit exact runtime scope without group-derived authority', () => {
+    const router = { accessGroups: ['serviceAccountUserGroup'], authTokenTypes: ['service'], permission: 'jobs.execute' };
+    assert.equal(admit({ router }), true);
+    assert.notEqual(admit({ router, moduleName: 'inventory' }), true);
+    assert.notEqual(admit({ router, authData: { tokenType: 'service', modules: ['cronjob'], runtimeScope: scope, permissions: [], userGroups: ['serviceAccountUserGroup'] } }), true);
+    assert.notEqual(admit({ router: { ...router, authTokenTypes: ['access'] } }), true);
+    const original = CONFIG.get;
+    CONFIG.get = key => key === 'authSecurity' ? { internalToken: { runtimeAccessGroups: ['userGroup'] } } : undefined;
+    try { assert.notEqual(admit({ router }), true); } finally { CONFIG.get = original; }
 });

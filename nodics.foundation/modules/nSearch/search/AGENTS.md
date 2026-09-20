@@ -20,3 +20,5 @@ This file gives AI coding agents mandatory guidance for this Nodics module or pa
 
 This capability declares an inert model-service inventory for [governed Local reset](../../nSystem/llm/contracts/local-reset.md).
 A server must explicitly select it; contributions never enable reset or bypass tenant, environment, confirmation or required-service checks.
+
+Database fallback defaults to false. A caller/deployment may intentionally select fallback through the existing search options. Search activation and provider selection remain explicit.

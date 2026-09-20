@@ -278,3 +278,34 @@ formula version, source dataset/version, original and normalized factors, geogra
 baseline, treatment, boundary, weight source/range/confidence and timestamps.
 `CARBON_EQUIVALENT_TCO2E` is a unit conversion metric, never an issued-credit quantity.
 Electronic WARM coefficients and mappings belong to the eWaste provider adapter.
+
+## Sourced energy and prospective input metrics
+
+WARM provider version 2 also calculates energy savings from EPA WARM v16 Energy
+Impacts Exhibit 7-12, using `(landfill - recycling) * kWhPerMillionBtu /
+kgPerShortTon`. Energy is calculated independently, never converted from CO2e.
+Factors are in million Btu per US short ton; the International Table Btu conversion
+is 293.0710701722222 kWh per million Btu. This is life-cycle energy across fuels,
+not a promise of electricity savings on the customer's bill.
+
+The provider emits baseline emissions and prospective recycling input mass/count.
+Input mass is not a recovery yield or confirmed landfill diversion. It retains the
+same measured/declared/inferred input precedence, quantity-once rule and saved
+range bounds. Missing water, transport and treatment-outcome metrics stay null.
+Client presentation must distinguish these from calculated zero and must not show
+failed, illustrative or stale result values as benefits. Original assessments
+are preserved; re-estimation uses the existing authorized revision-aware operation.
+
+Small chargers now have an explicit size-scoped REFERENCE_SCENARIO using the
+WARM peripherals proxy. This is not a validated charger-specific coefficient.
+Unknown weight uses configured modelling bounds of 50–150 g per item, informed
+by published 87.7 g and 92.5 g adapter examples; these are not measured or statistical
+confidence bounds. Measured/declared weight and valid image weight ranges take
+precedence; invalid inputs never fall back. Source links, version and explanation
+are preserved in the saved assessment. Disable referenceScenarios.CHARGER.enabled
+or supply a directly supported item mapping in a later layer to replace the proxy.
+
+Source: https://nepis.epa.gov/Exe/ZyPURL.cgi?Dockey=P101982A.txt (Exhibit 7-12).
+Conversion reference: https://nvlpubs.nist.gov/nistpubs/Legacy/IR/nbsir81-2401.pdf.
+Tests include independent energy arithmetic, quantity and range propagation,
+invalid conversions, unsupported categories, preserved unknowns and no credit issuance.

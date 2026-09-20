@@ -25,3 +25,10 @@ sections, or write into `docs/pages`.
 This package is for framework documentation. Axis product documentation belongs
 to `nodics.platform/modules/axis`; customer/project documentation belongs to the
 owning customer or project documentation package.
+
+Source coverage defaults to metadata-declared module roots within this framework
+checkout. It never auto-selects sibling customer/frontend repositories. To audit
+another owner, pass explicit `--source-root`, `--catalogue` and `--output-dir`;
+its report belongs to that owner and cannot overwrite Framework artifacts.
+See the source-backed documentation coverage guide for invocation and boundaries.
+`test/sourceCoverageScope.test.mjs` proves sibling independence and output isolation.

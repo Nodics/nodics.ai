@@ -21,13 +21,13 @@ import { spawnSync } from 'node:child_process';
 import crypto from 'node:crypto';
 import fs from 'node:fs';
 import path from 'node:path';
-import { readContainerEnvironmentProfile, resolveTemplate } from './defaultProjectContainerProfileService.mjs';
+import { readContainerEnvironmentConfiguration, resolveTemplate } from './defaultProjectContainerConfigurationService.mjs';
 
 const projectRoot = process.cwd();
 const workspaceRoot = path.resolve(projectRoot, '..');
 
 function readProfile(profileCode) {
-  const profile = readContainerEnvironmentProfile(projectRoot, profileCode);
+  const profile = readContainerEnvironmentConfiguration(projectRoot, profileCode);
   const resilience = profile.resilience || {};
   return {
     code: profile.code,

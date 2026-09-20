@@ -322,3 +322,8 @@ Before configuration implementation, apply
 Framework defaults, customer policy and deployment differences have distinct
 owners. Prove effective inheritance and preserve operational gates when moving
 values; include detailed customization, migration and verification guidance.
+
+Before reporting completion or progressing to live acceptance/release, apply
+[the mandatory ownership, placement and scope review](contracts/ai-coding-and-customization-contract.md#mandatory-ownership-placement-and-scope-review).
+Its complete inventory, semantic inspection and PASS/FAIL decision cannot be
+replaced by a completed finding list or automated validation summary.

@@ -1,0 +1,25 @@
+{
+  "name": "nexusCore",
+  "version": "0.0.0",
+  "index": "92.81",
+  "private": true,
+  "main": "nodics.js",
+  "description": "Reusable Nexus website accelerator administration and acceptance configuration.",
+  "license": "SEE LICENSE IN LICENSE",
+  "nodics": {
+    "kind": "capability",
+    "displayName": "Nexus Core",
+    "runtimeModule": true,
+    "loadableByNodicsModuleLoader": true,
+    "owns": [
+      "configuration",
+      "llm"
+    ],
+    "runtime": {
+      "router": false,
+      "publish": false,
+      "web": false
+    }
+  },
+  "scripts": {}
+}

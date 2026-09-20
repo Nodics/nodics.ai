@@ -134,3 +134,27 @@ interceptor tests, identity governance and migration tests, mandatory identity
 bootstrap checks, and generated schema contracts for Enterprise, Tenant,
 Customer, Employee, UserGroup, User, UserState, Password, and
 PrincipalScopeAssignment.
+
+Profile refresh sessions use the Profile-owned `auth` cache channel. Its module
+configuration references nAuth's strict channel defaults through nConfig; do not
+copy those defaults into a customer environment or redirect identity ownership.
+The deployment must still enable the distributed provider. Later Profile channel
+overrides use normal layering, preserving atomic consume and no local fallback.
+
+Browser sessions resolve credentialed origins through nRouter's existing
+`resolveCorsOrigins` service. Endpoint-derived origins and explicit origin lists
+share one policy; explicit denials and endpoint disables take precedence.
+Profile continues to enforce cookie security, CSRF and refresh rotation.
+
+During a governed Local reset, the provider's private authority may reach scope
+cleanup after Employee deletion. Profile must prove principal absence through an
+authoritative read and await nAuth shared-stamp revocation. It must reject failed
+reads or revocation, and a request field cannot forge reset authority. Existing
+principals and ordinary scope mutations still require exactly one acknowledged
+Employee update. This rule is independent of reset inventory ordering.
+
+Scoped runtime route admission recognizes `userGroup` and
+`serviceAccountUserGroup` as base route classes. These labels do not become JWT
+groups or expand permissions. nRouter still enforces the approved module, explicit
+action permission, accepted token type and deployment exposure. Administrator and
+human-only groups remain ineligible; later deployment policy may narrow the list.

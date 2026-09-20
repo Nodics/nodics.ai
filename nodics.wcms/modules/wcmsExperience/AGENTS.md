@@ -47,3 +47,6 @@ Any deeper implementation must keep these rules true:
 - Keep Page Designer rule attachment deferred until Experience Studio/resolver contracts are stable.
 - Keep product grids, product variants, prices, inventory, filters, sorting, and pagination in Commerce/Search.
 - Keep Axis as configuration/preview/control plane, not CMS source of truth.
+
+Route-category defaults belong to this capability; deployments supply only intentional overrides.
+Preserve nRouter enforcement and independent route authorization. See [exposure ownership](../../../nodics.foundation/modules/nRouter/llm/contracts/README.md#capability-owned-exposure-defaults).

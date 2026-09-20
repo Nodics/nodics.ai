@@ -341,3 +341,8 @@ explicit action permissions must match the approved token list. Restricted-group
 and human-only routes remain restricted. Legacy routes without an action
 permission require approved module scope and an eligible base access group;
 domain ownership and mutation checks still apply.
+
+Operator-triggered application and remote activation imports preserve the authenticated
+human bearer through configured nImport routes. Service callers or missing bearers
+cannot execute setup imports. Read-only preflight retains the bounded runtime token;
+destination permission, tenant and schema-access enforcement remains authoritative.

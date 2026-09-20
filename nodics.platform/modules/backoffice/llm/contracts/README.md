@@ -58,3 +58,26 @@ retains its group-free, scoped credential; discovery must not give it generic
 BackOffice schema rights. Preserve source-instance evidence and existing bounded
 normalization, compatibility classification, approval and revision checks. Human
 contract decisions retain their authenticated actor and permission gates.
+
+## Inherited application targets and observed package facts
+
+BackOffice owns `backofficeApplicationInitialization.target` technical defaults (`cms`, abstract transport, bounded timeout, one attempt). A deployment selects its connection name once; `profiles.<code>.target` supplies genuine exceptions. Resolve the target when consuming the final configuration so node changes apply. Missing destinations and profiles with `enabled: false` are rejected before initiation. Product-owned profiles may be inert until the customer enables them. Human initiation, Staged authority, exact-release review and publication confirmations remain mandatory.
+
+Functional-module data package descriptors reuse the owning registration manifest. `backofficeFunctionalModuleActivationData.modules.<identity>.dataPackages` may supply routing-only deltas by code. Observed required/sample/trigger/type facts are retained; an unavailable owner is not replaced with an invented descriptor. Preserve explicit multi-runtime destinations and target-scoped completion receipts. A missing/running/failed required import cannot be called complete.
+
+The Local reset coordinator owns `providerDefaults.moduleName: 'system'`; deployments still select every provider, connection and target authority. Defaults never enable reset, choose targets or remove environment, human/service-token, confirmation and required-model checks.
+
+BackOffice owns inert capability-registry acceptance defaults. Resolve observed
+server coordinates from the selected deployment rather than a reference-project
+string. Media preparation steps may declare `manifestModule` with an owner-relative
+`manifestPath`; the owner must match the step's module identity. Resolve only through
+the existing raw-module registry, confine real paths and payloads to that owner,
+and retain project-relative compatibility. Never return local source paths to clients.
+Existing authorization, target-role, media upload and publication gates still apply.
+
+Operator-triggered application and remote activation imports forward the
+authenticated human bearer to the configured nImport owner. Require a human
+principal and bearer before execution; do not substitute the group-free runtime
+credential or add administrator groups to it. Status/preflight retains the scoped
+runtime credential. nImport still enforces the operator's import permission, tenant,
+release governance and schema access at the destination.

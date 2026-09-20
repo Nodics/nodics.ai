@@ -26,3 +26,9 @@ on both runtimes to the active `auth` module and enable its distributed auth
 channel with fallback disabled. Retain separate per-instance proof. Runtime
 bootstrap reads the existing `/enterprise/get` capability; it cannot enumerate
 another enterprise or bypass schema access using an empty group list.
+
+A registry lease endpoint already names its canonical module API path and is preserved, including a prefix different from the logical module name. An origin-only endpoint uses the existing discovered package prefix or module name. Credentials, logical ownership and target-authority filtering remain unchanged.
+
+Inherit authentication policy and bind deployment credentials through the existing
+nAuth/nService contract. Keep provisioning proof separate from retained runtime
+proof; preserve strict shared auth state and Profile grants. See the local contract.

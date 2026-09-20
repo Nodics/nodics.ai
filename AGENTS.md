@@ -259,3 +259,24 @@ around copied defaults do not satisfy this principle.
   root `AGENTS.md` and `nodics.foundation/modules/nSetup/llm`, but must not become
   the source of truth.
 - Apply `nodics.foundation/modules/nSetup/llm/contracts/module-owned-ui-contribution-contract.md` before placing navigation, component properties or workspace data. Visual nesting does not transfer business ownership.
+
+Before reporting a change complete or progressing to live acceptance, deployment,
+merge or release, pass [the mandatory ownership, placement and scope review](nodics.foundation/modules/nSetup/llm/contracts/ai-coding-and-customization-contract.md#mandatory-ownership-placement-and-scope-review).
+Account for every changed file, inspect the semantic diff and effective
+configuration owners, distinguish pre-existing/incidental changes, and record
+PASS/FAIL with evidence limits in the existing canonical checklist. Tests and
+generated validations do not substitute for this review.
+
+Apply the mandatory configuration ownership restrictions in
+`nodics.foundation/modules/nSetup/llm/contracts/customer-config-classification-contract.md`.
+Local provider defaults are framework-owned; customer layers declare only actual
+selection or deployment differences. No environment descriptor, copied secret,
+or duplicate endpoint/authentication authority may be introduced by code or generators.
+
+
+Backend startup, readiness and API acceptance must work without any frontend
+repository or running frontend server. Do not declare frontend launch commands,
+paths, lifecycle or UI tests in backend properties or backend acceptance runners.
+Frontend applications own their servers, outage/retry presentation, and frontend
+tests. Backend CORS and browser-session contracts are tested through APIs using
+explicit security policy; they do not confer frontend lifecycle ownership.

@@ -15,7 +15,7 @@ governed record that needs safety, routing, and audit.
 | Engagement overview | `docs/pages/nodics.engagement/unified-operations.md` |
 | Governance docs | `docs/pages/nodics.engagement/governed-automation.md` |
 | Communication providers | `docs/pages/nodics.communication/provider-runbooks.md` |
-| Nexus form data | `../../nodics.kickoff/modules/nexus.web/data/sample-v001/content/records/engagement/` |
+| Nexus form data | `../nodics.accelerators/modules/nexus/modules/nexus.web/data/sample-v001/content/records/engagement/` |
 
 ## Lifecycle
 

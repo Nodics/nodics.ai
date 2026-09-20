@@ -129,7 +129,9 @@ and AI tools.
 
 ## Local Runtime Isolation
 
-The existing environment `nodics.environment.json` remains topology authority.
+Existing server properties own backend endpoints; environment properties own
+operator inputs. Frontend lifecycle and tests belong to frontend applications. Tooling reads them through nConfig, with explicit launch
+order or module-index order and metadata-based discovery.
 `dependsOn` validates startup order, not a cascade-shutdown policy. Once all
 selected runtimes are ready, an unexpected child exit is recorded and logged
 without stopping its peers. Startup failure still fails and rolls back the
@@ -231,3 +233,27 @@ Foundation exposes the existing project bridge as the installed `nodics` command
 Keep command normalization, registry dispatch and startup resolution framework-owned;
 projects bind a compatible dependency and declare only optional aliases. See
 [installed project command](llm/contracts/README.md#installed-project-command).
+
+The principle audit also protects the canonical
+[final ownership, placement and scope review](../nSetup/llm/contracts/ai-coding-and-customization-contract.md#mandatory-ownership-placement-and-scope-review)
+and its discovery links. A passing command does not certify completion of that
+review; the implementation record must contain its own evidence and decision.
+
+Qualification contracts cannot claim deployment evidence. Keep authored-source
+ownership metadata accurate; follow the [tooling contract](llm/contracts/README.md).
+
+Topology generation declares only additional capabilities/providers in server activation lists. nConfig selects the environment/server/node from metadata. See the [existing tooling contract](llm/contracts/README.md#minimal-generated-topology).
+
+Reusable acceptance defaults are contributed under each capability's `tooling.acceptance`.
+The existing non-runtime module discovery/static contribution reader merges framework
+contributions by index; the selected project's descriptor and nConfig deployment
+properties supply later deltas. No tooling default activates a runtime or executes
+an operation. Resolve runtime choices by an explicit server or a unique semantic
+`runtimeRole`, then reuse its declared endpoint and launch descriptor. Select an
+enabled initialization profile by explicit code or a unique template match; missing
+and ambiguous selections fail before acceptance operations. Keep actual customer
+journey choices and deployment container/URL differences in their existing layers.
+
+Customer-project validation permits a direct `bootstrapIdentity.adminPassword`
+value in the customer configuration layers. Framework audit and all other literal
+credential restrictions remain enforced; nAuth validates effective strength.

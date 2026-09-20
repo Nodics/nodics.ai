@@ -43,9 +43,7 @@ module.exports = {
                 },
                 master: {
                     URI: 'mongodb://127.0.0.1:27017',
-                    //URI: 'mongodb+srv://nodics:Nodics12345@nodicsmongonode0-wzf8z.gcp.mongodb.net',
-                    //URI: 'mongodb+srv://nodicsMaster:Nodics15021981Master@nodicsmongonode0-q6lyz.gcp.mongodb.net',
-                    databaseName: 'nodicsMaster',
+                    databaseName: 'masterLocal',
                     options: {
                         useNewUrlParser: true,
                         maxPoolSize: 5,
@@ -56,7 +54,7 @@ module.exports = {
                 },
                 test: {
                     URI: 'mongodb://127.0.0.1:27017',
-                    databaseName: 'nodicsTest',
+                    databaseName: 'testLocal',
                     options: {
                         useNewUrlParser: true,
                         maxPoolSize: 5,

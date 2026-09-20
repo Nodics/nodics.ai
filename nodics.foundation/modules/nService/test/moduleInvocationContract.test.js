@@ -178,6 +178,19 @@ const service = Object.assign({}, definition, {
     assert.strictEqual(service.getTransportDiagnostics().moduleInvocation.runtimeRegistry, 1);
     assert.strictEqual(service.getTransportDiagnostics().moduleInvocation.lastResolution.source, 'runtimeRegistry');
 
+
+    registryOwners = [{ moduleName: 'workflow', instanceId: 'process-one',
+        endpoint: 'http://registry.test/enterprise/process', runtimeRole: { code: 'PROCESS' }, state: 'UP' }];
+    await service.invokeModule({ moduleName: 'workflow', connectionName: 'processRemote', local: false,
+        apiName: '/instances/example/actions/claim', request: { tenant: 'default' } });
+    assert.strictEqual(fetchedRequest.uri, 'http://registry.test/enterprise/process/v0/instances/example/actions/claim');
+    assert.strictEqual(fetchedRequest.nodicsContext.moduleName, 'workflow');
+    assert.strictEqual(fetchedRequest.headers.Authorization, 'Bearer service-token');
+    NODICS.getRawModule = name => name === 'workflow' ? { metaData: { prefix: 'process' } } : undefined;
+    registryOwners[0].endpoint = 'http://registry.test';
+    await service.invokeModule({ moduleName: 'workflow', local: false, apiName: '/instances/example/actions/claim' });
+    assert.strictEqual(fetchedRequest.uri, 'http://registry.test/nodics/process/v0/instances/example/actions/claim');
+    delete NODICS.getRawModule;
     registryOwners = [];
     availableEndpoints = ['publicCatalog'];
     activeModules = [];

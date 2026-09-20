@@ -25,3 +25,11 @@ This file gives AI coding agents mandatory guidance for this Nodics module or pa
 
 This capability declares an inert model-service inventory for [governed Local reset](../../../nodics.foundation/modules/nSystem/llm/contracts/local-reset.md).
 A server must explicitly select it; contributions never enable reset or bypass tenant, environment, confirmation or required-service checks.
+
+Route-category defaults belong to this capability; deployments supply only intentional overrides.
+Preserve nRouter enforcement and independent route authorization. See [exposure ownership](../../../nodics.foundation/modules/nRouter/llm/contracts/README.md#capability-owned-exposure-defaults).
+
+CMS owns generic guided-publication acceptance defaults: select the WCMS_STAGED
+runtime and an enabled initialization profile using the framework `foundation`
+template. Application publication selections, Site identities and delivery probes
+belong to their accelerator or customer pack. Defaults never install or publish data.

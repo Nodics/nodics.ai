@@ -10,3 +10,6 @@ ownership.
 Impact facade changes must preserve effective SERVICE resolution, asynchronous
 provider results, and trusted controller tenant context. Do not use body fields
 to select an impact provider or runtime configuration.
+
+Route-category defaults belong to this capability; deployments supply only intentional overrides.
+Preserve nRouter enforcement and independent route authorization. See [exposure ownership](../../../nodics.foundation/modules/nRouter/llm/contracts/README.md#capability-owned-exposure-defaults).

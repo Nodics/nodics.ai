@@ -56,14 +56,14 @@ fs.writeFileSync(path.join(root, 'data', 'manifest.json'), JSON.stringify({
 global.CONFIG = { get: key => key === 'data' ? {
     dataReleases: {
         allowedContractVersions: [1, 2], maximumFilesPerRelease: 10, maximumModulesPerRun: 5,
-        allowDowngrade: false, destinationEnforced: true, environmentClass: 'LOCAL',
+        allowDowngrade: false, destinationEnforced: true,
         allowedDestinationRoles: ['WCMS_STAGED'],
         initializationProfiles: { testFoundation: { enabled: true, label: 'Test foundation',
             description: 'Install the test foundation.', completionMessage: 'The test foundation is ready.',
             steps: [{ dataType: 'init' }, { dataType: 'core' }] } },
         types: { init: { enabled: true, operatorExecution: true }, core: { enabled: true, operatorExecution: true }, sample: { enabled: false } }
     }
-} : key === 'defaultTenant' ? 'default' : key === 'runtimeRole' ?
+} : key === 'environment' ? {class:'LOCAL'} : key === 'defaultTenant' ? 'default' : key === 'runtimeRole' ?
     { code: 'WCMS_STAGED', publication: 'STAGED' } : undefined };
 global.NODICS = {
     getActiveModules: () => ['testModule'],

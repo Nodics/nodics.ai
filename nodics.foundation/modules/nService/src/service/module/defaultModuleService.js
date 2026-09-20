@@ -329,10 +329,13 @@ module.exports = {
         let endpoint = String(owner.endpoint || '').replace(/\/+$/, '');
         let url = new URL(endpoint);
         let path = url.pathname.replace(/\/+$/, '');
-        let moduleSegment = '/' + options.moduleName;
-        if (!path.endsWith(moduleSegment)) {
+        // A registry lease already supplies the owning module's canonical API path.
+        // Only legacy origin-only endpoints need a context/module path appended.
+        if (!path) {
+            const target = NODICS.getRawModule && NODICS.getRawModule(options.moduleName);
+            const prefix = target && target.metaData && target.metaData.prefix || options.moduleName;
             let contextRoot = options.contextRoot || CONFIG.get('contextRoot') || 'nodics';
-            url.pathname = path + '/' + String(contextRoot).replace(/^\/+|\/+$/g, '') + moduleSegment;
+            url.pathname = '/' + String(contextRoot).replace(/^\/+|\/+$/g, '') + '/' + prefix;
         }
         let base = url.toString().replace(/\/+$/, '');
         return {

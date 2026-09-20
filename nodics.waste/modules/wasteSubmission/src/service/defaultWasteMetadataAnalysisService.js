@@ -35,7 +35,7 @@ module.exports = {
       environment: object({ recyclability: observation(DEFINITIONS.recyclability), contamination: observation(DEFINITIONS.contamination),
         hazards: { type: "array", items: object({ code: choice(DEFINITIONS.hazards), basis: choice(["OBSERVED", "INFERRED"]), confidence }) },
         recoveryPotential: observation(["POTENTIAL", "UNKNOWN"]) }),
-      qualityFlags: { type: "array", items: choice(["BLURRY", "MULTIPLE_ITEMS", "LABEL_UNREADABLE", "MISMATCH"]) },
+      qualityFlags: { type: "array", items: choice(DEFINITIONS.qualityFlags) },
       unknownFields: { type: "array", items: choice(["brand", "model", "conditionGrade", "materials", "weight", "dimensions", "sizeClass"]) },
     }) };
   },
@@ -49,8 +49,12 @@ module.exports = {
       "A small watermark alone does not make an ordinary item photo promotional. Assess the overall composition. Text on a photographed device screen does not alone make it a screenshot; designed advertising text and graphic panels around a scene are promotional evidence. Do not treat a photorealistic advertisement as direct item evidence.",
       "Image-source concerns route to manual approval, not automatic rejection. Still describe the recognizable depicted electronic/waste item using the catalogue. A poster or illustration containing a recognizable in-domain item can be SUPPORTED with a flagged imageEvidence sourceType. If the depicted item itself is unrecognizable or outside the domain, use UNCERTAIN or UNSUPPORTED normally. For non-photographic evidence, physical ranges and contamination must remain unknown; composition and hazards are only possible/inferred, never observed physical facts.",
       "Identify the main foreground " + label + " first, then match it to the supported catalogue below. A hand holding it, furniture and incidental background objects are not submitted items.",
+      settings.allowBundles === true && fallback
+        ? "BUNDLES ARE ACCEPTED: when several foreground in-domain items are presented together, use assessment SUPPORTED and qualityFlags MULTIPLE_ITEMS. Ignore non-domain objects such as bags, cloth, packaging and furniture in classification, materials, count and weight. Use the generic catalogue type " + fallback.code + " and category " + fallback.categoryCode + ". Give a collective name such as Bundle of charging cables and adapters and describe the recognizable electronic contents and any exclusions. Do not count cable ends as separate devices or guess an exact count when tangled. quantity MUST be 1 submission bundle; weightEstimate is the TOTAL eligible electronic bundle mass, dimensions cover the bundle. Do not use an individual charger weight for the group. This bundle rule overrides the per-item quantity/weight rule. If no electronic items are recognizable, use UNSUPPORTED."
+        : "Submit a single recognizable item type.",
       "Describe only observable features. Do not claim ownership, safety certification, operability, measured weight or dimensions, carbon credits or rewards. Never extract serial numbers, IMEI or information about people.",
       "Assessment: SUPPORTED means the main object is a recognizable " + label + "; its exact brand, model and catalogue subtype may be unknown. UNSUPPORTED means the main object is clearly outside that domain. UNCERTAIN means you cannot reliably identify the main object at all, not merely that its exact subtype or label is missing.",
+      "For UNSUPPORTED items, still provide a short recognizable name and a neutral visual description (form, colour and clearly visible features). Do not guess contents, brand, chemical composition or disposal instructions. Keep taxonomy codes null; do not force an out-of-domain object into this catalogue.",
       "Use the most specific actually matching catalogue item. Never select an unrelated type just to fill the field.",
       fallback
         ? "When the object is recognizable in this domain but no specific catalogue type matches, use " + fallback.code + " with categoryCode " + fallback.categoryCode + " and assessment SUPPORTED. Keep the real observed object name and description; a generic catalogue match does not make the photo unclear."
@@ -58,10 +62,10 @@ module.exports = {
       "Return one JSON object with contractVersion: 1, assessment, imageEvidence, name, description, itemTypeCode, categoryCode, conditionGrade, brand, model, quantity, confidence, materials, sizeClass, weightEstimate, dimensionsEstimate, environment, qualityFlags and unknownFields. Every key must be present; use explicit unknown values instead of inventing facts.",
       "conditionGrade is UNKNOWN unless damage is visibly established. quantity counts only the main submitted objects. confidence is a number from 0 to 1.",
       "brand and model must be null unless their exact text is clearly readable on the main item. Do not guess a logo spelling or use a third-party service/app button as the manufacturer.",
-      "materials is an array of {code, basis, confidence} using only the material catalogue. OBSERVED requires a directly visible material; unseen internal components can only be INFERRED, or omitted. Do not infer rare metals such as gold from an unseen circuit; a circuit board is a COMPONENT, not proof of its chemical composition. Never invent material percentages or quantities.",
-      'sizeClass is SMALL, MEDIUM, LARGE, BULKY, HEAVY or UNKNOWN. Prefer UNKNOWN when image scale is unclear. weightEstimate is {min:null,max:null,unit:"KG",basis:"UNKNOWN",confidence:null}. dimensionsEstimate has length, width and height ranges with unit CM. For a recognizable common form factor, provide defensible broad typical ranges with basis INFERRED and calibrated confidence, even when brand/model is unreadable. These describe an approximate item, never measured facts. If no defensible form factor or scale exists, use null endpoints and basis UNKNOWN. Dimensions must be {length:{min,max,unit:"CM",basis,confidence},width:{min,max,unit:"CM",basis,confidence},height:{min,max,unit:"CM",basis,confidence}}; never flatten the axes.',
-      'environment is {recyclability:{value:"POTENTIAL|PARTIAL|UNKNOWN",basis:"OBSERVED|INFERRED|UNKNOWN",confidence:null}, contamination:{value:"VISIBLE|NOT_VISIBLE|UNKNOWN",basis:"OBSERVED|INFERRED|UNKNOWN",confidence:null}, hazards:[{code:"BATTERY_PRESENT|SHARP_EDGES|VISIBLE_LEAKAGE|CHEMICAL_RESIDUE|CONTAMINATION|UNKNOWN",basis:"OBSERVED|INFERRED",confidence:null}], recoveryPotential:{value:"POTENTIAL|UNKNOWN",basis:"INFERRED|UNKNOWN",confidence:null}}. NOT_VISIBLE never means clean or safe. Do not infer repair, reuse, certified recycling, environmental impact amounts or rewards.',
-      "qualityFlags defaults to []. Include a flag only if it actually applies: BLURRY only when blur prevents identifying the main item; MULTIPLE_ITEMS only for multiple distinct foreground items being submitted together; LABEL_UNREADABLE only for an unreadable relevant label; MISMATCH only for contradictory visual evidence. A hand, table, chair, floor or soft background does not make an image blurry or multi-item. Do not copy this list into the answer.",
+      "materials is an array of {code, basis, confidence} using only the material catalogue. OBSERVED requires a directly visible material; unseen internal components can only be INFERRED, or omitted. Do not infer rare metals such as gold from an unseen circuit; a circuit board is a COMPONENT, not proof of its chemical composition. Never invent material percentages or quantities. Do not label electrical plug pins or contacts as metal fasteners; only match the actual component function. If the catalogue has no matching component, omit that component rather than substitute an unrelated code.",
+      'sizeClass is SMALL, MEDIUM, LARGE, BULKY, HEAVY or UNKNOWN. Prefer UNKNOWN when image scale is unclear. weightEstimate must be assessed independently: for a recognizable physical item, estimate a broad typical PER-ITEM mass range in kilograms using its form factor and likely construction. Return {min:positiveNumber,max:positiveNumber,unit:"KG",basis:"INFERRED",confidence:number}; never multiply this range by quantity. An unreadable model or missing weighing scale alone is not a reason to leave weight unknown. Use {min:null,max:null,unit:"KG",basis:"UNKNOWN",confidence:null} only when the item form is too uncertain to support a defensible range. These are model estimates, not measured facts or manufacturer specifications. dimensionsEstimate has length, width and height ranges with unit CM. For a recognizable common form factor, provide defensible broad typical ranges with basis INFERRED and calibrated confidence, even when brand/model is unreadable. These describe an approximate item, never measured facts. If no defensible form factor or scale exists, use null endpoints and basis UNKNOWN. Dimensions must be {length:{min,max,unit:"CM",basis,confidence},width:{min,max,unit:"CM",basis,confidence},height:{min,max,unit:"CM",basis,confidence}}; never flatten the axes.',
+      'environment is {recyclability:{value:"POTENTIAL|PARTIAL|LOW|UNKNOWN",basis:"OBSERVED|INFERRED|UNKNOWN",confidence:null}, contamination:{value:"VISIBLE|NOT_VISIBLE|UNKNOWN",basis:"OBSERVED|INFERRED|UNKNOWN",confidence:null}, hazards:[{code:"BATTERY_PRESENT|LITHIUM_BATTERY|SWOLLEN_BATTERY|SHARP_EDGES|VISIBLE_LEAKAGE|CHEMICAL_RESIDUE|DAMAGED_SCREEN|BROKEN_CASING|EXPOSED_ELECTRONICS|CONTAMINATION|UNKNOWN",basis:"OBSERVED|INFERRED",confidence:null}], recoveryPotential:{value:"POTENTIAL|UNKNOWN",basis:"INFERRED|UNKNOWN",confidence:null}}. NOT_VISIBLE never means clean or safe. Do not infer certified recycling, environmental impact amounts or rewards.',
+      "qualityFlags defaults to []. Include a flag only if it actually applies: BLURRY only when blur prevents identifying the main item; MULTIPLE_ITEMS only for multiple distinct foreground items being submitted together; LABEL_UNREADABLE only for an unreadable relevant label; MISMATCH only for contradictory visual evidence; LOW_RESOLUTION for insufficient pixels/detail; HEAVILY_CROPPED for a main item cut off enough to limit assessment. A hand, table, chair, floor or soft background does not make an image blurry or multi-item. Do not copy this list into the answer.",
       "Assess each field independently. An unreadable brand must not erase visible materials, item form, quantity or environmental observations. Before responding, recheck the photo and fill every defensible observation. Inferred recyclability/recovery is potential only. Unknown values must agree with unknownFields; do not list weight or dimensions as unknown when you supplied valid ranges. Refusal must use assessment UNCERTAIN.",
       "Supported catalogue: " + JSON.stringify(items.map(item => ({ itemTypeCode: item.code, categoryCode: item.categoryCode, name: item.name?.en || item.code }))),
       "Material catalogue: " + JSON.stringify(materials.map(material => ({ code: material.code, name: material.name?.en || material.code, kind: material.materialKind || "MATERIAL" }))),
@@ -149,18 +153,23 @@ module.exports = {
         "ERR_WASTE_RECOGNITION_INVALID",
         "Recognition was inconclusive. Retake the photo or enter the details manually",
       );
-    if (parsed.assessment !== "SUPPORTED")
-      store.fail(
-        "ERR_WASTE_RECOGNITION_INVALID",
-        parsed.assessment === "UNSUPPORTED"
-          ? "This photo does not show a supported item. Check the item or replace the photo"
-          : "The item is unclear. Retake the photo or choose the item type",
-      );
+    if (parsed.assessment === "UNSUPPORTED") {
+      const brief = (value, limit) => typeof value === "string" ? value.replace(/[\x00-\x1f\x7f]/g, " ").replace(/\s+/g, " ").trim().slice(0, limit) : "";
+      const name = brief(parsed.name, 120), description = brief(parsed.description, 400);
+      store.fail("ERR_WASTE_ITEM_UNSUPPORTED",
+        (name ? "This looks like " + name + ". " : "Thank you for sharing your photo. ") +
+        (description ? description + " " : "") +
+        "This collection service currently accepts " + String(settings.subjectLabel || "waste items").slice(0, 120) +
+        " only, so we can’t accept this item here. You can choose another item to continue.");
+    }
+    if (parsed.assessment === "UNCERTAIN")
+      store.fail("ERR_WASTE_RECOGNITION_INVALID", "We couldn’t identify the item clearly. Please try another view of the item.");
     const exactItem = items.find((i) => i.code === parsed.itemTypeCode);
     const fallbackItem = items.find((i) => i.code === settings.fallbackItemTypeCode);
     // A provider's invented subtype cannot create taxonomy. Retain observable
     // details against an explicitly configured active generic type for review.
-    const item = exactItem || (
+    const bundle = settings.allowBundles === true && Array.isArray(parsed.qualityFlags) && parsed.qualityFlags.includes("MULTIPLE_ITEMS");
+    const item = bundle ? fallbackItem : exactItem || (
       typeof parsed.name === "string" && parsed.name.trim() ? fallbackItem : undefined
     );
     if (!item)
@@ -184,6 +193,10 @@ module.exports = {
           ? parsed.quantity
           : 1,
     };
+    if (bundle) {
+      proposal.quantity = 1;
+      proposal.submissionUnit = "BUNDLE";
+    }
     for (const key of ["brand", "model"])
       if (typeof parsed[key] === "string")
         proposal[key] = parsed[key].slice(0, 180);
@@ -216,9 +229,14 @@ module.exports = {
       for (const key of ['recyclability', 'recoveryPotential']) if (normalized.environment[key].value !== 'UNKNOWN') normalized.environment[key].basis = 'INFERRED';
       normalized.environment.hazards.forEach(hazard => { hazard.basis = 'INFERRED'; });
     }
+    proposal.sizeProvenance = {
+      basis: sizeClass !== "UNKNOWN" ? "TAXONOMY_POLICY" : proposal.sizeClass !== "UNKNOWN" ? "INFERRED" : "UNKNOWN",
+      policyVersion: sizeClass !== "UNKNOWN" ? sizePolicy.version : null,
+      confidence: null,
+    };
     const recognition = {
       contractVersion: 1,
-      promptVersion: "WASTE_PHOTO_V5",
+      promptVersion: "WASTE_PHOTO_V7",
       imageEvidence: evidenceReview,
       assessment: parsed.assessment,
       taxonomyMatch: {
@@ -235,8 +253,7 @@ module.exports = {
       analyzedAt: new Date().toISOString(),
       size: {
         value: proposal.sizeClass,
-        basis: sizeClass !== "UNKNOWN" ? "TAXONOMY_POLICY" : proposal.sizeClass !== "UNKNOWN" ? "INFERRED" : "UNKNOWN",
-        policyVersion: sizePolicy.version || null,
+        ...proposal.sizeProvenance,
       },
       ...normalized,
       materials: materialHints,
@@ -245,16 +262,12 @@ module.exports = {
       qualityFlags: (Array.isArray(parsed.qualityFlags)
         ? parsed.qualityFlags
         : []
-      ).filter((flag) =>
-        ["BLURRY", "MULTIPLE_ITEMS", "LABEL_UNREADABLE", "MISMATCH"].includes(
-          flag,
-        ),
-      ),
+      ).filter((flag) => DEFINITIONS.qualityFlags.includes(flag)),
       unknownFields: descriptor.unknownFields(proposal),
     };
     if (
       recognition.qualityFlags.some((flag) =>
-        ["BLURRY", "MULTIPLE_ITEMS", "MISMATCH"].includes(flag),
+        ["BLURRY", "MISMATCH", ...(bundle ? [] : ["MULTIPLE_ITEMS"])].includes(flag),
       )
     )
       store.fail(

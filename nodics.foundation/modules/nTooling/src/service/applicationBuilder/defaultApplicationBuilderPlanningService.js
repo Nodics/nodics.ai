@@ -96,7 +96,7 @@ module.exports = {
     );
     const excluded = new Set(solution.capabilities.excluded || []);
     const dataPacks = new Set(
-      (catalogue.customerDataPacks || []).map((dataPack) => dataPack.code),
+      [...(catalogue.frameworkDataPacks || []), ...(catalogue.customerDataPacks || [])].map((dataPack) => dataPack.code),
     );
     const composition = (catalogue.frontendCompositions || []).find(
       (candidate) =>

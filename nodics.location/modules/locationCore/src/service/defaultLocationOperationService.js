@@ -133,8 +133,23 @@ module.exports = {
     read: function (request) {
         let context = this.context(request);
         let code = request && request.params && request.params.locationCode || request && request.locationCode || request && request.code;
-        if (!code) this.fail('ERR_LOCATION_CODE_REQUIRED', 'Location code is required');
+        if (typeof code !== 'string' || !code.trim() || code.length > 191) this.fail('ERR_LOCATION_CODE_REQUIRED', 'Location code is required');
+        context = this.readContext(context);
         return this.repository().get(Object.assign({}, context, { query: { code: code }, searchOptions: { limit: 1 } }));
+    },
+
+    /** Authorizes a scoped runtime read before using the Location owner's private persistence actor. */
+    readContext: function (context) {
+        const auth = context.authData || {};
+        if (!auth.runtimeScope) return context;
+        if (auth.tokenType !== 'service' || auth.principalType !== 'service' || !auth.runtimeScope.instanceCode ||
+            auth.tenant !== context.tenant || !Array.isArray(auth.modules) || !auth.modules.includes('locationCore') ||
+            !Array.isArray(auth.permissions) || !auth.permissions.includes('location.location.read')) {
+            this.fail('ERR_AUTH_00003', 'Location read requires an approved runtime scope and permission');
+        }
+        return { tenant: context.tenant, authData: { tenant: context.tenant,
+            principalId: 'locationReferenceRead', loginId: 'locationReferenceRead', principalType: 'service',
+            userGroups: ['serviceAccountUserGroup'] } };
     },
 
     /** Searches locations by safe Location-owned filters. */

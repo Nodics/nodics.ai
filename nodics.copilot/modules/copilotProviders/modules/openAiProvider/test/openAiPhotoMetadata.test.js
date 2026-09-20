@@ -16,6 +16,15 @@ const defaults = require('../config/properties').copilot.providers.adapters.open
 const jpeg = Buffer.from([255,216,255,224,0,0]).toString('base64');
 const request = () => ({ adapter: {...defaults, generation:{reasoningEffort:'none'}}, profile:{structuredOutput:true,maximumOutputTokens:1200,imageDetail:'high'}, limits:{maximumRequestBytes:8000000}, messages:[{role:'user',content:'Return JSON metadata.',images:[jpeg]}] });
 
+test('only trusted profiles enable search and preserve actual returned references', () => {
+    const source = request(); source.webSearch = true;
+    assert.equal(adapter.body(source).tools, undefined);
+    source.profile.webSearch = true;
+    assert.deepEqual(adapter.body(source).tools, [{ type: 'web_search' }]);
+    assert.deepEqual(adapter.body(source).include, ['web_search_call.action.sources']);
+    assert.deepEqual(adapter.sources({ output: [{ action: { sources: [{ url: 'https://epa.gov/reference', title: 'EPA' }, { url: 'javascript:bad' }] } }] }), [{ url: 'https://epa.gov/reference', title: 'EPA' }]);
+});
+
 test('photo mapping preserves evidence and JSON intent without provider state or sampling conflicts', () => {
     const source=request(), before=JSON.stringify(source), body=adapter.body(source);
     assert.equal(body.input[0].content[1].image_url,'data:image/jpeg;base64,'+jpeg);

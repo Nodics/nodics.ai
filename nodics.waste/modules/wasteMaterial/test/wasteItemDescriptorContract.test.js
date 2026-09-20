@@ -81,6 +81,7 @@ test('unapplied analysis projects physical and environmental observations; effec
  const result=descriptor.describe({code:'D',submissionStatus:'METADATA_SUGGESTED',submittedFacts:{preferredCollectionPointCode:'C'},metadata:{suggestion:{facts,recognition:{unknownFields:['materials','weight','dimensions','sizeClass']}}}},{materials});
  assert.equal(result.identity.name,'Remote');assert.equal(result.physical.weightEstimate.min,.1);
  assert.equal(result.environment.observations.recyclability.value,'POTENTIAL');
+ assert.equal(result.materials.length,0);assert.equal(result.components[0].ref.code,'CIRCUIT_BOARD');
  assert.deepEqual(result.unknownFields,['brand','model','conditionGrade']);
  const reviewed=descriptor.describe({code:'D',submissionStatus:'APPROVED',metadata:{reviewedFacts:{name:'Corrected',materials:[]},suggestion:{facts,recognition:{materials:facts.materials}}}},{materials});
  assert.deepEqual(reviewed.materials,[]);assert(reviewed.unknownFields.includes('weight'));
@@ -97,4 +98,72 @@ test('fresh analysis clears old unknown brand/model and photo replacement invali
  assert.equal(attached.metadata.suggestion,null);assert.deepEqual(attached.metadataSuggestionRefs,[]);
  assert.equal(attached.submittedFacts.brand,undefined);assert.equal(attached.submittedFacts.materials,undefined);
  assert.equal(attached.submittedFacts.name,'My item');assert.equal(attached.submittedFacts.preferredCollectionPointCode,'C');
+});
+
+
+test('sparse descriptor has explicit unknown ranges, observations and governed pending values', () => {
+ const result = descriptor.describe({code:'D', submissionStatus:'DRAFT', submittedFacts:{sizeClass:'UNKNOWN', dimensionsEstimate:{length:{min:1,max:2,unit:'CM',basis:'INFERRED'}}}});
+ assert.equal(result.identity.brand, null);
+ assert.equal(result.physical.size.basis, 'UNKNOWN');
+ assert.equal(result.physical.size.confidence, null);
+ assert.equal(result.physical.dimensionsEstimate.width.basis, 'UNKNOWN');
+ assert.equal(result.physical.dimensionsEstimate.height.min, null);
+ assert.equal(result.environment.observations.contamination.value, 'UNKNOWN');
+ assert.equal(result.environment.observations.hazardAssessment, 'UNVERIFIED');
+ assert.equal(result.environment.carbonImpact.status, 'NOT_ASSESSED');
+ assert.equal(result.environment.landfillDiversion.value, null);
+ assert.equal(result.reward.rewardStatus, 'NOT_ASSESSED');
+ assert.equal(result.metadataQuality.manualVerificationRequired, true);
+ assert.deepEqual(result.metadataQuality.lowConfidenceFields, []);
+});
+
+test('confidence reports effective field paths, independently from evidence quality flags and later policy', () => {
+ const record = {code:'D',submissionStatus:'METADATA_SUGGESTED', submittedFacts:{privatePartnerFact:{confidence:.1},weightEstimate:{min:1,max:2,unit:'KG',basis:'INFERRED',confidence:.5}},metadata:{suggestion:{recognition:{qualityFlags:['LABEL_UNREADABLE']}}}};
+ const result = descriptor.describe(record);
+ assert.deepEqual(result.evidenceReview.qualityFlags, ['LABEL_UNREADABLE']);
+ assert.deepEqual(result.metadataQuality.lowConfidenceFields, ['weightEstimate']);
+ const custom = {...descriptor, settings:()=>({...defaults.descriptor, minimumFieldConfidence:.4})};
+ assert.deepEqual(custom.describe(record).metadataQuality.lowConfidenceFields, []);
+});
+
+test('reviewed metadata does not inherit stale analysis confidence, safety or reward finality', () => {
+ const result = descriptor.describe({code:'D',submissionStatus:'REJECTED',metadata:{reviewedFacts:{sizeClass:'SMALL',materials:[{code:'CIRCUIT_BOARD',basis:'OPERATOR_VERIFIED'}]},suggestion:{recognition:{size:{basis:'TAXONOMY_POLICY',confidence:.99}}},valuation:{rewards:[{amount:'10'}]},manualReviewRequired:true}},{materials});
+ assert.equal(result.physical.size.confidence, null);
+ assert.equal(result.physical.size.basis, 'INFERRED');
+ assert.equal(result.components[0].hazardRelevant, null);
+ assert.equal(result.components[0].recoveryRelevant, null);
+ assert.equal(result.reward.rewardStatus, 'ESTIMATED');
+ assert.equal(result.metadataQuality.manualVerificationRequired, false);
+});
+
+test('governed zero diversion, failures, settlement and illustrative rewards keep their owner states', () => {
+ const indicator = {metricCode:'LANDFILL_DIVERSION',value:0,unitOfMeasure:'KG',status:'ESTIMATED',basis:'MODEL'};
+ const record = {code:'D',submissionStatus:'APPROVED',metadata:{approvedEstimate:{calculationStatus:'ESTIMATED',metadata:{environmentalAssessment:{status:'ESTIMATED',indicators:[indicator]}}},valuation:{version:'v1',rewards:[{amount:'0'}]},settlementStatus:'PENDING'}};
+ let result = descriptor.describe(record);
+ assert.equal(result.environment.landfillDiversion.value, 0);
+ assert.equal(result.environment.landfillDiversion.status, 'ESTIMATED');
+ assert.equal(result.reward.rewardStatus, 'ESTIMATED');
+ record.metadata.settlementStatus = 'COMPLETED';
+ assert.equal(descriptor.describe(record).reward.rewardStatus, 'CONFIRMED');
+ record.metadata.valuation.illustrative = true;
+ assert.equal(descriptor.describe(record).reward.rewardStatus, 'ILLUSTRATIVE');
+ record.metadata.approvedEstimate = {calculationStatus:'FAILED',metadata:{environmentalAssessment:{status:'FAILED',indicators:[{...indicator,value:null,status:'FAILED'}]}}};
+ result = descriptor.describe(record);
+ assert.equal(result.environment.status, 'FAILED');
+ assert.equal(result.environment.landfillDiversion.status, 'FAILED');
+ assert.equal(result.environment.landfillDiversion.value, null);
+});
+
+
+test('prepared submissions and final reviewed assets retain trusted size provenance', async () => {
+ const provenance = {value:'SMALL',basis:'TAXONOMY_POLICY',policyVersion:'sizes-v1',confidence:null};
+ const analysis = {proposal:{name:'Device',itemTypeCode:'DEVICE',categoryCode:'ELECTRONICS',sizeClass:'SMALL'},recognition:{assessment:'SUPPORTED',size:provenance},evidenceReview:{manualApprovalRequired:false}};
+ const store = {customer:()=>({code:'CUSTOMER'}),one:async()=>null,create:async(_schema,_request,model)=>model};
+ SERVICE.DefaultWasteMetadataAnalysisService = {suggestion:()=>({code:'S'})};
+ const service = {...operations,store:()=>store,validateFacts:async()=>{}};
+ const record = await service.createPrepared({idempotencyKey:'prepared-123',mediaDescriptor:{code:'PHOTO',ownerReference:'CUSTOMER'},preparedAnalysis:analysis});
+ assert.deepEqual(record.submittedFacts.sizeProvenance, provenance);
+ const reviewed = descriptor.describe({code:'A',assetStatus:'OWNED',metadata:{facts:record.submittedFacts}});
+ assert.equal(reviewed.physical.size.basis, 'TAXONOMY_POLICY');
+ assert.equal(reviewed.physical.size.confidence, null);
 });

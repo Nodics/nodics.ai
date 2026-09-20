@@ -230,11 +230,12 @@ module.exports = {
             contractVersion: 1, mappingVersion: settings.environmentalAssessment.version,
             status, assessedAt: result.calculatedAt, publicClaimAllowed: false,
             indicators,
+            metricEvidence: provider.metricEvidence || [],
             inputs: this.provenanceFields(provider.input, ['weightKg', 'weightSource', 'quantity', 'defaultUnitWeightKg', 'defaultWeightSource', 'weightMinKg', 'weightMaxKg', 'unitWeightMinKg', 'unitWeightMaxKg', 'weightConfidence', 'weightBasis', 'weightAggregation', 'itemTypeCode', 'categoryCode']),
-            factors: this.provenanceFields(provider.parameters, ['factorKgCO2ePerKg', 'factorSource', 'factorSetVersion', 'baselineFactor', 'treatmentFactor', 'sourceFactorUnit', 'kgPerShortTon', 'savingsMinKgCO2e', 'savingsMaxKgCO2e']),
+            factors: this.provenanceFields(provider.parameters, ['factorKgCO2ePerKg', 'factorSource', 'factorSetVersion', 'baselineFactor', 'treatmentFactor', 'sourceFactorUnit', 'kgPerShortTon', 'savingsMinKgCO2e', 'savingsMaxKgCO2e', 'energyFactorKWhPerKg', 'energyBaselineFactor', 'energyTreatmentFactor', 'energySourceFactorUnit', 'kWhPerMillionBtu', 'energyMinKWh', 'energyMaxKWh']),
             methodology: Object.assign({ formulaVersion: result.formulaVersion || null, profileCode: result.profileCode,
                 providerCode: provider.code || null, providerVersion: provider.version || null, isMock: provider.isMock === true },
-                this.provenanceFields(provider, ['assessmentRef', 'methodologyRef', 'geography', 'baselineScenario', 'treatmentScenario', 'systemBoundary', 'referenceYear', 'factorDatasetRef', 'assessmentBasis'])),
+                this.provenanceFields(provider, ['assessmentRef', 'methodologyRef', 'geography', 'baselineScenario', 'treatmentScenario', 'systemBoundary', 'referenceYear', 'factorDatasetRef', 'assessmentBasis', 'assessmentLimitation', 'referenceScenarioVersion', 'referenceScenarioExplanation', 'weightReference', 'weightReferenceUrl', 'comparisonReferenceUrl'])),
             carbonCredits: { status: states.not_assessed, issuedQuantity: null, registryReference: null,
                 reason: 'Credit eligibility and issuance require separate programme verification and registry evidence. An impact estimate does not issue credits.' }
         };
@@ -272,7 +273,7 @@ module.exports = {
         });
         const calculation = response.calculation || {};
         const parameters = this.provenanceFields(calculation.parameters,
-            ['factorKgCO2ePerKg', 'factorSource', 'factorSetVersion', 'precision', 'roundingMode', 'defaultUnitWeightKg', 'defaultWeightSource', 'baselineFactor', 'treatmentFactor', 'sourceFactorUnit', 'kgPerShortTon', 'savingsMinKgCO2e', 'savingsMaxKgCO2e']);
+            ['factorKgCO2ePerKg', 'factorSource', 'factorSetVersion', 'precision', 'roundingMode', 'defaultUnitWeightKg', 'defaultWeightSource', 'baselineFactor', 'treatmentFactor', 'sourceFactorUnit', 'kgPerShortTon', 'savingsMinKgCO2e', 'savingsMaxKgCO2e', 'energyFactorKWhPerKg', 'energyBaselineFactor', 'energyTreatmentFactor', 'energySourceFactorUnit', 'kWhPerMillionBtu', 'energyMinKWh', 'energyMaxKWh']);
         const provenance = {
             service: settings.providerService,
             code: identity.code, version: identity.version, isMock: identity.isMock,
@@ -286,7 +287,18 @@ module.exports = {
             }, formulaVersion: response.formulaVersion, parameters: parameters }),
             inputFingerprint: this.fingerprint({ sourceRef: request.sourceRef, profile: request.profile, facts: request.facts })
         };
-        Object.assign(provenance, this.provenanceFields(response, ['assessmentRef', 'methodologyRef', 'geography', 'baselineScenario', 'treatmentScenario', 'systemBoundary', 'referenceYear', 'factorDatasetRef', 'assessmentBasis']));
+        if (response.metricEvidence !== undefined) {
+            if (!Array.isArray(response.metricEvidence) || response.metricEvidence.length > 32) this.fail('ERR_WASTE_IMPACT_PROVIDER_RESULT_INVALID', 'Invalid metric evidence');
+            provenance.metricEvidence = response.metricEvidence.map(evidence => {
+                if (!codes.has(evidence.metricCode) || !Number.isFinite(evidence.min) || !Number.isFinite(evidence.max) || evidence.min > evidence.max ||
+                    typeof evidence.explanation !== 'string' || evidence.explanation.length > 512 ||
+                    typeof evidence.sourceUrl !== 'string' || evidence.sourceUrl.length > 2048 || (evidence.sourceUrl && !/^https?:\/\//.test(evidence.sourceUrl)))
+                    this.fail('ERR_WASTE_IMPACT_PROVIDER_RESULT_INVALID', 'Invalid metric evidence');
+                return { metricCode: evidence.metricCode, min: evidence.min, max: evidence.max, sourceUrl: evidence.sourceUrl, explanation: evidence.explanation };
+            });
+        }
+        if (typeof response.model === 'string') provenance.model = response.model.slice(0, 120);
+        Object.assign(provenance, this.provenanceFields(response, ['assessmentRef', 'methodologyRef', 'geography', 'baselineScenario', 'treatmentScenario', 'systemBoundary', 'referenceYear', 'factorDatasetRef', 'assessmentBasis', 'assessmentLimitation', 'referenceScenarioVersion', 'referenceScenarioExplanation', 'weightReference', 'weightReferenceUrl', 'comparisonReferenceUrl']));
         return { metrics: metrics, formulaVersion: response.formulaVersion,
             calculationStatus: identity.isMock ? VOCABULARY.statuses.estimated : response.calculationStatus,
             metadata: { impactProvider: provenance } };
@@ -305,18 +317,35 @@ module.exports = {
             correlationId: request.correlationId
         }));
         const resultRequest = this.snapshot(request);
+        const attempts = [];
         try {
-            const provider = this.provider(settings);
-            const response = await this.invokeProvider(provider, input, settings, context);
-            const normalized = this.normalizeProviderResult(response, input, settings);
-            return this.withEnvironmentalAssessment(Object.assign(this.result(resultRequest, normalized.metrics), normalized), settings);
+            const fallbacks = settings.fallbackProviderServices || [];
+            if (!Array.isArray(fallbacks) || fallbacks.length > 4 || fallbacks.some(name => typeof name !== 'string' || !name.trim()))
+                this.fail('ERR_WASTE_IMPACT_CONFIGURATION_INVALID', 'Invalid fallback provider configuration');
+            let lastError;
+            for (const service of [...new Set([settings.providerService, ...fallbacks])]) {
+                const selected = this.freeze({ ...settings, providerService: service });
+                try {
+                    const response = await this.invokeProvider(this.provider(selected), input, selected, context);
+                    const normalized = this.normalizeProviderResult(response, input, selected);
+                    if (attempts.length && normalized.metadata.impactProvider.isMock)
+                        this.fail('ERR_WASTE_IMPACT_PROVIDER_RESULT_INVALID', 'Mock fallback is prohibited');
+                    const result = this.withEnvironmentalAssessment(Object.assign(this.result(resultRequest, normalized.metrics), normalized), selected);
+                    result.metadata.impactProvider.attempts = [...attempts, { service, status: 'SUCCEEDED' }];
+                    return result;
+                } catch (error) {
+                    lastError = error;
+                    attempts.push({ service, status: 'FAILED', errorCode: Object.prototype.hasOwnProperty.call(STATUS, error?.code) ? error.code : 'ERR_WASTE_IMPACT_PROVIDER_FAILED' });
+                }
+            }
+            throw lastError;
         } catch (error) {
             const code = error && Object.prototype.hasOwnProperty.call(STATUS, error.code) ?
                 error.code : 'ERR_WASTE_IMPACT_PROVIDER_FAILED';
             if (settings.failureMode === 'RESULT') {
                 return this.withEnvironmentalAssessment(Object.assign(this.result(resultRequest, []), {
                     calculationStatus: VOCABULARY.statuses.failed,
-                    metadata: { impactProvider: { service: settings.providerService, errorCode: code, publicClaimAllowed: false } }
+                    metadata: { impactProvider: { service: settings.providerService, errorCode: code, attempts, publicClaimAllowed: false } }
                 }), settings);
             }
             this.fail(code, STATUS[code].message);

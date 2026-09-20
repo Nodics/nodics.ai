@@ -37,7 +37,8 @@ dependency, but that does not make every setting a Foundation-owned setting.
 | Catalogue limits and discovery behavior | Product capability |
 | Customer store identity and application choices | Customer project/application configuration |
 | Shared customer administration descriptors | A project configuration module explicitly selected by the administrative runtime |
-| Deployment-wide CORS and database baseline | Environment configuration |
+| Standard CORS and database defaults | Owning framework capabilities (nRouter and MongoDB) |
+| Changed CORS origins and database deployment settings | Environment configuration |
 | Active module composition, ports and isolated database names | Server configuration |
 | Instance-specific differences | Node configuration |
 | Shared build/start/validation mechanics | Foundation's non-runtime nTooling package |
@@ -315,7 +316,7 @@ Use an explicit `$config` object only when a value needs resolution:
 - `path`: a `base` of `project`, `framework`, `environment`, `server`, `file`,
   or a binding that resolves to an absolute path, plus a `relative` string.
   This supports explicit sibling checkout paths; it is not a filesystem sandbox.
-- `composition`: the selected environment profile's explicit composition `name`
+- `composition`: the effective `activeModules.compositions` entry selected by `name`
   and optional `field`. Its declared `environmentVariable` chooses domains;
   `emptySelections` declares aliases, with only `none` supplied by default.
   No application identity or environment-variable name is inferred by nConfig.
@@ -385,3 +386,184 @@ checkout itself is supported. If a generated folder or its parent is a symlink,
 correct the server layout and rerun the same selected-server command; do not
 remove unrelated data or bypass the check. This protects other servers and shared
 framework sources while keeping one generated set for all nodes of the server.
+
+## Defaults that stay with their owners
+
+A project selects its business and deployment choices while the owning capability supplies technical defaults. The following examples show the important boundaries.
+
+| Configuration | Inherited owner behavior | Project or deployment choice |
+| --- | --- | --- |
+| API exposure | Each capability declares its categories; nRouter enforces them | Intentional category denies or an explicit compatibility exception |
+| Copilot conversation API | Disabled until selected | `copilot.api.enabled`, authorized sources and qualified providers |
+| Application preparation | BackOffice target mechanics and nImport profile templates | Target connection, enabled profiles, exact approved releases |
+| Database and search | Existing consumer default merge | Participating modules, isolated databases, provider and fallback policy |
+| Runtime authority | nService resolves only explicitly selected context defaults | Common context and exact schema/module exceptions |
+| Local reset | Inert owner inventories and transport defaults | Explicit enablement, targets, environment allowlist and confirmations |
+| Shipping and returns | Fulfillment validates the method contract | Offered methods, prices, currency, promises and eligibility |
+
+### Customize and extend safely: exact collections
+
+A shorter ordinary array still has legacy positional merge behavior. Declare a complete selection explicitly:
+
+```js
+module.exports = {
+  fulfillmentCore: { customerShipping: { methods: {
+    $config: 'replace',
+    value: [{ code: 'LOCAL_COURIER', price: '4.00', currency: 'GBP', requiresAddress: true }]
+  } } }
+};
+```
+
+Use `value: []` to select no methods. To change entries by identity, use
+`{ $config: 'keyed', key: 'code', entries: [{ code: 'LOCAL_COURIER', enabled: false }], remove: ['PICKUP'] }`. Existing identities keep their order; new identities append. Reordering uses complete replacement. A nested source `paths` list also needs replacement when reducing its scope. Duplicate identities, simultaneous update/removal and malformed operations fail before configuration changes. Other tenants retain their own settings; a failed all-tenant update publishes none of its candidates.
+
+API categories and enablement are separate from permission. An unknown category is denied by default; migrating older custom routes requires declaring their category in the customer capability. Copilot's API switch is `copilot.api.enabled`; remove retired `copilot.enabled` and `copilot.core.enabled` switches.
+
+A shared endpoint binding resolves when its server contribution loads. Override `servers.<alias>` in a later node when changing that node's destination. BackOffice targets and nImport profile templates resolve at consumption time, so their owning defaults can combine with later deployment selections without forward references during discovery.
+
+Framework shipping and return lists are empty until a store selects them. Package and content metadata does not select a release version: approved immutable version pins remain explicit. A remote workflow uses an allowed protocol and connection alias; the target domain retains validation, permissions and persistence.
+
+When migrating, first preserve a configuration/consumer comparison, then remove repeated declarations, run the focused owner and customer tests, and restart through the existing lifecycle path. A rejected configuration update preserves the previous effective value; a stale running process is not evidence that new source values were applied. Never dump credentials or complete effective configuration into diagnostics.
+
+## Runtime callback authority
+
+A module's transport settings select a peer; they do not prove a business action
+was approved. Remote Process actions use the existing scoped service identity
+and a current single-claim execution held by Process. Receiving domains claim
+authoritative context, enforce their own revision/lifecycle rules and preserve
+idempotency on governed retries. Human access tokens and supplied decision
+payloads cannot substitute for that boundary. Task and immutable execution
+records remain under the owning lifecycle APIs, including generic CRUD denial.
+
+
+## Minimal topology and shared deployment references
+
+A partner supplies each deployment value once and inherits general capability
+defaults. nConfig automatically activates the selected environment, server and
+node; `activeModules.modules` contains additional capabilities/providers only.
+This also applies to generated topologies, including an empty optional selection.
+A server inherits its environment's unchanged database URI while retaining its
+isolated database name and intentional exceptions.
+
+Peer aliases reference a canonical environment endpoint through existing `ref`
+bindings. Keep each alias's `remoteOnly`, advertised address and protocol shape;
+an HTTP-only alias must not acquire HTTPS fields during cleanup. Change the
+canonical endpoint before environment loading, or override the actual
+`servers.<alias>.endpoint` in a later node/tenant contribution. Missing or cyclic
+references fail preparation. References are resolved values, not live links.
+
+Retain equal security, authority and provider qualification pins only with their
+purpose and review trigger documented. Do not infer credentials, grants, ports,
+publication permission or reset scope from names. Before adopting a reduction,
+compare prepared module graphs and effective values, then exercise empty/reordered
+composition, canonical endpoint changes and later consumer overrides. Preparation
+is not live provider or authenticated deployment acceptance.
+
+
+### Consumer defaults and property ownership
+
+Check the consumer before copying configuration. Database/search modules merge
+selected module entries with the environment/default connection, so participation
+can remain explicit without repeating connection values. Environment-level
+release class and shared provider addresses stay in the environment. Capabilities
+that are not active must not gain configuration merely to make a file look complete.
+
+For CORS, nRouter owns header baselines and empty `allowedHeaderOverrides` /
+`exposedHeaderOverrides` maps. An application declares only additions/removals as
+header-name booleans. Baseline names match case-insensitively; keep map key spelling
+consistent across layers and reject conflicting case variants. An override does
+not enable CORS, permit an origin or allow credentials. Explicit list replacement
+and normal nConfig collection semantics remain available.
+
+A complete refactor classifies every remaining declaration and validates the
+actual consumers. Raw configuration equality alone misses copied defaults and
+can also mistake safe representation changes for changed runtime behavior.
+
+
+## Origins from configured frontend endpoints
+
+nRouter constructs browser origins from `httpHardening.cors.originEndpoints`,
+using framework `originDefaults` of HTTP and localhost for structured
+`{ code, port }` entries. A keyed endpoint map also accepts full origin URLs.
+nRouter supplies enabled CORS and standard localhost application origins
+(Axis 3100, Nexus 3200, Agora 3300/3400/3500, Circa 3600). Deployments declare
+only changed origins or restrictions in existing security properties. nRouter never reads frontend lifecycle metadata. Backend
+startup and API tests require no frontend repository or running UI. Host and port values must be the published frontend addresses
+seen by the browser, including reverse-proxy or container mapping.
+
+For a custom project/environment, override `originDefaults.host` and `.protocol`
+for structured endpoints, or supply exact URL endpoint values. Replace the
+endpoint collection using `$config: 'replace'` when changing the deployment.
+`originEndpointOverrides: { store: false }` denies the named frontend and follows
+its changed host/port. Explicit allowed origins remain additive; every explicit
+or endpoint denial wins. Clear obsolete identity overrides when replacing sources.
+CORS activates for declared browser endpoints, with credential support and exact
+origin enforcement. Explicit false disables it; no declared endpoints grants no origins.
+
+Only declared sources are used. No request header or backend-listener discovery
+can grant an origin. Missing endpoint fields, duplicate frontend codes, unknown
+restriction codes, malformed ports/URLs and unsafe endpoint data reject. Source
+metadata is read at configuration load; later resolved property changes are
+observed by the router. Authored endpoint edits require normal configuration reload.
+
+The complete Local and custom-HTTPS examples, explicit-origin alternative and
+collection replacement guidance are in
+`nRouter/llm/examples/README.md#configure-browser-origins`; the exact behavior and
+failure contract is in `nRouter/llm/contracts/README.md#configured-browser-origin-construction`.
+Project owners supply deployment choices; framework maintainers own construction,
+validation and regression coverage. Operators validate browser access after the
+normal build/restart; prepared configuration checks alone do not prove deployment.
+
+## Mandatory configuration ownership restrictions
+
+Framework providers own Local infrastructure defaults, including Elasticsearch at
+`http://localhost:9200`. A Local customer inherits them. Other environments supply
+only actual connection differences. Runtime composition and deployment credentials
+remain explicit; framework policy must not be copied into customer layers.
+
+The environment descriptor and profile binding are retired. nConfig projects peer
+endpoints from their owning server properties while preserving contribution timing,
+node overrides and cycle checks. Existing metadata supplies module identity and
+package versions. Optional application composition uses `activeModules.compositions`.
+
+nAuth binds deployment secrets through existing configuration inputs and keeps
+bootstrap proof separate from current runtime proof. Shared auth state remains
+strict; no compatibility bypass or credential rotation is part of cleanup. Profile
+owns initializer identity checks and runtime grants. nImport uses `environment.class`
+and permits authorized manual Sample execution while only Init can run on startup.
+Project validation and principle audit enforce the nSetup configuration restrictions.
+
+## MongoDB default database names
+
+The MongoDB adapter under nDatabase supplies `masterLocal` and `testLocal` at
+`database.default.mongodb.master.databaseName` and `.test.databaseName`.
+Projects and Local environments omit unchanged values. Server/node/tenant layers
+retain explicitly isolated names, and container deployments retain their genuine
+connection and database differences. Changing defaults does not rename or migrate
+existing databases; an explicit override continues to select its existing database.
+
+## Redis default prefix
+
+The nCache Redis provider supplies `localRuntimeAuth` at
+`cache.default.engines.redis.options.prefix`. Redis remains disabled by default;
+a Local environment selecting the provider enables it with `enabled: true` and
+inherits unchanged options. Later layers may override the prefix for deployment
+isolation. Engine startup and channel/module/tenant key construction continue to
+follow nCache's existing behavior; this option does not enable an engine or channel.
+
+## Capability-owned acceptance tooling
+
+Shared acceptance defaults live in the owning module: nTooling supplies common
+journey selection, Waste Core supplies Waste checks, BackOffice supplies registry
+checks, and CMS supplies guided publication mechanics. The existing tooling reader
+merges these inert contributions before project and deployment overrides.
+`projectRuntime` selects a declared server by code or semantic role; missing or
+ambiguous matches fail. Ports, labels and launch commands come from that server.
+Enabled initialization profiles come from its data-release configuration. Reading
+these defaults never starts services, imports data or activates optional modules.
+
+The Nexus accelerator illustrates content ownership: `nexusCore` supplies inert
+administrative/acceptance descriptors, while `nexus.web` owns immutable reference
+releases and CMS/media defaults. Platform selects only the descriptor capability;
+WCMS and Engagement select their required content contribution. Customer projects
+keep application overrides and explicit composition, with one source owner per pack.

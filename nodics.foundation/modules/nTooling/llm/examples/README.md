@@ -37,3 +37,50 @@ before writing. The generic data-manifest command refreshes only explicitly
 declared development-baseline checksums; changed immutable releases fail before
 any manifest write. Environment composition selects an explicit code or the sole
 declared composition and reads only its declared environment variable.
+
+The existing design-principle governance test also removes final-review
+headings/discovery anchors in memory. Missing guidance fails the audit without
+editing source. A separate real review must inspect the changed-file inventory,
+configuration consumers and authority boundaries and record its decision.
+
+Qualification contract runners report `environment: null` and
+`executionScope: ISOLATED_CONTRACT_TESTS`; they must not claim a named deployment
+was executed. The focused evidence-scope regression preserves success/failure
+while preventing a fabricated environment label. Deployment evidence requires
+an actual selected deployment and separately observed results.
+
+Keep `nodics.owns` aligned with authored source responsibilities. The existing
+structure audit reports missing source ownership; generated server artifacts do
+not transfer framework ownership to the customer. Resolve these findings during
+the mandatory final review rather than treating a root test as their acceptance.
+
+## Additional capability selections
+
+A generated server with selected environment `preview` and server `worker`
+declares `activeModules: { groups: [], modules: ['applicationCore'] }` when the
+operator selects that application module. It does not repeat `preview` or
+`worker`. With no optional modules/providers, `modules` remains empty. nConfig
+keeps the selected topology active; unrelated capabilities remain unselected.
+See `test/topologyPlanWorkflow.test.js` for generated output and multi-environment
+empty-selection coverage.
+
+
+Backend startup, readiness and API acceptance must work without any frontend
+repository or running frontend server. Do not declare frontend launch commands,
+paths, lifecycle or UI tests in backend properties or backend acceptance runners.
+Frontend applications own their servers, outage/retry presentation, and frontend
+tests. Backend CORS and browser-session contracts are tested through APIs using
+explicit security policy; they do not confer frontend lifecycle ownership.
+
+Acceptance consumers read the selected environment through nTooling, then use
+`projectRuntime(profile, { role: "WCMS_STAGED" })` (or the capability's own role).
+Override an ambiguous role with an explicit server selection; reuse its port and
+launch descriptor rather than repeating either in environment acceptance metadata.
+
+Customer projects may declare `bootstrapIdentity.adminPassword` in their own
+`config/properties.js`, with environment/server overrides through nConfig. The
+value must meet nAuth strength policy. Project validation permits this direct
+admin-bootstrap value only; framework defaults, service credentials and binding
+fallbacks retain deployment-input requirements. No credential values belong in
+examples, diagnostics or published documentation. Configuration changes apply to
+future initialization; existing accounts require Profile password operations.

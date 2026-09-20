@@ -11,34 +11,73 @@
 
 /** @module pricing/config/properties @description Defines Commerce capability and schema access policies. @layer config @owner pricing */
 module.exports = {
-    // Inert inventory; an allowed local server must explicitly select this capability.
-    localResetProvider: {
-        "contributions": {
-            "pricing": {
-                "serviceNames": {
-                    "DefaultPriceBookService": true,
-                    "DefaultPriceDecisionService": true,
-                    "DefaultPriceQuoteService": true,
-                    "DefaultPriceRowService": true
-                }
-            }
-        }
+  // Inert inventory; an allowed local server must explicitly select this capability.
+  localResetProvider: {
+    contributions: {
+      pricing: {
+        serviceNames: {
+          DefaultPriceBookService: true,
+          DefaultPriceDecisionService: true,
+          DefaultPriceQuoteService: true,
+          DefaultPriceRowService: true,
+        },
+      },
     },
+  },
 
-    pricing: {
-        enabled: true,
-        customerSummary: {
-            enabled: true,
-            defaultCurrency: 'USD',
-            defaultQuantity: '1',
-            maximumProductsPerRequest: 100,
-            includeEvidence: false,
-            missingPriceBehavior: 'omit'
-        }
+  pricing: {
+    enabled: true,
+    customerSummary: {
+      enabled: true,
+      defaultCurrency: "USD",
+      defaultQuantity: "1",
+      maximumProductsPerRequest: 100,
+      includeEvidence: false,
+      missingPriceBehavior: "omit",
     },
-    schemaPolicies: { pricing: {
-        operational: { accessGroups: { adminGroup: 10, commerceOperatorUserGroup: 10, serviceAccountUserGroup: 10 } },
-        tenantOwned: { accessGroups: { adminGroup: 10, commerceOperatorUserGroup: 10, serviceAccountUserGroup: 10 } },
-        customerOwned: { accessGroups: { adminGroup: 10, commerceOperatorUserGroup: 10, serviceAccountUserGroup: 10, customerUserGroup: 10 }, ownership: { enabled: true, ownerProperty: 'ownerId', bypassGroups: { adminGroup: true, commerceOperatorUserGroup: true, serviceAccountUserGroup: true }, subjectGroups: { customerUserGroup: true }, principalTypes: { customer: true } } }
-    } }
+  },
+  schemaPolicies: {
+    pricing: {
+      operational: {
+        accessGroups: {
+          adminGroup: 10,
+          commerceOperatorUserGroup: 10,
+          serviceAccountUserGroup: 10,
+        },
+      },
+      tenantOwned: {
+        accessGroups: {
+          adminGroup: 10,
+          commerceOperatorUserGroup: 10,
+          serviceAccountUserGroup: 10,
+        },
+      },
+      customerOwned: {
+        accessGroups: {
+          adminGroup: 10,
+          commerceOperatorUserGroup: 10,
+          serviceAccountUserGroup: 10,
+          customerUserGroup: 10,
+        },
+        ownership: {
+          enabled: true,
+          ownerProperty: "ownerId",
+          bypassGroups: {
+            adminGroup: true,
+            commerceOperatorUserGroup: true,
+            serviceAccountUserGroup: true,
+          },
+          subjectGroups: { customerUserGroup: true },
+          principalTypes: { customer: true },
+        },
+      },
+    },
+  },
+  apiExposure: {
+    categories: {
+      commercePublicationIngestion: {
+        enabled: true,
+      },
+    },
+  },
 };

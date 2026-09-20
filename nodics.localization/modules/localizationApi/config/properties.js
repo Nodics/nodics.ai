@@ -17,15 +17,25 @@
  * @override Project, environment, server, node, tenant, or customer layers may override these defaults through Nodics configuration layering.
  */
 module.exports = {
-    localization: {
-        api: {
-            enabled: true,
-            contractVersion: 0,
-            phase: 'REGISTRY_AND_BUNDLES',
-            maximumNamespaces: 50,
-            maximumBundleKeys: 10000,
-            compressionThresholdBytes: 1024,
-            cacheControl: 'public, max-age=60, stale-while-revalidate=300'
-        }
-    }
+  localization: {
+    api: {
+      enabled: true,
+      contractVersion: 0,
+      phase: "REGISTRY_AND_BUNDLES",
+      maximumNamespaces: 50,
+      maximumBundleKeys: 10000,
+      compressionThresholdBytes: 1024,
+      cacheControl: "public, max-age=60, stale-while-revalidate=300",
+    },
+  },
+  apiExposure: {
+    categories: {
+      localizationManagement: {
+        enabled: true,
+      },
+      localizationPublic: {
+        enabled: true,
+      },
+    },
+  },
 };

@@ -48,3 +48,7 @@ A Local server selects Inventory and can disable the optional adjustment service
 through a later keyed override. A Production server remains disabled. A selected
 CMS inventory is never inferred merely because the same repository contains CMS.
 Search projection targets retain their explicit module/index allowlist.
+
+## Inventory scope and optional compositions
+
+Maintain missing service inventories with the model-owning capability. A server may replace repeated active model names with a selected inventory only after comparing the resolved service set. Preserve explicit optional/historical cleanup names when their owner is inactive; absence from today's graph is not proof that historical cleanup can be removed. Optional accelerator selections follow the same environment composition that activates their inventory. Do not weaken unknown-inventory rejection to hide an invalid selection. Common provider transport defaults never infer new reset targets.

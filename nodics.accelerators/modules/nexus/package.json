@@ -1,0 +1,33 @@
+{
+  "name": "nexus",
+  "version": "0.0.0",
+  "index": "92.89",
+  "private": true,
+  "main": "nodics.js",
+  "description": "Reusable Nexus website accelerator composition.",
+  "license": "SEE LICENSE IN LICENSE",
+  "nodics": {
+    "kind": "group",
+    "displayName": "Nexus",
+    "runtimeModule": true,
+    "loadableByNodicsModuleLoader": true,
+    "owns": [
+      "composition",
+      "configuration",
+      "llm"
+    ],
+    "runtime": {
+      "router": false,
+      "publish": false,
+      "web": false
+    },
+    "extends": [
+      "nodics.wcms"
+    ]
+  },
+  "scripts": {},
+  "requiredModules": [
+    "nexusCore",
+    "nexus.web"
+  ]
+}

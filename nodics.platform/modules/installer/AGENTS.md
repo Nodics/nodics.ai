@@ -48,3 +48,6 @@
   Application Builder source of truth.
 - Preserve the standalone `npx github:Nodics/nodics.installer` path for
   beginners who do not yet have Nodics locally.
+
+Route-category defaults belong to this capability; deployments supply only intentional overrides.
+Preserve nRouter enforcement and independent route authorization. See [exposure ownership](../../../nodics.foundation/modules/nRouter/llm/contracts/README.md#capability-owned-exposure-defaults).

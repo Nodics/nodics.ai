@@ -35,3 +35,8 @@ and central shutdown include engine clients and channel subscribers exactly
 once. Attempt every close even if another fails; preserve the original failure.
 A subscriber whose connection/subscription fails before registration must close
 at the Redis provider boundary. Never leave detached startup subscriptions.
+
+Redis provider properties own the default `cache.default.engines.redis.options.prefix`
+value `localRuntimeAuth`. Inherit it through nConfig; a Local environment enabling
+Redis declares only `enabled: true`. Later deployment layers may override the prefix
+for isolation. A prefix does not enable Redis or replace channel/module/tenant keying.

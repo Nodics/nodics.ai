@@ -42,3 +42,24 @@ The Electronics navigation anchor opens its scoped dashboard. Its operational
 children are Submissions and Review queue; no duplicate Overview link is published.
 
 WARM electronics is an optional provider over Waste Impact; see `llm/contracts/e-waste-domain.md`. Versioned factors, weight ranges and potential-treatment assumptions are saved. Operator history/reassessment/acceptance use Waste-owned operations; changing providers never overwrites an old assessment or reward.
+
+Route-category defaults belong to this capability; deployments supply only intentional overrides.
+Preserve nRouter enforcement and independent route authorization. See [exposure ownership](../../../../../nodics.foundation/modules/nRouter/llm/contracts/README.md#capability-owned-exposure-defaults).
+
+Canonical customer resolution forwards the authenticated customer bearer for its
+Profile self-query. Never replace it with a service token or accept identity from
+request bodies. Owner-only operations keep their scoped internal transport.
+
+WARM v2 adds independently sourced energy savings and prospective recycling input
+mass/count. Preserve input and energy ranges and never equate input mass with
+completed diversion. See the sourced-energy section in the domain contract.
+
+Small-charger reference scenarios must remain explicitly labelled proxies with
+saved version, sources and weight assumptions; never promote them to validated
+charger factors or achieved recycling outcomes. See the domain contract.
+
+Provider v4 preserves available recycling-input mass/count as INPUT_ONLY when carbon coverage or weight is absent (warm.allowPartialAssessment). Preserve assessmentLimitation; never apply mixed-load factors to an unidentified individual item. See the domain contract.
+
+Provider v5 adds a configurable, disclosed bundle reference comparison using total eligible mass once. It does not establish the bundle composition or issue credits. See the bundle reference comparison contract.
+
+Submission assessment is mandatory in eWaste: automatic preparation and a Waste confirmation guard enforce it. Catalogue coverage tests distinguish numerical coverage from explicit partial assessments; see the mandatory submission assessment contract.

@@ -129,3 +129,11 @@ audit; the runtime proof does not replace caller permission checks. Business
 deactivation blocks new instances while existing instances retain their normal
 completion, cancellation and recovery contract. Missing/stale authority fails
 closed without a second activation registry.
+
+## Selected remote action protocols
+
+The existing action registry accepts explicit records or names from `process.actionAdapters.definitions`. Definitions are inert; `allowedActions` remains the deployment allowlist. Unknown names fail, disabled adapters reject execution, and graph-supplied service/URL/method values cannot expand the allowlist. Use nConfig replacement for a complete selected list.
+
+`DefaultProcessRemoteActionAdapterService` delegates standard Editorial callbacks through nService. Deployment `process.remoteActions.targets.editorial.connectionName` supplies the peer alias. Workflow owns only the bounded execution envelope and transport; Editorial owns decision transformation, source revision correlation and publication through nPublish. The transport forces remote dispatch and WCMS Staged authority, forwards caller access/tenant/enterprise/correlation context, uses a bounded timeout and one attempt, and propagates failures. No local Editorial activation, arbitrary URL fallback, direct fetch implementation or internal-token privilege escalation is permitted.
+
+The selected `editorial.applyDecision` and `editorial.publishApproved` protocols invoke Editorial-owned callbacks. The CMS decision protocol continues using its existing callback service. Publication callback technical defaults belong to Workflow; each deployment selects its actual CMS connection. An unavailable peer or missing caller identity leaves the action failed for normal Process recovery.

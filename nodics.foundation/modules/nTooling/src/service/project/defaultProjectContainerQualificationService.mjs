@@ -20,13 +20,13 @@
 import { spawnSync } from 'node:child_process';
 import fs from 'node:fs';
 import path from 'node:path';
-import { readContainerEnvironmentProfile } from './defaultProjectContainerProfileService.mjs';
+import { readContainerEnvironmentConfiguration } from './defaultProjectContainerConfigurationService.mjs';
 
 const projectRoot = process.cwd();
 const workspaceRoot = path.resolve(projectRoot, '..');
 
 function profile(code) {
-  const selected = readContainerEnvironmentProfile(projectRoot, code);
+  const selected = readContainerEnvironmentConfiguration(projectRoot, code);
   return {
     code: selected.code,
     ...selected,
@@ -111,6 +111,7 @@ function acceptanceEnvironment(selected, kind = 'platform') {
     ...process.env,
     ...values,
     NODICS_ACCEPTANCE_RUNTIME: selected.environment,
+    ENV: selected.environment,
     AXIS_LOGIN_ID: process.env.AXIS_LOGIN_ID || 'admin',
     AXIS_PASSWORD: process.env.AXIS_PASSWORD || values.BOOTSTRAP_ADMIN_PASSWORD,
     NODICS_SERVICE_API_KEY: process.env.NODICS_SERVICE_API_KEY || values.BOOTSTRAP_SERVICE_API_KEY,
@@ -124,7 +125,6 @@ function acceptanceEnvironment(selected, kind = 'platform') {
       NODICS_COMMERCE_ONLINE_URL: process.env.NODICS_COMMERCE_ONLINE_URL || urls.commerce,
       NODICS_COMMERCE_URL: process.env.NODICS_COMMERCE_URL || urls.commerce,
       NODICS_WCMS_ONLINE_URL: process.env.NODICS_WCMS_ONLINE_URL || urls.wcmsOnline,
-      AXIS_ORIGIN: process.env.AXIS_ORIGIN || urls.axis
     };
   }
   return {
@@ -132,8 +132,8 @@ function acceptanceEnvironment(selected, kind = 'platform') {
     AXIS_PLATFORM_URL: urls.platform,
     AXIS_WCMS_URL: urls.wcmsStaged,
     AXIS_PROCESS_URL: urls.process,
+    AXIS_LOCATION_URL: urls.location,
     NODICS_ENGAGEMENT_URL: urls.engagement,
-    AXIS_URL: urls.axis,
     ...Object.fromEntries(Object.entries(selected.acceptance.environmentUrls || {}).map(([name, key]) => {
       if (!/^[A-Z][A-Z0-9_]*$/.test(name) || !Object.prototype.hasOwnProperty.call(urls, key)) throw new Error('Invalid acceptance environment URL mapping');
       return [name, urls[key]];
@@ -204,7 +204,6 @@ async function runQualification(selected) {
     return run(composeBinary, args, { env: { ...process.env, ...values, NODICS_WORKSPACE_ROOT: workspaceRoot } });
   });
   await check(evidence, 'runtime-health', async () => Promise.all((q.runtimePorts || []).map(port => httpOk(`http://127.0.0.1:${port}/nodics/system/v0/health/ready`))));
-  await check(evidence, 'frontend-health', async () => Promise.all((q.frontendUrls || []).map(httpOk)));
   await check(evidence, 'bounded-read-load', async () => {
     const ports = q.readLoadPorts || [];
     const requests = Array.from({ length: q.readLoadRequests || 50 }, (_, index) => httpOk(`http://127.0.0.1:${ports[index % ports.length]}/nodics/system/v0/health/ready`));
@@ -376,13 +375,6 @@ async function runResilienceQualification(selected) {
     if ((vulnerabilities.critical || 0) > 0 || (vulnerabilities.high || 0) > 0) throw new Error(`npm audit reports high=${vulnerabilities.high || 0}, critical=${vulnerabilities.critical || 0}`);
     return { high: vulnerabilities.high || 0, critical: vulnerabilities.critical || 0 };
   });
-  await check(evidence, 'axis-bundled-login-accessibility-contract', () => {
-    const source = fs.readFileSync(path.join(workspaceRoot, 'nodics.exp', 'nodics.axis', 'src', 'initialization', 'BundledLoginPage.tsx'), 'utf8');
-    for (const pattern of [/component="main"/, /label="Login ID"/, /label="Password"/, /type="password"/, /type="submit"/]) {
-      if (!pattern.test(source)) throw new Error(`Bundled login is missing ${pattern}`);
-    }
-    return { classification: 'AUTOMATED_STATIC_CONTRACT_ONLY' };
-  }, 'AUTOMATED_STATIC_CONTRACT_ONLY');
   evidence.push({ id: 'redis-application-transparent-failover', state: sentinelContinuityCompleted ? 'PASSED' : 'FAILED', classification: 'LOCAL_PRODUCTION_SIMULATION', message: sentinelContinuityCompleted ? 'Sentinel-aware runtimes remained ready and completed authenticated publishing acceptance after replica promotion.' : 'Sentinel promotion continuity did not complete; no transparent-failover claim is permitted.' });
   evidence.push({ id: 'independent-penetration-and-human-accessibility', state: 'EXTERNAL_EVIDENCE_REQUIRED', classification: 'EXTERNAL', message: 'Automation does not replace independent penetration testing or assistive-technology review.' });
   console.log(JSON.stringify({ contractVersion: 0, environment: selected.environment, qualificationClass: 'LOCAL_RECOVERY_SIMULATION', generatedAt: new Date().toISOString(), evidence }, null, 2));

@@ -168,7 +168,9 @@ module.exports = {
                     this.LOG.error('Invalid node id : ' + options.nodeId + ' while preparing URL for connection : ' + connectionName);
                 }
             }
-            url += '/' + contextRoot + '/' + options.moduleName;
+            const target = NODICS.getRawModule && NODICS.getRawModule(options.moduleName);
+            const prefix = target && target.metaData && target.metaData.prefix || options.moduleName;
+            url += '/' + contextRoot + '/' + prefix;
         } catch (error) {
             this.LOG.error('While Preparing URL for :' + options.moduleName + ' : ', error);
         }

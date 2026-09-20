@@ -17,15 +17,22 @@
  * @override Project, environment, server, node, tenant, or customer layers may override these defaults through Nodics configuration layering.
  */
 module.exports = {
-    dataExport: {
-        enabled: true,
-        allowedFormats: ['csv', 'json'],
-        defaultFormat: 'csv',
-        maximumRecords: 1000,
-        pageSize: 50,
-        media: {
-            folderCode: 'exportFiles',
-            formatCode: 'exportFile'
-        }
-    }
+  dataExport: {
+    enabled: true,
+    allowedFormats: ["csv", "json"],
+    defaultFormat: "csv",
+    maximumRecords: 1000,
+    pageSize: 50,
+    media: {
+      folderCode: "exportFiles",
+      formatCode: "exportFile",
+    },
+  },
+  apiExposure: {
+    categories: {
+      dataExport: {
+        enabled: false,
+      },
+    },
+  },
 };

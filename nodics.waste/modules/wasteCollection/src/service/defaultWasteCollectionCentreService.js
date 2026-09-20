@@ -123,22 +123,19 @@ module.exports = {
     loadProfileRecords: function (context, schemaName, codes) {
         codes = this.uniqueCodes(codes);
         if (codes.length === 0) return Promise.resolve([]);
-        let serviceName = schemaName === 'enterprise' ? 'DefaultEnterpriseService' : 'DefaultAddressService';
         return this.invokeModule({
+            local: false,
             moduleName: typeof CONFIG !== 'undefined' && CONFIG.get && CONFIG.get('profileModuleName') || 'profile',
-            serviceName: serviceName,
-            operationName: 'get',
-            apiName: '/' + schemaName,
+            connectionName: 'profile',
+            apiName: '/references/read',
             methodName: 'POST',
             request: {
                 tenant: context.tenant,
-                authData: context.authData,
-                query: { code: { $in: codes } },
-                options: { recursive: false, limit: 100 }
+                authData: context.authData
             },
             requestBody: {
-                query: { code: { $in: codes } },
-                options: { recursive: false, limit: 100 }
+                type: schemaName,
+                codes: codes
             },
             responseSelector: response => this.records(response)
         });

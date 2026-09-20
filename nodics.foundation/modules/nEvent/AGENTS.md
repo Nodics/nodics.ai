@@ -17,3 +17,5 @@ This file gives AI coding agents mandatory guidance for this Nodics module or pa
 - Update the concise `README.md`, canonical documentation content, `llm/contracts`, `llm/examples`, generated context, and tests whenever behavior or extension contracts change.
 - Use `llm/contracts` for exact module-local AI/developer rules, `llm/examples` for approved patterns, and `llm/generated` for source-derived facts. Do not add a module-local llm README file; this `AGENTS.md` is the AI navigation and behavior entrypoint for the module.
 - Generated files must be recreated from source definitions; do not hand-maintain generated artifacts as source of truth.
+
+Remote publishing defaults to false. A distributed event deployment explicitly enables it; local delivery remains available.

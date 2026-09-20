@@ -308,6 +308,10 @@ module.exports = {
     code: "400",
     message: "Marketplace projection sale state invalid",
   },
+  ERR_WASTE_ITEM_UNSUPPORTED: {
+    code: "400",
+    message: "About your item",
+  },
   ERR_WASTE_RECOGNITION_INVALID: {
     code: "400",
     message: "Recognition invalid",

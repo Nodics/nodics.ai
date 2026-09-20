@@ -276,3 +276,42 @@ assert.throws(() => generator.validateDocument({
 }), /Unresolved local reference/);
 
 console.log('OpenAPI generation contract validated');
+
+
+// The OpenAPI child of a selected build must receive the resolver's canonical server.
+{
+    const fs = require('node:fs');
+    const os = require('node:os');
+    const path = require('node:path');
+    const project = fs.mkdtempSync(path.join(os.tmpdir(), 'nodics-openapi-selection-'));
+    const beforeEnv = { ...process.env };
+    const beforeArgs = process.argv.slice();
+    try {
+        fs.writeFileSync(path.join(project, 'package.json'), JSON.stringify({ name: 'sample.project', nodics: { kind: 'application' } }));
+        for (const environment of ['firstLocal', 'secondLocal']) {
+            const server = path.join(project, 'envs', environment, 'platformServer');
+            fs.mkdirSync(server, { recursive: true });
+            fs.writeFileSync(path.join(server, 'package.json'), JSON.stringify({ name: 'platformServer', nodics: { kind: 'server', runtimeModuleRoots: [] } }));
+        }
+        process.env.NODICS_HOME = project;
+        delete process.env.CUSTOM_HOME;
+        process.env.NODICS_FRAMEWORK_ROOT = path.resolve(__dirname, '../../../..');
+        for (const [environment, selector] of [['firstLocal', 'platform'], ['secondLocal', 'platformServer']]) {
+            process.argv = beforeArgs.filter(value => !/^(E|S|NODE)=/.test(value));
+            const options = generator.createOptions(['--env=' + environment, '--server=' + selector]);
+            assert.equal(options.defaultEnvironment, environment);
+            assert.equal(options.defaultServer, 'platformServer');
+            assert(options.MODULE_ROOTS.includes(project));
+            assert(process.argv.includes('E=' + environment));
+            assert(process.argv.includes('S=platformServer'));
+            assert(!process.argv.includes('S=platform'));
+        }
+        assert.throws(() => generator.createOptions(['--env=firstLocal', '--server=missing']), /Unknown project runtime server/);
+        assert.throws(() => generator.createOptions(['--env=missingLocal', '--server=platform']), /Unknown project runtime server/);
+    } finally {
+        for (const key of Object.keys(process.env)) if (!(key in beforeEnv)) delete process.env[key];
+        Object.assign(process.env, beforeEnv);
+        process.argv = beforeArgs;
+        fs.rmSync(project, { recursive: true, force: true });
+    }
+}

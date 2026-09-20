@@ -17,140 +17,170 @@
  * @override Projects enable and register remote sources and adapters in later configuration layers without changing framework defaults.
  */
 module.exports = {
-    // Inert inventory; an allowed local server must explicitly select this capability.
-    localResetProvider: {
-        "contributions": {
-            "import": {
-                "serviceNames": {
-                    "DefaultDataInstallationService": true,
-                    "DefaultImportDefinitionService": true,
-                    "DefaultImportRunService": true
-                }
-            }
-        }
+  // Inert inventory; an allowed local server must explicitly select this capability.
+  localResetProvider: {
+    contributions: {
+      import: {
+        serviceNames: {
+          DefaultDataInstallationService: true,
+          DefaultImportDefinitionService: true,
+          DefaultImportRunService: true,
+        },
+      },
     },
+  },
 
-    data: {
-        dataImportPhasesLimit: 5,
-        finalizeImportDataAsync: true,
-        importDataConvertEncoding: 'utf8',
-        readBufferSize: 1024,
-        stopImportOnFailure: false,
-        batchImport: {
-            enabled: false,
-            size: 100
-        },
-        headerBatchSize: 0,
-        importGovernance: {
-            duplicateProtection: true,
-            duplicateStatuses: ['COMPLETED', 'VALIDATED'],
-            retry: {
-                maxAttempts: 0
-            },
-            rollback: {
-                enabled: true
-            }
-        },
-        dataReleases: {
-            allowedContractVersions: [1, 2],
-            lifecycleMetadataRequired: false,
-            contributions: [],
-            installers: {},
-            environmentClass: null,
-            maximumFilesPerRelease: 1024,
-            maximumModulesPerRun: 256,
-            allowDowngrade: false,
-            initializationProfiles: {},
-            types: {
-                init: {
-                    enabled: true,
-                    startupExecution: true,
-                    operatorExecution: true
-                },
-                core: {
-                    enabled: true,
-                    operatorExecution: true
-                },
-                sample: {
-                    enabled: false,
-                    operatorExecution: false
-                }
-            }
-        },
-        contentPacks: {
-            enabled: false,
-            allowedContractVersions: [0, 1, 2],
-            cleanupStaging: true,
-            stagingDirectory: 'import/content-packs',
-            packs: {
-                nodicsDocumentation: {
-                    enabled: true,
-                        manifestPack: 'nodics.docs',
-                        source: {
-                            type: 'LOCAL_SIBLING',
-                            repositoryName: 'nodics.docs',
-                            contentPath: 'data/core-v001',
-                            manifestPath: 'data/manifest.json',
-                            manifestSection: 'documentation'
-                        },
-                    updatePolicy: {
-                        allowDowngrade: false,
-                        sameVersionContentChange: 'REJECT'
-                    },
-                    presentation: {
-                        title: 'Nodics documentation',
-                        unavailableMessage: 'Documentation has not been installed for this environment.',
-                        disabledMessage: 'Documentation imports are not enabled for this environment.',
-                        importAction: 'Import documentation',
-                        updateAction: 'Update documentation',
-                        retryAction: 'Retry import'
-                    }
-                },
-                axisDocumentation: {
-                    enabled: true,
-                        manifestPack: 'nodics.platform.axis',
-                        source: {
-                            type: 'LOCAL_SIBLING',
-                            repositoryName: 'nodics.platform',
-                            contentPath: 'modules/axis/data/core-v001',
-                            manifestPath: 'modules/axis/data/manifest.json',
-                            manifestSection: 'documentation'
-                        },
-                    updatePolicy: {
-                        allowDowngrade: false,
-                        sameVersionContentChange: 'REJECT'
-                    },
-                    presentation: {
-                        title: 'Nodics Axis documentation',
-                        unavailableMessage: 'Nodics Axis documentation has not been installed for this environment.',
-                        disabledMessage: 'Documentation imports are not enabled for this environment.',
-                        importAction: 'Import Nodics Axis documentation',
-                        updateAction: 'Update Nodics Axis documentation',
-                        retryAction: 'Retry import'
-                    }
-                }
-            }
-        },
-        remoteImport: {
-            enabled: false,
-            defaultTransport: null,
-            defaultHeaderDataType: 'core',
-            cleanupStaging: true,
-            policy: {
-                timeoutMs: 30000,
-                retries: 0,
-                maxFiles: 100,
-                maxFileBytes: 10485760,
-                maxTotalBytes: 104857600,
-                allowedExtensions: ['json', 'csv', 'xlsx'],
-                requireChecksums: true
-            },
-            transports: {},
-            sources: {}
-        }
+  data: {
+    dataImportPhasesLimit: 5,
+    finalizeImportDataAsync: true,
+    importDataConvertEncoding: "utf8",
+    readBufferSize: 1024,
+    stopImportOnFailure: false,
+    batchImport: {
+      enabled: false,
+      size: 100,
     },
+    headerBatchSize: 0,
+    importGovernance: {
+      duplicateProtection: true,
+      duplicateStatuses: ["COMPLETED", "VALIDATED"],
+      retry: {
+        maxAttempts: 0,
+      },
+      rollback: {
+        enabled: true,
+      },
+    },
+    dataReleases: {
+      allowedContractVersions: [1, 2],
+      lifecycleMetadataRequired: true,
+      destinationEnforced: true,
+      contributions: [],
+      installers: {},
+      maximumFilesPerRelease: 1024,
+      maximumModulesPerRun: 256,
+      allowDowngrade: false,
+      initializationProfiles: {},
+      types: {
+        init: {
+          enabled: true,
+          startupExecution: true,
+          operatorExecution: true,
+        },
+        core: {
+          enabled: true,
+          operatorExecution: true,
+        },
+        sample: {
+          enabled: true,
+          operatorExecution: true,
+        },
+      },
+      initializationProfileDefaults: {
+        foundation: {
+          steps: {
+            $config: "replace",
+            value: [
+              {
+                dataType: "init",
+              },
+              {
+                dataType: "core",
+              },
+            ],
+          },
+        },
+      },
+    },
+    contentPacks: {
+      enabled: false,
+      allowedContractVersions: [0, 1, 2],
+      cleanupStaging: true,
+      stagingDirectory: "import/content-packs",
+      defaults: {
+        enabled: true,
+        source: {
+          type: "LOCAL_PROJECT",
+          manifestPath: "data/manifest.json",
+        },
+        updatePolicy: {
+          allowDowngrade: false,
+          sameVersionContentChange: "REJECT",
+        },
+        presentation: {
+          title: "Content pack",
+          unavailableMessage: "Content has not been installed for this environment.",
+          disabledMessage: "Content-pack imports are not enabled for this environment.",
+          importAction: "Import content",
+          updateAction: "Update content",
+          retryAction: "Retry import",
+        },
+      },
+      packs: {
+        nodicsDocumentation: {
+          manifestPack: "nodics.docs",
+          source: {
+            type: "LOCAL_SIBLING",
+            repositoryName: "nodics.docs",
+            manifestSection: "documentation",
+          },
+          presentation: {
+            title: "Nodics documentation",
+            unavailableMessage:
+              "Documentation has not been installed for this environment.",
+            disabledMessage:
+              "Documentation imports are not enabled for this environment.",
+            importAction: "Import documentation",
+            updateAction: "Update documentation",
+          },
+        },
+        axisDocumentation: {
+          manifestPack: "nodics.platform.axis",
+          source: {
+            type: "LOCAL_SIBLING",
+            repositoryName: "nodics.platform",
+            manifestPath: "modules/axis/data/manifest.json",
+            manifestSection: "documentation",
+          },
+          presentation: {
+            title: "Nodics Axis documentation",
+            unavailableMessage:
+              "Nodics Axis documentation has not been installed for this environment.",
+            disabledMessage:
+              "Documentation imports are not enabled for this environment.",
+            importAction: "Import Nodics Axis documentation",
+            updateAction: "Update Nodics Axis documentation",
+          },
+        },
+      },
+    },
+    remoteImport: {
+      enabled: false,
+      defaultTransport: null,
+      defaultHeaderDataType: "core",
+      cleanupStaging: true,
+      policy: {
+        timeoutMs: 30000,
+        retries: 0,
+        maxFiles: 100,
+        maxFileBytes: 10485760,
+        maxTotalBytes: 104857600,
+        allowedExtensions: ["json", "csv", "xlsx"],
+        requireChecksums: true,
+      },
+      transports: {},
+      sources: {},
+    },
+  },
 
-    defaultErrorCodes: {
-        DataImportError: 'ERR_IMP_00000'
-    }
+  defaultErrorCodes: {
+    DataImportError: "ERR_IMP_00000",
+  },
+  apiExposure: {
+    categories: {
+      dataImport: {
+        enabled: false,
+      },
+    },
+  },
 };

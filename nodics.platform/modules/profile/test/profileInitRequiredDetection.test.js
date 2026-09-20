@@ -63,7 +63,8 @@ function configureDatabase(collections, enterpriseResponse, employeeResponse) {
     };
     global.CONFIG = {
         get: function (key) {
-            if (key === 'defaultAuthDetail') return { loginId: 'admin' };
+            if (key === 'profileInitialization') return { requiredEmployeeLogins: ['admin', 'apiAdmin'] };
+            if (key === 'defaultAuthDetail') return { loginId: 'separate-runtime-proof' };
             if (key === 'defaultTenant') return 'default';
             if (key === 'profileModuleName') return 'profile';
             return undefined;
@@ -78,9 +79,10 @@ async function isInitRequired(collections, enterpriseResponse, employeeResponse)
 
 (async function () {
     assert.strictEqual(await isInitRequired([], undefined), true);
-    assert.strictEqual(await isInitRequired(['EnterpriseModel'], { result: [{ code: 'default' }] }, { result: [{ loginId: 'admin' }] }), false);
+    assert.strictEqual(await isInitRequired(['EnterpriseModel'], { result: [{ code: 'default' }] }, { result: [{ loginId: 'admin' }] }), true);
+    assert.strictEqual(await isInitRequired(['EnterpriseModel'], { result: [{ code: 'default' }] }, { result: [{ loginId: 'admin' }, { loginId: 'apiAdmin' }] }), false);
     assert.strictEqual(await isInitRequired(['EnterpriseModel'], { result: [] }), true);
-    assert.strictEqual(await isInitRequired(['EnterpriseModel'], [{ code: 'default' }], [{ loginId: 'admin' }]), false);
+    assert.strictEqual(await isInitRequired(['EnterpriseModel'], [{ code: 'default' }], [{ loginId: 'admin' }, { loginId: 'apiAdmin' }]), false);
     assert.strictEqual(await isInitRequired(['EnterpriseModel'], [{ code: 'default' }], []), true);
 })().catch(error => {
     console.error(error);

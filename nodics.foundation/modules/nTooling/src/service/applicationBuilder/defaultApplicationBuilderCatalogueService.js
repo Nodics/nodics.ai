@@ -381,6 +381,13 @@ module.exports = {
           [],
         ).sort((left, right) => left.name.localeCompare(right.name))
       : [];
+    const frameworkDataPacks = this.discoverDataPacks(frameworkPackages);
+    const customerDataPacks = this.discoverDataPacks(customerPackages);
+    const packOwners = new Set();
+    for (const pack of [...frameworkDataPacks, ...customerDataPacks]) {
+      if (packOwners.has(pack.code)) throw new Error("Data pack has multiple source owners: " + pack.code);
+      packOwners.add(pack.code);
+    }
     const capabilities = frameworkPackages.map((packageObject) => ({
       code: packageObject.name,
       version: packageObject.version,
@@ -422,7 +429,8 @@ module.exports = {
           evidence: "DECLARED_CUSTOMER_COMPOSITION",
         }),
       ),
-      customerDataPacks: this.discoverDataPacks(customerPackages),
+      customerDataPacks,
+      frameworkDataPacks,
       qualificationCommands: {
         framework: this.discoverQualificationCommands(roots.framework),
         frontend: this.discoverQualificationCommands(roots.frontend),

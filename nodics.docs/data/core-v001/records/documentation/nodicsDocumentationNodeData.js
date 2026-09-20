@@ -976,7 +976,7 @@ module.exports = {
       {
         "code": "applications.nexus-data-content-guide",
         "title": "Nexus Data and Content Guide",
-        "summary": "How Nexus corporate content, media, editorial, engagement, Staged publication, Online delivery, and browser validation are authored from project data releases.",
+        "summary": "How Nexus corporate content, media, editorial, engagement, Staged publication, Online delivery, and browser validation are authored from accelerator-owned reference releases and customer overlays.",
         "order": 20
       }
     ],
@@ -12534,7 +12534,7 @@ module.exports = {
     "nodeLevel": "PAGE_LINK",
     "nodeType": "PAGE",
     "nodeTitle": "Nexus Data and Content Guide",
-    "nodeSummary": "How Nexus corporate content, media, editorial, engagement, Staged publication, Online delivery, and browser validation are authored from project data releases.",
+    "nodeSummary": "How Nexus corporate content, media, editorial, engagement, Staged publication, Online delivery, and browser validation are authored from accelerator-owned reference releases and customer overlays.",
     "nodeContentArea": {
       "route": "/docs/framework/applications-nexus-data-content-guide",
       "documentType": "how-to",

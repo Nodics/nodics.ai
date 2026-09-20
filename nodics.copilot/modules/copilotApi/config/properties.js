@@ -17,12 +17,25 @@
  * @override Project, environment, server, node, tenant, or customer layers may override these defaults through Nodics configuration layering.
  */
 module.exports = {
-    responseHandler: { copilotSseResponseHandler: 'DefaultCopilotSseResponseHandlerService' },
-    copilot: {
-        api: {
-            enabled: false, exposure: 'copilotApi', streamHeartbeatMs: 15000,
-            maximumRequestBytes: 131072, maximumPageSize: 50, maximumEventReplaySize: 500,
-            maximumEventBytes: 65536
-        }
-    }
+  responseHandler: {
+    copilotSseResponseHandler: "DefaultCopilotSseResponseHandlerService",
+  },
+  copilot: {
+    api: {
+      enabled: false,
+      exposure: "copilotApi",
+      streamHeartbeatMs: 15000,
+      maximumRequestBytes: 131072,
+      maximumPageSize: 50,
+      maximumEventReplaySize: 500,
+      maximumEventBytes: 65536,
+    },
+  },
+  apiExposure: {
+    categories: {
+      copilotApi: {
+        enabled: true,
+      },
+    },
+  },
 };

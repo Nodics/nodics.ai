@@ -75,7 +75,8 @@ module.exports = exportedService = {
             const server = runtime.resolveServer(commandHome, manifest, serverCode, environment);
             const framework = runtime.resolveFrameworkRoot(commandHome, environment);
             return { NODICS_HOME: runtime.packageRoot(framework, 'nodics.foundation'), CUSTOM_HOME: commandHome,
-                MODULE_ROOTS: runtime.resolveModuleRoots(commandHome, framework, server) };
+                MODULE_ROOTS: runtime.resolveModuleRoots(commandHome, framework, server),
+                defaultEnvironment: server.environment, defaultServer: server.server };
         }
 
         if (packageJson.name === 'nodics.ai' && Array.isArray(packageJson.workspaces)) {
@@ -833,15 +834,19 @@ module.exports = exportedService = {
 
     /** Implements createOptions as an overrideable service operation. */
     createOptions: function (args) {
-    const environmentName = (this.readOption || exportedService.readOption).call(this, args, '--environment', null);
+    const environmentName = (this.readOption || exportedService.readOption).call(this, args, '--environment',
+        (this.readOption || exportedService.readOption).call(this, args, '--env', null));
     const serverName = (this.readOption || exportedService.readOption).call(this, args, '--server', null);
     const nodeName = (this.readOption || exportedService.readOption).call(this, args, '--node', null);
-    (this.ensureRuntimeArgument || exportedService.ensureRuntimeArgument).call(this, 'E', environmentName);
-    (this.ensureRuntimeArgument || exportedService.ensureRuntimeArgument).call(this, 'S', serverName);
+    const roots = (this.resolveRuntimeRoots || exportedService.resolveRuntimeRoots).call(this, args);
+    const selectedEnvironment = roots.defaultEnvironment || environmentName || env.defaultOptions.defaultEnvironment;
+    const selectedServer = roots.defaultServer || serverName || env.defaultOptions.defaultServer;
+    (this.ensureRuntimeArgument || exportedService.ensureRuntimeArgument).call(this, 'E', selectedEnvironment);
+    (this.ensureRuntimeArgument || exportedService.ensureRuntimeArgument).call(this, 'S', selectedServer);
     (this.ensureRuntimeArgument || exportedService.ensureRuntimeArgument).call(this, 'NODE', nodeName);
-    return Object.assign((this.resolveRuntimeRoots || exportedService.resolveRuntimeRoots).call(this, args), {
-        defaultEnvironment: environmentName || env.defaultOptions.defaultEnvironment,
-        defaultServer: serverName || env.defaultOptions.defaultServer,
+    return Object.assign(roots, {
+        defaultEnvironment: selectedEnvironment,
+        defaultServer: selectedServer,
         includeRuntimeSchemas: (this.readBooleanOption || exportedService.readBooleanOption).call(this, args, '--runtime-schemas', false),
         outputDir: (this.readOption || exportedService.readOption).call(this, args, '--output-dir', null)
     });

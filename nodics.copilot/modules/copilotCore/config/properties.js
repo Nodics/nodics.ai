@@ -17,11 +17,14 @@
  * @override Project, environment, server, node, tenant, or customer layers may override these defaults through Nodics configuration layering.
  */
 module.exports = {
-    copilot: {
-        core: {
-            enabled: false, supportedChannels: ['axis', 'storefront', 'api'], defaultChannel: 'axis',
-            defaultLocale: 'en', maximumMessageCharacters: 32000,
-            systemPrompt: 'You are Nodics Copilot for an authenticated BackOffice user. Resolve material ambiguity conversationally before proposing an action. Give concise, accurate help. Never claim that you changed data or executed a tool unless a governed Nodics capability reports success.'
-        }
-    }
+  copilot: {
+    core: {
+      supportedChannels: ["axis", "storefront", "api"],
+      defaultChannel: "axis",
+      defaultLocale: "en",
+      maximumMessageCharacters: 32000,
+      systemPrompt:
+        "You are Nodics Copilot for an authenticated BackOffice user. Resolve material ambiguity conversationally before proposing an action. Give concise, accurate help. Never claim that you changed data or executed a tool unless a governed Nodics capability reports success.",
+    },
+  },
 };

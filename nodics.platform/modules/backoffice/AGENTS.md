@@ -166,3 +166,23 @@ retains its group-free, scoped credential; discovery must not give it generic
 BackOffice schema rights. Preserve source-instance evidence and existing bounded
 normalization, compatibility classification, approval and revision checks. Human
 contract decisions retain their authenticated actor and permission gates.
+
+Route-category defaults belong to this capability; deployments supply only intentional overrides.
+Preserve nRouter enforcement and independent route authorization. See [exposure ownership](../../../nodics.foundation/modules/nRouter/llm/contracts/README.md#capability-owned-exposure-defaults).
+
+Resolve application targets from current layered defaults and reuse registered package facts. Routing overrides and reset transport defaults never enable operations; see the local contract.
+
+BackOffice owns inert capability-registry acceptance defaults. Resolve observed
+server coordinates from the selected deployment rather than a reference-project
+string. Media preparation steps may declare `manifestModule` with an owner-relative
+`manifestPath`; the owner must match the step's module identity. Resolve only through
+the existing raw-module registry, confine real paths and payloads to that owner,
+and retain project-relative compatibility. Never return local source paths to clients.
+Existing authorization, target-role, media upload and publication gates still apply.
+
+Operator-triggered application and remote activation imports forward the
+authenticated human bearer to the configured nImport owner. Require a human
+principal and bearer before execution; do not substitute the group-free runtime
+credential or add administrator groups to it. Status/preflight retains the scoped
+runtime credential. nImport still enforces the operator's import permission, tenant,
+release governance and schema access at the destination.

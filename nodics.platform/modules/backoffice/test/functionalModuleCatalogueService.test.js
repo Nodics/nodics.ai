@@ -240,6 +240,17 @@ async function run() {
     assert.strictEqual(transportOptions.header.Authorization, 'Bearer internal-token');
     assert.strictEqual(transportOptions.requestBody.releaseCodes[0], 'baseCommerce:core-reference');
     assert.strictEqual(remotePreflight.data.releases[0].status, 'CURRENT');
+    const release = { dataType: 'core', releaseCodes: ['baseCommerce:core-reference'] };
+    const target = { targetServer: 'commerceServer', targetModule: 'commerce' };
+    const operator = { tenant: 'default', authData: { principalId: 'admin' }, httpRequest: { headers: { authorization: 'Bearer operator-token' } } };
+    await service.runActivationDataReleaseOperation('execute', release, target, operator);
+    assert.strictEqual(transportOptions.header.Authorization, 'Bearer operator-token');
+    for (const rejected of [
+        { ...operator, httpRequest: { headers: {} } },
+        { ...operator, httpRequest: { headers: { authorization: 'Basic invalid' } } },
+        { ...operator, authData: { principalId: 'service', tokenType: 'service' } },
+        { ...operator, authData: {} }
+    ]) await assert.rejects(service.runActivationDataReleaseOperation('execute', release, target, rejected), error => error.code === 'ERR_AUTH_00003');
     CONFIG.get = originalConfigGet;
     NODICS = originalNodics;
 

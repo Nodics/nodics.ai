@@ -18,7 +18,8 @@
       "facade",
       "service",
       "test",
-      "llm"
+      "llm",
+      "utility"
     ],
     "runtime": {
       "router": true,

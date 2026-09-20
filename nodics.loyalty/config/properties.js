@@ -17,19 +17,11 @@
  * @override Project, environment, server, node, tenant, or customer layers may refine feature policy without changing functional identity.
  */
 module.exports = {
-    loyalty: {
-        capabilities: {
-            programs: true,
-            rewardTypes: true,
-            wallets: true,
-            ledger: true,
-            reservations: true,
-            redemptions: true
-        },
-        defaults: {
-            amountScale: 2,
-            reservationTtlSeconds: 900,
-            idempotencyRequired: true
-        }
-    }
+  loyalty: {
+    defaults: {
+      amountScale: 2,
+      reservationTtlSeconds: 900,
+      idempotencyRequired: true,
+    },
+  },
 };

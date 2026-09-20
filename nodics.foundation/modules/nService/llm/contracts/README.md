@@ -80,10 +80,28 @@ fails during protected calls rather than silently broadening the credential.
 state namespace for both principal stamps and token revocation. Authority and
 consumer runtimes must use the same configured distributed channel. It can be
 the active Foundation `auth` module when Profile runs remotely; this never
-changes `profileModuleName` or identity ownership. The default remains Profile.
+changes `profileModuleName` or identity ownership. The logical cache namespace defaults to `auth`; Profile remains the identity authority.
 
 Module invocation honors the router topology's effective `remoteOnly` option,
 including connection aliases, even when the module source is active locally.
 The selected remote endpoint or registry owner remains mandatory; removing the
 option restores ordinary local dispatch. Active source is not proof of local
 service ownership. See `test/moduleInvocationContract.test.js`.
+
+## Selected authority-context defaults
+
+`runtimeAuthorityContexts.default` is an explicitly configured context, used only for modules whose entry is `true`, for example `{ default: 'warehouse.operational', modules: { stock: true, pricing: 'pricing.staged' } }`. Unselected/false modules retain their existing module/schema fallback. Explicit schema declarations and schema overrides retain precedence over module selections. A selected common default must be a nonempty string; malformed context values fail. Do not derive authority from a server name, module discovery, UI grouping or connection topology. Profile-issued deployment scope and runtime-role/tenant checks remain independent.
+
+Activation-package facts come from existing module manifests and registration. A later BackOffice routing-only delta reuses observed owner facts; it cannot invent a release before its owner registers. Explicit custom package descriptors retain their documented registration/selection contract.
+
+A registry lease endpoint already names its canonical module API path and is preserved, including a prefix different from the logical module name. An origin-only endpoint uses the existing discovered package prefix or module name. Credentials, logical ownership and target-authority filtering remain unchanged.
+
+## Runtime credential configuration
+
+Inherit security policy and credential input defaults from
+[nAuth](../../../nAuth/llm/contracts/README.md#deployment-credentials-and-inherited-auth-policy).
+nService consumes current retained `defaultAuthDetail.apiKey` proof for both
+initial issuance and renewal. It never falls back to provisioning proof or a human
+administrator. Profile still validates tenant, enterprise and deployment grants.
+A selected deployment may bind distinct runtime credentials through later layers.
+The logical auth cache namespace is `auth`; this does not change Profile ownership.

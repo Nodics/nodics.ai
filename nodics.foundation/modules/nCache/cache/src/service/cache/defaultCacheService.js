@@ -526,7 +526,8 @@ module.exports = {
         let channel = options.channel || SERVICE.DefaultCacheEngineService.getCacheEngine(options.moduleName, options.channelName);
         let cacheConfig = CONFIG.get('cache') || {};
         let policy = cacheConfig.invalidation || {};
-        if (options.suppressPropagation === true || policy.crossNode === false || this.getChannelCapabilities(channel).distributed === true) {
+        const crossNode = policy.crossNode == null ? (CONFIG.get('event') || {}).remotePublishEnabled === true : policy.crossNode;
+        if (options.suppressPropagation === true || crossNode === false || this.getChannelCapabilities(channel).distributed === true) {
             return Promise.resolve(true);
         }
         if (!SERVICE.DefaultEventService || typeof SERVICE.DefaultEventService.publish !== 'function') {

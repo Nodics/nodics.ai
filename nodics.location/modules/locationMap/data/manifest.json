@@ -21,7 +21,7 @@
             "removalPolicy": "RETAIN",
             "files": {
                 "core-v001/headers/location/locationMapConfigurationHeader.js": "9fa5aa610c79c41a41a746582d64dbbb25b58a51e458b57831379e87d1699ad6",
-                "core-v001/records/backoffice/locationMapBackofficeCapabilityData.js": "642b0ab70bb0c6c9dda23ea4055f73370f3123a78ecefd16b7f3e0415b823490",
+                "core-v001/records/backoffice/locationMapBackofficeCapabilityData.js": "ced3d4c7431d7720760569c70be703bc655072a10a241251f349edcd7dabf1df",
                 "core-v001/records/location/locationMapProviderData.js": "e12babf84a1a28bb89a33b26651c8b4f2e2c1e84adab1c555db8d931f215673b",
                 "core-v001/records/location/locationMapUsageData.js": "ef9344832b65d1af7debc51f2ce9b0c56a0a53aeb087220a4ffcb6e78e22b75c",
                 "core-v001/records/location/locationMapStylePresetData.js": "717444afd6124447d8f33c4d4de051768db1d3e0dc900788214a9eec960617f2",

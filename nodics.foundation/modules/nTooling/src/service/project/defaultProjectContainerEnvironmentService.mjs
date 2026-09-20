@@ -22,13 +22,13 @@ import crypto from 'node:crypto';
 import fs from 'node:fs';
 import net from 'node:net';
 import path from 'node:path';
-import { readContainerEnvironmentProfile } from './defaultProjectContainerProfileService.mjs';
+import { readContainerEnvironmentConfiguration } from './defaultProjectContainerConfigurationService.mjs';
 
 const projectRoot = process.cwd();
 const workspaceRoot = path.resolve(projectRoot, '..');
 
 function readProfile(profileCode) {
-  const profile = readContainerEnvironmentProfile(projectRoot, profileCode);
+  const profile = readContainerEnvironmentConfiguration(projectRoot, profileCode);
   return {
     code: profile.code,
     environment: profile.environment,
@@ -42,7 +42,7 @@ function readProfile(profileCode) {
     replicaSet: profile.replicaSet || 'nodicsContainerEnvironment',
     mongodbHost: profile.mongodbHost || 'mongodb',
     redisPrimaryHost: profile.redisPrimaryHost || 'redis-primary',
-    bootstrapAdminPassword: profile.bootstrapAdminPassword || 'NodicsLocal@2026'
+    bootstrapAdminPassword: profile.bootstrapAdminPassword
   };
 }
 
@@ -91,7 +91,7 @@ function ensureEnvironment(profile) {
       REDIS_PASSWORD: randomSecret(),
       AUTH_JWT_SECRET: randomSecret(),
       AUTH_API_KEY_PEPPER: randomSecret(),
-      BOOTSTRAP_ADMIN_PASSWORD: process.env.NODICS_DOCKER_ADMIN_PASSWORD || profile.bootstrapAdminPassword,
+      BOOTSTRAP_ADMIN_PASSWORD: process.env.NODICS_DOCKER_ADMIN_PASSWORD || profile.bootstrapAdminPassword || randomSecret(),
       BOOTSTRAP_SERVICE_PASSWORD: randomSecret(),
       BOOTSTRAP_SERVICE_API_KEY: randomSecret(),
     };
@@ -101,7 +101,7 @@ function ensureEnvironment(profile) {
   appendMissing(profile.environmentPath, 'AUTH_API_KEY_PEPPER', randomSecret());
   appendMissing(profile.environmentPath, 'AUTH_JWT_SECRET', randomSecret());
   for (const key of ['BOOTSTRAP_ADMIN_PASSWORD', 'BOOTSTRAP_SERVICE_PASSWORD', 'BOOTSTRAP_SERVICE_API_KEY']) {
-    appendMissing(profile.environmentPath, key, key === 'BOOTSTRAP_ADMIN_PASSWORD' ? profile.bootstrapAdminPassword : randomSecret());
+    appendMissing(profile.environmentPath, key, key === 'BOOTSTRAP_ADMIN_PASSWORD' && profile.bootstrapAdminPassword ? profile.bootstrapAdminPassword : randomSecret());
   }
   appendMissing(profile.environmentPath, 'MONGO_REPLICA_KEY', randomSecret() + randomSecret());
   const mongoEnvironment = fs.readFileSync(profile.environmentPath, 'utf8');

@@ -17,23 +17,68 @@
  * @override Project, environment, server, node, tenant, or customer layers may override these defaults through Nodics configuration layering.
  */
 module.exports = {
-    // Inert inventory; an allowed local server must explicitly select this capability.
-    localResetProvider: {
-        "contributions": {
-            "apparelProduct": {
-                "serviceNames": {
-                    "DefaultApparelFitProfileService": true,
-                    "DefaultApparelSizeSystemService": true,
-                    "DefaultApparelStyleService": true,
-                    "DefaultApparelVariantProfileService": true
-                }
-            }
-        }
+  // Inert inventory; an allowed local server must explicitly select this capability.
+  localResetProvider: {
+    contributions: {
+      apparelProduct: {
+        serviceNames: {
+          DefaultApparelFitProfileService: true,
+          DefaultApparelSizeSystemService: true,
+          DefaultApparelStyleService: true,
+          DefaultApparelVariantProfileService: true,
+        },
+      },
     },
- apparelProduct: {
-    sizeSystems: ['ALPHA', 'EU', 'UK', 'US', 'AGE', 'ONE_SIZE'],
+  },
+  apparelProduct: {
+    sizeSystems: ["ALPHA", "EU", "UK", "US", "AGE", "ONE_SIZE"],
     compositionTotal: 100,
-    requireActiveStyleForProjection: true
-}, schemaPolicies: { apparelProduct: {
-    tenantOwned: { accessGroups: { adminGroup: 10, commerceOperatorUserGroup: 10, serviceAccountUserGroup: 10 } }
-} }, product: { publication: { searchEnrichment: { domains: { contributors: { apparel: { serviceName: 'DefaultApparelProductSearchEnrichmentService', required: true } } } } } } };
+    requireActiveStyleForProjection: true,
+  },
+  schemaPolicies: {
+    apparelProduct: {
+      tenantOwned: {
+        accessGroups: {
+          adminGroup: 10,
+          commerceOperatorUserGroup: 10,
+          serviceAccountUserGroup: 10,
+        },
+      },
+    },
+  },
+  product: {
+    publication: {
+      searchEnrichment: {
+        domains: {
+          contributors: {
+            apparel: {
+              serviceName: "DefaultApparelProductSearchEnrichmentService",
+              required: true,
+            },
+          },
+        },
+      },
+    },
+    discovery: {
+      catalogue: {
+        dimensions: {
+          colors: {
+            paths: {
+              $config: "replace",
+              value: [
+                "apparel.options.colourCode",
+                "apparel.options.colorCode",
+              ],
+            },
+          },
+          sizes: {
+            paths: {
+              $config: "replace",
+              value: ["apparel.options.sizeCode"],
+            },
+          },
+        },
+      },
+    },
+  },
+};

@@ -19,12 +19,21 @@ const crypto = require('crypto');
  * @override Projects may layer cookie policy while preserving HttpOnly refresh, exact-origin, CSRF, and rotation guarantees.
  */
 module.exports = {
-    /** Returns and validates the effective browser-session configuration. */
+    /** Resolves request-scoped cookie policy without mutating configuration. Explicit local HTTP loopback support retains Secure cookies for HTTPS; origin authorization remains mandatory. */
     config: function (request) {
         const key = request && request.browserSessionPrincipalType === 'Customer' ? 'profileCustomerBrowserSession' : 'profileBrowserSession';
         let config = CONFIG.get(key) || {};
         if (config.enabled !== true) {
             throw new CLASSES.NodicsError('ERR_AUTH_00001', 'Browser sessions are disabled');
+        }
+        if (config.secure === true && config.allowInsecureLoopback === true) {
+            const origin = request?.httpRequest?.headers?.origin;
+            try {
+                const parsed = new URL(origin);
+                if (parsed.protocol === 'http:' && ['localhost', '127.0.0.1', '[::1]'].includes(parsed.hostname)) {
+                    config = Object.assign({}, config, { secure: false });
+                }
+            } catch (_) { /* Origin validation below rejects missing or invalid origins. */ }
         }
         let names = [config.refreshCookieName, config.csrfCookieName];
         let sameSite = ['Strict', 'Lax', 'None'];
@@ -39,6 +48,7 @@ module.exports = {
             !Number.isInteger(config.maximumAgeSeconds) ||
             config.maximumAgeSeconds < 60 ||
             typeof config.secure !== 'boolean' ||
+            (config.allowInsecureLoopback !== undefined && typeof config.allowInsecureLoopback !== 'boolean') ||
             (config.sameSite === 'None' && config.secure !== true)) {
             throw new CLASSES.NodicsError(
                 'ERR_AUTH_00001', 'Browser session configuration is invalid'
@@ -75,9 +85,10 @@ module.exports = {
         let origin = request.httpRequest && request.httpRequest.headers &&
             request.httpRequest.headers.origin;
         let cors = CONFIG.get('httpHardening') && CONFIG.get('httpHardening').cors || {};
+        const policy = SERVICE.DefaultHttpHardeningService.resolveCorsOrigins(cors);
         if (cors.enabled !== true || cors.allowCredentials !== true ||
-            !origin || !Array.isArray(cors.allowedOrigins) ||
-            cors.allowedOrigins.includes('*') || !cors.allowedOrigins.includes(origin)) {
+            !origin || policy.deniedOrigins.includes(origin) ||
+            policy.allowedOrigins.includes('*') || !policy.allowedOrigins.includes(origin)) {
             throw new CLASSES.NodicsError('ERR_AUTH_00001', 'Browser session origin is not allowed');
         }
         let parsed;
@@ -86,7 +97,7 @@ module.exports = {
         } catch (error) {
             throw new CLASSES.NodicsError('ERR_AUTH_00001', 'Browser session origin is invalid');
         }
-        let loopback = ['localhost', '127.0.0.1', '::1'].includes(parsed.hostname);
+        let loopback = ['localhost', '127.0.0.1', '[::1]'].includes(parsed.hostname);
         if (config.secure !== true && (!loopback || parsed.protocol !== 'http:')) {
             throw new CLASSES.NodicsError(
                 'ERR_AUTH_00001',

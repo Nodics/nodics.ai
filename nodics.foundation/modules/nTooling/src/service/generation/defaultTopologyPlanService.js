@@ -175,7 +175,9 @@ module.exports = {
                     path: serverPath,
                     index: base + '.3' + (envIndex + 1) + '.' + (serverIndex + 1),
                     activeGroups: options.activeGroups,
-                    activeModules: [scopedServerName, envName].concat(options.modules, options.providers)
+                    // nConfig selects the environment/server/node from runtime metadata.
+                    // Declare only the additional capabilities and providers here.
+                    activeModules: options.modules.concat(options.providers)
                 });
                 options.nodes.forEach((nodeName, nodeIndex) => {
                     entries.push({

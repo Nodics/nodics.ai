@@ -174,3 +174,26 @@ authorization; runtime tokens gain no group-based generic CRUD access. Local
 startup may prepare its authority-owned tenant inventory; a remote runtime may
 only discover the enterprise authorized by its retained proof and deployment
 grant. Tenant properties are protected runtime configuration, not public data.
+
+`profileInitialization.requiredEmployeeLogins` owns initializer identity checks,
+with admin/apiAdmin defaults matching Profile Init data. Runtime API-key login
+metadata does not select the initializer employee. Custom identities require
+matching governed Init data; partial checks never reset existing credentials.
+
+Profile refresh sessions use the Profile-owned `auth` cache channel. Its module
+configuration references nAuth's strict channel defaults through nConfig; do not
+copy those defaults into a customer environment or redirect identity ownership.
+The deployment must still enable the distributed provider. Later Profile channel
+overrides use normal layering, preserving atomic consume and no local fallback.
+
+Browser sessions resolve credentialed origins through nRouter's existing
+`resolveCorsOrigins` service. Endpoint-derived origins and explicit origin lists
+share one policy; explicit denials and endpoint disables take precedence.
+Profile continues to enforce cookie security, CSRF and refresh rotation.
+
+During a governed Local reset, the provider's private authority may reach scope
+cleanup after Employee deletion. Profile must prove principal absence through an
+authoritative read and await nAuth shared-stamp revocation. It must reject failed
+reads or revocation, and a request field cannot forge reset authority. Existing
+principals and ordinary scope mutations still require exactly one acknowledged
+Employee update. This rule is independent of reset inventory ordering.

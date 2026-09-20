@@ -23,4 +23,4 @@ module.exports = {
             }
         }
     },
- schemaPolicies: { wasteSubmission: { operational: { accessGroups: { adminGroup: 10, serviceAccountUserGroup: 10, employeeUserGroup: 10, customerGroup: 10 } } } }, wasteSubmission: { evidenceRequiredForSubmit: true, metadataSuggestion: { enabled: false, subjectLabel: "waste item", fallbackItemTypeCode: null } } };
+ schemaPolicies: { wasteSubmission: { operational: { accessGroups: { adminGroup: 10, serviceAccountUserGroup: 10, employeeUserGroup: 10, customerGroup: 10 } } } }, wasteSubmission: { requireEnvironmentalAssessment: false, evidenceRequiredForSubmit: true, metadataSuggestion: { enabled: false, subjectLabel: "waste item", fallbackItemTypeCode: null } } };

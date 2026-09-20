@@ -100,3 +100,6 @@ Avoid:
 - editing generated catalog artifacts manually;
 - mixing publish lifecycle behavior into catalog unless the business module owns it;
 - bypassing import/export/search contracts for catalog data movement.
+
+This capability contributes an inert model-service inventory for [governed Local reset](../nSystem/llm/contracts/local-reset.md).
+Deployment selection, environment and tenant checks, confirmation and required services remain mandatory.

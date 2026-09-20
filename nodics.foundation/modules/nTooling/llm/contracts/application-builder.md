@@ -246,3 +246,11 @@ composition, renderer, store, catalog and data pack. It runs generation and
 starter HTTP qualification, rejects undeclared choices and missing CI sources,
 and proves metadata edits invalidate plan digests. Customizations must preserve
 these checks, dependency closure, approval, containment and existing-file safety.
+
+## Accelerator-owned data packs
+
+The existing catalogue discovers explicitly opted-in packs from both framework and
+customer package metadata, exposing `frameworkDataPacks` and `customerDataPacks`
+with source-relative module paths and metadata digests. A pack identity must have
+one source owner; duplicates fail discovery. Planning and lock evidence resolve
+both ownership classes. Discovery does not copy, import, publish or execute a pack.

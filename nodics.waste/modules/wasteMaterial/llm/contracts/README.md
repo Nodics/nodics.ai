@@ -49,3 +49,56 @@ newly flagged records additionally require evidence acknowledgement. The
 projection exposes manual routing and acknowledgement requirements, explanatory
 copy and whether manual approval was recorded. Private reviewer identities stay
 in the audit metadata.
+
+## Metadata coverage and lifecycle
+
+Every current image-schema property has the disposition below. This is a mapping
+of existing authorities, not a second schema or runtime registry. The schema-key
+coverage assertion and full nested range/environment comparisons live in
+`wasteSubmission/test/wasteRecognitionAlignment.test.js`.
+
+| Image schema property (including children) | Recorded by wasteSubmission | Public descriptor / lifecycle |
+| --- | --- | --- |
+| contractVersion | recognition.contractVersion | contractVersion; protocol metadata |
+| assessment | recognition.assessment | SUPPORTED proceeds; UNSUPPORTED/UNCERTAIN reject before saving a suggestion |
+| imageEvidence.sourceType/confidence/reason | recognition.imageEvidence and metadata.evidenceReview | evidenceReview; uncertain/missing/mismatched evidence requires human review |
+| name, description, brand, model | suggestion.facts, applied facts | identity; absent identity values are null (unknown from evidence) |
+| itemTypeCode, categoryCode | canonical catalogue relationship in facts and recognition.taxonomyMatch | classification; fallback match remains advisory; family resolved from catalogue |
+| conditionGrade | facts.conditionGrade | condition value and basis; UNKNOWN until defensible observation/review |
+| quantity | facts.quantity | physical.quantity; bounded main-item count |
+| confidence | suggestion.confidence | advisory overall confidence remains suggestion metadata; never copied to each property |
+| materials[].code/basis/confidence | canonical facts.materials refs and recognition.materials | materials or components by catalogue kind; [] means no supported observations, not absence of components |
+| sizeClass | facts.sizeClass and sizeProvenance, recognition.size | physical.size; taxonomy policy or inference; UNKNOWN has UNKNOWN basis and null confidence |
+| weightEstimate.min/max/unit/basis/confidence | facts.weightEstimate | physical.weightEstimate; inferred range or null endpoints; never measured weight |
+| dimensionsEstimate.length/width/height and each range member | facts.dimensionsEstimate | physical.dimensionsEstimate; each missing axis is explicitly unknown |
+| environment.recyclability/contamination/recoveryPotential value/basis/confidence | facts.environment | environment.observations; partial snapshots fill missing groups with UNKNOWN |
+| environment.hazards[].code/basis/confidence | facts.environment.hazards | environment.observations.hazards; empty list is not safety clearance; hazardAssessment remains UNVERIFIED until reviewed |
+| qualityFlags[] | recognition.qualityFlags | evidenceReview.qualityFlags; separate from low-confidence field paths |
+| unknownFields[] | recomputed recognition.unknownFields | unknownFields and metadataQuality.unknownFields recomputed from effective facts; contradictory provider labels are discarded |
+
+Fields outside the image schema remain governed: environment.assessment,
+carbonImpact and landfillDiversion project only Waste Impact results. Missing
+results retain NOT_ASSESSED (customer copy: pending calculation); FAILED stays
+FAILED and zero stays zero. No measured weight, carbon, credit issuance or reward
+amount can be manufactured from recognition. Reward valuation is ESTIMATED until
+its owner records COMPLETED settlement; illustrative valuations stay ILLUSTRATIVE.
+A rejected submission never makes its reward CONFIRMED.
+
+Material visibility/recoverability and component hazard/recovery relevance are
+unknown unless explicitly recorded. Observed material does not prove external
+visibility; inferred material does not prove internal placement. Unknown boolean
+component relevance is null, not a fabricated safety or recovery assertion.
+
+`metadataQuality.lowConfidenceFields` contains effective fact paths below
+`wasteMaterial.descriptor.minimumFieldConfidence` (default 0.6), never quality
+flag codes. Later layers can override that reporting threshold; it does not
+change permission, approval, evidence holds or impact calculations. Missing
+confidence stays null. Final reviewed records do not borrow confidence or size
+policy from old AI suggestions. Review completion clears the pending metadata
+verification indicator while retaining the original evidence hold for audit.
+
+Customer name/description edits, confirmation and reviewer snapshots retain their
+existing authority. Original suggestions remain separate records. Legacy records
+need no migration: absent values receive explicit unknown projections. For new
+schema properties, update this coverage map and the schema-key regression before
+shipping. Serial numbers/IMEI, personal data and provider internals remain excluded.

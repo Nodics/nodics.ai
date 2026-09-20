@@ -25,3 +25,9 @@ This file gives AI coding agents mandatory guidance for this Nodics module or pa
 Governance reports use the loader's effective artifact trace and member origins.
 Preserve generated-before-authored order and inherited methods; do not infer a
 method winner from the last contributing filename.
+
+This capability contributes an inert model-service inventory for [governed Local reset](../nSystem/llm/contracts/local-reset.md).
+Deployment selection, environment and tenant checks, confirmation and required services remain mandatory.
+
+Route-category defaults belong to this capability; deployments supply only intentional overrides.
+Preserve nRouter enforcement and independent route authorization. See [exposure ownership](../nRouter/llm/contracts/README.md#capability-owned-exposure-defaults).

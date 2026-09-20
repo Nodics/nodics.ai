@@ -46,7 +46,8 @@ module.exports = {
           ? left.localeCompare(right)
           : leftOrder - rightOrder;
       })
-      .map((code) => this.describe(profiles[code]))
+      .filter((code) => profiles[code].enabled !== false)
+      .map((code) => this.describe(this.resolveProfile(profiles[code])))
       .filter(Boolean);
   },
   /** Projects one configured profile without exposing transport internals or credentials. */
@@ -175,6 +176,7 @@ module.exports = {
         (type === "MEDIA_ASSET_MANIFEST" ? "WCMS_STAGED" : ""),
     );
     let manifestPath = String(step.manifestPath || "");
+    let manifestModule = step.manifestModule ? String(step.manifestModule) : undefined;
     if (
       !/^[A-Za-z][A-Za-z0-9._-]{0,127}:[A-Za-z][A-Za-z0-9_-]{0,127}$/.test(
         code,
@@ -184,6 +186,7 @@ module.exports = {
       !/^[A-Z][A-Z0-9_]{1,63}$/.test(targetRuntimeRole) ||
       (type === "MEDIA_ASSET_MANIFEST" &&
         (!manifestPath ||
+          (manifestModule && (!/^[A-Za-z][A-Za-z0-9._-]{0,127}$/.test(manifestModule) || manifestModule !== code.split(":")[0])) ||
           path.isAbsolute(manifestPath) ||
           manifestPath.split(/[\\/]+/).includes("..")))
     ) {
@@ -206,6 +209,7 @@ module.exports = {
       targetServer: targetServer,
       targetRuntimeRole: targetRuntimeRole,
       manifestPath: type === "MEDIA_ASSET_MANIFEST" ? manifestPath : undefined,
+      manifestModule: type === "MEDIA_ASSET_MANIFEST" ? manifestModule : undefined,
       folderCode: step.folderCode ? String(step.folderCode) : undefined,
       businessPurpose: step.businessPurpose
         ? String(step.businessPurpose)
@@ -348,10 +352,12 @@ module.exports = {
         "Application profile code is invalid",
       );
     }
-    let profile = ((CONFIG.get("backofficeApplicationInitialization") || {})
+    let configured = ((CONFIG.get("backofficeApplicationInitialization") || {})
       .profiles || {})[code];
+    let profile = configured && this.resolveProfile(configured);
     if (
       !profile ||
+      profile.enabled === false ||
       !profile.owner ||
       !profile.applicationCode ||
       !profile.siteCode ||
@@ -367,6 +373,18 @@ module.exports = {
       );
     }
     return Object.assign({}, profile);
+  },
+  /** Resolves technical target defaults at consumption time so later deployment and node choices apply to earlier customer profiles. */
+  resolveProfile: function (profile) {
+    const configuration =
+      CONFIG.get("backofficeApplicationInitialization") || {};
+    return Object.assign({}, profile, {
+      target: Object.assign(
+        {},
+        configuration.target || {},
+        profile.target || {},
+      ),
+    });
   },
   /** Requires a human principal for initiation while allowing authenticated status reads. */
   /** Executes the documented bounded module operation. */
@@ -448,6 +466,8 @@ module.exports = {
         "Application initialization service authentication is unavailable",
       );
     let suffix = mode === "preflight" ? "validate" : "install";
+    const authorization = mode === "execute"
+      ? this.authorizationHeader(request, true) : "Bearer " + token;
     return SERVICE.DefaultModuleService.invokeModule({
       moduleName: "import",
       // These operations intentionally use the governed HTTP import route, even in a consolidated runtime.
@@ -468,7 +488,7 @@ module.exports = {
       timeoutMs: group.timeoutMs || 120000,
       maxAttempts: 1,
       idempotencyKey: mode === "execute" ? group.idempotencyKey : undefined,
-      header: { Authorization: "Bearer " + token },
+      header: { Authorization: authorization },
       responseSelector: (response) =>
         response && (response.data || response.result || response),
     });
@@ -723,10 +743,39 @@ module.exports = {
     }
     return resolved;
   },
+  /** Resolves a declared module-owned manifest through the canonical module registry, preserving project-relative compatibility. */
+  safeManifestPath: function (step) {
+    if (!step.manifestModule) return this.safeProjectPath(step.manifestPath);
+    const owner = typeof NODICS.getRawModule === "function" && NODICS.getRawModule(step.manifestModule);
+    const relativePath = String(step.manifestPath || "");
+    if (!owner || !owner.path || !relativePath || path.isAbsolute(relativePath) || relativePath.split(/[\\/]+/).includes("..")) {
+      throw new CLASSES.NodicsError("ERR_BOF_00081", "Application preparation manifest requires a declared module-relative source");
+    }
+    const root = fs.realpathSync(owner.path);
+    const resolved = fs.realpathSync(path.resolve(root, relativePath));
+    if (!resolved.startsWith(root + path.sep) || !fs.statSync(resolved).isFile()) {
+      throw new CLASSES.NodicsError("ERR_BOF_00081", "Application preparation manifest escapes its owning module");
+    }
+    return resolved;
+  },
+  /** Confines media payloads to the declared manifest's files directory, including symlink resolution. */
+  safeManifestAssetPath: function (step, fileName) {
+    const manifest = this.safeManifestPath(step);
+    const root = fs.realpathSync(path.join(path.dirname(manifest), "files"));
+    if (!root.startsWith(path.dirname(manifest) + path.sep))
+      throw new CLASSES.NodicsError("ERR_BOF_00085", "Application preparation media directory escapes its manifest directory");
+    const relativePath = String(fileName || "");
+    if (!relativePath || path.isAbsolute(relativePath) || relativePath.split(/[\\/]+/).includes(".."))
+      throw new CLASSES.NodicsError("ERR_BOF_00085", "Application preparation media asset path is invalid");
+    const resolved = fs.realpathSync(path.resolve(root, relativePath));
+    if (!resolved.startsWith(root + path.sep) || !fs.statSync(resolved).isFile())
+      throw new CLASSES.NodicsError("ERR_BOF_00085", "Application preparation media asset escapes its manifest directory");
+    return resolved;
+  },
   /** Counts declared media assets without exposing local file paths to the browser. */
   mediaManifestAssetCount: function (step) {
     try {
-      let manifestPath = this.safeProjectPath(step.manifestPath);
+      let manifestPath = this.safeManifestPath(step);
       delete require.cache[require.resolve(manifestPath)];
       let assets = require(manifestPath);
       return Array.isArray(assets) ? assets.length : 0;
@@ -734,7 +783,7 @@ module.exports = {
       return 0;
     }
   },
-  /** Reads declared media identities from project-owned asset manifests for the governed Online release. */
+  /** Reads declared media identities from owner-scoped asset manifests for the governed Online release. */
   mediaManifestCodes: function (profile) {
     let codes = new Set();
     this.preparationSteps(profile)
@@ -743,7 +792,7 @@ module.exports = {
           step.type === "MEDIA_ASSET_MANIFEST" && step.required !== false,
       )
       .forEach((step) => {
-        let manifestPath = this.safeProjectPath(step.manifestPath);
+        let manifestPath = this.safeManifestPath(step);
         delete require.cache[require.resolve(manifestPath)];
         let assets = require(manifestPath);
         if (!Array.isArray(assets)) return;
@@ -755,10 +804,16 @@ module.exports = {
     return Array.from(codes).sort();
   },
   /** Returns a browser/request token when available so media-owned upload permissions stay human governed. */
-  authorizationHeader: function (request) {
+  authorizationHeader: function (request, requireHuman = false) {
     let headers =
       (request && request.httpRequest && request.httpRequest.headers) || {};
     let authorization = headers.authorization || headers.Authorization;
+    if (requireHuman) {
+      this.human(request);
+      if (typeof authorization !== "string" || !/^Bearer\s+\S+$/i.test(authorization)) {
+        throw new CLASSES.NodicsError("ERR_BOF_00082", "Operator bearer authorization is required for application data installation");
+      }
+    }
     if (authorization) return authorization;
     let token = NODICS.getInternalAuthToken(request.tenant);
     if (!token)
@@ -775,21 +830,36 @@ module.exports = {
     let requestHeaders = (request && request.headers) || {};
     let configured = (CONFIG.get("backofficeApplicationInitialization") || {})
       .operatorOrigin;
-    let origin = (
+    let origin =
       httpHeaders.origin ||
       httpHeaders.Origin ||
       requestHeaders.origin ||
       requestHeaders.Origin ||
-      configured
-    );
+      configured;
     if (typeof origin !== "string" || !origin)
-      throw new CLASSES.NodicsError("ERR_BOF_00083", "An explicit operator origin is required for governed media preparation");
+      throw new CLASSES.NodicsError(
+        "ERR_BOF_00083",
+        "An explicit operator origin is required for governed media preparation",
+      );
     let parsed;
-    try { parsed = new URL(origin); } catch {
-      throw new CLASSES.NodicsError("ERR_BOF_00083", "Operator origin is invalid");
+    try {
+      parsed = new URL(origin);
+    } catch {
+      throw new CLASSES.NodicsError(
+        "ERR_BOF_00083",
+        "Operator origin is invalid",
+      );
     }
-    if (!["http:", "https:"].includes(parsed.protocol) || parsed.origin !== origin || parsed.username || parsed.password)
-      throw new CLASSES.NodicsError("ERR_BOF_00083", "Operator origin must be an HTTP origin");
+    if (
+      !["http:", "https:"].includes(parsed.protocol) ||
+      parsed.origin !== origin ||
+      parsed.username ||
+      parsed.password
+    )
+      throw new CLASSES.NodicsError(
+        "ERR_BOF_00083",
+        "Operator origin must be an HTTP origin",
+      );
     return parsed.origin;
   },
   /** Resolves a configured server connection into an HTTP base URL. */
@@ -808,21 +878,7 @@ module.exports = {
   },
   /** Uploads one declared media asset through the media-owned upload API. */
   uploadMediaAsset: async function (step, asset, request) {
-    let manifestPath = this.safeProjectPath(step.manifestPath);
-    let filePath = path.join(
-      path.dirname(manifestPath),
-      "files",
-      String(asset.fileName || ""),
-    );
-    if (
-      !filePath.startsWith(path.dirname(manifestPath) + path.sep) ||
-      !fs.existsSync(filePath)
-    ) {
-      throw new CLASSES.NodicsError(
-        "ERR_BOF_00085",
-        "Application preparation media asset is missing",
-      );
-    }
+    let filePath = this.safeManifestAssetPath(step, asset.fileName);
     let buffer = fs.readFileSync(filePath);
     let form = new FormData();
     let extension = path.extname(String(asset.fileName || "")).toLowerCase();
@@ -913,7 +969,7 @@ module.exports = {
     );
     let uploaded = [];
     for (let step of steps) {
-      let manifestPath = this.safeProjectPath(step.manifestPath);
+      let manifestPath = this.safeManifestPath(step);
       delete require.cache[require.resolve(manifestPath)];
       let assets = require(manifestPath);
       if (!Array.isArray(assets) || assets.length === 0) {

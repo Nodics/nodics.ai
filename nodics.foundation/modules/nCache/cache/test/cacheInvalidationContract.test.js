@@ -39,7 +39,8 @@ const cacheConfig = {
     routerCacheChannelNameMapping: { get: 'routerCustom' },
     authCacheChannelNameMapping: {}
 };
-global.CONFIG = { get: key => key === 'cache' ? cacheConfig : key === 'nodeId' ? 'node-a' : undefined };
+const eventConfig = { remotePublishEnabled: false };
+global.CONFIG = { get: key => key === 'event' ? eventConfig : key === 'cache' ? cacheConfig : key === 'nodeId' ? 'node-a' : undefined };
 
 const configurationService = require('../src/service/config/defaultCacheConfigurationService');
 configurationService.channels = { profile: { router: {}, routerCustom: {}, schemaCustom: {} } };
@@ -97,6 +98,17 @@ global.SERVICE = {
     });
     assert.strictEqual(published.length, 1, 'Shared adapters must not publish redundant peer invalidation');
     localChannel.engineOptions.capabilities.distributed = false;
+
+    cacheConfig.invalidation.crossNode = null;
+    const propagation = { tenant: 'tenant-a', moduleName: 'profile', channelName: 'schemaCustom', channel: localChannel };
+    await cacheService.propagateInvalidation(propagation);
+    assert.strictEqual(published.length, 1, 'Standalone defaults must keep invalidation local');
+    eventConfig.remotePublishEnabled = true;
+    await cacheService.propagateInvalidation(propagation);
+    assert.strictEqual(published.length, 2, 'Selected remote event publication enables peer invalidation');
+    cacheConfig.invalidation.crossNode = false;
+    await cacheService.propagateInvalidation(propagation);
+    assert.strictEqual(published.length, 2, 'Explicit deployment disablement must win');
 
     let peerRequest;
     global.SERVICE.DefaultCacheService = {

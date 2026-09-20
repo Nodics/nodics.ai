@@ -22,3 +22,6 @@ This file gives AI coding agents mandatory guidance for this Nodics module or pa
   the selected module/schema and existing trusted export scope. Fail closed if
   that owner is unavailable. Do not restore removed Workbench discovery methods.
   Bounded record collection remains with its current search owner until migrated.
+
+Route-category defaults belong to this capability; deployments supply only intentional overrides.
+Preserve nRouter enforcement and independent route authorization. See [exposure ownership](../../../nRouter/llm/contracts/README.md#capability-owned-exposure-defaults).

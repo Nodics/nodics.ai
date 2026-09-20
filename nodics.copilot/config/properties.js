@@ -16,14 +16,5 @@
  * @owner generated
  * @override Project, environment, server, node, tenant, or customer layers may override these defaults through Nodics configuration layering.
  */
-module.exports = {
-    copilot: {
-        enabled: false,
-        apiExposure: 'copilotApi',
-        requireClarificationOnAmbiguity: true,
-        requireMutationConfirmation: true,
-        maximumExportRows: 10000,
-        maximumToolCallsPerTurn: 8,
-        maximumContextItems: 20
-    }
-};
+// Capability modules own configuration; API opt-in is copilot.api.enabled.
+module.exports = {};

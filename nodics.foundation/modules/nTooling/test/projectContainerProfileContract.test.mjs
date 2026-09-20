@@ -9,6 +9,7 @@
 
  */
 
+import writeEnvironment from './helpers/environmentFixture.cjs';
 /**
  * @module nTooling/test/projectContainerProfileContract
  * @description Guards environment-owned container profile discovery and rejects misplaced root descriptor facts.
@@ -22,21 +23,21 @@ import os from 'node:os';
 import path from 'node:path';
 import test from 'node:test';
 import {
-  conventionalEnvironmentName,
-  readContainerEnvironmentProfile,
-} from '../src/service/project/defaultProjectContainerProfileService.mjs';
+  readContainerEnvironmentConfiguration,
+} from '../src/service/project/defaultProjectContainerConfigurationService.mjs';
 
 function writeJson(filePath, value) {
+  if (filePath.endsWith('/config/properties.js')) return writeEnvironment(path.dirname(path.dirname(filePath)), value);
   fs.mkdirSync(path.dirname(filePath), { recursive: true });
   fs.writeFileSync(filePath, JSON.stringify(value, null, 2) + '\n');
 }
 
-test('container profile resolves from environment-owned nodics.environment.json', () => {
+test('container profile resolves from environment-owned config/properties.js', () => {
   const projectRoot = fs.mkdtempSync(path.join(os.tmpdir(), 'nodics-container-profile-'));
   writeJson(path.join(projectRoot, 'package.json'), {
     name: 'acme.startio',
   });
-  writeJson(path.join(projectRoot, 'envs', 'startioDockerLocal', 'nodics.environment.json'), {
+  writeJson(path.join(projectRoot, 'envs', 'startioDockerLocal', 'config/properties.js'), {
     contractVersion: 1,
     profileCode: 'dockerLocal',
     environment: 'startioDockerLocal',
@@ -46,9 +47,8 @@ test('container profile resolves from environment-owned nodics.environment.json'
     acceptance: { urls: { platform: 'http://127.0.0.1:5300' } },
   });
 
-  const profile = readContainerEnvironmentProfile(projectRoot, 'dockerLocal');
+  const profile = readContainerEnvironmentConfiguration(projectRoot, 'dockerLocal');
 
-  assert.equal(conventionalEnvironmentName({}, 'dockerLocal', projectRoot), 'startioDockerLocal');
   assert.equal(profile.code, 'dockerLocal');
   assert.equal(profile.environment, 'startioDockerLocal');
   assert.equal(profile.composePath, path.join(projectRoot, 'envs/startioDockerLocal/docker/compose.yaml'));
@@ -73,7 +73,7 @@ test('container profile rejects root descriptor container facts', () => {
   });
 
   assert.throws(
-    () => readContainerEnvironmentProfile(projectRoot, 'dockerLocal'),
+    () => readContainerEnvironmentConfiguration(projectRoot, 'dockerLocal'),
     /Unsupported nodics\.project\.json property `containerEnvironments`/
   );
 });

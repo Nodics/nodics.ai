@@ -18,6 +18,7 @@ module.exports = {
       operation === "readInternal" ? "read" : operation
     ]({
       authData: request.authData,
+      authorization: (http.headers || {}).authorization,
       tenant: request.tenant,
       files: http.files || [],
       payload: operation === "uploadEncoded" ? http.body : undefined,

@@ -11,19 +11,19 @@
 
 /** @module digitalCore/config/properties @description Defines Digital Commerce capability and schema access policies. @layer config @owner digitalCore */
 module.exports = {
-    // Inert inventory; an allowed local server must explicitly select this capability.
-    localResetProvider: {
-        "contributions": {
-            "digitalCore": {
-                "serviceNames": {
-                    "DefaultDigitalDeliveryService": true,
-                    "DefaultDigitalEntitlementService": true,
-                    "DefaultDigitalProductBindingService": true,
-                    "DefaultDigitalReversalService": true
-                }
-            }
-        }
+  // Inert inventory; an allowed local server must explicitly select this capability.
+  localResetProvider: {
+    contributions: {
+      digitalCore: {
+        serviceNames: {
+          DefaultDigitalDeliveryService: true,
+          DefaultDigitalEntitlementService: true,
+          DefaultDigitalProductBindingService: true,
+          DefaultDigitalReversalService: true,
+        },
+      },
     },
+  },
 
   digitalCore: {
     enabled: true,
@@ -66,6 +66,17 @@ module.exports = {
           subjectGroups: { customerUserGroup: true },
           principalTypes: { customer: true },
         },
+      },
+    },
+  },
+
+  apiExposure: {
+    categories: {
+      commerceCustomer: {
+        enabled: true,
+      },
+      commerceManagement: {
+        enabled: true,
       },
     },
   },

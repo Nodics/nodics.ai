@@ -11,14 +11,15 @@
  */
 
 /**
- * @module nTooling/service/project/defaultProjectContainerProfileService
- * @description Resolves project container-environment profiles from environment-owned files.
+ * @module nTooling/service/project/defaultProjectContainerConfigurationService
+ * @description Resolves project container operation inputs from existing environment configuration.
  * @layer tooling
  * @owner nTooling
  */
 
 import fs from 'node:fs';
 import path from 'node:path';
+import configuration from '../../../../nConfig/src/service/DefaultFrameworkInitializerService.js';
 
 /**
  * Resolves project-relative template values used by environment profiles.
@@ -101,55 +102,35 @@ export function resolveProjectCode(projectRoot, manifest = {}) {
   return projectCode;
 }
 
-/**
- * Builds the conventional environment name for a project profile code.
- * @param {Object} manifest Project manifest.
- * @param {string} profileCode Container profile code.
- * @param {string} [projectRoot] Project root.
- * @returns {string} Conventional environment name.
- */
-export function conventionalEnvironmentName(manifest, profileCode, projectRoot = '') {
-  const projectCode = projectRoot ? resolveProjectCode(projectRoot, manifest) : 'project';
-  const projectSegment = String(projectCode).split('.').filter(Boolean).pop() || 'project';
-  return projectSegment + profileCode.slice(0, 1).toUpperCase() + profileCode.slice(1);
+/** Selects declared environment configuration by exact identity or explicit policy, never a filename convention. @param {string} projectRoot Project root. @param {string} code Environment or container code. @param {boolean} container Container selection. @returns {Object} Selected identity and resolved properties. */
+export function selectEnvironmentConfiguration(projectRoot, code = '', container = false, inheritedProperties = {}) {
+  const environments = configuration.discoverDeploymentEnvironments(projectRoot);
+  const explicit = environments.find(item => item.code === code);
+  const read = item => ({ code: item.code, properties: configuration.readDeploymentConfiguration({ projectRoot, environmentCode: item.code, inheritedProperties }) });
+  if (explicit) return read(explicit);
+  const candidates = environments.map(read).filter(item => container
+    ? item.properties.tooling?.container?.code === code
+    : !code && item.properties.environment?.class === 'LOCAL');
+  if (candidates.length === 1) return candidates[0];
+  if (!code && !container && environments.length === 1) return read(environments[0]);
+  throw new Error('Select an available environment: ' + environments.map(item => item.code).join(', '));
 }
 
-/**
- * Resolves possible environment profile files for the given profile.
- * @param {string} projectRoot Project root.
- * @param {string} profileCode Container profile code.
- * @param {Object} manifest Project manifest.
- * @returns {string[]} Candidate profile files.
- */
-export function profileFileCandidates(projectRoot, profileCode, manifest) {
-  const candidates = [
-    path.join(projectRoot, 'envs', conventionalEnvironmentName(manifest, profileCode, projectRoot), 'nodics.environment.json'),
-    path.join(projectRoot, 'envs', profileCode, 'nodics.environment.json'),
-  ].filter(Boolean);
-  return [...new Set(candidates)];
-}
-
-/**
- * Reads an environment-owned container profile.
- * @param {string} projectRoot Project root.
- * @param {string} profileCode Container profile code.
- * @returns {Object} Resolved container profile.
- */
-export function readContainerEnvironmentProfile(projectRoot, profileCode) {
-  const manifest = readProjectManifest(projectRoot);
-  const profileFile = profileFileCandidates(projectRoot, profileCode, manifest).find(candidate => fs.existsSync(candidate));
-  const profile = profileFile ? JSON.parse(fs.readFileSync(profileFile, 'utf8')) : undefined;
-  if (!profile) throw new Error(`Unknown container environment profile: ${profileCode}`);
-  if (profile.profileCode && profile.profileCode !== profileCode) {
-    throw new Error(`Container environment profile mismatch: expected ${profileCode}, found ${profile.profileCode}`);
-  }
-  const environment = profile.environment || conventionalEnvironmentName(manifest, profileCode, projectRoot);
+/** Reads container inputs from the existing environment contribution; no environment descriptor is loaded. @param {string} projectRoot Project root. @param {string} profileCode Explicit container/environment selector. @returns {Object} Derived operation inputs. */
+export function readContainerEnvironmentConfiguration(projectRoot, profileCode) {
+  readProjectManifest(projectRoot);
+  const selected = selectEnvironmentConfiguration(projectRoot, profileCode, true);
+  const environment = selected.code;
+  const profile = selected.properties.tooling?.container;
+  if (!profile) throw new Error('Selected environment does not configure container tooling');
   const composeFile = profile.composeFile || `envs/${environment}/docker/compose.yaml`;
   const generatedRoot = path.resolve(projectRoot, resolveTemplate(projectRoot, profile.generatedDirectory || `envs/${environment}/generated`));
   return {
     ...profile,
-    code: profileCode,
-    profilePath: profileFile,
+    composition: selected.properties.activeModules?.compositions || {},
+    acceptance: selected.properties.tooling?.acceptance || {},
+    qualificationClass: selected.properties.environment?.class,
+    code: profile.code || profileCode,
     environment,
     composeFile,
     composePath: path.resolve(projectRoot, resolveTemplate(projectRoot, composeFile)),

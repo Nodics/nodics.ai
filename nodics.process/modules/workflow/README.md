@@ -19,3 +19,8 @@ workflow activation state and validated local runtime identity. Preserve the
 caller's authorization/audit context. Existing instances retain their completion,
 cancellation and recovery contract after business deactivation; definition and
 incident management do not silently start new instances.
+
+Route-category defaults belong to this capability; deployments supply only intentional overrides.
+Preserve nRouter enforcement and independent route authorization. See [exposure ownership](../../../nodics.foundation/modules/nRouter/llm/contracts/README.md#capability-owned-exposure-defaults).
+
+Remote actions use the existing allowlist and nService with scoped runtime identity. Process persists an expiring single-claim execution in its instance; the target claims authoritative context before mutation. Completed task decisions and immutable versions are read-only through generic APIs. See `llm/contracts/README.md`; no domain HTTP implementation or new identity authority belongs in Process.

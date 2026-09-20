@@ -147,6 +147,18 @@ module.exports = {
     if (!facts.sizeClass || facts.sizeClass === 'UNKNOWN') unknown.push('sizeClass');
     return unknown;
   },
+  /** Reports confidence on effective facts only; image quality flags are separate evidence concerns. */
+  lowConfidenceFields: function (facts) {
+    const threshold = this.settings().minimumFieldConfidence ?? DEFAULTS.minimumFieldConfidence;
+    const fields = [];
+    const visit = (value, path) => {
+      if (!value || typeof value !== 'object') return;
+      if (typeof value.confidence === 'number' && value.confidence < threshold) fields.push(path);
+      for (const [key, child] of Object.entries(value)) if (key !== 'confidence') visit(child, path ? path + '.' + key : key);
+    };
+    for (const key of ['materials', 'weightEstimate', 'dimensionsEstimate', 'environment', 'sizeProvenance', 'conditionProvenance']) visit(facts[key], key);
+    return fields;
+  },
   /** Resolves the catalogue once per request so list projection does not create per-item taxonomy reads. */
   catalogue: async function (request) {
     const store = SERVICE.DefaultWastePersistenceService;
@@ -199,17 +211,32 @@ module.exports = {
     const impact = final ? metadata.acceptedEstimate || metadata.approvedEstimate || metadata.verifiedEstimate : metadata.estimate;
     const assessment = impact && impact.metadata && impact.metadata.environmentalAssessment;
     const materialFacts = facts.materials || (!final && recognition.materials) || [];
+    const qualityFlags = [...new Set([...(recognition.qualityFlags || []), ...((metadata.evidenceReview && metadata.evidenceReview.qualityFlags) || [])].filter(value => DEFINITIONS.qualityFlags.includes(value)))];
+    const observations = { ...this.environment(), ...(facts.environment || {}) };
+    const evidenceReview = this.evidenceReview(record);
+    const size = facts.sizeProvenance || (!final && recognition.size) || {};
+    const dimensionsEstimate = Object.fromEntries(['length', 'width', 'height'].map(axis => [axis, facts.dimensionsEstimate?.[axis] || this.range(null, 'CM', this.settings().maximumDimensionCm)]));
+    const carbonImpact = assessment ? {
+      status: assessment.status,
+      indicators: assessment.indicators || [],
+      assessedAt: assessment.assessedAt || null,
+      methodology: assessment.methodology || null,
+    } : { status: 'NOT_ASSESSED', indicators: [], assessedAt: null, methodology: null };
+    const landfillMetric = (carbonImpact.indicators || []).find(value => ['LANDFILL_DIVERSION', 'LANDFILL_DIVERSION_WEIGHT'].includes(value.metricCode));
     return {
       contractVersion: 1, code: record.code, sourceSubmissionCode: record.sourceSubmissionCode || record.code, photo: metadata.photo || null,
       status: record.submissionStatus || record.assetStatus, requiresClassificationReview: Boolean(metadata.manualReviewRequired && !final),
       stage: final ? 'REVIEWED' : record.confirmedFacts ? 'SUBMITTED' : 'SUGGESTED',
-      evidenceReview: this.evidenceReview(record),
+      evidenceReview: { ...evidenceReview, qualityFlags },
       identity: { name: facts.name || null, description: facts.description || null, brand: facts.brand || null, model: facts.model || null },
       classification: { family: { code: familyCode, name: family && family.name || null }, category: { code: facts.categoryCode || null, name: category && category.name || null }, itemType: { code: facts.itemTypeCode || null, name: item && item.name || null } },
-      physical: { quantity: facts.quantity ?? null, size: { value: facts.sizeClass || 'UNKNOWN', basis: facts.sizeClass ? facts.sizeProvenance && facts.sizeProvenance.basis || recognition.size && recognition.size.basis || 'INFERRED' : 'UNKNOWN' }, weight: { value: facts.weight === undefined || facts.weight === null ? null : String(facts.weight), unit: 'KG', basis: facts.weightProvenance && facts.weightProvenance.basis || 'UNKNOWN' }, weightEstimate: facts.weightEstimate || this.range(null, 'KG', this.settings().maximumWeightKg), dimensionsEstimate: facts.dimensionsEstimate || null },
-      materials: materialFacts.map(hint => { const code = hint.ref && hint.ref.code || hint.code; const material = (catalogue.materials || []).find(value => value.code === code); return { ref: { module: 'wasteMaterial', schema: 'wasteMaterialType', code }, name: material && material.name || hint.name || null, kind: material && material.materialKind || hint.kind || 'MATERIAL', basis: hint.basis || 'UNKNOWN', confidence: this.confidence(hint.confidence) }; }),
+      physical: { quantity: facts.quantity ?? null, size: { value: facts.sizeClass || 'UNKNOWN', basis: facts.sizeClass && facts.sizeClass !== 'UNKNOWN' ? size.basis || 'INFERRED' : 'UNKNOWN', confidence: facts.sizeClass && facts.sizeClass !== 'UNKNOWN' ? this.confidence(size.confidence) : null }, weight: { value: facts.weight === undefined || facts.weight === null ? null : String(facts.weight), unit: 'KG', basis: facts.weightProvenance && facts.weightProvenance.basis || 'UNKNOWN' }, weightEstimate: facts.weightEstimate || this.range(null, 'KG', this.settings().maximumWeightKg), dimensionsEstimate },
+      materials: materialFacts.filter(hint => { const code = hint.ref && hint.ref.code || hint.code; const material = (catalogue.materials || []).find(value => value.code === code); return (material && material.materialKind || hint.kind || 'MATERIAL') !== 'COMPONENT'; }).map(hint => { const code = hint.ref && hint.ref.code || hint.code; const material = (catalogue.materials || []).find(value => value.code === code); return { ref: { module: 'wasteMaterial', schema: 'wasteMaterialType', code }, name: material && material.name || hint.name || null, kind: material && material.materialKind || hint.kind || 'MATERIAL', basis: hint.basis || 'UNKNOWN', confidence: this.confidence(hint.confidence), visibility: hint.visibility || 'UNKNOWN', recoverability: hint.recoverability || 'UNKNOWN' }; }),
+      components: materialFacts.filter(hint => { const code = hint.ref && hint.ref.code || hint.code; const material = (catalogue.materials || []).find(value => value.code === code); return (material && material.materialKind || hint.kind) === 'COMPONENT'; }).map(hint => { const code = hint.ref && hint.ref.code || hint.code; const material = (catalogue.materials || []).find(value => value.code === code); return { ref: { module: 'wasteMaterial', schema: 'wasteMaterialType', code }, name: material && material.name || hint.name || null, basis: hint.basis || 'UNKNOWN', confidence: this.confidence(hint.confidence), hazardRelevant: typeof hint.hazardRelevant === 'boolean' ? hint.hazardRelevant : null, recoveryRelevant: typeof hint.recoveryRelevant === 'boolean' ? hint.recoveryRelevant : null }; }),
       condition: { value: facts.conditionGrade || 'UNKNOWN', basis: facts.conditionGrade && facts.conditionGrade !== 'UNKNOWN' ? facts.conditionProvenance && facts.conditionProvenance.basis || 'INFERRED' : 'UNKNOWN' },
-      environment: { observations: facts.environment || this.environment(), assessment: assessment || null, metrics: impact && impact.metrics || [], status: impact && impact.calculationStatus || 'NOT_ASSESSED', provisional: !final, publicClaimAllowed: false },
+      environment: { observations, assessment: assessment || null, metrics: impact && impact.metrics || [], status: impact && impact.calculationStatus || 'NOT_ASSESSED', provisional: !final, publicClaimAllowed: false, carbonImpact, landfillDiversion: { value: landfillMetric?.value ?? null, unit: landfillMetric && landfillMetric.unitOfMeasure || 'KG', basis: landfillMetric && landfillMetric.basis || 'UNKNOWN', status: landfillMetric && landfillMetric.status || 'NOT_ASSESSED', confidence: this.confidence(landfillMetric?.confidence) } },
+      reward: metadata.valuation ? { estimatedReward: metadata.valuation.rewards || [], rewardStatus: metadata.valuation.illustrative === true ? 'ILLUSTRATIVE' : metadata.settlementStatus === 'COMPLETED' && record.submissionStatus !== 'REJECTED' ? 'CONFIRMED' : 'ESTIMATED', rewardCalculationVersion: metadata.valuation.version || null, rewardCalculationBasis: metadata.valuation.weightSource || null } : { estimatedReward: [], rewardStatus: 'NOT_ASSESSED', rewardCalculationVersion: null, rewardCalculationBasis: null },
+      metadataQuality: { unknownFields: this.unknownFields(facts), lowConfidenceFields: this.lowConfidenceFields(facts), manualVerificationRequired: !final && (evidenceReview.manualApprovalRequired || Boolean(metadata.manualReviewRequired)), completenessScore: null },
       review: { decision: final ? record.submissionStatus || 'APPROVED' : null, comment: final ? metadata.publicReason || null : null, reviewedAt: metadata.reviewedAt || null },
       customerEditableFields: final || record.confirmedFacts ? [] : ['name', 'description'],
       unknownFields: this.unknownFields(facts),

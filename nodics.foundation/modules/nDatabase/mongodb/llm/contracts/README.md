@@ -20,3 +20,9 @@ keywords remain inherited. Preserve explicit zero/false schema values. Reject
 arrays, null and non-boolean entries instead of silently dropping validation.
 This unreleased property has no array compatibility adapter; migrate declared
 project overrides together. Driver validation still owns keyword semantics.
+
+MongoDB owns the framework connection-name defaults: `masterLocal` and `testLocal`
+under `database.default.mongodb.master/test.databaseName`. Local deployments
+inherit them; later layers declare only deliberate differences. Keep separate
+server and tenant databases where required for isolation. A default change must
+not rename, migrate, delete or reconnect existing databases automatically.

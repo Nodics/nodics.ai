@@ -9,7 +9,7 @@
 
  */
 
-'use strict';
+"use strict";
 
 /**
  * @module installer/config/properties
@@ -19,35 +19,39 @@
  * @override Customer projects may override allowlists and operation policy through normal Nodics configuration layering.
  */
 module.exports = {
-    installer: {
-        applicationBuilder: {
-            enabled: true,
-            apiOperationsEnabled: true,
-            mutatingOperationsEnabled: false,
-            standaloneBootstrapRepository: 'Nodics/nodics.installer',
-            standaloneBootstrapCommand: 'npx github:Nodics/nodics.installer',
-            latestVerifiedStandaloneVersion: '0.7.2',
-            protectVendorRepositories: [
-                'nodics.ai',
-                'nodics.axis'
-            ],
-            evidenceDirectoryName: '.nodics-installer',
-            workspaceManifestName: '.nodics-workspace.json',
-            workspaceIdentityName: '.nodics-installer-identity.json',
-            workspaceLockName: '.nodics-installer-lock.json',
-            workspace: {
-                allowedRoots: [],
-                allowRequestWorkspaceRoot: true,
-                maxEvidenceBytes: 65536,
-                allowedEvidenceFiles: [
-                    '.nodics-workspace.json',
-                    '.nodics-installer-identity.json',
-                    '.nodics-installer-lock.json',
-                    'summary.json',
-                    'setup.log',
-                    'preflight.log'
-                ]
-            }
-        }
-    }
+  installer: {
+    applicationBuilder: {
+      enabled: true,
+      apiOperationsEnabled: true,
+      mutatingOperationsEnabled: false,
+      standaloneBootstrapRepository: "Nodics/nodics.installer",
+      standaloneBootstrapCommand: "npx github:Nodics/nodics.installer",
+      latestVerifiedStandaloneVersion: "0.7.2",
+      protectVendorRepositories: ["nodics.ai", "nodics.axis"],
+      evidenceDirectoryName: ".nodics-installer",
+      workspaceManifestName: ".nodics-workspace.json",
+      workspaceIdentityName: ".nodics-installer-identity.json",
+      workspaceLockName: ".nodics-installer-lock.json",
+      workspace: {
+        allowedRoots: [],
+        allowRequestWorkspaceRoot: true,
+        maxEvidenceBytes: 65536,
+        allowedEvidenceFiles: [
+          ".nodics-workspace.json",
+          ".nodics-installer-identity.json",
+          ".nodics-installer-lock.json",
+          "summary.json",
+          "setup.log",
+          "preflight.log",
+        ],
+      },
+    },
+  },
+  apiExposure: {
+    categories: {
+      installerManagement: {
+        enabled: true,
+      },
+    },
+  },
 };

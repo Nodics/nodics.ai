@@ -18,9 +18,18 @@
  */
 
 module.exports = {
+  bootstrapIdentity: {
+    source: "environment",
+    adminPassword: { $config: "env", name: "NODICS_BOOTSTRAP_ADMIN_PASSWORD", fallback: null },
+    servicePassword: { $config: "env", name: "NODICS_BOOTSTRAP_SERVICE_PASSWORD", fallback: null },
+    serviceApiKey: { $config: "env", name: "NODICS_BOOTSTRAP_SERVICE_API_KEY", fallback: null },
+  },
+  defaultAuthDetail: {
+    apiKey: { $config: "env", name: "NODICS_RUNTIME_API_KEY", fallback: null },
+  },
   authSecurity: {
     jwt: {
-      secret: null,
+      secret: { $config: "env", name: "NODICS_JWT_SECRET", fallback: null },
       minimumSecretLength: 32,
       issuer: "nodics",
       audience: "nodics-services",
@@ -48,7 +57,7 @@ module.exports = {
       requireScopes: true,
       allowLegacyHumanPrincipals: false,
       allowLegacyPlaintextLookup: false,
-      pepper: null,
+      pepper: { $config: "env", name: "NODICS_API_KEY_PEPPER", fallback: null },
       minimumPepperLength: 32,
     },
     audit: {
@@ -60,12 +69,12 @@ module.exports = {
       enabled: true,
       failClosed: true,
       allowMissingStamp: false,
-      cacheModuleName: null,
+      cacheModuleName: "auth",
     },
     internalToken: {
       maximumLifetimeSeconds: 300,
       renewalConcurrency: 4,
-      runtimeAccessGroups: ["userGroup"],
+      runtimeAccessGroups: ["userGroup", "serviceAccountUserGroup"],
       routePermission: "auth.internal.token.read",
       crossTenantPermissions: ["auth.internal.token.read.anyTenant"],
       crossTenantGroups: [],
@@ -92,13 +101,13 @@ module.exports = {
     },
   },
   cache: {
-    profile: {
+    auth: {
       channels: {
         auth: {
-          ttl: 3600,
+          ttl: 0,
           enabled: true,
-          fallback: true,
-          engine: "local",
+          fallback: false,
+          engine: "redis",
           events: {
             expired:
               "DefaultAuthTokenInvalidationService.publishTokenExpiredEvent",

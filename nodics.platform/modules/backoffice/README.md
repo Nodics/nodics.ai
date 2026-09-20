@@ -113,45 +113,10 @@ Validate these boundaries with `test/functionalModuleEligibilityPagination.test.
 the real model option normalizer, covers more than 256 records and page-size
 overrides, and rejects partial or malformed reads.
 
-The store defaults to process memory for local and single-instance operation.
-Production replicas configure `backofficeRegistry.store.mode` as `distributed`;
-the same store service then uses the configured nCache-owned distributed engine
-with provider TTL leases and incremental key scanning. BackOffice never creates
-or owns a second Redis connection. Modules reconcile automatically after
-BackOffice or module restart through bounded retry and periodic renewal.
-
-See the registry contract (canonical documentation: `solution.backoffice.technical-reference`) and
-the operations runbook (canonical documentation: `solution.backoffice.technical-reference`). API, catalogue,
-compatibility, and audit behavior is defined by
-the API catalogue contract (canonical documentation: `solution.backoffice.technical-reference`); deployment
-configuration follows the environment deployment contract (canonical documentation: `solution.backoffice.technical-reference`).
-Module capability discovery, safe snapshot behavior, and CMS provider selection
-follow the capability discovery contract (canonical documentation: `solution.backoffice.technical-reference`).
-Durable observation history, breaking-change approval, rejection, rollback,
-retention, and replica concurrency follow
-the contract history lifecycle (canonical documentation: `solution.backoffice.technical-reference`).
-Runtime readiness observation and multi-instance availability aggregation follow
-the availability observation contract (canonical documentation: `solution.backoffice.technical-reference`).
-The operator journey, per-instance projection, security boundary, and cluster
-interpretation follow
-the Module Health operations guide (canonical documentation: `solution.backoffice.technical-reference`).
-Core-data installation and update behavior follows
-the Core Data operations guide (canonical documentation: `solution.backoffice.technical-reference`).
-The same contract governs deduplicated state-transition events and sanitized
-probe/publication metrics through Nodics' existing event capability.
-Bounded administrative inventory, detail, and governed refresh behavior follow
-the registry administration contract (canonical documentation: `solution.backoffice.technical-reference`).
-Human/service separation and the administrative permission matrix follow
-the administrative security contract (canonical documentation: `solution.backoffice.technical-reference`).
-Structural scale budgets and benchmark evidence follow
-the performance and scale contract (canonical documentation: `solution.backoffice.technical-reference`).
-Backend go-live, monitoring, rollback, and residual-risk gates follow
-the backend release-readiness checklist (canonical documentation: `solution.backoffice.technical-reference`).
-The current evidence, acceptance decision, and remaining production gates are
-recorded in the backend acceptance report (canonical documentation: `solution.backoffice.technical-reference`).
-The module-owned core records for the initial Axis login, employee password
-recovery, secured screen lock, and dashboard composition are described in
-the Axis content catalog guide (canonical documentation: `solution.backoffice.technical-reference`).
+The store defaults to process memory for local development. Production adapters,
+API and security contracts, operator guides, compatibility/history governance,
+readiness, performance, release acceptance and Axis content guidance are in the
+canonical documentation topic `solution.backoffice.technical-reference`.
 
 ## Customization
 
@@ -192,10 +157,6 @@ Required data permits activation only after confirmed CURRENT release status.
 Preserve running/incomplete receipts and reject before catalogue activation. See
 [completion gate](llm/contracts/README.md#required-data-completion-before-activation).
 
-Required activation data must be confirmed current by nImport. Never convert
-running, queued, missing or non-executable results to imported receipts. Preserve
-incomplete receipts, fail activation, and retain catalogue revision/runtime gates.
-
 This capability declares an inert model-service inventory for [governed Local reset](../../../nodics.foundation/modules/nSystem/llm/contracts/local-reset.md).
 A server must explicitly select it; contributions never enable reset or bypass tenant, environment, confirmation or required-service checks.
 
@@ -205,3 +166,23 @@ retains its group-free, scoped credential; discovery must not give it generic
 BackOffice schema rights. Preserve source-instance evidence and existing bounded
 normalization, compatibility classification, approval and revision checks. Human
 contract decisions retain their authenticated actor and permission gates.
+
+Route-category defaults belong to this capability; deployments supply only intentional overrides.
+Preserve nRouter enforcement and independent route authorization. See [exposure ownership](../../../nodics.foundation/modules/nRouter/llm/contracts/README.md#capability-owned-exposure-defaults).
+
+Application targets and package facts inherit owning defaults; see [the contract](llm/contracts/README.md#inherited-application-targets-and-observed-package-facts).
+
+BackOffice owns inert capability-registry acceptance defaults. Resolve observed
+server coordinates from the selected deployment rather than a reference-project
+string. Media preparation steps may declare `manifestModule` with an owner-relative
+`manifestPath`; the owner must match the step's module identity. Resolve only through
+the existing raw-module registry, confine real paths and payloads to that owner,
+and retain project-relative compatibility. Never return local source paths to clients.
+Existing authorization, target-role, media upload and publication gates still apply.
+
+Operator-triggered application and remote activation imports forward the
+authenticated human bearer to the configured nImport owner. Require a human
+principal and bearer before execution; do not substitute the group-free runtime
+credential or add administrator groups to it. Status/preflight retains the scoped
+runtime credential. nImport still enforces the operator's import permission, tenant,
+release governance and schema access at the destination.

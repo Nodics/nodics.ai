@@ -17,7 +17,9 @@ module.exports = {
   /** Returns the trusted customer identity. */
   owner: async function (request) {
     const auth = request.authData || {};
-    if (auth.principalType !== "customer" || !auth.loginId)
+    if (auth.principalType !== "customer" || !auth.loginId || !auth.tenant ||
+        (request.tenant && request.tenant !== auth.tenant) ||
+        typeof request.authorization !== "string" || !/^Bearer \S+$/i.test(request.authorization))
       throw new CLASSES.NodicsError(
         "ERR_MED_00007",
         "A customer session is required",
@@ -29,6 +31,7 @@ module.exports = {
       apiName: "/customer",
       methodName: "POST",
       tenant: auth.tenant,
+      header: { Authorization: request.authorization },
       request: { tenant: auth.tenant },
       requestBody: {
         query: { loginId: auth.loginId },

@@ -39,7 +39,7 @@ see [failure ownership](llm/contracts/configuration-inheritance-contract.md#fail
 Keep dynamic configuration declarative using [property bindings](llm/contracts/configuration-inheritance-contract.md#declarative-property-bindings).
 Do not move composition algorithms into project configuration helpers. Tests that
 assert runtime behavior must resolve contributions through nConfig, including
-earlier-layer references and the selected environment profile.
+earlier-layer references and the selected runtime contributions.
 
 Build and clean lifecycle writers acquire the selected server filesystem lock before any generated-output mutation and release it after hooks and manifest publication. A competing writer or startup rejects a held lock. Interrupted locks require operator verification and removal; never steal by timeout.
 
@@ -54,3 +54,18 @@ Keep method origins on the existing loader's `xNodics` trace. Reports must use
 actual generated-before-authored load order, preserve unchanged method origins,
 and distinguish contributing server paths from canonical capability ownership.
 See the configuration-inheritance contract's effective behavior diagnostics.
+
+Use explicit collection replacement/keyed changes and preserve ordinary-array compatibility, reference timing and tenant isolation. See the configuration-inheritance contract.
+
+Do not repeat the selected environment/server/node in additional capability activation lists. Inherit unchanged defaults and environment connections; preserve explicit policy pins and reference timing. Apply the [customer configuration rule](../nSetup/llm/contracts/customer-config-classification-contract.md#structural-facts-and-repeated-deployment-values) to generators, examples and review.
+
+Use existing layered properties and `runtime`/`ref` projections. Do not read or
+regenerate an environment descriptor. Preserve contribution timing and bounded
+metadata discovery; see [runtime projections](llm/contracts/configuration-inheritance-contract.md#runtime-and-property-projections).
+
+The existing pre-start `readDeploymentConfiguration` entrypoint accepts optional
+`inheritedProperties` from its owning tooling caller. Apply them before authored
+project/environment/server/node contributions through the same binding and merge
+sequence. This preserves explicit replacement/keyed semantics for framework-owned
+tooling defaults; never merge defaults back into already-resolved collections.
+This projection does not activate modules or alter runtime startup authority.

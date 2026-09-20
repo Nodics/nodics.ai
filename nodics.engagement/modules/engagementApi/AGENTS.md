@@ -21,3 +21,6 @@ Before implementing non-trivial behavior here, record the business outcome, owni
 - Keep API routes secured by default and domain persistence behind the gateway port.
 - Preserve one-way dependencies and keep generated artifacts derived from source definitions.
 - Update local contracts, examples, tests, README, and generated context together when behavior begins.
+
+Route-category defaults belong to this capability; deployments supply only intentional overrides.
+Preserve nRouter enforcement and independent route authorization. See [exposure ownership](../../../nodics.foundation/modules/nRouter/llm/contracts/README.md#capability-owned-exposure-defaults).

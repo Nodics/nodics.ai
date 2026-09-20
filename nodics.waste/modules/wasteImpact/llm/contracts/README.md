@@ -1,5 +1,13 @@
 # wasteImpact Contracts
 
+Configured `fallbackProviderServices` are tried in order after the selected provider
+fails, times out or returns invalid metrics/disclosure. Each attempt has the configured
+timeout and cancellation signal. No mock fallback is accepted. The successful result
+records service, provider and bounded attempt error codes; never raw upstream errors.
+Provider selection is trusted CONFIG, never caller facts. An empty list retains the
+single-provider contract. Optional bounded `metricEvidence` preserves ranges, source
+URLs and explanations in the saved assessment; references do not establish certification.
+
 Waste Impact owns metric/profile/result envelopes and provider execution.
 `EXTERNAL_PROVIDER` profiles dispatch to the configured loader-owned service;
 existing static, weight, and quantity formulas retain their synchronous behavior.
@@ -100,3 +108,12 @@ formula version, source dataset/version, original and normalized factors, geogra
 baseline, treatment, boundary, weight source/range/confidence and timestamps.
 `CARBON_EQUIVALENT_TCO2E` is a unit conversion metric, never an issued-credit quantity.
 Electronic WARM coefficients and mappings belong to the eWaste provider adapter.
+
+Provider energy provenance is allowlisted alongside carbon provenance: energy
+factor, source unit, baseline/treatment coefficients, conversion and result bounds.
+The generic dispatcher preserves these scalars; domain providers own their formulas.
+
+Reference scenario version/explanation and weight source references are bounded
+scalar methodology provenance. Preserve REFERENCE_SCENARIO through all projections.
+
+Provider assessmentLimitation is preserved as bounded methodology provenance. INPUT_ONLY may retain prospective input metrics while carbon/energy remain null. Generic impact performs no domain factor selection; the accelerator owns coverage and formulas.

@@ -18,6 +18,14 @@
  */
 module.exports = {
   profile: {
+    references: {
+      read: {
+        secured: true, authTokenTypes: ["service"], accessGroups: ["serviceAccountUserGroup"],
+        permissions: ["profile.address.reference.read", "profile.enterprise.reference.read"],
+        apiExposure: "profileManagement", key: "/references/read", method: "POST",
+        controller: "DefaultProfileReferenceController", operation: "read",
+      },
+    },
     principalScopes: {
       mine: {
         secured: true,

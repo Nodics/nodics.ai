@@ -74,3 +74,8 @@ Do not place generated build artifacts in `nSetup`.
 The config module has a test that protects this rule: `modules/nConfig/test/nonRuntimePackageDiscovery.test.js`.
 
 UI and navigation ownership follows the [module contribution contract](llm/contracts/module-owned-ui-contribution-contract.md), including independent accelerator subtrees and typed native workspace bindings.
+
+The [mandatory final review](llm/contracts/ai-coding-and-customization-contract.md#mandatory-ownership-placement-and-scope-review)
+checks artifact placement, configuration ownership and semantic scope before
+completion or progression. Record its decision in the existing checklist;
+passing tests alone cannot close it.

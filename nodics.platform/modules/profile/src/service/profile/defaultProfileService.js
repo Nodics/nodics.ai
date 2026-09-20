@@ -76,19 +76,19 @@ module.exports = {
      * @returns {Promise<boolean>} Resolves true when the configured employee exists.
      */
     hasBootstrapEmployee: function (profileModuleName, defaultTenant) {
-        let defaultAuthDetail = CONFIG.get('defaultAuthDetail') || {};
-        let loginId = defaultAuthDetail.loginId;
-        if (!loginId) return Promise.resolve(true);
+        const policy = CONFIG.get('profileInitialization') || {};
+        const logins = policy.requiredEmployeeLogins;
+        if (!Array.isArray(logins) || !logins.length || logins.some(login => typeof login !== 'string' || !login.trim())) return Promise.resolve(false);
         let models = NODICS.getModels(profileModuleName, defaultTenant);
         if (!models || !models.EmployeeModel || typeof models.EmployeeModel.getItems !== 'function') {
             return Promise.resolve(false);
         }
         return models.EmployeeModel.getItems({
             tenant: defaultTenant,
-            query: { loginId: loginId }
+            query: { loginId: { $in: logins } }
         }).then(success => {
             let employees = UTILS.isArray(success) ? success : success.result;
-            return Boolean(employees && employees.length > 0);
+            return Array.isArray(employees) && logins.every(login => employees.some(employee => employee.loginId === login));
         });
     },
 

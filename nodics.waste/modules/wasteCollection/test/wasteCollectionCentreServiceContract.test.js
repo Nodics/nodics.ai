@@ -59,7 +59,10 @@ async function main() {
                         }
                     });
                 }
-                if (request.moduleName === 'profile' && request.apiName === '/address') {
+                if (request.moduleName === 'profile' && request.requestBody.type === 'address') {
+                    assert.equal(request.local, false);
+                    assert.equal(request.apiName, '/references/read');
+                    assert.deepEqual(request.requestBody.codes, ['ADDR_001']);
                     return request.responseSelector({
                         result: [
                             {
@@ -71,7 +74,9 @@ async function main() {
                         ]
                     });
                 }
-                if (request.moduleName === 'profile' && request.apiName === '/enterprise') {
+                if (request.moduleName === 'profile' && request.requestBody.type === 'enterprise') {
+                    assert.equal(request.local, false);
+                    assert.equal(request.apiName, '/references/read');
                     return request.responseSelector({
                         result: [
                             {
@@ -132,8 +137,8 @@ async function main() {
     assert.deepStrictEqual(calls[0].options, { recursive: false, skipItemCache: true });
     assert.deepStrictEqual(moduleCalls.map(call => call.moduleName + call.apiName), [
         'locationCore/locations/LOC_001',
-        'profile/address',
-        'profile/enterprise'
+        'profile/references/read',
+        'profile/references/read'
     ]);
     assert.strictEqual(moduleCalls[0].request.tenant, 'runtimeTenantFromToken');
 

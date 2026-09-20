@@ -60,3 +60,13 @@ Do not design the route like this for a browser-facing workflow:
 
 `inputPath.rootPath` remains a backend-local/trusted operational contract.
 Axis should never become the authority for that path.
+
+A deployment profile selects `template: "foundation"` and supplies its own label, description, completion message and explicit enabled state. An optional complete steps array replaces template mechanics. Missing templates and wrong destination roles fail before execution.
+
+## Minimal project content pack
+
+A project declares `data.contentPacks.packs.projectGuide = { source: { manifestSection: 'guide' } }`. Its existing `package.json` supplies identity, `data/manifest.json` identifies the selected section, and that section's `contentPath` points to the release folder. The runtime separately enables content-pack imports.
+
+To change wording, add only `presentation: { title: 'Partner guide' }`; the remaining messages/actions inherit. To change all selected packs, override `data.contentPacks.defaults.presentation.retryAction` in a later layer. An individual pack may override that field again. A nonstandard layout can explicitly set `source.manifestPath` and `source.contentPath`. Such overrides remain subject to containment and manifest validation.
+
+Sample releases are available to authorized manual operators by default, with optional deployment restriction. Only Init can auto-run at startup. Environment scope reads the canonical `environment.class`; never derive it from the selected environment name or another capability policy. Permissions, roles, tenant isolation, release checksums and durable receipts remain mandatory.

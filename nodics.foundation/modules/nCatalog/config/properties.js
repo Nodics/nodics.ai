@@ -17,5 +17,13 @@
  * @override Project, environment, server, node, tenant, or customer layers may override these defaults through Nodics configuration layering.
  */
 module.exports = {
-
+  localResetProvider: {
+    contributions: {
+      catalog: {
+        serviceNames: {
+          DefaultCatalogService: true,
+        },
+      },
+    },
+  },
 };

@@ -16,6 +16,25 @@ const assert = require('assert');
 const service = require('../src/service/engine/defaultRedisCacheEngineService');
 const adapter = require('../src/service/engine/defaultSentinelRedisClientAdapterService');
 
+// Layer provider defaults and exercise the key consumer without connecting to Redis.
+const merge = require('lodash/merge');
+const cacheConfiguration = require('../../cache/src/service/config/defaultCacheConfigurationService');
+const baseline = merge({}, require('../../cache/config/properties'), require('../config/properties'));
+const engine = baseline.cache.default.engines.redis;
+assert.strictEqual(engine.enabled, false);
+assert.strictEqual(engine.options.prefix, 'localRuntimeAuth');
+const enabled = merge({}, engine, { enabled: true });
+const overridden = merge({}, enabled, { options: { prefix: 'isolatedRuntimeAuth' } });
+const key = (engineOptions, tenant) => cacheConfiguration.createStorageKey({
+    channel: { channelName: 'auth', engineOptions }, tenant, key: 'session'
+});
+assert.strictEqual(key(enabled, 'tenantA'), 'auth_localRuntimeAuth_tenantA_session');
+assert.strictEqual(key(overridden, 'tenantA'), 'auth_isolatedRuntimeAuth_tenantA_session');
+assert.notStrictEqual(key(overridden, 'tenantA'), key(overridden, 'tenantB'));
+assert.strictEqual(overridden.options.host, engine.options.host);
+assert.strictEqual(engine.options.prefix, 'localRuntimeAuth');
+assert.strictEqual(engine.enabled, false);
+
 assert.strictEqual(service.buildSentinelOptions({ url: 'redis://127.0.0.1:6379' }), null);
 assert.throws(() => service.buildSentinelOptions({ sentinel: { enabled: true, endpoints: [] } }), /master name/);
 assert.throws(() => service.buildSentinelOptions({ sentinel: { enabled: true, name: 'nodics', endpoints: [{ host: '', port: 0 }] } }), /valid host and port/);

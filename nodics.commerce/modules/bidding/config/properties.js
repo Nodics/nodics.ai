@@ -11,16 +11,16 @@
 
 /** @module bidding/config/properties.js @description Defines deployment-owned bidding eligibility and exact negotiation policy. @layer config @owner bidding */
 module.exports = {
-    // Inert inventory; an allowed local server must explicitly select this capability.
-    localResetProvider: {
-        "contributions": {
-            "bidding": {
-                "serviceNames": {
-                    "DefaultCheckoutBidService": true
-                }
-            }
-        }
+  // Inert inventory; an allowed local server must explicitly select this capability.
+  localResetProvider: {
+    contributions: {
+      bidding: {
+        serviceNames: {
+          DefaultCheckoutBidService: true,
+        },
+      },
     },
+  },
 
   bidding: {
     enabled: false,
@@ -42,6 +42,14 @@ module.exports = {
           commerceOperatorUserGroup: 10,
           serviceAccountUserGroup: 10,
         },
+      },
+    },
+  },
+
+  apiExposure: {
+    categories: {
+      commerceCustomer: {
+        enabled: true,
       },
     },
   },

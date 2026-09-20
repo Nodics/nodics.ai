@@ -85,6 +85,7 @@ assert.deepEqual(capability.discovery, {
 global.CONFIG = {
     get: key => ({
         backofficeRegistration: {
+            ...require('../config/properties').backofficeRegistration,
             enabled: true,
             moduleName: 'backoffice',
             heartbeatIntervalMs: 10000,
@@ -115,6 +116,7 @@ global.NODICS = {
 };
 
 const agent = Object.assign({}, registrationAgent, {
+    getInstanceId: () => 'capability-fixture-instance',
     _backofficeCapabilityProviders: new Map()
 });
 assert.equal(agent.buildRegistration('unregisteredSampleModule').backoffice, undefined,

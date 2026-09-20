@@ -101,3 +101,6 @@ Avoid:
 - Runtime engine: [workflow services](../../../nodics.process/modules/workflow/src/service)
 - Application data contracts: [workflow schemas](../../../nodics.process/modules/workflow/src/schemas)
 - Pipeline framework: [nPipeline](../nPipeline/README.md)
+
+This capability contributes an inert model-service inventory for [governed Local reset](../nSystem/llm/contracts/local-reset.md).
+Deployment selection, environment and tenant checks, confirmation and required services remain mandatory.

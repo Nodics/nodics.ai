@@ -51,7 +51,7 @@ module.exports = {
         default: {
             options: {
                 enabled: false, //if false, system will not configure any search related functionalities
-                fallback: true, // If true and search query return blank result, same query will be performed to Database
+                fallback: false, // If true and search query return blank result, same query will be performed to Database
                 engine: 'elastic', //Engine could be like elastic, solr, googleCommerce, endeca
             }
         }

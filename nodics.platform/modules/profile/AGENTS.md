@@ -78,3 +78,37 @@ authorization; runtime tokens gain no group-based generic CRUD access. Local
 startup may prepare its authority-owned tenant inventory; a remote runtime may
 only discover the enterprise authorized by its retained proof and deployment
 grant. Tenant properties are protected runtime configuration, not public data.
+
+Route-category defaults belong to this capability; deployments supply only intentional overrides.
+Preserve nRouter enforcement and independent route authorization. See [exposure ownership](../../../nodics.foundation/modules/nRouter/llm/contracts/README.md#capability-owned-exposure-defaults).
+
+`profileInitialization.requiredEmployeeLogins` owns initializer identity checks,
+with admin/apiAdmin defaults matching Profile Init data. Runtime API-key login
+metadata does not select the initializer employee. Custom identities require
+matching governed Init data; partial checks never reset existing credentials.
+
+Profile refresh sessions use the Profile-owned `auth` cache channel. Its module
+configuration references nAuth's strict channel defaults through nConfig; do not
+copy those defaults into a customer environment or redirect identity ownership.
+The deployment must still enable the distributed provider. Later Profile channel
+overrides use normal layering, preserving atomic consume and no local fallback.
+
+Browser sessions resolve credentialed origins through nRouter's existing
+`resolveCorsOrigins` service. Endpoint-derived origins and explicit origin lists
+share one policy; explicit denials and endpoint disables take precedence.
+Profile continues to enforce cookie security, CSRF and refresh rotation.
+
+During a governed Local reset, the provider's private authority may reach scope
+cleanup after Employee deletion. Profile must prove principal absence through an
+authoritative read and await nAuth shared-stamp revocation. It must reject failed
+reads or revocation, and a request field cannot forge reset authority. Existing
+principals and ordinary scope mutations still require exactly one acknowledged
+Employee update. This rule is independent of reset inventory ordering.
+
+For a deployment serving both an approved HTTPS origin and local HTTP development,
+keep browser-session `secure: true` and opt into `allowInsecureLoopback: true` in
+the appropriate customer or employee session configuration. Only exact HTTP
+localhost, IPv4 loopback and IPv6 loopback requests receive non-Secure cookies;
+HTTPS retains Secure. This is resolved per request without changing shared
+configuration. Exact credentialed CORS, CSRF, proof freshness and refresh rotation
+remain required. Non-loopback HTTP and SameSite=None with non-Secure cookies fail.

@@ -169,3 +169,77 @@ Operators need to know whether a route is missing, blocked by permission, failin
 Verification starts with the documentation page. It must include the business problem, owning capability, route metadata table, security and access rules, visual request flow, customization guidance, runtime-change behavior, common mistakes, and validation commands. The catalogue entry must include source evidence pointing to route metadata, router services, schema CRUD configuration, and related docs.
 
 Implementation verification should include router syntax checks, generated route tests, authorization denial tests, profile permission resolution tests, request-context tests, controller/facade tests, and runtime router override tests where applicable. Public Nexus routes must be verified separately from Axis authenticated routes. Production-like validation should prove that no draft or restricted route becomes public documentation, no secret-like example is rendered, and all cluster nodes agree on the effective route registry.
+
+Selected project builds and OpenAPI generation use the same runtime metadata
+resolver. A short server alias such as `platform` resolves to its declared
+server, such as `platformServer`, before configuration loads. The selected
+environment is retained. Unknown servers or environments fail; generation must
+never silently switch to another runtime graph. Generated contracts remain
+projections of that graph and do not start application resources.
+
+## Module identity and outbound API prefixes
+
+A capability may declare an existing package `prefix` that differs from its
+logical name. Route registration and static outbound URL construction use that
+same metadata. For example, Workflow remains `workflow` for ownership and
+credential scope while its API path uses `/process`. A connection alias selects
+the deployment endpoint; it does not rename the capability. Discover remote
+source metadata through the existing runtime roots without activating its
+services when the prefix is needed by a static connection.
+
+Runtime Registry lease endpoints already carry the canonical module API path.
+The shared nService client retains that path instead of appending a second
+logical module segment. Origin-only endpoints use the discovered package prefix
+or the unchanged logical name. Target-authority checks, scoped authentication,
+remote-only dispatch and request deadlines still apply.
+
+
+### CORS header differences
+
+Keep default allowed/exposed header lists in nRouter. Applications add only their
+header differences using `httpHardening.cors.allowedHeaderOverrides` and
+`exposedHeaderOverrides`, both empty by default. For example,
+`exposedHeaderOverrides: { ETag: true }` exposes that response header after the
+origin passes existing CORS policy. A false entry removes a baseline or previously
+added header. Exact origins, enablement and credentials remain separate decisions.
+
+Names match the baseline without regard to case. Keep override key spelling
+consistent across layers; duplicate case variants, invalid HTTP token names and
+non-boolean maps reject. The consumer preserves its inputs. Use explicit nConfig
+replacement for clearing inherited overrides and existing array semantics for a
+complete baseline override. The HTTP hardening test covers two unrelated browser
+origins, additions/removals, malformed input, default closure and origin denial.
+
+
+## Origins from configured frontend endpoints
+
+nRouter constructs browser origins from `httpHardening.cors.originEndpoints`,
+using framework `originDefaults` of HTTP and localhost for structured
+`{ code, port }` entries. A keyed endpoint map also accepts full origin URLs.
+Frontend ports can come from the selected environment profile through nConfig:
+`{ $config: 'profile', path: 'topology.groups.frontends', fields: ['code', 'port'] }`.
+This is a literal projection through the existing loader, not a new configuration
+layer. Host and port values must be the published frontend addresses seen by the
+browser, including any reverse proxy or container mapping.
+
+For a custom project/environment, override `originDefaults.host` and `.protocol`
+for structured endpoints, or supply exact URL endpoint values. Replace the
+endpoint collection using `$config: 'replace'` when changing the deployment.
+`originEndpointOverrides: { store: false }` denies the named frontend and follows
+its changed host/port. Explicit allowed origins remain additive; every explicit
+or endpoint denial wins. Clear obsolete identity overrides when replacing sources.
+CORS activation and credential policy remain separate, closed framework defaults.
+
+Only declared sources are used. No request header or backend-listener discovery
+can grant an origin. Missing profile fields, duplicate frontend codes, unknown
+restriction codes, malformed ports/URLs and unsafe profile data reject. Source
+metadata is read at configuration load; later resolved property changes are
+observed by the router. Profile-file edits require normal configuration reload.
+
+The complete Local and custom-HTTPS examples, explicit-origin alternative and
+collection replacement guidance are in
+`nRouter/llm/examples/README.md#configure-browser-origins`; the exact behavior and
+failure contract is in `nRouter/llm/contracts/README.md#configured-browser-origin-construction`.
+Project owners supply deployment choices; framework maintainers own construction,
+validation and regression coverage. Operators validate browser access after the
+normal build/restart; prepared configuration checks alone do not prove deployment.

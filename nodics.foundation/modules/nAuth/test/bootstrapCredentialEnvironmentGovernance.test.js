@@ -28,7 +28,7 @@ const _ = require('lodash');
  */
 
 const authSecurity = require('../src/service/security/defaultAuthSecurityService');
-const authDefaults = require('../config/properties').authSecurity;
+const authDefaults = require('../../nConfig/src/service/defaultConfigurationBindingService').resolve(require('../config/properties'), {}, {environmentVariables:{}}).authSecurity;
 const fixtureRoot = fs.mkdtempSync(path.join(os.tmpdir(), 'nodics-auth-env-'));
 
 function loadProperties(relativePath) {

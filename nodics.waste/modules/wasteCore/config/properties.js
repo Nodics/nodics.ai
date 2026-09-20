@@ -11,6 +11,27 @@
 
 /** @module wasteCore/config/properties @description Provides shared Waste defaults. @layer config @owner wasteCore @override Partner modules may refine policy through configuration layering. */
 module.exports = {
+  tooling: {
+        acceptance: {
+            "wasteManagement": {
+                "runtime": {
+                    "role": "WASTE"
+                }
+            },
+            "wasteBackofficeDiscovery": {
+                "functionalModule": "nodics.waste",
+                "providerModule": "wasteCore",
+                "capabilityId": "waste-management",
+                "groupId": "sustainability-operations",
+                "platform": {
+                    "role": "PLATFORM"
+                },
+                "waste": {
+                    "role": "WASTE"
+                }
+            }
+        },
+  },
     // Inert inventory; an allowed local server must explicitly select this capability.
     localResetProvider: {
         "contributions": {

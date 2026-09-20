@@ -90,13 +90,12 @@ module.exports = {
     processRetrySleepTime: 2000,
     defaultAuthDetail: {
         entCode: 'default',
-        tenant: 'default',
-        loginId: 'apiAdmin'
+        tenant: 'default'
     },
 
     log: {
         enabled: true,
-        level: 'debug',
+        level: 'info',
         redaction: {
             enabled: true,
             mask: '[REDACTED]',
@@ -159,7 +158,7 @@ module.exports = {
                     format: 'simple',
                     options: {
                         filename: 'nodics.log',
-                        level: 'debug',
+                        level: 'info',
                         maxsize: '20971520',
                         maxFiles: '14',
                         tailable: true,
@@ -172,7 +171,7 @@ module.exports = {
                     enabled: false,
                     format: 'simple',
                     options: {
-                        level: 'debug',
+                        level: 'info',
                         index: 'nodicsLog'
                     },
                     client: {

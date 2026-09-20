@@ -12,10 +12,21 @@
 /** @module editorial/controller/DefaultEditorialPublicationTargetController @description Maps internal Editorial Online target operations to target-local persistence. @layer controller @owner editorial */
 module.exports = {
     /** Invokes one target operation using the standard callback contract. */
-    invoke: function (operation, request, callback) {
-        request.editorialPublicationTarget = request.httpRequest && request.httpRequest.body || request.editorialPublicationTarget || {};
-        let promise = SERVICE.DefaultEditorialPublicationTargetService[operation](request);
-        return callback ? promise.then(result => callback(null, { code: 'SUC_SYS_00000', result: result })).catch(callback) : promise;
+    invoke: async function (operation, request, callback) {
+        try {
+            SERVICE.DefaultServiceTokenService.requireRuntimePrincipal(request, 'editorial');
+            SERVICE.DefaultEditorialPublicationTargetService.assertOnlineRuntime();
+            const targetRequest = Object.assign({}, request, {
+                editorialPublicationTarget: request.httpRequest && request.httpRequest.body || request.editorialPublicationTarget || {},
+                authData: Object.assign({}, request.authData,
+                    SERVICE.DefaultIdentityGovernanceService.getSystemAuthData()),
+            });
+            const result = await SERVICE.DefaultEditorialPublicationTargetService[operation](targetRequest);
+            return callback ? callback(null, { code: 'SUC_SYS_00000', result: result }) : result;
+        } catch (error) {
+            if (callback) return callback(error);
+            throw error;
+        }
     },
     /** Deploys immutable Editorial Online projections. */
     deploy: function (request, callback) { return this.invoke('deploy', request, callback); },

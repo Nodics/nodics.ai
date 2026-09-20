@@ -35,6 +35,9 @@ try {
     const serverProperties = require(path.join(composition.serverRoot, 'config', 'properties.js'));
     assert(serverProperties.activeModules.modules.includes('nTest'),
         'Repository builds must activate nTest to generate module-owned test artifacts');
+    assert(!serverProperties.activeModules.modules.includes(composition.environmentName) &&
+        !serverProperties.activeModules.modules.includes(composition.serverName),
+        'Repository builds inherit selected topology activation from nConfig');
     assert.strictEqual(compositionService.validate(composition), true);
     assert(compositionService.runtimeGroups().includes('nodics.location'));
     assert(compositionService.runtimeGroups().includes('nodics.copilot'));

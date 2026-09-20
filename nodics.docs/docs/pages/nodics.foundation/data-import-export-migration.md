@@ -647,3 +647,11 @@ no automatic timeout takeover. The receipt counter fences installation status;
 it does not cancel business writes already in flight or make partial data
 imports transactional. Provider-side atomic writes and crash recovery remain
 part of deployment qualification.
+
+## Content-pack configuration defaults
+
+nImport owns reusable content-pack defaults under `data.contentPacks.defaults`. Customer projects declare selected pack codes, manifest sections and intentional overrides. Source type defaults to `LOCAL_PROJECT`; manifest location defaults to `data/manifest.json`. Project package metadata supplies pack identity, while the selected aggregate manifest section supplies the release content path relative to the manifest directory. Existing explicit source content paths remain repository-relative overrides.
+
+Update-policy defaults reject downgrades and stable same-version checksum changes. All required presentation messages/actions inherit from nImport; a partner can override one label or policy field without repeating the rest. Built-in pack definitions inherit the same defaults. The global content-pack import gate remains disabled by default, and per-pack disablement remains effective. Unknown packs are not auto-enrolled.
+
+This resolution stays within the existing content-pack service. It preserves identity, contract-version, path-containment and checksum validation, tenant-scoped state, source-safe staging and governed import execution. A discovered folder or manifest does not authorize installation. Module documentation data and existing administrative profiles retain their site, catalogue and navigation ownership.

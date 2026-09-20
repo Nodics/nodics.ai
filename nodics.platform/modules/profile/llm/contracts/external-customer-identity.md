@@ -84,3 +84,11 @@ link/account/application revocation, refresh preservation and caller injection
 denial. See `profileExternalIdentity.test.js` and
 `profileExternalSessionBinding.test.js`. Later providers reuse this binding and
 must not extend the launch freshness window to solve journey continuation.
+
+For a deployment serving both an approved HTTPS origin and local HTTP development,
+keep browser-session `secure: true` and opt into `allowInsecureLoopback: true` in
+the appropriate customer or employee session configuration. Only exact HTTP
+localhost, IPv4 loopback and IPv6 loopback requests receive non-Secure cookies;
+HTTPS retains Secure. This is resolved per request without changing shared
+configuration. Exact credentialed CORS, CSRF, proof freshness and refresh rotation
+remain required. Non-loopback HTTP and SameSite=None with non-Secure cookies fail.

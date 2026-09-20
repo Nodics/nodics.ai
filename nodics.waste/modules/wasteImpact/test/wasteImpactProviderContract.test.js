@@ -61,6 +61,34 @@ beforeEach(() => {
 });
 afterEach(() => { delete global.CONFIG; delete global.SERVICE; delete global.FACADE; });
 
+test('ordered providers fall back after invalid output and preserve the successful service and failed attempt', async () => {
+    SERVICE.Primary = { calculate: async () => ({ metrics: [] }) };
+    SERVICE.Secondary = { calculate: async () => providerResponse() };
+    settings({ providerService: 'Primary', fallbackProviderServices: ['Secondary'] });
+    const result = await impact.calculate(request());
+    assert.equal(result.metadata.impactProvider.service, 'Secondary');
+    assert.deepEqual(result.metadata.impactProvider.attempts.map(item => item.status), ['FAILED', 'SUCCEEDED']);
+});
+
+test('valid primary skips fallback; timed-out primary cancels before fallback', async () => {
+    let fallbackCalls = 0, aborted = false;
+    SERVICE.Primary = { calculate: async () => providerResponse() };
+    SERVICE.Secondary = { calculate: async () => { fallbackCalls++; return providerResponse(); } };
+    settings({ providerService: 'Primary', fallbackProviderServices: ['Secondary'], timeoutMs: 10 });
+    await impact.calculate(request());
+    assert.equal(fallbackCalls, 0);
+    SERVICE.Primary.calculate = (_, context) => new Promise(() => context.signal.addEventListener('abort', () => { aborted = true; }));
+    await impact.calculate(request());
+    assert.equal(aborted, true);
+    assert.equal(fallbackCalls, 1);
+});
+
+test('fallback never silently substitutes an illustrative mock', async () => {
+    SERVICE.Primary = { calculate: async () => { throw new Error('private upstream data'); } };
+    settings({ providerService: 'Primary', fallbackProviderServices: ['DefaultWasteImpactMockProviderService'] });
+    await assert.rejects(impact.calculate(request()), error => error.code === 'ERR_WASTE_IMPACT_PROVIDER_RESULT_INVALID');
+});
+
 test('default mock is usable, traceable and always estimated without minting value', async () => {
     const input = request({ weight: '2.5' });
     input.calculationStatus = 'CONFIRMED';

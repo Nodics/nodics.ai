@@ -323,6 +323,25 @@ module.exports = {
         }
     },
 
+    /** Reads inert framework tooling defaults through the existing module discovery and static contribution reader. No runtime modules are activated. @param {string} sectionName Tooling section. @returns {Object} Defaults merged by module index. */
+    loadFrameworkToolingDefaults: function (sectionName) {
+        if (!/^[A-Za-z][A-Za-z0-9]*$/.test(sectionName)) throw new Error('Invalid tooling defaults section');
+        const modules = this.collectModules(frameworkHome, []);
+        modules.sort((left, right) => this.compareModuleIndex(left.index, right.index) || left.path.localeCompare(right.path));
+        return modules.reduce((defaults, moduleObject) => {
+            const contribution = this.getContributionPath(moduleObject);
+            if (!contribution) return defaults;
+            const tooling = this.findObjectLiteralByProperty(fs.readFileSync(contribution, 'utf8'), 'tooling');
+            const section = tooling && this.findObjectLiteralByProperty(tooling, sectionName);
+            if (!section) return defaults;
+            try {
+                return _.merge(defaults, Function('return (' + section + ');')());
+            } catch (error) {
+                throw new Error('Unable to parse tooling.' + sectionName + ' from ' + contribution + ': ' + error.message);
+            }
+        }, {});
+    },
+
     /**
      * Merges one command contribution with explicit handler-replacement governance.
      * @param {Object<string,Object>} registry Mutable command registry.

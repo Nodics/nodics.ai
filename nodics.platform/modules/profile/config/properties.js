@@ -17,26 +17,39 @@
  * @override Project, environment, server, node, tenant, or customer layers may override these defaults through Nodics configuration layering.
  */
 module.exports = {
-    // Inert inventory; an allowed local server must explicitly select this capability.
-    localResetProvider: {
-        "contributions": {
-            "profile": {
-                "serviceNames": {
-                    "DefaultAddressService": true,
-                    "DefaultContactService": true,
-                    "DefaultCustomerService": true,
-                    "DefaultEmployeeService": true,
-                    "DefaultEnterpriseService": true,
-                    "DefaultIdentityMigrationAuditService": true,
-                    "DefaultPasswordService": true,
-                    "DefaultPrincipalScopeAssignmentService": true,
-                    "DefaultTenantService": true,
-                    "DefaultUserGroupService": true,
-                    "DefaultUserStateService": true
-                }
-            }
-        }
+  identityGovernance: { permissionCatalog: ["profile.address.reference.read", "profile.enterprise.reference.read"] },
+  profileReferenceRead: {
+    maximumCodes: 100,
+    types: {
+      address: { serviceName: "DefaultAddressService", permission: "profile.address.reference.read",
+        fields: ["code", "addressLine1", "addressLine2", "city", "countryCode"] },
+      enterprise: { serviceName: "DefaultEnterpriseService", permission: "profile.enterprise.reference.read",
+        fields: ["code", "name"] },
     },
+  },
+  // Profile owns refresh sessions; inherit nAuth strict channel mechanics.
+  cache: { profile: { channels: { auth: { $config: "ref", path: "cache.auth.channels.auth" } } } },
+  profileInitialization: { requiredEmployeeLogins: ["admin", "apiAdmin"] },
+  // Inert inventory; an allowed local server must explicitly select this capability.
+  localResetProvider: {
+    contributions: {
+      profile: {
+        serviceNames: {
+          DefaultAddressService: true,
+          DefaultContactService: true,
+          DefaultCustomerService: true,
+          DefaultEmployeeService: true,
+          DefaultEnterpriseService: true,
+          DefaultIdentityMigrationAuditService: true,
+          DefaultPasswordService: true,
+          DefaultPrincipalScopeAssignmentService: true,
+          DefaultTenantService: true,
+          DefaultUserGroupService: true,
+          DefaultUserStateService: true,
+        },
+      },
+    },
+  },
 
   schemaPolicies: {
     profile: {
@@ -109,6 +122,7 @@ module.exports = {
     csrfCookiePath: "/",
     sameSite: "Strict",
     secure: true,
+    allowInsecureLoopback: false,
     maximumAgeSeconds: 86400,
   },
   profileBrowserSession: {
@@ -119,6 +133,7 @@ module.exports = {
     csrfCookiePath: "/",
     sameSite: "Strict",
     secure: true,
+    allowInsecureLoopback: false,
     maximumAgeSeconds: 86400,
   },
 
@@ -579,6 +594,17 @@ module.exports = {
     loginIdFormat: "default",
     loginIdFormatValidators: {
       email: "DefaultLoginIdAsEmailValidatorService",
+    },
+  },
+
+  apiExposure: {
+    categories: {
+      profileManagement: {
+        enabled: true,
+      },
+      profileRegistration: {
+        enabled: true,
+      },
     },
   },
 };

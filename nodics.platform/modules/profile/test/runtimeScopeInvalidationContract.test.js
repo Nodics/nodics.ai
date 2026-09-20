@@ -48,3 +48,30 @@ test('canonical generated envelopes govern scope reads and exactly one acknowled
         await assert.rejects(governance.invalidateRuntimeScopeCredentials(request), /invalidation/);
     }
 });
+
+
+test('governed reset proves deleted principal absence and revokes its shared stamp', async () => {
+    const authority = {}, revoked = [];
+    const request = { tenant: 'warehouse', localResetAuthority: authority, runtimeScopePrincipalCodes: ['jobs-1'] };
+    SERVICE.DefaultLocalResetProviderService = { authorizes: input => input.localResetAuthority === authority };
+    SERVICE.DefaultEmployeeService.get = async input => {
+        assert.equal(input.tenant, 'warehouse'); assert.equal(input.query.loginId, 'jobs-1');
+        return { code: 'SUC_FIND_00000', result: [] };
+    };
+    SERVICE.DefaultEmployeeService.update = async () => { throw Error('Unexpected missing-principal update'); };
+    SERVICE.DefaultPrincipalSecurityStampService = { revoke: async (...args) => { revoked.push(args); return 7; } };
+    await governance.invalidateRuntimeScopeCredentials(request);
+    assert.deepEqual(revoked, [['warehouse', 'jobs-1']]);
+    await assert.rejects(governance.invalidateRuntimeScopeCredentials({ ...request, localResetAuthority: {} }), /missing-principal/);
+    SERVICE.DefaultEmployeeService.get = async () => ({ success: false, code: 'SUC_FIND_00000', result: [] });
+    await assert.rejects(governance.invalidateRuntimeScopeCredentials(request), /authoritative/);
+    SERVICE.DefaultEmployeeService.get = async () => ({ code: 'SUC_FIND_00000', result: [] });
+    SERVICE.DefaultPrincipalSecurityStampService.revoke = async () => { throw Error('Shared cache unavailable'); };
+    await assert.rejects(governance.invalidateRuntimeScopeCredentials(request), /cache unavailable/);
+    SERVICE.DefaultPrincipalSecurityStampService.revoke = async () => false;
+    await assert.rejects(governance.invalidateRuntimeScopeCredentials(request), /revocation/);
+    SERVICE.DefaultEmployeeService.get = async () => ({ code: 'SUC_FIND_00000', result: [{ loginId: 'jobs-1' }] });
+    SERVICE.DefaultEmployeeService.update = async () => ({ code: 'SUC_UPD_00000', result: { acknowledged: true, matchedCount: 0 } });
+    await assert.rejects(governance.invalidateRuntimeScopeCredentials(request), /invalidation/);
+    delete SERVICE.DefaultLocalResetProviderService;
+});

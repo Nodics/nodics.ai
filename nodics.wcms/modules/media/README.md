@@ -35,3 +35,11 @@ npm run quality:docs
 
 This capability declares an inert model-service inventory for [governed Local reset](../../../nodics.foundation/modules/nSystem/llm/contracts/local-reset.md).
 A server must explicitly select it; contributions never enable reset or bypass tenant, environment, confirmation or required-service checks.
+
+Route-category defaults belong to this capability; deployments supply only intentional overrides.
+Preserve nRouter enforcement and independent route authorization. See [exposure ownership](../../../nodics.foundation/modules/nRouter/llm/contracts/README.md#capability-owned-exposure-defaults).
+
+Customer photo operations preserve the authenticated customer bearer header when
+resolving the canonical owner through Profile. Missing credentials or a tenant
+mismatch are rejected; request-body credentials are never trusted. Runtime
+service credentials must not substitute for the customer session in this lookup.

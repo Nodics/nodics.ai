@@ -18,6 +18,22 @@
  */
 module.exports = {
     tooling: {
+        acceptance: {
+            "functionalJourney": {
+                "reason": "Functional acceptance",
+                "runtimes": {
+                    "platform": {
+                        "role": "PLATFORM"
+                    },
+                    "commerce": {
+                        "role": "COMMERCE"
+                    },
+                    "engagement": {
+                        "role": "ENGAGEMENT"
+                    }
+                }
+            }
+        },
         discovery: {
             ignoreDotDirectories: true,
             ignoredDirectories: [

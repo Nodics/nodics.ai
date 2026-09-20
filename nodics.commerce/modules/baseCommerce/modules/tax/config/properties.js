@@ -11,22 +11,61 @@
 
 /** @module tax/config/properties @description Defines Commerce capability and schema access policies. @layer config @owner tax */
 module.exports = {
-    // Inert inventory; an allowed local server must explicitly select this capability.
-    localResetProvider: {
-        "contributions": {
-            "tax": {
-                "serviceNames": {
-                    "DefaultTaxDecisionService": true,
-                    "DefaultTaxPolicyService": true
-                }
-            }
-        }
+  // Inert inventory; an allowed local server must explicitly select this capability.
+  localResetProvider: {
+    contributions: {
+      tax: {
+        serviceNames: {
+          DefaultTaxDecisionService: true,
+          DefaultTaxPolicyService: true,
+        },
+      },
     },
+  },
 
-    tax: { enabled: true },
-    schemaPolicies: { tax: {
-        operational: { accessGroups: { adminGroup: 10, commerceOperatorUserGroup: 10, serviceAccountUserGroup: 10 } },
-        tenantOwned: { accessGroups: { adminGroup: 10, commerceOperatorUserGroup: 10, serviceAccountUserGroup: 10 } },
-        customerOwned: { accessGroups: { adminGroup: 10, commerceOperatorUserGroup: 10, serviceAccountUserGroup: 10, customerUserGroup: 10 }, ownership: { enabled: true, ownerProperty: 'ownerId', bypassGroups: { adminGroup: true, commerceOperatorUserGroup: true, serviceAccountUserGroup: true }, subjectGroups: { customerUserGroup: true }, principalTypes: { customer: true } } }
-    } }
+  tax: { enabled: true },
+  schemaPolicies: {
+    tax: {
+      operational: {
+        accessGroups: {
+          adminGroup: 10,
+          commerceOperatorUserGroup: 10,
+          serviceAccountUserGroup: 10,
+        },
+      },
+      tenantOwned: {
+        accessGroups: {
+          adminGroup: 10,
+          commerceOperatorUserGroup: 10,
+          serviceAccountUserGroup: 10,
+        },
+      },
+      customerOwned: {
+        accessGroups: {
+          adminGroup: 10,
+          commerceOperatorUserGroup: 10,
+          serviceAccountUserGroup: 10,
+          customerUserGroup: 10,
+        },
+        ownership: {
+          enabled: true,
+          ownerProperty: "ownerId",
+          bypassGroups: {
+            adminGroup: true,
+            commerceOperatorUserGroup: true,
+            serviceAccountUserGroup: true,
+          },
+          subjectGroups: { customerUserGroup: true },
+          principalTypes: { customer: true },
+        },
+      },
+    },
+  },
+  apiExposure: {
+    categories: {
+      commercePublicationIngestion: {
+        enabled: true,
+      },
+    },
+  },
 };

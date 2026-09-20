@@ -67,3 +67,16 @@ Effective artifacts carry ordered `xNodics.overrideTrace` and top-level
 `memberOrigins`. These explain which layer supplied an inherited or replaced
 method without exposing its source text. nDynamo governance reports consume the
 same loader metadata. See the [diagnostics contract](llm/contracts/configuration-inheritance-contract.md#effective-behavior-diagnostics).
+
+Use explicit collection replacement/keyed changes and preserve ordinary-array compatibility, reference timing and tenant isolation. See the configuration-inheritance contract.
+
+Use existing layered properties and `runtime`/`ref` projections. Do not read or
+regenerate an environment descriptor. Preserve contribution timing and bounded
+metadata discovery; see [runtime projections](llm/contracts/configuration-inheritance-contract.md#runtime-and-property-projections).
+
+The existing pre-start `readDeploymentConfiguration` entrypoint accepts optional
+`inheritedProperties` from its owning tooling caller. Apply them before authored
+project/environment/server/node contributions through the same binding and merge
+sequence. This preserves explicit replacement/keyed semantics for framework-owned
+tooling defaults; never merge defaults back into already-resolved collections.
+This projection does not activate modules or alter runtime startup authority.

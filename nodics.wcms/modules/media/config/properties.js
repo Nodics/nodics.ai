@@ -17,293 +17,432 @@
  * @override Project, environment, server, node, tenant, or customer layers may override these defaults through Nodics configuration layering.
  */
 module.exports = {
-    // Inert inventory; an allowed local server must explicitly select this capability.
-    localResetProvider: {
-        "contributions": {
-            "media": {
-                "serviceNames": {
-                    "DefaultMediaFolderService": true,
-                    "DefaultMediaFormatService": true,
-                    "DefaultMediaReferenceService": true,
-                    "DefaultMediaService": true,
-                    "DefaultMediaSetEntryService": true,
-                    "DefaultMediaSetService": true
-                }
-            }
-        }
+  // Inert inventory; an allowed local server must explicitly select this capability.
+  localResetProvider: {
+    contributions: {
+      media: {
+        serviceNames: {
+          DefaultMediaFolderService: true,
+          DefaultMediaFormatService: true,
+          DefaultMediaReferenceService: true,
+          DefaultMediaService: true,
+          DefaultMediaSetEntryService: true,
+          DefaultMediaSetService: true,
+        },
+      },
     },
+  },
 
-    bodyParserHandler: {
-        mediaMultipartUploadBodyParserHandler: 'DefaultMediaMultipartUploadBodyParserHandlerService',
-        mediaPublicationBodyParserHandler: 'DefaultMediaPublicationBodyParserHandlerService'
+  bodyParserHandler: {
+    mediaMultipartUploadBodyParserHandler:
+      "DefaultMediaMultipartUploadBodyParserHandlerService",
+    mediaPublicationBodyParserHandler:
+      "DefaultMediaPublicationBodyParserHandlerService",
+  },
+  responseHandler: {
+    mediaContentResponseHandler: "DefaultMediaContentResponseHandlerService",
+  },
+  media: {
+    publication: {
+      maximumAssets: 100,
+      maximumAssetBytes: 52428800,
+      maximumTotalBytes: 104857600,
+      maximumPublicationRequestBytes: "64mb",
+      retentionDays: 7,
+      garbageCollectionBatchSize: 100,
+      topology: {
+        policy: "PRIMARY_ONLY",
+        activeLocationRole: "ACTIVE_PROD_MEDIA_LOCATION",
+        replicationLocationRole: "REPLICATION_PROD_MEDIA_LOCATION",
+        activeProviderCode: "",
+        replicationProviderCode: "",
+        replicationEnabled: false,
+        strictReplication: false,
+        retryDelaySeconds: 300,
+        maxRetryAttempts: 10,
+      },
     },
-    responseHandler: {
-        mediaContentResponseHandler: 'DefaultMediaContentResponseHandlerService'
+    storage: {
+      defaultProvider: "local",
+      defaultKeyStrategy: "tenantEnterpriseSchemaDateMedia",
+      keyStrategies: {
+        default: "tenantEnterpriseSchemaDateMedia",
+        importSources: "tenantEnterpriseSchemaDateMedia",
+        exportFiles: "tenantEnterpriseSchemaDateMedia",
+        cmsAssets: "tenantEnterpriseSchemaDateMedia",
+        productAssets: "tenantEnterpriseSchemaDateMedia",
+      },
+      keyStrategyServices: {
+        tenantEnterpriseSchemaDateMedia:
+          "DefaultTenantEnterpriseSchemaDateMediaKeyStrategyService",
+      },
+      exposeAbsolutePath: false,
+      providers: {
+        local: {
+          enabled: true,
+          service: "DefaultLocalMediaStorageProviderService",
+          basePath: "",
+          fallbackRelativeBasePath: "temp/media",
+          baseUrl: "/nodics/media/v0/content",
+        },
+        nas: {
+          enabled: false,
+          service: "DefaultNasMediaStorageProviderService",
+          basePath: "/mnt/nodics-media",
+          baseUrl: "https://media.example.com",
+        },
+        s3: {
+          enabled: false,
+          service: "DefaultS3MediaStorageProviderService",
+          bucket: "",
+          region: "",
+          baseUrl: "",
+        },
+        azureBlob: {
+          enabled: false,
+          service: "DefaultAzureBlobMediaStorageProviderService",
+          container: "",
+          baseUrl: "",
+        },
+        gcpStorage: {
+          enabled: false,
+          service: "DefaultGcpMediaStorageProviderService",
+          bucket: "",
+          baseUrl: "",
+        },
+      },
     },
-    media: {
-        publication: {
-            maximumAssets: 100,
-            maximumAssetBytes: 52428800,
-            maximumTotalBytes: 104857600,
-            maximumPublicationRequestBytes: '64mb',
-            retentionDays: 7,
-            garbageCollectionBatchSize: 100,
-            topology: {
-                policy: 'PRIMARY_ONLY',
-                activeLocationRole: 'ACTIVE_PROD_MEDIA_LOCATION',
-                replicationLocationRole: 'REPLICATION_PROD_MEDIA_LOCATION',
-                activeProviderCode: '',
-                replicationProviderCode: '',
-                replicationEnabled: false,
-                strictReplication: false,
-                retryDelaySeconds: 300,
-                maxRetryAttempts: 10
-            }
-        },
-        storage: {
-            defaultProvider: 'local',
-            defaultKeyStrategy: 'tenantEnterpriseSchemaDateMedia',
-            keyStrategies: {
-                default: 'tenantEnterpriseSchemaDateMedia',
-                importSources: 'tenantEnterpriseSchemaDateMedia',
-                exportFiles: 'tenantEnterpriseSchemaDateMedia',
-                cmsAssets: 'tenantEnterpriseSchemaDateMedia',
-                productAssets: 'tenantEnterpriseSchemaDateMedia'
-            },
-            keyStrategyServices: {
-                tenantEnterpriseSchemaDateMedia: 'DefaultTenantEnterpriseSchemaDateMediaKeyStrategyService'
-            },
-            exposeAbsolutePath: false,
-            providers: {
-                local: {
-                    enabled: true,
-                    service: 'DefaultLocalMediaStorageProviderService',
-                    basePath: '',
-                    fallbackRelativeBasePath: 'temp/media',
-                    baseUrl: '/nodics/media/v0/content'
-                },
-                nas: {
-                    enabled: false,
-                    service: 'DefaultNasMediaStorageProviderService',
-                    basePath: '/mnt/nodics-media',
-                    baseUrl: 'https://media.example.com'
-                },
-                s3: {
-                    enabled: false,
-                    service: 'DefaultS3MediaStorageProviderService',
-                    bucket: '',
-                    region: '',
-                    baseUrl: ''
-                },
-                azureBlob: {
-                    enabled: false,
-                    service: 'DefaultAzureBlobMediaStorageProviderService',
-                    container: '',
-                    baseUrl: ''
-                },
-                gcpStorage: {
-                    enabled: false,
-                    service: 'DefaultGcpMediaStorageProviderService',
-                    bucket: '',
-                    baseUrl: ''
-                }
-            }
-        },
-        customerUploads: { enabled: false, folderCode: 'customerPhotos', maximumBytes: 5242880, permission: 'media.customer.upload' },
-        evidenceRead: { maximumBytes: 5242880, publicPreviewMimeTypes: ['image/jpeg', 'image/png', 'image/webp', 'image/svg+xml'] },
-        upload: {
-            maximumFileSizeBytes: 52428800,
-            maximumFiles: 1,
-            maximumFields: 50,
-            maximumFieldSizeBytes: 1048576,
-            checksumAlgorithm: 'sha256',
-            defaultAllowedExtensions: ['csv', 'gif', 'jpeg', 'jpg', 'json', 'pdf', 'png', 'svg', 'webp', 'xls', 'xlsx'],
-            defaultAllowedMimeTypes: [
-                'application/json',
-                'application/pdf',
-                'application/vnd.ms-excel',
-                'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
-                'image/gif',
-                'image/jpeg',
-                'image/png',
-                'image/svg+xml',
-                'image/webp',
-                'text/csv'
-            ]
-        },
-        folders: {
-            customerPhotos: { code:'customerPhotos', storagePrefix:'media/customer-photos', access:'PRIVATE', allowedExtensions:['jpg','jpeg','png','webp'], allowedMimeTypes:['image/jpeg','image/png','image/webp'], maximumFileSizeBytes:5242880, retentionDays:0 },
-            default: {
-                code: 'default',
-                storagePrefix: 'media/utility',
-                access: 'PRIVATE',
-                allowedExtensions: [],
-                allowedMimeTypes: [],
-                maximumFileSizeBytes: 0,
-                retentionDays: 0
-            },
-            importSources: {
-                code: 'importSources',
-                storagePrefix: 'data/import',
-                access: 'PRIVATE',
-                allowedExtensions: ['csv', 'json', 'xls', 'xlsx'],
-                allowedMimeTypes: [
-                    'application/json',
-                    'application/vnd.ms-excel',
-                    'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
-                    'text/csv'
-                ],
-                maximumFileSizeBytes: 52428800,
-                retentionDays: 30
-            },
-            exportFiles: {
-                code: 'exportFiles',
-                storagePrefix: 'data/export',
-                access: 'PRIVATE',
-                allowedExtensions: ['csv', 'json', 'pdf', 'xls', 'xlsx', 'zip'],
-                allowedMimeTypes: [
-                    'application/json',
-                    'application/pdf',
-                    'application/vnd.ms-excel',
-                    'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
-                    'application/zip',
-                    'text/csv'
-                ],
-                maximumFileSizeBytes: 52428800,
-                retentionDays: 30
-            },
-            cmsAssets: {
-                code: 'cmsAssets',
-                storagePrefix: 'media/content',
-                access: 'PUBLIC',
-                allowedExtensions: ['gif', 'jpeg', 'jpg', 'pdf', 'png', 'svg', 'webp'],
-                allowedMimeTypes: ['application/pdf', 'image/gif', 'image/jpeg', 'image/png', 'image/svg+xml', 'image/webp'],
-                maximumFileSizeBytes: 52428800,
-                retentionDays: 0
-            },
-            productAssets: {
-                code: 'productAssets',
-                storagePrefix: 'media/product',
-                access: 'PUBLIC',
-                allowedExtensions: ['gif', 'jpeg', 'jpg', 'pdf', 'png', 'webp'],
-                allowedMimeTypes: ['application/pdf', 'image/gif', 'image/jpeg', 'image/png', 'image/webp'],
-                maximumFileSizeBytes: 52428800,
-                retentionDays: 0
-            }
-        },
-        contexts: {
-            dataImports: {
-                code: 'dataImports',
-                sourceType: 'Data imports',
-                aliases: ['dataImport', 'dataImports', 'importSources'],
-                label: 'Data imports',
-                description: 'Governed files uploaded for validation and processing by nImport.',
-                folderCodes: ['importSources'],
-                defaultFolderCode: 'importSources',
-                allowedFormatCodes: ['importFile'],
-                defaultFormatCode: 'importFile',
-                defaultModuleName: 'import',
-                defaultSchemaName: 'mediaImport',
-                targetRequired: true,
-                manualUploadEnabled: true,
-                storageRouteTemplate: 'data/import/{tenant}/{enterprise}/{schema}/{yyyy}/{mm}/{mediaCode}.{extension}'
-            },
-            dataExports: {
-                code: 'dataExports',
-                sourceType: 'Data exports',
-                aliases: ['dataExport', 'dataExports', 'exportFiles', 'exportResults'],
-                label: 'Data exports',
-                description: 'Governed files generated by nExport workflows and exposed through media delivery.',
-                folderCodes: ['exportFiles'],
-                defaultFolderCode: 'exportFiles',
-                allowedFormatCodes: ['exportFile'],
-                defaultFormatCode: 'exportFile',
-                targetRequired: true,
-                manualUploadEnabled: false,
-                storageRouteTemplate: 'data/export/{tenant}/{enterprise}/{schema}/{yyyy}/{mm}/{mediaCode}.{extension}'
-            },
-            productMedia: {
-                code: 'productMedia',
-                sourceType: 'Product media',
-                aliases: ['productMedia', 'productAssets'],
-                label: 'Product media',
-                description: 'Reusable product assets such as catalog images, manuals, galleries, and product documents.',
-                folderCodes: ['productAssets'],
-                defaultFolderCode: 'productAssets',
-                allowedFormatCodes: ['original', 'thumbnail', 'small', 'medium', 'large', 'zoom'],
-                defaultFormatCode: 'original',
-                defaultModuleName: 'product',
-                defaultSchemaName: 'product',
-                targetRequired: false,
-                manualUploadEnabled: true,
-                storageRouteTemplate: 'media/product/{tenant}/{enterprise}/{schema}/{yyyy}/{mm}/{mediaCode}.{extension}'
-            },
-            contentMedia: {
-                code: 'contentMedia',
-                sourceType: 'Content media',
-                aliases: ['contentMedia', 'cmsAssets', 'contentAssets'],
-                label: 'Content media',
-                description: 'Reusable CMS and storefront content assets such as banners, icons, page imagery, and documents.',
-                folderCodes: ['cmsAssets'],
-                defaultFolderCode: 'cmsAssets',
-                allowedFormatCodes: ['original', 'thumbnail', 'desktop', 'mobile'],
-                defaultFormatCode: 'original',
-                defaultModuleName: 'cms',
-                defaultSchemaName: 'cmsComponent',
-                targetRequired: false,
-                manualUploadEnabled: true,
-                storageRouteTemplate: 'media/content/{tenant}/{enterprise}/{schema}/{yyyy}/{mm}/{mediaCode}.{extension}'
-            },
-            utilityMedia: {
-                code: 'utilityMedia',
-                sourceType: 'Utility media',
-                aliases: ['utilityMedia', 'utilityFiles', 'default'],
-                label: 'Utility media',
-                description: 'General governed files that are not owned by product, content, import, or export flows.',
-                folderCodes: ['default'],
-                defaultFolderCode: 'default',
-                allowedFormatCodes: ['original'],
-                defaultFormatCode: 'original',
-                targetRequired: false,
-                manualUploadEnabled: true,
-                storageRouteTemplate: 'media/utility/{tenant}/{enterprise}/{schema}/{yyyy}/{mm}/{mediaCode}.{extension}'
-            }
-        },
-        formats: {
-            original: { code: 'original', name: 'Original', description: 'Original uploaded media', formatFamily: 'ORIGINAL', status: 'ACTIVE' },
-            thumbnail: { code: 'thumbnail', name: 'Thumbnail', description: 'Small preview media', formatFamily: 'PREVIEW', status: 'ACTIVE' },
-            small: { code: 'small', name: 'Small', description: 'Small responsive media variant', formatFamily: 'RESPONSIVE', status: 'ACTIVE' },
-            medium: { code: 'medium', name: 'Medium', description: 'Medium responsive media variant', formatFamily: 'RESPONSIVE', status: 'ACTIVE' },
-            large: { code: 'large', name: 'Large', description: 'Large responsive media variant', formatFamily: 'RESPONSIVE', status: 'ACTIVE' },
-            zoom: { code: 'zoom', name: 'Zoom', description: 'High-detail zoom media variant', formatFamily: 'PREVIEW', status: 'ACTIVE' },
-            desktop: { code: 'desktop', name: 'Desktop', description: 'Desktop presentation media', formatFamily: 'RESPONSIVE', status: 'ACTIVE' },
-            mobile: { code: 'mobile', name: 'Mobile', description: 'Mobile presentation media', formatFamily: 'RESPONSIVE', status: 'ACTIVE' },
-            importFile: { code: 'importFile', name: 'Import file', description: 'File staged for governed data import', formatFamily: 'IMPORT', status: 'ACTIVE' },
-            exportFile: { code: 'exportFile', name: 'Export file', description: 'File generated by governed data export', formatFamily: 'EXPORT', status: 'ACTIVE' }
-        },
-        referenceLookup: {
-            requireServiceToken: true,
-            maximumResults: 2,
-            activeMediaStatuses: ['READY', 'CONSUMED'],
-            activeMediaSetStatuses: ['ACTIVE']
-        },
-        importSource: {
-            allowedFolders: ['importSources'],
-            allowedFormats: ['importFile'],
-            validationOnlyFolders: ['exportFiles'],
-            validationOnlyFormats: ['exportFile'],
-            allowedStatuses: ['READY', 'CONSUMED'],
-            maximumResults: 2
-        },
-        delivery: {
-            enabled: true,
-            allowedStatuses: ['READY', 'CONSUMED'],
-            publicAccessEnabled: true,
-            signedAccessEnabled: false,
-            privateAccessEnabled: true,
-            maximumResults: 2,
-            cacheControl: 'public, max-age=3600',
-            contentDisposition: 'inline'
-        }
-    }
+    customerUploads: {
+      enabled: false,
+      folderCode: "customerPhotos",
+      maximumBytes: 5242880,
+      permission: "media.customer.upload",
+    },
+    evidenceRead: {
+      maximumBytes: 5242880,
+      publicPreviewMimeTypes: [
+        "image/jpeg",
+        "image/png",
+        "image/webp",
+        "image/svg+xml",
+      ],
+    },
+    upload: {
+      maximumFileSizeBytes: 52428800,
+      maximumFiles: 1,
+      maximumFields: 50,
+      maximumFieldSizeBytes: 1048576,
+      checksumAlgorithm: "sha256",
+      defaultAllowedExtensions: [
+        "csv",
+        "gif",
+        "jpeg",
+        "jpg",
+        "json",
+        "pdf",
+        "png",
+        "svg",
+        "webp",
+        "xls",
+        "xlsx",
+      ],
+      defaultAllowedMimeTypes: [
+        "application/json",
+        "application/pdf",
+        "application/vnd.ms-excel",
+        "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+        "image/gif",
+        "image/jpeg",
+        "image/png",
+        "image/svg+xml",
+        "image/webp",
+        "text/csv",
+      ],
+    },
+    folders: {
+      customerPhotos: {
+        code: "customerPhotos",
+        storagePrefix: "media/customer-photos",
+        access: "PRIVATE",
+        allowedExtensions: ["jpg", "jpeg", "png", "webp"],
+        allowedMimeTypes: ["image/jpeg", "image/png", "image/webp"],
+        maximumFileSizeBytes: 5242880,
+        retentionDays: 0,
+      },
+      default: {
+        code: "default",
+        storagePrefix: "media/utility",
+        access: "PRIVATE",
+        allowedExtensions: [],
+        allowedMimeTypes: [],
+        maximumFileSizeBytes: 0,
+        retentionDays: 0,
+      },
+      importSources: {
+        code: "importSources",
+        storagePrefix: "data/import",
+        access: "PRIVATE",
+        allowedExtensions: ["csv", "json", "xls", "xlsx"],
+        allowedMimeTypes: [
+          "application/json",
+          "application/vnd.ms-excel",
+          "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+          "text/csv",
+        ],
+        maximumFileSizeBytes: 52428800,
+        retentionDays: 30,
+      },
+      exportFiles: {
+        code: "exportFiles",
+        storagePrefix: "data/export",
+        access: "PRIVATE",
+        allowedExtensions: ["csv", "json", "pdf", "xls", "xlsx", "zip"],
+        allowedMimeTypes: [
+          "application/json",
+          "application/pdf",
+          "application/vnd.ms-excel",
+          "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+          "application/zip",
+          "text/csv",
+        ],
+        maximumFileSizeBytes: 52428800,
+        retentionDays: 30,
+      },
+      cmsAssets: {
+        code: "cmsAssets",
+        storagePrefix: "media/content",
+        access: "PUBLIC",
+        allowedExtensions: ["gif", "jpeg", "jpg", "pdf", "png", "svg", "webp"],
+        allowedMimeTypes: [
+          "application/pdf",
+          "image/gif",
+          "image/jpeg",
+          "image/png",
+          "image/svg+xml",
+          "image/webp",
+        ],
+        maximumFileSizeBytes: 52428800,
+        retentionDays: 0,
+      },
+      productAssets: {
+        code: "productAssets",
+        storagePrefix: "media/product",
+        access: "PUBLIC",
+        allowedExtensions: ["gif", "jpeg", "jpg", "pdf", "png", "webp"],
+        allowedMimeTypes: [
+          "application/pdf",
+          "image/gif",
+          "image/jpeg",
+          "image/png",
+          "image/webp",
+        ],
+        maximumFileSizeBytes: 52428800,
+        retentionDays: 0,
+      },
+    },
+    contexts: {
+      dataImports: {
+        code: "dataImports",
+        sourceType: "Data imports",
+        aliases: ["dataImport", "dataImports", "importSources"],
+        label: "Data imports",
+        description:
+          "Governed files uploaded for validation and processing by nImport.",
+        folderCodes: ["importSources"],
+        defaultFolderCode: "importSources",
+        allowedFormatCodes: ["importFile"],
+        defaultFormatCode: "importFile",
+        defaultModuleName: "import",
+        defaultSchemaName: "mediaImport",
+        targetRequired: true,
+        manualUploadEnabled: true,
+        storageRouteTemplate:
+          "data/import/{tenant}/{enterprise}/{schema}/{yyyy}/{mm}/{mediaCode}.{extension}",
+      },
+      dataExports: {
+        code: "dataExports",
+        sourceType: "Data exports",
+        aliases: ["dataExport", "dataExports", "exportFiles", "exportResults"],
+        label: "Data exports",
+        description:
+          "Governed files generated by nExport workflows and exposed through media delivery.",
+        folderCodes: ["exportFiles"],
+        defaultFolderCode: "exportFiles",
+        allowedFormatCodes: ["exportFile"],
+        defaultFormatCode: "exportFile",
+        targetRequired: true,
+        manualUploadEnabled: false,
+        storageRouteTemplate:
+          "data/export/{tenant}/{enterprise}/{schema}/{yyyy}/{mm}/{mediaCode}.{extension}",
+      },
+      productMedia: {
+        code: "productMedia",
+        sourceType: "Product media",
+        aliases: ["productMedia", "productAssets"],
+        label: "Product media",
+        description:
+          "Reusable product assets such as catalog images, manuals, galleries, and product documents.",
+        folderCodes: ["productAssets"],
+        defaultFolderCode: "productAssets",
+        allowedFormatCodes: [
+          "original",
+          "thumbnail",
+          "small",
+          "medium",
+          "large",
+          "zoom",
+        ],
+        defaultFormatCode: "original",
+        defaultModuleName: "product",
+        defaultSchemaName: "product",
+        targetRequired: false,
+        manualUploadEnabled: true,
+        storageRouteTemplate:
+          "media/product/{tenant}/{enterprise}/{schema}/{yyyy}/{mm}/{mediaCode}.{extension}",
+      },
+      contentMedia: {
+        code: "contentMedia",
+        sourceType: "Content media",
+        aliases: ["contentMedia", "cmsAssets", "contentAssets"],
+        label: "Content media",
+        description:
+          "Reusable CMS and storefront content assets such as banners, icons, page imagery, and documents.",
+        folderCodes: ["cmsAssets"],
+        defaultFolderCode: "cmsAssets",
+        allowedFormatCodes: ["original", "thumbnail", "desktop", "mobile"],
+        defaultFormatCode: "original",
+        defaultModuleName: "cms",
+        defaultSchemaName: "cmsComponent",
+        targetRequired: false,
+        manualUploadEnabled: true,
+        storageRouteTemplate:
+          "media/content/{tenant}/{enterprise}/{schema}/{yyyy}/{mm}/{mediaCode}.{extension}",
+      },
+      utilityMedia: {
+        code: "utilityMedia",
+        sourceType: "Utility media",
+        aliases: ["utilityMedia", "utilityFiles", "default"],
+        label: "Utility media",
+        description:
+          "General governed files that are not owned by product, content, import, or export flows.",
+        folderCodes: ["default"],
+        defaultFolderCode: "default",
+        allowedFormatCodes: ["original"],
+        defaultFormatCode: "original",
+        targetRequired: false,
+        manualUploadEnabled: true,
+        storageRouteTemplate:
+          "media/utility/{tenant}/{enterprise}/{schema}/{yyyy}/{mm}/{mediaCode}.{extension}",
+      },
+    },
+    formats: {
+      original: {
+        code: "original",
+        name: "Original",
+        description: "Original uploaded media",
+        formatFamily: "ORIGINAL",
+        status: "ACTIVE",
+      },
+      thumbnail: {
+        code: "thumbnail",
+        name: "Thumbnail",
+        description: "Small preview media",
+        formatFamily: "PREVIEW",
+        status: "ACTIVE",
+      },
+      small: {
+        code: "small",
+        name: "Small",
+        description: "Small responsive media variant",
+        formatFamily: "RESPONSIVE",
+        status: "ACTIVE",
+      },
+      medium: {
+        code: "medium",
+        name: "Medium",
+        description: "Medium responsive media variant",
+        formatFamily: "RESPONSIVE",
+        status: "ACTIVE",
+      },
+      large: {
+        code: "large",
+        name: "Large",
+        description: "Large responsive media variant",
+        formatFamily: "RESPONSIVE",
+        status: "ACTIVE",
+      },
+      zoom: {
+        code: "zoom",
+        name: "Zoom",
+        description: "High-detail zoom media variant",
+        formatFamily: "PREVIEW",
+        status: "ACTIVE",
+      },
+      desktop: {
+        code: "desktop",
+        name: "Desktop",
+        description: "Desktop presentation media",
+        formatFamily: "RESPONSIVE",
+        status: "ACTIVE",
+      },
+      mobile: {
+        code: "mobile",
+        name: "Mobile",
+        description: "Mobile presentation media",
+        formatFamily: "RESPONSIVE",
+        status: "ACTIVE",
+      },
+      importFile: {
+        code: "importFile",
+        name: "Import file",
+        description: "File staged for governed data import",
+        formatFamily: "IMPORT",
+        status: "ACTIVE",
+      },
+      exportFile: {
+        code: "exportFile",
+        name: "Export file",
+        description: "File generated by governed data export",
+        formatFamily: "EXPORT",
+        status: "ACTIVE",
+      },
+    },
+    referenceLookup: {
+      requireServiceToken: true,
+      maximumResults: 2,
+      activeMediaStatuses: ["READY", "CONSUMED"],
+      activeMediaSetStatuses: ["ACTIVE"],
+    },
+    importSource: {
+      allowedFolders: ["importSources"],
+      allowedFormats: ["importFile"],
+      validationOnlyFolders: ["exportFiles"],
+      validationOnlyFormats: ["exportFile"],
+      allowedStatuses: ["READY", "CONSUMED"],
+      maximumResults: 2,
+    },
+    delivery: {
+      enabled: true,
+      allowedStatuses: ["READY", "CONSUMED"],
+      publicAccessEnabled: true,
+      signedAccessEnabled: false,
+      privateAccessEnabled: true,
+      maximumResults: 2,
+      cacheControl: "public, max-age=3600",
+      contentDisposition: "inline",
+    },
+  },
+  apiExposure: {
+    categories: {
+      mediaDelivery: {
+        enabled: true,
+      },
+      mediaManagement: {
+        enabled: true,
+      },
+      moduleInternal: {
+        enabled: true,
+      },
+    },
+  },
 };

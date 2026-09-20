@@ -28,10 +28,10 @@ global.SERVICE = { DefaultWasteImpactMockProviderService: mock };
   const result = await impact.calculate({ sourceRef: { module: 'wasteSubmission', schema: 'wasteSubmission', code: 'test' },
     profile: { code: 'test', formulaType: 'EXTERNAL_PROVIDER' }, facts: { weight: 2 } });
   const assessment = result.metadata.environmentalAssessment;
-  assert.equal(assessment.indicators.length, 12);
+  assert.equal(assessment.indicators.length, 14);
   assert.equal(assessment.indicators.filter(item => item.value !== null).length, 1);
-  assert.equal(assessment.indicators[0].status, 'ILLUSTRATIVE');
+  assert.equal(assessment.indicators.find(item => item.key === 'avoidedEmissions').status, 'ILLUSTRATIVE');
   assert.equal(assessment.carbonCredits.issuedQuantity, null);
   assert.equal(assessment.publicClaimAllowed, false);
-  console.log('eWaste environmental mappings: 11 indicators, one illustrative value, no fabricated metrics or credits');
+  console.log('eWaste environmental mappings: 14 indicators, one illustrative value, no fabricated metrics or credits');
 })().catch(error => { console.error(error); process.exitCode = 1; });

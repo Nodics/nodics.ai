@@ -211,3 +211,11 @@ connection aliases. Authority and consumers share the configured
 See the [runtime contract](llm/contracts/README.md) and the
 [detailed configuration and acceptance guide](../../../nodics.docs/docs/pages/nodics.foundation/service-runtime-overrides.md)
 for proof, grants, tenant discovery, cache namespaces and live test commands.
+
+Keep common authority contexts bounded to explicitly selected modules; schema overrides and Profile-issued scopes remain authoritative. See the local contract.
+
+A registry lease endpoint already names its canonical module API path and is preserved, including a prefix different from the logical module name. An origin-only endpoint uses the existing discovered package prefix or module name. Credentials, logical ownership and target-authority filtering remain unchanged.
+
+Inherit authentication policy and bind deployment credentials through the existing
+nAuth/nService contract. Keep provisioning proof separate from retained runtime
+proof; preserve strict shared auth state and Profile grants. See the local contract.

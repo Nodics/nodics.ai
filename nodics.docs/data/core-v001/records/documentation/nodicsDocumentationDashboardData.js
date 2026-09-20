@@ -1085,7 +1085,7 @@ module.exports = {
       {
         "code": "applications.nexus-data-content-guide",
         "title": "Nexus Data and Content Guide",
-        "summary": "How Nexus corporate content, media, editorial, engagement, Staged publication, Online delivery, and browser validation are authored from project data releases.",
+        "summary": "How Nexus corporate content, media, editorial, engagement, Staged publication, Online delivery, and browser validation are authored from accelerator-owned reference releases and customer overlays.",
         "order": 20
       }
     ],

@@ -21,24 +21,83 @@
 module.exports = {
     // Inert inventory; an allowed local server must explicitly select this capability.
     localResetProvider: {
-        "contributions": {
-            "workflow": {
-                "serviceNames": {
-                    "DefaultProcessAuditEventService": true,
-                    "DefaultProcessDefinitionService": true,
-                    "DefaultProcessDefinitionVersionService": true,
-                    "DefaultProcessIncidentService": true,
-                    "DefaultProcessInstanceService": true,
-                    "DefaultProcessTaskService": true,
-                    "DefaultProcessTriggerService": true
-                }
-            }
-        }
+        contributions: {
+            workflow: {
+                serviceNames: {
+                    DefaultProcessAuditEventService: true,
+                    DefaultProcessDefinitionService: true,
+                    DefaultProcessDefinitionVersionService: true,
+                    DefaultProcessIncidentService: true,
+                    DefaultProcessInstanceService: true,
+                    DefaultProcessTaskService: true,
+                    DefaultProcessTriggerService: true,
+                },
+            },
+        },
     },
 
     process: {
         definitionContributions: {
-            maximumDefinitionsPerContribution: 50
-        }
-    }
+            maximumDefinitionsPerContribution: 50,
+        },
+        actionAdapters: {
+            definitions: {
+                'nodics.process.noop': {
+                    moduleName: 'nodics.process',
+                    operation: 'noop',
+                },
+                'cms.applyPublicationDecision': {
+                    moduleName: 'cms',
+                    operation: 'applyPublicationDecision',
+                    service: 'DefaultProcessPublicationDecisionCallbackService',
+                    method: 'applyPublicationDecision',
+                },
+                'editorial.applyDecision': {
+                    moduleName: 'editorial',
+                    operation: 'applyDecision',
+                    remote: {
+                        target: 'editorial',
+                        moduleName: 'editorial',
+                        runtimeRole: 'WCMS_STAGED',
+                        apiName: '/workflow/actions/applyDecision',
+                        requiresCompletedTask: true,
+                    },
+                },
+                'editorial.publishApproved': {
+                    moduleName: 'editorial',
+                    operation: 'publishApproved',
+                    remote: {
+                        target: 'editorial',
+                        moduleName: 'editorial',
+                        runtimeRole: 'WCMS_STAGED',
+                        apiName: '/workflow/actions/publishApproved',
+                    },
+                },
+            },
+        },
+        remoteActions: {
+            maximumExecutionAgeMs: 30000,
+            connectionType: 'abstract',
+            timeoutMs: 10000,
+            targets: {},
+        },
+        publicationDecisionCallback: {
+            target: {
+                moduleName: 'cms',
+                connectionType: 'abstract',
+                timeoutMs: 10000,
+                maxAttempts: 2,
+            },
+        },
+    },
+    apiExposure: {
+        categories: {
+            moduleInternal: {
+                enabled: true,
+            },
+            processManagement: {
+                enabled: true,
+            },
+        },
+    },
 };

@@ -34,6 +34,26 @@ module.exports = {
   /** Invalidates service credentials after an acknowledged scope change using existing employee/stamp governance. */
   invalidateRuntimeScopeCredentials: async function (request) {
     for (const principalCode of request.runtimeScopePrincipalCodes || []) {
+      // A governed reset may already have removed this principal. Only the
+      // provider's private authority permits this path; prove absence and revoke
+      // the shared stamp rather than pretending a zero-match update succeeded.
+      if (SERVICE.DefaultLocalResetProviderService &&
+          SERVICE.DefaultLocalResetProviderService.authorizes(request)) {
+        const principal = await SERVICE.DefaultEmployeeService.get({ tenant: request.tenant,
+          authData: SERVICE.DefaultIdentityGovernanceService.getSystemAuthData(),
+          query: { loginId: principalCode }, options: { recursive: false } });
+        if (!principal || principal.success === false || !/^SUC_/.test(principal.code || '') ||
+            (principal.errors && principal.errors.length) || !Array.isArray(principal.result)) {
+          throw new CLASSES.NodicsError('ERR_AUTH_00003', 'Runtime reset requires authoritative principal reads');
+        }
+        if (principal.result.length === 0) {
+          const revoked = await SERVICE.DefaultPrincipalSecurityStampService.revoke(request.tenant, principalCode);
+          if (!Number.isSafeInteger(revoked) || revoked < 1) {
+            throw new CLASSES.NodicsError('ERR_AUTH_00003', 'Runtime reset credential revocation did not complete');
+          }
+          continue;
+        }
+      }
       const result = await SERVICE.DefaultEmployeeService.update({ tenant: request.tenant,
         authData: SERVICE.DefaultIdentityGovernanceService.getSystemAuthData(), query: { loginId: principalCode },
         model: { $set: { authVersion: 1 } } });

@@ -27,7 +27,7 @@ module.exports = {
      * @returns {Object} Effective action-adapter policy.
      */
     getPolicy: function () {
-        return (((CONFIG.get('process') || {}).actionAdapters) || {});
+        return (CONFIG.get('process') || {}).actionAdapters || {};
     },
 
     /**
@@ -37,7 +37,7 @@ module.exports = {
      * @returns {string} Adapter lookup key.
      */
     actionKey: function (action) {
-        return String(action && action.moduleName || '') + '.' + String(action && action.operation || '');
+        return String((action && action.moduleName) || '') + '.' + String((action && action.operation) || '');
     },
 
     /**
@@ -48,13 +48,26 @@ module.exports = {
      */
     allowedActions: function () {
         let policy = this.getPolicy();
-        return Array.isArray(policy.allowedActions) ? policy.allowedActions : [
-            {
-                moduleName: 'nodics.process',
-                operation: 'noop',
-                description: 'Safe no-op adapter for framework smoke tests and beginner demos'
+        let actions = Array.isArray(policy.allowedActions)
+            ? policy.allowedActions
+            : [
+                  {
+                      moduleName: 'nodics.process',
+                      operation: 'noop',
+                      description: 'Safe no-op adapter for framework smoke tests and beginner demos',
+                  },
+              ];
+        return actions.map((action) => {
+            if (typeof action !== 'string') return action;
+            const definition = (policy.definitions || {})[action];
+            if (!definition || this.actionKey(definition) !== action) {
+                throw new CLASSES.NodicsError(
+                    'ERR_PROCESS_00019',
+                    'Process action definition is unavailable: ' + action,
+                );
             }
-        ];
+            return definition;
+        });
     },
 
     /**
@@ -65,7 +78,7 @@ module.exports = {
      */
     findAllowedAction: function (action) {
         let actionKey = this.actionKey(action);
-        return this.allowedActions().find(item => this.actionKey(item) === actionKey);
+        return this.allowedActions().find((item) => this.actionKey(item) === actionKey);
     },
 
     /**
@@ -79,23 +92,42 @@ module.exports = {
      * @throws {CLASSES.NodicsError} When action is missing, unknown, or blocked.
      */
     execute: async function (request, execution) {
-        let node = execution && execution.node || {};
+        if (this.getPolicy().enabled === false)
+            throw new CLASSES.NodicsError('ERR_PROCESS_00019', 'Process action adapters are disabled');
+        let node = (execution && execution.node) || {};
         let action = node.action || {};
         let allowed = this.findAllowedAction(action);
         if (!allowed) {
-            throw new CLASSES.NodicsError('ERR_PROCESS_00019', 'Process action adapter is not registered or allowed');
+            throw new CLASSES.NodicsError(
+                'ERR_PROCESS_00019',
+                'Process action adapter is not registered or allowed',
+            );
         }
         if (action.moduleName === 'nodics.process' && action.operation === 'noop') {
             return {
                 status: 'COMPLETED',
                 adapter: this.actionKey(action),
                 message: 'Safe no-op process action executed',
-                output: {}
+                output: {},
             };
         }
-        if (!allowed.service || !allowed.method || !SERVICE[allowed.service] || typeof SERVICE[allowed.service][allowed.method] !== 'function') {
-            throw new CLASSES.NodicsError('ERR_PROCESS_00019', 'Process action adapter implementation is unavailable');
+        if (allowed.remote)
+            return SERVICE.DefaultProcessRemoteActionAdapterService.execute(
+                request,
+                execution,
+                Object.assign({}, allowed.remote, { actionKey: this.actionKey(action) }),
+            );
+        if (
+            !allowed.service ||
+            !allowed.method ||
+            !SERVICE[allowed.service] ||
+            typeof SERVICE[allowed.service][allowed.method] !== 'function'
+        ) {
+            throw new CLASSES.NodicsError(
+                'ERR_PROCESS_00019',
+                'Process action adapter implementation is unavailable',
+            );
         }
         return SERVICE[allowed.service][allowed.method](request, execution);
-    }
+    },
 };

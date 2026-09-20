@@ -17,33 +17,27 @@
  * @override Project, environment, server, tenant, or customer process overlays may enable APIs, designer providers, and process schemas without changing framework defaults.
  */
 module.exports = {
-    apiExposure: {
-        categories: {
-            processManagement: {
-                enabled: true
-            }
-        }
-    },
-    process: {
-        actionAdapters: {
-            enabled: true,
-            allowUnregisteredActions: false,
-            allowedActions: [
-                {
-                    moduleName: 'nodics.process',
-                    operation: 'noop',
-                    description: 'Safe no-op adapter for framework smoke tests and beginner demos'
-                }
-            ]
+  process: {
+    actionAdapters: {
+      enabled: true,
+      allowUnregisteredActions: false,
+      allowedActions: [
+        {
+          moduleName: "nodics.process",
+          operation: "noop",
+          description:
+            "Safe no-op adapter for framework smoke tests and beginner demos",
         },
-        designer: {
-            enabled: false,
-            provider: 'NODICS_NATIVE_GRAPH',
-            persistDrafts: false,
-            allowBpmnImport: false,
-            allowBpmnExport: false,
-            maximumNodesPerDefinition: 250,
-            maximumTransitionsPerDefinition: 500
-        }
-    }
+      ],
+    },
+    designer: {
+      enabled: false,
+      provider: "NODICS_NATIVE_GRAPH",
+      persistDrafts: false,
+      allowBpmnImport: false,
+      allowBpmnExport: false,
+      maximumNodesPerDefinition: 250,
+      maximumTransitionsPerDefinition: 500,
+    },
+  },
 };

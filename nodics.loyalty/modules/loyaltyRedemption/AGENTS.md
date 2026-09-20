@@ -8,3 +8,6 @@ Own reward redemption evidence. Redemptions prove captured reward usage but do n
 Keep rewards marketplace enterprise seed data in `loyaltyCore/data`, because it
 is common Loyalty reference data. Do not add Loyalty demo enterprises to Profile
 global init data or this leaf module.
+
+This capability contributes an inert model-service inventory for [governed Local reset](../../../nodics.foundation/modules/nSystem/llm/contracts/local-reset.md).
+Deployment selection, environment and tenant checks, confirmation and required services remain mandatory.

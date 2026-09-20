@@ -27,4 +27,13 @@ const context = { ...service, store: () => ({ one: async () => ({ metadata: { sa
     assert.equal((await context.evidencePhoto({ resourceType: 'review', code: 'submission' })).previewType, 'PUBLIC_MEDIA');
     allowed = false; await assert.rejects(() => context.evidencePhoto({ resourceType: 'review', code: 'submission' }), /Denied/);
     assert.equal(reads, 1); console.log('eWaste evidence reference contract validated');
+    SERVICE.DefaultWasteSubmissionOperationService = { read: async () => ({ metadata: { photo: { code: 'private-photo' } } }) };
+    const customer = { ...service, store: () => ({}), remote: async (...args) => {
+        assert.equal(args[3], '/customer/photos/private-photo');
+        assert.equal(args[6], 'Bearer customer-test');
+        return { contentBase64: 'owned' };
+    } };
+    assert.equal((await customer.evidencePhoto({ resourceType: 'submission', authorization: 'Bearer customer-test' })).contentBase64, 'owned');
+    SERVICE.DefaultWasteSubmissionOperationService.read = async () => { throw Error('Not owner'); };
+    await assert.rejects(customer.evidencePhoto({ resourceType: 'submission' }), /Not owner/);
 })().catch(error => { console.error(error); process.exitCode = 1; });

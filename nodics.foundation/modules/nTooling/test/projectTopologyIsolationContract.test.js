@@ -9,6 +9,7 @@
 
  */
 
+const writeEnvironment = require('./helpers/environmentFixture.cjs');
 /** @module nTooling/test/projectTopologyIsolationContract @description Proves independent post-start runtime failure with real isolated child processes. @layer test @owner nTooling */
 const assert = require('node:assert/strict');
 const fs = require('node:fs');
@@ -38,9 +39,9 @@ async function scenario(startupFailure) {
             `require('node:http').createServer((req,res)=>res.end('ready')).listen(${port},'127.0.0.1')`] }));
     fs.writeFileSync(path.join(dir, 'package.json'), JSON.stringify({ name: 'isolated.project' }));
     fs.mkdirSync(path.join(dir, 'envs/local'), { recursive: true });
-    fs.writeFileSync(path.join(dir, 'envs/local/nodics.environment.json'), JSON.stringify({ environment: 'isolated', topology: {
+    writeEnvironment(path.join(dir, 'envs/local'), { environment: 'isolated', topology: {
         environment: 'isolated', stateDirectory: 'generated', groups: { backends: runtimes }
-    } }));
+    } });
     let output = '';
     const supervisor = spawn(process.execPath, [script, 'start'], { cwd: dir, env: { ...process.env, ENV: '' } });
     supervisor.stdout.on('data', data => { output += data; });

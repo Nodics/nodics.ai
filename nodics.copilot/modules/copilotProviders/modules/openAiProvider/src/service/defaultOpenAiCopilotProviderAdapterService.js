@@ -39,6 +39,12 @@ module.exports = {
         });
         const body = { model: adapter.model.name, input: input, store: adapter.model.store === true, max_output_tokens: profile.maximumOutputTokens };
         if ((adapter.generation || {}).reasoningEffort) body.reasoning = { effort: adapter.generation.reasoningEffort };
+        if (profile.reasoningEffort) body.reasoning = { effort: profile.reasoningEffort };
+        if (profile.webSearch === true) {
+            body.tools = [{ type: 'web_search' }];
+            body.include = ['web_search_call.action.sources'];
+            body.tool_choice = 'required';
+        }
         if (request.responseSchema !== undefined) {
             const format = request.responseSchema;
             if (!format || !/^[a-zA-Z0-9_-]{1,64}$/.test(format.name || '') || !format.schema || format.schema.type !== 'object' || format.schema.additionalProperties !== false)
@@ -67,11 +73,26 @@ module.exports = {
             const text = await response.text();
             if (Buffer.byteLength(text) > Number(request.adapter.connection.maximumResponseBytes)) throw new Error('COPILOT_PROVIDER_RESPONSE_LIMIT_EXCEEDED');
             if (!response.ok) throw new Error('COPILOT_OPENAI_HTTP_' + response.status);
-            return this.normalize(JSON.parse(text));
+            const payload = JSON.parse(text);
+            const result = this.normalize(payload);
+            result.metadata.sources = this.sources(payload);
+            return result;
         } finally {
             clearTimeout(timer);
             if (external) external.removeEventListener('abort', abort);
         }
+    },
+    /** Preserves bounded HTTP source references returned by search, never model-invented citations. */
+    sources: function (payload) {
+        const sources = [];
+        for (const item of payload.output || []) {
+            const candidates = [...(item.action?.sources || []), ...(item.action?.url ? [{ url: item.action.url }] : []), ...(item.action?.urls || []).map(url => ({ url })), ...(item.content || []).flatMap(part => part.annotations || [])];
+            for (const source of candidates) {
+                if (typeof source.url !== 'string' || source.url.length > 2048 || !/^https?:\/\//.test(source.url)) continue;
+                if (!sources.some(value => value.url === source.url)) sources.push({ url: source.url, title: String(source.title || '').slice(0, 200) });
+            }
+        }
+        return sources.slice(0, 50);
     },
     /** Uses the same real API and emits one normalized completion when chunk transport is not selected. */
     invokeStream: async function (request, onEvent, dependencies) { const result = await this.invoke(request, dependencies); onEvent(result); return result; }

@@ -8,7 +8,7 @@ Use these files for rules that are more specific than root `AGENTS.md` and the m
 
 - Strict security-stamp and refresh-token state must fail closed unless the
   effective layered cache configuration enables the cache subsystem, enables
-  the `profile.auth` channel, selects an enabled distributed engine, declares
+  the `auth.auth` channel, selects an enabled distributed engine, declares
   atomic consume and atomic version-write support, and disables local fallback.
 - Do not treat the presence of a Redis URL or engine definition as activation.
   Activation comes from layered properties and runtime governance.
@@ -46,3 +46,47 @@ cache must preserve durable shared state; eviction/loss causes strict validation
 to fail, and recovery must restore trusted current versions before issuance.
 Direct token revocation does not mutate Profile identity records: recovery uses
 a governed principal update and fresh proof, rather than accepting stale claims.
+
+`DefaultServiceTokenService.requireRuntimePrincipal(request, moduleName)` checks
+an already verified principal for service identity, exact tenant, enterprise,
+bound runtime instance/scope and the required capability. It does not validate
+raw JWTs: routes must still use the existing authentication/permission pipeline,
+and callers checking a stored token must first use the authorization provider.
+Remote business execution also requires the owning capability's current action
+proof; runtime identity alone cannot authorize a caller-supplied decision.
+
+## Deployment credentials and inherited auth policy
+
+nAuth defaults bind `NODICS_JWT_SECRET`, `NODICS_API_KEY_PEPPER`,
+`NODICS_BOOTSTRAP_ADMIN_PASSWORD`, `NODICS_BOOTSTRAP_SERVICE_PASSWORD`,
+`NODICS_BOOTSTRAP_SERVICE_API_KEY` and `NODICS_RUNTIME_API_KEY` through nConfig.
+Unset credentials remain null and owning validators fail without printing values.
+Layered external/secret-provider overrides remain supported. The bootstrap source
+label describes the configured input contract; it does not verify provenance or
+make an environment local. Local compatibility is disabled by default.
+
+Provisioning credentials create initial Profile records. Runtime proof is supplied
+independently and remains subject to Profile tenant/enterprise/deployment grants,
+renewal and revocation. No bootstrap-to-runtime proof fallback or credential
+rotation occurs on restart. Profile initialization checks its configured required
+human/service identities, independently of runtime authentication login metadata.
+
+The shared logical `auth.auth` channel defaults to strict Redis use with no local
+fallback, atomic consume/version writes and non-expiring stamp state. The adapter
+must be explicitly selected and enabled by the deployment. One environment
+connection/namespace serves its participants; another distributed provider may be
+selected through the existing cache contract. JWT/API-key/stamp policy stays in
+nAuth; cache activation is not inferred from a URL.
+
+For an initialized deployment, supply its current signing secret and pepper
+before restarting. Digest migration, scope/stamp repair, key rotation and runtime
+grants use existing Profile governance. Never re-import Init to reset credentials,
+restore a revoked key or enable legacy-human/plaintext compatibility as a shortcut.
+Fresh and restarted credential bindings are covered by focused tests; production
+identity migration and browser/provider acceptance require separate live evidence.
+
+Scoped runtime route admission recognizes `userGroup` and
+`serviceAccountUserGroup` as base route classes. These labels do not become JWT
+groups or expand permissions. nRouter still enforces the approved module, explicit
+action permission, accepted token type and deployment exposure. Administrator and
+human-only groups remain ineligible; later deployment policy may narrow the list.

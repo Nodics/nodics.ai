@@ -51,7 +51,7 @@ module.exports = {
             ]
         },
         invalidation: {
-            crossNode: true,
+            crossNode: null,
             eventName: 'cacheInvalidation'
         },
         schemaCacheChannelNameMapping: {
@@ -136,7 +136,9 @@ module.exports = {
                     ttl: 100,
                     options: {
                         host: 'localhost',
-                        port: 6379
+                        port: 6379,
+                        prefix: 'localRuntimeAuth',
+                        sentinel: { enabled: false, name: null, endpoints: [] }
                     }
                 },
                 hazelcast: {

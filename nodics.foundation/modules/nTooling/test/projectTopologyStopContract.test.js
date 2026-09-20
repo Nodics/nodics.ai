@@ -9,6 +9,7 @@
 
  */
 
+const writeEnvironment = require('./helpers/environmentFixture.cjs');
 /**
  * @module nTooling/test/projectTopologyStopContract
  * @description Verifies local topology stop handles stale generated supervisor
@@ -55,19 +56,19 @@ function createProject(port) {
     fs.mkdirSync(path.join(projectRoot, 'generated/local-topology'), { recursive: true });
     fs.writeFileSync(path.join(projectRoot, 'package.json'), JSON.stringify({ name: 'stop-test.project' }));
     fs.mkdirSync(path.join(projectRoot, 'envs/local'), { recursive: true });
-    fs.writeFileSync(path.join(projectRoot, 'envs/local/nodics.environment.json'), JSON.stringify({
-        environment: 'testLocal',
+    writeEnvironment(path.join(projectRoot, 'envs/local'), {
+        environment: 'local',
         topology: {
-            environment: 'testLocal',
+            environment: 'local',
             stateDirectory: 'generated/local-topology',
             groups: {
                 backends: [{ code: 'platform', label: 'Platform', port }]
             }
         }
-    }, null, 2) + '\n');
+    });
     fs.writeFileSync(path.join(projectRoot, 'generated/local-topology/processes.json'), JSON.stringify({
         contractVersion: 0,
-        environment: 'testLocal',
+        environment: 'local',
         projectRoot,
         supervisorPid: 999999,
         children: [{ code: 'platform', pid: 999998, port }]
@@ -81,7 +82,7 @@ reservePort().then(port => {
         cwd: projectRoot,
         encoding: 'utf8'
     });
-    assert(output.includes('removed stale testLocal supervisor state'),
+    assert(output.includes('removed stale local supervisor state'),
         'Stop should clean stale state when no declared runtime ports are listening');
     assert(!fs.existsSync(path.join(projectRoot, 'generated/local-topology/processes.json')),
         'Stale state file should be removed after safe no-op stop');

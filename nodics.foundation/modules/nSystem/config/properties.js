@@ -17,25 +17,56 @@
  * @override Project, environment, server, node, tenant, or customer layers may override these defaults through Nodics configuration layering.
  */
 module.exports = {
-    localResetProvider: {
-        enabled: false,
-        environmentAllowlist: [],
-        confirmation: 'RESET_LOCAL_NODICS_DATA',
-        maximumServices: 128,
-        serviceNames: [],
-        contributions: {
-            "system": {
-                "serviceNames": {
-                    "DefaultConfigurationService": true,
-                    "DefaultEventListenerService": true,
-                    "DefaultInterceptorService": true
-                }
-            }
-        }
+  localResetProvider: {
+    enabled: false,
+    environmentAllowlist: [],
+    confirmation: "RESET_LOCAL_NODICS_DATA",
+    maximumServices: 128,
+    serviceNames: [],
+    contributions: {
+      system: {
+        serviceNames: {
+          DefaultConfigurationService: true,
+          DefaultEventListenerService: true,
+          DefaultInterceptorService: true,
+        },
+      },
     },
-    readiness: {
-        contributorTimeoutMs: 1000,
-        cacheTtlMs: 1000,
-        degradedIsReady: false
-    }
+  },
+  readiness: {
+    contributorTimeoutMs: 1000,
+    cacheTtlMs: 1000,
+    degradedIsReady: false,
+  },
+  apiExposure: {
+    categories: {
+      dataImport: {
+        enabled: false,
+      },
+      logManagement: {
+        enabled: false,
+      },
+      moduleInternal: {
+        enabled: true,
+      },
+      openApiContract: {
+        enabled: true,
+      },
+      operationalHealth: {
+        enabled: true,
+      },
+      runtimeConfiguration: {
+        enabled: true,
+      },
+      schemaMaintenance: {
+        enabled: true,
+      },
+      serviceRegistry: {
+        enabled: true,
+      },
+      testExecution: {
+        enabled: false,
+      },
+    },
+  },
 };

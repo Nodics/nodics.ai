@@ -272,6 +272,26 @@ module.exports = exportedService = {
 
     /** Implements auditPrincipleContracts as an overrideable service operation. */
     auditPrincipleContracts: function (failures) {
+        // Protect the canonical gate and its discovery routes; this is not proof
+        // that a batch's semantic review has been performed or passed.
+        ['nodics-principles.md', 'ai-coding-and-customization-contract.md'].forEach(fileName => {
+            (this.requireClauses || exportedService.requireClauses).call(this, failures,
+                (this.corePath || exportedService.corePath).call(this, 'modules/nSetup/llm/contracts/' + fileName),
+                ['## Mandatory Ownership, Placement And Scope Review']);
+        });
+        [
+            'contracts/developer-implementation-contract.md',
+            'contracts/customer-config-classification-contract.md',
+            'contracts/module-structure-contract.md',
+            'playbooks/change-gate-contract.md',
+            'playbooks/daily-change-checklist.md',
+            'prompts/review-prompt.md',
+            'ai-enablement-index.md'
+        ].forEach(relativePath => {
+            (this.requireClauses || exportedService.requireClauses).call(this, failures,
+                (this.corePath || exportedService.corePath).call(this, 'modules/nSetup/llm/' + relativePath),
+                ['ai-coding-and-customization-contract.md#mandatory-ownership-placement-and-scope-review']);
+        });
         (this.requireClauses || exportedService.requireClauses).call(this, failures, (this.corePath || exportedService.corePath).call(this, 'modules/nSetup/llm/contracts/nodics-principles.md'), [
             'capabilities are sacred, implementations are negotiable',
             'Framework, Accelerator And Partner Ownership',
@@ -454,6 +474,49 @@ module.exports = exportedService = {
         });
     },
 
+    /** Rejects retired authorities and framework/service secrets without executing properties. Customer validation permits its direct administrator bootstrap override; nAuth still validates the effective value. @param {string[]} failures Findings. @param {string} directory Framework or customer root. @param {Object} options Explicit caller scope; customerProject is set only by customer-project validation. @returns {void} */
+    auditConfigurationSources: function (failures, directory = rootPath, options = {}) {
+        const skip = new Set(['node_modules', '.git', 'generated', 'data', 'test', 'tests', 'temp', 'dist', 'build', 'coverage', 'llm']);
+        const inspectObject = (node, propertyPath, file) => {
+            if (!node || node.type !== 'ObjectExpression') return;
+            for (const property of node.properties) {
+                if (property.type !== 'Property') continue;
+                const key = property.key.type === 'Identifier' ? property.key.name : property.key.value;
+                const current = propertyPath.concat(String(key));
+                const name = current.join('.');
+                const value = property.value;
+                if (name === 'frontends' || name === 'tooling.topology.groups.frontends') failures.push(file + ': frontend lifecycle belongs to frontend applications, not backend properties');
+                if (key === '$config' && value.type === 'Literal' && value.value === 'profile') failures.push(file + ': retired profile binding; use existing layered properties');
+                if (['configurationValues.remoteEndpoints', 'configurationValues.runtimeAuthentication'].includes(name)) failures.push(file + ': duplicated configuration authority ' + name);
+                const customerAdminOverride = options.customerProject === true && name === 'bootstrapIdentity.adminPassword';
+                if (!customerAdminOverride && /^(?:authSecurity\.(?:jwt\.secret|apiKey\.pepper)|bootstrapIdentity\.(?:adminPassword|servicePassword|serviceApiKey)|defaultAuthDetail\.apiKey)(?:\.fallback)?$/.test(name) && value.type === 'Literal' && typeof value.value === 'string' && value.value.length) failures.push(file + ': authentication secret must use deployment input at ' + name);
+                inspectObject(value, current, file);
+                if (value.type === 'ArrayExpression') value.elements.forEach(item => inspectObject(item, current, file));
+            }
+        };
+        const inspectExports = (node, file) => {
+            if (!node || typeof node !== 'object') return;
+            if (node.type === 'AssignmentExpression' && node.left?.type === 'MemberExpression' && node.left.object?.name === 'module' && node.left.property?.name === 'exports') inspectObject(node.right, [], file);
+            for (const value of Object.values(node)) {
+                if (Array.isArray(value)) value.forEach(item => inspectExports(item, file));
+                else if (value && typeof value === 'object') inspectExports(value, file);
+            }
+        };
+        const walk = folder => {
+            for (const entry of fs.readdirSync(folder, {withFileTypes:true})) {
+                if (entry.name.startsWith('.') || skip.has(entry.name) || entry.isSymbolicLink()) continue;
+                const absolute = path.join(folder, entry.name), relative = path.relative(directory, absolute);
+                if (entry.isDirectory()) walk(absolute);
+                else if (entry.name === 'nodics.environment.json') failures.push(relative + ': environment descriptors are prohibited; use existing module configuration');
+                else if (entry.name === 'properties.js' && path.basename(folder) === 'config') {
+                    try { inspectExports(acorn.parse(fs.readFileSync(absolute, 'utf8'), {ecmaVersion:'latest',sourceType:'script'}), relative); }
+                    catch (error) { failures.push(relative + ': configuration syntax must be valid'); }
+                }
+            }
+        };
+        walk(directory);
+    },
+
     /** Implements audit as an overrideable service operation. */
     audit: function () {
         const failures = [];
@@ -463,6 +526,7 @@ module.exports = exportedService = {
         (this.auditLlmGuidance || exportedService.auditLlmGuidance).call(this, failures);
         (this.auditGeneratedContextEntrypoints || exportedService.auditGeneratedContextEntrypoints).call(this, failures);
         (this.auditServiceExportStyle || exportedService.auditServiceExportStyle).call(this, failures);
+        (this.auditConfigurationSources || exportedService.auditConfigurationSources).call(this, failures);
         return failures;
     },
 

@@ -602,3 +602,10 @@ developer-facing concepts and documentation structure:
 
 Before publishing or implementing from planning notes, reconcile each topic with
 source code and active contracts.
+
+## Final Review Before Completion
+
+The [mandatory ownership, placement and scope review](ai-coding-and-customization-contract.md#mandatory-ownership-placement-and-scope-review)
+applies to human developers and AI tools. Record its evidence and PASS/FAIL in
+the existing canonical checklist before calling the change complete or moving
+to live acceptance or release. Passing tests is one input, not a waiver.

@@ -9,6 +9,15 @@ Review this Nodics change as a platform maintainer.
 Load the base Nodics assistant prompt first. Load only the affected module
 context and the specific contracts touched by the change.
 
+Apply contracts/ai-coding-and-customization-contract.md#mandatory-ownership-placement-and-scope-review.
+Account for the complete changed-file inventory and formatting-normalized
+semantic diff against the authorized scope and baseline. For a repository-wide
+placement claim, inventory all tracked and relevant untracked paths. Separate
+pre-existing work, generated artifacts, incidental repairs and uninspected
+areas. Verify configuration consumers and business authority, including whether
+callbacks prove the owning workflow decision. Record PASS/FAIL in the existing
+canonical checklist; do not substitute passing tests for review completion.
+
 Prioritize findings before summaries. Report concrete bugs, regressions,
 security issues, tenant-context mistakes, missing validation, missing audit,
 missing rollback, generated-artifact drift, missing tests, and broken

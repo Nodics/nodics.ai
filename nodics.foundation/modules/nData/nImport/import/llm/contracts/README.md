@@ -167,3 +167,13 @@ of business writes transactional or prove automatic crash-safe replay.
 Verification includes independent executors racing absent and existing receipts,
 stale completion, partial-plan failure and missing/failed storage. Provider and
 live multi-process behavior still require deployment qualification.
+
+## Inherited governance and selected profiles
+
+See [governance defaults and selected owner templates](inherited-governance.md).
+
+## Content-pack defaults and manifest paths
+
+Inherit nImport defaults and derive content paths from the selected manifest. Preserve per-pack overrides, disabled import gates and validation. See [the detailed contract](inherited-governance.md#content-pack-defaults-and-manifest-paths).
+
+Sample releases are available to authorized manual operators by default, with optional deployment restriction. Only Init can auto-run at startup. Environment scope reads the canonical `environment.class`; never derive it from the selected environment name or another capability policy. Permissions, roles, tenant isolation, release checksums and durable receipts remain mandatory.

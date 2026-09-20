@@ -24,3 +24,8 @@ A server must explicitly select it; contributions never enable reset or bypass t
 The existing Local reset provider accepts inert capability-owned inventories and
 explicit server module selection. Preserve final-scope validation before mutation;
 see [Local reset](llm/contracts/local-reset.md#capability-owned-inventories).
+
+Route-category defaults belong to this capability; deployments supply only intentional overrides.
+Preserve nRouter enforcement and independent route authorization. See [exposure ownership](../nRouter/llm/contracts/README.md#capability-owned-exposure-defaults).
+
+Secured service-registry API exposure defaults to enabled for runtime registration/contract retrieval. Exposure never bypasses service-token, grant or route permissions. Standalone deployments can explicitly disable the category.

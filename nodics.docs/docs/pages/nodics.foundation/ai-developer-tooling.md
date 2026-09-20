@@ -90,3 +90,27 @@ Operators need production-safe evidence, not only implementation notes. Each pag
 Verification starts with the document itself: it must include business context, technical ownership, a visual flow, data or configuration tables, customization guidance, common mistakes, and validation evidence. Developers then run the documentation generator and content-pack validator so the page becomes backend-owned data with checksum, lifecycle, navigation, access policy, publication state, and search metadata.
 
 For implementation verification, run the owning module tests and any Axis or Nexus renderer tests that consume the page. Operators should confirm that production-like runtime behavior matches the documentation: permissions reject unauthorized access, Online pages do not expose Staged data, runtime changes propagate through governed events, and troubleshooting evidence is available without exposing secrets.
+
+## Final review before completion
+
+A developer must verify where each change belongs and what behavior it adds
+before closing the work or moving to live acceptance and release. Keep the
+review decision in the existing canonical checklist. Passing tests alone does
+not establish that configuration ownership, file placement or scope is correct.
+
+Record the starting revision and existing work, account for every changed file,
+inspect the semantic diff with formatting noise removed, and map each artifact
+to its existing capability or customer/deployment owner. Configuration review
+also checks active module order, real consumers, collection semantics and later
+overrides. List incidental repairs, pre-existing defects and excluded external
+or persisted settings separately. Matching identifiers in a callback do not
+prove the owning workflow approved its mutation.
+
+For a repository-wide placement claim, account for every tracked and relevant
+untracked path. Label automated inventory and manual semantic review separately.
+Record PASS or FAIL with concrete evidence; unresolved required findings keep
+the gate open. The principle audit protects discovery of the rule but cannot
+certify that this review has been performed.
+
+The canonical procedure is
+`nodics.foundation/modules/nSetup/llm/contracts/ai-coding-and-customization-contract.md#mandatory-ownership-placement-and-scope-review`.

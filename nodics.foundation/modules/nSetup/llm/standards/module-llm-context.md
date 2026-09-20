@@ -104,3 +104,10 @@ Do not use top-level `type` for Nodics metadata, and do not add `nodics.moduleTy
 Keep server and node names short. Nodics derives parentage and canonical
 identity from the physical hierarchy discovered by the module loader. Do not
 duplicate topology parentage or canonical identity in `package.json`.
+
+Framework accelerator reference packs use the existing `content-pack` kind. A pack
+may opt into Builder discovery with `nodics.applicationBuilder: { dataPack: true }`
+and must own `data` plus its release manifest. Framework package metadata permits
+only this bounded Builder opt-in; project preset/frontend/composition choices do
+not belong in framework packages. Customer and framework pack identities must not
+collide. The metadata validator applies these ownership and shape checks.

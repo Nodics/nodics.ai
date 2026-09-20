@@ -18,7 +18,11 @@ assert(schemas.publish.publicationRequest.model);
 assert(schemas.publish.publicationAudit.model);
 assert.strictEqual(schemas.publish.publicationRequest.isVersionedEnabled, false);
 assert.strictEqual(schemas.publish.publicationAudit.isVersionedEnabled, false);
-assert.strictEqual(schemas.publish.publicationRequest.router.enabled, false);
+assert.strictEqual(schemas.publish.publicationRequest.router.enabled, true);
+for (const schema of [schemas.publish.publicationRequest, schemas.publish.publicationAudit]) {
+    assert.strictEqual(schema.backoffice.mutationMode, 'READ_ONLY');
+    assert.deepStrictEqual(schema.backoffice.operations, ['search', 'read']);
+}
 assert(states.definition.includes('STAGED'));
 assert(states.definition.includes('ONLINE'));
 assert.strictEqual(properties.publish.lifecycle.initialState, 'STAGED');
@@ -36,8 +40,36 @@ assert.deepStrictEqual(routes.activate.authTokenTypes, ['service']);
 assert.deepStrictEqual(operations.diagnostics.authTokenTypes, ['access']);
 assert.strictEqual(operations.reconcile.permission, 'publish.operations.reconcile');
 assert.strictEqual(operations.recover.permission, 'publish.operations.recover');
-assert.strictEqual(properties.publish.providers.versionProvider, null, 'nPublish must not embed a storage provider');
-assert.deepStrictEqual(properties.publish.providers.domainAdapters, {}, 'business adapters must be contributed by owning modules');
+assert.strictEqual(
+    properties.publish.providers.versionProvider,
+    null,
+    'nPublish must not embed a storage provider',
+);
+assert.deepStrictEqual(
+    properties.publish.providers.domainAdapters,
+    {},
+    'business adapters must be contributed by owning modules',
+);
 let source = require('fs').readFileSync(require('path').join(__dirname, '../src/schemas/schemas.js'), 'utf8');
 assert(!/cms|wcms|catalog/i.test(source), 'generic publication schemas must not embed a business domain');
+
+const authoringPolicy = require('../../nDatabase/database/src/service/schema/defaultSchemaAuthoringPolicyService');
+global.CLASSES = {
+    NodicsError: class extends Error {
+        constructor(code, message) {
+            super(message);
+            this.code = code;
+        }
+    },
+};
+global.CONFIG = { get: () => ({ publication: 'STAGED' }) };
+global.NODICS = { getModule: () => ({ rawSchema: schemas.publish }) };
+for (const name of ['publicationRequest', 'publicationAudit']) {
+    for (const operation of ['create', 'update', 'delete']) {
+        assert.throws(
+            () => authoringPolicy.assertMutationAllowed('publish', name, operation),
+            /generic operation|read-only/,
+        );
+    }
+}
 console.log('nPublish authority contract validated');

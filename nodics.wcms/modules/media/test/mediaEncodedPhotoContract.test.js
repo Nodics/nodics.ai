@@ -52,3 +52,31 @@ test("oversize, invalid formats, altered bytes and foreign replay cannot write m
   await assert.rejects(ownerService.uploadEncoded(request()), { code: "ERR_MED_00007" });
   assert.equal(writes, 1);
 });
+
+
+test("customer lookup forwards the verified caller credential rather than runtime authority", async () => {
+ const input = {tenant:'test',authData:{tenant:'test',principalType:'customer',loginId:'person'},authorization:'Bearer customer-test-token',payload:{authorization:'Bearer attacker'}};
+ SERVICE.DefaultModuleService = {invokeModule:async call=>{
+  assert.deepEqual(call.header,{Authorization:'Bearer customer-test-token'});
+  assert.equal(call.tenant,'test');assert.deepEqual(call.requestBody.query,{loginId:'person'});
+  return {result:[{code:'CUSTOMER_CODE',loginId:'person'}]};
+ }};
+ assert.equal(await service.owner(input),'CUSTOMER_CODE');
+ for(const delta of [{authorization:undefined},{tenant:'other'},{authData:{tenant:'test',principalType:'service',loginId:'person'}}])
+  await assert.rejects(service.owner({...input,...delta}),{code:'ERR_MED_00007'});
+ SERVICE.DefaultModuleService.invokeModule=async()=>({result:[{code:'OTHER',loginId:'other'}]});
+ await assert.rejects(service.owner(input),{code:'ERR_MED_00007'});
+});
+
+
+test("controller forwards transport authorization and ignores body credentials", async () => {
+  const controller = require("../src/controller/storage/defaultCustomerMediaController");
+  SERVICE.DefaultCustomerMediaService = { uploadEncoded: async input => {
+    assert.equal(input.authorization, "Bearer trusted-session");
+    assert.equal(input.tenant, "test");
+    return { code: "PHOTO" };
+  } };
+  assert.deepEqual(await controller.uploadEncoded({ tenant: "test", authData: { principalType: "customer" },
+    httpRequest: { headers: { authorization: "Bearer trusted-session" }, body: { authorization: "Bearer attacker" } }
+  }), { data: { code: "PHOTO" } });
+});

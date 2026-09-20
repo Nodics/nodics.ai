@@ -63,3 +63,6 @@ The frozen rules are:
 - Axis permissions must separate view, edit, preview, publish-status, and override/rollback actions.
 - every projected component must carry renderer key and contract version.
 - end-to-end business/developer documentation is required before the capability is marked complete.
+
+Route-category defaults belong to this capability; deployments supply only intentional overrides.
+Preserve nRouter enforcement and independent route authorization. See [exposure ownership](../../../nodics.foundation/modules/nRouter/llm/contracts/README.md#capability-owned-exposure-defaults).

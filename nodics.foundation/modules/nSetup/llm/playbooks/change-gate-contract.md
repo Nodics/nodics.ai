@@ -28,6 +28,17 @@ This boundary is mandatory for token and execution efficiency. It cannot be
 used to skip project-level security, tenant, compatibility, layering, or
 customization checks.
 
+## Mandatory Final Ownership, Placement And Scope Review
+
+Before completion claims, checklist closure or progression to live acceptance,
+deployment, merge or release, pass
+[the mandatory final review](../contracts/ai-coding-and-customization-contract.md#mandatory-ownership-placement-and-scope-review).
+The review covers the full changed-file inventory and semantic diff, actual
+artifact/configuration owners, preserved existing work, scope deviations and
+relevant authority boundaries. Record PASS/FAIL and unresolved findings in the
+existing canonical checklist. The proportional gates below and their test
+results do not replace this decision.
+
 ## Gate 1: Change Slice
 
 Run the five questions in `playbooks/daily-change-checklist.md` once per coherent change

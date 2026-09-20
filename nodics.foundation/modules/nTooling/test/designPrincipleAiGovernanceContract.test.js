@@ -71,6 +71,22 @@ assert.deepStrictEqual(intactFailures, [], 'authored principle contracts must pa
 
 // Simulate lost source clauses without changing the checkout or generated data.
 [
+    ...['nodics-principles.md', 'ai-coding-and-customization-contract.md'].map(fileName => [
+        'modules/nSetup/llm/contracts/' + fileName,
+        '## Mandatory Ownership, Placement And Scope Review'
+    ]),
+    ...[
+        'contracts/developer-implementation-contract.md',
+        'contracts/customer-config-classification-contract.md',
+        'contracts/module-structure-contract.md',
+        'playbooks/change-gate-contract.md',
+        'playbooks/daily-change-checklist.md',
+        'prompts/review-prompt.md',
+        'ai-enablement-index.md'
+    ].map(relativePath => [
+        'modules/nSetup/llm/' + relativePath,
+        'ai-coding-and-customization-contract.md#mandatory-ownership-placement-and-scope-review'
+    ]),
     [partnerContract, 'Partners write only to their customer-owned backend and frontend repositories.'],
     [partnerContract, '## Ownership And Dependency Direction'],
     [partnerContract, '## Schema Ownership And Data Contributions'],
@@ -91,7 +107,7 @@ assert.deepStrictEqual(intactFailures, [], 'authored principle contracts must pa
     };
     drifted.auditPrincipleContracts(driftedFailures);
     assert(driftedFailures.some(message => message.includes(targetPath) && message.includes(clause)),
-        'principle audit must reject a removed partner governance clause: ' + clause);
+        'principle audit must reject lost mandatory governance or discovery: ' + clause);
 });
 const missingFailures = [];
 context.auditPrincipleContracts.call({

@@ -143,3 +143,9 @@ Artifact diagnostics now read effective loader traces and show per-member
 origins. The last file to contribute an artifact does not necessarily supply
 every method. Reports retain the selected server and node coordinates without
 embedding function bodies or secret configuration values.
+
+This capability contributes an inert model-service inventory for [governed Local reset](../nSystem/llm/contracts/local-reset.md).
+Deployment selection, environment and tenant checks, confirmation and required services remain mandatory.
+
+Route-category defaults belong to this capability; deployments supply only intentional overrides.
+Preserve nRouter enforcement and independent route authorization. See [exposure ownership](../nRouter/llm/contracts/README.md#capability-owned-exposure-defaults).

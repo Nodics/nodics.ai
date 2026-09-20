@@ -124,3 +124,6 @@ Metadata lookup no longer depends on Workbench discovery. Missing Schema Utility
 fails with `ERR_EXP_00001`; it never falls back to raw schemas or removed routes.
 Bounded record collection continues through the existing Workbench search owner
 until its separate migration. See [the metadata contract](llm/contracts/README.md#schema-metadata-owner).
+
+Route-category defaults belong to this capability; deployments supply only intentional overrides.
+Preserve nRouter enforcement and independent route authorization. See [exposure ownership](../../../nRouter/llm/contracts/README.md#capability-owned-exposure-defaults).

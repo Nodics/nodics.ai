@@ -9,6 +9,7 @@
 
  */
 
+const writeEnvironment = require('./helpers/environmentFixture.cjs');
 /**
  * @module nTooling/test/projectTopologyRuntimeEnvContract
  * @description Verifies local topology runtime environment values are declared
@@ -33,12 +34,13 @@ const originalCwd = process.cwd();
 const originalEnv = process.env.ENV;
 const projectRoot = fs.mkdtempSync(path.join(os.tmpdir(), 'nodics-topology-env-'));
 function writeJson(filePath, value) {
+  if (filePath.endsWith('/config/properties.js')) return writeEnvironment(path.dirname(path.dirname(filePath)), value);
     fs.mkdirSync(path.dirname(filePath), { recursive: true });
     fs.writeFileSync(filePath, JSON.stringify(value, null, 2) + '\n');
 }
 
 writeJson(path.join(projectRoot, 'package.json'), { name: 'acme.startio' });
-writeJson(path.join(projectRoot, 'envs', 'testLocal', 'nodics.environment.json'), {
+writeJson(path.join(projectRoot, 'envs', 'testLocal', 'config/properties.js'), {
     contractVersion: 1,
     environment: 'testLocal',
     topology: {

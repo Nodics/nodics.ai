@@ -11,7 +11,25 @@
 
 /** @module loyaltyWallet/config/properties @description Defines loyaltyWallet schema access policy. @layer config @owner loyaltyWallet */
 module.exports = {
-    schemaPolicies: { loyaltyWallet: {
-        operational: { accessGroups: { adminGroup: 10, serviceAccountUserGroup: 10, employeeUserGroup: 10 } }
-    } }
+  schemaPolicies: {
+    loyaltyWallet: {
+      operational: {
+        accessGroups: {
+          adminGroup: 10,
+          serviceAccountUserGroup: 10,
+          employeeUserGroup: 10,
+        },
+      },
+    },
+  },
+  localResetProvider: {
+    contributions: {
+      loyaltyWallet: {
+        serviceNames: {
+          DefaultLoyaltyWalletRewardBalanceService: true,
+          DefaultLoyaltyWalletService: true,
+        },
+      },
+    },
+  },
 };

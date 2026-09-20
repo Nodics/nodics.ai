@@ -107,3 +107,32 @@ quality and unsupported-item validation remains in force.
 The hold is checked by Waste Verification and copied to approved assets.
 Recognition itself does not approve or reject an asset, grant permission, or
 activate an automation.
+
+## Complete property disposition
+
+Use the [shared metadata coverage map](../../../wasteMaterial/llm/contracts/README.md#metadata-coverage-and-lifecycle)
+for every image-schema property. The alignment regression enumerates the schema
+keys and checks persistence/application/projection, including nested estimates
+and environmental observations. Unsupported/uncertain input is a rejected
+analysis attempt, not a persisted supported suggestion. Do not record arbitrary
+provider fields or image instructions to achieve apparent completeness.
+
+Persist size provenance in the trusted analysis snapshot and copy it when applying
+saved analysis or creating a prepared submission. Customer payloads still cannot
+write provenance. Source confidence is not per-property confidence. A property
+that cannot be defensibly extracted remains unknown; do not fill it with a guess.
+
+Photo prompt V6 requests per-item inferred mass ranges independently of brand/model identification. UNKNOWN is retained when no defensible form factor is available; non-photo restrictions remain. Quantity is applied once downstream. This is not measured weight or a request for environmental coefficients.
+
+Unsupported-domain photos return ERR_WASTE_ITEM_UNSUPPORTED with a bounded advisory item name/description before the configured domain acceptance explanation. They never write accepted suggestions or create impact/rewards. Uncertain recognition and provider failures remain separate. Clients render descriptive text as plain text, with replacement controls rather than a misleading clearer-photo instruction.
+
+Photo prompt V7 supports opt-in `allowBundles` (enabled by eWaste): MULTIPLE_ITEMS is advisory for a recognized group; non-domain objects are excluded. A bundle uses the configured generic taxonomy, submittedFacts.submissionUnit=BUNDLE and quantity=1 submission unit; inferred mass covers all eligible contents once. The customer sees one bundle, not a claimed physical item count. WARM input-only bundle assessments omit item-count and unsupported climate metrics. Blur/mismatch and out-of-domain rejection remain enforced. Original photo and review lifecycle remain authoritative.
+
+
+Required environmental assessment is an opt-in domain policy under
+`wasteSubmission.requireEnvironmentalAssessment` (generic default false; eWaste true).
+Estimate persistence and confirmation reject absent, failed, mock or empty assessments.
+Draft edits/photo replacement invalidate the saved estimate; confirmation replay
+remains idempotent. A valid partial assessment may retain supported input metrics
+and explicit reasons for unavailable outcomes; this policy does not manufacture
+carbon factors or certify credits. Provider failures cannot be treated as success.

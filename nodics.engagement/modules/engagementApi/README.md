@@ -23,3 +23,6 @@ This capability depends on domain facades/services and engagementCore security c
 ## Verification
 
 Verification covers route authentication metadata, tenant and customer ownership checks, service-token boundaries, payload/query limits, strict DTO allow-lists, safe errors, fail-closed missing domain adapters, and later-layer anonymous-policy override behavior.
+
+Route-category defaults belong to this capability; deployments supply only intentional overrides.
+Preserve nRouter enforcement and independent route authorization. See [exposure ownership](../../../nodics.foundation/modules/nRouter/llm/contracts/README.md#capability-owned-exposure-defaults).

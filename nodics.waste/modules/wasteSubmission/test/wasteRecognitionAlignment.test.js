@@ -38,13 +38,44 @@ test('complete paged taxonomy and structured properties survive persistence, app
  assert(sent.responseSchema.schema.properties.itemTypeCode.enum.includes('ITEM_500'));
  assert.equal(sent.responseSchema.schema.additionalProperties,false);
  assert.equal(sent.responseSchema.schema.properties.dimensionsEstimate.properties.width.properties.unit.enum[0],'CM');
- assert.equal(current.metadata.suggestion.recognition.promptVersion,'WASTE_PHOTO_V5');
+ assert.equal(current.metadata.suggestion.recognition.promptVersion,'WASTE_PHOTO_V7');
  assert.equal(current.metadata.suggestion.recognition.size.basis,'TAXONOMY_POLICY');
  assert.deepEqual(current.metadata.suggestion.recognition.unknownFields,['brand','model','conditionGrade']);
  assert.equal(JSON.parse(suggestion.rawSummary).environment.contamination.value,'NOT_VISIBLE');
  await SERVICE.DefaultWasteSubmissionOperationService.applyAnalysis({expectedRevision:2});
  const result=descriptor.describe(current,{items,materials,categories:catalogues.wasteCategory});
  assert.equal(result.classification.category.code,'DEVICES');
+ // Every schema property must have an explicit persistence/projection disposition.
+ const coverage = {
+  contractVersion: ['recognition.contractVersion', 'contractVersion'],
+  assessment: ['recognition.assessment', null],
+  imageEvidence: ['recognition.imageEvidence', 'evidenceReview'],
+  name: ['facts.name', 'identity.name'], description: ['facts.description', 'identity.description'],
+  itemTypeCode: ['facts.itemTypeCode', 'classification.itemType.code'], categoryCode: ['facts.categoryCode', 'classification.category.code'],
+  conditionGrade: ['facts.conditionGrade', 'condition.value'], brand: ['facts.brand', 'identity.brand'], model: ['facts.model', 'identity.model'],
+  quantity: ['facts.quantity', 'physical.quantity'], confidence: ['confidence', null],
+  materials: ['facts.materials', 'materials'], sizeClass: ['facts.sizeClass', 'physical.size.value'],
+  weightEstimate: ['facts.weightEstimate', 'physical.weightEstimate'], dimensionsEstimate: ['facts.dimensionsEstimate', 'physical.dimensionsEstimate'],
+  environment: ['facts.environment', 'environment.observations'], qualityFlags: ['recognition.qualityFlags', 'evidenceReview.qualityFlags'],
+  unknownFields: ['recognition.unknownFields', 'metadataQuality.unknownFields'],
+ };
+ assert.deepEqual(Object.keys(coverage).sort(), Object.keys(sent.responseSchema.schema.properties).sort());
+ const read = (value, path) => path.split('.').reduce((row, key) => row?.[key], value);
+ for (const [field, [storedPath, publicPath]] of Object.entries(coverage)) {
+  const stored = read(current.metadata.suggestion, storedPath);
+  if (['brand', 'model'].includes(field)) assert.equal(stored ?? null, null);
+  else assert.notEqual(stored, undefined, field + ' must be recorded');
+  if (publicPath) assert.notEqual(read(result, publicPath), undefined, field + ' must be projected');
+ }
+ assert.equal(result.physical.size.basis, 'TAXONOMY_POLICY');
+ assert.equal(current.submittedFacts.sizeProvenance.policyVersion, 'v2');
+ assert.deepEqual(result.environment.observations, current.metadata.suggestion.facts.environment);
+ assert.equal(current.metadata.suggestion.confidence, '0.9');
+ assert.equal(result.identity.name, response.name);
+ assert.equal(result.identity.description, response.description);
+ assert.equal(result.physical.quantity, response.quantity);
+ assert.equal(result.condition.value, response.conditionGrade);
+ assert.deepEqual(result.evidenceReview.qualityFlags, response.qualityFlags);
  assert.deepEqual(result.physical.weightEstimate,response.weightEstimate);
  assert.deepEqual(result.physical.dimensionsEstimate,response.dimensionsEstimate);
  assert.equal(result.materials[0].ref.code,'PLASTIC');assert.equal(result.materials[0].basis,'OBSERVED');
@@ -56,4 +87,14 @@ test('complete paged taxonomy and structured properties survive persistence, app
  assert(current.metadata.suggestion.recognition.unknownFields.includes('weight'));
  assert(current.metadata.suggestion.recognition.unknownFields.includes('dimensions'));
  assert(current.metadata.suggestion.recognition.unknownFields.includes('materials'));
+});
+
+
+test("generic photo prompt requests independent per-item mass estimates without manufacturing impact factors", () => {
+ const prompt=analysis.buildPrompt([],[],{});
+ assert.match(prompt,/PER-ITEM mass range/);
+ assert.match(prompt,/never multiply this range by quantity/);
+ assert.match(prompt,/not measured facts or manufacturer specifications/);
+ assert.match(prompt,/Do not infer certified recycling, environmental impact amounts or rewards/);
+ assert.match(prompt,/electrical plug pins or contacts/);
 });

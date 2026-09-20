@@ -21,3 +21,5 @@ Before implementing non-trivial behavior here, record the business outcome, owni
 
 This capability declares an inert model-service inventory for [governed Local reset](../../../../../nodics.foundation/modules/nSystem/llm/contracts/local-reset.md).
 A server must explicitly select it; contributions never enable reset or bypass tenant, environment, confirmation or required-service checks.
+
+Own Product colour/size field mappings only while Apparel is active. Customer labels and collection selection stay in customer policy.

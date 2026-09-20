@@ -25,7 +25,7 @@ write boundary and the separate Nodics contribution and release process.
 - Keep capabilities stable and make implementations replaceable through the module hierarchy.
 - Do not hardcode project, environment, server, node, tenant, or customer behavior into reusable framework code.
 - Local topology runtime-specific environment values belong in the project
-  manifest runtime `env` object and must be merged by topology tooling at
+  server `tooling.runtime.env` object and must be merged by topology tooling at
   process launch. Do not require customer-specific `.env` files inside
   vendor-owned frontend repositories.
 - Put configurable behavior in layered configuration, schemas, routers, services, pipelines, data, and runtime governance.
@@ -76,3 +76,48 @@ and Nodics legal headers. Do not require customers to copy those files or label
 their own source with Nodics copyright. A customer may add its own legal and
 documentation gates through the existing command override. Project clean only
 cleans the selected server; it does not erase project-wide LLM context.
+
+Preserve the existing principle audit's discovery checks for the
+[mandatory final review](../nSetup/llm/contracts/ai-coding-and-customization-contract.md#mandatory-ownership-placement-and-scope-review).
+Those checks establish that the rule remains discoverable, not that a semantic
+review occurred or passed. Review decisions belong in the canonical checklist.
+
+Qualification contract runners report `environment: null` and
+`executionScope: ISOLATED_CONTRACT_TESTS`; they must not claim a named deployment
+was executed. The focused evidence-scope regression preserves success/failure
+while preventing a fabricated environment label. Deployment evidence requires
+an actual selected deployment and separately observed results.
+
+Keep `nodics.owns` aligned with authored source responsibilities. The existing
+structure audit reports missing source ownership; generated server artifacts do
+not transfer framework ownership to the customer. Resolve these findings during
+the mandatory final review rather than treating a root test as their acceptance.
+
+Do not repeat the selected environment/server/node in additional capability activation lists. Inherit unchanged defaults and environment connections; preserve explicit policy pins and reference timing. Apply the [customer configuration rule](../nSetup/llm/contracts/customer-config-classification-contract.md#structural-facts-and-repeated-deployment-values) to generators, examples and review.
+
+Startup, readiness and acceptance must use the same declared endpoints. Use
+`projectEndpointUrl` for origins from the resolved deployment projection; retain
+explicit published-address overrides. Do not duplicate server ports in tooling
+metadata or silently substitute a hardcoded endpoint when selection is missing.
+
+
+Backend startup, readiness and API acceptance must work without any frontend
+repository or running frontend server. Do not declare frontend launch commands,
+paths, lifecycle or UI tests in backend properties or backend acceptance runners.
+Frontend applications own their servers, outage/retry presentation, and frontend
+tests. Backend CORS and browser-session contracts are tested through APIs using
+explicit security policy; they do not confer frontend lifecycle ownership.
+
+Reusable acceptance defaults are contributed under each capability's `tooling.acceptance`.
+The existing non-runtime module discovery/static contribution reader merges framework
+contributions by index; the selected project's descriptor and nConfig deployment
+properties supply later deltas. No tooling default activates a runtime or executes
+an operation. Resolve runtime choices by an explicit server or a unique semantic
+`runtimeRole`, then reuse its declared endpoint and launch descriptor. Select an
+enabled initialization profile by explicit code or a unique template match; missing
+and ambiguous selections fail before acceptance operations. Keep actual customer
+journey choices and deployment container/URL differences in their existing layers.
+
+Customer-project validation permits a direct `bootstrapIdentity.adminPassword`
+value in the customer configuration layers. Framework audit and all other literal
+credential restrictions remain enforced; nAuth validates effective strength.

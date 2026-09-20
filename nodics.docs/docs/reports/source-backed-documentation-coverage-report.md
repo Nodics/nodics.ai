@@ -7,19 +7,18 @@ This generated report maps current source boundaries to published documentation 
 | Metric | Count |
 | --- | --- |
 | Catalogue documents | 130 |
-| Source boundaries scanned | 192 |
-| Needs page or owner mapping | 9 |
-| Needs deeper section | 13 |
-| Covered | 166 |
-| Internal-only candidate | 4 |
-| Classified backlog items | 23 |
+| Source boundaries scanned | 197 |
+| Needs page or owner mapping | 16 |
+| Needs deeper section | 5 |
+| Covered | 168 |
+| Internal-only candidate | 8 |
+| Classified backlog items | 22 |
 
 ## Classified Backlog
 
 | Priority | Status | Item | Classification | Source areas | Action |
 | --- | --- | --- | --- | --- | --- |
-| P0 | closed-by-p0-docs-batch | Nexus data and content guide | needs-page | `nodics.kickoff/modules/nexus.web` | Document project content data, media assets, publication, Online delivery, and browser validation for Nexus. |
-| P0 | closed-by-p0-docs-batch | Axis setup and user-safe error contracts | needs-deeper-section | `nodics.platform/modules/backoffice`<br/>`nodics.platform/modules/axis`<br/>`nodics.exp/nodics.axis` | Document status states, setup blockers, retry actions, technical evidence, and user-safe message rules. |
+| P0 | closed-by-p0-docs-batch | Axis setup and user-safe error contracts | needs-deeper-section | `nodics.platform/modules/backoffice`<br/>`nodics.platform/modules/axis` | Document status states, setup blockers, retry actions, technical evidence, and user-safe message rules. |
 | P0 | closed-by-p0-docs-batch | CMS exact source map | needs-deeper-section | `nodics.wcms/modules/cms` | Split authoring, delivery, publication manifest, migration, cache, and documentation governance coverage. |
 | P0 | closed-by-p0-docs-batch | Media operations runbook | needs-deeper-section | `nodics.wcms/modules/media`<br/>`nodics.foundation/modules/nData/nImport/import/src/service/media` | Document upload, import hydration, storage providers, cleanup lifecycle, replication queue, and delivery failures. |
 | P0 | closed-by-p0-docs-batch | Import/export provider guides | needs-page | `nodics.foundation/modules/nData/nImport`<br/>`nodics.foundation/modules/nData/nExport` | Document JavaScript, JSON, CSV, Excel, generated exports, parser behavior, safety, masking, and customization. |
@@ -46,32 +45,35 @@ This generated report maps current source boundaries to published documentation 
 
 | Classification | Score | Source boundary | Current matches | Key signals |
 | --- | ---: | --- | --- | --- |
-| needs-page-or-owner-mapping | 434 | `nodics.kickoff/envs/kickoffDockerLocal/wasteServer` | None | services:62, controllers:62 |
-| needs-page-or-owner-mapping | 434 | `nodics.kickoff/envs/kickoffLocal/wasteServer` | None | services:62, controllers:62 |
-| needs-page-or-owner-mapping | 282 | `nodics.kickoff/modules/circa.ewaste` | None | services:7, controllers:4, routers:1, dataHeaders:9, dataRecords:54, assets:19, tests:7 |
-| needs-page-or-owner-mapping | 154 | `nodics.kickoff/envs/kickoffDockerLocal/locationServer` | None | services:22, controllers:22 |
-| needs-page-or-owner-mapping | 154 | `nodics.kickoff/envs/kickoffLocal/locationServer` | None | services:22, controllers:22 |
+| needs-page-or-owner-mapping | 64 | `nodics.ai/nodics.location/modules/locationMap` | None | schemas:1, services:5, controllers:1, routers:2, dataHeaders:2, dataRecords:6, tests:3 |
 | needs-page-or-owner-mapping | 58 | `nodics.ai/nodics.commerce/modules/digitalCommerce` | None | schemas:1, services:7, controllers:2, routers:2, tests:7 |
 | needs-page-or-owner-mapping | 58 | `nodics.ai/nodics.commerce/modules/digitalCommerce/modules/digitalCore` | None | schemas:1, services:7, controllers:2, routers:2, tests:7 |
+| needs-page-or-owner-mapping | 42 | `nodics.ai/nodics.copilot/modules/copilotProviders` | None | schemas:1, services:7, routers:2, tests:3 |
 | needs-page-or-owner-mapping | 32 | `nodics.ai/nodics.commerce/modules/bidding` | None | schemas:1, services:3, controllers:1, routers:2, tests:2 |
-| needs-page-or-owner-mapping | 17 | `nodics.kickoff/modules/kickoffWaste` | None | dataHeaders:1, dataRecords:4, tests:1 |
-| needs-deeper-section | 4515 | `nodics.kickoff/envs/kickoffDockerLocal` | reference.internal-source-boundary-register | services:645, controllers:645 |
-| needs-deeper-section | 707 | `nodics.kickoff/envs/kickoffDockerLocal/commerceServer` | reference.internal-source-boundary-register | services:101, controllers:101 |
-| needs-deeper-section | 707 | `nodics.kickoff/envs/kickoffDockerLocal/commerceStagedServer` | reference.internal-source-boundary-register | services:101, controllers:101 |
-| needs-deeper-section | 707 | `nodics.kickoff/envs/kickoffLocal/commerceServer` | reference.internal-source-boundary-register | services:101, controllers:101 |
-| needs-deeper-section | 707 | `nodics.kickoff/envs/kickoffLocal/commerceStagedServer` | reference.internal-source-boundary-register | services:101, controllers:101 |
-| needs-deeper-section | 658 | `nodics.kickoff/envs/kickoffDockerLocal/wcmsStagedServer` | reference.internal-source-boundary-register | services:94, controllers:94 |
-| needs-deeper-section | 658 | `nodics.kickoff/envs/kickoffLocal/wcmsStagedServer` | reference.internal-source-boundary-register | services:94, controllers:94 |
-| needs-deeper-section | 532 | `nodics.kickoff/envs/kickoffDockerLocal/wcmsOnlineServer` | reference.internal-source-boundary-register | services:76, controllers:76 |
-| needs-deeper-section | 532 | `nodics.kickoff/envs/kickoffLocal/wcmsOnlineServer` | reference.internal-source-boundary-register | services:76, controllers:76 |
-| needs-deeper-section | 112 | `nodics.kickoff/envs/kickoffDockerLocal/loyaltyServer` | loyalty.wallets-rewards-ledger | services:16, controllers:16 |
-| needs-deeper-section | 112 | `nodics.kickoff/envs/kickoffLocal/loyaltyServer` | loyalty.wallets-rewards-ledger | services:16, controllers:16 |
+| needs-page-or-owner-mapping | 29 | `nodics.ai/nodics.copilot/modules/copilotCapability` | None | schemas:1, services:4, routers:2, tests:1 |
+| needs-page-or-owner-mapping | 29 | `nodics.ai/nodics.waste/modules/wasteMaterial` | None | schemas:1, services:1, dataHeaders:1, dataRecords:4, tests:2 |
+| needs-page-or-owner-mapping | 23 | `nodics.ai/nodics.copilot/modules/copilotEvaluation` | None | schemas:1, services:2, routers:2, tests:1 |
+| needs-page-or-owner-mapping | 23 | `nodics.ai/nodics.copilot/modules/copilotPolicy` | None | schemas:1, services:2, routers:2, tests:1 |
+| needs-page-or-owner-mapping | 23 | `nodics.ai/nodics.copilot/modules/copilotWorkbench` | None | schemas:1, services:2, routers:2, tests:1 |
+| needs-page-or-owner-mapping | 21 | `nodics.ai/nodics.copilot/modules/copilotProviders/modules/copilotProvider` | None | schemas:1, services:2, routers:2 |
+| needs-page-or-owner-mapping | 18 | `nodics.ai/nodics.location/modules/locationApproval` | None | schemas:1, services:1, routers:2 |
+| needs-page-or-owner-mapping | 18 | `nodics.ai/nodics.location/modules/locationDraft` | None | schemas:1, services:1, routers:2 |
+| needs-page-or-owner-mapping | 18 | `nodics.ai/nodics.location/modules/locationProjection` | None | schemas:1, services:1, routers:2 |
+| needs-page-or-owner-mapping | 18 | `nodics.ai/nodics.location/modules/locationSearch` | None | schemas:1, services:1, routers:2 |
+| needs-page-or-owner-mapping | 18 | `nodics.ai/nodics.location/modules/locationType` | None | schemas:1, services:1, routers:2 |
+| needs-deeper-section | 73 | `nodics.ai/nodics.waste/modules/wasteCore` | configuration.runtime-behavior-management, platform.module-registry-journey | schemas:1, services:14, dataHeaders:1, dataRecords:1, tests:9 |
 | needs-deeper-section | 54 | `nodics.ai/nodics.wcms/modules/wcmsExperience` | framework.modular-architecture | schemas:1, services:5, controllers:2, routers:2, tests:8 |
 | needs-deeper-section | 51 | `nodics.ai/nodics.commerce/modules/checkout/modules/checkoutCore` | commerce.enterprise-operations, commerce.payment-provider-boundaries | schemas:1, services:4, controllers:1, routers:2, tests:10 |
+| needs-deeper-section | 49 | `nodics.ai/nodics.waste/modules/wasteCollection` | platform.module-registry-journey | schemas:1, services:2, dataHeaders:3, dataRecords:7, tests:3 |
+| needs-deeper-section | 46 | `nodics.ai/nodics.copilot/modules/copilotKnowledge` | framework.modular-architecture | schemas:1, services:9, routers:2, tests:2 |
+| internal-only-candidate | 7 | `nodics.ai/nodics.waste/modules/wasteCompliance` | None | schemas:1 |
+| internal-only-candidate | 7 | `nodics.ai/nodics.waste/modules/wasteMovement` | None | schemas:1 |
+| internal-only-candidate | 7 | `nodics.ai/nodics.waste/modules/wasteReceipt` | None | schemas:1 |
 | internal-only-candidate | 5 | `nodics.ai/nodics.accelerators/modules/waste/modules/wasteRecycling` | None | services:1, tests:1 |
-| internal-only-candidate | 5 | `nodics.exp/nodics.circa.eWaste` | None | frontends:1 |
-| internal-only-candidate | 0 | `nodics.exp/nodics.axis/packages/location-map-ui` | None | package only |
-| internal-only-candidate | 0 | `nodics.kickoff/modules/kickoffAdministration` | None | package only |
+| internal-only-candidate | 5 | `nodics.ai/nodics.copilot/modules/copilotProviders/modules/ollamaProvider` | None | services:1, tests:1 |
+| internal-only-candidate | 5 | `nodics.ai/nodics.copilot/modules/copilotProviders/modules/openAiProvider` | None | services:1, tests:1 |
+| internal-only-candidate | 3 | `nodics.ai/nodics.copilot/modules/copilotProviders/modules/claudeProvider` | None | services:1 |
+| internal-only-candidate | 3 | `nodics.ai/nodics.copilot/modules/copilotProviders/modules/geminiProvider` | None | services:1 |
 
 ## Verification
 

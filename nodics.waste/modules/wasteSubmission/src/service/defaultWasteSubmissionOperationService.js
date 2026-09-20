@@ -109,12 +109,13 @@ module.exports = {
     }
     for (const key of ['materials', 'weightEstimate', 'dimensionsEstimate', 'environment'])
       if (source[key] !== undefined) result[key] = source[key];
+    if (source.submissionUnit === "BUNDLE") result.submissionUnit = "BUNDLE";
     return result;
   },
   /** Removes properties owned by a previous photo analysis while retaining customer text, location and later-layer fields. */
   clearAnalysisFacts: function (facts = {}) {
     const result = { ...facts };
-    for (const key of ['categoryCode', 'itemTypeCode', 'conditionGrade', 'conditionProvenance', 'brand', 'model', 'quantity', 'sizeClass', 'sizeProvenance', 'weight', 'weightProvenance', 'materials', 'weightEstimate', 'dimensionsEstimate', 'environment']) delete result[key];
+    for (const key of ['submissionUnit', 'categoryCode', 'itemTypeCode', 'conditionGrade', 'conditionProvenance', 'brand', 'model', 'quantity', 'sizeClass', 'sizeProvenance', 'weight', 'weightProvenance', 'materials', 'weightEstimate', 'dimensionsEstimate', 'environment']) delete result[key];
     return result;
   },
   /** Applies a stored analysis proposal without accepting provider facts from the caller. */
@@ -125,7 +126,7 @@ module.exports = {
     if (current.submissionStatus !== 'METADATA_SUGGESTED' || !suggestion || !suggestion.facts)
       this.store().fail('ERR_WASTE_RECOGNITION_INVALID', 'Analyze the current photo before preparing the item');
     return this.store().update('wasteSubmission', request, current, {
-      submittedFacts: { ...this.clearAnalysisFacts(current.submittedFacts), ...this.facts(suggestion.facts) },
+      submittedFacts: { ...this.clearAnalysisFacts(current.submittedFacts), ...this.facts(suggestion.facts), sizeProvenance: suggestion.recognition?.size || suggestion.facts.sizeProvenance },
       metadata: { ...current.metadata, estimate: null, confirmationRevision: null },
     });
   },
@@ -199,7 +200,7 @@ module.exports = {
     analysis.evidenceReview.evidenceRef = evidenceRef;
     if (analysis.evidenceReview.manualApprovalRequired && !analysis.evidenceReview.flaggedEvidenceRef?.code) analysis.evidenceReview.flaggedEvidenceRef = evidenceRef;
     const current = { code, revision: existing?.revision || 0, submitterRef: owner, submissionStatus: "METADATA_SUGGESTED",
-      submittedFacts: { ...this.facts(analysis.proposal), preferredCollectionPointCode: request.preparationCentreCode },
+      submittedFacts: { ...this.facts(analysis.proposal), sizeProvenance: analysis.recognition?.size || analysis.proposal.sizeProvenance, preferredCollectionPointCode: request.preparationCentreCode },
       metadata: { ...existing?.metadata, draftCreatedAt: existing?.metadata?.draftCreatedAt || new Date().toISOString(), preparationChecksum: request.preparationChecksum, preparationKey: request.idempotencyKey, estimate: null, confirmationRevision: null,
         photo: { code: media.code }, arrival: request.preparationArrival, origin: existing?.metadata?.origin || request.preparationOrigin,
         evidenceReview: analysis.evidenceReview,
@@ -388,6 +389,17 @@ module.exports = {
       }),
     });
   },
+  /** Enforces domain-selected assessment policy without inventing unavailable metrics or credits. */
+  assertEnvironmentalAssessment: function (assessment) {
+    if ((CONFIG.get("wasteSubmission") || {}).requireEnvironmentalAssessment !== true) return;
+    const environment = assessment?.metadata?.environmentalAssessment;
+    if (!environment || !["ESTIMATED", "CONFIRMED", "RECALCULATED"].includes(environment.status) ||
+        environment.methodology?.isMock !== false || !Array.isArray(environment.indicators) ||
+        !environment.indicators.some(item => item.value !== null && item.value !== undefined &&
+          String(item.value).trim() !== "" && Number.isFinite(Number(item.value)) &&
+          ["ESTIMATED", "CONFIRMED", "RECALCULATED"].includes(item.status)))
+      this.store().fail("ERR_WASTE_IMPACT_INPUT_INVALID", "Update the environmental impact assessment before submitting. Your photo and details are saved.");
+  },
   /** Calculates advisory impact through the configured provider and persists its provenance. */
   estimate: async function (request) {
     const current = await this.read(request);
@@ -430,9 +442,10 @@ module.exports = {
         },
         request,
       );
+    this.assertEnvironmentalAssessment(assessment);
     return this.store().update("wasteSubmission", request, current, {
       submissionStatus: "AWAITING_SUBMITTER_CONFIRMATION",
-      metadata: Object.assign({}, current.metadata, { estimate: assessment }),
+      metadata: Object.assign({}, current.metadata, { estimate: assessment, estimatePending: false }),
     });
   },
   /** Persists an explicitly confirmed draft and returns its authoritative receipt. */
@@ -464,6 +477,7 @@ module.exports = {
         "Add a photo before submitting",
       );
     const validated = await this.validateFacts(request, current);
+    this.assertEnvironmentalAssessment(current.metadata?.estimate);
     const next = SERVICE.DefaultWasteSubmissionLifecycleService.confirmFacts(
       current,
       validated.facts,

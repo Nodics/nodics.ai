@@ -174,7 +174,7 @@ Nexus, or Agora journey that users experience.
 
 ## First inventory snapshot
 
-A generated source coverage scan of current framework and reference project
+Earlier scope included framework and reference project
 roots found 172 module or package boundaries and 94 published documentation
 pages. The committed report currently identifies 22 source boundaries that
 need a page or explicit owner mapping, 6 high-surface boundaries that need
@@ -280,3 +280,28 @@ For runtime-visible topics, also run the owning module tests, fresh-schema
 import checks, publication checks, and browser qualification for Axis, Nexus,
 or Agora. A topic is accepted only when the authored page, generated CMS data,
 source evidence, and runtime behavior agree.
+
+## Explicit repository scope
+
+The default command discovers metadata-declared module roots inside the current
+Framework checkout. Installing or removing a sibling customer/frontend checkout
+does not change that report. Frontend and customer documentation still need
+review, but their scope must be explicitly selected and recorded separately.
+
+To generate a customer's report with the same owner tool:
+
+```bash
+node /path/to/framework/nodics.docs/scripts/audit-source-coverage.mjs \
+  --source-root=/path/to/customer \
+  --catalogue=/path/to/customer/docs/catalogue.json \
+  --output-dir=/path/to/customer/docs/reports
+```
+
+Repeat `--source-root` to include additional explicitly selected roots; use
+`--path-base` to choose their relative display base. Content/evidence paths
+resolve from the selected catalogue's project root. An optional
+`documentationBacklog` in that catalogue remains owner-supplied. Add `--check`
+to verify the selected report is current. Missing scope/output arguments fail,
+and custom output cannot resolve inside Framework, including through symlinks.
+This is a read-only source inventory plus an explicitly located report write;
+it does not import, publish or certify live behavior.

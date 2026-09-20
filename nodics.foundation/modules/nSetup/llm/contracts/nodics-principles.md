@@ -57,6 +57,33 @@ legacy test does not prove compliance. Apply
 [Customer Configuration Classification](customer-config-classification-contract.md)
 and [AI Coding And Customization](ai-coding-and-customization-contract.md).
 
+## Mandatory Ownership, Placement And Scope Review
+
+Every coherent change must pass a final ownership, artifact-placement and
+semantic-scope review before being called complete or advancing to live
+acceptance, deployment, merge or release. This applies to human and AI work.
+Passing tests, syntax checks, generators or a limited finding list cannot
+substitute for the review.
+
+Account for every added, modified, renamed and deleted file against the agreed
+scope and starting state, including pre-existing work, supporting changes,
+formatting and generated artifacts. Verify each responsibility and configurable
+value against its existing capability, customer, environment, server or node
+owner. Inspect the effective inheritance and consumers where behavior depends
+on layering. Reject misplaced policy, customer assumptions in framework code,
+parallel authorities and unagreed functionality.
+
+A claim of a full repository audit requires a complete scoped file inventory
+and explicit coverage of configuration sources; sampling must be labelled as
+sampling. Record findings and a PASS or FAIL decision in the existing canonical
+checklist. Unresolved required findings keep the gate open. Do not infer a
+waiver from silence or a previous completion statement. Fixes within authorized
+scope continue under that authority; the review does not create a new approval
+ritual for routine work.
+
+The binding procedure and evidence are in
+[AI Coding And Customization](ai-coding-and-customization-contract.md#mandatory-ownership-placement-and-scope-review).
+
 ## Capability APIs And Safe Consolidation
 
 Shared schema metadata belongs to the existing schema owner. Generated APIs,
@@ -674,6 +701,20 @@ They carry only intentional deltas such as topology, local coordinates,
 secret-source references, active runtime composition, tenant/deployment
 selection, or explicit enable/disable decisions.
 
+Do not restate facts already supplied by the selected runtime topology or an
+earlier configuration owner. nConfig selects the environment, server and node;
+their names do not belong in additional capability activation lists. Declare a
+shared deployment connection once and reference it through existing property
+bindings. Inherit equal capability defaults instead of copying them. Equal
+security, authority or qualification pins require an explicit reason and review
+trigger. Apply this rule to generators and examples as well as authored files;
+verify effective configuration and later overrides before removing repetitions.
+
+Completion requires classifying every remaining declaration in the agreed scope,
+including consumer defaults and collection extensions. A preserved runtime snapshot
+or an edit to every file does not prove property ownership. Never retain copied
+defaults under a blanket policy-pin exception.
+
 Every module must keep tooling command declarations, discovery rules, and governance gate data in module-owned `config/properties.js` so runtime, generator, and AI governance behavior can be discovered from the same module-owned source.
 
 This layering rule applies to every property namespace. Do not treat
@@ -914,3 +955,25 @@ frontend choices and deployment targets from owning metadata. Application-specif
 acceptance journeys, sample media seeding and release qualification compositions
 belong to the application and use the existing project-script command contract.
 Do not place those application policies in framework-wide default aliases.
+
+
+Browser-origin construction and standard Nodics application origins belong to
+nRouter. Inherit enabled CORS and the standard ports; deployments declare only
+differences through `httpHardening.cors`. Frontend
+commands, paths, readiness and UI tests belong to their independent applications.
+A permitted origin is an API security policy, not a frontend lifecycle dependency.
+Preserve denials when configured addresses change; never trust request hosts.
+
+Apply the mandatory configuration ownership restrictions in
+`nodics.foundation/modules/nSetup/llm/contracts/customer-config-classification-contract.md`.
+Local provider defaults are framework-owned; customer layers declare only actual
+selection or deployment differences. No environment descriptor, copied secret,
+or duplicate endpoint/authentication authority may be introduced by code or generators.
+
+
+Backend startup, readiness and API acceptance must work without any frontend
+repository or running frontend server. Do not declare frontend launch commands,
+paths, lifecycle or UI tests in backend properties or backend acceptance runners.
+Frontend applications own their servers, outage/retry presentation, and frontend
+tests. Backend CORS and browser-session contracts are tested through APIs using
+explicit security policy; they do not confer frontend lifecycle ownership.

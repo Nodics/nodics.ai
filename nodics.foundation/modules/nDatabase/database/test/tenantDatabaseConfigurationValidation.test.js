@@ -103,4 +103,22 @@ assert.throws(() => service.addTenantDatabase('profile', 'tenantA'), /handle is 
 assert.strictEqual(service.removeTenantDatabase('profile', 'tenantA'), true);
 assert.strictEqual(service.getTenantDatabase('profile', 'tenantA'), undefined);
 
+// Exercise provider defaults through the real database consumer without opening a connection.
+const bindings = require('../../../nConfig/src/service/defaultConfigurationBindingService');
+const providerDefaults = require('../../mongodb/config/properties').database;
+configurations.default = bindings.merge(require('../config/properties').database, providerDefaults);
+const inherited = service.getDatabaseConfiguration('profile', 'default');
+assert.strictEqual(inherited.master.databaseName, 'masterLocal');
+assert.strictEqual(inherited.test.databaseName, 'testLocal');
+configurations.default = bindings.merge(configurations.default, {
+    profile: { mongodb: { master: { databaseName: 'isolatedProfileLocal' } } }
+});
+const overridden = service.getDatabaseConfiguration('profile', 'default');
+assert.strictEqual(overridden.master.databaseName, 'isolatedProfileLocal');
+assert.strictEqual(overridden.master.URI, inherited.master.URI);
+assert.strictEqual(overridden.test.databaseName, 'testLocal');
+assert.strictEqual(service.getDatabaseConfiguration('default', 'default').master.databaseName, 'masterLocal');
+assert.strictEqual(service.getDatabaseConfiguration('profile', 'tenantA').master.databaseName, 'tenantAProfile');
+assert.strictEqual(providerDefaults.default.mongodb.master.databaseName, 'masterLocal');
+
 console.log('Tenant and module database configuration validation passed');

@@ -23,26 +23,26 @@ import net from 'node:net';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 import {
-  readProjectEnvironmentProfile,
-} from './defaultProjectEnvironmentProfileService.mjs';
-import { resolveTemplate } from './defaultProjectContainerProfileService.mjs';
+  readProjectEnvironmentConfiguration,
+} from './defaultProjectEnvironmentConfigurationService.mjs';
+import { resolveTemplate } from './defaultProjectContainerConfigurationService.mjs';
 
 export const projectRoot = process.cwd();
 export const workspaceRoot = path.resolve(projectRoot, '..');
 
 function readTopology() {
-  const profile = readProjectEnvironmentProfile(projectRoot, process.env.ENV || '');
+  const profile = readProjectEnvironmentConfiguration(projectRoot, process.env.ENV || '');
   const topology = profile.topology || {};
   const environment = profile.environment || 'local';
   const stateDirectory = profile.stateDirectory || path.resolve(projectRoot, resolveTemplate(projectRoot, topology.stateDirectory || `envs/${environment}/generated/local-topology`));
   const backendRuntimes = Object.freeze([].concat((topology.groups || {}).backends || []).map(normalizeRuntime));
-  const frontendRuntimes = Object.freeze([].concat((topology.groups || {}).frontends || []).map(normalizeRuntime));
-  return { manifest: profile, topology, environment, stateDirectory, statePath: path.join(stateDirectory, 'processes.json'), backendRuntimes, frontendRuntimes };
+  return { manifest: profile, topology, environment, stateDirectory, statePath: path.join(stateDirectory, 'processes.json'), backendRuntimes };
 }
 
 function normalizeRuntime(runtime) {
   return {
     ...runtime,
+    args: runtime.args?.map(value => String(value).replaceAll('{port}', String(runtime.port))),
     cwd: runtime.cwd ? path.resolve(resolveTemplate(projectRoot, runtime.cwd)) : projectRoot,
     readyPath: runtime.readyPath || '/nodics/system/v0/health/ready',
     dependsOn: normalizeRuntimeDependencies(runtime.dependsOn),
@@ -84,7 +84,6 @@ function runtimeEnvironment(runtime) {
 }
 
 export const backendRuntimes = Object.freeze(readTopology().backendRuntimes);
-export const frontendRuntimes = Object.freeze(readTopology().frontendRuntimes);
 
 const sleep = milliseconds => new Promise(resolve => setTimeout(resolve, milliseconds));
 const healthUrl = runtime => `http://127.0.0.1:${String(runtime.port)}${runtime.readyPath || '/nodics/system/v0/health/ready'}`;
@@ -152,15 +151,15 @@ export function isOwnedSupervisor(state, readCommand = pid => execFileSync('ps',
 }
 
 /** Returns the selected topology without allowing arbitrary command injection. */
-export function selectRuntimes(includeFrontends = false) {
+export function selectRuntimes() {
   const topology = readTopology();
-  return includeFrontends ? [...topology.backendRuntimes, ...topology.frontendRuntimes] : [...topology.backendRuntimes];
+  return [...topology.backendRuntimes];
 }
 
 /** Performs non-mutating Local topology checks without opening database connections directly. */
-export async function preflight(includeFrontends = false) {
+export async function preflight() {
   const topology = readTopology();
-  const runtimes = selectRuntimes(includeFrontends);
+  const runtimes = selectRuntimes();
   const checks = [];
   const dependencyViolations = runtimeDependencyViolations(runtimes);
   checks.push({ id: 'runtime-dependencies', state: dependencyViolations.length ? 'FAILED' : 'PASSED', dependencies: dependencyViolations });
@@ -230,9 +229,9 @@ async function inspect(runtimes) {
   return { environment: topology.environment, supervisor: owned ? 'RUNNING' : 'NOT_RUNNING', supervisorPid: owned ? state.supervisorPid : null, runtimes: entries };
 }
 
-async function start(includeFrontends) {
+async function start() {
   const topology = readTopology();
-  const runtimes = selectRuntimes(includeFrontends);
+  const runtimes = selectRuntimes();
   const dependencyViolations = runtimeDependencyViolations(runtimes);
   if (dependencyViolations.length) throw new Error(`Invalid runtime dependency order: ${dependencyViolations.join('; ')}`);
   const existing = readState();
@@ -246,7 +245,7 @@ async function start(includeFrontends) {
   let stopping = false;
   let started = false;
   const persist = () => fs.writeFileSync(topology.statePath, JSON.stringify({ contractVersion: 0, environment: topology.environment, projectRoot,
-    supervisorPid: process.pid, startedAt: new Date().toISOString(), includeFrontends, children: children.map(entry => ({ code: entry.runtime.code,
+    supervisorPid: process.pid, startedAt: new Date().toISOString(), children: children.map(entry => ({ code: entry.runtime.code,
       pid: entry.child.pid, port: entry.runtime.port, exited: entry.child.exitCode !== null || entry.child.signalCode !== null })) }, null, 2) + '\n');
 
   const stop = async signal => {
@@ -338,11 +337,11 @@ async function stop() {
 
 async function main() {
   const command = process.argv[2] || 'status';
-  const includeFrontends = process.argv.includes('--include-frontends');
-  if (command === 'start') return start(includeFrontends);
+  if (process.argv.includes('--include-frontends')) throw new Error('Frontend lifecycle belongs to the frontend application');
+  if (command === 'start') return start();
   if (command === 'stop') return stop();
-  if (command === 'preflight') { const result = await preflight(includeFrontends); console.log(JSON.stringify(result, null, 2)); if (!result.ready) process.exitCode = 1; return; }
-  if (command === 'status') { console.log(JSON.stringify(await inspect(selectRuntimes(includeFrontends)), null, 2)); return; }
+  if (command === 'preflight') { const result = await preflight(); console.log(JSON.stringify(result, null, 2)); if (!result.ready) process.exitCode = 1; return; }
+  if (command === 'status') { console.log(JSON.stringify(await inspect(selectRuntimes()), null, 2)); return; }
   throw new Error(`Unknown topology command: ${command}`);
 }
 
