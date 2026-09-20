@@ -76,6 +76,14 @@ module.exports = {
                 controller: 'DefaultRuleDefinitionController', operation: 'listVersions'
             }
         },
+        propertyCatalogues: {
+            getPropertyCatalogue: {
+                secured: true, authTokenTypes: ['access'], accessGroups: ['userGroup'],
+                permission: 'rules.definition.read', apiExposure: 'rulesManagement',
+                key: '/property-catalogues/:propertyProviderCode', method: 'GET',
+                controller: 'DefaultRuleDefinitionController', operation: 'propertyCatalogue'
+            }
+        },
         processActions: {
             applyDecision: {
                 secured: true,
@@ -91,6 +99,24 @@ module.exports = {
             }
         },
         scoreBandSets: {
+            listBandSets: {
+                secured: true, authTokenTypes: ['access'], accessGroups: ['userGroup'],
+                permission: 'rules.band.read', apiExposure: 'rulesManagement',
+                key: '/band-sets', method: 'GET',
+                controller: 'DefaultRuleDefinitionController', operation: 'listBandSets'
+            },
+            getBandSet: {
+                secured: true, authTokenTypes: ['access'], accessGroups: ['userGroup'],
+                permission: 'rules.band.read', apiExposure: 'rulesManagement',
+                key: '/band-sets/:bandSetCode', method: 'GET',
+                controller: 'DefaultRuleDefinitionController', operation: 'getBandSet'
+            },
+            listBandVersions: {
+                secured: true, authTokenTypes: ['access'], accessGroups: ['userGroup'],
+                permission: 'rules.band.read', apiExposure: 'rulesManagement',
+                key: '/band-sets/:bandSetCode/versions', method: 'GET',
+                controller: 'DefaultRuleDefinitionController', operation: 'listBandVersions'
+            },
             createBandSet: {
                 secured: true, authTokenTypes: ['access'], accessGroups: ['runtimeConfigAdminUserGroup'],
                 permission: 'rules.band.create', apiExposure: 'rulesManagement',
