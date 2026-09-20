@@ -10,4 +10,16 @@
  */
 
 /** @module rulesDefinition/config/properties @description Configurable defaults for governed rule definitions. @layer config @owner rulesDefinition */
-module.exports = {};
+module.exports = {
+    schemaPolicies: {
+        rulesDefinition: {
+            operational: {
+                accessGroups: {
+                    adminGroup: 10,
+                    serviceAccountUserGroup: 10,
+                    employeeUserGroup: 10
+                }
+            }
+        }
+    }
+};
