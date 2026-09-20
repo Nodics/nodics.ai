@@ -18,12 +18,47 @@
  */
 module.exports = {
     rulesApi: {
+        /**
+         * Leaves session middleware under the shared router/security contract.
+         * @param {Object} app Express application instance.
+         * @returns {void}
+         */
         initSession: function (app) {},
+        /**
+         * Leaves request logging under the shared router contract.
+         * @param {Object} app Express application instance.
+         * @returns {void}
+         */
         initLogger: function (app) {},
+        /**
+         * Leaves application cache middleware under the shared router contract.
+         * @param {Object} app Express application instance.
+         * @returns {void}
+         */
         initCache: function (app) {},
+        /**
+         * Leaves body-parser policy under the shared hardened router defaults.
+         * @param {Object} app Express application instance.
+         * @returns {void}
+         */
         initBodyParser: function (app) {},
+        /**
+         * Leaves HTTP header policy under the shared hardened router defaults.
+         * @param {Object} app Express application instance.
+         * @returns {void}
+         */
         initHeaders: function (app) {},
+        /**
+         * Leaves application error routing under the shared router contract.
+         * @param {Object} app Express application instance.
+         * @returns {void}
+         */
         initErrorRoutes: function (app) {},
+        /**
+         * Declares no Rules-specific application extras.
+         * @param {Object} app Express application instance.
+         * @returns {void}
+         */
         initExtras: function (app) {}
     }
 };
