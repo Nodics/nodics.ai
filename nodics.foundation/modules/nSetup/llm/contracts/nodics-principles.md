@@ -23,6 +23,63 @@ Nodics is an enterprise application platform and application factory. It is not
 a lightweight API folder, a one-off service scaffold, or a place where each
 feature invents its own architecture.
 
+## Token Optimisation And Proportionate Execution
+
+This principle is mandatory for every Nodics framework maintainer, accelerator,
+customer project, implementation partner and AI coding tool. It applies to
+analysis, implementation, validation and release; it is not a personal or
+project-specific preference. Reduce redundant work and context, never required
+correctness, security, ownership or release evidence.
+
+- Establish the authorized scope and smallest owning boundary once. Batch
+  independent repository inventories, targeted searches and reads. Expand only
+  when evidence reveals a relevant dependency, failure or unresolved question.
+- Use progressive disclosure. Read required guidance once per unchanged version
+  in the active task; reuse reliable context instead of loading entire packs,
+  broad source trees or historical conversations repeatedly. Refresh when the
+  scope, files or applicable instructions change or retained evidence is missing.
+- Reuse successful validation only when the covered source, dependencies,
+  configuration and relevant environment are unchanged. Keep a compact record
+  of the command, covered revision/content, environment and result. Rerun affected
+  checks after changes and all checks explicitly required by release policy.
+  Do not infer a clean install from existing node_modules or a live deployment
+  from local tests. Do not regenerate unchanged artifacts without a required gate
+  or identified drift.
+- Keep verbose logs in task-local artifacts; inspect targeted failure excerpts.
+  Show summaries rather than full successful output. Exclude secrets and customer
+  data from diagnostics. Do not create a second persistent evidence authority.
+- During an authorized release, inventory and commit the scoped repositories,
+  fetch before publication, respect protected branches and synchronize requested
+  branches without force. Verify clean state and local/remote commit equality
+  once after publication. Repeat only after mutation, rejection, remote drift
+  or another concrete concern. Branch names and final checkout follow the
+  project's release policy and user instructions, not a hardcoded framework rule.
+- Preserve required isolated clean-install checks and execute actual workflow
+  gates; a printed plan is not a passed gate. Customer-project work runs its
+  project checks against the consumed framework version, not an unsolicited
+  framework-wide requalification.
+- Verify required CI for the exact published commits and branches, including
+  matrix jobs. Prefer completion events or supported waits. When polling is
+  necessary, use expected workflow duration and backoff within tool wait limits;
+  do not repeatedly fetch unchanged jobs or successful logs. Missing, pending,
+  failed or inaccessible CI must remain explicit, never reported as passed.
+- Keep progress concise and proportional, respecting communication requirements.
+  Report changed findings, blockers and decisions instead of repeating unchanged
+  status. Finish with outcome, validation, residual issues and an evidence link
+  where useful. Do not expand into unrelated cleanup, upgrades or audits.
+
+Examples: an unchanged successful focused test can be reused at commit time;
+changing its dependency or effective configuration invalidates that evidence.
+A documentation correction needs relevant documentation/link/governance checks,
+not a fresh application acceptance campaign unless a required gate demands it.
+A failed install requires dependency/lockfile diagnosis and a new clean install;
+token savings never justify bypassing it. A queued CI run should be awaited with
+backoff, not treated as success or queried continuously.
+
+Project guidance must reference this canonical principle rather than maintain
+forked copies. Projects may specify stricter required gates and evidence retention,
+but cannot use token optimisation to waive authorization or required validation.
+
 ## Existing Layers And Project Independence
 
 Use the established Nodics layers and their canonical owners. Do not invent an

@@ -25,6 +25,12 @@ This file gives AI coding agents mandatory guidance for this Nodics module or pa
   `llm/contracts/customer-project-mode-contract.md`; do not grant framework or
   accelerator modification authority from a partner application request.
 
+## Token optimisation
+
+Follow [the canonical token optimisation principle](llm/contracts/nodics-principles.md#token-optimisation-and-proportionate-execution).
+Keep this rule discoverable for every customer project; do not fork it into
+project-specific or tool-specific instruction authorities.
+
 ## nSetup Rules
 
 - Enforce [existing layers and project independence](llm/contracts/nodics-principles.md#existing-layers-and-project-independence).

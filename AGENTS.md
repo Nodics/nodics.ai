@@ -131,6 +131,12 @@ review and release process. An explicitly authorized Nodics-maintainer task is a
 separate scope. Classify framework capability, domain accelerator and customer
 application ownership before placing code, data, tests or documentation.
 
+## Token optimisation principle
+
+Apply [Token Optimisation And Proportionate Execution](nodics.foundation/modules/nSetup/llm/contracts/nodics-principles.md#token-optimisation-and-proportionate-execution)
+to every task and customer project. Reuse valid evidence, bound reads and output,
+and avoid redundant validation and CI polling without weakening required gates.
+
 ## Minimal configuration principle
 
 Apply [Existing Layers And Project Independence](nodics.foundation/modules/nSetup/llm/contracts/nodics-principles.md#existing-layers-and-project-independence)

@@ -44,6 +44,13 @@ and templates before making code changes.
 
 If an AI tool automatically scans the repository, this folder should be treated as the canonical instruction source for Nodics development behavior.
 
+## Efficient AI-assisted delivery
+
+[Token optimisation and proportionate execution](llm/contracts/nodics-principles.md#token-optimisation-and-proportionate-execution)
+applies to every project and tool: reuse valid context and validation evidence,
+keep diagnostics bounded, and await exact-commit CI without redundant polling.
+Required correctness and release checks remain mandatory.
+
 ## Partner implementation contract
 
 The [existing layers and project independence principle](llm/contracts/nodics-principles.md#existing-layers-and-project-independence)
