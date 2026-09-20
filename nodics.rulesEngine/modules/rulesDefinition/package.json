@@ -1,0 +1,29 @@
+{
+  "name": "rulesDefinition",
+  "index": "84.20",
+  "description": "Governed Rules Engine definitions, drafts and immutable version contracts.",
+  "main": "nodics.js",
+  "version": "0.0.0",
+  "private": true,
+  "license": "SEE LICENSE IN LICENSE",
+  "nodics": {
+    "kind": "capability",
+    "displayName": "Rules Definition",
+    "runtimeModule": true,
+    "loadableByNodicsModuleLoader": true,
+    "owns": [
+      "configuration",
+      "schema",
+      "service",
+      "utility",
+      "test",
+      "llm"
+    ],
+    "runtime": {
+      "router": false,
+      "publish": false,
+      "web": false
+    }
+  },
+  "scripts": {}
+}
