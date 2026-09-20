@@ -69,7 +69,7 @@ module.exports = {
         }
         if (condition.minimumConfidence !== undefined && condition.minimumConfidence !== null) {
             let confidence = Number(condition.minimumConfidence);
-            if (!Number.isFinite(confidence) || confidence < 0 || confidence > 1) {
+            if (!Number.isFinite(confidence) || confidence < 0 || confidence > 100) {
                 issues.push({ path: path, code: 'MINIMUM_CONFIDENCE_INVALID' });
             }
         }
