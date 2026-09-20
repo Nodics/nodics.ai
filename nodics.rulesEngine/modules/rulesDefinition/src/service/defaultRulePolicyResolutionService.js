@@ -19,7 +19,7 @@ module.exports = {
 
     isEffective: function (version, now) {
         now = now || new Date();
-        if (!version || version.status !== 'ACTIVE') return false;
+        if (!version || ['ACTIVE','SCHEDULED'].indexOf(version.status) < 0) return false;
         if (version.effectiveFrom && new Date(version.effectiveFrom) > now) return false;
         if (version.effectiveTo && new Date(version.effectiveTo) <= now) return false;
         return true;
@@ -50,11 +50,17 @@ module.exports = {
         let allowed = effective.overridePolicy && Array.isArray(effective.overridePolicy.allowedFields)
             ? effective.overridePolicy.allowedFields
             : [];
-        let overrides = child.metadata && child.metadata.overrides || {};
-        let denied = Object.keys(overrides).filter(field => !allowed.includes(field));
+        let metadata = child.metadata || {};
+        let explicitOverrides = metadata.overrides || {};
+        let overrideFields = Array.isArray(metadata.overrideFields) ? metadata.overrideFields : Object.keys(explicitOverrides);
+        let denied = overrideFields.filter(field => !allowed.includes(field));
         if (denied.length) throw new Error('Policy override is not permitted for fields: ' + denied.join(', '));
         let merged = Object.assign({}, effective);
-        Object.keys(overrides).forEach(field => { merged[field] = overrides[field]; });
+        overrideFields.forEach(field => {
+            merged[field] = Object.prototype.hasOwnProperty.call(explicitOverrides, field)
+                ? explicitOverrides[field]
+                : child[field];
+        });
         merged.code = child.code;
         merged.ruleSetCode = child.ruleSetCode;
         merged.version = child.version;
