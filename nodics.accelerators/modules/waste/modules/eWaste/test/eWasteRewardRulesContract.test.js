@@ -12,8 +12,8 @@
 'use strict';
 
 const assert = require('assert');
-const registry = require('../../../../../nodics.rulesEngine/modules/rulesCore/src/service/defaultRulePropertyCatalogueRegistryService');
-const evaluator = require('../../../../../nodics.rulesEngine/modules/rulesEvaluation/src/service/defaultRuleEvaluationService');
+const registry = require('../../../../../../nodics.rulesEngine/modules/rulesCore/src/service/defaultRulePropertyCatalogueRegistryService');
+const evaluator = require('../../../../../../nodics.rulesEngine/modules/rulesEvaluation/src/service/defaultRuleEvaluationService');
 const provider = require('../src/service/defaultEWasteRulePropertyCatalogueService');
 const contextService = require('../src/service/defaultEWasteRewardContextService');
 const assessmentService = require('../src/service/defaultEWasteRewardAssessmentOperationService');
