@@ -15,6 +15,7 @@
 module.exports = {
     providers: {},
 
+    /** Implements registerProvider as an overrideable service operation. */
     registerProvider: function (code, provider) {
         if (!code || !provider || typeof provider.getCatalogue !== 'function' || typeof provider.resolveProperty !== 'function') {
             throw new Error('Rule property provider must expose getCatalogue and resolveProperty');
@@ -26,20 +27,24 @@ module.exports = {
         return true;
     },
 
+    /** Implements getProvider as an overrideable service operation. */
     getProvider: function (code) {
         let provider = this.providers[code];
         if (!provider) throw new Error('Rule property provider is unavailable: ' + code);
         return provider;
     },
 
+    /** Implements getCatalogue as an overrideable service operation. */
     getCatalogue: function (code, context) {
         return this.getProvider(code).getCatalogue(context || {});
     },
 
+    /** Implements resolveProperty as an overrideable service operation. */
     resolveProperty: function (code, request) {
         return this.getProvider(code).resolveProperty(request || {});
     },
 
+    /** Implements resolveFallback as an overrideable service operation. */
     resolveFallback: function (code, request) {
         let provider = this.getProvider(code);
         return typeof provider.resolveFallback === 'function'
@@ -47,6 +52,7 @@ module.exports = {
             : { available: false };
     },
 
+    /** Implements resolveAllowedValues as an overrideable service operation. */
     resolveAllowedValues: function (code, request) {
         let provider = this.getProvider(code);
         return typeof provider.resolveAllowedValues === 'function'
@@ -54,6 +60,7 @@ module.exports = {
             : [];
     },
 
+    /** Implements reset as an overrideable service operation. */
     reset: function () {
         this.providers = {};
     }

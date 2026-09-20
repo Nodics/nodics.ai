@@ -11,6 +11,8 @@
 
 /** @module rulesCore/nodics @description Declares the rulesCore Rules Engine capability boundary. @layer module @owner rulesCore @override Later active modules may extend behavior through standard Nodics layering. */
 module.exports = {
+    /** Implements init as an overrideable service operation. */
     init: function (options) { return Promise.resolve(true); },
+    /** Implements postInit as an overrideable service operation. */
     postInit: function (options) { return Promise.resolve(true); }
 };

@@ -13,12 +13,15 @@
 
 /** @module rulesApi/src/service/defaultRuleManagementService @description Read and simulation orchestration over Rules definition/evaluation owners. @layer service @owner rulesApi */
 module.exports = {
+    /** Implements lifecycle as an overrideable service operation. */
     lifecycle: function () { return SERVICE.DefaultRuleDefinitionLifecycleService; },
 
+    /** Implements serviceRequest as an overrideable service operation. */
     serviceRequest: function (request, additions) {
         return this.lifecycle().serviceRequest(request, additions);
     },
 
+    /** Implements listDefinitions as an overrideable service operation. */
     listDefinitions: async function (request) {
         let response = await SERVICE.DefaultRuleSetService.get(this.serviceRequest(request, {
             query: request.query || {},
@@ -27,10 +30,12 @@ module.exports = {
         return { code: 'RULE_SET_LIST', data: response.result || [] };
     },
 
+    /** Implements getDefinition as an overrideable service operation. */
     getDefinition: async function (request) {
         return { code: 'RULE_SET_DETAIL', data: await this.lifecycle().requireRuleSet(request, request.ruleSetCode) };
     },
 
+    /** Implements listVersions as an overrideable service operation. */
     listVersions: async function (request) {
         this.lifecycle().assertCode(request.ruleSetCode);
         let response = await SERVICE.DefaultRuleSetVersionService.get(this.serviceRequest(request, {
@@ -40,6 +45,7 @@ module.exports = {
         return { code: 'RULE_SET_VERSIONS', data: response.result || [] };
     },
 
+    /** Implements listAudit as an overrideable service operation. */
     listAudit: async function (request) {
         this.lifecycle().assertCode(request.ruleSetCode);
         let response = await SERVICE.DefaultRuleAuditEventService.get(this.serviceRequest(request, {
@@ -49,6 +55,7 @@ module.exports = {
         return { code: 'RULE_SET_AUDIT', data: response.result || [] };
     },
 
+    /** Implements propertyCatalogue as an overrideable service operation. */
     propertyCatalogue: function (request) {
         let code = request.propertyProviderCode;
         this.lifecycle().assertCode(code);
@@ -69,6 +76,7 @@ module.exports = {
         };
     },
 
+    /** Implements propertyValues as an overrideable service operation. */
     propertyValues: async function (request) {
         this.lifecycle().assertCode(request.propertyProviderCode);
         this.lifecycle().assertCode(request.propertyCode);
@@ -87,6 +95,7 @@ module.exports = {
         return { code: 'RULE_PROPERTY_VALUES', data: values || [] };
     },
 
+    /** Implements listBandSets as an overrideable service operation. */
     listBandSets: async function (request) {
         let response = await SERVICE.DefaultScoreBandSetService.get(this.serviceRequest(request, {
             query: request.query || {},
@@ -95,10 +104,12 @@ module.exports = {
         return { code: 'SCORE_BAND_SET_LIST', data: response.result || [] };
     },
 
+    /** Implements getBandSet as an overrideable service operation. */
     getBandSet: async function (request) {
         return { code: 'SCORE_BAND_SET_DETAIL', data: await this.lifecycle().requireBandSet(request, request.bandSetCode) };
     },
 
+    /** Implements listBandVersions as an overrideable service operation. */
     listBandVersions: async function (request) {
         this.lifecycle().assertCode(request.bandSetCode);
         let response = await SERVICE.DefaultScoreBandSetVersionService.get(this.serviceRequest(request, {
@@ -108,6 +119,7 @@ module.exports = {
         return { code: 'SCORE_BAND_SET_VERSIONS', data: response.result || [] };
     },
 
+    /** Implements simulateDraft as an overrideable service operation. */
     simulateDraft: async function (request) {
         let ruleSet = await this.lifecycle().requireRuleSet(request, request.ruleSetCode);
         if (ruleSet.status !== 'DRAFT') throw new Error('Simulation requires an editable draft');

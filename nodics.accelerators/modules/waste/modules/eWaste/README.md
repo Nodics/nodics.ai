@@ -8,21 +8,24 @@ asset listing/gifting/purchase and Commerce coupon handoff.
 The Waste framework owns schemas, persistence and lifecycles. Profile, Media,
 Copilot, Loyalty, Commerce, Location and Engagement retain their own authorities.
 This accelerator has no application brand, page composition, customer-project
-identity, sample reward formula or duplicate domain schemas.
+identity, sample reward formula or duplicate domain schemas. Generic immutable
+reward-assessment persistence belongs to `wasteReward`.
 
 Domain HTTP routes use `/nodics/eWaste/v0` and the `eWasteCustomer` exposure
 category. Existing Waste permissions and owner checks apply. Enable that category
 only in a runtime configured for these journeys and their owning services.
 
-Projects provide `CONFIG.eWaste` deltas for application code, named valuation
-service, marketplace policy and explanatory copy. A missing valuation service
-fails closed; automated listing publication is disabled by default. Public website
+Projects provide `CONFIG.eWaste` deltas for application code, governed Rules
+policy/catalogue/band-set codes, Loyalty programme defaults, marketplace policy
+and explanatory copy. Missing published reward policy leaves assessment and
+settlement pending rather than inventing value; automated listing publication
+is disabled by default. Public website
 composition, registration/contact forms, branding and sample policy belong in a
 customer backend module. A separate application-named accelerator is unnecessary.
 
 The 83 core reference records keep their `eWaste:core-reference` identity and
 Waste schema destinations. Run `npm test` for data integrity, authorization,
-application-neutral composition, configurable valuation and conversation checks.
+application-neutral composition, governed reward assessment and conversation checks.
 See [the contract](llm/contracts/e-waste-domain.md) and
 [customization example](llm/examples/README.md).
 
@@ -63,3 +66,9 @@ Provider v4 preserves available recycling-input mass/count as INPUT_ONLY when ca
 Provider v5 adds a configurable, disclosed bundle reference comparison using total eligible mass once. It does not establish the bundle composition or issue credits. See the bundle reference comparison contract.
 
 Submission assessment is mandatory in eWaste: automatic preparation and a Waste confirmation guard enforce it. Catalogue coverage tests distinguish numerical coverage from explicit partial assessments; see the mandatory submission assessment contract.
+
+Approval evaluates the effective published Rules policy and persists one
+`wasteRewardAssessment` with `assessmentType: CONFIRMED`. Settlement accepts only
+that evidence, posts one idempotent earning through Loyalty, then records the
+wallet and append-only ledger references on the Waste asset. A completed replay
+must not post another entry. Zero-value bands complete without opening a wallet.

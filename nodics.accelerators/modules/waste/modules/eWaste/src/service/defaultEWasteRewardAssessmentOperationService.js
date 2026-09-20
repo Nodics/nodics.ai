@@ -21,10 +21,12 @@ const crypto = require('node:crypto');
  * @override Partner projects may select policy scope/defaults while preserving Rules evaluation and Loyalty ownership.
  */
 module.exports = {
+    /** Implements settings as an overrideable service operation. */
     settings: function () {
         return (CONFIG.get('eWaste') || {}).rewardRules || {};
     },
 
+    /** Implements serviceRequest as an overrideable service operation. */
     serviceRequest: function (request, additions) {
         return Object.assign({
             tenant: request.tenant,
@@ -33,6 +35,7 @@ module.exports = {
         }, additions || {});
     },
 
+    /** Implements scope as an overrideable service operation. */
     scope: function (request) {
         let settings = this.settings();
         let submission = request.submission || {};
@@ -45,6 +48,7 @@ module.exports = {
         }, request.scope || {});
     },
 
+    /** Implements resolvePolicy as an overrideable service operation. */
     resolvePolicy: function (request) {
         let settings = this.settings();
         return SERVICE.DefaultRulePolicyResolutionService.resolveEffective({
@@ -57,6 +61,7 @@ module.exports = {
         });
     },
 
+    /** Implements loadBandVersion as an overrideable service operation. */
     loadBandVersion: async function (request, policy) {
         if (!policy.scoreBandSetCode || !policy.scoreBandSetVersion) {
             throw new Error('Effective eWaste reward policy must bind an immutable score-band version');
@@ -74,6 +79,7 @@ module.exports = {
         return version;
     },
 
+    /** Implements normalizedAmount as an overrideable service operation. */
     normalizedAmount: function (outcome) {
         let amount = outcome && (outcome.amount !== undefined ? outcome.amount : outcome.rewardAmount);
         if (amount === undefined || amount === null || amount === '') throw new Error('Reward outcome amount is required');
@@ -82,6 +88,7 @@ module.exports = {
         return String(amount);
     },
 
+    /** Implements collectExplanation as an overrideable service operation. */
     collectExplanation: function (groupResults) {
         let fallbackInputs = [];
         let qualityExcludedInputs = [];
@@ -107,6 +114,7 @@ module.exports = {
         return { fallbackInputs: fallbackInputs, qualityExcludedInputs: qualityExcludedInputs };
     },
 
+    /** Implements assessmentCode as an overrideable service operation. */
     assessmentCode: function (request, assessmentType, policy) {
         let submission = request.submission || {};
         let sourceRevision = Number(request.sourceRevision !== undefined ? request.sourceRevision : submission.revision || 0);
@@ -120,6 +128,7 @@ module.exports = {
         ].join('_');
     },
 
+    /** Implements existing as an overrideable service operation. */
     existing: async function (request, code) {
         let response = await SERVICE.DefaultWasteRewardAssessmentService.get(this.serviceRequest(request, {
             query: { code: code },
@@ -129,6 +138,7 @@ module.exports = {
         return Array.isArray(result) ? result[0] : result;
     },
 
+    /** Implements assess as an overrideable service operation. */
     assess: async function (request, assessmentType) {
         if (!request || !request.submission || !request.submission.code) throw new Error('Reward assessment requires a waste submission');
         if (!['ESTIMATED','CONFIRMED','RECALCULATED'].includes(assessmentType)) throw new Error('Unsupported reward assessment type');
@@ -235,14 +245,17 @@ module.exports = {
         return response && response.result || response;
     },
 
+    /** Implements assessEstimated as an overrideable service operation. */
     assessEstimated: function (request) {
         return this.assess(request, 'ESTIMATED');
     },
 
+    /** Implements assessConfirmed as an overrideable service operation. */
     assessConfirmed: function (request) {
         return this.assess(request, 'CONFIRMED');
     },
 
+    /** Implements reassessConfirmed as an overrideable service operation. */
     reassessConfirmed: function (request) {
         return this.assess(request, 'RECALCULATED');
     }

@@ -18,11 +18,13 @@
  * @owner rulesDefinition
  */
 module.exports = {
+    /** Implements actor as an overrideable service operation. */
     actor: function (request) {
         let auth = request && request.authData || {};
         return auth.loginId || auth.code || auth.userId || auth.serviceId;
     },
 
+    /** Implements serviceRequest as an overrideable service operation. */
     serviceRequest: function (request, additions) {
         return Object.assign({
             tenant: request && request.tenant,
@@ -31,6 +33,7 @@ module.exports = {
         }, additions || {});
     },
 
+    /** Implements record as an overrideable service operation. */
     record: async function (request, event) {
         event = event || {};
         let model = {

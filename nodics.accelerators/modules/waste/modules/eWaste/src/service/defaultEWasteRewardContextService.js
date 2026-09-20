@@ -18,12 +18,14 @@
  * @owner eWaste
  */
 module.exports = {
+    /** Implements provider as an overrideable service operation. */
     provider: function () {
         return typeof SERVICE !== 'undefined' && SERVICE.DefaultEWasteRulePropertyCatalogueService
             ? SERVICE.DefaultEWasteRulePropertyCatalogueService
             : require('./defaultEWasteRulePropertyCatalogueService');
     },
 
+    /** Implements resolution as an overrideable service operation. */
     resolution: function (value, quality, confidence, source) {
         let available = value !== undefined && value !== null && value !== '' &&
             !(typeof value === 'number' && !Number.isFinite(value));
@@ -36,6 +38,7 @@ module.exports = {
         };
     },
 
+    /** Implements codes as an overrideable service operation. */
     codes: function (values) {
         return (Array.isArray(values) ? values : values === undefined || values === null ? [] : [values])
             .map(value => {
@@ -46,6 +49,7 @@ module.exports = {
             .filter(value => typeof value === 'string' && value.length > 0);
     },
 
+    /** Implements provenanceQuality as an overrideable service operation. */
     provenanceQuality: function (facts, key, defaultQuality) {
         let provenance = facts && facts[key + 'Provenance'];
         let basis = provenance && provenance.basis;
@@ -54,12 +58,14 @@ module.exports = {
             : this.provider().normalizeQuality(basis);
     },
 
+    /** Implements metric as an overrideable service operation. */
     metric: function (impact, metricCodes) {
         let metrics = impact && Array.isArray(impact.metrics) ? impact.metrics : [];
         let wanted = Array.isArray(metricCodes) ? metricCodes : [metricCodes];
         return metrics.find(metric => wanted.includes(metric.metricCode || metric.code));
     },
 
+    /** Implements metricValue as an overrideable service operation. */
     metricValue: function (metric) {
         if (!metric) return undefined;
         let value = metric.value;
@@ -69,34 +75,40 @@ module.exports = {
         return Number.isFinite(numeric) ? numeric : value;
     },
 
+    /** Implements carbonQuality as an overrideable service operation. */
     carbonQuality: function (impact, confirmed) {
         if (confirmed) return 'OPERATOR_VERIFIED';
         if (impact && ['CONFIRMED','RECALCULATED'].includes(impact.calculationStatus)) return 'OPERATOR_VERIFIED';
         return 'AI_INFERRED';
     },
 
+    /** Implements descriptorValue as an overrideable service operation. */
     descriptorValue: function (descriptor, path) {
         return path.split('.').reduce((value, key) => value && value[key], descriptor || {});
     },
 
+    /** Implements rangeMidpoint as an overrideable service operation. */
     rangeMidpoint: function (range) {
         if (!range || typeof range !== 'object') return undefined;
         let min = Number(range.min), max = Number(range.max);
         return Number.isFinite(min) && Number.isFinite(max) && max >= min ? (min + max) / 2 : undefined;
     },
 
+    /** Implements observationValue as an overrideable service operation. */
     observationValue: function (observation) {
         if (observation && typeof observation === 'object' && Object.prototype.hasOwnProperty.call(observation, 'value'))
             return observation.value === 'UNKNOWN' ? undefined : observation.value;
         return observation === 'UNKNOWN' ? undefined : observation;
     },
 
+    /** Implements observationQuality as an overrideable service operation. */
     observationQuality: function (observation, fallback) {
         let basis = observation && typeof observation === 'object' && observation.basis;
         let normalized = this.provider().normalizeQuality(basis);
         return normalized === 'UNAVAILABLE' ? fallback : normalized;
     },
 
+    /** Implements build as an overrideable service operation. */
     build: function (request) {
         let submission = request.submission || {};
         let descriptor = request.descriptor || submission.metadata && submission.metadata.suggestion || {};

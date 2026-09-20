@@ -13,12 +13,14 @@
 
 /** @module rulesEvaluation/src/service/defaultRuleGroupEvaluationService @description Recursively evaluates ALL/ANY rule groups while preserving optional-condition semantics and explanation evidence. @layer service @owner rulesEvaluation */
 module.exports = {
+    /** Implements conditionService as an overrideable service operation. */
     conditionService: function () {
         return typeof SERVICE !== 'undefined' && SERVICE.DefaultRuleConditionEvaluationService
             ? SERVICE.DefaultRuleConditionEvaluationService
             : require('./defaultRuleConditionEvaluationService');
     },
 
+    /** Implements evaluate as an overrideable service operation. */
     evaluate: function (group, evaluationContext, depth) {
         depth = depth || 1;
         let maximumDepth = evaluationContext.maximumGroupDepth || 5;

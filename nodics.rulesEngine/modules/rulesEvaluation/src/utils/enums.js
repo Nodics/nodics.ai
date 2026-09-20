@@ -11,13 +11,15 @@
 
 /** @module rulesEvaluation/src/utils/enums @description Stable generic evaluation enums. @layer utility @owner rulesEvaluation */
 module.exports = {
-    INPUT_QUALITY: Object.freeze({
-        VERIFIED_MEASUREMENT: 'VERIFIED_MEASUREMENT',
-        OPERATOR_VERIFIED: 'OPERATOR_VERIFIED',
-        CUSTOMER_CONFIRMED: 'CUSTOMER_CONFIRMED',
-        AI_OBSERVED: 'AI_OBSERVED',
-        AI_INFERRED: 'AI_INFERRED',
-        REFERENCE_DEFAULT: 'REFERENCE_DEFAULT',
-        UNAVAILABLE: 'UNAVAILABLE'
-    })
+    INPUT_QUALITY: {
+        definition: Object.freeze({
+            VERIFIED_MEASUREMENT: 'VERIFIED_MEASUREMENT',
+            OPERATOR_VERIFIED: 'OPERATOR_VERIFIED',
+            CUSTOMER_CONFIRMED: 'CUSTOMER_CONFIRMED',
+            AI_OBSERVED: 'AI_OBSERVED',
+            AI_INFERRED: 'AI_INFERRED',
+            REFERENCE_DEFAULT: 'REFERENCE_DEFAULT',
+            UNAVAILABLE: 'UNAVAILABLE'
+        })
+    }
 };

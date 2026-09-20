@@ -11,9 +11,11 @@
 
 /** @module wasteReward/src/utils/enums @description Stable Waste reward assessment enums. @layer utility @owner wasteReward */
 module.exports = {
-    ASSESSMENT_TYPE: Object.freeze({
-        ESTIMATED: 'ESTIMATED',
-        CONFIRMED: 'CONFIRMED',
-        RECALCULATED: 'RECALCULATED'
-    })
+    ASSESSMENT_TYPE: {
+        definition: Object.freeze({
+            ESTIMATED: 'ESTIMATED',
+            CONFIRMED: 'CONFIRMED',
+            RECALCULATED: 'RECALCULATED'
+        })
+    }
 };

@@ -21,6 +21,7 @@
 module.exports = {
     providerCode: 'eWaste.reward',
 
+    /** Implements init as an overrideable service operation. */
     init: function () {
         if (typeof SERVICE !== 'undefined' && SERVICE.DefaultRulePropertyCatalogueRegistryService) {
             SERVICE.DefaultRulePropertyCatalogueRegistryService.registerProvider(this.providerCode, this);
@@ -28,8 +29,10 @@ module.exports = {
         return Promise.resolve(true);
     },
 
+    /** Implements postInit as an overrideable service operation. */
     postInit: function () { return Promise.resolve(true); },
 
+    /** Implements property as an overrideable service operation. */
     property: function (code, displayName, dataType, operators, options) {
         return Object.assign({
             code: code,
@@ -41,6 +44,7 @@ module.exports = {
         }, options || {});
     },
 
+    /** Implements getCatalogue as an overrideable service operation. */
     getCatalogue: function () {
         const equality = ['EQUALS','NOT_EQUALS','IN','NOT_IN','IS_AVAILABLE','IS_NOT_AVAILABLE'];
         const numeric = ['EQUALS','NOT_EQUALS','GREATER_THAN','GREATER_THAN_OR_EQUAL','LESS_THAN','LESS_THAN_OR_EQUAL','BETWEEN','IS_AVAILABLE','IS_NOT_AVAILABLE'];
@@ -92,6 +96,7 @@ module.exports = {
         };
     },
 
+    /** Implements resolveProperty as an overrideable service operation. */
     resolveProperty: function (request) {
         let context = request && request.context || {};
         let properties = context.properties || {};
@@ -99,6 +104,7 @@ module.exports = {
         return resolution || { available:false, quality:'UNAVAILABLE', source:'UNAVAILABLE' };
     },
 
+    /** Implements label as an overrideable service operation. */
     label: function (record) {
         if (!record) return '';
         if (typeof record.name === 'string') return record.name;
@@ -109,6 +115,7 @@ module.exports = {
         return record.code;
     },
 
+    /** Implements values as an overrideable service operation. */
     values: function (records) {
         return (records || []).map(record => ({
             value: record.code,
@@ -116,6 +123,7 @@ module.exports = {
         }));
     },
 
+    /** Implements resolveAllowedValues as an overrideable service operation. */
     resolveAllowedValues: async function (request) {
         let propertyCode = request.propertyCode;
         let property = this.getCatalogue().properties.find(item => item.code === propertyCode);
@@ -179,12 +187,14 @@ module.exports = {
         return [];
     },
 
+    /** Implements qualityService as an overrideable service operation. */
     qualityService: function () {
         return typeof SERVICE !== 'undefined' && SERVICE.DefaultRuleQualityService
             ? SERVICE.DefaultRuleQualityService
             : require('../../../../../../../nodics.rulesEngine/modules/rulesEvaluation/src/service/defaultRuleQualityService');
     },
 
+    /** Implements resolveFallback as an overrideable service operation. */
     resolveFallback: function (request) {
         let context = request && request.context || {};
         let fallback = context.fallbacks && context.fallbacks[request.propertyCode];
@@ -196,6 +206,7 @@ module.exports = {
             { available:false, quality:'UNAVAILABLE', source:'UNAVAILABLE' };
     },
 
+    /** Implements normalizeQuality as an overrideable service operation. */
     normalizeQuality: function (basis) {
         const map = {
             OPERATOR_MEASURED:'VERIFIED_MEASUREMENT',

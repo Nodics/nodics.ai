@@ -13,6 +13,7 @@
 
 /** @module rulesDefinition/src/service/defaultRuleDefinitionValidationService @description Validates generic RuleGroup graphs, consumer property/operator compatibility, score bands and policy dates before publication. @layer service @owner rulesDefinition */
 module.exports = {
+    /** Implements limits as an overrideable service operation. */
     limits: function () {
         let config = typeof CONFIG !== 'undefined' && CONFIG.get ? CONFIG.get('rulesEngine') : {};
         return (config && config.limits) || {
@@ -22,24 +23,28 @@ module.exports = {
         };
     },
 
+    /** Implements providerRegistry as an overrideable service operation. */
     providerRegistry: function () {
         return typeof SERVICE !== 'undefined' && SERVICE.DefaultRulePropertyCatalogueRegistryService
             ? SERVICE.DefaultRulePropertyCatalogueRegistryService
             : require('../../../rulesCore/src/service/defaultRulePropertyCatalogueRegistryService');
     },
 
+    /** Implements operatorService as an overrideable service operation. */
     operatorService: function () {
         return typeof SERVICE !== 'undefined' && SERVICE.DefaultRuleOperatorService
             ? SERVICE.DefaultRuleOperatorService
             : require('../../../rulesCore/src/service/defaultRuleOperatorService');
     },
 
+    /** Implements outcomeRegistry as an overrideable service operation. */
     outcomeRegistry: function () {
         return typeof SERVICE !== 'undefined' && SERVICE.DefaultRuleOutcomeRegistryService
             ? SERVICE.DefaultRuleOutcomeRegistryService
             : require('../../../rulesCore/src/service/defaultRuleOutcomeRegistryService');
     },
 
+    /** Implements propertyMap as an overrideable service operation. */
     propertyMap: function (providerCode, context) {
         let catalogue = this.providerRegistry().getCatalogue(providerCode, context || {});
         let properties = catalogue && catalogue.properties || [];
@@ -49,6 +54,7 @@ module.exports = {
         }, {});
     },
 
+    /** Implements validateCondition as an overrideable service operation. */
     validateCondition: function (condition, propertyMap, issues, path) {
         if (!condition || !condition.code) issues.push({ path: path, code: 'CONDITION_CODE_REQUIRED' });
         if (!condition || !condition.propertyCode || !propertyMap[condition.propertyCode]) {
@@ -82,6 +88,7 @@ module.exports = {
         }
     },
 
+    /** Implements validateGroup as an overrideable service operation. */
     validateGroup: function (group, propertyMap, issues, path, depth, seenCodes) {
         let limits = this.limits();
         if (depth > Number(limits.maximumGroupDepth || 5)) {
@@ -108,6 +115,7 @@ module.exports = {
         }
     },
 
+    /** Implements validateDefinition as an overrideable service operation. */
     validateDefinition: function (request) {
         let definition = request && request.definition || {};
         let groups = definition.groups || [];
@@ -121,6 +129,7 @@ module.exports = {
         return { valid: issues.length === 0, issues: issues };
     },
 
+    /** Implements validateBands as an overrideable service operation. */
     validateBands: function (bands, gapBehavior) {
         let issues = [];
         if (!Array.isArray(bands) || bands.length === 0) return { valid: false, issues: [{ path: 'bands', code: 'BANDS_REQUIRED' }] };
@@ -149,6 +158,7 @@ module.exports = {
         return { valid: issues.length === 0, issues: issues };
     },
 
+    /** Implements validateDates as an overrideable service operation. */
     validateDates: function (effectiveFrom, effectiveTo) {
         if (!effectiveFrom || !effectiveTo) return { valid: true, issues: [] };
         let from = new Date(effectiveFrom), to = new Date(effectiveTo);

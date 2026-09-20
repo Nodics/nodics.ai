@@ -17,16 +17,16 @@ const path = require("node:path");
 const pkg = require("../package.json");
 const properties = require("../config/properties").eWaste;
 const routes = require("../src/router/routers").eWaste.experience;
-const schemas = require("../src/schemas/schemas").eWaste;
 const originalPublic = new Set(["experience", "marketplace"]);
 assert.equal(pkg.nodics.runtime.router, true);
 assert.deepEqual(pkg.nodics.extends, [
   "nodics.waste",
   "nodics.rulesEngine",
 ]);
+assert(!pkg.nodics.owns.includes("schema"));
 assert(
-  pkg.nodics.owns.includes("schema"),
-  "eWaste must declare ownership of its reward-policy preset schemas",
+  !fs.existsSync(path.join(__dirname, "..", "src", "schemas", "schemas.js")),
+  "eWaste must persist generic reward assessments through wasteReward",
 );
 assert.equal(properties.marketplace.autoPublishListings, false);
 assert.equal(properties.rewardValuationService, null);
@@ -89,13 +89,6 @@ for (const folder of ["src", "config"]) {
     );
   }
 }
-assert.deepEqual(Object.keys(schemas), ["eWasteRewardAssessment"]);
-assert.deepEqual(schemas.eWasteRewardAssessment.backoffice, {
-  mutationMode: "READ_ONLY",
-  operations: ["search", "read"],
-});
-assert.equal(schemas.eWasteRewardAssessment.definition.policyVersion.required, true);
-assert.equal(schemas.eWasteRewardAssessment.definition.sourceHash.required, true);
 console.log("eWaste domain ownership and API boundaries validated");
 
 assert.equal(routes.verify.permission, "waste.verification.record");

@@ -11,7 +11,7 @@
 
 /** @module rulesDefinition/src/utils/enums @description Stable generic definition enums. @layer utility @owner rulesDefinition */
 module.exports = {
-    RULE_SET_STATUS: Object.freeze({ DRAFT: 'DRAFT', SCHEDULED: 'SCHEDULED', ACTIVE: 'ACTIVE', EXPIRED: 'EXPIRED', DISABLED: 'DISABLED', ARCHIVED: 'ARCHIVED' }),
-    GROUP_OPERATOR: Object.freeze({ ALL: 'ALL', ANY: 'ANY' }),
-    MISSING_VALUE_BEHAVIOR: Object.freeze({ REQUIRED: 'REQUIRED', OPTIONAL: 'OPTIONAL', FALLBACK_ALLOWED: 'FALLBACK_ALLOWED' })
+    RULE_SET_STATUS: { definition: Object.freeze({ DRAFT: 'DRAFT', SCHEDULED: 'SCHEDULED', ACTIVE: 'ACTIVE', EXPIRED: 'EXPIRED', DISABLED: 'DISABLED', ARCHIVED: 'ARCHIVED' }) },
+    GROUP_OPERATOR: { definition: Object.freeze({ ALL: 'ALL', ANY: 'ANY' }) },
+    MISSING_VALUE_BEHAVIOR: { definition: Object.freeze({ REQUIRED: 'REQUIRED', OPTIONAL: 'OPTIONAL', FALLBACK_ALLOWED: 'FALLBACK_ALLOWED' }) }
 };

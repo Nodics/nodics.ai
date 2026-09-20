@@ -16,6 +16,7 @@ module.exports = {
     definitions: {
         ADD_SCORE: {
             ownerModule: 'rulesCore',
+            /** Implements validate as an overrideable service operation. */
             validate: function (outcome) {
                 let score = Number(outcome && outcome.parameters && outcome.parameters.score);
                 return Number.isFinite(score)
@@ -25,6 +26,7 @@ module.exports = {
         }
     },
 
+    /** Implements registerOutcomeType as an overrideable service operation. */
     registerOutcomeType: function (code, definition) {
         if (!code || !definition || typeof definition.validate !== 'function') {
             throw new Error('Rule outcome definition must provide a validator');
@@ -36,10 +38,12 @@ module.exports = {
         return true;
     },
 
+    /** Implements get as an overrideable service operation. */
     get: function (code) {
         return this.definitions[code];
     },
 
+    /** Implements validate as an overrideable service operation. */
     validate: function (outcome) {
         if (!outcome || !outcome.outcomeType) {
             return { valid: false, issues: [{ code: 'OUTCOME_TYPE_REQUIRED' }] };

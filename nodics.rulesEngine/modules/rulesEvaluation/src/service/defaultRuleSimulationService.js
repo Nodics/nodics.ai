@@ -13,12 +13,14 @@
 
 /** @module rulesEvaluation/src/service/defaultRuleSimulationService @description Runs the same evaluator used at runtime and returns bounded explainable simulation evidence without side effects. @layer service @owner rulesEvaluation */
 module.exports = {
+    /** Implements evaluateService as an overrideable service operation. */
     evaluateService: function () {
         return typeof SERVICE !== 'undefined' && SERVICE.DefaultRuleEvaluationService
             ? SERVICE.DefaultRuleEvaluationService
             : require('./defaultRuleEvaluationService');
     },
 
+    /** Implements simulate as an overrideable service operation. */
     simulate: function (request) {
         let result = this.evaluateService().evaluate(request);
         return Object.assign({ simulation: true }, result);

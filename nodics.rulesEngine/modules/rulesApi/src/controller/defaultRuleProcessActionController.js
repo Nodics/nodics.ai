@@ -13,6 +13,7 @@
 
 /** @module rulesApi/src/controller/defaultRuleProcessActionController @description Claims one Process-owned remote action before applying its authoritative maker-checker decision to a Rules draft. @layer controller @owner rulesApi */
 module.exports = {
+    /** Implements claimExecution as an overrideable service operation. */
     claimExecution: async function (request) {
         let auth = SERVICE.DefaultServiceTokenService.requireRuntimePrincipal(request, 'workflow');
         let input = request.httpRequest && request.httpRequest.body || {};
@@ -48,6 +49,7 @@ module.exports = {
         });
     },
 
+    /** Implements applyDecision as an overrideable service operation. */
     applyDecision: async function (request, callback) {
         try {
             let execution = await this.claimExecution(request);

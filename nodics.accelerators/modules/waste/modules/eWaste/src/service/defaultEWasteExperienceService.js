@@ -492,33 +492,65 @@ module.exports = {
       queue,
     );
   },
-  /** Settles approval through the configured valuation seam and Loyalty ledger. */
-  settle: async function (request, asset) {
-    if (asset.metadata && asset.metadata.settlementStatus === "COMPLETED")
-      return asset;
-    const valuation = SERVICE[this.settings().rewardValuationService];
-    if (!valuation || typeof valuation.assess !== "function")
+  /** Loads the immutable confirmed Rules assessment that exclusively authorizes approval settlement. */
+  confirmedRewardAssessment: async function (request, asset) {
+    const reference = asset.metadata?.confirmedRewardAssessmentRef;
+    const assessment = reference?.code
+      ? await this.store().one("wasteRewardAssessment", request, reference.code)
+      : undefined;
+    if (!assessment || !assessment.code || assessment.assessmentType !== "CONFIRMED")
       this.store().fail(
-        "ERR_EWASTE_VALUATION_UNAVAILABLE",
-        "Reward valuation is not configured",
+        "ERR_EWASTE_REWARD_ASSESSMENT_REQUIRED",
+        "A persisted confirmed reward assessment is required",
       );
-    const impact = await this.store().one(
-      "wasteImpactResult",
-      request,
-      (asset.metadata?.approvedEstimate?.code || asset.impactRef.code),
-    );
-    const assessed = await valuation.assess({ asset: asset, impact: impact });
-    const wallet = await this.remote(
-      request,
-      "loyaltyApi",
-      "loyalty",
-      "/wallets",
-      "POST",
-      { ownerType: "CUSTOMER", ownerCode: asset.ownerRef.code },
-    );
-    const refs = [];
-    for (const reward of assessed.rewards) {
-      if (Number(reward.amount) <= 0) continue;
+    if (assessment.assetCode && assessment.assetCode !== asset.code)
+      this.store().fail(
+        "ERR_EWASTE_REWARD_ASSESSMENT_CONFLICT",
+        "The confirmed reward assessment belongs to a different asset",
+      );
+    if (reference?.code && reference.code !== assessment.code)
+      this.store().fail(
+        "ERR_EWASTE_REWARD_ASSESSMENT_CONFLICT",
+        "The asset references a different confirmed reward assessment",
+      );
+    return assessment;
+  },
+  /** Settles exactly one persisted confirmed Rules outcome through the Loyalty-owned wallet API. */
+  settle: async function (request, asset) {
+    const assessment = await this.confirmedRewardAssessment(request, asset);
+    if (asset.metadata?.settlementStatus === "COMPLETED") {
+      if (asset.metadata.rewardSettlement?.assessmentCode !== assessment.code)
+        this.store().fail(
+          "ERR_EWASTE_REWARD_SETTLEMENT_CONFLICT",
+          "Completed reward settlement is bound to different assessment evidence",
+        );
+      return asset;
+    }
+    const rules = this.settings().rewardRules || {};
+    const outcome = assessment.rewardOutcome || {};
+    const amount = String(assessment.rewardAmount);
+    const numericAmount = Number(amount);
+    if (!Number.isFinite(numericAmount) || numericAmount < 0)
+      this.store().fail(
+        "ERR_EWASTE_REWARD_OUTCOME_INVALID",
+        "The confirmed reward amount is invalid",
+      );
+    let wallet;
+    let ledgerReference;
+    if (numericAmount > 0) {
+      wallet = await this.remote(
+        request,
+        "loyaltyApi",
+        "loyalty",
+        "/wallets",
+        "POST",
+        { ownerType: "CUSTOMER", ownerCode: asset.ownerRef.code },
+      );
+      if (!wallet?.code)
+        this.store().fail(
+          "ERR_EWASTE_REWARD_SETTLEMENT_INVALID",
+          "Loyalty did not return a wallet identity",
+        );
       const result = await this.remote(
         request,
         "loyaltyApi",
@@ -526,43 +558,58 @@ module.exports = {
         "/reward-earnings",
         "POST",
         {
-          walletCode: wallet.code,
-          programCode: reward.programCode,
-          rewardTypeCode: reward.rewardTypeCode,
-          amount: reward.amount,
-          scale: reward.scale,
-          sourceType: "WASTE_ASSET",
-          sourceCode: asset.code,
+          walletCode: wallet && wallet.code,
+          programCode: outcome.programCode || rules.loyaltyProgramCode || "default",
+          rewardTypeCode: assessment.rewardTypeCode,
+          amount: amount,
+          scale: outcome.scale === undefined ? rules.rewardScale : outcome.scale,
+          sourceType: "WASTE_REWARD_ASSESSMENT",
+          sourceCode: assessment.code,
+          targetType: "WASTE_ASSET",
+          targetCode: asset.code,
           reasonCode: "APPROVED_SUBMISSION",
-          idempotencyKey: asset.code + ":approval:" + reward.rewardTypeCode,
+          idempotencyKey: assessment.code + ":wallet-settlement",
+          correlationId: request.correlationId || assessment.correlationId,
           metadata: {
-            valuationVersion: assessed.version,
-            impactRef: { module: "wasteImpact", schema: "wasteImpactResult", code: impact.code },
-            illustrative: assessed.illustrative === true,
+            assessmentCode: assessment.code,
+            policyCode: assessment.policyCode,
+            policyVersion: assessment.policyVersion,
+            bandSetCode: assessment.bandSetCode,
+            bandSetVersion: assessment.bandSetVersion,
+            scoreBandCode: assessment.scoreBandCode,
+            sourceHash: assessment.sourceHash,
           },
         },
       );
       const entry = this.unwrap(result.ledgerEntry);
-      refs.push({
+      const ledgerEntry = Array.isArray(entry) ? entry[0] : entry;
+      if (!ledgerEntry?.code)
+        this.store().fail(
+          "ERR_EWASTE_REWARD_SETTLEMENT_INVALID",
+          "Loyalty did not return append-only ledger evidence",
+        );
+      ledgerReference = {
         module: "loyaltyLedger",
         schema: "rewardLedgerEntry",
-        code: Array.isArray(entry) ? entry[0].code : entry.code,
-        rewardTypeCode: reward.rewardTypeCode,
-      });
+        code: ledgerEntry.code,
+        rewardTypeCode: assessment.rewardTypeCode,
+        assessmentCode: assessment.code,
+      };
     }
     return this.store().update("wasteAsset", request, asset, {
-      rewardSettlementRefs: refs.filter(
-        (r) => r.rewardTypeCode === assessed.pointsRewardTypeCode,
-      ),
-      carbonSettlementRefs: refs.filter(
-        (r) => r.rewardTypeCode !== assessed.pointsRewardTypeCode,
-      ),
+      rewardSettlementRefs: ledgerReference ? [ledgerReference] : [],
       metadata: Object.assign({}, asset.metadata, {
         settlementStatus: "COMPLETED",
-        valuation: assessed,
-        illustrativeCarbonUnits: assessed.rewards
-          .filter((r) => r.rewardTypeCode !== assessed.pointsRewardTypeCode)
-          .reduce((sum, r) => sum + Number(r.amount), 0),
+        rewardSettlement: {
+          assessmentCode: assessment.code,
+          walletCode: wallet?.code,
+          ledgerEntryCode: ledgerReference?.code,
+          rewardTypeCode: assessment.rewardTypeCode,
+          rewardAmount: amount,
+          policyCode: assessment.policyCode,
+          policyVersion: assessment.policyVersion,
+          settledAt: new Date(),
+        },
       }),
     });
   },
@@ -673,7 +720,7 @@ module.exports = {
               ...(result.asset.metadata || {}),
               confirmedRewardAssessmentRef: {
                 module: "wasteReward",
-            schema: "wasteRewardAssessment",
+                schema: "wasteRewardAssessment",
                 code: assessment.code,
               },
               confirmedReward: summary,
@@ -683,7 +730,7 @@ module.exports = {
         }
       } catch (error) {
         // Approval remains authoritative even when a reward programme is not yet
-        // configured. Milestone 6 will settle only a persisted CONFIRMED assessment.
+        // configured. Settlement accepts only persisted CONFIRMED evidence.
         result.rewardAssessmentStatus = "PENDING";
         result.rewardAssessmentMessage =
           "Approval is saved. Confirmed reward assessment needs configuration or retry.";

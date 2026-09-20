@@ -13,22 +13,26 @@
 
 /** @module rulesEvaluation/src/service/defaultRuleConditionEvaluationService @description Applies missing-value policy and one generic operator after centralized consumer property resolution. @layer service @owner rulesEvaluation */
 module.exports = {
+    /** Implements resolutionService as an overrideable service operation. */
     resolutionService: function () {
         return typeof SERVICE !== 'undefined' && SERVICE.DefaultRulePropertyResolutionService
             ? SERVICE.DefaultRulePropertyResolutionService
             : require('./defaultRulePropertyResolutionService');
     },
 
+    /** Implements operatorService as an overrideable service operation. */
     operatorService: function () {
         return typeof SERVICE !== 'undefined' && SERVICE.DefaultRuleOperatorService
             ? SERVICE.DefaultRuleOperatorService
             : require('../../../rulesCore/src/service/defaultRuleOperatorService');
     },
 
+    /** Implements availabilityOperator as an overrideable service operation. */
     availabilityOperator: function (operatorCode) {
         return operatorCode === 'IS_AVAILABLE' || operatorCode === 'IS_NOT_AVAILABLE';
     },
 
+    /** Implements evaluate as an overrideable service operation. */
     evaluate: function (condition, evaluationContext) {
         if (!condition || !condition.propertyCode || !condition.operatorCode) {
             throw new Error('Rule condition property and operator are required');

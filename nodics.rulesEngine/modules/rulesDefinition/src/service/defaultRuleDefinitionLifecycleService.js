@@ -15,15 +15,18 @@ const crypto = require('node:crypto');
 
 /** @module rulesDefinition/src/service/defaultRuleDefinitionLifecycleService @description Owns governed rule-set and score-band draft, validation, immutable publication and next-draft preparation. @layer service @owner rulesDefinition */
 module.exports = {
+    /** Implements tenant as an overrideable service operation. */
     tenant: function (request) {
         return request && request.tenant || (typeof CONFIG !== 'undefined' && CONFIG.get && CONFIG.get('defaultTenant')) || 'default';
     },
 
+    /** Implements actor as an overrideable service operation. */
     actor: function (request) {
         let auth = request && request.authData || {};
         return auth.loginId || auth.code || auth.userId || auth.serviceId;
     },
 
+    /** Implements serviceRequest as an overrideable service operation. */
     serviceRequest: function (request, additions) {
         return Object.assign({
             tenant: this.tenant(request),
@@ -32,23 +35,30 @@ module.exports = {
         }, additions || {});
     },
 
+    /** Implements ruleSetService as an overrideable service operation. */
     ruleSetService: function () { return SERVICE.DefaultRuleSetService; },
+    /** Implements ruleSetVersionService as an overrideable service operation. */
     ruleSetVersionService: function () { return SERVICE.DefaultRuleSetVersionService; },
+    /** Implements bandSetService as an overrideable service operation. */
     bandSetService: function () { return SERVICE.DefaultScoreBandSetService; },
+    /** Implements bandSetVersionService as an overrideable service operation. */
     bandSetVersionService: function () { return SERVICE.DefaultScoreBandSetVersionService; },
 
+    /** Implements validationService as an overrideable service operation. */
     validationService: function () {
         return typeof SERVICE !== 'undefined' && SERVICE.DefaultRuleDefinitionValidationService
             ? SERVICE.DefaultRuleDefinitionValidationService
             : require('./defaultRuleDefinitionValidationService');
     },
 
+    /** Implements auditService as an overrideable service operation. */
     auditService: function () {
         return typeof SERVICE !== 'undefined' && SERVICE.DefaultRuleAuditService
             ? SERVICE.DefaultRuleAuditService
             : require('./defaultRuleAuditService');
     },
 
+    /** Implements assertCurrentSimulation as an overrideable service operation. */
     assertCurrentSimulation: async function (request, ruleSet) {
         let simulation = ruleSet.lastSimulation || {};
         let bandVersion = ruleSet.scoreBandSetCode
@@ -66,25 +76,30 @@ module.exports = {
         return bandVersion;
     },
 
+    /** Implements isCode as an overrideable service operation. */
     isCode: function (value) {
         return typeof value === 'string' && /^[A-Za-z0-9][A-Za-z0-9._-]{0,127}$/.test(value);
     },
 
+    /** Implements assertCode as an overrideable service operation. */
     assertCode: function (value) {
         if (!this.isCode(value)) throw new Error('Rule definition code is invalid');
         return value;
     },
 
+    /** Implements modelOf as an overrideable service operation. */
     modelOf: function (request) {
         return request && (request.model || request.body || request.ruleSet || request.bandSet) || {};
     },
 
+    /** Implements one as an overrideable service operation. */
     one: function (response) {
         let result = response && response.result;
         if (Array.isArray(result)) return result[0];
         return result;
     },
 
+    /** Implements findRuleSet as an overrideable service operation. */
     findRuleSet: async function (request, code) {
         let response = await this.ruleSetService().get(this.serviceRequest(request, {
             query: { code: this.assertCode(code) },
@@ -93,12 +108,14 @@ module.exports = {
         return this.one(response);
     },
 
+    /** Implements requireRuleSet as an overrideable service operation. */
     requireRuleSet: async function (request, code) {
         let row = await this.findRuleSet(request, code);
         if (!row) throw new Error('Rule set was not found');
         return row;
     },
 
+    /** Implements findBandSet as an overrideable service operation. */
     findBandSet: async function (request, code) {
         let response = await this.bandSetService().get(this.serviceRequest(request, {
             query: { code: this.assertCode(code) },
@@ -107,16 +124,19 @@ module.exports = {
         return this.one(response);
     },
 
+    /** Implements requireBandSet as an overrideable service operation. */
     requireBandSet: async function (request, code) {
         let row = await this.findBandSet(request, code);
         if (!row) throw new Error('Score band set was not found');
         return row;
     },
 
+    /** Implements checksum as an overrideable service operation. */
     checksum: function (payload) {
         return crypto.createHash('sha256').update(JSON.stringify(payload)).digest('hex');
     },
 
+    /** Implements publishedStatus as an overrideable service operation. */
     publishedStatus: function (effectiveFrom, effectiveTo, now) {
         now = now || new Date();
         if (effectiveTo && new Date(effectiveTo) <= now) return 'EXPIRED';
@@ -124,6 +144,7 @@ module.exports = {
         return 'ACTIVE';
     },
 
+    /** Implements createRuleSet as an overrideable service operation. */
     createRuleSet: async function (request) {
         let model = Object.assign({}, this.modelOf(request));
         this.assertCode(model.code);
@@ -154,6 +175,7 @@ module.exports = {
         return { code: 'RULE_SET_CREATED', data: response.result || response };
     },
 
+    /** Implements updateRuleSetDraft as an overrideable service operation. */
     updateRuleSetDraft: async function (request) {
         let current = await this.requireRuleSet(request, request.ruleSetCode);
         if (current.status !== 'DRAFT') throw new Error('Only draft rule sets can be updated');
@@ -184,6 +206,7 @@ module.exports = {
         return { code: 'RULE_SET_UPDATED', data: { code: current.code, draftRevision: patch.draftRevision, validation: validation } };
     },
 
+    /** Implements validateRuleSetDraft as an overrideable service operation. */
     validateRuleSetDraft: async function (request) {
         let current = await this.requireRuleSet(request, request.ruleSetCode);
         let validation = this.validationService().validateDefinition({
@@ -206,6 +229,7 @@ module.exports = {
         return { code: 'RULE_SET_VALID', data: validation };
     },
 
+    /** Implements currentBandVersion as an overrideable service operation. */
     currentBandVersion: async function (request, bandSetCode) {
         if (!bandSetCode) return null;
         let bandSet = await this.requireBandSet(request, bandSetCode);
@@ -221,6 +245,7 @@ module.exports = {
         return version;
     },
 
+    /** Implements publishRuleSetDraft as an overrideable service operation. */
     publishRuleSetDraft: async function (request) {
         let current = await this.requireRuleSet(request, request.ruleSetCode);
         if (current.status !== 'DRAFT') throw new Error('Only draft rule sets can be published');
@@ -282,6 +307,7 @@ module.exports = {
         return { code: 'RULE_SET_PUBLISHED', data: { code: current.code, version: version, status: status, checksum: immutable.checksum } };
     },
 
+    /** Implements prepareNextRuleSetDraft as an overrideable service operation. */
     prepareNextRuleSetDraft: async function (request) {
         let current = await this.requireRuleSet(request, request.ruleSetCode);
         if (current.status === 'DRAFT') return { code: 'RULE_SET_DRAFT_READY', data: current };
@@ -326,6 +352,7 @@ module.exports = {
         return { code: 'RULE_SET_DRAFT_READY', data: { code: current.code, draftRevision: draftRevision, preparedFromVersion: version.version } };
     },
 
+    /** Implements createBandSet as an overrideable service operation. */
     createBandSet: async function (request) {
         let model = Object.assign({}, this.modelOf(request));
         this.assertCode(model.code);
@@ -343,6 +370,7 @@ module.exports = {
         return { code: 'SCORE_BAND_SET_CREATED', data: response.result || response };
     },
 
+    /** Implements updateBandSetDraft as an overrideable service operation. */
     updateBandSetDraft: async function (request) {
         let current = await this.requireBandSet(request, request.bandSetCode);
         if (current.status !== 'DRAFT') throw new Error('Only draft score band sets can be updated');
@@ -360,6 +388,7 @@ module.exports = {
         return { code: 'SCORE_BAND_SET_UPDATED', data: { code: current.code, draftRevision: patch.draftRevision, validation: validation } };
     },
 
+    /** Implements publishBandSetDraft as an overrideable service operation. */
     publishBandSetDraft: async function (request) {
         let current = await this.requireBandSet(request, request.bandSetCode);
         if (current.status !== 'DRAFT') throw new Error('Only draft score band sets can be published');
@@ -408,6 +437,7 @@ module.exports = {
         return { code: 'SCORE_BAND_SET_PUBLISHED', data: { code: current.code, version: version, status: status, checksum: immutable.checksum } };
     },
 
+    /** Implements prepareNextBandSetDraft as an overrideable service operation. */
     prepareNextBandSetDraft: async function (request) {
         let current = await this.requireBandSet(request, request.bandSetCode);
         if (current.status === 'DRAFT') return { code: 'SCORE_BAND_SET_DRAFT_READY', data: current };

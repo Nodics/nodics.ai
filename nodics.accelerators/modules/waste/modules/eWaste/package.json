@@ -18,7 +18,6 @@
       "llm",
       "composition",
       "service",
-      "schema",
       "router",
       "controller",
       "utility"

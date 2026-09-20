@@ -13,10 +13,12 @@
 
 /** @module rulesDefinition/src/service/defaultRulePolicyResolutionService @description Resolves Platform→Domain→Enterprise→Campaign policy inheritance into one deterministic effective rule snapshot. @layer service @owner rulesDefinition */
 module.exports = {
+    /** Implements rank as an overrideable service operation. */
     rank: function (scopeType) {
         return { PLATFORM: 0, DOMAIN: 1, ENTERPRISE: 2, CAMPAIGN: 3 }[scopeType];
     },
 
+    /** Implements isEffective as an overrideable service operation. */
     isEffective: function (version, now) {
         now = now || new Date();
         if (!version || ['ACTIVE','SCHEDULED'].indexOf(version.status) < 0) return false;
@@ -25,6 +27,7 @@ module.exports = {
         return true;
     },
 
+    /** Implements scopeMatches as an overrideable service operation. */
     scopeMatches: function (version, scope) {
         if (!scope || !version) return false;
         if (version.scopeType === 'PLATFORM') return version.scopeCode === scope.platformCode || version.scopeCode === 'DEFAULT';
@@ -34,6 +37,7 @@ module.exports = {
         return false;
     },
 
+    /** Implements latestPerScope as an overrideable service operation. */
     latestPerScope: function (versions, scope, now) {
         let result = {};
         (versions || []).filter(version => this.isEffective(version, now) && this.scopeMatches(version, scope))
@@ -44,6 +48,7 @@ module.exports = {
         return ['PLATFORM','DOMAIN','ENTERPRISE','CAMPAIGN'].map(type => result[type]).filter(Boolean);
     },
 
+    /** Implements mergeOverrides as an overrideable service operation. */
     mergeOverrides: function (effective, child) {
         let inherits = child.inheritsFrom;
         if (!inherits) return Object.assign({}, child, { lineage: (effective.lineage || []).concat([child.code]) });
@@ -71,6 +76,7 @@ module.exports = {
         return merged;
     },
 
+    /** Implements materialize as an overrideable service operation. */
     materialize: function (versions, scope, now) {
         let chain = this.latestPerScope(versions, scope, now);
         if (!chain.length) throw new Error('No active rule policy applies to the requested scope');
@@ -84,6 +90,7 @@ module.exports = {
         return effective;
     },
 
+    /** Implements resolveEffective as an overrideable service operation. */
     resolveEffective: async function (request) {
         let response = await SERVICE.DefaultRuleSetVersionService.get({
             tenant: request.tenant,

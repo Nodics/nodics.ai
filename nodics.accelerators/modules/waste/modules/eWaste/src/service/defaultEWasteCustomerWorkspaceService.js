@@ -110,15 +110,17 @@ module.exports = {
     // Drafts are a collection of submissions, never a separate resource or persistence owner.
     if (view === "drafts") view = "submissions";
     const metadata = record.metadata || {}, descriptor = SERVICE.DefaultWasteItemDescriptorService.describe(record, catalogue), status = this.status(record[this.resource(view).status], view);
+    const settlement = metadata.rewardSettlement;
+    const confirmed = metadata.confirmedReward;
     const valuation = metadata.valuation;
-    const reward = valuation?.rewards?.find(value => value.rewardTypeCode === valuation.pointsRewardTypeCode);
+    const legacyReward = valuation?.rewards?.find(value => value.rewardTypeCode === valuation.pointsRewardTypeCode);
     return {
       code: record.code, resource: view, revision: record.revision, descriptor, status,
       photo: metadata.photo ? { code: metadata.photo.code || null, url: metadata.photo.url || null } : null,
       submittedAt: metadata.submittedAt || null, reviewedAt: metadata.reviewedAt || null, updatedAt: record.updated || null,
       actions: this.actions(record, view),
       nextStep: this.settings().nextSteps[record[this.resource(view).status]] || this.settings().nextSteps.DEFAULT,
-      ownership: view === "assets" ? { isCurrentOwner: true, originalReward: reward?.amount ?? metadata.openingReward ?? null, rewardTypeCode: valuation?.pointsRewardTypeCode || null, illustrativeCarbonUnits: metadata.illustrativeCarbonUnits ?? null, askingPrice: metadata.listingRewardPrice ?? metadata.askingPrice ?? null, settlementStatus: metadata.settlementStatus || null } : null,
+      ownership: view === "assets" ? { isCurrentOwner: true, originalReward: settlement?.rewardAmount ?? confirmed?.rewardAmount ?? legacyReward?.amount ?? metadata.openingReward ?? null, rewardTypeCode: settlement?.rewardTypeCode || confirmed?.rewardTypeCode || valuation?.pointsRewardTypeCode || null, illustrativeCarbonUnits: metadata.illustrativeCarbonUnits ?? null, askingPrice: metadata.listingRewardPrice ?? metadata.askingPrice ?? null, settlementStatus: metadata.settlementStatus || null } : null,
     };
   },
   /** Returns a stable page and status counts for the same owner and active non-status filters. Taxonomy options come from the canonical active catalogue. */

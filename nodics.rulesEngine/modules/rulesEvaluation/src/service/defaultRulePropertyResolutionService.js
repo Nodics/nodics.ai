@@ -18,29 +18,34 @@
  * @owner rulesEvaluation
  */
 module.exports = {
+    /** Implements registry as an overrideable service operation. */
     registry: function () {
         return typeof SERVICE !== 'undefined' && SERVICE.DefaultRulePropertyCatalogueRegistryService
             ? SERVICE.DefaultRulePropertyCatalogueRegistryService
             : require('../../../rulesCore/src/service/defaultRulePropertyCatalogueRegistryService');
     },
 
+    /** Implements quality as an overrideable service operation. */
     quality: function () {
         return typeof SERVICE !== 'undefined' && SERVICE.DefaultRuleQualityService
             ? SERVICE.DefaultRuleQualityService
             : require('./defaultRuleQualityService');
     },
 
+    /** Implements available as an overrideable service operation. */
     available: function (resolution) {
         return Boolean(resolution && resolution.available === true &&
             resolution.value !== undefined && resolution.value !== null && resolution.value !== '');
     },
 
+    /** Implements acceptable as an overrideable service operation. */
     acceptable: function (resolution, condition) {
         return this.available(resolution) &&
             this.quality().meets(resolution.quality, condition.minimumInputQuality) &&
             this.quality().confidenceMeets(resolution.confidence, condition.minimumConfidence);
     },
 
+    /** Implements primary as an overrideable service operation. */
     primary: function (providerCode, condition, evaluationContext) {
         return this.registry().resolveProperty(providerCode, {
             propertyCode: condition.propertyCode,
@@ -50,6 +55,7 @@ module.exports = {
         }) || { available: false, quality: 'UNAVAILABLE', source: 'UNAVAILABLE' };
     },
 
+    /** Implements fallback as an overrideable service operation. */
     fallback: function (providerCode, condition, evaluationContext, current) {
         return this.registry().resolveFallback(providerCode, {
             propertyCode: condition.propertyCode,
@@ -62,6 +68,7 @@ module.exports = {
         }) || { available: false, quality: 'UNAVAILABLE', source: 'UNAVAILABLE' };
     },
 
+    /** Implements resolve as an overrideable service operation. */
     resolve: function (providerCode, condition, evaluationContext) {
         let resolution = this.primary(providerCode, condition, evaluationContext);
         let acceptable = this.acceptable(resolution, condition);

@@ -18,6 +18,7 @@
  * @owner rulesEvaluation
  */
 module.exports = {
+    /** Implements contains as an overrideable service operation. */
     contains: function (band, score) {
         let minimum = Number(band.minScore);
         let maximum = band.maxScore === undefined || band.maxScore === null || band.maxScore === ''
@@ -28,6 +29,7 @@ module.exports = {
         return score >= minimum && (maximum === undefined || score <= maximum);
     },
 
+    /** Implements resolve as an overrideable service operation. */
     resolve: function (request) {
         request = request || {};
         let score = Number(request.score);

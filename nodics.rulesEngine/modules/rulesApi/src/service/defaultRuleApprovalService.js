@@ -15,24 +15,29 @@ const crypto = require('node:crypto');
 
 /** @module rulesApi/src/service/defaultRuleApprovalService @description Bridges Rules policy drafts to Process-owned maker-checker tasks while Rules retains policy lifecycle ownership. @layer service @owner rulesApi */
 module.exports = {
+    /** Implements settings as an overrideable service operation. */
     settings: function () {
         return ((CONFIG.get('rulesEngine') || {}).approval) || {};
     },
 
+    /** Implements instanceCode as an overrideable service operation. */
     instanceCode: function (ruleSetCode, draftRevision) {
         return 'rulesPolicyApproval-' + crypto.createHash('sha256')
             .update(ruleSetCode + ':' + String(draftRevision)).digest('hex').slice(0, 24);
     },
 
+    /** Implements processTarget as an overrideable service operation. */
     processTarget: function () {
         return this.settings().processTarget || {};
     },
 
+    /** Implements actor as an overrideable service operation. */
     actor: function (request) {
         let auth = request && request.authData || {};
         return auth.loginId || auth.code || auth.userId || auth.serviceId;
     },
 
+    /** Implements startProcess as an overrideable service operation. */
     startProcess: function (request, runtimeOperation) {
         if (typeof SERVICE !== 'undefined' &&
             SERVICE.DefaultProcessRuntimeLifecycleService &&
@@ -62,6 +67,7 @@ module.exports = {
         });
     },
 
+    /** Implements submit as an overrideable service operation. */
     submit: async function (request) {
         let lifecycle = SERVICE.DefaultRuleDefinitionLifecycleService;
         let ruleSet = await lifecycle.requireRuleSet(request, request.ruleSetCode);
@@ -126,6 +132,7 @@ module.exports = {
         return { code: 'RULE_APPROVAL_PENDING', data: approval };
     },
 
+    /** Implements applyProcessDecision as an overrideable service operation. */
     applyProcessDecision: async function (request, execution) {
         let instance = execution && execution.instance || {};
         let context = instance.context || {};

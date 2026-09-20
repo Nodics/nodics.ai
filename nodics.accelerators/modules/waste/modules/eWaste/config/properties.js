@@ -259,6 +259,8 @@ module.exports = {
       policyType: "REWARD_SCORING",
       defaultPlatformScopeCode: "DEFAULT",
       domainScopeCode: "ELECTRONICS",
+      loyaltyProgramCode: "default",
+      rewardScale: 2,
     },
     preparation: {
       maximumPhotoBytes: 5242880,

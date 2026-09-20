@@ -13,6 +13,7 @@
 
 /** @module rulesCore/src/service/defaultRuleOperatorService @description Evaluates the generic type-safe operator catalogue used by Rules Engine conditions. @layer service @owner rulesCore */
 module.exports = {
+    /** Implements definitions as an overrideable service operation. */
     definitions: function () {
         return Object.freeze({
             EQUALS: { dataTypes: ['STRING','NUMBER','BOOLEAN','DATE'] },
@@ -35,29 +36,35 @@ module.exports = {
         });
     },
 
+    /** Implements operators as an overrideable service operation. */
     operators: function () {
         return Object.freeze(Object.keys(this.definitions()));
     },
 
+    /** Implements supports as an overrideable service operation. */
     supports: function (operator, dataType) {
         let definition = this.definitions()[operator];
         return Boolean(definition && definition.dataTypes.includes(String(dataType || '').toUpperCase()));
     },
 
+    /** Implements isAvailable as an overrideable service operation. */
     isAvailable: function (value) {
         return value !== undefined && value !== null && value !== '';
     },
 
+    /** Implements number as an overrideable service operation. */
     number: function (value) {
         let parsed = typeof value === 'number' ? value : Number(value);
         if (!Number.isFinite(parsed)) throw new Error('Numeric rule operator requires a finite number');
         return parsed;
     },
 
+    /** Implements list as an overrideable service operation. */
     list: function (value) {
         return Array.isArray(value) ? value : [value];
     },
 
+    /** Implements evaluate as an overrideable service operation. */
     evaluate: function (operator, actual, expected, expectedTo) {
         if (!this.operators().includes(operator)) throw new Error('Unsupported rule operator: ' + operator);
         if (operator === 'IS_AVAILABLE') return this.isAvailable(actual);

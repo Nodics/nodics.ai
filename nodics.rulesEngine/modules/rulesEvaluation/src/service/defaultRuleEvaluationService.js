@@ -15,17 +15,20 @@ const crypto = require('node:crypto');
 
 /** @module rulesEvaluation/src/service/defaultRuleEvaluationService @description Evaluates a complete immutable rule-set snapshot into deterministic generic outcomes and explainable score-band evidence. @layer service @owner rulesEvaluation */
 module.exports = {
+    /** Implements groupService as an overrideable service operation. */
     groupService: function () {
         return typeof SERVICE !== 'undefined' && SERVICE.DefaultRuleGroupEvaluationService
             ? SERVICE.DefaultRuleGroupEvaluationService
             : require('./defaultRuleGroupEvaluationService');
     },
 
+    /** Implements number as an overrideable service operation. */
     number: function (value, fallback) {
         let parsed = Number(value);
         return Number.isFinite(parsed) ? parsed : fallback;
     },
 
+    /** Implements scoreFromOutcome as an overrideable service operation. */
     scoreFromOutcome: function (outcome) {
         if (!outcome || outcome.outcomeType !== 'ADD_SCORE') return 0;
         let score = Number(outcome.parameters && outcome.parameters.score);
@@ -33,6 +36,7 @@ module.exports = {
         return score;
     },
 
+    /** Implements flattenGroups as an overrideable service operation. */
     flattenGroups: function (groups) {
         let result = [];
         let visit = function (group) {
@@ -43,6 +47,7 @@ module.exports = {
         return result;
     },
 
+    /** Implements clamp as an overrideable service operation. */
     clamp: function (score, minimum, maximum) {
         let result = score;
         if (Number.isFinite(Number(minimum))) result = Math.max(result, Number(minimum));
@@ -50,18 +55,21 @@ module.exports = {
         return result;
     },
 
+    /** Implements bandService as an overrideable service operation. */
     bandService: function () {
         return typeof SERVICE !== 'undefined' && SERVICE.DefaultScoreBandResolutionService
             ? SERVICE.DefaultScoreBandResolutionService
             : require('./defaultScoreBandResolutionService');
     },
 
+    /** Implements outcomeRegistry as an overrideable service operation. */
     outcomeRegistry: function () {
         return typeof SERVICE !== 'undefined' && SERVICE.DefaultRuleOutcomeRegistryService
             ? SERVICE.DefaultRuleOutcomeRegistryService
             : require('../../../rulesCore/src/service/defaultRuleOutcomeRegistryService');
     },
 
+    /** Implements evaluate as an overrideable service operation. */
     evaluate: function (request) {
         if (!request || !request.ruleSet || !request.propertyProviderCode) {
             throw new Error('Rule-set snapshot and property provider are required');

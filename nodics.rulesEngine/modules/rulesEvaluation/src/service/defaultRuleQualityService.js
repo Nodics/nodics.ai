@@ -13,6 +13,7 @@
 
 /** @module rulesEvaluation/src/service/defaultRuleQualityService @description Compares normalized rule-input quality without understanding consumer-domain provenance semantics. @layer service @owner rulesEvaluation */
 module.exports = {
+    /** Implements ranks as an overrideable service operation. */
     ranks: function () {
         return Object.freeze({
             UNAVAILABLE: 0,
@@ -25,6 +26,7 @@ module.exports = {
         });
     },
 
+    /** Implements meets as an overrideable service operation. */
     meets: function (actual, minimum) {
         if (!minimum) return true;
         let ranks = this.ranks();
@@ -33,6 +35,7 @@ module.exports = {
             ranks[actual] >= ranks[minimum];
     },
 
+    /** Implements normalizeConfidence as an overrideable service operation. */
     normalizeConfidence: function (value) {
         if (value === undefined || value === null || value === '') return undefined;
         let normalized = Number(value);
@@ -41,6 +44,7 @@ module.exports = {
         return normalized >= 0 && normalized <= 1 ? normalized : undefined;
     },
 
+    /** Implements confidenceMeets as an overrideable service operation. */
     confidenceMeets: function (actual, minimum) {
         if (minimum === undefined || minimum === null || minimum === '') return true;
         let required = this.normalizeConfidence(minimum);

@@ -11,6 +11,8 @@
 
 /** @module wasteReward/nodics @description Declares the reusable Waste reward-assessment capability boundary. @layer module @owner wasteReward @override Accelerators contribute reward policy/context while Waste owns reusable assessment persistence. */
 module.exports = {
+    /** Implements init as an overrideable service operation. */
     init: function (options) { return Promise.resolve(true); },
+    /** Implements postInit as an overrideable service operation. */
     postInit: function (options) { return Promise.resolve(true); }
 };
