@@ -60,6 +60,7 @@ let groupTree = [
         code: "runtimeConfigOperatorUserGroup",
         permissions: [
           "runtime.config.request.activate",
+          "runtime.config.update",
           "runtime.config.rollback",
           "runtime.config.cleanup.preview",
         ],
@@ -68,6 +69,7 @@ let groupTree = [
             code: "runtimeConfigRequesterUserGroup",
             permissions: [
               "runtime.config.preview",
+              "runtime.config.validate",
               "runtime.config.request.create",
             ],
             parentGroups: [
@@ -102,6 +104,8 @@ let permissions = global.UTILS.getUserGroupPermissions(groupTree);
 assert(permissions.includes("runtime.config.cleanup.execute"));
 assert(permissions.includes("runtime.config.cleanup.preview"));
 assert(permissions.includes("runtime.config.preview"));
+assert(permissions.includes("runtime.config.validate"));
+assert(permissions.includes("runtime.config.update"));
 assert(permissions.includes("runtime.config.request.view"));
 assert(permissions.includes("system.contract.openapi.view"));
 assert(permissions.includes("backoffice.registry.view"));
@@ -443,6 +447,20 @@ assert(
 const runtimeAdminMigrationPermissions =
   authProperties.identityGovernance.migration.groupTargets
     .runtimeConfigAdminUserGroup.permissions;
+const runtimeConfigRequesterMigrationPermissions =
+  authProperties.identityGovernance.migration.groupTargets
+    .runtimeConfigRequesterUserGroup.permissions;
+const runtimeConfigOperatorMigrationPermissions =
+  authProperties.identityGovernance.migration.groupTargets
+    .runtimeConfigOperatorUserGroup.permissions;
+assert(
+  runtimeConfigRequesterMigrationPermissions.includes("runtime.config.validate"),
+  "Runtime configuration requester migration target must include runtime.config.validate",
+);
+assert(
+  runtimeConfigOperatorMigrationPermissions.includes("runtime.config.update"),
+  "Runtime configuration operator migration target must include runtime.config.update",
+);
 [
   "backoffice.application.initialization.view",
   "axis.view",

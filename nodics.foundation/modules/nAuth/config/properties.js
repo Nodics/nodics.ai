@@ -148,10 +148,14 @@ module.exports = {
       "identity.credential.rotate",
       "auth.internal.token.read",
       "auth.internal.token.read.anyTenant",
+      "runtime.config.schema.view",
+      "runtime.config.effective.view",
       "runtime.config.history.view",
       "runtime.config.summary.view",
       "runtime.config.request.view",
       "runtime.config.preview",
+      "runtime.config.validate",
+      "runtime.config.update",
       "runtime.config.request.create",
       "runtime.config.request.approve",
       "runtime.config.request.reject",
@@ -838,6 +842,8 @@ module.exports = {
         runtimeConfigViewerUserGroup: {
           parentGroups: ["employeeUserGroup"],
           permissions: [
+            "runtime.config.schema.view",
+            "runtime.config.effective.view",
             "runtime.config.history.view",
             "runtime.config.summary.view",
             "runtime.config.request.view",
@@ -855,6 +861,7 @@ module.exports = {
           parentGroups: ["runtimeConfigViewerUserGroup"],
           permissions: [
             "runtime.config.preview",
+            "runtime.config.validate",
             "runtime.config.request.create",
           ],
         },
@@ -869,6 +876,7 @@ module.exports = {
           parentGroups: ["runtimeConfigRequesterUserGroup"],
           permissions: [
             "runtime.config.request.activate",
+            "runtime.config.update",
             "runtime.config.rollback",
             "runtime.config.cleanup.preview",
           ],

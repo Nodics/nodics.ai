@@ -38,6 +38,50 @@
             },
             "sourceRoot": "init-v001"
         },
+        "init-v002": {
+            "kind": "DATA_RELEASE",
+            "dataType": "init",
+            "version": "0.0.1",
+            "description": "Profile runtime configuration authorization update",
+            "owningDomain": "profile",
+            "lifecycle": "REFERENCE",
+            "destinationRole": "PLATFORM",
+            "environmentScope": [
+                "ALL"
+            ],
+            "sensitivity": "RESTRICTED",
+            "versioningPolicy": "NONE",
+            "publicationPolicy": "NONE",
+            "initialPublicationPolicy": "NONE",
+            "removalPolicy": "RETAIN",
+            "files": {
+                "init-v002/headers/groups/runtimeConfigurationUserGroupsHeader.js": "a06709a71569a9fff30065cf1c6d726fe1c9f5d48047726722b74ab8a6311d49",
+                "init-v002/records/groups/runtimeConfigurationUserGroupsData.js": "66b5488a4e979c2018abcabee39f6c2820a2a909b684612854d53add8ab44945"
+            },
+            "sourceRoot": "init-v002"
+        },
+        "init-v003": {
+            "kind": "DATA_RELEASE",
+            "dataType": "init",
+            "version": "0.0.2",
+            "description": "Profile runtime configuration update authorization",
+            "owningDomain": "profile",
+            "lifecycle": "REFERENCE",
+            "destinationRole": "PLATFORM",
+            "environmentScope": [
+                "ALL"
+            ],
+            "sensitivity": "RESTRICTED",
+            "versioningPolicy": "NONE",
+            "publicationPolicy": "NONE",
+            "initialPublicationPolicy": "NONE",
+            "removalPolicy": "RETAIN",
+            "files": {
+                "init-v003/headers/groups/runtimeConfigurationUpdateUserGroupsHeader.js": "da47bdda51160a229675f47bbb7b6f737f5fc160d9de6a648a53a5a82ba9fe47",
+                "init-v003/records/groups/runtimeConfigurationUpdateUserGroupsData.js": "5e4797233840406f41fcfc4197f8b994b3d5f61f0be3035caec52495d3ba3374"
+            },
+            "sourceRoot": "init-v003"
+        },
         "sample-v001": {
             "kind": "DATA_RELEASE",
             "dataType": "sample",
