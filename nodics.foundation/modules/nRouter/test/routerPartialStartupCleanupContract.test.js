@@ -56,3 +56,43 @@ test('one failed bind closes a sibling whose listening event arrives later and o
         assert.equal(created[0].forced, true);
     } finally { http.createServer = createServer; }
 });
+
+test('co-located module endpoint aliases share the consolidated default listener', async () => {
+    const created = [];
+    const createServer = http.createServer;
+    let registered = false;
+    class Listener extends EventEmitter {
+        constructor() { super(); this.listening = false; }
+        listen() { setImmediate(() => { this.listening = true; this.emit('listening'); }); }
+        close(callback) { this.listening = false; callback(); }
+    }
+    const defaultApp = Object.assign(() => {}, { uses: [], use(path, router) { this.uses.push({ path, router }); } });
+    const moduleApp = Object.assign(() => {}, { uses: [], use(path, router) { this.uses.push({ path, router }); } });
+    global.NODICS = { getModules: () => ({
+        default: { app: defaultApp, moduleRouter: { code: 'default' } },
+        profile: { app: moduleApp, moduleRouter: { code: 'profile' } },
+        backoffice: { app: moduleApp, moduleRouter: { code: 'backoffice' } }
+    }) };
+    global.UTILS = { isRouterEnabled: () => true };
+    global.CONFIG = { get: () => ({ httpDrainTimeoutMs: 5 }) };
+    global.SERVICE = { DefaultRuntimeLifecycleService: { registerContributor: () => { registered = true; } } };
+    const endpoint = { getHttpPort: () => 4300, getHttpsPort: () => undefined };
+    const configs = {};
+    const descriptor = name => configs[name] ||= { running: false,
+        getOptions: () => ({}), getEndpoint: () => endpoint,
+        isServerRunning() { return this.running; }, setIsServerRunning(value) { this.running = value; } };
+    const service = Object.assign({}, source, { runtimeServers: [], lifecycleContributorRegistered: false,
+        LOG: { info() {}, error() {} }, getModulesPool: () => ({ isAvailableModuleConfig: () => true }),
+        getModuleServerConfig: descriptor });
+    http.createServer = () => { const server = new Listener(); created.push(server); return server; };
+    try {
+        await service.startServers();
+        assert.equal(registered, true);
+        assert.equal(created.length, 1);
+        assert.deepEqual(defaultApp.uses.map(item => item.router.code), ['default', 'profile', 'backoffice']);
+        assert.equal(moduleApp.uses.length, 0);
+    } finally {
+        await service.closeRuntimeServers(true);
+        http.createServer = createServer;
+    }
+});

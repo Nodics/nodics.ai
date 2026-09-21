@@ -667,6 +667,11 @@ Implementation must follow these platform coding principles:
    configuration or governed runtime configuration. Stable protocol constants,
    schema contracts, and security invariants remain code when they are not
    legitimate variation points.
+   Configuration keys remain environment-neutral; layers and runtime records
+   change values for Local, QA, PROD and customer deployments. Do not introduce
+   `.env` files as authored project configuration, and do not encode deployment
+   classes such as `LOCAL` in property names. Credential-bearing values use
+   logical credential references and the owning runtime configuration authority.
 5. Keep layer responsibilities separate: routers declare transport and access
    metadata; controllers map requests; facades orchestrate policy boundaries;
    services own business behavior and provider-neutral abstractions; providers

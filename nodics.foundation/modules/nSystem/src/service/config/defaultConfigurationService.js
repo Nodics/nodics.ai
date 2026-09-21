@@ -328,6 +328,56 @@ module.exports = {
     },
 
     /**
+     * Lists module-owned runtime configuration schemas declared through nConfig.
+     *
+     * @param {Object} request Nodics request context.
+     * @returns {Promise<Object>} Runtime configuration schema response.
+     */
+    listRuntimeConfigurationSchemas: function (request) {
+        return this.delegateRuntimeConfigurationSchema(request, 'listSchemas');
+    },
+
+    /**
+     * Returns one module-owned runtime configuration schema.
+     *
+     * @param {Object} request Nodics request context.
+     * @returns {Promise<Object>} Runtime configuration schema response.
+     */
+    getRuntimeConfigurationSchema: function (request) {
+        return this.delegateRuntimeConfigurationSchema(request, 'getSchema');
+    },
+
+    /**
+     * Returns masked effective runtime configuration values for one schema.
+     *
+     * @param {Object} request Nodics request context.
+     * @returns {Promise<Object>} Runtime configuration effective value response.
+     */
+    getRuntimeConfigurationEffectiveValues: function (request) {
+        return this.delegateRuntimeConfigurationSchema(request, 'getEffectiveConfiguration');
+    },
+
+    /**
+     * Validates a runtime configuration update against its module-owned schema.
+     *
+     * @param {Object} request Nodics request context.
+     * @returns {Promise<Object>} Runtime configuration validation response.
+     */
+    validateRuntimeConfigurationUpdate: function (request) {
+        return this.delegateRuntimeConfigurationSchema(request, 'validateUpdate');
+    },
+
+    /**
+     * Saves a schema-owned runtime configuration update through the dedicated secret-safe store.
+     *
+     * @param {Object} request Nodics request context.
+     * @returns {Promise<Object>} Runtime configuration save response.
+     */
+    saveRuntimeConfigurationUpdate: function (request) {
+        return this.delegateRuntimeConfigurationSchema(request, 'saveUpdate');
+    },
+
+    /**
      * Returns runtime configuration activation requests.
      *
      * @param {Object} request Nodics request context.
@@ -394,6 +444,32 @@ module.exports = {
     },
 
     /**
+     * Delegates schema/effective-value operations to the runtime configuration schema service.
+     *
+     * @param {Object} request Nodics request context.
+     * @param {string} operation Runtime configuration schema service operation.
+     * @returns {Promise<Object>} Operation response.
+     */
+    delegateRuntimeConfigurationSchema: function (request, operation) {
+        return new Promise((resolve, reject) => {
+            try {
+                if (!SERVICE.DefaultRuntimeConfigurationSchemaService ||
+                    typeof SERVICE.DefaultRuntimeConfigurationSchemaService[operation] !== 'function') {
+                    reject(new CLASSES.NodicsError('ERR_SYS_00001', 'Runtime configuration schema service is not available'));
+                    return;
+                }
+                SERVICE.DefaultRuntimeConfigurationSchemaService[operation](request).then(success => {
+                    resolve(success);
+                }).catch(error => {
+                    reject(error);
+                });
+            } catch (error) {
+                reject(new CLASSES.NodicsError(error, 'While processing runtime configuration schema request', 'ERR_SYS_00000'));
+            }
+        });
+    },
+
+    /**
      * Delegates runtime governance cleanup operations to the dynamo cleanup service.
      *
      * @param {Object} request Nodics request context.
@@ -455,6 +531,27 @@ module.exports = {
                 }).catch(error => {
                     reject(error);
                 });
+            } catch (error) {
+                reject(new CLASSES.NodicsError(error));
+            }
+        });
+    },
+
+    /**
+     * Reloads a runtime configuration value record after a metadata-only cluster event.
+     *
+     * @param {Object} request Event request.
+     * @returns {Promise<string>} Reload message.
+     */
+    handleRuntimeConfigurationChangedEvent: function (request) {
+        return new Promise((resolve, reject) => {
+            try {
+                if (!SERVICE.DefaultRuntimeConfigurationSchemaService ||
+                    typeof SERVICE.DefaultRuntimeConfigurationSchemaService.reloadRuntimeConfigurationRecord !== 'function') {
+                    resolve('Runtime configuration schema service is not available; reload skipped');
+                    return;
+                }
+                SERVICE.DefaultRuntimeConfigurationSchemaService.reloadRuntimeConfigurationRecord(request).then(resolve).catch(reject);
             } catch (error) {
                 reject(new CLASSES.NodicsError(error));
             }

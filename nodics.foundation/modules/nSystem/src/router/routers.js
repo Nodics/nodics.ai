@@ -288,6 +288,92 @@ module.exports = {
                     url: 'http://host:port/nodics/system/config/runtime/request'
                 }
             },
+            listRuntimeConfigurationSchemas: {
+                secured: true,
+                accessGroups: ['userGroup'],
+                permission: 'runtime.config.schema.view',
+                apiExposure: 'runtimeConfiguration',
+                key: '/config/runtime/schema',
+                method: 'GET',
+                controller: 'DefaultConfigurationController',
+                operation: 'listRuntimeConfigurationSchemas',
+                help: {
+                    requestType: 'secured',
+                    message: 'Authorization: Bearer <token> header is preferred; legacy authToken header is deprecated',
+                    method: 'GET',
+                    url: 'http://host:port/nodics/system/config/runtime/schema'
+                }
+            },
+            getRuntimeConfigurationSchema: {
+                secured: true,
+                accessGroups: ['userGroup'],
+                permission: 'runtime.config.schema.view',
+                apiExposure: 'runtimeConfiguration',
+                key: '/config/runtime/schema/:schemaCode',
+                method: 'GET',
+                controller: 'DefaultConfigurationController',
+                operation: 'getRuntimeConfigurationSchema',
+                help: {
+                    requestType: 'secured',
+                    message: 'Authorization: Bearer <token> header is preferred; legacy authToken header is deprecated',
+                    method: 'GET',
+                    url: 'http://host:port/nodics/system/config/runtime/schema/{schemaCode}'
+                }
+            },
+            getRuntimeConfigurationEffectiveValues: {
+                secured: true,
+                accessGroups: ['userGroup'],
+                permission: 'runtime.config.effective.view',
+                apiExposure: 'runtimeConfiguration',
+                key: '/config/runtime/schema/:schemaCode/effective',
+                method: 'GET',
+                controller: 'DefaultConfigurationController',
+                operation: 'getRuntimeConfigurationEffectiveValues',
+                help: {
+                    requestType: 'secured',
+                    message: 'Authorization: Bearer <token> header is preferred; legacy authToken header is deprecated',
+                    method: 'GET',
+                    url: 'http://host:port/nodics/system/config/runtime/schema/{schemaCode}/effective'
+                }
+            },
+            validateRuntimeConfigurationUpdatePost: {
+                secured: true,
+                accessGroups: ['userGroup'],
+                permission: 'runtime.config.validate',
+                apiExposure: 'runtimeConfiguration',
+                key: '/config/runtime/schema/:schemaCode/validate',
+                method: 'POST',
+                controller: 'DefaultConfigurationController',
+                operation: 'validateRuntimeConfigurationUpdate',
+                help: {
+                    requestType: 'secured',
+                    message: 'Authorization: Bearer <token> header is preferred; legacy authToken header is deprecated',
+                    method: 'POST',
+                    url: 'http://host:port/nodics/system/config/runtime/schema/{schemaCode}/validate',
+                    body: {
+                        values: 'Field-code keyed update payload; sensitive fields must not be submitted as plain source values'
+                    }
+                }
+            },
+            saveRuntimeConfigurationUpdatePost: {
+                secured: true,
+                accessGroups: ['userGroup'],
+                permission: 'runtime.config.update',
+                apiExposure: 'runtimeConfiguration',
+                key: '/config/runtime/schema/:schemaCode',
+                method: 'POST',
+                controller: 'DefaultConfigurationController',
+                operation: 'saveRuntimeConfigurationUpdate',
+                help: {
+                    requestType: 'secured',
+                    message: 'Authorization: Bearer <token> header is preferred; legacy authToken header is deprecated',
+                    method: 'POST',
+                    url: 'http://host:port/nodics/system/config/runtime/schema/{schemaCode}',
+                    body: {
+                        values: 'Field-code keyed update payload; sensitive values are encrypted by the dedicated runtime configuration store and never enter generic property activation audit'
+                    }
+                }
+            },
             getRuntimeConfigurationActivationRequests: {
                 secured: true,
                 accessGroups: ['userGroup'],

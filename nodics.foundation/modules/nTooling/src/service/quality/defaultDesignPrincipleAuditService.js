@@ -488,8 +488,7 @@ module.exports = exportedService = {
                 if (name === 'frontends' || name === 'tooling.topology.groups.frontends') failures.push(file + ': frontend lifecycle belongs to frontend applications, not backend properties');
                 if (key === '$config' && value.type === 'Literal' && value.value === 'profile') failures.push(file + ': retired profile binding; use existing layered properties');
                 if (['configurationValues.remoteEndpoints', 'configurationValues.runtimeAuthentication'].includes(name)) failures.push(file + ': duplicated configuration authority ' + name);
-                const customerAdminOverride = options.customerProject === true && name === 'bootstrapIdentity.adminPassword';
-                if (!customerAdminOverride && /^(?:authSecurity\.(?:jwt\.secret|apiKey\.pepper)|bootstrapIdentity\.(?:adminPassword|servicePassword|serviceApiKey)|defaultAuthDetail\.apiKey)(?:\.fallback)?$/.test(name) && value.type === 'Literal' && typeof value.value === 'string' && value.value.length) failures.push(file + ': authentication secret must use deployment input at ' + name);
+                if (/^(?:authSecurity\.(?:jwt\.secret|apiKey\.pepper)|bootstrapIdentity\.(?:adminPassword|servicePassword|serviceApiKey)|defaultAuthDetail\.apiKey)(?:\.fallback)?$/.test(name) && value.type === 'Literal' && typeof value.value === 'string' && value.value.length) failures.push(file + ': authentication secret must use deployment input at ' + name);
                 inspectObject(value, current, file);
                 if (value.type === 'ArrayExpression') value.elements.forEach(item => inspectObject(item, current, file));
             }

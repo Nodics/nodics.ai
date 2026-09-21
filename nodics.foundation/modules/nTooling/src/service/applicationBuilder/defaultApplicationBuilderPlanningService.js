@@ -267,7 +267,6 @@ module.exports = {
       });
     };
     add("CREATE_FILE", "EVIDENCE", "package.json", "GENERATED", "ABSENT");
-    add("CREATE_FILE", "EVIDENCE", ".env.example", "GENERATED", "ABSENT");
     add("CREATE_FILE", "EVIDENCE", ".gitignore", "GENERATED", "ABSENT");
     add("CREATE_FILE", "EVIDENCE", "README.md", "GENERATED", "ABSENT");
     add(

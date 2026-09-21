@@ -61,7 +61,7 @@ test('backend properties reject frontend launch catalogues while accepting expli
 });
 
 
-test('only explicit customer validation permits a direct administrator bootstrap value', t => {
+test('customer validation rejects direct administrator bootstrap values', t => {
   const root = fs.mkdtempSync(path.join(os.tmpdir(), 'nodics-customer-bootstrap-'));
   t.after(() => fs.rmSync(root, {recursive:true,force:true}));
   fs.mkdirSync(path.join(root, 'config'));
@@ -73,7 +73,7 @@ test('only explicit customer validation permits a direct administrator bootstrap
   audit.auditConfigurationSources(framework, root);
   audit.auditConfigurationSources(customer, root, {customerProject:true});
   assert.equal(framework.length, 1);
-  assert.deepEqual(customer, []);
+  assert.equal(customer.length, 1);
   write({bootstrapIdentity:{adminPassword:{$config:'env',name:'ADMIN_PASSWORD',fallback:secret},servicePassword:secret,serviceApiKey:secret},authSecurity:{jwt:{secret},apiKey:{pepper:secret}},defaultAuthDetail:{apiKey:secret}});
   const rejected = [];
   audit.auditConfigurationSources(rejected, root, {customerProject:true});

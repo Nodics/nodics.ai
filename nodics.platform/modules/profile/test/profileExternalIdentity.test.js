@@ -29,10 +29,10 @@ function request(login = 'a', subject = 42) {
     return { entCode: 'enterprise-a', applicationCode: 'app-a', proof: proof(subject), authData: { loginId: login, principalType: 'customer', authVersion: 1, entCode: 'enterprise-a', tenant: 'tenant-a', tokenType: 'access' } };
 }
 beforeEach(() => {
-    process.env.NODICS_TEST_EXTERNAL_SECRET = token;
+    delete process.env.NODICS_TEST_EXTERNAL_SECRET;
     global.CLASSES = { NodicsError: class extends Error { constructor(code,message) { super(message || code); this.code=code; } } };
-    policy = { enabled: true, maximumAssertionAgeSeconds: 300, clockSkewSeconds: 30, maximumAssertionCharacters: 16384, providers: { TELEGRAM: { service: 'DefaultTelegramIdentityProviderService' } }, applications: { 'app-a': { enabled: true, provider: 'TELEGRAM', enterpriseCode: 'enterprise-a', secretEnvironmentVariable: 'NODICS_TEST_EXTERNAL_SECRET' } } };
-    global.CONFIG = { get: key => key === 'profileExternalIdentity' ? policy : undefined };
+    policy = { enabled: true, maximumAssertionAgeSeconds: 300, clockSkewSeconds: 30, maximumAssertionCharacters: 16384, providers: { TELEGRAM: { service: 'DefaultTelegramIdentityProviderService' } }, applications: { 'app-a': { enabled: true, provider: 'TELEGRAM', enterpriseCode: 'enterprise-a', credentialReference: 'telegram.bot.local' } } };
+    global.CONFIG = { get: key => key === 'profileExternalIdentity' ? policy : key === 'runtimeConfiguration' ? { credentials: { 'telegram.bot.local': { value: token } } } : undefined };
     records = new Map(); locked = false; issued = [];
     customers = Object.fromEntries(['a','b'].map(loginId => [loginId,{ loginId, _id: loginId, active: true, principalType: 'customer', authVersion: 1, password: { active: true } }]));
     global.SERVICE = {
@@ -106,6 +106,16 @@ test('configured provider replacement preserves the owner link/session pipeline'
     const r={...request(),proof:'valid-provider-proof'};await identity.link(r);assert.equal((await identity.session(r)).loginId,'a');
     assert.equal([...records.values()][0].provider,'OTHER');
 });
+test('missing Telegram credential reports unconfigured without process environment fallback', () => {
+    process.env.NODICS_TEST_EXTERNAL_SECRET = token;
+    CONFIG.get = key => key === 'profileExternalIdentity' ? policy : undefined;
+    assert.throws(
+        () => telegram.verify({proof:proof(),application:{...policy.applications['app-a'],secretEnvironmentVariable:'NODICS_TEST_EXTERNAL_SECRET'},policy}),
+        error => error.code === 'ERR_PROFILE_EXTERNAL_UNAVAILABLE' &&
+            error.runtimeConfigurationStatus === 'UNCONFIGURED' &&
+            error.responseCode === 'TELEGRAM_CONFIGURATION_REQUIRED'
+    );
+});
 test('unconfigured applications, invalid policy and unavailable verification remain closed', async () => {
     await assert.rejects(identity.session({...request(),applicationCode:'other'}),{code:'ERR_PROFILE_EXTERNAL_ASSERTION'});
     policy.maximumAssertionAgeSeconds=NaN;await assert.rejects(identity.session(request()),{code:'ERR_PROFILE_EXTERNAL_UNAVAILABLE'});
@@ -118,7 +128,7 @@ test('source recipient requires both signed proof and matching active customer l
     customers.a.authVersion=2;await assert.rejects(identity.origin(request()),{code:'ERR_PROFILE_EXTERNAL_ASSERTION'});
 });
 
-test('Communication destination resolves canonical customer code and respects revocation',async()=>{customers.a.code='CUSTOMER_A';await identity.link(request());const link=[...records.values()][0];const input={tenant:'tenant-a',entCode:'enterprise-a',authData:{principalType:'service'},linkCode:link.code,recipientId:'CUSTOMER_A'};assert.equal((await identity.destination(input)).subject,'42');assert.equal((await identity.destination({...input,recipientId:'a'})).allowed,false);await assert.rejects(identity.destination({...input,authData:{principalType:'customer'}}));link.status='REVOKED';records.set('tenant-a|'+link.code,link);assert.equal((await identity.destination(input)).allowed,false);});
+test('Communication destination resolves canonical customer code and respects revocation',async()=>{customers.a.code='CUSTOMER_A';await identity.link(request());const link=[...records.values()][0];const input={tenant:'tenant-a',entCode:'enterprise-a',authData:{principalType:'service'},linkCode:link.code,recipientId:'CUSTOMER_A'};const destination=await identity.destination(input);assert.equal(destination.subject,'42');assert.equal(destination.credentialReference,'telegram.bot.local');assert.equal((await identity.destination({...input,recipientId:'a'})).allowed,false);await assert.rejects(identity.destination({...input,authData:{principalType:'customer'}}));link.status='REVOKED';records.set('tenant-a|'+link.code,link);assert.equal((await identity.destination(input)).allowed,false);});
 
 
 test('external identity routes enter bearer authentication before owner controller dispatch', async () => {

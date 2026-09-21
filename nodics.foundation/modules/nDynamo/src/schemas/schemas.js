@@ -342,6 +342,91 @@ module.exports = {
             }
         },
 
+        runtimeConfigurationValue: {
+            super: 'base',
+            model: true,
+            service: {
+                enabled: true
+            },
+            event: {
+                enabled: false
+            },
+            router: {
+                enabled: false
+            },
+            tenants: ['default'],
+            definition: {
+                ownerModule: {
+                    type: 'string',
+                    required: true,
+                    description: 'Module that owns the runtime configuration contract'
+                },
+                schemaCode: {
+                    type: 'string',
+                    required: true,
+                    description: 'Runtime configuration schema code declared by the owner module'
+                },
+                capabilityGroup: {
+                    type: 'string',
+                    required: false,
+                    description: 'Capability group used by operations surfaces'
+                },
+                category: {
+                    type: 'string',
+                    required: false,
+                    description: 'Schema category used by operations surfaces'
+                },
+                scope: {
+                    type: 'object',
+                    required: true,
+                    description: 'Runtime scope such as tenant, environment, server, or node'
+                },
+                tenant: {
+                    type: 'string',
+                    required: false,
+                    description: 'Tenant where the runtime configuration applies'
+                },
+                fields: {
+                    type: 'object',
+                    required: true,
+                    description: 'Field-code keyed values; sensitive fields contain encrypted envelopes and masked values only'
+                },
+                status: {
+                    type: 'string',
+                    required: true,
+                    default: 'CONFIGURED',
+                    description: 'Effective runtime configuration status'
+                },
+                revision: {
+                    type: 'string',
+                    required: true,
+                    description: 'Opaque revision for cluster reload and optimistic UI checks'
+                },
+                requestedBy: {
+                    type: 'string',
+                    required: false,
+                    description: 'User or process that changed the value'
+                },
+                updatedAt: {
+                    type: 'date',
+                    required: false,
+                    description: 'Runtime configuration update timestamp'
+                },
+                changedFieldCodes: {
+                    type: 'array',
+                    required: false,
+                    default: [],
+                    description: 'Field codes changed in the last update'
+                },
+                refreshBehavior: {
+                    type: 'string',
+                    required: false,
+                    default: 'runtime',
+                    description: 'Owner-declared refresh behavior: runtime or restartRequired'
+                }
+            }
+        },
+
         schemaAccessPolicy: {
             super: 'base',
             model: true,

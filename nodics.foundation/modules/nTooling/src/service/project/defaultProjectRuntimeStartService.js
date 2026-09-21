@@ -24,14 +24,16 @@ const path = require('node:path');
 
 module.exports = {
     /**
-     * Reads optional project runtime overrides.
+     * Rejects retired project descriptors.
      * @param {string} projectRoot Project root.
-     * @returns {Object} Project manifest.
+     * @returns {Object} Empty descriptor for older internal callers.
      */
     readManifest: function (projectRoot) {
-        const manifestPath = path.join(projectRoot, 'nodics.project.json');
-        if (!fs.existsSync(manifestPath)) return {};
-        return JSON.parse(fs.readFileSync(manifestPath, 'utf8'));
+        const descriptorPath = path.join(projectRoot, 'nodics.project.json');
+        if (fs.existsSync(descriptorPath)) {
+            throw new Error('Unsupported nodics.project.json; project runtime startup is derived from package.json and envs/* server package metadata.');
+        }
+        return {};
     },
 
     /**
@@ -50,19 +52,12 @@ module.exports = {
     /**
      * Resolves canonical project identity from package.json.name.
      * @param {string} projectRoot Project root.
-     * @param {Object} manifest Project manifest.
      * @returns {string} Canonical project code.
      */
-    resolveProjectCode: function (projectRoot, manifest) {
+    resolveProjectCode: function (projectRoot) {
         const projectCode = this.readProjectPackage(projectRoot).name;
         if (!projectCode || !/^[a-zA-Z][a-zA-Z0-9._-]*$/.test(projectCode)) {
             throw new Error('package.json requires a stable Nodics project name');
-        }
-        if (Object.prototype.hasOwnProperty.call(manifest, 'contractVersion')) {
-            throw new Error('nodics.project.json must not declare contractVersion');
-        }
-        if (Object.prototype.hasOwnProperty.call(manifest, 'projectCode')) {
-            throw new Error('nodics.project.json must not declare projectCode; use package.json.name');
         }
         return projectCode;
     },
@@ -70,15 +65,13 @@ module.exports = {
     /**
      * Builds the conventional local environment name for a project.
      * @param {string} projectRoot Project root.
-     * @param {Object} manifest Project manifest.
      * @returns {string} Local environment name.
      */
-    conventionalLocalEnvironmentName: function (projectRoot, manifest) {
+    conventionalLocalEnvironmentName: function (projectRoot) {
         if (typeof projectRoot !== 'string') {
-            manifest = projectRoot || {};
             projectRoot = process.cwd();
         }
-        const projectSegment = String(this.resolveProjectCode(projectRoot, manifest)).split('.').filter(Boolean).pop() || 'project';
+        const projectSegment = String(this.resolveProjectCode(projectRoot)).split('.').filter(Boolean).pop() || 'project';
         return projectSegment + 'Local';
     },
 
@@ -97,7 +90,7 @@ module.exports = {
                 !fs.existsSync(path.join(frameworkRoot, 'nodics.foundation', 'package.json'))) {
             throw new Error(
                 'Unable to resolve Nodics framework root for project runtime. ' +
-                'Set NODICS_FRAMEWORK_ROOT in the project .env to the nodics.ai checkout.'
+                'Set NODICS_FRAMEWORK_ROOT for this process or place the project beside the nodics.ai checkout.'
             );
         }
         return frameworkRoot;
@@ -175,19 +168,16 @@ module.exports = {
     /**
      * Resolves the selected environment before server metadata is loaded.
      * @param {string} projectRoot Project root.
-     * @param {Object} manifest Project manifest.
      * @param {Object} environment Environment values.
      * @returns {string} Environment name.
      */
-    resolveEnvironmentName: function (projectRoot, manifest, environment) {
+    resolveEnvironmentName: function (projectRoot, environment) {
         if (typeof projectRoot !== 'string') {
-            environment = manifest || {};
-            manifest = projectRoot || {};
+            environment = projectRoot || {};
             projectRoot = process.cwd();
         }
         return environment.ENV ||
-            (manifest.topology && manifest.topology.environment) ||
-            this.conventionalLocalEnvironmentName(projectRoot, manifest);
+            this.conventionalLocalEnvironmentName(projectRoot);
     },
 
     /**
@@ -212,26 +202,17 @@ module.exports = {
 
     /**
      * Resolves a server declaration and protects retired runtime aliases.
-     * Existing manifests with `runtime.servers` remain supported, but normalized
-     * projects can rely on `envs/<environment>/<server>Server/package.json`.
      * @param {string} projectRoot Project root.
-     * @param {Object} manifest Project manifest.
      * @param {string} serverCode Runtime server code.
      * @param {Object} environment Environment values.
      * @returns {Object} Runtime server declaration.
      */
-    resolveServer: function (projectRoot, manifest, serverCode, environment) {
-        const servers = manifest.runtime && manifest.runtime.servers
-            ? manifest.runtime.servers
-            : {};
-        const server = servers[serverCode];
-        if (server && server.retired) {
-            throw new Error([].concat(
-                server.retiredMessage || ['Project runtime server is retired: ' + serverCode]
-            ).join(' '));
+    resolveServer: function (projectRoot, serverCode, environment, legacyEnvironment) {
+        if (serverCode && typeof serverCode === 'object' && typeof environment === 'string') {
+            serverCode = environment;
+            environment = legacyEnvironment;
         }
-        if (server) return server;
-        return this.discoverServer(projectRoot, this.resolveEnvironmentName(projectRoot, manifest, environment), serverCode);
+        return this.discoverServer(projectRoot, this.resolveEnvironmentName(projectRoot, environment), serverCode);
     },
 
     /**
@@ -245,8 +226,8 @@ module.exports = {
     start: async function (options) {
         const projectRoot = path.resolve(options.projectRoot || process.cwd());
         const environment = options.environment || process.env;
-        const manifest = this.readManifest(projectRoot);
-        const server = this.resolveServer(projectRoot, manifest, options.serverCode, environment);
+        this.readManifest(projectRoot);
+        const server = this.resolveServer(projectRoot, options.serverCode, environment);
         const frameworkRoot = this.resolveFrameworkRoot(projectRoot, environment);
         const foundationRoot = this.packageRoot(frameworkRoot, 'nodics.foundation');
         const foundation = require(foundationRoot);
@@ -254,7 +235,7 @@ module.exports = {
 
         const previous = { S: process.env.S, E: process.env.E, NODICS_NODE: process.env.NODICS_NODE };
         process.env.S = server.server;
-        process.env.E = server.environment || this.resolveEnvironmentName(projectRoot, manifest, environment);
+        process.env.E = server.environment || this.resolveEnvironmentName(projectRoot, environment);
         if (environment.NODICS_NODE) process.env.NODICS_NODE = environment.NODICS_NODE;
         try {
             return await foundation.start(Object.freeze({
@@ -278,10 +259,10 @@ module.exports = {
         if (!['cleanAll', 'buildAll'].includes(options.method)) throw new Error('Unsupported project lifecycle method: ' + options.method);
         const projectRoot = path.resolve(options.projectRoot || process.cwd());
         const environment = options.environment || process.env;
-        const manifest = this.readManifest(projectRoot);
+        this.readManifest(projectRoot);
         const serverCode = options.serverCode || environment.S || environment.SERVER;
         if (!serverCode) throw new Error('Select a server with --server=<code> or SERVER before project clean/build');
-        const server = this.resolveServer(projectRoot, manifest, serverCode, environment);
+        const server = this.resolveServer(projectRoot, serverCode, environment);
         const frameworkRoot = this.resolveFrameworkRoot(projectRoot, environment);
         const foundationRoot = this.packageRoot(frameworkRoot, 'nodics.foundation');
         // Lifecycle commands run in their own process. Match nConfig's environment

@@ -247,7 +247,7 @@ module.exports = {
       provider: link.provider,
       subject: link.providerSubject,
       applicationSubject: link.applicationSubject,
-      credentialReference: app.secretEnvironmentVariable,
+      credentialReference: app.credentialReference || app.secretEnvironmentVariable,
     };
   },
   /** Exchanges verified linked identity for the existing Profile token pair; unlinked/stale links return the same secure-sign-in requirement. */

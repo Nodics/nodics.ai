@@ -204,7 +204,7 @@ test("undeclared variables, invalid channels and unauthorized sources do not per
   assert.equal(db.CommsIntent.size, 0);
 });
 test("Telegram uses verified destination and plain text, handles accepted, rejected and uncertain transport", async () => {
-  process.env.COMMS_TEST_TOKEN = "123:test-placeholder";
+  delete process.env.COMMS_TEST_TOKEN;
   SERVICE.DefaultModuleService = {
     invokeModule: async () => ({
       data: {
@@ -212,14 +212,17 @@ test("Telegram uses verified destination and plain text, handles accepted, rejec
         provider: "TELEGRAM",
         subject: "42",
         applicationSubject: "123",
-        credentialReference: "COMMS_TEST_TOKEN",
+        credentialReference: "telegram.bot.local",
       },
     }),
   };
   const args = {
     request,
     intent: { ...command, renderedContent: { body: "<b>literal</b>" } },
-    policy: { credentialReferences: ["COMMS_TEST_TOKEN"] },
+    policy: {
+      credentialReferences: ["telegram.bot.local"],
+      credentials: { "telegram.bot.local": { value: "123:test-placeholder" } },
+    },
   };
   const success = await telegram.deliver(args, async (url, options) => {
     const body = JSON.parse(options.body);
@@ -245,6 +248,14 @@ test("Telegram uses verified destination and plain text, handles accepted, rejec
     ).status,
     "RETRY_PENDING",
   );
+  const unconfigured = await telegram.deliver(
+    { ...args, policy: { credentialReferences: ["telegram.bot.local"] } },
+    async () => {
+      throw new Error("must not send without configured credentials");
+    },
+  );
+  assert.equal(unconfigured.status, "UNCONFIGURED");
+  assert.equal(unconfigured.responseCode, "TELEGRAM_CONFIGURATION_REQUIRED");
   delete process.env.COMMS_TEST_TOKEN;
 });
 test("uncertain delivery needs a current revision, explicit decision and reason; resolution never sends", async () => {

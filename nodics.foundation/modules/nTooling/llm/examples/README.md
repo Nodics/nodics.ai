@@ -26,12 +26,14 @@ projections for that store, restores operational records through their owners,
 and verifies discovery/PDP delivery. A checksum mismatch rejects the handoff;
 it must be repaired in a new source release, never bypassed or restored manually.
 
-Project command defaults contain reusable operations only. Application server and
-environment aliases, named customer acceptance journeys and media seeds are
-project-owned `nodics.project.json` tooling commands. Declare scripts under
-`tooling.scriptOwnership.projectOwned`; the existing executor supplies project and
-framework roots. Do not copy topology, release or configuration resolvers into the
-project. Project documentation generators read stable publication identifiers,
+Project command defaults contain reusable operations only. Application server
+aliases are discovered from environment server package metadata, and named
+customer acceptance journeys or media seeds are discovered from conventional
+`scripts/acceptance/*Service.mjs` files. Do not create a root
+`nodics.project.json` or move these aliases into layered properties just to repeat
+the project structure. The existing executor supplies project and framework
+roots. Do not copy topology, release or configuration resolvers into the project.
+Project documentation generators read stable publication identifiers,
 routes, labels and channels from `docs/catalogue.json.publication`, validated
 before writing. The generic data-manifest command refreshes only explicitly
 declared development-baseline checksums; changed immutable releases fail before
@@ -77,10 +79,11 @@ Acceptance consumers read the selected environment through nTooling, then use
 Override an ambiguous role with an explicit server selection; reuse its port and
 launch descriptor rather than repeating either in environment acceptance metadata.
 
-Customer projects may declare `bootstrapIdentity.adminPassword` in their own
-`config/properties.js`, with environment/server overrides through nConfig. The
-value must meet nAuth strength policy. Project validation permits this direct
-admin-bootstrap value only; framework defaults, service credentials and binding
-fallbacks retain deployment-input requirements. No credential values belong in
-examples, diagnostics or published documentation. Configuration changes apply to
-future initialization; existing accounts require Profile password operations.
+nAuth owns `bootstrapIdentity` bindings. Customer projects may supply
+administrator bootstrap values through governed project/environment/server/node
+configuration or future runtime credential authority, but authored source must
+not carry live literal credentials. The value must meet nAuth strength policy.
+Service credentials, signing/digest material and binding fallbacks retain
+deployment-input requirements. No credential values belong in examples,
+diagnostics or published documentation. Configuration changes apply to future
+initialization; existing accounts require Profile password operations.

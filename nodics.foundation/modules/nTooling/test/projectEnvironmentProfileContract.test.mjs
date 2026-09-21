@@ -140,7 +140,7 @@ test('domain composition resolver supports environment selections without projec
   });
 });
 
-test('project environment profile rejects root descriptor topology facts', () => {
+test('project environment profile rejects root project descriptors', () => {
   const projectRoot = fs.mkdtempSync(path.join(os.tmpdir(), 'nodics-env-profile-'));
   writeJson(path.join(projectRoot, 'package.json'), {
     name: 'acme.startio',
@@ -159,7 +159,7 @@ test('project environment profile rejects root descriptor topology facts', () =>
 
   assert.throws(
     () => readProjectEnvironmentConfiguration(projectRoot),
-    /Unsupported nodics\.project\.json property `topology`/
+    /Unsupported nodics\.project\.json/
   );
 });
 

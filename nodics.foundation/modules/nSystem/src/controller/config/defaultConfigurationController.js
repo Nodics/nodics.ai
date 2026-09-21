@@ -211,6 +211,101 @@ module.exports = {
     },
 
     /**
+     * Returns runtime configuration schemas declared by active modules.
+     *
+     * @param {Object} request Nodics request context.
+     * @param {Function} [callback] Optional Node-style callback used by controller pipeline execution.
+     * @returns {Promise|undefined} Returns a promise when no callback is supplied.
+     */
+    listRuntimeConfigurationSchemas: function (request, callback) {
+        if (callback) {
+            FACADE.DefaultConfigurationFacade.listRuntimeConfigurationSchemas(request).then(success => {
+                callback(null, success);
+            }).catch(error => {
+                callback(error);
+            });
+        } else {
+            return FACADE.DefaultConfigurationFacade.listRuntimeConfigurationSchemas(request);
+        }
+    },
+
+    /**
+     * Returns one runtime configuration schema.
+     *
+     * @param {Object} request Nodics request context.
+     * @param {Function} [callback] Optional Node-style callback used by controller pipeline execution.
+     * @returns {Promise|undefined} Returns a promise when no callback is supplied.
+     */
+    getRuntimeConfigurationSchema: function (request, callback) {
+        if (callback) {
+            FACADE.DefaultConfigurationFacade.getRuntimeConfigurationSchema(request).then(success => {
+                callback(null, success);
+            }).catch(error => {
+                callback(error);
+            });
+        } else {
+            return FACADE.DefaultConfigurationFacade.getRuntimeConfigurationSchema(request);
+        }
+    },
+
+    /**
+     * Returns masked effective runtime configuration values for one schema.
+     *
+     * @param {Object} request Nodics request context.
+     * @param {Function} [callback] Optional Node-style callback used by controller pipeline execution.
+     * @returns {Promise|undefined} Returns a promise when no callback is supplied.
+     */
+    getRuntimeConfigurationEffectiveValues: function (request, callback) {
+        if (callback) {
+            FACADE.DefaultConfigurationFacade.getRuntimeConfigurationEffectiveValues(request).then(success => {
+                callback(null, success);
+            }).catch(error => {
+                callback(error);
+            });
+        } else {
+            return FACADE.DefaultConfigurationFacade.getRuntimeConfigurationEffectiveValues(request);
+        }
+    },
+
+    /**
+     * Validates runtime configuration updates without persisting them.
+     *
+     * @param {Object} request Nodics request context.
+     * @param {Function} [callback] Optional Node-style callback used by controller pipeline execution.
+     * @returns {Promise|undefined} Returns a promise when no callback is supplied.
+     */
+    validateRuntimeConfigurationUpdate: function (request, callback) {
+        if (callback) {
+            FACADE.DefaultConfigurationFacade.validateRuntimeConfigurationUpdate(request).then(success => {
+                callback(null, success);
+            }).catch(error => {
+                callback(error);
+            });
+        } else {
+            return FACADE.DefaultConfigurationFacade.validateRuntimeConfigurationUpdate(request);
+        }
+    },
+
+    /**
+     * Saves runtime configuration updates through the dedicated owner-schema contract.
+     *
+     * @param {Object} request Nodics request context.
+     * @param {Function} [callback] Optional Node-style callback used by controller pipeline execution.
+     * @returns {Promise|undefined} Returns a promise when no callback is supplied.
+     */
+    saveRuntimeConfigurationUpdate: function (request, callback) {
+        if (callback) {
+            FACADE.DefaultConfigurationFacade.saveRuntimeConfigurationUpdate(request).then(success => {
+                callback(null, success);
+            }).catch(error => {
+                callback(error);
+            });
+        } else {
+            return FACADE.DefaultConfigurationFacade.saveRuntimeConfigurationUpdate(request);
+        }
+    },
+
+    /**
      * Returns runtime configuration activation requests for admin work queues.
      *
      * @param {Object} request Nodics request context.

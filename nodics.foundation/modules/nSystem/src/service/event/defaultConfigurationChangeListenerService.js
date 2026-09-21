@@ -42,5 +42,24 @@ module.exports = {
         } catch (error) {
             callback(new CLASSES.EventError(error, 'Unable to handle configuration update handler', 'ERR_EVNT_00000'));
         }
+    },
+
+    /**
+     * Reloads a schema-owned runtime configuration record after a cluster event.
+     *
+     * @param {*} request Event request.
+     * @param {*} callback Event callback.
+     * @returns {void}
+     */
+    handleRuntimeConfigurationChangedEvent: function (request, callback) {
+        try {
+            SERVICE.DefaultConfigurationService.handleRuntimeConfigurationChangedEvent(request).then(success => {
+                callback(null, { code: 'SUC_EVNT_00000', message: success });
+            }).catch(error => {
+                callback(new CLASSES.EventError(error, 'Unable to handle runtime configuration update handler', 'ERR_EVNT_00000'));
+            });
+        } catch (error) {
+            callback(new CLASSES.EventError(error, 'Unable to handle runtime configuration update handler', 'ERR_EVNT_00000'));
+        }
     }
 };

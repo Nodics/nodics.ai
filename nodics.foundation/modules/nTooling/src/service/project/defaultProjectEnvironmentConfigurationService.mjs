@@ -28,8 +28,8 @@ import { readProjectManifest, resolveProjectCode, resolveTemplate, selectEnviron
 
 /** Projects startup/readiness coordinates from actual backend server configuration. @param {string} projectRoot Project root. @param {string} environmentCode Optional selected environment. @returns {Object} Derived tooling inputs, not another persisted configuration authority. */
 export function readProjectEnvironmentConfiguration(projectRoot, environmentCode = '') {
-  const manifest = readProjectManifest(projectRoot);
-  const inheritedProperties = { tooling: { acceptance: configurationBindings.merge(tooling.loadFrameworkToolingDefaults('acceptance'), manifest.acceptance || {}) } };
+  readProjectManifest(projectRoot);
+  const inheritedProperties = { tooling: { acceptance: tooling.loadFrameworkToolingDefaults('acceptance') } };
   const selected = selectEnvironmentConfiguration(projectRoot, environmentCode, false, inheritedProperties);
   const environment = selected.code;
   const properties = selected.properties;
@@ -58,7 +58,7 @@ export function readProjectEnvironmentConfiguration(projectRoot, environmentCode
   const topology = properties.tooling?.topology || {};
   const stateDirectory = topology.stateDirectory || `envs/${environment}/generated/local-topology`;
   return {
-    projectCode: resolveProjectCode(projectRoot, manifest),
+    projectCode: resolveProjectCode(projectRoot),
     environment,
     cors: configurationBindings.merge(routerProperties.httpHardening.cors, properties.httpHardening?.cors || {}),
     composition: properties.activeModules?.compositions || {},

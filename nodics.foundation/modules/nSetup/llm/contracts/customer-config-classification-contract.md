@@ -62,6 +62,15 @@ the existing later mechanisms. The selected topology chain is project,
 environment, server, then optional node; concrete indexes must preserve that
 order.
 
+Auth, channel, provider and integration settings must use environment-neutral
+property names. The environment layer supplies different values; property names
+must not encode `LOCAL`, `QA`, `PROD` or another deployment class. `.env` files
+are process injection only and are not canonical Nodics project configuration,
+sample structure or generated output. Secrets and runtime credentials must be
+referenced by logical credential references and resolved by the owning runtime
+configuration authority; source properties may declare the schema/reference but
+must not carry live credential values.
+
 For each default moved to a module, prove that the owner is active on every
 intended server and that its index precedes every intended override. A
 configuration module does not get special precedence because its name contains
@@ -266,12 +275,13 @@ customer, environment, server and node configuration, including generators.
   nRouter constructs origins and owns standard headers and credential behavior. Retain server-specific denials,
   explicit disablement and genuine deployment overrides. CORS never grants API
   permission, changes tenant authority or permits wildcard credentialed origins.
-- Customer projects may explicitly configure `bootstrapIdentity.adminPassword`
-  in project properties; later environment/server/node layers may override it.
-  This direct customer-owned value is the sole literal-credential audit exception.
-  nAuth still enforces password strength and distinct admin/service credentials.
-  Framework defaults, JWT secrets, API-key peppers, service passwords/keys and
-  predictable binding fallbacks must use nConfig secret inputs. Do not publish
+- nAuth owns `bootstrapIdentity` bindings. Customer projects may override
+  `bootstrapIdentity.adminPassword` through existing project/environment/server/
+  node layers only as a governed deployment input or future runtime credential
+  value; authored source must not carry live literal credentials. nAuth still
+  enforces password strength and distinct admin/service credentials. Framework
+  defaults, JWT secrets, API-key peppers, service passwords/keys and predictable
+  binding fallbacks must use nConfig secret inputs. Do not publish
   credential-bearing customer files. Bootstrap provisioning and current runtime
   proof have distinct lifecycles; runtime proof never falls back to the admin.
 - A cleanup must preserve credential rotation/revocation, strict distributed auth
@@ -279,8 +289,8 @@ customer, environment, server and node configuration, including generators.
   release receipts. It must not weaken a security policy to remove configuration.
 - `project:validate` and `ai:principle-audit` reject retired descriptors/bindings,
   duplicate endpoint/authentication catalogues and literal authentication secrets,
-  except the direct customer administrator bootstrap override described above.
-  Static gates do not replace effective-configuration and ownership review.
+  including customer-authored administrator bootstrap literals. Static gates do
+  not replace effective-configuration and ownership review.
 
 Framework baselines now include info logging, remote event publishing disabled,
 search database fallback disabled, secured service-registry exposure, and

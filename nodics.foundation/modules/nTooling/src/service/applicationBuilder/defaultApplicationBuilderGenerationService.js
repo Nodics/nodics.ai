@@ -605,23 +605,8 @@ module.exports = {
         ) + "\n"
       );
     }
-    if (relativePath === ".env.example") {
-      return (
-        "NODE_ENV=development\n" +
-        "BACKEND_HOST=127.0.0.1\n" +
-        "BACKEND_PORT=4300\n" +
-        "STOREFRONT_HOST=127.0.0.1\n" +
-        "STOREFRONT_PORT=3300\n" +
-        "NODICS_CUSTOMER_CODE=" +
-        solution.identity.customerCode +
-        "\n" +
-        "NODICS_PROJECT_CODE=" +
-        projectCode +
-        "\n"
-      );
-    }
     if (relativePath === ".gitignore") {
-      return "node_modules/\n.env\nlogs/\ntmp/\ndist/\ncoverage/\n.DS_Store\n";
+      return "node_modules/\nlogs/\ntmp/\ndist/\ncoverage/\n.DS_Store\n";
     }
     if (relativePath === "builder-handoff.json") {
       return (

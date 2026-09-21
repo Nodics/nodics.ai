@@ -217,12 +217,14 @@ Project clean/build use explicit server selection and startup metadata. Framewor
 validation derives runtime groups from workspaces and retains its own generated
 server between gates. See [build targeting](llm/contracts/README.md#project-and-repository-build-targeting).
 
-Project command defaults contain reusable operations only. Application server and
-environment aliases, named customer acceptance journeys and media seeds are
-project-owned `nodics.project.json` tooling commands. Declare scripts under
-`tooling.scriptOwnership.projectOwned`; the existing executor supplies project and
-framework roots. Do not copy topology, release or configuration resolvers into the
-project. Project documentation generators read stable publication identifiers,
+Project command defaults contain reusable operations only. Application server
+aliases are discovered from environment server package metadata, and named
+customer acceptance journeys or media seeds are discovered from conventional
+`scripts/acceptance/*Service.mjs` files. Do not create a root
+`nodics.project.json` or move these aliases into layered properties just to repeat
+the project structure. The existing executor supplies project and framework
+roots. Do not copy topology, release or configuration resolvers into the project.
+Project documentation generators read stable publication identifiers,
 routes, labels and channels from `docs/catalogue.json.publication`, validated
 before writing. The generic data-manifest command refreshes only explicitly
 declared development-baseline checksums; changed immutable releases fail before
@@ -254,6 +256,8 @@ enabled initialization profile by explicit code or a unique template match; miss
 and ambiguous selections fail before acceptance operations. Keep actual customer
 journey choices and deployment container/URL differences in their existing layers.
 
-Customer-project validation permits a direct `bootstrapIdentity.adminPassword`
-value in the customer configuration layers. Framework audit and all other literal
-credential restrictions remain enforced; nAuth validates effective strength.
+nAuth owns `bootstrapIdentity` bindings. Customer-project validation rejects
+direct administrator bootstrap literals in authored source; deployment layers
+may bind or override values through governed configuration. Framework audit and
+all other literal credential restrictions remain enforced; nAuth validates
+effective strength.

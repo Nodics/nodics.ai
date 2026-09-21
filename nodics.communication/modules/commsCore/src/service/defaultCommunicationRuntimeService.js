@@ -328,6 +328,7 @@ module.exports = {
         "FAILED",
         "UNCERTAIN",
         "SUPPRESSED",
+        "UNCONFIGURED",
       ].includes(outcome.status)
     )
       outcome = {

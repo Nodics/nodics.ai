@@ -11,7 +11,7 @@
 
 /**
  * @module nTooling/test/projectCommandServiceContract
- * @description Guards manifest-driven project commands so generated projects keep facts locally while framework tooling owns execution and validation.
+ * @description Guards structure-discovered project commands so generated projects avoid duplicate command descriptors while framework tooling owns execution and validation.
  * @layer test
  * @owner nTooling
  */
@@ -22,124 +22,53 @@ const os = require('os');
 const path = require('path');
 const service = require('../src/service/command/defaultProjectCommandService');
 
-function createProject(manifestOverrides = {}, packageOverrides = {}) {
+function createProject(packageOverrides = {}) {
     const root = fs.mkdtempSync(path.join(os.tmpdir(), 'nodics-project-contract-'));
-    fs.mkdirSync(path.join(root, 'scripts'), { recursive: true });
+    fs.mkdirSync(path.join(root, 'scripts', 'acceptance'), { recursive: true });
     fs.writeFileSync(
-        path.join(root, 'scripts', 'hello.js'),
+        path.join(root, 'scripts', 'acceptance', 'defaultProjectLocalBootstrapAcceptanceService.mjs'),
         'console.log("hello project command");\n'
-    );
-    const manifest = Object.assign(
-        {
-            tooling: {
-                scriptOwnership: {
-                    projectOwned: ['scripts/hello.js'],
-                    forbiddenProjectOwnedPatterns: ['local-security-boundary-qualification']
-                },
-                commands: {
-                    hello: { type: 'projectScript', script: 'scripts/hello.js' }
-                }
-            }
-        },
-        manifestOverrides
     );
     const packageJson = Object.assign({ name: 'duShop', version: '0.0.0', private: true }, packageOverrides);
     fs.writeFileSync(path.join(root, 'package.json'), JSON.stringify(packageJson, null, 2));
-    if (manifestOverrides !== false) {
-        fs.writeFileSync(path.join(root, 'nodics.project.json'), JSON.stringify(manifest, null, 2));
-    }
+    fs.mkdirSync(path.join(root, 'envs', 'duShopLocal', 'platformServer'), { recursive: true });
+    fs.writeFileSync(path.join(root, 'envs', 'duShopLocal', 'platformServer', 'package.json'), JSON.stringify({
+        name: 'platformServer',
+        nodics: { kind: 'server' }
+    }, null, 2));
     return root;
 }
 
 const validRoot = createProject();
-const validManifest = service.readManifest(validRoot);
-service.validateManifest(validRoot, validManifest);
-assert.equal(service.runProjectCommand(validRoot, validManifest, 'hello', []), true);
+service.validateProject(validRoot);
+assert.equal(service.runProjectCommand(validRoot, 'acceptance:local', []), true);
+assert.equal(service.resolveCommands(validRoot)['start:platform'].command, 'project:runtime-start');
+assert.equal(service.resolveCommands(validRoot)['docker-local:preflight'].command, 'project:container');
 
-const minimalRoot = createProject(false, { name: 'acme.startio' });
-const minimalManifest = service.readManifest(minimalRoot);
-service.validateManifest(minimalRoot, minimalManifest);
-assert.equal(service.resolveProjectCode(minimalRoot, minimalManifest), 'acme.startio');
-assert.equal(service.resolveCommands(minimalManifest)['docs:generate'].command, 'project:documentation-content');
-assert.equal(service.resolveCommands(minimalManifest)['start:platform'], undefined);
-assert.equal(service.resolveCommands(minimalManifest)['docker-local:preflight'], undefined);
-assert.equal(Object.keys(service.defaultCommands()).some(name => /agora|nexus|kickoff/.test(name)), false);
+const minimalRoot = createProject({ name: 'acme.startio' });
+service.validateProject(minimalRoot);
+assert.equal(service.resolveProjectCode(minimalRoot), 'acme.startio');
+assert.equal(service.resolveCommands(minimalRoot)['docs:generate'].command, 'project:documentation-content');
+assert.equal(Object.keys(service.defaultCommands()).some(name => /kickoff/.test(name)), false);
 
-const descriptorProjectCodeRoot = createProject({
-    projectCode: 'right.shop',
-    tooling: undefined
-}, { name: 'right.shop' });
+const descriptorProjectCodeRoot = createProject({ name: 'right.shop' });
+fs.writeFileSync(path.join(descriptorProjectCodeRoot, 'nodics.project.json'), JSON.stringify({ projectCode: 'right.shop' }, null, 2));
 assert.throws(
-    () => service.validateManifest(descriptorProjectCodeRoot, service.readManifest(descriptorProjectCodeRoot)),
-    /must not declare projectCode/
+    () => service.validateProject(descriptorProjectCodeRoot),
+    /Unsupported nodics\.project\.json/
 );
 
-const descriptorContractVersionRoot = createProject({
-    contractVersion: 1,
-    tooling: undefined
-}, { name: 'right.shop' });
+const forbiddenRoot = createProject();
+fs.writeFileSync(path.join(forbiddenRoot, 'scripts', 'acceptance', 'local-security-boundary-qualificationService.mjs'), 'console.log("unsafe");\n');
 assert.throws(
-    () => service.validateManifest(descriptorContractVersionRoot, service.readManifest(descriptorContractVersionRoot)),
-    /must not declare contractVersion/
-);
-
-const emptyDescriptorRoot = createProject({
-    tooling: undefined
-}, { name: 'right.shop' });
-assert.deepEqual(service.readManifest(emptyDescriptorRoot), {});
-assert.throws(
-    () => service.validateManifest(emptyDescriptorRoot, service.readManifest(emptyDescriptorRoot)),
-    /Unnecessary nodics\.project\.json/
-);
-
-const misplacedTopologyRoot = createProject({
-    topology: { environment: 'rightLocal' },
-    tooling: undefined
-}, { name: 'right.shop' });
-assert.throws(
-    () => service.validateManifest(misplacedTopologyRoot, service.readManifest(misplacedTopologyRoot)),
-    /Unsupported nodics\.project\.json property `topology`/
-);
-
-const emptyToolingRoot = createProject({
-    tooling: {}
-}, { name: 'right.shop' });
-assert.throws(
-    () => service.validateManifest(emptyToolingRoot, service.readManifest(emptyToolingRoot)),
-    /remove empty override sections/
-);
-
-const forbiddenRoot = createProject({
-    tooling: {
-        scriptOwnership: {
-            projectOwned: ['scripts/local-security-boundary-qualification.mjs'],
-            forbiddenProjectOwnedPatterns: ['local-security-boundary-qualification']
-        },
-        commands: {
-            unsafe: { type: 'projectScript', script: 'scripts/local-security-boundary-qualification.mjs' }
-        }
-    }
-});
-fs.writeFileSync(path.join(forbiddenRoot, 'scripts', 'local-security-boundary-qualification.mjs'), 'console.log("unsafe");\n');
-assert.throws(
-    () => service.validateManifest(forbiddenRoot, service.readManifest(forbiddenRoot)),
+    () => service.validateProject(forbiddenRoot),
     /Forbidden framework-owned script pattern/
 );
 
-const forbiddenDirectoryRoot = createProject({
-    tooling: {
-        scriptOwnership: {
-            projectOwned: ['scripts/hello.js'],
-            forbiddenProjectDirectories: ['src', 'local-engines']
-        },
-        commands: {
-            hello: { type: 'projectScript', script: 'scripts/hello.js' }
-        }
-    }
-});
+const forbiddenDirectoryRoot = createProject();
 fs.mkdirSync(path.join(forbiddenDirectoryRoot, 'src'), { recursive: true });
 assert.throws(
-    () => service.validateManifest(forbiddenDirectoryRoot, service.readManifest(forbiddenDirectoryRoot)),
+    () => service.validateProject(forbiddenDirectoryRoot),
     /Forbidden project-owned implementation directory exists: src/
 );
 

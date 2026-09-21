@@ -11,10 +11,10 @@
 
 /**
  * @module nTooling/service/command/defaultProjectCommandService
- * @description Executes framework-owned project command aliases with project manifest overrides so generated projects stay light while framework tooling evolves.
+ * @description Executes framework-owned project command aliases discovered from project package, environment server and acceptance-script structure.
  * @layer tooling
  * @owner nTooling
- * @override Projects customize only non-standard command aliases; framework command execution and validation remain owned by nTooling.
+ * @override Projects customize behavior through module structure and layered configuration; framework command execution and validation remain owned by nTooling.
  */
 
 const fs = require('fs');
@@ -23,39 +23,50 @@ const { spawnSync } = require('child_process');
 
 module.exports = {
     /**
-     * Executes a project manifest operation.
+     * Executes a project command operation.
      * @param {Object} context Tooling command context.
      * @returns {Promise<boolean>} Whether the operation completed.
      */
     run: async function (context) {
         const operation = context.command.operation || 'validate';
-        const manifest = this.readManifest(context.home);
+        this.assertNoProjectDescriptor(context.home);
         if (operation === 'validate') {
-            this.validateManifest(context.home, manifest);
-            const projectCode = this.resolveProjectCode(context.home, manifest);
+            this.validateProject(context.home);
+            const projectCode = this.resolveProjectCode(context.home);
             console.log(JSON.stringify({
                 projectCode: projectCode,
-                commandCount: Object.keys(this.resolveCommands(manifest)).length,
+                commandCount: Object.keys(this.resolveCommands(context.home)).length,
                 state: 'PASSED'
             }, null, 2));
             return true;
         }
         if (operation === 'run') {
-            this.validateManifest(context.home, manifest);
-            return this.runProjectCommand(context.home, manifest, context.args[0], context.args.slice(1));
+            this.validateProject(context.home);
+            return this.runProjectCommand(context.home, context.args[0], context.args.slice(1));
         }
         throw new Error('Unsupported project command operation: ' + operation);
     },
 
     /**
-     * Reads optional project command overrides.
+     * Rejects retired project descriptors.
      * @param {string} projectRoot Project root.
-     * @returns {Object} Parsed manifest.
+     * @returns {Object} Empty descriptor for older internal callers.
      */
     readManifest: function (projectRoot) {
-        const manifestPath = path.join(projectRoot, 'nodics.project.json');
-        if (!fs.existsSync(manifestPath)) return {};
-        return JSON.parse(fs.readFileSync(manifestPath, 'utf8'));
+        this.assertNoProjectDescriptor(projectRoot);
+        return {};
+    },
+
+    /**
+     * Rejects root-level project descriptors so structure remains canonical.
+     * @param {string} projectRoot Project root.
+     * @returns {void}
+     */
+    assertNoProjectDescriptor: function (projectRoot) {
+        const descriptorPath = path.join(projectRoot, 'nodics.project.json');
+        if (fs.existsSync(descriptorPath)) {
+            throw new Error('Unsupported nodics.project.json; project commands must be derived from package.json, envs/* server metadata, scripts/acceptance, and layered configuration.');
+        }
     },
 
     /**
@@ -74,106 +85,50 @@ module.exports = {
     /**
      * Resolves the canonical project code from package.json.name.
      * @param {string} projectRoot Project root.
-     * @param {Object} manifest Project manifest.
      * @returns {string} Canonical project code.
      */
-    resolveProjectCode: function (projectRoot, manifest) {
+    resolveProjectCode: function (projectRoot) {
         const packageJson = this.readProjectPackage(projectRoot);
         const projectCode = packageJson.name;
         if (!projectCode || !/^[a-zA-Z][a-zA-Z0-9._-]*$/.test(projectCode)) {
             throw new Error('package.json requires a stable Nodics project name');
         }
-        if (Object.prototype.hasOwnProperty.call(manifest, 'contractVersion')) {
-            throw new Error('nodics.project.json must not declare contractVersion');
-        }
-        if (Object.prototype.hasOwnProperty.call(manifest, 'projectCode')) {
-            throw new Error('nodics.project.json must not declare projectCode; use package.json.name');
-        }
         return projectCode;
     },
 
     /**
-     * Validates the project contract manifest and script ownership policy.
+     * Validates the project command contract and script ownership policy.
      * @param {string} projectRoot Project root.
-     * @param {Object} manifest Project manifest.
      * @returns {void}
      */
-    validateManifest: function (projectRoot, manifest) {
-        this.validateDescriptorProperties(projectRoot, manifest);
-        this.resolveProjectCode(projectRoot, manifest);
-        const commands = this.resolveCommands(manifest);
+    validateProject: function (projectRoot) {
+        this.assertNoProjectDescriptor(projectRoot);
+        this.resolveProjectCode(projectRoot);
+        const commands = this.resolveCommands(projectRoot);
         Object.entries(commands).forEach(([name, command]) => this.validateCommand(projectRoot, name, command));
-        this.validateScriptOwnership(projectRoot, manifest, commands);
-        this.validateProjectDirectoryBoundaries(projectRoot, manifest);
+        this.validateScriptOwnership(projectRoot, commands);
+        this.validateProjectDirectoryBoundaries(projectRoot);
         const configurationFailures = [];
         require('../quality/defaultDesignPrincipleAuditService').auditConfigurationSources(configurationFailures, projectRoot, { customerProject: true });
         if (configurationFailures.length) throw new Error('Configuration coding restrictions failed: ' + configurationFailures.join('; '));
     },
 
     /**
-     * Rejects redundant or misplaced project descriptor properties.
+     * Validates older callers through the current project contract.
      * @param {string} projectRoot Project root.
-     * @param {Object} manifest Project manifest.
      * @returns {void}
      */
-    validateDescriptorProperties: function (projectRoot, manifest) {
-        const descriptorExists = fs.existsSync(path.join(projectRoot, 'nodics.project.json'));
-        const keys = Object.keys(manifest || {});
-        if (!descriptorExists && keys.length === 0) return;
-        if (descriptorExists && keys.length === 0) {
-            throw new Error('Unnecessary nodics.project.json; remove the file unless project-owned tooling or acceptance overrides are required');
-        }
-        if (Object.prototype.hasOwnProperty.call(manifest, 'contractVersion')) {
-            throw new Error('nodics.project.json must not declare contractVersion');
-        }
-        if (Object.prototype.hasOwnProperty.call(manifest, 'projectCode')) {
-            throw new Error('nodics.project.json must not declare projectCode; use package.json.name');
-        }
-        const allowedTopLevel = ['acceptance', 'tooling'];
-        keys.forEach(key => {
-            if (!allowedTopLevel.includes(key)) {
-                throw new Error('Unsupported nodics.project.json property `' + key + '`. Allowed properties: acceptance, tooling');
-            }
-        });
-        this.validateDescriptorSection('tooling', manifest.tooling, ['commands', 'scriptOwnership']);
-        this.validateDescriptorSection('acceptance', manifest.acceptance, [
-            'capabilityRegistry',
-            'functionalJourney',
-            'guidedInitialization',
-            'localBootstrap'
-        ]);
+    validateManifest: function (projectRoot) {
+        return this.validateProject(projectRoot);
     },
 
     /**
-     * Validates that a descriptor section is a non-empty object with known keys.
-     * @param {string} sectionName Descriptor section name.
-     * @param {Object} section Section value.
-     * @param {string[]} allowedKeys Allowed nested keys.
-     * @returns {void}
-     */
-    validateDescriptorSection: function (sectionName, section, allowedKeys) {
-        if (section === undefined) return;
-        if (!section || typeof section !== 'object' || Array.isArray(section)) {
-            throw new Error('nodics.project.json `' + sectionName + '` must be an object');
-        }
-        const keys = Object.keys(section);
-        if (keys.length === 0) {
-            throw new Error('Unnecessary nodics.project.json `' + sectionName + '` section; remove empty override sections');
-        }
-        keys.forEach(key => {
-            if (!allowedKeys.includes(key)) {
-                throw new Error('Unsupported nodics.project.json `' + sectionName + '.' + key + '` property');
-            }
-        });
-    },
-
-    /**
-     * Returns framework-owned project command aliases. Project manifests only
-     * need to declare custom additions or intentional overrides.
+     * Returns framework-owned project command aliases.
+     * @param {string} projectRoot Project root.
      * @returns {Object} Command alias map.
      */
-    defaultCommands: function () {
-        return {
+    defaultCommands: function (projectRoot) {
+        return Object.assign({
             "docs:generate": {
                 "type": "frameworkCommand",
                 "command": "project:documentation-content",
@@ -247,36 +202,232 @@ module.exports = {
             "qualification:publishing-interruption-contracts": {
                 "type": "frameworkCommand",
                 "command": "qualification:publishing-interruption-contracts"
+            },
+            "docker-local:preflight": {
+                "type": "frameworkCommand",
+                "command": "project:container",
+                "home": "project",
+                "args": ["dockerLocal", "preflight"]
+            },
+            "docker-local:build": {
+                "type": "frameworkCommand",
+                "command": "project:container",
+                "home": "project",
+                "args": ["dockerLocal", "build"]
+            },
+            "docker-local:start": {
+                "type": "frameworkCommand",
+                "command": "project:container",
+                "home": "project",
+                "args": ["dockerLocal", "start"]
+            },
+            "docker-local:status": {
+                "type": "frameworkCommand",
+                "command": "project:container",
+                "home": "project",
+                "args": ["dockerLocal", "status"]
+            },
+            "docker-local:logs": {
+                "type": "frameworkCommand",
+                "command": "project:container",
+                "home": "project",
+                "args": ["dockerLocal", "logs"]
+            },
+            "docker-local:stop": {
+                "type": "frameworkCommand",
+                "command": "project:container",
+                "home": "project",
+                "args": ["dockerLocal", "stop"]
+            },
+            "docker-local:reset": {
+                "type": "frameworkCommand",
+                "command": "project:container",
+                "home": "project",
+                "args": ["dockerLocal", "reset", "--confirm-destroy-docker-local-data"]
+            },
+            "docker-local:acceptance": {
+                "type": "frameworkCommand",
+                "command": "project:container-qualification",
+                "home": "project",
+                "args": ["dockerLocal", "acceptance"]
+            },
+            "docker-local:qualify": {
+                "type": "frameworkCommand",
+                "command": "project:container-qualification",
+                "home": "project",
+                "args": ["dockerLocal", "qualification"]
+            },
+            "docker-local:backup": {
+                "type": "frameworkCommand",
+                "command": "project:container-resilience",
+                "home": "project",
+                "args": ["dockerLocal", "backup"]
+            },
+            "docker-local:verify": {
+                "type": "frameworkCommand",
+                "command": "project:container-resilience",
+                "home": "project",
+                "args": ["dockerLocal", "verify"]
+            },
+            "docker-local:restore": {
+                "type": "frameworkCommand",
+                "command": "project:container-resilience",
+                "home": "project",
+                "args": ["dockerLocal", "restore"]
+            },
+            "docker-local:resilience": {
+                "type": "frameworkCommand",
+                "command": "project:container-qualification",
+                "home": "project",
+                "args": ["dockerLocal", "resilience-qualification"]
+            },
+            "docker-local:soak": {
+                "type": "frameworkCommand",
+                "command": "project:container-qualification",
+                "home": "project",
+                "args": ["dockerLocal", "soak"]
+            },
+            "acceptance:agora-commerce:docker": {
+                "type": "frameworkCommand",
+                "command": "project:container-qualification",
+                "home": "project",
+                "args": ["dockerLocal", "commerce-acceptance"]
+            },
+            "acceptance:documentation:fresh-browser": {
+                "type": "frameworkCommand",
+                "command": "project:container-qualification",
+                "home": "project",
+                "args": ["dockerLocal", "acceptance", "--expect-documentation-not-installed"]
             }
-        };
+        }, this.discoverRuntimeStartCommands(projectRoot), this.discoverAcceptanceCommands(projectRoot));
     },
 
     /**
-     * Resolves effective command aliases from framework defaults plus project
-     * overrides.
-     * @param {Object} manifest Project manifest.
+     * Discovers runtime start aliases from environment server package metadata.
+     * @param {string} projectRoot Project root.
+     * @returns {Object} Command alias map.
+     */
+    discoverRuntimeStartCommands: function (projectRoot) {
+        if (!projectRoot) return {};
+        const envsRoot = path.join(projectRoot, 'envs');
+        if (!fs.existsSync(envsRoot)) return {};
+        const commands = {};
+        const serverCodes = new Set();
+        for (const environment of fs.readdirSync(envsRoot, { withFileTypes: true })) {
+            if (!environment.isDirectory()) continue;
+            const environmentRoot = path.join(envsRoot, environment.name);
+            for (const entry of fs.readdirSync(environmentRoot, { withFileTypes: true })) {
+                if (!entry.isDirectory()) continue;
+                const packagePath = path.join(environmentRoot, entry.name, 'package.json');
+                if (!fs.existsSync(packagePath)) continue;
+                const metadata = JSON.parse(fs.readFileSync(packagePath, 'utf8'));
+                if (metadata.nodics?.kind !== 'server' || metadata.nodics.retired === true) continue;
+                serverCodes.add(entry.name.replace(/Server$/u, ''));
+            }
+        }
+        Array.from(serverCodes).sort().forEach(serverCode => {
+            const commandName = 'start:' + this.serverCodeToCommandSegment(serverCode);
+            commands[commandName] = {
+                type: 'frameworkCommand',
+                command: 'project:runtime-start',
+                home: 'project',
+                args: [serverCode]
+            };
+        });
+        return commands;
+    },
+
+    /**
+     * Converts camel-case runtime server codes to developer command segments.
+     * @param {string} serverCode Runtime server code without Server suffix.
+     * @returns {string} Command segment.
+     */
+    serverCodeToCommandSegment: function (serverCode) {
+        return String(serverCode).replace(/([a-z0-9])([A-Z])/gu, '$1:$2').toLowerCase();
+    },
+
+    /**
+     * Discovers project acceptance command aliases from conventional scripts.
+     * @param {string} projectRoot Project root.
+     * @returns {Object} Command alias map.
+     */
+    discoverAcceptanceCommands: function (projectRoot) {
+        if (!projectRoot) return {};
+        const acceptanceRoot = path.join(projectRoot, 'scripts', 'acceptance');
+        if (!fs.existsSync(acceptanceRoot)) return {};
+        const commands = {};
+        const explicitNames = {
+            defaultProjectAgoraCmsMediaSeedService: 'acceptance:agora-cms-media-seed',
+            defaultProjectAgoraCommerceAcceptanceService: 'acceptance:agora-commerce',
+            defaultProjectAgoraCommerceDataAcceptanceService: 'acceptance:agora-commerce-data',
+            defaultProjectAgoraCommerceLiveQualificationService: 'qualification:agora-commerce:live',
+            defaultProjectAgoraCommercePublicationAcceptanceService: 'acceptance:agora-commerce-publication',
+            defaultProjectCapabilityRegistryAcceptanceService: 'acceptance:capability-registry',
+            defaultProjectDeploymentQualificationService: 'qualification:deployment',
+            defaultProjectEditorialLiveJourneyAcceptanceService: 'acceptance:editorial-live',
+            defaultProjectFunctionalJourneyAcceptanceService: 'acceptance:functional',
+            defaultProjectGuidedInitializationAcceptanceService: 'acceptance:guided-initialization',
+            defaultProjectLocalBootstrapAcceptanceService: 'acceptance:local',
+            defaultProjectLoyaltyRewardCheckoutAcceptanceService: 'acceptance:loyalty-reward-checkout',
+            defaultProjectNexusCmsMediaSeedService: 'acceptance:nexus-cms-media-seed',
+            defaultProjectRuntimeDeploymentGrantAcceptanceService: 'acceptance:runtime-grants',
+            defaultProjectWasteBackofficeDiscoveryAcceptanceService: 'acceptance:waste-backoffice-discovery',
+            defaultProjectWasteManagementAcceptanceService: 'acceptance:waste-management'
+        };
+        for (const file of fs.readdirSync(acceptanceRoot).filter(name => name.endsWith('Service.mjs')).sort()) {
+            const baseName = file.replace(/\.mjs$/u, '');
+            const commandName = explicitNames[baseName] || this.acceptanceScriptToCommandName(baseName);
+            if (!commandName) continue;
+            commands[commandName] = { type: 'projectScript', script: path.join('scripts', 'acceptance', file) };
+        }
+        if (commands['acceptance:local']) {
+            commands['acceptance:local:fresh'] = Object.assign({}, commands['acceptance:local'], { args: ['--drop-local-db'] });
+        }
+        if (commands['qualification:deployment']) {
+            commands['qualification:deployment:local'] = Object.assign({}, commands['qualification:deployment'], { args: ['--execute-local'] });
+        }
+        return commands;
+    },
+
+    /**
+     * Builds a fallback command name for conventional acceptance scripts.
+     * @param {string} baseName Script base name.
+     * @returns {string} Command name.
+     */
+    acceptanceScriptToCommandName: function (baseName) {
+        const shortName = String(baseName)
+            .replace(/^defaultProject/u, '')
+            .replace(/Service$/u, '')
+            .replace(/Acceptance$/u, '')
+            .replace(/Journey$/u, '')
+            .replace(/Qualification$/u, '');
+        if (!shortName) return '';
+        const kebab = shortName.replace(/([a-z0-9])([A-Z])/gu, '$1-$2').toLowerCase();
+        return 'acceptance:' + kebab;
+    },
+
+    /**
+     * Resolves effective command aliases from framework and project structure.
+     * @param {string} projectRoot Project root.
      * @returns {Object} Effective command alias map.
      */
-    resolveCommands: function (manifest) {
-        return Object.assign({}, this.defaultCommands(), ((manifest.tooling || {}).commands) || {});
+    resolveCommands: function (projectRoot) {
+        return this.defaultCommands(projectRoot);
     },
 
     /**
      * Resolves script ownership defaults used by project command validation.
-     * @param {Object} manifest Project manifest.
      * @returns {Object} Script ownership policy.
      */
-    resolveScriptOwnership: function (manifest) {
-        const local = ((manifest.tooling || {}).scriptOwnership) || {};
+    resolveScriptOwnership: function () {
         return {
-            projectOwned: [].concat(local.projectOwned || []),
-            forbiddenProjectOwnedPatterns: [].concat(local.forbiddenProjectOwnedPatterns || [
+            forbiddenProjectOwnedPatterns: [
                 'local-security-boundary-qualification',
                 'publishing-capacity-baseline',
                 'local-sustained-publishing-qualification',
                 'docker-local-publishing-interruption-contracts'
-            ]),
-            forbiddenProjectDirectories: [].concat(local.forbiddenProjectDirectories || ['src'])
+            ],
+            forbiddenProjectDirectories: ['src']
         };
     },
 
@@ -310,27 +461,20 @@ module.exports = {
     },
 
     /**
-     * Ensures project scripts are explicitly declared and not pretending to own framework behavior.
+     * Ensures discovered project scripts do not pretend to own framework behavior.
      * @param {string} projectRoot Project root.
-     * @param {Object} manifest Project manifest.
      * @param {Object} commands Project command map.
      * @returns {void}
      */
-    validateScriptOwnership: function (projectRoot, manifest, commands) {
+    validateScriptOwnership: function (projectRoot, commands) {
         const declaredScripts = new Set(Object.values(commands)
             .filter(command => command.type === 'projectScript')
             .map(command => path.normalize(command.script)));
-        const ownership = this.resolveScriptOwnership(manifest);
-        const projectOwnedScripts = new Set([].concat(ownership.projectOwned || []).map(script => path.normalize(script)));
-        for (const script of declaredScripts) {
-            if (!projectOwnedScripts.has(script)) {
-                throw new Error('Project script command is not listed under tooling.scriptOwnership.projectOwned: ' + script);
-            }
-        }
+        const ownership = this.resolveScriptOwnership();
         const forbidden = [].concat(ownership.forbiddenProjectOwnedPatterns || []);
-        for (const script of projectOwnedScripts) {
+        for (const script of declaredScripts) {
             if (!fs.existsSync(path.join(projectRoot, script))) {
-                throw new Error('Project-owned script is missing: ' + script);
+                throw new Error('Project script command is missing: ' + script);
             }
             if (forbidden.some(pattern => new RegExp(pattern).test(script))) {
                 throw new Error('Forbidden framework-owned script pattern declared as project-owned: ' + script);
@@ -342,11 +486,10 @@ module.exports = {
      * Ensures generated/reference projects do not grow framework-owned local
      * implementation directories that make framework upgrades harder.
      * @param {string} projectRoot Project root.
-     * @param {Object} manifest Project manifest.
      * @returns {void}
      */
-    validateProjectDirectoryBoundaries: function (projectRoot, manifest) {
-        const ownership = this.resolveScriptOwnership(manifest);
+    validateProjectDirectoryBoundaries: function (projectRoot) {
+        const ownership = this.resolveScriptOwnership();
         const forbiddenDirectories = [].concat(
             ownership.forbiddenProjectDirectories || []
         );
@@ -368,17 +511,16 @@ module.exports = {
     /**
      * Runs a declared project command.
      * @param {string} projectRoot Project root.
-     * @param {Object} manifest Project manifest.
      * @param {string} name Command name.
      * @param {string[]} args Additional command arguments.
      * @returns {boolean} Whether command passed.
      */
-    runProjectCommand: function (projectRoot, manifest, name, args) {
-        const projectCode = this.resolveProjectCode(projectRoot, manifest);
-        const commands = this.resolveCommands(manifest);
+    runProjectCommand: function (projectRoot, name, args) {
+        const projectCode = this.resolveProjectCode(projectRoot);
+        const commands = this.resolveCommands(projectRoot);
         const command = commands[name];
         if (!command) {
-            throw new Error('Unknown project command in nodics.project.json: ' + name);
+            throw new Error('Unknown project command: ' + name);
         }
         let execution;
         if (command.type === 'projectScript') {

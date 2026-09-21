@@ -11,6 +11,28 @@
 
 const crypto = require('node:crypto');
 
+function valueFromStore(store, reference) {
+    const entry = store && reference ? store[reference] : undefined;
+    if (typeof entry === 'string') return entry;
+    if (entry && typeof entry.value === 'string') return entry.value;
+    if (entry && typeof entry.token === 'string') return entry.token;
+    return undefined;
+}
+
+function configuredCredential(application, policy) {
+    const config = typeof CONFIG !== 'undefined' && typeof CONFIG.get === 'function' ? CONFIG : undefined;
+    const reference = application.credentialReference || application.secretEnvironmentVariable,
+        runtime = config ? config.get('runtimeConfiguration') : undefined,
+        secure = config ? config.get('secureConfiguration') : undefined,
+        generic = config ? config.get('credentials') : undefined;
+    const token = valueFromStore(application.credentials, reference) ||
+        valueFromStore(policy.credentials, reference) ||
+        valueFromStore(runtime?.credentials, reference) ||
+        valueFromStore(secure?.credentials, reference) ||
+        valueFromStore(generic, reference);
+    return { reference, token };
+}
+
 /**
  * @module profile/service/defaultTelegramIdentityProviderService
  * @description Verifies Telegram Mini App launch assertions using server-configured credentials; returns minimized identity facts and never issues tokens.
@@ -22,8 +44,13 @@ module.exports = {
     invalid: function () { throw new CLASSES.NodicsError('ERR_PROFILE_EXTERNAL_ASSERTION'); },
     /** Verifies a bounded signed assertion against a configured bot. @param {object} options Provider configuration, proof and policy. @returns {object} Stable provider subject and consent facts; throws on failure. */
     verify: function ({ proof, application, policy }) {
-        const token = process.env[application.secretEnvironmentVariable];
-        if (!token || !/^\d+:[^\s]+$/.test(token)) throw new CLASSES.NodicsError('ERR_PROFILE_EXTERNAL_UNAVAILABLE');
+        const { token } = configuredCredential(application, policy || {});
+        if (!token || !/^\d+:[^\s]+$/.test(token)) {
+            let error = new CLASSES.NodicsError('ERR_PROFILE_EXTERNAL_UNAVAILABLE');
+            error.runtimeConfigurationStatus = 'UNCONFIGURED';
+            error.responseCode = 'TELEGRAM_CONFIGURATION_REQUIRED';
+            throw error;
+        }
         if (typeof proof !== 'string' || !proof || proof.length > policy.maximumAssertionCharacters) return this.invalid();
         const params = new URLSearchParams(proof), keys = [...params.keys()];
         if (new Set(keys).size !== keys.length) return this.invalid();

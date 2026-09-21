@@ -27,23 +27,6 @@ const { spawnSync } = require('child_process');
 
 const toolingCommandService = require('../src/service/defaultToolingCommandService');
 
-function readEnvFile(filePath) {
-    if (!fs.existsSync(filePath)) return {};
-    return fs.readFileSync(filePath, 'utf8').split(/\r?\n/u).reduce((env, line) => {
-        const trimmed = line.trim();
-        if (!trimmed || trimmed.startsWith('#')) return env;
-        const separatorIndex = trimmed.indexOf('=');
-        if (separatorIndex < 0) return env;
-        const key = trimmed.slice(0, separatorIndex).trim();
-        let value = trimmed.slice(separatorIndex + 1).trim();
-        if ((value.startsWith('"') && value.endsWith('"')) || (value.startsWith("'") && value.endsWith("'"))) {
-            value = value.slice(1, -1);
-        }
-        env[key] = value;
-        return env;
-    }, {});
-}
-
 function findFrameworkRootFromBridge() {
     const candidates = [];
     let current = path.resolve(__dirname);
@@ -59,7 +42,7 @@ function findFrameworkRootFromBridge() {
 }
 
 function resolveFrameworkRoot(projectRoot, projectEnv) {
-    const env = Object.assign({}, projectEnv || readEnvFile(path.join(projectRoot, '.env')), process.env);
+    const env = Object.assign({}, projectEnv || {}, process.env);
     if (env.NODICS_FRAMEWORK_ROOT) {
         return path.resolve(projectRoot, env.NODICS_FRAMEWORK_ROOT);
     }
@@ -71,8 +54,8 @@ function assertFrameworkRoot(frameworkRoot) {
     const packagePath = path.join(frameworkRoot, 'package.json');
     if (!fs.existsSync(toolPath) || !fs.existsSync(packagePath)) {
         throw new Error(
-            'Unable to resolve Nodics framework root. Set NODICS_FRAMEWORK_ROOT in the project .env ' +
-            'or run configure:framework before using Nodics lifecycle commands.'
+            'Unable to resolve Nodics framework root. Set NODICS_FRAMEWORK_ROOT for this process ' +
+            'or run from a project beside the nodics.ai checkout before using Nodics lifecycle commands.'
         );
     }
     const packageJson = JSON.parse(fs.readFileSync(packagePath, 'utf8'));
@@ -94,7 +77,7 @@ function resolveCommandHome(command, projectRoot) {
 function main() {
     const normalized = toolingCommandService.normalizeArguments(process.argv.slice(2));
     const projectRoot = toolingCommandService.resolveHome(normalized);
-    const projectEnv = readEnvFile(path.join(projectRoot, '.env'));
+    const projectEnv = {};
     const command = normalizeCommand(normalized.find(argument => !argument.startsWith('-')) || 'help');
     const frameworkRoot = resolveFrameworkRoot(projectRoot, projectEnv);
     const toolPath = assertFrameworkRoot(frameworkRoot);

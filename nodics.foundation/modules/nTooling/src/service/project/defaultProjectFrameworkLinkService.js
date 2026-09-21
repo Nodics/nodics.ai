@@ -16,38 +16,13 @@
  * @description Validates project framework-root configuration without creating project-local framework links.
  * @layer tooling
  * @owner nTooling
- * @override Projects own NODICS_FRAMEWORK_ROOT; framework tooling owns validation and migration guidance.
+ * @override Projects own framework-root configuration; framework tooling owns validation and migration guidance.
  */
 
 const fs = require('node:fs');
 const path = require('node:path');
 
 module.exports = {
-    /**
-     * Reads a dotenv-style file without loading it into global process state.
-     * @param {string} filePath Environment file path.
-     * @returns {Object} Parsed values.
-     */
-    readEnvFile: function (filePath) {
-        if (!fs.existsSync(filePath)) return {};
-        return fs.readFileSync(filePath, 'utf8')
-            .split(/\r?\n/u)
-            .reduce((env, line) => {
-                const trimmed = line.trim();
-                if (!trimmed || trimmed.startsWith('#')) return env;
-                const separatorIndex = trimmed.indexOf('=');
-                if (separatorIndex < 0) return env;
-                const key = trimmed.slice(0, separatorIndex).trim();
-                let value = trimmed.slice(separatorIndex + 1).trim();
-                if ((value.startsWith('"') && value.endsWith('"')) ||
-                        (value.startsWith("'") && value.endsWith("'"))) {
-                    value = value.slice(1, -1);
-                }
-                env[key] = value;
-                return env;
-            }, {});
-    },
-
     /**
      * Resolves and validates one framework package root.
      * @param {string} frameworkRoot Framework root.
@@ -60,7 +35,7 @@ module.exports = {
         if (!fs.existsSync(modulePackage)) {
             throw new Error(
                 `Cannot resolve ${moduleName}. Expected package at ${modulePackage}. ` +
-                'Update NODICS_FRAMEWORK_ROOT in .env.'
+                'Update the project framework-root configuration or the NODICS_FRAMEWORK_ROOT process value.'
             );
         }
         return moduleRoot;
@@ -76,17 +51,14 @@ module.exports = {
     validate: function (options = {}) {
         const projectRoot = path.resolve(options.projectRoot || process.cwd());
         const packageJsonPath = path.join(projectRoot, 'package.json');
-        const envPath = path.join(projectRoot, '.env');
         const environment = Object.assign(
             {},
-            this.readEnvFile(envPath),
             options.environment || process.env
         );
         const frameworkRootValue = environment.NODICS_FRAMEWORK_ROOT;
         if (!frameworkRootValue) {
             throw new Error(
-                'NODICS_FRAMEWORK_ROOT is not configured. Copy .env.example to .env ' +
-                'and point it to the folder containing Nodics framework packages.'
+                'NODICS_FRAMEWORK_ROOT is not configured. Provide it through the project runtime configuration or this process invocation.'
             );
         }
 

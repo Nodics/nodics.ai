@@ -9,6 +9,29 @@
 
  */
 "use strict";
+function valueFromStore(store, reference) {
+  const entry = store && reference ? store[reference] : undefined;
+  if (typeof entry === "string") return entry;
+  if (entry && typeof entry.value === "string") return entry.value;
+  if (entry && typeof entry.token === "string") return entry.token;
+  return undefined;
+}
+
+function configuredCredential(reference, policy) {
+  const config =
+      typeof CONFIG !== "undefined" && typeof CONFIG.get === "function"
+        ? CONFIG
+        : undefined,
+    runtime = config ? config.get("runtimeConfiguration") : undefined,
+    secure = config ? config.get("secureConfiguration") : undefined,
+    generic = config ? config.get("credentials") : undefined;
+  return (
+    valueFromStore((policy || {}).credentials, reference) ||
+    valueFromStore(runtime?.credentials, reference) ||
+    valueFromStore(secure?.credentials, reference) ||
+    valueFromStore(generic, reference)
+  );
+}
 /**
  * @module commsCore/service/defaultTelegramCommunicationProviderService
  * @description Sends plain Telegram messages only to Profile-resolved active links. Never logs credentials, proof, recipient or response content.
@@ -48,10 +71,10 @@ module.exports = {
     if (
       !(policy.credentialReferences || []).includes(target.credentialReference)
     )
-      return { status: "FAILED", responseCode: "CREDENTIAL_NOT_CONFIGURED" };
-    const token = process.env[target.credentialReference];
+      return { status: "UNCONFIGURED", responseCode: "TELEGRAM_CONFIGURATION_REQUIRED" };
+    const token = configuredCredential(target.credentialReference, policy);
     if (!token || token.split(":")[0] !== target.applicationSubject)
-      return { status: "FAILED", responseCode: "CREDENTIAL_NOT_CONFIGURED" };
+      return { status: "UNCONFIGURED", responseCode: "TELEGRAM_CONFIGURATION_REQUIRED" };
     let result;
     try {
       const raw = await transport(

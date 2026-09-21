@@ -56,7 +56,7 @@ test('container profile resolves from environment-owned config/properties.js', (
   assert.equal(profile.acceptance.urls.platform, 'http://127.0.0.1:5300');
 });
 
-test('container profile rejects root descriptor container facts', () => {
+test('container profile rejects root project descriptors', () => {
   const projectRoot = fs.mkdtempSync(path.join(os.tmpdir(), 'nodics-container-profile-'));
   writeJson(path.join(projectRoot, 'package.json'), {
     name: 'acme.startio',
@@ -74,6 +74,6 @@ test('container profile rejects root descriptor container facts', () => {
 
   assert.throws(
     () => readContainerEnvironmentConfiguration(projectRoot, 'dockerLocal'),
-    /Unsupported nodics\.project\.json property `containerEnvironments`/
+    /Unsupported nodics\.project\.json/
   );
 });

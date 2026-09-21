@@ -159,8 +159,10 @@ not recovery yields, hazard measurements, lifecycle results or carbon credits.
 `outcomeCommunication.detailLinks` may supply a trusted destination URL and query
 parameter per delivery channel. The immutable submission code is encoded into
 that URL; it selects a record and conveys no authorization. Local Circa uses a
-Telegram Main Mini App `startapp` link and a browser mobile-detail link. A normal
-fresh Profile session and owner-scoped Waste read remain mandatory at the target.
+Telegram Main Mini App `startapp` link and a browser mobile-detail link. Profile
+and Communication receive logical Telegram credential references from layered
+configuration; runtime configuration supplies the secret value. A normal fresh
+Profile session and owner-scoped Waste read remain mandatory at the target.
 
 Notification templates can declare `detailUrl` alongside the exact public review
 comment. Configurations without a detail link retain the older variable contract.

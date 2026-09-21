@@ -65,12 +65,14 @@ and the documented `src/lib` constructor category. Keep existing non-runtime
 command-boundary coverage explicit. Nested callbacks and control-flow statements
 must not be mistaken for exported shorthand methods.
 
-Project command defaults contain reusable operations only. Application server and
-environment aliases, named customer acceptance journeys and media seeds are
-project-owned `nodics.project.json` tooling commands. Declare scripts under
-`tooling.scriptOwnership.projectOwned`; the existing executor supplies project and
-framework roots. Do not copy topology, release or configuration resolvers into the
-project. Project documentation generators read stable publication identifiers,
+Project command defaults contain reusable operations only. Application server
+aliases are discovered from environment server package metadata, and named
+customer acceptance journeys or media seeds are discovered from conventional
+`scripts/acceptance/*Service.mjs` files. Do not create a root
+`nodics.project.json` or move these aliases into layered properties just to repeat
+the project structure. The existing executor supplies project and framework
+roots. Do not copy topology, release or configuration resolvers into the project.
+Project documentation generators read stable publication identifiers,
 routes, labels and channels from `docs/catalogue.json.publication`, validated
 before writing. The generic data-manifest command refreshes only explicitly
 declared development-baseline checksums; changed immutable releases fail before
@@ -184,9 +186,10 @@ properties and rejected by the configuration audit.
 `auditConfigurationSources` statically inspects authored properties without
 executing them. Both project validation and principle audit enforce the nSetup
 configuration restrictions; diagnostics report paths, never secret values.
-Project validation explicitly enables the direct customer
-`bootstrapIdentity.adminPassword` override. Framework audit retains its literal
-secret ban; service credentials, signing/digest material and binding fallbacks
+Project validation rejects direct customer `bootstrapIdentity.adminPassword`
+literals in authored source. nAuth owns the binding, and customer deployment
+layers may supply governed configuration values without committing live
+credentials. Service credentials, signing/digest material and binding fallbacks
 remain prohibited in both scopes. Effective nAuth strength validation still runs.
 Container credential generation persists random per-install credentials and
 preserves existing values. Docker variable mappings may retain an installed

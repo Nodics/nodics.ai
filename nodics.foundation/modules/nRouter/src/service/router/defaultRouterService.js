@@ -124,6 +124,22 @@ module.exports = {
     },
 
     /**
+     * Returns whether an alias resolves to the consolidated default listener.
+     *
+     * @param {Object} moduleConfig Candidate module/server configuration.
+     * @param {Object} defaultConfig Consolidated default listener configuration.
+     * @returns {boolean} True when both configurations bind the same ports.
+     */
+    sharesDefaultListener: function (moduleConfig, defaultConfig) {
+        if (!moduleConfig || !defaultConfig || moduleConfig === defaultConfig) return false;
+        const moduleEndpoint = moduleConfig.getEndpoint && moduleConfig.getEndpoint();
+        const defaultEndpoint = defaultConfig.getEndpoint && defaultConfig.getEndpoint();
+        if (!moduleEndpoint || !defaultEndpoint) return false;
+        return moduleEndpoint.getHttpPort() === defaultEndpoint.getHttpPort() &&
+            moduleEndpoint.getHttpsPort() === defaultEndpoint.getHttpsPort();
+    },
+
+    /**
      * Builds the base HTTP or HTTPS URL for a node configuration.
      *
      * @param {Object} nodeConfig Node/server configuration with host and port accessors.
@@ -426,9 +442,17 @@ module.exports = {
                         let displayName = null;
                         if (_self.getModulesPool().isAvailableModuleConfig(moduleName)) {
                             moduleConfig = _self.getModuleServerConfig(moduleName);
-                            app = moduleObject.app;
-                            app.use('/', moduleObject.moduleRouter);
-                            displayName = moduleName;
+                            let defaultConfig = _self.getModuleServerConfig('default');
+                            if (NODICS.getModules().default && _self.sharesDefaultListener(moduleConfig, defaultConfig)) {
+                                moduleConfig = defaultConfig;
+                                app = NODICS.getModules().default.app;
+                                app.use('/', moduleObject.moduleRouter);
+                                displayName = 'default';
+                            } else {
+                                app = moduleObject.app;
+                                app.use('/', moduleObject.moduleRouter);
+                                displayName = moduleName;
+                            }
                         } else {
                             moduleConfig = _self.getModuleServerConfig('default');
                             app = NODICS.getModules().default.app;

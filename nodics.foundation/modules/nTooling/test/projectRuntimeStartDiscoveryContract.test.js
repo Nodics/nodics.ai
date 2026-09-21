@@ -41,10 +41,7 @@ writeJson(path.join(frameworkRoot, 'nodics.foundation', 'package.json'), { name:
 writeJson(path.join(frameworkRoot, 'nodics.loyalty', 'package.json'), { name: 'nodics.loyalty' });
 writeJson(path.join(frameworkRoot, 'nodics.waste', 'package.json'), { name: 'nodics.waste' });
 writeJson(path.join(frameworkRoot, 'nodics.accelerators/modules/waste', 'package.json'), { name: 'waste' });
-writeJson(path.join(projectRoot, 'package.json'), { name: 'customer.project' });
-writeJson(path.join(projectRoot, 'nodics.project.json'), {
-    topology: { environment: 'customerLocal' }
-});
+writeJson(path.join(projectRoot, 'package.json'), { name: 'customer' });
 writeJson(path.join(serverRoot, 'package.json'), {
     name: 'loyaltyServer',
     nodics: { kind: 'server', extends: ['nodics.loyalty'] }
@@ -62,8 +59,8 @@ writeJson(path.join(retiredRoot, 'package.json'), {
     nodics: { kind: 'server', retired: true, replacementServers: ['wcmsStagedServer', 'wcmsOnlineServer'] }
 });
 
-const manifest = service.readManifest(projectRoot);
-const server = service.resolveServer(projectRoot, manifest, 'loyalty', {});
+service.readManifest(projectRoot);
+const server = service.resolveServer(projectRoot, 'loyalty', {});
 assert.equal(server.environment, 'customerLocal');
 assert.equal(server.server, 'loyaltyServer');
 assert.deepEqual(server.moduleRoots, ['nodics.foundation', 'nodics.loyalty', '{project}']);
@@ -75,10 +72,10 @@ assert.deepEqual(moduleRoots, [
     projectRoot
 ]);
 
-const dockerServer = service.resolveServer(projectRoot, manifest, 'loyalty', { ENV: 'customerLocal' });
+const dockerServer = service.resolveServer(projectRoot, 'loyalty', { ENV: 'customerLocal' });
 assert.equal(dockerServer.server, 'loyaltyServer');
 
-const wasteServer = service.resolveServer(projectRoot, manifest, 'waste', {});
+const wasteServer = service.resolveServer(projectRoot, 'waste', {});
 assert.deepEqual(wasteServer.moduleRoots, [
     'nodics.foundation',
     'nodics.waste',
@@ -93,7 +90,7 @@ assert.deepEqual(service.resolveModuleRoots(projectRoot, frameworkRoot, wasteSer
 ]);
 
 assert.throws(
-    () => service.resolveServer(projectRoot, manifest, 'legacy', {}),
+    () => service.resolveServer(projectRoot, 'legacy', {}),
     /Project runtime server is retired: legacy/
 );
 

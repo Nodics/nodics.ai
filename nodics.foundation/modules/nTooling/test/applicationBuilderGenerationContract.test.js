@@ -110,9 +110,10 @@ try {
       fs.statSync(path.join(outputRoot, "storefront/customer")).isDirectory(),
       "Storefront customer extension directory must exist",
     );
-    assert(
-      fs.statSync(path.join(outputRoot, ".env.example")).isFile(),
-      "Generated project must include beginner environment bootstrap",
+    assert.strictEqual(
+      fs.existsSync(path.join(outputRoot, ".env.example")),
+      false,
+      "Generated project must not introduce .env configuration scaffolding",
     );
     assert(
       fs.statSync(path.join(outputRoot, ".gitignore")).isFile(),

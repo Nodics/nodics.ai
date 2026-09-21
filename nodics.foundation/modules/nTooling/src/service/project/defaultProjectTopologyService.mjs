@@ -299,7 +299,7 @@ async function start() {
     started = true;
     persist();
     process.stdout.write(`[topology] ${topology.environment} is running under supervisor PID ${String(process.pid)}. Use npm run topology:stop or Ctrl+C.\n`);
-    await new Promise(resolve => process.once('beforeExit', resolve));
+    await new Promise(() => {});
   } catch (error) {
     await stop('startup failure');
     throw error;

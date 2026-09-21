@@ -127,6 +127,56 @@ module.exports = {
     },
 
     /**
+     * Delegates runtime configuration schema listing to the system service.
+     *
+     * @param {Object} request Nodics request context.
+     * @returns {Promise<Object>} Runtime configuration schema response.
+     */
+    listRuntimeConfigurationSchemas: function (request) {
+        return SERVICE.DefaultConfigurationService.listRuntimeConfigurationSchemas(request);
+    },
+
+    /**
+     * Delegates runtime configuration schema lookup to the system service.
+     *
+     * @param {Object} request Nodics request context.
+     * @returns {Promise<Object>} Runtime configuration schema response.
+     */
+    getRuntimeConfigurationSchema: function (request) {
+        return SERVICE.DefaultConfigurationService.getRuntimeConfigurationSchema(request);
+    },
+
+    /**
+     * Delegates masked effective runtime configuration lookup to the system service.
+     *
+     * @param {Object} request Nodics request context.
+     * @returns {Promise<Object>} Runtime configuration effective value response.
+     */
+    getRuntimeConfigurationEffectiveValues: function (request) {
+        return SERVICE.DefaultConfigurationService.getRuntimeConfigurationEffectiveValues(request);
+    },
+
+    /**
+     * Delegates runtime configuration update validation to the system service.
+     *
+     * @param {Object} request Nodics request context.
+     * @returns {Promise<Object>} Runtime configuration validation response.
+     */
+    validateRuntimeConfigurationUpdate: function (request) {
+        return SERVICE.DefaultConfigurationService.validateRuntimeConfigurationUpdate(request);
+    },
+
+    /**
+     * Delegates runtime configuration update saving to the system service.
+     *
+     * @param {Object} request Nodics request context.
+     * @returns {Promise<Object>} Runtime configuration save response.
+     */
+    saveRuntimeConfigurationUpdate: function (request) {
+        return SERVICE.DefaultConfigurationService.saveRuntimeConfigurationUpdate(request);
+    },
+
+    /**
      * Delegates activation request lookup to the system service.
      *
      * @param {Object} request Nodics request context.

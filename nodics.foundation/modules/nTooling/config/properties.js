@@ -649,12 +649,12 @@ module.exports = {
                 arguments: ['publishing-interruption-contracts']
             },
             'project:validate': {
-                description: 'Validate a generated or reference project contract from nodics.project.json.',
+                description: 'Validate a generated or reference project contract from package, environment server metadata, scripts, and layered configuration.',
                 handler: '@nTooling/project',
                 operation: 'validate'
             },
             'project:run': {
-                description: 'Run a framework-owned project command alias with optional project manifest overrides.',
+                description: 'Run a framework-owned project command alias discovered from package, environment server metadata, scripts, and layered configuration.',
                 handler: '@nTooling/project',
                 operation: 'run'
             },
@@ -699,7 +699,7 @@ module.exports = {
                 script: 'src/service/project/defaultProjectRuntimeStartService.js'
             },
             'project:runtime-start': {
-                description: 'Start a project-declared Nodics runtime server using framework-owned startup mechanics.',
+                description: 'Start a discovered project Nodics runtime server using framework-owned startup mechanics.',
                 handler: 'src/service/command/defaultNodeScriptCommandService.js',
                 script: 'src/service/project/defaultProjectRuntimeStartService.js'
             },

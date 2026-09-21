@@ -35,16 +35,16 @@ export function resolveTemplate(projectRoot, value) {
 }
 
 /**
- * Reads the project manifest when present.
+ * Rejects retired project descriptors.
  * @param {string} projectRoot Project root.
- * @returns {Object} Parsed manifest.
+ * @returns {Object} Empty descriptor for older internal callers.
  */
 export function readProjectManifest(projectRoot) {
-  const manifestPath = path.join(projectRoot, 'nodics.project.json');
-  if (!fs.existsSync(manifestPath)) return {};
-  const manifest = JSON.parse(fs.readFileSync(manifestPath, 'utf8'));
-  validateProjectManifest(manifest);
-  return manifest;
+  const descriptorPath = path.join(projectRoot, 'nodics.project.json');
+  if (fs.existsSync(descriptorPath)) {
+    throw new Error('Unsupported nodics.project.json; project environment and container tooling are derived from package.json, envs/* configuration, and layered properties.');
+  }
+  return {};
 }
 
 /**
@@ -52,23 +52,8 @@ export function readProjectManifest(projectRoot) {
  * @param {Object} manifest Parsed project descriptor.
  * @returns {void}
  */
-export function validateProjectManifest(manifest = {}) {
-  const keys = Object.keys(manifest);
-  if (keys.length === 0) {
-    throw new Error('Unnecessary nodics.project.json; remove the file unless project-owned tooling or acceptance overrides are required');
-  }
-  if (Object.prototype.hasOwnProperty.call(manifest, 'contractVersion')) {
-    throw new Error('nodics.project.json must not declare contractVersion');
-  }
-  if (Object.prototype.hasOwnProperty.call(manifest, 'projectCode')) {
-    throw new Error('nodics.project.json must not declare projectCode; use package.json.name');
-  }
-  const allowedTopLevel = ['acceptance', 'tooling'];
-  keys.forEach(key => {
-    if (!allowedTopLevel.includes(key)) {
-      throw new Error(`Unsupported nodics.project.json property \`${key}\`. Allowed properties: acceptance, tooling`);
-    }
-  });
+export function validateProjectManifest() {
+  throw new Error('Unsupported nodics.project.json; remove the root descriptor and use package, env/server metadata, and layered properties.');
 }
 
 /**
@@ -85,19 +70,12 @@ export function readProjectPackage(projectRoot) {
 /**
  * Resolves canonical project identity from package.json.name.
  * @param {string} projectRoot Project root.
- * @param {Object} manifest Project manifest.
  * @returns {string} Canonical project code.
  */
-export function resolveProjectCode(projectRoot, manifest = {}) {
+export function resolveProjectCode(projectRoot) {
   const projectCode = readProjectPackage(projectRoot).name;
   if (!projectCode || !/^[a-zA-Z][a-zA-Z0-9._-]*$/.test(projectCode)) {
     throw new Error('package.json requires a stable Nodics project name');
-  }
-  if (Object.prototype.hasOwnProperty.call(manifest, 'contractVersion')) {
-    throw new Error('nodics.project.json must not declare contractVersion');
-  }
-  if (Object.prototype.hasOwnProperty.call(manifest, 'projectCode')) {
-    throw new Error('nodics.project.json must not declare projectCode; use package.json.name');
   }
   return projectCode;
 }

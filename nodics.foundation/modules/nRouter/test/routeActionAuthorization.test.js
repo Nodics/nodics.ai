@@ -124,6 +124,21 @@ let wildcardGranted = executeCheckAccess(createRequest({
 }));
 assert.strictEqual(wildcardGranted.success, true, 'Wildcard permission should allow matching route action');
 
+let runtimeConfigurationUpdateDenied = executeCheckAccess(createRequest({
+    permission: 'runtime.config.update',
+    permissions: ['runtime.config.schema.view', 'runtime.config.effective.view']
+}));
+assert.strictEqual(runtimeConfigurationUpdateDenied.success, false,
+    'Runtime configuration update route must deny read-only configuration users');
+assert.strictEqual(runtimeConfigurationUpdateDenied.error.code, 'ERR_AUTH_00003');
+
+let runtimeConfigurationUpdateGranted = executeCheckAccess(createRequest({
+    permission: 'runtime.config.update',
+    permissions: ['runtime.config.update']
+}));
+assert.strictEqual(runtimeConfigurationUpdateGranted.success, true,
+    'Runtime configuration update route must allow the explicit update grant');
+
 routeActionAuthorization = {
     enabled: true,
     strict: true,
