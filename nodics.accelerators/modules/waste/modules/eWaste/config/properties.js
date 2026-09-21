@@ -254,6 +254,14 @@ module.exports = {
     },
   },
   eWaste: {
+    rewardRules: {
+      propertyProviderCode: "eWaste.reward",
+      policyType: "REWARD_SCORING",
+      defaultPlatformScopeCode: "DEFAULT",
+      domainScopeCode: "ELECTRONICS",
+      loyaltyProgramCode: "default",
+      rewardScale: 2,
+    },
     preparation: {
       maximumPhotoBytes: 5242880,
       permission: "waste.submission.create",

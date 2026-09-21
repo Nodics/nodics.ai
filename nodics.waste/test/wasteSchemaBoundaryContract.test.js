@@ -24,6 +24,7 @@ const schemaFiles = [
     'modules/wasteVerification/src/schemas/schemas.js',
     'modules/wasteReceipt/src/schemas/schemas.js',
     'modules/wasteImpact/src/schemas/schemas.js',
+    'modules/wasteReward/src/schemas/schemas.js',
     'modules/wasteMovement/src/schemas/schemas.js',
     'modules/wasteCompliance/src/schemas/schemas.js'
 ];

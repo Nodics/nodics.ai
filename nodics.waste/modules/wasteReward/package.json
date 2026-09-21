@@ -1,0 +1,33 @@
+{
+  "name": "wasteReward",
+  "index": "82.75",
+  "description": "Reusable Waste reward assessment persistence and lifecycle evidence.",
+  "main": "nodics.js",
+  "version": "0.0.0",
+  "private": true,
+  "license": "SEE LICENSE IN LICENSE",
+  "nodics": {
+    "kind": "capability",
+    "displayName": "Waste Reward",
+    "runtimeModule": true,
+    "loadableByNodicsModuleLoader": true,
+    "owns": [
+      "configuration",
+      "schema",
+      "service",
+      "utility",
+      "test",
+      "llm"
+    ],
+    "runtime": {
+      "router": false,
+      "publish": false,
+      "web": false
+    }
+  },
+  "scripts": {
+    "check:syntax": "find . -name '*.js' -not -path './node_modules/*' -print0 | xargs -0 -n 50 node --check",
+    "test:contract": "for file in test/*.test.js; do if [ -f \"$file\" ]; then node \"$file\" || exit 1; fi; done",
+    "test": "npm run check:syntax && npm run test:contract"
+  }
+}

@@ -19,7 +19,15 @@ const properties = require("../config/properties").eWaste;
 const routes = require("../src/router/routers").eWaste.experience;
 const originalPublic = new Set(["experience", "marketplace"]);
 assert.equal(pkg.nodics.runtime.router, true);
-assert.deepEqual(pkg.nodics.extends, ["nodics.waste"]);
+assert.deepEqual(pkg.nodics.extends, [
+  "nodics.waste",
+  "nodics.rulesEngine",
+]);
+assert(!pkg.nodics.owns.includes("schema"));
+assert(
+  !fs.existsSync(path.join(__dirname, "..", "src", "schemas", "schemas.js")),
+  "eWaste must persist generic reward assessments through wasteReward",
+);
 assert.equal(properties.marketplace.autoPublishListings, false);
 assert.equal(properties.rewardValuationService, null);
 assert.equal(properties.applicationCode, "EWASTE");
@@ -81,7 +89,6 @@ for (const folder of ["src", "config"]) {
     );
   }
 }
-assert(!fs.existsSync(path.join(__dirname, "../src/schemas")));
 console.log("eWaste domain ownership and API boundaries validated");
 
 assert.equal(routes.verify.permission, "waste.verification.record");

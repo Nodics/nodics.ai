@@ -6,7 +6,13 @@ A later customer module contributes small deltas to `config/properties.js`:
 module.exports = {
   eWaste: {
     applicationCode: "PARTNER_EWASTE",
-    rewardValuationService: "PartnerRewardValuationService",
+    rewardRules: {
+      policyCode: "PARTNER_EWASTE_REWARD",
+      propertyCatalogueCode: "EWASTE_REWARD_PROPERTIES",
+      bandSetCode: "PARTNER_EWASTE_REWARD_BANDS",
+      loyaltyProgramCode: "partner-program",
+      rewardScale: 2,
+    },
     marketplace: {
       autoPublishListings: false,
       orderCodePrefix: "PARTNER_ORDER_",
@@ -18,10 +24,12 @@ module.exports = {
 };
 ```
 
-The named service implements `assess({ asset, impact })` and returns version,
-illustrative flag, pointsRewardTypeCode and reward entries with programCode,
-rewardTypeCode, decimal amount and scale. It supplies valuation, not ledger writes.
-The existing Loyalty API posts value with stable approval references.
+The referenced definition, property catalogue and score-band set are governed
+backend records. Business users prepare and simulate drafts in Axis, while
+Process owns approval and Rules owns deterministic evaluation. eWaste persists
+the confirmed assessment; Loyalty posts its fixed outcome with a stable
+assessment-derived idempotency key. Do not implement the formula or ledger write
+in the customer module or browser.
 
 Keep the website name, hero images, page composition and contact routing in the
 customer module. Its controller can call DefaultEWasteRequestService.invoke with

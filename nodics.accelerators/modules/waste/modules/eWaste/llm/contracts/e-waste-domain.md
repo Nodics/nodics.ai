@@ -25,9 +25,11 @@ Preserve old assessments and use existing explicit reassessment operations.
 - Public domain experience returns taxonomy and centres. Application presentation
   and Profile/Engagement site-form adapters belong in the customer backend.
 - CONFIG.eWaste is the reusable configuration namespace. Projects set only deltas:
-  applicationCode, rewardValuationService, marketplace and conversation guidance.
-- Valuation selects a named runtime service from server-owned configuration.
-  Missing configuration leaves approved rewards pending instead of inventing value.
+  applicationCode, governed rewardRules record codes, Loyalty programme defaults,
+  marketplace and conversation guidance.
+- Rules Engine evaluates the published, version-bound policy. Missing policy or
+  band configuration leaves the confirmed assessment or settlement pending
+  instead of inventing value.
 - Marketplace orderCodePrefix is stable deployment identity. Preserve it when
   migrating an existing application so retries and history use the same orders.
 - autoPublishListings defaults false. Explicitly configured deployments can use
@@ -42,6 +44,22 @@ Validation covers independent domain use, a later project configuration, unchang
 route security, attempted context injection, conversation correction/immutability,
 manifest integrity and framework schema boundaries. Cross-domain crash recovery
 and production merchant/physical delivery acceptance remain deployment gates.
+
+## Approval reward assessment and settlement
+
+Approval asks the eWaste property provider for normalized, quality-qualified
+facts, then evaluates the effective published Rules definition and score-band
+set. The accelerator persists the complete result as the generic Waste-owned
+`wasteRewardAssessment`; it does not define a duplicate eWaste schema. Estimated
+and confirmed assessments remain distinct immutable evidence.
+
+Only a persisted `CONFIRMED` assessment bound to the approved asset can authorize
+settlement. eWaste opens the customer wallet through Loyalty when the amount is
+positive, posts one earning with `<assessment-code>:wallet-settlement`, and saves
+the returned ledger reference on the asset. Completed retries verify the same
+assessment and return without posting again. Zero-value outcomes complete without
+wallet or ledger creation. Missing, estimated, mismatched or invalid outcomes fail
+closed while the already-saved approval remains available for an authorized retry.
 
 Evidence preview resolves every available photo code through Media, including
 imported sample records. A project-relative artwork URL is not a substitute for

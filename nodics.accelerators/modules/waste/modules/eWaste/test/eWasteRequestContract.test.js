@@ -54,43 +54,58 @@ test("body fields cannot replace authenticated owner/context or select a service
   });
   assert.equal(result.data.owner, "customer@example.test");
 });
-test("the configured valuation service is used and a missing one fails closed", async () => {
+test("settlement consumes persisted confirmed Rules evidence and missing evidence fails closed", async () => {
+  const assessment = {
+    code: "reward-assessment",
+    assetCode: "asset",
+    assessmentType: "CONFIRMED",
+    rewardTypeCode: "points",
+    rewardAmount: "12.00",
+    rewardOutcome: {},
+    policyCode: "EWASTE_REWARD",
+    policyVersion: 2,
+    bandSetCode: "EWASTE_BANDS",
+    bandSetVersion: 1,
+    scoreBandCode: "STANDARD",
+    sourceHash: "source-hash",
+  };
   global.CONFIG = {
-    get: () => ({ rewardValuationService: "PartnerValuation" }),
+    get: () => ({ rewardRules: { loyaltyProgramCode: "default", rewardScale: 2 } }),
   };
   global.SERVICE = {
     DefaultWastePersistenceService: {
-      one: async () => ({ code: "impact" }),
+      one: async () => assessment,
       fail: (code) => {
         throw Error(code);
       },
       update: async (_s, _r, asset, patch) => ({ ...asset, ...patch }),
     },
-    PartnerValuation: {
-      assess: async () => ({
-        version: "partner",
-        pointsRewardTypeCode: "points",
-        rewards: [],
-      }),
-    },
   };
+  const calls = [];
   const scoped = Object.assign({}, xp, {
-    remote: async () => ({ code: "wallet" }),
+    remote: async (_request, _module, _connection, route, _method, body) => {
+      calls.push({ route, body });
+      return route === "/wallets"
+        ? { code: "wallet" }
+        : { ledgerEntry: { code: "ledger-entry" } };
+    },
   });
   const result = await scoped.settle(
     {},
     {
       code: "asset",
       ownerRef: { code: "owner" },
-      impactRef: { code: "impact" },
-      metadata: {},
+      metadata: {
+        confirmedRewardAssessmentRef: { code: assessment.code },
+        settlementStatus: "PENDING",
+      },
     },
   );
-  assert.equal(result.metadata.valuation.version, "partner");
-  delete global.SERVICE.PartnerValuation;
+  assert.equal(result.metadata.rewardSettlement.assessmentCode, assessment.code);
+  assert.equal(calls[1].body.sourceCode, assessment.code);
   await assert.rejects(
     () => scoped.settle({}, { metadata: {} }),
-    /ERR_EWASTE_VALUATION_UNAVAILABLE/,
+    /ERR_EWASTE_REWARD_ASSESSMENT_REQUIRED/,
   );
 });
 

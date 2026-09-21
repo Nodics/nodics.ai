@@ -11,6 +11,7 @@
         "wasteVerification",
         "wasteReceipt",
         "wasteImpact",
+        "wasteReward",
         "wasteMovement",
         "wasteCompliance",
         "wasteApi"
