@@ -29,8 +29,8 @@ const context = { ...service, store: () => ({ one: async () => ({ metadata: { sa
     assert.equal(reads, 1); console.log('eWaste evidence reference contract validated');
     SERVICE.DefaultWasteSubmissionOperationService = { read: async () => ({ metadata: { photo: { code: 'private-photo' } } }) };
     const customer = { ...service, store: () => ({}), remote: async (...args) => {
-        assert.equal(args[3], '/customer/photos/private-photo');
-        assert.equal(args[6], 'Bearer customer-test');
+        assert.equal(args[3], '/internal/evidence/photos/private-photo');
+        assert.equal(args[6], undefined);
         return { contentBase64: 'owned' };
     } };
     assert.equal((await customer.evidencePhoto({ resourceType: 'submission', authorization: 'Bearer customer-test' })).contentBase64, 'owned');

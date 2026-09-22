@@ -19,7 +19,7 @@ const category = (code, familyCode, name, itemTypeCodes, materialTypeCodes, opti
     itemTypeCodes,
     materialTypeCodes,
     evidencePolicyCode: 'EWASTE_STANDARD_PHOTO',
-    impactProfileCode: 'EWASTE_WEIGHT_ESTIMATE',
+    impactProfileCode: 'CIRCA_EWASTE_ESTIMATE',
     hazardFlags: [],
     status: 'ACTIVE',
     revision: 1,
@@ -36,5 +36,5 @@ module.exports = {
     record6: category('SMALL_APPLIANCE', 'ELECTRONICS', 'Small Appliance', ['SMALL_HOME_APPLIANCE'], ['CIRCUIT_BOARD', 'COPPER', 'ALUMINUM', 'PLASTIC_CASING']),
     record7: category('LITHIUM_BATTERY', 'BATTERY', 'Lithium Battery', ['LOOSE_LITHIUM_BATTERY'], ['LITHIUM_BATTERY'], { evidencePolicyCode: 'EWASTE_BATTERY_PHOTO', impactProfileCode: 'EWASTE_BATTERY_COUNT', hazardFlags: ['BATTERY_HANDLING'] }),
     record8: category('POWER_BANK', 'BATTERY', 'Power Bank', ['POWER_BANK_DEVICE'], ['LITHIUM_BATTERY', 'CIRCUIT_BOARD', 'PLASTIC_CASING'], { evidencePolicyCode: 'EWASTE_BATTERY_PHOTO', impactProfileCode: 'EWASTE_BATTERY_COUNT', hazardFlags: ['BATTERY_HANDLING'] }),
-    record9: category('MIXED_ELECTRONICS', 'ELECTRONICS', 'Mixed Electronics', ['UNKNOWN_ELECTRONIC_ITEM'], ['MIXED_ELECTRONIC_MATERIAL'], { evidencePolicyCode: 'EWASTE_STANDARD_PHOTO', impactProfileCode: 'EWASTE_ITEM_COUNT' })
+    record9: category('MIXED_ELECTRONICS', 'ELECTRONICS', 'Mixed Electronics', ['UNKNOWN_ELECTRONIC_ITEM'], ['MIXED_ELECTRONIC_MATERIAL'], { evidencePolicyCode: 'EWASTE_STANDARD_PHOTO', impactProfileCode: 'CIRCA_EWASTE_ESTIMATE' })
 };

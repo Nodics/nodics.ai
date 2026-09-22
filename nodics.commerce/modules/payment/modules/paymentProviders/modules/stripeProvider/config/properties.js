@@ -10,4 +10,20 @@
  */
 
 /** @module stripeProvider/config/properties @layer config @owner stripeProvider */
-module.exports = { stripeProvider: { enabled: false, maturity: 'OFFLINE_CONFORMANCE', sandboxOnly: true, liveQualified: false } };
+module.exports = {
+  stripeProvider: {
+    enabled: false,
+    maturity: "OFFLINE_CONFORMANCE",
+    sandboxOnly: true,
+    liveQualified: false,
+    runtimeRoleProfiles: {
+      COMMERCE: {
+        enabled: true,
+      },
+      COMMERCE_STAGED: {
+        enabled: false,
+        maturity: "NOT_APPLICABLE_FOR_STAGED_CATALOG",
+      },
+    },
+  },
+};

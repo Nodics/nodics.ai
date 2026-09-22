@@ -20,10 +20,12 @@ const crypto = require('crypto');
  * @override Project modules may extend `runtimeConfigurationSchemas` through layered properties; they must not create a parallel configuration authority.
  */
 module.exports = {
+    /** Initializes the runtime configuration schema service. */
     init: function () {
         return Promise.resolve(true);
     },
 
+    /** Completes runtime configuration schema service startup. */
     postInit: function () {
         return Promise.resolve(true);
     },
@@ -199,10 +201,12 @@ module.exports = {
         });
     },
 
+    /** Returns the effective active schema registry from layered configuration. */
     getSchemaRegistry: function () {
         return (CONFIG && typeof CONFIG.get === 'function' && CONFIG.get('runtimeConfigurationSchemas')) || {};
     },
 
+    /** Resolves one schema or raises the stable system error. */
     resolveSchema: function (schemaCode) {
         let schemas = this.getSchemaRegistry();
         let schema = schemaCode ? schemas[schemaCode] : undefined;
@@ -212,6 +216,7 @@ module.exports = {
         return schema;
     },
 
+    /** Projects a schema for API output without sample or placeholder values. */
     describeSchema: function (schemaCode, schema) {
         let described = _.cloneDeep(schema || {});
         described.code = described.code || schemaCode;
@@ -224,6 +229,7 @@ module.exports = {
         return described;
     },
 
+    /** Resolves one field from runtime, secure, or credential configuration sources. */
     resolveFieldValue: function (field) {
         let runtime = CONFIG.get('runtimeConfiguration') || {};
         let secure = CONFIG.get('secureConfiguration') || {};
@@ -248,6 +254,7 @@ module.exports = {
         return undefined;
     },
 
+    /** Extracts the operator-facing scalar value from wrapped configuration entries. */
     unwrapValue: function (value) {
         if (value && typeof value === 'object') {
             if (typeof value.value === 'string') return value.value;
@@ -257,6 +264,7 @@ module.exports = {
         return value;
     },
 
+    /** Determines whether a field value is usable under its declared contract. */
     isConfigured: function (field, value) {
         if (!this.isPresent(value)) {
             return false;
@@ -271,10 +279,12 @@ module.exports = {
         return true;
     },
 
+    /** Checks whether a candidate value is present before placeholder validation. */
     isPresent: function (value) {
         return value !== undefined && value !== null && value !== '';
     },
 
+    /** Masks sensitive values for operator responses. */
     maskValue: function (value, field) {
         if (field.sensitive !== true) {
             return value;
@@ -286,6 +296,7 @@ module.exports = {
         return text.slice(0, 2) + '****' + text.slice(-2);
     },
 
+    /** Validates submitted values against the declared field types and patterns. */
     validateValues: function (schema, values, options) {
         options = options || {};
         let errors = [];
@@ -321,6 +332,7 @@ module.exports = {
         };
     },
 
+    /** Builds the persisted runtime configuration record for one schema update. */
     createRuntimeConfigurationRecord: function (request, schemaCode, schema, values) {
         let fields = {};
         (schema.fields || []).forEach(field => {
@@ -348,6 +360,7 @@ module.exports = {
         };
     },
 
+    /** Builds one persisted field record, encrypting sensitive values. */
     createFieldRecord: function (field, value) {
         let record = {
             sensitive: field.sensitive === true,
@@ -363,6 +376,7 @@ module.exports = {
         return record;
     },
 
+    /** Encrypts a sensitive configuration value for persisted storage. */
     encryptSensitiveValue: function (value) {
         let key = this.resolveEncryptionKey();
         if (!key) {
@@ -379,6 +393,7 @@ module.exports = {
         };
     },
 
+    /** Decrypts a sensitive configuration envelope for effective runtime application. */
     decryptSensitiveValue: function (envelope) {
         if (!envelope) {
             return undefined;
@@ -395,6 +410,7 @@ module.exports = {
         ]).toString('utf8');
     },
 
+    /** Resolves the configured AES key material for runtime configuration secrets. */
     resolveEncryptionKey: function () {
         let security = CONFIG.get('runtimeConfigurationSecurity') || {};
         let configured = security.encryptionKey;
@@ -407,6 +423,7 @@ module.exports = {
         return crypto.createHash('sha256').update(configured).digest();
     },
 
+    /** Persists the runtime configuration record through the generated value service. */
     persistRuntimeConfigurationRecord: function (request, record) {
         let service = SERVICE.DefaultRuntimeConfigurationValueService;
         if (!service || typeof service.save !== 'function') {
@@ -418,6 +435,7 @@ module.exports = {
         });
     },
 
+    /** Applies a persisted record into the effective tenant runtime configuration layer. */
     applyRuntimeConfigurationRecord: function (request, record) {
         let patch = this.createEffectiveRuntimePatch(record);
         if (Object.keys(patch).length > 0 && CONFIG && typeof CONFIG.changeTenantProperties === 'function') {
@@ -426,6 +444,7 @@ module.exports = {
         return patch;
     },
 
+    /** Creates the effective runtime configuration patch represented by a record. */
     createEffectiveRuntimePatch: function (record) {
         let schema = this.resolveSchema(record.schemaCode);
         let patch = {};
@@ -446,6 +465,7 @@ module.exports = {
         return patch;
     },
 
+    /** Identifies schema paths that target an existing wrapped credential value. */
     fieldPathTargetsValue: function (path) {
         if (Array.isArray(path)) {
             return path[path.length - 1] === 'value';
@@ -453,6 +473,7 @@ module.exports = {
         return typeof path === 'string' && path.split('.').pop() === 'value';
     },
 
+    /** Publishes the cluster/runtime refresh event for a saved configuration record. */
     publishRuntimeConfigurationChanged: function (request, record) {
         if (!SERVICE.DefaultEventService || typeof SERVICE.DefaultEventService.publish !== 'function') {
             return Promise.resolve({ skipped: true, reason: 'event_service_unavailable' });
@@ -473,6 +494,7 @@ module.exports = {
         }).catch(error => ({ skipped: true, reason: 'event_publish_failed', errorCode: error.code }));
     },
 
+    /** Projects a persisted record for API output with encrypted values removed. */
     describeRuntimeConfigurationRecord: function (record) {
         let copy = _.cloneDeep(record);
         Object.keys(copy.fields || {}).forEach(fieldCode => {
@@ -484,11 +506,13 @@ module.exports = {
         return copy;
     },
 
+    /** Creates the deterministic persisted record code for tenant, scope, and schema. */
     runtimeRecordCode: function (request, schemaCode) {
         let scope = this.resolveScope(request);
         return [this.getTenant(request), scope.level, scope.code, schemaCode].filter(Boolean).join(':');
     },
 
+    /** Resolves the update scope declared by the request payload. */
     resolveScope: function (request) {
         let payload = this.getPayload(request);
         return {
@@ -497,15 +521,18 @@ module.exports = {
         };
     },
 
+    /** Creates an opaque revision token for runtime configuration records. */
     createRevision: function () {
         return Date.now().toString(36) + crypto.randomBytes(4).toString('hex');
     },
 
+    /** Resolves the authenticated actor recorded on the configuration update. */
     resolveRuntimeActor: function (request) {
         let authData = request && (request.authData || request.autData) || {};
         return authData.loginId || authData.serviceId || authData.sub || authData.code || authData.userId || authData.uid || authData.email;
     },
 
+    /** Masks submitted values for validation responses. */
     maskUpdateValues: function (schema, values) {
         let masked = {};
         (schema.fields || []).forEach(field => {
@@ -516,16 +543,19 @@ module.exports = {
         return masked;
     },
 
+    /** Extracts the schema code from params, query, or body payload. */
     getSchemaCode: function (request) {
         let payload = this.getPayload(request);
         return request.schemaCode || payload.schemaCode || payload.code || payload.configurationCode;
     },
 
+    /** Merges supported HTTP request payload locations into one object. */
     getPayload: function (request) {
         let httpRequest = request && request.httpRequest ? request.httpRequest : {};
         return _.merge({}, request && request.query || {}, httpRequest.params || {}, httpRequest.query || {}, httpRequest.body || {});
     },
 
+    /** Resolves the active tenant for runtime configuration operations. */
     getTenant: function (request) {
         return request && request.tenant || CONFIG.get('defaultTenant') || 'default';
     }

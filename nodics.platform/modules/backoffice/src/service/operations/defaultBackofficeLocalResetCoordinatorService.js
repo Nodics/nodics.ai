@@ -79,7 +79,18 @@ module.exports = {
     });
   },
   /** Executes the documented bounded module operation. */
-  invokeProvider: function (provider, request, input) {
+  refreshProviderCredential: async function () {
+    if (
+      SERVICE.DefaultInternalAuthenticationProviderService &&
+      typeof SERVICE.DefaultInternalAuthenticationProviderService
+        .refreshInternalAuthTokens === "function"
+    ) {
+      await SERVICE.DefaultInternalAuthenticationProviderService.refreshInternalAuthTokens();
+    }
+  },
+  /** Executes the documented bounded module operation. */
+  invokeProvider: async function (provider, request, input) {
+    await this.refreshProviderCredential();
     let token = NODICS.getInternalAuthToken(request.tenant);
     if (!token)
       throw new CLASSES.NodicsError(

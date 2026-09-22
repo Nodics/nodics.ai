@@ -25,7 +25,7 @@ module.exports = {
     serviceApiKey: { $config: "env", name: "NODICS_BOOTSTRAP_SERVICE_API_KEY", fallback: null },
   },
   defaultAuthDetail: {
-    apiKey: { $config: "env", name: "NODICS_RUNTIME_API_KEY", fallback: null },
+    apiKey: { $config: "env", name: "NODICS_API_KEY", fallback: null },
   },
   authSecurity: {
     jwt: {
@@ -139,6 +139,8 @@ module.exports = {
       active: true,
     },
     permissionCatalog: [
+      "profile.address.reference.read",
+      "profile.enterprise.reference.read",
       "commerce.coupon.pos.redeem",
       "commerce.dispute.review",
       "commerce.refund.execute",
@@ -169,6 +171,7 @@ module.exports = {
       "backoffice.functionalModule.register",
       "backoffice.functionalModule.activate",
       "backoffice.functionalModule.deactivate",
+      "backoffice.functionalModule.rollback",
       "backoffice.functionalModule.deregister",
       "backoffice.bootstrap.view",
       "backoffice.axis.policy.view",
@@ -467,6 +470,9 @@ module.exports = {
         apiAdmin: [
           "auth.internal.token.read",
           "auth.internal.token.read.anyTenant",
+          "location.location.read",
+          "profile.address.reference.read",
+          "profile.enterprise.reference.read",
         ],
       },
       administratorCodes: ["admin"],
@@ -919,6 +925,7 @@ module.exports = {
             "backoffice.functionalModule.register",
             "backoffice.functionalModule.activate",
             "backoffice.functionalModule.deactivate",
+            "backoffice.functionalModule.rollback",
             "backoffice.functionalModule.deregister",
             "profile.backoffice.view",
             "profile.enterprise.search",
@@ -1077,6 +1084,8 @@ module.exports = {
             "loyalty.rewards.reverse",
             "location.location.read",
             "location.location.search",
+            "profile.address.reference.read",
+            "profile.enterprise.reference.read",
             "waste.submission.create",
             "waste.submission.transition",
             "profile.scope.read",

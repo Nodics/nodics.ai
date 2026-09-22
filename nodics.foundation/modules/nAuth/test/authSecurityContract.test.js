@@ -398,13 +398,21 @@ assert.ok(profileProviderSource.includes('revokeSession'));
 assert.ok(apiKeyInterceptorSource.includes('Server-generated API-key rotation is disabled'));
 assert.ok(employeeServiceSource.includes('apiKeyExpiresAt'));
 assert.ok(employeeServiceSource.includes("status !== 'active'"));
-assert.deepStrictEqual(
-    routerProperties.routeActionAuthorization.groupPermissions.serviceAccountUserGroup,
-    ['auth.internal.token.read', 'auth.internal.token.read.anyTenant',
-        'import.init.run', 'import.core.run', 'import.sample.run', 'import.release.validate',
-        'location.location.read', 'location.location.search'],
-    'Service account group must satisfy secured internal-token route permission in modular startup'
-);
+[
+    'auth.internal.token.read',
+    'auth.internal.token.read.anyTenant',
+    'import.init.run',
+    'import.core.run',
+    'import.sample.run',
+    'import.release.validate',
+    'location.location.read',
+    'location.location.search',
+    'profile.address.reference.read',
+    'profile.enterprise.reference.read'
+].forEach(permission => assert(
+    routerProperties.routeActionAuthorization.groupPermissions.serviceAccountUserGroup.includes(permission),
+    'Service account group must include ' + permission + ' for modular startup'
+));
 global.CONFIG = configuration({ nodeId: 'node-test' });
 const sanitizedAudit = auditService.sanitize({
     eventType: 'password.authentication',

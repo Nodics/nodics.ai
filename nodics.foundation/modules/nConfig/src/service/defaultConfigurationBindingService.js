@@ -368,14 +368,19 @@ module.exports = {
       const definitions = typeof state.context.readLayeredProperty === "function"
         ? state.context.readLayeredProperty(["activeModules", "compositions"]) || {}
         : this.merge(_.get(state.inherited, "activeModules.compositions", {}), _.get(state.contribution, "activeModules.compositions", {}));
-      if (!Object.prototype.hasOwnProperty.call(definitions, binding.name))
+      const bootstrapDefinitions =
+        typeof state.context.readBootstrapCompositionDefinitions === "function"
+          ? state.context.readBootstrapCompositionDefinitions()
+          : {};
+      const effectiveDefinitions = this.merge(bootstrapDefinitions, definitions);
+      if (!Object.prototype.hasOwnProperty.call(effectiveDefinitions, binding.name))
         throw new Error(
           "Configuration composition is unavailable: " + binding.name,
         );
       state.compositions.set(
         binding.name,
         this.resolveDomainComposition(
-          definitions[binding.name],
+          effectiveDefinitions[binding.name],
           "",
           state.context.environmentVariables || process.env,
         ),

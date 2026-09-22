@@ -34,6 +34,22 @@ module.exports = {
   httpHardening: {
     enabled: true,
     trustProxy: false,
+    runtimeRoleProfiles: {
+      PROCESS: {
+        cors: {
+          originEndpointOverrides: {
+            nexus: false,
+          },
+        },
+      },
+      WCMS_STAGED: {
+        cors: {
+          originEndpointOverrides: {
+            nexus: false,
+          },
+        },
+      },
+    },
     body: {
       urlencoded: {
         extended: true,
@@ -135,21 +151,24 @@ module.exports = {
       serviceAccountUserGroup: [
         "auth.internal.token.read",
         "auth.internal.token.read.anyTenant",
+        "profile.externalIdentity.prepare",
+        "profile.customer.register",
+        "media.customer.upload",
+        "media.customer.read",
         "import.init.run",
         "import.core.run",
         "import.sample.run",
         "import.release.validate",
         "location.location.read",
         "location.location.search",
+        "profile.address.reference.read",
+        "profile.enterprise.reference.read",
       ],
     },
   },
   apiExposure: {
     default: {
       enabled: true,
-    },
-    unknown: {
-      enabled: false,
     },
     categories: {
       schemaApi: {

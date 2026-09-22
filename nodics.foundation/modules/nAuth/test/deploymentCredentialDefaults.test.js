@@ -35,7 +35,7 @@ test('bootstrap proof and current runtime proof remain independently supplied ac
     NODICS_BOOTSTRAP_ADMIN_PASSWORD:'C3-opaque-initial-human-password',
     NODICS_BOOTSTRAP_SERVICE_PASSWORD:'D4-opaque-initial-service-password',
     NODICS_BOOTSTRAP_SERVICE_API_KEY:'E5-opaque-initial-service-proof-for-contract-check',
-    NODICS_RUNTIME_API_KEY:'F6-opaque-current-runtime-proof-for-contract-check',
+    NODICS_API_KEY:'F6-opaque-current-runtime-proof-for-contract-check',
   };
   const first = bindings.resolve(defaults, {}, {environmentVariables:variables});
   const restart = bindings.resolve(defaults, {}, {environmentVariables:variables});
@@ -43,7 +43,7 @@ test('bootstrap proof and current runtime proof remain independently supplied ac
   assert.equal(security.validateBootstrapIdentity(facade(first)).serviceApiKey, variables.NODICS_BOOTSTRAP_SERVICE_API_KEY);
   assert.notEqual(first.defaultAuthDetail.apiKey, first.bootstrapIdentity.serviceApiKey);
   assert.deepEqual(first, restart);
-  delete variables.NODICS_RUNTIME_API_KEY;
+  delete variables.NODICS_API_KEY;
   assert.equal(bindings.resolve(defaults, {}, {environmentVariables:variables}).defaultAuthDetail.apiKey, null);
   const changed = bindings.merge(first, {defaultAuthDetail:{apiKey:'selected-node-retained-proof'}});
   assert.equal(changed.defaultAuthDetail.apiKey, 'selected-node-retained-proof');

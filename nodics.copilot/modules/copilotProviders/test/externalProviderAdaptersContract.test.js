@@ -40,13 +40,16 @@ cases.forEach(entry => test(entry.name + ' adapter is disabled by default and be
     delete global.SERVICE;
 }));
 
-test('default secret resolver supports explicit environment references without putting credentials in properties', async () => {
+test('default secret resolver supports environment references and layered credential references', async () => {
     const previous = process.env.NODICS_COPILOT_TEST_KEY;
     process.env.NODICS_COPILOT_TEST_KEY = 'runtime-only-test-value';
+    global.CONFIG = { get: key => key === 'credentials' ? { 'copilot.test': { value: 'layered-test-value', status: 'ACTIVE', secret: true } } : {} };
     try {
         assert.equal(await secretService.resolve('env:NODICS_COPILOT_TEST_KEY'), 'runtime-only-test-value');
+        assert.equal(await secretService.resolve('credentials:copilot.test'), 'layered-test-value');
         await assert.rejects(secretService.resolve('plain-text-secret'), /COPILOT_SECRET_REFERENCE_UNSUPPORTED/);
     } finally {
+        delete global.CONFIG;
         if (previous === undefined) delete process.env.NODICS_COPILOT_TEST_KEY;
         else process.env.NODICS_COPILOT_TEST_KEY = previous;
     }

@@ -10,5 +10,5 @@
  */
 
 /** @module wasteMaterial/data/wasteMaterialCoreHeader @description Imports generic taxonomy through generated owning services. @owner wasteMaterial @layer data-header */
-const entry = schema => ({ options: { enabled: true, schemaName: schema, operation: 'saveAll', dataFilePrefix: schema + 'CoreData' }, query: { code: '$code' } });
+const entry = schema => ({ options: { enabled: true, schemaName: schema, operation: 'saveAll', dataFilePrefix: schema + 'CoreData', userGroups: ['adminGroup'] }, query: { code: '$code' } });
 module.exports = { wasteMaterial: Object.fromEntries(['wasteFamily','wasteCategory','wasteItemType','wasteMaterialType'].map(schema => [schema + 'CoreData', entry(schema)])) };

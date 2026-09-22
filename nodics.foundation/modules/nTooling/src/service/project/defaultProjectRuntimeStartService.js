@@ -21,6 +21,7 @@
 
 const fs = require('node:fs');
 const path = require('node:path');
+const localRuntimeCredentials = require('./defaultProjectLocalRuntimeCredentialService');
 
 module.exports = {
     /**
@@ -225,15 +226,22 @@ module.exports = {
      */
     start: async function (options) {
         const projectRoot = path.resolve(options.projectRoot || process.cwd());
-        const environment = options.environment || process.env;
+        let environment = options.environment || process.env;
         this.readManifest(projectRoot);
         const server = this.resolveServer(projectRoot, options.serverCode, environment);
+        environment = localRuntimeCredentials.mergeEnvironment(projectRoot, server.environment || this.resolveEnvironmentName(projectRoot, environment), environment);
         const frameworkRoot = this.resolveFrameworkRoot(projectRoot, environment);
         const foundationRoot = this.packageRoot(frameworkRoot, 'nodics.foundation');
         const foundation = require(foundationRoot);
         const moduleRoots = this.resolveModuleRoots(projectRoot, frameworkRoot, server);
 
-        const previous = { S: process.env.S, E: process.env.E, NODICS_NODE: process.env.NODICS_NODE };
+        const previous = Object.fromEntries(
+            [...new Set(Object.keys(environment).concat(['S', 'E', 'NODICS_NODE']))]
+                .map(key => [key, process.env[key]])
+        );
+        for (const [key, value] of Object.entries(environment)) {
+            if (value !== undefined && value !== null) process.env[key] = String(value);
+        }
         process.env.S = server.server;
         process.env.E = server.environment || this.resolveEnvironmentName(projectRoot, environment);
         if (environment.NODICS_NODE) process.env.NODICS_NODE = environment.NODICS_NODE;

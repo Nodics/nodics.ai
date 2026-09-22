@@ -177,11 +177,13 @@ inherited defaults, canonical connection references and justified policy pins.
 ## Configuration ownership checks
 
 Use nConfig for project/environment/server/node contributions and bounded runtime
-projections. Never load or generate `nodics.environment.json`. Backend metadata
-identifies runnable servers; `tooling.runtime` supplies genuine launch differences.
-Environment `tooling` supplies backend operator inputs. A backend port belongs
-to its server endpoint. Frontend lifecycle catalogues are prohibited in backend
-properties and rejected by the configuration audit.
+projections. Never load or generate `nodics.environment.json`. Backend package
+metadata identifies runnable servers; `package.json` `nodics.runtimeTooling`
+supplies genuine launch differences such as command alias, process script,
+dependency order, and launch-only environment values. Environment `tooling`
+supplies backend operator inputs. A backend port belongs to its server endpoint.
+Frontend lifecycle catalogues are prohibited in backend properties and rejected
+by the configuration audit.
 
 `auditConfigurationSources` statically inspects authored properties without
 executing them. Both project validation and principle audit enforce the nSetup

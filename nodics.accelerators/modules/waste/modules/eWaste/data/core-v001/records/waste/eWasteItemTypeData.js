@@ -23,7 +23,7 @@ const item = (code, categoryCode, name, options) => Object.assign({
     requiresQuantity: true,
     allowedConditionGrades: ['WORKING', 'REUSABLE', 'REPAIRABLE', 'PARTS_ONLY', 'RECYCLABLE', 'DAMAGED', 'HAZARDOUS', 'UNKNOWN'],
     evidencePolicyCode: 'EWASTE_STANDARD_PHOTO',
-    impactProfileCode: 'EWASTE_ITEM_COUNT',
+    impactProfileCode: 'CIRCA_EWASTE_ESTIMATE',
     status: 'ACTIVE',
     revision: 1,
     active: true

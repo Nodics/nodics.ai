@@ -121,8 +121,17 @@ module.exports = {
         if (!/^[A-Za-z0-9][A-Za-z0-9@._:-]{0,255}$/.test(requestedBy)) {
             throw new CLASSES.NodicsError('CMS_BASELINE_HUMAN_REQUIRED', 'A delegated human administrator identity is required');
         }
-        return Object.assign({}, request, { authData: Object.assign({}, request.authData, {
-            principalId: requestedBy, delegatedBy: request.authData && (request.authData.principalId || request.authData.code)
+        let serviceAuth = request.authData || {};
+        let permissions = ['publish.lifecycle.create', 'publish.lifecycle.view',
+            'publish.lifecycle.validate', 'publish.lifecycle.requestApproval'];
+        return Object.assign({}, request, { authData: Object.assign({}, serviceAuth, {
+            tokenType: 'access',
+            principalType: 'human',
+            loginId: requestedBy,
+            principalId: requestedBy,
+            userGroups: ['runtimeConfigAdminUserGroup'],
+            permissions: [...new Set([].concat(serviceAuth.permissions || [], permissions))],
+            delegatedBy: serviceAuth.principalId || serviceAuth.code || serviceAuth.serviceId
         }), reason: input.reason || defaultReason,
         correlationId: input.correlationId || request.correlationId || request.requestId });
     },

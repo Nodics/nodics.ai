@@ -54,6 +54,8 @@ const codes = function (records) {
 assert.strictEqual(properties.eWaste.presetPack.code, 'EWASTE_CORE_PRESETS');
 assert.strictEqual(properties.eWaste.presetPack.targetModule, 'nodics.waste');
 assert.strictEqual(JSON.stringify(properties).includes('acceptedFamilyCodes'), false, 'Family/category/material values must not live in properties');
+assert.strictEqual(properties.wasteSubmission.metadataSuggestion.sizePolicy.version, 'EWASTE_SIZE_POLICY_V1');
+assert.strictEqual(properties.wasteSubmission.metadataSuggestion.sizePolicy.itemTypes.CHARGER, 'SMALL');
 assert.strictEqual(contributionPolicy.validateHeader(header).length, Object.keys(expectedHeaderSchemas).length);
 
 Object.keys(expectedHeaderSchemas).forEach(function (dataFilePrefix) {
@@ -102,6 +104,7 @@ assert(receiptPolicyCodes.includes('EWASTE_STANDARD_RECEIPT'));
 assert(verificationPolicyCodes.includes('EWASTE_STANDARD_VERIFICATION'));
 assert(impactMetricCodes.includes('EWASTE_WEIGHT_KG'));
 assert(impactProfileCodes.includes('EWASTE_WEIGHT_ESTIMATE'));
+assert(impactProfileCodes.includes('CIRCA_EWASTE_ESTIMATE'));
 assert(assetCreationPolicyCodes.includes('EWASTE_APPROVED_ASSET_STANDARD'));
 assert(assetTypeCodes.includes('EWASTE_MOBILE_DEVICE_ASSET'));
 assert(assetTypeCodes.includes('EWASTE_BATTERY_ASSET'));

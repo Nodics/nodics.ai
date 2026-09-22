@@ -21,11 +21,15 @@ import { spawn, execFileSync } from 'node:child_process';
 import fs from 'node:fs';
 import net from 'node:net';
 import path from 'node:path';
+import { createRequire } from 'node:module';
 import { fileURLToPath } from 'node:url';
 import {
   readProjectEnvironmentConfiguration,
 } from './defaultProjectEnvironmentConfigurationService.mjs';
 import { resolveTemplate } from './defaultProjectContainerConfigurationService.mjs';
+
+const require = createRequire(import.meta.url);
+const localRuntimeCredentials = require('./defaultProjectLocalRuntimeCredentialService');
 
 export const projectRoot = process.cwd();
 export const workspaceRoot = path.resolve(projectRoot, '..');
@@ -80,7 +84,7 @@ function normalizeReadinessChecks(checks) {
 }
 
 function runtimeEnvironment(runtime) {
-  return Object.assign({}, process.env, runtime.env || {});
+  return localRuntimeCredentials.mergeEnvironment(projectRoot, readTopology().environment, Object.assign({}, process.env, runtime.env || {}));
 }
 
 export const backendRuntimes = Object.freeze(readTopology().backendRuntimes);

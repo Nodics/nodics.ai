@@ -40,12 +40,24 @@ const runtimeTemplates = require(path.join(
     releaseRoot,
     'core-v001/records/communication/commsRuntimeDefaultTemplateData.js'
 ));
+const runtimeHeader = require(path.join(
+    releaseRoot,
+    'core-v001/headers/communication/commsRuntimeDefaultHeader.js'
+));
 const sampleTemplates = require(path.join(
     releaseRoot,
     'sample-v001/records/communication/commsSampleTemplateData.js'
 ));
 
 assert.strictEqual(runtimeTemplates.record0.code, 'COMMUNICATION_RUNTIME_NOTICE');
+assert.deepStrictEqual(
+    runtimeHeader.commsSchema.commsRuntimeDefaultTemplateData.options.userGroups,
+    ['adminGroup']
+);
+assert.deepStrictEqual(
+    runtimeHeader.commsSchema.commsRuntimeDefaultTemplateVersionData.options.userGroups,
+    ['adminGroup']
+);
 assert.deepStrictEqual(
     Object.values(sampleTemplates).map(template => template.code).sort(),
     ['CONTACT_ACKNOWLEDGEMENT', 'FEEDBACK_ACKNOWLEDGEMENT', 'REVIEW_ACKNOWLEDGEMENT', 'TESTIMONIAL_CONSENT_REQUEST']

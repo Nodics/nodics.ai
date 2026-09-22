@@ -71,6 +71,9 @@ const request = { tenant: 'default', authData: { principalId: 'platform-service'
     assert.strictEqual(operations[1][1].rootCode, 'axisCmsSite');
     assert.deepStrictEqual(operations[1][1].mediaCodes, ['product-extra-media']);
     assert.strictEqual(operations[1][2].principalId, 'admin');
+    assert.deepStrictEqual(operations[1][2].userGroups, ['runtimeConfigAdminUserGroup']);
+    assert(operations[1][2].permissions.includes('publish.lifecycle.create'));
+    assert(operations[1][2].permissions.includes('publish.lifecycle.requestApproval'));
     assert(!operations.some(item => item[0] === 'approve' || item[0] === 'activate'),
         'baseline initiation must never approve or deploy Online');
     const replay = await service.initiate('axis', request);

@@ -20,6 +20,26 @@ const crypto = require('crypto');
  */
 module.exports = {
 
+    /** Returns effective group codes from persisted principal groups and framework governance defaults. */
+    resolveSessionUserGroups: function (person) {
+        const directGroups = person && person.userGroupCodes ? person.userGroupCodes : UTILS.getUserGroupCodes(person && person.userGroups);
+        const identityGovernance = CONFIG.get('identityGovernance') || {};
+        const groupTargets = identityGovernance.migration && identityGovernance.migration.groupTargets ? identityGovernance.migration.groupTargets : {};
+        const resolved = [];
+        const visited = {};
+        const visit = group => {
+            const code = typeof group === 'string' ? group : group && group.code;
+            if (!code || visited[code]) return;
+            visited[code] = true;
+            resolved.push(code);
+            const modelParents = group && typeof group === 'object' && Array.isArray(group.parentGroups) ? group.parentGroups : [];
+            const targetParents = groupTargets[code] && Array.isArray(groupTargets[code].parentGroups) ? groupTargets[code].parentGroups : [];
+            modelParents.concat(targetParents).forEach(parent => visit(parent));
+        };
+        (directGroups || []).forEach(group => visit(group));
+        return resolved;
+    },
+
     /**
 
      * Executes record auth event behavior.
@@ -90,6 +110,28 @@ module.exports = {
             options.state.lockedTime = new Date();
         }
         return this.updateAuthData(options);
+    },
+
+    /** Resolves an embedded or referenced password credential before proof comparison. */
+    resolvePasswordCredential: function (options) {
+        const password = options.person && options.person.password;
+        if (password && typeof password === 'object' && typeof password.password === 'string') {
+            return Promise.resolve(password);
+        }
+        if (!password || !SERVICE.DefaultPasswordService || typeof SERVICE.DefaultPasswordService.get !== 'function') {
+            return Promise.resolve(null);
+        }
+        const query = typeof password === 'string' ? { $or: [{ _id: password }, { code: password }] } : { _id: password };
+        return SERVICE.DefaultPasswordService.get({
+            tenant: options.enterprise.tenant.code,
+            authData: SERVICE.DefaultIdentityGovernanceService.getSystemAuthData(),
+            query,
+            searchOptions: { pageSize: 1, pageNumber: 1 },
+            options: { recursive: false }
+        }).then(response => {
+            const result = response && (response.result || response.data || response);
+            return Array.isArray(result) ? result[0] : result;
+        }).catch(() => null);
     },
 
     /**
@@ -235,11 +277,14 @@ module.exports = {
                     tenant: options.enterprise.tenant.code,
                     loginId: options.person.loginId,
                     _id: options.person._id
-                }).then(state => {
-                    if (state.locked || !options.person.active || !options.person.password || options.person.password.active === false || options.person.principalType === 'service') {
+                }).then(state => this.resolvePasswordCredential(options).then(passwordCredential => {
+                    if (passwordCredential) options.person.password = passwordCredential;
+                    if (state.locked || !options.person.active || !passwordCredential || passwordCredential.active === false ||
+                        typeof options.request.password !== 'string' ||
+                        typeof passwordCredential.password !== 'string' || options.person.principalType === 'service') {
                         reject(new CLASSES.NodicsError('ERR_LIN_00002'));
                     } else {
-                        UTILS.compareHash(options.request.password, options.person.password.password).then(match => {
+                        UTILS.compareHash(options.request.password, passwordCredential.password).then(match => {
                             if (match) {
                                 _self.issueSession(options, state, 'password.authentication').then(resolve).catch(reject);
                             } else {
@@ -263,7 +308,7 @@ module.exports = {
                             reject(new CLASSES.NodicsError('ERR_AUTH_00000'));
                         });
                     }
-                }).catch(error => {
+                })).catch(error => {
                     reject(new CLASSES.NodicsError('ERR_AUTH_00000'));
                 });
             } catch (error) {
@@ -276,7 +321,7 @@ module.exports = {
     issueSession: async function (options, state, eventType) {
         const person = options.person, enterprise = options.enterprise;
         if (!enterprise.active || !enterprise.tenant || enterprise.tenant.active === false || !person.active || person.principalType === 'service' || state.locked || !person.password || person.password.active === false) throw new CLASSES.NodicsError('ERR_AUTH_00001');
-        const session = { entCode: enterprise.code, tenant: enterprise.tenant.code, loginId: person.loginId, type: options.type, principalType: person.principalType, authVersion: person.authVersion || 1, tokenLife: person.tokenLife, userGroups: person.userGroupCodes || UTILS.getUserGroupCodes(person.userGroups), permissions: person.userGroupPermissions || UTILS.getUserGroupPermissions(person.userGroups) };
+        const session = { entCode: enterprise.code, tenant: enterprise.tenant.code, loginId: person.loginId, type: options.type, principalType: person.principalType, authVersion: person.authVersion || 1, tokenLife: person.tokenLife, userGroups: this.resolveSessionUserGroups(person), permissions: person.userGroupPermissions || UTILS.getUserGroupPermissions(person.userGroups) };
         if (options.externalIdentityLinkCode !== undefined) {
             if (eventType !== 'external_identity.authentication' || session.principalType !== 'customer' || session.type !== 'Customer' ||
                 !/^EID_[a-f0-9]{64}$/.test(options.externalIdentityLinkCode)) throw new CLASSES.NodicsError('ERR_AUTH_00001');
@@ -379,7 +424,7 @@ module.exports = {
                 if (session.externalIdentityLinkCode) {
                     await SERVICE.DefaultExternalIdentityService.validateSessionBinding(session);
                 }
-                session.userGroups = person.userGroupCodes || UTILS.getUserGroupCodes(person.userGroups);
+                session.userGroups = _self.resolveSessionUserGroups(person);
                 session.permissions = person.userGroupPermissions || UTILS.getUserGroupPermissions(person.userGroups);
                 session.principalType = person.principalType;
                 return _self.createRefreshToken(session);

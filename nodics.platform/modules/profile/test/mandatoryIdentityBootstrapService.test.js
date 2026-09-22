@@ -13,7 +13,7 @@ const assert = require('assert');
 
 /**
  * @module profile/test/mandatoryIdentityBootstrapService
- * @description Verifies idempotent, audited creation of missing configured identity groups and non-secret reconciliation of configured service principals without overwriting tenant secrets.
+ * @description Verifies idempotent, audited creation of missing configured identity groups, metadata reconciliation, and local generated runtime credential repair without exposing tenant secrets.
  * @layer test
  * @owner profile
  * @override Projects may extend group targets and bootstrap services through layered configuration.
@@ -24,10 +24,15 @@ const groups = [
     { code: 'adminGroup', active: true, parentGroups: ['customParent'] }
 ];
 const employees = [
+    { code: 'admin', loginId: 'admin', active: true, principalType: 'human', password: { active: true }, userGroups: ['adminGroup'] },
     { code: 'apiAdmin', loginId: 'apiAdmin', active: true, apiKey: 'existing-api-key', userGroups: ['employeeUserGroup'] }
 ];
 const saved = [];
 const employeeUpdates = [];
+const scopeAssignments = [];
+const passwordSaves = [];
+const userStates = [];
+const userStateSaves = [];
 const audits = [];
 
 global.CLASSES = {
@@ -42,6 +47,10 @@ global.CONFIG = {
     /** Returns layered identity-governance test configuration. */
     get: function (key) {
         if (key === 'defaultTenant') return 'default';
+        if (key === 'defaultEnterprise') return 'default';
+        if (key === 'defaultAuthDetail') return { apiKey: process.env.NODICS_PLATFORM_API_KEY || process.env.NODICS_RUNTIME_API_KEY, entCode: 'default' };
+        if (key === 'runtimeIdentity') return { instanceCode: 'kickoff-local-platform-1', remoteModules: ['axis'] };
+        if (key === 'bootstrapIdentity') return { adminPassword: 'adminPassword' };
         if (key === 'identityGovernance') return {
             migration: {
                 version: 2,
@@ -54,6 +63,7 @@ global.CONFIG = {
                     serviceAccountUserGroup: { parentGroups: ['userGroup'], permissions: ['auth.internal.token.read'] }
                 },
                 servicePrincipalCodes: ['apiAdmin'],
+                administratorCodes: ['admin'],
                 servicePrincipalScopes: {
                     apiAdmin: ['auth.internal.token.read', 'auth.internal.token.read.anyTenant']
                 },
@@ -108,9 +118,39 @@ global.SERVICE = {
             employeeUpdates.push(request);
             employees.forEach(employee => {
                 if (employee.code === request.query.code) {
-                    Object.assign(employee, request.model);
+                    if (request.model && request.model.$set) Object.assign(employee, request.model.$set);
+                    else Object.assign(employee, request.model);
+                    Object.keys(request.model && request.model.$unset || {}).forEach(key => { delete employee[key]; });
                 }
             });
+            return Promise.resolve({ result: request.model });
+        }
+    },
+    DefaultAPIKeyCredentialService: {
+        /** Returns a deterministic test digest for local credential reconciliation. */
+        digest: function (apiKey) { return 'hash:' + apiKey; },
+        /** Returns sanitized persisted credential fields. */
+        prepare: function (apiKey) { return { apiKeyHash: 'hash:' + apiKey }; }
+    },
+    DefaultPasswordService: {
+        /** Captures local administrator password bootstrap writes without exposing the password in assertions. */
+        save: function (request) {
+            passwordSaves.push(request);
+            return Promise.resolve({ result: { _id: 'saved-password-id', code: request.model.code } });
+        }
+    },
+    DefaultUserStateService: {
+        /** Returns mutable in-memory user-state fixtures. */
+        findUserState: function (request) {
+            const state = userStates.find(item => item.loginId === request.loginId && item.personId === request._id);
+            return Promise.resolve(state || { loginId: request.loginId, personId: request._id, attempts: 0, active: true });
+        },
+        /** Captures local administrator state reconciliation writes. */
+        save: function (request) {
+            userStateSaves.push(request);
+            const existing = userStates.find(item => item.loginId === request.model.loginId && item.personId === request.model.personId);
+            if (existing) Object.assign(existing, request.model);
+            else userStates.push(request.model);
             return Promise.resolve({ result: request.model });
         }
     },
@@ -118,6 +158,25 @@ global.SERVICE = {
         /** Captures sanitized bootstrap audit fixtures. */
         save: function (request) {
             audits.push(request.model);
+            return Promise.resolve({ result: request.model });
+        }
+    },
+    DefaultPrincipalScopeAssignmentService: {
+        /** Returns local runtime grant fixtures. */
+        get: function (request) {
+            let result = scopeAssignments.slice();
+            if (request.query && request.query.code) result = result.filter(item => item.code === request.query.code);
+            return Promise.resolve({ result });
+        },
+        /** Saves one local runtime grant fixture. */
+        save: function (request) {
+            scopeAssignments.push(request.model);
+            return Promise.resolve({ result: request.model });
+        },
+        /** Updates one local runtime grant fixture. */
+        update: function (request) {
+            const assignment = scopeAssignments.find(item => item.code === request.query.code);
+            if (assignment) Object.assign(assignment, request.model);
             return Promise.resolve({ result: request.model });
         }
     }
@@ -130,7 +189,9 @@ const service = require('../src/service/identity/defaultMandatoryIdentityBootstr
     assert.deepStrictEqual(first, {
         status: 'RECONCILED',
         createdGroups: ['parentServiceGroup', 'childServiceGroup', 'serviceAccountUserGroup'],
-        reconciledServicePrincipals: ['apiAdmin']
+        reconciledServicePrincipals: ['apiAdmin'],
+        reconciledRuntimeDeploymentGrants: [],
+        reconciledAdministrators: []
     });
     assert.strictEqual(saved.length, 3);
     assert(saved.findIndex(group => group.code === 'parentServiceGroup') < saved.findIndex(group => group.code === 'childServiceGroup'));
@@ -142,14 +203,14 @@ const service = require('../src/service/identity/defaultMandatoryIdentityBootstr
     assert.strictEqual(employeeUpdates[0].model.identityMigrationVersion, 2);
     assert.strictEqual(employeeUpdates[0].model.apiKeyStatus, 'active');
     assert.strictEqual(employeeUpdates[0].model.apiKey, undefined);
-    assert.strictEqual(employees[0].apiKey, 'existing-api-key');
+    assert.strictEqual(employees.find(employee => employee.code === 'apiAdmin').apiKey, 'existing-api-key');
     assert.strictEqual(audits.length, 1);
     assert.deepStrictEqual(audits[0].result.createdGroups, ['parentServiceGroup', 'childServiceGroup', 'serviceAccountUserGroup']);
     assert.deepStrictEqual(audits[0].result.reconciledServicePrincipals, ['apiAdmin']);
 
-    employees[0].userGroups = [{ code: 'serviceAccountUserGroup' }];
+    employees.find(employee => employee.code === 'apiAdmin').userGroups = [{ code: 'serviceAccountUserGroup' }];
     const second = await service.reconcile({ tenant: 'default' });
-    assert.deepStrictEqual(second, { status: 'NO_CHANGES', createdGroups: [], reconciledServicePrincipals: [] });
+    assert.deepStrictEqual(second, { status: 'NO_CHANGES', createdGroups: [], reconciledServicePrincipals: [], reconciledRuntimeDeploymentGrants: [], reconciledAdministrators: [] });
     assert.strictEqual(saved.length, 3);
     assert.strictEqual(employeeUpdates.length, 1);
     assert.strictEqual(audits.length, 1);
@@ -168,11 +229,88 @@ const service = require('../src/service/identity/defaultMandatoryIdentityBootstr
         { code: 'unrelatedGroup10' }
     );
     const third = await service.reconcile({ tenant: 'default' });
-    assert.deepStrictEqual(third, { status: 'NO_CHANGES', createdGroups: [], reconciledServicePrincipals: [] });
+    assert.deepStrictEqual(third, { status: 'NO_CHANGES', createdGroups: [], reconciledServicePrincipals: [], reconciledRuntimeDeploymentGrants: [], reconciledAdministrators: [] });
     assert.strictEqual(saved.length, 3);
     assert.strictEqual(employeeUpdates.length, 1);
     assert.strictEqual(groups.filter(group => group.code === 'serviceAccountUserGroup').length, 1);
     assert.strictEqual(audits.length, 1);
+
+    const previousNodics = global.NODICS;
+    const previousUtils = global.UTILS;
+    const previousRuntimeApiKey = process.env.NODICS_RUNTIME_API_KEY;
+    const previousPlatformApiKey = process.env.NODICS_PLATFORM_API_KEY;
+    global.NODICS = {
+        getEnvironmentName: () => 'nodics.kickoff',
+        getSelectedEnvironmentName: () => 'kickoffLocal',
+        getServerName: () => 'platformServer',
+        getActiveModules: () => ['profile', 'backoffice']
+    };
+    global.UTILS = { compareHash: async () => false };
+    process.env.NODICS_RUNTIME_API_KEY = 'local-runtime-api-key-with-at-least-thirty-two-characters';
+    process.env.NODICS_PLATFORM_API_KEY = 'local-platform-api-key-with-at-least-thirty-two-characters';
+    employees.find(employee => employee.code === 'apiAdmin').apiKeyHash = 'hash:old-local-runtime-key';
+    employees.find(employee => employee.code === 'admin')._id = 'admin-id';
+    userStates.push({ loginId: 'admin', personId: 'admin-id', attempts: 5, locked: true, lockedTime: new Date(), active: true });
+    const fourth = await service.reconcile({ tenant: 'default' });
+    assert.deepStrictEqual(fourth, {
+        status: 'RECONCILED',
+        createdGroups: [],
+        reconciledServicePrincipals: ['apiAdmin'],
+        reconciledRuntimeDeploymentGrants: ['kickoff-local-platform-runtime-deployment'],
+        reconciledAdministrators: ['admin']
+    });
+    assert.strictEqual(employeeUpdates.length, 3);
+    const apiAdminUpdate = employeeUpdates.find(update => update.query.code === 'apiAdmin' && update.model.$set);
+    const adminUpdate = employeeUpdates.find(update => update.query.code === 'admin');
+    assert.strictEqual(apiAdminUpdate.model.$set.apiKeyHash, 'hash:' + process.env.NODICS_PLATFORM_API_KEY);
+    assert.deepStrictEqual(apiAdminUpdate.model.$unset, { apiKey: 1 });
+    assert.strictEqual(employees.find(employee => employee.code === 'apiAdmin').apiKey, undefined);
+
+    const refreshedScopeCredential = service.buildLocalRuntimeCredentialUpdate({
+        code: 'apiAdmin',
+        apiKeyHash: 'hash:' + process.env.NODICS_PLATFORM_API_KEY,
+        apiKeyScopes: ['auth.internal.token.read'],
+        apiKeyStatus: 'active',
+        identityMigrationVersion: 2
+    }, {
+        version: 2,
+        servicePrincipalCodes: ['apiAdmin'],
+        servicePrincipalScopes: {
+            apiAdmin: ['auth.internal.token.read', 'profile.enterprise.reference.read']
+        }
+    });
+    assert.deepStrictEqual(refreshedScopeCredential.apiKeyScopes, ['auth.internal.token.read', 'profile.enterprise.reference.read']);
+    assert.strictEqual(service.buildLocalRuntimeCredentialUpdate({
+        code: 'apiAdmin',
+        apiKeyHash: 'hash:' + process.env.NODICS_PLATFORM_API_KEY,
+        apiKeyScopes: ['auth.internal.token.read', 'profile.enterprise.reference.read'],
+        apiKeyStatus: 'active',
+        identityMigrationVersion: 2
+    }, {
+        version: 2,
+        servicePrincipalCodes: ['apiAdmin'],
+        servicePrincipalScopes: {
+            apiAdmin: ['auth.internal.token.read', 'profile.enterprise.reference.read']
+        }
+    }), null);
+
+    assert.strictEqual(scopeAssignments.length, 1);
+    assert.strictEqual(scopeAssignments[0].principalCode, 'apiAdmin');
+    assert.strictEqual(scopeAssignments[0].runtimeScope.instanceCode, 'kickoff-local-platform-1');
+    assert.strictEqual(passwordSaves.length, 1);
+    assert.strictEqual(passwordSaves[0].model.password, 'adminPassword');
+    assert.strictEqual(adminUpdate.model.password, 'saved-password-id');
+    assert.strictEqual(employees.find(employee => employee.code === 'admin').password, 'saved-password-id');
+    assert.strictEqual(userStateSaves.length, 1);
+    assert.strictEqual(userStateSaves[0].model.loginId, 'admin');
+    assert.strictEqual(userStateSaves[0].model.attempts, 0);
+    assert.strictEqual(userStateSaves[0].model.locked, false);
+    if (previousRuntimeApiKey === undefined) delete process.env.NODICS_RUNTIME_API_KEY;
+    else process.env.NODICS_RUNTIME_API_KEY = previousRuntimeApiKey;
+    if (previousPlatformApiKey === undefined) delete process.env.NODICS_PLATFORM_API_KEY;
+    else process.env.NODICS_PLATFORM_API_KEY = previousPlatformApiKey;
+    global.NODICS = previousNodics;
+    global.UTILS = previousUtils;
 
     console.log('Mandatory identity bootstrap reconciliation validated');
 })().catch(error => {

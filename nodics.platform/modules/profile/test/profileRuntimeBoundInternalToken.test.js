@@ -46,6 +46,24 @@ test('unapproved modules, deployment changes, duplicate claims and another repli
     }
     assert.equal(issued.length, 0);
 });
+test('native local runtimes may share the generated local service principal while matching one grant', async () => {
+    setup();
+    const localScope = { ...scope, environmentCode: 'kickoffLocal', serverCode: 'wasteServer', instanceCode: 'kickoff-local-waste-1' };
+    const peerScope = { ...scope, environmentCode: 'kickoffLocal', serverCode: 'locationServer', instanceCode: 'kickoff-local-location-1' };
+    rows = [
+        { ...assignment, code: 'kickoff-local-waste-runtime-deployment', principalCode: 'apiAdmin', runtimeScope: localScope },
+        { ...assignment, code: 'kickoff-local-location-runtime-deployment', principalCode: 'apiAdmin', runtimeScope: peerScope }
+    ];
+    const localRequest = structuredClone(request);
+    localRequest.authData.person.loginId = 'apiAdmin';
+    localRequest.headers['x-nodics-environment'] = localScope.environmentCode;
+    localRequest.headers['x-nodics-server'] = localScope.serverCode;
+    localRequest.headers['x-nodics-runtime-instance'] = localScope.instanceCode;
+    localRequest.headers['x-nodics-modules'] = localScope.modules.join(',');
+    const result = await issuer.getInternalAuthToken(localRequest);
+    assert.equal(result.result.authToken, 'signed-runtime-token');
+    assert.equal(issued[0].runtimeScope.assignmentCode, 'kickoff-local-waste-runtime-deployment');
+});
 test('missing, expired, ambiguous or denied grants and unavailable storage never issue a credential', async () => {
     setup();
     for (const values of [[], [{ ...assignment, effectiveTo: new Date(Date.now() - 1000).toISOString() }], [assignment, { ...assignment, code: 'duplicate' }], [assignment, { ...assignment, code: 'deny', effect: 'DENY' }]]) {

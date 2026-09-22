@@ -12,11 +12,17 @@
 
 /** @module copilotProvider/src/service/defaultCopilotSecretResolverService @description Resolves configured secret references through an injected resolver or an environment reference without logging secret values. @layer service @owner copilotProvider @override Environment modules may supply a resolver integration for their secret platform. */
 module.exports = {
-    /** Resolves a supported runtime reference. Only explicit env: references are handled by the framework default. @param {string} secretRef Governed secret reference. @returns {string|null} Secret value or null. */
+    /** Resolves a supported runtime reference without logging secret material. @param {string} secretRef Governed secret reference. @returns {string|null} Secret value or null. */
     resolveReference: function (secretRef) {
-        const match = /^env:([A-Z][A-Z0-9_]*)$/.exec(String(secretRef || ''));
-        if (!match) throw new Error('COPILOT_SECRET_REFERENCE_UNSUPPORTED');
-        return process.env[match[1]] || null;
+        const reference = String(secretRef || '');
+        const envMatch = /^env:([A-Z][A-Z0-9_]*)$/.exec(reference);
+        if (envMatch) return process.env[envMatch[1]] || null;
+        const credentialMatch = /^credentials:([A-Za-z0-9._-]+)$/.exec(reference);
+        if (credentialMatch) {
+            const credential = (typeof CONFIG !== 'undefined' && CONFIG.get && CONFIG.get('credentials') || {})[credentialMatch[1]];
+            return credential && credential.status !== 'DISABLED' && typeof credential.value === 'string' ? credential.value : null;
+        }
+        throw new Error('COPILOT_SECRET_REFERENCE_UNSUPPORTED');
     },
     /** Resolves a non-secret reference. @param {string} secretRef Governed secret reference. @param {Function} resolver Environment-owned resolver. @returns {Promise<string>} Secret value for immediate provider use. */
     resolve: function (secretRef, resolver) {

@@ -14,6 +14,84 @@ const DEFINITIONS = require("../../../wasteMaterial/src/utils/descriptorDefiniti
 
 /** @module wasteSubmission/service/defaultWasteMetadataAnalysisService @description Produces advisory photo metadata through the configured Copilot provider, retaining the original evidence and explicit customer confirmation. @layer service @owner wasteSubmission @override Select a different provider through layered configuration; never treat recognition as verified facts. */
 module.exports = {
+  /** Identifies provider setup failures that should preserve the photo for manual review. */
+  isRecognitionUnavailable: function (error) {
+    return [
+      "COPILOT_SECRET_NOT_FOUND",
+      "ERR_COPILOT_SECRET_NOT_FOUND",
+      "ERR_COPILOT_PROVIDER_UNCONFIGURED",
+      "ERR_WASTE_RECOGNITION_UNAVAILABLE",
+    ].includes(error && (error.code || error.message));
+  },
+  /** Builds a governed fallback analysis when recognition is unavailable but manual review is enabled. */
+  manualReviewAnalysis: async function (request, current = { revision: 0, metadata: {} }) {
+    const store = SERVICE.DefaultWastePersistenceService;
+    const settings = (CONFIG.get("wasteSubmission") || {}).metadataSuggestion || {};
+    if (settings.manualReviewFallback !== true || !settings.fallbackItemTypeCode)
+      store.fail(
+        "ERR_WASTE_RECOGNITION_UNAVAILABLE",
+        "Photo recognition is unavailable. Enter the item details manually",
+      );
+    const item = await store.one("wasteItemType", request, settings.fallbackItemTypeCode);
+    const category = item && await store.one("wasteCategory", request, item.categoryCode);
+    if (!item || item.status !== "ACTIVE" || !category || category.status !== "ACTIVE" ||
+      (Array.isArray(settings.allowedFamilyCodes) && settings.allowedFamilyCodes.length && !settings.allowedFamilyCodes.includes(category.familyCode)))
+      store.fail("ERR_WASTE_TAXONOMY_INVALID", "Manual review classification is unavailable");
+    const descriptor = SERVICE.DefaultWasteItemDescriptorService;
+    const normalized = descriptor.normalize({
+      materials: [],
+      weightEstimate: {},
+      dimensionsEstimate: {},
+      environment: {},
+    }, []);
+    const proposal = {
+      name: "Electronic item for review",
+      description: "Photo saved for manual item review because photo recognition is unavailable.",
+      itemTypeCode: item.code,
+      categoryCode: item.categoryCode,
+      conditionGrade: "UNKNOWN",
+      quantity: 1,
+      sizeClass: "UNKNOWN",
+      sizeProvenance: { basis: "UNKNOWN", policyVersion: null, confidence: null },
+      ...normalized,
+    };
+    const evidenceReview = descriptor.normalizeImageEvidence({
+      sourceType: "UNCERTAIN",
+      confidence: null,
+      reason: "Photo recognition is unavailable; manual review required.",
+    }, current.metadata && current.metadata.evidenceReview, { module: "media", schema: "media", code: request.photo && request.photo.code });
+    const recognition = {
+      contractVersion: 1,
+      promptVersion: "WASTE_PHOTO_V7",
+      analysisStatus: "UNAVAILABLE",
+      imageEvidence: evidenceReview,
+      assessment: "SUPPORTED",
+      taxonomyMatch: {
+        kind: "GENERIC_FALLBACK",
+        itemTypeCode: item.code,
+        categoryCode: item.categoryCode,
+      },
+      evidenceRef: { module: "media", schema: "media", code: request.photo && request.photo.code },
+      draftRevision: current.revision || 0,
+      analyzedAt: new Date().toISOString(),
+      size: { value: "UNKNOWN", basis: "UNKNOWN", policyVersion: null, confidence: null },
+      ...normalized,
+      weight: { value: null, unit: "KG", basis: "UNKNOWN" },
+      dimensions: { value: null, basis: "UNKNOWN" },
+      qualityFlags: [],
+      unknownFields: descriptor.unknownFields(proposal),
+    };
+    return {
+      proposal,
+      recognition,
+      evidenceReview,
+      provider: null,
+      model: null,
+      sourceType: "RULE",
+      confidence: "0",
+      manualReviewRequired: true,
+    };
+  },
   /** Builds the provider-neutral response schema from active taxonomy and shared descriptor vocabulary. */
   buildResponseSchema: function (items, materials) {
     const object = properties => ({ type: "object", properties, required: Object.keys(properties), additionalProperties: false });
@@ -115,23 +193,33 @@ module.exports = {
       items = items.filter(item => codes.has(item.categoryCode));
     }
     const materials = catalogue.materials;
-    const result = await SERVICE.DefaultCopilotProviderService.invoke(
-      {
-        responseSchema: this.buildResponseSchema(items, materials),
-        messages: [
-          {
-            role: "user",
-            images: [image],
-            content: this.buildPrompt(items, materials, settings),
-          },
-        ],
-      },
-      {
-        configuration: (CONFIG.get("copilot") || {}).providers,
-        adapter: settings.adapter,
-        profile: settings.profile,
-      },
-    );
+    let result;
+    try {
+      result = await SERVICE.DefaultCopilotProviderService.invoke(
+        {
+          responseSchema: this.buildResponseSchema(items, materials),
+          messages: [
+            {
+              role: "user",
+              images: [image],
+              content: this.buildPrompt(items, materials, settings),
+            },
+          ],
+        },
+        {
+          configuration: (CONFIG.get("copilot") || {}).providers,
+          adapter: settings.adapter,
+          profile: settings.profile,
+        },
+      );
+    } catch (error) {
+      if (this.isRecognitionUnavailable(error))
+        store.fail(
+          "ERR_WASTE_RECOGNITION_UNAVAILABLE",
+          "Photo recognition is unavailable. Enter the item details manually",
+        );
+      throw error;
+    }
     let parsed;
     try {
       parsed = JSON.parse(result.content);
@@ -279,17 +367,17 @@ module.exports = {
   },
   /** Builds canonical suggestion records from server-produced analysis only. */
   suggestion: function (request, current, analysis) {
-    const { proposal, recognition, evidenceReview, provider, model, confidence } = analysis;
+    const { proposal, recognition, evidenceReview, provider, model, confidence, sourceType } = analysis;
     const suggestionCode = current.code + "_SUGGESTION_" + current.revision;
     const suggestion = {
       code: suggestionCode,
       submissionCode: current.code,
-      sourceType: "AI",
-      providerRef: {
+      sourceType: sourceType || "AI",
+      providerRef: provider ? {
         module: "copilotProvider",
         schema: "provider",
         code: provider,
-      },
+      } : undefined,
       suggestedCategoryCode: proposal.categoryCode,
       suggestedItemTypeCode: proposal.itemTypeCode,
       suggestedConditionGrade: proposal.conditionGrade,

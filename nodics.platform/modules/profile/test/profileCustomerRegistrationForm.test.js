@@ -103,3 +103,34 @@ test("owner validation and identity member remain supported later-layer extensio
   };
   assert.equal(customized.formModel(form).code, "PARTNER_user@example.com");
 });
+test("service registration persists customer through Profile system write context", async () => {
+  const systemAuth = { isSystem: true, userGroups: ["serviceAccountUserGroup"] };
+  global.SERVICE.DefaultIdentityGovernanceService = {
+    getSystemAuthData: () => systemAuth,
+  };
+  global.SERVICE.DefaultKycDecisionEnforcementService = null;
+  let savedRequest;
+  const process = {
+    nextSuccess: () => {},
+    error: (request, response, error) => {
+      throw error;
+    },
+  };
+  await registration.createCustomer(
+    {
+      tenant: "default",
+      authData: { tokenType: "service" },
+      model: { loginId: "user@example.com" },
+      defaultCustomerService: {
+        save: async (request) => {
+          savedRequest = request;
+          return { result: { code: request.model.loginId } };
+        },
+      },
+    },
+    {},
+    process,
+  );
+  assert.deepEqual(savedRequest.authData, systemAuth);
+  assert.equal(savedRequest.model.loginId, "user@example.com");
+});

@@ -1660,6 +1660,14 @@ module.exports = {
   ) {
     let owner = await this.resolveActivationDataRuntimeOwner(pack);
     let tenant = this.getTenant(request);
+    if (
+      SERVICE.DefaultInternalAuthenticationProviderService &&
+      typeof SERVICE.DefaultInternalAuthenticationProviderService
+        .refreshInternalAuthTokens === "function"
+    ) {
+      await SERVICE.DefaultInternalAuthenticationProviderService
+        .refreshInternalAuthTokens(tenant);
+    }
     let token =
       typeof NODICS !== "undefined" &&
       NODICS.getInternalAuthToken &&
@@ -1670,15 +1678,6 @@ module.exports = {
         "Internal activation data token is unavailable",
       );
     let authorization = "Bearer " + token;
-    if (mode === "execute") {
-      const auth = request.authData || {};
-      const headers = (request.httpRequest && request.httpRequest.headers) || {};
-      authorization = headers.authorization || headers.Authorization;
-      if (!(auth.principalId || auth.loginId || auth.code) || auth.tokenType === "service" ||
-          typeof authorization !== "string" || !/^Bearer\s+\S+$/i.test(authorization)) {
-        throw new CLASSES.NodicsError("ERR_AUTH_00003", "Operator bearer authorization is required for activation data installation");
-      }
-    }
     let moduleService = SERVICE.DefaultModuleService;
     if (
       !moduleService ||

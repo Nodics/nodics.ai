@@ -485,7 +485,8 @@ module.exports = {
     try {
       let modules = [];
       let serverProperties = this.loadServerProperties();
-      let prop = _.merge({}, props, serverProperties);
+      serverProperties = this.deriveRuntimePublicationFlag(serverProperties);
+      let prop = this.deriveRuntimePublicationFlag(_.merge({}, props, serverProperties));
       this.LOG = logger.createLogger(
         "DefaultModuleInitializerService",
         prop.log,
@@ -1184,6 +1185,10 @@ module.exports = {
   validateResolvedConfiguration: function () {
     let serverProperties =
       CONFIG.getProperties() || this.loadServerProperties();
+    serverProperties = this.deriveCurrentRuntimeConfiguration(serverProperties);
+    if (CONFIG && typeof CONFIG.setProperties === "function") {
+      CONFIG.setProperties(serverProperties);
+    }
     this.validateRawModuleIndexes();
     this.validateRuntimeModuleMetadata();
     this.validateConfiguredModules(serverProperties);
@@ -1195,6 +1200,35 @@ module.exports = {
     this.validateNodeConfiguration(serverProperties);
     this.validateModularProfileConfiguration(serverProperties);
     this.validateRuntimeTopologyConfiguration(serverProperties);
+  },
+
+  /** Adds source-derived deployment metadata for the selected live runtime before validation and service registry preparation. @param {Object} properties Loaded runtime properties. @returns {Object} Properties with derived runtime metadata. */
+  deriveCurrentRuntimeConfiguration: function (properties) {
+    if (
+      typeof NODICS === "undefined" ||
+      !NODICS ||
+      typeof NODICS.getServerPath !== "function"
+    ) {
+      return properties;
+    }
+    const serverPath = NODICS.getServerPath && NODICS.getServerPath();
+    if (!serverPath) return properties;
+    const context = this.getPropertyBindingContext(require("node:path").join(serverPath, "config", "properties.js"));
+    let resolved = this.deriveDeploymentEnvironmentMetadata(properties, context);
+    resolved = this.deriveRuntimeModuleRootDataReleaseProfiles(resolved, context);
+    resolved = this.deriveDatabaseModuleDefaults(resolved);
+    resolved = this.deriveRuntimePublicationFlag(resolved);
+    resolved = this.deriveDeploymentRuntimeIdentity(resolved, context);
+    resolved = this.deriveDeploymentServerReferences(resolved, context);
+    resolved = this.deriveRuntimeRoleDataReleases(resolved);
+    resolved = this.deriveRuntimeRoleInitializationProfiles(resolved, context);
+    resolved = this.deriveRuntimeRoleApiExposure(resolved);
+    resolved = this.deriveRuntimeRoleCopilot(resolved);
+    resolved = this.deriveRuntimeRoleSearch(resolved);
+    resolved = this.deriveRuntimeRoleStripeProvider(resolved);
+    resolved = this.deriveRuntimeRoleHttpHardening(resolved);
+    resolved = this.deriveRuntimeRoleBackofficeProfiles(resolved);
+    return this.deriveRuntimeRoleCommerceProfiles(resolved);
   },
 
   /**
@@ -1441,7 +1475,63 @@ module.exports = {
     context.readPackageVersion = base => this.readConfigurationPackageVersion(context, base);
     context.readRuntimeProperty = (name, property, node) =>
       this.readRuntimeProperty(context, name, property, node);
+    context.readBootstrapCompositionDefinitions = () =>
+      this.readBootstrapCompositionDefinitions(context);
     return context;
+  },
+
+  /** Reads composition definitions from one module tree without resolving selected bindings. @param {string} root Module or project root. @returns {Object} Composition definitions keyed by code. */
+  readBootstrapCompositionDefinitionsFromRoot: function (root) {
+    const path = require("path");
+    let definitions = {};
+    const visit = (directory) => {
+      const file = path.join(directory, "config", "properties.js");
+      if (fs.existsSync(file)) {
+        const properties = require(file);
+        if (properties?.activeModules?.compositions) {
+          definitions = configurationBindings.merge(definitions, properties.activeModules.compositions);
+        }
+      }
+      const modulesDirectory = path.join(directory, "modules");
+      if (!fs.existsSync(modulesDirectory)) return;
+      fs.readdirSync(modulesDirectory, { withFileTypes: true }).filter(entry => entry.isDirectory()).forEach(entry => {
+        visit(path.join(modulesDirectory, entry.name));
+      });
+    };
+    if (root && fs.existsSync(root)) visit(root);
+    return definitions;
+  },
+
+  /** Reads early composition definitions from module-owned configuration before active module resolution. @param {Object} context Optional deployment binding context. @returns {Object} Composition definitions keyed by code. */
+  readBootstrapCompositionDefinitions: function (context) {
+    const path = require("path");
+    let definitions = {};
+    if (context?.roots) {
+      const roots = new Set([context.roots.project, context.roots.environment, context.roots.server, context.roots.node].filter(Boolean));
+      if (context.roots.framework && context.roots.server) {
+        try {
+          const metadata = JSON.parse(fs.readFileSync(path.join(context.roots.server, "package.json"), "utf8"));
+          [].concat(metadata.nodics?.runtimeModuleRoots || metadata.nodics?.extends || []).filter(Boolean)
+            .forEach(name => roots.add(path.join(context.roots.framework, name)));
+        } catch (error) {
+          // Deployment context validation owns package failures.
+        }
+      }
+      roots.forEach(root => {
+        definitions = configurationBindings.merge(definitions, this.readBootstrapCompositionDefinitionsFromRoot(root));
+      });
+    }
+    if (typeof NODICS === "undefined" || !NODICS || typeof NODICS.getRawModules !== "function") return definitions;
+    _.each(NODICS.getRawModules(), (moduleObject) => {
+      if (!moduleObject || !moduleObject.path) return;
+      const file = path.join(moduleObject.path, "config", "properties.js");
+      if (!fs.existsSync(file)) return;
+      const properties = require(file);
+      if (properties?.activeModules?.compositions) {
+        definitions = configurationBindings.merge(definitions, properties.activeModules.compositions);
+      }
+    });
+    return definitions;
   },
 
   /** Resolves explicit property bindings at the existing contribution boundary, before its normal layered merge. @param {string} filePath Existing source file. @param {Object} inherited Earlier properties. @returns {Object} Effective contribution. */
@@ -1456,10 +1546,360 @@ module.exports = {
   /** Reads the existing project/environment/server/node contributions for pre-start tooling without loading services or another descriptor. @param {Object} options Explicit deployment coordinates. @returns {Object} Resolved properties. */
   readDeploymentConfiguration: function (options) {
     const context = this.deploymentPropertyContext(options);
-    return this.deploymentPropertyFiles(context).reduce((properties, file) => {
+    const properties = this.deploymentPropertyFiles(context).reduce((properties, file) => {
       if (!fs.existsSync(file)) return properties;
       return configurationBindings.merge(properties, this.readPropertyContribution(file, properties, context));
     }, configurationBindings.merge({}, options.inheritedProperties || {}));
+    let resolved = this.deriveDeploymentEnvironmentMetadata(properties, context);
+    resolved = this.deriveRuntimeModuleRootDataReleaseProfiles(resolved, context);
+    resolved = this.deriveDatabaseModuleDefaults(resolved);
+    resolved = this.deriveRuntimePublicationFlag(resolved);
+    resolved = this.deriveDeploymentRuntimeIdentity(resolved, context);
+    resolved = this.deriveDeploymentServerReferences(resolved, context);
+    resolved = this.deriveRuntimeRoleDataReleases(resolved);
+    resolved = this.deriveRuntimeRoleInitializationProfiles(resolved, context);
+    resolved = this.deriveRuntimeRoleApiExposure(resolved);
+    resolved = this.deriveRuntimeRoleCopilot(resolved);
+    resolved = this.deriveRuntimeRoleSearch(resolved);
+    resolved = this.deriveRuntimeRoleStripeProvider(resolved);
+    resolved = this.deriveRuntimeRoleHttpHardening(resolved);
+    resolved = this.deriveRuntimeRoleBackofficeProfiles(resolved);
+    return this.deriveRuntimeRoleCommerceProfiles(resolved);
+  },
+
+  /** Projects selected environment metadata into effective configuration without requiring authored environment properties. @param {Object} properties Resolved deployment configuration. @param {Object} context Trusted binding context. @returns {Object} Resolved configuration with derived environment identity. */
+  deriveDeploymentEnvironmentMetadata: function (properties, context) {
+    const path = require("node:path");
+    if (!context.roots.environment || !fs.existsSync(context.roots.environment)) return properties;
+    const metadata = JSON.parse(fs.readFileSync(path.join(context.roots.environment, "package.json"), "utf8"));
+    const deploymentClass = metadata.nodics?.deploymentClass || metadata.nodics?.environmentClass;
+    const derived = { environment: { code: context.environmentCode, module: metadata.name || context.environmentCode } };
+    if (deploymentClass) derived.environment.class = String(deploymentClass).toUpperCase();
+    return configurationBindings.merge(derived, properties);
+  },
+
+  /** Projects runtime identity from the selected server package metadata, keeping identity out of authored properties. @param {Object} properties Resolved deployment configuration. @param {Object} context Trusted binding context. @returns {Object} Resolved configuration with package-owned runtime identity. */
+  deriveDeploymentRuntimeIdentity: function (properties, context) {
+    const path = require("node:path");
+    if (!context.roots.server || !fs.existsSync(context.roots.server)) return properties;
+    const packageFile = path.join(context.roots.server, "package.json");
+    if (!fs.existsSync(packageFile)) return properties;
+    const metadata = JSON.parse(fs.readFileSync(packageFile, "utf8"));
+    const identity = metadata.nodics?.runtimeIdentity;
+    if (!identity) return properties;
+    return configurationBindings.merge({ runtimeIdentity: _.cloneDeep(identity) }, properties);
+  },
+
+  /** Derives the legacy publish activation flag from the semantic publication runtime role. @param {Object} properties Resolved deployment configuration. @returns {Object} Configuration with effective publish activation. */
+  deriveRuntimePublicationFlag: function (properties) {
+    const publicationRole = properties && properties.runtimeRole && properties.runtimeRole.publication;
+    if (!publicationRole) return properties;
+    const resolved = _.cloneDeep(properties);
+    resolved.publishEnabled = publicationRole === "STAGED";
+    return resolved;
+  },
+
+  /** Applies module-owned API exposure profiles for the selected runtime role. @param {Object} properties Resolved deployment configuration. @returns {Object} Configuration with role profile folded into `apiExposure.categories`. */
+  deriveRuntimeRoleApiExposure: function (properties) {
+    return this.deriveRuntimeRoleProfile(properties, "apiExposure");
+  },
+
+  /** Applies module-owned Copilot profiles for the selected runtime role. @param {Object} properties Resolved deployment configuration. @returns {Object} Configuration with role profile folded into `copilot`. */
+  deriveRuntimeRoleCopilot: function (properties) {
+    return this.deriveRuntimeRoleProfile(properties, "copilot");
+  },
+
+  /** Applies module/customer-owned Search profiles for the selected runtime role. @param {Object} properties Resolved deployment configuration. @returns {Object} Configuration with role profile folded into `search`. */
+  deriveRuntimeRoleSearch: function (properties) {
+    return this.deriveRuntimeRoleProfile(properties, "search");
+  },
+
+  /** Applies customer-owned Stripe provider profiles for the selected runtime role. @param {Object} properties Resolved deployment configuration. @returns {Object} Configuration with role profile folded into `stripeProvider`. */
+  deriveRuntimeRoleStripeProvider: function (properties) {
+    return this.deriveRuntimeRoleProfile(properties, "stripeProvider");
+  },
+
+  /** Applies customer-owned HTTP hardening profiles for the selected runtime role. @param {Object} properties Resolved deployment configuration. @returns {Object} Configuration with role profile folded into `httpHardening`. */
+  deriveRuntimeRoleHttpHardening: function (properties) {
+    return this.deriveRuntimeRoleProfile(properties, "httpHardening");
+  },
+
+  /** Applies project/module-owned BackOffice profiles for the selected runtime role. @param {Object} properties Resolved deployment configuration. @returns {Object} Configuration with BackOffice profile namespaces folded into effective values. */
+  deriveRuntimeRoleBackofficeProfiles: function (properties) {
+    return ["backofficeApplicationInitialization", "backofficeFunctionalModuleActivationData"].reduce(
+      (resolved, namespace) => this.deriveRuntimeRoleProfile(resolved, namespace),
+      properties,
+    );
+  },
+
+  /** Applies Commerce application/business profiles for the selected runtime role. @param {Object} properties Resolved deployment configuration. @returns {Object} Configuration with Commerce role profiles folded into capability namespaces. */
+  deriveRuntimeRoleCommerceProfiles: function (properties) {
+    return ["product", "cart", "fulfillmentCore"].reduce(
+      (resolved, namespace) => this.deriveRuntimeRoleProfile(resolved, namespace),
+      properties,
+    );
+  },
+
+  /** Adds default database participation for active modules that own schemas, while preserving explicit module database overrides. @param {Object} properties Resolved deployment configuration. @returns {Object} Configuration with derived database module entries. */
+  deriveDatabaseModuleDefaults: function (properties) {
+    const activeModules = typeof NODICS !== "undefined" && NODICS && typeof NODICS.getActiveModules === "function"
+      ? NODICS.getActiveModules() || []
+      : properties?.activeModules?.modules || [];
+    const derived = { database: {} };
+    activeModules.forEach(moduleName => {
+      if (this.moduleOwnsSchema(moduleName) && !properties?.database?.[moduleName]) {
+        derived.database[moduleName] = {};
+      }
+    });
+    return Object.keys(derived.database).length > 0
+      ? configurationBindings.merge(derived, properties)
+      : properties;
+  },
+
+  /** Checks package metadata for schema ownership without requiring authored database placeholders. @param {string} moduleName Active module name. @returns {boolean} True when the module owns schemas. */
+  moduleOwnsSchema: function (moduleName) {
+    if (typeof NODICS === "undefined" || !NODICS || typeof NODICS.getRawModule !== "function") return false;
+    const rawModule = NODICS.getRawModule(moduleName);
+    if (!rawModule || !rawModule.path) return false;
+    const file = require("path").join(rawModule.path, "package.json");
+    if (!fs.existsSync(file)) return false;
+    const owns = JSON.parse(fs.readFileSync(file, "utf8")).nodics?.owns || [];
+    return Array.isArray(owns) && owns.includes("schema");
+  },
+
+  /** Adds role-scoped data-release profiles from declared runtime module roots without activating their runtime behavior. @param {Object} properties Resolved deployment configuration. @param {Object} context Trusted binding context. @returns {Object} Configuration with runtime-root data-release profiles available for role projection. */
+  deriveRuntimeModuleRootDataReleaseProfiles: function (properties, context) {
+    const path = require("node:path");
+    if (!context.roots.server) return properties;
+    const packageFile = path.join(context.roots.server, "package.json");
+    if (!fs.existsSync(packageFile)) return properties;
+    const metadata = JSON.parse(fs.readFileSync(packageFile, "utf8"));
+    const roots = [].concat(metadata.nodics?.runtimeModuleRoots || metadata.nodics?.extends || []);
+    const derived = { data: { dataReleases: { runtimeRoleProfiles: {} } } };
+    roots.filter(root => typeof root === "string" && root).forEach(root => {
+      const candidates = [
+        context.roots.framework && path.join(context.roots.framework, root, "config", "properties.js"),
+        context.roots.project && path.join(context.roots.project, root, "config", "properties.js"),
+      ].filter(Boolean);
+      const file = candidates.find(candidate => fs.existsSync(candidate));
+      if (!file) return;
+      const contribution = require(file);
+      const profiles = contribution?.data?.dataReleases?.runtimeRoleProfiles;
+      if (profiles) this.mergeDataReleaseProfileBlock(derived.data.dataReleases.runtimeRoleProfiles, profiles);
+    });
+    return configurationBindings.merge(derived, properties);
+  },
+
+  /** Applies module/environment-owned data-release profiles for the selected runtime role. @param {Object} properties Resolved deployment configuration. @returns {Object} Configuration with role profile folded into `data.dataReleases`. */
+  deriveRuntimeRoleDataReleases: function (properties) {
+    const data = properties.data || {};
+    const releases = data.dataReleases || {};
+    const roleCode = properties.runtimeRole && properties.runtimeRole.code;
+    const profile = roleCode && releases.runtimeRoleProfiles && releases.runtimeRoleProfiles[roleCode];
+    const resolved = _.cloneDeep(properties);
+    if (!profile) {
+      if (resolved.data?.dataReleases) delete resolved.data.dataReleases.runtimeRoleProfiles;
+      return resolved;
+    }
+    resolved.data = resolved.data || {};
+    resolved.data.dataReleases = this.mergeDataReleaseProfileBlock(
+      _.cloneDeep(releases),
+      profile,
+    );
+    delete resolved.data.dataReleases.runtimeRoleProfiles;
+    return resolved;
+  },
+
+  /** Merges data-release role profiles while accumulating contribution selectors and replacing ordered step arrays. */
+  mergeDataReleaseProfileBlock: function (target, source) {
+    return _.mergeWith(target, source, (targetValue, sourceValue, key) => {
+      if (!Array.isArray(sourceValue)) return undefined;
+      if (key === "contributions" && Array.isArray(targetValue)) {
+        return targetValue.concat(sourceValue);
+      }
+      return sourceValue;
+    });
+  },
+
+  /** Derives generic guided initialization profiles from active module data-release manifests while preserving authored project overrides. @param {Object} properties Resolved deployment configuration. @param {Object} context Trusted binding context. @returns {Object} Configuration with inferred initialization profiles. */
+  deriveRuntimeRoleInitializationProfiles: function (properties, context) {
+    const releases = properties.data && properties.data.dataReleases;
+    const roleCode = properties.runtimeRole && properties.runtimeRole.code;
+    if (!releases || !roleCode) return properties;
+    const generated = this.defaultInitializationProfileForRole(roleCode, this.discoverCompatibleDataReleaseTypes(properties, context));
+    if (!generated) return properties;
+    const resolved = _.cloneDeep(properties);
+    resolved.data = resolved.data || {};
+    resolved.data.dataReleases = resolved.data.dataReleases || {};
+    resolved.data.dataReleases.initializationProfiles = configurationBindings.merge(
+      generated,
+      resolved.data.dataReleases.initializationProfiles || {},
+    );
+    return resolved;
+  },
+
+  /** Returns compatible release data types for the selected runtime from module-loader state and explicit release contributions. */
+  discoverCompatibleDataReleaseTypes: function (properties, context) {
+    const path = require("node:path");
+    const roleCode = properties.runtimeRole && properties.runtimeRole.code;
+    const environmentClass = String((properties.environment && properties.environment.class) || "").toUpperCase();
+    if (!roleCode) return new Set();
+    const selectors = new Map();
+    const activeModules = typeof NODICS !== "undefined" && NODICS && typeof NODICS.getActiveModules === "function"
+      ? NODICS.getActiveModules() || []
+      : [];
+    activeModules.forEach(moduleName => selectors.set(moduleName, { moduleName, active: true }));
+    ((properties.data && properties.data.dataReleases && properties.data.dataReleases.contributions) || []).forEach(selector => {
+      if (selector && typeof selector.moduleName === "string") {
+        selectors.set(selector.moduleName, Object.assign({}, selector, { active: selectors.get(selector.moduleName)?.active === true }));
+      }
+    });
+    const dataTypes = new Set();
+    selectors.forEach(selector => {
+      const rawModule = typeof NODICS !== "undefined" && NODICS && typeof NODICS.getRawModule === "function"
+        ? NODICS.getRawModule(selector.moduleName)
+        : undefined;
+      const modulePath = rawModule && rawModule.path;
+      if (!modulePath) return;
+      const manifestFile = path.join(modulePath, "data", "manifest.json");
+      if (!fs.existsSync(manifestFile)) return;
+      let manifest;
+      try { manifest = JSON.parse(fs.readFileSync(manifestFile, "utf8")); } catch (error) { return; }
+      Object.entries(manifest.sections || {}).forEach(([sectionCode, section]) => {
+        if (!section || section.kind !== "DATA_RELEASE") return;
+        if (!selector.active && !(selector.sections || []).includes(sectionCode)) return;
+        if (!["init", "core", "sample"].includes(section.dataType)) return;
+        if (![roleCode, "ALL"].includes(section.destinationRole)) return;
+        const scope = Array.isArray(section.environmentScope) ? section.environmentScope.map(value => String(value).toUpperCase()) : [];
+        if (!scope.includes("ALL") && (!environmentClass || !scope.includes(environmentClass))) return;
+        dataTypes.add(section.dataType);
+      });
+    });
+    return dataTypes;
+  },
+
+  /** Builds the conventional local foundation profile for a runtime role when manifests prove its step data types exist. */
+  defaultInitializationProfileForRole: function (roleCode, availableTypes) {
+    const definitions = {
+      PLATFORM: ["localPlatformFoundation", "Local Platform foundation", "Platform", ["init", "core"]],
+      WCMS_STAGED: ["localWcmsFoundation", "Local WCMS foundation", "Staged content", ["init", "core"]],
+      PROCESS: ["localProcessWorkflowFoundation", "Local Process and Workflow foundation", "Process and Workflow", ["init"]],
+      COMMERCE: ["localCommerceFoundation", "Local Commerce foundation", "Commerce", ["core"]],
+      COMMERCE_STAGED: ["localCommerceStagedCatalogFoundation", "Local Commerce Staged catalog foundation", "Staged Commerce catalog", ["sample"]],
+      ENGAGEMENT: ["localEngagementFoundation", "Local Engagement foundation", "Engagement", ["core", "sample"]],
+      LOYALTY: ["localLoyaltyFoundation", "Local Loyalty foundation", "Loyalty", ["core"]],
+      WASTE: ["localWasteFoundation", "Local Waste foundation", "Waste Management", ["core"]],
+      LOCATION: ["localLocationFoundation", "Local Location foundation", "Location", ["init", "core"]],
+    };
+    const definition = definitions[roleCode];
+    if (!definition) return undefined;
+    const [code, label, subject, desiredTypes] = definition;
+    const steps = desiredTypes.filter(type => availableTypes.has(type)).map(dataType => ({ dataType }));
+    if (!steps.length) return undefined;
+    return {
+      [code]: {
+        enabled: true,
+        label,
+        description: `Install the ${subject} releases discovered from the selected runtime module graph and compatible data manifests.`,
+        completionMessage: `The ${subject} foundation is ready for this runtime. Operators can continue with governed validation and business workflows.`,
+        steps,
+      },
+    };
+  },
+
+  /** Applies a namespace's selected runtime role profile, then removes the profile map from effective CONFIG. @param {Object} properties Resolved deployment configuration. @param {string} namespace Configuration namespace. @returns {Object} Effective configuration. */
+  deriveRuntimeRoleProfile: function (properties, namespace) {
+    const block = properties[namespace] || {};
+    const roleCode = properties.runtimeRole && properties.runtimeRole.code;
+    const profile = roleCode && block.runtimeRoleProfiles && block.runtimeRoleProfiles[roleCode];
+    if (!profile) {
+      if (!block.runtimeRoleProfiles) return properties;
+      const resolved = _.cloneDeep(properties);
+      delete resolved[namespace].runtimeRoleProfiles;
+      return resolved;
+    }
+    const resolved = _.cloneDeep(properties);
+    resolved[namespace] = _.mergeWith(
+      {},
+      block,
+      profile,
+      (target, source) => (Array.isArray(source) ? source : undefined),
+    );
+    delete resolved[namespace].runtimeRoleProfiles;
+    return resolved;
+  },
+
+  /** Discovers sibling runtime server packages for a selected deployment environment. @param {Object} context Trusted binding context. @returns {Object[]} Server descriptors. */
+  discoverDeploymentServers: function (context) {
+    const path = require("node:path");
+    if (!context.roots.environment || !fs.existsSync(context.roots.environment)) return [];
+    return fs.readdirSync(context.roots.environment, { withFileTypes: true }).filter(entry => entry.isDirectory()).flatMap(entry => {
+      const packageFile = path.join(context.roots.environment, entry.name, "package.json");
+      if (!fs.existsSync(packageFile)) return [];
+      const metadata = JSON.parse(fs.readFileSync(packageFile, "utf8"));
+      return metadata.nodics?.kind === "server" && metadata.nodics.runtimeModule === true && metadata.nodics.retired !== true
+        ? [{ code: entry.name, metadata }] : [];
+    });
+  },
+
+  /** Reads a sibling server property without requiring an authored environment-level endpoint map. @param {Object} context Trusted binding context. @param {string} serverCode Target server code. @param {string} property Property path. @returns {*} Resolved value or undefined. */
+  tryReadRuntimeProperty: function (context, serverCode, property) {
+    try {
+      return this.readRuntimeProperty(context, serverCode, property);
+    } catch (error) {
+      return undefined;
+    }
+  },
+
+  /** Reads a sibling server's authored properties without resolving bindings or runtime compositions. @param {Object} context Trusted binding context. @param {string} serverCode Target server code. @returns {Object} Authored properties. */
+  readRawDeploymentServerProperties: function (context, serverCode) {
+    const path = require("node:path");
+    const file = path.join(context.roots.environment, serverCode, "config", "properties.js");
+    if (!fs.existsSync(file)) return {};
+    return require(file);
+  },
+
+  /** Builds stable peer aliases from discovered server names, metadata aliases, and uniquely owned active modules. @param {Object} context Trusted binding context. @param {Object[]} servers Discovered servers. @returns {Object} Alias map keyed by connection/module name. */
+  deriveDeploymentServerAliases: function (context, servers) {
+    const aliases = {};
+    const moduleOwners = new Map();
+    servers.forEach(server => {
+      const active = this.readRawDeploymentServerProperties(context, server.code).activeModules?.modules || [];
+      [].concat(active || []).filter(moduleName => typeof moduleName === "string" && moduleName).forEach(moduleName => {
+        if (!moduleOwners.has(moduleName)) moduleOwners.set(moduleName, new Set());
+        moduleOwners.get(moduleName).add(server.code);
+      });
+    });
+    servers.forEach(server => {
+      const names = new Set([server.code]);
+      if (/Server$/u.test(server.code)) names.add(server.code.replace(/Server$/u, ""));
+      [].concat(server.metadata.nodics?.runtimeAliases || []).filter(alias => typeof alias === "string" && alias).forEach(alias => names.add(alias));
+      for (const [moduleName, owners] of moduleOwners.entries()) {
+        if (owners.size === 1 && owners.has(server.code)) names.add(moduleName);
+      }
+      aliases[server.code] = Array.from(names).sort();
+    });
+    return aliases;
+  },
+
+  /** Adds derived sibling runtime endpoints while preserving explicit deployment/server/node overrides. @param {Object} properties Resolved deployment configuration. @param {Object} context Trusted binding context. @returns {Object} Resolved configuration with derived peer server endpoints. */
+  deriveDeploymentServerReferences: function (properties, context) {
+    const servers = this.discoverDeploymentServers(context);
+    if (!servers.length) return properties;
+    const aliases = this.deriveDeploymentServerAliases(context, servers);
+    let derived = { servers: {} };
+    servers.forEach(server => {
+      const endpoint = this.tryReadRuntimeProperty(context, server.code, "servers.default.abstractEndpoint") ||
+        this.tryReadRuntimeProperty(context, server.code, "servers.default.endpoint");
+      if (!endpoint) return;
+      const browserEndpoint = this.tryReadRuntimeProperty(context, server.code, "servers.default.browserEndpoint");
+      (aliases[server.code] || [server.code]).forEach(alias => {
+        derived.servers[alias] = { endpoint: _.cloneDeep(endpoint) };
+        if (server.code !== context.serverCode) derived.servers[alias].remoteOnly = true;
+        if (browserEndpoint) derived.servers[alias].browserEndpoint = _.cloneDeep(browserEndpoint);
+      });
+    });
+    return configurationBindings.merge(derived, properties);
   },
 
   /** Validates concrete deployment boundaries and creates the same binding coordinates used at startup. @param {Object} options Explicit project/environment and optional server/node. @returns {Object} Trusted binding context. */
@@ -1493,6 +1933,7 @@ module.exports = {
     };
     context.readPackageVersion = base => this.readConfigurationPackageVersion(context, base);
     context.readRuntimeProperty = (name, property, selectedNode) => this.readRuntimeProperty(context, name, property, selectedNode);
+    context.readBootstrapCompositionDefinitions = () => this.readBootstrapCompositionDefinitions(context);
     return context;
   },
 

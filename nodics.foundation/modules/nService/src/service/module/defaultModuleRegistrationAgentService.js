@@ -332,6 +332,24 @@ module.exports = {
     return token ? { Authorization: "Bearer " + token } : null;
   },
 
+  /** Returns true when a registration failure can be repaired by refreshing the runtime service token. */
+  isRefreshableAuthorizationFailure: function (error) {
+    const code = error && (error.code || error.name || error.responseCode);
+    const message = String(error && error.message || "");
+    return code === "ERR_AUTH_00001" ||
+      code === "ERR_AUTH_00002" ||
+      code === "ERR_AUTH_00003" ||
+      /stale|expired|authorization token|internal service token|runtime credential/i.test(message);
+  },
+
+  /** Refreshes tenant-scoped runtime credentials when the authentication owner supports renewal. */
+  refreshRegistrationToken: async function () {
+    const provider = SERVICE.DefaultInternalAuthenticationProviderService;
+    if (!provider || typeof provider.refreshInternalAuthTokens !== "function") return false;
+    await provider.refreshInternalAuthTokens();
+    return true;
+  },
+
   /** Registers or renews all locally served module leases in one bounded cycle. */
   runRegistration: function () {
     if (this._registrationPromise) return Promise.resolve(false);
@@ -347,14 +365,14 @@ module.exports = {
     this._running = true;
     this._metrics.attempts++;
     try {
-      let header = this.getAuthorizationHeader();
-      if (!header) throw new Error("Internal service token is not available");
       let config = this.getConfiguration();
       let modules = this.getLocalModules();
       if (modules.length > Number(config.maxModulesPerRegistration))
         throw new Error("Active module registration limit exceeded");
-      const response = await SERVICE.DefaultModuleService.fetch(
-        SERVICE.DefaultModuleService.buildRequest({
+      const buildRequest = () => {
+        let header = this.getAuthorizationHeader();
+        if (!header) throw new Error("Internal service token is not available");
+        return SERVICE.DefaultModuleService.buildRequest({
           moduleName: config.moduleName,
           connectionName: config.connectionName,
           apiName: "/registry/instances",
@@ -375,8 +393,16 @@ module.exports = {
             ),
           },
           timeoutMs: config.requestTimeoutMs,
-        }),
-      );
+        });
+      };
+      let response;
+      try {
+        response = await SERVICE.DefaultModuleService.fetch(buildRequest());
+      } catch (error) {
+        if (!this.isRefreshableAuthorizationFailure(error)) throw error;
+        await this.refreshRegistrationToken();
+        response = await SERVICE.DefaultModuleService.fetch(buildRequest());
+      }
       this.recordOperationalState(response, modules);
       this._registered = modules;
       this._metrics.successes++;

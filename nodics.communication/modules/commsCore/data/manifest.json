@@ -22,7 +22,7 @@
             "files": {
                 "core-v001/records/communication/commsRuntimeDefaultTemplateData.js": "9d01675cce0b6c89615aa1c29d36529c616444d940852c531517072da6280169",
                 "core-v001/records/communication/commsRuntimeDefaultTemplateVersionData.js": "de3df801527f208c2547e20045e4160a245772d48c1570d625d9275f50897a73",
-                "core-v001/headers/communication/commsRuntimeDefaultHeader.js": "f8f338d58fa5b8f44fdc0ade5f5809098460e4ef62cb4cdfdf1a23732ecde034"
+                "core-v001/headers/communication/commsRuntimeDefaultHeader.js": "e8fec61b19e9b33a8c957cd5a4b7855ee7b85f223cdcc3f7bc66dd03d8f6b03f"
             },
             "sourceRoot": "core-v001"
         },

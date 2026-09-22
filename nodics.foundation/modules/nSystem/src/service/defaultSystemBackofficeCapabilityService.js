@@ -72,6 +72,7 @@ const capability = {
  * @override Projects may contribute additional runtime configuration schemas through their owning modules; the control-plane workspace remains nSystem-owned.
  */
 module.exports = {
+    /** Registers the nSystem Axis capability provider during module startup. */
     init: function () {
         if (global.SERVICE && SERVICE.DefaultModuleRegistrationAgentService) {
             SERVICE.DefaultModuleRegistrationAgentService.registerBackofficeCapabilityProvider('system', this);
@@ -79,10 +80,12 @@ module.exports = {
         return Promise.resolve(true);
     },
 
+    /** Completes nSystem BackOffice capability startup. */
     postInit: function () {
         return Promise.resolve(true);
     },
 
+    /** Returns the immutable Runtime Configuration BackOffice capability contract. */
     getCapability: function () {
         return JSON.parse(JSON.stringify(capability));
     }

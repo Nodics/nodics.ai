@@ -15,6 +15,8 @@
  * @layer service
  * @owner nSystem
  */
+const merge = require("lodash/merge");
+
 module.exports = {
   _authority: null,
   /** Executes the documented bounded module operation. */
@@ -28,7 +30,7 @@ module.exports = {
   },
   /** Executes the documented bounded module operation. */
   policy: function () {
-    const policy = CONFIG.get("localResetProvider") || {};
+    const policy = this.applyRuntimeProfile(CONFIG.get("localResetProvider") || {});
     if (policy.modules === undefined) return policy;
     const selected = this.booleanMap(policy.modules, "modules");
     const contributions = policy.contributions || {};
@@ -47,6 +49,15 @@ module.exports = {
       if (enabled) names.add(name); else names.delete(name);
     }
     return { ...policy, serviceNames: [...names].sort() };
+  },
+  /** Applies the selected runtime role's reset inventory without moving inventories into server properties. */
+  applyRuntimeProfile: function (policy) {
+    const role = CONFIG.get("runtimeRole") || {};
+    const profiles = policy.profiles || {};
+    const profile = role.code && profiles[role.code] ? profiles[role.code] : {};
+    const resolved = merge({}, policy, profile);
+    delete resolved.profiles;
+    return resolved;
   },
   /** Validates keyed contribution selection without inferring additional reset targets. */
   booleanMap: function (value, label) {
@@ -71,6 +82,15 @@ module.exports = {
     if (
       policy.enabled !== true ||
       ![].concat(policy.environmentAllowlist || []).includes(this.environment())
+    ) {
+      throw new CLASSES.NodicsError(
+        "ERR_SYS_00120",
+        "Local reset provider is disabled",
+      );
+    }
+    if (
+      Array.isArray(policy.enabledRuntimeRoles) &&
+      !policy.enabledRuntimeRoles.includes((CONFIG.get("runtimeRole") || {}).code)
     ) {
       throw new CLASSES.NodicsError(
         "ERR_SYS_00120",

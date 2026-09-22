@@ -42,5 +42,17 @@ module.exports = {
         status: 'ACTIVE',
         revision: 1,
         active: true
+    },
+    record3: {
+        code: 'CIRCA_EWASTE_ESTIMATE',
+        name: { en: 'Circa e-waste environmental estimate' },
+        formulaType: 'EXTERNAL_PROVIDER',
+        metadata: {
+            publicClaimAllowed: false,
+            assessmentUse: 'ADVISORY_SUBMISSION_GATE'
+        },
+        status: 'ACTIVE',
+        revision: 1,
+        active: true
     }
 };

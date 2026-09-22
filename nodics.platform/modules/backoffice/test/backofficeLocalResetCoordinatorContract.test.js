@@ -18,9 +18,15 @@ class NodicsError extends Error { constructor(code, message) { super(message || 
     let policy = { enabled: false, environmentAllowlist: ['kickoffLocal'], confirmation: 'RESET_LOCAL_NODICS_DATA', maximumTargets: 2, providers: [] };
     global.CLASSES = { NodicsError };
     global.CONFIG = { get: key => key === 'backofficeLocalReset' ? policy : undefined };
+    let refreshes = 0;
     global.NODICS = { getSelectedEnvironmentName: () => 'kickoffLocal', getInternalAuthToken: () => 'service-token' };
-    global.SERVICE = { DefaultModuleService: {
+    global.SERVICE = {
+      DefaultInternalAuthenticationProviderService: {
+        refreshInternalAuthTokens: async () => { refreshes++; return ['default']; }
+      },
+      DefaultModuleService: {
         invokeModule: async descriptor => {
+            assert.strictEqual(refreshes, 1);
             assert.strictEqual(descriptor.local, false);
             assert.strictEqual(descriptor.apiName, '/operations/local-reset');
             assert.deepStrictEqual(descriptor.targetAuthority, { runtimeRole: 'OWNER' });
@@ -47,5 +53,6 @@ class NodicsError extends Error { constructor(code, message) { super(message || 
     assert.strictEqual(result.acknowledged, true);
     assert.strictEqual(result.providerCount, 1);
     assert.strictEqual(result.requestedBy, 'admin');
+    assert.strictEqual(refreshes, 1);
     console.log('BackOffice Local reset coordinator contract validated');
 })().catch(error => { console.error(error); process.exit(1); });

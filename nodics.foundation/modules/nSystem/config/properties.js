@@ -41,7 +41,6 @@ module.exports = {
   apiExposure: {
     categories: {
       dataImport: {
-        enabled: false,
       },
       logManagement: {
         enabled: false,

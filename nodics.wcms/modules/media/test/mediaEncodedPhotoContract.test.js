@@ -80,3 +80,61 @@ test("controller forwards transport authorization and ignores body credentials",
     httpRequest: { headers: { authorization: "Bearer trusted-session" }, body: { authorization: "Bearer attacker" } }
   }), { data: { code: "PHOTO" } });
 });
+
+test("controller forwards trusted internal encoded owner payload", async () => {
+  const controller = require("../src/controller/storage/defaultCustomerMediaController");
+  const body = { mimeType: "image/png", contentBase64: "cGhvdG8=", owner: { code: "CUSTOMER" } };
+  SERVICE.DefaultCustomerMediaService = { uploadInternalEncoded: async input => {
+    assert.equal(input.tenant, "test");
+    assert.deepEqual(input.authData, { tokenType: "service", principalType: "service" });
+    assert.equal(input.authorization, "Bearer service-token");
+    assert.deepEqual(input.payload, body);
+    return { code: "INTERNAL_PHOTO" };
+  } };
+  assert.deepEqual(await controller.uploadInternalEncoded({ tenant: "test",
+    authData: { tokenType: "service", principalType: "service" },
+    httpRequest: { headers: { authorization: "Bearer service-token" }, body }
+  }), { data: { code: "INTERNAL_PHOTO" } });
+  assert.deepEqual(await controller.uploadInternalEncoded({ tenant: "test",
+    authData: { tokenType: "service", principalType: "service" },
+    httpRequest: { headers: { authorization: "Bearer service-token" } },
+    body
+  }), { data: { code: "INTERNAL_PHOTO" } });
+});
+
+test("internal encoded owner accepts bounded framework service token shape", async () => {
+  const trusted = { tenant: "test", payload: { owner: { tenant: "test", code: "CUSTOMER", loginId: "customer", principalType: "customer" } },
+    authData: { tenant: "test", tokenType: "service", serviceId: "waste-runtime", runtimeScope: { instanceCode: "waste-1" } } };
+  assert.equal(service.internalOwner(trusted), "CUSTOMER");
+  await assert.rejects(async () => service.internalOwner({
+    ...trusted,
+    authData: { tenant: "test", tokenType: "access", serviceId: "waste-runtime" },
+  }), { code: "ERR_MED_00007" });
+});
+
+test("internal evidence reads keep request tenant and return bounded media bytes", async () => {
+  const bytes = Buffer.from("<svg/>");
+  global.CONFIG = { get: key => key === "defaultTenant" ? "fallbackTenant" : ({
+    evidenceRead: { maximumBytes: 1024, publicPreviewMimeTypes: ["image/svg+xml"] }
+  }) };
+  global.SERVICE = {
+    DefaultMediaReferenceLookupService: { loadReference: async (context, type, code) => {
+      assert.equal(context.tenant, "requestTenant");
+      assert.equal(context.authData.tenant, "requestTenant");
+      assert.equal(context.authData.tokenType, "service");
+      assert.equal(type, "MEDIA");
+      assert.equal(code, "sample-public-photo");
+      return { code, ownerType: "APPLICATION", ownerReference: "CIRCA_EWASTE", access: "PUBLIC",
+        mimeType: "image/svg+xml", providerCode: "local", storageKey: "samples/sample.svg" };
+    } },
+    DefaultMediaStorageProviderRegistryService: { read: async input => {
+      assert.equal(input.maximumBytes, 1024);
+      assert.equal(input.storageKey, "samples/sample.svg");
+      return bytes;
+    } },
+  };
+  const response = await service.read({ tenant: "requestTenant", internalEvidenceRead: true,
+    authData: { tokenType: "service", principalType: "service" }, code: "sample-public-photo" });
+  assert.equal(response.previewType, "PUBLIC_MEDIA");
+  assert.equal(response.contentBase64, bytes.toString("base64"));
+});

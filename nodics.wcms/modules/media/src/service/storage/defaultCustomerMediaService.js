@@ -54,9 +54,12 @@ module.exports = {
   },
   /** Creates a generated-service context after customer authorization. */
   context: function (request) {
+    const tenant = request.tenant || request.authData.tenant || CONFIG.get("defaultTenant");
     return {
-      tenant: request.authData.tenant,
+      tenant,
       authData: Object.assign({}, request.authData, {
+        tenant,
+        tokenType: "service",
         principalType: "service",
         code: "customerMediaService",
         loginId: "customerMediaService",
@@ -64,6 +67,18 @@ module.exports = {
         groups: ["serviceAccountUserGroup"],
       }),
     };
+  },
+  /** Returns an owner pre-authorized by a trusted domain service. */
+  internalOwner: function (request) {
+    const auth = request.authData || {}, owner = (request.payload || {}).owner;
+    const serviceIdentity = auth.tokenType === "service" && (auth.principalType === "service" || !!auth.serviceId);
+    if (!serviceIdentity)
+      throw new CLASSES.NodicsError("ERR_MED_00007", "A trusted service identity is required");
+    if (!owner || owner.principalType !== "customer" || !owner.loginId || !owner.code || !owner.tenant)
+      throw new CLASSES.NodicsError("ERR_MED_00007", "A trusted customer owner is required");
+    if (request.tenant && request.tenant !== owner.tenant)
+      throw new CLASSES.NodicsError("ERR_MED_00007", "Customer owner tenant must match the request tenant");
+    return owner.code;
   },
   /** Copies safe descriptor fields; physical storage addresses stay private. */
   project: function (item) {
@@ -79,6 +94,15 @@ module.exports = {
   /** Accepts bounded encoded bytes for service-orchestrated customer uploads after domain preparation. Storage remains Media-owned. */
   uploadEncoded: async function (request) {
     const owner = await this.owner(request), input = request.payload || {};
+    return this.uploadEncodedForOwner(request, owner, input);
+  },
+  /** Accepts encoded bytes from a trusted internal domain service. */
+  uploadInternalEncoded: async function (request) {
+    const input = request.payload || {};
+    return this.uploadEncodedForOwner(request, this.internalOwner(request), input);
+  },
+  /** Stores bounded encoded bytes for an already-authorized owner. */
+  uploadEncodedForOwner: async function (request, owner, input) {
     const maximum = Number((CONFIG.get("media") || {}).customerUploads?.maximumBytes || 5242880);
     if (typeof input.contentBase64 !== "string" || input.contentBase64.length > Math.ceil(maximum / 3) * 4 ||
       !/^[A-Za-z0-9+/]+={0,2}$/.test(input.contentBase64) || input.contentBase64.length % 4 ||
@@ -100,12 +124,16 @@ module.exports = {
     const extension = { "image/jpeg": "jpg", "image/png": "png", "image/webp": "webp" }[input.mimeType];
     const originalFileName = typeof input.originalFileName === "string" && input.originalFileName.length <= 255
       ? input.originalFileName.split(/[\\/]/).pop() : "item-photo." + extension;
-    return this.upload({ ...request, mediaCode: code, files: [{ buffer, mimeType: input.mimeType, sizeBytes: buffer.length,
-      originalFileName, fileName: originalFileName }] });
+    return this.uploadForOwner({ ...request, mediaCode: code, files: [{ buffer, mimeType: input.mimeType, sizeBytes: buffer.length,
+      originalFileName, fileName: originalFileName }] }, owner);
   },
   /** Persists exactly one original photo; callers cannot select the storage path or owner. */
   upload: async function (request) {
     const owner = await this.owner(request);
+    return this.uploadForOwner(request, owner);
+  },
+  /** Persists exactly one original photo for an already-authorized owner. */
+  uploadForOwner: async function (request, owner) {
     const media = CONFIG.get("media") || {},
       policy = media.customerUploads || {};
     if (policy.enabled !== true)
@@ -149,12 +177,12 @@ module.exports = {
       groups = (auth.userGroups || auth.groups || []).map((g) =>
         typeof g === "string" ? g : g.code,
       );
+    const internalServiceRead =
+      request.internalEvidenceRead === true && auth.tokenType === "service";
     const staff =
       (auth.principalType !== "customer" &&
         groups.some((g) => ["adminGroup", "employeeUserGroup"].includes(g))) ||
-      (request.internalEvidenceRead === true &&
-        auth.principalType === "service" &&
-        groups.includes("serviceAccountUserGroup"));
+      internalServiceRead;
     const owner = staff ? undefined : await this.owner(request);
     const context = this.context(request);
     const item = await SERVICE.DefaultMediaReferenceLookupService.loadReference(
@@ -164,9 +192,7 @@ module.exports = {
     );
     const policy = (CONFIG.get("media") || {}).evidenceRead || {};
     const publicPreview =
-      request.internalEvidenceRead === true &&
-      auth.principalType === "service" &&
-      groups.includes("serviceAccountUserGroup") &&
+      internalServiceRead &&
       item.ownerType !== "CUSTOMER" &&
       item.access === "PUBLIC" &&
       (policy.publicPreviewMimeTypes || []).includes(item.mimeType);

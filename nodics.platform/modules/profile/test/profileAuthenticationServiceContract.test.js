@@ -147,6 +147,12 @@ global.SERVICE = {
             return Promise.resolve(customer);
         }
     },
+    DefaultPasswordService: {
+        get: function (request) {
+            lookups.push({ service: 'password', request });
+            return Promise.resolve({ result: [{ _id: 'password-ref', active: true, password: 'referenced-password' }] });
+        }
+    },
     DefaultUserStateService: {
         findUserState: function (request) {
             lookups.push({ service: 'userState', request });
@@ -269,6 +275,18 @@ function resetCalls() {
     assert.deepStrictEqual(tokenAdds[0].value.permissions, ['profile.customer.read']);
 
     resetCalls();
+    const referencedPasswordResult = await service.authenticate({
+        request: { password: 'referenced-password' },
+        enterprise,
+        person: Object.assign({}, employee, { password: 'password-ref' }),
+        type: 'Employee'
+    });
+    assert.strictEqual(referencedPasswordResult.authToken, 'access-token-employee@example.com');
+    assert.deepStrictEqual(lookups.slice(0, 2).map(item => item.service), ['userState', 'password']);
+    assert.deepStrictEqual(lookups[1].request.query, { $or: [{ _id: 'password-ref' }, { code: 'password-ref' }] });
+    assert.strictEqual(compareCalls[0].stored, 'referenced-password');
+
+    resetCalls();
     await assert.rejects(() => service.authenticate({
         request: {
             password: 'wrong-password'
@@ -284,6 +302,15 @@ function resetCalls() {
     assert.strictEqual(auditEvents[0].eventType, 'password.authentication');
     assert.strictEqual(auditEvents[0].outcome, 'failure');
     assert.strictEqual(auditEvents[0].reasonCode, 'INVALID_CREDENTIALS');
+
+    resetCalls();
+    await assert.rejects(() => service.authenticate({
+        request: {},
+        enterprise: enterprise,
+        person: employee,
+        type: 'Employee'
+    }), error => error.code === 'ERR_LIN_00002');
+    assert.strictEqual(compareCalls.length, 0, 'Malformed password requests must not reach bcrypt');
 
     resetCalls();
     const apiKeyResult = await service.authenticateAPIKey({

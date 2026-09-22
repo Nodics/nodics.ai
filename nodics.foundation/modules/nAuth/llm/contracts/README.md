@@ -59,7 +59,7 @@ proof; runtime identity alone cannot authorize a caller-supplied decision.
 
 nAuth defaults bind `NODICS_JWT_SECRET`, `NODICS_API_KEY_PEPPER`,
 `NODICS_BOOTSTRAP_ADMIN_PASSWORD`, `NODICS_BOOTSTRAP_SERVICE_PASSWORD`,
-`NODICS_BOOTSTRAP_SERVICE_API_KEY` and `NODICS_RUNTIME_API_KEY` through nConfig.
+`NODICS_BOOTSTRAP_SERVICE_API_KEY` and the server-local `NODICS_API_KEY` through nConfig.
 Unset credentials remain null and owning validators fail without printing values.
 Layered external/secret-provider overrides remain supported. The bootstrap source
 label describes the configured input contract; it does not verify provenance or

@@ -60,6 +60,15 @@ module.exports = {
         if (!target.moduleName || !target.connectionName || target.connectionName === 'default') {
             throw new CLASSES.NodicsError('AXIS_INITIALIZATION_TARGET_UNAVAILABLE', 'Axis WCMS Staged initialization target is unavailable');
         }
+        if (SERVICE.DefaultInternalAuthenticationProviderService &&
+            typeof SERVICE.DefaultInternalAuthenticationProviderService.refreshInternalAuthTokens === 'function') {
+            return SERVICE.DefaultInternalAuthenticationProviderService.refreshInternalAuthTokens(request.tenant).then(() =>
+                this.invokeWithInternalToken(operation, request, principal, configuration, target, baselineCode));
+        }
+        return this.invokeWithInternalToken(operation, request, principal, configuration, target, baselineCode);
+    },
+    /** Calls the configured target using the current internal token after any available refresh. */
+    invokeWithInternalToken: function (operation, request, principal, configuration, target, baselineCode) {
         let token = NODICS.getInternalAuthToken(request.tenant);
         if (!token) throw new CLASSES.NodicsError('AXIS_INITIALIZATION_INTERNAL_AUTH_UNAVAILABLE', 'Axis initialization authentication is unavailable');
         let body = operation === 'initiate' ? { requestedBy: principal, reason: request.initialization && request.initialization.reason,

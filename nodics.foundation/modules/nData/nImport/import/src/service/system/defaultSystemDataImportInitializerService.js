@@ -460,7 +460,9 @@ module.exports = {
                         instance.options.owningModule = instance.options.owningModule || moduleName;
                         instance.options.headerFileName = headerFileName;
                         instance.options.dataFilePrefix = instance.options.dataFilePrefix || sourceHeaderName;
-                        if (request.authData) instance.options.userGroups = request.authData.userGroups;
+                        if (request.authData && Array.isArray(request.authData.userGroups) && request.authData.userGroups.length) {
+                            instance.options.userGroups = request.authData.userGroups;
+                        }
                         instance.options.dataHandler = instance.options.indexName ? 'indexerDataHandlerPipeline' : 'schemaDataHandlerPipeline';
                         if (instance.options.finalizeData === undefined) instance.options.finalizeData = true;
                         instance.local = instance.local || {};

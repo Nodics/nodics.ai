@@ -22,7 +22,7 @@ module.exports = function writeEnvironment(root, definition) {
  for (const [index, runtime] of (groups.backends || []).entries()) {
   const {code,port,host,label,...launch} = runtime;
   const server = path.join(root,code);
-  json(path.join(server,'package.json'),{name:code,index:'1002.'+String(index).padStart(2,'0'),nodics:{kind:'server',runtimeModule:true,displayName:label}});
-  properties(server,{servers:{default:{endpoint:{httpHost:host || '127.0.0.1',httpPort:port}}},tooling:{runtime:launch}});
+  json(path.join(server,'package.json'),{name:code,index:'1002.'+String(index).padStart(2,'0'),nodics:{kind:'server',runtimeModule:true,displayName:label,runtimeTooling:launch}});
+  properties(server,{servers:{default:{endpoint:{httpHost:host || '127.0.0.1',httpPort:port}}}});
  }
 };

@@ -68,8 +68,12 @@ global.NODICS = {
     getEnvironmentName: () => 'envs', getSelectedEnvironmentName: () => 'local', getServerName: () => 'cmsServer', getNodeName: () => null,
     getInternalAuthToken: () => 'service-token'
 };
+let refreshedRuntimeTokens = 0;
 global.SERVICE = {
-    DefaultInternalAuthenticationProviderService: { buildRuntimeIdentityHeaders: () => ({ 'x-nodics-runtime-instance': 'cms-instance' }) },
+    DefaultInternalAuthenticationProviderService: {
+        buildRuntimeIdentityHeaders: () => ({ 'x-nodics-runtime-instance': 'cms-instance' }),
+        refreshInternalAuthTokens: async () => { refreshedRuntimeTokens++; return ['default']; }
+    },
     DefaultRuntimeLifecycleService: { registerContributor: (name, value) => { contributor = value; } },
     DefaultRouterService: {
         prepareUrl: options => 'http://localhost:3040/nodics/' + options.moduleName,
@@ -156,6 +160,31 @@ async function run() {
 
     NODICS.getInternalAuthToken = () => undefined;
     assert.strictEqual(await service.runRegistration(), false, 'missing service identity must not fail runtime startup');
+
+    let staleAttempts = 0;
+    let currentToken = 'stale-token';
+    refreshedRuntimeTokens = 0;
+    NODICS.getInternalAuthToken = () => currentToken;
+    SERVICE.DefaultInternalAuthenticationProviderService.refreshInternalAuthTokens = async () => {
+        refreshedRuntimeTokens++;
+        currentToken = 'fresh-token';
+        return ['default'];
+    };
+    SERVICE.DefaultModuleService.fetch = request => {
+        staleAttempts++;
+        if (request.header.Authorization === 'Bearer stale-token') {
+            const error = new Error('Authentication token security stamp is stale');
+            error.code = 'ERR_AUTH_00001';
+            return Promise.reject(error);
+        }
+        return Promise.resolve({ data: { operationalState: { instanceId: 'cms-instance', projectCode: 'envs', expiresAt: Date.now() + 30000, modules: ['cms', 'utility'].map(moduleName => ({ moduleName, enabled: true })) } } });
+    };
+    assert.strictEqual(await service.runRegistration(), true,
+        'registration must refresh stale runtime credentials and retry once');
+    assert.strictEqual(refreshedRuntimeTokens, 1,
+        'stale-token recovery must use the internal token owner instead of bypassing authorization');
+    assert.strictEqual(staleAttempts, 2,
+        'stale-token recovery must retry the same bounded registration cycle exactly once');
 
     // A BackOffice restart temporarily rejects registration. The same runtime
     // must recover on its configured retry loop without restarting itself.

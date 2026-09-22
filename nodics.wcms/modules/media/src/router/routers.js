@@ -297,6 +297,11 @@ module.exports = {
                 permissionConfig: 'media.customerUploads.permission', apiExposure: 'mediaManagement', jsonBodyLimit: '8mb',
                 key: '/photos/encoded', method: 'POST', controller: 'DefaultCustomerMediaController', operation: 'uploadEncoded',
             },
+            uploadInternalEncodedPhoto: {
+                secured: true, authTokenTypes: ['service'], accessGroups: ['serviceAccountUserGroup'],
+                permission: 'media.customer.upload', apiExposure: 'moduleInternal', jsonBodyLimit: '8mb',
+                key: '/internal/customer/photos/encoded', method: 'POST', controller: 'DefaultCustomerMediaController', operation: 'uploadInternalEncoded',
+            },
             readInternalEvidencePhoto:{secured:true,authTokenTypes:['service'],accessGroups:['serviceAccountUserGroup'],permission:'media.evidence.read',apiExposure:'mediaManagement',key:'/internal/evidence/photos/:code',method:'GET',controller:'DefaultCustomerMediaController',operation:'readInternal'},
             readCustomerPhoto: {
                 secured: true, authTokenTypes: ['access'], accessGroups: ['customerUserGroup','adminGroup','employeeUserGroup'],

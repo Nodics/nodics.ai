@@ -11,7 +11,7 @@
 
 /**
  * @module profile/service/identity/DefaultMandatoryIdentityBootstrapService
- * @description Reconciles missing, non-secret identity-governance groups and configured service-principal metadata after init data is available. Credential values are never generated, rotated, or overwritten automatically, preserving project and tenant secrets while allowing safe framework upgrades.
+ * @description Reconciles missing identity-governance groups and configured service-principal metadata after init data is available. Local generated runtime credentials may be reconciled before the first local token request; non-local credential material remains operator-owned.
  * @layer service
  * @owner profile
  * @override Projects may replace this service or the configured mandatory-bootstrap service list while preserving idempotency, auditability, and fail-closed identity startup.
@@ -19,7 +19,7 @@
 module.exports = {
     /**
      * Applies required tenant Init releases and existing identity reconciliation before runtime authentication.
-     * Provisioned credentials and deployment grants remain explicit operator-owned records.
+     * Provisioned credentials and deployment grants remain explicit operator-owned records outside generated local runtime startup.
      * @param {Object} request Tenant and selected module context.
      * @returns {Promise<Object>} Completed identity reconciliation.
      */
@@ -130,7 +130,199 @@ module.exports = {
         return changed ? target : null;
     },
 
-    /** Reconciles existing configured service principals without touching credential material. */
+    /** Resolves the selected native-local environment code, when available. */
+    getSelectedEnvironmentCode: function () {
+        if (typeof NODICS !== 'undefined' && NODICS && typeof NODICS.getSelectedEnvironmentName === 'function') {
+            return NODICS.getSelectedEnvironmentName();
+        }
+        return process.env.ENV || process.env.E || '';
+    },
+
+    /** Local generated credentials are allowed to repair only native local startup records. */
+    isLocalRuntimeCredentialBootstrapEnabled: function () {
+        const environmentCode = this.getSelectedEnvironmentCode();
+        if (!/Local$/u.test(String(environmentCode || ''))) return false;
+        const credentials = CONFIG.get('defaultAuthDetail') || {};
+        const apiKey = credentials.apiKey || process.env.NODICS_RUNTIME_API_KEY;
+        return typeof apiKey === 'string' && apiKey.length >= 32;
+    },
+
+    /** Builds a governed local-only API-key update for an existing service principal. */
+    buildLocalRuntimeCredentialUpdate: function (principal, policy) {
+        if (!this.isLocalRuntimeCredentialBootstrapEnabled()) return null;
+        if (!principal || ![].concat(policy.servicePrincipalCodes || []).includes(principal.code)) return null;
+        if (!SERVICE.DefaultAPIKeyCredentialService || typeof SERVICE.DefaultAPIKeyCredentialService.prepare !== 'function' ||
+            typeof SERVICE.DefaultAPIKeyCredentialService.digest !== 'function') return null;
+        const credentials = CONFIG.get('defaultAuthDetail') || {};
+        const apiKey = credentials.apiKey || process.env.NODICS_RUNTIME_API_KEY;
+        if (typeof apiKey !== 'string' || apiKey.length < 32) return null;
+        const apiKeyHash = SERVICE.DefaultAPIKeyCredentialService.digest(apiKey);
+        const configuredScopes = policy.servicePrincipalScopes && policy.servicePrincipalScopes[principal.code] || [];
+        const scopes = Array.from(new Set([].concat(principal.apiKeyScopes || [], configuredScopes).filter(Boolean)));
+        const currentScopes = Array.from(new Set([].concat(principal.apiKeyScopes || []).filter(Boolean)));
+        const scopesChanged = JSON.stringify(currentScopes.slice().sort()) !== JSON.stringify(scopes.slice().sort());
+        if (principal.apiKeyHash === apiKeyHash && !principal.apiKey && !scopesChanged && principal.apiKeyStatus === 'active' &&
+            principal.identityMigrationVersion === (policy.version || 1)) return null;
+        const credential = SERVICE.DefaultAPIKeyCredentialService.prepare(apiKey);
+        credential.apiKeyScopes = scopes;
+        credential.apiKeyStatus = 'active';
+        credential.identityMigrationVersion = policy.version || 1;
+        return credential;
+    },
+
+    /** Builds the local runtime deployment grant code used by project tooling. */
+    localRuntimeGrantCode: function (environmentCode, serverCode) {
+        return String(environmentCode || '').replace(/[A-Z]/gu, match => '-' + match.toLowerCase()).replace(/^-/, '') +
+            '-' + String(serverCode || '').replace(/Server$/u, '').replace(/[A-Z]/gu, match => '-' + match.toLowerCase()) +
+            '-runtime-deployment';
+    },
+
+    /** Returns the current runtime identity declaration for local bootstrap repair. */
+    currentRuntimeScope: function (policy) {
+        if (typeof NODICS === 'undefined' || !NODICS) return null;
+        const projectCode = typeof NODICS.getEnvironmentName === 'function' ? NODICS.getEnvironmentName() : undefined;
+        const environmentCode = this.getSelectedEnvironmentCode();
+        const serverCode = typeof NODICS.getServerName === 'function' ? NODICS.getServerName() : undefined;
+        const identity = CONFIG.get('runtimeIdentity') || {};
+        const activeModules = typeof NODICS.getActiveModules === 'function' ? NODICS.getActiveModules() : [];
+        const modules = Array.from(new Set([].concat(activeModules || [], identity.remoteModules || []).filter(Boolean)));
+        const permissions = Array.from(new Set([].concat(policy.servicePrincipalScopes && policy.servicePrincipalScopes.apiAdmin || []).filter(Boolean)));
+        if (!projectCode || !environmentCode || !serverCode || !identity.instanceCode || modules.length === 0 || permissions.length === 0) return null;
+        return { projectCode, environmentCode, serverCode, instanceCode: identity.instanceCode, modules, permissions };
+    },
+
+    /** Reconciles the current local runtime grant before first internal-token issuance. */
+    reconcileLocalRuntimeDeploymentGrant: function (request, policy) {
+        if (!this.isLocalRuntimeCredentialBootstrapEnabled() || !SERVICE.DefaultPrincipalScopeAssignmentService) return Promise.resolve([]);
+        const scope = this.currentRuntimeScope(policy);
+        if (!scope) return Promise.resolve([]);
+        const tenantCode = request.tenant || CONFIG.get('defaultTenant') || 'default';
+        const enterpriseCode = CONFIG.get('defaultEnterprise') || 'default';
+        const code = this.localRuntimeGrantCode(scope.environmentCode, scope.serverCode);
+        const model = {
+            code,
+            active: true,
+            principalType: 'service',
+            principalCode: 'apiAdmin',
+            scopeType: 'RUNTIME_DEPLOYMENT',
+            scopeCode: code,
+            tenantCode,
+            enterpriseCode,
+            effect: 'ALLOW',
+            inheritanceMode: 'DIRECT',
+            status: 'ACTIVE',
+            runtimeScope: scope,
+            reasonCode: 'LOCAL_RUNTIME_BOOTSTRAP'
+        };
+        const lookup = this.systemRequest(request, { query: { code }, options: { recursive: false } });
+        return SERVICE.DefaultPrincipalScopeAssignmentService.get(lookup).then(response => {
+            const current = response && response.result && response.result[0];
+            if (current && JSON.stringify(current.runtimeScope || {}) === JSON.stringify(scope) &&
+                current.status === model.status && current.effect === model.effect && current.principalCode === model.principalCode) {
+                return [];
+            }
+            const serviceRequest = this.systemRequest(request, current ? {
+                query: { code },
+                model: {
+                    principalType: model.principalType,
+                    principalCode: model.principalCode,
+                    scopeType: model.scopeType,
+                    scopeCode: model.scopeCode,
+                    tenantCode: model.tenantCode,
+                    enterpriseCode: model.enterpriseCode,
+                    effect: model.effect,
+                    inheritanceMode: model.inheritanceMode,
+                    status: model.status,
+                    runtimeScope: model.runtimeScope,
+                    reasonCode: model.reasonCode
+                }
+            } : { query: { code }, model });
+            const operation = current ? SERVICE.DefaultPrincipalScopeAssignmentService.update : SERVICE.DefaultPrincipalScopeAssignmentService.save;
+            return operation.call(SERVICE.DefaultPrincipalScopeAssignmentService, serviceRequest).then(() => [code]);
+        });
+    },
+
+    /** Resolves the local bootstrap administrator password when safe to repair local startup. */
+    getLocalBootstrapAdminPassword: function () {
+        if (!this.isLocalRuntimeCredentialBootstrapEnabled()) return null;
+        const bootstrap = CONFIG.get('bootstrapIdentity') || {};
+        return typeof bootstrap.adminPassword === 'string' && bootstrap.adminPassword.length > 0 ? bootstrap.adminPassword : null;
+    },
+
+    /** Reconciles local administrator password state when a reused local DB lacks a usable password hash. */
+    reconcileLocalAdministratorCredential: function (request, policy) {
+        const password = this.getLocalBootstrapAdminPassword();
+        if (!password || !SERVICE.DefaultPasswordService || !SERVICE.DefaultEmployeeService) return Promise.resolve([]);
+        const administrators = [].concat(policy.administratorCodes || []).filter(Boolean);
+        if (administrators.length === 0) return Promise.resolve([]);
+        return SERVICE.DefaultEmployeeService.get(this.systemRequest(request, {
+            query: { code: { $in: administrators } },
+            searchOptions: { pageSize: administrators.length, pageNumber: 1 }
+        })).then(response => {
+            const employees = response.result || [];
+            return employees.reduce((promise, employee) => promise.then(reconciled => {
+                const currentHash = employee.password && employee.password.password;
+                const compare = typeof currentHash === 'string' && typeof UTILS !== 'undefined' && UTILS && typeof UTILS.compareHash === 'function' ?
+                    UTILS.compareHash(password, currentHash).catch(() => false) : Promise.resolve(false);
+                return compare.then(matches => {
+                    if (matches) return reconciled;
+                    const passwordCode = 'password_' + employee.loginId.replace(/[^A-Za-z0-9]+/gu, '_');
+                    return SERVICE.DefaultPasswordService.save(this.systemRequest(request, {
+                        query: { code: passwordCode },
+                        model: { code: passwordCode, loginId: employee.loginId, password, active: true }
+                    })).then(saved => {
+                        const savedPassword = saved && (saved.result || saved.data || saved);
+                        const reference = savedPassword && (savedPassword._id || savedPassword.code) || passwordCode;
+                        return SERVICE.DefaultEmployeeService.update(this.systemRequest(request, {
+                            query: { code: employee.code },
+                            model: { password: reference }
+                        })).then(() => reconciled.concat(employee.code));
+                    });
+                });
+            }), Promise.resolve([]));
+        });
+    },
+
+    /** Clears stale local administrator failed-login state after repairing local bootstrap credentials. */
+    reconcileLocalAdministratorState: function (request, administrators) {
+        if (!this.isLocalRuntimeCredentialBootstrapEnabled() || !SERVICE.DefaultUserStateService || typeof SERVICE.DefaultUserStateService.findUserState !== 'function' ||
+            typeof SERVICE.DefaultUserStateService.save !== 'function') return Promise.resolve([]);
+        const tenant = request.tenant || CONFIG.get('defaultTenant') || 'default';
+        return [].concat(administrators || []).reduce((promise, employee) => promise.then(reconciled => {
+            if (!employee || !employee.loginId) return reconciled;
+            return SERVICE.DefaultUserStateService.findUserState({
+                tenant,
+                loginId: employee.loginId,
+                _id: employee._id
+            }).then(state => {
+                const stale = state && (state.locked || state.attempts > 0 || state.active === false);
+                if (!stale) return reconciled;
+                return SERVICE.DefaultUserStateService.save(this.systemRequest(request, {
+                    model: Object.assign({}, state, {
+                        loginId: employee.loginId,
+                        personId: employee._id || state.personId,
+                        attempts: 0,
+                        locked: false,
+                        lockedTime: null,
+                        active: true
+                    })
+                })).then(() => reconciled.concat(employee.code || employee.loginId));
+            });
+        }), Promise.resolve([]));
+    },
+
+    /** Looks up configured local administrators and clears stale failed-login state. */
+    reconcileConfiguredLocalAdministratorState: function (request, policy) {
+        if (!this.isLocalRuntimeCredentialBootstrapEnabled() || !SERVICE.DefaultEmployeeService) return Promise.resolve([]);
+        const administrators = [].concat(policy.administratorCodes || []).filter(Boolean);
+        if (administrators.length === 0) return Promise.resolve([]);
+        return SERVICE.DefaultEmployeeService.get(this.systemRequest(request, {
+            query: { code: { $in: administrators } },
+            searchOptions: { pageSize: administrators.length, pageNumber: 1 }
+        })).then(response => this.reconcileLocalAdministratorState(request, response.result || []));
+    },
+
+    /** Reconciles existing configured service principals without exposing credential material. */
     reconcileServicePrincipals: function (request, policy) {
         const lookup = this.buildServicePrincipalLookup(policy);
         const configuredCodes = new Set([].concat(policy.servicePrincipalCodes || []));
@@ -139,10 +331,15 @@ module.exports = {
             const principals = (response.result || []).filter(principal => configuredCodes.has(principal.code));
             return principals.reduce((promise, principal) => promise.then(reconciled => {
                 const target = this.buildServicePrincipalUpdate(principal, policy);
-                if (!target) return reconciled;
+                const credential = this.buildLocalRuntimeCredentialUpdate(principal, policy);
+                if (!target && !credential) return reconciled;
+                const model = credential ? {
+                    $set: Object.assign({}, target || {}, credential),
+                    $unset: { apiKey: 1 }
+                } : target;
                 return SERVICE.DefaultEmployeeService.update(this.systemRequest(request, {
                     query: { code: principal.code },
-                    model: target
+                    model: model
                 })).then(() => reconciled.concat(principal.code));
             }), Promise.resolve([]));
         });
@@ -166,19 +363,32 @@ module.exports = {
             const creationOrder = this.orderMissingGroups(targets, existingCodes);
             const models = creationOrder.map(code => Object.assign({ code: code, name: code, active: true }, targets[code]));
             const save = models.length > 0 ? this.saveMissingGroups(request, models) : Promise.resolve([]);
-            return save.then(createdGroups => this.reconcileServicePrincipals(request, policy).then(reconciledServicePrincipals => {
-                return this.recordAudit(request, createdGroups, reconciledServicePrincipals).then(() => ({
-                    status: createdGroups.length > 0 || reconciledServicePrincipals.length > 0 ? 'RECONCILED' : 'NO_CHANGES',
-                    createdGroups: createdGroups,
-                    reconciledServicePrincipals: reconciledServicePrincipals
-                }));
-            }));
+            return save.then(createdGroups => {
+                return this.reconcileServicePrincipals(request, policy).then(reconciledServicePrincipals => {
+                    return this.reconcileLocalRuntimeDeploymentGrant(request, policy).then(reconciledRuntimeDeploymentGrants => this.reconcileLocalAdministratorCredential(request, policy).then(reconciledAdministratorCredentials => {
+                        return this.reconcileConfiguredLocalAdministratorState(request, policy).then(reconciledAdministratorStates => {
+                            const reconciledAdministrators = Array.from(new Set([].concat(reconciledAdministratorCredentials || [], reconciledAdministratorStates || [])));
+                        return this.recordAudit(request, createdGroups, reconciledServicePrincipals, reconciledRuntimeDeploymentGrants, reconciledAdministrators).then(() => ({
+                            status: createdGroups.length > 0 || reconciledServicePrincipals.length > 0 ||
+                                reconciledRuntimeDeploymentGrants.length > 0 || reconciledAdministrators.length > 0 ? 'RECONCILED' : 'NO_CHANGES',
+                            createdGroups: createdGroups,
+                            reconciledServicePrincipals: reconciledServicePrincipals,
+                            reconciledRuntimeDeploymentGrants: reconciledRuntimeDeploymentGrants,
+                            reconciledAdministrators: reconciledAdministrators
+                        }));
+                        });
+                    }));
+                });
+            });
         });
     },
 
     /** Persists a sanitized audit entry when startup creates mandatory groups or reconciles service-principal metadata. */
-    recordAudit: function (request, createdGroups, reconciledServicePrincipals) {
-        if (createdGroups.length === 0 && reconciledServicePrincipals.length === 0) return Promise.resolve(true);
+    recordAudit: function (request, createdGroups, reconciledServicePrincipals, reconciledRuntimeDeploymentGrants, reconciledAdministrators) {
+        reconciledRuntimeDeploymentGrants = reconciledRuntimeDeploymentGrants || [];
+        reconciledAdministrators = reconciledAdministrators || [];
+        if (createdGroups.length === 0 && reconciledServicePrincipals.length === 0 &&
+            reconciledRuntimeDeploymentGrants.length === 0 && reconciledAdministrators.length === 0) return Promise.resolve(true);
         return SERVICE.DefaultIdentityMigrationAuditService.save(this.systemRequest(request, {
             model: {
                 code: 'mandatoryIdentityBootstrap_' + (request.tenant || 'default') + '_' + Date.now(),
@@ -187,7 +397,8 @@ module.exports = {
                 status: 'BOOTSTRAP_RECONCILED',
                 tenant: request.tenant || CONFIG.get('defaultTenant') || 'default',
                 requestedBy: 'nodics-startup',
-                result: { createdGroups: createdGroups, reconciledServicePrincipals: reconciledServicePrincipals },
+                result: { createdGroups: createdGroups, reconciledServicePrincipals: reconciledServicePrincipals,
+                    reconciledRuntimeDeploymentGrants: reconciledRuntimeDeploymentGrants, reconciledAdministrators: reconciledAdministrators },
                 correlationId: request.correlationId
             }
         }));

@@ -37,7 +37,7 @@ global.CONFIG = {
                         type: 'string',
                         required: true,
                         sensitive: true,
-                        path: ['credentials', 'telegram.bot.local', 'value'],
+                        path: ['credentials', 'telegram.bot.circa', 'value'],
                         pattern: '^\\d+:[^\\s]+$'
                     }]
                 }
@@ -46,7 +46,7 @@ global.CONFIG = {
         if (key === 'runtimeConfiguration') {
             return {
                 credentials: {
-                    'telegram.bot.local': {
+                    'telegram.bot.circa': {
                         value: '123456789:test-runtime-secret'
                     }
                 }
@@ -159,7 +159,7 @@ const service = require('../src/service/config/defaultRuntimeConfigurationSchema
     assert.strictEqual(savedRecords.length, 1);
     assert.notStrictEqual(savedRecords[0].fields.botToken.encryptedValue.value.includes('test-updated-secret'), true);
     assert.strictEqual(tenantPatches[0].tenant, 'electronicsTenant');
-    assert.deepStrictEqual(tenantPatches[0].configuration.runtimeConfiguration.credentials['telegram.bot.local'], {
+    assert.deepStrictEqual(tenantPatches[0].configuration.runtimeConfiguration.credentials['telegram.bot.circa'], {
         value: '987654321:test-updated-secret'
     });
     assert.strictEqual(publishedEvents[0].event, 'runtimeConfigurationChanged');

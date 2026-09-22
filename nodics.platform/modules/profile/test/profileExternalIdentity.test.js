@@ -31,8 +31,8 @@ function request(login = 'a', subject = 42) {
 beforeEach(() => {
     delete process.env.NODICS_TEST_EXTERNAL_SECRET;
     global.CLASSES = { NodicsError: class extends Error { constructor(code,message) { super(message || code); this.code=code; } } };
-    policy = { enabled: true, maximumAssertionAgeSeconds: 300, clockSkewSeconds: 30, maximumAssertionCharacters: 16384, providers: { TELEGRAM: { service: 'DefaultTelegramIdentityProviderService' } }, applications: { 'app-a': { enabled: true, provider: 'TELEGRAM', enterpriseCode: 'enterprise-a', credentialReference: 'telegram.bot.local' } } };
-    global.CONFIG = { get: key => key === 'profileExternalIdentity' ? policy : key === 'runtimeConfiguration' ? { credentials: { 'telegram.bot.local': { value: token } } } : undefined };
+    policy = { enabled: true, maximumAssertionAgeSeconds: 300, clockSkewSeconds: 30, maximumAssertionCharacters: 16384, providers: { TELEGRAM: { service: 'DefaultTelegramIdentityProviderService' } }, applications: { 'app-a': { enabled: true, provider: 'TELEGRAM', enterpriseCode: 'enterprise-a', credentialReference: 'telegram.bot.circa' } } };
+    global.CONFIG = { get: key => key === 'profileExternalIdentity' ? policy : key === 'runtimeConfiguration' ? { credentials: { 'telegram.bot.circa': { value: token } } } : undefined };
     records = new Map(); locked = false; issued = [];
     customers = Object.fromEntries(['a','b'].map(loginId => [loginId,{ loginId, _id: loginId, active: true, principalType: 'customer', authVersion: 1, password: { active: true } }]));
     global.SERVICE = {
@@ -53,6 +53,12 @@ test('signed launch verifies stable subject and bot without exposing profile/nam
     const verified=telegram.verify({proof:proof(),application:policy.applications['app-a'],policy});
     assert.deepEqual(Object.keys(verified).sort(),['allowsWrite','applicationSubject','authenticatedAt','subject']);
     assert.equal(verified.subject,'42'); assert.equal(verified.applicationSubject,'123456789');
+});
+test('runtime Telegram credential overrides source configuration defaults', () => {
+    policy.credentials = { 'telegram.bot.circa': { value: '987654321:source-default-token' } };
+    policy.applications['app-a'].credentials = { 'telegram.bot.circa': { value: '987654321:application-default-token' } };
+    const verified=telegram.verify({proof:proof(),application:policy.applications['app-a'],policy});
+    assert.equal(verified.applicationSubject,'123456789');
 });
 test('forged, duplicate, expired, future, malformed and bot assertions fail closed', () => {
     const bad=[proof().replace('42','43'),proof()+'&auth_date=3',proof(42,{auth_date:'1'}),proof(42,{auth_date:String(Math.floor(Date.now()/1000)+100)}),proof(42,{user:'{}'}),proof(42,{user:JSON.stringify({id:42,is_bot:true})})];
@@ -128,7 +134,7 @@ test('source recipient requires both signed proof and matching active customer l
     customers.a.authVersion=2;await assert.rejects(identity.origin(request()),{code:'ERR_PROFILE_EXTERNAL_ASSERTION'});
 });
 
-test('Communication destination resolves canonical customer code and respects revocation',async()=>{customers.a.code='CUSTOMER_A';await identity.link(request());const link=[...records.values()][0];const input={tenant:'tenant-a',entCode:'enterprise-a',authData:{principalType:'service'},linkCode:link.code,recipientId:'CUSTOMER_A'};const destination=await identity.destination(input);assert.equal(destination.subject,'42');assert.equal(destination.credentialReference,'telegram.bot.local');assert.equal((await identity.destination({...input,recipientId:'a'})).allowed,false);await assert.rejects(identity.destination({...input,authData:{principalType:'customer'}}));link.status='REVOKED';records.set('tenant-a|'+link.code,link);assert.equal((await identity.destination(input)).allowed,false);});
+test('Communication destination resolves canonical customer code and respects revocation',async()=>{customers.a.code='CUSTOMER_A';await identity.link(request());const link=[...records.values()][0];const input={tenant:'tenant-a',entCode:'enterprise-a',authData:{principalType:'service'},linkCode:link.code,recipientId:'CUSTOMER_A'};const destination=await identity.destination(input);assert.equal(destination.subject,'42');assert.equal(destination.credentialReference,'telegram.bot.circa');assert.equal((await identity.destination({...input,recipientId:'a'})).allowed,false);await assert.rejects(identity.destination({...input,authData:{principalType:'customer'}}));link.status='REVOKED';records.set('tenant-a|'+link.code,link);assert.equal((await identity.destination(input)).allowed,false);});
 
 
 test('external identity routes enter bearer authentication before owner controller dispatch', async () => {

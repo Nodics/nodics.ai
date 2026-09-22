@@ -1923,7 +1923,7 @@ module.exports = {
 
   /** Replaces only a configured browser-facing origin while retaining the registered module path. */
   clientEndpoint: function (instance) {
-    let configured = (this.getConfiguration().clientEndpoints || {})[instance.server];
+    let configured = this.getConfiguredClientEndpoint(instance.server);
     if (!configured) return instance.endpoint;
     let registered = new URL(instance.endpoint);
     let browser = new URL(configured);
@@ -1933,6 +1933,20 @@ module.exports = {
     }
     browser.pathname = registered.pathname;
     return browser.toString().replace(/\/$/, '');
+  },
+
+  /** Resolves a browser-facing endpoint from owning runtime server metadata. */
+  getConfiguredClientEndpoint: function (serverCode) {
+    let servers = CONFIG.get("servers") || {};
+    let server = servers[serverCode] || {};
+    let endpoint = server.browserEndpoint;
+    if (!endpoint) return null;
+    if (typeof endpoint === "string") return endpoint;
+    let protocol = endpoint.protocol || (endpoint.httpsPort ? "https:" : "http:");
+    let host = endpoint.httpHost || endpoint.httpsHost || "localhost";
+    let port = endpoint.httpPort || endpoint.httpsPort;
+    if (!port) return null;
+    return protocol + "//" + host + ":" + port + "/";
   },
 
   /** Removes every lease whose bounded expiry time has elapsed. */

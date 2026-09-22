@@ -9,29 +9,7 @@
 
  */
 "use strict";
-function valueFromStore(store, reference) {
-  const entry = store && reference ? store[reference] : undefined;
-  if (typeof entry === "string") return entry;
-  if (entry && typeof entry.value === "string") return entry.value;
-  if (entry && typeof entry.token === "string") return entry.token;
-  return undefined;
-}
 
-function configuredCredential(reference, policy) {
-  const config =
-      typeof CONFIG !== "undefined" && typeof CONFIG.get === "function"
-        ? CONFIG
-        : undefined,
-    runtime = config ? config.get("runtimeConfiguration") : undefined,
-    secure = config ? config.get("secureConfiguration") : undefined,
-    generic = config ? config.get("credentials") : undefined;
-  return (
-    valueFromStore((policy || {}).credentials, reference) ||
-    valueFromStore(runtime?.credentials, reference) ||
-    valueFromStore(secure?.credentials, reference) ||
-    valueFromStore(generic, reference)
-  );
-}
 /**
  * @module commsCore/service/defaultTelegramCommunicationProviderService
  * @description Sends plain Telegram messages only to Profile-resolved active links. Never logs credentials, proof, recipient or response content.
@@ -39,6 +17,32 @@ function configuredCredential(reference, policy) {
  * @override Certified transports may replace delivery while preserving uncertain-send outcomes and trusted destination resolution.
  */
 module.exports = {
+  /** Extracts a credential value from a layered store entry. */
+  valueFromStore: function (store, reference) {
+    const entry = store && reference ? store[reference] : undefined;
+    if (typeof entry === "string") return entry;
+    if (entry && typeof entry.value === "string") return entry.value;
+    if (entry && typeof entry.token === "string") return entry.token;
+    return undefined;
+  },
+
+  /** Resolves the configured Telegram credential from runtime, secure, policy, or generic layers. */
+  configuredCredential: function (reference, policy) {
+    const config =
+        typeof CONFIG !== "undefined" && typeof CONFIG.get === "function"
+          ? CONFIG
+          : undefined,
+      runtime = config ? config.get("runtimeConfiguration") : undefined,
+      secure = config ? config.get("secureConfiguration") : undefined,
+      generic = config ? config.get("credentials") : undefined;
+    return (
+      this.valueFromStore(runtime?.credentials, reference) ||
+      this.valueFromStore(secure?.credentials, reference) ||
+      this.valueFromStore((policy || {}).credentials, reference) ||
+      this.valueFromStore(generic, reference)
+    );
+  },
+
   /** Resolves the linked recipient before sending; any network ambiguity is recorded for operator review. */
   deliver: async function ({ request, intent, policy }, transport = fetch) {
     const response = await SERVICE.DefaultModuleService.invokeModule({
@@ -72,7 +76,7 @@ module.exports = {
       !(policy.credentialReferences || []).includes(target.credentialReference)
     )
       return { status: "UNCONFIGURED", responseCode: "TELEGRAM_CONFIGURATION_REQUIRED" };
-    const token = configuredCredential(target.credentialReference, policy);
+    const token = this.configuredCredential(target.credentialReference, policy);
     if (!token || token.split(":")[0] !== target.applicationSubject)
       return { status: "UNCONFIGURED", responseCode: "TELEGRAM_CONFIGURATION_REQUIRED" };
     let result;

@@ -40,7 +40,7 @@ export function readProjectEnvironmentConfiguration(projectRoot, environmentCode
     const metadata = JSON.parse(fs.readFileSync(packageFile, 'utf8'));
     if (metadata.nodics?.kind !== 'server' || metadata.nodics.runtimeModule !== true || metadata.nodics.retired === true) return [];
     const runtime = configuration.readDeploymentConfiguration({ projectRoot, environmentCode: environment, serverCode: entry.name });
-    const launch = runtime.tooling?.runtime || {};
+    const launch = metadata.nodics?.runtimeTooling || {};
     if (launch.enabled === false) return [];
     const endpoint = runtime.servers?.default?.endpoint;
     if (!endpoint || !Number.isSafeInteger(endpoint.httpPort) || endpoint.httpPort < 1 || endpoint.httpPort > 65535)

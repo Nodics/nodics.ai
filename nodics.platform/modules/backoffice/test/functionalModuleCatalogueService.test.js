@@ -207,13 +207,22 @@ async function run() {
     let originalNodics = NODICS;
     let resolvedOptions;
     let transportOptions;
+    let internalToken = 'internal-token';
+    let refreshedTenants = [];
     CONFIG.get = key => key === 'defaultTenant' ? 'default' :
         key === 'backofficeFunctionalModuleActivationData' ? { timeoutMs: 1234 } :
             key === 'servers' ? { options: { contextRoot: 'nodics' } } : originalConfigGet(key);
     NODICS = {
         getEnvironmentName: () => 'example.project',
         getServerName: () => 'platformServer',
-        getInternalAuthToken: tenant => tenant === 'default' ? 'internal-token' : undefined
+        getInternalAuthToken: tenant => tenant === 'default' ? internalToken : undefined
+    };
+    SERVICE.DefaultInternalAuthenticationProviderService = {
+        refreshInternalAuthTokens: async tenant => {
+            refreshedTenants.push(tenant);
+            internalToken = 'refreshed-internal-token';
+            return [tenant];
+        }
     };
     SERVICE.DefaultBackofficeRegistryService = {
         resolveRuntimeOwner: async options => {
@@ -237,20 +246,26 @@ async function run() {
     assert.strictEqual(resolvedOptions.moduleName, 'system');
     assert.strictEqual(resolvedOptions.connectionName, 'commerceServer');
     assert.strictEqual(transportOptions.uri, 'http://localhost:4350/nodics/import/v0/core/validate');
-    assert.strictEqual(transportOptions.header.Authorization, 'Bearer internal-token');
+    assert.deepStrictEqual(refreshedTenants, ['default']);
+    assert.strictEqual(transportOptions.header.Authorization, 'Bearer refreshed-internal-token');
     assert.strictEqual(transportOptions.requestBody.releaseCodes[0], 'baseCommerce:core-reference');
     assert.strictEqual(remotePreflight.data.releases[0].status, 'CURRENT');
     const release = { dataType: 'core', releaseCodes: ['baseCommerce:core-reference'] };
     const target = { targetServer: 'commerceServer', targetModule: 'commerce' };
     const operator = { tenant: 'default', authData: { principalId: 'admin' }, httpRequest: { headers: { authorization: 'Bearer operator-token' } } };
+    refreshedTenants = [];
+    internalToken = 'stale-internal-token';
     await service.runActivationDataReleaseOperation('execute', release, target, operator);
-    assert.strictEqual(transportOptions.header.Authorization, 'Bearer operator-token');
-    for (const rejected of [
-        { ...operator, httpRequest: { headers: {} } },
-        { ...operator, httpRequest: { headers: { authorization: 'Basic invalid' } } },
-        { ...operator, authData: { principalId: 'service', tokenType: 'service' } },
-        { ...operator, authData: {} }
-    ]) await assert.rejects(service.runActivationDataReleaseOperation('execute', release, target, rejected), error => error.code === 'ERR_AUTH_00003');
+    assert.deepStrictEqual(refreshedTenants, ['default']);
+    assert.strictEqual(transportOptions.header.Authorization, 'Bearer refreshed-internal-token');
+    SERVICE.DefaultInternalAuthenticationProviderService.refreshInternalAuthTokens = async tenant => {
+        refreshedTenants.push(tenant);
+        internalToken = undefined;
+        return [];
+    };
+    await assert.rejects(service.runActivationDataReleaseOperation('execute', release, target, operator),
+        error => error.code === 'ERR_AUTH_00003');
+    delete SERVICE.DefaultInternalAuthenticationProviderService;
     CONFIG.get = originalConfigGet;
     NODICS = originalNodics;
 

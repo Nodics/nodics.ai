@@ -8,7 +8,7 @@
     root LICENSE file or a separate written agreement with Nodics.
 
  */
-/** @module router/test/apiExposureOwnershipContract @description Proves explicit capability category ownership and unknown/invalid-category denial without changing route authorization. @layer test @owner router */
+/** @module router/test/apiExposureOwnershipContract @description Proves explicit capability category ownership and broad exposure policy overrides without changing route authorization. @layer test @owner router */
 const assert = require('node:assert/strict');
 const test = require('node:test');
 const fs = require('node:fs');
@@ -52,28 +52,27 @@ test('every authored literal API category is declared by the route capability', 
             if (!value || typeof value.value !== 'string') return;
             count++;
             const policy = properties.apiExposure?.categories?.[value.value];
-            if (!policy || typeof policy.enabled !== 'boolean')
+            if (!policy || (Object.prototype.hasOwnProperty.call(policy, 'enabled') && typeof policy.enabled !== 'boolean'))
                 violations.push(path.relative(root, file) + ': ' + value.value);
         });
     }
     assert.ok(count > 100, 'inspect the actual route inventory');
     assert.deepEqual(violations, []);
 });
-test('unknown and malformed categories are denied; explicit deployment and node overrides remain authoritative', () => {
+test('unknown categories follow default exposure; explicit deployment and node overrides remain authoritative', () => {
     let exposure = {
         default: { enabled: true },
-        unknown: { enabled: false },
         categories: { sample: { enabled: true } },
     };
     global.CONFIG = { get: () => exposure };
     assert.equal(pipeline.isApiExposureEnabled('sample'), true);
-    assert.equal(pipeline.isApiExposureEnabled('absent'), false);
+    assert.equal(pipeline.isApiExposureEnabled('absent'), true);
     exposure.categories.sample.enabled = false;
     assert.equal(pipeline.isApiExposureEnabled('sample'), false);
     exposure.categories.sample.enabled = 'true';
     assert.equal(pipeline.isApiExposureEnabled('sample'), false);
-    exposure.unknown.enabled = true;
-    assert.equal(pipeline.isApiExposureEnabled('absent'), true, 'explicit compatibility policy only');
+    exposure.unknown = { enabled: false };
+    assert.equal(pipeline.isApiExposureEnabled('absent'), false, 'explicit compatibility policy can still deny unknown categories');
     exposure = undefined;
     assert.equal(pipeline.isApiExposureEnabled('absent'), false);
 });

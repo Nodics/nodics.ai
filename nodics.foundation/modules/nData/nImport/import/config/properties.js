@@ -179,7 +179,6 @@ module.exports = {
   apiExposure: {
     categories: {
       dataImport: {
-        enabled: false,
       },
     },
   },

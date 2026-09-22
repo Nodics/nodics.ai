@@ -57,8 +57,15 @@ module.exports = {
         dimensions: {
           brands: { paths: ["brand", "localizedAttributes.brand"] },
           categories: { paths: ["categoryCodes"] },
-          collections: { paths: ["collectionCodes"] },
-          availability: { paths: ["availability.status"] },
+          collections: { paths: ["collectionCodes", "localizedAttributes.collection"] },
+          availability: {
+            paths: ["availability.status"],
+            labels: {
+              IN_STOCK: "Available",
+              OUT_OF_STOCK: "Not available",
+              PREORDER: "Pre-order",
+            },
+          },
         },
         saleCollectionCodes: [],
       },
@@ -117,6 +124,27 @@ module.exports = {
           missingBehavior: "omit",
         },
         domains: { enabled: true, contributors: {}, missingBehavior: "omit" },
+      },
+    },
+    runtimeRoleProfiles: {
+      COMMERCE: {
+        publication: {
+          searchEnrichment: {
+            domains: { missingBehavior: "error" },
+          },
+        },
+        discovery: {
+          catalogue: {
+            enabled: true,
+          },
+        },
+      },
+      COMMERCE_STAGED: {
+        publication: {
+          searchEnrichment: {
+            domains: { missingBehavior: "error" },
+          },
+        },
       },
     },
   },

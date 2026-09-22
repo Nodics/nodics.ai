@@ -252,7 +252,12 @@ module.exports = {
     gate
       .then((kycDecision) => {
         request.kycDecisionReference = kycDecision.decisionId;
-        return request.defaultCustomerService.save(request);
+        return request.defaultCustomerService.save(
+          Object.assign({}, request, {
+            authData:
+              SERVICE.DefaultIdentityGovernanceService.getSystemAuthData(),
+          }),
+        );
       })
       .then((success) => {
         response.success = success;

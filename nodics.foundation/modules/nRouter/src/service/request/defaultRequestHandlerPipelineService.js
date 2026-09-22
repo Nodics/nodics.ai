@@ -111,7 +111,13 @@ module.exports = {
       !exposure.categories ||
       !Object.prototype.hasOwnProperty.call(exposure.categories, category)
     ) {
-      return Boolean(exposure.unknown && exposure.unknown.enabled === true);
+      if (exposure.unknown && Object.prototype.hasOwnProperty.call(exposure.unknown, "enabled")) {
+        return exposure.unknown.enabled === true;
+      }
+      if (Object.prototype.hasOwnProperty.call(defaultConfig, "enabled")) {
+        return defaultConfig.enabled === true;
+      }
+      return false;
     }
     let categoryConfig = exposure.categories[category] || {};
     if (Object.prototype.hasOwnProperty.call(categoryConfig, "enabled")) {

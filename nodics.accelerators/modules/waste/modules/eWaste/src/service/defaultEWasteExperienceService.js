@@ -418,8 +418,6 @@ module.exports = {
     if (!record) store.fail("ERR_WASTE_RECORD_NOT_FOUND", "Record not found");
     const photo = record.metadata && record.metadata.photo;
     if (!photo || !photo.code) return { url: photo && photo.url };
-    if (request.resourceType === "submission")
-      return this.remote(request, "media", "wcms", "/customer/photos/" + encodeURIComponent(photo.code), "GET", undefined, request.authorization);
     return this.remote(
       request,
       "media",

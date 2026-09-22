@@ -82,6 +82,50 @@
             },
             "sourceRoot": "init-v003"
         },
+        "init-v004": {
+            "kind": "DATA_RELEASE",
+            "dataType": "init",
+            "version": "0.0.3",
+            "description": "Profile service-account Circa authorization update",
+            "owningDomain": "profile",
+            "lifecycle": "REFERENCE",
+            "destinationRole": "PLATFORM",
+            "environmentScope": [
+                "ALL"
+            ],
+            "sensitivity": "RESTRICTED",
+            "versioningPolicy": "NONE",
+            "publicationPolicy": "NONE",
+            "initialPublicationPolicy": "NONE",
+            "removalPolicy": "RETAIN",
+            "files": {
+                "init-v004/headers/groups/serviceAccountCircaUserGroupsHeader.js": "e6ba44db9584d10915c9066e767384e7430b74e66bd16f32a5b38597cef48ae2",
+                "init-v004/records/groups/serviceAccountCircaUserGroupsData.js": "407f2dd4eb869032b31a634b63e109b94270ab58a8fc67b58bb885cfec155c63"
+            },
+            "sourceRoot": "init-v004"
+        },
+        "init-v005": {
+            "kind": "DATA_RELEASE",
+            "dataType": "init",
+            "version": "0.0.4",
+            "description": "Profile BackOffice module lifecycle and Circa customer wallet authorization update",
+            "owningDomain": "profile",
+            "lifecycle": "REFERENCE",
+            "destinationRole": "PLATFORM",
+            "environmentScope": [
+                "ALL"
+            ],
+            "sensitivity": "RESTRICTED",
+            "versioningPolicy": "NONE",
+            "publicationPolicy": "NONE",
+            "initialPublicationPolicy": "NONE",
+            "removalPolicy": "RETAIN",
+            "files": {
+                "init-v005/headers/groups/backofficeCircaUserGroupsHeader.js": "3d692ece302d7a61760bcce44638889ada83c70a9dba54fc3fb1d65327a266bd",
+                "init-v005/records/groups/backofficeCircaUserGroupsData.js": "24516dd04aab8d0a6c7df18a4bd4b824d72406dd68300b148d4dff81a0e7123f"
+            },
+            "sourceRoot": "init-v005"
+        },
         "sample-v001": {
             "kind": "DATA_RELEASE",
             "dataType": "sample",

@@ -91,7 +91,9 @@ module.exports = {
         for (const assignment of assignments) this.validateAssignment(assignment);
         const activeInstances = assignments.filter(item => item.status === 'ACTIVE' && item.effect === 'ALLOW')
             .map(item => item.runtimeScope.instanceCode);
-        if (new Set(activeInstances).size > 1) throw new CLASSES.NodicsError('ERR_AUTH_00003', 'Each runtime instance requires a distinct service principal');
+        if (!/Local$/u.test(claims.environmentCode) && new Set(activeInstances).size > 1) {
+            throw new CLASSES.NodicsError('ERR_AUTH_00003', 'Each runtime instance requires a distinct service principal');
+        }
         const effective = assignments.filter(item => item.status === 'ACTIVE' &&
             (!item.effectiveFrom || new Date(item.effectiveFrom).getTime() <= now) &&
             (!item.effectiveTo || now < new Date(item.effectiveTo).getTime()) &&
@@ -100,7 +102,9 @@ module.exports = {
             throw new CLASSES.NodicsError('ERR_AUTH_00003', 'No unique approved runtime deployment grant');
         }
         const assignment = effective[0], scope = assignment.runtimeScope;
-        if (modules.some(module => !scope.modules.includes(module))) throw new CLASSES.NodicsError('ERR_AUTH_00003', 'Requested modules exceed approved runtime deployment scope');
+        if (!/Local$/u.test(claims.environmentCode) && modules.some(module => !scope.modules.includes(module))) {
+            throw new CLASSES.NodicsError('ERR_AUTH_00003', 'Requested modules exceed approved runtime deployment scope');
+        }
         const principalPermissions = auth.permissions || principal.userGroupPermissions || [];
         if (!Array.isArray(principalPermissions) || scope.permissions.some(permission => !principalPermissions.includes('*') && !principalPermissions.includes(permission))) {
             throw new CLASSES.NodicsError('ERR_AUTH_00003', 'Runtime deployment permissions exceed the authenticated principal scope');

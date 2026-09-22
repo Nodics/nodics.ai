@@ -94,7 +94,7 @@ module.exports = {
   },
   attemptsToLockAccount: 5,
   encryptSaltLength: 10,
-  passwordLengthLimit: 25,
+  passwordLengthLimit: 128,
   forceAPIKeyGenerate: false,
   profileCustomerRegistrationForm: {
     minimumPasswordCharacters: 12,
@@ -105,7 +105,7 @@ module.exports = {
   },
   profileExternalIdentity: {
     enabled: false,
-    maximumAssertionAgeSeconds: 300,
+    maximumAssertionAgeSeconds: 3600,
     browserHandoffLifetimeSeconds: 60,
     clockSkewSeconds: 30,
     maximumAssertionCharacters: 16384,
@@ -113,32 +113,6 @@ module.exports = {
       TELEGRAM: { service: "DefaultTelegramIdentityProviderService" },
     },
     applications: {},
-  },
-  runtimeConfigurationSchemas: {
-    telegramExternalIdentity: {
-      code: "telegramExternalIdentity",
-      ownerModule: "profile",
-      label: "Telegram external identity",
-      description:
-        "Logical bot credential required to verify Telegram Mini App launch assertions. Source config declares application bindings; operational values must come from governed runtime configuration.",
-      refreshBehavior: "runtime",
-      updatePermission: "runtime.config.request.create",
-      viewPermission: "runtime.config.effective.view",
-      fields: [
-        {
-          code: "botToken",
-          label: "Telegram bot token",
-          type: "string",
-          required: true,
-          sensitive: true,
-          credentialReference: "telegram.bot.local",
-          path: ["credentials", "telegram.bot.local", "value"],
-          pattern: "^\\d+:[^\\s]+$",
-          restartRequired: false,
-          unconfiguredValues: ["", "sample", "placeholder", "changeme"],
-        },
-      ],
-    },
   },
   profileCustomerBrowserSession: {
     enabled: false,

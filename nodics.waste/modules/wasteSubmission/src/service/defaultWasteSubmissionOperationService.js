@@ -202,6 +202,7 @@ module.exports = {
     const current = { code, revision: existing?.revision || 0, submitterRef: owner, submissionStatus: "METADATA_SUGGESTED",
       submittedFacts: { ...this.facts(analysis.proposal), sizeProvenance: analysis.recognition?.size || analysis.proposal.sizeProvenance, preferredCollectionPointCode: request.preparationCentreCode },
       metadata: { ...existing?.metadata, draftCreatedAt: existing?.metadata?.draftCreatedAt || new Date().toISOString(), preparationChecksum: request.preparationChecksum, preparationKey: request.idempotencyKey, estimate: null, confirmationRevision: null,
+        manualReviewRequired: Boolean(analysis.manualReviewRequired || analysis.evidenceReview?.manualApprovalRequired),
         photo: { code: media.code }, arrival: request.preparationArrival, origin: existing?.metadata?.origin || request.preparationOrigin,
         evidenceReview: analysis.evidenceReview,
         suggestion: { recognition: analysis.recognition, facts: analysis.proposal, confidence: analysis.confidence, provider: analysis.provider, model: analysis.model, advisory: true } } };

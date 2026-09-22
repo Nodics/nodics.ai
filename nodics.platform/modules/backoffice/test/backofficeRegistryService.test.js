@@ -17,7 +17,7 @@
  * @override Project registry storage implementations must preserve these observed-state invariants.
  */
 const assert = require("assert");
-let clientEndpoints = {};
+let serverEndpoints = {};
 
 global.CONFIG = {
   get: (key) =>
@@ -35,7 +35,6 @@ global.CONFIG = {
             keyPrefix: "registry:lease:",
           },
           modulePermissions: {},
-          clientEndpoints: clientEndpoints,
           compatibility: {
             registryContractVersion: 1,
             minimumClientContractVersion: 0,
@@ -72,6 +71,8 @@ global.CONFIG = {
             "backoffice",
           ],
         }
+      : key === "servers"
+        ? serverEndpoints
       : undefined,
 };
 let storeDefinition = require("../src/service/registry/defaultBackofficeRegistryStoreService");
@@ -471,10 +472,10 @@ async function run() {
     engagement: "http://engagement:4340/nodics/engagement",
   });
   assert.deepStrictEqual(publicBootstrap.data.endpointRoles, { cms: "ONLINE" });
-  clientEndpoints = { wcmsOnlineServer: "https://axis-cms.example.com/" };
+  serverEndpoints = { wcmsOnlineServer: { browserEndpoint: "https://axis-cms.example.com/" } };
   assert.strictEqual((await service.publicBootstrap({ headers: { "x-nodics-client-contract-version": "1" } })).data.endpoints.cms,
-    "https://axis-cms.example.com/nodics/cms", "Environment configuration may replace only the browser-facing origin");
-  clientEndpoints = {};
+    "https://axis-cms.example.com/nodics/cms", "Owning server metadata may replace only the browser-facing origin");
+  serverEndpoints = {};
   assert.strictEqual(publicBootstrap.data.uiComposition.site, "axisCmsSite");
   assert.strictEqual(
     JSON.stringify(publicBootstrap).includes("instanceId"),

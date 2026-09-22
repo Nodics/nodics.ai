@@ -14,6 +14,8 @@ module.exports = {
   /** Maps trusted transport context and invokes the selected media operation. */
   invoke: function (operation, request, callback) {
     const http = request.httpRequest || {};
+    const encodedUpload = operation === "uploadEncoded" || operation === "uploadInternalEncoded";
+    const encodedPayload = http.body || request.body || request.payload;
     const promise = SERVICE.DefaultCustomerMediaService[
       operation === "readInternal" ? "read" : operation
     ]({
@@ -21,7 +23,7 @@ module.exports = {
       authorization: (http.headers || {}).authorization,
       tenant: request.tenant,
       files: http.files || [],
-      payload: operation === "uploadEncoded" ? http.body : undefined,
+      payload: encodedUpload ? encodedPayload : undefined,
       internalEvidenceRead: operation === "readInternal",
       code: (http.params || {}).code,
     }).then((data) => ({ data: data }));
@@ -35,6 +37,10 @@ module.exports = {
   /** Ingests encoded customer bytes through the same Media upload authority. */
   uploadEncoded: function (request, callback) {
     return this.invoke("uploadEncoded", request, callback);
+  },
+  /** Ingests encoded customer bytes from a trusted domain service. */
+  uploadInternalEncoded: function (request, callback) {
+    return this.invoke("uploadInternalEncoded", request, callback);
   },
   /** Reads evidence only on the service-authorized internal route. */
   readInternal: function (request, callback) {

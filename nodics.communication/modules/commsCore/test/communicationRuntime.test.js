@@ -212,7 +212,7 @@ test("Telegram uses verified destination and plain text, handles accepted, rejec
         provider: "TELEGRAM",
         subject: "42",
         applicationSubject: "123",
-        credentialReference: "telegram.bot.local",
+        credentialReference: "telegram.bot.circa",
       },
     }),
   };
@@ -220,11 +220,15 @@ test("Telegram uses verified destination and plain text, handles accepted, rejec
     request,
     intent: { ...command, renderedContent: { body: "<b>literal</b>" } },
     policy: {
-      credentialReferences: ["telegram.bot.local"],
-      credentials: { "telegram.bot.local": { value: "123:test-placeholder" } },
+      credentialReferences: ["telegram.bot.circa"],
+      credentials: { "telegram.bot.circa": { value: "123:source-placeholder" } },
     },
   };
+  CONFIG.get = key => key === "runtimeConfiguration" ? {
+    credentials: { "telegram.bot.circa": { value: "123:runtime-placeholder" } },
+  } : key === "communication" ? policy : undefined;
   const success = await telegram.deliver(args, async (url, options) => {
+    assert.equal(url, "https://api.telegram.org/bot123:runtime-placeholder/sendMessage");
     const body = JSON.parse(options.body);
     assert.equal(body.chat_id, "42");
     assert.equal(body.parse_mode, undefined);
@@ -248,8 +252,9 @@ test("Telegram uses verified destination and plain text, handles accepted, rejec
     ).status,
     "RETRY_PENDING",
   );
+  CONFIG.get = key => key === "communication" ? policy : undefined;
   const unconfigured = await telegram.deliver(
-    { ...args, policy: { credentialReferences: ["telegram.bot.local"] } },
+    { ...args, policy: { credentialReferences: ["telegram.bot.circa"] } },
     async () => {
       throw new Error("must not send without configured credentials");
     },

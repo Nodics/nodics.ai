@@ -29,7 +29,7 @@ write boundary and the separate Nodics contribution and release process.
 - Keep capabilities stable and make implementations replaceable through the module hierarchy.
 - Do not hardcode project, environment, server, node, tenant, or customer behavior into reusable framework code.
 - Local topology runtime-specific environment values belong in the project
-  server `tooling.runtime.env` object and must be merged by topology tooling at
+  server `package.json` `nodics.runtimeTooling.env` object and must be merged by topology tooling at
   process launch. Do not require customer-specific `.env` files inside
   vendor-owned frontend repositories.
 - Put configurable behavior in layered configuration, schemas, routers, services, pipelines, data, and runtime governance.

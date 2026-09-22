@@ -48,6 +48,80 @@ module.exports = {
         defaultPropertySequence: 0,
         defaultDoSaveOperation: 'doSave',
         eventOnRefresh: true,
+        runtimeRoleProfiles: {
+            PLATFORM: {
+                discoveryProjection: {
+                    options: {
+                        enabled: true
+                    }
+                }
+            },
+            WASTE: {
+                discoveryProjection: {
+                    options: {
+                        enabled: true
+                    }
+                }
+            },
+            WCMS_STAGED: {
+                discoveryProjection: {
+                    options: {
+                        enabled: true
+                    }
+                },
+                wcmsExperience: {
+                    options: {
+                        enabled: true
+                    }
+                }
+            },
+            WCMS_ONLINE: {
+                discoveryProjection: {
+                    options: {
+                        enabled: true
+                    }
+                },
+                wcmsExperience: {
+                    options: {
+                        enabled: true
+                    }
+                }
+            },
+            COMMERCE_STAGED: {
+                product: {
+                    options: {
+                        enabled: true
+                    }
+                },
+                commerceSearchCore: {
+                    options: {
+                        enabled: true
+                    }
+                },
+                discoveryProjection: {
+                    options: {
+                        enabled: true
+                    }
+                }
+            },
+            COMMERCE: {
+                product: {
+                    options: {
+                        enabled: true
+                    }
+                },
+                commerceSearchCore: {
+                    options: {
+                        enabled: true
+                    }
+                },
+                discoveryProjection: {
+                    options: {
+                        enabled: true
+                    }
+                }
+            }
+        },
         default: {
             options: {
                 enabled: false, //if false, system will not configure any search related functionalities

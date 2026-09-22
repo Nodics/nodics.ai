@@ -25,7 +25,8 @@ module.exports = {
             options: {
                 enabled: true,
                 schemaName: 'activeSchema',
-                operation: 'saveAll'
+                operation: 'saveAll',
+                userGroups: ['headerUserGroup']
             }
         }
     },
@@ -34,7 +35,8 @@ module.exports = {
             options: {
                 enabled: true,
                 schemaName: 'inactiveSchema',
-                operation: 'saveAll'
+                operation: 'saveAll',
+                userGroups: ['inactiveHeaderUserGroup']
             }
         }
     }

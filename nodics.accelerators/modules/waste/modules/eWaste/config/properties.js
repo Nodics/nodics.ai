@@ -49,6 +49,12 @@ module.exports = {
       manualReviewFallback: true,
       allowedFamilyCodes: ["ELECTRONICS", "BATTERY"],
       fallbackItemTypeCode: "UNKNOWN_ELECTRONIC_ITEM",
+      sizePolicy: {
+        version: "EWASTE_SIZE_POLICY_V1",
+        itemTypes: {
+          CHARGER: "SMALL",
+        },
+      },
     },
   },
   wasteImpact: {

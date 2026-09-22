@@ -138,6 +138,20 @@ when generic tooling resolves or validates them.
   Aliases reference the canonical value through nConfig bindings and retain their
   own `remoteOnly`, advertised endpoint and protocol restrictions. Never infer
   hosts, ports, credentials, authority or publication policy from a module name.
+- Keep reusable media delivery paths with the owning CMS/Product/media
+  capability. Do not repeat `mediaDeliveryBaseUrl` in runtime server
+  properties merely to add the local host and port; browser or acceptance
+  consumers can compose a relative delivery route with the selected public WCMS
+  endpoint. Actual media storage roots remain deployment facts and may stay with
+  the runtime/server/container layer that owns the filesystem path.
+- Keep Commerce business policy with the most reusable owner. Generic catalogue
+  mechanics, dimensions and strict Product enrichment defaults belong to the
+  Commerce framework modules. Application market choices such as default
+  currency, jurisdiction, shipping and return methods belong to the owning
+  application module, for example Circa for Circa sample-market behavior. Root
+  customer-project config should carry only true project overrides or composition
+  choices. Runtime server files may still select Commerce modules, authority
+  contexts, isolated databases and endpoints.
 - Remove unchanged general capability defaults. Retained equal authentication,
   API exposure, provider qualification or compatibility pins must identify their
   purpose and the deployment/qualification change that requires review.
@@ -265,12 +279,105 @@ customer, environment, server and node configuration, including generators.
   for selected peers and `ref` for ordinary property reuse. Do not maintain
   `configurationValues.remoteEndpoints` or a duplicate authentication-policy map.
   Module/server identity and package versions come from existing metadata.
+- Server `config/properties.js` files are override layers, not peer-topology
+  registries. They must declare the selected server's own endpoint, active
+  modules, runtime role/authority, isolated databases and true server
+  exceptions. Peer endpoints and standard aliases are derived from sibling
+  runtime server metadata and the owning server endpoint; retain only explicit
+  per-peer policy such as `remoteOnly`, protocol restriction or an intentional
+  advertised-host override.
+- Browser-facing endpoint overrides belong on the owning runtime server, for
+  example `servers.default.browserEndpoint`, and are projected by nConfig for
+  aliases. Do not keep a central BackOffice `clientEndpoints` compatibility map
+  for runtime topology; remove the old structure instead of supporting both.
+- Runtime identity belongs to runtime package metadata and is projected into
+  effective configuration by nConfig. Do not author `runtimeIdentity` in server
+  `config/properties.js`.
+- Runtime launch metadata belongs to runtime package metadata. Use
+  `package.json` `nodics.runtimeTooling` for command code, package script,
+  dependency order and launch-only environment values. Do not author
+  `tooling.runtime` in server `config/properties.js`; those files are reserved
+  for effective runtime behavior and server-specific overrides.
+- Search capability enablement belongs to module/customer/environment-owned
+  `search.runtimeRoleProfiles` or environment-level search connection overrides.
+  Do not copy per-index `search.<module>.options.enabled` blocks into every
+  server config; the selected runtime role should project the same effective
+  search graph. Keep nSearch default-disabled unless a role/profile explicitly
+  opts in.
+- Data-release availability and generic guided initialization profiles are
+  derived from the selected runtime module graph, data manifests, destination
+  metadata and explicit module-owned contribution selectors. Do not move
+  `data.dataReleases.runtimeRoleProfiles` from server config into environment
+  config as another catalogue. Environment config may supply deployment facts,
+  not repeated release inventories. Keep only curated project/module profiles
+  where business wording, explicit release-code subsets or cross-runtime
+  content selection cannot be inferred from the module loader.
+- Publication module activation is derived from the semantic runtime role. WCMS
+  Staged declares `runtimeRole.publication: "STAGED"` and WCMS Online declares
+  `runtimeRole.publication: "ONLINE"`; nConfig projects the effective
+  `publishEnabled` flag for legacy consumers. Do not author `publishEnabled` in
+  runtime server `config/properties.js`.
+- Reference payment-provider enablement belongs to project/module-owned
+  runtime-role policy, not runtime server files. Provider modules keep safe
+  defaults such as disabled sandbox adapters; a customer project may opt a
+  runtime role into the provider through `<provider>.runtimeRoleProfiles`.
+  Server config must not repeat `stripeProvider` enablement for every Commerce
+  runtime.
+- Runtime service-auth defaults belong to nAuth and governed runtime credential
+  layers. Framework defaults may supply tenant and enterprise code; nAuth owns
+  the `defaultAuthDetail.apiKey` deployment binding. Runtime server config must
+  not repeat the same API-key binding for every server. Use later governed
+  external, tenant or persisted runtime configuration for deliberate credential
+  replacement.
+- HTTP hardening has two owners. Deployment origins and published frontend
+  addresses belong at the environment layer. Runtime-role CORS policy, such as
+  denying a public frontend for an authoring or process role, belongs in
+  module/customer `httpHardening.runtimeRoleProfiles`. Runtime server config
+  must not repeat role-level `httpHardening` blocks.
+- Runtime-role inventories belong to module-owned role profiles, not server
+  overrides. Examples include `localResetProvider.profiles`,
+  `copilot.runtimeRoleProfiles`, `apiExposure.runtimeRoleProfiles` and
+  BackOffice reset provider lists. Environment config may enable or disable a
+  policy for an environment, but server config must not repeat capability
+  inventories, Copilot source registries or API exposure categories that can be
+  selected by module/runtime role.
+- Runtime-role business behavior follows the same profile pattern. Framework
+  modules may use `product.runtimeRoleProfiles`, `cart.runtimeRoleProfiles` and
+  `fulfillmentCore.runtimeRoleProfiles` for reusable Commerce role behavior.
+  Application modules may override only their own market or domain choices. Root
+  customer-project config must not collect reusable defaults merely to make
+  server files smaller, and runtime server config must not repeat Product
+  discovery/catalogue, Cart customer defaults or Fulfillment shipping policies.
+- Data release selections follow the same ownership rule. Generic release
+  contributions, installers and destination policies belong to their owning
+  framework/root module runtime-role profile. Environment setup profiles belong
+  at the selected environment layer. Server config may retain only the selected
+  runtime's true deployment facts, such as an isolated database name; it must
+  not repeat `data.dataReleases` inventories. When administrative activation
+  packages need a target runtime's deployment fact, use bounded nConfig
+  `runtime` projection instead of an early `ref` that freezes a framework
+  default before the target server override is applied.
+- External identity application bindings and runtime configuration schemas belong
+  to their owning framework provider or application/channel module, not server
+  config. Profile owns provider mechanics and assertion policy; applications
+  such as Circa own their Telegram application enrollment, credential reference
+  and runtime-update schema. Resolve reusable enterprise scope through
+  `defaultEnterprise` or a later customer override instead of hardcoding
+  `"default"` in channel/application configuration.
+- Profile browser-session defaults belong to Profile. Environment layers may
+  enable customer or employee browser sessions, choose environment-specific
+  cookie names and opt into `allowInsecureLoopback` for local HTTP development.
+  Do not put browser-session policy in server config, and prefer
+  `secure: true` with loopback-only per-request relaxation over authored
+  `secure: false`.
 - Optional application composition belongs in `activeModules.compositions` and
   is read only by an explicit composition selection. A cron-only or website-only
   project does not need an Agora declaration. Provider activation remains an
   explicit runtime selection; a connection URL does not activate an adapter.
-- Use `environment.class` for deployment classification. Do not infer it from a
-  name, hostname or request, or repeat it under each capability's policy.
+- nConfig projects effective `environment.class` from selected environment
+  module metadata for deployment classification. Do not author it in environment
+  properties, infer it from a name/hostname/request, or repeat it under each
+  capability's policy.
 - Trusted browser origins belong in explicit `httpHardening.cors` security policy;
   nRouter constructs origins and owns standard headers and credential behavior. Retain server-specific denials,
   explicit disablement and genuine deployment overrides. CORS never grants API

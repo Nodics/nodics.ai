@@ -101,6 +101,73 @@ createService().buildHeaderInstances(headerRequest, {}, {
 
 assert.strictEqual(buildHeaderState.success, true);
 assert.deepStrictEqual(Object.keys(headerRequest.data.headers), ['activeTarget:activeData']);
+assert.deepStrictEqual(headerRequest.data.headers['activeTarget:activeData'].options.userGroups, ['headerUserGroup']);
 assert.strictEqual(headerRequest.importRun.summary.enabledHeaders, 1);
 assert.strictEqual(headerRequest.importRun.summary.disabledHeaders, 1);
 assert.strictEqual(headerRequest.importRun.headers[0].targetModule, 'activeTarget');
+
+let serviceTokenState = {};
+let serviceTokenRequest = {
+    authData: {
+        userGroups: []
+    },
+    data: {
+        headerFiles: {
+            mixedHeaders: [
+                require.resolve('./fixtures/system-import/mixedTargetHeader.js')
+            ]
+        }
+    },
+    importRun: {
+        summary: {
+            enabledHeaders: 0,
+            disabledHeaders: 0
+        },
+        headers: []
+    }
+};
+
+createService().buildHeaderInstances(serviceTokenRequest, {}, {
+    nextSuccess: function () {
+        serviceTokenState.success = true;
+    },
+    error: function (_request, _response, error) {
+        serviceTokenState.error = error;
+    }
+});
+
+assert.strictEqual(serviceTokenState.success, true);
+assert.deepStrictEqual(serviceTokenRequest.data.headers['activeTarget:activeData'].options.userGroups, ['headerUserGroup']);
+
+let overrideState = {};
+let overrideRequest = {
+    authData: {
+        userGroups: ['requestUserGroup']
+    },
+    data: {
+        headerFiles: {
+            mixedHeaders: [
+                require.resolve('./fixtures/system-import/mixedTargetHeader.js')
+            ]
+        }
+    },
+    importRun: {
+        summary: {
+            enabledHeaders: 0,
+            disabledHeaders: 0
+        },
+        headers: []
+    }
+};
+
+createService().buildHeaderInstances(overrideRequest, {}, {
+    nextSuccess: function () {
+        overrideState.success = true;
+    },
+    error: function (_request, _response, error) {
+        overrideState.error = error;
+    }
+});
+
+assert.strictEqual(overrideState.success, true);
+assert.deepStrictEqual(overrideRequest.data.headers['activeTarget:activeData'].options.userGroups, ['requestUserGroup']);

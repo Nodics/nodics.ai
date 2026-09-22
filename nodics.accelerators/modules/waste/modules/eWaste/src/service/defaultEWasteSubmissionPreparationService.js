@@ -51,16 +51,23 @@ module.exports = {
     }
     if (request.code && !existing) store.fail("ERR_WASTE_RECORD_NOT_FOUND", "The requested record was not found");
     this.assertActive(request);
-    const analysis = await SERVICE.DefaultWasteMetadataAnalysisService.inspect({ ...request, photo }, existing);
+    let analysis;
+    try {
+      analysis = await SERVICE.DefaultWasteMetadataAnalysisService.inspect({ ...request, photo }, existing);
+    } catch (error) {
+      if (!SERVICE.DefaultWasteMetadataAnalysisService.isRecognitionUnavailable?.(error)) throw error;
+      analysis = await SERVICE.DefaultWasteMetadataAnalysisService.manualReviewAnalysis({ ...request, photo }, existing);
+    }
     this.assertActive(request);
     const centreCode = request.preparationCentreCode || request.payload.collectionPointCode;
     await operations.validateFacts(request, { submittedFacts: { ...analysis.proposal, preferredCollectionPointCode: centreCode } });
     this.assertActive(request);
     // Customer credentials are forwarded only to the owning Media capability.
     const response = await SERVICE.DefaultModuleService.invokeModule({
-      local: false, moduleName: "media", connectionName: "wcms", apiName: "/photos/encoded", methodName: "POST",
-      tenant: request.tenant, header: { Authorization: request.authorization }, timeoutMs: 30000, maxAttempts: 1,
-      requestBody: { mimeType: photo.mimeType, contentBase64: photo.contentBase64, originalFileName: photo.originalFileName, idempotencyKey: commandCode + ":" + photo.checksum },
+      local: false, moduleName: "media", connectionName: "wcms", apiName: "/internal/customer/photos/encoded", methodName: "POST",
+      tenant: request.tenant, request: { tenant: request.tenant }, timeoutMs: 30000, maxAttempts: 1,
+      requestBody: { mimeType: photo.mimeType, contentBase64: photo.contentBase64, originalFileName: photo.originalFileName, idempotencyKey: commandCode + ":" + photo.checksum,
+        owner: { tenant: request.tenant, code: owner.code, loginId: request.authData.loginId, principalType: "customer" } },
     });
     const media = SERVICE.DefaultEWasteExperienceService.unwrap(response);
     return operations.createPrepared({ ...request, applicationCode: (CONFIG.get("eWaste") || {}).applicationCode,

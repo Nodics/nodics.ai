@@ -13,7 +13,7 @@
 
 /** @module commsCore/data/core-v001/headers/commsRuntimeDefaultHeader @description Imports Communication runtime default templates required before activation. @layer data-header @owner commsCore */
 const entry = (schemaName, dataFilePrefix) => ({
-    options: { enabled: true, schemaName, operation: 'saveAll', dataFilePrefix },
+    options: { enabled: true, schemaName, operation: 'saveAll', dataFilePrefix, userGroups: ['adminGroup'] },
     query: { code: '$code', tenant: '$tenant' }
 });
 
