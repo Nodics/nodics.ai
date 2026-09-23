@@ -257,6 +257,11 @@ module.exports = {
                 "home": "project",
                 "args": ["dockerLocal", "qualification"]
             },
+            "post-reset:readiness": {
+                "type": "frameworkCommand",
+                "command": "project:post-reset-readiness",
+                "home": "project"
+            },
             "docker-local:backup": {
                 "type": "frameworkCommand",
                 "command": "project:container-resilience",

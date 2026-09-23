@@ -284,6 +284,7 @@ module.exports = {
                 { node: 'nodics.foundation/modules/nTooling/test/extensibilityConfigurationBoundary.test.js' },
                 { node: 'nodics.foundation/modules/nTooling/test/serviceExportStyleGovernanceContract.test.js' },
                 { node: 'nodics.foundation/modules/nTooling/test/projectEnvironmentProfileContract.test.mjs' },
+                { node: 'nodics.foundation/modules/nTooling/test/projectPostResetReadinessContract.test.mjs' },
                 { node: 'nodics.foundation/modules/nTooling/test/projectContainerProfileContract.test.mjs' },
                 { node: 'nodics.foundation/modules/nTooling/test/toolingCommandOverride.test.js' },
                 { node: 'nodics.foundation/modules/nTooling/test/repositoryToolingBoundary.test.js' },
@@ -681,6 +682,11 @@ module.exports = {
                 description: 'Run environment-owned container acceptance, qualification, resilience, and soak evidence.',
                 handler: 'src/service/command/defaultNodeScriptCommandService.js',
                 script: 'src/service/project/defaultProjectContainerQualificationService.mjs'
+            },
+            'project:post-reset-readiness': {
+                description: 'Produce post-reset readiness evidence for bootstrap, runtimes, imports, publishing, docs, media, search, assistant, and browser validation.',
+                handler: 'src/service/command/defaultNodeScriptCommandService.js',
+                script: 'src/service/project/defaultProjectPostResetReadinessService.mjs'
             },
             'project:documentation-content': {
                 description: 'Generate or validate project documentation content packs from project-owned documentation facts.',

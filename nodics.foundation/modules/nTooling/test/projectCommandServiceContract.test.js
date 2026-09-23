@@ -44,11 +44,13 @@ service.validateProject(validRoot);
 assert.equal(service.runProjectCommand(validRoot, 'acceptance:local', []), true);
 assert.equal(service.resolveCommands(validRoot)['start:platform'].command, 'project:runtime-start');
 assert.equal(service.resolveCommands(validRoot)['docker-local:preflight'].command, 'project:container');
+assert.equal(service.resolveCommands(validRoot)['post-reset:readiness'].command, 'project:post-reset-readiness');
 
 const minimalRoot = createProject({ name: 'acme.startio' });
 service.validateProject(minimalRoot);
 assert.equal(service.resolveProjectCode(minimalRoot), 'acme.startio');
 assert.equal(service.resolveCommands(minimalRoot)['docs:generate'].command, 'project:documentation-content');
+assert.equal(service.defaultCommands()['post-reset:readiness'].home, 'project');
 assert.equal(Object.keys(service.defaultCommands()).some(name => /kickoff/.test(name)), false);
 
 const descriptorProjectCodeRoot = createProject({ name: 'right.shop' });
