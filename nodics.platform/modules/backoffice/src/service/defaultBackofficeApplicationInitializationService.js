@@ -62,6 +62,7 @@ module.exports = {
       required: step.required,
       trigger: step.trigger,
       dataType: step.dataType,
+      classification: step.classification,
       targetServer: step.targetServer,
       targetRuntimeRole: step.targetRuntimeRole,
     }));
@@ -71,6 +72,8 @@ module.exports = {
         kind: "CONTENT_PACK",
         required: true,
         trigger: "USER",
+        dataType: "content",
+        classification: "DOCUMENTATION_CONTENT_PACK",
       });
     return {
       code: String(profile.code),
@@ -195,7 +198,7 @@ module.exports = {
         "Application preparation step configuration is invalid",
       );
     }
-    return {
+    let normalized = {
       order: Number(step.order || index + 1),
       type: type,
       code: code,
@@ -215,6 +218,25 @@ module.exports = {
         ? String(step.businessPurpose)
         : undefined,
     };
+    normalized.classification = this.dataPackageClassification(normalized);
+    return normalized;
+  },
+  /** Classifies setup packages for readiness and operator guidance without becoming an import authority. */
+  dataPackageClassification: function (step) {
+    if (!step) return "DATA_RELEASE";
+    if (step.type === "MEDIA_ASSET_MANIFEST") return "MEDIA_ASSET_MANIFEST";
+    if (step.kind === "CONTENT_PACK") return "DOCUMENTATION_CONTENT_PACK";
+    let code = String(step.code || "");
+    let dataType = String(step.dataType || "").toLowerCase();
+    let trigger = String(step.trigger || "").toUpperCase();
+    if (dataType === "init" && (/^nodics[.:]/.test(code) || /^cms:/.test(code)))
+      return "FRAMEWORK_BASELINE";
+    if (dataType === "core") return "MODULE_BASELINE";
+    if (dataType === "sample" && trigger === "USER") return "SAMPLE_DEMO";
+    if (dataType === "sample") return "ACCELERATOR_BASELINE";
+    if (dataType === "config") return "RUNTIME_CONFIG";
+    if (trigger === "PROJECT") return "PROJECT_OVERRIDE";
+    return "DATA_RELEASE";
   },
   /** Returns normalized functional capabilities required before an application can be considered ready. */
   requiredFunctionalModules: function (profile) {
@@ -832,8 +854,16 @@ module.exports = {
       });
     }
     if (projection && projection.readiness === "PUBLICATION_PENDING") {
+      let approvalDiagnostic = this.approvalWorkflowDiagnostic(projection);
       let publication = projection.publication || {};
-      let code = publication.workflowRef ? "APPROVAL_IN_PROGRESS" : "APPROVAL_TASK_MISSING";
+      let code =
+        approvalDiagnostic.status === "TASK_REFERENCE_MISSING"
+          ? "APPROVAL_TASK_MISSING"
+          : approvalDiagnostic.status === "TASK_ASSIGNEE_MISSING"
+            ? "APPROVAL_TASK_ASSIGNEE_MISSING"
+            : approvalDiagnostic.status === "TASK_NOT_ACTIONABLE"
+              ? "APPROVAL_TASK_UNACTIONABLE"
+              : "APPROVAL_IN_PROGRESS";
       let repair = publication.workflowRef
         ? this.capabilityRepairProjection("APPROVAL_IN_PROGRESS", {
             owner: publication.code || projection.releaseCode,
@@ -848,14 +878,12 @@ module.exports = {
         owner: String(publication.code || projection.releaseCode || ""),
         ownerType: "PROCESS_WORKFLOW",
         source: "PUBLICATION_APPROVAL",
-        message: publication.workflowRef
-          ? "Publication is waiting for reviewer decision."
-          : "Publication is pending approval, but no workflow task reference is available.",
-        action: publication.workflowRef ? "Review approval queue" : "Reconcile publication approval",
-        disabledReason: publication.workflowRef
-          ? "The publication is waiting for a governed Process reviewer decision."
-          : "The publication has no actionable Process task reference; reconcile approval before continuing.",
+        message: approvalDiagnostic.message,
+        action: approvalDiagnostic.suggestedAction,
+        disabledReason: approvalDiagnostic.disabledReason,
+        technicalStatus: approvalDiagnostic.status,
         repair: repair,
+        approvalDiagnostic: approvalDiagnostic,
       });
     }
     return blockers;
@@ -1036,6 +1064,22 @@ module.exports = {
         idempotent: true,
         requiresConfirmation: false,
       },
+      APPROVAL_TASK_ASSIGNEE_MISSING: {
+        available: false,
+        label: "Assign publication approval task",
+        operation: "process.assignApprovalTask",
+        action: "ASSIGN_APPROVAL_TASK",
+        idempotent: true,
+        requiresConfirmation: true,
+      },
+      APPROVAL_TASK_UNACTIONABLE: {
+        available: false,
+        label: "Review Process workflow state",
+        operation: "process.reviewApprovalTask",
+        action: "REVIEW_APPROVAL_TASK_STATE",
+        idempotent: true,
+        requiresConfirmation: false,
+      },
       ONLINE_POINTER_STALE: {
         available: false,
         label: "Refresh Online publication pointer",
@@ -1069,6 +1113,86 @@ module.exports = {
         : "The owning module, source release, runtime, or workflow authority must perform this repair.",
     });
   },
+  /** Projects current publication approval evidence without querying Process from the browser. */
+  approvalWorkflowDiagnostic: function (projection) {
+    let publication = (projection && projection.publication) || {};
+    let workflowRef = publication.workflowRef ? String(publication.workflowRef) : undefined;
+    let task = publication.approvalTask || publication.workflowTask || publication.task;
+    let taskStatus = task && task.status ? String(task.status) : undefined;
+    let assignee = task && task.assignee ? String(task.assignee) : undefined;
+    let queue = task && (task.queue || task.candidateGroup || task.assignment)
+      ? String(task.queue || task.candidateGroup || task.assignment)
+      : undefined;
+    let actionable = taskStatus
+      ? ["OPEN", "CLAIMED", "ESCALATED"].includes(taskStatus)
+      : undefined;
+    let hasPublicationEvidence = Object.keys(publication).length > 0;
+    let status =
+      !projection || projection.readiness !== "PUBLICATION_PENDING"
+        ? projection && projection.readiness === "READY"
+          ? "APPROVED"
+          : "NOT_STARTED"
+        : !hasPublicationEvidence
+          ? "PUBLICATION_MISSING"
+          : !workflowRef
+            ? "TASK_REFERENCE_MISSING"
+            : task && actionable === false
+              ? "TASK_NOT_ACTIONABLE"
+              : task && task.requiresAssignee === true && !assignee && !queue
+                ? "TASK_ASSIGNEE_MISSING"
+                : "WAITING_REVIEWER";
+    let messages = {
+      APPROVED: "Publication approval is complete.",
+      NOT_STARTED: "Publication approval has not been requested yet.",
+      PUBLICATION_MISSING:
+        "Publication is pending approval, but publication evidence is unavailable.",
+      TASK_REFERENCE_MISSING:
+        "Publication is pending approval, but no workflow task reference is available.",
+      TASK_ASSIGNEE_MISSING:
+        "Publication approval task exists but has no assignee or review queue evidence.",
+      TASK_NOT_ACTIONABLE:
+        "Publication approval workflow reference exists, but the known task is not open for decision.",
+      WAITING_REVIEWER: "Publication is waiting for reviewer decision.",
+    };
+    let actions = {
+      APPROVED: "Monitor Online publication",
+      NOT_STARTED: "Request publication approval",
+      PUBLICATION_MISSING: "Reconcile publication approval",
+      TASK_REFERENCE_MISSING: "Reconcile publication approval",
+      TASK_ASSIGNEE_MISSING: "Assign approval task",
+      TASK_NOT_ACTIONABLE: "Review Process workflow state",
+      WAITING_REVIEWER: "Review approval queue",
+    };
+    let disabled = {
+      APPROVED: "The governed Process approval has completed.",
+      NOT_STARTED:
+        "The staged publication must be submitted for governed approval before reviewers can decide.",
+      PUBLICATION_MISSING:
+        "The publication approval state is incomplete; reconcile approval before continuing.",
+      TASK_REFERENCE_MISSING:
+        "The publication has no actionable Process task reference; reconcile approval before continuing.",
+      TASK_ASSIGNEE_MISSING:
+        "The Process task needs assignee or queue evidence before Axis can present a decision path.",
+      TASK_NOT_ACTIONABLE:
+        "The Process task is not currently open, claimed, or escalated for decision.",
+      WAITING_REVIEWER:
+        "The publication is waiting for a governed Process reviewer decision.",
+    };
+    return {
+      source: "PUBLICATION_APPROVAL",
+      status: status,
+      publicationCode: publication.code ? String(publication.code) : undefined,
+      publicationState: publication.state ? String(publication.state) : undefined,
+      workflowRef: workflowRef,
+      taskCode: task && task.code ? String(task.code) : undefined,
+      taskStatus: taskStatus,
+      assignee: assignee,
+      queue: queue,
+      message: messages[status],
+      suggestedAction: actions[status],
+      disabledReason: disabled[status],
+    };
+  },
   /** Builds a backend-owned dependency projection for Axis pages without exposing implementation internals. */
   capabilityDependencies: function (profile, projection) {
     let dependencies = [];
@@ -1096,6 +1220,9 @@ module.exports = {
         code: String(pack.code),
         label: String(pack.kind || pack.code),
         required: pack.required !== false,
+        trigger: pack.trigger ? String(pack.trigger) : undefined,
+        dataType: pack.dataType ? String(pack.dataType) : undefined,
+        classification: pack.classification || this.dataPackageClassification(pack),
         server: pack.targetServer ? String(pack.targetServer) : undefined,
         runtimeRole: pack.targetRuntimeRole ? String(pack.targetRuntimeRole) : undefined,
         status: this.dependencyStatus(pack, projection),
@@ -1110,21 +1237,28 @@ module.exports = {
         code: String(module.code),
         label: String(module.label || module.code),
         required: module.required !== false,
+        classification: "FUNCTIONAL_MODULE",
         status: this.dependencyStatus(dependency, projection),
         evidence: this.dependencyEvidence(step),
       });
     });
+    let approvalDiagnostic = this.approvalWorkflowDiagnostic(projection);
     dependencies.push({
       kind: "PROCESS",
       code: "publicationApproval",
       label: "Governed publication approval",
       required: true,
       status:
-        projection && projection.readiness === "PUBLICATION_PENDING"
+        approvalDiagnostic.status === "WAITING_REVIEWER"
           ? "PENDING"
-          : projection && projection.readiness === "READY"
+          : approvalDiagnostic.status === "APPROVED"
             ? "CURRENT"
-            : "NOT_STARTED",
+            : ["TASK_REFERENCE_MISSING", "TASK_ASSIGNEE_MISSING", "TASK_NOT_ACTIONABLE", "PUBLICATION_MISSING"].includes(approvalDiagnostic.status)
+              ? "UNAVAILABLE"
+              : "NOT_STARTED",
+      evidence: {
+        approvalDiagnostic: approvalDiagnostic,
+      },
     });
     dependencies.push({
       kind: "ONLINE_PUBLICATION",
@@ -1172,6 +1306,9 @@ module.exports = {
       evidence.targetRuntimeRole = String(step.targetRuntimeRole);
     if (step.runtimeEvidence) evidence.runtimeEvidence = step.runtimeEvidence;
     if (step.runtimeDiagnostic) evidence.runtimeDiagnostic = step.runtimeDiagnostic;
+    if (step.classification) evidence.classification = String(step.classification);
+    if (step.trigger) evidence.trigger = String(step.trigger);
+    if (step.dataType) evidence.dataType = String(step.dataType);
     return Object.keys(evidence).length ? evidence : undefined;
   },
   /** Builds a compact graph so UI pages can explain cross-runtime readiness order. */
@@ -1208,14 +1345,7 @@ module.exports = {
             : "UNKNOWN",
       staged:
         projection && projection.releaseStatus ? String(projection.releaseStatus) : "UNKNOWN",
-      approval:
-        projection && projection.readiness === "PUBLICATION_PENDING"
-          ? "PENDING"
-          : blockerCodes.has("APPROVAL_TASK_MISSING")
-            ? "NEEDS_REPAIR"
-            : projection && projection.readiness === "READY"
-              ? "APPROVED"
-              : "NOT_STARTED",
+      approval: this.approvalWorkflowDiagnostic(projection).status,
       online:
         projection && projection.publication && projection.publication.state === "ONLINE"
           ? "ONLINE"
@@ -1269,6 +1399,7 @@ module.exports = {
       blockers: blockers,
       repairActions: blockers.map((blocker) => blocker.repair).filter(Boolean),
       publicationSummary: this.capabilityPublicationSummary(projection, blockers),
+      approvalDiagnostic: this.approvalWorkflowDiagnostic(projection),
       disabledReason: blockingAction ? blockingAction.disabledReason || blockingAction.message : undefined,
       nextAction:
         blockingAction?.action ||

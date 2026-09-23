@@ -103,16 +103,28 @@ Capability blockers must be stable, bounded, and client-safe:
   operation family owns it, an action code, idempotency, and confirmation
   requirements.
 - `subject`, `status`, `lastEvaluatedAt`, `source`, `stale`,
-  `dependencies`, `dependencyGraph`, `repairActions`, `publicationSummary`, and
-  `disabledReason` are backend-owned readiness facts. Axis may display these
-  fields but must not recompute readiness, runtime ownership, approval state,
-  data import completeness, media readiness, or publishability from page-local
-  state.
+  `dependencies`, `dependencyGraph`, `repairActions`, `publicationSummary`,
+  `approvalDiagnostic`, and `disabledReason` are backend-owned readiness facts.
+  Axis may display these fields but must not recompute readiness, runtime
+  ownership, approval state, data import completeness, media readiness, or
+  publishability from page-local state.
 - Runtime, module, data-release, media, Process approval and Online pointer
   dependencies must be exposed as bounded status summaries. A "No runtime"
   condition must identify whether it came from module registry state, runtime
   ownership, heartbeat/transport, or target authorization evidence whenever the
   owning diagnostic is available.
+- Data-release and media dependencies must preserve bounded classification
+  evidence (`classification`, `trigger`, and `dataType`) so Axis can group
+  framework baselines, module baselines, accelerator/sample data, project
+  overrides, runtime configuration, documentation packs, and media manifests
+  without inspecting source folders or generated manifests.
+- Process approval dependencies must carry `approvalDiagnostic` evidence when
+  publication is pending. Stable statuses include approval waiting, approved,
+  not started, publication missing, workflow/task reference missing, missing
+  assignee, and non-actionable task. The diagnostic may include sanitized
+  publication state, workflow/task reference, queue, message, suggested action,
+  and disabled reason; it must not expose raw Process records, private comments,
+  credentials, or unauthorized assignee data.
 - Module dependency rows and dependency-graph nodes may carry sanitized runtime
   evidence from the Functional Module Catalogue: runtime state, registration
   state, enabled flag, observed server identities, stale flag, and bounded

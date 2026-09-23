@@ -533,29 +533,50 @@ global.fetch = async (url) => {
     ),
     "Blocked application setup must expose capability-level guided recovery evidence",
   );
-	  assert(
-	    blockedAgora.capability.dependencies.some(
-	      (dependency) =>
-	        dependency.kind === "MODULE" &&
-	        dependency.code === "nodics.commerce" &&
-	        dependency.status === "NOT_STARTED" &&
-	        dependency.evidence &&
-	        dependency.evidence.runtimeState === "ACTIVE" &&
-	        dependency.evidence.runtimeEvidence &&
-	        dependency.evidence.runtimeEvidence.status === "ACTIVE",
-	    ),
-	    "Capability readiness must expose backend-owned dependency status for required modules",
-	  );
-	  assert(
-	    blockedAgora.capability.dependencyGraph.nodes.some(
-	      (node) =>
-	        node.id === "MODULE:nodics.commerce" &&
-	        node.evidence &&
-	        node.evidence.runtimeEvidence &&
-	        node.evidence.runtimeEvidence.source === "FUNCTIONAL_MODULE_CATALOGUE",
-	    ),
-	    "Capability readiness must expose a compact dependency graph for Axis pages",
-	  );
+  assert(
+    blockedAgora.capability.dependencies.some(
+      (dependency) =>
+        dependency.kind === "MODULE" &&
+        dependency.code === "nodics.commerce" &&
+        dependency.status === "NOT_STARTED" &&
+        dependency.classification === "FUNCTIONAL_MODULE" &&
+        dependency.evidence &&
+        dependency.evidence.runtimeState === "ACTIVE" &&
+        dependency.evidence.runtimeEvidence &&
+        dependency.evidence.runtimeEvidence.status === "ACTIVE",
+    ),
+    "Capability readiness must expose backend-owned dependency status for required modules",
+  );
+  assert(
+    blockedAgora.capability.dependencies.some(
+      (dependency) =>
+        dependency.kind === "DATA_RELEASE" &&
+        dependency.code === "agora.apparel:agoraApparelContentCatalog" &&
+        dependency.classification === "SAMPLE_DEMO" &&
+        dependency.dataType === "sample" &&
+        dependency.trigger === "USER",
+    ),
+    "Capability readiness must classify data packages for business-facing setup guidance",
+  );
+  assert(
+    blockedAgora.capability.dependencies.some(
+      (dependency) =>
+        dependency.kind === "MEDIA" &&
+        dependency.code === "agora.apparel:agoraApparelMediaAssets" &&
+        dependency.classification === "MEDIA_ASSET_MANIFEST",
+    ),
+    "Capability readiness must classify media package dependencies distinctly",
+  );
+  assert(
+    blockedAgora.capability.dependencyGraph.nodes.some(
+      (node) =>
+        node.id === "MODULE:nodics.commerce" &&
+        node.evidence &&
+        node.evidence.runtimeEvidence &&
+        node.evidence.runtimeEvidence.source === "FUNCTIONAL_MODULE_CATALOGUE",
+    ),
+    "Capability readiness must expose a compact dependency graph for Axis pages",
+  );
   assert.strictEqual(
     blockedAgora.capability.publicationSummary.runtime,
     "AVAILABLE",
@@ -568,46 +589,46 @@ global.fetch = async (url) => {
         step.status === "NOT_REGISTERED",
     ),
   );
-	  functionalModuleRecords = {
-	    "nodics.commerce": {
-	      functionalModule: "nodics.commerce",
-	      displayName: "Commerce",
-	      registeredVersion: "0.0.0",
-	      registrationState: "REGISTERED",
-	      enabled: true,
-	      runtimeState: "OFFLINE",
-	      observedServers: [],
-	    },
-	  };
-	  const offlineCommerceStatus = await service.status("agoraapparel", {
-	    tenant: "default",
-	    requestId: "request-agora-runtime-offline",
-	    authData: { principalId: "admin" },
-	    httpRequest: { headers: { authorization: "Bearer operator-token" } },
-	  });
-	  assert(
-	    offlineCommerceStatus.capability.dependencies.some(
-	      (dependency) =>
-	        dependency.kind === "MODULE" &&
-	        dependency.code === "nodics.commerce" &&
-	        dependency.status === "UNAVAILABLE" &&
-	        dependency.evidence &&
-	        dependency.evidence.runtimeEvidence &&
-	        dependency.evidence.runtimeEvidence.stale === true,
-	    ),
-	    "Offline required modules must carry stale runtime evidence into capability dependencies",
-	  );
-	  functionalModuleRecords = {
-	    "nodics.commerce": {
-	      functionalModule: "nodics.commerce",
-	      displayName: "Commerce",
-	      registeredVersion: "0.0.0",
-	      registrationState: "REGISTERED",
-	      enabled: true,
-	      runtimeState: "ACTIVE",
-	      observedServers: ["kickoffLocal:commerceServer:node-a"],
-	    },
-	  };
+  functionalModuleRecords = {
+    "nodics.commerce": {
+      functionalModule: "nodics.commerce",
+      displayName: "Commerce",
+      registeredVersion: "0.0.0",
+      registrationState: "REGISTERED",
+      enabled: true,
+      runtimeState: "OFFLINE",
+      observedServers: [],
+    },
+  };
+  const offlineCommerceStatus = await service.status("agoraapparel", {
+    tenant: "default",
+    requestId: "request-agora-runtime-offline",
+    authData: { principalId: "admin" },
+    httpRequest: { headers: { authorization: "Bearer operator-token" } },
+  });
+  assert(
+    offlineCommerceStatus.capability.dependencies.some(
+      (dependency) =>
+        dependency.kind === "MODULE" &&
+        dependency.code === "nodics.commerce" &&
+        dependency.status === "UNAVAILABLE" &&
+        dependency.evidence &&
+        dependency.evidence.runtimeEvidence &&
+        dependency.evidence.runtimeEvidence.stale === true,
+    ),
+    "Offline required modules must carry stale runtime evidence into capability dependencies",
+  );
+  functionalModuleRecords = {
+    "nodics.commerce": {
+      functionalModule: "nodics.commerce",
+      displayName: "Commerce",
+      registeredVersion: "0.0.0",
+      registrationState: "REGISTERED",
+      enabled: true,
+      runtimeState: "ACTIVE",
+      observedServers: ["kickoffLocal:commerceServer:node-a"],
+    },
+  };
   let unavailableReleaseCalls = [];
   moduleInvocationHandler = async (request) => {
     unavailableReleaseCalls.push(request);
@@ -808,12 +829,33 @@ global.fetch = async (url) => {
     "A pending publication must not advertise a duplicate initialize action",
   );
   assert.strictEqual(pendingDocsStatus.capability.businessStatus, "APPROVAL_IN_PROGRESS");
+  assert.strictEqual(
+    pendingDocsStatus.capability.approvalDiagnostic.status,
+    "TASK_REFERENCE_MISSING",
+  );
+  assert.strictEqual(
+    pendingDocsStatus.capability.publicationSummary.approval,
+    "TASK_REFERENCE_MISSING",
+  );
+  assert(
+    pendingDocsStatus.capability.dependencies.some(
+      (dependency) =>
+        dependency.kind === "PROCESS" &&
+        dependency.status === "UNAVAILABLE" &&
+        dependency.evidence &&
+        dependency.evidence.approvalDiagnostic &&
+        dependency.evidence.approvalDiagnostic.status === "TASK_REFERENCE_MISSING",
+    ),
+    "Process dependency must expose backend-owned approval workflow diagnostics",
+  );
   assert(
     pendingDocsStatus.capability.blockers.some(
       (blocker) =>
         blocker.code === "APPROVAL_TASK_MISSING" &&
         blocker.ownerType === "PROCESS_WORKFLOW" &&
         blocker.source === "PUBLICATION_APPROVAL" &&
+        blocker.approvalDiagnostic &&
+        blocker.approvalDiagnostic.status === "TASK_REFERENCE_MISSING" &&
         /no actionable Process task/.test(blocker.disabledReason) &&
         blocker.action === "Reconcile publication approval" &&
         blocker.repair &&
