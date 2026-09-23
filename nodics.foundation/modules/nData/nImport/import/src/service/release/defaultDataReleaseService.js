@@ -398,6 +398,11 @@ module.exports = {
     let executablePlan = this.executablePlan(plan, operationReleases);
     for (const release of executablePlan.releases)
       await this.resolveCompositionSources(plan, release, true);
+    let dryRun = this.buildDryRunSummary(
+      plan,
+      operationReleases,
+      executablePlan,
+    );
     let validation = {
       validationOnly: true,
       importExecuted: false,
@@ -414,8 +419,109 @@ module.exports = {
         tenant: plan.tenant,
         releases: operationReleases,
         validation: validation,
+        dryRun: dryRun,
       },
     };
+  },
+
+  /** Builds a release-level dry-run summary without claiming row-level import effects. */
+  buildDryRunSummary: function (plan, operationReleases, executablePlan) {
+    const executableCodes = new Set(
+      (executablePlan.releases || []).map((release) => release.releaseCode),
+    );
+    const outcomes = operationReleases.map((release) =>
+      this.dryRunReleaseOutcome(release, executableCodes),
+    );
+    const summary = {
+      install: outcomes.filter((outcome) => outcome.operation === "INSTALL")
+        .length,
+      update: outcomes.filter((outcome) => outcome.operation === "UPDATE")
+        .length,
+      retry: outcomes.filter((outcome) => outcome.operation === "RETRY")
+        .length,
+      skip: outcomes.filter((outcome) => outcome.operation === "SKIP_CURRENT")
+        .length,
+      blocked: outcomes.filter((outcome) => outcome.operation === "BLOCKED")
+        .length,
+      wait: outcomes.filter((outcome) => outcome.operation === "WAIT").length,
+    };
+    const messages = [];
+    if (operationReleases.length === 0) {
+      messages.push("No data release matched this dry-run selection.");
+    } else if ((executablePlan.releases || []).length === 0) {
+      messages.push(
+        "Every selected data release is already current; no import will run.",
+      );
+    } else {
+      messages.push(
+        "Dry-run validated the selected release plan. No data was imported.",
+      );
+    }
+    if (summary.blocked > 0)
+      messages.push(
+        "Repair blocked releases before they can be installed or updated.",
+      );
+    if (summary.wait > 0)
+      messages.push(
+        "Wait for running imports to complete, then refresh readiness.",
+      );
+    return {
+      mode: "VALIDATE",
+      validationOnly: true,
+      importExecuted: false,
+      dataType: plan.dataType,
+      tenant: plan.tenant,
+      totalReleases: operationReleases.length,
+      executableReleases: (executablePlan.releases || []).length,
+      alreadyCurrent: outcomes.filter(
+        (outcome) => outcome.operation === "SKIP_CURRENT",
+      ).length,
+      blockedReleases: summary.blocked,
+      summary: summary,
+      outcomes: outcomes,
+      messages: messages,
+    };
+  },
+
+  /** Projects one release's dry-run effect using the same readiness contract as Axis. */
+  dryRunReleaseOutcome: function (release, executableCodes) {
+    const readiness = this.releaseReadinessProjection(release);
+    const executable = executableCodes.has(release.releaseCode);
+    const operation = this.dryRunOperation(release.status, executable);
+    return {
+      releaseCode: release.releaseCode,
+      displayName: release.displayName,
+      moduleName: release.moduleName,
+      status: release.status,
+      operation: operation,
+      impact: this.dryRunImpact(operation),
+      nextAction: readiness.nextAction,
+      blockers: readiness.blockers,
+    };
+  },
+
+  /** Maps immutable release state to a business-readable dry-run operation. */
+  dryRunOperation: function (status, executable) {
+    if (executable && status === "NOT_INSTALLED") return "INSTALL";
+    if (executable && status === "UPDATE_AVAILABLE") return "UPDATE";
+    if (executable && status === "FAILED") return "RETRY";
+    if (status === "CURRENT") return "SKIP_CURRENT";
+    if (status === "RUNNING") return "WAIT";
+    return "BLOCKED";
+  },
+
+  /** Explains the effect of a release-level dry-run operation. */
+  dryRunImpact: function (operation) {
+    return (
+      {
+        INSTALL: "Release will be installed for this runtime.",
+        UPDATE: "Installed release will be updated to the available version.",
+        RETRY: "The previous failed release import will be retried.",
+        SKIP_CURRENT: "No import will run because the release is already current.",
+        WAIT: "Import is already running; refresh after it completes.",
+        BLOCKED: "Release cannot be imported until its readiness blocker is repaired.",
+      }[operation] || "Review release readiness before continuing."
+    );
   },
 
   /** Executes an operator-selected plan through the existing release authority. */

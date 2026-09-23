@@ -167,6 +167,12 @@ const routers = require('../src/router/routers');
     assert.strictEqual(preflight.data.validation.validationOnly, true);
     assert.strictEqual(preflight.data.validation.importExecuted, false);
     assert.strictEqual(preflight.data.validation.skipped, false);
+    assert.strictEqual(preflight.data.dryRun.validationOnly, true);
+    assert.strictEqual(preflight.data.dryRun.importExecuted, false);
+    assert.strictEqual(preflight.data.dryRun.executableReleases, 1);
+    assert.strictEqual(preflight.data.dryRun.summary.retry, 1);
+    assert.strictEqual(preflight.data.dryRun.outcomes[0].operation, 'RETRY');
+    assert.strictEqual(preflight.data.dryRun.outcomes[0].nextAction, 'Retry failed import');
     assert.strictEqual(preflight.data.releases[0].status, 'FAILED');
     assert.strictEqual(installations.length, 1);
     assert.strictEqual(importAttempts, 1);
@@ -211,6 +217,9 @@ const routers = require('../src/router/routers');
     assert.strictEqual(preflight.data.releases[0].status, 'CURRENT');
     assert.strictEqual(preflight.data.validation.skipped, true);
     assert.strictEqual(preflight.data.validation.importExecuted, false);
+    assert.strictEqual(preflight.data.dryRun.executableReleases, 0);
+    assert.strictEqual(preflight.data.dryRun.summary.skip, 1);
+    assert.strictEqual(preflight.data.dryRun.outcomes[0].operation, 'SKIP_CURRENT');
     assert.strictEqual(importAttempts, 2);
 
     await assert.rejects(() => service.execute({
