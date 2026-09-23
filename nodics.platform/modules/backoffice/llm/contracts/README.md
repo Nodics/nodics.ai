@@ -32,6 +32,37 @@
 - Framework capability help must link to framework documentation routes. Use
   Axis-only documentation only for concepts that are truly Axis-client specific.
 
+## Startup and configuration validation
+
+BackOffice owns the operator-facing startup validation projection. It may
+aggregate configuration invariants and module-declared risk rules, but it must
+not become a second configuration authority. Values still come from nConfig
+layering: framework defaults, active module/server/project layers, external
+private configuration, tenant overrides, and persisted runtime configuration
+where the owning schema allows it.
+
+Startup validation reports are exposed through authenticated bootstrap as
+`startupValidation` with state `READY`, `NEEDS_ATTENTION`, or `NOT_READY`.
+Findings use stable `ERROR`, `WARNING`, and `INFO` severities and must include
+`code`, `owner`, `ownerType`, `message`, `action`, `dismissible`, and
+`auditRequired`. A finding may include a bounded `propertyPath`, but it must
+never include the actual property value, expected secret, token, password, API
+key, private file path, or raw persisted configuration payload.
+
+Owning modules should define safe defaults and declarative risk rules at their
+own layer. Customer projects should override only genuine project-specific
+values. Do not create `.env` as a Nodics configuration mechanism, and do not
+move generic startup rules into a customer project. External private
+configuration may supply deployment-specific sensitive values through existing
+nConfig external loading.
+
+Axis may render startup validation, route the operator to the backend-owned
+Runtime Configuration workspace when available, and later invoke governed
+dismissal/acknowledgement operations. Axis must not recompute whether a
+password, token, API key, runtime identity, or required property is acceptable.
+Dismissible findings still require an auditable backend acknowledgement before
+a partner can claim the warning was reviewed.
+
 Validation:
 
 ```bash

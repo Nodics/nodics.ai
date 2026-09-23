@@ -55,6 +55,21 @@ assert(
 assert(contracts.bootstrapData.required.includes("axisPolicy"));
 assert(contracts.bootstrapData.required.includes("tenantCode"));
 assert(contracts.bootstrapData.required.includes("documentationSources"));
+assert(contracts.bootstrapData.required.includes("startupValidation"));
+assert.deepStrictEqual(contracts.startupValidationReport.properties.state.enum, [
+  "READY",
+  "NEEDS_ATTENTION",
+  "NOT_READY",
+]);
+assert.deepStrictEqual(contracts.startupValidationFinding.properties.severity.enum, [
+  "ERROR",
+  "WARNING",
+  "INFO",
+]);
+assert(
+  contracts.startupValidationFinding.required.includes("auditRequired"),
+  "startup validation warnings must declare whether dismissal/acknowledgement is auditable",
+);
 assert.deepStrictEqual(contracts.documentationSource.properties.type.enum, [
   "CMS",
   "OPENAPI",

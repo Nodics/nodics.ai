@@ -952,6 +952,45 @@ const moduleLease = {
     backoffice: backofficeMetadata,
   },
 };
+const startupValidationFinding = {
+  type: "object",
+  additionalProperties: false,
+  required: ["code", "severity", "owner", "ownerType", "message", "action", "dismissible", "auditRequired"],
+  properties: {
+    code: { type: "string", minLength: 1, maxLength: 128 },
+    severity: { enum: ["ERROR", "WARNING", "INFO"] },
+    owner: { type: "string", minLength: 1, maxLength: 128 },
+    ownerType: { type: "string", minLength: 1, maxLength: 128 },
+    propertyPath: { type: "string", minLength: 1, maxLength: 256 },
+    message: { type: "string", minLength: 1, maxLength: 512 },
+    action: { type: "string", minLength: 1, maxLength: 1024 },
+    dismissible: { type: "boolean" },
+    auditRequired: { type: "boolean" },
+  },
+};
+const startupValidationReport = {
+  type: "object",
+  additionalProperties: false,
+  required: ["state", "checkedAt", "source", "summary", "findings"],
+  properties: {
+    state: { enum: ["READY", "NEEDS_ATTENTION", "NOT_READY"] },
+    checkedAt: { type: "string", format: "date-time" },
+    source: { type: "string", minLength: 1, maxLength: 128 },
+    summary: {
+      type: "object",
+      additionalProperties: false,
+      required: ["total", "errors", "warnings", "info", "dismissible"],
+      properties: {
+        total: { type: "integer", minimum: 0 },
+        errors: { type: "integer", minimum: 0 },
+        warnings: { type: "integer", minimum: 0 },
+        info: { type: "integer", minimum: 0 },
+        dismissible: { type: "integer", minimum: 0 },
+      },
+    },
+    findings: { type: "array", maxItems: 128, items: startupValidationFinding },
+  },
+};
 
 module.exports = {
   registrationResult: {
@@ -991,6 +1030,8 @@ module.exports = {
   uiCompositionSelection: uiCompositionSelection,
   moduleAvailability: moduleAvailability,
   instanceAvailability: instanceAvailability,
+  startupValidationFinding: startupValidationFinding,
+  startupValidationReport: startupValidationReport,
   adminListData: {
     type: "object",
     required: ["total", "offset", "limit", "items"],
@@ -1263,6 +1304,7 @@ module.exports = {
       "uiComposition",
       "documentationSources",
       "axisPolicy",
+      "startupValidation",
       "tenantCode",
     ],
     properties: {
@@ -1276,6 +1318,7 @@ module.exports = {
       uiComposition: uiCompositionSelection,
       documentationSources: { type: "array", items: documentationSelection },
       axisPolicy: axisPolicy,
+      startupValidation: startupValidationReport,
       tenantCode: { type: "string" },
     },
   },

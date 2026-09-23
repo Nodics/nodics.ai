@@ -115,6 +115,21 @@ global.SERVICE = {
       return Promise.resolve(event);
     },
   },
+  DefaultBackofficeOperationalReadinessService: {
+    assess: () => ({
+      state: "READY",
+      checkedAt: "2026-07-27T00:00:00.000Z",
+      alerts: [],
+    }),
+    publishAssessment: () => Promise.resolve(false),
+    startupValidationReport: () => ({
+      state: "READY",
+      checkedAt: "2026-07-27T00:00:00.000Z",
+      source: "backoffice.operationalReadiness",
+      summary: { total: 0, errors: 0, warnings: 0, info: 0, dismissible: 0 },
+      findings: [],
+    }),
+  },
   DefaultBackofficeContractRepositoryService: {
     getOperationalDiagnostics: (request) => {
       diagnosticsAuthData = request && request.authData;
@@ -773,6 +788,8 @@ async function run() {
   );
   assert.strictEqual(bootstrap.data.axisPolicy.idleTimeoutSeconds, 900);
   assert.strictEqual(bootstrap.data.axisPolicy.recentNavigationLimit, 12);
+  assert.strictEqual(bootstrap.data.startupValidation.state, "READY");
+  assert.strictEqual(bootstrap.data.startupValidation.source, "backoffice.operationalReadiness");
   assert(Array.isArray(bootstrap.data.documentationSources));
   assert.strictEqual(bootstrap.data.tenantCode, "default");
   assert.strictEqual(

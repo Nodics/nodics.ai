@@ -1467,6 +1467,16 @@ module.exports = {
         "ERR_BOF_00000",
         "Axis employee policy is unavailable",
       );
+    let startupValidation = SERVICE.DefaultBackofficeOperationalReadinessService &&
+      typeof SERVICE.DefaultBackofficeOperationalReadinessService.startupValidationReport === "function"
+      ? SERVICE.DefaultBackofficeOperationalReadinessService.startupValidationReport(request)
+      : {
+          state: "READY",
+          checkedAt: new Date().toISOString(),
+          source: "backoffice.operationalReadiness",
+          summary: { total: 0, errors: 0, warnings: 0, info: 0, dismissible: 0 },
+          findings: [],
+        };
     return {
       code: "SUC_BOF_00004",
       data: {
@@ -1485,6 +1495,7 @@ module.exports = {
           : [],
         documentationSources: documentationSources,
         axisPolicy: axisPolicy,
+        startupValidation: startupValidation,
         tenantCode: request.tenant,
       },
     };

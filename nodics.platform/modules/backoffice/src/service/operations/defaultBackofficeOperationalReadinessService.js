@@ -30,6 +30,133 @@ module.exports = {
     postInit: function () { return Promise.resolve(true); },
     /** Returns layered operations policy. */
     getConfiguration: function () { return (CONFIG.get('backofficeRegistry') || {}).operations || {}; },
+    /** Safely resolves a layered configuration path without exposing the value to clients. */
+    resolveConfigurationPath: function (path) {
+        let segments = String(path || '').split('.').filter(Boolean);
+        if (segments.length === 0) return undefined;
+        let value = CONFIG.get(segments.shift());
+        while (segments.length > 0 && value !== undefined && value !== null) {
+            value = value[segments.shift()];
+        }
+        return value;
+    },
+    /** Returns true when a configured value looks like a sample/local bootstrap secret. */
+    isSampleOrLocalValue: function (value) {
+        if (typeof value !== 'string') return false;
+        let normalized = value.trim().toLowerCase();
+        if (!normalized) return false;
+        if (normalized === 'adminpassword') return true;
+        return ['sample', 'local', 'test', 'default', 'change-me', 'changeme', 'placeholder']
+            .some(fragment => normalized.includes(fragment));
+    },
+    /** Creates one client-safe startup finding. */
+    startupFinding: function (code, severity, owner, message, action, options) {
+        options = options || {};
+        return {
+            code: String(code),
+            severity: ['ERROR', 'WARNING', 'INFO'].includes(String(severity)) ? String(severity) : 'WARNING',
+            owner: String(owner || 'backoffice'),
+            ownerType: String(options.ownerType || 'CONFIGURATION'),
+            propertyPath: options.propertyPath ? String(options.propertyPath) : undefined,
+            message: String(message),
+            action: String(action),
+            dismissible: options.dismissible === true,
+            auditRequired: options.auditRequired === true,
+        };
+    },
+    /** Validates mandatory non-secret property presence declared by owning modules. */
+    collectMandatoryPropertyFindings: function (policy) {
+        return [].concat(policy.requiredProperties || []).map(rule => {
+            let value = this.resolveConfigurationPath(rule.path);
+            if (value !== undefined && value !== null && String(value).trim() !== '') return undefined;
+            return this.startupFinding(
+                rule.code || 'MANDATORY_CONFIGURATION_MISSING',
+                rule.severity || 'ERROR',
+                rule.owner || 'backoffice',
+                rule.message || 'A mandatory runtime configuration value is missing.',
+                rule.action || 'Add the value in the owning module, server, tenant, or external configuration layer.',
+                { ownerType: rule.ownerType, propertyPath: rule.path, dismissible: rule.dismissible, auditRequired: rule.auditRequired }
+            );
+        }).filter(Boolean);
+    },
+    /** Flags configured default/sample values without returning the sensitive value. */
+    collectDefaultValueRiskFindings: function (policy) {
+        return [].concat(policy.defaultValueRisks || []).map(rule => {
+            let value = this.resolveConfigurationPath(rule.path);
+            if (value === undefined || value === null || String(value).trim() === '') return undefined;
+            let risky = rule.match === 'SAMPLE_OR_LOCAL_STRING' ? this.isSampleOrLocalValue(value) : false;
+            if (!risky) return undefined;
+            return this.startupFinding(
+                rule.code || 'DEFAULT_CONFIGURATION_VALUE_ACTIVE',
+                rule.severity || 'WARNING',
+                rule.owner || 'backoffice',
+                rule.message || 'A sample/default runtime configuration value is active.',
+                rule.action || 'Replace the value through the owning configuration layer before non-local use.',
+                { ownerType: rule.ownerType, propertyPath: rule.path, dismissible: rule.dismissible !== false, auditRequired: rule.auditRequired !== false }
+            );
+        }).filter(Boolean);
+    },
+    /** Maps operational configuration failures to startup findings with repair guidance. */
+    collectConfigurationFailureFindings: function () {
+        let messages = {
+            LEASE_TTL_NOT_GREATER_THAN_SWEEP: 'Registry lease timing is invalid.',
+            DISTRIBUTED_STORE_REQUIRED: 'A distributed registry store is required by policy.',
+            DISTRIBUTED_STORE_COORDINATES_INVALID: 'Distributed registry store coordinates are incomplete.',
+            AVAILABILITY_PRESSURE_LIMIT_INVALID: 'Runtime availability pressure limits are invalid.',
+            AVAILABILITY_FRESHNESS_INVALID: 'Availability freshness timing is invalid.',
+            OPERATION_THRESHOLD_INVALID: 'Operational readiness thresholds are invalid.',
+            OPERATION_SAMPLE_LIMIT_INVALID: 'Operational sample limits are invalid.',
+            PRODUCTION_DISTRIBUTED_STORE_REQUIRED: 'Production mode requires a distributed registry store.',
+            PRODUCTION_HTTPS_REQUIRED: 'Production mode requires HTTPS-only runtime registration.',
+            PRODUCTION_HOST_ALLOWLIST_REQUIRED: 'Production mode requires runtime host allowlists.',
+            PRODUCTION_AUDIT_DELIVERY_REQUIRED: 'Production mode requires strict audit delivery.',
+            PRODUCTION_AUDIT_PUBLISHER_UNAVAILABLE: 'The configured production audit publisher is unavailable.',
+            PRODUCTION_ALERT_DELIVERY_REQUIRED: 'Production mode requires strict alert delivery.',
+            PRODUCTION_ALERT_PUBLISHER_UNAVAILABLE: 'The configured production alert publisher is unavailable.',
+            PRODUCTION_HUMAN_ADMIN_REQUIRED: 'Production mode requires human administrator actions.'
+        };
+        return this.validateConfiguration().failures.map(code => this.startupFinding(
+            code,
+            'ERROR',
+            'backoffice',
+            messages[code] || 'BackOffice operational configuration is invalid.',
+            'Repair the owning BackOffice operations configuration and restart the affected runtime.',
+            { ownerType: 'BACKOFFICE_OPERATIONS', dismissible: false, auditRequired: true }
+        ));
+    },
+    /** Produces a sanitized startup/configuration validation report for Axis and operators. */
+    startupValidationReport: function () {
+        let operations = this.getConfiguration();
+        let policy = operations.startupValidation || {};
+        if (policy.enabled === false) {
+            return { state: 'READY', checkedAt: new Date().toISOString(), source: 'backoffice.operationalReadiness',
+                summary: { total: 0, errors: 0, warnings: 0, info: 0, dismissible: 0 }, findings: [] };
+        }
+        let findings = []
+            .concat(this.collectConfigurationFailureFindings())
+            .concat(this.collectMandatoryPropertyFindings(policy))
+            .concat(this.collectDefaultValueRiskFindings(policy))
+            .filter(Boolean)
+            .sort((left, right) => {
+                let order = { ERROR: 0, WARNING: 1, INFO: 2 };
+                return order[left.severity] - order[right.severity] || left.code.localeCompare(right.code);
+            });
+        let summary = findings.reduce((result, finding) => {
+            result.total++;
+            if (finding.severity === 'ERROR') result.errors++;
+            else if (finding.severity === 'WARNING') result.warnings++;
+            else result.info++;
+            if (finding.dismissible === true) result.dismissible++;
+            return result;
+        }, { total: 0, errors: 0, warnings: 0, info: 0, dismissible: 0 });
+        return {
+            state: summary.errors > 0 ? 'NOT_READY' : summary.warnings > 0 ? 'NEEDS_ATTENTION' : 'READY',
+            checkedAt: new Date().toISOString(),
+            source: 'backoffice.operationalReadiness',
+            summary: summary,
+            findings: findings
+        };
+    },
     /** Validates cross-setting invariants without reading or returning secrets. */
     validateConfiguration: function () {
         let registry = CONFIG.get('backofficeRegistry') || {};

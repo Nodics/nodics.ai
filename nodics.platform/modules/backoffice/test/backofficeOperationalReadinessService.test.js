@@ -17,7 +17,16 @@
  */
 const assert = require('assert');
 let registry = require('../config/properties').backofficeRegistry;
-global.CONFIG = { get: key => key === 'backofficeRegistry' ? registry : undefined };
+let bootstrapIdentity = {
+    source: 'localSample',
+    adminPassword: 'local-admin-password-12345',
+};
+let defaultAuthDetail = {
+    apiKey: 'local-runtime-api-key-with-at-least-thirty-two-characters',
+};
+global.CONFIG = { get: key => key === 'backofficeRegistry' ? registry :
+    key === 'bootstrapIdentity' ? bootstrapIdentity :
+        key === 'defaultAuthDetail' ? defaultAuthDetail : undefined };
 let readinessContributor;
 let publishedAlerts = [];
 global.SERVICE = { AuditPublisher: { record: () => Promise.resolve(true) },
@@ -53,6 +62,26 @@ let originalThreshold = registry.operations.thresholds.availabilityFailurePercen
 registry.operations.thresholds.availabilityFailurePercent = 101;
 assert(service.validateConfiguration().failures.includes('OPERATION_THRESHOLD_INVALID'));
 registry.operations.thresholds.availabilityFailurePercent = originalThreshold;
+let startupReport = service.startupValidationReport();
+assert.strictEqual(startupReport.state, 'NEEDS_ATTENTION');
+assert.strictEqual(startupReport.summary.warnings, 3);
+assert(startupReport.findings.some(finding => finding.code === 'LOCAL_SAMPLE_ADMIN_PASSWORD'));
+assert(startupReport.findings.some(finding => finding.propertyPath === 'defaultAuthDetail.apiKey'));
+assert(!JSON.stringify(startupReport).includes(defaultAuthDetail.apiKey));
+assert(!JSON.stringify(startupReport).includes(bootstrapIdentity.adminPassword));
+let originalRequiredProperties = registry.operations.startupValidation.requiredProperties;
+registry.operations.startupValidation.requiredProperties = [{
+    code: 'MISSING_TEST_PROPERTY',
+    owner: 'testModule',
+    ownerType: 'TEST',
+    path: 'missing.required.value',
+    message: 'A required test property is missing.',
+    action: 'Configure the missing test value.'
+}];
+let missingReport = service.startupValidationReport();
+assert.strictEqual(missingReport.state, 'NOT_READY');
+assert(missingReport.findings.some(finding => finding.code === 'MISSING_TEST_PROPERTY'));
+registry.operations.startupValidation.requiredProperties = originalRequiredProperties;
 
 async function validateDeliveryAndProductionPolicy() {
     registry.operations.alerts = { enabled: true, failClosed: true, requireAcknowledgement: true,
