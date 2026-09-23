@@ -26,7 +26,10 @@ let defaultAuthDetail = {
 };
 global.CONFIG = { get: key => key === 'backofficeRegistry' ? registry :
     key === 'bootstrapIdentity' ? bootstrapIdentity :
-        key === 'defaultAuthDetail' ? defaultAuthDetail : undefined };
+        key === 'defaultAuthDetail' ? defaultAuthDetail :
+            key === 'runtimeRole' ? { code: 'PLATFORM' } :
+                key === 'search' ? { default: { options: { enabled: false, fallback: false, engine: 'elastic' } },
+                    runtimeRoleProfiles: { PLATFORM: { discoveryProjection: { options: { enabled: true } } } } } : undefined };
 let readinessContributor;
 let publishedAlerts = [];
 let auditEvents = [];
@@ -46,6 +49,9 @@ global.SERVICE = { AuditPublisher: { record: () => Promise.resolve(true) },
             nextAction: 'Monitor Online readiness'
         }
     }) },
+    DefaultBackofficeDiscoveryService: { getDiagnostics: () => ({ attempts: 2, successes: 2, failures: 0,
+        lastSuccessAt: '2026-09-24T00:00:00.000Z', activeSnapshots: 2, inflight: 0 }) },
+    DefaultSearchConfigurationService: { getSearchReadiness: () => true },
     DefaultHealthService: { registerReadinessContributor: (name, contributor) => {
     assert.strictEqual(name, 'backofficeOperationalConfiguration'); readinessContributor = contributor;
 } } };
@@ -172,6 +178,12 @@ async function validateDeliveryAndProductionPolicy() {
         && section.businessStatus === 'READY'
         && section.summary.readyOrNotRequiredCount === 1
         && section.summary.cleanupReviewRoute === '/media/cleanup-candidates'));
+    assert(aggregateReport.sections.some(section => section.key === 'search'
+        && section.businessStatus === 'READY'
+        && section.summary.runtimeRole === 'PLATFORM'
+        && section.summary.readSourcePolicy === 'SEARCH_ENGINE'
+        && section.summary.runtimeProfileCount === 1
+        && section.summary.discoveryAttempts === 2));
     assert(aggregateReport.sections.some(section => section.key === 'documentation'
         && section.businessStatus === 'READY'));
     assert(aggregateReport.sections.some(section => section.key === 'runtimeCommunication'

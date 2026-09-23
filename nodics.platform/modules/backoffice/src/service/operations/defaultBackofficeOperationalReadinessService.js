@@ -754,6 +754,118 @@ module.exports = {
                     'Configure application/media preparation profiles before validating media readiness.',
         };
     },
+    /** Summarizes nSearch/read-source configuration without requiring custom-project runtime settings. */
+    searchConfigurationSummary: function () {
+        let search = CONFIG.get('search') || {};
+        let defaultOptions = (search.default || {}).options || {};
+        let runtimeRoleConfig = CONFIG.get('runtimeRole') || {};
+        let runtimeRole = runtimeRoleConfig.code || runtimeRoleConfig.name || runtimeRoleConfig.roleCode || undefined;
+        let runtimeProfile = runtimeRole && search.runtimeRoleProfiles ? search.runtimeRoleProfiles[String(runtimeRole)] : undefined;
+        let profileEntries = Object.entries(runtimeProfile || {}).filter(entry => {
+            let value = entry[1] || {};
+            return value.options && value.options.enabled === true;
+        });
+        let defaultEnabled = defaultOptions.enabled === true;
+        let fallbackEnabled = defaultOptions.fallback === true;
+        let engine = defaultOptions.engine || 'database';
+        return {
+            runtimeRole: runtimeRole ? String(runtimeRole) : 'UNKNOWN',
+            engine: String(engine),
+            defaultSearchEnabled: defaultEnabled,
+            defaultFallbackEnabled: fallbackEnabled,
+            runtimeProfileCount: profileEntries.length,
+            runtimeProfileCodes: profileEntries.map(entry => String(entry[0])),
+            readSourcePolicy: fallbackEnabled ? 'SEARCH_WITH_DATABASE_FALLBACK' :
+                defaultEnabled || profileEntries.length > 0 ? 'SEARCH_ENGINE' : 'DATABASE_OR_OWNER_DEFAULT',
+        };
+    },
+    /** Returns bounded discovery/search diagnostics from owner services. */
+    searchReadinessEvidence: function (context) {
+        context = context || {};
+        let diagnostics = SERVICE.DefaultBackofficeDiscoveryService &&
+            typeof SERVICE.DefaultBackofficeDiscoveryService.getDiagnostics === 'function' ?
+                SERVICE.DefaultBackofficeDiscoveryService.getDiagnostics() : {};
+        let searchReady;
+        if (SERVICE.DefaultSearchConfigurationService &&
+            typeof SERVICE.DefaultSearchConfigurationService.getSearchReadiness === 'function') {
+            try {
+                searchReady = SERVICE.DefaultSearchConfigurationService.getSearchReadiness();
+            } catch (error) {
+                searchReady = false;
+            }
+        }
+        let moduleEntries = Object.entries(context.modules || {}).reduce((result, entry) => result.concat((entry[1] || [])
+            .map(item => Object.assign({ moduleName: entry[0] }, item))), []);
+        let activeSearchModules = moduleEntries.filter(item => /search/i.test(String(item.moduleName || item.module || item.name || '')));
+        let activeDiscoveryModules = moduleEntries.filter(item => /discovery/i.test(String(item.moduleName || item.module || item.name || '')));
+        return {
+            diagnostics: diagnostics || {},
+            searchReady: searchReady,
+            activeSearchModuleCount: activeSearchModules.length,
+            activeDiscoveryModuleCount: activeDiscoveryModules.length,
+        };
+    },
+    /** Builds owner-backed readiness for search indexes and database/search read-source policy. */
+    searchSection: function (context) {
+        let configuration = this.searchConfigurationSummary();
+        let evidence = this.searchReadinessEvidence(context);
+        let diagnostics = evidence.diagnostics || {};
+        let blockers = [];
+        if (evidence.searchReady === false) blockers.push(this.readinessBlocker(
+            'SEARCH_ENGINE_UNAVAILABLE',
+            'NEEDS_ATTENTION',
+            'SEARCH',
+            'NSEARCH_RUNTIME',
+            'Open Search controls',
+            'One or more initialized search engine clients are unavailable.',
+            { repairOperation: 'search.refreshEngines', repairAction: 'REFRESH_SEARCH_ENGINE',
+                suggestedAction: 'Open Search controls, verify the active read-source policy, and repair the unavailable engine.' }
+        ));
+        if ((diagnostics.failures || 0) > 0 || diagnostics.lastFailureCode) {
+            let blocker = this.readinessBlocker(
+                'DISCOVERY_CONTRACT_SYNC_FAILED',
+                'NEEDS_ATTENTION',
+                'DISCOVERY',
+                'BACKOFFICE_DISCOVERY',
+                'Open Discovery controls',
+                'BackOffice discovery has recent contract synchronization failures.',
+                { repairOperation: 'discovery.refreshContracts', repairAction: 'REFRESH_DISCOVERY_CONTRACTS',
+                    suggestedAction: 'Open Discovery controls, refresh owner module contracts, and inspect the latest failure code.' }
+            );
+            blocker.lastFailureCode = diagnostics.lastFailureCode ? String(diagnostics.lastFailureCode) : undefined;
+            blocker.lastFailureAt = diagnostics.lastFailureAt;
+            blockers.push(blocker);
+        }
+        let hasConfiguredSearch = configuration.defaultSearchEnabled || configuration.runtimeProfileCount > 0 ||
+            evidence.activeSearchModuleCount > 0 || evidence.activeDiscoveryModuleCount > 0 ||
+            (diagnostics.attempts || 0) > 0 || (diagnostics.activeSnapshots || 0) > 0;
+        return {
+            key: 'search',
+            title: 'Search indexes and read-source policy',
+            businessStatus: blockers.length ? 'NEEDS_ATTENTION' : hasConfiguredSearch ? 'READY' : 'NOT_CONFIGURED',
+            ownerModule: 'search',
+            source: 'NSEARCH_CONFIGURATION',
+            route: '/discovery',
+            summary: {
+                runtimeRole: configuration.runtimeRole,
+                engine: configuration.engine,
+                readSourcePolicy: configuration.readSourcePolicy,
+                defaultSearchEnabled: configuration.defaultSearchEnabled,
+                defaultFallbackEnabled: configuration.defaultFallbackEnabled,
+                runtimeProfileCount: configuration.runtimeProfileCount,
+                activeSearchModuleCount: evidence.activeSearchModuleCount,
+                activeDiscoveryModuleCount: evidence.activeDiscoveryModuleCount,
+                discoveryAttempts: diagnostics.attempts || 0,
+                discoveryFailures: diagnostics.failures || 0,
+                discoveryLastSuccessAt: diagnostics.lastSuccessAt,
+                discoveryLastFailureAt: diagnostics.lastFailureAt,
+            },
+            blockers: blockers,
+            nextAction: blockers.length ? 'Open Discovery/Search controls and reconcile search engine or contract synchronization failures.' :
+                hasConfiguredSearch ? 'Search/read-source readiness evidence is available.' :
+                    'Enable an owner search/read-source profile when the runtime must render from search indexes.',
+        };
+    },
     /** Builds the canonical post-reset operational readiness aggregate for Axis and tooling. */
     operationalReadinessReport: async function (request, context) {
         context = context || {};
@@ -803,7 +915,7 @@ module.exports = {
             this.approvalSection(profileStatusReport),
             this.documentationSection(context.documentationSources, context.documentationPublication),
             this.mediaSection(profileStatusReport),
-            this.ownerPendingSection('search', 'Search index and read-source policy', 'search', '/discovery', 'SEARCH_READINESS', 'Open Discovery/Search controls and verify index freshness.'),
+            this.searchSection(context),
             this.ownerPendingSection('assistant', 'Assistant knowledge sources', 'assistant', '/assistant', 'ASSISTANT_KNOWLEDGE_READINESS', 'Install/publish/index authorized knowledge sources.'),
             this.applicationSection(context.applicationInitializationProfiles),
         ];
