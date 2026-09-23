@@ -1000,10 +1000,37 @@ const startupValidationFinding = {
     auditRequired: { type: "boolean" },
   },
 };
+const startupBootstrapCheck = {
+  type: "object",
+  additionalProperties: false,
+  required: ["code", "state", "owner", "ownerType", "message", "action", "auditRequired"],
+  properties: {
+    code: { type: "string", minLength: 1, maxLength: 128 },
+    state: { enum: ["READY", "MISSING", "NEEDS_ATTENTION"] },
+    owner: { type: "string", minLength: 1, maxLength: 128 },
+    ownerType: { type: "string", minLength: 1, maxLength: 128 },
+    propertyPath: { type: "string", minLength: 1, maxLength: 256 },
+    message: { type: "string", minLength: 1, maxLength: 512 },
+    action: { type: "string", minLength: 1, maxLength: 1024 },
+    auditRequired: { type: "boolean" },
+  },
+};
+const startupBootstrapChecks = {
+  type: "object",
+  additionalProperties: false,
+  required: ["total", "ready", "missing", "needsAttention", "checks"],
+  properties: {
+    total: { type: "integer", minimum: 0 },
+    ready: { type: "integer", minimum: 0 },
+    missing: { type: "integer", minimum: 0 },
+    needsAttention: { type: "integer", minimum: 0 },
+    checks: { type: "array", maxItems: 128, items: startupBootstrapCheck },
+  },
+};
 const startupValidationReport = {
   type: "object",
   additionalProperties: false,
-  required: ["state", "checkedAt", "source", "summary", "findings"],
+  required: ["state", "checkedAt", "source", "summary", "bootstrapChecks", "findings"],
   properties: {
     state: { enum: ["READY", "NEEDS_ATTENTION", "NOT_READY"] },
     checkedAt: { type: "string", format: "date-time" },
@@ -1020,6 +1047,7 @@ const startupValidationReport = {
         dismissible: { type: "integer", minimum: 0 },
       },
     },
+    bootstrapChecks: startupBootstrapChecks,
     findings: { type: "array", maxItems: 128, items: startupValidationFinding },
   },
 };
@@ -1063,6 +1091,8 @@ module.exports = {
   moduleAvailability: moduleAvailability,
   instanceAvailability: instanceAvailability,
   startupValidationFinding: startupValidationFinding,
+  startupBootstrapCheck: startupBootstrapCheck,
+  startupBootstrapChecks: startupBootstrapChecks,
   startupValidationReport: startupValidationReport,
   adminListData: {
     type: "object",

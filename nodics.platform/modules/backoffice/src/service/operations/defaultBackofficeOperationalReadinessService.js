@@ -96,6 +96,23 @@ module.exports = {
             );
         }).filter(Boolean);
     },
+    /** Reports bootstrap repair/self-healing prerequisites without exposing values. */
+    collectBootstrapChecks: function (policy) {
+        return [].concat(policy.bootstrapChecks || []).map(rule => {
+            let value = this.resolveConfigurationPath(rule.path);
+            let ready = value !== undefined && value !== null && String(value).trim() !== '';
+            return {
+                code: String(rule.code || 'BOOTSTRAP_CHECK'),
+                state: ready ? 'READY' : 'MISSING',
+                owner: String(rule.owner || 'backoffice'),
+                ownerType: String(rule.ownerType || 'CONFIGURATION'),
+                propertyPath: rule.path ? String(rule.path) : undefined,
+                message: String(rule.message || (ready ? 'Bootstrap prerequisite is resolved.' : 'Bootstrap prerequisite is missing.')),
+                action: String(rule.action || 'Repair the owning layered configuration and restart the affected runtime.'),
+                auditRequired: rule.auditRequired === true
+            };
+        });
+    },
     /** Maps operational configuration failures to startup findings with repair guidance. */
     collectConfigurationFailureFindings: function () {
         let messages = {
@@ -149,11 +166,20 @@ module.exports = {
             if (finding.dismissible === true) result.dismissible++;
             return result;
         }, { total: 0, errors: 0, warnings: 0, info: 0, dismissible: 0 });
+        let bootstrapCheckItems = this.collectBootstrapChecks(policy);
+        let bootstrapChecks = bootstrapCheckItems.reduce((result, check) => {
+            result.total++;
+            if (check.state === 'READY') result.ready++;
+            else if (check.state === 'MISSING') result.missing++;
+            else result.needsAttention++;
+            return result;
+        }, { total: 0, ready: 0, missing: 0, needsAttention: 0, checks: bootstrapCheckItems });
         return {
             state: summary.errors > 0 ? 'NOT_READY' : summary.warnings > 0 ? 'NEEDS_ATTENTION' : 'READY',
             checkedAt: new Date().toISOString(),
             source: 'backoffice.operationalReadiness',
             summary: summary,
+            bootstrapChecks: bootstrapChecks,
             findings: findings
         };
     },

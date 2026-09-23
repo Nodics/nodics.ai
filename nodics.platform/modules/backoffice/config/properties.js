@@ -243,6 +243,32 @@ module.exports = {
       },
       startupValidation: {
         enabled: true,
+        bootstrapChecks: [
+          {
+            code: "BOOTSTRAP_IDENTITY_PRESENT",
+            owner: "nAuth",
+            ownerType: "AUTHENTICATION",
+            path: "bootstrapIdentity.source",
+            message: "Bootstrap identity source is resolved.",
+            action: "If missing after a schema reset, restart the platform runtime and verify the owning layered configuration.",
+          },
+          {
+            code: "BOOTSTRAP_ADMIN_PASSWORD_PRESENT",
+            owner: "nAuth",
+            ownerType: "AUTHENTICATION",
+            path: "bootstrapIdentity.adminPassword",
+            message: "Bootstrap administrator password path is resolved.",
+            action: "If missing after a schema reset, repair the profile init data or owning private configuration before Axis login.",
+          },
+          {
+            code: "RUNTIME_API_KEY_PRESENT",
+            owner: "nAuth",
+            ownerType: "AUTHENTICATION",
+            path: "defaultAuthDetail.apiKey",
+            message: "Runtime API key path is resolved.",
+            action: "If missing after a schema reset, repair the server-level runtime credential before runtime-to-runtime calls.",
+          },
+        ],
         requiredProperties: [],
         defaultValueRisks: [
           {

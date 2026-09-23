@@ -70,6 +70,15 @@ assert(
   contracts.startupValidationFinding.required.includes("auditRequired"),
   "startup validation warnings must declare whether dismissal/acknowledgement is auditable",
 );
+assert(
+  contracts.startupValidationReport.required.includes("bootstrapChecks"),
+  "startup validation must include bootstrap self-healing checks",
+);
+assert.deepStrictEqual(contracts.startupBootstrapCheck.properties.state.enum, [
+  "READY",
+  "MISSING",
+  "NEEDS_ATTENTION",
+]);
 assert.deepStrictEqual(contracts.documentationSource.properties.type.enum, [
   "CMS",
   "OPENAPI",

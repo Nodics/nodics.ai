@@ -65,10 +65,20 @@ registry.operations.thresholds.availabilityFailurePercent = originalThreshold;
 let startupReport = service.startupValidationReport();
 assert.strictEqual(startupReport.state, 'NEEDS_ATTENTION');
 assert.strictEqual(startupReport.summary.warnings, 3);
+assert.strictEqual(startupReport.bootstrapChecks.total, 3);
+assert.strictEqual(startupReport.bootstrapChecks.ready, 3);
+assert.strictEqual(startupReport.bootstrapChecks.missing, 0);
+assert(startupReport.bootstrapChecks.checks.some(check => check.code === 'BOOTSTRAP_ADMIN_PASSWORD_PRESENT'));
 assert(startupReport.findings.some(finding => finding.code === 'LOCAL_SAMPLE_ADMIN_PASSWORD'));
 assert(startupReport.findings.some(finding => finding.propertyPath === 'defaultAuthDetail.apiKey'));
 assert(!JSON.stringify(startupReport).includes(defaultAuthDetail.apiKey));
 assert(!JSON.stringify(startupReport).includes(bootstrapIdentity.adminPassword));
+let originalAdminPassword = bootstrapIdentity.adminPassword;
+bootstrapIdentity.adminPassword = '';
+let missingBootstrapReport = service.startupValidationReport();
+assert.strictEqual(missingBootstrapReport.bootstrapChecks.missing, 1);
+assert(missingBootstrapReport.bootstrapChecks.checks.some(check => check.code === 'BOOTSTRAP_ADMIN_PASSWORD_PRESENT' && check.state === 'MISSING'));
+bootstrapIdentity.adminPassword = originalAdminPassword;
 let originalRequiredProperties = registry.operations.startupValidation.requiredProperties;
 registry.operations.startupValidation.requiredProperties = [{
     code: 'MISSING_TEST_PROPERTY',
