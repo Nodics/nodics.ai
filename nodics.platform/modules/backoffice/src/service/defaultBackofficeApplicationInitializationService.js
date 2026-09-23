@@ -318,6 +318,11 @@ module.exports = {
             status: status,
             version: record && record.registeredVersion,
             description: String(displayName),
+            runtimeState: record && record.runtimeState ? String(record.runtimeState) : undefined,
+            registrationState:
+              record && record.registrationState ? String(record.registrationState) : undefined,
+            observedServers: this.safeObservedServers(record && record.observedServers),
+            runtimeEvidence: this.functionalModuleRuntimeEvidence(record),
             message:
               status === "CURRENT"
                 ? String(displayName) + " is registered and active."
@@ -337,13 +342,49 @@ module.exports = {
             status: "UNAVAILABLE",
             message:
               (error && error.message) || step.label + " cannot be checked.",
+            runtimeEvidence: {
+              source: "FUNCTIONAL_MODULE_CATALOGUE",
+              status: "UNAVAILABLE",
+              stale: true,
+            },
           }),
         );
       }
     }
     return projected;
   },
-  /** Returns the immutable configured application profile. */
+  /** Returns bounded observed server identities without leaking registry internals. */
+  safeObservedServers: function (servers) {
+    return Array.from(
+      new Set(
+        [].concat(servers || [])
+          .map((server) => String(server || "").trim())
+          .filter(Boolean),
+      ),
+    ).sort();
+  },
+  /** Projects sanitized functional-module runtime evidence for readiness consumers. */
+  functionalModuleRuntimeEvidence: function (record) {
+    if (!record) {
+      return {
+        source: "FUNCTIONAL_MODULE_CATALOGUE",
+        status: "NOT_REGISTERED",
+        stale: true,
+        observedServers: [],
+      };
+    }
+    const observedServers = this.safeObservedServers(record.observedServers);
+    return {
+      source: "FUNCTIONAL_MODULE_CATALOGUE",
+      status: record.runtimeState ? String(record.runtimeState) : "UNKNOWN",
+      registrationState: record.registrationState
+        ? String(record.registrationState)
+        : undefined,
+      enabled: record.enabled === true,
+      stale: record.runtimeState !== "ACTIVE" || observedServers.length === 0,
+      observedServers: observedServers,
+    };
+  },
   /** Executes the documented bounded module operation. */
   profile: function (code) {
     if (!/^[a-z][a-z0-9_-]{0,63}$/.test(String(code || ""))) {
@@ -1044,6 +1085,7 @@ module.exports = {
       });
     }
     [].concat((profile && profile.dataPackages) || []).forEach((pack) => {
+      let step = this.dependencyStep(pack, projection);
       dependencies.push({
         kind:
           pack.type === "MEDIA_ASSET_MANIFEST"
@@ -1057,15 +1099,19 @@ module.exports = {
         server: pack.targetServer ? String(pack.targetServer) : undefined,
         runtimeRole: pack.targetRuntimeRole ? String(pack.targetRuntimeRole) : undefined,
         status: this.dependencyStatus(pack, projection),
+        evidence: this.dependencyEvidence(step),
       });
     });
     [].concat((profile && profile.presentation && profile.presentation.requiredFunctionalModules) || []).forEach((module) => {
+      let dependency = { code: module.code, type: "FUNCTIONAL_MODULE" };
+      let step = this.dependencyStep(dependency, projection);
       dependencies.push({
         kind: "MODULE",
         code: String(module.code),
         label: String(module.label || module.code),
         required: module.required !== false,
-        status: this.dependencyStatus({ code: module.code, type: "FUNCTIONAL_MODULE" }, projection),
+        status: this.dependencyStatus(dependency, projection),
+        evidence: this.dependencyEvidence(step),
       });
     });
     dependencies.push({
@@ -1094,12 +1140,16 @@ module.exports = {
     });
     return dependencies;
   },
-  /** Returns the current status for a declared dependency from the preparation projection. */
-  dependencyStatus: function (dependency, projection) {
+  /** Finds the preparation step backing one dependency projection. */
+  dependencyStep: function (dependency, projection) {
     let steps = [].concat(
       (projection && projection.preparation && projection.preparation.steps) || [],
     );
-    let step = steps.find((item) => item.code === dependency.code);
+    return steps.find((item) => item.code === dependency.code);
+  },
+  /** Returns the current status for a declared dependency from the preparation projection. */
+  dependencyStatus: function (dependency, projection) {
+    let step = this.dependencyStep(dependency, projection);
     if (!step) return "UNKNOWN";
     if (["CURRENT", "SOURCE_READY", "OPTIONAL"].includes(step.status)) return "CURRENT";
     if (["NOT_INSTALLED", "NOT_REGISTERED"].includes(step.status)) return "NOT_STARTED";
@@ -1107,6 +1157,22 @@ module.exports = {
     if (["RUNNING", "IMPORTING"].includes(step.status)) return "IN_PROGRESS";
     if (["RUNTIME_OFFLINE", "UNAVAILABLE"].includes(step.status)) return "UNAVAILABLE";
     return String(step.status || "UNKNOWN");
+  },
+  /** Projects sanitized evidence for dependency rows and graph nodes. */
+  dependencyEvidence: function (step) {
+    if (!step) return undefined;
+    let evidence = {};
+    if (step.runtimeState) evidence.runtimeState = String(step.runtimeState);
+    if (step.registrationState) evidence.registrationState = String(step.registrationState);
+    if (Array.isArray(step.observedServers)) {
+      evidence.observedServers = this.safeObservedServers(step.observedServers);
+    }
+    if (step.targetServer) evidence.targetServer = String(step.targetServer);
+    if (step.targetRuntimeRole)
+      evidence.targetRuntimeRole = String(step.targetRuntimeRole);
+    if (step.runtimeEvidence) evidence.runtimeEvidence = step.runtimeEvidence;
+    if (step.runtimeDiagnostic) evidence.runtimeDiagnostic = step.runtimeDiagnostic;
+    return Object.keys(evidence).length ? evidence : undefined;
   },
   /** Builds a compact graph so UI pages can explain cross-runtime readiness order. */
   capabilityDependencyGraph: function (profile, projection) {
@@ -1120,6 +1186,7 @@ module.exports = {
         kind: dependency.kind,
         label: dependency.label,
         status: dependency.status,
+        evidence: dependency.evidence,
       })),
     );
     let edges = dependencies.map((dependency) => ({

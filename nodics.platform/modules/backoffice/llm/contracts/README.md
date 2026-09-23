@@ -113,6 +113,11 @@ Capability blockers must be stable, bounded, and client-safe:
   condition must identify whether it came from module registry state, runtime
   ownership, heartbeat/transport, or target authorization evidence whenever the
   owning diagnostic is available.
+- Module dependency rows and dependency-graph nodes may carry sanitized runtime
+  evidence from the Functional Module Catalogue: runtime state, registration
+  state, enabled flag, observed server identities, stale flag, and bounded
+  runtime diagnostics. Do not expose raw leases, endpoints, credentials,
+  provider errors, database records, or unapproved internal topology details.
 
 Executable repairs must point to an existing governed backend operation, such
 as setup-only capability preparation, application initiation, or approval
