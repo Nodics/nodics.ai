@@ -115,6 +115,7 @@ function acceptanceEnvironment(selected, kind = 'platform') {
     AXIS_LOGIN_ID: process.env.AXIS_LOGIN_ID || 'admin',
     AXIS_PASSWORD: process.env.AXIS_PASSWORD || values.BOOTSTRAP_ADMIN_PASSWORD,
     NODICS_SERVICE_API_KEY: process.env.NODICS_SERVICE_API_KEY || values.BOOTSTRAP_SERVICE_API_KEY,
+    NODICS_ACCEPTANCE_BROWSER_VALIDATION_ENABLED: String(selected.acceptance.browserValidation?.enabled === true),
     NODICS_ACCEPTANCE_READY_TIMEOUT_MS: process.env.NODICS_ACCEPTANCE_READY_TIMEOUT_MS || '30000'
   };
   if (kind === 'commerce') {

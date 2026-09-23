@@ -102,6 +102,7 @@ test('project environment profile resolves local topology from env-owned file', 
   assert.equal(profile.stateDirectory, path.join(projectRoot, 'envs/startioLocal/generated/local-topology'));
   assert.equal(profile.topology.groups.backends[0].code, 'platform');
   assert.equal(profile.acceptance.guidedInitialization.profileCode, 'localWcmsFoundation');
+  assert.equal(profile.acceptance.browserValidation.enabled, false);
   assert.deepEqual(composition.domains, ['apparel', 'telco', 'electronics']);
   assert.deepEqual(composition.frameworkGroups, ['apparel', 'telco', 'electronics']);
   assert.deepEqual(composition.sharedModules, ['domainCommerceCore']);
@@ -258,6 +259,7 @@ test('capability acceptance defaults resolve renamed deployments without custome
       } } } });
     const profile = readProjectEnvironmentConfiguration(projectRoot, 'acceptanceEast');
     assert.equal(profile.acceptance.functionalJourney.reason, 'Deployment acceptance');
+    assert.equal(profile.acceptance.browserValidation.enabled, false);
     assert.deepEqual(profile.acceptance.guidedInitialization.publicationProfiles, ['customSite'], 'Project replacement must not retain framework publication targets');
     assert.deepEqual(profile.acceptance.functionalJourney.runtimes.platform, { role: 'PLATFORM' });
     assert.equal(profile.acceptance.wasteBackofficeDiscovery.providerModule, 'wasteCore');

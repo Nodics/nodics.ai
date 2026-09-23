@@ -19,6 +19,10 @@
 module.exports = {
     tooling: {
         acceptance: {
+            "browserValidation": {
+                "enabled": false,
+                "reason": "Browser-driven validation is optional because non-local environments may not have an interactive browser runner available."
+            },
             "functionalJourney": {
                 "reason": "Functional acceptance",
                 "runtimes": {
