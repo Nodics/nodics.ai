@@ -103,7 +103,9 @@ Executable repairs must point to an existing governed backend operation, such
 as setup-only capability preparation, application initiation, or approval
 reconciliation. `applicationInitialization.prepareCapability` may install
 profile-owned setup data and media without submitting the publication approval
-request. Source-only repairs, like invalid release manifests, and
+request. Its response should include compact `preparationOperation` evidence
+with before/after preparation status, changed flag, and step count so Axis can
+show what happened without becoming an import authority. Source-only repairs, like invalid release manifests, and
 environment/runtime repairs, like offline targets, must be marked unavailable
 for automatic browser execution and should guide the operator to the owning
 module, runtime, or source release.

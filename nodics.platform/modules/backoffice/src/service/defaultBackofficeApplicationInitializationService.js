@@ -1423,10 +1423,47 @@ module.exports = {
     this.human(request);
     let initialPreparation = await this.preparationStatus(profile, request);
     if (initialPreparation.status === "BLOCKED") {
-      return this.blockedProjection(profile, initialPreparation);
+      return Object.assign(this.blockedProjection(profile, initialPreparation), {
+        preparationOperation: this.prepareCapabilityEvidence(
+          profile,
+          initialPreparation,
+          initialPreparation,
+          false,
+        ),
+      });
     }
     await this.prepareApplication(profile, request, initialPreparation);
-    return this.status(profileCode, request);
+    let refreshed = await this.status(profileCode, request);
+    return Object.assign(refreshed, {
+      preparationOperation: this.prepareCapabilityEvidence(
+        profile,
+        initialPreparation,
+        refreshed.preparation,
+        true,
+      ),
+    });
+  },
+  /** Builds compact operator evidence for setup-only capability preparation. */
+  prepareCapabilityEvidence: function (profile, before, after, attempted) {
+    let beforeSteps = (before && before.steps) || [];
+    let afterSteps = (after && after.steps) || [];
+    return {
+      operation: "applicationInitialization.prepareCapability",
+      capabilityCode: profile.code,
+      beforeStatus: before && before.status,
+      afterStatus: after && after.status,
+      attempted: attempted === true,
+      stepCount: afterSteps.length,
+      changed:
+        Boolean(before && after) &&
+        (before.status !== after.status ||
+          JSON.stringify(
+            beforeSteps.map((step) => [step.code, step.status, step.installedVersion]),
+          ) !==
+            JSON.stringify(
+              afterSteps.map((step) => [step.code, step.status, step.installedVersion]),
+            )),
+    };
   },
   /** Invokes only the profile-owned fixed Staged baseline endpoint. */
   /** Executes the documented bounded module operation. */

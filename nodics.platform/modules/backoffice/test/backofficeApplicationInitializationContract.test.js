@@ -907,6 +907,15 @@ global.fetch = async (url) => {
     httpRequest: { headers: { authorization: "Bearer operator-token" } },
   });
   assert.strictEqual(preparedOnly.preparation.status, "CURRENT");
+  assert.strictEqual(
+    preparedOnly.preparationOperation.operation,
+    "applicationInitialization.prepareCapability",
+  );
+  assert.strictEqual(preparedOnly.preparationOperation.capabilityCode, "nexusneedssetup");
+  assert.strictEqual(preparedOnly.preparationOperation.afterStatus, "CURRENT");
+  assert.strictEqual(preparedOnly.preparationOperation.attempted, true);
+  assert.strictEqual(preparedOnly.preparationOperation.stepCount, 1);
+  assert.strictEqual(typeof preparedOnly.preparationOperation.changed, "boolean");
   assert(
     prepareOnlyCalls.some(
       (call) => call.moduleName === "import" && call.methodName === "POST",

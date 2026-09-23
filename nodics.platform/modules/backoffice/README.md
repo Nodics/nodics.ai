@@ -42,6 +42,9 @@ and `test/functionalModuleConcurrency.test.js` for concurrency guarantees.
 - Project application capability readiness with stable blocker and repair
   metadata so Axis can explain blocked setup, approval, media, runtime,
   manifest, and publication states without becoming the readiness authority.
+- Return compact preparation operation evidence for setup-only capability
+  repairs so Axis can show before/after readiness without inspecting import
+  internals.
 
 ## Explicit Exclusions
 
