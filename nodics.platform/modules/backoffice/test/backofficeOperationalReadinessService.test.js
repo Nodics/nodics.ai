@@ -52,6 +52,11 @@ global.SERVICE = { AuditPublisher: { record: () => Promise.resolve(true) },
     DefaultBackofficeDiscoveryService: { getDiagnostics: () => ({ attempts: 2, successes: 2, failures: 0,
         lastSuccessAt: '2026-09-24T00:00:00.000Z', activeSnapshots: 2, inflight: 0 }) },
     DefaultSearchConfigurationService: { getSearchReadiness: () => true },
+    DefaultCopilotKnowledgeRuntimeService: { readiness: () => ({
+        businessStatus: 'READY', retrievalEnabled: true, ingestionEnabled: true, sourceRegistryEnabled: true,
+        sourceCount: 2, enabledSourceCount: 1, indexedSourceCount: 1, notIndexedSourceCount: 0,
+        failedSourceCount: 0, lastRefreshAt: '2026-09-24T00:00:00.000Z', blockers: []
+    }) },
     DefaultHealthService: { registerReadinessContributor: (name, contributor) => {
     assert.strictEqual(name, 'backofficeOperationalConfiguration'); readinessContributor = contributor;
 } } };
@@ -184,6 +189,10 @@ async function validateDeliveryAndProductionPolicy() {
         && section.summary.readSourcePolicy === 'SEARCH_ENGINE'
         && section.summary.runtimeProfileCount === 1
         && section.summary.discoveryAttempts === 2));
+    assert(aggregateReport.sections.some(section => section.key === 'assistant'
+        && section.businessStatus === 'READY'
+        && section.summary.providerAvailable === true
+        && section.summary.indexedSourceCount === 1));
     assert(aggregateReport.sections.some(section => section.key === 'documentation'
         && section.businessStatus === 'READY'));
     assert(aggregateReport.sections.some(section => section.key === 'runtimeCommunication'

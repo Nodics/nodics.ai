@@ -866,6 +866,90 @@ module.exports = {
                     'Enable an owner search/read-source profile when the runtime must render from search indexes.',
         };
     },
+    /** Builds owner-backed readiness for Axis Assistant knowledge sources and indexing. */
+    assistantSection: function () {
+        let service = SERVICE.DefaultCopilotKnowledgeRuntimeService;
+        if (!service || typeof service.readiness !== 'function') return {
+            key: 'assistant',
+            title: 'Assistant knowledge sources',
+            businessStatus: 'NOT_CONFIGURED',
+            ownerModule: 'copilotKnowledge',
+            source: 'COPILOT_KNOWLEDGE_READINESS',
+            route: '/assistant',
+            summary: { providerAvailable: false },
+            blockers: [],
+            nextAction: 'Activate Copilot Knowledge when Axis Assistant should answer from governed knowledge sources.',
+        };
+        let report;
+        try {
+            report = service.readiness();
+        } catch (error) {
+            let blocker = this.readinessBlocker(
+                'COPILOT_KNOWLEDGE_PROVIDER_UNAVAILABLE',
+                'NEEDS_ATTENTION',
+                'ASSISTANT_KNOWLEDGE',
+                'COPILOT_KNOWLEDGE_READINESS',
+                'Open Assistant Knowledge',
+                'Assistant knowledge readiness could not be read from the owning Copilot Knowledge service.',
+                { repairOperation: 'copilotKnowledge.readiness', repairAction: 'REFRESH_KNOWLEDGE_READINESS',
+                    suggestedAction: 'Open Assistant Knowledge and verify Copilot Knowledge module startup and configuration.' }
+            );
+            blocker.failureCode = String(error.code || error.message || 'COPILOT_KNOWLEDGE_READINESS_FAILED');
+            return {
+                key: 'assistant',
+                title: 'Assistant knowledge sources',
+                businessStatus: 'NEEDS_ATTENTION',
+                ownerModule: 'copilotKnowledge',
+                source: 'COPILOT_KNOWLEDGE_READINESS',
+                route: '/assistant',
+                summary: { providerAvailable: false, blockerCount: 1 },
+                blockers: [blocker],
+                nextAction: 'Open Assistant Knowledge and repair the Copilot Knowledge readiness provider.',
+            };
+        }
+        let blockers = [].concat((report || {}).blockers || []).map(item => {
+            item = item || {};
+            return this.readinessBlocker(
+                item.code || 'COPILOT_KNOWLEDGE_NOT_READY',
+                item.severity || 'NEEDS_ATTENTION',
+                'ASSISTANT_KNOWLEDGE',
+                item.source || 'COPILOT_KNOWLEDGE_READINESS',
+                item.action || 'Open Assistant Knowledge',
+                item.message || 'Assistant knowledge source readiness needs attention.',
+                { repairAvailable: item.repair && item.repair.available === true,
+                    repairOperation: item.repair && item.repair.operation,
+                    repairAction: item.repair && (item.repair.action || item.repair.actionCode),
+                    repairEligibility: item.repair && item.repair.eligibility,
+                    repairLabel: item.repair && item.repair.label,
+                    suggestedAction: item.action || 'Open Assistant Knowledge' }
+            );
+        });
+        return {
+            key: 'assistant',
+            title: 'Assistant knowledge sources',
+            businessStatus: blockers.length ? 'NEEDS_ATTENTION' : String((report || {}).businessStatus || 'NOT_CONFIGURED'),
+            ownerModule: 'copilotKnowledge',
+            source: 'COPILOT_KNOWLEDGE_READINESS',
+            route: '/assistant',
+            summary: {
+                providerAvailable: true,
+                retrievalEnabled: (report || {}).retrievalEnabled === true,
+                ingestionEnabled: (report || {}).ingestionEnabled === true,
+                sourceRegistryEnabled: (report || {}).sourceRegistryEnabled === true,
+                sourceCount: (report || {}).sourceCount || 0,
+                enabledSourceCount: (report || {}).enabledSourceCount || 0,
+                indexedSourceCount: (report || {}).indexedSourceCount || 0,
+                notIndexedSourceCount: (report || {}).notIndexedSourceCount || 0,
+                failedSourceCount: (report || {}).failedSourceCount || 0,
+                lastRefreshAt: (report || {}).lastRefreshAt,
+                blockerCount: blockers.length,
+            },
+            blockers: blockers,
+            nextAction: blockers.length ? 'Open Assistant Knowledge and resolve source registry or indexing blockers.' :
+                (report || {}).businessStatus === 'READY' ? 'Assistant knowledge sources are configured and indexed.' :
+                    'Configure Copilot Knowledge retrieval and enabled sources before relying on Assistant answers.',
+        };
+    },
     /** Builds the canonical post-reset operational readiness aggregate for Axis and tooling. */
     operationalReadinessReport: async function (request, context) {
         context = context || {};
@@ -916,7 +1000,7 @@ module.exports = {
             this.documentationSection(context.documentationSources, context.documentationPublication),
             this.mediaSection(profileStatusReport),
             this.searchSection(context),
-            this.ownerPendingSection('assistant', 'Assistant knowledge sources', 'assistant', '/assistant', 'ASSISTANT_KNOWLEDGE_READINESS', 'Install/publish/index authorized knowledge sources.'),
+            this.assistantSection(),
             this.applicationSection(context.applicationInitializationProfiles),
         ];
         let summary = sections.reduce((result, section) => {

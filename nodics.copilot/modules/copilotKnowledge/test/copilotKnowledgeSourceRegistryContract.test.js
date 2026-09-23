@@ -13,7 +13,9 @@
 const assert = require('node:assert/strict');
 const test = require('node:test');
 const registryService = require('../src/service/defaultCopilotKnowledgeSourceRegistryService');
+const runtimeService = require('../src/service/defaultCopilotKnowledgeRuntimeService');
 const knowledgeConfiguration = require('../config/properties').copilot.knowledge.sourceRegistry;
+const fullKnowledgeConfiguration = require('../config/properties').copilot.knowledge;
 const policy = require('../../copilotPolicy/src/service/defaultCopilotPolicyService');
 const policyConfiguration = require('../../copilotPolicy/config/properties').copilot.policy;
 
@@ -61,4 +63,36 @@ test('pre-retrieval scopes expose only sources authorized for the current channe
     assert.deepEqual(registryService.buildQueryScope(registry, axisAdmin, policyConfiguration, policy).sourceCodes, ['nodics-public-docs', 'framework-readmes', 'framework-agents']);
     const customer = policy.normalizeSecurityContext({ channel: 'CUSTOMER', actor: 'customer-1', customer: 'customer-1', tenant: 'acmeTenant', customerProject: 'acme' }, policyConfiguration);
     assert.deepEqual(registryService.buildQueryScope(registry, customer, policyConfiguration, policy).sourceCodes, ['nodics-public-docs', 'acme-project']);
+});
+
+test('runtime readiness reports configured, indexed, and blocked knowledge source state', () => {
+    const sourceDefinition = definition();
+    global.CONFIG = { get: key => key === 'copilot' ? { policy: policyConfiguration, knowledge: Object.assign({}, fullKnowledgeConfiguration, {
+        ingestion: Object.assign({}, fullKnowledgeConfiguration.ingestion, { enabled: true }),
+        retrieval: Object.assign({}, fullKnowledgeConfiguration.retrieval, { enabled: true }),
+        sourceRegistry: Object.assign({}, fullKnowledgeConfiguration.sourceRegistry, { definitions: [sourceDefinition] })
+    }) } : undefined };
+    global.SERVICE = {
+        DefaultCopilotKnowledgeSourceRegistryService: registryService,
+        DefaultCopilotPolicyService: policy
+    };
+    try {
+        runtimeService.state.reports = new Map([[sourceDefinition.code, { sourceCode: sourceDefinition.code, sourceVersion: sourceDefinition.version, state: 'PROJECTED' }]]);
+        runtimeService.state.lastRefreshAt = '2026-09-24T00:00:00.000Z';
+        const ready = runtimeService.readiness();
+        assert.equal(ready.businessStatus, 'READY');
+        assert.equal(ready.enabledSourceCount, 1);
+        assert.equal(ready.indexedSourceCount, 1);
+        assert.equal(ready.blockers.length, 0);
+        runtimeService.state.reports = new Map();
+        const notIndexed = runtimeService.readiness();
+        assert.equal(notIndexed.businessStatus, 'NEEDS_ATTENTION');
+        assert.equal(notIndexed.notIndexedSourceCount, 1);
+        assert.equal(notIndexed.blockers[0].code, 'COPILOT_KNOWLEDGE_SOURCES_NOT_INDEXED');
+    } finally {
+        runtimeService.state.reports = new Map();
+        runtimeService.state.lastRefreshAt = null;
+        delete global.CONFIG;
+        delete global.SERVICE;
+    }
 });

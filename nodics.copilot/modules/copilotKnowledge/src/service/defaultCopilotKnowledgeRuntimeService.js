@@ -67,6 +67,80 @@ module.exports = {
             }, this.state.reports.get(source.code) || { state: 'NOT_INDEXED' }))
         };
     },
+    /** Returns operator-safe assistant knowledge readiness without widening source access. */
+    readiness: function () {
+        const configuration = this.configuration();
+        const knowledge = configuration.knowledge || {};
+        const registryConfiguration = knowledge.sourceRegistry || {};
+        const blockers = [];
+        let registry;
+        try {
+            registry = this.registry(configuration);
+        } catch (error) {
+            blockers.push({
+                code: 'COPILOT_KNOWLEDGE_REGISTRY_INVALID',
+                severity: 'NEEDS_ATTENTION',
+                source: 'COPILOT_KNOWLEDGE_SOURCE_REGISTRY',
+                action: 'Open Assistant Knowledge',
+                message: 'Assistant knowledge source registry is invalid: ' + String(error.code || error.message || 'UNKNOWN'),
+                repair: { available: true, operation: 'copilotKnowledge.sourceRegistry.repair',
+                    action: 'REPAIR_KNOWLEDGE_SOURCE_REGISTRY', eligibility: 'MANUAL', label: 'Repair knowledge source registry' }
+            });
+            registry = { sources: [] };
+        }
+        const sources = registry.sources || [];
+        const enabledSources = sources.filter(source => source.enabled === true);
+        const reports = enabledSources.map(source => this.state.reports.get(source.code) ||
+            { sourceCode: source.code, sourceVersion: source.version, state: 'NOT_INDEXED' });
+        const indexed = reports.filter(report => String(report.state) === 'PROJECTED').length;
+        const failed = reports.filter(report => String(report.state) === 'FAILED').length;
+        const notIndexed = Math.max(0, enabledSources.length - indexed - failed);
+        if (knowledge.retrieval && knowledge.retrieval.enabled === true && enabledSources.length === 0) blockers.push({
+            code: 'COPILOT_KNOWLEDGE_SOURCES_MISSING',
+            severity: 'NEEDS_ATTENTION',
+            source: 'COPILOT_KNOWLEDGE_SOURCE_REGISTRY',
+            action: 'Open Assistant Knowledge',
+            message: 'Assistant retrieval is enabled but no enabled knowledge source is registered.',
+            repair: { available: true, operation: 'copilotKnowledge.sourceRegistry.update',
+                action: 'REGISTER_KNOWLEDGE_SOURCE', eligibility: 'MANUAL', label: 'Register knowledge source' }
+        });
+        if (notIndexed > 0) blockers.push({
+            code: 'COPILOT_KNOWLEDGE_SOURCES_NOT_INDEXED',
+            severity: 'NEEDS_ATTENTION',
+            source: 'COPILOT_KNOWLEDGE_INGESTION',
+            action: 'Refresh Assistant Knowledge',
+            message: 'One or more assistant knowledge sources have not been indexed.',
+            repair: { available: true, operation: 'copilotKnowledge.refresh',
+                action: 'REFRESH_KNOWLEDGE_SOURCE', eligibility: 'MANUAL', label: 'Refresh knowledge source' }
+        });
+        if (failed > 0) blockers.push({
+            code: 'COPILOT_KNOWLEDGE_SOURCE_INDEX_FAILED',
+            severity: 'NEEDS_ATTENTION',
+            source: 'COPILOT_KNOWLEDGE_INGESTION',
+            action: 'Refresh Assistant Knowledge',
+            message: 'One or more assistant knowledge sources failed during indexing.',
+            repair: { available: true, operation: 'copilotKnowledge.refresh',
+                action: 'RETRY_KNOWLEDGE_SOURCE', eligibility: 'MANUAL', label: 'Retry knowledge indexing' }
+        });
+        const retrievalEnabled = knowledge.retrieval && knowledge.retrieval.enabled === true;
+        const ingestionEnabled = knowledge.ingestion && knowledge.ingestion.enabled === true;
+        const businessStatus = blockers.length ? 'NEEDS_ATTENTION' :
+            retrievalEnabled && enabledSources.length > 0 ? 'READY' : 'NOT_CONFIGURED';
+        return {
+            businessStatus: businessStatus,
+            enabled: retrievalEnabled,
+            retrievalEnabled: retrievalEnabled,
+            ingestionEnabled: ingestionEnabled,
+            sourceRegistryEnabled: registryConfiguration.enabled === true,
+            sourceCount: sources.length,
+            enabledSourceCount: enabledSources.length,
+            indexedSourceCount: indexed,
+            notIndexedSourceCount: notIndexed,
+            failedSourceCount: failed,
+            lastRefreshAt: this.state.lastRefreshAt,
+            blockers: blockers
+        };
+    },
     /** Reindexes one registered source through a bounded service identity after explicit administrator authorization. */
     refresh: function (request) {
         const permissions = request && request.authData && request.authData.permissions || [];
