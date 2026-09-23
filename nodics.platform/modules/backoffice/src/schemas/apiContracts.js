@@ -999,6 +999,27 @@ const startupRepairMetadata = {
     unavailableReason: { type: "string", minLength: 1, maxLength: 512 },
   },
 };
+const startupFindingAcknowledgement = {
+  type: "object",
+  additionalProperties: false,
+  required: ["acknowledged", "acknowledgedAt", "acknowledgedBy"],
+  properties: {
+    acknowledged: { type: "boolean" },
+    acknowledgedAt: { type: "string", format: "date-time" },
+    acknowledgedBy: { type: "string", minLength: 1, maxLength: 160 },
+    reasonCode: { type: "string", minLength: 1, maxLength: 160 },
+  },
+};
+const startupFindingAcknowledgementRequest = {
+  type: "object",
+  additionalProperties: false,
+  required: ["reason"],
+  properties: {
+    propertyPath: { type: "string", minLength: 1, maxLength: 256 },
+    reason: { type: "string", minLength: 8, maxLength: 1000 },
+    reasonCode: { type: "string", minLength: 1, maxLength: 160 },
+  },
+};
 const startupValidationFinding = {
   type: "object",
   additionalProperties: false,
@@ -1014,6 +1035,7 @@ const startupValidationFinding = {
     dismissible: { type: "boolean" },
     auditRequired: { type: "boolean" },
     repair: startupRepairMetadata,
+    acknowledgement: startupFindingAcknowledgement,
   },
 };
 const startupBootstrapCheck = {
@@ -1054,13 +1076,14 @@ const startupValidationReport = {
     summary: {
       type: "object",
       additionalProperties: false,
-      required: ["total", "errors", "warnings", "info", "dismissible"],
+      required: ["total", "errors", "warnings", "info", "dismissible", "acknowledged"],
       properties: {
         total: { type: "integer", minimum: 0 },
         errors: { type: "integer", minimum: 0 },
         warnings: { type: "integer", minimum: 0 },
         info: { type: "integer", minimum: 0 },
         dismissible: { type: "integer", minimum: 0 },
+        acknowledged: { type: "integer", minimum: 0 },
       },
     },
     bootstrapChecks: startupBootstrapChecks,
@@ -1108,6 +1131,8 @@ module.exports = {
   instanceAvailability: instanceAvailability,
   startupValidationFinding: startupValidationFinding,
   startupRepairMetadata: startupRepairMetadata,
+  startupFindingAcknowledgement: startupFindingAcknowledgement,
+  startupFindingAcknowledgementRequest: startupFindingAcknowledgementRequest,
   startupBootstrapCheck: startupBootstrapCheck,
   startupBootstrapChecks: startupBootstrapChecks,
   startupValidationReport: startupValidationReport,

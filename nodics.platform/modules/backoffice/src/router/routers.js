@@ -539,6 +539,19 @@ module.exports = {
                 } } } }
             }
         },
+        operationalReadiness: {
+            acknowledgeStartupFinding: {
+                secured: true, accessGroups: ['runtimeConfigAdminUserGroup'], permission: 'backoffice.startupValidation.acknowledge',
+                authTokenTypes: ['access'], apiExposure: 'serviceRegistry',
+                key: '/operations/startup-validation/findings/:code/acknowledgement', method: 'POST',
+                cache: { enabled: false },
+                controller: 'DefaultBackofficeOperationalReadinessController', operation: 'acknowledgeStartupFinding',
+                requestBody: { required: true, content: { 'application/json': { schema: contracts.startupFindingAcknowledgementRequest } } },
+                responses: { '200': { description: 'Auditable acknowledgement for one active startup validation finding', content: { 'application/json': {
+                    schema: ({ type: 'object', required: ['code', 'data'], properties: { code: { type: 'string' }, data: { type: 'object' } } })
+                } } } }
+            }
+        },
         contractHistory: {
             current: {
                 secured: true, accessGroups: ['userGroup'], permission: 'backoffice.contract.view',

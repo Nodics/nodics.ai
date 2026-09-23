@@ -29,7 +29,9 @@ global.CONFIG = { get: key => key === 'backofficeRegistry' ? registry :
         key === 'defaultAuthDetail' ? defaultAuthDetail : undefined };
 let readinessContributor;
 let publishedAlerts = [];
+let auditEvents = [];
 global.SERVICE = { AuditPublisher: { record: () => Promise.resolve(true) },
+    DefaultBackofficeAuditService: { record: event => { auditEvents.push(event); return Promise.resolve(event); } },
     AlertPublisher: { record: event => { publishedAlerts.push(event); return Promise.resolve(true); } },
     DefaultHealthService: { registerReadinessContributor: (name, contributor) => {
     assert.strictEqual(name, 'backofficeOperationalConfiguration'); readinessContributor = contributor;
@@ -77,6 +79,25 @@ assert.strictEqual(sampleKeyFinding.repair.operation, 'runtimeConfiguration.upda
 assert.strictEqual(sampleKeyFinding.repair.actionCode, 'ROTATE_DEFAULT_CONFIGURATION');
 assert.strictEqual(sampleKeyFinding.repair.eligibility, 'MANUAL');
 assert.strictEqual(sampleKeyFinding.repair.requiresConfirmation, true);
+assert.strictEqual(startupReport.summary.acknowledged, 0);
+service.acknowledgeFinding({
+    tenant: 'default',
+    authData: { loginId: 'admin' },
+    correlationId: 'startup-ack-test',
+    startupFindingAcknowledgement: {
+        code: sampleKeyFinding.code,
+        propertyPath: sampleKeyFinding.propertyPath,
+        reason: 'Reviewed local development default before continuing.',
+        reasonCode: 'LOCAL_DEV_ACCEPTED'
+    }
+});
+let acknowledgedReport = service.startupValidationReport({ tenant: 'default' });
+let acknowledgedFinding = acknowledgedReport.findings.find(finding => finding.code === sampleKeyFinding.code);
+assert.strictEqual(acknowledgedReport.summary.acknowledged, 1);
+assert.strictEqual(acknowledgedFinding.acknowledgement.acknowledged, true);
+assert.strictEqual(acknowledgedFinding.acknowledgement.acknowledgedBy, 'admin');
+assert(auditEvents.some(event => event.eventType === 'backoffice.startupFinding.acknowledge'
+    && event.findingCode === sampleKeyFinding.code));
 assert(!JSON.stringify(startupReport).includes(defaultAuthDetail.apiKey));
 assert(!JSON.stringify(startupReport).includes(bootstrapIdentity.adminPassword));
 let originalAdminPassword = bootstrapIdentity.adminPassword;

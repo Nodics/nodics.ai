@@ -1474,7 +1474,8 @@ module.exports = {
           state: "READY",
           checkedAt: new Date().toISOString(),
           source: "backoffice.operationalReadiness",
-          summary: { total: 0, errors: 0, warnings: 0, info: 0, dismissible: 0 },
+          summary: { total: 0, errors: 0, warnings: 0, info: 0, dismissible: 0, acknowledged: 0 },
+          bootstrapChecks: { total: 0, ready: 0, missing: 0, needsAttention: 0, checks: [] },
           findings: [],
         };
     return {

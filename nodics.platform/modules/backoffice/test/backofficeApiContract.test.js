@@ -86,6 +86,15 @@ assert(
   "repair metadata must include stable operation fields while leaving unavailableReason conditional",
 );
 assert(
+  contracts.startupFindingAcknowledgement.required.includes("acknowledgedAt") &&
+    contracts.startupFindingAcknowledgementRequest.required.includes("reason"),
+  "startup finding acknowledgement must expose bounded evidence and require an operator reason",
+);
+assert(
+  contracts.startupValidationReport.properties.summary.required.includes("acknowledged"),
+  "startup validation summary must count backend-owned acknowledgements",
+);
+assert(
   contracts.startupValidationReport.required.includes("bootstrapChecks"),
   "startup validation must include bootstrap self-healing checks",
 );
@@ -128,6 +137,14 @@ assert.deepStrictEqual(contracts.publicBootstrapData.required, [
   "endpointRoles",
   "uiComposition",
 ]);
+assert.strictEqual(
+  routers.operationalReadiness.acknowledgeStartupFinding.controller,
+  "DefaultBackofficeOperationalReadinessController",
+);
+assert.strictEqual(
+  routers.operationalReadiness.acknowledgeStartupFinding.permission,
+  "backoffice.startupValidation.acknowledge",
+);
 assert.deepStrictEqual(contracts.publicBootstrapData.properties.endpointRoles.properties.cms.enum, ["ONLINE"]);
 assert(contracts.publicBootstrapData.properties.endpoints.properties.engagement);
 assert(contracts.publicBootstrapData.properties.endpoints.properties.editorial);
