@@ -895,6 +895,22 @@ const functionalModuleRegistration = {
       items: activationDataPackage,
     },
     observedServers: { type: "array", uniqueItems: true, items: { type: "string" } },
+    runtimeObservations: {
+      type: "array",
+      maxItems: 128,
+      items: {
+        type: "object",
+        additionalProperties: false,
+        required: ["observedServer"],
+        properties: {
+          observedServer: { type: "string", minLength: 1, maxLength: 256 },
+          environment: { type: "string", minLength: 1, maxLength: 120 },
+          server: { type: "string", minLength: 1, maxLength: 120 },
+          node: { type: "string", minLength: 1, maxLength: 120 },
+          lastObservedAt: { type: "string", format: "date-time" }
+        }
+      }
+    },
     catalogueRevision: { type: "integer", minimum: 1 },
     registeredAt: { type: "string", format: "date-time" },
     lastObservedAt: { type: "string", format: "date-time" }

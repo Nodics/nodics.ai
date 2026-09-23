@@ -1035,6 +1035,20 @@ module.exports = {
     }
     return changed;
   },
+  /** Projects the durable observed server keys into client-readable runtime evidence. */
+  projectRuntimeObservations: function (record) {
+    let lastObservedAt = record.lastObservedAt;
+    return this.uniqueSorted(record.observedServers).map((observedServer) => {
+      let parts = String(observedServer).split(":");
+      return {
+        observedServer: observedServer,
+        environment: parts[0] || undefined,
+        server: parts[1] || undefined,
+        node: parts[2] || undefined,
+        lastObservedAt: lastObservedAt,
+      };
+    });
+  },
   /** Returns a client-safe functional-module registration projection. */
   projectClientSafe: function (record, options) {
     options = options || {};
@@ -1054,6 +1068,7 @@ module.exports = {
         record.functionalModule,
       ),
       observedServers: this.uniqueSorted(record.observedServers),
+      runtimeObservations: this.projectRuntimeObservations(record),
       catalogueRevision: Number(record.catalogueRevision || 1),
       registeredAt: record.registeredAt,
       lastObservedAt: record.lastObservedAt,

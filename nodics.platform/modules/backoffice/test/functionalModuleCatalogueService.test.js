@@ -202,6 +202,15 @@ async function run() {
     assert.strictEqual(reconciled, 1);
     assert.strictEqual(runtimeUpdates[0].model.runtimeState, 'ACTIVE');
     assert.deepStrictEqual(runtimeUpdates[0].model.observedServers, ['local:processServer:default']);
+    assert.deepStrictEqual(service.projectRuntimeObservations(Object.assign({}, runtimeRecords[0], runtimeUpdates[0].model, {
+        lastObservedAt: new Date('2026-08-28T12:00:00.000Z')
+    })), [{
+        observedServer: 'local:processServer:default',
+        environment: 'local',
+        server: 'processServer',
+        node: 'default',
+        lastObservedAt: new Date('2026-08-28T12:00:00.000Z')
+    }]);
 
     let originalConfigGet = CONFIG.get;
     let originalNodics = NODICS;
