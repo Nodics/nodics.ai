@@ -69,6 +69,7 @@ module.exports = {
         if (options.parentModuleName) item.parentModuleName = options.parentModuleName;
         if (options.group) item.group = options.group;
         if (options.lifecycleActions) item.lifecycleActions = options.lifecycleActions;
+        if (options.readiness) item.readiness = options.readiness;
         return item;
     }
 };

@@ -42,6 +42,19 @@ resolver.resolveIndexConfiguration({ tenant: 'default', ownerType: 'PRODUCT' }).
         assert.equal(capability.capabilityId, 'discovery-management');
         assert.equal(capability.navigation[0].route, '/discovery/config');
         assert.equal(capability.navigation[0].permission, 'discovery.config.read');
+        assert.deepEqual(capability.navigation[0].readiness, {
+            kind: 'SEARCH_INDEX',
+            ownerModule: 'discoveryConfig',
+            sourceModule: 'discoveryConfig',
+            sourceSchema: 'discoveryIndexConfiguration',
+            statusField: 'status',
+            freshnessField: 'revision',
+            desiredFreshnessSeconds: 3600,
+            repairRoute: '/discovery/publication-policies',
+            summary: 'Search rendering depends on Discovery-owned index configuration status, projection freshness, and publication policy readiness.'
+        });
+        assert.equal(capability.navigation.find(item => item.id === 'search-sources-indexes').readiness.repairRoute, '/discovery/publication-policies');
+        assert.equal(capability.navigation.find(item => item.id === 'search-publication-index-operations').readiness.kind, 'SEARCH_INDEX');
         assert.deepEqual(capability.navigation[0].group, {
             id: 'search-discovery',
             label: 'Search and Discovery',

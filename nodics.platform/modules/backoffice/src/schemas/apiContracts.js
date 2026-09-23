@@ -517,6 +517,37 @@ const navigationHelp = {
     },
   },
 };
+const navigationReadiness = {
+  type: "object",
+  additionalProperties: false,
+  required: ["kind", "ownerModule"],
+  properties: {
+    kind: { type: "string", minLength: 1, maxLength: 64 },
+    ownerModule: moduleName,
+    sourceModule: moduleName,
+    sourceSchema: {
+      type: "string",
+      minLength: 1,
+      maxLength: 128,
+      pattern: "^[A-Za-z][A-Za-z0-9._-]{0,127}$",
+    },
+    statusField: {
+      type: "string",
+      minLength: 1,
+      maxLength: 128,
+      pattern: "^[A-Za-z][A-Za-z0-9._-]{0,127}$",
+    },
+    freshnessField: {
+      type: "string",
+      minLength: 1,
+      maxLength: 128,
+      pattern: "^[A-Za-z][A-Za-z0-9._-]{0,127}$",
+    },
+    desiredFreshnessSeconds: { type: "integer", minimum: 1, maximum: 31536000 },
+    repairRoute: { type: "string", minLength: 1, maxLength: 512, pattern: "^/(?!/)" },
+    summary: { type: "string", minLength: 1, maxLength: 320 },
+  },
+};
 const navigationLifecycleAction = {
   type: "object",
   additionalProperties: false,
@@ -769,6 +800,7 @@ const backofficeMetadata = {
             items: navigationDetailPanel,
           },
           help: navigationHelp,
+          readiness: navigationReadiness,
           lifecycleActions: {
             type: "array",
             uniqueItems: true,
@@ -1123,6 +1155,7 @@ module.exports = {
   navigationWorkbenchTarget: navigationWorkbenchTarget,
   navigationDetailPanel: navigationDetailPanel,
   navigationHelp: navigationHelp,
+  navigationReadiness: navigationReadiness,
   backendWorkspace: backendWorkspace,
   contractHistorySnapshot: contractHistorySnapshot,
   contractActivation: contractActivation,

@@ -344,6 +344,47 @@ module.exports = {
           /^[A-Za-z0-9._:-]{1,128}$/.test(help.documentationFragment)))
     );
   },
+  /** Validates bounded non-executable readiness ownership metadata for Axis workspaces. */
+  validateNavigationReadiness: function (readiness) {
+    return (
+      readiness &&
+      typeof readiness === "object" &&
+      !Array.isArray(readiness) &&
+      !Object.keys(readiness).some(
+        (key) =>
+          ![
+            "kind",
+            "ownerModule",
+            "sourceModule",
+            "sourceSchema",
+            "statusField",
+            "freshnessField",
+            "desiredFreshnessSeconds",
+            "repairRoute",
+            "summary",
+          ].includes(key),
+      ) &&
+      this.isString(readiness.kind, 64) &&
+      contracts.moduleName.pattern &&
+      new RegExp(contracts.moduleName.pattern).test(readiness.ownerModule || "") &&
+      (readiness.sourceModule === undefined ||
+        new RegExp(contracts.moduleName.pattern).test(readiness.sourceModule)) &&
+      (readiness.sourceSchema === undefined ||
+        /^[A-Za-z][A-Za-z0-9._-]{0,127}$/.test(readiness.sourceSchema)) &&
+      (readiness.statusField === undefined ||
+        /^[A-Za-z][A-Za-z0-9._-]{0,127}$/.test(readiness.statusField)) &&
+      (readiness.freshnessField === undefined ||
+        /^[A-Za-z][A-Za-z0-9._-]{0,127}$/.test(readiness.freshnessField)) &&
+      (readiness.desiredFreshnessSeconds === undefined ||
+        (Number.isInteger(readiness.desiredFreshnessSeconds) &&
+          readiness.desiredFreshnessSeconds >= 1 &&
+          readiness.desiredFreshnessSeconds <= 31536000)) &&
+      (readiness.repairRoute === undefined ||
+        this.isSafePath(readiness.repairRoute)) &&
+      (readiness.summary === undefined ||
+        this.isString(readiness.summary, 320))
+    );
+  },
   /** Validates bounded non-executable lifecycle action hints for Axis workspaces. */
   validateNavigationLifecycleActions: function (actions) {
     if (!Array.isArray(actions) || actions.length > 24) return false;
@@ -672,6 +713,7 @@ module.exports = {
                 "detailPanels",
                 "workbenchPresentation",
                 "help",
+                "readiness",
                 "lifecycleActions",
               ].includes(key),
           ) &&
@@ -712,6 +754,8 @@ module.exports = {
               item.workbenchPresentation,
             )) &&
           (item.help === undefined || this.validateNavigationHelp(item.help)) &&
+          (item.readiness === undefined ||
+            this.validateNavigationReadiness(item.readiness)) &&
           (item.lifecycleActions === undefined ||
             this.validateNavigationLifecycleActions(item.lifecycleActions)) &&
           (item.requiredPermissions === undefined ||
