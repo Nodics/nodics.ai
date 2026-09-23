@@ -477,6 +477,18 @@ module.exports = exportedService = {
     /** Rejects retired authorities and framework/service secrets without executing properties. Customer validation permits its direct administrator bootstrap override; nAuth still validates the effective value. @param {string[]} failures Findings. @param {string} directory Framework or customer root. @param {Object} options Explicit caller scope; customerProject is set only by customer-project validation. @returns {void} */
     auditConfigurationSources: function (failures, directory = rootPath, options = {}) {
         const skip = new Set(['node_modules', '.git', 'generated', 'data', 'test', 'tests', 'temp', 'dist', 'build', 'coverage', 'llm']);
+        const customerProjectRootNamespaces = new Set([
+            'apiExposure',
+            'backofficeApplicationInitialization',
+            'backofficeFunctionalModuleCatalogue',
+            'backofficeRegistry',
+            'data',
+            'localResetProvider',
+            'profileBrowserSession',
+            'profileCustomerBrowserSession',
+            'profileExternalIdentity',
+            'servers'
+        ]);
         const inspectObject = (node, propertyPath, file) => {
             if (!node || node.type !== 'ObjectExpression') return;
             for (const property of node.properties) {
@@ -485,6 +497,8 @@ module.exports = exportedService = {
                 const current = propertyPath.concat(String(key));
                 const name = current.join('.');
                 const value = property.value;
+                if (options.customerProject === true && file === 'config/properties.js' && current.length === 1 &&
+                    customerProjectRootNamespaces.has(String(key))) failures.push(file + ': customer project root must not carry framework/runtime default namespace ' + key + '; move defaults to the owning framework module and keep only true environment/server/customer overrides');
                 if (name === 'frontends' || name === 'tooling.topology.groups.frontends') failures.push(file + ': frontend lifecycle belongs to frontend applications, not backend properties');
                 if (key === '$config' && value.type === 'Literal' && value.value === 'profile') failures.push(file + ': retired profile binding; use existing layered properties');
                 if (['configurationValues.remoteEndpoints', 'configurationValues.runtimeAuthentication'].includes(name)) failures.push(file + ': duplicated configuration authority ' + name);

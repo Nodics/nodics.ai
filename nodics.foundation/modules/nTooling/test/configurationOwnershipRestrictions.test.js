@@ -80,3 +80,21 @@ test('customer validation rejects direct administrator bootstrap values', t => {
   assert.equal(rejected.length, 6);
   assert(!rejected.join(' ').includes(secret));
 });
+
+
+test('customer project root rejects framework and runtime default namespace leakage', t => {
+  const root = fs.mkdtempSync(path.join(os.tmpdir(), 'nodics-customer-leakage-'));
+  t.after(() => fs.rmSync(root, {recursive:true,force:true}));
+  fs.mkdirSync(path.join(root, 'config'), { recursive: true });
+  fs.writeFileSync(path.join(root, 'config/properties.js'), 'module.exports = { backofficeRegistry: {}, apiExposure: {}, servers: {} };\n');
+  const failures = [];
+  audit.auditConfigurationSources(failures, root, {customerProject:true});
+  assert.equal(failures.length, 3);
+  assert(failures.some(value => value.includes('backofficeRegistry')));
+  fs.mkdirSync(path.join(root, 'envs/customerLocal/platformServer/config'), { recursive: true });
+  fs.writeFileSync(path.join(root, 'config/properties.js'), 'module.exports = { project: { code: "customer" } };\n');
+  fs.writeFileSync(path.join(root, 'envs/customerLocal/platformServer/config/properties.js'), 'module.exports = { servers: {}, profileBrowserSession: {} };\n');
+  const scoped = [];
+  audit.auditConfigurationSources(scoped, root, {customerProject:true});
+  assert.deepEqual(scoped, []);
+});
