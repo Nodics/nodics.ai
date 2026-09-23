@@ -432,6 +432,9 @@ module.exports = {
     const outcomes = operationReleases.map((release) =>
       this.dryRunReleaseOutcome(release, executableCodes),
     );
+    const publicationFollowUps = operationReleases
+      .map((release) => this.dryRunPublicationFollowUp(release))
+      .filter(Boolean);
     const summary = {
       install: outcomes.filter((outcome) => outcome.operation === "INSTALL")
         .length,
@@ -465,6 +468,10 @@ module.exports = {
       messages.push(
         "Wait for running imports to complete, then refresh readiness.",
       );
+    if (publicationFollowUps.length > 0)
+      messages.push(
+        "One or more selected releases require governed publication before Online users can see the change.",
+      );
     return {
       mode: "VALIDATE",
       validationOnly: true,
@@ -479,7 +486,38 @@ module.exports = {
       blockedReleases: summary.blocked,
       summary: summary,
       outcomes: outcomes,
+      publicationFollowUps: publicationFollowUps,
       messages: messages,
+    };
+  },
+
+  /** Projects publishable release follow-up steps without invoking nPublish. */
+  dryRunPublicationFollowUp: function (release) {
+    if (
+      release.lifecycle !== "PUBLISHABLE" ||
+      release.publicationPolicy !== "REQUIRED"
+    ) {
+      return undefined;
+    }
+    const review = release.publicationReview || {};
+    return {
+      releaseCode: release.releaseCode,
+      displayName: release.displayName,
+      moduleName: release.moduleName,
+      publicationPolicy: release.publicationPolicy,
+      initialPublicationPolicy: release.initialPublicationPolicy,
+      targetRole: review.targetRole,
+      sourceRole: review.sourceRole || release.destinationRole,
+      siteCode: review.siteCode,
+      catalogCode: review.catalogCode,
+      workflowRequired: true,
+      nextAction:
+        release.status === "CURRENT"
+          ? "Review publication status"
+          : "Import release, then request publication approval",
+      impact:
+        review.impactMessage ||
+        "Imported data remains staged until governed publication makes it Online.",
     };
   },
 
