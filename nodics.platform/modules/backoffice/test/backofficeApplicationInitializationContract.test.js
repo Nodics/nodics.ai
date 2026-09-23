@@ -507,7 +507,10 @@ global.fetch = async (url) => {
     blockedAgora.capability.blockers.some(
       (blocker) =>
         blocker.code === "MISSING_DEPENDENCY" &&
-        blocker.action === "Prepare required dependency",
+        blocker.action === "Prepare required dependency" &&
+        blocker.repair &&
+        blocker.repair.available === false &&
+        blocker.repair.operation === "moduleRegistry.prepareDependency",
     ),
     "Blocked application setup must expose capability-level guided recovery evidence",
   );
@@ -574,6 +577,16 @@ global.fetch = async (url) => {
         !/ERR_|internal error/i.test(step.message),
     ),
   );
+  assert(
+    blockedBySetupData.capability.blockers.some(
+      (blocker) =>
+        blocker.code === "IMPORT_FAILED" &&
+        blocker.repair &&
+        blocker.repair.available === true &&
+        blocker.repair.operation === "applicationInitialization.prepareCapability",
+    ),
+    "Unavailable setup data must expose a governed retry/repair hint without leaking target errors",
+  );
   unavailableReleaseCalls = [];
   let blockedInitiateBySetupData = await service.initiate("agoraapparel", {
     tenant: "default",
@@ -594,6 +607,10 @@ global.fetch = async (url) => {
       "application/json"
     ].schema.properties.forceRefresh.type,
     "boolean",
+  );
+  assert.strictEqual(
+    routes.prepareApplicationCapability.permission,
+    "backoffice.application.initialization.initiate",
   );
   let contentPackRequest;
   moduleInvocationHandler = async (request) => {
@@ -723,6 +740,29 @@ global.fetch = async (url) => {
       readiness: "READY",
       releaseCode: "nexus.web:nexusCorporateSite",
       releaseVersion: "0.0.0",
+      releaseStatus: "CURRENT",
+    },
+  });
+  const readyWithoutReceipt = await service.status("nexus", {
+    tenant: "default",
+    authData: { principalId: "admin" },
+    httpRequest: { headers: { authorization: "Bearer operator-token" } },
+  });
+  assert.strictEqual(readyWithoutReceipt.capability.businessStatus, "NEEDS_ATTENTION");
+  assert(
+    readyWithoutReceipt.capability.blockers.some(
+      (blocker) =>
+        blocker.code === "PUBLICATION_RECEIPT_MISSING" &&
+        blocker.repair &&
+        blocker.repair.operation === "publishing.reconcileReceipt",
+    ),
+    "Online-ready projection without publication evidence must expose receipt reconciliation guidance",
+  );
+  moduleInvocationHandler = async () => ({
+    data: {
+      readiness: "READY",
+      releaseCode: "nexus.web:nexusCorporateSite",
+      releaseVersion: "0.0.0",
       releaseStatus: "UPDATE_AVAILABLE",
       publication: { state: "ONLINE", previousOnlineVersion: "v0" },
     },
@@ -807,10 +847,80 @@ global.fetch = async (url) => {
     "Prepare capability",
   );
   assert(
+    readyButMissingSetup.capability.blockers.some(
+      (blocker) =>
+        blocker.code === "IMPORT_NOT_STARTED" &&
+        blocker.repair &&
+        blocker.repair.operation === "applicationInitialization.prepareCapability",
+    ),
+    "Prepare capability blockers must point at the setup-only governed operation",
+  );
+  assert(
     readyCalls.some(
       (call) =>
         call.moduleName === "import" && call.apiName === "/core/validate",
     ),
+  );
+  let setupInstalled = false;
+  let prepareOnlyCalls = [];
+  moduleInvocationHandler = async (request) => {
+    prepareOnlyCalls.push(request);
+    if (request.moduleName === "import" && request.methodName === "POST") {
+      setupInstalled = true;
+      return {
+        data: {
+          releases: request.requestBody.releaseCodes.map((code) => ({
+            releaseCode: code,
+            version: "0.0.0",
+            status: "CURRENT",
+          })),
+        },
+      };
+    }
+    if (request.moduleName === "import") {
+      return {
+        data: {
+          releases: [
+            {
+              releaseCode: "nexus.web:nexusCorporateMediaReferences",
+              version: "0.0.0",
+              status: setupInstalled ? "CURRENT" : "NOT_INSTALLED",
+            },
+          ],
+        },
+      };
+    }
+    return {
+      data: {
+        readiness: "READY",
+        releaseCode: "nexus.web:nexusCorporateSite",
+        releaseVersion: "0.0.7",
+        releaseStatus: "CURRENT",
+        publication: { state: "ONLINE" },
+      },
+    };
+  };
+  const preparedOnly = await service.prepare("nexusneedssetup", {
+    tenant: "default",
+    requestId: "request-prepare-only",
+    authData: { principalId: "admin" },
+    httpRequest: { headers: { authorization: "Bearer operator-token" } },
+  });
+  assert.strictEqual(preparedOnly.preparation.status, "CURRENT");
+  assert(
+    prepareOnlyCalls.some(
+      (call) => call.moduleName === "import" && call.methodName === "POST",
+    ),
+    "Prepare-only operation must install required setup data",
+  );
+  assert(
+    !prepareOnlyCalls.some(
+      (call) =>
+        call.moduleName === "cms" &&
+        call.methodName === "POST" &&
+        /\/initiate$/.test(call.apiName),
+    ),
+    "Prepare-only operation must not submit the publication approval request",
   );
   moduleInvocationHandler = async () => {
     let error = new Error("CMS baseline release qualification failed");

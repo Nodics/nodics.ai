@@ -39,6 +39,9 @@ and `test/functionalModuleConcurrency.test.js` for concurrency guarantees.
   nImport as the only core-data import authority.
 - Persist and project tenant-scoped, client-safe Axis employee experience
   policy with optimistic operator updates.
+- Project application capability readiness with stable blocker and repair
+  metadata so Axis can explain blocked setup, approval, media, runtime,
+  manifest, and publication states without becoming the readiness authority.
 
 ## Explicit Exclusions
 

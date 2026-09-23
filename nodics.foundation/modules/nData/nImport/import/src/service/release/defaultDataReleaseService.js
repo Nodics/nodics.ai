@@ -2164,6 +2164,7 @@ module.exports = {
           owner: code,
           message: "Data release import is already running.",
           action: "Refresh readiness",
+          repair: this.releaseRepairProjection("IMPORT_IN_PROGRESS", code),
         },
       ];
     if (release.status === "NOT_INSTALLED")
@@ -2174,6 +2175,7 @@ module.exports = {
           owner: code,
           message: "Data release has not been installed for this runtime.",
           action: "Prepare capability",
+          repair: this.releaseRepairProjection("IMPORT_NOT_STARTED", code),
         },
       ];
     if (release.status === "UPDATE_AVAILABLE")
@@ -2184,6 +2186,7 @@ module.exports = {
           owner: code,
           message: "A newer immutable data release is available.",
           action: "Update release",
+          repair: this.releaseRepairProjection("VERSION_MISMATCH", code),
         },
       ];
     if (release.status === "FAILED")
@@ -2194,6 +2197,7 @@ module.exports = {
           owner: code,
           message: "The last data release import attempt failed.",
           action: "Retry failed import",
+          repair: this.releaseRepairProjection("IMPORT_FAILED", code),
         },
       ];
     if (release.status === "DOWNGRADE_AVAILABLE")
@@ -2205,6 +2209,7 @@ module.exports = {
           message:
             "The installed release version is newer than the source release.",
           action: "Review installed version",
+          repair: this.releaseRepairProjection("DOWNGRADE_AVAILABLE", code),
         },
       ];
     return [
@@ -2216,8 +2221,65 @@ module.exports = {
           release.invalidReason ||
           "Data release manifest is invalid or unresolved.",
         action: "Repair release manifest",
+        repair: this.releaseRepairProjection("INVALID_MANIFEST", code),
       },
     ];
+  },
+
+  /** Projects client-safe repair metadata for release readiness without granting browser import authority. */
+  releaseRepairProjection: function (code, owner) {
+    const definitions = {
+      IMPORT_IN_PROGRESS: {
+        available: true,
+        label: "Refresh readiness",
+        operation: "dataRelease.status",
+        action: "REFRESH_READINESS",
+        idempotent: true,
+        requiresConfirmation: false,
+      },
+      IMPORT_NOT_STARTED: {
+        available: true,
+        label: "Prepare capability",
+        operation: "dataRelease.install",
+        action: "PREPARE_CAPABILITY",
+        idempotent: true,
+        requiresConfirmation: false,
+      },
+      VERSION_MISMATCH: {
+        available: true,
+        label: "Update release",
+        operation: "dataRelease.install",
+        action: "UPDATE_RELEASE",
+        idempotent: true,
+        requiresConfirmation: false,
+      },
+      IMPORT_FAILED: {
+        available: true,
+        label: "Retry failed import",
+        operation: "dataRelease.install",
+        action: "RETRY_FAILED_IMPORT",
+        idempotent: true,
+        requiresConfirmation: false,
+      },
+      DOWNGRADE_AVAILABLE: {
+        available: false,
+        label: "Review installed version",
+        operation: "dataRelease.reviewInstalledVersion",
+        action: "REVIEW_INSTALLED_VERSION",
+        idempotent: true,
+        requiresConfirmation: true,
+      },
+      INVALID_MANIFEST: {
+        available: false,
+        label: "Repair release manifest source",
+        operation: "source.releaseManifest.repair",
+        action: "REPAIR_RELEASE_MANIFEST_SOURCE",
+        idempotent: false,
+        requiresConfirmation: true,
+      },
+    };
+    const repair = definitions[code];
+    return repair ? Object.assign({}, repair, { owner: owner }) : undefined;
   },
 
   /** Enforces downgrade and same-version checksum policy. */

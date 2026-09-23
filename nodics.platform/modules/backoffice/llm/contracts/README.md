@@ -81,3 +81,33 @@ principal and bearer before execution; do not substitute the group-free runtime
 credential or add administrator groups to it. Status/preflight retains the scoped
 runtime credential. nImport still enforces the operator's import permission, tenant,
 release governance and schema access at the destination.
+
+## Application capability readiness and repairs
+
+Application initialization status projects one business capability lifecycle for
+Setup & Accelerators, Documentation, Publishing, and related Axis pages. The
+projection is backend-owned; Axis may render it and invoke declared operations,
+but must not infer readiness from page-local state.
+
+Capability blockers must be stable, bounded, and client-safe:
+
+- `code`, `severity`, `owner`, `message`, and `action` identify the issue and
+  next operator-facing step.
+- `technicalStatus`, target server, and target runtime role may be projected
+  only as sanitized evidence.
+- `repair` metadata declares whether a governed action is available, which
+  operation family owns it, an action code, idempotency, and confirmation
+  requirements.
+
+Executable repairs must point to an existing governed backend operation, such
+as setup-only capability preparation, application initiation, or approval
+reconciliation. `applicationInitialization.prepareCapability` may install
+profile-owned setup data and media without submitting the publication approval
+request. Source-only repairs, like invalid release manifests, and
+environment/runtime repairs, like offline targets, must be marked unavailable
+for automatic browser execution and should guide the operator to the owning
+module, runtime, or source release.
+
+Publication readiness must distinguish approval waiting, missing approval task,
+missing publication receipt, and stale Online pointer instead of collapsing all
+states into generic unavailable/invalid messages.

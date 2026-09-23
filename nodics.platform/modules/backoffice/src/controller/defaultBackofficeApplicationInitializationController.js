@@ -37,6 +37,8 @@ module.exports = {
     installContentPack: function (request, callback) { return this.invoke('installContentPack', request, callback); },
     /** Executes the documented bounded module operation. */
     initiate: function (request, callback) { return this.invoke('initiate', request, callback); },
+    /** Prepares capability setup data and media without submitting publication approval. */
+    prepareCapability: function (request, callback) { return this.invoke('prepare', request, callback); },
     /** Reconciles a pending approval workflow through the owning backend operation. */
     reconcileApproval: function (request, callback) { return this.invoke('reconcileApproval', request, callback); },
     /** Executes the documented bounded module operation. */

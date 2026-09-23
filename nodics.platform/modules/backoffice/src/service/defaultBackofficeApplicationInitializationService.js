@@ -653,6 +653,11 @@ module.exports = {
     )
       return "NEEDS_ATTENTION";
     if (projection.readiness === "RETIRED") return "RETIRED";
+    if (
+      projection.readiness === "READY" &&
+      (!projection.publication || projection.publication.state !== "ONLINE")
+    )
+      return "NEEDS_ATTENTION";
     if (projection.readiness === "READY" && projection.releaseStatus !== "UPDATE_AVAILABLE")
       return "ONLINE";
     if (projection.readiness === "READY" && projection.releaseStatus === "UPDATE_AVAILABLE")
@@ -701,6 +706,16 @@ module.exports = {
             "Capability preparation needs attention.",
         ),
         action: this.capabilityBlockerAction(code),
+        targetServer: step.targetServer ? String(step.targetServer) : undefined,
+        targetRuntimeRole: step.targetRuntimeRole
+          ? String(step.targetRuntimeRole)
+          : undefined,
+        technicalStatus: step.status ? String(step.status) : undefined,
+        repair: this.capabilityRepairProjection(code, {
+          owner: step.code,
+          targetServer: step.targetServer,
+          targetRuntimeRole: step.targetRuntimeRole,
+        }),
       });
     });
     if (projection && projection.releaseStatus === "INVALID_RELEASE") {
@@ -711,6 +726,35 @@ module.exports = {
         message:
           "The staged release manifest is invalid and must be repaired before publication.",
         action: "Repair release manifest",
+        technicalStatus: "INVALID_RELEASE",
+        repair: this.capabilityRepairProjection("INVALID_MANIFEST", {
+          owner: projection.releaseCode,
+        }),
+      });
+    }
+    if (
+      projection &&
+      projection.readiness === "READY" &&
+      (!projection.publication || projection.publication.state !== "ONLINE")
+    ) {
+      let code = projection.publication ? "ONLINE_POINTER_STALE" : "PUBLICATION_RECEIPT_MISSING";
+      blockers.push({
+        code: code,
+        severity: "BLOCKER",
+        owner: String(projection.releaseCode || ""),
+        message: projection.publication
+          ? "The publication is marked ready, but the Online pointer is not confirmed."
+          : "The publication is marked ready, but no publication receipt was returned.",
+        action: code === "ONLINE_POINTER_STALE"
+          ? "Refresh Online publication pointer"
+          : "Reconcile publication receipt",
+        technicalStatus:
+          projection.publication && projection.publication.state
+            ? String(projection.publication.state)
+            : "MISSING_PUBLICATION",
+        repair: this.capabilityRepairProjection(code, {
+          owner: projection.releaseCode,
+        }),
       });
     }
     if (projection && projection.readiness === "PUBLICATION_PENDING") {
@@ -724,15 +768,12 @@ module.exports = {
           : "Publication is pending approval, but no workflow task reference is available.",
         action: publication.workflowRef ? "Review approval queue" : "Reconcile publication approval",
         repair: publication.workflowRef
-          ? undefined
-          : {
-              available: true,
-              label: "Reconcile publication approval",
-              operation: "applicationInitialization.reconcileApproval",
-              action: "RECONCILE_APPROVAL_TASK",
-              idempotent: true,
-              requiresConfirmation: false,
-            },
+          ? this.capabilityRepairProjection("APPROVAL_IN_PROGRESS", {
+              owner: publication.code || projection.releaseCode,
+            })
+          : this.capabilityRepairProjection("APPROVAL_TASK_MISSING", {
+              owner: publication.code || projection.releaseCode,
+            }),
       });
     }
     return blockers;
@@ -753,6 +794,137 @@ module.exports = {
         IMPORT_FAILED: "Retry failed import",
       }[code] || "Review capability readiness"
     );
+  },
+  /** Returns client-safe repair metadata for a readiness blocker without inventing browser authority. */
+  capabilityRepairProjection: function (code, context) {
+    let owner = context && context.owner ? String(context.owner) : undefined;
+    let targetServer =
+      context && context.targetServer ? String(context.targetServer) : undefined;
+    let targetRuntimeRole =
+      context && context.targetRuntimeRole
+        ? String(context.targetRuntimeRole)
+        : undefined;
+    let definitions = {
+      MODULE_INACTIVE: {
+        available: false,
+        label: "Activate module in Module Registry",
+        operation: "moduleRegistry.activate",
+        action: "ACTIVATE_REQUIRED_MODULE",
+        idempotent: false,
+        requiresConfirmation: true,
+      },
+      RUNTIME_UNAVAILABLE: {
+        available: false,
+        label: "Restore target runtime",
+        operation: "runtimeTopology.restoreRuntime",
+        action: "RESTORE_RUNTIME",
+        idempotent: true,
+        requiresConfirmation: true,
+      },
+      MISSING_DEPENDENCY: {
+        available: false,
+        label: "Prepare required dependency",
+        operation: "moduleRegistry.prepareDependency",
+        action: "PREPARE_DEPENDENCY",
+        idempotent: true,
+        requiresConfirmation: true,
+      },
+      MEDIA_MISSING: {
+        available: true,
+        label: "Rebuild media references",
+        operation: "applicationInitialization.prepareCapability",
+        action: "REBUILD_MEDIA_REFERENCES",
+        idempotent: true,
+        requiresConfirmation: false,
+      },
+      MEDIA_UNPUBLISHED: {
+        available: true,
+        label: "Prepare media assets",
+        operation: "applicationInitialization.prepareCapability",
+        action: "PREPARE_MEDIA_ASSETS",
+        idempotent: true,
+        requiresConfirmation: false,
+      },
+      INVALID_MANIFEST: {
+        available: false,
+        label: "Repair release manifest source",
+        operation: "source.releaseManifest.repair",
+        action: "REPAIR_RELEASE_MANIFEST_SOURCE",
+        idempotent: false,
+        requiresConfirmation: true,
+      },
+      VERSION_MISMATCH: {
+        available: true,
+        label: "Update staged release",
+        operation: "applicationInitialization.prepareCapability",
+        action: "UPDATE_STAGED_RELEASE",
+        idempotent: true,
+        requiresConfirmation: false,
+      },
+      IMPORT_IN_PROGRESS: {
+        available: true,
+        label: "Refresh readiness",
+        operation: "applicationInitialization.status",
+        action: "REFRESH_READINESS",
+        idempotent: true,
+        requiresConfirmation: false,
+      },
+      IMPORT_NOT_STARTED: {
+        available: true,
+        label: "Prepare capability",
+        operation: "applicationInitialization.prepareCapability",
+        action: "PREPARE_CAPABILITY",
+        idempotent: true,
+        requiresConfirmation: false,
+      },
+      IMPORT_FAILED: {
+        available: true,
+        label: "Retry failed import",
+        operation: "applicationInitialization.prepareCapability",
+        action: "RETRY_FAILED_IMPORT",
+        idempotent: true,
+        requiresConfirmation: false,
+      },
+      APPROVAL_TASK_MISSING: {
+        available: true,
+        label: "Reconcile publication approval",
+        operation: "applicationInitialization.reconcileApproval",
+        action: "RECONCILE_APPROVAL_TASK",
+        idempotent: true,
+        requiresConfirmation: false,
+      },
+      APPROVAL_IN_PROGRESS: {
+        available: false,
+        label: "Review approval queue",
+        operation: "process.reviewApprovalTask",
+        action: "REVIEW_APPROVAL_TASK",
+        idempotent: true,
+        requiresConfirmation: false,
+      },
+      ONLINE_POINTER_STALE: {
+        available: false,
+        label: "Refresh Online publication pointer",
+        operation: "publishing.refreshOnlinePointer",
+        action: "REFRESH_ONLINE_POINTER",
+        idempotent: true,
+        requiresConfirmation: true,
+      },
+      PUBLICATION_RECEIPT_MISSING: {
+        available: false,
+        label: "Reconcile publication receipt",
+        operation: "publishing.reconcileReceipt",
+        action: "RECONCILE_PUBLICATION_RECEIPT",
+        idempotent: true,
+        requiresConfirmation: true,
+      },
+    };
+    let repair = definitions[code];
+    if (!repair) return undefined;
+    return Object.assign({}, repair, {
+      owner: owner,
+      targetServer: targetServer,
+      targetRuntimeRole: targetRuntimeRole,
+    });
   },
   /** Builds the shared business capability readiness projection consumed by Axis pages. */
   capabilityProjection: function (profile, projection) {
@@ -1245,6 +1417,17 @@ module.exports = {
         : "Publication approval could not be reconciled automatically. Review Process workflow state.",
     };
   },
+  /** Runs only profile-owned setup preparation, then returns the refreshed readiness projection. */
+  prepareCapability: async function (profileCode, request) {
+    let profile = this.profile(profileCode);
+    this.human(request);
+    let initialPreparation = await this.preparationStatus(profile, request);
+    if (initialPreparation.status === "BLOCKED") {
+      return this.blockedProjection(profile, initialPreparation);
+    }
+    await this.prepareApplication(profile, request, initialPreparation);
+    return this.status(profileCode, request);
+  },
   /** Invokes only the profile-owned fixed Staged baseline endpoint. */
   /** Executes the documented bounded module operation. */
   invoke: async function (operation, profileCode, request) {
@@ -1456,6 +1639,10 @@ module.exports = {
   /** Executes the documented bounded module operation. */
   status: function (profileCode, request) {
     return this.invoke("status", profileCode, request);
+  },
+  /** Prepares profile-owned setup data and media without submitting publication approval. */
+  prepare: function (profileCode, request) {
+    return this.prepareCapability(profileCode, request);
   },
   /** Executes the documented bounded module operation. */
   initiate: function (profileCode, request) {

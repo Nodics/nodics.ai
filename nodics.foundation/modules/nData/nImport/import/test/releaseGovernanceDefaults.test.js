@@ -119,6 +119,9 @@ test('catalogue items expose backend-owned preparation readiness guidance', () =
     assert.equal(item.readiness.businessStatus, 'NEEDS_ATTENTION');
     assert.equal(item.readiness.blockers[0].code, 'VERSION_MISMATCH');
     assert.equal(item.readiness.blockers[0].action, 'Update release');
+    assert.equal(item.readiness.blockers[0].repair.operation, 'dataRelease.install');
+    assert.equal(item.readiness.blockers[0].repair.action, 'UPDATE_RELEASE');
+    assert.equal(item.readiness.blockers[0].repair.available, true);
     const current = service.toCatalogueItem(release, { version: '1.0.0', checksum: release.checksum }, false);
     assert.equal(current.readiness.businessStatus, 'PREPARED_STAGED');
     assert.deepEqual(current.readiness.blockers, []);
@@ -164,6 +167,7 @@ test('public catalogue response includes release readiness projection', async ()
         assert.equal(response.data[0].readiness.group, 'PROJECT_ACCELERATOR');
         assert.equal(response.data[0].readiness.businessStatus, 'NOT_PREPARED');
         assert.equal(response.data[0].readiness.blockers[0].action, 'Prepare capability');
+        assert.equal(response.data[0].readiness.blockers[0].repair.action, 'PREPARE_CAPABILITY');
     } finally {
         global.NODICS = previousNodics;
     }

@@ -26,7 +26,8 @@ catalogue item can carry a client-safe `readiness` projection with:
 
 - `capabilityCode`, `displayName`, `capabilityType`, and `group`;
 - `businessStatus`, `technicalStatus`, `releaseStatus`, and `nextAction`;
-- bounded blockers with `code`, `severity`, `owner`, `message`, and `action`;
+- bounded blockers with `code`, `severity`, `owner`, `message`, `action`, and
+  optional client-safe `repair` metadata;
 - optional `extendsCapability` and `businessOutcome` for business grouping.
 
 Axis renders this projection as preparation readiness. It must not calculate
@@ -45,6 +46,14 @@ metadata. Common state mapping is:
 | `FAILED` | `NEEDS_ATTENTION` | Retry failed import |
 | `DOWNGRADE_AVAILABLE` | `NEEDS_ATTENTION` | Review installed version |
 | `INVALID_RELEASE` | `NEEDS_ATTENTION` | Repair release manifest |
+
+Blocker `repair` metadata is declarative guidance, not a browser authority. It
+identifies whether a safe governed action is available now, the owning operation
+family, an action code, idempotency, and whether confirmation is required.
+Install/update/retry release actions stay inside nImport. Source defects such as
+invalid generated release manifests are marked unavailable for automatic browser
+repair and should guide the developer/operator to repair the owning source
+release instead of asking business users to understand manifest internals.
 
 ## Optional Release Descriptor
 
