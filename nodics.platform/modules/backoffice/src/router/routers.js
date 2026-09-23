@@ -472,6 +472,19 @@ module.exports = {
                     }
                 } } } }
             },
+            reconcileApplicationApproval: {
+                secured: true, accessGroups: ['runtimeConfigAdminUserGroup'], permission: 'backoffice.application.initialization.reconcileApproval',
+                authTokenTypes: ['access'], apiExposure: 'serviceRegistry', cache: { enabled: false },
+                key: '/applications/:profileCode/initialization/reconcile-approval', method: 'POST',
+                controller: 'DefaultBackofficeApplicationInitializationController', operation: 'reconcileApproval',
+                requestBody: { required: true, content: { 'application/json': { schema: {
+                    type: 'object', additionalProperties: false, properties: {
+                        reason: { type: 'string', maxLength: 1000 },
+                        correlationId: { type: 'string', maxLength: 256 },
+                        forceRefresh: { type: 'boolean' }
+                    }
+                } } } }
+            },
             rollbackApplicationInitialization: {
                 secured: true, accessGroups: ['runtimeConfigAdminUserGroup'], permission: 'backoffice.application.initialization.rollback',
                 authTokenTypes: ['access'], apiExposure: 'serviceRegistry', cache: { enabled: false },

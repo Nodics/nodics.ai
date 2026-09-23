@@ -723,6 +723,16 @@ module.exports = {
           ? "Publication is waiting for reviewer decision."
           : "Publication is pending approval, but no workflow task reference is available.",
         action: publication.workflowRef ? "Review approval queue" : "Reconcile publication approval",
+        repair: publication.workflowRef
+          ? undefined
+          : {
+              available: true,
+              label: "Reconcile publication approval",
+              operation: "applicationInitialization.reconcileApproval",
+              action: "RECONCILE_APPROVAL_TASK",
+              idempotent: true,
+              requiresConfirmation: false,
+            },
       });
     }
     return blockers;
@@ -1203,6 +1213,38 @@ module.exports = {
     }
     return this.preparationStatus(profile, request);
   },
+  /** Returns the target baseline operation used for one BackOffice application operation. */
+  targetBaselineOperation: function (operation) {
+    return operation === "reconcileApproval" ? "initiate" : operation;
+  },
+  /** Returns the target baseline API suffix for one BackOffice application operation. */
+  targetBaselineSuffix: function (operation) {
+    let targetOperation = this.targetBaselineOperation(operation);
+    return targetOperation === "status" ? "" : "/" + targetOperation;
+  },
+  /** Projects repair metadata for BackOffice-owned approval reconciliation. */
+  approvalRepairProjection: function (operation, before, after) {
+    if (operation !== "reconcileApproval") return undefined;
+    let previousPublication = (before && before.publication) || {};
+    let repairedPublication = (after && after.publication) || {};
+    let previousWorkflowRef = previousPublication.workflowRef;
+    let repairedWorkflowRef = repairedPublication.workflowRef;
+    return {
+      action: "RECONCILE_APPROVAL_TASK",
+      status: repairedWorkflowRef ? "REPAIRED_OR_REPLAYED" : "NEEDS_PROCESS_REVIEW",
+      idempotent: true,
+      previousWorkflowRef: previousWorkflowRef ? String(previousWorkflowRef) : undefined,
+      workflowRef: repairedWorkflowRef ? String(repairedWorkflowRef) : undefined,
+      publicationCode: repairedPublication.code
+        ? String(repairedPublication.code)
+        : previousPublication.code
+          ? String(previousPublication.code)
+          : undefined,
+      message: repairedWorkflowRef
+        ? "Publication approval workflow was reconciled. Review the Process task for decision."
+        : "Publication approval could not be reconciled automatically. Review Process workflow state.",
+    };
+  },
   /** Invokes only the profile-owned fixed Staged baseline endpoint. */
   /** Executes the documented bounded module operation. */
   invoke: async function (operation, profileCode, request) {
@@ -1236,13 +1278,36 @@ module.exports = {
             reason: input.reason,
             correlationId: correlationId,
             forceRefresh:
-              input.forceRefresh === true || preparationChanged
+              operation === "reconcileApproval" ||
+              input.forceRefresh === true ||
+              preparationChanged
                 ? true
                 : undefined,
             mediaCodes: mediaCodes.length ? mediaCodes : undefined,
           }
         : undefined;
-    let suffix = operation === "status" ? "" : "/" + operation;
+    let suffix = this.targetBaselineSuffix(operation);
+    let repairBefore;
+    if (operation === "reconcileApproval") {
+      repairBefore = await SERVICE.DefaultModuleService.invokeModule({
+        moduleName: profile.target.moduleName,
+        local: false,
+        connectionName: profile.target.connectionName,
+        connectionType: profile.target.connectionType || "abstract",
+        targetAuthority: {
+          runtimeRole: profile.target.runtimeRole || "WCMS_STAGED",
+        },
+        methodName: "GET",
+        apiName:
+          "/publication/baselines/" +
+          encodeURIComponent(profile.baselineCode),
+        timeoutMs: profile.target.timeoutMs,
+        maxAttempts: profile.target.maxAttempts,
+        header: { Authorization: "Bearer " + token },
+      })
+        .then((response) => (response && (response.data || response.result || response)) || {})
+        .catch(() => undefined);
+    }
     return SERVICE.DefaultModuleService.invokeModule({
       moduleName: profile.target.moduleName,
       local: false,
@@ -1292,6 +1357,11 @@ module.exports = {
           preparation: preparation,
           publication: authority.publication,
         };
+        let repair = this.approvalRepairProjection(
+          operation,
+          repairBefore,
+          authority,
+        );
         return {
           profileCode: profile.code,
           type: profile.type,
@@ -1324,6 +1394,7 @@ module.exports = {
           preparation: preparation,
           publication: authority.publication,
           lineage: authority.lineage,
+          repair: repair,
           capability: this.capabilityProjection(profile, projection),
         };
       });
@@ -1389,6 +1460,10 @@ module.exports = {
   /** Executes the documented bounded module operation. */
   initiate: function (profileCode, request) {
     return this.invoke("initiate", profileCode, request);
+  },
+  /** Executes governed approval reconciliation through the owning Staged baseline authority. */
+  reconcileApproval: function (profileCode, request) {
+    return this.invoke("reconcileApproval", profileCode, request);
   },
   /** Executes the documented bounded module operation. */
   rollback: function (profileCode, request) {

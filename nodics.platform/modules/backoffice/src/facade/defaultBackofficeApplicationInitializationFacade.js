@@ -23,6 +23,8 @@ module.exports = {
     installContentPack: function (profileCode, request) { return SERVICE.DefaultBackofficeApplicationInitializationService.installContentPack(profileCode, request); },
     /** Delegates the requested initialization to the existing owner and returns its asynchronous result. */
     initiate: function (profileCode, request) { return SERVICE.DefaultBackofficeApplicationInitializationService.initiate(profileCode, request); },
+    /** Delegates governed approval-task reconciliation to the owning initialization service. */
+    reconcileApproval: function (profileCode, request) { return SERVICE.DefaultBackofficeApplicationInitializationService.reconcileApproval(profileCode, request); },
     /** Delegates governed application rollback to the owning initialization service. */
     rollback: function (profileCode, request) { return SERVICE.DefaultBackofficeApplicationInitializationService.rollback(profileCode, request); },
     /** Delegates governed application retirement to the owning initialization service. */

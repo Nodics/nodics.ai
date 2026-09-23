@@ -249,6 +249,10 @@ global.fetch = async (url) => {
     routes.initiateApplicationInitialization.permission,
     "backoffice.application.initialization.initiate",
   );
+  assert.strictEqual(
+    routes.reconcileApplicationApproval.permission,
+    "backoffice.application.initialization.reconcileApproval",
+  );
   let prepared = controller.prepare({
     requestId: "request-controller",
     httpRequest: {
@@ -294,6 +298,74 @@ global.fetch = async (url) => {
     false,
     "HTTP publication operations must retain route governance in consolidated runtimes",
   );
+  let reconcileStatusRequest;
+  let reconcileRequest;
+  moduleInvocationHandler = async (request) => {
+    if (request.methodName === "GET") {
+      reconcileStatusRequest = request;
+      return {
+        data: {
+          readiness: "PUBLICATION_PENDING",
+          releaseCode: "nexus.web:nexusCorporateSite",
+          releaseVersion: "0.0.0",
+          releaseStatus: "CURRENT",
+          publication: {
+            code: "cmsBaseline_nexus_0_0_0",
+            state: "PENDING_APPROVAL",
+            workflowRef: "workflow-cmsBaseline_nexus_0_0_0-1",
+          },
+        },
+      };
+    }
+    reconcileRequest = request;
+    return {
+      data: {
+        readiness: "PUBLICATION_PENDING",
+        releaseCode: "nexus.web:nexusCorporateSite",
+        releaseVersion: "0.0.0",
+        releaseStatus: "CURRENT",
+        publication: {
+          code: "cmsBaseline_nexus_0_0_0",
+          state: "PENDING_APPROVAL",
+          workflowRef: "workflow-cmsBaseline_nexus_0_0_0-2",
+        },
+      },
+    };
+  };
+  const reconciled = await service.reconcileApproval("nexus", {
+    tenant: "default",
+    requestId: "request-reconcile",
+    applicationInitialization: {
+      reason: "Repair missing approval task",
+      correlationId: "repair-corr-1",
+    },
+    authData: { principalId: "admin" },
+    httpRequest: { headers: { authorization: "Bearer operator-token" } },
+  });
+  assert.strictEqual(
+    reconcileStatusRequest.apiName,
+    "/publication/baselines/nexus",
+  );
+  assert.strictEqual(
+    reconcileRequest.apiName,
+    "/publication/baselines/nexus/initiate",
+    "Approval reconciliation must replay the owning baseline workflow through the target authority",
+  );
+  assert.strictEqual(reconcileRequest.requestBody.forceRefresh, true);
+  assert.strictEqual(
+    reconcileRequest.idempotencyKey,
+    "nexus:reconcileApproval:repair-corr-1",
+  );
+  assert.deepStrictEqual(reconciled.repair, {
+    action: "RECONCILE_APPROVAL_TASK",
+    status: "REPAIRED_OR_REPLAYED",
+    idempotent: true,
+    previousWorkflowRef: "workflow-cmsBaseline_nexus_0_0_0-1",
+    workflowRef: "workflow-cmsBaseline_nexus_0_0_0-2",
+    publicationCode: "cmsBaseline_nexus_0_0_0",
+    message:
+      "Publication approval workflow was reconciled. Review the Process task for decision.",
+  });
   let preparationCalls = [];
   operationSequence = [];
   fetchUrls = [];
@@ -639,9 +711,12 @@ global.fetch = async (url) => {
     pendingDocsStatus.capability.blockers.some(
       (blocker) =>
         blocker.code === "APPROVAL_TASK_MISSING" &&
-        blocker.action === "Reconcile publication approval",
+        blocker.action === "Reconcile publication approval" &&
+        blocker.repair &&
+        blocker.repair.operation === "applicationInitialization.reconcileApproval" &&
+        blocker.repair.action === "RECONCILE_APPROVAL_TASK",
     ),
-    "Pending publication without a workflow reference must guide the operator to reconcile approval",
+    "Pending publication without a workflow reference must expose governed approval repair metadata",
   );
   moduleInvocationHandler = async () => ({
     data: {
