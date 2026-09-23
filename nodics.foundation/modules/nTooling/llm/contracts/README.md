@@ -215,3 +215,20 @@ an operation. Resolve runtime choices by an explicit server or a unique semantic
 enabled initialization profile by explicit code or a unique template match; missing
 and ambiguous selections fail before acceptance operations. Keep actual customer
 journey choices and deployment container/URL differences in their existing layers.
+
+Acceptance runners must expose a capability-oriented matrix rather than asking
+developers to remember scattered scripts. Matrix rows should identify the
+business outcome, owning capability, required runtime role, required data
+release or publication state, optional browser validation flag, and evidence
+produced. The framework default for browser validation is disabled; local
+environment properties may enable it where a browser and frontend URLs are
+available. Non-local acceptance must not fail solely because browser validation
+is disabled, but it should report that visual evidence was skipped by
+configuration.
+
+Browser evidence capture is tooling-owned. When enabled, it should record the
+page, role, URL source, screenshot or trace location, status, and repair hint.
+It must not become a frontend configuration source, runtime startup dependency,
+or customer-project-only script. Backend readiness, import, publication, media,
+search, assistant, and runtime communication checks remain authoritative even
+when browser smoke validation is unavailable.

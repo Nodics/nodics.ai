@@ -71,6 +71,21 @@ assert(
   "startup validation warnings must declare whether dismissal/acknowledgement is auditable",
 );
 assert(
+  contracts.startupValidationFinding.required.includes("repair"),
+  "startup validation findings must declare backend-owned repair metadata",
+);
+assert.deepStrictEqual(contracts.startupRepairMetadata.properties.eligibility.enum, [
+  "AUTOMATIC",
+  "MANUAL",
+  "NOT_AVAILABLE",
+]);
+assert(
+  contracts.startupRepairMetadata.required.includes("available") &&
+    contracts.startupRepairMetadata.required.includes("operation") &&
+    contracts.startupRepairMetadata.required.includes("unavailableReason") === false,
+  "repair metadata must include stable operation fields while leaving unavailableReason conditional",
+);
+assert(
   contracts.startupValidationReport.required.includes("bootstrapChecks"),
   "startup validation must include bootstrap self-healing checks",
 );

@@ -984,10 +984,25 @@ const moduleLease = {
     backoffice: backofficeMetadata,
   },
 };
+const startupRepairMetadata = {
+  type: "object",
+  additionalProperties: false,
+  required: ["available", "operation", "actionCode", "eligibility", "label", "idempotent", "requiresConfirmation"],
+  properties: {
+    available: { type: "boolean" },
+    operation: { type: "string", minLength: 1, maxLength: 160 },
+    actionCode: { type: "string", minLength: 1, maxLength: 160 },
+    eligibility: { enum: ["AUTOMATIC", "MANUAL", "NOT_AVAILABLE"] },
+    label: { type: "string", minLength: 1, maxLength: 160 },
+    idempotent: { type: "boolean" },
+    requiresConfirmation: { type: "boolean" },
+    unavailableReason: { type: "string", minLength: 1, maxLength: 512 },
+  },
+};
 const startupValidationFinding = {
   type: "object",
   additionalProperties: false,
-  required: ["code", "severity", "owner", "ownerType", "message", "action", "dismissible", "auditRequired"],
+  required: ["code", "severity", "owner", "ownerType", "message", "action", "dismissible", "auditRequired", "repair"],
   properties: {
     code: { type: "string", minLength: 1, maxLength: 128 },
     severity: { enum: ["ERROR", "WARNING", "INFO"] },
@@ -998,6 +1013,7 @@ const startupValidationFinding = {
     action: { type: "string", minLength: 1, maxLength: 1024 },
     dismissible: { type: "boolean" },
     auditRequired: { type: "boolean" },
+    repair: startupRepairMetadata,
   },
 };
 const startupBootstrapCheck = {
@@ -1091,6 +1107,7 @@ module.exports = {
   moduleAvailability: moduleAvailability,
   instanceAvailability: instanceAvailability,
   startupValidationFinding: startupValidationFinding,
+  startupRepairMetadata: startupRepairMetadata,
   startupBootstrapCheck: startupBootstrapCheck,
   startupBootstrapChecks: startupBootstrapChecks,
   startupValidationReport: startupValidationReport,

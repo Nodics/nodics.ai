@@ -62,7 +62,27 @@ module.exports = {
             action: String(action),
             dismissible: options.dismissible === true,
             auditRequired: options.auditRequired === true,
+            repair: this.startupRepair(options.repair, options),
         };
+    },
+    /** Creates bounded repair metadata for startup/configuration findings. */
+    startupRepair: function (repair, options) {
+        options = options || {};
+        repair = repair || {};
+        let available = repair.available === true;
+        let metadata = {
+            available: available,
+            operation: String(repair.operation || options.repairOperation || (available ? 'runtimeConfiguration.update' : 'manual.review')),
+            actionCode: String(repair.actionCode || options.repairActionCode || (available ? 'UPDATE_CONFIGURATION' : 'REVIEW_OWNER')),
+            eligibility: ['AUTOMATIC', 'MANUAL', 'NOT_AVAILABLE'].includes(String(repair.eligibility)) ?
+                String(repair.eligibility) : (available ? 'MANUAL' : 'NOT_AVAILABLE'),
+            label: String(repair.label || options.repairLabel || (available ? 'Update configuration' : 'Review owning configuration')),
+            idempotent: repair.idempotent === undefined ? true : repair.idempotent === true,
+            requiresConfirmation: repair.requiresConfirmation === undefined ? available : repair.requiresConfirmation === true,
+        };
+        if (!available) metadata.unavailableReason = String(repair.unavailableReason || options.repairUnavailableReason ||
+            'No governed automatic repair is available for this finding. Use the owning configuration or runtime capability.');
+        return metadata;
     },
     /** Validates mandatory non-secret property presence declared by owning modules. */
     collectMandatoryPropertyFindings: function (policy) {
@@ -75,7 +95,10 @@ module.exports = {
                 rule.owner || 'backoffice',
                 rule.message || 'A mandatory runtime configuration value is missing.',
                 rule.action || 'Add the value in the owning module, server, tenant, or external configuration layer.',
-                { ownerType: rule.ownerType, propertyPath: rule.path, dismissible: rule.dismissible, auditRequired: rule.auditRequired }
+                { ownerType: rule.ownerType, propertyPath: rule.path, dismissible: rule.dismissible, auditRequired: rule.auditRequired,
+                    repair: rule.repair || { available: true, operation: 'runtimeConfiguration.update',
+                        actionCode: 'UPDATE_REQUIRED_CONFIGURATION', eligibility: 'MANUAL',
+                        label: 'Add required configuration', idempotent: true, requiresConfirmation: true } }
             );
         }).filter(Boolean);
     },
@@ -92,7 +115,11 @@ module.exports = {
                 rule.owner || 'backoffice',
                 rule.message || 'A sample/default runtime configuration value is active.',
                 rule.action || 'Replace the value through the owning configuration layer before non-local use.',
-                { ownerType: rule.ownerType, propertyPath: rule.path, dismissible: rule.dismissible !== false, auditRequired: rule.auditRequired !== false }
+                { ownerType: rule.ownerType, propertyPath: rule.path, dismissible: rule.dismissible !== false,
+                    auditRequired: rule.auditRequired !== false, repair: rule.repair || { available: true,
+                        operation: 'runtimeConfiguration.update', actionCode: 'ROTATE_DEFAULT_CONFIGURATION',
+                        eligibility: 'MANUAL', label: 'Rotate default value', idempotent: true,
+                        requiresConfirmation: true } }
             );
         }).filter(Boolean);
     },
@@ -138,7 +165,12 @@ module.exports = {
             'backoffice',
             messages[code] || 'BackOffice operational configuration is invalid.',
             'Repair the owning BackOffice operations configuration and restart the affected runtime.',
-            { ownerType: 'BACKOFFICE_OPERATIONS', dismissible: false, auditRequired: true }
+            { ownerType: 'BACKOFFICE_OPERATIONS', dismissible: false, auditRequired: true,
+                repair: { available: false, operation: 'backoffice.operations.configure',
+                    actionCode: 'REPAIR_BACKOFFICE_OPERATIONS_CONFIGURATION', eligibility: 'NOT_AVAILABLE',
+                    label: 'Repair BackOffice operations configuration', idempotent: true,
+                    requiresConfirmation: false,
+                    unavailableReason: 'BackOffice operations policy is source/layer owned and must be repaired in the owning configuration before restart.' } }
         ));
     },
     /** Produces a sanitized startup/configuration validation report for Axis and operators. */

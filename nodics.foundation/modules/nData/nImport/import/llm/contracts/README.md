@@ -80,6 +80,19 @@ Use these files for rules that are more specific than root `AGENTS.md` and the m
   install/update/retry actions, but Axis still invokes the existing nImport
   execution route with immutable release selections. Invalid manifests are
   source repair guidance, not an automatic browser repair.
+- Optional `release.descriptor.json` files may supply business grouping hints
+  such as release code, capability code, inherited capability, release type,
+  and short business outcome when framework/tooling cannot derive them from the
+  owning module and generated manifest. They are source-side hints only. They
+  must not be required for every release, must not replace the generated
+  manifest, and must not contain environment values, secrets, runtime URLs, or
+  operator credentials.
+- Pipeline and tooling hooks own manifest refresh, checksum calculation,
+  descriptor validation, and repair diagnostics. Axis and custom projects must
+  not hand-maintain checksum maps or source repair state. A corrupted release
+  must report what is wrong, which owner must repair it, whether a generated
+  command can refresh evidence, and why browser repair is unavailable when the
+  source package itself is invalid.
 
 ## Media-backed file import
 

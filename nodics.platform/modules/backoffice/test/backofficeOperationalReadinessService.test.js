@@ -71,6 +71,12 @@ assert.strictEqual(startupReport.bootstrapChecks.missing, 0);
 assert(startupReport.bootstrapChecks.checks.some(check => check.code === 'BOOTSTRAP_ADMIN_PASSWORD_PRESENT'));
 assert(startupReport.findings.some(finding => finding.code === 'LOCAL_SAMPLE_ADMIN_PASSWORD'));
 assert(startupReport.findings.some(finding => finding.propertyPath === 'defaultAuthDetail.apiKey'));
+let sampleKeyFinding = startupReport.findings.find(finding => finding.propertyPath === 'defaultAuthDetail.apiKey');
+assert.strictEqual(sampleKeyFinding.repair.available, true);
+assert.strictEqual(sampleKeyFinding.repair.operation, 'runtimeConfiguration.update');
+assert.strictEqual(sampleKeyFinding.repair.actionCode, 'ROTATE_DEFAULT_CONFIGURATION');
+assert.strictEqual(sampleKeyFinding.repair.eligibility, 'MANUAL');
+assert.strictEqual(sampleKeyFinding.repair.requiresConfirmation, true);
 assert(!JSON.stringify(startupReport).includes(defaultAuthDetail.apiKey));
 assert(!JSON.stringify(startupReport).includes(bootstrapIdentity.adminPassword));
 let originalAdminPassword = bootstrapIdentity.adminPassword;
@@ -91,6 +97,9 @@ registry.operations.startupValidation.requiredProperties = [{
 let missingReport = service.startupValidationReport();
 assert.strictEqual(missingReport.state, 'NOT_READY');
 assert(missingReport.findings.some(finding => finding.code === 'MISSING_TEST_PROPERTY'));
+let missingFinding = missingReport.findings.find(finding => finding.code === 'MISSING_TEST_PROPERTY');
+assert.strictEqual(missingFinding.repair.available, true);
+assert.strictEqual(missingFinding.repair.actionCode, 'UPDATE_REQUIRED_CONFIGURATION');
 registry.operations.startupValidation.requiredProperties = originalRequiredProperties;
 
 async function validateDeliveryAndProductionPolicy() {
