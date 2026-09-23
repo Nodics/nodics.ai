@@ -710,10 +710,18 @@ module.exports = {
                   : step.status === "NOT_INSTALLED"
                     ? "IMPORT_NOT_STARTED"
                     : "IMPORT_FAILED";
+      let repair = this.capabilityRepairProjection(code, {
+        owner: step.code,
+        targetServer: step.targetServer,
+        targetRuntimeRole: step.targetRuntimeRole,
+      });
       blockers.push({
+        blockerCode: code,
         code: code,
-        severity: step.required === false ? "INFO" : "BLOCKER",
+        severity: this.capabilityBlockerSeverity(code, step.required, repair),
         owner: String(step.code || ""),
+        ownerType: this.capabilityBlockerOwnerType(step),
+        source: this.capabilityBlockerSource(step),
         message: String(
           step.message ||
             step.description ||
@@ -721,31 +729,34 @@ module.exports = {
             "Capability preparation needs attention.",
         ),
         action: this.capabilityBlockerAction(code),
+        disabledReason: this.capabilityBlockerDisabledReason(code, step),
         targetServer: step.targetServer ? String(step.targetServer) : undefined,
         targetRuntimeRole: step.targetRuntimeRole
           ? String(step.targetRuntimeRole)
           : undefined,
         technicalStatus: step.status ? String(step.status) : undefined,
-        repair: this.capabilityRepairProjection(code, {
-          owner: step.code,
-          targetServer: step.targetServer,
-          targetRuntimeRole: step.targetRuntimeRole,
-        }),
+        repair: repair,
         runtimeDiagnostic: step.runtimeDiagnostic,
       });
     });
     if (projection && projection.releaseStatus === "INVALID_RELEASE") {
+      let repair = this.capabilityRepairProjection("INVALID_MANIFEST", {
+        owner: projection.releaseCode,
+      });
       blockers.push({
+        blockerCode: "INVALID_MANIFEST",
         code: "INVALID_MANIFEST",
-        severity: "BLOCKER",
+        severity: this.capabilityBlockerSeverity("INVALID_MANIFEST", true, repair),
         owner: String(projection.releaseCode || ""),
+        ownerType: "SOURCE_RELEASE",
+        source: "RELEASE_MANIFEST",
         message:
           "The staged release manifest is invalid and must be repaired before publication.",
         action: "Repair release manifest",
+        disabledReason:
+          "The source release manifest must be repaired before Axis can install or publish it.",
         technicalStatus: "INVALID_RELEASE",
-        repair: this.capabilityRepairProjection("INVALID_MANIFEST", {
-          owner: projection.releaseCode,
-        }),
+        repair: repair,
       });
     }
     if (
@@ -754,45 +765,112 @@ module.exports = {
       (!projection.publication || projection.publication.state !== "ONLINE")
     ) {
       let code = projection.publication ? "ONLINE_POINTER_STALE" : "PUBLICATION_RECEIPT_MISSING";
+      let repair = this.capabilityRepairProjection(code, {
+        owner: projection.releaseCode,
+      });
       blockers.push({
+        blockerCode: code,
         code: code,
-        severity: "BLOCKER",
+        severity: this.capabilityBlockerSeverity(code, true, repair),
         owner: String(projection.releaseCode || ""),
+        ownerType: "PUBLICATION",
+        source: "ONLINE_PUBLICATION",
         message: projection.publication
           ? "The publication is marked ready, but the Online pointer is not confirmed."
           : "The publication is marked ready, but no publication receipt was returned.",
         action: code === "ONLINE_POINTER_STALE"
           ? "Refresh Online publication pointer"
           : "Reconcile publication receipt",
+        disabledReason:
+          "Publication evidence is incomplete; reconcile the Online pointer or receipt before treating this capability as Online.",
         technicalStatus:
           projection.publication && projection.publication.state
             ? String(projection.publication.state)
             : "MISSING_PUBLICATION",
-        repair: this.capabilityRepairProjection(code, {
-          owner: projection.releaseCode,
-        }),
+        repair: repair,
       });
     }
     if (projection && projection.readiness === "PUBLICATION_PENDING") {
       let publication = projection.publication || {};
+      let code = publication.workflowRef ? "APPROVAL_IN_PROGRESS" : "APPROVAL_TASK_MISSING";
+      let repair = publication.workflowRef
+        ? this.capabilityRepairProjection("APPROVAL_IN_PROGRESS", {
+            owner: publication.code || projection.releaseCode,
+          })
+        : this.capabilityRepairProjection("APPROVAL_TASK_MISSING", {
+            owner: publication.code || projection.releaseCode,
+          });
       blockers.push({
-        code: publication.workflowRef ? "APPROVAL_IN_PROGRESS" : "APPROVAL_TASK_MISSING",
-        severity: publication.workflowRef ? "INFO" : "BLOCKER",
+        blockerCode: code,
+        code: code,
+        severity: this.capabilityBlockerSeverity(code, !publication.workflowRef, repair),
         owner: String(publication.code || projection.releaseCode || ""),
+        ownerType: "PROCESS_WORKFLOW",
+        source: "PUBLICATION_APPROVAL",
         message: publication.workflowRef
           ? "Publication is waiting for reviewer decision."
           : "Publication is pending approval, but no workflow task reference is available.",
         action: publication.workflowRef ? "Review approval queue" : "Reconcile publication approval",
-        repair: publication.workflowRef
-          ? this.capabilityRepairProjection("APPROVAL_IN_PROGRESS", {
-              owner: publication.code || projection.releaseCode,
-            })
-          : this.capabilityRepairProjection("APPROVAL_TASK_MISSING", {
-              owner: publication.code || projection.releaseCode,
-            }),
+        disabledReason: publication.workflowRef
+          ? "The publication is waiting for a governed Process reviewer decision."
+          : "The publication has no actionable Process task reference; reconcile approval before continuing.",
+        repair: repair,
       });
     }
     return blockers;
+  },
+  /** Maps raw preparation source data to a stable repair severity. */
+  capabilityBlockerSeverity: function (code, required, repair) {
+    if (required === false || code === "APPROVAL_IN_PROGRESS") return "INFO";
+    if (repair && repair.available === true) return "REPAIR_REQUIRED";
+    if (["VERSION_MISMATCH", "IMPORT_IN_PROGRESS"].includes(code)) return "WARNING";
+    return "BLOCKED";
+  },
+  /** Classifies which authority owns the fix for one blocker. */
+  capabilityBlockerOwnerType: function (step) {
+    if (!step) return "UNKNOWN";
+    if (step.type === "FUNCTIONAL_MODULE") return "MODULE_REGISTRY";
+    if (step.type === "MEDIA_ASSET_MANIFEST") return "MEDIA_MODULE";
+    if (step.type === "DATA_RELEASE") return "DATA_RELEASE";
+    return "APPLICATION_PROFILE";
+  },
+  /** Classifies which readiness source produced one blocker. */
+  capabilityBlockerSource: function (step) {
+    if (!step) return "UNKNOWN";
+    if (step.type === "FUNCTIONAL_MODULE") return "MODULE_REGISTRY";
+    if (step.type === "MEDIA_ASSET_MANIFEST") return "MEDIA_MANIFEST";
+    if (step.type === "DATA_RELEASE") return "IMPORT_PREFLIGHT";
+    return "APPLICATION_PREPARATION";
+  },
+  /** Returns a concise disabled-action explanation for Axis buttons/tooltips. */
+  capabilityBlockerDisabledReason: function (code, step) {
+    let target = step && (step.targetServer || step.targetRuntimeRole);
+    return (
+      {
+        MODULE_INACTIVE:
+          "This capability depends on a module that is not registered and active.",
+        RUNTIME_UNAVAILABLE:
+          "No active runtime currently owns the required module route.",
+        MISSING_DEPENDENCY:
+          "A required framework or accelerator capability is not ready.",
+        MEDIA_MISSING:
+          "Required media references are missing from the owning media manifest.",
+        MEDIA_UNPUBLISHED:
+          "Required media assets must be prepared before publication.",
+        INVALID_MANIFEST:
+          "The source release manifest is invalid and cannot be installed.",
+        VERSION_MISMATCH:
+          "The staged data version does not match the expected release version.",
+        IMPORT_IN_PROGRESS:
+          "The import runtime is still processing this release.",
+        IMPORT_NOT_STARTED:
+          "Required setup data has not been installed yet.",
+        IMPORT_FAILED:
+          "The target import preflight failed for " +
+          String(target || "the configured runtime") +
+          ".",
+      }[code] || "Readiness is blocked by a capability dependency."
+    );
   },
   /** Returns a guided recovery label for one blocker code. */
   capabilityBlockerAction: function (code) {
@@ -940,14 +1018,174 @@ module.exports = {
       owner: owner,
       targetServer: targetServer,
       targetRuntimeRole: targetRuntimeRole,
+      eligibility: repair.available
+        ? repair.requiresConfirmation
+          ? "MANUAL"
+          : "AUTOMATIC"
+        : "NOT_AVAILABLE",
+      unavailableReason: repair.available
+        ? undefined
+        : "The owning module, source release, runtime, or workflow authority must perform this repair.",
     });
+  },
+  /** Builds a backend-owned dependency projection for Axis pages without exposing implementation internals. */
+  capabilityDependencies: function (profile, projection) {
+    let dependencies = [];
+    let target = (profile && profile.target) || {};
+    if (target.connectionName || target.runtimeRole) {
+      dependencies.push({
+        kind: "RUNTIME",
+        code: String(target.connectionName || target.runtimeRole || "target"),
+        label: "Publication target runtime",
+        required: true,
+        server: target.connectionName ? String(target.connectionName) : undefined,
+        runtimeRole: target.runtimeRole ? String(target.runtimeRole) : "WCMS_STAGED",
+        status: projection && projection.readiness === "BLOCKED" ? "UNKNOWN" : "AVAILABLE",
+      });
+    }
+    [].concat((profile && profile.dataPackages) || []).forEach((pack) => {
+      dependencies.push({
+        kind:
+          pack.type === "MEDIA_ASSET_MANIFEST"
+            ? "MEDIA"
+            : pack.type === "FUNCTIONAL_MODULE"
+              ? "MODULE"
+              : "DATA_RELEASE",
+        code: String(pack.code),
+        label: String(pack.kind || pack.code),
+        required: pack.required !== false,
+        server: pack.targetServer ? String(pack.targetServer) : undefined,
+        runtimeRole: pack.targetRuntimeRole ? String(pack.targetRuntimeRole) : undefined,
+        status: this.dependencyStatus(pack, projection),
+      });
+    });
+    [].concat((profile && profile.presentation && profile.presentation.requiredFunctionalModules) || []).forEach((module) => {
+      dependencies.push({
+        kind: "MODULE",
+        code: String(module.code),
+        label: String(module.label || module.code),
+        required: module.required !== false,
+        status: this.dependencyStatus({ code: module.code, type: "FUNCTIONAL_MODULE" }, projection),
+      });
+    });
+    dependencies.push({
+      kind: "PROCESS",
+      code: "publicationApproval",
+      label: "Governed publication approval",
+      required: true,
+      status:
+        projection && projection.readiness === "PUBLICATION_PENDING"
+          ? "PENDING"
+          : projection && projection.readiness === "READY"
+            ? "CURRENT"
+            : "NOT_STARTED",
+    });
+    dependencies.push({
+      kind: "ONLINE_PUBLICATION",
+      code: "onlinePointer",
+      label: "Online publication pointer",
+      required: true,
+      status:
+        projection &&
+        projection.publication &&
+        projection.publication.state === "ONLINE"
+          ? "CURRENT"
+          : "NOT_READY",
+    });
+    return dependencies;
+  },
+  /** Returns the current status for a declared dependency from the preparation projection. */
+  dependencyStatus: function (dependency, projection) {
+    let steps = [].concat(
+      (projection && projection.preparation && projection.preparation.steps) || [],
+    );
+    let step = steps.find((item) => item.code === dependency.code);
+    if (!step) return "UNKNOWN";
+    if (["CURRENT", "SOURCE_READY", "OPTIONAL"].includes(step.status)) return "CURRENT";
+    if (["NOT_INSTALLED", "NOT_REGISTERED"].includes(step.status)) return "NOT_STARTED";
+    if (["UPDATE_AVAILABLE", "DOWNGRADE_AVAILABLE"].includes(step.status)) return "VERSION_MISMATCH";
+    if (["RUNNING", "IMPORTING"].includes(step.status)) return "IN_PROGRESS";
+    if (["RUNTIME_OFFLINE", "UNAVAILABLE"].includes(step.status)) return "UNAVAILABLE";
+    return String(step.status || "UNKNOWN");
+  },
+  /** Builds a compact graph so UI pages can explain cross-runtime readiness order. */
+  capabilityDependencyGraph: function (profile, projection) {
+    let dependencies = this.capabilityDependencies(profile, projection);
+    let capabilityCode = String(((profile && profile.presentation) || {}).capabilityCode || profile.code);
+    let nodes = [
+      { id: capabilityCode, kind: "CAPABILITY", label: String(((profile && profile.presentation) || {}).title || profile.code) },
+    ].concat(
+      dependencies.map((dependency) => ({
+        id: dependency.kind + ":" + dependency.code,
+        kind: dependency.kind,
+        label: dependency.label,
+        status: dependency.status,
+      })),
+    );
+    let edges = dependencies.map((dependency) => ({
+      from: dependency.kind + ":" + dependency.code,
+      to: capabilityCode,
+      relationship: "REQUIRED_FOR",
+    }));
+    return { nodes: nodes, edges: edges };
+  },
+  /** Summarizes installation, approval, Online, runtime, and media state for business users. */
+  capabilityPublicationSummary: function (projection, blockers) {
+    let blockerCodes = new Set(blockers.map((blocker) => blocker.code));
+    return {
+      installed:
+        projection && projection.preparation && projection.preparation.status === "CURRENT"
+          ? "CURRENT"
+          : projection && projection.preparation
+            ? String(projection.preparation.status)
+            : "UNKNOWN",
+      staged:
+        projection && projection.releaseStatus ? String(projection.releaseStatus) : "UNKNOWN",
+      approval:
+        projection && projection.readiness === "PUBLICATION_PENDING"
+          ? "PENDING"
+          : blockerCodes.has("APPROVAL_TASK_MISSING")
+            ? "NEEDS_REPAIR"
+            : projection && projection.readiness === "READY"
+              ? "APPROVED"
+              : "NOT_STARTED",
+      online:
+        projection && projection.publication && projection.publication.state === "ONLINE"
+          ? "ONLINE"
+          : blockerCodes.has("ONLINE_POINTER_STALE") ||
+              blockerCodes.has("PUBLICATION_RECEIPT_MISSING")
+            ? "NEEDS_REPAIR"
+            : "NOT_ONLINE",
+      runtime:
+        blockers.some((blocker) => blocker.code === "RUNTIME_UNAVAILABLE")
+          ? "UNAVAILABLE"
+          : blockers.some((blocker) => blocker.runtimeDiagnostic)
+            ? "NEEDS_ATTENTION"
+            : "AVAILABLE",
+      media:
+        blockerCodes.has("MEDIA_MISSING") || blockerCodes.has("MEDIA_UNPUBLISHED")
+          ? "NEEDS_REPAIR"
+          : "READY_OR_NOT_REQUIRED",
+    };
   },
   /** Builds the shared business capability readiness projection consumed by Axis pages. */
   capabilityProjection: function (profile, projection) {
     let presentation = (profile && profile.presentation) || {};
     let blockers = this.capabilityBlockers(projection);
     let businessStatus = this.capabilityBusinessStatus(projection);
+    let blockingAction = blockers.find((item) =>
+      ["BLOCKED", "REPAIR_REQUIRED"].includes(item.severity),
+    );
+    let evaluatedAt = new Date().toISOString();
     return {
+      subject: {
+        type: "APPLICATION_CAPABILITY",
+        code: String(presentation.capabilityCode || profile.code),
+        owner: String(profile.owner),
+        applicationCode: String(profile.applicationCode),
+        siteCode: String(profile.siteCode),
+      },
+      status: businessStatus,
       capabilityCode: String(presentation.capabilityCode || profile.code),
       displayName: String(presentation.title || profile.code),
       owningModule: String(profile.owner),
@@ -956,9 +1194,17 @@ module.exports = {
       businessStatus: businessStatus,
       technicalStatus: String((projection && projection.readiness) || "UNKNOWN"),
       releaseStatus: projection && projection.releaseStatus ? String(projection.releaseStatus) : undefined,
+      lastEvaluatedAt: evaluatedAt,
+      source: "backoffice.applicationInitialization",
+      stale: false,
+      dependencies: this.capabilityDependencies(profile, projection),
+      dependencyGraph: this.capabilityDependencyGraph(profile, projection),
       blockers: blockers,
+      repairActions: blockers.map((blocker) => blocker.repair).filter(Boolean),
+      publicationSummary: this.capabilityPublicationSummary(projection, blockers),
+      disabledReason: blockingAction ? blockingAction.disabledReason || blockingAction.message : undefined,
       nextAction:
-        blockers.find((item) => item.severity === "BLOCKER")?.action ||
+        blockingAction?.action ||
         blockers[0]?.action ||
         (businessStatus === "ONLINE" ? "Monitor Online readiness" : "Prepare capability"),
     };

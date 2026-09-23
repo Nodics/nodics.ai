@@ -93,11 +93,26 @@ Capability blockers must be stable, bounded, and client-safe:
 
 - `code`, `severity`, `owner`, `message`, and `action` identify the issue and
   next operator-facing step.
+- `blockerCode` is the stable cross-page blocker identity. `severity` must use
+  the shared business scale `INFO`, `WARNING`, `BLOCKED`, or
+  `REPAIR_REQUIRED`, so Setup, Documentation, Publishing, Approval Queue and
+  Module Registry render the same issue consistently.
 - `technicalStatus`, target server, and target runtime role may be projected
   only as sanitized evidence.
 - `repair` metadata declares whether a governed action is available, which
   operation family owns it, an action code, idempotency, and confirmation
   requirements.
+- `subject`, `status`, `lastEvaluatedAt`, `source`, `stale`,
+  `dependencies`, `dependencyGraph`, `repairActions`, `publicationSummary`, and
+  `disabledReason` are backend-owned readiness facts. Axis may display these
+  fields but must not recompute readiness, runtime ownership, approval state,
+  data import completeness, media readiness, or publishability from page-local
+  state.
+- Runtime, module, data-release, media, Process approval and Online pointer
+  dependencies must be exposed as bounded status summaries. A "No runtime"
+  condition must identify whether it came from module registry state, runtime
+  ownership, heartbeat/transport, or target authorization evidence whenever the
+  owning diagnostic is available.
 
 Executable repairs must point to an existing governed backend operation, such
 as setup-only capability preparation, application initiation, or approval

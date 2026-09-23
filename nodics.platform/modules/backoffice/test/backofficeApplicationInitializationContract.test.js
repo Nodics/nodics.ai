@@ -508,18 +508,49 @@ global.fetch = async (url) => {
     "Blocked application setup must not advertise initialize, retire, or rollback actions as if the app is complete",
   );
   assert.strictEqual(blockedAgora.preparation.status, "BLOCKED");
+  assert.strictEqual(blockedAgora.capability.status, "NEEDS_ATTENTION");
+  assert.strictEqual(blockedAgora.capability.subject.type, "APPLICATION_CAPABILITY");
+  assert.strictEqual(blockedAgora.capability.subject.code, "agoraapparel");
+  assert.strictEqual(blockedAgora.capability.source, "backoffice.applicationInitialization");
+  assert.strictEqual(blockedAgora.capability.stale, false);
+  assert.ok(Date.parse(blockedAgora.capability.lastEvaluatedAt));
   assert.strictEqual(blockedAgora.capability.businessStatus, "NEEDS_ATTENTION");
   assert.strictEqual(blockedAgora.capability.group, "PROJECT_ACCELERATOR");
   assert(
     blockedAgora.capability.blockers.some(
       (blocker) =>
+        blocker.blockerCode === "MISSING_DEPENDENCY" &&
         blocker.code === "MISSING_DEPENDENCY" &&
+        blocker.severity === "BLOCKED" &&
+        blocker.ownerType === "MODULE_REGISTRY" &&
+        blocker.source === "MODULE_REGISTRY" &&
         blocker.action === "Prepare required dependency" &&
+        /required framework or accelerator capability/.test(blocker.disabledReason) &&
         blocker.repair &&
         blocker.repair.available === false &&
+        blocker.repair.eligibility === "NOT_AVAILABLE" &&
         blocker.repair.operation === "moduleRegistry.prepareDependency",
     ),
     "Blocked application setup must expose capability-level guided recovery evidence",
+  );
+  assert(
+    blockedAgora.capability.dependencies.some(
+      (dependency) =>
+        dependency.kind === "MODULE" &&
+        dependency.code === "nodics.commerce" &&
+        dependency.status === "NOT_STARTED",
+    ),
+    "Capability readiness must expose backend-owned dependency status for required modules",
+  );
+  assert(
+    blockedAgora.capability.dependencyGraph.nodes.some(
+      (node) => node.id === "MODULE:nodics.commerce",
+    ),
+    "Capability readiness must expose a compact dependency graph for Axis pages",
+  );
+  assert.strictEqual(
+    blockedAgora.capability.publicationSummary.runtime,
+    "AVAILABLE",
   );
   assert(
     blockedAgora.preparation.steps.some(
@@ -588,8 +619,12 @@ global.fetch = async (url) => {
     blockedBySetupData.capability.blockers.some(
       (blocker) =>
         blocker.code === "IMPORT_FAILED" &&
+        blocker.severity === "REPAIR_REQUIRED" &&
+        blocker.ownerType === "DATA_RELEASE" &&
+        blocker.source === "IMPORT_PREFLIGHT" &&
         blocker.repair &&
         blocker.repair.available === true &&
+        blocker.repair.eligibility === "AUTOMATIC" &&
         blocker.repair.operation === "applicationInitialization.prepareCapability" &&
         blocker.runtimeDiagnostic &&
         blocker.runtimeDiagnostic.targetModule === "import" &&
@@ -739,6 +774,9 @@ global.fetch = async (url) => {
     pendingDocsStatus.capability.blockers.some(
       (blocker) =>
         blocker.code === "APPROVAL_TASK_MISSING" &&
+        blocker.ownerType === "PROCESS_WORKFLOW" &&
+        blocker.source === "PUBLICATION_APPROVAL" &&
+        /no actionable Process task/.test(blocker.disabledReason) &&
         blocker.action === "Reconcile publication approval" &&
         blocker.repair &&
         blocker.repair.operation === "applicationInitialization.reconcileApproval" &&
@@ -760,10 +798,15 @@ global.fetch = async (url) => {
     httpRequest: { headers: { authorization: "Bearer operator-token" } },
   });
   assert.strictEqual(readyWithoutReceipt.capability.businessStatus, "NEEDS_ATTENTION");
+  assert.strictEqual(
+    readyWithoutReceipt.capability.publicationSummary.online,
+    "NEEDS_REPAIR",
+  );
   assert(
     readyWithoutReceipt.capability.blockers.some(
       (blocker) =>
         blocker.code === "PUBLICATION_RECEIPT_MISSING" &&
+        blocker.ownerType === "PUBLICATION" &&
         blocker.repair &&
         blocker.repair.operation === "publishing.reconcileReceipt",
     ),
