@@ -377,8 +377,168 @@ module.exports = {
             nextAction: nextAction,
         };
     },
+    /** Returns the operator authorization header for owner runtime readiness reads. */
+    authorizationHeader: function (request) {
+        let header = request && (request.header || request.headers || (request.httpRequest && request.httpRequest.headers)) || {};
+        let value = header.Authorization || header.authorization;
+        if (value && /^Bearer\s+/i.test(String(value))) return String(value);
+        if (request && request.authToken) return 'Bearer ' + request.authToken;
+        return undefined;
+    },
+    /** Extracts unique nImport catalogue targets from application preparation profiles. */
+    importReadinessTargets: function (profiles) {
+        let targets = {};
+        [].concat(profiles || []).forEach(profile => {
+            [].concat((profile || {}).dataPackages || []).forEach(step => {
+                if (!step || !step.dataType || !step.targetServer) return;
+                let dataType = String(step.dataType);
+                let key = [step.targetServer, step.targetRuntimeRole || '', dataType].join(':');
+                targets[key] = {
+                    dataType: dataType,
+                    targetServer: String(step.targetServer),
+                    targetRuntimeRole: step.targetRuntimeRole ? String(step.targetRuntimeRole) : undefined,
+                };
+            });
+        });
+        return Object.values(targets).sort((left, right) =>
+            [left.targetServer, left.targetRuntimeRole || '', left.dataType].join(':')
+                .localeCompare([right.targetServer, right.targetRuntimeRole || '', right.dataType].join(':')));
+    },
+    /** Calls the owner nImport catalogue route for one target runtime. */
+    invokeImportCatalogue: async function (target, request) {
+        if (!SERVICE.DefaultModuleService || typeof SERVICE.DefaultModuleService.invokeModule !== 'function') {
+            throw new CLASSES.NodicsError('ERR_BOF_00000', 'Module communication service is unavailable');
+        }
+        let authorization = this.authorizationHeader(request);
+        return SERVICE.DefaultModuleService.invokeModule({
+            moduleName: 'import',
+            local: false,
+            connectionName: target.targetServer,
+            connectionType: 'abstract',
+            targetAuthority: {
+                server: target.targetServer,
+                runtimeRole: target.targetRuntimeRole ? { code: target.targetRuntimeRole } : undefined,
+            },
+            methodName: 'GET',
+            apiName: '/' + target.dataType,
+            timeoutMs: 30000,
+            maxAttempts: 1,
+            header: authorization ? { Authorization: authorization } : {},
+            responseSelector: response => response && (response.data || response.result || response) || [],
+        });
+    },
+    /** Normalizes an nImport release blocker into the shared BackOffice readiness shape. */
+    normalizeImportBlocker: function (blocker, release, target) {
+        blocker = blocker || {};
+        let action = blocker.action || (release.readiness || {}).nextAction || 'Open Data Releases';
+        let repair = Object.assign({}, blocker.repair || {});
+        if (!repair.operation) repair.operation = 'dataRelease.install';
+        if (!repair.action) repair.action = repair.actionCode || 'REPAIR_DATA_RELEASE';
+        if (!repair.eligibility) repair.eligibility = repair.available === true ? 'MANUAL' : 'NOT_AVAILABLE';
+        if (!repair.label) repair.label = action;
+        return {
+            blockerCode: String(blocker.blockerCode || blocker.code || 'DATA_RELEASE_NOT_READY'),
+            code: String(blocker.code || blocker.blockerCode || 'DATA_RELEASE_NOT_READY'),
+            severity: String(blocker.severity || 'NEEDS_ATTENTION'),
+            ownerType: String(blocker.ownerType || 'DATA_RELEASE'),
+            source: String(blocker.source || 'IMPORT_RELEASE_CATALOGUE'),
+            action: String(action),
+            message: String(blocker.message || (release.displayName || release.releaseCode || 'Data release') + ' is not ready.'),
+            disabledReason: String(blocker.disabledReason || blocker.message || 'Data release is not ready.'),
+            repair: repair,
+            suggestedAction: String(blocker.suggestedAction || action),
+            ownerModule: release.moduleName || (release.readiness || {}).owningModule,
+            releaseCode: release.releaseCode,
+            dataType: target.dataType,
+            targetServer: target.targetServer,
+            targetRuntimeRole: target.targetRuntimeRole,
+        };
+    },
+    /** Builds the owner-backed import release readiness section from nImport catalogue projections. */
+    importReadinessSection: async function (request, profiles) {
+        let targets = this.importReadinessTargets(profiles);
+        if (targets.length === 0) {
+            return {
+                key: 'imports',
+                title: 'Data import releases',
+                businessStatus: 'NOT_CONFIGURED',
+                ownerModule: 'import',
+                source: 'IMPORT_RELEASE_CATALOGUE',
+                route: '/operations/imports-exports',
+                summary: { targetCount: 0, releaseCount: 0, blockerCount: 0 },
+                blockers: [this.readinessBlocker(
+                    'IMPORT_READINESS_TARGETS_MISSING',
+                    'NEEDS_ATTENTION',
+                    'DATA_RELEASE',
+                    'IMPORT_RELEASE_CATALOGUE',
+                    'Open Setup & Accelerators',
+                    'No application preparation data targets are visible for import readiness.',
+                    { repairOperation: 'applicationInitialization.configureProfiles', repairAction: 'CONFIGURE_PREPARATION_TARGETS',
+                        suggestedAction: 'Define application preparation data targets in the owning application initialization profiles.' }
+                )],
+                nextAction: 'Define application preparation data targets in the owning application initialization profiles.',
+            };
+        }
+        let releases = [];
+        let providerErrors = [];
+        for (let target of targets) {
+            try {
+                let response = await this.invokeImportCatalogue(target, request);
+                [].concat(response || []).forEach(release => releases.push(Object.assign({}, release, { _target: target })));
+            } catch (error) {
+                providerErrors.push({ target: target, error: error });
+            }
+        }
+        let blockers = releases.reduce((result, release) => {
+            let readiness = release.readiness || {};
+            return result.concat([].concat(readiness.blockers || []).map(blocker =>
+                this.normalizeImportBlocker(blocker, release, release._target || {})));
+        }, []);
+        providerErrors.forEach(item => {
+            let diagnostic = item.error && item.error.metadata && item.error.metadata.runtimeInvocationDiagnostic;
+            blockers.push(this.readinessBlocker(
+                'IMPORT_READINESS_PROVIDER_UNAVAILABLE',
+                'NEEDS_ATTENTION',
+                'DATA_RELEASE',
+                'IMPORT_RELEASE_CATALOGUE',
+                'Refresh Module Registry',
+                'nImport catalogue readiness could not be read from the target runtime.',
+                { repairOperation: 'moduleRegistry.refreshRuntime', repairAction: 'REFRESH_IMPORT_RUNTIME',
+                    suggestedAction: 'Start the target runtime, refresh Module Registry, then retry import readiness.',
+                    repairAvailable: true, repairEligibility: 'MANUAL', repairLabel: 'Refresh runtime' }
+            ));
+            blockers[blockers.length - 1].targetServer = item.target.targetServer;
+            blockers[blockers.length - 1].targetRuntimeRole = item.target.targetRuntimeRole;
+            blockers[blockers.length - 1].dataType = item.target.dataType;
+            if (diagnostic) blockers[blockers.length - 1].runtimeDiagnostic = diagnostic;
+        });
+        let statusCounts = releases.reduce((result, release) => {
+            let status = (release.readiness || {}).businessStatus || 'UNKNOWN';
+            result[status] = (result[status] || 0) + 1;
+            return result;
+        }, {});
+        let businessStatus = providerErrors.length || blockers.length ? 'NEEDS_ATTENTION' : releases.length ? 'READY' : 'NOT_CONFIGURED';
+        return {
+            key: 'imports',
+            title: 'Data import releases',
+            businessStatus: businessStatus,
+            ownerModule: 'import',
+            source: 'IMPORT_RELEASE_CATALOGUE',
+            route: '/operations/imports-exports',
+            summary: Object.assign({
+                targetCount: targets.length,
+                releaseCount: releases.length,
+                blockerCount: blockers.length,
+                providerErrorCount: providerErrors.length,
+            }, statusCounts),
+            blockers: blockers,
+            nextAction: blockers.length ? 'Open Data Releases and repair blocked release groups.' :
+                releases.length ? 'Data releases are prepared in the owning import catalogues.' :
+                    'Install required data release catalogues for the active preparation targets.',
+        };
+    },
     /** Builds the canonical post-reset operational readiness aggregate for Axis and tooling. */
-    operationalReadinessReport: function (request, context) {
+    operationalReadinessReport: async function (request, context) {
         context = context || {};
         let startupValidation = context.startupValidation || this.startupValidationReport(request);
         let startupBlockers = []
@@ -402,6 +562,7 @@ module.exports = {
                 'One or more bootstrap checks are missing.',
                 { repairOperation: 'runtimeConfiguration.update', repairAction: 'REPAIR_BOOTSTRAP_CONFIGURATION' }
             )] : []);
+        let importSection = await this.importReadinessSection(request, context.applicationInitializationProfiles);
         let sections = [
             {
                 key: 'bootstrap',
@@ -419,7 +580,7 @@ module.exports = {
                 nextAction: startupBlockers.length ? 'Resolve startup validation findings on the Axis dashboard.' : 'Startup validation is clear.',
             },
             this.moduleRuntimeSection(context.modules, context.availability),
-            this.ownerPendingSection('imports', 'Data import releases', 'import', '/operations/imports-exports', 'NIMPORT_RELEASE_READINESS', 'Open Data Releases and repair blocked release groups.'),
+            importSection,
             this.ownerPendingSection('publishing', 'Publication readiness', 'publishing', '/publishing/setup', 'PUBLICATION_READINESS', 'Open Publishing and resolve dependency/approval blockers.'),
             this.ownerPendingSection('approval', 'Process approval tasks', 'workflow', '/process/approval-queue', 'PROCESS_APPROVAL_READINESS', 'Open Approval Queue and reconcile missing process tasks.'),
             this.documentationSection(context.documentationSources, context.documentationPublication),

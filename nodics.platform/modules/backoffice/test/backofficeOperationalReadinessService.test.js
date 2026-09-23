@@ -121,28 +121,42 @@ assert(missingReport.findings.some(finding => finding.code === 'MISSING_TEST_PRO
 let missingFinding = missingReport.findings.find(finding => finding.code === 'MISSING_TEST_PROPERTY');
 assert.strictEqual(missingFinding.repair.available, true);
 assert.strictEqual(missingFinding.repair.actionCode, 'UPDATE_REQUIRED_CONFIGURATION');
-let aggregateReport = service.operationalReadinessReport({ tenant: 'default' }, {
-    startupValidation: missingReport,
-    modules: { backoffice: [{ instanceId: 'platformServer:backoffice', state: 'ACTIVE' }] },
-    availability: { backoffice: { state: 'UP' } },
-    documentationSources: [{ id: 'framework.docs', label: 'Framework docs', type: 'CMS', route: '/docs/framework' }],
-    documentationPublication: {},
-    applicationInitializationProfiles: [{ code: 'circaewaste', title: 'Circa eWaste' }]
-});
-assert.strictEqual(aggregateReport.contractVersion, 1);
-assert.strictEqual(aggregateReport.state, 'NOT_READY');
-assert(aggregateReport.sections.some(section => section.key === 'imports'
-    && section.businessStatus === 'NOT_EXPOSED'
-    && section.blockers[0].suggestedAction));
-assert(aggregateReport.sections.some(section => section.key === 'documentation'
-    && section.businessStatus === 'READY'));
-assert(aggregateReport.sections.some(section => section.key === 'runtimeCommunication'
-    && section.businessStatus === 'READY'));
-assert(aggregateReport.sections.find(section => section.key === 'bootstrap').blockers
-    .some(blocker => blocker.code === 'MISSING_TEST_PROPERTY' && blocker.repair.operation === 'runtimeConfiguration.update'));
 registry.operations.startupValidation.requiredProperties = originalRequiredProperties;
 
 async function validateDeliveryAndProductionPolicy() {
+    let moduleInvocationCalls = [];
+    let originalModuleService = global.SERVICE.DefaultModuleService;
+    global.SERVICE.DefaultModuleService = { invokeModule: async descriptor => {
+        moduleInvocationCalls.push(descriptor);
+        return [{ releaseCode: 'circa.ewaste:sample', moduleName: 'circa.ewaste',
+            displayName: 'Circa sample release',
+            readiness: { businessStatus: 'PREPARED_STAGED', blockers: [] } }];
+    } };
+    let aggregateReport = await service.operationalReadinessReport({ tenant: 'default', httpRequest: { headers: { authorization: 'Bearer operator-token' } } }, {
+        startupValidation: missingReport,
+        modules: { backoffice: [{ instanceId: 'platformServer:backoffice', state: 'ACTIVE' }] },
+        availability: { backoffice: { state: 'UP' } },
+        documentationSources: [{ id: 'framework.docs', label: 'Framework docs', type: 'CMS', route: '/docs/framework' }],
+        documentationPublication: {},
+        applicationInitializationProfiles: [{ code: 'circaewaste', title: 'Circa eWaste',
+            dataPackages: [{ code: 'circa.ewaste:sample', dataType: 'sample', targetServer: 'wcmsStaged', targetRuntimeRole: 'WCMS_STAGED' }] }]
+    });
+    assert.strictEqual(aggregateReport.contractVersion, 1);
+    assert.strictEqual(aggregateReport.state, 'NOT_READY');
+    assert(aggregateReport.sections.some(section => section.key === 'imports'
+        && section.businessStatus === 'READY'
+        && section.summary.releaseCount === 1));
+    assert.strictEqual(moduleInvocationCalls[0].moduleName, 'import');
+    assert.strictEqual(moduleInvocationCalls[0].apiName, '/sample');
+    assert.strictEqual(moduleInvocationCalls[0].header.Authorization, 'Bearer operator-token');
+    assert(aggregateReport.sections.some(section => section.key === 'documentation'
+        && section.businessStatus === 'READY'));
+    assert(aggregateReport.sections.some(section => section.key === 'runtimeCommunication'
+        && section.businessStatus === 'READY'));
+    assert(aggregateReport.sections.find(section => section.key === 'bootstrap').blockers
+        .some(blocker => blocker.code === 'MISSING_TEST_PROPERTY' && blocker.repair.operation === 'runtimeConfiguration.update'));
+    global.SERVICE.DefaultModuleService = originalModuleService;
+
     registry.operations.alerts = { enabled: true, failClosed: true, requireAcknowledgement: true,
         publisherService: 'AlertPublisher' };
     service._lastPublishedSignature = null;

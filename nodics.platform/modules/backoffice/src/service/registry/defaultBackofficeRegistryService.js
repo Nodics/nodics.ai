@@ -1484,7 +1484,7 @@ module.exports = {
       : [];
     let operationalReadiness = SERVICE.DefaultBackofficeOperationalReadinessService &&
       typeof SERVICE.DefaultBackofficeOperationalReadinessService.operationalReadinessReport === "function"
-      ? SERVICE.DefaultBackofficeOperationalReadinessService.operationalReadinessReport(request, {
+      ? await SERVICE.DefaultBackofficeOperationalReadinessService.operationalReadinessReport(request, {
           startupValidation: startupValidation,
           modules: effectiveModules,
           availability: availability,
