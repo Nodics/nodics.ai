@@ -702,6 +702,58 @@ module.exports = {
                 'No actionable publication approval blockers were detected.',
         };
     },
+    /** Builds owner-backed media readiness from media-manifest evidence in application/CMS projections. */
+    mediaSection: function (profileStatusReport) {
+        let statuses = [].concat((profileStatusReport || {}).statuses || []);
+        let errors = [].concat((profileStatusReport || {}).errors || []);
+        let blockers = statuses.reduce((result, status) => {
+            let capability = status && status.capability || {};
+            let mediaBlockers = [].concat(capability.blockers || [])
+                .filter(blocker => blocker.source === 'MEDIA_MANIFEST' || String(blocker.code || '').startsWith('MEDIA_'));
+            return result.concat(mediaBlockers.map(blocker => this.normalizeCapabilityBlocker(blocker, status, 'MEDIA_MODULE')));
+        }, []);
+        errors.forEach(item => {
+            let blocker = this.readinessBlocker(
+                'MEDIA_PROVIDER_UNAVAILABLE',
+                'NEEDS_ATTENTION',
+                'MEDIA_MODULE',
+                'BACKOFFICE_APPLICATION_INITIALIZATION',
+                'Open Media Management',
+                'Media readiness could not be read because the owning application/media status is unavailable.',
+                { repairOperation: 'applicationInitialization.refreshStatus', repairAction: 'REFRESH_MEDIA_STATUS',
+                    suggestedAction: 'Refresh Setup & Accelerators and verify the target media/CMS runtimes are registered.' }
+            );
+            blocker.profileCode = item.profile && item.profile.code ? String(item.profile.code) : undefined;
+            blockers.push(blocker);
+        });
+        let mediaStates = statuses.map(status => {
+            let summary = status && status.capability && status.capability.publicationSummary || {};
+            return summary.media ? String(summary.media) : 'UNKNOWN';
+        });
+        let ready = mediaStates.filter(state => state === 'READY_OR_NOT_REQUIRED').length;
+        let needsRepair = mediaStates.filter(state => state === 'NEEDS_REPAIR').length;
+        return {
+            key: 'media',
+            title: 'Media objects and references',
+            businessStatus: blockers.length || errors.length || needsRepair > 0 ? 'NEEDS_ATTENTION' : statuses.length ? 'READY' : 'NOT_CONFIGURED',
+            ownerModule: 'media',
+            source: 'MEDIA_MANIFEST',
+            route: '/media',
+            summary: {
+                profileCount: statuses.length,
+                readyOrNotRequiredCount: ready,
+                needsRepairCount: needsRepair,
+                blockerCount: blockers.length,
+                providerErrorCount: errors.length,
+                cleanupReviewRoute: '/media/cleanup-candidates',
+                replicationRoute: '/media/replication',
+            },
+            blockers: blockers,
+            nextAction: blockers.length ? 'Open Media Management or Setup & Accelerators and repair missing media references/assets.' :
+                statuses.length ? 'Media references and required publication assets are ready or not required.' :
+                    'Configure application/media preparation profiles before validating media readiness.',
+        };
+    },
     /** Builds the canonical post-reset operational readiness aggregate for Axis and tooling. */
     operationalReadinessReport: async function (request, context) {
         context = context || {};
@@ -750,7 +802,7 @@ module.exports = {
             this.publishingSection(profileStatusReport),
             this.approvalSection(profileStatusReport),
             this.documentationSection(context.documentationSources, context.documentationPublication),
-            this.ownerPendingSection('media', 'Media objects and references', 'media', '/media', 'MEDIA_READINESS', 'Open Media Management and reconcile missing media objects/references.'),
+            this.mediaSection(profileStatusReport),
             this.ownerPendingSection('search', 'Search index and read-source policy', 'search', '/discovery', 'SEARCH_READINESS', 'Open Discovery/Search controls and verify index freshness.'),
             this.ownerPendingSection('assistant', 'Assistant knowledge sources', 'assistant', '/assistant', 'ASSISTANT_KNOWLEDGE_READINESS', 'Install/publish/index authorized knowledge sources.'),
             this.applicationSection(context.applicationInitializationProfiles),

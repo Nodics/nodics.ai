@@ -42,7 +42,7 @@ global.SERVICE = { AuditPublisher: { record: () => Promise.resolve(true) },
             businessStatus: 'ONLINE',
             blockers: [],
             approvalDiagnostic: { status: 'APPROVED', message: 'Publication approval is complete.' },
-            publicationSummary: { online: 'ONLINE', approval: 'APPROVED' },
+            publicationSummary: { online: 'ONLINE', approval: 'APPROVED', media: 'READY_OR_NOT_REQUIRED' },
             nextAction: 'Monitor Online readiness'
         }
     }) },
@@ -168,6 +168,10 @@ async function validateDeliveryAndProductionPolicy() {
     assert(aggregateReport.sections.some(section => section.key === 'approval'
         && section.businessStatus === 'READY'
         && section.summary.pendingApprovalCount === 0));
+    assert(aggregateReport.sections.some(section => section.key === 'media'
+        && section.businessStatus === 'READY'
+        && section.summary.readyOrNotRequiredCount === 1
+        && section.summary.cleanupReviewRoute === '/media/cleanup-candidates'));
     assert(aggregateReport.sections.some(section => section.key === 'documentation'
         && section.businessStatus === 'READY'));
     assert(aggregateReport.sections.some(section => section.key === 'runtimeCommunication'
