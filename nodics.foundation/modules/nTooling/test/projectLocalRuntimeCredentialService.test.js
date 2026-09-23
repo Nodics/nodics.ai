@@ -35,6 +35,8 @@ assert.strictEqual(fs.statSync(file).mode & 0o777, 0o600, 'generated local crede
 assert(first.NODICS_JWT_SECRET, 'generated local credentials must include JWT signing material');
 assert(first.NODICS_API_KEY_PEPPER, 'generated local credentials must include API-key digest material');
 assert(first.NODICS_API_KEY, 'generated local credentials must include a server-local runtime proof');
+assert.strictEqual(first.NODICS_BOOTSTRAP_ADMIN_PASSWORD, 'adminPassword',
+    'native-local credentials must keep the documented administrator password');
 assert.strictEqual(first.NODICS_RUNTIME_API_KEY, undefined,
     'new native-local credentials must not generate server-shared runtime aliases');
 assert.strictEqual(first.NODICS_WASTE_API_KEY, undefined,
@@ -65,6 +67,8 @@ fs.writeFileSync(migratedFile, JSON.stringify({
     NODICS_WASTE_API_KEY: 'w'.repeat(48)
 }, null, 2));
 const migrated = service.ensureCredentials(migratedRoot, 'kickoffLocal');
+assert.strictEqual(migrated.NODICS_BOOTSTRAP_ADMIN_PASSWORD, 'adminPassword',
+    'legacy local administrator passwords must normalize to the documented local default');
 assert.strictEqual(migrated.NODICS_API_KEY, 'r'.repeat(48),
     'legacy retained runtime proof must migrate to the server-local runtime proof');
 assert.strictEqual(migrated.NODICS_RUNTIME_API_KEY, undefined);

@@ -28,7 +28,7 @@ module.exports = {
         publication: { baselines: {
           "nexus": {
             "releaseCode": "nexus.web:nexusCorporateSite",
-            "releaseVersion": "0.0.21",
+            "releaseVersion": "0.0.22",
             "dataType": "sample",
             "rootType": "site",
             "rootCode": "nexusCorporateSite",

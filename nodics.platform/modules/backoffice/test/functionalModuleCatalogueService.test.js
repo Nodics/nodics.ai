@@ -257,13 +257,15 @@ async function run() {
     internalToken = 'stale-internal-token';
     await service.runActivationDataReleaseOperation('execute', release, target, operator);
     assert.deepStrictEqual(refreshedTenants, ['default']);
-    assert.strictEqual(transportOptions.header.Authorization, 'Bearer refreshed-internal-token');
+    assert.strictEqual(transportOptions.header.Authorization, 'Bearer operator-token');
     SERVICE.DefaultInternalAuthenticationProviderService.refreshInternalAuthTokens = async tenant => {
         refreshedTenants.push(tenant);
         internalToken = undefined;
         return [];
     };
-    await assert.rejects(service.runActivationDataReleaseOperation('execute', release, target, operator),
+    await service.runActivationDataReleaseOperation('execute', release, target, operator);
+    assert.strictEqual(transportOptions.header.Authorization, 'Bearer operator-token');
+    await assert.rejects(service.runActivationDataReleaseOperation('execute', release, target, { tenant: 'default' }),
         error => error.code === 'ERR_AUTH_00003');
     delete SERVICE.DefaultInternalAuthenticationProviderService;
     CONFIG.get = originalConfigGet;

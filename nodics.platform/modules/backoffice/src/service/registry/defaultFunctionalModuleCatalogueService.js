@@ -1668,16 +1668,22 @@ module.exports = {
       await SERVICE.DefaultInternalAuthenticationProviderService
         .refreshInternalAuthTokens(tenant);
     }
+    let operatorAuthorization =
+      request &&
+      request.httpRequest &&
+      request.httpRequest.headers &&
+      (request.httpRequest.headers.authorization ||
+        request.httpRequest.headers.Authorization);
     let token =
       typeof NODICS !== "undefined" &&
       NODICS.getInternalAuthToken &&
       NODICS.getInternalAuthToken(tenant);
-    if (!token)
+    if (!operatorAuthorization && !token)
       throw new CLASSES.NodicsError(
         "ERR_AUTH_00003",
         "Internal activation data token is unavailable",
       );
-    let authorization = "Bearer " + token;
+    let authorization = operatorAuthorization || "Bearer " + token;
     let moduleService = SERVICE.DefaultModuleService;
     if (
       !moduleService ||

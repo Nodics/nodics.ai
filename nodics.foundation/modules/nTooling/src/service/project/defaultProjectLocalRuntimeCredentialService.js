@@ -37,6 +37,7 @@ const legacyRuntimeApiKeys = Object.freeze([
     'NODICS_COMMERCE_STAGED_API_KEY',
     'NODICS_COMMERCE_API_KEY'
 ]);
+const localBootstrapAdminPassword = 'adminPassword';
 
 function randomSecret(bytes = 48) {
     return crypto.randomBytes(bytes).toString('base64url');
@@ -67,15 +68,15 @@ module.exports = {
             values = {
                 NODICS_JWT_SECRET: randomSecret(64),
                 NODICS_API_KEY_PEPPER: randomSecret(64),
-                NODICS_BOOTSTRAP_ADMIN_PASSWORD: process.env.NODICS_BOOTSTRAP_ADMIN_PASSWORD || randomSecret(),
+                NODICS_BOOTSTRAP_ADMIN_PASSWORD: process.env.NODICS_BOOTSTRAP_ADMIN_PASSWORD || localBootstrapAdminPassword,
                 NODICS_BOOTSTRAP_SERVICE_PASSWORD: randomSecret(),
                 NODICS_BOOTSTRAP_SERVICE_API_KEY: randomSecret(),
                 NODICS_API_KEY: randomSecret()
             };
         }
         let changed = false;
-        if (isWeakBootstrapSecret(values.NODICS_BOOTSTRAP_ADMIN_PASSWORD)) {
-            values.NODICS_BOOTSTRAP_ADMIN_PASSWORD = randomSecret();
+        if (values.NODICS_BOOTSTRAP_ADMIN_PASSWORD !== localBootstrapAdminPassword) {
+            values.NODICS_BOOTSTRAP_ADMIN_PASSWORD = process.env.NODICS_BOOTSTRAP_ADMIN_PASSWORD || localBootstrapAdminPassword;
             changed = true;
         }
         if (isWeakBootstrapSecret(values.NODICS_BOOTSTRAP_SERVICE_PASSWORD)) {

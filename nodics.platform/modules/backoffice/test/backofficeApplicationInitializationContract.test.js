@@ -159,6 +159,7 @@ let moduleInvocationHandler = async (request) => ({
   request,
 });
 let operationSequence = [];
+let fetchUrls = [];
 let functionalModuleRecords = {
   "nodics.commerce": {
     functionalModule: "nodics.commerce",
@@ -177,9 +178,17 @@ global.SERVICE = {
     getRecord: async (_project, functionalModule) =>
       functionalModuleRecords[functionalModule],
   },
+  DefaultBackofficeRegistryService: {
+    resolveRuntimeOwner: async (options) => ({
+      endpoint:
+        "https://runtime.example.test/nodics/" +
+        String(options.moduleName || "unknown"),
+    }),
+  },
 };
-global.fetch = async () => {
+global.fetch = async (url) => {
   operationSequence.push("media:upload");
+  fetchUrls.push(String(url));
   return { ok: true, text: async () => "{}" };
 };
 
@@ -189,7 +198,7 @@ global.fetch = async () => {
   const executed = await service.invokeDataReleaseOperation("execute", importGroup, operator);
   assert.equal(executed.request.header.Authorization, "Bearer operator-token");
   const checked = await service.invokeDataReleaseOperation("preflight", importGroup, operator);
-  assert.equal(checked.request.header.Authorization, "Bearer service-token");
+  assert.equal(checked.request.header.Authorization, "Bearer operator-token");
   for (const rejected of [
     { ...operator, httpRequest: { headers: {} } },
     { ...operator, httpRequest: { headers: { authorization: "Basic invalid" } } },
@@ -287,6 +296,7 @@ global.fetch = async () => {
   );
   let preparationCalls = [];
   operationSequence = [];
+  fetchUrls = [];
   moduleInvocationHandler = async (request) => {
     preparationCalls.push(request);
     operationSequence.push(request.moduleName + ":" + request.apiName);
@@ -367,6 +377,9 @@ global.fetch = async () => {
       operationSequence.indexOf("import:/sample/install"),
     "Application media must be uploaded before WCMS content imports bind media references",
   );
+  assert.deepStrictEqual(fetchUrls, [
+    "https://runtime.example.test/nodics/media/v0/storage/upload",
+  ]);
   moduleInvocationHandler = async (request) => {
     if (request.moduleName === "import") {
       return {

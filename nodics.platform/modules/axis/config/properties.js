@@ -87,7 +87,8 @@ module.exports = {
             {
               "moduleName": "axis",
               "sections": [
-                "axisBaseline"
+                "axisBaseline",
+                "core-v002"
               ]
             }
           ]

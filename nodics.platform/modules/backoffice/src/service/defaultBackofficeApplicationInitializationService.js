@@ -459,15 +459,8 @@ module.exports = {
   },
   /** Invokes one target runtime data-release operation for application preparation. */
   invokeDataReleaseOperation: function (mode, group, request) {
-    let token = NODICS.getInternalAuthToken(request.tenant);
-    if (!token)
-      throw new CLASSES.NodicsError(
-        "ERR_BOF_00083",
-        "Application initialization service authentication is unavailable",
-      );
     let suffix = mode === "preflight" ? "validate" : "install";
-    const authorization = mode === "execute"
-      ? this.authorizationHeader(request, true) : "Bearer " + token;
+    const authorization = this.authorizationHeader(request, true);
     return SERVICE.DefaultModuleService.invokeModule({
       moduleName: "import",
       // These operations intentionally use the governed HTTP import route, even in a consolidated runtime.
@@ -862,19 +855,48 @@ module.exports = {
       );
     return parsed.origin;
   },
-  /** Resolves a configured server connection into an HTTP base URL. */
-  serverBaseUrl: function (serverCode) {
-    let servers = CONFIG.get("servers") || {};
-    let server = servers[serverCode] || {};
-    let endpoint = server.abstractEndpoint || server.endpoint || {};
-    let host = endpoint.httpHost || "localhost";
-    let port = endpoint.httpPort;
-    if (!port)
+  /** Resolves a runtime registry owner into the module's HTTP base URL. */
+  moduleBaseUrl: async function (serverCode, moduleName, runtimeRole) {
+    const resolver = SERVICE.DefaultBackofficeRegistryService;
+    if (!resolver || typeof resolver.resolveRuntimeOwner !== "function") {
       throw new CLASSES.NodicsError(
         "ERR_BOF_00081",
-        "Application preparation target server is unavailable",
+        "Application preparation runtime registry is unavailable",
       );
-    return "http://" + host + ":" + String(port);
+    }
+    const candidates = Array.from(
+      new Set(
+        [
+          String(serverCode || ""),
+          String(serverCode || "").replace(/Server$/, ""),
+          /Server$/.test(String(serverCode || ""))
+            ? String(serverCode || "")
+            : String(serverCode || "") + "Server",
+        ].filter(Boolean),
+      ),
+    );
+    let owner;
+    for (const candidate of candidates) {
+      owner = await resolver.resolveRuntimeOwner({
+        moduleName,
+        connectionName: candidate,
+        targetAuthority: {
+          server: candidate,
+          runtimeRole: runtimeRole ? { code: runtimeRole } : undefined,
+        },
+      });
+      if (owner && owner.endpoint) break;
+    }
+    if (!owner || !owner.endpoint) {
+      throw new CLASSES.NodicsError(
+        "ERR_BOF_00081",
+        "Application preparation target runtime is unavailable",
+      );
+    }
+    return String(owner.endpoint).replace(
+      new RegExp("/" + moduleName.replace(/[.*+?^${}()|[\]\\]/g, "\\$&") + "$"),
+      "",
+    );
   },
   /** Uploads one declared media asset through the media-owned upload API. */
   uploadMediaAsset: async function (step, asset, request) {
@@ -928,7 +950,8 @@ module.exports = {
       ),
     );
     let response = await fetch(
-      this.serverBaseUrl(step.targetServer) + "/nodics/media/v0/storage/upload",
+      (await this.moduleBaseUrl(step.targetServer, "media", step.targetRuntimeRole)) +
+        "/media/v0/storage/upload",
       {
         method: "POST",
         headers: {
