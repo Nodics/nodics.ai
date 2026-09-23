@@ -70,12 +70,16 @@ Use these files for rules that are more specific than root `AGENTS.md` and the m
   checksum changes for a non-development installed version, block execution
   unless the release version changes or an explicit later-layer policy permits
   the change.
-- Release catalogue readiness blockers must include business-safe repair
-  metadata when a known next action exists. `dataRelease.install` repair
-  metadata may guide authorized install/update/retry actions, but Axis still
-  invokes the existing nImport execution route with immutable release
-  selections. Invalid manifests are source repair guidance, not an automatic
-  browser repair.
+- Release catalogue readiness blockers must use the shared BackOffice/Axis
+  capability-readiness vocabulary. Emit stable `blockerCode`, `code`,
+  `owner`, `ownerType`, `source`, `message`, `action`, `disabledReason`,
+  sanitized `technicalStatus`, optional target evidence, and severity values
+  from `INFO`, `WARNING`, `BLOCKED`, or `REPAIR_REQUIRED`. Do not reintroduce
+  legacy `ACTION` or `BLOCKER` severities as the primary contract.
+  `dataRelease.install` repair metadata may guide authorized
+  install/update/retry actions, but Axis still invokes the existing nImport
+  execution route with immutable release selections. Invalid manifests are
+  source repair guidance, not an automatic browser repair.
 
 ## Media-backed file import
 

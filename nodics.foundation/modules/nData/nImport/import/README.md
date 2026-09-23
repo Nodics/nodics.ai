@@ -26,12 +26,19 @@ catalogue item can carry a client-safe `readiness` projection with:
 
 - `capabilityCode`, `displayName`, `capabilityType`, and `group`;
 - `businessStatus`, `technicalStatus`, `releaseStatus`, and `nextAction`;
-- bounded blockers with `code`, `severity`, `owner`, `message`, `action`, and
-  optional client-safe `repair` metadata;
+- bounded blockers with stable `blockerCode`, `code`, shared severity
+  (`INFO`, `WARNING`, `BLOCKED`, or `REPAIR_REQUIRED`), `owner`,
+  `ownerType`, `source`, `message`, `action`, client-safe disabled reason,
+  sanitized technical status, and optional client-safe `repair` metadata;
 - optional `extendsCapability` and `businessOutcome` for business grouping.
 
 Axis renders this projection as preparation readiness. It must not calculate
 readiness from browser state, source folders, or release names.
+
+This projection uses the same blocker vocabulary as BackOffice application
+capability readiness. Axis pages must not keep legacy `ACTION` or `BLOCKER`
+normalization fallbacks as the primary contract; those strings are historical
+compatibility only.
 
 Readiness is derived from the available release, installed receipt, active run
 state, optional manifest capability metadata, and optional release descriptor

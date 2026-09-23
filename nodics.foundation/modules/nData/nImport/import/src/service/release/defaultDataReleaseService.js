@@ -2158,72 +2158,109 @@ module.exports = {
     if (release.status === "CURRENT") return [];
     if (release.status === "RUNNING")
       return [
-        {
+        this.releaseReadinessBlocker(release, {
           code: "IMPORT_IN_PROGRESS",
           severity: "INFO",
-          owner: code,
           message: "Data release import is already running.",
           action: "Refresh readiness",
-          repair: this.releaseRepairProjection("IMPORT_IN_PROGRESS", code),
-        },
+        }),
       ];
     if (release.status === "NOT_INSTALLED")
       return [
-        {
+        this.releaseReadinessBlocker(release, {
           code: "IMPORT_NOT_STARTED",
-          severity: "ACTION",
-          owner: code,
+          severity: "REPAIR_REQUIRED",
           message: "Data release has not been installed for this runtime.",
           action: "Prepare capability",
-          repair: this.releaseRepairProjection("IMPORT_NOT_STARTED", code),
-        },
+        }),
       ];
     if (release.status === "UPDATE_AVAILABLE")
       return [
-        {
+        this.releaseReadinessBlocker(release, {
           code: "VERSION_MISMATCH",
-          severity: "ACTION",
-          owner: code,
+          severity: "REPAIR_REQUIRED",
           message: "A newer immutable data release is available.",
           action: "Update release",
-          repair: this.releaseRepairProjection("VERSION_MISMATCH", code),
-        },
+        }),
       ];
     if (release.status === "FAILED")
       return [
-        {
+        this.releaseReadinessBlocker(release, {
           code: "IMPORT_FAILED",
-          severity: "BLOCKER",
-          owner: code,
+          severity: "REPAIR_REQUIRED",
           message: "The last data release import attempt failed.",
           action: "Retry failed import",
-          repair: this.releaseRepairProjection("IMPORT_FAILED", code),
-        },
+        }),
       ];
     if (release.status === "DOWNGRADE_AVAILABLE")
       return [
-        {
+        this.releaseReadinessBlocker(release, {
           code: "VERSION_MISMATCH",
-          severity: "BLOCKER",
-          owner: code,
+          repairCode: "DOWNGRADE_AVAILABLE",
+          severity: "BLOCKED",
           message:
             "The installed release version is newer than the source release.",
           action: "Review installed version",
-          repair: this.releaseRepairProjection("DOWNGRADE_AVAILABLE", code),
-        },
+        }),
       ];
     return [
-      {
+      this.releaseReadinessBlocker(release, {
         code: "INVALID_MANIFEST",
-        severity: "BLOCKER",
-        owner: code,
+        severity: "BLOCKED",
         message:
           release.invalidReason ||
           "Data release manifest is invalid or unresolved.",
         action: "Repair release manifest",
-        repair: this.releaseRepairProjection("INVALID_MANIFEST", code),
-      },
+      }),
     ];
+  },
+
+  /** Builds one shared readiness blocker using the BackOffice/Axis severity vocabulary. */
+  releaseReadinessBlocker: function (release, definition) {
+    const owner = release.releaseCode || release.moduleName + ":" + release.dataType;
+    const code = definition.code;
+    const repairCode = definition.repairCode || code;
+    return {
+      blockerCode: code,
+      code: code,
+      severity: definition.severity,
+      owner: owner,
+      ownerType: "DATA_RELEASE",
+      source: "IMPORT_RELEASE_CATALOGUE",
+      message: definition.message,
+      action: definition.action,
+      disabledReason: this.releaseReadinessDisabledReason(repairCode, release),
+      technicalStatus: release.status,
+      targetServer: release.targetServer ? String(release.targetServer) : undefined,
+      targetRuntimeRole: release.targetRuntimeRole
+        ? String(release.targetRuntimeRole)
+        : undefined,
+      repair: this.releaseRepairProjection(repairCode, owner),
+    };
+  },
+
+  /** Explains why an import readiness action is blocked or available. */
+  releaseReadinessDisabledReason: function (code, release) {
+    const target = release.targetServer || release.targetRuntimeRole;
+    return (
+      {
+        IMPORT_IN_PROGRESS:
+          "The import runtime is already processing this release; refresh readiness after it completes.",
+        IMPORT_NOT_STARTED:
+          "The release is not installed for this runtime and must be prepared through nImport.",
+        VERSION_MISMATCH:
+          "The installed release is behind the available source release.",
+        IMPORT_FAILED:
+          "The previous import attempt failed; retry through the governed nImport operation.",
+        DOWNGRADE_AVAILABLE:
+          "The installed release version is newer than the available source and requires operator review.",
+        INVALID_MANIFEST:
+          "The source release manifest is invalid; repair the owning source release before import.",
+      }[code] ||
+      "Release readiness is blocked for " +
+        String(target || "the configured runtime") +
+        "."
+    );
   },
 
   /** Projects client-safe repair metadata for release readiness without granting browser import authority. */

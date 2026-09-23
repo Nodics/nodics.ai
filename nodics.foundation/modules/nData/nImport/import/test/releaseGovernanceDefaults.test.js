@@ -117,8 +117,13 @@ test('catalogue items expose backend-owned preparation readiness guidance', () =
     const item = service.toCatalogueItem(release, { version: '0.9.0', checksum: 'b'.repeat(64) }, false);
     assert.equal(item.status, 'UPDATE_AVAILABLE');
     assert.equal(item.readiness.businessStatus, 'NEEDS_ATTENTION');
+    assert.equal(item.readiness.blockers[0].blockerCode, 'VERSION_MISMATCH');
     assert.equal(item.readiness.blockers[0].code, 'VERSION_MISMATCH');
+    assert.equal(item.readiness.blockers[0].severity, 'REPAIR_REQUIRED');
+    assert.equal(item.readiness.blockers[0].ownerType, 'DATA_RELEASE');
+    assert.equal(item.readiness.blockers[0].source, 'IMPORT_RELEASE_CATALOGUE');
     assert.equal(item.readiness.blockers[0].action, 'Update release');
+    assert.match(item.readiness.blockers[0].disabledReason, /installed release is behind/);
     assert.equal(item.readiness.blockers[0].repair.operation, 'dataRelease.install');
     assert.equal(item.readiness.blockers[0].repair.action, 'UPDATE_RELEASE');
     assert.equal(item.readiness.blockers[0].repair.available, true);
@@ -166,6 +171,7 @@ test('public catalogue response includes release readiness projection', async ()
         assert.equal(response.data[0].readiness.displayName, 'Circa eWaste');
         assert.equal(response.data[0].readiness.group, 'PROJECT_ACCELERATOR');
         assert.equal(response.data[0].readiness.businessStatus, 'NOT_PREPARED');
+        assert.equal(response.data[0].readiness.blockers[0].severity, 'REPAIR_REQUIRED');
         assert.equal(response.data[0].readiness.blockers[0].action, 'Prepare capability');
         assert.equal(response.data[0].readiness.blockers[0].repair.action, 'PREPARE_CAPABILITY');
     } finally {
