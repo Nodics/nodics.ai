@@ -17,7 +17,7 @@
  * @owner nTooling
  */
 
-import { spawn, execFileSync } from 'node:child_process';
+import { spawn, spawnSync, execFileSync } from 'node:child_process';
 import fs from 'node:fs';
 import net from 'node:net';
 import path from 'node:path';
@@ -160,6 +160,36 @@ export function selectRuntimes() {
   return [...topology.backendRuntimes];
 }
 
+function selectedServerBuild(runtime, topology) {
+  if (runtime.buildBeforeStart === false || !runtime.server) return undefined;
+  if (runtime.command && !['nodics', 'npm'].includes(runtime.command)) return undefined;
+  return {
+    command: runtime.buildCommand || 'nodics',
+    args: runtime.buildArgs || ['build', '--environment=' + topology.environment, '--server=' + runtime.server],
+    cwd: runtime.cwd || projectRoot
+  };
+}
+
+function buildSelectedRuntime(runtime, topology) {
+  const build = selectedServerBuild(runtime, topology);
+  if (!build) return;
+  const logPath = path.join(topology.stateDirectory, `${runtime.code}.build.log`);
+  fs.mkdirSync(topology.stateDirectory, { recursive: true });
+  const log = fs.openSync(logPath, 'a');
+  fs.writeSync(log, `\n[topology] BUILD ${runtime.label} ${new Date().toISOString()}\n`);
+  const result = spawnSync(build.command, build.args, {
+    cwd: build.cwd,
+    env: runtimeEnvironment(runtime),
+    stdio: ['ignore', log, log],
+    encoding: 'utf8'
+  });
+  fs.closeSync(log);
+  if (result.status !== 0) {
+    throw new Error(`${runtime.label} selected-server build failed; log: ${logPath}`);
+  }
+  process.stdout.write(`[topology] BUILT ${runtime.label}\n`);
+}
+
 /** Performs non-mutating Local topology checks without opening database connections directly. */
 export async function preflight() {
   const topology = readTopology();
@@ -245,6 +275,7 @@ async function start() {
   if (busy.length) throw new Error(`Refusing to start because required ports are busy: ${busy.join(', ')}. Run topology:status and stop the owning process explicitly.`);
 
   fs.mkdirSync(topology.stateDirectory, { recursive: true });
+  for (const runtime of runtimes) buildSelectedRuntime(runtime, topology);
   const children = [];
   let stopping = false;
   let started = false;
