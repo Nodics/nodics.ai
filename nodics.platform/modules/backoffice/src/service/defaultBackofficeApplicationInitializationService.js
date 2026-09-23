@@ -457,6 +457,21 @@ module.exports = {
       causes: remoteResponse ? [remoteResponse] : undefined,
     });
   },
+  /** Extracts a client-safe runtime invocation diagnostic from a framework error. */
+  runtimeInvocationDiagnostic: function (error, fallback) {
+    let source =
+      (error && error.metadata && error.metadata.runtimeInvocationDiagnostic) ||
+      (error &&
+        error.contexts &&
+        error.contexts
+          .map((context) => context && context.runtimeInvocationDiagnostic)
+          .find(Boolean)) ||
+      undefined;
+    if (!source && !fallback) return undefined;
+    return CLASSES.NodicsError.cleanContext(
+      Object.assign({}, fallback || {}, source || {}),
+    );
+  },
   /** Invokes one target runtime data-release operation for application preparation. */
   invokeDataReleaseOperation: function (mode, group, request) {
     let suffix = mode === "preflight" ? "validate" : "install";
@@ -716,6 +731,7 @@ module.exports = {
           targetServer: step.targetServer,
           targetRuntimeRole: step.targetRuntimeRole,
         }),
+        runtimeDiagnostic: step.runtimeDiagnostic,
       });
     });
     if (projection && projection.releaseStatus === "INVALID_RELEASE") {
@@ -989,6 +1005,14 @@ module.exports = {
             Object.assign({}, step, {
               status: "UNAVAILABLE",
               message: this.preparationFailureMessage(step, error),
+              runtimeDiagnostic: this.runtimeInvocationDiagnostic(error, {
+                phase: "preparation",
+                targetServer: group.targetServer,
+                targetRuntimeRole: group.targetRuntimeRole,
+                targetModule: "import",
+                suggestedAction:
+                  "Start the target import runtime or repair its runtime registration and service credential.",
+              }),
             }),
           ),
         );

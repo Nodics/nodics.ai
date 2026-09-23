@@ -29,6 +29,13 @@ class NodicsError extends Error {
       this.code = code;
     }
   }
+  static cleanContext(context) {
+    return Object.fromEntries(
+      Object.entries(context || {}).filter(
+        ([, value]) => value !== undefined && value !== null && value !== "",
+      ),
+    );
+  }
 }
 global.CLASSES = { NodicsError };
 global.CONFIG = {
@@ -583,9 +590,13 @@ global.fetch = async (url) => {
         blocker.code === "IMPORT_FAILED" &&
         blocker.repair &&
         blocker.repair.available === true &&
-        blocker.repair.operation === "applicationInitialization.prepareCapability",
+        blocker.repair.operation === "applicationInitialization.prepareCapability" &&
+        blocker.runtimeDiagnostic &&
+        blocker.runtimeDiagnostic.targetModule === "import" &&
+        blocker.runtimeDiagnostic.targetServer === "wcmsStaged" &&
+        blocker.runtimeDiagnostic.targetRuntimeRole === "WCMS_STAGED",
     ),
-    "Unavailable setup data must expose a governed retry/repair hint without leaking target errors",
+    "Unavailable setup data must expose governed retry/repair and runtime diagnostic hints without leaking target errors",
   );
   unavailableReleaseCalls = [];
   let blockedInitiateBySetupData = await service.initiate("agoraapparel", {

@@ -21,8 +21,18 @@ const assert = require('assert');
 
 class NodicsError extends Error {
     constructor(code, message) {
-        super(message || String(code));
-        this.code = code;
+        const input = typeof code === 'object' && code !== null ? code : { code, message };
+        super(input.message || String(input.code));
+        this.code = input.code;
+        this.metadata = input.metadata;
+    }
+    static cleanContext(context) {
+        return Object.fromEntries(Object.entries(context || {}).filter(([, value]) => value !== undefined && value !== null && value !== ''));
+    }
+    addContext(context) {
+        this.contexts = this.contexts || [];
+        this.contexts.push(NodicsError.cleanContext(context));
+        return this;
     }
 }
 
@@ -40,6 +50,7 @@ global.CONFIG = {
 	    get: key => {
 	        if (key === 'defaultContentType') return 'application/json';
 	        if (key === 'defaultTenant') return 'default';
+	        if (key === 'contextRoot') return 'nodics';
 	        if (key === 'runtimeRole') return { code: 'INVENTORY', publication: 'OPERATIONAL' };
 	        if (key === 'serviceCommunication') return {
 	            timeoutMs: 1000,
@@ -155,6 +166,20 @@ const service = Object.assign({}, definition, {
         apiName: '/cart',
         request: { tenant: 'default' }
     }), /Remote module endpoint is unavailable/);
+    try {
+        await service.invokeModule({
+            moduleName: 'checkout',
+            targetAuthority: { runtimeRole: 'CHECKOUT_ONLINE' },
+            apiName: '/cart',
+            request: { tenant: 'default' }
+        });
+        assert.fail('Unavailable endpoint should expose runtime invocation diagnostics');
+    } catch (error) {
+        assert.strictEqual(error.metadata.runtimeInvocationDiagnostic.targetModule, 'checkout');
+        assert.strictEqual(error.metadata.runtimeInvocationDiagnostic.targetRuntimeRole, 'CHECKOUT_ONLINE');
+        assert.strictEqual(error.metadata.runtimeInvocationDiagnostic.phase, 'runtimeResolution');
+        assert.strictEqual(error.metadata.runtimeInvocationDiagnostic.failureCode, 'REMOTE_ENDPOINT_UNAVAILABLE');
+    }
 
     registryOwners = [{
         moduleName: 'checkout',
@@ -204,6 +229,19 @@ const service = Object.assign({}, definition, {
     });
     assert.strictEqual(fetchedRequest.headers.Authorization, undefined,
         'Explicit unauthenticated remote calls must not invent service credentials');
+    await assert.rejects(async () => {
+        await service.invokeModule({
+            moduleName: 'secureCatalog',
+            apiName: '/internal-health',
+            methodName: 'GET',
+            request: { tenant: 'default' }
+        });
+    }, error => {
+        assert.strictEqual(error.metadata.runtimeInvocationDiagnostic.phase, 'credential');
+        assert.strictEqual(error.metadata.runtimeInvocationDiagnostic.requiredCredential, 'internalServiceToken');
+        assert.strictEqual(error.metadata.runtimeInvocationDiagnostic.targetModule, 'secureCatalog');
+        return true;
+    });
 
     console.log('Module invocation local/remote contract validated');
 })().catch(error => {

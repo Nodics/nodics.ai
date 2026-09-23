@@ -139,6 +139,49 @@ module.exports = {
             runtimeRole: resolution && resolution.runtimeRole
         };
     },
+    /** Builds credential-free operator diagnostics for runtime communication failures. */
+    buildInvocationDiagnostic: function (options, phase, extra) {
+        options = options || {};
+        extra = extra || {};
+        let targetAuthority = options.targetAuthority || {};
+        if (typeof targetAuthority === 'string') targetAuthority = { runtimeRole: targetAuthority };
+        let current = this.getCurrentRuntimeAuthority();
+        let request = options.request || options.requestBody || {};
+        return CLASSES.NodicsError.cleanContext({
+            phase: phase,
+            sourceEnvironment: current.environment,
+            sourceServer: current.server,
+            sourceNode: current.node,
+            sourceRuntimeRole: current.runtimeRole && (current.runtimeRole.code || current.runtimeRole.runtimeRole || current.runtimeRole.publication),
+            targetModule: options.moduleName,
+            targetConnection: this.getModuleConnectionName(options),
+            targetServer: targetAuthority.server,
+            targetRuntimeRole: targetAuthority.runtimeRole && (targetAuthority.runtimeRole.code || targetAuthority.runtimeRole),
+            targetEnvironment: targetAuthority.environment,
+            targetNode: targetAuthority.node,
+            apiName: options.apiName,
+            methodName: options.methodName || 'POST',
+            tenant: options.tenant || request.tenant || CONFIG.get('defaultTenant') || 'default',
+            requiredCredential: options.requireInternalAuth === false ? 'none' : 'internalServiceToken',
+            resolutionSource: extra.resolutionSource,
+            resolvedInstanceId: extra.instanceId,
+            resolvedEndpoint: extra.endpoint,
+            failureCode: extra.failureCode,
+            failureMessage: extra.failureMessage,
+            suggestedAction: extra.suggestedAction
+        });
+    },
+
+    /** Creates a Nodics error carrying the shared runtime invocation diagnostic. */
+    invocationError: function (code, message, options, phase, extra) {
+        return new CLASSES.NodicsError({
+            code: code,
+            message: message,
+            metadata: {
+                runtimeInvocationDiagnostic: this.buildInvocationDiagnostic(options, phase, extra)
+            }
+        });
+    },
 
     /** Resolves the logical module or origin circuit partition for a request. */
     getCircuitKey: function (requestUrl) {
@@ -318,8 +361,14 @@ module.exports = {
         if (options.requireInternalAuth === false) {
             return {};
         }
-        throw new CLASSES.NodicsError('ERR_TNT_00002',
-            'Internal service token is unavailable for remote module: ' + options.moduleName);
+        throw this.invocationError('ERR_TNT_00002',
+            'Internal service token is unavailable for remote module: ' + options.moduleName,
+            options,
+            'credential',
+            {
+                failureCode: 'INTERNAL_TOKEN_UNAVAILABLE',
+                suggestedAction: 'Verify the source runtime has a server-level API key or bootstrap proof and can obtain an internal service token.'
+            });
     },
 
     /** Builds a request directly against a Runtime Registry owner endpoint. */
@@ -358,7 +407,10 @@ module.exports = {
                 methodName: options.methodName || 'GET',
                 apiName: options.apiName,
                 instanceId: owner.instanceId,
-                runtimeRole: owner.runtimeRole
+                runtimeRole: owner.runtimeRole,
+                server: owner.server,
+                node: owner.node,
+                targetAuthority: options.targetAuthority
             }
         };
     },
@@ -413,12 +465,35 @@ module.exports = {
                 return this.buildRuntimeRegistryRequest(requestOptions, owner, header);
             }
             if (!this.isModuleEndpointAvailable(options)) {
-                throw new CLASSES.NodicsError('ERR_TNT_00002',
-                    'Remote module endpoint is unavailable: ' + this.getModuleConnectionName(options));
+                throw this.invocationError('ERR_TNT_00002',
+                    'Remote module endpoint is unavailable: ' + this.getModuleConnectionName(options),
+                    options,
+                    'runtimeResolution',
+                    {
+                        failureCode: 'REMOTE_ENDPOINT_UNAVAILABLE',
+                        resolutionSource: 'runtimeRegistry/staticFallback',
+                        suggestedAction: 'Start the target runtime or verify it has registered an active runtime lease for the requested module and role.'
+                    });
             }
             this.recordInvocationResolution(options, { source: 'staticFallback' });
             return this.buildRequest(requestOptions);
-        }).then(requestUrl => this.fetch(requestUrl)).then(response => {
+        }).then(requestUrl => this.fetch(requestUrl)).catch(error => {
+            if (error && error.metadata && error.metadata.runtimeInvocationDiagnostic) throw error;
+            let diagnostic = this.buildInvocationDiagnostic(options, 'transport', {
+                failureCode: error && error.code,
+                failureMessage: error && (error.remoteMessage || error.message),
+                suggestedAction: 'Check target runtime health, route permission, internal grant, and runtime registration.'
+            });
+            if (error && typeof error.addContext === 'function') {
+                error.addContext({ runtimeInvocationDiagnostic: diagnostic });
+            }
+            if (error) {
+                error.metadata = Object.assign({}, error.metadata, {
+                    runtimeInvocationDiagnostic: diagnostic
+                });
+            }
+            throw error;
+        }).then(response => {
             if (typeof options.responseSelector === 'function') {
                 return options.responseSelector(response);
             }
@@ -545,7 +620,8 @@ module.exports = {
                 moduleName: options.moduleName,
                 connectionName: options.connectionName || options.moduleName,
                 methodName: options.methodName || 'GET',
-                apiName: options.apiName
+                apiName: options.apiName,
+                targetAuthority: options.targetAuthority
             }
         };
     },
