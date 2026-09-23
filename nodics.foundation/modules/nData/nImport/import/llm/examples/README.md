@@ -4,6 +4,13 @@ This folder contains examples that help AI agents and developers work correctly 
 
 Prefer small examples that show proper layered customization, configuration overrides, service extension, schema/router changes, tests, and documentation updates without modifying unrelated Nodics code.
 
+## Release descriptor metadata
+
+Use [release descriptor examples](release-descriptor.md) when a release needs
+business capability metadata for Axis readiness grouping. Descriptors remain
+source-side metadata and must not become imported payload, runtime
+configuration, or a custom-project replacement for framework projection rules.
+
 ## Axis file import example
 
 The Back Office file import journey is a composition of two backend

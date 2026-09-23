@@ -427,6 +427,78 @@ module.exports = exportedService = {
                 'Section `' + sectionName + '` must declare a supported kind and semantic version.');
         }
     });
+    (this.validateReleaseDescriptors || exportedService.validateReleaseDescriptors).call(this, report, moduleObject, dataPath);
+},
+
+    /** Validates optional release descriptor files as source metadata, not payload/configuration. */
+    validateReleaseDescriptors: function (report, moduleObject, dataPath) {
+    const descriptors = (this.collectNamedFiles || exportedService.collectNamedFiles).call(this, dataPath, 'release.descriptor.json', []);
+    descriptors.forEach(filePath => {
+        const relativePath = (this.relative || exportedService.relative).call(this, moduleObject.path, filePath);
+        const releaseRoot = path.basename(path.dirname(filePath));
+        if (!/^(init|core|sample)-v\d{3}$/.test(releaseRoot) && !['init', 'core', 'sample'].includes(releaseRoot)) {
+            (this.createFinding || exportedService.createFinding).call(this, report, 'error', moduleObject, 'invalid-release-descriptor-placement',
+                '`release.descriptor.json` must live directly inside an init/core/sample release root: `' + relativePath + '`.');
+            return;
+        }
+        let descriptor;
+        try {
+            descriptor = (this.readJson || exportedService.readJson).call(this, filePath);
+        } catch (error) {
+            (this.createFinding || exportedService.createFinding).call(this, report, 'error', moduleObject, 'invalid-release-descriptor-json',
+                '`release.descriptor.json` must contain valid JSON: `' + relativePath + '`.');
+            return;
+        }
+        if (!descriptor || typeof descriptor !== 'object' || Array.isArray(descriptor)) {
+            (this.createFinding || exportedService.createFinding).call(this, report, 'error', moduleObject, 'invalid-release-descriptor',
+                '`release.descriptor.json` must contain an object: `' + relativePath + '`.');
+            return;
+        }
+        const sectionEntries = descriptor.sections && typeof descriptor.sections === 'object' && !Array.isArray(descriptor.sections)
+            ? Object.entries(descriptor.sections)
+            : [['$', descriptor]];
+        sectionEntries.forEach(([sectionCode, section]) => {
+            if (!section || typeof section !== 'object' || Array.isArray(section)) {
+                (this.createFinding || exportedService.createFinding).call(this, report, 'error', moduleObject, 'invalid-release-descriptor-section',
+                    'Descriptor section `' + sectionCode + '` must be an object in `' + relativePath + '`.');
+                return;
+            }
+            const capability = section.capability;
+            if (capability === undefined) return;
+            if (!capability || typeof capability !== 'object' || Array.isArray(capability)) {
+                (this.createFinding || exportedService.createFinding).call(this, report, 'error', moduleObject, 'invalid-release-descriptor-capability',
+                    'Descriptor capability must be an object in `' + relativePath + '`.');
+                return;
+            }
+            const allowed = new Set(['code', 'displayName', 'type', 'group', 'extendsCapability', 'businessOutcome']);
+            Object.keys(capability).forEach(key => {
+                if (!allowed.has(key)) {
+                    (this.createFinding || exportedService.createFinding).call(this, report, 'error', moduleObject, 'invalid-release-descriptor-capability-field',
+                        'Descriptor capability field `' + key + '` is not allowed in `' + relativePath + '`.');
+                }
+            });
+            if (!/^[A-Za-z][A-Za-z0-9._-]{1,127}$/.test(String(capability.code || ''))) {
+                (this.createFinding || exportedService.createFinding).call(this, report, 'error', moduleObject, 'invalid-release-descriptor-capability-code',
+                    'Descriptor capability code is invalid in `' + relativePath + '`.');
+            }
+            ['displayName', 'businessOutcome'].forEach(key => {
+                if (capability[key] !== undefined && (typeof capability[key] !== 'string' || !capability[key].trim() || capability[key].length > (key === 'displayName' ? 160 : 600) || /[<>\u0000-\u001F\u007F]/.test(capability[key]))) {
+                    (this.createFinding || exportedService.createFinding).call(this, report, 'error', moduleObject, 'invalid-release-descriptor-capability-text',
+                        'Descriptor capability `' + key + '` is invalid in `' + relativePath + '`.');
+                }
+            });
+            ['type', 'group'].forEach(key => {
+                if (capability[key] !== undefined && !/^[A-Z][A-Z0-9_]{1,63}$/.test(String(capability[key]))) {
+                    (this.createFinding || exportedService.createFinding).call(this, report, 'error', moduleObject, 'invalid-release-descriptor-capability-classifier',
+                        'Descriptor capability `' + key + '` is invalid in `' + relativePath + '`.');
+                }
+            });
+            if (capability.extendsCapability !== undefined && !/^[A-Za-z][A-Za-z0-9._-]{1,127}$/.test(String(capability.extendsCapability))) {
+                (this.createFinding || exportedService.createFinding).call(this, report, 'error', moduleObject, 'invalid-release-descriptor-extends-capability',
+                    'Descriptor extended capability is invalid in `' + relativePath + '`.');
+            }
+        });
+    });
 },
 
     /** Implements validateActivationPlacement as an overrideable service operation. */

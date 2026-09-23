@@ -1263,6 +1263,12 @@ module.exports = {
       manifest.files,
       isAggregate,
     );
+    let descriptor = this.releaseDescriptor(
+      releaseRoot,
+      sourceRoot,
+      sectionCode,
+      isAggregate,
+    );
     let fileNames = Object.keys(files).sort();
     if (
       fileNames.length === 0 ||
@@ -1304,6 +1310,11 @@ module.exports = {
       installer: installer,
       sourceRoot: sourceRoot,
       declaredFiles: fileNames.slice(),
+      capability: this.validateCapabilityMetadata(
+        manifest.capability || descriptor.capability,
+        rawModule.name,
+        sectionCode,
+      ),
       publicationReview: this.validatePublicationReview(
         manifest.publicationReview,
         rawModule.name,
@@ -1332,7 +1343,9 @@ module.exports = {
         "Data release sourceRoot is unavailable: " + sourceRoot,
       );
     }
-    let allFiles = this.collectReleaseFiles(sourceFolder).reduce(
+    let allFiles = this.collectReleaseFiles(sourceFolder)
+      .filter((relativeFile) => relativeFile !== "release.descriptor.json")
+      .reduce(
       (result, relativeFile) => {
         let releaseFile = isAggregate
           ? sourceRoot + "/" + relativeFile
@@ -1362,6 +1375,46 @@ module.exports = {
       return selected;
     this.expandMediaAssetFiles(selected, allFiles, releaseRoot);
     return Object.keys(selected).length > 0 ? selected : allFiles;
+  },
+
+  /** Reads optional source-side release descriptor metadata without making it import payload. */
+  releaseDescriptor: function (releaseRoot, sourceRoot, sectionCode, isAggregate) {
+    const descriptorPath = isAggregate
+      ? path.resolve(releaseRoot, sourceRoot, "release.descriptor.json")
+      : path.resolve(releaseRoot, "release.descriptor.json");
+    if (!fs.existsSync(descriptorPath)) return {};
+    let descriptor;
+    try {
+      descriptor = JSON.parse(fs.readFileSync(descriptorPath, "utf8"));
+    } catch (error) {
+      throw this.error(
+        "ERR_IMP_00003",
+        "Data release descriptor JSON is invalid for " + sectionCode,
+      );
+    }
+    if (!descriptor || typeof descriptor !== "object" || Array.isArray(descriptor)) {
+      throw this.error(
+        "ERR_IMP_00003",
+        "Data release descriptor is invalid for " + sectionCode,
+      );
+    }
+    if (descriptor.sections !== undefined) {
+      if (
+        !descriptor.sections ||
+        typeof descriptor.sections !== "object" ||
+        Array.isArray(descriptor.sections)
+      ) {
+        throw this.error(
+          "ERR_IMP_00003",
+          "Data release descriptor sections are invalid for " + sectionCode,
+        );
+      }
+      let section = descriptor.sections[sectionCode];
+      return section && typeof section === "object" && !Array.isArray(section)
+        ? section
+        : {};
+    }
+    return descriptor;
   },
 
   /** Recursively lists non-symlink files under a release folder. */
@@ -1584,6 +1637,76 @@ module.exports = {
       entities: entities,
       postPublicationCapabilities: capabilities,
     };
+  },
+
+  /** Validates optional release-to-capability metadata used for business readiness rollups. */
+  validateCapabilityMetadata: function (capability, moduleName, sectionCode) {
+    if (capability === undefined) return undefined;
+    if (!capability || typeof capability !== "object" || Array.isArray(capability)) {
+      throw this.error(
+        "ERR_IMP_00003",
+        "Capability metadata is invalid for " + moduleName + ":" + sectionCode,
+      );
+    }
+    const text = (field, maximum, required) => {
+      const value = String(capability[field] || "").trim();
+      if (!value) {
+        if (required) {
+          throw this.error(
+            "ERR_IMP_00003",
+            "Capability metadata is incomplete for " +
+              moduleName +
+              ":" +
+              sectionCode,
+          );
+        }
+        return undefined;
+      }
+      if (value.length > maximum || /[<>\u0000-\u001F\u007F]/.test(value)) {
+        throw this.error(
+          "ERR_IMP_00003",
+          "Capability metadata text is invalid for " +
+            moduleName +
+            ":" +
+            sectionCode,
+        );
+      }
+      return value;
+    };
+    const code = text("code", 128, true);
+    if (!/^[A-Za-z][A-Za-z0-9._-]{1,127}$/.test(code)) {
+      throw this.error(
+        "ERR_IMP_00003",
+        "Capability code is invalid for " + moduleName + ":" + sectionCode,
+      );
+    }
+    const group = text("group", 64, false);
+    const type = text("type", 64, false);
+    const extendsCapability = text("extendsCapability", 128, false);
+    if (
+      (group && !/^[A-Z][A-Z0-9_]{1,63}$/.test(group)) ||
+      (type && !/^[A-Z][A-Z0-9_]{1,63}$/.test(type)) ||
+      (extendsCapability &&
+        !/^[A-Za-z][A-Za-z0-9._-]{1,127}$/.test(extendsCapability))
+    ) {
+      throw this.error(
+        "ERR_IMP_00003",
+        "Capability metadata code fields are invalid for " +
+          moduleName +
+          ":" +
+          sectionCode,
+      );
+    }
+    return Object.fromEntries(
+      Object.entries({
+        code: code,
+        displayName: text("displayName", 160, false),
+        type: type,
+        group: group,
+        extendsCapability: extendsCapability,
+        businessOutcome: text("businessOutcome", 600, false),
+      }).filter((entry) => entry[1] !== undefined),
+    );
   },
 
   /** Validates optional contract-v2 lifecycle routing metadata during migration. */
@@ -1937,13 +2060,16 @@ module.exports = {
   /** Combines available and installed state into a client-safe catalogue item. */
   toCatalogueItem: function (release, installed, running) {
     if (release.invalidManifest === true) {
-      return Object.assign(this.publicRelease(release), {
+      const item = Object.assign(this.publicRelease(release), {
         installedVersion: installed && installed.version,
         installedChecksum: installed && installed.checksum,
         lastRunId: installed && installed.runId,
         installedAt: installed && installed.installedAt,
         lastAttemptAt: installed && installed.lastAttemptAt,
         status: "INVALID_RELEASE",
+      });
+      return Object.assign(item, {
+        readiness: this.releaseReadinessProjection(item),
       });
     }
     let status = "NOT_INSTALLED";
@@ -1964,7 +2090,7 @@ module.exports = {
     }
     if (running || (installed && installed.status === "RUNNING"))
       status = "RUNNING";
-    return Object.assign(this.publicRelease(release), {
+    const item = Object.assign(this.publicRelease(release), {
       installedVersion: installed && installed.version,
       installedChecksum: installed && installed.checksum,
       lastRunId: installed && installed.runId,
@@ -1972,6 +2098,126 @@ module.exports = {
       lastAttemptAt: installed && installed.lastAttemptAt,
       status: status,
     });
+    return Object.assign(item, {
+      readiness: this.releaseReadinessProjection(item),
+    });
+  },
+
+  /** Projects backend-owned business readiness for Axis data-preparation screens. */
+  releaseReadinessProjection: function (release) {
+    const code = release.releaseCode || release.moduleName + ":" + release.dataType;
+    const blockers = this.releaseReadinessBlockers(release);
+    const businessStatus = this.releaseBusinessStatus(release.status);
+    const capability = release.capability || {};
+    return {
+      capabilityCode: capability.code || release.sectionCode || code,
+      displayName: capability.displayName || release.displayName || code,
+      owningModule: release.moduleName,
+      capabilityType: capability.type || this.releaseCapabilityType(release),
+      group: capability.group || this.releaseCapabilityGroup(release),
+      extendsCapability: capability.extendsCapability,
+      businessOutcome: capability.businessOutcome,
+      businessStatus: businessStatus,
+      technicalStatus: release.status,
+      releaseStatus: release.status,
+      nextAction:
+        blockers[0] && blockers[0].action
+          ? blockers[0].action
+          : businessStatus === "PREPARED_STAGED"
+            ? "No import action required"
+            : "Review release readiness",
+      blockers: blockers,
+    };
+  },
+
+  /** Maps release state into the shared capability lifecycle vocabulary. */
+  releaseBusinessStatus: function (status) {
+    if (status === "CURRENT") return "PREPARED_STAGED";
+    if (status === "RUNNING") return "PREPARING";
+    if (status === "NOT_INSTALLED") return "NOT_PREPARED";
+    return "NEEDS_ATTENTION";
+  },
+
+  /** Classifies release readiness for business-oriented grouping. */
+  releaseCapabilityGroup: function (release) {
+    if (release.lifecycle === "PUBLISHABLE") return "PUBLISHING_PROFILE";
+    if (release.dataType === "sample") return "APPLICATION_CONTENT";
+    return "FOUNDATION_DATA";
+  },
+
+  /** Describes the kind of preparation represented by the release. */
+  releaseCapabilityType: function (release) {
+    if (release.dataType === "init") return "INITIALIZATION_DATA";
+    if (release.dataType === "sample") return "SAMPLE_DATA";
+    return "CORE_DATA";
+  },
+
+  /** Builds guided recovery blockers from immutable release state. */
+  releaseReadinessBlockers: function (release) {
+    const code = release.releaseCode || release.moduleName + ":" + release.dataType;
+    if (release.status === "CURRENT") return [];
+    if (release.status === "RUNNING")
+      return [
+        {
+          code: "IMPORT_IN_PROGRESS",
+          severity: "INFO",
+          owner: code,
+          message: "Data release import is already running.",
+          action: "Refresh readiness",
+        },
+      ];
+    if (release.status === "NOT_INSTALLED")
+      return [
+        {
+          code: "IMPORT_NOT_STARTED",
+          severity: "ACTION",
+          owner: code,
+          message: "Data release has not been installed for this runtime.",
+          action: "Prepare capability",
+        },
+      ];
+    if (release.status === "UPDATE_AVAILABLE")
+      return [
+        {
+          code: "VERSION_MISMATCH",
+          severity: "ACTION",
+          owner: code,
+          message: "A newer immutable data release is available.",
+          action: "Update release",
+        },
+      ];
+    if (release.status === "FAILED")
+      return [
+        {
+          code: "IMPORT_FAILED",
+          severity: "BLOCKER",
+          owner: code,
+          message: "The last data release import attempt failed.",
+          action: "Retry failed import",
+        },
+      ];
+    if (release.status === "DOWNGRADE_AVAILABLE")
+      return [
+        {
+          code: "VERSION_MISMATCH",
+          severity: "BLOCKER",
+          owner: code,
+          message:
+            "The installed release version is newer than the source release.",
+          action: "Review installed version",
+        },
+      ];
+    return [
+      {
+        code: "INVALID_MANIFEST",
+        severity: "BLOCKER",
+        owner: code,
+        message:
+          release.invalidReason ||
+          "Data release manifest is invalid or unresolved.",
+        action: "Repair release manifest",
+      },
+    ];
   },
 
   /** Enforces downgrade and same-version checksum policy. */
@@ -2047,6 +2293,7 @@ module.exports = {
       initialPublicationPolicy: release.initialPublicationPolicy,
       removalPolicy: release.removalPolicy,
       installer: release.installer,
+      capability: release.capability,
       publicationReview: release.publicationReview,
       invalidReason: release.invalidReason,
     };

@@ -56,12 +56,25 @@ owner('inactiveOwner', {
         'init-v001/records/stagedData.js': 'module.exports = {};\n', 'init-v001/headers/stagedHeader.js': 'module.exports = {};\n'
     } }
 });
+fs.writeFileSync(path.join(root, 'inactiveOwner', 'data', 'init-v001', 'release.descriptor.json'), JSON.stringify({
+    sections: {
+        processContribution: {
+            capability: {
+                code: 'partner.process',
+                displayName: 'Partner Process',
+                type: 'FOUNDATION_DATA',
+                group: 'FOUNDATION_DATA',
+                businessOutcome: 'Prepare partner-owned process data.'
+            }
+        }
+    }
+}));
 
 let policy = { allowedContractVersions: [2], lifecycleMetadataRequired: true, destinationEnforced: true,
     allowedDestinationRoles: ['PROCESS'], contributions: [{ moduleName: 'inactiveOwner', sections: ['processContribution'] }],
     installers: { PROCESS_DEFINITION: 'DefinitionInstaller' },
     types: { init: { enabled: true, operatorExecution: true } } };
-global.CONFIG = { get: key => key === 'data' ? { dataReleases: policy } : key === 'runtimeRole' ? { code: 'PROCESS' } : undefined };
+global.CONFIG = { get: key => key === 'data' ? { dataReleases: policy } : key === 'runtimeRole' ? { code: 'PROCESS' } : key === 'environment' ? { class: 'LOCAL' } : undefined };
 global.NODICS = {
     getActiveModules: () => ['activeOwner'],
     getRawModule: name => owners[name],
@@ -80,6 +93,9 @@ try {
     assert.strictEqual(releases.some(item => item.sectionCode === 'stagedContribution'), false,
         'an inactive owner must expose only explicitly selected sections');
     const contribution = releases.find(item => item.releaseCode === 'inactiveOwner:processContribution');
+    assert.strictEqual(contribution.capability.code, 'partner.process');
+    assert.strictEqual(contribution.capability.displayName, 'Partner Process');
+    assert.strictEqual(contribution.declaredFiles.some(file => file.endsWith('release.descriptor.json')), false);
     assert.strictEqual(service.validateDestination(contribution), true);
     assert.throws(() => service.validateDestination(Object.assign({}, contribution, { destinationRole: 'WCMS_STAGED' })),
         /not permitted for runtime destination PROCESS/);

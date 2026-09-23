@@ -231,6 +231,16 @@ declared development-baseline checksums; changed immutable releases fail before
 any manifest write. Environment composition selects an explicit code or the sole
 declared composition and reads only its declared environment variable.
 
+Release descriptors are source-side capability intent metadata. A
+`release.descriptor.json` file may live inside a versioned release root, but it
+is not a data payload file and must not be treated as an imported record or a
+runtime configuration source. Tooling may preserve or validate descriptor
+shape, and future manifest generation may fold descriptor values into generated
+manifest metadata, but descriptor authors should keep only safe fields such as
+capability code, display name, type, group, extended capability, and business
+outcome. Do not place secrets, endpoints, environment values, approval state, or
+operator choices in descriptors.
+
 Foundation exposes the existing project bridge as the installed `nodics` command.
 Keep command normalization, registry dispatch and startup resolution framework-owned;
 projects bind a compatible dependency and declare only optional aliases. See

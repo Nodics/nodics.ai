@@ -84,6 +84,45 @@ the current checksum from disk instead of making developers repair JSON by
 hand. Stable installed releases are still protected: if a non-development
 version changes without a version bump, the upgrade policy blocks execution.
 
+### Release Descriptors And Capability Readiness
+
+`data/manifest.json` remains generated release evidence. When a release needs
+business intent that cannot be safely derived from folders, headers, or module
+metadata, the release source root may include an optional
+`release.descriptor.json`.
+
+The descriptor is source-side metadata, not import payload. Nodics reads it
+while building the release catalogue, excludes it from import file expansion,
+and does not write it as a business record. For aggregate manifests, one
+descriptor can describe section intent:
+
+```json
+{
+  "sections": {
+    "content": {
+      "capability": {
+        "code": "circa.ewaste",
+        "displayName": "Circa eWaste",
+        "type": "ACCELERATOR",
+        "group": "PROJECT_ACCELERATOR",
+        "extendsCapability": "ewaste",
+        "businessOutcome": "Prepare customer-facing Circa pages and media."
+      }
+    }
+  }
+}
+```
+
+Use this only for stable, client-safe capability identity and outcome text.
+Do not put secrets, environment-specific values, runtime endpoints, credentials,
+approval decisions, or operator state in descriptors. Generic readiness rules
+remain framework-owned; project descriptors describe project data intent only.
+
+The `import` runtime projects release readiness from the effective manifest,
+descriptor, installed receipt, and runtime state. Axis and other clients render
+that projection; they must not infer data readiness from files, folder names,
+or browser-only logic.
+
 ## Runtime Safety
 
 Imports and exports can affect many records quickly, so they must preserve

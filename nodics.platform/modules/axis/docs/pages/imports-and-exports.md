@@ -46,6 +46,30 @@ TanStack Query owns catalogue server state. The browser sends selected module
 codes and reviewed versions; Nodics re-discovers and validates the authority
 before doing work.
 
+## Capability preparation readiness
+
+The Initialization, Core, and Sample tabs are advanced preparation workspaces,
+but they should still guide a business user by capability first. Axis displays
+the backend `readiness` projection returned by `nImport` before the raw release
+rows. That projection tells the user:
+
+- which capability or capability group is affected;
+- whether it is prepared, preparing, not prepared, or needs attention;
+- the owning module and safe capability code;
+- the first blocker and recommended action;
+- how many underlying immutable releases are current or actionable.
+
+When a user selects a capability group, Axis only expands that choice into the
+exact actionable release codes already returned by the backend. The validate
+and install operations still submit immutable releases to `nImport`; Axis does
+not create a second capability-preparation authority.
+
+Backend modules may provide capability identity through manifest metadata or an
+optional source-side `release.descriptor.json`. Axis treats those values as
+client-safe presentation metadata only. Runtime endpoints, credentials,
+environment values, approval state, import execution, media movement, search
+indexing, and publication readiness remain backend-owned.
+
 ## Employee workflow
 
 The default **Guided setup** tab presents backend-owned initialization
@@ -85,6 +109,12 @@ reloaded before another operator action.
 
 The install/update action remains disabled when every selected release is
 already current because there is no executable import work.
+
+If the preparation readiness band reports an invalid manifest, failed import,
+version mismatch, or import in progress, follow the recommended backend action
+shown there first. The lower release sections remain available as drill-down
+evidence for developers and operators who need the exact release code, target
+runtime role, installed version, and technical state.
 
 Controls stack on narrow screens, remain keyboard operable, and have assistive
 labels.
@@ -259,10 +289,18 @@ not provide a “force install” shortcut. The source release should be repaire
 the manifest regenerated, and the backend validation re-run before the install
 action becomes available.
 
+If a capability name looks wrong, repair the owning release manifest or
+`release.descriptor.json`. Do not patch Axis labels to hide incorrect backend
+metadata.
+
 ## Common mistakes
 
 - Letting Axis scan folders, inspect server paths, parse release files, or
   decide installation status locally.
+- Letting Axis derive capability readiness from release names instead of the
+  backend `readiness` projection.
+- Putting secrets, endpoints, environment-specific values, or operator state in
+  `release.descriptor.json`.
 - Treating checksum failure as a warning. Invalid releases must be repaired at
   source before validation or installation.
 - Combining initialization, core, sample, file import, export, and history

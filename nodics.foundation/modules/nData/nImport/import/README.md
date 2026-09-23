@@ -19,6 +19,66 @@ This module owns generic import mechanics. Functional modules own their data mea
 - Do not send local filesystem paths from Axis; use governed upload/media references.
 - Keep tenant precedence, publication state, checksum, and rollback evidence explicit.
 
+## Release Readiness Contract
+
+The data-release catalogue is the backend authority for import readiness. Every
+catalogue item can carry a client-safe `readiness` projection with:
+
+- `capabilityCode`, `displayName`, `capabilityType`, and `group`;
+- `businessStatus`, `technicalStatus`, `releaseStatus`, and `nextAction`;
+- bounded blockers with `code`, `severity`, `owner`, `message`, and `action`;
+- optional `extendsCapability` and `businessOutcome` for business grouping.
+
+Axis renders this projection as preparation readiness. It must not calculate
+readiness from browser state, source folders, or release names.
+
+Readiness is derived from the available release, installed receipt, active run
+state, optional manifest capability metadata, and optional release descriptor
+metadata. Common state mapping is:
+
+| Release status | Business status | Typical next action |
+| --- | --- | --- |
+| `CURRENT` | `PREPARED_STAGED` | No import action required |
+| `RUNNING` | `PREPARING` | Refresh readiness |
+| `NOT_INSTALLED` | `NOT_PREPARED` | Prepare capability |
+| `UPDATE_AVAILABLE` | `NEEDS_ATTENTION` | Update release |
+| `FAILED` | `NEEDS_ATTENTION` | Retry failed import |
+| `DOWNGRADE_AVAILABLE` | `NEEDS_ATTENTION` | Review installed version |
+| `INVALID_RELEASE` | `NEEDS_ATTENTION` | Repair release manifest |
+
+## Optional Release Descriptor
+
+A release source root may include `release.descriptor.json` when the business
+capability cannot be safely derived from the generated manifest. The descriptor
+is not import payload and is excluded from release file expansion and checksum
+calculation.
+
+For aggregate manifests, declare section metadata under
+`sections.<sectionCode>.capability`:
+
+```json
+{
+  "sections": {
+    "commerce": {
+      "capability": {
+        "code": "agora.apparel",
+        "displayName": "Agora Apparel",
+        "type": "ACCELERATOR",
+        "group": "PROJECT_ACCELERATOR",
+        "businessOutcome": "Prepare storefront commerce data."
+      }
+    }
+  }
+}
+```
+
+Allowed capability fields are `code`, `displayName`, `type`, `group`,
+`extendsCapability`, and `businessOutcome`. Values must be bounded,
+client-safe, and free of secrets or environment-specific runtime values. The
+descriptor describes data intent only; framework logic, runtime configuration,
+operator state, approval tasks, endpoints, and credentials belong to their
+owning modules and configuration layers.
+
 ## Documentation
 
 Deep documentation lives in:

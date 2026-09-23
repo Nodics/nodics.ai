@@ -100,7 +100,8 @@ function visit(folder) {
                             contribution.kind === 'DATA_RELEASE' && contribution.dataType === dataType)
                         .flatMap(([, contribution]) => Object.keys(contribution.files || {}))
                         .map(file => file.startsWith(releaseRoot.sourceRoot + '/') ? file.slice(releaseRoot.sourceRoot.length + 1) : file));
-                    let releaseFiles = filesBelow(releaseRoot.root).filter(file => !contributionFiles.has(file));
+                    let releaseFiles = filesBelow(releaseRoot.root).filter(file =>
+                        file !== 'release.descriptor.json' && !contributionFiles.has(file));
                     if (releaseFiles.length === 0) continue;
                     let files = Object.fromEntries(releaseFiles.map(file => [
                         releaseRoot.sourceRoot + '/' + file,

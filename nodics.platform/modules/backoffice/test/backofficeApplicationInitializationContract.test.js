@@ -429,6 +429,16 @@ global.fetch = async (url) => {
     "Blocked application setup must not advertise initialize, retire, or rollback actions as if the app is complete",
   );
   assert.strictEqual(blockedAgora.preparation.status, "BLOCKED");
+  assert.strictEqual(blockedAgora.capability.businessStatus, "NEEDS_ATTENTION");
+  assert.strictEqual(blockedAgora.capability.group, "PROJECT_ACCELERATOR");
+  assert(
+    blockedAgora.capability.blockers.some(
+      (blocker) =>
+        blocker.code === "MISSING_DEPENDENCY" &&
+        blocker.action === "Prepare required dependency",
+    ),
+    "Blocked application setup must expose capability-level guided recovery evidence",
+  );
   assert(
     blockedAgora.preparation.steps.some(
       (step) =>
@@ -614,16 +624,24 @@ global.fetch = async (url) => {
       publication: { state: "PENDING_APPROVAL" },
     },
   });
-  assert.deepStrictEqual(
-    (
-      await service.status("frameworkdocs", {
-        tenant: "default",
-        authData: { principalId: "admin" },
+  const pendingDocsStatus = await service.status("frameworkdocs", {
+    tenant: "default",
+    authData: { principalId: "admin" },
     httpRequest: { headers: { authorization: "Bearer operator-token" } },
-      })
-    ).allowedActions,
+  });
+  assert.deepStrictEqual(
+    pendingDocsStatus.allowedActions,
     [],
     "A pending publication must not advertise a duplicate initialize action",
+  );
+  assert.strictEqual(pendingDocsStatus.capability.businessStatus, "APPROVAL_IN_PROGRESS");
+  assert(
+    pendingDocsStatus.capability.blockers.some(
+      (blocker) =>
+        blocker.code === "APPROVAL_TASK_MISSING" &&
+        blocker.action === "Reconcile publication approval",
+    ),
+    "Pending publication without a workflow reference must guide the operator to reconcile approval",
   );
   moduleInvocationHandler = async () => ({
     data: {
@@ -703,6 +721,15 @@ global.fetch = async (url) => {
   assert.strictEqual(
     readyButMissingSetup.preparation.status,
     "ACTION_REQUIRED",
+  );
+  assert.strictEqual(
+    readyButMissingSetup.capability.businessStatus,
+    "NEEDS_ATTENTION",
+    "Online apps with required setup gaps must project a business capability attention state",
+  );
+  assert.strictEqual(
+    readyButMissingSetup.capability.nextAction,
+    "Prepare capability",
   );
   assert(
     readyCalls.some(

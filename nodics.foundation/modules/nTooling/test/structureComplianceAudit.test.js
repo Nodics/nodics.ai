@@ -157,6 +157,57 @@ try {
     assert(!documentationOwnerReport.findings.some(finding => finding.module === 'documentationOwner'
         && finding.code === 'parallel-module-docs'),
     'Audit must permit a governed docs source catalogue for an explicit documentation owner');
+    const dataOwner = createModule(projectHome, 'dataOwner', 'dataOwner', 'capability', ['configuration', 'data', 'llm']);
+    write(path.join(dataOwner, 'data/manifest.json'), JSON.stringify({
+        contractVersion: 2,
+        module: 'dataOwner',
+        sections: {
+            sample: {
+                kind: 'DATA_RELEASE',
+                dataType: 'sample',
+                version: '0.0.0',
+                files: {}
+            }
+        }
+    }));
+    write(path.join(dataOwner, 'data/sample-v001/release.descriptor.json'), JSON.stringify({
+        sections: {
+            sample: {
+                capability: {
+                    code: 'data.owner',
+                    displayName: 'Data Owner',
+                    type: 'FOUNDATION_DATA',
+                    group: 'FOUNDATION_DATA',
+                    businessOutcome: 'Prepare governed fixture data.'
+                }
+            }
+        }
+    }));
+    const descriptorReport = structureComplianceQualityService.collectReport({
+        rootDir: projectHome,
+        includeInfo: false
+    });
+    assert(!descriptorReport.findings.some(finding => finding.module === 'dataOwner'
+        && finding.code.startsWith('invalid-release-descriptor')),
+    'Audit must permit bounded release descriptor capability metadata');
+    write(path.join(dataOwner, 'data/sample-v001/release.descriptor.json'), JSON.stringify({
+        sections: {
+            sample: {
+                capability: {
+                    code: 'bad code',
+                    token: 'secret'
+                }
+            }
+        }
+    }));
+    const badDescriptorReport = structureComplianceQualityService.collectReport({
+        rootDir: projectHome,
+        includeInfo: false
+    });
+    assert(findingCodes(badDescriptorReport).includes('invalid-release-descriptor-capability-field'),
+        'Audit must reject unsupported release descriptor capability fields');
+    assert(findingCodes(badDescriptorReport).includes('invalid-release-descriptor-capability-code'),
+        'Audit must reject invalid release descriptor capability codes');
     assert(structureComplianceQualityService.hasComplianceGaps(gapReport),
         'Audit must expose gaps for fail-on-gap mode');
 } finally {
