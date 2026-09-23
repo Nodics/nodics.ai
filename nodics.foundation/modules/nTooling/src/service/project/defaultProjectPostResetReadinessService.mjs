@@ -284,6 +284,20 @@ function optionalReadinessRecord(data, names) {
   return undefined;
 }
 
+function operationalReadinessSection(report, key) {
+  if (!isRecord(report)) return undefined;
+  return safeArray(report.sections).find(item => isRecord(item) && item.key === key);
+}
+
+function operationalSectionState(section, liveBootstrap, fallback = 'NEEDS_ATTENTION') {
+  if (!section) return fallback;
+  const status = String(section.businessStatus || '').toUpperCase();
+  if (status === 'READY') return 'READY';
+  if (status === 'NOT_READY' || status === 'BLOCKED') return 'NOT_READY';
+  if (status === 'NOT_EXPOSED' || status === 'NEEDS_ATTENTION') return stateFromLive('NOT_READY', liveBootstrap, false);
+  return fallback;
+}
+
 function stateFromLive(baseState, liveResult, ready = false) {
   if (!liveResult || liveResult.state === 'SKIPPED') return baseState;
   if (!liveResult.ok) return liveResult.state;
@@ -314,6 +328,15 @@ export async function buildPostResetReadinessReport(projectRoot, environmentCode
   const moduleConnections = summarizeModuleConnections(bootstrapData.modules);
   const applications = summarizeApplicationProfiles(bootstrapData.applicationInitializationProfiles);
   const documentation = summarizeDocumentationSources(bootstrapData.documentationSources);
+  const operationalReadiness = isRecord(bootstrapData.operationalReadiness) ? bootstrapData.operationalReadiness : undefined;
+  const importSection = operationalReadinessSection(operationalReadiness, 'imports');
+  const publishingSection = operationalReadinessSection(operationalReadiness, 'publishing');
+  const approvalSection = operationalReadinessSection(operationalReadiness, 'approval');
+  const mediaSection = operationalReadinessSection(operationalReadiness, 'media');
+  const searchSection = operationalReadinessSection(operationalReadiness, 'search');
+  const assistantSection = operationalReadinessSection(operationalReadiness, 'assistant');
+  const applicationSection = operationalReadinessSection(operationalReadiness, 'applications');
+  const documentationSection = operationalReadinessSection(operationalReadiness, 'documentation');
   const importReadiness = optionalReadinessRecord(bootstrapData, ['importReadiness', 'dataImportReadiness', 'releases']);
   const publishingReadiness = optionalReadinessRecord(bootstrapData, ['publishingReadiness', 'publicationReadiness', 'publication']);
   const approvalReadiness = optionalReadinessRecord(bootstrapData, ['approvalDiagnostic', 'approvalReadiness']);
@@ -346,41 +369,41 @@ export async function buildPostResetReadinessReport(projectRoot, environmentCode
       'Confirm required modules are registered, active, and have their expected runtime role.',
       { route: '/system/modules', runtimeCount: runtimes.length, moduleConnections },
       'Open Module Registry and resolve missing runtime, inactive module, or activation data blockers.'),
-    section('imports', 'Data import releases', importReadiness ? stateFromLive('NOT_READY', liveBootstrap, String(importReadiness.state || importReadiness.readiness || '').toUpperCase() === 'READY') : 'NEEDS_ATTENTION',
-      importReadiness ? 'BackOffice returned data import readiness evidence.' : 'Validate Foundation, Media, Publishing, Application Content, and Project Accelerator release groups.',
-      { route: '/operations/imports-exports', dryRunRecommended: true, readiness: importReadiness },
+    section('imports', 'Data import releases', importSection ? operationalSectionState(importSection, liveBootstrap) : importReadiness ? stateFromLive('NOT_READY', liveBootstrap, String(importReadiness.state || importReadiness.readiness || '').toUpperCase() === 'READY') : 'NEEDS_ATTENTION',
+      importSection ? 'BackOffice returned canonical data import readiness guidance.' : importReadiness ? 'BackOffice returned data import readiness evidence.' : 'Validate Foundation, Media, Publishing, Application Content, and Project Accelerator release groups.',
+      { route: '/operations/imports-exports', dryRunRecommended: true, readiness: importSection || importReadiness },
       'Run import dry-run/validation before install and follow grouped readiness order.'),
     section('manifestRepair', 'Manifest and descriptor repair', 'NEEDS_ATTENTION',
       'Invalid release manifests and descriptors require source/tooling repair before browser import.',
       { command: 'project:data-manifests', descriptor: 'release.descriptor.json optional' },
       'Refresh generated manifests or repair the owning module source descriptor.'),
-    section('publishing', 'Publication readiness', publishingReadiness ? stateFromLive('NOT_READY', liveBootstrap, String(publishingReadiness.state || publishingReadiness.readiness || '').toUpperCase() === 'READY') : 'NEEDS_ATTENTION',
-      publishingReadiness ? 'BackOffice returned publication dependency readiness evidence.' : 'Confirm Staged, approval, Online pointer, media, search, and runtime dependencies.',
-      { route: '/publishing/setup', publicationProfiles: derivePublicationProfiles(configuration), readiness: publishingReadiness },
+    section('publishing', 'Publication readiness', publishingSection ? operationalSectionState(publishingSection, liveBootstrap) : publishingReadiness ? stateFromLive('NOT_READY', liveBootstrap, String(publishingReadiness.state || publishingReadiness.readiness || '').toUpperCase() === 'READY') : 'NEEDS_ATTENTION',
+      publishingSection ? 'BackOffice returned canonical publication readiness guidance.' : publishingReadiness ? 'BackOffice returned publication dependency readiness evidence.' : 'Confirm Staged, approval, Online pointer, media, search, and runtime dependencies.',
+      { route: '/publishing/setup', publicationProfiles: derivePublicationProfiles(configuration), readiness: publishingSection || publishingReadiness },
       'Open Publishing and Setup & Accelerators; approve only after dependencies are green.'),
-    section('approval', 'Process approval tasks', approvalReadiness ? stateFromLive('NOT_READY', liveBootstrap, String(approvalReadiness.state || approvalReadiness.status || '').toUpperCase() === 'READY') : 'NEEDS_ATTENTION',
-      approvalReadiness ? 'BackOffice returned approval/process diagnostics.' : 'Confirm governed Process workflow/task availability for pending publication requests.',
-      { route: '/process/approval-queue', reportSource: 'approvalDiagnostic', readiness: approvalReadiness },
+    section('approval', 'Process approval tasks', approvalSection ? operationalSectionState(approvalSection, liveBootstrap) : approvalReadiness ? stateFromLive('NOT_READY', liveBootstrap, String(approvalReadiness.state || approvalReadiness.status || '').toUpperCase() === 'READY') : 'NEEDS_ATTENTION',
+      approvalSection ? 'BackOffice returned canonical approval/process readiness guidance.' : approvalReadiness ? 'BackOffice returned approval/process diagnostics.' : 'Confirm governed Process workflow/task availability for pending publication requests.',
+      { route: '/process/approval-queue', reportSource: 'approvalDiagnostic', readiness: approvalSection || approvalReadiness },
       'Repair missing workflow references, assignees, or Process runtime before retrying approval.'),
-    section('documentation', 'Documentation publishing and indexing', documentationState,
+    section('documentation', 'Documentation publishing and indexing', documentationSection ? operationalSectionState(documentationSection, liveBootstrap, documentationState) : documentationState,
       'Confirm docs packs are installed, approved, Online, indexed, and searchable.',
-      { route: '/docs/dashboard', documentation },
+      { route: '/docs/dashboard', documentation, readiness: documentationSection },
       'Install/publish docs packs and rebuild knowledge/search indexes where configured.'),
-    section('media', 'Media objects and references', mediaReadiness ? stateFromLive('NOT_READY', liveBootstrap, String(mediaReadiness.state || mediaReadiness.readiness || '').toUpperCase() === 'READY') : 'NEEDS_ATTENTION',
-      mediaReadiness ? 'BackOffice returned media readiness evidence.' : 'Confirm media object creation, physical transfer evidence, and consuming model references.',
-      { route: '/media', readiness: mediaReadiness },
+    section('media', 'Media objects and references', mediaSection ? operationalSectionState(mediaSection, liveBootstrap) : mediaReadiness ? stateFromLive('NOT_READY', liveBootstrap, String(mediaReadiness.state || mediaReadiness.readiness || '').toUpperCase() === 'READY') : 'NEEDS_ATTENTION',
+      mediaSection ? 'BackOffice returned canonical media readiness guidance.' : mediaReadiness ? 'BackOffice returned media readiness evidence.' : 'Confirm media object creation, physical transfer evidence, and consuming model references.',
+      { route: '/media', readiness: mediaSection || mediaReadiness },
       'Review media transfer manifests, target receipts, and reference readiness.'),
-    section('search', 'Search index and read-source policy', searchReadiness ? stateFromLive('NOT_READY', liveBootstrap, String(searchReadiness.state || searchReadiness.readiness || '').toUpperCase() === 'READY') : 'NEEDS_ATTENTION',
-      searchReadiness ? 'BackOffice returned search/discovery readiness evidence.' : 'Confirm DB/search read-source policy and index freshness for rendered pages.',
-      { route: '/discovery', reportSource: 'nSearch', readiness: searchReadiness },
+    section('search', 'Search index and read-source policy', searchSection ? operationalSectionState(searchSection, liveBootstrap) : searchReadiness ? stateFromLive('NOT_READY', liveBootstrap, String(searchReadiness.state || searchReadiness.readiness || '').toUpperCase() === 'READY') : 'NEEDS_ATTENTION',
+      searchSection ? 'BackOffice returned canonical search/discovery readiness guidance.' : searchReadiness ? 'BackOffice returned search/discovery readiness evidence.' : 'Confirm DB/search read-source policy and index freshness for rendered pages.',
+      { route: '/discovery', reportSource: 'nSearch', readiness: searchSection || searchReadiness },
       'Use runtime configuration and Discovery readiness before switching rendering to search.'),
-    section('assistant', 'Assistant knowledge sources', assistantReadiness ? stateFromLive('NOT_READY', liveBootstrap, String(assistantReadiness.state || assistantReadiness.readiness || '').toUpperCase() === 'READY') : 'NEEDS_ATTENTION',
-      assistantReadiness ? 'BackOffice returned assistant knowledge readiness evidence.' : 'Confirm assistant knowledge source installation, publication, indexing, and authorization.',
-      { route: '/assistant', reportSource: 'assistant.knowledge', readiness: assistantReadiness },
+    section('assistant', 'Assistant knowledge sources', assistantSection ? operationalSectionState(assistantSection, liveBootstrap) : assistantReadiness ? stateFromLive('NOT_READY', liveBootstrap, String(assistantReadiness.state || assistantReadiness.readiness || '').toUpperCase() === 'READY') : 'NEEDS_ATTENTION',
+      assistantSection ? 'BackOffice returned canonical assistant knowledge readiness guidance.' : assistantReadiness ? 'BackOffice returned assistant knowledge readiness evidence.' : 'Confirm assistant knowledge source installation, publication, indexing, and authorization.',
+      { route: '/assistant', reportSource: 'assistant.knowledge', readiness: assistantSection || assistantReadiness },
       'Index approved docs/knowledge sources before treating assistant answers as verified.'),
-    section('applications', 'Circa, Nexus, Agora parity', applicationState,
+    section('applications', 'Circa, Nexus, Agora parity', applicationSection ? operationalSectionState(applicationSection, liveBootstrap, applicationState) : applicationState,
       liveBootstrap.ok ? 'BackOffice application initialization profiles were inspected.' : 'Validate customer-facing app profiles through the same import/publication/runtime evidence.',
-      { publicationProfiles: derivePublicationProfiles(configuration), applications },
+      { publicationProfiles: derivePublicationProfiles(configuration), applications, readiness: applicationSection },
       'Check each profile for Online state, media/search dependencies, and browser smoke where enabled.'),
     section('browserValidation', 'Browser validation evidence', browserValidationEnabled ? 'NEEDS_ATTENTION' : 'SKIPPED',
       browserValidationEnabled ? 'Browser validation is enabled for this environment.' : 'Browser validation skipped by configuration.',

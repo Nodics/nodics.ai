@@ -162,6 +162,41 @@ test('post-reset readiness report parses authenticated BackOffice bootstrap evid
                 mediaReadiness: { state: 'READY' },
                 searchReadiness: { state: 'READY' },
                 assistantReadiness: { state: 'READY' },
+                operationalReadiness: {
+                  contractVersion: 1,
+                  state: 'NEEDS_ATTENTION',
+                  checkedAt: '2026-09-23T00:00:00.000Z',
+                  source: 'backoffice.operationalReadiness',
+                  summary: { total: 2, blockers: 1, READY: 1, NOT_EXPOSED: 1 },
+                  sections: [
+                    {
+                      key: 'imports',
+                      title: 'Data import releases',
+                      businessStatus: 'NOT_EXPOSED',
+                      ownerModule: 'import',
+                      source: 'NIMPORT_RELEASE_READINESS',
+                      route: '/operations/imports-exports',
+                      summary: { exposed: false },
+                      blockers: [{
+                        blockerCode: 'IMPORTS_READINESS_NOT_EXPOSED',
+                        code: 'IMPORTS_READINESS_NOT_EXPOSED',
+                        suggestedAction: 'Open Data Releases',
+                      }],
+                      nextAction: 'Open Data Releases',
+                    },
+                    {
+                      key: 'applications',
+                      title: 'Customer application readiness',
+                      businessStatus: 'READY',
+                      ownerModule: 'backoffice',
+                      source: 'BACKOFFICE_APPLICATION_INITIALIZATION',
+                      route: '/publishing',
+                      summary: { profileCount: 1 },
+                      blockers: [],
+                      nextAction: 'Application profiles are available.',
+                    },
+                  ],
+                },
               },
             };
           },
@@ -175,6 +210,8 @@ test('post-reset readiness report parses authenticated BackOffice bootstrap evid
     assert.equal(report.exitCode, 1);
     assert.equal(report.sections.find(section => section.id === 'bootstrap').state, 'READY');
     assert.equal(report.sections.find(section => section.id === 'moduleRegistry').state, 'READY');
+    assert.equal(report.sections.find(section => section.id === 'imports').state, 'NOT_READY');
+    assert.equal(report.sections.find(section => section.id === 'imports').evidence.readiness.source, 'NIMPORT_RELEASE_READINESS');
     assert.equal(report.sections.find(section => section.id === 'applications').evidence.applications.total, 1);
     assert.equal(report.sections.find(section => section.id === 'documentation').evidence.documentation.total, 1);
     assert.doesNotMatch(JSON.stringify(report), /local-secret-token/);

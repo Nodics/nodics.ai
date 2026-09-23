@@ -121,6 +121,25 @@ assert(missingReport.findings.some(finding => finding.code === 'MISSING_TEST_PRO
 let missingFinding = missingReport.findings.find(finding => finding.code === 'MISSING_TEST_PROPERTY');
 assert.strictEqual(missingFinding.repair.available, true);
 assert.strictEqual(missingFinding.repair.actionCode, 'UPDATE_REQUIRED_CONFIGURATION');
+let aggregateReport = service.operationalReadinessReport({ tenant: 'default' }, {
+    startupValidation: missingReport,
+    modules: { backoffice: [{ instanceId: 'platformServer:backoffice', state: 'ACTIVE' }] },
+    availability: { backoffice: { state: 'UP' } },
+    documentationSources: [{ id: 'framework.docs', label: 'Framework docs', type: 'CMS', route: '/docs/framework' }],
+    documentationPublication: {},
+    applicationInitializationProfiles: [{ code: 'circaewaste', title: 'Circa eWaste' }]
+});
+assert.strictEqual(aggregateReport.contractVersion, 1);
+assert.strictEqual(aggregateReport.state, 'NOT_READY');
+assert(aggregateReport.sections.some(section => section.key === 'imports'
+    && section.businessStatus === 'NOT_EXPOSED'
+    && section.blockers[0].suggestedAction));
+assert(aggregateReport.sections.some(section => section.key === 'documentation'
+    && section.businessStatus === 'READY'));
+assert(aggregateReport.sections.some(section => section.key === 'runtimeCommunication'
+    && section.businessStatus === 'READY'));
+assert(aggregateReport.sections.find(section => section.key === 'bootstrap').blockers
+    .some(blocker => blocker.code === 'MISSING_TEST_PROPERTY' && blocker.repair.operation === 'runtimeConfiguration.update'));
 registry.operations.startupValidation.requiredProperties = originalRequiredProperties;
 
 async function validateDeliveryAndProductionPolicy() {

@@ -245,6 +245,204 @@ module.exports = {
             findings: findings
         };
     },
+    /** Creates one shared readiness blocker with stable business/user recovery fields. */
+    readinessBlocker: function (code, severity, ownerType, source, action, message, options) {
+        options = options || {};
+        return {
+            blockerCode: String(code),
+            code: String(code),
+            severity: String(severity || 'NEEDS_ATTENTION'),
+            ownerType: String(ownerType || 'BACKOFFICE'),
+            source: String(source || 'BACKOFFICE_OPERATIONAL_READINESS'),
+            action: String(action || 'Review readiness'),
+            message: String(message || 'Readiness needs review.'),
+            disabledReason: String(options.disabledReason || message || 'Readiness needs review.'),
+            repair: {
+                available: options.repairAvailable === true,
+                operation: String(options.repairOperation || 'readiness.review'),
+                action: String(options.repairAction || 'REVIEW_READINESS'),
+                eligibility: String(options.repairEligibility || (options.repairAvailable === true ? 'MANUAL' : 'NOT_AVAILABLE')),
+                label: String(options.repairLabel || action || 'Review readiness'),
+            },
+            suggestedAction: String(options.suggestedAction || action || 'Review readiness'),
+        };
+    },
+    /** Maps module availability into a compact support-safe readiness section. */
+    moduleRuntimeSection: function (modules, availability) {
+        modules = modules || {};
+        availability = availability || {};
+        let entries = Object.entries(modules).reduce((result, entry) => result.concat(entry[1] || []), []);
+        let runtimeCount = entries.length;
+        let unavailable = Object.entries(availability).filter(entry => !['UP', 'UNKNOWN'].includes(String((entry[1] || {}).state || 'UNKNOWN')));
+        let blocker = unavailable[0] ? this.readinessBlocker(
+            'RUNTIME_UNAVAILABLE',
+            'BLOCKED',
+            'RUNTIME',
+            'BACKOFFICE_AVAILABILITY',
+            'Open Module Registry',
+            'One or more registered runtimes are degraded or unavailable.',
+            { repairOperation: 'moduleRegistry.refreshRuntime', repairAction: 'REFRESH_RUNTIME', suggestedAction: 'Refresh Module Registry and inspect stale runtime observations.' }
+        ) : undefined;
+        return {
+            key: 'runtimeCommunication',
+            title: 'Runtime internal communication',
+            businessStatus: unavailable.length > 0 ? 'NEEDS_ATTENTION' : runtimeCount > 0 ? 'READY' : 'NOT_CONFIGURED',
+            ownerModule: 'nService',
+            source: 'BACKOFFICE_BOOTSTRAP',
+            route: '/system/modules',
+            summary: { runtimeCount: runtimeCount, unavailableCount: unavailable.length },
+            blockers: blocker ? [blocker] : [],
+            nextAction: unavailable.length > 0 ? 'Open Module Registry and repair unavailable runtime communication.' :
+                runtimeCount > 0 ? 'Runtime communication has active bootstrap evidence.' : 'Register runtime modules before validating communication.',
+        };
+    },
+    /** Summarizes application initialization capability readiness profiles. */
+    applicationSection: function (profiles) {
+        profiles = [].concat(profiles || []);
+        let blockers = profiles.length === 0 ? [this.readinessBlocker(
+            'APPLICATION_PROFILES_MISSING',
+            'NEEDS_ATTENTION',
+            'APPLICATION_INITIALIZATION',
+            'BACKOFFICE_APPLICATION_INITIALIZATION',
+            'Open Setup & Accelerators',
+            'No application initialization profiles are visible to this operator.',
+            { repairOperation: 'applicationInitialization.reviewProfiles', repairAction: 'REVIEW_APPLICATION_PROFILES' }
+        )] : [];
+        return {
+            key: 'applications',
+            title: 'Customer application readiness',
+            businessStatus: blockers.length ? 'NEEDS_ATTENTION' : 'READY',
+            ownerModule: 'backoffice',
+            source: 'BACKOFFICE_APPLICATION_INITIALIZATION',
+            route: '/publishing',
+            summary: { profileCount: profiles.length },
+            blockers: blockers,
+            nextAction: blockers.length ? 'Open Setup & Accelerators and initialize required profiles.' : 'Application profiles are available for Setup & Accelerators.',
+        };
+    },
+    /** Summarizes documentation source visibility and publication guidance. */
+    documentationSection: function (sources, publicationState) {
+        sources = [].concat(sources || []);
+        let pending = Object.values(publicationState || {}).filter(item => item && item.readiness && item.readiness !== 'READY');
+        let blockers = [];
+        if (sources.length === 0) blockers.push(this.readinessBlocker(
+            'DOCUMENTATION_SOURCES_MISSING',
+            'NEEDS_ATTENTION',
+            'DOCUMENTATION',
+            'BACKOFFICE_DOCUMENTATION',
+            'Open Documentation Dashboard',
+            'No documentation sources are visible to this operator.',
+            { repairOperation: 'documentation.installSources', repairAction: 'INSTALL_DOCUMENTATION_SOURCES' }
+        ));
+        if (pending.length > 0) blockers.push(this.readinessBlocker(
+            'DOCUMENTATION_PUBLICATION_PENDING',
+            'NEEDS_ATTENTION',
+            'PUBLICATION',
+            'DOCUMENTATION_PUBLICATION',
+            'Publish documentation',
+            'One or more documentation packs still need staged-to-online publication.',
+            { repairOperation: 'documentation.publish', repairAction: 'PUBLISH_DOCUMENTATION' }
+        ));
+        return {
+            key: 'documentation',
+            title: 'Documentation publishing and indexing',
+            businessStatus: blockers.length ? 'NEEDS_ATTENTION' : 'READY',
+            ownerModule: 'documentation',
+            source: 'BACKOFFICE_DOCUMENTATION',
+            route: '/docs/dashboard',
+            summary: { sourceCount: sources.length, pendingPublicationCount: pending.length },
+            blockers: blockers,
+            nextAction: blockers.length ? 'Install, approve, publish, and index documentation packs.' : 'Documentation sources are visible and publication blockers were not detected.',
+        };
+    },
+    /** Builds a placeholder section when a domain capability has not yet exposed canonical readiness. */
+    ownerPendingSection: function (key, title, ownerModule, route, source, nextAction) {
+        return {
+            key: key,
+            title: title,
+            businessStatus: 'NOT_EXPOSED',
+            ownerModule: ownerModule,
+            source: source,
+            route: route,
+            summary: { exposed: false },
+            blockers: [this.readinessBlocker(
+                key.toUpperCase() + '_READINESS_NOT_EXPOSED',
+                'NEEDS_ATTENTION',
+                ownerModule,
+                source,
+                nextAction,
+                title + ' does not yet expose a canonical BackOffice readiness section.',
+                { repairOperation: ownerModule + '.exposeReadiness', repairAction: 'EXPOSE_READINESS_CONTRACT' }
+            )],
+            nextAction: nextAction,
+        };
+    },
+    /** Builds the canonical post-reset operational readiness aggregate for Axis and tooling. */
+    operationalReadinessReport: function (request, context) {
+        context = context || {};
+        let startupValidation = context.startupValidation || this.startupValidationReport(request);
+        let startupBlockers = []
+            .concat((startupValidation.findings || []).map(finding => this.readinessBlocker(
+                finding.code,
+                finding.severity === 'ERROR' ? 'BLOCKED' : 'NEEDS_ATTENTION',
+                finding.ownerType,
+                'BACKOFFICE_STARTUP_VALIDATION',
+                finding.action,
+                finding.message,
+                { repairOperation: (finding.repair || {}).operation, repairAction: (finding.repair || {}).actionCode,
+                    repairAvailable: (finding.repair || {}).available === true, repairEligibility: (finding.repair || {}).eligibility,
+                    repairLabel: (finding.repair || {}).label }
+            )))
+            .concat((startupValidation.bootstrapChecks || {}).missing > 0 ? [this.readinessBlocker(
+                'BOOTSTRAP_CHECKS_MISSING',
+                'BLOCKED',
+                'CONFIGURATION',
+                'BACKOFFICE_STARTUP_VALIDATION',
+                'Repair bootstrap configuration',
+                'One or more bootstrap checks are missing.',
+                { repairOperation: 'runtimeConfiguration.update', repairAction: 'REPAIR_BOOTSTRAP_CONFIGURATION' }
+            )] : []);
+        let sections = [
+            {
+                key: 'bootstrap',
+                title: 'Bootstrap and admin access',
+                businessStatus: startupValidation.state === 'READY' ? 'READY' : startupValidation.state,
+                ownerModule: 'backoffice',
+                source: 'BACKOFFICE_STARTUP_VALIDATION',
+                route: '/dashboard',
+                summary: {
+                    findingCount: (startupValidation.summary || {}).total || 0,
+                    missingBootstrapChecks: ((startupValidation.bootstrapChecks || {}).missing || 0),
+                    acknowledged: (startupValidation.summary || {}).acknowledged || 0,
+                },
+                blockers: startupBlockers,
+                nextAction: startupBlockers.length ? 'Resolve startup validation findings on the Axis dashboard.' : 'Startup validation is clear.',
+            },
+            this.moduleRuntimeSection(context.modules, context.availability),
+            this.ownerPendingSection('imports', 'Data import releases', 'import', '/operations/imports-exports', 'NIMPORT_RELEASE_READINESS', 'Open Data Releases and repair blocked release groups.'),
+            this.ownerPendingSection('publishing', 'Publication readiness', 'publishing', '/publishing/setup', 'PUBLICATION_READINESS', 'Open Publishing and resolve dependency/approval blockers.'),
+            this.ownerPendingSection('approval', 'Process approval tasks', 'workflow', '/process/approval-queue', 'PROCESS_APPROVAL_READINESS', 'Open Approval Queue and reconcile missing process tasks.'),
+            this.documentationSection(context.documentationSources, context.documentationPublication),
+            this.ownerPendingSection('media', 'Media objects and references', 'media', '/media', 'MEDIA_READINESS', 'Open Media Management and reconcile missing media objects/references.'),
+            this.ownerPendingSection('search', 'Search index and read-source policy', 'search', '/discovery', 'SEARCH_READINESS', 'Open Discovery/Search controls and verify index freshness.'),
+            this.ownerPendingSection('assistant', 'Assistant knowledge sources', 'assistant', '/assistant', 'ASSISTANT_KNOWLEDGE_READINESS', 'Install/publish/index authorized knowledge sources.'),
+            this.applicationSection(context.applicationInitializationProfiles),
+        ];
+        let summary = sections.reduce((result, section) => {
+            result.total++;
+            result[section.businessStatus] = (result[section.businessStatus] || 0) + 1;
+            result.blockers += (section.blockers || []).length;
+            return result;
+        }, { total: 0, blockers: 0 });
+        return {
+            contractVersion: 1,
+            state: summary.BLOCKED || summary.NOT_READY ? 'NOT_READY' : summary.NEEDS_ATTENTION || summary.NOT_EXPOSED ? 'NEEDS_ATTENTION' : 'READY',
+            checkedAt: new Date().toISOString(),
+            source: 'backoffice.operationalReadiness',
+            summary: summary,
+            sections: sections,
+        };
+    },
     /** Records auditable acknowledgement for one active startup finding. */
     acknowledgeFinding: function (request) {
         let input = request && request.startupFindingAcknowledgement || {};

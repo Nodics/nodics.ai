@@ -187,3 +187,25 @@ module, runtime, or source release.
 Publication readiness must distinguish approval waiting, missing approval task,
 missing publication receipt, and stale Online pointer instead of collapsing all
 states into generic unavailable/invalid messages.
+
+## Operational readiness aggregate
+
+Authenticated BackOffice bootstrap exposes `operationalReadiness` as the
+canonical post-reset readiness aggregate for Axis and tooling. It summarizes
+startup validation, runtime communication, import release readiness, publication,
+Process approval, documentation, media, search/discovery, assistant knowledge,
+and customer application parity through stable `sections`.
+
+Each section must carry `key`, `title`, `businessStatus`, `ownerModule`,
+`source`, `route`, `summary`, `blockers`, and `nextAction`. Blockers use the
+same guided recovery shape as capability readiness: stable `blockerCode`/`code`,
+operator-facing `message`, `action`, `suggestedAction`, sanitized owner/source
+evidence, and bounded `repair` metadata. Axis and nTooling may render this
+aggregate and link to owning pages, but must not recompute import, publishing,
+approval, media, search, assistant, or application readiness from page-local
+state when a backend section is available.
+
+If an owning capability has not yet exposed a concrete readiness provider,
+BackOffice may return a `NOT_EXPOSED` section with a blocker that names the
+owning module and the action to add the provider. That is a framework gap, not
+a customer-project configuration requirement.

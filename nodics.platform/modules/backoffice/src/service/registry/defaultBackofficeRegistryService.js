@@ -1478,6 +1478,21 @@ module.exports = {
           bootstrapChecks: { total: 0, ready: 0, missing: 0, needsAttention: 0, checks: [] },
           findings: [],
         };
+    let applicationInitializationProfiles = SERVICE.DefaultBackofficeApplicationInitializationService &&
+      typeof SERVICE.DefaultBackofficeApplicationInitializationService.profiles === "function"
+      ? SERVICE.DefaultBackofficeApplicationInitializationService.profiles(request)
+      : [];
+    let operationalReadiness = SERVICE.DefaultBackofficeOperationalReadinessService &&
+      typeof SERVICE.DefaultBackofficeOperationalReadinessService.operationalReadinessReport === "function"
+      ? SERVICE.DefaultBackofficeOperationalReadinessService.operationalReadinessReport(request, {
+          startupValidation: startupValidation,
+          modules: effectiveModules,
+          availability: availability,
+          documentationSources: documentationSources,
+          documentationPublication: documentationPublication,
+          applicationInitializationProfiles: applicationInitializationProfiles,
+        })
+      : undefined;
     return {
       code: "SUC_BOF_00004",
       data: {
@@ -1488,12 +1503,10 @@ module.exports = {
         modules: effectiveModules,
         catalogue: catalogue,
         availability: availability,
+        operationalReadiness: operationalReadiness,
         effectiveNavigationComposition: effectiveNavigationComposition,
         uiComposition: this.selectUiComposition(catalogue, availability),
-        applicationInitializationProfiles: SERVICE.DefaultBackofficeApplicationInitializationService &&
-          typeof SERVICE.DefaultBackofficeApplicationInitializationService.profiles === "function"
-          ? SERVICE.DefaultBackofficeApplicationInitializationService.profiles(request)
-          : [],
+        applicationInitializationProfiles: applicationInitializationProfiles,
         documentationSources: documentationSources,
         axisPolicy: axisPolicy,
         startupValidation: startupValidation,

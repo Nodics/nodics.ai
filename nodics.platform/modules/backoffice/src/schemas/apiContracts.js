@@ -1090,6 +1090,52 @@ const startupValidationReport = {
     findings: { type: "array", maxItems: 128, items: startupValidationFinding },
   },
 };
+const operationalReadinessBlocker = {
+  type: "object",
+  additionalProperties: true,
+  required: ["blockerCode", "code", "severity", "ownerType", "source", "action", "message", "disabledReason", "repair", "suggestedAction"],
+  properties: {
+    blockerCode: { type: "string", minLength: 1, maxLength: 160 },
+    code: { type: "string", minLength: 1, maxLength: 160 },
+    severity: { type: "string", minLength: 1, maxLength: 64 },
+    ownerType: { type: "string", minLength: 1, maxLength: 128 },
+    source: { type: "string", minLength: 1, maxLength: 160 },
+    action: { type: "string", minLength: 1, maxLength: 512 },
+    message: { type: "string", minLength: 1, maxLength: 1024 },
+    disabledReason: { type: "string", minLength: 1, maxLength: 1024 },
+    repair: { type: "object" },
+    suggestedAction: { type: "string", minLength: 1, maxLength: 1024 },
+  },
+};
+const operationalReadinessSection = {
+  type: "object",
+  additionalProperties: false,
+  required: ["key", "title", "businessStatus", "ownerModule", "source", "route", "summary", "blockers", "nextAction"],
+  properties: {
+    key: { type: "string", minLength: 1, maxLength: 128 },
+    title: { type: "string", minLength: 1, maxLength: 160 },
+    businessStatus: { type: "string", minLength: 1, maxLength: 64 },
+    ownerModule: { type: "string", minLength: 1, maxLength: 128 },
+    source: { type: "string", minLength: 1, maxLength: 160 },
+    route: { type: "string", minLength: 1, maxLength: 256 },
+    summary: { type: "object" },
+    blockers: { type: "array", maxItems: 256, items: operationalReadinessBlocker },
+    nextAction: { type: "string", minLength: 1, maxLength: 1024 },
+  },
+};
+const operationalReadinessReport = {
+  type: "object",
+  additionalProperties: false,
+  required: ["contractVersion", "state", "checkedAt", "source", "summary", "sections"],
+  properties: {
+    contractVersion: { enum: [1] },
+    state: { enum: ["READY", "NEEDS_ATTENTION", "NOT_READY"] },
+    checkedAt: { type: "string", format: "date-time" },
+    source: { type: "string", minLength: 1, maxLength: 160 },
+    summary: { type: "object" },
+    sections: { type: "array", minItems: 1, maxItems: 32, items: operationalReadinessSection },
+  },
+};
 
 module.exports = {
   registrationResult: {
@@ -1136,6 +1182,9 @@ module.exports = {
   startupBootstrapCheck: startupBootstrapCheck,
   startupBootstrapChecks: startupBootstrapChecks,
   startupValidationReport: startupValidationReport,
+  operationalReadinessBlocker: operationalReadinessBlocker,
+  operationalReadinessSection: operationalReadinessSection,
+  operationalReadinessReport: operationalReadinessReport,
   adminListData: {
     type: "object",
     required: ["total", "offset", "limit", "items"],
@@ -1410,6 +1459,7 @@ module.exports = {
       "documentationSources",
       "axisPolicy",
       "startupValidation",
+      "operationalReadiness",
       "tenantCode",
     ],
     properties: {
@@ -1424,6 +1474,7 @@ module.exports = {
       documentationSources: { type: "array", items: documentationSelection },
       axisPolicy: axisPolicy,
       startupValidation: startupValidationReport,
+      operationalReadiness: operationalReadinessReport,
       tenantCode: { type: "string" },
     },
   },

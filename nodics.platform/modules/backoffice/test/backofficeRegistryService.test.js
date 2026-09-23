@@ -130,6 +130,48 @@ global.SERVICE = {
       bootstrapChecks: { total: 0, ready: 0, missing: 0, needsAttention: 0, checks: [] },
       findings: [],
     }),
+    operationalReadinessReport: (request, context) => ({
+      contractVersion: 1,
+      state: "NEEDS_ATTENTION",
+      checkedAt: "2026-07-27T00:00:00.000Z",
+      source: "backoffice.operationalReadiness",
+      summary: { total: 2, blockers: 1, READY: 1, NOT_EXPOSED: 1 },
+      sections: [
+        {
+          key: "bootstrap",
+          title: "Bootstrap and admin access",
+          businessStatus: "READY",
+          ownerModule: "backoffice",
+          source: "BACKOFFICE_STARTUP_VALIDATION",
+          route: "/dashboard",
+          summary: { findingCount: (context.startupValidation.summary || {}).total },
+          blockers: [],
+          nextAction: "Startup validation is clear.",
+        },
+        {
+          key: "imports",
+          title: "Data import releases",
+          businessStatus: "NOT_EXPOSED",
+          ownerModule: "import",
+          source: "NIMPORT_RELEASE_READINESS",
+          route: "/operations/imports-exports",
+          summary: { exposed: false },
+          blockers: [{
+            blockerCode: "IMPORTS_READINESS_NOT_EXPOSED",
+            code: "IMPORTS_READINESS_NOT_EXPOSED",
+            severity: "NEEDS_ATTENTION",
+            ownerType: "import",
+            source: "NIMPORT_RELEASE_READINESS",
+            action: "Open Data Releases",
+            message: "Data import releases does not yet expose a canonical BackOffice readiness section.",
+            disabledReason: "Data import releases does not yet expose a canonical BackOffice readiness section.",
+            repair: { available: false, operation: "import.exposeReadiness", action: "EXPOSE_READINESS_CONTRACT", eligibility: "NOT_AVAILABLE", label: "Open Data Releases" },
+            suggestedAction: "Open Data Releases",
+          }],
+          nextAction: "Open Data Releases",
+        },
+      ],
+    }),
   },
   DefaultBackofficeContractRepositoryService: {
     getOperationalDiagnostics: (request) => {
@@ -791,6 +833,11 @@ async function run() {
   assert.strictEqual(bootstrap.data.axisPolicy.recentNavigationLimit, 12);
   assert.strictEqual(bootstrap.data.startupValidation.state, "READY");
   assert.strictEqual(bootstrap.data.startupValidation.source, "backoffice.operationalReadiness");
+  assert.strictEqual(bootstrap.data.operationalReadiness.state, "NEEDS_ATTENTION");
+  assert(
+    bootstrap.data.operationalReadiness.sections.some(section => section.key === "imports" && section.blockers[0].suggestedAction),
+    "bootstrap must expose canonical readiness sections with blocker guidance",
+  );
   assert(Array.isArray(bootstrap.data.documentationSources));
   assert.strictEqual(bootstrap.data.tenantCode, "default");
   assert.strictEqual(

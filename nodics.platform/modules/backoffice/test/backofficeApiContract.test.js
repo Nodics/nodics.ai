@@ -56,6 +56,17 @@ assert(contracts.bootstrapData.required.includes("axisPolicy"));
 assert(contracts.bootstrapData.required.includes("tenantCode"));
 assert(contracts.bootstrapData.required.includes("documentationSources"));
 assert(contracts.bootstrapData.required.includes("startupValidation"));
+assert(contracts.bootstrapData.required.includes("operationalReadiness"));
+assert.deepStrictEqual(contracts.operationalReadinessReport.properties.state.enum, [
+  "READY",
+  "NEEDS_ATTENTION",
+  "NOT_READY",
+]);
+assert(
+  contracts.operationalReadinessSection.required.includes("blockers") &&
+    contracts.operationalReadinessBlocker.required.includes("suggestedAction"),
+  "operational readiness sections must expose guided blockers for Axis and tooling",
+);
 assert.deepStrictEqual(contracts.startupValidationReport.properties.state.enum, [
   "READY",
   "NEEDS_ATTENTION",
