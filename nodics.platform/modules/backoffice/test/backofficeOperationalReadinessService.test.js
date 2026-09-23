@@ -33,6 +33,19 @@ let auditEvents = [];
 global.SERVICE = { AuditPublisher: { record: () => Promise.resolve(true) },
     DefaultBackofficeAuditService: { record: event => { auditEvents.push(event); return Promise.resolve(event); } },
     AlertPublisher: { record: event => { publishedAlerts.push(event); return Promise.resolve(true); } },
+    DefaultBackofficeApplicationInitializationService: { status: async profileCode => ({
+        profileCode: profileCode,
+        applicationCode: 'circa',
+        siteCode: 'circaSite',
+        releaseCode: 'circa.ewaste:site',
+        capability: {
+            businessStatus: 'ONLINE',
+            blockers: [],
+            approvalDiagnostic: { status: 'APPROVED', message: 'Publication approval is complete.' },
+            publicationSummary: { online: 'ONLINE', approval: 'APPROVED' },
+            nextAction: 'Monitor Online readiness'
+        }
+    }) },
     DefaultHealthService: { registerReadinessContributor: (name, contributor) => {
     assert.strictEqual(name, 'backofficeOperationalConfiguration'); readinessContributor = contributor;
 } } };
@@ -137,7 +150,7 @@ async function validateDeliveryAndProductionPolicy() {
         modules: { backoffice: [{ instanceId: 'platformServer:backoffice', state: 'ACTIVE' }] },
         availability: { backoffice: { state: 'UP' } },
         documentationSources: [{ id: 'framework.docs', label: 'Framework docs', type: 'CMS', route: '/docs/framework' }],
-        documentationPublication: {},
+        documentationPublication: { bySourceId: { 'framework.docs': { readiness: 'READY', ready: true } } },
         applicationInitializationProfiles: [{ code: 'circaewaste', title: 'Circa eWaste',
             dataPackages: [{ code: 'circa.ewaste:sample', dataType: 'sample', targetServer: 'wcmsStaged', targetRuntimeRole: 'WCMS_STAGED' }] }]
     });
@@ -149,6 +162,12 @@ async function validateDeliveryAndProductionPolicy() {
     assert.strictEqual(moduleInvocationCalls[0].moduleName, 'import');
     assert.strictEqual(moduleInvocationCalls[0].apiName, '/sample');
     assert.strictEqual(moduleInvocationCalls[0].header.Authorization, 'Bearer operator-token');
+    assert(aggregateReport.sections.some(section => section.key === 'publishing'
+        && section.businessStatus === 'READY'
+        && section.summary.onlineCount === 1));
+    assert(aggregateReport.sections.some(section => section.key === 'approval'
+        && section.businessStatus === 'READY'
+        && section.summary.pendingApprovalCount === 0));
     assert(aggregateReport.sections.some(section => section.key === 'documentation'
         && section.businessStatus === 'READY'));
     assert(aggregateReport.sections.some(section => section.key === 'runtimeCommunication'

@@ -323,7 +323,12 @@ module.exports = {
     /** Summarizes documentation source visibility and publication guidance. */
     documentationSection: function (sources, publicationState) {
         sources = [].concat(sources || []);
-        let pending = Object.values(publicationState || {}).filter(item => item && item.readiness && item.readiness !== 'READY');
+        let bySource = (publicationState || {}).bySourceId || {};
+        let pending = sources.filter(source => {
+            if (!source || !source.id) return false;
+            let state = bySource[String(source.id)];
+            return source.type === 'CMS' && (!state || state.ready !== true);
+        });
         let blockers = [];
         if (sources.length === 0) blockers.push(this.readinessBlocker(
             'DOCUMENTATION_SOURCES_MISSING',
@@ -334,15 +339,23 @@ module.exports = {
             'No documentation sources are visible to this operator.',
             { repairOperation: 'documentation.installSources', repairAction: 'INSTALL_DOCUMENTATION_SOURCES' }
         ));
-        if (pending.length > 0) blockers.push(this.readinessBlocker(
-            'DOCUMENTATION_PUBLICATION_PENDING',
-            'NEEDS_ATTENTION',
-            'PUBLICATION',
-            'DOCUMENTATION_PUBLICATION',
-            'Publish documentation',
-            'One or more documentation packs still need staged-to-online publication.',
-            { repairOperation: 'documentation.publish', repairAction: 'PUBLISH_DOCUMENTATION' }
-        ));
+        pending.forEach(source => {
+            let state = bySource[String(source.id)] || {};
+            let blocker = this.readinessBlocker(
+                'DOCUMENTATION_PUBLICATION_PENDING',
+                'NEEDS_ATTENTION',
+                'PUBLICATION',
+                'DOCUMENTATION_PUBLICATION',
+                'Open Documentation Dashboard',
+                'Documentation pack is not Online-ready: ' + String(source.label || source.id),
+                { repairOperation: 'documentation.publish', repairAction: 'PUBLISH_DOCUMENTATION',
+                    suggestedAction: 'Install staged content, request approval, approve, and publish the documentation pack Online.' }
+            );
+            blocker.sourceId = String(source.id);
+            blocker.route = source.route ? String(source.route) : undefined;
+            blocker.readiness = state.readiness ? String(state.readiness) : 'UNKNOWN';
+            blockers.push(blocker);
+        });
         return {
             key: 'documentation',
             title: 'Documentation publishing and indexing',
@@ -350,9 +363,15 @@ module.exports = {
             ownerModule: 'documentation',
             source: 'BACKOFFICE_DOCUMENTATION',
             route: '/docs/dashboard',
-            summary: { sourceCount: sources.length, pendingPublicationCount: pending.length },
+            summary: {
+                sourceCount: sources.length,
+                cmsSourceCount: sources.filter(source => source && source.type === 'CMS').length,
+                pendingPublicationCount: pending.length,
+                openApiSourceCount: sources.filter(source => source && source.type === 'OPENAPI').length,
+            },
             blockers: blockers,
-            nextAction: blockers.length ? 'Install, approve, publish, and index documentation packs.' : 'Documentation sources are visible and publication blockers were not detected.',
+            nextAction: blockers.length ? 'Install, approve, publish, and index documentation packs from Documentation Dashboard.' :
+                'Documentation sources are visible and publication blockers were not detected.',
         };
     },
     /** Builds a placeholder section when a domain capability has not yet exposed canonical readiness. */
@@ -537,6 +556,152 @@ module.exports = {
                     'Install required data release catalogues for the active preparation targets.',
         };
     },
+    /** Reads owner application profile readiness projections once for publishing and approval aggregate sections. */
+    applicationProfileStatusEntries: async function (request, profiles) {
+        let service = SERVICE.DefaultBackofficeApplicationInitializationService;
+        if (!service || typeof service.status !== 'function') return { statuses: [], errors: [] };
+        let statuses = [];
+        let errors = [];
+        for (let profile of [].concat(profiles || [])) {
+            if (!profile || !profile.code) continue;
+            try {
+                let status = await service.status(String(profile.code), request);
+                statuses.push(status);
+            } catch (error) {
+                errors.push({ profile: profile, error: error });
+            }
+        }
+        return { statuses: statuses, errors: errors };
+    },
+    /** Normalizes application capability blockers into shared readiness blockers. */
+    normalizeCapabilityBlocker: function (blocker, status, ownerTypeOverride) {
+        blocker = blocker || {};
+        let repair = Object.assign({}, blocker.repair || {});
+        if (!repair.operation) repair.operation = 'applicationInitialization.status';
+        if (!repair.action) repair.action = repair.actionCode || blocker.code || 'REVIEW_CAPABILITY';
+        if (!repair.eligibility) repair.eligibility = repair.available === true ? 'MANUAL' : 'NOT_AVAILABLE';
+        if (!repair.label) repair.label = blocker.action || 'Review capability';
+        return {
+            blockerCode: String(blocker.blockerCode || blocker.code || 'CAPABILITY_NOT_READY'),
+            code: String(blocker.code || blocker.blockerCode || 'CAPABILITY_NOT_READY'),
+            severity: String(blocker.severity || 'NEEDS_ATTENTION'),
+            ownerType: String(ownerTypeOverride || blocker.ownerType || 'APPLICATION_CAPABILITY'),
+            source: String(blocker.source || 'BACKOFFICE_APPLICATION_INITIALIZATION'),
+            action: String(blocker.action || 'Open Setup & Accelerators'),
+            message: String(blocker.message || 'Application capability needs attention.'),
+            disabledReason: String(blocker.disabledReason || blocker.message || 'Application capability needs attention.'),
+            repair: repair,
+            suggestedAction: String(blocker.suggestedAction || blocker.action || (status && status.capability && status.capability.nextAction) || 'Open Setup & Accelerators'),
+            profileCode: status && status.profileCode ? String(status.profileCode) : undefined,
+            applicationCode: status && status.applicationCode ? String(status.applicationCode) : undefined,
+            siteCode: status && status.siteCode ? String(status.siteCode) : undefined,
+            releaseCode: status && status.releaseCode ? String(status.releaseCode) : undefined,
+            approvalDiagnostic: blocker.approvalDiagnostic,
+            runtimeDiagnostic: blocker.runtimeDiagnostic,
+        };
+    },
+    /** Builds owner-backed publication readiness from application initialization/CMS projections. */
+    publishingSection: function (profileStatusReport) {
+        let statuses = [].concat((profileStatusReport || {}).statuses || []);
+        let errors = [].concat((profileStatusReport || {}).errors || []);
+        let blockers = statuses.reduce((result, status) => {
+            let capability = status && status.capability || {};
+            let capabilityBlockers = [].concat(capability.blockers || [])
+                .filter(blocker => blocker.source !== 'PUBLICATION_APPROVAL');
+            return result.concat(capabilityBlockers.map(blocker => this.normalizeCapabilityBlocker(blocker, status, 'PUBLICATION')));
+        }, []);
+        errors.forEach(item => {
+            let blocker = this.readinessBlocker(
+                'PUBLICATION_PROVIDER_UNAVAILABLE',
+                'NEEDS_ATTENTION',
+                'PUBLICATION',
+                'BACKOFFICE_APPLICATION_INITIALIZATION',
+                'Open Setup & Accelerators',
+                'Publication readiness could not be read from the owning application profile.',
+                { repairOperation: 'applicationInitialization.refreshStatus', repairAction: 'REFRESH_PUBLICATION_STATUS',
+                    suggestedAction: 'Refresh Setup & Accelerators and verify the target publication runtime is registered.' }
+            );
+            blocker.profileCode = item.profile && item.profile.code ? String(item.profile.code) : undefined;
+            blockers.push(blocker);
+        });
+        let online = statuses.filter(status => status && status.capability && status.capability.businessStatus === 'ONLINE').length;
+        let pending = statuses.length - online;
+        return {
+            key: 'publishing',
+            title: 'Publication readiness',
+            businessStatus: errors.length || blockers.length || pending > 0 ? 'NEEDS_ATTENTION' : statuses.length ? 'READY' : 'NOT_CONFIGURED',
+            ownerModule: 'cms',
+            source: 'BACKOFFICE_APPLICATION_INITIALIZATION',
+            route: '/publishing/setup',
+            summary: { profileCount: statuses.length, onlineCount: online, pendingCount: Math.max(0, pending), blockerCount: blockers.length, providerErrorCount: errors.length },
+            blockers: blockers,
+            nextAction: blockers.length || pending > 0 ? 'Open Setup & Accelerators and resolve publication readiness blockers.' :
+                statuses.length ? 'Publication profiles are Online-ready.' : 'Configure application publication profiles.',
+        };
+    },
+    /** Builds owner-backed approval readiness from Process evidence carried by CMS/application projections. */
+    approvalSection: function (profileStatusReport) {
+        let statuses = [].concat((profileStatusReport || {}).statuses || []);
+        let errors = [].concat((profileStatusReport || {}).errors || []);
+        let blockers = [];
+        statuses.forEach(status => {
+            let capability = status && status.capability || {};
+            let diagnostic = capability.approvalDiagnostic || {};
+            if (['APPROVED', 'NOT_STARTED'].includes(String(diagnostic.status || ''))) return;
+            let approvalBlockers = [].concat(capability.blockers || [])
+                .filter(blocker => blocker.source === 'PUBLICATION_APPROVAL');
+            if (approvalBlockers.length) {
+                blockers = blockers.concat(approvalBlockers.map(blocker => this.normalizeCapabilityBlocker(blocker, status, 'PROCESS_WORKFLOW')));
+                return;
+            }
+            let blocker = this.readinessBlocker(
+                'APPROVAL_IN_PROGRESS',
+                'NEEDS_ATTENTION',
+                'PROCESS_WORKFLOW',
+                'PUBLICATION_APPROVAL',
+                diagnostic.suggestedAction || 'Open Approval Queue',
+                diagnostic.message || 'Publication approval needs reviewer action.',
+                { repairOperation: 'process.approval.review', repairAction: 'REVIEW_APPROVAL_TASK',
+                    suggestedAction: diagnostic.suggestedAction || 'Open Approval Queue and review the governed task.' }
+            );
+            blocker.profileCode = status.profileCode ? String(status.profileCode) : undefined;
+            blocker.publicationCode = diagnostic.publicationCode;
+            blocker.publicationState = diagnostic.publicationState;
+            blocker.taskCode = diagnostic.taskCode;
+            blocker.taskStatus = diagnostic.taskStatus;
+            blockers.push(blocker);
+        });
+        errors.forEach(item => {
+            let blocker = this.readinessBlocker(
+                'APPROVAL_PROVIDER_UNAVAILABLE',
+                'NEEDS_ATTENTION',
+                'PROCESS_WORKFLOW',
+                'PUBLICATION_APPROVAL',
+                'Refresh publication status',
+                'Approval readiness could not be read because publication status is unavailable.',
+                { repairOperation: 'applicationInitialization.refreshStatus', repairAction: 'REFRESH_APPROVAL_STATUS',
+                    suggestedAction: 'Refresh Setup & Accelerators and verify CMS/Process runtimes are registered.' }
+            );
+            blocker.profileCode = item.profile && item.profile.code ? String(item.profile.code) : undefined;
+            blockers.push(blocker);
+        });
+        let pending = statuses.filter(status => {
+            let diagnostic = status && status.capability && status.capability.approvalDiagnostic || {};
+            return !['APPROVED', 'NOT_STARTED'].includes(String(diagnostic.status || ''));
+        }).length;
+        return {
+            key: 'approval',
+            title: 'Process approval tasks',
+            businessStatus: blockers.length ? 'NEEDS_ATTENTION' : 'READY',
+            ownerModule: 'workflow',
+            source: 'PUBLICATION_APPROVAL',
+            route: '/process/approval-queue',
+            summary: { profileCount: statuses.length, pendingApprovalCount: pending, blockerCount: blockers.length, providerErrorCount: errors.length },
+            blockers: blockers,
+            nextAction: blockers.length ? 'Open Approval Queue and reconcile governed publication approval tasks.' :
+                'No actionable publication approval blockers were detected.',
+        };
+    },
     /** Builds the canonical post-reset operational readiness aggregate for Axis and tooling. */
     operationalReadinessReport: async function (request, context) {
         context = context || {};
@@ -563,6 +728,7 @@ module.exports = {
                 { repairOperation: 'runtimeConfiguration.update', repairAction: 'REPAIR_BOOTSTRAP_CONFIGURATION' }
             )] : []);
         let importSection = await this.importReadinessSection(request, context.applicationInitializationProfiles);
+        let profileStatusReport = await this.applicationProfileStatusEntries(request, context.applicationInitializationProfiles);
         let sections = [
             {
                 key: 'bootstrap',
@@ -581,8 +747,8 @@ module.exports = {
             },
             this.moduleRuntimeSection(context.modules, context.availability),
             importSection,
-            this.ownerPendingSection('publishing', 'Publication readiness', 'publishing', '/publishing/setup', 'PUBLICATION_READINESS', 'Open Publishing and resolve dependency/approval blockers.'),
-            this.ownerPendingSection('approval', 'Process approval tasks', 'workflow', '/process/approval-queue', 'PROCESS_APPROVAL_READINESS', 'Open Approval Queue and reconcile missing process tasks.'),
+            this.publishingSection(profileStatusReport),
+            this.approvalSection(profileStatusReport),
             this.documentationSection(context.documentationSources, context.documentationPublication),
             this.ownerPendingSection('media', 'Media objects and references', 'media', '/media', 'MEDIA_READINESS', 'Open Media Management and reconcile missing media objects/references.'),
             this.ownerPendingSection('search', 'Search index and read-source policy', 'search', '/discovery', 'SEARCH_READINESS', 'Open Discovery/Search controls and verify index freshness.'),
