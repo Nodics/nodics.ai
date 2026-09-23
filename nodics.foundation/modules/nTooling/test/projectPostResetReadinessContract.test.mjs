@@ -102,3 +102,118 @@ test('post-reset readiness report skips browser validation by framework default'
     fs.rmSync(projectRoot, { recursive: true, force: true });
   }
 });
+
+test('post-reset readiness report parses authenticated BackOffice bootstrap evidence', async () => {
+  const projectRoot = fs.mkdtempSync(path.join(os.tmpdir(), 'nodics-post-reset-live-'));
+  try {
+    writeJson(path.join(projectRoot, 'package.json'), { name: 'acme.live', private: true });
+    writeEnvironment(path.join(projectRoot, 'envs', 'liveLocal'), {
+      acceptance: {
+        functionalJourney: { runtimes: { platform: { role: 'PLATFORM' } } },
+      },
+    });
+    const platform = path.join(projectRoot, 'envs', 'liveLocal', 'platformServer');
+    fs.mkdirSync(platform, { recursive: true });
+    writeJson(path.join(platform, 'package.json'), {
+      name: 'platformServer',
+      index: '1000',
+      nodics: { kind: 'server', runtimeModule: true, displayName: 'Platform Server' },
+    });
+    writeProperties(platform, {
+      runtimeRole: { code: 'PLATFORM' },
+      servers: { default: { endpoint: { httpPort: 4312 } } },
+    });
+    let requestedUrl = '';
+    let authorization = '';
+    const report = await buildPostResetReadinessReport(projectRoot, 'liveLocal', {
+      live: true,
+      accessToken: 'local-secret-token',
+      fetchImpl: async (url, request) => {
+        requestedUrl = String(url);
+        authorization = request.headers.Authorization;
+        return {
+          ok: true,
+          status: 200,
+          async json() {
+            return {
+              code: 'SUCCESS',
+              data: {
+                startupValidation: {
+                  state: 'READY',
+                  checkedAt: '2026-09-23T00:00:00.000Z',
+                  source: 'backoffice.startupValidation',
+                  summary: { total: 1, errors: 0, warnings: 0, info: 0, dismissible: 0, acknowledged: 0 },
+                  bootstrapChecks: { total: 1, ready: 1, missing: 0, needsAttention: 0, checks: [] },
+                  findings: [],
+                },
+                modules: {
+                  backoffice: [{ instanceId: 'platformServer:backoffice', server: 'platformServer', state: 'ACTIVE' }],
+                  process: [{ instanceId: 'processServer:process', server: 'processServer', state: 'ACTIVE' }],
+                },
+                applicationInitializationProfiles: [
+                  { code: 'circaewaste', title: 'Circa eWaste', requiredServers: ['platformServer'] },
+                ],
+                documentationSources: [
+                  { id: 'framework.docs', label: 'Framework docs', type: 'CMS', route: '/docs/framework', readiness: 'READY' },
+                ],
+                importReadiness: { state: 'READY' },
+                publicationReadiness: { state: 'READY' },
+                approvalReadiness: { state: 'READY' },
+                mediaReadiness: { state: 'READY' },
+                searchReadiness: { state: 'READY' },
+                assistantReadiness: { state: 'READY' },
+              },
+            };
+          },
+        };
+      },
+    });
+
+    assert.equal(requestedUrl, 'http://localhost:4312/nodics/backoffice/v0/bootstrap');
+    assert.equal(authorization, 'Bearer local-secret-token');
+    assert.equal(report.contractVersion, 2);
+    assert.equal(report.exitCode, 1);
+    assert.equal(report.sections.find(section => section.id === 'bootstrap').state, 'READY');
+    assert.equal(report.sections.find(section => section.id === 'moduleRegistry').state, 'READY');
+    assert.equal(report.sections.find(section => section.id === 'applications').evidence.applications.total, 1);
+    assert.equal(report.sections.find(section => section.id === 'documentation').evidence.documentation.total, 1);
+    assert.doesNotMatch(JSON.stringify(report), /local-secret-token/);
+  } finally {
+    fs.rmSync(projectRoot, { recursive: true, force: true });
+  }
+});
+
+test('post-reset readiness report classifies unauthorized live bootstrap without leaking token', async () => {
+  const projectRoot = fs.mkdtempSync(path.join(os.tmpdir(), 'nodics-post-reset-unauthorized-'));
+  try {
+    writeJson(path.join(projectRoot, 'package.json'), { name: 'acme.unauthorized', private: true });
+    writeEnvironment(path.join(projectRoot, 'envs', 'unauthorizedLocal'), {
+      acceptance: {
+        functionalJourney: { runtimes: { platform: { role: 'PLATFORM' } } },
+      },
+    });
+    const platform = path.join(projectRoot, 'envs', 'unauthorizedLocal', 'platformServer');
+    fs.mkdirSync(platform, { recursive: true });
+    writeJson(path.join(platform, 'package.json'), {
+      name: 'platformServer',
+      index: '1000',
+      nodics: { kind: 'server', runtimeModule: true },
+    });
+    writeProperties(platform, {
+      runtimeRole: { code: 'PLATFORM' },
+      servers: { default: { endpoint: { httpPort: 4313 } } },
+    });
+    const report = await buildPostResetReadinessReport(projectRoot, 'unauthorizedLocal', {
+      live: true,
+      accessToken: 'denied-token',
+      fetchImpl: async () => ({ ok: false, status: 403, async json() { return {}; } }),
+    });
+
+    assert.equal(report.exitCode, 2);
+    assert.equal(report.sections.find(section => section.id === 'bootstrap').state, 'UNAUTHORIZED');
+    assert.equal(report.summary.UNAUTHORIZED > 0, true);
+    assert.doesNotMatch(JSON.stringify(report), /denied-token/);
+  } finally {
+    fs.rmSync(projectRoot, { recursive: true, force: true });
+  }
+});

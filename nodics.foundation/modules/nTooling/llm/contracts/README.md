@@ -105,6 +105,15 @@ CLI targets take precedence over environment-file defaults. Selection is restore
 after an awaited runtime lifecycle, including failure. Credentials stay in the
 existing external/environment/secret authority and are never CLI examples.
 
+`project:post-reset-readiness` is the canonical post-reset diagnostic command.
+It may inspect selected environment topology and BackOffice bootstrap evidence,
+but it must not import data, initialize modules, approve publication, write
+runtime configuration, or persist tokens. Live mode requires an externally
+supplied Axis/BackOffice access token and emits only redacted evidence. Keep new
+post-reset checks in framework/tooling or the owning capability module; customer
+projects should contribute only real overrides or project-specific data, not
+duplicate framework readiness logic.
+
 The same registry still accepts its existing command names. Customer acceptance
 aliases remain opt-in `project:run` commands. Qualification/release commands retain
 the framework home established by the project bridge. Changing command packaging

@@ -1,0 +1,87 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://nodics.local/contracts/nTooling/project-post-reset-readiness-report.schema.json",
+  "title": "Nodics Project Post-Reset Readiness Report",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "contractVersion",
+    "projectCode",
+    "environment",
+    "generatedAt",
+    "live",
+    "summary",
+    "exitCode",
+    "sections",
+    "commands"
+  ],
+  "properties": {
+    "contractVersion": { "const": 2 },
+    "projectCode": { "type": "string", "minLength": 1 },
+    "environment": { "type": "string", "minLength": 1 },
+    "generatedAt": { "type": "string", "format": "date-time" },
+    "live": { "type": "boolean" },
+    "summary": {
+      "type": "object",
+      "required": ["total"],
+      "properties": {
+        "total": { "type": "integer", "minimum": 0 },
+        "READY": { "type": "integer", "minimum": 0 },
+        "NEEDS_ATTENTION": { "type": "integer", "minimum": 0 },
+        "NOT_READY": { "type": "integer", "minimum": 0 },
+        "NOT_CONFIGURED": { "type": "integer", "minimum": 0 },
+        "UNAUTHORIZED": { "type": "integer", "minimum": 0 },
+        "UNREACHABLE": { "type": "integer", "minimum": 0 },
+        "SKIPPED": { "type": "integer", "minimum": 0 },
+        "FAILED": { "type": "integer", "minimum": 0 }
+      },
+      "additionalProperties": { "type": "integer", "minimum": 0 }
+    },
+    "exitCode": { "type": "integer", "minimum": 0, "maximum": 4 },
+    "sections": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["id", "title", "state", "message", "evidence", "nextAction"],
+        "properties": {
+          "id": { "type": "string", "minLength": 1 },
+          "title": { "type": "string", "minLength": 1 },
+          "state": {
+            "enum": [
+              "READY",
+              "NEEDS_ATTENTION",
+              "NOT_READY",
+              "NOT_CONFIGURED",
+              "UNAUTHORIZED",
+              "UNREACHABLE",
+              "SKIPPED",
+              "FAILED"
+            ]
+          },
+          "message": { "type": "string", "minLength": 1 },
+          "evidence": { "type": "object" },
+          "nextAction": { "type": "string" }
+        }
+      }
+    },
+    "commands": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": true,
+        "required": ["command", "args", "environment", "evidenceOnly"],
+        "properties": {
+          "command": { "type": "string", "minLength": 1 },
+          "args": {
+            "type": "array",
+            "items": { "type": "string" }
+          },
+          "environment": { "type": "string", "minLength": 1 },
+          "evidenceOnly": { "type": "boolean" }
+        }
+      }
+    }
+  }
+}

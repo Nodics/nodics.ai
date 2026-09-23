@@ -146,6 +146,27 @@ registry is introduced. Test this with
 isolated from customer runtimes. Standard functional exceptions are tested by
 `test/functionalModuleOptionalityContract.test.js`.
 
+## Post-Reset Readiness
+
+`project:post-reset-readiness` produces the support-safe evidence bundle to run
+after a schema reset, server restart, import repair, or publication recovery. It
+derives expected runtimes from the selected environment/server metadata and, in
+`--live` mode, calls the secured BackOffice bootstrap contract used by Axis:
+
+```bash
+npm exec -- nodics project:post-reset-readiness --environment=kickoffLocal --json
+npm exec -- nodics project:post-reset-readiness --environment=kickoffLocal --live --access-token-file=/path/to/private/axis-access-token --json
+```
+
+The command must not store credentials. Use `--access-token`,
+`--access-token-file`, or `NODICS_BACKOFFICE_ACCESS_TOKEN` from an external,
+private source. Output is redacted and classified with operational states:
+`READY`, `NEEDS_ATTENTION`, `NOT_READY`, `NOT_CONFIGURED`, `UNAUTHORIZED`,
+`UNREACHABLE`, `SKIPPED`, and `FAILED`. Exit codes are stable for automation:
+`0` ready, `1` needs attention/not ready, `2` unauthorized, `3` unreachable,
+and `4` not configured. The machine-readable shape is defined by
+`contracts/project-post-reset-readiness-report.schema.json`.
+
 ## Command Contract
 
 Commands belong in `config/properties.js` under `tooling.commands`. A command definition should identify:
