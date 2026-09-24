@@ -161,12 +161,30 @@ registry.operations.startupValidation.requiredProperties = originalRequiredPrope
 async function validateDeliveryAndProductionPolicy() {
     let moduleInvocationCalls = [];
     let originalModuleService = global.SERVICE.DefaultModuleService;
+    let originalEWasteReadinessService = global.SERVICE.DefaultEWasteAcceptanceReadinessService;
     global.SERVICE.DefaultModuleService = { invokeModule: async descriptor => {
         moduleInvocationCalls.push(descriptor);
         return [{ releaseCode: 'circa.ewaste:sample', moduleName: 'circa.ewaste',
             displayName: 'Circa sample release',
             readiness: { businessStatus: 'PREPARED_STAGED', blockers: [] } }];
     } };
+    global.SERVICE.DefaultEWasteAcceptanceReadinessService = { readiness: () => ({
+        contractVersion: 1,
+        businessStatus: 'READY',
+        summary: {
+            telegramChannelConfigured: true,
+            customerAccountLinkReady: true,
+            imageAnalysisConfigured: true,
+            manualReviewFallbackReady: true,
+            draftPhotoRetentionStatus: 'CUSTOMER_DRAFT_UNTIL_SUBMIT_OR_REPLACE',
+            rejectedDraftCleanupStatus: 'OWNER_POLICY_REVIEW_REQUIRED',
+            acceptedEvidenceRetentionStatus: 'RETAIN_WITH_APPROVED_ASSET_EVIDENCE',
+            acceptScenarioReady: true,
+            rejectScenarioReady: true,
+        },
+        blockers: [],
+        nextAction: 'Circa/eWaste acceptance readiness is clear.'
+    }) };
     let aggregateReport = await service.operationalReadinessReport({ tenant: 'default', httpRequest: { headers: { authorization: 'Bearer operator-token' } } }, {
         startupValidation: missingReport,
         modules: { backoffice: [{ instanceId: 'platformServer:backoffice', moduleName: 'backoffice', state: 'ACTIVE',
@@ -225,6 +243,11 @@ async function validateDeliveryAndProductionPolicy() {
         && section.summary.mediaStateCounts.READY_OR_NOT_REQUIRED === 1
         && section.summary.cleanupReviewRoute === '/media/cleanup-candidates'
         && section.summary.operatorCommands.includes('Reconcile product or content references')));
+    assert(aggregateReport.sections.some(section => section.key === 'eWasteAcceptance'
+        && section.businessStatus === 'READY'
+        && section.summary.telegramChannelConfigured === true
+        && section.summary.acceptScenarioReady === true
+        && section.summary.rejectScenarioReady === true));
     assert(aggregateReport.sections.some(section => section.key === 'search'
         && section.businessStatus === 'READY'
         && section.summary.runtimeRole === 'PLATFORM'
@@ -322,6 +345,7 @@ async function validateDeliveryAndProductionPolicy() {
     assert(aggregateReport.sections.find(section => section.key === 'bootstrap').blockers
         .some(blocker => blocker.code === 'MISSING_TEST_PROPERTY' && blocker.repair.operation === 'runtimeConfiguration.update'));
     global.SERVICE.DefaultModuleService = originalModuleService;
+    global.SERVICE.DefaultEWasteAcceptanceReadinessService = originalEWasteReadinessService;
 
     let repairCalls = [];
     let importRepairProvider = {

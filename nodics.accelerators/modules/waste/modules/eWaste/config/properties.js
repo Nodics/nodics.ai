@@ -425,6 +425,18 @@ module.exports = {
       },
     },
     channelAuthentication: { enabled: false, timeoutMs: 15000, channels: {} },
+    acceptanceReadiness: {
+      enabled: true,
+      draftMedia: {
+        retentionStatus: "CUSTOMER_DRAFT_UNTIL_SUBMIT_OR_REPLACE",
+        rejectedCleanupStatus: "OWNER_POLICY_REVIEW_REQUIRED",
+        acceptedEvidenceRetentionStatus: "RETAIN_WITH_APPROVED_ASSET_EVIDENCE",
+      },
+      scenarios: {
+        accept: { enabled: true },
+        reject: { enabled: true },
+      },
+    },
     presetPack: {
       code: "EWASTE_CORE_PRESETS",
       enabled: true,

@@ -1181,6 +1181,98 @@ module.exports = {
                     'Configure application/media preparation profiles before validating media readiness.',
         };
     },
+    /** Includes Circa/eWaste owner readiness when the eWaste accelerator is present in the active runtime. */
+    eWasteAcceptanceSection: function (context) {
+        context = context || {};
+        let hasEWasteConfig = !!CONFIG.get('eWaste');
+        let service = SERVICE.DefaultEWasteAcceptanceReadinessService;
+        if (!hasEWasteConfig && (!service || typeof service.readiness !== 'function')) return undefined;
+        if (!service || typeof service.readiness !== 'function') {
+            let blocker = this.readinessBlocker(
+                'EWASTE_ACCEPTANCE_PROVIDER_NOT_CONFIGURED',
+                'NEEDS_ATTENTION',
+                'EWASTE_ACCEPTANCE',
+                'EWASTE_ACCEPTANCE_READINESS',
+                'Start eWaste readiness provider',
+                'The eWaste acceptance readiness provider is not available in this runtime.',
+                { repairOperation: 'eWaste.acceptance.readiness', repairAction: 'START_EWASTE_ACCEPTANCE_READINESS',
+                    suggestedAction: 'Activate the eWaste accelerator runtime and refresh operational readiness.',
+                    businessImpact: 'Axis cannot confirm Circa Telegram, AI, media, accept or reject scenario readiness.',
+                    recoveryHint: 'Start the owning eWaste runtime and refresh Axis readiness.' }
+            );
+            return {
+                key: 'eWasteAcceptance',
+                title: 'Circa/eWaste acceptance readiness',
+                businessStatus: 'NEEDS_ATTENTION',
+                ownerModule: 'eWaste',
+                source: 'EWASTE_ACCEPTANCE_READINESS',
+                route: '/waste/review-queue',
+                summary: { providerAvailable: false, blockerCount: 1 },
+                blockers: [blocker],
+                nextAction: 'Start the owning eWaste readiness provider and refresh readiness.',
+            };
+        }
+        let report;
+        try {
+            report = service.readiness(context);
+        } catch (error) {
+            let blocker = this.readinessBlocker(
+                'EWASTE_ACCEPTANCE_PROVIDER_FAILED',
+                'NEEDS_ATTENTION',
+                'EWASTE_ACCEPTANCE',
+                'EWASTE_ACCEPTANCE_READINESS',
+                'Open eWaste readiness',
+                'The eWaste acceptance readiness provider failed while building readiness evidence.',
+                { repairOperation: 'eWaste.acceptance.readiness', repairAction: 'REFRESH_EWASTE_ACCEPTANCE_READINESS',
+                    suggestedAction: 'Inspect eWaste startup/configuration and refresh readiness.',
+                    businessImpact: 'Axis cannot confirm Circa Telegram, AI, media, accept or reject scenario readiness.',
+                    recoveryHint: 'Repair the owning eWaste provider error, restart if needed, and refresh readiness.' }
+            );
+            blocker.failureCode = String(error.code || error.message || 'EWASTE_ACCEPTANCE_READINESS_FAILED');
+            return {
+                key: 'eWasteAcceptance',
+                title: 'Circa/eWaste acceptance readiness',
+                businessStatus: 'NEEDS_ATTENTION',
+                ownerModule: 'eWaste',
+                source: 'EWASTE_ACCEPTANCE_READINESS',
+                route: '/waste/review-queue',
+                summary: { providerAvailable: false, blockerCount: 1 },
+                blockers: [blocker],
+                nextAction: 'Open eWaste readiness and repair the owner provider failure.',
+            };
+        }
+        let blockers = [].concat((report || {}).blockers || []).map(item => {
+            item = item || {};
+            return this.readinessBlocker(
+                item.code || item.blockerCode || 'EWASTE_ACCEPTANCE_NOT_READY',
+                item.severity || 'NEEDS_ATTENTION',
+                'EWASTE_ACCEPTANCE',
+                item.source || 'EWASTE_ACCEPTANCE_READINESS',
+                item.action || 'Open eWaste readiness',
+                item.message || 'Circa/eWaste acceptance readiness needs attention.',
+                { repairAvailable: item.repair && item.repair.available === true,
+                    repairOperation: item.repair && item.repair.operation,
+                    repairAction: item.repair && (item.repair.action || item.repair.actionCode),
+                    repairEligibility: item.repair && item.repair.eligibility,
+                    repairLabel: item.repair && item.repair.label,
+                    suggestedAction: item.suggestedAction || item.action || 'Open eWaste readiness',
+                    businessImpact: item.businessImpact || 'Circa/eWaste acceptance can be blocked until the owner readiness item is resolved.',
+                    recoveryHint: item.recoveryHint || item.suggestedAction || item.action || 'Open eWaste readiness and follow the owner guidance.' }
+            );
+        });
+        return {
+            key: 'eWasteAcceptance',
+            title: 'Circa/eWaste acceptance readiness',
+            businessStatus: blockers.length ? 'NEEDS_ATTENTION' : String((report || {}).businessStatus || 'NOT_CONFIGURED'),
+            ownerModule: 'eWaste',
+            source: 'EWASTE_ACCEPTANCE_READINESS',
+            route: '/waste/review-queue',
+            summary: Object.assign({ providerAvailable: true }, (report || {}).summary || {}, { blockerCount: blockers.length }),
+            blockers: blockers,
+            nextAction: blockers.length ? 'Open eWaste readiness and resolve Telegram, AI, media or scenario blockers.' :
+                ((report || {}).nextAction || 'Circa/eWaste acceptance readiness is clear.'),
+        };
+    },
     /** Summarizes nSearch/read-source configuration without requiring custom-project runtime settings. */
     searchConfigurationSummary: function () {
         let search = CONFIG.get('search') || {};
@@ -2035,11 +2127,12 @@ module.exports = {
             this.approvalSection(profileStatusReport),
             this.documentationSection(context.documentationSources, context.documentationPublication),
             this.mediaSection(profileStatusReport),
+            this.eWasteAcceptanceSection(context),
             this.searchSection(context),
             this.assistantSection(),
             this.applicationSection(context.applicationInitializationProfiles),
             this.acceptanceSection(profileStatusReport, context),
-        ];
+        ].filter(Boolean);
         let summary = sections.reduce((result, section) => {
             result.total++;
             result[section.businessStatus] = (result[section.businessStatus] || 0) + 1;

@@ -39,6 +39,12 @@ linked identities can sign in seamlessly; unlinked customers use the shared
 account form. Profile retains proof, links, registration and browser session
 issuance. See [channel account entry](llm/contracts/e-waste-domain.md#channel-account-entry).
 
+The accelerator owns Circa/eWaste acceptance readiness for channel launch,
+Profile external identity mapping, image/AI assessment prerequisites, draft
+media lifecycle policy and accept/reject scenario gates. BackOffice may aggregate
+this report for Axis, but must not duplicate Telegram, OpenAI, Media or Waste
+workflow rules in a customer project.
+
 Electronics navigation and keyed review-view properties are contributed by eWaste itself. Its concrete provider attaches the Electronics dashboard anchor and its Submissions and Review queue children beneath the generic Waste Management anchor. Without this active, authorized contribution, those links are absent.
 
 The Electronics navigation anchor opens its scoped dashboard. Its operational

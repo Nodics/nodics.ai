@@ -129,6 +129,23 @@ Tests: `eWasteChannelAuthenticationContract.test.js` covers linked and unlinked
 entry, disabled/unknown channels, custom seamless policy, customer-link scope,
 caller-field isolation and owner error propagation.
 
+## Circa acceptance readiness
+
+`DefaultEWasteAcceptanceReadinessService` owns Circa/eWaste prerequisite
+readiness. It reports channel policy, Profile external-identity mapping, masked
+Telegram credential presence, OpenAI/environmental assessment profile readiness,
+manual image-analysis fallback, draft media lifecycle status and accept/reject
+scenario dependencies. The provider must not call Telegram, OpenAI, Media intake
+or customer workflow APIs while building readiness; it checks owner configuration
+and local service availability only.
+
+BackOffice may aggregate this report for Axis as `eWasteAcceptance`, but the
+rules stay in eWaste. Custom projects should supply only later-layer deltas such
+as application code, credential references, bot/openAI secret values and media
+cleanup policy. Missing secrets are reported as masked blockers with recovery
+guidance, never as displayed values. Live browser/customer execution remains the
+separate acceptance-evidence contract.
+
 ## Photo recognition taxonomy fallback
 
 The accelerator contributes `wasteSubmission.metadataSuggestion.subjectLabel`
