@@ -76,6 +76,7 @@ test('post-reset readiness report derives recovery evidence from environment top
     assert.match(formatPostResetReadinessReport(report), /Post-reset readiness: acme\.recovery \/ recoveryLocal/);
 
     const passedReport = await buildPostResetReadinessReport(projectRoot, 'recoveryLocal', {
+      now: new Date('2026-09-24T00:10:00.000Z'),
       browserValidationEvidence: {
         state: 'PASSED',
         checkedAt: '2026-09-24T00:00:00.000Z',
@@ -89,6 +90,28 @@ test('post-reset readiness report derives recovery evidence from environment top
     assert.equal(browserSection.state, 'READY');
     assert.equal(browserSection.evidence.latestEvidence.state, 'PASSED');
     assert.equal(browserSection.evidence.latestEvidence.runId, 'browser-smoke-1');
+
+    writeJson(path.join(projectRoot, 'envs', 'recoveryLocal', 'generated', 'acceptance', 'browser-validation-evidence.json'), {
+      state: 'PASSED',
+      checkedAt: '2026-09-24T00:00:00.000Z',
+      runId: 'auto-discovered-browser-smoke',
+      urls: ['http://localhost:3100/dashboard'],
+    });
+    const discoveredReport = await buildPostResetReadinessReport(projectRoot, 'recoveryLocal', {
+      now: new Date('2026-09-24T00:10:00.000Z'),
+    });
+    const discoveredSection = discoveredReport.sections.find(section => section.id === 'browserValidation');
+    assert.equal(discoveredSection.state, 'READY');
+    assert.equal(discoveredSection.evidence.latestEvidence.runId, 'auto-discovered-browser-smoke');
+    assert.match(discoveredSection.evidence.evidenceFile, /browser-validation-evidence\.json$/);
+
+    const staleReport = await buildPostResetReadinessReport(projectRoot, 'recoveryLocal', {
+      now: new Date('2026-09-24T02:30:00.000Z'),
+    });
+    const staleSection = staleReport.sections.find(section => section.id === 'browserValidation');
+    assert.equal(staleSection.state, 'NOT_READY');
+    assert.equal(staleSection.evidence.latestEvidence.state, 'STALE');
+    assert.equal(staleSection.evidence.latestEvidence.maxAgeSeconds, 3600);
   } finally {
     fs.rmSync(projectRoot, { recursive: true, force: true });
   }

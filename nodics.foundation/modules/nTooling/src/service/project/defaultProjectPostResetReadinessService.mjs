@@ -18,6 +18,7 @@
  */
 
 import fs from 'node:fs/promises';
+import path from 'node:path';
 import { readProjectEnvironmentConfiguration, projectEndpointUrl } from './defaultProjectEnvironmentConfigurationService.mjs';
 
 const sectionDefinitions = Object.freeze([
@@ -135,9 +136,35 @@ async function readAccessToken(options = {}) {
   return '';
 }
 
-async function readJsonFile(filePath) {
+async function readOptionalJsonFile(filePath) {
   if (!filePath) return undefined;
-  return JSON.parse(await fs.readFile(String(filePath), 'utf8'));
+  try {
+    return JSON.parse(await fs.readFile(String(filePath), 'utf8'));
+  } catch (error) {
+    if (error && error.code === 'ENOENT') return undefined;
+    throw error;
+  }
+}
+
+function browserValidationEvidencePath(projectRoot, configuration, options = {}) {
+  if (options.browserValidationEvidenceFile) return path.resolve(projectRoot, String(options.browserValidationEvidenceFile));
+  const configured = configuration.acceptance?.browserValidation?.evidenceFile;
+  if (configured) return path.resolve(projectRoot, String(configured));
+  return path.resolve(projectRoot, 'envs', configuration.environment, 'generated', 'acceptance', 'browser-validation-evidence.json');
+}
+
+function freshnessAdjustedBrowserEvidence(evidence, browserValidation, now = new Date()) {
+  const maxAgeSeconds = Number(browserValidation?.maxEvidenceAgeSeconds || 0);
+  if (!evidence || evidence.state !== 'PASSED' || !Number.isFinite(maxAgeSeconds) || maxAgeSeconds <= 0) return evidence;
+  const checkedAt = Date.parse(evidence.checkedAt || '');
+  if (!Number.isFinite(checkedAt)) return { ...evidence, state: 'STALE',
+    message: 'Browser validation evidence has no valid checkedAt timestamp.',
+    nextAction: 'Rerun local browser validation and refresh readiness evidence.' };
+  const ageSeconds = Math.max(0, Math.floor((now.getTime() - checkedAt) / 1000));
+  if (ageSeconds <= maxAgeSeconds) return { ...evidence, ageSeconds, maxAgeSeconds };
+  return { ...evidence, state: 'STALE', ageSeconds, maxAgeSeconds,
+    message: `Browser validation evidence is stale after ${String(ageSeconds)} seconds.`,
+    nextAction: 'Rerun local browser validation and refresh readiness evidence.' };
 }
 
 async function fetchJson(url, options = {}) {
@@ -360,9 +387,16 @@ export async function buildPostResetReadinessReport(projectRoot, environmentCode
   const live = options.live === true;
   const platformUrl = deriveRuntimeUrl(configuration, configuration.acceptance?.functionalJourney?.runtimes?.platform || { role: 'PLATFORM' });
   const browserValidationEnabled = configuration.acceptance?.browserValidation?.enabled === true;
-  const browserValidationEvidence = normalizeBrowserValidationEvidence(options.browserValidationEvidence ||
+  const browserValidationEvidenceFile = browserValidationEvidencePath(projectRoot, configuration, options);
+  const browserValidationEvidenceSource = options.browserValidationEvidence ||
+    await readOptionalJsonFile(browserValidationEvidenceFile) ||
     configuration.acceptance?.browserValidation?.latestEvidence ||
-    configuration.acceptance?.browserValidation?.evidence);
+    configuration.acceptance?.browserValidation?.evidence;
+  const browserValidationEvidence = freshnessAdjustedBrowserEvidence(
+    normalizeBrowserValidationEvidence(browserValidationEvidenceSource),
+    configuration.acceptance?.browserValidation,
+    options.now instanceof Date ? options.now : new Date(),
+  );
   const runtimes = runtimeEvidence(configuration);
   const liveBootstrap = await authenticatedBackofficeBootstrap(platformUrl, {
     ...options,
@@ -453,7 +487,9 @@ export async function buildPostResetReadinessReport(projectRoot, environmentCode
       'Check each profile for Online state, media/search dependencies, and browser smoke where enabled.'),
     section('browserValidation', 'Browser validation evidence', browserValidationSectionState(browserValidationEnabled, browserValidationEvidence),
       browserValidationEnabled ? 'Browser validation is enabled for this environment.' : 'Browser validation skipped by configuration.',
-      { enabled: browserValidationEnabled, localOnly: true, latestEvidence: browserValidationEvidence },
+      { enabled: browserValidationEnabled, localOnly: true, evidenceFile: browserValidationEvidenceFile,
+        maxEvidenceAgeSeconds: Number(configuration.acceptance?.browserValidation?.maxEvidenceAgeSeconds || 0),
+        latestEvidence: browserValidationEvidence },
       browserValidationEnabled && browserValidationEvidence.state !== 'PASSED' ?
         browserValidationEvidence.nextAction : 'Enable only in local environments where browser/frontend URLs are available.'),
     section('diagnostics', 'Support-safe diagnostics export', 'READY',
@@ -508,7 +544,7 @@ async function main() {
     timeoutMs: Number(optionValue(args, 'timeout-ms', '2000')),
     accessToken: optionValue(args, 'access-token', ''),
     accessTokenFile: optionValue(args, 'access-token-file', ''),
-    browserValidationEvidence: await readJsonFile(optionValue(args, 'browser-validation-evidence-file', '')),
+    browserValidationEvidenceFile: optionValue(args, 'browser-validation-evidence-file', ''),
     clientContractVersion: Number(optionValue(args, 'client-contract-version', '1')),
   });
   if (args.includes('--json')) console.log(JSON.stringify(report, null, 2));

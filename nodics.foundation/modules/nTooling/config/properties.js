@@ -21,6 +21,7 @@ module.exports = {
         acceptance: {
             "browserValidation": {
                 "enabled": false,
+                "maxEvidenceAgeSeconds": 3600,
                 "reason": "Browser-driven validation is optional because non-local environments may not have an interactive browser runner available."
             },
             "functionalJourney": {
