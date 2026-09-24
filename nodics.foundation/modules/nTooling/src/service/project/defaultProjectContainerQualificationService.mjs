@@ -20,6 +20,7 @@
 import { spawnSync } from 'node:child_process';
 import fs from 'node:fs';
 import path from 'node:path';
+import { fileURLToPath } from 'node:url';
 import { readContainerEnvironmentConfiguration } from './defaultProjectContainerConfigurationService.mjs';
 
 const projectRoot = process.cwd();
@@ -76,6 +77,12 @@ function dockerEnvironment(selected) {
     DOCKER_HOST: process.env.DOCKER_HOST || `unix://${path.join(process.env.HOME || '', '.docker/run/docker.sock')}` };
 }
 
+function redactEvidenceString(value) {
+  return String(value || '')
+    .replace(/Bearer\s+[A-Za-z0-9._~+/=-]+/g, 'Bearer [REDACTED]')
+    .replace(/([?&](?:access_token|token|apiKey|api_key|password)=)[^&\s]+/gi, '$1[REDACTED]');
+}
+
 async function check(evidence, id, operation, classification = 'QUALIFIED') {
   const started = performance.now();
   try {
@@ -107,6 +114,7 @@ async function waitReady(port, timeoutMs = 120000) {
 function acceptanceEnvironment(selected, kind = 'platform') {
   const values = readEnvironment(selected);
   const urls = selected.acceptance.urls || {};
+  const evidenceFile = browserValidationEvidenceFile(selected);
   const base = {
     ...process.env,
     ...values,
@@ -116,6 +124,7 @@ function acceptanceEnvironment(selected, kind = 'platform') {
     AXIS_PASSWORD: process.env.AXIS_PASSWORD || values.BOOTSTRAP_ADMIN_PASSWORD,
     NODICS_SERVICE_API_KEY: process.env.NODICS_SERVICE_API_KEY || values.BOOTSTRAP_SERVICE_API_KEY,
     NODICS_ACCEPTANCE_BROWSER_VALIDATION_ENABLED: String(selected.acceptance.browserValidation?.enabled === true),
+    NODICS_ACCEPTANCE_BROWSER_VALIDATION_EVIDENCE_FILE: evidenceFile,
     NODICS_ACCEPTANCE_READY_TIMEOUT_MS: process.env.NODICS_ACCEPTANCE_READY_TIMEOUT_MS || '30000'
   };
   if (kind === 'commerce') {
@@ -142,7 +151,47 @@ function acceptanceEnvironment(selected, kind = 'platform') {
   };
 }
 
+export function browserValidationEvidenceFile(selected) {
+  if (process.env.NODICS_ACCEPTANCE_BROWSER_VALIDATION_EVIDENCE_FILE) {
+    return process.env.NODICS_ACCEPTANCE_BROWSER_VALIDATION_EVIDENCE_FILE;
+  }
+  const configured = selected.acceptance?.browserValidation?.evidenceFile;
+  if (configured) return path.resolve(projectRoot, String(configured));
+  return path.join(selected.generatedRoot, 'acceptance', 'browser-validation-evidence.json');
+}
+
+export function platformAcceptanceEvidence(selected, result, acceptanceArguments, startedAt = new Date()) {
+  const enabled = selected.acceptance?.browserValidation?.enabled === true;
+  const status = Number.isInteger(result?.status) ? result.status : 1;
+  const state = !enabled ? 'SKIPPED' : status === 0 ? 'PASSED' : 'FAILED';
+  const urls = selected.acceptance?.urls || {};
+  return {
+    contractVersion: 1,
+    state,
+    checkedAt: new Date().toISOString(),
+    runId: `platform-acceptance-${startedAt.toISOString()}`,
+    command: redactEvidenceString(['npm'].concat(acceptanceArguments).join(' ')),
+    urls: Object.values(urls).filter(Boolean).map(redactEvidenceString),
+    failedStep: state === 'FAILED' ? 'platformAcceptance' : undefined,
+    message: state === 'PASSED' ? 'Platform acceptance completed with browser validation enabled.' :
+      state === 'SKIPPED' ? 'Browser validation was disabled for this environment.' :
+        'Platform acceptance failed before browser validation could be accepted.',
+    nextAction: state === 'PASSED' ? 'Refresh post-reset readiness with this evidence file.' :
+      state === 'SKIPPED' ? 'Enable browser validation only where a browser runner is available.' :
+        'Review the acceptance command output, fix the failing local flow, and rerun acceptance.',
+  };
+}
+
+export function writePlatformAcceptanceEvidence(selected, result, acceptanceArguments, startedAt = new Date()) {
+  const evidence = platformAcceptanceEvidence(selected, result, acceptanceArguments, startedAt);
+  const filePath = browserValidationEvidenceFile(selected);
+  fs.mkdirSync(path.dirname(filePath), { recursive: true });
+  fs.writeFileSync(filePath, JSON.stringify(evidence, null, 2) + '\n');
+  return filePath;
+}
+
 function runPlatformAcceptance(selected, args = process.argv.slice(4)) {
+  const startedAt = new Date();
   const acceptanceArguments = ['run', selected.acceptance.platformCommand || 'acceptance:local', '--', '--leave-started'];
   if (args.includes('--expect-documentation-not-installed')) acceptanceArguments.push('--expect-documentation-not-installed');
   if (args.includes('--qualify-documentation-rollback')) acceptanceArguments.push('--qualify-documentation-rollback');
@@ -151,6 +200,7 @@ function runPlatformAcceptance(selected, args = process.argv.slice(4)) {
     env: acceptanceEnvironment(selected),
     stdio: 'inherit'
   });
+  writePlatformAcceptanceEvidence(selected, result, acceptanceArguments, startedAt);
   process.exitCode = result.status ?? 1;
 }
 
@@ -382,11 +432,13 @@ async function runResilienceQualification(selected) {
   if (evidence.some(item => item.state === 'FAILED')) process.exitCode = 1;
 }
 
-const selected = profile(process.argv[2] || 'default');
-const command = process.argv[3] || 'acceptance';
-if (command === 'acceptance') runPlatformAcceptance(selected);
-else if (command === 'commerce-acceptance') runCommerceAcceptance(selected);
-else if (command === 'qualification') await runQualification(selected);
-else if (command === 'soak') await runSoak(selected);
-else if (command === 'resilience-qualification') await runResilienceQualification(selected);
-else throw new Error(`Unknown container qualification command: ${command}`);
+if (process.argv[1] && fileURLToPath(import.meta.url) === path.resolve(process.argv[1])) {
+  const selected = profile(process.argv[2] || 'default');
+  const command = process.argv[3] || 'acceptance';
+  if (command === 'acceptance') runPlatformAcceptance(selected);
+  else if (command === 'commerce-acceptance') runCommerceAcceptance(selected);
+  else if (command === 'qualification') await runQualification(selected);
+  else if (command === 'soak') await runSoak(selected);
+  else if (command === 'resilience-qualification') await runResilienceQualification(selected);
+  else throw new Error(`Unknown container qualification command: ${command}`);
+}
