@@ -23,6 +23,12 @@ global.SERVICE = {
     DefaultRuntimeLifecycleService: { registerContributor: (name, value) => { lifecycleContributors[name] = value; } },
     DefaultHealthService: { registerReadinessContributor: (name, value) => { readinessContributors[name] = value; } }
 };
+global.CONFIG = { get: key => key === 'search' ? {
+    default: { options: { enabled: false, fallback: true, engine: 'elastic' } },
+    runtimeRoleProfiles: { PLATFORM: { productProjection: { options: { enabled: true } } } },
+    cms: { options: { enabled: true } },
+} : key === 'runtimeRole' ? { code: 'PLATFORM' } : undefined };
+global.NODICS = { getModules: () => ({ cms: {}, profile: {} }) };
 const definition = require('../src/service/config/defaultSearchConfigurationService');
 let active = true;
 let closed = 0;
@@ -35,8 +41,20 @@ service.init();
 assert(lifecycleContributors.searchEngines, 'search lifecycle contributor must be registered');
 assert(readinessContributors.searchEngines, 'search readiness contributor must be registered');
 assert.strictEqual(service.getSearchReadiness(), true);
+let readiness = service.readiness();
+assert.strictEqual(readiness.contractVersion, 1);
+assert.strictEqual(readiness.businessStatus, 'READY');
+assert.strictEqual(readiness.summary.readSourcePolicy, 'SEARCH_WITH_DATABASE_FALLBACK');
+assert.strictEqual(readiness.summary.runtimeRole, 'PLATFORM');
+assert.strictEqual(readiness.summary.configuredModuleCount, 1);
+assert.strictEqual(readiness.summary.initializedEngineCount, 1);
+assert(readiness.summary.repairActions.some(action => action.operation === 'search.index.rebuild'));
 active = false;
 assert.strictEqual(service.getSearchReadiness(), false);
+let blocked = service.readiness();
+assert.strictEqual(blocked.businessStatus, 'NEEDS_ATTENTION');
+assert(blocked.blockers.some(blocker => blocker.code === 'SEARCH_ENGINE_UNAVAILABLE'
+    && blocker.repair.operation === 'search.refreshEngines'));
 active = true;
 lifecycleContributors.searchEngines.shutdown().then(() => {
     assert.strictEqual(closed, 1);

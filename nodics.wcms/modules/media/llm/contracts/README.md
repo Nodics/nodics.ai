@@ -50,3 +50,23 @@ Customer photo operations preserve the authenticated customer bearer header when
 resolving the canonical owner through Profile. Missing credentials or a tenant
 mismatch are rejected; request-body credentials are never trusted. Runtime
 service credentials must not substitute for the customer session in this lookup.
+
+## Media Readiness Diagnostics
+
+Media owns the readiness facts for media object metadata, physical artifact
+availability, media references, and cleanup candidates. BackOffice and Axis may
+display these facts, but must not infer storage health, reference correctness,
+or retention state from customer/project-level configuration.
+
+The owner readiness contract reports:
+
+- media object provider availability and bounded media counts;
+- missing required media metadata;
+- missing physical storage, URL, or inline content evidence;
+- broken or inactive consuming media references;
+- cleanup candidate counts for retention/operator review;
+- governed repair operation metadata for object repair, physical reconciliation,
+  reference reconciliation, and cleanup review.
+
+Readiness scans are read-only. Physical movement, media object creation,
+reference updates, and cleanup remain separate governed owner operations.

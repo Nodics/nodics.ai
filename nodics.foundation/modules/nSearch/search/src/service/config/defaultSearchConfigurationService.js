@@ -160,6 +160,104 @@ module.exports = {
         }));
     },
 
+    /** Returns configured active search modules without failing when framework globals are not available yet. */
+    configuredSearchModules: function () {
+        let modules = {};
+        try {
+            modules = NODICS && typeof NODICS.getModules === 'function' ? NODICS.getModules() || {} : {};
+        } catch (error) {
+            modules = {};
+        }
+        let search = {};
+        try {
+            search = CONFIG && typeof CONFIG.get === 'function' ? CONFIG.get('search') || {} : {};
+        } catch (error) {
+            search = {};
+        }
+        return Object.keys(modules).filter(moduleName => !!search[moduleName]);
+    },
+
+    /** Summarizes database/search read-source policy owned by nSearch configuration. */
+    readSourcePolicy: function () {
+        let search = {};
+        let runtimeRoleConfig = {};
+        try {
+            search = CONFIG && typeof CONFIG.get === 'function' ? CONFIG.get('search') || {} : {};
+            runtimeRoleConfig = CONFIG && typeof CONFIG.get === 'function' ? CONFIG.get('runtimeRole') || {} : {};
+        } catch (error) {
+            search = {};
+            runtimeRoleConfig = {};
+        }
+        let defaultOptions = (search.default || {}).options || {};
+        let runtimeRole = runtimeRoleConfig.code || runtimeRoleConfig.name || runtimeRoleConfig.roleCode || undefined;
+        let runtimeProfile = runtimeRole && search.runtimeRoleProfiles ? search.runtimeRoleProfiles[String(runtimeRole)] : undefined;
+        let profileEntries = Object.entries(runtimeProfile || {}).filter(entry => {
+            let value = entry[1] || {};
+            return value.options && value.options.enabled === true;
+        });
+        let defaultEnabled = defaultOptions.enabled === true;
+        let fallbackEnabled = defaultOptions.fallback === true;
+        return {
+            runtimeRole: runtimeRole ? String(runtimeRole) : 'UNKNOWN',
+            engine: String(defaultOptions.engine || 'database'),
+            defaultSearchEnabled: defaultEnabled,
+            defaultFallbackEnabled: fallbackEnabled,
+            runtimeProfileCount: profileEntries.length,
+            runtimeProfileCodes: profileEntries.map(entry => String(entry[0])),
+            readSourcePolicy: fallbackEnabled ? 'SEARCH_WITH_DATABASE_FALLBACK' :
+                defaultEnabled || profileEntries.length > 0 ? 'SEARCH_ENGINE' : 'DATABASE_OR_OWNER_DEFAULT',
+        };
+    },
+
+    /** Returns owner-owned search readiness, repair actions, and policy visibility for BackOffice/Axis. */
+    readiness: function () {
+        let policy = this.readSourcePolicy();
+        let engineEntries = Object.entries(this.searchEngines || {}).reduce((result, entry) => {
+            let moduleName = entry[0];
+            Object.entries(entry[1] || {}).forEach(tenantEntry => {
+                let engine = tenantEntry[1];
+                let active = !engine || typeof engine.isActive !== 'function' || engine.isActive() === true;
+                result.push({ moduleName: moduleName, tenant: tenantEntry[0], active: active });
+            });
+            return result;
+        }, []);
+        let inactive = engineEntries.filter(entry => entry.active !== true);
+        let configuredModules = this.configuredSearchModules();
+        let repairActions = [
+            { action: 'REFRESH_SEARCH_ENGINE', operation: 'search.refreshEngines', label: 'Refresh search engine', available: true },
+            { action: 'REBUILD_SEARCH_INDEX', operation: 'search.index.rebuild', label: 'Rebuild search index', available: true },
+            { action: 'REFRESH_SEARCH_PROJECTIONS', operation: 'search.projection.refresh', label: 'Refresh search projections', available: true },
+        ];
+        let blockers = inactive.length ? [{
+            code: 'SEARCH_ENGINE_UNAVAILABLE',
+            severity: 'NEEDS_ATTENTION',
+            source: 'NSEARCH_RUNTIME',
+            action: 'Open Search controls',
+            message: 'One or more initialized search engine clients are unavailable.',
+            repair: repairActions[0],
+            targetIdentifiers: { engines: inactive.map(entry => entry.moduleName + ':' + entry.tenant).slice(0, 25) },
+        }] : [];
+        return {
+            contractVersion: 1,
+            businessStatus: blockers.length ? 'NEEDS_ATTENTION' : 'READY',
+            source: 'NSEARCH_CONFIGURATION',
+            summary: Object.assign({}, policy, {
+                configuredModuleCount: configuredModules.length,
+                configuredModuleCodes: configuredModules,
+                initializedEngineCount: engineEntries.length,
+                inactiveEngineCount: inactive.length,
+                projectionFreshness: 'OWNER_REFRESH_AVAILABLE',
+                indexFreshness: engineEntries.length ? 'OBSERVED' : 'UNKNOWN',
+                axisConfigurationVisible: true,
+                configurationRoute: '/discovery',
+                repairActions: repairActions,
+            }),
+            blockers: blockers,
+            nextAction: blockers.length ? 'Open Discovery/Search controls and refresh or rebuild the unavailable search engines.' :
+                'Search engine and read-source policy readiness are clear.',
+        };
+    },
+
     /** Closes each unique initialized search provider connection during central runtime shutdown. */
     closeSearchEngines: async function () {
         let connections = [];

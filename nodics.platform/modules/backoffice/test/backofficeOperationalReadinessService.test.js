@@ -62,7 +62,47 @@ global.SERVICE = { AuditPublisher: { record: () => Promise.resolve(true) },
     }) },
     DefaultBackofficeDiscoveryService: { getDiagnostics: () => ({ attempts: 2, successes: 2, failures: 0,
         lastSuccessAt: '2026-09-24T00:00:00.000Z', activeSnapshots: 2, inflight: 0 }) },
-    DefaultSearchConfigurationService: { getSearchReadiness: () => true },
+    DefaultMediaReadinessService: { readiness: async () => ({
+        contractVersion: 1,
+        businessStatus: 'READY',
+        summary: {
+            providerAvailable: true,
+            referenceProviderAvailable: true,
+            cleanupProviderAvailable: true,
+            mediaCount: 3,
+            incompleteMetadataCount: 0,
+            missingPhysicalCount: 0,
+            referenceCount: 2,
+            brokenReferenceCount: 0,
+            cleanupCandidateCount: 0,
+            draftCleanupStatus: 'OWNER_POLICY_REVIEW_REQUIRED',
+            rejectedDraftCleanupStatus: 'OWNER_POLICY_REVIEW_REQUIRED',
+            acceptedEvidenceRetentionStatus: 'RETAIN_WITH_APPROVED_ASSET_EVIDENCE',
+        },
+        blockers: [],
+    }) },
+    DefaultSearchConfigurationService: { getSearchReadiness: () => true, readiness: () => ({
+        contractVersion: 1,
+        businessStatus: 'READY',
+        source: 'NSEARCH_CONFIGURATION',
+        summary: {
+            runtimeRole: 'PLATFORM',
+            engine: 'elastic',
+            readSourcePolicy: 'SEARCH_ENGINE',
+            configuredModuleCount: 1,
+            initializedEngineCount: 1,
+            inactiveEngineCount: 0,
+            indexFreshness: 'OBSERVED',
+            projectionFreshness: 'OWNER_REFRESH_AVAILABLE',
+            axisConfigurationVisible: true,
+            configurationRoute: '/discovery',
+            repairActions: [
+                { action: 'REFRESH_SEARCH_ENGINE', operation: 'search.refreshEngines', label: 'Refresh search engine', available: true },
+                { action: 'REBUILD_SEARCH_INDEX', operation: 'search.index.rebuild', label: 'Rebuild search index', available: true },
+            ],
+        },
+        blockers: [],
+    }) },
     DefaultCopilotKnowledgeRuntimeService: { readiness: () => ({
         businessStatus: 'READY', retrievalEnabled: true, ingestionEnabled: true, sourceRegistryEnabled: true,
         sourceCount: 2, enabledSourceCount: 1, indexedSourceCount: 1, notIndexedSourceCount: 0,
@@ -270,8 +310,15 @@ async function validateDeliveryAndProductionPolicy() {
         && section.businessStatus === 'READY'
         && section.summary.readyOrNotRequiredCount === 1
         && section.summary.mediaStateCounts.READY_OR_NOT_REQUIRED === 1
+        && section.summary.ownerProviderAvailable === true
+        && section.summary.mediaObjectCount === 3
+        && section.summary.brokenReferenceCount === 0
         && section.summary.cleanupReviewRoute === '/media/cleanup-candidates'
         && section.summary.operatorCommands.includes('Reconcile product or content references')));
+    let mediaOwnerBlockerSection = await service.mediaSection({ statuses: [], errors: [] }, {
+        mediaQuery: { code: 'broken' }
+    });
+    assert.strictEqual(mediaOwnerBlockerSection.summary.ownerProviderAvailable, true);
     assert(aggregateReport.sections.some(section => section.key === 'eWasteAcceptance'
         && section.businessStatus === 'READY'
         && section.summary.telegramChannelConfigured === true
@@ -282,6 +329,9 @@ async function validateDeliveryAndProductionPolicy() {
         && section.summary.runtimeRole === 'PLATFORM'
         && section.summary.readSourcePolicy === 'SEARCH_ENGINE'
         && section.summary.renderingPolicy === 'SEARCH_ENGINE'
+        && section.summary.ownerProviderAvailable === true
+        && section.summary.axisConfigurationVisible === true
+        && section.summary.repairActions.some(action => action.operation === 'search.index.rebuild')
         && section.summary.runtimeProfileCount === 1
         && section.summary.discoveryAttempts === 2));
     assert(aggregateReport.sections.some(section => section.key === 'assistant'

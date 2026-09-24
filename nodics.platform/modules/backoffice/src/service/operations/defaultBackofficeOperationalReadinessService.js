@@ -1127,7 +1127,8 @@ module.exports = {
         };
     },
     /** Builds owner-backed media readiness from media-manifest evidence in application/CMS projections. */
-    mediaSection: function (profileStatusReport) {
+    mediaSection: async function (profileStatusReport, context) {
+        context = context || {};
         let statuses = [].concat((profileStatusReport || {}).statuses || []);
         let errors = [].concat((profileStatusReport || {}).errors || []);
         let blockers = statuses.reduce((result, status) => {
@@ -1150,6 +1151,47 @@ module.exports = {
             blocker.profileCode = item.profile && item.profile.code ? String(item.profile.code) : undefined;
             blockers.push(blocker);
         });
+        let ownerReadiness;
+        if (SERVICE.DefaultMediaReadinessService && typeof SERVICE.DefaultMediaReadinessService.readiness === 'function') {
+            try {
+                ownerReadiness = await SERVICE.DefaultMediaReadinessService.readiness(context);
+                blockers = blockers.concat([].concat((ownerReadiness || {}).blockers || []).map(item => {
+                    item = item || {};
+                    return this.readinessBlocker(
+                        item.code || item.blockerCode || 'MEDIA_READINESS_BLOCKER',
+                        item.severity || 'NEEDS_ATTENTION',
+                        'MEDIA_MODULE',
+                        item.source || 'MEDIA_READINESS',
+                        item.action || 'Open Media Management',
+                        item.message || 'Media readiness needs attention.',
+                        { repairAvailable: item.repair && item.repair.available === true,
+                            repairOperation: item.repair && item.repair.operation,
+                            repairAction: item.repair && (item.repair.action || item.repair.actionCode),
+                            repairEligibility: item.repair && item.repair.eligibility,
+                            repairLabel: item.repair && item.repair.label,
+                            suggestedAction: item.suggestedAction || item.action || 'Open Media Management',
+                            businessImpact: item.businessImpact || 'Published pages, product catalogues, documentation, or evidence views may show missing media until repaired.',
+                            recoveryHint: item.recoveryHint || item.action || 'Open Media Management and follow the owner repair guidance.' }
+                    );
+                }));
+            } catch (error) {
+                let blocker = this.readinessBlocker(
+                    'MEDIA_READINESS_PROVIDER_FAILED',
+                    'NEEDS_ATTENTION',
+                    'MEDIA_MODULE',
+                    'MEDIA_READINESS',
+                    'Open Media Management',
+                    'Media readiness provider failed while scanning object, physical artifact, reference, or cleanup readiness.',
+                    { repairOperation: 'media.readiness', repairAction: 'REFRESH_MEDIA_READINESS',
+                        repairAvailable: true, repairEligibility: 'MANUAL', repairLabel: 'Refresh media readiness',
+                        suggestedAction: 'Inspect Media runtime startup and refresh operational readiness.',
+                        businessImpact: 'Axis cannot confirm media artifact/reference readiness until the Media owner provider responds.',
+                        recoveryHint: 'Repair the Media runtime/provider failure, restart if needed, and refresh readiness.' }
+                );
+                blocker.failureCode = String(error.code || error.message || 'MEDIA_READINESS_FAILED');
+                blockers.push(blocker);
+            }
+        }
         let mediaStates = statuses.map(status => {
             let summary = status && status.capability && status.capability.publicationSummary || {};
             return summary.media ? String(summary.media) : 'UNKNOWN';
@@ -1157,10 +1199,12 @@ module.exports = {
         let mediaStateCounts = this.countByValue(mediaStates, state => state);
         let ready = mediaStates.filter(state => state === 'READY_OR_NOT_REQUIRED').length;
         let needsRepair = mediaStates.filter(state => state === 'NEEDS_REPAIR').length;
+        let ownerSummary = ownerReadiness && ownerReadiness.summary || {};
         return {
             key: 'media',
             title: 'Media objects and references',
-            businessStatus: blockers.length || errors.length || needsRepair > 0 ? 'NEEDS_ATTENTION' : statuses.length ? 'READY' : 'NOT_CONFIGURED',
+            businessStatus: blockers.length || errors.length || needsRepair > 0 ? 'NEEDS_ATTENTION' :
+                statuses.length || ownerReadiness ? 'READY' : 'NOT_CONFIGURED',
             ownerModule: 'media',
             source: 'MEDIA_MANIFEST',
             route: '/media',
@@ -1171,6 +1215,19 @@ module.exports = {
                 blockerCount: blockers.length,
                 providerErrorCount: errors.length,
                 mediaStateCounts: mediaStateCounts,
+                ownerProviderAvailable: !!ownerReadiness,
+                mediaObjectProviderAvailable: ownerSummary.providerAvailable,
+                mediaReferenceProviderAvailable: ownerSummary.referenceProviderAvailable,
+                mediaCleanupProviderAvailable: ownerSummary.cleanupProviderAvailable,
+                mediaObjectCount: ownerSummary.mediaCount || 0,
+                incompleteMetadataCount: ownerSummary.incompleteMetadataCount || 0,
+                missingPhysicalCount: ownerSummary.missingPhysicalCount || 0,
+                referenceCount: ownerSummary.referenceCount || 0,
+                brokenReferenceCount: ownerSummary.brokenReferenceCount || 0,
+                cleanupCandidateCount: ownerSummary.cleanupCandidateCount || 0,
+                draftCleanupStatus: ownerSummary.draftCleanupStatus,
+                rejectedDraftCleanupStatus: ownerSummary.rejectedDraftCleanupStatus,
+                acceptedEvidenceRetentionStatus: ownerSummary.acceptedEvidenceRetentionStatus,
                 cleanupReviewRoute: '/media/cleanup-candidates',
                 replicationRoute: '/media/replication',
                 operatorCommands: [
@@ -1309,6 +1366,23 @@ module.exports = {
         let diagnostics = SERVICE.DefaultBackofficeDiscoveryService &&
             typeof SERVICE.DefaultBackofficeDiscoveryService.getDiagnostics === 'function' ?
                 SERVICE.DefaultBackofficeDiscoveryService.getDiagnostics() : {};
+        let ownerReadiness;
+        if (SERVICE.DefaultSearchConfigurationService &&
+            typeof SERVICE.DefaultSearchConfigurationService.readiness === 'function') {
+            try {
+                ownerReadiness = SERVICE.DefaultSearchConfigurationService.readiness(context);
+            } catch (error) {
+                ownerReadiness = { businessStatus: 'NEEDS_ATTENTION', blockers: [{
+                    code: 'SEARCH_READINESS_PROVIDER_FAILED',
+                    severity: 'NEEDS_ATTENTION',
+                    source: 'NSEARCH_CONFIGURATION',
+                    action: 'Open Search controls',
+                    message: 'Search readiness provider failed while reading search/read-source policy.',
+                    repair: { operation: 'search.readiness', action: 'REFRESH_SEARCH_READINESS',
+                        label: 'Refresh search readiness', available: true, eligibility: 'MANUAL' }
+                }], summary: { failureCode: String(error.code || error.message || 'SEARCH_READINESS_FAILED') } };
+            }
+        }
         let searchReady;
         if (SERVICE.DefaultSearchConfigurationService &&
             typeof SERVICE.DefaultSearchConfigurationService.getSearchReadiness === 'function') {
@@ -1325,6 +1399,7 @@ module.exports = {
         return {
             diagnostics: diagnostics || {},
             searchReady: searchReady,
+            ownerReadiness: ownerReadiness,
             activeSearchModuleCount: activeSearchModules.length,
             activeDiscoveryModuleCount: activeDiscoveryModules.length,
         };
@@ -1334,8 +1409,25 @@ module.exports = {
         let configuration = this.searchConfigurationSummary();
         let evidence = this.searchReadinessEvidence(context);
         let diagnostics = evidence.diagnostics || {};
-        let blockers = [];
-        if (evidence.searchReady === false) blockers.push(this.readinessBlocker(
+        let ownerReadiness = evidence.ownerReadiness || {};
+        let ownerSummary = ownerReadiness.summary || {};
+        let blockers = [].concat(ownerReadiness.blockers || []).map(item => this.readinessBlocker(
+            item.code || item.blockerCode || 'SEARCH_READINESS_BLOCKER',
+            item.severity || 'NEEDS_ATTENTION',
+            'SEARCH',
+            item.source || 'NSEARCH_CONFIGURATION',
+            item.action || 'Open Search controls',
+            item.message || 'Search/read-source readiness needs attention.',
+            { repairAvailable: item.repair && item.repair.available === true,
+                repairOperation: item.repair && item.repair.operation,
+                repairAction: item.repair && (item.repair.action || item.repair.actionCode),
+                repairEligibility: item.repair && item.repair.eligibility,
+                repairLabel: item.repair && item.repair.label,
+                suggestedAction: item.suggestedAction || item.action || 'Open Search controls',
+                businessImpact: item.businessImpact || 'Pages or workbenches configured to render from search may show empty or stale results until repaired.',
+                recoveryHint: item.recoveryHint || 'Refresh or rebuild search indexes, then refresh readiness.' }
+        ));
+        if (evidence.searchReady === false && !blockers.some(blocker => blocker.code === 'SEARCH_ENGINE_UNAVAILABLE')) blockers.push(this.readinessBlocker(
             'SEARCH_ENGINE_UNAVAILABLE',
             'NEEDS_ATTENTION',
             'SEARCH',
@@ -1383,14 +1475,23 @@ module.exports = {
                 defaultSearchEnabled: configuration.defaultSearchEnabled,
                 defaultFallbackEnabled: configuration.defaultFallbackEnabled,
                 runtimeProfileCount: configuration.runtimeProfileCount,
+                ownerProviderAvailable: !!evidence.ownerReadiness,
+                ownerBusinessStatus: ownerReadiness.businessStatus,
+                configuredModuleCount: ownerSummary.configuredModuleCount,
+                initializedEngineCount: ownerSummary.initializedEngineCount,
+                inactiveEngineCount: ownerSummary.inactiveEngineCount,
+                axisConfigurationVisible: ownerSummary.axisConfigurationVisible,
+                configurationRoute: ownerSummary.configurationRoute || '/discovery',
+                repairActions: ownerSummary.repairActions || [],
                 activeSearchModuleCount: evidence.activeSearchModuleCount,
                 activeDiscoveryModuleCount: evidence.activeDiscoveryModuleCount,
                 discoveryAttempts: diagnostics.attempts || 0,
                 discoveryFailures: diagnostics.failures || 0,
                 discoveryLastSuccessAt: diagnostics.lastSuccessAt,
                 discoveryLastFailureAt: diagnostics.lastFailureAt,
-                renderingPolicy: configuration.readSourcePolicy,
-                indexFreshness: diagnostics.lastSuccessAt ? 'OBSERVED' : 'UNKNOWN',
+                renderingPolicy: ownerSummary.readSourcePolicy || configuration.readSourcePolicy,
+                indexFreshness: ownerSummary.indexFreshness || (diagnostics.lastSuccessAt ? 'OBSERVED' : 'UNKNOWN'),
+                projectionFreshness: ownerSummary.projectionFreshness,
                 operatorCommands: [
                     'Open Discovery/Search controls',
                     'Review database/search rendering policy',
@@ -2131,7 +2232,7 @@ module.exports = {
             this.publishingSection(profileStatusReport),
             this.approvalSection(profileStatusReport),
             this.documentationSection(context.documentationSources, context.documentationPublication),
-            this.mediaSection(profileStatusReport),
+            await this.mediaSection(profileStatusReport, context),
             this.eWasteAcceptanceSection(context),
             this.searchSection(context),
             this.assistantSection(),
