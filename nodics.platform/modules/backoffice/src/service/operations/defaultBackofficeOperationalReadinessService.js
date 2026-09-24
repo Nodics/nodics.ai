@@ -21,6 +21,8 @@ module.exports = {
     _findingAcknowledgements: Object.create(null),
     _lastOperationalReadinessSnapshot: null,
     _operationalReadinessTimeline: [],
+    _repairAttempts: [],
+    _repairResultsByKey: Object.create(null),
     /** Registers configuration validity as a required readiness contributor. */
     init: function () {
         if (SERVICE.DefaultHealthService) SERVICE.DefaultHealthService.registerReadinessContributor('backofficeOperationalConfiguration', {
@@ -110,6 +112,8 @@ module.exports = {
             'Refresh Axis dashboard bootstrap',
         ];
     },
+    /** Returns a stable timestamp for bounded operational evidence. */
+    now: function () { return new Date().toISOString(); },
     /** Creates one client-safe startup finding. */
     startupFinding: function (code, severity, owner, message, action, options) {
         options = options || {};
@@ -1418,6 +1422,137 @@ module.exports = {
     /** Returns the bounded in-memory operational readiness timeline for Axis and support diagnostics. */
     operationalReadinessTimeline: function () {
         return (this._operationalReadinessTimeline || []).slice();
+    },
+    /** Normalizes one requested owner repair without trusting frontend state. */
+    normalizeRepairRequest: function (request) {
+        let input = request && request.readinessRepair || {};
+        let repair = input.repair || {};
+        let operation = String(input.operation || repair.operation || '').trim();
+        let action = String(input.action || repair.action || repair.actionCode || '').trim();
+        let ownerModule = String(input.ownerModule || '').trim();
+        let idempotencyKey = String(input.idempotencyKey || '').trim();
+        if (!operation || !action || !ownerModule || !idempotencyKey) {
+            throw new CLASSES.NodicsError('ERR_BOF_00000', 'Readiness repair requires operation, action, ownerModule, and idempotencyKey');
+        }
+        let eligibility = String(input.eligibility || repair.eligibility || 'NOT_AVAILABLE');
+        let available = input.available === true || repair.available === true;
+        return {
+            idempotencyKey: idempotencyKey,
+            dryRun: input.dryRun !== false,
+            operation: operation,
+            action: action,
+            ownerModule: ownerModule,
+            ownerType: input.ownerType ? String(input.ownerType) : undefined,
+            source: input.source ? String(input.source) : 'BACKOFFICE_OPERATIONAL_READINESS',
+            blockerCode: input.blockerCode ? String(input.blockerCode) : undefined,
+            route: input.route ? String(input.route) : undefined,
+            eligibility: eligibility,
+            available: available,
+            label: String(input.label || repair.label || action),
+            reason: input.reason ? String(input.reason) : undefined,
+            context: input.context && typeof input.context === 'object' && !Array.isArray(input.context) ? input.context : {},
+        };
+    },
+    /** Resolves an owner-declared repair provider; BackOffice never guesses repair work. */
+    repairProvider: function (repair) {
+        let providers = [
+            SERVICE.DefaultBackofficeReadinessRepairService,
+            SERVICE.DefaultOperationalReadinessRepairService,
+        ];
+        let ownerToken = String(repair.ownerModule || '').replace(/[^A-Za-z0-9]/g, '');
+        if (ownerToken) {
+            let serviceName = 'Default' + ownerToken.charAt(0).toUpperCase() + ownerToken.slice(1) + 'ReadinessRepairService';
+            providers.push(SERVICE[serviceName]);
+        }
+        return providers.find(provider => provider && typeof provider.executeRepair === 'function') ||
+            providers.find(provider => provider && typeof provider.executeReadinessRepair === 'function');
+    },
+    /** Returns the owner-provider execution function. */
+    invokeRepairProvider: async function (provider, repair, request) {
+        if (typeof provider.executeRepair === 'function') return provider.executeRepair(repair, request);
+        return provider.executeReadinessRepair(repair, request);
+    },
+    /** Normalizes repair execution result from owner modules into the BackOffice contract. */
+    normalizeRepairResult: function (repair, result, options) {
+        options = options || {};
+        result = result || {};
+        let state = String(result.state || options.state || (repair.dryRun ? 'DRY_RUN' : 'COMPLETED'));
+        return {
+            contractVersion: 1,
+            idempotencyKey: repair.idempotencyKey,
+            dryRun: repair.dryRun === true,
+            state: state,
+            operation: repair.operation,
+            action: repair.action,
+            ownerModule: repair.ownerModule,
+            ownerType: repair.ownerType,
+            source: repair.source,
+            blockerCode: repair.blockerCode,
+            changedCount: Number.isInteger(result.changedCount) ? result.changedCount : 0,
+            skippedCount: Number.isInteger(result.skippedCount) ? result.skippedCount : 0,
+            blockersRemaining: Number.isInteger(result.blockersRemaining) ? result.blockersRemaining : (state === 'COMPLETED' ? 0 : 1),
+            retryable: result.retryable === undefined ? state !== 'COMPLETED' : result.retryable === true,
+            nextAction: String(result.nextAction || options.nextAction || (repair.dryRun ?
+                'Review dry-run evidence, confirm the repair, then execute with the same owner operation.' :
+                'Refresh operational readiness and review remaining blockers.')),
+            evidenceReference: result.evidenceReference ? String(result.evidenceReference) : options.evidenceReference,
+            message: String(result.message || options.message || (repair.dryRun ?
+                'Dry run completed for the owner repair operation.' : 'Repair operation completed.')),
+            checkedAt: this.now(),
+            idempotentReplay: options.idempotentReplay === true,
+        };
+    },
+    /** Records a bounded operator-safe repair attempt and audit event. */
+    recordRepairAttempt: function (result, request) {
+        let attempt = Object.assign({}, result, {
+            principal: this.principal(request),
+            tenant: request && request.tenant,
+        });
+        this._repairAttempts = [attempt].concat(this._repairAttempts || []).slice(0, 25);
+        let publisher = SERVICE.DefaultBackofficeAuditService;
+        if (publisher && typeof publisher.record === 'function') {
+            Promise.resolve(publisher.record(Object.assign({
+                eventType: 'backoffice.operationalReadiness.repair',
+                label: 'Operational readiness repair',
+            }, attempt))).catch(() => false);
+        }
+        return result;
+    },
+    /** Returns recent bounded repair attempts for dashboard refresh/debug payloads. */
+    repairHistory: function () {
+        return (this._repairAttempts || []).slice();
+    },
+    /** Executes or dry-runs one owner-declared readiness repair operation. */
+    executeRepair: async function (request) {
+        let repair = this.normalizeRepairRequest(request);
+        if (this._repairResultsByKey[repair.idempotencyKey]) {
+            return this.normalizeRepairResult(repair, this._repairResultsByKey[repair.idempotencyKey], { idempotentReplay: true });
+        }
+        if (repair.available !== true || !['AUTOMATIC', 'MANUAL'].includes(repair.eligibility)) {
+            let blocked = this.normalizeRepairResult(repair, {}, {
+                state: 'NOT_EXECUTABLE',
+                message: 'Repair is not executable because the owner did not declare an available governed operation.',
+                nextAction: 'Open the owning workspace and follow the manual recovery guidance.',
+            });
+            this._repairResultsByKey[repair.idempotencyKey] = blocked;
+            return this.recordRepairAttempt(blocked, request);
+        }
+        let provider = this.repairProvider(repair);
+        if (!provider) {
+            let unavailable = this.normalizeRepairResult(repair, {}, {
+                state: repair.dryRun ? 'DRY_RUN' : 'PROVIDER_UNAVAILABLE',
+                message: repair.dryRun ? 'Dry run is valid, but no owner repair provider is registered for execution yet.' :
+                    'No owner repair provider is registered for this operation.',
+                nextAction: repair.dryRun ? 'Review the operation details; execution requires the owner module to register a repair provider.' :
+                    'Open the owning workspace or register the owner repair provider before executing.',
+            });
+            if (!repair.dryRun) this._repairResultsByKey[repair.idempotencyKey] = unavailable;
+            return this.recordRepairAttempt(unavailable, request);
+        }
+        let ownerResult = await this.invokeRepairProvider(provider, repair, request);
+        let normalized = this.normalizeRepairResult(repair, ownerResult);
+        if (!repair.dryRun) this._repairResultsByKey[repair.idempotencyKey] = normalized;
+        return this.recordRepairAttempt(normalized, request);
     },
     /** Creates a compact client-safe snapshot from the canonical readiness aggregate. */
     operationalReadinessSnapshot: function (report) {

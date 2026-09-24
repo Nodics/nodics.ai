@@ -550,6 +550,17 @@ module.exports = {
                 responses: { '200': { description: 'Auditable acknowledgement for one active startup validation finding', content: { 'application/json': {
                     schema: ({ type: 'object', required: ['code', 'data'], properties: { code: { type: 'string' }, data: { type: 'object' } } })
                 } } } }
+            },
+            executeRepair: {
+                secured: true, accessGroups: ['runtimeConfigAdminUserGroup'], permission: 'backoffice.operationalReadiness.repair',
+                authTokenTypes: ['access'], apiExposure: 'serviceRegistry',
+                key: '/operations/readiness/repairs', method: 'POST',
+                cache: { enabled: false },
+                controller: 'DefaultBackofficeOperationalReadinessController', operation: 'executeRepair',
+                requestBody: { required: true, content: { 'application/json': { schema: contracts.readinessRepairRequest } } },
+                responses: { '200': { description: 'Governed operational readiness repair result', content: { 'application/json': {
+                    schema: ({ type: 'object', required: ['code', 'data'], properties: { code: { type: 'string' }, data: contracts.readinessRepairResult } })
+                } } } }
             }
         },
         contractHistory: {

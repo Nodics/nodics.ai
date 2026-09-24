@@ -1140,6 +1140,54 @@ const operationalReadinessReport = {
     sections: { type: "array", minItems: 1, maxItems: 32, items: operationalReadinessSection },
   },
 };
+const readinessRepairRequest = {
+  type: "object",
+  additionalProperties: true,
+  required: ["idempotencyKey", "operation", "action", "ownerModule"],
+  properties: {
+    idempotencyKey: { type: "string", minLength: 8, maxLength: 256 },
+    dryRun: { type: "boolean" },
+    operation: { type: "string", minLength: 1, maxLength: 256 },
+    action: { type: "string", minLength: 1, maxLength: 256 },
+    ownerModule: { type: "string", minLength: 1, maxLength: 128 },
+    ownerType: { type: "string", maxLength: 128 },
+    source: { type: "string", maxLength: 160 },
+    blockerCode: { type: "string", maxLength: 160 },
+    route: { type: "string", maxLength: 256 },
+    eligibility: { enum: ["AUTOMATIC", "MANUAL", "NOT_AVAILABLE"] },
+    available: { type: "boolean" },
+    label: { type: "string", maxLength: 256 },
+    reason: { type: "string", maxLength: 1000 },
+    context: { type: "object" },
+  },
+};
+const readinessRepairResult = {
+  type: "object",
+  additionalProperties: false,
+  required: ["contractVersion", "idempotencyKey", "dryRun", "state", "operation", "action", "ownerModule",
+    "changedCount", "skippedCount", "blockersRemaining", "retryable", "nextAction", "message", "checkedAt"],
+  properties: {
+    contractVersion: { enum: [1] },
+    idempotencyKey: { type: "string", minLength: 1, maxLength: 256 },
+    dryRun: { type: "boolean" },
+    state: { type: "string", minLength: 1, maxLength: 64 },
+    operation: { type: "string", minLength: 1, maxLength: 256 },
+    action: { type: "string", minLength: 1, maxLength: 256 },
+    ownerModule: { type: "string", minLength: 1, maxLength: 128 },
+    ownerType: { type: "string", maxLength: 128 },
+    source: { type: "string", maxLength: 160 },
+    blockerCode: { type: "string", maxLength: 160 },
+    changedCount: { type: "integer", minimum: 0 },
+    skippedCount: { type: "integer", minimum: 0 },
+    blockersRemaining: { type: "integer", minimum: 0 },
+    retryable: { type: "boolean" },
+    nextAction: { type: "string", minLength: 1, maxLength: 1024 },
+    evidenceReference: { type: "string", maxLength: 512 },
+    message: { type: "string", minLength: 1, maxLength: 1024 },
+    checkedAt: { type: "string", format: "date-time" },
+    idempotentReplay: { type: "boolean" },
+  },
+};
 
 module.exports = {
   registrationResult: {
@@ -1189,6 +1237,8 @@ module.exports = {
   operationalReadinessBlocker: operationalReadinessBlocker,
   operationalReadinessSection: operationalReadinessSection,
   operationalReadinessReport: operationalReadinessReport,
+  readinessRepairRequest: readinessRepairRequest,
+  readinessRepairResult: readinessRepairResult,
   adminListData: {
     type: "object",
     required: ["total", "offset", "limit", "items"],

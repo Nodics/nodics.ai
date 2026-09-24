@@ -18,5 +18,9 @@ module.exports = {
     /** Delegates auditable startup finding acknowledgement. */
     acknowledgeStartupFinding: function (request) {
         return SERVICE.DefaultBackofficeOperationalReadinessService.acknowledgeFinding(request);
+    },
+    /** Delegates governed readiness repair execution/dry-run to BackOffice dispatcher. */
+    executeRepair: function (request) {
+        return SERVICE.DefaultBackofficeOperationalReadinessService.executeRepair(request);
     }
 };

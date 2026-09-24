@@ -23,9 +23,16 @@ module.exports = {
         };
         return request;
     },
+    /** Normalizes readiness repair execution request input. */
+    prepareRepair: function (request) {
+        let body = request.httpRequest && request.httpRequest.body || {};
+        request.readinessRepair = body;
+        return request;
+    },
     /** Executes one facade operation using the standard promise/callback contract. */
     invoke: function (operation, request, callback) {
         if (operation === 'acknowledgeStartupFinding') this.prepareAcknowledgement(request);
+        if (operation === 'executeRepair') this.prepareRepair(request);
         let promise = FACADE.DefaultBackofficeOperationalReadinessFacade[operation](request)
             .then(data => ({ code: 'SUC_BOF_00021', data: data }));
         if (!callback) return promise;
@@ -34,5 +41,9 @@ module.exports = {
     /** Records auditable acknowledgement for an active startup validation finding. */
     acknowledgeStartupFinding: function (request, callback) {
         return this.invoke('acknowledgeStartupFinding', request, callback);
+    },
+    /** Executes or dry-runs one governed owner-declared readiness repair. */
+    executeRepair: function (request, callback) {
+        return this.invoke('executeRepair', request, callback);
     }
 };

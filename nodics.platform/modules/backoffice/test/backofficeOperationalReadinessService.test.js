@@ -321,6 +321,93 @@ async function validateDeliveryAndProductionPolicy() {
         .some(blocker => blocker.code === 'MISSING_TEST_PROPERTY' && blocker.repair.operation === 'runtimeConfiguration.update'));
     global.SERVICE.DefaultModuleService = originalModuleService;
 
+    let repairCalls = [];
+    global.SERVICE.DefaultBackofficeReadinessRepairService = {
+        executeRepair: async repair => {
+            repairCalls.push(repair);
+            return {
+                state: repair.dryRun ? 'DRY_RUN' : 'COMPLETED',
+                changedCount: repair.dryRun ? 0 : 2,
+                skippedCount: 1,
+                blockersRemaining: repair.dryRun ? 1 : 0,
+                retryable: repair.dryRun,
+                evidenceReference: 'repair-evidence:sample',
+                message: repair.dryRun ? 'Would repair import release.' : 'Import release repaired.',
+                nextAction: repair.dryRun ? 'Execute repair.' : 'Refresh readiness.',
+            };
+        }
+    };
+    let dryRunRepair = await service.executeRepair({
+        tenant: 'default',
+        authData: { loginId: 'admin' },
+        readinessRepair: {
+            idempotencyKey: 'repair-dry-run-001',
+            dryRun: true,
+            operation: 'dataRelease.install',
+            action: 'REPAIR_DATA_RELEASE',
+            ownerModule: 'import',
+            ownerType: 'DATA_RELEASE',
+            source: 'IMPORT_RELEASE_CATALOGUE',
+            blockerCode: 'INVALID_MANIFEST',
+            eligibility: 'MANUAL',
+            available: true,
+            label: 'Repair data release'
+        }
+    });
+    assert.strictEqual(dryRunRepair.state, 'DRY_RUN');
+    assert.strictEqual(dryRunRepair.changedCount, 0);
+    assert.strictEqual(repairCalls.length, 1);
+    let executedRepair = await service.executeRepair({
+        tenant: 'default',
+        authData: { loginId: 'admin' },
+        readinessRepair: {
+            idempotencyKey: 'repair-execute-001',
+            dryRun: false,
+            operation: 'dataRelease.install',
+            action: 'REPAIR_DATA_RELEASE',
+            ownerModule: 'import',
+            eligibility: 'MANUAL',
+            available: true,
+            label: 'Repair data release'
+        }
+    });
+    assert.strictEqual(executedRepair.state, 'COMPLETED');
+    assert.strictEqual(executedRepair.changedCount, 2);
+    let replayedRepair = await service.executeRepair({
+        tenant: 'default',
+        authData: { loginId: 'admin' },
+        readinessRepair: {
+            idempotencyKey: 'repair-execute-001',
+            dryRun: false,
+            operation: 'dataRelease.install',
+            action: 'REPAIR_DATA_RELEASE',
+            ownerModule: 'import',
+            eligibility: 'MANUAL',
+            available: true,
+            label: 'Repair data release'
+        }
+    });
+    assert.strictEqual(replayedRepair.idempotentReplay, true);
+    assert.strictEqual(repairCalls.length, 2);
+    assert(service.repairHistory().some(item => item.idempotencyKey === 'repair-execute-001'
+        && item.principal === 'admin'));
+    assert(auditEvents.some(event => event.eventType === 'backoffice.operationalReadiness.repair'
+        && event.idempotencyKey === 'repair-execute-001'));
+    delete global.SERVICE.DefaultBackofficeReadinessRepairService;
+    let unavailableRepair = await service.executeRepair({
+        readinessRepair: {
+            idempotencyKey: 'repair-unavailable-001',
+            dryRun: false,
+            operation: 'media.reconcile',
+            action: 'REPAIR_MEDIA_REFERENCES',
+            ownerModule: 'media',
+            eligibility: 'NOT_AVAILABLE',
+            available: false,
+            label: 'Repair media references'
+        }
+    });
+    assert.strictEqual(unavailableRepair.state, 'NOT_EXECUTABLE');
+
     registry.operations.alerts = { enabled: true, failClosed: true, requireAcknowledgement: true,
         publisherService: 'AlertPublisher' };
     service._lastPublishedSignature = null;

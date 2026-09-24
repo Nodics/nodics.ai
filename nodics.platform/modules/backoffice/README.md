@@ -122,6 +122,33 @@ may render the lane and open the owner workspace, but it must not inspect raw
 release manifests, generated files, private media paths, credentials, or
 custom-project data to decide readiness.
 
+## Guided Repair Execution
+
+BackOffice exposes a governed readiness repair dispatcher at
+`/operations/readiness/repairs`. Axis may call it only for blockers whose owner
+metadata declares an executable repair (`repair.available === true` and
+`repair.eligibility` is `MANUAL` or `AUTOMATIC`). Every call must include an
+idempotency key, operation, action, owner module, and dry-run flag.
+
+The dispatcher is intentionally conservative:
+
+- Dry-runs can validate and explain an operation before execution.
+- Actual execution succeeds only when an owner repair provider is registered.
+- BackOffice records bounded repair history and audit events, but does not
+  implement module-specific repair logic.
+- Results use a stable shape: state, operation, action, changed/skipped counts,
+  remaining blockers, retryability, next action, evidence reference, and
+  checked time.
+- Missing providers, unavailable repairs, or non-executable eligibility return
+  explicit non-success states instead of silently mutating data.
+
+Owner modules should expose repair providers for their own domains. For
+example, nImport owns release install/manifest repair, CMS owns staged/Online
+publication, Process owns approval reconciliation, nMedia owns media object and
+reference repair, nSearch owns indexing/read-source repair, and Copilot
+Knowledge owns source registration/indexing. Customer projects must not add
+parallel repair scripts just to satisfy Axis.
+
 ## Runtime Communication Diagnostics
 
 Runtime communication readiness is derived from BackOffice bootstrap/module
