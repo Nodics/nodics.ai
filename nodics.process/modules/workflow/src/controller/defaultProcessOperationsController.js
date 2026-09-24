@@ -57,6 +57,10 @@ module.exports = {
     startPublicationApproval: function (request, callback) {
         return this.invoke('startPublicationApproval', request, callback);
     },
+    /** Diagnoses the fixed internally requested CMS publication approval workflow. */
+    diagnosePublicationApproval: function (request, callback) {
+        return this.invoke('diagnosePublicationApproval', request, callback);
+    },
     /** Reads one governed runtime instance. */
     getInstance: function (request, callback) {
         return this.invoke('getInstance', request, callback);

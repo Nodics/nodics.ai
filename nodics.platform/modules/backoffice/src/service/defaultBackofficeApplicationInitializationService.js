@@ -1116,8 +1116,22 @@ module.exports = {
   /** Projects current publication approval evidence without querying Process from the browser. */
   approvalWorkflowDiagnostic: function (projection) {
     let publication = (projection && projection.publication) || {};
+    let ownerDiagnostic = publication.approvalDiagnostic || projection && projection.approvalDiagnostic;
     let workflowRef = publication.workflowRef ? String(publication.workflowRef) : undefined;
     let task = publication.approvalTask || publication.workflowTask || publication.task;
+    if (ownerDiagnostic && ownerDiagnostic.status) {
+      return Object.assign({}, ownerDiagnostic, {
+        source: ownerDiagnostic.source || "PUBLICATION_APPROVAL",
+        publicationCode: ownerDiagnostic.publicationCode || (publication.code ? String(publication.code) : undefined),
+        publicationState: ownerDiagnostic.publicationState || (publication.state ? String(publication.state) : undefined),
+        workflowRef: ownerDiagnostic.workflowRef || workflowRef,
+        taskCode: ownerDiagnostic.taskCode || (task && task.code ? String(task.code) : undefined),
+        taskStatus: ownerDiagnostic.taskStatus || (task && task.status ? String(task.status) : undefined),
+        message: ownerDiagnostic.message || "Publication approval diagnostic is unavailable.",
+        suggestedAction: ownerDiagnostic.suggestedAction || "Refresh publication approval readiness",
+        disabledReason: ownerDiagnostic.disabledReason || "Process approval evidence is unavailable.",
+      });
+    }
     let taskStatus = task && task.status ? String(task.status) : undefined;
     let assignee = task && task.assignee ? String(task.assignee) : undefined;
     let queue = task && (task.queue || task.candidateGroup || task.assignment)
@@ -1152,6 +1166,8 @@ module.exports = {
         "Publication approval task exists but has no assignee or review queue evidence.",
       TASK_NOT_ACTIONABLE:
         "Publication approval workflow reference exists, but the known task is not open for decision.",
+      PROVIDER_UNAVAILABLE:
+        "Process approval diagnostic is unavailable.",
       WAITING_REVIEWER: "Publication is waiting for reviewer decision.",
     };
     let actions = {
@@ -1161,6 +1177,7 @@ module.exports = {
       TASK_REFERENCE_MISSING: "Reconcile publication approval",
       TASK_ASSIGNEE_MISSING: "Assign approval task",
       TASK_NOT_ACTIONABLE: "Review Process workflow state",
+      PROVIDER_UNAVAILABLE: "Check Process runtime connectivity",
       WAITING_REVIEWER: "Review approval queue",
     };
     let disabled = {
@@ -1175,6 +1192,8 @@ module.exports = {
         "The Process task needs assignee or queue evidence before Axis can present a decision path.",
       TASK_NOT_ACTIONABLE:
         "The Process task is not currently open, claimed, or escalated for decision.",
+      PROVIDER_UNAVAILABLE:
+        "Process approval evidence is unavailable; check runtime connectivity before deciding.",
       WAITING_REVIEWER:
         "The publication is waiting for a governed Process reviewer decision.",
     };
@@ -1867,14 +1886,21 @@ module.exports = {
     if (operation !== "reconcileApproval") return undefined;
     let previousPublication = (before && before.publication) || {};
     let repairedPublication = (after && after.publication) || {};
+    let previousDiagnostic = previousPublication.approvalDiagnostic || {};
+    let repairedDiagnostic = repairedPublication.approvalDiagnostic || {};
     let previousWorkflowRef = previousPublication.workflowRef;
     let repairedWorkflowRef = repairedPublication.workflowRef;
     return {
       action: "RECONCILE_APPROVAL_TASK",
-      status: repairedWorkflowRef ? "REPAIRED_OR_REPLAYED" : "NEEDS_PROCESS_REVIEW",
+      status: repairedDiagnostic.status === "WAITING_REVIEWER" || repairedWorkflowRef
+        ? "REPAIRED_OR_REPLAYED"
+        : "NEEDS_PROCESS_REVIEW",
       idempotent: true,
       previousWorkflowRef: previousWorkflowRef ? String(previousWorkflowRef) : undefined,
       workflowRef: repairedWorkflowRef ? String(repairedWorkflowRef) : undefined,
+      previousApprovalStatus: previousDiagnostic.status,
+      approvalStatus: repairedDiagnostic.status,
+      taskCode: repairedDiagnostic.taskCode,
       publicationCode: repairedPublication.code
         ? String(repairedPublication.code)
         : previousPublication.code

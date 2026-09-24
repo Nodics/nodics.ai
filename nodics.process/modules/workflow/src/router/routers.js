@@ -193,6 +193,23 @@ module.exports = {
                     url: 'http://host:port/nodics/process/v0/instances/publication-approval',
                 },
             },
+            diagnosePublicationApproval: {
+                secured: true,
+                authTokenTypes: ['service'],
+                accessGroups: ['userGroup'],
+                permissionConfig: 'authSecurity.internalToken.routePermission',
+                apiExposure: 'moduleInternal',
+                key: '/instances/publication-approval/diagnose',
+                method: 'POST',
+                controller: 'DefaultProcessOperationsController',
+                operation: 'diagnosePublicationApproval',
+                help: {
+                    requestType: 'internal',
+                    message: 'Diagnose the fixed CMS publication approval workflow without mutating runtime state',
+                    method: 'POST',
+                    url: 'http://host:port/nodics/process/v0/instances/publication-approval/diagnose',
+                },
+            },
             startInstance: {
                 secured: true,
                 authTokenTypes: ['access'],

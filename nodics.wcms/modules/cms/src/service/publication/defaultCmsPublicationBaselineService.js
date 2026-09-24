@@ -98,6 +98,30 @@ module.exports = {
             throw error;
         }
     },
+    /** Reads Process-owned publication approval diagnostics when a pending publication has workflow scope. */
+    approvalDiagnostic: async function (publication, request) {
+        if (!publication || publication.state !== 'PENDING_APPROVAL' ||
+            !SERVICE.DefaultCmsPublicationWorkflowService ||
+            typeof SERVICE.DefaultCmsPublicationWorkflowService.diagnoseApproval !== 'function') return undefined;
+        try {
+            let result = await SERVICE.DefaultCmsPublicationWorkflowService.diagnoseApproval(publication, request);
+            return result && (result.data || result.result || result);
+        } catch (error) {
+            return {
+                source: 'PUBLICATION_APPROVAL',
+                status: 'PROVIDER_UNAVAILABLE',
+                publicationCode: publication.code,
+                publicationRevision: publication.revision,
+                publicationState: publication.state,
+                workflowRef: publication.workflowRef || SERVICE.DefaultCmsPublicationWorkflowService.reference(publication),
+                message: 'Process approval diagnostic is unavailable.',
+                suggestedAction: 'Check Process runtime connectivity',
+                disabledReason: 'CMS could not read the Process approval task diagnostic for this publication.',
+                owner: 'PROCESS',
+                errorCode: error && (error.code || error.message)
+            };
+        }
+    },
     /** Waits briefly for a cross-runtime approval callback to finish its local Online transition. */
     onlinePublication: async function (descriptor, request) {
         let publication;
@@ -160,6 +184,14 @@ module.exports = {
             workflow: entry.details && entry.details.workflow,
             failureCode: entry.details && entry.details.failureCode
         }));
+        let approvalDiagnostic = await this.approvalDiagnostic(publication, request);
+        let approvalTask = approvalDiagnostic && approvalDiagnostic.taskCode ? {
+            code: approvalDiagnostic.taskCode,
+            status: approvalDiagnostic.taskStatus,
+            assignee: approvalDiagnostic.assignee,
+            queue: approvalDiagnostic.queue,
+            requiresAssignee: approvalDiagnostic.status === 'TASK_ASSIGNEE_MISSING'
+        } : undefined;
         let readiness = state === 'ONLINE' ? 'READY' : state === 'WITHDRAWN' ? 'RETIRED' :
             state === 'ROLLED_BACK' ? 'ROLLED_BACK' : state === 'REJECTED' ? 'REJECTED' :
             state === 'FAILED' ? 'FAILED' : state ? 'PUBLICATION_PENDING' :
@@ -174,7 +206,9 @@ module.exports = {
                 workflowRef: publication.workflowRef || (state === 'PENDING_APPROVAL' &&
                     SERVICE.DefaultCmsPublicationWorkflowService.reference(publication)),
                 correlationId: publication.correlationId,
-                failureCode: state === 'FAILED' && lastAudit && lastAudit.details && lastAudit.details.failureCode },
+                failureCode: state === 'FAILED' && lastAudit && lastAudit.details && lastAudit.details.failureCode,
+                approvalDiagnostic: approvalDiagnostic,
+                approvalTask: approvalTask },
             lineage: publication && { actor: publication.requestedBy,
                 source: { releaseCode: release.releaseCode, releaseVersion: release.version,
                     sourceVersion: publication.sourceVersion },

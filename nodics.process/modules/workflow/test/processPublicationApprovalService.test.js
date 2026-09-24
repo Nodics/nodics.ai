@@ -17,10 +17,16 @@ let existing;
 let startRequest;
 let definition = { code: 'cmsPublicationApproval', status: 'PUBLISHED' };
 let definitionInstallCount = 0;
+let tasks = [{ code: 'approval-task', status: 'OPEN' }];
 global.SERVICE = {
     DefaultProcessDefinitionService: { get: async () => ({ result: definition ? [definition] : [] }) },
     DefaultDataReleaseService: { execute: async () => { definitionInstallCount++; definition = { code: 'cmsPublicationApproval', status: 'PUBLISHED' }; } },
-    DefaultProcessTaskService: { get: async () => ({ result: [{ code: 'approval-task', status: 'OPEN' }] }) },
+    DefaultProcessTaskService: { get: async request => {
+        let query = request.query || {};
+        let values = [].concat(tasks || []).filter(task => !query.status || !query.status.$in ||
+            query.status.$in.includes(task.status));
+        return { result: values };
+    } },
     DefaultProcessInstanceService: { get: async () => ({ result: existing ? [existing] : [] }) },
     DefaultProcessRuntimeLifecycleService: { startInstance: async request => { startRequest = request;
         return { data: { instance: { code: request.runtimeOperation.instanceCode } } }; } }
@@ -45,6 +51,30 @@ const request = { tenant: 'default', publicationApproval: { publicationCode: 'ho
     existing = { code: service.instanceCode('home-v2', 4), status: 'WAITING' };
     let replay = await service.start(request);
     assert.strictEqual(replay.data.replay, true);
+    let diagnostic = await service.diagnose({ tenant: 'default', authData: {}, runtimeOperation: {
+        publicationCode: 'home-v2', publicationRevision: 4 } });
+    assert.strictEqual(diagnostic.data.status, 'WAITING_REVIEWER');
+    assert.strictEqual(diagnostic.data.workflowRef, service.instanceCode('home-v2', 4));
+    tasks = [{ code: 'approval-task', status: 'OPEN', requiresAssignee: true }];
+    diagnostic = await service.diagnose({ tenant: 'default', authData: {}, runtimeOperation: {
+        workflowRef: service.instanceCode('home-v2', 4) } });
+    assert.strictEqual(diagnostic.data.status, 'TASK_ASSIGNEE_MISSING');
+    tasks = [{ code: 'approval-task', status: 'COMPLETED' }];
+    diagnostic = await service.diagnose({ tenant: 'default', authData: {}, runtimeOperation: {
+        publicationCode: 'home-v2', publicationRevision: 4 } });
+    assert.strictEqual(diagnostic.data.status, 'TASK_NOT_ACTIONABLE');
+    tasks = [];
+    diagnostic = await service.diagnose({ tenant: 'default', authData: {}, runtimeOperation: {
+        publicationCode: 'home-v2', publicationRevision: 4 } });
+    assert.strictEqual(diagnostic.data.status, 'TASK_REFERENCE_MISSING');
+    existing = undefined;
+    diagnostic = await service.diagnose({ tenant: 'default', authData: {}, runtimeOperation: {
+        publicationCode: 'home-v2', publicationRevision: 4 } });
+    assert.strictEqual(diagnostic.data.status, 'TASK_REFERENCE_MISSING');
+    definition = undefined;
+    diagnostic = await service.diagnose({ tenant: 'default', authData: {}, runtimeOperation: {
+        publicationCode: 'home-v2', publicationRevision: 4 } });
+    assert.strictEqual(diagnostic.data.status, 'WORKFLOW_DEFINITION_MISSING');
     assert.notStrictEqual(service.instanceCode('home-v2', 4), service.instanceCode('home-v2', 8),
         'a governed resubmission revision must create a distinct approval attempt');
     await assert.rejects(service.start({ publicationApproval: { publicationCode: 'bad code' } }), /request is invalid/);

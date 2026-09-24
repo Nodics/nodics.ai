@@ -35,6 +35,10 @@ module.exports = {
     startPublicationApproval: function (request) {
         return SERVICE.DefaultProcessPublicationApprovalService.start(request);
     },
+    /** Delegates fixed CMS publication approval diagnostic lookup. */
+    diagnosePublicationApproval: function (request) {
+        return SERVICE.DefaultProcessPublicationApprovalService.diagnose(request);
+    },
     /** Delegates runtime instance read. */
     getInstance: function (request) {
         return SERVICE.DefaultProcessOperationsInspectionService.getInstance(request);

@@ -79,5 +79,29 @@ module.exports = {
             header: { Authorization: 'Bearer ' + token },
             responseSelector: response => response && (response.result || response.data || response)
         });
+    },
+    /** Reads Process-owned approval diagnostics for one CMS publication without repairing runtime state. */
+    diagnoseApproval: function (publicationRequest, request) {
+        let publication = (CONFIG.get('cms') || {}).publication || {};
+        let workflow = publication.workflow || {};
+        let target = workflow.target || {};
+        if (publication.runtimeRole !== 'STAGED' || !target.moduleName || !target.connectionName ||
+            target.connectionName === 'default') return undefined;
+        let token = NODICS.getInternalAuthToken(request.tenant);
+        if (!token) return undefined;
+        let payload = {
+            publicationCode: publicationRequest.code,
+            publicationRevision: publicationRequest.revision,
+            workflowRef: publicationRequest.workflowRef || this.reference(publicationRequest)
+        };
+        return SERVICE.DefaultModuleService.invokeModule({ moduleName: target.moduleName,
+            connectionName: target.connectionName, connectionType: target.connectionType || 'abstract',
+            targetAuthority: { runtimeRole: target.runtimeRole || 'PROCESS' },
+            methodName: 'POST',
+            apiName: '/instances/publication-approval/diagnose', requestBody: payload, timeoutMs: target.timeoutMs,
+            maxAttempts: target.maxAttempts, idempotencyKey: payload.workflowRef,
+            header: { Authorization: 'Bearer ' + token },
+            responseSelector: response => response && (response.result || response.data || response)
+        });
     }
 };

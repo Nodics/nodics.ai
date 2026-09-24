@@ -317,12 +317,13 @@ global.fetch = async (url) => {
           releaseVersion: "0.0.0",
           releaseStatus: "CURRENT",
           publication: {
-            code: "cmsBaseline_nexus_0_0_0",
-            state: "PENDING_APPROVAL",
-            workflowRef: "workflow-cmsBaseline_nexus_0_0_0-1",
-          },
+          code: "cmsBaseline_nexus_0_0_0",
+          state: "PENDING_APPROVAL",
+          workflowRef: "workflow-cmsBaseline_nexus_0_0_0-1",
+          approvalDiagnostic: { status: "TASK_REFERENCE_MISSING" },
         },
-      };
+      },
+    };
     }
     reconcileRequest = request;
     return {
@@ -335,6 +336,10 @@ global.fetch = async (url) => {
           code: "cmsBaseline_nexus_0_0_0",
           state: "PENDING_APPROVAL",
           workflowRef: "workflow-cmsBaseline_nexus_0_0_0-2",
+          approvalDiagnostic: {
+            status: "WAITING_REVIEWER",
+            taskCode: "approval-task",
+          },
         },
       },
     };
@@ -369,6 +374,9 @@ global.fetch = async (url) => {
     idempotent: true,
     previousWorkflowRef: "workflow-cmsBaseline_nexus_0_0_0-1",
     workflowRef: "workflow-cmsBaseline_nexus_0_0_0-2",
+    previousApprovalStatus: "TASK_REFERENCE_MISSING",
+    approvalStatus: "WAITING_REVIEWER",
+    taskCode: "approval-task",
     publicationCode: "cmsBaseline_nexus_0_0_0",
     message:
       "Publication approval workflow was reconciled. Review the Process task for decision.",
@@ -863,6 +871,49 @@ global.fetch = async (url) => {
         blocker.repair.action === "RECONCILE_APPROVAL_TASK",
     ),
     "Pending publication without a workflow reference must expose governed approval repair metadata",
+  );
+  moduleInvocationHandler = async () => ({
+    data: {
+      readiness: "PUBLICATION_PENDING",
+      releaseCode: "contentPack:nodicsDocumentation",
+      releaseVersion: "0.16.5",
+      releaseStatus: "CURRENT",
+      publication: {
+        code: "cmsBaseline_frameworkdocs_0_16_5",
+        state: "PENDING_APPROVAL",
+        workflowRef: "cmsPublicationApproval-owner",
+        approvalDiagnostic: {
+          source: "PUBLICATION_APPROVAL",
+          status: "TASK_ASSIGNEE_MISSING",
+          workflowRef: "cmsPublicationApproval-owner",
+          taskCode: "approval-task",
+          taskStatus: "OPEN",
+          message: "Publication approval task exists but has no assignee or review queue evidence.",
+          suggestedAction: "Assign approval task",
+          disabledReason: "The Process task needs assignee or queue evidence before Axis can present a decision path.",
+        },
+      },
+    },
+  });
+  const ownerDiagnosticStatus = await service.status("frameworkdocs", {
+    tenant: "default",
+    authData: { principalId: "admin" },
+    httpRequest: { headers: { authorization: "Bearer operator-token" } },
+  });
+  assert.strictEqual(
+    ownerDiagnosticStatus.capability.approvalDiagnostic.status,
+    "TASK_ASSIGNEE_MISSING",
+    "BackOffice must prefer Process-owned approval diagnostics when CMS supplies them",
+  );
+  assert(
+    ownerDiagnosticStatus.capability.blockers.some(
+      (blocker) =>
+        blocker.code === "APPROVAL_TASK_ASSIGNEE_MISSING" &&
+        blocker.action === "Assign approval task" &&
+        blocker.approvalDiagnostic &&
+        blocker.approvalDiagnostic.taskCode === "approval-task",
+    ),
+    "Owner-provided approval diagnostics must drive blocker guidance",
   );
   moduleInvocationHandler = async () => ({
     data: {

@@ -22,7 +22,12 @@ let lifecycle;
 let operations = [];
 global.SERVICE = {
     DefaultCmsPublicationWorkflowService: {
-        reference: value => 'workflow-' + value.code + '-' + value.revision
+        reference: value => 'workflow-' + value.code + '-' + value.revision,
+        diagnoseApproval: async value => ({ data: { source: 'PUBLICATION_APPROVAL', status: 'WAITING_REVIEWER',
+            publicationCode: value.code, publicationRevision: value.revision, publicationState: value.state,
+            workflowRef: 'workflow-' + value.code + '-' + value.revision, taskCode: 'approval-task',
+            taskStatus: 'OPEN', queue: 'publication-reviewers', message: 'Publication is waiting for reviewer decision.',
+            suggestedAction: 'Review approval queue', disabledReason: 'Waiting for reviewer.' } })
     },
     DefaultDataReleaseService: {
         getCatalogue: async () => ({ data: [{ releaseCode: 'axis:axisBaseline', version: '0.0.0',
@@ -95,6 +100,9 @@ const request = { tenant: 'default', authData: { principalId: 'platform-service'
     assert.strictEqual(operations.filter(item => item[0] === 'requestApproval').length, 4);
     const status = await service.status('axis', request);
     assert.strictEqual(status.readiness, 'PUBLICATION_PENDING');
+    assert.strictEqual(status.publication.approvalDiagnostic.status, 'WAITING_REVIEWER');
+    assert.strictEqual(status.publication.approvalTask.code, 'approval-task');
+    assert.strictEqual(status.publication.approvalTask.queue, 'publication-reviewers');
     lifecycle = undefined;
     releaseStatus = 'RUNNING';
     const importing = await service.status('axis', request);
