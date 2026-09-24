@@ -209,3 +209,29 @@ If an owning capability has not yet exposed a concrete readiness provider,
 BackOffice may return a `NOT_EXPOSED` section with a blocker that names the
 owning module and the action to add the provider. That is a framework gap, not
 a customer-project configuration requirement.
+
+## Guided readiness repair provider contract
+
+Axis may request readiness repair only through the authenticated BackOffice
+dispatcher. The request must carry `repairContractVersion: 1`, an idempotency
+key, correlation id, dry-run flag, bounded timeout, operation, action,
+owner module, eligibility/availability metadata, and stable target identifiers
+such as `releaseCode`, `profileCode`, `publicationCode`, `taskCode`,
+`mediaManifestCode`, or `sourceCode`. A blocker code can help diagnose the
+failure, but display text alone is not repair identity.
+
+BackOffice validates the contract, stores idempotent execution results, records
+repair attempts, and dispatches only to an owner-declared provider. It must not
+implement nImport, nPublish, Process, Media, Search, Copilot, or accelerator
+domain repair logic inline. Owner providers expose optional
+`repairCapability()` or `readinessRepairCapability()` metadata for supported
+operation/action pairs, provider availability, environment policy, and operator
+guidance. Execution remains in `executeRepair()` or
+`executeReadinessRepair()`.
+
+The normalized result must preserve contract version, correlation id, target
+identifiers, prerequisites, preview target codes, changed/skipped counts,
+remaining blockers, evidence reference, transaction/rollback details, policy,
+retry policy, and next action. Dry-run and execute must describe the same target
+set. High-impact execution requires an operator note. Customer projects must not
+add repair scripts or static configuration solely to make Axis buttons work.

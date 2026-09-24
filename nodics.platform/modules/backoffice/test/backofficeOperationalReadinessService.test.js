@@ -323,6 +323,11 @@ async function validateDeliveryAndProductionPolicy() {
 
     let repairCalls = [];
     global.SERVICE.DefaultBackofficeReadinessRepairService = {
+        repairCapability: () => ({
+            repairContractVersion: 1,
+            available: true,
+            supportedOperations: [{ operation: 'dataRelease.install', action: 'REPAIR_DATA_RELEASE' }]
+        }),
         executeRepair: async repair => {
             repairCalls.push(repair);
             return {
@@ -332,6 +337,11 @@ async function validateDeliveryAndProductionPolicy() {
                 blockersRemaining: repair.dryRun ? 1 : 0,
                 retryable: repair.dryRun,
                 evidenceReference: 'repair-evidence:sample',
+                targetIdentifiers: repair.targetIdentifiers,
+                preview: { changedCount: repair.dryRun ? 2 : 0, skippedCount: 1, targetCodes: ['circa.ewaste:sample'] },
+                transaction: { atomic: false, rollbackAvailable: false, compensatingAction: 'Reinstall previous release' },
+                policy: { environment: 'kickoffLocal', approvalRequired: false },
+                retryPolicy: { safeToRetry: true, reuseIdempotencyKey: true },
                 message: repair.dryRun ? 'Would repair import release.' : 'Import release repaired.',
                 nextAction: repair.dryRun ? 'Execute repair.' : 'Refresh readiness.',
             };
@@ -351,11 +361,15 @@ async function validateDeliveryAndProductionPolicy() {
             blockerCode: 'INVALID_MANIFEST',
             eligibility: 'MANUAL',
             available: true,
-            label: 'Repair data release'
+            label: 'Repair data release',
+            targetIdentifiers: { releaseCode: 'circa.ewaste:sample' }
         }
     });
     assert.strictEqual(dryRunRepair.state, 'DRY_RUN');
     assert.strictEqual(dryRunRepair.changedCount, 0);
+    assert.strictEqual(dryRunRepair.repairContractVersion, 1);
+    assert.strictEqual(dryRunRepair.preview.targetCodes[0], 'circa.ewaste:sample');
+    assert.strictEqual(dryRunRepair.transaction.rollbackAvailable, false);
     assert.strictEqual(repairCalls.length, 1);
     let executedRepair = await service.executeRepair({
         tenant: 'default',
@@ -368,11 +382,13 @@ async function validateDeliveryAndProductionPolicy() {
             ownerModule: 'import',
             eligibility: 'MANUAL',
             available: true,
-            label: 'Repair data release'
+            label: 'Repair data release',
+            targetIdentifiers: { releaseCode: 'circa.ewaste:sample' }
         }
     });
     assert.strictEqual(executedRepair.state, 'COMPLETED');
     assert.strictEqual(executedRepair.changedCount, 2);
+    assert.strictEqual(executedRepair.targetIdentifiers.releaseCode, 'circa.ewaste:sample');
     let replayedRepair = await service.executeRepair({
         tenant: 'default',
         authData: { loginId: 'admin' },
@@ -384,7 +400,8 @@ async function validateDeliveryAndProductionPolicy() {
             ownerModule: 'import',
             eligibility: 'MANUAL',
             available: true,
-            label: 'Repair data release'
+            label: 'Repair data release',
+            targetIdentifiers: { releaseCode: 'circa.ewaste:sample' }
         }
     });
     assert.strictEqual(replayedRepair.idempotentReplay, true);
@@ -403,7 +420,8 @@ async function validateDeliveryAndProductionPolicy() {
             ownerModule: 'media',
             eligibility: 'NOT_AVAILABLE',
             available: false,
-            label: 'Repair media references'
+            label: 'Repair media references',
+            targetIdentifiers: { mediaManifestCode: 'circa.ewaste:published-media' }
         }
     });
     assert.strictEqual(unavailableRepair.state, 'NOT_EXECUTABLE');

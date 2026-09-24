@@ -1,0 +1,105 @@
+{
+  "contractVersion": 1,
+  "description": "Sample BackOffice readiness repair provider requests and results. Domain mutation belongs to the owning module provider, never Axis or a customer project.",
+  "samples": [
+    {
+      "name": "nImport release install dry-run",
+      "request": {
+        "repairContractVersion": 1,
+        "idempotencyKey": "sample-import-dry-run",
+        "correlationId": "sample-import-dry-run",
+        "dryRun": true,
+        "timeoutMs": 30000,
+        "operation": "dataRelease.install",
+        "action": "REPAIR_DATA_RELEASE",
+        "ownerModule": "import",
+        "ownerType": "DATA_RELEASE",
+        "source": "IMPORT_RELEASE_CATALOGUE",
+        "blockerCode": "INVALID_MANIFEST",
+        "eligibility": "MANUAL",
+        "available": true,
+        "targetIdentifiers": {
+          "releaseCode": "circa.ewaste:sample"
+        },
+        "reason": "Operator requested a guided import release repair dry-run."
+      },
+      "result": {
+        "repairContractVersion": 1,
+        "state": "DRY_RUN",
+        "targetIdentifiers": {
+          "releaseCode": "circa.ewaste:sample"
+        },
+        "preview": {
+          "changedCount": 2,
+          "skippedCount": 1,
+          "targetCodes": [
+            "circa.ewaste:sample"
+          ]
+        },
+        "transaction": {
+          "atomic": false,
+          "rollbackAvailable": false,
+          "rollbackHint": "Re-run the previous approved release if rollback is required."
+        },
+        "retryPolicy": {
+          "safeToRetry": true,
+          "reuseIdempotencyKey": true
+        },
+        "message": "Would repair import release.",
+        "nextAction": "Review dry-run evidence before execution."
+      }
+    },
+    {
+      "name": "Process approval reconciliation execute",
+      "request": {
+        "repairContractVersion": 1,
+        "idempotencyKey": "sample-process-approval-execute",
+        "correlationId": "sample-process-approval-execute",
+        "dryRun": false,
+        "timeoutMs": 30000,
+        "operation": "process.approval.review",
+        "action": "REVIEW_APPROVAL_TASK",
+        "ownerModule": "workflow",
+        "ownerType": "PROCESS",
+        "source": "PUBLICATION_APPROVAL",
+        "blockerCode": "TASK_NOT_ACTIONABLE",
+        "eligibility": "MANUAL",
+        "available": true,
+        "targetIdentifiers": {
+          "taskCode": "publication-approval:circa.ewaste"
+        },
+        "operatorNote": "Reviewer confirmed the pending approval task should be reconciled."
+      },
+      "result": {
+        "repairContractVersion": 1,
+        "state": "COMPLETED",
+        "targetIdentifiers": {
+          "taskCode": "publication-approval:circa.ewaste"
+        },
+        "preview": {
+          "changedCount": 1,
+          "skippedCount": 0,
+          "targetCodes": [
+            "publication-approval:circa.ewaste"
+          ]
+        },
+        "transaction": {
+          "atomic": true,
+          "rollbackAvailable": false,
+          "rollbackHint": "Approval decisions remain governed records and are not automatically rolled back."
+        },
+        "policy": {
+          "approvalRequired": true,
+          "approvalRoute": "/process/approval-queue"
+        },
+        "retryPolicy": {
+          "safeToRetry": false,
+          "reuseIdempotencyKey": true
+        },
+        "evidenceReference": "process:approval-reconciliation",
+        "message": "Approval task reconciliation completed.",
+        "nextAction": "Refresh publication readiness."
+      }
+    }
+  ]
+}

@@ -23,6 +23,7 @@ module.exports = {
     _operationalReadinessTimeline: [],
     _repairAttempts: [],
     _repairResultsByKey: Object.create(null),
+    _supportedRepairContractVersion: 1,
     /** Registers configuration validity as a required readiness contributor. */
     init: function () {
         if (SERVICE.DefaultHealthService) SERVICE.DefaultHealthService.registerReadinessContributor('backofficeOperationalConfiguration', {
@@ -1436,7 +1437,9 @@ module.exports = {
         }
         let eligibility = String(input.eligibility || repair.eligibility || 'NOT_AVAILABLE');
         let available = input.available === true || repair.available === true;
+        let context = input.context && typeof input.context === 'object' && !Array.isArray(input.context) ? input.context : {};
         return {
+            repairContractVersion: Number(input.repairContractVersion || repair.repairContractVersion || 1),
             idempotencyKey: idempotencyKey,
             dryRun: input.dryRun !== false,
             operation: operation,
@@ -1450,8 +1453,30 @@ module.exports = {
             available: available,
             label: String(input.label || repair.label || action),
             reason: input.reason ? String(input.reason) : undefined,
-            context: input.context && typeof input.context === 'object' && !Array.isArray(input.context) ? input.context : {},
+            correlationId: String(input.correlationId || request && request.correlationId || idempotencyKey),
+            timeoutMs: Number.isInteger(input.timeoutMs) ? Math.max(1000, Math.min(input.timeoutMs, 120000)) : 30000,
+            targetIdentifiers: this.normalizeRepairTargetIdentifiers(input.targetIdentifiers || context.targetIdentifiers || {}),
+            preview: input.preview && typeof input.preview === 'object' && !Array.isArray(input.preview) ? input.preview : undefined,
+            prerequisites: [].concat(input.prerequisites || context.prerequisites || []),
+            batch: input.batch === true,
+            highImpact: input.highImpact === true,
+            operatorNote: input.operatorNote ? String(input.operatorNote) : undefined,
+            environmentPolicy: input.environmentPolicy ? String(input.environmentPolicy) : undefined,
+            context: context,
         };
+    },
+    /** Normalizes stable target identifiers; display labels are never enough to execute a repair. */
+    normalizeRepairTargetIdentifiers: function (identifiers) {
+        identifiers = identifiers && typeof identifiers === 'object' && !Array.isArray(identifiers) ? identifiers : {};
+        return ['releaseCode', 'profileCode', 'publicationCode', 'taskCode', 'mediaManifestCode', 'sourceCode']
+            .reduce((result, key) => {
+                if (identifiers[key]) result[key] = String(identifiers[key]);
+                return result;
+            }, {});
+    },
+    /** Returns true when at least one stable target identifier is supplied. */
+    hasRepairTargetIdentity: function (repair) {
+        return Object.keys(repair.targetIdentifiers || {}).length > 0;
     },
     /** Resolves an owner-declared repair provider; BackOffice never guesses repair work. */
     repairProvider: function (repair) {
@@ -1467,6 +1492,43 @@ module.exports = {
         return providers.find(provider => provider && typeof provider.executeRepair === 'function') ||
             providers.find(provider => provider && typeof provider.executeReadinessRepair === 'function');
     },
+    /** Reads optional provider capability/health metadata without requiring every provider to implement it. */
+    repairProviderCapability: function (provider, repair) {
+        if (!provider) return {};
+        if (typeof provider.repairCapability === 'function') return provider.repairCapability(repair) || {};
+        if (typeof provider.readinessRepairCapability === 'function') return provider.readinessRepairCapability(repair) || {};
+        if (typeof provider.selfTest === 'function') return { selfTestAvailable: true };
+        return {};
+    },
+    /** Validates provider capability metadata before execution. */
+    validateRepairProviderCapability: function (provider, repair) {
+        let capability = this.repairProviderCapability(provider, repair);
+        let version = Number(capability.repairContractVersion || 1);
+        if (version !== this._supportedRepairContractVersion) return {
+            state: 'UNSUPPORTED_CONTRACT',
+            message: 'Owner repair provider contract version is unsupported.',
+            nextAction: 'Upgrade the owner repair provider or BackOffice repair contract before executing.',
+        };
+        let supported = [].concat(capability.supportedOperations || capability.supportedRepairOperations || []);
+        if (supported.length > 0) {
+            let match = supported.some(item => {
+                item = item || {};
+                return String(item.operation || '') === repair.operation &&
+                    (!item.action || String(item.action) === repair.action);
+            });
+            if (!match) return {
+                state: 'NOT_SUPPORTED',
+                message: 'Owner repair provider does not support this operation/action pair.',
+                nextAction: 'Open the owning workspace or choose a supported repair action.',
+            };
+        }
+        if (capability.available === false) return {
+            state: 'PROVIDER_UNAVAILABLE',
+            message: String(capability.message || 'Owner repair provider is not currently available.'),
+            nextAction: String(capability.nextAction || 'Retry after the owner repair provider reports healthy.'),
+        };
+        return {};
+    },
     /** Returns the owner-provider execution function. */
     invokeRepairProvider: async function (provider, repair, request) {
         if (typeof provider.executeRepair === 'function') return provider.executeRepair(repair, request);
@@ -1477,9 +1539,13 @@ module.exports = {
         options = options || {};
         result = result || {};
         let state = String(result.state || options.state || (repair.dryRun ? 'DRY_RUN' : 'COMPLETED'));
+        let preview = result.preview && typeof result.preview === 'object' && !Array.isArray(result.preview) ? result.preview :
+            repair.preview && typeof repair.preview === 'object' ? repair.preview : {};
         return {
             contractVersion: 1,
+            repairContractVersion: this._supportedRepairContractVersion,
             idempotencyKey: repair.idempotencyKey,
+            correlationId: repair.correlationId,
             dryRun: repair.dryRun === true,
             state: state,
             operation: repair.operation,
@@ -1488,6 +1554,33 @@ module.exports = {
             ownerType: repair.ownerType,
             source: repair.source,
             blockerCode: repair.blockerCode,
+            targetIdentifiers: this.normalizeRepairTargetIdentifiers(result.targetIdentifiers || repair.targetIdentifiers),
+            prerequisites: [].concat(result.prerequisites || repair.prerequisites || []).slice(0, 20),
+            preview: {
+                changedCount: Number.isInteger(preview.changedCount) ? preview.changedCount : undefined,
+                skippedCount: Number.isInteger(preview.skippedCount) ? preview.skippedCount : undefined,
+                targetCodes: [].concat(preview.targetCodes || []).filter(Boolean).map(item => String(item)).slice(0, 25),
+            },
+            transaction: {
+                atomic: result.transaction && result.transaction.atomic === true,
+                rollbackAvailable: result.transaction && result.transaction.rollbackAvailable === true,
+                rollbackHint: result.transaction && result.transaction.rollbackHint ? String(result.transaction.rollbackHint) :
+                    'No automatic rollback was declared for this repair result.',
+                compensatingAction: result.transaction && result.transaction.compensatingAction ?
+                    String(result.transaction.compensatingAction) : undefined,
+            },
+            policy: {
+                environment: result.policy && result.policy.environment ? String(result.policy.environment) : repair.environmentPolicy,
+                approvalRequired: result.policy && result.policy.approvalRequired === true,
+                approvalRoute: result.policy && result.policy.approvalRoute ? String(result.policy.approvalRoute) : undefined,
+                disabled: result.policy && result.policy.disabled === true,
+            },
+            retryPolicy: {
+                safeToRetry: result.retryPolicy && result.retryPolicy.safeToRetry !== undefined ?
+                    result.retryPolicy.safeToRetry === true : state !== 'COMPLETED',
+                reuseIdempotencyKey: result.retryPolicy && result.retryPolicy.reuseIdempotencyKey !== undefined ?
+                    result.retryPolicy.reuseIdempotencyKey === true : true,
+            },
             changedCount: Number.isInteger(result.changedCount) ? result.changedCount : 0,
             skippedCount: Number.isInteger(result.skippedCount) ? result.skippedCount : 0,
             blockersRemaining: Number.isInteger(result.blockersRemaining) ? result.blockersRemaining : (state === 'COMPLETED' ? 0 : 1),
@@ -1537,6 +1630,22 @@ module.exports = {
             this._repairResultsByKey[repair.idempotencyKey] = blocked;
             return this.recordRepairAttempt(blocked, request);
         }
+        if (repair.highImpact && !repair.operatorNote) {
+            let noteRequired = this.normalizeRepairResult(repair, {}, {
+                state: 'OPERATOR_NOTE_REQUIRED',
+                message: 'High-impact repair execution requires an operator note.',
+                nextAction: 'Add an operator note explaining the repair reason and retry.',
+            });
+            return this.recordRepairAttempt(noteRequired, request);
+        }
+        if (!this.hasRepairTargetIdentity(repair)) {
+            let validation = this.normalizeRepairResult(repair, {}, {
+                state: 'VALIDATION_FAILED',
+                message: 'Repair target identity is missing.',
+                nextAction: 'Retry with a stable target identifier such as releaseCode, profileCode, publicationCode, taskCode, mediaManifestCode, or sourceCode.',
+            });
+            return this.recordRepairAttempt(validation, request);
+        }
         let provider = this.repairProvider(repair);
         if (!provider) {
             let unavailable = this.normalizeRepairResult(repair, {}, {
@@ -1548,6 +1657,12 @@ module.exports = {
             });
             if (!repair.dryRun) this._repairResultsByKey[repair.idempotencyKey] = unavailable;
             return this.recordRepairAttempt(unavailable, request);
+        }
+        let providerValidation = this.validateRepairProviderCapability(provider, repair);
+        if (providerValidation.state) {
+            let invalidProvider = this.normalizeRepairResult(repair, {}, providerValidation);
+            if (!repair.dryRun) this._repairResultsByKey[repair.idempotencyKey] = invalidProvider;
+            return this.recordRepairAttempt(invalidProvider, request);
         }
         let ownerResult = await this.invokeRepairProvider(provider, repair, request);
         let normalized = this.normalizeRepairResult(repair, ownerResult);

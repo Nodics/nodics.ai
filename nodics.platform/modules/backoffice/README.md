@@ -128,7 +128,11 @@ BackOffice exposes a governed readiness repair dispatcher at
 `/operations/readiness/repairs`. Axis may call it only for blockers whose owner
 metadata declares an executable repair (`repair.available === true` and
 `repair.eligibility` is `MANUAL` or `AUTOMATIC`). Every call must include an
-idempotency key, operation, action, owner module, and dry-run flag.
+idempotency key, operation, action, owner module, dry-run flag, repair contract
+version, correlation id, bounded timeout, and stable target identity such as
+`releaseCode`, `profileCode`, `publicationCode`, `taskCode`,
+`mediaManifestCode`, or `sourceCode`. Display labels are never enough to execute
+a repair.
 
 The dispatcher is intentionally conservative:
 
@@ -137,10 +141,14 @@ The dispatcher is intentionally conservative:
 - BackOffice records bounded repair history and audit events, but does not
   implement module-specific repair logic.
 - Results use a stable shape: state, operation, action, changed/skipped counts,
-  remaining blockers, retryability, next action, evidence reference, and
-  checked time.
+  remaining blockers, retryability, next action, evidence reference, checked
+  time, target identifiers, preview targets, prerequisite evidence, transaction
+  and rollback metadata, policy metadata, and retry policy.
 - Missing providers, unavailable repairs, or non-executable eligibility return
   explicit non-success states instead of silently mutating data.
+- High-impact repair execution requires an operator note. Owner providers may
+  also report environment policy or approval requirements, which Axis should
+  render without trying to bypass them.
 
 Owner modules should expose repair providers for their own domains. For
 example, nImport owns release install/manifest repair, CMS owns staged/Online
@@ -148,6 +156,15 @@ publication, Process owns approval reconciliation, nMedia owns media object and
 reference repair, nSearch owns indexing/read-source repair, and Copilot
 Knowledge owns source registration/indexing. Customer projects must not add
 parallel repair scripts just to satisfy Axis.
+
+An owner repair provider may expose `repairCapability(repair)` or
+`readinessRepairCapability(repair)` before execution. The capability response
+declares `repairContractVersion`, availability, optional supported
+operation/action pairs, and unavailable guidance. The execution method remains
+owner-specific (`executeRepair` or `executeReadinessRepair`), but it must honor
+dry-run parity, idempotency, target identity, timeout/correlation context, audit
+expectations, and the normalized result contract. Provider implementation code
+belongs in the owning framework/module package, not in `nodics.kickoff`.
 
 ## Runtime Communication Diagnostics
 
