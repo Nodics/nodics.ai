@@ -176,6 +176,13 @@ async function validateDeliveryAndProductionPolicy() {
     });
     assert.strictEqual(aggregateReport.contractVersion, 1);
     assert.strictEqual(aggregateReport.state, 'NOT_READY');
+    assert.strictEqual(service._lastOperationalReadinessSnapshot.state, 'NOT_READY');
+    assert.strictEqual(service._lastOperationalReadinessSnapshot.source, 'backoffice.operationalReadiness.snapshot');
+    assert(Array.isArray(aggregateReport.summary.timeline));
+    assert(aggregateReport.summary.timeline.some(item => item.eventType === 'backoffice.operationalReadiness.snapshot'
+        && item.state === 'NOT_READY'));
+    assert(auditEvents.some(event => event.eventType === 'backoffice.operationalReadiness.snapshot'
+        && event.state === 'NOT_READY'));
     assert(aggregateReport.sections.some(section => section.key === 'imports'
         && section.businessStatus === 'READY'
         && section.summary.releaseCount === 1));

@@ -262,6 +262,11 @@ module.exports = {
                 "command": "project:post-reset-readiness",
                 "home": "project"
             },
+            "local-recovery:readiness": {
+                "type": "frameworkCommand",
+                "command": "project:local-recovery-readiness",
+                "home": "project"
+            },
             "docker-local:backup": {
                 "type": "frameworkCommand",
                 "command": "project:container-resilience",

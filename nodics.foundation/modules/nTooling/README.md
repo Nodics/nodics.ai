@@ -158,6 +158,29 @@ npm exec -- nodics project:post-reset-readiness --environment=kickoffLocal --jso
 npm exec -- nodics project:post-reset-readiness --environment=kickoffLocal --live --access-token-file=/path/to/private/axis-access-token --json
 ```
 
+`project:local-recovery-readiness` wraps the same canonical report and persists a
+generated, redacted snapshot for local operators and support diagnostics:
+
+```bash
+npm exec -- nodics project:local-recovery-readiness --environment=kickoffLocal --json
+npm exec -- nodics project:local-recovery-readiness --environment=kickoffLocal --live --access-token-file=/path/to/private/axis-access-token --json
+```
+
+The default snapshot path is
+`envs/<environment>/generated/acceptance/local-recovery-readiness-snapshot.json`.
+Generated snapshots are evidence artifacts, not source configuration. Custom
+projects should not add their own recovery scripts for the same checks; extend
+the owning framework/module readiness provider instead.
+
+Local recovery exits `0` after producing the snapshot so interactive operators
+can read the evidence instead of seeing a tooling failure. Automation that wants
+readiness failures as process failures can add `--fail-on-not-ready`.
+
+When `docker-local:acceptance` writes
+`envs/<environment>/generated/acceptance/browser-validation-evidence.json`,
+post-reset and local-recovery readiness auto-discover that file unless
+`--browser-validation-evidence-file` is supplied.
+
 The command must not store credentials. Use `--access-token`,
 `--access-token-file`, or `NODICS_BACKOFFICE_ACCESS_TOKEN` from an external,
 private source. Output is redacted and classified with operational states:

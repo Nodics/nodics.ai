@@ -689,6 +689,11 @@ module.exports = {
                 handler: 'src/service/command/defaultNodeScriptCommandService.js',
                 script: 'src/service/project/defaultProjectPostResetReadinessService.mjs'
             },
+            'project:local-recovery-readiness': {
+                description: 'Produce local recovery readiness evidence and persist the generated support-safe snapshot under the selected environment generated folder.',
+                handler: 'src/service/command/defaultNodeScriptCommandService.js',
+                script: 'src/service/project/defaultProjectLocalRecoveryReadinessService.mjs'
+            },
             'project:documentation-content': {
                 description: 'Generate or validate project documentation content packs from project-owned documentation facts.',
                 handler: 'src/service/command/defaultNodeScriptCommandService.js',

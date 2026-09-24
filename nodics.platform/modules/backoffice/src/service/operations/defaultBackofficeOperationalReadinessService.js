@@ -19,6 +19,8 @@
 module.exports = {
     _lastPublishedSignature: null,
     _findingAcknowledgements: Object.create(null),
+    _lastOperationalReadinessSnapshot: null,
+    _operationalReadinessTimeline: [],
     /** Registers configuration validity as a required readiness contributor. */
     init: function () {
         if (SERVICE.DefaultHealthService) SERVICE.DefaultHealthService.registerReadinessContributor('backofficeOperationalConfiguration', {
@@ -1100,6 +1102,67 @@ module.exports = {
                     'Configure Copilot Knowledge retrieval and enabled sources before relying on Assistant answers.',
         };
     },
+    /** Returns the bounded in-memory operational readiness timeline for Axis and support diagnostics. */
+    operationalReadinessTimeline: function () {
+        return (this._operationalReadinessTimeline || []).slice();
+    },
+    /** Creates a compact client-safe snapshot from the canonical readiness aggregate. */
+    operationalReadinessSnapshot: function (report) {
+        report = report || {};
+        let sections = [].concat(report.sections || []);
+        let blockers = sections.flatMap(section => [].concat(section.blockers || []).map(blocker => ({
+            section: section.key,
+            code: blocker.code || blocker.blockerCode,
+            severity: blocker.severity,
+            ownerType: blocker.ownerType,
+            source: blocker.source || section.source,
+            action: blocker.suggestedAction || blocker.action || section.nextAction,
+        })));
+        return {
+            contractVersion: 1,
+            source: 'backoffice.operationalReadiness.snapshot',
+            state: report.state,
+            checkedAt: report.checkedAt,
+            summary: report.summary,
+            blockerCount: blockers.length,
+            blockers: blockers.slice(0, 25),
+            sections: sections.map(section => ({
+                key: section.key,
+                title: section.title,
+                businessStatus: section.businessStatus,
+                ownerModule: section.ownerModule,
+                source: section.source,
+                blockerCount: [].concat(section.blockers || []).length,
+                nextAction: section.nextAction,
+            })),
+        };
+    },
+    /** Records snapshot and emits best-effort backend-owned readiness event evidence. */
+    recordOperationalReadinessSnapshot: function (report, context) {
+        context = context || {};
+        let snapshot = this.operationalReadinessSnapshot(report);
+        this._lastOperationalReadinessSnapshot = snapshot;
+        let event = {
+            id: String(snapshot.checkedAt || new Date().toISOString()) + ':' + String(snapshot.state || 'UNKNOWN'),
+            eventType: 'backoffice.operationalReadiness.snapshot',
+            label: 'Operational readiness',
+            state: snapshot.state,
+            checkedAt: snapshot.checkedAt,
+            blockerCount: snapshot.blockerCount,
+            source: snapshot.source,
+            tenant: context.tenant,
+            environment: context.environment,
+        };
+        this._operationalReadinessTimeline = [event]
+            .concat(this._operationalReadinessTimeline || [])
+            .filter((item, index, values) => values.findIndex(candidate => candidate.id === item.id) === index)
+            .slice(0, 20);
+        let publisher = SERVICE.DefaultBackofficeAuditService;
+        if (publisher && typeof publisher.record === 'function') {
+            Promise.resolve(publisher.record(event)).catch(() => false);
+        }
+        return snapshot;
+    },
     /** Builds the canonical post-reset operational readiness aggregate for Axis and tooling. */
     operationalReadinessReport: async function (request, context) {
         context = context || {};
@@ -1160,7 +1223,7 @@ module.exports = {
             result.blockers += (section.blockers || []).length;
             return result;
         }, { total: 0, blockers: 0 });
-        return {
+        let report = {
             contractVersion: 1,
             state: summary.BLOCKED || summary.NOT_READY ? 'NOT_READY' : summary.NEEDS_ATTENTION || summary.NOT_EXPOSED ? 'NEEDS_ATTENTION' : 'READY',
             checkedAt: new Date().toISOString(),
@@ -1168,6 +1231,18 @@ module.exports = {
             summary: summary,
             sections: sections,
         };
+        let snapshot = this.recordOperationalReadinessSnapshot(report, Object.assign({}, context, {
+            tenant: request && request.tenant,
+        }));
+        report.summary = Object.assign({}, report.summary, {
+            latestSnapshot: {
+                state: snapshot.state,
+                checkedAt: snapshot.checkedAt,
+                blockerCount: snapshot.blockerCount,
+            },
+            timeline: this.operationalReadinessTimeline(),
+        });
+        return report;
     },
     /** Records auditable acknowledgement for one active startup finding. */
     acknowledgeFinding: function (request) {

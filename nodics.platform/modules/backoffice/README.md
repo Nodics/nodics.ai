@@ -45,6 +45,10 @@ and `test/functionalModuleConcurrency.test.js` for concurrency guarantees.
 - Return compact preparation operation evidence for setup-only capability
   repairs so Axis can show before/after readiness without inspecting import
   internals.
+- Aggregate operational readiness snapshots and a bounded timeline from
+  backend-owned evidence. Axis may render these snapshots, but BackOffice
+  remains responsible for source, state, blocker count, and next-action
+  semantics.
 
 ## Explicit Exclusions
 
@@ -78,6 +82,22 @@ by BackOffice.
 Module registration uses the separate Nodics service-to-service identity path.
 Registration must be idempotent, environment-bound, auditable, retryable with
 bounded backoff, and safe when BackOffice is unavailable.
+
+## Operational Readiness Timeline
+
+The secured bootstrap contract includes `operationalReadiness`, a canonical
+aggregate across startup validation, runtime registration, imports, publishing,
+approval, documentation, media, search, assistant knowledge, application parity,
+and acceptance evidence. Every aggregate call records an in-memory, client-safe
+snapshot and appends a bounded timeline event. Events are emitted best-effort to
+the configured audit publisher and must never expose credentials, private
+tokens, internal-only URLs, or raw target payloads.
+
+The timeline exists to guide operators after reset/start/import/publish cycles:
+it shows the latest state, checked time, blocker count, and owning source. Any
+new readiness contributor must be implemented in its owning framework module and
+then projected through BackOffice. Customer projects must not duplicate
+readiness logic merely to make Axis display a green status.
 
 Authenticated presentation, lifecycle listings, receipt reads and lease
 reconciliation read every page of the project/tenant functional
