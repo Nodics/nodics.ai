@@ -18,6 +18,7 @@ const publication = { runtimeRole: 'STAGED', baselines: { axis: { releaseCode: '
 global.CONFIG = { get: key => key === 'cms' ? { publication: publication } : undefined };
 
 let releaseStatus = 'NOT_INSTALLED';
+let releaseVersion = '0.0.0';
 let lifecycle;
 let targetLineage;
 let targetLineageError;
@@ -38,7 +39,7 @@ global.SERVICE = {
         }
     },
     DefaultDataReleaseService: {
-        getCatalogue: async () => ({ data: [{ releaseCode: 'axis:axisBaseline', version: '0.0.0',
+        getCatalogue: async () => ({ data: [{ releaseCode: 'axis:axisBaseline', version: releaseVersion,
             destinationRole: 'WCMS_STAGED', lifecycle: 'PUBLISHABLE', initialPublicationPolicy: 'ADMIN_INITIATED',
             checksum: 'release-checksum', publicationReview: {
                 title: 'Publish Axis', summary: 'Review Axis', sourceRole: 'WCMS_STAGED', targetRole: 'WCMS_ONLINE',
@@ -153,6 +154,12 @@ const request = { tenant: 'default', authData: { principalId: 'platform-service'
     releaseStatus = 'CURRENT';
     const missingPublication = await service.status('axis', request);
     assert.strictEqual(missingPublication.publicationDiagnostic.status, 'PUBLICATION_NOT_CREATED');
+    releaseVersion = '9.9.9';
+    const invalidRelease = await service.status('axis', request);
+    assert.strictEqual(invalidRelease.readiness, 'BLOCKED');
+    assert.strictEqual(invalidRelease.releaseStatus, 'INVALID_RELEASE');
+    assert.strictEqual(invalidRelease.publicationDiagnostic.status, 'STAGED_SOURCE_INVALID_RELEASE');
+    releaseVersion = '0.0.0';
     publication.runtimeRole = 'ONLINE';
     await assert.rejects(service.status('axis', request), error => error.code === 'CMS_BASELINE_SOURCE_ROLE_INVALID');
     console.log('CMS publication baseline service validated');

@@ -1934,6 +1934,7 @@ module.exports = {
       workflowRef: repairedWorkflowRef ? String(repairedWorkflowRef) : undefined,
       previousApprovalStatus: previousDiagnostic.status,
       approvalStatus: repairedDiagnostic.status,
+      previousTaskCode: previousDiagnostic.taskCode,
       taskCode: repairedDiagnostic.taskCode,
       publicationCode: repairedPublication.code
         ? String(repairedPublication.code)
@@ -1943,6 +1944,21 @@ module.exports = {
       message: repairedWorkflowRef
         ? "Publication approval workflow was reconciled. Review the Process task for decision."
         : "Publication approval could not be reconciled automatically. Review Process workflow state.",
+    };
+  },
+  /** Builds a bounded proof bundle for approval reconciliation requests. */
+  approvalRepairBinding: function (status) {
+    let publication = status && status.publication || {};
+    let diagnostic = publication.approvalDiagnostic || {};
+    if (!diagnostic.workflowRef && !publication.workflowRef) return undefined;
+    return {
+      source: "PUBLICATION_APPROVAL",
+      publicationCode: publication.code ? String(publication.code) : undefined,
+      publicationRevision: publication.revision,
+      workflowRef: diagnostic.workflowRef || publication.workflowRef,
+      taskCode: diagnostic.taskCode,
+      taskStatus: diagnostic.taskStatus,
+      approvalStatus: diagnostic.status,
     };
   },
   /** Runs only profile-owned setup preparation, then returns the refreshed readiness projection. */
@@ -2052,9 +2068,11 @@ module.exports = {
         timeoutMs: profile.target.timeoutMs,
         maxAttempts: profile.target.maxAttempts,
         header: { Authorization: "Bearer " + token },
-      })
+        })
         .then((response) => (response && (response.data || response.result || response)) || {})
         .catch(() => undefined);
+      let binding = this.approvalRepairBinding(repairBefore);
+      if (binding) body.approvalRepairBinding = binding;
     }
     return SERVICE.DefaultModuleService.invokeModule({
       moduleName: profile.target.moduleName,

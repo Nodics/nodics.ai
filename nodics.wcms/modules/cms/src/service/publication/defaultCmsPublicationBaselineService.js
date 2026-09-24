@@ -129,6 +129,9 @@ module.exports = {
                 label: 'Install staged source', available: true, idempotent: true },
             STAGED_SOURCE_IMPORTING: { action: 'REFRESH_STAGED_SOURCE', operation: 'cmsPublicationBaseline.status',
                 label: 'Refresh staged source', available: true, idempotent: true },
+            STAGED_SOURCE_INVALID_RELEASE: { action: 'REPAIR_STAGED_SOURCE_MANIFEST',
+                operation: 'dataRelease.repairManifest', label: 'Repair staged source manifest',
+                available: false, idempotent: true },
             PUBLICATION_NOT_CREATED: { action: 'CREATE_PUBLICATION', operation: 'cmsPublicationBaseline.initiate',
                 label: 'Create publication', available: true, idempotent: true },
             PUBLICATION_VALIDATION_PENDING: { action: 'VALIDATE_PUBLICATION', operation: 'cmsPublicationBaseline.initiate',
@@ -160,7 +163,8 @@ module.exports = {
     publicationDiagnostic: function (descriptor, release, publication, target, targetEvidenceError, approvalDiagnostic, transitions) {
         let state = publication && publication.state;
         let lastTransition = transitions && transitions.length ? transitions[transitions.length - 1] : undefined;
-        let status = release.status === 'RUNNING' ? 'STAGED_SOURCE_IMPORTING' :
+        let status = release.status === 'INVALID_RELEASE' ? 'STAGED_SOURCE_INVALID_RELEASE' :
+            release.status === 'RUNNING' ? 'STAGED_SOURCE_IMPORTING' :
             release.status !== 'CURRENT' ? 'STAGED_SOURCE_NOT_INSTALLED' :
                 !publication ? 'PUBLICATION_NOT_CREATED' :
                     ['STAGED', 'VALIDATING'].includes(state) ? 'PUBLICATION_VALIDATION_PENDING' :
@@ -182,6 +186,7 @@ module.exports = {
         let messages = {
             STAGED_SOURCE_NOT_INSTALLED: 'The publishable Staged source is not installed/current.',
             STAGED_SOURCE_IMPORTING: 'The publishable Staged source is still importing.',
+            STAGED_SOURCE_INVALID_RELEASE: 'The publishable Staged source manifest or runtime contract is invalid.',
             PUBLICATION_NOT_CREATED: 'The Staged source is current, but no publication lifecycle receipt exists.',
             PUBLICATION_VALIDATION_PENDING: 'The publication exists and must complete validation.',
             PUBLICATION_APPROVAL_NOT_REQUESTED: 'The publication is validated but approval has not been requested.',
@@ -249,6 +254,24 @@ module.exports = {
         }
         return { nodes: nodes, edges: edges };
     },
+    /** Builds a non-throwing readiness projection when source qualification itself fails. */
+    invalidReleaseStatus: function (descriptor, error) {
+        let release = {
+            releaseCode: descriptor.releaseCode || 'contentPack:' + descriptor.contentPackCode,
+            version: descriptor.releaseVersion,
+            status: 'INVALID_RELEASE',
+            sourceKind: descriptor.contentPackCode ? 'CONTENT_PACK' : 'DATA_RELEASE',
+            errorCode: error && (error.code || error.message)
+        };
+        let diagnostic = this.publicationDiagnostic(descriptor, release, undefined, undefined,
+            error && (error.code || error.message), undefined, []);
+        return { baselineCode: descriptor.code, releaseCode: release.releaseCode, releaseVersion: release.version,
+            releaseStatus: release.status, readiness: 'BLOCKED',
+            publicationDiagnostic: diagnostic,
+            publicationDependencyGraph: this.publicationDependencyGraph(descriptor, release),
+            lineage: { source: { releaseCode: release.releaseCode, releaseVersion: release.version,
+                sourceVersion: descriptor.sourceVersion }, targetEvidenceError: error && (error.code || error.message) } };
+    },
     /** Waits briefly for a cross-runtime approval callback to finish its local Online transition. */
     onlinePublication: async function (descriptor, request) {
         let publication;
@@ -290,7 +313,13 @@ module.exports = {
     status: async function (code, request) {
         this.assertStaged();
         let descriptor = this.descriptor(code);
-        let release = await this.release(descriptor, request);
+        let release;
+        try {
+            release = await this.release(descriptor, request);
+        } catch (error) {
+            if (error && error.code === 'CMS_BASELINE_RELEASE_INVALID') return this.invalidReleaseStatus(descriptor, error);
+            throw error;
+        }
         let publication = await this.publication(descriptor, request);
         let state = publication && publication.state;
         let lastAudit = publication && Array.isArray(publication.auditTrail) && publication.auditTrail.length

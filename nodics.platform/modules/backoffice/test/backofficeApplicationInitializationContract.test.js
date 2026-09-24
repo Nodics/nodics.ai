@@ -320,7 +320,12 @@ global.fetch = async (url) => {
           code: "cmsBaseline_nexus_0_0_0",
           state: "PENDING_APPROVAL",
           workflowRef: "workflow-cmsBaseline_nexus_0_0_0-1",
-          approvalDiagnostic: { status: "TASK_REFERENCE_MISSING" },
+          approvalDiagnostic: {
+            status: "TASK_REFERENCE_MISSING",
+            workflowRef: "workflow-cmsBaseline_nexus_0_0_0-1",
+            taskCode: "missing-approval-task",
+            taskStatus: "MISSING",
+          },
         },
       },
     };
@@ -364,6 +369,15 @@ global.fetch = async (url) => {
     "Approval reconciliation must replay the owning baseline workflow through the target authority",
   );
   assert.strictEqual(reconcileRequest.requestBody.forceRefresh, true);
+  assert.deepStrictEqual(reconcileRequest.requestBody.approvalRepairBinding, {
+    source: "PUBLICATION_APPROVAL",
+    publicationCode: "cmsBaseline_nexus_0_0_0",
+    publicationRevision: undefined,
+    workflowRef: "workflow-cmsBaseline_nexus_0_0_0-1",
+    taskCode: "missing-approval-task",
+    taskStatus: "MISSING",
+    approvalStatus: "TASK_REFERENCE_MISSING",
+  });
   assert.strictEqual(
     reconcileRequest.idempotencyKey,
     "nexus:reconcileApproval:repair-corr-1",
@@ -376,6 +390,7 @@ global.fetch = async (url) => {
     workflowRef: "workflow-cmsBaseline_nexus_0_0_0-2",
     previousApprovalStatus: "TASK_REFERENCE_MISSING",
     approvalStatus: "WAITING_REVIEWER",
+    previousTaskCode: "missing-approval-task",
     taskCode: "approval-task",
     publicationCode: "cmsBaseline_nexus_0_0_0",
     message:
