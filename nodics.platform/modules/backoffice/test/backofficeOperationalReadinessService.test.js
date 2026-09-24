@@ -213,6 +213,22 @@ async function validateDeliveryAndProductionPolicy() {
     assert.strictEqual(acceptanceSection.summary.onlineProfileCount, 1);
     assert(acceptanceSection.blockers.some(blocker => blocker.code === 'BROWSER_VALIDATION_EVIDENCE_REQUIRED'
         && blocker.repair.operation === 'tooling.acceptance.browserValidation'));
+    tooling.acceptance.browserValidation.latestEvidence = {
+        state: 'PASSED',
+        checkedAt: '2026-09-24T00:00:00.000Z',
+        runId: 'browser-smoke-1',
+        command: 'npm run acceptance:local',
+        urls: ['http://localhost:3100/dashboard', 'http://localhost:3600'],
+        message: 'Axis and Circa browser smoke passed.'
+    };
+    let acceptedSection = service.acceptanceSection({ statuses: [{
+        capability: { businessStatus: 'ONLINE' }
+    }], errors: [] });
+    assert.strictEqual(acceptedSection.businessStatus, 'READY');
+    assert.strictEqual(acceptedSection.summary.browserValidationState, 'PASSED');
+    assert.strictEqual(acceptedSection.summary.browserValidationRunId, 'browser-smoke-1');
+    assert.strictEqual(acceptedSection.blockers.length, 0);
+    delete tooling.acceptance.browserValidation.latestEvidence;
     assert(aggregateReport.sections.find(section => section.key === 'bootstrap').blockers
         .some(blocker => blocker.code === 'MISSING_TEST_PROPERTY' && blocker.repair.operation === 'runtimeConfiguration.update'));
     global.SERVICE.DefaultModuleService = originalModuleService;

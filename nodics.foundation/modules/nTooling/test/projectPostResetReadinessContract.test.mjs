@@ -74,6 +74,21 @@ test('post-reset readiness report derives recovery evidence from environment top
     assert.equal(report.sections.find(section => section.id === 'publishing').evidence.publicationProfiles[0], 'circaewaste');
     assert(report.commands.some(command => command.command === 'project:data-manifests'));
     assert.match(formatPostResetReadinessReport(report), /Post-reset readiness: acme\.recovery \/ recoveryLocal/);
+
+    const passedReport = await buildPostResetReadinessReport(projectRoot, 'recoveryLocal', {
+      browserValidationEvidence: {
+        state: 'PASSED',
+        checkedAt: '2026-09-24T00:00:00.000Z',
+        runId: 'browser-smoke-1',
+        command: 'npm run acceptance:local',
+        urls: ['http://localhost:3100/dashboard', 'http://localhost:3600'],
+        message: 'Axis and Circa browser smoke passed.',
+      },
+    });
+    const browserSection = passedReport.sections.find(section => section.id === 'browserValidation');
+    assert.equal(browserSection.state, 'READY');
+    assert.equal(browserSection.evidence.latestEvidence.state, 'PASSED');
+    assert.equal(browserSection.evidence.latestEvidence.runId, 'browser-smoke-1');
   } finally {
     fs.rmSync(projectRoot, { recursive: true, force: true });
   }

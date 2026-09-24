@@ -50,6 +50,29 @@ module.exports = {
         return ['sample', 'local', 'test', 'default', 'change-me', 'changeme', 'placeholder']
             .some(fragment => normalized.includes(fragment));
     },
+    /** Normalizes browser-validation evidence from tooling/runtime configuration without exposing secrets. */
+    browserValidationEvidence: function (browserValidation) {
+        browserValidation = browserValidation || {};
+        let evidence = browserValidation.latestEvidence || browserValidation.evidence || {};
+        let allowed = ['PASSED', 'FAILED', 'SKIPPED', 'STALE', 'NOT_RUN'];
+        let state = allowed.includes(String(evidence.state || '').toUpperCase()) ?
+            String(evidence.state).toUpperCase() : 'NOT_RUN';
+        return {
+            state: state,
+            checkedAt: evidence.checkedAt ? String(evidence.checkedAt) : undefined,
+            runId: evidence.runId ? String(evidence.runId) : undefined,
+            command: evidence.command ? String(evidence.command) : undefined,
+            urls: [].concat(evidence.urls || []).map(item => String(item)),
+            failedStep: evidence.failedStep ? String(evidence.failedStep) : undefined,
+            message: evidence.message ? String(evidence.message) : state === 'PASSED' ?
+                'Browser validation passed.' : state === 'SKIPPED' ?
+                    'Browser validation was skipped.' : 'Browser validation evidence is not passing.',
+            nextAction: evidence.nextAction ? String(evidence.nextAction) : state === 'PASSED' ?
+                'Refresh Axis readiness and continue acceptance.' : state === 'SKIPPED' ?
+                    'Enable browser validation only where a browser runner is available.' :
+                    'Run the local browser smoke and refresh readiness evidence.',
+        };
+    },
     /** Creates one client-safe startup finding. */
     startupFinding: function (code, severity, owner, message, action, options) {
         options = options || {};
@@ -328,6 +351,7 @@ module.exports = {
         let statuses = [].concat((profileStatusReport || {}).statuses || []);
         let errors = [].concat((profileStatusReport || {}).errors || []);
         let browserEnabled = browserValidation.enabled === true;
+        let browserEvidence = this.browserValidationEvidence(browserValidation);
         let reason = browserValidation.reason ? String(browserValidation.reason) :
             browserEnabled ? 'Browser validation is enabled for this environment.' :
                 'Browser validation is disabled by configuration.';
@@ -359,16 +383,24 @@ module.exports = {
             { repairOperation: 'applicationInitialization.reviewProfiles', repairAction: 'REVIEW_APPLICATION_PARITY',
                 suggestedAction: 'Open Setup & Accelerators and bring pending applications or documentation packs Online before final acceptance.' }
         ));
-        if (browserEnabled) blockers.push(this.readinessBlocker(
-            'BROWSER_VALIDATION_EVIDENCE_REQUIRED',
-            'NEEDS_ATTENTION',
-            'ACCEPTANCE',
-            'NTOOLING_BROWSER_VALIDATION',
-            'Run local browser validation',
-            'Browser validation is enabled for this environment but the latest captured evidence is not attached to readiness.',
-            { repairOperation: 'tooling.acceptance.browserValidation', repairAction: 'CAPTURE_BROWSER_VALIDATION',
-                suggestedAction: 'Run the local acceptance/browser smoke and refresh Axis after evidence is captured.' }
-        ));
+        if (browserEnabled && browserEvidence.state !== 'PASSED' && browserEvidence.state !== 'SKIPPED') {
+            let evidenceCode = browserEvidence.state === 'FAILED' ? 'BROWSER_VALIDATION_FAILED' :
+                browserEvidence.state === 'STALE' ? 'BROWSER_VALIDATION_EVIDENCE_STALE' :
+                    'BROWSER_VALIDATION_EVIDENCE_REQUIRED';
+            blockers.push(this.readinessBlocker(
+                evidenceCode,
+                browserEvidence.state === 'FAILED' ? 'BLOCKED' : 'NEEDS_ATTENTION',
+                'ACCEPTANCE',
+                'NTOOLING_BROWSER_VALIDATION',
+                'Run local browser validation',
+                browserEvidence.message || 'Browser validation evidence is not passing.',
+                { repairOperation: 'tooling.acceptance.browserValidation', repairAction: 'CAPTURE_BROWSER_VALIDATION',
+                    suggestedAction: browserEvidence.nextAction || 'Run the local acceptance/browser smoke and refresh Axis after evidence is captured.' }
+            ));
+            blockers[blockers.length - 1].browserValidationState = browserEvidence.state;
+            blockers[blockers.length - 1].failedStep = browserEvidence.failedStep;
+            blockers[blockers.length - 1].checkedAt = browserEvidence.checkedAt;
+        }
         let businessStatus = blockers.length ? 'NEEDS_ATTENTION' :
             statuses.length ? 'READY' : browserEnabled ? 'NEEDS_ATTENTION' : 'NOT_CONFIGURED';
         return {
@@ -381,6 +413,10 @@ module.exports = {
             summary: {
                 browserValidationEnabled: browserEnabled,
                 browserValidationReason: reason,
+                browserValidationState: browserEnabled ? browserEvidence.state : 'SKIPPED',
+                browserValidationCheckedAt: browserEvidence.checkedAt,
+                browserValidationRunId: browserEvidence.runId,
+                browserValidationFailedStep: browserEvidence.failedStep,
                 profileCount: statuses.length,
                 onlineProfileCount: online,
                 pendingProfileCount: pending,

@@ -77,6 +77,44 @@ function redact(value) {
   }));
 }
 
+function normalizeBrowserValidationEvidence(value) {
+  if (!isRecord(value)) return {
+    state: 'NOT_RUN',
+    checkedAt: undefined,
+    runId: undefined,
+    command: undefined,
+    urls: [],
+    failedStep: undefined,
+    message: 'No browser-validation evidence has been captured.',
+    nextAction: 'Run the local browser smoke and refresh readiness evidence.',
+  };
+  const allowedStates = ['PASSED', 'FAILED', 'SKIPPED', 'STALE', 'NOT_RUN'];
+  const state = allowedStates.includes(String(value.state || '').toUpperCase()) ?
+    String(value.state).toUpperCase() : 'NOT_RUN';
+  return redact({
+    state,
+    checkedAt: value.checkedAt ? String(value.checkedAt) : undefined,
+    runId: value.runId ? String(value.runId) : undefined,
+    command: value.command ? String(value.command) : undefined,
+    urls: safeArray(value.urls).map(item => String(item)),
+    failedStep: value.failedStep ? String(value.failedStep) : undefined,
+    message: value.message ? String(value.message) : state === 'PASSED' ?
+      'Browser validation passed.' : state === 'SKIPPED' ?
+        'Browser validation was skipped.' : 'Browser validation evidence is not passing.',
+    nextAction: value.nextAction ? String(value.nextAction) : state === 'PASSED' ?
+      'Refresh Axis readiness and continue acceptance.' : state === 'SKIPPED' ?
+        'Enable browser validation only where a browser runner is available.' :
+        'Run the local browser smoke and refresh readiness evidence.',
+  });
+}
+
+function browserValidationSectionState(enabled, evidence) {
+  if (!enabled) return 'SKIPPED';
+  if (!evidence || evidence.state === 'NOT_RUN') return 'NEEDS_ATTENTION';
+  if (evidence.state === 'PASSED' || evidence.state === 'SKIPPED') return 'READY';
+  return 'NOT_READY';
+}
+
 function classifyHttpStatus(status) {
   if (status === 401 || status === 403) return 'UNAUTHORIZED';
   if (status === 404) return 'NOT_CONFIGURED';
@@ -95,6 +133,11 @@ async function readAccessToken(options = {}) {
   }
   if (process.env.NODICS_BACKOFFICE_ACCESS_TOKEN) return process.env.NODICS_BACKOFFICE_ACCESS_TOKEN.trim();
   return '';
+}
+
+async function readJsonFile(filePath) {
+  if (!filePath) return undefined;
+  return JSON.parse(await fs.readFile(String(filePath), 'utf8'));
 }
 
 async function fetchJson(url, options = {}) {
@@ -317,6 +360,9 @@ export async function buildPostResetReadinessReport(projectRoot, environmentCode
   const live = options.live === true;
   const platformUrl = deriveRuntimeUrl(configuration, configuration.acceptance?.functionalJourney?.runtimes?.platform || { role: 'PLATFORM' });
   const browserValidationEnabled = configuration.acceptance?.browserValidation?.enabled === true;
+  const browserValidationEvidence = normalizeBrowserValidationEvidence(options.browserValidationEvidence ||
+    configuration.acceptance?.browserValidation?.latestEvidence ||
+    configuration.acceptance?.browserValidation?.evidence);
   const runtimes = runtimeEvidence(configuration);
   const liveBootstrap = await authenticatedBackofficeBootstrap(platformUrl, {
     ...options,
@@ -405,10 +451,11 @@ export async function buildPostResetReadinessReport(projectRoot, environmentCode
       liveBootstrap.ok ? 'BackOffice application initialization profiles were inspected.' : 'Validate customer-facing app profiles through the same import/publication/runtime evidence.',
       { publicationProfiles: derivePublicationProfiles(configuration), applications, readiness: applicationSection },
       'Check each profile for Online state, media/search dependencies, and browser smoke where enabled.'),
-    section('browserValidation', 'Browser validation evidence', browserValidationEnabled ? 'NEEDS_ATTENTION' : 'SKIPPED',
+    section('browserValidation', 'Browser validation evidence', browserValidationSectionState(browserValidationEnabled, browserValidationEvidence),
       browserValidationEnabled ? 'Browser validation is enabled for this environment.' : 'Browser validation skipped by configuration.',
-      { enabled: browserValidationEnabled, localOnly: true },
-      browserValidationEnabled ? 'Capture configured local browser evidence.' : 'Enable only in local environments where browser/frontend URLs are available.'),
+      { enabled: browserValidationEnabled, localOnly: true, latestEvidence: browserValidationEvidence },
+      browserValidationEnabled && browserValidationEvidence.state !== 'PASSED' ?
+        browserValidationEvidence.nextAction : 'Enable only in local environments where browser/frontend URLs are available.'),
     section('diagnostics', 'Support-safe diagnostics export', 'READY',
       'This report is path-light and secret-free; attach it to support/debug threads when investigating reset recovery.',
       { generatedAt: new Date().toISOString() },
@@ -461,6 +508,7 @@ async function main() {
     timeoutMs: Number(optionValue(args, 'timeout-ms', '2000')),
     accessToken: optionValue(args, 'access-token', ''),
     accessTokenFile: optionValue(args, 'access-token-file', ''),
+    browserValidationEvidence: await readJsonFile(optionValue(args, 'browser-validation-evidence-file', '')),
     clientContractVersion: Number(optionValue(args, 'client-contract-version', '1')),
   });
   if (args.includes('--json')) console.log(JSON.stringify(report, null, 2));
