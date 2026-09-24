@@ -71,7 +71,42 @@ module.exports = {
                 'Refresh Axis readiness and continue acceptance.' : state === 'SKIPPED' ?
                     'Enable browser validation only where a browser runner is available.' :
                     'Run the local browser smoke and refresh readiness evidence.',
+            source: evidence.source ? String(evidence.source) : evidence.evidenceFile ? 'GENERATED_FILE' : 'CONFIGURATION',
+            evidenceFile: evidence.evidenceFile ? String(evidence.evidenceFile) : undefined,
         };
+    },
+    /** Resolves browser-validation evidence from the nTooling owner contract, context, or layered configuration. */
+    resolveBrowserValidationEvidence: function (browserValidation, context) {
+        context = context || {};
+        if (context.acceptanceEvidence) return this.browserValidationEvidence({
+            latestEvidence: Object.assign({ source: 'OPERATIONAL_READINESS_CONTEXT' }, context.acceptanceEvidence)
+        });
+        let provider = SERVICE.DefaultToolingAcceptanceEvidenceService;
+        if (provider && typeof provider.latestBrowserValidationEvidence === 'function') {
+            try {
+                let evidence = provider.latestBrowserValidationEvidence(context);
+                if (evidence) return this.browserValidationEvidence({
+                    latestEvidence: Object.assign({ source: 'NTOOLING_ACCEPTANCE_EVIDENCE' }, evidence)
+                });
+            } catch (error) {
+                return this.browserValidationEvidence({ latestEvidence: {
+                    state: 'FAILED',
+                    source: 'NTOOLING_ACCEPTANCE_EVIDENCE',
+                    failedStep: 'latestBrowserValidationEvidence',
+                    message: 'Browser-validation evidence provider failed: ' + String(error.code || error.message || error),
+                    nextAction: 'Run acceptance, refresh post-reset readiness evidence, and retry Axis bootstrap.',
+                } });
+            }
+        }
+        return this.browserValidationEvidence(browserValidation);
+    },
+    /** Returns operator command guidance for the acceptance evidence loop. */
+    acceptanceOperatorCommands: function () {
+        return [
+            'npm run docker-local:acceptance',
+            'npm run project:post-reset-readiness -- --live --json',
+            'Refresh Axis dashboard bootstrap',
+        ];
     },
     /** Creates one client-safe startup finding. */
     startupFinding: function (code, severity, owner, message, action, options) {
@@ -344,14 +379,15 @@ module.exports = {
         };
     },
     /** Summarizes local acceptance and optional browser-validation evidence without making browsers mandatory outside opted-in environments. */
-    acceptanceSection: function (profileStatusReport) {
+    acceptanceSection: function (profileStatusReport, context) {
         let tooling = CONFIG.get('tooling') || {};
         let acceptance = tooling.acceptance || {};
         let browserValidation = acceptance.browserValidation || {};
         let statuses = [].concat((profileStatusReport || {}).statuses || []);
         let errors = [].concat((profileStatusReport || {}).errors || []);
         let browserEnabled = browserValidation.enabled === true;
-        let browserEvidence = this.browserValidationEvidence(browserValidation);
+        let browserEvidence = this.resolveBrowserValidationEvidence(browserValidation, context);
+        let operatorCommands = this.acceptanceOperatorCommands();
         let reason = browserValidation.reason ? String(browserValidation.reason) :
             browserEnabled ? 'Browser validation is enabled for this environment.' :
                 'Browser validation is disabled by configuration.';
@@ -417,6 +453,11 @@ module.exports = {
                 browserValidationCheckedAt: browserEvidence.checkedAt,
                 browserValidationRunId: browserEvidence.runId,
                 browserValidationFailedStep: browserEvidence.failedStep,
+                browserValidationSource: browserEvidence.source,
+                browserValidationEvidenceFile: browserEvidence.evidenceFile,
+                browserValidationCommand: browserEvidence.command,
+                browserValidationNextAction: browserEvidence.nextAction,
+                operatorCommands: operatorCommands,
                 profileCount: statuses.length,
                 onlineProfileCount: online,
                 pendingProfileCount: pending,
@@ -424,7 +465,7 @@ module.exports = {
                 blockerCount: blockers.length,
             },
             blockers: blockers,
-            nextAction: blockers.length ? 'Complete application parity and capture configured local browser-validation evidence.' :
+            nextAction: blockers.length ? 'Complete application parity and capture configured local browser-validation evidence. Commands: ' + operatorCommands.join(' -> ') :
                 statuses.length ? 'Acceptance readiness has no detected blockers.' :
                     'Configure acceptance profiles or keep browser validation disabled until a local runner is available.',
         };
@@ -1111,7 +1152,7 @@ module.exports = {
             this.searchSection(context),
             this.assistantSection(),
             this.applicationSection(context.applicationInitializationProfiles),
-            this.acceptanceSection(profileStatusReport),
+            this.acceptanceSection(profileStatusReport, context),
         ];
         let summary = sections.reduce((result, section) => {
             result.total++;

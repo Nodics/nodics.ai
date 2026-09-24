@@ -229,6 +229,48 @@ async function validateDeliveryAndProductionPolicy() {
     assert.strictEqual(acceptedSection.summary.browserValidationRunId, 'browser-smoke-1');
     assert.strictEqual(acceptedSection.blockers.length, 0);
     delete tooling.acceptance.browserValidation.latestEvidence;
+    global.SERVICE.DefaultToolingAcceptanceEvidenceService = {
+        latestBrowserValidationEvidence: () => ({
+            state: 'PASSED',
+            checkedAt: '2026-09-24T00:05:00.000Z',
+            runId: 'provider-browser-smoke',
+            command: 'npm run docker-local:acceptance',
+            evidenceFile: 'envs/kickoffLocal/generated/acceptance/browser-validation-evidence.json',
+            urls: ['http://localhost:3100/dashboard']
+        })
+    };
+    let bridgedSection = service.acceptanceSection({ statuses: [{
+        capability: { businessStatus: 'ONLINE' }
+    }], errors: [] }, { environment: 'kickoffLocal' });
+    assert.strictEqual(bridgedSection.businessStatus, 'READY');
+    assert.strictEqual(bridgedSection.summary.browserValidationState, 'PASSED');
+    assert.strictEqual(bridgedSection.summary.browserValidationSource, 'NTOOLING_ACCEPTANCE_EVIDENCE');
+    assert.strictEqual(bridgedSection.summary.browserValidationEvidenceFile,
+        'envs/kickoffLocal/generated/acceptance/browser-validation-evidence.json');
+    assert.deepStrictEqual(bridgedSection.summary.operatorCommands, [
+        'npm run docker-local:acceptance',
+        'npm run project:post-reset-readiness -- --live --json',
+        'Refresh Axis dashboard bootstrap'
+    ]);
+    global.SERVICE.DefaultToolingAcceptanceEvidenceService = {
+        latestBrowserValidationEvidence: () => ({
+            state: 'FAILED',
+            checkedAt: '2026-09-24T00:06:00.000Z',
+            runId: 'provider-browser-smoke-failed',
+            failedStep: 'circaMiniApp',
+            message: 'Circa browser validation failed.',
+            nextAction: 'Fix Circa local URL and rerun acceptance.'
+        })
+    };
+    let failedBridgeSection = service.acceptanceSection({ statuses: [{
+        capability: { businessStatus: 'ONLINE' }
+    }], errors: [] }, { environment: 'kickoffLocal' });
+    assert.strictEqual(failedBridgeSection.businessStatus, 'NEEDS_ATTENTION');
+    assert.strictEqual(failedBridgeSection.summary.browserValidationState, 'FAILED');
+    assert.strictEqual(failedBridgeSection.summary.browserValidationFailedStep, 'circaMiniApp');
+    assert(failedBridgeSection.blockers.some(blocker => blocker.code === 'BROWSER_VALIDATION_FAILED'
+        && blocker.suggestedAction === 'Fix Circa local URL and rerun acceptance.'));
+    delete global.SERVICE.DefaultToolingAcceptanceEvidenceService;
     assert(aggregateReport.sections.find(section => section.key === 'bootstrap').blockers
         .some(blocker => blocker.code === 'MISSING_TEST_PROPERTY' && blocker.repair.operation === 'runtimeConfiguration.update'));
     global.SERVICE.DefaultModuleService = originalModuleService;
