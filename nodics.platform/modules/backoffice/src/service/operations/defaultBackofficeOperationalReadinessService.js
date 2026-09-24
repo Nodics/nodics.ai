@@ -325,6 +325,8 @@ module.exports = {
                 label: String(options.repairLabel || action || 'Review readiness'),
             },
             suggestedAction: String(options.suggestedAction || action || 'Review readiness'),
+            businessImpact: String(options.businessImpact || 'This readiness issue can block reliable local recovery, publication, or go-live validation.'),
+            recoveryHint: String(options.recoveryHint || options.suggestedAction || action || 'Review the owning workspace and refresh readiness.'),
         };
     },
     /** Normalizes one active runtime observation for operator-safe communication diagnostics. */
@@ -722,6 +724,7 @@ module.exports = {
         if (!repair.action) repair.action = repair.actionCode || 'REPAIR_DATA_RELEASE';
         if (!repair.eligibility) repair.eligibility = repair.available === true ? 'MANUAL' : 'NOT_AVAILABLE';
         if (!repair.label) repair.label = action;
+        if (repair.available === undefined) repair.available = repair.eligibility === 'MANUAL' || repair.eligibility === 'AUTOMATIC';
         return {
             blockerCode: String(blocker.blockerCode || blocker.code || 'DATA_RELEASE_NOT_READY'),
             code: String(blocker.code || blocker.blockerCode || 'DATA_RELEASE_NOT_READY'),
@@ -733,6 +736,8 @@ module.exports = {
             disabledReason: String(blocker.disabledReason || blocker.message || 'Data release is not ready.'),
             repair: repair,
             suggestedAction: String(blocker.suggestedAction || action),
+            businessImpact: String(blocker.businessImpact || 'Required business data may be missing or stale, so application setup and publication validation can be misleading.'),
+            recoveryHint: String(blocker.recoveryHint || blocker.suggestedAction || action || 'Repair the data release in the import workspace and refresh readiness.'),
             ownerModule: release.moduleName || (release.readiness || {}).owningModule,
             releaseCode: release.releaseCode,
             dataType: target.dataType,
@@ -778,6 +783,37 @@ module.exports = {
         });
         return Object.values(groups).sort((left, right) => left.code.localeCompare(right.code));
     },
+    /** Returns a stable unique compact array for client-safe dashboard summaries. */
+    uniqueValues: function (items) {
+        return [].concat(items || []).filter(Boolean).map(item => String(item))
+            .filter((item, index, values) => values.indexOf(item) === index);
+    },
+    /** Extracts safe repair actions from section blockers. */
+    repairActionsForSection: function (blockers) {
+        return this.uniqueValues([].concat(blockers || []).map(blocker => {
+            let repair = blocker && blocker.repair || {};
+            let label = repair.label || blocker.suggestedAction || blocker.action;
+            let operation = repair.operation || 'readiness.review';
+            let action = repair.action || repair.actionCode || blocker.code;
+            return [label, operation, action].filter(Boolean).join(' · ');
+        })).slice(0, 5);
+    },
+    /** Extracts target runtime dependencies from section blockers without exposing credentials. */
+    runtimeDependenciesForSection: function (blockers) {
+        return this.uniqueValues([].concat(blockers || []).map(blocker => {
+            let diagnostic = blocker && blocker.runtimeDiagnostic || {};
+            let server = blocker && blocker.targetServer || diagnostic.server;
+            let role = blocker && blocker.targetRuntimeRole || diagnostic.runtimeRole || diagnostic.runtimeRoleCode;
+            let node = diagnostic.node;
+            return [server, role, node].filter(Boolean).join('/');
+        })).slice(0, 5);
+    },
+    /** Resolves a concise business impact statement for each recovery lane. */
+    laneBusinessImpact: function (section, fallback) {
+        let blockers = [].concat((section || {}).blockers || []);
+        let impact = blockers.map(blocker => blocker && blocker.businessImpact).find(Boolean);
+        return String(impact || fallback || 'Readiness must be resolved before dependable go-live or recovery validation.');
+    },
     /** Creates the business-user recovery lane model consumed by Axis. */
     recoveryLane: function (section, label, description) {
         section = section || {};
@@ -792,6 +828,9 @@ module.exports = {
             route: String(section.route || '/dashboard'),
             blockerCount: blockers.length,
             issueCodes: blockers.map(blocker => blocker.code || blocker.blockerCode).filter(Boolean).slice(0, 4),
+            repairActions: this.repairActionsForSection(blockers),
+            runtimeDependencies: this.runtimeDependenciesForSection(blockers),
+            businessImpact: this.laneBusinessImpact(section),
             nextAction: String(section.nextAction || 'Review the owning workspace.'),
         };
     },
@@ -802,11 +841,15 @@ module.exports = {
             return result;
         }, {});
         return [
+            this.recoveryLane(byKey.runtimeCommunication, 'Verify runtimes', 'Confirm module runtimes, heartbeats, grants, and internal communication.'),
             this.recoveryLane(byKey.imports, 'Import data', 'Install and repair business data releases from owner catalogues.'),
             this.recoveryLane(byKey.publishing, 'Prepare staged publication', 'Prepare staged application and documentation publication profiles.'),
             this.recoveryLane(byKey.approval, 'Complete approvals', 'Resolve governed Process approval tasks before Online publication.'),
             this.recoveryLane(byKey.documentation, 'Publish documentation', 'Install, approve, publish, and index documentation packs.'),
             this.recoveryLane(byKey.media, 'Repair media', 'Create required media objects and reconcile references before Online delivery.'),
+            this.recoveryLane(byKey.search, 'Validate search', 'Confirm database/search rendering policy and index readiness.'),
+            this.recoveryLane(byKey.assistant, 'Index assistant knowledge', 'Confirm governed Assistant sources are registered, indexed, and retrievable.'),
+            this.recoveryLane(byKey.acceptance, 'Capture validation evidence', 'Run configured browser and acceptance checks after repairs.'),
         ];
     },
     /** Builds the owner-backed import release readiness section from nImport catalogue projections. */
@@ -883,6 +926,12 @@ module.exports = {
                 blockerCount: blockers.length,
                 providerErrorCount: providerErrors.length,
                 releaseGroups: releaseGroups,
+                operatorCommands: [
+                    'Open Data Releases',
+                    'Validate blocked release group',
+                    'Install or update selected release',
+                    'Refresh operational readiness',
+                ],
             }, statusCounts),
             blockers: blockers,
             nextAction: blockers.length ? 'Open Data Releases and repair blocked release groups.' :
@@ -915,17 +964,26 @@ module.exports = {
         if (!repair.action) repair.action = repair.actionCode || blocker.code || 'REVIEW_CAPABILITY';
         if (!repair.eligibility) repair.eligibility = repair.available === true ? 'MANUAL' : 'NOT_AVAILABLE';
         if (!repair.label) repair.label = blocker.action || 'Review capability';
+        if (repair.available === undefined) repair.available = repair.eligibility === 'MANUAL' || repair.eligibility === 'AUTOMATIC';
+        let ownerType = String(ownerTypeOverride || blocker.ownerType || 'APPLICATION_CAPABILITY');
         return {
             blockerCode: String(blocker.blockerCode || blocker.code || 'CAPABILITY_NOT_READY'),
             code: String(blocker.code || blocker.blockerCode || 'CAPABILITY_NOT_READY'),
             severity: String(blocker.severity || 'NEEDS_ATTENTION'),
-            ownerType: String(ownerTypeOverride || blocker.ownerType || 'APPLICATION_CAPABILITY'),
+            ownerType: ownerType,
             source: String(blocker.source || 'BACKOFFICE_APPLICATION_INITIALIZATION'),
             action: String(blocker.action || 'Open Setup & Accelerators'),
             message: String(blocker.message || 'Application capability needs attention.'),
             disabledReason: String(blocker.disabledReason || blocker.message || 'Application capability needs attention.'),
             repair: repair,
             suggestedAction: String(blocker.suggestedAction || blocker.action || (status && status.capability && status.capability.nextAction) || 'Open Setup & Accelerators'),
+            businessImpact: String(blocker.businessImpact || (ownerType === 'PROCESS_WORKFLOW' ?
+                'Governed publication cannot move Online until the approval task is actionable and complete.' :
+                ownerType === 'MEDIA_MODULE' ?
+                    'Published pages may show missing images or broken references until media objects and references are reconciled.' :
+                    'The application cannot be treated as Online-ready until the owning capability is repaired.')),
+            recoveryHint: String(blocker.recoveryHint || blocker.suggestedAction || blocker.action ||
+                'Open the owning workspace, complete the repair, and refresh readiness.'),
             profileCode: status && status.profileCode ? String(status.profileCode) : undefined,
             applicationCode: status && status.applicationCode ? String(status.applicationCode) : undefined,
             siteCode: status && status.siteCode ? String(status.siteCode) : undefined,
@@ -970,7 +1028,13 @@ module.exports = {
             source: 'BACKOFFICE_APPLICATION_INITIALIZATION',
             route: '/publishing/setup',
             summary: { profileCount: statuses.length, onlineCount: online, pendingCount: Math.max(0, pending),
-                blockerCount: blockers.length, providerErrorCount: errors.length, profileStateCounts: profileStateCounts },
+                blockerCount: blockers.length, providerErrorCount: errors.length, profileStateCounts: profileStateCounts,
+                operatorCommands: [
+                    'Open Setup & Accelerators',
+                    'Prepare staged content',
+                    'Request or complete approval',
+                    'Publish Online after approval',
+                ] },
             blockers: blockers,
             nextAction: blockers.length || pending > 0 ? 'Open Setup & Accelerators and resolve publication readiness blockers.' :
                 statuses.length ? 'Publication profiles are Online-ready.' : 'Configure application publication profiles.',
@@ -1037,7 +1101,13 @@ module.exports = {
             source: 'PUBLICATION_APPROVAL',
             route: '/process/approval-queue',
             summary: { profileCount: statuses.length, pendingApprovalCount: pending, blockerCount: blockers.length,
-                providerErrorCount: errors.length, approvalStatusCounts: approvalStatusCounts },
+                providerErrorCount: errors.length, approvalStatusCounts: approvalStatusCounts,
+                operatorCommands: [
+                    'Open Approval Queue',
+                    'Review actionable publication task',
+                    'If missing, refresh publication status and Process runtime',
+                    'Refresh operational readiness',
+                ] },
             blockers: blockers,
             nextAction: blockers.length ? 'Open Approval Queue and reconcile governed publication approval tasks.' :
                 'No actionable publication approval blockers were detected.',
@@ -1090,6 +1160,12 @@ module.exports = {
                 mediaStateCounts: mediaStateCounts,
                 cleanupReviewRoute: '/media/cleanup-candidates',
                 replicationRoute: '/media/replication',
+                operatorCommands: [
+                    'Open Media Management',
+                    'Repair missing media objects from manifest',
+                    'Reconcile product or content references',
+                    'Refresh publication readiness',
+                ],
             },
             blockers: blockers,
             nextAction: blockers.length ? 'Open Media Management or Setup & Accelerators and repair missing media references/assets.' :
@@ -1162,7 +1238,10 @@ module.exports = {
             'Open Search controls',
             'One or more initialized search engine clients are unavailable.',
             { repairOperation: 'search.refreshEngines', repairAction: 'REFRESH_SEARCH_ENGINE',
-                suggestedAction: 'Open Search controls, verify the active read-source policy, and repair the unavailable engine.' }
+                repairAvailable: true, repairEligibility: 'MANUAL', repairLabel: 'Refresh search engine',
+                suggestedAction: 'Open Search controls, verify the active read-source policy, and repair the unavailable engine.',
+                businessImpact: 'Pages or workbenches configured to render from search may show empty or stale results until the search engine is healthy.',
+                recoveryHint: 'Switch read-source policy to database fallback or repair/reindex the search engine, then refresh readiness.' }
         ));
         if ((diagnostics.failures || 0) > 0 || diagnostics.lastFailureCode) {
             let blocker = this.readinessBlocker(
@@ -1173,7 +1252,10 @@ module.exports = {
                 'Open Discovery controls',
                 'BackOffice discovery has recent contract synchronization failures.',
                 { repairOperation: 'discovery.refreshContracts', repairAction: 'REFRESH_DISCOVERY_CONTRACTS',
-                    suggestedAction: 'Open Discovery controls, refresh owner module contracts, and inspect the latest failure code.' }
+                    repairAvailable: true, repairEligibility: 'MANUAL', repairLabel: 'Refresh discovery contracts',
+                    suggestedAction: 'Open Discovery controls, refresh owner module contracts, and inspect the latest failure code.',
+                    businessImpact: 'Axis may miss routes, schemas, or owner workspaces when discovery contracts are stale.',
+                    recoveryHint: 'Refresh owner module contracts, then refresh runtime readiness.' }
             );
             blocker.lastFailureCode = diagnostics.lastFailureCode ? String(diagnostics.lastFailureCode) : undefined;
             blocker.lastFailureAt = diagnostics.lastFailureAt;
@@ -1202,6 +1284,14 @@ module.exports = {
                 discoveryFailures: diagnostics.failures || 0,
                 discoveryLastSuccessAt: diagnostics.lastSuccessAt,
                 discoveryLastFailureAt: diagnostics.lastFailureAt,
+                renderingPolicy: configuration.readSourcePolicy,
+                indexFreshness: diagnostics.lastSuccessAt ? 'OBSERVED' : 'UNKNOWN',
+                operatorCommands: [
+                    'Open Discovery/Search controls',
+                    'Review database/search rendering policy',
+                    'Refresh owner contracts or rebuild index',
+                    'Refresh operational readiness',
+                ],
             },
             blockers: blockers,
             nextAction: blockers.length ? 'Open Discovery/Search controls and reconcile search engine or contract synchronization failures.' :
@@ -1212,17 +1302,38 @@ module.exports = {
     /** Builds owner-backed readiness for Axis Assistant knowledge sources and indexing. */
     assistantSection: function () {
         let service = SERVICE.DefaultCopilotKnowledgeRuntimeService;
-        if (!service || typeof service.readiness !== 'function') return {
+        if (!service || typeof service.readiness !== 'function') {
+            let blocker = this.readinessBlocker(
+                'COPILOT_KNOWLEDGE_PROVIDER_NOT_CONFIGURED',
+                'INFO',
+                'ASSISTANT_KNOWLEDGE',
+                'COPILOT_KNOWLEDGE_READINESS',
+                'Open Assistant Knowledge',
+                'Assistant knowledge provider is not configured for this runtime.',
+                { repairOperation: 'copilotKnowledge.configureSources', repairAction: 'CONFIGURE_KNOWLEDGE_SOURCES',
+                    repairAvailable: false,
+                    suggestedAction: 'Activate Copilot Knowledge only when Axis Assistant should answer from governed sources.',
+                    businessImpact: 'Axis Assistant will not answer from governed Nodics knowledge until sources and indexing are configured.',
+                    recoveryHint: 'Register governed knowledge sources, enable retrieval and ingestion, then index them.' }
+            );
+            return {
             key: 'assistant',
             title: 'Assistant knowledge sources',
             businessStatus: 'NOT_CONFIGURED',
             ownerModule: 'copilotKnowledge',
             source: 'COPILOT_KNOWLEDGE_READINESS',
             route: '/assistant',
-            summary: { providerAvailable: false },
-            blockers: [],
+            summary: { providerAvailable: false, blockerCount: 1, reason: 'PROVIDER_NOT_CONFIGURED',
+                operatorCommands: [
+                    'Open Assistant Knowledge',
+                    'Register governed sources',
+                    'Trigger indexing',
+                    'Refresh operational readiness',
+                ] },
+            blockers: [blocker],
             nextAction: 'Activate Copilot Knowledge when Axis Assistant should answer from governed knowledge sources.',
         };
+        }
         let report;
         try {
             report = service.readiness();
@@ -1235,7 +1346,10 @@ module.exports = {
                 'Open Assistant Knowledge',
                 'Assistant knowledge readiness could not be read from the owning Copilot Knowledge service.',
                 { repairOperation: 'copilotKnowledge.readiness', repairAction: 'REFRESH_KNOWLEDGE_READINESS',
-                    suggestedAction: 'Open Assistant Knowledge and verify Copilot Knowledge module startup and configuration.' }
+                    repairAvailable: true, repairEligibility: 'MANUAL', repairLabel: 'Refresh knowledge readiness',
+                    suggestedAction: 'Open Assistant Knowledge and verify Copilot Knowledge module startup and configuration.',
+                    businessImpact: 'Axis Assistant cannot determine whether governed sources are ready, so answers may be blocked.',
+                    recoveryHint: 'Verify Copilot Knowledge runtime startup/configuration, then refresh readiness.' }
             );
             blocker.failureCode = String(error.code || error.message || 'COPILOT_KNOWLEDGE_READINESS_FAILED');
             return {
@@ -1264,7 +1378,9 @@ module.exports = {
                     repairAction: item.repair && (item.repair.action || item.repair.actionCode),
                     repairEligibility: item.repair && item.repair.eligibility,
                     repairLabel: item.repair && item.repair.label,
-                    suggestedAction: item.action || 'Open Assistant Knowledge' }
+                    suggestedAction: item.action || 'Open Assistant Knowledge',
+                    businessImpact: item.businessImpact || 'Axis Assistant may refuse to answer because governed knowledge sources are missing, stale, or not indexed.',
+                    recoveryHint: item.recoveryHint || 'Register the source, trigger indexing, and refresh knowledge readiness.' }
             );
         });
         return {
@@ -1286,6 +1402,12 @@ module.exports = {
                 failedSourceCount: (report || {}).failedSourceCount || 0,
                 lastRefreshAt: (report || {}).lastRefreshAt,
                 blockerCount: blockers.length,
+                operatorCommands: [
+                    'Open Assistant Knowledge',
+                    'Register or enable governed source',
+                    'Trigger indexing',
+                    'Refresh operational readiness',
+                ],
             },
             blockers: blockers,
             nextAction: blockers.length ? 'Open Assistant Knowledge and resolve source registry or indexing blockers.' :

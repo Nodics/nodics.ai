@@ -1107,6 +1107,8 @@ const operationalReadinessBlocker = {
     disabledReason: { type: "string", minLength: 1, maxLength: 1024 },
     repair: { type: "object" },
     suggestedAction: { type: "string", minLength: 1, maxLength: 1024 },
+    businessImpact: { type: "string", minLength: 1, maxLength: 1024 },
+    recoveryHint: { type: "string", minLength: 1, maxLength: 1024 },
   },
 };
 const operationalReadinessSection = {

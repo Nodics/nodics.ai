@@ -182,6 +182,9 @@ async function validateDeliveryAndProductionPolicy() {
     assert.strictEqual(service._lastOperationalReadinessSnapshot.source, 'backoffice.operationalReadiness.snapshot');
     assert(Array.isArray(aggregateReport.summary.timeline));
     assert(Array.isArray(aggregateReport.summary.recoveryMatrix));
+    assert(aggregateReport.summary.recoveryMatrix.length >= 9);
+    assert(aggregateReport.summary.recoveryMatrix.some(lane => lane.key === 'runtimeCommunication'
+        && lane.label === 'Verify runtimes'));
     assert(aggregateReport.summary.recoveryMatrix.some(lane => lane.key === 'imports'
         && lane.label === 'Import data'
         && lane.route === '/operations/imports-exports'
@@ -189,6 +192,10 @@ async function validateDeliveryAndProductionPolicy() {
     assert(aggregateReport.summary.recoveryMatrix.some(lane => lane.key === 'approval'
         && lane.label === 'Complete approvals'
         && lane.route === '/process/approval-queue'));
+    assert(aggregateReport.summary.recoveryMatrix.some(lane => lane.key === 'acceptance'
+        && lane.label === 'Capture validation evidence'
+        && lane.issueCodes.includes('BROWSER_VALIDATION_EVIDENCE_REQUIRED')
+        && lane.repairActions.some(action => action.includes('tooling.acceptance.browserValidation'))));
     assert(aggregateReport.summary.timeline.some(item => item.eventType === 'backoffice.operationalReadiness.snapshot'
         && item.state === 'NOT_READY'));
     assert(auditEvents.some(event => event.eventType === 'backoffice.operationalReadiness.snapshot'
@@ -197,7 +204,8 @@ async function validateDeliveryAndProductionPolicy() {
         && section.businessStatus === 'READY'
         && section.summary.releaseCount === 1
         && section.summary.releaseGroups.some(group => group.code === 'DATA_RELEASE'
-            && group.releaseCount === 1)));
+            && group.releaseCount === 1)
+        && section.summary.operatorCommands.includes('Validate blocked release group')));
     assert.strictEqual(moduleInvocationCalls[0].moduleName, 'import');
     assert.strictEqual(moduleInvocationCalls[0].apiName, '/sample');
     assert.strictEqual(moduleInvocationCalls[0].header.Authorization, 'Bearer operator-token');
@@ -207,22 +215,26 @@ async function validateDeliveryAndProductionPolicy() {
     assert(aggregateReport.sections.some(section => section.key === 'approval'
         && section.businessStatus === 'READY'
         && section.summary.pendingApprovalCount === 0
-        && section.summary.approvalStatusCounts.APPROVED === 1));
+        && section.summary.approvalStatusCounts.APPROVED === 1
+        && section.summary.operatorCommands.includes('If missing, refresh publication status and Process runtime')));
     assert(aggregateReport.sections.some(section => section.key === 'media'
         && section.businessStatus === 'READY'
         && section.summary.readyOrNotRequiredCount === 1
         && section.summary.mediaStateCounts.READY_OR_NOT_REQUIRED === 1
-        && section.summary.cleanupReviewRoute === '/media/cleanup-candidates'));
+        && section.summary.cleanupReviewRoute === '/media/cleanup-candidates'
+        && section.summary.operatorCommands.includes('Reconcile product or content references')));
     assert(aggregateReport.sections.some(section => section.key === 'search'
         && section.businessStatus === 'READY'
         && section.summary.runtimeRole === 'PLATFORM'
         && section.summary.readSourcePolicy === 'SEARCH_ENGINE'
+        && section.summary.renderingPolicy === 'SEARCH_ENGINE'
         && section.summary.runtimeProfileCount === 1
         && section.summary.discoveryAttempts === 2));
     assert(aggregateReport.sections.some(section => section.key === 'assistant'
         && section.businessStatus === 'READY'
         && section.summary.providerAvailable === true
-        && section.summary.indexedSourceCount === 1));
+        && section.summary.indexedSourceCount === 1
+        && section.summary.operatorCommands.includes('Trigger indexing')));
     assert(aggregateReport.sections.some(section => section.key === 'documentation'
         && section.businessStatus === 'READY'
         && section.summary.sourceReadinessCounts.READY === 1));

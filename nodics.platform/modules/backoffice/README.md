@@ -99,6 +99,29 @@ new readiness contributor must be implemented in its owning framework module and
 then projected through BackOffice. Customer projects must not duplicate
 readiness logic merely to make Axis display a green status.
 
+## Go-Live Recovery Matrix
+
+BackOffice also projects `operationalReadiness.summary.recoveryMatrix`, a
+business-user recovery lane model consumed by Axis. Lanes are derived from the
+same canonical readiness sections and currently cover runtime communication,
+data imports, staged publication, governed approvals, documentation, media,
+search/read-source policy, Assistant knowledge, and acceptance evidence.
+
+Every lane should expose only client-safe guidance:
+
+- `state`, `blockerCount`, and stable issue codes.
+- `ownerModule`, `source`, and existing Axis repair route.
+- `businessImpact` explaining why the blocker matters.
+- `repairActions` derived from owner repair metadata, not frontend inference.
+- `runtimeDependencies` when blockers identify target server/role/node
+  coordinates.
+
+The matrix is not a second workflow engine. Install, approve, publish, media
+repair, indexing, and acceptance capture remain owner-module operations. Axis
+may render the lane and open the owner workspace, but it must not inspect raw
+release manifests, generated files, private media paths, credentials, or
+custom-project data to decide readiness.
+
 ## Runtime Communication Diagnostics
 
 Runtime communication readiness is derived from BackOffice bootstrap/module
