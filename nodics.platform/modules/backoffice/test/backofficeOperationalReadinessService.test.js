@@ -107,6 +107,8 @@ global.SERVICE = { AuditPublisher: { record: () => Promise.resolve(true) },
         businessStatus: 'READY', retrievalEnabled: true, ingestionEnabled: true, sourceRegistryEnabled: true,
         sourceCount: 2, enabledSourceCount: 1, indexedSourceCount: 1, notIndexedSourceCount: 0,
         failedSourceCount: 0, lastRefreshAt: '2026-09-24T00:00:00.000Z', blockers: []
+        , providerConfigured: true, enabledProviderCount: 1, selectedProviderCode: 'mock',
+        modelConfigured: true, modelName: 'mock'
     }) },
     DefaultHealthService: { registerReadinessContributor: (name, contributor) => {
     assert.strictEqual(name, 'backofficeOperationalConfiguration'); readinessContributor = contributor;
@@ -338,12 +340,30 @@ async function validateDeliveryAndProductionPolicy() {
         && section.businessStatus === 'READY'
         && section.summary.providerAvailable === true
         && section.summary.indexedSourceCount === 1
+        && section.summary.providerConfigured === true
+        && section.summary.modelConfigured === true
         && section.summary.operatorCommands.includes('Trigger indexing')));
     assert(aggregateReport.sections.some(section => section.key === 'documentation'
         && section.businessStatus === 'READY'
-        && section.summary.sourceReadinessCounts.READY === 1));
+        && section.summary.sourceReadinessCounts.READY === 1
+        && section.summary.onlineSourceCount === 1
+        && section.summary.operatorCommands.includes('Trigger documentation indexing')));
+    let documentationRepairSection = service.documentationSection([
+        { id: 'kickoff.docs', label: 'Nodics Kickoff docs', type: 'CMS', route: '/docs/kickoff' },
+        { id: 'axis.openapi', label: 'Axis OpenAPI', type: 'OPENAPI', route: '/swaggers' }
+    ], { bySourceId: { 'kickoff.docs': { readiness: 'STAGED_NOT_INSTALLED', ready: false } } });
+    assert.strictEqual(documentationRepairSection.businessStatus, 'NEEDS_ATTENTION');
+    assert(documentationRepairSection.blockers.some(blocker => blocker.code === 'DOCUMENTATION_PACK_NOT_INSTALLED'
+        && blocker.repair.operation === 'documentation.pack.installStaged'));
+    assert(aggregateReport.sections.some(section => section.key === 'applications'
+        && section.businessStatus === 'READY'
+        && section.summary.applicationCodes.includes('circa')
+        && section.summary.circaParity === 'OBSERVED'));
     assert(aggregateReport.sections.some(section => section.key === 'runtimeCommunication'
         && section.businessStatus === 'READY'));
+    assert(aggregateReport.sections.some(section => section.key === 'repairGovernance'
+        && section.businessStatus === 'NOT_CONFIGURED'
+        && section.summary.providerCount === 0));
     let runtimeCommunication = aggregateReport.sections.find(section => section.key === 'runtimeCommunication');
     assert(runtimeCommunication.summary.reasonCodes.includes('RUNTIME_OBSERVED'));
     assert(runtimeCommunication.summary.communicationChecks.some(check => check.code === 'RUNTIME_API_KEY_GRANT_READY'
@@ -464,6 +484,22 @@ async function validateDeliveryAndProductionPolicy() {
     });
     assert.strictEqual(providerRegistration.ownerModule, 'import');
     assert(service.repairProviderRegistry().some(provider => provider.ownerModule === 'import'));
+    let repairGovernanceReady = service.repairGovernanceSection();
+    assert.strictEqual(repairGovernanceReady.businessStatus, 'READY');
+    assert.strictEqual(repairGovernanceReady.summary.providerCount, 1);
+    assert(repairGovernanceReady.summary.telemetry.registered >= 1);
+    let batchPlan = service.planRepairBatch({ repairs: [{
+        operation: 'dataRelease.install',
+        action: 'REPAIR_DATA_RELEASE',
+        ownerModule: 'import',
+        available: true,
+        eligibility: 'MANUAL',
+        targetIdentifiers: { releaseCode: 'circa.ewaste:sample' },
+        prerequisites: [{ code: 'IMPORT_RUNTIME_READY' }]
+    }] });
+    assert.strictEqual(batchPlan.state, 'DRY_RUN');
+    assert.strictEqual(batchPlan.executableCount, 1);
+    assert(batchPlan.graph.nodes.some(node => node.type === 'DEPENDENCY'));
     let dryRunRepair = await service.executeRepair({
         tenant: 'default',
         authData: { loginId: 'admin' },
@@ -535,6 +571,9 @@ async function validateDeliveryAndProductionPolicy() {
     assert.strictEqual(repairCalls.length, 2);
     assert(service.repairHistory().some(item => item.idempotencyKey === 'repair-execute-001'
         && item.principal === 'admin'));
+    assert.strictEqual(service.repairHistory({ ownerModule: 'import' }).length >= 1, true);
+    assert(service.repairReceipts().some(receipt => receipt.ownerModule === 'import'
+        && receipt.receiptType === 'OPERATIONAL_READINESS_REPAIR'));
     assert(auditEvents.some(event => event.eventType === 'backoffice.operationalReadiness.repair'
         && event.idempotencyKey === 'repair-execute-001'));
     service.unregisterRepairProvider('import');

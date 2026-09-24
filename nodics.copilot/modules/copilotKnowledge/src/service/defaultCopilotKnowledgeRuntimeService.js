@@ -71,6 +71,15 @@ module.exports = {
     readiness: function () {
         const configuration = this.configuration();
         const knowledge = configuration.knowledge || {};
+        const providers = configuration.providers || {};
+        const adapters = providers.adapters || {};
+        const defaultAdapter = providers.defaultAdapter || providers.adapter || providers.default;
+        const enabledAdapters = Object.entries(adapters).filter(entry => entry[1] && entry[1].enabled === true);
+        const selectedAdapter = defaultAdapter ? adapters[defaultAdapter] : enabledAdapters[0] && enabledAdapters[0][1];
+        const modelConfigured = !!(selectedAdapter && selectedAdapter.model && selectedAdapter.model.name);
+        const providerConfigured = !!(selectedAdapter || enabledAdapters.length);
+        const retrievalEnabled = knowledge.retrieval && knowledge.retrieval.enabled === true;
+        const ingestionEnabled = knowledge.ingestion && knowledge.ingestion.enabled === true;
         const registryConfiguration = knowledge.sourceRegistry || {};
         const blockers = [];
         let registry;
@@ -122,8 +131,24 @@ module.exports = {
             repair: { available: true, operation: 'copilotKnowledge.refresh',
                 action: 'RETRY_KNOWLEDGE_SOURCE', eligibility: 'MANUAL', label: 'Retry knowledge indexing' }
         });
-        const retrievalEnabled = knowledge.retrieval && knowledge.retrieval.enabled === true;
-        const ingestionEnabled = knowledge.ingestion && knowledge.ingestion.enabled === true;
+        if (retrievalEnabled && !providerConfigured) blockers.push({
+            code: 'COPILOT_PROVIDER_NOT_CONFIGURED',
+            severity: 'NEEDS_ATTENTION',
+            source: 'COPILOT_PROVIDER_CONFIGURATION',
+            action: 'Open Assistant configuration',
+            message: 'Assistant retrieval is enabled but no Copilot model provider is configured.',
+            repair: { available: true, operation: 'copilotProvider.configure',
+                action: 'CONFIGURE_COPILOT_PROVIDER', eligibility: 'MANUAL', label: 'Configure Copilot provider' }
+        });
+        if (retrievalEnabled && providerConfigured && !modelConfigured) blockers.push({
+            code: 'COPILOT_MODEL_NOT_CONFIGURED',
+            severity: 'NEEDS_ATTENTION',
+            source: 'COPILOT_PROVIDER_CONFIGURATION',
+            action: 'Open Assistant configuration',
+            message: 'Assistant retrieval is enabled but the selected Copilot provider has no configured model.',
+            repair: { available: true, operation: 'copilotProvider.configureModel',
+                action: 'CONFIGURE_COPILOT_MODEL', eligibility: 'MANUAL', label: 'Configure Copilot model' }
+        });
         const businessStatus = blockers.length ? 'NEEDS_ATTENTION' :
             retrievalEnabled && enabledSources.length > 0 ? 'READY' : 'NOT_CONFIGURED';
         return {
@@ -138,6 +163,11 @@ module.exports = {
             notIndexedSourceCount: notIndexed,
             failedSourceCount: failed,
             lastRefreshAt: this.state.lastRefreshAt,
+            providerConfigured: providerConfigured,
+            enabledProviderCount: enabledAdapters.length,
+            selectedProviderCode: defaultAdapter || (enabledAdapters[0] && enabledAdapters[0][0]),
+            modelConfigured: modelConfigured,
+            modelName: selectedAdapter && selectedAdapter.model ? selectedAdapter.model.name : undefined,
             blockers: blockers
         };
     },

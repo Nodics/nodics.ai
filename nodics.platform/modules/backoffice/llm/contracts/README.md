@@ -219,6 +219,27 @@ aggregate and link to owning pages, but must not recompute import, publishing,
 approval, media, search, assistant, or application readiness from page-local
 state when a backend section is available.
 
+Documentation readiness is an aggregate over documentation sources and their
+publication/indexing state. `nodics.docs` owns framework documentation content
+and content-pack data; BackOffice may expose install/stage/Online/indexing
+repair metadata for Axis, but it must not import source files directly or move
+documentation-content authority into the customer project.
+
+Application parity readiness is profile/provider based. Nexus, Agora, Circa and
+future applications must appear as owner profile status facts from Setup &
+Accelerators or their owning capability services. BackOffice may count and group
+parity states, but it must not infer application readiness from frontend routes,
+open browser tabs, or customer-project folder names.
+
+Readiness repair governance is backend-owned. Owner modules register executable
+repair providers and BackOffice validates contract version, lifecycle state,
+operation/action support, target identifiers, safety, dry-run state, locking,
+receipts, telemetry, and provider events. Axis may display the provider panel,
+history, dependency graph, dry-run plan, and receipts, but must not execute a
+repair unless the owner supplied `available: true`, a supported operation/action,
+and stable target identifiers. Batch execution stays disabled until approval and
+rollback maturity are explicit.
+
 If an owning capability has not yet exposed a concrete readiness provider,
 BackOffice may return a `NOT_EXPOSED` section with a blocker that names the
 owning module and the action to add the provider. That is a framework gap, not

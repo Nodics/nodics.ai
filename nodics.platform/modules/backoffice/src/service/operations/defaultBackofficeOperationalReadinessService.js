@@ -26,6 +26,8 @@ module.exports = {
     _repairResultsByKey: Object.create(null),
     _repairLocksByTarget: Object.create(null),
     _repairProviderRegistry: Object.create(null),
+    _repairProviderCapabilityCache: Object.create(null),
+    _repairTelemetry: { registered: 0, unregistered: 0, dryRuns: 0, executed: 0, completed: 0, failed: 0, blocked: 0, providerRefreshes: 0 },
     _supportedRepairContractVersion: 1,
     /** Registers configuration validity as a required readiness contributor. */
     init: function () {
@@ -475,8 +477,10 @@ module.exports = {
         };
     },
     /** Summarizes application initialization capability readiness profiles. */
-    applicationSection: function (profiles) {
+    applicationSection: function (profileStatusReport, profiles) {
         profiles = [].concat(profiles || []);
+        let statuses = [].concat((profileStatusReport || {}).statuses || []);
+        let errors = [].concat((profileStatusReport || {}).errors || []);
         let blockers = profiles.length === 0 ? [this.readinessBlocker(
             'APPLICATION_PROFILES_MISSING',
             'NEEDS_ATTENTION',
@@ -486,6 +490,56 @@ module.exports = {
             'No application initialization profiles are visible to this operator.',
             { repairOperation: 'applicationInitialization.reviewProfiles', repairAction: 'REVIEW_APPLICATION_PROFILES' }
         )] : [];
+        let profileCodesWithStatus = new Set(statuses.map(status => String(status.profileCode || '')).filter(Boolean));
+        profiles.filter(profile => profile && profile.code && !profileCodesWithStatus.has(String(profile.code))).forEach(profile => {
+            blockers.push(this.readinessBlocker(
+                'APPLICATION_PARITY_PROVIDER_UNAVAILABLE',
+                'NEEDS_ATTENTION',
+                'APPLICATION_INITIALIZATION',
+                'BACKOFFICE_APPLICATION_INITIALIZATION',
+                'Refresh application parity',
+                'Application parity could not be read for profile: ' + String(profile.title || profile.code),
+                { repairOperation: 'applicationInitialization.refreshStatus', repairAction: 'REFRESH_APPLICATION_PARITY',
+                    repairAvailable: true, repairEligibility: 'MANUAL', repairLabel: 'Refresh application parity',
+                    suggestedAction: 'Refresh Setup & Accelerators and verify the owning runtime/provider is active.' }
+            ));
+        });
+        errors.forEach(item => {
+            let profile = item.profile || {};
+            let blocker = this.readinessBlocker(
+                'APPLICATION_PARITY_PROVIDER_FAILED',
+                'NEEDS_ATTENTION',
+                'APPLICATION_INITIALIZATION',
+                'BACKOFFICE_APPLICATION_INITIALIZATION',
+                'Refresh application parity',
+                'Application parity provider failed for profile: ' + String(profile.title || profile.code || 'unknown'),
+                { repairOperation: 'applicationInitialization.refreshStatus', repairAction: 'REFRESH_APPLICATION_PARITY',
+                    repairAvailable: true, repairEligibility: 'MANUAL', repairLabel: 'Refresh application parity',
+                    suggestedAction: 'Open Setup & Accelerators, refresh the profile, and verify the owning runtime.' }
+            );
+            blocker.profileCode = profile.code ? String(profile.code) : undefined;
+            blocker.failureCode = item.error ? String(item.error.code || item.error.message || 'APPLICATION_PARITY_FAILED') : undefined;
+            blockers.push(blocker);
+        });
+        statuses.forEach(status => {
+            let capability = status && status.capability || {};
+            if (capability.businessStatus && !['ONLINE', 'READY'].includes(String(capability.businessStatus))) {
+                blockers.push(this.readinessBlocker(
+                    'APPLICATION_PARITY_NOT_ONLINE',
+                    'NEEDS_ATTENTION',
+                    'APPLICATION_INITIALIZATION',
+                    'BACKOFFICE_APPLICATION_INITIALIZATION',
+                    'Open Setup & Accelerators',
+                    'Application is not Online-ready: ' + String(status.applicationCode || status.profileCode || 'unknown'),
+                    { repairOperation: 'applicationInitialization.prepareCapability', repairAction: 'PREPARE_APPLICATION_PARITY',
+                        repairAvailable: true, repairEligibility: 'MANUAL', repairLabel: 'Prepare application parity',
+                        suggestedAction: capability.nextAction || 'Prepare, approve, and publish the application profile.' }
+                ));
+            }
+        });
+        let applicationCodes = statuses.map(status => status.applicationCode || status.profileCode).filter(Boolean).map(String);
+        let applicationStatusCounts = this.countByValue(statuses, status =>
+            status && status.capability && status.capability.businessStatus || 'UNKNOWN');
         return {
             key: 'applications',
             title: 'Customer application readiness',
@@ -493,9 +547,25 @@ module.exports = {
             ownerModule: 'backoffice',
             source: 'BACKOFFICE_APPLICATION_INITIALIZATION',
             route: '/publishing',
-            summary: { profileCount: profiles.length },
+            summary: {
+                profileCount: profiles.length,
+                statusCount: statuses.length,
+                providerErrorCount: errors.length,
+                applicationCodes: applicationCodes,
+                applicationStatusCounts: applicationStatusCounts,
+                nexusParity: applicationCodes.includes('nexus') || applicationCodes.some(code => /nexus/i.test(code)) ? 'OBSERVED' : 'NOT_OBSERVED',
+                agoraParity: applicationCodes.includes('agora') || applicationCodes.some(code => /agora/i.test(code)) ? 'OBSERVED' : 'NOT_OBSERVED',
+                circaParity: applicationCodes.includes('circa') || applicationCodes.some(code => /circa/i.test(code)) ? 'OBSERVED' : 'NOT_OBSERVED',
+                operatorCommands: [
+                    'Open Setup & Accelerators',
+                    'Refresh application profile status',
+                    'Prepare or publish pending profiles',
+                    'Refresh operational readiness',
+                ],
+            },
             blockers: blockers,
-            nextAction: blockers.length ? 'Open Setup & Accelerators and initialize required profiles.' : 'Application profiles are available for Setup & Accelerators.',
+            nextAction: blockers.length ? 'Open Setup & Accelerators and initialize or repair required application parity profiles.' :
+                'Application profiles are available and parity providers returned ready state.',
         };
     },
     /** Summarizes local acceptance and optional browser-validation evidence without making browsers mandatory outside opted-in environments. */
@@ -590,6 +660,10 @@ module.exports = {
                     'Configure acceptance profiles or keep browser validation disabled until a local runner is available.',
         };
     },
+    /** Builds guided documentation repair metadata for operator-facing blockers. */
+    documentationRepair: function (operation, action, label) {
+        return { operation: operation, action: action, label: label, available: true, eligibility: 'MANUAL' };
+    },
     /** Summarizes documentation source visibility and publication guidance. */
     documentationSection: function (sources, publicationState) {
         sources = [].concat(sources || []);
@@ -607,18 +681,28 @@ module.exports = {
             'BACKOFFICE_DOCUMENTATION',
             'Open Documentation Dashboard',
             'No documentation sources are visible to this operator.',
-            { repairOperation: 'documentation.installSources', repairAction: 'INSTALL_DOCUMENTATION_SOURCES' }
+            { repairOperation: 'documentation.installSources', repairAction: 'INSTALL_DOCUMENTATION_SOURCES',
+                repairAvailable: true, repairEligibility: 'MANUAL', repairLabel: 'Install documentation sources' }
         ));
         pending.forEach(source => {
             let state = bySource[String(source.id)] || {};
+            let readiness = String(state.readiness || '').toUpperCase();
+            let repair = readiness.includes('NOT_INSTALLED') || readiness.includes('NOT_INITIALIZED') ?
+                this.documentationRepair('documentation.pack.installStaged', 'INSTALL_DOCUMENTATION_PACK', 'Install documentation pack') :
+                readiness.includes('INDEX') ?
+                    this.documentationRepair('documentation.index.refresh', 'INDEX_DOCUMENTATION_PACK', 'Index documentation pack') :
+                    this.documentationRepair('documentation.publish', 'PUBLISH_DOCUMENTATION', 'Publish documentation pack');
             let blocker = this.readinessBlocker(
-                'DOCUMENTATION_PUBLICATION_PENDING',
+                readiness.includes('INDEX') ? 'DOCUMENTATION_INDEXING_PENDING' :
+                    readiness.includes('NOT_INSTALLED') || readiness.includes('NOT_INITIALIZED') ? 'DOCUMENTATION_PACK_NOT_INSTALLED' :
+                        'DOCUMENTATION_PUBLICATION_PENDING',
                 'NEEDS_ATTENTION',
                 'PUBLICATION',
                 'DOCUMENTATION_PUBLICATION',
                 'Open Documentation Dashboard',
                 'Documentation pack is not Online-ready: ' + String(source.label || source.id),
-                { repairOperation: 'documentation.publish', repairAction: 'PUBLISH_DOCUMENTATION',
+                { repairOperation: repair.operation, repairAction: repair.action, repairAvailable: true,
+                    repairEligibility: 'MANUAL', repairLabel: repair.label,
                     suggestedAction: 'Install staged content, request approval, approve, and publish the documentation pack Online.' }
             );
             blocker.sourceId = String(source.id);
@@ -643,8 +727,27 @@ module.exports = {
                 sourceCount: sources.length,
                 cmsSourceCount: sources.filter(source => source && source.type === 'CMS').length,
                 pendingPublicationCount: pending.length,
+                installedSourceCount: sources.filter(source => {
+                    let state = source && source.id ? bySource[String(source.id)] || {} : {};
+                    return state.installed === true || state.ready === true || String(state.readiness || '').includes('INSTALLED');
+                }).length,
+                onlineSourceCount: sources.filter(source => {
+                    let state = source && source.id ? bySource[String(source.id)] || {} : {};
+                    return state.online === true || state.ready === true || String(state.readiness || '').includes('ONLINE');
+                }).length,
+                indexedSourceCount: sources.filter(source => {
+                    let state = source && source.id ? bySource[String(source.id)] || {} : {};
+                    return state.indexed === true || String(state.indexing || '').toUpperCase() === 'INDEXED';
+                }).length,
                 openApiSourceCount: sources.filter(source => source && source.type === 'OPENAPI').length,
                 sourceReadinessCounts: sourceReadinessCounts,
+                operatorCommands: [
+                    'Open Documentation Dashboard',
+                    'Initialize or install staged documentation packs',
+                    'Request approval and publish Online',
+                    'Trigger documentation indexing',
+                    'Refresh operational readiness',
+                ],
             },
             blockers: blockers,
             nextAction: blockers.length ? 'Install, approve, publish, and index documentation packs from Documentation Dashboard.' :
@@ -1607,6 +1710,11 @@ module.exports = {
                 notIndexedSourceCount: (report || {}).notIndexedSourceCount || 0,
                 failedSourceCount: (report || {}).failedSourceCount || 0,
                 lastRefreshAt: (report || {}).lastRefreshAt,
+                providerConfigured: (report || {}).providerConfigured === true,
+                enabledProviderCount: (report || {}).enabledProviderCount || 0,
+                selectedProviderCode: (report || {}).selectedProviderCode,
+                modelConfigured: (report || {}).modelConfigured === true,
+                modelName: (report || {}).modelName,
                 blockerCount: blockers.length,
                 operatorCommands: [
                     'Open Assistant Knowledge',
@@ -1693,12 +1801,36 @@ module.exports = {
             lifecycleState: 'REGISTERED',
             provider: provider,
         }, metadata || {});
+        delete this._repairProviderCapabilityCache[ownerModule];
+        this._repairTelemetry.registered += 1;
+        this._repairTelemetry.providerRefreshes += 1;
+        this.recordRepairProviderEvent('REGISTERED', ownerModule, metadata);
         return this.repairProviderDescriptor(this._repairProviderRegistry[ownerModule]);
     },
     /** Removes one owner repair provider registration. */
     unregisterRepairProvider: function (ownerModule) {
-        delete this._repairProviderRegistry[String(ownerModule || '').trim()];
+        ownerModule = String(ownerModule || '').trim();
+        delete this._repairProviderRegistry[ownerModule];
+        delete this._repairProviderCapabilityCache[ownerModule];
+        this._repairTelemetry.unregistered += 1;
+        this._repairTelemetry.providerRefreshes += 1;
+        this.recordRepairProviderEvent('UNREGISTERED', ownerModule, {});
         return true;
+    },
+    /** Records a compact provider lifecycle event for Module Registry and support diagnostics. */
+    recordRepairProviderEvent: function (event, ownerModule, metadata) {
+        let item = {
+            eventType: 'backoffice.readinessRepair.provider',
+            event: event,
+            ownerModule: ownerModule,
+            providerCode: metadata && metadata.providerCode ? String(metadata.providerCode) : ownerModule,
+            checkedAt: this.now(),
+        };
+        this._repairProviderEvents = [item].concat(this._repairProviderEvents || []).slice(0, 25);
+        if (SERVICE.DefaultBackofficeAuditService && typeof SERVICE.DefaultBackofficeAuditService.record === 'function') {
+            Promise.resolve(SERVICE.DefaultBackofficeAuditService.record(item)).catch(() => false);
+        }
+        return item;
     },
     /** Returns a client-safe provider descriptor. */
     repairProviderDescriptor: function (entry, capability) {
@@ -1721,6 +1853,12 @@ module.exports = {
     repairProviderRegistry: function () {
         return Object.keys(this._repairProviderRegistry || {}).sort().map(ownerModule =>
             this.repairProviderDescriptor(this._repairProviderRegistry[ownerModule]));
+    },
+    /** Returns the provider capability cache TTL in milliseconds. */
+    repairProviderCapabilityTtlMs: function () {
+        let operations = this.getConfiguration() || {};
+        let repair = operations.repair || {};
+        return Math.max(1000, Number(repair.providerCapabilityTtlMs || 30000));
     },
     /** Resolves provider candidates through registry first and legacy framework service names second. */
     repairProviderEntries: function (repair) {
@@ -1764,17 +1902,27 @@ module.exports = {
         return this.repairProviderEntries(repair).find(entry => entry && entry.provider);
     },
     /** Reads optional provider capability/health metadata without requiring every provider to implement it. */
-    repairProviderCapability: function (provider, repair) {
+    repairProviderCapability: function (provider, repair, entry) {
         if (!provider) return {};
-        if (typeof provider.repairCapability === 'function') return provider.repairCapability(repair) || {};
-        if (typeof provider.readinessRepairCapability === 'function') return provider.readinessRepairCapability(repair) || {};
-        if (typeof provider.selfTest === 'function') return { selfTestAvailable: true };
-        return {};
+        let ownerModule = String(repair && repair.ownerModule || entry && entry.ownerModule || '');
+        let cacheKey = ownerModule + ':' + String(repair && repair.operation || '*') + ':' + String(repair && repair.action || '*');
+        let cached = this._repairProviderCapabilityCache[cacheKey];
+        if (cached && cached.expiresAtMs > Date.now()) return cached.capability;
+        let capability = {};
+        if (typeof provider.repairCapability === 'function') capability = provider.repairCapability(repair) || {};
+        else if (typeof provider.readinessRepairCapability === 'function') capability = provider.readinessRepairCapability(repair) || {};
+        else if (typeof provider.selfTest === 'function') capability = { selfTestAvailable: true };
+        if (ownerModule) this._repairProviderCapabilityCache[cacheKey] = {
+            capability: capability,
+            expiresAtMs: Date.now() + this.repairProviderCapabilityTtlMs(),
+            cachedAt: this.now(),
+        };
+        return capability;
     },
     /** Validates provider capability metadata before execution. */
     validateRepairProviderCapability: function (entry, repair) {
         let provider = entry && entry.provider || entry;
-        let capability = this.repairProviderCapability(provider, repair);
+        let capability = this.repairProviderCapability(provider, repair, entry);
         let version = Number(capability.repairContractVersion || 1);
         if (version !== this._supportedRepairContractVersion) return {
             state: 'UNSUPPORTED_CONTRACT',
@@ -1913,6 +2061,14 @@ module.exports = {
             checkedAt: result.checkedAt,
         };
         this._repairReceipts = [receipt].concat(this._repairReceipts || []).slice(0, 50);
+        if (SERVICE.DefaultBackofficeRepairReceiptService && typeof SERVICE.DefaultBackofficeRepairReceiptService.save === 'function') {
+            Promise.resolve(SERVICE.DefaultBackofficeRepairReceiptService.save({
+                tenant: request && request.tenant,
+                authData: request && request.authData,
+                query: { receiptCode: receipt.receiptCode },
+                model: receipt,
+            })).catch(() => false);
+        }
         return receipt;
     },
     /** Returns bounded client-safe repair receipts. */
@@ -2006,6 +2162,13 @@ module.exports = {
             tenant: request && request.tenant,
         });
         this._repairAttempts = [attempt].concat(this._repairAttempts || []).slice(0, 25);
+        if (result.dryRun) this._repairTelemetry.dryRuns += 1;
+        else this._repairTelemetry.executed += 1;
+        if (result.state === 'COMPLETED') this._repairTelemetry.completed += 1;
+        else if (result.state === 'FAILED') this._repairTelemetry.failed += 1;
+        else if (['NOT_EXECUTABLE', 'PROVIDER_UNAVAILABLE', 'VALIDATION_FAILED', 'BATCH_EXECUTION_DISABLED'].includes(result.state)) {
+            this._repairTelemetry.blocked += 1;
+        }
         let publisher = SERVICE.DefaultBackofficeAuditService;
         if (publisher && typeof publisher.record === 'function') {
             Promise.resolve(publisher.record(Object.assign({
@@ -2016,8 +2179,91 @@ module.exports = {
         return result;
     },
     /** Returns recent bounded repair attempts for dashboard refresh/debug payloads. */
-    repairHistory: function () {
-        return (this._repairAttempts || []).slice();
+    repairHistory: function (request) {
+        let input = request && request.query || request || {};
+        let limit = Math.min(Math.max(Number(input.limit || 25), 1), 100);
+        return (this._repairAttempts || []).filter(item => {
+            if (input.ownerModule && item.ownerModule !== String(input.ownerModule)) return false;
+            if (input.operation && item.operation !== String(input.operation)) return false;
+            if (input.state && item.state !== String(input.state)) return false;
+            if (input.principal && item.principal !== String(input.principal)) return false;
+            return true;
+        }).slice(0, limit);
+    },
+    /** Builds a client-safe dependency graph for repair planning and Axis visualization. */
+    repairDependencyGraph: function (repairs) {
+        repairs = [].concat(repairs || []);
+        let nodes = {};
+        let edges = [];
+        repairs.forEach((repair, index) => {
+            repair = repair || {};
+            let repairId = 'repair:' + index + ':' + String(repair.ownerModule || 'unknown') + ':' + String(repair.operation || 'unknown');
+            nodes[repairId] = { id: repairId, type: 'REPAIR', ownerModule: repair.ownerModule, operation: repair.operation, action: repair.action };
+            [].concat(repair.prerequisites || []).forEach((dependency, dependencyIndex) => {
+                let dependencyId = 'dependency:' + index + ':' + dependencyIndex + ':' + String(dependency.code || dependency.operation || dependency);
+                nodes[dependencyId] = { id: dependencyId, type: 'DEPENDENCY', code: String(dependency.code || dependency.operation || dependency) };
+                edges.push({ from: dependencyId, to: repairId, relation: 'REQUIRED_BEFORE' });
+            });
+        });
+        return { nodes: Object.values(nodes), edges: edges };
+    },
+    /** Produces a dry-run batch plan without executing owner repairs. */
+    planRepairBatch: function (request) {
+        let repairs = [].concat(request && request.repairs || request && request.readinessRepairs || []);
+        let normalized = repairs.map((item, index) => this.normalizeRepairRequest({ readinessRepair: Object.assign({
+            idempotencyKey: 'repair-batch-plan-' + index,
+            dryRun: true,
+        }, item || {}) }));
+        return {
+            contractVersion: 1,
+            state: normalized.length ? 'DRY_RUN' : 'EMPTY',
+            repairCount: normalized.length,
+            executableCount: normalized.filter(item => item.available === true && ['MANUAL', 'AUTOMATIC'].includes(item.eligibility)).length,
+            highImpactCount: normalized.filter(item => item.highImpact).length,
+            graph: this.repairDependencyGraph(normalized),
+            nextAction: normalized.length ? 'Review the dependency graph and execute one governed owner repair at a time until batch approval/rollback maturity is enabled.' :
+                'Select readiness repair actions before planning a batch.',
+        };
+    },
+    /** Returns repair governance summary for Module Registry and Axis readiness panels. */
+    repairGovernanceSection: function () {
+        let providers = this.repairProviderRegistry();
+        let unavailable = providers.filter(provider => ['UNAVAILABLE', 'MISCONFIGURED', 'DISABLED'].includes(provider.lifecycleState));
+        return {
+            key: 'repairGovernance',
+            title: 'Repair governance',
+            businessStatus: unavailable.length ? 'NEEDS_ATTENTION' : providers.length ? 'READY' : 'NOT_CONFIGURED',
+            ownerModule: 'backoffice',
+            source: 'BACKOFFICE_REPAIR_GOVERNANCE',
+            route: '/system/modules',
+            summary: {
+                providerCount: providers.length,
+                unavailableProviderCount: unavailable.length,
+                providerCapabilityTtlMs: this.repairProviderCapabilityTtlMs(),
+                telemetry: Object.assign({}, this._repairTelemetry),
+                recentProviderEvents: (this._repairProviderEvents || []).slice(0, 10),
+                recentReceiptCount: (this._repairReceipts || []).length,
+                operatorCommands: [
+                    'Open Module Registry',
+                    'Review repair provider readiness',
+                    'Run dry-run before execution',
+                    'Refresh operational readiness',
+                ],
+            },
+            blockers: unavailable.map(provider => this.readinessBlocker(
+                'REPAIR_PROVIDER_NOT_READY',
+                'NEEDS_ATTENTION',
+                'REPAIR_GOVERNANCE',
+                'BACKOFFICE_REPAIR_GOVERNANCE',
+                'Open Module Registry',
+                'Readiness repair provider is not ready: ' + provider.ownerModule,
+                { repairOperation: 'repairProvider.refreshCapability', repairAction: 'REFRESH_REPAIR_PROVIDER',
+                    repairAvailable: true, repairEligibility: 'MANUAL', repairLabel: 'Refresh repair provider' }
+            )),
+            nextAction: unavailable.length ? 'Open Module Registry and repair unavailable readiness repair providers.' :
+                providers.length ? 'Repair providers are registered and ready for governed dry-runs.' :
+                    'Register owner repair providers as modules expose executable readiness repairs.',
+        };
     },
     /** Executes or dry-runs one owner-declared readiness repair operation. */
     executeRepair: async function (request) {
@@ -2236,7 +2482,8 @@ module.exports = {
             this.eWasteAcceptanceSection(context),
             this.searchSection(context),
             this.assistantSection(),
-            this.applicationSection(context.applicationInitializationProfiles),
+            this.applicationSection(profileStatusReport, context.applicationInitializationProfiles),
+            this.repairGovernanceSection(),
             this.acceptanceSection(profileStatusReport, context),
         ].filter(Boolean);
         let summary = sections.reduce((result, section) => {
