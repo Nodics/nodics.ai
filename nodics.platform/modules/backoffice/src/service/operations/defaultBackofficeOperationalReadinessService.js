@@ -616,6 +616,12 @@ module.exports = {
             blocker.readiness = state.readiness ? String(state.readiness) : 'UNKNOWN';
             blockers.push(blocker);
         });
+        let sourceReadinessCounts = this.countByValue(sources, source => {
+            if (!source || !source.id) return 'UNKNOWN';
+            let state = bySource[String(source.id)] || {};
+            if (source.type === 'OPENAPI') return 'REFERENCE';
+            return state.ready === true ? 'READY' : state.readiness || 'NOT_READY';
+        });
         return {
             key: 'documentation',
             title: 'Documentation publishing and indexing',
@@ -628,6 +634,7 @@ module.exports = {
                 cmsSourceCount: sources.filter(source => source && source.type === 'CMS').length,
                 pendingPublicationCount: pending.length,
                 openApiSourceCount: sources.filter(source => source && source.type === 'OPENAPI').length,
+                sourceReadinessCounts: sourceReadinessCounts,
             },
             blockers: blockers,
             nextAction: blockers.length ? 'Install, approve, publish, and index documentation packs from Documentation Dashboard.' :
@@ -733,6 +740,75 @@ module.exports = {
             targetRuntimeRole: target.targetRuntimeRole,
         };
     },
+    /** Counts stable status values without leaking owner payloads into the dashboard contract. */
+    countByValue: function (items, resolver) {
+        return [].concat(items || []).reduce((result, item) => {
+            let value = resolver(item);
+            value = value ? String(value) : 'UNKNOWN';
+            result[value] = (result[value] || 0) + 1;
+            return result;
+        }, {});
+    },
+    /** Groups import releases by their business data group so operators see outcomes, not files. */
+    importReleaseGroups: function (releases) {
+        let groups = {};
+        [].concat(releases || []).forEach(release => {
+            let readiness = release.readiness || {};
+            let group = readiness.group || release.releaseGroup || release.dataGroup || release.dataType || 'DATA_RELEASE';
+            let key = String(group);
+            if (!groups[key]) groups[key] = {
+                code: key,
+                releaseCount: 0,
+                blockerCount: 0,
+                currentCount: 0,
+                needsAttentionCount: 0,
+                targetServers: [],
+            };
+            groups[key].releaseCount++;
+            if (readiness.businessStatus === 'READY' || readiness.businessStatus === 'CURRENT' ||
+                readiness.businessStatus === 'PREPARED_STAGED') groups[key].currentCount++;
+            if (readiness.businessStatus && !['READY', 'CURRENT', 'PREPARED_STAGED'].includes(String(readiness.businessStatus))) {
+                groups[key].needsAttentionCount++;
+            }
+            groups[key].blockerCount += [].concat(readiness.blockers || []).length;
+            let target = release._target || {};
+            if (target.targetServer && !groups[key].targetServers.includes(String(target.targetServer))) {
+                groups[key].targetServers.push(String(target.targetServer));
+            }
+        });
+        return Object.values(groups).sort((left, right) => left.code.localeCompare(right.code));
+    },
+    /** Creates the business-user recovery lane model consumed by Axis. */
+    recoveryLane: function (section, label, description) {
+        section = section || {};
+        let blockers = [].concat(section.blockers || []);
+        return {
+            key: String(section.key || label || 'readiness'),
+            label: String(label || section.title || section.key || 'Readiness'),
+            description: String(description || section.title || 'Review readiness.'),
+            state: String(section.businessStatus || 'UNKNOWN'),
+            ownerModule: String(section.ownerModule || 'unknown'),
+            source: String(section.source || 'unknown'),
+            route: String(section.route || '/dashboard'),
+            blockerCount: blockers.length,
+            issueCodes: blockers.map(blocker => blocker.code || blocker.blockerCode).filter(Boolean).slice(0, 4),
+            nextAction: String(section.nextAction || 'Review the owning workspace.'),
+        };
+    },
+    /** Builds the canonical go-live recovery matrix from existing readiness sections. */
+    operationalRecoveryMatrix: function (sections) {
+        let byKey = [].concat(sections || []).reduce((result, section) => {
+            if (section && section.key) result[section.key] = section;
+            return result;
+        }, {});
+        return [
+            this.recoveryLane(byKey.imports, 'Import data', 'Install and repair business data releases from owner catalogues.'),
+            this.recoveryLane(byKey.publishing, 'Prepare staged publication', 'Prepare staged application and documentation publication profiles.'),
+            this.recoveryLane(byKey.approval, 'Complete approvals', 'Resolve governed Process approval tasks before Online publication.'),
+            this.recoveryLane(byKey.documentation, 'Publish documentation', 'Install, approve, publish, and index documentation packs.'),
+            this.recoveryLane(byKey.media, 'Repair media', 'Create required media objects and reconcile references before Online delivery.'),
+        ];
+    },
     /** Builds the owner-backed import release readiness section from nImport catalogue projections. */
     importReadinessSection: async function (request, profiles) {
         let targets = this.importReadinessTargets(profiles);
@@ -791,11 +867,8 @@ module.exports = {
             blockers[blockers.length - 1].dataType = item.target.dataType;
             if (diagnostic) blockers[blockers.length - 1].runtimeDiagnostic = diagnostic;
         });
-        let statusCounts = releases.reduce((result, release) => {
-            let status = (release.readiness || {}).businessStatus || 'UNKNOWN';
-            result[status] = (result[status] || 0) + 1;
-            return result;
-        }, {});
+        let statusCounts = this.countByValue(releases, release => (release.readiness || {}).businessStatus || 'UNKNOWN');
+        let releaseGroups = this.importReleaseGroups(releases);
         let businessStatus = providerErrors.length || blockers.length ? 'NEEDS_ATTENTION' : releases.length ? 'READY' : 'NOT_CONFIGURED';
         return {
             key: 'imports',
@@ -809,6 +882,7 @@ module.exports = {
                 releaseCount: releases.length,
                 blockerCount: blockers.length,
                 providerErrorCount: providerErrors.length,
+                releaseGroups: releaseGroups,
             }, statusCounts),
             blockers: blockers,
             nextAction: blockers.length ? 'Open Data Releases and repair blocked release groups.' :
@@ -886,6 +960,8 @@ module.exports = {
         });
         let online = statuses.filter(status => status && status.capability && status.capability.businessStatus === 'ONLINE').length;
         let pending = statuses.length - online;
+        let profileStateCounts = this.countByValue(statuses, status =>
+            status && status.capability && status.capability.businessStatus || 'UNKNOWN');
         return {
             key: 'publishing',
             title: 'Publication readiness',
@@ -893,7 +969,8 @@ module.exports = {
             ownerModule: 'cms',
             source: 'BACKOFFICE_APPLICATION_INITIALIZATION',
             route: '/publishing/setup',
-            summary: { profileCount: statuses.length, onlineCount: online, pendingCount: Math.max(0, pending), blockerCount: blockers.length, providerErrorCount: errors.length },
+            summary: { profileCount: statuses.length, onlineCount: online, pendingCount: Math.max(0, pending),
+                blockerCount: blockers.length, providerErrorCount: errors.length, profileStateCounts: profileStateCounts },
             blockers: blockers,
             nextAction: blockers.length || pending > 0 ? 'Open Setup & Accelerators and resolve publication readiness blockers.' :
                 statuses.length ? 'Publication profiles are Online-ready.' : 'Configure application publication profiles.',
@@ -949,6 +1026,9 @@ module.exports = {
             let diagnostic = status && status.capability && status.capability.approvalDiagnostic || {};
             return !['APPROVED', 'NOT_STARTED'].includes(String(diagnostic.status || ''));
         }).length;
+        let approvalStatusCounts = this.countByValue(statuses, status =>
+            status && status.capability && status.capability.approvalDiagnostic &&
+            status.capability.approvalDiagnostic.status || 'UNKNOWN');
         return {
             key: 'approval',
             title: 'Process approval tasks',
@@ -956,7 +1036,8 @@ module.exports = {
             ownerModule: 'workflow',
             source: 'PUBLICATION_APPROVAL',
             route: '/process/approval-queue',
-            summary: { profileCount: statuses.length, pendingApprovalCount: pending, blockerCount: blockers.length, providerErrorCount: errors.length },
+            summary: { profileCount: statuses.length, pendingApprovalCount: pending, blockerCount: blockers.length,
+                providerErrorCount: errors.length, approvalStatusCounts: approvalStatusCounts },
             blockers: blockers,
             nextAction: blockers.length ? 'Open Approval Queue and reconcile governed publication approval tasks.' :
                 'No actionable publication approval blockers were detected.',
@@ -990,6 +1071,7 @@ module.exports = {
             let summary = status && status.capability && status.capability.publicationSummary || {};
             return summary.media ? String(summary.media) : 'UNKNOWN';
         });
+        let mediaStateCounts = this.countByValue(mediaStates, state => state);
         let ready = mediaStates.filter(state => state === 'READY_OR_NOT_REQUIRED').length;
         let needsRepair = mediaStates.filter(state => state === 'NEEDS_REPAIR').length;
         return {
@@ -1005,6 +1087,7 @@ module.exports = {
                 needsRepairCount: needsRepair,
                 blockerCount: blockers.length,
                 providerErrorCount: errors.length,
+                mediaStateCounts: mediaStateCounts,
                 cleanupReviewRoute: '/media/cleanup-candidates',
                 replicationRoute: '/media/replication',
             },
@@ -1331,6 +1414,7 @@ module.exports = {
             result.blockers += (section.blockers || []).length;
             return result;
         }, { total: 0, blockers: 0 });
+        summary.recoveryMatrix = this.operationalRecoveryMatrix(sections);
         let report = {
             contractVersion: 1,
             state: summary.BLOCKED || summary.NOT_READY ? 'NOT_READY' : summary.NEEDS_ATTENTION || summary.NOT_EXPOSED ? 'NEEDS_ATTENTION' : 'READY',

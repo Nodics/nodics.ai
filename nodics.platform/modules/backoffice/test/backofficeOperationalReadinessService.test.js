@@ -181,13 +181,23 @@ async function validateDeliveryAndProductionPolicy() {
     assert.strictEqual(service._lastOperationalReadinessSnapshot.state, 'NOT_READY');
     assert.strictEqual(service._lastOperationalReadinessSnapshot.source, 'backoffice.operationalReadiness.snapshot');
     assert(Array.isArray(aggregateReport.summary.timeline));
+    assert(Array.isArray(aggregateReport.summary.recoveryMatrix));
+    assert(aggregateReport.summary.recoveryMatrix.some(lane => lane.key === 'imports'
+        && lane.label === 'Import data'
+        && lane.route === '/operations/imports-exports'
+        && lane.state === 'READY'));
+    assert(aggregateReport.summary.recoveryMatrix.some(lane => lane.key === 'approval'
+        && lane.label === 'Complete approvals'
+        && lane.route === '/process/approval-queue'));
     assert(aggregateReport.summary.timeline.some(item => item.eventType === 'backoffice.operationalReadiness.snapshot'
         && item.state === 'NOT_READY'));
     assert(auditEvents.some(event => event.eventType === 'backoffice.operationalReadiness.snapshot'
         && event.state === 'NOT_READY'));
     assert(aggregateReport.sections.some(section => section.key === 'imports'
         && section.businessStatus === 'READY'
-        && section.summary.releaseCount === 1));
+        && section.summary.releaseCount === 1
+        && section.summary.releaseGroups.some(group => group.code === 'DATA_RELEASE'
+            && group.releaseCount === 1)));
     assert.strictEqual(moduleInvocationCalls[0].moduleName, 'import');
     assert.strictEqual(moduleInvocationCalls[0].apiName, '/sample');
     assert.strictEqual(moduleInvocationCalls[0].header.Authorization, 'Bearer operator-token');
@@ -196,10 +206,12 @@ async function validateDeliveryAndProductionPolicy() {
         && section.summary.onlineCount === 1));
     assert(aggregateReport.sections.some(section => section.key === 'approval'
         && section.businessStatus === 'READY'
-        && section.summary.pendingApprovalCount === 0));
+        && section.summary.pendingApprovalCount === 0
+        && section.summary.approvalStatusCounts.APPROVED === 1));
     assert(aggregateReport.sections.some(section => section.key === 'media'
         && section.businessStatus === 'READY'
         && section.summary.readyOrNotRequiredCount === 1
+        && section.summary.mediaStateCounts.READY_OR_NOT_REQUIRED === 1
         && section.summary.cleanupReviewRoute === '/media/cleanup-candidates'));
     assert(aggregateReport.sections.some(section => section.key === 'search'
         && section.businessStatus === 'READY'
@@ -212,7 +224,8 @@ async function validateDeliveryAndProductionPolicy() {
         && section.summary.providerAvailable === true
         && section.summary.indexedSourceCount === 1));
     assert(aggregateReport.sections.some(section => section.key === 'documentation'
-        && section.businessStatus === 'READY'));
+        && section.businessStatus === 'READY'
+        && section.summary.sourceReadinessCounts.READY === 1));
     assert(aggregateReport.sections.some(section => section.key === 'runtimeCommunication'
         && section.businessStatus === 'READY'));
     let runtimeCommunication = aggregateReport.sections.find(section => section.key === 'runtimeCommunication');
