@@ -19,6 +19,8 @@ global.CONFIG = { get: key => key === 'cms' ? { publication: publication } : und
 
 let releaseStatus = 'NOT_INSTALLED';
 let lifecycle;
+let targetLineage;
+let targetLineageError;
 let operations = [];
 global.SERVICE = {
     DefaultCmsPublicationWorkflowService: {
@@ -28,6 +30,12 @@ global.SERVICE = {
             workflowRef: 'workflow-' + value.code + '-' + value.revision, taskCode: 'approval-task',
             taskStatus: 'OPEN', queue: 'publication-reviewers', message: 'Publication is waiting for reviewer decision.',
             suggestedAction: 'Review approval queue', disabledReason: 'Waiting for reviewer.' } })
+    },
+    DefaultCmsPublicationVersionProviderService: {
+        getLineage: async () => {
+            if (targetLineageError) throw targetLineageError;
+            return targetLineage;
+        }
     },
     DefaultDataReleaseService: {
         getCatalogue: async () => ({ data: [{ releaseCode: 'axis:axisBaseline', version: '0.0.0',
@@ -100,14 +108,36 @@ const request = { tenant: 'default', authData: { principalId: 'platform-service'
     assert.strictEqual(operations.filter(item => item[0] === 'requestApproval').length, 4);
     const status = await service.status('axis', request);
     assert.strictEqual(status.readiness, 'PUBLICATION_PENDING');
+    assert.strictEqual(status.publicationDiagnostic.status, 'PUBLICATION_APPROVAL_PENDING');
+    assert.strictEqual(status.publicationDependencyGraph.nodes.some(node => node.kind === 'PROCESS_WORKFLOW'), true);
     assert.strictEqual(status.publication.approvalDiagnostic.status, 'WAITING_REVIEWER');
     assert.strictEqual(status.publication.approvalTask.code, 'approval-task');
     assert.strictEqual(status.publication.approvalTask.queue, 'publication-reviewers');
+    lifecycle = Object.assign({}, lifecycle, { state: 'FAILED', revision: 7, auditTrail: [
+        { revision: 6, toState: 'VALIDATING' },
+        { revision: 7, toState: 'FAILED', details: { failureCode: 'VALIDATION_FAILED' } }
+    ] });
+    const failed = await service.status('axis', request);
+    assert.strictEqual(failed.publicationDiagnostic.status, 'PUBLICATION_FAILED');
+    assert.strictEqual(failed.publicationDiagnostic.failureCode, 'VALIDATION_FAILED');
+    lifecycle = Object.assign({}, lifecycle, { state: 'ONLINE', revision: 8, targetVersion: 'axis-manifest-1',
+        previousOnlineVersion: 'axis-manifest-0' });
+    targetLineageError = new NodicsError('TARGET_RECEIPT_MISSING', 'target evidence missing');
+    const receiptMissing = await service.status('axis', request);
+    assert.strictEqual(receiptMissing.publicationDiagnostic.status, 'ONLINE_RECEIPT_MISSING');
+    targetLineageError = undefined;
+    targetLineage = { status: 'CONSISTENT', manifest: { code: 'axis-manifest-1' } };
+    const online = await service.status('axis', request);
+    assert.strictEqual(online.publicationDiagnostic.status, 'PUBLICATION_ONLINE');
     lifecycle = undefined;
     releaseStatus = 'RUNNING';
     const importing = await service.status('axis', request);
     assert.strictEqual(importing.readiness, 'IMPORTING');
     assert.strictEqual(importing.releaseStatus, 'RUNNING');
+    assert.strictEqual(importing.publicationDiagnostic.status, 'STAGED_SOURCE_IMPORTING');
+    releaseStatus = 'CURRENT';
+    const missingPublication = await service.status('axis', request);
+    assert.strictEqual(missingPublication.publicationDiagnostic.status, 'PUBLICATION_NOT_CREATED');
     publication.runtimeRole = 'ONLINE';
     await assert.rejects(service.status('axis', request), error => error.code === 'CMS_BASELINE_SOURCE_ROLE_INVALID');
     console.log('CMS publication baseline service validated');

@@ -853,6 +853,38 @@ module.exports = {
         repair: repair,
       });
     }
+    if (
+      projection &&
+      projection.publicationDiagnostic &&
+      !["PUBLICATION_ONLINE", "PUBLICATION_APPROVAL_PENDING"].includes(
+        projection.publicationDiagnostic.status,
+      )
+    ) {
+      let diagnostic = projection.publicationDiagnostic;
+      let repair = diagnostic.repair;
+      blockers.push({
+        blockerCode: diagnostic.status,
+        code: diagnostic.status,
+        severity:
+          diagnostic.severity === "INFO"
+            ? "INFO"
+            : diagnostic.severity === "WAITING"
+              ? "WARNING"
+              : diagnostic.severity === "REPAIR_REQUIRED"
+                ? "REPAIR_REQUIRED"
+                : "BLOCKED",
+        owner: String(diagnostic.publicationCode || diagnostic.releaseCode || projection.releaseCode || ""),
+        ownerType: "PUBLICATION",
+        source: "CMS_PUBLICATION",
+        message: diagnostic.message,
+        action: diagnostic.suggestedAction,
+        disabledReason: diagnostic.disabledReason,
+        technicalStatus: diagnostic.status,
+        failureCode: diagnostic.failureCode,
+        repair: repair,
+        publicationDiagnostic: diagnostic,
+      });
+    }
     if (projection && projection.readiness === "PUBLICATION_PENDING") {
       let approvalDiagnostic = this.approvalWorkflowDiagnostic(projection);
       let publication = projection.publication || {};
@@ -1414,10 +1446,12 @@ module.exports = {
       source: "backoffice.applicationInitialization",
       stale: false,
       dependencies: this.capabilityDependencies(profile, projection),
-      dependencyGraph: this.capabilityDependencyGraph(profile, projection),
+      dependencyGraph: projection && projection.publicationDependencyGraph ||
+        this.capabilityDependencyGraph(profile, projection),
       blockers: blockers,
       repairActions: blockers.map((blocker) => blocker.repair).filter(Boolean),
       publicationSummary: this.capabilityPublicationSummary(projection, blockers),
+      publicationDiagnostic: projection && projection.publicationDiagnostic,
       approvalDiagnostic: this.approvalWorkflowDiagnostic(projection),
       disabledReason: blockingAction ? blockingAction.disabledReason || blockingAction.message : undefined,
       nextAction:
@@ -2070,6 +2104,8 @@ module.exports = {
           releaseCode: authority.releaseCode,
           preparation: preparation,
           publication: authority.publication,
+          publicationDiagnostic: authority.publicationDiagnostic,
+          publicationDependencyGraph: authority.publicationDependencyGraph,
         };
         let repair = this.approvalRepairProjection(
           operation,
@@ -2107,6 +2143,8 @@ module.exports = {
           releaseStatus: authority.releaseStatus,
           preparation: preparation,
           publication: authority.publication,
+          publicationDiagnostic: authority.publicationDiagnostic,
+          publicationDependencyGraph: authority.publicationDependencyGraph,
           lineage: authority.lineage,
           repair: repair,
           capability: this.capabilityProjection(profile, projection),

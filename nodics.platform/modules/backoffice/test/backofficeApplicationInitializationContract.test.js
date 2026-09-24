@@ -893,6 +893,26 @@ global.fetch = async (url) => {
           disabledReason: "The Process task needs assignee or queue evidence before Axis can present a decision path.",
         },
       },
+      publicationDiagnostic: {
+        source: "CMS_PUBLICATION",
+        status: "PUBLICATION_APPROVAL_PENDING",
+        severity: "WAITING",
+        publicationCode: "cmsBaseline_frameworkdocs_0_16_5",
+        workflowRef: "cmsPublicationApproval-owner",
+        message: "The publication is waiting for governed approval.",
+        suggestedAction: "Review approval queue",
+      },
+      publicationDependencyGraph: {
+        nodes: [
+          { id: "source:contentPack:nodicsDocumentation", kind: "CONTENT_PACK", status: "CURRENT" },
+          { id: "publication:cmsBaseline_frameworkdocs_0_16_5", kind: "PUBLICATION", status: "PENDING_APPROVAL" },
+          { id: "workflow:cmsPublicationApproval-owner", kind: "PROCESS_WORKFLOW", status: "TASK_ASSIGNEE_MISSING" },
+        ],
+        edges: [
+          { from: "source:contentPack:nodicsDocumentation", to: "publication:cmsBaseline_frameworkdocs_0_16_5",
+            relationship: "PUBLISHES_TO" },
+        ],
+      },
     },
   });
   const ownerDiagnosticStatus = await service.status("frameworkdocs", {
@@ -905,6 +925,18 @@ global.fetch = async (url) => {
     "TASK_ASSIGNEE_MISSING",
     "BackOffice must prefer Process-owned approval diagnostics when CMS supplies them",
   );
+  assert.strictEqual(
+    ownerDiagnosticStatus.capability.publicationDiagnostic.status,
+    "PUBLICATION_APPROVAL_PENDING",
+    "BackOffice must expose CMS-owned publication diagnostics without synthesizing publication state",
+  );
+  assert.strictEqual(
+    ownerDiagnosticStatus.capability.dependencyGraph.nodes.some(
+      (node) => node.kind === "PROCESS_WORKFLOW",
+    ),
+    true,
+    "BackOffice must expose the CMS-owned publication dependency graph for Axis rendering",
+  );
   assert(
     ownerDiagnosticStatus.capability.blockers.some(
       (blocker) =>
@@ -914,6 +946,53 @@ global.fetch = async (url) => {
         blocker.approvalDiagnostic.taskCode === "approval-task",
     ),
     "Owner-provided approval diagnostics must drive blocker guidance",
+  );
+  moduleInvocationHandler = async () => ({
+    data: {
+      readiness: "FAILED",
+      releaseCode: "contentPack:nodicsDocumentation",
+      releaseVersion: "0.16.5",
+      releaseStatus: "CURRENT",
+      publication: {
+        code: "cmsBaseline_frameworkdocs_0_16_5",
+        state: "FAILED",
+        revision: 9,
+        failureCode: "ACTIVATION_FAILED",
+      },
+      publicationDiagnostic: {
+        source: "CMS_PUBLICATION",
+        status: "PUBLICATION_FAILED",
+        severity: "REPAIR_REQUIRED",
+        publicationCode: "cmsBaseline_frameworkdocs_0_16_5",
+        failureCode: "ACTIVATION_FAILED",
+        message: "Publication failed before reaching Online.",
+        suggestedAction: "Retry publication",
+        disabledReason: "Resolve the CMS/nPublish publication diagnostic before treating this capability as Online.",
+        repair: {
+          available: true,
+          operation: "cmsPublicationBaseline.initiate",
+          action: "RETRY_PUBLICATION",
+          label: "Retry publication",
+          idempotent: true,
+        },
+      },
+    },
+  });
+  const failedPublicationStatus = await service.status("frameworkdocs", {
+    tenant: "default",
+    authData: { principalId: "admin" },
+    httpRequest: { headers: { authorization: "Bearer operator-token" } },
+  });
+  assert(
+    failedPublicationStatus.capability.blockers.some(
+      (blocker) =>
+        blocker.code === "PUBLICATION_FAILED" &&
+        blocker.source === "CMS_PUBLICATION" &&
+        blocker.failureCode === "ACTIVATION_FAILED" &&
+        blocker.repair &&
+        blocker.repair.action === "RETRY_PUBLICATION",
+    ),
+    "CMS-owned publication diagnostics must become BackOffice capability blockers with repair guidance",
   );
   moduleInvocationHandler = async () => ({
     data: {

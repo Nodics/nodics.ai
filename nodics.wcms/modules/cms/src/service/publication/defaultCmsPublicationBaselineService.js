@@ -122,6 +122,133 @@ module.exports = {
             };
         }
     },
+    /** Returns stable publication repair metadata owned by CMS/nPublish readiness. */
+    publicationRepair: function (status) {
+        let repairs = {
+            STAGED_SOURCE_NOT_INSTALLED: { action: 'INSTALL_STAGED_SOURCE', operation: 'cmsPublicationBaseline.initiate',
+                label: 'Install staged source', available: true, idempotent: true },
+            STAGED_SOURCE_IMPORTING: { action: 'REFRESH_STAGED_SOURCE', operation: 'cmsPublicationBaseline.status',
+                label: 'Refresh staged source', available: true, idempotent: true },
+            PUBLICATION_NOT_CREATED: { action: 'CREATE_PUBLICATION', operation: 'cmsPublicationBaseline.initiate',
+                label: 'Create publication', available: true, idempotent: true },
+            PUBLICATION_VALIDATION_PENDING: { action: 'VALIDATE_PUBLICATION', operation: 'cmsPublicationBaseline.initiate',
+                label: 'Validate publication', available: true, idempotent: true },
+            PUBLICATION_APPROVAL_NOT_REQUESTED: { action: 'REQUEST_PUBLICATION_APPROVAL',
+                operation: 'cmsPublicationBaseline.initiate', label: 'Request approval', available: true, idempotent: true },
+            PUBLICATION_APPROVAL_PENDING: { action: 'REVIEW_APPROVAL_TASK', operation: 'process.reviewApprovalTask',
+                label: 'Review approval queue', available: false, idempotent: true },
+            PUBLICATION_APPROVAL_REJECTED: { action: 'RESUBMIT_PUBLICATION', operation: 'cmsPublicationBaseline.initiate',
+                label: 'Resubmit publication', available: true, idempotent: true },
+            PUBLICATION_FAILED: { action: 'RETRY_PUBLICATION', operation: 'cmsPublicationBaseline.initiate',
+                label: 'Retry publication', available: true, idempotent: true },
+            PUBLICATION_ROLLED_BACK: { action: 'REPUBLISH_PUBLICATION', operation: 'cmsPublicationBaseline.initiate',
+                label: 'Republish publication', available: true, idempotent: true },
+            PUBLICATION_WITHDRAWN: { action: 'RESTORE_PUBLICATION', operation: 'cmsPublicationBaseline.initiate',
+                label: 'Restore publication', available: true, idempotent: true },
+            ONLINE_RECEIPT_MISSING: { action: 'RECONCILE_ONLINE_EVIDENCE', operation: 'publishing.reconcileReceipt',
+                label: 'Reconcile Online evidence', available: true, idempotent: true },
+            ONLINE_POINTER_STALE: { action: 'REVIEW_ONLINE_POINTER', operation: 'publishing.reviewOnlinePointer',
+                label: 'Review Online pointer', available: false, idempotent: true },
+            PUBLICATION_ONLINE: { action: 'MONITOR_PUBLICATION', operation: 'cmsPublicationBaseline.status',
+                label: 'Monitor publication', available: true, idempotent: true }
+        };
+        let repair = repairs[status] || { action: 'REFRESH_PUBLICATION_STATUS', operation: 'cmsPublicationBaseline.status',
+            label: 'Refresh publication status', available: true, idempotent: true };
+        return Object.assign({ requiresConfirmation: false }, repair);
+    },
+    /** Normalizes source, lifecycle, workflow, and Online evidence into one publication diagnostic. */
+    publicationDiagnostic: function (descriptor, release, publication, target, targetEvidenceError, approvalDiagnostic, transitions) {
+        let state = publication && publication.state;
+        let lastTransition = transitions && transitions.length ? transitions[transitions.length - 1] : undefined;
+        let status = release.status === 'RUNNING' ? 'STAGED_SOURCE_IMPORTING' :
+            release.status !== 'CURRENT' ? 'STAGED_SOURCE_NOT_INSTALLED' :
+                !publication ? 'PUBLICATION_NOT_CREATED' :
+                    ['STAGED', 'VALIDATING'].includes(state) ? 'PUBLICATION_VALIDATION_PENDING' :
+                        state === 'VALIDATED' ? 'PUBLICATION_APPROVAL_NOT_REQUESTED' :
+                            state === 'PENDING_APPROVAL' ? 'PUBLICATION_APPROVAL_PENDING' :
+                                state === 'REJECTED' ? 'PUBLICATION_APPROVAL_REJECTED' :
+                                    state === 'FAILED' ? 'PUBLICATION_FAILED' :
+                                        state === 'ROLLED_BACK' ? 'PUBLICATION_ROLLED_BACK' :
+                                            state === 'WITHDRAWN' ? 'PUBLICATION_WITHDRAWN' :
+                                                state === 'ONLINE' && targetEvidenceError ? 'ONLINE_RECEIPT_MISSING' :
+                                                    state === 'ONLINE' && target && target.status === 'POINTER_DRIFT' ? 'ONLINE_POINTER_STALE' :
+                                                        state === 'ONLINE' ? 'PUBLICATION_ONLINE' : 'PUBLICATION_STATE_UNKNOWN';
+        let severity = status === 'PUBLICATION_ONLINE' ? 'INFO' :
+            ['STAGED_SOURCE_IMPORTING', 'PUBLICATION_APPROVAL_PENDING'].includes(status) ? 'WAITING' :
+                ['PUBLICATION_FAILED', 'STAGED_SOURCE_NOT_INSTALLED', 'PUBLICATION_NOT_CREATED',
+                    'PUBLICATION_VALIDATION_PENDING', 'PUBLICATION_APPROVAL_NOT_REQUESTED',
+                    'PUBLICATION_APPROVAL_REJECTED', 'PUBLICATION_ROLLED_BACK', 'PUBLICATION_WITHDRAWN',
+                    'ONLINE_RECEIPT_MISSING'].includes(status) ? 'REPAIR_REQUIRED' : 'BLOCKED';
+        let messages = {
+            STAGED_SOURCE_NOT_INSTALLED: 'The publishable Staged source is not installed/current.',
+            STAGED_SOURCE_IMPORTING: 'The publishable Staged source is still importing.',
+            PUBLICATION_NOT_CREATED: 'The Staged source is current, but no publication lifecycle receipt exists.',
+            PUBLICATION_VALIDATION_PENDING: 'The publication exists and must complete validation.',
+            PUBLICATION_APPROVAL_NOT_REQUESTED: 'The publication is validated but approval has not been requested.',
+            PUBLICATION_APPROVAL_PENDING: 'The publication is waiting for governed approval.',
+            PUBLICATION_APPROVAL_REJECTED: 'The governed publication approval was rejected.',
+            PUBLICATION_FAILED: 'Publication failed before reaching Online.',
+            PUBLICATION_ROLLED_BACK: 'Publication was rolled back from Online.',
+            PUBLICATION_WITHDRAWN: 'Publication was withdrawn from Online.',
+            ONLINE_RECEIPT_MISSING: 'Online publication evidence is incomplete or unavailable.',
+            ONLINE_POINTER_STALE: 'Online pointer evidence does not match the expected target publication.',
+            PUBLICATION_ONLINE: 'Publication is Online with target evidence.'
+        };
+        let repair = this.publicationRepair(status);
+        return {
+            source: 'CMS_PUBLICATION',
+            owner: 'cms',
+            status: status,
+            severity: severity,
+            baselineCode: descriptor.code,
+            releaseCode: release.releaseCode,
+            releaseVersion: release.version,
+            releaseStatus: release.status,
+            publicationCode: publication && publication.code,
+            publicationState: state,
+            publicationRevision: publication && publication.revision,
+            sourceVersion: publication && publication.sourceVersion || descriptor.sourceVersion,
+            targetVersion: publication && publication.targetVersion,
+            previousOnlineVersion: publication && publication.previousOnlineVersion,
+            workflowRef: publication && (publication.workflowRef || (state === 'PENDING_APPROVAL' &&
+                SERVICE.DefaultCmsPublicationWorkflowService.reference(publication))),
+            approvalStatus: approvalDiagnostic && approvalDiagnostic.status,
+            targetStatus: target && target.status,
+            failureCode: state === 'FAILED' && lastTransition && lastTransition.failureCode || targetEvidenceError,
+            lastTransition: lastTransition,
+            message: messages[status] || 'Publication readiness requires owner review.',
+            suggestedAction: repair.label,
+            disabledReason: severity === 'INFO' ? 'Publication is ready.' :
+                'Resolve the CMS/nPublish publication diagnostic before treating this capability as Online.',
+            repair: repair
+        };
+    },
+    /** Builds a compact owner dependency graph for publication readiness rendering. */
+    publicationDependencyGraph: function (descriptor, release, publication, target, approvalDiagnostic) {
+        let publicationCode = publication && publication.code || this.publicationCode(descriptor);
+        let workflowRef = publication && (publication.workflowRef ||
+            (publication.state === 'PENDING_APPROVAL' && SERVICE.DefaultCmsPublicationWorkflowService.reference(publication)));
+        let targetVersion = publication && publication.targetVersion;
+        let nodes = [
+            { id: 'source:' + release.releaseCode, kind: release.sourceKind || 'DATA_RELEASE',
+                label: release.releaseCode, owner: 'nImport', status: release.status },
+            { id: 'publication:' + publicationCode, kind: 'PUBLICATION',
+                label: publicationCode, owner: 'nPublish', status: publication && publication.state || 'MISSING' }
+        ];
+        let edges = [{ from: nodes[0].id, to: nodes[1].id, relationship: 'PUBLISHES_TO' }];
+        if (workflowRef) {
+            nodes.push({ id: 'workflow:' + workflowRef, kind: 'PROCESS_WORKFLOW',
+                label: workflowRef, owner: 'process', status: approvalDiagnostic && approvalDiagnostic.status || 'UNKNOWN' });
+            edges.push({ from: nodes[1].id, to: 'workflow:' + workflowRef, relationship: 'REQUIRES_APPROVAL' });
+        }
+        if (targetVersion || target) {
+            nodes.push({ id: 'online:' + (targetVersion || publicationCode), kind: 'ONLINE_TARGET',
+                label: targetVersion || publicationCode, owner: 'wcms', status: target && target.status || 'UNKNOWN' });
+            edges.push({ from: nodes[1].id, to: 'online:' + (targetVersion || publicationCode),
+                relationship: 'DEPLOYS_TO' });
+        }
+        return { nodes: nodes, edges: edges };
+    },
     /** Waits briefly for a cross-runtime approval callback to finish its local Online transition. */
     onlinePublication: async function (descriptor, request) {
         let publication;
@@ -192,6 +319,10 @@ module.exports = {
             queue: approvalDiagnostic.queue,
             requiresAssignee: approvalDiagnostic.status === 'TASK_ASSIGNEE_MISSING'
         } : undefined;
+        let publicationDiagnostic = this.publicationDiagnostic(descriptor, release, publication, target,
+            targetEvidenceError, approvalDiagnostic, transitions);
+        let publicationDependencyGraph = this.publicationDependencyGraph(descriptor, release, publication, target,
+            approvalDiagnostic);
         let readiness = state === 'ONLINE' ? 'READY' : state === 'WITHDRAWN' ? 'RETIRED' :
             state === 'ROLLED_BACK' ? 'ROLLED_BACK' : state === 'REJECTED' ? 'REJECTED' :
             state === 'FAILED' ? 'FAILED' : state ? 'PUBLICATION_PENDING' :
@@ -200,6 +331,8 @@ module.exports = {
         return { baselineCode: descriptor.code, releaseCode: release.releaseCode, releaseVersion: release.version,
             releaseStatus: release.status, readiness: readiness,
             review: this.review(descriptor, release, publication, request),
+            publicationDiagnostic: publicationDiagnostic,
+            publicationDependencyGraph: publicationDependencyGraph,
             publication: publication && { code: publication.code, state: publication.state, revision: publication.revision,
                 targetVersion: publication.targetVersion, previousOnlineVersion: publication.previousOnlineVersion,
                 sourceVersion: publication.sourceVersion, requestedBy: publication.requestedBy,
@@ -213,7 +346,8 @@ module.exports = {
                 source: { releaseCode: release.releaseCode, releaseVersion: release.version,
                     sourceVersion: publication.sourceVersion },
             publication: { code: publication.code, workflowRef: publication.workflowRef,
-                    correlationId: publication.correlationId, transitions: transitions },
+                    correlationId: publication.correlationId, transitions: transitions,
+                    diagnostic: publicationDiagnostic },
                 target: target, targetEvidenceError: targetEvidenceError } };
     },
     /** Installs and submits one baseline without approving or deploying it. */
