@@ -997,6 +997,7 @@ module.exports = {
             siteCode: status && status.siteCode ? String(status.siteCode) : undefined,
             releaseCode: status && status.releaseCode ? String(status.releaseCode) : undefined,
             approvalDiagnostic: blocker.approvalDiagnostic,
+            publicationDiagnostic: blocker.publicationDiagnostic,
             runtimeDiagnostic: blocker.runtimeDiagnostic,
         };
     },
@@ -1028,6 +1029,9 @@ module.exports = {
         let pending = statuses.length - online;
         let profileStateCounts = this.countByValue(statuses, status =>
             status && status.capability && status.capability.businessStatus || 'UNKNOWN');
+        let publicationStatusCounts = this.countByValue(statuses, status =>
+            status && status.capability && status.capability.publicationDiagnostic &&
+            status.capability.publicationDiagnostic.status || 'UNKNOWN');
         return {
             key: 'publishing',
             title: 'Publication readiness',
@@ -1037,6 +1041,7 @@ module.exports = {
             route: '/publishing/setup',
             summary: { profileCount: statuses.length, onlineCount: online, pendingCount: Math.max(0, pending),
                 blockerCount: blockers.length, providerErrorCount: errors.length, profileStateCounts: profileStateCounts,
+                publicationStatusCounts: publicationStatusCounts,
                 operatorCommands: [
                     'Open Setup & Accelerators',
                     'Prepare staged content',

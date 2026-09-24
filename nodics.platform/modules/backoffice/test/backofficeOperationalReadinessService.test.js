@@ -232,6 +232,35 @@ async function validateDeliveryAndProductionPolicy() {
     assert(aggregateReport.sections.some(section => section.key === 'publishing'
         && section.businessStatus === 'READY'
         && section.summary.onlineCount === 1));
+    let publicationDiagnosticsSection = service.publishingSection({ statuses: [{
+        profileCode: 'frameworkdocs',
+        applicationCode: 'axis',
+        siteCode: 'nodicsDocumentationSite',
+        releaseCode: 'contentPack:nodicsDocumentation',
+        capability: {
+            businessStatus: 'NEEDS_ATTENTION',
+            publicationDiagnostic: {
+                status: 'PUBLICATION_FAILED',
+                severity: 'REPAIR_REQUIRED',
+            },
+            blockers: [{
+                code: 'PUBLICATION_FAILED',
+                severity: 'REPAIR_REQUIRED',
+                source: 'CMS_PUBLICATION',
+                ownerType: 'PUBLICATION',
+                action: 'Retry publication',
+                message: 'Publication failed before reaching Online.',
+                publicationDiagnostic: { status: 'PUBLICATION_FAILED', failureCode: 'ACTIVATION_FAILED' },
+                repair: { available: true, operation: 'cmsPublicationBaseline.initiate',
+                    action: 'RETRY_PUBLICATION', label: 'Retry publication' }
+            }],
+        }
+    }], errors: [] });
+    assert.strictEqual(publicationDiagnosticsSection.businessStatus, 'NEEDS_ATTENTION');
+    assert.strictEqual(publicationDiagnosticsSection.summary.publicationStatusCounts.PUBLICATION_FAILED, 1);
+    assert(publicationDiagnosticsSection.blockers.some(blocker => blocker.source === 'CMS_PUBLICATION'
+        && blocker.publicationDiagnostic.status === 'PUBLICATION_FAILED'
+        && blocker.repair.action === 'RETRY_PUBLICATION'));
     assert(aggregateReport.sections.some(section => section.key === 'approval'
         && section.businessStatus === 'READY'
         && section.summary.pendingApprovalCount === 0

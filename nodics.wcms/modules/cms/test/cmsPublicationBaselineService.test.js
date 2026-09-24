@@ -120,12 +120,27 @@ const request = { tenant: 'default', authData: { principalId: 'platform-service'
     const failed = await service.status('axis', request);
     assert.strictEqual(failed.publicationDiagnostic.status, 'PUBLICATION_FAILED');
     assert.strictEqual(failed.publicationDiagnostic.failureCode, 'VALIDATION_FAILED');
+    lifecycle = Object.assign({}, lifecycle, { state: 'REJECTED', revision: 8, auditTrail: [
+        { revision: 8, toState: 'REJECTED' }
+    ] });
+    const rejected = await service.status('axis', request);
+    assert.strictEqual(rejected.publicationDiagnostic.status, 'PUBLICATION_APPROVAL_REJECTED');
+    lifecycle = Object.assign({}, lifecycle, { state: 'ROLLED_BACK', revision: 9, targetVersion: 'axis-manifest-1',
+        previousOnlineVersion: 'axis-manifest-0' });
+    const rolledBack = await service.status('axis', request);
+    assert.strictEqual(rolledBack.publicationDiagnostic.status, 'PUBLICATION_ROLLED_BACK');
+    lifecycle = Object.assign({}, lifecycle, { state: 'WITHDRAWN', revision: 10, targetVersion: 'axis-manifest-1' });
+    const withdrawn = await service.status('axis', request);
+    assert.strictEqual(withdrawn.publicationDiagnostic.status, 'PUBLICATION_WITHDRAWN');
     lifecycle = Object.assign({}, lifecycle, { state: 'ONLINE', revision: 8, targetVersion: 'axis-manifest-1',
         previousOnlineVersion: 'axis-manifest-0' });
     targetLineageError = new NodicsError('TARGET_RECEIPT_MISSING', 'target evidence missing');
     const receiptMissing = await service.status('axis', request);
     assert.strictEqual(receiptMissing.publicationDiagnostic.status, 'ONLINE_RECEIPT_MISSING');
     targetLineageError = undefined;
+    targetLineage = { status: 'POINTER_DRIFT', manifest: { code: 'axis-manifest-2' } };
+    const pointerDrift = await service.status('axis', request);
+    assert.strictEqual(pointerDrift.publicationDiagnostic.status, 'ONLINE_POINTER_STALE');
     targetLineage = { status: 'CONSISTENT', manifest: { code: 'axis-manifest-1' } };
     const online = await service.status('axis', request);
     assert.strictEqual(online.publicationDiagnostic.status, 'PUBLICATION_ONLINE');

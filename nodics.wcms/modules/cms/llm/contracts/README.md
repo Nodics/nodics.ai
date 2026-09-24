@@ -52,3 +52,24 @@ CMS owns generic guided-publication acceptance defaults: select the WCMS_STAGED
 runtime and an enabled initialization profile using the framework `foundation`
 template. Application publication selections, Site identities and delivery probes
 belong to their accelerator or customer pack. Defaults never install or publish data.
+
+## Publication Readiness Diagnostics
+
+- CMS/nPublish owns publication readiness facts for source release/content-pack
+  state, publication lifecycle receipts, validation state, approval request
+  state, target manifest lineage and Online pointer evidence.
+- Process owns approval workflow/task facts. CMS may attach the Process
+  `approvalDiagnostic` to publication readiness, but CMS must not mutate
+  approval tasks or infer assignee/queue state itself.
+- BackOffice consumes CMS `publicationDiagnostic`,
+  `publicationDependencyGraph`, `approvalDiagnostic` and `approvalTask` as owner
+  evidence. Axis renders these fields and must not synthesize publication
+  readiness from local UI state.
+- Publication diagnostics must include stable machine fields and business
+  guidance: `status`, `severity`, `message`, `suggestedAction`,
+  `disabledReason`, sanitized source/publication/target identifiers, and
+  governed `repair` metadata when an action exists.
+- Expected publication statuses include staged source not installed/importing,
+  publication not created, validation pending, approval not requested, approval
+  pending/rejected, failed, rolled back, withdrawn, Online receipt missing,
+  Online pointer stale and Online.

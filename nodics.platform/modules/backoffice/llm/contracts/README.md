@@ -167,6 +167,20 @@ Capability blockers must be stable, bounded, and client-safe:
   publication state, workflow/task reference, queue, message, suggested action,
   and disabled reason; it must not expose raw Process records, private comments,
   credentials, or unauthorized assignee data.
+- CMS/nPublish publication readiness must carry `publicationDiagnostic` evidence
+  when the owning publication authority can identify source, lifecycle, approval
+  or Online-target state. Stable statuses include staged source not installed,
+  staged source importing, publication not created, validation pending, approval
+  pending, approval rejected, publication failed, rolled back, withdrawn, Online
+  receipt missing, Online pointer stale, and Online. BackOffice may aggregate
+  these facts into capability blockers and operational-readiness sections, but
+  it must not infer CMS publication state from Axis page state or filesystem
+  layout.
+- Publication dependency graphs must be backend-owned. CMS/nPublish owns source
+  release/content-pack, publication lifecycle and Online-target nodes; Process
+  owns approval workflow/task evidence; BackOffice aggregates the graph; Axis
+  renders it without recalculating readiness or creating replacement dependency
+  semantics.
 - Module dependency rows and dependency-graph nodes may carry sanitized runtime
   evidence from the Functional Module Catalogue: runtime state, registration
   state, enabled flag, observed server identities, stale flag, and bounded
