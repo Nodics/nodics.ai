@@ -495,7 +495,7 @@ const request = { tenant: 'tenant-a', authData: { principalId: 'publisher-a' }, 
         }
     };
     global.NODICS = { getInternalAuthToken: () => undefined };
-    assert.throws(() => transport.deploy({ manifest: manifest }, request),
+    await assert.rejects(() => transport.deploy({ manifest: manifest }, request),
         error => error.code === 'CMS_PUBLICATION_INTERNAL_AUTH_UNAVAILABLE');
     NODICS.getInternalAuthToken = tenant => tenant === 'tenant-a' ? 'service-token' : undefined;
     assert.strictEqual((await transport.deploy({ manifest: manifest }, request)).version, 'target-v1');

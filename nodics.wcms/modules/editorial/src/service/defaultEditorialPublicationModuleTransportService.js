@@ -15,8 +15,36 @@ module.exports = {
     init: function () { return Promise.resolve(true); },
     /** Completes Editorial target transport initialization. */
     postInit: function () { return Promise.resolve(true); },
+    /** Returns true only for stale internal-auth failures that can be safely retried with a freshly issued runtime token. */
+    isStaleInternalAuth: function (error) {
+        let message = String(error && (error.message || error.code) || '');
+        return String(error && error.code || '') === 'ERR_AUTH_00001' ||
+            /token security stamp is stale|authentication token .*stale/i.test(message);
+    },
+    /** Refreshes runtime-owned internal tokens without accepting caller credentials as publication authority. */
+    refreshInternalAuth: function (tenant) {
+        let provider = SERVICE.DefaultInternalAuthenticationProviderService;
+        if (!provider || typeof provider.refreshInternalAuthTokens !== 'function') {
+            throw new CLASSES.NodicsError('ERR_EDT_00001', 'Editorial publication internal authentication refresh is unavailable');
+        }
+        return provider.refreshInternalAuthTokens(tenant);
+    },
+    /** Invokes the configured Online Editorial module using the current internal token. */
+    invoke: function (operation, payload, request, internalToken, target) {
+        return SERVICE.DefaultModuleService.invokeModule({ moduleName: target.moduleName,
+            connectionName: target.connectionName, connectionType: target.connectionType || 'abstract',
+            targetAuthority: { runtimeRole: target.runtimeRole || 'WCMS_ONLINE' },
+            nodeId: target.nodeId, methodName: 'POST',
+            apiName: '/publication/target/' + operation, requestBody: Object.assign({ tenant: request.tenant,
+                correlationId: request.correlationId || request.requestId }, payload),
+            timeoutMs: target.timeoutMs, maxAttempts: target.maxAttempts,
+            idempotencyKey: payload.operationKey || payload.publication && payload.publication.code || payload.articleCode,
+            header: { Authorization: 'Bearer ' + internalToken },
+            responseSelector: response => response && response.result
+        });
+    },
     /** Sends one authenticated operation to the configured Online Editorial module. */
-    send: function (operation, payload, request) {
+    send: async function (operation, payload, request) {
         let publication = (CONFIG.get('editorial') || {}).publication || {};
         let target = publication.target || {};
         if (publication.runtimeRole !== 'STAGED') {
@@ -29,17 +57,17 @@ module.exports = {
         if (!internalToken) {
             throw new CLASSES.NodicsError('ERR_EDT_00001', 'Editorial publication internal authentication is unavailable');
         }
-        return SERVICE.DefaultModuleService.invokeModule({ moduleName: target.moduleName,
-            connectionName: target.connectionName, connectionType: target.connectionType || 'abstract',
-            targetAuthority: { runtimeRole: target.runtimeRole || 'WCMS_ONLINE' },
-            nodeId: target.nodeId, methodName: 'POST',
-            apiName: '/publication/target/' + operation, requestBody: Object.assign({ tenant: request.tenant,
-                correlationId: request.correlationId || request.requestId }, payload),
-            timeoutMs: target.timeoutMs, maxAttempts: target.maxAttempts,
-            idempotencyKey: payload.operationKey || payload.publication && payload.publication.code || payload.articleCode,
-            header: { Authorization: 'Bearer ' + internalToken },
-            responseSelector: response => response && response.result
-        });
+        try {
+            return await this.invoke(operation, payload, request, internalToken, target);
+        } catch (error) {
+            if (!this.isStaleInternalAuth(error)) throw error;
+            await this.refreshInternalAuth(request.tenant);
+            let refreshedToken = NODICS.getInternalAuthToken(request.tenant);
+            if (!refreshedToken) {
+                throw new CLASSES.NodicsError('ERR_EDT_00001', 'Editorial publication internal authentication is unavailable after refresh');
+            }
+            return this.invoke(operation, payload, request, refreshedToken, target);
+        }
     },
     /** Deploys one immutable Editorial projection set. */
     deploy: function (payload, request) { return this.send('deploy', payload, request); },
