@@ -62,6 +62,14 @@ invalid generated release manifests are marked unavailable for automatic browser
 repair and should guide the developer/operator to repair the owning source
 release instead of asking business users to understand manifest internals.
 
+The module registers `dataReleaseReadinessRepairProvider` when BackOffice
+operational-readiness orchestration is present in the same runtime. BackOffice
+owns repair locks, receipts, audit, cluster refresh events, and Axis response
+contracts. The provider owns only nImport-specific execution and delegates to
+`DefaultDataReleaseService.preflight` or `DefaultDataReleaseService.execute`.
+Projects must not add parallel import repair handlers in Axis or custom project
+code; extend nImport release policy, release data, or owner manifests instead.
+
 ## Optional Release Descriptor
 
 A release source root may include `release.descriptor.json` when the business

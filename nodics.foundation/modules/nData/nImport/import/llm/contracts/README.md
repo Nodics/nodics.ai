@@ -93,6 +93,13 @@ Use these files for rules that are more specific than root `AGENTS.md` and the m
   must report what is wrong, which owner must repair it, whether a generated
   command can refresh evidence, and why browser repair is unavailable when the
   source package itself is invalid.
+- nImport owns the data-release readiness repair provider. The provider may
+  execute `dataRelease.install` actions (`PREPARE_CAPABILITY`,
+  `UPDATE_RELEASE`, `RETRY_FAILED_IMPORT`) and validation-only
+  `dataRelease.status` refresh by delegating to `DefaultDataReleaseService`.
+  BackOffice remains the orchestrator for provider discovery, capability
+  checks, target locks, receipts, audit and refresh events. Axis must only call
+  the BackOffice repair endpoint and render the returned contract.
 
 ## Media-backed file import
 

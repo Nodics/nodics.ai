@@ -35,6 +35,22 @@ module.exports = {
      */
     postInit: function (options) {
         return new Promise((resolve, reject) => {
+            if (
+                typeof SERVICE !== 'undefined' &&
+                SERVICE.DefaultBackofficeOperationalReadinessService &&
+                SERVICE.DefaultDataReleaseReadinessRepairService &&
+                typeof SERVICE.DefaultBackofficeOperationalReadinessService.registerRepairProvider === 'function'
+            ) {
+                SERVICE.DefaultBackofficeOperationalReadinessService.registerRepairProvider(
+                    'import',
+                    SERVICE.DefaultDataReleaseReadinessRepairService,
+                    {
+                        providerCode: 'dataReleaseReadinessRepairProvider',
+                        lifecycleState: 'READY',
+                        repairContractVersion: 1,
+                    },
+                );
+            }
             resolve(true);
         });
     },
