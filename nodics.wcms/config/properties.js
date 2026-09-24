@@ -1,3 +1,4 @@
+/** @module nodics.wcms/config/properties @description Defines reusable WCMS content-pack sources for framework, Axis and customer-project documentation publication. @layer config @owner wcms @override Later layers may override content-pack availability, source versions and publication profile bindings. */
 module.exports = {
   "data": {
     "contentPacks": {

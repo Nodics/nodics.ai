@@ -1,3 +1,4 @@
+/** @module nodics.loyalty/config/properties @description Defines reusable Loyalty defaults and baseline data-release contributions. @layer config @owner loyalty @override Later layers may override scale, reservation TTL, idempotency policy and release placement for deployment-specific programmes. */
 module.exports = {
   "loyalty": {
     "defaults": {

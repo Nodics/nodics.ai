@@ -1,3 +1,4 @@
+/** @module nodics.process/config/properties @description Defines reusable Process action-adapter, designer and process-definition data-release defaults. @layer config @owner process @override Later layers may enable designer features, register safe action adapters and place process-definition releases for each runtime role. */
 module.exports = {
   "process": {
     "actionAdapters": {

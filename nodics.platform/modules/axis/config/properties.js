@@ -1,3 +1,4 @@
+/** @module axis/config/properties @description Defines Axis product initialization, CMS baseline publication and BackOffice application setup defaults. @layer config @owner axis @override Later layers may override target runtimes, publication source versions and customer documentation profile bindings. */
 module.exports = {
   "axis": {
     "initialization": {

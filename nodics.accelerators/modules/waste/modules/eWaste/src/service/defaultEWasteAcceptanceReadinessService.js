@@ -13,12 +13,15 @@
 
 /** @module eWaste/service/defaultEWasteAcceptanceReadinessService @description Owns Circa/eWaste channel, AI, media and accept/reject scenario readiness without calling external providers or moving authority into BackOffice. @owner eWaste @layer service @override Later layers may configure channel applications, credentials, provider adapters and media cleanup policy; readiness remains owner-owned and reports masked operator guidance only. */
 module.exports = {
+  /** Reads one layered configuration object without throwing when the runtime registry is unavailable. */
   config: function (key) {
     return (global.CONFIG && typeof CONFIG.get === "function" && CONFIG.get(key)) || {};
   },
+  /** Checks whether an owner dependency is loaded in the current runtime. */
   hasService: function (name) {
     return !!(global.SERVICE && SERVICE[name]);
   },
+  /** Returns the supported masked credential stores used by local readiness checks. */
   credentialStores: function () {
     return [
       this.config("runtimeConfiguration"),
@@ -29,6 +32,7 @@ module.exports = {
       this.config("eWaste"),
     ];
   },
+  /** Resolves credential presence only; callers must never include the value in readiness output. */
   readCredential: function (reference) {
     if (typeof reference !== "string" || !reference) return undefined;
     if (reference.startsWith("env:")) return process.env[reference.slice(4)];
@@ -41,6 +45,7 @@ module.exports = {
     }
     return undefined;
   },
+  /** Builds one eWaste-owned readiness blocker with stable operator recovery fields. */
   blocker: function (code, severity, action, message, options) {
     options = options || {};
     return {
@@ -64,6 +69,7 @@ module.exports = {
       },
     };
   },
+  /** Validates Telegram channel policy, Profile application mapping and credential reference presence. */
   channelReadiness: function () {
     const eWaste = this.config("eWaste");
     const channelConfig = eWaste.channelAuthentication || {};
@@ -134,6 +140,7 @@ module.exports = {
       credentialReferenceConfigured: !!credentialReference,
     };
   },
+  /** Validates photo analysis, manual fallback and OpenAI environmental assessment prerequisites without provider calls. */
   imageAnalysisReadiness: function () {
     const eWaste = this.config("eWaste");
     const wasteSubmission = this.config("wasteSubmission");
@@ -209,6 +216,7 @@ module.exports = {
       maximumPhotoBytesConfigured: Number.isSafeInteger(eWaste.preparation && eWaste.preparation.maximumPhotoBytes),
     };
   },
+  /** Reports draft, rejected and accepted media lifecycle policy readiness. */
   mediaLifecycleReadiness: function () {
     const policy = ((this.config("eWaste").acceptanceReadiness || {}).draftMedia) || {};
     const blockers = [];
@@ -233,6 +241,7 @@ module.exports = {
       customerUploadPathReady: this.hasService("DefaultModuleService"),
     };
   },
+  /** Checks service/config prerequisites for governed accept and reject scenarios. */
   scenarioReadiness: function () {
     const required = [
       "DefaultEWasteExperienceService",
@@ -271,6 +280,7 @@ module.exports = {
       rejectScenarioReady: blockers.length === 0 && (policy.reject || {}).enabled !== false,
     };
   },
+  /** Builds the public Circa/eWaste acceptance readiness contract consumed by BackOffice. */
   readiness: function () {
     const channel = this.channelReadiness();
     const image = this.imageAnalysisReadiness();

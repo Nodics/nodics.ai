@@ -328,6 +328,7 @@ module.exports = {
     return "Refresh operational readiness and confirm the capability is prepared.";
   },
 
+  /** Returns a guarded result when the owning nImport service is not loaded. */
   unavailable: function (repair) {
     return {
       state: "PROVIDER_MISCONFIGURED",
@@ -339,6 +340,7 @@ module.exports = {
     };
   },
 
+  /** Returns validation guidance when the repair request lacks stable target identity. */
   targetMissing: function () {
     return {
       state: "VALIDATION_FAILED",
@@ -348,6 +350,7 @@ module.exports = {
     };
   },
 
+  /** Returns target guidance when the requested release cannot be found in the active catalogue. */
   targetUnavailable: function (repair, releaseCode) {
     return {
       state: "TARGET_NOT_FOUND",
