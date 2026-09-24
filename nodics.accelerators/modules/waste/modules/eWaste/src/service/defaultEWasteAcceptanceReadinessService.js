@@ -11,7 +11,7 @@
 
 "use strict";
 
-/** @module eWaste/service/defaultEWasteAcceptanceReadinessService @description Owns Circa/eWaste channel, AI, media and accept/reject scenario readiness without calling external providers or moving authority into BackOffice. @owner eWaste @layer service @override Later layers may configure channel applications, credentials, provider adapters and media cleanup policy; readiness remains owner-owned and reports masked operator guidance only. */
+/** @module eWaste/service/defaultEWasteAcceptanceReadinessService @description Owns eWaste channel, AI, media and accept/reject scenario readiness without calling external providers or moving authority into BackOffice. @owner eWaste @layer service @override Later layers may configure channel applications, credentials, provider adapters and media cleanup policy; readiness remains owner-owned and reports masked operator guidance only. */
 module.exports = {
   /** Reads one layered configuration object without throwing when the runtime registry is unavailable. */
   config: function (key) {
@@ -58,7 +58,7 @@ module.exports = {
       message,
       disabledReason: options.disabledReason || message,
       suggestedAction: options.suggestedAction || action,
-      businessImpact: options.businessImpact || "Circa/eWaste cannot complete a reliable customer acceptance scenario until this owner readiness issue is resolved.",
+      businessImpact: options.businessImpact || "eWaste cannot complete a reliable customer acceptance scenario until this owner readiness issue is resolved.",
       recoveryHint: options.recoveryHint || options.suggestedAction || action,
       repair: {
         available: false,
@@ -83,13 +83,13 @@ module.exports = {
       "EWASTE_TELEGRAM_CHANNEL_DISABLED",
       "NEEDS_ATTENTION",
       "Enable the Telegram channel in eWaste channelAuthentication",
-      "Circa Telegram launch is not enabled in the eWaste channel policy.",
+      "The Telegram launch channel is not enabled in the eWaste channel policy.",
       { recoveryHint: "Configure eWaste.channelAuthentication.channels.TELEGRAM at the owning eWaste layer or a later runtime configuration layer." }
     ));
     if (typeof appCode !== "string" || !appCode) blockers.push(this.blocker(
       "EWASTE_TELEGRAM_APPLICATION_MISSING",
       "NEEDS_ATTENTION",
-      "Configure the Circa Telegram application code",
+      "Configure the Telegram application code",
       "The eWaste Telegram channel does not declare the Profile application code it should use."
     ));
     if (profile.enabled !== true) blockers.push(this.blocker(
@@ -102,7 +102,7 @@ module.exports = {
     if (!application || application.enabled !== true) blockers.push(this.blocker(
       "PROFILE_EXTERNAL_APPLICATION_MISSING",
       "NEEDS_ATTENTION",
-      "Configure the Profile external identity application for Circa",
+      "Configure the Profile external identity application for the eWaste channel",
       "Profile does not expose an enabled external-identity application matching the eWaste Telegram channel."
     ));
     if (application && application.provider !== "TELEGRAM") blockers.push(this.blocker(
@@ -280,7 +280,7 @@ module.exports = {
       rejectScenarioReady: blockers.length === 0 && (policy.reject || {}).enabled !== false,
     };
   },
-  /** Builds the public Circa/eWaste acceptance readiness contract consumed by BackOffice. */
+  /** Builds the public eWaste acceptance readiness contract consumed by BackOffice. */
   readiness: function () {
     const channel = this.channelReadiness();
     const image = this.imageAnalysisReadiness();
@@ -309,7 +309,7 @@ module.exports = {
       },
       blockers,
       nextAction: blockers.length ? "Open eWaste configuration/readiness guidance and resolve the listed owner blockers." :
-        "Circa/eWaste channel, AI, media and accept/reject scenario prerequisites are ready.",
+        "eWaste channel, AI, media and accept/reject scenario prerequisites are ready.",
     };
   },
 };

@@ -20,6 +20,7 @@
 const fs = require('fs');
 const path = require('path');
 const { spawnSync } = require('child_process');
+const localRuntimeCredentials = require('../project/defaultProjectLocalRuntimeCredentialService');
 
 module.exports = {
     /**
@@ -550,9 +551,10 @@ module.exports = {
                 args: [path.join(this.resolveFrameworkRoot(), 'nodics.foundation', 'modules', 'nTooling', 'bin', 'nodics-tool.js'), command.command, '--home=' + commandHome].concat(command.args || [], args || [])
             };
         }
+        const commandEnvironment = this.projectCommandEnvironment(projectRoot, process.env);
         const result = spawnSync(execution.executable, execution.args, {
             cwd: projectRoot,
-            env: Object.assign({}, process.env, {
+            env: Object.assign({}, commandEnvironment, {
                 NODICS_PROJECT_ROOT: projectRoot,
                 NODICS_FRAMEWORK_ROOT: this.resolveFrameworkRoot(),
                 NODICS_PROJECT_CODE: projectCode
@@ -564,6 +566,32 @@ module.exports = {
             throw new Error('Project command failed with exit code ' + result.status + ': ' + name);
         }
         return true;
+    },
+
+    /**
+     * Builds the environment used by project-level commands. Native Local commands
+     * receive generated runtime credentials through the same framework-owned helper
+     * used by topology and selected-server startup.
+     *
+     * @param {string} projectRoot Project root.
+     * @param {Object} environment Current process environment.
+     * @returns {Object} Command environment.
+     */
+    projectCommandEnvironment: function (projectRoot, environment) {
+        const selectedEnvironment = environment.ENV || environment.E ||
+            environment.NODICS_ACCEPTANCE_RUNTIME || this.conventionalLocalEnvironmentName(projectRoot);
+        return localRuntimeCredentials.mergeEnvironment(projectRoot, selectedEnvironment, environment);
+    },
+
+    /**
+     * Resolves the conventional Local environment name for a customer project.
+     *
+     * @param {string} projectRoot Project root.
+     * @returns {string} Local environment name.
+     */
+    conventionalLocalEnvironmentName: function (projectRoot) {
+        const projectSegment = String(this.resolveProjectCode(projectRoot)).split('.').filter(Boolean).pop() || 'project';
+        return projectSegment + 'Local';
     },
 
     /**

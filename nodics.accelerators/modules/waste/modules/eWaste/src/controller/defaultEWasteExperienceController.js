@@ -21,6 +21,14 @@ module.exports = {
   },
   /** Maps authorized assessment history reads. */
   impactRecover: function (request, callback) { return this.invoke('impactRecover', request, callback); },
+  /** Returns eWaste-owned acceptance readiness for BackOffice/runtime diagnostics. */
+  acceptanceReadiness: function (request, callback) {
+    const promise = Promise.resolve()
+      .then(() => SERVICE.DefaultEWasteAcceptanceReadinessService.readiness(request))
+      .then((data) => ({ data }));
+    if (!callback) return promise;
+    promise.then((result) => callback(null, result)).catch(callback);
+  },
   /** Maps authorized assessment history reads. */
   impactHistory: function (request, callback) { return this.invoke('impactHistory', request, callback); },
   /** Maps an explicit reassessment command. */

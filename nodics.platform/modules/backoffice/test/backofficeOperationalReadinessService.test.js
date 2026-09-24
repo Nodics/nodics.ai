@@ -443,6 +443,37 @@ async function validateDeliveryAndProductionPolicy() {
     delete global.SERVICE.DefaultToolingAcceptanceEvidenceService;
     assert(aggregateReport.sections.find(section => section.key === 'bootstrap').blockers
         .some(blocker => blocker.code === 'MISSING_TEST_PROPERTY' && blocker.repair.operation === 'runtimeConfiguration.update'));
+    delete global.SERVICE.DefaultEWasteAcceptanceReadinessService;
+    global.SERVICE.DefaultModuleService = { invokeModule: async descriptor => {
+        moduleInvocationCalls.push(descriptor);
+        if (descriptor.moduleName === 'eWaste' && descriptor.apiName === '/readiness/acceptance') return {
+            contractVersion: 1,
+            businessStatus: 'READY',
+            summary: {
+                telegramChannelConfigured: true,
+                customerAccountLinkReady: true,
+                imageAnalysisConfigured: true,
+                manualReviewFallbackReady: true,
+                acceptScenarioReady: true,
+                rejectScenarioReady: true,
+            },
+            blockers: [],
+            nextAction: 'Remote eWaste readiness is clear.'
+        };
+        return [];
+    } };
+    let remoteEWasteSection = await service.eWasteAcceptanceSection(
+        { tenant: 'default', httpRequest: { headers: { authorization: 'Bearer operator-token' } } },
+        {}
+    );
+    assert.strictEqual(remoteEWasteSection.businessStatus, 'READY');
+    assert.strictEqual(remoteEWasteSection.summary.providerAvailable, true);
+    let remoteEWasteCall = moduleInvocationCalls.find(call => call.moduleName === 'eWaste'
+        && call.apiName === '/readiness/acceptance');
+    assert(remoteEWasteCall);
+    assert.strictEqual(remoteEWasteCall.connectionName, 'wasteServer');
+    assert.deepStrictEqual(remoteEWasteCall.targetAuthority.runtimeRole, { code: 'WASTE' });
+    assert.strictEqual(remoteEWasteCall.header.Authorization, 'Bearer operator-token');
     global.SERVICE.DefaultModuleService = originalModuleService;
     global.SERVICE.DefaultEWasteAcceptanceReadinessService = originalEWasteReadinessService;
 

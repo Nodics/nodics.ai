@@ -1346,40 +1346,36 @@ module.exports = {
                     'Configure application/media preparation profiles before validating media readiness.',
         };
     },
+    /** Reads Circa/eWaste owner readiness locally or from the registered eWaste runtime. */
+    eWasteAcceptanceReadiness: async function (request, context) {
+        let service = SERVICE.DefaultEWasteAcceptanceReadinessService;
+        if (service && typeof service.readiness === 'function') return service.readiness(context);
+        if (!SERVICE.DefaultModuleService || typeof SERVICE.DefaultModuleService.invokeModule !== 'function') return undefined;
+        let authorization = this.authorizationHeader(request);
+        return SERVICE.DefaultModuleService.invokeModule({
+            moduleName: 'eWaste',
+            local: false,
+            connectionName: 'wasteServer',
+            connectionType: 'abstract',
+            targetAuthority: {
+                server: 'wasteServer',
+                runtimeRole: { code: 'WASTE' },
+            },
+            methodName: 'GET',
+            apiName: '/readiness/acceptance',
+            timeoutMs: 10000,
+            maxAttempts: 1,
+            header: authorization ? { Authorization: authorization } : {},
+            responseSelector: response => response && (response.data || response.result || response),
+        });
+    },
     /** Includes Circa/eWaste owner readiness when the eWaste accelerator is present in the active runtime. */
-    eWasteAcceptanceSection: function (context) {
+    eWasteAcceptanceSection: async function (request, context) {
         context = context || {};
         let hasEWasteConfig = !!CONFIG.get('eWaste');
-        let service = SERVICE.DefaultEWasteAcceptanceReadinessService;
-        if (!hasEWasteConfig && (!service || typeof service.readiness !== 'function')) return undefined;
-        if (!service || typeof service.readiness !== 'function') {
-            let blocker = this.readinessBlocker(
-                'EWASTE_ACCEPTANCE_PROVIDER_NOT_CONFIGURED',
-                'NEEDS_ATTENTION',
-                'EWASTE_ACCEPTANCE',
-                'EWASTE_ACCEPTANCE_READINESS',
-                'Start eWaste readiness provider',
-                'The eWaste acceptance readiness provider is not available in this runtime.',
-                { repairOperation: 'eWaste.acceptance.readiness', repairAction: 'START_EWASTE_ACCEPTANCE_READINESS',
-                    suggestedAction: 'Activate the eWaste accelerator runtime and refresh operational readiness.',
-                    businessImpact: 'Axis cannot confirm Circa Telegram, AI, media, accept or reject scenario readiness.',
-                    recoveryHint: 'Start the owning eWaste runtime and refresh Axis readiness.' }
-            );
-            return {
-                key: 'eWasteAcceptance',
-                title: 'Circa/eWaste acceptance readiness',
-                businessStatus: 'NEEDS_ATTENTION',
-                ownerModule: 'eWaste',
-                source: 'EWASTE_ACCEPTANCE_READINESS',
-                route: '/waste/review-queue',
-                summary: { providerAvailable: false, blockerCount: 1 },
-                blockers: [blocker],
-                nextAction: 'Start the owning eWaste readiness provider and refresh readiness.',
-            };
-        }
         let report;
         try {
-            report = service.readiness(context);
+            report = await this.eWasteAcceptanceReadiness(request, context);
         } catch (error) {
             let blocker = this.readinessBlocker(
                 'EWASTE_ACCEPTANCE_PROVIDER_FAILED',
@@ -1404,6 +1400,32 @@ module.exports = {
                 summary: { providerAvailable: false, blockerCount: 1 },
                 blockers: [blocker],
                 nextAction: 'Open eWaste readiness and repair the owner provider failure.',
+            };
+        }
+        if (!hasEWasteConfig && !report) return undefined;
+        if (!report) {
+            let blocker = this.readinessBlocker(
+                'EWASTE_ACCEPTANCE_PROVIDER_NOT_CONFIGURED',
+                'NEEDS_ATTENTION',
+                'EWASTE_ACCEPTANCE',
+                'EWASTE_ACCEPTANCE_READINESS',
+                'Start eWaste readiness provider',
+                'The eWaste acceptance readiness provider is not available in this runtime.',
+                { repairOperation: 'eWaste.acceptance.readiness', repairAction: 'START_EWASTE_ACCEPTANCE_READINESS',
+                    suggestedAction: 'Activate the eWaste accelerator runtime and refresh operational readiness.',
+                    businessImpact: 'Axis cannot confirm Circa Telegram, AI, media, accept or reject scenario readiness.',
+                    recoveryHint: 'Start the owning eWaste runtime and refresh Axis readiness.' }
+            );
+            return {
+                key: 'eWasteAcceptance',
+                title: 'Circa/eWaste acceptance readiness',
+                businessStatus: 'NEEDS_ATTENTION',
+                ownerModule: 'eWaste',
+                source: 'EWASTE_ACCEPTANCE_READINESS',
+                route: '/waste/review-queue',
+                summary: { providerAvailable: false, blockerCount: 1 },
+                blockers: [blocker],
+                nextAction: 'Start the owning eWaste readiness provider and refresh readiness.',
             };
         }
         let blockers = [].concat((report || {}).blockers || []).map(item => {
@@ -2479,7 +2501,7 @@ module.exports = {
             this.approvalSection(profileStatusReport),
             this.documentationSection(context.documentationSources, context.documentationPublication),
             await this.mediaSection(profileStatusReport, context),
-            this.eWasteAcceptanceSection(context),
+            await this.eWasteAcceptanceSection(request, context),
             this.searchSection(context),
             this.assistantSection(),
             this.applicationSection(profileStatusReport, context.applicationInitializationProfiles),

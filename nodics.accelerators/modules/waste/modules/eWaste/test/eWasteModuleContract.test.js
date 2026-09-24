@@ -57,6 +57,14 @@ for (const [name, route] of Object.entries(routes)) {
   }
   assert.equal(route.controller, "DefaultEWasteExperienceController");
   assert.equal(route.apiExposure, "eWasteCustomer");
+  if (name === "acceptanceReadiness") {
+    assert.equal(route.secured, true);
+    assert.deepEqual(route.authTokenTypes, ["access", "service"]);
+    assert.deepEqual(route.accessGroups, ["runtimeConfigAdminUserGroup", "adminGroup"]);
+    assert.equal(route.permission, "waste.review.queue.read");
+    assert.equal(route.cache.enabled, false);
+    continue;
+  }
   if (!originalPublic.has(name)) {
     assert.equal(route.secured, true, name + " must retain authentication");
     const permission = route.permission || route.permissionConfig?.split(".").reduce(

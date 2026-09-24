@@ -27,7 +27,16 @@ function createProject(packageOverrides = {}) {
     fs.mkdirSync(path.join(root, 'scripts', 'acceptance'), { recursive: true });
     fs.writeFileSync(
         path.join(root, 'scripts', 'acceptance', 'defaultProjectLocalBootstrapAcceptanceService.mjs'),
-        'console.log("hello project command");\n'
+        [
+            'if (!process.env.NODICS_BOOTSTRAP_ADMIN_PASSWORD) throw new Error("missing local bootstrap admin password");',
+            'if (!process.env.NODICS_BOOTSTRAP_SERVICE_PASSWORD) throw new Error("missing local bootstrap service password");',
+            'if (!process.env.NODICS_BOOTSTRAP_SERVICE_API_KEY) throw new Error("missing local bootstrap service API key");',
+            'if (!process.env.NODICS_JWT_SECRET) throw new Error("missing local JWT secret");',
+            'if (!process.env.NODICS_API_KEY_PEPPER) throw new Error("missing local API-key pepper");',
+            'if (!process.env.NODICS_API_KEY) throw new Error("missing local runtime API key");',
+            'if (process.env.NODICS_PROJECT_CODE !== "duShop") throw new Error("missing project code");',
+            'console.log("hello project command");'
+        ].join('\n') + '\n'
     );
     const packageJson = Object.assign({ name: 'duShop', version: '0.0.0', private: true }, packageOverrides);
     fs.writeFileSync(path.join(root, 'package.json'), JSON.stringify(packageJson, null, 2));

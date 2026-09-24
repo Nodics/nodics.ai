@@ -100,6 +100,18 @@ module.exports = {
         accessGroups: ["employeeUserGroup", "adminGroup"],
         permission: "waste.review.queue.read",
       },
+      acceptanceReadiness: {
+        key: "/readiness/acceptance",
+        method: "GET",
+        secured: true,
+        controller: "DefaultEWasteExperienceController",
+        operation: "acceptanceReadiness",
+        apiExposure: "eWasteCustomer",
+        authTokenTypes: ["access", "service"],
+        accessGroups: ["runtimeConfigAdminUserGroup", "adminGroup"],
+        permission: "waste.review.queue.read",
+        cache: { enabled: false },
+      },
       verify: {
         key: "/reviews/:code/verify",
         method: "POST",
