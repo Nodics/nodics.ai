@@ -939,7 +939,9 @@ const functionalModuleRegistration = {
           environment: { type: "string", minLength: 1, maxLength: 120 },
           server: { type: "string", minLength: 1, maxLength: 120 },
           node: { type: "string", minLength: 1, maxLength: 120 },
-          lastObservedAt: { type: "string", format: "date-time" }
+          lastObservedAt: { type: "string", format: "date-time" },
+          reasonCode: { type: "string", minLength: 1, maxLength: 128 },
+          recoveryAction: { type: "string", minLength: 1, maxLength: 512 }
         }
       }
     },

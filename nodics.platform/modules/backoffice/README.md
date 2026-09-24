@@ -99,6 +99,25 @@ new readiness contributor must be implemented in its owning framework module and
 then projected through BackOffice. Customer projects must not duplicate
 readiness logic merely to make Axis display a green status.
 
+## Runtime Communication Diagnostics
+
+Runtime communication readiness is derived from BackOffice bootstrap/module
+registry evidence, not static customer-project server lists. Each runtime
+observation should carry project, environment, server, node, runtime role,
+state, freshness, reason code, and recovery action. Stable reason codes include:
+
+- `RUNTIME_OBSERVED` when a module has current heartbeat evidence.
+- `RUNTIME_NOT_REGISTERED` when no runtime heartbeat is visible.
+- `HEARTBEAT_STALE` when an existing observation is too old.
+- `RUNTIME_UNAVAILABLE` when availability probes report an unavailable runtime.
+- `RUNTIME_API_KEY_GRANT_READY` as a readiness check for server-level internal
+  communication identity and grants.
+
+BackOffice may show diagnostics for API-key or grant readiness, but server
+credentials remain owned by the runtime/server configuration layer. Axis renders
+the reason code, server, node, and recovery action; it must not infer whether a
+runtime is safe to call from frontend-only state.
+
 Authenticated presentation, lifecycle listings, receipt reads and lease
 reconciliation read every page of the project/tenant functional
 catalogue using the model pipeline's `pageSize` and `pageNumber` contract.

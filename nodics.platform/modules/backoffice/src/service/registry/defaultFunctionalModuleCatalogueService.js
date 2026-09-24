@@ -1046,6 +1046,10 @@ module.exports = {
         server: parts[1] || undefined,
         node: parts[2] || undefined,
         lastObservedAt: lastObservedAt,
+        reasonCode: record.runtimeState === "ACTIVE" ? "RUNTIME_OBSERVED" : "RUNTIME_NOT_ACTIVE",
+        recoveryAction: record.runtimeState === "ACTIVE" ?
+          "Runtime heartbeat is currently linked to this module." :
+          "Start the owning runtime server and refresh Module Registry.",
       };
     });
   },

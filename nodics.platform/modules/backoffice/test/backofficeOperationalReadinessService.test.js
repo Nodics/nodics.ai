@@ -167,7 +167,9 @@ async function validateDeliveryAndProductionPolicy() {
     } };
     let aggregateReport = await service.operationalReadinessReport({ tenant: 'default', httpRequest: { headers: { authorization: 'Bearer operator-token' } } }, {
         startupValidation: missingReport,
-        modules: { backoffice: [{ instanceId: 'platformServer:backoffice', state: 'ACTIVE' }] },
+        modules: { backoffice: [{ instanceId: 'platformServer:backoffice', moduleName: 'backoffice', state: 'ACTIVE',
+            environment: 'kickoffLocal', server: 'platformServer', node: 'default',
+            runtimeRole: { code: 'PLATFORM', publication: 'OPERATIONAL' } }] },
         availability: { backoffice: { state: 'UP' } },
         documentationSources: [{ id: 'framework.docs', label: 'Framework docs', type: 'CMS', route: '/docs/framework' }],
         documentationPublication: { bySourceId: { 'framework.docs': { readiness: 'READY', ready: true } } },
@@ -213,6 +215,18 @@ async function validateDeliveryAndProductionPolicy() {
         && section.businessStatus === 'READY'));
     assert(aggregateReport.sections.some(section => section.key === 'runtimeCommunication'
         && section.businessStatus === 'READY'));
+    let runtimeCommunication = aggregateReport.sections.find(section => section.key === 'runtimeCommunication');
+    assert(runtimeCommunication.summary.reasonCodes.includes('RUNTIME_OBSERVED'));
+    assert(runtimeCommunication.summary.communicationChecks.some(check => check.code === 'RUNTIME_API_KEY_GRANT_READY'
+        && check.state === 'READY'));
+    assert(runtimeCommunication.summary.runtimeObservations.some(observation => observation.server === 'platformServer'
+        && observation.node === 'default'
+        && observation.reasonCode === 'RUNTIME_OBSERVED'));
+    assert.deepStrictEqual(runtimeCommunication.summary.operatorCommands, [
+        'npm run local-recovery:readiness -- --live --json',
+        'Open Module Registry and refresh runtime status',
+        'Check server-level API key/grant readiness when probes fail'
+    ]);
     let acceptanceSection = aggregateReport.sections.find(section => section.key === 'acceptance');
     assert(acceptanceSection);
     assert.strictEqual(acceptanceSection.businessStatus, 'NEEDS_ATTENTION');

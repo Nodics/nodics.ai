@@ -327,14 +327,97 @@ module.exports = {
             suggestedAction: String(options.suggestedAction || action || 'Review readiness'),
         };
     },
-    /** Maps module availability into a compact support-safe readiness section. */
-    moduleRuntimeSection: function (modules, availability) {
+    /** Normalizes one active runtime observation for operator-safe communication diagnostics. */
+    runtimeObservation: function (instance, availability) {
+        availability = availability || {};
+        let state = String((availability[instance.moduleName] || {}).state || instance.state || 'UNKNOWN');
+        let freshness = String((availability[instance.moduleName] || {}).freshness || (state === 'UP' ? 'FRESH' : 'UNKNOWN'));
+        let stale = ['STALE', 'MISSING'].includes(freshness) || ['DOWN', 'UNAVAILABLE'].includes(state);
+        return {
+            moduleName: instance.moduleName,
+            instanceId: instance.instanceId,
+            environment: instance.environment,
+            server: instance.server,
+            node: instance.node || 'default',
+            runtimeRole: instance.runtimeRole && instance.runtimeRole.code,
+            publication: instance.runtimeRole && instance.runtimeRole.publication,
+            state: state,
+            freshness: freshness,
+            lastSeenAt: instance.lastSeenAt,
+            reasonCode: stale ? (freshness === 'STALE' ? 'HEARTBEAT_STALE' : 'RUNTIME_UNAVAILABLE') : 'RUNTIME_OBSERVED',
+            recoveryAction: stale ? 'Refresh Module Registry, verify the server is running, and check runtime API key/grant readiness.' :
+                'Runtime heartbeat is visible to BackOffice.',
+        };
+    },
+    /** Builds stable operator-safe runtime communication diagnostics from active bootstrap evidence. */
+    runtimeCommunicationDiagnostics: function (modules, availability) {
         modules = modules || {};
         availability = availability || {};
         let entries = Object.entries(modules).reduce((result, entry) => result.concat(entry[1] || []), []);
-        let runtimeCount = entries.length;
+        let observations = entries.map(instance => this.runtimeObservation(instance, availability));
+        let serverKeys = Array.from(new Set(observations.map(item =>
+            [item.environment, item.server, item.node || 'default'].filter(Boolean).join(':')).filter(Boolean))).sort();
+        let runtimeRoles = Array.from(new Set(observations.map(item => item.runtimeRole).filter(Boolean))).sort();
+        let stale = observations.filter(item => ['HEARTBEAT_STALE', 'RUNTIME_UNAVAILABLE'].includes(item.reasonCode));
         let unavailable = Object.entries(availability).filter(entry => !['UP', 'UNKNOWN'].includes(String((entry[1] || {}).state || 'UNKNOWN')));
-        let blocker = unavailable[0] ? this.readinessBlocker(
+        let communicationChecks = [
+            {
+                code: 'RUNTIME_IDENTITY_PRESENT',
+                state: observations.length > 0 ? 'READY' : 'MISSING',
+                message: observations.length > 0 ? 'Runtime instances supplied environment/server/node identity.' :
+                    'No runtime instance identity is available from BackOffice bootstrap.',
+                action: observations.length > 0 ? 'Monitor runtime identity.' : 'Start runtimes and refresh Module Registry.',
+            },
+            {
+                code: 'SERVER_NODE_COORDINATES_PRESENT',
+                state: observations.every(item => item.server && item.node) && observations.length > 0 ? 'READY' : 'NEEDS_ATTENTION',
+                message: 'Each runtime should report server and node coordinates.',
+                action: 'Verify runtime self-registration includes project, environment, server, and node.',
+            },
+            {
+                code: 'RUNTIME_API_KEY_GRANT_READY',
+                state: observations.length > 0 && unavailable.length === 0 ? 'READY' : 'NEEDS_ATTENTION',
+                message: 'Internal runtime calls require server-level API key and grant readiness.',
+                action: 'Check server-level defaultAuthDetail and runtime communication grants in owning framework configuration.',
+            },
+            {
+                code: 'MODULE_REGISTRY_RECONCILED',
+                state: stale.length === 0 && unavailable.length === 0 ? 'READY' : 'NEEDS_ATTENTION',
+                message: 'Module Registry should reconcile active runtime leases and stale node records on every startup.',
+                action: 'Refresh Module Registry after startup; stale leases are repaired by the backend lease reconciler.',
+            },
+        ];
+        let reasonCodes = Array.from(new Set(observations.map(item => item.reasonCode)
+            .concat(unavailable.length > 0 ? ['RUNTIME_UNAVAILABLE'] : [])
+            .concat(observations.length === 0 ? ['RUNTIME_NOT_REGISTERED'] : []))).sort();
+        return {
+            entries: entries,
+            observations: observations,
+            serverKeys: serverKeys,
+            runtimeRoles: runtimeRoles,
+            staleCount: stale.length,
+            unavailable: unavailable,
+            reasonCodes: reasonCodes,
+            communicationChecks: communicationChecks,
+        };
+    },
+    /** Maps module availability into a compact support-safe readiness section. */
+    moduleRuntimeSection: function (modules, availability) {
+        let diagnostics = this.runtimeCommunicationDiagnostics(modules, availability);
+        let runtimeCount = diagnostics.entries.length;
+        let unavailable = diagnostics.unavailable;
+        let blockers = [];
+        if (runtimeCount === 0) blockers.push(this.readinessBlocker(
+            'RUNTIME_NOT_REGISTERED',
+            'NEEDS_ATTENTION',
+            'RUNTIME',
+            'BACKOFFICE_BOOTSTRAP',
+            'Start runtimes and refresh Module Registry',
+            'No runtime heartbeat evidence is registered for the visible module catalogue.',
+            { repairOperation: 'moduleRegistry.refreshRuntime', repairAction: 'REFRESH_RUNTIME',
+                suggestedAction: 'Start local/backend runtimes, then refresh Module Registry and Axis bootstrap.' }
+        ));
+        if (unavailable[0]) blockers.push(this.readinessBlocker(
             'RUNTIME_UNAVAILABLE',
             'BLOCKED',
             'RUNTIME',
@@ -342,17 +425,42 @@ module.exports = {
             'Open Module Registry',
             'One or more registered runtimes are degraded or unavailable.',
             { repairOperation: 'moduleRegistry.refreshRuntime', repairAction: 'REFRESH_RUNTIME', suggestedAction: 'Refresh Module Registry and inspect stale runtime observations.' }
-        ) : undefined;
+        ));
+        if (diagnostics.staleCount > 0) blockers.push(this.readinessBlocker(
+            'HEARTBEAT_STALE',
+            'NEEDS_ATTENTION',
+            'RUNTIME',
+            'BACKOFFICE_AVAILABILITY',
+            'Refresh Module Registry',
+            'One or more runtime heartbeat observations are stale.',
+            { repairOperation: 'moduleRegistry.refreshRuntime', repairAction: 'REFRESH_RUNTIME',
+                suggestedAction: 'Restart the owning runtime if needed, refresh Module Registry, and rerun local recovery readiness.' }
+        ));
         return {
             key: 'runtimeCommunication',
             title: 'Runtime internal communication',
-            businessStatus: unavailable.length > 0 ? 'NEEDS_ATTENTION' : runtimeCount > 0 ? 'READY' : 'NOT_CONFIGURED',
+            businessStatus: blockers.length > 0 ? 'NEEDS_ATTENTION' : runtimeCount > 0 ? 'READY' : 'NOT_CONFIGURED',
             ownerModule: 'nService',
             source: 'BACKOFFICE_BOOTSTRAP',
             route: '/system/modules',
-            summary: { runtimeCount: runtimeCount, unavailableCount: unavailable.length },
-            blockers: blocker ? [blocker] : [],
-            nextAction: unavailable.length > 0 ? 'Open Module Registry and repair unavailable runtime communication.' :
+            summary: {
+                runtimeCount: runtimeCount,
+                unavailableCount: unavailable.length,
+                staleCount: diagnostics.staleCount,
+                serverCount: diagnostics.serverKeys.length,
+                nodeCount: diagnostics.serverKeys.length,
+                runtimeRoles: diagnostics.runtimeRoles,
+                reasonCodes: diagnostics.reasonCodes,
+                communicationChecks: diagnostics.communicationChecks,
+                runtimeObservations: diagnostics.observations.slice(0, 25),
+                operatorCommands: [
+                    'npm run local-recovery:readiness -- --live --json',
+                    'Open Module Registry and refresh runtime status',
+                    'Check server-level API key/grant readiness when probes fail',
+                ],
+            },
+            blockers: blockers,
+            nextAction: blockers.length > 0 ? 'Open Module Registry and repair unavailable runtime communication.' :
                 runtimeCount > 0 ? 'Runtime communication has active bootstrap evidence.' : 'Register runtime modules before validating communication.',
         };
     },

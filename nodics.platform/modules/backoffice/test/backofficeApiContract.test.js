@@ -67,6 +67,16 @@ assert(
     contracts.operationalReadinessBlocker.required.includes("suggestedAction"),
   "operational readiness sections must expose guided blockers for Axis and tooling",
 );
+assert.strictEqual(
+  contracts.functionalModuleRegistration.properties.runtimeObservations.items.properties.reasonCode.type,
+  "string",
+  "runtime observations must expose stable reason codes for Axis and support diagnostics",
+);
+assert.strictEqual(
+  contracts.functionalModuleRegistration.properties.runtimeObservations.items.properties.recoveryAction.type,
+  "string",
+  "runtime observations must expose recovery guidance without frontend inference",
+);
 assert.deepStrictEqual(contracts.startupValidationReport.properties.state.enum, [
   "READY",
   "NEEDS_ATTENTION",
