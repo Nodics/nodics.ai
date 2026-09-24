@@ -320,6 +320,79 @@ module.exports = {
             nextAction: blockers.length ? 'Open Setup & Accelerators and initialize required profiles.' : 'Application profiles are available for Setup & Accelerators.',
         };
     },
+    /** Summarizes local acceptance and optional browser-validation evidence without making browsers mandatory outside opted-in environments. */
+    acceptanceSection: function (profileStatusReport) {
+        let tooling = CONFIG.get('tooling') || {};
+        let acceptance = tooling.acceptance || {};
+        let browserValidation = acceptance.browserValidation || {};
+        let statuses = [].concat((profileStatusReport || {}).statuses || []);
+        let errors = [].concat((profileStatusReport || {}).errors || []);
+        let browserEnabled = browserValidation.enabled === true;
+        let reason = browserValidation.reason ? String(browserValidation.reason) :
+            browserEnabled ? 'Browser validation is enabled for this environment.' :
+                'Browser validation is disabled by configuration.';
+        let online = statuses.filter(status =>
+            status && status.capability && status.capability.businessStatus === 'ONLINE').length;
+        let pending = Math.max(0, statuses.length - online);
+        let blockers = [];
+        errors.forEach(item => {
+            let blocker = this.readinessBlocker(
+                'ACCEPTANCE_PROFILE_PROVIDER_UNAVAILABLE',
+                'NEEDS_ATTENTION',
+                'ACCEPTANCE',
+                'BACKOFFICE_APPLICATION_INITIALIZATION',
+                'Open Setup & Accelerators',
+                'Acceptance readiness could not read one or more application profiles.',
+                { repairOperation: 'applicationInitialization.refreshStatus', repairAction: 'REFRESH_ACCEPTANCE_STATUS',
+                    suggestedAction: 'Refresh Setup & Accelerators and verify the owning publication/runtime providers are registered.' }
+            );
+            blocker.profileCode = item.profile && item.profile.code ? String(item.profile.code) : undefined;
+            blockers.push(blocker);
+        });
+        if (pending > 0) blockers.push(this.readinessBlocker(
+            'ACCEPTANCE_APPLICATIONS_NOT_ONLINE',
+            'NEEDS_ATTENTION',
+            'ACCEPTANCE',
+            'BACKOFFICE_APPLICATION_INITIALIZATION',
+            'Open Setup & Accelerators',
+            'One or more customer application profiles are not Online-ready.',
+            { repairOperation: 'applicationInitialization.reviewProfiles', repairAction: 'REVIEW_APPLICATION_PARITY',
+                suggestedAction: 'Open Setup & Accelerators and bring pending applications or documentation packs Online before final acceptance.' }
+        ));
+        if (browserEnabled) blockers.push(this.readinessBlocker(
+            'BROWSER_VALIDATION_EVIDENCE_REQUIRED',
+            'NEEDS_ATTENTION',
+            'ACCEPTANCE',
+            'NTOOLING_BROWSER_VALIDATION',
+            'Run local browser validation',
+            'Browser validation is enabled for this environment but the latest captured evidence is not attached to readiness.',
+            { repairOperation: 'tooling.acceptance.browserValidation', repairAction: 'CAPTURE_BROWSER_VALIDATION',
+                suggestedAction: 'Run the local acceptance/browser smoke and refresh Axis after evidence is captured.' }
+        ));
+        let businessStatus = blockers.length ? 'NEEDS_ATTENTION' :
+            statuses.length ? 'READY' : browserEnabled ? 'NEEDS_ATTENTION' : 'NOT_CONFIGURED';
+        return {
+            key: 'acceptance',
+            title: 'Acceptance and browser validation',
+            businessStatus: businessStatus,
+            ownerModule: 'tooling',
+            source: 'NTOOLING_ACCEPTANCE_READINESS',
+            route: '/dashboard',
+            summary: {
+                browserValidationEnabled: browserEnabled,
+                browserValidationReason: reason,
+                profileCount: statuses.length,
+                onlineProfileCount: online,
+                pendingProfileCount: pending,
+                providerErrorCount: errors.length,
+                blockerCount: blockers.length,
+            },
+            blockers: blockers,
+            nextAction: blockers.length ? 'Complete application parity and capture configured local browser-validation evidence.' :
+                statuses.length ? 'Acceptance readiness has no detected blockers.' :
+                    'Configure acceptance profiles or keep browser validation disabled until a local runner is available.',
+        };
+    },
     /** Summarizes documentation source visibility and publication guidance. */
     documentationSection: function (sources, publicationState) {
         sources = [].concat(sources || []);
@@ -1002,6 +1075,7 @@ module.exports = {
             this.searchSection(context),
             this.assistantSection(),
             this.applicationSection(context.applicationInitializationProfiles),
+            this.acceptanceSection(profileStatusReport),
         ];
         let summary = sections.reduce((result, section) => {
             result.total++;

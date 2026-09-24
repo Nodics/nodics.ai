@@ -24,12 +24,21 @@ let bootstrapIdentity = {
 let defaultAuthDetail = {
     apiKey: 'local-runtime-api-key-with-at-least-thirty-two-characters',
 };
+let tooling = {
+    acceptance: {
+        browserValidation: {
+            enabled: true,
+            reason: 'Local validation can run browser smoke checks against developer-visible applications.'
+        }
+    }
+};
 global.CONFIG = { get: key => key === 'backofficeRegistry' ? registry :
     key === 'bootstrapIdentity' ? bootstrapIdentity :
         key === 'defaultAuthDetail' ? defaultAuthDetail :
             key === 'runtimeRole' ? { code: 'PLATFORM' } :
-                key === 'search' ? { default: { options: { enabled: false, fallback: false, engine: 'elastic' } },
-                    runtimeRoleProfiles: { PLATFORM: { discoveryProjection: { options: { enabled: true } } } } } : undefined };
+                key === 'tooling' ? tooling :
+                    key === 'search' ? { default: { options: { enabled: false, fallback: false, engine: 'elastic' } },
+                        runtimeRoleProfiles: { PLATFORM: { discoveryProjection: { options: { enabled: true } } } } } : undefined };
 let readinessContributor;
 let publishedAlerts = [];
 let auditEvents = [];
@@ -197,6 +206,13 @@ async function validateDeliveryAndProductionPolicy() {
         && section.businessStatus === 'READY'));
     assert(aggregateReport.sections.some(section => section.key === 'runtimeCommunication'
         && section.businessStatus === 'READY'));
+    let acceptanceSection = aggregateReport.sections.find(section => section.key === 'acceptance');
+    assert(acceptanceSection);
+    assert.strictEqual(acceptanceSection.businessStatus, 'NEEDS_ATTENTION');
+    assert.strictEqual(acceptanceSection.summary.browserValidationEnabled, true);
+    assert.strictEqual(acceptanceSection.summary.onlineProfileCount, 1);
+    assert(acceptanceSection.blockers.some(blocker => blocker.code === 'BROWSER_VALIDATION_EVIDENCE_REQUIRED'
+        && blocker.repair.operation === 'tooling.acceptance.browserValidation'));
     assert(aggregateReport.sections.find(section => section.key === 'bootstrap').blockers
         .some(blocker => blocker.code === 'MISSING_TEST_PROPERTY' && blocker.repair.operation === 'runtimeConfiguration.update'));
     global.SERVICE.DefaultModuleService = originalModuleService;
