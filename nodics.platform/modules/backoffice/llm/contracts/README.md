@@ -235,3 +235,19 @@ remaining blockers, evidence reference, transaction/rollback details, policy,
 retry policy, and next action. Dry-run and execute must describe the same target
 set. High-impact execution requires an operator note. Customer projects must not
 add repair scripts or static configuration solely to make Axis buttons work.
+
+Provider registry discovery is the preferred extension mechanism. Owner modules
+register readiness repair providers with BackOffice and declare lifecycle state,
+supported operation/action pairs, and capability metadata. BackOffice may still
+fall back to legacy service names, but new module/provider work should not rely
+on Axis knowing service names. Execution is protected by target-scoped locks,
+idempotency, bounded history, repair receipts, and best-effort
+`operationalReadinessRepairChanged` events for cluster refresh.
+
+Repair results may include `provider`, `safety`, `plan`, `lock`, `receipt`, and
+`events` sections. `plan.businessSteps` is operator-facing; `plan.machineSteps`
+is future automation/pipeline input. `safety.level` distinguishes safe,
+high-impact, batch-disabled, and destructive-disabled operations. Batch
+execution is disabled by default. Owner providers must expose unavailable,
+misconfigured, unsupported, partial-success, dependency-missing, approval-bound,
+and failed states with problem, owner, impact, next action, and repair route.

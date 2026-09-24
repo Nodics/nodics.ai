@@ -26,6 +26,11 @@
       "result": {
         "repairContractVersion": 1,
         "state": "DRY_RUN",
+        "provider": {
+          "ownerModule": "import",
+          "providerCode": "importReadinessRepairProvider",
+          "lifecycleState": "READY"
+        },
         "targetIdentifiers": {
           "releaseCode": "circa.ewaste:sample"
         },
@@ -44,6 +49,23 @@
         "retryPolicy": {
           "safeToRetry": true,
           "reuseIdempotencyKey": true
+        },
+        "safety": {
+          "level": "SAFE",
+          "destructiveDisabled": false
+        },
+        "plan": {
+          "businessSteps": [
+            "Validate release descriptor and generated manifest",
+            "Preview import receipt changes"
+          ],
+          "machineSteps": [
+            {
+              "action": "VALIDATE_MANIFEST",
+              "ownerModule": "import",
+              "target": "circa.ewaste:sample"
+            }
+          ]
         },
         "message": "Would repair import release.",
         "nextAction": "Review dry-run evidence before execution."
@@ -73,6 +95,11 @@
       "result": {
         "repairContractVersion": 1,
         "state": "COMPLETED",
+        "provider": {
+          "ownerModule": "workflow",
+          "providerCode": "processApprovalRepairProvider",
+          "lifecycleState": "READY"
+        },
         "targetIdentifiers": {
           "taskCode": "publication-approval:circa.ewaste"
         },
@@ -95,6 +122,22 @@
         "retryPolicy": {
           "safeToRetry": false,
           "reuseIdempotencyKey": true
+        },
+        "safety": {
+          "level": "HIGH_IMPACT",
+          "destructiveDisabled": false
+        },
+        "receipt": {
+          "receiptCode": "repair:workflow:publication-approval-circa-ewaste",
+          "receiptType": "OPERATIONAL_READINESS_REPAIR"
+        },
+        "events": {
+          "emitted": true,
+          "refreshScopes": [
+            "approval",
+            "publishing",
+            "operationalReadiness"
+          ]
         },
         "evidenceReference": "process:approval-reconciliation",
         "message": "Approval task reconciliation completed.",

@@ -42,9 +42,11 @@ global.CONFIG = { get: key => key === 'backofficeRegistry' ? registry :
 let readinessContributor;
 let publishedAlerts = [];
 let auditEvents = [];
+let publishedEvents = [];
 global.SERVICE = { AuditPublisher: { record: () => Promise.resolve(true) },
     DefaultBackofficeAuditService: { record: event => { auditEvents.push(event); return Promise.resolve(event); } },
     AlertPublisher: { record: event => { publishedAlerts.push(event); return Promise.resolve(true); } },
+    DefaultEventService: { publish: event => { publishedEvents.push(event); return Promise.resolve(true); } },
     DefaultBackofficeApplicationInitializationService: { status: async profileCode => ({
         profileCode: profileCode,
         applicationCode: 'circa',
@@ -322,10 +324,11 @@ async function validateDeliveryAndProductionPolicy() {
     global.SERVICE.DefaultModuleService = originalModuleService;
 
     let repairCalls = [];
-    global.SERVICE.DefaultBackofficeReadinessRepairService = {
+    let importRepairProvider = {
         repairCapability: () => ({
             repairContractVersion: 1,
             available: true,
+            lifecycleState: 'READY',
             supportedOperations: [{ operation: 'dataRelease.install', action: 'REPAIR_DATA_RELEASE' }]
         }),
         executeRepair: async repair => {
@@ -342,11 +345,22 @@ async function validateDeliveryAndProductionPolicy() {
                 transaction: { atomic: false, rollbackAvailable: false, compensatingAction: 'Reinstall previous release' },
                 policy: { environment: 'kickoffLocal', approvalRequired: false },
                 retryPolicy: { safeToRetry: true, reuseIdempotencyKey: true },
+                plan: {
+                    businessSteps: ['Validate release manifest', 'Repair import receipt'],
+                    machineSteps: [{ action: 'VALIDATE_MANIFEST', target: 'circa.ewaste:sample' }]
+                },
+                refreshScopes: ['imports', 'operationalReadiness'],
                 message: repair.dryRun ? 'Would repair import release.' : 'Import release repaired.',
                 nextAction: repair.dryRun ? 'Execute repair.' : 'Refresh readiness.',
             };
         }
     };
+    let providerRegistration = service.registerRepairProvider('import', importRepairProvider, {
+        providerCode: 'sampleImportRepairProvider',
+        supportedOperations: [{ operation: 'dataRelease.install', action: 'REPAIR_DATA_RELEASE' }]
+    });
+    assert.strictEqual(providerRegistration.ownerModule, 'import');
+    assert(service.repairProviderRegistry().some(provider => provider.ownerModule === 'import'));
     let dryRunRepair = await service.executeRepair({
         tenant: 'default',
         authData: { loginId: 'admin' },
@@ -370,6 +384,9 @@ async function validateDeliveryAndProductionPolicy() {
     assert.strictEqual(dryRunRepair.repairContractVersion, 1);
     assert.strictEqual(dryRunRepair.preview.targetCodes[0], 'circa.ewaste:sample');
     assert.strictEqual(dryRunRepair.transaction.rollbackAvailable, false);
+    assert.strictEqual(dryRunRepair.provider.ownerModule, 'import');
+    assert.strictEqual(dryRunRepair.safety.level, 'SAFE');
+    assert(dryRunRepair.plan.businessSteps.includes('Validate release manifest'));
     assert.strictEqual(repairCalls.length, 1);
     let executedRepair = await service.executeRepair({
         tenant: 'default',
@@ -389,6 +406,12 @@ async function validateDeliveryAndProductionPolicy() {
     assert.strictEqual(executedRepair.state, 'COMPLETED');
     assert.strictEqual(executedRepair.changedCount, 2);
     assert.strictEqual(executedRepair.targetIdentifiers.releaseCode, 'circa.ewaste:sample');
+    assert.strictEqual(executedRepair.receipt.receiptType, 'OPERATIONAL_READINESS_REPAIR');
+    assert.strictEqual(executedRepair.events.emitted, true);
+    assert(executedRepair.events.refreshScopes.includes('imports'));
+    assert(publishedEvents.some(event => event.event === 'operationalReadinessRepairChanged'
+        && event.data.ownerModule === 'import'
+        && event.data.receiptCode === executedRepair.receipt.receiptCode));
     let replayedRepair = await service.executeRepair({
         tenant: 'default',
         authData: { loginId: 'admin' },
@@ -405,12 +428,57 @@ async function validateDeliveryAndProductionPolicy() {
         }
     });
     assert.strictEqual(replayedRepair.idempotentReplay, true);
+    assert.strictEqual(replayedRepair.receipt.receiptCode, executedRepair.receipt.receiptCode);
     assert.strictEqual(repairCalls.length, 2);
     assert(service.repairHistory().some(item => item.idempotencyKey === 'repair-execute-001'
         && item.principal === 'admin'));
     assert(auditEvents.some(event => event.eventType === 'backoffice.operationalReadiness.repair'
         && event.idempotencyKey === 'repair-execute-001'));
-    delete global.SERVICE.DefaultBackofficeReadinessRepairService;
+    service.unregisterRepairProvider('import');
+    let lockedRepair = await service.executeRepair({
+        tenant: 'default',
+        authData: { loginId: 'admin' },
+        readinessRepair: {
+            idempotencyKey: 'repair-locked-001',
+            dryRun: false,
+            operation: 'dataRelease.install',
+            action: 'REPAIR_DATA_RELEASE',
+            ownerModule: 'import',
+            eligibility: 'MANUAL',
+            available: true,
+            label: 'Repair data release',
+            targetIdentifiers: { releaseCode: 'circa.ewaste:locked' }
+        }
+    });
+    assert.strictEqual(lockedRepair.state, 'PROVIDER_UNAVAILABLE');
+    let unsupportedContract = await service.executeRepair({
+        readinessRepair: {
+            repairContractVersion: 99,
+            idempotencyKey: 'repair-contract-001',
+            dryRun: true,
+            operation: 'dataRelease.install',
+            action: 'REPAIR_DATA_RELEASE',
+            ownerModule: 'import',
+            eligibility: 'MANUAL',
+            available: true,
+            label: 'Repair data release',
+            targetIdentifiers: { releaseCode: 'circa.ewaste:sample' }
+        }
+    });
+    assert.strictEqual(unsupportedContract.state, 'UNSUPPORTED_CONTRACT');
+    let missingTargetRepair = await service.executeRepair({
+        readinessRepair: {
+            idempotencyKey: 'repair-missing-target-001',
+            dryRun: true,
+            operation: 'dataRelease.install',
+            action: 'REPAIR_DATA_RELEASE',
+            ownerModule: 'import',
+            eligibility: 'MANUAL',
+            available: true,
+            label: 'Repair data release'
+        }
+    });
+    assert.strictEqual(missingTargetRepair.state, 'VALIDATION_FAILED');
     let unavailableRepair = await service.executeRepair({
         readinessRepair: {
             idempotencyKey: 'repair-unavailable-001',

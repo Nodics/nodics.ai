@@ -166,6 +166,35 @@ dry-run parity, idempotency, target identity, timeout/correlation context, audit
 expectations, and the normalized result contract. Provider implementation code
 belongs in the owning framework/module package, not in `nodics.kickoff`.
 
+Owner modules can register providers with
+`DefaultBackofficeOperationalReadinessService.registerRepairProvider(ownerModule,
+provider, metadata)` during startup. Registry discovery is preferred over
+hard-coded service-name lookup; legacy service discovery remains only as a
+framework compatibility fallback. Registered providers expose lifecycle state
+such as `REGISTERED`, `READY`, `DEGRADED`, `DISABLED`, `MISCONFIGURED`, or
+`UNAVAILABLE`, plus supported operation/action pairs.
+
+BackOffice adds common repair governance around every provider:
+
+- target-scoped execution locks prevent concurrent execution for the same owner
+  operation and target identifiers;
+- non-dry-run execution creates a client-safe repair receipt;
+- successful or partial repairs publish a best-effort
+  `operationalReadinessRepairChanged` event so clustered nodes can refresh
+  readiness/cache/search/config state through owner listeners;
+- dry-run and execution results may include a business-readable plan, a
+  machine-readable plan, safety level, refresh scopes, rollback advisory, and
+  receipt/evidence references;
+- batch execution remains disabled by default until owner approvals, locking,
+  rollback, and dependency ordering are mature.
+
+Owner-specific repairs are still separate work. nImport owns release
+install/manifest repair, Process owns approval reconciliation, nPublish/WCMS
+owns staged-to-Online operations, Media owns object/reference/file repair,
+nSearch owns index/read-source repair, Docs owns documentation pack readiness,
+Assistant/Copilot owns knowledge-source repair, and eWaste owns Circa draft
+asset cleanup and channel-specific acceptance readiness.
+
 ## Runtime Communication Diagnostics
 
 Runtime communication readiness is derived from BackOffice bootstrap/module

@@ -22,7 +22,10 @@ module.exports = {
     _lastOperationalReadinessSnapshot: null,
     _operationalReadinessTimeline: [],
     _repairAttempts: [],
+    _repairReceipts: [],
     _repairResultsByKey: Object.create(null),
+    _repairLocksByTarget: Object.create(null),
+    _repairProviderRegistry: Object.create(null),
     _supportedRepairContractVersion: 1,
     /** Registers configuration validity as a required readiness contributor. */
     init: function () {
@@ -1478,19 +1481,89 @@ module.exports = {
     hasRepairTargetIdentity: function (repair) {
         return Object.keys(repair.targetIdentifiers || {}).length > 0;
     },
-    /** Resolves an owner-declared repair provider; BackOffice never guesses repair work. */
-    repairProvider: function (repair) {
-        let providers = [
-            SERVICE.DefaultBackofficeReadinessRepairService,
-            SERVICE.DefaultOperationalReadinessRepairService,
-        ];
+    /** Registers an owner repair provider through framework/module startup or tests. */
+    registerRepairProvider: function (ownerModule, provider, metadata) {
+        ownerModule = String(ownerModule || '').trim();
+        if (!ownerModule) throw new CLASSES.NodicsError('ERR_BOF_00000', 'Repair provider ownerModule is required');
+        if (!provider || (typeof provider.executeRepair !== 'function' &&
+            typeof provider.executeReadinessRepair !== 'function')) {
+            throw new CLASSES.NodicsError('ERR_BOF_00000', 'Repair provider requires executeRepair or executeReadinessRepair');
+        }
+        this._repairProviderRegistry[ownerModule] = Object.assign({
+            ownerModule: ownerModule,
+            registeredAt: this.now(),
+            lifecycleState: 'REGISTERED',
+            provider: provider,
+        }, metadata || {});
+        return this.repairProviderDescriptor(this._repairProviderRegistry[ownerModule]);
+    },
+    /** Removes one owner repair provider registration. */
+    unregisterRepairProvider: function (ownerModule) {
+        delete this._repairProviderRegistry[String(ownerModule || '').trim()];
+        return true;
+    },
+    /** Returns a client-safe provider descriptor. */
+    repairProviderDescriptor: function (entry, capability) {
+        entry = entry || {};
+        capability = capability || {};
+        return {
+            ownerModule: String(entry.ownerModule || capability.ownerModule || 'unknown'),
+            providerCode: String(entry.providerCode || capability.providerCode || entry.ownerModule || 'unknown'),
+            lifecycleState: String(capability.lifecycleState || entry.lifecycleState || (capability.available === false ? 'UNAVAILABLE' : 'READY')),
+            registeredAt: entry.registeredAt,
+            repairContractVersion: Number(capability.repairContractVersion || entry.repairContractVersion || this._supportedRepairContractVersion),
+            supportedOperations: [].concat(capability.supportedOperations || capability.supportedRepairOperations || entry.supportedOperations || [])
+                .map(item => ({ operation: String((item || {}).operation || ''), action: (item || {}).action ? String(item.action) : undefined }))
+                .filter(item => item.operation),
+            message: capability.message ? String(capability.message) : undefined,
+            nextAction: capability.nextAction ? String(capability.nextAction) : undefined,
+        };
+    },
+    /** Returns registered repair providers without exposing executable instances. */
+    repairProviderRegistry: function () {
+        return Object.keys(this._repairProviderRegistry || {}).sort().map(ownerModule =>
+            this.repairProviderDescriptor(this._repairProviderRegistry[ownerModule]));
+    },
+    /** Resolves provider candidates through registry first and legacy framework service names second. */
+    repairProviderEntries: function (repair) {
+        let entries = [];
+        let registered = this._repairProviderRegistry && this._repairProviderRegistry[repair.ownerModule];
+        if (registered && registered.provider) entries.push(registered);
+        [
+            ['backoffice', SERVICE.DefaultBackofficeReadinessRepairService],
+            ['operationalReadiness', SERVICE.DefaultOperationalReadinessRepairService],
+        ].forEach(pair => {
+            if (pair[1]) entries.push({ ownerModule: pair[0], providerCode: pair[0], provider: pair[1], lifecycleState: 'READY' });
+        });
         let ownerToken = String(repair.ownerModule || '').replace(/[^A-Za-z0-9]/g, '');
         if (ownerToken) {
             let serviceName = 'Default' + ownerToken.charAt(0).toUpperCase() + ownerToken.slice(1) + 'ReadinessRepairService';
-            providers.push(SERVICE[serviceName]);
+            if (SERVICE[serviceName]) entries.push({
+                ownerModule: repair.ownerModule,
+                providerCode: serviceName,
+                provider: SERVICE[serviceName],
+                lifecycleState: 'READY',
+            });
         }
-        return providers.find(provider => provider && typeof provider.executeRepair === 'function') ||
-            providers.find(provider => provider && typeof provider.executeReadinessRepair === 'function');
+        let seen = new Set();
+        return entries.filter(entry => {
+            let provider = entry && entry.provider;
+            if (!provider || (typeof provider.executeRepair !== 'function' &&
+                typeof provider.executeReadinessRepair !== 'function')) return false;
+            let key = entry.providerCode || entry.ownerModule || provider;
+            if (seen.has(key)) return false;
+            seen.add(key);
+            return true;
+        });
+    },
+    /** Resolves an owner-declared repair provider; BackOffice never guesses repair work. */
+    repairProvider: function (repair) {
+        let entry = this.repairProviderEntry(repair);
+        return entry && entry.provider;
+    },
+    /** Resolves an owner-declared repair provider registry entry. */
+    repairProviderEntry: function (repair) {
+        return this.repairProviderEntries(repair).find(entry => entry && entry.provider);
     },
     /** Reads optional provider capability/health metadata without requiring every provider to implement it. */
     repairProviderCapability: function (provider, repair) {
@@ -1501,13 +1574,22 @@ module.exports = {
         return {};
     },
     /** Validates provider capability metadata before execution. */
-    validateRepairProviderCapability: function (provider, repair) {
+    validateRepairProviderCapability: function (entry, repair) {
+        let provider = entry && entry.provider || entry;
         let capability = this.repairProviderCapability(provider, repair);
         let version = Number(capability.repairContractVersion || 1);
         if (version !== this._supportedRepairContractVersion) return {
             state: 'UNSUPPORTED_CONTRACT',
             message: 'Owner repair provider contract version is unsupported.',
             nextAction: 'Upgrade the owner repair provider or BackOffice repair contract before executing.',
+            provider: this.repairProviderDescriptor(entry, capability),
+        };
+        let lifecycleState = String(capability.lifecycleState || entry && entry.lifecycleState || 'READY');
+        if (['DISABLED', 'MISCONFIGURED', 'UNAVAILABLE'].includes(lifecycleState)) return {
+            state: lifecycleState === 'MISCONFIGURED' ? 'PROVIDER_MISCONFIGURED' : 'PROVIDER_UNAVAILABLE',
+            message: String(capability.message || 'Owner repair provider is not ready.'),
+            nextAction: String(capability.nextAction || 'Open Module Registry or the owning configuration workspace and repair provider readiness.'),
+            provider: this.repairProviderDescriptor(entry, capability),
         };
         let supported = [].concat(capability.supportedOperations || capability.supportedRepairOperations || []);
         if (supported.length > 0) {
@@ -1520,14 +1602,124 @@ module.exports = {
                 state: 'NOT_SUPPORTED',
                 message: 'Owner repair provider does not support this operation/action pair.',
                 nextAction: 'Open the owning workspace or choose a supported repair action.',
+                provider: this.repairProviderDescriptor(entry, capability),
             };
         }
         if (capability.available === false) return {
             state: 'PROVIDER_UNAVAILABLE',
             message: String(capability.message || 'Owner repair provider is not currently available.'),
             nextAction: String(capability.nextAction || 'Retry after the owner repair provider reports healthy.'),
+            provider: this.repairProviderDescriptor(entry, capability),
         };
-        return {};
+        return { provider: this.repairProviderDescriptor(entry, capability) };
+    },
+    /** Returns a stable repair target key for locks, receipts, and telemetry. */
+    repairTargetKey: function (repair) {
+        let ids = this.normalizeRepairTargetIdentifiers(repair.targetIdentifiers);
+        let encoded = Object.keys(ids).sort().map(key => key + '=' + ids[key]).join('&');
+        return [repair.ownerModule, repair.operation, repair.action, encoded].map(value => String(value || '')).join('|');
+    },
+    /** Attempts to acquire an execution lock for a repair target. */
+    acquireRepairLock: function (repair, request) {
+        let targetKey = this.repairTargetKey(repair);
+        let now = Date.now();
+        let existing = this._repairLocksByTarget[targetKey];
+        if (existing && existing.expiresAtMs > now) return {
+            acquired: false,
+            targetKey: targetKey,
+            lock: Object.assign({}, existing, { expiresAtMs: undefined, expiresAt: new Date(existing.expiresAtMs).toISOString() }),
+        };
+        let expiresAtMs = now + Math.max(5000, Number(repair.timeoutMs || 30000) + 30000);
+        let lock = {
+            targetKey: targetKey,
+            ownerModule: repair.ownerModule,
+            operation: repair.operation,
+            action: repair.action,
+            idempotencyKey: repair.idempotencyKey,
+            correlationId: repair.correlationId,
+            acquiredAt: this.now(),
+            expiresAtMs: expiresAtMs,
+            principal: this.principal(request),
+        };
+        this._repairLocksByTarget[targetKey] = lock;
+        return { acquired: true, targetKey: targetKey, lock: Object.assign({}, lock, { expiresAtMs: undefined, expiresAt: new Date(expiresAtMs).toISOString() }) };
+    },
+    /** Releases a target execution lock owned by the current idempotency key. */
+    releaseRepairLock: function (targetKey, idempotencyKey) {
+        let existing = this._repairLocksByTarget[targetKey];
+        if (existing && existing.idempotencyKey === idempotencyKey) delete this._repairLocksByTarget[targetKey];
+    },
+    /** Returns policy/safety metadata for a repair request. */
+    repairSafety: function (repair, result) {
+        result = result || {};
+        let safetyLevel = result.safety && result.safety.level ? String(result.safety.level) :
+            repair.highImpact ? 'HIGH_IMPACT' : repair.batch ? 'BATCH_DISABLED' : 'SAFE';
+        return {
+            level: safetyLevel,
+            destructiveDisabled: safetyLevel === 'DESTRUCTIVE_DISABLED' || repair.action === 'DELETE' || repair.action === 'REMOVE',
+            highImpact: repair.highImpact === true,
+            batchExecutionAllowed: false,
+        };
+    },
+    /** Creates a normalized human and machine repair plan from provider output. */
+    normalizeRepairPlan: function (repair, result) {
+        result = result || {};
+        let plan = result.plan && typeof result.plan === 'object' && !Array.isArray(result.plan) ? result.plan : {};
+        return {
+            businessSteps: [].concat(plan.businessSteps || result.businessSteps || []).filter(Boolean).map(item => String(item)).slice(0, 12),
+            machineSteps: [].concat(plan.machineSteps || result.machineSteps || []).filter(Boolean).map(item => {
+                item = item && typeof item === 'object' && !Array.isArray(item) ? item : { action: item };
+                return {
+                    action: String(item.action || repair.action),
+                    ownerModule: String(item.ownerModule || repair.ownerModule),
+                    target: item.target ? String(item.target) : undefined,
+                };
+            }).slice(0, 12),
+        };
+    },
+    /** Publishes a best-effort repair event for cluster/runtime refresh. */
+    publishRepairEvent: function (result, request) {
+        if (!SERVICE.DefaultEventService || typeof SERVICE.DefaultEventService.publish !== 'function') {
+            return Promise.resolve({ skipped: true, reason: 'event_service_unavailable' });
+        }
+        return SERVICE.DefaultEventService.publish({
+            tenant: request && request.tenant || 'default',
+            event: 'operationalReadinessRepairChanged',
+            data: {
+                state: result.state,
+                ownerModule: result.ownerModule,
+                operation: result.operation,
+                action: result.action,
+                targetIdentifiers: result.targetIdentifiers,
+                receiptCode: result.receipt && result.receipt.receiptCode,
+                refreshScopes: result.events && result.events.refreshScopes,
+            },
+            correlationId: result.correlationId,
+        }).catch(error => ({ skipped: true, reason: 'event_publish_failed', errorCode: error.code }));
+    },
+    /** Records a durable-shape in-memory receipt until persistence is introduced. */
+    recordRepairReceipt: function (result, request) {
+        if (result.dryRun || result.idempotentReplay) return undefined;
+        let receipt = {
+            receiptCode: ['repair', result.ownerModule, Date.now()].map(value => String(value || 'unknown')).join(':'),
+            receiptType: 'OPERATIONAL_READINESS_REPAIR',
+            state: result.state,
+            ownerModule: result.ownerModule,
+            operation: result.operation,
+            action: result.action,
+            targetIdentifiers: result.targetIdentifiers,
+            evidenceReference: result.evidenceReference,
+            correlationId: result.correlationId,
+            idempotencyKey: result.idempotencyKey,
+            principal: this.principal(request),
+            checkedAt: result.checkedAt,
+        };
+        this._repairReceipts = [receipt].concat(this._repairReceipts || []).slice(0, 50);
+        return receipt;
+    },
+    /** Returns bounded client-safe repair receipts. */
+    repairReceipts: function () {
+        return (this._repairReceipts || []).slice();
     },
     /** Returns the owner-provider execution function. */
     invokeRepairProvider: async function (provider, repair, request) {
@@ -1541,6 +1733,9 @@ module.exports = {
         let state = String(result.state || options.state || (repair.dryRun ? 'DRY_RUN' : 'COMPLETED'));
         let preview = result.preview && typeof result.preview === 'object' && !Array.isArray(result.preview) ? result.preview :
             repair.preview && typeof repair.preview === 'object' ? repair.preview : {};
+        let provider = result.provider || options.provider;
+        let refreshScopes = [].concat(result.refreshScopes || result.events && result.events.refreshScopes || [])
+            .filter(Boolean).map(item => String(item)).slice(0, 12);
         return {
             contractVersion: 1,
             repairContractVersion: this._supportedRepairContractVersion,
@@ -1554,6 +1749,8 @@ module.exports = {
             ownerType: repair.ownerType,
             source: repair.source,
             blockerCode: repair.blockerCode,
+            provider: provider && typeof provider === 'object' && !Array.isArray(provider) ?
+                this.repairProviderDescriptor(provider, provider) : undefined,
             targetIdentifiers: this.normalizeRepairTargetIdentifiers(result.targetIdentifiers || repair.targetIdentifiers),
             prerequisites: [].concat(result.prerequisites || repair.prerequisites || []).slice(0, 20),
             preview: {
@@ -1580,6 +1777,15 @@ module.exports = {
                     result.retryPolicy.safeToRetry === true : state !== 'COMPLETED',
                 reuseIdempotencyKey: result.retryPolicy && result.retryPolicy.reuseIdempotencyKey !== undefined ?
                     result.retryPolicy.reuseIdempotencyKey === true : true,
+            },
+            safety: this.repairSafety(repair, result),
+            plan: this.normalizeRepairPlan(repair, result),
+            lock: options.lock,
+            receipt: result.receipt && typeof result.receipt === 'object' && !Array.isArray(result.receipt) ? result.receipt : undefined,
+            events: {
+                emitted: false,
+                refreshScopes: refreshScopes,
+                invalidatesReadiness: state === 'COMPLETED' || state === 'PARTIAL_SUCCESS',
             },
             changedCount: Number.isInteger(result.changedCount) ? result.changedCount : 0,
             skippedCount: Number.isInteger(result.skippedCount) ? result.skippedCount : 0,
@@ -1618,8 +1824,24 @@ module.exports = {
     /** Executes or dry-runs one owner-declared readiness repair operation. */
     executeRepair: async function (request) {
         let repair = this.normalizeRepairRequest(request);
+        if (repair.repairContractVersion !== this._supportedRepairContractVersion) {
+            let unsupported = this.normalizeRepairResult(repair, {}, {
+                state: 'UNSUPPORTED_CONTRACT',
+                message: 'Readiness repair request contract version is unsupported.',
+                nextAction: 'Refresh Axis or upgrade the caller to the supported BackOffice repair contract.',
+            });
+            return this.recordRepairAttempt(unsupported, request);
+        }
         if (this._repairResultsByKey[repair.idempotencyKey]) {
             return this.normalizeRepairResult(repair, this._repairResultsByKey[repair.idempotencyKey], { idempotentReplay: true });
+        }
+        if (repair.batch && repair.dryRun !== true) {
+            let batchBlocked = this.normalizeRepairResult(repair, {}, {
+                state: 'BATCH_EXECUTION_DISABLED',
+                message: 'Batch repair execution is disabled until owner approvals, locking, and rollback are mature.',
+                nextAction: 'Run dry-runs and execute one owner repair target at a time.',
+            });
+            return this.recordRepairAttempt(batchBlocked, request);
         }
         if (repair.available !== true || !['AUTOMATIC', 'MANUAL'].includes(repair.eligibility)) {
             let blocked = this.normalizeRepairResult(repair, {}, {
@@ -1630,7 +1852,7 @@ module.exports = {
             this._repairResultsByKey[repair.idempotencyKey] = blocked;
             return this.recordRepairAttempt(blocked, request);
         }
-        if (repair.highImpact && !repair.operatorNote) {
+        if (repair.highImpact && repair.dryRun !== true && !repair.operatorNote) {
             let noteRequired = this.normalizeRepairResult(repair, {}, {
                 state: 'OPERATOR_NOTE_REQUIRED',
                 message: 'High-impact repair execution requires an operator note.',
@@ -1646,8 +1868,8 @@ module.exports = {
             });
             return this.recordRepairAttempt(validation, request);
         }
-        let provider = this.repairProvider(repair);
-        if (!provider) {
+        let providerEntry = this.repairProviderEntry(repair);
+        if (!providerEntry) {
             let unavailable = this.normalizeRepairResult(repair, {}, {
                 state: repair.dryRun ? 'DRY_RUN' : 'PROVIDER_UNAVAILABLE',
                 message: repair.dryRun ? 'Dry run is valid, but no owner repair provider is registered for execution yet.' :
@@ -1658,16 +1880,54 @@ module.exports = {
             if (!repair.dryRun) this._repairResultsByKey[repair.idempotencyKey] = unavailable;
             return this.recordRepairAttempt(unavailable, request);
         }
-        let providerValidation = this.validateRepairProviderCapability(provider, repair);
+        let providerValidation = this.validateRepairProviderCapability(providerEntry, repair);
         if (providerValidation.state) {
             let invalidProvider = this.normalizeRepairResult(repair, {}, providerValidation);
             if (!repair.dryRun) this._repairResultsByKey[repair.idempotencyKey] = invalidProvider;
             return this.recordRepairAttempt(invalidProvider, request);
         }
-        let ownerResult = await this.invokeRepairProvider(provider, repair, request);
-        let normalized = this.normalizeRepairResult(repair, ownerResult);
-        if (!repair.dryRun) this._repairResultsByKey[repair.idempotencyKey] = normalized;
-        return this.recordRepairAttempt(normalized, request);
+        let lockResult = repair.dryRun ? undefined : this.acquireRepairLock(repair, request);
+        if (lockResult && lockResult.acquired === false) {
+            let locked = this.normalizeRepairResult(repair, {}, {
+                state: 'REPAIR_LOCKED',
+                message: 'Another repair is already running for this target.',
+                nextAction: 'Wait for the active repair lock to expire or complete, then refresh readiness.',
+                lock: lockResult.lock,
+                provider: providerValidation.provider,
+            });
+            return this.recordRepairAttempt(locked, request);
+        }
+        try {
+            let ownerResult = await this.invokeRepairProvider(providerEntry.provider, repair, request);
+            let normalized = this.normalizeRepairResult(repair, ownerResult, {
+                provider: providerValidation.provider,
+                lock: lockResult && lockResult.lock,
+            });
+            let receipt = this.recordRepairReceipt(normalized, request);
+            if (receipt) normalized.receipt = receipt;
+            if (!repair.dryRun) {
+                let eventEvidence = await this.publishRepairEvent(normalized, request);
+                normalized.events = Object.assign({}, normalized.events, {
+                    emitted: eventEvidence && eventEvidence.skipped !== true,
+                    reason: eventEvidence && eventEvidence.reason,
+                });
+                this._repairResultsByKey[repair.idempotencyKey] = normalized;
+            }
+            return this.recordRepairAttempt(normalized, request);
+        } catch (error) {
+            let failed = this.normalizeRepairResult(repair, {}, {
+                state: 'FAILED',
+                message: 'Owner repair provider failed before returning a governed result.',
+                nextAction: 'Open the owning workspace, review provider health, and retry only if the retry policy allows it.',
+                provider: providerValidation.provider,
+                lock: lockResult && lockResult.lock,
+                evidenceReference: error && error.code ? String(error.code) : undefined,
+            });
+            if (!repair.dryRun) this._repairResultsByKey[repair.idempotencyKey] = failed;
+            return this.recordRepairAttempt(failed, request);
+        } finally {
+            if (lockResult && lockResult.acquired) this.releaseRepairLock(lockResult.targetKey, repair.idempotencyKey);
+        }
     },
     /** Creates a compact client-safe snapshot from the canonical readiness aggregate. */
     operationalReadinessSnapshot: function (report) {
