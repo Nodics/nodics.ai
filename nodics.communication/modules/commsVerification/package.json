@@ -13,6 +13,7 @@
     "owns": [
       "configuration",
       "service",
+      "utility",
       "test",
       "llm"
     ],

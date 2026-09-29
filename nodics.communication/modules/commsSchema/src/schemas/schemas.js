@@ -32,3 +32,23 @@ Object.assign(module.exports.commsSchema.commsIntent.definition, {
  nextAttemptAt:{type:'date',description:'Earliest permitted time for a known retryable failure.'},
  providerReference:{type:'string',description:'Provider acceptance reference without recipient or message content.'}
 });
+
+// Verification uses its existing private schema; managed revisions prevent stale proof mutations.
+Object.assign(module.exports.commsSchema.commsVerificationChallenge, {
+    router: { groups: { schemaOperations: false }, enabled: false },
+    backoffice: { enabled: false, concurrency: { managed: true, field: 'revision' } }
+});
+Object.assign(module.exports.commsSchema.commsVerificationChallenge.definition, {
+    revision: { type: 'int', default: 0, required: true, description: 'Managed optimistic revision for verification transitions.' },
+    sourceModule: { type: 'string', description: 'Authorised purpose owner requesting verification, not an identity grant.' },
+    bindingHash: { type: 'string', description: 'Digest binding the tenant, source, purpose, subject, destination and trusted continuation.' },
+    generation: { type: 'int', description: 'Current code generation; replacement atomically invalidates earlier code and proof.' },
+    issuedAt: { type: 'date', description: 'Server-controlled time of the current issue.' },
+    nextIssueAt: { type: 'date', description: 'Server-controlled earliest replacement time.' },
+    proofHash: { type: 'string', description: 'Private digest of the transient verified continuation proof; never returned by generic APIs.' },
+    proofExpiresAt: { type: 'date', description: 'Verified proof expiry, never later than challenge expiry.' },
+    consumedAt: { type: 'date', description: 'Time of the one acknowledged proof consumption.' },
+    consumedOperationHash: { type: 'string', description: 'Private receipt binding consumption to an owning business command; not authorisation to rerun it.' },
+    lastMutationId: { type: 'string', description: 'Private per-attempt write marker used to confirm exact acknowledged persistence.' }
+});
+module.exports.commsSchema.commsVerificationChallenge.definition.status.enum.push('CONSUMED');
