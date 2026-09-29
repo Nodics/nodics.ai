@@ -217,10 +217,13 @@ module.exports = {
         return { enterprise: enterprise, tenantCode: tenantCode };
     },
 
-    /** Builds a deterministic assignment code for idempotent pre-registration state. */
+    /**
+     * Derives a bounded assignment identity from the exact enterprise/email tuple.
+     * Reuses the canonical digest so punctuation-distinct emails cannot share a
+     * lossy slug. Existing assignments retain their persisted code when refreshed.
+     */
     assignmentCode: function (enterpriseCode, normalizedEmail) {
-        return ['enterpriseAccess', enterpriseCode, normalizedEmail.replace(/[^a-z0-9]+/g, '_')]
-            .join('_').replace(/_+/g, '_').replace(/_$/g, '');
+        return 'enterpriseAccess_' + this.commandDigest(['enterpriseAccess', enterpriseCode, normalizedEmail]);
     },
 
     /** Returns the Profile authority tenant for enterprise access-assignment registry state. */
@@ -284,6 +287,28 @@ module.exports = {
         }).filter(tab => tab.sections.length > 0);
         effective.defaultTab = effective.tabs[0] && effective.tabs[0].id || effective.defaultTab;
         return effective;
+    },
+
+    /**
+     * Reads completed registration independently of invitation eligibility.
+     * A registered assignment remains protected after its invitation expires and
+     * cannot be hidden by a page of newer pending records. Preserve authority,
+     * fresh owner reads and the existing generated-service response contract.
+     */
+    findRegisteredAssignment: async function (normalizedEmail, enterpriseCode, authData) {
+        let response = await SERVICE.DefaultEnterpriseAccessAssignmentService.get({
+            tenant: this.assignmentTenant(),
+            authData: authData,
+            query: { normalizedEmail: normalizedEmail, enterpriseCode: enterpriseCode, status: 'REGISTERED' },
+            options: { recursive: false, skipItemCache: true },
+            searchOptions: { pageSize: 1, pageNumber: 1 }
+        });
+        if (!response || response.success === false || response.error ||
+            typeof response.code === 'string' && response.code.startsWith('ERR_') ||
+            !Array.isArray(response.result)) {
+            throw this.error('Enterprise registration state is unavailable');
+        }
+        return response.result[0];
     },
 
     /** Finds active assignment candidates for one normalized email and enterprise. */
@@ -492,10 +517,9 @@ module.exports = {
         let roleCode = String(body.roleCode || '').trim();
         let role = this.rolePolicy(roleCode);
         let enterprise = await this.retrieveEnterpriseForAccess(enterpriseCode);
+        let registered = await this.findRegisteredAssignment(normalizedEmail, enterpriseCode, request.authData);
+        if (registered) throw this.error('Enterprise user email is already registered');
         let existing = await this.findActiveAssignment(normalizedEmail, enterpriseCode, request.authData);
-        if (existing && existing.status === 'REGISTERED') {
-            throw this.error('Enterprise user email is already registered');
-        }
         let expiresAt = body.expiresAt ? new Date(body.expiresAt) : new Date(
             Date.now() + Number(policy.defaultExpiryDays || 14) * 24 * 60 * 60 * 1000);
         if (!Number.isFinite(expiresAt.getTime())) throw this.error('Enterprise access expiry is invalid');

@@ -111,3 +111,22 @@ localhost, IPv4 loopback and IPv6 loopback requests receive non-Secure cookies;
 HTTPS retains Secure. This is resolved per request without changing shared
 configuration. Exact credentialed CORS, CSRF, proof freshness and refresh rotation
 remain required. Non-loopback HTTP and SameSite=None with non-Secure cookies fail.
+
+## Enterprise access-assignment safeguards
+
+New pre-assignment identifiers retain exact enterprise/email identity through the
+existing canonical digest; eligible legacy associations retain their codes.
+The management operation checks completed registration independently of pending
+invitation expiry and paging. A completed association is not reset by an ordinary
+pre-assignment request, and unavailable registry evidence blocks that request.
+See [the assignment contract and worked cases](llm/contracts/README.md#assignment-identity-and-completed-registration-safeguards).
+
+Focused verification:
+
+```bash
+node --test nodics.platform/modules/profile/test/enterpriseAccessAssignmentSafety.test.js
+```
+
+This is a bounded pre-assignment safeguard, not acceptance of OTP enforcement,
+concurrent provisioning, multi-enterprise identity, recovery or the full Axis
+journey. No credential migration, new UI field or data reset is introduced.

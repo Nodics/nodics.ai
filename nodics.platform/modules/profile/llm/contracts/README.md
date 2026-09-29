@@ -86,6 +86,58 @@ utility so generated and domain consumers receive one contract.
   `/enterprise-access/workspace` contract. Do not hardcode role labels, fields,
   tabs, columns, or operation endpoints into an enterprise-specific Axis page.
 
+### Assignment identity and completed-registration safeguards
+
+A new assignment code is `enterpriseAccess_` followed by the existing
+`commandDigest` of `['enterpriseAccess', enterpriseCode, normalizedEmail]`.
+Normalize the email through the existing Profile policy before deriving the key.
+Do not erase punctuation to make an identifier: `alex.smith@example.test` and
+`alex-smith@example.test` must remain different assignment identities. The tuple
+also prevents enterprise/email boundary ambiguity and keeps the code bounded.
+This digest is an identifier, not a secret or evidence of mailbox ownership.
+
+Refresh a matching eligible legacy assignment under its existing persisted code.
+Do not rename historic associations, credentials or principal scopes during this
+change. Existing-person membership acceptance and credential/scope identity
+migration retain their separate Profile lifecycle requirements.
+
+Before pre-assignment, `findRegisteredAssignment` performs a fresh exact
+enterprise/email/REGISTERED query through the generated assignment service in the
+Profile authority tenant. It is deliberately independent of `activeStatuses` and
+invitation expiry. Completed registration cannot become invitation-eligible
+because an old expiry elapsed or because newer pending rows fill a result page.
+Owner errors and malformed/explicitly failed responses block the write.
+`findActiveAssignment` remains the invitation lookup; do not add REGISTERED to its
+eligible states to make the management guard work.
+
+For an authorised administrator, the observable procedure is:
+
+1. Submit the employee email and a permitted responsibility in the existing
+   enterprise-team operation.
+2. If the exact enterprise/email assignment is already registered, stop without
+   rewriting it as pending. Use the supported member-management journey instead
+   of changing the email to evade the check.
+3. If an eligible pending assignment exists, preserve its identity on refresh.
+   Otherwise derive a new assignment identifier without lossy email slugs.
+4. If the registry cannot establish the registration state, retain the current
+   task and retry only through the owning operation after service recovery.
+
+Later layers can still override `assignmentCode` or the effective `commandDigest`
+member. They must preserve exact pair separation, stable identity and the existing
+registry owner. Do not introduce another invitation table or frontend key builder.
+
+Run `node --test nodics.platform/modules/profile/test/enterpriseAccessAssignmentSafety.test.js`.
+The focused fixtures cover punctuation/boundary cases, long identifiers, legacy
+refresh, completed/expired protection, more than one page of pending rows, failed
+reads, cross-enterprise rejection and effective-member customization. These are
+isolated generated-service fixtures, not live data tests.
+
+**Scope limit:** this sequential pre-assignment guard is not a transaction across
+concurrent registration and invitation refresh. Atomic provisioning/recovery,
+email-proof enforcement, global identity linking and existing-person membership
+acceptance need their own owner-level tests and acceptance before enabling the
+complete onboarding journey. Do not infer those guarantees from this helper.
+
 ## Principal authorization scopes
 
 - Profile owns the `principalScopeAssignment` schema and
