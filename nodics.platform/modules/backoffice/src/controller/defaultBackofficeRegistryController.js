@@ -45,6 +45,8 @@ module.exports = {
     registerFunctionalModule: function (request, callback) { return this.execute('registerFunctionalModule', request, callback); },
     /** Handles registered functional-module Axis activation. */
     activateFunctionalModule: function (request, callback) { return this.execute('activateFunctionalModule', request, callback); },
+    /** Handles one business selection update over functional-module registration and activation. */
+    applyFunctionalModuleSelection: function (request, callback) { return this.execute('applyFunctionalModuleSelection', request, callback); },
     /** Handles optional functional-module Axis deactivation. */
     deactivateFunctionalModule: function (request, callback) { return this.execute('deactivateFunctionalModule', request, callback); },
     /** Handles optional functional-module activation rollback. */

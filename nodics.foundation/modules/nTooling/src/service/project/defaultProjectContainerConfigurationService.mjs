@@ -20,6 +20,7 @@
 import fs from 'node:fs';
 import path from 'node:path';
 import configuration from '../../../../nConfig/src/service/DefaultFrameworkInitializerService.js';
+import { readProjectEnvironmentConfiguration, projectEndpointUrl } from './defaultProjectEnvironmentConfigurationService.mjs';
 
 /**
  * Resolves project-relative template values used by environment profiles.
@@ -103,10 +104,19 @@ export function readContainerEnvironmentConfiguration(projectRoot, profileCode) 
   if (!profile) throw new Error('Selected environment does not configure container tooling');
   const composeFile = profile.composeFile || `envs/${environment}/docker/compose.yaml`;
   const generatedRoot = path.resolve(projectRoot, resolveTemplate(projectRoot, profile.generatedDirectory || `envs/${environment}/generated`));
+  const acceptance = { ...selected.properties.tooling?.acceptance };
+  if (acceptance.urls) {
+    let deployment;
+    acceptance.urls = Object.fromEntries(Object.entries(acceptance.urls).map(([key, value]) => {
+      if (typeof value === 'string') return [key, value];
+      deployment ||= readProjectEnvironmentConfiguration(projectRoot, environment);
+      return [key, projectEndpointUrl(deployment, value, 'backends', 'published')];
+    }));
+  }
   return {
     ...profile,
     composition: selected.properties.activeModules?.compositions || {},
-    acceptance: selected.properties.tooling?.acceptance || {},
+    acceptance,
     qualificationClass: selected.properties.environment?.class,
     code: profile.code || profileCode,
     environment,

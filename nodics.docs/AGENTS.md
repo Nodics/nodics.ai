@@ -38,3 +38,8 @@ another owner, pass explicit `--source-root`, `--catalogue` and `--output-dir`;
 its report belongs to that owner and cannot overwrite Framework artifacts.
 See the source-backed documentation coverage guide for invocation and boundaries.
 `test/sourceCoverageScope.test.mjs` proves sibling independence and output isolation.
+
+Framework documentation owns its inert acceptance pack descriptor under
+`tooling.acceptance.localBootstrap.documentationPacks`. Axis and customer packs
+own their respective descriptors. Projects select pack codes explicitly; static
+discovery does not import, activate or publish documentation.

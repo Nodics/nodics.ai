@@ -1,0 +1,30 @@
+{
+    "contractVersion": 2,
+    "module": "inventory",
+    "sections": {
+        "inventoryPublicationWorkflow": {
+            "kind": "DATA_RELEASE",
+            "selectionPolicy": "EXPLICIT",
+            "dataType": "init",
+            "version": "1.0.1",
+            "displayName": "Inventory Policy Publication Approval",
+            "description": "Forward Process approval contribution for exact retained policy.",
+            "owningDomain": "inventory",
+            "lifecycle": "OPERATIONAL_VERSIONED",
+            "destinationRole": "PROCESS",
+            "environmentScope": [
+                "ALL"
+            ],
+            "sensitivity": "INTERNAL",
+            "versioningPolicy": "IMMUTABLE",
+            "publicationPolicy": "NONE",
+            "initialPublicationPolicy": "NONE",
+            "removalPolicy": "RETAIN",
+            "installer": "PROCESS_DEFINITION",
+            "sourceRoot": "init-v002",
+            "files": {
+                "init-v002/records/process/inventoryPublicationWorkflowDefinitionData.js": "eb8ba0c8e59a3610ac392c1d3f948df6fab6d51e1480787b7361a5b0da83a3d3"
+            }
+        }
+    }
+}

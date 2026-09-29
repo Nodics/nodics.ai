@@ -35,7 +35,8 @@ const schemas = schemaFiles.flatMap(function (file) {
     Object.keys(contributed).forEach(function (namespace) { namespaces[namespace] = contributed[namespace]; });
     return Object.keys(contributed).flatMap(function (namespace) {
         return Object.keys(contributed[namespace]).map(function (schemaCode) {
-            return { schemaCode: schemaCode, schema: contributed[namespace][schemaCode] };
+            return { moduleName: namespace, schemaName: schemaCode, schemaCode: schemaCode,
+                schema: contributed[namespace][schemaCode], exposed: schemaCode !== 'wasteRewardAssessment' };
         });
     });
 });
@@ -45,8 +46,18 @@ schemas.forEach(function (entry) {
     assert.strictEqual(definition.tenant, undefined, entry.schemaCode + ' must derive tenant from runtime context');
     assert.strictEqual(definition.enterpriseCode, undefined, entry.schemaCode + ' must use source references rather than enterpriseCode data ownership');
     assert.strictEqual(definition.rewardEligibility, undefined, entry.schemaCode + ' must not own reward eligibility policy');
-    assert.strictEqual(entry.schema.router.enabled, false, entry.schemaCode + ' must not expose generated CRUD routers');
+    assert.strictEqual(entry.schema.service.enabled, true, entry.schemaCode + ' retains generated service capability');
+    if (entry.schemaCode === 'wasteRewardAssessment') {
+        assert.deepStrictEqual(entry.schema.router, { enabled: false }, 'immutable reward assessments remain service-only');
+        assert.deepStrictEqual(entry.schema.backoffice, { mutationMode: 'READ_ONLY', operations: ['search', 'read'] });
+        assert.strictEqual(require('../modules/wasteReward/package.json').nodics.runtime.router, false);
+    } else {
+        assert.strictEqual(entry.schema.router.enabled, true, entry.schemaCode + ' opts into governed schema operations');
+        assert.deepStrictEqual(entry.schema.router.groups, { schemaOperations: true }, entry.schemaCode + ' must not enable broad CRUD route groups');
+    }
 });
+
+require('../../nodics.foundation/modules/nRouter/test/helpers/schemaExposure.cjs')(schemas);
 
 function assertReference(schema, fieldName, targetModule, targetSchema, type) {
     assert.deepStrictEqual(schema.refSchema[fieldName], {

@@ -19,7 +19,7 @@
 
 import { spawn, spawnSync, execFileSync } from 'node:child_process';
 import fs from 'node:fs';
-import net from 'node:net';
+import { probeAcceptancePort } from './defaultProjectAcceptanceService.mjs';
 import path from 'node:path';
 import { createRequire } from 'node:module';
 import { fileURLToPath } from 'node:url';
@@ -129,14 +129,34 @@ async function childrenStillActive(children) {
 
 /** Returns whether a local TCP port currently accepts connections. */
 export function portListening(port) {
-  return new Promise(resolve => {
-    const socket = net.createConnection({ host: '127.0.0.1', port });
-    const finish = value => { socket.destroy(); resolve(value); };
-    socket.setTimeout(500);
-    socket.once('connect', () => finish(true));
-    socket.once('timeout', () => finish(false));
-    socket.once('error', () => finish(false));
+  return probeAcceptancePort(port);
+}
+
+/** Verifies a local maintenance outage without signalling processes or claiming a distributed write fence. */
+export async function verifyMaintenanceOutage(options = {}) {
+  const runtimes = options.runtimes || selectRuntimes();
+  if (!runtimes.length || runtimes.some(runtime => !Number.isInteger(runtime.port))) {
+    throw new Error('Maintenance requires a complete explicit backend topology');
+  }
+  const probe = options.probePort || (port => probeAcceptancePort(port, { strict: true }));
+  for (const runtime of runtimes) {
+    const listening = await probe(runtime.port);
+    if (listening === true) throw new Error('Maintenance blocked by listening runtime: ' + runtime.code);
+    if (listening !== false) throw new Error('Maintenance port inspection inconclusive: ' + runtime.code);
+  }
+  const processTable = options.readProcesses ? options.readProcesses() :
+    execFileSync('ps', ['-axo', 'pid=,command='], { encoding: 'utf8' });
+  if (typeof processTable !== 'string' || !processTable.trim()) throw new Error('Maintenance process inventory unavailable');
+  const active = processTable.split('\n').filter(line => {
+    const match = line.trim().match(/^(\d+)\s+(.*)$/);
+    if (!match || Number(match[1]) === process.pid) return false;
+    const command = match[2];
+    return /(?:nodics|nodemon|defaultProjectTopologyService\.mjs)/i.test(command) &&
+      /(?:\s|^)(?:start(?=\s|$)|--server(?:=|\s))/.test(command);
   });
+  if (active.length) throw new Error('Maintenance blocked by active runtime or supervisor processes');
+  return { verifiedAt: new Date().toISOString(), runtimeCodes: runtimes.map(runtime => runtime.code),
+    ports: runtimes.map(runtime => runtime.port), processInventoryChecked: true };
 }
 
 /** Loads supervisor state. Missing or invalid generated state is treated as absent. */
@@ -209,6 +229,50 @@ export async function preflight() {
     ready: checks.every(check => !['FAILED', 'BUSY'].includes(check.state)) };
 }
 
+/** Checks nSystem readiness and declared supplemental probes without process operations. */
+export async function checkRuntimeReadiness(runtime, { fetchResponse = fetch } = {}) {
+  const response = await fetchResponse(healthUrl(runtime), { redirect: 'error', signal: AbortSignal.timeout(5000) });
+  if (!response.ok) throw new Error(`${runtime.label || runtime.code} HTTP ${response.status}`);
+  const body = await response.json();
+  if (body?.data?.status !== 'UP') throw new Error(`${runtime.label || runtime.code} nSystem readiness is not UP`);
+  for (const check of runtime.readinessChecks || []) {
+    const result = await fetchResponse(readinessCheckUrl(runtime, check), {
+      method: check.method || 'GET', headers: check.headers || {}, redirect: 'error', signal: AbortSignal.timeout(5000),
+    });
+    const expected = check.expectedStatuses?.length ? check.expectedStatuses.includes(result.status) : result.ok;
+    if (!expected) throw new Error(`${check.label} HTTP ${result.status}`);
+  }
+  return body;
+}
+
+/** Read-only smoke for explicit selections already owned by this topology supervisor.
+ * Rejects unknown selections, omitted dependencies and external/exited processes before probing.
+ * Injectable dependencies permit offline tests; defaults use canonical topology operations.
+ */
+export async function assertTopologyReadiness(codes, {
+  runtimes = selectRuntimes(), state = readState(), owned = isOwnedSupervisor,
+  probe = checkRuntimeReadiness,
+} = {}) {
+  if (!Array.isArray(codes) || codes.length === 0 || new Set(codes).size !== codes.length)
+    throw new Error('Readiness requires distinct explicit runtime codes');
+  const selected = codes.map(code => {
+    const runtime = runtimes.find(item => item.code === code);
+    if (!runtime) throw new Error(`Unknown topology runtime: ${code}`);
+    return runtime;
+  });
+  const violations = runtimeDependencyViolations(selected);
+  if (violations.length) throw new Error(violations.join('; '));
+  if (!owned(state)) throw new Error('Readiness requires this project topology supervisor; start it explicitly through topology tooling');
+  for (const runtime of selected) {
+    const child = state.children?.find(item => item.code === runtime.code);
+    if (!child || child.exited || !Number.isInteger(child.pid) || child.pid <= 0)
+      throw new Error(`${runtime.code} is not an active child of this topology supervisor`);
+  }
+  const results = [];
+  for (const runtime of selected) results.push({ code: runtime.code, readiness: await probe(runtime) });
+  return results;
+}
+
 async function waitUntilReady(runtime, timeoutMs = 90000, child) {
   const startedAt = Date.now();
   let lastError = 'not reachable';
@@ -217,27 +281,8 @@ async function waitUntilReady(runtime, timeoutMs = 90000, child) {
       throw new Error(`${runtime.label} exited before readiness`);
     }
     try {
-      const response = await fetch(healthUrl(runtime), { redirect: 'error', signal: AbortSignal.timeout(5000) });
-      if (response.ok) {
-        let ready = true;
-        for (const check of runtime.readinessChecks || []) {
-          const checkResponse = await fetch(readinessCheckUrl(runtime, check), {
-            method: check.method || 'GET',
-            headers: check.headers || {},
-            redirect: 'error',
-            signal: AbortSignal.timeout(5000)
-          });
-          const expectedStatuses = check.expectedStatuses && check.expectedStatuses.length ? check.expectedStatuses : undefined;
-          if (!(expectedStatuses ? expectedStatuses.includes(checkResponse.status) : checkResponse.ok)) {
-            ready = false;
-            lastError = `${check.label} HTTP ${String(checkResponse.status)}`;
-            break;
-          }
-        }
-        if (ready) return;
-      } else {
-        lastError = `HTTP ${String(response.status)}`;
-      }
+      await checkRuntimeReadiness(runtime);
+      return;
     } catch (error) { lastError = error.message; }
     await sleep(1000);
   }
@@ -253,7 +298,7 @@ async function inspect(runtimes) {
     const listening = await portListening(runtime.port);
     let ready = false;
     if (listening) {
-      try { ready = (await fetch(healthUrl(runtime), { redirect: 'error', signal: AbortSignal.timeout(5000) })).ok; } catch { ready = false; }
+      try { await checkRuntimeReadiness(runtime); ready = true; } catch { ready = false; }
     }
     const recorded = state?.children?.find(child => child.code === runtime.code);
     entries.push({ code: runtime.code, label: runtime.label, port: runtime.port, listening, ready,

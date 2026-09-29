@@ -140,6 +140,7 @@ module.exports = {
         }
         let restored = [];
         for (let snapshot of input.projections) {
+            if (snapshot.publicationVersion) throw new Error('Version-qualified Product projections require governed target preparation');
             if (snapshot.tenant !== request.tenant || snapshot.productCode !== input.productCode || snapshot.storeCode !== input.storeCode) {
                 throw new Error('Search restoration projection escaped its tenant Product or Store boundary');
             }
@@ -181,7 +182,7 @@ module.exports = {
         if (!request || !request.tenant || !input || !input.productCode || !input.storeCode) {
             throw new Error('Tenant, Product, and Store are required for search withdrawal');
         }
-        let query = { tenant: request.tenant, productCode: input.productCode, storeCode: input.storeCode };
+        let query = { tenant: request.tenant, productCode: input.productCode, storeCode: input.storeCode, status: 'CURRENT' };
         await SERVICE.DefaultProductSearchProjectionService.update({ tenant: request.tenant,
             authData: request.authData, query: query, model: { status: 'WITHDRAWN' } });
         await this.searchService().doRemoveByQuery({ tenant: request.tenant, moduleName: 'product',

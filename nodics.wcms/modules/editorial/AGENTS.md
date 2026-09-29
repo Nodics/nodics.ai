@@ -1,5 +1,10 @@
 # Editorial Agent Contract
 
+Editorial owns neutral process definition authoring through its destination-qualified
+`editorialWorkflows` release. Keep reviewer policy in customer module configuration and retain
+old released payloads as provenance evidence. Follow `llm/contracts/README.md`
+and Workflow's adoption contract before any installed ownership transition.
+
 ## Inheritance
 
 - Follow the repository agent contract: `../../../AGENTS.md`.
@@ -22,3 +27,8 @@ Remote workflow callbacks accept only scoped Workflow runtime credentials and op
 After the Process claim succeeds and its source context is valid, the callback uses nAuth's existing internal system auth data for the bounded domain persistence request. Preserve the original principal metadata and keep this request local; never grant those groups to the incoming runtime token or acquire persistence authority before a successful claim. The existing schema policy, exact revision/instance checks and nPublish owner still apply.
 
 The existing Online publication target likewise requires a scoped Editorial runtime principal and the Online role before using internal auth data for its target-local persistence. Incoming runtime claims remain unchanged.
+
+Editorial owns neutral publication target module/transport defaults. Deployments
+select the actual connection and provider explicitly. Shared defaults do not
+activate publication or transfer workflow contribution provenance; installed
+definitions require an owner-checked migration before relocation.

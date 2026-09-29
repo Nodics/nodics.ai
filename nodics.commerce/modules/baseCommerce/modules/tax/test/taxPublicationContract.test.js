@@ -16,32 +16,13 @@ const test = require('node:test');
 const routers = require('../src/router/routers');
 const service = require('../src/service/defaultTaxPublicationService');
 
-test('Tax exposes only internal operational publication restoration', () => {
+/** @module tax/test/taxPublicationContract @description Keeps the secured legacy transport fail-closed until nPublish qualification. @layer test @owner tax */
+test('Tax legacy transport remains secured and rejects before writes', async () => {
     const route = routers.tax.operator.restoreOperational;
-    assert.equal(route.key, '/internal/tax/publication/operational/restore');
     assert.equal(route.apiExposure, 'commercePublicationIngestion');
     assert.equal(route.secured, true);
-});
-
-test('Tax operational restoration saves tenant-bound active policies', async () => {
-    const saves = [];
-    global.SERVICE = {
-        DefaultTaxPolicyService: { save: async request => { saves.push(request); return { result: request.model }; } }
-    };
-    const result = await service.restoreOperational({ tenant: 'default', enterpriseCode: 'enterprise-a', authData: { tenant: 'default', enterpriseCode: 'enterprise-a' } }, {
-        taxPolicies: [{ code: 'vat', tenant: 'default', jurisdiction: 'AE', taxCode: 'VAT', rate: '0.05', status: 'ACTIVE', revision: 1 }]
-    });
-    assert.equal(result.restored, 1);
-    assert.equal(result.enterpriseCode, 'enterprise-a');
-    assert.equal(saves[0].model.active, true);
-    assert.equal(saves[0].model.enterpriseCode, 'enterprise-a');
-});
-
-test('Tax operational restoration rejects records from another enterprise', async () => {
-    global.SERVICE = {
-        DefaultTaxPolicyService: { save: async request => request.model }
-    };
-    await assert.rejects(service.restoreOperational({ tenant: 'default', enterpriseCode: 'enterprise-a', authData: { tenant: 'default' } }, {
-        taxPolicies: [{ code: 'vat', tenant: 'default', enterpriseCode: 'enterprise-b', jurisdiction: 'AE', taxCode: 'VAT', rate: '0.05', status: 'ACTIVE', revision: 1 }]
-    }), /enterprise boundary/);
+    global.CLASSES = { NodicsError: class extends Error { constructor(code, message) { super(message); this.code = code; } } };
+    global.SERVICE = new Proxy({}, { get() { assert.fail('Unqualified transport must not access persistence'); } });
+    await assert.rejects(service.restoreOperational({ tenant: 'default', enterpriseCode: 'enterprise-a' }, {}),
+        error => error.code === 'ERR_PUB_00006');
 });

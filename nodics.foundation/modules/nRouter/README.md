@@ -57,6 +57,11 @@ Runtime activation and OpenAPI use the same selector. Grouped mutations carry
 `schemaGoverned` so generated controllers enforce selected-record identity and
 schema operations. Module HTTP activation remains independently configured.
 
+Schema-owner boundary tests reuse `test/helpers/schemaExposure.cjs` with explicit
+owner fixtures. Its isolated route matrix covers disablement and invalid groups;
+it does not replace live authorization or generated-service acceptance. See the
+[test contract](llm/contracts/README.md#schema-exposure-tests).
+
 Register listener cleanup before opening ports. Await all bind results; a
 sibling failure closes listeners that succeeded. Missing HTTP configuration
 rejects startup through the normal lifecycle. Open HTTPS only when its port is
@@ -84,4 +89,4 @@ Keep frontend identity restrictions stable across address changes. See the
 [origin construction contract](llm/contracts/README.md#configured-browser-origin-construction)
 and [configuration examples](llm/examples/README.md#configure-browser-origins).
 
-nRouter enables CORS by default for the standard Nodics localhost origins: Axis 3100, Nexus 3200, Agora Apparel 3300, Electronics 3400, Telco 3500 and Circa 3600. These shared API security defaults apply independently of Platform/accelerator activation and frontend health. Environments declare only different addresses or policy; server denials and explicit disablement remain supported. nRouter never reads a frontend launch catalogue. Exact origins, header policy and route authorization remain enforced.
+nRouter supplies the framework browser origins, Axis 3100 and Nexus 3200. Customer application origins belong in project/environment CORS properties so all intended API compositions receive them independently of application activation or frontend health. Server denials and explicit disablement remain supported. nRouter never reads a frontend launch catalogue. Exact origins, header policy and route authorization remain enforced.

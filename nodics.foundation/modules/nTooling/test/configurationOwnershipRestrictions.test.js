@@ -93,8 +93,41 @@ test('customer project root rejects framework and runtime default namespace leak
   assert(failures.some(value => value.includes('backofficeRegistry')));
   fs.mkdirSync(path.join(root, 'envs/customerLocal/platformServer/config'), { recursive: true });
   fs.writeFileSync(path.join(root, 'config/properties.js'), 'module.exports = { project: { code: "customer" } };\n');
-  fs.writeFileSync(path.join(root, 'envs/customerLocal/platformServer/config/properties.js'), 'module.exports = { servers: {}, profileBrowserSession: {} };\n');
+  fs.writeFileSync(path.join(root, 'envs/customerLocal/platformServer/config/properties.js'), 'module.exports = { servers: { default: { endpoint: { httpPort: 4400 } } } };\n');
   const scoped = [];
   audit.auditConfigurationSources(scoped, root, {customerProject:true});
   assert.deepEqual(scoped, []);
+});
+
+test('runtime placement rules cover arbitrary customer server names without evaluating source', t => {
+  const root = fs.mkdtempSync(path.join(os.tmpdir(), 'nodics-runtime-placement-'));
+  t.after(() => fs.rmSync(root, { recursive: true, force: true }));
+  const folder = path.join(root, 'envs/partnerTest/authoring/config');
+  fs.mkdirSync(folder, { recursive: true });
+  const file = path.join(folder, 'properties.js');
+  const inspect = value => {
+    fs.writeFileSync(file, 'throw new Error("must not execute"); module.exports = ' + JSON.stringify(value));
+    const failures = [];
+    audit.auditConfigurationSources(failures, root, { customerProject: true });
+    return failures;
+  };
+  for (const key of ['copilot', 'localResetProvider', 'profileBrowserSession', 'apiExposure', 'product', 'publishEnabled']) {
+    assert(inspect({ [key]: { enabled: true } }).some(message => message.includes('module-owned')));
+  }
+  assert(inspect({ servers: { peer: { endpoint: { $config: 'runtime', name: 'other', path: 'servers.default.endpoint' } } } })
+    .some(message => message.includes('derive peer endpoints')));
+  assert(inspect({ servers: { peer: { remoteOnly: true } } }).some(message => message.includes('derive peer remoteness')));
+  assert(inspect({ data: { dataReleases: { contributions: [] } } }).some(message => message.includes('owning module')));
+  assert.deepEqual(inspect({
+    activeModules: { modules: ['partnerApp'] }, runtimeRole: { code: 'WCMS_STAGED', publication: 'STAGED' },
+    servers: { default: { endpoint: { httpPort: 4400 } } },
+    database: { default: { mongodb: { master: { databaseName: 'partnerTest' } } } },
+  }), []);
+  fs.unlinkSync(file);
+  const envFile = path.join(root, 'envs/partnerTest/config/properties.js');
+  fs.mkdirSync(path.dirname(envFile), { recursive: true });
+  fs.writeFileSync(envFile, 'module.exports = { profileBrowserSession: { enabled: true }, httpHardening: { cors: { enabled: true } } };');
+  const failures = [];
+  audit.auditConfigurationSources(failures, root, { customerProject: true });
+  assert.deepEqual(failures, []);
 });

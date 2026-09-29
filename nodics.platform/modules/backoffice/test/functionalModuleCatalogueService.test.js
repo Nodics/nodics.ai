@@ -76,6 +76,72 @@ async function run() {
     assert.strictEqual(leaseIndex.media, 'nodics.wcms');
     assert.strictEqual(leaseIndex.projectCore, undefined, 'project modules must not become functional capability owners');
 
+    const structuralMetadata = require('../../../../nodics.accelerators/package.json');
+    const previousRawModule = NODICS.getRawModule;
+    NODICS.getRawModule = name => name === 'example.composition'
+        ? { metaData: structuralMetadata } : undefined;
+    try {
+        const structuralBatch = { ...batch, registrations: [
+            { moduleName: 'example.composition', functionalModule: {
+                identity: 'example.composition', displayName: 'Old umbrella', type: 'STANDARD' } },
+            { moduleName: 'industryChild', parentModule: 'example.composition' },
+            { moduleName: 'industryCapability', parentModule: 'example.composition', functionalModule: {
+                identity: 'industryCapability', displayName: 'Industry capability', type: 'STANDARD' } },
+        ] };
+        assert.deepStrictEqual(service.buildObservations(structuralBatch).map(item => item.functionalModule),
+            ['industryCapability'], 'stale umbrella declarations must not recreate activation owners');
+        const structuralIndex = service.buildLeaseFunctionalModuleIndex(structuralBatch);
+        assert.strictEqual(structuralIndex.industryChild, undefined);
+        assert.strictEqual(structuralIndex.industryCapability, 'industryCapability');
+        const nestedBatch = { ...batch, registrations: [
+            ...batch.registrations,
+            { moduleName: 'example.composition', parentModule: 'nodics.platform' },
+            { moduleName: 'nestedCapability', parentModule: 'example.composition' },
+        ] };
+        assert.strictEqual(service.buildLeaseFunctionalModuleIndex(nestedBatch).nestedCapability,
+            'nodics.platform', 'ordinary intermediate groups must preserve their real functional ancestor');
+        const projection = Object.assign({}, definition, {
+            getAllRecords: async () => [
+                { functionalModule: 'example.composition', technicalModules: ['industryChild'],
+                    runtimeState: 'ACTIVE', registrationState: 'REGISTERED', enabled: true },
+                { functionalModule: 'nodics.commerce', technicalModules: ['product'],
+                    runtimeState: 'ACTIVE', registrationState: 'REGISTERED', enabled: true },
+            ],
+            projectClientSafeWithReceipts: async record => record,
+            getPersistenceAuthData: auth => auth,
+            getTenant: () => 'default',
+        });
+        const request = { project: 'example.project', authData: {} };
+        const list = await projection.listRegistrations(request);
+        assert.deepStrictEqual(list.data.items.map(item => item.functionalModule), ['nodics.commerce']);
+        const eligibility = await projection.getPresentationEligibility(request);
+        assert(!eligibility.governedModules.includes('industryChild'));
+        assert(eligibility.eligibleModules.includes('product'), 'actual capability gates remain intact');
+        projection.getLifecycleContext = () => ({ functionalModule: 'example.composition' });
+        await assert.rejects(() => projection.transition(request, 'activate'), /Composition-only groups/);
+        projection.getSelectionContext = () => ({ modules: [{ functionalModule: 'example.composition' }] });
+        await assert.rejects(() => projection.applySelection(request), /Composition-only groups/);
+        let retired;
+        const remote = Object.assign({}, definition, {
+            getRecord: async () => ({ code: 'example.project::remote.group', catalogueRevision: 2 }),
+            updateRecord: async change => { retired = change; return { result: { modifiedCount: 1 } }; },
+            getTenant: () => 'default',
+            getPersistenceAuthData: auth => auth,
+        });
+        await remote.reconcileRuntimeBatch({ project: 'example.project', registrations: [
+            { moduleName: 'remote.group', moduleKind: 'group' },
+        ] }, {});
+        assert.strictEqual(retired.model.compositionOnly, true);
+        assert.strictEqual(retired.model.catalogueRevision, 3);
+        assert.strictEqual(retired.query.catalogueRevision, 2);
+        remote.getAllRecords = async () => [{ functionalModule: 'remote.group', compositionOnly: true }];
+        remote.projectClientSafeWithReceipts = async record => record;
+        assert.deepStrictEqual((await remote.listAvailable(request)).data.items, []);
+        assert.deepStrictEqual((await remote.getPresentationEligibility(request)).governedModules, []);
+    } finally {
+        NODICS.getRawModule = previousRawModule;
+    }
+
     let saved;
     let updated;
     let existing;
@@ -144,6 +210,48 @@ async function run() {
     assert.strictEqual(activated.data.enabled, true);
     assert.strictEqual(activated.data.catalogueRevision, 3);
 
+    let selectionRecords = {
+        'nodics.location': {
+            code: 'example.project::nodics.location', projectCode: 'example.project',
+            functionalModule: 'nodics.location', displayName: 'Location', required: false,
+            registrationState: 'AVAILABLE', enabled: false, runtimeState: 'ACTIVE',
+            catalogueRevision: 1, technicalModules: ['locationMap'], activationDataPackages: []
+        },
+        'nodics.loyalty': {
+            code: 'example.project::nodics.loyalty', projectCode: 'example.project',
+            functionalModule: 'nodics.loyalty', displayName: 'Loyalty', required: false,
+            registrationState: 'REGISTERED', enabled: true, runtimeState: 'ACTIVE',
+            catalogueRevision: 4, technicalModules: ['loyaltyCore'], activationDataPackages: []
+        }
+    };
+    service.getRecord = async (project, functionalModule) => selectionRecords[functionalModule];
+    service.updateRecord = async request => {
+        let moduleCode = request.query.code.replace('example.project::', '');
+        selectionRecords[moduleCode] = Object.assign({}, selectionRecords[moduleCode], request.model);
+        return { result: { modifiedCount: 1 } };
+    };
+    let selection = await service.applySelection({
+        body: { project: 'example.project', reason: 'business selection update', modules: [
+            { functionalModule: 'nodics.location', expectedRevision: 1, selected: true },
+            { functionalModule: 'nodics.loyalty', expectedRevision: 4, selected: false }
+        ] },
+        authData: { tokenType: 'access', principalId: 'admin' }
+    });
+    assert.strictEqual(selection.data.applied, 2);
+    assert.deepStrictEqual(selection.data.items.map(item => [item.functionalModule, item.action, item.status]), [
+        ['nodics.location', 'registerActivate', 'APPLIED'],
+        ['nodics.loyalty', 'deactivate', 'APPLIED']
+    ]);
+    assert.strictEqual(selectionRecords['nodics.location'].registrationState, 'REGISTERED');
+    assert.strictEqual(selectionRecords['nodics.location'].enabled, true);
+    assert.strictEqual(selectionRecords['nodics.location'].catalogueRevision, 3);
+    assert.strictEqual(selectionRecords['nodics.loyalty'].registrationState, 'REGISTERED',
+        'deselection must deactivate, not deregister');
+    assert.strictEqual(selectionRecords['nodics.loyalty'].enabled, false);
+    assert.strictEqual(selectionRecords['nodics.loyalty'].catalogueRevision, 5);
+
+    service.getRecord = async () => existing;
+    service.updateRecord = async request => { updated = request.model; return { result: { modifiedCount: 1 } }; };
     existing = Object.assign({}, existing, updated);
     optionalRequest.body.expectedRevision = 3;
     let deregistered = await service.deregister(optionalRequest);
@@ -209,7 +317,9 @@ async function run() {
         environment: 'local',
         server: 'processServer',
         node: 'default',
-        lastObservedAt: new Date('2026-08-28T12:00:00.000Z')
+        lastObservedAt: new Date('2026-08-28T12:00:00.000Z'),
+        reasonCode: 'RUNTIME_OBSERVED',
+        recoveryAction: 'Runtime heartbeat is currently linked to this module.'
     }]);
 
     let originalConfigGet = CONFIG.get;

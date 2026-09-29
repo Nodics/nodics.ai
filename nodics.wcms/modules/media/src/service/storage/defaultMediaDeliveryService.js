@@ -44,6 +44,15 @@ module.exports = {
         if (policy.enabled !== true) {
             throw new CLASSES.NodicsError('ERR_MED_00012', 'Media delivery is disabled by media policy');
         }
+        let publication = (CONFIG.get('media') || {}).publication || {};
+        if (publication.versionProviderEnabled === true && publication.runtimeRole === 'ONLINE') {
+            let retained = await SERVICE.DefaultMediaPublicationTargetService.resolveDelivery(mediaCode, request);
+            this.validateAccess(request, retained.media);
+            return { code: 'SUC_MED_00005', mediaCode, buffer: retained.buffer,
+                fileName: retained.media.originalFileName, mimeType: retained.media.mimeType,
+                cacheControl: 'no-store', responseHeaders: policy.responseHeaders,
+                contentDisposition: this.resolveContentDisposition(request, policy) };
+        }
         let media = await this.loadMedia(request, mediaCode);
         this.validateAccess(request, media);
         let source = SERVICE.DefaultMediaStorageProviderRegistryService.resolveImportSource({
@@ -65,7 +74,7 @@ module.exports = {
             filePath: source.absolutePath,
             fileName: source.fileName || media.originalFileName || media.storedFileName || media.code,
             mimeType: media.mimeType || source.mimeType,
-            cacheControl: policy.cacheControl,
+            cacheControl: SERVICE.DefaultMediaLifecycleCoordinationService && SERVICE.DefaultMediaLifecycleCoordinationService.isVersioned(request) ? 'no-store' : policy.cacheControl,
             responseHeaders: policy.responseHeaders,
             contentDisposition: this.resolveContentDisposition(request, policy)
         };

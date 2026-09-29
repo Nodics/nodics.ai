@@ -53,61 +53,32 @@ fs.writeFileSync(path.join(root, 'data', 'manifest.json'), JSON.stringify({
     } }
 }));
 
-global.CONFIG = { get: key => key === 'data' ? {
-    dataReleases: {
+let importAttempts = 0;
+let failNextImport = false;
+let importedReleasePlans = [];
+const fixture = require('./helpers/releaseExecution')({
+    modules: { testModule: {
+        name: 'testModule', path: root, index: '60.99', parent: 'testGroup', canonicalIdentity: 'testGroup/testModule',
+        metaData: { nodics: { displayName: 'Test Module' } }
+    } },
+    configuration: {
         allowedContractVersions: [1, 2], maximumFilesPerRelease: 10, maximumModulesPerRun: 5,
-        allowDowngrade: false, destinationEnforced: true,
-        allowedDestinationRoles: ['WCMS_STAGED'],
+        allowDowngrade: false, destinationEnforced: true, allowedDestinationRoles: ['WCMS_STAGED'],
         initializationProfiles: { testFoundation: { enabled: true, label: 'Test foundation',
             description: 'Install the test foundation.', completionMessage: 'The test foundation is ready.',
             steps: [{ dataType: 'init' }, { dataType: 'core' }] } },
         types: { init: { enabled: true, operatorExecution: true }, core: { enabled: true, operatorExecution: true }, sample: { enabled: false } }
-    }
-} : key === 'environment' ? {class:'LOCAL'} : key === 'defaultTenant' ? 'default' : key === 'runtimeRole' ?
-    { code: 'WCMS_STAGED', publication: 'STAGED' } : undefined };
-global.NODICS = {
-    getActiveModules: () => ['testModule'],
-    getRawModule: () => ({
-        name: 'testModule', path: root, index: '60.99', parent: 'testGroup', canonicalIdentity: 'testGroup/testModule',
-        metaData: { nodics: { displayName: 'Test Module' } }
-    }),
-    getSelectedEnvironmentName: () => 'testEnvironment'
-};
-let installations = [];
-let importAttempts = 0;
-let failNextImport = false;
-let importedReleasePlans = [];
-global.SERVICE = {
-    DefaultDataInstallationService: {
-        get: request => {
-            let matched = installations.filter(item =>
-                (!request.tenant || item.tenant === request.tenant) &&
-                (!request.query.code || item.code === request.query.code));
-            let pageSize = request.searchOptions && request.searchOptions.pageSize || 10;
-            let pageNumber = request.searchOptions && request.searchOptions.pageNumber || 1;
-            let skip = pageSize * (pageNumber - 1);
-            return Promise.resolve({ result: matched.slice(skip, skip + pageSize) });
-        },
-        save: request => { installations.push(request.model); return Promise.resolve(request.model); },
-        update: request => {
-            let index = installations.findIndex(item => item.code === request.query.code);
-            installations[index] = request.model;
-            return Promise.resolve(request.model);
-        }
     },
-    DefaultImportService: {
-        importCoreData: request => {
-            importAttempts++;
-            importedReleasePlans.push((request.dataReleasePlan || []).map(release => release.releaseCode));
-            if (failNextImport) {
-                failNextImport = false;
-                return Promise.reject(new Error('controlled import failure'));
-            }
-            request.importRun = { runId: request.options.validateOnly ? 'validate-run' : 'install-run' };
-            return Promise.resolve({ validationOnly: request.options.validateOnly });
+    onImport: request => {
+        importAttempts++;
+        importedReleasePlans.push((request.dataReleasePlan || []).map(release => release.releaseCode));
+        if (failNextImport) {
+            failNextImport = false;
+            throw new Error('controlled import failure');
         }
     }
-};
+});
+const installations = fixture.installations;
 
 const service = require('../src/service/release/defaultDataReleaseService');
 const routers = require('../src/router/routers');
@@ -124,6 +95,55 @@ const routers = require('../src/router/routers');
     assert.strictEqual(discovered[0].dataType, 'core');
     assert.strictEqual(discovered[0].lifecycle, 'PUBLISHABLE');
     assert.strictEqual(discovered[0].destinationRole, 'WCMS_STAGED');
+
+    // Exercise throwing destination validation independently of any customer runtime.
+    const policy = service.configuration();
+    const originalRoles = policy.allowedDestinationRoles;
+    for (const role of ['PLATFORM', 'WCMS_STAGED', 'COMMERCE', 'COMMERCE_STAGED',
+        'PROCESS', 'ENGAGEMENT', 'LOYALTY', 'WASTE', 'LOCATION']) {
+        fixture.runtimeRole = role;
+        policy.allowedDestinationRoles = [role];
+        assert.strictEqual(service.validateDestination({ destinationRole: role, environmentScope: ['LOCAL'] }), true);
+        const rejected = role === 'COMMERCE_STAGED' ? ['UNRELATED', 'WCMS_STAGED', 'COMMERCE'] : ['UNRELATED'];
+        for (const destinationRole of rejected) {
+            assert.throws(() => service.validateDestination({ destinationRole, environmentScope: ['LOCAL'] }), {
+                code: 'ERR_IMP_00004', message: 'Data release is not permitted for runtime destination ' + role
+            });
+        }
+    }
+    fixture.runtimeRole = 'WCMS_STAGED';
+    policy.allowedDestinationRoles = originalRoles;
+    assert.throws(() => service.validateDestination({
+        destinationRole: 'COMMERCE_STAGED', environmentScope: ['LOCAL']
+    }), { code: 'ERR_IMP_00004', message: 'Data release is not permitted for runtime destination WCMS_STAGED' });
+    assert.throws(() => service.validateDestination({
+        destinationRole: 'WCMS_STAGED', environmentScope: ['PRODUCTION']
+    }), { code: 'ERR_IMP_00004', message: 'Data release is not permitted for environment LOCAL' });
+
+    const initialPreflight = await service.preflight({
+        tenant: 'default', releaseRequest: { dataType: 'core', releaseCodes: ['testModule:core-v001'] }
+    });
+    assert.strictEqual(initialPreflight.data.validation.importExecuted, false);
+    assert.strictEqual(initialPreflight.data.validation.validationOnly, true);
+    assert.strictEqual(initialPreflight.data.releases[0].status, 'NOT_INSTALLED');
+    assert.strictEqual(fixture.imports.length, 0);
+    assert.strictEqual(installations.length, 0);
+    const freshExecution = await service.execute({
+        tenant: 'fresh', releaseRequest: { dataType: 'core',
+            releaseCodes: ['testModule:core-v001'], expectedReleases: { 'testModule:core-v001': '1.1.0' } }
+    });
+    assert.strictEqual(freshExecution.data.importRun.runId, 'install-run');
+    assert.strictEqual(freshExecution.data.releases[0].status, 'CURRENT');
+    assert.strictEqual(fixture.imports.length, 1);
+    assert.strictEqual(fixture.imports[0].options.validateOnly, false);
+    assert.strictEqual(installations.length, 1);
+    assert.strictEqual(installations[0].code, 'testEnvironment:fresh:testModule:core-v001:core');
+    assert.strictEqual(installations[0].status, 'CURRENT');
+    // Restore the empty in-memory ports for the independent retry/profile cases below.
+    installations.length = 0;
+    fixture.imports.length = 0;
+    importAttempts = 0;
+    importedReleasePlans = [];
 
     let catalogue = await service.getCatalogue({ tenant: 'default', dataType: 'core' });
     assert.strictEqual(catalogue.data.length, 1);
@@ -189,6 +209,12 @@ const routers = require('../src/router/routers');
     assert.strictEqual(execution.data.releases[0].status, 'CURRENT');
     assert.strictEqual(execution.data.releases[0].installedVersion, '1.1.0');
     assert.strictEqual(installations.length, 1);
+    assert.strictEqual(fixture.imports.length, 2); // One failed attempt, one successful retry.
+    assert.strictEqual(fixture.imports[1].options.validateOnly, false);
+    assert.deepStrictEqual(fixture.imports[1].modules, ['testModule']);
+    assert.strictEqual(fixture.imports[1].dataReleasePlan[0].releaseCode, 'testModule:core-v001');
+    assert.strictEqual(installations[0].code, 'testEnvironment:default:testModule:core-v001:core');
+    assert.strictEqual(installations[0].status, 'CURRENT');
 
     let profile = await service.getInitializationProfile({ tenant: 'default',
         httpRequest: { params: { profileCode: 'testFoundation' } } });
@@ -230,7 +256,7 @@ const routers = require('../src/router/routers');
     await assert.rejects(() => service.execute({
         tenant: 'default',
         releaseRequest: { dataType: 'core', modules: ['testModule'], expectedReleases: { testModule: '1.1.0' } }
-    }), /already current/);
+    }), error => error.code === 'ERR_IMP_00003' && /already current/.test(error.message));
 
     const mixedSectionPlan = {
         releases: [
@@ -299,6 +325,24 @@ const routers = require('../src/router/routers');
         assert.strictEqual(batchExecution.data.releases.length, 2);
         assert.strictEqual(batchExecution.data.importRuns.length, 2);
         assert.strictEqual(installations.filter(item => item.tenant === 'batch' && item.status === 'CURRENT').length, 2);
+
+        global.NODICS.getActiveModules = () => ['testModule', 'batchModule'];
+        importedReleasePlans = [];
+        const releaseCodes = ['testModule:core-v001', 'batchModule:core-v001', 'batchModule:core-v002'];
+        const multiModuleExecution = await service.execute({
+            tenant: 'multiModule',
+            releaseRequest: { dataType: 'core', releaseCodes, expectedReleases: {
+                'testModule:core-v001': '1.1.0', 'batchModule:core-v001': '0.0.0', 'batchModule:core-v002': '0.0.0'
+            } }
+        });
+        assert.deepStrictEqual(importedReleasePlans, releaseCodes.map(code => [code]));
+        assert.strictEqual(multiModuleExecution.data.releases.length, 3);
+        assert.strictEqual(multiModuleExecution.data.importRuns.length, 3);
+        assert.strictEqual(installations.filter(item => item.tenant === 'multiModule' && item.status === 'CURRENT').length, 3);
+        await assert.rejects(() => service.execute({
+            tenant: 'multiModule', releaseRequest: { dataType: 'core', releaseCodes }
+        }), error => error.code === 'ERR_IMP_00003' && /already current/.test(error.message));
+        assert.strictEqual(importedReleasePlans.length, 3);
     } finally {
         global.NODICS.getActiveModules = originalGetActiveModulesForBatch;
         global.NODICS.getRawModule = originalGetRawModuleForBatch;

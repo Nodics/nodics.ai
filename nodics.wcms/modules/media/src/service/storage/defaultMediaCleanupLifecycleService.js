@@ -19,6 +19,23 @@ const crypto = require('crypto');
  * @override Customers may decorate candidate policy and approval checks while preserving Media-owned physical lifecycle authority.
  */
 module.exports = {
+    /** Checks one manifest-authoritative retained placement, keeping all retained versions protected from ordinary cleanup. */
+    reconcileRetainedPublication: async function (input, request) {
+        const owner = SERVICE.DefaultMediaRetainedPublicationService;
+        owner.assertScope(request, 'ONLINE');
+        if (!input || typeof input.mediaCode !== 'string' || typeof input.manifestCode !== 'string' ||
+            !/^[a-f0-9]{64}$/.test(input.manifestCode)) throw owner.invalid('Exact retained Media identity is required');
+        const manifest = await owner.one(SERVICE.DefaultMediaTransferManifestService, { code: input.manifestCode }, request);
+        if (!manifest || !manifest.artifacts || !manifest.artifacts.asset || manifest.artifacts.asset.code !== input.mediaCode) {
+            throw owner.invalid('Retained Media manifest is unavailable');
+        }
+        const pointer = await SERVICE.DefaultMediaPublicationTargetService.pointer(input.mediaCode, request);
+        let intact = true;
+        try { await owner.readBytes(manifest, request); } catch (error) { intact = false; }
+        return { manifestCode: manifest.code, mediaCode: input.mediaCode, intact,
+            active: !!pointer && pointer.manifestCode === manifest.code,
+            protected: true, repaired: false, deleted: false };
+    },
     /** Initializes the service. */
     init: function () { return Promise.resolve(true); },
     /** Completes service initialization. */
@@ -119,9 +136,16 @@ module.exports = {
         let now = request.now ? new Date(request.now) : new Date();
         let model = Object.assign({}, candidate, { passiveMarkedAt: now, status: 'PASSIVE', evidence: Object.assign({}, candidate.evidence || {}, {
             passiveMarkedAt: now.toISOString(), passiveMarkedBy: request.authData && (request.authData.email || request.authData.uid || request.authData.userName) || request.source || 'system', passiveReason: request.reason || candidate.reasonCode }) });
+        const lifecycle = SERVICE.DefaultMediaLifecycleCoordinationService;
+        const versioned = lifecycle && lifecycle.isVersioned(request);
+        if (versioned && candidate.mediaCode) {
+            const current = await lifecycle.load({ ...request, mediaCode: candidate.mediaCode });
+            if (current.legalHold === true) throw new CLASSES.NodicsError('ERR_MED_00028', 'Current Media legal hold blocks retirement');
+            if (current.status !== 'RETIRED') await lifecycle.updateMetadata(request, current, { status: 'RETIRED' });
+        }
         let response = await SERVICE.DefaultMediaCleanupCandidateService.save({ tenant: request.tenant, authData: request.authData,
             transactionContext: request.transactionContext, query: { code: code }, model: model });
-        if (SERVICE.DefaultMediaService && typeof SERVICE.DefaultMediaService.save === 'function' && candidate.mediaCode) {
+        if (!versioned && SERVICE.DefaultMediaService && typeof SERVICE.DefaultMediaService.save === 'function' && candidate.mediaCode) {
             await SERVICE.DefaultMediaService.save({ tenant: request.tenant, authData: request.authData,
                 transactionContext: request.transactionContext, query: { code: candidate.mediaCode }, model: { code: candidate.mediaCode, status: 'RETIRED' } });
         }
@@ -129,6 +153,7 @@ module.exports = {
     },
     /** Runs approval-gated passive retention cleanup through provider APIs. */
     runRetentionCleanup: async function (request) {
+        if (SERVICE.DefaultMediaLifecycleCoordinationService) SERVICE.DefaultMediaLifecycleCoordinationService.assertPhysicalCleanup(request);
         if (!SERVICE.DefaultMediaCleanupCandidateService || typeof SERVICE.DefaultMediaCleanupCandidateService.get !== 'function') throw new CLASSES.NodicsError('ERR_MED_00026', 'Media cleanup candidate service is unavailable');
         let policy = this.policy();
         let now = request.now ? new Date(request.now) : new Date();

@@ -73,6 +73,14 @@ idempotency key. Projects may override the service or properties, but must keep
 timeouts bounded and must not expose credentials or response bodies through
 diagnostics.
 
+An open circuit rejects calls without moving its original recovery deadline or
+counting another remote failure. Registration polling therefore cannot prevent
+reconnection after Platform recovers. A successful probe closes the circuit; an
+actual failed probe opens a new recovery interval. Rejections remain visible in
+transport diagnostics. Customize the existing `serviceCommunication.circuitBreaker`
+policy, not registration-specific bypasses or a second transport client. The
+focused transport resilience test covers repeated rejection and probe recovery.
+
 ## Configuration And Security
 
 Service behavior must be driven by active modules, layered configuration, tenant context, schemas, pipelines, and runtime governance.

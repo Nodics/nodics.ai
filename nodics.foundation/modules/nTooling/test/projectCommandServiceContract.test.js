@@ -21,12 +21,15 @@ const fs = require('fs');
 const os = require('os');
 const path = require('path');
 const service = require('../src/service/command/defaultProjectCommandService');
+const temporaryRoots = [];
+process.on('exit', () => temporaryRoots.forEach(root => fs.rmSync(root, { recursive: true, force: true })));
 
 function createProject(packageOverrides = {}) {
     const root = fs.mkdtempSync(path.join(os.tmpdir(), 'nodics-project-contract-'));
+    temporaryRoots.push(root);
     fs.mkdirSync(path.join(root, 'scripts', 'acceptance'), { recursive: true });
     fs.writeFileSync(
-        path.join(root, 'scripts', 'acceptance', 'defaultProjectLocalBootstrapAcceptanceService.mjs'),
+        path.join(root, 'scripts', 'acceptance', 'defaultProjectCustomerReceiptAcceptanceService.mjs'),
         [
             'if (!process.env.NODICS_BOOTSTRAP_ADMIN_PASSWORD) throw new Error("missing local bootstrap admin password");',
             'if (!process.env.NODICS_BOOTSTRAP_SERVICE_PASSWORD) throw new Error("missing local bootstrap service password");',
@@ -50,7 +53,8 @@ function createProject(packageOverrides = {}) {
 
 const validRoot = createProject();
 service.validateProject(validRoot);
-assert.equal(service.runProjectCommand(validRoot, 'acceptance:local', []), true);
+assert.equal(service.runProjectCommand(validRoot, 'acceptance:customer-receipt', []), true);
+assert.equal(service.resolveCommands(validRoot)['acceptance:local'].type, 'frameworkCommand');
 assert.equal(service.resolveCommands(validRoot)['start:platform'].command, 'project:runtime-start');
 assert.equal(service.resolveCommands(validRoot)['docker-local:preflight'].command, 'project:container');
 assert.equal(service.resolveCommands(validRoot)['post-reset:readiness'].command, 'project:post-reset-readiness');
@@ -75,6 +79,10 @@ assert.throws(
     () => service.validateProject(forbiddenRoot),
     /Forbidden framework-owned script pattern/
 );
+
+const shadowRoot = createProject();
+fs.writeFileSync(path.join(shadowRoot, 'scripts', 'acceptance', 'defaultProjectLocalBootstrapAcceptanceService.mjs'), 'throw new Error("must not execute");\n');
+assert.throws(() => service.validateProject(shadowRoot), /shadows framework acceptance contract: acceptance:local/);
 
 const forbiddenDirectoryRoot = createProject();
 fs.mkdirSync(path.join(forbiddenDirectoryRoot, 'src'), { recursive: true });

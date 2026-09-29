@@ -10,6 +10,7 @@
  */
 
 const path = require('path');
+const assert = require('node:assert/strict');
 const repositoryRoot = path.resolve(__dirname, '../../../..');
 const { assertRouteContracts } = require(path.join(repositoryRoot,
     'nodics.foundation/modules/nRouter/test/routerContractTestUtils'));
@@ -43,4 +44,8 @@ const expectedRoutes = [
 ];
 
 assertRouteContracts(routerConfig, expectedRoutes);
+const browserKeys = ['/employee/browser/authenticate', '/employee/browser/restore', '/employee/browser/logout'];
+const browserRoutes = Object.values(routerConfig.profile).flatMap(Object.values).filter(route => browserKeys.includes(route.key));
+assert.deepEqual(browserRoutes.map(route => route.key).sort(), browserKeys.sort(),
+    'Each browser-session operation must appear exactly once');
 console.log(`Profile route contract validated: ${expectedRoutes.length} routes`);

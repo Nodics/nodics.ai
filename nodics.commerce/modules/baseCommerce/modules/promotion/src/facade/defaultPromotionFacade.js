@@ -13,6 +13,20 @@
 
 /** @module promotion/src/facade/defaultPromotionFacade @description Normalizes authenticated customer promotion API context. @layer facade @owner promotion */
 module.exports = {
+    /** Captures policy through the fixed owner using authenticated operator scope only. */
+    createGoverned: async function (request) {
+        const auth = request.authData || {};
+        const enterpriseCode = auth.entCode || auth.enterpriseCode;
+        const actorId = auth.principalId || auth.loginId || auth.code;
+        if (auth.tokenType !== 'access' || !auth.tenant || !enterpriseCode || !actorId ||
+            request.tenant && request.tenant !== auth.tenant ||
+            auth.entCode && auth.enterpriseCode && auth.entCode !== auth.enterpriseCode) {
+            throw new Error('Authenticated publication operator scope is required');
+        }
+        return SERVICE.DefaultPromotionPublicationService.createGoverned({
+            ...request, tenant: auth.tenant, enterpriseCode, entCode: enterpriseCode, actorId
+        }, request.httpRequest && request.httpRequest.body || request.payload || {});
+    },
     /**
      * Executes `applyContext` as a loader-visible operation owned by this module.
      * @param {*} request Value defined by the owning module contract.
@@ -24,7 +38,12 @@ module.exports = {
         const tenant = authData.tenant || request.tenant;
         const ownerId = authData.principalId || authData.userId || authData.code || authData.loginId || request.ownerId;
         if (!tenant || !ownerId) throw new Error('Authenticated tenant and customer are required for promotion APIs');
-        return Object.assign({}, request, { tenant, ownerId, authData });
+        const context = Object.assign({}, request, { tenant, ownerId, authData });
+        if ([request.storeCode, request.payload && request.payload.storeCode,
+            request.query && request.query.storeCode].some(value => value !== undefined)) {
+            context.storeCode = SERVICE.DefaultStoreContextService.resolveStoreCode(request);
+        }
+        return context;
     },
     /**
      * Executes `preview` as a loader-visible operation owned by this module.

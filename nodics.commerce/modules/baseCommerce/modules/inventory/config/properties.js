@@ -11,6 +11,15 @@
 
 /** @module inventory/config/properties @description Defines Commerce capability and schema access policies. @layer config @owner inventory */
 module.exports = {
+  publish: {
+    providers: { domainAdapters: { inventory: null }, versionProviders: { inventory: null }, workflowProviders: { inventory: null } },
+    approvalWorkflow: { domains: { inventory: { definitionCode: 'inventoryPublicationApproval', ownerModule: 'inventory',
+      actionKey: 'inventory.applyPublicationDecision', sourceRuntimeRole: 'COMMERCE_STAGED' } } }
+  },
+  process: { actionAdapters: { definitions: { 'inventory.applyPublicationDecision': {
+    moduleName: 'inventory', operation: 'applyPublicationDecision', remote: { target: 'inventory', moduleName: 'inventory',
+      runtimeRole: 'COMMERCE_STAGED', apiName: '/workflow/actions/applyPublicationDecision', requiresCompletedTask: true }
+  } } } },
   // Inert inventory; an allowed local server must explicitly select this capability.
   localResetProvider: {
     contributions: {
@@ -37,6 +46,7 @@ module.exports = {
   },
   schemaPolicies: {
     inventory: {
+      publicationVersioned: { isVersionedEnabled: false },
       operational: {
         accessGroups: {
           adminGroup: 10,
@@ -74,6 +84,7 @@ module.exports = {
   },
   apiExposure: {
     categories: {
+      inventoryPublicationAuthoring: { enabled: false },
       commerceManagement: {
         enabled: true,
       },
@@ -82,4 +93,14 @@ module.exports = {
       },
     },
   },
+};
+
+// Registration remains separate from availability; installed qualification is an operator gate.
+module.exports.inventory.publication = {
+    runtimeRole: null,
+    sourceVersioningQualified: false,
+    delivery: { enabled: false, rootCodes: [] },
+    legacyCasRecovery: { enabled: false, operations: [] },
+    targetTransportProvider: null,
+    maxDependencies: 1000
 };

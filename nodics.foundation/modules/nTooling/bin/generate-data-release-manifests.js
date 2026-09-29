@@ -17,6 +17,7 @@
 const crypto = require('crypto');
 const fs = require('fs');
 const path = require('path');
+const releasePolicy = require('../../nData/nImport/import/src/service/release/defaultDataReleaseService');
 
 const root = path.resolve(__dirname, '../../../..');
 const dataTypes = new Set(['init', 'core', 'sample']);
@@ -91,9 +92,11 @@ function visit(folder) {
             let contentOwnedRoots = new Set(Object.values(aggregate.sections)
                 .filter(section => section && section.kind === 'CONTENT_PACK' && section.contentPath)
                 .map(section => String(section.contentPath).split('/')[0]));
+            const retainedRoots = releasePolicy.validateRetainedRoots(dataRoot, aggregate);
             let changed = false;
             for (let dataType of dataTypes) {
                 for (let releaseRoot of releaseRootsFor(dataRoot, dataType)) {
+                    if (retainedRoots.has(releaseRoot.sourceRoot)) continue;
                     if (contentOwnedRoots.has(releaseRoot.sourceRoot) && !aggregate.sections[releaseRoot.sectionCode]) continue;
                     let contributionFiles = new Set(Object.entries(aggregate.sections)
                         .filter(([sectionCode, contribution]) => sectionCode !== releaseRoot.sectionCode && contribution &&

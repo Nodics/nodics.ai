@@ -71,6 +71,7 @@ module.exports = {
       versionProvider: null,
       versionProviders: {},
       workflowProvider: null,
+      workflowProviders: {},
     },
     events: {
       activated: "publicationActivated",

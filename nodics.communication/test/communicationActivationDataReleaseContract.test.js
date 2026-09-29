@@ -27,6 +27,28 @@ assert.strictEqual(sections['runtime-defaults'].dataType, 'core');
 assert.strictEqual(sections['sample-templates'].displayName, 'Communication Sample Templates');
 assert.strictEqual(sections['sample-templates'].dataType, 'sample');
 
+// Exercise registration and BackOffice projection using this owner's manifest.
+const registration = require('../../nodics.foundation/modules/nService/src/service/module/defaultModuleRegistrationAgentService');
+const catalogue = require('../../nodics.platform/modules/backoffice/src/service/registry/defaultFunctionalModuleCatalogueService');
+const previousGlobals = Object.fromEntries(['CONFIG', 'NODICS'].map(key => [key, Object.getOwnPropertyDescriptor(global, key)]));
+try {
+    global.CONFIG = { get: () => undefined };
+    global.NODICS = { getServerName: () => 'messageWorker' };
+    const packages = catalogue.getActivationDataPackages('nodics.communication', {
+        activationDataPackages: registration.buildActivationDataPackages('commsCore', { path: path.dirname(releaseRoot) }),
+    });
+    assert.deepStrictEqual(packages.map(item => item.code).sort(), ['commsCore:runtime-defaults', 'commsCore:sample-templates']);
+    assert(packages.every(item => item.targetModule === 'commsCore'));
+    assert.strictEqual(packages.find(item => item.dataType === 'core').required, true);
+    assert.strictEqual(packages.find(item => item.dataType === 'core').trigger, 'ACTIVATION');
+    assert.strictEqual(packages.find(item => item.dataType === 'sample').trigger, 'USER');
+} finally {
+    for (const [key, descriptor] of Object.entries(previousGlobals)) {
+        if (descriptor) Object.defineProperty(global, key, descriptor);
+        else delete global[key];
+    }
+}
+
 Object.values(sections).forEach(section => {
     Object.entries(section.files).forEach(([relativeFile, expectedChecksum]) => {
         const filePath = path.join(releaseRoot, relativeFile);

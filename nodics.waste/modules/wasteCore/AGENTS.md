@@ -16,4 +16,18 @@ A server must explicitly select it; contributions never enable reset or bypass t
 Waste Core owns inert Waste acceptance defaults under `tooling.acceptance`.
 Resolve the WASTE and PLATFORM roles from the selected topology; do not copy
 customer environment names, server names, ports or initialization profile codes.
-The invoking project still owns its journey script and explicit execution.
+Waste Core owns the complete protected `acceptance:waste-backoffice` suite.
+It checks existing authorized registration and navigation without identity
+migration, runtime grant expansion, automatic activation or runtime startup.
+Customers supply topology and employee credentials, not replacement assertions.
+
+Installed reference inspection belongs to Waste Core and the secured Waste API,
+not a customer repair script or enabled generic CRUD router. Preserve the
+[installed evidence contract](llm/contracts/README.md#installed-evidence-inspection):
+tenant-wide permission, bounded generated reads, transaction fingerprints only,
+operator-policy conflict rejection and nImport-owned exact release provenance.
+Inspection is not migration authority or an atomic snapshot.
+Effective inspection configuration may narrow the owner resource inventory and
+disclosure only. Preserve the enforced transaction fingerprint ceiling and
+multi-page checksum regression coverage; never turn a transaction into a
+reference response through configuration.

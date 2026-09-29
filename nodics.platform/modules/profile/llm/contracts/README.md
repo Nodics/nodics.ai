@@ -1,5 +1,20 @@
 # profile AI Contracts
 
+## Runtime Grant Acceptance
+
+The capability-owned runtime deployment grant suite reads existing governed
+assignments; it never provisions credentials, rotates keys or repairs grants.
+Imports and help are inert. Every selected runtime must have one matching active
+ALLOW service assignment for its project, environment, server, instance, enterprise
+and tenant. Verify both active and remote module requirements and both owner
+permission sources. Modules and permissions must be arrays, never strings whose
+substring matching could fabricate coverage. Missing, ambiguous, malformed and
+denied records fail the suite.
+
+Run `node --test nodics.platform/modules/profile/test/runtimeDeploymentGrantAcceptance.test.mjs`
+from the framework root. These injected API fixtures prove assertions and refusal
+behavior only; live assignment provisioning remains a separate governed operation.
+
 This folder contains module-specific AI/developer contracts for `nodics.platform/modules/profile`.
 
 Use these files for rules that are more specific than root `AGENTS.md` and the module `AGENTS.md`, especially extension boundaries, override expectations, testing rules, security constraints, and generated-artifact responsibilities.
@@ -148,6 +163,17 @@ trusted initializer data or existing privileged setup; runtimes cannot enroll
 themselves by choosing headers. A single-use enrollment-grant provider is not
 implemented by this path. Restart and renewal reauthenticate retained proof and
 re-read the assignment; no second business registration is required.
+
+Native local startup is the one repair exception. After a local schema reset,
+Profile mandatory identity bootstrap may discover sibling runtime server package
+metadata from the selected project/environment, resolve each server's effective
+active modules through nConfig, and create or update explicit local
+`RUNTIME_DEPLOYMENT` assignments for the generated `apiAdmin` proof. The
+permissions used by those grants must also be present on the service principal
+API-key scope through `identityGovernance.migration`; the runtime request
+headers remain a request and are still checked against the persisted assignment.
+This local repair does not apply to non-local environments and does not create a
+generic topology-based entitlement path.
 
 Assignment save/update/removal captures old and new affected principals and
 awaits their existing Employee update path. That path allocates the security

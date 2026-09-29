@@ -32,6 +32,12 @@ project must provide reviewed source versions, repository-root coordinates,
 Discovery index configuration, source-provider registrations, and explicit
 enablement before runtime use.
 
+Trusted deployment hooks may delegate late startup ingestion to
+`DefaultCopilotKnowledgeRuntimeService.ingestOnStart()`. Source selection and
+operational policy live in `copilot.knowledge.ingestion.startup`; reusable
+orchestration stays here. See the [startup contract](llm/contracts/secure-ingestion-and-retrieval-contract.md#trusted-startup-delegation)
+for opt-in gates, failure semantics and authorization boundaries.
+
 Use this README to understand what this module is for, which capability or composition boundary it owns, how it fits its parent hierarchy, and where developers or AI tools should continue reading.
 
 For implementation rules, read this module `AGENTS.md` after the root-to-leaf ancestor `AGENTS.md` chain. For exact contracts and examples, read this module `llm/` guidance and the relevant global contracts under `modules/nSetup/llm`.

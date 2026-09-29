@@ -19,6 +19,57 @@
  * @override Later modules may add approval gates while preserving Product publication service ownership.
  */
 module.exports = {
+    /** Requires the authenticated tenant rather than a payload-selected partition. */
+    governedContext: function (request) {
+        const auth = request.authData || {};
+        if (!auth.tenant || request.tenant && request.tenant !== auth.tenant) throw new Error('Authenticated Product tenant is required');
+        return Object.assign({}, request, { tenant: auth.tenant });
+    },
+    /** Captures immutable membership and starts nPublish approval. */
+    createGoverned: function (request) {
+        return SERVICE.DefaultProductGovernedPublicationService.create(this.governedContext(request), request.payload);
+    },
+    /** Binds this route to Product regardless of submitted payload. */
+    applyPublicationDecision: function (request) {
+        return SERVICE.DefaultPublicationApprovalCallbackService.applyDecision(this.governedContext(request),
+            { domain: 'product', actionKey: 'product.applyPublicationDecision' });
+    },
+    /** Reads stored source intent for a scoped runtime principal. */
+    authorizeTarget: function (request) {
+        return SERVICE.DefaultProductGovernedPublicationService.authorizeTarget(this.governedContext(request), request.payload);
+    },
+    /** Requires independent source authorization before any target mutation. */
+    target: async function (request, operation) {
+        const input = structuredClone(request.payload);
+        request = this.governedContext(request);
+        SERVICE.DefaultServiceTokenService.requireRuntimePrincipal(request, 'product');
+        request = Object.assign({}, request, { authData: structuredClone(request.authData) });
+        const target = SERVICE.DefaultProductPublicationTargetService;
+        target.assertOnline();
+        target.scopeCode(operation === 'deploy' ? input.manifest && input.manifest.scope : input.scope, request);
+        if (operation !== 'getStatus') {
+            const command = { operation: operation === 'deploy' ? 'deploy' : operation, publicationCode: input.publicationCode,
+                sourceVersion: input.sourceVersion, operationKey: input.operationKey, expectedVersion: input.expectedVersion,
+                scope: operation === 'deploy' ? input.manifest && input.manifest.scope : input.scope,
+                version: operation === 'deploy' ? input.manifest && input.manifest.version : operation === 'withdraw' ? '' : input.version };
+            const approved = await SERVICE.DefaultProductPublicationTransportService.authorize(command, request);
+            if (!approved || approved.authorized !== true || approved.fingerprint !== SERVICE.DefaultProductPublicationGraphService.hash(command)) {
+                throw new Error('Product source authorization mismatch');
+            }
+        }
+        // Only verified owner operations receive local persistence authority; transport retains the caller.
+        const local = Object.assign({}, request, { authData: Object.assign({}, request.authData,
+            SERVICE.DefaultIdentityGovernanceService.getSystemAuthData()) });
+        return target[operation](input, local);
+    },
+    /** Deploys only independently verified source intent. */
+    targetDeploy: function (request) { return this.target(request, 'deploy'); },
+    /** Reads status for a scoped runtime principal. */
+    targetStatus: function (request) { return this.target(request, 'getStatus'); },
+    /** Restores only independently verified source intent. */
+    targetRollback: function (request) { return this.target(request, 'rollback'); },
+    /** Withdraws only independently verified source intent. */
+    targetWithdraw: function (request) { return this.target(request, 'withdraw'); },
     /** Initializes the facade lifecycle. @returns {Promise<boolean>} Initialization result. */
     init: function () { return Promise.resolve(true); },
     /** Completes the facade lifecycle. @returns {Promise<boolean>} Initialization result. */

@@ -82,10 +82,21 @@ module.exports = {
     /** Applies one compare-and-set publication state update. */
     transition: async function (publication, expectedRevision, patch, request) {
         let next = Object.assign({}, patch, { revision: Number(publication.revision || 0) + 1 });
+        // Optional typed fields use absence in storage; receipt/journal evidence retains explicit null lineage.
+        const unset = {};
+        for (const field of ['previousOnlineVersion', 'activationOperation']) {
+            if (next[field] === null) {
+                unset[field] = 1;
+                delete next[field];
+            }
+        }
+        const model = Object.keys(unset).length ? { $set: next, $unset: unset } : next;
         let response = await this.getServices().publication.update({ tenant: this.getTenant(request), authData: request && request.authData,
-            query: { code: publication.code, revision: Number(expectedRevision) }, model: next });
+            query: { code: publication.code, revision: Number(expectedRevision) }, model: model });
         if (this.getAffectedCount(response) !== 1) throw new CLASSES.NodicsError('ERR_PUB_00004', 'Publication revision conflict');
-        return Object.assign({}, publication, next);
+        const updated = Object.assign({}, publication, next);
+        Object.keys(unset).forEach(field => { delete updated[field]; });
+        return updated;
     },
     /** Atomically applies a state transition, revision, and authoritative immutable audit journal entry. */
     transitionWithAudit: async function (publication, expectedRevision, patch, audit, request) {

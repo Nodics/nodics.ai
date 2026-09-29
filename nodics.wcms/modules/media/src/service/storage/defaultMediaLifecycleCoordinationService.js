@@ -23,6 +23,44 @@ module.exports = {
     postInit: function () { return Promise.resolve(true); },
     /** Returns the available record collection from the owning persistence result without mutating it. */
     records: function (value) { return value && Array.isArray(value.result) ? value.result : []; },
+    /** Resolves installed metadata mode; policy opt-in cannot silently use an unmigrated model. */
+    isVersioned: function (request) {
+        const models = typeof NODICS !== 'undefined' && typeof NODICS.getModels === 'function' && NODICS.getModels('media', request.tenant);
+        const name = typeof UTILS !== 'undefined' && typeof UTILS.createModelName === 'function' && UTILS.createModelName('media');
+        const model = models && name && models[name];
+        const policies = typeof CONFIG !== 'undefined' && CONFIG.get('schemaPolicies');
+        const selected = policies && policies.media && policies.media.publicationVersioned;
+        if (model && model.versioned === true) {
+            if (!model.rawSchema || model.rawSchema.versionedReadMode !== 'CURRENT') throw this.error('ERR_MED_00014', 'Media writers require CURRENT versioned metadata');
+            return true;
+        }
+        if (selected && selected.isVersionedEnabled === true) throw this.error('ERR_MED_00014', 'Installed Media versioned metadata is unavailable');
+        return false;
+    },
+    /** Uses generated immutable updates and verifies the exact successor without bypassing cache/event ownership. */
+    updateMetadata: async function (request, media, patch) {
+        if (!this.isVersioned(request)) return SERVICE.DefaultMediaService.update({ tenant: request.tenant, authData: request.authData,
+            query: { code: media.code, version: media.version }, model: { $set: patch } });
+        if (!Number.isSafeInteger(media.versionId) || media.versionId < 0 || media.versionId === Number.MAX_SAFE_INTEGER ||
+            (request.versionId !== undefined && request.versionId !== media.versionId)) throw this.error('ERR_MED_00014', 'Media metadata version conflict');
+        const fields = Object.fromEntries(Object.entries(patch).filter(([, value]) => value !== undefined));
+        if (Object.keys(fields).some(key => key.startsWith('$') || ['_id', 'code', 'versionId'].includes(key))) throw this.error('ERR_MED_00014', 'Invalid Media metadata update');
+        await SERVICE.DefaultMediaService.update({ tenant: request.tenant, authData: request.authData,
+            query: { code: media.code, versionId: media.versionId }, model: fields });
+        const rows = this.records(await SERVICE.DefaultMediaService.get({ tenant: request.tenant, authData: request.authData,
+            query: { code: media.code, versionId: media.versionId + 1 }, searchOptions: { limit: 2 } }));
+        const equal = require('lodash').isEqual;
+        if (rows.length !== 1 || rows[0].code !== media.code || rows[0].versionId !== media.versionId + 1 ||
+            Object.entries(fields).some(([key, value]) => !equal(rows[0][key], value))) throw this.error('ERR_MED_00014', 'Media successor was not acknowledged');
+        return rows[0];
+    },
+    /** Keeps physical history/retained cleanup closed until a reference-aware purge is qualified. */
+    assertPhysicalCleanup: function (request) {
+        const media = typeof CONFIG !== 'undefined' && CONFIG.get('media') || {};
+        if (this.isVersioned(request) || media.publication && media.publication.versionProviderEnabled === true) {
+            throw this.error('ERR_MED_00019', 'Physical cleanup is disabled for versioned or retained Media');
+        }
+    },
 
     /**
 
@@ -137,7 +175,7 @@ module.exports = {
         const media = await this.load(request);
         if (media.businessPurpose && media.businessPurpose !== request.businessPurpose) throw this.error('ERR_MED_00001', 'Media purpose cannot be rebound.');
         if (media.ownerReference && media.ownerReference !== request.ownerReference && media.reusable !== true) throw this.error('ERR_MED_00001', 'Media owner cannot be rebound.');
-        await SERVICE.DefaultMediaService.update({ tenant: request.tenant, authData: request.authData, query: { code: media.code, version: media.version }, model: { $set: { businessPurpose: request.businessPurpose, ownerType: request.ownerType, ownerReference: request.ownerReference, reusable: request.reusable === true, retentionUntil: request.retentionUntil, legalHold: request.legalHold === true, version: Number(media.version || 0) + 1 } } });
+        await this.updateMetadata(request, media, { businessPurpose: request.businessPurpose, ownerType: request.ownerType, ownerReference: request.ownerReference, reusable: request.reusable === true, retentionUntil: request.retentionUntil, legalHold: request.legalHold === true, version: Number(media.version || 0) + 1 });
         return { mediaCode: media.code, businessPurpose: request.businessPurpose, retentionUntil: request.retentionUntil, legalHold: request.legalHold === true };
     },
 
@@ -159,7 +197,7 @@ module.exports = {
 
     setLegalHold: async function (request) {
         const media = await this.load(request);
-        await SERVICE.DefaultMediaService.update({ tenant: request.tenant, authData: request.authData, query: { code: media.code, version: media.version }, model: { $set: { legalHold: request.legalHold === true, version: Number(media.version || 0) + 1 } } });
+        await this.updateMetadata(request, media, { legalHold: request.legalHold === true, version: Number(media.version || 0) + 1 });
         return { mediaCode: media.code, legalHold: request.legalHold === true };
     },
 
@@ -180,6 +218,7 @@ module.exports = {
      */
 
     deleteExpired: async function (request) {
+        this.assertPhysicalCleanup(request);
         const media = await this.load(request);
         if (media.legalHold === true || request.legalHold === true) throw this.error('ERR_MED_00019', 'Media deletion is blocked by legal hold.');
         if (!media.retentionUntil || new Date(media.retentionUntil).getTime() > new Date(request.now || Date.now()).getTime()) throw this.error('ERR_MED_00019', 'Media retention has not elapsed.');

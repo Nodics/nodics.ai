@@ -1,5 +1,28 @@
 # Product examples
 
+## Exact Product Publication
+
+After qualification and role-specific route activation, submit
+`{publicationCode: 'review-1', productCode: 'item-1', storeCode: 'store-1', versionId: 0}`
+to `POST /products/publication`. The owner captures current dependencies, saves
+the next immutable root through versioned update, creates/validates nPublish and
+requests normal Process approval. Retry the same identity after an interrupted
+response; do not increment the caller version to guess recovery. Validation
+resolves only sealed references. The route is inactive by default.
+
+Reject a changed dependency hash, unqualified source model, duplicate locale,
+missing category ancestor or cross-tenant record. If indexing fails, the prepared
+rows remain hidden and the old pointer remains authoritative. Retry with the
+same immutable operation key; a committed receipt is returned rather than
+writing another lifecycle history. Rollback selects a retained graph only when
+the expected active version still matches.
+
+Later-layer transport replacement uses the existing
+`product.publication.targetTransportProvider` property and preserves target
+receipt fields verbatim. Select `product.discovery.activationService` only with
+the qualified Online target reader. Do not enable global publication flags or
+write project-owned copies of versioned schema policies to make a test pass.
+
 ## Publish
 
 Supply one active Product, a Store code, and English/Arabic `READY` localization rows to

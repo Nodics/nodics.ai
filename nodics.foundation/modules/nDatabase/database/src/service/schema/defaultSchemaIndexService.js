@@ -26,6 +26,35 @@ const _ = require('lodash');
  * @property {Object} NODICS.models Tenant and channel scoped generated model registry.
  */
 module.exports = {
+    /** Reads one active owner/schema in the authenticated tenant's master channel; never fans out or authorizes migration. */
+    inspectSchemaIndexes: async function (request, moduleName, schemaName) {
+        const auth = request && request.authData || {};
+        const security = SERVICE.DefaultSecuredRequestPipelineService;
+        const identity = SERVICE.DefaultIdentityGovernanceService;
+        if (auth.principalType !== 'human' || !auth.loginId || typeof auth.tenant !== 'string' || !auth.tenant.trim() ||
+            !security || !identity || !identity.hasAdministrativeAccess(Object.assign({}, auth, {
+                userGroups: security.getEffectiveUserGroupCodes(auth.userGroups || [])
+            })) ||
+            !security.isPermissionGranted('system.schema.view', security.getGrantedPermissions(request), {})) {
+            throw new CLASSES.NodicsError('ERR_DBS_00004', 'Installed-index inspection requires tenant administrator authority');
+        }
+        if (![moduleName, schemaName].every(value => typeof value === 'string' && /^[A-Za-z][A-Za-z0-9._-]{0,127}$/.test(value))) {
+            throw new CLASSES.NodicsError('ERR_DBS_00003', 'An explicit module and schema are required');
+        }
+        if (!NODICS.isModuleActive(moduleName) || !NODICS.getActiveTenants().includes(auth.tenant)) {
+            throw new CLASSES.NodicsError('ERR_DBS_00004', 'Installed-index inspection requires an active owner and tenant');
+        }
+        const models = NODICS.getModels(moduleName, auth.tenant, 'master');
+        const model = models && models[UTILS.createModelName(schemaName)];
+        const provider = SERVICE.DefaultDatabaseModelHandlerService;
+        if (!model || !provider || typeof provider.inspectIndexes !== 'function') {
+            throw new CLASSES.NodicsError('ERR_DBS_00004', 'Installed-index inspection is unavailable for this owner');
+        }
+        const evidence = await provider.inspectIndexes(model);
+        return { code: 'SUC_DBS_00000', data: Object.assign({}, evidence, {
+            moduleName, schemaName, tenant: auth.tenant, channel: 'master', migrationAuthorized: false
+        }) };
+    },
     /**
      * Updates indexes for one schema across all active tenants and supported channels.
      *

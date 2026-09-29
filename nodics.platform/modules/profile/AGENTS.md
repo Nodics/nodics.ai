@@ -60,7 +60,7 @@ A server must explicitly select it; contributions never enable reset or bypass t
 
 Runtime admission reuses direct RUNTIME_DEPLOYMENT principal scope assignments. Never infer approval from headers, topology, broad groups or cross-tenant permission. Scope mutations await existing principal invalidation; the pre-update hook owns atomic version allocation.
 
-Tenant preparation uses the existing governed Init release owner before mandatory identity reconciliation. It does not synthesize deployment grants or credentials from runtime topology; first authority provisioning remains trusted operator initializer data.
+Tenant preparation uses the existing governed Init release owner before mandatory identity reconciliation. Non-local deployment grants and credentials remain governed operator records. Native local startup may idempotently reconcile explicit `RUNTIME_DEPLOYMENT` grants for discovered sibling runtime identities from package metadata and effective module configuration, using framework-owned generated local credential proof; this is local bootstrap repair, not runtime self-enrollment from request headers.
 
 Generated Profile reads return the canonical `{code, result}` envelope, with a
 success code and result array; they do not set a Boolean `success: true`. Runtime

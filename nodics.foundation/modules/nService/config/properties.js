@@ -42,6 +42,7 @@ module.exports = {
     },
     backofficeRegistration: {
         enabled: true,
+        asyncServerStartup: true,
         moduleName: 'backoffice',
         leaseTtlMs: 30000,
         operationalStateTtlMs: 30000,

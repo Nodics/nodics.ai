@@ -12,6 +12,20 @@
 
 /** @module copilotKnowledge/src/service/defaultCopilotKnowledgeSourceRegistryService @description Builds an immutable, classified source registry and produces security-filtered pre-retrieval query scopes without scanning repositories or bypassing Discovery. @layer service @owner copilotKnowledge @override Projects may contribute stricter classified definitions through layered configuration. */
 module.exports = {
+    /** Expands opt-in owner templates without inventing identity, enablement or customer scope. Arrays replace, never concatenate. */
+    expandDefinition: function (source, configuration) {
+        if (!source || source.template === undefined) return source || {};
+        const templates = configuration && configuration.templates;
+        if (typeof source.template !== 'string' || !templates || !Object.hasOwn(templates, source.template))
+            throw new Error('COPILOT_KNOWLEDGE_SOURCE_TEMPLATE_INVALID');
+        const template = templates[source.template];
+        const fields = ['sourceType', 'classification', 'paths', 'excludedPaths', 'allowedExtensions',
+            'limits', 'allowedChannels', 'requiredPermissions', 'secretScanPolicy'];
+        if (!template || typeof template !== 'object' || Array.isArray(template) ||
+            Object.keys(template).some(key => !fields.includes(key)))
+            throw new Error('COPILOT_KNOWLEDGE_SOURCE_TEMPLATE_INVALID');
+        return { ...template, ...source };
+    },
     /** Returns a classification rank used to prevent weaker-than-default registration. @param {string} classification Classification. @returns {number} Rank. */
     classificationRank: function (classification) {
         return { PUBLIC: 0, CUSTOMER: 1, INTERNAL: 2, RESTRICTED: 3 }[String(classification || '').toUpperCase()];
@@ -23,7 +37,7 @@ module.exports = {
     },
     /** Normalizes and validates one source definition. @param {Object} source Raw source definition. @param {Object} configuration Registry configuration. @param {Object} policyService Policy service. @returns {Object} Immutable definition. */
     normalize: function (source, configuration, policyService) {
-        const input = source || {};
+        const input = this.expandDefinition(source, configuration);
         const classifications = (configuration || {}).allowedClassifications || ['PUBLIC', 'CUSTOMER', 'INTERNAL', 'RESTRICTED'];
         const classification = String(input.classification || '').toUpperCase();
         const sourceType = String(input.sourceType || '').toUpperCase();

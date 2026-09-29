@@ -39,7 +39,8 @@ rollback.
 
 ## Functional module lifecycle
 
-1. Runtime observes `nodics.process` as an optional functional module.
+1. Runtime observes `nodics.process` as a mandatory functional module required
+   by governed publication approval.
 2. BackOffice exposes process navigation only when the module is registered,
    active, live, and authorized.
 3. Axis renders Process and Workflow pages from the BackOffice navigation

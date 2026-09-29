@@ -28,6 +28,83 @@ const controller = require('../src/controller/defaultCartCustomerController');
 const facade = require('../src/facade/defaultCartCustomerFacade');
 const service = require('../src/service/defaultCartOperationService');
 const storeContext = require('../../../../baseCommerce/modules/store/src/service/defaultStoreContextService');
+
+test('Cart variant resolution delegates to Product without mutable source or caller SKU fallback', async () => {
+    const previous = global.SERVICE;
+    const previousClasses = global.CLASSES;
+    global.CLASSES = { NodicsError: class extends Error {} };
+    const request = { tenant: 't', storeCode: 's', locale: 'en', payload: { productCode: 'p', variantCode: 'v' } };
+    try {
+        global.SERVICE = {
+            DefaultProductDiscoveryService: { activeSelection: async input => { global.SERVICE.selectedRequest = input; return []; }, resolveVariantSku: async input => {
+                assert.equal(input, global.SERVICE.selectedRequest);
+                assert.equal(input.storeCode, 's'); assert.equal(input.productCode, 'p');
+                assert.equal(input.variantCode, 'v'); return 'trusted';
+            } },
+            DefaultProductVariantService: { get: () => assert.fail('No source fallback') },
+            DefaultProductSearchProjectionService: { get: () => assert.fail('No duplicate projection query') }
+        };
+        assert.equal(await service.resolveSku(request), 'trusted');
+        await assert.rejects(service.resolveSku({ ...request, payload: { ...request.payload, sku: 'untrusted' } }), /ERR_CART_PRODUCT_UNAVAILABLE/);
+        SERVICE.DefaultProductDiscoveryService.resolveVariantSku = async () => undefined;
+        assert.equal(await service.resolveSku(request), undefined);
+    } finally { global.SERVICE = previous; global.CLASSES = previousClasses; }
+});
+
+test('Unselected Cart keeps legacy variant lookup with reader present and no locale', async () => {
+    const previous = global.SERVICE;
+    try {
+        global.SERVICE = {
+            DefaultProductDiscoveryService: { activeSelection: async () => undefined,
+                resolveVariantSku: () => assert.fail('Unselected store must keep legacy path') },
+            DefaultProductVariantService: { get: async input => {
+                assert.equal(input.query.code, 'v'); assert.equal(input.query.productCode, 'p');
+                return { result: [{ sku: 'legacy-sku' }] };
+            } }
+        };
+        const request = { tenant: 't', storeCode: 'unselected', payload: { productCode: 'p', variantCode: 'v' } };
+        assert.equal(await service.resolveSku(request), 'legacy-sku');
+        assert.equal(await service.resolveSku({ ...request, payload: { productCode: 'p', sku: 'legacy-explicit' } }), 'legacy-explicit');
+    } finally { global.SERVICE = previous; }
+});
+
+test('Selected Cart explicit SKU requires activated Product membership', async () => {
+    const previous = global.SERVICE;
+    const previousClasses = global.CLASSES;
+    global.CLASSES = { NodicsError: class extends Error {} };
+    try {
+        const request = { tenant: 't', storeCode: 's', locale: 'en', payload: { productCode: 'p', sku: 'trusted' } };
+        global.SERVICE = { DefaultProductDiscoveryService: {
+            activeSelection: async () => ['selected'],
+            resolveVariantSku: async input => {
+                assert.equal(input.variantCode, undefined);
+                assert.equal(input.productCode, 'p');
+                return input.sku === 'trusted' ? input.sku : undefined;
+            }
+        }, DefaultProductVariantService: { get: () => assert.fail('No source fallback') } };
+        assert.equal(await service.resolveSku(request), 'trusted');
+        await assert.rejects(service.resolveSku({ ...request, payload: { productCode: 'p', sku: 'foreign' } }), /ERR_CART_PRODUCT_UNAVAILABLE/);
+        SERVICE.DefaultProductDiscoveryService.activeSelection = async () => [];
+        SERVICE.DefaultProductDiscoveryService.resolveVariantSku = async () => undefined;
+        await assert.rejects(service.resolveSku(request), /ERR_CART_PRODUCT_UNAVAILABLE/);
+        assert.equal(require('../src/utils/statusDefinitions').ERR_CART_PRODUCT_UNAVAILABLE.code, '409');
+    } finally { global.SERVICE = previous; global.CLASSES = previousClasses; }
+});
+
+test('Cart unavailable inventory maps to a typed business rejection before pricing', async () => {
+    const previous = { CONFIG: global.CONFIG, SERVICE: global.SERVICE, CLASSES: global.CLASSES };
+    const NodicsError = require('../../../../../../nodics.foundation/modules/nCommon/src/lib/nodicsError');
+    try {
+        global.CONFIG = { get: () => ({ NodicsError: 'ERR_SYS_00000' }) };
+        global.SERVICE = { DefaultStatusService: { get: code => require('../src/utils/statusDefinitions')[code] } };
+        global.CLASSES = { NodicsError };
+        const engine = require('../src/service/defaultCartCalculationEngineService');
+        await assert.rejects(engine.calculate({ tenant: 't', entries: [{ sku: 's', quantity: '1' }] }, {
+            inventory: async () => ({ available: false }), pricing: () => assert.fail('No price on rejection'),
+            tax: () => {}, promotion: () => {}, exact: {}
+        }), error => error.code === 'ERR_CART_INVENTORY_UNAVAILABLE' && error.responseCode === '409');
+    } finally { Object.assign(global, previous); }
+});
 const validationService = require('../src/service/defaultCartValidationService');
 const calculationEngine = require('../src/service/defaultCartCalculationEngineService');
 const calculationPipelineService = require('../src/service/pipelines/defaultCartCalculationPipelineService');

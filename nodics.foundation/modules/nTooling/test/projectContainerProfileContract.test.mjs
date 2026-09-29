@@ -22,6 +22,7 @@ import fs from 'node:fs';
 import os from 'node:os';
 import path from 'node:path';
 import test from 'node:test';
+import { createRequire } from 'node:module';
 import {
   readContainerEnvironmentConfiguration,
 } from '../src/service/project/defaultProjectContainerConfigurationService.mjs';
@@ -31,6 +32,37 @@ function writeJson(filePath, value) {
   fs.mkdirSync(path.dirname(filePath), { recursive: true });
   fs.writeFileSync(filePath, JSON.stringify(value, null, 2) + '\n');
 }
+
+test('container acceptance selects published server endpoints and preserves literal overrides', t => {
+  const root = fs.mkdtempSync(path.join(os.tmpdir(), 'container-published-endpoints-'));
+  t.after(() => fs.rmSync(root, { recursive: true, force: true }));
+  writeJson(path.join(root, 'package.json'), { name: 'independent.endpoint.consumer' });
+  const environment = path.join(root, 'envs/isolated');
+  writeEnvironment(environment, { profileCode: 'containers',
+    topology: { groups: { backends: [{ code: 'api', host: 'internal.test', port: 4123 }] } },
+    acceptance: { urls: { selected: { server: 'api' }, overridden: 'https://explicit.test/base' } },
+  });
+  const file = path.join(environment, 'api/config/properties.js');
+  const require = createRequire(import.meta.url);
+  const update = browserEndpoint => {
+    fs.writeFileSync(file, 'module.exports = ' + JSON.stringify({
+      servers: { default: { endpoint: { httpHost: 'internal.test', httpPort: 4123 }, browserEndpoint } },
+    }));
+    delete require.cache[require.resolve(file)];
+  };
+  update({ httpHost: 'published.test', httpPort: 6123 });
+  const first = readContainerEnvironmentConfiguration(root, 'containers');
+  assert.equal(first.acceptance.urls.selected, 'http://published.test:6123');
+  assert.equal(first.acceptance.urls.overridden, 'https://explicit.test/base');
+  update({ httpHost: '::1', httpPort: 7123 });
+  const changed = readContainerEnvironmentConfiguration(root, 'containers');
+  assert.equal(changed.acceptance.urls.selected, 'http://[::1]:7123');
+  assert.equal(changed.acceptance.urls.overridden, first.acceptance.urls.overridden);
+  update(undefined);
+  assert.throws(() => readContainerEnvironmentConfiguration(root, 'containers'), /Published endpoint/);
+  update({ httpHost: '0.0.0.0', httpPort: 7123 });
+  assert.throws(() => readContainerEnvironmentConfiguration(root, 'containers'), /Invalid configured endpoint/);
+});
 
 test('container profile resolves from environment-owned config/properties.js', () => {
   const projectRoot = fs.mkdtempSync(path.join(os.tmpdir(), 'nodics-container-profile-'));

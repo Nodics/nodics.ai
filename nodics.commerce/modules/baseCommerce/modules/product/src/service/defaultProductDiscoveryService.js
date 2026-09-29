@@ -170,8 +170,77 @@ module.exports = {
     return undefined;
   },
 
-  /** Executes the Product search projection query through generated nSearch behavior when available. @param {Object} request Nodics request. @param {Object} query Query. @param {Object} searchOptions Search options. @returns {Promise<Array>} Projection records. */
+  /** Pins owner activation evidence once per request, including catalogue pagination. Explicit broken bindings fail closed. */
+  activeSelection: function (request) {
+    const policy = this.policy(), name = policy.activationService, scopes = policy.activationScopes;
+    if (scopes !== undefined && scopes !== null) {
+      if (!Array.isArray(scopes) || scopes.length > 100 || scopes.some(scope =>
+        !scope || Object.keys(scope).sort().join(',') !== 'storeCode,tenant' ||
+        ['tenant', 'storeCode'].some(key => typeof scope[key] !== 'string' || !scope[key].trim() || scope[key] !== scope[key].trim() || scope[key].length > 128 || scope[key].includes('*'))) ||
+        new Set(scopes.map(scope => JSON.stringify([scope.tenant, scope.storeCode]))).size !== scopes.length) {
+        throw new Error('Product activation scopes must be bounded exact tenant/store pairs');
+      }
+      if (!scopes.some(scope => scope.tenant === request.tenant && scope.storeCode === request.storeCode)) return Promise.resolve(undefined);
+      if (!name) throw new Error('Product activation reader is unavailable for selected store');
+    }
+    if (!name) return Promise.resolve(undefined);
+    if (!SERVICE[name] || typeof SERVICE[name].activeVersions !== 'function') throw new Error('Product activation reader is unavailable');
+    if (!this.publicationSelections) this.publicationSelections = new WeakMap();
+    if (!this.publicationSelections.has(request)) this.publicationSelections.set(request, SERVICE[name].activeVersions(
+      Object.assign({}, request, { authData: this.serviceAuthData(request) })));
+    return this.publicationSelections.get(request);
+  },
+
+  /** Restricts every search and fallback to the pinned activated versions; request parameters cannot select prepared content. */
+  searchPinned: async function (request, query, searchOptions) {
+    const versions = await this.activeSelection(request);
+    if (versions === undefined) return this.searchSelected(request, query, searchOptions);
+    if (!Array.isArray(versions) || versions.some(version => !/^[a-f0-9]{64}$/.test(version))) throw new Error('Invalid Product activation evidence');
+    if (!versions.length) return [];
+    const selected = Object.assign({}, query, { status: 'STALE', publicationVersion: versions });
+    const rows = await this.searchSelected(request, selected, searchOptions);
+    if (rows.some(row => !versions.includes(row.publicationVersion) || row.tenant !== request.tenant ||
+        row.storeCode !== request.storeCode || row.locale !== request.locale || (request.productCode && row.productCode !== request.productCode))) {
+      throw new Error('Product search escaped activated catalogue scope');
+    }
+    return rows;
+  },
+
+  /** Adds live summaries only for consumer delivery, leaving internal identity reads catalogue-only. */
   search: async function (request, query, searchOptions) {
+    const rows = await this.searchPinned(request, query, searchOptions);
+    if (await this.activeSelection(request) === undefined) return rows;
+    const enrichment = SERVICE.DefaultProductSearchEnrichmentService;
+    if (!enrichment || typeof enrichment.consumerSummaries !== 'function') {
+        if (['pricing', 'inventory'].some(domain => (((CONFIG.get(domain) || {}).publication || {}).delivery || {}).enabled === true)) {
+          throw new Error('Activated Product customer enrichment provider is unavailable');
+        }
+        return rows.map(row => ({ ...row, payload: { ...row.payload, price: undefined, availability: undefined } }));
+    }
+    const summaries = await enrichment.consumerSummaries(request, rows);
+    return rows.map(row => ({ ...row, payload: { ...row.payload,
+      price: summaries.prices[row.productCode], availability: summaries.availability[row.productCode] } }));
+  },
+
+  /** Resolves internal variant identity through the same pinned owner reader as public delivery. */
+  resolveVariantSku: async function (request) {
+    if (!request.tenant || !request.storeCode || !request.locale || !request.productCode || (!request.variantCode && !request.sku)) return undefined;
+    const rows = await this.searchPinned(request, this.query(request), { pageSize: 2, pageNumber: 1, limit: 2 });
+    if (rows.length !== 1) return undefined;
+    const payload = rows[0].payload || {};
+    if (!request.variantCode) {
+      const map = payload.variantSkuMap || {};
+      return typeof request.sku === 'string' && request.sku.trim() &&
+        (payload.variantCodes || []).some(code => Object.hasOwn(map, code) && map[code] === request.sku)
+        ? request.sku : undefined;
+    }
+    if (!(payload.variantCodes || []).includes(request.variantCode)) return undefined;
+    const sku = payload.variantSkuMap && Object.hasOwn(payload.variantSkuMap, request.variantCode) && payload.variantSkuMap[request.variantCode];
+    return typeof sku === 'string' && sku.trim() ? sku : undefined;
+  },
+
+  /** Executes the Product search projection query through generated nSearch behavior when available. @param {Object} request Nodics request. @param {Object} query Query. @param {Object} searchOptions Search options. @returns {Promise<Array>} Projection records. */
+  searchSelected: async function (request, query, searchOptions) {
     let service = SERVICE.DefaultProductSearchProjectionService;
     if (!service)
       throw new Error("Product search projection service is unavailable");
@@ -384,7 +453,7 @@ module.exports = {
     Object.keys(query || {}).forEach((key) => {
       if (key === "text") return;
       let target = key.endsWith(".keyword") ? key.slice(0, -8) : key;
-      mapped[target] = query[key];
+      mapped[target] = target === 'publicationVersion' && Array.isArray(query[key]) ? { $in: query[key] } : query[key];
     });
     return mapped;
   },
@@ -831,6 +900,9 @@ module.exports = {
       pageSize: 2,
       pageNumber: 1,
     });
+    if (records.length === 0) {
+      throw new CLASSES.NodicsError('ERR_FIND_00004', 'Product is unavailable');
+    }
     if (records.length !== 1) {
       let error = new Error("Product is unavailable");
       error.statusCode = records.length === 0 ? 404 : 409;

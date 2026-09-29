@@ -1,5 +1,49 @@
 # Checkout Core Contracts
 
+## Checkout Contract Acceptance
+
+The capability-owned OpenAPI acceptance is read-only, with inert imports/help.
+It requires POST operations for cart calculation, checkout placement, order
+lifecycle preview, Process retry and compensation, and GET for Process incidents.
+A path key without the required operation does not establish API coverage.
+Direct and nested OpenAPI envelopes are supported; denied reads fail without
+repair or mutation. This suite proves effective contract presence, not successful
+checkout, payment, recovery execution or production readiness.
+
+Run `node --test nodics.commerce/modules/checkout/modules/checkoutCore/test/checkoutContractAcceptance.test.mjs`
+from the framework root for isolated positive and negative contract evidence.
+
+## Commerce Journey Acceptance
+
+Checkout Core owns `runCommerceJourneyAcceptance(options)` and the canonical
+`acceptance:commerce-journey` command. Import and `--help` are inert; execution
+requires `--execute`. Runtime lifecycle belongs to topology tooling.
+
+The effective COMMERCE graph supplies `tooling.acceptance.commerceJourney`:
+`productCode`, `variantCode`, `secondaryProductCode`, `secondaryVariantCode`,
+`categoryCode`, `storeCode`, `locale`, `channelCode`, `jurisdiction`, `currency`,
+`promotionCode`, `providerToken`, `shippingAddress`, `shippingMethod`,
+`paymentMethod`. There are no sample application fallbacks. Payment inputs must
+target an approved sandbox, and source configuration must never carry live secrets.
+Tests may inject the same object as `options.acceptance`, with `configuration`,
+`environment` and `fetch`; deployment execution resolves nConfig through nTooling.
+
+The suite checks effective routes, customer Product discovery/PDP field safety,
+shipping/returns methods, all three shopping lists, promotion preview/apply,
+cart add/read/update/remove/calculation, checkout/order, cancellation, return,
+refund, exchange and appeal automation, and second-customer order/cart denial.
+Customers, carts, orders, promotions and lifecycle evidence remain after a run.
+No direct database cleanup is performed. Missing credentials generate separate
+acceptance customers through Profile signup; supplied credentials use existing
+customers unless registration is explicitly requested. Signup failures propagate.
+
+Operators must provision required grants, sandbox providers and published data
+before execution. Denial, absent automation, internal field leaks and non-owner
+access fail the run; failure may leave earlier authorized actions completed.
+Later layers customize fixtures, never the assertions. Independent partner
+fixtures and negative tests live in `test/commerceJourneyAcceptance.test.mjs`.
+API evidence does not prove frontend behavior or production provider readiness.
+
 Checkout owns placement, compensation and purchase idempotency. Bidding owns pre-checkout negotiation.
 See [negotiated purchases](negotiated-purchase-contract.md), the Commerce checkout
 contract and Pricing's private quote contract. Product remains the published

@@ -16,7 +16,7 @@ module.exports = {
       {
         super: "base",
         model: true,
-        schemaPolicies: ["tenantOwned"],
+        schemaPolicies: ["tenantOwned", "publicationVersioned"],
         service: { enabled: true },
         router: { groups: { schemaOperations: true }, enabled: true },
         cache: { enabled: false },
@@ -79,7 +79,7 @@ module.exports = {
       {
         super: "base",
         model: true,
-        schemaPolicies: ["tenantOwned"],
+        schemaPolicies: ["tenantOwned", "publicationVersioned"],
         service: { enabled: true },
         router: { groups: { schemaOperations: true }, enabled: true },
         cache: { enabled: false },
@@ -254,6 +254,298 @@ module.exports = {
       },
     ),
   },
+};
+
+/** Pricing owns retained policy content; nPublish remains lifecycle authority. */
+module.exports.pricing.pricingPolicyRelease = {
+    "super": "base",
+    "model": true,
+    "isVersionedEnabled": false,
+    "schemaPolicies": [
+        "operational"
+    ],
+    "service": {
+        "enabled": true
+    },
+    "router": {
+        "enabled": false
+    },
+    "cache": {
+        "enabled": false
+    },
+    "event": {
+        "enabled": false
+    },
+    "search": {
+        "enabled": false
+    },
+    "backoffice": {
+        "operations": [
+            "search",
+            "read"
+        ],
+        "concurrency": {
+            "managed": true,
+            "field": "revision"
+        }
+    },
+    "indexes": {
+        "individual": {
+            "policyIdentity": {
+                "name": "code",
+                "enabled": true,
+                "options": {
+                    "unique": true
+                }
+            }
+        }
+    },
+    "definition": {
+        "code": {
+            "type": "string",
+            "required": true,
+            "description": "Content or operation identity including trusted scope."
+        },
+        "tenant": {
+            "type": "string",
+            "required": true,
+            "description": "Runtime tenant partition."
+        },
+        "enterpriseCode": {
+            "type": "string",
+            "required": true,
+            "description": "Owning business enterprise."
+        },
+        "revision": {
+            "type": "int",
+            "required": true,
+            "description": "Managed compare-and-set counter, not policy version."
+        },
+        "rootType": {
+            "type": "string",
+            "required": true,
+            "description": "Owning source schema identity."
+        },
+        "rootCode": {
+            "type": "string",
+            "required": true,
+            "description": "Owning policy root."
+        },
+        "payload": {
+            "type": "object",
+            "required": true,
+            "description": "Retained exact policy-only content."
+        },
+        "fingerprint": {
+            "type": "string",
+            "required": true,
+            "description": "Canonical SHA256 content identity."
+        }
+    }
+};
+/** Pricing owns retained policy activation pointer; nPublish remains lifecycle authority. */
+module.exports.pricing.pricingPolicyPointer = {
+    "super": "base",
+    "model": true,
+    "isVersionedEnabled": false,
+    "schemaPolicies": [
+        "operational"
+    ],
+    "service": {
+        "enabled": true
+    },
+    "router": {
+        "enabled": false
+    },
+    "cache": {
+        "enabled": false
+    },
+    "event": {
+        "enabled": false
+    },
+    "search": {
+        "enabled": false
+    },
+    "backoffice": {
+        "operations": [
+            "search",
+            "read"
+        ],
+        "concurrency": {
+            "managed": true,
+            "field": "revision"
+        }
+    },
+    "indexes": {
+        "individual": {
+            "policyIdentity": {
+                "name": "code",
+                "enabled": true,
+                "options": {
+                    "unique": true
+                }
+            }
+        }
+    },
+    "definition": {
+        "code": {
+            "type": "string",
+            "required": true,
+            "description": "Content or operation identity including trusted scope."
+        },
+        "tenant": {
+            "type": "string",
+            "required": true,
+            "description": "Runtime tenant partition."
+        },
+        "enterpriseCode": {
+            "type": "string",
+            "required": true,
+            "description": "Owning business enterprise."
+        },
+        "revision": {
+            "type": "int",
+            "required": true,
+            "description": "Managed compare-and-set counter, not policy version."
+        },
+        "rootType": {
+            "type": "string",
+            "required": true,
+            "description": "Owning source schema identity."
+        },
+        "rootCode": {
+            "type": "string",
+            "required": true,
+            "description": "Owning policy root."
+        },
+        "version": {
+            "type": "string",
+            "required": false,
+            "description": "Activated retained release; null before first activation."
+        },
+        "receiptCode": {
+            "type": "string",
+            "required": false,
+            "description": "Receipt committed by the same pointer CAS."
+        },
+        "legacyCasRecovery": {
+            "type": "object",
+            "required": false,
+            "description": "Reviewed pre-fix CAS recovery evidence, committed atomically by managed concurrency."
+        }
+    }
+};
+/** Pricing owns retained policy operation evidence; nPublish remains lifecycle authority. */
+module.exports.pricing.pricingPolicyReceipt = {
+    "super": "base",
+    "model": true,
+    "isVersionedEnabled": false,
+    "schemaPolicies": [
+        "operational"
+    ],
+    "service": {
+        "enabled": true
+    },
+    "router": {
+        "enabled": false
+    },
+    "cache": {
+        "enabled": false
+    },
+    "event": {
+        "enabled": false
+    },
+    "search": {
+        "enabled": false
+    },
+    "backoffice": {
+        "operations": [
+            "search",
+            "read"
+        ],
+        "concurrency": {
+            "managed": true,
+            "field": "revision"
+        }
+    },
+    "indexes": {
+        "individual": {
+            "policyIdentity": {
+                "name": "code",
+                "enabled": true,
+                "options": {
+                    "unique": true
+                }
+            }
+        }
+    },
+    "definition": {
+        "code": {
+            "type": "string",
+            "required": true,
+            "description": "Content or operation identity including trusted scope."
+        },
+        "tenant": {
+            "type": "string",
+            "required": true,
+            "description": "Runtime tenant partition."
+        },
+        "enterpriseCode": {
+            "type": "string",
+            "required": true,
+            "description": "Owning business enterprise."
+        },
+        "revision": {
+            "type": "int",
+            "required": true,
+            "description": "Managed compare-and-set counter, not policy version."
+        },
+        "pointerCode": {
+            "type": "string",
+            "required": true,
+            "description": "Scoped root pointer identity."
+        },
+        "operationKey": {
+            "type": "string",
+            "required": true,
+            "description": "Pinned nPublish operation identity."
+        },
+        "publicationCode": {
+            "type": "string",
+            "required": true,
+            "description": "Owning nPublish request."
+        },
+        "sourceVersion": {
+            "type": "string",
+            "required": true,
+            "description": "Approved retained source release."
+        },
+        "targetVersion": {
+            "type": "string",
+            "required": true,
+            "description": "Exact target release."
+        },
+        "previousOnlineVersion": {
+            "type": "string",
+            "required": false,
+            "description": "Original Online version, null for first release."
+        },
+        "expectedRevision": {
+            "type": "int",
+            "required": true,
+            "description": "Pointer revision before CAS."
+        },
+        "fingerprint": {
+            "type": "string",
+            "required": true,
+            "description": "Target content fingerprint."
+        },
+        "applied": {
+            "type": "bool",
+            "required": true,
+            "description": "Pointer CAS is durably evidenced; not an approval state."
+        }
+    }
 };
 module.exports.pricing.priceRow.backoffice = {
   operations: ["search", "read", "create", "update"],

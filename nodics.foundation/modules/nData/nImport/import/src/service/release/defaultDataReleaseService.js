@@ -267,7 +267,7 @@ module.exports = {
         releases.forEach((release) => this.validateDestination(release));
       } else {
         releases = releases.filter((release) =>
-          this.isDestinationCompatible(release),
+          release.selectionPolicy !== "EXPLICIT" && this.isDestinationCompatible(release),
         );
       }
       return {
@@ -398,6 +398,8 @@ module.exports = {
     let executablePlan = this.executablePlan(plan, operationReleases);
     for (const release of executablePlan.releases)
       await this.resolveCompositionSources(plan, release, true);
+    const contributionPlans = await this.preflightContributions(request, plan);
+    const ready = contributionPlans.every((item) => item.ready === true);
     let dryRun = this.buildDryRunSummary(
       plan,
       operationReleases,
@@ -406,9 +408,12 @@ module.exports = {
     let validation = {
       validationOnly: true,
       importExecuted: false,
+      ready: ready,
       skipped: executablePlan.releases.length === 0,
       reason:
-        executablePlan.releases.length === 0
+        !ready
+          ? "Selected contribution plans are blocked; review owner evidence"
+          : executablePlan.releases.length === 0
           ? "Selected data releases are already current"
           : "Data release plan validated; no import execution was performed",
     };
@@ -420,8 +425,29 @@ module.exports = {
         releases: operationReleases,
         validation: validation,
         dryRun: dryRun,
+        contributionPlans: contributionPlans,
       },
     };
+  },
+
+  /** Invokes only configured read-only installer hooks, including current receipts, using qualified descriptors. */
+  preflightContributions: async function (request, plan) {
+    const results = [];
+    for (const release of plan.releases.filter((item) => item.installer)) {
+      const providerName = (this.configuration().installers || {})[release.installer];
+      const provider = providerName && SERVICE[providerName];
+      if (!provider || typeof provider.preflightContribution !== "function") {
+        throw this.error("ERR_IMP_00003", "Data release installer preflight is unavailable: " + release.installer);
+      }
+      const result = await provider.preflightContribution(
+        Object.assign({}, request, { tenant: plan.tenant, contribution: release }),
+      );
+      if (!result || typeof result.ready !== "boolean") {
+        throw this.error("ERR_IMP_00003", "Data release installer preflight result is invalid");
+      }
+      results.push(Object.assign({}, result, { releaseCode: release.releaseCode }));
+    }
+    return results;
   },
 
   /** Builds a release-level dry-run summary without claiming row-level import effects. */
@@ -588,6 +614,7 @@ module.exports = {
     const releases = this.discoverReleases("init").filter(
       (release) =>
         modules.has(release.moduleName) &&
+        release.selectionPolicy !== "EXPLICIT" &&
         (release.invalidManifest || this.isDestinationCompatible(release)),
     );
     if (releases.length === 0)
@@ -734,7 +761,7 @@ module.exports = {
     let requested =
       requestedCodes ||
       requestedModules ||
-      available.map((item) => item.releaseCode);
+      available.filter((item) => item.selectionPolicy !== "EXPLICIT").map((item) => item.releaseCode);
     if (
       requested.length >
         Number(this.configuration().maximumModulesPerRun || 256) ||
@@ -754,11 +781,11 @@ module.exports = {
     let availableByCode = Object.fromEntries(
       available.map((item) => [item.releaseCode, item]),
     );
-    let releases = requestedCodes
+    let releases = !requestedModules
       ? requested.map((code) => availableByCode[code])
       : requested.map((moduleName) => {
           let matches = available.filter(
-            (item) => item.moduleName === moduleName,
+            (item) => item.moduleName === moduleName && item.selectionPolicy !== "EXPLICIT",
           );
           if (matches.length > 1)
             throw this.error(
@@ -1118,6 +1145,7 @@ module.exports = {
                   entry[1],
                   entry[0],
                   !selector.active,
+                  aggregate.retainedRoots && aggregate.retainedRoots[entry[1].sourceRoot],
                 ),
                 { discoveryOrder: discovery.order++ },
               ),
@@ -1139,7 +1167,11 @@ module.exports = {
         });
         if (selector.active) {
           let representedRoots = new Set(
-            sections.map((entry) => entry[1].sourceRoot || entry[0]),
+            sections.map((entry) => entry[1].sourceRoot || entry[0])
+              .concat(aggregate.retainedRoots ? Object.values(aggregate.sections)
+                .filter(section => section && section.kind === "CONTENT_PACK" && section.contentPath)
+                .map(section => section.contentPath.split("/")[0]) : [])
+              .concat(Object.keys(aggregate.retainedRoots || {})),
           );
           this.discoverFolderReleases(
             rawModule,
@@ -1325,7 +1357,115 @@ module.exports = {
           "; verify contractVersion, module identity, and sections map",
       );
     }
+    this.validateRetainedRoots(path.dirname(manifestPath), manifest);
     return manifest;
+  },
+
+  /** Hashes a complete contained source tree, including metadata, without executing payloads. */
+  sourceRootFiles: function (dataRoot, sourceRoot) {
+    if (typeof sourceRoot !== "string" || !/^(init|core|sample)(-v\d{3})?$/.test(sourceRoot)) {
+      throw this.error("ERR_IMP_00003", "Data release sourceRoot is invalid");
+    }
+    const canonicalData = fs.realpathSync(dataRoot);
+    const folder = path.join(dataRoot, sourceRoot);
+    if (fs.lstatSync(dataRoot).isSymbolicLink() || fs.lstatSync(folder).isSymbolicLink() ||
+        fs.realpathSync(folder) !== path.join(canonicalData, sourceRoot) || !fs.statSync(folder).isDirectory()) {
+      throw this.error("ERR_IMP_00003", "Data release sourceRoot must be contained without symlinks");
+    }
+    return Object.fromEntries(this.collectReleaseFiles(folder).map(relative => {
+      const file = path.join(folder, relative);
+      if (!fs.statSync(file).isFile()) throw this.error("ERR_IMP_00003", "Data release requires regular files");
+      return [sourceRoot + "/" + relative, crypto.createHash("sha256").update(fs.readFileSync(file)).digest("hex")];
+    }));
+  },
+
+  /** Validates opt-in historical source retention before discovery or generation may suppress a root. */
+  validateRetainedRoots: function (dataRoot, manifest) {
+    if (manifest.retainedRoots === undefined) return new Set();
+    const isMap = value => value && typeof value === "object" && !Array.isArray(value);
+    const fail = message => { throw this.error("ERR_IMP_00003", "Retained release " + message); };
+    if (!isMap(manifest.retainedRoots) || !isMap(manifest.sections)) fail("maps are invalid");
+    const identities = new Set();
+    for (const [root, retained] of Object.entries(manifest.retainedRoots)) {
+      if (!isMap(retained) || !isMap(retained.files) || !isMap(retained.sections) ||
+          !Object.keys(retained.sections).length ||
+          (retained.scope !== undefined && retained.scope !== "SECTIONS")) fail("root metadata is invalid: " + root);
+      const actual = this.sourceRootFiles(dataRoot, root);
+      if (!Object.keys(retained.files).length ||
+          (retained.scope !== "SECTIONS" && Object.keys(actual).length !== Object.keys(retained.files).length) ||
+          Object.entries(retained.files).some(([file, hash]) => !/^[a-f0-9]{64}$/.test(hash) || actual[file] !== hash)) {
+        fail("tree checksum or membership changed: " + root);
+      }
+      const claimedFiles = new Set();
+      for (const [code, section] of Object.entries(retained.sections)) {
+        const successor = manifest.sections[code];
+        const original = this.retainedSectionSource(section);
+        const next = this.retainedSectionSource(successor);
+        if (original.sourceRoot !== root ||
+            Object.entries(original.files).some(([file, hash]) => actual[file] !== hash) ||
+            successor.kind !== section.kind || successor.dataType !== section.dataType || successor.pack !== section.pack ||
+            !/^\d+\.\d+\.\d+$/.test(successor.version || "") || this.compareVersions(successor.version, section.version) <= 0 ||
+            this.releaseSequence(next) <= this.releaseSequence(original)) fail("section requires an unchanged snapshot and a newer active successor: " + code);
+        const identity = code + "@" + section.version;
+        if (identities.has(identity)) fail("identity is duplicated: " + identity);
+        identities.add(identity);
+        const successorFiles = this.sourceRootFiles(dataRoot, next.sourceRoot);
+        if (next.sourceRoot.split("-")[0] !== root.split("-")[0] ||
+            Object.entries(next.files).some(([file, hash]) => successorFiles[file] !== hash)) {
+          fail("active successor checksum or ownership is invalid: " + code);
+        }
+        for (const file of Object.keys(original.files)) {
+          if (claimedFiles.has(file)) fail("historical sections overlap: " + file);
+          claimedFiles.add(file);
+        }
+      }
+      if (retained.scope === "SECTIONS" && (claimedFiles.size !== Object.keys(retained.files).length ||
+          [...claimedFiles].some(file => !Object.hasOwn(retained.files, file)))) {
+        fail("section retention must contain exactly its historical file claims: " + root);
+      }
+      // Section-scoped retention leaves disjoint active payloads free to evolve.
+      for (const section of Object.values(manifest.sections)) {
+        if (!isMap(section)) continue;
+        const files = section.files || section.generatedHashes || {};
+        if (String(section.sourceRoot || section.contentPath || section.dataType || "").split("/")[0] !== root &&
+            !Object.keys(files).some(file => file.startsWith(root + "/"))) continue;
+        const active = this.retainedSectionSource(section);
+        if (active.sourceRoot !== root) fail("active section claims another source root");
+        for (const [file, hash] of Object.entries(active.files)) {
+          if (claimedFiles.has(file) || (retained.scope !== "SECTIONS" && actual[file] !== hash)) fail("active and retained ownership conflict: " + file);
+          claimedFiles.add(file);
+        }
+      }
+      if (retained.scope !== "SECTIONS" && Object.keys(actual).some(file => file !== root + "/release.descriptor.json" && !claimedFiles.has(file))) {
+        fail("tree contains files without historical section ownership: " + root);
+      }
+    }
+    return new Set(Object.keys(manifest.retainedRoots));
+  },
+
+  /** Normalizes existing data-release and content-pack fields for retention without changing their identities. */
+  retainedSectionSource: function (section) {
+    const isMap = value => value && typeof value === "object" && !Array.isArray(value);
+    if (!isMap(section) || !["DATA_RELEASE", "CONTENT_PACK"].includes(section.kind) ||
+        !/^\d+\.\d+\.\d+$/.test(section.version || "")) {
+      throw this.error("ERR_IMP_00003", "Retained release section is invalid");
+    }
+    const sourceRoot = section.kind === "CONTENT_PACK" ? section.contentPath : section.sourceRoot;
+    const files = section.kind === "CONTENT_PACK" ? section.generatedHashes : section.files;
+    if (typeof sourceRoot !== "string" || !/^(init|core|sample)(-v\d{3})?$/.test(sourceRoot) ||
+        !isMap(files) || !Object.keys(files).length ||
+        Object.entries(files).some(([file, hash]) => !file.startsWith(sourceRoot + "/") ||
+          file.split(/[\\/]/).some(part => part === ".." || part === "." || part === "") ||
+          file.includes("\\") || !/^[a-f0-9]{64}$/.test(hash)) ||
+        (section.kind === "DATA_RELEASE" && section.dataType !== sourceRoot.split("-")[0])) {
+      throw this.error("ERR_IMP_00003", "Retained release section source or files are invalid");
+    }
+    if (section.kind === "CONTENT_PACK" &&
+        (!/^[A-Za-z0-9._-]+$/.test(section.pack || "") || section.releaseChecksum !==
+          require("../contentPack/defaultContentPackService").createReleaseChecksum(files))) {
+      throw this.error("ERR_IMP_00003", "Retained content-pack identity or release checksum is invalid");
+    }
+    return { sourceRoot, files };
   },
 
   /** Validates one release section and computes current file integrity from the release folder. */
@@ -1336,6 +1476,7 @@ module.exports = {
     aggregateSection,
     sectionCode,
     lifecycleRequired,
+    retainedSource,
   ) {
     let releaseRoot = path.dirname(manifestPath);
     let manifest;
@@ -1385,6 +1526,10 @@ module.exports = {
       dataType,
       lifecycleRequired,
     );
+    if (manifest.selectionPolicy !== undefined &&
+        !["DEFAULT", "EXPLICIT"].includes(manifest.selectionPolicy)) {
+      throw this.error("ERR_IMP_00003", "Data release selectionPolicy must be DEFAULT or EXPLICIT");
+    }
     let installer = manifest.installer;
     if (installer !== undefined && !/^[A-Z][A-Z0-9_]{1,63}$/.test(installer)) {
       throw this.error(
@@ -1406,6 +1551,7 @@ module.exports = {
       sourceRoot,
       manifest.files,
       isAggregate,
+      retainedSource ? Object.values(retainedSource.sections).flatMap(section => Object.keys(this.retainedSectionSource(section).files)) : [],
     );
     let descriptor = this.releaseDescriptor(
       releaseRoot,
@@ -1427,6 +1573,7 @@ module.exports = {
       .digest("hex");
     return {
       releaseCode: rawModule.name + ":" + sectionCode,
+      selectionPolicy: manifest.selectionPolicy || "DEFAULT",
       sectionCode: sectionCode,
       moduleName: rawModule.name,
       displayName:
@@ -1474,6 +1621,7 @@ module.exports = {
     sourceRoot,
     declaredFiles,
     isAggregate,
+    excludedFiles = [],
   ) {
     let sourceFolder = isAggregate
       ? path.resolve(releaseRoot, sourceRoot)
@@ -1489,6 +1637,7 @@ module.exports = {
     }
     let allFiles = this.collectReleaseFiles(sourceFolder)
       .filter((relativeFile) => relativeFile !== "release.descriptor.json")
+      .filter((relativeFile) => !excludedFiles.includes(isAggregate ? sourceRoot + "/" + relativeFile : relativeFile))
       .reduce(
       (result, relativeFile) => {
         let releaseFile = isAggregate
@@ -2515,6 +2664,7 @@ module.exports = {
   publicRelease: function (release) {
     return {
       releaseCode: release.releaseCode,
+      selectionPolicy: release.selectionPolicy || "DEFAULT",
       sectionCode: release.sectionCode,
       moduleName: release.moduleName,
       displayName: release.displayName,

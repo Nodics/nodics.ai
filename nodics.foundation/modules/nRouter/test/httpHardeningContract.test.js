@@ -22,6 +22,11 @@
 
 const assert = require('assert');
 const defaultPolicy = require('../config/properties').httpHardening;
+assert(defaultPolicy.securityHeaders.headers['Content-Security-Policy'].includes("frame-ancestors 'none'"));
+assert.strictEqual(defaultPolicy.securityHeaders.headers['X-Content-Type-Options'], 'nosniff');
+assert.strictEqual(defaultPolicy.securityHeaders.headers['X-Frame-Options'], 'DENY');
+assert.strictEqual(defaultPolicy.body.json.strict, true);
+assert.strictEqual(defaultPolicy.body.json.limit, '1mb');
 
 assert(defaultPolicy.cors.allowedHeaders.includes('X-Enterprise-Code'),
     'CORS must allow the canonical enterprise header consumed by the request pipeline');
@@ -266,6 +271,27 @@ const dynamicCors = {
     originEndpointOverrides: { store: false }
 };
 const originalDynamic = structuredClone(dynamicCors);
+const bindings = require('../../nConfig/src/service/defaultConfigurationBindingService');
+const replacementCors = bindings.merge(dynamicCors, bindings.resolve({
+    originEndpoints: { $config: 'replace', value: { app: { protocol: 'https', host: 'app.customer.example', port: 443 } } },
+    originEndpointOverrides: { $config: 'replace', value: {} },
+    allowedOrigins: { $config: 'replace', value: [] },
+    deniedOrigins: { $config: 'replace', value: [] }
+}, dynamicCors));
+assert.deepStrictEqual(service.resolveCorsOrigins(replacementCors), {
+    allowedOrigins: ['https://app.customer.example'], deniedOrigins: []
+});
+assert.strictEqual(service.resolveAllowedOrigin('http://localhost:4400', replacementCors), undefined);
+const emptyCors = bindings.merge(replacementCors, bindings.resolve({
+    originEndpoints: { $config: 'replace', value: {} }
+}, replacementCors));
+assert.deepStrictEqual(service.resolveCorsOrigins(emptyCors), { allowedOrigins: [], deniedOrigins: [] });
+assert.strictEqual(service.resolveAllowedOrigin('https://app.customer.example', emptyCors), undefined);
+assert.strictEqual(service.resolveAllowedOrigin('http://172.20.10.2:4400', dynamicCors), undefined);
+for (const header of ['Authorization', 'X-Tenant-Code', 'Tenant']) {
+    assert(service.resolveCorsHeaderList(defaultPolicy.cors.allowedHeaders, {}).includes(header));
+}
+assert(service.resolveCorsHeaderList(defaultPolicy.cors.exposedHeaders, {}).includes('ETag'));
 assert.strictEqual(service.resolveAllowedOrigin('http://localhost:4400', dynamicCors), 'http://localhost:4400');
 assert.strictEqual(service.resolveAllowedOrigin('http://localhost:4500', dynamicCors), undefined);
 assert.strictEqual(service.resolveAllowedOrigin('http://127.0.0.1:4400', dynamicCors), undefined);
@@ -295,12 +321,16 @@ assert.strictEqual(service.applyCors({ method: 'OPTIONS', headers: { origin: 'ht
 assert.strictEqual(closedResponse.headers['Access-Control-Allow-Origin'], undefined);
 assert.strictEqual(defaultPolicy.cors.enabled, true);
 assert.deepStrictEqual(service.resolveCorsOrigins(defaultPolicy.cors), {
-    allowedOrigins: [3100, 3200, 3300, 3400, 3500, 3600].map(port => `http://localhost:${port}`),
+    allowedOrigins: [3100, 3200].map(port => `http://localhost:${port}`),
     deniedOrigins: []
 });
-for (const port of [3100, 3200, 3300, 3400, 3500, 3600]) {
+for (const port of [3100, 3200]) {
     assert.strictEqual(service.resolveAllowedOrigin(`http://localhost:${port}`, defaultPolicy.cors), `http://localhost:${port}`);
     assert.strictEqual(service.resolveAllowedOrigin(`http://127.0.0.1:${port}`, defaultPolicy.cors), undefined);
+}
+for (const port of [3300, 3400, 3500, 3600]) {
+    assert.strictEqual(service.resolveAllowedOrigin(`http://localhost:${port}`, defaultPolicy.cors), undefined,
+        'Customer browser origins require an explicit project or deployment contribution');
 }
 const urlsCors = { ...structuredClone(defaultPolicy.cors), originEndpoints: {
     editor: 'https://editor.customer.example/', public: { host: 'public.customer.example', protocol: 'https', port: 443 }

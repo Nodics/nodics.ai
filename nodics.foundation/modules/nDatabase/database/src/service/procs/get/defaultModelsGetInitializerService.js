@@ -68,7 +68,12 @@ module.exports = {
         } else if (searchOptions && searchOptions.sort && !UTILS.isObject(searchOptions.sort)) {
             process.error(request, response, new CLASSES.NodicsError('ERR_FIND_00003', 'Invalid sort object'));
         } else {
-            process.nextSuccess(request, response);
+            try {
+                this.resolveReadMethod(request);
+                process.nextSuccess(request, response);
+            } catch (error) {
+                process.error(request, response, error);
+            }
         }
     },
     /**
@@ -248,7 +253,7 @@ module.exports = {
      */
     executeQuery: function (request, response, process) {
         this.LOG.debug('Executing get query');
-        request.schemaModel.getItems(request).then(success => {
+        Promise.resolve().then(() => this.readItems(request)).then(success => {
             response.success = {
                 code: 'SUC_FIND_00000',
                 cache: 'item mis',
@@ -261,6 +266,18 @@ module.exports = {
         }).catch(error => {
             process.error(request, response, error);
         });
+    },
+    /** Resolves ordinary reads; explicit version-aware policies require the owning service variant before any cache lookup. */
+    resolveReadMethod: function (request) {
+        const mode = (request.schemaModel.rawSchema || {}).versionedReadMode;
+        if (mode !== undefined && mode !== 'HISTORY') {
+            throw new CLASSES.NodicsError('ERR_FIND_00003', 'Version-aware read capability is unavailable');
+        }
+        return 'getItems';
+    },
+    /** Dispatches the effective provider-neutral read selection while retaining the original secured request. */
+    readItems: function (request) {
+        return request.schemaModel[this.resolveReadMethod(request)](request);
     },
     /**
      * Recursively populates referenced models when requested.

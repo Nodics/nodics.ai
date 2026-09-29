@@ -1847,6 +1847,8 @@ module.exports = {
       );
     let endpoints = {};
     let endpointRoles = {};
+    let moduleStates = {};
+    let missingRequiredModules = [];
     Object.entries(policy.requiredModules || {}).forEach((entry) => {
       let selection = typeof entry[1] === "string"
         ? { moduleName: entry[1] }
@@ -1861,12 +1863,21 @@ module.exports = {
           ),
         );
       if (candidates.length === 0) {
-        throw new CLASSES.NodicsError(
-          "ERR_BOF_00000",
-          "Required public bootstrap module is unavailable",
-        );
+        let fallbackEndpoint = this.publicBootstrapFallbackEndpoint(selection);
+        if (!fallbackEndpoint || policy.allowConfiguredEndpointFallback === false) {
+          throw new CLASSES.NodicsError(
+            "ERR_BOF_00000",
+            "Required public bootstrap module is unavailable",
+          );
+        }
+        endpoints[entry[0]] = fallbackEndpoint;
+        moduleStates[entry[0]] = "UNOBSERVED";
+        missingRequiredModules.push(entry[0]);
+        if (selection.runtimeRole) endpointRoles[entry[0]] = selection.runtimeRole;
+        return;
       }
       endpoints[entry[0]] = this.clientEndpoint(candidates[0]);
+      moduleStates[entry[0]] = "UP";
       if (selection.runtimeRole) endpointRoles[entry[0]] = selection.runtimeRole;
     });
     Object.entries(policy.optionalModules || {}).forEach((entry) => {
@@ -1880,6 +1891,7 @@ module.exports = {
         .sort((left, right) => String(right.lastSeenAt || "").localeCompare(String(left.lastSeenAt || "")))[0];
       if (candidate) {
         endpoints[entry[0]] = this.clientEndpoint(candidate);
+        moduleStates[entry[0]] = "UP";
         if (selection.runtimeRole) endpointRoles[entry[0]] = selection.runtimeRole;
       }
     });
@@ -1890,9 +1902,35 @@ module.exports = {
         clientContractVersion: clientContractVersion,
         endpoints: endpoints,
         endpointRoles: endpointRoles,
+        bootstrapState: {
+          state: missingRequiredModules.length ? "SETUP_REQUIRED" : "READY",
+          moduleStates: moduleStates,
+          missingRequiredModules: missingRequiredModules,
+        },
         uiComposition: Object.assign({}, policy.uiComposition),
       },
     };
+  },
+
+  /** Derives a public bootstrap endpoint from the selected runtime server map before an observed lease exists. */
+  publicBootstrapFallbackEndpoint: function (selection) {
+    let router = SERVICE.DefaultRouterService;
+    if (!router || typeof router.prepareUrl !== "function") return null;
+    let moduleName = selection && selection.moduleName;
+    if (!moduleName) return null;
+    let connectionName = selection.connectionName || selection.server || moduleName;
+    let endpoint = router.prepareUrl({
+      moduleName: moduleName,
+      connectionName: connectionName,
+    });
+    if (!endpoint) return null;
+    try {
+      let parsed = new URL(endpoint);
+      if (!["http:", "https:"].includes(parsed.protocol) || parsed.username || parsed.password) return null;
+      return parsed.toString().replace(/\/$/, "");
+    } catch (error) {
+      return null;
+    }
   },
 
   /** Returns sanitized registry size and lifecycle counters. */

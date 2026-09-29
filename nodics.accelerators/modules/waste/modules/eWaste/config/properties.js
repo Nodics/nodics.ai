@@ -260,6 +260,17 @@ module.exports = {
     },
   },
   eWaste: {
+    catalogue: {
+      pageSize: 12,
+      maximumPageSize: 48,
+      discoveryBatchSize: 100,
+      maximumProducts: 2000,
+    },
+    journey: {
+      maximumPositionAgeMs: 60000,
+      captureTimeoutMs: 12000,
+      nearestCentreCount: 3,
+    },
     rewardRules: {
       propertyProviderCode: "eWaste.reward",
       policyType: "REWARD_SCORING",

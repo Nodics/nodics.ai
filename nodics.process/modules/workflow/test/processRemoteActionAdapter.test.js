@@ -14,6 +14,40 @@ const assert = require('node:assert/strict');
 const test = require('node:test');
 const _ = require('lodash');
 const registry = require('../src/service/operation/defaultProcessActionAdapterRegistryService');
+test('explicit remote actions consume inactive owner declarations without activation or copied defaults', () => {
+    const saved = { CONFIG: global.CONFIG, NODICS: global.NODICS, CLASSES: global.CLASSES };
+    const names = ['product', 'pricing', 'promotion', 'inventory', 'tax', 'media'];
+    let policy = { allowedActions: names.map(name => name + '.applyPublicationDecision'), definitions: {} };
+    const lookedUp = [];
+    try {
+        global.CONFIG = { get: () => ({ actionAdapters: policy }) };
+        global.CLASSES = { NodicsError: class extends Error { constructor(code, message) { super(message); this.code = code; } } };
+        global.NODICS = { getRawModule: name => {
+            lookedUp.push(name);
+            return names.includes(name) ? { path: require('node:path').resolve(__dirname, '../../../../',
+                name === 'media' ? 'nodics.wcms/modules/media' : 'nodics.commerce/modules/baseCommerce/modules/' + name) } : undefined;
+        } };
+        const actions = registry.allowedActions();
+        assert.deepEqual(actions.map(action => action.moduleName), names);
+        assert(actions.every(action => action.remote.requiresCompletedTask === true));
+        actions[0].remote.apiName = '/changed';
+        assert.equal(registry.allowedActions()[0].remote.apiName, '/workflow/actions/applyPublicationDecision');
+        policy.definitions.product = null;
+        policy.definitions['product.applyPublicationDecision'] = null;
+        assert.throws(() => registry.allowedActions(), /unavailable/);
+        policy.definitions['product.applyPublicationDecision'] = { moduleName: 'product', operation: 'applyPublicationDecision', remote: { target: 'custom' } };
+        assert.equal(registry.allowedActions()[0].remote.target, 'custom');
+        policy = { allowedActions: [] };
+        const before = lookedUp.length;
+        assert.deepEqual(registry.allowedActions(), []); assert.equal(lookedUp.length, before);
+        for (const key of ['missing.applyPublicationDecision', '../product.applyPublicationDecision', 'product.unknown']) {
+            policy = { allowedActions: [key] };
+            assert.throws(() => registry.allowedActions(), /unavailable/);
+        }
+    } finally {
+        for (const key of Object.keys(saved)) { if (saved[key] === undefined) delete global[key]; else global[key] = saved[key]; }
+    }
+});
 const transport = require('../src/service/operation/defaultProcessRemoteActionAdapterService');
 const lifecycle = require('../src/service/operation/defaultProcessRuntimeLifecycleService');
 const defaults = require('../config/properties').process;
@@ -260,6 +294,58 @@ function completedTask(f) {
     });
 }
 
+test('pending Editorial decisions finish against their immutable version after contribution forward migration', async () => {
+    const contributions = require('../src/service/definition/defaultProcessDefinitionContributionService');
+    const definitions = require('../src/service/definition/defaultProcessDefinitionLifecycleService');
+    const validation = require('../src/service/designer/defaultProcessGraphValidationService');
+    for (const approved of [true, false]) {
+        const f = fixture();
+        f.request.runtimeOperation.decision.approved = approved;
+        f.request.runtimeOperation.decision.action = approved ? 'APPROVE' : 'REJECT';
+        f.version.graph.nodes.unshift({ code: 'start', type: 'START' });
+        f.version.graph.transitions.unshift({ source: 'start', target: 'task' });
+        f.version.graph.transitions.forEach((edge, index) => { edge.code = 'edge' + index; });
+        // Publication is tested separately; keep this fixture an entirely reachable decision graph.
+        f.version.graph.nodes = f.version.graph.nodes.filter(node => node.code !== 'publish');
+        const source = { moduleName: 'deployment', releaseCode: 'deployment:review', version: '1.0.0', checksum: 'a'.repeat(64) };
+        const target = { ...source, moduleName: 'editorial', releaseCode: 'editorial:review', checksum: 'b'.repeat(64) };
+        const definition = Object.assign({ code: 'review', ownerModule: 'editorial', status: 'PUBLISHED', currentVersion: 1 },
+            contributions.model({ graph: _.cloneDeep(f.version.graph) }, source));
+        Object.assign(f.version, contributions.model({}, source), { checksum: definitions.checksum(definition) });
+        const before = _.cloneDeep(f.version), versions = [f.version];
+        SERVICE.DefaultProcessDefinitionService = {
+            get: async input => ({ result: input.query.code === definition.code ? [_.cloneDeep(definition)] : [] }),
+            update: async input => {
+                assert.equal(input.query.status, definition.status);
+                Object.assign(definition, _.cloneDeep(input.model.$set));
+                return { result: { modifiedCount: 1 } };
+            }
+        };
+        SERVICE.DefaultProcessDefinitionVersionService = {
+            get: async input => ({ result: versions.filter(version => version.definitionCode === input.query.definitionCode &&
+                version.version === input.query.version).map(version => _.cloneDeep(version)) }),
+            save: async input => { versions.push(_.cloneDeep(input.model)); return { result: input.model }; }
+        };
+        SERVICE.DefaultProcessDefinitionLifecycleService = definitions;
+        SERVICE.DefaultProcessGraphValidationService = validation;
+        f.settings.definitionContributions = { ownershipTransitions: [{ definitionCode: 'review', source, target,
+            mode: 'FORWARD', publishedChecksum: f.version.checksum }] };
+        const future = { code: 'review', ownerModule: 'editorial', graph: _.cloneDeep(f.version.graph) };
+        future.graph.nodes.find(node => node.code === 'task').assignee = 'futureReviewers';
+        f.settings.definitionContributions.ownershipTransitions[0].targetExecutionChecksum = contributions.executionChecksum(future);
+        await contributions.reconcileDefinition(f.request, future, target);
+        assert.equal(definition.currentVersion, 2);
+        assert.deepEqual(f.version, before);
+        assert.equal(f.instance.version, 1);
+        await assert.rejects(lifecycle.completeTask({ ...f.request, runtimeOperation: { decision: { approved: true } } }), /multiple approvals/);
+        const result = await lifecycle.completeTask(f.request);
+        assert.equal(result.data.instance.status, 'COMPLETED');
+        assert.equal(f.article.status, approved ? 'APPROVED' : 'CHANGES_REQUESTED');
+        assert.equal(f.articleWrites, 1);
+        assert.deepEqual(f.version, before);
+    }
+});
+
 test('actual task policy governs the remote callback and stored decision wins over caller input', async () => {
     const f = fixture();
     await assert.rejects(
@@ -417,6 +503,9 @@ test('one concurrent claimant wins and a failed response can retry without a sec
     };
     const claims = await Promise.allSettled([transport.claim(req), transport.claim(req)]);
     assert.equal(claims.filter((value) => value.status === 'fulfilled').length, 1);
+    const claim = claims.find(value => value.status === 'fulfilled').value.data;
+    assert.equal(claim.instance.definitionCode, f.instance.definitionCode);
+    assert.equal(claim.instance.version, f.instance.version);
     const g = fixture();
     completedTask(g);
     g.failAfterMutation = true;

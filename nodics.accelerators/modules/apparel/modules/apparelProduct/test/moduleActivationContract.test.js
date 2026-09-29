@@ -62,7 +62,8 @@ const apparelPackage = require(path.join(acceleratorsRoot, 'modules/apparel/pack
 assert.deepStrictEqual(acceleratorPackage.nodics.extends, ['nodics.foundation'],
     'the umbrella must not impose unrelated optional capabilities on every industry');
 assert.deepStrictEqual(apparelPackage.nodics.extends, ['nodics.commerce']);
-assert.strictEqual(acceleratorPackage.nodics.functionalModule.identity, 'nodics.accelerators');
+assert.strictEqual(acceleratorPackage.nodics.functionalModule, undefined,
+    'the composition umbrella must not declare a business activation switch');
 assert.strictEqual(fs.existsSync(path.join(acceleratorsRoot, 'src')), false, 'Accelerator root must remain source-free');
 assert.strictEqual(fs.existsSync(path.join(acceleratorsRoot, 'data')), false, 'Accelerator root must remain data-free');
 assert.strictEqual(fs.existsSync(path.join(acceleratorsRoot, 'modules/apparel/src')), false, 'Apparel group must remain source-free');

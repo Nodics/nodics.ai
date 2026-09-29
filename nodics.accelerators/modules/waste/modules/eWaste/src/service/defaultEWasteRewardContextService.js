@@ -43,7 +43,7 @@ module.exports = {
         return (Array.isArray(values) ? values : values === undefined || values === null ? [] : [values])
             .map(value => {
                 if (typeof value === 'string') return value;
-                if (value && typeof value === 'object') return value.code || value.materialCode || value.componentCode || value.hazardCode || value.name;
+                if (value && typeof value === 'object') return value.code || value.materialCode || value.componentCode || value.hazardCode || value.ref && value.ref.code || value.name;
                 return undefined;
             })
             .filter(value => typeof value === 'string' && value.length > 0);
@@ -108,11 +108,36 @@ module.exports = {
         return normalized === 'UNAVAILABLE' ? fallback : normalized;
     },
 
+    /** Implements descriptorFacts as an overrideable service operation. */
+    descriptorFacts: function (descriptor) {
+        if (!descriptor || typeof descriptor !== 'object' || !descriptor.classification) return {};
+        return {
+            familyCode: descriptor.classification.family && descriptor.classification.family.code,
+            categoryCode: descriptor.classification.category && descriptor.classification.category.code,
+            itemTypeCode: descriptor.classification.itemType && descriptor.classification.itemType.code,
+            brand: descriptor.identity && descriptor.identity.brand,
+            model: descriptor.identity && descriptor.identity.model,
+            conditionGrade: descriptor.condition && descriptor.condition.value,
+            quantity: descriptor.physical && descriptor.physical.quantity,
+            sizeClass: descriptor.physical && descriptor.physical.size && descriptor.physical.size.value,
+            weight: descriptor.physical && descriptor.physical.weight && descriptor.physical.weight.value === null
+                ? undefined
+                : descriptor.physical && descriptor.physical.weight && descriptor.physical.weight.value,
+            weightProvenance: descriptor.physical && descriptor.physical.weight,
+            weightEstimate: descriptor.physical && descriptor.physical.weightEstimate,
+            dimensionsEstimate: descriptor.physical && descriptor.physical.dimensionsEstimate,
+            materials: descriptor.materials,
+            components: descriptor.components,
+            environment: descriptor.environment && descriptor.environment.observations
+        };
+    },
+
     /** Implements build as an overrideable service operation. */
     build: function (request) {
         let submission = request.submission || {};
         let descriptor = request.descriptor || submission.metadata && submission.metadata.suggestion || {};
-        let facts = request.facts || submission.confirmedFacts || submission.submittedFacts || {};
+        let descriptorFacts = this.descriptorFacts(descriptor);
+        let facts = request.facts || submission.confirmedFacts || submission.submittedFacts || descriptorFacts || {};
         let impact = request.impact || submission.metadata && submission.metadata.approvedEstimate || {};
         let confirmed = request.assessmentType === 'CONFIRMED' || request.assessmentType === 'RECALCULATED';
         let factQuality = confirmed ? 'OPERATOR_VERIFIED' : 'CUSTOMER_CONFIRMED';
@@ -120,32 +145,37 @@ module.exports = {
         let landfill = this.metric(impact, ['DIVERTED_FROM_LANDFILL_KG']);
         let suggestionFacts = descriptor.facts || {};
         let recognition = descriptor.recognition || {};
-        let environment = facts.environment || suggestionFacts.environment || {};
+        let metadataQuality = descriptor.metadataQuality || {};
+        let descriptorEnvironment = descriptor.environment && descriptor.environment.observations || {};
+        let environment = facts.environment || suggestionFacts.environment || descriptorEnvironment || {};
         let approximateRange = facts.weightEstimate || suggestionFacts.weightEstimate ||
+            this.descriptorValue(descriptor, 'physical.weightEstimate') ||
             this.descriptorValue(descriptor, 'physical.approximateWeight') || descriptor.approximateWeight;
         let approximateWeight = typeof approximateRange === 'number' ? approximateRange : this.rangeMidpoint(approximateRange);
-        let dimensions = facts.dimensionsEstimate || suggestionFacts.dimensionsEstimate || {};
-        let recordedWeight = facts.weight !== undefined ? Number(facts.weight) : undefined;
+        let dimensions = facts.dimensionsEstimate || suggestionFacts.dimensionsEstimate ||
+            this.descriptorValue(descriptor, 'physical.dimensionsEstimate') || {};
+        let recordedWeight = facts.weight !== undefined && facts.weight !== null ? Number(facts.weight) : undefined;
         let materials = this.codes(
             facts.materials && facts.materials.length ? facts.materials :
             facts.materialTypeCodes && facts.materialTypeCodes.length ? facts.materialTypeCodes :
             suggestionFacts.materials && suggestionFacts.materials.length ? suggestionFacts.materials :
+            descriptor.materials && descriptor.materials.length ? descriptor.materials :
             recognition.materials
         );
-        let components = this.codes(facts.components || suggestionFacts.components || recognition.components);
+        let components = this.codes(facts.components || suggestionFacts.components || descriptor.components || recognition.components);
         let hazards = this.codes(environment.hazards || facts.hazards || suggestionFacts.hazards);
-        let evidence = submission.metadata && submission.metadata.evidenceReview || {};
+        let evidence = submission.metadata && submission.metadata.evidenceReview || descriptor.evidenceReview || {};
         let descriptorOwner = typeof SERVICE !== 'undefined' && SERVICE.DefaultWasteItemDescriptorService;
         let unknownFields = this.codes(
-            descriptor.unknownFields || recognition.unknownFields ||
+            metadataQuality.unknownFields || descriptor.unknownFields || recognition.unknownFields ||
             (descriptorOwner && descriptorOwner.unknownFields ? descriptorOwner.unknownFields(facts) : [])
         );
         let lowConfidenceFields = this.codes(
-            descriptor.lowConfidenceFields || recognition.lowConfidenceFields ||
+            metadataQuality.lowConfidenceFields || descriptor.lowConfidenceFields || recognition.lowConfidenceFields ||
             (descriptorOwner && descriptorOwner.lowConfidenceFields ? descriptorOwner.lowConfidenceFields(facts) : [])
         );
         let qualityFlags = this.codes(evidence.qualityFlags || descriptor.qualityFlags || recognition.qualityFlags);
-        let completeness = descriptor.metadataCompleteness || descriptor.completenessScore;
+        let completeness = metadataQuality.completenessScore || descriptor.metadataCompleteness || descriptor.completenessScore;
         if (!Number.isFinite(Number(completeness))) completeness = Math.max(0, 1 - unknownFields.length / 7);
         let properties = {
             'asset.domain': this.resolution('ELECTRONICS','REFERENCE_DEFAULT',1,'EWASTE_ACCELERATOR'),

@@ -18,6 +18,12 @@ const guidedService = require('../src/service/applicationBuilder/defaultApplicat
 const workspace = require('./helpers/applicationBuilderWorkspace')();
 const input = { framework: path.resolve(__dirname, '../../../..'), frontend: workspace.frontend, customer: workspace.customer };
 const catalogue = catalogueService.discover(input);
+for (const domain of ['apparel', 'electronics', 'telco']) {
+  const reference = catalogue.customerDataPacks.find(item => item.code === 'agora.' + domain);
+  assert(reference);
+  assert.equal(reference.moduleRoot, `modules/agora.${domain}`);
+  assert(!catalogue.frameworkDataPacks.some(item => item.code === reference.code));
+}
 const pack = catalogue.frameworkDataPacks.find(item => item.code === 'nexus.web');
 assert(pack);
 assert.equal(pack.moduleRoot, 'nodics.accelerators/modules/nexus/modules/nexus.web');

@@ -19,32 +19,51 @@
 module.exports = {
     /** Rejects publication mutation on delivery-only runtimes and normalizes bounded request input. */
     prepare: function (request) {
-        if (CONFIG.get('publishEnabled') === false) {
-            throw new CLASSES.NodicsError('ERR_PUB_00003', 'Publication lifecycle administration is disabled on this runtime');
-        }
         let body = request.httpRequest && request.httpRequest.body || {};
         let params = request.httpRequest && request.httpRequest.params || request.params || {};
         request.publication = body.publication || body;
-        request.publicationCode = params.publicationCode || body.publicationCode || request.publicationCode;
+        request.publicationCode = params.publicationCode !== undefined ? params.publicationCode :
+            body.publicationCode !== undefined ? body.publicationCode : request.publicationCode;
         request.expectedRevision = body.expectedRevision === undefined ? request.expectedRevision : body.expectedRevision;
         request.reason = body.reason || request.reason;
         request.repairEvidence = body.repairEvidence === true;
         request.correlationId = body.correlationId || request.correlationId || request.requestId;
         return request;
     },
+    /** Allows only fully registered domain administration on Staged when legacy global publishing is disabled. */
+    assertAdministration: async function (operation, request) {
+        if (CONFIG.get('publishEnabled') !== false) return;
+        const deny = () => { throw new CLASSES.NodicsError('ERR_PUB_00003', 'Publication lifecycle administration is disabled on this runtime'); };
+        if ((CONFIG.get('runtimeRole') || {}).publication !== 'STAGED') return deny();
+        const lifecycle = SERVICE.DefaultPublicationLifecycleService;
+        const publication = operation === 'create' ? request.publication :
+            request.publicationCode ? await lifecycle.get(request) : null;
+        const domain = publication && publication.domain;
+        const providers = (CONFIG.get('publish') || {}).providers || {};
+        for (const [map, methods] of [
+            ['domainAdapters', ['validate']],
+            ['versionProviders', ['getVersion', 'activate', 'rollback']],
+            ['workflowProviders', ['requestApproval']]
+        ]) {
+            const entries = providers[map] || {};
+            if (typeof domain !== 'string' || !Object.prototype.hasOwnProperty.call(entries, domain) || !entries[domain]) return deny();
+            const provider = lifecycle.resolveProvider(entries[domain]);
+            if (!provider || methods.some(method => typeof provider[method] !== 'function')) return deny();
+        }
+    },
     /** Invokes one lifecycle operation and preserves the standard callback envelope. */
     invoke: function (operation, request, callback) {
         try { this.prepare(request); } catch (error) { if (callback) return callback(error); return Promise.reject(error); }
-        let promise = operation === 'get'
+        let promise = this.assertAdministration(operation, request).then(() => operation === 'get'
             ? SERVICE.DefaultPublicationLifecycleService.get(request)
-            : SERVICE.DefaultPublicationLifecycleService[operation](request);
+            : SERVICE.DefaultPublicationLifecycleService[operation](request));
         if (!callback) return promise;
         promise.then(result => callback(null, { code: 'SUC_PUB_00000', result: result || null })).catch(callback);
     },
     /** Invokes one bounded operator operation without exposing repository CRUD. */
     invokeOperations: function (operation, request, callback) {
         try { this.prepare(request); } catch (error) { if (callback) return callback(error); return Promise.reject(error); }
-        let promise = SERVICE.DefaultPublicationOperationsService[operation](request);
+        let promise = this.assertAdministration(operation, request).then(() => SERVICE.DefaultPublicationOperationsService[operation](request));
         if (!callback) return promise;
         promise.then(result => callback(null, { code: 'SUC_PUB_00000', result: result || null })).catch(callback);
     },

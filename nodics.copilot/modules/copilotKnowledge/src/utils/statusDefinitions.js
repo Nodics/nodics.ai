@@ -25,5 +25,7 @@ module.exports = {
     ERR_CPK_00005: { code: '422', message: 'The Copilot knowledge file was rejected by secret inspection.' },
     ERR_CPK_00006: { code: '413', message: 'The Copilot knowledge source exceeded an ingestion bound.' },
     ERR_CPK_00007: { code: '400', message: 'The Copilot knowledge query is invalid.' },
-    ERR_CPK_00008: { code: '503', message: 'The Copilot knowledge retrieval capability is disabled.' }
+    ERR_CPK_00008: { code: '503', message: 'The Copilot knowledge retrieval capability is disabled.' },
+    ERR_CPK_00009: { code: '422', message: 'The Copilot knowledge startup ingestion rejected files.' },
+    ERR_CPK_00010: { code: '400', message: 'The Copilot knowledge startup ingestion policy is invalid.' }
 };

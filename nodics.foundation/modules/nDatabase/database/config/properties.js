@@ -17,6 +17,18 @@
  * @override Project, environment, server, node, tenant, or customer layers may override these defaults through Nodics configuration layering.
  */
 module.exports = {
+  tooling: {
+    commands: {
+      'schema:version-migrate': {
+        projectHome: true,
+        handler: '@nTooling/node-script',
+        script: 'src/service/schema/defaultInstalledVersionMigrationCommand.mjs',
+      },
+    },
+  },
+  installedVersionMigration: {
+    limits: { maxRecords: 10000, pageSize: 100, maxBytes: 8388608 },
+  },
   defaultPageSize: 10,
   defaultPageNumber: 1,
   queryMaxTimeMS: 1000,

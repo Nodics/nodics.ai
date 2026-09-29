@@ -1,5 +1,16 @@
 # nTooling Agent Contract
 
+Native-local migration uses the existing topology owner's `verifyMaintenanceOutage`
+to reject listening backend ports and active runtime/supervisor processes. Missing
+process inventory fails closed. Recheck before effects; this is evidence under
+an operator-controlled outage, not a distributed write lock or permission to
+signal unknown processes. Do not resume writers until the owner verifies recovery.
+
+Forward DATA_RELEASE generation reuses `DefaultProjectDataManifestService.planForwardRelease`
+and nImport's retained-root validator. Preserve immutable historical trees and
+section identities; never recreate retained roots as conventional releases. See
+`llm/contracts/README.md#forward-data-releases` before integrating any generator.
+
 This file gives AI coding agents mandatory guidance for this Nodics module or package boundary.
 
 ## Inheritance
@@ -129,3 +140,59 @@ direct administrator bootstrap literals in authored source; deployment layers
 may bind or override values through governed configuration. Framework audit and
 all other literal credential restrictions remain enforced; nAuth validates
 effective strength.
+
+Shared acceptance mechanics live in `defaultProjectAcceptanceService.mjs` and
+`defaultProjectAcceptanceMediaService.mjs`. Keep project scenarios, endpoint
+selection, credentials, expected outcomes and timing policy in the caller.
+Importing helpers must perform no operations. Reuse existing topology tooling
+for launch; cleanup may signal only caller-owned children. Media helpers call
+the owning API, never persistence. Test failure/cleanup and caller-equivalence
+when consolidating scripts; do not promote a sample journey into a framework
+default merely because its HTTP mechanics are shared.
+
+Customer property-placement checks belong to the existing framework design
+principle audit, not a project-specific validator. Parse authored configuration
+without executing it; recognize quoted and unquoted keys and arbitrary server
+names. Static tooling contributions are inert discovery metadata. Use
+`projectRuntimeAcceptance` to overlay acceptance policy from the explicitly
+selected runtime's nConfig graph, including customer modules. Never interpret
+discovery as runtime activation. Child probes inherit deployment environment
+only when requested; do not serialize credentials into command arguments.
+
+Process acceptance helpers require the caller's explicit workflow correlation,
+task node and decision. Bound polling and selection, reject unavailable tasks,
+and propagate claim failures. Shared mechanics do not grant approval authority.
+
+Complete reusable acceptance suites belong to their capability owners, not to
+customer copies that merely import shared helpers. Existing `tooling.commands`
+entries marked `acceptanceContract: true` are canonical and cannot be replaced,
+merged or shadowed by project scripts. Resolve trusted owners before considering
+module index order. Ordinary commands retain documented customization. Projects
+supply topology, fixtures and scenario selection, not pass criteria. Keep canonical
+gates separate from customer-supplied journey evidence and human release approval.
+
+BackOffice owns `acceptance:capability-registry`; CMS owns
+`acceptance:guided-initialization`; nTooling owns `qualification:deployment`.
+`projectHome: true` preserves the selected customer context while executing the
+owner's source. Imports/help must be inert. Mutating suites require explicit
+execution flags; normal approval cannot acquire an emergency override.
+
+Compose canonical owner suites for functional and Commerce live qualification;
+customer fixture selections cannot replace the fixed gates. Require every
+participating backend, including Commerce Staged, to be ready before execution.
+No frontend lifecycle is implied. Preserve explicit evidence gaps when owner
+APIs or publication adapters are unavailable; do not replace them with provider
+writes, permission repair or fabricated receipts. See the canonical acceptance
+command contract and `commerceLiveQualification.test.mjs`.
+
+Reusable test drivers and configuration consumers belong here, not in copied
+customer helpers. `test/helpers/projectConfiguration.js` binds explicit project
+coordinates and delegates to existing owners; it carries no customer identities,
+environment defaults, runtime startup or business pass criteria. Use it serially
+within each test process because existing owner consumers use process globals.
+Preserve independent fixtures and failure cleanup in `projectConfigurationHarness.test.js`.
+
+Register extracted owner tests in the existing `tooling.testSuites` graph and
+guard basic/full reachability in `fullTestSuiteCoverageContract.test.js`.
+Files present on disk or passing direct invocations are not release-gate adoption.
+Keep customer CI revision selection and application test aliases project-owned.

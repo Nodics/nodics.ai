@@ -20,7 +20,13 @@ module.exports = {
     copilot: { knowledge: {
         discoveryService: 'DefaultDiscoveryQueryService', maximumEvidenceItems: 20, requireCitations: true,
         ingestion: {
-            enabled: false, indexConfigurationCode: 'copilotKnowledge', indexName: 'discoveryDocumentProjection', maximumFilesPerSource: 5000,
+            enabled: false, ingestOnStart: false, indexTenant: 'default',
+            startup: {
+                sourceProject: null, serviceId: 'copilot-knowledge-startup', locale: 'en',
+                environment: { $config: 'context', name: 'environmentCode' },
+                failOnRejectedFiles: false, rejectionMessage: null, logSummary: false
+            },
+            indexConfigurationCode: 'copilotKnowledge', indexName: 'discoveryDocumentProjection', maximumFilesPerSource: 5000,
             maximumFileBytes: 1048576, maximumSourceBytes: 52428800, chunkCharacters: 4000,
             chunkOverlapCharacters: 400, allowedExtensions: ['.md', '.txt', '.js', '.ts', '.tsx', '.json', '.yaml', '.yml'],
             excludedSegments: ['.git', 'node_modules', 'coverage', 'dist', 'build', 'temp', 'llm/generated',
@@ -34,6 +40,32 @@ module.exports = {
         },
         repositoryRoots: {},
         sourceRegistry: {
+            templates: {
+                employeeReadme: {
+                    sourceType: 'README', classification: 'INTERNAL',
+                    paths: ['README.md', '**/README.md'], allowedChannels: ['EMPLOYEE'],
+                    requiredPermissions: ['copilot.knowledge.internal.read'], secretScanPolicy: 'REQUIRED'
+                },
+                employeeContracts: {
+                    sourceType: 'AGENTS_CONTRACT', classification: 'RESTRICTED',
+                    paths: ['AGENTS.md', '**/AGENTS.md', '**/llm/contracts/*.md'], allowedChannels: ['EMPLOYEE'],
+                    requiredPermissions: ['copilot.knowledge.restricted.read'], secretScanPolicy: 'REQUIRED'
+                },
+                customerReadme: {
+                    sourceType: 'CUSTOMER_PROJECT', classification: 'CUSTOMER',
+                    paths: ['README.md', '**/README.md', 'docs/**/*.md'], allowedChannels: ['EMPLOYEE'],
+                    requiredPermissions: ['copilot.knowledge.customer.read'], secretScanPolicy: 'REQUIRED'
+                },
+                customerContracts: {
+                    sourceType: 'CUSTOMER_PROJECT', classification: 'CUSTOMER',
+                    paths: ['AGENTS.md', '**/AGENTS.md', '**/llm/contracts/*.md'], allowedChannels: ['EMPLOYEE'],
+                    requiredPermissions: ['copilot.knowledge.customer.read'], secretScanPolicy: 'REQUIRED'
+                },
+                employeeSource: {
+                    sourceType: 'SOURCE_CODE', classification: 'RESTRICTED', allowedChannels: ['EMPLOYEE'],
+                    requiredPermissions: ['copilot.knowledge.restricted.read'], secretScanPolicy: 'REQUIRED'
+                }
+            },
             enabled: true, failOnInvalidSource: true,
             allowedClassifications: ['PUBLIC', 'CUSTOMER', 'INTERNAL', 'RESTRICTED'],
             minimumClassificationByType: {

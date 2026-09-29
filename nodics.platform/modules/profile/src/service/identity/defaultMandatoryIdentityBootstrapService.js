@@ -103,7 +103,7 @@ module.exports = {
     /** Builds a non-secret metadata update for an existing configured service principal. */
     buildServicePrincipalUpdate: function (principal, policy) {
         const serviceGroup = policy.serviceGroup;
-        const configuredScopes = policy.servicePrincipalScopes && policy.servicePrincipalScopes[principal.code] || [];
+        const configuredScopes = this.servicePrincipalCredentialScopes(policy, principal.code);
         const codeOf = item => item && typeof item === 'object' ? item.code : item;
         const sameSet = (left, right) => {
             const leftSet = new Set([].concat(left || []).map(codeOf).filter(Boolean));
@@ -157,7 +157,7 @@ module.exports = {
         const apiKey = credentials.apiKey || process.env.NODICS_RUNTIME_API_KEY;
         if (typeof apiKey !== 'string' || apiKey.length < 32) return null;
         const apiKeyHash = SERVICE.DefaultAPIKeyCredentialService.digest(apiKey);
-        const configuredScopes = policy.servicePrincipalScopes && policy.servicePrincipalScopes[principal.code] || [];
+        const configuredScopes = this.servicePrincipalCredentialScopes(policy, principal.code);
         const scopes = Array.from(new Set([].concat(principal.apiKeyScopes || [], configuredScopes).filter(Boolean)));
         const currentScopes = Array.from(new Set([].concat(principal.apiKeyScopes || []).filter(Boolean)));
         const scopesChanged = JSON.stringify(currentScopes.slice().sort()) !== JSON.stringify(scopes.slice().sort());
@@ -177,6 +177,22 @@ module.exports = {
             '-runtime-deployment';
     },
 
+    /** Returns the effective local runtime grant permissions and matching service-principal API-key scopes. */
+    runtimeGrantPermissions: function (policy) {
+        return Array.from(new Set([].concat(
+            policy.servicePrincipalScopes && policy.servicePrincipalScopes.apiAdmin || [],
+            policy.localRuntimeDeploymentGrantPermissions || []
+        ).filter(Boolean)));
+    },
+
+    /** Returns configured API-key scopes for one service principal. */
+    servicePrincipalCredentialScopes: function (policy, principalCode) {
+        return Array.from(new Set([].concat(
+            policy.servicePrincipalScopes && policy.servicePrincipalScopes[principalCode] || [],
+            principalCode === 'apiAdmin' ? policy.localRuntimeDeploymentGrantPermissions || [] : []
+        ).filter(Boolean)));
+    },
+
     /** Returns the current runtime identity declaration for local bootstrap repair. */
     currentRuntimeScope: function (policy) {
         if (typeof NODICS === 'undefined' || !NODICS) return null;
@@ -186,16 +202,67 @@ module.exports = {
         const identity = CONFIG.get('runtimeIdentity') || {};
         const activeModules = typeof NODICS.getActiveModules === 'function' ? NODICS.getActiveModules() : [];
         const modules = Array.from(new Set([].concat(activeModules || [], identity.remoteModules || []).filter(Boolean)));
-        const permissions = Array.from(new Set([].concat(policy.servicePrincipalScopes && policy.servicePrincipalScopes.apiAdmin || []).filter(Boolean)));
+        const permissions = this.runtimeGrantPermissions(policy);
         if (!projectCode || !environmentCode || !serverCode || !identity.instanceCode || modules.length === 0 || permissions.length === 0) return null;
         return { projectCode, environmentCode, serverCode, instanceCode: identity.instanceCode, modules, permissions };
     },
 
-    /** Reconciles the current local runtime grant before first internal-token issuance. */
-    reconcileLocalRuntimeDeploymentGrant: function (request, policy) {
-        if (!this.isLocalRuntimeCredentialBootstrapEnabled() || !SERVICE.DefaultPrincipalScopeAssignmentService) return Promise.resolve([]);
-        const scope = this.currentRuntimeScope(policy);
-        if (!scope) return Promise.resolve([]);
+    /** Resolves the selected project root when a runtime was started from a customer project. */
+    getProjectRoot: function () {
+        if (typeof NODICS !== 'undefined' && NODICS && typeof NODICS.getCustomHome === 'function') return NODICS.getCustomHome();
+        return null;
+    },
+
+    /** Loads nConfig's deployment projection service from the active framework home. */
+    getDeploymentConfigurationService: function () {
+        if (typeof NODICS === 'undefined' || !NODICS || typeof NODICS.getNodicsHome !== 'function') return null;
+        try {
+            const path = require('path');
+            return require(path.join(NODICS.getNodicsHome(), 'modules/nConfig/src/service/DefaultFrameworkInitializerService'));
+        } catch (error) {
+            return null;
+        }
+    },
+
+    /** Discovers sibling local runtime declarations from the selected project/environment package metadata. */
+    discoverLocalRuntimeScopes: function (policy) {
+        if (!this.isLocalRuntimeCredentialBootstrapEnabled()) return [];
+        const fs = require('fs');
+        const path = require('path');
+        const projectRoot = this.getProjectRoot();
+        const environmentCode = this.getSelectedEnvironmentCode();
+        const configuration = this.getDeploymentConfigurationService();
+        if (!projectRoot || !environmentCode || !configuration || typeof configuration.readDeploymentConfiguration !== 'function') return [];
+        const environmentRoot = path.join(projectRoot, 'envs', environmentCode);
+        if (!fs.existsSync(environmentRoot)) return [];
+        const projectCode = typeof NODICS.getEnvironmentName === 'function' ? NODICS.getEnvironmentName() : undefined;
+        const permissions = this.runtimeGrantPermissions(policy);
+        if (!projectCode || permissions.length === 0) return [];
+        return fs.readdirSync(environmentRoot, { withFileTypes: true }).filter(entry => entry.isDirectory()).flatMap(entry => {
+            const packageFile = path.join(environmentRoot, entry.name, 'package.json');
+            if (!fs.existsSync(packageFile)) return [];
+            let metadata;
+            try { metadata = JSON.parse(fs.readFileSync(packageFile, 'utf8')); } catch (error) { return []; }
+            if (metadata.nodics && (metadata.nodics.kind !== 'server' || metadata.nodics.retired === true)) return [];
+            let runtime;
+            try {
+                runtime = configuration.readDeploymentConfiguration({ projectRoot, environmentCode, serverCode: entry.name });
+            } catch (error) {
+                return [];
+            }
+            const identity = runtime.runtimeIdentity || metadata.nodics && metadata.nodics.runtimeIdentity || {};
+            if (!identity.instanceCode) return [];
+            const modules = Array.from(new Set([].concat(
+                runtime.activeModules && runtime.activeModules.modules || [],
+                identity.remoteModules || []
+            ).filter(moduleName => typeof moduleName === 'string' && /^[A-Za-z][A-Za-z0-9_.-]{0,127}$/.test(moduleName))));
+            if (modules.length === 0) return [];
+            return [{ projectCode, environmentCode, serverCode: entry.name, instanceCode: identity.instanceCode, modules, permissions }];
+        });
+    },
+
+    /** Creates or updates one runtime deployment assignment from an already validated scope. */
+    reconcileRuntimeDeploymentGrantScope: function (request, scope) {
         const tenantCode = request.tenant || CONFIG.get('defaultTenant') || 'default';
         const enterpriseCode = CONFIG.get('defaultEnterprise') || 'default';
         const code = this.localRuntimeGrantCode(scope.environmentCode, scope.serverCode);
@@ -219,7 +286,7 @@ module.exports = {
             const current = response && response.result && response.result[0];
             if (current && JSON.stringify(current.runtimeScope || {}) === JSON.stringify(scope) &&
                 current.status === model.status && current.effect === model.effect && current.principalCode === model.principalCode) {
-                return [];
+                return null;
             }
             const serviceRequest = this.systemRequest(request, current ? {
                 query: { code },
@@ -238,8 +305,20 @@ module.exports = {
                 }
             } : { query: { code }, model });
             const operation = current ? SERVICE.DefaultPrincipalScopeAssignmentService.update : SERVICE.DefaultPrincipalScopeAssignmentService.save;
-            return operation.call(SERVICE.DefaultPrincipalScopeAssignmentService, serviceRequest).then(() => [code]);
+            return operation.call(SERVICE.DefaultPrincipalScopeAssignmentService, serviceRequest).then(() => code);
         });
+    },
+
+    /** Reconciles the current local runtime grant before first internal-token issuance. */
+    reconcileLocalRuntimeDeploymentGrant: function (request, policy) {
+        if (!this.isLocalRuntimeCredentialBootstrapEnabled() || !SERVICE.DefaultPrincipalScopeAssignmentService) return Promise.resolve([]);
+        const scopes = this.discoverLocalRuntimeScopes(policy);
+        const current = this.currentRuntimeScope(policy);
+        if (current && !scopes.some(scope => scope.serverCode === current.serverCode && scope.instanceCode === current.instanceCode)) scopes.push(current);
+        if (scopes.length === 0) return Promise.resolve([]);
+        return scopes.reduce((promise, scope) => promise.then(reconciled => this.reconcileRuntimeDeploymentGrantScope(request, scope).then(code => {
+            return code ? reconciled.concat(code) : reconciled;
+        })), Promise.resolve([]));
     },
 
     /** Resolves the local bootstrap administrator password when safe to repair local startup. */

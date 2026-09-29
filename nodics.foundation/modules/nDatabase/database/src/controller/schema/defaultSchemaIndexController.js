@@ -25,6 +25,15 @@
  */
 module.exports = {
 
+    /** Reads one authenticated tenant's installed index evidence without maintenance writes. */
+    inspectSchemaIndexes: function (request, callback) {
+        const params = request.httpRequest && request.httpRequest.params || {};
+        const pending = Promise.resolve().then(() => FACADE.DefaultSchemaIndexFacade.inspectSchemaIndexes(
+            request, params.owner, params.schema));
+        if (callback) return pending.then(result => callback(null, result), error => callback(error));
+        return pending;
+    },
+
     /**
      * Updates indexes for one schema when `:schema` is present, otherwise for the request module.
      *

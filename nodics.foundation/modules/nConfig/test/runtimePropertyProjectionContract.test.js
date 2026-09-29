@@ -116,6 +116,62 @@ test('deployment configuration applies search runtime role profiles without serv
   assert.equal(plain.search.runtimeRoleProfiles,undefined);
 });
 
+test('capability role profiles are owner-neutral, isolated, and preserve explicit selections', () => {
+  const input = {
+    runtimeRole: {code: 'AUTHOR'},
+    activeModules: {modules: ['selectedCapability']},
+    independentSolution: {
+      enabled: false,
+      targets: ['base', 'must-not-survive'],
+      runtimeRoleProfiles: {
+        AUTHOR: {enabled: true, targets: ['selected']},
+        READER: {enabled: false, targets: []},
+      },
+    },
+    anotherCustomer: {
+      credentialReference: 'customer-owned',
+      runtimeRoleProfiles: {READER: {credentialReference: 'other-customer'}},
+    },
+    ordinaryArray: [{runtimeRoleProfiles: {AUTHOR: {enabled: true}}}],
+  };
+  const original = structuredClone(input);
+  const selected = initializer.deriveRuntimeRoleCapabilityProfiles(input);
+  assert.equal(selected.independentSolution.enabled, true);
+  assert.deepEqual(selected.independentSolution.targets, ['selected']);
+  assert.equal(selected.anotherCustomer.credentialReference, 'customer-owned');
+  assert.equal(selected.anotherCustomer.runtimeRoleProfiles, undefined);
+  assert.deepEqual(selected.activeModules, input.activeModules);
+  assert.deepEqual(selected.ordinaryArray, input.ordinaryArray);
+  assert.deepEqual(input, original, 'projection must not mutate authored contributions');
+  const reader = initializer.deriveRuntimeRoleCapabilityProfiles({...input, runtimeRole: {code: 'READER'}});
+  assert.deepEqual(reader.independentSolution.targets, []);
+  assert.equal(reader.independentSolution.enabled, false);
+  const missing = initializer.deriveRuntimeRoleCapabilityProfiles({...input, runtimeRole: {}});
+  assert.equal(missing.independentSolution.enabled, false);
+  assert.deepEqual(missing.independentSolution.targets, ['base', 'must-not-survive']);
+  assert.equal(missing.independentSolution.runtimeRoleProfiles, undefined);
+  const later = {...selected, independentSolution: {...selected.independentSolution, enabled: false}};
+  assert.equal(initializer.deriveRuntimeRoleCapabilityProfiles(later).independentSolution.enabled, false,
+    'a later override must not reapply a consumed profile');
+});
+
+test('deployment projection applies previously unknown owner profiles through the real reader', t => {
+  const root = fs.mkdtempSync(path.join(os.tmpdir(), 'nodics-capability-role-'));
+  t.after(() => fs.rmSync(root, {recursive: true, force: true}));
+  const server = path.join(root, 'envs', 'qa', 'author');
+  fs.mkdirSync(path.join(server, 'config'), {recursive: true});
+  fs.writeFileSync(path.join(root, 'package.json'), JSON.stringify({name: 'independent.customer', version: '1.0.0'}));
+  fs.writeFileSync(path.join(root, 'envs', 'qa', 'package.json'), JSON.stringify({name: 'qa', nodics: {kind: 'group', runtimeModule: true}}));
+  fs.writeFileSync(path.join(server, 'package.json'), JSON.stringify({name: 'author', nodics: {kind: 'server', runtimeModule: true}}));
+  fs.writeFileSync(path.join(server, 'config', 'properties.js'), 'module.exports = ' + JSON.stringify({
+    runtimeRole: {code: 'AUTHOR'},
+    independentSolution: {enabled: false, runtimeRoleProfiles: {AUTHOR: {enabled: true}}},
+    servers: {default: {endpoint: {httpPort: 5500}}},
+  }));
+  const resolved = initializer.readDeploymentConfiguration({projectRoot: root, environmentCode: 'qa', serverCode: 'author'});
+  assert.deepEqual(resolved.independentSolution, {enabled: true});
+});
+
 test('runtime initialization profiles derive from active module data manifests', t => {
   const root = fs.mkdtempSync(path.join(os.tmpdir(), 'nodics-derived-data-profile-'));
   t.after(() => fs.rmSync(root,{recursive:true,force:true}));

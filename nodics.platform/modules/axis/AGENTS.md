@@ -45,6 +45,17 @@
 
 ## Verification
 
+Axis owns the inert BackOffice documentation setup descriptors, including the
+Framework Documentation entry. The framework documentation content remains in
+nodics.docs. Both documentation entries default disabled; projects explicitly
+select them through their Platform profiles.
+
+Axis owns only its own documentation acceptance pack descriptor under
+`tooling.acceptance.localBootstrap.documentationPacks`. Framework documentation
+content acceptance metadata belongs to nodics.docs; customer metadata and the
+explicit pack selection belong to the customer. These inert descriptors do not
+import or publish documentation and are distinct from setup presentation above.
+
 Run:
 
 ```bash

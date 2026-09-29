@@ -59,6 +59,7 @@ test("the existing nConfig load sequence resolves references and preserves later
     connection: { $config: "ref", path: ["connectionValues", "local"] },
     sourceRoot: { $config: "path", base: "project", relative: "docs/customer" },
     project: { $config: "context", name: "projectCode" },
+    setup: { profiles: { independent: { target: { timeoutMs: 1000 }, dataPackages: ["owner:core"] } } },
     activeModules: {
       modules: [
         "jobs",
@@ -74,6 +75,7 @@ test("the existing nConfig load sequence resolves references and preserves later
   const node = path.join(serverRoot, "worker1");
   write(path.join(node, "config/properties.js"), {
     connection: { port: 4600 },
+    setup: { profiles: { independent: { target: { timeoutMs: 9876 } } } },
     log: { level: "debug" },
   });
   global.NODICS = {
@@ -98,6 +100,8 @@ test("the existing nConfig load sequence resolves references and preserves later
     "customer.shipping",
   ]);
   assert.equal(actual.log.level, "debug");
+  assert.equal(actual.setup.profiles.independent.target.timeoutMs, 9876);
+  assert.deepEqual(actual.setup.profiles.independent.dataPackages, ["owner:core"]);
   let loaded = {};
   global.CONFIG = {
     getProperties: () => loaded,
@@ -382,6 +386,17 @@ test("collection declarations reject ambiguity before changing effective configu
     /identities/,
   );
   assert.deepEqual(inherited, { entries: [{ code: "one", enabled: false }] });
+});
+
+test("tenant endpoint overrides preserve sibling fields and isolate other tenants", () => {
+  const Config = require("../bin/config");
+  const config = new Config();
+  const baseline = { servers: { identity: { endpoint: { httpHost: "identity.example", httpPort: 5400 } } } };
+  for (const tenant of ["default", "alpha", "beta"]) config.setProperties(structuredClone(baseline), tenant);
+  config.changeTenantProperties({ servers: { identity: { endpoint: { httpPort: 54322 } } } }, "alpha");
+  assert.deepEqual(config.get("servers", "alpha").identity.endpoint, { httpHost: "identity.example", httpPort: 54322 });
+  assert.deepEqual(config.get("servers", "beta"), baseline.servers);
+  assert.deepEqual(config.get("servers"), baseline.servers);
 });
 
 test("normal, external and tenant configuration use the same explicit collection merge", (t) => {

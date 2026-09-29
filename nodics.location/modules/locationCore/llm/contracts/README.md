@@ -19,6 +19,21 @@ operations.
   geocoding metadata, verification metadata, and display policy are rejected
   from Location records.
 
+## Direct distance contract
+
+`DefaultLocationDistanceService.distance(a, b)` is a dependency-free, synchronous
+calculation over already validated numeric `latitude`/`longitude` objects.
+It returns unrounded spherical direct distance in metres using a 6,371,000-metre
+Earth radius, including date-line and antipodal cases. It has no CONFIG, SERVICE,
+persistence, provider or runtime-locality dependency.
+
+Consumers in another process may require this pure export without activating
+Location schemas or accessing Location persistence. This allowance applies only
+to arithmetic; live place reads remain behind Location APIs. Consumers own their
+freshness, eligibility and arrival policy and may override their distance hook
+through normal layered services. Test with
+`node --test test/locationDistanceService.test.js`.
+
 ## Route contract
 
 Location Core exposes secured internal routes:

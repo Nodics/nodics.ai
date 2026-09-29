@@ -36,7 +36,7 @@ async function scenario(startupFailure) {
     while (ports.length < 3) { const port = await freePort(); if (!ports.includes(port)) ports.push(port); }
     const runtimes = ports.map((port, i) => ({ code: `runtime-${i}`, label: `Runtime ${i}`, port,
         command: process.execPath, args: ['-e', startupFailure && i === 1 ? 'process.exit(1)' :
-            `require('node:http').createServer((req,res)=>res.end('ready')).listen(${port},'127.0.0.1')`] }));
+            `require('node:http').createServer((req,res)=>res.end(JSON.stringify({data:{status:'UP'}}))).listen(${port},'127.0.0.1')`] }));
     fs.writeFileSync(path.join(dir, 'package.json'), JSON.stringify({ name: 'isolated.project' }));
     fs.mkdirSync(path.join(dir, 'envs/local'), { recursive: true });
     writeEnvironment(path.join(dir, 'envs/local'), { environment: 'isolated', topology: {

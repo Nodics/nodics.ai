@@ -39,6 +39,10 @@ module.exports = {
     process: {
         definitionContributions: {
             maximumDefinitionsPerContribution: 50,
+            // Customer policy may assign existing TASK nodes; it cannot replace graphs or identities.
+            reviewerAssignments: {},
+            // Disabled by default; exact migration evidence is required. See ../llm/contracts/README.md.
+            ownershipTransitions: [],
         },
         actionAdapters: {
             definitions: {

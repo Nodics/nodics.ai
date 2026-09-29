@@ -1228,7 +1228,7 @@ module.exports = {
     resolved = this.deriveRuntimeRoleStripeProvider(resolved);
     resolved = this.deriveRuntimeRoleHttpHardening(resolved);
     resolved = this.deriveRuntimeRoleBackofficeProfiles(resolved);
-    return this.deriveRuntimeRoleCommerceProfiles(resolved);
+    return this.deriveRuntimeRoleCapabilityProfiles(this.deriveRuntimeRoleCommerceProfiles(resolved));
   },
 
   /**
@@ -1564,7 +1564,7 @@ module.exports = {
     resolved = this.deriveRuntimeRoleStripeProvider(resolved);
     resolved = this.deriveRuntimeRoleHttpHardening(resolved);
     resolved = this.deriveRuntimeRoleBackofficeProfiles(resolved);
-    return this.deriveRuntimeRoleCommerceProfiles(resolved);
+    return this.deriveRuntimeRoleCapabilityProfiles(this.deriveRuntimeRoleCommerceProfiles(resolved));
   },
 
   /** Projects selected environment metadata into effective configuration without requiring authored environment properties. @param {Object} properties Resolved deployment configuration. @param {Object} context Trusted binding context. @returns {Object} Resolved configuration with derived environment identity. */
@@ -1638,6 +1638,17 @@ module.exports = {
       (resolved, namespace) => this.deriveRuntimeRoleProfile(resolved, namespace),
       properties,
     );
+  },
+
+  /** Folds explicit top-level capability profiles without a capability-name registry or module activation. @param {Object} properties Resolved configuration from selected contributions. @returns {Object} Configuration with remaining role profiles applied. */
+  deriveRuntimeRoleCapabilityProfiles: function (properties) {
+    return Object.keys(properties).reduce((resolved, namespace) => {
+      const block = resolved[namespace];
+      return block && typeof block === "object" && !Array.isArray(block) &&
+        Object.prototype.hasOwnProperty.call(block, "runtimeRoleProfiles")
+        ? this.deriveRuntimeRoleProfile(resolved, namespace)
+        : resolved;
+    }, properties);
   },
 
   /** Adds default database participation for active modules that own schemas, while preserving explicit module database overrides. @param {Object} properties Resolved deployment configuration. @returns {Object} Configuration with derived database module entries. */
@@ -2070,8 +2081,27 @@ module.exports = {
   },
 
   /**
+   * Loads effective services and schema utilities for explicit offline maintenance.
+   * Requires configuration discovery first; never invokes module/entity lifecycle,
+   * deployment scripts, generated runtime startup or provider initialization.
+   * @returns {Promise<void>} Resolves with the existing service registry loaded.
+   */
+  loadMaintenanceServices: async function () {
+    require('../../config/prescripts').addStringCamelCaseFunction();
+    const log = this.LOG;
+    enumService.LOG = log;
+    classesLoader.LOG = log;
+    fileLoader.LOG = log;
+    fileLoader.loadFiles('/src/utils/utils.js', global.UTILS);
+    UTILS.LOG = log;
+    await this.initUtilities();
+    for (const module of NODICS.getIndexedModules().values()) {
+      await this.loadServices(module);
+    }
+  },
+
+  /**
    * Loads all indexed active modules recursively in sorted module index order.
-   *
    * @param {string[]} [modules] Module index values to load; defaults to all indexed modules.
    * @returns {Promise<boolean>} Resolves after all modules are loaded.
    * @throws Rejects when any module load fails.

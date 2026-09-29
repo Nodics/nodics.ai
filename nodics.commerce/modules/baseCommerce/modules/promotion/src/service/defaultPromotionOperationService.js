@@ -15,6 +15,38 @@ const crypto = require("node:crypto");
 
 /** @module promotion/src/service/defaultPromotionOperationService @description Provides bounded promotion eligibility, preview, redemption, reversal, lifecycle, coupon, budget, and analytics operations across caller contexts. @layer service @owner promotion */
 module.exports = {
+  /** Identifies policy authoring without changing disabled legacy behavior. */
+  isStagedPolicyRuntime: function () {
+    return typeof CONFIG !== 'undefined' && (CONFIG.get('promotion') || {}).publication?.runtimeRole === 'STAGED';
+  },
+  /** Operational mutations never run against the policy-authoring store. */
+  requireOperationalRuntime: function () {
+    if (this.isStagedPolicyRuntime()) throw new Error('Promotion operational mutation is forbidden on Staged policy runtime');
+    return true;
+  },
+  /** Guards schema and draft writes, including dotted and operator updates. */
+  validatePolicyAuthoring: function (request) {
+    if (!this.isStagedPolicyRuntime()) return true;
+    const visit = (value, prefix = '') => {
+      if (!value || typeof value !== 'object') return;
+      for (const [key, item] of Object.entries(value)) {
+        if (key.startsWith('$') && !['$set', '$setOnInsert', '$unset'].includes(key)) {
+          throw new Error('Staged promotion authoring requires explicit policy field updates');
+        }
+        const field = key.startsWith('$') ? prefix : prefix ? prefix + '.' + key : key;
+        if (field === 'analytics' || field.startsWith('analytics.') ||
+            field.startsWith('budget.') && field !== 'budget.limit') {
+          throw new Error('Staged promotion authoring excludes operational consumption');
+        }
+        if (field === 'budget' && (item === null || typeof item !== 'object' || Array.isArray(item))) {
+          throw new Error('Staged promotion budget must contain policy limit only');
+        }
+        visit(item, field);
+      }
+    };
+    for (const model of [].concat(request.models || request.model || request.payload || [])) visit(model);
+    return true;
+  },
   /** Unwraps a standard result envelope while preserving raw provider values. */
   unwrap: function (response) { return response && Object.prototype.hasOwnProperty.call(response, "result")
       ? response.result
@@ -224,6 +256,28 @@ module.exports = {
    * @override Later-loaded modules may replace this member through the standard merge contract.
    */
   promotions: async function (request) {
+    const delivery = typeof CONFIG === 'undefined' ? {} : ((CONFIG.get('promotion') || {}).publication || {}).delivery || {};
+    if (delivery.enabled === true && SERVICE.DefaultPromotionPublicationService.deliveryEnabled(request)) {
+      const publication = SERVICE.DefaultPromotionPublicationService;
+      const auth = request.authData || {};
+      const enterpriseCode = auth.enterpriseCode || auth.entCode;
+      if (!auth.tenant || request.tenant !== auth.tenant || !enterpriseCode ||
+          [auth.enterpriseCode, auth.entCode, request.enterpriseCode, request.entCode]
+            .some(value => value !== undefined && value !== enterpriseCode)) {
+        throw new Error('Authenticated Promotion policy scope mismatch');
+      }
+      const context = { ...request, enterpriseCode };
+      context.authData = this.serviceAuthData(context);
+      const policies = [], seen = new Set();
+      for (const rootCode of publication.deliveryRoots(request)) {
+        for (const policy of await publication.readActivatedWithConsumption(context, rootCode)) {
+          if (seen.has(policy.code)) throw new Error('Activated promotion membership conflict');
+          seen.add(policy.code);
+          policies.push(policy);
+        }
+      }
+      return policies;
+    }
     const response = await SERVICE.DefaultPromotionService.get({
       tenant: request.tenant,
       authData: this.serviceAuthData(request),
@@ -381,6 +435,7 @@ module.exports = {
    * @override Later-loaded modules may replace this member through the standard merge contract.
    */
   persistBudgetLedger: async function (request, input) {
+    this.requireOperationalRuntime();
     if (
       !SERVICE.DefaultPromotionBudgetLedgerService ||
       !SERVICE.DefaultPromotionBudgetLedgerService.save
@@ -436,6 +491,7 @@ module.exports = {
    * @override Later-loaded modules may replace this member through the standard merge contract.
    */
   createCouponBatch: async function (request) {
+    this.requireOperationalRuntime();
     const payload = request.payload || {};
     if (!payload.promotionCode)
       throw new Error("Promotion code is required for coupon batch");
@@ -498,6 +554,7 @@ module.exports = {
    * @override Later-loaded modules may replace this member through the standard merge contract.
    */
   saveDraft: async function (request) {
+    this.validatePolicyAuthoring(request);
     const payload = request.payload || {};
     if (!payload.code && !request.promotionCode)
       throw new Error("Promotion code is required for draft save");
@@ -925,6 +982,7 @@ module.exports = {
    * @override Later-loaded modules may replace this member through the standard merge contract.
    */
   reserveCouponCodeForCheckout: async function (request) {
+    this.requireOperationalRuntime();
     const existing = await this.findCouponByIdempotency(request);
     if (existing) return existing;
     const payload = request.payload || {};
@@ -1008,6 +1066,7 @@ module.exports = {
   },
   /** Locks or completes revocation of an unused purchased coupon under a stable approved order refund reference. */
   revokePurchasedCoupon: async function (request) {
+    this.requireOperationalRuntime();
     const coupon = await this.getOne(SERVICE.DefaultCouponService, {
       tenant: request.tenant,
       authData: this.serviceAuthData(request),
@@ -1151,6 +1210,7 @@ module.exports = {
   },
   /** Transitions an original reserved coupon sale under its current lifecycle and immutable purchase references. */
   transitionReservedCouponSale: async function (request, targetStatus, patch) {
+    this.requireOperationalRuntime();
     const payload = request.payload || {};
     const couponCode = payload.couponCode || request.couponCode;
     if (!couponCode) throw new Error("Coupon code is required");
@@ -1285,6 +1345,7 @@ module.exports = {
    * @override Later-loaded modules may replace this member through the standard merge contract.
    */
   confirmCouponCodeSale: async function (request) {
+    this.requireOperationalRuntime();
     return this.transitionReservedCouponSale(request, "SOLD", {
       saleStatus: "SOLD",
       benefitStatus: "UNCLAIMED",
@@ -1299,6 +1360,7 @@ module.exports = {
    * @override Later-loaded modules may replace this member through the standard merge contract.
    */
   deliverCouponCodeSale: async function (request) {
+    this.requireOperationalRuntime();
     return this.transitionReservedCouponSale(request, "DELIVERED", {
       saleStatus: "DELIVERED",
       benefitStatus: "UNCLAIMED",
@@ -1313,6 +1375,7 @@ module.exports = {
    * @override Later-loaded modules may replace this member through the standard merge contract.
    */
   releaseCouponCodeReservation: async function (request) {
+    this.requireOperationalRuntime();
     const payload = request.payload || {};
     const couponCode = payload.couponCode || request.couponCode;
     if (!couponCode) throw new Error("Coupon code is required");
@@ -1371,6 +1434,7 @@ module.exports = {
    * @override Later-loaded modules may replace this member through the standard merge contract.
    */
   claimPurchasedCouponCode: async function (request) {
+    this.requireOperationalRuntime();
     return this.transitionReservedCouponSale(request, "CLAIMED", {
       saleStatus: "DELIVERED",
       benefitStatus: "CLAIMED",
@@ -1384,6 +1448,7 @@ module.exports = {
    * @override Later-loaded modules may replace this member through the standard merge contract.
    */
   redeemClaimedCouponCode: async function (request) {
+    this.requireOperationalRuntime();
     const payload = request.payload || {};
     const coupon = await this.transitionReservedCouponSale(
       request,
@@ -1465,6 +1530,7 @@ module.exports = {
    * @override Later-loaded modules may replace this member through the standard merge contract.
    */
   setCouponBatchReservation: async function (request, status) {
+    this.requireOperationalRuntime();
     const payload = request.payload || {};
     const batchCode = payload.batchCode || request.batchCode;
     if (!batchCode) throw new Error("Coupon batch code is required");
@@ -1577,6 +1643,7 @@ module.exports = {
    * @override Later-loaded modules may replace this member through the standard merge contract.
    */
   consumeCoupon: async function (request, coupon) {
+    this.requireOperationalRuntime();
     if (!coupon) return undefined;
     const usedCount = Number(coupon.usedCount || 0) + 1;
     const model = this.withSchemaBase(
@@ -1609,7 +1676,10 @@ module.exports = {
    * @override Later-loaded modules may replace this member through the standard merge contract.
    */
   consumeBudget: async function (request, promotion, amount) {
+    this.requireOperationalRuntime();
     if (!promotion.budget) return promotion;
+    const delivery = typeof CONFIG === 'undefined' ? {} : ((CONFIG.get('promotion') || {}).publication || {}).delivery || {};
+    if (delivery.enabled === true && SERVICE.DefaultPromotionPublicationService.deliveryEnabled(request)) return this.consumeActivatedBudget(request, promotion, amount);
     const exact = this.exact();
     const spent = exact.normalize(String(promotion.budget.spent || "0.00"));
     const limit = exact.normalize(String(promotion.budget.limit || "0.00"));
@@ -1655,6 +1725,29 @@ module.exports = {
     });
     return updated;
   },
+  /** Consumes only live budget state under CAS; retained policy never overwrites the current rule record. */
+  consumeActivatedBudget: async function (request, policy, amount) {
+    this.requireOperationalRuntime();
+    const publication = SERVICE.DefaultPromotionPublicationService;
+    const current = await publication.readRecord(SERVICE.DefaultPromotionService, policy.code, request);
+    if (!current || !current.budget || typeof current.budget.spent !== 'string' ||
+        !Number.isSafeInteger(current.revision)) throw new Error('Current promotion budget is unavailable');
+    const exact = this.exact(), spent = exact.normalize(current.budget.spent);
+    const nextSpent = exact.add(spent, amount);
+    if (exact.compare(nextSpent, policy.budget.limit) > 0) throw new Error('Promotion budget exhausted');
+    const result = this.unwrap(await SERVICE.DefaultPromotionService.update({
+      tenant: request.tenant, authData: this.serviceAuthData(request),
+      query: { ...publication.scope(request), code: current.code, revision: current.revision, 'budget.spent': current.budget.spent },
+      model: { budget: { ...current.budget, spent: nextSpent }, revision: current.revision + 1 }
+    }));
+    if (!result || result.modifiedCount !== 1) throw new Error('Promotion budget consumption conflict');
+    await this.persistBudgetLedger(request, {
+      promotionCode: policy.code, mutationType: 'COMMIT', amount, beforeSpent: spent, afterSpent: nextSpent,
+      targetCode: (request.payload && request.payload.cartCode) || request.ownerId,
+      idempotencyKey: this.idempotencyKey(request, policy, (request.payload && request.payload.cartCode) || request.ownerId)
+    });
+    return { ...current, budget: { ...current.budget, spent: nextSpent }, revision: current.revision + 1 };
+  },
   /**
    * Executes `releaseCoupon` as a loader-visible operation owned by this module.
    * @param {*} request Value defined by the owning module contract.
@@ -1663,6 +1756,7 @@ module.exports = {
    * @override Later-loaded modules may replace this member through the standard merge contract.
    */
   releaseCoupon: async function (request, redemption) {
+    this.requireOperationalRuntime();
     if (!redemption.couponCode) return undefined;
     const coupon = await this.getOne(SERVICE.DefaultCouponService, {
       tenant: request.tenant,
@@ -1710,6 +1804,7 @@ module.exports = {
    * @override Later-loaded modules may replace this member through the standard merge contract.
    */
   releaseBudget: async function (request, redemption) {
+    this.requireOperationalRuntime();
     const promotion = await this.getOne(SERVICE.DefaultPromotionService, {
       tenant: request.tenant,
       authData: this.serviceAuthData(request),
@@ -1774,6 +1869,7 @@ module.exports = {
    * @override Later-loaded modules may replace this member through the standard merge contract.
    */
   persistDecision: async function (request, decision) {
+    this.requireOperationalRuntime();
     const decidedAt = this.schemaDate(request.now);
     const model = this.withSchemaBase(
       Object.assign(
@@ -1811,6 +1907,7 @@ module.exports = {
    * @override Later-loaded modules may replace this member through the standard merge contract.
    */
   persistRedemption: async function (request, promotion, coupon, decision) {
+    this.requireOperationalRuntime();
     const targetCode = decision.targetCode;
     const appliedAt = this.schemaDate(request.now);
     const model = this.withSchemaBase(
@@ -1947,6 +2044,7 @@ module.exports = {
    * @override Later-loaded modules may replace this member through the standard merge contract.
    */
   apply: async function (request) {
+    this.requireOperationalRuntime();
     const preview = await this.preview(request);
     const selection = await this.selectPromotionForRequest(request, preview);
     const selected = selection.promotion;
@@ -2006,6 +2104,7 @@ module.exports = {
    * @override Later-loaded modules may replace this member through the standard merge contract.
    */
   reverse: async function (request) {
+    this.requireOperationalRuntime();
     const code =
       request.redemptionCode ||
       (request.payload && request.payload.redemptionCode);

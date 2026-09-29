@@ -29,3 +29,18 @@ Registration does not mean ingestion succeeded. Later ingestion must attach a
 content digest, effective version, classification and provenance to every
 chunk, reject detected secrets, preserve publication state, and audit the
 projection lifecycle before a source becomes searchable.
+
+## Opt-in Source Templates
+
+`copilot.knowledge.sourceRegistry.templates` owns reusable source controls.
+A definition selects a template explicitly and overlays its own fields; arrays
+replace rather than concatenate. Expansion precedes all existing normalization
+and security validation, so a template cannot bypass scope, classification,
+channel, permission or secret-scan requirements.
+
+Templates may contain source type, classification, paths, exclusions, extensions,
+limits, channels, permissions and secret-scan policy only. Identity, repository
+root, version, enablement, publication state and customer scope remain explicit
+source-definition responsibilities. Unknown templates and unsupported template
+keys fail closed. Adding a template neither registers a source nor activates
+Copilot on an unselected runtime.

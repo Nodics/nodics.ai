@@ -19,6 +19,22 @@
  * @override Projects may contribute their own documentation packs through project-owned modules or repositories.
  */
 module.exports = {
+    tooling: {
+        acceptance: {
+            localBootstrap: {
+                documentationPacks: {
+                    nodicsDocumentation: {
+                        code: 'nodicsDocumentation',
+                        profileCode: 'frameworkdocs',
+                        minimumRoutes: 9,
+                        navigationComponent: 'nodicsDocumentationNavigation',
+                        site: 'nodicsDocumentationSite',
+                        path: '/docs/framework',
+                    },
+                },
+            },
+        },
+    },
     docs: {
         contentPack: {
             enabled: true,

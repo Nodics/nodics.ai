@@ -108,11 +108,18 @@ module.exports = {
             throw error;
         }
     },
-    /** Replays one bounded tenant-scoped pending batch after restart or consumer failure. */
+    /** Replays a bounded tenant batch, restricted to the exact publication when supplied. */
     reconcile: async function (request) {
         let policy = (((CONFIG.get('cms') || {}).publication || {}).outbox || {});
+        let query = { status: { $in: ['PENDING', 'PROCESSING'] } };
+        if (request.publicationCode !== undefined) {
+            if (typeof request.publicationCode !== 'string' || !request.publicationCode.trim()) {
+                throw new CLASSES.NodicsError('ERR_PUB_00001', 'A nonempty publication code is required for scoped reconciliation');
+            }
+            query.publicationCode = request.publicationCode;
+        }
         let response = await SERVICE.DefaultCmsPublicationEventOutboxService.get({ tenant: request.tenant,
-            authData: request.authData, query: { status: { $in: ['PENDING', 'PROCESSING'] } },
+            authData: request.authData, query: query,
             searchOptions: { limit: Number(policy.batchSize || 100), sort: { sequence: 1, createdAt: 1, code: 1 } } });
         let events = this.items(response).sort((left, right) => Number(left.sequence || 0) - Number(right.sequence || 0) ||
             String(left.code).localeCompare(String(right.code)));

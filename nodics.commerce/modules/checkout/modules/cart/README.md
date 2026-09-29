@@ -1,8 +1,21 @@
 # Cart
 
+Activated policy rollout may be scoped by the owning domains' delivery.storeCodes.
+Calculation ports delegate this selection to each owner using the persisted Cart
+storeCode, never a calculation-body override. Unselected stores retain existing
+Pricing, Inventory, Promotion and Tax behavior. A selected store never falls
+back to mutable policy when retained evidence is unavailable. Tax resolution
+remains awaited and Inventory reads, but does not mutate, live balances.
+
 Cart owns customer purchase intent and its secured APIs for every application.
 Pricing, Promotion, Tax, Inventory and Checkout retain their own decisions and
 lifecycles. Archived gComm is reference-only.
+
+Configured calculation ports use activated Pricing, Inventory, Promotion and
+Tax policy through their owners, without mutable-source policy fallback. Live
+stock/coupon checks and private negotiated prices retain their existing owners.
+See [activated policy calculation](llm/contracts/README.md#activated-policy-calculation)
+and `test/cartActivatedPolicyPorts.test.js`; deployment defaults remain disabled.
 
 ## Explicit store context
 

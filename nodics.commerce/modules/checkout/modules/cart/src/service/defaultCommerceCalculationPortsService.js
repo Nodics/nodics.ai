@@ -13,6 +13,23 @@
 'use strict';
 /** @module cart/src/service/defaultCommerceCalculationPortsService @description Resolves Pricing, Promotion, Tax, and Inventory owner evidence for Cart. @layer service @owner cart */
 module.exports = {
+    /** Reads the domain's disabled-by-default delivery selection without a Cart-owned policy copy. */
+    activatedDelivery: function (domain, cart) {
+        const settings = typeof CONFIG === 'undefined' ? {} : CONFIG.get(domain) || {};
+        const delivery = (settings.publication || {}).delivery || {};
+        if (delivery.enabled !== true) return false;
+        if (delivery.storeCodes === undefined) return true;
+        const owner = SERVICE['Default' + domain[0].toUpperCase() + domain.slice(1) + 'PublicationService'];
+        if (!owner || typeof owner.deliveryEnabled !== 'function') throw new Error('Scoped delivery owner unavailable');
+        return owner.deliveryEnabled(cart);
+    },
+    /** Preserves persisted Cart scope while forwarding calculation inputs and existing internal auth. */
+    ownerContext: function (request, cart, authData) {
+        if ((cart.tenant && request.tenant && cart.tenant !== request.tenant) ||
+            (cart.enterpriseCode && request.enterpriseCode && cart.enterpriseCode !== request.enterpriseCode)) throw new Error('Cart calculation scope mismatch');
+        return { ...request, tenant: cart.tenant || request.tenant,
+            enterpriseCode: cart.enterpriseCode || request.enterpriseCode, storeCode: cart.storeCode, authData };
+    },
     /** Unwraps a standard result envelope while preserving raw provider values. */
     unwrap: function (response) { return response && Object.prototype.hasOwnProperty.call(response, 'result') ? response.result : response; },
     /** Builds service authentication for calculation owner reads. @param {Object} cart Cart context. @returns {Object} Internal service auth data. */
@@ -81,8 +98,16 @@ module.exports = {
         }
         if (!SERVICE.DefaultPriceSelectionService) throw new Error('Price selection service is required');
         const exact = SERVICE.DefaultExactAmountService;
-        const books = await this.loadPriceBooks(request, authData);
-        const rows = await this.loadPriceRows(request, authData);
+        let books, rows;
+        if (this.activatedDelivery('pricing', cart)) {
+            request = this.ownerContext(request, cart, authData);
+            const records = await SERVICE.DefaultPricingPublicationService.readConfigured(request);
+            books = records.filter(item => item.schema === 'priceBook').map(item => item.policy);
+            rows = records.filter(item => item.schema === 'priceRow').map(item => item.policy);
+        } else {
+            books = await this.loadPriceBooks(request, authData);
+            rows = await this.loadPriceRows(request, authData);
+        }
         const selection = SERVICE.DefaultPriceSelectionService.select(request, books, rows, exact);
         if (!selection.selected) throw new Error('No eligible price row');
         return SERVICE.DefaultPricingDecisionService.decide(Object.assign({}, request, { calculationVersion: '1', correlationId: cart.correlationId }), selection.selected, exact);
@@ -97,17 +122,28 @@ module.exports = {
                 return self.price(request, cart, authData);
             },
             inventory: async request => {
+                let warehouses;
+                if (self.activatedDelivery('inventory', cart)) {
+                    request = self.ownerContext(request, cart, authData);
+                    const records = await SERVICE.DefaultInventoryPublicationService.readConfigured(request);
+                    warehouses = new Map(records.filter(item => item.schema === 'warehouse' && item.policy.status === 'ACTIVE')
+                        .map(item => [item.policy.code, item.policy]));
+                }
                 const balances = await self.list(SERVICE.DefaultInventoryBalanceService, request.tenant, self.scopedQuery(request, { sku: request.sku }), 100, authData);
                 const couponPoolAvailability = self.couponPoolAvailability(request, balances);
                 if (couponPoolAvailability) return couponPoolAvailability;
-                const candidates = SERVICE.DefaultInventorySourcingService.source(request, balances);
+                const eligibleBalances = warehouses ? balances.filter(item => warehouses.has(item.warehouseCode))
+                    .map(item => ({ ...item, priority: warehouses.get(item.warehouseCode).priority })) : balances;
+                const candidates = SERVICE.DefaultInventorySourcingService.source(request, eligibleBalances);
                 return { available: candidates.some(value => exact.compare(value.available, request.quantity) >= 0), strategy: 'PHYSICAL_STOCK', inventoryStrategy: 'PHYSICAL_STOCK', reservableAt: 'CHECKOUT_BEFORE_PAYMENT', guaranteed: false, candidates };
             },
             promotion: async request => {
+                if (self.activatedDelivery('promotion', cart)) request = self.ownerContext(request, cart, authData);
                 if (SERVICE.DefaultPromotionOperationService && SERVICE.DefaultPromotionOperationService.quote) {
                     return SERVICE.DefaultPromotionOperationService.quote({
                         tenant: request.tenant,
                         enterpriseCode: request.enterpriseCode || cart.enterpriseCode,
+                        storeCode: cart.storeCode,
                         ownerId: request.ownerId || cart.ownerId,
                         cartCode: request.cartCode || cart.code,
                         couponCode: request.couponCode || cart.couponCode,
@@ -121,15 +157,22 @@ module.exports = {
                         authData
                     });
                 }
+                if (self.activatedDelivery('promotion', cart)) throw new Error('Activated Promotion owner is unavailable');
                 const values = await self.list(SERVICE.DefaultPromotionService, request.tenant, self.scopedQuery(request, { status: 'ACTIVE' }), 100, authData);
                 const selected = values.find(value => value.actions && value.actions.discountAmount && (!value.conditions || value.conditions.couponRequired !== true) && (!value.conditions || !value.conditions.minimumSubtotal || exact.compare(request.subtotal, value.conditions.minimumSubtotal) >= 0));
                 if (!selected) return { discountAmount: '0', reasonCode: 'NO_APPLICABLE_PROMOTION', sourceHash: 'none' };
                 return SERVICE.DefaultPromotionDecisionService.decide(Object.assign({}, request, { promotionCode: selected.code, targetType: 'CART', targetCode: cart.code, discountAmount: selected.actions.discountAmount, reasonCode: selected.actions.reasonCode || 'APPLIED', correlationId: cart.correlationId }), selected, exact);
             },
             tax: async request => {
+                if (self.activatedDelivery('tax', cart)) {
+                    const context = self.ownerContext(request, cart, authData);
+                    return await SERVICE.DefaultTaxDecisionEngineService.decide({ ...context,
+                        jurisdiction: cart.jurisdiction, correlationId: cart.correlationId }, undefined, exact);
+                }
                 const values = await self.list(SERVICE.DefaultTaxPolicyService, request.tenant, self.scopedQuery(cart, { jurisdiction: cart.jurisdiction, status: 'ACTIVE' }), 10, authData);
                 if (!values[0]) throw new Error('No active tax policy');
-                return SERVICE.DefaultTaxDecisionEngineService.decide(Object.assign({}, request, { correlationId: cart.correlationId }), values[0], exact);
+                return SERVICE.DefaultTaxDecisionEngineService.decide(Object.assign({}, request, {
+                    storeCode: cart.storeCode, correlationId: cart.correlationId }), values[0], exact);
             }
         };
     }

@@ -35,6 +35,32 @@ const projectionBuilder = require('../src/service/defaultProductLocalizedProject
 const searchPublication = require('../src/service/defaultProductSearchPublicationService');
 const searchEnrichment = require('../src/service/defaultProductSearchEnrichmentService');
 
+test('missing Product detail uses the shared not-found HTTP mapping', async () => {
+    const previous = { CONFIG: global.CONFIG, SERVICE: global.SERVICE, CLASSES: global.CLASSES };
+    const foundation = '../../../../../../nodics.foundation/modules/';
+    const NodicsError = require(foundation + 'nCommon/src/lib/nodicsError');
+    const statuses = require(foundation + 'nDatabase/database/src/utils/statusDefinitions');
+    const handler = require(foundation + 'nRouter/src/service/handlers/response/defaultJsonResponseHandlerService');
+    try {
+        global.CONFIG = { get: key => key === 'defaultErrorCodes' ? { NodicsError: 'ERR_SYS_00000' } : undefined };
+        global.SERVICE = { DefaultStatusService: { get: code => statuses[code] } };
+        global.CLASSES = { NodicsError };
+        const service = { ...discovery, indexConfiguration: async () => ({}), query: () => ({}), search: async () => [] };
+        let failure;
+        await assert.rejects(service.detail({ productCode: 'missingProduct' }), error => {
+            failure = error;
+            return error instanceof NodicsError && error.code === 'ERR_FIND_00004';
+        });
+        const response = { status(value) { this.statusCode = value; }, json(value) { this.body = value; } };
+        handler.handleError.call({ ...handler, LOG: { error() {} } }, {}, response, failure);
+        assert.equal(response.statusCode, 404);
+        assert.equal(response.body.code, 'ERR_FIND_00004');
+        assert.match(response.body.message, /Product is unavailable/);
+    } finally {
+        Object.assign(global, previous);
+    }
+});
+
 const products = [
     { code: 'agoraLinenWrapDress', tenant: 'default', name: 'Linen Wrap Dress', status: 'ACTIVE', catalogVersion: 'agoraStaged', revision: 1 },
     { code: 'agoraOxfordShirt', tenant: 'default', name: 'Oxford Shirt', status: 'ACTIVE', catalogVersion: 'agoraStaged', revision: 1 }

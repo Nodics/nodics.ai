@@ -39,19 +39,21 @@ const legacyRuntimeApiKeys = Object.freeze([
 ]);
 const localBootstrapAdminPassword = 'adminPassword';
 
-function randomSecret(bytes = 48) {
-    return crypto.randomBytes(bytes).toString('base64url');
-}
-
-function isWeakBootstrapSecret(value, minimumLength = 16) {
-    const normalized = typeof value === 'string' ? value.toLowerCase() : '';
-    return typeof value !== 'string' ||
-        value.length < minimumLength ||
-        insecureBootstrapValues.has(normalized) ||
-        normalized.indexOf('change-me') >= 0;
-}
-
 module.exports = {
+    /** Generates a cryptographically random local secret. */
+    randomSecret: function (bytes = 48) {
+        return crypto.randomBytes(bytes).toString('base64url');
+    },
+
+    /** Checks the existing minimum bootstrap-service credential policy. */
+    isWeakBootstrapSecret: function (value, minimumLength = 16) {
+        const normalized = typeof value === 'string' ? value.toLowerCase() : '';
+        return typeof value !== 'string' ||
+            value.length < minimumLength ||
+            insecureBootstrapValues.has(normalized) ||
+            normalized.indexOf('change-me') >= 0;
+    },
+
     /** Returns the generated local credential file for one selected environment. */
     credentialPath: function (projectRoot, environmentCode) {
         return path.join(projectRoot, 'envs', environmentCode, 'generated', 'local-runtime', 'credentials.json');
@@ -66,12 +68,12 @@ module.exports = {
             values = JSON.parse(fs.readFileSync(file, 'utf8'));
         } catch {
             values = {
-                NODICS_JWT_SECRET: randomSecret(64),
-                NODICS_API_KEY_PEPPER: randomSecret(64),
+                NODICS_JWT_SECRET: this.randomSecret(64),
+                NODICS_API_KEY_PEPPER: this.randomSecret(64),
                 NODICS_BOOTSTRAP_ADMIN_PASSWORD: process.env.NODICS_BOOTSTRAP_ADMIN_PASSWORD || localBootstrapAdminPassword,
-                NODICS_BOOTSTRAP_SERVICE_PASSWORD: randomSecret(),
-                NODICS_BOOTSTRAP_SERVICE_API_KEY: randomSecret(),
-                NODICS_API_KEY: randomSecret()
+                NODICS_BOOTSTRAP_SERVICE_PASSWORD: this.randomSecret(),
+                NODICS_BOOTSTRAP_SERVICE_API_KEY: this.randomSecret(),
+                NODICS_API_KEY: this.randomSecret()
             };
         }
         let changed = false;
@@ -79,22 +81,22 @@ module.exports = {
             values.NODICS_BOOTSTRAP_ADMIN_PASSWORD = process.env.NODICS_BOOTSTRAP_ADMIN_PASSWORD || localBootstrapAdminPassword;
             changed = true;
         }
-        if (isWeakBootstrapSecret(values.NODICS_BOOTSTRAP_SERVICE_PASSWORD)) {
-            values.NODICS_BOOTSTRAP_SERVICE_PASSWORD = randomSecret();
+        if (this.isWeakBootstrapSecret(values.NODICS_BOOTSTRAP_SERVICE_PASSWORD)) {
+            values.NODICS_BOOTSTRAP_SERVICE_PASSWORD = this.randomSecret();
             changed = true;
         }
         if (values.NODICS_BOOTSTRAP_ADMIN_PASSWORD === values.NODICS_BOOTSTRAP_SERVICE_PASSWORD) {
-            values.NODICS_BOOTSTRAP_SERVICE_PASSWORD = randomSecret();
+            values.NODICS_BOOTSTRAP_SERVICE_PASSWORD = this.randomSecret();
             changed = true;
         }
         if (typeof values.NODICS_BOOTSTRAP_SERVICE_API_KEY !== 'string' || values.NODICS_BOOTSTRAP_SERVICE_API_KEY.length < 32) {
-            values.NODICS_BOOTSTRAP_SERVICE_API_KEY = randomSecret();
+            values.NODICS_BOOTSTRAP_SERVICE_API_KEY = this.randomSecret();
             changed = true;
         }
         if (typeof values.NODICS_API_KEY !== 'string' || values.NODICS_API_KEY.length < 32) {
             values.NODICS_API_KEY = typeof values.NODICS_RUNTIME_API_KEY === 'string' && values.NODICS_RUNTIME_API_KEY.length >= 32
                 ? values.NODICS_RUNTIME_API_KEY
-                : randomSecret();
+                : this.randomSecret();
             changed = true;
         }
         for (const key of legacyRuntimeApiKeys) {

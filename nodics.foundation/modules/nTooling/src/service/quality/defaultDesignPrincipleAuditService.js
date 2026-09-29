@@ -295,6 +295,8 @@ module.exports = exportedService = {
         (this.requireClauses || exportedService.requireClauses).call(this, failures, (this.corePath || exportedService.corePath).call(this, 'modules/nSetup/llm/contracts/nodics-principles.md'), [
             'capabilities are sacred, implementations are negotiable',
             'Framework, Accelerator And Partner Ownership',
+            '### Lightweight customer modules and runtimes',
+            'Separate a reusable mechanism from the customer',
             'customer-project-mode-contract.md',
             'AI Role And Responsibility Boundary',
             'Pre-Implementation Framework Study Gate',
@@ -307,6 +309,7 @@ module.exports = exportedService = {
             '## Partner Write Boundary',
             'Partners write only to their customer-owned backend and frontend repositories.',
             '## Ownership And Dependency Direction',
+            '### Mechanism and policy extraction',
             '## Schema Ownership And Data Contributions',
             '## Supported Customization',
             '## Separate Contribution And Release Channel',
@@ -474,7 +477,44 @@ module.exports = exportedService = {
         });
     },
 
-    /** Rejects retired authorities and framework/service secrets without executing properties. Customer validation permits its direct administrator bootstrap override; nAuth still validates the effective value. @param {string[]} failures Findings. @param {string} directory Framework or customer root. @param {Object} options Explicit caller scope; customerProject is set only by customer-project validation. @returns {void} */
+    /** Checks customer runtime placement on parsed syntax, never by executing project configuration. */
+    auditCustomerPropertyPlacement: function (failures, node, propertyPath, file) {
+        const server = /^envs\/[^/]+\/[^/]+\/(?:[^/]+\/)?config\/properties\.js$/.test(file);
+        const environment = /^envs\/[^/]+\/config\/properties\.js$/.test(file);
+        const name = propertyPath.join('.');
+        const misplaced = new Set([
+            'runtimeIdentity', 'localResetProvider', 'backofficeLocalReset', 'copilot',
+            'profileExternalIdentity', 'runtimeConfigurationSchemas', 'profileCustomerBrowserSession',
+            'profileBrowserSession', 'defaultAuthDetail', 'apiExposure', 'search', 'publishEnabled',
+            'stripeProvider', 'httpHardening', 'product', 'cart', 'fulfillmentCore',
+        ]);
+        const report = reason => failures.push(file + ': ' + reason + ' at ' + (name || '<root>'));
+        if (server && propertyPath.length === 1 && misplaced.has(name))
+            report('keep capability policy in module-owned runtime-role profiles or the environment');
+        if (server && ['data.dataReleases', 'tooling.runtime'].includes(name))
+            report('use owning module contributions or server package metadata');
+        if (environment && name === 'data.dataReleases.runtimeRoleProfiles')
+            report('release inventories belong to their module, not the environment');
+        if (name === 'backofficeRegistry.clientEndpoints')
+            report('browser endpoint ownership belongs to each runtime server');
+        if (server && propertyPath.at(-1) === 'mediaDeliveryBaseUrl')
+            report('media delivery policy belongs to its capability');
+        if (server && node.type === 'ObjectExpression' && !node.properties.length)
+            report('remove empty runtime override objects');
+        if (server && node.type === 'ObjectExpression') {
+            const fields = new Map(node.properties.filter(p => p.type === 'Property')
+                .map(p => [p.key.type === 'Identifier' ? p.key.name : p.key.value, p.value]));
+            if (name.startsWith('servers.') && name.endsWith('.endpoint') && fields.get('$config')?.value === 'runtime')
+                report('derive peer endpoints from server metadata');
+            if (/^servers\.[^.]+$/.test(name) && !['servers.default', 'servers.options'].includes(name) &&
+                fields.size === 1 && fields.get('remoteOnly')?.value === true)
+                report('derive peer remoteness from environment topology');
+        }
+        if (name === 'apiExposure.categories.serviceRegistry.enabled' && node.type === 'Literal' && node.value === true)
+            report('inherit the secured nSystem service-registry exposure default');
+    },
+
+    /** Rejects retired authorities and literal authentication secrets without executing properties. @param {string[]} failures Findings. @param {string} directory Framework or customer root. @param {Object} options Explicit caller scope. @returns {void} */
     auditConfigurationSources: function (failures, directory = rootPath, options = {}) {
         const skip = new Set(['node_modules', '.git', 'generated', 'data', 'test', 'tests', 'temp', 'dist', 'build', 'coverage', 'llm']);
         const customerProjectRootNamespaces = new Set([
@@ -489,6 +529,8 @@ module.exports = exportedService = {
             'profileExternalIdentity',
             'servers'
         ]);
+        ['search', 'stripeProvider', 'httpHardening', 'product', 'cart', 'fulfillmentCore']
+            .forEach(name => customerProjectRootNamespaces.add(name));
         const inspectObject = (node, propertyPath, file) => {
             if (!node || node.type !== 'ObjectExpression') return;
             for (const property of node.properties) {
@@ -497,6 +539,8 @@ module.exports = exportedService = {
                 const current = propertyPath.concat(String(key));
                 const name = current.join('.');
                 const value = property.value;
+                if (options.customerProject === true)
+                    (this.auditCustomerPropertyPlacement || exportedService.auditCustomerPropertyPlacement).call(this, failures, value, current, file);
                 if (options.customerProject === true && file === 'config/properties.js' && current.length === 1 &&
                     customerProjectRootNamespaces.has(String(key))) failures.push(file + ': customer project root must not carry framework/runtime default namespace ' + key + '; move defaults to the owning framework module and keep only true environment/server/customer overrides');
                 if (name === 'frontends' || name === 'tooling.topology.groups.frontends') failures.push(file + ': frontend lifecycle belongs to frontend applications, not backend properties');

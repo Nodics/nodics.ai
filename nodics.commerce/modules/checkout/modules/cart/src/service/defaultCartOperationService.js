@@ -87,6 +87,15 @@ module.exports = {
     /** Resolves an internal SKU from a customer-safe Product variant code when the customer request does not expose a raw SKU. @param {Object} request Request. @returns {Promise<string|undefined>} Resolved SKU. */
     resolveSku: async function (request) {
         let payload = request.payload || {};
+        const reader = SERVICE.DefaultProductDiscoveryService;
+        if ((payload.variantCode || payload.sku) && reader && typeof reader.resolveVariantSku === 'function') {
+            const scopeRequest = { ...request, query: {}, productCode: payload.productCode, variantCode: payload.variantCode, sku: payload.sku };
+            if (await reader.activeSelection(scopeRequest) !== undefined) {
+                const sku = await reader.resolveVariantSku(scopeRequest);
+                if (payload.sku && payload.sku !== sku) throw new CLASSES.NodicsError('ERR_CART_PRODUCT_UNAVAILABLE');
+                return sku;
+            }
+        }
         if (payload.sku) return payload.sku;
         if (!payload.variantCode) return undefined;
         let service = SERVICE.DefaultProductVariantService;

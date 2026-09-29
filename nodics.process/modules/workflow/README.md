@@ -2,6 +2,12 @@
 
 Workflow is the first capability inside the `nodics.process` functional module group. It owns schemas, engine services, and APIs for governed business process definitions, publication, execution, and inspection.
 
+Explicit instance-code retries preserve the original start identity and pinned
+version. Completed starts return existing state; conflicting or interrupted
+starts fail closed instead of executing nodes again. See the
+[runtime authority contract](llm/contracts/README.md#remote-action-authority)
+for recovery limits and focused tests.
+
 Runtime ownership is organized internally without nested runtime modules:
 
 - `src/schemas` owns workflow persistence models.

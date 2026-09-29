@@ -14,7 +14,12 @@ module.exports = {
     /** Returns the configured remote Process base URL, when Editorial and Process run in separate runtimes. */
     processBaseUrl: function () {
         let settings = (CONFIG.get('editorial') || {}).workflow || {};
-        return settings.processBaseUrl ? String(settings.processBaseUrl).replace(/\/+$/, '') : '';
+        if (settings.processBaseUrl) return String(settings.processBaseUrl).replace(/\/+$/, '');
+        if (!settings.processConnectionName) return '';
+        const router = SERVICE.DefaultRouterService;
+        const pool = router.getModulesPool();
+        if (!pool.isAvailableModuleConfig(settings.processConnectionName)) return '';
+        return router.getURL(pool.getModule(settings.processConnectionName).getAbstractEndpoint());
     },
 
     /** Preserves the authenticated actor and tenant context when delegating to the Process runtime. */

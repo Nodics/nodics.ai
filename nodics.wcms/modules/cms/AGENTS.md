@@ -1,5 +1,11 @@
 # cms Agent Contract
 
+Documentation discovery reads canonical CMS product records through existing
+authorized APIs. See [the discovery contract](llm/contracts/README.md#documentation-product-discovery).
+Never duplicate product identities in properties or read tenant content during
+synchronous capability registration. Existing initialization profiles supply
+publication bindings; CMS records and delivery retain content/access authority.
+
 This file gives AI coding agents mandatory guidance for this Nodics module or package boundary.
 
 ## Inheritance
@@ -33,3 +39,18 @@ CMS owns generic guided-publication acceptance defaults: select the WCMS_STAGED
 runtime and an enabled initialization profile using the framework `foundation`
 template. Application publication selections, Site identities and delivery probes
 belong to their accelerator or customer pack. Defaults never install or publish data.
+
+CMS owns neutral publication target and Process transport mechanics in its
+properties. Connection names, enablement, provider selection and application
+release policy remain explicit deployment/customer choices. A null connection
+must not be replaced with an inferred runtime or implicit approval. Keep these
+defaults out of cmsStaged and server overlays when unchanged.
+
+CMS owns the complete canonical `acceptance:guided-initialization` suite.
+Projects supply initialization/publication profiles and delivery fixtures, not
+assertions. Imports are inert; execution requires `--execute --approve-publications`.
+Verify idempotency, Online import denial, workflow lineage and delivery through
+owner APIs. Never promote emergency approval into acceptance defaults or retry a
+denied decision with broader authority. A missing/denied normal approval is a
+failed acceptance result. `test/guidedInitializationAcceptance.test.mjs` covers
+independent customer inputs and rejection boundaries.

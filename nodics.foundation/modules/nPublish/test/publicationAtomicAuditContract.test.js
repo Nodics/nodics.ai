@@ -68,5 +68,34 @@ const repository = require('../src/service/defaultPublicationRepositoryService')
     assert.strictEqual((await repository.get('shared-code', { tenant: 'tenant-a' })).tenantEvidence, 'tenant-a');
     assert.strictEqual((await repository.get('shared-code', { tenant: 'tenant-b' })).tenantEvidence, 'tenant-b');
 
+    const databaseModel = require('../../nDatabase/mongodb/src/schemas/model').default;
+    global.UTILS = { isBlank: value => value === undefined || value === null ||
+        (typeof value === 'object' && !Object.keys(value).length) };
+    let stored = { ...updated, previousOnlineVersion: 'stale', activationOperation: { key: 'retained-operation' } };
+    SERVICE.DefaultPublicationRequestService.update = request => databaseModel.updateItems.call(Object.assign({}, databaseModel, {
+        dataBase: { getOptions: () => ({}) },
+        updateMany: async (query, update) => {
+            assert.strictEqual(query.revision, stored.revision);
+            const next = { ...stored, ...update.$set };
+            Object.keys(update.$unset || {}).forEach(key => { delete next[key]; });
+            assert.ok(!Object.hasOwn(next, 'previousOnlineVersion') || typeof next.previousOnlineVersion === 'string');
+            assert.ok(!Object.hasOwn(next, 'activationOperation') || next.activationOperation !== null);
+            stored = next;
+            return { modifiedCount: 1 };
+        }
+    }), request);
+    const receipt = { operationKey: 'retained-operation', previousOnlineVersion: null };
+    const completed = await repository.transitionWithAudit(stored, stored.revision,
+        { state: 'ONLINE', previousOnlineVersion: null },
+        { publicationCode: stored.code, fromState: 'ACTIVATING', toState: 'ONLINE', details: { receipt } },
+        { tenant: 'tenant-a' });
+    assert.strictEqual(Object.hasOwn(stored, 'previousOnlineVersion'), false);
+    assert.strictEqual(Object.hasOwn(completed, 'previousOnlineVersion'), false);
+    assert.strictEqual(stored.activationOperation.key, receipt.operationKey);
+    assert.strictEqual(stored.auditTrail.at(-1).details.receipt.previousOnlineVersion, null);
+    const fresh = await repository.transition(stored, stored.revision,
+        { state: 'VALIDATING', activationOperation: null }, { tenant: 'tenant-a' });
+    assert.strictEqual(Object.hasOwn(stored, 'activationOperation'), false);
+    assert.strictEqual(Object.hasOwn(fresh, 'activationOperation'), false);
     console.log('nPublish atomic audit contract validated');
 })().catch(error => { console.error(error); process.exit(1); });

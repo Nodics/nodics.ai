@@ -11,6 +11,15 @@
 
 /** @module pricing/config/properties @description Defines Commerce capability and schema access policies. @layer config @owner pricing */
 module.exports = {
+  publish: {
+    providers: { domainAdapters: { pricing: null }, versionProviders: { pricing: null }, workflowProviders: { pricing: null } },
+    approvalWorkflow: { domains: { pricing: { definitionCode: 'pricingPublicationApproval', ownerModule: 'pricing',
+      actionKey: 'pricing.applyPublicationDecision', sourceRuntimeRole: 'COMMERCE_STAGED' } } }
+  },
+  process: { actionAdapters: { definitions: { 'pricing.applyPublicationDecision': {
+    moduleName: 'pricing', operation: 'applyPublicationDecision', remote: { target: 'pricing', moduleName: 'pricing',
+      runtimeRole: 'COMMERCE_STAGED', apiName: '/workflow/actions/applyPublicationDecision', requiresCompletedTask: true }
+  } } } },
   // Inert inventory; an allowed local server must explicitly select this capability.
   localResetProvider: {
     contributions: {
@@ -38,6 +47,7 @@ module.exports = {
   },
   schemaPolicies: {
     pricing: {
+      publicationVersioned: { isVersionedEnabled: false },
       operational: {
         accessGroups: {
           adminGroup: 10,
@@ -75,9 +85,20 @@ module.exports = {
   },
   apiExposure: {
     categories: {
+      pricingPublicationAuthoring: { enabled: false },
       commercePublicationIngestion: {
         enabled: true,
       },
     },
   },
+};
+
+// Registration remains separate from availability; installed qualification is an operator gate.
+module.exports.pricing.publication = {
+    runtimeRole: null,
+    sourceVersioningQualified: false,
+    delivery: { enabled: false, rootCodes: [] },
+    legacyCasRecovery: { enabled: false, operations: [] },
+    targetTransportProvider: null,
+    maxDependencies: 1000
 };

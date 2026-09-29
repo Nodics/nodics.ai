@@ -37,6 +37,12 @@ module.exports = {
             }
         },
         operator: {
+            createGoverned: { active: true, secured: true, authTokenTypes: ['access'], accessGroups: ['employeeUserGroup'],
+                permission: 'commerce.product.publish', apiExposure: 'productPublicationSource', key: '/products/publication', method: 'POST',
+                controller: 'DefaultProductPublicationController', operation: 'createGoverned' },
+            applyPublicationDecision: { active: true, secured: true, authTokenTypes: ['service'], accessGroups: ['serviceAccountUserGroup'],
+                permission: 'commerce.product.publish', apiExposure: 'productPublicationSource', key: '/workflow/actions/applyPublicationDecision', method: 'POST',
+                controller: 'DefaultProductPublicationController', operation: 'applyPublicationDecision' },
             createListing:{secured:true,authTokenTypes:['service'],accessGroups:['serviceAccountUserGroup'],permission:'commerce.product.publish',apiExposure:'commerceManagement',key:'/internal/products/listings',method:'POST',controller:'DefaultProductListingAuthoringController',operation:'create'},
             publishSearch: {
                 secured: true, authTokenTypes: ['access','service'], accessGroups: ['employeeUserGroup','serviceAccountUserGroup'],
@@ -55,3 +61,10 @@ module.exports = {
         }
     }
 };
+
+for (const [operation, path] of Object.entries({ targetDeploy: 'deploy', targetStatus: 'status', targetRollback: 'rollback', targetWithdraw: 'withdraw', authorizeTarget: 'authorize-target' })) {
+    module.exports.product.operator[operation] = { active: true, secured: true, authTokenTypes: ['service'],
+        accessGroups: ['serviceAccountUserGroup'], permission: 'commerce.product.publish',
+        apiExposure: operation === 'authorizeTarget' ? 'productPublicationSource' : 'productPublicationTarget',
+        key: '/internal/products/publication/' + path, method: 'POST', controller: 'DefaultProductPublicationController', operation };
+}

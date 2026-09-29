@@ -75,3 +75,60 @@ test('manifest paths and section shapes are validated before writes', t => {
     fs.symlinkSync(outside, f.manifestPath);
     assert.throws(() => service.run({ projectRoot: f.root }), /outside its owning project module/);
 });
+
+test('forward planning retains exact historical metadata and files without writing or changing identity', t => {
+    const f = fixture(t);
+    service.run({ projectRoot: f.root });
+    const manifest = JSON.parse(fs.readFileSync(f.manifestPath));
+    manifest.sections.core.sourceRoot = 'core-v001';
+    manifest.sections.core.version = '1.0.0';
+    fs.writeFileSync(path.join(f.data, 'core-v001/release.descriptor.json'), '{}\n');
+    fs.cpSync(path.join(f.data, 'core-v001'), path.join(f.data, 'core-v002'), { recursive: true });
+    fs.writeFileSync(path.join(f.data, 'core-v002/records/items.js'), 'module.exports = { record0: { code: "next" } };');
+    const before = fs.readFileSync(f.manifestPath);
+    const next = service.planForwardRelease({ dataRoot: f.data, manifest, sectionCode: 'core', sourceRoot: 'core-v002', version: '1.0.1' });
+    assert.deepEqual(fs.readFileSync(f.manifestPath), before);
+    assert.deepEqual(next.retainedRoots['core-v001'].sections.core, manifest.sections.core);
+    assert(next.retainedRoots['core-v001'].files['core-v001/release.descriptor.json']);
+    assert.equal(next.sections.core.version, '1.0.1');
+    assert.equal(manifest.sections.core.version, '1.0.0');
+    fs.writeFileSync(f.manifestPath, JSON.stringify(next));
+    assert.equal(service.run({ projectRoot: f.root, check: true })[0].changedFiles, 0);
+    fs.cpSync(path.join(f.data, 'core-v002'), path.join(f.data, 'core-v003'), { recursive: true });
+    const third = service.planForwardRelease({ dataRoot: f.data, manifest: next, sectionCode: 'core', sourceRoot: 'core-v003', version: '1.0.2' });
+    assert.deepEqual(Object.keys(third.retainedRoots), ['core-v001', 'core-v002']);
+    assert.deepEqual(third.retainedRoots['core-v001'], next.retainedRoots['core-v001']);
+    assert.deepEqual(third.retainedRoots['core-v002'].sections.core, next.sections.core);
+    for (const options of [ { version: '1.0.0' }, { sourceRoot: 'core-v001' }, { sourceRoot: '../escape' } ]) {
+        assert.throws(() => service.planForwardRelease({ dataRoot: f.data, manifest, sectionCode: 'core', sourceRoot: 'core-v002', version: '1.0.1', ...options }));
+    }
+    fs.writeFileSync(path.join(f.data, 'core-v001/records/items.js'), 'changed');
+    assert.throws(() => service.planForwardRelease({ dataRoot: f.data, manifest, sectionCode: 'core', sourceRoot: 'core-v002', version: '1.0.1' }), /Immutable release/);
+    assert.throws(() => service.run({ projectRoot: f.root }), /checksum/);
+    assert.deepEqual(JSON.parse(fs.readFileSync(f.manifestPath)), next);
+});
+
+test('section-scoped forward planning leaves shared-root siblings active and independently mutable', t => {
+    const f = fixture(t);
+    service.run({ projectRoot: f.root });
+    const manifest = JSON.parse(fs.readFileSync(f.manifestPath));
+    manifest.sections.core.sourceRoot = 'core-v001';
+    manifest.sections.core.version = '1.0.0';
+    fs.writeFileSync(path.join(f.data, 'core-v001/records/sibling.js'), 'module.exports = {};');
+    const policy = require('../../nData/nImport/import/src/service/release/defaultDataReleaseService');
+    manifest.sections.sibling = { ...manifest.sections.core, version: '0.0.0', files: {
+        'core-v001/records/sibling.js': policy.sourceRootFiles(f.data, 'core-v001')['core-v001/records/sibling.js']
+    } };
+    fs.mkdirSync(path.join(f.data, 'core-v002/records'), { recursive: true });
+    fs.copyFileSync(path.join(f.data, 'core-v001/records/items.js'), path.join(f.data, 'core-v002/records/items.js'));
+    const next = service.planForwardRelease({ dataRoot: f.data, manifest, sectionCode: 'core', sourceRoot: 'core-v002', version: '1.0.1', retentionScope: 'SECTIONS' });
+    assert.deepEqual(next.sections.sibling, manifest.sections.sibling);
+    assert.deepEqual(next.retainedRoots['core-v001'].files, manifest.sections.core.files);
+    assert.equal(next.retainedRoots['core-v001'].scope, 'SECTIONS');
+    assert(!Object.keys(next.sections.core.files).some(file => file.endsWith('sibling.js')));
+    fs.writeFileSync(path.join(f.data, 'core-v001/records/sibling.js'), 'module.exports = { changed: true };');
+    assert.doesNotThrow(() => policy.validateRetainedRoots(f.data, next));
+    fs.writeFileSync(f.manifestPath, JSON.stringify(next));
+    assert.equal(service.run({ projectRoot: f.root })[0].changedFiles, 1);
+    assert.deepEqual(JSON.parse(fs.readFileSync(f.manifestPath)).retainedRoots, next.retainedRoots);
+});

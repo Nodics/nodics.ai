@@ -1,5 +1,61 @@
 # cms AI Contracts
 
+## Documentation product discovery
+
+`cmsDocumentationProduct` records own product name, `publicRootPath`, Site,
+content catalog, description and audience. CMS navigation/page records own the
+published reader hierarchy. Do not duplicate these identities in a configuration
+map or a customer copy of a generic capability service.
+
+BackOffice capability registration is synchronous and not an employee/tenant
+content-read context. Providers must not perform asynchronous content queries,
+cache tenant records into runtime registration or introduce service-credential
+reads to manufacture a global documentation catalogue.
+
+Axis may discover additional public product metadata through the existing secured
+CMS schema capabilities and generated safe-search API using the current employee
+and the registered Staged CMS connection. The authored lifecycle field is not
+proof of publication. Online manifests serve published pages, not the authoring
+product collection; never enable Online generic schema APIs for this discovery.
+Use advertised operations and bounded
+paging; deny/unavailable/invalid responses must not trigger a fallback API, Site
+or connection. Join products by exact Site to the existing authenticated
+`DOCUMENTATION_BUNDLE` initialization profiles. Only the content-pack code,
+publication profile and display order come from that existing profile. Ambiguous
+bindings or routes fail closed. No new project configuration is required.
+
+This is a transient reader projection, not another source registry or authority.
+Existing BackOffice module sources remain available; CMS product records supply
+additional product links within the documentation reader/dashboard. Unimported,
+unpublished and non-public products are not promoted into public delivery.
+Setup and Accelerators remains the existing entry for their governed preparation
+and publication. The selected initialization profile still gates reader delivery,
+and CMS independently enforces content access. Discovery never installs data,
+approves publication or changes records.
+
+Keep `publicRootPath` aligned with the generated root page route in the owning
+content release. Correct immutable content via a successor release, never by a
+client alias or rewritten historical payload. Axis matches declared route
+boundaries and never defaults an unknown product URL to Framework.
+
+Axis's `test/documentation/api/documentationProductClient.test.ts` and
+`test/documentation/DocumentationRoutePage.test.tsx` cover read transport,
+pagination, profile binding, unsafe/ambiguous metadata and fail-closed routing.
+Live schema-read permissions and published record/page alignment must be verified
+separately after deployment.
+
+## Canonical guided acceptance
+
+`acceptance:guided-initialization` is a CMS-owned tooling suite. Customer inputs
+choose an enabled initialization profile, application publication profiles and
+an Online delivery probe. Required assertions remain in CMS: destination binding,
+init/core order, persisted CURRENT state, idempotent installation, Online import
+denial, Process approval lineage and delivery availability. Execute only with
+`--execute --approve-publications`; the suite may install and publish through
+authorized owner APIs. It neither supplies emergency override nor retries denied
+approval with broader authority. A same-actor policy denial is an acceptance
+failure, not permission to bypass the workflow. Imports/help are inert.
+
 This folder contains module-specific AI/developer contracts for `nodics.wcms/modules/cms`.
 
 Use these files for rules that are more specific than root `AGENTS.md` and the module `AGENTS.md`, especially extension boundaries, override expectations, testing rules, security constraints, and generated-artifact responsibilities.

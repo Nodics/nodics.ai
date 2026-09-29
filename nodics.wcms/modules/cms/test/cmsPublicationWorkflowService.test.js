@@ -11,6 +11,10 @@
 
 /** Validates bounded, authenticated, idempotent Staged-to-Process approval submission. */
 const assert = require('assert');
+const publicationDefaults = require('../config/properties').cms.publication;
+assert.strictEqual(publicationDefaults.enabled, false, 'Publication remains opt-in');
+assert.strictEqual(publicationDefaults.workflow.target.connectionName, null, 'Deployment chooses Process connection');
+assert.strictEqual(publicationDefaults.target.connectionName, null, 'Deployment chooses Online connection');
 class NodicsError extends Error { constructor(code, message) { super(message); this.code = code; } }
 global.CLASSES = { NodicsError: NodicsError };
 let role = 'STAGED';

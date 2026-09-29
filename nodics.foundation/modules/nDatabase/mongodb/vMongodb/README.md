@@ -14,7 +14,28 @@ The module extends MongoDB model behavior for versioned records. Its versioned m
 
 This supports publish/revert-style data behavior where previous versions remain available.
 
+Version IDs must be nonnegative safe integers; invalid inputs fail before reads
+or writes. History reads accept the existing item-array or `{ result: [] }`
+envelope. Failed or malformed responses reject instead of being treated as an
+empty collection. See [the persistence safety contract](llm/contracts/README.md)
+for extension and qualification limits.
+
+Installed records also require valid version IDs before versioned writes. Missing
+IDs require an explicit migration; ordinary saves do not backfill them. Updates
+derive the next ID from persisted history, never from a caller's patch, and
+reject exhausted counters. Provider-returned history objects remain unchanged.
+Update selections produce one successor per logical identity. A stale or missing
+selection rejects before insertion, as do logical-identity renames and supplied
+storage IDs. Duplicate-key write conflicts propagate without automatic retry.
+See the safety contract for index prerequisites and non-atomic batch limits.
+
 ## Source Contracts
+
+`getCurrentVersionItems` supplies an explicit current-authoring view for schemas
+whose service layer selects it. It groups by logical identity before filtering,
+so old active or previously accessible records cannot reappear when the newest
+version no longer matches. Paging and counts use that view; existing `getItems`
+history behavior remains unchanged. See [current reads](llm/contracts/README.md#current-version-reads).
 
 - `src/schemas/model.js` owns versioned MongoDB model functions.
 - `test/versionedModelContract.test.js` verifies versioned save/update behavior.

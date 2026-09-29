@@ -4,6 +4,7 @@
   "index": "70.11",
   "private": true,
   "main": "nodics.js",
+  "requiredModules": ["vDatabase", "vService"],
   "description": "Nodics Commerce Product capability.",
   "nodics": {
     "kind": "capability",

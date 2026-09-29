@@ -43,7 +43,7 @@ module.exports = {
         quantity: entry.quantity,
       });
       if (!availability || availability.available !== true)
-        throw new Error("Inventory unavailable");
+        throw new CLASSES.NodicsError('ERR_CART_INVENTORY_UNAVAILABLE');
       const price = await ports.pricing({
         tenant: cart.tenant,
         enterpriseCode: cart.enterpriseCode,

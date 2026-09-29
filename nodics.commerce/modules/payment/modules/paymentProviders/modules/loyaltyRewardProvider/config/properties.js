@@ -13,6 +13,16 @@
 
 /** @module loyaltyRewardProvider/config/properties @description Defines Commerce payment-provider defaults for Loyalty reward payment integration. @layer config @owner loyaltyRewardProvider */
 module.exports = {
+    tooling: {
+        commands: {
+            'acceptance:loyalty-reward-checkout': {
+                acceptanceContract: true,
+                projectHome: true,
+                handler: '@nTooling/node-script',
+                script: 'src/service/acceptance/defaultLoyaltyRewardCheckoutAcceptanceService.mjs'
+            }
+        }
+    },
     loyaltyRewardProvider: {
         enabled: true,
         providerCode: 'loyalty-reward-points',

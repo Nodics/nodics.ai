@@ -12,6 +12,7 @@
 const crypto = require('crypto');
 const fs = require('fs');
 const path = require('path');
+const releasePolicy = require('../../../nData/nImport/import/src/service/release/defaultDataReleaseService');
 
 const DOCUMENT_IDENTITY = /^[A-Za-z][A-Za-z0-9._-]{0,127}$/;
 const LOWER_DOCUMENT_IDENTITY = /^[a-z][a-z0-9.-]*$/;
@@ -407,6 +408,35 @@ module.exports = {
             }
         });
         return this.sha256(entries.sort(([left], [right]) => left.localeCompare(right)).map(([fileName, checksum]) => fileName + ':' + checksum).join('|'));
+    },
+
+    /**
+     * Checks a complete documentation generation plan before any output is written.
+     * @param {Object|null} previous Existing manifest section, when present.
+     * @param {Object} next Proposed section with generated checksums.
+     * @returns {Object} Validated proposed section; throws on identity, version or immutable path reuse.
+     */
+    validateGeneration: function (previous, next) {
+        this.validateReleaseSection(next);
+        if (!previous) return next;
+        this.validateReleaseSection(previous);
+        if (previous.pack !== next.pack || previous.owningDomain !== next.owningDomain) {
+            this.fail('ERR_TOOL_DOC_00007', 'Documentation owner changes require an explicit migration');
+        }
+        if (releasePolicy.isDevelopmentRelease(previous.version)) return next;
+        if (!SEMVER.test(previous.version) || !SEMVER.test(next.version) ||
+            releasePolicy.compareVersions(next.version, previous.version) < 0) {
+            this.fail('ERR_TOOL_DOC_00006', 'Documentation release versions must not move backwards');
+        }
+        if (previous.version === next.version && previous.releaseChecksum !== next.releaseChecksum) {
+            this.fail('ERR_TOOL_DOC_00006', 'Immutable documentation release changed; select a forward version and a new publication.contentPath');
+        }
+        for (const [file, checksum] of Object.entries(next.generatedHashes)) {
+            if (previous.generatedHashes[file] && previous.generatedHashes[file] !== checksum) {
+                this.fail('ERR_TOOL_DOC_00006', 'Immutable documentation path would be overwritten: ' + file);
+            }
+        }
+        return next;
     },
 
     /** Builds the shared immutable application-documentation manifest contract. */

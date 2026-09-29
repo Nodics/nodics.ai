@@ -42,6 +42,11 @@ module.exports = {
         if (success.mimeType && response.type) response.type(success.mimeType);
         if (success.cacheControl && response.set) response.set('Cache-Control', success.cacheControl);
         this.applyResponseHeaders(response, success.responseHeaders);
+        if (Buffer.isBuffer(success.buffer)) {
+            if (response.set) response.set('Content-Disposition', (success.contentDisposition || 'inline') +
+                '; filename="' + this.safeHeaderFileName(success.fileName) + '"');
+            return response.send(success.buffer);
+        }
         if (this.isAttachment(success) && typeof response.download === 'function') {
             return response.download(
                 success.filePath,

@@ -26,6 +26,7 @@ module.exports = {
                     connectionHandler: 'DefaultMongodbDatabaseConnectionHandlerService',
                     schemaHandler: 'DefaultMongodbDatabaseSchemaHandlerService',
                     modelHandler: 'DefaultMongodbDatabaseModelHandlerService',
+                    installedVersionMigrationService: 'DefaultMongodbInstalledVersionMigrationService',
                     interceptorHandler: 'DefaultMongodbDatabaseInterceptorHandlerService',
                     schemaProperties: { enum: true, minimum: true, maximum: true, exclusiveMaximum: true, pattern: true },
                     defaultIndexes: ['_id'],

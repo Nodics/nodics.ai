@@ -69,6 +69,63 @@ const normalized = contextService.build({
 assert.strictEqual(normalized.properties['asset.recordedWeight'].quality, 'VERIFIED_MEASUREMENT');
 assert.strictEqual(normalized.properties['environment.carbonImpact'].value, 14.6);
 assert.strictEqual(normalized.properties['environment.carbonImpact'].quality, 'OPERATOR_VERIFIED');
+
+const descriptorContext = contextService.build({
+    submission: { code: 'SUB-DESCRIPTOR', revision: 1, metadata: {} },
+    descriptor: {
+        contractVersion: 1,
+        classification: {
+            family: { code: 'ELECTRONICS' },
+            category: { code: 'CABLE_OR_CHARGER' },
+            itemType: { code: 'CHARGER' }
+        },
+        identity: { brand: null, model: null },
+        condition: { value: 'UNKNOWN' },
+        physical: {
+            quantity: 1,
+            size: { value: 'SMALL', basis: 'TAXONOMY_POLICY', confidence: 1 },
+            weight: { value: null, unit: 'KG', basis: 'UNKNOWN' },
+            weightEstimate: { min: 0.05, max: 0.2, unit: 'KG', basis: 'INFERRED', confidence: 0.74 },
+            dimensionsEstimate: {
+                length: { min: 4, max: 8, unit: 'CM', basis: 'INFERRED', confidence: 0.62 },
+                width: { min: 3, max: 5, unit: 'CM', basis: 'INFERRED', confidence: 0.62 },
+                height: { min: 2, max: 4, unit: 'CM', basis: 'INFERRED', confidence: 0.58 }
+            }
+        },
+        materials: [{ ref: { code: 'PLASTIC' }, basis: 'OBSERVED', confidence: 0.8 }],
+        components: [{ ref: { code: 'PCB_COMPONENT' }, basis: 'INFERRED', confidence: 0.55 }],
+        environment: {
+            observations: {
+                recyclability: { value: 'POTENTIAL', basis: 'INFERRED', confidence: 0.65 },
+                contamination: { value: 'NOT_VISIBLE', basis: 'OBSERVED', confidence: 0.7 },
+                hazards: [{ code: 'EXPOSED_ELECTRONICS', basis: 'INFERRED', confidence: 0.5 }],
+                recoveryPotential: { value: 'POTENTIAL', basis: 'INFERRED', confidence: 0.64 }
+            }
+        },
+        evidenceReview: {
+            sourceType: 'ITEM_PHOTOGRAPH',
+            confidence: 0.93,
+            manualApprovalRequired: false,
+            qualityFlags: ['LABEL_UNREADABLE']
+        },
+        metadataQuality: {
+            unknownFields: ['brand', 'model', 'conditionGrade'],
+            lowConfidenceFields: ['components.0', 'physical.dimensionsEstimate.height'],
+            manualVerificationRequired: false,
+            completenessScore: 0.57
+        }
+    },
+    assessmentType: 'ESTIMATED'
+});
+assert.strictEqual(descriptorContext.properties['asset.recordedWeight'].available, false, 'descriptor null measured weight must remain unavailable');
+assert.strictEqual(descriptorContext.properties['asset.approximateWeight'].value, 0.125);
+assert.deepStrictEqual(descriptorContext.properties.materials.value, ['PLASTIC']);
+assert.deepStrictEqual(descriptorContext.properties.components.value, ['PCB_COMPONENT']);
+assert.deepStrictEqual(descriptorContext.properties.hazards.value, ['EXPOSED_ELECTRONICS']);
+assert.deepStrictEqual(descriptorContext.properties['metadata.lowConfidenceFields'].value, ['components.0', 'physical.dimensionsEstimate.height']);
+assert.deepStrictEqual(descriptorContext.properties['evidence.qualityFlags'].value, ['LABEL_UNREADABLE']);
+assert.strictEqual(descriptorContext.properties['metadata.completenessScore'].value, 0.57);
+
 const fallback = provider.resolveFallback({
     propertyCode:'asset.recordedWeight',
     minimumInputQuality:'AI_INFERRED',

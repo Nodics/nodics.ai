@@ -6,7 +6,7 @@
       "kind": "DATA_RELEASE",
       "dataType": "init",
       "version": "0.0.0",
-      "description": "Platform-owned Axis baseline experience for Staged installation and controlled publication",
+      "description": "Platform-owned Axis baseline experience with the current dashboard composition for Staged installation and controlled publication",
       "owningDomain": "axis",
       "lifecycle": "PUBLISHABLE",
       "destinationRole": "WCMS_STAGED",
@@ -20,7 +20,7 @@
       "removalPolicy": "UNPUBLISH_OR_RETIRE",
       "publicationReview": {
         "title": "Publish the managed Nodics Axis workspace",
-        "summary": "Approve the immutable Axis baseline that replaces the bundled recovery workspace with the managed Online administration experience.",
+        "summary": "Approve the current Axis baseline that installs the managed administration experience and latest dashboard composition into Online after local Staged validation.",
         "sourceRole": "WCMS_STAGED",
         "targetRole": "WCMS_ONLINE",
         "siteCode": "axisCmsSite",
@@ -49,8 +49,8 @@
           {
             "type": "cmsTypeCode",
             "label": "Page and component types",
-            "total": 21,
-            "added": 21,
+            "total": 22,
+            "added": 22,
             "updated": 0,
             "unchanged": 0,
             "removed": 0
@@ -58,8 +58,8 @@
           {
             "type": "cmsRenderer",
             "label": "Renderer mappings",
-            "total": 21,
-            "added": 21,
+            "total": 22,
+            "added": 22,
             "updated": 0,
             "unchanged": 0,
             "removed": 0
@@ -76,8 +76,8 @@
           {
             "type": "cmsSlot",
             "label": "Template slots",
-            "total": 17,
-            "added": 17,
+            "total": 13,
+            "added": 13,
             "updated": 0,
             "unchanged": 0,
             "removed": 0
@@ -85,8 +85,8 @@
           {
             "type": "cmsComponent",
             "label": "Components",
-            "total": 28,
-            "added": 28,
+            "total": 50,
+            "added": 50,
             "updated": 0,
             "unchanged": 0,
             "removed": 0
@@ -134,14 +134,14 @@
         ]
       },
       "files": {
-        "init-v001/records/axis/axisCmsComponentData.js": "e2089c1f29de6f6268b8daddae1edec56f6b8b123812c667e63a64b6bd1c99a0",
-        "init-v001/records/axis/axisCmsPageData.js": "c5a7f64e684d588a864e76f3ee473bed7ba7b7612cfef4f2ae0e9ba78cb99b2c",
-        "init-v001/records/axis/axisCmsRendererData.js": "5065addc7631e11ae8666434c3bdbe60cba4b0aec4655ce9fdd6621993ad1f14",
-        "init-v001/records/axis/axisCmsRouteData.js": "a309d56e36b2e5682a030699c1d1e95236e2be78c324b2c19b21550aa8ef6ddd",
+        "init-v001/records/axis/axisCmsComponentData.js": "be6adda75a1ddecbdcfd5a47f87cd5b9c5319ac3febabec48578fba657bee6e0",
+        "init-v001/records/axis/axisCmsPageData.js": "3a86119dcc26b4d614374649fccaf3166834b1ce0629230760c7c4d856a0855e",
+        "init-v001/records/axis/axisCmsRendererData.js": "1d035be285b2510cc132c1efa1a75d9663d4b17c497291512215db845bac9202",
+        "init-v001/records/axis/axisCmsRouteData.js": "0f4f0649e84749a5e6d78bc290c1b865a73b491877f341de8bdd8404130910d9",
         "init-v001/records/axis/axisCmsSiteData.js": "6cbe2e4c0080aab43e82e5cfcbae9fa9c7696d9038b496809684c836131e8ea4",
-        "init-v001/records/axis/axisCmsSlotData.js": "b773d365fae8ba37b14458d11fd0dc54304f2bf0f0b4b378e4f06ccf13096f19",
-        "init-v001/records/axis/axisCmsTemplateData.js": "9af21863924e74792216f3a9b742cef06b43abb6cd012791a44729d7de3b61eb",
-        "init-v001/records/axis/axisCmsTypeCodeData.js": "41eaa29480e6517877ac145d6edb16fc71240c4f781cddcc66fb2261a716e9db",
+        "init-v001/records/axis/axisCmsSlotData.js": "61e366535dfb740dc2b4ba4f515e57232831dbf5aef7051b78153fb718a741ee",
+        "init-v001/records/axis/axisCmsTemplateData.js": "71f8ff3cdf6500eadcac065dec3a48edb04c8d82003adeebd5ae5194bf2ad15f",
+        "init-v001/records/axis/axisCmsTypeCodeData.js": "c32a751bc833153d2d0c02e7f34454467f87ad45958a133b6a446cff83e5a6bc",
         "init-v001/records/axis/axisContentCatalogData.js": "ad09b3030816cc6c355aeccb20f59ea643da47ce91ab7eaaaf5b2b12ca12fe90",
         "init-v001/headers/axis/axisContentCatalogHeader.js": "6793eb87ab4d54963a98c045e958bce598b4df05f0080bf690ed161043bae5d0"
       },
@@ -236,18 +236,18 @@
       "pages": 18,
       "components": 19,
       "routes": 18,
-      "releaseChecksum": "b35b7bc09fba1f6db8e50c0f832b2387fe2d9570a7621efd46f299abcfd5a6b2",
+      "releaseChecksum": "9cc71f0d476f90aa6b51ba735cf0ee94c37a785c9f2cc7e1fc8fdcaceb724589",
       "generatedHashes": {
         "core-v001/records/documentation/axisDocumentationAccessPolicyData.js": "dd948efe165365adedfbd8102647d6cb2bd837f0ce5c75bd0f6120fb586b7f1b",
         "core-v001/records/documentation/axisDocumentationDashboardData.js": "0a2084e73332c2b8f514d399dd1eefa89b6366c33091ac1b858c87fa00b7abf7",
         "core-v001/records/documentation/axisDocumentationLegacyNavigationCleanupData.js": "9834348653678933d43ea165ae67c9f275a64dfc35aa7e705c51314007f7ec0b",
         "core-v001/records/documentation/axisDocumentationNavigationData.js": "ffea967d9fae65d5153fb3b092f3826c5682456365cff6f5d8efa1ea8c438827",
         "core-v001/records/documentation/axisDocumentationNodeData.js": "2a589bbea5937eb79aaae4ae1e3460d3a1e4b5aa8ea5cbe4d51f232afe760a08",
-        "core-v001/records/documentation/axisDocumentationPageMetadataData.js": "9e38fd990b961666b979ad55c3fa3a6a7bdb7d80ec73a26eec0a338dcd076ef2",
+        "core-v001/records/documentation/axisDocumentationPageMetadataData.js": "0e6112183938ff324b0fc2326b3205e28a5361f69d4e50afda44fcd89e113e6c",
         "core-v001/records/documentation/axisDocumentationProductData.js": "e1e980db49906f19c49f9a33fdb347b2fc9752716290c38751955f2c488f6b84",
         "core-v001/records/documentation/axisDocumentationPublicationStateData.js": "82e9685cf018eb89e8ea37f701a6ca54134b64cffd8e688ae6b524289f540801",
-        "core-v001/records/documentation/axisDocumentationSearchMetadataData.js": "6d0cb2ee54a85fa05a0aaef1a56ab11aa104e307b150b1f4904db24c7c48111f",
-        "core-v001/records/documentation/axisDocumentationComponentData.js": "396a04de2c077d4d1b0310139b2cfe9919539cd6c3012709083caebcff996d6e",
+        "core-v001/records/documentation/axisDocumentationSearchMetadataData.js": "bb74395db08c53ca9dbad76ee58ce05f91cef490930abf5c39949b7cf310a93a",
+        "core-v001/records/documentation/axisDocumentationComponentData.js": "50cfc10b160d6959ee438b3e305c446b32ffa37af9368a961939df5f87dfcbb7",
         "core-v001/records/documentation/axisDocumentationPageData.js": "de4033d92d5faca60b9709acbc7662fae370cd1e2b09d336d09206ce0d3a8de7",
         "core-v001/records/documentation/axisDocumentationRendererData.js": "780fce11057c4d41e54d3d5c5577de24b2920be3730d037f9b994ed9bf375008",
         "core-v001/records/documentation/axisDocumentationRouteData.js": "fc8ee198df8b4bf3ea96eb2d6938e6ad9781d72f145875cea91bcae7b9935f33",

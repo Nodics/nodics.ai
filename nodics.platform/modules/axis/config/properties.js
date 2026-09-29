@@ -1,5 +1,32 @@
+/*
+    Nodics - Enterprice Micro-Services Management Framework
+
+    Copyright (c) 2026 Nodics All rights reserved.
+
+    This software is governed by the Nodics Source-Available Commercial License.
+    You may use, copy, modify, deploy, or distribute it only as permitted by the
+    root LICENSE file or a separate written agreement with Nodics.
+
+ */
+
 /** @module axis/config/properties @description Defines Axis product initialization, CMS baseline publication and BackOffice application setup defaults. @layer config @owner axis @override Later layers may override target runtimes, publication source versions and customer documentation profile bindings. */
 module.exports = {
+  "tooling": {
+    "acceptance": {
+      "localBootstrap": {
+        "documentationPacks": {
+          "axisDocumentation": {
+            "code": "axisDocumentation",
+            "profileCode": "axisdocs",
+            "minimumRoutes": 14,
+            "navigationComponent": "axisDocumentationNavigation",
+            "site": "axisDocumentationSite",
+            "path": "/docs/nodics-axis"
+          }
+        }
+      }
+    }
+  },
   "axis": {
     "initialization": {
       "baselineCode": "axis",
@@ -33,6 +60,34 @@ module.exports = {
   },
   "backofficeApplicationInitialization": {
     "profiles": {
+      "frameworkdocs": {
+        "code": "frameworkdocs",
+        "type": "DOCUMENTATION_BUNDLE",
+        "owner": "nodics.docs",
+        "applicationCode": "axis",
+        "siteCode": "nodicsDocumentationSite",
+        "baselineCode": "frameworkdocs",
+        "contentPackCode": "nodicsDocumentation",
+        "presentation": {
+          "title": "Framework Documentation",
+          "kind": "DOCUMENTATION",
+          "category": "documentation",
+          "order": 300,
+          "summary": "Framework documentation content pack and Online delivery profile.",
+          "requiredServers": [
+            "Platform",
+            "WCMS Staged",
+            "WCMS Online",
+            "Process"
+          ],
+          "activationPolicy": {
+            "approvalRequiredForOnline": true,
+            "requiredDataTrigger": "USER",
+            "sampleDataTrigger": "USER"
+          }
+        },
+        "enabled": false
+      },
       "axisdocs": {
         "code": "axisdocs",
         "type": "DOCUMENTATION_BUNDLE",

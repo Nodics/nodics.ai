@@ -49,6 +49,18 @@ module.exports = {
         },
       );
     }
+    if (SERVICE.DefaultHealthService && typeof SERVICE.DefaultHealthService.registerReadinessContributor === "function") {
+      try {
+        SERVICE.DefaultHealthService.registerReadinessContributor("backofficeRegistration", {
+          order: 700,
+          required: this.getConfiguration().enabled !== false,
+          description: "BackOffice registration and runtime operational state must be current",
+          check: () => this.getReadinessStatus(),
+        });
+      } catch (error) {
+        if (!/already registered/i.test(String(error && error.message || ""))) throw error;
+      }
+    }
     return Promise.resolve(true);
   },
 
@@ -231,11 +243,16 @@ module.exports = {
       .map((sectionCode) => {
         let section = sections[sectionCode] || {};
         if (section.kind !== "DATA_RELEASE") return undefined;
+        if (section.selectionPolicy !== undefined &&
+            !["DEFAULT", "EXPLICIT"].includes(section.selectionPolicy)) {
+          throw new Error("Data release selectionPolicy must be DEFAULT or EXPLICIT");
+        }
         let dataType = String(
           section.dataType ||
             this.inferActivationDataType(section, sectionCode),
         );
         let isActivationRequired =
+          section.selectionPolicy !== "EXPLICIT" &&
           dataType !== "sample" &&
           section.initialPublicationPolicy !== "ADMIN_INITIATED";
         let pack = {
@@ -558,10 +575,35 @@ module.exports = {
     return true;
   },
 
+  /** Returns a sanitized readiness contribution for System Information and traffic admission. */
+  getReadinessStatus: function () {
+    const config = this.getConfiguration();
+    if (config.enabled === false) return {
+      status: "UP",
+      reasonCode: "BACKOFFICE_REGISTRATION_DISABLED",
+      suggestedAction: "Enable BackOffice registration for governed runtime visibility.",
+    };
+    const state = this._operationalState;
+    if (state && Date.now() < state.expiresAt) return {
+      status: "UP",
+      reasonCode: "BACKOFFICE_REGISTRATION_CURRENT",
+      lastSuccessAt: this._metrics.lastSuccessAt || undefined,
+      observedAt: this._metrics.lastSuccessAt || undefined,
+    };
+    return {
+      status: "DOWN",
+      reasonCode: this._metrics.lastFailureCode || "BACKOFFICE_OPERATIONAL_STATE_MISSING",
+      lastSuccessAt: this._metrics.lastSuccessAt || undefined,
+      lastFailureAt: this._metrics.lastFailureAt || undefined,
+      suggestedAction: "Start Platform/BackOffice, verify runtime service credentials, then wait for the registration retry.",
+    };
+  },
+
   /** Returns sanitized registration attempt and outcome counters. */
   getDiagnostics: function () {
     return Object.assign({}, this._metrics, {
       registeredModuleCount: this._registered.length,
+      readiness: this.getReadinessStatus(),
     });
   },
 };

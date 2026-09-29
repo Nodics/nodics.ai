@@ -1,5 +1,109 @@
 # eWaste domain contract
 
+## Fresh Arrival Journey
+
+`DefaultEWasteJourneyService` owns centre selection, fresh arrival evidence,
+photo preparation and confirmation orchestration over the existing Waste
+operations. It creates no parallel records or routes. Controllers must retain
+the trusted request mapper and existing permission/owner checks.
+
+Its `settings()` reads `CONFIG.eWaste.journey`. Effective configuration must
+provide positive numeric `arrivalRadiusMetres`, `maximumPositionAgeMs` and
+`captureTimeoutMs`, plus integer `nearestCentreCount >= 3`; missing/invalid
+policy fails closed with `ERR_EWASTE_JOURNEY_UNAVAILABLE`. Optional
+`reviewAssignment.queueCode/label` and `depositInstruction` control the
+confirmation handoff. The instruction may contain `{centreName}`.
+Configuration defaults are supplied by the owning properties layer, never
+inferred from a customer application.
+
+Later project modules may override exported `settings`, `origin`, `errorCode`,
+`distance` and orchestration members using the standard service merge.
+A thin project adapter may compose its policy over the domain settings and map
+domain errors to its existing public codes. Origin defaults to authenticated
+`authData.eWasteOrigin` or WEB; branded auth fields belong in the adapter.
+Body-provided origins, distances and arrival claims grant no authority.
+
+Direct distance is unrounded and the configured radius is inclusive. Accuracy
+is optional metadata (invalid/missing becomes null), never an arrival gate.
+Coordinate validity and stale/future observations remain distinct errors.
+Live eligible centres and Location projections are re-read before confirmation;
+stored distances and map selections do not prove arrival. Preview writes
+nothing, early empty-draft creation rejects, and rejected arrival checks retain
+saved drafts and photos. Successful centre changes invalidate derived estimate
+and confirmation revision. Confirmation retains optimistic revisions, handoff
+metadata and completed-command idempotent replay.
+
+Location Core's dependency-free distance export is used locally for arithmetic
+only: eWaste does not require Location services to be registered in the Waste
+process. Place reads still use existing owning APIs. No topology activation,
+data import or migration is required by this extraction.
+
+Run `node --test test/eWasteJourneyService.test.js` for standalone configuration,
+customization, evidence preservation, origin, revision and replay coverage.
+Customer adapters must additionally run their public journey compatibility tests.
+
+## Reusable Customer Composition
+
+The historical customer-named `CIRCA_EWASTE_ESTIMATE` profile and its framework
+references remain in the retained core-v001 snapshot. The explicit core-v002
+successor uses `EWASTE_ENVIRONMENTAL_ESTIMATE`; it does not delete installed
+historical profiles or rename saved assessments. Customers keep deliberate
+historical selections through nImport source-key deltas. See
+[reference compatibility](reference-compatibility.md) for exact selection,
+ordering, retention and installed-provenance requirements.
+
+`DefaultEWasteMarketplaceService` owns bounded published Product traversal and
+joining offers to currently listed Waste assets. Customer catalogue adapters
+may supply trusted browsing limits and presentation/filtering but cannot replace
+store identity from request input. Preserve unsafe-media exclusion, expiry and
+price validation, ownership binding, private-photo exclusion, cancellation and
+duplicate-page detection. The legacy marketplace list DTO remains compatible.
+
+`DefaultEWasteWeightRewardValuationService` accepts an explicit policy from its
+caller. The application retains rates, reward/programme identifiers and public
+error mappings. The provider normalizes original approval evidence and computes
+illustrative amounts; it does not issue credits, settle wallets or revalue prior
+settlements. Missing defensible carbon remains unavailable rather than invented.
+
+The existing conversation service supplies reusable guidance orchestration and
+history persistence. Customer wording and intent selection remain in the adapter.
+Revision failures propagate; guidance never confirms a submission or discards its
+assessment/evidence. Test an unrelated policy, invalid inputs, privacy exclusions,
+provider failure and later overrides in `test/eWasteReusableComposition.test.js`;
+consumer adapters must run their own regression tests too.
+
+### Independent regression coverage
+
+The module's `npm test` discovers every `test/*.test.js` file. The Waste
+accelerator umbrella also discovers these files through its existing contract
+suite. Independent owner fixtures must never import a customer checkout or
+customer properties. Customer tests retain actual policy selections, presentation,
+adapter forwarding and public error compatibility.
+
+| Owner suite | Preserved assertions |
+| --- | --- |
+| `eWasteCatalogueDiscovery.test.js` | 105 published products across two reads; global filtering/sorting before paging; exact total 6 and prices 103/102; exact product lookup; cross-kind/invalid references; missing/inactive/stale assets; expired, wrong-currency and invalid-price coupons; revision/owner/bid binding; private-field suppression; deduplicated safe gallery and explicit terms; invalid selectors before reads; page clamp; maximum-products overflow and repeated pages. |
+| `eWasteArrivalPolicy.test.js` | Preview and rejected early creation do not persist; arrival/photo continuation; bounded nearest centres; ambiguous and invalid choices; stale/future/invalid observations and attach-photo guard; current-centre confirmation; queue/replay; inclusive unrounded radius and customization; invalid policy; missing/inactive Location; preserved photos on rejection/retry; complete optional-accuracy matrix, including inaccurate remote observations that cannot grant arrival. |
+| `eWasteGuidanceHistory.test.js` | Successful reply preserves facts and persists both history entries; revision-conflict error propagates with unchanged revision. This is successful conversation coverage, not provider fallback evidence. |
+| `eWasteReusableComposition.test.js` | Trusted context, original valuation evidence, alternate rates, provider/read-owner/revision errors, correction routing and pre-draft guidance. Provider failure is injected into `DefaultCopilotCustomerGuidanceService.reply`, the invoked operation. |
+| `eWasteWeightValuationPrecision.test.js` | Exact 20.00 points and 2.381 carbon amount from original assessment; quantity-times-midpoint 40.00 with failed-impact 0.000; unknown weight remains unavailable with 0.00 points. |
+| `eWasteJourneyService.test.js` | Independent defaults, customization, freshness boundaries, evidence preservation, trusted origin, revision/replay and analysis failure. |
+
+Experience adapters must project the same effective settings hook used by their
+arrival validator. Merge domain technical defaults with customer policy before
+projection; remove private review assignment from the public projection. Test
+inherited settings and later overrides for freshness, capture timeout, centre
+count and radius, plus invalid-policy and stale/invalid-coordinate rejection.
+Customer configuration-only integration tests may use the existing nTooling
+probe to resolve nConfig bindings without starting providers or listeners.
+
+Inactive mock settings do not select a provider. An application removing legacy
+mock weights must first qualify any explicit later deployment/tenant selection
+against the Waste Impact provider contract. The saved configuration fingerprint
+uses the selected provider identity, formula and applied parameters, not the
+entire unused settings tree; existing assessment provenance must remain intact.
+Never add mock to a fallback chain as part of configuration cleanup.
+
 ## Optional OpenAI environmental provider
 
 `DefaultEWasteOpenAiImpactProviderService` separately assesses normalized metadata
@@ -355,3 +459,12 @@ input-only assessments with explicit limitations. Mandatory assessment is not a
 claim of numerical carbon coverage for these seven types. Every mapped property
 must have a finite supported value or an explicit reason/requirements. Source
 and type-specific methods are required before expanding numerical coverage.
+
+## Reusable Catalogue
+
+`DefaultEWasteCatalogueService` owns bounded catalogue discovery, selector
+validation, facets, sorting, pagination and product-kind checks, using existing
+marketplace owner reads. Neutral limits live in `eWaste.catalogue`.
+Applications retain experience identity and policy and may supply explicit
+later-layer catalogue overrides through thin adapters. The service must work
+without Circa identifiers; it does not grant publication or data access.

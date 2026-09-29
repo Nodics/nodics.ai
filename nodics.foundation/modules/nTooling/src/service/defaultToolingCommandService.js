@@ -12,6 +12,7 @@
 const fs = require('fs');
 const path = require('path');
 const _ = require('lodash');
+const acorn = require('acorn');
 const defaultProperties = require('../../config/properties');
 
 const frameworkHome = path.resolve(__dirname, '../../../../..');
@@ -225,17 +226,26 @@ module.exports = {
      * @returns {string|null} Object literal source or null.
      */
     findObjectLiteralByProperty: function (source, propertyName, startIndex = 0) {
-        const propertyPattern = new RegExp('(?:^|[,{])\\s*' + propertyName + '\\s*:', 'g');
-        propertyPattern.lastIndex = startIndex;
-        const match = propertyPattern.exec(source);
-        if (!match) {
-            return null;
-        }
-        const objectStart = source.indexOf('{', propertyPattern.lastIndex);
-        if (objectStart < 0) {
-            return null;
-        }
-        return this.readBalancedObjectLiteral(source, objectStart);
+        const wrapped = source.trimStart().startsWith('{');
+        const offset = wrapped ? 1 : 0;
+        const ast = acorn.parse(wrapped ? '(' + source + ')' : source,
+            { ecmaVersion: 'latest', sourceType: 'script' });
+        let found = null;
+        const visit = node => {
+            if (!node || typeof node !== 'object' || found) return;
+            if (node.type === 'Property' && !node.computed && node.start - offset >= startIndex &&
+                (node.key.type === 'Identifier' ? node.key.name : node.key.value) === propertyName &&
+                node.value.type === 'ObjectExpression') {
+                found = source.slice(node.value.start - offset, node.value.end - offset);
+                return;
+            }
+            for (const value of Object.values(node)) {
+                if (Array.isArray(value)) value.forEach(visit);
+                else if (value && typeof value === 'object') visit(value);
+            }
+        };
+        visit(ast);
+        return found;
     },
 
     /**
@@ -352,6 +362,9 @@ module.exports = {
      */
     mergeCommand: function (registry, commandName, incoming, moduleObject) {
         const existing = registry[commandName];
+        if (existing?.acceptanceContract === true && existing.sourcePath !== moduleObject.path) {
+            throw new Error('Framework acceptance contract cannot be overridden: ' + commandName);
+        }
         const override = incoming.$override || {};
         const definition = Object.assign({}, incoming);
         delete definition.$override;
@@ -394,14 +407,27 @@ module.exports = {
         }
         const uniqueModules = Array.from(new Map(modules.map(moduleObject => [path.resolve(moduleObject.path), moduleObject])).values());
         uniqueModules.sort((left, right) => this.compareModuleIndex(left.index, right.index) || left.path.localeCompare(right.path));
-        const registry = {};
-        uniqueModules.forEach(moduleObject => {
+        const contributions = uniqueModules.map(moduleObject => {
             const contributionPath = this.getContributionPath(moduleObject);
-            if (!contributionPath) {
-                return;
-            }
-            const commands = this.loadToolingCommands(contributionPath);
+            return { moduleObject, commands: contributionPath ? this.loadToolingCommands(contributionPath) : {} };
+        });
+        // Discover canonical owners first so an earlier-index customer cannot preempt them.
+        const owners = new Map();
+        contributions.forEach(({ moduleObject, commands }) => {
+            const relative = path.relative(frameworkHome, fs.realpathSync(moduleObject.path));
+            if (relative.startsWith('..') || path.isAbsolute(relative)) return;
+            Object.entries(commands).forEach(([name, definition]) => {
+                if (definition.acceptanceContract !== true) return;
+                if (owners.has(name) && owners.get(name) !== moduleObject.path)
+                    throw new Error('Duplicate framework acceptance owner: ' + name);
+                owners.set(name, moduleObject.path);
+            });
+        });
+        const registry = {};
+        contributions.forEach(({ moduleObject, commands }) => {
             Object.keys(commands).forEach(commandName => {
+                if (owners.has(commandName) && owners.get(commandName) !== moduleObject.path)
+                    throw new Error('Framework acceptance contract cannot be overridden: ' + commandName);
                 this.mergeCommand(registry, commandName, commands[commandName], moduleObject);
             });
         });

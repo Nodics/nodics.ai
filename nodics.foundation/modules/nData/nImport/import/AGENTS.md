@@ -1,5 +1,19 @@
 # import Agent Contract
 
+Installed migration evidence stays in the existing `importRun` model through
+`DefaultInstalledMigrationJournalService`, never `recordRun` or a new collection.
+Require immutable scoped plans, explicit provenance, insert-only begin, and
+revision/attempt-fenced checkpoints before external effects. No timeout takeover,
+implicit replay, or best-effort strict writes. Preserve normal history behavior
+and its migration namespace guard. Read the
+[strict journal contract](llm/contracts/installed-migration-journal.md) before
+changing its internal API or offline persistence binding.
+
+Preserve historical release roots through the optional aggregate `retainedRoots`
+contract. Validate containment, full-tree hashes and successor ownership before
+suppressing conventional discovery. Never rewrite old payloads or receipt keys;
+see `llm/contracts/README.md#retained-source-roots` and the independent retention test.
+
 This file gives AI coding agents mandatory guidance for this Nodics module or package boundary.
 
 ## Inheritance
@@ -26,6 +40,15 @@ This file gives AI coding agents mandatory guidance for this Nodics module or pa
 - For module release data, treat `headers`, `records`, and `assets` as the developer-authored source. Treat `data/manifest.json` as generated audit evidence and grouping metadata. Do not ask developers or AI tools to hand-update checksum maps when header or record files change.
 
 ## Content-pack rules
+
+- nImport owns the complete protected `acceptance:staged-sample-data` API suite.
+  Projects retain only release-module/role selections and adoption checks. Resolve
+  effective application descriptors through nConfig, not raw customer source paths.
+  Preserve default validation-only behavior, explicit install intent, employee
+  authority and exact catalogue versions. Error-message matching must never turn
+  a rejected installation into success; verify CURRENT state through the catalogue.
+  Runtime startup belongs to topology tooling. Cover independent partner fixtures,
+  denial, missing/ambiguous releases, version drift and idempotent current releases.
 
 - `nImport` is the only content-pack execution authority. System may expose
   secured control-plane routes and BackOffice clients may invoke them, but no

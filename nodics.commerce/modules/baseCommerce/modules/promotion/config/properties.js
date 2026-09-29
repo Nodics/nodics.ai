@@ -11,6 +11,15 @@
 
 /** @module promotion/config/properties @description Defines Commerce capability and schema access policies. @layer config @owner promotion */
 module.exports = {
+  publish: {
+    providers: { domainAdapters: { promotion: null }, versionProviders: { promotion: null }, workflowProviders: { promotion: null } },
+    approvalWorkflow: { domains: { promotion: { definitionCode: 'promotionPublicationApproval', ownerModule: 'promotion',
+      actionKey: 'promotion.applyPublicationDecision', sourceRuntimeRole: 'COMMERCE_STAGED' } } }
+  },
+  process: { actionAdapters: { definitions: { 'promotion.applyPublicationDecision': {
+    moduleName: 'promotion', operation: 'applyPublicationDecision', remote: { target: 'promotion', moduleName: 'promotion',
+      runtimeRole: 'COMMERCE_STAGED', apiName: '/workflow/actions/applyPublicationDecision', requiresCompletedTask: true }
+  } } } },
   // Inert inventory; an allowed local server must explicitly select this capability.
   localResetProvider: {
     contributions: {
@@ -30,6 +39,7 @@ module.exports = {
   promotion: { enabled: true, legacyTokenHashPolicies: [] },
   schemaPolicies: {
     promotion: {
+      publicationVersioned: { isVersionedEnabled: false },
       operational: {
         accessGroups: {
           adminGroup: 10,
@@ -67,6 +77,7 @@ module.exports = {
   },
   apiExposure: {
     categories: {
+      promotionPublicationAuthoring: { enabled: false },
       commerceCustomer: {
         enabled: true,
       },
@@ -81,4 +92,14 @@ module.exports = {
       },
     },
   },
+};
+
+// Registration remains separate from availability; installed qualification is an operator gate.
+module.exports.promotion.publication = {
+    runtimeRole: null,
+    sourceVersioningQualified: false,
+    delivery: { enabled: false, rootCodes: [] },
+    legacyCasRecovery: { enabled: false, operations: [] },
+    targetTransportProvider: null,
+    maxDependencies: 1000
 };

@@ -1,3 +1,14 @@
+/*
+    Nodics - Enterprice Micro-Services Management Framework
+
+    Copyright (c) 2026 Nodics All rights reserved.
+
+    This software is governed by the Nodics Source-Available Commercial License.
+    You may use, copy, modify, deploy, or distribute it only as permitted by the
+    root LICENSE file or a separate written agreement with Nodics.
+
+ */
+
 /** @module nodics.wcms/config/properties @description Defines reusable WCMS content-pack sources for framework, Axis and customer-project documentation publication. @layer config @owner wcms @override Later layers may override content-pack availability, source versions and publication profile bindings. */
 module.exports = {
   "data": {
@@ -48,6 +59,12 @@ module.exports = {
               "moduleName": "cms",
               "sections": [
                 "cmsPublicationApproval"
+              ]
+            },
+            {
+              "moduleName": "media",
+              "sections": [
+                "mediaPublicationWorkflow"
               ]
             }
           ]

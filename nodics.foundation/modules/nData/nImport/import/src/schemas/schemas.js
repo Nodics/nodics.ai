@@ -163,6 +163,21 @@ module.exports = {
             },
             tenants: ['default'],
             definition: {
+                migration: {
+                    type: 'object',
+                    required: false,
+                    description: 'Strict installed migration plan, provenance and checkpoint evidence; internal journal service only'
+                },
+                migrationRevision: {
+                    type: 'int',
+                    required: false,
+                    description: 'Compare-and-set revision of strict installed migration evidence'
+                },
+                migrationAttempt: {
+                    type: 'int',
+                    required: false,
+                    description: 'Explicit stopped-worker recovery attempt; never a timeout lease'
+                },
                 runId: {
                     type: 'string',
                     required: true,

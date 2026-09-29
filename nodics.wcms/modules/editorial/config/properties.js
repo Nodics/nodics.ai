@@ -17,6 +17,16 @@
  * @override Project, environment, server, node, tenant, or customer layers may override these defaults through Nodics configuration layering.
  */
 module.exports = {
+    tooling: {
+        commands: {
+            'acceptance:editorial-live': {
+                acceptanceContract: true,
+                projectHome: true,
+                handler: '@nTooling/node-script',
+                script: 'src/service/acceptance/defaultEditorialLiveJourneyAcceptanceService.mjs'
+            }
+        }
+    },
     // Inert inventory; an allowed local server must explicitly select this capability.
     localResetProvider: {
         contributions: {
@@ -72,6 +82,11 @@ module.exports = {
             runtimeRole: 'STAGED',
             maximumDependencies: 500,
             versionProvider: 'DefaultEditorialPublicationVersionProviderService',
+            target: {
+                moduleName: 'editorial',
+                connectionName: null,
+                connectionType: 'abstract',
+            },
         },
         delivery: {
             defaultLimit: 20,

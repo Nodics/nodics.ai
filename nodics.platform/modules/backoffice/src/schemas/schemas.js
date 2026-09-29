@@ -33,6 +33,7 @@ module.exports = {
                 registeredVersion: { type: 'string', required: true, description: 'Last reconciled standard functional-module version' },
                 moduleIndex: { type: 'string', required: false, description: 'Runtime package index used for stable module ordering' },
                 registrationState: { type: 'string', required: true, description: 'Durable AVAILABLE, REGISTERED, or DEREGISTERED project decision' },
+                compositionOnly: { type: 'boolean', description: 'Observed group no longer declares a business activation identity; historical record only' },
                 enabled: { type: 'bool', required: true, default: true, description: 'Whether Axis may present the functional module' },
                 required: { type: 'bool', required: true, default: false, description: 'Whether the project protects this functional module from disablement or deregistration' },
                 runtimeState: { type: 'string', required: true, description: 'Observed ACTIVE, OFFLINE, DEGRADED, or INCOMPATIBLE state' },

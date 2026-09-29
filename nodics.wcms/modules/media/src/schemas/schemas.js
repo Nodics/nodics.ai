@@ -176,6 +176,7 @@ module.exports = {
         media: {
             super: 'base',
             model: true,
+            schemaPolicies: ['publicationVersioned'],
             service: { enabled: true },
             event: { enabled: true, type: 'SYNC' },
             router: { enabled: true },
@@ -481,14 +482,19 @@ module.exports = {
         },
         mediaPlacement: {
             super: 'base',
+            isVersionedEnabled: false,
+            cache: { enabled: false },
+            transaction: { enabled: true, sideEffects: 'none' },
             model: true,
             service: { enabled: true },
-            event: { enabled: true, type: 'SYNC' },
+            event: { enabled: false },
             router: { enabled: true },
             backoffice: {
                 excludedFields: ['storageKey', 'relativePath', 'fullPath', 'url', 'accessUrl'],
+                mutationMode: 'READ_ONLY',
             },
             definition: {
+                revision: { type: 'int', required: false, description: 'Owner-managed CAS counter for governed Online media placement' },
                 code: {
                     type: 'string',
                     required: true,
@@ -750,9 +756,13 @@ module.exports = {
         },
         mediaTransferManifest: {
             super: 'base',
+            isVersionedEnabled: false,
+            cache: { enabled: false },
+            transaction: { enabled: true, sideEffects: 'none' },
+            backoffice: { mutationMode: 'READ_ONLY', excludedFields: ['evidence'] },
             model: true,
             service: { enabled: true },
-            event: { enabled: true, type: 'SYNC' },
+            event: { enabled: false },
             router: { enabled: true },
             definition: {
                 code: { type: 'string', required: true, searchOptions: { enabled: true }, description: 'Stable transfer manifest identity' },
@@ -770,9 +780,13 @@ module.exports = {
         },
         mediaPublicationReceipt: {
             super: 'base',
+            isVersionedEnabled: false,
+            cache: { enabled: false },
+            transaction: { enabled: true, sideEffects: 'none' },
+            backoffice: { mutationMode: 'READ_ONLY' },
             model: true,
             service: { enabled: true },
-            event: { enabled: true, type: 'SYNC' },
+            event: { enabled: false },
             router: { enabled: true },
             definition: {
                 code: { type: 'string', required: true, searchOptions: { enabled: true }, description: 'Stable publication receipt identity for physical artifacts' },

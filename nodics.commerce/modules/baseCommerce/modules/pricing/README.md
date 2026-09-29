@@ -19,3 +19,8 @@ A server must explicitly select it; contributions never enable reset or bypass t
 
 Route-category defaults belong to this capability; deployments supply only intentional overrides.
 Preserve nRouter enforcement and independent route authorization. See [exposure ownership](../../../../../nodics.foundation/modules/nRouter/llm/contracts/README.md#capability-owned-exposure-defaults).
+
+See [publication qualification](llm/contracts/README.md#publication-qualification-boundary):
+policy capture is a projection, not immutable storage proof. Mutable restoration
+is disabled; provider registration and activation require owner migration,
+retained target policy, durable receipts, pointer CAS and no-source-fallback reads.

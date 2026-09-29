@@ -2,6 +2,25 @@
 
 Media owns governed asset records, folders, formats, storage providers, upload, download, delivery, publication transfer, references, and media sets.
 
+## Canonical Staged Media Preparation
+
+Run `nodics project:run acceptance:media-seed --manifest-modules=<module,...> --execute`
+from the selected customer project/environment. Without `--execute`, mutation is
+rejected; `--help` performs no configuration discovery or network operations.
+The module list is an allowlist intersected with effective Platform application
+profiles. Inactive selections are ignored; no matching assets is an error.
+Existing `MEDIA_ASSET_MANIFEST` descriptors supply paths and business purpose.
+Customer assets stay customer-owned; reusable accelerator assets stay with their
+accelerator. No copied upload suite or parallel manifest registry is needed.
+
+The command validates all paths and duplicate codes before network access, then
+uses employee-authorized Media uploads on the selected `WCMS_STAGED` runtime.
+Each response must prove the media code and SHA-256 checksum. Denials, malformed
+responses and duplicate errors fail, rather than becoming a false success.
+Repeat preparation uses the same Media save API; partial failures are not rolled
+back automatically. Reconcile the cause before retrying. Online publication,
+service credentials and approval decisions are not part of this command.
+
 ## Responsibility
 
 This module manages media metadata and storage policy. Product, CMS, engagement, and import/export modules own their domain relationship to a media code.
@@ -15,6 +34,27 @@ This module manages media metadata and storage policy. Product, CMS, engagement,
 - Customer photo orchestration may use bounded encoded intake after its own
   analysis succeeds. Media retains upload policy, original filename, private
   storage, owner identity and checksum-checked idempotent replay.
+
+## Retained Publication (Gated)
+
+Media now has owner-local exact-version capture, hidden target preparation and
+transactional placement/receipt methods for the existing nPublish provider
+contract, authenticated target routes/transport, and a fixed Process callback
+binding with an explicit Media-owned workflow release. Publication providers
+are **not registered or enabled**. Existing CMS transfer remains
+unchanged and does not gain these guarantees automatically.
+
+Developers and maintainers: start with [the retained publication contract](llm/contracts/README.md#retained-publication).
+It defines the service interfaces, required shared integration, migration and
+acceptance gates. Operators must not enable `media.publication.versionProviderEnabled`
+until those gates pass. Business users continue using the existing governed
+publication workflow; there is no new approval UI or public route in this batch.
+
+Qualified Staged operators can submit an exact metadata version through secured
+`POST /nodics/media/v0/publication/requests`; it captures retained content and
+delegates validation and approval to nPublish. See the
+[local qualification handoff](llm/contracts/README.md#local-qualification-handoff)
+for composition, connection and API prerequisites.
 
 ## Documentation
 

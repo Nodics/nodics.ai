@@ -100,6 +100,21 @@ Provider-specific configuration rules:
 
 ## Implementation Order
 
+Retained publication is gated, not registered. Read
+`llm/contracts/README.md#retained-publication` before modifying capture, target
+preparation, delivery or rollback. Reuse transfer manifests, placements,
+publication receipts, provider storage and nDatabase transactions. Never route
+retained preparation through `importReferenced` or `upload`: those can make
+mutable Media rows deliverable before activation. Never reinterpret a passing
+mock transaction test as installed database/Process/transport qualification.
+Do not relax `schemaMaintenance` to inspect or deploy Online Media.
+Retained target routes use the existing Media controller/facade and scoped
+runtime principal check. Process callbacks must always pass the fixed Media
+domain/action to nPublish's claimed-decision bridge. Install the owner workflow
+only through its EXPLICIT PROCESS contribution; never auto-install or accept a
+callback's decision payload. Manifest reconciliation is read-only and protects
+inactive rollback versions; it does not authorize orphan deletion.
+
 For every media change:
 
 1. Reuse the `media` provider, folder, format, media, media set, and reference contracts.
@@ -107,6 +122,15 @@ For every media change:
 3. Create a new schema/service/provider only after checking that existing contracts cannot express the requirement.
 
 ## Documentation and Test Expectations
+
+Media owns the complete `acceptance:media-seed` preparation and integrity suite.
+Applications supply existing manifest descriptors and explicit module selections,
+not alternate implementations of its assertions. Resolve profiles through actual
+nConfig and module paths through existing discovery. Preflight must reject path
+and symlink escape, ambiguous ownership and conflicting media codes. Only employee
+uploads to Staged are permitted; never restore direct Online import or service
+credential fallback in this command. Test independent partner fixtures, denial,
+integrity failures, inactive selections and inert import/help.
 
 Every media lifecycle change must update:
 

@@ -25,177 +25,381 @@ const withAxisOwnership = records => {
 };
 
 module.exports = withAxisOwnership({
-    record0: { code: 'axisAuthenticationPageType', kind: 'PAGE', contractVersion: 0, active: true },
-    record1: { code: 'axisDashboardPageType', kind: 'PAGE', contractVersion: 0, active: true },
-    record2: {
-        code: 'axisBrandComponentType',
-        kind: 'COMPONENT',
-        contractVersion: 0,
-        propertySchema: { productName: 'string', tagline: 'string', logoAsset: 'string', displayMode: 'string' },
-        active: true
+    "record0": {
+        "code": "axisAuthenticationPageType",
+        "kind": "PAGE",
+        "contractVersion": 0,
+        "active": true
     },
-    record3: {
-        code: 'axisMessageComponentType',
-        kind: 'COMPONENT',
-        contractVersion: 0,
-        propertySchema: { title: 'string', message: 'string', tone: 'string' },
-        active: true
+    "record1": {
+        "code": "axisDashboardPageType",
+        "kind": "PAGE",
+        "contractVersion": 0,
+        "active": true
     },
-    record4: {
-        code: 'axisEmployeeLoginFormComponentType',
-        kind: 'COMPONENT',
-        contractVersion: 0,
-        propertySchema: { title: 'string', usernameLabel: 'string', usernamePlaceholder: 'string',
-            passwordLabel: 'string', passwordPlaceholder: 'string', submitLabel: 'string' },
-        active: true
-    },
-    record5: {
-        code: 'axisEmployeeRecoveryFormComponentType',
-        kind: 'COMPONENT',
-        contractVersion: 0,
-        propertySchema: { title: 'string', identifierLabel: 'string', identifierPlaceholder: 'string',
-            submitLabel: 'string', successMessage: 'string' },
-        active: true
-    },
-    record6: {
-        code: 'axisLinkComponentType',
-        kind: 'COMPONENT',
-        contractVersion: 0,
-        propertySchema: { label: 'string', route: 'string' },
-        active: true
-    },
-    record7: {
-        code: 'axisDashboardSummaryComponentType',
-        kind: 'COMPONENT',
-        contractVersion: 0,
-        propertySchema: { title: 'string', items: 'array', placeholder: 'boolean' },
-        active: true
-    },
-    record8: {
-        code: 'axisDashboardActionsComponentType',
-        kind: 'COMPONENT',
-        contractVersion: 0,
-        propertySchema: { title: 'string', actions: 'array', placeholder: 'boolean' },
-        active: true
-    },
-    record9: {
-        code: 'axisAuthenticationShowcaseComponentType',
-        kind: 'COMPONENT',
-        contractVersion: 0,
-        propertySchema: { eyebrow: 'string', title: 'string', message: 'string',
-            highlights: 'array', logoAsset: 'string', backgroundAsset: 'string' },
-        active: true
-    },
-    record10: {
-        code: 'axisEmployeeLockFormComponentType',
-        kind: 'COMPONENT',
-        contractVersion: 0,
-        propertySchema: { title: 'string', employeeLabel: 'string', passwordLabel: 'string',
-            passwordPlaceholder: 'string', submitLabel: 'string', signOutLabel: 'string' },
-        active: true
-    },
-    record11: { code: 'axisAssistantPageType', kind: 'PAGE', contractVersion: 0, active: true },
-    record12: {
-        code: 'axisAssistantWorkspaceComponentType', kind: 'COMPONENT', contractVersion: 0,
-        propertySchema: { title: 'string', welcomeMessage: 'string', inputPlaceholder: 'string',
-            submitLabel: 'string', stopLabel: 'string', emptyState: 'string',
-            employeeLabel: 'string', assistantLabel: 'string', workingLabel: 'string',
-            cancellingLabel: 'string', errorLabel: 'string', historyLabel: 'string',
-            newConversationLabel: 'string', noConversationsLabel: 'string',
-            loadMoreLabel: 'string', clarificationTitle: 'string',
-            clarificationSubmitLabel: 'string', toolPlanTitle: 'string',
-            confirmationTitle: 'string', approveLabel: 'string', rejectLabel: 'string',
-            executeLabel: 'string', confirmationExpiredLabel: 'string',
-            confirmationCompletedLabel: 'string', toolPlannedLabel: 'string',
-            toolRunningLabel: 'string', toolSucceededLabel: 'string',
-            toolFailedLabel: 'string', citationsTitle: 'string',
-            noCitationsLabel: 'string', usageTitle: 'string',
-            inputTokensLabel: 'string', outputTokensLabel: 'string',
-            cachedTokensLabel: 'string', reasoningTokensLabel: 'string',
-            embeddingTokensLabel: 'string', reconciliationLabel: 'string' }, active: true
-    },
-    record13: { code: 'axisSchemaWorkbenchPageType', kind: 'PAGE', contractVersion: 0, active: true },
-    record14: {
-        code: 'axisSchemaWorkbenchComponentType', kind: 'COMPONENT', contractVersion: 0,
-        propertySchema: {
-            title: 'string', introduction: 'string', schemaSearchLabel: 'string',
-            schemaSearchPlaceholder: 'string', schemasLabel: 'string', recordsLabel: 'string',
-            noSchemasLabel: 'string', noRecordsLabel: 'string', selectSchemaLabel: 'string',
-            loadingLabel: 'string', retryLabel: 'string', createLabel: 'string',
-            cancelLabel: 'string', savingLabel: 'string',
-            selectExistingLabel: 'string', createRelatedLabel: 'string',
-            addToDraftLabel: 'string', removeRelatedLabel: 'string',
-            noRelatedRecordsLabel: 'string', relatedSearchLabel: 'string',
-            missingReferencePropertyLabel: 'string',
-            actionsLabel: 'string', viewLabel: 'string', editLabel: 'string',
-            updateLabel: 'string', updatingLabel: 'string', closeLabel: 'string',
-            trueLabel: 'string', falseLabel: 'string',
-            deleteLabel: 'string', deletingLabel: 'string',
-            confirmDeleteLabel: 'string', deleteTitle: 'string',
-            deleteWarning: 'string', tenantLabel: 'string', enterpriseLabel: 'string',
-            searchRecordsLabel: 'string', searchRecordsPlaceholder: 'string',
-            moduleLabel: 'string', availableOperationsLabel: 'string',
-            resultsLabel: 'string', pageSizeLabel: 'string', paginationLabel: 'string',
-            filterBuilderLabel: 'string', addConditionLabel: 'string',
-            addGroupLabel: 'string', applyFiltersLabel: 'string',
-            clearFiltersLabel: 'string',
-            filterFieldLabel: 'string', filterOperatorLabel: 'string',
-            filterValueLabel: 'string', filterMatchLabel: 'string',
-            removeFilterLabel: 'string', requestPreviewLabel: 'string',
-            addFavouriteLabel: 'string', removeFavouriteLabel: 'string',
-            gridSettingsLabel: 'string', savedViewNameLabel: 'string',
-            saveViewLabel: 'string', selectVisibleRecordsLabel: 'string',
-            selectRecordLabel: 'string', selectedRecordsLabel: 'string',
-            bulkDeleteLabel: 'string', bulkDeletingLabel: 'string',
-            deleteImpactLoadingLabel: 'string', deleteImpactBlockedLabel: 'string',
-            deleteImpactClearLabel: 'string', editRelatedLabel: 'string'
+    "record2": {
+        "code": "axisBrandComponentType",
+        "kind": "COMPONENT",
+        "contractVersion": 0,
+        "propertySchema": {
+            "productName": "string",
+            "tagline": "string",
+            "logoAsset": "string",
+            "displayMode": "string"
         },
-        active: true
+        "active": true
     },
-    record15: { code: 'axisMediaManagementPageType', kind: 'PAGE', contractVersion: 0, active: true },
-    record16: {
-        code: 'axisMediaManagementWorkspaceComponentType', kind: 'COMPONENT', contractVersion: 0,
-        propertySchema: {
-            title: 'string',
-            introduction: 'string',
-            backendAuthority: 'string',
-            customizationBoundary: 'string'
+    "record3": {
+        "code": "axisMessageComponentType",
+        "kind": "COMPONENT",
+        "contractVersion": 0,
+        "propertySchema": {
+            "title": "string",
+            "message": "string",
+            "tone": "string"
         },
-        active: true
+        "active": true
     },
-    record17: { code: 'axisPlatformPageType', kind: 'PAGE', contractVersion: 0, active: true },
-    record18: {
-        code: 'axisPlatformSummaryComponentType', kind: 'COMPONENT', contractVersion: 0,
-        propertySchema: {
-            title: 'string',
-            introduction: 'string',
-            primaryMetricLabel: 'string',
-            secondaryMetricLabel: 'string',
-            emptyState: 'string'
+    "record4": {
+        "code": "axisEmployeeLoginFormComponentType",
+        "kind": "COMPONENT",
+        "contractVersion": 0,
+        "propertySchema": {
+            "title": "string",
+            "usernameLabel": "string",
+            "usernamePlaceholder": "string",
+            "passwordLabel": "string",
+            "passwordPlaceholder": "string",
+            "submitLabel": "string"
         },
-        active: true
+        "active": true
     },
-    record19: {
-        code: 'axisPlatformInitializeComponentType', kind: 'COMPONENT', contractVersion: 0,
-        propertySchema: {
-            title: 'string',
-            introduction: 'string',
-            disabledMessage: 'string',
-            previewLabel: 'string',
-            executeLabel: 'string'
+    "record5": {
+        "code": "axisEmployeeRecoveryFormComponentType",
+        "kind": "COMPONENT",
+        "contractVersion": 0,
+        "propertySchema": {
+            "title": "string",
+            "identifierLabel": "string",
+            "identifierPlaceholder": "string",
+            "submitLabel": "string",
+            "successMessage": "string"
         },
-        active: true
+        "active": true
     },
-    record20: {
-        code: 'axisRuntimeModulesRegistryComponentType', kind: 'COMPONENT', contractVersion: 0,
-        propertySchema: {
-            title: 'string',
-            introduction: 'string',
-            registeredLabel: 'string',
-            availableLabel: 'string',
-            protectedLabel: 'string',
-            activeLabel: 'string'
+    "record6": {
+        "code": "axisLinkComponentType",
+        "kind": "COMPONENT",
+        "contractVersion": 0,
+        "propertySchema": {
+            "label": "string",
+            "route": "string"
         },
-        active: true
+        "active": true
+    },
+    "record7": {
+        "code": "axisAuthenticationShowcaseComponentType",
+        "kind": "COMPONENT",
+        "contractVersion": 0,
+        "propertySchema": {
+            "eyebrow": "string",
+            "title": "string",
+            "message": "string",
+            "highlights": "array",
+            "logoAsset": "string",
+            "backgroundAsset": "string"
+        },
+        "active": true
+    },
+    "record8": {
+        "code": "axisEmployeeLockFormComponentType",
+        "kind": "COMPONENT",
+        "contractVersion": 0,
+        "propertySchema": {
+            "title": "string",
+            "employeeLabel": "string",
+            "passwordLabel": "string",
+            "passwordPlaceholder": "string",
+            "submitLabel": "string",
+            "signOutLabel": "string"
+        },
+        "active": true
+    },
+    "record9": {
+        "code": "axisAssistantPageType",
+        "kind": "PAGE",
+        "contractVersion": 0,
+        "active": true
+    },
+    "record10": {
+        "code": "axisAssistantWorkspaceComponentType",
+        "kind": "COMPONENT",
+        "contractVersion": 0,
+        "propertySchema": {
+            "title": "string",
+            "welcomeMessage": "string",
+            "inputPlaceholder": "string",
+            "submitLabel": "string",
+            "stopLabel": "string",
+            "emptyState": "string",
+            "employeeLabel": "string",
+            "assistantLabel": "string",
+            "workingLabel": "string",
+            "cancellingLabel": "string",
+            "errorLabel": "string",
+            "historyLabel": "string",
+            "newConversationLabel": "string",
+            "noConversationsLabel": "string",
+            "loadMoreLabel": "string",
+            "clarificationTitle": "string",
+            "clarificationSubmitLabel": "string",
+            "toolPlanTitle": "string",
+            "confirmationTitle": "string",
+            "approveLabel": "string",
+            "rejectLabel": "string",
+            "executeLabel": "string",
+            "confirmationExpiredLabel": "string",
+            "confirmationCompletedLabel": "string",
+            "toolPlannedLabel": "string",
+            "toolRunningLabel": "string",
+            "toolSucceededLabel": "string",
+            "toolFailedLabel": "string",
+            "citationsTitle": "string",
+            "noCitationsLabel": "string",
+            "usageTitle": "string",
+            "inputTokensLabel": "string",
+            "outputTokensLabel": "string",
+            "cachedTokensLabel": "string",
+            "reasoningTokensLabel": "string",
+            "embeddingTokensLabel": "string",
+            "reconciliationLabel": "string"
+        },
+        "active": true
+    },
+    "record11": {
+        "code": "axisSchemaWorkbenchPageType",
+        "kind": "PAGE",
+        "contractVersion": 0,
+        "active": true
+    },
+    "record12": {
+        "code": "axisSchemaWorkbenchComponentType",
+        "kind": "COMPONENT",
+        "contractVersion": 0,
+        "propertySchema": {
+            "title": "string",
+            "introduction": "string",
+            "schemaSearchLabel": "string",
+            "schemaSearchPlaceholder": "string",
+            "schemasLabel": "string",
+            "recordsLabel": "string",
+            "noSchemasLabel": "string",
+            "noRecordsLabel": "string",
+            "selectSchemaLabel": "string",
+            "loadingLabel": "string",
+            "retryLabel": "string",
+            "createLabel": "string",
+            "cancelLabel": "string",
+            "savingLabel": "string",
+            "selectExistingLabel": "string",
+            "createRelatedLabel": "string",
+            "addToDraftLabel": "string",
+            "removeRelatedLabel": "string",
+            "noRelatedRecordsLabel": "string",
+            "relatedSearchLabel": "string",
+            "missingReferencePropertyLabel": "string",
+            "actionsLabel": "string",
+            "viewLabel": "string",
+            "editLabel": "string",
+            "updateLabel": "string",
+            "updatingLabel": "string",
+            "closeLabel": "string",
+            "trueLabel": "string",
+            "falseLabel": "string",
+            "deleteLabel": "string",
+            "deletingLabel": "string",
+            "confirmDeleteLabel": "string",
+            "deleteTitle": "string",
+            "deleteWarning": "string",
+            "tenantLabel": "string",
+            "enterpriseLabel": "string",
+            "searchRecordsLabel": "string",
+            "searchRecordsPlaceholder": "string",
+            "moduleLabel": "string",
+            "availableOperationsLabel": "string",
+            "resultsLabel": "string",
+            "pageSizeLabel": "string",
+            "paginationLabel": "string",
+            "filterBuilderLabel": "string",
+            "addConditionLabel": "string",
+            "addGroupLabel": "string",
+            "applyFiltersLabel": "string",
+            "clearFiltersLabel": "string",
+            "filterFieldLabel": "string",
+            "filterOperatorLabel": "string",
+            "filterValueLabel": "string",
+            "filterMatchLabel": "string",
+            "removeFilterLabel": "string",
+            "requestPreviewLabel": "string",
+            "addFavouriteLabel": "string",
+            "removeFavouriteLabel": "string",
+            "gridSettingsLabel": "string",
+            "savedViewNameLabel": "string",
+            "saveViewLabel": "string",
+            "selectVisibleRecordsLabel": "string",
+            "selectRecordLabel": "string",
+            "selectedRecordsLabel": "string",
+            "bulkDeleteLabel": "string",
+            "bulkDeletingLabel": "string",
+            "deleteImpactLoadingLabel": "string",
+            "deleteImpactBlockedLabel": "string",
+            "deleteImpactClearLabel": "string",
+            "editRelatedLabel": "string"
+        },
+        "active": true
+    },
+    "record13": {
+        "code": "axisMediaManagementPageType",
+        "kind": "PAGE",
+        "contractVersion": 0,
+        "active": true
+    },
+    "record14": {
+        "code": "axisMediaManagementWorkspaceComponentType",
+        "kind": "COMPONENT",
+        "contractVersion": 0,
+        "propertySchema": {
+            "title": "string",
+            "introduction": "string",
+            "backendAuthority": "string",
+            "customizationBoundary": "string"
+        },
+        "active": true
+    },
+    "record15": {
+        "code": "axisPlatformPageType",
+        "kind": "PAGE",
+        "contractVersion": 0,
+        "active": true
+    },
+    "record16": {
+        "code": "axisPlatformSummaryComponentType",
+        "kind": "COMPONENT",
+        "contractVersion": 0,
+        "propertySchema": {
+            "title": "string",
+            "introduction": "string",
+            "primaryMetricLabel": "string",
+            "secondaryMetricLabel": "string",
+            "emptyState": "string"
+        },
+        "active": true
+    },
+    "record17": {
+        "code": "axisPlatformInitializeComponentType",
+        "kind": "COMPONENT",
+        "contractVersion": 0,
+        "propertySchema": {
+            "title": "string",
+            "introduction": "string",
+            "disabledMessage": "string",
+            "previewLabel": "string",
+            "executeLabel": "string"
+        },
+        "active": true
+    },
+    "record18": {
+        "code": "axisRuntimeModulesRegistryComponentType",
+        "kind": "COMPONENT",
+        "contractVersion": 0,
+        "propertySchema": {
+            "title": "string",
+            "introduction": "string",
+            "registeredLabel": "string",
+            "availableLabel": "string",
+            "protectedLabel": "string",
+            "activeLabel": "string"
+        },
+        "active": true
+    },
+    "record19": {
+        "code": "axisDashboardWorkspaceComponentType",
+        "kind": "COMPONENT",
+        "contractVersion": 1,
+        "propertySchema": {
+            "title": "string",
+            "defaultView": "string"
+        },
+        "active": true
+    },
+    "record20": {
+        "code": "axisDashboardTabComponentType",
+        "kind": "COMPONENT",
+        "contractVersion": 1,
+        "propertySchema": {
+            "title": "string",
+            "view": "string",
+            "description": "string",
+            "layout": "string",
+            "presentation": "string"
+        },
+        "active": true
+    },
+    "record21": {
+        "code": "axisDashboardSectionComponentType",
+        "kind": "COMPONENT",
+        "contractVersion": 1,
+        "propertySchema": {
+            "kind": "string",
+            "title": "string",
+            "published": "string",
+            "approval": "string",
+            "preparing": "string",
+            "available": "string",
+            "unknown": "string",
+            "configuration": "string",
+            "checked": "string",
+            "incomplete": "string",
+            "previous": "string",
+            "next": "string",
+            "steps": "string",
+            "review": "string",
+            "empty": "string",
+            "description": "string",
+            "blocked": "string",
+            "details": "string",
+            "ready": "string",
+            "needsAttention": "string",
+            "areas": "object",
+            "route": "string",
+            "scope": "string",
+            "refresh": "string",
+            "taskNavigationRef": "string",
+            "search": "string",
+            "openDashboard": "string",
+            "allViews": "string",
+            "close": "string",
+            "destinations": "string",
+            "records": "string",
+            "unavailable": "string",
+            "updated": "string",
+            "noMetrics": "string",
+            "noDomains": "string",
+            "noResults": "string",
+            "workUnavailable": "string",
+            "openWork": "string",
+            "escalated": "string",
+            "overdue": "string",
+            "due": "string",
+            "noTasks": "string",
+            "bounded": "string",
+            "observedTasks": "string",
+            "observedProcesses": "string",
+            "noActivity": "string",
+            "noExceptions": "string",
+            "navigationRefs": "array",
+            "excludedGroups": "array"
+        },
+        "active": true
     }
 });

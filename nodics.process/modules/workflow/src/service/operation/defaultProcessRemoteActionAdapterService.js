@@ -281,7 +281,8 @@ module.exports = {
         return {
             code: 'SUC_PROCESS_00000',
             data: {
-                instance: { code: instance.code, context: active.context },
+                instance: { code: instance.code, definitionCode: instance.definitionCode,
+                    version: instance.version, context: active.context },
                 nodeCode: active.nodeCode,
                 executionCode: active.code,
                 taskCode: active.taskCode,

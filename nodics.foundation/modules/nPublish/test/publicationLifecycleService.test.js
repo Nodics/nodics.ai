@@ -110,6 +110,8 @@ const request = (revision, extra) => Object.assign({ tenant: 'tenant-a', publica
     } }));
     online = await service.activate(request(refreshApproved.revision));
     assert.strictEqual(online.state, 'ONLINE');
+    assert.notStrictEqual(online.activationOperation.key, replay.activationOperation.key,
+        'a completed Online refresh must start a new operation, not replay the completed one');
     assert.strictEqual(activated, 2, 'approved online refresh must activate exactly once');
     let originalGetOnlineVersion = versionProvider.getOnlineVersion;
     versionProvider.getOnlineVersion = async () => ({ partial: true, routeCount: 2 });
@@ -160,5 +162,126 @@ const request = (revision, extra) => Object.assign({ tenant: 'tenant-a', publica
     assert.strictEqual(records.get('bounded').state, 'FAILED');
     properties.lifecycle.maxDependencies = 10000;
 
+    records.set('lost-target-response', { code: 'lost-target-response', domain: 'cms', state: 'APPROVED', revision: 0, sourceVersion: 'v2' });
+    versionProvider.getOnlineVersion = async () => ({ version: 'v0' });
+    versionProvider.activate = async publication => {
+        assert.deepStrictEqual(records.get(publication.code).activationOperation,
+            { key: 'lost-target-response:activate:1', previousOnlineVersion: 'v0' });
+        throw new Error('Target committed but response was lost');
+    };
+    await assert.rejects(service.activate(request(0, { publicationCode: 'lost-target-response' })), /response was lost/);
+    assert.strictEqual(records.get('lost-target-response').activationOperation.key, 'lost-target-response:activate:1');
+    assert.strictEqual(records.get('lost-target-response').targetVersion, undefined);
+
+    // A recovered target receipt, not a fresh Online read, owns rollback lineage.
+    records.set('receipt-replay', { code: 'receipt-replay', domain: 'cms', state: 'ACTIVATING', revision: 4,
+        sourceVersion: 'v2', activationOperation: { key: 'receipt-replay:activate:4', previousOnlineVersion: 'v1' } });
+    versionProvider.targetReceiptContract = 'v1';
+    versionProvider.getOnlineVersion = async () => { throw new Error('Replay must not reread predecessor'); };
+    versionProvider.activate = async publication => ({ version: 'v2', receipt: {
+        operationKey: publication.activationOperation.key, publicationCode: publication.code,
+        sourceVersion: 'v2', targetVersion: 'v2', previousOnlineVersion: 'v0'
+    } });
+    const replayed = await service.activate(request(4, { publicationCode: 'receipt-replay' }));
+    assert.strictEqual(replayed.previousOnlineVersion, 'v0');
+    assert.strictEqual(replayed.auditTrail.at(-1).details.receipt.operationKey, 'receipt-replay:activate:4');
+    for (const field of ['operationKey', 'publicationCode', 'sourceVersion', 'targetVersion', 'previousOnlineVersion']) {
+        const code = 'bad-receipt-' + field;
+        records.set(code, { code, domain: 'cms', state: 'ACTIVATING', revision: 4, sourceVersion: 'v2',
+            activationOperation: { key: code + ':activate:4', previousOnlineVersion: 'v0' } });
+        versionProvider.activate = async publication => ({ version: 'v2', receipt: {
+            operationKey: publication.activationOperation.key, publicationCode: code,
+            sourceVersion: 'v2', targetVersion: 'v2', previousOnlineVersion: 'v0', [field]: undefined
+        } });
+        await assert.rejects(service.activate(request(4, { publicationCode: code })), /receipt is invalid/);
+        assert.strictEqual(records.get(code).state, 'FAILED');
+    }
+    records.set('first-target', { code: 'first-target', domain: 'cms', state: 'ACTIVATING', revision: 1,
+        sourceVersion: 'v2', activationOperation: { key: 'first-target:activate:1' }, previousOnlineVersion: 'stale' });
+    versionProvider.activate = async publication => ({ version: 'v2', receipt: {
+        operationKey: publication.activationOperation.key, publicationCode: publication.code,
+        sourceVersion: 'v2', targetVersion: 'v2', previousOnlineVersion: null
+    } });
+    assert.strictEqual((await service.activate(request(1, { publicationCode: 'first-target' }))).previousOnlineVersion, null);
+    delete versionProvider.targetReceiptContract;
+    records.set('legacy-receipt', { code: 'legacy-receipt', domain: 'cms', state: 'ACTIVATING', revision: 4, sourceVersion: 'v2' });
+    versionProvider.activate = async () => ({ version: 'v2', previousOnlineVersion: 'v0' });
+    assert.strictEqual((await service.activate(request(4, { publicationCode: 'legacy-receipt' }))).previousOnlineVersion, 'v0');
+    for (const revision of [0, 7, undefined]) {
+        const code = 'predecessor-' + revision;
+        records.set(code, { code, domain: 'cms', state: 'APPROVED', revision: 0, sourceVersion: 'v2' });
+        versionProvider.getOnlineVersion = async () => ({ version: revision === 0 ? null : 'v0', revision });
+        versionProvider.activate = async publication => {
+            const retained = records.get(code).activationOperation;
+            assert.strictEqual(retained.previousOnlineRevision, revision);
+            assert.strictEqual(Object.hasOwn(retained, 'previousOnlineRevision'), revision !== undefined);
+            return { version: 'v2' };
+        };
+        await service.activate(request(0, { publicationCode: code }));
+        const stored = records.get(code);
+        records.set(code, { ...stored, state: 'ACTIVATING' });
+        versionProvider.getOnlineVersion = async () => { throw new Error('Replay must not refresh target revision'); };
+        await service.activate(request(stored.revision, { publicationCode: code }));
+    }
+    for (const revision of [null, -1, 0.5, '7', Number.MAX_SAFE_INTEGER + 1]) {
+        records.set('invalid-predecessor', { code: 'invalid-predecessor', domain: 'cms', state: 'APPROVED', revision: 0, sourceVersion: 'v2' });
+        versionProvider.getOnlineVersion = async () => ({ version: 'v0', revision });
+        versionProvider.activate = async () => { throw new Error('Must reject before target work'); };
+        await assert.rejects(service.activate(request(0, { publicationCode: 'invalid-predecessor' })), /Target predecessor revision is invalid/);
+        assert.strictEqual(records.get('invalid-predecessor').state, 'APPROVED');
+    }
+    for (const failure of ['response-loss', 'completion-hook', 'legacy-response-loss', 'first-target-response-loss']) {
+        const code = 'retry-' + failure;
+        const qualified = failure !== 'legacy-response-loss';
+        if (qualified) versionProvider.targetReceiptContract = 'v1';
+        else delete versionProvider.targetReceiptContract;
+        records.set(code, { code, domain: 'cms', state: 'APPROVED', revision: 0, sourceVersion: 'v2' });
+        const predecessor = failure === 'first-target-response-loss' ? null : 'v0';
+        let pointer = predecessor;
+        let reads = 0;
+        let commits = 0;
+        let receipt;
+        let loseResponse = failure !== 'completion-hook';
+        let failHook = failure === 'completion-hook';
+        versionProvider.getOnlineVersion = async () => { reads++; return { version: pointer, revision: 7 }; };
+        versionProvider.activate = async publication => {
+            if (receipt) assert.strictEqual(publication.activationOperation.key, receipt.operationKey);
+            else {
+                receipt = { operationKey: publication.activationOperation.key, publicationCode: code,
+                    sourceVersion: 'v2', targetVersion: 'v2', previousOnlineVersion: pointer };
+                pointer = 'v2';
+                commits++;
+            }
+            if (loseResponse) { loseResponse = false; throw new Error('Committed response lost'); }
+            return qualified ? { version: 'v2', receipt } : { version: 'v2' };
+        };
+        adapter.afterActivate = async () => {
+            if (failHook) { failHook = false; throw new Error('Completion hook failed'); }
+        };
+        await assert.rejects(service.activate(request(0, { publicationCode: code })), /lost|hook failed/);
+        let failed = records.get(code);
+        const operation = structuredClone(failed.activationOperation);
+        assert.strictEqual(failed.state, 'FAILED');
+        let retried = await service.retry(request(failed.revision, { publicationCode: code }));
+        let pendingRetry = await service.requestApproval(request(retried.revision, { publicationCode: code }));
+        let approvedRetry = await service.approve(request(pendingRetry.revision, { publicationCode: code }));
+        const recovered = await service.activate(request(approvedRetry.revision, { publicationCode: code }));
+        assert.strictEqual(recovered.state, 'ONLINE');
+        assert.deepStrictEqual(recovered.activationOperation, operation);
+        assert.strictEqual(recovered.previousOnlineVersion, predecessor);
+        assert.strictEqual(reads, 1, 'retry must not replace the original predecessor with the committed target');
+        assert.strictEqual(commits, 1);
+        versionProvider.rollback = async (publication, previous) => {
+            assert.strictEqual(previous, predecessor);
+            pointer = previous;
+            return { restored: previous };
+        };
+        const restored = await service.rollback(request(recovered.revision, { publicationCode: code }));
+        assert.strictEqual(pointer, predecessor);
+        const fresh = await service.resubmit(request(restored.revision, { publicationCode: code }));
+        assert.strictEqual(fresh.activationOperation, null, 'completed rollback permits a new activation identity');
+    }
+    delete adapter.afterActivate;
+    delete versionProvider.targetReceiptContract;
     console.log('nPublish lifecycle orchestration validated');
 })().catch(error => { console.error(error); process.exit(1); });

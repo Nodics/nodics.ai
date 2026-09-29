@@ -36,6 +36,14 @@ assert.strictEqual(engine.options.prefix, 'localRuntimeAuth');
 assert.strictEqual(engine.enabled, false);
 
 assert.strictEqual(service.buildSentinelOptions({ url: 'redis://127.0.0.1:6379' }), null);
+const sentinelDefaults = service.buildSentinelOptions(merge({}, engine.options, {
+    sentinel: { enabled: true, name: 'independent-cache', endpoints: [{ host: 'sentinel.example.test', port: 26379 }] }
+}));
+assert.strictEqual(sentinelDefaults.db, 0);
+assert.strictEqual(sentinelDefaults.retryStrategy(1), 250);
+assert.strictEqual(sentinelDefaults.retryStrategy(100), 5000);
+assert.strictEqual(sentinelDefaults.connectTimeout, 10000);
+assert.strictEqual(sentinelDefaults.commandTimeout, 10000);
 assert.throws(() => service.buildSentinelOptions({ sentinel: { enabled: true, endpoints: [] } }), /master name/);
 assert.throws(() => service.buildSentinelOptions({ sentinel: { enabled: true, name: 'nodics', endpoints: [{ host: '', port: 0 }] } }), /valid host and port/);
 
@@ -64,6 +72,8 @@ assert.strictEqual(options.db, 2);
 assert.strictEqual(options.connectionName, 'nodics-test');
 assert.strictEqual(options.sentinelUsername, 'sentinel-runtime');
 assert.strictEqual(options.sentinelPassword, 'sentinel-secret');
+assert.strictEqual(options.connectTimeout, 4000);
+assert.strictEqual(options.commandTimeout, 5000);
 assert.deepStrictEqual(options.sentinelTLS, {});
 assert.strictEqual(options.retryStrategy(100), 1000);
 assert.strictEqual(typeof adapter.createSentinelClient, 'function');
@@ -73,3 +83,37 @@ assert.strictEqual(typeof adapter.scanIterator, 'function');
 assert.strictEqual(typeof adapter.subscribe, 'function');
 
 console.log('Redis Sentinel configuration contract validated');
+
+require('node:test')('module cache consumers inherit capabilities and later deployment overrides', async () => {
+    const previousConfig = global.CONFIG;
+    const previousNodics = global.NODICS;
+    const selected = merge({}, baseline, {
+        cache: { default: { engines: { redis: { enabled: true } } } }
+    });
+    const consumer = { ...cacheConfiguration, channels: {}, engines: {} };
+    try {
+        global.CONFIG = { get: key => selected[key] };
+        global.NODICS = { getModules: () => ({ independentModule: {}, otherModule: {} }) };
+        await consumer.loadCacheConfiguration();
+        const inherited = consumer.getCacheEngine('independentModule', 'redis');
+        assert.strictEqual(inherited.enabled, true);
+        assert.strictEqual(inherited.options.prefix, 'localRuntimeAuth');
+        assert.strictEqual(inherited.distributed, true);
+        assert.strictEqual(inherited.atomicConsume, true);
+        selected.cache.default.engines.redis.options.prefix = 'isolatedRuntimeAuth';
+        selected.cache.default.engines.redis.ttl = 270;
+        selected.cache.otherModule = { engines: { redis: { enabled: false } } };
+        await consumer.loadCacheConfiguration();
+        const changed = consumer.getCacheEngine('independentModule', 'redis');
+        assert.strictEqual(changed.options.prefix, 'isolatedRuntimeAuth');
+        assert.strictEqual(changed.ttl, 270);
+        assert.strictEqual(consumer.getCacheEngine('otherModule', 'redis').enabled, false);
+        assert.strictEqual(consumer.getCacheEngine('inactiveModule', 'redis'), null);
+        assert.strictEqual(inherited.options.prefix, 'localRuntimeAuth');
+        assert.strictEqual(engine.enabled, false);
+        assert.strictEqual(engine.options.prefix, 'localRuntimeAuth');
+    } finally {
+        global.CONFIG = previousConfig;
+        global.NODICS = previousNodics;
+    }
+});

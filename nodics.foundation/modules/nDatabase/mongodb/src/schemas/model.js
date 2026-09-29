@@ -21,19 +21,56 @@ const _ = require('lodash');
  */
 module.exports = {
     default: {
+        /** Advertises the internal durable protocol only for a discovered writable provider and unversioned model. */
+        persistenceCapabilities: function () {
+            const capabilities = this.dataBase && typeof this.dataBase.getCapabilities === 'function'
+                ? this.dataBase.getCapabilities() : {};
+            const persistence = capabilities && capabilities.persistence || {};
+            const supported = this.versioned !== true && persistence.contractVersion === 1 &&
+                persistence.durableJournal === true && persistence.primaryMajorityReadback === true;
+            return { durableJournal: supported, primaryMajorityReadback: supported, contractVersion: 1 };
+        },
+
+        /** Resolves one allowlisted internal policy; never merges request-supplied driver durability options. */
+        internalPersistenceOptions: function (input, read) {
+            if (input.internalPersistence === undefined) return {};
+            if (input.internalPersistence !== 'DURABLE_JOURNAL' || input.transactionContext ||
+                this.persistenceCapabilities().durableJournal !== true) {
+                throw new CLASSES.NodicsError('ERR_MDL_00005', 'Qualified internal durable journal persistence required');
+            }
+            return read
+                ? { readPreference: 'primary', readConcern: { level: 'majority' }, collation: { locale: 'simple' } }
+                : Object.assign({ writeConcern: { w: 'majority', j: true } },
+                    input.operation === 'create' ? {} : { collation: { locale: 'simple' } });
+        },
+
+        /** Rejects failed, ambiguous or write-concern-error command responses before journal acknowledgement. */
+        validateDurableAcknowledgement: function (result, create) {
+            if (!result || result.writeConcernError || result.writeConcernErrors && result.writeConcernErrors.length ||
+                result.writeErrors && result.writeErrors.length || result.acknowledged === false ||
+                (create ? result.acknowledged !== true : result.ok !== 1 || !Object.prototype.hasOwnProperty.call(result, 'value'))) {
+                throw new CLASSES.NodicsError('ERR_MDL_00005', 'Durable journal write was not acknowledged');
+            }
+        },
+
         /**
          * Performs a single managed record mutation atomically and returns the
          * persisted document, never a reconstructed pre-write snapshot.
          * The generated pipeline owns authorization and concurrency policy.
          */
         compareAndSetItem: async function (input) {
-            const options = this.transactionOptions(input, this);
+            const durable = input.internalPersistence !== undefined;
+            const options = Object.assign({}, this.transactionOptions(input, this), this.internalPersistenceOptions(input, false));
             try {
+                if (durable && !['create', 'update'].includes(input.operation)) {
+                    throw new CLASSES.NodicsError('ERR_MDL_00005', 'Durable journal permits only insert or conditional update');
+                }
                 if (input.operation === 'create') {
                     const model = this.normalizeModelForWrite(input.model);
                     await SERVICE.DefaultModelValidatorService.validateMandate(model, this.rawSchema);
                     await SERVICE.DefaultModelValidatorService.validateDataType(model, this.rawSchema);
                     const result = await this.insertOne(model, options);
+                    if (durable) this.validateDurableAcknowledgement(result, true);
                     if (!result.acknowledged && !(result.ops && result.ops.length)) throw new CLASSES.NodicsError('ERR_MDL_00005');
                     return Object.assign({}, model, { _id: result.insertedId || result.ops[0]._id });
                 }
@@ -41,6 +78,7 @@ module.exports = {
                     ? await this.findOneAndDelete(input.query, Object.assign({}, options, { includeResultMetadata: true }))
                     : await this.findOneAndUpdate(input.query, { $set: this.normalizeModelForWrite(input.model) },
                         Object.assign({}, options, { upsert: false, returnDocument: 'after', includeResultMetadata: true }));
+                if (durable) this.validateDurableAcknowledgement(result, false);
                 return result && Object.prototype.hasOwnProperty.call(result, 'value') ? result.value : result;
             } catch (error) {
                 if (error && error.code === 11000) throw new CLASSES.NodicsError('ERR_CONCURRENCY_00001');
@@ -186,6 +224,10 @@ module.exports = {
         getItems: function (input) {
             return new Promise((resolve, reject) => {
                 try {
+                    const durableOptions = this.internalPersistenceOptions(input, true);
+                    if (input.internalPersistence !== undefined) {
+                        return this.getDurableJournalItems(input, durableOptions).then(resolve, reject);
+                    }
                     let operationOptions = this.transactionOptions(input, this);
                     let cursor = this.find(input.query, Object.assign({}, input.searchOptions || {}, operationOptions));
                     if (input.searchOptions && input.searchOptions.sort && !UTILS.isBlank(input.searchOptions.sort)) {
@@ -222,6 +264,23 @@ module.exports = {
                     reject(new CLASSES.NodicsError(error, 'While executing find operation', 'ERR_MDL_00000'));
                 }
             });
+        },
+
+        /** Reads bounded full journal records and count from primary majority state, ignoring caller driver overrides. */
+        getDurableJournalItems: async function (input, options) {
+            const search = input.searchOptions || {};
+            if (!Number.isSafeInteger(search.limit) || search.limit < 1 ||
+                Object.keys(search).some(key => !['limit'].includes(key))) {
+                throw new CLASSES.NodicsError('ERR_MDL_00000', 'Durable journal read requires only a bounded limit');
+            }
+            const cursor = this.find(input.query, Object.assign({ limit: search.limit }, options));
+            const result = await this.cursorToArray(cursor);
+            const count = await this.countDocuments(input.query, options);
+            if (!Array.isArray(result) || !Number.isSafeInteger(count) || count < 0 ||
+                result.length !== Math.min(count, search.limit)) {
+                throw new CLASSES.NodicsError('ERR_MDL_00000', 'Inconsistent durable journal readback');
+            }
+            return { query: input.query, options: input.searchOptions, count, result };
         },
 
         /**

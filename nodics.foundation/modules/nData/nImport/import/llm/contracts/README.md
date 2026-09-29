@@ -1,5 +1,128 @@
 # import AI Contracts
 
+## Custom installer preflight
+
+The existing secured `/init/validate` controller/facade path calls
+`DefaultDataReleaseService.preflight`. For every selected custom release,
+including CURRENT receipts, `preflightContributions` resolves the installer from
+`data.dataReleases.installers` and calls its read-only `preflightContribution`
+with the nImport-qualified descriptor and original authorized principal/tenant.
+Missing hooks or malformed results fail closed. Neither request bodies nor
+HTTP clients select a provider or supply trusted contribution provenance.
+The hook must never install, write receipts, acquire elevated auth or change
+configuration. Normal release discovery, destination and checksum guards run first.
+
+Results appear in `data.contributionPlans`; `data.validation.ready` is true only
+when every selected custom installer returns `ready: true`. Standard releases
+retain their existing metadata/composition preflight. Release-level dry-run counts
+and CURRENT receipts do not override a blocked owner plan. Process supplies
+verified immutable evidence before transition approval, with a blocker instead
+of an authorized plan; exact transition configuration remains its only authority.
+Corrupt evidence and unexpected read failures reject preflight. Installation
+continues through the existing `/init/install` authority and rechecks owner policy.
+No new endpoint, acceptance installer or runtime service dispatcher is introduced.
+`test/dataReleaseContributionPreflight.test.js` exercises the actual controller,
+facade, release discovery and Process planner with isolated generated read ports;
+it does not claim live HTTP authorization or installation acceptance.
+
+## Strict installed migration evidence
+
+The [installed migration journal contract](installed-migration-journal.md)
+defines the internal fail-closed `importRun` extension, immutable aggregate plans,
+atomic checkpoint API, stopped-worker recovery and offline provider binding.
+Ordinary `recordRun` remains best-effort and cannot write the reserved namespace.
+
+## Retained source roots
+
+Aggregate contract 2 optionally declares `retainedRoots[sourceRoot] = { files,
+sections }`. `files` is the complete original tree's SHA-256 map relative to
+`data/`, including `release.descriptor.json`; `sections` preserves each original
+DATA_RELEASE or CONTENT_PACK section under its unchanged section code. This is historical source
+evidence inside the existing manifest, never an executable release registry.
+
+Before discovery, `validateRetainedRoots(dataRoot, manifest)` verifies canonical
+contained roots, regular files without symlinks, exact tree membership/hashes,
+section ownership and a newer active successor under every original section code.
+CONTENT_PACK snapshots retain their native `contentPath`, `pack`, `generatedHashes`
+and `releaseChecksum`; validation reuses the content-pack checksum authority and
+requires unchanged pack identity plus a higher version and source sequence.
+Missing/altered historical files or conflicting declarations invalidate discovery
+without conventional fallback. With retention enabled, active CONTENT_PACK roots
+also remain outside conventional DATA_RELEASE discovery.
+
+Optional `scope: "SECTIONS"` changes `files` to exactly the union of the retained
+sections' payload claims. Disjoint active sibling sections may remain in that
+root and their development payloads may evolve. Retired files are excluded before
+active header-prefix expansion, so an active sibling cannot implicitly replay
+them. Overlapping explicit claims reject. Other files are not frozen by section
+retention, including shared descriptor metadata. Without scope, the entire tree
+including its descriptor is frozen and all payload files must belong to retained
+or active sections. `sourceRootFiles` provides the shared non-executing tree hash
+interface; `retainedSectionSource` validates either native metadata variant.
+
+Only valid retained roots are suppressed from conventional discovery. Omission
+preserves existing discovery and development-baseline defaults. A successor keeps
+the module/section release code and installation key; existing receipts are read
+unchanged and project UPDATE_AVAILABLE until an authorized upgrade. Retention
+does not authorize imports, publication, rollback, receipt rewrites or deletion.
+Restore historical bytes to recover from drift; never rehash altered history.
+Independent coverage: `test/dataReleaseRetention.test.js`.
+
+## Explicit release selection
+
+Optional operational Init releases may declare `selectionPolicy: "EXPLICIT"`
+in their DATA_RELEASE section. nImport validates this metadata independently of
+publication policy; only `DEFAULT` and `EXPLICIT` are accepted. Omission retains
+the existing default installation behavior. Non-publishable releases still use
+`initialPublicationPolicy: "NONE"`; do not substitute publication semantics for
+installation selection.
+
+An EXPLICIT release remains discoverable and its selection policy is included
+in the catalogue. It is excluded from startup Init plans, implicit initialization
+profile steps, unqualified plans and legacy module-wide selection. Operators must
+name its exact `releaseCodes` entry, directly or in a selected initialization
+profile. That selection still requires the existing role, environment, tenant,
+permission, checksum, version and lifecycle checks. Discovery or selection does
+not confer contribution migration authority.
+
+nService projects EXPLICIT releases as `required: false`, `trigger: "USER"`.
+Other required Init/Core packages keep their existing activation contract. The
+metadata does not reroute an optional package to another runtime: use the
+destination owner's explicit nImport selection. `test/dataReleaseSelectionPolicy.test.js`
+covers these contracts using isolated persistence ports and the actual discovery,
+plan, startup and profile builders. It performs no installed-data mutation.
+
+## Offline execution test ownership
+
+`test/dataReleaseService.test.js` owns independent preflight/no-import,
+CURRENT receipt, repeat-current error, batch plan/count and throwing destination
+contracts. Destination probes must assert `ERR_IMP_00004` and the runtime or
+environment message; an `isDestinationCompatible` boolean is not equivalent.
+Repeat execution must retain `ERR_IMP_00003` without another import.
+Reuse `test/helpers/releaseExecution.js` for in-memory receipt/import ports.
+Customer tests supply real module roots, release selections and plan/file
+expectations; they must not copy the stubs or synthetic rejection matrix.
+These ports never run an importer, database or runtime. They do not replace
+the separate durable receipt concurrency tests or live acceptance.
+
+## Canonical Staged Sample Acceptance
+
+The protected `acceptance:staged-sample-data` suite belongs to nImport even when
+a Commerce application invokes it. Generic release/catalogue/validation rules
+are not customer or Commerce policy. Applications contribute existing effective
+Platform profile `dataPackages`, module selections and a Staged target role.
+No additional manifest registry, raw project configuration reader or importer is
+allowed. The CLI does not manage runtime lifecycle; topology tooling owns servers.
+
+Validation is the default; only `--execute-install` enables installation. Retain
+employee and enterprise context on all requests. Catalogue identity and version
+must be unambiguous, sample-qualified and destination-matched. Never guess missing
+versions. Validate the selected plan before any install. Skip CURRENT releases,
+propagate all failed API requests, and verify the final catalogue retains the
+expected versions and CURRENT status. Error text, empty results and HTTP success
+alone cannot prove installation. Partial failure does not authorize rollback,
+reset, direct persistence, Online publication or permission changes.
+
 This folder contains module-specific AI/developer contracts for `nodics.foundation/modules/nData/nImport/import`.
 
 Use these files for rules that are more specific than root `AGENTS.md` and the module `AGENTS.md`, especially extension boundaries, override expectations, testing rules, security constraints, and generated-artifact responsibilities.

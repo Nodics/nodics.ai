@@ -36,6 +36,7 @@ module.exports = {
             tenant: request.tenant,
             loginId: 'productSearchPublication',
             principalType: 'service',
+            userGroups: ['serviceAccountUserGroup'],
             groups: ['serviceAccountUserGroup']
         });
     },
@@ -45,11 +46,85 @@ module.exports = {
         return Array.from(new Set((variants || []).map(variant => variant && variant.sku).filter(Boolean).map(String)));
     },
 
+    /** Checks configured delivery through its owner; never substitutes indexed operational summaries. */
+    assertConsumerProvider: function (domain, ownerName, request, input, policy, service) {
+        if (((((CONFIG.get(domain) || {}).publication || {}).delivery) || {}).enabled !== true) return;
+        const owner = SERVICE[ownerName];
+        if (!owner || typeof owner.deliveryEnabled !== 'function') throw new Error('Activated ' + domain + ' owner is unavailable');
+        if (owner.deliveryEnabled({ ...request, storeCode: input.storeCode }) &&
+            (policy.enabled === false || !service || typeof service.summarize !== 'function')) {
+            throw new Error('Activated ' + domain + ' customer summary provider is unavailable');
+        }
+    },
+
+    /** Batches live consumer summaries once per owner/result set; retained projections are never mutated. */
+    consumerSummaries: async function (request, rows) {
+        if (!rows.length) return { prices: {}, availability: {} };
+        const codes = [...new Set(rows.map(row => row.code))];
+        if (codes.some(code => typeof code !== 'string' || !code) || !SERVICE.DefaultProductSearchProjectionService) {
+            throw new Error('Retained Product projection authority is unavailable');
+        }
+        const response = await SERVICE.DefaultProductSearchProjectionService.get({
+            tenant: request.tenant, authData: this.serviceAuthData(request),
+            query: { tenant: request.tenant, storeCode: request.storeCode, code: { $in: codes } },
+            searchOptions: { pageSize: codes.length + 1, limit: codes.length + 1, pageNumber: 1 }
+        });
+        const retained = response && response.result;
+        if (!Array.isArray(retained) || retained.length !== codes.length || new Set(retained.map(row => row.code)).size !== codes.length) {
+            throw new Error('Retained Product projection authority is incomplete');
+        }
+        const byCode = new Map(retained.map(row => [row.code, row]));
+        rows = rows.map(row => {
+            const stored = byCode.get(row.code);
+            if (!stored || ['tenant', 'storeCode', 'productCode', 'locale', 'publicationVersion', 'sourceHash'].some(key => stored[key] !== row[key]) ||
+                stored.status !== 'STALE' || (row.enterpriseCode !== undefined && row.enterpriseCode !== stored.enterpriseCode)) {
+                throw new Error('Retained Product projection scope mismatch');
+            }
+            return { ...row, enterpriseCode: stored.enterpriseCode };
+        });
+        const enterprises = new Set(rows.map(row => row.enterpriseCode));
+        const enterpriseCode = rows[0].enterpriseCode;
+        const auth = request.authData || {};
+        if (enterprises.size !== 1 || typeof enterpriseCode !== 'string' || !enterpriseCode.trim() ||
+            enterpriseCode !== enterpriseCode.trim() ||
+            rows.some(row => row.tenant !== request.tenant || row.storeCode !== request.storeCode) ||
+            [auth.enterpriseCode, auth.entCode].some(value => value !== undefined && value !== enterpriseCode)) {
+            throw new Error('Activated Product enterprise scope is invalid');
+        }
+        request = { ...request, enterpriseCode, entCode: enterpriseCode,
+            authData: { ...auth, enterpriseCode, entCode: enterpriseCode } };
+        const pricing = this.enrichmentPolicy('pricing'), inventory = this.enrichmentPolicy('inventory');
+        const priceService = SERVICE[pricing.serviceName || 'DefaultCustomerPriceSummaryService'];
+        const inventoryService = SERVICE[inventory.serviceName || 'DefaultCustomerAvailabilitySummaryService'];
+        this.assertConsumerProvider('pricing', 'DefaultPricingPublicationService', request, request, pricing, priceService);
+        this.assertConsumerProvider('inventory', 'DefaultInventoryPublicationService', request, request, inventory, inventoryService);
+        const products = new Map();
+        for (const row of rows) {
+            const skus = products.get(row.productCode) || new Set();
+            Object.values((row.payload || {}).variantSkuMap || {}).filter(sku => typeof sku === 'string' && sku)
+                .forEach(sku => skus.add(sku));
+            products.set(row.productCode, skus);
+        }
+        const context = { tenant: request.tenant, enterpriseCode: request.enterpriseCode,
+            storeCode: request.storeCode, authData: this.serviceAuthData(request),
+            now: request.now, correlationId: request.correlationId };
+        const [prices, availability] = await Promise.all([
+            pricing.enabled !== false && priceService && typeof priceService.summarize === 'function'
+                ? priceService.summarize({ ...context, productCodes: [...products.keys()],
+                    currency: pricing.defaultCurrency, quantity: pricing.defaultQuantity || '1' }) : {},
+            inventory.enabled !== false && inventoryService && typeof inventoryService.summarize === 'function'
+                ? inventoryService.summarize({ ...context, products: [...products].map(([productCode, skus]) =>
+                    ({ productCode, skus: [...skus] })) }) : {}
+        ]);
+        return { prices, availability };
+    },
+
     /** Resolves one Product customer price summary. @param {Object} request Request. @param {Object} input Publication input. @returns {Promise<Object|undefined>} Price. */
     price: async function (request, input) {
         let policy = this.enrichmentPolicy('pricing');
-        if (policy.enabled === false) return undefined;
         let service = SERVICE[policy.serviceName || 'DefaultCustomerPriceSummaryService'];
+        this.assertConsumerProvider('pricing', 'DefaultPricingPublicationService', request, input, policy, service);
+        if (policy.enabled === false) return undefined;
         if (!service || typeof service.summarize !== 'function') return undefined;
         let result = await service.summarize({
             tenant: request.tenant,
@@ -67,8 +142,9 @@ module.exports = {
     /** Resolves one Product customer availability summary. @param {Object} request Request. @param {Object} input Publication input. @returns {Promise<Object|undefined>} Availability. */
     availability: async function (request, input) {
         let policy = this.enrichmentPolicy('inventory');
-        if (policy.enabled === false) return undefined;
         let service = SERVICE[policy.serviceName || 'DefaultCustomerAvailabilitySummaryService'];
+        this.assertConsumerProvider('inventory', 'DefaultInventoryPublicationService', request, input, policy, service);
+        if (policy.enabled === false) return undefined;
         if (!service || typeof service.summarize !== 'function') return undefined;
         let skus = this.variantSkus(input.variants);
         if (skus.length === 0) return undefined;

@@ -23,8 +23,11 @@ is disabled by default. Public website
 composition, registration/contact forms, branding and sample policy belong in a
 customer backend module. A separate application-named accelerator is unnecessary.
 
-The 83 core reference records keep their `eWaste:core-reference` identity and
-Waste schema destinations. Run `npm test` for data integrity, authorization,
+The 83 core reference records keep their `eWaste:core-reference` release identity
+and Waste schema destinations. Explicit version `0.0.1` in `core-v002` uses a
+neutral environmental profile; `core-v001` remains retained. Read
+[reference compatibility](llm/contracts/reference-compatibility.md) before adoption.
+Run `npm test` for data integrity, authorization,
 application-neutral composition, governed reward assessment and conversation checks.
 See [the contract](llm/contracts/e-waste-domain.md) and
 [customization example](llm/examples/README.md).
@@ -78,3 +81,9 @@ Approval evaluates the effective published Rules policy and persists one
 that evidence, posts one idempotent earning through Loyalty, then records the
 wallet and append-only ledger references on the Waste asset. A completed replay
 must not post another entry. Zero-value bands complete without opening a wallet.
+
+The reusable journey inherits `eWaste.journey.maximumPositionAgeMs` (60000),
+`captureTimeoutMs` (12000) and `nearestCentreCount` (3). No arrival radius is
+enabled by default. A customer policy must supply a positive radius; missing or
+invalid policy fails closed before an arrival decision. Later customer layers
+may override these limits through existing configuration layering.

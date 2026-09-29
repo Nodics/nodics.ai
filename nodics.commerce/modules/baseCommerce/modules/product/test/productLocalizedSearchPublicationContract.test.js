@@ -19,53 +19,29 @@ const test = require('node:test');
  * @owner product
  */
 
-const properties = require('../config/properties');
-const localization = require('../src/service/defaultProductLocalizationPolicyService');
-const builder = require('../src/service/defaultProductLocalizedProjectionBuilderService');
-const enrichment = require('../src/service/defaultProductSearchEnrichmentService');
-const staging = require('../src/service/defaultProductPublicationPolicyService');
 const publication = require('../src/service/defaultProductSearchPublicationService');
 const indexes = require('../src/search/indexes');
 const sampleProducts = require('../data/sample-v001/records/product/sampleProductData');
 const sampleLocalizations = require('../data/sample-v001/records/product/sampleProductLocalizationData');
+const publicationFixture = require('./helpers/searchPublication');
+let persisted, indexed, updated, removed;
 
-const persisted = [];
-const indexed = [];
-const updated = [];
-const removed = [];
-
-global.CONFIG = { get: key => key === 'product' ? properties.product : undefined };
-global.SERVICE = {
-    DefaultProductLocalizationPolicyService: localization,
-    DefaultProductLocalizedProjectionBuilderService: builder,
-    DefaultProductSearchEnrichmentService: enrichment,
-    DefaultProductPublicationPolicyService: staging,
-    DefaultCustomerPriceSummaryService: {
-        summarize: async request => ({ [request.productCodes[0]]: { currency: request.currency, unitAmount: '89.00' } })
-    },
-    DefaultCustomerAvailabilitySummaryService: {
-        summarize: async request => ({ [request.products[0].productCode]: { available: true, status: 'IN_STOCK' } })
-    },
-    DefaultProductSearchProjectionService: {
-        save: async request => persisted.push(request),
-        update: async request => updated.push(request)
-    },
-    DefaultSearchService: {
-        doSave: async request => indexed.push(request),
-        doRemoveByQuery: async request => removed.push(request)
-    }
+// Neutral owner records exercise actual Pricing and Inventory summaries together.
+const summaryRecords = {
+    priceBooks: [{ code: 'sampleRetail', tenant: 'default', currency: 'USD', status: 'ACTIVE' }],
+    priceRows: [{ code: 'samplePriceRow', tenant: 'default', priceBookCode: 'sampleRetail',
+        productCode: 'sampleRunningShoe', currency: 'USD', unitAmount: '89.00', minQuantity: '1' }],
+    inventoryBalances: [{ tenant: 'default', warehouseCode: 'sampleWarehouse', sku: 'SAMPLE-RUN-BLUE-42',
+        available: '3', priority: 1, revision: 1 }]
 };
 
 const request = { tenant: 'default', enterpriseCode: 'sampleEnterprise', correlationId: 'corr-search-1', authData: { groups: ['adminGroup'] },
     now: '2026-08-10T00:00:00.000Z' };
-const product = sampleProducts.record0;
+const product = { ...sampleProducts.record0, sku: 'PRIVATE-PRODUCT-SKU', inventory: { available: '99' } };
 const localizations = Object.values(sampleLocalizations);
 
 test.beforeEach(() => {
-    persisted.length = 0;
-    indexed.length = 0;
-    updated.length = 0;
-    removed.length = 0;
+    ({ persisted, indexed, updated, removed } = publicationFixture(summaryRecords));
 });
 
 test('sample release publishes one isolated nSearch document for English and Arabic', async () => {
@@ -87,8 +63,14 @@ test('sample release publishes one isolated nSearch document for English and Ara
     assert(indexed.every(item => item.model.tenant === 'default' && item.model.enterpriseCode === 'sampleEnterprise' && item.model.storeCode === 'sampleStore'));
     assert(indexed.every(item => item.model.payload.sku === undefined && item.model.payload.inventory === undefined));
     assert(indexed.every(item => item.model.payload.variantSkuMap.sampleRunningShoeBlue42 === 'SAMPLE-RUN-BLUE-42'));
-    assert(indexed.every(item => item.model.payload.price.currency === 'USD' && item.model.payload.price.unitAmount === '89.00'));
+    assert(indexed.every(item => item.model.payload.price.currency === 'USD' && item.model.payload.price.unitAmount === '89'));
     assert(indexed.every(item => item.model.payload.availability.status === 'IN_STOCK'));
+    assert(indexed.every(item => item.model.payload.price.priceRowCode === undefined));
+    assert(indexed.every(item => item.model.payload.availability.warehouseCode === undefined));
+    assert(indexed.every(item => item.model.payload.availability.sku === undefined));
+    assert(indexed.every(item => item.model.payload.availability.availableQuantity === undefined));
+    assert.equal(updated.length, 0);
+    assert.equal(removed.length, 0);
 });
 
 test('localized media is carried into customer search projection payloads', async () => {
@@ -128,7 +110,7 @@ test('publication fails closed when nSearch reports document indexing failures',
             code: 'ERR_PRODUCT_SEARCH_INDEX_0001'
         });
         assert.equal(removed.length, 1);
-        assert.deepEqual(removed[0].query, { tenant: 'default', productCode: product.code, storeCode: 'sampleStore' });
+        assert.deepEqual(removed[0].query, { tenant: 'default', productCode: product.code, storeCode: 'sampleStore', status: 'CURRENT' });
     } finally {
         global.SERVICE.DefaultSearchService.doSave = original;
     }
@@ -136,7 +118,7 @@ test('publication fails closed when nSearch reports document indexing failures',
 
 test('withdrawal updates and removes only the tenant Product and Store partition', async () => {
     let result = await publication.withdraw(request, { productCode: product.code, storeCode: 'sampleStore' });
-    let query = { tenant: 'default', productCode: product.code, storeCode: 'sampleStore' };
+    let query = { tenant: 'default', productCode: product.code, storeCode: 'sampleStore', status: 'CURRENT' };
 
     assert.equal(result.status, 'WITHDRAWN');
     assert.deepEqual(updated[0].query, query);
@@ -211,4 +193,27 @@ test('publication refreshes index visibility before invalidating cached search r
     global.SERVICE.DefaultCacheService = { invalidateResource: async request => { calls.push('invalidate:' + request.resourceName); } };
     try { await publication.refreshPublishedIndex({tenant:'default'}); assert.deepEqual(calls,['refresh:productLocalized','invalidate:productLocalized']); }
     finally { if(priorRefresh)search.doRefresh=priorRefresh;else delete search.doRefresh;global.SERVICE.DefaultCacheService=cache; }
+});
+
+test('generated projection search ports preserve combined safe summaries and exact locale write counts', async () => {
+    ({ persisted, indexed, updated, removed } = publicationFixture({ ...summaryRecords, generatedSearch: true }));
+    const result = await publication.publish(request, { product, localizations, storeCode: 'sampleStore',
+        variants: [{ code: 'sampleRunningShoeBlue42', sku: 'SAMPLE-RUN-BLUE-42' }] });
+    assert.deepEqual(result.projections.map(item => item.locale).sort(), ['ar', 'en']);
+    assert.equal(persisted.length, localizations.length);
+    assert.equal(indexed.length, localizations.length);
+    assert.equal(updated.length, 0);
+    assert.equal(removed.length, 0);
+    for (const { model } of indexed) {
+        assert.equal(model.tenant, request.tenant);
+        assert.equal(model.storeCode, 'sampleStore');
+        assert.equal(model.payload.inventory, undefined);
+        assert.equal(model.payload.sku, undefined);
+        assert.deepEqual(model.payload.price, { currency: 'USD', unitAmount: '89' });
+        assert.equal(model.payload.price.priceRowCode, undefined);
+        assert.deepEqual(model.payload.availability, { available: true, status: 'IN_STOCK' });
+        assert.equal(model.payload.availability.warehouseCode, undefined);
+        assert.equal(model.payload.availability.sku, undefined);
+        assert.equal(model.payload.availability.availableQuantity, undefined);
+    }
 });

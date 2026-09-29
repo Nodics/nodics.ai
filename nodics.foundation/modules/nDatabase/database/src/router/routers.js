@@ -52,6 +52,17 @@ module.exports = {
         },
         schemaIndexes: {
             options: { targetModules: ['system'] },
+            inspectSchemaIndexes: {
+                secured: true,
+                authTokenTypes: ['access'],
+                accessGroups: ['adminGroup'],
+                permission: 'system.schema.view',
+                apiExposure: 'schemaMaintenance',
+                key: '/schema/indexes/module/:owner/schema/:schema',
+                method: 'GET',
+                controller: 'DefaultSchemaIndexController',
+                operation: 'inspectSchemaIndexes'
+            },
             updateSchemaIndexesBySchemaName: {
                 secured: true,
                 accessGroups: ['userGroup'],

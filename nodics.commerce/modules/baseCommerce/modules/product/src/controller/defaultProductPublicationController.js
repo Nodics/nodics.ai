@@ -19,6 +19,27 @@
  * @override Later modules may decorate operator transport while preserving Product publication ownership.
  */
 module.exports = {
+    /** Maps a fixed owner operation; payload never selects a service or method. */
+    governed: function (request, callback, operation) {
+        request.payload = request.httpRequest && request.httpRequest.body || request.payload || {};
+        const result = Promise.resolve().then(() => FACADE.DefaultProductPublicationFacade[operation](request)).then(data => ({ data }));
+        if (!callback) return result;
+        result.then(data => callback(null, data), error => callback(error));
+    },
+    /** Captures a root and starts normal publication approval. */
+    createGoverned: function (request, callback) { return this.governed(request, callback, 'createGoverned'); },
+    /** Executes the fixed Process decision callback. */
+    applyPublicationDecision: function (request, callback) { return this.governed(request, callback, 'applyPublicationDecision'); },
+    /** Verifies target work against stored source intent. */
+    authorizeTarget: function (request, callback) { return this.governed(request, callback, 'authorizeTarget'); },
+    /** Applies a governed target deployment. */
+    targetDeploy: function (request, callback) { return this.governed(request, callback, 'targetDeploy'); },
+    /** Reads target status. */
+    targetStatus: function (request, callback) { return this.governed(request, callback, 'targetStatus'); },
+    /** Applies a governed rollback. */
+    targetRollback: function (request, callback) { return this.governed(request, callback, 'targetRollback'); },
+    /** Applies a governed withdrawal. */
+    targetWithdraw: function (request, callback) { return this.governed(request, callback, 'targetWithdraw'); },
     /** Initializes the controller lifecycle. @returns {Promise<boolean>} Initialization result. */
     init: function () { return Promise.resolve(true); },
     /** Completes the controller lifecycle. @returns {Promise<boolean>} Initialization result. */

@@ -51,7 +51,7 @@ module.exports = {
       .filter(Boolean);
   },
   /** Projects one configured profile without exposing transport internals or credentials. */
-  describe: function (profile) {
+  describe: function (profile, evidence) {
     if (!profile || !profile.code) return undefined;
     let presentation = profile.presentation || {};
     let preparationSteps = this.preparationSteps(profile);
@@ -91,6 +91,7 @@ module.exports = {
             : "accelerator"),
       ),
       summary: String(presentation.summary || ""),
+      visual: this.visual(presentation.visual, profile.target, this.applicationArtworkActive(profile, evidence)),
       order: Number(presentation.order || 1000),
       type: String(profile.type),
       owner: String(profile.owner),
@@ -116,6 +117,7 @@ module.exports = {
       })),
       dataPackages: dataPackages,
       preparationSteps: preparationSteps,
+      setupPlan: this.setupPlan(profile),
       activationPolicy: Object.assign(
         {
           approvalRequiredForOnline: true,
@@ -125,6 +127,61 @@ module.exports = {
         },
         presentation.activationPolicy || {},
       ),
+    };
+  },
+  /** Projects an owner media reference; Media retains record, storage and access authority. */
+  visual: function (value, target, active) {
+    if (!value || typeof value.mediaCode !== "string" || !/^[A-Za-z0-9][A-Za-z0-9_.-]{0,159}$/.test(value.mediaCode)) return undefined;
+    if (typeof value.alt !== "string" || !value.alt.trim() || value.alt.length > 200) return undefined;
+    let runtimeRole = target && target.runtimeRole;
+    if (typeof runtimeRole !== "string" || !/^[A-Z][A-Z0-9_]{1,63}$/.test(runtimeRole)) return undefined;
+    return { mediaCode: value.mediaCode, alt: value.alt.trim(), runtimeRole: runtimeRole, active: active === true };
+  },
+  /** Catalogue presence is not activation. Require current module activation and an initiated application baseline, not Online publication. */
+  applicationArtworkActive: function (profile, evidence) {
+    if (!evidence || !["IMPORTING", "IMPORTED", "PUBLICATION_PENDING", "READY", "REJECTED", "ROLLED_BACK"].includes(evidence.readiness)) return false;
+    const steps = (evidence.preparation && evidence.preparation.steps) || [];
+    return this.requiredFunctionalModules(profile).every((required) => steps.some((step) =>
+      step.type === "FUNCTIONAL_MODULE" && step.code === required.code && step.status === "CURRENT"));
+  },
+  /** Projects a read-only scope from the existing owner profile. It never activates or imports.
+   * Later modules can extend this member for additional stages without changing Axis.
+   * Public items deliberately omit paths, credentials and target transport details.
+   */
+  setupPlan: function (profile) {
+    let labels = (CONFIG.get("backofficeApplicationInitialization") || {}).planPresentation;
+    if (!labels || !labels.capabilities || !labels.preparation || !labels.publication) return undefined;
+    let capabilities = Array.from(new Map(this.requiredFunctionalModules(profile).slice().sort((a, b) => a.order - b.order).map((item) => [item.code, {
+      code: item.code, label: item.label, required: item.required,
+      type: "FUNCTIONAL_MODULE", owner: item.code,
+    }])).values());
+    let preparation = new Map();
+    this.preparationSteps(profile).slice().sort((left, right) => left.order - right.order).forEach((step) => {
+      let identity = JSON.stringify([step.type, step.code, step.targetServer, step.targetRuntimeRole]);
+      let previous = preparation.get(identity);
+      preparation.set(identity, {
+        code: step.code + "@" + crypto.createHash("sha256").update(identity).digest("hex").slice(0, 16), label: step.label || step.kind,
+        required: step.required || Boolean(previous && previous.required),
+        type: step.type, owner: String(profile.owner),
+      });
+    });
+    if (profile.contentPackCode) preparation.set("contentPack:" + profile.contentPackCode, {
+      code: "contentPack:" + profile.contentPackCode,
+      label: String((profile.presentation || {}).title || profile.contentPackCode),
+      required: true, type: "CONTENT_PACK", owner: String(profile.owner),
+    });
+    let approvalRequired = ((profile.presentation || {}).activationPolicy || {}).approvalRequiredForOnline !== false;
+    return {
+      contractVersion: 1,
+      stages: [
+        { code: "capabilities", title: labels.capabilities.title, summary: labels.capabilities.summary, items: capabilities },
+        { code: "preparation", title: labels.preparation.title, summary: labels.preparation.summary, items: Array.from(preparation.values()) },
+        { code: "publication", title: labels.publication.title, summary: labels.publication.summary, items: [{
+          code: String(profile.baselineCode),
+          label: approvalRequired ? labels.publicationReview : labels.publicationPrepare,
+          required: true, type: "PUBLICATION", owner: String(profile.owner),
+        }] },
+      ].filter((stage) => stage.items.length > 0),
     };
   },
   /** Returns a normalized application-preparation plan owned by the profile contract. */
@@ -691,7 +748,7 @@ module.exports = {
       owner: profile.owner,
       applicationCode: profile.applicationCode,
       siteCode: profile.siteCode,
-      profile: this.describe(profile),
+      profile: this.describe(profile, projection),
       allowedActions: [],
       readiness: "BLOCKED",
       releaseCode: releaseIdentity.releaseCode,
@@ -2136,7 +2193,7 @@ module.exports = {
           owner: profile.owner,
           applicationCode: profile.applicationCode,
           siteCode: profile.siteCode,
-          profile: this.describe(profile),
+          profile: this.describe(profile, projection),
           allowedActions:
             preparation.status === "BLOCKED"
               ? []

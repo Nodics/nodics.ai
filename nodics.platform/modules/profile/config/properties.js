@@ -17,6 +17,16 @@
  * @override Project, environment, server, node, tenant, or customer layers may override these defaults through Nodics configuration layering.
  */
 module.exports = {
+  tooling: {
+    commands: {
+      'acceptance:runtime-grants': {
+        acceptanceContract: true,
+        projectHome: true,
+        handler: '@nTooling/node-script',
+        script: 'src/service/acceptance/defaultRuntimeDeploymentGrantAcceptanceService.mjs'
+      }
+    }
+  },
   identityGovernance: { permissionCatalog: ["profile.address.reference.read", "profile.enterprise.reference.read"] },
   profileReferenceRead: {
     maximumCodes: 100,

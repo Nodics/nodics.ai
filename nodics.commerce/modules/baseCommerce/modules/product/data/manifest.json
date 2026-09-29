@@ -2,6 +2,15 @@
     "contractVersion": 2,
     "module": "product",
     "sections": {
+        "productPublicationWorkflow": {
+            "kind": "DATA_RELEASE", "selectionPolicy": "EXPLICIT", "dataType": "init", "version": "2.0.0",
+            "displayName": "Product Publication Approval", "description": "Exact catalogue review through Process and nPublish.",
+            "owningDomain": "product", "lifecycle": "OPERATIONAL_VERSIONED", "destinationRole": "PROCESS",
+            "environmentScope": ["ALL"], "sensitivity": "INTERNAL", "versioningPolicy": "IMMUTABLE",
+            "publicationPolicy": "NONE", "initialPublicationPolicy": "NONE", "removalPolicy": "RETAIN",
+            "installer": "PROCESS_DEFINITION", "sourceRoot": "init-v002",
+            "files": { "init-v002/records/process/productPublicationWorkflowDefinitionData.js": "42b7789deec9e2e13d2c82bd8d0bd790510bf608e19d5e574f11310b6160e6e3" }
+        },
         "sample-v001": {
             "kind": "DATA_RELEASE",
             "dataType": "sample",

@@ -52,6 +52,32 @@ evidence later, but provider selection never changes retrieval authorization.
 
 ## Runtime Activation
 
+### Trusted Startup Delegation
+
+`DefaultCopilotKnowledgeRuntimeService.ingestOnStart()` owns reusable startup
+orchestration. It accepts no caller overrides and has no API route. Both
+`copilot.knowledge.ingestion.enabled` and `ingestOnStart` must be explicitly true;
+disabled execution performs no registry or provider work. A deployment may call
+it from its late server `postInit` hook to preserve dependency readiness. The
+knowledge module lifecycle only registers providers; it does not start ingestion.
+
+The existing `ingestion.startup` configuration controls source selection and
+operational policy: `sourceProject: null` selects all enabled registered sources;
+a string selects that exact project. Projects own source definitions, identity
+labels, rejection messages and summary preferences. Environment context supplies
+`startup.environment`; later layers may disable or narrow selection. Framework
+defaults own the neutral policy and fixed `copilot.knowledge.source.manage`
+permission. Neither request input nor model output can change startup authority.
+
+Execution uses the canonical registry, policy, secret inspection, chunking and
+Discovery projection path. Invalid policy fails before ingestion; provider
+failure stops later sources. `failOnRejectedFiles` rejects startup after the
+source report is saved, but does not roll back already projected safe files.
+Explicit retries use the existing ingestion path without a second skip ledger.
+Optional summary logs contain counts and source/state only, never source text,
+rejected paths or credentials. Owner tests run independently of customer code;
+project tests retain only configuration adoption and lifecycle delegation checks.
+
 Reusable defaults keep ingestion and retrieval disabled. A project-layer
 activation must provide reviewed immutable source versions, repository roots or
 domain providers, Discovery index configuration, service authorization,

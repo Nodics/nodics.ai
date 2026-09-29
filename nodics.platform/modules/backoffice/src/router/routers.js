@@ -132,6 +132,16 @@ module.exports = {
                     schema: ({ type: 'object', required: ['code', 'data'], properties: { code: { type: 'string' }, data: contracts.functionalModuleRegistration } })
                 } } } }
             },
+            applyFunctionalModuleSelection: {
+                secured: true, accessGroups: ['userGroup'], permission: 'backoffice.functionalModule.activate',
+                authTokenTypes: ['access'], apiExposure: 'serviceRegistry',
+                key: '/runtime/modules/registrations/selection/apply', method: 'POST',
+                controller: 'DefaultBackofficeRegistryController', operation: 'applyFunctionalModuleSelection',
+                requestBody: { required: true, content: { 'application/json': { schema: contracts.functionalModuleSelectionApply } } },
+                responses: { '200': { description: 'Functional module selection applied as one governed business action', content: { 'application/json': {
+                    schema: ({ type: 'object', required: ['code', 'data'], properties: { code: { type: 'string' }, data: contracts.functionalModuleSelectionApplyResult } })
+                } } } }
+            },
             deactivateFunctionalModule: {
                 secured: true, accessGroups: ['userGroup'], permission: 'backoffice.functionalModule.deactivate',
                 authTokenTypes: ['access'], apiExposure: 'serviceRegistry',

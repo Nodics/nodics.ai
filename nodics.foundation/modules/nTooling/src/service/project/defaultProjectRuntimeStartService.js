@@ -25,6 +25,33 @@ const localRuntimeCredentials = require('./defaultProjectLocalRuntimeCredentialS
 
 module.exports = {
     /**
+     * Builds an origin from the selected topology runtime, including IPv6 hosts.
+     * @param {Object} runtime Resolved protocol, host and port.
+     * @returns {string} Runtime origin; later layers may replace address selection.
+     */
+    runtimeOrigin: function (runtime) {
+        const protocol = runtime.protocol || 'http';
+        const host = runtime.host || 'localhost';
+        const port = runtime.port;
+        const hostname = String(host).includes(':') && !String(host).startsWith('[') ? '[' + host + ']' : host;
+        return protocol + '://' + hostname + ':' + String(port);
+    },
+
+    /**
+     * Performs a bounded readiness GET without following redirects.
+     * @param {string} url Selected dependency URL.
+     * @param {Object} options Request headers and timeoutMs.
+     * @returns {Promise<Response>} Response; transport and deadline failures reject.
+     */
+    boundedFetch: async function (url, options) {
+        const timeoutMs = Number(options.timeoutMs || 5000);
+        return fetch(url, {
+            method: 'GET', redirect: 'error', headers: options.headers || {},
+            signal: AbortSignal.timeout(timeoutMs)
+        });
+    },
+
+    /**
      * Rejects retired project descriptors.
      * @param {string} projectRoot Project root.
      * @returns {Object} Empty descriptor for older internal callers.
@@ -216,6 +243,62 @@ module.exports = {
         return this.discoverServer(projectRoot, this.resolveEnvironmentName(projectRoot, environment), serverCode);
     },
 
+    /** Returns derived topology for startup admission without starting a runtime. */
+    readStartupTopology: async function (projectRoot, environmentName) {
+        const module = await import('./defaultProjectEnvironmentConfigurationService.mjs');
+        return module.readProjectEnvironmentConfiguration(projectRoot, environmentName);
+    },
+
+    /** Selects the current runtime from derived environment topology. */
+    selectStartupRuntime: function (profile, server) {
+        const runtimes = [].concat(profile.topology && profile.topology.groups && profile.topology.groups.backends || []);
+        return runtimes.find(runtime => runtime.code === server.server || runtime.server === server.server);
+    },
+
+    /** Probes one dependent runtime readiness endpoint and its declared admission checks. */
+    probeStartupDependency: async function (dependency) {
+        const origin = this.runtimeOrigin(dependency);
+        const checks = [{ label: 'Runtime readiness', path: '/nodics/system/v0/health/ready' }]
+            .concat(dependency.readinessChecks || []);
+        for (const check of checks) {
+            const url = origin + check.path;
+            let response;
+            try {
+                response = await this.boundedFetch(url, {
+                    headers: check.headers || {},
+                    timeoutMs: check.timeoutMs || dependency.dependencyTimeoutMs || 5000
+                });
+            } catch (error) {
+                throw new Error((check.label || 'Readiness check') + ' is unreachable at ' + url);
+            }
+            if (!response.ok) {
+                throw new Error((check.label || 'Readiness check') + ' returned HTTP ' + String(response.status) + ' at ' + url);
+            }
+        }
+        return true;
+    },
+
+    /** Enforces strict dependency startup when the selected runtime disables async startup. */
+    enforceStartupDependencies: async function (projectRoot, server) {
+        const profile = await this.readStartupTopology(projectRoot, server.environment);
+        const current = this.selectStartupRuntime(profile, server);
+        if (!current || current.asyncServerStartup !== false) return true;
+        const runtimes = [].concat(profile.topology && profile.topology.groups && profile.topology.groups.backends || []);
+        const dependencies = [].concat(current.dependsOn || []);
+        for (const dependencyCode of dependencies) {
+            const dependency = runtimes.find(runtime => runtime.code === dependencyCode || runtime.server === dependencyCode);
+            if (!dependency) {
+                throw new Error(server.server + ' startup blocked because dependency `' + dependencyCode + '` is not declared in topology');
+            }
+            try {
+                await this.probeStartupDependency(dependency);
+            } catch (error) {
+                throw new Error(server.server + ' startup blocked because required runtime `' + dependency.label + '` is unavailable: ' + error.message);
+            }
+        }
+        return true;
+    },
+
     /**
      * Starts a project runtime server.
      * @param {Object} options Start options.
@@ -234,6 +317,7 @@ module.exports = {
         const foundationRoot = this.packageRoot(frameworkRoot, 'nodics.foundation');
         const foundation = require(foundationRoot);
         const moduleRoots = this.resolveModuleRoots(projectRoot, frameworkRoot, server);
+        await this.enforceStartupDependencies(projectRoot, server);
 
         const previous = Object.fromEntries(
             [...new Set(Object.keys(environment).concat(['S', 'E', 'NODICS_NODE']))]

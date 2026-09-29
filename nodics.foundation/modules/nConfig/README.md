@@ -18,6 +18,10 @@ and [the smallest override example](llm/examples/minimal-configuration.md).
 
 ## Developer Notes
 
+- Explicit offline maintenance may load effective services through
+  `DefaultFrameworkInitializerService.loadMaintenanceServices` after configuration
+  discovery, without invoking startup hooks or initializing providers. The
+  maintenance owner remains responsible for scope, outage and durable recovery.
 - Keep configuration ownership with the module that owns the behavior.
 - Use pre-start and post-start scripts for controlled lifecycle extension.
 - Preserve redaction for secrets and operational logs.

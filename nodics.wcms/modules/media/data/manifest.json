@@ -2,6 +2,28 @@
     "contractVersion": 2,
     "module": "media",
     "sections": {
+        "mediaPublicationWorkflow": {
+            "kind": "DATA_RELEASE",
+            "selectionPolicy": "EXPLICIT",
+            "dataType": "init",
+            "version": "1.0.0",
+            "displayName": "Media Publication Approval",
+            "description": "Media-owned exact retained-content approval through Process and nPublish.",
+            "owningDomain": "media",
+            "lifecycle": "OPERATIONAL_VERSIONED",
+            "destinationRole": "PROCESS",
+            "environmentScope": ["ALL"],
+            "sensitivity": "INTERNAL",
+            "versioningPolicy": "IMMUTABLE",
+            "publicationPolicy": "NONE",
+            "initialPublicationPolicy": "NONE",
+            "removalPolicy": "RETAIN",
+            "installer": "PROCESS_DEFINITION",
+            "files": {
+                "init-v002/records/process/mediaPublicationWorkflowDefinitionData.js": "44355063df521b219094703cee293b65df954352e5ced7b77b8b6153acbb5fe9"
+            },
+            "sourceRoot": "init-v002"
+        },
         "mediaReplicationRetryJob": {
             "kind": "DATA_RELEASE",
             "dataType": "init",

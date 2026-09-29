@@ -282,6 +282,68 @@ read-only targets, body spoofing, promise/callback errors, and no persistence on
 rejection. A full Published view must read active domain projections; these
 generic guards do not create a publication workflow or a source/Online diff UI.
 
+## Installed Version Migration
+
+Converting installed ordinary records to versioned authoring is a maintenance
+operation, separate from moving source code, changing a technical revision,
+resetting a schema or publishing a release. Database owns the scoped command
+and orchestration; the selected database provider owns conditional record/index
+effects, nImport owns strict `importRun` evidence, and nTooling owns local outage
+inspection. Operators control downtime and reopening. Business users do not run
+this procedure through generic CRUD or Axis.
+
+The current native-local sequence is: stop and exclude all writers; capture and
+review an immutable scoped plan; durably begin/checkpoint the attempt; backfill
+only `versionId: 0`; create/verify version-qualified unique indexes before dropping
+mapped old constraints; verify every planned record/index; then separately adopt
+source flags and variants before reopening. No other record values, revisions or
+timestamps are regenerated. Batch intent acknowledgement reduces journal writes,
+but each record remains conditional and requires reconciliation after interruption.
+
+Planning and execution require ordinary source schemas. Do not enable
+`isVersionedEnabled` first and let startup reconcile installed indexes. After
+verified forward completion, opt in the owning schemas explicitly, include
+`vDatabase`, `vService` and the matching provider variant, and qualify CURRENT
+authoring reads where intended. Invalidate affected caches and account for every
+tenant/database loading that source, including separate Online installations.
+CURRENT reads do not activate a published release. The maintenance result always
+leaves `writersMayRestart: false` pending this handoff.
+
+### Failure And Recovery
+
+Missing outage evidence, source/index drift, storage failure, wrong worker or
+unplanned record state stops the operation. Preserve the original plan/checksum,
+identity and journal, and keep writers offline. Resume or interrupted-attempt
+rollback applies only to a RUNNING journal with verified previous-worker stop
+evidence. It must not reopen a terminal COMPLETED/ROLLED_BACK journal.
+
+Pre-reopen compensation of a completed migration needs a **new linked journal**,
+fresh outage and verification of the exact unchanged target. The parent remains
+COMPLETED; successful linked compensation becomes ROLLED_BACK. Database owns the
+command integration and rollback-direction enforcement; the journal API alone
+does not execute compensation. Preserve/restore the reviewed ordinary source
+composition without bypassing its original hash. Any subsequent authoring or
+unaccounted state requires separately qualified repair, not deletion of history.
+
+### Customize And Extend Safely
+
+Project owners select actual environment/server/tenant/schema scope through the
+existing command and effective configuration; generic mechanics stay in the
+framework. `installedVersionMigration.limits` controls bounded source/plan work;
+the strict journal has a separate aggregate evidence budget. A project's
+`modules/<owning-module>/src/schemas/schemas.js` may later select
+`isVersionedEnabled: true` and `versionedReadMode: 'CURRENT'` on qualified schemas.
+Do not edit the global base, invent a journal or copy provider operations into a
+customer script. Extensions cannot weaken immutable scope/checksum, durability,
+worker fencing, outage, conditional writes, index ordering or terminal evidence.
+
+Follow the [operator contract](../../../../nodics.foundation/modules/nDatabase/database/llm/contracts/installed-version-migration.md)
+and [worked local example](../../../../nodics.foundation/modules/nDatabase/database/llm/examples/installed-version-migration.md).
+Validate command parsing, orchestration, provider/journal contracts and outage
+failure cases, then retain separate installed-run and post-restart application
+evidence. This authored guide is not proof of a live migration, generated
+documentation update, publication or production qualification.
+
 ## Technical revisions without manual arithmetic
 
 Canonical owner: `nodics.foundation`, implemented by `nDatabase/database` and

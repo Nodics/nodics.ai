@@ -19,6 +19,7 @@ test('Electronics validates specifications compatibility warranty and device ide
     assert.equal(validation.validateSpecification({ productCode: 'phone', specificationFamilyCode: 'smartphone', specifications: { storage: '256GB' } }).valid, true);
     assert.deepEqual(validation.compatible({ connector: 'USB-C' }, { connector: ['USB-C', 'USB-A'] }), { compatible: true, mismatches: [] });
     assert.equal(validation.validateWarranty({ duration: 2, durationUnit: 'YEAR', coverage: ['PARTS'] }).valid, true);
+    assert.equal(validation.validateWarranty({ duration: 2, durationUnit: 'YEAR', coverage: ['PARTS', 'LABOUR'] }).valid, true);
     assert.equal(validation.validateIdentityPolicy({ identifierTypes: ['IMEI', 'SERIAL'] }).valid, true);
 });
 test('Electronics projection exposes safe specifications and warranty only', () => { const result = projection.project({ status: 'ACTIVE', tenant: 'default', productCode: 'phone', modelNumber: 'N1', specificationFamilyCode: 'smartphone', specifications: { storage: '256GB' } }, { status: 'ACTIVE', duration: 2, durationUnit: 'YEAR', coverage: ['PARTS'] }); assert.equal(result.electronics.specifications.storage, '256GB'); assert.equal(result.electronics.tenant, undefined); assert.equal(result.electronics.warranty.duration, 2); });

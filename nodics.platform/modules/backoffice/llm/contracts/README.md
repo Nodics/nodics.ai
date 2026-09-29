@@ -1,5 +1,29 @@
 # BackOffice AI Contracts
 
+## Documentation source routing
+
+CMS product records are discovered through authorized CMS read APIs; see the
+[CMS discovery contract](../../../../../nodics.wcms/modules/cms/llm/contracts/README.md#documentation-product-discovery).
+Registration remains synchronous and contains module metadata, not tenant content
+queried under service identity. Authenticated initialization profiles supply the
+existing Site-to-pack/publication binding for the reader projection; do not add a
+second customer identity map to BackOffice or infer a product from its URL.
+Retain module eligibility, source permissions and publication gating. Axis must
+match the canonical product route and must not substitute Framework or the first
+source for an unknown, missing or unauthorized product. CMS delivery remains
+content/access authority.
+
+## Canonical registry acceptance
+
+`acceptance:capability-registry` executes the complete BackOffice-owned suite from
+the selected framework version. It is a canonical tooling command, not a customer
+script. Customer inputs select the deployment and credentials. `--execute` is
+required because the suite may register/activate a capability, then restores its
+original state. Failed visibility assertions and authorization denials fail the
+suite; cleanup must preserve pre-existing registration/activation. Imports/help
+perform no acceptance operations. Independent-project and failure tests live in
+`test/capabilityRegistryAcceptance.test.mjs`.
+
 - `capability-registry-contract.md` defines service-owned providers, runtime
   registration, effective aggregation, and the Axis projection boundary.
 
@@ -7,6 +31,18 @@
 - Target Nodics modules remain authoritative for operations and authorization.
 - Human login and service-to-service registration identities stay separate.
 - Frontend registry output contains only approved client-safe metadata.
+- Composition-only groups without a package `nodics.functionalModule` declaration
+  are not business activation owners. BackOffice uses existing loader metadata
+  to exclude obsolete structural-group catalogue rows from selection and
+  presentation eligibility, and rejects their lifecycle commands. Retain
+  persisted history; do not add client-side name filters or remove application
+  capability, import, authorization, or publication prerequisites.
+  When a remote runtime reports a group without a functional declaration, the
+  authenticated registration reconciliation marks any existing matching
+  catalogue record `compositionOnly`, using its current revision. This makes
+  retirement durable even when Platform does not load that group's source.
+  This flag cannot be changed by ordinary activation commands. Fresh installs
+  do not create business catalogue records for structural groups.
 - Self-registration must be idempotent, environment-bound, auditable, retryable,
   and safe during BackOffice outages.
 - Availability retries use registration renewal, a short configured first
@@ -125,6 +161,36 @@ runtime credential. nImport still enforces the operator's import permission, ten
 release governance and schema access at the destination.
 
 ## Application capability readiness and repairs
+
+### Business offering setup review
+
+The owner may supply optional `presentation.visual` with public `src` and `alt`
+for an offering preview. `describe` projects only these two fields. Accept HTTPS
+without embedded credentials or same-origin absolute paths; ignore invalid
+artwork without rejecting the offering. Never fetch these URLs on the backend,
+expose private/signed media links, or make artwork a setup/readiness dependency.
+Rendering, lazy loading and image-error fallback belong to Axis. These images
+are illustrative presentation, not a published-product or runtime readiness claim.
+
+The existing application-initialization catalogue is the sole offering authority.
+Owners supply presentation/category, functional requirements and preparation
+steps through existing layered profiles. New categories must not require an Axis
+switch, a customer-owned copy of framework defaults or another registry.
+
+`profile.setupPlan` version 1 is an inert, read-only scope preview. BackOffice
+projects ordered capability, data/media and publication requirements from the
+existing profile. It deduplicates identical execution targets while retaining
+required/optional distinctions. Plan items expose only labels, identity, type,
+owner and requirement flags, never paths or private transport fields. Copy defaults
+belong to `backofficeApplicationInitialization.planPresentation`. Later modules
+can extend `setupPlan` through the standard service override contract.
+
+Viewing a plan must not register, activate, import or publish anything. Availability
+is not user selection; missing prerequisites for an unselected offering are not
+an installation failure. A plan is not an execution receipt, dependency resolver
+or readiness certification. Workflow progress and permitted actions still come
+from existing owner status APIs. New execution orchestration must use owner
+services and pipelines, not browser-side loops over this preview.
 
 Application initialization status projects one business capability lifecycle for
 Setup & Accelerators, Documentation, Publishing, and related Axis pages. The

@@ -1,9 +1,9 @@
 # nodics.process
 
-Process is an optional functional group. It is not auto-activated merely because
-a runtime observes it. Approval-required and workflow-dependent operations must
-still fail closed when Process is unavailable; unrelated modules remain usable.
-Existing registered/enabled installations retain their administrative state.
+Process is a mandatory functional group because governed publication approval
+requires workflow during first-run setup. Runtime observation still remains
+separate from bounded BackOffice operational state; workflow-dependent
+operations fail closed when that authority is unavailable.
 
 `nodics.process` is the standard Nodics functional module group for governed
 business processes and workflows.

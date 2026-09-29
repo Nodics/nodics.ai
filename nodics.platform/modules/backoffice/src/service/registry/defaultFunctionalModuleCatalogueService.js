@@ -652,13 +652,24 @@ module.exports = {
       JSON.stringify(this.normalizeActivationDataPackages(right))
     );
   },
+  /** Uses loader metadata to distinguish composition groups from business activation owners. */
+  isStructuralModuleGroup: function (moduleName) {
+    let raw = typeof NODICS !== "undefined" && NODICS.getRawModule
+      ? NODICS.getRawModule(this.normalizeFunctionalModule(moduleName))
+      : undefined;
+    let metadata = raw && raw.metaData && raw.metaData.nodics;
+    return Boolean(metadata && metadata.kind === "group" && !metadata.functionalModule);
+  },
   /** Resolves the nearest functional root for one observed runtime module. */
   resolveFunctionalRoot: function (registration, registrationsByName) {
     let current = registration;
     let visited = new Set();
     while (current && !visited.has(current.moduleName)) {
       visited.add(current.moduleName);
-      if (current.functionalModule) return current;
+      if (current.functionalModule) {
+        if (this.isStructuralModuleGroup(current.moduleName)) return undefined;
+        return current;
+      }
       current =
         current.parentModule && registrationsByName.get(current.parentModule);
     }
@@ -670,7 +681,8 @@ module.exports = {
     let registrationsByName = new Map(
       registrations.map((item) => [item.moduleName, item]),
     );
-    let roots = registrations.filter((item) => item.functionalModule);
+    let roots = registrations.filter((item) => item.functionalModule &&
+      !this.isStructuralModuleGroup(item.moduleName));
     return roots.map((root) => {
       let identity = this.normalizeFunctionalModule(
         root.functionalModule.identity,
@@ -957,6 +969,20 @@ module.exports = {
       throw new Error("Runtime registration batch is missing project identity");
     let observations = this.buildObservations(batch);
     let records = [];
+    for (let registration of batch.registrations || []) {
+      if (registration.moduleKind !== "group" || registration.functionalModule) continue;
+      let existing = await this.getRecord(batch.project, registration.moduleName, { authData });
+      if (!existing || existing.compositionOnly === true) continue;
+      let result = await this.updateRecord({
+        tenant: this.getTenant({ authData }),
+        authData: this.getPersistenceAuthData(authData),
+        query: { code: existing.code, catalogueRevision: existing.catalogueRevision },
+        model: { compositionOnly: true, catalogueRevision: Number(existing.catalogueRevision || 1) + 1 },
+      });
+      if (this.getMatchedCount(result) !== 1)
+        throw new CLASSES.NodicsError("ERR_BOF_00000",
+          "Functional-module declaration changed concurrently; retry registration");
+    }
     for (let observation of observations) {
       records.push(
         await this.reconcileObservation(observation, { authData: authData }),
@@ -1136,6 +1162,7 @@ module.exports = {
     });
     let items = [];
     for (let item of records) {
+      if (item.compositionOnly === true || this.isStructuralModuleGroup(item.functionalModule)) continue;
       items.push(await this.projectClientSafeWithReceipts(item, {}, request));
     }
     return { code: code, data: { project: project, items: items } };
@@ -1172,6 +1199,7 @@ module.exports = {
       query: { projectCode: project },
     });
     records.forEach((record) => {
+      if (record.compositionOnly === true || this.isStructuralModuleGroup(record.functionalModule)) return;
       let modules = [record.functionalModule]
         .concat(record.technicalModules || [])
         .filter(Boolean);
@@ -1202,7 +1230,8 @@ module.exports = {
       params.functionalModule,
       request,
     );
-    if (!record || record.registrationState === "DEREGISTERED")
+    if (!record || record.compositionOnly === true || this.isStructuralModuleGroup(record.functionalModule) ||
+        record.registrationState === "DEREGISTERED")
       throw new CLASSES.NodicsError(
         "ERR_BOF_00000",
         "Functional-module registration not found",
@@ -1259,12 +1288,15 @@ module.exports = {
   /** Applies one optimistic durable lifecycle transition without changing runtime composition. */
   transition: async function (request, action) {
     let context = this.getLifecycleContext(request);
+    if (this.isStructuralModuleGroup(context.functionalModule))
+      throw new CLASSES.NodicsError("ERR_BOF_00000",
+        "Composition-only groups are not business capabilities. Use the application's setup and required capabilities.");
     let existing = await this.getRecord(
       context.project,
       context.functionalModule,
       request,
     );
-    if (!existing)
+    if (!existing || existing.compositionOnly === true)
       throw new CLASSES.NodicsError(
         "ERR_BOF_00000",
         "Functional module is not available",
@@ -1391,6 +1423,167 @@ module.exports = {
         { action: action },
         request,
       ),
+    };
+  },
+  /** Resolves and validates one governed business selection update. */
+  getSelectionContext: function (request) {
+    let body = this.getBody(request);
+    let authData = (request && request.authData) || {};
+    let actor = String(
+      authData.principalId || authData.loginId || authData.code || "",
+    );
+    if (!actor || authData.tokenType === "service")
+      throw new CLASSES.NodicsError(
+        "ERR_AUTH_00003",
+        "A human employee principal is required",
+      );
+    if (
+      !body.project ||
+      !body.reason ||
+      String(body.reason).length > 512 ||
+      !Array.isArray(body.modules) ||
+      body.modules.length < 1 ||
+      body.modules.length > 128
+    ) {
+      throw new CLASSES.NodicsError(
+        "ERR_BOF_00000",
+        "Invalid functional-module selection request",
+      );
+    }
+    let seen = new Set();
+    let modules = body.modules.map((item) => {
+      if (
+        !item ||
+        !item.functionalModule ||
+        !Number.isInteger(Number(item.expectedRevision)) ||
+        Number(item.expectedRevision) < 1 ||
+        typeof item.selected !== "boolean"
+      ) {
+        throw new CLASSES.NodicsError(
+          "ERR_BOF_00000",
+          "Invalid functional-module selection item",
+        );
+      }
+      let functionalModule = String(item.functionalModule);
+      if (seen.has(functionalModule))
+        throw new CLASSES.NodicsError(
+          "ERR_BOF_00000",
+          "Duplicate functional-module selection item",
+        );
+      seen.add(functionalModule);
+      return {
+        functionalModule: functionalModule,
+        expectedRevision: Number(item.expectedRevision),
+        selected: item.selected === true,
+      };
+    });
+    return {
+      project: String(body.project),
+      reason: String(body.reason),
+      actor: actor,
+      modules: modules,
+    };
+  },
+  /** Builds a single-module lifecycle request from a bulk selection item. */
+  selectionLifecycleRequest: function (request, context, item, revision) {
+    return Object.assign({}, request, {
+      body: {
+        project: context.project,
+        expectedRevision: revision,
+        reason: context.reason,
+        includeActivationData: true,
+      },
+      params: { functionalModule: item.functionalModule },
+    });
+  },
+  /** Applies business-facing module selection while preserving governed lifecycle authority. */
+  applySelection: async function (request) {
+    let context = this.getSelectionContext(request);
+    let items = [];
+    for (let item of context.modules) {
+      if (this.isStructuralModuleGroup(item.functionalModule))
+        throw new CLASSES.NodicsError("ERR_BOF_00000",
+          "Composition-only groups are not business capabilities. Use the application's setup and required capabilities.");
+      let record = await this.getRecord(context.project, item.functionalModule, request);
+      if (!record || record.compositionOnly === true)
+        throw new CLASSES.NodicsError(
+          "ERR_BOF_00000",
+          "Functional module is not available: " + item.functionalModule,
+        );
+      if (Number(record.catalogueRevision) !== item.expectedRevision)
+        throw new CLASSES.NodicsError(
+          "ERR_BOF_00000",
+          "Functional-module catalogue revision conflict",
+        );
+      if (record.required === true && item.selected === false)
+        throw new CLASSES.NodicsError(
+          "ERR_BOF_00000",
+          "Required functional module cannot be deselected",
+        );
+      let action = "unchanged";
+      let status = "UNCHANGED";
+      let module = record;
+      if (item.selected === true) {
+        if (record.registrationState !== "REGISTERED") {
+          action = "registerActivate";
+          let registered = await this.transition(
+            this.selectionLifecycleRequest(request, context, item, item.expectedRevision),
+            "register",
+          );
+          module = registered.data;
+          let activated = await this.transition(
+            this.selectionLifecycleRequest(request, context, item, module.catalogueRevision),
+            "activate",
+          );
+          module = activated.data;
+          status = "APPLIED";
+        } else if (record.enabled !== true) {
+          action = "activate";
+          let activated = await this.transition(
+            this.selectionLifecycleRequest(request, context, item, item.expectedRevision),
+            "activate",
+          );
+          module = activated.data;
+          status = "APPLIED";
+        } else {
+          module = await this.projectClientSafeWithReceipts(record, { action: "unchanged" }, request);
+        }
+      } else if (record.registrationState === "REGISTERED" && record.enabled === true) {
+        action = "deactivate";
+        let deactivated = await this.transition(
+          this.selectionLifecycleRequest(request, context, item, item.expectedRevision),
+          "deactivate",
+        );
+        module = deactivated.data;
+        status = "APPLIED";
+      } else {
+        module = await this.projectClientSafeWithReceipts(record, { action: "unchanged" }, request);
+      }
+      items.push({
+        functionalModule: item.functionalModule,
+        selected: item.selected,
+        action: action,
+        status: status,
+        module: module,
+      });
+    }
+    if (SERVICE.DefaultBackofficeAuditService)
+      await SERVICE.DefaultBackofficeAuditService.record({
+        eventType: "backoffice.functional-module.selection.apply",
+        outcome: "completed",
+        project: context.project,
+        principalId: context.actor,
+        moduleCount: items.length,
+        applied: items.filter((item) => item.status === "APPLIED").length,
+        reason: context.reason,
+      });
+    return {
+      code: "SUC_BOF_00020",
+      data: {
+        project: context.project,
+        applied: items.filter((item) => item.status === "APPLIED").length,
+        items: items,
+      },
     };
   },
   /** Executes required activation data packages through the existing nImport data-release executor. */
@@ -1768,6 +1961,10 @@ module.exports = {
   /** Enables one registered functional module for Axis presentation. */
   activate: function (request) {
     return this.transition(request, "activate");
+  },
+  /** Applies business-facing module selection in one governed operation. */
+  applyFunctionalModuleSelection: function (request) {
+    return this.applySelection(request);
   },
   /** Disables one optional functional module without changing its runtime. */
   deactivate: function (request) {

@@ -22,6 +22,7 @@ module.exports = {
         "baselineCode": "nexus",
         "presentation": {
           "title": "Nexus Corporate",
+          "visual": require("../data/backoffice/applicationVisualData"),
           "kind": "PROJECT",
           "category": "accelerator",
           "order": 100,

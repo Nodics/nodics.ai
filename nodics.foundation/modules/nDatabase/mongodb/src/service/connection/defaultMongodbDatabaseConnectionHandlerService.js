@@ -60,6 +60,7 @@ module.exports = {
                 topology = await db.command({ isMaster: 1 });
             } catch (fallbackError) {
                 return {
+                    persistence: { durableJournal: false, primaryMajorityReadback: false, contractVersion: 1 },
                     transaction: {
                         multiRecordAtomic: false,
                         reason: 'MongoDB topology discovery failed'
@@ -70,7 +71,10 @@ module.exports = {
         let sessionCapable = Number.isFinite(topology.logicalSessionTimeoutMinutes);
         let qualifiedTopology = typeof topology.setName === 'string' ||
             topology.msg === 'isdbgrid';
+        const durableProtocol = Number.isSafeInteger(topology.maxWireVersion) && topology.maxWireVersion >= 4 &&
+            topology.readOnly !== true && (topology.isWritablePrimary === true || topology.ismaster === true || topology.msg === 'isdbgrid');
         return {
+            persistence: { durableJournal: durableProtocol, primaryMajorityReadback: durableProtocol, contractVersion: 1 },
             transaction: {
                 multiRecordAtomic: sessionCapable && qualifiedTopology,
                 reason: sessionCapable && qualifiedTopology ? undefined :

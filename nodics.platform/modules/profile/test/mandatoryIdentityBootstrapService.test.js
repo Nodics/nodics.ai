@@ -10,6 +10,9 @@
  */
 
 const assert = require('assert');
+const fs = require('fs');
+const os = require('os');
+const path = require('path');
 
 /**
  * @module profile/test/mandatoryIdentityBootstrapService
@@ -305,6 +308,60 @@ const service = require('../src/service/identity/defaultMandatoryIdentityBootstr
     assert.strictEqual(userStateSaves[0].model.loginId, 'admin');
     assert.strictEqual(userStateSaves[0].model.attempts, 0);
     assert.strictEqual(userStateSaves[0].model.locked, false);
+
+    const projectRoot = fs.mkdtempSync(path.join(os.tmpdir(), 'nodics-profile-runtime-grants-'));
+    const writeJson = (file, value) => {
+        fs.mkdirSync(path.dirname(file), { recursive: true });
+        fs.writeFileSync(file, JSON.stringify(value, null, 2) + '\n');
+    };
+    const writeProperties = (directory, value) => {
+        const file = path.join(directory, 'config/properties.js');
+        fs.mkdirSync(path.dirname(file), { recursive: true });
+        fs.writeFileSync(file, 'module.exports = ' + JSON.stringify(value, null, 2) + ';\n');
+        delete require.cache[require.resolve(file)];
+    };
+    writeJson(path.join(projectRoot, 'package.json'), { name: 'nodics.kickoff' });
+    writeJson(path.join(projectRoot, 'envs', 'kickoffLocal', 'package.json'), {
+        name: 'kickoffLocal',
+        nodics: { kind: 'group', runtimeModule: true, deploymentClass: 'LOCAL' }
+    });
+    writeJson(path.join(projectRoot, 'envs', 'kickoffLocal', 'platformServer', 'package.json'), {
+        name: 'platformServer',
+        nodics: { kind: 'server', runtimeModule: true, runtimeIdentity: { instanceCode: 'kickoff-local-platform-1', remoteModules: ['axis'] } }
+    });
+    writeJson(path.join(projectRoot, 'envs', 'kickoffLocal', 'wasteServer', 'package.json'), {
+        name: 'wasteServer',
+        nodics: { kind: 'server', runtimeModule: true, runtimeIdentity: { instanceCode: 'kickoff-local-waste-1', remoteModules: ['profile', 'location'] } }
+    });
+    writeProperties(path.join(projectRoot, 'envs', 'kickoffLocal', 'platformServer'), {
+        activeModules: { modules: ['profile', 'backoffice'] },
+        servers: { default: { endpoint: { httpPort: 4300 } } }
+    });
+    writeProperties(path.join(projectRoot, 'envs', 'kickoffLocal', 'wasteServer'), {
+        activeModules: { modules: ['waste', 'rulesApi'] },
+        servers: { default: { endpoint: { httpPort: 4370 } } }
+    });
+    global.NODICS = {
+        getNodicsHome: () => path.resolve(__dirname, '../../../../nodics.foundation'),
+        getCustomHome: () => projectRoot,
+        getEnvironmentName: () => 'nodics.kickoff',
+        getSelectedEnvironmentName: () => 'kickoffLocal',
+        getServerName: () => 'platformServer',
+        getActiveModules: () => ['profile', 'backoffice']
+    };
+    process.env.NODICS_RUNTIME_API_KEY = 'local-runtime-api-key-with-at-least-thirty-two-characters';
+    const discovered = await service.reconcileLocalRuntimeDeploymentGrant({ tenant: 'default' }, {
+        version: 2,
+        servicePrincipalScopes: { apiAdmin: ['auth.internal.token.read'] },
+        localRuntimeDeploymentGrantPermissions: ['profile.enterprise.search', 'rules.approval.callback']
+    });
+    assert(discovered.includes('kickoff-local-platform-runtime-deployment'));
+    assert(discovered.includes('kickoff-local-waste-runtime-deployment'));
+    const wasteGrant = scopeAssignments.find(item => item.code === 'kickoff-local-waste-runtime-deployment');
+    assert.deepStrictEqual(wasteGrant.runtimeScope.modules, ['waste', 'rulesApi', 'profile', 'location']);
+    assert.deepStrictEqual(wasteGrant.runtimeScope.permissions, ['auth.internal.token.read', 'profile.enterprise.search', 'rules.approval.callback']);
+    fs.rmSync(projectRoot, { recursive: true, force: true });
+
     if (previousRuntimeApiKey === undefined) delete process.env.NODICS_RUNTIME_API_KEY;
     else process.env.NODICS_RUNTIME_API_KEY = previousRuntimeApiKey;
     if (previousPlatformApiKey === undefined) delete process.env.NODICS_PLATFORM_API_KEY;

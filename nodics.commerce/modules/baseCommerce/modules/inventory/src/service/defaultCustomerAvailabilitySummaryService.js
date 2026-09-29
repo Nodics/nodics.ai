@@ -77,10 +77,22 @@ module.exports = {
         if (!request || !request.tenant) throw new Error('Tenant is required for customer availability summary');
         let products = this.products(request.products);
         if (products.length === 0) return {};
-        if (!SERVICE.DefaultInventorySourcingService || !SERVICE.DefaultInventoryBalanceService) return {};
+        const delivery = ((CONFIG.get('inventory') || {}).publication || {}).delivery || {};
+        const activated = delivery.enabled === true && SERVICE.DefaultInventoryPublicationService.deliveryEnabled(request);
+        if (!SERVICE.DefaultInventorySourcingService || !SERVICE.DefaultInventoryBalanceService) {
+            if (activated) throw new Error('Activated Inventory dependencies unavailable');
+            return {};
+        }
 
         let skus = Array.from(new Set(products.flatMap(item => item.skus)));
         let balances = await this.loadBalances(request, skus);
+        if (activated) {
+            const records = await SERVICE.DefaultInventoryPublicationService.readConfigured(request);
+            const warehouses = new Map(records.filter(item => item.schema === 'warehouse' && item.policy.status === 'ACTIVE')
+                .map(item => [item.policy.code, item.policy]));
+            balances = balances.filter(item => warehouses.has(item.warehouseCode)).map(item =>
+                ({ ...item, priority: warehouses.get(item.warehouseCode).priority }));
+        }
         let result = {};
         for (let product of products) {
             let candidates = product.skus.flatMap(sku => SERVICE.DefaultInventorySourcingService.source({

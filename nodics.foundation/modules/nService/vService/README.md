@@ -8,11 +8,17 @@ Variant changes should be minimal, layered, and test-backed. Avoid duplicating b
 
 ## Capability Status
 
+Schemas may explicitly select `versionedReadMode: 'CURRENT'` after installed-data
+qualification. The get variant selects the owning provider's current-record
+read method without copying authorization, caching or response handling. Exact
+scalar versionId queries still select immutable history; omitted mode preserves
+existing behavior, including CMS. See [read selection](llm/contracts/README.md#versioned-read-selection).
+
 The module currently provides a standard variant module boundary:
 
 - layered configuration files;
 - router, schema, pipeline, utility, enum, and status extension slots;
-- a sample service scaffold;
+- version-aware save/update and opt-in read selection;
 - common and environment-local smoke tests;
 - generated LLM context.
 
@@ -31,6 +37,15 @@ Use `vService` when a variant must:
 Keep provider-neutral service contracts in `nService`. Keep business publish lifecycle rules in the owning business module unless the rule is a true framework contract.
 
 ## Tests
+
+For save/update override qualification, run
+`node --test nodics.foundation/modules/nService/vService/test/managedMutationLayerContract.test.js`
+from the framework root. Nonversioned managed schemas reuse the database
+concurrency owner; see [managed mutation delegation](llm/contracts/README.md#managed-mutation-delegation).
+Set `NODICS_MONGODB_TEST_URI` to an explicitly authorized test MongoDB endpoint
+to include real-provider CAS verification in a uniquely named temporary database.
+Without that variable, only the live case is skipped. The fixture drops its own
+database and does not bootstrap application runtimes or access application data.
 
 Run:
 

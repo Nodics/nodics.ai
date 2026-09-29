@@ -372,6 +372,7 @@ module.exports = {
     },
     /** Deletes only expired Online copies owned by publication and absent from the CMS protected reference set. */
     collectGarbage: async function (request) {
+        if (SERVICE.DefaultMediaLifecycleCoordinationService) SERVICE.DefaultMediaLifecycleCoordinationService.assertPhysicalCleanup(request);
         let policy = this.policy();
         let protectedCodes = new Set([].concat(request.protectedMediaCodes || []).filter(Boolean));
         let maximum = Number(policy.garbageCollectionBatchSize || 100);

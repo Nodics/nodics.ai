@@ -156,7 +156,7 @@ module.exports = {
         return Promise.race([
             Promise.resolve().then(() => contributor.check()).then(result => {
                 let passed = result === true || result && result.status === 'UP';
-                return this.createCheck(contributor.name, passed, contributor.description || 'Runtime dependency readiness', contributor.required !== false);
+                return this.createCheck(contributor.name, passed, contributor.description || 'Runtime dependency readiness', contributor.required !== false, result);
             }),
             new Promise((resolve, reject) => {
                 timeout = setTimeout(() => reject(new Error('Readiness contributor timed out')), timeoutMs);
@@ -173,13 +173,21 @@ module.exports = {
      * @param {string} description Human-readable check purpose.
      * @returns {Object} Normalized check result.
      */
-    createCheck: function (name, passed, description, required) {
-        return {
+    createCheck: function (name, passed, description, required, details) {
+        const check = {
             name: name,
             status: passed ? 'UP' : 'DOWN',
             description: description,
             required: required !== false
         };
+        if (details && typeof details === 'object') {
+            ['reasonCode', 'lastSuccessAt', 'lastFailureAt', 'observedAt', 'suggestedAction'].forEach(field => {
+                if (typeof details[field] === 'string' && details[field] && !/password|token|secret|key/i.test(details[field])) {
+                    check[field] = details[field].slice(0, 256);
+                }
+            });
+        }
+        return check;
     },
 
     /** Returns layered readiness policy without exposing it in responses. */

@@ -2,6 +2,27 @@
     "contractVersion": 2,
     "module": "editorial",
     "sections": {
+        "editorialWorkflows": {
+            "kind": "DATA_RELEASE",
+            "selectionPolicy": "EXPLICIT",
+            "dataType": "init",
+            "version": "1.0.0",
+            "description": "Editorial-owned neutral approval and publication definitions",
+            "owningDomain": "editorial",
+            "lifecycle": "OPERATIONAL_VERSIONED",
+            "destinationRole": "PROCESS",
+            "environmentScope": ["ALL"],
+            "sensitivity": "INTERNAL",
+            "versioningPolicy": "IMMUTABLE",
+            "publicationPolicy": "NONE",
+            "initialPublicationPolicy": "NONE",
+            "removalPolicy": "RETAIN",
+            "installer": "PROCESS_DEFINITION",
+            "files": {
+                "init-v002/records/process/editorialWorkflowDefinitionData.js": "2a57f151d7562422a0e3cde7ed3c3b804864d024c94e17c4f745cdd93bf5a183"
+            },
+            "sourceRoot": "init-v002"
+        },
         "init-v001": {
             "kind": "DATA_RELEASE",
             "dataType": "init",

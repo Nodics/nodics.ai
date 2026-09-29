@@ -17,7 +17,16 @@
  * @override Project modules may provide later property contributions for CMS rendering, data, and integration settings.
  */
 module.exports = {
-  tooling: {
+    tooling: {
+        commands: {
+            'acceptance:guided-initialization': {
+                projectHome: true,
+                description: 'Verify governed initialization, idempotency, normal Process approval and Online delivery.',
+                acceptanceContract: true,
+                handler: '@nTooling/node-script',
+                script: 'src/service/acceptance/defaultGuidedInitializationAcceptanceService.mjs'
+            }
+        },
         acceptance: {
             "guidedInitialization": {
                 "runtime": {
@@ -170,8 +179,17 @@ module.exports = {
         maximumProtectedManifests: 1000,
       },
       baselines: {},
+      workflow: {
+        target: {
+          moduleName: "process",
+          connectionName: null,
+          connectionType: "abstract",
+          timeoutMs: 10000,
+          maxAttempts: 2,
+        },
+      },
       target: {
-        moduleName: null,
+        moduleName: "cms",
         connectionName: null,
         connectionType: "abstract",
         timeoutMs: 30000,

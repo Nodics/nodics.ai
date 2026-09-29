@@ -17,6 +17,16 @@
  * @override Projects enable and register remote sources and adapters in later configuration layers without changing framework defaults.
  */
 module.exports = {
+  tooling: {
+    commands: {
+      'acceptance:staged-sample-data': {
+        acceptanceContract: true,
+        projectHome: true,
+        handler: '@nTooling/node-script',
+        script: 'src/service/acceptance/defaultStagedSampleAcceptanceService.mjs'
+      }
+    }
+  },
   // Inert inventory; an allowed local server must explicitly select this capability.
   localResetProvider: {
     contributions: {

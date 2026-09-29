@@ -57,8 +57,12 @@ const request = { tenant: 'default', authData: { principalId: 'platform-service'
     await service.initiate('documentation', request);
     assert.strictEqual(imported, 1, 'replay must not re-import a current immutable content pack');
     publication.baselines.documentation.releaseVersion = '9.9.9';
-    await assert.rejects(service.status('documentation', request),
+    const invalidRelease = await service.status('documentation', request);
+    assert.strictEqual(invalidRelease.releaseStatus, 'INVALID_RELEASE');
+    assert.strictEqual(invalidRelease.publicationDiagnostic.status, 'STAGED_SOURCE_INVALID_RELEASE');
+    await assert.rejects(service.initiate('documentation', request),
         error => error.code === 'CMS_BASELINE_RELEASE_INVALID');
+    assert.strictEqual(imported, 1, 'invalid baseline must not import content');
     publication.runtimeRole = 'ONLINE';
     await assert.rejects(service.status('documentation', request),
         error => error.code === 'CMS_BASELINE_SOURCE_ROLE_INVALID');

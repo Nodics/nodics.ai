@@ -42,6 +42,14 @@ fs.writeFileSync(path.join(fixtureModuleRoot, 'data', 'manifest.json'), JSON.str
             sourceRoot: 'sample-v001',
             lifecycle: 'SAMPLE',
             initialPublicationPolicy: 'NONE'
+        },
+        'z-optional-init': {
+            kind: 'DATA_RELEASE',
+            dataType: 'init',
+            sourceRoot: 'init-v002',
+            lifecycle: 'OPERATIONAL_VERSIONED',
+            initialPublicationPolicy: 'NONE',
+            selectionPolicy: 'EXPLICIT'
         }
     }
 }), 'utf8');
@@ -75,6 +83,7 @@ global.SERVICE = {
         refreshInternalAuthTokens: async () => { refreshedRuntimeTokens++; return ['default']; }
     },
     DefaultRuntimeLifecycleService: { registerContributor: (name, value) => { contributor = value; } },
+    DefaultHealthService: { registerReadinessContributor: (name, value) => { global.registrationReadinessContributor = value; } },
     DefaultRouterService: {
         prepareUrl: options => 'http://localhost:3040/nodics/' + options.moduleName,
         getModuleServerConfig: moduleName => ({ getOptions: () => ({ remoteOnly: moduleName === 'remoteProfile' }) })
@@ -96,6 +105,7 @@ const service = Object.assign({}, definition, {
 async function run() {
     await service.init();
     assert(contributor, 'registration agent must use the central lifecycle');
+    assert(global.registrationReadinessContributor, 'registration agent must contribute runtime readiness diagnostics');
     assert.strictEqual(contributor.ready(), true, 'ready hook must not await BackOffice network traffic');
     await new Promise(resolve => setTimeout(resolve, 5));
     assert.strictEqual(requests.length, 1, 'one bounded runtime batch should register active locally hosted modules');
@@ -108,6 +118,8 @@ async function run() {
     assert.deepStrictEqual(requests[0].requestBody.registrations.map(item => item.moduleName), ['cms', 'utility']);
     assert.deepStrictEqual(service._registered, ['cms', 'utility'],
         'remote-only dependencies must not renew local leases or advertise foreign authority claims');
+    assert.strictEqual(service.getReadinessStatus().status, 'UP',
+        'fresh operational state must make BackOffice registration readiness visible as UP');
     const remoteConfiguration = SERVICE.DefaultRouterService.getModuleServerConfig;
     SERVICE.DefaultRouterService.getModuleServerConfig = () => ({ getOptions: () => ({ remoteOnly: false }) });
     assert.deepStrictEqual(service.getLocalModules(), ['cms', 'utility', 'remoteProfile'],
@@ -120,9 +132,14 @@ async function run() {
     assert.strictEqual(requests[0].requestBody.registrations[0].backoffice, undefined,
         'legacy configuration must not synthesize BackOffice navigation without a module-owned provider');
     assert.deepStrictEqual(requests[0].requestBody.registrations[0].activationDataPackages.map(item => item.code),
-        ['cms:core-reference', 'cms:sample-demo']);
+        ['cms:core-reference', 'cms:sample-demo', 'cms:z-optional-init']);
     assert.strictEqual(requests[0].requestBody.registrations[0].activationDataPackages[0].trigger, 'ACTIVATION');
+    assert.strictEqual(requests[0].requestBody.registrations[0].activationDataPackages[0].required, true);
+    assert(requests[0].requestBody.registrations[0].activationDataPackages.every(item => item.targetModule === 'cms'));
+    assert.strictEqual(requests[0].requestBody.registrations[0].activationDataPackages[1].required, false);
     assert.strictEqual(requests[0].requestBody.registrations[0].activationDataPackages[1].trigger, 'USER');
+    assert.strictEqual(requests[0].requestBody.registrations[0].activationDataPackages[2].required, false);
+    assert.strictEqual(requests[0].requestBody.registrations[0].activationDataPackages[2].trigger, 'USER');
     assert.deepStrictEqual(requests[0].requestBody.registrations[0].authorityClaims, [{
         kind: 'schema',
         moduleName: 'cms',
@@ -160,6 +177,9 @@ async function run() {
 
     NODICS.getInternalAuthToken = () => undefined;
     assert.strictEqual(await service.runRegistration(), false, 'missing service identity must not fail runtime startup');
+    service._operationalState = null;
+    assert.strictEqual(service.getReadinessStatus().status, 'DOWN',
+        'missing operational state must be visible to System Information as runtime readiness degradation');
 
     let staleAttempts = 0;
     let currentToken = 'stale-token';

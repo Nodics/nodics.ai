@@ -71,6 +71,7 @@ const modelRegistry = {
 const indexCalls = [];
 
 global.NODICS = {
+    isModuleActive: moduleName => ['profile', 'catalog'].includes(moduleName),
     getActiveTenants: function () {
         return ['default', 'tenantB'];
     },
@@ -135,6 +136,69 @@ const service = require('../src/service/schema/defaultSchemaIndexService');
         return true;
     });
 
+    indexCalls.length = 0;
+    const inspected = [];
+    const identityPolicy = require('../../../nAuth/config/properties').identityGovernance;
+    let effectiveIdentityPolicy = identityPolicy;
+    global.CONFIG = { get: key => key === 'identityGovernance' ? effectiveIdentityPolicy : undefined };
+    SERVICE.DefaultIdentityGovernanceService = require('../../../nAuth/src/service/identity/defaultIdentityGovernanceService');
+    SERVICE.DefaultSecuredRequestPipelineService = {
+        getEffectiveUserGroupCodes: groups => groups,
+        getGrantedPermissions: request => request.authData.permissions || [],
+        isPermissionGranted: (permission, granted) => granted.includes(permission)
+    };
+    SERVICE.DefaultDatabaseModelHandlerService.inspectIndexes = async model => {
+        inspected.push(model.name);
+        return { indexes: [], recordCount: 0, missingVersionCount: 0 };
+    };
+    const request = { tenant: 'default', channel: 'test', authData: {
+        principalType: 'human', loginId: 'operator', tenant: 'tenantB',
+        userGroups: ['adminGroup'], permissions: ['system.schema.view']
+    } };
+    const evidence = await service.inspectSchemaIndexes(request, 'profile', 'tenant');
+    assert.deepStrictEqual(inspected, ['profile.tenantB.master.tenant']);
+    assert.strictEqual(evidence.data.tenant, 'tenantB');
+    assert.strictEqual(evidence.data.migrationAuthorized, false);
+    assert.deepStrictEqual(indexCalls, [], 'inspection must not rebuild any index');
+    for (const patch of [{ principalType: 'service' }, { userGroups: [] }, { permissions: [] }, { tenant: '' }]) {
+        await assert.rejects(service.inspectSchemaIndexes({ authData: { ...request.authData, ...patch } }, 'profile', 'tenant'),
+            { code: 'ERR_DBS_00004' });
+    }
+    await assert.rejects(service.inspectSchemaIndexes(request, '../profile', 'tenant'), { code: 'ERR_DBS_00003' });
+    await assert.rejects(service.inspectSchemaIndexes(request, 'catalog', 'missing'), { code: 'ERR_DBS_00004' });
+    await assert.rejects(service.inspectSchemaIndexes(request, 'inactive', 'tenant'), { code: 'ERR_DBS_00004' });
+    await assert.rejects(service.inspectSchemaIndexes({ authData: { ...request.authData, tenant: 'inactive' } }, 'profile', 'tenant'),
+        { code: 'ERR_DBS_00004' });
+    assert.strictEqual(inspected.length, 1, 'denied or unavailable inspections never reach a provider');
+    effectiveIdentityPolicy = { administrativeGroups: ['inspectionAdministrators'] };
+    await assert.rejects(service.inspectSchemaIndexes(request, 'profile', 'tenant'), { code: 'ERR_DBS_00004' });
+    const customRequest = { authData: { ...request.authData, userGroups: ['inspectionAdministrators'] } };
+    await service.inspectSchemaIndexes(customRequest, 'profile', 'tenant');
+    await assert.rejects(service.inspectSchemaIndexes({ authData: { ...customRequest.authData, permissions: [] } }, 'profile', 'tenant'),
+        { code: 'ERR_DBS_00004' });
+    for (const policy of [{}, { administrativeGroups: [] }]) {
+        effectiveIdentityPolicy = policy;
+        await assert.rejects(service.inspectSchemaIndexes(customRequest, 'profile', 'tenant'), { code: 'ERR_DBS_00004' });
+    }
+    effectiveIdentityPolicy = identityPolicy;
+    const routes = require('../src/router/routers').common.schemaIndexes.inspectSchemaIndexes;
+    assert.strictEqual(routes.method, 'GET');
+    assert.deepStrictEqual(routes.authTokenTypes, ['access']);
+    assert.deepStrictEqual(routes.accessGroups, ['adminGroup']);
+    const facade = require('../src/facade/schema/defaultSchemaIndexFacade');
+    const controller = require('../src/controller/schema/defaultSchemaIndexController');
+    SERVICE.DefaultSchemaIndexService = service;
+    global.FACADE = { DefaultSchemaIndexFacade: facade };
+    const controllerRequest = { ...request, httpRequest: { params: { owner: 'profile', schema: 'tenant' } } };
+    assert.strictEqual((await controller.inspectSchemaIndexes(controllerRequest)).data.tenant, 'tenantB');
+    await new Promise((resolve, reject) => controller.inspectSchemaIndexes(controllerRequest,
+        (error, result) => error ? reject(error) : resolve(assert.strictEqual(result.data.channel, 'master'))));
+    const handler = require('../src/service/model/defaultDatabaseModelHandlerService');
+    const selectedModel = { dataBase: { getOptions: () => ({ modelHandler: 'SelectedProvider' }) } };
+    SERVICE.SelectedProvider = { inspectIndexes: async model => { assert.strictEqual(model, selectedModel); return { recordCount: 7 }; } };
+    assert.strictEqual((await handler.inspectIndexes(selectedModel)).recordCount, 7);
+    delete SERVICE.SelectedProvider;
+    await assert.rejects(handler.inspectIndexes(selectedModel), { code: 'ERR_DBS_00004' });
     console.log('Schema index service contract validated');
 })().catch(error => {
     console.error(error);

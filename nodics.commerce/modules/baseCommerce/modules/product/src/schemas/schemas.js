@@ -22,10 +22,38 @@ module.exports = { product: {
 } };
 module.exports.product.product.backoffice = { operations: ['search', 'read', 'create', 'update'], description: 'Product sellable master data.' };
 
+module.exports.product.product.definition.publicationReferences = { type: 'object', required: false,
+    description: 'Exact dependency references and Store scope sealed in an immutable Product source version.' };
+module.exports.product.productSearchProjection.definition.publicationVersion = { type: 'string', required: false,
+    description: 'Immutable catalogue manifest identity; customer visibility is controlled by the activation pointer.' };
+
+for (const name of ['productPublicationManifest', 'productPublicationPointer']) {
+    module.exports.product[name] = { super: 'base', model: true, schemaPolicies: ['operational'],
+        isVersionedEnabled: false, service: { enabled: true }, router: { enabled: false },
+        cache: { enabled: false }, event: { enabled: false }, search: { enabled: false },
+        backoffice: { mutationMode: 'READ_ONLY', operations: ['search', 'read'], concurrency: { enabled: true, managed: true, field: 'revision' } },
+        definition: {
+            tenant: { type: 'string', required: true, description: 'Runtime partition of the publication envelope.' },
+            productCode: { type: 'string', required: true, description: 'Product identity of the activation scope.' },
+            storeCode: { type: 'string', required: true, description: 'Store identity of the activation scope.' },
+            revision: { type: 'int', required: true, description: 'Provider-atomic concurrency token.' }
+        } };
+}
+Object.assign(module.exports.product.productPublicationManifest.definition, {
+    references: { type: 'array', required: true, description: 'Exact immutable source identities and checksums, not copied authoring records.' },
+    projections: { type: 'array', required: true, description: 'Retained projection identities and payload checksums.' }
+});
+Object.assign(module.exports.product.productPublicationPointer.definition, {
+    version: { type: 'string', required: true, description: 'Currently activated immutable Product manifest.' },
+    receipts: { type: 'array', required: true, description: 'Operation receipts committed atomically with the active version.' }
+});
+
 // Catalogue source records are authored in Staged; publication evidence is not generic CRUD.
 for (const name of ['product', 'productLocalization', 'productVariant', 'productVariantLocalization', 'category', 'categoryLocalization']) {
     const schema = module.exports.product[name];
+    schema.schemaPolicies = schema.schemaPolicies.concat(['catalogueVersioned']);
     schema.backoffice = Object.assign({}, schema.backoffice, {
+        operations: ['search', 'read', 'create', 'update'],
         mutationPolicy: { lifecycle: 'PUBLISHABLE', publishRequired: true },
     });
 }

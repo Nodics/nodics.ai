@@ -345,6 +345,32 @@ module.exports = {
         });
     },
 
+    /** Reads installed indexes and record counts from one generated model without performing reconciliation or exposing records. */
+    inspectIndexes: async function (model) {
+        if (!model || typeof model.indexes !== 'function' || typeof model.countDocuments !== 'function') {
+            throw new CLASSES.NodicsError('ERR_DBS_00003', 'Installed model inspection is unavailable');
+        }
+        const indexes = await new Promise((resolve, reject) => model.indexes((error, values) => {
+            if (error || !Array.isArray(values) || values.length > 1000) {
+                reject(new CLASSES.NodicsError('ERR_DBS_00000', 'Installed index discovery failed'));
+            } else resolve(values);
+        }));
+        const recordCount = await model.countDocuments({});
+        const missingVersionCount = await model.countDocuments({ versionId: { $exists: false } });
+        if (![recordCount, missingVersionCount].every(value => Number.isSafeInteger(value) && value >= 0) || missingVersionCount > recordCount) {
+            throw new CLASSES.NodicsError('ERR_DBS_00000', 'Installed record evidence is inconsistent');
+        }
+        const schema = model.rawSchema || {};
+        const options = (schema.schemaOptions || {})[model.tenant] || {};
+        return {
+            versioned: model.versioned === true,
+            recordCount, missingVersionCount,
+            indexes: indexes.map(index => _.pick(index, ['name', 'key', 'unique', 'sparse', 'expireAfterSeconds', 'partialFilterExpression', 'collation'])),
+            desiredIndexes: _.cloneDeep(options.indexedFields || []),
+            observedAt: new Date().toISOString()
+        };
+    },
+
     /**
      * Reconciles MongoDB indexes for one generated model.
      *
@@ -355,7 +381,7 @@ module.exports = {
      */
     createIndexes: function (model, cleanOrphan) {
         let _self = this;
-        cleanOrphan = cleanOrphan || CONFIG.get('database').default.options.cleanOrphan;
+        cleanOrphan = cleanOrphan === undefined ? CONFIG.get('database').default.options.cleanOrphan : cleanOrphan;
         return new Promise((resolve, reject) => {
             try {
                 if (model) {
@@ -363,6 +389,16 @@ module.exports = {
                     let schemaOptions = model.rawSchema.schemaOptions[model.tenant];
                     if (!UTILS.isBlank(schemaOptions.indexedFields)) {
                         model.indexes(function (err, indexes) {
+                            if (err || !Array.isArray(indexes)) {
+                                reject(new CLASSES.NodicsError('ERR_DBS_00000', 'Index discovery failed; no reconciliation was attempted'));
+                                return;
+                            }
+                            try {
+                                _self.validateVersionedIndexTransition(model, schemaOptions.indexedFields, indexes);
+                            } catch (error) {
+                                reject(error);
+                                return;
+                            }
                             if (databaseOptions.defaultIndexes && databaseOptions.defaultIndexes.length > 0 && indexes && indexes.length > 0) {
                                 databaseOptions.defaultIndexes.forEach(property => {
                                     let tmpKey = {};
@@ -393,6 +429,26 @@ module.exports = {
                 reject(new CLASSES.NodicsError(error, 'while creating indexes for model: ' + model.schemaName, 'ERR_DBS_00000'));
             }
         });
+    },
+
+    /**
+     * Prevents ordinary index reconciliation from becoming an implicit versioning migration.
+     * @param {Object} model Selected generated model.
+     * @param {Object[]} desired Effective index declarations.
+     * @param {Object[]} installed Installed MongoDB indexes before default-index filtering.
+     * @throws {CLASSES.NodicsError} When versioned uniqueness would overwrite a non-versioned identity contract.
+     */
+    validateVersionedIndexTransition: function (model, desired, installed) {
+        if (model.versioned !== true) return;
+        if (desired.some(index => index.options && index.options.unique === true &&
+            !Object.prototype.hasOwnProperty.call(index.fields || {}, 'versionId'))) {
+            throw new CLASSES.NodicsError('ERR_DBS_00000', 'Versioned unique indexes must include versionId');
+        }
+        if (installed.some(index => index.unique === true &&
+            !_.isEqual(index.key, { _id: 1 }) &&
+            !Object.prototype.hasOwnProperty.call(index.key || {}, 'versionId'))) {
+            throw new CLASSES.NodicsError('ERR_DBS_00000', 'Installed unique indexes require an explicit versioning migration before reconciliation');
+        }
     },
 
     /**
@@ -455,15 +511,13 @@ module.exports = {
                 dropPromises.push(_self.dropIndex(model, name));
             });
         }
-        if (finalIndexes.create && finalIndexes.create.length > 0) {
-            finalIndexes.create.forEach(indexData => {
-                createPromises.push(_self.createIndex(model, indexData));
-            });
-        }
-        if (dropPromises.length === 0 && createPromises.length === 0) {
+        if (dropPromises.length === 0 && (!finalIndexes.create || finalIndexes.create.length === 0)) {
             return Promise.resolve({});
         }
         return SERVICE.DefaultNodicsPromiseService.all(dropPromises).then(dropResult => {
+            (finalIndexes.create || []).forEach(indexData => {
+                createPromises.push(_self.createIndex(model, indexData));
+            });
             return SERVICE.DefaultNodicsPromiseService.all(createPromises).then(createResult => {
                 return {
                     drop: dropResult,

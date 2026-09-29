@@ -5,6 +5,7 @@ Product, Pricing, Promotion, Tax, Inventory, Cart, Checkout, Order, Payment,
 and Fulfillment authority. The group is composition-only; concrete child
 modules own Apparel schemas, validation, services, projections, and tests.
 
-Apparel data belongs to the customer project's Apparel product and content
-catalogs. This framework group owns no customer product, price, stock, page,
-component, or renderer-mapping record.
+Customer Apparel data belongs to customer-owned product and content catalogs.
+`agora.apparel` is a customer application in Kickoff that consumes this accelerator.
+Its BackOffice profile, configuration, media and data stay in the customer project.
+Selecting Apparel alone does not activate or import an application.

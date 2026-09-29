@@ -64,12 +64,16 @@ module.exports = {
     },
     /** Reconciles audit and outbox projections through owning services. */
     reconcile: async function (request) {
+        if (request.publicationCode !== undefined &&
+            (typeof request.publicationCode !== 'string' || !request.publicationCode.trim())) {
+            throw new CLASSES.NodicsError('ERR_PUB_00001', 'A nonempty publication code is required for scoped reconciliation');
+        }
         let projection = await SERVICE.DefaultPublicationAuditReconciliationService.reconcile(request);
         let outbox = SERVICE.DefaultCmsPublicationOutboxService && SERVICE.DefaultCmsPublicationOutboxService.reconcile ?
             await SERVICE.DefaultCmsPublicationOutboxService.reconcile(request) : { skipped: true, reason: 'CMS_OUTBOX_NOT_LOADED' };
         let target = [];
         for (let publication of await this.select(request)) {
-            if (!publication.targetVersion) continue;
+            if (!publication.targetVersion && !publication.activationOperation && publication.state !== 'ACTIVATING') continue;
             try {
                 let provider = SERVICE.DefaultPublicationLifecycleService.getVersionProvider(publication.domain);
                 if (provider && typeof provider.reconcile === 'function') target.push({ publicationCode: publication.code,
@@ -89,6 +93,7 @@ module.exports = {
         }
         request.expectedRevision = publication.revision;
         request.reason = request.reason || 'Operator-governed recovery';
-        return SERVICE.DefaultPublicationLifecycleService.retry(request);
+        return publication.state === 'FAILED' ? SERVICE.DefaultPublicationLifecycleService.retry(request) :
+            SERVICE.DefaultPublicationLifecycleService.resubmit(request);
     }
 };

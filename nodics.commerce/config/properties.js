@@ -20,6 +20,21 @@
  */
 
 module.exports = {
+    data: {
+        dataReleases: {
+            runtimeRoleProfiles: {
+                PROCESS: {
+                    contributions: [
+                        { moduleName: 'product', sections: ['productPublicationWorkflow'] },
+                        { moduleName: 'pricing', sections: ['pricingPublicationWorkflow'] },
+                        { moduleName: 'promotion', sections: ['promotionPublicationWorkflow'] },
+                        { moduleName: 'inventory', sections: ['inventoryPublicationWorkflow'] },
+                        { moduleName: 'tax', sections: ['taxPublicationWorkflow'] }
+                    ]
+                }
+            }
+        }
+    },
     commerce: {
         capabilities: {
             baseCommerce: true,

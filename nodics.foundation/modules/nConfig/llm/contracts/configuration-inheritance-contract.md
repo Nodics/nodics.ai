@@ -1,5 +1,17 @@
 # Minimal configuration and effective inheritance
 
+## Offline Maintenance Loading
+
+After ordinary effective configuration discovery, the existing initializer's
+`loadMaintenanceServices` loads compatibility utilities, enums, classes and
+services in selected module order. It must not invoke module/entity init or
+post-init, project deployment scripts, generated runtime startup, listeners,
+imports, model creation or index reconciliation. Later-layer service overrides
+remain effective; a failed contribution rejects loading. The maintenance owner
+must separately validate selected provider, tenant, schema and environment, and
+obtain a verified outage before any mutation. This method confers no HTTP or
+database permission and is not a second runtime lifecycle.
+
 Apply the canonical [customer configuration classification contract](../../../nSetup/llm/contracts/customer-config-classification-contract.md).
 
 nConfig owns loading, not capability defaults. Defaults belong in the capability
@@ -36,6 +48,27 @@ Verify with `test/configurationOwnershipContract.test.js`,
 `test/configurationValidation.test.js`, and the consuming project's real
 `prepareStart` scenarios. Read `nodics.docs/docs/pages/nodics.foundation/runtime-configuration.md`
 for the human journey, examples, migration and operational limits.
+
+## Capability role profiles
+
+An active owner may declare a top-level namespace's `runtimeRoleProfiles`, keyed
+by the selected `runtimeRole.code`. The existing role-profile projection applies
+that one profile and removes the map from effective configuration, including
+when no role matches. It supports functional, accelerator and customer namespaces
+without a Foundation registry of their names. Nested data-release initialization
+profiles retain their existing dedicated projection.
+
+This is selection of contributed configuration, not module activation or import
+authorization. Missing roles retain base values. Existing role-profile semantics
+remain: profile objects merge into base objects and profile arrays replace base
+arrays. Ordinary contribution arrays still follow the separately documented
+binding/merge contract. Later runtime overrides operate on effective consumer
+keys; consumed profiles are not reapplied. Put environment/server exceptions in
+the selected profile where required by that existing precedence.
+
+Validate selected and unselected roles, unrelated owner namespaces, empty and
+shortened arrays, immutable inputs and later overrides with
+`test/runtimePropertyProjectionContract.test.js`, then run consumer preparation.
 
 ## Server build and lifecycle ownership
 

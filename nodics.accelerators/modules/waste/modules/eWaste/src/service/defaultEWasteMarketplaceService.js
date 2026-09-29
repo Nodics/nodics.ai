@@ -13,6 +13,219 @@
 const crypto = require("node:crypto");
 /** @module eWaste/service/defaultEWasteMarketplaceService @description Composes Product discovery and customer Commerce checkout with Waste ownership and Loyalty references. @layer service @owner eWaste @override Configured stores and settlement policies remain in later layers. */
 module.exports = {
+  /** Rejects incomplete catalogue reads without exposing provider details. */
+  catalogueFailure: function (message, status = 400) {
+    const error = new Error(message);
+    error.statusCode = status;
+    throw error;
+  },
+  /** Calls only the configured store's published Product customer API. Caller store/runtime fields are never forwarded. */
+  products: function (request, path, page, policy) {
+    const storeCode = this.settings().storeCode;
+    const query = new URLSearchParams({ storeCode, locale: "en" });
+    if (page) {
+      query.set("page", String(page));
+      query.set("pageSize", String(policy.discoveryBatchSize));
+    }
+    return this.experience().remote(
+      request,
+      "product",
+      "commerce",
+      path + "?" + query,
+      "GET",
+    );
+  },
+  /** Reads all published store pages for a consistent facet/count projection; fails explicitly at the configured bound. */
+  published: async function (
+    request,
+    policy,
+    readProducts = this.products.bind(this),
+  ) {
+    const products = [],
+      seen = new Set(),
+      batch = policy.discoveryBatchSize;
+    for (
+      let page = 1;
+      page <= Math.ceil(policy.maximumProducts / batch) + 1;
+      page++
+    ) {
+      if (request.isCancelled?.())
+        this.catalogueFailure("Catalogue request cancelled", 499);
+      const response = await readProducts(
+        request,
+        "/products/discovery",
+        page,
+        policy,
+      );
+      if (!Array.isArray(response.products))
+        this.catalogueFailure("Catalogue is temporarily unavailable", 503);
+      for (const product of response.products) {
+        if (seen.has(product.productCode))
+          this.catalogueFailure(
+            "Catalogue changed while loading. Refresh your results.",
+            503,
+          );
+        seen.add(product.productCode);
+        products.push(product);
+        if (products.length > policy.maximumProducts)
+          this.catalogueFailure(
+            "Catalogue exceeds its configured browsing limit",
+            503,
+          );
+      }
+      if (response.products.length < batch) return products;
+    }
+    this.catalogueFailure("Catalogue is temporarily unavailable", 503);
+  },
+  /** Projects customer-facing copy only; arbitrary localized attributes are never serialized. */
+  copyLines: function (value) {
+    return (
+      Array.isArray(value) ? value : typeof value === "string" ? [value] : []
+    )
+      .filter((item) => typeof item === "string" && item.trim())
+      .slice(0, 30)
+      .map((item) => item.slice(0, 4000));
+  },
+  /** Allows browser-safe public Product media URLs only. */
+  mediaUrl: function (value) {
+    return typeof value === "string" &&
+      (/^https?:\/\//i.test(value) || /^\/(?!\/)/.test(value))
+      ? value
+      : null;
+  },
+  /** Composes a published product with its current listed asset; private Waste evidence and customer details are excluded. */
+  offer: async function (request, product, catalogue) {
+    const attrs = product.localizedAttributes || {},
+      price = product.price;
+    if (
+      !["ASSET", "COUPON"].includes(attrs.kind) ||
+      !price ||
+      price.currency !== this.settings().currency ||
+      !Number.isFinite(Number(price.unitAmount)) ||
+      Number(price.unitAmount) <= 0
+    )
+      return null;
+    if (
+      attrs.expiresAt &&
+      (!Number.isFinite(Date.parse(attrs.expiresAt)) ||
+        Date.parse(attrs.expiresAt) <= Date.now())
+    )
+      return null;
+    let asset, descriptor;
+    if (attrs.kind === "ASSET") {
+      if (
+        typeof attrs.assetCode !== "string" ||
+        !/^[A-Za-z0-9][A-Za-z0-9._-]{0,179}$/.test(attrs.assetCode)
+      )
+        return null;
+      asset = await this.experience()
+        .store()
+        .one("wasteAsset", request, attrs.assetCode);
+      if (
+        !asset ||
+        asset.active === false ||
+        asset.assetStatus !== "LISTED" ||
+        (asset.metadata?.marketProductCode &&
+          asset.metadata.marketProductCode !== product.productCode)
+      )
+        return null;
+      descriptor = {
+        ...SERVICE.DefaultWasteItemDescriptorService.describe(asset, catalogue),
+        photo: null,
+      };
+    }
+    const media = [
+        product.media?.primary,
+        ...(product.media?.gallery || []),
+        { url: attrs.imageUrl },
+      ],
+      gallery = [];
+    for (const image of media) {
+      const url = this.mediaUrl(
+        typeof image === "string" ? image : image?.url || image?.deliveryUrl,
+      );
+      if (url && !gallery.some((item) => item.url === url))
+        gallery.push({
+          url,
+          alt:
+            typeof image?.altText === "string" ? image.altText : product.name,
+        });
+    }
+    const classification = descriptor?.classification?.category;
+    return {
+      code: product.productCode,
+      kind: attrs.kind,
+      name: product.name,
+      description: product.description || product.summary,
+      issuer: attrs.issuer,
+      rewardPrice: Number(price.unitAmount),
+      currency: price.currency,
+      revision: asset ? asset.revision : product.version,
+      variantCode: (product.variantCodes || [])[0],
+      imageUrl: gallery[0]?.url,
+      gallery,
+      expiresAt: attrs.expiresAt,
+      category: classification
+        ? {
+            code: classification.code,
+            label:
+              typeof classification.name === "string"
+                ? classification.name
+                : classification.name?.en || classification.code,
+          }
+        : null,
+      condition: descriptor?.condition?.value || null,
+      available: product.availability?.available !== false,
+      terms: this.copyLines(attrs.terms),
+      eligibility: this.copyLines(attrs.eligibility),
+      exclusions: this.copyLines(attrs.exclusions),
+      redemptionInstructions: this.copyLines(attrs.redemptionInstructions),
+      saleMode: attrs.saleMode,
+      purchaseConditions: this.copyLines(attrs.purchaseConditions),
+      ...(asset
+        ? {
+            assetCode: asset.code,
+            descriptor,
+            ownerCode: asset.ownerRef?.code,
+            carbonUnits: Number(asset.metadata?.illustrativeCarbonUnits || 0),
+            biddingAvailable:
+              attrs.ownerRef?.module === "profile" &&
+              attrs.ownerRef?.schema === "customer" &&
+              attrs.ownerRef?.code === asset.ownerRef?.code &&
+              attrs.sourceRef?.module === "wasteCore" &&
+              attrs.sourceRef?.schema === "wasteAsset" &&
+              attrs.sourceRef?.code === asset.code &&
+              attrs.commerceBidding?.enabled !== false,
+          }
+        : {}),
+    };
+  },
+  /** Composes safe published offers in bounded batches; trusted project layers may refine the DTO. */
+  catalogueOffers: async function (
+    request,
+    products,
+    projectOffer = this.offer.bind(this),
+  ) {
+    const catalogue = products.some(
+      (product) => product.localizedAttributes?.kind === "ASSET",
+    )
+      ? await SERVICE.DefaultWasteItemDescriptorService.catalogue(request)
+      : {};
+    const output = { assets: [], coupons: [] };
+    // Bounded batches avoid unbounded generated-repository reads for larger catalogues.
+    for (let offset = 0; offset < products.length; offset += 10) {
+      const offers = await Promise.all(
+        products
+          .slice(offset, offset + 10)
+          .map((product) => projectOffer(request, product, catalogue)),
+      );
+      for (const offer of offers)
+        if (offer)
+          output[offer.kind === "ASSET" ? "assets" : "coupons"].push(offer);
+    }
+    return output;
+  },
+
   /** Returns the customer's manual Order review history through Commerce. */
   orderReviews: function (request) {
     return this.customerRemote(
@@ -81,74 +294,43 @@ module.exports = {
         "&locale=en&pageSize=100",
       "GET",
     );
-    const assets = await this.experience()
-      .store()
-      .list("wasteAsset", request, { assetStatus: "LISTED" }, 100);
-    const output = { assets: [], coupons: [] };
-    const descriptorCatalogue = assets.length ? await SERVICE.DefaultWasteItemDescriptorService.catalogue(request) : {};
-    for (const product of catalogue.products || []) {
-      const attributes = product.localizedAttributes || {},
-        price = product.price;
-      if (
-        !price ||
-        price.currency !== this.settings().currency ||
-        !Number.isFinite(Number(price.unitAmount)) ||
-        Number(price.unitAmount) <= 0
-      )
-        continue;
-      if (!["ASSET", "COUPON"].includes(attributes.kind)) continue;
-      const asset =
-        attributes.kind === "ASSET"
-          ? assets.find((a) => a.code === attributes.assetCode)
-          : undefined;
-      if (
-        attributes.kind === "ASSET" &&
-        (!asset ||
-          (asset.metadata.marketProductCode &&
-            asset.metadata.marketProductCode !== product.productCode))
-      )
-        continue;
-      if (attributes.expiresAt && new Date(attributes.expiresAt) <= new Date())
-        continue;
-      const offer = {
-        code: product.productCode,
-        name: product.name,
-        description: product.summary,
-        kind: attributes.kind,
-        issuer: attributes.issuer,
-        imageUrl:
-          (product.media &&
-            product.media.primary &&
-            (product.media.primary.url || product.media.primary.deliveryUrl)) ||
-          attributes.imageUrl,
-        rewardPrice: Number(price.unitAmount),
-        biddingAvailable:
-          attributes.kind === "ASSET" &&
-          attributes.ownerRef?.module === "profile" &&
-          attributes.ownerRef?.schema === "customer" &&
-          attributes.ownerRef?.code === asset?.ownerRef?.code &&
-          attributes.sourceRef?.module === "wasteCore" &&
-          attributes.sourceRef?.schema === "wasteAsset" &&
-          attributes.sourceRef?.code === asset?.code &&
-          attributes.commerceBidding?.enabled !== false,
-        currency: price.currency,
-        revision: asset ? asset.revision : product.version,
-        variantCode: (product.variantCodes || [])[0],
-        expiresAt: attributes.expiresAt,
-        ...(asset
-          ? {
-              assetCode: asset.code,
-              descriptor: { ...SERVICE.DefaultWasteItemDescriptorService.describe(asset, descriptorCatalogue), photo: null },
-              ownerCode: asset.ownerRef.code,
-              carbonUnits: Number(
-                (asset.metadata && asset.metadata.illustrativeCarbonUnits) || 0,
-              ),
-            }
-          : {}),
-      };
-      output[attributes.kind === "ASSET" ? "assets" : "coupons"].push(offer);
-    }
-    return output;
+    return this.catalogueOffers(
+      request,
+      catalogue.products || [],
+      this.marketplaceOffer.bind(this),
+    );
+  },
+  /** Retains the domain marketplace DTO while reusing the published-offer safety checks. */
+  marketplaceOffer: async function (request, product, catalogue) {
+    const offer = await this.offer(request, product, catalogue);
+    if (!offer) return null;
+    return {
+      code: offer.code,
+      name: offer.name,
+      description: product.summary,
+      kind: offer.kind,
+      issuer: offer.issuer,
+      imageUrl:
+        this.mediaUrl(
+          product.media?.primary?.url ||
+            product.media?.primary?.deliveryUrl ||
+            product.localizedAttributes?.imageUrl,
+        ) || undefined,
+      rewardPrice: offer.rewardPrice,
+      biddingAvailable: offer.kind === "ASSET" && offer.biddingAvailable,
+      currency: offer.currency,
+      revision: offer.revision,
+      variantCode: offer.variantCode,
+      expiresAt: offer.expiresAt,
+      ...(offer.kind === "ASSET"
+        ? {
+            assetCode: offer.assetCode,
+            descriptor: offer.descriptor,
+            ownerCode: offer.ownerCode,
+            carbonUnits: offer.carbonUnits,
+          }
+        : {}),
+    };
   },
   /** Restricts this domain adapter to Waste asset bids in its configured Commerce store. */
   isDomainBid: function (bid) {

@@ -1,0 +1,30 @@
+{
+    "contractVersion": 2,
+    "module": "pricing",
+    "sections": {
+        "pricingPublicationWorkflow": {
+            "kind": "DATA_RELEASE",
+            "selectionPolicy": "EXPLICIT",
+            "dataType": "init",
+            "version": "1.0.1",
+            "displayName": "Pricing Policy Publication Approval",
+            "description": "Forward Process approval contribution for exact retained policy.",
+            "owningDomain": "pricing",
+            "lifecycle": "OPERATIONAL_VERSIONED",
+            "destinationRole": "PROCESS",
+            "environmentScope": [
+                "ALL"
+            ],
+            "sensitivity": "INTERNAL",
+            "versioningPolicy": "IMMUTABLE",
+            "publicationPolicy": "NONE",
+            "initialPublicationPolicy": "NONE",
+            "removalPolicy": "RETAIN",
+            "installer": "PROCESS_DEFINITION",
+            "sourceRoot": "init-v002",
+            "files": {
+                "init-v002/records/process/pricingPublicationWorkflowDefinitionData.js": "b8eb487458f4162e6d97a038c2e968e341591e79d703f9dcfa7dd46e24224719"
+            }
+        }
+    }
+}

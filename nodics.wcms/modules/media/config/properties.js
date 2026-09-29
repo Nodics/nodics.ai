@@ -17,6 +17,44 @@
  * @override Project, environment, server, node, tenant, or customer layers may override these defaults through Nodics configuration layering.
  */
 module.exports = {
+  schemaPolicies: {
+    media: {
+      publicationVersioned: { isVersionedEnabled: false },
+    },
+  },
+  publish: {
+    approvalWorkflow: {
+      domains: {
+        media: {
+          definitionCode: 'mediaPublicationApproval',
+          ownerModule: 'media',
+          actionKey: 'media.applyPublicationDecision',
+          sourceRuntimeRole: 'WCMS_STAGED',
+        },
+      },
+    },
+  },
+  process: {
+    actionAdapters: {
+      definitions: {
+        'media.applyPublicationDecision': {
+          moduleName: 'media', operation: 'applyPublicationDecision',
+          remote: { target: 'media', moduleName: 'media', runtimeRole: 'WCMS_STAGED',
+            apiName: '/workflow/actions/applyPublicationDecision', requiresCompletedTask: true },
+        },
+      },
+    },
+  },
+  tooling: {
+    commands: {
+      'acceptance:media-seed': {
+        acceptanceContract: true,
+        projectHome: true,
+        handler: '@nTooling/node-script',
+        script: 'src/service/acceptance/defaultMediaSeedAcceptanceService.mjs'
+      }
+    }
+  },
   // Inert inventory; an allowed local server must explicitly select this capability.
   localResetProvider: {
     contributions: {
@@ -44,6 +82,13 @@ module.exports = {
   },
   media: {
     publication: {
+      // Unselected until installed schemas, transport, Process and target acceptance are qualified.
+      versionProviderEnabled: false,
+      runtimeRole: "",
+      targetTransportProvider: "",
+      target: { connectionName: '', connectionType: 'abstract', timeoutMs: 30000, maxAttempts: 1 },
+      source: { connectionName: '', connectionType: 'abstract', timeoutMs: 30000, maxAttempts: 1 },
+      transactionModuleName: "media",
       maximumAssets: 100,
       maximumAssetBytes: 52428800,
       maximumTotalBytes: 104857600,

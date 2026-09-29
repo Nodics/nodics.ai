@@ -12,6 +12,14 @@
 /** @module wasteCore/config/properties @description Provides shared Waste defaults. @layer config @owner wasteCore @override Partner modules may refine policy through configuration layering. */
 module.exports = {
   tooling: {
+        commands: {
+            'acceptance:waste-backoffice': {
+                acceptanceContract: true,
+                projectHome: true,
+                handler: '@nTooling/node-script',
+                script: 'src/service/acceptance/defaultWasteBackofficeAcceptanceService.mjs'
+            }
+        },
         acceptance: {
             "wasteManagement": {
                 "runtime": {
@@ -126,6 +134,40 @@ module.exports = {
     },
   },
   waste: {
+    installedDataInspection: {
+      pageSize: 100,
+      resources: {
+        wasteFamily: 'REFERENCE',
+        wasteCategory: 'REFERENCE',
+        wasteItemType: 'REFERENCE',
+        wasteMaterialType: 'REFERENCE',
+        wasteConditionGrade: 'REFERENCE',
+        wasteEvidencePolicy: 'REFERENCE',
+        wasteCollectionPreset: 'REFERENCE',
+        wasteCollectionPointType: 'REFERENCE',
+        wasteCollectionAcceptanceRule: 'REFERENCE',
+        wasteReceiptPolicy: 'REFERENCE',
+        wasteVerificationPolicy: 'REFERENCE',
+        wasteLifecyclePolicy: 'REFERENCE',
+        wasteAssetCreationPolicy: 'REFERENCE',
+        wasteAssetType: 'REFERENCE',
+        wasteAssetTransferPolicy: 'REFERENCE',
+        wasteMarketplaceEligibilityPolicy: 'REFERENCE',
+        wasteRewardSettlementPolicy: 'REFERENCE',
+        wasteCarbonSettlementPolicy: 'REFERENCE',
+        wasteCouponRedemptionSettlementPolicy: 'REFERENCE',
+        wasteImpactMetric: 'REFERENCE',
+        wasteImpactProfile: 'REFERENCE',
+        wasteSubmission: 'FINGERPRINT',
+        wasteEvidence: 'FINGERPRINT',
+        wasteAsset: 'FINGERPRINT',
+        wasteAssetOwnershipEvent: 'FINGERPRINT',
+        wasteReceipt: 'FINGERPRINT',
+        wasteVerification: 'FINGERPRINT',
+        wasteImpactResult: 'FINGERPRINT',
+        wasteImpactSelection: 'FINGERPRINT'
+      }
+    },
     reviewWorkspace: { views: {
         'waste.overview': { ownerModule: 'wasteCore', label: 'Waste overview', mode: 'OVERVIEW' },
         'waste.submissions': { ownerModule: 'wasteCore', label: 'All submissions', mode: 'SUBMISSIONS' },

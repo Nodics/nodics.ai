@@ -17,8 +17,8 @@ const fs = require('fs');
 const path = require('path');
 
 const moduleRoot = path.resolve(__dirname, '..');
-const recordRoot = path.join(moduleRoot, 'data/core-v001/records/waste');
-const header = require(path.join(moduleRoot, 'data/core-v001/headers/waste/eWastePresetHeader'));
+const recordRoot = path.join(moduleRoot, 'data/core-v002/records/waste');
+const header = require(path.join(moduleRoot, 'data/core-v002/headers/waste/eWastePresetHeader'));
 const properties = require(path.join(moduleRoot, 'config/properties'));
 const contributionPolicy = require('../../../../../../nodics.waste/modules/wasteCore/src/service/defaultWasteDataContributionPolicyService');
 const forbiddenPattern = /(BANTGO|I2E|i2eCredits|MAPBOX|RECYCLER_ADAPTER|LOGISTICS_ADAPTER|VENDOR_CODE|VENDOR_REF)/;
@@ -57,6 +57,7 @@ assert.strictEqual(JSON.stringify(properties).includes('acceptedFamilyCodes'), f
 assert.strictEqual(properties.wasteSubmission.metadataSuggestion.sizePolicy.version, 'EWASTE_SIZE_POLICY_V1');
 assert.strictEqual(properties.wasteSubmission.metadataSuggestion.sizePolicy.itemTypes.CHARGER, 'SMALL');
 assert.strictEqual(contributionPolicy.validateHeader(header).length, Object.keys(expectedHeaderSchemas).length);
+contributionPolicy.validateManifestSection(require(path.join(moduleRoot, 'data/manifest.json')).sections['core-reference']);
 
 Object.keys(expectedHeaderSchemas).forEach(function (dataFilePrefix) {
     let matches = Object.values(header).flatMap(function (section) {
@@ -93,8 +94,11 @@ const acceptanceRules = loadRecords('eWasteAcceptanceRuleData.js');
 assert(familyCodes.includes('ELECTRONICS'));
 assert(familyCodes.includes('BATTERY'));
 assert(categoryCodes.includes('MOBILE_DEVICE'));
+assert(categoryCodes.includes('LAPTOP_COMPUTER'));
 assert(categoryCodes.includes('LITHIUM_BATTERY'));
 assert(materialCodes.includes('CIRCUIT_BOARD'));
+assert(materialCodes.includes('COPPER'));
+assert(materialCodes.includes('LITHIUM_BATTERY'));
 assert(collectionPointTypeCodes.includes('E_WASTE_DROP_OFF'));
 assert(collectionPointTypeCodes.includes('E_WASTE_BIN'));
 assert(collectionPresetCodes.includes('EWASTE_DROP_OFF_STANDARD'));
@@ -103,8 +107,10 @@ assert(evidencePolicyCodes.includes('EWASTE_STANDARD_PHOTO'));
 assert(receiptPolicyCodes.includes('EWASTE_STANDARD_RECEIPT'));
 assert(verificationPolicyCodes.includes('EWASTE_STANDARD_VERIFICATION'));
 assert(impactMetricCodes.includes('EWASTE_WEIGHT_KG'));
+assert(impactMetricCodes.includes('DIVERTED_FROM_LANDFILL_KG'));
 assert(impactProfileCodes.includes('EWASTE_WEIGHT_ESTIMATE'));
-assert(impactProfileCodes.includes('CIRCA_EWASTE_ESTIMATE'));
+assert(impactProfileCodes.includes('EWASTE_ENVIRONMENTAL_ESTIMATE'));
+assert(!impactProfileCodes.includes('CIRCA_EWASTE_ESTIMATE'));
 assert(assetCreationPolicyCodes.includes('EWASTE_APPROVED_ASSET_STANDARD'));
 assert(assetTypeCodes.includes('EWASTE_MOBILE_DEVICE_ASSET'));
 assert(assetTypeCodes.includes('EWASTE_BATTERY_ASSET'));
@@ -144,6 +150,9 @@ fs.readdirSync(recordRoot).filter(function (fileName) {
 }).forEach(function (fileName) {
     let source = fs.readFileSync(path.join(recordRoot, fileName), 'utf8');
     assert(!forbiddenPattern.test(source), fileName + ' must not contain partner/reward/map/provider-specific values');
+    const records = loadRecords(fileName);
+    assert(records.length > 0, fileName + ' must contain contribution records');
+    records.forEach(record => contributionPolicy.validateRecord(record, 'SCENARIO_ACCELERATOR'));
 });
 
 console.log('eWaste preset data contract validated');

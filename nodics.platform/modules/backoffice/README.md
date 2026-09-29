@@ -1,7 +1,19 @@
 # backoffice
 
+BackOffice owns the canonical `acceptance:capability-registry` tooling suite.
+Customer projects invoke it through `nodics project:run` with `--execute`, supply
+deployment inputs, and retain no copy of its assertions. It verifies discovery,
+activation visibility and restoration through authorized APIs. See
+[canonical registry acceptance](llm/contracts/README.md#canonical-registry-acceptance).
+
 `backoffice` is the backend registry, discovery, catalogue, compatibility, and
 bootstrap capability for the separate Nodics Axis administration application.
+
+Application profiles also publish an inert setup review derived from their existing
+capability and preparation declarations. See the [business offering contract](llm/contracts/README.md#business-offering-setup-review).
+The preview does not activate dependencies or execute imports. Framework-owned
+`backofficeApplicationInitialization.planPresentation` supplies shared copy;
+owners contribute offering metadata through the existing layers.
 
 BackOffice persistence schemas consume layered policies under
 `schemaPolicies.backoffice`. Partner modules may extend `contractReader` or
@@ -9,6 +21,11 @@ BackOffice persistence schemas consume layered policies under
 groups remain authoritative.
 
 ## Responsibilities
+
+Module Registry lists declared business capabilities, not composition-only
+groups. Obsolete structural-group records remain historical and cannot be
+activated or used to gate descendant presentation. Package metadata is the
+authority; application setup continues to declare its actual required modules.
 
 Functional lifecycle revisions protect administrator decisions and activation
 policy, not heartbeat timestamps or replica membership. Activation packages and
@@ -327,3 +344,14 @@ principal and bearer before execution; do not substitute the group-free runtime
 credential or add administrator groups to it. Status/preflight retains the scoped
 runtime credential. nImport still enforces the operator's import permission, tenant,
 release governance and schema access at the destination.
+
+## Application Bootstrap Acceptance
+
+`acceptance:local --execute --approve-publications` runs the capability-owned
+application administration suite with the selected customer's declarative
+`tooling.acceptance.localBootstrap` fixtures. It can import, activate and publish;
+it is not read-only. Runtime startup additionally requires `--start-runtimes`.
+Fresh reset requires LOCAL class, explicit reset intent and exclusive owned startup.
+Only owned children are stopped. Frontends and Docker execution are independent.
+Missing identity grants or fixture prerequisites fail through their normal owners;
+the suite never adds privileges or accesses provider collections directly.

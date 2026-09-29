@@ -444,3 +444,90 @@ test('Order BackOffice capability declares operator actions for cancellation ret
     assert(capability.navigation.some(item => item.id === 'order-exchanges' && item.summary.includes('exchange and replacement')));
     assert(capability.navigation.some(item => item.id === 'order-appeals' && item.presentation.fixedFilters[0].value === 'APPEAL'));
 });
+
+const reverseLifecycle = require('../src/service/defaultOrderLifecycleService');
+
+test("cancellation return and refund orchestration remains routed to existing Commerce authorities", async () => {
+  const calls = [];
+  const ports = {
+    find: async () => undefined,
+    evaluatePolicy: async () => ({ eligible: true }),
+    requestApproval: async () => ({ status: "APPROVED" }),
+    fulfillmentIntent: async () => {
+      calls.push("FULFILLMENT");
+      return { returnMethod: "DROP_OFF" };
+    },
+    inventoryDisposition: async () => {
+      calls.push("INVENTORY");
+      return { disposition: "RESTOCK" };
+    },
+    paymentIntent: async () => {
+      calls.push("PAYMENT");
+      return { refundMethod: "ORIGINAL_PAYMENT" };
+    },
+    complete: async (request, evidence) => ({
+      status: "COMPLETED",
+      requestType: request.requestType,
+      evidence,
+    }),
+  };
+  for (const requestType of ["CANCELLATION", "RETURN", "REFUND"]) {
+    const result = await reverseLifecycle.process(
+      {
+        tenant: "default",
+        orderCode: `order-${requestType}`,
+        requestType,
+        idempotencyKey: `reverse-${requestType}`,
+      },
+      ports,
+    );
+    assert.equal(result.status, "COMPLETED");
+  }
+  assert.deepEqual(calls, [
+    "FULFILLMENT",
+    "INVENTORY",
+    "PAYMENT",
+    "FULFILLMENT",
+    "INVENTORY",
+    "PAYMENT",
+    "FULFILLMENT",
+    "INVENTORY",
+    "PAYMENT",
+  ]);
+});
+
+test("provider partial failure records compensation evidence with completed owner checkpoints", async () => {
+  let compensation;
+  const ports = {
+    find: async () => undefined,
+    evaluatePolicy: async () => ({ eligible: true }),
+    requestApproval: async () => ({ status: "APPROVED" }),
+    fulfillmentIntent: async () => ({ code: "return-1" }),
+    inventoryDisposition: async () => ({ disposition: "RESTOCK" }),
+    paymentIntent: async () => {
+      throw new Error("provider unavailable");
+    },
+    compensate: async (request, checkpoint, error) => {
+      compensation = { request, checkpoint, error: error.message };
+    },
+  };
+  await assert.rejects(
+    () =>
+      reverseLifecycle.process(
+        {
+          tenant: "default",
+          orderCode: "order-failure",
+          requestType: "REFUND",
+          idempotencyKey: "failure-1",
+          correlationId: "corr-failure",
+        },
+        ports,
+      ),
+    /provider unavailable/,
+  );
+  assert.deepEqual(compensation.checkpoint.completed, [
+    "FULFILLMENT",
+    "INVENTORY",
+  ]);
+  assert.equal(compensation.error, "provider unavailable");
+});

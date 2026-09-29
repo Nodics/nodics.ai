@@ -74,6 +74,7 @@ module.exports = {
         return new Promise((resolve, reject) => {
             try {
                 let location = this.resolveLocation(request);
+                this.assertMutableKey(location.storageKey);
                 let content = request.buffer || request.content;
                 if (!Buffer.isBuffer(content)) {
                     throw new CLASSES.NodicsError('ERR_MED_00001', 'Invalid media request: buffer is required');
@@ -93,6 +94,33 @@ module.exports = {
                 reject(error);
             }
         });
+    },
+
+    /** Reserves publication placements from ordinary overwrite, transfer and cleanup operations. */
+    assertMutableKey: function (key) {
+        if (String(key).split('/').includes('mediaPublicationRetention')) {
+            throw new CLASSES.NodicsError('ERR_MED_00012', 'Retained publication bytes cannot be mutated');
+        }
+    },
+
+    /** Creates a backend-generated retained placement exclusively; a failed write never yields a descriptor. */
+    storeRetained: async function (request) {
+        if (!Buffer.isBuffer(request.buffer) || !request.buffer.length) {
+            throw new CLASSES.NodicsError('ERR_MED_00001', 'Retained media requires bytes');
+        }
+        let location = this.resolveLocation(Object.assign({}, request, {
+            storageKey: undefined, trustedStorageKey: false,
+            mediaCode: SERVICE.DefaultMediaStorageKeyService.uuid(), schemaName: 'mediaPublicationRetention'
+        }));
+        if (!String(location.storageKey).split('/').includes('mediaPublicationRetention')) {
+            throw new CLASSES.NodicsError('ERR_MED_00004', 'Media key strategy lacks retained-byte isolation');
+        }
+        await fs.promises.mkdir(path.dirname(location.internalAbsolutePath), { recursive: true });
+        let file = await fs.promises.open(location.internalAbsolutePath, 'wx', 0o400);
+        try { await file.writeFile(request.buffer); await file.sync(); } finally { await file.close(); }
+        let directory = await fs.promises.open(path.dirname(location.internalAbsolutePath), 'r');
+        try { await directory.sync(); } finally { await directory.close(); }
+        return { providerCode: location.providerCode, storageKey: location.storageKey, sizeBytes: request.buffer.length };
     },
 
     /** Reads one provider-relative media object without exposing its path. */
@@ -133,6 +161,7 @@ module.exports = {
                 throw new CLASSES.NodicsError('ERR_MED_00004', 'Unsafe media storage key');
             }
             let location = this.resolveLocation(request);
+            this.assertMutableKey(location.storageKey);
             return fs.promises.stat(sourceAbsolutePath).then(stat => {
                 let maximum = Number(request.maximumBytes || 0);
                 if (maximum > 0 && stat.size > maximum) {
@@ -167,6 +196,7 @@ module.exports = {
             try {
                 let basePath = this.resolveBasePath(request.provider);
                 let storageKey = SERVICE.DefaultMediaStorageKeyService.assertSafeStorageKey(request.storageKey);
+                this.assertMutableKey(storageKey);
                 let absolutePath = path.resolve(basePath, storageKey);
                 if (!absolutePath.startsWith(basePath + path.sep) && absolutePath !== basePath) {
                     throw new CLASSES.NodicsError('ERR_MED_00004', 'Unsafe media storage key');

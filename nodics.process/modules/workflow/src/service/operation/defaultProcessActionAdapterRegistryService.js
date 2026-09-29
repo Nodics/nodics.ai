@@ -59,7 +59,9 @@ module.exports = {
               ];
         return actions.map((action) => {
             if (typeof action !== 'string') return action;
-            const definition = (policy.definitions || {})[action];
+            const definitions = policy.definitions || {};
+            const definition = Object.prototype.hasOwnProperty.call(definitions, action)
+                ? definitions[action] : this.ownerDefinition(action);
             if (!definition || this.actionKey(definition) !== action) {
                 throw new CLASSES.NodicsError(
                     'ERR_PROCESS_00019',
@@ -68,6 +70,30 @@ module.exports = {
             }
             return definition;
         });
+    },
+
+    /** Reads only an explicitly selected owner's remote action declaration, without activating its runtime or merging its configuration. */
+    ownerDefinition: function (key) {
+        const match = /^([A-Za-z][A-Za-z0-9_-]*)\.([A-Za-z][A-Za-z0-9_]*)$/.exec(key);
+        if (!match || typeof NODICS === 'undefined' || typeof NODICS.getRawModule !== 'function') return undefined;
+        const owner = NODICS.getRawModule(match[1]);
+        if (!owner || !owner.path) return undefined;
+        const path = require('node:path');
+        const file = path.join(owner.path, 'config', 'properties.js');
+        if (!require('node:fs').existsSync(file)) return undefined;
+        const properties = require(file);
+        const definitions = properties && properties.process && properties.process.actionAdapters && properties.process.actionAdapters.definitions;
+        if (!definitions || !Object.prototype.hasOwnProperty.call(definitions, key)) return undefined;
+        const definition = definitions[key];
+        if (!definition || definition.moduleName !== match[1] || definition.operation !== match[2] ||
+            !definition.remote || definition.remote.moduleName !== match[1] ||
+            typeof definition.remote.target !== 'string' || !definition.remote.target ||
+            typeof definition.remote.runtimeRole !== 'string' || !definition.remote.runtimeRole ||
+            typeof definition.remote.apiName !== 'string' || !definition.remote.apiName.startsWith('/') ||
+            definition.service || definition.method) {
+            throw new CLASSES.NodicsError('ERR_PROCESS_00019', 'Owner remote action declaration is invalid: ' + key);
+        }
+        return structuredClone(definition);
     },
 
     /**

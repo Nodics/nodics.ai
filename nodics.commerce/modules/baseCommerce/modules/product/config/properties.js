@@ -11,6 +11,25 @@
 
 /** @module product/config/properties @description Defines Commerce capability and schema access policies. @layer config @owner product */
 module.exports = {
+  publish: {
+    providers: { domainAdapters: { product: null }, versionProviders: { product: null }, workflowProviders: { product: null } },
+    approvalWorkflow: { domains: { product: { definitionCode: 'productPublicationApproval', ownerModule: 'product',
+      actionKey: 'product.applyPublicationDecision', sourceRuntimeRole: 'COMMERCE_STAGED' } } },
+  },
+  process: { actionAdapters: { definitions: { 'product.applyPublicationDecision': {
+    moduleName: 'product', operation: 'applyPublicationDecision', remote: { target: 'product', moduleName: 'product',
+      runtimeRole: 'COMMERCE_STAGED', apiName: '/workflow/actions/applyPublicationDecision', requiresCompletedTask: true },
+  } } } },
+  tooling: {
+    commands: {
+      'acceptance:commerce-publication': {
+        acceptanceContract: true,
+        projectHome: true,
+        handler: '@nTooling/node-script',
+        script: 'src/service/acceptance/defaultCommercePublicationAcceptanceService.mjs',
+      },
+    },
+  },
   // Inert inventory; an allowed local server must explicitly select this capability.
   localResetProvider: {
     contributions: {
@@ -50,6 +69,8 @@ module.exports = {
       },
     },
     discovery: {
+      activationService: null,
+      activationScopes: null,
       catalogue: {
         enabled: false,
         maximumCandidates: 1000,
@@ -108,8 +129,14 @@ module.exports = {
       exposedSorts: ["relevance", "name-asc", "name-desc"],
     },
     publication: {
+      targetTransportProvider: null,
+      target: { moduleName: 'product', connectionName: null, connectionType: 'abstract', runtimeRole: 'COMMERCE' },
+      source: { moduleName: 'product', connectionName: null, connectionType: 'abstract', runtimeRole: 'COMMERCE_STAGED' },
       defaultStoreCode: "defaultStore",
       maximumBatchSize: 100,
+      maximumDependencies: 1000,
+      maximumActivationReceipts: 1000,
+      maximumActiveProducts: 1000,
       searchEnrichment: {
         pricing: {
           enabled: true,
@@ -150,6 +177,7 @@ module.exports = {
   },
   schemaPolicies: {
     product: {
+      catalogueVersioned: { isVersionedEnabled: false },
       operational: {
         accessGroups: {
           adminGroup: 10,
@@ -188,6 +216,8 @@ module.exports = {
 
   apiExposure: {
     categories: {
+      productPublicationSource: { enabled: false },
+      productPublicationTarget: { enabled: false },
       commerceCustomer: {
         enabled: true,
       },

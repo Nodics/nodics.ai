@@ -1,0 +1,30 @@
+{
+    "contractVersion": 2,
+    "module": "promotion",
+    "sections": {
+        "promotionPublicationWorkflow": {
+            "kind": "DATA_RELEASE",
+            "selectionPolicy": "EXPLICIT",
+            "dataType": "init",
+            "version": "1.0.1",
+            "displayName": "Promotion Policy Publication Approval",
+            "description": "Forward Process approval contribution for exact retained policy.",
+            "owningDomain": "promotion",
+            "lifecycle": "OPERATIONAL_VERSIONED",
+            "destinationRole": "PROCESS",
+            "environmentScope": [
+                "ALL"
+            ],
+            "sensitivity": "INTERNAL",
+            "versioningPolicy": "IMMUTABLE",
+            "publicationPolicy": "NONE",
+            "initialPublicationPolicy": "NONE",
+            "removalPolicy": "RETAIN",
+            "installer": "PROCESS_DEFINITION",
+            "sourceRoot": "init-v002",
+            "files": {
+                "init-v002/records/process/promotionPublicationWorkflowDefinitionData.js": "ad5dc795058f225d31f37cba22d63751e722d25de162ab0a629e949c3b395628"
+            }
+        }
+    }
+}

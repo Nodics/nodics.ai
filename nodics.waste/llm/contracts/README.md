@@ -12,6 +12,29 @@
 - Partner projects customize by extending accelerator/project schemas, policies,
   seed data, provider adapters, and journeys in later active modules.
 
+## Governed Schema Exposure
+
+Waste schemas, except the service-only `wasteRewardAssessment`, explicitly select
+`router.groups: { schemaOperations: true }` for governed schema utilities.
+Reward assessments retain `router.enabled: false` and read-only BackOffice
+operations to protect immutable calculation evidence. This is the approved
+selective exposure described by
+nRouter's [selective schema routes](../../../nodics.foundation/modules/nRouter/README.md#selective-schema-routes),
+not approval for broad query/by-ID CRUD groups or a replacement for Waste lifecycle APIs.
+Preserve `schemaGoverned`, secured `schemaApi` exposure, read/write permissions,
+schema access policy and authenticated tenant/record scope. A registered route
+does not grant mutation authority or replace operational authorization.
+Later layers can disable routes with `router.enabled: false` or keyed
+`schemaOperations: false`; service generation and HTTP exposure are independent.
+The owner schema boundary suite reuses nRouter's `test/helpers/schemaExposure.cjs`
+for route projection. It runs without customer modules, listeners,
+database or generated-service builds. `test/wasteGeneratedRuntimeContract.test.js`
+separately exercises effective model/schema materialization and generated get/save
+services in a disposable independent deployment through nTooling's shared driver,
+including the service-only reward assessment. Customer composition tests retain
+their actual runtime and overlay selections; static route tests do not replace
+generation evidence.
+
 ## Reusable Ownership
 
 Common frameworks remain outside Waste:

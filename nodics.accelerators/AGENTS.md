@@ -1,5 +1,10 @@
 # nodics.accelerators Agents
 
+Agora Apparel, Electronics and Telco, like Circa eWaste, are customer applications
+in Kickoff. Their data and profiles must not move here merely because they reuse
+accelerators or are reference applications. Follow the customer-project-mode
+contract's ownership table. Run `npm test` here for the discovery boundary check.
+
 Follow the root Nodics AI agent contract before changing this boundary:
 
 - Follow the repository agent contract: `../AGENTS.md`.

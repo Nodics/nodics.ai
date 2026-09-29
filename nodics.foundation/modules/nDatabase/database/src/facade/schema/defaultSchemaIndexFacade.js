@@ -21,6 +21,10 @@
  * services.
  */
 module.exports = {
+    /** Delegates scoped read-only installed-index inspection to the existing maintenance owner. */
+    inspectSchemaIndexes: function (request, moduleName, schemaName) {
+        return SERVICE.DefaultSchemaIndexService.inspectSchemaIndexes(request, moduleName, schemaName);
+    },
     /**
      * Updates indexes for one schema in one module.
      *

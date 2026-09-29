@@ -1,5 +1,13 @@
 # database Agent Contract
 
+For installed ordinary-to-versioned changes, read the
+[operator contract](llm/contracts/installed-version-migration.md) and
+[CLI example](llm/examples/installed-version-migration.md). Keep source flags
+ordinary during maintenance; qualify variants and every affected installation
+before reopening. Preserve immutable plans, strict nImport evidence and nTooling
+outage checks. Never describe terminal COMPLETED rollback or automatic restart
+as supported by the current command.
+
 This file gives AI coding agents mandatory guidance for this Nodics module or package boundary.
 
 ## Inheritance
@@ -9,6 +17,18 @@ This file gives AI coding agents mandatory guidance for this Nodics module or pa
 - If a deeper child module has its own `AGENTS.md`, follow that file for changes inside the child module.
 
 ## Module Work Rules
+
+- Keep generated get response handling in the base pipeline. Versioned variants
+  customize `resolveReadMethod`, not authorization or a copied executor. Validate
+  explicit read capability before cache lookup; missing variants fail closed.
+
+- Installed-index inspection stays in the existing schema maintenance owner.
+  Require authenticated human tenant-admin authority and `system.schema.view`;
+  inspect one explicit module/schema in that tenant's master channel only.
+  Never reuse maintenance's all-tenant fan-out for reads or treat evidence as
+  permission to migrate. See `llm/contracts/README.md#installed-index-inspection`.
+  Resolve administrative access through nAuth's existing identity-governance
+  service and layered policy, never an implementation-owned group literal.
 
 - Share generic HTTP/Workbench mutation-field normalization through the existing
   schema utility owner. Filter unknown/protected/read-only top-level fields,

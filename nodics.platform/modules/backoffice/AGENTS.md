@@ -11,6 +11,11 @@
 
 ## Capability Boundary
 
+- Business offering setup reviews use the existing application-initialization
+  profiles and inert `setupPlan` projection. Do not add an Axis-owned offering
+  registry, category switch or dependency executor. Viewing a plan never selects
+  or installs an application. Follow the [local contract](llm/contracts/README.md#business-offering-setup-review).
+
 - Keep runtime observations separate from revision-protected administrator
   lifecycle writes. Do not let a heartbeat restore stale enabled/registration
   state. Deduplicate activation releases and receipts by their execution target;
@@ -186,3 +191,18 @@ principal and bearer before execution; do not substitute the group-free runtime
 credential or add administrator groups to it. Status/preflight retains the scoped
 runtime credential. nImport still enforces the operator's import permission, tenant,
 release governance and schema access at the destination.
+
+BackOffice owns the complete `acceptance:capability-registry` suite, contributed
+as a canonical tooling command. Customer repositories invoke it with `--execute`
+and supply deployment selection/credentials; they do not copy its assertions.
+Keep imports inert, preserve revision-protected API operations, restore only
+test-owned lifecycle changes and fail on missing capability or denied authority.
+See `test/capabilityRegistryAcceptance.test.mjs`.
+
+BackOffice also owns `acceptance:local`, the application administration suite.
+Customers select profiles, delivery fixtures and documentation packs through
+effective `tooling.acceptance.localBootstrap`; they do not copy its assertions.
+Require explicit execution and publication approval, LOCAL class for bootstrap,
+separate owned-runtime startup and governed reset intent. Optional application
+capabilities are selections, not mandatory framework dependencies. Cleanup may
+stop only child handles created by this invocation, never unrelated port owners.

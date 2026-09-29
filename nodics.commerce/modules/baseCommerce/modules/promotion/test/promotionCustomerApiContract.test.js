@@ -26,6 +26,7 @@ const simulation = require('../src/service/defaultPromotionSimulationService');
 const decision = require('../src/service/defaultPromotionDecisionService');
 const schemas = require('../src/schemas/schemas');
 const exact = require('../../pricing/src/service/defaultExactAmountService');
+const storeContext = require('../../store/src/service/defaultStoreContextService');
 
 let promotionRequests;
 let promotions;
@@ -47,6 +48,7 @@ function installGlobals() {
     redemptions = [];
     budgetLedger = [];
     global.SERVICE = {
+        DefaultStoreContextService: storeContext,
         DefaultPromotionOperationService: service,
         DefaultPromotionPublicationService: publicationService,
         DefaultBackofficeCapabilityDefinitionService: {
@@ -126,6 +128,99 @@ function installGlobals() {
 
 test.beforeEach(installGlobals);
 
+function scopedPreview(t) {
+    const previous = global.CONFIG;
+    t.after(() => { if (previous === undefined) delete global.CONFIG; else global.CONFIG = previous; });
+    global.CONFIG = { get: key => key === 'promotion' ? {
+        publication: { delivery: { enabled: true, storeCodes: ['selectedStore'], rootCodes: ['retainedPromotion'] } }
+    } : {} };
+    const calls = [];
+    global.SERVICE.DefaultPromotionPublicationService = Object.assign({}, publicationService, {
+        readActivatedWithConsumption: async (request, rootCode) => {
+            calls.push({ request, rootCode });
+            return [{ tenant: 'default', code: rootCode, status: 'ACTIVE', priority: 1,
+                conditions: {}, actions: { discountAmount: '3.00', reasonCode: 'RETAINED' } }];
+        }
+    });
+    return calls;
+}
+
+test('Public Promotion preview forwards validated selected Store to retained policy reader', async t => {
+    const calls = scopedPreview(t);
+    const authData = { tenant: 'default', entCode: 'default', loginId: 'customer-1',
+        tokenType: 'access', userGroups: ['customerUserGroup'], groups: ['customerUserGroup'] };
+    const originalAuth = structuredClone(authData);
+    const request = { authData, httpRequest: { body: {
+        storeCode: 'selectedStore', tenant: 'foreign', ownerId: 'foreign', subtotal: '129.00', currency: 'USD'
+    } } };
+    const result = await controller.preview(request);
+    assert.equal(result.data.selected[0].code, 'retainedPromotion');
+    assert.equal(calls.length, 1);
+    assert.equal(calls[0].rootCode, 'retainedPromotion');
+    assert.equal(calls[0].request.storeCode, 'selectedStore');
+    assert.equal(calls[0].request.tenant, 'default');
+    assert.equal(calls[0].request.ownerId, 'customer-1');
+    assert.notEqual(calls[0].request.authData, authData);
+    assert.equal(calls[0].request.enterpriseCode, 'default');
+    assert.equal(calls[0].request.authData.enterpriseCode, 'default');
+    assert.equal(calls[0].request.authData.tenant, 'default');
+    assert.deepEqual(calls[0].request.authData.userGroups, ['serviceAccountUserGroup']);
+    assert.deepEqual(calls[0].request.authData.groups, ['serviceAccountUserGroup']);
+    assert.deepEqual(authData, originalAuth);
+    assert.equal(request.storeCode, undefined);
+    assert.equal(promotionRequests.length, 0);
+    assert.equal(result.data.mutationPerformed, false);
+    assert.equal(redemptions.length, 0);
+    assert.equal(budgetLedger.length, 0);
+});
+
+test('Activated Promotion customer reads reject missing or conflicting scope before owner auth', async t => {
+    const calls = scopedPreview(t);
+    const original = service.serviceAuthData;
+    let authCalls = 0;
+    service.serviceAuthData = request => { authCalls++; return original.call(service, request); };
+    t.after(() => { service.serviceAuthData = original; });
+    const base = { tenant: 'default', storeCode: 'selectedStore', ownerId: 'customer-1',
+        authData: { tenant: 'default', entCode: 'default', loginId: 'customer-1', userGroups: ['customerUserGroup'] } };
+    for (const input of [
+        { ...base, tenant: 'foreign' },
+        { ...base, enterpriseCode: 'foreign' },
+        { ...base, entCode: 'foreign' },
+        { ...base, authData: { ...base.authData, enterpriseCode: 'foreign' } },
+        { ...base, authData: { tenant: 'default', loginId: 'customer-1' } },
+        { ...base, authData: { entCode: 'default', loginId: 'customer-1' } }
+    ]) await assert.rejects(service.preview(input), /Authenticated Promotion policy scope mismatch/);
+    assert.equal(authCalls, 0);
+    assert.equal(calls.length, 0);
+    assert.equal(promotionRequests.length, 0);
+});
+
+test('Public Promotion preview preserves unselected and missing Store legacy reads', async t => {
+    const calls = scopedPreview(t);
+    for (const storeCode of ['anotherStore', undefined]) {
+        const result = await controller.preview({ authData: { tenant: 'default', loginId: 'customer-1' },
+            httpRequest: { body: { ...(storeCode === undefined ? {} : { storeCode }), subtotal: '129.00', currency: 'USD' } } });
+        assert.equal(result.data.selected[0].code, 'welcome10');
+    }
+    assert.equal(calls.length, 0);
+    assert.equal(promotionRequests.length, 2);
+});
+
+test('Public Promotion preview rejects malformed or conflicting Store before policy reads', async t => {
+    const calls = scopedPreview(t);
+    for (const body of [{ storeCode: '' }, { storeCode: ' selectedStore' }, { storeCode: 7 }]) {
+        await assert.rejects(controller.preview({ authData: { tenant: 'default', loginId: 'customer-1' },
+            httpRequest: { body } }), /Store code/);
+    }
+    await assert.rejects(controller.preview({ storeCode: 'anotherStore',
+        authData: { tenant: 'default', loginId: 'customer-1' },
+        httpRequest: { body: { storeCode: 'selectedStore' } } }), /Store context does not match/);
+    await assert.rejects(controller.preview({ authData: { tenant: 'default', loginId: 'customer-1' },
+        httpRequest: { body: { storeCode: 'selectedStore' }, query: { storeCode: 'anotherStore' } } }), /Store context does not match/);
+    assert.equal(calls.length, 0);
+    assert.equal(promotionRequests.length, 0);
+});
+
 test('Promotion customer routes expose secured preview and apply permissions', () => {
     assert.equal(routers.promotion.customer.preview.key, '/promotions/preview');
     assert.equal(routers.promotion.customer.preview.controller, 'DefaultPromotionController');
@@ -173,42 +268,19 @@ test('Promotion schemas expose explicit enterprise association references', () =
     });
 });
 
-test('Promotion operational publication restoration saves rules batches and coupon rows', async () => {
-    const result = await controller.restoreOperational({
-        enterpriseCode: 'enterprise-a',
-        authData: { tenant: 'default', enterpriseCode: 'enterprise-a', principalId: 'operator-1' },
-        httpRequest: {
-            body: {
-                promotions: [{ tenant: 'default', code: 'market5', name: 'Market 5', status: 'ACTIVE', priority: 10, conditions: { couponRequired: true }, actions: { discountAmount: '5.00' }, revision: 1 }],
-                couponBatches: [{ tenant: 'default', code: 'market5-batch', promotionCode: 'market5', status: 'ACTIVE', issuedCount: 1, reservedCount: 0, tokenHashPolicy: 'TENANT_UPPERCASE_SHA256', revision: 1 }],
-                coupons: [{ tenant: 'default', code: 'market5-row-1', promotionCode: 'market5', batchCode: 'market5-batch', tokenHash: service.hashToken('default', 'MARKET5-0001'), status: 'ACTIVE', maxUses: 1, usedCount: 0, revision: 1 }]
-            }
-        }
-    });
-
-    assert.equal(result.data.restored, 3);
-    assert.equal(result.data.enterpriseCode, 'enterprise-a');
-    assert.equal(promotions.some(item => item.code === 'market5'), true);
-    assert.equal(couponBatches.some(item => item.code === 'market5-batch'), true);
-    assert.equal(coupons.some(item => item.code === 'market5-row-1'), true);
-    assert(promotions.find(item => item.code === 'market5').enterpriseCode === 'enterprise-a');
-    assert(couponBatches.find(item => item.code === 'market5-batch').enterpriseCode === 'enterprise-a');
-    assert(coupons.find(item => item.code === 'market5-row-1').enterpriseCode === 'enterprise-a');
-    assert.equal(promotions.find(item => item.code === 'market5').issuerEnterpriseRef.code, 'enterprise-a');
-    assert.equal(couponBatches.find(item => item.code === 'market5-batch').vendorEnterpriseRef.code, 'enterprise-a');
-    assert.equal(coupons.find(item => item.code === 'market5-row-1').vendorEnterpriseRef.code, 'enterprise-a');
-});
-
-test('Promotion operational publication rejects records from another enterprise', async () => {
+test('Promotion publication transport rejects without changing rules coupons or budgets', async () => {
+    global.CLASSES = { NodicsError: class extends Error { constructor(code, message) { super(message); this.code = code; } } };
+    const before = structuredClone({ promotions, coupons, couponBatches, budgetLedger });
     await assert.rejects(controller.restoreOperational({
         enterpriseCode: 'enterprise-a',
-        authData: { tenant: 'default', principalId: 'operator-1' },
-        httpRequest: {
-            body: {
-                promotions: [{ tenant: 'default', enterpriseCode: 'enterprise-b', code: 'market5-other', name: 'Market 5', status: 'ACTIVE', priority: 10, conditions: { couponRequired: true }, actions: { discountAmount: '5.00' }, revision: 1 }]
-            }
-        }
-    }), /enterprise boundary/);
+        authData: { tenant: 'default', enterpriseCode: 'enterprise-a', principalId: 'operator-1' },
+        httpRequest: { body: {
+            promotions: [{ tenant: 'default', code: 'market5', budget: { limit: '100.00', spent: '0.00' } }],
+            couponBatches: [{ tenant: 'default', code: 'market5-batch', issuedCount: 1 }],
+            coupons: [{ tenant: 'default', code: 'market5-row', usedCount: 0 }]
+        } }
+    }), /qualified immutable migration/);
+    assert.deepEqual({ promotions, coupons, couponBatches, budgetLedger }, before);
 });
 
 test('Promotion BackOffice capability exposes builder lifecycle coupon budget and analytics routes', () => {

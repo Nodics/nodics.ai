@@ -1,5 +1,72 @@
 # nTooling AI Contracts
 
+## Maintenance Outage Evidence
+
+`defaultProjectTopologyService.mjs.verifyMaintenanceOutage(options)` verifies the
+selected backend topology without sending signals, starting runtimes or opening
+a database. It requires nonempty runtime selections with integer ports, probes
+every selected port and reads `ps -axo pid=,command=`. Listening ports, recognized
+Nodics/nodemon/topology start or `--server` processes, missing inventory and probe
+or inventory errors reject. The current maintenance process is excluded from its
+own process scan. Successful evidence contains `verifiedAt`, `runtimeCodes`,
+`ports` and `processInventoryChecked`; it is a point-in-time observation only.
+
+Operators must first stop owned processes through the existing topology lifecycle
+and stop separately launched writers through their owners. No listener is not
+proof of no writer: the process matcher cannot discover every custom script,
+remote client, scheduler or database connection. Maintain explicit operational
+exclusion and recheck before effects and final verification. Do not use a passing
+helper result as a distributed lease, process-termination proof or restart grant.
+Tests may inject `runtimes`, `probePort` and `readProcesses`; production callers
+must retain the complete real topology and trustworthy inspection functions.
+
+The database-owned command performs stopped-PID checks for recovery; the nImport
+journal validates previous PID/hostname evidence and fences attempts. nTooling
+does not duplicate those authorities. Follow the
+[migration operator contract](../../../nDatabase/database/llm/contracts/installed-version-migration.md)
+for source/index sequencing and recovery limited to RUNNING attempts.
+`test/projectTopologyLifecycleContract.test.mjs` covers outage success, missing
+topology, listening ports, active processes and unavailable inventory. It does
+not prove an actual maintenance outage or authorize a migration.
+
+## Forward data releases
+
+`DefaultProjectDataManifestService.planForwardRelease({ dataRoot, manifest,
+sectionCode, sourceRoot, version })` returns a cloned proposed contract-2 manifest
+without writes. Author a separate successor source tree first. The planner checks
+historical payload hashes, requires a higher semantic version and directory
+sequence, preserves the section identity/policy, generates successor hashes and
+records the complete old tree plus unchanged section in `retainedRoots`.
+The existing nImport `validateRetainedRoots` interface owns integrity, containment,
+conflicts and discovery exclusion. Both manifest generators reuse that validator;
+neither may rehash retained history or recreate it as a conventional release.
+
+For a shared source root, pass `retentionScope: "SECTIONS"` to freeze only the
+moved section's exact file claims. Active siblings remain in place and cannot
+overlap those claims. Omitting scope freezes the complete historical tree.
+Planning failures perform no writes. Existing manifests without retention keep
+their defaults. This planner is DATA_RELEASE-only. The documentation generator
+owns CONTENT_PACK planning using `contentPath`, `generatedHashes` and
+`releaseChecksum`; it preserves the original section and uses nImport's shared
+tree hashes and retention validation, never DATA_RELEASE conversion. Full
+validation requires successor files on disk; validate historical evidence before
+writes and the full envelope during post-generation/check validation. No live
+installation or publication is implied. Owner regressions live
+in `projectDataManifestContract.test.js` and `dataReleaseManifestGeneratorContract.test.js`.
+
+## Functional Journey Composition
+
+The functional journey acceptance requires literal `execute: true` before
+calling either owner. It runs Checkout's read-only contract suite first, then
+Engagement's mutating lifecycle suite, returning each owner's evidence unchanged.
+Checkout failure or denial prevents Engagement mutation; Engagement failure must
+propagate. Projects supply deployment choices, never replacement pass criteria.
+Imports/help for the composer and all five extracted suite owners are inert.
+
+Run `node --test nodics.foundation/modules/nTooling/test/functionalJourneyAcceptance.test.mjs`
+from the framework root. It exercises real owner composition against injected API
+fixtures and fresh-process import/help paths without starting runtimes.
+
 Content-pack package identities may use dot-separated alphanumeric identifier
 segments, each starting with a letter. Preserve these identities when relocating
 governed data into an accelerator. Capability identifiers retain their existing
@@ -16,6 +83,15 @@ data files, and publish immutable manifest sections with
 `OPTIONAL_AXIS_INITIATED` installation, `WCMS_STAGED` destination and required
 publication. Never treat source Markdown, generated CMS records, or a frontend
 renderer as interchangeable authorities.
+
+Project documentation generation validates the entire proposed manifest before
+writing records. Stable versions cannot change checksums, move backwards or
+overwrite a previously declared artifact path with different bytes. Select a
+forward catalogue version and unused `publication.contentPath` (`core-vNNN`)
+for changed content. Occupied destinations reject before any writes. Only the
+existing nImport development version policy permits mutable baseline generation.
+This filesystem guard does not reconcile installed receipts or approve a
+publication; operators still verify installed history through owning APIs.
 
 Use [application-builder.md](application-builder.md) for the non-runtime
 Application Builder authorities, validation rules, deterministic planning, and
@@ -229,15 +305,133 @@ Acceptance runners must expose a capability-oriented matrix rather than asking
 developers to remember scattered scripts. Matrix rows should identify the
 business outcome, owning capability, required runtime role, required data
 release or publication state, optional browser validation flag, and evidence
-produced. The framework default for browser validation is disabled; local
-environment properties may enable it where a browser and frontend URLs are
-available. Non-local acceptance must not fail solely because browser validation
-is disabled, but it should report that visual evidence was skipped by
-configuration.
+produced. Backend acceptance must not require frontend repositories, URLs or
+browser execution. Frontend applications own their visual tests and evidence;
+report missing frontend evidence separately without making it backend readiness.
 
-Browser evidence capture is tooling-owned. When enabled, it should record the
+Shared evidence-capture mechanics may be tooling-owned. Frontend-owned tests should record the
 page, role, URL source, screenshot or trace location, status, and repair hint.
 It must not become a frontend configuration source, runtime startup dependency,
 or customer-project-only script. Backend readiness, import, publication, media,
 search, assistant, and runtime communication checks remain authoritative even
 when browser smoke validation is unavailable.
+## Reusable acceptance mechanics
+
+The project acceptance helpers in `src/service/project` share response parsing,
+employee authentication, caller-selected readiness polling, owned-child cleanup
+and Media upload mechanics. They are non-runtime and inert on import. Projects
+retain scenarios, selected endpoints/routes, credentials, timing, fixtures and
+expected outcomes. Helpers must not discover or terminate an unrelated runtime,
+enroll an application, reset data or bypass an owning API. Caller-specific
+response projections and failure messages remain explicit options.
+
+`test/projectAcceptanceInfrastructure.test.mjs` covers isolated success/failure,
+cleanup timers and upload mechanics. Existing project acceptance contracts and
+connected application tests remain required; helper tests do not prove a deployed
+customer journey. Reuse topology/deployment resolvers instead of copying them.
+
+Configuration probes also belong to nTooling. The isolated child probe runs
+discovery and configuration only, with explicit project, environment and runtime
+coordinates; it must not start providers, lifecycle hooks or listeners.
+Owner schema-generation tests use `test/helpers/generatedRuntime.cjs`: explicit
+module/schema selections, isolated process, disposable selected-server output,
+real nConfig/nDatabase/nService generation, and cleanup on success or failure.
+Connections and listeners fail the test. Customer configuration checks cannot
+substitute for effective schema/model and generated-service evidence.
+
+Read-only runtime smoke uses `assertTopologyReadiness` from the existing topology
+service. Require an owned supervisor, recorded active children and explicit
+dependency-ordered selections. Startup, status and smoke share nSystem's
+`data.status: UP` predicate and declared supplemental checks. HTTP success or a
+`success: true` field alone is insufficient. Smoke cannot launch/adopt/stop
+processes; lifecycle execution is an explicit separate operation.
+Qualification evidence mechanics accept a caller-owned plan and environment;
+they do not choose customer scenarios or assert production approval.
+
+Acceptance startup uses a shared loopback TCP probe and caller-supplied readiness
+check. Only children spawned by that invocation enter its cleanup inventory.
+An existing listener is never terminated or treated as a managed child.
+Cover these boundaries in `test/projectExtractionContracts.test.mjs`.
+
+## Canonical acceptance commands
+
+When extracting tests, register them in the existing `tooling.testSuites`
+composition. `fullTestSuiteCoverageContract.test.js` guards the moved
+configuration, preparation, topology, container, publication-route and owner
+schema-boundary contracts
+through both `basic` and `full`. Adding a file or running it directly does not
+prove release-gate reachability. Customer CI owns compatible commit selection
+and retained customer-test adoption; independent owner fixtures must not depend
+on that customer checkout. Missing gate membership is a failed extraction, and
+must be corrected before claiming upgrade qualification.
+
+Reusable suites are contributed by their capability owner through the existing
+`tooling.commands` registry. `acceptanceContract: true` reserves a command for
+that framework owner. Registry assembly rejects earlier/later project overrides,
+including `$override.mode: replace`, metadata merges and argument changes.
+Project-script discovery rejects aliases that collide with a canonical command.
+Unmarked tooling commands retain their existing extension contract.
+
+`projectHome: true` means execute the framework script with the selected project
+as context; it does not transfer source ownership. Customer inputs may describe
+fixtures, topology and application selections, but not skip mandatory assertions.
+Invoke mutating suites with explicit flags: capability registry uses `--execute`;
+guided initialization requires both `--execute` and `--approve-publications`.
+The latter uses normal Process approval and propagates denial without override.
+
+Deployment qualification retains mandatory framework security/publication gates
+and calls them directly, not through replaceable customer npm aliases. Its plan
+is non-executing by default. `--execute-local` runs builds and live gates;
+`--include-fresh` additionally selects the declared destructive customer journey.
+Customer journey evidence and nine external evidence classes remain explicit;
+no local report approves production. CI/release operators must require canonical
+qualification: a partner controlling a repository can still skip local commands
+or modify its dependency. These checks are not a sandbox against hostile code.
+
+Use `canonicalAcceptanceOwnership.test.js` for independent-project and shadowing
+coverage. Each suite owner tests success, denial and recovery; customer tests
+verify only adoption and customer-specific expectations.
+
+Cross-capability composition invokes owner suites, never copies their rules.
+`acceptance:functional` composes Checkout and Engagement;
+`qualification:commerce-live` invokes nImport, Product publication and Checkout
+journey commands directly. The latter requires `--execute --approve-publications`
+and every participating backend, including Commerce Staged, to be ready. It never
+starts runtimes or frontends. Customer release-module selections are inputs, not
+an editable list of canonical gates. Failures stop later steps.
+
+BackOffice owns `acceptance:local`; Profile owns `acceptance:runtime-grants`;
+Editorial, Waste and Loyalty/Checkout integration retain their respective suites.
+Local bootstrap requires `--execute --approve-publications`. Runtime startup needs
+`--start-runtimes`; `acceptance:local:fresh` additionally selects a governed reset,
+but still requires execution/approval intent. Cleanup signals only owned child
+processes, never listeners found by port. Read-only grant verification observes
+Profile's canonical bootstrap grants; acceptance may not invent credentials,
+grant permissions, write provider collections or bypass Process decisions.
+
+Use explicit prerequisite failures where a secured owner API or provisioned
+fixture is unavailable. Do not replace missing live evidence with a direct
+database write, permissive service token, import acknowledgement or mocked PASS.
+Fixture-isolated contract tests, live API evidence and persistence/import evidence
+must be reported separately.
+
+## Effective acceptance policy
+
+The design principle audit owns customer configuration placement checks for all
+projects, including arbitrary deployment server names. Configuration inspection
+must parse source without executing it. Quoted property keys have the same
+meaning as unquoted keys; comments, strings and neighboring properties do not
+contribute configuration.
+
+Static module tooling defaults describe capabilities without activating them.
+`projectRuntimeAcceptance` merges those defaults with the explicitly selected
+runtime's effective nConfig acceptance policy. Customer selections and arrays
+remain authoritative. Environment inheritance for that configuration-only child
+is explicit and never passes secret values in command arguments.
+
+`completeAcceptanceWorkflow` only executes a caller-supplied decision against
+the selected definition, correlation, instance and node. Polling and result
+limits are bounded; missing tasks or failed claims fail closed. It does not
+choose an approval, broaden identity permissions or bypass Process APIs.
+Regression coverage includes `toolingContributionSyntax.test.js`,
+`configurationOwnershipRestrictions.test.js` and `projectWorkflowAcceptance.test.mjs`.

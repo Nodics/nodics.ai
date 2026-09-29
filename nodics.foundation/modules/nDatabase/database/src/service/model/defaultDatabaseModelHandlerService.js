@@ -379,6 +379,16 @@ module.exports = {
         });
     },
 
+    /** Delegates installed-index inspection through the model's selected provider, without falling back to another database. */
+    inspectIndexes: async function (model) {
+        const options = model && model.dataBase && model.dataBase.getOptions();
+        const provider = options && SERVICE[options.modelHandler];
+        if (!provider || typeof provider.inspectIndexes !== 'function' || provider === this) {
+            throw new CLASSES.NodicsError('ERR_DBS_00004', 'Selected database provider does not support installed-index inspection');
+        }
+        return provider.inspectIndexes(model);
+    },
+
     /**
      * Delegates database index creation for one generated model.
      *

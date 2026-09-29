@@ -53,8 +53,8 @@ assert.strictEqual(
 );
 assert.strictEqual(
   packageJson.nodics.functionalModule.protected,
-  false,
-  "Process remains optional and requires explicit registration and enablement before publication approval",
+  true,
+  "Process is mandatory because governed publication approval requires workflow during first-run setup",
 );
 assert.deepStrictEqual(
   packageJson.requiredModules,

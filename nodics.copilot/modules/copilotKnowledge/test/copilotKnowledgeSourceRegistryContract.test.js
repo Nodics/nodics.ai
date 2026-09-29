@@ -26,6 +26,30 @@ const definition = overrides => Object.assign({
     secretScanPolicy: 'REQUIRED', enabled: true
 }, overrides || {});
 
+test('opt-in templates preserve explicit identity, scope and replacement semantics', () => {
+    const source = {
+        code: 'partner-readme', repository: 'partner.repo', project: 'partner', module: 'partner.module',
+        owner: 'partner', version: '1', template: 'employeeReadme', enabled: true,
+    };
+    const normalized = registryService.normalize(source, knowledgeConfiguration, policy);
+    assert.equal(normalized.classification, 'INTERNAL');
+    assert.deepEqual(normalized.requiredPermissions, ['copilot.knowledge.internal.read']);
+    assert.deepEqual(registryService.normalize({ ...source, paths: ['README.md'] }, knowledgeConfiguration, policy).paths, ['README.md']);
+    assert.throws(() => registryService.normalize({ ...source, paths: [] }, knowledgeConfiguration, policy), /SOURCE_INVALID/);
+    assert.throws(() => registryService.normalize({ ...source, template: 'missing' }, knowledgeConfiguration, policy), /TEMPLATE_INVALID/);
+    assert.throws(() => registryService.normalize({ ...source, template: 'customerReadme' }, knowledgeConfiguration, policy), /PROJECT_SCOPE_REQUIRED/);
+    assert.throws(() => registryService.normalize({ ...source, classification: 'PUBLIC' }, knowledgeConfiguration, policy), /CLASSIFICATION_TOO_WEAK/);
+    assert.throws(() => registryService.normalize({ ...source, secretScanPolicy: 'NONE' }, knowledgeConfiguration, policy), /SECRET_SCAN_REQUIRED/);
+    assert.throws(() => registryService.normalize({ ...source, repository: undefined }, knowledgeConfiguration, policy), /SOURCE_INVALID/);
+    assert.throws(() => registryService.normalize(source, {
+        ...knowledgeConfiguration, templates: { employeeReadme: { enabled: true } },
+    }, policy), /TEMPLATE_INVALID/);
+    assert.equal(source.sourceType, undefined);
+    const registry = registryService.createRegistry([source], knowledgeConfiguration, policy);
+    const publicContext = policy.normalizeSecurityContext({ channel: 'PUBLIC' }, policyConfiguration);
+    assert.deepEqual(registryService.buildQueryScope(registry, publicContext, policyConfiguration, policy).sourceCodes, []);
+});
+
 test('registry rejects missing classification, weak classification, unpublished public content, and missing secret policy', () => {
     assert.throws(() => registryService.normalize(definition({ classification: undefined }), knowledgeConfiguration, policy), /COPILOT_KNOWLEDGE_SOURCE_INVALID/);
     assert.throws(() => registryService.normalize(definition({ sourceType: 'README' }), knowledgeConfiguration, policy), /COPILOT_KNOWLEDGE_SOURCE_CLASSIFICATION_TOO_WEAK/);
@@ -67,7 +91,9 @@ test('pre-retrieval scopes expose only sources authorized for the current channe
 
 test('runtime readiness reports configured, indexed, and blocked knowledge source state', () => {
     const sourceDefinition = definition();
-    global.CONFIG = { get: key => key === 'copilot' ? { policy: policyConfiguration, knowledge: Object.assign({}, fullKnowledgeConfiguration, {
+    global.CONFIG = { get: key => key === 'copilot' ? {
+        providers: { defaultAdapter: 'fixture', adapters: { fixture: { enabled: true, model: { name: 'fixture' } } } },
+        policy: policyConfiguration, knowledge: Object.assign({}, fullKnowledgeConfiguration, {
         ingestion: Object.assign({}, fullKnowledgeConfiguration.ingestion, { enabled: true }),
         retrieval: Object.assign({}, fullKnowledgeConfiguration.retrieval, { enabled: true }),
         sourceRegistry: Object.assign({}, fullKnowledgeConfiguration.sourceRegistry, { definitions: [sourceDefinition] })

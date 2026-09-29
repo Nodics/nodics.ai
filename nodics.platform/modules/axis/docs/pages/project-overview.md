@@ -30,6 +30,105 @@ module registry, content workspaces, documentation, API reference, schema
 workbench, media management, imports, operational health, and future governed
 business workspaces.
 
+## Choose an application from the dashboard
+
+The dashboard uses the same authenticated CMS delivery and governed publication
+process as the managed Axis workspace. Its Overview, Applications and Technical
+overview tabs are CMS component records, not customer-project configuration.
+The Axis-owned `core-v003` update adds one workspace, three tab records and
+fifteen section records. CMS owns the default tab, headings, descriptions,
+section membership and order. Axis supplies installed, allowlisted interactive
+renderers; BackOffice supplies authorized facts and operations.
+
+The subsequent immutable `core-v004` update refines the project overview and
+adds Operational pulse and Documentation & guidance. Documentation is separate
+from business applications: documentation packs never increase application
+counts or appear in the application preview strip.
+
+Operational pulse shows the current BackOffice assessment, owner-reported
+status and next actions. Expand reported issues for details, then open the
+authorized owning workspace. Missing evidence is shown as unavailable, not
+healthy. These snapshots do not imply live revenue, transaction volume or
+historical activity. Such metrics require their own owner-supplied contracts.
+Configuration notices expand to explain significance and remediation without
+changing settings or dismissing notices automatically.
+
+Overview is the source default. It shows current application publication counts,
+configuration notices, an application preview strip, readiness distribution and
+next decisions. These are snapshots, not invented business trends. A published
+application can still have business dependencies to configure. Unknown or stale
+status must not be interpreted as ready, and viewing an optional application
+must not install or select it.
+
+For example, a later layered CMS release can move Technical overview after
+Applications, rename a heading, or remove a section without adding a frontend
+registry or a Kickoff property. New renderer behaviors still require a reviewed
+frontend implementation and an allowlisted versioned contract. Content properties
+cannot introduce scripts, credentials, arbitrary API endpoints or permissions.
+
+Install the dashboard update into WCMS Staged using the existing Data Releases
+journey, inspect its composition, then request and approve publication through
+the normal Process workflow. Import does not make the change Online. The original
+baseline stays immutable, and the previous published dashboard remains available
+until the update is published. Do not bypass this lifecycle with direct database
+writes or a native frontend fallback.
+
+The Applications tab lists the business offerings available to your account.
+Search by name or filter by the categories contributed by their owning modules.
+Review setup opens a read-only plan of required capabilities, data/media and
+publication review. Optional packages are identified separately. Browsing a plan
+does not register modules, import records or publish anything.
+
+Offerings can show their existing application media in cards and setup review.
+Before activation, cards show a shared neutral Nodics illustration. An unavailable
+image also falls back to this illustration and does not block setup.
+Developers select optional artwork (`mediaCode`, `alt`) in each application's
+`data/backoffice/applicationVisualData.js`, consumed by the existing owning
+profile's `presentation.visual`. Reference an actual Media record from that
+application's content pack, not an external stock-image URL or another app's media.
+BackOffice supplies the runtime role from the effective profile target; Axis
+discovers its authorized Media connection and reads the existing content endpoint
+with the employee's enterprise scope. Media retains storage and access policy.
+There is no new preview importer, public file server or BackOffice media proxy.
+
+The backend status response enables artwork only after the application baseline
+has entered setup and its required functional modules are registered and active.
+Catalogue presence alone does not enable it. Imported or pending-approval content
+can supply previews; Online publication is not a prerequisite. Retired, blocked or
+unknown application state retains the shared fallback. Axis never infers activation
+from a successful image request or the existence of an asset.
+
+Before the owning application media is imported, its card shows the shared fallback.
+Complete the application's existing setup/import journey to make its media
+available. A missing file, denied access or unavailable runtime also retains the
+fallback; do not disable security or import unrelated packs to fill it. Opening the
+dashboard never imports media or publishes an application. Staged artwork is a
+preview, not proof of Online publication or business readiness.
+
+To customize, select a different owner media code or update the referenced record
+through the existing Media lifecycle, then refresh. Source descriptor changes
+require the owning runtime's normal build/restart. No Axis application-name map,
+raw storage path, signed URL or provider credential belongs in the descriptor.
+
+Continue to setup opens the existing setup workspace focused on that offering.
+The workspace still enforces the owning services' permissions, dependencies and
+approval decisions. Automatic dependency activation and durable setup selection
+are not provided by the read-only dashboard review. A blocked prerequisite can
+still require an authorized operator in its existing owner workspace.
+
+The selected offering and category remain in the URL so a refresh or browser Back
+can restore the review. If status is unavailable, refresh it before continuing;
+the plan alone is not evidence that installation or publication succeeded. If an
+offering disappears or setup is unavailable for your account, contact your
+administrator. Published describes publication status, not proof that every
+integration or business acceptance scenario has passed.
+
+Environment notices can be expanded for the owning module's guidance. They do not
+edit passwords or configuration; use the correct authorized owner workspace.
+Technical overview retains detailed runtime, import and readiness diagnostics for
+administrators. New offerings and categories are contributed through the existing
+BackOffice profile contract, not through changes to the frontend application list.
+
 ## Reader mindset
 
 For a business reader, Axis is the operational face of Nodics. It shows that a

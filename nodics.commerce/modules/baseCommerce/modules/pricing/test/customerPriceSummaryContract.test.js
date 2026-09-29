@@ -32,10 +32,10 @@ const books = [
     { code: 'otherUsd', tenant: 'other', enterpriseCode: 'enterprise-a', currency: 'USD', status: 'ACTIVE' }
 ];
 const rows = [
-    { code: 'dressBase', tenant: 'default', enterpriseCode: 'enterprise-a', priceBookCode: 'retailUsd', productCode: 'agoraDress', unitAmount: '129.00', currency: 'USD', minQuantity: '1' },
-    { code: 'dressBulk', tenant: 'default', enterpriseCode: 'enterprise-a', priceBookCode: 'retailUsd', productCode: 'agoraDress', unitAmount: '119.00', currency: 'USD', minQuantity: '5' },
-    { code: 'otherEnterpriseDress', tenant: 'default', enterpriseCode: 'enterprise-b', priceBookCode: 'otherEnterpriseUsd', productCode: 'agoraDress', unitAmount: '1.00', currency: 'USD', minQuantity: '1' },
-    { code: 'otherTenantDress', tenant: 'other', enterpriseCode: 'enterprise-a', priceBookCode: 'otherUsd', productCode: 'agoraDress', unitAmount: '1.00', currency: 'USD', minQuantity: '1' }
+    { code: 'dressBase', tenant: 'default', enterpriseCode: 'enterprise-a', priceBookCode: 'retailUsd', productCode: 'sampleProduct', unitAmount: '129.00', currency: 'USD', minQuantity: '1' },
+    { code: 'dressBulk', tenant: 'default', enterpriseCode: 'enterprise-a', priceBookCode: 'retailUsd', productCode: 'sampleProduct', unitAmount: '119.00', currency: 'USD', minQuantity: '5' },
+    { code: 'otherEnterpriseDress', tenant: 'default', enterpriseCode: 'enterprise-b', priceBookCode: 'otherEnterpriseUsd', productCode: 'sampleProduct', unitAmount: '1.00', currency: 'USD', minQuantity: '1' },
+    { code: 'otherTenantDress', tenant: 'other', enterpriseCode: 'enterprise-a', priceBookCode: 'otherUsd', productCode: 'sampleProduct', unitAmount: '1.00', currency: 'USD', minQuantity: '1' }
 ];
 let bookRequests;
 let rowRequests;
@@ -57,31 +57,31 @@ test('customer price summary selects effective tenant price and hides price-row 
     let result = await summary.summarize({
         tenant: 'default',
         enterpriseCode: 'enterprise-a',
-        productCodes: ['agoraDress'],
+        productCodes: ['sampleProduct'],
         currency: 'USD',
         quantity: '1',
         authData: { groups: ['customerUserGroup'] }
     });
 
-    assert.deepEqual(result.agoraDress, { currency: 'USD', unitAmount: '129' });
-    assert.equal(result.agoraDress.priceRowCode, undefined);
+    assert.deepEqual(result.sampleProduct, { currency: 'USD', unitAmount: '129' });
+    assert.equal(result.sampleProduct.priceRowCode, undefined);
     assert.deepEqual(bookRequests[0].authData.groups, ['serviceAccountUserGroup']);
     assert.equal(bookRequests[0].authData.enterpriseCode, 'enterprise-a');
     assert.equal(bookRequests[0].query.enterpriseCode, 'enterprise-a');
     assert.equal(rowRequests[0].query.enterpriseCode, 'enterprise-a');
-    assert.deepEqual(rowRequests[0].query.productCode, { $in: ['agoraDress'] });
+    assert.deepEqual(rowRequests[0].query.productCode, { $in: ['sampleProduct'] });
 });
 
 test('customer price summary applies quantity tier without leaking other tenants', async () => {
     let result = await summary.summarize({
         tenant: 'default',
         enterpriseCode: 'enterprise-a',
-        productCodes: ['agoraDress'],
+        productCodes: ['sampleProduct'],
         currency: 'USD',
         quantity: '5'
     });
 
-    assert.deepEqual(result.agoraDress, { currency: 'USD', unitAmount: '119' });
+    assert.deepEqual(result.sampleProduct, { currency: 'USD', unitAmount: '119' });
 });
 
 test('customer price summary fails open when generated price services are unavailable', async () => {
@@ -91,7 +91,7 @@ test('customer price summary fails open when generated price services are unavai
         DefaultExactAmountService: exact
     };
 
-    let result = await summary.summarize({ tenant: 'default', productCodes: ['agoraDress'], currency: 'USD' });
+    let result = await summary.summarize({ tenant: 'default', productCodes: ['sampleProduct'], currency: 'USD' });
 
     assert.deepEqual(result, {});
 });

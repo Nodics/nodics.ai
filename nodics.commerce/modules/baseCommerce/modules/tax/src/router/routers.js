@@ -24,3 +24,86 @@ module.exports = {
         }
     }
 };
+
+// Runtime service grants and explicit Online role are required; no customer authoring route.
+module.exports.tax.policyPublicationAuthoring = {
+    createGoverned: { active: true, secured: true, authTokenTypes: ['access'],
+        accessGroups: ['runtimeConfigAdminUserGroup'], permission: 'publish.lifecycle.create',
+        apiExposure: 'taxPublicationAuthoring', key: '/publication/policy', method: 'POST',
+        controller: 'DefaultTaxPublicationTargetController', operation: 'createGoverned' }
+};
+module.exports.tax.policyPublicationTarget = {
+    "prepare": {
+        "secured": true,
+        "authTokenTypes": [
+            "service"
+        ],
+        "accessGroups": [
+            "userGroup"
+        ],
+        "permissionConfig": "authSecurity.internalToken.routePermission",
+        "apiExposure": "commercePublicationIngestion",
+        "key": "/publication/policy/prepare",
+        "method": "POST",
+        "controller": "DefaultTaxPublicationTargetController",
+        "operation": "prepare"
+    },
+    "status": {
+        "secured": true,
+        "authTokenTypes": [
+            "service"
+        ],
+        "accessGroups": [
+            "userGroup"
+        ],
+        "permissionConfig": "authSecurity.internalToken.routePermission",
+        "apiExposure": "commercePublicationIngestion",
+        "key": "/publication/policy/status",
+        "method": "POST",
+        "controller": "DefaultTaxPublicationTargetController",
+        "operation": "status"
+    },
+    "activate": {
+        "secured": true,
+        "authTokenTypes": [
+            "service"
+        ],
+        "accessGroups": [
+            "userGroup"
+        ],
+        "permissionConfig": "authSecurity.internalToken.routePermission",
+        "apiExposure": "commercePublicationIngestion",
+        "key": "/publication/policy/activate",
+        "method": "POST",
+        "controller": "DefaultTaxPublicationTargetController",
+        "operation": "activate"
+    },
+    "reconcile": {
+        "secured": true,
+        "authTokenTypes": [
+            "service"
+        ],
+        "accessGroups": [
+            "userGroup"
+        ],
+        "permissionConfig": "authSecurity.internalToken.routePermission",
+        "apiExposure": "commercePublicationIngestion",
+        "key": "/publication/policy/reconcile",
+        "method": "POST",
+        "controller": "DefaultTaxPublicationTargetController",
+        "operation": "reconcile"
+    }
+};
+
+module.exports.tax.policyPublicationTarget.authorize = {
+    secured: true, authTokenTypes: ['service'], accessGroups: ['userGroup'],
+    permissionConfig: 'authSecurity.internalToken.routePermission', apiExposure: 'commercePublicationIngestion',
+    key: '/publication/policy/authorize', method: 'POST',
+    controller: 'DefaultTaxPublicationTargetController', operation: 'authorize'
+};
+module.exports.tax.policyPublicationTarget.applyPublicationDecision = {
+    secured: true, authTokenTypes: ['service'], accessGroups: ['userGroup'],
+    permissionConfig: 'authSecurity.internalToken.routePermission', apiExposure: 'commercePublicationIngestion',
+    key: '/workflow/actions/applyPublicationDecision', method: 'POST',
+    controller: 'DefaultTaxPublicationTargetController', operation: 'applyPublicationDecision'
+};

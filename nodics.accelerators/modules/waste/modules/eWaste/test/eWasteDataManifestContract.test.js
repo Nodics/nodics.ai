@@ -28,7 +28,9 @@ assert.strictEqual(section.dataType, 'core');
 assert.strictEqual(section.owningDomain, 'waste');
 assert.strictEqual(section.destinationRole, 'WASTE');
 assert.strictEqual(section.lifecycle, 'REFERENCE');
-assert.strictEqual(section.sourceRoot, 'core-v001');
+assert.strictEqual(section.sourceRoot, 'core-v002');
+assert.strictEqual(section.version, '0.0.1');
+assert.strictEqual(section.selectionPolicy, 'EXPLICIT');
 
 Object.keys(section.files).forEach(function (relativeFilePath) {
     let absoluteFilePath = path.join(dataRoot, relativeFilePath);

@@ -11,6 +11,16 @@
 
 /** @module wasteApi/config/properties @description Provides Waste API exposure defaults. @layer config @owner wasteApi @override Partner modules may add external API surfaces through policy. */
 module.exports = {
+  tooling: {
+    commands: {
+      'acceptance:waste-management': {
+        acceptanceContract: true,
+        projectHome: true,
+        handler: '@nTooling/node-script',
+        script: 'src/service/acceptance/defaultWasteManagementAcceptanceService.mjs'
+      }
+    }
+  },
   wasteApi: { exposure: { internal: "wasteInternal" } },
   apiExposure: {
     categories: {

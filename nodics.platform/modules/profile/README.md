@@ -62,7 +62,7 @@ A server must explicitly select it; contributions never enable reset or bypass t
 
 Runtime deployment authorization reuses direct service-principal scope assignments and API-key proof. Each instance has its own retained secret and approved project/environment/server/modules; assignment changes invalidate issued credentials.
 
-Runtime tenant bootstrap awaits governed Init releases and reconciles existing identity metadata before proof/grant validation. Approved deployment records and securely retained proof must already be provisioned by the operator.
+Runtime tenant bootstrap awaits governed Init releases and reconciles existing identity metadata before proof/grant validation. Native local startup may repair missing deployment records for discovered sibling runtime identities after a schema reset, using generated local credential proof and explicit `RUNTIME_DEPLOYMENT` assignments. Non-local deployment records and securely retained proof must still be provisioned by the operator.
 
 Runtime deployment scope uses the canonical generated-service response envelope.
 Grant reads require successful records; scope invalidation requires an acknowledged

@@ -5,8 +5,13 @@ Nodics authorities. It is a runtime group and never owns industry business
 logic, schemas, APIs, or data directly; concrete accelerator capabilities own
 those artifacts below their domain group.
 
-Standard framework groups never depend on this group. Customer projects may
-activate the complete group or one child domain group. Read `AGENTS.md`, then
+Standard framework groups never depend on this group. Runtime composition may
+load the complete group or one child domain group. This is loader composition,
+not a business activation switch: the umbrella declares no functional-module
+identity in the Axis Module Registry. Individual applications use Setup &
+Accelerators and declare their actual required capabilities, such as Commerce
+or Waste. Import, permissions, readiness, and publication remain owner-governed.
+Read `AGENTS.md`, then
 the selected domain and capability guidance before implementation.
 
 The umbrella extends Foundation only. It must not force Commerce or Discovery

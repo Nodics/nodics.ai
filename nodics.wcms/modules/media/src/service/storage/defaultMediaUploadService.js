@@ -43,7 +43,20 @@ module.exports = {
         let checksumAlgorithm = this.resolveChecksumAlgorithm(request);
         let checksum = this.calculateChecksum(file.buffer, checksumAlgorithm);
         let mediaCode = request.mediaCode || request.code || this.buildMediaCode(file, checksum);
-        let storage = await SERVICE.DefaultMediaStorageProviderRegistryService.store({
+        const lifecycle = SERVICE.DefaultMediaLifecycleCoordinationService;
+        const versioned = lifecycle && lifecycle.isVersioned(request);
+        let previous;
+        if (versioned) {
+            const rows = lifecycle.records(await SERVICE.DefaultMediaService.get({ tenant: request.tenant, authData: request.authData,
+                query: { code: mediaCode }, searchOptions: { limit: 2 } }));
+            if (rows.length > 1) throw new CLASSES.NodicsError('ERR_MED_00014', 'Ambiguous current Media metadata');
+            previous = rows[0];
+            if (previous && (!Number.isSafeInteger(request.versionId) || request.versionId !== previous.versionId)) {
+                throw new CLASSES.NodicsError('ERR_MED_00014', 'Re-upload requires the current Media versionId');
+            }
+            if (previous && previous.legalHold === true) throw new CLASSES.NodicsError('ERR_MED_00019', 'Media legal hold blocks re-upload');
+        }
+        const storageRequest = {
             tenant: request.tenant,
             authData: request.authData,
             enterpriseCode: request.enterpriseCode,
@@ -60,7 +73,13 @@ module.exports = {
             mimeType: file.mimeType,
             sizeBytes: file.sizeBytes,
             buffer: file.buffer
-        });
+        };
+        const registry = SERVICE.DefaultMediaStorageProviderRegistryService;
+        let storage = await (versioned ? registry.storeRetained(storageRequest) : registry.store(storageRequest));
+        if (versioned) {
+            storage = Object.assign({}, registry.resolveLocation({ ...storageRequest, providerCode: storage.providerCode,
+                storageKey: storage.storageKey, trustedStorageKey: true }), storage);
+        }
         let media = {
             code: mediaCode,
             active: true,
@@ -95,6 +114,11 @@ module.exports = {
         if (!service || typeof service.save !== 'function') {
             throw new CLASSES.NodicsError('ERR_MED_00009', 'Media metadata service is unavailable');
         }
+        if (versioned && previous) {
+            const patch = { ...media }; delete patch.code;
+            return lifecycle.updateMetadata(request, previous, patch);
+        }
+        if (versioned) media.versionId = 0;
         let response = await service.save({
             tenant: request.tenant,
             authData: request.authData,
@@ -103,7 +127,11 @@ module.exports = {
             query: { code: mediaCode },
             model: media
         });
-        return this.firstResult(response) || media;
+        const saved = this.firstResult(response);
+        if (versioned && (!saved || saved.code !== mediaCode || saved.versionId !== 0 || saved.storageKey !== media.storageKey)) {
+            throw new CLASSES.NodicsError('ERR_MED_00014', 'Versioned Media upload was not acknowledged');
+        }
+        return saved || media;
     },
 
     /**

@@ -962,6 +962,30 @@ const functionalModuleLifecycleDecision = {
     includeActivationData: { type: "boolean" }
   }
 };
+const functionalModuleSelectionApply = {
+  type: "object",
+  additionalProperties: false,
+  required: ["project", "modules", "reason"],
+  properties: {
+    project: moduleName,
+    reason: { type: "string", minLength: 1, maxLength: 512 },
+    modules: {
+      type: "array",
+      minItems: 1,
+      maxItems: 128,
+      items: {
+        type: "object",
+        additionalProperties: false,
+        required: ["functionalModule", "expectedRevision", "selected"],
+        properties: {
+          functionalModule: moduleName,
+          expectedRevision: { type: "integer", minimum: 1 },
+          selected: { type: "boolean" }
+        }
+      }
+    }
+  }
+};
 const moduleLease = {
   type: "object",
   required: ["moduleName", "instanceId", "state", "lastSeenAt"],
@@ -1413,6 +1437,29 @@ module.exports = {
   registration: registration,
   functionalModuleRegistration: functionalModuleRegistration,
   functionalModuleLifecycleDecision: functionalModuleLifecycleDecision,
+  functionalModuleSelectionApply: functionalModuleSelectionApply,
+  functionalModuleSelectionApplyResult: {
+    type: "object",
+    required: ["project", "applied", "items"],
+    properties: {
+      project: moduleName,
+      applied: { type: "integer", minimum: 0 },
+      items: {
+        type: "array",
+        items: {
+          type: "object",
+          required: ["functionalModule", "selected", "action", "status", "module"],
+          properties: {
+            functionalModule: moduleName,
+            selected: { type: "boolean" },
+            action: { enum: ["registerActivate", "activate", "deactivate", "unchanged"] },
+            status: { enum: ["APPLIED", "UNCHANGED"] },
+            module: functionalModuleRegistration
+          }
+        }
+      }
+    }
+  },
   functionalModuleCatalogueData: {
     type: "object",
     required: ["project", "items"],

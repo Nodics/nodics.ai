@@ -31,6 +31,7 @@ module.exports = {
                 locale: { enabled: true, type: 'keyword' },
                 status: { enabled: true, type: 'keyword' },
                 sourceHash: { enabled: true, type: 'keyword' },
+                publicationVersion: { enabled: true, type: 'keyword' },
                 payload: {
                     enabled: true,
                     type: 'object',

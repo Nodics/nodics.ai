@@ -59,7 +59,9 @@ test('every authored literal API category is declared by the route capability', 
     assert.ok(count > 100, 'inspect the actual route inventory');
     assert.deepEqual(violations, []);
 });
-test('unknown categories follow default exposure; explicit deployment and node overrides remain authoritative', () => {
+test('unknown categories follow default exposure; explicit deployment and node overrides remain authoritative', (t) => {
+    const original = global.CONFIG;
+    t.after(() => { if (original === undefined) delete global.CONFIG; else global.CONFIG = original; });
     let exposure = {
         default: { enabled: true },
         categories: { sample: { enabled: true } },
@@ -75,4 +77,31 @@ test('unknown categories follow default exposure; explicit deployment and node o
     assert.equal(pipeline.isApiExposureEnabled('absent'), false, 'explicit compatibility policy can still deny unknown categories');
     exposure = undefined;
     assert.equal(pipeline.isApiExposureEnabled('absent'), false);
+});
+
+test('owner declarations inherit actual router defaults without granting public access', (t) => {
+    const original = global.CONFIG;
+    t.after(() => { if (original === undefined) delete global.CONFIG; else global.CONFIG = original; });
+    const defaults = require('../config/properties').apiExposure;
+    const owner = require('../../nData/nImport/import/config/properties').apiExposure.categories;
+    const exposure = { ...defaults, categories: { ...defaults.categories, ...owner } };
+    global.CONFIG = { get: () => exposure };
+    assert.ok(Object.hasOwn(owner, 'dataImport'), 'nImport declares its own category');
+    assert.equal(pipeline.isApiExposureEnabled('dataImport'), true);
+    exposure.categories.dataExport = require('../../nData/nExport/export/config/properties').apiExposure.categories.dataExport;
+    assert.equal(pipeline.isApiExposureEnabled('dataExport'), false, 'an explicit owner denial wins over the broad default');
+    const originalLodash = global._;
+    global._ = require('lodash');
+    t.after(() => { if (originalLodash === undefined) delete global._; else global._ = originalLodash; });
+    assert.equal(pipeline.isPublicRequest({ apiExposure: { category: 'dataImport' } }), false);
+    exposure.default = { enabled: false };
+    assert.equal(pipeline.isApiExposureEnabled('dataImport'), false);
+    exposure.categories.dataImport = { enabled: true };
+    assert.equal(pipeline.isApiExposureEnabled('dataImport'), true);
+    exposure.categories.dataImport = {};
+    for (const value of [undefined, {}, { enabled: 'true' }, { enabled: null }]) {
+        exposure.default = value;
+        assert.equal(pipeline.isApiExposureEnabled('dataImport'), false);
+        assert.equal(pipeline.isApiExposureEnabled('unregistered'), false);
+    }
 });

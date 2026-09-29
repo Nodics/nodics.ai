@@ -202,6 +202,10 @@ module.exports = {
             router: { groups: { schemaOperations: true }, enabled: true },
             search: { enabled: true, idPropertyName: 'code' },
             definition: {
+                startFingerprint: { type: 'string', required: false,
+                    description: 'Process-owned SHA-256 of immutable start input and authenticated scope; absent on historical instances' },
+                startCompleted: { type: 'boolean', required: false,
+                    description: 'Process-owned evidence that initial node entry finished; incomplete starts must not be blindly replayed' },
                 definitionCode: {
                     type: 'string',
                     required: true,

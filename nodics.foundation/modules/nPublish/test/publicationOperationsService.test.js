@@ -20,20 +20,25 @@ const rows = [
     { code: 'failed', state: 'FAILED', revision: 2, correlationId: 'corr-b', failureCode: 'SAFE_FAILURE', updatedAt: new Date(now).toISOString() }
 ];
 let retried;
+let reconciledScopes = [];
 global.CLASSES = { NodicsError };
 global.CONFIG = { get: key => key === 'publish' ? { reconciliation: {
     correlationSearchLimit: 10, stuckAfterMs: 1000, alertFailureCount: 1
 } } : undefined };
 global.SERVICE = {
     DefaultPublicationAuditReconciliationService: {
-        getRepository: () => ({ list: async () => rows }),
-        reconcile: async () => ({ scanned: 3, restored: 1 })
+        getRepository: () => ({ list: async request => request.publicationCode
+            ? rows.filter(item => item.code === request.publicationCode) : rows }),
+        reconcile: async request => { reconciledScopes.push(['audit', request.publicationCode]); return { scanned: 3, restored: 1 }; }
     },
-    DefaultCmsPublicationOutboxService: { reconcile: async () => ({ delivered: 1 }) },
+    DefaultCmsPublicationOutboxService: { reconcile: async request => {
+        reconciledScopes.push(['outbox', request.publicationCode]); return { delivered: 1 };
+    } },
     DefaultPublicationLifecycleService: {
         getVersionProvider: () => ({ reconcile: async publication => ({ status: 'CONSISTENT', manifestCode: publication.targetVersion }) }),
         get: async request => rows.find(item => item.code === request.publicationCode),
-        retry: async request => { retried = request; return { state: 'VALIDATING' }; }
+        retry: async request => { retried = request; return { state: 'VALIDATING' }; },
+        resubmit: async request => ({ resubmitted: request.publicationCode })
     }
 };
 
@@ -51,7 +56,25 @@ global.SERVICE = {
     assert.deepStrictEqual(reconciliation.projection, { scanned: 3, restored: 1 });
     assert.deepStrictEqual(reconciliation.outbox, { delivered: 1 });
     assert.deepStrictEqual(reconciliation.target, [{ publicationCode: 'online',
-        result: { status: 'CONSISTENT', manifestCode: 'm4' } }]);
+        result: { status: 'CONSISTENT', manifestCode: 'm4' } },
+        { publicationCode: 'stuck', result: { status: 'CONSISTENT', manifestCode: undefined } }]);
+    rows[2].activationOperation = { key: 'failed:activate:1' };
+    assert.strictEqual((await service.reconcile({ tenant: 'tenant-a' })).target.length, 3);
+    reconciledScopes = [];
+    const scoped = await service.reconcile({ tenant: 'tenant-a', publicationCode: 'failed' });
+    assert.deepStrictEqual(scoped.target.map(item => item.publicationCode), ['failed']);
+    assert.deepStrictEqual(reconciledScopes, [['audit', 'failed'], ['outbox', 'failed']]);
+    const controller = require('../src/controller/defaultPublicationLifecycleController');
+    for (const publicationCode of ['', ' ', null, { $ne: '' }]) {
+        const request = controller.prepare({ httpRequest: { body: { publicationCode } } });
+        await assert.rejects(service.reconcile(request), error => error.code === 'ERR_PUB_00001');
+    }
+    assert.deepStrictEqual(reconciledScopes, [['audit', 'failed'], ['outbox', 'failed']],
+        'invalid HTTP scope must not become a broad reconciliation');
+    for (const state of ['REJECTED', 'WITHDRAWN', 'ROLLED_BACK']) {
+        rows.push({ code: state, state, revision: 9 });
+        assert.deepStrictEqual(await service.recover({ publicationCode: state }), { resubmitted: state });
+    }
     let recovered = await service.recover({ publicationCode: 'failed', reason: 'operator repair' });
     assert.strictEqual(recovered.state, 'VALIDATING');
     assert.strictEqual(retried.expectedRevision, 2);

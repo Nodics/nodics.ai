@@ -15,6 +15,13 @@
 module.exports = {
     wasteApi: {
         internal: {
+            inspectInstalledData: {
+                secured: true, authTokenTypes: ['access'], accessGroups: ['adminGroup'],
+                permission: 'waste.audit.read', apiExposure: 'wasteInternal',
+                key: '/waste/installed-data/inspect', method: 'POST',
+                controller: 'DefaultWasteInternalController', operation: 'inspectInstalledData',
+                help: { requestType: 'secured', message: 'Reads bounded installed reference records or transaction fingerprints without authorizing migration.' }
+            },
             collectionAcceptanceCheck: {
                 secured: true, authTokenTypes: ['access', 'service'], accessGroups: ['serviceAccountUserGroup', 'employeeUserGroup'],
                 permission: 'waste.collectionPoint.acceptance.check', apiExposure: 'wasteInternal',

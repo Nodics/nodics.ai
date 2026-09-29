@@ -1,5 +1,12 @@
 # database
 
+Installed ordinary-to-versioned maintenance is an explicit native-local operation,
+not a startup side effect. Follow the [operator contract](llm/contracts/installed-version-migration.md)
+and [scoped CLI example](llm/examples/installed-version-migration.md) for outage,
+immutable plans, ordered index transitions and source/variant adoption. Recovery
+is limited to RUNNING attempts; a completed migration does not authorize restart
+or support the command's rollback action.
+
 Generic authoring follows effective schema publication metadata and the existing
 runtime role: publishable sources are Staged-only; publication projections and
 receipts are read-only to Workbench/generated HTTP CRUD. Owning publication and
@@ -74,6 +81,14 @@ Deep documentation lives in:
 - `nodics.docs/docs/pages/nodics.foundation/runtime-configuration.md`
 
 ## Verification
+
+Tenant administrators can inspect one installed model through
+`GET /nodics/system/v0/schema/indexes/module/:owner/schema/:schema`, using the
+existing `system.schema.view` permission and schema-maintenance exposure policy.
+This returns provider index metadata and record/version-presence counts, never
+records, connection credentials or a migration authorization. It does not rebuild
+indexes or read another tenant/channel. See the
+[inspection contract](llm/contracts/README.md#installed-index-inspection).
 
 Run database, schema, and model-generation tests when behavior changes, then run:
 

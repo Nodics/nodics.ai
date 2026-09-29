@@ -24,6 +24,13 @@ const donationTransferService = require('../../../wasteCore/src/service/defaultW
 
 /** @module wasteApi/src/facade/defaultWasteInternalFacade @description Coordinates generic Waste internal API operations with owner services. @layer facade @owner wasteApi @override Later modules may route to generated persistence services while preserving capability ownership. */
 module.exports = {
+    /** Uses the effective owner service; absence cannot fall back to ungoverned reads. */
+    inspectInstalledData: async function (request) {
+        if (typeof SERVICE === 'undefined' || !SERVICE.DefaultWasteInstalledDataInspectionService) {
+            this.fail('ERR_WASTE_RUNTIME_UNAVAILABLE', 'Installed Waste inspection is unavailable');
+        }
+        return SERVICE.DefaultWasteInstalledDataInspectionService.inspect(request);
+    },
     /** Throws a Nodics-compatible error when available. */
     fail: function (code, message) {
         let error = typeof CLASSES !== 'undefined' && CLASSES.NodicsError ? new CLASSES.NodicsError(code, message) : new Error(message);

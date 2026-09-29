@@ -719,9 +719,11 @@ module.exports = {
         let maxAttempts = Math.max(1, Number(requestUrl.maxAttempts || policy.retry.maxAttempts || 1));
         if (!this.isRetrySafe(requestUrl)) maxAttempts = 1;
         let startedAt = Date.now();
+        let circuitAdmitted = false;
         this._diagnostics.requests++;
         try {
             this.assertCircuitAvailable(circuitKey, policy.circuitBreaker);
+            circuitAdmitted = true;
             for (let attempt = 1; attempt <= maxAttempts; attempt++) {
                 let controller = new AbortController();
                 let timeoutMs = Number(requestUrl.timeoutMs || policy.timeoutMs);
@@ -778,7 +780,8 @@ module.exports = {
                 }
             }
         } catch (error) {
-            this.recordCircuitFailure(circuitKey, policy.circuitBreaker);
+            // Locally rejected calls must not keep moving the recovery deadline.
+            if (circuitAdmitted) this.recordCircuitFailure(circuitKey, policy.circuitBreaker);
             this._diagnostics.failures++;
             this._diagnostics.lastFailureAt = new Date().toISOString();
             throw CLASSES.NodicsError.enrich(error, this.buildFetchErrorContext(requestUrl));

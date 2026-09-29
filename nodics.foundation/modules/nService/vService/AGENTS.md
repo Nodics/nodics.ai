@@ -10,6 +10,18 @@ This file gives AI coding agents mandatory guidance for this Nodics module or pa
 
 ## Module Work Rules
 
+- Nonversioned managed save/update schemas must delegate to the effective
+  `DefaultModelConcurrencyService`, including internal generated-service calls.
+  Do not bypass it through `saveItems`/`updateItems` or calculate revisions in
+  domain services. Preserve versioned persistence and unchanged-save effects.
+  Qualify the merged base-plus-variant pipeline nodes, not the base alone.
+
+- Schema-owned `versionedReadMode: 'CURRENT'` selects the provider's current
+  authoring view through `resolveReadMethod`; preserve the base secured get
+  pipeline, validation before cache lookup, and response envelope. Missing
+  capability rejects. Explicit scalar versionId queries retain exact reads.
+  Never infer Online activation from the highest stored version.
+
 - Treat this directory as a layered Nodics module boundary when it contains `package.json`.
 - Keep capabilities stable and make implementations replaceable through the module hierarchy.
 - Do not hardcode project, environment, server, node, tenant, or customer behavior into reusable framework code.

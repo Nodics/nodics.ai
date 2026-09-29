@@ -123,7 +123,148 @@ async function verifyStaleIndexIsDroppedBeforeReplacementCreate() {
         'Stale indexes must be dropped before replacement indexes are created');
 }
 
-verifyStaleIndexIsDroppedBeforeReplacementCreate().then(() => {
+async function verifyDropCompletionAndFailureGateCreates() {
+    let finishDrop;
+    const operations = [];
+    const subject = Object.assign({}, service, {
+        dropIndex: function () {
+            operations.push('drop-start');
+            return new Promise(resolve => { finishDrop = resolve; });
+        },
+        createIndex: async function () { operations.push('create'); }
+    });
+    const pending = subject.executeIndexPlan({}, {
+        drop: ['old'], create: [{ fields: { code: 1, versionId: 1 } }]
+    });
+    await Promise.resolve();
+    assert.deepStrictEqual(operations, ['drop-start'], 'create must wait for drop completion, not just invocation');
+    finishDrop('done');
+    await pending;
+    assert.deepStrictEqual(operations, ['drop-start', 'create']);
+    operations.length = 0;
+    subject.dropIndex = async function () { throw new Error('drop denied'); };
+    await assert.rejects(subject.executeIndexPlan({}, {
+        drop: ['old'], create: [{ fields: { code: 1 } }]
+    }), /drop denied/);
+    assert.deepStrictEqual(operations, [], 'failed drop must cause zero creates');
+}
+
+async function verifyDiscoveryFailureAndExplicitCleanupSelection() {
+    global.CONFIG = { get: () => ({ default: { options: { cleanOrphan: true } } }) };
+    global.UTILS = { isBlank: value => !value || !value.length };
+    const model = {
+        schemaName: 'example', tenant: 'tenant-a', channel: 'master',
+        rawSchema: { schemaOptions: { 'tenant-a': { indexedFields: [{ fields: { code: 1 } }] } } },
+        dataBase: { getOptions: () => ({ defaultIndexes: ['_id'] }) },
+        indexes: callback => callback(null, [{ name: '_id_', key: { _id: 1 } }, { name: 'custom', key: { custom: 1 } }])
+    };
+    const plans = [];
+    const subject = Object.assign({}, service, {
+        executeIndexPlan: async function (selected, plan) { plans.push(plan); return plan; }
+    });
+    await subject.createIndexes(model, false);
+    assert.deepStrictEqual(plans[0].drop, [], 'explicit false must override true inherited cleanup');
+    await subject.createIndexes(model);
+    assert.deepStrictEqual(plans[1].drop, ['custom'], 'omitted selection inherits cleanup without dropping _id');
+    for (const [error, indexes] of [[new Error('index read denied'), []], [null, undefined], [null, {}]]) {
+        model.indexes = callback => callback(error, indexes);
+        await assert.rejects(subject.createIndexes(model, false));
+    }
+    assert.strictEqual(plans.length, 2, 'failed index discovery must never dispatch a plan');
+}
+
+async function verifyReadOnlyInstalledInspection() {
+    const calls = [];
+    const model = {
+        tenant: 'tenant-a', versioned: false,
+        rawSchema: { schemaOptions: { 'tenant-a': { indexedFields: [{ fields: { code: 1 }, options: { unique: true } }] } } },
+        indexes: callback => callback(null, [{ name: 'code_1', key: { code: 1 }, unique: true, ns: 'private.database' }]),
+        countDocuments: async query => { calls.push(query); return Object.keys(query).length ? 3 : 4; },
+        dropIndex: () => { throw new Error('must not drop'); },
+        insertOne: () => { throw new Error('must not insert'); }
+    };
+    const result = await service.inspectIndexes(model);
+    assert.strictEqual(result.recordCount, 4);
+    assert.strictEqual(result.missingVersionCount, 3);
+    assert.strictEqual(result.indexes[0].ns, undefined);
+    assert.deepStrictEqual(calls, [{}, { versionId: { $exists: false } }]);
+    result.desiredIndexes[0].fields.code = -1;
+    assert.strictEqual(model.rawSchema.schemaOptions['tenant-a'].indexedFields[0].fields.code, 1);
+    model.indexes = callback => callback(new Error('unavailable'));
+    await assert.rejects(service.inspectIndexes(model));
+    assert.strictEqual(calls.length, 2, 'failed index discovery must not continue into count reads');
+    model.indexes = callback => callback(null, []);
+    model.countDocuments = async () => NaN;
+    await assert.rejects(service.inspectIndexes(model), /inconsistent/);
+}
+
+async function verifyVersionedIndexTransitionRequiresMigration() {
+    const desired = [{ fields: { code: 1, versionId: 1 }, options: { unique: true } }];
+    const model = {
+        versioned: true, schemaName: 'example', tenant: 'tenant-a', channel: 'master',
+        rawSchema: { schemaOptions: { 'tenant-a': { indexedFields: desired } } },
+        dataBase: { getOptions: () => ({ defaultIndexes: ['_id'] }) }
+    };
+    const plans = [];
+    const subject = Object.assign({}, service, {
+        executeIndexPlan: async function (selected, plan) { plans.push(plan); return plan; }
+    });
+    for (const key of [{ code: 1 }, { tenant: 1, productCode: 1, locale: 1 }]) {
+        model.indexes = callback => callback(null, [{ name: 'legacy_unique', key, unique: true }]);
+        await assert.rejects(subject.createIndexes(model, true), /migration/);
+        await assert.rejects(subject.createIndexes(model, false), /migration/);
+    }
+    assert.strictEqual(plans.length, 0, 'automatic reconciliation cannot migrate installed uniqueness');
+    model.indexes = callback => callback(null, [{ name: '_id_', key: { _id: 1 }, unique: true }]);
+    await subject.createIndexes(model, true);
+    assert.deepStrictEqual(plans[0].create, desired, 'new collections retain ordinary versioned setup');
+    model.rawSchema.schemaOptions['tenant-a'].indexedFields = [{ fields: { code: 1 }, options: { unique: true } }];
+    await assert.rejects(subject.createIndexes(model, true), /versionId/);
+    assert.strictEqual(plans.length, 1, 'invalid desired versioned uniqueness cannot dispatch');
+    model.versioned = false;
+    await subject.createIndexes(model, false);
+    assert.strictEqual(plans.length, 2, 'ordinary schemas keep existing reconciliation behavior');
+}
+
+async function verifyStartupDoesNotMigrateInstalledIdentity() {
+    const calls = [];
+    const schema = {
+        versioned: true,
+        schemaOptions: { 'tenant-a': { primaryKeys: ['code'], indexedFields: [
+            { fields: { code: 1, versionId: 1 }, options: { unique: true } }
+        ] } }
+    };
+    const model = { indexes: callback => callback(null, [{ name: 'code_1', key: { code: 1 }, unique: true }]) };
+    const database = {
+        getCollectionList: () => ['Example'],
+        getConnection: () => ({ collection: () => model }),
+        getOptions: () => ({ defaultIndexes: ['_id'] })
+    };
+    const subject = Object.assign({}, service, {
+        LOG: { debug: () => {}, error: () => {} },
+        executeIndexPlan: async () => { calls.push('plan'); return {}; },
+        updateValidator: async () => { calls.push('validator'); }
+    });
+    const options = {
+        modelName: 'Example', schemaName: 'example', tntCode: 'tenant-a', channel: 'master',
+        moduleObject: { rawSchema: { example: schema } }
+    };
+    await assert.rejects(subject.retrieveModel(options, database), /Model metadata refresh failed/);
+    assert.deepStrictEqual(calls, [], 'startup rejects before index changes or validator refresh');
+    model.indexes = callback => callback(null, [
+        { name: '_id_', key: { _id: 1 }, unique: true },
+        { name: 'code_1_versionId_1', key: { code: 1, versionId: 1 }, unique: true }
+    ]);
+    assert.strictEqual(await subject.retrieveModel(options, database), model);
+    assert.deepStrictEqual(calls, ['plan', 'validator']);
+}
+
+verifyStaleIndexIsDroppedBeforeReplacementCreate()
+    .then(verifyDropCompletionAndFailureGateCreates)
+    .then(verifyDiscoveryFailureAndExplicitCleanupSelection)
+    .then(verifyReadOnlyInstalledInspection)
+    .then(verifyVersionedIndexTransitionRequiresMigration)
+    .then(verifyStartupDoesNotMigrateInstalledIdentity).then(() => {
     console.log('MongoDB index reconciliation contract validated');
 }).catch(error => {
     console.error(error);

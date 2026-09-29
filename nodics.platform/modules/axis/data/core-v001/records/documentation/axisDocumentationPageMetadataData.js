@@ -35,78 +35,83 @@ module.exports = {
         "level": 2
       },
       {
+        "text": "Choose an application from the dashboard",
+        "anchor": "overview-2-choose-an-application-from-the-dashboard",
+        "level": 2
+      },
+      {
         "text": "Reader mindset",
-        "anchor": "overview-2-reader-mindset",
+        "anchor": "overview-3-reader-mindset",
         "level": 2
       },
       {
         "text": "Beginner mental model",
-        "anchor": "overview-3-beginner-mental-model",
+        "anchor": "overview-4-beginner-mental-model",
         "level": 2
       },
       {
         "text": "Boundaries",
-        "anchor": "overview-4-boundaries",
+        "anchor": "overview-5-boundaries",
         "level": 2
       },
       {
         "text": "How Axis discovers capability",
-        "anchor": "overview-5-how-axis-discovers-capability",
+        "anchor": "overview-6-how-axis-discovers-capability",
         "level": 2
       },
       {
         "text": "Prerequisites",
-        "anchor": "overview-6-prerequisites",
+        "anchor": "overview-7-prerequisites",
         "level": 2
       },
       {
         "text": "Start locally",
-        "anchor": "overview-7-start-locally",
+        "anchor": "overview-8-start-locally",
         "level": 2
       },
       {
         "text": "Environment and runtime configuration",
-        "anchor": "overview-8-environment-and-runtime-configuration",
+        "anchor": "overview-9-environment-and-runtime-configuration",
         "level": 2
       },
       {
         "text": "Quality commands",
-        "anchor": "overview-9-quality-commands",
+        "anchor": "overview-10-quality-commands",
         "level": 2
       },
       {
         "text": "Current scope",
-        "anchor": "overview-10-current-scope",
+        "anchor": "overview-11-current-scope",
         "level": 2
       },
       {
         "text": "Axis startup flow",
-        "anchor": "overview-11-axis-startup-flow",
+        "anchor": "overview-12-axis-startup-flow",
         "level": 2
       },
       {
         "text": "Backend-owned content rule",
-        "anchor": "overview-12-backend-owned-content-rule",
+        "anchor": "overview-13-backend-owned-content-rule",
         "level": 2
       },
       {
         "text": "Beginner mental model",
-        "anchor": "overview-13-beginner-mental-model",
+        "anchor": "overview-14-beginner-mental-model",
         "level": 2
       },
       {
         "text": "Customize and extend safely",
-        "anchor": "overview-14-customize-and-extend-safely",
+        "anchor": "overview-15-customize-and-extend-safely",
         "level": 2
       },
       {
         "text": "Common mistakes",
-        "anchor": "overview-15-common-mistakes",
+        "anchor": "overview-16-common-mistakes",
         "level": 2
       },
       {
         "text": "Verification",
-        "anchor": "overview-16-verification",
+        "anchor": "overview-17-verification",
         "level": 2
       }
     ],
@@ -133,8 +138,8 @@ module.exports = {
     ],
     "sourceRepository": "nodics.platform",
     "sourcePath": "docs/pages/project-overview.md",
-    "sourceChecksum": "8175d307de409b5df6c760f5f81f2e3010c230394647ea1fb4778370ec06868f",
-    "sourceWordCount": 1962,
+    "sourceChecksum": "8c0e78c905d28a4a7037123e7909da8adb4a14ab0adb507e66ae3833f47e3315",
+    "sourceWordCount": 2849,
     "audience": [
       "business-user",
       "administrator",
@@ -1576,38 +1581,43 @@ module.exports = {
         "level": 2
       },
       {
+        "text": "Capability preparation readiness",
+        "anchor": "imports-exports-3-capability-preparation-readiness",
+        "level": 2
+      },
+      {
         "text": "Employee workflow",
-        "anchor": "imports-exports-3-employee-workflow",
+        "anchor": "imports-exports-4-employee-workflow",
         "level": 2
       },
       {
         "text": "File import workflow",
-        "anchor": "imports-exports-4-file-import-workflow",
+        "anchor": "imports-exports-5-file-import-workflow",
         "level": 2
       },
       {
         "text": "Security, failure, and extension",
-        "anchor": "imports-exports-5-security-failure-and-extension",
+        "anchor": "imports-exports-6-security-failure-and-extension",
         "level": 2
       },
       {
         "text": "Export workflow",
-        "anchor": "imports-exports-6-export-workflow",
+        "anchor": "imports-exports-7-export-workflow",
         "level": 2
       },
       {
         "text": "Customize and extend safely",
-        "anchor": "imports-exports-7-customize-and-extend-safely",
+        "anchor": "imports-exports-8-customize-and-extend-safely",
         "level": 2
       },
       {
         "text": "Common mistakes",
-        "anchor": "imports-exports-8-common-mistakes",
+        "anchor": "imports-exports-9-common-mistakes",
         "level": 2
       },
       {
         "text": "Verification",
-        "anchor": "imports-exports-9-verification",
+        "anchor": "imports-exports-10-verification",
         "level": 2
       }
     ],
@@ -1627,8 +1637,8 @@ module.exports = {
     ],
     "sourceRepository": "nodics.platform",
     "sourcePath": "docs/pages/imports-and-exports.md",
-    "sourceChecksum": "3276761777c6f2a21183ffa6fe4067ac46abaea66fa9e67a4195fc92ab989d19",
-    "sourceWordCount": 2326,
+    "sourceChecksum": "9287e82701168f87082e9674b6557d2e3b223b502382eafba28a0511ce97b29c",
+    "sourceWordCount": 2596,
     "audience": [
       "administrator",
       "operator",

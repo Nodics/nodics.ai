@@ -38,6 +38,8 @@ module.exports = {
                     description: 'Immutable staged source version',
                 },
                 targetVersion: { type: 'string', required: false, description: 'Activated Online version' },
+                activationOperation: { type: 'object', required: false,
+                    description: 'Retained activation operation key and observed predecessor for target reconciliation' },
                 state: {
                     type: 'string',
                     required: true,

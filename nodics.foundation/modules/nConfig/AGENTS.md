@@ -1,5 +1,11 @@
 # nConfig Agent Contract
 
+Offline maintenance reuses `DefaultFrameworkInitializerService.loadMaintenanceServices`
+after effective configuration discovery. It loads utilities/classes/services in
+module order without lifecycle hooks, deployment scripts, generated runtime
+startup or provider initialization. Only the maintenance owner may then connect
+explicitly scoped providers; loading services does not grant mutation authority.
+
 This file gives AI coding agents mandatory guidance for this Nodics module or package boundary.
 
 ## Inheritance
@@ -27,6 +33,12 @@ This file gives AI coding agents mandatory guidance for this Nodics module or pa
 - Generated files must be recreated from source definitions; do not hand-maintain generated artifacts as source of truth.
 
 Apply [minimal configuration and effective inheritance](llm/contracts/configuration-inheritance-contract.md) before adding or relocating defaults. Validate the active owner and index order, and preserve array merge semantics and explicit operational gates.
+
+Top-level capability namespaces may declare `runtimeRoleProfiles` through the
+existing role-profile projection. Do not add accelerator/customer names to a
+Foundation allowlist to enable this mechanism. Profiles use only selected
+contributions and never activate modules or authorize imports. Preserve the
+existing profile merge precedence and remove unselected profile maps from CONFIG.
 
 Apply [server build and lifecycle ownership](../nConfig/llm/contracts/configuration-inheritance-contract.md#server-build-and-lifecycle-ownership).
 Keep generation, loading, cleanup and test discovery on the same selected server;

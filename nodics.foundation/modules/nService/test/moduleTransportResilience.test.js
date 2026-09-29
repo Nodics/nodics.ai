@@ -106,6 +106,31 @@ async function run() {
     await assert.rejects(service.fetch({ method: 'POST', uri: baseUri + '/unsafe', headers: {}, body: {}, json: true, nodicsContext: { moduleName: 'open' } }), error => error.code === 'EOPENBREAKER');
     assert.strictEqual(attempts.unsafe, beforeRejected, 'open circuits must fail without network traffic');
 
+    const opened = Object.assign({}, service._circuits.get('open'));
+    const realNow = Date.now;
+    try {
+        for (const fraction of [0.25, 0.5, 0.75]) {
+            Date.now = () => opened.openedAt + configuration.circuitBreaker.recoveryTimeoutMs * fraction;
+            await assert.rejects(service.fetch({ method: 'GET', uri: baseUri + '/safe', headers: {}, json: true,
+                nodicsContext: { moduleName: 'open' } }), error => error.code === 'EOPENBREAKER');
+            assert.deepStrictEqual(service._circuits.get('open'), opened,
+                'rejected registration polling must not extend recovery or count as a new remote failure');
+        }
+        Date.now = () => opened.openedAt + configuration.circuitBreaker.recoveryTimeoutMs;
+        let recovered = await service.fetch({ method: 'GET', uri: baseUri + '/safe', headers: {}, json: true,
+            nodicsContext: { moduleName: 'open' } });
+        assert.strictEqual(recovered.status, 'ok', 'a restored dependency must be reachable at the original recovery deadline');
+        assert.deepStrictEqual(service._circuits.get('open'), { state: 'closed', failures: 0, openedAt: null });
+
+        service._circuits.set('open', Object.assign({}, opened));
+        await assert.rejects(service.fetch({ method: 'POST', uri: baseUri + '/unsafe', headers: {}, body: {}, json: true,
+            nodicsContext: { moduleName: 'open' } }));
+        assert.strictEqual(service._circuits.get('open').openedAt, Date.now(),
+            'an actual failed half-open probe must start a fresh recovery interval');
+    } finally {
+        Date.now = realNow;
+    }
+
     await service.closeTransport();
     assert.strictEqual(service._agents, null);
     await new Promise(resolve => server.close(resolve));

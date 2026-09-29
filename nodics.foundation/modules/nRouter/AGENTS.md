@@ -34,6 +34,12 @@ This file gives AI coding agents mandatory guidance for this Nodics module or pa
   keyed disablement, invalid-group rejection and the `schemaGoverned` contract;
   schema selection must not enable an internal module's HTTP listener.
 
+Owner schema tests reuse `test/helpers/schemaExposure.cjs` for the common
+route-projection and fail-closed override matrix. Pass owner schemas and explicit
+exposure expectations; do not copy the router harness into each domain suite.
+The helper must be inert on import and restore globals/prototype helpers after
+success and failure. It does not prove live authorization or persistence.
+
 Register listener cleanup before opening ports. Await all bind results; a
 sibling failure closes listeners that succeeded. Missing HTTP configuration
 rejects startup through the normal lifecycle. Open HTTPS only when its port is
@@ -65,4 +71,4 @@ Keep frontend identity restrictions stable across address changes. See the
 [origin construction contract](llm/contracts/README.md#configured-browser-origin-construction)
 and [configuration examples](llm/examples/README.md#configure-browser-origins).
 
-nRouter enables CORS by default for the standard Nodics localhost origins: Axis 3100, Nexus 3200, Agora Apparel 3300, Electronics 3400, Telco 3500 and Circa 3600. These shared API security defaults apply independently of Platform/accelerator activation and frontend health. Environments declare only different addresses or policy; server denials and explicit disablement remain supported. nRouter never reads a frontend launch catalogue. Exact origins, header policy and route authorization remain enforced.
+nRouter supplies the framework browser origins, Axis 3100 and Nexus 3200. Customer application origins belong in project/environment CORS properties so all intended API compositions receive them independently of application activation or frontend health. Server denials and explicit disablement remain supported. nRouter never reads a frontend launch catalogue. Exact origins, header policy and route authorization remain enforced.

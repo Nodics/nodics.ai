@@ -11,6 +11,9 @@
 
 /** @module wasteCore/src/utils/statusDefinitions @description Defines stable Waste response and error codes. @layer utility @owner wasteCore @override Later modules may add codes while preserving existing meanings. */
 module.exports = {
+  ERR_WASTE_INSPECTION_INVALID: { code: '400', message: 'Invalid installed-data inspection request' },
+  ERR_WASTE_INSPECTION_CONFLICT: { code: '409', message: 'Installed Waste evidence differs from the qualified expectation' },
+  ERR_WASTE_INSPECTION_FORBIDDEN: { code: '403', message: 'Installed-data inspection requires tenant-wide inspection authority' },
   ERR_WASTE_CUSTOMER_FIELD_READ_ONLY: { code: '400', message: 'Only the item name and description can be edited by the customer' },
   ERR_WASTE_DESCRIPTOR_INVALID: { code: '422', message: 'An item property or material reference is invalid' },
   ERR_WASTE_CATALOGUE_UNAVAILABLE: { code: '503', message: 'The active waste catalogue cannot be loaded completely' },

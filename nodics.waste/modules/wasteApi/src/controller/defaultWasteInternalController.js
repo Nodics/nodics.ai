@@ -13,6 +13,10 @@
 
 /** @module wasteApi/src/controller/defaultWasteInternalController @description Maps secured Waste API requests into the internal Waste facade. @layer controller @owner wasteApi @override Later modules may add request mapping without changing route ownership. */
 module.exports = {
+    /** Inspects installed data through the read-only Waste owner operation. */
+    inspectInstalledData: function (request, callback) {
+        return this.invoke('inspectInstalledData', request, callback);
+    },
     /** Builds a normalized facade request from HTTP context. */
     request: function (request) {
         request = request || {};

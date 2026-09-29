@@ -132,7 +132,7 @@ test('partial indexing failure invokes tenant Product and Store compensation', a
     try {
         await assert.rejects(searchPublication.publish(request, input), /provider unavailable/);
         assert.equal(removedQueries.length, 1);
-        assert.deepEqual(removedQueries[0].query, { tenant: 'default', productCode: product.code, storeCode: 'sampleStore' });
+        assert.deepEqual(removedQueries[0].query, { tenant: 'default', productCode: product.code, storeCode: 'sampleStore', status: 'CURRENT' });
     } finally {
         global.SERVICE.DefaultSearchService.doSave = original;
     }

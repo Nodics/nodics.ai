@@ -38,3 +38,86 @@ module.exports = {
         }
     }
 };
+
+// Runtime service grants and explicit Online role are required; no customer authoring route.
+module.exports.promotion.policyPublicationAuthoring = {
+    createGoverned: { active: true, secured: true, authTokenTypes: ['access'],
+        accessGroups: ['runtimeConfigAdminUserGroup'], permission: 'publish.lifecycle.create',
+        apiExposure: 'promotionPublicationAuthoring', key: '/publication/policy', method: 'POST',
+        controller: 'DefaultPromotionPublicationTargetController', operation: 'createGoverned' }
+};
+module.exports.promotion.policyPublicationTarget = {
+    "prepare": {
+        "secured": true,
+        "authTokenTypes": [
+            "service"
+        ],
+        "accessGroups": [
+            "userGroup"
+        ],
+        "permissionConfig": "authSecurity.internalToken.routePermission",
+        "apiExposure": "commercePublicationIngestion",
+        "key": "/publication/policy/prepare",
+        "method": "POST",
+        "controller": "DefaultPromotionPublicationTargetController",
+        "operation": "prepare"
+    },
+    "status": {
+        "secured": true,
+        "authTokenTypes": [
+            "service"
+        ],
+        "accessGroups": [
+            "userGroup"
+        ],
+        "permissionConfig": "authSecurity.internalToken.routePermission",
+        "apiExposure": "commercePublicationIngestion",
+        "key": "/publication/policy/status",
+        "method": "POST",
+        "controller": "DefaultPromotionPublicationTargetController",
+        "operation": "status"
+    },
+    "activate": {
+        "secured": true,
+        "authTokenTypes": [
+            "service"
+        ],
+        "accessGroups": [
+            "userGroup"
+        ],
+        "permissionConfig": "authSecurity.internalToken.routePermission",
+        "apiExposure": "commercePublicationIngestion",
+        "key": "/publication/policy/activate",
+        "method": "POST",
+        "controller": "DefaultPromotionPublicationTargetController",
+        "operation": "activate"
+    },
+    "reconcile": {
+        "secured": true,
+        "authTokenTypes": [
+            "service"
+        ],
+        "accessGroups": [
+            "userGroup"
+        ],
+        "permissionConfig": "authSecurity.internalToken.routePermission",
+        "apiExposure": "commercePublicationIngestion",
+        "key": "/publication/policy/reconcile",
+        "method": "POST",
+        "controller": "DefaultPromotionPublicationTargetController",
+        "operation": "reconcile"
+    }
+};
+
+module.exports.promotion.policyPublicationTarget.authorize = {
+    secured: true, authTokenTypes: ['service'], accessGroups: ['userGroup'],
+    permissionConfig: 'authSecurity.internalToken.routePermission', apiExposure: 'commercePublicationIngestion',
+    key: '/publication/policy/authorize', method: 'POST',
+    controller: 'DefaultPromotionPublicationTargetController', operation: 'authorize'
+};
+module.exports.promotion.policyPublicationTarget.applyPublicationDecision = {
+    secured: true, authTokenTypes: ['service'], accessGroups: ['userGroup'],
+    permissionConfig: 'authSecurity.internalToken.routePermission', apiExposure: 'commercePublicationIngestion',
+    key: '/workflow/actions/applyPublicationDecision', method: 'POST',
+    controller: 'DefaultPromotionPublicationTargetController', operation: 'applyPublicationDecision'
+};

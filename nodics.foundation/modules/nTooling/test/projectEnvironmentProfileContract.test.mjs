@@ -141,6 +141,33 @@ test('domain composition resolver supports environment selections without projec
   });
 });
 
+test('domain selection rejects unknown entries and preserves independent customer ordering', () => {
+  const config = {
+    selection: 'all',
+    domains: [
+      { code: 'stock', frameworkGroup: 'inventory', projectPack: 'example.stock' },
+      { code: 'dispatch', frameworkGroup: 'fulfillment', projectPack: 'example.dispatch',
+        impliedProductSearchContributorDomains: ['stock'],
+        productSearchContributor: { serviceName: 'DispatchSearch', required: true } },
+    ],
+    sharedModules: [{ module: 'sharedSearch', minSelectedDomains: 2 }],
+  };
+  const snapshot = structuredClone(config);
+  assert.deepEqual(resolveDomainComposition(config, 'stock'), {
+    domains: ['stock'], frameworkGroups: ['inventory'], sharedModules: [],
+    projectPacks: ['example.stock'], productSearchContributors: {},
+  });
+  assert.deepEqual(resolveDomainComposition(config).domains, ['stock', 'dispatch']);
+  assert.deepEqual(resolveDomainComposition(config).sharedModules, ['sharedSearch']);
+  const reversed = resolveDomainComposition(config, 'dispatch,stock');
+  assert.deepEqual(reversed.domains, ['dispatch', 'stock']);
+  assert.deepEqual(reversed.projectPacks, ['example.dispatch', 'example.stock']);
+  assert.deepEqual(resolveDomainComposition(config, 'none').domains, []);
+  assert.throws(() => resolveDomainComposition(config, 'stock,unknown'), /Unsupported domain composition selection/);
+  assert.throws(() => resolveDomainComposition(config, 'unknown'), /Unsupported domain composition selection/);
+  assert.deepEqual(config, snapshot, 'Selections must not mutate the caller declaration');
+});
+
 test('project environment profile rejects root project descriptors', () => {
   const projectRoot = fs.mkdtempSync(path.join(os.tmpdir(), 'nodics-env-profile-'));
   writeJson(path.join(projectRoot, 'package.json'), {
@@ -189,6 +216,55 @@ test('an explicitly missing environment never falls back to a local profile', t 
   assert.throws(() => readProjectEnvironmentConfiguration(root, 'production'), /Select an available environment/);
 });
 
+test('runtime topology derives platform startup admission for dependent backends', t => {
+  const root = fs.mkdtempSync(path.join(os.tmpdir(), 'nodics-topology-admission-'));
+  t.after(() => fs.rmSync(root, { recursive: true, force: true }));
+  const writeProperties = (directory, properties) => {
+    fs.mkdirSync(path.join(directory, 'config'), { recursive: true });
+    fs.writeFileSync(path.join(directory, 'config/properties.js'), 'module.exports = ' + JSON.stringify(properties));
+  };
+  writeJson(path.join(root, 'package.json'), { name: 'admission.application' });
+  writeEnvironment(path.join(root, 'envs', 'admissionLocal'), {});
+  writeJson(path.join(root, 'envs/admissionLocal/platformServer/package.json'), {
+    name: 'platformServer',
+    index: '1001.01',
+    nodics: {
+      kind: 'server',
+      runtimeModule: true,
+      displayName: 'Platform Server',
+      runtimeTooling: { code: 'platform', script: 'start:platform', order: 0 },
+    },
+  });
+  writeProperties(path.join(root, 'envs/admissionLocal/platformServer'), {
+    runtimeRole: { code: 'PLATFORM' },
+    servers: { default: { endpoint: { httpPort: 4300 } } },
+  });
+  writeJson(path.join(root, 'envs/admissionLocal/processServer/package.json'), {
+    name: 'processServer',
+    index: '1001.02',
+    nodics: {
+      kind: 'server',
+      runtimeModule: true,
+      displayName: 'Process Server',
+      runtimeTooling: { code: 'process', script: 'start:process', order: 1 },
+    },
+  });
+  writeProperties(path.join(root, 'envs/admissionLocal/processServer'), {
+    runtimeRole: { code: 'PROCESS' },
+    servers: { default: { endpoint: { httpPort: 4330 } } },
+  });
+
+  const profile = readProjectEnvironmentConfiguration(root, 'admissionLocal');
+  const platform = profile.topology.groups.backends.find(runtime => runtime.code === 'platform');
+  const processRuntime = profile.topology.groups.backends.find(runtime => runtime.code === 'process');
+  assert.deepEqual(processRuntime.dependsOn, ['platform']);
+  assert.deepEqual(platform.readinessChecks, [{
+    label: 'BackOffice public bootstrap',
+    path: '/nodics/backoffice/v0/bootstrap/public',
+    headers: { 'x-nodics-client-contract-version': '1' },
+  }]);
+});
+
 
 test('acceptance coordinates and origins follow the owning endpoint without a second port declaration', t => {
   const root = fs.mkdtempSync(path.join(os.tmpdir(), 'nodics-endpoint-owner-'));
@@ -205,6 +281,14 @@ test('acceptance coordinates and origins follow the owning endpoint without a se
   const first = readProjectEnvironmentConfiguration(root, 'qa');
   assert.equal(first.acceptance.check.port, 5490);
   assert.equal(projectEndpointUrl(first, 'api'), 'http://api.example.test:5490');
+  first.topology.groups.backends[0].browserEndpoint = { httpHost: 'public.example.test', httpPort: 6490 };
+  assert.equal(projectEndpointUrl(first, 'api', 'backends', 'published'), 'http://public.example.test:6490');
+  assert.equal(projectEndpointUrl(first, 'api'), 'http://api.example.test:5490');
+  assert.throws(() => projectEndpointUrl(first, 'api', 'backends', 'unknown'), /valid endpoint address/);
+  assert.throws(() => projectEndpointUrl(first, 'absent', 'backends', 'published'), /one configured endpoint/);
+  first.topology.groups.backends[0].enabled = false;
+  assert.throws(() => projectEndpointUrl(first, 'api', 'backends', 'published'), /one configured endpoint/);
+  delete first.topology.groups.backends[0].enabled;
   assert.equal(first.topology.groups.frontends, undefined);
   assert.throws(() => projectEndpointUrl(first, 'editor', 'frontends'), /valid endpoint group/);
   const file = path.join(env, 'api/config/properties.js');

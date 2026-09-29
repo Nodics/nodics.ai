@@ -75,7 +75,10 @@ module.exports = {
                     });
                 });
             } else {
-                request.schemaModel.updateItems(request).then(result => {
+                const concurrency = typeof SERVICE !== 'undefined' && SERVICE.DefaultModelConcurrencyService;
+                const update = concurrency && concurrency.getField(request.schemaModel.rawSchema)
+                    ? concurrency.execute(request, 'update') : request.schemaModel.updateItems(request);
+                update.then(result => {
                     response.success = {
                         success: true,
                         code: 'SUC_UPD_00000',

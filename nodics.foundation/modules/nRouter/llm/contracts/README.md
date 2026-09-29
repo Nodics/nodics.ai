@@ -4,6 +4,17 @@ This folder contains module-specific AI/developer contracts for `nodics.foundati
 
 Use these files for rules that are more specific than root `AGENTS.md` and the module `AGENTS.md`, especially extension boundaries, override expectations, testing rules, security constraints, and generated-artifact responsibilities.
 
+## Schema Exposure Tests
+
+Schema owners reuse `test/helpers/schemaExposure.cjs` for the common selective
+route-projection matrix. Fixtures and explicit exposed/service-only decisions
+remain with the schema owner. The harness opens no listeners, performs no
+persistence and restores caller globals and string helpers on success/failure.
+`schemaRouteGroupContract.test.js` validates it with independent fixtures.
+Projection checks complement, rather than replace, authorization, schema access
+policy and effective-runtime generation tests. Keep invariant checks here instead
+of duplicating the router harness into every functional module.
+
 ## Configurable route permissions
 
 A server-authored route may declare `jsonBodyLimit` for a bounded JSON intake
@@ -107,9 +118,9 @@ credential checks. Persisted-schema reads remain an explicit generation option.
 
 ## Capability-owned exposure defaults
 
-Each route-owning capability declares a boolean `apiExposure.categories.<category>.enabled` default in its own properties. Loading another functional group must not be needed to obtain that category's policy. nRouter owns enforcement and the common `schemaApi` policy; category enablement never replaces authentication, token type, permission, tenant, runtime-role or record authorization.
+Each route-owning capability declares `apiExposure.categories.<category>` in its own properties. An omitted `enabled` inherits nRouter's common `apiExposure.default.enabled`; an explicit boolean overrides that default. Loading another functional group must not be needed to declare the category. nRouter owns enforcement and the common `schemaApi` policy; category enablement never replaces authentication, token type, permission, tenant, runtime-role or record authorization.
 
-Unknown categories are denied by default. `apiExposure.unknown.enabled: true` is an explicit legacy compatibility exception. A named category with an explicit nonboolean enabled value is denied. Deployment/node/tenant category overrides remain authoritative. Declare customer categories in their actual customer capability. Do not copy every category into each project, infer categories from URLs, or enable all APIs when merely selecting internal provider/knowledge modules.
+The framework common default is enabled. Unknown categories inherit that default unless `apiExposure.unknown.enabled` explicitly overrides it. Missing or nonboolean effective enablement is denied; an explicit category denial cannot be undone by the common default. Deployment/node/tenant overrides remain authoritative. Declare customer categories in their actual customer capability even when inheriting the default. Do not copy every category into each project, infer categories from URLs, or change exposure when merely selecting internal provider/knowledge modules. Exposure is route availability, not permission to import, initialize or publish data.
 
 OpenAPI options retain the canonical environment/server returned by nTooling runtime metadata resolution, including short aliases. Resolve before populating runtime E/S arguments; never pass an unresolved alias into nConfig. Invalid selected servers must fail rather than fall back to a different graph.
 
@@ -162,4 +173,4 @@ rejection, independent declarations and initialization rejection. This capabilit
 changes browser reachability only; request authorization remains independently
 enforced by the route/authentication owners.
 
-nRouter enables CORS by default for the standard Nodics localhost origins: Axis 3100, Nexus 3200, Agora Apparel 3300, Electronics 3400, Telco 3500 and Circa 3600. These shared API security defaults apply independently of Platform/accelerator activation and frontend health. Environments declare only different addresses or policy; server denials and explicit disablement remain supported. nRouter never reads a frontend launch catalogue. Exact origins, header policy and route authorization remain enforced.
+nRouter supplies the framework browser origins, Axis 3100 and Nexus 3200. Customer application origins belong in project/environment CORS properties so all intended API compositions receive them independently of application activation or frontend health. Server denials and explicit disablement remain supported. nRouter never reads a frontend launch catalogue. Exact origins, header policy and route authorization remain enforced.

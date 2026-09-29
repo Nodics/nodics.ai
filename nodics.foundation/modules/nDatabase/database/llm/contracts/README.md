@@ -1,5 +1,52 @@
 # database AI Contracts
 
+## Installed Version Migration
+
+The [operator contract](installed-version-migration.md) owns generic orchestration,
+source/variant sequencing, native-local CLI scope and interrupted RUNNING recovery.
+Use the [scoped example](../examples/installed-version-migration.md), not a copied
+project script or startup import. Terminal completion is not restart approval.
+
+## Generated Read Dispatch
+
+The generated get pipeline validates `resolveReadMethod` before progressing to
+cache lookup and dispatches `readItems` inside its existing error/response path.
+The base supports unchanged ordinary/HISTORY reads; a selected CURRENT policy
+requires the vService capability and a supporting versioned provider. Variants
+must not copy permission, record ownership, tenant, cache or response machinery.
+
+## Installed Index Inspection
+
+The existing schema index controller/facade/service owns read-only inspection of
+one selected module/schema. The schema-maintenance GET route accepts only human
+access-token principals, requires `adminGroup` and `system.schema.view`, and
+retains its route guards independently of service authorization. The service
+requires a human principal and `system.schema.view`, delegating administrative
+group decisions to `DefaultIdentityGovernanceService.hasAdministrativeAccess`
+with effective user groups. Its existing `identityGovernance.administrativeGroups`
+policy is the authority for internal callers; no copied group list or literal
+belongs in inspection code. Missing/empty policy grants no administrative access.
+Changing service policy does not grant access through the independently guarded
+HTTP route. Tenant comes from verified
+authentication, never route/body overrides. Only the selected master-channel model
+is read; unlike rebuild operations, inspection cannot fan out over tenants.
+
+Providers implement `inspectIndexes(model)`. MongoDB returns effective desired
+indexes, installed index metadata, total records and records missing `versionId`.
+No record bodies, connection names or credentials are returned. Unsupported
+providers and unavailable models reject. Counts are separate observations, not
+an atomic snapshot or a full validation of all existing version values.
+`migrationAuthorized` remains false. Neither a zero missing-version count nor
+matching indexes qualifies a source capture, migration, approval or activation.
+
+Later-layer providers may customize storage inspection while preserving scope,
+read-only behavior and fail-closed errors. Operators inspect the exact runtime
+and retain provenance before a separately reviewed migration. Developers and AI
+tools use `schemaIndexServiceContract.test.js` and the MongoDB index contract;
+these cover alternate tenants, permission denial, unavailable owners, controller
+callbacks and no maintenance writes. Business users receive no additional
+authoring/publication capability from this administrative API.
+
 This folder contains module-specific AI/developer contracts for `nodics.foundation/modules/nDatabase/database`.
 
 Use these files for rules that are more specific than root `AGENTS.md` and the module `AGENTS.md`, especially extension boundaries, override expectations, testing rules, security constraints, and generated-artifact responsibilities.

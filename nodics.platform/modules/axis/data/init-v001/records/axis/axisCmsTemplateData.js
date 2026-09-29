@@ -11,7 +11,7 @@
 
 /**
  * @module axis/data/init-v001/records/axis/axisCmsTemplateData
- * @description Defines the initial Axis authentication and secured dashboard page templates.
+ * @description Declares initial Axis page templates.
  * @layer data
  * @owner axis
  */
@@ -25,42 +25,71 @@ const withAxisOwnership = records => {
 };
 
 module.exports = withAxisOwnership({
-    record0: {
-        code: 'axisAuthenticationPageTemplate',
-        name: 'Axis Authentication Page',
-        renderer: 'axis.template.authentication',
-        contractVersion: 0,
-        slots: ['axisAuthenticationShowcaseSlot', 'axisAuthenticationBrandSlot', 'axisAuthenticationIntroductionSlot', 'axisAuthenticationFormSlot',
-            'axisAuthenticationAssistanceSlot', 'axisAuthenticationLegalSlot'],
-        active: true
+    "record0": {
+        "code": "axisAuthenticationPageTemplate",
+        "name": "Axis Authentication Page",
+        "renderer": "axis.template.authentication",
+        "contractVersion": 0,
+        "slots": [
+            "axisAuthenticationShowcaseSlot",
+            "axisAuthenticationBrandSlot",
+            "axisAuthenticationIntroductionSlot",
+            "axisAuthenticationFormSlot",
+            "axisAuthenticationAssistanceSlot",
+            "axisAuthenticationLegalSlot"
+        ],
+        "active": true
     },
-    record1: {
-        code: 'axisDashboardPageTemplate',
-        name: 'Axis Dashboard Page',
-        renderer: 'axis.template.dashboard',
-        contractVersion: 0,
-        slots: ['axisDashboardWelcomeSlot', 'axisDashboardSummarySlot',
-            'axisDashboardActionsSlot', 'axisDashboardActivitySlot', 'axisDashboardHelpSlot'],
-        active: true
+    "record1": {
+        "code": "axisAssistantPageTemplate",
+        "name": "Axis Assistant Workspace",
+        "renderer": "axis.template.assistant",
+        "contractVersion": 0,
+        "slots": [
+            "axisAssistantHeaderSlot",
+            "axisAssistantWorkspaceSlot"
+        ],
+        "active": true
     },
-    record2: {
-        code: 'axisAssistantPageTemplate', name: 'Axis Assistant Workspace',
-        renderer: 'axis.template.assistant', contractVersion: 0,
-        slots: ['axisAssistantHeaderSlot', 'axisAssistantWorkspaceSlot'], active: true
+    "record2": {
+        "code": "axisSchemaWorkbenchPageTemplate",
+        "name": "Axis Schema Workbench",
+        "renderer": "axis.template.schema-workbench",
+        "contractVersion": 0,
+        "slots": [
+            "axisSchemaWorkbenchHeaderSlot",
+            "axisSchemaWorkbenchContentSlot"
+        ],
+        "active": true
     },
-    record3: {
-        code: 'axisSchemaWorkbenchPageTemplate', name: 'Axis Schema Workbench',
-        renderer: 'axis.template.schema-workbench', contractVersion: 0,
-        slots: ['axisSchemaWorkbenchHeaderSlot', 'axisSchemaWorkbenchContentSlot'], active: true
+    "record3": {
+        "code": "axisMediaManagementPageTemplate",
+        "name": "Axis Media Management",
+        "renderer": "axis.template.media-management",
+        "contractVersion": 0,
+        "slots": [
+            "axisMediaManagementWorkspaceSlot"
+        ],
+        "active": true
     },
-    record4: {
-        code: 'axisMediaManagementPageTemplate', name: 'Axis Media Management',
-        renderer: 'axis.template.media-management', contractVersion: 0,
-        slots: ['axisMediaManagementWorkspaceSlot'], active: true
+    "record4": {
+        "code": "axisPlatformPageTemplate",
+        "name": "Axis Platform Workspace",
+        "renderer": "axis.template.platform",
+        "contractVersion": 0,
+        "slots": [
+            "axisPlatformContentSlot"
+        ],
+        "active": true
     },
-    record5: {
-        code: 'axisPlatformPageTemplate', name: 'Axis Platform Workspace',
-        renderer: 'axis.template.platform', contractVersion: 0,
-        slots: ['axisPlatformContentSlot'], active: true
+    "record5": {
+        "code": "axisDashboardWorkspaceTemplate",
+        "name": "Axis Governed Dashboard",
+        "renderer": "axis.template.dashboard",
+        "contractVersion": 1,
+        "slots": [
+            "axisDashboardWorkspaceSlot"
+        ],
+        "active": true
     }
 });

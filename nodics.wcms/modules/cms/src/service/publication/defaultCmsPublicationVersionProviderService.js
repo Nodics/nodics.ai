@@ -68,6 +68,19 @@ module.exports = {
             repairEvidence: request.repairEvidence === true,
             operationKey: publication.code + ':reconcile:' + String(publication.revision) }, request);
     },
+    /** Recovers a target deploy whose Online commit succeeded but whose transport response failed. */
+    recoverCommittedDeploy: async function (publication, manifest, request, error) {
+        let operationKey = publication.code + ':activate:' + String(publication.revision);
+        let reconciliation = await this.transport().reconcile({ manifestCode: manifest.code,
+            repairEvidence: true, operationKey: operationKey }, request).catch(() => undefined);
+        if (!reconciliation || !['CONSISTENT', 'REPAIRED'].includes(reconciliation.status)) throw error;
+        let status = await this.transport().getStatus({ manifestCode: manifest.code }, request).catch(() => undefined);
+        let deployReceipt = [].concat(status && status.receipts || [])
+            .find(item => item.operation === 'DEPLOY' && item.status === 'ONLINE');
+        return { version: manifest.code,
+            previousOnlineVersion: deployReceipt && deployReceipt.previousOnlineVersion,
+            recovered: true, recoveryStatus: reconciliation.status };
+    },
     /** Builds an immutable manifest and atomically activates its Online pointer. */
     activate: async function (publication, request) {
         this.assertStagedRuntime();
@@ -88,8 +101,12 @@ module.exports = {
                     operationKey: publication.code + ':prepare:' + child.code + ':' + String(publication.revision) }, request);
             }
         }
-        return this.transport().deploy({ manifest: manifest,
-            operationKey: publication.code + ':activate:' + String(publication.revision) }, request);
+        try {
+            return await this.transport().deploy({ manifest: manifest,
+                operationKey: publication.code + ':activate:' + String(publication.revision) }, request);
+        } catch (error) {
+            return this.recoverCommittedDeploy(publication, manifest, request, error);
+        }
     },
     /** Atomically restores a previously active immutable manifest. */
     rollback: async function (publication, targetVersion, request) {

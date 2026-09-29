@@ -18,11 +18,27 @@
  */
 module.exports = {
   tooling: {
+        commands: {
+            'acceptance:local': {
+                projectHome: true,
+                acceptanceContract: true,
+                handler: '@nTooling/node-script',
+                script: 'src/service/acceptance/defaultApplicationBootstrapAcceptanceService.mjs'
+            },
+            'acceptance:capability-registry': {
+                projectHome: true,
+                description: 'Verify canonical registration, activation visibility and state restoration through BackOffice APIs.',
+                acceptanceContract: true,
+                handler: '@nTooling/node-script',
+                script: 'src/service/acceptance/defaultCapabilityRegistryAcceptanceService.mjs'
+            }
+        },
         acceptance: {
             "capabilityRegistry": {
                 "foundationModule": "nodics.foundation",
                 "retiredModule": "nodics.core",
                 "functionalModule": "nodics.process",
+                "technicalModules": ["workflow", "cronjob"],
                 "runtime": {
                     "role": "PROCESS"
                 }
@@ -44,6 +60,13 @@ module.exports = {
   },
 
   backofficeApplicationInitialization: {
+    planPresentation: {
+      capabilities: { title: "Business capabilities", summary: "Required capabilities are shared with other applications that use them." },
+      preparation: { title: "Data and media", summary: "The owning modules define the preparation order and required data. Optional packages remain separate." },
+      publication: { title: "Review and publish", summary: "Prepare the application for publication through its governed release process." },
+      publicationReview: "Review and approve publication",
+      publicationPrepare: "Prepare publication",
+    },
     target: {
       moduleName: "cms",
       connectionType: "abstract",

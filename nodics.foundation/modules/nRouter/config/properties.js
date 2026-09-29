@@ -83,14 +83,10 @@ module.exports = {
       allowedOrigins: [],
       deniedOrigins: [],
       originDefaults: { protocol: "http", host: "localhost" },
-      // Standard Nodics browser origins; independent of frontend lifecycle.
+      // Framework browser origins; applications supply their own environment policy.
       originEndpoints: {
         axis: { port: 3100 },
         nexus: { port: 3200 },
-        agora: { port: 3300 },
-        agoraElectronics: { port: 3400 },
-        agoraTelco: { port: 3500 },
-        circa: { port: 3600 },
       },
       originEndpointOverrides: {},
       allowedMethods: ["GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS"],

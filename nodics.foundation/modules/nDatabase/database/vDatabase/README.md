@@ -15,6 +15,10 @@ The module contributes schema metadata under `default.versioned`:
 
 This establishes a source definition for versioned data without making every persistent schema versioned. An owning module enables the capability independently on each schema with `isVersionedEnabled: true`. The runtime then composes the versioned contract and exposes the existing internal `schemaModel.versioned` flag consumed by version-aware services and providers.
 
+The version initializer supplies zero only when `versionId` is omitted. Explicit
+values are not coerced, so invalid input remains visible to the existing
+validation/provider boundary. See the [per-schema contract](llm/contracts/per-schema-versioning-contract.md).
+
 ```js
 module.exports = {
     catalog: {

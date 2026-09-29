@@ -96,6 +96,56 @@ requireSuiteIncludes('full', [
     'basic'
 ]);
 
+// Owner contracts must be reachable from both release gates, not only runnable by hand.
+const requiredOwnerContracts = [
+    'nodics.foundation/modules/nService/vService/test/managedMutationLayerContract.test.js',
+    'nodics.foundation/modules/nTooling/test/projectLocalRuntimeCredentialService.test.js',
+    'nodics.foundation/modules/nData/nImport/import/test/dataReleaseSelectionPolicy.test.js',
+    'nodics.foundation/modules/nTooling/test/generatedRuntimeDriverContract.test.js',
+    'nodics.loyalty/test/loyaltyGeneratedRuntimeContract.test.js',
+    'nodics.waste/test/wasteGeneratedRuntimeContract.test.js',
+    'nodics.accelerators/modules/waste/modules/eWaste/test/eWasteManifestOwnershipContract.test.js',
+    'nodics.communication/test/communicationActivationDataReleaseContract.test.js',
+    'nodics.platform/modules/profile/test/profileRouteContract.test.js',
+    'nodics.process/modules/workflow/test/processContributionAdoption.test.js',
+    'nodics.process/modules/workflow/test/processRemoteActionAdapter.test.js',
+    'nodics.wcms/modules/editorial/test/editorialWorkflowContribution.test.js',
+    'nodics.wcms/modules/editorial/test/editorialWorkflowEndpoint.test.js',
+    'nodics.accelerators/modules/waste/modules/eWaste/test/eWasteCatalogueDiscovery.test.js',
+    'nodics.accelerators/modules/waste/modules/eWaste/test/eWasteArrivalPolicy.test.js',
+    'nodics.accelerators/modules/waste/modules/eWaste/test/eWasteGuidanceHistory.test.js',
+    'nodics.accelerators/modules/waste/modules/eWaste/test/eWasteWeightValuationPrecision.test.js',
+    'nodics.waste/modules/wasteCore/test/wasteDataContributionPolicyContract.test.js',
+    'nodics.location/modules/locationCore/test/locationDistanceService.test.js',
+    'nodics.foundation/modules/nData/nImport/import/test/dataReleaseService.test.js',
+    'nodics.commerce/modules/baseCommerce/modules/product/test/productLocalizedSearchPublicationContract.test.js',
+    'nodics.commerce/modules/baseCommerce/modules/pricing/test/customerPriceSummaryContract.test.js',
+    'nodics.commerce/modules/baseCommerce/modules/inventory/test/customerAvailabilitySummaryContract.test.js',
+    'nodics.commerce/modules/checkout/modules/order/test/orderReverseLifecycleDepthContract.test.js',
+    'nodics.accelerators/modules/electronics/modules/electronicsProduct/test/electronicsProductContract.test.js',
+    'nodics.accelerators/modules/telco/modules/telcoCatalog/test/telcoContract.test.js',
+    'nodics.accelerators/modules/domainCommerceCore/test/domainCommerceCoreContract.test.js',
+    'nodics.foundation/modules/nTooling/test/projectDocumentationIdentityContract.test.js',
+    'nodics.copilot/modules/copilotKnowledge/test/copilotKnowledgeStartupContract.test.js',
+    'nodics.foundation/modules/nTooling/test/projectConfigurationHarness.test.js',
+    'nodics.foundation/modules/nTooling/test/projectRuntimePreparationContract.test.js',
+    'nodics.foundation/modules/nTooling/test/projectTopologyLifecycleContract.test.mjs',
+    'nodics.foundation/modules/nTooling/test/projectContainerContracts.test.mjs',
+    'nodics.foundation/modules/nPublish/test/publicationOperationsRouteContract.test.js',
+    'nodics.wcms/modules/cms/test/cmsPublicationTargetRouteContract.test.js',
+    'nodics.loyalty/test/loyaltySchemaBoundaryContract.test.js',
+    'nodics.waste/test/wasteSchemaBoundaryContract.test.js',
+    'nodics.foundation/modules/nRouter/test/schemaRouteGroupContract.test.js',
+    'nodics.foundation/modules/nTooling/test/fullTestSuiteCoverageContract.test.js'
+];
+['basic', 'full'].forEach(suiteName => {
+    const tokens = suiteTokens(suiteName);
+    requiredOwnerContracts.forEach(file => {
+        requireFile(file);
+        assert(tokens.includes(file), suiteName + ' must execute the owner contract: ' + file);
+    });
+});
+
 requireSuiteIncludes('import', [
     'importTenantPrecedence.test.js',
     'testTenantImportIsolation.test.js',

@@ -24,6 +24,7 @@ import routerProperties from '../../../../nRouter/config/properties.js';
 import httpHardening from '../../../../nRouter/src/service/defaultHttpHardeningService.js';
 import configurationBindings from '../../../../nConfig/src/service/defaultConfigurationBindingService.js';
 import configuration from '../../../../nConfig/src/service/DefaultFrameworkInitializerService.js';
+import configurationProbe from './defaultProjectConfigurationProbeService.js';
 import { readProjectManifest, resolveProjectCode, resolveTemplate, selectEnvironmentConfiguration } from './defaultProjectContainerConfigurationService.mjs';
 
 /** Projects startup/readiness coordinates from actual backend server configuration. @param {string} projectRoot Project root. @param {string} environmentCode Optional selected environment. @returns {Object} Derived tooling inputs, not another persisted configuration authority. */
@@ -48,11 +49,14 @@ export function readProjectEnvironmentConfiguration(projectRoot, environmentCode
     return [{ code: entry.name, moduleIndex: metadata.index, label: metadata.nodics.displayName || metadata.name,
       ...(launch.script ? {} : { command: 'nodics', args: ['start', '--environment=' + environment, '--server=' + entry.name] }),
       ...launch, port: endpoint.httpPort, host: endpoint.httpHost || 'localhost', server: entry.name,
+      browserEndpoint: runtime.servers?.default?.browserEndpoint,
       role: typeof runtime.runtimeRole === 'string' ? runtime.runtimeRole : runtime.runtimeRole?.code,
+      asyncServerStartup: runtime.backofficeRegistration?.asyncServerStartup !== false,
       initializationProfiles: Object.entries(runtime.data?.dataReleases?.initializationProfiles || {})
         .filter(([, profile]) => profile && typeof profile === 'object' && !Array.isArray(profile) && profile.enabled !== false)
         .map(([code, profile]) => ({ code, template: profile.template })) }];
   });
+  applyRuntimeTopologyDefaults(backends);
   const moduleOrder = configuration.sortModules(backends.map(runtime => runtime.moduleIndex));
   backends.sort((left, right) => (left.order ?? moduleOrder.indexOf(left.moduleIndex)) - (right.order ?? moduleOrder.indexOf(right.moduleIndex)));
   const topology = properties.tooling?.topology || {};
@@ -68,10 +72,59 @@ export function readProjectEnvironmentConfiguration(projectRoot, environmentCode
   };
 }
 
-/** Constructs an HTTP origin from one explicitly selected, configured runtime. @param {Object} configuration Resolved deployment projection. @param {string|Object} code Declared backend code or semantic role selector. @param {string} group Topology group. @returns {string} Validated origin; missing or ambiguous selections reject. */
-export function projectEndpointUrl(configuration, code, group = 'backends') {
+/** Reads acceptance settings from an explicitly selected active runtime graph, without activating providers or listeners. */
+export function projectRuntimeAcceptance(projectRoot, configuration, selection) {
+  const runtime = projectRuntime(configuration, selection);
+  const effective = configurationProbe.read({
+    projectRoot, environment: configuration.environment, server: runtime.server,
+    inheritEnvironment: true,
+  });
+  return configurationBindings.merge(configuration.acceptance || {}, effective.properties.tooling?.acceptance || {});
+}
+
+function runtimeCode(runtime) {
+  return runtime?.code || runtime?.server || '';
+}
+
+function isPlatformRuntime(runtime) {
+  return runtimeCode(runtime) === 'platform' || runtime?.server === 'platformServer' || runtime?.role === 'PLATFORM';
+}
+
+function mergeDependency(runtime, dependency) {
+  const existing = new Set([].concat(runtime.dependsOn || []).filter(Boolean));
+  existing.add(dependency);
+  runtime.dependsOn = [...existing];
+}
+
+function mergeReadinessCheck(runtime, check) {
+  const checks = [].concat(runtime.readinessChecks || []);
+  if (!checks.some(item => item && item.label === check.label && item.path === check.path)) checks.push(check);
+  runtime.readinessChecks = checks;
+}
+
+function applyRuntimeTopologyDefaults(backends) {
+  const platform = backends.find(isPlatformRuntime);
+  if (!platform) return;
+  const platformCode = runtimeCode(platform);
+  for (const runtime of backends) {
+    if (!isPlatformRuntime(runtime)) mergeDependency(runtime, platformCode);
+  }
+  mergeReadinessCheck(platform, {
+    label: 'BackOffice public bootstrap',
+    path: '/nodics/backoffice/v0/bootstrap/public',
+    headers: { 'x-nodics-client-contract-version': '1' }
+  });
+}
+
+/** Constructs an HTTP origin from one explicitly selected, configured runtime. @param {Object} configuration Resolved deployment projection. @param {string|Object} code Declared backend code or semantic role selector. @param {string} group Topology group. @param {string} address Runtime listener or explicitly published browser endpoint. @returns {string} Validated origin; missing or ambiguous selections reject. */
+export function projectEndpointUrl(configuration, code, group = 'backends', address = 'runtime') {
   if (group !== 'backends') throw new Error('Select a valid endpoint group');
-  const { host = 'localhost', protocol = 'http', port } = projectRuntime(configuration, code);
+  if (!['runtime', 'published'].includes(address)) throw new Error('Select a valid endpoint address');
+  const runtime = projectRuntime(configuration, code);
+  if (address === 'published' && !runtime.browserEndpoint) throw new Error('Published endpoint is not configured');
+  const { host = 'localhost', protocol = 'http', port } = address === 'published'
+    ? { host: runtime.browserEndpoint.httpHost || '', port: runtime.browserEndpoint.httpPort }
+    : runtime;
   if (!['http', 'https'].includes(protocol) || typeof host !== 'string' || !host || ['0.0.0.0', '::', '[::]'].includes(host) || /[\s\\/@?#]/.test(host) ||
       !Number.isSafeInteger(port) || port < 1 || port > 65535) throw new Error('Invalid configured endpoint: ' + code);
   const hostname = host.includes(':') && !host.startsWith('[') ? '[' + host + ']' : host;

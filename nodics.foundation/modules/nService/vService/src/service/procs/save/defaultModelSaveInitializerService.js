@@ -75,7 +75,11 @@ module.exports = {
                     'Failed saving versioned schema: ' + request.schemaModel.schemaName, 'ERR_SAVE_00000'));
             });
         } else {
-            request.schemaModel.saveItems(request).then(success => {
+            Promise.resolve().then(() => {
+                const concurrency = typeof SERVICE !== 'undefined' && SERVICE.DefaultModelConcurrencyService;
+                return concurrency && concurrency.getField(request.schemaModel.rawSchema)
+                    ? concurrency.execute(request, 'save') : request.schemaModel.saveItems(request);
+            }).then(success => {
                 let model = {
                     success: true,
                     code: 'SUC_SAVE_00000'

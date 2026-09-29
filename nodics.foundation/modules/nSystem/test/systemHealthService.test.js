@@ -110,9 +110,14 @@ const service = require('../src/service/health/defaultHealthService');
     assert(optionalFailure.data.checks.some(check => check.name === 'optionalSearch' && check.status === 'DOWN' && check.required === false));
 
     service.resetReadinessContributors();
-    service.registerReadinessContributor('requiredDatabase', { required: true, check: async function () { return false; } });
+    service.registerReadinessContributor('requiredDatabase', { required: true, check: async function () {
+        return { status: 'DOWN', reasonCode: 'DATABASE_UNAVAILABLE', suggestedAction: 'Start database runtime' };
+    } });
     let requiredFailure = await service.getReadiness({});
     assert.strictEqual(requiredFailure.data.status, 'DOWN', 'required dependency failure must remove traffic');
+    let requiredFailureDetails = await service.getReadinessDetails({});
+    assert(requiredFailureDetails.data.checks.some(check => check.name === 'requiredDatabase' &&
+        check.reasonCode === 'DATABASE_UNAVAILABLE' && check.suggestedAction === 'Start database runtime'));
 
     service.resetReadinessContributors();
     service.registerReadinessContributor('slowDependency', { required: true, timeoutMs: 5, check: function () { return new Promise(() => {}); } });

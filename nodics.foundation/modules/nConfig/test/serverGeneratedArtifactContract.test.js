@@ -22,6 +22,33 @@ const loader = require('../src/service/defaultFilesLoaderService');
 const initializer = require('../src/service/DefaultFrameworkInitializerService');
 const infra = require('../src/service/defaultInfraService');
 
+test('maintenance loads services in effective order without lifecycle or generated startup', async () => {
+    const previous = { NODICS: global.NODICS, UTILS: global.UTILS, loadFiles: loader.loadFiles };
+    const descriptors = Object.getOwnPropertyDescriptors(String.prototype);
+    const calls = [];
+    const first = { name: 'capability' }, second = { name: 'extension' };
+    const owner = Object.assign({}, initializer, {
+        LOG: { info() {}, debug() {}, warn() {}, error() {} },
+        initUtilities: async () => calls.push('utilities'),
+        loadServices: async module => calls.push(module.name),
+        loadModule: () => assert.fail('module init must not run'),
+        initEntities: () => assert.fail('entity init must not run'),
+    });
+    try {
+        global.NODICS = { getIndexedModules: () => new Map([[1, first], [2, second]]) };
+        global.UTILS = {};
+        loader.loadFiles = source => { assert.equal(source, '/src/utils/utils.js'); calls.push('utils'); };
+        await owner.loadMaintenanceServices();
+        assert.deepEqual(calls, ['utils', 'utilities', 'capability', 'extension']);
+        owner.loadServices = async () => { throw new Error('invalid contribution'); };
+        await assert.rejects(owner.loadMaintenanceServices(), /invalid contribution/);
+    } finally {
+        global.NODICS = previous.NODICS; global.UTILS = previous.UTILS; loader.loadFiles = previous.loadFiles;
+        for (const key of Object.getOwnPropertyNames(String.prototype)) if (!descriptors[key]) delete String.prototype[key];
+        Object.defineProperties(String.prototype, descriptors);
+    }
+});
+
 // Keep only host logging and schema metadata in memory; execute the actual writers and loaders.
 test('server build, clean and node loading preserve other servers and authored overrides', async () => {
     const root = fs.mkdtempSync(path.join(os.tmpdir(), 'nodics-server-artifacts-'));

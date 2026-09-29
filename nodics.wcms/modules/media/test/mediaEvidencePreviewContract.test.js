@@ -33,13 +33,14 @@ const context = { ...service, owner: async request => {
     if (request.authData.principalType !== 'customer') throw new NodicsError('ERR_MED_00007', 'Customer required');
     return request.authData.code;
 } };
-const internal = { code: 'sample', internalEvidenceRead: true, authData: { tenant: 'test', principalType: 'service', groups: ['serviceAccountUserGroup'] } };
+const internal = { code: 'sample', internalEvidenceRead: true, authData: { tenant: 'test', tokenType: 'service', principalType: 'service', groups: ['serviceAccountUserGroup'] } };
 const customer = { code: 'original', authData: { tenant: 'test', principalType: 'customer', code: 'alice', groups: ['customerUserGroup'] } };
 (async () => {
     item = { code: 'sample', ownerType: 'APPLICATION', access: 'PUBLIC', mimeType: 'image/svg+xml', storageKey: 'private/provider/key' };
     const sample = await context.read(internal);
     assert.equal(sample.previewType, 'PUBLIC_MEDIA'); assert.equal(sample.contentBase64, 'aW1hZ2U=');
     assert.equal(sample.storageKey, undefined); assert.equal(reads, 1);
+    await assert.rejects(() => context.read({ ...internal, authData: { ...internal.authData, tokenType: undefined } }), { code: 'ERR_MED_00007' });
     await assert.rejects(() => context.read(customer), { code: 'ERR_MED_00008' });
     await assert.rejects(() => context.read({ ...internal, internalEvidenceRead: false }));
     item = { ...item, access: 'PRIVATE' };

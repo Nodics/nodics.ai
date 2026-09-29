@@ -1,5 +1,16 @@
 # nService AI Contracts
 
+## Optional release projection
+
+Registration honors the nImport DATA_RELEASE `selectionPolicy` contract.
+`EXPLICIT` projects as optional USER-triggered data, including Init releases;
+`DEFAULT` or omission preserves existing required activation behavior. Reject
+unknown values rather than silently turning malformed opt-in metadata into an
+automatic installation. Publication policy keeps its independent meaning.
+The package projection grants no import or ownership migration authority and
+does not replace destination validation. See
+`../../../nData/nImport/import/llm/contracts/README.md#explicit-release-selection`.
+
 This folder contains module-specific AI/developer contracts for `nodics.foundation/modules/nService`.
 
 Use these files for rules that are more specific than root `AGENTS.md` and the module `AGENTS.md`, especially extension boundaries, override expectations, testing rules, security constraints, and generated-artifact responsibilities.
@@ -15,6 +26,13 @@ Use these files for rules that are more specific than root `AGENTS.md` and the m
   credential-free observability contract and fail-safe cache callback behavior.
 
 ## Module topology registry
+
+Circuit-breaker admission rejection is not a remote transport failure. Preserve
+the circuit's failure count and original `openedAt` when no request is admitted;
+periodic registration attempts must not postpone recovery indefinitely. At the
+configured recovery deadline, successful transport closes the circuit and a real
+failed probe starts a new interval. Preserve existing diagnostics, identity,
+idempotency and layered `serviceCommunication` policy; do not bypass discovery.
 
 - `DefaultModulesConfigurationService` is the singleton authority for effective
   module, server, and node topology in one runtime process.

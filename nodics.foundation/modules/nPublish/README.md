@@ -1,5 +1,13 @@
 # nPublish
 
+Version providers can opt into qualified target receipts while existing providers
+remain compatible. Activation retains operation identity before target work;
+reconciliation can inspect uncertain deployments without a target version. See
+[qualified receipts and recovery](llm/contracts/publication-authority-contract.md#qualified-target-receipts-and-recovery).
+Target atomicity, pointer concurrency and retained content remain provider-owned.
+Operations reconciliation preserves an explicit publication scope across audit,
+target and CMS outbox work; invalid supplied scopes reject before effects.
+
 `nPublish` provides framework publishing support for runtime/module activation patterns. It is the place for generic publish-time contracts, schemas, routes, and pipeline hooks that support publishable module variants.
 
 Use this module for publish capability behavior that is not specific to one provider or domain. Variant modules such as `vDatabase` or `vMongodb` should contain variant wiring, not duplicated publish infrastructure.
@@ -68,6 +76,20 @@ The source of truth must remain module definitions, schemas, services, pipelines
 
 ## Extension Path
 
+`publish.providers.workflowProviders[domain]` selects an owning approval provider.
+Domains without an override retain `workflowProvider` as the legacy fallback.
+An explicit unresolved, null or invalid override fails before approval state is
+changed; it never silently uses another domain's workflow. Provider selection
+does not grant approval authority or bypass the Process decision contract.
+
+The [Process approval bridge](llm/contracts/process-approval-bridge.md) reuses
+Process start/claim APIs and nPublish lifecycle operations. It remains unselected
+until the documented Process idempotency, claim evidence, domain graph and
+runtime integration prerequisites are qualified. Its isolated tests are not
+evidence of a live approval path. See the
+[publication authority contract](llm/contracts/publication-authority-contract.md)
+for the ownership and reuse boundary.
+
 Projects may extend publish behavior by:
 
 - using `vDatabase`, `vMongodb`, or `vService` where versioned behavior is required;
@@ -93,9 +115,16 @@ The focused orchestration contract can be run with:
 
 ```bash
 node nodics.foundation/modules/nPublish/test/publicationLifecycleService.test.js
+node --test nodics.foundation/modules/nPublish/test/publicationWorkflowProvider.test.js
+node --test nodics.foundation/modules/nPublish/test/publicationApprovalBridge.test.js
 node nodics.foundation/modules/nPublish/test/publicationAtomicAuditContract.test.js
 node nodics.foundation/modules/nPublish/test/publicationAuditReconciliationService.test.js
+node --test nodics.foundation/modules/nPublish/test/publicationOperationsRouteContract.test.js
 ```
+
+The operations route contract validates diagnostics, correlation, reconciliation
+and recovery paths together with their access-token and permission boundaries.
+It is framework-owned and requires no customer deployment.
 
 ## What To Avoid
 

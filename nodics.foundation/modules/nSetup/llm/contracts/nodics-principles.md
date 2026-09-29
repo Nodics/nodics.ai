@@ -82,6 +82,49 @@ but cannot use token optimisation to waive authorization or required validation.
 
 ## Existing Layers And Project Independence
 
+### Application ownership survives accelerator reuse
+
+Consuming or extending an accelerator expresses a dependency, not a transfer of
+ownership. A customer application remains customer-owned even when Nodics authors
+it, ships it as a demonstration/reference application, or packages it as data-only.
+Reuse potential, a folder name, `content-pack` metadata and `extends` are not
+evidence that an application belongs in the framework.
+
+Apparel, Electronics, Telco and eWaste are reusable accelerators. Their consumer
+applications agora.apparel, agora.electronics, agora.telco and circa.ewaste belong
+in the customer project. Generic capability defaults may be extracted separately;
+application identities, branding, catalogues, profiles and data remain with the
+application. Ownership changes require an explicit product-ownership decision,
+not an inferred refactoring opportunity. Apply the customer-project-mode contract.
+
+### Lightweight customer modules and runtimes
+
+Classify individual behavior and configuration, not whole files or application
+names. Domain primitives shared within or across domains belong to their existing
+functional owner. Reusable solution orchestration over those primitives belongs
+to an accelerator. Only application-specific policy, identity, presentation,
+content, selections and thin adaptations belong to a customer module. Runtime
+servers assemble and deploy capabilities; they do not own business algorithms.
+
+Separate a reusable mechanism from the customer's decision to use it. For
+example, a configurable valuation provider can be accelerator-owned while its
+rates, programme identifiers and opt-in remain customer-owned. Moving the
+mechanism must not promote those values into framework defaults. Configuration
+follows the same semantic owner as behavior, through existing layered properties.
+
+Before adding customer implementation, check the owning capability and its
+extension points. During maintainer refactoring, replace duplicate implementations
+with delegation, remove proven redundant defaults, and retain explicit security
+or compatibility pins. Apply this to scripts, generators, tests and administrative
+descriptors as well as runtime services. A smaller customer file that merely
+relocates a project-specific implementation is not a successful extraction.
+
+Prove extracted behavior with an unrelated customer policy, rejected inputs,
+unchanged authorization and lifecycle outcomes, and affected runtime composition.
+Never activate an extra domain merely to load its configuration, infer reset or
+import permission from discovery, or introduce a parallel registry to shorten
+configuration. Preserve one implementation and one authority for each capability.
+
 Use the established Nodics layers and their canonical owners. Do not invent an
 additional architectural layer, proxy, configuration authority, registry,
 loader, or consumer-specific API family to implement a feature or refactor.
@@ -484,10 +527,10 @@ Do not disable an entire unrelated functional module because one integration
 uses that optional module. This applies to every framework and domain group.
 
 The standard protected functional roots are Foundation (runtime substrate),
-Platform, and WCMS. Process and Localization are optional functional groups;
-an operation that requires approval, workflow, or an authoritative translation
-bundle must still reject safely when its authority is unavailable. Optionality
-never means bypassing security, validation, required references, or approval.
+Platform, WCMS, and Process. Localization is an optional functional group; an
+operation that requires an authoritative translation bundle must still reject
+safely when its authority is unavailable. Optionality never means bypassing
+security, validation, required references, or approval.
 
 Use existing authorities only:
 

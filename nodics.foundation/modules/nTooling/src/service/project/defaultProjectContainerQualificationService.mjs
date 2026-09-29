@@ -111,7 +111,8 @@ async function waitReady(port, timeoutMs = 120000) {
   throw new Error(`Runtime ${port} did not recover within ${timeoutMs}ms`);
 }
 
-function acceptanceEnvironment(selected, kind = 'platform') {
+/** Builds child acceptance inputs from resolved backend URLs, preserving explicit operator overrides. */
+export function acceptanceEnvironment(selected, kind = 'platform') {
   const values = readEnvironment(selected);
   const urls = selected.acceptance.urls || {};
   const evidenceFile = browserValidationEvidenceFile(selected);
@@ -139,16 +140,51 @@ function acceptanceEnvironment(selected, kind = 'platform') {
   }
   return {
     ...base,
-    AXIS_PLATFORM_URL: urls.platform,
-    AXIS_WCMS_URL: urls.wcmsStaged,
-    AXIS_PROCESS_URL: urls.process,
-    AXIS_LOCATION_URL: urls.location,
-    NODICS_ENGAGEMENT_URL: urls.engagement,
+    AXIS_PLATFORM_URL: process.env.AXIS_PLATFORM_URL || urls.platform,
+    AXIS_WCMS_URL: process.env.AXIS_WCMS_URL || urls.wcmsStaged,
+    AXIS_PROCESS_URL: process.env.AXIS_PROCESS_URL || urls.process,
+    AXIS_LOCATION_URL: process.env.AXIS_LOCATION_URL || urls.location,
+    NODICS_ENGAGEMENT_URL: process.env.NODICS_ENGAGEMENT_URL || urls.engagement,
     ...Object.fromEntries(Object.entries(selected.acceptance.environmentUrls || {}).map(([name, key]) => {
       if (!/^[A-Z][A-Z0-9_]*$/.test(name) || !Object.prototype.hasOwnProperty.call(urls, key)) throw new Error('Invalid acceptance environment URL mapping');
-      return [name, urls[key]];
+      return [name, process.env[name] || urls[key]];
     }))
   };
+}
+
+/** Checks declared container network membership. The injected inspection keeps policy tests offline; legacy external-public checks remain opt-in. */
+export function qualifyContainerNetworkSeparation(qualification, inspect) {
+  const policy = qualification.networkSeparation;
+  if (!policy) throw new Error('Container network isolation policy is required');
+  const networks = container => {
+    const memberships = inspect(container)?.NetworkSettings?.Networks;
+    if (!memberships || !Object.keys(memberships).length) throw new Error('Container network membership is unavailable: ' + container);
+    return Object.keys(memberships);
+  };
+  if (policy.applicationContainers !== undefined) {
+    const validList = values => Array.isArray(values) && values.length > 0 &&
+      values.every(value => typeof value === 'string' && value.length > 0) && new Set(values).size === values.length;
+    if (!validList(policy.applicationContainers) || !validList(policy.requiredNetworks) ||
+        !validList(policy.forbiddenNetworks) || typeof qualification.containerPrefix !== 'string' ||
+        policy.requiredNetworks.some(name => policy.forbiddenNetworks.includes(name))) {
+      throw new Error('Invalid backend container network isolation policy');
+    }
+    for (const name of policy.applicationContainers) {
+      const membership = networks(`${qualification.containerPrefix}${name}-1`);
+      if (policy.requiredNetworks.some(network => !membership.includes(network)) ||
+          policy.forbiddenNetworks.some(network => membership.includes(network))) {
+        throw new Error('Backend container violates required or forbidden network membership: ' + name);
+      }
+    }
+  } else {
+    if (!policy.applicationContainer) throw new Error('Application container selection is required');
+    if (networks(policy.applicationContainer).some(name => name.includes('public'))) {
+      throw new Error('public and application/data network boundaries overlap');
+    }
+  }
+  if (policy.publicContainer && networks(policy.publicContainer).some(name => name.includes('application') || name.includes('data'))) {
+    throw new Error('public and application/data network boundaries overlap');
+  }
 }
 
 export function browserValidationEvidenceFile(selected) {
@@ -192,7 +228,7 @@ export function writePlatformAcceptanceEvidence(selected, result, acceptanceArgu
 
 function runPlatformAcceptance(selected, args = process.argv.slice(4)) {
   const startedAt = new Date();
-  const acceptanceArguments = ['run', selected.acceptance.platformCommand || 'acceptance:local', '--', '--leave-started'];
+  const acceptanceArguments = ['run', selected.acceptance.platformCommand || 'acceptance:local', '--', '--execute', '--approve-publications', '--leave-started'];
   if (args.includes('--expect-documentation-not-installed')) acceptanceArguments.push('--expect-documentation-not-installed');
   if (args.includes('--qualify-documentation-rollback')) acceptanceArguments.push('--qualify-documentation-rollback');
   const result = spawnSync('npm', acceptanceArguments, {
@@ -209,10 +245,8 @@ function runCommerceAcceptance(selected) {
   const commands = [
     {
       command: selected.acceptance.commerceDataCommand,
-      env: {
-        ...env,
-        NODICS_STOREFRONT_COMMERCE_DATA_EXECUTE: process.env.NODICS_STOREFRONT_COMMERCE_DATA_EXECUTE || 'true',
-      },
+      args: ['--', '--execute-install'],
+      env,
     },
     {
       command: selected.acceptance.commercePublicationCommand,
@@ -225,7 +259,7 @@ function runCommerceAcceptance(selected) {
   ];
   if (commands.some(step => typeof step.command !== 'string' || !step.command)) throw new Error('Declare the environment commerce acceptance commands');
   for (const step of commands) {
-    const result = spawnSync('npm', ['run', step.command], {
+    const result = spawnSync('npm', ['run', step.command, ...(step.args || [])], {
       cwd: projectRoot,
       env: step.env,
       stdio: 'inherit'
@@ -277,11 +311,8 @@ async function runQualification(selected) {
     }
   });
   await check(evidence, 'network-separation', () => {
-    const publicNetworks = JSON.parse(run(docker, ['inspect', q.networkSeparation.publicContainer], { env: dockerEnv }))[0].NetworkSettings.Networks;
-    const staged = JSON.parse(run(docker, ['inspect', q.networkSeparation.applicationContainer], { env: dockerEnv }))[0].NetworkSettings.Networks;
-    if (Object.keys(publicNetworks).some(name => name.includes('application') || name.includes('data')) || Object.keys(staged).some(name => name.includes('public'))) {
-      throw new Error('public and application/data network boundaries overlap');
-    }
+    qualifyContainerNetworkSeparation(q, container =>
+      JSON.parse(run(docker, ['inspect', container], { env: dockerEnv }))[0]);
   });
   console.log(JSON.stringify({ contractVersion: 0, environment: selected.environment, qualificationClass: selected.qualificationClass, evidence }, null, 2));
   if (evidence.some(item => item.state !== 'PASSED')) process.exitCode = 1;

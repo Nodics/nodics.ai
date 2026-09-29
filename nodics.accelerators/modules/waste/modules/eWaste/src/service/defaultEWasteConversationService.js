@@ -13,6 +13,60 @@
 
 /** @module eWaste/service/defaultEWasteConversationService @description Grounds customer conversation in a Waste-owned draft and allowlisted taxonomy; Copilot supplies advisory language, never executable actions. @layer service @owner eWaste @override Later layers may refine prompts and guidance while preserving owner, revision and confirmation boundaries. */
 module.exports = {
+  /** Orchestrates guidance with trusted project copy, owner/revision checks and canonical correction routing. No reply advances or submits the journey. */
+  guidance: async function (request, policy = {}) {
+    const domain = SERVICE.DefaultEWasteExperienceService,
+      store = SERVICE.DefaultWastePersistenceService;
+    const draft = request.code ? await domain.readDraft(request) : null;
+    if (draft) store.revision(draft, request.expectedRevision);
+    const text = request.payload.message;
+    if (typeof text !== "string" || !text.trim() || text.length > 1500)
+      store.fail(
+        "ERR_EWASTE_MESSAGE_INVALID",
+        "Enter a message of at most 1500 characters.",
+      );
+    let message = policy.fixedMessage ? policy.fixedMessage(text) : undefined;
+    const explicitCorrection =
+      draft && /^(?:it is|it's|this is)\s+/i.test(text.trim());
+    if (!message && explicitCorrection) return this.message(request);
+    const settings = (CONFIG.get("eWaste") || {}).conversation || {};
+    const result = await SERVICE.DefaultCopilotCustomerGuidanceService.reply(
+      {
+        tenant: request.tenant,
+        authData: request.authData,
+        message: text,
+        conversationCode:
+          draft?.metadata?.conversationRef?.code ||
+          request.payload.conversationCode,
+        idempotencyKey: request.idempotencyKey,
+        legacyHistory: draft?.metadata?.conversation,
+        facts: draft?.submittedFacts,
+        stage: draft?.submissionStatus || "BEFORE_DRAFT",
+      },
+      Object.assign({}, settings, { fixedMessage: message }),
+    );
+    message = result.message;
+    if (!draft) return result;
+    const next = await store.update("wasteSubmission", request, draft, {
+      metadata: Object.assign({}, draft.metadata, {
+        conversationRef: {
+          module: "copilotConversation",
+          schema: "copilotConversationRecord",
+          code: result.conversationCode,
+        },
+        conversation: result.history || [],
+      }),
+    });
+    return {
+      contractVersion: 1,
+      conversationCode: result.conversationCode,
+      message,
+      draft: next,
+      changed: false,
+      actions: [],
+    };
+  },
+
   /** Answers context questions and applies only explicit draft corrections. */
   message: async function (request) {
     const store = SERVICE.DefaultWastePersistenceService;

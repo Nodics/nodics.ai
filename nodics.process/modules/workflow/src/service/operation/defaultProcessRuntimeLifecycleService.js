@@ -736,8 +736,34 @@ module.exports = {
         throw new CLASSES.NodicsError('ERR_PROCESS_00018', 'Unsupported process runtime node type');
     },
 
+    /** Binds an instance start to immutable input, independent of JSON key order and later context updates. */
+    startFingerprint: function (request, body, version) {
+        const input = Object.assign({}, body);
+        delete input.instanceCode;
+        delete input.definitionCode;
+        delete input.version;
+        input.context = input.context || {};
+        const auth = request.authData || {};
+        const identity = { tenant: this.getTenant(request), enterprise: auth.entCode || auth.enterpriseCode || '',
+            definitionCode: version.definitionCode, version: version.version, input };
+        const serialized = JSON.stringify(identity, (key, value) => value && typeof value === 'object' && !Array.isArray(value)
+            ? Object.fromEntries(Object.keys(value).sort().map(name => [name, value[name]])) : value);
+        return require('node:crypto').createHash('sha256').update(serialized).digest('hex');
+    },
+
+    /** Returns only an exact completed-start replay; partial starts never execute again through the start endpoint. */
+    replayStart: async function (request, body, instance) {
+        if (instance.definitionCode !== (body.definitionCode || request.definitionCode) ||
+            ((body.version || request.version) && Number(body.version || request.version) !== instance.version) ||
+            instance.startFingerprint !== this.startFingerprint(request, body, instance)) {
+            throw new CLASSES.NodicsError('ERR_PROCESS_00026');
+        }
+        if (instance.startCompleted !== true) throw new CLASSES.NodicsError('ERR_PROCESS_00027');
+        return { code: 'SUC_PROCESS_00000', data: { instance } };
+    },
+
     /**
-     * Starts a published process definition and creates the first task when needed.
+     * Starts a published process definition once and creates the first task when needed.
      *
      * @param {Object} request Nodics request context.
      * @returns {Promise<Object>} Started instance and first task summary.
@@ -752,6 +778,13 @@ module.exports = {
         }
         await admission.assertModuleOperational('workflow', this.getTenant(request));
         let body = this.bodyOf(request);
+        if (body.instanceCode !== undefined) {
+            this.assertCode(body.instanceCode);
+            const found = await this.instanceService().get(this.serviceRequest(request, {
+                query: { code: body.instanceCode }, searchOptions: { limit: 1 },
+            }));
+            if (found && found.result && found.result[0]) return this.replayStart(request, body, found.result[0]);
+        }
         let version = await this.resolveStartVersion(request, body);
         let instanceModel = {
             code: body.instanceCode || this.runtimeCode(version.definitionCode),
@@ -763,8 +796,20 @@ module.exports = {
             context: body.context || {},
             currentNode: 'start',
             startedAt: new Date(),
+            startFingerprint: this.startFingerprint(request, body, version),
+            startCompleted: false,
         };
-        let saved = await this.instanceService().save(this.serviceRequest(request, { model: instanceModel }));
+        let saved;
+        try {
+            // No query: generated persistence inserts under the existing unique primary key, never upserts.
+            saved = await this.instanceService().save(this.serviceRequest(request, { model: instanceModel }));
+        } catch (error) {
+            const found = await this.instanceService().get(this.serviceRequest(request, {
+                query: { code: instanceModel.code }, searchOptions: { limit: 1 },
+            }));
+            if (found && found.result && found.result[0]) return this.replayStart(request, body, found.result[0]);
+            throw error;
+        }
         let instance = saved.result || saved;
         await this.audit(request, {
             definitionCode: instance.definitionCode,
@@ -779,6 +824,15 @@ module.exports = {
             this.firstRuntimeNode(version.graph || {}),
             body,
         );
+        const completed = await this.instanceService().update(this.serviceRequest(request, {
+            query: { code: instance.code, startFingerprint: instanceModel.startFingerprint, startCompleted: false },
+            model: { $set: { startCompleted: true } },
+        }));
+        const result = completed && completed.result;
+        if (!result || Number(result.modifiedCount === undefined ? result.nModified === undefined ? result.n : result.nModified : result.modifiedCount) !== 1) {
+            throw new CLASSES.NodicsError('ERR_PROCESS_00027');
+        }
+        entered.instance = Object.assign({}, entered.instance, { startCompleted: true });
         return { code: 'SUC_PROCESS_00007', data: entered };
     },
 

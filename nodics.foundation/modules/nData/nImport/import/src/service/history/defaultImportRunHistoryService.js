@@ -53,6 +53,14 @@ module.exports = {
      */
     recordRun: function (request) {
         return new Promise(resolve => {
+            // Strict migration evidence is never writable through best-effort history.
+            const run = request && request.importRun;
+            if (run && (run.dataType === 'INSTALLED_MIGRATION'
+                || ['code', 'runId'].some(key => /^installedMigration_/i.test(String(run[key] || '')))
+                || ['migration', 'migrationRevision', 'migrationAttempt'].some(key => Object.prototype.hasOwnProperty.call(run, key)))) {
+                resolve({ skipped: true, reason: 'RESERVED_MIGRATION_HISTORY' });
+                return;
+            }
             let importRun = this.prepareImportRunRecord(request || {});
             if (!importRun) {
                 resolve({

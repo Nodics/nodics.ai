@@ -1,5 +1,21 @@
 # Product Agent Contract
 
+Governed Product publication uses `DefaultProductPublicationGraphService`, the
+nPublish adapter/version provider, and `DefaultProductPublicationTargetService`.
+Read [the exact graph and activation contract](llm/contracts/README.md#exact-product-graph-and-activation)
+before registration. Source selection requires qualified versioned CURRENT
+models; do not enable `publishEnabled` or schema version flags as a shortcut.
+Target manifests/pointers reuse generated managed-revision persistence, not a
+second approval lifecycle. Registration and secured cross-runtime transport are
+still integration gates. Legacy projection APIs are not governed activation.
+
+Own the complete Product publication acceptance suite and customer-safe delivery
+assertions here. Customer fixtures select catalogues and exact approved publication
+evidence; they never redefine invariants. Never call internal Online restore or
+Media asset import from operator acceptance, mint service tokens, change grants,
+or treat missing domain lifecycle adapters as permission to bypass governance.
+See the acceptance prerequisite contract in `llm/contracts/README.md`.
+
 - Follow `../../../../../AGENTS.md` and `../../../../../nodics.foundation/modules/nSetup/llm/ai-enablement-index.md`.
 - Follow ancestor contracts and read local guidance.
 

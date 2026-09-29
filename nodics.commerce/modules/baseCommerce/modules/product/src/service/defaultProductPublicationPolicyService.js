@@ -9,7 +9,6 @@
 
  */
 
-/* Copyright (c) 2026 Nodics. Governed by the root LICENSE. */
 'use strict';
 const crypto = require('node:crypto');
 /** @module product/src/service/defaultProductPublicationPolicyService @description Produces staged immutable Product publication evidence. @layer service @owner product */

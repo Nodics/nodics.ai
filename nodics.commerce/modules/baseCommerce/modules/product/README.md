@@ -1,5 +1,39 @@
 # Product
 
+## Governed Catalogue Publication
+
+Customer delivery can be rolled out to exact tenant/store pairs with
+`product.discovery.activationScopes` alongside the existing `activationService`.
+Unselected stores retain legacy delivery; selected stores never fall back to it.
+See the [delivery qualification contract](llm/contracts/README.md#exact-product-graph-and-activation)
+for bounds, failure behavior and isolated-store approval/rollback proof.
+
+The Product owner now provides exact source-graph resolution, an unregistered
+nPublish adapter/version provider, hidden version-qualified projection preparation,
+and a managed-revision activation pointer with durable operation receipts.
+See [the integration contract](llm/contracts/README.md#exact-product-graph-and-activation)
+and [developer example](llm/examples/README.md#exact-product-publication).
+These are source-level capabilities, not a claim that installed Product data is
+migrated or Online deployment is enabled. No activation binding,
+approval bypass or runtime start is contributed here. The six sources reference
+an owner policy that remains disabled until migration and runtime dependencies
+are qualified together. Provider-specific variants remain an explicit deployment
+selection. Governed create, secured target
+transport and fixed Process callback routes are implemented but inactive pending
+live qualification.
+
+For operators and evaluators, the existing legacy localized publication commands
+below remain distinct from nPublish-governed Staged-to-Online publication. A
+successful projection write is not approval or activation evidence.
+
+The protected `acceptance:commerce-publication --execute --approve-publications`
+command verifies exact existing governed Online publication evidence and checks
+Online customer cards, PDPs and Media hashes without publication writes. Separate
+`--legacy-projection-qualification` additionally exercises Staged projection writes.
+It does not transfer records to Online. Missing owner adapters or approved receipts
+are explicit prerequisites, not a reason to call internal ingestion routes.
+See [the acceptance contract](llm/contracts/README.md#commerce-publication-acceptance).
+
 Generic authoring follows effective schema publication metadata and the existing
 runtime role: publishable sources are Staged-only; publication projections and
 receipts are read-only to Workbench/generated HTTP CRUD. Owning publication and

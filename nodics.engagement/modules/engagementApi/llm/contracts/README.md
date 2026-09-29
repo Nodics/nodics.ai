@@ -1,5 +1,20 @@
 # engagementApi Contracts
 
+## Canonical Journey Acceptance
+
+The capability-owned journey requires literal `execute: true` (CLI: `--execute`);
+imports and help perform no operations. Verify RECEIVED intake with a nonnegative
+safe-integer revision, correlated operator lookup and all five transitions:
+TRIAGE to TRIAGED, ASSIGN to ASSIGNED, START to IN_PROGRESS, RESOLVE to RESOLVED
+and CONFIRM to CLOSED. Each response must identify the submitted record, reach
+the expected status and advance its numeric revision. A successful HTTP response
+or revision increment alone is insufficient. Public testimonials and review items
+must retain their array contracts. Denials and invalid evidence stop the journey.
+
+Run `node --test nodics.engagement/modules/engagementApi/test/engagementJourneyAcceptance.test.mjs`
+from the framework root. Fixtures use injected transport and independent deployment
+names; customer activation and live journey evidence remain customer-owned.
+
 ## API capability contract
 
 - Status: secured foundation implemented; domain experiences remain inactive.

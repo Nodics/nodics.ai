@@ -22,6 +22,44 @@ const catalogue = require('../applicationBuilder/defaultApplicationBuilderCatalo
 const releasePolicy = require('../../../../nData/nImport/import/src/service/release/defaultDataReleaseService');
 
 module.exports = {
+    /** Plans a successor from an authored new root while preserving the old tree and exact section identity. Does not write files. */
+    planForwardRelease: function ({ dataRoot, manifest, sectionCode, sourceRoot, version, retentionScope }) {
+        const proposed = JSON.parse(JSON.stringify(manifest));
+        if (retentionScope !== undefined && retentionScope !== 'SECTIONS') throw new Error('Unsupported forward release retention scope');
+        if (proposed.contractVersion !== 2 || !proposed.module || !proposed.sections) throw new Error('Forward release requires a contractVersion 2 manifest');
+        releasePolicy.validateRetainedRoots(dataRoot, proposed);
+        const previous = proposed.sections[sectionCode];
+        if (!previous || previous.kind !== 'DATA_RELEASE' || !previous.sourceRoot || !previous.files ||
+            !/^\d+\.\d+\.\d+$/.test(previous.version || '') || !/^\d+\.\d+\.\d+$/.test(version || '') ||
+            releasePolicy.compareVersions(version, previous.version) <= 0 || sourceRoot === previous.sourceRoot ||
+            !new RegExp('^' + previous.dataType + '-v\\d{3}$').test(sourceRoot) ||
+            releasePolicy.releaseSequence({ sourceRoot }) <= releasePolicy.releaseSequence(previous)) {
+            throw new Error('Forward release requires a newer version and source sequence for an existing DATA_RELEASE');
+        }
+        if (Object.entries(proposed.sections).some(([code, section]) => code !== sectionCode && section &&
+            section.sourceRoot === sourceRoot)) {
+            throw new Error('Forward release source conflicts with another active section');
+        }
+        const retainedFiles = releasePolicy.sourceRootFiles(dataRoot, previous.sourceRoot);
+        if (!Object.keys(previous.files).length || Object.entries(previous.files).some(([file, hash]) => retainedFiles[file] !== hash)) {
+            throw new Error('Immutable release content changed; restore original bytes before a forward release');
+        }
+        if (proposed.retainedRoots && proposed.retainedRoots[sourceRoot]) throw new Error('Forward release source is already retained');
+        const files = Object.fromEntries(Object.entries(releasePolicy.sourceRootFiles(dataRoot, sourceRoot))
+            .filter(([file]) => file !== sourceRoot + '/release.descriptor.json'));
+        if (!Object.keys(files).length) throw new Error('Forward release payload is empty');
+        const retained = proposed.retainedRoots && proposed.retainedRoots[previous.sourceRoot];
+        if (retained && retained.scope !== retentionScope) throw new Error('Forward release cannot change an existing retention scope');
+        proposed.retainedRoots = { ...proposed.retainedRoots, [previous.sourceRoot]: {
+            ...(retentionScope ? { scope: retentionScope } : {}),
+            files: retentionScope === 'SECTIONS' ? { ...(retained && retained.files), ...previous.files } : retainedFiles,
+            sections: { ...(retained && retained.sections), [sectionCode]: previous }
+        } };
+        proposed.sections[sectionCode] = { ...previous, sourceRoot, version, files };
+        releasePolicy.validateRetainedRoots(dataRoot, proposed);
+        return proposed;
+    },
+
     /** Plans checksum changes using declared manifests and the existing package inventory. @param {Object} options Project/module coordinates. @returns {Object[]} Planned updates. */
     plan: function (options = {}) {
         const projectRoot = fs.realpathSync(path.resolve(options.projectRoot || process.cwd()));
@@ -51,6 +89,7 @@ module.exports = {
                 throw new Error('Project data manifest must declare its module and contractVersion 2: ' + owner.name);
             }
             const changes = [];
+            releasePolicy.validateRetainedRoots(dataRoot, manifest);
             for (const [sectionCode, section] of Object.entries(manifest.sections)) {
                 if (!section || typeof section !== 'object' || Array.isArray(section)) throw new Error('Manifest section must be an object: ' + sectionCode);
                 if (section.kind !== 'DATA_RELEASE') continue;

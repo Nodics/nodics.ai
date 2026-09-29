@@ -1,5 +1,10 @@
 # Waste Core
 
+For maintainers qualifying a reference-only upgrade, use the
+[installed evidence inspection contract](llm/contracts/README.md#installed-evidence-inspection)
+and its [read-only request examples](llm/examples/README.md). Inspection preserves
+customer policy and transaction privacy; nImport retains release/install authority.
+
 `wasteCore` defines shared Waste contracts used by all Waste child modules:
 source reference shape, common lifecycle vocabulary, safe defaults, and utility
 helpers.
@@ -17,4 +22,7 @@ A server must explicitly select it; contributions never enable reset or bypass t
 Waste Core owns inert Waste acceptance defaults under `tooling.acceptance`.
 Resolve the WASTE and PLATFORM roles from the selected topology; do not copy
 customer environment names, server names, ports or initialization profile codes.
-The invoking project still owns its journey script and explicit execution.
+Waste Core owns the complete protected `acceptance:waste-backoffice` suite.
+It checks existing authorized registration and navigation without identity
+migration, runtime grant expansion, automatic activation or runtime startup.
+Customers supply topology and employee credentials, not replacement assertions.

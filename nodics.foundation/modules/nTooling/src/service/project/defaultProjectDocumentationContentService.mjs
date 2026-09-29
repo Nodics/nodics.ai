@@ -17,9 +17,8 @@ import { createRequire } from 'node:module';
 const root = path.resolve(process.env.NODICS_PROJECT_ROOT || process.cwd());
 const require = createRequire(import.meta.url);
 const applicationDocumentationContract = require('../defaultApplicationDocumentationContractService.js');
+const releasePolicy = require('../../../../nData/nImport/import/src/service/release/defaultDataReleaseService.js');
 const cataloguePath = path.join(root, 'docs/catalogue.json');
-const dataRoot = path.join(root, 'data/core-v001');
-const dataPath = path.join(dataRoot, 'data/documentation');
 const manifestPath = path.join(root, 'data/manifest.json');
 const checkOnly = process.argv.includes('--check');
 const copyrightHeader = `/*
@@ -38,6 +37,8 @@ const catalogue = JSON.parse(fs.readFileSync(cataloguePath, 'utf8'));
 const project = JSON.parse(fs.readFileSync(path.join(root, 'package.json'), 'utf8'));
 const publication = catalogue.publication;
 if (!publication || !project.name || catalogue.pack !== project.name) throw new Error('Project documentation requires its owning package and catalogue publication metadata');
+const contentPath = publication.contentPath || 'core-v001';
+if (!/^core-v\d{3}$/.test(contentPath)) throw new Error('Documentation publication.contentPath must be a governed core-vNNN directory');
 for (const key of ['recordPrefix', 'codePrefix', 'sectionCode', 'owningDomain', 'keyword']) {
   if (typeof publication[key] !== 'string' || !/^[A-Za-z][A-Za-z0-9._-]*$/.test(publication[key])) throw new Error('Invalid documentation publication identifier: ' + key);
 }
@@ -746,15 +747,15 @@ const publicationStateRecords = Object.fromEntries(
       lifecycleState: target.lifecycleState || defaultLifecycle,
       publicationCode: publication.recordPrefix,
       workflowReference: (publication.recordPrefix + "ReviewWorkflow"),
-      stagedVersion: catalogue.release,
-      ...(target.lifecycleState === 'ONLINE' ? { onlineVersion: catalogue.release } : {}),
+      stagedVersion: catalogue.version,
+      ...(target.lifecycleState === 'ONLINE' ? { onlineVersion: catalogue.version } : {}),
       validationResult: {
         generated: true,
         sourceAuthority: 'docs/catalogue.json',
         publicationPath: 'STAGED_REVIEW_APPROVAL_ONLINE',
         publicVisibleOnlyWhenOnlineAndPublic: true,
       },
-      checksum: sha256(`${target.type}:${target.code}:${target.lifecycleState || defaultLifecycle}:${catalogue.release}`),
+      checksum: sha256(`${target.type}:${target.code}:${target.lifecycleState || defaultLifecycle}:${catalogue.version}`),
       ...workflowMetadata(target.type),
       decisionPolicy: publicationDecisionPolicy,
       actor: (project.name + ".generator"),
@@ -869,15 +870,15 @@ Object.assign(
         lifecycleState: record.lifecycleState || defaultLifecycle,
         publicationCode: publication.recordPrefix,
         workflowReference: (publication.recordPrefix + "ReviewWorkflow"),
-        stagedVersion: catalogue.release,
-        ...(record.lifecycleState === 'ONLINE' ? { onlineVersion: catalogue.release } : {}),
+        stagedVersion: catalogue.version,
+        ...(record.lifecycleState === 'ONLINE' ? { onlineVersion: catalogue.version } : {}),
         validationResult: {
           generated: true,
           sourceAuthority: 'docs/catalogue.json',
           publicationPath: 'STAGED_REVIEW_APPROVAL_ONLINE',
           publicVisibleOnlyWhenOnlineAndPublic: true,
         },
-        checksum: sha256(`SEARCH_METADATA:${record.code}:${record.lifecycleState || defaultLifecycle}:${catalogue.release}`),
+        checksum: sha256(`SEARCH_METADATA:${record.code}:${record.lifecycleState || defaultLifecycle}:${catalogue.version}`),
         ...workflowMetadata('SEARCH_METADATA'),
         decisionPolicy: publicationDecisionPolicy,
         actor: (project.name + ".generator"),
@@ -1106,20 +1107,19 @@ const files = {
   [("data/core-v001/headers/" + publication.recordPrefix + "ContentPackHeader.js")]: `${copyrightHeader}'use strict';\n\n/** @description ${publication.label} core-import header for project documentation. */\nmodule.exports = {\n  cms: {\n    ${publication.recordPrefix}SiteData: { options: { enabled: true, schemaName: 'cmsSite', operation: 'saveAll', dataFilePrefix: '${publication.recordPrefix}SiteData' }, query: { code: '$code' } },\n    ${publication.recordPrefix}ProductData: { options: { enabled: true, schemaName: 'cmsDocumentationProduct', operation: 'saveAll', dataFilePrefix: '${publication.recordPrefix}ProductData' }, query: { code: '$code' } },\n    ${publication.recordPrefix}AccessPolicyData: { options: { enabled: true, schemaName: 'cmsDocumentationAccessPolicy', operation: 'saveAll', dataFilePrefix: '${publication.recordPrefix}AccessPolicyData' }, query: { code: '$code' } },\n    ${publication.recordPrefix}NavigationData: { options: { enabled: true, schemaName: 'cmsDocumentationNavigation', operation: 'saveAll', dataFilePrefix: '${publication.recordPrefix}NavigationData' }, query: { code: '$code' } },\n    ${publication.recordPrefix}DashboardData: { options: { enabled: true, schemaName: 'cmsDocumentationDashboard', operation: 'saveAll', dataFilePrefix: '${publication.recordPrefix}DashboardData' }, query: { code: '$code' } },\n    ${publication.recordPrefix}LegacyNavigationCleanupData: { options: { enabled: true, schemaName: 'cmsDocumentationNode', operation: 'remove', dataFilePrefix: '${publication.recordPrefix}LegacyNavigationCleanupData' }, query: { product: '${productCode}', navigation: '${navigationCode}', nodeLevel: { $in: ['GROUP', 'SUBGROUP', 'TOPIC'] } } },\n    ${publication.recordPrefix}NodeData: { options: { enabled: true, schemaName: 'cmsDocumentationNode', operation: 'saveAll', dataFilePrefix: '${publication.recordPrefix}NodeData' }, query: { code: '$code' } },\n    ${publication.recordPrefix}PageMetadataData: { options: { enabled: true, schemaName: 'cmsDocumentationPage', operation: 'saveAll', dataFilePrefix: '${publication.recordPrefix}PageMetadataData' }, query: { code: '$code' } },\n    ${publication.recordPrefix}PublicationStateData: { options: { enabled: true, schemaName: 'cmsDocumentationPublicationState', operation: 'saveAll', dataFilePrefix: '${publication.recordPrefix}PublicationStateData' }, query: { code: '$code' } },\n    ${publication.recordPrefix}SearchMetadataData: { options: { enabled: true, schemaName: 'cmsDocumentationSearchMetadata', operation: 'saveAll', dataFilePrefix: '${publication.recordPrefix}SearchMetadataData' }, query: { code: '$code' } },\n    ${publication.recordPrefix}TypeCodeData: { options: { enabled: true, schemaName: 'cmsTypeCode', operation: 'saveAll', dataFilePrefix: '${publication.recordPrefix}TypeCodeData' }, query: { code: '$code' } },\n    ${publication.recordPrefix}RendererData: { options: { enabled: true, schemaName: 'cmsTypeCode2Renderer', operation: 'saveAll', dataFilePrefix: '${publication.recordPrefix}RendererData' }, query: { code: '$code' } },\n    ${publication.recordPrefix}TemplateData: { options: { enabled: true, schemaName: 'cmsPageTemplate', operation: 'saveAll', dataFilePrefix: '${publication.recordPrefix}TemplateData' }, query: { code: '$code' } },\n    ${publication.recordPrefix}SlotData: { options: { enabled: true, schemaName: 'cmsSlotDefinition', operation: 'saveAll', dataFilePrefix: '${publication.recordPrefix}SlotData' }, query: { code: '$code' } },\n    ${publication.recordPrefix}ComponentData: { options: { enabled: true, schemaName: 'cmsComponent', operation: 'saveAll', dataFilePrefix: '${publication.recordPrefix}ComponentData' }, query: { code: '$code' } },\n    ${publication.recordPrefix}PageData: { options: { enabled: true, schemaName: 'cmsPage', operation: 'saveAll', dataFilePrefix: '${publication.recordPrefix}PageData' }, query: { code: '$code' } },\n    ${publication.recordPrefix}RouteData: { options: { enabled: true, schemaName: 'cmsPageRoute', operation: 'saveAll', dataFilePrefix: '${publication.recordPrefix}RouteData' }, query: { code: '$code' } },\n  },\n};\n`,
 };
 
-for (const [relativePath, content] of Object.entries(files)) {
-  await writeOrCheck(relativePath, content);
-}
+const plannedFiles = Object.fromEntries(Object.entries(files).map(([relativePath, content]) =>
+  [relativePath.replace(/^data\/core-v001\//, `data/${contentPath}/`), content]));
 
 const generatedHashes = Object.fromEntries(
-  Object.keys(files).map((relativePath) => [
+  Object.entries(plannedFiles).map(([relativePath, content]) => [
     relativePath.replace(/^data\//, ''),
-    sha256(fs.readFileSync(path.join(root, relativePath))),
+    sha256(content),
   ]),
 );
 const documentationSection = applicationDocumentationContract.buildReleaseSection({
   catalogue,
   generatedHashes,
-  contentPath: 'core-v001',
+  contentPath,
   owningDomain: publication.owningDomain,
   environmentScope: ['ALL'],
   sensitivity: 'PUBLIC',
@@ -1133,12 +1133,39 @@ const documentationSection = applicationDocumentationContract.buildReleaseSectio
 const previousManifest = fs.existsSync(manifestPath)
   ? JSON.parse(fs.readFileSync(manifestPath, 'utf8'))
   : { contractVersion: 2, module: project.name, sections: {} };
+applicationDocumentationContract.validateGeneration(previousManifest.sections?.documentation, documentationSection);
+releasePolicy.validateRetainedRoots(path.join(root, 'data'), previousManifest);
+const previousSection = previousManifest.sections?.documentation;
+const retainedRoots = { ...(previousManifest.retainedRoots || {}) };
+if (previousSection && previousSection.contentPath !== contentPath) {
+  if (retainedRoots[contentPath] || Object.entries(previousManifest.sections).some(([code, section]) =>
+    code !== 'documentation' && [section.sourceRoot, section.contentPath].includes(previousSection.contentPath))) {
+    throw new Error('Documentation forward release conflicts with another retained or active owner');
+  }
+  const files = releasePolicy.sourceRootFiles(path.join(root, 'data'), previousSection.contentPath);
+  if (Object.keys(files).length !== Object.keys(previousSection.generatedHashes).length ||
+      Object.entries(previousSection.generatedHashes).some(([file, hash]) => files[file] !== hash)) {
+    throw new Error('Immutable documentation source tree changed; preserve the original release before forwarding');
+  }
+  retainedRoots[previousSection.contentPath] = { files, sections: { documentation: previousSection } };
+}
+// Reject occupied output paths as a full plan, including old releases no longer selected by the manifest.
+for (const [relativePath, content] of Object.entries(plannedFiles)) {
+  const target = applicationDocumentationContract.containedPath(root, relativePath, 'generated documentation');
+  if (!checkOnly && previousManifest.sections?.documentation?.contentPath !== contentPath &&
+      fs.existsSync(target) && fs.readFileSync(target, 'utf8') !== content) {
+    throw new Error('Documentation output path already contains different content: ' + relativePath);
+  }
+}
 const manifest = {
+  ...previousManifest,
   contractVersion: 2,
   module: project.name,
   sections: { ...(previousManifest.sections || {}), documentation: documentationSection },
+  ...(Object.keys(retainedRoots).length ? { retainedRoots } : {}),
 };
 
+for (const [relativePath, content] of Object.entries(plannedFiles)) await writeOrCheck(relativePath, content);
 await writeOrCheck('data/manifest.json', `${JSON.stringify(manifest, null, 2)}\n`);
 
 console.log(`${checkOnly ? 'Validated' : 'Generated'} ${sourcePages.length} ${publication.shortLabel} documentation pages`);

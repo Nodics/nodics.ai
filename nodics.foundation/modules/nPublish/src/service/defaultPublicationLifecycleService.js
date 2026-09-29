@@ -48,6 +48,18 @@ module.exports = {
         if (!provider) throw new CLASSES.NodicsError('ERR_PUB_00002', 'Publication domain adapter is unavailable: ' + domain);
         return provider;
     },
+    /** Resolves a domain workflow override without silently falling back from an invalid explicit selection. */
+    getWorkflowProvider: function (domain) {
+        let providers = this.getConfiguration().providers || {};
+        let overrides = providers.workflowProviders || {};
+        let explicit = Object.prototype.hasOwnProperty.call(overrides, domain);
+        let reference = explicit ? overrides[domain] : providers.workflowProvider;
+        let provider = this.resolveProvider(reference);
+        if ((explicit || reference) && (!provider || typeof provider.requestApproval !== 'function')) {
+            throw new CLASSES.NodicsError('ERR_PUB_00001', 'Publication workflow provider is unavailable');
+        }
+        return provider;
+    },
     /** Resolves a safe actor identifier from authenticated context. */
     getActor: function (request) {
         let auth = request && request.authData || {};
@@ -121,7 +133,8 @@ module.exports = {
         let publication = await this.getRepository().get(request.publicationCode, request);
         if (!publication) throw new CLASSES.NodicsError('ERR_PUB_00000', 'Publication request was not found');
         if (publication.state === 'VALIDATED') return publication;
-        if (publication.state !== 'VALIDATING') publication = await this.transition(publication, 'VALIDATING', request);
+        if (publication.state !== 'VALIDATING') publication = await this.transition(publication, 'VALIDATING', request,
+            publication.state === 'ONLINE' ? { activationOperation: null } : {});
         try {
             let adapter = this.getDomainAdapter(publication.domain);
             let provider = this.getVersionProvider(publication.domain);
@@ -143,7 +156,7 @@ module.exports = {
     /** Moves a validated publication into governed approval. */
     requestApproval: async function (request) {
         let publication = await this.getRepository().get(request.publicationCode, request);
-        let workflow = this.resolveProvider((this.getConfiguration().providers || {}).workflowProvider);
+        let workflow = this.getWorkflowProvider(publication && publication.domain);
         if (publication && publication.state === 'PENDING_APPROVAL') {
             if (workflow && workflow.requestApproval) await workflow.requestApproval(publication, request);
             return publication;
@@ -190,7 +203,9 @@ module.exports = {
             throw new CLASSES.NodicsError('ERR_PUB_00005', 'Only a rolled back, withdrawn, or rejected publication can be resubmitted');
         }
         publication = await this.transition(publication, 'VALIDATING', request,
-            { recoveryFromState: publication.state }, { resubmission: true, recoveryFromState: publication.state });
+            Object.assign({ recoveryFromState: publication.state },
+                ['ROLLED_BACK', 'WITHDRAWN'].includes(publication.state) ? { activationOperation: null } : {}),
+            { resubmission: true, recoveryFromState: publication.state });
         return this.validate(Object.assign({}, request, { expectedRevision: publication.revision }));
     },
     /** Resumes an already-approved domain workflow release idempotently through validation and Online activation. */
@@ -212,22 +227,64 @@ module.exports = {
         }
         return publication;
     },
+    /** Validates optional qualified target evidence; target atomicity remains provider-owned. */
+    activationReceipt: function (provider, publication, activation) {
+        if (provider.targetReceiptContract === undefined) return null;
+        const receipt = activation && activation.receipt;
+        if (provider.targetReceiptContract !== 'v1' || !receipt ||
+            receipt.operationKey !== publication.activationOperation.key ||
+            receipt.publicationCode !== publication.code || receipt.sourceVersion !== publication.sourceVersion ||
+            typeof receipt.targetVersion !== 'string' || !receipt.targetVersion ||
+            receipt.targetVersion !== activation.version ||
+            !(receipt.previousOnlineVersion === null ||
+                (typeof receipt.previousOnlineVersion === 'string' && receipt.previousOnlineVersion.length > 0))) {
+            throw new CLASSES.NodicsError('ERR_PUB_00006', 'Qualified target activation receipt is invalid');
+        }
+        return receipt;
+    },
     /** Activates an approved source version and records the previous Online version. */
     activate: async function (request) {
         let publication = await this.getRepository().get(request.publicationCode, request);
         if (publication && publication.state === 'ONLINE') return publication;
-        if (publication.state !== 'ACTIVATING') publication = await this.transition(publication, 'ACTIVATING', request);
+        const provider = this.getVersionProvider(publication.domain);
+        if (publication.state !== 'ACTIVATING') {
+            this.assertTransition(publication.state, 'ACTIVATING');
+            this.requireExpectedRevision(request, publication);
+            // A failed response or completion hook does not prove the target failed to commit.
+            let operation = publication.activationOperation;
+            if (!operation) {
+                const previous = provider.getOnlineVersion ? await provider.getOnlineVersion(publication, request) : null;
+                operation = { key: publication.code + ':activate:' + String(Number(publication.revision) + 1),
+                previousOnlineVersion: (typeof previous === 'string' ? previous : previous && previous.version) || null };
+                if (previous && typeof previous === 'object' && previous.revision !== undefined) {
+                    if (!Number.isSafeInteger(previous.revision) || previous.revision < 0) {
+                        throw new CLASSES.NodicsError('ERR_PUB_00004', 'Target predecessor revision is invalid');
+                    }
+                    operation.previousOnlineRevision = previous.revision;
+                }
+            }
+            publication = await this.transition(publication, 'ACTIVATING', request, {
+                activationOperation: operation
+            });
+        }
         try {
-            let provider = this.getVersionProvider(publication.domain);
-            let previous = provider.getOnlineVersion ? await provider.getOnlineVersion(publication, request) : null;
+            // Historical in-flight requests retain their original revision-derived operation identity.
+            if (!publication.activationOperation) publication = Object.assign({}, publication, {
+                activationOperation: { key: publication.code + ':activate:' + String(publication.revision) }
+            });
             let activation = await provider.activate(publication, request);
+            const receipt = this.activationReceipt(provider, publication, activation);
             let adapter = this.getDomainAdapter(publication.domain);
             if (adapter.afterActivate) await adapter.afterActivate(publication, activation, request);
             let patch = { targetVersion: activation && activation.version || publication.sourceVersion };
-            let previousOnlineVersion = previous && (typeof previous === 'string' ? previous : previous.version);
-            if (previousOnlineVersion && typeof previousOnlineVersion === 'string') {
-                patch.previousOnlineVersion = previousOnlineVersion;
+            const previousOnlineVersion = receipt ? receipt.previousOnlineVersion :
+                activation && Object.prototype.hasOwnProperty.call(activation, 'previousOnlineVersion') &&
+                    activation.previousOnlineVersion !== undefined ? activation.previousOnlineVersion :
+                    publication.activationOperation.previousOnlineVersion;
+            if (previousOnlineVersion || publication.previousOnlineVersion || receipt) {
+                patch.previousOnlineVersion = previousOnlineVersion || null;
             }
+            patch.activationOperation = publication.activationOperation;
             return await this.transition(publication, 'ONLINE', Object.assign({}, request, { expectedRevision: publication.revision }),
                 patch, activation);
         } catch (error) {

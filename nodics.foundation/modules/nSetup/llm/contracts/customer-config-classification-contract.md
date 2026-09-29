@@ -251,9 +251,10 @@ ownership. Distinguish raw representation changes from effective behavior and
 record any remaining finding in the existing checklist.
 
 
-Browser-origin construction and standard Nodics application origins belong to
-nRouter. Inherit enabled CORS and standard ports; deployments declare differences
-through `httpHardening.cors`. Frontend
+Browser-origin construction and framework-owned browser defaults belong to
+nRouter. Customer application origins and their ports belong to the customer or
+environment through `httpHardening.cors`; reference applications do not become
+universal trusted origins. Frontend
 commands, repository paths, process readiness and UI tests are prohibited in
 backend properties. A security origin is an API trust decision, never a frontend
 lifecycle dependency. Preserve denials when a permitted address changes.
@@ -361,7 +362,10 @@ customer, environment, server and node configuration, including generators.
   to their owning framework provider or application/channel module, not server
   config. Profile owns provider mechanics and assertion policy; applications
   such as Circa own their Telegram application enrollment, credential reference
-  and runtime-update schema. Resolve reusable enterprise scope through
+  and runtime-update schema. Reusing provider field definitions requires proof
+  that the schema consumer can resolve the owner on its actual runtime; do not
+  activate unrelated providers or add an unused template registry just to shorten
+  application configuration. Resolve reusable enterprise scope through
   `defaultEnterprise` or a later customer override instead of hardcoding
   `"default"` in channel/application configuration.
 - Profile browser-session defaults belong to Profile. Environment layers may
@@ -411,8 +415,40 @@ Reusable acceptance defaults belong in each owning capability's `tooling.accepta
 and are read by the existing non-runtime nTooling entrypoint. Do not place a shared
 acceptance catalogue in every environment. Select runtime descriptors from declared
 roles/metadata; keep customer journey choices and real deployment deltas local.
-Accelerator reference content and its product-specific defaults are Nodics-owned;
-customer-specific content remains in customer overlays. Moving an immutable pack
+Only reference content explicitly owned by an accelerator belongs in that owner;
+customer applications remain customer-owned even when described as reference apps.
+Nodics authorship, data-only packaging and reuse of an accelerator do not change
+ownership. Apply the application mapping in customer-project-mode-contract.md;
+Agora and Circa application profiles and data stay in Kickoff. Moving an immutable pack
 preserves its module/release identities, versions, payloads and checksums, and
 updates explicit source consumers without keeping a second copy or adding another
 importer. A framework group must never acquire a dependency on an accelerator.
+
+Optional reference packs stay separate from domain requiredModules. Their property
+indexes precede customer layers, and media descriptors use manifestModule with
+module-relative manifestPath. Moving a pack also updates explicit runtime discovery
+roots and source consumers; it does not activate the domain on an administration
+runtime. Keep destination routing overrides and bounded reset selections in the
+deployment/project owner when the reusable package facts already come from manifests.
+
+## Cleanup verification boundary
+
+Classify the whole customer project, not only the current industry application:
+shared functional mechanics, accelerator composition, customer policy/content,
+deployment bindings and intentional extension templates have different owners.
+Record retained items and migration blockers in the project's canonical checklist.
+Do not count moving a file as success until effective configuration, module
+activation, reset scope and caller behavior remain valid under the existing loader.
+
+nTooling's existing design principle audit owns source-level customer placement
+checks. Projects consume that gate instead of maintaining competing validators.
+Static tooling discovery must handle normal quoted/unquoted property syntax
+without executing surrounding source. For acceptance, overlay the explicitly
+selected runtime's effective nConfig graph so customer module contributions are
+not lost. Discovery metadata alone never enables a runtime, channel or operation.
+
+Inert provider/transport defaults belong to their functional owner. Actual
+connections, credential references, channel selection and approval decisions
+remain explicit later-layer policy. Preserve installed contribution provenance
+and immutable release receipts; use a supported migration or a new release when
+ownership/content changes cannot be represented safely by a source-only move.

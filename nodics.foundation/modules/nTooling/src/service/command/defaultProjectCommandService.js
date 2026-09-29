@@ -310,7 +310,24 @@ module.exports = {
                 "home": "project",
                 "args": ["dockerLocal", "acceptance", "--expect-documentation-not-installed"]
             }
-        }, this.discoverRuntimeStartCommands(projectRoot), this.discoverAcceptanceCommands(projectRoot));
+        }, this.discoverRuntimeStartCommands(projectRoot), this.discoverAcceptanceCommands(projectRoot), this.frameworkAcceptanceCommands());
+    },
+
+    /** Reuses capability-owned canonical commands; no project script may shadow these aliases. */
+    frameworkAcceptanceCommands: function () {
+        const registry = require('../defaultToolingCommandService').loadCommands(this.resolveFrameworkRoot());
+        const commands = {};
+        for (const [name, definition] of Object.entries(registry)) {
+            if (definition.acceptanceContract === true)
+                commands[name] = { type: 'frameworkCommand', command: name, ...(definition.projectHome ? { home: 'project' } : {}) };
+        }
+        commands['qualification:deployment:local'] = {
+            ...commands['qualification:deployment'], args: ['--execute-local']
+        };
+        if (commands['acceptance:local']) commands['acceptance:local:fresh'] = {
+            ...commands['acceptance:local'], args: ['--drop-local-db', '--start-runtimes']
+        };
+        return commands;
     },
 
     /**
@@ -368,11 +385,9 @@ module.exports = {
         if (!fs.existsSync(acceptanceRoot)) return {};
         const commands = {};
         const explicitNames = {
-            defaultProjectAgoraCmsMediaSeedService: 'acceptance:agora-cms-media-seed',
-            defaultProjectAgoraCommerceAcceptanceService: 'acceptance:agora-commerce',
-            defaultProjectAgoraCommerceDataAcceptanceService: 'acceptance:agora-commerce-data',
-            defaultProjectAgoraCommerceLiveQualificationService: 'qualification:agora-commerce:live',
-            defaultProjectAgoraCommercePublicationAcceptanceService: 'acceptance:agora-commerce-publication',
+            defaultProjectAgoraCommerceAcceptanceService: 'acceptance:commerce-journey',
+            defaultProjectAgoraCommerceLiveQualificationService: 'qualification:commerce-live',
+            defaultProjectAgoraCommercePublicationAcceptanceService: 'acceptance:commerce-publication',
             defaultProjectCapabilityRegistryAcceptanceService: 'acceptance:capability-registry',
             defaultProjectDeploymentQualificationService: 'qualification:deployment',
             defaultProjectEditorialLiveJourneyAcceptanceService: 'acceptance:editorial-live',
@@ -380,15 +395,16 @@ module.exports = {
             defaultProjectGuidedInitializationAcceptanceService: 'acceptance:guided-initialization',
             defaultProjectLocalBootstrapAcceptanceService: 'acceptance:local',
             defaultProjectLoyaltyRewardCheckoutAcceptanceService: 'acceptance:loyalty-reward-checkout',
-            defaultProjectNexusCmsMediaSeedService: 'acceptance:nexus-cms-media-seed',
             defaultProjectRuntimeDeploymentGrantAcceptanceService: 'acceptance:runtime-grants',
-            defaultProjectWasteBackofficeDiscoveryAcceptanceService: 'acceptance:waste-backoffice-discovery',
+            defaultProjectWasteBackofficeDiscoveryAcceptanceService: 'acceptance:waste-backoffice',
             defaultProjectWasteManagementAcceptanceService: 'acceptance:waste-management'
         };
+        const canonical = this.frameworkAcceptanceCommands();
         for (const file of fs.readdirSync(acceptanceRoot).filter(name => name.endsWith('Service.mjs')).sort()) {
             const baseName = file.replace(/\.mjs$/u, '');
             const commandName = explicitNames[baseName] || this.acceptanceScriptToCommandName(baseName);
             if (!commandName) continue;
+            if (canonical[commandName]) throw new Error('Project script shadows framework acceptance contract: ' + commandName);
             commands[commandName] = { type: 'projectScript', script: path.join('scripts', 'acceptance', file) };
         }
         if (commands['acceptance:local']) {

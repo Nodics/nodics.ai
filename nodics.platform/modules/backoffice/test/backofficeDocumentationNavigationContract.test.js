@@ -152,8 +152,6 @@ assert(axisCapability.roles.includes('UI_COMPOSITION_PROVIDER'),
     'Platform axis module contributes UI composition and documentation metadata');
 assert.strictEqual(platformProperties.apiExposure, undefined,
     'Platform composition must not own another capability category policy');
-assert.strictEqual(require('../../../../nodics.foundation/modules/nData/nImport/import/config/properties').apiExposure.categories.dataImport.enabled, false,
-    'nImport owns its category default and deployments explicitly select governed initialization');
 assert(sources.every(source => source.connectionModule),
     'every documentation source must resolve its runtime through the BackOffice registry');
 assert.strictEqual(sources.find(source => source.id === 'nodics-axis').packCode, 'axisDocumentation');

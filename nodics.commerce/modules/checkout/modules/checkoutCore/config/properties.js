@@ -11,6 +11,16 @@
 
 /** @module checkoutCore/config/properties @description Defines Commerce capability and schema access policies. @layer config @owner checkoutCore */
 module.exports = {
+  tooling: {
+    commands: {
+      'acceptance:commerce-journey': {
+        acceptanceContract: true,
+        projectHome: true,
+        handler: '@nTooling/node-script',
+        script: 'src/service/acceptance/defaultCommerceJourneyAcceptanceService.mjs',
+      },
+    },
+  },
   // Inert inventory; an allowed local server must explicitly select this capability.
   localResetProvider: {
     contributions: {

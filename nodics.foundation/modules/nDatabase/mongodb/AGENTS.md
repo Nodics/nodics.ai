@@ -10,6 +10,27 @@ This file gives AI coding agents mandatory guidance for this Nodics module or pa
 
 ## Module Work Rules
 
+- Offline installed-version migration uses
+  `DefaultMongodbInstalledVersionMigrationService`, not startup reconciliation.
+  Read its [contract](llm/contracts/installed-version-migration-contract.md).
+  Require explicit scope/schema/index proof, bounded BSON evidence, verified
+  parent-owned outage and acknowledged durable intent before every side effect.
+  Never open another connection, import business schema names, infer target
+  indexes, reopen writers or create a parallel execution journal here.
+- Strict internal journals must qualify `model.persistenceCapabilities()` and
+  select `internalPersistence: 'DURABLE_JOURNAL'` on both CAS and readback. Never
+  forward caller-supplied write concern into ordinary CRUD or equate an ordinary
+  readback with crash durability. See the durable journal section of the
+  [provider contract](llm/contracts/README.md#internal-durable-journal-persistence).
+
+- Index discovery failures must reject before a reconciliation plan is dispatched.
+  Respect explicit `cleanOrphan: false`; await all replacement drops before any
+  create starts. A failed drop prohibits creates. Inspection never invokes this
+  mutation path. Preserve the independent deferred/failure regression tests.
+- Versioned index reconciliation must reject installed non-versioned unique
+  indexes before any plan runs. Preserve the _id exemption; ordinary schemas
+  retain their behavior. Configuration activation is not migration authority.
+
 - Treat this directory as a layered Nodics module boundary when it contains `package.json`.
 - Keep capabilities stable and make implementations replaceable through the module hierarchy.
 - Do not hardcode project, environment, server, node, tenant, or customer behavior into reusable framework code.

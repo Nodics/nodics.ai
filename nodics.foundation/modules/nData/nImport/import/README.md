@@ -1,5 +1,17 @@
 # import
 
+Internal installed-schema migrations can journal immutable plans and fenced
+checkpoints through the existing `importRun` authority. See the
+[strict migration journal contract](llm/contracts/installed-migration-journal.md)
+for developer integration, stopped-worker recovery and evidence limits. This
+does not execute a migration, manage runtimes, expose a new route or change normal
+best-effort import history.
+
+Forward releases may retain historical source trees in the existing manifest's
+validated `retainedRoots` map. Old bytes and installation identities remain intact;
+retained roots are excluded from conventional discovery. See the
+[retention contract](llm/contracts/README.md#retained-source-roots).
+
 Import provides governed data ingestion for seed packs, migration inputs, media-backed uploads, headers, validation, dispatch, and execution evidence.
 
 ## Responsibility
@@ -112,6 +124,24 @@ Deep documentation lives in:
 - `nodics.docs/docs/pages/applications/tee-deap-solution-use-cases.md`
 
 ## Verification
+
+`nodics project:run acceptance:staged-sample-data --target-role=<ROLE_STAGED> --release-modules=<module,...>`
+checks the secured sample catalogue and validation APIs using employee authority.
+Start the selected Platform and Staged runtimes through the project's topology
+tooling first. The suite never starts or stops servers. `--help` is inert.
+Application `dataPackages` in effective Platform profiles select the releases;
+the module allowlist ignores inactive applications but fails when nothing matches.
+Application data and fixture selections remain with their owners.
+
+The default is validation-only. `--execute-install` explicitly permits installation;
+the historical storefront-specific environment flag has no effect. Versions come
+from the catalogue, never a guessed fallback. Duplicate/missing identities, wrong
+destinations, changed versions and validation responses claiming execution fail.
+Current releases are skipped; after installation the catalogue must report the
+same selected versions as `CURRENT`. Import errors, including immutable-release
+errors, are not success evidence. Partial installation is not automatically rolled
+back; resolve the failure and retry through nImport. No reset, Online publication,
+permission mutation or approval is performed by this suite.
 
 Run import-focused contract tests when behavior changes, then run:
 

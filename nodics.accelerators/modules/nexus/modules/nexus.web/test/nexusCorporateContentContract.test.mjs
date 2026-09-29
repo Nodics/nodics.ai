@@ -19,9 +19,24 @@ import { createHash } from "node:crypto";
 
 const moduleRoot = resolve(dirname(fileURLToPath(import.meta.url)), "..");
 const require = createRequire(import.meta.url);
+const pack = require(resolve(moduleRoot, 'package.json'));
+const properties = require(resolve(moduleRoot, 'config/properties.js'));
+const initialization = require(resolve(moduleRoot, '../nexusCore/config/properties.js'))
+  .backofficeApplicationInitialization.profiles.nexus;
+assert.equal(pack.name, 'nexus.web');
+assert.deepEqual(pack.nodics.extends, ['nexus']);
+assert.equal(properties.cms.publication.baselines.nexus.releaseCode, 'nexus.web:nexusCorporateSite');
+assert.equal(properties.cms.designerAuthoring.draftDefaults.siteCode, 'nexusCorporateSite');
+assert.equal(initialization.dataPackages.$config, 'replace');
+const mediaManifest = initialization.dataPackages.value
+  .find(step => step.type === 'MEDIA_ASSET_MANIFEST');
+assert.equal(mediaManifest.manifestModule, pack.name);
+assert.equal(mediaManifest.manifestPath, 'data/sample-v001/content/assets/nexus-cms-media/assetManifest.js');
+assert(existsSync(resolve(moduleRoot, mediaManifest.manifestPath)));
 const manifest = JSON.parse(
   await readFile(resolve(moduleRoot, "data/manifest.json")),
 );
+assert.equal(manifest.module, pack.name);
 const documentationBoundary = await readFile(
   resolve(moduleRoot, "docs/README.md"),
   "utf8",

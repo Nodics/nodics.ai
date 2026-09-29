@@ -19,6 +19,63 @@
 module.exports = {
     media: {
         storagePolicy: {
+            createRetainedPublication: {
+                secured: true, authTokenTypes: ['access'], accessGroups: ['runtimeConfigAdminUserGroup'],
+                permission: 'publish.lifecycle.create', apiExposure: 'mediaManagement',
+                key: '/publication/requests', method: 'POST', controller: 'DefaultMediaStorageController',
+                operation: 'createRetainedPublication',
+                help: { requestType: 'secured', message: 'Captures an exact Media metadata version and requests governed publication approval.', method: 'POST', url: 'http://host:port/nodics/media/v0/publication/requests' },
+                responses: { '200': { description: 'Media publication workflow request' } }
+            },
+            authorizeRetainedPublication: {
+                secured: true, authTokenTypes: ['service'], accessGroups: ['userGroup'],
+                permissionConfig: 'authSecurity.internalToken.routePermission', apiExposure: 'moduleInternal',
+                key: '/publication/authorize-target', method: 'POST', controller: 'DefaultMediaStorageController',
+                operation: 'authorizeRetainedPublication',
+                help: { requestType: 'internalService', message: 'Checks stored Media publication intent on Staged.', method: 'POST', url: 'http://host:port/nodics/media/v0/publication/authorize-target' },
+                responses: { '200': { description: 'Exact source operation authorization' } }
+            },
+            deployRetainedPublication: {
+                secured: true, authTokenTypes: ['service'], accessGroups: ['userGroup'],
+                permissionConfig: 'authSecurity.internalToken.routePermission', apiExposure: 'moduleInternal',
+                bodyParserHandler: 'mediaPublicationBodyParserHandler',
+                key: '/publication/target/deploy', method: 'POST', controller: 'DefaultMediaStorageController',
+                operation: 'deployRetainedPublication',
+                help: { requestType: 'internalService', message: 'Prepares or activates retained Media content on the qualified Online target.', method: 'POST', url: 'http://host:port/nodics/media/v0/publication/target/deploy' },
+                responses: { '200': { description: 'Retained Media target receipt' } }
+            },
+            retainedPublicationStatus: {
+                secured: true, authTokenTypes: ['service'], accessGroups: ['userGroup'],
+                permissionConfig: 'authSecurity.internalToken.routePermission', apiExposure: 'moduleInternal',
+                key: '/publication/target/status', method: 'POST', controller: 'DefaultMediaStorageController',
+                operation: 'retainedPublicationStatus',
+                help: { requestType: 'internalService', message: 'Reads activated Media version evidence.', method: 'POST', url: 'http://host:port/nodics/media/v0/publication/target/status' },
+                responses: { '200': { description: 'Active Media version' } }
+            },
+            rollbackRetainedPublication: {
+                secured: true, authTokenTypes: ['service'], accessGroups: ['userGroup'],
+                permissionConfig: 'authSecurity.internalToken.routePermission', apiExposure: 'moduleInternal',
+                key: '/publication/target/rollback', method: 'POST', controller: 'DefaultMediaStorageController',
+                operation: 'rollbackRetainedPublication',
+                help: { requestType: 'internalService', message: 'Restores a retained Media manifest without rereading Staged content.', method: 'POST', url: 'http://host:port/nodics/media/v0/publication/target/rollback' },
+                responses: { '200': { description: 'Retained Media rollback receipt' } }
+            },
+            reconcileRetainedPublication: {
+                secured: true, authTokenTypes: ['service'], accessGroups: ['userGroup'],
+                permissionConfig: 'authSecurity.internalToken.routePermission', apiExposure: 'moduleInternal',
+                key: '/publication/target/reconcile', method: 'POST', controller: 'DefaultMediaStorageController',
+                operation: 'reconcileRetainedPublication',
+                help: { requestType: 'internalService', message: 'Checks retained Media integrity without pointer repair or deletion.', method: 'POST', url: 'http://host:port/nodics/media/v0/publication/target/reconcile' },
+                responses: { '200': { description: 'Retained Media integrity evidence' } }
+            },
+            applyPublicationDecision: {
+                secured: true, authTokenTypes: ['service'], accessGroups: ['userGroup'],
+                permissionConfig: 'authSecurity.internalToken.routePermission', apiExposure: 'moduleInternal',
+                key: '/workflow/actions/applyPublicationDecision', method: 'POST', controller: 'DefaultMediaStorageController',
+                operation: 'applyPublicationDecision',
+                help: { requestType: 'internalService', message: 'Claims a fixed Media publication decision from Process before nPublish transitions.', method: 'POST', url: 'http://host:port/nodics/media/v0/workflow/actions/applyPublicationDecision' },
+                responses: { '200': { description: 'Claimed Media publication decision result' } }
+            },
             listMediaContexts: {
                 secured: true,
                 accessGroups: ['userGroup'],

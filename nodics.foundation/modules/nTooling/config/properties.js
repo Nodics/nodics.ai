@@ -222,6 +222,7 @@ module.exports = {
                 { suite: 'traceability' },
                 { suite: 'headers' },
                 { suite: 'route-contracts' },
+                { node: 'nodics.foundation/modules/nRouter/test/apiExposureOwnershipContract.test.js' },
                 { suite: 'generated' },
                 { tool: ['test:capability-behavior', '--area=system'] },
                 { suite: 'import' },
@@ -275,6 +276,10 @@ module.exports = {
                 { tool: ['llm:validate'] }
             ],
             tooling: [
+                { node: 'nodics.foundation/modules/nTooling/test/projectConfigurationHarness.test.js' },
+                { node: 'nodics.foundation/modules/nTooling/test/projectRuntimePreparationContract.test.js' },
+                { node: 'nodics.foundation/modules/nTooling/test/projectTopologyLifecycleContract.test.mjs' },
+                { node: 'nodics.foundation/modules/nTooling/test/projectContainerContracts.test.mjs' },
                 { node: 'nodics.foundation/modules/nTooling/test/applicationBuilderProjectIndependenceContract.test.js' },
                 { node: 'nodics.foundation/modules/nTooling/test/projectBuildTargetContract.test.js' },
                 { node: 'nodics.foundation/modules/nTooling/test/projectSelectiveRuntimeContract.test.js' },
@@ -301,6 +306,7 @@ module.exports = {
                 { node: 'nodics.foundation/modules/nTooling/test/projectPostmanCoverageOwnership.test.js' },
                 { node: 'nodics.foundation/modules/nTooling/test/fullTestSuiteCoverageContract.test.js' },
                 { node: 'nodics.foundation/modules/nTooling/test/moduleStructure.test.js' },
+                { node: 'nodics.foundation/modules/nTooling/test/projectLocalRuntimeCredentialService.test.js' },
                 { node: 'nodics.foundation/modules/nTooling/test/structureComplianceAudit.test.js' },
                 { node: 'nodics.foundation/modules/nTooling/test/structureGeneratorAlignment.test.js' },
                 { node: 'nodics.foundation/modules/nTooling/test/topologyPlanWorkflow.test.js' },
@@ -324,6 +330,52 @@ module.exports = {
                 { node: 'nodics.foundation/modules/nTooling/test/applicationBuilderSafetyAcceptanceContract.test.js' }
             ],
             governance: [
+                { node: 'nodics.foundation/modules/nData/nImport/import/test/dataReleaseSelectionPolicy.test.js' },
+                { node: 'nodics.foundation/modules/nTooling/test/generatedRuntimeDriverContract.test.js' },
+                { node: 'nodics.loyalty/test/loyaltyGeneratedRuntimeContract.test.js' },
+                { node: 'nodics.waste/test/wasteGeneratedRuntimeContract.test.js' },
+                { node: 'nodics.accelerators/modules/waste/modules/eWaste/test/eWasteManifestOwnershipContract.test.js' },
+                { node: 'nodics.accelerators/modules/waste/modules/eWaste/test/eWasteReferenceCompatibility.test.js' },
+                { node: 'nodics.communication/test/communicationActivationDataReleaseContract.test.js' },
+                { node: 'nodics.platform/modules/profile/test/profileRouteContract.test.js' },
+                { node: 'nodics.process/modules/workflow/test/processContributionAdoption.test.js' },
+                { node: 'nodics.process/modules/workflow/test/processRemoteActionAdapter.test.js' },
+                { node: 'nodics.process/modules/workflow/test/processStartReplay.test.js' },
+                { node: 'nodics.waste/modules/wasteCore/test/wasteInstalledDataInspection.test.js' },
+                { node: 'nodics.wcms/modules/editorial/test/editorialWorkflowContribution.test.js' },
+                { node: 'nodics.wcms/modules/editorial/test/editorialWorkflowEndpoint.test.js' },
+                { node: 'nodics.accelerators/modules/waste/modules/eWaste/test/eWasteCatalogueDiscovery.test.js' },
+                { node: 'nodics.accelerators/modules/waste/modules/eWaste/test/eWasteArrivalPolicy.test.js' },
+                { node: 'nodics.accelerators/modules/waste/modules/eWaste/test/eWasteGuidanceHistory.test.js' },
+                { node: 'nodics.accelerators/modules/waste/modules/eWaste/test/eWasteWeightValuationPrecision.test.js' },
+                { node: 'nodics.waste/modules/wasteCore/test/wasteDataContributionPolicyContract.test.js' },
+                { node: 'nodics.location/modules/locationCore/test/locationDistanceService.test.js' },
+                { node: 'nodics.foundation/modules/nData/nImport/import/test/dataReleaseService.test.js' },
+                { node: 'nodics.foundation/modules/nData/nImport/import/test/installedMigrationJournalContract.test.js' },
+                { node: 'nodics.commerce/modules/baseCommerce/modules/product/test/productLocalizedSearchPublicationContract.test.js' },
+                { node: 'nodics.commerce/modules/baseCommerce/modules/product/test/productGovernedPublicationContract.test.js' },
+                { node: 'nodics.commerce/modules/baseCommerce/modules/pricing/test/pricingPolicyProvider.test.js' },
+                { node: 'nodics.commerce/modules/baseCommerce/modules/pricing/test/pricingPublicationPolicyBoundary.test.js' },
+                { node: 'nodics.commerce/modules/baseCommerce/modules/promotion/test/promotionPolicyProvider.test.js' },
+                { node: 'nodics.commerce/modules/baseCommerce/modules/promotion/test/promotionPublicationPolicyBoundary.test.js' },
+                { node: 'nodics.commerce/modules/baseCommerce/modules/inventory/test/inventoryPolicyProvider.test.js' },
+                { node: 'nodics.commerce/modules/baseCommerce/modules/inventory/test/inventoryPublicationPolicyBoundary.test.js' },
+                { node: 'nodics.commerce/modules/baseCommerce/modules/tax/test/taxPolicyProvider.test.js' },
+                { node: 'nodics.commerce/modules/baseCommerce/modules/tax/test/taxPublicationPolicyBoundary.test.js' },
+                { node: 'nodics.wcms/modules/media/test/mediaRetainedPublicationContract.test.js' },
+                { node: 'nodics.wcms/modules/media/test/mediaRetainedStorageContract.test.js' },
+                { node: 'nodics.wcms/modules/media/test/mediaPublicationIntegrationContract.test.js' },
+                { node: 'nodics.wcms/modules/media/test/mediaWorkflowReleaseUpgradeContract.test.js' },
+                { node: 'nodics.wcms/modules/media/test/mediaRetainedTargetReplicaSet.test.js' },
+                { node: 'nodics.commerce/modules/baseCommerce/modules/pricing/test/customerPriceSummaryContract.test.js' },
+                { node: 'nodics.commerce/modules/baseCommerce/modules/inventory/test/customerAvailabilitySummaryContract.test.js' },
+                { node: 'nodics.commerce/modules/checkout/modules/order/test/orderReverseLifecycleDepthContract.test.js' },
+                { node: 'nodics.accelerators/modules/electronics/modules/electronicsProduct/test/electronicsProductContract.test.js' },
+                { node: 'nodics.accelerators/modules/telco/modules/telcoCatalog/test/telcoContract.test.js' },
+                { node: 'nodics.accelerators/modules/domainCommerceCore/test/domainCommerceCoreContract.test.js' },
+                { node: 'nodics.copilot/modules/copilotKnowledge/test/copilotKnowledgeStartupContract.test.js' },
+                { node: 'nodics.loyalty/test/loyaltySchemaBoundaryContract.test.js' },
+                { node: 'nodics.waste/test/wasteSchemaBoundaryContract.test.js' },
                 { node: 'nodics.foundation/modules/nDatabase/database/test/generatedSchemaServiceStartupContract.test.js' },
                 { node: 'nodics.foundation/modules/nDatabase/database/test/localRuntimeAuthorityGate.test.js' },
                 { node: 'nodics.foundation/modules/nDatabase/database/test/modelConcurrencyContract.test.js' },
@@ -347,13 +399,23 @@ module.exports = {
                 { node: 'nodics.foundation/modules/nDatabase/database/test/modelSaveInitializerPipelineContract.test.js' },
                 { node: 'nodics.foundation/modules/nDatabase/database/test/schemaTransactionGovernanceContract.test.js' },
                 { node: 'nodics.foundation/modules/nDatabase/database/test/databaseTransactionContract.test.js' },
+                { node: 'nodics.foundation/modules/nDatabase/database/test/installedVersionMigrationCommand.test.mjs' },
+                { node: 'nodics.foundation/modules/nDatabase/database/test/installedVersionMigrationOrchestration.test.js' },
+                { node: 'nodics.foundation/modules/nDatabase/database/test/installedVersionMigrationLive.test.js' },
+                { node: 'nodics.foundation/modules/nDatabase/mongodb/test/installedVersionMigrationContract.test.js' },
+                { node: 'nodics.foundation/modules/nDatabase/mongodb/test/durableJournalPersistenceContract.test.js' },
                 { node: 'nodics.foundation/modules/nDatabase/mongodb/test/mongodbTransactionContract.test.js' },
                 { node: 'nodics.foundation/modules/nDatabase/database/test/modelsSaveInitializerPipelineContract.test.js' },
                 { node: 'nodics.foundation/modules/nDatabase/database/test/modelsRemoveUpdateInitializerPipelineContract.test.js' },
                 { node: 'nodics.foundation/modules/nDatabase/database/test/schemaWriteAccessPolicyService.test.js' },
                 { node: 'nodics.foundation/modules/nDatabase/database/vDatabase/test/versionedSchemaSelectionContract.test.js' },
                 { node: 'nodics.foundation/modules/nDatabase/mongodb/vMongodb/test/versionedModelContract.test.js' },
+                { node: 'nodics.foundation/modules/nDatabase/mongodb/vMongodb/test/currentVersionReadContract.test.js' },
+                { node: 'nodics.foundation/modules/nService/vService/test/versionedReadResponseContract.test.js' },
+                { node: 'nodics.foundation/modules/nService/vService/test/managedMutationLayerContract.test.js' },
                 { node: 'nodics.foundation/modules/nPublish/test/publicationLifecycleService.test.js' },
+                { node: 'nodics.foundation/modules/nPublish/test/publicationWorkflowProvider.test.js' },
+                { node: 'nodics.foundation/modules/nPublish/test/publicationApprovalBridge.test.js' },
                 { node: 'nodics.foundation/modules/nConfig/test/artifactOverrideTraceability.test.js' }
             ],
             'runtime-overrides': [
@@ -415,6 +477,9 @@ module.exports = {
                 { node: 'nodics.foundation/modules/nAuth/test/integration/authRuntimeRedisLive.test.js' }
             ],
             'route-contracts': [
+                { node: 'nodics.foundation/modules/nRouter/test/schemaRouteGroupContract.test.js' },
+                { node: 'nodics.foundation/modules/nPublish/test/publicationOperationsRouteContract.test.js' },
+                { node: 'nodics.wcms/modules/cms/test/cmsPublicationTargetRouteContract.test.js' },
                 { tool: ['test:route-contracts'] },
                 { node: 'nodics.foundation/modules/nRouter/test/openapiContractGeneration.test.js' }
             ],
@@ -428,6 +493,8 @@ module.exports = {
                 { tool: ['test:generated'] }
             ],
             import: [
+                { node: 'nodics.foundation/modules/nData/nImport/import/test/dataReleaseContributionPreflight.test.js' },
+                { node: 'nodics.foundation/modules/nData/nImport/import/test/dataReleaseRetention.test.js' },
                 { node: 'nodics.foundation/modules/nData/nImport/import/test/dataReleaseConcurrencyContract.test.js' },
                 { node: 'nodics.foundation/modules/nData/nImport/import/test/jsSourceRecordIdentityContract.test.js' },
                 { node: 'nodics.foundation/modules/nData/nImport/import/test/layeredReleaseCompositionContract.test.js' },
@@ -573,6 +640,18 @@ module.exports = {
             ]
         },
         commands: {
+            'qualification:commerce-live': {
+                acceptanceContract: true,
+                projectHome: true,
+                handler: '@nTooling/node-script',
+                script: 'src/service/project/defaultCommerceLiveQualificationService.mjs'
+            },
+            'acceptance:functional': {
+                acceptanceContract: true,
+                projectHome: true,
+                handler: '@nTooling/node-script',
+                script: 'src/service/project/defaultFunctionalJourneyAcceptanceService.mjs'
+            },
             'validate:root': {
                 description: 'Validate the nodics.ai framework repository boundary and nSetup LLM taxonomy.',
                 handler: 'src/service/command/defaultNodeScriptCommandService.js',
@@ -631,28 +710,39 @@ module.exports = {
                 ]
             },
             'qualification:security-boundary': {
+                acceptanceContract: true,
                 description: 'Run framework-owned automated local security boundary contracts.',
                 handler: 'src/service/command/defaultNodeScriptCommandService.js',
                 script: 'src/service/quality/defaultFrameworkQualificationEvidenceService.js',
                 arguments: ['security-boundary']
             },
             'qualification:publishing-capacity': {
+                acceptanceContract: true,
                 description: 'Run framework-owned bounded publication capacity contracts.',
                 handler: 'src/service/command/defaultNodeScriptCommandService.js',
                 script: 'src/service/quality/defaultFrameworkQualificationEvidenceService.js',
                 arguments: ['publishing-capacity']
             },
             'qualification:publishing-soak': {
+                acceptanceContract: true,
                 description: 'Run framework-owned sustained publication reliability contracts.',
                 handler: 'src/service/command/defaultNodeScriptCommandService.js',
                 script: 'src/service/quality/defaultFrameworkQualificationEvidenceService.js',
                 arguments: ['publishing-soak']
             },
             'qualification:publishing-interruption-contracts': {
+                acceptanceContract: true,
                 description: 'Run framework-owned publication interruption and reconciliation contracts.',
                 handler: 'src/service/command/defaultNodeScriptCommandService.js',
                 script: 'src/service/quality/defaultFrameworkQualificationEvidenceService.js',
                 arguments: ['publishing-interruption-contracts']
+            },
+            'qualification:deployment': {
+                projectHome: true,
+                description: 'Build or execute the canonical Local deployment qualification plan; production evidence remains separate.',
+                acceptanceContract: true,
+                handler: '@nTooling/node-script',
+                script: 'src/service/project/defaultDeploymentQualificationService.mjs'
             },
             'project:validate': {
                 description: 'Validate a generated or reference project contract from package, environment server metadata, scripts, and layered configuration.',

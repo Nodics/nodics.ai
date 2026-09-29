@@ -178,7 +178,8 @@ class NodicsError extends Error { constructor(code, message) { super(message || 
         { code: 'young', businessPurpose: 'CMS_PUBLICATION', status: 'READY', retentionUntil: '2027-01-01T00:00:00.000Z' },
         { code: 'held', businessPurpose: 'CMS_PUBLICATION', status: 'READY', retentionUntil: '2026-01-01T00:00:00.000Z', legalHold: true }
     ] });
-    global.SERVICE.DefaultMediaLifecycleCoordinationService = { deleteExpired: async request => deleted.push(request.mediaCode) };
+    global.SERVICE.DefaultMediaLifecycleCoordinationService = { ...require('../src/service/storage/defaultMediaLifecycleCoordinationService'),
+        deleteExpired: async request => deleted.push(request.mediaCode) };
     let collected = await service.collectGarbage({ tenant: 'default', authData: {},
         protectedMediaCodes: ['active', 'rollback'], now: '2026-06-01T00:00:00.000Z', dryRun: false });
     assert.deepStrictEqual(deleted, ['orphan']);

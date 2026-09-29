@@ -1,5 +1,15 @@
 # nTooling
 
+The data-manifest service exposes a write-free `planForwardRelease` interface for
+immutable successors and historical source retention. Both manifest generators
+reuse nImport's validation. See [forward releases](llm/contracts/README.md#forward-data-releases).
+
+Canonical capability acceptance is contributed by framework owners through
+`tooling.commands` with `acceptanceContract: true`; projects cannot shadow those
+commands. `qualification:deployment` now owns the complete Local qualification
+plan. It prints a plan by default; execution and destructive fresh-data checks
+require separate flags. See [canonical acceptance commands](llm/contracts/README.md#canonical-acceptance-commands).
+
 `nTooling` owns Nodics development-time commands, quality gates, generators, and
 repository inspection utilities. It is deliberately excluded from the runtime
 module loader so application startup never depends on development tooling.
@@ -146,7 +156,17 @@ registry is introduced. Test this with
 isolated from customer runtimes. Standard functional exceptions are tested by
 `test/functionalModuleOptionalityContract.test.js`.
 
+## Maintenance Outage
+
+For installed-schema migration, use the existing topology service's read-only
+`verifyMaintenanceOutage` helper. It rejects listening backend ports, recognized
+runtime/supervisor processes and unavailable process inventory; it does not stop
+writers or establish a distributed lock. See the
+[outage evidence contract](llm/contracts/README.md#maintenance-outage-evidence)
+and the database-owned [operator procedure](../nDatabase/database/llm/contracts/installed-version-migration.md).
+
 ## Post-Reset Readiness
+
 
 `project:post-reset-readiness` produces the support-safe evidence bundle to run
 after a schema reset, server restart, import repair, or publication recovery. It

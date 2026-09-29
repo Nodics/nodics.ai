@@ -1,5 +1,44 @@
 # mongodb Module
 
+## Internal Durable Journals
+
+Unversioned internal execution journals reuse `compareAndSetItem` with the
+allowlisted `internalPersistence: 'DURABLE_JOURNAL'` mode after checking
+`persistenceCapabilities()`. It enforces journaled-majority writes and
+primary-majority `getItems` readback, without accepting caller driver options.
+Standalone servers are not excluded merely because transactions are unavailable.
+Handshake capability is not proof of a completed durable write: every operation
+must acknowledge the requested policy. See the
+[durability contract](llm/contracts/README.md#internal-durable-journal-persistence).
+
+## Offline Installed Version Migration
+
+`DefaultMongodbInstalledVersionMigrationService` supplies bounded, checkpointed
+backfill, explicit index transition, verification and pre-reopen rollback for
+an existing provider model. It does not operate application databases at startup
+or own execution history, authorization, outage orchestration or publication.
+The inert `database.default.mongodb.options.installedVersionMigrationService`
+selector supports generic orchestration. `bindMaintenanceModel` attaches existing
+provider methods without initialization effects; `desiredTransitions` derives
+explicit mappings through the existing options builder on a cloned target schema.
+See the [API and recovery contract](llm/contracts/installed-version-migration-contract.md)
+and [integration example](llm/examples/README.md#offline-migration-integration).
+
+Run `node --test nodics.foundation/modules/nDatabase/mongodb/test/installedVersionMigrationContract.test.js`.
+Set `NODICS_MONGODB_TEST_URI` explicitly to include the isolated UUID-database
+MongoDB test. Without it, the live test is reported skipped, not validated.
+
+Installed-index inspection and reconciliation share this provider owner, not a
+customer utility. Inspection is read-only. Reconciliation respects explicit
+no-orphan-cleanup and completes replacement drops before creating indexes;
+failed discovery or drops reject without later creates. See the
+[index safety contract](llm/contracts/README.md#index-inspection-and-reconciliation).
+
+Versioned reconciliation rejects installed non-versioned unique indexes before
+mutation, regardless of orphan-cleanup selection. Qualify and explicitly migrate
+installed identities first; merely enabling versioning must not replace their
+uniqueness contract. New collections retain version-aware index creation.
+
 `mongodb` is the MongoDB adapter module for `nDatabase`. It owns MongoDB connection defaults, provider handler wiring, MongoDB model behavior, schema/model adapter slots, and provider-specific pipeline extension points.
 
 Use this module when implementing or changing MongoDB-specific database behavior. Shared DAO contracts, schema access policy, generated CRUD behavior, tenant database validation, and provider-neutral database lifecycle rules belong in `nDatabase/database`.

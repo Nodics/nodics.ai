@@ -1,5 +1,20 @@
 # Workflow Agent Guide
 
+Explicit allowed action strings can resolve remote declarations from discovered
+inactive owners through the existing action registry. Keep the allowlist and
+remote targets deployment-owned; do not copy owner definitions into Process or
+activate a domain just to read them. See `llm/contracts/README.md`.
+
+Preserve create-only start persistence and exact original-input replay evidence.
+Never re-enter nodes on start retry or infer start identity from mutable context.
+Incomplete or historical unverified starts require inspection, not overwrite.
+Claim responses bind the stored definition/version as well as the execution.
+
+Definition contribution owner changes require the exact provenance adoption
+contract in `llm/contracts/README.md`. Never relabel installed history, accept
+request-supplied transition authority or overwrite immutable versions. Domain
+authoring and customer reviewer policy remain separate from Process installation.
+
 ## Inheritance
 
 - Follow the repository AGENTS contract: `../../../AGENTS.md`.

@@ -87,12 +87,24 @@ module.exports = {
         if (!request || !request.tenant) throw new Error('Tenant is required for customer price summary');
         let productCodes = this.productCodes(request.productCodes);
         if (productCodes.length === 0) return {};
-        if (!SERVICE.DefaultPriceSelectionService || !SERVICE.DefaultExactAmountService) return {};
+        const delivery = ((CONFIG.get('pricing') || {}).publication || {}).delivery || {};
+        const activated = delivery.enabled === true && SERVICE.DefaultPricingPublicationService.deliveryEnabled(request);
+        if (!SERVICE.DefaultPriceSelectionService || !SERVICE.DefaultExactAmountService) {
+            if (activated) throw new Error('Activated Pricing dependencies unavailable');
+            return {};
+        }
 
         let currency = request.currency || policy.defaultCurrency || 'USD';
         let quantity = request.quantity || policy.defaultQuantity || '1';
-        let books = await this.loadPriceBooks(request, currency);
-        let rows = await this.loadPriceRows(request, productCodes, currency);
+        let books, rows;
+        if (activated) {
+            const records = await SERVICE.DefaultPricingPublicationService.readConfigured(request);
+            books = records.filter(item => item.schema === 'priceBook').map(item => item.policy);
+            rows = records.filter(item => item.schema === 'priceRow').map(item => item.policy);
+        } else {
+            books = await this.loadPriceBooks(request, currency);
+            rows = await this.loadPriceRows(request, productCodes, currency);
+        }
         let result = {};
         for (let productCode of productCodes) {
             let decision = SERVICE.DefaultPriceSelectionService.select(Object.assign({}, request, {

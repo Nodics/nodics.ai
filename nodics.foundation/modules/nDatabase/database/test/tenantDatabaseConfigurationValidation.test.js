@@ -111,6 +111,13 @@ const inherited = service.getDatabaseConfiguration('profile', 'default');
 assert.strictEqual(inherited.master.databaseName, 'masterLocal');
 assert.strictEqual(inherited.test.databaseName, 'testLocal');
 configurations.default = bindings.merge(configurations.default, {
+    default: { mongodb: { master: { databaseName: 'nodeDatabaseOverride', URI: 'mongodb://deployment.invalid:27017' } } }
+});
+assert.strictEqual(service.getDatabaseConfiguration('profile', 'default').master.databaseName, 'nodeDatabaseOverride');
+assert.strictEqual(service.getDatabaseConfiguration('profile', 'default').master.URI, 'mongodb://deployment.invalid:27017');
+assert.strictEqual(service.getDatabaseConfiguration('profile', 'tenantA').master.databaseName, 'tenantAProfile');
+configurations.default = bindings.merge(require('../config/properties').database, providerDefaults);
+configurations.default = bindings.merge(configurations.default, {
     profile: { mongodb: { master: { databaseName: 'isolatedProfileLocal' } } }
 });
 const overridden = service.getDatabaseConfiguration('profile', 'default');

@@ -29,6 +29,9 @@ const generated = {
 let role = 'ONLINE';
 let invalidations = [];
 let transactionOpen = false;
+global.CLASSES = { NodicsError: class extends Error {
+    constructor(code, message) { super(message); this.code = code; }
+} };
 global.CONFIG = { get: key => key === 'cms' ? { publication: { runtimeRole: role,
     outbox: { batchSize: 100, maximumAttempts: 10, leaseMs: 100, startupReconciliation: true } } } :
     key === 'defaultTenant' ? 'default' : undefined };
@@ -75,6 +78,22 @@ const request = { tenant: 'default', correlationId: 'correlation-v2', publicatio
     await service.postInit();
     assert.deepStrictEqual(invalidations, ['expired-lease'], 'Online startup must reclaim and redeliver expired work');
     assert.strictEqual(events.find(item => item.code === 'expired-lease').status, 'DELIVERED');
+
+    events.push({ code: 'scoped-event', publicationCode: 'selected-cms', status: 'PENDING', attempts: 0, sequence: 12 });
+    events.push({ code: 'unrelated-event', publicationCode: 'other-cms', status: 'PENDING', attempts: 0, sequence: 13 });
+    invalidations = [];
+    assert.deepStrictEqual(await service.reconcile({ tenant: 'default', publicationCode: 'selected-media' }),
+        { selected: 0, delivered: 0, failed: 0 });
+    assert.deepStrictEqual(invalidations, [], 'a Media-only request must not process unrelated CMS events');
+    assert.deepStrictEqual(await service.reconcile({ tenant: 'default', publicationCode: 'selected-cms' }),
+        { selected: 1, delivered: 1, failed: 0 });
+    assert.deepStrictEqual(invalidations, ['scoped-event']);
+    assert.strictEqual(events.find(item => item.code === 'unrelated-event').status, 'PENDING');
+    for (const publicationCode of ['', ' ', null, { $ne: '' }]) {
+        await assert.rejects(service.reconcile({ tenant: 'default', publicationCode }),
+            error => error.code === 'ERR_PUB_00001');
+    }
+    assert.deepStrictEqual(invalidations, ['scoped-event'], 'invalid scope must fail before effects');
 
     role = 'STAGED';
     events.push({ code: 'staged-pending', status: 'PENDING', attempts: 0, sequence: 12 });

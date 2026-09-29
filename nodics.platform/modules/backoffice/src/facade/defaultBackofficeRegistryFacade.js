@@ -39,6 +39,8 @@ module.exports = {
     registerFunctionalModule: function (request) { return SERVICE.DefaultFunctionalModuleCatalogueService.register(request); },
     /** Delegates registered functional-module Axis activation. */
     activateFunctionalModule: function (request) { return SERVICE.DefaultFunctionalModuleCatalogueService.activate(request); },
+    /** Delegates one business selection update over functional-module registration and activation. */
+    applyFunctionalModuleSelection: function (request) { return SERVICE.DefaultFunctionalModuleCatalogueService.applySelection(request); },
     /** Delegates optional functional-module Axis deactivation. */
     deactivateFunctionalModule: function (request) { return SERVICE.DefaultFunctionalModuleCatalogueService.deactivate(request); },
     /** Delegates optional functional-module activation rollback. */

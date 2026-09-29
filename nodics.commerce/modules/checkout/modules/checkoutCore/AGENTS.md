@@ -1,5 +1,12 @@
 # Checkout Foundation Agent Contract
 
+Complete Commerce customer journey acceptance belongs here, not in customer scripts.
+Keep app identifiers, sandbox payment inputs and shipping addresses in customer
+`tooling.acceptance.commerceJourney`; use semantic runtime roles and shared
+nTooling context. Preserve all reverse-lifecycle and non-owner rejection checks.
+Run only with explicit execution intent; do not start runtimes or conceal signup
+denials. See the local acceptance contract in `llm/contracts/README.md`.
+
 - Follow `../../../../../AGENTS.md` and `../../../../../nodics.foundation/modules/nSetup/llm/ai-enablement-index.md`.
 - Follow ancestor contracts and read local guidance.
 

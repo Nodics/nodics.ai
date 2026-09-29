@@ -24,16 +24,21 @@ const schemaFiles = [
     'modules/loyaltyRedemption/src/schemas/schemas.js'
 ];
 
-const schemas = schemaFiles.flatMap(file => {
+const schemaEntries = schemaFiles.flatMap(file => {
     const contributed = require(path.join(moduleRoot, file));
-    return Object.keys(contributed).flatMap(namespace => Object.keys(contributed[namespace]).map(schemaCode => contributed[namespace][schemaCode]));
+    return Object.keys(contributed).flatMap(moduleName => Object.keys(contributed[moduleName]).map(schemaName => ({
+        moduleName, schemaName, schema: contributed[moduleName][schemaName], exposed: true
+    })));
 });
+const schemas = schemaEntries.map(entry => entry.schema);
 
 schemas.forEach(schema => {
     const definition = schema.definition || {};
     assert.strictEqual(definition.tenant, undefined, 'Loyalty data schemas must derive tenant/schema from runtime context');
     assert.strictEqual(definition.enterpriseCode, undefined, 'Loyalty data schemas must not store enterpriseCode as ordinary data');
-    assert.strictEqual(schema.router.enabled, false, 'Loyalty data schemas must not expose generated CRUD routers');
+    assert.strictEqual(schema.service.enabled, true, 'Loyalty schemas retain generated service capability');
+    assert.strictEqual(schema.router.enabled, true, 'Loyalty schemas opt into governed schema operations');
+    assert.deepStrictEqual(schema.router.groups, { schemaOperations: true }, 'Loyalty schemas must not enable broad CRUD route groups');
 });
 
 const walletSchemas = require(path.join(moduleRoot, 'modules/loyaltyWallet/src/schemas/schemas.js')).loyaltyWallet;
@@ -47,4 +52,5 @@ const balanceDefinition = walletSchemas.loyaltyWalletRewardBalance.definition;
     assert(balanceDefinition[field], 'wallet reward balance must expose ' + field);
 });
 
-console.log('Loyalty schema boundary contract validated');
+require('../../nodics.foundation/modules/nRouter/test/helpers/schemaExposure.cjs')(schemaEntries);
+console.log('Loyalty schema boundary and exposure contract validated');

@@ -61,3 +61,33 @@ lifecycleContributors.searchEngines.shutdown().then(() => {
     assert.deepStrictEqual(service.searchEngines, {});
     console.log('Search runtime lifecycle contract validated');
 }).catch(error => { console.error(error); process.exit(1); });
+
+require('node:test')('provider connection defaults reach consumers and later overrides stay isolated', () => {
+    const bindings = require('../../../nConfig/src/service/defaultConfigurationBindingService');
+    const defaults = bindings.merge(require('../config/properties').search, require('../../elastic/config/properties').search);
+    const originalConfig = global.CONFIG;
+    let selected = bindings.merge(defaults, { independentIndex: { options: { enabled: true } } });
+    try {
+        global.CONFIG = { get: key => key === 'search' ? selected : undefined };
+        const inherited = definition.getSearchConfiguration('independentIndex', 'default');
+        assert.deepStrictEqual(inherited.connection.hosts, ['http://localhost:9200']);
+        assert.strictEqual(inherited.options.enabled, true);
+        selected = bindings.merge(selected, {
+            default: { elastic: { connection: { hosts: ['https://search.example.test:9243'] } } }
+        });
+        assert.deepStrictEqual(definition.getSearchConfiguration('independentIndex', 'default').connection.hosts,
+            ['https://search.example.test:9243']);
+        selected = bindings.merge(selected, {
+            independentIndex: { elastic: { connection: { hosts: ['https://isolated.example.test:9243'] } } }
+        });
+        assert.deepStrictEqual(definition.getSearchConfiguration('independentIndex', 'default').connection.hosts,
+            ['https://isolated.example.test:9243']);
+        assert.deepStrictEqual(definition.getSearchConfiguration('otherIndex', 'default').connection.hosts,
+            ['https://search.example.test:9243']);
+        assert.strictEqual(definition.getSearchConfiguration('otherIndex', 'default').options.enabled, false);
+        assert.deepStrictEqual(inherited.connection.hosts, ['http://localhost:9200']);
+        assert.deepStrictEqual(defaults.default.elastic.connection.hosts, ['http://localhost:9200']);
+    } finally {
+        global.CONFIG = originalConfig;
+    }
+});

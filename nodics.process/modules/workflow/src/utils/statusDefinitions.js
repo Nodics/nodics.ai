@@ -57,5 +57,7 @@ module.exports = {
     ERR_PROCESS_00022: { code: '404', message: 'Process recovery incident was not found' },
     ERR_PROCESS_00023: { code: '409', message: 'Process incident is not eligible for retry' },
     ERR_PROCESS_00024: { code: '409', message: 'Process incident changed; refresh before retrying' },
-    ERR_PROCESS_00025: { code: '409', message: 'Process instance is not eligible for compensation' }
+    ERR_PROCESS_00025: { code: '409', message: 'Process instance is not eligible for compensation' },
+    ERR_PROCESS_00026: { code: '409', message: 'Process instance code belongs to a different or unverified start request' },
+    ERR_PROCESS_00027: { code: '409', message: 'Process start is incomplete; inspect the existing instance before recovery' }
 };

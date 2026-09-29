@@ -42,6 +42,10 @@
   never describe ordered writes or compensation as an atomic deployment.
 - Manifest, pointer, receipt, and outbox writes share one opaque transaction
   context. Cache delivery occurs only after commit.
+- Outbox reconciliation honors an explicit `publicationCode` in its generated
+  service query before batch limiting. Empty or malformed supplied codes reject;
+  a Media-only scope cannot process other CMS events. Omitted scope retains
+  bounded tenant startup recovery. Custom consumers must preserve this boundary.
 - Use pointer revision compare-and-set plus operation-scoped receipt/outbox
   identities. A retry after a committed response is lost must converge without
   another pointer, receipt, or event.

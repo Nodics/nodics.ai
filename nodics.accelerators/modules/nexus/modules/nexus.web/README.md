@@ -41,6 +41,10 @@ Verify the release contract with:
 npm test
 ```
 
+The isolated `test/nexusReleaseClassification.test.mjs` also guards immutable
+manifest version, lifecycle and destination classification without a customer
+checkout. Customer tests own the release pins selected for their deployment.
+
 The manifest exposes three destination-qualified releases:
 `nexusCorporateSite`, `nexusEditorialSource`, and
 `nexusEngagementOperational`. It includes accelerator-owned reference CMS

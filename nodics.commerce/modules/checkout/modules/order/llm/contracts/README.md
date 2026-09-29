@@ -14,3 +14,10 @@ Payment persistence.
 Later customer modules may replace individual owner ports or compensation
 handling, but they must preserve tenant context, idempotency, maker-checker
 separation, correlation evidence, and the domain ownership sequence.
+
+The independent `test/orderReverseLifecycleDepthContract.test.js` covers
+CANCELLATION, RETURN and REFUND through Fulfillment, Inventory and Payment in
+that order. Its provider-failure probe preserves the original error and the
+completed FULFILLMENT/INVENTORY compensation checkpoints. Customer fixture
+qualification must not duplicate these synthetic owner-port scenarios or claim
+that copying content objects proves publication execution.

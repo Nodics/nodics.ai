@@ -28,6 +28,43 @@ module.exports = {
         if (!request || !request.securityContext) throw new Error('COPILOT_SECURITY_CONTEXT_REQUIRED');
         return SERVICE.DefaultCopilotPolicyService.normalizeSecurityContext(request.securityContext, (configuration || {}).policy || {});
     },
+    /** Runs an explicitly configured startup ingestion from a trusted lifecycle hook. No caller request, identity or source override is accepted. @returns {Promise<boolean>} Resolves after selected sources complete; failures propagate for startup handling. */
+    ingestOnStart: async function () {
+        const configuration = this.configuration();
+        const ingestion = (configuration.knowledge || {}).ingestion || {};
+        if (ingestion.enabled !== true || ingestion.ingestOnStart !== true) return true;
+        const startup = ingestion.startup || {};
+        const nonblank = value => typeof value === 'string' && value.trim().length > 0;
+        if (![startup.serviceId, startup.environment, startup.locale, ingestion.indexTenant].every(nonblank) ||
+            !(startup.sourceProject === null || nonblank(startup.sourceProject)) ||
+            typeof startup.failOnRejectedFiles !== 'boolean' || typeof startup.logSummary !== 'boolean' ||
+            !(startup.rejectionMessage === null || nonblank(startup.rejectionMessage))) {
+            throw new CLASSES.NodicsError('ERR_CPK_00010');
+        }
+        const sources = this.registry(configuration).sources.filter(source => source.enabled === true &&
+            (startup.sourceProject === null || source.project === startup.sourceProject));
+        const reports = [];
+        for (const source of sources) {
+            const report = await this.ingest({
+                sourceCode: source.code, indexTenant: ingestion.indexTenant, indexVersion: source.version,
+                locale: startup.locale,
+                securityContext: {
+                    channel: 'SYSTEM', actor: startup.serviceId, principalType: 'SERVICE',
+                    permissions: ['copilot.knowledge.source.manage'], environment: startup.environment
+                },
+                authData: { isSystem: true, serviceId: startup.serviceId, permissions: ['copilot.knowledge.source.manage'] }
+            });
+            reports.push(report);
+            if (startup.failOnRejectedFiles && report.filesRejected) {
+                throw new CLASSES.NodicsError({ code: 'ERR_CPK_00009', message: startup.rejectionMessage });
+            }
+        }
+        if (startup.logSummary && NODICS.LOG) NODICS.LOG.info('Copilot knowledge ingestion completed', reports.map(report => ({
+            sourceCode: report.sourceCode, state: report.state, filesAccepted: report.filesAccepted,
+            filesRejected: report.filesRejected, chunksProjected: report.chunksProjected
+        })));
+        return true;
+    },
     /** Ingests one configured source by code. @param {Object} request System ingestion request. @returns {Promise<Object>} Safe ingestion report. */
     ingest: async function (request) {
         const configuration = this.configuration();

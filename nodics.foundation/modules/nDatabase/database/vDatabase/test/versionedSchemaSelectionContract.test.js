@@ -60,12 +60,19 @@ assert(effective.catalog.parents.includes('versioned'));
 
 let ordinaryModel = { code: 'ordinary' };
 let versionedModel = { code: 'versioned' };
+const suppliedModels = [null, false, NaN, '', '0', -1, 0.5, Infinity, Number.MAX_SAFE_INTEGER + 1, 0, 1]
+    .map(versionId => ({ code: 'supplied', versionId }));
+const suppliedVersions = suppliedModels.map(model => model.versionId);
 Promise.all([
     versionInterceptor.updateVersionId({ schemaModel: effective.user, model: ordinaryModel }, {}),
-    versionInterceptor.updateVersionId({ schemaModel: effective.catalog, model: versionedModel }, {})
+    versionInterceptor.updateVersionId({ schemaModel: effective.catalog, model: versionedModel }, {}),
+    ...suppliedModels.map(model => versionInterceptor.updateVersionId({ schemaModel: effective.catalog, model }, {}))
 ]).then(() => {
     assert.strictEqual(ordinaryModel.versionId, undefined, 'ordinary schemas must not receive a version field from the interceptor');
     assert.strictEqual(versionedModel.versionId, 0, 'selected versioned schemas must receive their initial version');
+    suppliedModels.forEach((model, index) => {
+        assert(Object.is(model.versionId, suppliedVersions[index]), 'supplied versions must reach validation without coercion');
+    });
 });
 
 const withoutVersionContract = _.merge({}, databaseSchemas);

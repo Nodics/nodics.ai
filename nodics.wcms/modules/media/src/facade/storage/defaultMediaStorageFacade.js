@@ -17,6 +17,41 @@
  * @override Later layers may decorate facade behavior while preserving provider-neutral storage service ownership.
  */
 module.exports = {
+    /** Enforces internal runtime authority before dispatching fixed owner publication operations. */
+    retainedPublication: async function (operation, input, request) {
+        let result;
+        if (operation === 'createGoverned') {
+            if (!request.authData || request.authData.tokenType !== 'access' || !request.authData.tenant ||
+                request.tenant !== request.authData.tenant || CONFIG.get('publishEnabled') === false) {
+                throw new CLASSES.NodicsError('ERR_MED_00023', 'Authenticated publication operator tenant is required');
+            }
+            result = await SERVICE.DefaultMediaPublicationVersionProviderService.createGoverned(input, request);
+        } else if (operation === 'applyPublicationDecision') {
+            SERVICE.DefaultMediaRetainedPublicationService.assertScope(request, 'STAGED');
+            result = await SERVICE.DefaultPublicationApprovalCallbackService.applyDecision(request,
+                { domain: 'media', actionKey: 'media.applyPublicationDecision' });
+        } else if (operation === 'authorizeTarget') {
+            result = await SERVICE.DefaultMediaPublicationVersionProviderService.authorizeTarget(input, request);
+        } else {
+            if (!['deploy', 'getStatus', 'rollback', 'reconcile'].includes(operation)) {
+                throw new CLASSES.NodicsError('ERR_MED_00023', 'Unsupported Media publication operation');
+            }
+            SERVICE.DefaultServiceTokenService.requireRuntimePrincipal(request, 'media');
+            if (operation === 'deploy' || operation === 'rollback') {
+                SERVICE.DefaultMediaRetainedPublicationService.assertScope(request, 'ONLINE');
+                const command = { operation, publicationCode: input.publicationCode, operationKey: input.operationKey,
+                    expectedVersion: input.expectedVersion, mediaCode: operation === 'deploy' ? input.manifest && input.manifest.asset && input.manifest.asset.code : input.mediaCode,
+                    sourceVersion: operation === 'deploy' ? input.manifest && input.manifest.code : input.sourceVersion,
+                    manifestCode: operation === 'deploy' ? input.manifest && input.manifest.code : input.manifestCode };
+                const approved = await SERVICE.DefaultMediaPublicationModuleTransportService.authorize(command, request);
+                if (!approved || approved.authorized !== true || approved.fingerprint !== SERVICE.DefaultMediaRetainedPublicationService.digest(command)) {
+                    throw new CLASSES.NodicsError('ERR_MED_00023', 'Media source authorization mismatch');
+                }
+            }
+            result = await SERVICE.DefaultMediaPublicationTargetService[operation](input, request);
+        }
+        return { code: 'SUC_SYS_00000', result: result === undefined ? null : result };
+    },
     /**
      * Initializes the media storage facade.
      *

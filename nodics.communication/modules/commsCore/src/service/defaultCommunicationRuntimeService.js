@@ -17,6 +17,19 @@
  */
 const crypto = require("node:crypto");
 module.exports = {
+  /** Resolves an explicitly selected provider type; definitions never enroll credentials or enable channels. */
+  providerPolicy: function (policy, channel) {
+    const selected = policy.providers?.[channel];
+    if (!selected || selected.type === undefined) return selected;
+    const types = policy.providerTypes || {};
+    if (typeof selected.type !== "string" || !Object.hasOwn(types, selected.type))
+      throw new Error("COMMUNICATION_PROVIDER_TYPE_INVALID");
+    const defaults = types[selected.type];
+    if (!defaults || typeof defaults !== "object" || Array.isArray(defaults) ||
+        Object.keys(defaults).some(key => !["code", "service", "timeoutMilliseconds"].includes(key)))
+      throw new Error("COMMUNICATION_PROVIDER_TYPE_INVALID");
+    return { ...defaults, ...selected };
+  },
   /** Detaches the generated persistence result. */
   rows: function (response) {
     return JSON.parse(JSON.stringify(response.result || []));
@@ -300,7 +313,7 @@ module.exports = {
         }
         outcome = { status: "DELIVERED", providerReference: inboxCode };
       } else {
-        const provider = policy.providers?.[current.channel];
+        const provider = this.providerPolicy(policy, current.channel);
         providerCode = provider?.code || current.channel;
         const adapter = provider && SERVICE[provider.service];
         if (!adapter)

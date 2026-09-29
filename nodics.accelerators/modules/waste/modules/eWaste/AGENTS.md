@@ -24,11 +24,24 @@ Do not add an application-named accelerator beside eWaste for the same domain.
 Use CONFIG.eWaste for reusable defaults and configurable service/policy seams;
 never reference a customer-named service directly from reusable source.
 
+Reusable fresh-arrival orchestration, safe marketplace offer projection,
+guidance persistence and evidence-based weight valuation live here. Customer
+adapters supply policy, display copy and compatibility error mappings; they must
+not copy these algorithms. A valuation provider never chooses a customer's rates
+or programme. Preserve unknown-impact semantics and original approval evidence.
+See the domain contract and reusable composition/journey tests. Generic distance
+arithmetic belongs to Location and does not activate its runtime inside Waste.
+
 Retain authorization, trusted request context, revisions, idempotency and ledger
 references. Customer bodies cannot select a service or replace authenticated
 identity. Project controllers may reuse DefaultEWasteRequestService with a
 server-owned adapter name. Reward ledgers, Commerce records and media stay behind
 their owning operations. Reference data changes require manifest regeneration.
+
+The explicit core-v002 reference successor is governed by
+`llm/contracts/reference-compatibility.md`. Retain core-v001 bytes and historical
+identifiers; qualify nImport source-key inheritance and exact version selection
+before customer adoption. Source tests do not authorize installed imports.
 
 Run module tests and umbrella composition tests. A route/module relocation also
 requires consumer updates, runtime discovery validation and connected acceptance.

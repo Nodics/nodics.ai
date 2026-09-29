@@ -44,3 +44,25 @@ transactional idempotency guarantee.
 
 Verify `../../test/cartCustomerApiContract.test.js`, the Shopping List contract,
 Commerce foundation checks and owning runtime composition before deployment.
+
+## Product and inventory decisions
+
+When Product discovery selects activation for the Cart store (`activeSelection`
+is not undefined), variant-only entry requests delegate SKU resolution to its
+`resolveVariantSku` operation with the same pinned request object and persisted
+Cart store, locale, tenant and enterprise. Unselected stores retain the original
+variant-service and legacy projection paths, including requests without locale.
+For selected stores do not query CURRENT projections independently or fall back
+to mutable variants after that reader returns no matching identity. Identity
+lookup uses the pinned catalogue read without Pricing/Inventory enrichment.
+A supplied SKU accompanying a variant must match the owner-resolved identity.
+Explicit-SKU-only requests in selected stores must also match a SKU belonging
+to a declared variant in the activated Product snapshot; empty activation or
+foreign SKUs reject without fallback. Unselected explicit-SKU behavior remains
+unchanged.
+Explicit SKU membership failure uses `ERR_CART_PRODUCT_UNAVAILABLE` (HTTP 409),
+not an internal-server error.
+
+An unavailable Inventory decision rejects calculation with Cart-owned
+`ERR_CART_INVENTORY_UNAVAILABLE` (HTTP 409), before Pricing or later calculation
+steps. This rejection does not create reservations or change balances.

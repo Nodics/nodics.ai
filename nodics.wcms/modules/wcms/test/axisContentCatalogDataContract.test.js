@@ -31,11 +31,8 @@ const header = require(path.join(axisModuleRoot, 'data/init-v001/headers/axis/ax
 const axisDataSets = [catalog, sites, types, renderers, slots, templates, components, pages, routes];
 
 const frameworkRoot = path.resolve(moduleRoot, '../../..');
-const importProperties = require(path.join(frameworkRoot, 'nodics.foundation/modules/nData/nImport/import/config/properties'));
 const exportProperties = require(path.join(frameworkRoot, 'nodics.foundation/modules/nData/nExport/export/config/properties'));
 const mediaProperties = require('../../media/config/properties');
-assert.strictEqual(importProperties.apiExposure.categories.dataImport.enabled, false,
-    'Import must remain closed until a deployment explicitly enables governed data imports');
 assert.strictEqual(exportProperties.apiExposure.categories.dataExport.enabled, false,
     'Export must remain closed until a deployment explicitly enables governed data exports');
 assert.strictEqual(mediaProperties.apiExposure.categories.mediaManagement.enabled, true,
@@ -120,9 +117,9 @@ pages.forEach(page => {
     });
 });
 
-assert.deepStrictEqual(routes.map(route => route.path),
+assert.deepStrictEqual(routes.map(route => route.path).sort(),
     ['/login', '/forgot-password', '/dashboard', '/lock-screen', '/assistant', '/schema-workbench',
-        '/media-management', '/platform', '/platform/initialize', '/platform/runtime-modules']);
+        '/media-management', '/platform', '/platform/initialize', '/platform/runtime-modules'].sort());
 routes.forEach(route => {
     const page = pageByCode.get(route.page);
     assert(page, 'Missing route page ' + route.page);

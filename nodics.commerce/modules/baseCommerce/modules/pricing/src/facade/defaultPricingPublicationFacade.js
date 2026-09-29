@@ -12,6 +12,20 @@
 'use strict';
 /** @module pricing/src/facade/defaultPricingPublicationFacade @description Enforces tenant context before Pricing publication ingestion. @layer facade @owner pricing */
 module.exports = {
+    /** Captures policy through the fixed owner using authenticated operator scope only. */
+    createGoverned: async function (request) {
+        const auth = request.authData || {};
+        const enterpriseCode = auth.entCode || auth.enterpriseCode;
+        const actorId = auth.principalId || auth.loginId || auth.code;
+        if (auth.tokenType !== 'access' || !auth.tenant || !enterpriseCode || !actorId ||
+            request.tenant && request.tenant !== auth.tenant ||
+            auth.entCode && auth.enterpriseCode && auth.entCode !== auth.enterpriseCode) {
+            throw new Error('Authenticated publication operator scope is required');
+        }
+        return SERVICE.DefaultPricingPublicationService.createGoverned({
+            ...request, tenant: auth.tenant, enterpriseCode, entCode: enterpriseCode, actorId
+        }, request.httpRequest && request.httpRequest.body || request.payload || {});
+    },
     /**
      * Executes `init` as a loader-visible operation owned by this module.
      * @returns {*} Result defined by the owning module contract.

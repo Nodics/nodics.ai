@@ -17,6 +17,31 @@
  * @override Later layers may add upload endpoints after media-owned multipart intake exists.
  */
 module.exports = {
+    /** Maps a fixed publication action while discarding body-supplied tenant, auth and transaction contexts. */
+    invokeRetainedPublication: function (operation, request, callback) {
+        const promise = Promise.resolve().then(() => {
+            const input = request && request.httpRequest && request.httpRequest.body || {};
+            const context = { tenant: request.tenant, authData: request.authData,
+                requestId: request.requestId, correlationId: request.correlationId, httpRequest: request.httpRequest };
+            return FACADE.DefaultMediaStorageFacade.retainedPublication(operation, input, context);
+        });
+        if (!callback) return promise;
+        promise.then(result => callback(null, result)).catch(callback);
+    },
+    /** Prepares or activates exact retained Media content. */
+    deployRetainedPublication: function (request, callback) { return this.invokeRetainedPublication('deploy', request, callback); },
+    /** Captures exact metadata and bytes before requesting governed Process approval. */
+    createRetainedPublication: function (request, callback) { return this.invokeRetainedPublication('createGoverned', request, callback); },
+    /** Checks stored Staged publication intent for an authenticated target runtime. */
+    authorizeRetainedPublication: function (request, callback) { return this.invokeRetainedPublication('authorizeTarget', request, callback); },
+    /** Returns active Media publication evidence. */
+    retainedPublicationStatus: function (request, callback) { return this.invokeRetainedPublication('getStatus', request, callback); },
+    /** Restores an exact retained Media release. */
+    rollbackRetainedPublication: function (request, callback) { return this.invokeRetainedPublication('rollback', request, callback); },
+    /** Verifies retained Media content without mutating pointers or deleting files. */
+    reconcileRetainedPublication: function (request, callback) { return this.invokeRetainedPublication('reconcile', request, callback); },
+    /** Delegates only the fixed Media Process action to the shared claimed-decision bridge. */
+    applyPublicationDecision: function (request, callback) { return this.invokeRetainedPublication('applyPublicationDecision', request, callback); },
     /**
      * Initializes the media storage controller.
      *
@@ -359,9 +384,19 @@ module.exports = {
     uploadMedia: function (request, callback) {
         let body = request && request.httpRequest && request.httpRequest.body || {};
         let files = request && request.httpRequest && request.httpRequest.files || [];
+        let versionId = body.versionId;
+        if (versionId !== undefined) {
+            if (typeof versionId === 'string' && /^(0|[1-9][0-9]*)$/.test(versionId)) versionId = Number(versionId);
+            if (!Number.isSafeInteger(versionId) || versionId < 0) {
+                const error = new CLASSES.NodicsError('ERR_MED_00014', 'Media versionId must be one nonnegative safe integer');
+                if (callback) return callback(error);
+                return Promise.reject(error);
+            }
+        }
         let input = Object.assign({}, body, {
             tenant: request && request.tenant,
             authData: request && request.authData,
+            versionId: versionId,
             files: files
         });
         if (callback) {

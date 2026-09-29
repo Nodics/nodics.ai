@@ -14,7 +14,8 @@
         "owns": [
             "composition",
             "configuration",
-            "llm"
+            "llm",
+            "test"
         ],
         "runtime": {
             "router": false,
@@ -23,13 +24,7 @@
         },
         "extends": [
             "nodics.foundation"
-        ],
-        "functionalModule": {
-            "identity": "nodics.accelerators",
-            "displayName": "Accelerators",
-            "type": "STANDARD",
-            "protected": false
-        }
+        ]
     },
-    "scripts": {}
+    "scripts": { "test": "node --test test/*.test.js" }
 }

@@ -230,6 +230,16 @@ global.SERVICE = {
     getDiagnostics: () => ({ attempts: 1, successes: 1 }),
   },
   DefaultRuntimeRegistryResolverService: require("../../../../nodics.foundation/modules/nService/src/service/module/defaultRuntimeRegistryResolverService"),
+  DefaultRouterService: {
+    prepareUrl: ({ moduleName, connectionName }) => {
+      const endpoints = {
+        profile: "http://profile:3000/nodics/profile",
+        cms: "http://cms:3040/nodics/cms",
+        wcmsOnlineServer: "http://cms:3040/nodics/cms",
+      };
+      return endpoints[connectionName] || endpoints[moduleName] || "";
+    },
+  },
 };
 global.CLASSES = { NodicsError: class NodicsError extends Error {} };
 
@@ -553,11 +563,24 @@ async function run() {
   store._instances.delete("engagementApi:engagement-1");
   store._instances.delete("profile:profile-1");
   store._instances.delete("cms:cms-staged-1");
-  await assert.rejects(
-    service.publicBootstrap({
-      headers: { "x-nodics-client-contract-version": "1" },
-    }),
-    "public bootstrap must fail closed when a required module is unavailable",
+  const setupBootstrap = await service.publicBootstrap({
+    headers: { "x-nodics-client-contract-version": "1" },
+  });
+  assert.deepStrictEqual(
+    setupBootstrap.data.endpoints,
+    {
+      profile: "http://profile:3000/nodics/profile",
+      cms: "http://cms:3040/nodics/cms",
+    },
+    "fresh bootstrap must use configured runtime endpoints until required leases register",
+  );
+  assert.deepStrictEqual(
+    setupBootstrap.data.bootstrapState,
+    {
+      state: "SETUP_REQUIRED",
+      moduleStates: { profile: "UNOBSERVED", cms: "UP" },
+      missingRequiredModules: ["profile"],
+    },
   );
   store._instances.get("cms:cms-1").expiresAt = Date.now() - 1;
   await service.expireStale();

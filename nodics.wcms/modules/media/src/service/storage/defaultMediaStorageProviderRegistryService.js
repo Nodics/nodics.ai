@@ -78,6 +78,17 @@ module.exports = {
         }));
     },
 
+    /** Retains publication bytes using a provider's create-only storage contract; never falls back to mutable store. */
+    storeRetained: function (request) {
+        let context = this.resolveProvider(request);
+        if (typeof context.service.storeRetained !== 'function') {
+            throw new CLASSES.NodicsError('ERR_MED_00011', 'Media provider does not support retained publication bytes');
+        }
+        return context.service.storeRetained(Object.assign({}, request, {
+            providerCode: context.code, provider: context.policy.provider, storage: context.policy.storage
+        }));
+    },
+
     /** Reads one bounded backend-only payload through its owning provider. */
     read: function (request) {
         let context = this.resolveProvider(request);

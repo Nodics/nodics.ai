@@ -1,5 +1,58 @@
 # Customer Project Mode Contract
 
+## Acceptance ownership and upgrade qualification
+
+Asset preparation follows the same boundary: applications own manifests and
+selection, while Media owns upload/integrity acceptance. Reuse effective owner
+configuration; do not create a parallel manifest registry or promote historical
+customer shortcuts into framework defaults. Moving a suite never grants broader
+runtime authority: Staged preparation cannot silently import Online content or
+replace publication approval, and error text cannot stand in for integrity proof.
+
+Acceptance must never manufacture the authority or persistence state it is meant
+to verify. Use secured owner APIs and explicit operation intent; report missing
+provisioning as a prerequisite. An extraction must preserve assertions or record
+an explicit evidence gap, not silently downgrade live coverage to a mocked PASS.
+
+Framework invariants and their complete reusable acceptance suites belong to the
+respective functional modules; reusable industry journeys belong to accelerators.
+The customer owns fixtures, selected capabilities, deployment inputs, custom
+business policy and tests of its own extensions. Importing a shared helper does
+not justify retaining a duplicate framework acceptance implementation in a project.
+
+Apply this classification to individual test assertions, not filenames. Split mixed
+tests: generic defaults, rejection rules, lifecycle behavior and upgrade invariants
+run with independent fixtures under the owning framework module. Do not make those
+tests import a reference customer checkout. Project tests retain selected topology,
+customer records, bindings and extension behavior only; application-only fixtures
+belong under that application. Consolidate routine framework-command adoption into
+one small project test instead of one wrapper per capability. Reusable test drivers
+and configuration consumers stay framework-owned. A migration must preserve each
+assertion through a moved test or an identified existing owner test, and update
+test entrypoints so the retained checks continue to run.
+
+Extraction is incomplete until the moved owner tests are reachable from the
+framework's declared release suites and retained customer checks are reachable
+from the project's verification entrypoint. Guard that reachability with an
+owner-level regression; a one-off direct test invocation is not CI adoption.
+Customer CI must select an explicit compatible framework commit and fail closed
+when that selection is absent. Record the tested commit separately from local
+uncommitted evidence; do not silently fall back to a feature or default branch.
+
+Canonical suites use the existing tooling command registry with
+`acceptanceContract: true`. Customer layers may supply supported inputs and add
+checks, but may not replace these commands or their required assertions. Runtime
+API authorization, tenant isolation, lifecycle and release-integrity enforcement
+remain mandatory independently of acceptance. Ordinary runtime extension rules
+are unchanged; qualification evaluates the resulting implementation.
+
+Upgrade/release processes must run the target framework version's canonical gates
+against the customer's effective composition and retain explicit compatibility
+failures. Customer-owned journey tests supplement, not replace, those gates.
+Local ownership checks cannot prevent a repository owner from skipping tests or
+forking dependencies; organizational CI/release enforcement remains necessary.
+No source migration alone constitutes production or upgrade certification.
+
 This contract applies to every implementation partner, customer developer,
 Nodics application team, and AI tool building on Nodics, across all domains.
 It implements the ownership principle in [nodics-principles.md](nodics-principles.md).
@@ -58,7 +111,66 @@ Location owns location capabilities, Media owns files, Loyalty owns wallet and
 reward operations, and Commerce owns checkout and orders. Domain orchestration
 composes their contracts without taking over their persistence or lifecycle.
 
+### Mechanism and policy extraction
+
+Keep customer modules and runtimes lightweight. Classify each algorithm,
+configuration block, descriptor and script separately. An application-owned file
+may contain reusable behavior that should be contributed to its functional or
+accelerator owner; this does not transfer ownership of the application itself.
+Apply the lightweight customer modules and runtimes principle in
+`nodics-principles.md`.
+
+Nodics-maintainer extraction must leave one implementation and preserve customer
+policy as explicit inputs: identifiers, valuation rates, provider selection,
+release subsets, trust origins and enablement are not reusable defaults simply
+because the underlying mechanism is reusable. Use existing owner metadata where
+it already describes structural facts; do not duplicate it in project scripts.
+Retain deployment routing, permission gates and deliberate compatibility pins.
+
+A retained compatibility snapshot must name its dependency, reason, affected
+persisted identities and review trigger. It is not a permanent exemption from
+ownership review. Moving source must not reassign installed contribution owners,
+rewrite immutable checksums, rename historical business keys or discard pending
+workflow instances. Separate source extraction from migration execution and
+record both states. A passing isolated test does not establish installed release
+history. Consult owning APIs for that evidence; do not query database collections
+or infer an empty installation from unavailable authentication.
+
+Acceptance must cover the original application, an unrelated policy or customer
+context, invalid/missing input, authorization rejection, later-layer overrides
+and affected runtime loading. Record live acceptance separately from isolated
+contracts. A wrapper, line-count reduction or renamed namespace alone does not
+prove correct ownership. Partners request these reusable changes through the
+contribution channel; this rule grants no new framework write authority.
+
 ## Schema Ownership And Data Contributions
+
+### Classify applications before moving source
+
+The following are customer applications in nodics.kickoff, each consuming a
+separate reusable accelerator:
+
+| Customer application | Reusable accelerator |
+| --- | --- |
+| agora.apparel | apparel |
+| agora.electronics | electronics |
+| agora.telco | telco |
+| circa.ewaste | eWaste |
+
+Application configuration, BackOffice initialization profiles, branding, catalogues,
+media and importable data stay with the application in the customer repository.
+Data-only packaging, sample/reference status, Nodics authorship and module `extends`
+do not promote the application into an accelerator. Sample data describes lifecycle,
+not source ownership. A profile displayed under an Accelerators heading still
+belongs to its actual application owner.
+
+Before extraction, record the established owner and identify the exact reusable
+domain behavior that works without application identity or policy. Extract only
+that behavior through the maintainer contribution process. Preserve application
+modules and their later-layer configuration. Relocating an entire application
+requires an explicit ownership decision; do not infer one from a request to clean
+up configuration. Test framework-only discovery, customer discovery and effective
+runtime selection to prevent customer packs leaking into framework ownership.
 
 The module owning a business concept owns its canonical schema and operations.
 A later layer contributes records, supported schema fragments or configured
@@ -145,3 +257,22 @@ Framework maintainers separately prove default and later-layer customization
 behavior and update the owning contracts and generated guidance on release.
 The nTooling principle audit checks that these governance clauses remain
 discoverable; it does not enforce filesystem permissions or repository ACLs.
+
+### Whole-project Ownership Review
+
+Apply ownership review to every domain, runtime, script, test helper and
+configuration namespace, not only the currently selected application.
+Cross-project domain behavior belongs to its functional module; reusable
+industry composition belongs to the respective accelerator. Cross-domain
+mechanics belong to the existing Foundation owner. Customer identities, policy,
+release selections, fixtures and integration bindings stay in the application.
+
+Keep `kickoffApi` and `kickoffInt` as intentional customer extension templates,
+even when minimal. Agora and Circa are customer applications consuming
+accelerators, not framework accelerators themselves.
+
+Before relocation, prove effective configuration and override behavior, preserve
+activation and authorization boundaries, and check installed release provenance.
+Do not rewrite immutable releases, weaken ownership checks or promote direct
+database access merely to reduce the customer project's file count. Record
+migration prerequisites in the project's canonical acceptance checklist.

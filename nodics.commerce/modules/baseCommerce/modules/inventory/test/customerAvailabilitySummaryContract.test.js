@@ -47,14 +47,14 @@ test('customer availability summary exposes status only and hides SKU warehouse 
     let result = await summary.summarize({
         tenant: 'default',
         enterpriseCode: 'enterprise-a',
-        products: [{ productCode: 'agoraDress', skus: ['SKU-1', 'SKU-2'] }],
+        products: [{ productCode: 'sampleProduct', skus: ['SKU-1', 'SKU-2'] }],
         authData: { groups: ['customerUserGroup'] }
     });
 
-    assert.deepEqual(result.agoraDress, { available: true, status: 'IN_STOCK' });
-    assert.equal(result.agoraDress.sku, undefined);
-    assert.equal(result.agoraDress.warehouseCode, undefined);
-    assert.equal(result.agoraDress.availableQuantity, undefined);
+    assert.deepEqual(result.sampleProduct, { available: true, status: 'IN_STOCK' });
+    assert.equal(result.sampleProduct.sku, undefined);
+    assert.equal(result.sampleProduct.warehouseCode, undefined);
+    assert.equal(result.sampleProduct.availableQuantity, undefined);
     assert.deepEqual(balanceRequests[0].authData.groups, ['serviceAccountUserGroup']);
     assert.equal(balanceRequests[0].authData.enterpriseCode, 'enterprise-a');
     assert.equal(balanceRequests[0].query.enterpriseCode, 'enterprise-a');
@@ -65,10 +65,10 @@ test('customer availability summary returns out of stock when no SKU can be sour
     let result = await summary.summarize({
         tenant: 'default',
         enterpriseCode: 'enterprise-a',
-        products: [{ productCode: 'agoraBelt', skus: ['SKU-2'] }]
+        products: [{ productCode: 'unavailableProduct', skus: ['SKU-2'] }]
     });
 
-    assert.deepEqual(result.agoraBelt, { available: false, status: 'OUT_OF_STOCK' });
+    assert.deepEqual(result.unavailableProduct, { available: false, status: 'OUT_OF_STOCK' });
 });
 
 test('customer availability summary fails open when generated inventory service is unavailable', async () => {
@@ -77,7 +77,7 @@ test('customer availability summary fails open when generated inventory service 
         DefaultInventorySourcingService: sourcing
     };
 
-    let result = await summary.summarize({ tenant: 'default', products: [{ productCode: 'agoraDress', skus: ['SKU-1'] }] });
+    let result = await summary.summarize({ tenant: 'default', products: [{ productCode: 'sampleProduct', skus: ['SKU-1'] }] });
 
     assert.deepEqual(result, {});
 });
