@@ -36,6 +36,7 @@ const standardSourceDirectories = new Set([
     'router',
     'schemas',
     'search',
+    'templates',
     'interceptors',
     'service',
     'controller',
