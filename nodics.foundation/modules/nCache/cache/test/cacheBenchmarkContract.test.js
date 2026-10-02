@@ -124,6 +124,7 @@ function requestForItem() {
         searchOptions: { limit: 10 },
         query: { code: 'employee-a' },
         schemaModel: {
+            rawSchema: {},
             moduleName: 'profile',
             schemaName: 'employee',
             cache: { enabled: true, ttl: 30 },
@@ -200,6 +201,7 @@ let itemQueryCalls = 0;
         }
     };
     global.SERVICE = {
+        DefaultLoggerService: require('../../../nConfig/src/service/DefaultLoggerService'),
         DefaultCacheConfigurationService: {
             createApiKey: request => JSON.stringify({ tenant: request.tenant, url: request.originalUrl })
         },
@@ -219,6 +221,7 @@ let itemQueryCalls = 0;
     assert.strictEqual(controllerCalls, iterations, 'Router cache misses must call the controller once per request');
 
     global.SERVICE = {
+        DefaultLoggerService: require('../../../nConfig/src/service/DefaultLoggerService'),
         DefaultCacheConfigurationService: {
             createItemKey: () => 'employee_tenant-a_hash'
         },

@@ -14,9 +14,12 @@ const fs = require('node:fs');
 const path = require('node:path');
 const contract = require('../src/service/contract/defaultBackofficeContractService');
 const root = path.resolve(__dirname, '../../../..');
-// Providers may read layered policy; an unconfigured policy keeps optional contributions disabled.
-global.CONFIG = { get: () => undefined };
+// Read the presentation owner's actual defaults; optional qualification remains disabled.
+const digitalDefaults = require('../../../../nodics.commerce/modules/digitalCommerce/modules/digitalCore/config/properties');
+const mediaDefaults = require('../../../../nodics.wcms/modules/media/config/properties');
+global.CONFIG = { get: key => key === 'media' ? mediaDefaults.media : digitalDefaults[key] };
 global.SERVICE = {
+    DefaultDigitalCommerceNotificationService: require('../../../../nodics.commerce/modules/digitalCommerce/modules/digitalCore/src/service/defaultDigitalCommerceNotificationService'),
     DefaultBackofficeCapabilityDefinitionService: require('../../../../nodics.foundation/modules/nService/src/service/module/defaultBackofficeCapabilityDefinitionService')
 };
 const files = [];
