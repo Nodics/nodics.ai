@@ -15,6 +15,8 @@ const assert = require('assert');
 const path = require('path');
 
 const root = path.resolve(__dirname, '../../../..');
+const mediaDefaults = require(path.join(root, 'nodics.wcms/modules/media/config/properties.js'));
+global.CONFIG = { get: key => mediaDefaults[key] };
 
 global.SERVICE = {
     DefaultBackofficeCapabilityDefinitionService: require(path.join(

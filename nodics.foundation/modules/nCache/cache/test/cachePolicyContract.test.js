@@ -63,6 +63,7 @@ function itemRequest() {
         tenant: 'tenant-a',
         cacheKeyHash: 'item-key',
         schemaModel: {
+            rawSchema: {},
             moduleName: 'profile',
             schemaName: 'employee',
             cache: { enabled: true, ttl: 30 }
@@ -208,6 +209,7 @@ function runItemUpdate(request, success) {
         }
     };
     global.SERVICE = {
+        DefaultLoggerService: require('../../../nConfig/src/service/DefaultLoggerService'),
         DefaultCachePolicyService: policyService,
         DefaultCacheService: {
             getRouterCacheChannel: () => 'router',
