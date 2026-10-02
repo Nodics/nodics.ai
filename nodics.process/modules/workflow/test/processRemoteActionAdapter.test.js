@@ -178,16 +178,16 @@ function fixture() {
         return {
             get: async (input) => {
                 authorize(input);
-                return { result: input.tenant === 'tenantA' && matches(row, input.query) ? [_.cloneDeep(row)] : [] };
+                return { code: 'SUC_SYS_00000', result: input.tenant === 'tenantA' && matches(row, input.query) ? [_.cloneDeep(row)] : [] };
             },
             update: async (input) => {
                 authorize(input);
                 if (input.tenant !== 'tenantA' || !matches(row, input.query))
-                    return { result: { modifiedCount: 0 } };
+                    return { code: 'SUC_SYS_00000', result: { acknowledged: true, matchedCount: 0, modifiedCount: 0 } };
                 for (const [key, value] of Object.entries(input.model.$set || input.model))
                     _.set(row, key, _.cloneDeep(value));
                 if (kind === 'article') state.articleWrites++;
-                return { result: { modifiedCount: 1 } };
+                return { code: 'SUC_SYS_00000', result: { acknowledged: true, matchedCount: 1, modifiedCount: 1 } };
             },
         };
     }

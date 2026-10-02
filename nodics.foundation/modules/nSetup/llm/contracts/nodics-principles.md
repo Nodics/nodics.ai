@@ -1,5 +1,49 @@
 # Nodics Principles Contract
 
+## Module-Owned Email And SMS Presentation
+
+Email and SMS are framework-governed delivery capabilities, not strings embedded
+in project configuration. Domain modules own the reason, approved dynamic values
+and neutral default presentation. Communication owns resource resolution, rendering,
+intents, suppression, provider selection, attempts and recovery. Providers deliver
+frozen representations; they never load templates or decide business state.
+
+- Author new email under `<module>/src/templates/email/<name>/template.json`
+  with locale `subject.txt`, `email.html` and `email.txt`. Author SMS under
+  `src/templates/sms/<name>/template.json` with locale `message.txt`.
+  OTP is a business/security purpose, not an `OTP/` channel directory.
+- Configuration selects resources, trusted sources, providers and policy; it
+  does not contain new notification presentation bodies. Persisted adoption
+  records reference resources; do not create a second authored-template store.
+- A configured trusted-source name is not execution authority. Internal request,
+  retry and uncertainty resolution require signed service tenant, permission and
+  Communication/source module delegation. Retried intents authorize their stored
+  source rather than a caller-selected name; private content remains owner-only.
+- Reuse existing discovered/indexed module layers. Customer modules and selected
+  environment/server/node scopes override individual files; no project-root
+  template loader, duplicate registry or domain activation solely for files.
+- Keep reusable mechanics and defaults in framework owners. Customer projects
+  contain only genuine branding, channel selection and deployment differences.
+- Use declared typed parameters, escaped HTML and bounded plain text. No executable
+  email, raw parameter markup, secrets in presentation defaults or arbitrary paths.
+  An HTTPS action link is navigation; the destination still authorizes the action.
+- Freeze effective rendered content and content-free resource provenance privately
+  in each intent. Retrying must not re-render, repeat domain decisions or blindly
+  resend an uncertain outcome. Events, public projections and logs omit bodies.
+- Resource availability, optional selection, business enablement and provider
+  qualification are distinct gates. Browser previews and sandbox acceptance do
+  not prove mailbox or handset delivery. External adapters remain guarded.
+
+Legacy inline text is a compatibility boundary through the canonical renderer,
+not the pattern for new EMAIL/SMS work. Preserve historical releases and queued
+content; use governed adoption for new versions. Non-email channel contracts are
+not silently changed by this rule.
+
+The executable detail belongs to
+[Communication's resource contract](../../../../../nodics.communication/modules/commsCore/llm/contracts/template-resources.md).
+The authoring and extension journey is in
+[Email and SMS templates](../../../../../nodics.docs/docs/pages/nodics.communication/email-sms-templates.md).
+
 ## Business Data Journeys
 
 - Business-facing creation and editing consume effective schema metadata and
@@ -148,6 +192,23 @@ routes. Required business context must be resolved and validated through the
 existing owner, never fabricated as a sample identity or a literal default
 store. Preserve token, permission, tenant, enterprise, ownership and lifecycle
 enforcement for every caller.
+
+Logical tenant identity alone does not establish physical storage isolation.
+The database owner must admit effective tenant destinations before connections,
+models or initialization writes; Profile remains the authority for tenant
+provisioning and protected continuation evidence. Retain established destination
+bindings across restart rather than silently deriving a replacement. Later-layer
+customization must preserve those boundaries, not bypass them. Provisional runtime
+addressability is not readiness, and failed admission must not prevent cleanup of
+already acquired resources. See the database owner's
+[Tenant Physical Namespace contract](../../../nDatabase/database/llm/contracts/tenant-physical-namespace.md).
+
+Business setup recovery must remain available after navigation or session loss
+without reconstructing authorized intent from current policy or automatically
+repeating uncertain mutations. Preserve original owner-held intent, inspect fresh
+evidence, and refuse ambiguous recovery. Neither a failed import nor a new
+idempotency key proves that no earlier writes committed. Source checks, a repaired
+retry and a clean browser journey remain distinct evidence.
 
 Implementation and review must identify the existing owner, prove no parallel
 authority or customer dependency was introduced, and verify unrelated customer
@@ -1082,3 +1143,13 @@ paths, lifecycle or UI tests in backend properties or backend acceptance runners
 Frontend applications own their servers, outage/retry presentation, and frontend
 tests. Backend CORS and browser-session contracts are tested through APIs using
 explicit security policy; they do not confer frontend lifecycle ownership.
+
+Application preparation must reconcile Media through its owning upload
+inspection contract before re-uploading deterministic manifest identities.
+Verified unchanged reuse belongs to Media, including bounded stored-byte
+verification; changed versioned uploads must carry the inspected current
+`versionId` and preserve CAS. Callers must not read generated Media CRUD,
+silently refresh/retry a conflict, or treat duplicate-error text as completion.
+Human preparation retains the initiating signed identity across inspection and
+upload. An explicit retry may inspect an uncertain prior result, but cannot
+invent a receipt or weaken owner version/hold/publication guards.

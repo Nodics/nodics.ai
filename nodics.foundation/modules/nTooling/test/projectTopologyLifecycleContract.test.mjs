@@ -17,6 +17,12 @@ import test from 'node:test';
 import { fileURLToPath } from 'node:url';
 import writeEnvironment from './helpers/environmentFixture.cjs';
 
+/**
+ * @description Tests topology selection, readiness and ownership with isolated fixtures.
+ * Terminal-exit cases inject nSystem contributor diagnostics. Default Local public
+ * /health/ready has no data.checks, so these cases do not qualify live early exit
+ * in that composition; registration can stop retrying while readiness times out.
+ */
 test('independent topology selection, dependency failures and supervisor ownership', async () => {
   const root = fs.realpathSync(fs.mkdtempSync(path.join(os.tmpdir(), 'topology-contract-')));
   const previous = { cwd: process.cwd(), env: process.env.ENV, framework: process.env.NODICS_FRAMEWORK_ROOT };
@@ -91,6 +97,33 @@ test('independent topology selection, dependency failures and supervisor ownersh
     await assert.rejects(topology.checkRuntimeReadiness(selected[0], { fetchResponse: async () => response({ data: { status: 'UP' } }, 503) }), /HTTP 503/);
     await assert.rejects(topology.checkRuntimeReadiness(selected[0], { fetchResponse: async () => ({ ok: true, json: async () => { throw new Error('invalid JSON'); } }) }), /invalid JSON/);
     await assert.rejects(topology.checkRuntimeReadiness(withCheck, { fetchResponse: async () => response({ data: { status: 'UP' } }) }), /protected capability HTTP 200/);
+    const terminal = { name: 'backofficeRegistration', required: true, status: 'DOWN',
+      reasonCode: 'BACKOFFICE_REGISTRATION_REPAIR_REQUIRED', suggestedAction: 'private-sentinel' };
+    for (const status of [200, 503]) {
+      let probes = 0;
+      await assert.rejects(topology.waitUntilReady(selected[0], 90000, undefined, {
+        probe: runtime => { probes++; return topology.checkRuntimeReadiness(runtime, {
+          fetchResponse: async () => response({ data: { status: 'DOWN', checks: [terminal] } }, status) }); },
+        pause: () => assert.fail('terminal registration must fail before polling delay'),
+      }), error => error.code === 'BACKOFFICE_REGISTRATION_REPAIR_REQUIRED' && !error.message.includes('private-sentinel'));
+      assert.equal(probes, 1);
+    }
+    for (const check of [{ ...terminal, required: false }, { ...terminal, name: 'other' },
+      { ...terminal, status: 'UP' }, { ...terminal, reasonCode: 'BACKOFFICE_OPERATIONAL_STATE_MISSING' }]) {
+      await assert.rejects(topology.checkRuntimeReadiness(selected[0], { fetchResponse: async () =>
+        response({ data: { status: 'DOWN', checks: [check] } }) }), error => error.code === undefined && /not UP/.test(error.message));
+    }
+    let recoverProbes = 0, pauses = 0;
+    await topology.waitUntilReady(selected[0], 90000, undefined, {
+      probe: async runtime => {
+        recoverProbes++;
+        if (recoverProbes === 1) throw Object.assign(new Error('connection unavailable'), { code: 'ECONNREFUSED' });
+        return topology.checkRuntimeReadiness(runtime, { fetchResponse: async () =>
+          response({ data: { status: recoverProbes === 2 ? 'DOWN' : 'UP' } }, recoverProbes === 2 ? 503 : 200) });
+      }, pause: async () => { pauses++; },
+    });
+    assert.equal(recoverProbes, 3);
+    assert.equal(pauses, 2);
     // An empty declaration exercises preflight without touching any live port.
     process.env.ENV = 'empty';
     const result = await topology.preflight();

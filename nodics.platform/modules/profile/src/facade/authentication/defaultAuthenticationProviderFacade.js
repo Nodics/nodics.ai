@@ -17,6 +17,19 @@
  * @override Project modules may override this behavior through later active modules while preserving the published capability contract.
  */
 module.exports = {
+    /** Delegates cookie-safe context changes to Profile's browser-session owner. @param {Object} request Signed browser command. @returns {Promise<Object>} Safe access-only result. */
+    switchEmployeeBrowser: function (request) {
+        return SERVICE.DefaultBrowserSessionService.switchEnterprise(request);
+    },
+    /** Keeps recovery orchestration with Profile and verification/delivery with their existing owners. */
+    employeeRecovery: function (request, operation) {
+        const owner = SERVICE.DefaultEmployeeRecoveryService;
+        if (!owner)
+            throw new CLASSES.NodicsError('ERR_PROFILE_RECOVERY_UNAVAILABLE');
+        return operation === 'WORKSPACE'
+            ? owner.workspace()
+            : owner.execute(request, operation);
+    },
 
     /**
 
@@ -31,7 +44,9 @@ module.exports = {
      */
 
     authenticateEmployee: function (request) {
-        return SERVICE.DefaultAuthenticationProviderService.authenticateEmployee(request);
+        return SERVICE.DefaultAuthenticationProviderService.authenticateEmployee(
+            request
+        );
     },
 
     /**
@@ -47,6 +62,8 @@ module.exports = {
      */
 
     authenticateCustomer: function (request) {
-        return SERVICE.DefaultAuthenticationProviderService.authenticateCustomer(request);
+        return SERVICE.DefaultAuthenticationProviderService.authenticateCustomer(
+            request
+        );
     }
 };

@@ -21,10 +21,11 @@ flowchart LR
   Domain["Business module creates intent"] --> Policy["Recipient, purpose, consent and suppression"]
   Policy -->|Suppressed| Evidence["Suppression evidence"]
   Policy -->|Allowed| Template["Validated template version"]
-  Template --> Render["Transient declared-variable rendering"]
-  Render --> Provider["Certified channel provider"]
+  Template --> Render["Typed rendering and frozen private intent"]
+  Render --> Provider["Explicitly selected guarded provider"]
   Provider -->|Delivered| Outcome["Content-free delivery evidence"]
-  Provider -->|Failed| Retry["Bounded retry or fallback"]
+  Provider -->|Known retryable failure| Retry["Authorized bounded retry"]
+  Provider -->|Ambiguous| Uncertain["Uncertain: reconcile before resend"]
   Retry --> Provider
   Retry -->|Exhausted| Dead["Dead letter and reconciliation"]
   Outcome --> Domain
@@ -32,17 +33,34 @@ flowchart LR
 
 ## Template and rendering journey
 
-An administrator defines a template code, purpose, supported channels, and declared variables. Each locale/channel body is an immutable validated version with a checksum. Activation moves the template pointer; it does not rewrite earlier delivery evidence.
+Domain modules supply neutral presentation under `src/templates/email/<name>`
+or `src/templates/sms/<name>`. An inert manifest declares code, owner, purpose,
+channel, source allowlist and typed parameters. Email has locale subject, HTML and
+plain-text files; SMS has a locale message.txt. Customer/runtime layers override
+individual files. Configuration and published adoption records select resources;
+new EMAIL/SMS presentation does not belong in configuration or database body blobs.
 
-The renderer accepts only declared variables, rejects executable constructs, and enforces count and rendered-size limits. Rendering is transient. Intent and event records store a variables hash and template version, not a convenient copy of every customer field. Provider secrets never appear in templates or Axis.
+The shared renderer accepts declared typed values, escapes HTML and enforces bounds.
+New intents privately store frozen rendered content and effective template identity
+for deterministic retry, as well as a variables hash/version. Public results,
+events and logs omit content. Providers consume frozen representations and do not
+load templates. Provider credentials never belong in presentation. The private
+message content needs storage access and retention controls.
 
 Developers add a template by declaring the smallest variable set, providing safe locale/channel versions, testing missing and unknown variables, validating output size and escaping, and supplying a migration path before retiring an active version.
+
+Use [Email and SMS Templates](email-sms-templates.md) for the complete inventory,
+selection precedence, customer/server overrides, localization and worked examples.
 
 ## Consent, purpose, and suppression
 
 Every intent states a purpose such as transactional, service, consent, verification, or marketing. Marketing consent must never be inferred from permission to send a transaction or security challenge. A suppression is recipient-, purpose-, and channel-scoped with reason, source, and validity period.
 
-Policy runs before rendering and provider delivery. A suppressed request produces evidence and returns safely to the caller. It is not retried through another provider to evade customer preference. Emergency or legally required messages need an explicit policy rather than a hidden bypass.
+Trusted-source and template policy run before new rendering; durable suppression
+and expiry checks prevent sending. A suppressed request produces evidence. It must
+not switch providers to evade customer preference. The diagram above summarizes
+policy responsibility rather than promising that every suppression read precedes
+rendering. Emergency exceptions require an explicit owner-defined policy.
 
 ## Idempotency and delivery evidence
 
@@ -70,18 +88,24 @@ When Communication is unavailable, the bridge returns deferred evidence with `do
 
 ## Provider activation and operations
 
-The local provider is enabled for development and returns deterministic content-free evidence. SMTP and Twilio-style external providers remain disabled until a deployment supplies secured credentials, verified sender identity, region/residency approval, consent mapping, callbacks, retry/fallback, observability, rate and cost limits, incident response, and rollback.
+The local provider returns deterministic development evidence. SMTP supports a
+disabled-by-default guarded test mode with approved recipients and TLS. SMS is an
+injected sandbox adapter, not a supplied live carrier client. Neither is qualified
+for unrestricted production simply by configuring credentials. See
+[provider runbooks](provider-runbooks.md) for exact settings, outcome semantics
+and the remaining delivery/operational qualification gates.
 
 Operators monitor accepted/suppressed intent volume, render failures, provider latency/error, delivered rate, retry age, dead letters, callback rejection/replay, inbox expiry, verification success/lockout, and consent/suppression decisions. Logs use intent, attempt, template, and correlation codes without content.
 
 ## Common mistakes
 
-- Letting Engagement, Order, or Process own email templates or provider retry.
+- Putting domain presentation in generic configuration, or domain-owned provider retry.
 - Letting Communication change order, case, identity, or security status.
 - Storing rendered bodies or recipient addresses in events and logs.
 - Treating transactional permission as marketing consent.
 - Sending again after retry without checking the idempotency key or ambiguous provider outcome.
-- Storing a verification secret in plaintext or allowing unlimited guesses.
+- Logging verification secrets, storing plaintext as authoritative challenge evidence,
+  or allowing unlimited guesses. Private delivery content is a separate protected boundary.
 - Enabling an external provider because local delivery passed.
 - Trusting callback fields without service authentication, signature, replay, tenant, and provider-reference validation.
 
@@ -89,10 +113,18 @@ Operators monitor accepted/suppressed intent volume, render failures, provider l
 
 Prove template version/checksum, declared-variable rendering, executable and unknown-variable rejection, output limits, purpose/channel denial, suppression, consent separation, idempotent replay, content-free events, local delivery, provider failure, exponential retry, dead letter, safe fallback, callback authentication and replay policy, tenant isolation, customer inbox ownership, challenge hashing/expiry/lockout/single use, one-way domain integration, and domain durability during outage. Run Communication package tests, generated schema contracts, Communication route/security contracts, Engagement bridge tests, documentation generation/validation, and the effective Engagement server build to confirm Communication loads first.
 
-## Customization and extension
+## Customize and extend safely
 
 Projects may add providers, templates, channel policies, callback adapters,
 verification purposes, and inbox views through Communication-owned extension
 points. The extension must preserve consent, suppression, content masking,
 idempotency, replay protection, tenant isolation, and the rule that
 Communication delivers messages but does not decide domain state.
+
+For example, replace only
+`<customer-module>/src/templates/email/employee-email-verification/en/subject.txt`
+to brand a subject while inheriting the owner's manifest and bodies. The module
+must be discovered in the effective sending hierarchy. Wrong source, incompatible
+manifest and invalid parameters reject; queued intents keep their old content.
+Verify the effective override and rejection/replay behavior using the
+[worked guide](email-sms-templates.md#customize-and-extend-safely).

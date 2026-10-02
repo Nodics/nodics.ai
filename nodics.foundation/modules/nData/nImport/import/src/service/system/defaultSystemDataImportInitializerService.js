@@ -150,6 +150,8 @@ module.exports = {
             validationErrors: [],
             failures: []
         };
+        if (typeof SERVICE !== 'undefined' && SERVICE.DefaultDataReleaseService?.bindOperationMetadataRun)
+            SERVICE.DefaultDataReleaseService.bindOperationMetadataRun(request);
     },
 
     /**

@@ -468,12 +468,16 @@ test('Staged policy guards reject operational mutations and nested consumption w
     }
     assert.equal(service.validatePolicyAuthoring({ model: { budget: { limit: '10' } } }), true);
     const registry = require('../src/interceptors/interceptors');
-    assert.equal(Object.keys(registry).length, 19);
-    for (const definition of Object.values(registry)) {
+    const operational = Object.values(registry).filter(definition =>
+        definition.handler === 'DefaultPromotionOperationService.requireOperationalRuntime');
+    assert.equal(operational.length, 15);
+    for (const item of ['coupon', 'couponBatch', 'promotionBudgetLedger', 'promotionRedemption', 'discountDecision']) {
+        assert.deepEqual(operational.filter(definition => definition.item === item)
+            .map(definition => definition.trigger).sort(), ['preRemove', 'preSave', 'preUpdate']);
+    }
+    for (const definition of operational) {
         assert.equal(definition.type, 'schema');
-        if (definition.item !== 'promotion') {
-            assert.throws(() => service[definition.handler.split('.')[1]]({}), /forbidden on Staged/);
-        }
+        assert.throws(() => service[definition.handler.split('.')[1]]({}), /forbidden on Staged/);
     }
     for (const method of ['apply', 'reverse', 'consumeBudget', 'releaseBudget', 'consumeActivatedBudget',
         'createCouponBatch', 'reserveCouponCodeForCheckout', 'consumeCoupon', 'releaseCoupon',

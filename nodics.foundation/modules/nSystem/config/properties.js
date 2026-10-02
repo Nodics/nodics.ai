@@ -17,6 +17,14 @@
  * @override Project, environment, server, node, tenant, or customer layers may override these defaults through Nodics configuration layering.
  */
 module.exports = {
+  runtimeConfigurationSecurity: {
+    encryptionKey: {
+      $config: "env",
+      name: "NODICS_RUNTIME_CONFIGURATION_ENCRYPTION_KEY",
+      type: "string",
+      fallback: null,
+    },
+  },
   localResetProvider: {
     enabled: false,
     environmentAllowlist: [],

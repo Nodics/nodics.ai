@@ -10,6 +10,7 @@
  */
 
 const _ = require('lodash');
+const privacyApps = new WeakSet();
 
 /**
  * @module router/service/config/DefaultRouterConfigurationService
@@ -62,6 +63,10 @@ module.exports = {
      * @sideEffects Mutates Express app by applying properties, sessions, logging, cache, body parsing, headers, errors, and extras.
      */
     executeRouterConfig: function (app, scripts) {
+        if (!privacyApps.has(app)) {
+            app.use((req, res, next) => SERVICE.DefaultLoggerService.runRequestPrivacy(req, next));
+            privacyApps.add(app);
+        }
         if (scripts.initProperties && typeof scripts.initProperties === "function") {
             scripts.initProperties(app);
         }

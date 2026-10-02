@@ -15,12 +15,31 @@ const assert = require('node:assert/strict');
 const test = require('node:test');
 const capability = require('../src/service/defaultCopilotCapabilityService');
 const moduleRegistry = require('../src/service/defaultCopilotModuleRegistryCapabilityService');
+const policy = require('../../copilotPolicy/src/service/defaultCopilotPolicyService');
 
 test('capabilities enforce permission and mutation boundaries', async () => {
     const tool = { code: 'customer.list', permission: 'customer.read', riskClass: 'SENSITIVE_READ', handler: async () => ['ok'] };
     await assert.rejects(capability.invoke(tool, {}, { permissions: [] }), /COPILOT_CAPABILITY_FORBIDDEN/);
     assert.deepEqual(await capability.invoke(tool, {}, { permissions: ['customer.read'] }), ['ok']);
     await assert.rejects(capability.invoke(Object.assign({}, tool, { mutates: true }), {}, { permissions: ['customer.read'] }), /COPILOT_MUTATION_REQUIRES_GOVERNED_EXECUTION/);
+});
+
+test('capability catalogue and invocation use policy decisions when security context is present', async () => {
+    let invoked = false;
+    const tools = [
+        { code: 'docs.public', permission: null, riskClass: 'PUBLIC_READ', public: true, mutates: false, handler: async () => 'public' },
+        { code: 'data.export', permission: 'copilot.data.export', riskClass: 'EXPORT', export: true, mutates: false, handler: async () => { invoked = true; return 'export'; } },
+        { code: 'product.create', permission: 'copilot.product.create', riskClass: 'CREATE', mutates: true, handler: async () => 'created' }
+    ];
+    const publicContext = policy.normalizeSecurityContext({ channel: 'PUBLIC' }, {});
+    const publicTools = capability.listAllowed(tools, publicContext, { policyService: policy });
+    assert.deepEqual(publicTools.map(tool => tool.code), ['docs.public']);
+    assert.equal(publicTools[0].handler, undefined);
+    await assert.rejects(capability.invoke(tools[1], {}, publicContext, { policyService: policy }), /COPILOT_CAPABILITY_FORBIDDEN/);
+    assert.equal(invoked, false);
+    const employeeContext = policy.normalizeSecurityContext({ channel: 'EMPLOYEE', actor: 'u1', tenant: 't1', permissions: ['copilot.data.export', 'copilot.product.create'] }, {});
+    assert.deepEqual(await capability.invoke(tools[1], {}, employeeContext, { policyService: policy }), 'export');
+    await assert.rejects(capability.invoke(tools[2], {}, employeeContext, { policyService: policy }), /COPILOT_MUTATION_REQUIRES_GOVERNED_EXECUTION/);
 });
 
 test('exports are bounded and neutralize spreadsheet formulas', () => {

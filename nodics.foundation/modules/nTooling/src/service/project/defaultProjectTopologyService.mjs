@@ -232,8 +232,16 @@ export async function preflight() {
 /** Checks nSystem readiness and declared supplemental probes without process operations. */
 export async function checkRuntimeReadiness(runtime, { fetchResponse = fetch } = {}) {
   const response = await fetchResponse(healthUrl(runtime), { redirect: 'error', signal: AbortSignal.timeout(5000) });
+  let body;
+  try { body = await response.json(); } catch (error) { if (response.ok) throw error; }
+  if (body?.data?.status === 'DOWN' && Array.isArray(body.data.checks) && body.data.checks.some(check =>
+    check?.name === 'backofficeRegistration' && check.required === true && check.status === 'DOWN' &&
+    check.reasonCode === 'BACKOFFICE_REGISTRATION_REPAIR_REQUIRED')) {
+    const error = new Error(`${runtime.label || runtime.code} registration requires metadata or deployment scope repair`);
+    error.code = 'BACKOFFICE_REGISTRATION_REPAIR_REQUIRED';
+    throw error;
+  }
   if (!response.ok) throw new Error(`${runtime.label || runtime.code} HTTP ${response.status}`);
-  const body = await response.json();
   if (body?.data?.status !== 'UP') throw new Error(`${runtime.label || runtime.code} nSystem readiness is not UP`);
   for (const check of runtime.readinessChecks || []) {
     const result = await fetchResponse(readinessCheckUrl(runtime, check), {
@@ -273,7 +281,8 @@ export async function assertTopologyReadiness(codes, {
   return results;
 }
 
-async function waitUntilReady(runtime, timeoutMs = 90000, child) {
+/** Waits through transient readiness failures; only the exact required registration repair outcome is terminal. */
+export async function waitUntilReady(runtime, timeoutMs = 90000, child, { probe = checkRuntimeReadiness, pause = sleep } = {}) {
   const startedAt = Date.now();
   let lastError = 'not reachable';
   while (Date.now() - startedAt < timeoutMs) {
@@ -281,10 +290,13 @@ async function waitUntilReady(runtime, timeoutMs = 90000, child) {
       throw new Error(`${runtime.label} exited before readiness`);
     }
     try {
-      await checkRuntimeReadiness(runtime);
+      await probe(runtime);
       return;
-    } catch (error) { lastError = error.message; }
-    await sleep(1000);
+    } catch (error) {
+      if (error.code === 'BACKOFFICE_REGISTRATION_REPAIR_REQUIRED') throw error;
+      lastError = error.message;
+    }
+    await pause(1000);
   }
   throw new Error(`${runtime.label} readiness timed out: ${lastError}`);
 }

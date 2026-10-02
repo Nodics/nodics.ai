@@ -1,0 +1,1 @@
+Your contact verification code is {{verificationCode}}. Expires at {{expiresAt}}. Do not share it. This does not grant access or notification consent.

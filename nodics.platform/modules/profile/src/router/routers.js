@@ -18,12 +18,501 @@
  */
 module.exports = {
   profile: {
+    tenantNamespaceBindings: {
+      inventory: {
+        secured: true,
+        authTokenTypes: ["service"],
+        accessGroups: ["serviceAccountUserGroup"],
+        permissionConfig: "profileTenantProvisioning.inventoryPermission",
+        apiExposure: "profileTenantProvisioning",
+        requestPrivacy: { sensitive: true },
+        cache: { enabled: false },
+        key: "/internal/tenants/bootstrap",
+        method: "GET",
+        controller: "DefaultTenantNamespaceBindingController",
+        operation: "inventory",
+      },
+      bind: {
+        secured: true,
+        authTokenTypes: ["service"],
+        accessGroups: ["serviceAccountUserGroup"],
+        permissionConfig: "profileTenantProvisioning.permission",
+        apiExposure: "profileTenantProvisioning",
+        requestPrivacy: { sensitive: true },
+        cache: { enabled: false },
+        key: "/internal/tenants/:tenantCode/namespace-bindings",
+        method: "POST",
+        controller: "DefaultTenantNamespaceBindingController",
+        operation: "bind",
+        requestBody: {
+          required: true,
+          content: {
+            "application/json": {
+              schema: {
+                type: "object",
+                additionalProperties: false,
+                required: ["scopeKey", "binding"],
+                properties: {
+                  scopeKey: {
+                    type: "string",
+                    pattern: "^deployment_[a-f0-9]{64}$",
+                  },
+                  binding: { type: "object" },
+                },
+              },
+            },
+          },
+        },
+      },
+    },
+    verifiedContactWorkspace: {
+      workspace: {
+        secured: true,
+        authTokenTypes: ["access"],
+        accessGroups: ["customerUserGroup"],
+        permissionConfig: "profileVerifiedContacts.permission",
+        apiExposure: "profileVerifiedContacts",
+        requestPrivacy: { sensitive: true },
+        cache: { enabled: false },
+        key: "/customer/contacts/verification/workspace",
+        method: "GET",
+        controller: "DefaultProfileVerifiedContactWorkspaceController",
+        operation: "workspace",
+      },
+    },
+    verifiedContacts: Object.fromEntries(
+      [
+        ["begin", ["ownerId", "channel", "expectedRevision"]],
+        [
+          "verify",
+          ["ownerId", "channel", "expectedRevision", "commandId", "secret"],
+        ],
+        ["inspect", ["ownerId", "channel"]],
+        [
+          "consent",
+          [
+            "ownerId",
+            "channel",
+            "expectedRevision",
+            "purpose",
+            "purposeVersion",
+            "granted",
+            "operationReference",
+          ],
+        ],
+        [
+          "suppression",
+          ["ownerId", "channel", "expectedRevision", "purpose", "suppressed"],
+        ],
+      ].map(([operation, required]) => [
+        operation,
+        {
+          secured: true,
+          authTokenTypes: ["access"],
+          accessGroups: ["customerUserGroup"],
+          permissionConfig: "profileVerifiedContacts.permission",
+          apiExposure: "profileVerifiedContacts",
+          requestPrivacy: { sensitive: true },
+          cache: { enabled: false },
+          key: "/customer/contacts/verification/" + operation,
+          method: "POST",
+          controller: "DefaultProfileVerifiedContactController",
+          operation,
+          requestBody: {
+            required: true,
+            content: {
+              "application/json": {
+                schema: {
+                  type: "object",
+                  additionalProperties: false,
+                  required,
+                  properties: Object.fromEntries(
+                    required.map((key) => [
+                      key,
+                      {
+                        ownerId: {
+                          type: "string",
+                          pattern: "^[A-Za-z0-9][A-Za-z0-9_.:-]{0,127}$",
+                        },
+                        channel: { type: "string", enum: ["EMAIL", "SMS"] },
+                        expectedRevision: {
+                          type: "integer",
+                          minimum: 0,
+                          maximum: 2147483646,
+                        },
+                        commandId: {
+                          type: "string",
+                          pattern: "^[a-f0-9]{64}$",
+                        },
+                        secret: {
+                          type: "string",
+                          pattern: "^[a-f0-9]{12,128}$",
+                        },
+                        purpose: {
+                          type: "string",
+                          pattern: "^[A-Za-z0-9][A-Za-z0-9_.:-]{0,127}$",
+                        },
+                        purposeVersion: {
+                          type: "integer",
+                          minimum: 1,
+                          maximum: 2147483647,
+                        },
+                        operationReference: {
+                          type: "string",
+                          pattern: "^[A-Za-z0-9][A-Za-z0-9_.:-]{0,127}$",
+                        },
+                        granted: { type: "boolean" },
+                        suppressed: { type: "boolean" },
+                      }[key],
+                    ]),
+                  ),
+                },
+              },
+            },
+          },
+        },
+      ]),
+    ),
+    committedConsentStampRepair: {
+      inspect: {
+        secured: true,
+        authTokenTypes: ["access"],
+        accessGroups: ["adminGroup", "runtimeConfigAdminUserGroup"],
+        permissionConfig:
+          "enterpriseManagement.administrationConsent.stampRepairPermission",
+        apiExposure: "profileManagement",
+        cache: { enabled: false },
+        key: "/enterprise-administration/:enterpriseCode/consent/stamps/repair",
+        method: "GET",
+        controller: "DefaultEnterpriseManagementController",
+        operation: "inspectCommittedConsentStamps",
+      },
+      repair: {
+        secured: true,
+        authTokenTypes: ["access"],
+        accessGroups: ["adminGroup", "runtimeConfigAdminUserGroup"],
+        permissionConfig:
+          "enterpriseManagement.administrationConsent.stampRepairPermission",
+        apiExposure: "profileManagement",
+        cache: { enabled: false },
+        key: "/enterprise-administration/:enterpriseCode/consent/stamps/repair",
+        method: "POST",
+        controller: "DefaultEnterpriseManagementController",
+        operation: "repairCommittedConsentStamps",
+        requestBody: {
+          required: true,
+          content: {
+            "application/json": {
+              schema: {
+                type: "object",
+                additionalProperties: false,
+                required: [
+                  "enterpriseCode",
+                  "revision",
+                  "operationId",
+                  "grantCodes",
+                ],
+                properties: {
+                  enterpriseCode: {
+                    type: "string",
+                    minLength: 1,
+                    maxLength: 128,
+                    pattern: "^[A-Za-z0-9][A-Za-z0-9._-]{0,127}$",
+                  },
+                  revision: {
+                    type: "integer",
+                    minimum: 1,
+                    maximum: 2147483647,
+                  },
+                  operationId: {
+                    type: "string",
+                    pattern: "^[A-Za-z0-9_-]{1,128}$",
+                  },
+                  grantCodes: {
+                    type: "array",
+                    minItems: 1,
+                    maxItems: 100,
+                    uniqueItems: true,
+                    items: {
+                      type: "string",
+                      minLength: 1,
+                      maxLength: 320,
+                      pattern: "^[A-Za-z0-9][A-Za-z0-9._@+-]{0,319}$",
+                    },
+                  },
+                },
+              },
+            },
+          },
+        },
+      },
+    },
+    commerceNotifications: {
+      recipient: {
+        secured: true,
+        authTokenTypes: ["service"],
+        accessGroups: ["serviceAccountUserGroup"],
+        permissionConfig: "profileCommerceNotifications.permission",
+        apiExposure: "profileManagement",
+        requestPrivacy: { sensitive: true },
+        cache: { enabled: false },
+        key: "/internal/commerce/notification-recipient",
+        method: "POST",
+        controller: "DefaultProfileCommerceNotificationRecipientController",
+        operation: "resolve",
+        requestBody: {
+          required: true,
+          content: {
+            "application/json": {
+              schema: {
+                type: "object",
+                additionalProperties: false,
+                required: ["channel", "source"],
+                properties: {
+                  channel: { type: "string", enum: ["EMAIL", "SMS"] },
+                  source: {
+                    type: "object",
+                    additionalProperties: false,
+                    required: [
+                      "kind",
+                      "orderCode",
+                      "sourceCode",
+                      "orderRevision",
+                    ],
+                    properties: {
+                      kind: { type: "string", enum: ["PURCHASED", "REFUNDED"] },
+                      orderCode: {
+                        type: "string",
+                        minLength: 1,
+                        maxLength: 128,
+                      },
+                      sourceCode: {
+                        type: "string",
+                        minLength: 1,
+                        maxLength: 128,
+                      },
+                      orderRevision: { type: "integer", minimum: 0 },
+                    },
+                  },
+                },
+              },
+            },
+          },
+        },
+      },
+    },
+    canonicalHistoricalLink: {
+      prepare: {
+        secured: true,
+        authTokenTypes: ["access"],
+        accessGroups: ["runtimeConfigAdminUserGroup"],
+        permission: "identity.migration.apply",
+        apiExposure: "profileManagement",
+        requestPrivacy: { sensitive: true },
+        cache: { enabled: false },
+        key: "/identity/canonical-link/prepare",
+        method: "POST",
+        controller: "DefaultCanonicalHistoricalIdentityLinkController",
+        operation: "prepare",
+        requestBody: {
+          required: true,
+          content: {
+            "application/json": {
+              schema: {
+                type: "object",
+                additionalProperties: false,
+                required: [
+                  "canonicalIdentity",
+                  "historicalIdentity",
+                  "canonicalPassword",
+                  "historicalPassword",
+                  "confirmed",
+                ],
+                properties: {
+                  canonicalIdentity: {
+                    type: "object",
+                    additionalProperties: false,
+                    required: ["tenantCode", "recordKind", "recordId"],
+                    properties: {
+                      tenantCode: {
+                        type: "string",
+                        pattern: "^[A-Za-z0-9._-]{1,128}$",
+                      },
+                      recordKind: {
+                        type: "string",
+                        enum: ["EMPLOYEE", "CUSTOMER"],
+                      },
+                      recordId: {
+                        type: "string",
+                        minLength: 1,
+                        maxLength: 192,
+                      },
+                    },
+                  },
+                  historicalIdentity: {
+                    type: "object",
+                    additionalProperties: false,
+                    required: ["tenantCode", "recordKind", "recordId"],
+                    properties: {
+                      tenantCode: {
+                        type: "string",
+                        pattern: "^[A-Za-z0-9._-]{1,128}$",
+                      },
+                      recordKind: {
+                        type: "string",
+                        enum: ["EMPLOYEE", "CUSTOMER"],
+                      },
+                      recordId: {
+                        type: "string",
+                        minLength: 1,
+                        maxLength: 192,
+                      },
+                    },
+                  },
+                  canonicalPassword: {
+                    type: "string",
+                    minLength: 1,
+                    maxLength: 1024,
+                  },
+                  historicalPassword: {
+                    type: "string",
+                    minLength: 1,
+                    maxLength: 1024,
+                  },
+                  confirmed: { type: "boolean", enum: [true] },
+                },
+              },
+            },
+          },
+        },
+      },
+      commit: {
+        secured: true,
+        authTokenTypes: ["access"],
+        accessGroups: ["runtimeConfigAdminUserGroup"],
+        permission: "identity.migration.apply",
+        apiExposure: "profileManagement",
+        requestPrivacy: { sensitive: true },
+        cache: { enabled: false },
+        key: "/identity/canonical-link/commit",
+        method: "POST",
+        controller: "DefaultCanonicalHistoricalIdentityLinkController",
+        operation: "commit",
+        requestBody: {
+          required: true,
+          content: {
+            "application/json": {
+              schema: {
+                type: "object",
+                additionalProperties: false,
+                required: [
+                  "auditCode",
+                  "fingerprint",
+                  "canonicalPassword",
+                  "historicalPassword",
+                  "confirmed",
+                ],
+                properties: {
+                  auditCode: {
+                    type: "string",
+                    pattern: "^canonical-link-[a-f0-9]{40}$",
+                  },
+                  fingerprint: { type: "string", pattern: "^[a-f0-9]{64}$" },
+                  canonicalPassword: {
+                    type: "string",
+                    minLength: 1,
+                    maxLength: 1024,
+                  },
+                  historicalPassword: {
+                    type: "string",
+                    minLength: 1,
+                    maxLength: 1024,
+                  },
+                  confirmed: { type: "boolean", enum: [true] },
+                  resume: { type: "boolean" },
+                },
+              },
+            },
+          },
+        },
+      },
+      inspect: {
+        secured: true,
+        authTokenTypes: ["access"],
+        accessGroups: ["runtimeConfigAdminUserGroup"],
+        permission: "identity.migration.apply",
+        apiExposure: "profileManagement",
+        requestPrivacy: { sensitive: true },
+        cache: { enabled: false },
+        key: "/identity/canonical-link/inspect",
+        method: "POST",
+        controller: "DefaultCanonicalHistoricalIdentityLinkController",
+        operation: "inspect",
+        requestBody: {
+          required: true,
+          content: {
+            "application/json": {
+              schema: {
+                type: "object",
+                additionalProperties: false,
+                required: ["auditCode", "fingerprint"],
+                properties: {
+                  auditCode: {
+                    type: "string",
+                    pattern: "^canonical-link-[a-f0-9]{40}$",
+                  },
+                  fingerprint: { type: "string", pattern: "^[a-f0-9]{64}$" },
+                },
+              },
+            },
+          },
+        },
+      },
+    },
+    sessionContext: {
+      validate: {
+        requestPrivacy: { sensitive: true },
+        secured: true,
+        authTokenTypes: ["service"],
+        accessGroups: ["serviceAccountUserGroup"],
+        permissionConfig: "authSecurity.sessionContextValidation.permission",
+        apiExposure: "profileManagement",
+        cache: { enabled: false },
+        key: "/internal/session-context/validate",
+        method: "POST",
+        controller: "DefaultProfileSessionContextController",
+        operation: "validate",
+        requestBody: {
+          required: true,
+          content: {
+            "application/json": {
+              schema: {
+                type: "object",
+                additionalProperties: false,
+                required: ["authToken"],
+                properties: {
+                  authToken: { type: "string", minLength: 5, maxLength: 65536 },
+                },
+              },
+            },
+          },
+        },
+      },
+    },
     references: {
       read: {
-        secured: true, authTokenTypes: ["service"], accessGroups: ["serviceAccountUserGroup"],
-        permissions: ["profile.address.reference.read", "profile.enterprise.reference.read"],
-        apiExposure: "profileManagement", key: "/references/read", method: "POST",
-        controller: "DefaultProfileReferenceController", operation: "read",
+        secured: true,
+        authTokenTypes: ["service"],
+        accessGroups: ["serviceAccountUserGroup"],
+        permissions: [
+          "profile.address.reference.read",
+          "profile.enterprise.reference.read",
+        ],
+        apiExposure: "profileManagement",
+        key: "/references/read",
+        method: "POST",
+        controller: "DefaultProfileReferenceController",
+        operation: "read",
       },
     },
     principalScopes: {
@@ -156,9 +645,17 @@ module.exports = {
         method: "POST",
         controller: "DefaultEnterpriseManagementController",
         operation: "create",
-        summary: "Create one enterprise after governed confirmation",
+        summary: "Create an enterprise and prepare its default administrator",
         description:
-          "Profile validates and persists the enterprise; callers may not bypass target authorization.",
+          "Profile derives runtime placement and composes existing enterprise/pre-enrolment owners. Identity activation remains a separate invitee action.",
+        parameters: [
+          {
+            name: "Idempotency-Key",
+            in: "header",
+            required: true,
+            schema: { type: "string", minLength: 8, maxLength: 256 },
+          },
+        ],
         requestBody: {
           required: true,
           content: {
@@ -166,32 +663,26 @@ module.exports = {
               schema: {
                 type: "object",
                 additionalProperties: false,
-                required: ["code", "name", "idempotencyKey"],
+                required: ["model"],
                 properties: {
-                  code: { type: "string", maxLength: 128 },
-                  name: { type: "string", maxLength: 256 },
-                  tenantCode: { type: "string", maxLength: 128 },
-                  superEnterpriseCode: { type: "string", maxLength: 128 },
-                  roleCodes: {
-                    type: "array",
-                    items: {
-                      type: "string",
-                      enum: [
-                        "PLATFORM_OWNER",
-                        "PROGRAM_OPERATOR",
-                        "SERVICE_PROVIDER",
-                        "MARKETPLACE_VENDOR",
-                        "ISSUER",
-                        "ASSET_OWNER",
-                        "BUSINESS_PARTNER",
-                      ],
+                  model: {
+                    type: "object",
+                    required: ["code", "name"],
+                    description:
+                      "Effective Profile enterprise descriptor validates writable fields; adminEmail is required unless a unique EMAIL contact is selected.",
+                    properties: {
+                      code: { type: "string", maxLength: 128 },
+                      name: { type: "string", maxLength: 256 },
+                      adminEmail: { type: "string", maxLength: 320 },
+                      contacts: {
+                        type: "array",
+                        maxItems: 100,
+                        items: { type: "string", maxLength: 128 },
+                      },
+                      active: { type: "boolean" },
+                      roleCodes: { type: "array", items: { type: "string" } },
+                      superEnterprise: { type: "string", maxLength: 128 },
                     },
-                  },
-                  active: { type: "boolean" },
-                  idempotencyKey: {
-                    type: "string",
-                    minLength: 8,
-                    maxLength: 256,
                   },
                 },
               },
@@ -199,7 +690,10 @@ module.exports = {
           },
         },
         responses: {
-          200: { description: "Created client-safe enterprise result" },
+          200: {
+            description:
+              "Persisted enterprise with administrator enrolment prepared, not an activated employee session",
+          },
         },
       },
       searchEnterpriseAccessAssignments: {
@@ -410,6 +904,168 @@ module.exports = {
         },
         responses: {
           200: { description: "Registered enterprise employee result" },
+        },
+      },
+    },
+
+    employeeRecovery: {
+      workspace: {
+        secured: false,
+        accessGroups: ["userGroup"],
+        apiExposure: "profileEmployeeRecovery",
+        key: "/employee-recovery/workspace",
+        method: "GET",
+        controller: "DefaultAuthenticationProviderController",
+        operation: "employeeRecoveryWorkspace",
+        summary:
+          "Discover the independently qualified employee password recovery contract",
+      },
+      start: {
+        secured: false,
+        accessGroups: ["userGroup"],
+        apiExposure: "profileEmployeeRecovery",
+        key: "/employee-recovery/start",
+        method: "POST",
+        controller: "DefaultAuthenticationProviderController",
+        operation: "startEmployeeRecovery",
+        requestBody: {
+          required: true,
+          content: {
+            "application/json": {
+              schema: {
+                type: "object",
+                additionalProperties: false,
+                required: ["email"],
+                properties: {
+                  email: { type: "string", format: "email", maxLength: 320 },
+                },
+              },
+            },
+          },
+        },
+      },
+      verify: {
+        secured: false,
+        accessGroups: ["userGroup"],
+        apiExposure: "profileEmployeeRecovery",
+        key: "/employee-recovery/verify",
+        method: "POST",
+        controller: "DefaultAuthenticationProviderController",
+        operation: "verifyEmployeeRecovery",
+        requestBody: {
+          required: true,
+          content: {
+            "application/json": {
+              schema: {
+                type: "object",
+                additionalProperties: false,
+                required: ["continuation", "code"],
+                properties: {
+                  continuation: {
+                    type: "string",
+                    pattern: "^[A-Za-z0-9_-]{43}$",
+                    writeOnly: true,
+                  },
+                  code: {
+                    type: "string",
+                    minLength: 6,
+                    maxLength: 128,
+                    writeOnly: true,
+                  },
+                },
+              },
+            },
+          },
+        },
+      },
+      resend: {
+        secured: false,
+        accessGroups: ["userGroup"],
+        apiExposure: "profileEmployeeRecovery",
+        key: "/employee-recovery/resend",
+        method: "POST",
+        controller: "DefaultAuthenticationProviderController",
+        operation: "resendEmployeeRecovery",
+        requestBody: {
+          required: true,
+          content: {
+            "application/json": {
+              schema: {
+                type: "object",
+                additionalProperties: false,
+                required: ["continuation"],
+                properties: {
+                  continuation: {
+                    type: "string",
+                    pattern: "^[A-Za-z0-9_-]{43}$",
+                    writeOnly: true,
+                  },
+                },
+              },
+            },
+          },
+        },
+      },
+      status: {
+        secured: false,
+        accessGroups: ["userGroup"],
+        apiExposure: "profileEmployeeRecovery",
+        key: "/employee-recovery/status",
+        method: "POST",
+        controller: "DefaultAuthenticationProviderController",
+        operation: "employeeRecoveryStatus",
+        requestBody: {
+          required: true,
+          content: {
+            "application/json": {
+              schema: {
+                type: "object",
+                additionalProperties: false,
+                required: ["continuation"],
+                properties: {
+                  continuation: {
+                    type: "string",
+                    pattern: "^[A-Za-z0-9_-]{43}$",
+                    writeOnly: true,
+                  },
+                },
+              },
+            },
+          },
+        },
+      },
+      reset: {
+        secured: false,
+        accessGroups: ["userGroup"],
+        apiExposure: "profileEmployeeRecovery",
+        key: "/employee-recovery/reset",
+        method: "POST",
+        controller: "DefaultAuthenticationProviderController",
+        operation: "completeEmployeeRecovery",
+        requestBody: {
+          required: true,
+          content: {
+            "application/json": {
+              schema: {
+                type: "object",
+                additionalProperties: false,
+                required: ["continuation", "password"],
+                properties: {
+                  continuation: {
+                    type: "string",
+                    pattern: "^[A-Za-z0-9_-]{43}$",
+                    writeOnly: true,
+                  },
+                  password: {
+                    type: "string",
+                    minLength: 12,
+                    maxLength: 1024,
+                    writeOnly: true,
+                  },
+                },
+              },
+            },
+          },
         },
       },
     },
@@ -715,6 +1371,48 @@ module.exports = {
       },
     },
     identityMigration: {
+      assessment: {
+        secured: true,
+        accessGroups: ["runtimeConfigAdminUserGroup"],
+        permission: "identity.migration.preview",
+        key: "/identity/migration/assessment",
+        method: "POST",
+        controller: "DefaultIdentityGovernanceController",
+        operation: "assessIdentities",
+        requestPrivacy: { sensitive: true },
+      },
+      bootstrapReview: {
+        secured: true,
+        accessGroups: ["runtimeConfigAdminUserGroup"],
+        permission: "identity.migration.preview",
+        key: "/identity/migration/assessment/bootstrap-review",
+        method: "POST",
+        controller: "DefaultIdentityGovernanceController",
+        operation: "reviewBootstrapIdentities",
+        requestPrivacy: { sensitive: true },
+        authTokenTypes: ["access"],
+        cache: { enabled: false },
+        requestBody: {
+          required: true,
+          content: {
+            "application/json": {
+              schema: {
+                type: "object",
+                additionalProperties: false,
+                required: ["confirmed", "reviewToken"],
+                properties: {
+                  confirmed: { type: "boolean", enum: [true] },
+                  reviewToken: {
+                    type: "string",
+                    maxLength: 2048,
+                    pattern: "^[A-Za-z0-9_-]+\\.[a-f0-9]{64}$",
+                  },
+                },
+              },
+            },
+          },
+        },
+      },
       preview: {
         secured: true,
         accessGroups: ["runtimeConfigAdminUserGroup"],
@@ -732,6 +1430,27 @@ module.exports = {
         method: "POST",
         controller: "DefaultIdentityGovernanceController",
         operation: "applyMigration",
+        authTokenTypes: ["access"],
+        cache: { enabled: false },
+        summary:
+          "Apply an explicitly reviewed legacy structural preview; not canonical identity reconciliation",
+        requestBody: {
+          required: true,
+          content: {
+            "application/json": {
+              schema: {
+                type: "object",
+                additionalProperties: false,
+                required: ["confirmed", "fingerprint", "migrationVersion"],
+                properties: {
+                  confirmed: { type: "boolean", enum: [true] },
+                  fingerprint: { type: "string", pattern: "^[a-f0-9]{64}$" },
+                  migrationVersion: { type: "integer", minimum: 1 },
+                },
+              },
+            },
+          },
+        },
       },
       rollback: {
         secured: true,
@@ -741,6 +1460,86 @@ module.exports = {
         method: "POST",
         controller: "DefaultIdentityGovernanceController",
         operation: "rollbackMigration",
+        authTokenTypes: ["access"],
+        cache: { enabled: false },
+        summary:
+          "Restore an explicitly reviewed completed structural audit; never restore credentials",
+        requestBody: {
+          required: true,
+          content: {
+            "application/json": {
+              schema: {
+                type: "object",
+                additionalProperties: false,
+                required: ["auditCode", "confirmed", "fingerprint"],
+                properties: {
+                  auditCode: { type: "string", minLength: 1, maxLength: 192 },
+                  confirmed: { type: "boolean", enum: [true] },
+                  fingerprint: { type: "string", pattern: "^[a-f0-9]{64}$" },
+                },
+              },
+            },
+          },
+        },
+      },
+      recover: {
+        secured: true,
+        authTokenTypes: ["access"],
+        accessGroups: ["runtimeConfigAdminUserGroup"],
+        permission: "identity.migration.apply",
+        key: "/identity/migration/recover",
+        method: "POST",
+        cache: { enabled: false },
+        controller: "DefaultIdentityGovernanceController",
+        operation: "recoverMigration",
+        summary: "Recover only exact reviewed structural audit pre/post states",
+        requestBody: {
+          required: true,
+          content: {
+            "application/json": {
+              schema: {
+                type: "object",
+                additionalProperties: false,
+                required: ["auditCode", "confirmed", "fingerprint"],
+                properties: {
+                  auditCode: { type: "string", minLength: 1, maxLength: 192 },
+                  confirmed: { type: "boolean", enum: [true] },
+                  fingerprint: { type: "string", pattern: "^[a-f0-9]{64}$" },
+                },
+              },
+            },
+          },
+        },
+      },
+      inspect: {
+        secured: true,
+        authTokenTypes: ["access"],
+        accessGroups: ["runtimeConfigAdminUserGroup"],
+        permission: "identity.migration.preview",
+        key: "/identity/migration/inspect",
+        method: "POST",
+        cache: { enabled: false },
+        controller: "DefaultIdentityGovernanceController",
+        operation: "inspectMigration",
+        summary:
+          "Inspect reviewed structural audit progress without replay or unlocking",
+        requestBody: {
+          required: true,
+          content: {
+            "application/json": {
+              schema: {
+                type: "object",
+                additionalProperties: false,
+                required: ["auditCode", "confirmed", "fingerprint"],
+                properties: {
+                  auditCode: { type: "string", minLength: 1, maxLength: 192 },
+                  confirmed: { type: "boolean", enum: [true] },
+                  fingerprint: { type: "string", pattern: "^[a-f0-9]{64}$" },
+                },
+              },
+            },
+          },
+        },
       },
       rotateServiceKey: {
         secured: true,
@@ -799,6 +1598,1103 @@ module.exports = {
           url: "http://host:port/nodics/profile/customer/signUp",
           body: {
             //complete customer profile data
+          },
+        },
+      },
+    },
+  },
+};
+
+// Public transport remains within the existing Profile registration route family.
+// Never expose Communication's service-only API to Axis.
+Object.assign(module.exports.profile.loadDefaults, {
+  startEmployeeRegistration: {
+    secured: false,
+    accessGroups: ["userGroup"],
+    apiExposure: "profileRegistration",
+    key: "/enterprise-access/start",
+    method: "POST",
+    controller: "DefaultEnterpriseManagementController",
+    operation: "startEmployeeRegistration",
+    summary: "Start a neutral email-first employee registration",
+    requestBody: {
+      required: true,
+      content: {
+        "application/json": {
+          schema: {
+            type: "object",
+            additionalProperties: false,
+            required: ["email"],
+            properties: {
+              email: { type: "string", format: "email", maxLength: 320 },
+            },
+          },
+        },
+      },
+    },
+    responses: {
+      200: {
+        description:
+          "Opaque continuation and neutral delivery progress; no identity or invitation disclosure",
+      },
+    },
+  },
+  verifyEmployeeRegistration: {
+    secured: false,
+    accessGroups: ["userGroup"],
+    apiExposure: "profileRegistration",
+    key: "/enterprise-access/verify",
+    method: "POST",
+    controller: "DefaultEnterpriseManagementController",
+    operation: "verifyEmployeeRegistration",
+    summary: "Verify email and resolve authorised registration choices",
+    requestBody: {
+      required: true,
+      content: {
+        "application/json": {
+          schema: {
+            type: "object",
+            additionalProperties: false,
+            required: ["continuation", "code"],
+            properties: {
+              continuation: {
+                type: "string",
+                pattern: "^[A-Za-z0-9_-]{43}$",
+                writeOnly: true,
+              },
+              code: {
+                type: "string",
+                minLength: 6,
+                maxLength: 128,
+                writeOnly: true,
+              },
+            },
+          },
+        },
+      },
+    },
+    responses: {
+      200: {
+        description:
+          "Verified registration progress without OTP or execution proof",
+      },
+    },
+  },
+  resendEmployeeRegistration: {
+    secured: false,
+    accessGroups: ["userGroup"],
+    apiExposure: "profileRegistration",
+    key: "/enterprise-access/resend",
+    method: "POST",
+    controller: "DefaultEnterpriseManagementController",
+    operation: "resendEmployeeRegistration",
+    summary:
+      "Replace an eligible verification code under the existing cooldown and attempt policy",
+    requestBody: {
+      required: true,
+      content: {
+        "application/json": {
+          schema: {
+            type: "object",
+            additionalProperties: false,
+            required: ["continuation"],
+            properties: {
+              continuation: {
+                type: "string",
+                pattern: "^[A-Za-z0-9_-]{43}$",
+                writeOnly: true,
+              },
+            },
+          },
+        },
+      },
+    },
+    responses: {
+      200: {
+        description: "New generation progress; not proof of inbox receipt",
+      },
+    },
+  },
+  employeeRegistrationStatus: {
+    secured: false,
+    accessGroups: ["userGroup"],
+    apiExposure: "profileRegistration",
+    key: "/enterprise-access/status",
+    method: "POST",
+    controller: "DefaultEnterpriseManagementController",
+    operation: "employeeRegistrationStatus",
+    summary:
+      "Read the current protected registration outcome without repeating writes",
+    requestBody: {
+      required: true,
+      content: {
+        "application/json": {
+          schema: {
+            type: "object",
+            additionalProperties: false,
+            required: ["continuation"],
+            properties: {
+              continuation: {
+                type: "string",
+                pattern: "^[A-Za-z0-9_-]{43}$",
+                writeOnly: true,
+              },
+            },
+          },
+        },
+      },
+    },
+    responses: { 200: { description: "Authoritative registration progress" } },
+  },
+});
+// Update the existing completion operation rather than introduce a competing one.
+module.exports.profile.loadDefaults.registerPreAssignedEnterpriseEmployee.requestBody =
+  {
+    required: true,
+    content: {
+      "application/json": {
+        schema: {
+          type: "object",
+          additionalProperties: false,
+          required: ["continuation", "firstName", "lastName", "password"],
+          properties: {
+            continuation: {
+              type: "string",
+              pattern: "^[A-Za-z0-9_-]{43}$",
+              writeOnly: true,
+            },
+            assignmentCode: { type: "string", minLength: 1, maxLength: 128 },
+            firstName: { type: "string", minLength: 1, maxLength: 256 },
+            lastName: { type: "string", minLength: 1, maxLength: 256 },
+            password: {
+              type: "string",
+              minLength: 12,
+              maxLength: 1024,
+              writeOnly: true,
+            },
+          },
+        },
+      },
+    },
+  };
+
+// Application intake shares the existing proof-bound registration continuation.
+module.exports.profile.loadDefaults.withdrawEmployeeApplication = {
+  secured: false,
+  accessGroups: ["userGroup"],
+  apiExposure: "profileRegistration",
+  key: "/enterprise-access/withdraw-application",
+  method: "POST",
+  controller: "DefaultEnterpriseManagementController",
+  operation: "withdrawEmployeeApplication",
+  summary:
+    "Withdraw a mailbox-proven pending application at its displayed revision",
+  cache: { enabled: false },
+  requestBody: {
+    required: true,
+    content: {
+      "application/json": {
+        schema: {
+          type: "object",
+          additionalProperties: false,
+          required: ["continuation", "applicationCode", "expectedRevision"],
+          properties: {
+            continuation: {
+              type: "string",
+              pattern: "^[A-Za-z0-9_-]{43}$",
+              writeOnly: true,
+            },
+            applicationCode: {
+              type: "string",
+              pattern: "^[A-Za-z0-9_.-]{1,128}$",
+            },
+            expectedRevision: { type: "string", pattern: "^[1-9][0-9]{0,9}$" },
+          },
+        },
+      },
+    },
+  },
+  responses: {
+    200: { description: "Current application history; no access granted" },
+  },
+};
+Object.assign(module.exports.profile.loadDefaults, {
+  applyForEnterprise: {
+    secured: false,
+    accessGroups: ["userGroup"],
+    apiExposure: "profileRegistration",
+    key: "/enterprise-access/apply",
+    method: "POST",
+    controller: "DefaultEnterpriseManagementController",
+    operation: "applyForEnterprise",
+    summary:
+      "Submit verified employee details for enterprise review without granting access",
+    cache: { enabled: false },
+    requestBody: {
+      required: true,
+      content: {
+        "application/json": {
+          schema: {
+            type: "object",
+            additionalProperties: false,
+            required: [
+              "continuation",
+              "enterpriseCode",
+              "firstName",
+              "lastName",
+            ],
+            properties: {
+              continuation: {
+                type: "string",
+                pattern: "^[A-Za-z0-9_-]{43}$",
+                writeOnly: true,
+              },
+              enterpriseCode: { type: "string", minLength: 1, maxLength: 128 },
+              firstName: { type: "string", minLength: 1, maxLength: 256 },
+              lastName: { type: "string", minLength: 1, maxLength: 256 },
+              note: { type: "string", maxLength: 4000 },
+            },
+          },
+        },
+      },
+    },
+    responses: {
+      200: {
+        description:
+          "Saved application status; not registration or workflow approval",
+      },
+    },
+  },
+  searchEmployeeApplications: {
+    secured: true,
+    authTokenTypes: ["access"],
+    accessGroups: ["runtimeConfigAdminUserGroup", "adminGroup"],
+    permissionConfig: "enterpriseManagement.applications.reviewPermission",
+    apiExposure: "profileManagement",
+    key: "/enterprise-access/applications",
+    method: "GET",
+    controller: "DefaultEnterpriseManagementController",
+    operation: "searchEmployeeApplications",
+    cache: { enabled: false },
+    summary: "List pending applications within the authorised enterprise scope",
+    parameters: [
+      {
+        name: "enterpriseCode",
+        in: "query",
+        required: false,
+        schema: { type: "string", maxLength: 128 },
+      },
+      {
+        name: "page",
+        in: "query",
+        required: false,
+        schema: { type: "integer", minimum: 1, maximum: 10000 },
+      },
+      {
+        name: "limit",
+        in: "query",
+        required: false,
+        schema: { type: "integer", minimum: 1, maximum: 100 },
+      },
+    ],
+    responses: {
+      200: {
+        description:
+          "Bounded application list without proof or credential data",
+      },
+    },
+  },
+});
+
+module.exports.profile.loadDefaults.applyEmployeeApplicationDecision = {
+  secured: true,
+  authTokenTypes: ["service"],
+  accessGroups: ["serviceAccountUserGroup"],
+  permissionConfig:
+    "enterpriseManagement.applications.review.callbackPermission",
+  apiExposure: "moduleInternal",
+  key: "/enterprise-access/applications/process-decision",
+  method: "POST",
+  cache: { enabled: false },
+  controller: "DefaultEnterpriseManagementController",
+  operation: "applyEmployeeApplicationDecision",
+  summary:
+    "Claim and apply a Process-owned employee application review decision",
+  requestBody: {
+    required: true,
+    content: {
+      "application/json": {
+        schema: {
+          type: "object",
+          additionalProperties: false,
+          required: ["instanceCode", "executionCode"],
+          properties: {
+            instanceCode: {
+              type: "string",
+              pattern: "^employeeApplicationReview_[a-f0-9]{64}$",
+            },
+            executionCode: { type: "string", pattern: "^[a-f0-9-]{36}$" },
+          },
+        },
+      },
+    },
+  },
+  responses: {
+    200: {
+      description: "Authoritative application outcome, not login activation",
+    },
+  },
+};
+
+// Recovery commands do not accept an approval decision or an arbitrary message recipient.
+module.exports.profile.loadDefaults.inspectEmployeeApplicationReview = {
+  secured: true,
+  authTokenTypes: ["access"],
+  accessGroups: ["runtimeConfigAdminUserGroup", "adminGroup"],
+  permissionConfig:
+    "enterpriseManagement.applications.review.decisionPermission",
+  apiExposure: "profileManagement",
+  key: "/enterprise-access/applications/:applicationCode/recovery",
+  method: "GET",
+  cache: { enabled: false },
+  controller: "DefaultEnterpriseManagementController",
+  operation: "inspectEmployeeApplicationReview",
+  summary:
+    "Inspect one scoped application without starting or deciding its Process review",
+  parameters: [
+    {
+      name: "applicationCode",
+      in: "path",
+      required: true,
+      schema: { type: "string", pattern: "^enterpriseAccess_[a-f0-9]{64}$" },
+    },
+  ],
+  responses: {
+    200: { description: "Redacted current application recovery evidence" },
+  },
+};
+module.exports.profile.loadDefaults.manageEmployeeApplicationReview = {
+  secured: true,
+  authTokenTypes: ["access"],
+  accessGroups: ["runtimeConfigAdminUserGroup", "adminGroup"],
+  permissionConfig:
+    "enterpriseManagement.applications.review.decisionPermission",
+  apiExposure: "profileManagement",
+  key: "/enterprise-access/applications/:applicationCode/actions",
+  method: "POST",
+  controller: "DefaultEnterpriseManagementController",
+  operation: "manageEmployeeApplicationReview",
+  cache: { enabled: false },
+  summary:
+    "Reconcile the saved application review or its existing decision notification",
+  parameters: [
+    {
+      name: "applicationCode",
+      in: "path",
+      required: true,
+      schema: { type: "string", pattern: "^enterpriseAccess_[a-f0-9]{64}$" },
+    },
+  ],
+  requestBody: {
+    required: true,
+    content: {
+      "application/json": {
+        schema: {
+          type: "object",
+          additionalProperties: false,
+          required: ["operation", "revision"],
+          properties: {
+            operation: {
+              type: "string",
+              enum: [
+                "RETRY_REVIEW_START",
+                "RETRY_NOTIFICATION",
+                "RETRY_REVIEW_RETIREMENT",
+              ],
+            },
+            revision: { type: "integer", minimum: 1 },
+            attempt: { type: "integer", minimum: 1, maximum: 20 },
+          },
+        },
+      },
+    },
+  },
+  responses: {
+    200: {
+      description:
+        "Fresh recovery state; never proof of mailbox delivery or approval",
+    },
+  },
+};
+
+// Consent changes are target-owned lifecycle commands, not generic scope CRUD.
+module.exports.profile.loadDefaults.inspectEnterpriseHierarchy = {
+  secured: true,
+  authTokenTypes: ["access"],
+  accessGroups: ["adminGroup", "runtimeConfigAdminUserGroup"],
+  permissionConfig:
+    "enterpriseManagement.administrationConsent.reparentPermission",
+  apiExposure: "profileManagement",
+  key: "/enterprise-administration/hierarchy",
+  method: "GET",
+  controller: "DefaultEnterpriseManagementController",
+  operation: "inspectEnterpriseHierarchy",
+  cache: { enabled: false },
+  summary: "Inspect one retained platform-owned hierarchy change",
+};
+module.exports.profile.loadDefaults.reparentEnterprise = {
+  secured: true,
+  authTokenTypes: ["access"],
+  accessGroups: ["adminGroup", "runtimeConfigAdminUserGroup"],
+  permissionConfig:
+    "enterpriseManagement.administrationConsent.reparentPermission",
+  apiExposure: "profileManagement",
+  key: "/enterprise-administration/hierarchy",
+  method: "POST",
+  controller: "DefaultEnterpriseManagementController",
+  operation: "reparentEnterprise",
+  cache: { enabled: false },
+  summary: "Apply or resume one reviewed platform-owned relationship change",
+  requestBody: {
+    required: true,
+    content: {
+      "application/json": {
+        schema: {
+          type: "object",
+          additionalProperties: false,
+          required: ["enterpriseCode", "parentCode", "epoch", "operationId"],
+          properties: {
+            enterpriseCode: { type: "string", maxLength: 128 },
+            parentCode: { type: "string", nullable: true, maxLength: 128 },
+            epoch: { type: "integer", minimum: 0, maximum: 2147483646 },
+            operationId: { type: "string", pattern: "^[A-Za-z0-9_-]{16,128}$" },
+          },
+        },
+      },
+    },
+  },
+};
+module.exports.profile.loadDefaults.inspectAdministrationConsent = {
+  secured: true,
+  authTokenTypes: ["access"],
+  accessGroups: ["adminGroup"],
+  permissionConfig: "enterpriseManagement.administrationConsent.permission",
+  apiExposure: "profileManagement",
+  key: "/enterprise-administration/consent",
+  method: "GET",
+  controller: "DefaultEnterpriseManagementController",
+  operation: "inspectAdministrationConsent",
+  cache: { enabled: false },
+  summary:
+    "Inspect explicit administration consent owned by the current enterprise",
+};
+module.exports.profile.loadDefaults.recoverEnterpriseHierarchy = {
+  secured: true,
+  authTokenTypes: ["access"],
+  accessGroups: ["adminGroup", "runtimeConfigAdminUserGroup"],
+  permissionConfig:
+    "enterpriseManagement.administrationConsent.hierarchyRecoveryPermission",
+  apiExposure: "profileManagement",
+  key: "/enterprise-administration/hierarchy/recover",
+  method: "POST",
+  controller: "DefaultEnterpriseManagementController",
+  operation: "recoverEnterpriseHierarchy",
+  cache: { enabled: false },
+  summary:
+    "Resolve one inspected hierarchy fence without stealing pending work",
+  requestBody: {
+    required: true,
+    content: {
+      "application/json": {
+        schema: {
+          type: "object",
+          additionalProperties: false,
+          required: ["enterpriseCode", "operationId", "revision"],
+          properties: {
+            enterpriseCode: { type: "string", minLength: 1, maxLength: 128 },
+            operationId: { type: "string", pattern: "^[A-Za-z0-9_-]{16,128}$" },
+            revision: { type: "integer", minimum: 1, maximum: 2147483646 },
+          },
+        },
+      },
+    },
+  },
+};
+module.exports.profile.loadDefaults.changeAdministrationConsent = {
+  secured: true,
+  authTokenTypes: ["access"],
+  accessGroups: ["adminGroup"],
+  permissionConfig: "enterpriseManagement.administrationConsent.permission",
+  apiExposure: "profileManagement",
+  key: "/enterprise-administration/consent",
+  method: "POST",
+  controller: "DefaultEnterpriseManagementController",
+  operation: "changeAdministrationConsent",
+  cache: { enabled: false },
+  summary: "Commit one reviewed explicit target consent grant or revocation",
+};
+
+module.exports.profile.loadDefaults.administrationConsentWorkspace = {
+  secured: true,
+  authTokenTypes: ["access"],
+  accessGroups: ["adminGroup"],
+  permissionConfig: "enterpriseManagement.administrationConsent.permission",
+  apiExposure: "profileManagement",
+  key: "/enterprise-administration/:enterpriseCode/workspace",
+  method: "GET",
+  controller: "DefaultEnterpriseManagementController",
+  operation: "administrationConsentWorkspace",
+  cache: { enabled: false },
+  summary:
+    "Read the authorized target administration workspace without mutation",
+};
+for (const [name, method, operation] of [
+  ["inspectTargetAdministrationConsent", "GET", "inspectAdministrationConsent"],
+  ["changeTargetAdministrationConsent", "POST", "changeAdministrationConsent"],
+]) {
+  module.exports.profile.loadDefaults[name] = {
+    secured: true,
+    authTokenTypes: ["access"],
+    accessGroups: ["adminGroup"],
+    permissionConfig: "enterpriseManagement.administrationConsent.permission",
+    apiExposure: "profileManagement",
+    key: "/enterprise-administration/:enterpriseCode/consent",
+    method,
+    controller: "DefaultEnterpriseManagementController",
+    operation,
+    cache: { enabled: false },
+    summary:
+      "Inspect or change explicit consent for one independently authorized target",
+  };
+}
+
+for (const name of [
+  "changeAdministrationConsent",
+  "changeTargetAdministrationConsent",
+]) {
+  module.exports.profile.loadDefaults[name].requestBody = {
+    required: true,
+    content: {
+      "application/json": {
+        schema: {
+          type: "object",
+          additionalProperties: false,
+          required: ["operation", "operationId", "revision"],
+          properties: {
+            operation: { type: "string", enum: ["GRANT", "REVOKE"] },
+            operationId: { type: "string", pattern: "^[A-Za-z0-9_-]{16,128}$" },
+            revision: { type: "integer", minimum: 0, maximum: 2147483646 },
+            grantCode: { type: "string", minLength: 1, maxLength: 128 },
+            sourceEnterpriseCode: {
+              type: "string",
+              minLength: 1,
+              maxLength: 128,
+            },
+            recipientAssignmentCode: {
+              type: "string",
+              minLength: 1,
+              maxLength: 128,
+            },
+            parentGrantCode: { type: "string", minLength: 1, maxLength: 128 },
+            roleCodes: {
+              type: "array",
+              minItems: 1,
+              maxItems: 100,
+              uniqueItems: true,
+              items: { type: "string", minLength: 1, maxLength: 128 },
+            },
+            actions: {
+              type: "array",
+              minItems: 1,
+              maxItems: 3,
+              uniqueItems: true,
+              items: {
+                type: "string",
+                enum: ["VIEW", "INVITE", "MANAGE_ACCESS"],
+              },
+            },
+            recipients: {
+              type: "array",
+              minItems: 1,
+              maxItems: 100,
+              uniqueItems: true,
+              items: { type: "string", minLength: 1, maxLength: 254 },
+            },
+            expiresAt: { type: "string", format: "date-time", maxLength: 40 },
+          },
+          oneOf: [
+            {
+              properties: { operation: { enum: ["REVOKE"] } },
+              required: ["grantCode"],
+            },
+            {
+              properties: { operation: { enum: ["GRANT"] } },
+              required: [
+                "sourceEnterpriseCode",
+                "recipientAssignmentCode",
+                "roleCodes",
+                "actions",
+                "recipients",
+                "expiresAt",
+              ],
+            },
+          ],
+        },
+      },
+    },
+  };
+}
+
+// Self-service membership commands expose no caller-selected tenant, role or identity.
+module.exports.profile.loadDefaults.enterpriseMembershipWorkspace = {
+  secured: true,
+  authTokenTypes: ["access"],
+  accessGroups: ["userGroup", "customerUserGroup"],
+  apiExposure: "profileMembership",
+  key: "/enterprise-memberships/workspace",
+  method: "GET",
+  cache: { enabled: false },
+  controller: "DefaultEnterpriseManagementController",
+  operation: "enterpriseMembershipWorkspace",
+  summary: "Read only the authenticated person membership task",
+};
+module.exports.profile.loadDefaults.switchEmployeeBrowser = {
+  secured: true,
+  authTokenTypes: ["access"],
+  accessGroups: ["userGroup"],
+  apiExposure: "profileMembership",
+  key: "/employee/browser/switch-enterprise",
+  method: "POST",
+  cache: { enabled: false },
+  controller: "DefaultAuthenticationProviderController",
+  operation: "switchEmployeeBrowser",
+  requestBody: {
+    required: true,
+    content: {
+      "application/json": {
+        schema: {
+          type: "object",
+          additionalProperties: false,
+          required: ["assignmentCode", "revision"],
+          properties: {
+            assignmentCode: { type: "string", minLength: 1, maxLength: 128 },
+            revision: { type: "integer", minimum: 1 },
+          },
+        },
+      },
+    },
+  },
+  summary:
+    "Switch one same-person password browser session to an accepted membership after origin and CSRF proof",
+};
+module.exports.profile.loadDefaults.enterpriseTeamWorkspace = {
+  secured: true,
+  authTokenTypes: ["access"],
+  accessGroups: ["adminGroup", "runtimeConfigAdminUserGroup"],
+  permission: "profile.enterpriseAccess.assign",
+  apiExposure: "profileMembership",
+  key: "/enterprise-team/workspace",
+  method: "GET",
+  cache: { enabled: false },
+  controller: "DefaultEnterpriseManagementController",
+  operation: "enterpriseTeamWorkspace",
+  summary: "Read the bounded team task for the current authorized enterprise",
+};
+module.exports.profile.loadDefaults.listOwnMemberships = {
+  secured: true,
+  authTokenTypes: ["access"],
+  accessGroups: ["userGroup", "customerUserGroup"],
+  apiExposure: "profileMembership",
+  key: "/enterprise-memberships",
+  method: "GET",
+  controller: "DefaultEnterpriseManagementController",
+  operation: "listOwnMemberships",
+  cache: { enabled: false },
+  summary:
+    "List bounded memberships for the fresh canonical authenticated person",
+  responses: {
+    200: {
+      description: "Safe owned membership list; not a session or access grant",
+    },
+  },
+};
+module.exports.profile.loadDefaults.acceptMembership = {
+  secured: true,
+  authTokenTypes: ["access"],
+  accessGroups: ["userGroup", "customerUserGroup"],
+  apiExposure: "profileMembership",
+  key: "/enterprise-memberships/accept",
+  method: "POST",
+  controller: "DefaultEnterpriseManagementController",
+  operation: "acceptMembership",
+  cache: { enabled: false },
+  summary:
+    "Explicitly accept one current invitation using an authenticated password identity",
+  requestBody: {
+    required: true,
+    content: {
+      "application/json": {
+        schema: {
+          type: "object",
+          additionalProperties: false,
+          required: ["assignmentCode", "revision"],
+          properties: {
+            assignmentCode: { type: "string", minLength: 1, maxLength: 128 },
+            revision: { type: "integer", minimum: 1 },
+          },
+        },
+      },
+    },
+  },
+  responses: {
+    200: { description: "Safe acceptance outcome; no browser token or cookie" },
+  },
+};
+for (const [name, path] of [
+  ["suspendMembership", "suspend"],
+  ["revokeMembership", "revoke"],
+  ["resumeMembership", "resume"],
+  ["withdrawInvitation", "withdraw"],
+]) {
+  module.exports.profile.loadDefaults[name] = {
+    secured: true,
+    authTokenTypes: ["access"],
+    accessGroups: ["adminGroup", "runtimeConfigAdminUserGroup"],
+    permission: "profile.enterpriseAccess.assign",
+    apiExposure: "profileMembership",
+    key: "/enterprise-team/" + path,
+    method: "POST",
+    controller: "DefaultEnterpriseManagementController",
+    operation: name,
+    cache: { enabled: false },
+    summary:
+      "Apply one serialized membership lifecycle command with current administrator safeguards",
+    requestBody: {
+      required: true,
+      content: {
+        "application/json": {
+          schema: {
+            type: "object",
+            additionalProperties: false,
+            required: ["assignmentCode", "revision", "operationId"],
+            properties: {
+              assignmentCode: { type: "string", minLength: 1, maxLength: 128 },
+              revision: { type: "integer", minimum: 1 },
+              operationId: {
+                type: "string",
+                pattern: "^[A-Za-z0-9_-]{16,128}$",
+              },
+            },
+          },
+        },
+      },
+    },
+    responses: {
+      200: {
+        description:
+          "Saved same-operation outcome, never a canonical identity mutation",
+      },
+    },
+  };
+}
+module.exports.profile.loadDefaults.handoverAdministrator = {
+  secured: true,
+  authTokenTypes: ["access"],
+  accessGroups: ["adminGroup", "runtimeConfigAdminUserGroup"],
+  permission: "profile.enterpriseAccess.assign",
+  apiExposure: "profileMembership",
+  key: "/enterprise-team/handover",
+  method: "POST",
+  controller: "DefaultEnterpriseManagementController",
+  operation: "handoverAdministrator",
+  cache: { enabled: false },
+  summary: "Transfer default designation to a current active administrator",
+  requestBody: {
+    required: true,
+    content: {
+      "application/json": {
+        schema: {
+          type: "object",
+          additionalProperties: false,
+          required: [
+            "enterpriseCode",
+            "assignmentCode",
+            "revision",
+            "operationId",
+          ],
+          properties: {
+            enterpriseCode: { type: "string", minLength: 1, maxLength: 128 },
+            assignmentCode: { type: "string", minLength: 1, maxLength: 128 },
+            revision: { type: "integer", minimum: 1 },
+            operationId: { type: "string", pattern: "^[A-Za-z0-9_-]{16,128}$" },
+          },
+        },
+      },
+    },
+  },
+  responses: {
+    200: {
+      description:
+        "Saved default-administrator designation without replacing credentials or memberships",
+    },
+  },
+};
+module.exports.profile.loadDefaults.enterpriseRecoveryWorkspace = {
+  secured: true,
+  authTokenTypes: ["access"],
+  accessGroups: ["runtimeConfigAdminUserGroup"],
+  permission: "profile.enterpriseAccess.assign",
+  apiExposure: "profileMembership",
+  key: "/enterprise-team/recovery-workspace",
+  method: "POST",
+  controller: "DefaultEnterpriseManagementController",
+  operation: "enterpriseRecoveryWorkspace",
+  cache: { enabled: false },
+  requestBody: {
+    required: true,
+    content: {
+      "application/json": {
+        schema: {
+          type: "object",
+          additionalProperties: false,
+          required: ["enterpriseCode"],
+          properties: {
+            enterpriseCode: { type: "string", minLength: 1, maxLength: 128 },
+          },
+        },
+      },
+    },
+  },
+};
+module.exports.profile.loadDefaults.customerParticipationWorkspace = {
+  secured: true,
+  authTokenTypes: ["access"],
+  accessGroups: ["userGroup"],
+  apiExposure: "profileMembership",
+  key: "/customer/participation/workspace",
+  method: "GET",
+  controller: "DefaultCustomerController",
+  operation: "participationWorkspace",
+  cache: { enabled: false },
+};
+module.exports.profile.loadDefaults.retryLifecycleNotification = {
+  secured: true,
+  authTokenTypes: ["access"],
+  accessGroups: ["adminGroup", "runtimeConfigAdminUserGroup"],
+  permission: "profile.enterpriseAccess.assign",
+  apiExposure: "profileMembership",
+  key: "/enterprise-team/retry-notification",
+  method: "POST",
+  controller: "DefaultEnterpriseManagementController",
+  operation: "retryLifecycleNotification",
+  cache: { enabled: false },
+  requestBody: {
+    required: true,
+    content: {
+      "application/json": {
+        schema: {
+          type: "object",
+          additionalProperties: false,
+          required: ["assignmentCode", "revision", "kind"],
+          properties: {
+            assignmentCode: { type: "string", minLength: 1, maxLength: 128 },
+            revision: { type: "integer", minimum: 1 },
+            kind: { type: "string", enum: ["INVITATION", "ACCOUNT_READY"] },
+          },
+        },
+      },
+    },
+  },
+};
+module.exports.profile.loadDefaults.reconcileTeamOperation = {
+  secured: true,
+  authTokenTypes: ["access"],
+  accessGroups: ["adminGroup"],
+  permission: "profile.enterpriseAccess.assign",
+  apiExposure: "profileMembership",
+  key: "/enterprise-team/reconcile-committed",
+  method: "POST",
+  controller: "DefaultEnterpriseManagementController",
+  operation: "reconcileTeamOperation",
+  cache: { enabled: false },
+  summary:
+    "Platform operator reconciliation of an evidenced committed team operation; never a write replay",
+  requestBody: {
+    required: true,
+    content: {
+      "application/json": {
+        schema: {
+          type: "object",
+          additionalProperties: false,
+          required: ["enterpriseCode", "teamRevision", "operationId"],
+          properties: {
+            enterpriseCode: { type: "string", minLength: 1, maxLength: 128 },
+            teamRevision: { type: "integer", minimum: 1 },
+            operationId: { type: "string", pattern: "^[A-Za-z0-9_-]{16,128}$" },
+          },
+        },
+      },
+    },
+  },
+  responses: {
+    200: {
+      description:
+        "Recorded membership outcome; no replay, lock steal or private operation inputs",
+    },
+  },
+};
+module.exports.profile.loadDefaults.acceptCustomerParticipation = {
+  secured: true,
+  authTokenTypes: ["access"],
+  accessGroups: ["userGroup"],
+  apiExposure: "profileMembership",
+  key: "/customer/participation/accept",
+  method: "POST",
+  cache: { enabled: false },
+  controller: "DefaultCustomerController",
+  operation: "acceptParticipation",
+  summary:
+    "Accept configured customer terms using current employee proof without copying credentials or staff permissions",
+  requestBody: {
+    required: true,
+    content: {
+      "application/json": {
+        schema: {
+          type: "object",
+          additionalProperties: false,
+          required: ["termsVersion", "termsDigest", "accepted"],
+          properties: {
+            termsVersion: { type: "string", minLength: 1, maxLength: 128 },
+            termsDigest: { type: "string", pattern: "^[a-f0-9]{64}$" },
+            accepted: { type: "boolean", const: true },
+          },
+        },
+      },
+    },
+  },
+  responses: {
+    200: {
+      description:
+        "Accepted participation; issuing a customer session remains a separate authentication action",
+    },
+  },
+};
+module.exports.profile.loadDefaults.renewCustomerParticipation = {
+  ...module.exports.profile.loadDefaults.customerParticipationWorkspace,
+  key: "/customer/participation/renew",
+  method: "POST",
+  operation: "renewParticipation",
+  requestBody: {
+    required: true,
+    content: {
+      "application/json": {
+        schema: {
+          type: "object",
+          additionalProperties: false,
+          required: ["revision", "termsVersion", "termsDigest", "accepted"],
+          properties: {
+            revision: { type: "integer", minimum: 1 },
+            termsVersion: { type: "string", minLength: 1, maxLength: 128 },
+            termsDigest: { type: "string", pattern: "^[a-f0-9]{64}$" },
+            accepted: { type: "boolean", enum: [true] },
+          },
+        },
+      },
+    },
+  },
+};
+module.exports.profile.loadDefaults.withdrawCustomerParticipation = {
+  ...module.exports.profile.loadDefaults.customerParticipationWorkspace,
+  key: "/customer/participation/withdraw",
+  method: "POST",
+  operation: "withdrawParticipation",
+  requestBody: {
+    required: true,
+    content: {
+      "application/json": {
+        schema: {
+          type: "object",
+          additionalProperties: false,
+          required: ["revision", "confirmed"],
+          properties: {
+            revision: { type: "integer", minimum: 1 },
+            confirmed: { type: "boolean", enum: [true] },
+          },
+        },
+      },
+    },
+  },
+};
+module.exports.profile.loadDefaults.switchCustomerParticipation = {
+  ...module.exports.profile.loadDefaults.customerParticipationWorkspace,
+  key: "/employee/browser/customer-participation/switch",
+  method: "POST",
+  operation: "switchParticipation",
+  requestBody: {
+    required: true,
+    content: {
+      "application/json": {
+        schema: {
+          type: "object",
+          additionalProperties: false,
+          required: ["revision"],
+          properties: { revision: { type: "integer", minimum: 1 } },
+        },
+      },
+    },
+  },
+};
+
+// Fixed setup recovery uses the existing human management permission; gates remain separately disabled.
+module.exports.profile.loadDefaults.inspectEnterpriseSetup = {
+  secured: true,
+  authTokenTypes: ["access"],
+  accessGroups: ["adminGroup", "runtimeConfigAdminUserGroup"],
+  permission: "profile.enterprise.create",
+  apiExposure: "profileManagement",
+  requestPrivacy: { sensitive: true },
+  key: "/enterprises/:enterpriseCode/setup",
+  method: "GET",
+  controller: "DefaultEnterpriseManagementController",
+  operation: "inspectEnterpriseSetup",
+  cache: { enabled: false },
+  summary:
+    "Inspect retained original enterprise setup without replaying operations",
+  parameters: [
+    {
+      name: "enterpriseCode",
+      in: "path",
+      required: true,
+      schema: { type: "string", pattern: "^[A-Za-z0-9][A-Za-z0-9._-]{0,127}$" },
+    },
+  ],
+  responses: {
+    200: {
+      description: "Content-safe setup state and owner workspace descriptor",
+    },
+  },
+};
+module.exports.profile.loadDefaults.resumeEnterpriseSetup = {
+  ...module.exports.profile.loadDefaults.inspectEnterpriseSetup,
+  key: "/enterprises/:enterpriseCode/setup/resume",
+  method: "POST",
+  operation: "resumeEnterpriseSetup",
+  summary:
+    "Continue the retained nomination through qualified serialized owner evidence",
+  requestBody: {
+    required: true,
+    content: {
+      "application/json": {
+        schema: {
+          type: "object",
+          additionalProperties: false,
+          required: ["expectedRevision"],
+          properties: {
+            expectedRevision: {
+              type: "integer",
+              minimum: 0,
+              maximum: 2147483646,
+            },
           },
         },
       },

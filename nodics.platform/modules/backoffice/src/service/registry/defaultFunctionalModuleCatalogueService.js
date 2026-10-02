@@ -1175,7 +1175,7 @@ module.exports = {
   listRegistrations: function (request) {
     return this.listByState(request, "REGISTERED", "SUC_BOF_00018");
   },
-  /** Reads every project-scoped catalogue page before returning eligibility; query failures propagate without a partial projection. */
+  /** Reads project eligibility from the configured default-tenant authority without changing the employee context; failed pages never return a partial projection. */
   getPresentationEligibility: async function (request) {
     let query = this.getQuery(request);
     let project =
@@ -1189,7 +1189,7 @@ module.exports = {
         "ERR_BOF_00000",
         "Functional-module project is required",
       );
-    let tenant = this.getTenant(request);
+    let tenant = this.getTenant();
     let authData = this.getPersistenceAuthData(request && request.authData);
     let governed = new Set();
     let eligible = new Set();

@@ -51,3 +51,12 @@ are source-contract tests, not a live database, full generated pipeline,
 installed-dependency, provider-durability, email-delivery or browser qualification.
 Run the effective server build and applicable framework gates before enabling
 this integration. Do not describe this source change as complete registration.
+
+## Secured internal transport and receipt
+
+`readConsumptionReceiptStored` validates the original consumed proof and command
+for a bounded read-only result. It never grants another business execution. The
+existing Communication API now offers a service-only command transport; see the
+[API contract](../commsApi/llm/contracts/README.md). Profile remains responsible for
+public onboarding, continuation custody and recoverable provisioning. Transport
+source tests do not establish real runtime deployment or email/browser acceptance.

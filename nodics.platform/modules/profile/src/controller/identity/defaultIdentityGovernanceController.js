@@ -17,27 +17,59 @@
  * @override Later project modules may replace request mapping while preserving operation names and credential redaction.
  */
 module.exports = {
+    /**
+     * Maps the empty assessment command to the read-only migration owner.
+     * @param {Object} request Authenticated Profile request.
+     * @param {Function} [callback] Optional Nodics completion callback.
+     * @returns {Promise<Object>|undefined} Redacted inventory assessment or callback delivery.
+     */
+    assessIdentities: function (request, callback) {
+        request.httpResponse?.setHeader?.("Cache-Control", "no-store");
+        return this.invoke("assessIdentities", request, callback);
+    },
+    /** Maps explicit read-only bootstrap review without migration apply or qualification authority. @param {Object} request Human review command. @param {Function} [callback] Completion callback. @returns {Promise<Object>|undefined} Redacted evidence. */
+    reviewBootstrapIdentities: function (request, callback) {
+        request.httpResponse?.setHeader?.("Cache-Control", "no-store");
+        return this.invoke("reviewBootstrapIdentities", request, callback);
+    },
     /** Invokes a governance operation with the normalized request body. */
     invoke: function (operation, request, callback) {
-        request.identityMigration = request.httpRequest && request.httpRequest.body || request.identityMigration || {};
-        let promise = SERVICE.DefaultIdentityGovernanceMigrationService[operation](request);
-        if (callback) promise.then(result => callback(null, result)).catch(callback);
+        request.identityMigration =
+            (request.httpRequest && request.httpRequest.body) ||
+            request.identityMigration ||
+            {};
+        let promise =
+            SERVICE.DefaultIdentityGovernanceMigrationService[operation](
+                request,
+            );
+        if (callback)
+            promise.then((result) => callback(null, result)).catch(callback);
         else return promise;
     },
     /** Returns a non-mutating identity migration preview. */
     previewMigration: function (request, callback) {
-        return this.invoke('previewMigration', request, callback);
+        return this.invoke("previewMigration", request, callback);
     },
     /** Applies the previewed versioned identity migration. */
     applyMigration: function (request, callback) {
-        return this.invoke('applyMigration', request, callback);
+        return this.invoke("applyReviewedMigration", request, callback);
     },
     /** Rolls back only the audited migration change set. */
     rollbackMigration: function (request, callback) {
-        return this.invoke('rollbackMigration', request, callback);
+        return this.invoke("rollbackReviewedMigration", request, callback);
+    },
+    /** Delegates exact reviewed structural recovery without accepting a replacement plan. */
+    recoverMigration: function (request, callback) {
+        request.httpResponse?.setHeader?.("Cache-Control", "no-store");
+        return this.invoke("recoverReviewedMigration", request, callback);
+    },
+    /** Maps a fixed read-only audit inspection; never resumes or clears an operation. @param {Object} request Reviewed human operator context. @param {Function} [callback] Nodics completion callback. @returns {Promise<Object>|undefined} Redacted evidence or callback delivery. */
+    inspectMigration: function (request, callback) {
+        request.httpResponse?.setHeader?.("Cache-Control", "no-store");
+        return this.invoke("inspectReviewedMigration", request, callback);
     },
     /** Replaces a service credential with a client-generated secret. */
     rotateServiceKey: function (request, callback) {
-        return this.invoke('rotateServiceKey', request, callback);
-    }
+        return this.invoke("rotateServiceKey", request, callback);
+    },
 };

@@ -9,7 +9,7 @@
 
  */
 
-'use strict';
+"use strict";
 
 /**
  * @module nodics.process/modules/workflow/config/properties
@@ -19,100 +19,114 @@
  * @override Projects and customer overlays may extend workflow capability defaults through standard Nodics configuration layering.
  */
 module.exports = {
-    // Inert inventory; an allowed local server must explicitly select this capability.
-    localResetProvider: {
-        contributions: {
-            workflow: {
-                serviceNames: {
-                    DefaultProcessAuditEventService: true,
-                    DefaultProcessDefinitionService: true,
-                    DefaultProcessDefinitionVersionService: true,
-                    DefaultProcessIncidentService: true,
-                    DefaultProcessInstanceService: true,
-                    DefaultProcessTaskService: true,
-                    DefaultProcessTriggerService: true,
-                },
-            },
+  // Inert inventory; an allowed local server must explicitly select this capability.
+  localResetProvider: {
+    contributions: {
+      workflow: {
+        serviceNames: {
+          DefaultProcessAuditEventService: true,
+          DefaultProcessDefinitionService: true,
+          DefaultProcessDefinitionVersionService: true,
+          DefaultProcessIncidentService: true,
+          DefaultProcessInstanceService: true,
+          DefaultProcessTaskService: true,
+          DefaultProcessTriggerService: true,
         },
+      },
     },
+  },
 
-    process: {
-        definitionContributions: {
-            maximumDefinitionsPerContribution: 50,
-            // Customer policy may assign existing TASK nodes; it cannot replace graphs or identities.
-            reviewerAssignments: {},
-            // Disabled by default; exact migration evidence is required. See ../llm/contracts/README.md.
-            ownershipTransitions: [],
-        },
-        actionAdapters: {
-            definitions: {
-                'nodics.process.noop': {
-                    moduleName: 'nodics.process',
-                    operation: 'noop',
-                },
-                'cms.applyPublicationDecision': {
-                    moduleName: 'cms',
-                    operation: 'applyPublicationDecision',
-                    service: 'DefaultProcessPublicationDecisionCallbackService',
-                    method: 'applyPublicationDecision',
-                },
-                'editorial.applyDecision': {
-                    moduleName: 'editorial',
-                    operation: 'applyDecision',
-                    remote: {
-                        target: 'editorial',
-                        moduleName: 'editorial',
-                        runtimeRole: 'WCMS_STAGED',
-                        apiName: '/workflow/actions/applyDecision',
-                        requiresCompletedTask: true,
-                    },
-                },
-                'editorial.publishApproved': {
-                    moduleName: 'editorial',
-                    operation: 'publishApproved',
-                    remote: {
-                        target: 'editorial',
-                        moduleName: 'editorial',
-                        runtimeRole: 'WCMS_STAGED',
-                        apiName: '/workflow/actions/publishApproved',
-                    },
-                },
-                'rulesApi.applyDecision': {
-                    moduleName: 'rulesApi',
-                    operation: 'applyDecision',
-                    remote: {
-                        target: 'rulesApi',
-                        moduleName: 'rulesApi',
-                        runtimeRole: 'WASTE',
-                        apiName: '/workflow/actions/applyDecision',
-                        requiresCompletedTask: true,
-                    },
-                },
-            },
-        },
-        remoteActions: {
-            maximumExecutionAgeMs: 30000,
-            connectionType: 'abstract',
-            timeoutMs: 10000,
-            targets: {},
-        },
-        publicationDecisionCallback: {
-            target: {
-                moduleName: 'cms',
-                connectionType: 'abstract',
-                timeoutMs: 10000,
-                maxAttempts: 2,
-            },
-        },
+  process: {
+    runtime: {
+      internalRetirements: {
+        enabled: false,
+        allowedDefinitions: [],
+        permission: "process.instance.retire.internal",
+      },
+      internalStarts: {
+        enabled: false,
+        allowedDefinitions: [],
+        permission: "process.instance.start.internal",
+        maximumContextBytes: 16384,
+      },
     },
-    apiExposure: {
-        categories: {
-            moduleInternal: {
-                enabled: true,
-            },
-            processManagement: {
-                enabled: true,
-            },
-        },
+    definitionContributions: {
+      maximumDefinitionsPerContribution: 50,
+      // Customer policy may assign existing TASK nodes; it cannot replace graphs or identities.
+      reviewerAssignments: {},
+      // Disabled by default; exact migration evidence is required. See ../llm/contracts/README.md.
+      ownershipTransitions: [],
     },
+    actionAdapters: {
+      definitions: {
+        "nodics.process.noop": {
+          moduleName: "nodics.process",
+          operation: "noop",
+        },
+        "cms.applyPublicationDecision": {
+          moduleName: "cms",
+          operation: "applyPublicationDecision",
+          service: "DefaultProcessPublicationDecisionCallbackService",
+          method: "applyPublicationDecision",
+          requiresCompletedTask: true,
+        },
+        "editorial.applyDecision": {
+          moduleName: "editorial",
+          operation: "applyDecision",
+          remote: {
+            target: "editorial",
+            moduleName: "editorial",
+            runtimeRole: "WCMS_STAGED",
+            apiName: "/workflow/actions/applyDecision",
+            requiresCompletedTask: true,
+          },
+        },
+        "editorial.publishApproved": {
+          moduleName: "editorial",
+          operation: "publishApproved",
+          remote: {
+            target: "editorial",
+            moduleName: "editorial",
+            runtimeRole: "WCMS_STAGED",
+            apiName: "/workflow/actions/publishApproved",
+          },
+        },
+        "rulesApi.applyDecision": {
+          moduleName: "rulesApi",
+          operation: "applyDecision",
+          remote: {
+            target: "rulesApi",
+            moduleName: "rulesApi",
+            runtimeRole: "WASTE",
+            apiName: "/workflow/actions/applyDecision",
+            requiresCompletedTask: true,
+          },
+        },
+      },
+    },
+    remoteActions: {
+      maximumExecutionAgeMs: 30000,
+      connectionType: "abstract",
+      timeoutMs: 10000,
+      targets: {},
+    },
+    publicationDecisionCallback: {
+      target: {
+        moduleName: "cms",
+        connectionType: "abstract",
+        timeoutMs: 10000,
+        maxAttempts: 2,
+      },
+    },
+  },
+  apiExposure: {
+    categories: {
+      moduleInternal: {
+        enabled: true,
+      },
+      processManagement: {
+        enabled: true,
+      },
+    },
+  },
 };

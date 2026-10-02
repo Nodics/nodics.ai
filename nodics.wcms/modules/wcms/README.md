@@ -6,6 +6,11 @@ Use this module when content behavior needs workflow governance. Plain content s
 
 Workflow content changes must preserve source definitions, validation, auditability, tenant isolation, and rollback expectations.
 
+Required Init releases are installed by the framework before listeners and READY,
+never by a second WCMS ready-phase import. The compatibility startup helper uses
+the canonical release installer, retaining destination, immutable-version and
+already-CURRENT guards. See [the startup contract](llm/contracts/README.md#canonical-startup-installation).
+
 The existing CMS page and component approval workflows now route successful
 manual review into an automatic publication action. The action reuses nPublish
 to validate the associated immutable release, record workflow approval, and

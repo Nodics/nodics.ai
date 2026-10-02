@@ -10,6 +10,7 @@
  */
 
 const assert = require('assert');
+global.SERVICE = {};
 
 global.CLASSES = {
     NodicsError: class NodicsError extends Error {

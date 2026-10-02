@@ -196,7 +196,10 @@ module.exports = {
                         resolve(true);
                     }
                 } else {
-                    _self.LOG.warn('Search is not enabled for module: ' + moduleName + ', tenant: ' + tntCode);
+                    if (SERVICE.DefaultSearchConfigurationService.isSearchExplicitlyDisabled(moduleName, tntCode))
+                        _self.LOG.debug('Search is not enabled for module: ' + moduleName + ', tenant: ' + tntCode);
+                    else
+                        _self.LOG.warn('Search is not enabled for module: ' + moduleName + ', tenant: ' + tntCode);
                     resolve(true);
                 }
             } catch (error) {
@@ -223,25 +226,26 @@ module.exports = {
                         tntCode: options.tntCode,
                         searchEngine: options.searchEngine,
                         indexName: indexDef.indexName || indexName,
-                        typeName: indexDef.typeName || indexDef.indexName || indexName,
+                        typeName: indexDef.typeName || indexName,
                         indexDef: indexDef,
                         LOG: SERVICE.DefaultLoggerService.createLogger(searchModelName)
                     };
                     _self.registerSearchModels(options.rawSearchModelDef.default, searchModel);
                     _self.registerSearchModels(options.rawSearchModelDef[options.moduleName], searchModel);
-                    _self.registerSearchModels(options.rawSearchModelDef[indexDef.indexName], searchModel);
+                    _self.registerSearchModels(options.rawSearchModelDef[indexName] || options.rawSearchModelDef[indexDef.indexName], searchModel);
                     options.moduleObject.searchModels[options.tntCode][searchModelName] = searchModel;
                     if (indexDef.schemaName) {
                         let schemaModel = NODICS.getModels(options.moduleName, options.tntCode)[indexDef.schemaName.toUpperCaseFirstChar() + 'Model'];
                         if (schemaModel) {
                             schemaModel.searchModelName = searchModelName;
-                            schemaModel.indexName = indexDef.indexName;
-                            schemaModel.typeName = indexDef.typeName;
+                            schemaModel.indexName = searchModel.indexName;
+                            schemaModel.typeName = searchModel.typeName;
                         }
                     }
-                    if (!options.searchEngine.isActiveIndex(indexDef.indexName.toLowerCase())) {
+                    let physicalIndexName = searchModel.indexName.toLowerCase();
+                    if (!options.searchEngine.isActiveIndex(physicalIndexName)) {
                         searchModel.doCreateIndex({}).then(success => {
-                            options.searchEngine.addIndex(indexName, {});
+                            options.searchEngine.addIndex(physicalIndexName, {});
                             _self.prepareTypeSearchModels(options).then(success => {
                                 resolve(true);
                             }).catch(error => {
@@ -251,7 +255,7 @@ module.exports = {
                             reject(error);
                         });
                     } else {
-                        options.searchEngine.addIndex(indexName, {});
+                        options.searchEngine.addIndex(physicalIndexName, {});
                         _self.prepareTypeSearchModels(options).then(success => {
                             resolve(true);
                         }).catch(error => {
@@ -379,7 +383,10 @@ module.exports = {
                             resolve(true);
                         }
                     } else {
-                        _self.LOG.warn('Search is not enabled for module: ' + moduleName + ', tenant: ' + tntCode);
+                        if (SERVICE.DefaultSearchConfigurationService.isSearchExplicitlyDisabled(moduleName, tntCode))
+                            _self.LOG.debug('Search is not enabled for module: ' + moduleName + ', tenant: ' + tntCode);
+                        else
+                            _self.LOG.warn('Search is not enabled for module: ' + moduleName + ', tenant: ' + tntCode);
                         resolve(true);
                     }
                 } else {

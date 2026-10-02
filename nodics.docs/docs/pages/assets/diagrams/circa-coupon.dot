@@ -1,0 +1,21 @@
+digraph Coupon {
+  graph [rankdir=TB, bgcolor="#ffffff", pad="0.4", nodesep="0.4", ranksep="0.45", fontname="Helvetica", label="Coupon lifecycle: owner evidence, not browser success", labelloc=t, fontsize=21];
+  node [shape=box, style="rounded,filled", fillcolor="#f3f4f6", color="#64748b", fontname="Helvetica", fontsize=12, margin="0.18,0.12"];
+  edge [color="#475569", fontname="Helvetica", fontsize=10];
+  browse [label="Published Product / price / offer\nCirca browsing and explicit review", fillcolor="#dcfce7"];
+  checkout [label="Checkout\nStable order / revision / command key"];
+  reserve [label="Promotion reserves concrete units\nBounded quantity; exact owner evidence"];
+  pay [label="Payment / Loyalty value owner\nOriginal payment evidence"];
+  sale [label="Promotion sale + delivery\nOriginal buyer/order/time retained"];
+  entitlement [label="Digital entitlement / purchase history\nOwner-authorized reveal", fillcolor="#ccfbf1"];
+  merchant [label="Claim / authorized outlet confirmation\nCurrent staff scope + supported conditions"];
+  redeemed [label="Single-use fulfillment evidence"];
+  refund [label="Reviewed Order refund\nExact units + policy + original payment reversal"];
+  compensation [label="Known releases + uncertain command\nAmbiguity remains recovery-required", fillcolor="#fee2e2"];
+  staged [label="QUALIFICATION GATES\nRetained purchase rights default off\nRich benefits / commercial authority / intent wiring\nstill require complete implementation and acceptance", shape=note, fillcolor="#fef3c7"];
+  browse -> checkout -> reserve -> pay -> sale -> entitlement -> merchant -> redeemed;
+  reserve -> compensation [style=dashed, label="partial / uncertain"];
+  pay -> compensation [style=dashed, label="failure"];
+  entitlement -> refund [label="only eligible unused units"];
+  refund -> staged [style=dashed, label="no completed message without evidence"];
+}

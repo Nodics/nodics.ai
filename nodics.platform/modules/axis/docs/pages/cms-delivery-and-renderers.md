@@ -94,15 +94,74 @@ npm test -- --run test/cms
 
 Run `npm run verify` before handing off or committing the completed slice.
 
-`/login` and `/forgot-password` are resolved from public CMS delivery. The
-login renderer sends employee credentials only to Profile. After Profile issues
+`/login` is resolved from public CMS delivery in the configured project's
+enterprise context. A registration sign-in hint selects Profile authentication,
+not the public CMS tenant. The login renderer sends employee credentials only to
+Profile. After Profile issues
 the human bearer token, Axis validates access through secured BackOffice
 bootstrap before loading the authenticated CMS dashboard. Tokens remain in
-memory and are cleared locally before logout revocation is sent to Profile.
+memory and are cleared locally only after Profile confirms logout revocation.
+Authenticated CMS delivery retains the authenticated employee context.
 
-The forgot-password page is presentation-ready, but submission remains disabled
-until Profile owns an approved employee-recovery API. Axis does not simulate
-recovery or create a second identity workflow.
+The Axis baseline explicitly declares `/dashboard` and `/lock-screen` as shared
+employee composition paths. CMS authenticates and authorizes the employee before
+reading the project's Online publication pointer and its pinned manifest for
+those paths. This shares the static application composition, not enterprise data.
+The browser continues sending the employee's own token and enterprise; it cannot
+choose a content-authority tenant. Operational components still call their domain
+owners with that employee's permissions and enterprise context.
+
+Customize this declaration through the owning baseline's layered
+`employeeCompositionPaths` policy. Use the normal collection-replacement directive
+to replace the inherited allowlist, including when disabling sharing:
+
+```js
+module.exports = {
+  cms: {
+    publication: {
+      baselines: {
+        axis: {
+          employeeCompositionPaths: { $config: 'replace', value: [] }
+        }
+      }
+    }
+  }
+};
+```
+
+WCMS Online must discover the Axis configuration owner without activating its
+Platform services. In the selected Online server's `package.json`, retain its
+existing discovery roots, include `nodics.platform` in `nodics.runtimeModuleRoots`,
+and declare the bounded configuration contribution:
+
+```json
+{
+  "moduleName": "axis",
+  "namespace": "cms",
+  "runtimeRole": "WCMS_ONLINE"
+}
+```
+
+The object belongs in `nodics.runtimeConfigurationContributions`. nConfig reads
+only the owner's declared role profile before ordinary layered configuration;
+project, environment, server and node overrides then use the existing merge
+contract. This declaration does not activate Axis services, import data, grant
+permissions or publish content. Kickoff Local supplies this deployment wiring;
+other deployments must declare it explicitly. No browser tenant selector or
+duplicate baseline import replaces this requirement.
+
+Do not use shared composition
+to publish tenant-private business records or broaden arbitrary CMS reads. Other
+sites, paths, public/customer routes, authoring and media access retain their own
+boundaries. Shared composition requires a valid Online pointer and matching
+immutable manifest; missing or ambiguous publication fails closed without scanning
+other tenants or reading draft content.
+
+The `/forgot-password` route renders Profile's separately discovered
+`axis.employee-recovery` workspace, with Profile-owned presentation and operations.
+Submission depends on that deployment's recovery qualification and availability.
+Axis does not simulate recovery, substitute registration or create a second
+identity workflow. See the employee-login guide for the verified recovery journey.
 
 For example, a CMS page may declare logical renderer
 `axis.component.media-management-workspace`. Axis can map that key to a

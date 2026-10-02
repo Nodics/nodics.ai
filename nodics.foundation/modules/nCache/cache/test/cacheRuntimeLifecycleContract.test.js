@@ -13,8 +13,81 @@
 const assert = require('node:assert/strict');
 const definition = require('../src/service/engine/defaultCacheEngineService');
 const redisEngine = require('../../redisCache/src/service/engine/defaultRedisCacheEngineService');
+/** Exercises effective layered configuration and real engine/channel startup with provider connections replaced by memory. */
+async function verifyNamespaces() {
+    const _ = require('lodash');
+    const configuration = require('../src/service/config/defaultCacheConfigurationService');
+    const adapter = require('../../redisCache/src/service/cache/defaultRedisCacheService');
+    const defaults = require('../config/properties').cache;
+    for (const explicit of [true, false]) {
+        const policy = _.cloneDeep(defaults), started = [];
+        policy.default.engines.redis.enabled = true;
+        if (explicit) policy.default.engines.redis.options.prefix = 'isolatedLocal';
+        else delete policy.default.engines.redis.options.prefix;
+        for (const name of ['local', 'redis']) {
+            policy.default.engines[name].connectionHandler = 'Connection';
+            policy.default.engines[name].cacheHandler = 'Adapter';
+        }
+        policy.auth = { channels: { auth: { enabled: true, fallback: false, engine: 'redis', ttl: 0 } } };
+        policy.inventory = { engines: { redis: { options: { prefix: 'inventoryScoped' } } },
+            channels: { schema: { enabled: true, fallback: false, engine: 'redis', ttl: 17 } } };
+        const modules = { auth: {}, profile: {}, inventory: {}, store: {} };
+        global.CONFIG = { get: key => key === 'cache' ? policy : undefined };
+        global.NODICS = { getModules: () => modules };
+        global.CLASSES = { CacheError: Error };
+        global.UTILS = { isBlank: value => !value || Object.keys(value).length === 0, generateHash: () => 'same-query' };
+        const selected = { ...configuration, channels: {}, engines: {} };
+        global.SERVICE = {
+            DefaultCacheConfigurationService: selected,
+            Adapter: adapter,
+            Connection: { initCache: async (options, moduleName) => {
+                started.push({ moduleName, prefix: options.options.prefix });
+                return { code: 'SUC_CACHE_00000', result: { isReady: true, quit: async () => {} } };
+            } }
+        };
+        await selected.loadCacheConfiguration();
+        const startup = { ...definition, engineClients: {}, cacheClients: {} };
+        await startup.buildCacheEngines();
+        assert.equal(selected.engines.auth.redis.options.prefix, explicit ? 'isolatedLocal' : 'auth');
+        assert.equal(selected.engines.profile.redis.options.prefix, explicit ? 'isolatedLocal' : 'profile');
+        assert.equal(selected.engines.inventory.redis.options.prefix, 'inventoryScoped');
+        const auth = startup.getCacheEngine('auth', 'auth');
+        assert.equal(auth.channelOptions.fallback, false);
+        assert.equal(auth.channelOptions.ttl, 0);
+        assert.equal(selected.createStorageKey({ moduleName: 'auth', channel: auth, key: 'securityStamp:default:fixture' }),
+            'auth_' + (explicit ? 'isolatedLocal' : 'auth') + '_securityStamp:default:fixture');
+        const inventoryChannel = startup.getCacheEngine('inventory', 'schema');
+        assert.equal(inventoryChannel.engineOptions.options.prefix, 'inventoryScoped');
+        assert.equal(inventoryChannel.channelOptions.ttl, 17);
+        assert.equal(inventoryChannel.channelOptions.fallback, false);
+        const logical = selected.createItemKey({ tenant: 'default', schemaModel: { schemaName: 'sameSchema' }, query: {}, options: {} });
+        const profileKey = selected.createStorageKey({ moduleName: 'profile', channel: startup.getCacheEngine('profile', 'schema'), key: logical });
+        const storeKey = selected.createStorageKey({ moduleName: 'store', channel: startup.getCacheEngine('store', 'schema'), key: logical });
+        const inventoryKey = selected.createStorageKey({ moduleName: 'inventory', channel: inventoryChannel, key: logical });
+        assert.notEqual(profileKey, storeKey, 'ordinary default local item channels retain distinct module namespaces');
+        assert.notEqual(profileKey, inventoryKey, 'ordinary Redis override retains its explicit owning namespace');
+        assert(started.some(row => row.moduleName === 'inventory' && row.prefix === 'inventoryScoped'));
+        const replicaConfiguration = {...configuration,channels:{},engines:{}};
+        SERVICE.DefaultCacheConfigurationService = replicaConfiguration;
+        await replicaConfiguration.loadCacheConfiguration();
+        const replica = {...definition,engineClients:{},cacheClients:{}};
+        await replica.buildCacheEngines();
+        assert.equal(replicaConfiguration.createStorageKey({moduleName:'auth',channel:replica.getCacheEngine('auth','auth'),key:'securityStamp:default:fixture'}),
+            selected.createStorageKey({moduleName:'auth',channel:auth,key:'securityStamp:default:fixture'}),
+            'independent participants intentionally share the selected auth namespace');
+        if (explicit) {
+            const sharedSchema = {...auth,channelName:'schema'};
+            assert.equal(selected.createStorageKey({moduleName:'profile',channel:sharedSchema,key:logical}),
+                selected.createStorageKey({moduleName:'store',channel:sharedSchema,key:logical}),
+                'explicitly sharing Redis prefixes also shares ordinary keys; deployments must use module overrides for isolation');
+        }
+        await replica.closeEngineClients();
+        await startup.closeEngineClients();
+    }
+}
 /** Exercises real lifecycle and subscription owners with controlled resource completion. */
 async function run() {
+    await verifyNamespaces();
     const contributors = {}, readiness = {}, closed = [];
     global.SERVICE = {
         DefaultRuntimeLifecycleService: { registerContributor: (name, value) => { contributors[name] = value; } },

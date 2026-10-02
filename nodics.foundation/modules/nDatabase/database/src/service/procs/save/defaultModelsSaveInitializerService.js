@@ -25,7 +25,7 @@ const _ = require('lodash');
  *
  * @property {Object[]} request.models Models to save.
  * @property {Object[]} response.success Successful saved models.
- * @property {Object[]} response.failed Failed save errors with model metadata.
+ * @property {Object[]} response.failed Failed save errors with owner metadata and diagnostic `metadata.failedModel`.
  */
 module.exports = {
     /**
@@ -185,7 +185,8 @@ module.exports = {
     },
 
     /**
-     * Records a model save failure without assuming framework-specific error shape.
+     * Records a model save failure while separating owner proof from source diagnostics.
+     * Source fields never become top-level error metadata or overwrite owner declarations.
      *
      * @param {Object} response Pipeline response accumulator.
      * @param {Error|Object|string} error Failure returned by the single-model save pipeline.
@@ -195,7 +196,10 @@ module.exports = {
     addFailure: function (response, error, model) {
         if (!response.failed) response.failed = [];
         let failure = error && typeof error === 'object' ? error : new CLASSES.NodicsError(error, null, 'ERR_SAVE_00000');
-        failure.metadata = _.cloneDeep(model);
+        let ownerMetadata = failure.metadata;
+        failure.metadata = _.isPlainObject(ownerMetadata) ? _.cloneDeep(ownerMetadata) :
+            ownerMetadata === undefined ? {} : { ownerMetadata: _.cloneDeep(ownerMetadata) };
+        failure.metadata.failedModel = _.cloneDeep(model);
         response.failed.push(failure);
     },
 

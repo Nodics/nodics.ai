@@ -16,6 +16,22 @@ module.exports = {
   policy: function () {
     return (CONFIG.get("order") || {}).refunds || {};
   },
+  /** Requests refund messaging only after fresh completion evidence; communication failure cannot alter refund progress. @param {Object} r Owner context. @param {Object} row Refund checkpoint. @returns {Promise<void>} Independent notification attempt. */
+  notifyCompleted: async function (r, row) {
+    if (
+      row?.status !== "COMPLETED" ||
+      row.evidence?.plan?.provider !== "digitalCore"
+    )
+      return;
+    try {
+      await SERVICE.DefaultDigitalCommerceNotificationService?.request(
+        r,
+        "REFUNDED",
+      );
+    } catch (_) {
+      /* A completed refund is never rolled back for delivery failure. */
+    }
+  },
   /** Reuses Order's current Profile staff-scope checks and requires operational Commerce. */
   context: async function (input) {
     const role = CONFIG.get("runtimeRole"),
@@ -300,6 +316,7 @@ module.exports = {
     }
     if (row.status === "COMPLETED") {
       await this.caseProjection(r, row);
+      await this.notifyCompleted(r, row);
       return this.result(row);
     }
     if (
@@ -404,6 +421,7 @@ module.exports = {
       row = await this.record(r);
       row = await this.update(r, row, { status: "COMPLETED" });
       await this.caseProjection(r, row);
+      await this.notifyCompleted(r, row);
       return this.result(row);
     } catch (error) {
       row = await this.record(r);

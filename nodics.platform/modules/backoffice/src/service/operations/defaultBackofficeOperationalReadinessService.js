@@ -2478,7 +2478,7 @@ module.exports = {
                 { repairOperation: 'runtimeConfiguration.update', repairAction: 'REPAIR_BOOTSTRAP_CONFIGURATION' }
             )] : []);
         let importSection = await this.importReadinessSection(request, context.applicationInitializationProfiles);
-        let profileStatusReport = await this.applicationProfileStatusEntries(request, context.applicationInitializationProfiles);
+        let profileStatusReport = context.applicationProfileStatusReport || await this.applicationProfileStatusEntries(request, context.applicationInitializationProfiles);
         let sections = [
             {
                 key: 'bootstrap',

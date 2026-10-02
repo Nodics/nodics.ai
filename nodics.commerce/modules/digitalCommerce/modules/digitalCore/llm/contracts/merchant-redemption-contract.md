@@ -1,5 +1,44 @@
 # Enterprise Merchant Redemption
 
+## Qualified Outlet Increment
+
+`digitalCore.merchantRedemption.storeScope` defaults disabled/unqualified. Disabled
+policy rejects supplied storeCode instead of ignoring it. Qualified activation
+requires joint acceptance of Store, Profile scopes, Promotion and provider contracts.
+
+GET `/merchant/redemptions/workspace` returns at most 100 live authorized Store
+choices using caller Store read permission and current Profile STORE ALLOW. Broader
+positive scope alone cannot grant an outlet; relevant DENY wins. Store must be active,
+tenant-consistent, revisioned and linked to the coupon issuer. No static project
+store list is authority. Axis supplies selected storeCode for queue/validate/confirm.
+
+Validation binds outlet code/revision and staff identity. Promotion optionally
+restricts campaigns through bounded unique conditions.storeCodes; absent outlet
+cannot satisfy it. Confirmation retains canonical storeRef/storeRevision and checks
+original receipt/key/outlet on replay, verifies entitlement single-match persistence
+and readback, then rereads staff/Store authority before provider attestation.
+This is not a distributed transaction; installed CAS/races remain acceptance gates.
+
+Qualified providers acknowledge matching storeCode/storeRevision with receipt fields.
+Merchant receipt owner availability is checked before acquiring a fulfillment
+claim. Provider acknowledgement must match the original receipt reference and
+mode as well as operation, issuer and outlet. Receipt persistence uses the existing
+Digital Entitlement save/read helpers, successful generated-owner envelopes and
+exact uncached readback. Failed or missing receipt evidence cannot consume a code.
+A retry reuses only the original matching committed receipt rather than invoking
+the provider again. Failed/ambiguous reads are not absence; when the provider
+executed but no receipt was saved, its original operation-key idempotency and
+reconciliation remain required. This is not an exactly-once external POS guarantee.
+Receipt correlation is the persisted redemption operation, not a new retry's
+transport correlation. Duplicate entitlements and conflicting receipt evidence
+fail closed. New receipt-authority/replay fixtures remain unexecuted.
+
+Delivery evidence retains the outlet reference. Circa displays an outlet only from
+REDEEMED evidence with canonical Store reference and positive revision. No new
+purchase/debit or frontend authorization is introduced. Customize owning backend
+policy, Store data and Promotion restrictions through later layers. New outlet-scope
+and extended Circa history fixtures are authored, not executed acceptance.
+
 Every merchant is a Profile enterprise. Its registered employees perform the
 merchant journey in Axis at `/commerce/coupons/fulfillment`. The Profile
 `MERCHANT_OPERATOR` enterprise-access role assigns the canonical nAuth
@@ -28,6 +67,12 @@ acknowledgement, records delivery evidence and invokes Promotion redemption.
 The merchant-screen provider records authenticated staff attestation; it does not
 claim to have contacted an external POS. The existing customer claim API remains
 compatible, but no new customer screen is required.
+
+Selected monetary benefits require the native basket reference BEFORE validation.
+The concrete native provider binds the priced snapshot to validation, original
+marker and receipt, and reuses live Profile/Store membership and activated prices.
+See [native priced evidence v1](../../../../../baseCommerce/modules/pricing/llm/contracts/native-merchant-priced-evidence-v1.md).
+MERCHANT_SCREEN/PRICED_CART remains native attestation, not external POS settlement.
 
 Confirmation is idempotent and cannot change the entered receipt. If completion
 is interrupted after the instruction is persisted, the scoped Axis queue exposes

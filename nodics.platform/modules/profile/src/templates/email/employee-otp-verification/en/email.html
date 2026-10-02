@@ -1,0 +1,125 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Your employee account recovery code</title>
+  </head>
+  <body
+    style="
+      margin: 0;
+      padding: 0;
+      background-color: #f3f5f4;
+      color: #202624;
+      font-family: Arial, Helvetica, sans-serif;
+    "
+  >
+    <table
+      role="presentation"
+      width="100%"
+      cellspacing="0"
+      cellpadding="0"
+      style="width: 100%"
+    >
+      <tr>
+        <td align="center" style="padding: 24px 12px">
+          <table
+            role="presentation"
+            width="600"
+            cellspacing="0"
+            cellpadding="0"
+            style="
+              width: 100%;
+              max-width: 600px;
+              table-layout: fixed;
+              background-color: #ffffff;
+              border-top: 4px solid #11634b;
+            "
+          >
+            <tr>
+              <td
+                style="
+                  padding: 28px 24px 16px;
+                  color: #11634b;
+                  font-size: 14px;
+                  font-weight: bold;
+                  overflow-wrap: anywhere;
+                "
+              >
+                {{brandName}}
+              </td>
+            </tr>
+            <tr>
+              <td style="padding: 0 24px 12px">
+                <h1
+                  style="
+                    margin: 0 0 24px;
+                    font-size: 24px;
+                    line-height: 1.3;
+                    overflow-wrap: anywhere;
+                  "
+                >
+                  Your employee account recovery code
+                </h1>
+                <p
+                  style="
+                    margin: 0 0 20px;
+                    font-size: 16px;
+                    line-height: 1.6;
+                    overflow-wrap: anywhere;
+                  "
+                >
+                  Your recovery code is
+                  <strong
+                    style="
+                      display: block;
+                      margin: 12px 0;
+                      font-size: 28px;
+                      color: #11634b;
+                    "
+                    >{{verificationCode}}</strong
+                  >
+                </p>
+                <p
+                  style="
+                    margin: 0 0 20px;
+                    font-size: 16px;
+                    line-height: 1.6;
+                    overflow-wrap: anywhere;
+                  "
+                >
+                  Expiry time: {{expiresAt}}.
+                </p>
+                <p
+                  style="
+                    margin: 0 0 20px;
+                    font-size: 16px;
+                    line-height: 1.6;
+                    overflow-wrap: anywhere;
+                  "
+                >
+                  Use this code only on the recovery page you opened. Do not
+                  share it. Ignore this message if you did not request recovery.
+                </p>
+              </td>
+            </tr>
+            <tr>
+              <td
+                style="
+                  padding: 20px 24px;
+                  border-top: 1px solid #dce2de;
+                  color: #535e58;
+                  font-size: 13px;
+                  line-height: 1.6;
+                "
+              >
+                This is an account security notification. Keep your account
+                information private.
+              </td>
+            </tr>
+          </table>
+        </td>
+      </tr>
+    </table>
+  </body>
+</html>

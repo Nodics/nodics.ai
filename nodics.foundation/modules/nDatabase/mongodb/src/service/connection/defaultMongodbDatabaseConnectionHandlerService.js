@@ -27,6 +27,12 @@ const MongoClient = require('mongodb').MongoClient;
  * @property {Object} config.options MongoClient options.
  */
 module.exports = {
+    /** Opens an explicitly attested offline disposable Local reset target, never an ordinary CRUD/startup path. */
+    openLocalResetMaintenance: function (options) {
+        const owner = global.SERVICE?.DefaultMongodbLocalResetMaintenanceService ||
+            require('../maintenance/defaultMongodbLocalResetMaintenanceService');
+        return owner.open(options);
+    },
     /**
      * Returns transaction capability discovered from the live MongoDB topology.
      *
@@ -136,6 +142,99 @@ module.exports = {
         return new Promise((resolve, reject) => {
             resolve(true);
         });
+    },
+
+    /**
+     * Validates a portable physical database name without contacting MongoDB.
+     * @param {string} name Physical name.
+     * @returns {boolean} True for an admitted name.
+     */
+    validateTenantDatabaseName: function (name) {
+        if (typeof name !== 'string' || !name || Buffer.byteLength(name, 'utf8') > 63 ||
+            /[\s/\\."$*<>:|?\u0000]/u.test(name) || ['admin', 'config', 'local'].includes(name.toLowerCase())) {
+            throw new CLASSES.NodicsError('ERR_DATABASE_TENANT_NAMESPACE', 'Invalid tenant database namespace');
+        }
+        return true;
+    },
+
+    /**
+     * Derives a namespace from exact base/tenant identity, not normalized labels.
+     * @param {string} baseName Runtime/module base name.
+     * @param {string} tenant Tenant code.
+     * @returns {string} Physical name, at most 62 ASCII bytes.
+     */
+    deriveTenantDatabaseName: function (baseName, tenant) {
+        this.validateTenantDatabaseName(baseName);
+        if (typeof tenant !== 'string' || !tenant || tenant.trim() !== tenant ||
+            Buffer.byteLength(tenant, 'utf8') > 256 || /[\u0000-\u001f\u007f]/u.test(tenant)) {
+            throw new CLASSES.NodicsError('ERR_DATABASE_TENANT_NAMESPACE', 'Invalid tenant namespace intent');
+        }
+        const digest = require('crypto').createHash('sha256').update(JSON.stringify([1, baseName, tenant])).digest('base64url');
+        const prefix = baseName.replace(/[^A-Za-z0-9_-]/g, '_').slice(0, 16);
+        const name = prefix + '_t_' + digest;
+        this.validateTenantDatabaseName(name);
+        return name;
+    },
+
+    /**
+     * Fingerprints non-secret endpoint configuration without DNS, connection or credential material.
+     * Pins detect configured endpoint drift, not installed DNS/SRV/cluster or certificate identity.
+     * @param {Object} config Effective channel URI/options, never returned or persisted.
+     * @returns {string} SHA-256 of canonical protocol, seed endpoints and topology/trust options.
+     */
+    getTenantEndpointFingerprint: function (config) {
+        try {
+            const ConnectionString = require('mongodb-connection-string-url').default;
+            if (typeof config?.URI !== 'string' || config.URI.length > 16384) throw new Error();
+            this.validateTenantDatabaseName(config.databaseName);
+            const parsed = new ConnectionString(config.URI);
+            const keys = ['replicaset', 'directconnection', 'loadbalanced', 'srvservicename', 'srvmaxhosts',
+                'tls', 'tlsinsecure', 'tlsallowinvalidcertificates', 'tlsallowinvalidhostnames',
+                'tlscafile', 'tlscertificatekeyfile', 'tlsdisableocspendpointcheck', 'tlsdisablecertificaterevocationcheck',
+                'proxyhost', 'proxyport', 'family'];
+            const booleans = new Set(['directconnection', 'loadbalanced', 'tls', 'tlsinsecure',
+                'tlsallowinvalidcertificates', 'tlsallowinvalidhostnames', 'tlsdisableocspendpointcheck',
+                'tlsdisablecertificaterevocationcheck']);
+            const integers = new Set(['srvmaxhosts', 'proxyport', 'family']);
+            const values = {};
+            const assign = (key, value) => {
+                key = key.toLowerCase() === 'ssl' ? 'tls' : key.toLowerCase();
+                if (!keys.includes(key)) return;
+                if (booleans.has(key)) {
+                    if (![true, false, 'true', 'false'].includes(value)) throw new Error();
+                    value = value === true || value === 'true';
+                } else if (integers.has(key)) {
+                    if (!/^\d{1,10}$/.test(String(value)) || !Number.isSafeInteger(Number(value))) throw new Error();
+                    value = Number(value);
+                } else if (typeof value !== 'string' || !value || value.length > 1024) throw new Error();
+                values[key] = value;
+            };
+            const seen = new Set();
+            for (const [key, value] of parsed.searchParams) {
+                const canonical = key.toLowerCase() === 'ssl' ? 'tls' : key.toLowerCase();
+                if (!keys.includes(canonical)) continue;
+                if (seen.has(canonical)) throw new Error();
+                seen.add(canonical);
+                assign(key, value);
+            }
+            const optionKeys = new Set();
+            for (const [key, value] of Object.entries(config.options || {})) {
+                const canonical = key.toLowerCase() === 'ssl' ? 'tls' : key.toLowerCase();
+                if (keys.includes(canonical) && optionKeys.has(canonical)) throw new Error();
+                optionKeys.add(canonical);
+                assign(key, value);
+            }
+            const hosts = parsed.hosts.map(host => {
+                // Domain sockets are case-sensitive paths, not TCP seed endpoints.
+                if (/[\/\\]/u.test(decodeURIComponent(host))) throw new Error();
+                host = host.toLowerCase();
+                return parsed.protocol === 'mongodb:' && !/:(\d+)$/.test(host) ? host + ':27017' : host;
+            }).sort();
+            const options = keys.filter(key => Object.hasOwn(values, key)).map(key => [key, values[key]]);
+            return require('crypto').createHash('sha256').update(JSON.stringify([1, parsed.protocol, hosts, config.databaseName, options])).digest('hex');
+        } catch (_) {
+            throw new CLASSES.NodicsError('ERR_DATABASE_TENANT_BINDING', 'Invalid endpoint configuration identity');
+        }
     },
 
     /**

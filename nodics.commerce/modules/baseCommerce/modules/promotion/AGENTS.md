@@ -1,5 +1,10 @@
 # Promotion Agent Contract
 
+For issuer-reviewed seller consent and owner-priced merchant benefits, read
+[the owner contract](llm/contracts/issuer-seller-and-merchant-benefits.md).
+Keep selection unqualified until installed private writes/CAS, Profile scopes and
+real priced-source acceptance pass. References or display names are not grants.
+
 - Follow `../../../../../AGENTS.md` and `../../../../../nodics.foundation/modules/nSetup/llm/ai-enablement-index.md`.
 - Follow ancestor contracts and read local guidance.
 

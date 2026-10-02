@@ -39,6 +39,11 @@ waiting, human decisions, retries across time, or business-visible lifecycle.
 
 ## Extension Contract
 
+Sensitive requests preserve exact owner admission through pipeline dispatch.
+See the [private entry contract](../nRouter/llm/contracts/request-capture-privacy-contract.md)
+before customizing context mapping or exception logging. Ambient async suppression
+does not authorize a cloned request; deployment qualification remains separate.
+
 Pipeline changes must preserve execution order, context propagation, error
 traceability, and override behavior. Later modules should customize pipelines
 through source definitions and configuration, not by editing framework runtime

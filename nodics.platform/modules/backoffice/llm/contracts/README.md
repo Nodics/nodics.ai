@@ -1,354 +1,148 @@
 # BackOffice AI Contracts
 
+This index routes developers to BackOffice's discovery, registration, readiness and governed repair contracts.
+
+## Application Readiness Evidence
+
+Application readiness is an owner-targeted observation, not the most recent
+global import outcome. Only the selected release owner's `FAILED` status maps
+to `IMPORT_FAILED` / `REVIEW_IMPORT_HISTORY`. Missing or unrecognized release
+evidence maps to `READINESS_UNKNOWN`; a failed prerequisite or transport check
+maps to `READINESS_UNAVAILABLE`. Neither asserts that an import was attempted.
+Unknown evidence blocks preparation; it never grants install admission.
+
+The import owner's `ERR_IMP_00003` with HTTP 400 is a typed preflight
+validation refusal; `ERR_IMP_00004` with HTTP 404 is a selected-release
+availability refusal. Prefer nService's response-owned
+`metadata.remoteHttpFailure` code/status over the normalized default status;
+neither exception text nor response-body metadata establishes this evidence.
+The selected batch remains `VALIDATION_BLOCKED`, producing
+`READINESS_VALIDATION_BLOCKED` / `REVIEW_SETUP_PREREQUISITES` with no executable
+repair. A batch refusal does not identify which individual release failed and
+does not establish an import failure or a runtime outage. Do not expose raw
+owner errors, infer Profile qualification, or install unaffected members of a
+held batch. Review releases independently through the existing governed import
+workbench when individual diagnostic evidence is needed.
+
+Publication-runtime availability is separate from overall application readiness.
+Resolve the configured connection through the existing deployment alias owner;
+project its canonical server only after that binding succeeds. Recognized
+preflight release evidence from that same server/role, fresh successful Media
+metadata evidence, or a successful fixed publication-target response establishes
+`AVAILABLE` for this request even if another runtime's prerequisites are blocked.
+Missing, unrecognized, ambiguous or different-role evidence remains `UNKNOWN`.
+Availability here is a point-in-request response observation, not continuous
+health, publication readiness, Online qualification, or permission to execute.
+
+The router's typed `ERR_RTR_00004` maps to `READINESS_RATE_LIMITED`, including
+read-only publication-baseline status calls. Its only recovery operation is
+`applicationInitialization.status` / `REFRESH_READINESS`, after waiting.
+These codes do not create a failed publication, replay a write, enable a module,
+relax eligibility, or authorize an import retry. Generic HTTP 500, authorization
+denial, and opaque startup transport failures are not proof of a safely retryable
+operation. Existing diagnostics and runtime-owner checks remain authoritative.
+
+Import history remains local to the selected import runtime and tenant. A generic
+History route without an exact authorized `importInstance` is not an aggregate
+of every runtime and cannot prove that another runtime has no receipts. Axis
+uses the authenticated connection catalogue for an exact-runtime read handoff;
+never infer that endpoint from a receipt or invent a browser aggregation owner.
+
+For an owner-confirmed failed data release, `repair.handoff` uses contract
+version 1, owner `import`, action `REVIEW_IMPORT_HISTORY`, `readOnly: true`
+and `automaticExecution: false`. An available handoff supplies `repair.route`,
+`handoff.route`, `handoff.importInstance`, `targetServer` and
+`targetRuntimeRole`. The route is the authorized effective `imports-exports`
+navigation route plus `area=history&importInstance=<exact instance>`. No endpoint
+or historical run ID is inferred or returned. A preparation operation failure
+may carry the same descriptor as `operationFailure.historyHandoff` only when
+fresh owner evidence confirms the failed selected release.
+
+The registry's `readNavigationRecoveryContext(request)` reuses the existing
+store, discovery/module permission checks, client-safe projection, functional
+eligibility, fresh availability observations and effective navigation owners.
+It does not expire leases, invoke bootstrap auditing, install data, or query
+Media/publication readiness. The handoff requires one unexpired, healthy,
+authorized import instance in the selected environment matching the exact
+server and runtime role. Missing/ambiguous/denied evidence returns an unavailable
+descriptor without a route. Navigation never grants history API permission.
+Axis must preserve the descriptor and revalidate its instance against its
+current authenticated catalogue; it must not substitute Process navigation,
+guess a connection, aggregate unrelated runtimes, or turn navigation into retry.
+
+Additional focused command:
+
+```sh
+node --test nodics.platform/modules/backoffice/test/applicationImportHistoryHandoffContract.test.js
+```
+
+Focused source verification from the framework root:
+
+```sh
+node --test nodics.platform/modules/backoffice/test/applicationReadinessEvidenceContract.test.js nodics.platform/modules/backoffice/test/applicationPreparationReceipts.test.js nodics.platform/modules/backoffice/test/applicationTargetDiagnostic.test.js nodics.platform/modules/backoffice/test/backofficeApplicationInitializationContract.test.js
+```
+
+This suite uses inert collaborators and performs no runtime imports, database
+writes, or live qualification. Customize through the layered BackOffice owner
+service while retaining typed evidence and the separate execution admissions.
+
+Keep CMS content delivery and target business APIs with their owners. Preserve signed scope, freshness, client-safe projections and explicit authorization; setup previews never install or activate dependencies.
+
+Detailed material is preserved in the adjacent [contract guide](backoffice-governance-contracts.md). This README is the discovery index, not a replacement authority or evidence that runtime qualification passed.
+
+Read [owner guidance](../../AGENTS.md) before changing behavior. Customize through the established later-loaded configuration, services, providers, schemas and runtime layers described in the guide; do not copy framework owners or bypass their invariants. Verification commands and their limits are retained in the guide. This documentation-only reorganization runs no behavioral tests or operations.
+
 ## Documentation source routing
 
-CMS product records are discovered through authorized CMS read APIs; see the
-[CMS discovery contract](../../../../../nodics.wcms/modules/cms/llm/contracts/README.md#documentation-product-discovery).
-Registration remains synchronous and contains module metadata, not tenant content
-queried under service identity. Authenticated initialization profiles supply the
-existing Site-to-pack/publication binding for the reader projection; do not add a
-second customer identity map to BackOffice or infer a product from its URL.
-Retain module eligibility, source permissions and publication gating. Axis must
-match the canonical product route and must not substitute Framework or the first
-source for an unknown, missing or unauthorized product. CMS delivery remains
-content/access authority.
+See [Documentation source routing](backoffice-governance-contracts.md#documentation-source-routing).
 
 ## Canonical registry acceptance
 
-`acceptance:capability-registry` executes the complete BackOffice-owned suite from
-the selected framework version. It is a canonical tooling command, not a customer
-script. Customer inputs select the deployment and credentials. `--execute` is
-required because the suite may register/activate a capability, then restores its
-original state. Failed visibility assertions and authorization denials fail the
-suite; cleanup must preserve pre-existing registration/activation. Imports/help
-perform no acceptance operations. Independent-project and failure tests live in
-`test/capabilityRegistryAcceptance.test.mjs`.
-
-- `capability-registry-contract.md` defines service-owned providers, runtime
-  registration, effective aggregation, and the Axis projection boundary.
-
-- BackOffice owns observed registry/discovery state and presentation enablement.
-- Target Nodics modules remain authoritative for operations and authorization.
-- Human login and service-to-service registration identities stay separate.
-- Frontend registry output contains only approved client-safe metadata.
-- Composition-only groups without a package `nodics.functionalModule` declaration
-  are not business activation owners. BackOffice uses existing loader metadata
-  to exclude obsolete structural-group catalogue rows from selection and
-  presentation eligibility, and rejects their lifecycle commands. Retain
-  persisted history; do not add client-side name filters or remove application
-  capability, import, authorization, or publication prerequisites.
-  When a remote runtime reports a group without a functional declaration, the
-  authenticated registration reconciliation marks any existing matching
-  catalogue record `compositionOnly`, using its current revision. This makes
-  retirement durable even when Platform does not load that group's source.
-  This flag cannot be changed by ordinary activation commands. Fresh installs
-  do not create business catalogue records for structural groups.
-- Self-registration must be idempotent, environment-bound, auditable, retryable,
-  and safe during BackOffice outages.
-- Availability retries use registration renewal, a short configured first
-  failure interval, and bounded repeated-failure backoff; do not add another
-  scheduler or health authority.
-- Reuse Nodics loaders and governance paths; never introduce parallel authority.
-- Axis reference composition is BackOffice-owned core data imported through
-  nData into nCatalog/CMS-owned schemas; it is never a startup write side effect.
-- Axis is an employee-only application. Public login and employee recovery
-  composition must never include authenticated components, and dashboard
-  composition is authenticated by default.
-- Module-owned navigation may include bounded `workbenchPresentation` metadata
-  for reusable Axis schema workspaces. Treat it as labels, default columns,
-  filters, and owner-action hints only; it is not executable authority and must
-  not bypass target-module permissions or services.
-- Axis reusable component metadata must stay backend-driven and data-only.
-  Schema-backed business pages declare `workbenchTarget`, bounded
-  `workbenchPresentation`, lifecycle-action hints, reusable detail panels, and
-  framework documentation links through the owning module's
-  module-owned BackOffice capability service. BackOffice validates and filters this
-  metadata, but never stores frontend renderers, component names, executable
-  render functions, or duplicated page-specific CRUD behavior.
-- Framework capability help must link to framework documentation routes. Use
-  Axis-only documentation only for concepts that are truly Axis-client specific.
+See [Canonical registry acceptance](backoffice-governance-contracts.md#canonical-registry-acceptance).
 
 ## Startup and configuration validation
 
-BackOffice owns the operator-facing startup validation projection. It may
-aggregate configuration invariants and module-declared risk rules, but it must
-not become a second configuration authority. Values still come from nConfig
-layering: framework defaults, active module/server/project layers, external
-private configuration, tenant overrides, and persisted runtime configuration
-where the owning schema allows it.
+Generic tab workspaces may carry Profile's version-1 inert
+`setupContinuation` descriptor. Its declared transport contains only type,
+availability, bounded configured task/reason labels and optional inspect/resume
+actions. Explicitly unavailable descriptors may omit actions entirely; available
+descriptors require both. Inspect is GET, resume is POST with only
+`expectedRevision`, and a qualified resume requires availability. Relative paths
+support prepared custom prefixes but contain exactly one `{enterpriseCode}`
+selector and no traversal, query, credentials or other selectors. Registry
+metadata does not grant execution rights or expose retained setup intent/proof.
+The API schema and executable contract reject undeclared fields throughout.
+Unrelated native workspaces do not acquire this field. Regression coverage uses
+the real Profile workspace/continuation owners and registration builder, including
+unavailable metadata; omitting the continuation owner from a fixture is not
+equivalent to installed module composition.
 
-Startup validation reports are exposed through authenticated bootstrap as
-`startupValidation` with state `READY`, `NEEDS_ATTENTION`, or `NOT_READY`.
-Findings use stable `ERROR`, `WARNING`, and `INFO` severities and must include
-`code`, `owner`, `ownerType`, `message`, `action`, `dismissible`, and
-`auditRequired`. Findings must also include backend-owned `repair` metadata:
-`available`, `operation`, `actionCode`, `eligibility`, `label`, `idempotent`,
-and `requiresConfirmation`, plus `unavailableReason` when no governed repair is
-available. Axis may render this metadata and invoke an authorized operation only
-when `available` is true. It must never synthesize repair availability from page
-state. A finding may include a bounded `propertyPath`, but it must never include
-the actual property value, expected secret, token, password, API key, private
-file path, or raw persisted configuration payload.
-
-Owning modules should define safe defaults and declarative risk rules at their
-own layer. Customer projects should override only genuine project-specific
-values. Do not create `.env` as a Nodics configuration mechanism, and do not
-move generic startup rules into a customer project. External private
-configuration may supply deployment-specific sensitive values through existing
-nConfig external loading.
-
-Axis may render startup validation, route the operator to the backend-owned
-Runtime Configuration workspace when available, and later invoke governed
-dismissal/acknowledgement operations. Axis must not recompute whether a
-password, token, API key, runtime identity, or required property is acceptable.
-Dismissible findings still require an auditable backend acknowledgement before
-a partner can claim the warning was reviewed.
-
-Default-value risk acknowledgement is backend evidence, not a browser flag.
-Until an owning acknowledgement endpoint exists, the finding may be dismissible
-for future UX but the repair contract must direct operators to update the owning
-configuration. Do not add local storage dismissal, hidden frontend state, or a
-customer-project table to silence these warnings.
-
-Validation:
-
-```bash
-node nodics.platform/backoffice/test/backofficeAxisReusableComponentGovernanceContract.test.js
-```
+See [Startup and configuration validation](backoffice-governance-contracts.md#startup-and-configuration-validation).
 
 ## Required data completion before activation
 
-A required activation release is imported only when nImport reports `CURRENT`.
-Running, queued, pending, missing, invalid and incomplete execution results do
-not enable the capability. Preserve running receipts as running and reject the
-activation before its catalogue compare-and-set. Execute only unapplied/failed
-releases; merge confirmed current preflight entries with completed execution
-results so mixed groups remain complete without reimporting current releases.
-Runtime loss or a conflicting administrator revision still prevents activation.
-
-Required activation data must be confirmed current by nImport. Never convert
-running, queued, missing or non-executable results to imported receipts. Preserve
-incomplete receipts, fail activation, and retain catalogue revision/runtime gates.
-
-Background contract discovery uses the existing repository-owned system context
-for normalized observation persistence. The runtime reporting a validated lease
-retains its group-free, scoped credential; discovery must not give it generic
-BackOffice schema rights. Preserve source-instance evidence and existing bounded
-normalization, compatibility classification, approval and revision checks. Human
-contract decisions retain their authenticated actor and permission gates.
+See [Required data completion before activation](backoffice-governance-contracts.md#required-data-completion-before-activation).
 
 ## Inherited application targets and observed package facts
 
-BackOffice owns `backofficeApplicationInitialization.target` technical defaults (`cms`, abstract transport, bounded timeout, one attempt). A deployment selects its connection name once; `profiles.<code>.target` supplies genuine exceptions. Resolve the target when consuming the final configuration so node changes apply. Missing destinations and profiles with `enabled: false` are rejected before initiation. Product-owned profiles may be inert until the customer enables them. Human initiation, Staged authority, exact-release review and publication confirmations remain mandatory.
-
-Functional-module data package descriptors reuse the owning registration manifest. `backofficeFunctionalModuleActivationData.modules.<identity>.dataPackages` may supply routing-only deltas by code. Observed required/sample/trigger/type facts are retained; an unavailable owner is not replaced with an invented descriptor. Preserve explicit multi-runtime destinations and target-scoped completion receipts. A missing/running/failed required import cannot be called complete.
-
-The Local reset coordinator owns `providerDefaults.moduleName: 'system'`; deployments still select every provider, connection and target authority. Defaults never enable reset, choose targets or remove environment, human/service-token, confirmation and required-model checks.
-
-BackOffice owns inert capability-registry acceptance defaults. Resolve observed
-server coordinates from the selected deployment rather than a reference-project
-string. Media preparation steps may declare `manifestModule` with an owner-relative
-`manifestPath`; the owner must match the step's module identity. Resolve only through
-the existing raw-module registry, confine real paths and payloads to that owner,
-and retain project-relative compatibility. Never return local source paths to clients.
-Existing authorization, target-role, media upload and publication gates still apply.
-
-Operator-triggered application and remote activation imports forward the
-authenticated human bearer to the configured nImport owner. Require a human
-principal and bearer before execution; do not substitute the group-free runtime
-credential or add administrator groups to it. Status/preflight retains the scoped
-runtime credential. nImport still enforces the operator's import permission, tenant,
-release governance and schema access at the destination.
+See [Inherited application targets and observed package facts](backoffice-governance-contracts.md#inherited-application-targets-and-observed-package-facts).
 
 ## Application capability readiness and repairs
 
+See [Application capability readiness and repairs](backoffice-governance-contracts.md#application-capability-readiness-and-repairs).
+
 ### Business offering setup review
 
-The owner may supply optional `presentation.visual` with public `src` and `alt`
-for an offering preview. `describe` projects only these two fields. Accept HTTPS
-without embedded credentials or same-origin absolute paths; ignore invalid
-artwork without rejecting the offering. Never fetch these URLs on the backend,
-expose private/signed media links, or make artwork a setup/readiness dependency.
-Rendering, lazy loading and image-error fallback belong to Axis. These images
-are illustrative presentation, not a published-product or runtime readiness claim.
-
-The existing application-initialization catalogue is the sole offering authority.
-Owners supply presentation/category, functional requirements and preparation
-steps through existing layered profiles. New categories must not require an Axis
-switch, a customer-owned copy of framework defaults or another registry.
-
-`profile.setupPlan` version 1 is an inert, read-only scope preview. BackOffice
-projects ordered capability, data/media and publication requirements from the
-existing profile. It deduplicates identical execution targets while retaining
-required/optional distinctions. Plan items expose only labels, identity, type,
-owner and requirement flags, never paths or private transport fields. Copy defaults
-belong to `backofficeApplicationInitialization.planPresentation`. Later modules
-can extend `setupPlan` through the standard service override contract.
-
-Viewing a plan must not register, activate, import or publish anything. Availability
-is not user selection; missing prerequisites for an unselected offering are not
-an installation failure. A plan is not an execution receipt, dependency resolver
-or readiness certification. Workflow progress and permitted actions still come
-from existing owner status APIs. New execution orchestration must use owner
-services and pipelines, not browser-side loops over this preview.
-
-Application initialization status projects one business capability lifecycle for
-Setup & Accelerators, Documentation, Publishing, and related Axis pages. The
-projection is backend-owned; Axis may render it and invoke declared operations,
-but must not infer readiness from page-local state.
-
-Capability blockers must be stable, bounded, and client-safe:
-
-- `code`, `severity`, `owner`, `message`, and `action` identify the issue and
-  next operator-facing step.
-- `blockerCode` is the stable cross-page blocker identity. `severity` must use
-  the shared business scale `INFO`, `WARNING`, `BLOCKED`, or
-  `REPAIR_REQUIRED`, so Setup, Documentation, Publishing, Approval Queue and
-  Module Registry render the same issue consistently.
-- `technicalStatus`, target server, and target runtime role may be projected
-  only as sanitized evidence.
-- `repair` metadata declares whether a governed action is available, which
-  operation family owns it, an action code, idempotency, and confirmation
-  requirements.
-- `subject`, `status`, `lastEvaluatedAt`, `source`, `stale`,
-  `dependencies`, `dependencyGraph`, `repairActions`, `publicationSummary`,
-  `approvalDiagnostic`, and `disabledReason` are backend-owned readiness facts.
-  Axis may display these fields but must not recompute readiness, runtime
-  ownership, approval state, data import completeness, media readiness, or
-  publishability from page-local state.
-- Runtime, module, data-release, media, Process approval and Online pointer
-  dependencies must be exposed as bounded status summaries. A "No runtime"
-  condition must identify whether it came from module registry state, runtime
-  ownership, heartbeat/transport, or target authorization evidence whenever the
-  owning diagnostic is available.
-- Data-release and media dependencies must preserve bounded classification
-  evidence (`classification`, `trigger`, and `dataType`) so Axis can group
-  framework baselines, module baselines, accelerator/sample data, project
-  overrides, runtime configuration, documentation packs, and media manifests
-  without inspecting source folders or generated manifests.
-- Process approval dependencies must carry `approvalDiagnostic` evidence when
-  publication is pending. Stable statuses include approval waiting, approved,
-  not started, publication missing, workflow/task reference missing, missing
-  assignee, and non-actionable task. The diagnostic may include sanitized
-  publication state, workflow/task reference, queue, message, suggested action,
-  and disabled reason; it must not expose raw Process records, private comments,
-  credentials, or unauthorized assignee data.
-- CMS/nPublish publication readiness must carry `publicationDiagnostic` evidence
-  when the owning publication authority can identify source, lifecycle, approval
-  or Online-target state. Stable statuses include staged source not installed,
-  staged source importing, publication not created, validation pending, approval
-  pending, approval rejected, publication failed, rolled back, withdrawn, Online
-  receipt missing, Online pointer stale, and Online. BackOffice may aggregate
-  these facts into capability blockers and operational-readiness sections, but
-  it must not infer CMS publication state from Axis page state or filesystem
-  layout.
-- Publication dependency graphs must be backend-owned. CMS/nPublish owns source
-  release/content-pack, publication lifecycle and Online-target nodes; Process
-  owns approval workflow/task evidence; BackOffice aggregates the graph; Axis
-  renders it without recalculating readiness or creating replacement dependency
-  semantics.
-- Module dependency rows and dependency-graph nodes may carry sanitized runtime
-  evidence from the Functional Module Catalogue: runtime state, registration
-  state, enabled flag, observed server identities, stale flag, and bounded
-  runtime diagnostics. Do not expose raw leases, endpoints, credentials,
-  provider errors, database records, or unapproved internal topology details.
-
-Executable repairs must point to an existing governed backend operation, such
-as setup-only capability preparation, application initiation, or approval
-reconciliation. `applicationInitialization.prepareCapability` may install
-profile-owned setup data and media without submitting the publication approval
-request. Its response should include compact `preparationOperation` evidence
-with before/after preparation status, changed flag, and step count so Axis can
-show what happened without becoming an import authority. Source-only repairs, like invalid release manifests, and
-environment/runtime repairs, like offline targets, must be marked unavailable
-for automatic browser execution and should guide the operator to the owning
-module, runtime, or source release.
-
-Publication readiness must distinguish approval waiting, missing approval task,
-missing publication receipt, and stale Online pointer instead of collapsing all
-states into generic unavailable/invalid messages.
+See [Business offering setup review](backoffice-governance-contracts.md#business-offering-setup-review).
 
 ## Operational readiness aggregate
 
-Authenticated BackOffice bootstrap exposes `operationalReadiness` as the
-canonical post-reset readiness aggregate for Axis and tooling. It summarizes
-startup validation, runtime communication, import release readiness, publication,
-Process approval, documentation, media, search/discovery, assistant knowledge,
-and customer application parity through stable `sections`.
-
-Each section must carry `key`, `title`, `businessStatus`, `ownerModule`,
-`source`, `route`, `summary`, `blockers`, and `nextAction`. Blockers use the
-same guided recovery shape as capability readiness: stable `blockerCode`/`code`,
-operator-facing `message`, `action`, `suggestedAction`, sanitized owner/source
-evidence, and bounded `repair` metadata. Axis and nTooling may render this
-aggregate and link to owning pages, but must not recompute import, publishing,
-approval, media, search, assistant, or application readiness from page-local
-state when a backend section is available.
-
-Documentation readiness is an aggregate over documentation sources and their
-publication/indexing state. `nodics.docs` owns framework documentation content
-and content-pack data; BackOffice may expose install/stage/Online/indexing
-repair metadata for Axis, but it must not import source files directly or move
-documentation-content authority into the customer project.
-
-Application parity readiness is profile/provider based. Nexus, Agora, Circa and
-future applications must appear as owner profile status facts from Setup &
-Accelerators or their owning capability services. BackOffice may count and group
-parity states, but it must not infer application readiness from frontend routes,
-open browser tabs, or customer-project folder names.
-
-Readiness repair governance is backend-owned. Owner modules register executable
-repair providers and BackOffice validates contract version, lifecycle state,
-operation/action support, target identifiers, safety, dry-run state, locking,
-receipts, telemetry, and provider events. Axis may display the provider panel,
-history, dependency graph, dry-run plan, and receipts, but must not execute a
-repair unless the owner supplied `available: true`, a supported operation/action,
-and stable target identifiers. Batch execution stays disabled until approval and
-rollback maturity are explicit.
-
-If an owning capability has not yet exposed a concrete readiness provider,
-BackOffice may return a `NOT_EXPOSED` section with a blocker that names the
-owning module and the action to add the provider. That is a framework gap, not
-a customer-project configuration requirement.
+See [Operational readiness aggregate](backoffice-governance-contracts.md#operational-readiness-aggregate).
 
 ## Guided readiness repair provider contract
 
-Axis may request readiness repair only through the authenticated BackOffice
-dispatcher. The request must carry `repairContractVersion: 1`, an idempotency
-key, correlation id, dry-run flag, bounded timeout, operation, action,
-owner module, eligibility/availability metadata, and stable target identifiers
-such as `releaseCode`, `profileCode`, `publicationCode`, `taskCode`,
-`mediaManifestCode`, or `sourceCode`. A blocker code can help diagnose the
-failure, but display text alone is not repair identity.
+See [Guided readiness repair provider contract](backoffice-governance-contracts.md#guided-readiness-repair-provider-contract).
 
-BackOffice validates the contract, stores idempotent execution results, records
-repair attempts, and dispatches only to an owner-declared provider. It must not
-implement nImport, nPublish, Process, Media, Search, Copilot, or accelerator
-domain repair logic inline. Owner providers expose optional
-`repairCapability()` or `readinessRepairCapability()` metadata for supported
-operation/action pairs, provider availability, environment policy, and operator
-guidance. Execution remains in `executeRepair()` or
-`executeReadinessRepair()`.
+## Application Preparation Media Retry
 
-The normalized result must preserve contract version, correlation id, target
-identifiers, prerequisites, preview target codes, changed/skipped counts,
-remaining blockers, evidence reference, transaction/rollback details, policy,
-retry policy, and next action. Dry-run and execute must describe the same target
-set. High-impact execution requires an operator note. Customer projects must not
-add repair scripts or static configuration solely to make Axis buttons work.
-
-Provider registry discovery is the preferred extension mechanism. Owner modules
-register readiness repair providers with BackOffice and declare lifecycle state,
-supported operation/action pairs, and capability metadata. BackOffice may still
-fall back to legacy service names, but new module/provider work should not rely
-on Axis knowing service names. Execution is protected by target-scoped locks,
-idempotency, bounded history, repair receipts, and best-effort
-`operationalReadinessRepairChanged` events for cluster refresh.
-
-Repair results may include `provider`, `safety`, `plan`, `lock`, `receipt`, and
-`events` sections. `plan.businessSteps` is operator-facing; `plan.machineSteps`
-is future automation/pipeline input. `safety.level` distinguishes safe,
-high-impact, batch-disabled, and destructive-disabled operations. Batch
-execution is disabled by default. Owner providers must expose unavailable,
-misconfigured, unsupported, partial-success, dependency-missing, approval-bound,
-and failed states with problem, owner, impact, next action, and repair route.
+See [Application Preparation Media Retry](backoffice-governance-contracts.md#application-preparation-media-retry).

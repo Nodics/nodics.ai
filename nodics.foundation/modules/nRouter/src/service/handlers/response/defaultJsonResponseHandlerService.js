@@ -154,6 +154,7 @@ module.exports = exportedService = {
      * @sideEffects Wraps non-Nodics errors, logs, and writes HTTP status plus JSON error body.
      */
     handleError: function (request, response, error) {
+        if (SERVICE.DefaultRouterOperationService?.sendPrivateError(request, response, error)) return;
         if (!(error instanceof CLASSES.NodicsError)) {
             error = new CLASSES.NodicsError(error);
         }

@@ -1,0 +1,8 @@
+{{brandName}}
+
+You have been invited to {{enterpriseName}} as {{responsibility}}.
+
+{{nextStep}}
+
+This invitation does not grant access until you verify your account and accept the invitation. It does not enroll you as a customer.
+Never share your password or verification code.

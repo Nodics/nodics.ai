@@ -119,7 +119,8 @@ module.exports = {
         let publication = await lifecycle.get(local);
         const expected = this.workflow().context(Object.assign({}, publication,
             { revision: context.publicationRevision }), local);
-        if (Object.keys(expected).some(key => context[key] !== expected[key])) {
+        if ((expected.workflowVersion !== undefined && execution.instance.version !== expected.workflowVersion) ||
+            Object.keys(expected).some(key => context[key] !== expected[key])) {
             throw new CLASSES.NodicsError('ERR_PUB_00004', 'Publication no longer matches the claimed source');
         }
         const evidence = this.evidence(execution, action);

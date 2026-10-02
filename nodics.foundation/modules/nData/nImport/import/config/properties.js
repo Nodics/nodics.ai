@@ -17,6 +17,13 @@
  * @override Projects enable and register remote sources and adapters in later configuration layers without changing framework defaults.
  */
 module.exports = {
+  serviceCommunication: {
+    circuitBreaker: {
+      domainRefusals: {
+        import: { ERR_IMP_00003: 400, ERR_IMP_00004: 404 },
+      },
+    },
+  },
   tooling: {
     commands: {
       'acceptance:staged-sample-data': {
@@ -67,6 +74,7 @@ module.exports = {
       destinationEnforced: true,
       contributions: [],
       installers: {},
+      targetValidators: {},
       maximumFilesPerRelease: 1024,
       maximumModulesPerRun: 256,
       allowDowngrade: false,

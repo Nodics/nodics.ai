@@ -11,15 +11,47 @@
 
 /** @module promotion/config/properties @description Defines Commerce capability and schema access policies. @layer config @owner promotion */
 module.exports = {
-  publish: {
-    providers: { domainAdapters: { promotion: null }, versionProviders: { promotion: null }, workflowProviders: { promotion: null } },
-    approvalWorkflow: { domains: { promotion: { definitionCode: 'promotionPublicationApproval', ownerModule: 'promotion',
-      actionKey: 'promotion.applyPublicationDecision', sourceRuntimeRole: 'COMMERCE_STAGED' } } }
+  data: {
+    dataReleases: {
+      targetValidators: {
+        promotion: "DefaultPromotionOperationService",
+      },
+    },
   },
-  process: { actionAdapters: { definitions: { 'promotion.applyPublicationDecision': {
-    moduleName: 'promotion', operation: 'applyPublicationDecision', remote: { target: 'promotion', moduleName: 'promotion',
-      runtimeRole: 'COMMERCE_STAGED', apiName: '/workflow/actions/applyPublicationDecision', requiresCompletedTask: true }
-  } } } },
+  publish: {
+    providers: {
+      domainAdapters: { promotion: null },
+      versionProviders: { promotion: null },
+      workflowProviders: { promotion: null },
+    },
+    approvalWorkflow: {
+      domains: {
+        promotion: {
+          definitionCode: "promotionPublicationApproval",
+          ownerModule: "promotion",
+          actionKey: "promotion.applyPublicationDecision",
+          sourceRuntimeRole: "COMMERCE_STAGED",
+        },
+      },
+    },
+  },
+  process: {
+    actionAdapters: {
+      definitions: {
+        "promotion.applyPublicationDecision": {
+          moduleName: "promotion",
+          operation: "applyPublicationDecision",
+          remote: {
+            target: "promotion",
+            moduleName: "promotion",
+            runtimeRole: "COMMERCE_STAGED",
+            apiName: "/workflow/actions/applyPublicationDecision",
+            requiresCompletedTask: true,
+          },
+        },
+      },
+    },
+  },
   // Inert inventory; an allowed local server must explicitly select this capability.
   localResetProvider: {
     contributions: {
@@ -36,7 +68,31 @@ module.exports = {
     },
   },
 
-  promotion: { enabled: true, legacyTokenHashPolicies: [] },
+  promotion: {
+    enabled: true,
+    legacyTokenHashPolicies: [],
+    sellerAuthorization: {
+      enabled: false,
+      qualified: false,
+      maximumSellers: 100,
+    },
+    merchantBenefits: {
+      enabled: false,
+      qualified: false,
+      evidenceService: "DefaultPromotionPricedTransactionAdapterService",
+      pricedSource: {
+        qualified: false,
+        connectionName: "pricing",
+        timeoutMilliseconds: 10000,
+        allowInsecureLoopback: false,
+      },
+    },
+    purchasedRights: {
+      enabled: false,
+      qualified: false,
+      maximumValidityDays: 3650,
+    },
+  },
   schemaPolicies: {
     promotion: {
       publicationVersioned: { isVersionedEnabled: false },
@@ -77,6 +133,7 @@ module.exports = {
   },
   apiExposure: {
     categories: {
+      commerceSellerAuthorizationManagement: { enabled: false },
       promotionPublicationAuthoring: { enabled: false },
       commerceCustomer: {
         enabled: true,
@@ -96,10 +153,10 @@ module.exports = {
 
 // Registration remains separate from availability; installed qualification is an operator gate.
 module.exports.promotion.publication = {
-    runtimeRole: null,
-    sourceVersioningQualified: false,
-    delivery: { enabled: false, rootCodes: [] },
-    legacyCasRecovery: { enabled: false, operations: [] },
-    targetTransportProvider: null,
-    maxDependencies: 1000
+  runtimeRole: null,
+  sourceVersioningQualified: false,
+  delivery: { enabled: false, rootCodes: [] },
+  legacyCasRecovery: { enabled: false, operations: [] },
+  targetTransportProvider: null,
+  maxDependencies: 1000,
 };

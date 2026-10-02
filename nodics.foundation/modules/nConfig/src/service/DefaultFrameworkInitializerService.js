@@ -1431,6 +1431,21 @@ module.exports = {
   loadConfigurations: function (fileName) {
     let _self = this;
     fileName = fileName || "/config/properties.js";
+    const serverPath = NODICS.getServerPath && NODICS.getServerPath();
+    if (fileName === "/config/properties.js" && serverPath) {
+      const path = require("node:path");
+      const packageFile = path.join(serverPath, "package.json");
+      const selectors = fs.existsSync(packageFile)
+        ? JSON.parse(fs.readFileSync(packageFile, "utf8")).nodics?.runtimeConfigurationContributions : undefined;
+      if (selectors !== undefined && (!Array.isArray(selectors) || selectors.length > 32)) {
+        throw new Error("Invalid runtime configuration selectors");
+      }
+      if (selectors && selectors.length) {
+        const context = this.getPropertyBindingContext(path.join(serverPath, "config", "properties.js"));
+        const defaults = this.readInactiveRuntimeRoleConfiguration(this.loadServerProperties(), context);
+        CONFIG.setProperties(configurationBindings.merge(CONFIG.getProperties() || {}, defaults));
+      }
+    }
     NODICS.getIndexedModules().forEach(function (moduleObject, index) {
       _self.loadModuleConfiguration(moduleObject.name, fileName);
     });
@@ -1546,10 +1561,14 @@ module.exports = {
   /** Reads the existing project/environment/server/node contributions for pre-start tooling without loading services or another descriptor. @param {Object} options Explicit deployment coordinates. @returns {Object} Resolved properties. */
   readDeploymentConfiguration: function (options) {
     const context = this.deploymentPropertyContext(options);
-    const properties = this.deploymentPropertyFiles(context).reduce((properties, file) => {
+    const layers = this.deploymentPropertyFiles(context);
+    const readLayers = inherited => layers.reduce((properties, file) => {
       if (!fs.existsSync(file)) return properties;
       return configurationBindings.merge(properties, this.readPropertyContribution(file, properties, context));
-    }, configurationBindings.merge({}, options.inheritedProperties || {}));
+    }, inherited);
+    let properties = readLayers(configurationBindings.merge({}, options.inheritedProperties || {}));
+    const defaults = this.readInactiveRuntimeRoleConfiguration(properties, context);
+    if (Object.keys(defaults).length) properties = readLayers(configurationBindings.merge(defaults, options.inheritedProperties || {}));
     let resolved = this.deriveDeploymentEnvironmentMetadata(properties, context);
     resolved = this.deriveRuntimeModuleRootDataReleaseProfiles(resolved, context);
     resolved = this.deriveDatabaseModuleDefaults(resolved);
@@ -1698,7 +1717,80 @@ module.exports = {
       const profiles = contribution?.data?.dataReleases?.runtimeRoleProfiles;
       if (profiles) this.mergeDataReleaseProfileBlock(derived.data.dataReleases.runtimeRoleProfiles, profiles);
     });
-    return configurationBindings.merge(derived, properties);
+    const resolved = configurationBindings.merge(derived, properties);
+    // Contribution selectors accumulate by owner, not by array position.
+    resolved.data.dataReleases.runtimeRoleProfiles = this.mergeDataReleaseProfileBlock(
+      _.cloneDeep(derived.data.dataReleases.runtimeRoleProfiles),
+      properties.data?.dataReleases?.runtimeRoleProfiles || {},
+    );
+    return resolved;
+  },
+
+  /** Reads explicitly selected owner role defaults before ordinary contribution merging, without activating the owner. @param {Object} properties Deployment role selection. @param {Object} context Existing discovery coordinates. @returns {Object} Selected defaults for canonical layered merging. */
+  readInactiveRuntimeRoleConfiguration: function (properties, context) {
+    const path = require("node:path");
+    if (!context.roots.server) return {};
+    const packageFile = path.join(context.roots.server, "package.json");
+    if (!fs.existsSync(packageFile)) return {};
+    const metadata = JSON.parse(fs.readFileSync(packageFile, "utf8"));
+    const selectors = metadata.nodics?.runtimeConfigurationContributions;
+    if (selectors === undefined) return {};
+    if (!Array.isArray(selectors) || selectors.length > 32) throw new Error("Invalid runtime configuration selectors");
+    const roots = [].concat(metadata.nodics?.runtimeModuleRoots || metadata.nodics?.extends || []);
+    const forbidden = new Set(["activeModules", "requiredModules", "runtimeRole", "runtimeIdentity", "servers",
+      "database", "authSecurity", "defaultAuthDetail", "__proto__", "prototype", "constructor"]);
+    const seen = new Set();
+    let discovered;
+    let defaults = {};
+    for (const selector of selectors) {
+      if (!selector || typeof selector !== "object" || Array.isArray(selector) ||
+          Object.keys(selector).sort().join(",") !== "moduleName,namespace,runtimeRole" ||
+          [selector.moduleName, selector.namespace, selector.runtimeRole].some(value => typeof value !== "string") ||
+          !/^[A-Za-z][A-Za-z0-9_.-]{0,127}$/.test(selector.moduleName || "") ||
+          !/^[A-Za-z][A-Za-z0-9]{0,127}$/.test(selector.namespace || "") ||
+          !/^[A-Z][A-Z0-9_]{0,63}$/.test(selector.runtimeRole || "") || forbidden.has(selector.namespace)) {
+        throw new Error("Invalid runtime configuration selector");
+      }
+      const key = selector.namespace + ":" + selector.runtimeRole;
+      if (seen.has(key)) throw new Error("Ambiguous runtime configuration selector");
+      seen.add(key);
+      if (properties.runtimeRole?.code !== selector.runtimeRole) continue;
+      if (!discovered) {
+        const utils = require("../utils/utils");
+        const records = [];
+        for (const root of roots) {
+          if (typeof root !== "string" || path.isAbsolute(root) || root.split(/[\\/]/).includes("..")) {
+            throw new Error("Invalid runtime configuration discovery root");
+          }
+          const directory = [context.roots.framework, context.roots.project].filter(Boolean)
+            .map(base => path.join(base, root)).find(candidate => fs.existsSync(candidate));
+          if (directory) utils.collectModuleRecords(directory, records, null);
+        }
+        discovered = {};
+        utils.indexModuleRecords(records, discovered);
+      }
+      const owner = discovered[selector.moduleName];
+      if (!owner || !owner.path) throw new Error("Runtime configuration owner is not discovered: " + selector.moduleName);
+      const file = path.join(owner.path, "config", "properties.js");
+      if (!fs.existsSync(file)) throw new Error("Runtime configuration owner has no properties: " + selector.moduleName);
+      const realFile = fs.realpathSync(file);
+      const contained = roots.some(root => typeof root === "string" && !path.isAbsolute(root) &&
+        !root.split(/[\\/]/).includes("..") && [context.roots.framework, context.roots.project].filter(Boolean).some(base => {
+          const directory = path.join(base, root);
+          if (!fs.existsSync(directory)) return false;
+          const relative = path.relative(fs.realpathSync(directory), realFile);
+          return relative && !relative.startsWith(".." + path.sep) && relative !== ".." && !path.isAbsolute(relative);
+        }));
+      if (!contained) throw new Error("Runtime configuration owner is outside declared discovery roots");
+      const contribution = require(realFile);
+      const profile = contribution?.[selector.namespace]?.runtimeRoleProfiles?.[selector.runtimeRole];
+      if (!profile || typeof profile !== "object" || Array.isArray(profile)) throw new Error("Runtime configuration role profile is unavailable");
+      const resolved = configurationBindings.resolve(profile, contribution,
+        { ...context, roots: { ...context.roots, file: path.dirname(realFile) } });
+      if (!resolved || typeof resolved !== "object" || Array.isArray(resolved)) throw new Error("Invalid runtime configuration role profile");
+      defaults[selector.namespace] = resolved;
+    }
+    return defaults;
   },
 
   /** Applies module/environment-owned data-release profiles for the selected runtime role. @param {Object} properties Resolved deployment configuration. @returns {Object} Configuration with role profile folded into `data.dataReleases`. */

@@ -25,81 +25,173 @@ const fs = require('fs');
 const os = require('os');
 const path = require('path');
 const repositoryRoot = path.resolve(__dirname, '../../../..');
-const integrationConfiguration = require(path.join(repositoryRoot,
-    'nodics.foundation/modules/nAuth/test/integration/authIntegrationTestConfiguration')).load();
+const integrationConfiguration = require(
+    path.join(
+        repositoryRoot,
+        'nodics.foundation/modules/nAuth/test/integration/authIntegrationTestConfiguration'
+    )
+).load();
 
 class NodicsError extends Error {
-    constructor(code, message) { super(message || code && code.message || String(code)); this.code = typeof code === 'string' ? code : code && code.code; }
+    constructor(code, message) {
+        super(message || (code && code.message) || String(code));
+        this.code = typeof code === 'string' ? code : code && code.code;
+    }
 }
 global.CLASSES = { NodicsError };
-global.CONFIG = { get: key => ({
-    defaultTenant: integrationConfiguration.tenant,
-    authSecurity: { apiKey: { pepper: 'auth-distributed-migration-pepper-with-more-than-thirty-two-characters', minimumPepperLength: 32, defaultLifetimeSeconds: 3600 } },
-    identityGovernance: {
-        permissionCatalog: ['auth.internal.token.read', 'auth.internal.token.read.anyTenant'],
-        principalPolicy: {
-            allowedTypes: ['human', 'service', 'customer'],
-            serviceType: 'service',
-            serviceGroup: 'serviceAccountUserGroup',
-            minimumServiceApiKeyLength: 32
-        },
-        migration: {
-            version: 2,
-            servicePrincipalCodes: ['apiAdmin'],
-            servicePrincipalScopes: { apiAdmin: ['auth.internal.token.read', 'auth.internal.token.read.anyTenant'] },
-            administratorCodes: ['admin'],
-            serviceGroup: 'serviceAccountUserGroup',
-            administratorGroups: ['adminGroup', 'runtimeConfigAdminUserGroup'],
-            humanDefaultGroup: 'employeeUserGroup',
-            customerGroup: 'customerUserGroup',
-            groupTargets: {
-                userGroup: { parentGroups: [] },
-                adminGroup: { parentGroups: ['userGroup'] },
-                serviceAccountUserGroup: { parentGroups: ['userGroup'], permissions: ['auth.internal.token.read'] }
+global.CONFIG = {
+    get: (key) =>
+        ({
+            defaultTenant: integrationConfiguration.tenant,
+            authSecurity: {
+                apiKey: {
+                    pepper: 'auth-distributed-migration-pepper-with-more-than-thirty-two-characters',
+                    minimumPepperLength: 32,
+                    defaultLifetimeSeconds: 3600
+                }
+            },
+            identityGovernance: {
+                permissionCatalog: [
+                    'auth.internal.token.read',
+                    'auth.internal.token.read.anyTenant'
+                ],
+                principalPolicy: {
+                    allowedTypes: ['human', 'service', 'customer'],
+                    serviceType: 'service',
+                    serviceGroup: 'serviceAccountUserGroup',
+                    minimumServiceApiKeyLength: 32
+                },
+                migration: {
+                    version: 2,
+                    servicePrincipalCodes: ['apiAdmin'],
+                    servicePrincipalScopes: {
+                        apiAdmin: [
+                            'auth.internal.token.read',
+                            'auth.internal.token.read.anyTenant'
+                        ]
+                    },
+                    administratorCodes: ['admin'],
+                    serviceGroup: 'serviceAccountUserGroup',
+                    administratorGroups: [
+                        'adminGroup',
+                        'runtimeConfigAdminUserGroup'
+                    ],
+                    humanDefaultGroup: 'employeeUserGroup',
+                    customerGroup: 'customerUserGroup',
+                    groupTargets: {
+                        userGroup: { parentGroups: [] },
+                        adminGroup: { parentGroups: ['userGroup'] },
+                        serviceAccountUserGroup: {
+                            parentGroups: ['userGroup'],
+                            permissions: ['auth.internal.token.read']
+                        }
+                    }
+                }
             }
-        }
-    }
-})[key] };
+        })[key]
+};
 
-function clone(value) { return JSON.parse(JSON.stringify(value)); }
+function clone(value) {
+    return JSON.parse(JSON.stringify(value));
+}
+
+/** Matches generated equality/CAS selectors without weakening missing-field fences. */
+function matches(record, query) {
+    return Object.entries(query).every(([key, value]) =>
+        value && typeof value === 'object' && Object.hasOwn(value, '$exists')
+            ? Object.hasOwn(record, key) === value.$exists
+            : JSON.stringify(record[key]) === JSON.stringify(value)
+    );
+}
 
 class PersistentIdentityRepository {
     constructor(file, initial) {
         this.file = file;
         this.failureCode = null;
+        Object.entries(initial).forEach(([collection, rows]) =>
+            rows.forEach((row, index) => {
+                row._id = row._id || collection + '-' + index;
+            })
+        );
         fs.writeFileSync(file, JSON.stringify(initial, null, 2));
     }
-    read() { return JSON.parse(fs.readFileSync(this.file, 'utf8')); }
-    write(state) { fs.writeFileSync(this.file, JSON.stringify(state, null, 2)); }
+    read() {
+        return JSON.parse(fs.readFileSync(this.file, 'utf8'));
+    }
+    write(state) {
+        fs.writeFileSync(this.file, JSON.stringify(state, null, 2));
+    }
     service(collection) {
         return {
-            get: request => {
+            get: (request) => {
                 let state = this.read();
                 let query = request.query || {};
-                let result = (state[collection] || []).filter(record => Object.keys(query).every(key => record[key] === query[key]));
-                return Promise.resolve({ result: clone(result), success: true });
+                let result = (state[collection] || []).filter((record) =>
+                    matches(record, query)
+                );
+                const { pageSize = 100, pageNumber = 1 } =
+                    request.searchOptions || {};
+                return Promise.resolve({
+                    code: 'SUC_READ',
+                    count: result.length,
+                    result: clone(
+                        result.slice(
+                            (pageNumber - 1) * pageSize,
+                            pageNumber * pageSize
+                        )
+                    )
+                });
             },
-            save: request => {
+            save: (request) => {
                 let state = this.read();
                 state[collection] = state[collection] || [];
-                state[collection].push(clone(request.model));
+                state[collection].push({
+                    ...clone(request.model),
+                    _id: collection + '-' + state[collection].length
+                });
                 this.write(state);
-                return Promise.resolve(true);
+                return Promise.resolve({
+                    code: 'SUC_SAVE',
+                    result: { acknowledged: true, insertedCount: 1 }
+                });
             },
-            update: request => {
+            update: (request) => {
                 let state = this.read();
                 let query = request.query || {};
-                let index = (state[collection] || []).findIndex(record => Object.keys(query).every(key => record[key] === query[key]));
-                if (index < 0) return Promise.reject(new NodicsError('ERR_AUTH_00003', 'Fixture record not found'));
-                if (this.failureCode && state[collection][index].code === this.failureCode) return Promise.reject(new NodicsError('ERR_AUTH_00000', 'Injected migration persistence failure'));
+                let index = (state[collection] || []).findIndex((record) =>
+                    matches(record, query)
+                );
+                if (index < 0)
+                    return Promise.reject(
+                        new NodicsError(
+                            'ERR_AUTH_00003',
+                            'Fixture record not found'
+                        )
+                    );
+                if (
+                    this.failureCode &&
+                    state[collection][index].code === this.failureCode
+                )
+                    return Promise.reject(
+                        new NodicsError(
+                            'ERR_AUTH_00000',
+                            'Injected migration persistence failure'
+                        )
+                    );
                 let record = state[collection][index];
-                Object.keys(request.model.$set || {}).forEach(key => {
-                    if (request.model.$set[key] === undefined) delete record[key];
+                Object.keys(request.model.$set || {}).forEach((key) => {
+                    if (request.model.$set[key] === undefined)
+                        delete record[key];
                     else record[key] = clone(request.model.$set[key]);
                 });
-                Object.keys(request.model.$unset || {}).forEach(key => delete record[key]);
+                Object.keys(request.model.$unset || {}).forEach(
+                    (key) => delete record[key]
+                );
                 this.write(state);
-                return Promise.resolve(true);
+                return Promise.resolve({
+                    code: 'SUC_UPDATE',
+                    result: { acknowledged: true, matchedCount: 1 }
+                });
             }
         };
     }
@@ -108,15 +200,45 @@ class PersistentIdentityRepository {
 function fixture() {
     return {
         userGroups: [
-            { code: 'userGroup', parentGroups: ['adminGroup'], permissions: [] },
+            {
+                code: 'userGroup',
+                parentGroups: ['adminGroup'],
+                permissions: []
+            },
             { code: 'adminGroup', parentGroups: [], permissions: [] },
-            { code: 'serviceAccountUserGroup', parentGroups: ['adminGroup'], permissions: [] }
+            {
+                code: 'serviceAccountUserGroup',
+                parentGroups: ['adminGroup'],
+                permissions: []
+            }
         ],
         employees: [
-            { code: 'admin', loginId: 'admin', active: true, userGroups: ['adminGroup'], apiKey: 'legacy-human-secret' },
-            { code: 'apiAdmin', loginId: 'apiAdmin', active: true, userGroups: ['adminGroup'], apiKey: 'legacy-service-secret' }
+            {
+                code: 'admin',
+                loginId: 'admin',
+                active: true,
+                userGroups: ['adminGroup'],
+                apiKey: 'legacy-human-secret'
+            },
+            {
+                code: 'apiAdmin',
+                loginId: 'apiAdmin',
+                active: true,
+                userGroups: ['adminGroup'],
+                apiKey: 'legacy-service-secret'
+            }
         ],
-        customers: [{ code: 'customer-a', loginId: 'customer-a', active: true, userGroups: ['userGroup'], apiKey: 'legacy-customer-secret', addresses: ['address-a'], contacts: ['contact-a'] }],
+        customers: [
+            {
+                code: 'customer-a',
+                loginId: 'customer-a',
+                active: true,
+                userGroups: ['userGroup'],
+                apiKey: 'legacy-customer-secret',
+                addresses: ['address-a'],
+                contacts: ['contact-a']
+            }
+        ],
         addresses: [{ code: 'address-a' }],
         contacts: [{ code: 'contact-a' }],
         audits: []
@@ -125,9 +247,17 @@ function fixture() {
 
 function wire(repository) {
     global.SERVICE = {
-        DefaultIdentityGovernanceService: { getSystemAuthData: () => ({ isSystem: true }) },
-        DefaultAPIKeyCredentialService: require(path.join(repositoryRoot,
-            'nodics.foundation/modules/nAuth/src/service/identity/defaultAPIKeyCredentialService')),
+        DefaultPrincipalSecurityStampGovernanceService: require('../src/service/identity/defaultPrincipalSecurityStampGovernanceService'),
+        DefaultEnterpriseRegistrationService: require('../src/service/enterprise/defaultEnterpriseRegistrationService'),
+        DefaultIdentityGovernanceService: {
+            getSystemAuthData: () => ({ isSystem: true })
+        },
+        DefaultAPIKeyCredentialService: require(
+            path.join(
+                repositoryRoot,
+                'nodics.foundation/modules/nAuth/src/service/identity/defaultAPIKeyCredentialService'
+            )
+        ),
         DefaultUserGroupService: repository.service('userGroups'),
         DefaultEmployeeService: repository.service('employees'),
         DefaultCustomerService: repository.service('customers'),
@@ -138,55 +268,157 @@ function wire(repository) {
 }
 
 async function run() {
-    let directory = fs.mkdtempSync(path.join(os.tmpdir(), 'nodics-auth-distributed-'));
-    let file = path.join(directory, integrationConfiguration.database + '.json');
+    let directory = fs.mkdtempSync(
+        path.join(os.tmpdir(), 'nodics-auth-distributed-')
+    );
+    let file = path.join(
+        directory,
+        integrationConfiguration.database + '.json'
+    );
     let repository = new PersistentIdentityRepository(file, fixture());
     wire(repository);
     let migration = require('../src/service/identity/defaultIdentityGovernanceMigrationService');
-    let request = { tenant: integrationConfiguration.tenant, authData: { loginId: 'migration-operator' }, correlationId: integrationConfiguration.correlationId };
+    let request = {
+        tenant: integrationConfiguration.tenant,
+        authData: { loginId: 'migration-operator' },
+        correlationId: integrationConfiguration.correlationId
+    };
     try {
-        let beforePreview = crypto.createHash('sha256').update(fs.readFileSync(file)).digest('hex');
+        let beforePreview = crypto
+            .createHash('sha256')
+            .update(fs.readFileSync(file))
+            .digest('hex');
         let preview = await migration.previewMigration(request);
         assert(preview.data.changeCount > 0);
-        assert.strictEqual(crypto.createHash('sha256').update(fs.readFileSync(file)).digest('hex'), beforePreview, 'Preview must not mutate persistence');
+        assert.strictEqual(
+            crypto
+                .createHash('sha256')
+                .update(fs.readFileSync(file))
+                .digest('hex'),
+            beforePreview,
+            'Preview must not mutate persistence'
+        );
 
         let applied = await migration.applyMigration(request);
         assert.strictEqual(applied.data.status, 'APPLIED');
         let persisted = fs.readFileSync(file, 'utf8');
-        ['legacy-human-secret', 'legacy-service-secret', 'legacy-customer-secret'].forEach(secret => assert.strictEqual(persisted.includes(secret), false));
+        [
+            'legacy-human-secret',
+            'legacy-service-secret',
+            'legacy-customer-secret'
+        ].forEach((secret) =>
+            assert.strictEqual(persisted.includes(secret), false)
+        );
         let repeat = await migration.applyMigration(request);
         assert.strictEqual(repeat.data.status, 'NO_CHANGES');
         assert.strictEqual(repeat.data.preview.idempotent, true);
 
-        let replacement = 'auth-distributed-client-generated-rotation-key-1234567890';
-        let rotated = await migration.rotateServiceKey(Object.assign({}, request, { identityMigration: { principalCode: 'apiAdmin', newApiKey: replacement } }));
+        let replacement =
+            'auth-distributed-client-generated-rotation-key-1234567890';
+        // Credential rotation is an independent later mutation, not rollback authority.
+        const rotationRepository = new PersistentIdentityRepository(
+            path.join(directory, 'rotation.json'),
+            repository.read()
+        );
+        wire(rotationRepository);
+        let rotated = await migration.rotateServiceKey(
+            Object.assign({}, request, {
+                identityMigration: {
+                    principalCode: 'apiAdmin',
+                    newApiKey: replacement
+                }
+            })
+        );
         assert.strictEqual(rotated.data.status, 'CREDENTIAL_ROTATED');
-        persisted = fs.readFileSync(file, 'utf8');
+        persisted = fs.readFileSync(rotationRepository.file, 'utf8');
         assert.strictEqual(persisted.includes(replacement), false);
-        assert(repository.read().employees.find(item => item.code === 'apiAdmin').apiKeyHash);
+        assert(
+            rotationRepository
+                .read()
+                .employees.find((item) => item.code === 'apiAdmin').apiKeyHash
+        );
+        await assert.rejects(
+            migration.rollbackMigration(
+                Object.assign({}, request, {
+                    identityMigration: { auditCode: applied.data.code }
+                })
+            ),
+            { code: 'ERR_AUTH_00003' }
+        );
+        assert(
+            rotationRepository
+                .read()
+                .employees.find((item) => item.code === 'apiAdmin').apiKeyHash
+        );
+        wire(repository);
 
-        let rolledBack = await migration.rollbackMigration(Object.assign({}, request, { identityMigration: { auditCode: applied.data.code } }));
+        let rolledBack = await migration.rollbackMigration(
+            Object.assign({}, request, {
+                identityMigration: { auditCode: applied.data.code }
+            })
+        );
         assert.strictEqual(rolledBack.data.credentialsRestored, false);
-        assert.strictEqual(fs.readFileSync(file, 'utf8').includes('legacy-service-secret'), false);
-        let repeatedRollback = await migration.rollbackMigration(Object.assign({}, request, { identityMigration: { auditCode: applied.data.code } }));
+        assert.strictEqual(
+            fs.readFileSync(file, 'utf8').includes('legacy-service-secret'),
+            false
+        );
+        let repeatedRollback = await migration.rollbackMigration(
+            Object.assign({}, request, {
+                identityMigration: { auditCode: applied.data.code }
+            })
+        );
         assert.strictEqual(repeatedRollback.data.idempotent, true);
 
-        let failedFile = path.join(directory, integrationConfiguration.database + '-failure.json');
-        let failedRepository = new PersistentIdentityRepository(failedFile, fixture());
+        let failedFile = path.join(
+            directory,
+            integrationConfiguration.database + '-failure.json'
+        );
+        let failedRepository = new PersistentIdentityRepository(
+            failedFile,
+            fixture()
+        );
         failedRepository.failureCode = 'apiAdmin';
         wire(failedRepository);
-        await assert.rejects(migration.applyMigration(request), /Injected migration persistence failure/);
-        let failedAudit = failedRepository.read().audits.find(audit => audit.status === 'FAILED');
-        assert(failedAudit, 'Partial migration failure must be persisted for recovery');
-        assert.strictEqual(JSON.stringify(failedAudit).includes('legacy-service-secret'), false);
+        await assert.rejects(
+            migration.applyMigration(request),
+            /Injected migration persistence failure/
+        );
+        let failedAudit = failedRepository
+            .read()
+            .audits.find((audit) => audit.status === 'FAILED');
+        assert(
+            failedAudit,
+            'Partial migration failure must be persisted for recovery'
+        );
+        assert.strictEqual(
+            JSON.stringify(failedAudit).includes('legacy-service-secret'),
+            false
+        );
         failedRepository.failureCode = null;
-        let recovered = await migration.rollbackMigration(Object.assign({}, request, { identityMigration: { auditCode: failedAudit.code } }));
-        assert.strictEqual(recovered.data.status, 'ROLLED_BACK');
+        await assert.rejects(
+            migration.rollbackMigration(
+                Object.assign({}, request, {
+                    identityMigration: { auditCode: failedAudit.code }
+                })
+            ),
+            /Partial migrations require inspected recovery/
+        );
+        assert.strictEqual(
+            failedRepository
+                .read()
+                .audits.find((audit) => audit.code === failedAudit.code).status,
+            'FAILED'
+        );
 
-        console.log('Profile identity governance migration integration validated');
+        console.log(
+            'Profile identity governance migration integration validated'
+        );
     } finally {
         fs.rmSync(directory, { recursive: true, force: true });
     }
 }
 
-run().catch(error => { console.error(error); process.exit(1); });
+run().catch((error) => {
+    console.error(error);
+    process.exit(1);
+});

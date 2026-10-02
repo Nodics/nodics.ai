@@ -15,6 +15,14 @@ module.exports = {
   /** Acknowledges the persisted staff instruction without claiming an external POS transaction occurred. */
   confirm: async function (request, redemption) {
     if (
+      redemption.pricedBenefit ||
+      CONFIG.get("promotion")?.merchantBenefits?.enabled === true
+    )
+      return SERVICE.DefaultDigitalCommercePricedMerchantProviderService.confirm(
+        request,
+        redemption,
+      );
+    if (
       request.merchant?.mode !== "MERCHANT_SCREEN" ||
       request.authData?.principalType !== "human" ||
       request.payload?.confirmed !== true ||
@@ -33,6 +41,12 @@ module.exports = {
       fulfillmentStatus: "COMPLETED",
       mode: "MERCHANT_SCREEN",
       merchantReceiptReference: redemption.merchantReceiptReference,
+      ...(request.merchant.store
+        ? {
+            storeCode: request.merchant.store.code,
+            storeRevision: request.merchant.store.revision,
+          }
+        : {}),
     };
   },
 };

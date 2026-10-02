@@ -30,6 +30,11 @@ Capability builders may project the bounded native `backendWorkspace` variant th
 
 ## Tenant startup completion
 
+Consumer-owned startup refusals must use nService-owned status definitions so
+optional Profile absence cannot mask a held error as an unknown code. Preserve
+content-free projection and fail-closed readiness/provenance; never load Profile
+just to obtain its status catalogue. See `llm/contracts/README.md`.
+
 Enterprise discovery, tenant database/model creation, search setup and initial
 Cron job creation must complete before startup succeeds. Propagate required
 failures; do not launch background enterprise retry loops or a second job

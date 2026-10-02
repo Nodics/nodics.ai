@@ -220,7 +220,7 @@ module.exports = {
                 let engineOptions = SERVICE.DefaultCacheConfigurationService.getCacheEngine(moduleName, engineName);
                 engineOptions.capabilities = _self.validateEngineContract(engineName, engineOptions, engineName);
                 engineOptions.options = engineOptions.options || {};
-                engineOptions.options.prefix = moduleName;
+                engineOptions.options.prefix = engineOptions.options.prefix || moduleName;
                 SERVICE[engineOptions.connectionHandler].initCache(engineOptions, moduleName).then(value => {
                     resolve(value);
                 }).catch(error => {

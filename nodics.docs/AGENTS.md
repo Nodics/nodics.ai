@@ -31,6 +31,12 @@
   a durable screen flow serves the reader better.
 - Report authored, generated/validated, visually reviewed, and published states
   separately. Pack validation is not proof of complete detail across all pages.
+- Framework-marketed product guides belong in this catalogue even when the
+  reference application composes customer-owned adapters. Preserve the distinction
+  between product positioning and runtime ownership. Keep customer-specific
+  deployment runbooks/data with their backend owner; do not relocate those records
+  or invent application-named domain accelerators. Use the Circa topic family as
+  the source-backed depth pattern for later Agora documentation.
 
 Source coverage defaults to metadata-declared module roots within this framework
 checkout. It never auto-selects sibling customer/frontend repositories. To audit

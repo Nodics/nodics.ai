@@ -80,7 +80,7 @@ module.exports = {
         const result = await owner.get({ tenant: request.tenant,
             authData: SERVICE.DefaultIdentityGovernanceService.getSystemAuthData(),
             query: { principalType: 'service', principalCode, scopeType: 'RUNTIME_DEPLOYMENT', tenantCode: request.tenant, enterpriseCode: auth.entCode },
-            options: { recursive: false, limit: 513 } });
+            options: { recursive: false, skipItemCache: true, limit: 513 } });
         if (!result || result.success === false || !/^SUC_/.test(result.code || '') ||
             (result.errors && result.errors.length) || !Array.isArray(result.result) || result.result.length > 512) {
             throw new CLASSES.NodicsError('ERR_AUTH_00003', 'Runtime authorization authority returned an invalid result');
@@ -102,7 +102,7 @@ module.exports = {
             throw new CLASSES.NodicsError('ERR_AUTH_00003', 'No unique approved runtime deployment grant');
         }
         const assignment = effective[0], scope = assignment.runtimeScope;
-        if (!/Local$/u.test(claims.environmentCode) && modules.some(module => !scope.modules.includes(module))) {
+        if (modules.some(module => !scope.modules.includes(module))) {
             throw new CLASSES.NodicsError('ERR_AUTH_00003', 'Requested modules exceed approved runtime deployment scope');
         }
         const principalPermissions = auth.permissions || principal.userGroupPermissions || [];

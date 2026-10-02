@@ -198,6 +198,7 @@ global.SERVICE = {
     },
   },
   DefaultLoggerService: {
+    ...require("../../nConfig/src/service/DefaultLoggerService"),
     createLogger: function () {
       return logger;
     },

@@ -47,7 +47,7 @@ function matches(model, query) {
 function createGeneratedService(store) {
     return {
         get: async function (request) {
-            return { result: store.filter((item) => matches(item, request.query)).map(clone) };
+            return { code: 'SUC_DBS_00000', result: store.filter((item) => matches(item, request.query)).map(clone) };
         },
         save: async function (request) {
             store.push(clone(request.model));
@@ -62,7 +62,7 @@ function createGeneratedService(store) {
                     count += 1;
                 }
             });
-            return { result: { n: count } };
+            return { code: 'SUC_DBS_00000', acknowledged: true, result: { acknowledged: true, matchedCount: count, n: count } };
         },
     };
 }

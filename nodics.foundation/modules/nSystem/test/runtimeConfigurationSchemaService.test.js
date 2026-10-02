@@ -12,9 +12,15 @@
 const assert = require('assert');
 const crypto = require('crypto');
 
+/**
+ * @module nSystem/test/runtimeConfigurationSchemaService
+ * @description Verifies masked configuration DTOs and pre-persistence prerequisites using synthetic in-memory owners only.
+ */
+
 const tenantPatches = [];
 const savedRecords = [];
 const publishedEvents = [];
+let encryptionKey = crypto.createHash('sha256').update('runtime-config-test-key').digest('hex');
 
 global.CONFIG = {
     get: function (key) {
@@ -39,6 +45,10 @@ global.CONFIG = {
                         sensitive: true,
                         path: ['credentials', 'telegram.bot.circa', 'value'],
                         pattern: '^\\d+:[^\\s]+$'
+                    }, {
+                        code: 'enabled',
+                        type: 'boolean',
+                        path: ['channel', 'enabled']
                     }]
                 }
             };
@@ -54,7 +64,7 @@ global.CONFIG = {
         }
         if (key === 'runtimeConfigurationSecurity') {
             return {
-                encryptionKey: crypto.createHash('sha256').update('runtime-config-test-key').digest('hex')
+                encryptionKey: encryptionKey
             };
         }
         return undefined;
@@ -118,6 +128,9 @@ const service = require('../src/service/config/defaultRuntimeConfigurationSchema
     let list = await service.listSchemas({ tenant: 'electronicsTenant' });
     assert.strictEqual(list.data.length, 1);
     assert.strictEqual(list.data[0].fields[0].placeholderValue, undefined);
+    assert.deepStrictEqual(list.data[0].secretPersistence, {
+        required: true, ready: true, reason: 'READY'
+    });
 
     let effective = await service.getEffectiveConfiguration({
         tenant: 'electronicsTenant',
@@ -127,6 +140,7 @@ const service = require('../src/service/config/defaultRuntimeConfigurationSchema
     assert.strictEqual(effective.data.values.botToken.configured, true);
     assert.strictEqual(effective.data.values.botToken.value.includes('test-runtime-secret'), false);
     assert.strictEqual(effective.data.values.botToken.value, '12****et');
+    assert.deepStrictEqual(effective.data.secretPersistence, list.data[0].secretPersistence);
 
     let invalid = await service.validateUpdate({
         schemaCode: 'telegramExternalIdentity',
@@ -183,6 +197,75 @@ const service = require('../src/service/config/defaultRuntimeConfigurationSchema
         schemaCode: 'telegramExternalIdentity',
         httpRequest: { body: { values: { botToken: 'not-a-telegram-token' } } }
     }), error => error.code === 'ERR_SYS_00002' && error.message.includes('pattern'));
+
+    // A stale ready descriptor or caller-supplied readiness cannot authorize a secret write.
+    const configuredKey = encryptionKey;
+    const createRecord = service.createRuntimeConfigurationRecord;
+    const counts = [savedRecords.length, tenantPatches.length, publishedEvents.length];
+    encryptionKey = undefined;
+    service.createRuntimeConfigurationRecord = function () {
+        assert.fail('Missing-key validation must precede record construction and encryption');
+    };
+    try {
+        const blocked = { required: true, ready: false, reason: 'ENCRYPTION_KEY_REQUIRED' };
+        assert.deepStrictEqual((await service.listSchemas({})).data[0].secretPersistence, blocked);
+        const descriptor = await service.getSchema({ schemaCode: 'telegramExternalIdentity' });
+        assert.deepStrictEqual(descriptor.data.secretPersistence, blocked);
+        const current = await service.getEffectiveConfiguration({ schemaCode: 'telegramExternalIdentity' });
+        assert.strictEqual(current.data.status, 'CONFIGURED');
+        assert.deepStrictEqual(current.data.secretPersistence, blocked);
+        const request = {
+            schemaCode: 'telegramExternalIdentity',
+            httpRequest: {
+                body: {
+                    secretPersistence: { ready: true },
+                    values: { botToken: '987654321:test-private-secret' }
+                }
+            }
+        };
+        const validation = await service.validateUpdate(request);
+        assert.strictEqual(validation.code, 'ERR_SYS_00002');
+        assert.deepStrictEqual(validation.data.secretPersistence, blocked);
+        assert(validation.data.errors.some(error => error.includes('encryption key')));
+        assert(validation.data.errors.some(error => error.includes('Sensitive runtime configuration field')));
+        assert.strictEqual(JSON.stringify(validation).includes('test-private-secret'), false);
+        assert.strictEqual(JSON.stringify(current).includes(configuredKey), false);
+        await assert.rejects(
+            () => service.saveUpdate(request),
+            error => error.code === 'ERR_SYS_00002' && error.message.includes('encryption key')
+        );
+        assert.deepStrictEqual([savedRecords.length, tenantPatches.length, publishedEvents.length], counts);
+    } finally {
+        service.createRuntimeConfigurationRecord = createRecord;
+    }
+
+    const ordinaryRequest = {
+        schemaCode: 'telegramExternalIdentity',
+        httpRequest: { body: { values: { enabled: true } } }
+    };
+    const ordinary = await service.validateUpdate(ordinaryRequest);
+    assert.strictEqual(ordinary.data.valid, true);
+    assert.deepStrictEqual(ordinary.data.secretPersistence, {
+        required: false, ready: true, reason: 'NOT_REQUIRED'
+    });
+    assert.strictEqual((await service.saveUpdate(ordinaryRequest)).data.fields.enabled.value, true);
+    assert.deepStrictEqual(service.getSecretPersistenceReadiness({ fields: [] }), ordinary.data.secretPersistence);
+    assert.strictEqual(service.validateValues(service.resolveSchema('telegramExternalIdentity'), { unknown: true }).valid, false);
+    encryptionKey = configuredKey;
+    assert.strictEqual(service.getSecretPersistenceReadiness(service.resolveSchema('telegramExternalIdentity')).ready, true);
+
+    // Later layers retain one mergeable readiness owner; encryption remains independently guarded.
+    const customized = Object.assign({}, service, {
+        resolveEncryptionKey: function () { return undefined; }
+    });
+    const schema = service.resolveSchema('telegramExternalIdentity');
+    assert.strictEqual(customized.describeSchema('telegramExternalIdentity', schema).secretPersistence.ready, false);
+    assert.strictEqual(customized.validateValues(
+        schema,
+        { botToken: '987654321:test-private-secret' },
+        { allowSensitivePlainValue: true }
+    ).valid, false);
+    assert.throws(() => customized.encryptSensitiveValue('test-private-secret'), error => error.code === 'ERR_SYS_00002');
 
     console.log('Runtime configuration schema service contract validated');
 })().catch((error) => {

@@ -16,7 +16,26 @@ necessarily replace an inherited array. See
 [the inheritance contract](llm/contracts/configuration-inheritance-contract.md)
 and [the smallest override example](llm/examples/minimal-configuration.md).
 
+Declared runtime roots may contribute selected data-release role profiles without
+activating their modules. Their `contributions` selectors accumulate with loaded
+role profiles, unlike ordinary positional arrays. See the
+[role-profile contract](llm/contracts/configuration-inheritance-contract.md#capability-role-profiles).
+
+Servers may also explicitly select an inactive owner's bounded capability role
+profile as configuration defaults, without loading its services or widening
+runtime grants. See the [deployment selector example](llm/contracts/configuration-inheritance-contract.md#explicit-inactive-owner-configuration).
+
 ## Developer Notes
+
+- Runtime encryption inputs are mandatory logger-redaction keys. Use
+  `CONFIG.getPublicProperties(tenant)` for authorized outward configuration
+  diagnostics; internal getters retain usable values. Common error DTOs reuse
+  the same sanitizer. See the [privacy contract](llm/contracts/README.md#runtime-encryption-input-privacy).
+  These safeguards do not qualify installed third-party APM capture.
+
+- Private request logging and exact-object entry proof are owned here; use the
+  [capture contract](../nRouter/llm/contracts/request-capture-privacy-contract.md).
+  Preserve pre-buffer suppression and explicitly qualify disabled upstream capture.
 
 - Explicit offline maintenance may load effective services through
   `DefaultFrameworkInitializerService.loadMaintenanceServices` after configuration
@@ -25,6 +44,11 @@ and [the smallest override example](llm/examples/minimal-configuration.md).
 - Keep configuration ownership with the module that owns the behavior.
 - Use pre-start and post-start scripts for controlled lifecycle extension.
 - Preserve redaction for secrets and operational logs.
+- Private `customerEligibilityDecision` metadata is appended to both log
+  configuration defaults and the logger's mandatory baseline. Later layers may
+  add keys but cannot remove this protection or disable the baseline. The
+  eligibility-redaction fixture is authored NOT RUN; installed capture/transport
+  qualification remains separate.
 - Treat runtime-refreshable settings separately from startup-only settings.
 
 ## Documentation

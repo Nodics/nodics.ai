@@ -40,8 +40,12 @@ global.ENUMS = {
 };
 
 const scopeGovernance = require("../src/service/identity/defaultPrincipalScopeGovernanceService");
-const schemaHandler = require(path.join(repositoryRoot,
-  "nodics.foundation/modules/nDatabase/database/src/service/schema/defaultDatabaseSchemaHandlerService"));
+const schemaHandler = require(
+  path.join(
+    repositoryRoot,
+    "nodics.foundation/modules/nDatabase/database/src/service/schema/defaultDatabaseSchemaHandlerService",
+  ),
+);
 const profileSchemas = schemaHandler.applyNamedSchemaPolicies(
   "profile",
   require("../src/schemas/schemas").profile,
@@ -198,6 +202,10 @@ assert.strictEqual(resolved.deniedScopes[0].scopeCode, "defaultContentCatalog");
 
 (async function () {
   global.SERVICE = {
+    DefaultEmployeeService: {
+      get: async () => ({ code: "SUC_READ", count: 0, result: [] }),
+    },
+    DefaultPrincipalSecurityStampGovernanceService: require("../src/service/identity/defaultPrincipalSecurityStampGovernanceService"),
     DefaultIdentityGovernanceService: {
       getSystemAuthData: () => ({ userGroups: ["serviceAccountUserGroup"] }),
     },
@@ -207,8 +215,11 @@ assert.strictEqual(resolved.deniedScopes[0].scopeCode, "defaultContentCatalog");
           code: "adminDefaultEnterprise",
         });
         return Promise.resolve({
+          code: "SUC_READ",
+          count: 1,
           result: [
             {
+              _id: "admin-scope",
               code: "adminDefaultEnterprise",
               principalType: "human",
               principalCode: "admin",

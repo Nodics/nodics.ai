@@ -92,7 +92,7 @@ function fixture(domain = 'example', owner = 'exampleOwner') {
             calls.push(['transport', options]);
             if (options.apiName === '/instances') return { instance: {
                 code: options.requestBody.instanceCode, definitionCode: options.requestBody.definitionCode,
-                version: 1, context: options.requestBody.context } };
+                version: options.requestBody.version || 1, context: options.requestBody.context } };
             return structuredClone(execution);
         } },
     };
@@ -115,6 +115,154 @@ test('approval uses configured domain and original caller on the existing Proces
     assert.equal(f.calls.some(call => call[0] === 'elevate'), false);
     assert.equal(workflow.reference(f.stored), workflow.reference(structuredClone(f.stored)));
     assert.notEqual(workflow.reference({ ...f.stored, revision: 4 }), f.stored.workflowRef);
+});
+
+function requesterReader(f) {
+    f.policy.reviewNodeCode = 'review';
+    f.policy.reviewPermission = 'publish.lifecycle.approve';
+    const invoke = SERVICE.DefaultModuleService.invokeModule;
+    SERVICE.DefaultModuleService.invokeModule = async options => {
+        if (options.methodName !== 'GET') return invoke(options);
+        const definition = { code: f.policy.definitionCode, ownerModule: f.policy.ownerModule,
+            active: true, status: 'PUBLISHED', currentVersion: 2 };
+        return options.apiName.endsWith('/versions') ? [{ definitionCode: definition.code,
+            version: 2, active: true, status: 'PUBLISHED',
+            policy: { actorPolicy: { permission: f.policy.reviewPermission,
+                enterpriseContextField: 'enterpriseCode', requesterContextField: 'requestedBy' } },
+            graph: { nodes: [{ code: 'review', type: 'TASK', policy: { decisionContract: {
+                contractVersion: 1, kind: 'APPROVAL', approveLabel: 'Approve', rejectLabel: 'Reject',
+                reasonLabel: 'Reason', rejectionReasonRequired: true, maximumReasonLength: 1000
+            } } }] } }] : definition;
+    };
+}
+
+async function bindRequester(f) {
+    f.policy.requesterBinding = 'NATIVE_ACTOR';
+    requesterReader(f);
+    const human = { tenant: 'tenant-a', entCode: 'enterprise-a', tokenType: 'access',
+        principalType: 'human', principalId: 'native-principal', loginId: 'maker@example.invalid' };
+    const request = { tenant: 'tenant-a', authData: human,
+        httpRequest: { headers: { authorization: 'Bearer human' }, body: { requestedBy: 'forged' } } };
+    f.stored.requestedBy = human.principalId;
+    const proof = await workflow.approvalEvidence(f.stored, request);
+    f.stored.auditTrail.push({ toState: 'PENDING_APPROVAL', revision: f.stored.revision,
+        details: { workflow: { ...proof, instanceCode: f.stored.workflowRef } } });
+    f.execution.instance.context = workflow.context(f.stored, request);
+    f.execution.instance.version = proof.workflowVersion;
+    return request;
+}
+
+test('native requester uses stored publisher actor and authenticated login namespace, never body identity', async () => {
+    const f = fixture();
+    const human = await bindRequester(f);
+    await workflow.requestApproval(f.stored, human);
+    const transport = f.calls.find(call => call[0] === 'transport')[1];
+    assert.equal(transport.requestBody.context.requestedBy, 'maker@example.invalid');
+    assert.notEqual(transport.requestBody.context.requestedBy, f.stored.requestedBy);
+    assert.equal(transport.requestBody.context.requestedActor, undefined);
+    assert.equal(transport.requestBody.version, 2);
+    assert.equal((await f.apply()).output.state, 'ONLINE');
+    assert.equal((await f.apply()).output.state, 'ONLINE');
+});
+
+test('requester binding rejects wrong native actor, service/system callers and absent native login', async () => {
+    for (const mutate of [
+        request => { request.authData.principalId = 'foreign'; },
+        request => { request.authData.tokenType = 'service'; },
+        request => { request.authData.isSystem = true; },
+        request => { delete request.authData.loginId; },
+        request => { request.authData.entCode = 'foreign'; }
+    ]) {
+        const f = fixture();
+        const human = await bindRequester(f);
+        mutate(human);
+        await assert.rejects(workflow.approvalEvidence(f.stored, human));
+        assert.equal(f.calls.length, 0);
+    }
+});
+
+test('real pending transition journals requester evidence atomically before Process transport', async () => {
+    const f = fixture();
+    f.policy.requesterBinding = 'NATIVE_ACTOR';
+    requesterReader(f);
+    f.settings.publish.providers.workflowProviders = { example: workflow };
+    Object.assign(f.stored, { state: 'VALIDATED', revision: 2, requestedBy: 'native-principal' });
+    const human = { tenant: 'tenant-a', expectedRevision: 2, publicationCode: f.stored.code,
+        authData: { tenant: 'tenant-a', entCode: 'enterprise-a', tokenType: 'access',
+            principalType: 'human', principalId: 'native-principal', loginId: 'maker' },
+        httpRequest: { headers: { authorization: 'Bearer human' } } };
+    f.repository.transitionWithAudit = async (item, expected, patch, audit) => {
+        assert.equal(expected, 2);
+        assert.equal(audit.details.workflow.requestedBy, 'maker');
+        assert.equal(audit.details.workflow.requestedActor, item.requestedBy);
+        assert.equal(f.calls.some(call => call[0] === 'transport'), false);
+        Object.assign(f.stored, patch, { revision: 3 });
+        f.stored.auditTrail.push({ ...audit, revision: 3 });
+        return structuredClone(f.stored);
+    };
+    await SERVICE.DefaultPublicationLifecycleService.requestApproval(human);
+    assert.equal(f.calls.find(call => call[0] === 'transport')[1].requestBody.context.requestedBy, 'maker');
+});
+
+test('claimed foreign requester and corrupted exact-revision journal cannot mutate publication', async () => {
+    for (const mutate of [
+        f => { f.execution.instance.context.requestedBy = 'foreign'; },
+        f => { delete f.execution.instance.context.requestedBy; },
+        f => { f.execution.instance.version = 1; },
+        f => { delete f.stored.auditTrail[0].details.workflow.workflowVersion; },
+        f => { f.stored.auditTrail[0].details.workflow.requestedActor = 'foreign'; },
+        f => { f.stored.auditTrail.push(structuredClone(f.stored.auditTrail[0])); }
+    ]) {
+        const f = fixture();
+        await bindRequester(f);
+        mutate(f);
+        await assert.rejects(f.apply());
+        assert.equal(f.calls.some(call => call[0] === 'transition'), false);
+    }
+});
+
+test('qualified start refuses an older pre-existing Process instance despite matching context', async () => {
+    const f = fixture();
+    const human = await bindRequester(f);
+    SERVICE.DefaultModuleService.invokeModule = async options => ({ instance: {
+        code: options.requestBody.instanceCode, definitionCode: options.requestBody.definitionCode,
+        version: 1, context: options.requestBody.context
+    } });
+    await assert.rejects(workflow.requestApproval(f.stored, human), { code: 'ERR_PUB_00004' });
+    assert.equal(f.calls.some(call => call[0] === 'transition'), false);
+});
+
+test('candidate denial, duplicate versions and pointer races stop before a pending write', async () => {
+    for (const mode of ['denied', 'duplicate', 'legacy', 'race']) {
+        const f = fixture();
+        const human = await bindRequester(f);
+        const original = SERVICE.DefaultModuleService.invokeModule;
+        let definitions = 0;
+        SERVICE.DefaultModuleService.invokeModule = async options => {
+            if (mode === 'denied') throw new Error('read denied');
+            const result = await original(options);
+            if (Array.isArray(result)) {
+                if (mode === 'duplicate') result.push(structuredClone(result[0]));
+                if (mode === 'legacy') delete result[0].policy;
+            } else if (++definitions === 2 && mode === 'race') result.currentVersion = 3;
+            return result;
+        };
+        await assert.rejects(workflow.approvalEvidence(f.stored, human));
+        assert.equal(f.calls.length, 0);
+    }
+});
+
+test('legacy pending instances keep their old callback context but cannot silently start a new bound cycle', async () => {
+    const f = fixture();
+    f.policy.requesterBinding = 'NATIVE_ACTOR';
+    requesterReader(f);
+    f.stored.requestedBy = 'native-principal';
+    const request = { tenant: 'tenant-a', authData: { tenant: 'tenant-a', entCode: 'enterprise-a',
+        tokenType: 'access', principalType: 'human', principalId: 'native-principal', loginId: 'maker' },
+        httpRequest: { headers: { authorization: 'Bearer human' } } };
+    await assert.rejects(workflow.requestApproval(f.stored, request), { code: 'ERR_PUB_00004' });
+    assert.equal(f.calls.length, 0);
+    assert.equal((await f.apply()).output.state, 'ONLINE');
 });
 
 test('source start fails closed for missing caller, wrong role, missing policy and invalid Process response', async () => {

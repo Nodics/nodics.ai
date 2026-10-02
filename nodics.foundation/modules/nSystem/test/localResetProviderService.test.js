@@ -242,6 +242,37 @@ class NodicsError extends Error {
     service.reset({ ...resetRequest, authData: { tokenType: "access" } }),
     /requires a service token/,
   );
+  // A record-reset receipt cannot silently become an offline deployment purge.
+  policy.searchIndexes = [];
+  let recordRemovals = 0;
+  SERVICE.DefaultCatalogService.remove = async (input) => {
+    recordRemovals++;
+    assert.equal(input.tenant, "tenant-a");
+    assert.deepEqual(input.query, { _id: { $ne: null } });
+    assert.equal(input.localResetAuthority, service._authority);
+    return { acknowledged: true };
+  };
+  const forbiddenPurge = () => {
+    throw new Error("Record reset must not purge deployment auth state");
+  };
+  SERVICE.DefaultCacheService = {
+    flushCache: forbiddenPurge,
+    flushByPrefix: forbiddenPurge,
+    flushByKeys: forbiddenPurge,
+  };
+  const recordReceipt = await service.reset({
+    ...resetRequest,
+    dropDatabase: true,
+    databaseNames: ["foreignDatabase"],
+    cachePrefix: "foreignAuthNamespace",
+    clearAuthenticationState: true,
+  });
+  assert.equal(recordRemovals, 1);
+  assert.equal(recordReceipt.acknowledged, true);
+  assert.deepEqual(recordReceipt.services, ["DefaultCatalogService"]);
+  assert.deepEqual(recordReceipt.searchIndexes, []);
+  assert.equal(recordReceipt.authenticationStateCleared, undefined);
+  assert.equal(recordReceipt.databasesDropped, undefined);
   console.log("Local reset provider service contract validated");
 })().catch((error) => {
   console.error(error);

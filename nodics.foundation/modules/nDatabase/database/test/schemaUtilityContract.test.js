@@ -404,6 +404,7 @@ test('canonical discovery enforces permission customization, exposure and inacti
     global._ = require('lodash');
     let handled = 0, rejected = 0;
     SERVICE.DefaultRequestHandlerService = { startRequestHandler: () => handled++ };
+    SERVICE.DefaultLoggerService = require('../../../nConfig/src/service/DefaultLoggerService');
     const router = Object.assign({}, binding, { sendRouterError: () => rejected++ });
     const routes = [definitions.schemaDiscovery.listSchemas, definitions.schemaDiscovery.getSchema];
     assert.equal(definitions.schemaApi, undefined);

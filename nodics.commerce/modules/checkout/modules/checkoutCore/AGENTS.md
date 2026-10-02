@@ -1,5 +1,9 @@
 # Checkout Foundation Agent Contract
 
+Committed coupon notification attempts use the existing Digital Core owner and
+must never enter placement compensation; consult Digital Core's committed
+notification contract. No message may be requested from a pre-commit UI result.
+
 Complete Commerce customer journey acceptance belongs here, not in customer scripts.
 Keep app identifiers, sandbox payment inputs and shipping addresses in customer
 `tooling.acceptance.commerceJourney`; use semantic runtime roles and shared

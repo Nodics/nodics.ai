@@ -1,5 +1,10 @@
 # nPipeline Agent Contract
 
+Preserve the [private request entry contract](../nRouter/llm/contracts/request-capture-privacy-contract.md).
+Carry exact admitted envelopes through dispatch; new mappings inherit only from a
+trusted admitted source. Do not log raw private execution errors or mint admission
+from ambient async context, copied request fields or deployment flags.
+
 This file gives AI coding agents mandatory guidance for this Nodics module or package boundary.
 
 ## Inheritance

@@ -175,6 +175,11 @@ const bootstrapUserGroups = require('../data/init-v001/records/groups/defaultBoo
     const runtimeAuth = { tokenType: 'service', runtimeScope: { instanceCode: 'worker-1' },
         modules: ['profile'], permissions: ['profile.enterprise.search'], entCode: 'electronics', tenant: 'electronicsTenant' };
     const runtimeRequest = { entCode: 'electronics', tenant: 'electronicsTenant', authData: runtimeAuth };
+    SERVICE.DefaultEnterpriseTenantProvisioningService = { rows: async (owner, query) => {
+        assert.strictEqual(owner, 'DefaultTenantService'); assert.strictEqual(query.code, 'electronicsTenant');
+        return [{ code: 'electronicsTenant', active: true, properties: { deploymentSetting: true,
+            enterpriseProvisioning: { setupRequestKey: 'private-excluded' } } }];
+    } };
     let runtimeLookups = 0;
     const runtimeService = { ...enterpriseService, retrieveEnterprise: async code => {
         runtimeLookups++; assert.strictEqual(code, 'electronics');

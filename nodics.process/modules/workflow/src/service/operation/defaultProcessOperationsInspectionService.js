@@ -168,7 +168,10 @@ module.exports = {
             query: this.safeQuery(request, ['instanceCode', 'status', 'assignee']),
             searchOptions: { limit: this.listLimit(request), sort: { dueAt: 1 } }
         }));
-        return { code: 'SUC_PROCESS_00000', data: response.result || [] };
+        const tasks = await SERVICE.DefaultProcessRuntimeLifecycleService.projectTaskDecisions(
+            request, response.result || []
+        );
+        return { code: 'SUC_PROCESS_00000', data: tasks };
     },
 
     /**
@@ -184,7 +187,8 @@ module.exports = {
         }));
         let task = response.result && response.result[0];
         if (!task) throw new CLASSES.NodicsError('ERR_PROCESS_00008', 'Process task was not found');
-        return { code: 'SUC_PROCESS_00000', data: task };
+        const projected = await SERVICE.DefaultProcessRuntimeLifecycleService.projectTaskDecisions(request, [task]);
+        return { code: 'SUC_PROCESS_00000', data: projected[0] };
     },
 
     /** Lists recovery incidents using bounded operational filters. */

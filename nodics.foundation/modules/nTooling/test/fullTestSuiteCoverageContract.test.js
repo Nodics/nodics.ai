@@ -96,6 +96,50 @@ requireSuiteIncludes('full', [
     'basic'
 ]);
 
+// Late lifecycle fixtures must remain explicit, unique and reachable through full.
+const lifecycleSteps = testSuites['enterprise-lifecycle'];
+assert(Array.isArray(lifecycleSteps), 'Missing enterprise-lifecycle suite');
+assert.strictEqual(lifecycleSteps.length, 198, 'Update the reviewed lifecycle inventory when adding fixtures');
+const lifecycleFiles = lifecycleSteps.map(step => {
+    if (step.node === 'node_modules/mocha/bin/mocha.js') {
+        assert.deepStrictEqual(Object.keys(step), ['node', 'args']);
+        assert.deepStrictEqual(step.args.slice(0, 2), ['--reporter', 'dot']);
+        assert.strictEqual(step.args.length, 3);
+        assert([
+            'nodics.wcms/modules/media/test/mediaReadinessAggregateContract.test.js',
+            'nodics.platform/modules/backoffice/test/backofficeStatusReadFanoutContract.test.js'
+        ].includes(step.args[2]), 'Only reviewed Mocha fixtures may use this lifecycle runner');
+        requireFile(step.node);
+        requireFile(step.args[2]);
+        return step.args[2];
+    }
+    assert.deepStrictEqual(Object.keys(step), ['node'], 'Lifecycle entries must be explicit fixture paths');
+    requireFile(step.node);
+    return step.node;
+});
+assert.strictEqual(new Set(lifecycleFiles).size, 198, 'Lifecycle fixture paths must not repeat');
+const lateLifecycleContracts = [
+    'nodics.foundation/modules/nService/test/tenantNamespaceHandshakeContract.test.js',
+    'nodics.foundation/modules/nService/test/tenantStartupCompletionContract.test.js',
+    'nodics.foundation/modules/nService/test/moduleDomainRefusalCircuitContract.test.js',
+    'nodics.foundation/modules/nService/test/moduleTransportFailureClassification.test.js',
+    'nodics.platform/modules/backoffice/test/applicationReadinessEvidenceContract.test.js',
+    'nodics.wcms/modules/media/test/mediaReadinessAggregateContract.test.js',
+    'nodics.platform/modules/backoffice/test/backofficeStatusReadFanoutContract.test.js',
+    'nodics.platform/modules/profile/test/bootstrapIdentityAssessmentContract.test.js',
+    'nodics.platform/modules/profile/test/passwordOwnershipPipelineContract.test.js',
+    'nodics.platform/modules/profile/test/customerRegistrationPlacementContract.test.js',
+    'nodics.foundation/modules/nCommon/test/interceptorOrderingContract.test.js',
+    'nodics.foundation/modules/nDatabase/database/test/nestedImportReplacementContract.test.js',
+    'nodics.foundation/modules/nData/nImport/import/test/importPlacementAdmission.test.js',
+    'nodics.foundation/modules/nData/nImport/import/test/importRetryClassification.test.js',
+    'nodics.foundation/modules/nData/nImport/import/test/startupDestinationOwnership.test.js'
+];
+lateLifecycleContracts.forEach(file => {
+    assert.strictEqual(lifecycleFiles.filter(item => item === file).length, 1, 'Missing or repeated late lifecycle fixture: ' + file);
+    assert(suiteTokens('full').includes(file), 'Full suite must reach the late lifecycle fixture: ' + file);
+});
+
 // Owner contracts must be reachable from both release gates, not only runnable by hand.
 const requiredOwnerContracts = [
     'nodics.foundation/modules/nService/vService/test/managedMutationLayerContract.test.js',

@@ -20,6 +20,18 @@ This file gives AI coding agents mandatory guidance for this Nodics module or pa
 
 ## Authentication And Authorization Rules
 
+- Independent person security bindings validate fail-closed even under legacy
+  policy exceptions. Keep shape/stamps generic; Profile owns identity and context.
+  See the bounded claims contract and `test/independentSecurityBindings.test.js`.
+
+- A bounded person session context uses independent typed bindings rather than
+  the colliding legacy tenant/login stamp. Validate context shape and person
+  access-token type before taking that path; Profile still owns live admission.
+- Qualified `authSecurity.authorizationPolicy` versions invalidate old access
+  and refresh proofs without legacy fail-open exceptions. Keep rollout default
+  off, coordinate the version across runtimes, and increase it on governed policy
+  replacement. This is explicit invalidation, not automatic config-change detection.
+
 - Authentication, authorization, token, service-token, API-key, and security-stamp behavior is security-critical.
 - Do not introduce local fallback for strict distributed auth state.
 - Strict auth cache state must respect layered cache activation: global cache,

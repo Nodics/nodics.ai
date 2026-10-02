@@ -1,5 +1,24 @@
 # Workflow
 
+Human task claims now use stored reviewer policy plus conditional write/readback;
+completion binds the inspected assignee and instance/node. Existing Axis consumers
+retain Process ownership. See the local contract for concurrency and cancellation
+limits; the authored claim fixture is not installed-runtime acceptance.
+
+Task completion/cancellation reject failed or non-acknowledged single-write
+envelopes and require fresh generated-owner readback before audit or advancement.
+Cancellation binds the inspected status/assignee/instance/node. Generic task and
+instance cancellation reject published governed actor policies until a domain
+cancellation contract exists. This safety restriction is not application withdrawal,
+resubmission, expiry or a cross-owner transaction.
+
+Source-owned retirement has a separate default-disabled internal route. It binds
+the signed domain, saved context and exact closure, cancels one waiting governed
+task before its instance, and permits same-command recovery. Completed decisions
+and claimed remote actions are not stolen. Private mutation hooks protect
+retirement evidence; see the owner contract. Fixtures are authored, not executed
+installed-runtime acceptance.
+
 Workflow is the first capability inside the `nodics.process` functional module group. It owns schemas, engine services, and APIs for governed business process definitions, publication, execution, and inspection.
 
 Explicit instance-code retries preserve the original start identity and pinned
@@ -7,6 +26,10 @@ version. Completed starts return existing state; conflicting or interrupted
 starts fail closed instead of executing nodes again. See the
 [runtime authority contract](llm/contracts/README.md#remote-action-authority)
 for recovery limits and focused tests.
+
+Service-owned starts and immutable human-review actor policy use the same
+lifecycle. They are opt-in and preserve domain ownership; see the
+[service admission contract](llm/contracts/README.md#service-owned-starts-and-human-review).
 
 Runtime ownership is organized internally without nested runtime modules:
 

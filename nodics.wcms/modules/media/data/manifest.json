@@ -6,7 +6,7 @@
             "kind": "DATA_RELEASE",
             "selectionPolicy": "EXPLICIT",
             "dataType": "init",
-            "version": "1.0.0",
+            "version": "1.0.1",
             "displayName": "Media Publication Approval",
             "description": "Media-owned exact retained-content approval through Process and nPublish.",
             "owningDomain": "media",
@@ -20,9 +20,9 @@
             "removalPolicy": "RETAIN",
             "installer": "PROCESS_DEFINITION",
             "files": {
-                "init-v002/records/process/mediaPublicationWorkflowDefinitionData.js": "44355063df521b219094703cee293b65df954352e5ced7b77b8b6153acbb5fe9"
+                "init-v003/records/process/mediaPublicationWorkflowDefinitionData.js": "7c16447da08484739a83c314d1349b29edd8ee1b578255eae8e72e105989740f"
             },
-            "sourceRoot": "init-v002"
+            "sourceRoot": "init-v003"
         },
         "mediaReplicationRetryJob": {
             "kind": "DATA_RELEASE",

@@ -27,9 +27,47 @@ module.exports = {
 
   digitalCore: {
     enabled: true,
+    maximumCouponUnitsPerCheckout: 100,
+    notifications: {
+      allowInsecureLoopback: false,
+      enabled: false,
+      qualified: false,
+      workspaceQualified: false,
+      connectionName: "communication",
+      timeoutMilliseconds: 10000,
+      recipientService: "DefaultDigitalCommerceNotificationRecipientService",
+      recipientResolution: {
+        qualified: false,
+        connectionName: null,
+        timeoutMilliseconds: 10000,
+        allowInsecureLoopback: false,
+      },
+      events: { PURCHASED: [], REFUNDED: [] },
+      workspace: {
+        title: "Order Notifications",
+        navigationLabel: "Order Notifications",
+        summary:
+          "Inspect original notification delivery evidence independently of order financial state.",
+        fields: {
+          kind: "Event",
+          expectedRevision: "Order revision",
+          confirmed: "Confirm retry",
+        },
+        commands: {
+          inspect: "Inspect Notification",
+          retry: "Retry Original Notification",
+        },
+      },
+    },
     merchantRedemption: {
       enabled: false,
       providerService: "DefaultDigitalCommerceMerchantScreenProviderService",
+      pricedProvider: { qualified: false },
+      storeScope: { enabled: false, qualified: false },
+      presentation: {
+        storeLabel: "Fulfillment outlet",
+        pricedSourceLabel: "Native basket reference",
+      },
     },
   },
   schemaPolicies: {
@@ -72,6 +110,8 @@ module.exports = {
 
   apiExposure: {
     categories: {
+      commerceNotificationManagement: { enabled: false },
+      commerceNotificationSources: { enabled: false },
       commerceCustomer: {
         enabled: true,
       },

@@ -30,7 +30,6 @@ module.exports = {
             router: { groups: { schemaOperations: true },
                 enabled: true
             },
-            tenants: ['default'],
             definition: {
                 revision: { type: 'int', required: true, default: 1, description: 'Database-managed counter fencing concurrent installation claims and completion' },
                 executionId: { type: 'string', required: false, description: 'Unique attempt identity that owns a running installation receipt' },
@@ -161,7 +160,6 @@ module.exports = {
             router: {
                 enabled: true
             },
-            tenants: ['default'],
             definition: {
                 migration: {
                     type: 'object',

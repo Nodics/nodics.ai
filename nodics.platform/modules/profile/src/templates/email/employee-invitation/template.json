@@ -1,0 +1,30 @@
+{
+  "formatVersion": 1,
+  "code": "profile.employee.invitation",
+  "ownerModule": "profile",
+  "version": 1,
+  "status": "ACTIVE",
+  "purpose": "EMPLOYEE_INVITATION",
+  "sourceModules": ["profile"],
+  "channel": "EMAIL",
+  "defaultLocale": "en",
+  "parameters": {
+    "enterpriseName": {
+      "type": "string",
+      "required": true,
+      "maximumLength": 256
+    },
+    "responsibility": {
+      "type": "string",
+      "required": true,
+      "maximumLength": 256
+    },
+    "nextStep": { "type": "string", "required": true, "maximumLength": 2000 },
+    "brandName": {
+      "type": "string",
+      "required": false,
+      "maximumLength": 120,
+      "default": "Account services"
+    }
+  }
+}

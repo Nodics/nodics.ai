@@ -26,6 +26,16 @@ This package is for framework documentation. Axis product documentation belongs
 to `nodics.platform/modules/axis`; customer/project documentation belongs to the
 owning customer or project documentation package.
 
+Framework product guides include the [Circa/eWaste product journey](docs/pages/accelerators/circa-overview.md),
+with separate data/network, submission, staff/rewards, coupon commerce,
+customization and deployment topics, plus exact collection, enterprise/staff,
+source release, catalogue and configuration references. Five editable architecture
+diagrams illustrate owner boundaries, journeys, record relationships and layers.
+Product presentation does not transfer
+runtime/data ownership out of the underlying framework and customer modules.
+Source capability, staged qualification and published/live acceptance remain
+explicitly distinct. Agora product guides follow the same depth/audience pattern.
+
 Source coverage defaults to metadata-declared module roots within this framework
 checkout. It never auto-selects sibling customer/frontend repositories. To audit
 another owner, pass explicit `--source-root`, `--catalogue` and `--output-dir`;

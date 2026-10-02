@@ -1,0 +1,19 @@
+{
+  "formatVersion": 1,
+  "code": "CONTACT_ACKNOWLEDGEMENT",
+  "ownerModule": "contactSubmission",
+  "version": 2,
+  "status": "ACTIVE",
+  "purpose": "TRANSACTIONAL",
+  "sourceModules": ["contactSubmission"],
+  "channel": "EMAIL",
+  "defaultLocale": "en",
+  "requiresSelection": true,
+  "parameters": {
+    "reference": {
+      "type": "string",
+      "required": true,
+      "maximumLength": 256
+    }
+  }
+}

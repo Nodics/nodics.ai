@@ -30,7 +30,8 @@ module.exports = {
         circuitBreaker: {
             enabled: true,
             failureThreshold: 5,
-            recoveryTimeoutMs: 30000
+            recoveryTimeoutMs: 30000,
+            domainRefusals: {}
         },
         connectionPool: {
             keepAlive: true,

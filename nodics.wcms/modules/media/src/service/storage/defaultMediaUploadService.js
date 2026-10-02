@@ -33,6 +33,62 @@ module.exports = {
     },
 
     /**
+     * Inspects an upload without disclosing storage locators or changing Media.
+     * Matching current versioned bytes may be reused; replacements still require CAS.
+     * @param {Object} request Trusted tenant/principal and desired upload descriptor.
+     * @returns {Promise<Object>} Path-free inspection and current revision.
+     */
+    inspectUpload: async function (request) {
+        if (!request || typeof request.mediaCode !== 'string' || !request.mediaCode.trim() ||
+            request.mediaCode.length > 256 || !/^[a-f0-9]{64}$/.test(request.checksum || '') ||
+            !Number.isSafeInteger(request.sizeBytes) || request.sizeBytes <= 0) {
+            throw new CLASSES.NodicsError('ERR_MED_00001', 'Invalid Media upload inspection');
+        }
+        SERVICE.DefaultMediaStoragePolicyService.validateDescriptor(request);
+        const lifecycle = SERVICE.DefaultMediaLifecycleCoordinationService;
+        const versioned = lifecycle.isVersioned(request);
+        const read = async () => {
+            const response = await SERVICE.DefaultMediaService.get({ tenant: request.tenant, authData: request.authData,
+                query: { code: request.mediaCode }, searchOptions: { limit: 2 } });
+            if (!response || !Array.isArray(response.result)) {
+                throw new CLASSES.NodicsError('ERR_MED_00014', 'Media inspection read was not acknowledged');
+            }
+            return response;
+        };
+        const rows = lifecycle.records(await read());
+        if (rows.length > 1) throw new CLASSES.NodicsError('ERR_MED_00014', 'Ambiguous current Media metadata');
+        const current = rows[0];
+        if (current && current.code !== request.mediaCode) {
+            throw new CLASSES.NodicsError('ERR_MED_00014', 'Media inspection identity mismatch');
+        }
+        const result = { contractVersion: 1, mediaCode: request.mediaCode, versioned: Boolean(versioned),
+            exists: Boolean(current), unchanged: false };
+        if (!current) return result;
+        if (versioned) {
+            if (!Number.isSafeInteger(current.versionId) || current.versionId < 0) {
+                throw new CLASSES.NodicsError('ERR_MED_00014', 'Invalid current Media versionId');
+            }
+            result.versionId = current.versionId;
+        }
+        const fields = ['folderCode', 'formatCode', 'name', 'description', 'businessPurpose', 'ownerType', 'ownerReference', 'mimeType', 'sizeBytes'];
+        if (!versioned || current.status !== 'READY' || current.active !== true ||
+            current.checksumAlgorithm !== 'sha256' || current.checksum !== request.checksum ||
+            fields.some(field => current[field] !== request[field])) return result;
+        const buffer = await SERVICE.DefaultMediaStorageProviderRegistryService.read({ tenant: request.tenant,
+            authData: request.authData, providerCode: current.providerCode, storageKey: current.storageKey,
+            maximumBytes: request.sizeBytes });
+        if (!Buffer.isBuffer(buffer) || buffer.length !== request.sizeBytes ||
+            this.calculateChecksum(buffer, 'sha256') !== request.checksum) return result;
+        // Do not authorize reuse from a version which changed during the provider read.
+        const fresh = lifecycle.records(await read());
+        if (fresh.length !== 1 || fresh[0].versionId !== current.versionId || fresh[0].checksum !== current.checksum) {
+            throw new CLASSES.NodicsError('ERR_MED_00014', 'Media changed during upload inspection');
+        }
+        result.unchanged = true;
+        return result;
+    },
+
+    /**
      * Stores one parsed upload and persists its media metadata.
      *
      * @param {Object} request Upload request.

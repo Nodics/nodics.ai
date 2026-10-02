@@ -9,116 +9,168 @@
 
  */
 
-const assert = require('assert');
-const fs = require('fs');
-const path = require('path');
-const jwt = require('jsonwebtoken');
-const _ = require('lodash');
+const assert = require("assert");
+const fs = require("fs");
+const path = require("path");
+const jwt = require("jsonwebtoken");
+const _ = require("lodash");
 
-const repositoryRoot = path.resolve(__dirname, '../../../..');
-const authSecurity = require('../src/service/security/defaultAuthSecurityService');
-const authDefaults = require('../config/properties').authSecurity;
+const repositoryRoot = path.resolve(__dirname, "../../../..");
+const authSecurity = require("../src/service/security/defaultAuthSecurityService");
+const authDefaults = require("../config/properties").authSecurity;
 
 function configuration(values) {
-    const effective = _.merge({ authSecurity: _.merge({}, authDefaults) }, values || {});
-    return {
-        get: function (key) {
-            return effective[key];
-        }
-    };
+  const effective = _.merge(
+    { authSecurity: _.merge({}, authDefaults) },
+    values || {},
+  );
+  return {
+    get: function (key) {
+      return effective[key];
+    },
+  };
 }
 
-const strongSecret = 'test-only-strong-secret-with-more-than-thirty-two-characters';
+const strongSecret =
+  "test-only-strong-secret-with-more-than-thirty-two-characters";
 const secureConfiguration = configuration({
-    authSecurity: {
-        jwt: {
-            secret: strongSecret,
-            issuer: 'contract-test',
-            audience: 'contract-services',
-            algorithms: ['HS256'],
-            accessTokenExpiresIn: '5m',
-            serviceTokenExpiresIn: '2m'
-        }
+  authSecurity: {
+    jwt: {
+      secret: strongSecret,
+      issuer: "contract-test",
+      audience: "contract-services",
+      algorithms: ["HS256"],
+      accessTokenExpiresIn: "5m",
+      serviceTokenExpiresIn: "2m",
     },
-    profile: {
-        jwtSignOptions: { algorithm: 'HS256' },
-        jwtVerifyOptions: { algorithm: ['HS256'] }
-    }
+  },
+  profile: {
+    jwtSignOptions: { algorithm: "HS256" },
+    jwtVerifyOptions: { algorithm: ["HS256"] },
+  },
 });
 
-assert.throws(() => authSecurity.getJwtSecret(configuration({})), /strong JWT secret/);
-assert.throws(() => authSecurity.getJwtSecret(configuration({ jwtSecretKey: 'nodics' })), /strong JWT secret/);
-assert.throws(() => authSecurity.validateBootstrapIdentity(configuration({})), /Bootstrap identity source/);
-assert.throws(() => authSecurity.validateBootstrapIdentity(configuration({
-    bootstrapIdentity: {
-        source: 'localSample',
-        adminPassword: 'kickoff-local-admin-change-me',
-        servicePassword: 'kickoff-local-service-change-me',
-        serviceApiKey: '944515ac-bbac-51cd-ac7e-3bbbb3c81bff'
-    }
-})), /Local bootstrap identity sources are disabled/);
-assert.throws(() => authSecurity.validateBootstrapIdentity(configuration({
-    bootstrapIdentity: {
-        source: 'environment',
-        adminPassword: 'change-me',
-        servicePassword: 'change-me-too',
-        serviceApiKey: '944515ac-bbac-51cd-ac7e-3bbbb3c81bff'
-    }
-})), /strong bootstrap adminPassword/);
-assert.strictEqual(authSecurity.validateBootstrapIdentity(configuration({
-    authSecurity: {
+assert.throws(
+  () => authSecurity.getJwtSecret(configuration({})),
+  /strong JWT secret/,
+);
+assert.throws(
+  () => authSecurity.getJwtSecret(configuration({ jwtSecretKey: "nodics" })),
+  /strong JWT secret/,
+);
+assert.throws(
+  () => authSecurity.validateBootstrapIdentity(configuration({})),
+  /Bootstrap identity source/,
+);
+assert.throws(
+  () =>
+    authSecurity.validateBootstrapIdentity(
+      configuration({
+        bootstrapIdentity: {
+          source: "localSample",
+          adminPassword: "kickoff-local-admin-change-me",
+          servicePassword: "kickoff-local-service-change-me",
+          serviceApiKey: "944515ac-bbac-51cd-ac7e-3bbbb3c81bff",
+        },
+      }),
+    ),
+  /Local bootstrap identity sources are disabled/,
+);
+assert.throws(
+  () =>
+    authSecurity.validateBootstrapIdentity(
+      configuration({
+        bootstrapIdentity: {
+          source: "environment",
+          adminPassword: "change-me",
+          servicePassword: "change-me-too",
+          serviceApiKey: "944515ac-bbac-51cd-ac7e-3bbbb3c81bff",
+        },
+      }),
+    ),
+  /strong bootstrap adminPassword/,
+);
+assert.strictEqual(
+  authSecurity.validateBootstrapIdentity(
+    configuration({
+      authSecurity: {
         compatibility: {
-            allowLocalBootstrapIdentity: true
-        }
-    },
-    bootstrapIdentity: {
-        source: 'test',
-        adminPassword: 'test-admin-password-12345',
-        servicePassword: 'test-service-password-12345',
-        serviceApiKey: 'test-service-api-key-value-12345678901234567890'
-    }
-})).source, 'test');
-assert.throws(() => authSecurity.getSignOptions(secureConfiguration, { lifetime: true }), /Non-expiring/);
-assert.deepStrictEqual(authSecurity.getVerifyOptions(secureConfiguration).algorithms, ['HS256']);
-assert.strictEqual(authSecurity.getVerifyOptions(secureConfiguration).algorithm, undefined);
-assert.strictEqual(authSecurity.getBrowserAudience(secureConfiguration, 'cms'), 'nodics-module:cms');
-assert.strictEqual(authSecurity.getVerifyOptions(secureConfiguration, {
-    audience: 'nodics-module:cms'
-}).audience, 'nodics-module:cms');
-assert.throws(() => authSecurity.getBrowserAudience(secureConfiguration, '../cms'), /valid target module/);
+          allowLocalBootstrapIdentity: true,
+        },
+      },
+      bootstrapIdentity: {
+        source: "test",
+        adminPassword: "test-admin-password-12345",
+        servicePassword: "test-service-password-12345",
+        serviceApiKey: "test-service-api-key-value-12345678901234567890",
+      },
+    }),
+  ).source,
+  "test",
+);
+assert.throws(
+  () => authSecurity.getSignOptions(secureConfiguration, { lifetime: true }),
+  /Non-expiring/,
+);
+assert.deepStrictEqual(
+  authSecurity.getVerifyOptions(secureConfiguration).algorithms,
+  ["HS256"],
+);
+assert.strictEqual(
+  authSecurity.getVerifyOptions(secureConfiguration).algorithm,
+  undefined,
+);
+assert.strictEqual(
+  authSecurity.getBrowserAudience(secureConfiguration, "cms"),
+  "nodics-module:cms",
+);
+assert.strictEqual(
+  authSecurity.getVerifyOptions(secureConfiguration, {
+    audience: "nodics-module:cms",
+  }).audience,
+  "nodics-module:cms",
+);
+assert.throws(
+  () => authSecurity.getBrowserAudience(secureConfiguration, "../cms"),
+  /valid target module/,
+);
 
 global.CONFIG = secureConfiguration;
 global.CLASSES = {
-    NodicsError: class NodicsError extends Error {
-        constructor(error) {
-            super(error && error.message || String(error));
-        }
-    },
-    CacheError: class CacheError extends Error {}
+  NodicsError: class NodicsError extends Error {
+    constructor(error) {
+      super((error && error.message) || String(error));
+    }
+  },
+  CacheError: class CacheError extends Error {},
 };
 global.SERVICE = {
-    DefaultAuthSecurityService: authSecurity
+  DefaultAuthSecurityService: authSecurity,
 };
 
-const provider = require('../src/service/authentication/defaultAuthenticationProviderService');
+const provider = require("../src/service/authentication/defaultAuthenticationProviderService");
 const accessToken = provider.generateAuthToken({
-    entCode: 'enterprise-a',
-    tenant: 'tenant-a',
-    loginId: 'user-a',
-    principalType: 'customer',
-    authVersion: 7,
-    refreshToken: 'must-not-leak',
-    apiKey: 'must-not-leak',
-    userGroups: ['userGroup'],
-    permissions: ['profile.read']
+  entCode: "enterprise-a",
+  tenant: "tenant-a",
+  loginId: "user-a",
+  principalType: "customer",
+  authVersion: 7,
+  refreshToken: "must-not-leak",
+  apiKey: "must-not-leak",
+  userGroups: ["userGroup"],
+  permissions: ["profile.read"],
 });
-const payload = jwt.verify(accessToken, strongSecret, authSecurity.getVerifyOptions(secureConfiguration));
-assert.strictEqual(payload.entCode, 'enterprise-a');
-assert.strictEqual(payload.tenant, 'tenant-a');
-assert.strictEqual(payload.tokenType, 'access');
-assert.strictEqual(payload.principalType, 'customer');
-assert.strictEqual(payload.iss, 'contract-test');
-assert.strictEqual(payload.aud, 'contract-services');
+const payload = jwt.verify(
+  accessToken,
+  strongSecret,
+  authSecurity.getVerifyOptions(secureConfiguration),
+);
+assert.strictEqual(payload.entCode, "enterprise-a");
+assert.strictEqual(payload.tenant, "tenant-a");
+assert.strictEqual(payload.tokenType, "access");
+assert.strictEqual(payload.principalType, "customer");
+assert.strictEqual(payload.iss, "contract-test");
+assert.strictEqual(payload.aud, "contract-services");
 assert.ok(payload.exp > payload.iat);
 assert.ok(payload.jti);
 assert.strictEqual(payload.refreshToken, undefined);
@@ -127,259 +179,579 @@ assert.strictEqual(payload.password, undefined);
 assert.strictEqual(payload.authVersion, 7);
 
 const cmsAccessToken = provider.generateAuthToken({
-    entCode: 'enterprise-a',
-    tenant: 'tenant-a',
-    loginId: 'user-a',
-    principalType: 'human',
-    audience: authSecurity.getBrowserAudience(secureConfiguration, 'cms'),
-    tokenLife: '5m'
+  entCode: "enterprise-a",
+  tenant: "tenant-a",
+  loginId: "user-a",
+  principalType: "human",
+  audience: authSecurity.getBrowserAudience(secureConfiguration, "cms"),
+  tokenLife: "5m",
 });
-assert.strictEqual(jwt.verify(cmsAccessToken, strongSecret, authSecurity.getVerifyOptions(secureConfiguration, {
-    audience: 'nodics-module:cms'
-})).aud, 'nodics-module:cms');
-assert.throws(() => jwt.verify(cmsAccessToken, strongSecret, authSecurity.getVerifyOptions(secureConfiguration, {
-    audience: 'nodics-module:backoffice'
-})), /audience/);
+assert.strictEqual(
+  jwt.verify(
+    cmsAccessToken,
+    strongSecret,
+    authSecurity.getVerifyOptions(secureConfiguration, {
+      audience: "nodics-module:cms",
+    }),
+  ).aud,
+  "nodics-module:cms",
+);
+assert.throws(
+  () =>
+    jwt.verify(
+      cmsAccessToken,
+      strongSecret,
+      authSecurity.getVerifyOptions(secureConfiguration, {
+        audience: "nodics-module:backoffice",
+      }),
+    ),
+  /audience/,
+);
 
 const serviceToken = provider.generateAuthToken({
-    entCode: 'enterprise-a',
-    tenant: 'tenant-a',
-    tokenType: 'service',
-    serviceId: 'module-a',
-    runtimeInstanceId: 'runtime-a',
-    modules: ['module-a', 'module-b']
+  entCode: "enterprise-a",
+  tenant: "tenant-a",
+  tokenType: "service",
+  serviceId: "module-a",
+  runtimeInstanceId: "runtime-a",
+  modules: ["module-a", "module-b"],
 });
-const servicePayload = jwt.verify(serviceToken, strongSecret, authSecurity.getVerifyOptions(secureConfiguration));
-assert.strictEqual(servicePayload.tokenType, 'service');
-assert.strictEqual(servicePayload.serviceId, 'module-a');
-assert.strictEqual(servicePayload.runtimeInstanceId, 'runtime-a');
-assert.deepStrictEqual(servicePayload.modules, ['module-a', 'module-b']);
+const servicePayload = jwt.verify(
+  serviceToken,
+  strongSecret,
+  authSecurity.getVerifyOptions(secureConfiguration),
+);
+assert.strictEqual(servicePayload.tokenType, "service");
+assert.strictEqual(servicePayload.serviceId, "module-a");
+assert.strictEqual(servicePayload.runtimeInstanceId, "runtime-a");
+assert.deepStrictEqual(servicePayload.modules, ["module-a", "module-b"]);
 assert.ok(servicePayload.exp > servicePayload.iat);
 
-const passwordInterceptor = require(path.join(repositoryRoot, 'nodics.platform/modules/profile/src/service/interceptors/defaultPasswordSaveInterceptorService'));
+const passwordInterceptor = require(
+  path.join(
+    repositoryRoot,
+    "nodics.platform/modules/profile/src/service/interceptors/defaultPasswordSaveInterceptorService",
+  ),
+);
+const credentialInventory = require(
+  path.join(
+    repositoryRoot,
+    "nodics.platform/modules/profile/src/service/identity/defaultPrincipalSecurityStampGovernanceService",
+  ),
+);
 let hashCalls = 0;
 global.UTILS = {
-    encryptPassword: function (password) {
-        hashCalls += 1;
-        return Promise.resolve('$2a$10$generated-for-' + password);
-    }
+  encryptPassword: function (password) {
+    hashCalls += 1;
+    return Promise.resolve("$2a$10$generated-for-" + password);
+  },
 };
 
 async function validateAsyncContracts() {
-    const longPasswordRequest = { model: { password: 'a-plain-text-password-longer-than-the-old-limit' } };
-    await passwordInterceptor.encryptPassword(longPasswordRequest, {});
-    assert.strictEqual(hashCalls, 1, 'Long plaintext passwords must be hashed');
-    assert.ok(longPasswordRequest.model.password.startsWith('$2a$10$'));
+  const schemaModel = { schemaName: "password", rawSchema: {} };
+  const originalCredential = {
+    _id: "credential-user-a",
+    code: "credential_user_a",
+    loginId: "user-a",
+    active: true,
+    password: "$2a$10$1234567890123456789012existinghashvalue",
+  };
+  const inventoryResponse = (rows) => ({
+    code: "SUC_FIXTURE",
+    result: rows,
+    count: rows.length,
+  });
+  // Fresh generated owner reads model a single original principal, not an embedded hash or a guard bypass.
+  global.SERVICE.DefaultPrincipalSecurityStampGovernanceService =
+    credentialInventory;
+  global.SERVICE.DefaultIdentityGovernanceService = {
+    getSystemAuthData: () => ({
+      isSystem: true,
+      userGroups: ["serviceAccountUserGroup"],
+      permissions: [],
+    }),
+  };
+  global.SERVICE.DefaultPasswordService = {
+    get: async (request) =>
+      inventoryResponse(
+        request.tenant === "tenant-a" &&
+          request.query._id === originalCredential._id
+          ? [{ ...originalCredential }]
+          : [],
+      ),
+  };
+  global.SERVICE.DefaultEmployeeService = {
+    get: async (request) =>
+      inventoryResponse(
+        request.tenant === "tenant-a" &&
+          request.query.password === originalCredential._id
+          ? [
+              {
+                _id: "employee-user-a",
+                loginId: "user-a",
+                password: originalCredential._id,
+              },
+            ]
+          : [],
+      ),
+  };
+  global.SERVICE.DefaultCustomerService = {
+    get: async () => inventoryResponse([]),
+  };
+  const longPasswordRequest = {
+    tenant: "tenant-a",
+    schemaModel,
+    model: {
+      loginId: "new-user",
+      password: "a-plain-text-password-longer-than-the-old-limit",
+    },
+  };
+  await passwordInterceptor.encryptPassword(longPasswordRequest, {});
+  assert.strictEqual(hashCalls, 1, "Long plaintext passwords must be hashed");
+  assert.ok(longPasswordRequest.model.password.startsWith("$2a$10$"));
 
-    const existingHashRequest = { model: { password: '$2a$10$1234567890123456789012existinghashvalue' } };
-    await passwordInterceptor.encryptPassword(existingHashRequest, {});
-    assert.strictEqual(hashCalls, 1, 'Existing bcrypt hashes must not be hashed again');
+  const existingHashRequest = {
+    tenant: "tenant-a",
+    schemaModel,
+    query: { _id: originalCredential._id },
+    model: {
+      loginId: originalCredential.loginId,
+      password: originalCredential.password,
+    },
+  };
+  await passwordInterceptor.encryptPassword(existingHashRequest, {});
+  assert.strictEqual(
+    hashCalls,
+    1,
+    "Existing bcrypt hashes must not be hashed again",
+  );
+  assert.strictEqual(
+    existingHashRequest.query.loginId,
+    originalCredential.loginId,
+  );
+  assert.strictEqual(existingHashRequest.options.upsert, false);
+  await assert.rejects(
+    passwordInterceptor.encryptPassword(
+      {
+        tenant: "tenant-a",
+        schemaModel,
+        query: { _id: originalCredential._id },
+        model: { loginId: "another-owner", password: "must-never-be-hashed" },
+      },
+      {},
+    ),
+    /ERR_PROFILE_CREDENTIAL_OWNERSHIP/,
+  );
+  assert.strictEqual(hashCalls, 1, "Owner mismatch must reject before hashing");
 
-    let persistedState;
-    global.SERVICE = {
-        DefaultIdentityGovernanceService: {
-            getSystemAuthData: function () {
-                return { isSystem: true, userGroups: ['serviceAccountUserGroup'], permissions: [] };
-            }
+  let persistedState;
+  global.SERVICE = {
+    DefaultAuthSecurityService: authSecurity,
+    DefaultIdentityGovernanceService: {
+      getSystemAuthData: function () {
+        return {
+          isSystem: true,
+          userGroups: ["serviceAccountUserGroup"],
+          permissions: [],
+        };
+      },
+    },
+    DefaultUserStateService: {
+      findUserState: async () => ({ locked: false }),
+      save: function (request) {
+        persistedState = request.model;
+        return Promise.resolve(true);
+      },
+    },
+  };
+  global.CONFIG = configuration({ attemptsToLockAccount: 5 });
+  const profileProvider = require(
+    path.join(
+      repositoryRoot,
+      "nodics.platform/modules/profile/src/service/authentication/defaultAuthenticationProviderService",
+    ),
+  );
+  profileProvider.LOG = { debug: function () {}, error: function () {} };
+  await profileProvider.updateFailedAuthData({
+    tenant: "tenant-a",
+    state: { attempts: 4, locked: false },
+  });
+  assert.strictEqual(persistedState.attempts, 5);
+  assert.strictEqual(
+    persistedState.locked,
+    true,
+    "The threshold attempt must lock the account",
+  );
+
+  let refreshSessions = {
+    "old-refresh-token": {
+      type: "Employee",
+      entCode: "enterprise-a",
+      tenant: "tenant-a",
+      loginId: "user-a",
+      principalType: "human",
+      authVersion: 7,
+      userGroups: ["userGroup"],
+      permissions: ["profile.read"],
+    },
+  };
+  profileProvider.findToken = function (moduleName, token) {
+    return refreshSessions[token]
+      ? Promise.resolve(refreshSessions[token])
+      : Promise.reject(new Error("missing"));
+  };
+  profileProvider.consumeToken = function (moduleName, token) {
+    if (!refreshSessions[token]) return Promise.reject(new Error("missing"));
+    let session = refreshSessions[token];
+    delete refreshSessions[token];
+    return Promise.resolve(session);
+  };
+  profileProvider.removeToken = function (moduleName, token) {
+    delete refreshSessions[token];
+    return Promise.resolve(true);
+  };
+  profileProvider.addToken = function (moduleName, expirable, token, value) {
+    refreshSessions[token] = value;
+    return Promise.resolve(true);
+  };
+  profileProvider.generateAuthToken = function () {
+    return "rotated-access-token";
+  };
+  profileProvider.recordAuthEvent = function () {
+    return Promise.resolve(true);
+  };
+  global.SERVICE.DefaultEnterpriseService = {
+    retrieveEnterprise: function () {
+      return Promise.resolve({
+        active: true,
+        tenant: { code: "tenant-a", active: true },
+      });
+    },
+  };
+  global.SERVICE.DefaultEmployeeService = {
+    get: async () =>
+      inventoryResponse([
+        {
+          _id: "employee-user-a",
+          loginId: "user-a",
+          password: originalCredential._id,
         },
-        DefaultUserStateService: {
-            findUserState: async () => ({locked: false}),
-            save: function (request) {
-                persistedState = request.model;
-                return Promise.resolve(true);
-            }
-        }
-    };
-    global.CONFIG = configuration({ attemptsToLockAccount: 5 });
-    const profileProvider = require(path.join(repositoryRoot, 'nodics.platform/modules/profile/src/service/authentication/defaultAuthenticationProviderService'));
-    profileProvider.LOG = { debug: function () {}, error: function () {} };
-    await profileProvider.updateFailedAuthData({ tenant: 'tenant-a', state: { attempts: 4, locked: false } });
-    assert.strictEqual(persistedState.attempts, 5);
-    assert.strictEqual(persistedState.locked, true, 'The threshold attempt must lock the account');
+      ]),
+    findByLoginId: function (request) {
+      assert.deepStrictEqual(request.options, {
+        recursive: false,
+        skipItemCache: true,
+      });
+      return Promise.resolve({
+        _id: "employee-user-a",
+        loginId: "user-a",
+        active: true,
+        password: originalCredential._id,
+        principalType: "human",
+        authVersion: 7,
+        userGroupCodes: ["userGroup"],
+        userGroupPermissions: ["profile.read"],
+      });
+    },
+  };
+  global.SERVICE.DefaultPasswordSaveInterceptorService = passwordInterceptor;
+  global.SERVICE.DefaultPrincipalSecurityStampGovernanceService =
+    credentialInventory;
+  global.SERVICE.DefaultPasswordService = {
+    get: async () => inventoryResponse([{ ...originalCredential }]),
+  };
+  global.SERVICE.DefaultCustomerService = {
+    get: async () => inventoryResponse([]),
+  };
+  global.CONFIG = configuration({
+    profileModuleName: "profile",
+    authSecurity: { refreshToken: { expiresInSeconds: 3600 } },
+  });
+  const rotated = await profileProvider.rotateRefreshToken({
+    refreshToken: "old-refresh-token",
+  });
+  assert.strictEqual(rotated.authToken, "rotated-access-token");
+  assert.notStrictEqual(rotated.refreshToken, "old-refresh-token");
+  assert.strictEqual(
+    refreshSessions["old-refresh-token"],
+    undefined,
+    "Refresh tokens must be single-use",
+  );
+  await assert.rejects(
+    profileProvider.rotateRefreshToken({ refreshToken: "old-refresh-token" }),
+  );
 
-    let refreshSessions = {
-        'old-refresh-token': {
-            entCode: 'enterprise-a', tenant: 'tenant-a', loginId: 'user-a',
-            principalType: 'human', authVersion: 7, userGroups: ['userGroup'], permissions: ['profile.read']
-        }
-    };
-    profileProvider.findToken = function (moduleName, token) {
-        return refreshSessions[token] ? Promise.resolve(refreshSessions[token]) : Promise.reject(new Error('missing'));
-    };
-    profileProvider.consumeToken = function (moduleName, token) {
-        if (!refreshSessions[token]) return Promise.reject(new Error('missing'));
-        let session = refreshSessions[token];
-        delete refreshSessions[token];
-        return Promise.resolve(session);
-    };
-    profileProvider.removeToken = function (moduleName, token) {
-        delete refreshSessions[token];
+  let atomicSession = { tenant: "tenant-a" };
+  let consumes = 0;
+  global.SERVICE.DefaultCacheService = {
+    consume: function () {
+      consumes += 1;
+      if (consumes > 1) return Promise.reject(new Error("already consumed"));
+      return Promise.resolve(atomicSession);
+    },
+  };
+  const baseProvider = require(
+    path.join(
+      repositoryRoot,
+      "nodics.foundation/modules/nService/src/service/authentication/defaultAuthenticationProviderService",
+    ),
+  );
+  assert.strictEqual(
+    await baseProvider.consumeToken("profile", "single-use-token"),
+    atomicSession,
+  );
+  await assert.rejects(
+    baseProvider.consumeToken("profile", "single-use-token"),
+  );
+
+  let localValues = new Map([
+    ["auth_profile_refresh-token", { tenant: "tenant-a" }],
+  ]);
+  let localClient = {
+    get: (key) => localValues.get(key),
+    del: (key) => localValues.delete(key),
+  };
+  const localCache = require(
+    path.join(
+      repositoryRoot,
+      "nodics.foundation/modules/nCache/nodeCache/src/service/cache/defaultLocalCacheService",
+    ),
+  );
+  global.SERVICE.DefaultCacheConfigurationService = require(
+    path.join(
+      repositoryRoot,
+      "nodics.foundation/modules/nCache/cache/src/service/config/defaultCacheConfigurationService",
+    ),
+  );
+  let localOptions = {
+    key: "refresh-token",
+    channel: {
+      channelName: "auth",
+      engineOptions: { options: { prefix: "profile" } },
+      client: localClient,
+    },
+  };
+  assert.strictEqual(
+    (await localCache.consume(localOptions)).tenant,
+    "tenant-a",
+  );
+  await assert.rejects(
+    localCache.consume(localOptions),
+    "A locally consumed refresh session must not be reusable",
+  );
+
+  global.NODICS = {
+    getInternalAuthToken: function () {
+      return "internal-token";
+    },
+  };
+  const InternalError = class InternalError extends Error {
+    constructor(code, message) {
+      super(message || code);
+      this.code = code;
+    }
+  };
+  global.CLASSES = { NodicsError: InternalError };
+  const internalProviderPath = path.join(
+    repositoryRoot,
+    "nodics.platform/modules/profile/src/service/authentication/defaultInternalAuthenticationProviderService",
+  );
+  delete require.cache[require.resolve(internalProviderPath)];
+  const internalProvider = require(internalProviderPath);
+  global.SERVICE.DefaultRuntimeAuthorizationService = require(
+    path.join(
+      repositoryRoot,
+      "nodics.platform/modules/profile/src/service/identity/defaultRuntimeAuthorizationService",
+    ),
+  );
+  await assert.rejects(
+    internalProvider.getInternalAuthToken({
+      tenant: "tenant-b",
+      authData: { tenant: "tenant-a", permissions: [] },
+    }),
+    (error) => error.code === "ERR_AUTH_00003",
+  );
+  await assert.rejects(
+    internalProvider.getInternalAuthToken({
+      tenant: "tenant-b",
+      authData: {
+        tenant: "tenant-a",
+        permissions: ["auth.internal.token.read.anyTenant"],
+      },
+    }),
+    (error) => error.code === "ERR_AUTH_00003",
+  );
+
+  global.CONFIG = secureConfiguration;
+  global.CLASSES = {
+    NodicsError: class NodicsError extends Error {
+      constructor(error, message) {
+        super(message || (error && error.message) || String(error));
+      }
+    },
+  };
+  global.SERVICE = {
+    DefaultAuthSecurityService: authSecurity,
+    DefaultAuthenticationProviderService: {
+      isTokenRevoked: function () {
+        return Promise.resolve(false);
+      },
+    },
+    DefaultPrincipalSecurityStampService: {
+      validate: function () {
         return Promise.resolve(true);
-    };
-    profileProvider.addToken = function (moduleName, expirable, token, value) {
-        refreshSessions[token] = value;
-        return Promise.resolve(true);
-    };
-    profileProvider.generateAuthToken = function () { return 'rotated-access-token'; };
-    profileProvider.recordAuthEvent = function () { return Promise.resolve(true); };
-    global.SERVICE.DefaultEnterpriseService = {
-        retrieveEnterprise: function () {
-            return Promise.resolve({ active: true, tenant: { code: 'tenant-a', active: true } });
-        }
-    };
-    global.SERVICE.DefaultEmployeeService = {
-        findByLoginId: function () {
-            return Promise.resolve({ active: true, password: {active: true}, principalType: 'human', authVersion: 7, userGroupCodes: ['userGroup'], userGroupPermissions: ['profile.read'] });
-        }
-    };
-    global.CONFIG = configuration({ profileModuleName: 'profile', authSecurity: { refreshToken: { expiresInSeconds: 3600 } } });
-    const rotated = await profileProvider.rotateRefreshToken({ refreshToken: 'old-refresh-token' });
-    assert.strictEqual(rotated.authToken, 'rotated-access-token');
-    assert.notStrictEqual(rotated.refreshToken, 'old-refresh-token');
-    assert.strictEqual(refreshSessions['old-refresh-token'], undefined, 'Refresh tokens must be single-use');
-    await assert.rejects(profileProvider.rotateRefreshToken({ refreshToken: 'old-refresh-token' }));
+      },
+    },
+  };
+  const authorizationProviderPath = path.join(
+    repositoryRoot,
+    "nodics.foundation/modules/nService/src/service/authorization/defaultAuthorizationProviderService",
+  );
+  delete require.cache[require.resolve(authorizationProviderPath)];
+  const authorizationProvider = require(authorizationProviderPath);
+  const expiredToken = jwt.sign(
+    {
+      entCode: "enterprise-a",
+      tenant: "tenant-a",
+      loginId: "user-a",
+      tokenType: "access",
+      authVersion: 7,
+    },
+    strongSecret,
+    {
+      algorithm: "HS256",
+      issuer: "contract-test",
+      audience: "contract-services",
+      expiresIn: -1,
+      jwtid: "expired-token-id",
+    },
+  );
+  await assert.rejects(
+    authorizationProvider.authorizeToken({ authToken: expiredToken }),
+    /expired/i,
+    "Expired browser access tokens must fail before authorization",
+  );
 
-    let atomicSession = { tenant: 'tenant-a' };
-    let consumes = 0;
-    global.SERVICE.DefaultCacheService = {
-        consume: function () {
-            consumes += 1;
-            if (consumes > 1) return Promise.reject(new Error('already consumed'));
-            return Promise.resolve(atomicSession);
-        }
+  global.SERVICE.DefaultAuthenticationProviderService.isTokenRevoked =
+    function () {
+      return Promise.resolve(true);
     };
-    const baseProvider = require(path.join(repositoryRoot, 'nodics.foundation/modules/nService/src/service/authentication/defaultAuthenticationProviderService'));
-    assert.strictEqual(await baseProvider.consumeToken('profile', 'single-use-token'), atomicSession);
-    await assert.rejects(baseProvider.consumeToken('profile', 'single-use-token'));
+  await assert.rejects(
+    authorizationProvider.authorizeToken({ authToken: accessToken }),
+    /revoked/i,
+    "Revoked browser access tokens must fail before authorization",
+  );
 
-    let localValues = new Map([['auth_profile_refresh-token', { tenant: 'tenant-a' }]]);
-    let localClient = {
-        get: key => localValues.get(key),
-        del: key => localValues.delete(key)
-    };
-    const localCache = require(path.join(repositoryRoot, 'nodics.foundation/modules/nCache/nodeCache/src/service/cache/defaultLocalCacheService'));
-    global.SERVICE.DefaultCacheConfigurationService = require(path.join(repositoryRoot, 'nodics.foundation/modules/nCache/cache/src/service/config/defaultCacheConfigurationService'));
-    let localOptions = {
-        key: 'refresh-token',
-        channel: { channelName: 'auth', engineOptions: { options: { prefix: 'profile' } }, client: localClient }
-    };
-    assert.strictEqual((await localCache.consume(localOptions)).tenant, 'tenant-a');
-    await assert.rejects(localCache.consume(localOptions), 'A locally consumed refresh session must not be reusable');
+  let revokedAccessToken;
+  let removedRefreshToken;
+  profileProvider.revokeAccessToken = function (authData) {
+    revokedAccessToken = authData.jti;
+    return Promise.resolve(true);
+  };
+  profileProvider.removeToken = function (moduleName, token) {
+    removedRefreshToken = { moduleName: moduleName, token: token };
+    return Promise.resolve(true);
+  };
+  profileProvider.recordAuthEvent = function () {
+    return Promise.resolve(true);
+  };
+  await profileProvider.revokeSession({
+    authData: {
+      jti: "logout-access-token-id",
+      tenant: "tenant-a",
+      entCode: "enterprise-a",
+      loginId: "user-a",
+    },
+    refreshToken: "logout-refresh-token",
+  });
+  assert.strictEqual(revokedAccessToken, "logout-access-token-id");
+  assert.deepStrictEqual(removedRefreshToken, {
+    moduleName: "profile",
+    token: "logout-refresh-token",
+  });
 
-    global.NODICS = { getInternalAuthToken: function () { return 'internal-token'; } };
-    const InternalError = class InternalError extends Error {
-        constructor(code, message) { super(message || code); this.code = code; }
+  const employeeOwner = require(
+    path.join(
+      repositoryRoot,
+      "nodics.platform/modules/profile/src/service/employee/defaultEmployeeService",
+    ),
+  );
+  global.CONFIG = configuration({
+    authSecurity: {
+      apiKey: { requireScopes: true, allowLegacyHumanPrincipals: false },
+    },
+  });
+  global.SERVICE = {
+    DefaultAPIKeyCredentialService: { digest: () => "fixture-digest" },
+    DefaultIdentityGovernanceService: {
+      getSystemAuthData: () => ({ isSystem: true }),
+    },
+  };
+  for (const status of [
+    "active",
+    "revoked",
+    "inactive",
+    "disabled",
+    "pending",
+  ]) {
+    const principal = {
+      principalType: "service",
+      active: true,
+      apiKeyStatus: status,
+      apiKeyScopes: ["profile.read"],
     };
-    global.CLASSES = { NodicsError: InternalError };
-    const internalProviderPath = path.join(repositoryRoot, 'nodics.platform/modules/profile/src/service/authentication/defaultInternalAuthenticationProviderService');
-    delete require.cache[require.resolve(internalProviderPath)];
-    const internalProvider = require(internalProviderPath);
-    global.SERVICE.DefaultRuntimeAuthorizationService = require(path.join(repositoryRoot, 'nodics.platform/modules/profile/src/service/identity/defaultRuntimeAuthorizationService'));
-    await assert.rejects(
-        internalProvider.getInternalAuthToken({ tenant: 'tenant-b', authData: { tenant: 'tenant-a', permissions: [] } }),
-        error => error.code === 'ERR_AUTH_00003'
-    );
-    await assert.rejects(internalProvider.getInternalAuthToken({
-        tenant: 'tenant-b',
-        authData: { tenant: 'tenant-a', permissions: ['auth.internal.token.read.anyTenant'] }
-    }), error => error.code === 'ERR_AUTH_00003');
-
-    global.CONFIG = secureConfiguration;
-    global.CLASSES = {
-        NodicsError: class NodicsError extends Error {
-            constructor(error, message) {
-                super(message || error && error.message || String(error));
-            }
-        }
+    const owner = {
+      ...employeeOwner,
+      get: async (request) => {
+        assert.deepStrictEqual(request.query, {
+          active: true,
+          apiKeyHash: "fixture-digest",
+        });
+        return { result: [principal] };
+      },
     };
-    global.SERVICE = {
-        DefaultAuthSecurityService: authSecurity,
-        DefaultAuthenticationProviderService: {
-            isTokenRevoked: function () {
-                return Promise.resolve(false);
-            }
-        },
-        DefaultPrincipalSecurityStampService: {
-            validate: function () {
-                return Promise.resolve(true);
-            }
-        }
-    };
-    const authorizationProviderPath = path.join(repositoryRoot, 'nodics.foundation/modules/nService/src/service/authorization/defaultAuthorizationProviderService');
-    delete require.cache[require.resolve(authorizationProviderPath)];
-    const authorizationProvider = require(authorizationProviderPath);
-    const expiredToken = jwt.sign({
-        entCode: 'enterprise-a',
-        tenant: 'tenant-a',
-        loginId: 'user-a',
-        tokenType: 'access',
-        authVersion: 7
-    }, strongSecret, {
-        algorithm: 'HS256',
-        issuer: 'contract-test',
-        audience: 'contract-services',
-        expiresIn: -1,
-        jwtid: 'expired-token-id'
+    const lookup = owner.findByAPIKey({
+      tenant: "tenant-a",
+      apiKey: "fixture-proof",
     });
-    await assert.rejects(
-        authorizationProvider.authorizeToken({ authToken: expiredToken }),
-        /expired/i,
-        'Expired browser access tokens must fail before authorization'
-    );
-
-    global.SERVICE.DefaultAuthenticationProviderService.isTokenRevoked = function () {
-        return Promise.resolve(true);
-    };
-    await assert.rejects(
-        authorizationProvider.authorizeToken({ authToken: accessToken }),
-        /revoked/i,
-        'Revoked browser access tokens must fail before authorization'
-    );
-
-    let revokedAccessToken;
-    let removedRefreshToken;
-    profileProvider.revokeAccessToken = function (authData) {
-        revokedAccessToken = authData.jti;
-        return Promise.resolve(true);
-    };
-    profileProvider.removeToken = function (moduleName, token) {
-        removedRefreshToken = { moduleName: moduleName, token: token };
-        return Promise.resolve(true);
-    };
-    profileProvider.recordAuthEvent = function () {
-        return Promise.resolve(true);
-    };
-    await profileProvider.revokeSession({
-        authData: {
-            jti: 'logout-access-token-id',
-            tenant: 'tenant-a',
-            entCode: 'enterprise-a',
-            loginId: 'user-a'
-        },
-        refreshToken: 'logout-refresh-token'
-    });
-    assert.strictEqual(revokedAccessToken, 'logout-access-token-id');
-    assert.deepStrictEqual(removedRefreshToken, {
-        moduleName: 'profile',
-        token: 'logout-refresh-token'
-    });
+    if (status === "active") assert.strictEqual(await lookup, principal);
+    else await assert.rejects(lookup, /inactive, expired, or outside policy/);
+  }
 }
 
 function read(relativePath) {
-    return fs.readFileSync(path.join(repositoryRoot, relativePath), 'utf8');
+  return fs.readFileSync(path.join(repositoryRoot, relativePath), "utf8");
 }
 
-const coreProperties = read('nodics.foundation/modules/nConfig/config/properties.js');
-const authProviderSource = read('nodics.foundation/modules/nAuth/src/service/authentication/defaultAuthenticationProviderService.js');
-const securedPipelineSource = read('nodics.foundation/modules/nRouter/src/service/request/defaultSecuredRequestPipelineService.js');
-const moduleServiceSource = read('nodics.foundation/modules/nService/src/service/module/defaultModuleService.js');
-const profileProviderSource = read('nodics.platform/modules/profile/src/service/authentication/defaultAuthenticationProviderService.js');
-const apiKeyInterceptorSource = read('nodics.platform/modules/profile/src/service/interceptors/defaultAPIKeyInterceptorService.js');
-const employeeServiceSource = read('nodics.platform/modules/profile/src/service/employee/defaultEmployeeService.js');
-const profileEmployeeData = read('nodics.platform/modules/profile/data/init-v001/records/user/defaultEmployeeData.js');
-const cmsEmployeeData = read('nodics.wcms/modules/cms/data/init-v001/records/user/defaultCmsEmployeeData.js');
-const auditService = require('../src/service/audit/defaultAuthAuditService');
-const routerProperties = require('../../nRouter/config/properties');
+const coreProperties = read(
+  "nodics.foundation/modules/nConfig/config/properties.js",
+);
+const authProviderSource = read(
+  "nodics.foundation/modules/nAuth/src/service/authentication/defaultAuthenticationProviderService.js",
+);
+const securedPipelineSource = read(
+  "nodics.foundation/modules/nRouter/src/service/request/defaultSecuredRequestPipelineService.js",
+);
+const moduleServiceSource = read(
+  "nodics.foundation/modules/nService/src/service/module/defaultModuleService.js",
+);
+const profileProviderSource = read(
+  "nodics.platform/modules/profile/src/service/authentication/defaultAuthenticationProviderService.js",
+);
+const apiKeyInterceptorSource = read(
+  "nodics.platform/modules/profile/src/service/interceptors/defaultAPIKeyInterceptorService.js",
+);
+const employeeServiceSource = read(
+  "nodics.platform/modules/profile/src/service/employee/defaultEmployeeService.js",
+);
+const profileEmployeeData = read(
+  "nodics.platform/modules/profile/data/init-v001/records/user/defaultEmployeeData.js",
+);
+const cmsEmployeeData = read(
+  "nodics.wcms/modules/cms/data/init-v001/records/user/defaultCmsEmployeeData.js",
+);
+const auditService = require("../src/service/audit/defaultAuthAuditService");
+const routerProperties = require("../../nRouter/config/properties");
 assert.ok(!coreProperties.includes("jwtSecretKey: 'nodics'"));
 assert.ok(!coreProperties.includes("apiKey: '944515ac"));
 assert.ok(!profileEmployeeData.includes("password: 'profile"));
@@ -387,60 +759,104 @@ assert.ok(!profileEmployeeData.includes("apiKey: '944515ac"));
 assert.ok(!cmsEmployeeData.includes("password: 'content"));
 assert.ok(!cmsEmployeeData.includes("apiKey: '944515ac"));
 assert.ok(!authProviderSource.includes("|| 'nodics'"));
-assert.ok(!securedPipelineSource.includes("'Authorizing auth token : ' + request.authToken"));
-assert.ok(!securedPipelineSource.includes("'Authorizing api key : ' + request.apiKey"));
+assert.ok(
+  !securedPipelineSource.includes(
+    "'Authorizing auth token : ' + request.authToken",
+  ),
+);
+assert.ok(
+  !securedPipelineSource.includes("'Authorizing api key : ' + request.apiKey"),
+);
 assert.ok(!moduleServiceSource.includes("JSON.stringify(requestUrl)"));
-assert.ok(!moduleServiceSource.includes('rejectUnauthorized: false'));
-assert.ok(moduleServiceSource.includes('requestPromise(requestUrl.uri, fetchOptions)'));
-assert.ok(!profileProviderSource.includes('password: options.password'));
-assert.ok(profileProviderSource.includes('rotateRefreshToken'));
-assert.ok(profileProviderSource.includes('revokeSession'));
-assert.ok(apiKeyInterceptorSource.includes('Server-generated API-key rotation is disabled'));
-assert.ok(employeeServiceSource.includes('apiKeyExpiresAt'));
-assert.ok(employeeServiceSource.includes("status !== 'active'"));
+assert.ok(!moduleServiceSource.includes("rejectUnauthorized: false"));
+assert.ok(
+  moduleServiceSource.includes("requestPromise(requestUrl.uri, fetchOptions)"),
+);
+assert.ok(!profileProviderSource.includes("password: options.password"));
+assert.ok(profileProviderSource.includes("rotateRefreshToken"));
+assert.ok(profileProviderSource.includes("revokeSession"));
+assert.ok(
+  apiKeyInterceptorSource.includes(
+    "Server-generated API-key rotation is disabled",
+  ),
+);
+assert.ok(employeeServiceSource.includes("apiKeyExpiresAt"));
+assert.match(employeeServiceSource, /\bstatus\s*!==\s*(["'])active\1/);
 [
-    'auth.internal.token.read',
-    'auth.internal.token.read.anyTenant',
-    'import.init.run',
-    'import.core.run',
-    'import.sample.run',
-    'import.release.validate',
-    'location.location.read',
-    'location.location.search',
-    'profile.address.reference.read',
-    'profile.enterprise.reference.read'
-].forEach(permission => assert(
-    routerProperties.routeActionAuthorization.groupPermissions.serviceAccountUserGroup.includes(permission),
-    'Service account group must include ' + permission + ' for modular startup'
-));
-global.CONFIG = configuration({ nodeId: 'node-test' });
+  "auth.internal.token.read",
+  "auth.internal.token.read.anyTenant",
+  "import.init.run",
+  "import.core.run",
+  "import.sample.run",
+  "import.release.validate",
+  "location.location.read",
+  "location.location.search",
+  "profile.address.reference.read",
+  "profile.enterprise.reference.read",
+].forEach((permission) =>
+  assert(
+    routerProperties.routeActionAuthorization.groupPermissions.serviceAccountUserGroup.includes(
+      permission,
+    ),
+    "Service account group must include " + permission + " for modular startup",
+  ),
+);
+global.CONFIG = configuration({ nodeId: "node-test" });
 const sanitizedAudit = auditService.sanitize({
-    eventType: 'password.authentication',
-    outcome: 'failure',
-    tenant: 'tenant-a',
-    password: 'must-not-leak',
-    authToken: 'must-not-leak',
-    refreshToken: 'must-not-leak',
-    apiKey: 'must-not-leak'
+  eventType: "password.authentication",
+  outcome: "failure",
+  tenant: "tenant-a",
+  password: "must-not-leak",
+  authToken: "must-not-leak",
+  refreshToken: "must-not-leak",
+  apiKey: "must-not-leak",
 });
 assert.strictEqual(sanitizedAudit.password, undefined);
 assert.strictEqual(sanitizedAudit.authToken, undefined);
 assert.strictEqual(sanitizedAudit.refreshToken, undefined);
 assert.strictEqual(sanitizedAudit.apiKey, undefined);
 
-validateAsyncContracts().then(() => {
-    console.log('nAuth security contracts validated');
-}).catch(error => {
+validateAsyncContracts()
+  .then(() => {
+    console.log("nAuth security contracts validated");
+  })
+  .catch((error) => {
     console.error(error);
     process.exitCode = 1;
-});
+  });
 
 // Only a bounded opaque customer binding may cross the access-token boundary.
-const externalLink = 'EID_' + 'a'.repeat(64);
-assert.strictEqual(authSecurity.buildPayload({principalType:'customer', externalIdentityLinkCode:externalLink}).externalIdentityLinkCode, externalLink);
-assert.strictEqual(authSecurity.buildPayload({principalType:'customer', proof:'private-launch', providerSubject:'42'}).externalIdentityLinkCode, undefined);
+const externalLink = "EID_" + "a".repeat(64);
+assert.strictEqual(
+  authSecurity.buildPayload({
+    principalType: "customer",
+    externalIdentityLinkCode: externalLink,
+  }).externalIdentityLinkCode,
+  externalLink,
+);
+assert.strictEqual(
+  authSecurity.buildPayload({
+    principalType: "customer",
+    proof: "private-launch",
+    providerSubject: "42",
+  }).externalIdentityLinkCode,
+  undefined,
+);
 for (const options of [
-    {principalType:'human'}, {principalType:'service'}, {principalType:'customer', tokenType:'service'},
-    {principalType:'customer', externalIdentityLinkCode:'https://untrusted.example'},
-    {principalType:'customer', externalIdentityLinkCode:'x'.repeat(129)},
-]) assert.throws(() => authSecurity.buildPayload({externalIdentityLinkCode:externalLink, ...options}), /External identity binding/);
+  { principalType: "human" },
+  { principalType: "service" },
+  { principalType: "customer", tokenType: "service" },
+  {
+    principalType: "customer",
+    externalIdentityLinkCode: "https://untrusted.example",
+  },
+  { principalType: "customer", externalIdentityLinkCode: "x".repeat(129) },
+])
+  assert.throws(
+    () =>
+      authSecurity.buildPayload({
+        externalIdentityLinkCode: externalLink,
+        ...options,
+      }),
+    /External identity binding/,
+  );

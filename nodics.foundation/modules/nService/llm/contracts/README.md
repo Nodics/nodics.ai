@@ -17,6 +17,24 @@ Use these files for rules that are more specific than root `AGENTS.md` and the m
 
 ## Auth invalidation observability
 
+Bearer acceptance always calls nAuth's `validateAuthorizationContext` after
+revocation and stamp checks, requiring true before returning the payload. A
+missing/failed/unqualified context owner cannot fall back to stamps. See
+[live authorization context validation](../../../nAuth/llm/contracts/session-context-validation.md)
+for exact proof and owner selection. `DefaultModuleSessionContextValidationService`
+uses existing module topology: the configured local owner when operational, otherwise
+the fixed authenticated Profile bridge. Remote admission independently verifies the
+original signed subject token; a runtime service token authenticates transport only.
+No unsigned claims, endpoint supplied by a caller or local-to-remote fallback is accepted.
+
+Sensitive module calls explicitly request `secureTransport` with `required:true`.
+The existing transport resolves the endpoint and then rejects redirects, credentials,
+query/fragment components and disabled TLS verification. HTTP is permitted only for
+an explicitly selected exact loopback host. Ordinary transport is unchanged. Private
+calls must use Logger's exact `runSensitiveOperation` admission; a body property cannot
+attest privacy. Installed proxy/APM/provider capture qualification remains separate.
+`test/authorizationContextAdmissionContract.test.js` is authored, not executed.
+
 - Auth token invalidation callbacks may publish logs, audit records, or
   cluster events only with sanitized context: reason code, tenant, enterprise,
   principal identifier, source module, and token type.
@@ -26,6 +44,72 @@ Use these files for rules that are more specific than root `AGENTS.md` and the m
   credential-free observability contract and fail-safe cache callback behavior.
 
 ## Module topology registry
+
+Selected Profile namespace provisioning authenticates in the default tenant;
+the target is the protected subject of that admission, not a relabelled proof.
+After providers, target Init and identity reconciliation, operational completion
+requires genuine target-principal authentication and a current target-enterprise
+deployment grant. Retain its token only in the target slot. Native Local binding
+derivation belongs to Profile's original setup provenance and preserves explicit
+overrides; no default bearer fallback or new credential registry is permitted.
+Unselected/default startup retains existing token scope.
+`DefaultEnterpriseHandlerService.isEnterpriseRuntimeReady` observes the exact
+active mapping, absence of in-flight preparation, actual target retained slot
+and current namespace enforcement; it grants no execution authority or token
+verification. Recovery qualification/admission remain with Profile. See
+[the owner contract](../../../../../nodics.platform/modules/profile/llm/contracts/enterprise-tenant-provisioning.md#selected-subject-completion-and-credential-realm)
+and `test/tenantNamespaceHandshakeContract.test.js` for actual provider/issuer
+composition and rejection coverage. No target credential registry is introduced.
+
+`DefaultModuleService.classifyTransportFailure` classifies native circuit/network
+codes and actual remote HTTP 502/503/504 responses without parsing messages.
+`fetch` preserves its bounded `{code,httpStatus?}` evidence as
+`metadata.transportFailure` after Nodics error normalization replaces native
+codes. Classification is independent of retry policy and authorizes no retry,
+circuit bypass or write replay. HTTP business/auth responses take precedence;
+generic ERR_SYS_00000/500 or matching English text is not outage evidence.
+Consumers may map this evidence to their existing unavailable status, retaining
+their own business-conflict and permission checks.
+
+Typed remote HTTP refusals retain response-owned `{code,httpStatus}` as
+`metadata.remoteHttpFailure`. Construct it only from the parsed response code
+and actual HTTP status before `NodicsError.enrich`; never promote an identically
+named response-body metadata field. The installed plain-object utility excludes
+native Error objects, so normalization can retain an ERR code while defaulting
+its responseCode to 500. Consumers requiring actual HTTP evidence must prefer
+this bounded transport snapshot, not error text or the status-definition default.
+It contains no message, raw response, credential or exception payload and grants
+no retry, authorization or write admission.
+
+### Capability-Owned Domain Refusals
+
+`serviceCommunication.circuitBreaker.domainRefusals` defaults to `{}`. A
+capability may contribute a logical-module map of exact error codes to numeric
+HTTP 400/404 statuses. nImport contributes only `ERR_IMP_00003: 400` and
+`ERR_IMP_00004: 404`. `DefaultModuleService.isExpectedDomainRefusal` requires
+actual response-owned `remoteHttpFailure` evidence, the resolved logical module,
+and an exact configured code/status match. Missing, malformed, foreign-module
+or mismatched declarations retain the ordinary circuit penalty. No error text
+or response-body metadata can qualify an exemption.
+
+These responses still reject and increment diagnostic `failures` and
+`lastFailureAt`; they grant neither replay nor successful business admission.
+Repeated expected refusals do not trip the shared module circuit or erase prior
+closed-state transport failures. An admitted half-open probe receiving a declared
+domain response closes the transport circuit because the owner answered; the
+business operation remains failed. A locally open circuit still rejects before
+HTTP dispatch and retains its original recovery deadline. HTTP 401/403, 429,
+5xx, network faults and timeouts keep existing penalties and retry rules. No
+threshold, timeout or rate limit is raised.
+
+Later layers may remove a declaration with `null` or change the exact owner map,
+but must not declare authentication, authorization or rate-limit denials as
+domain availability evidence. Do not use blanket 4xx exemptions. Offline
+`test/moduleDomainRefusalCircuitContract.test.js` composes actual nService and
+nImport configuration, the actual fetch owner, NodicsError and installed object
+utilities; only HTTP is stubbed. It covers repeated refusals, fault accumulation,
+half-open recovery, spoofed body evidence, mismatches and security/transport
+failures. This is not live provider qualification.
 
 Circuit-breaker admission rejection is not a remote transport failure. Preserve
 the circuit's failure count and original `openedAt` when no request is admitted;
@@ -50,6 +134,16 @@ Native business workspaces reuse the concrete module capability builder. `native
 
 ## Tenant startup completion
 
+New-tenant addressability during model/search preparation is provisional, not
+readiness. Concurrent callers join the same in-flight tenant preparation; Profile
+must delegate activation rather than bypassing it on an active-tenant marker.
+Required preparation failure removes only that provisional runtime marker and
+propagates the original failure. Persisted enterprises, setup request keys,
+tenant data and owner receipts remain intact for idempotent resumption. Publish
+the active enterprise mapping only after preparation and internal token issuance
+complete. Do not compensate by deleting the persisted enterprise or replaying an
+unrelated creation request.
+
 Enterprise discovery, tenant database/model creation, search setup and initial
 Cron job creation must complete before startup succeeds. Propagate required
 failures; do not launch background enterprise retry loops or a second job
@@ -58,6 +152,17 @@ existing runtime lifecycle service, prevents overlapping refreshes, stops its
 timer and awaits active refresh work before transport/resource shutdown.
 
 ## Runtime proof, renewal and operational admission
+
+Registration validation rejection (`ERR_BOF_00000`, HTTP 400) latches the current
+agent cycle as `BACKOFFICE_REGISTRATION_REPAIR_REQUIRED`. It clears operational
+evidence and stops automatic attempts until an explicit stop/start after repair.
+Native HTTP status or normalized transport status takes precedence over the
+error-code default status, so connection/circuit/503 failures remain retryable.
+Only fixed authentication codes select the single bounded credential refresh;
+message text never selects refresh or terminal classification. Readiness and
+terminal logs use fixed repair guidance, not the rejected descriptor or raw cause.
+The existing nSystem contributor exposes the sanitized reason in readiness
+details; its minimal UP/DOWN endpoint does not expose contributor reasons.
 
 `runtimeIdentity.instanceCode` is an explicit deployment value with a distinct
 Profile service principal and secret per replica. There is no process-ID identity
@@ -115,6 +220,25 @@ Activation-package facts come from existing module manifests and registration. A
 A registry lease endpoint already names its canonical module API path and is preserved, including a prefix different from the logical module name. An origin-only endpoint uses the existing discovered package prefix or module name. Credentials, logical ownership and target-authority filtering remain unchanged.
 
 ## Runtime credential configuration
+
+DERIVED tenant startup uses Profile's private approved bootstrap inventory and
+namespace-binding handshake before target providers open. Both local and remote
+paths verify the existing default-tenant retained runtime proof and current
+deployment grant. Original stable deployment snapshots permit multiple approved
+runtimes; new runtime enrollment cannot rewrite storage. Identity-only Enterprise
+events resolve fresh authorized inventory and join canonical in-flight startup.
+Never accept provisional activeTenants as readiness or send private continuation
+metadata through events. See [Profile provisioning](../../../../../nodics.platform/modules/profile/llm/contracts/enterprise-tenant-provisioning.md).
+
+Consumer-side enterprise discovery and namespace binding failures use the
+nService-owned `ERR_TNT_PROVISIONING_HELD` (409) status. Non-Profile runtimes load
+this definition through their existing layered status owner; they must not activate
+Profile or copy its status catalogue to construct a startup error. The generic
+message remains content-free, required failures still prevent readiness, and no
+fallback inventory, provenance reconstruction, provider opening or binding
+relaxation follows a held result. Profile continues to own the actual admission
+and retained provenance decisions. Cover this boundary using the real files/status
+loader and NodicsError with Profile absent, not an unrestricted mock status map.
 
 Inherit security policy and credential input defaults from
 [nAuth](../../../nAuth/llm/contracts/README.md#deployment-credentials-and-inherited-auth-policy).

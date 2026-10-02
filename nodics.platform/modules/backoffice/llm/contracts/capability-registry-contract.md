@@ -19,6 +19,42 @@ provider.
 
 ## Runtime flow
 
+### Bounded Readiness Composition
+
+An authenticated bootstrap creates a request-local application-status reader.
+Documentation navigation and operational readiness reuse the exact owner result
+or rejection for each profile within that composition. The reader captures the
+original authenticated request; it is never persisted, shared between principals,
+used after that composition, or replaced with caller-supplied status. Each new
+request rechecks the owners. A failed read stays unavailable; reuse does not grant
+permission, retry a command or certify Online readiness.
+
+Routine `MEDIA_ASSET_MANIFEST` status uses one Media-owned persisted CURRENT
+metadata aggregate per manifest (1–100 unique assets), not a byte-inspection
+request per asset. Desired checksums and descriptors still come from confined
+owner source files. All exact matches yield the step state `SOURCE_READY`, with
+`PERSISTED_CURRENT_METADATA`, a fresh `mediaCheckedAt` and explicit
+`storedBytesVerified:false`. This proves prepared metadata only. It never proves
+current physical-byte integrity, retained publication, approval or Online access.
+Missing assets yield `NOT_INSTALLED`; changed evidence yields `UPDATE_AVAILABLE`;
+denied, stale, ambiguous or incomplete results yield `UNAVAILABLE`. Do not fall
+back to counts, cached browser results, a service credential or a different target.
+
+Explicit preparation retains fresh per-asset Media byte verification before
+unchanged reuse or CAS replacement. Domains and providers retain their own
+publication and integrity checks. Later-loaded services may narrow the aggregate
+or projection, but must preserve human authorization, exact CURRENT proof and
+the evidence distinction. Neither metadata readiness nor status reuse enables a
+deployment gate or changes rate limits or circuit-breaker policy.
+
+Regression evidence: `test/backofficeStatusReadFanoutContract.test.js` composes
+the real bootstrap/readiness methods and Media controller/facade/read service
+with inert owner mocks. It proves 37 assets use one transport/read, cross-request
+and cross-principal isolation, unchanged descriptor checks, and fail-closed
+partial/stale evidence. `test/backofficeApplicationMediaRetryContract.test.js`
+retains explicit byte-inspection/CAS coverage. These are source tests, not live
+database, transport or browser qualification.
+
 1. A provider registers with `DefaultModuleRegistrationAgentService`.
 2. The agent serializes its bounded projection into the authenticated lease.
 3. BackOffice validates and stores the observed lease.
@@ -93,7 +129,16 @@ the employee. If the module is absent, inactive, disabled, offline, or
 unauthorized, BackOffice must withdraw the projection and Axis must hide the
 left-navigation item and related functional content.
 
-Eligibility must traverse the complete tenant/project catalogue with Nodics
+Presentation eligibility reads the canonical project catalogue in the configured
+`defaultTenant` authority through existing private persistence authentication.
+The employee's tenant is not a catalogue storage selector. Keep the original
+authenticated request, enterprise, permissions and tenant unchanged for registry
+filtering, employee policy and downstream business operations. This read grants
+no permission, copies no catalogue data and changes no lifecycle-write scope.
+An unavailable authority model or failed query must fail closed, never fall back
+to an employee-tenant catalogue or an ungoverned projection.
+
+Eligibility must traverse the complete authority-tenant/project catalogue with Nodics
 `pageSize`/`pageNumber`, never a `limit` that the model pipeline overwrites.
 Read size is layered through
 `backofficeFunctionalModuleCatalogue.eligibilityPageSize`. Failed pages must

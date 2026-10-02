@@ -352,7 +352,8 @@ module.exports = {
             targetEvidenceError, approvalDiagnostic, transitions);
         let publicationDependencyGraph = this.publicationDependencyGraph(descriptor, release, publication, target,
             approvalDiagnostic);
-        let readiness = state === 'ONLINE' ? 'READY' : state === 'WITHDRAWN' ? 'RETIRED' :
+        const mediaDependencies = state === 'ONLINE' ? await this.mediaDependencyStatus(publication, request) : undefined;
+        let readiness = state === 'ONLINE' ? mediaDependencies.qualified ? 'READY' : 'MEDIA_DEPENDENCIES_PENDING' : state === 'WITHDRAWN' ? 'RETIRED' :
             state === 'ROLLED_BACK' ? 'ROLLED_BACK' : state === 'REJECTED' ? 'REJECTED' :
             state === 'FAILED' ? 'FAILED' : state ? 'PUBLICATION_PENDING' :
                 release.status === 'RUNNING' ? 'IMPORTING' :
@@ -361,6 +362,7 @@ module.exports = {
             releaseStatus: release.status, readiness: readiness,
             review: this.review(descriptor, release, publication, request),
             publicationDiagnostic: publicationDiagnostic,
+            mediaDependencies: mediaDependencies,
             publicationDependencyGraph: publicationDependencyGraph,
             publication: publication && { code: publication.code, state: publication.state, revision: publication.revision,
                 targetVersion: publication.targetVersion, previousOnlineVersion: publication.previousOnlineVersion,
@@ -379,12 +381,25 @@ module.exports = {
                     diagnostic: publicationDiagnostic },
                 target: target, targetEvidenceError: targetEvidenceError } };
     },
+    /** Delegates exact release dependency qualification; missing owner/service never implies readiness. */
+    mediaDependencyStatus: function (publication, request) {
+        const owner = SERVICE.DefaultCmsMediaDependencyReadinessService;
+        if (owner && typeof owner.inspect === 'function') return owner.inspect(publication, request);
+        const retained = (((CONFIG.get('media') || {}).publication || {}).versionProviderEnabled === true);
+        return Promise.resolve({ contractVersion: 1, owner: 'media', status: retained ? 'UNAVAILABLE' : 'NOT_REQUIRED',
+            qualified: !retained, dependencies: [] });
+    },
     /** Installs and submits one baseline without approving or deploying it. */
     initiate: async function (code, request) {
         this.assertStaged();
         let input = request.baseline || {};
         let descriptor = this.descriptor(code);
         let release = await this.release(descriptor, request);
+        const previousPublication = await this.publication(descriptor, request);
+        const previousMedia = previousPublication && previousPublication.state === 'ONLINE'
+            ? await this.mediaDependencyStatus(previousPublication, request) : undefined;
+        const refreshMediaPins = !!previousMedia && [].concat(previousMedia.dependencies || [])
+            .some(item => item.status === 'VERSION_UNPINNED');
         if (release.status !== 'CURRENT' && release.sourceKind === 'CONTENT_PACK') {
             try {
                 await SERVICE.DefaultContentPackService.importPack(Object.assign({}, request,
@@ -414,7 +429,7 @@ module.exports = {
             publication = await SERVICE.DefaultPublicationLifecycleService.create(Object.assign({}, actorRequest,
                 { publication: publicationInput }));
         }
-        if (publication.state === 'ONLINE' && (release.status !== 'CURRENT' || input.forceRefresh === true)) {
+        if (publication.state === 'ONLINE' && (release.status !== 'CURRENT' || input.forceRefresh === true || refreshMediaPins)) {
             publication = await SERVICE.DefaultPublicationLifecycleService.validate(Object.assign({}, actorRequest,
                 { publicationCode: publication.code, expectedRevision: publication.revision }));
         }
@@ -434,11 +449,13 @@ module.exports = {
             publication = await SERVICE.DefaultPublicationLifecycleService.requestApproval(Object.assign({}, actorRequest,
                 { publicationCode: publication.code, expectedRevision: publication.revision }));
         }
-        let readiness = publication.state === 'ONLINE' ? 'READY' : publication.state === 'REJECTED' ? 'REJECTED' :
+        const mediaDependencies = publication.state === 'ONLINE' ? await this.mediaDependencyStatus(publication, actorRequest) : undefined;
+        let readiness = publication.state === 'ONLINE' ? mediaDependencies.qualified ? 'READY' : 'MEDIA_DEPENDENCIES_PENDING' : publication.state === 'REJECTED' ? 'REJECTED' :
             publication.state === 'FAILED' ? 'FAILED' : 'PUBLICATION_PENDING';
         return { baselineCode: descriptor.code, releaseCode: release.releaseCode, releaseVersion: descriptor.releaseVersion,
             releaseStatus: 'CURRENT',
             readiness: readiness,
+            mediaDependencies: mediaDependencies,
             review: this.review(descriptor, release, publication, request),
             publication: { code: publication.code, state: publication.state, revision: publication.revision,
                 workflowRef: publication.workflowRef || (publication.state === 'PENDING_APPROVAL' &&

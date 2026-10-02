@@ -9,103 +9,129 @@
 
  */
 
-'use strict';
+"use strict";
 /** @module pricing/src/router/routers @description Declares internal Pricing publication ingestion APIs. @layer router @owner pricing */
 module.exports = {
-    pricing: {
-        // Selective schema APIs reuse generated controllers; broad CRUD remains disabled.
+  pricing: {
+    merchantEvidence: {
+      evaluate: {
+        secured: true,
+        authTokenTypes: ["service"],
+        accessGroups: ["serviceAccountUserGroup"],
+        permission: "commerce.pricing.merchant.evidence",
+        apiExposure: "commerceMerchantPricing",
+        key: "/internal/merchant/priced-transaction",
+        method: "POST",
+        controller: "DefaultPricingMerchantEvidenceController",
+        operation: "evaluate",
+        cache: { enabled: false },
+        requestPrivacy: { sensitive: true },
+      },
+    },
+    // Selective schema APIs reuse generated controllers; broad CRUD remains disabled.
 
-        operator: {
-            restoreOperational: {
-                secured: true, authTokenTypes: ['access','service'], accessGroups: ['employeeUserGroup','serviceAccountUserGroup'],
-                permission: 'commerce.product.publish', apiExposure: 'commercePublicationIngestion',
-                key: '/internal/pricing/publication/operational/restore', method: 'POST',
-                controller: 'DefaultPricingPublicationController', operation: 'restoreOperational',
-                help: { requestType: 'secured', message: 'Restores evidenced Pricing operational records into the Online Pricing boundary.' }
-            }
-        }
-    }
+    operator: {
+      restoreOperational: {
+        secured: true,
+        authTokenTypes: ["access", "service"],
+        accessGroups: ["employeeUserGroup", "serviceAccountUserGroup"],
+        permission: "commerce.product.publish",
+        apiExposure: "commercePublicationIngestion",
+        key: "/internal/pricing/publication/operational/restore",
+        method: "POST",
+        controller: "DefaultPricingPublicationController",
+        operation: "restoreOperational",
+        help: {
+          requestType: "secured",
+          message:
+            "Restores evidenced Pricing operational records into the Online Pricing boundary.",
+        },
+      },
+    },
+  },
 };
 
 // Runtime service grants and explicit Online role are required; no customer authoring route.
 module.exports.pricing.policyPublicationAuthoring = {
-    createGoverned: { active: true, secured: true, authTokenTypes: ['access'],
-        accessGroups: ['runtimeConfigAdminUserGroup'], permission: 'publish.lifecycle.create',
-        apiExposure: 'pricingPublicationAuthoring', key: '/publication/policy', method: 'POST',
-        controller: 'DefaultPricingPublicationTargetController', operation: 'createGoverned' }
+  createGoverned: {
+    active: true,
+    secured: true,
+    authTokenTypes: ["access"],
+    accessGroups: ["runtimeConfigAdminUserGroup"],
+    permission: "publish.lifecycle.create",
+    apiExposure: "pricingPublicationAuthoring",
+    key: "/publication/policy",
+    method: "POST",
+    controller: "DefaultPricingPublicationTargetController",
+    operation: "createGoverned",
+  },
 };
 module.exports.pricing.policyPublicationTarget = {
-    "prepare": {
-        "secured": true,
-        "authTokenTypes": [
-            "service"
-        ],
-        "accessGroups": [
-            "userGroup"
-        ],
-        "permissionConfig": "authSecurity.internalToken.routePermission",
-        "apiExposure": "commercePublicationIngestion",
-        "key": "/publication/policy/prepare",
-        "method": "POST",
-        "controller": "DefaultPricingPublicationTargetController",
-        "operation": "prepare"
-    },
-    "status": {
-        "secured": true,
-        "authTokenTypes": [
-            "service"
-        ],
-        "accessGroups": [
-            "userGroup"
-        ],
-        "permissionConfig": "authSecurity.internalToken.routePermission",
-        "apiExposure": "commercePublicationIngestion",
-        "key": "/publication/policy/status",
-        "method": "POST",
-        "controller": "DefaultPricingPublicationTargetController",
-        "operation": "status"
-    },
-    "activate": {
-        "secured": true,
-        "authTokenTypes": [
-            "service"
-        ],
-        "accessGroups": [
-            "userGroup"
-        ],
-        "permissionConfig": "authSecurity.internalToken.routePermission",
-        "apiExposure": "commercePublicationIngestion",
-        "key": "/publication/policy/activate",
-        "method": "POST",
-        "controller": "DefaultPricingPublicationTargetController",
-        "operation": "activate"
-    },
-    "reconcile": {
-        "secured": true,
-        "authTokenTypes": [
-            "service"
-        ],
-        "accessGroups": [
-            "userGroup"
-        ],
-        "permissionConfig": "authSecurity.internalToken.routePermission",
-        "apiExposure": "commercePublicationIngestion",
-        "key": "/publication/policy/reconcile",
-        "method": "POST",
-        "controller": "DefaultPricingPublicationTargetController",
-        "operation": "reconcile"
-    }
+  prepare: {
+    secured: true,
+    authTokenTypes: ["service"],
+    accessGroups: ["userGroup"],
+    permissionConfig: "authSecurity.internalToken.routePermission",
+    apiExposure: "commercePublicationIngestion",
+    key: "/publication/policy/prepare",
+    method: "POST",
+    controller: "DefaultPricingPublicationTargetController",
+    operation: "prepare",
+  },
+  status: {
+    secured: true,
+    authTokenTypes: ["service"],
+    accessGroups: ["userGroup"],
+    permissionConfig: "authSecurity.internalToken.routePermission",
+    apiExposure: "commercePublicationIngestion",
+    key: "/publication/policy/status",
+    method: "POST",
+    controller: "DefaultPricingPublicationTargetController",
+    operation: "status",
+  },
+  activate: {
+    secured: true,
+    authTokenTypes: ["service"],
+    accessGroups: ["userGroup"],
+    permissionConfig: "authSecurity.internalToken.routePermission",
+    apiExposure: "commercePublicationIngestion",
+    key: "/publication/policy/activate",
+    method: "POST",
+    controller: "DefaultPricingPublicationTargetController",
+    operation: "activate",
+  },
+  reconcile: {
+    secured: true,
+    authTokenTypes: ["service"],
+    accessGroups: ["userGroup"],
+    permissionConfig: "authSecurity.internalToken.routePermission",
+    apiExposure: "commercePublicationIngestion",
+    key: "/publication/policy/reconcile",
+    method: "POST",
+    controller: "DefaultPricingPublicationTargetController",
+    operation: "reconcile",
+  },
 };
 
 module.exports.pricing.policyPublicationTarget.authorize = {
-    secured: true, authTokenTypes: ['service'], accessGroups: ['userGroup'],
-    permissionConfig: 'authSecurity.internalToken.routePermission', apiExposure: 'commercePublicationIngestion',
-    key: '/publication/policy/authorize', method: 'POST',
-    controller: 'DefaultPricingPublicationTargetController', operation: 'authorize'
+  secured: true,
+  authTokenTypes: ["service"],
+  accessGroups: ["userGroup"],
+  permissionConfig: "authSecurity.internalToken.routePermission",
+  apiExposure: "commercePublicationIngestion",
+  key: "/publication/policy/authorize",
+  method: "POST",
+  controller: "DefaultPricingPublicationTargetController",
+  operation: "authorize",
 };
 module.exports.pricing.policyPublicationTarget.applyPublicationDecision = {
-    secured: true, authTokenTypes: ['service'], accessGroups: ['userGroup'],
-    permissionConfig: 'authSecurity.internalToken.routePermission', apiExposure: 'commercePublicationIngestion',
-    key: '/workflow/actions/applyPublicationDecision', method: 'POST',
-    controller: 'DefaultPricingPublicationTargetController', operation: 'applyPublicationDecision'
+  secured: true,
+  authTokenTypes: ["service"],
+  accessGroups: ["userGroup"],
+  permissionConfig: "authSecurity.internalToken.routePermission",
+  apiExposure: "commercePublicationIngestion",
+  key: "/workflow/actions/applyPublicationDecision",
+  method: "POST",
+  controller: "DefaultPricingPublicationTargetController",
+  operation: "applyPublicationDecision",
 };

@@ -1,9 +1,28 @@
 # Workflow Agent Guide
 
+Source-owned review retirement is separately default-disabled. Preserve signed
+source/context ownership, exact task/instance CAS, private marker admission and
+same-closure recovery. Never steal remote actions or cancel a completed competing
+decision. Generic persistence fences retired records; activation and cross-owner
+acceptance remain separate. See the source-owned retirement contract.
+Historical source attempts retain their original context/instance; Process never
+selects application history. A completed task is a read-only competing outcome
+even after instance advancement. Preserve immutable execution identity and reject
+generic upserts/update pipelines that evade retirement fences.
+
+Service-owned starts remain default-disabled, explicitly allowlisted and scoped
+to the published domain owner/version. Preserve existing start/replay and
+immutable task actor policy; never substitute human credentials for a service
+principal. See `llm/contracts/README.md#service-owned-starts-and-human-review`.
+
 Explicit allowed action strings can resolve remote declarations from discovered
 inactive owners through the existing action registry. Keep the allowlist and
 remote targets deployment-owned; do not copy owner definitions into Process or
 activate a domain just to read them. See `llm/contracts/README.md`.
+The deployment must include each selected inactive owner's group in its existing
+`runtimeModuleRoots` discovery metadata. A remote identity grant or allowed action
+string does not discover source declarations. Verify the real prepared graph,
+not only a mocked owner lookup, and keep the remote owner inactive.
 
 Preserve create-only start persistence and exact original-input replay evidence.
 Never re-enter nodes on start retry or infer start identity from mutable context.

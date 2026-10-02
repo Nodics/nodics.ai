@@ -18,6 +18,7 @@
  */
 const fs = require("fs");
 const path = require("path");
+const configurationInitializer = require("../../../../../nodics.foundation/modules/nConfig/src/service/DefaultFrameworkInitializerService");
 const crypto = require("crypto");
 
 module.exports = {
@@ -91,7 +92,11 @@ module.exports = {
             : "accelerator"),
       ),
       summary: String(presentation.summary || ""),
-      visual: this.visual(presentation.visual, profile.target, this.applicationArtworkActive(profile, evidence)),
+      visual: this.visual(
+        presentation.visual,
+        profile.target,
+        this.applicationArtworkActive(profile, evidence),
+      ),
       order: Number(presentation.order || 1000),
       type: String(profile.type),
       owner: String(profile.owner),
@@ -131,56 +136,157 @@ module.exports = {
   },
   /** Projects an owner media reference; Media retains record, storage and access authority. */
   visual: function (value, target, active) {
-    if (!value || typeof value.mediaCode !== "string" || !/^[A-Za-z0-9][A-Za-z0-9_.-]{0,159}$/.test(value.mediaCode)) return undefined;
-    if (typeof value.alt !== "string" || !value.alt.trim() || value.alt.length > 200) return undefined;
+    if (
+      !value ||
+      typeof value.mediaCode !== "string" ||
+      !/^[A-Za-z0-9][A-Za-z0-9_.-]{0,159}$/.test(value.mediaCode)
+    )
+      return undefined;
+    if (
+      typeof value.alt !== "string" ||
+      !value.alt.trim() ||
+      value.alt.length > 200
+    )
+      return undefined;
     let runtimeRole = target && target.runtimeRole;
-    if (typeof runtimeRole !== "string" || !/^[A-Z][A-Z0-9_]{1,63}$/.test(runtimeRole)) return undefined;
-    return { mediaCode: value.mediaCode, alt: value.alt.trim(), runtimeRole: runtimeRole, active: active === true };
+    if (
+      typeof runtimeRole !== "string" ||
+      !/^[A-Z][A-Z0-9_]{1,63}$/.test(runtimeRole)
+    )
+      return undefined;
+    return {
+      mediaCode: value.mediaCode,
+      alt: value.alt.trim(),
+      runtimeRole: runtimeRole,
+      active: active === true,
+    };
   },
   /** Catalogue presence is not activation. Require current module activation and an initiated application baseline, not Online publication. */
   applicationArtworkActive: function (profile, evidence) {
-    if (!evidence || !["IMPORTING", "IMPORTED", "PUBLICATION_PENDING", "READY", "REJECTED", "ROLLED_BACK"].includes(evidence.readiness)) return false;
+    if (
+      !evidence ||
+      ![
+        "IMPORTING",
+        "IMPORTED",
+        "PUBLICATION_PENDING",
+        "READY",
+        "REJECTED",
+        "ROLLED_BACK",
+      ].includes(evidence.readiness)
+    )
+      return false;
     const steps = (evidence.preparation && evidence.preparation.steps) || [];
-    return this.requiredFunctionalModules(profile).every((required) => steps.some((step) =>
-      step.type === "FUNCTIONAL_MODULE" && step.code === required.code && step.status === "CURRENT"));
+    return this.requiredFunctionalModules(profile).every((required) =>
+      steps.some(
+        (step) =>
+          step.type === "FUNCTIONAL_MODULE" &&
+          step.code === required.code &&
+          step.status === "CURRENT",
+      ),
+    );
   },
   /** Projects a read-only scope from the existing owner profile. It never activates or imports.
    * Later modules can extend this member for additional stages without changing Axis.
    * Public items deliberately omit paths, credentials and target transport details.
    */
   setupPlan: function (profile) {
-    let labels = (CONFIG.get("backofficeApplicationInitialization") || {}).planPresentation;
-    if (!labels || !labels.capabilities || !labels.preparation || !labels.publication) return undefined;
-    let capabilities = Array.from(new Map(this.requiredFunctionalModules(profile).slice().sort((a, b) => a.order - b.order).map((item) => [item.code, {
-      code: item.code, label: item.label, required: item.required,
-      type: "FUNCTIONAL_MODULE", owner: item.code,
-    }])).values());
+    let labels = (CONFIG.get("backofficeApplicationInitialization") || {})
+      .planPresentation;
+    if (
+      !labels ||
+      !labels.capabilities ||
+      !labels.preparation ||
+      !labels.publication
+    )
+      return undefined;
+    let capabilities = Array.from(
+      new Map(
+        this.requiredFunctionalModules(profile)
+          .slice()
+          .sort((a, b) => a.order - b.order)
+          .map((item) => [
+            item.code,
+            {
+              code: item.code,
+              label: item.label,
+              required: item.required,
+              type: "FUNCTIONAL_MODULE",
+              owner: item.code,
+            },
+          ]),
+      ).values(),
+    );
     let preparation = new Map();
-    this.preparationSteps(profile).slice().sort((left, right) => left.order - right.order).forEach((step) => {
-      let identity = JSON.stringify([step.type, step.code, step.targetServer, step.targetRuntimeRole]);
-      let previous = preparation.get(identity);
-      preparation.set(identity, {
-        code: step.code + "@" + crypto.createHash("sha256").update(identity).digest("hex").slice(0, 16), label: step.label || step.kind,
-        required: step.required || Boolean(previous && previous.required),
-        type: step.type, owner: String(profile.owner),
+    this.preparationSteps(profile)
+      .slice()
+      .sort((left, right) => left.order - right.order)
+      .forEach((step) => {
+        let identity = JSON.stringify([
+          step.type,
+          step.code,
+          step.targetServer,
+          step.targetRuntimeRole,
+        ]);
+        let previous = preparation.get(identity);
+        preparation.set(identity, {
+          code:
+            step.code +
+            "@" +
+            crypto
+              .createHash("sha256")
+              .update(identity)
+              .digest("hex")
+              .slice(0, 16),
+          label: step.label || step.kind,
+          required: step.required || Boolean(previous && previous.required),
+          type: step.type,
+          owner: String(profile.owner),
+        });
       });
-    });
-    if (profile.contentPackCode) preparation.set("contentPack:" + profile.contentPackCode, {
-      code: "contentPack:" + profile.contentPackCode,
-      label: String((profile.presentation || {}).title || profile.contentPackCode),
-      required: true, type: "CONTENT_PACK", owner: String(profile.owner),
-    });
-    let approvalRequired = ((profile.presentation || {}).activationPolicy || {}).approvalRequiredForOnline !== false;
+    if (profile.contentPackCode)
+      preparation.set("contentPack:" + profile.contentPackCode, {
+        code: "contentPack:" + profile.contentPackCode,
+        label: String(
+          (profile.presentation || {}).title || profile.contentPackCode,
+        ),
+        required: true,
+        type: "CONTENT_PACK",
+        owner: String(profile.owner),
+      });
+    let approvalRequired =
+      ((profile.presentation || {}).activationPolicy || {})
+        .approvalRequiredForOnline !== false;
     return {
       contractVersion: 1,
       stages: [
-        { code: "capabilities", title: labels.capabilities.title, summary: labels.capabilities.summary, items: capabilities },
-        { code: "preparation", title: labels.preparation.title, summary: labels.preparation.summary, items: Array.from(preparation.values()) },
-        { code: "publication", title: labels.publication.title, summary: labels.publication.summary, items: [{
-          code: String(profile.baselineCode),
-          label: approvalRequired ? labels.publicationReview : labels.publicationPrepare,
-          required: true, type: "PUBLICATION", owner: String(profile.owner),
-        }] },
+        {
+          code: "capabilities",
+          title: labels.capabilities.title,
+          summary: labels.capabilities.summary,
+          items: capabilities,
+        },
+        {
+          code: "preparation",
+          title: labels.preparation.title,
+          summary: labels.preparation.summary,
+          items: Array.from(preparation.values()),
+        },
+        {
+          code: "publication",
+          title: labels.publication.title,
+          summary: labels.publication.summary,
+          items: [
+            {
+              code: String(profile.baselineCode),
+              label: approvalRequired
+                ? labels.publicationReview
+                : labels.publicationPrepare,
+              required: true,
+              type: "PUBLICATION",
+              owner: String(profile.owner),
+            },
+          ],
+        },
       ].filter((stage) => stage.items.length > 0),
     };
   },
@@ -211,7 +317,19 @@ module.exports = {
               pack,
             ),
           );
-    return rawSteps
+    const prerequisites =
+      profile && profile.preparation && profile.preparation.prerequisites;
+    if (
+      prerequisites !== undefined &&
+      (!Array.isArray(prerequisites) || prerequisites.length > 256)
+    ) {
+      throw new CLASSES.NodicsError(
+        "ERR_BOF_00081",
+        "Application preparation prerequisites must be a bounded step list",
+      );
+    }
+    return []
+      .concat(prerequisites || [], rawSteps)
       .map((step, index) => this.normalizePreparationStep(step, index))
       .filter(Boolean);
   },
@@ -236,7 +354,9 @@ module.exports = {
         (type === "MEDIA_ASSET_MANIFEST" ? "WCMS_STAGED" : ""),
     );
     let manifestPath = String(step.manifestPath || "");
-    let manifestModule = step.manifestModule ? String(step.manifestModule) : undefined;
+    let manifestModule = step.manifestModule
+      ? String(step.manifestModule)
+      : undefined;
     if (
       !/^[A-Za-z][A-Za-z0-9._-]{0,127}:[A-Za-z][A-Za-z0-9_-]{0,127}$/.test(
         code,
@@ -246,7 +366,9 @@ module.exports = {
       !/^[A-Z][A-Z0-9_]{1,63}$/.test(targetRuntimeRole) ||
       (type === "MEDIA_ASSET_MANIFEST" &&
         (!manifestPath ||
-          (manifestModule && (!/^[A-Za-z][A-Za-z0-9._-]{0,127}$/.test(manifestModule) || manifestModule !== code.split(":")[0])) ||
+          (manifestModule &&
+            (!/^[A-Za-z][A-Za-z0-9._-]{0,127}$/.test(manifestModule) ||
+              manifestModule !== code.split(":")[0])) ||
           path.isAbsolute(manifestPath) ||
           manifestPath.split(/[\\/]+/).includes("..")))
     ) {
@@ -269,7 +391,8 @@ module.exports = {
       targetServer: targetServer,
       targetRuntimeRole: targetRuntimeRole,
       manifestPath: type === "MEDIA_ASSET_MANIFEST" ? manifestPath : undefined,
-      manifestModule: type === "MEDIA_ASSET_MANIFEST" ? manifestModule : undefined,
+      manifestModule:
+        type === "MEDIA_ASSET_MANIFEST" ? manifestModule : undefined,
       folderCode: step.folderCode ? String(step.folderCode) : undefined,
       businessPurpose: step.businessPurpose
         ? String(step.businessPurpose)
@@ -397,10 +520,17 @@ module.exports = {
             status: status,
             version: record && record.registeredVersion,
             description: String(displayName),
-            runtimeState: record && record.runtimeState ? String(record.runtimeState) : undefined,
+            runtimeState:
+              record && record.runtimeState
+                ? String(record.runtimeState)
+                : undefined,
             registrationState:
-              record && record.registrationState ? String(record.registrationState) : undefined,
-            observedServers: this.safeObservedServers(record && record.observedServers),
+              record && record.registrationState
+                ? String(record.registrationState)
+                : undefined,
+            observedServers: this.safeObservedServers(
+              record && record.observedServers,
+            ),
             runtimeEvidence: this.functionalModuleRuntimeEvidence(record),
             message:
               status === "CURRENT"
@@ -436,7 +566,8 @@ module.exports = {
   safeObservedServers: function (servers) {
     return Array.from(
       new Set(
-        [].concat(servers || [])
+        []
+          .concat(servers || [])
           .map((server) => String(server || "").trim())
           .filter(Boolean),
       ),
@@ -521,6 +652,8 @@ module.exports = {
   },
   /** Converts target runtime exceptions into a user-safe application setup message. */
   targetFailureMessage: function (targetCode, targetMessage) {
+    if (targetCode === "ERR_RTR_00004")
+      return "Readiness checks are temporarily rate limited. Wait before refreshing status; no import or publication retry has been authorized.";
     if (
       /CMS_BASELINE_RELEASE_INVALID|INVALID_RELEASE/i.test(targetCode) ||
       /invalid release|release qualification|release is unavailable/i.test(
@@ -542,7 +675,7 @@ module.exports = {
     return "Application setup could not be completed by the target runtime. Ask an operator to check the target runtime logs before retrying.";
   },
   /** Preserves sanitized target-side diagnostics for operators without exposing request credentials. */
-  targetDiagnostic: function (error, profile) {
+  targetDiagnostic: function (error, profile, request) {
     let source =
       error && (error.data || error.result || error.response || error);
     let targetCode = String(
@@ -562,7 +695,45 @@ module.exports = {
         "Unknown target error",
     );
     let targetResponseCode =
-      source && source.responseCode ? String(source.responseCode) : undefined;
+      source && (source.responseCode || source.status)
+        ? String(source.responseCode || source.status)
+        : undefined;
+    const runtimeInvocationDiagnostic = this.runtimeInvocationDiagnostic(
+      error,
+      {
+        targetModule: profile.target.moduleName,
+        targetConnection: profile.target.connectionName,
+        targetRuntimeRole: profile.target.runtimeRole || "WCMS_STAGED",
+      },
+    );
+    const diagnostic = {
+      code: "ERR_BOF_00085",
+      targetCode: targetCode,
+      targetResponseCode: targetResponseCode,
+      profileCode: profile.code,
+      baselineCode: profile.baselineCode,
+      targetModule: profile.target.moduleName,
+      targetConnection: profile.target.connectionName,
+      targetRuntimeRole: profile.target.runtimeRole || "WCMS_STAGED",
+      phase: runtimeInvocationDiagnostic && runtimeInvocationDiagnostic.phase,
+      failureCode:
+        runtimeInvocationDiagnostic && runtimeInvocationDiagnostic.failureCode,
+      correlationId: request && (request.correlationId || request.requestId),
+    };
+    // Error serialization can omit metadata; log only bounded scalar routing facts separately.
+    const safeDiagnostic = Object.fromEntries(
+      Object.entries(diagnostic).filter(
+        ([, value]) =>
+          ["string", "number"].includes(typeof value) &&
+          /^[A-Za-z0-9_.:-]{1,192}$/.test(String(value)),
+      ),
+    );
+    if (this.LOG && typeof this.LOG.warn === "function") {
+      this.LOG.warn(
+        "Application initialization target invocation failed",
+        safeDiagnostic,
+      );
+    }
     return new CLASSES.NodicsError({
       code: "ERR_BOF_00085",
       message: this.targetFailureMessage(targetCode, targetMessage),
@@ -573,6 +744,7 @@ module.exports = {
         profileCode: profile.code,
         baselineCode: profile.baselineCode,
         targetModuleName: profile.target.moduleName,
+        runtimeInvocationDiagnostic: runtimeInvocationDiagnostic,
       },
       causes: remoteResponse ? [remoteResponse] : undefined,
     });
@@ -592,7 +764,54 @@ module.exports = {
       Object.assign({}, fallback || {}, source || {}),
     );
   },
-  /** Invokes one target runtime data-release operation for application preparation. */
+  /** Resolves declared deployment aliases without treating a connection name as server authority. */
+  applicationTargetBinding: function (connectionName, runtimeRole, moduleName) {
+    const context =
+      configurationInitializer.getPropertyBindingContext(__filename);
+    const servers = configurationInitializer.discoverDeploymentServers(context);
+    const aliases = configurationInitializer.deriveDeploymentServerAliases(
+      context,
+      servers,
+    );
+    const matches = Object.keys(aliases).filter((server) =>
+      aliases[server].includes(connectionName),
+    );
+    if (matches.length !== 1) {
+      throw new CLASSES.NodicsError(
+        "ERR_BOF_00081",
+        "Application target connection requires one declared deployment server",
+      );
+    }
+    const server = matches[0];
+    if (connectionName !== server) {
+      const router = SERVICE.DefaultRouterService;
+      const aliasUrl =
+        router &&
+        typeof router.prepareUrl === "function" &&
+        router.prepareUrl({ moduleName, connectionName });
+      const serverUrl =
+        router &&
+        typeof router.prepareUrl === "function" &&
+        router.prepareUrl({ moduleName, connectionName: server });
+      if (
+        !router ||
+        typeof router.prepareUrl !== "function" ||
+        !aliasUrl ||
+        !serverUrl ||
+        aliasUrl !== serverUrl
+      ) {
+        throw new CLASSES.NodicsError(
+          "ERR_BOF_00081",
+          "Application target alias differs from its declared server endpoint",
+        );
+      }
+    }
+    return {
+      connectionName: server,
+      targetAuthority: { server, runtimeRole: { code: runtimeRole } },
+    };
+  },
+  /** Invokes one governed data-release validation or installation with the initiating human context. */
   invokeDataReleaseOperation: function (mode, group, request) {
     let suffix = mode === "preflight" ? "validate" : "install";
     const authorization = this.authorizationHeader(request, true);
@@ -600,12 +819,12 @@ module.exports = {
       moduleName: "import",
       // These operations intentionally use the governed HTTP import route, even in a consolidated runtime.
       local: false,
-      connectionName: group.targetServer,
+      ...this.applicationTargetBinding(
+        group.targetServer,
+        group.targetRuntimeRole,
+        "import",
+      ),
       connectionType: "abstract",
-      targetAuthority: {
-        server: group.targetServer,
-        runtimeRole: { code: group.targetRuntimeRole },
-      },
       methodName: "POST",
       apiName: "/" + group.dataType + "/" + suffix,
       requestBody: {
@@ -621,13 +840,18 @@ module.exports = {
         response && (response.data || response.result || response),
     });
   },
-  /** Groups required preparation steps by target runtime and release type. */
+  /** Batches adjacent compatible releases without changing the configured dependency order. */
   preparationGroups: function (profile, request, steps) {
     let input = request.applicationInitialization || {};
     let correlationId =
       input.correlationId || request.correlationId || request.requestId;
-    let groups = {};
+    let groups = [];
     steps
+      .map((step, index) => ({
+        ...step,
+        order: Number.isFinite(step.order) ? step.order : index + 1,
+      }))
+      .sort((left, right) => left.order - right.order)
       .filter((step) => step.required !== false && step.type === "DATA_RELEASE")
       .forEach((step) => {
         let key = [
@@ -635,32 +859,63 @@ module.exports = {
           step.targetRuntimeRole,
           step.dataType,
         ].join(":");
-        groups[key] = groups[key] || {
-          targetServer: step.targetServer,
-          targetRuntimeRole: step.targetRuntimeRole,
-          dataType: step.dataType,
-          steps: [],
-          idempotencyKey:
-            profile.code +
-            ":prepare:" +
-            key +
-            ":" +
-            String(
-              correlationId ||
-                (request.authData && request.authData.principalId) ||
-                "operator",
-            ),
-        };
-        groups[key].steps.push(step);
+        let group = groups[groups.length - 1];
+        if (
+          !group ||
+          group.targetServer !== step.targetServer ||
+          group.targetRuntimeRole !== step.targetRuntimeRole ||
+          group.dataType !== step.dataType
+        ) {
+          group = {
+            targetServer: step.targetServer,
+            targetRuntimeRole: step.targetRuntimeRole,
+            dataType: step.dataType,
+            steps: [],
+            idempotencyKey:
+              profile.code +
+              ":prepare:" +
+              key +
+              ":" +
+              String(
+                correlationId ||
+                  (request.authData && request.authData.principalId) ||
+                  "operator",
+              ),
+          };
+          groups.push(group);
+        }
+        group.steps.push(step);
       });
-    return Object.values(groups).sort(
-      (left, right) =>
-        left.targetServer.localeCompare(right.targetServer) ||
-        left.dataType.localeCompare(right.dataType),
+    // Separated batches for one runtime must not share an operation key.
+    const counts = new Map();
+    for (const group of groups)
+      counts.set(
+        group.idempotencyKey,
+        (counts.get(group.idempotencyKey) || 0) + 1,
+      );
+    return groups.map((group) =>
+      counts.get(group.idempotencyKey) > 1
+        ? {
+            ...group,
+            idempotencyKey:
+              group.idempotencyKey +
+              ":" +
+              crypto
+                .createHash("sha256")
+                .update(JSON.stringify(group.steps.map((step) => step.code)))
+                .digest("hex"),
+          }
+        : group,
     );
   },
   /** Converts runtime preparation faults into business-facing setup guidance. */
-  preparationFailureMessage: function (step, error) {
+  preparationFailureMessage: function (step, error, group) {
+    if (error && error.code === "ERR_RTR_00004")
+      return this.targetFailureMessage("ERR_RTR_00004", "");
+    if (this.preparationValidationDenied(error)) {
+      const count = group && Array.isArray(group.steps) ? group.steps.length : 1;
+      return "The selected setup group (" + count + " releases) is held by the import owner's prerequisite or release validation. This does not identify a failure in every member. Review releases individually in the import workbench; no failed import or runtime outage has been established.";
+    }
     let rawMessage = String(
       (error && (error.remoteMessage || error.message)) || "",
     );
@@ -690,6 +945,14 @@ module.exports = {
       String(step.targetServer || "the target runtime") +
       ". Refresh after the target runtime is ready, or ask a developer to review the application setup configuration."
     );
+  },
+  /** Recognizes only the import owner's typed validation refusal, never exception text or a caller marker. */
+  preparationValidationDenied: function (error) {
+    const remote = error && error.metadata && error.metadata.remoteHttpFailure;
+    const code = remote ? remote.code : error && error.code;
+    const status = remote ? remote.httpStatus : error && (error.status || error.responseCode);
+    return (code === "ERR_IMP_00003" && Number(status) === 400) ||
+      (code === "ERR_IMP_00004" && Number(status) === 404);
   },
   /** Summarizes blocked preparation without leaking target runtime exception text. */
   preparationBlockedMessage: function (preparation) {
@@ -762,11 +1025,14 @@ module.exports = {
   /** Returns the business capability group for one initialization profile. */
   capabilityGroup: function (profile) {
     let presentation = (profile && profile.presentation) || {};
-    if (presentation.capabilityGroup) return String(presentation.capabilityGroup);
+    if (presentation.capabilityGroup)
+      return String(presentation.capabilityGroup);
     if (profile.type === "DOCUMENTATION_BUNDLE") return "DOCUMENTATION_PACK";
     if (String(presentation.category || "").toLowerCase() === "customization")
       return "APPLICATION_CONTENT";
-    if (/STOREFRONT|WEBSITE|APPLICATION|DOMAIN/i.test(String(profile.type || "")))
+    if (
+      /STOREFRONT|WEBSITE|APPLICATION|DOMAIN/i.test(String(profile.type || ""))
+    )
       return "PROJECT_ACCELERATOR";
     return "APPLICATION_CONTENT";
   },
@@ -775,13 +1041,20 @@ module.exports = {
     let presentation = (profile && profile.presentation) || {};
     if (presentation.capabilityType) return String(presentation.capabilityType);
     if (profile.type === "DOCUMENTATION_BUNDLE") return "DOCUMENTATION_PACK";
-    if (/STOREFRONT|WEBSITE|APPLICATION|DOMAIN/i.test(String(profile.type || "")))
+    if (
+      /STOREFRONT|WEBSITE|APPLICATION|DOMAIN/i.test(String(profile.type || ""))
+    )
       return "ACCELERATOR";
     return "APPLICATION";
   },
   /** Maps technical initialization facts to the shared business capability lifecycle. */
   capabilityBusinessStatus: function (projection) {
     if (!projection) return "NEEDS_ATTENTION";
+    if (
+      projection.mediaDependencies &&
+      projection.mediaDependencies.qualified !== true
+    )
+      return "NEEDS_ATTENTION";
     if (
       projection.preparation &&
       !["CURRENT", "RUNNING"].includes(projection.preparation.status)
@@ -793,11 +1066,18 @@ module.exports = {
       (!projection.publication || projection.publication.state !== "ONLINE")
     )
       return "NEEDS_ATTENTION";
-    if (projection.readiness === "READY" && projection.releaseStatus !== "UPDATE_AVAILABLE")
+    if (
+      projection.readiness === "READY" &&
+      projection.releaseStatus !== "UPDATE_AVAILABLE"
+    )
       return "ONLINE";
-    if (projection.readiness === "READY" && projection.releaseStatus === "UPDATE_AVAILABLE")
+    if (
+      projection.readiness === "READY" &&
+      projection.releaseStatus === "UPDATE_AVAILABLE"
+    )
       return "NEEDS_ATTENTION";
-    if (projection.readiness === "PUBLICATION_PENDING") return "APPROVAL_IN_PROGRESS";
+    if (projection.readiness === "PUBLICATION_PENDING")
+      return "APPROVAL_IN_PROGRESS";
     if (projection.readiness === "IMPORTED") return "APPROVAL_REQUIRED";
     if (projection.readiness === "IMPORTING") return "PREPARING";
     if (projection.readiness === "NOT_IMPORTED") return "NOT_PREPARED";
@@ -807,6 +1087,56 @@ module.exports = {
   /** Projects technical blockers into stable capability-level finding codes. */
   capabilityBlockers: function (projection) {
     let blockers = [];
+    const media = projection && projection.mediaDependencies;
+    if (media && media.qualified !== true) {
+      const dependencies = [].concat(media.dependencies || []);
+      for (const item of dependencies.length
+        ? dependencies
+        : [{ status: media.status }]) {
+        if (item.qualified === true) continue;
+        blockers.push({
+          blockerCode:
+            "MEDIA_DEPENDENCY_" + String(item.status || "UNAVAILABLE"),
+          code: "MEDIA_DEPENDENCY_" + String(item.status || "UNAVAILABLE"),
+          severity: "REPAIR_REQUIRED",
+          owner: String(item.mediaCode || "media"),
+          ownerType: "MEDIA",
+          source: "MEDIA_PUBLICATION",
+          message:
+            media.message ||
+            "Referenced Media is not qualified for Online delivery.",
+          technicalStatus: item.status,
+          action: item.nextAction || "Review Media publication",
+          mediaDependency: item,
+          repair:
+            item.status === "VERSION_UNPINNED"
+              ? {
+                  available: true,
+                  action: "INITIALIZE",
+                  operation: "applicationInitialization.initiate",
+                  label: "Review a fresh exact-version site publication",
+                  requiresConfirmation: true,
+                  automaticExecution: false,
+                }
+              : {
+                  available: !!(
+                    item.handoff && item.handoff.available === true
+                  ),
+                  action: "REVIEW_MEDIA_PUBLICATION",
+                  operation: "media.createRetainedPublication",
+                  label:
+                    (item.handoff && item.handoff.label) ||
+                    "Review exact-version Media publication",
+                  route: item.handoff && item.handoff.route,
+                  handoff: item.handoff,
+                  requiresOwnerInspection: true,
+                  requiresConfirmation: true,
+                  automaticExecution: false,
+                  publicationRequest: item.publicationRequest,
+                },
+        });
+      }
+    }
     let preparation = projection && projection.preparation;
     [].concat((preparation && preparation.steps) || []).forEach((step) => {
       if (["CURRENT", "SOURCE_READY", "OPTIONAL"].includes(step.status)) return;
@@ -829,11 +1159,20 @@ module.exports = {
                   ? "IMPORT_IN_PROGRESS"
                   : step.status === "NOT_INSTALLED"
                     ? "IMPORT_NOT_STARTED"
-                    : "IMPORT_FAILED";
+                    : step.status === "FAILED"
+                      ? "IMPORT_FAILED"
+                      : step.status === "READINESS_RATE_LIMITED"
+                        ? "READINESS_RATE_LIMITED"
+                        : step.status === "VALIDATION_BLOCKED"
+                          ? "READINESS_VALIDATION_BLOCKED"
+                          : step.status === "UNAVAILABLE"
+                            ? "READINESS_UNAVAILABLE"
+                            : "READINESS_UNKNOWN";
       let repair = this.capabilityRepairProjection(code, {
         owner: step.code,
         targetServer: step.targetServer,
         targetRuntimeRole: step.targetRuntimeRole,
+        historyHandoff: step.historyHandoff,
       });
       blockers.push({
         blockerCode: code,
@@ -857,6 +1196,7 @@ module.exports = {
         technicalStatus: step.status ? String(step.status) : undefined,
         repair: repair,
         runtimeDiagnostic: step.runtimeDiagnostic,
+        releaseReceipt: step.releaseReceipt,
       });
     });
     if (projection && projection.releaseStatus === "INVALID_RELEASE") {
@@ -866,7 +1206,11 @@ module.exports = {
       blockers.push({
         blockerCode: "INVALID_MANIFEST",
         code: "INVALID_MANIFEST",
-        severity: this.capabilityBlockerSeverity("INVALID_MANIFEST", true, repair),
+        severity: this.capabilityBlockerSeverity(
+          "INVALID_MANIFEST",
+          true,
+          repair,
+        ),
         owner: String(projection.releaseCode || ""),
         ownerType: "SOURCE_RELEASE",
         source: "RELEASE_MANIFEST",
@@ -884,7 +1228,9 @@ module.exports = {
       projection.readiness === "READY" &&
       (!projection.publication || projection.publication.state !== "ONLINE")
     ) {
-      let code = projection.publication ? "ONLINE_POINTER_STALE" : "PUBLICATION_RECEIPT_MISSING";
+      let code = projection.publication
+        ? "ONLINE_POINTER_STALE"
+        : "PUBLICATION_RECEIPT_MISSING";
       let repair = this.capabilityRepairProjection(code, {
         owner: projection.releaseCode,
       });
@@ -898,9 +1244,10 @@ module.exports = {
         message: projection.publication
           ? "The publication is marked ready, but the Online pointer is not confirmed."
           : "The publication is marked ready, but no publication receipt was returned.",
-        action: code === "ONLINE_POINTER_STALE"
-          ? "Refresh Online publication pointer"
-          : "Reconcile publication receipt",
+        action:
+          code === "ONLINE_POINTER_STALE"
+            ? "Refresh Online publication pointer"
+            : "Reconcile publication receipt",
         disabledReason:
           "Publication evidence is incomplete; reconcile the Online pointer or receipt before treating this capability as Online.",
         technicalStatus:
@@ -930,7 +1277,12 @@ module.exports = {
               : diagnostic.severity === "REPAIR_REQUIRED"
                 ? "REPAIR_REQUIRED"
                 : "BLOCKED",
-        owner: String(diagnostic.publicationCode || diagnostic.releaseCode || projection.releaseCode || ""),
+        owner: String(
+          diagnostic.publicationCode ||
+            diagnostic.releaseCode ||
+            projection.releaseCode ||
+            "",
+        ),
         ownerType: "PUBLICATION",
         source: "CMS_PUBLICATION",
         message: diagnostic.message,
@@ -963,7 +1315,11 @@ module.exports = {
       blockers.push({
         blockerCode: code,
         code: code,
-        severity: this.capabilityBlockerSeverity(code, !publication.workflowRef, repair),
+        severity: this.capabilityBlockerSeverity(
+          code,
+          !publication.workflowRef,
+          repair,
+        ),
         owner: String(publication.code || projection.releaseCode || ""),
         ownerType: "PROCESS_WORKFLOW",
         source: "PUBLICATION_APPROVAL",
@@ -975,13 +1331,18 @@ module.exports = {
         approvalDiagnostic: approvalDiagnostic,
       });
     }
-    return blockers;
+    return blockers.sort(
+      (left, right) =>
+        Number(right.code === "IMPORT_FAILED") -
+        Number(left.code === "IMPORT_FAILED"),
+    );
   },
   /** Maps raw preparation source data to a stable repair severity. */
   capabilityBlockerSeverity: function (code, required, repair) {
     if (required === false || code === "APPROVAL_IN_PROGRESS") return "INFO";
     if (repair && repair.available === true) return "REPAIR_REQUIRED";
-    if (["VERSION_MISMATCH", "IMPORT_IN_PROGRESS"].includes(code)) return "WARNING";
+    if (["VERSION_MISMATCH", "IMPORT_IN_PROGRESS"].includes(code))
+      return "WARNING";
     return "BLOCKED";
   },
   /** Classifies which authority owns the fix for one blocker. */
@@ -1021,8 +1382,15 @@ module.exports = {
           "The staged data version does not match the expected release version.",
         IMPORT_IN_PROGRESS:
           "The import runtime is still processing this release.",
-        IMPORT_NOT_STARTED:
-          "Required setup data has not been installed yet.",
+        IMPORT_NOT_STARTED: "Required setup data has not been installed yet.",
+        READINESS_UNAVAILABLE:
+          "The owning runtime could not verify readiness. Restore its prerequisites and refresh status; this is not evidence of a failed import.",
+        READINESS_UNKNOWN:
+          "The owning runtime did not return a recognized readiness status. Refresh status or ask an operator to inspect the owner response.",
+        READINESS_RATE_LIMITED:
+          "Readiness checks are temporarily rate limited. Wait before refreshing status.",
+        READINESS_VALIDATION_BLOCKED:
+          "The import owner refused the selected setup group's prerequisites or release validation. Resolve the owner gate before preparing data; this is not a runtime outage or failed import.",
         IMPORT_FAILED:
           "The target import preflight failed for " +
           String(target || "the configured runtime") +
@@ -1043,7 +1411,11 @@ module.exports = {
         VERSION_MISMATCH: "Update staged release",
         IMPORT_IN_PROGRESS: "Refresh readiness",
         IMPORT_NOT_STARTED: "Prepare capability",
-        IMPORT_FAILED: "Retry failed import",
+        IMPORT_FAILED: "Review import history",
+        READINESS_UNAVAILABLE: "Refresh readiness",
+        READINESS_UNKNOWN: "Refresh readiness",
+        READINESS_RATE_LIMITED: "Wait and refresh readiness",
+        READINESS_VALIDATION_BLOCKED: "Review setup prerequisites",
       }[code] || "Review capability readiness"
     );
   },
@@ -1051,12 +1423,45 @@ module.exports = {
   capabilityRepairProjection: function (code, context) {
     let owner = context && context.owner ? String(context.owner) : undefined;
     let targetServer =
-      context && context.targetServer ? String(context.targetServer) : undefined;
+      context && context.targetServer
+        ? String(context.targetServer)
+        : undefined;
     let targetRuntimeRole =
       context && context.targetRuntimeRole
         ? String(context.targetRuntimeRole)
         : undefined;
     let definitions = {
+      READINESS_VALIDATION_BLOCKED: {
+        available: false,
+        label: "Review setup prerequisites",
+        action: "REVIEW_SETUP_PREREQUISITES",
+        idempotent: true,
+        requiresConfirmation: false,
+      },
+      READINESS_UNAVAILABLE: {
+        available: true,
+        label: "Refresh readiness",
+        operation: "applicationInitialization.status",
+        action: "REFRESH_READINESS",
+        idempotent: true,
+        requiresConfirmation: false,
+      },
+      READINESS_UNKNOWN: {
+        available: true,
+        label: "Refresh readiness",
+        operation: "applicationInitialization.status",
+        action: "REFRESH_READINESS",
+        idempotent: true,
+        requiresConfirmation: false,
+      },
+      READINESS_RATE_LIMITED: {
+        available: true,
+        label: "Wait and refresh readiness",
+        operation: "applicationInitialization.status",
+        action: "REFRESH_READINESS",
+        idempotent: true,
+        requiresConfirmation: false,
+      },
       MODULE_INACTIVE: {
         available: false,
         label: "Activate module in Module Registry",
@@ -1130,12 +1535,16 @@ module.exports = {
         requiresConfirmation: false,
       },
       IMPORT_FAILED: {
-        available: true,
-        label: "Retry failed import",
-        operation: "applicationInitialization.prepareCapability",
-        action: "RETRY_FAILED_IMPORT",
+        available: !!(context && context.historyHandoff && context.historyHandoff.available === true),
+        label: "Review import history",
+        action: "REVIEW_IMPORT_HISTORY",
+        owner: "import",
+        unavailableReason:
+          "Review the owning runtime's import history; exact-runtime history navigation is not qualified by this setup contract.",
         idempotent: true,
         requiresConfirmation: false,
+        route: context && context.historyHandoff && context.historyHandoff.route,
+        handoff: context && context.historyHandoff,
       },
       APPROVAL_TASK_MISSING: {
         available: true,
@@ -1205,34 +1614,55 @@ module.exports = {
   /** Projects current publication approval evidence without querying Process from the browser. */
   approvalWorkflowDiagnostic: function (projection) {
     let publication = (projection && projection.publication) || {};
-    let ownerDiagnostic = publication.approvalDiagnostic || projection && projection.approvalDiagnostic;
-    let workflowRef = publication.workflowRef ? String(publication.workflowRef) : undefined;
-    let task = publication.approvalTask || publication.workflowTask || publication.task;
+    let ownerDiagnostic =
+      publication.approvalDiagnostic ||
+      (projection && projection.approvalDiagnostic);
+    let workflowRef = publication.workflowRef
+      ? String(publication.workflowRef)
+      : undefined;
+    let task =
+      publication.approvalTask || publication.workflowTask || publication.task;
     if (ownerDiagnostic && ownerDiagnostic.status) {
       return Object.assign({}, ownerDiagnostic, {
         source: ownerDiagnostic.source || "PUBLICATION_APPROVAL",
-        publicationCode: ownerDiagnostic.publicationCode || (publication.code ? String(publication.code) : undefined),
-        publicationState: ownerDiagnostic.publicationState || (publication.state ? String(publication.state) : undefined),
+        publicationCode:
+          ownerDiagnostic.publicationCode ||
+          (publication.code ? String(publication.code) : undefined),
+        publicationState:
+          ownerDiagnostic.publicationState ||
+          (publication.state ? String(publication.state) : undefined),
         workflowRef: ownerDiagnostic.workflowRef || workflowRef,
-        taskCode: ownerDiagnostic.taskCode || (task && task.code ? String(task.code) : undefined),
-        taskStatus: ownerDiagnostic.taskStatus || (task && task.status ? String(task.status) : undefined),
-        message: ownerDiagnostic.message || "Publication approval diagnostic is unavailable.",
-        suggestedAction: ownerDiagnostic.suggestedAction || "Refresh publication approval readiness",
-        disabledReason: ownerDiagnostic.disabledReason || "Process approval evidence is unavailable.",
+        taskCode:
+          ownerDiagnostic.taskCode ||
+          (task && task.code ? String(task.code) : undefined),
+        taskStatus:
+          ownerDiagnostic.taskStatus ||
+          (task && task.status ? String(task.status) : undefined),
+        message:
+          ownerDiagnostic.message ||
+          "Publication approval diagnostic is unavailable.",
+        suggestedAction:
+          ownerDiagnostic.suggestedAction ||
+          "Refresh publication approval readiness",
+        disabledReason:
+          ownerDiagnostic.disabledReason ||
+          "Process approval evidence is unavailable.",
       });
     }
     let taskStatus = task && task.status ? String(task.status) : undefined;
     let assignee = task && task.assignee ? String(task.assignee) : undefined;
-    let queue = task && (task.queue || task.candidateGroup || task.assignment)
-      ? String(task.queue || task.candidateGroup || task.assignment)
-      : undefined;
+    let queue =
+      task && (task.queue || task.candidateGroup || task.assignment)
+        ? String(task.queue || task.candidateGroup || task.assignment)
+        : undefined;
     let actionable = taskStatus
       ? ["OPEN", "CLAIMED", "ESCALATED"].includes(taskStatus)
       : undefined;
     let hasPublicationEvidence = Object.keys(publication).length > 0;
     let status =
       !projection || projection.readiness !== "PUBLICATION_PENDING"
-        ? projection && projection.readiness === "READY"
+        ? projection &&
+          (projection.readiness === "READY" || publication.state === "ONLINE")
           ? "APPROVED"
           : "NOT_STARTED"
         : !hasPublicationEvidence
@@ -1255,8 +1685,7 @@ module.exports = {
         "Publication approval task exists but has no assignee or review queue evidence.",
       TASK_NOT_ACTIONABLE:
         "Publication approval workflow reference exists, but the known task is not open for decision.",
-      PROVIDER_UNAVAILABLE:
-        "Process approval diagnostic is unavailable.",
+      PROVIDER_UNAVAILABLE: "Process approval diagnostic is unavailable.",
       WAITING_REVIEWER: "Publication is waiting for reviewer decision.",
     };
     let actions = {
@@ -1290,7 +1719,9 @@ module.exports = {
       source: "PUBLICATION_APPROVAL",
       status: status,
       publicationCode: publication.code ? String(publication.code) : undefined,
-      publicationState: publication.state ? String(publication.state) : undefined,
+      publicationState: publication.state
+        ? String(publication.state)
+        : undefined,
       workflowRef: workflowRef,
       taskCode: task && task.code ? String(task.code) : undefined,
       taskStatus: taskStatus,
@@ -1306,14 +1737,41 @@ module.exports = {
     let dependencies = [];
     let target = (profile && profile.target) || {};
     if (target.connectionName || target.runtimeRole) {
+      let server;
+      try {
+        server = this.applicationTargetBinding(
+          target.connectionName,
+          target.runtimeRole || "WCMS_STAGED",
+          target.moduleName,
+        ).connectionName;
+      } catch (_) {
+        // Unresolved aliases do not establish runtime authority.
+      }
+      const steps = [].concat(
+        (projection && projection.preparation && projection.preparation.steps) || [],
+      );
+      const answered = server && (
+        (projection && projection.publicationTargetResponded === true) ||
+        steps.some(step =>
+          [target.connectionName, server].includes(step.targetServer) &&
+          step.targetRuntimeRole === (target.runtimeRole || "WCMS_STAGED") &&
+          ((step.type === "DATA_RELEASE" && [
+            "CURRENT", "SOURCE_READY", "NOT_INSTALLED", "UPDATE_AVAILABLE",
+            "DOWNGRADE_AVAILABLE", "INVALID_RELEASE", "RUNNING", "FAILED",
+          ].includes(step.status)) ||
+          (step.type === "MEDIA_ASSET_MANIFEST" && step.status === "SOURCE_READY")),
+        )
+      );
       dependencies.push({
         kind: "RUNTIME",
-        code: String(target.connectionName || target.runtimeRole || "target"),
+        code: String(server || target.connectionName || target.runtimeRole || "target"),
         label: "Publication target runtime",
         required: true,
-        server: target.connectionName ? String(target.connectionName) : undefined,
-        runtimeRole: target.runtimeRole ? String(target.runtimeRole) : "WCMS_STAGED",
-        status: projection && projection.readiness === "BLOCKED" ? "UNKNOWN" : "AVAILABLE",
+        server: server,
+        runtimeRole: target.runtimeRole
+          ? String(target.runtimeRole)
+          : "WCMS_STAGED",
+        status: answered ? "AVAILABLE" : "UNKNOWN",
       });
     }
     [].concat((profile && profile.dataPackages) || []).forEach((pack) => {
@@ -1330,26 +1788,36 @@ module.exports = {
         required: pack.required !== false,
         trigger: pack.trigger ? String(pack.trigger) : undefined,
         dataType: pack.dataType ? String(pack.dataType) : undefined,
-        classification: pack.classification || this.dataPackageClassification(pack),
+        classification:
+          pack.classification || this.dataPackageClassification(pack),
         server: pack.targetServer ? String(pack.targetServer) : undefined,
-        runtimeRole: pack.targetRuntimeRole ? String(pack.targetRuntimeRole) : undefined,
+        runtimeRole: pack.targetRuntimeRole
+          ? String(pack.targetRuntimeRole)
+          : undefined,
         status: this.dependencyStatus(pack, projection),
         evidence: this.dependencyEvidence(step),
       });
     });
-    [].concat((profile && profile.presentation && profile.presentation.requiredFunctionalModules) || []).forEach((module) => {
-      let dependency = { code: module.code, type: "FUNCTIONAL_MODULE" };
-      let step = this.dependencyStep(dependency, projection);
-      dependencies.push({
-        kind: "MODULE",
-        code: String(module.code),
-        label: String(module.label || module.code),
-        required: module.required !== false,
-        classification: "FUNCTIONAL_MODULE",
-        status: this.dependencyStatus(dependency, projection),
-        evidence: this.dependencyEvidence(step),
+    []
+      .concat(
+        (profile &&
+          profile.presentation &&
+          profile.presentation.requiredFunctionalModules) ||
+          [],
+      )
+      .forEach((module) => {
+        let dependency = { code: module.code, type: "FUNCTIONAL_MODULE" };
+        let step = this.dependencyStep(dependency, projection);
+        dependencies.push({
+          kind: "MODULE",
+          code: String(module.code),
+          label: String(module.label || module.code),
+          required: module.required !== false,
+          classification: "FUNCTIONAL_MODULE",
+          status: this.dependencyStatus(dependency, projection),
+          evidence: this.dependencyEvidence(step),
+        });
       });
-    });
     let approvalDiagnostic = this.approvalWorkflowDiagnostic(projection);
     dependencies.push({
       kind: "PROCESS",
@@ -1361,7 +1829,12 @@ module.exports = {
           ? "PENDING"
           : approvalDiagnostic.status === "APPROVED"
             ? "CURRENT"
-            : ["TASK_REFERENCE_MISSING", "TASK_ASSIGNEE_MISSING", "TASK_NOT_ACTIONABLE", "PUBLICATION_MISSING"].includes(approvalDiagnostic.status)
+            : [
+                  "TASK_REFERENCE_MISSING",
+                  "TASK_ASSIGNEE_MISSING",
+                  "TASK_NOT_ACTIONABLE",
+                  "PUBLICATION_MISSING",
+                ].includes(approvalDiagnostic.status)
               ? "UNAVAILABLE"
               : "NOT_STARTED",
       evidence: {
@@ -1385,7 +1858,8 @@ module.exports = {
   /** Finds the preparation step backing one dependency projection. */
   dependencyStep: function (dependency, projection) {
     let steps = [].concat(
-      (projection && projection.preparation && projection.preparation.steps) || [],
+      (projection && projection.preparation && projection.preparation.steps) ||
+        [],
     );
     return steps.find((item) => item.code === dependency.code);
   },
@@ -1393,11 +1867,15 @@ module.exports = {
   dependencyStatus: function (dependency, projection) {
     let step = this.dependencyStep(dependency, projection);
     if (!step) return "UNKNOWN";
-    if (["CURRENT", "SOURCE_READY", "OPTIONAL"].includes(step.status)) return "CURRENT";
-    if (["NOT_INSTALLED", "NOT_REGISTERED"].includes(step.status)) return "NOT_STARTED";
-    if (["UPDATE_AVAILABLE", "DOWNGRADE_AVAILABLE"].includes(step.status)) return "VERSION_MISMATCH";
+    if (["CURRENT", "SOURCE_READY", "OPTIONAL"].includes(step.status))
+      return "CURRENT";
+    if (["NOT_INSTALLED", "NOT_REGISTERED"].includes(step.status))
+      return "NOT_STARTED";
+    if (["UPDATE_AVAILABLE", "DOWNGRADE_AVAILABLE"].includes(step.status))
+      return "VERSION_MISMATCH";
     if (["RUNNING", "IMPORTING"].includes(step.status)) return "IN_PROGRESS";
-    if (["RUNTIME_OFFLINE", "UNAVAILABLE"].includes(step.status)) return "UNAVAILABLE";
+    if (["RUNTIME_OFFLINE", "UNAVAILABLE"].includes(step.status))
+      return "UNAVAILABLE";
     return String(step.status || "UNKNOWN");
   },
   /** Projects sanitized evidence for dependency rows and graph nodes. */
@@ -1405,7 +1883,8 @@ module.exports = {
     if (!step) return undefined;
     let evidence = {};
     if (step.runtimeState) evidence.runtimeState = String(step.runtimeState);
-    if (step.registrationState) evidence.registrationState = String(step.registrationState);
+    if (step.registrationState)
+      evidence.registrationState = String(step.registrationState);
     if (Array.isArray(step.observedServers)) {
       evidence.observedServers = this.safeObservedServers(step.observedServers);
     }
@@ -1413,8 +1892,11 @@ module.exports = {
     if (step.targetRuntimeRole)
       evidence.targetRuntimeRole = String(step.targetRuntimeRole);
     if (step.runtimeEvidence) evidence.runtimeEvidence = step.runtimeEvidence;
-    if (step.runtimeDiagnostic) evidence.runtimeDiagnostic = step.runtimeDiagnostic;
-    if (step.classification) evidence.classification = String(step.classification);
+    if (step.runtimeDiagnostic)
+      evidence.runtimeDiagnostic = step.runtimeDiagnostic;
+    if (step.mediaEvidence) evidence.mediaEvidence = step.mediaEvidence;
+    if (step.classification)
+      evidence.classification = String(step.classification);
     if (step.trigger) evidence.trigger = String(step.trigger);
     if (step.dataType) evidence.dataType = String(step.dataType);
     return Object.keys(evidence).length ? evidence : undefined;
@@ -1422,9 +1904,17 @@ module.exports = {
   /** Builds a compact graph so UI pages can explain cross-runtime readiness order. */
   capabilityDependencyGraph: function (profile, projection) {
     let dependencies = this.capabilityDependencies(profile, projection);
-    let capabilityCode = String(((profile && profile.presentation) || {}).capabilityCode || profile.code);
+    let capabilityCode = String(
+      ((profile && profile.presentation) || {}).capabilityCode || profile.code,
+    );
     let nodes = [
-      { id: capabilityCode, kind: "CAPABILITY", label: String(((profile && profile.presentation) || {}).title || profile.code) },
+      {
+        id: capabilityCode,
+        kind: "CAPABILITY",
+        label: String(
+          ((profile && profile.presentation) || {}).title || profile.code,
+        ),
+      },
     ].concat(
       dependencies.map((dependency) => ({
         id: dependency.kind + ":" + dependency.code,
@@ -1446,31 +1936,58 @@ module.exports = {
     let blockerCodes = new Set(blockers.map((blocker) => blocker.code));
     return {
       installed:
-        projection && projection.preparation && projection.preparation.status === "CURRENT"
+        projection &&
+        projection.preparation &&
+        projection.preparation.status === "CURRENT"
           ? "CURRENT"
           : projection && projection.preparation
             ? String(projection.preparation.status)
             : "UNKNOWN",
       staged:
-        projection && projection.releaseStatus ? String(projection.releaseStatus) : "UNKNOWN",
+        projection && projection.releaseStatus
+          ? String(projection.releaseStatus)
+          : "UNKNOWN",
       approval: this.approvalWorkflowDiagnostic(projection).status,
       online:
-        projection && projection.publication && projection.publication.state === "ONLINE"
+        projection &&
+        projection.publication &&
+        projection.publication.state === "ONLINE"
           ? "ONLINE"
           : blockerCodes.has("ONLINE_POINTER_STALE") ||
               blockerCodes.has("PUBLICATION_RECEIPT_MISSING")
             ? "NEEDS_REPAIR"
             : "NOT_ONLINE",
-      runtime:
-        blockers.some((blocker) => blocker.code === "RUNTIME_UNAVAILABLE")
-          ? "UNAVAILABLE"
-          : blockers.some((blocker) => blocker.runtimeDiagnostic)
-            ? "NEEDS_ATTENTION"
-            : "AVAILABLE",
+      runtime: blockers.some(
+        (blocker) => blocker.code === "RUNTIME_UNAVAILABLE",
+      )
+        ? "UNAVAILABLE"
+        : blockers.some((blocker) => blocker.runtimeDiagnostic)
+          ? "NEEDS_ATTENTION"
+          : "AVAILABLE",
       media:
-        blockerCodes.has("MEDIA_MISSING") || blockerCodes.has("MEDIA_UNPUBLISHED")
-          ? "NEEDS_REPAIR"
-          : "READY_OR_NOT_REQUIRED",
+        projection && projection.mediaDependencies
+          ? projection.mediaDependencies.qualified === true
+            ? projection.mediaDependencies.status === "NOT_REQUIRED"
+              ? "NOT_REQUIRED"
+              : "READY"
+            : String(projection.mediaDependencies.status || "UNAVAILABLE")
+          : blockerCodes.has("MEDIA_MISSING") ||
+              blockerCodes.has("MEDIA_UNPUBLISHED")
+            ? "NEEDS_REPAIR"
+            : []
+                  .concat(
+                    (projection &&
+                      projection.preparation &&
+                      projection.preparation.steps) ||
+                      [],
+                  )
+                  .some(
+                    (step) =>
+                      step.type === "MEDIA_ASSET_MANIFEST" &&
+                      step.required !== false,
+                  )
+              ? "UNKNOWN"
+              : "NOT_REQUIRED",
     };
   },
   /** Builds the shared business capability readiness projection consumed by Axis pages. */
@@ -1497,27 +2014,133 @@ module.exports = {
       capabilityType: this.capabilityType(profile),
       group: this.capabilityGroup(profile),
       businessStatus: businessStatus,
-      technicalStatus: String((projection && projection.readiness) || "UNKNOWN"),
-      releaseStatus: projection && projection.releaseStatus ? String(projection.releaseStatus) : undefined,
+      technicalStatus: String(
+        (projection && projection.readiness) || "UNKNOWN",
+      ),
+      releaseStatus:
+        projection && projection.releaseStatus
+          ? String(projection.releaseStatus)
+          : undefined,
       lastEvaluatedAt: evaluatedAt,
       source: "backoffice.applicationInitialization",
       stale: false,
       dependencies: this.capabilityDependencies(profile, projection),
-      dependencyGraph: projection && projection.publicationDependencyGraph ||
+      dependencyGraph:
+        (projection && projection.publicationDependencyGraph) ||
         this.capabilityDependencyGraph(profile, projection),
       blockers: blockers,
       repairActions: blockers.map((blocker) => blocker.repair).filter(Boolean),
-      publicationSummary: this.capabilityPublicationSummary(projection, blockers),
+      publicationSummary: this.capabilityPublicationSummary(
+        projection,
+        blockers,
+      ),
       publicationDiagnostic: projection && projection.publicationDiagnostic,
+      mediaDependencies: projection && projection.mediaDependencies,
       approvalDiagnostic: this.approvalWorkflowDiagnostic(projection),
-      disabledReason: blockingAction ? blockingAction.disabledReason || blockingAction.message : undefined,
+      disabledReason: blockingAction
+        ? blockingAction.disabledReason || blockingAction.message
+        : undefined,
       nextAction:
         blockingAction?.action ||
         blockers[0]?.action ||
-        (businessStatus === "ONLINE" ? "Monitor Online readiness" : "Prepare capability"),
+        (businessStatus === "ONLINE"
+          ? "Monitor Online readiness"
+          : "Prepare capability"),
     };
   },
-  /** Returns current preparation state for every declared data-release dependency. */
+  /** Projects only bounded owner receipt fields, never record payloads or source paths. */
+  preparationReleaseReceipt: function (release) {
+    const receipt = {};
+    for (const key of [
+      "releaseCode",
+      "status",
+      "version",
+      "installedVersion",
+      "lastRunId",
+      "importRun",
+    ]) {
+      const value = release && release[key];
+      if (
+        ["string", "number"].includes(typeof value) &&
+        /^[A-Za-z0-9_.:-]{1,192}$/.test(String(value))
+      )
+        receipt[key] = String(value);
+    }
+    return receipt;
+  },
+  /** Resolves an inert exact-runtime History handoff from the existing authorized registry owner. */
+  importHistoryHandoff: async function (target, request) {
+    const unavailable = {
+      contractVersion: 1,
+      owner: "import",
+      action: "REVIEW_IMPORT_HISTORY",
+      available: false,
+      readOnly: true,
+      automaticExecution: false,
+      unavailableReason:
+        "Authorized exact-runtime import history navigation is unavailable.",
+    };
+    const registry =
+      typeof SERVICE !== "undefined" &&
+      SERVICE.DefaultBackofficeRegistryService;
+    if (
+      !registry ||
+      typeof registry.readNavigationRecoveryContext !== "function"
+    )
+      return unavailable;
+    try {
+      const context = await registry.readNavigationRecoveryContext(request);
+      const environment = NODICS.getSelectedEnvironmentName();
+      if (typeof environment !== "string" || !environment) return unavailable;
+      const routes = context.navigation.filter(
+        (item) =>
+          item.id === "imports-exports" &&
+          item.moduleName === "backoffice" &&
+          ["UP", "DEGRADED"].includes(item.availability) &&
+          (item.featureState === undefined || item.featureState === "ACTIVE"),
+      );
+      const instances = (context.modules.import || []).filter(
+        (instance) =>
+          instance.clientCallable === true &&
+          typeof instance.endpoint === "string" &&
+          instance.environment === environment &&
+          instance.server === target.targetServer &&
+          instance.runtimeRole &&
+          instance.runtimeRole.code === target.targetRuntimeRole &&
+          ["UP", "DEGRADED"].includes(instance.state),
+      );
+      if (routes.length !== 1 || instances.length !== 1) return unavailable;
+      const route = routes[0].route;
+      const instanceId = instances[0].instanceId;
+      if (
+        typeof route !== "string" ||
+        !/^\/(?!\/)[A-Za-z0-9_/-]{1,510}$/.test(route) ||
+        route.split("/").some((part) => part === "." || part === "..") ||
+        typeof instanceId !== "string" ||
+        !/^[A-Za-z0-9_.:-]{1,256}$/.test(instanceId)
+      )
+        return unavailable;
+      const query = new URLSearchParams({
+        area: "history",
+        importInstance: instanceId,
+      });
+      return {
+        contractVersion: 1,
+        owner: "import",
+        action: "REVIEW_IMPORT_HISTORY",
+        available: true,
+        readOnly: true,
+        automaticExecution: false,
+        route: route + "?" + query.toString(),
+        importInstance: instanceId,
+        targetServer: target.targetServer,
+        targetRuntimeRole: target.targetRuntimeRole,
+      };
+    } catch (_) {
+      return unavailable;
+    }
+  },
+  /** Reads owner-confirmed release, stored Media and runtime readiness without installing or publishing. */
   preparationStatus: async function (profile, request) {
     let steps = this.preparationSteps(profile);
     let functionalModuleSteps = await this.functionalModulePreparationStatus(
@@ -1546,10 +2169,22 @@ module.exports = {
           let release = byCode[step.code] || {};
           projected.push(
             Object.assign({}, step, {
-              status: String(release.status || "UNKNOWN"),
+              status: [
+                "CURRENT",
+                "SOURCE_READY",
+                "NOT_INSTALLED",
+                "UPDATE_AVAILABLE",
+                "DOWNGRADE_AVAILABLE",
+                "INVALID_RELEASE",
+                "RUNNING",
+                "FAILED",
+              ].includes(release.status)
+                ? release.status
+                : "UNKNOWN",
               version: release.version,
               installedVersion: release.installedVersion,
               description: release.description,
+              releaseReceipt: this.preparationReleaseReceipt(release),
             }),
           );
         });
@@ -1557,9 +2192,16 @@ module.exports = {
         group.steps.forEach((step) =>
           projected.push(
             Object.assign({}, step, {
-              status: "UNAVAILABLE",
-              message: this.preparationFailureMessage(step, error),
-              runtimeDiagnostic: this.runtimeInvocationDiagnostic(error, {
+              status:
+                error && error.code === "ERR_RTR_00004"
+                  ? "READINESS_RATE_LIMITED"
+                  : this.preparationValidationDenied(error)
+                    ? "VALIDATION_BLOCKED"
+                    : "UNAVAILABLE",
+              message: this.preparationFailureMessage(step, error, group),
+              runtimeDiagnostic: this.preparationValidationDenied(error)
+                ? undefined
+                : this.runtimeInvocationDiagnostic(error, {
                 phase: "preparation",
                 targetServer: group.targetServer,
                 targetRuntimeRole: group.targetRuntimeRole,
@@ -1572,24 +2214,11 @@ module.exports = {
         );
       }
     }
-    steps
-      .filter(
-        (step) =>
-          step.required !== false && step.type === "MEDIA_ASSET_MANIFEST",
-      )
-      .forEach((step) => {
-        let count = this.mediaManifestAssetCount(step);
-        projected.push(
-          Object.assign({}, step, {
-            status: count > 0 ? "SOURCE_READY" : "FAILED",
-            version: String(count),
-            description:
-              count > 0
-                ? String(count) + " media assets declared"
-                : "Media asset manifest is empty or unavailable",
-          }),
-        );
-      });
+    for (const step of steps.filter(
+      (item) => item.required !== false && item.type === "MEDIA_ASSET_MANIFEST",
+    )) {
+      projected.push(await this.mediaPreparationStatus(step, request));
+    }
     steps
       .filter((step) => step.required === false)
       .forEach((step) =>
@@ -1600,12 +2229,19 @@ module.exports = {
         ),
       );
     projected = projected.concat(functionalModuleSteps);
+    for (const step of projected) {
+      if (step.type === "DATA_RELEASE" && step.status === "FAILED")
+        step.historyHandoff = await this.importHistoryHandoff(step, request);
+    }
     return {
       status: projected.some((step) =>
         [
           "INVALID_RELEASE",
           "DOWNGRADE_AVAILABLE",
           "UNAVAILABLE",
+          "READINESS_RATE_LIMITED",
+          "VALIDATION_BLOCKED",
+          "UNKNOWN",
           "NOT_REGISTERED",
           "NOT_ACTIVE",
           "RUNTIME_OFFLINE",
@@ -1623,6 +2259,82 @@ module.exports = {
             : "ACTION_REQUIRED",
       steps: projected.sort((left, right) => left.order - right.order),
     };
+  },
+  /** Reads one fresh persisted CURRENT metadata aggregate; routine status never verifies bytes or publishes. */
+  mediaPreparationStatus: async function (step, request) {
+    try {
+      const manifestPath = this.safeManifestPath(step);
+      delete require.cache[require.resolve(manifestPath)];
+      const assets = require(manifestPath);
+      if (!Array.isArray(assets) || assets.length === 0 || assets.length > 100) {
+        return {
+          ...step,
+          status: "FAILED",
+          description: "Media asset manifest is empty or unavailable",
+        };
+      }
+      const descriptors = assets.map(asset =>
+        this.describeMediaAsset(step, asset, request).descriptor);
+      if (new Set(descriptors.map(asset => asset.mediaCode)).size !== descriptors.length) {
+        throw new Error("Ambiguous Media manifest");
+      }
+      const startedAt = Date.now();
+      const response = await SERVICE.DefaultModuleService.invokeModule({
+        moduleName: "media", local: false, tenant: request.tenant,
+        ...this.applicationTargetBinding(step.targetServer, step.targetRuntimeRole, "media"),
+        methodName: "POST", apiName: "/storage/readiness", maxAttempts: 1,
+        header: {
+          Authorization: this.authorizationHeader(request, true), tenant: request.tenant,
+          "x-enterprise-code": request.enterpriseCode || (request.authData && request.authData.entCode),
+          Origin: this.operatorOrigin(request),
+        },
+        requestBody: { assets: descriptors },
+      });
+      const aggregate = response && response.data;
+      const checkedAt = aggregate && Date.parse(aggregate.checkedAt);
+      if (!aggregate || typeof aggregate.checkedAt !== "string" || aggregate.checkedAt.length > 64 ||
+          aggregate.contractVersion !== 1 || aggregate.owner !== "media" ||
+          aggregate.evidenceKind !== "PERSISTED_CURRENT_METADATA" || !Number.isFinite(checkedAt) ||
+          checkedAt < startedAt - 1000 || checkedAt > Date.now() + 1000 ||
+          !Array.isArray(aggregate.items) || aggregate.items.length !== descriptors.length) {
+        throw new Error("Unconfirmed Media aggregate");
+      }
+      const evidence = aggregate.items;
+      const evidenceFields = ["mediaCode", "checksum", "versionId", "exists", "metadataMatched", "storedBytesVerified"];
+      evidence.forEach((item, index) => {
+        const descriptor = descriptors[index];
+        if (!item || Object.keys(item).some(key => !evidenceFields.includes(key)) ||
+            item.mediaCode !== descriptor.mediaCode || item.checksum !== descriptor.checksum ||
+            typeof item.exists !== "boolean" || typeof item.metadataMatched !== "boolean" || item.storedBytesVerified !== false ||
+            (item.versionId !== null && (!Number.isSafeInteger(item.versionId) || item.versionId < 0)) ||
+            (item.metadataMatched && (!item.exists || item.versionId === null))) {
+          throw new Error("Invalid Media aggregate");
+        }
+      });
+      const current = evidence.every(item => item.metadataMatched);
+      return {
+        ...step,
+        status: current
+          ? "SOURCE_READY"
+          : evidence.some((item) => item.exists)
+            ? "UPDATE_AVAILABLE"
+            : "NOT_INSTALLED",
+        version: String(assets.length),
+        mediaEvidence: evidence,
+        mediaEvidenceKind: aggregate.evidenceKind,
+        mediaCheckedAt: aggregate.checkedAt,
+        description: current
+          ? "Persisted CURRENT media metadata matches the declared assets. Byte verification and Online approval remain separate operations."
+          : "Declared media assets need governed Staged preparation.",
+      };
+    } catch (_) {
+      return {
+        ...step,
+        status: "UNAVAILABLE",
+        description:
+          "Media preparation evidence is unavailable. Restore authorized Media inspection before continuing.",
+      };
+    }
   },
   /** Returns the configured project root used only for declared project-owned setup assets. */
   projectRoot: function () {
@@ -1647,15 +2359,32 @@ module.exports = {
   /** Resolves a declared module-owned manifest through the canonical module registry, preserving project-relative compatibility. */
   safeManifestPath: function (step) {
     if (!step.manifestModule) return this.safeProjectPath(step.manifestPath);
-    const owner = typeof NODICS.getRawModule === "function" && NODICS.getRawModule(step.manifestModule);
+    const owner =
+      typeof NODICS.getRawModule === "function" &&
+      NODICS.getRawModule(step.manifestModule);
     const relativePath = String(step.manifestPath || "");
-    if (!owner || !owner.path || !relativePath || path.isAbsolute(relativePath) || relativePath.split(/[\\/]+/).includes("..")) {
-      throw new CLASSES.NodicsError("ERR_BOF_00081", "Application preparation manifest requires a declared module-relative source");
+    if (
+      !owner ||
+      !owner.path ||
+      !relativePath ||
+      path.isAbsolute(relativePath) ||
+      relativePath.split(/[\\/]+/).includes("..")
+    ) {
+      throw new CLASSES.NodicsError(
+        "ERR_BOF_00081",
+        "Application preparation manifest requires a declared module-relative source",
+      );
     }
     const root = fs.realpathSync(owner.path);
     const resolved = fs.realpathSync(path.resolve(root, relativePath));
-    if (!resolved.startsWith(root + path.sep) || !fs.statSync(resolved).isFile()) {
-      throw new CLASSES.NodicsError("ERR_BOF_00081", "Application preparation manifest escapes its owning module");
+    if (
+      !resolved.startsWith(root + path.sep) ||
+      !fs.statSync(resolved).isFile()
+    ) {
+      throw new CLASSES.NodicsError(
+        "ERR_BOF_00081",
+        "Application preparation manifest escapes its owning module",
+      );
     }
     return resolved;
   },
@@ -1664,13 +2393,29 @@ module.exports = {
     const manifest = this.safeManifestPath(step);
     const root = fs.realpathSync(path.join(path.dirname(manifest), "files"));
     if (!root.startsWith(path.dirname(manifest) + path.sep))
-      throw new CLASSES.NodicsError("ERR_BOF_00085", "Application preparation media directory escapes its manifest directory");
+      throw new CLASSES.NodicsError(
+        "ERR_BOF_00085",
+        "Application preparation media directory escapes its manifest directory",
+      );
     const relativePath = String(fileName || "");
-    if (!relativePath || path.isAbsolute(relativePath) || relativePath.split(/[\\/]+/).includes(".."))
-      throw new CLASSES.NodicsError("ERR_BOF_00085", "Application preparation media asset path is invalid");
+    if (
+      !relativePath ||
+      path.isAbsolute(relativePath) ||
+      relativePath.split(/[\\/]+/).includes("..")
+    )
+      throw new CLASSES.NodicsError(
+        "ERR_BOF_00085",
+        "Application preparation media asset path is invalid",
+      );
     const resolved = fs.realpathSync(path.resolve(root, relativePath));
-    if (!resolved.startsWith(root + path.sep) || !fs.statSync(resolved).isFile())
-      throw new CLASSES.NodicsError("ERR_BOF_00085", "Application preparation media asset escapes its manifest directory");
+    if (
+      !resolved.startsWith(root + path.sep) ||
+      !fs.statSync(resolved).isFile()
+    )
+      throw new CLASSES.NodicsError(
+        "ERR_BOF_00085",
+        "Application preparation media asset escapes its manifest directory",
+      );
     return resolved;
   },
   /** Counts declared media assets without exposing local file paths to the browser. */
@@ -1711,8 +2456,14 @@ module.exports = {
     let authorization = headers.authorization || headers.Authorization;
     if (requireHuman) {
       this.human(request);
-      if (typeof authorization !== "string" || !/^Bearer\s+\S+$/i.test(authorization)) {
-        throw new CLASSES.NodicsError("ERR_BOF_00082", "Operator bearer authorization is required for application data installation");
+      if (
+        typeof authorization !== "string" ||
+        !/^Bearer\s+\S+$/i.test(authorization)
+      ) {
+        throw new CLASSES.NodicsError(
+          "ERR_BOF_00082",
+          "Operator bearer authorization is required for application data installation",
+        );
       }
     }
     if (authorization) return authorization;
@@ -1772,29 +2523,15 @@ module.exports = {
         "Application preparation runtime registry is unavailable",
       );
     }
-    const candidates = Array.from(
-      new Set(
-        [
-          String(serverCode || ""),
-          String(serverCode || "").replace(/Server$/, ""),
-          /Server$/.test(String(serverCode || ""))
-            ? String(serverCode || "")
-            : String(serverCode || "") + "Server",
-        ].filter(Boolean),
-      ),
+    const binding = this.applicationTargetBinding(
+      serverCode,
+      runtimeRole,
+      moduleName,
     );
-    let owner;
-    for (const candidate of candidates) {
-      owner = await resolver.resolveRuntimeOwner({
-        moduleName,
-        connectionName: candidate,
-        targetAuthority: {
-          server: candidate,
-          runtimeRole: runtimeRole ? { code: runtimeRole } : undefined,
-        },
-      });
-      if (owner && owner.endpoint) break;
-    }
+    const owner = await resolver.resolveRuntimeOwner({
+      moduleName,
+      ...binding,
+    });
     if (!owner || !owner.endpoint) {
       throw new CLASSES.NodicsError(
         "ERR_BOF_00081",
@@ -1806,8 +2543,8 @@ module.exports = {
       "",
     );
   },
-  /** Uploads one declared media asset through the media-owned upload API. */
-  uploadMediaAsset: async function (step, asset, request) {
+  /** Builds the same confined asset descriptor for aggregate reads and explicit preparation. */
+  describeMediaAsset: function (step, asset, request) {
     let filePath = this.safeManifestAssetPath(step, asset.fileName);
     let buffer = fs.readFileSync(filePath);
     let form = new FormData();
@@ -1857,40 +2594,122 @@ module.exports = {
           asset.code,
       ),
     );
-    let response = await fetch(
-      (await this.moduleBaseUrl(step.targetServer, "media", step.targetRuntimeRole)) +
-        "/media/v0/storage/upload",
+    const headers = {
+      Authorization: this.authorizationHeader(request, true),
+      "x-enterprise-code":
+        request.enterpriseCode ||
+        (request.authData &&
+          (request.authData.enterpriseCode || request.authData.entCode)) ||
+        (request.headers &&
+          (request.headers.enterpriseCode ||
+            request.headers["x-enterprise-code"])) ||
+        CONFIG.get("defaultEnterprise") ||
+        "default",
+      Origin: this.operatorOrigin(request),
+    };
+    const checksum = crypto.createHash("sha256").update(buffer).digest("hex");
+    const descriptor = Object.fromEntries(
+      Array.from(form.entries()).filter(([key]) => key !== "file"),
+    );
+    Object.assign(descriptor, {
+      checksum,
+      sizeBytes: buffer.length,
+      mimeType,
+      originalFileName: String(asset.fileName),
+    });
+    return { form, headers, checksum, descriptor };
+  },
+  /** Explicit preparation reads exact current bytes before upload reuse or CAS replacement. */
+  inspectMediaAsset: async function (step, asset, request) {
+    const { form, headers, checksum, descriptor } = this.describeMediaAsset(step, asset, request);
+    const baseUrl = await this.moduleBaseUrl(step.targetServer, 'media', step.targetRuntimeRole);
+    const inspectionResponse = await fetch(
+      baseUrl + "/media/v0/storage/upload/inspect",
       {
         method: "POST",
-        headers: {
-          Authorization: this.authorizationHeader(request),
-          "x-enterprise-code":
-            request.enterpriseCode ||
-            (request.authData &&
-              (request.authData.enterpriseCode || request.authData.entCode)) ||
-            (request.headers &&
-              (request.headers.enterpriseCode ||
-                request.headers["x-enterprise-code"])) ||
-            CONFIG.get("defaultEnterprise") ||
-            "default",
-          Origin: this.operatorOrigin(request),
-        },
-        body: form,
+        headers: { ...headers, "Content-Type": "application/json" },
+        body: JSON.stringify(descriptor),
       },
     );
-    let text = await response.text();
-    if (!response.ok && !/duplicate|already|exists|E11000/i.test(text)) {
-      throw new CLASSES.NodicsError(
-        "ERR_BOF_00085",
-        "Application preparation media upload failed: HTTP " +
-          String(response.status) +
-          " - " +
-          text.slice(0, 300),
-      );
+    const fail = (message) => {
+      throw new CLASSES.NodicsError("ERR_BOF_00085", message);
+    };
+    const parse = async (response) => {
+      if (!response.ok) {
+        fail(
+          "Application preparation media request failed: HTTP " +
+            String(response.status),
+        );
+      }
+      try {
+        return JSON.parse(await response.text()).data;
+      } catch (_) {
+        return fail("Application preparation Media acknowledgement is invalid");
+      }
+    };
+    const inspection = await parse(inspectionResponse);
+    if (
+      !inspection ||
+      inspection.contractVersion !== 1 ||
+      inspection.mediaCode !== descriptor.mediaCode ||
+      typeof inspection.versioned !== "boolean" ||
+      typeof inspection.exists !== "boolean" ||
+      typeof inspection.unchanged !== "boolean" ||
+      (inspection.exists &&
+        inspection.versioned &&
+        (!Number.isSafeInteger(inspection.versionId) ||
+          inspection.versionId < 0)) ||
+      (inspection.unchanged && (!inspection.exists || !inspection.versioned))
+    ) {
+      fail("Application preparation Media inspection is invalid");
+    }
+    return {
+      inspection,
+      descriptor,
+      checksum,
+      form,
+      headers,
+      baseUrl,
+      parse,
+      fail,
+    };
+  },
+  /** Uploads one declared asset only when owner inspection cannot verify unchanged reuse. */
+  uploadMediaAsset: async function (step, asset, request) {
+    const {
+      inspection,
+      descriptor,
+      checksum,
+      form,
+      headers,
+      baseUrl,
+      parse,
+      fail,
+    } = await this.inspectMediaAsset(step, asset, request);
+    if (inspection.unchanged)
+      return { mediaCode: descriptor.mediaCode, checksum };
+    if (inspection.exists && inspection.versioned) {
+      form.append("versionId", String(inspection.versionId));
+    }
+    const response = await fetch(baseUrl + "/media/v0/storage/upload", {
+      method: "POST",
+      headers,
+      body: form,
+    });
+    const saved = await parse(response);
+    const expectedVersion = inspection.exists ? inspection.versionId + 1 : 0;
+    if (
+      !saved ||
+      saved.code !== descriptor.mediaCode ||
+      saved.checksumAlgorithm !== "sha256" ||
+      saved.checksum !== checksum ||
+      (inspection.versioned && saved.versionId !== expectedVersion)
+    ) {
+      fail("Application preparation Media upload was not acknowledged");
     }
     return {
       mediaCode: String(asset.mediaCode || asset.code),
-      checksum: crypto.createHash("sha256").update(buffer).digest("hex"),
+      checksum,
     };
   },
   /** Reconciles profile-declared media manifests into the Staged media store before publication approval. */
@@ -1945,6 +2764,7 @@ module.exports = {
         }),
       )
       .filter((group) => group.steps.length > 0);
+    const groupReceipts = [];
     for (let group of groups) {
       group.expectedReleases = Object.fromEntries(
         group.steps
@@ -1959,9 +2779,98 @@ module.exports = {
           })
           .filter((entry) => entry[1]),
       );
-      await this.invokeDataReleaseOperation("execute", group, request);
+      const receipt = {
+        targetServer: group.targetServer,
+        targetRuntimeRole: group.targetRuntimeRole,
+        dataType: group.dataType,
+        releaseCodes: group.steps.map((step) => step.code),
+      };
+      try {
+        const response = await this.invokeDataReleaseOperation(
+          "execute",
+          group,
+          request,
+        );
+        const result =
+          (response && (response.data || response.result || response)) || {};
+        const selected = new Set(receipt.releaseCodes);
+        const releases = Array.isArray(result.releases)
+          ? result.releases
+              .filter((release) => release && selected.has(release.releaseCode))
+              .map((release) => this.preparationReleaseReceipt(release))
+          : [];
+        groupReceipts.push({
+          ...receipt,
+          status:
+            releases.length === selected.size &&
+            releases.every((release) => release.status === "CURRENT")
+              ? "COMPLETE"
+              : "UNCONFIRMED",
+          releases,
+        });
+      } catch (error) {
+        const code = error && error.code;
+        const failureCode =
+          typeof code === "string" && /^ERR_[A-Z0-9_]{1,128}$/.test(code)
+            ? code
+            : "OWNER_OPERATION_FAILED";
+        groupReceipts.push({ ...receipt, status: "FAILED", failureCode });
+        const refreshed = await this.preparationStatus(profile, request).catch(
+          () => ({
+            status: "BLOCKED",
+            steps: preparation.steps.map((step) => ({
+              ...step,
+              status: "UNAVAILABLE",
+            })),
+          }),
+        );
+        const releases = refreshed.steps
+          .filter(
+            (step) =>
+              step.targetServer === group.targetServer &&
+              step.dataType === group.dataType &&
+              receipt.releaseCodes.includes(step.code),
+          )
+          .map(
+            (step) =>
+              step.releaseReceipt || {
+                releaseCode: step.code,
+                status: step.status,
+              },
+          );
+        groupReceipts[groupReceipts.length - 1].releases = releases;
+        for (const pending of groups.slice(groups.indexOf(group) + 1)) {
+          groupReceipts.push({
+            targetServer: pending.targetServer,
+            targetRuntimeRole: pending.targetRuntimeRole,
+            dataType: pending.dataType,
+            releaseCodes: pending.steps.map((step) => step.code),
+            status: "NOT_ATTEMPTED",
+            releases: [],
+          });
+        }
+        return {
+          ...refreshed,
+          status: "BLOCKED",
+          groupReceipts,
+          operationFailure: {
+            owner: "import",
+            ...receipt,
+            failureCode,
+            message:
+              "Data preparation failed. Review the owning runtime's import receipt before attempting another preparation.",
+            automaticRetry: false,
+            historyHandoff: refreshed.steps.find(step =>
+              step.status === "FAILED" && step.targetServer === group.targetServer &&
+              step.targetRuntimeRole === group.targetRuntimeRole && receipt.releaseCodes.includes(step.code))?.historyHandoff,
+          },
+        };
+      }
     }
-    return this.preparationStatus(profile, request);
+    return {
+      ...(await this.preparationStatus(profile, request)),
+      groupReceipts,
+    };
   },
   /** Returns the target baseline operation used for one BackOffice application operation. */
   targetBaselineOperation: function (operation) {
@@ -1983,12 +2892,17 @@ module.exports = {
     let repairedWorkflowRef = repairedPublication.workflowRef;
     return {
       action: "RECONCILE_APPROVAL_TASK",
-      status: repairedDiagnostic.status === "WAITING_REVIEWER" || repairedWorkflowRef
-        ? "REPAIRED_OR_REPLAYED"
-        : "NEEDS_PROCESS_REVIEW",
+      status:
+        repairedDiagnostic.status === "WAITING_REVIEWER" || repairedWorkflowRef
+          ? "REPAIRED_OR_REPLAYED"
+          : "NEEDS_PROCESS_REVIEW",
       idempotent: true,
-      previousWorkflowRef: previousWorkflowRef ? String(previousWorkflowRef) : undefined,
-      workflowRef: repairedWorkflowRef ? String(repairedWorkflowRef) : undefined,
+      previousWorkflowRef: previousWorkflowRef
+        ? String(previousWorkflowRef)
+        : undefined,
+      workflowRef: repairedWorkflowRef
+        ? String(repairedWorkflowRef)
+        : undefined,
       previousApprovalStatus: previousDiagnostic.status,
       approvalStatus: repairedDiagnostic.status,
       previousTaskCode: previousDiagnostic.taskCode,
@@ -2005,7 +2919,7 @@ module.exports = {
   },
   /** Builds a bounded proof bundle for approval reconciliation requests. */
   approvalRepairBinding: function (status) {
-    let publication = status && status.publication || {};
+    let publication = (status && status.publication) || {};
     let diagnostic = publication.approvalDiagnostic || {};
     if (!diagnostic.workflowRef && !publication.workflowRef) return undefined;
     return {
@@ -2024,17 +2938,39 @@ module.exports = {
     this.human(request);
     let initialPreparation = await this.preparationStatus(profile, request);
     if (initialPreparation.status === "BLOCKED") {
-      return Object.assign(this.blockedProjection(profile, initialPreparation), {
+      return Object.assign(
+        this.blockedProjection(profile, initialPreparation),
+        {
+          preparationOperation: this.prepareCapabilityEvidence(
+            profile,
+            initialPreparation,
+            initialPreparation,
+            false,
+          ),
+        },
+      );
+    }
+    const prepared = await this.prepareApplication(
+      profile,
+      request,
+      initialPreparation,
+    );
+    if (prepared.status === "BLOCKED") {
+      return {
+        ...this.blockedProjection(profile, prepared),
         preparationOperation: this.prepareCapabilityEvidence(
           profile,
           initialPreparation,
-          initialPreparation,
-          false,
+          prepared,
+          true,
         ),
-      });
+      };
     }
-    await this.prepareApplication(profile, request, initialPreparation);
     let refreshed = await this.status(profileCode, request);
+    refreshed.preparation = {
+      ...refreshed.preparation,
+      groupReceipts: prepared.groupReceipts,
+    };
     return Object.assign(refreshed, {
       preparationOperation: this.prepareCapabilityEvidence(
         profile,
@@ -2059,10 +2995,18 @@ module.exports = {
         Boolean(before && after) &&
         (before.status !== after.status ||
           JSON.stringify(
-            beforeSteps.map((step) => [step.code, step.status, step.installedVersion]),
+            beforeSteps.map((step) => [
+              step.code,
+              step.status,
+              step.installedVersion,
+            ]),
           ) !==
             JSON.stringify(
-              afterSteps.map((step) => [step.code, step.status, step.installedVersion]),
+              afterSteps.map((step) => [
+                step.code,
+                step.status,
+                step.installedVersion,
+              ]),
             )),
     };
   },
@@ -2081,6 +3025,8 @@ module.exports = {
       operation === "initiate"
         ? await this.prepareApplication(profile, request, initialPreparation)
         : initialPreparation;
+    if (preparation.status === "BLOCKED")
+      return this.blockedProjection(profile, preparation);
     let token = NODICS.getInternalAuthToken(request.tenant);
     if (!token)
       throw new CLASSES.NodicsError(
@@ -2113,20 +3059,23 @@ module.exports = {
       repairBefore = await SERVICE.DefaultModuleService.invokeModule({
         moduleName: profile.target.moduleName,
         local: false,
-        connectionName: profile.target.connectionName,
+        ...this.applicationTargetBinding(
+          profile.target.connectionName,
+          profile.target.runtimeRole || "WCMS_STAGED",
+          profile.target.moduleName,
+        ),
         connectionType: profile.target.connectionType || "abstract",
-        targetAuthority: {
-          runtimeRole: profile.target.runtimeRole || "WCMS_STAGED",
-        },
         methodName: "GET",
         apiName:
-          "/publication/baselines/" +
-          encodeURIComponent(profile.baselineCode),
+          "/publication/baselines/" + encodeURIComponent(profile.baselineCode),
         timeoutMs: profile.target.timeoutMs,
         maxAttempts: profile.target.maxAttempts,
         header: { Authorization: "Bearer " + token },
-        })
-        .then((response) => (response && (response.data || response.result || response)) || {})
+      })
+        .then(
+          (response) =>
+            (response && (response.data || response.result || response)) || {},
+        )
         .catch(() => undefined);
       let binding = this.approvalRepairBinding(repairBefore);
       if (binding) body.approvalRepairBinding = binding;
@@ -2134,11 +3083,12 @@ module.exports = {
     return SERVICE.DefaultModuleService.invokeModule({
       moduleName: profile.target.moduleName,
       local: false,
-      connectionName: profile.target.connectionName,
+      ...this.applicationTargetBinding(
+        profile.target.connectionName,
+        profile.target.runtimeRole || "WCMS_STAGED",
+        profile.target.moduleName,
+      ),
       connectionType: profile.target.connectionType || "abstract",
-      targetAuthority: {
-        runtimeRole: profile.target.runtimeRole || "WCMS_STAGED",
-      },
       methodName: operation === "status" ? "GET" : "POST",
       apiName:
         "/publication/baselines/" +
@@ -2157,14 +3107,38 @@ module.exports = {
           : undefined,
       header: { Authorization: "Bearer " + token },
     })
-      .catch((error) => {
-        throw this.targetDiagnostic(error, profile);
-      })
       .then((response) => {
         let authority =
           (response && (response.data || response.result || response)) || {};
+        const mediaDependencies =
+          authority.mediaDependencies ||
+          ((authority.readiness === "READY" ||
+            authority.readiness === "MEDIA_DEPENDENCIES_PENDING" ||
+            (authority.publication &&
+              authority.publication.state === "ONLINE")) &&
+          this.preparationSteps(profile).some(
+            (step) =>
+              step.type === "MEDIA_ASSET_MANIFEST" && step.required !== false,
+          )
+            ? {
+                contractVersion: 1,
+                owner: "media",
+                qualified: false,
+                status: "UNAVAILABLE",
+                dependencies: [],
+                message:
+                  "Media publication dependency evidence is not available from the CMS owner.",
+              }
+            : undefined);
         let readiness =
           preparation.status === "BLOCKED" ? "BLOCKED" : authority.readiness;
+        if (
+          readiness === "READY" &&
+          mediaDependencies &&
+          mediaDependencies.qualified !== true
+        ) {
+          readiness = "MEDIA_DEPENDENCIES_PENDING";
+        }
         let preparationUpdateAvailable =
           preparation.status !== "CURRENT" &&
           preparation.status !== "RUNNING" &&
@@ -2175,11 +3149,13 @@ module.exports = {
           ["UPDATE_AVAILABLE", "FAILED"].includes(authority.releaseStatus);
         let projection = {
           readiness: readiness,
+          publicationTargetResponded: true,
           releaseStatus: authority.releaseStatus,
           releaseCode: authority.releaseCode,
           preparation: preparation,
           publication: authority.publication,
           publicationDiagnostic: authority.publicationDiagnostic,
+          mediaDependencies,
           publicationDependencyGraph: authority.publicationDependencyGraph,
         };
         let repair = this.approvalRepairProjection(
@@ -2197,9 +3173,15 @@ module.exports = {
           allowedActions:
             preparation.status === "BLOCKED"
               ? []
-              : readiness === "READY"
+              : readiness === "READY" ||
+                  readiness === "MEDIA_DEPENDENCIES_PENDING"
                 ? [].concat(
-                    updateAvailable || preparationUpdateAvailable
+                    updateAvailable ||
+                      preparationUpdateAvailable ||
+                      (mediaDependencies &&
+                        []
+                          .concat(mediaDependencies.dependencies || [])
+                          .some((item) => item.status === "VERSION_UNPINNED"))
                       ? ["INITIALIZE"]
                       : [],
                     authority.publication &&
@@ -2219,11 +3201,34 @@ module.exports = {
           preparation: preparation,
           publication: authority.publication,
           publicationDiagnostic: authority.publicationDiagnostic,
+          mediaDependencies,
           publicationDependencyGraph: authority.publicationDependencyGraph,
           lineage: authority.lineage,
           repair: repair,
           capability: this.capabilityProjection(profile, projection),
         };
+      })
+      .catch((error) => {
+        if (operation === "status" && error && error.code === "ERR_RTR_00004") {
+          return this.blockedProjection(profile, {
+            ...preparation,
+            status: "BLOCKED",
+            steps: [].concat(preparation.steps || [], {
+              type: "PUBLICATION_READINESS",
+              code: profile.baselineCode,
+              required: true,
+              status: "READINESS_RATE_LIMITED",
+              targetServer: this.applicationTargetBinding(
+                profile.target.connectionName,
+                profile.target.runtimeRole || "WCMS_STAGED",
+                profile.target.moduleName,
+              ).connectionName,
+              targetRuntimeRole: profile.target.runtimeRole || "WCMS_STAGED",
+              message: this.targetFailureMessage("ERR_RTR_00004", ""),
+            }),
+          });
+        }
+        throw this.targetDiagnostic(error, profile, request);
       });
   },
   /** Reads or installs the profile-owned content pack through its fixed Staged target. */
@@ -2245,11 +3250,12 @@ module.exports = {
     return SERVICE.DefaultModuleService.invokeModule({
       moduleName: "system",
       local: false,
-      connectionName: profile.target.connectionName,
+      ...this.applicationTargetBinding(
+        profile.target.connectionName,
+        profile.target.runtimeRole || "WCMS_STAGED",
+        "system",
+      ),
       connectionType: profile.target.connectionType || "abstract",
-      targetAuthority: {
-        runtimeRole: profile.target.runtimeRole || "WCMS_STAGED",
-      },
       methodName: operation === "status" ? "GET" : "POST",
       apiName:
         "/internal/content-packs/" +

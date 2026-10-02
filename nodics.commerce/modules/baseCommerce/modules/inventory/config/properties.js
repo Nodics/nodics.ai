@@ -11,6 +11,7 @@
 
 /** @module inventory/config/properties @description Defines Commerce capability and schema access policies. @layer config @owner inventory */
 module.exports = {
+  data: { dataReleases: { targetValidators: { inventory: "DefaultInventoryOperationService" } } },
   publish: {
     providers: { domainAdapters: { inventory: null }, versionProviders: { inventory: null }, workflowProviders: { inventory: null } },
     approvalWorkflow: { domains: { inventory: { definitionCode: 'inventoryPublicationApproval', ownerModule: 'inventory',

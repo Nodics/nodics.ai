@@ -1,5 +1,13 @@
 # mongodb Agent Contract
 
+Explicit offline disposable database reset delegates to the provider-owned
+[Local maintenance contract](llm/contracts/local-reset-maintenance.md). Preserve
+exact native scope, operator attestations, positive bounded inspection, drop
+acknowledgement, empty readback and owned cleanup; never invoke it on startup.
+Registered derived destinations require genuine protected read observations and
+complete fresh durable-pin comparisons within the same private one-use invocation.
+Do not broaden public prefix guards or accept copied/serialized admission proof.
+
 This file gives AI coding agents mandatory guidance for this Nodics module or package boundary.
 
 ## Inheritance

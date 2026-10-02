@@ -22,22 +22,48 @@ module.exports = {
     const selected = policy.providers?.[channel];
     if (!selected || selected.type === undefined) return selected;
     const types = policy.providerTypes || {};
-    if (typeof selected.type !== "string" || !Object.hasOwn(types, selected.type))
+    if (
+      typeof selected.type !== "string" ||
+      !Object.hasOwn(types, selected.type)
+    )
       throw new Error("COMMUNICATION_PROVIDER_TYPE_INVALID");
     const defaults = types[selected.type];
-    if (!defaults || typeof defaults !== "object" || Array.isArray(defaults) ||
-        Object.keys(defaults).some(key => !["code", "service", "timeoutMilliseconds"].includes(key)))
+    if (
+      !defaults ||
+      typeof defaults !== "object" ||
+      Array.isArray(defaults) ||
+      Object.keys(defaults).some(
+        (key) => !["code", "service", "timeoutMilliseconds"].includes(key),
+      )
+    )
       throw new Error("COMMUNICATION_PROVIDER_TYPE_INVALID");
     return { ...defaults, ...selected };
   },
   /** Detaches the generated persistence result. */
   rows: function (response) {
-    return JSON.parse(JSON.stringify(response.result || []));
+    if (
+      !response ||
+      response.error ||
+      response.success === false ||
+      typeof response.code !== "string" ||
+      !response.code.startsWith("SUC_") ||
+      (response.errors &&
+        (!Array.isArray(response.errors) || response.errors.length)) ||
+      !Array.isArray(response.result)
+    ) {
+      throw new Error("Communication storage read could not be confirmed");
+    }
+    return JSON.parse(JSON.stringify(response.result));
   },
   /** Builds owner storage context after caller authorization. */
   context: function (request) {
     const tenant = request.authData?.tenant || request.tenant;
-    if (!tenant) throw new Error("Trusted communication context is required");
+    if (
+      typeof tenant !== "string" ||
+      !tenant ||
+      (request.tenant && request.tenant !== tenant)
+    )
+      throw new Error("Trusted communication context is required");
     return {
       tenant,
       authData: {
@@ -69,23 +95,77 @@ module.exports = {
   },
   /** Creates a unique record without upsert so a competing request cannot overwrite evidence. */
   create: async function (schema, request, model) {
-    await SERVICE["Default" + schema + "Service"].save({
+    const response = await SERVICE["Default" + schema + "Service"].save({
       ...this.context(request),
       model: { ...model, tenant: this.context(request).tenant, active: true },
       options: { recursive: false },
     });
+    this.assertWrite(response);
   },
-  /** Claims an exact intent revision; concurrent sends fail before transport invocation. */
+  /** Requires canonical acknowledgement before a persisted command can be treated as applied. */
+  assertWrite: function (response) {
+    if (
+      !response ||
+      response.error ||
+      response.success === false ||
+      typeof response.code !== "string" ||
+      !response.code.startsWith("SUC_") ||
+      (response.errors &&
+        (!Array.isArray(response.errors) || response.errors.length))
+    ) {
+      throw new Error("Communication storage write could not be confirmed");
+    }
+  },
+  /** Claims an exact revision and proves this writer by private marker/readback before invoking transport. */
   update: async function (request, current, patch) {
-    if (!Number.isSafeInteger(current.revision))
+    if (
+      !current ||
+      !Number.isSafeInteger(current.revision) ||
+      current.revision < 0
+    )
       throw new Error("Communication revision is required");
-    await SERVICE.DefaultCommsIntentService.update({
-      ...this.context(request),
-      query: { code: current.code, revision: current.revision },
-      model: { ...patch, code: current.code, revision: current.revision },
+    const context = this.context(request);
+    if (current.tenant !== context.tenant)
+      throw new Error("Communication context changed");
+    const lastMutationId = crypto.randomBytes(32).toString("hex");
+    const response = await SERVICE.DefaultCommsIntentService.update({
+      ...context,
+      query: {
+        code: current.code,
+        revision: current.revision,
+        status: current.status,
+      },
+      model: {
+        ...patch,
+        code: current.code,
+        revision: current.revision,
+        lastMutationId,
+      },
       options: { recursive: false },
     });
-    return this.read(request, current.code);
+    this.assertWrite(response);
+    if (
+      response.result &&
+      Object.hasOwn(response.result, "matchedCount") &&
+      response.result.matchedCount !== 1
+    )
+      throw new Error("Communication claim was not applied");
+    const saved = await this.read(request, current.code);
+    if (
+      !saved ||
+      saved.code !== current.code ||
+      saved.tenant !== context.tenant ||
+      saved.revision !== current.revision + 1 ||
+      saved.lastMutationId !== lastMutationId ||
+      Object.entries(patch).some(([key, value]) =>
+        value instanceof Date
+          ? new Date(saved[key]).getTime() !== value.getTime()
+          : JSON.stringify(saved[key]) !== JSON.stringify(value),
+      )
+    ) {
+      throw new Error("Communication claim could not be confirmed");
+    }
+    return saved;
   },
   /** Exposes safe delivery evidence without content or recipient addresses. */
   project: function (intent) {
@@ -123,8 +203,35 @@ module.exports = {
         command[key].length > 512
       )
         throw new Error("Communication command is incomplete");
+    command = { ...command, tenant: context.tenant };
+    const code =
+      "COMM_" +
+      crypto
+        .createHash("sha256")
+        .update(JSON.stringify([context.tenant, command.idempotencyKey]))
+        .digest("hex");
+    const commandHash = core.hash([
+      command.sourceModule,
+      command.sourceType,
+      command.sourceCode,
+      command.templateCode,
+      command.recipientId,
+      command.recipientAddressReference,
+      command.purpose,
+      command.channel,
+      command.locale,
+      command.variables,
+    ]);
+    let existing = await this.read(request, code);
+    if (existing) {
+      if (existing.commandHash !== commandHash)
+        throw new Error("Communication idempotency conflict");
+      return this.project(existing);
+    }
     const configured = policy.templates?.[command.templateCode];
-    let template = configured;
+    let template =
+      configured ||
+      SERVICE.DefaultCommunicationTemplateService?.resolve(command, policy);
     if (!template) {
       const parent = (
         await this.list(
@@ -155,6 +262,7 @@ module.exports = {
             declaredVariables: parent.declaredVariables,
             purpose: parent.purpose,
             channels: parent.channels,
+            sourceModules: parent.sourceModules,
           };
       }
     }
@@ -166,32 +274,44 @@ module.exports = {
       !template.sourceModules?.includes(command.sourceModule)
     )
       throw new Error("Communication template is unavailable for this source");
-    command = { ...command, tenant: context.tenant };
-    const code =
-      "COMM_" +
-      crypto
-        .createHash("sha256")
-        .update(JSON.stringify([context.tenant, command.idempotencyKey]))
-        .digest("hex");
-    const commandHash = core.hash([
-      command.sourceModule,
-      command.sourceType,
-      command.sourceCode,
-      command.templateCode,
-      command.recipientId,
-      command.recipientAddressReference,
-      command.purpose,
-      command.channel,
-      command.locale,
-      command.variables,
-    ]);
-    let existing = await this.read(request, code);
-    if (existing) {
-      if (existing.commandHash !== commandHash)
-        throw new Error("Communication idempotency conflict");
-      return this.project(existing);
+    if (template.resourceCode) {
+      if (
+        template.bodyTemplate !== undefined ||
+        template.subjectTemplate !== undefined
+      )
+        throw new Error(
+          "Communication resource reference cannot contain inline presentation",
+        );
+      if (template.resourceCode !== command.templateCode)
+        throw new Error("Communication template resource identity is invalid");
+      const reference = template;
+      template = SERVICE.DefaultCommunicationTemplateService.resolve(command, {
+        ...policy,
+        templateResources: {
+          ...policy.templateResources,
+          selections: {
+            ...policy.templateResources?.selections,
+            [command.templateCode]: true,
+          },
+        },
+      });
+      if (
+        !template ||
+        template.version !== reference.version ||
+        template.purpose !== command.purpose ||
+        !template.sourceModules.includes(command.sourceModule)
+      )
+        throw new Error(
+          "Communication template resource reference is unavailable",
+        );
     }
-    const rendered = core.render(template, command.variables, policy);
+    const rendered = template.resourceIdentity
+      ? SERVICE.DefaultCommunicationTemplateService.render(
+          template,
+          command.variables,
+          policy,
+        )
+      : core.render(template, command.variables, policy);
     const suppressions = await this.list("CommsSuppression", request, {
       recipientId: command.recipientId,
       purpose: command.purpose,
@@ -222,6 +342,28 @@ module.exports = {
   },
   /** Sends one persisted command; an expired external-send claim is uncertain and never blindly replayed. */
   deliver: async function (request, code) {
+    try {
+      const envelope = this.context(request);
+      const enterpriseCode = request.authData?.entCode || request.entCode;
+      if (enterpriseCode !== undefined) {
+        if (
+          typeof enterpriseCode !== "string" ||
+          !/^[A-Za-z0-9_.:@-]{1,128}$/.test(enterpriseCode)
+        )
+          throw new Error("COMMUNICATION_PRIVATE_CONTEXT_INVALID");
+        envelope.entCode = enterpriseCode;
+      }
+      return await SERVICE.DefaultLoggerService.runSensitiveOperation(
+        envelope,
+        () => this.deliverPrivate(envelope, code),
+      );
+    } catch {
+      throw new Error("COMMUNICATION_PRIVATE_DELIVERY_UNCONFIRMED");
+    }
+  },
+  /** Reads private persisted content and invokes providers only after exact non-HTTP capture admission. Keeps existing claims, retries and immutable intent semantics. @param {Object} request Detached protected owner context. @param {string} code Original intent code. @returns {Promise<Object>} Content-free delivery projection. */
+  deliverPrivate: async function (request, code) {
+    SERVICE.DefaultLoggerService.assertSensitiveRequest(request);
     let current = await this.read(request, code);
     if (!current) throw new Error("Communication intent not found");
     const policy = CONFIG.get("communication") || {};

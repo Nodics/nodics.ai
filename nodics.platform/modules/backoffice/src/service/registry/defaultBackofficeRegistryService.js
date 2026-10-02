@@ -580,6 +580,70 @@ module.exports = {
     return { code: "SUC_BOF_00002", data: { modules: modules } };
   },
 
+  /** Reads authorized live navigation evidence without expiring leases, auditing, or preparing applications. */
+  readNavigationRecoveryContext: async function (request) {
+    const modules = {};
+    const now = Date.now();
+    for (const entry of await this.getStore().values()) {
+      const instance = entry.value;
+      if (
+        !instance ||
+        !Number.isFinite(instance.expiresAt) ||
+        instance.expiresAt <= now ||
+        !this.isClientDiscoverable(instance) ||
+        !this.isModuleAuthorized(
+          instance.moduleName,
+          request && request.authData,
+          instance,
+        )
+      )
+        continue;
+      const availabilityOwner = SERVICE.DefaultBackofficeAvailabilityService;
+      const observation =
+        availabilityOwner &&
+        availabilityOwner.getInstanceAvailability(instance.instanceId);
+      if (
+        !observation ||
+        observation.freshness !== "FRESH" ||
+        !["UP", "DEGRADED"].includes(observation.state)
+      )
+        continue;
+      (modules[instance.moduleName] ||= []).push(
+        Object.assign(this.projectClientSafe(instance), {
+          state: observation.state,
+        }),
+      );
+    }
+    const eligibilityOwner = SERVICE.DefaultFunctionalModuleCatalogueService;
+    if (
+      !eligibilityOwner ||
+      typeof eligibilityOwner.getPresentationEligibility !== "function"
+    )
+      throw new Error("Functional presentation eligibility is unavailable");
+    const eligibility =
+      await eligibilityOwner.getPresentationEligibility(request);
+    const effectiveModules =
+      SERVICE.DefaultBackofficeCapabilityRegistryService.applyFunctionalModuleEligibility(
+        modules,
+        eligibility,
+      );
+    const catalogue = this.buildCatalogue(
+      effectiveModules,
+      this.getClientContractVersion(request),
+      request && request.authData,
+    );
+    const availability = this.buildAvailability(effectiveModules);
+    const composition = this.buildEffectiveNavigationComposition(
+      catalogue,
+      availability,
+      request && request.authData,
+      request,
+    );
+    return {
+      modules: effectiveModules,
+      navigation: composition.navigation || [],
+    };
+  },
   /** Determines whether Axis may discover a module lease without treating it as a direct HTTP endpoint. */
   isClientDiscoverable: function (instance) {
     if (!instance) return false;
@@ -1096,7 +1160,7 @@ module.exports = {
   },
 
   /** Reads bounded documentation publication status for bootstrap navigation gating. */
-  buildDocumentationPublicationState: async function (sources, request) {
+  buildDocumentationPublicationState: async function (sources, request, readStatus) {
     let result = { byRoute: {}, bySourceId: {} };
     let service = SERVICE.DefaultBackofficeApplicationInitializationService;
     if (!service || typeof service.status !== "function") return result;
@@ -1104,7 +1168,9 @@ module.exports = {
       source && source.type === "CMS" && source.initializationProfile && source.route);
     await Promise.all(cmsSources.map(async source => {
       try {
-        let status = await service.status(source.initializationProfile, request);
+        let status = await (readStatus
+          ? readStatus(source.initializationProfile)
+          : service.status(source.initializationProfile, request));
         let state = {
           readiness: status && status.readiness || "UNKNOWN",
           ready: Boolean(status && status.readiness === "READY")
@@ -1127,6 +1193,32 @@ module.exports = {
         };
       });
     return result;
+  },
+
+  /** Coalesces reads only inside one authenticated composition; no cross-request authority or freshness cache. */
+  applicationStatusReader: function (request) {
+    const results = new Map();
+    return (profileCode) => {
+      if (!results.has(profileCode)) {
+        results.set(profileCode, Promise.resolve().then(() =>
+          SERVICE.DefaultBackofficeApplicationInitializationService.status(profileCode, request)));
+      }
+      return results.get(profileCode);
+    };
+  },
+
+  /** Supplies the same owner results to readiness without repeating navigation's profile reads. */
+  applicationStatusReport: async function (profiles, readStatus) {
+    const report = { statuses: [], errors: [] };
+    for (const profile of profiles || []) {
+      if (!profile || !profile.code) continue;
+      try {
+        report.statuses.push(await readStatus(String(profile.code)));
+      } catch (error) {
+        report.errors.push({ profile, error });
+      }
+    }
+    return report;
   },
 
   /** Resolves and validates bounded administrative query parameters. */
@@ -1439,9 +1531,11 @@ module.exports = {
       catalogue,
       request && request.authData,
     );
+    const readApplicationStatus = this.applicationStatusReader(request);
     let documentationPublication = await this.buildDocumentationPublicationState(
       documentationSources,
       request,
+      readApplicationStatus,
     );
     let effectiveNavigationComposition = this.buildEffectiveNavigationComposition(
       catalogue,
@@ -1491,6 +1585,8 @@ module.exports = {
           documentationSources: documentationSources,
           documentationPublication: documentationPublication,
           applicationInitializationProfiles: applicationInitializationProfiles,
+          applicationProfileStatusReport: await this.applicationStatusReport(
+            applicationInitializationProfiles, readApplicationStatus),
         })
       : undefined;
     return {

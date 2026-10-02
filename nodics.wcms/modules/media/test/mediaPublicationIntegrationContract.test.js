@@ -130,6 +130,55 @@ test('target and callback routes require service tokens; Media Process release i
     assert.equal(action.remote.runtimeRole, 'WCMS_STAGED');
 });
 
+test('same-code forward Media release uses existing installer upgrade and preserves immutable v1 source', async () => {
+    fixture();
+    const installer = require('../../../../nodics.process/modules/workflow/src/service/definition/defaultProcessDefinitionContributionService');
+    const oldPath = path.join(__dirname, '../data/init-v002/records/process/mediaPublicationWorkflowDefinitionData.js');
+    assert.equal(crypto.createHash('sha256').update(fs.readFileSync(oldPath)).digest('hex'), '44355063df521b219094703cee293b65df954352e5ced7b77b8b6153acbb5fe9');
+    const release = require('../data/manifest.json').sections.mediaPublicationWorkflow;
+    assert.equal(release.version, '1.0.1');
+    const definition = require('../data/' + Object.keys(release.files)[0]).definitions[0];
+    const existing = { ...require(oldPath).definitions[0], status: 'PUBLISHED', currentVersion: 1,
+        contributionOwner: 'media', contributionCode: 'media:mediaPublicationWorkflow',
+        contributionVersion: '1.0.0', contributionChecksum: 'a'.repeat(64) };
+    const before = structuredClone(existing);
+    const calls = [];
+    SERVICE.DefaultProcessDefinitionLifecycleService = {
+        findDefinition: async () => existing,
+        prepareNextDraft: async request => calls.push(['draft', request.definitionCode]),
+        updateDraft: async request => calls.push(['update', request.processDefinition]),
+        publishDraft: async request => { calls.push(['publish', request.definitionCode]); return { data: { version: 2 } }; }
+    };
+    const contribution = { moduleName: 'media', releaseCode: 'media:mediaPublicationWorkflow', version: '1.0.1', checksum: 'b'.repeat(64) };
+    assert.equal((await installer.planDefinition({}, definition, contribution)).action, 'UPDATE');
+    assert.equal((await installer.reconcileDefinition({}, definition, contribution)).data.version, 2);
+    assert.deepEqual(calls.map(call => call[0]), ['draft', 'update', 'publish']);
+    assert.equal(calls[1][1].code, existing.code);
+    assert.deepEqual(existing, before);
+});
+
+test('successor policy uses real native Process maker-checker and typed rejection guards', () => {
+    fixture();
+    const runtime = require('../../../../nodics.process/modules/workflow/src/service/operation/defaultProcessRuntimeLifecycleService');
+    const definition = require('../data/init-v003/records/process/mediaPublicationWorkflowDefinitionData').definitions[0];
+    const policy = { ...definition.policy, ...definition.graph.nodes[1].policy };
+    SERVICE.DefaultSecuredRequestPipelineService = {
+        isPermissionGranted: (permission, grants) => grants.includes(permission),
+        getGrantedPermissions: request => request.authData.permissions,
+        getRouteActionAuthorizationConfig: () => ({})
+    };
+    const instance = { context: { enterpriseCode: 'owner', requestedBy: 'maker@example.invalid' } };
+    const request = { tenant: 'one', authData: { tenant: 'one', entCode: 'owner', tokenType: 'access', principalType: 'human',
+        principalId: 'different-native-id', loginId: 'maker@example.invalid', permissions: ['publish.lifecycle.approve'] } };
+    assert.throws(() => runtime.assertTaskActor(request, instance, policy));
+    request.authData.loginId = 'reviewer@example.invalid';
+    runtime.assertTaskActor(request, instance, policy);
+    assert.throws(() => runtime.assertTaskActorPolicy(request, instance, policy, { approved: false, reason: '' }));
+    assert.throws(() => runtime.assertTaskActorPolicy(request, instance, policy, { approved: false, reason: 'x'.repeat(1001) }));
+    runtime.assertTaskActorPolicy(request, instance, policy, { approved: false, reason: 'Not approved for delivery' });
+    assert.equal(runtime.taskDecisionContract(policy).kind, 'APPROVAL');
+});
+
 test('source authorization binds stored nPublish intent and rejects invented operations before target mutation', async () => {
     const f = fixture();
     const provider = require('../src/service/publication/defaultMediaPublicationVersionProviderService');
@@ -199,7 +248,8 @@ test('governed operator entry captures once and delegates fixed-domain publicati
     }, load: async () => manifest };
     SERVICE.DefaultMediaPublicationVersionProviderService = provider;
     SERVICE.DefaultPublicationLifecycleService = {
-        getWorkflowProvider: () => ({}), getDomainAdapter: () => provider, getVersionProvider: () => provider,
+        getWorkflowProvider: () => ({ policy: () => ({ definitionCode: 'mediaPublicationApproval', ownerModule: 'media', requesterBinding: 'NATIVE_ACTOR', reviewNodeCode: 'mediaReview', reviewPermission: 'publish.lifecycle.approve' }),
+            assertSource: () => true, target: () => ({ runtimeRole: 'PROCESS', connectionName: 'processServer', connectionType: 'abstract' }) }), getDomainAdapter: () => provider, getVersionProvider: () => provider,
         getRepository: () => ({ get: async code => publications.get(code) }),
         create: async request => { calls.push('create'); assert.equal(request.publication.domain, 'media');
             assert.equal(request.publication.rootType, 'media'); assert.equal(request.publication.sourceVersion, manifest.code);
@@ -208,10 +258,28 @@ test('governed operator entry captures once and delegates fixed-domain publicati
         validate: async request => { calls.push('validate'); assert.equal(request.expectedRevision, 1);
             const result = publications.get(request.publicationCode); Object.assign(result, { state: 'VALIDATED', revision: 2 }); return result; },
         requestApproval: async request => { calls.push('approval'); assert.equal(request.expectedRevision, 2);
+            assert.equal(request.httpRequest.headers.authorization, 'Bearer fixture-starter');
             const result = publications.get(request.publicationCode); Object.assign(result, { state: 'PENDING_APPROVAL', revision: 3 }); return result; }
     };
-    const input = { publicationCode: 'media-proof', mediaCode: 'hero', versionId: 2, domain: 'forged', sourceVersion: 'forged' };
-    const request = { tenant: 'one', authData: { tenant: 'one', tokenType: 'access' }, httpRequest: { body: input } };
+    SERVICE.DefaultMediaLibraryService = require('../src/service/defaultMediaLibraryService');
+    SERVICE.DefaultModuleService = { invokeModule: async request => request.responseSelector({ data:
+        request.apiName.endsWith('/versions') ? [{ ...require('../data/init-v003/records/process/mediaPublicationWorkflowDefinitionData').definitions[0], definitionCode: 'mediaPublicationApproval', active: true, status: 'PUBLISHED', version: 1 }] :
+            { code: 'mediaPublicationApproval', active: true, status: 'PUBLISHED', ownerModule: 'media', currentVersion: 1 } }) };
+    FACADE.DefaultMediaLibraryFacade = require('../src/facade/defaultMediaLibraryFacade');
+    SERVICE.DefaultSecuredRequestPipelineService = require('../../../../nodics.foundation/modules/nRouter/src/service/request/defaultSecuredRequestPipelineService');
+    SERVICE.DefaultDatabaseTransactionService = { capabilities: () => ({ multiRecordAtomic: true, contextPropagation: true }) };
+    global.UTILS = { createModelName: () => 'MediaModel' };
+    global.NODICS.getModels = () => ({ MediaModel: { versioned: true, rawSchema: { versionedReadMode: 'CURRENT' } } });
+    SERVICE.DefaultMediaService = { get: async request => {
+        assert.equal(request.tenant, 'one'); assert.equal(request.skipcache, true);
+        assert.deepEqual(request.query.$or[0], { enterpriseCode: 'owner' });
+        return { result: [{ code: 'hero', versionId: 2, active: true, status: 'READY', enterpriseCode: 'owner' }] };
+    } };
+    const input = { publicationCode: 'media-proof', mediaCode: 'hero', versionId: 2 };
+    const request = { tenant: 'one', authData: { tenant: 'one', entCode: 'owner', tokenType: 'access',
+        permissions: ['media.storage.policy.view', 'publish.lifecycle.create', 'publish.lifecycle.validate', 'publish.lifecycle.requestApproval', 'process.instance.start', 'process.definition.read'] },
+        httpRequest: { body: input, headers: { authorization: 'Bearer fixture-starter' } } };
+    await assert.rejects(controller.createRetainedPublication({ ...request, httpRequest: { body: { ...input, domain: 'forged', sourceVersion: 'forged' } } }));
     const first = await controller.createRetainedPublication(request);
     assert.equal(first.result.state, 'PENDING_APPROVAL');
     await controller.createRetainedPublication(request);
@@ -222,7 +290,7 @@ test('governed operator entry captures once and delegates fixed-domain publicati
     await assert.rejects(controller.createRetainedPublication({ ...request, authData: f.context.authData }));
     f.policy.runtimeRole = 'ONLINE'; await assert.rejects(controller.createRetainedPublication(request));
     f.policy.runtimeRole = 'STAGED'; SERVICE.DefaultPublicationLifecycleService.getWorkflowProvider = () => null;
-    await assert.rejects(controller.createRetainedPublication(request), /providers are not installed/);
+    await assert.rejects(controller.createRetainedPublication(request), error => error.code === 'ERR_MED_00023');
     assert.equal(captures, 1);
     const route = require('../src/router/routers').media.storagePolicy.createRetainedPublication;
     assert.deepEqual(route.authTokenTypes, ['access']); assert.equal(route.permission, 'publish.lifecycle.create');

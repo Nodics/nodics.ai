@@ -1,0 +1,6 @@
+Verify your contact email
+
+Your contact verification code is {{verificationCode}}.
+It expires at {{expiresAt}}.
+
+This code verifies the email contact on your account. It does not grant enterprise access or notification consent. Do not share the code. If you did not request verification, ignore this message.

@@ -1,5 +1,12 @@
 # database
 
+Nested generated saves isolate CMS replacement options by effective schema owner;
+ordinary indexes are not implicit save identities. Incomplete primary identities
+preserve ordinary insert intent so existing defaults/preSave owners can generate
+keys; replacement still requires complete bounded canonical identity. See the
+[nested write contract](llm/contracts/README.md#nested-save-replacement-isolation)
+and its offline import-to-Mongo regression before customizing persistence.
+
 Installed ordinary-to-versioned maintenance is an explicit native-local operation,
 not a startup side effect. Follow the [operator contract](llm/contracts/installed-version-migration.md)
 and [scoped CLI example](llm/examples/installed-version-migration.md) for outage,
@@ -122,3 +129,21 @@ composed custom methods; never synthesize missing services at startup. See
 
 Route-category defaults belong to this capability; deployments supply only intentional overrides.
 Preserve nRouter enforcement and independent route authorization. See [exposure ownership](../../nRouter/llm/contracts/README.md#capability-owned-exposure-defaults).
+
+## Tenant Physical Isolation
+
+The database owner exposes non-secret namespace intent for existing
+`Tenant.properties`; each runtime resolves against its own base. Aliases reject
+before connections, and retained cleanup is independent of write admission.
+DERIVED access now requires an exact deployment/server pin in existing
+`Tenant.properties.database.tenantNamespaceBindings`; missing pins and effective
+base/provider/endpoint drift reject before provider dispatch. Pure helpers build
+the candidate; Profile owns trusted persistence/readback. Installed integration
+and physical cluster qualification remain pending. See [the exact DTO and evidence boundary](llm/contracts/tenant-physical-namespace.md).
+
+## Bulk Failure Diagnostics
+
+Bulk-save errors retain capability-owner metadata. The failed record is cloned
+under `metadata.failedModel`, not flattened into the error's authority fields.
+Consumers previously reading `metadata.code` for the failed record must use
+`metadata.failedModel.code`. See the [metadata boundary contract](llm/contracts/README.md#bulk-failure-metadata-boundary).

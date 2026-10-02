@@ -141,6 +141,10 @@ module.exports = {
         code: '200',
         message: 'Media PROD/DR role switch resolved successfully'
     },
+    SUC_MED_00032: {
+        code: '200',
+        message: 'Media library operation completed successfully'
+    },
     ERR_MED_00001: {
         code: '400',
         message: 'Invalid media request'

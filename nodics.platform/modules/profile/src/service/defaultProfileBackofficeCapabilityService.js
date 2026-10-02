@@ -11,690 +11,706 @@
 
 /** @module profile/service/DefaultProfileBackofficeCapabilityService @description Publishes the concrete profile-owned BackOffice capability projection. @layer service @owner profile */
 const capability = {
-    "enabled": true,
-    "capabilityId": "identity-profile",
-    "displayName": "Profiles and Identity",
-    "category": "core",
-    "icon": "identity",
-    "contractVersion": 0,
-    "minimumClientContractVersion": 0,
-    "roles": [
-        "AUTHENTICATION_PROVIDER",
-        "FUNCTIONAL_CAPABILITY_PROVIDER"
-    ],
-    "discovery": {
-        "openApiPath": "/nodics/system/v0/contract/openapi/internal",
-        "contractVersion": 0
+  enabled: true,
+  capabilityId: "identity-profile",
+  displayName: "Profiles and Identity",
+  category: "core",
+  icon: "identity",
+  contractVersion: 0,
+  minimumClientContractVersion: 0,
+  roles: ["AUTHENTICATION_PROVIDER", "FUNCTIONAL_CAPABILITY_PROVIDER"],
+  discovery: {
+    openApiPath: "/nodics/system/v0/contract/openapi/internal",
+    contractVersion: 0,
+  },
+  requiredPermissions: ["profile.backoffice.view"],
+  navigation: [
+    {
+      id: "customer-workspace",
+      label: "Customer Workspace",
+      route: "/profile",
+      icon: "profile",
+      order: 400,
+      group: {
+        id: "organization",
+        label: "Customers and Organisation",
+        order: 400,
+      },
+      perspectives: ["operations"],
+      contexts: ["environment", "tenant", "enterprise"],
+      featureState: "ACTIVE",
+      requiredPermissions: ["profile.backoffice.view"],
     },
-    "requiredPermissions": [
-        "profile.backoffice.view"
-    ],
-    "navigation": [
-        {
-            "id": "customer-workspace",
-            "label": "Customer Workspace",
-            "route": "/profile",
-            "icon": "profile",
-            "order": 400,
-            "group": {
-                "id": "organization",
-                "label": "Customers and Organisation",
-                "order": 400
-            },
-            "perspectives": [
-                "operations"
-            ],
-            "contexts": [
-                "environment",
-                "tenant",
-                "enterprise"
-            ],
-            "featureState": "ACTIVE",
-            "requiredPermissions": [
-                "profile.backoffice.view"
-            ]
-        },
-        {
-            "id": "customers-profiles",
-            "label": "Customers and Profiles",
-            "route": "/profile#customers-profiles",
-            "icon": "profile",
-            "order": 410,
-            "group": {
-                "id": "organization",
-                "label": "Customers and Organisation",
-                "order": 400
-            },
-            "perspectives": [
-                "operations"
-            ],
-            "contexts": [
-                "environment",
-                "tenant",
-                "enterprise"
-            ],
-            "featureState": "ACTIVE",
-            "requiredPermissions": [
-                "profile.backoffice.view"
-            ]
-        },
-        {
-            "id": "customer-overview",
-            "parentId": "customer-workspace",
-            "label": "Customer Overview",
-            "route": "/profile#customer-overview",
-            "icon": "profile",
-            "order": 401,
-            "group": {
-                "id": "organization",
-                "label": "Customers and Organisation",
-                "order": 400
-            },
-            "perspectives": [
-                "operations"
-            ],
-            "contexts": [
-                "environment",
-                "tenant",
-                "enterprise"
-            ],
-            "featureState": "DISABLED"
-        },
-        {
-            "id": "search-customer",
-            "parentId": "customer-workspace",
-            "label": "Search Customer",
-            "route": "/profile#search-customer",
-            "icon": "search",
-            "order": 402,
-            "group": {
-                "id": "organization",
-                "label": "Customers and Organisation",
-                "order": 400
-            },
-            "perspectives": [
-                "operations"
-            ],
-            "contexts": [
-                "environment",
-                "tenant",
-                "enterprise"
-            ],
-            "featureState": "DISABLED"
-        },
-        {
-            "id": "create-customer",
-            "parentId": "customer-workspace",
-            "label": "Create Customer",
-            "route": "/profile#create-customer",
-            "icon": "add",
-            "order": 403,
-            "group": {
-                "id": "organization",
-                "label": "Customers and Organisation",
-                "order": 400
-            },
-            "perspectives": [
-                "operations"
-            ],
-            "contexts": [
-                "environment",
-                "tenant",
-                "enterprise"
-            ],
-            "featureState": "DISABLED"
-        },
-        {
-            "id": "customers-needing-attention",
-            "parentId": "customer-workspace",
-            "label": "Customers Needing Attention",
-            "route": "/profile#customers-needing-attention",
-            "icon": "validation",
-            "order": 404,
-            "group": {
-                "id": "organization",
-                "label": "Customers and Organisation",
-                "order": 400
-            },
-            "perspectives": [
-                "operations"
-            ],
-            "contexts": [
-                "environment",
-                "tenant",
-                "enterprise"
-            ],
-            "featureState": "DISABLED"
-        },
-        {
-            "id": "recent-registrations",
-            "parentId": "customer-workspace",
-            "label": "Recent Registrations",
-            "route": "/profile#recent-registrations",
-            "icon": "history",
-            "order": 405,
-            "group": {
-                "id": "organization",
-                "label": "Customers and Organisation",
-                "order": 400
-            },
-            "perspectives": [
-                "operations"
-            ],
-            "contexts": [
-                "environment",
-                "tenant",
-                "enterprise"
-            ],
-            "featureState": "DISABLED"
-        },
-        {
-            "id": "open-customer-requests",
-            "parentId": "customer-workspace",
-            "label": "Open Customer Requests",
-            "route": "/profile#open-customer-requests",
-            "icon": "feedback",
-            "order": 406,
-            "group": {
-                "id": "organization",
-                "label": "Customers and Organisation",
-                "order": 400
-            },
-            "perspectives": [
-                "operations"
-            ],
-            "contexts": [
-                "environment",
-                "tenant",
-                "enterprise"
-            ],
-            "featureState": "DISABLED"
-        },
-        {
-            "id": "complaints-escalations",
-            "parentId": "customer-workspace",
-            "label": "Complaints and Escalations",
-            "route": "/profile#complaints-escalations",
-            "icon": "feedback",
-            "order": 407,
-            "group": {
-                "id": "organization",
-                "label": "Customers and Organisation",
-                "order": 400
-            },
-            "perspectives": [
-                "operations"
-            ],
-            "contexts": [
-                "environment",
-                "tenant",
-                "enterprise"
-            ],
-            "featureState": "DISABLED"
-        },
-        {
-            "id": "consent-privacy-alerts",
-            "parentId": "customer-workspace",
-            "label": "Consent or Privacy Alerts",
-            "route": "/profile#consent-privacy-alerts",
-            "icon": "security",
-            "order": 408,
-            "group": {
-                "id": "organization",
-                "label": "Customers and Organisation",
-                "order": 400
-            },
-            "perspectives": [
-                "operations"
-            ],
-            "contexts": [
-                "environment",
-                "tenant",
-                "enterprise"
-            ],
-            "featureState": "DISABLED"
-        },
-        {
-            "id": "customer-activity-summary",
-            "parentId": "customer-workspace",
-            "label": "Customer Activity Summary",
-            "route": "/profile#customer-activity-summary",
-            "icon": "dashboard",
-            "order": 409,
-            "group": {
-                "id": "organization",
-                "label": "Customers and Organisation",
-                "order": 400
-            },
-            "perspectives": [
-                "operations"
-            ],
-            "contexts": [
-                "environment",
-                "tenant",
-                "enterprise"
-            ],
-            "featureState": "DISABLED"
-        },
-        {
-            "id": "segments-audiences",
-            "label": "Segments and Audiences",
-            "route": "/profile#segments-audiences",
-            "icon": "profile",
-            "order": 420,
-            "group": {
-                "id": "organization",
-                "label": "Customers and Organisation",
-                "order": 400
-            },
-            "perspectives": [
-                "operations"
-            ],
-            "contexts": [
-                "environment",
-                "tenant",
-                "enterprise"
-            ],
-            "featureState": "DISABLED",
-            "requiredPermissions": [
-                "profile.backoffice.view"
-            ]
-        },
-        {
-            "id": "organisations-business-accounts",
-            "label": "Organisations and Business Accounts",
-            "route": "/profile#organisations-business-accounts",
-            "icon": "organization",
-            "order": 430,
-            "group": {
-                "id": "organization",
-                "label": "Customers and Organisation",
-                "order": 400
-            },
-            "perspectives": [
-                "operations"
-            ],
-            "contexts": [
-                "environment",
-                "tenant",
-                "enterprise"
-            ],
-            "featureState": "DISABLED",
-            "requiredPermissions": [
-                "profile.backoffice.view"
-            ]
-        },
-        {
-            "id": "employees-teams",
-            "label": "Employees and Teams",
-            "route": "/profile#employees-teams",
-            "icon": "profile",
-            "order": 440,
-            "group": {
-                "id": "organization",
-                "label": "Customers and Organisation",
-                "order": 400
-            },
-            "perspectives": [
-                "operations"
-            ],
-            "contexts": [
-                "environment",
-                "tenant",
-                "enterprise"
-            ],
-            "featureState": "DISABLED",
-            "requiredPermissions": [
-                "profile.backoffice.view"
-            ]
-        },
-        {
-            "id": "roles-access",
-            "label": "Roles and Access",
-            "route": "/profile#roles-access",
-            "icon": "security",
-            "order": 450,
-            "group": {
-                "id": "organization",
-                "label": "Customers and Organisation",
-                "order": 400
-            },
-            "perspectives": [
-                "operations"
-            ],
-            "contexts": [
-                "environment",
-                "tenant",
-                "enterprise"
-            ],
-            "featureState": "DISABLED",
-            "requiredPermissions": [
-                "profile.backoffice.view"
-            ]
-        },
-        {
-            "id": "privacy-customer-rights",
-            "label": "Privacy and Customer Rights",
-            "route": "/profile#privacy-customer-rights",
-            "icon": "security",
-            "order": 490,
-            "group": {
-                "id": "organization",
-                "label": "Customers and Organisation",
-                "order": 400
-            },
-            "perspectives": [
-                "operations"
-            ],
-            "contexts": [
-                "environment",
-                "tenant",
-                "enterprise"
-            ],
-            "featureState": "DISABLED",
-            "requiredPermissions": [
-                "profile.backoffice.view"
-            ]
-        },
-        {
-            "id": "customers",
-            "parentId": "customers-profiles",
-            "label": "Customers",
-            "route": "/profile",
-            "icon": "profile",
-            "order": 411,
-            "group": {
-                "id": "organization",
-                "label": "Customers and Organisation",
-                "order": 400
-            },
-            "perspectives": [
-                "operations"
-            ],
-            "contexts": [
-                "environment",
-                "tenant",
-                "enterprise"
-            ],
-            "featureState": "ACTIVE",
-            "requiredPermissions": [
-                "profile.backoffice.view"
-            ]
-        },
-        {
-            "id": "customer-profiles",
-            "parentId": "customers-profiles",
-            "label": "Customer Profiles",
-            "route": "/profile/customer-profiles",
-            "icon": "profile",
-            "order": 412,
-            "group": {
-                "id": "organization",
-                "label": "Customers and Organisation",
-                "order": 400
-            },
-            "perspectives": [
-                "operations"
-            ],
-            "contexts": [
-                "environment",
-                "tenant",
-                "enterprise"
-            ],
-            "featureState": "DISABLED"
-        },
-        {
-            "id": "customer-addresses",
-            "parentId": "customers-profiles",
-            "label": "Addresses",
-            "route": "/profile/addresses",
-            "icon": "profile",
-            "order": 413,
-            "group": {
-                "id": "organization",
-                "label": "Customers and Organisation",
-                "order": 400
-            },
-            "perspectives": [
-                "operations"
-            ],
-            "contexts": [
-                "environment",
-                "tenant",
-                "enterprise"
-            ],
-            "featureState": "DISABLED"
-        },
-        {
-            "id": "customer-contact-details",
-            "parentId": "customers-profiles",
-            "label": "Contact Details",
-            "route": "/profile/contact-details",
-            "icon": "profile",
-            "order": 414,
-            "group": {
-                "id": "organization",
-                "label": "Customers and Organisation",
-                "order": 400
-            },
-            "perspectives": [
-                "operations"
-            ],
-            "contexts": [
-                "environment",
-                "tenant",
-                "enterprise"
-            ],
-            "featureState": "DISABLED"
-        },
-        {
-            "id": "customer-groups",
-            "parentId": "customers-profiles",
-            "label": "Customer Groups",
-            "route": "/profile/customer-groups",
-            "icon": "profile",
-            "order": 415,
-            "group": {
-                "id": "organization",
-                "label": "Customers and Organisation",
-                "order": 400
-            },
-            "perspectives": [
-                "operations"
-            ],
-            "contexts": [
-                "environment",
-                "tenant",
-                "enterprise"
-            ],
-            "featureState": "DISABLED"
-        },
-        {
-            "id": "customer-segments",
-            "parentId": "segments-audiences",
-            "label": "Customer Segments",
-            "route": "/profile/customer-segments",
-            "icon": "profile",
-            "order": 110,
-            "group": {
-                "id": "organization",
-                "label": "Customers and Organisation",
-                "order": 400
-            },
-            "perspectives": [
-                "operations"
-            ],
-            "contexts": [
-                "environment",
-                "tenant",
-                "enterprise"
-            ],
-            "featureState": "DISABLED"
-        },
-        {
-            "id": "employees",
-            "parentId": "employees-teams",
-            "label": "Employees",
-            "route": "/profile/employees",
-            "icon": "profile",
-            "order": 120,
-            "group": {
-                "id": "organization",
-                "label": "Customers and Organisation",
-                "order": 400
-            },
-            "perspectives": [
-                "operations"
-            ],
-            "contexts": [
-                "environment",
-                "tenant",
-                "enterprise"
-            ],
-            "featureState": "DISABLED"
-        },
-        {
-            "id": "roles",
-            "parentId": "roles-access",
-            "label": "Roles",
-            "route": "/profile/roles",
-            "icon": "profile",
-            "order": 130,
-            "group": {
-                "id": "organization",
-                "label": "Customers and Organisation",
-                "order": 400
-            },
-            "perspectives": [
-                "operations"
-            ],
-            "contexts": [
-                "environment",
-                "tenant",
-                "enterprise"
-            ],
-            "featureState": "DISABLED"
-        },
-        {
-            "id": "permission-groups",
-            "parentId": "roles-access",
-            "label": "Permission Groups",
-            "route": "/profile/permission-groups",
-            "icon": "profile",
-            "order": 140,
-            "group": {
-                "id": "organization",
-                "label": "Customers and Organisation",
-                "order": 400
-            },
-            "perspectives": [
-                "operations"
-            ],
-            "contexts": [
-                "environment",
-                "tenant",
-                "enterprise"
-            ],
-            "featureState": "DISABLED"
-        },
-        {
-            "id": "enterprises",
-            "parentId": "organisations-business-accounts",
-            "label": "Enterprises",
-            "route": "/profile/enterprises",
-            "icon": "profile",
-            "order": 150,
-            "group": {
-                "id": "organization",
-                "label": "Customers and Organisation",
-                "order": 400
-            },
-            "perspectives": [
-                "operations"
-            ],
-            "contexts": [
-                "environment",
-                "tenant",
-                "enterprise"
-            ],
-            "featureState": "DISABLED"
-        },
-        {
-            "id": "business-units",
-            "parentId": "organisations-business-accounts",
-            "label": "Business Units",
-            "route": "/profile/business-units",
-            "icon": "profile",
-            "order": 160,
-            "group": {
-                "id": "organization",
-                "label": "Customers and Organisation",
-                "order": 400
-            },
-            "perspectives": [
-                "operations"
-            ],
-            "contexts": [
-                "environment",
-                "tenant",
-                "enterprise"
-            ],
-            "featureState": "DISABLED"
-        }
-    ]
+    {
+      id: "customers-profiles",
+      label: "Customers and Profiles",
+      route: "/profile#customers-profiles",
+      icon: "profile",
+      order: 410,
+      group: {
+        id: "organization",
+        label: "Customers and Organisation",
+        order: 400,
+      },
+      perspectives: ["operations"],
+      contexts: ["environment", "tenant", "enterprise"],
+      featureState: "ACTIVE",
+      requiredPermissions: ["profile.backoffice.view"],
+    },
+    {
+      id: "customer-overview",
+      parentId: "customer-workspace",
+      label: "Customer Overview",
+      route: "/profile#customer-overview",
+      icon: "profile",
+      order: 401,
+      group: {
+        id: "organization",
+        label: "Customers and Organisation",
+        order: 400,
+      },
+      perspectives: ["operations"],
+      contexts: ["environment", "tenant", "enterprise"],
+      featureState: "DISABLED",
+    },
+    {
+      id: "search-customer",
+      parentId: "customer-workspace",
+      label: "Search Customer",
+      route: "/profile#search-customer",
+      icon: "search",
+      order: 402,
+      group: {
+        id: "organization",
+        label: "Customers and Organisation",
+        order: 400,
+      },
+      perspectives: ["operations"],
+      contexts: ["environment", "tenant", "enterprise"],
+      featureState: "DISABLED",
+    },
+    {
+      id: "create-customer",
+      parentId: "customer-workspace",
+      label: "Create Customer",
+      route: "/profile#create-customer",
+      icon: "add",
+      order: 403,
+      group: {
+        id: "organization",
+        label: "Customers and Organisation",
+        order: 400,
+      },
+      perspectives: ["operations"],
+      contexts: ["environment", "tenant", "enterprise"],
+      featureState: "DISABLED",
+    },
+    {
+      id: "customers-needing-attention",
+      parentId: "customer-workspace",
+      label: "Customers Needing Attention",
+      route: "/profile#customers-needing-attention",
+      icon: "validation",
+      order: 404,
+      group: {
+        id: "organization",
+        label: "Customers and Organisation",
+        order: 400,
+      },
+      perspectives: ["operations"],
+      contexts: ["environment", "tenant", "enterprise"],
+      featureState: "DISABLED",
+    },
+    {
+      id: "recent-registrations",
+      parentId: "customer-workspace",
+      label: "Recent Registrations",
+      route: "/profile#recent-registrations",
+      icon: "history",
+      order: 405,
+      group: {
+        id: "organization",
+        label: "Customers and Organisation",
+        order: 400,
+      },
+      perspectives: ["operations"],
+      contexts: ["environment", "tenant", "enterprise"],
+      featureState: "DISABLED",
+    },
+    {
+      id: "open-customer-requests",
+      parentId: "customer-workspace",
+      label: "Open Customer Requests",
+      route: "/profile#open-customer-requests",
+      icon: "feedback",
+      order: 406,
+      group: {
+        id: "organization",
+        label: "Customers and Organisation",
+        order: 400,
+      },
+      perspectives: ["operations"],
+      contexts: ["environment", "tenant", "enterprise"],
+      featureState: "DISABLED",
+    },
+    {
+      id: "complaints-escalations",
+      parentId: "customer-workspace",
+      label: "Complaints and Escalations",
+      route: "/profile#complaints-escalations",
+      icon: "feedback",
+      order: 407,
+      group: {
+        id: "organization",
+        label: "Customers and Organisation",
+        order: 400,
+      },
+      perspectives: ["operations"],
+      contexts: ["environment", "tenant", "enterprise"],
+      featureState: "DISABLED",
+    },
+    {
+      id: "consent-privacy-alerts",
+      parentId: "customer-workspace",
+      label: "Consent or Privacy Alerts",
+      route: "/profile#consent-privacy-alerts",
+      icon: "security",
+      order: 408,
+      group: {
+        id: "organization",
+        label: "Customers and Organisation",
+        order: 400,
+      },
+      perspectives: ["operations"],
+      contexts: ["environment", "tenant", "enterprise"],
+      featureState: "DISABLED",
+    },
+    {
+      id: "customer-activity-summary",
+      parentId: "customer-workspace",
+      label: "Customer Activity Summary",
+      route: "/profile#customer-activity-summary",
+      icon: "dashboard",
+      order: 409,
+      group: {
+        id: "organization",
+        label: "Customers and Organisation",
+        order: 400,
+      },
+      perspectives: ["operations"],
+      contexts: ["environment", "tenant", "enterprise"],
+      featureState: "DISABLED",
+    },
+    {
+      id: "segments-audiences",
+      label: "Segments and Audiences",
+      route: "/profile#segments-audiences",
+      icon: "profile",
+      order: 420,
+      group: {
+        id: "organization",
+        label: "Customers and Organisation",
+        order: 400,
+      },
+      perspectives: ["operations"],
+      contexts: ["environment", "tenant", "enterprise"],
+      featureState: "DISABLED",
+      requiredPermissions: ["profile.backoffice.view"],
+    },
+    {
+      id: "organisations-business-accounts",
+      label: "Organisations and Business Accounts",
+      route: "/profile#organisations-business-accounts",
+      icon: "organization",
+      order: 430,
+      group: {
+        id: "organization",
+        label: "Customers and Organisation",
+        order: 400,
+      },
+      perspectives: ["operations"],
+      contexts: ["environment", "tenant", "enterprise"],
+      featureState: "DISABLED",
+      requiredPermissions: ["profile.backoffice.view"],
+    },
+    {
+      id: "employees-teams",
+      label: "Employees and Teams",
+      route: "/profile#employees-teams",
+      icon: "profile",
+      order: 440,
+      group: {
+        id: "organization",
+        label: "Customers and Organisation",
+        order: 400,
+      },
+      perspectives: ["operations"],
+      contexts: ["environment", "tenant", "enterprise"],
+      featureState: "DISABLED",
+      requiredPermissions: ["profile.backoffice.view"],
+    },
+    {
+      id: "roles-access",
+      label: "Roles and Access",
+      route: "/profile#roles-access",
+      icon: "security",
+      order: 450,
+      group: {
+        id: "organization",
+        label: "Customers and Organisation",
+        order: 400,
+      },
+      perspectives: ["operations"],
+      contexts: ["environment", "tenant", "enterprise"],
+      featureState: "DISABLED",
+      requiredPermissions: ["profile.backoffice.view"],
+    },
+    {
+      id: "privacy-customer-rights",
+      label: "Privacy and Customer Rights",
+      route: "/profile#privacy-customer-rights",
+      icon: "security",
+      order: 490,
+      group: {
+        id: "organization",
+        label: "Customers and Organisation",
+        order: 400,
+      },
+      perspectives: ["operations"],
+      contexts: ["environment", "tenant", "enterprise"],
+      featureState: "DISABLED",
+      requiredPermissions: ["profile.backoffice.view"],
+    },
+    {
+      id: "customers",
+      parentId: "customers-profiles",
+      label: "Customers",
+      route: "/profile",
+      icon: "profile",
+      order: 411,
+      group: {
+        id: "organization",
+        label: "Customers and Organisation",
+        order: 400,
+      },
+      perspectives: ["operations"],
+      contexts: ["environment", "tenant", "enterprise"],
+      featureState: "ACTIVE",
+      requiredPermissions: ["profile.backoffice.view"],
+    },
+    {
+      id: "customer-profiles",
+      parentId: "customers-profiles",
+      label: "Customer Profiles",
+      route: "/profile/customer-profiles",
+      icon: "profile",
+      order: 412,
+      group: {
+        id: "organization",
+        label: "Customers and Organisation",
+        order: 400,
+      },
+      perspectives: ["operations"],
+      contexts: ["environment", "tenant", "enterprise"],
+      featureState: "DISABLED",
+    },
+    {
+      id: "customer-addresses",
+      parentId: "customers-profiles",
+      label: "Addresses",
+      route: "/profile/addresses",
+      icon: "profile",
+      order: 413,
+      group: {
+        id: "organization",
+        label: "Customers and Organisation",
+        order: 400,
+      },
+      perspectives: ["operations"],
+      contexts: ["environment", "tenant", "enterprise"],
+      featureState: "DISABLED",
+    },
+    {
+      id: "customer-contact-details",
+      parentId: "customers-profiles",
+      label: "Contact Details",
+      route: "/profile/contact-details",
+      icon: "profile",
+      order: 414,
+      group: {
+        id: "organization",
+        label: "Customers and Organisation",
+        order: 400,
+      },
+      perspectives: ["operations"],
+      contexts: ["environment", "tenant", "enterprise"],
+      featureState: "DISABLED",
+    },
+    {
+      id: "customer-groups",
+      parentId: "customers-profiles",
+      label: "Customer Groups",
+      route: "/profile/customer-groups",
+      icon: "profile",
+      order: 415,
+      group: {
+        id: "organization",
+        label: "Customers and Organisation",
+        order: 400,
+      },
+      perspectives: ["operations"],
+      contexts: ["environment", "tenant", "enterprise"],
+      featureState: "DISABLED",
+    },
+    {
+      id: "customer-segments",
+      parentId: "segments-audiences",
+      label: "Customer Segments",
+      route: "/profile/customer-segments",
+      icon: "profile",
+      order: 110,
+      group: {
+        id: "organization",
+        label: "Customers and Organisation",
+        order: 400,
+      },
+      perspectives: ["operations"],
+      contexts: ["environment", "tenant", "enterprise"],
+      featureState: "DISABLED",
+    },
+    {
+      id: "employees",
+      parentId: "employees-teams",
+      label: "Employees",
+      route: "/profile/employees",
+      icon: "profile",
+      order: 120,
+      group: {
+        id: "organization",
+        label: "Customers and Organisation",
+        order: 400,
+      },
+      perspectives: ["operations"],
+      contexts: ["environment", "tenant", "enterprise"],
+      featureState: "DISABLED",
+    },
+    {
+      id: "roles",
+      parentId: "roles-access",
+      label: "Roles",
+      route: "/profile/roles",
+      icon: "profile",
+      order: 130,
+      group: {
+        id: "organization",
+        label: "Customers and Organisation",
+        order: 400,
+      },
+      perspectives: ["operations"],
+      contexts: ["environment", "tenant", "enterprise"],
+      featureState: "DISABLED",
+    },
+    {
+      id: "permission-groups",
+      parentId: "roles-access",
+      label: "Permission Groups",
+      route: "/profile/permission-groups",
+      icon: "profile",
+      order: 140,
+      group: {
+        id: "organization",
+        label: "Customers and Organisation",
+        order: 400,
+      },
+      perspectives: ["operations"],
+      contexts: ["environment", "tenant", "enterprise"],
+      featureState: "DISABLED",
+    },
+    {
+      id: "enterprises",
+      parentId: "organisations-business-accounts",
+      label: "Enterprises",
+      route: "/profile/enterprises",
+      icon: "profile",
+      order: 150,
+      group: {
+        id: "organization",
+        label: "Customers and Organisation",
+        order: 400,
+      },
+      perspectives: ["operations"],
+      contexts: ["environment", "tenant", "enterprise"],
+      featureState: "DISABLED",
+    },
+    {
+      id: "business-units",
+      parentId: "organisations-business-accounts",
+      label: "Business Units",
+      route: "/profile/business-units",
+      icon: "profile",
+      order: 160,
+      group: {
+        id: "organization",
+        label: "Customers and Organisation",
+        order: 400,
+      },
+      perspectives: ["operations"],
+      contexts: ["environment", "tenant", "enterprise"],
+      featureState: "DISABLED",
+    },
+  ],
 };
 
-
 module.exports = {
-    /** Resolves layered enterprise workspace configuration. */
-    getEnterpriseManagementConfig: function () {
-        if (typeof CONFIG !== "undefined" && CONFIG && CONFIG.get) {
-            return CONFIG.get('enterpriseManagement') || {};
-        }
-        return require('../../config/properties').enterpriseManagement || {};
-    },
-    /** Registers this module BackOffice capability provider. */
-    init: function () {
-        SERVICE.DefaultModuleRegistrationAgentService.registerBackofficeCapabilityProvider('profile', this);
-        return Promise.resolve(true);
-    },
-    /** Completes provider lifecycle initialization. */
-    postInit: function () { return Promise.resolve(true); },
-    /** Returns this module owned BackOffice capability contract. */
-    getCapability: function () {
-        let effective = JSON.parse(JSON.stringify(capability));
-        let workspace = this.getEnterpriseManagementConfig().workspace;
-        if (workspace) {
-            let enterpriseWorkspaceIds = {
-                "organisations-business-accounts": true,
-                "employees-teams": true,
-                "roles-access": true,
-                "enterprises": true,
-                "employees": true,
-                "roles": true,
-                "permission-groups": true
-            };
-            effective.requiredPermissions = Array.from(new Set(
-                (effective.requiredPermissions || []).concat([
-                    "profile.enterprise.search",
-                    "profile.enterpriseAccess.search",
-                    "profile.enterpriseAccess.assign"
-                ])));
-            effective.navigation.forEach(item => {
-                if (!enterpriseWorkspaceIds[item.id]) return;
-                item.featureState = "ACTIVE";
-                item.backendWorkspace = workspace;
-                item.requiredPermissions = Array.from(new Set(
-                    (item.requiredPermissions || ["profile.backoffice.view"]).concat([
-                        "profile.enterprise.search",
-                        "profile.enterpriseAccess.search"
-                    ])));
-                if (item.id === "enterprises") {
-                    item.label = "Enterprises and Users";
-                    item.icon = "organization";
-                }
-            });
-        }
-        return effective;
+  /** Resolves layered enterprise workspace configuration. */
+  getEnterpriseManagementConfig: function () {
+    if (typeof CONFIG !== "undefined" && CONFIG && CONFIG.get) {
+      return CONFIG.get("enterpriseManagement") || {};
     }
+    return require("../../config/properties").enterpriseManagement || {};
+  },
+  /** Registers this module BackOffice capability provider. */
+  init: function () {
+    SERVICE.DefaultModuleRegistrationAgentService.registerBackofficeCapabilityProvider(
+      "profile",
+      this,
+    );
+    return Promise.resolve(true);
+  },
+  /** Completes provider lifecycle initialization. */
+  postInit: function () {
+    return Promise.resolve(true);
+  },
+  /** Returns this module owned BackOffice capability contract. */
+  getCapability: function () {
+    let effective = JSON.parse(JSON.stringify(capability));
+    const configuration = this.getEnterpriseManagementConfig();
+    let workspace;
+    if (configuration.workspace) {
+      const owner =
+        typeof SERVICE !== "undefined" &&
+        SERVICE.DefaultEnterpriseManagementService;
+      if (typeof owner?.getAccessWorkspace !== "function")
+        throw new Error(
+          "Profile authenticated enterprise workspace owner unavailable",
+        );
+      workspace = owner.getAccessWorkspace({ publicOnly: false });
+    }
+    if (
+      workspace &&
+      (configuration.applications?.enabled === true ||
+        configuration.applications?.review?.enabled === true) &&
+      configuration.applications.reviewWorkspace
+    ) {
+      workspace.tabs = (workspace.tabs || []).concat(
+        JSON.parse(JSON.stringify(configuration.applications.reviewWorkspace)),
+      );
+    }
+    if (workspace) {
+      effective.navigation.forEach((item) => {
+        if (item.id !== "enterprises") return;
+        item.featureState = "ACTIVE";
+        item.backendWorkspace = workspace;
+        item.requiredPermissions = Array.from(
+          new Set(
+            (item.requiredPermissions || ["profile.backoffice.view"]).concat([
+              "profile.enterprise.search",
+              "profile.enterpriseAccess.search",
+              "profile.enterpriseAccess.assign",
+            ]),
+          ),
+        );
+        if (item.id === "enterprises") {
+          item.label = "Enterprises and Users";
+          item.icon = "organization";
+        }
+      });
+    }
+    const membershipsQualified =
+      configuration.memberships?.enabled === true &&
+      configuration.memberships.inventoryQualified === true &&
+      configuration.memberships.sessionBindingQualified === true &&
+      configuration.memberships.assignmentClaimIndexQualified === true &&
+      typeof CONFIG !== "undefined" &&
+      CONFIG.get("apiExposure")?.categories?.profileMembership?.enabled ===
+        true;
+    if (membershipsQualified) {
+      effective.navigation.push({
+        id: "my-enterprise-memberships",
+        label: configuration.memberships.presentation.title,
+        route: "/profile/my-enterprise-memberships",
+        icon: "identity",
+        order: 409,
+        group: {
+          id: "organization",
+          label: "Customers and Organisation",
+          order: 400,
+        },
+        perspectives: ["operations"],
+        contexts: ["environment", "tenant", "enterprise"],
+        featureState: "ACTIVE",
+        requiredPermissions: ["profile.backoffice.view"],
+        backendWorkspace: {
+          contractVersion: 1,
+          renderer: "axis.workspace.native",
+          workspaceCode: "profile.enterpriseMemberships",
+          viewCode: "memberships",
+          title: configuration.memberships.presentation.title,
+        },
+      });
+    }
+    if (
+      membershipsQualified &&
+      configuration.teamAdministration?.enabled === true &&
+      configuration.teamAdministration.serializedWritesQualified === true
+    ) {
+      const team = effective.navigation.find((item) => item.id === "employees");
+      if (team) {
+        team.featureState = "ACTIVE";
+        team.label = configuration.teamAdministration.presentation.title;
+        team.requiredPermissions = [
+          "profile.backoffice.view",
+          "profile.enterpriseAccess.assign",
+        ];
+        team.backendWorkspace = {
+          contractVersion: 1,
+          renderer: "axis.workspace.native",
+          workspaceCode: "profile.enterpriseTeam",
+          viewCode: "team",
+          title: configuration.teamAdministration.presentation.title,
+        };
+      }
+    }
+    if (
+      membershipsQualified &&
+      configuration.teamAdministration?.enabled === true &&
+      configuration.teamAdministration.serializedWritesQualified === true &&
+      configuration.teamAdministration.operatorRecoveryQualified === true
+    ) {
+      effective.navigation.push({
+        id: "enterprise-operation-recovery",
+        label: configuration.teamAdministration.recoveryPresentation.title,
+        route: "/profile/enterprise-operation-recovery",
+        icon: "refresh",
+        order: 411,
+        group: {
+          id: "organization",
+          label: "Customers and Organisation",
+          order: 400,
+        },
+        perspectives: ["operations"],
+        contexts: ["environment", "tenant", "enterprise"],
+        featureState: "ACTIVE",
+        requiredPermissions: [
+          "profile.backoffice.view",
+          "profile.enterpriseAccess.assign",
+        ],
+        backendWorkspace: {
+          contractVersion: 1,
+          renderer: "axis.workspace.native",
+          workspaceCode: "profile.enterpriseRecovery",
+          viewCode: "recovery",
+          title: configuration.teamAdministration.recoveryPresentation.title,
+        },
+      });
+    }
+    const consent = configuration.administrationConsent;
+    if (
+      consent?.enabled === true &&
+      consent.enforcementQualified === true &&
+      typeof consent.workspace?.presentation?.title === "string" &&
+      consent.workspace.presentation.title.trim().length > 0 &&
+      consent.workspace.presentation.title.length <= 160 &&
+      CONFIG.get("apiExposure")?.categories?.profileManagement?.enabled === true
+    ) {
+      effective.navigation.push({
+        id: "enterprise-administration",
+        label: consent.workspace?.presentation?.title,
+        route: "/profile/enterprise-administration",
+        icon: "organization",
+        order: 412,
+        group: {
+          id: "organization",
+          label: "Customers and Organisation",
+          order: 400,
+        },
+        perspectives: ["operations"],
+        contexts: ["enterprise"],
+        featureState: "ACTIVE",
+        requiredPermissions: ["profile.backoffice.view", consent.permission],
+        backendWorkspace: {
+          contractVersion: 1,
+          renderer: "axis.workspace.native",
+          workspaceCode: "profile.enterpriseAdministration",
+          viewCode: "administration",
+          title: consent.workspace.presentation.title,
+        },
+      });
+    }
+    const participation = CONFIG.get("profileCustomerParticipation");
+    if (
+      membershipsQualified &&
+      configuration.applications?.enabled === true &&
+      configuration.applications.review?.enabled === true &&
+      configuration.applications.review.operatorRecoveryQualified === true
+    ) {
+      effective.navigation.push({
+        id: "application-review-recovery",
+        label: configuration.applications.review.recoveryPresentation.title,
+        route: "/profile/application-review-recovery",
+        icon: "refresh",
+        order: 413,
+        group: {
+          id: "organization",
+          label: "Customers and Organisation",
+          order: 400,
+        },
+        perspectives: ["operations"],
+        contexts: ["environment", "tenant", "enterprise"],
+        featureState: "ACTIVE",
+        requiredPermissions: [
+          "profile.backoffice.view",
+          configuration.applications.review.decisionPermission,
+        ],
+        backendWorkspace: {
+          contractVersion: 1,
+          renderer: "axis.workspace.native",
+          workspaceCode: "profile.applicationRecovery",
+          viewCode: "recovery",
+          title: configuration.applications.review.recoveryPresentation.title,
+        },
+      });
+    }
+    if (
+      membershipsQualified &&
+      participation?.enabled === true &&
+      participation.qualified === true &&
+      participation.sessionQualified === true
+    ) {
+      effective.navigation.push({
+        id: "customer-participation",
+        label: participation.presentation.title,
+        route: "/profile/customer-participation",
+        icon: "identity",
+        order: 412,
+        group: {
+          id: "organization",
+          label: "Customers and Organisation",
+          order: 400,
+        },
+        perspectives: ["operations"],
+        contexts: ["environment", "tenant", "enterprise"],
+        featureState: "ACTIVE",
+        requiredPermissions: ["profile.backoffice.view"],
+        backendWorkspace: {
+          contractVersion: 1,
+          renderer: "axis.workspace.native",
+          workspaceCode: "profile.customerParticipation",
+          viewCode: "terms",
+          title: participation.presentation.title,
+        },
+      });
+    }
+    return effective;
+  },
 };

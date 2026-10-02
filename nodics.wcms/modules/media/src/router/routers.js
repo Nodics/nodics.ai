@@ -18,6 +18,17 @@
  */
 module.exports = {
     media: {
+        library: {
+            list: { secured: true, authTokenTypes: ['access'], accessGroups: ['userGroup'],
+                permission: 'media.storage.policy.view', apiExposure: 'mediaManagement',
+                key: '/library', method: 'GET', controller: 'DefaultMediaLibraryController', operation: 'list' },
+            inspect: { secured: true, authTokenTypes: ['access'], accessGroups: ['userGroup'],
+                permission: 'media.storage.policy.view', apiExposure: 'mediaManagement',
+                key: '/library/:mediaCode', method: 'GET', controller: 'DefaultMediaLibraryController', operation: 'inspect' },
+            requestPublication: { secured: true, authTokenTypes: ['access'], accessGroups: ['runtimeConfigAdminUserGroup'],
+                permission: 'publish.lifecycle.create', apiExposure: 'mediaManagement',
+                key: '/library/publications', method: 'POST', controller: 'DefaultMediaLibraryController', operation: 'requestPublication' }
+        },
         storagePolicy: {
             createRetainedPublication: {
                 secured: true, authTokenTypes: ['access'], accessGroups: ['runtimeConfigAdminUserGroup'],
@@ -366,6 +377,42 @@ module.exports = {
                 key: '/customer/photos/:code', method: 'GET', controller: 'DefaultCustomerMediaController', operation: 'read',
                 help: { requestType:'secured', message:'Reads a photo for its owner or authorized reviewer.' }
             },
+            readReadiness: {
+                secured: true, authTokenTypes: ['access'], accessGroups: ['userGroup'],
+                permission: 'media.upload.create', apiExposure: 'mediaManagement',
+                key: '/storage/readiness', method: 'POST', controller: 'DefaultMediaStorageController', operation: 'readReadiness',
+                requestBody: { required: true, content: { 'application/json': { schema: {
+                    type: 'object', additionalProperties: false, required: ['assets'],
+                    properties: { assets: { type: 'array', minItems: 1, maxItems: 100, items: { type: 'object' } } }
+                } } } },
+                responses: { '200': { description: 'Bounded persisted CURRENT Media metadata readiness; no byte verification or mutation' } }
+            },
+            inspectUpload: {
+                secured: true,
+                accessGroups: ['userGroup'],
+                permission: 'media.upload.create',
+                apiExposure: 'mediaManagement',
+                key: '/storage/upload/inspect',
+                method: 'POST',
+                controller: 'DefaultMediaStorageController',
+                operation: 'inspectUpload',
+                requestBody: {
+                    required: true,
+                    content: { 'application/json': { schema: {
+                        type: 'object', required: ['mediaCode', 'checksum', 'sizeBytes', 'originalFileName'],
+                        properties: {
+                            mediaCode: { type: 'string', minLength: 1, maxLength: 256 },
+                            checksum: { type: 'string', pattern: '^[a-f0-9]{64}$' },
+                            sizeBytes: { type: 'integer', minimum: 1 },
+                            originalFileName: { type: 'string' },
+                            mimeType: { type: 'string' }, folderCode: { type: 'string' }, formatCode: { type: 'string' },
+                            name: { type: 'string' }, description: { type: 'string' }, businessPurpose: { type: 'string' },
+                            ownerType: { type: 'string' }, ownerReference: { type: 'string' }
+                        }
+                    } } }
+                },
+                responses: { '200': { description: 'Path-free current Media upload inspection; no mutation' } }
+            },
             uploadMedia: {
                 secured: true,
                 accessGroups: ['userGroup'],
@@ -403,6 +450,7 @@ module.exports = {
                                     indexName: { type: 'string' },
                                     keyStrategy: { type: 'string' },
                                     mediaCode: { type: 'string' },
+                                    versionId: { type: 'integer', minimum: 0 },
                                     name: { type: 'string' },
                                     description: { type: 'string' }
                                 }

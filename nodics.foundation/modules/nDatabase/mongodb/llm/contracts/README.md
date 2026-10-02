@@ -1,5 +1,23 @@
 # mongodb AI Contracts
 
+## Canonical Replacement Selector
+
+`saveItems` calls exported `assertReplacementIdentity` before every driver call
+when `replaceAllMatchesByQuery` is selected. Require a nonempty plain selector
+with concrete `_id`, or all fields declared `definition.primary: true` matching
+the model. An `_id` may be selected without repeating it in the patch. Reject
+empty/undefined identities, unresolved templates, dotted/operator predicates,
+nonfinite numbers and index-only selectors. Only scalar additional filters are
+permitted. Prepared index lists are not canonical identity proof. This applies
+before count, updateMany, upsert and insert, including zero-match requests.
+Canonical identity replacement can update retained versions of that identity;
+it must not change unrelated records. Ordinary saves retain existing behavior.
+
+The offline cross-owner regression lives in
+`../../../database/test/nestedImportReplacementContract.test.js`; it uses the real
+Mongo adapter with a driver-only stand-in, never an installed collection. Owner
+authorization and private credential guards remain independently mandatory.
+
 ## Internal Durable Journal Persistence
 
 The existing MongoDB `compareAndSetItem` port accepts one internal policy:
@@ -108,6 +126,18 @@ Use these files for rules that are more specific than root `AGENTS.md` and the m
 - End sessions in `finally`.
 - Use snapshot reads, majority writes, and configured commit timeout.
 - Require replica-set or sharded topology qualification.
+
+## Save no-upsert fences
+
+For a nonempty generated save selector, explicit `options.upsert: false` narrows
+the selected database save defaults and reaches `findOneAndUpdate`. An
+acknowledged response without a matched document rejects with `ERR_MDL_00005`;
+it must not synthesize success from the input model or resurrect a removed owner.
+Transaction options remain intact. Ordinary fresh inserts and saves without the
+explicit narrowing retain their existing behavior. The actual startup/import/
+generated-writer regression is Profile's
+`test/passwordOwnershipPipelineContract.test.js`, using this adapter with
+memory-only driver acknowledgements, not installed database acceptance.
 
 ## Keyed schema constraints
 

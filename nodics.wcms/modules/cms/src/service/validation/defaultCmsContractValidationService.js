@@ -121,7 +121,12 @@ module.exports = {
                 throw this.error('ERR_CMS_00095', 'CMS slot allowlists must be arrays');
             }
         });
-        if (model.template) await this.validateReference(request, 'DefaultCmsPageTemplateService', { code: model.template, active: true }, 'ERR_CMS_00095', 'CMS slot template is unavailable', true);
+        if (model.template) {
+            if (typeof model.template !== 'string' || !model.template.trim()) {
+                throw this.error('ERR_CMS_00095', 'CMS slot template code must be a non-empty string');
+            }
+            await this.validateReference(request, 'DefaultCmsPageTemplateService', { code: model.template, active: true }, 'ERR_CMS_00095', 'CMS slot template is unavailable', true, true);
+        }
         return true;
     },
 
@@ -135,8 +140,12 @@ module.exports = {
         if (model.parent && model.code && model.parent === model.code) {
             throw this.error('ERR_CMS_00096', 'CMS navigation node cannot be its own parent');
         }
-        if (nodeType === 'PAGE') await this.validateReference(request, 'DefaultCmsPageService', { code: model.targetPage, active: true }, 'ERR_CMS_00096', 'CMS navigation target page is unavailable');
-        if (nodeType === 'ROUTE') await this.validateReference(request, 'DefaultCmsPageRouteService', { code: model.targetRoute, active: true }, 'ERR_CMS_00096', 'CMS navigation target route is unavailable');
+        const target = nodeType === 'PAGE' ? model.targetPage : nodeType === 'ROUTE' ? model.targetRoute : undefined;
+        if (['PAGE', 'ROUTE'].includes(nodeType) && (typeof target !== 'string' || !target.trim())) {
+            throw this.error('ERR_CMS_00096', 'CMS navigation target code must be a non-empty string');
+        }
+        if (nodeType === 'PAGE') await this.validateReference(request, 'DefaultCmsPageService', { code: model.targetPage, active: true }, 'ERR_CMS_00096', 'CMS navigation target page is unavailable', false, true);
+        if (nodeType === 'ROUTE') await this.validateReference(request, 'DefaultCmsPageRouteService', { code: model.targetRoute, active: true }, 'ERR_CMS_00096', 'CMS navigation target route is unavailable', false, true);
         if (nodeType === 'EXTERNAL' && !this.safeExternalUrl(model.externalUrl)) {
             throw this.error('ERR_CMS_00096', 'CMS navigation external URL is unsafe');
         }
@@ -297,8 +306,8 @@ module.exports = {
         return response && Array.isArray(response.result) ? response.result : [];
     },
 
-    /** Validates a generated-service reference when the service is present. */
-    validateReference: async function (request, serviceName, query, code, message, optionalWhenServiceMissing) {
+    /** Validates a generated-service reference; only a declared pre-write empty lookup may defer import. */
+    validateReference: async function (request, serviceName, query, code, message, optionalWhenServiceMissing, preWriteDependency) {
         let service = serviceName && typeof SERVICE !== 'undefined' && SERVICE ? SERVICE[serviceName] : null;
         if (!service || typeof service.get !== 'function') {
             if (optionalWhenServiceMissing) return true;
@@ -311,10 +320,15 @@ module.exports = {
         let response = await service.get({
             tenant: request.tenant,
             authData: request.authData,
-            options: Object.assign({}, request.options || {}, { recursive: false }),
+            options: Object.assign({}, request.options || {}, { recursive: false }, preWriteDependency ? { skipItemCache: true } : {}),
             query: query,
             searchOptions: { limit: 2, sort: { versionId: -1 } }
         });
+        if (preWriteDependency === true && response && (
+            /^ERR_/u.test(String(response.code || '')) || response.success === false || response.error ||
+            Number(response.responseCode || response.statusCode || 0) >= 400 ||
+            Array.isArray(response.errors) && response.errors.length > 0
+        )) throw this.error(code, message);
         let matches = this.items(response).filter(item => Object.keys(criteria).every(key => {
             let source = item && item._doc || item;
             let actual = source && source[key] && source[key].code || source && source[key];
@@ -325,7 +339,22 @@ module.exports = {
         // business code. A reference is valid when at least one active exact
         // revision exists; the descending version sort keeps lookup behavior
         // deterministic without requiring an unversioned duplicate count of one.
-        if (matches.length < 1) throw this.error(code, message);
+        if (matches.length < 1) {
+            let error = this.error(code, message);
+            // Do not reinterpret access/provider failures, malformed responses or
+            // mismatched records as proof that an unapplied dependency can retry.
+            // Native generated reads carry SUC_FIND_00000, not a separate HTTP
+            // status. If a transport adds statuses, each must confirm success.
+            if (preWriteDependency === true && response && response.code === 'SUC_FIND_00000' &&
+                response.count === 0 && Array.isArray(response.result) && response.result.length === 0 &&
+                [response.responseCode, response.statusCode].every(status => status === undefined ||
+                    Number(status) >= 200 && Number(status) < 300)) {
+                error.metadata = Object.assign({}, error.metadata || {}, {
+                    importRetry: { kind: 'DEPENDENCY', writeOutcome: 'NOT_APPLIED' }
+                });
+            }
+            throw error;
+        }
         return true;
     },
 

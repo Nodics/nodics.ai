@@ -16,6 +16,7 @@ const controller = require('../src/controller/defaultInventoryOperationControlle
 
 (async () => {
     const writes = [];
+    global.CONFIG = { get: key => key === 'runtimeRole' ? { code: 'COMMERCE' } : {} };
     global.FACADE = { DefaultInventoryOperationFacade: facade };
     global.SERVICE = {
         DefaultInventoryOperationService: service,

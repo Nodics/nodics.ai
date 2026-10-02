@@ -10,4 +10,13 @@
  */
 
 /** @module digitalCore/utils/statusDefinitions @description Stable merchant authorization and fulfillment failures. @layer config @owner digitalCore */
-module.exports={ERR_DIGITAL_MERCHANT_INVALID:{code:"400",message:"Merchant redemption could not be confirmed"}};
+module.exports = {
+  ERR_DIGITAL_MERCHANT_INVALID: {
+    code: "400",
+    message: "Merchant redemption could not be confirmed",
+  },
+  ERR_DIGITAL_NOTIFICATION_UNCONFIRMED: {
+    code: "409",
+    message: "Committed notification evidence could not be confirmed",
+  },
+};

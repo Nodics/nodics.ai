@@ -16,20 +16,187 @@
  * @owner profile
  * @override Project modules may extend scope types, effects, and resolver behavior through configuration and later-layer services.
  */
+const scopeMutationTargets = new WeakMap();
 module.exports = {
+  /** Captures private old/new non-runtime scope targets and awaits pre-write invalidation. */
+  prepareScopeInvalidation: async function (request, assignments) {
+    const targets = assignments
+      .filter((item) => item.scopeType !== "RUNTIME_DEPLOYMENT")
+      .map((item) => ({
+        principalType: item.principalType,
+        principalCode: item.principalCode,
+        groupCode: item.groupCode,
+      }));
+    scopeMutationTargets.set(request, targets);
+    return this.invalidateScopeCredentials(request);
+  },
+  /** Invalidates current direct/group principals after persistence using captured private targets. */
+  invalidateScopeCredentials: async function (request) {
+    const targets = scopeMutationTargets.get(request);
+    if (!targets)
+      throw new CLASSES.NodicsError(
+        "ERR_AUTH_00003",
+        "Prepared scope invalidation is required",
+      );
+    if (!targets.length) return true;
+    const stamps = SERVICE.DefaultPrincipalSecurityStampGovernanceService;
+    const groups = targets.some((target) => target.principalType === "group")
+      ? await stamps.inventory(
+          SERVICE.DefaultUserGroupService,
+          request.tenant,
+          {},
+        )
+      : [];
+    const groupCodes = [
+      ...new Set(
+        targets
+          .filter((target) => target.principalType === "group")
+          .flatMap((target) => {
+            if (
+              typeof target.groupCode !== "string" ||
+              !target.groupCode.trim()
+            )
+              throw new CLASSES.NodicsError("ERR_AUTH_00003");
+            return stamps.getAffectedGroupCodes(groups, target.groupCode);
+          }),
+      ),
+    ];
+    const seen = new Set(),
+      membershipIds = [],
+      customerIds = [];
+    for (const [service, kinds, recordKind] of [
+      [SERVICE.DefaultEmployeeService, ["human", "service"], "EMPLOYEE"],
+      [SERVICE.DefaultCustomerService, ["customer"], "CUSTOMER"],
+    ]) {
+      const selectors = groupCodes.length
+        ? [{ userGroups: { $in: groupCodes } }]
+        : [];
+      for (const target of targets) {
+        if (
+          !["human", "service", "customer", "group"].includes(
+            target.principalType,
+          )
+        )
+          throw new CLASSES.NodicsError("ERR_AUTH_00003");
+        if (kinds.includes(target.principalType)) {
+          if (
+            typeof target.principalCode !== "string" ||
+            !target.principalCode.trim()
+          )
+            throw new CLASSES.NodicsError("ERR_AUTH_00003");
+          selectors.push({
+            principalType: target.principalType,
+            $or: [
+              { loginId: target.principalCode },
+              { code: target.principalCode },
+            ],
+          });
+        }
+      }
+      if (!selectors.length) continue;
+      for (const principal of await stamps.inventory(service, request.tenant, {
+        $or: selectors,
+      })) {
+        const key = recordKind + ":" + String(principal._id);
+        if (seen.has(key)) continue;
+        seen.add(key);
+        if (typeof principal.loginId !== "string" || !principal.loginId)
+          throw new CLASSES.NodicsError("ERR_AUTH_00003");
+        const identity = principal.authenticationIdentity;
+        const linked =
+          identity &&
+          !(
+            identity.tenantCode === request.tenant &&
+            identity.recordKind === recordKind &&
+            identity.recordId === String(principal._id)
+          );
+        if (recordKind === "EMPLOYEE")
+          membershipIds.push(String(principal._id));
+        if (linked) {
+          if (
+            recordKind === "CUSTOMER" &&
+            principal.customerParticipation?.phase === "COMPLETE" &&
+            SERVICE.DefaultCustomerRegistrationService
+          ) {
+            customerIds.push(String(principal._id));
+            continue;
+          }
+          if (
+            recordKind !== "EMPLOYEE" ||
+            !SERVICE.DefaultEnterpriseMembershipService?.enabled()
+          ) {
+            throw new CLASSES.NodicsError(
+              "ERR_AUTH_00003",
+              "Linked scope invalidation requires a qualified membership owner",
+            );
+          }
+          continue;
+        }
+        const result = await service.update({
+          tenant: request.tenant,
+          authData:
+            SERVICE.DefaultIdentityGovernanceService.getSystemAuthData(),
+          query: { _id: principal._id },
+          model: { $set: { authVersion: 1 } },
+        });
+        if (
+          !result ||
+          !/^SUC_/.test(result.code || "") ||
+          result.success === false ||
+          result.error ||
+          (result.errors &&
+            (!Array.isArray(result.errors) || result.errors.length)) ||
+          result.result?.acknowledged !== true ||
+          result.result?.matchedCount !== 1
+        ) {
+          throw new CLASSES.NodicsError(
+            "ERR_AUTH_00003",
+            "Scope credential invalidation did not complete",
+          );
+        }
+      }
+    }
+    if (
+      membershipIds.length &&
+      SERVICE.DefaultEnterpriseMembershipService?.enabled()
+    ) {
+      await SERVICE.DefaultEnterpriseMembershipService.invalidatePrincipalMemberships(
+        request.tenant,
+        membershipIds,
+      );
+    }
+    if (customerIds.length)
+      await SERVICE.DefaultCustomerRegistrationService.invalidateParticipations(
+        request.tenant,
+        customerIds,
+      );
+    if (groupCodes.length && SERVICE.DefaultCustomerRegistrationService)
+      await SERVICE.DefaultCustomerRegistrationService.invalidateGroupParticipations(
+        request.tenant,
+        groupCodes,
+      );
+    return true;
+  },
   /** Captures the principals whose previously issued runtime credentials must expire after a scope write. */
   captureRuntimeScopePrincipals: function (request, assignments) {
-    const codes = (assignments || []).filter(item => item.scopeType === 'RUNTIME_DEPLOYMENT').map(item => item.principalCode);
-    request.runtimeScopePrincipalCodes = [...new Set([...(request.runtimeScopePrincipalCodes || []), ...codes])];
+    const codes = (assignments || [])
+      .filter((item) => item.scopeType === "RUNTIME_DEPLOYMENT")
+      .map((item) => item.principalCode);
+    request.runtimeScopePrincipalCodes = [
+      ...new Set([...(request.runtimeScopePrincipalCodes || []), ...codes]),
+    ];
     return true;
   },
   /** Reads removed assignments before deletion, preserving the existing Profile identity authority. */
   prepareRuntimeScopeRemoval: async function (request) {
-    const result = await SERVICE.DefaultPrincipalScopeAssignmentService.get({ tenant: request.tenant,
-      authData: SERVICE.DefaultIdentityGovernanceService.getSystemAuthData(), query: request.query || {}, options: { recursive: false } });
-    if (!result || result.success === false || !/^SUC_/.test(result.code || '') ||
-      (result.errors && result.errors.length) || !Array.isArray(result.result)) throw new CLASSES.NodicsError('ERR_AUTH_00003', 'Scope removal requires authoritative assignment reads');
-    return this.captureRuntimeScopePrincipals(request, result.result);
+    const assignments =
+      await SERVICE.DefaultPrincipalSecurityStampGovernanceService.inventory(
+        SERVICE.DefaultPrincipalScopeAssignmentService,
+        request.tenant,
+        request.query || {},
+      );
+    this.captureRuntimeScopePrincipals(request, assignments);
+    return this.prepareScopeInvalidation(request, assignments);
   },
   /** Invalidates service credentials after an acknowledged scope change using existing employee/stamp governance. */
   invalidateRuntimeScopeCredentials: async function (request) {
@@ -37,28 +204,63 @@ module.exports = {
       // A governed reset may already have removed this principal. Only the
       // provider's private authority permits this path; prove absence and revoke
       // the shared stamp rather than pretending a zero-match update succeeded.
-      if (SERVICE.DefaultLocalResetProviderService &&
-          SERVICE.DefaultLocalResetProviderService.authorizes(request)) {
-        const principal = await SERVICE.DefaultEmployeeService.get({ tenant: request.tenant,
-          authData: SERVICE.DefaultIdentityGovernanceService.getSystemAuthData(),
-          query: { loginId: principalCode }, options: { recursive: false } });
-        if (!principal || principal.success === false || !/^SUC_/.test(principal.code || '') ||
-            (principal.errors && principal.errors.length) || !Array.isArray(principal.result)) {
-          throw new CLASSES.NodicsError('ERR_AUTH_00003', 'Runtime reset requires authoritative principal reads');
+      if (
+        SERVICE.DefaultLocalResetProviderService &&
+        SERVICE.DefaultLocalResetProviderService.authorizes(request)
+      ) {
+        const principal = await SERVICE.DefaultEmployeeService.get({
+          tenant: request.tenant,
+          authData:
+            SERVICE.DefaultIdentityGovernanceService.getSystemAuthData(),
+          query: { loginId: principalCode },
+          options: { recursive: false },
+        });
+        if (
+          !principal ||
+          principal.success === false ||
+          !/^SUC_/.test(principal.code || "") ||
+          (principal.errors && principal.errors.length) ||
+          !Array.isArray(principal.result)
+        ) {
+          throw new CLASSES.NodicsError(
+            "ERR_AUTH_00003",
+            "Runtime reset requires authoritative principal reads",
+          );
         }
         if (principal.result.length === 0) {
-          const revoked = await SERVICE.DefaultPrincipalSecurityStampService.revoke(request.tenant, principalCode);
+          const revoked =
+            await SERVICE.DefaultPrincipalSecurityStampService.revoke(
+              request.tenant,
+              principalCode,
+            );
           if (!Number.isSafeInteger(revoked) || revoked < 1) {
-            throw new CLASSES.NodicsError('ERR_AUTH_00003', 'Runtime reset credential revocation did not complete');
+            throw new CLASSES.NodicsError(
+              "ERR_AUTH_00003",
+              "Runtime reset credential revocation did not complete",
+            );
           }
           continue;
         }
       }
-      const result = await SERVICE.DefaultEmployeeService.update({ tenant: request.tenant,
-        authData: SERVICE.DefaultIdentityGovernanceService.getSystemAuthData(), query: { loginId: principalCode },
-        model: { $set: { authVersion: 1 } } });
-      if (!result || result.success === false || !/^SUC_/.test(result.code || '') ||
-        (result.errors && result.errors.length) || !result.result || result.result.acknowledged !== true || result.result.matchedCount !== 1) throw new CLASSES.NodicsError('ERR_AUTH_00003', 'Runtime scope credential invalidation did not complete');
+      const result = await SERVICE.DefaultEmployeeService.update({
+        tenant: request.tenant,
+        authData: SERVICE.DefaultIdentityGovernanceService.getSystemAuthData(),
+        query: { loginId: principalCode },
+        model: { $set: { authVersion: 1 } },
+      });
+      if (
+        !result ||
+        result.success === false ||
+        !/^SUC_/.test(result.code || "") ||
+        (result.errors && result.errors.length) ||
+        !result.result ||
+        result.result.acknowledged !== true ||
+        result.result.matchedCount !== 1
+      )
+        throw new CLASSES.NodicsError(
+          "ERR_AUTH_00003",
+          "Runtime scope credential invalidation did not complete",
+        );
     }
     return true;
   },
@@ -190,15 +392,31 @@ module.exports = {
    * @returns {*} Operation result, promise, or delegated service response.
    */
   assertDateOrder: function (assignment) {
-    if (!assignment.effectiveFrom || !assignment.effectiveTo) return;
-    let from = new Date(assignment.effectiveFrom).getTime();
-    let to = new Date(assignment.effectiveTo).getTime();
-    if (!Number.isFinite(from) || !Number.isFinite(to) || from > to) {
+    const from = this.scopeEffectiveTime(assignment.effectiveFrom);
+    const to = this.scopeEffectiveTime(assignment.effectiveTo);
+    if (from !== undefined && to !== undefined && from >= to) {
       throw new CLASSES.NodicsError(
         "ERR_AUTH_00003",
         "Principal authorization scope effective dates are invalid",
       );
     }
+  },
+  /** Validates each optional scope timestamp independently; a missing opposite bound cannot hide invalid data. */
+  scopeEffectiveTime: function (value) {
+    if (value === undefined || value === null) return undefined;
+    const time =
+      value instanceof Date
+        ? value.getTime()
+        : typeof value === "string" && value.trim()
+          ? Date.parse(value)
+          : NaN;
+    if (!Number.isFinite(time)) {
+      throw new CLASSES.NodicsError(
+        "ERR_AUTH_00003",
+        "Principal authorization scope effective dates are invalid",
+      );
+    }
+    return time;
   },
   /**
    * Executes the validate assignment contract for this module surface.
@@ -271,7 +489,7 @@ module.exports = {
       );
     }
     this.assertDateOrder(normalized);
-    if (normalized.scopeType === 'RUNTIME_DEPLOYMENT') {
+    if (normalized.scopeType === "RUNTIME_DEPLOYMENT") {
       SERVICE.DefaultRuntimeAuthorizationService.validateAssignment(normalized);
     }
     return normalized;
@@ -283,9 +501,36 @@ module.exports = {
    * @returns {*} Operation result, promise, or delegated service response.
    */
   validateSave: function (request) {
-    const assignments = this.normalizeModels(request.model).map(model => this.validateAssignment(model));
+    const assignments = this.normalizeModels(request.model).map((model) =>
+      this.validateAssignment(model),
+    );
     this.captureRuntimeScopePrincipals(request, assignments);
     return true;
+  },
+  /** Captures saved/upserted scope preimages after synchronous assignment validation. */
+  prepareScopeSave: async function (request) {
+    const assignments = this.normalizeModels(request.model).map((model) =>
+      this.validateAssignment(model),
+    );
+    if (
+      assignments.some(
+        (item) => typeof item.code !== "string" || !item.code.trim(),
+      )
+    ) {
+      throw new CLASSES.NodicsError(
+        "ERR_AUTH_00003",
+        "Scope save requires stable record codes",
+      );
+    }
+    const existing =
+      await SERVICE.DefaultPrincipalSecurityStampGovernanceService.inventory(
+        SERVICE.DefaultPrincipalScopeAssignmentService,
+        request.tenant,
+        { code: { $in: assignments.map((item) => item.code) } },
+      );
+    this.captureRuntimeScopePrincipals(request, existing);
+    this.captureRuntimeScopePrincipals(request, assignments);
+    return this.prepareScopeInvalidation(request, existing.concat(assignments));
   },
   /**
    * Executes the validate update contract for this module surface.
@@ -295,25 +540,44 @@ module.exports = {
    */
   validateUpdate: function (request) {
     let updates = this.normalizeModels(request.model);
-    if (!request.query || !SERVICE.DefaultPrincipalScopeAssignmentService) {
-      updates.forEach((model) => this.validateAssignment(model));
-      return true;
-    }
-    return SERVICE.DefaultPrincipalScopeAssignmentService.get({
-      tenant: request.tenant,
-      authData: SERVICE.DefaultIdentityGovernanceService.getSystemAuthData(),
-      query: request.query,
-      options: { recursive: false },
-    }).then((result) => {
-      let existing = (result && result.result) || [];
+    if (
+      !request.query ||
+      !SERVICE.DefaultPrincipalScopeAssignmentService ||
+      updates.length !== 1 ||
+      Object.entries(updates[0] || {}).some(
+        ([key, value]) =>
+          key.includes(".") ||
+          (key.startsWith("$") &&
+            (!["$set", "$unset"].includes(key) ||
+              !value ||
+              typeof value !== "object" ||
+              Array.isArray(value) ||
+              Object.keys(value).some(
+                (field) => field.includes(".") || field.startsWith("$"),
+              ))),
+      )
+    )
+      return Promise.reject(
+        new CLASSES.NodicsError(
+          "ERR_AUTH_00003",
+          "Scope update requires one governed model and selector",
+        ),
+      );
+    return SERVICE.DefaultPrincipalSecurityStampGovernanceService.inventory(
+      SERVICE.DefaultPrincipalScopeAssignmentService,
+      request.tenant,
+      request.query,
+    ).then((existing) => {
       if (existing.length === 0)
         throw new CLASSES.NodicsError(
           "ERR_AUTH_00003",
           "Principal scope assignment update requires an existing record",
         );
-      const effective = existing.map(assignment => this.validateAssignment(this.applyUpdate(assignment, updates[0])));
+      const effective = existing.map((assignment) =>
+        this.validateAssignment(this.applyUpdate(assignment, updates[0])),
+      );
       this.captureRuntimeScopePrincipals(request, existing.concat(effective));
-      return true;
+      return this.prepareScopeInvalidation(request, existing.concat(effective));
     });
   },
   /**
@@ -334,16 +598,25 @@ module.exports = {
    * @returns {*} Operation result, promise, or delegated service response.
    */
   isEffective: function (assignment, now) {
-    if (assignment.status !== "ACTIVE") return false;
-    let time = now ? new Date(now).getTime() : Date.now();
-    let from = assignment.effectiveFrom
-      ? new Date(assignment.effectiveFrom).getTime()
-      : undefined;
-    let to = assignment.effectiveTo
-      ? new Date(assignment.effectiveTo).getTime()
-      : undefined;
-    if (Number.isFinite(from) && time < from) return false;
-    if (Number.isFinite(to) && time > to) return false;
+    if (
+      !assignment ||
+      assignment.status !== "ACTIVE" ||
+      assignment.active === false
+    )
+      return false;
+    const time =
+      now === undefined
+        ? Date.now()
+        : now instanceof Date
+          ? now.getTime()
+          : typeof now === "number"
+            ? now
+            : Date.parse(now);
+    if (!Number.isFinite(time)) return false;
+    const from = this.scopeEffectiveTime(assignment.effectiveFrom);
+    const to = this.scopeEffectiveTime(assignment.effectiveTo);
+    if (from !== undefined && time < from) return false;
+    if (to !== undefined && time >= to) return false;
     return true;
   },
   /**
@@ -409,7 +682,23 @@ module.exports = {
     let denied = {};
     let now = options && options.now;
     (assignments || [])
-      .map((assignment) => this.normalizeAssignment(assignment))
+      .filter(
+        (assignment) =>
+          assignment &&
+          assignment.status === "ACTIVE" &&
+          assignment.active !== false,
+      )
+      .map((assignment) => {
+        // Do not drop malformed DENY records and thereby expose a matching ALLOW.
+        this.assertDateOrder(assignment);
+        if (!["ALLOW", "DENY"].includes(assignment.effect)) {
+          throw new CLASSES.NodicsError(
+            "ERR_AUTH_00003",
+            "Stored principal scope effect is invalid",
+          );
+        }
+        return this.normalizeAssignment(assignment);
+      })
       .filter((assignment) => this.isEffective(assignment, now))
       .filter((assignment) => this.appliesToPrincipal(assignment, authData))
       .forEach((assignment) => {
@@ -462,10 +751,29 @@ module.exports = {
       tenant: request.tenant,
       authData: SERVICE.DefaultIdentityGovernanceService.getSystemAuthData(),
       query: query,
-      options: { recursive: false },
+      options: { recursive: false, skipItemCache: true },
       searchOptions: { pageSize: maximum + 1, pageNumber: 1 },
     }).then((result) => {
-      if (((result && result.result) || []).length > maximum) throw new CLASSES.NodicsError("ERR_AUTH_00003", "Principal scope limit exceeded");
+      if (
+        !result ||
+        result.success === false ||
+        result.error ||
+        typeof result.code !== "string" ||
+        !result.code.startsWith("SUC_") ||
+        (result.errors &&
+          (!Array.isArray(result.errors) || result.errors.length)) ||
+        !Array.isArray(result.result)
+      ) {
+        throw new CLASSES.NodicsError(
+          "ERR_AUTH_00003",
+          "Principal scope resolution requires an authoritative owner read",
+        );
+      }
+      if (result.result.length > maximum)
+        throw new CLASSES.NodicsError(
+          "ERR_AUTH_00003",
+          "Principal scope limit exceeded",
+        );
       return this.resolveAssignments(
         authData,
         (result && result.result) || [],

@@ -1,5 +1,9 @@
 # mongodb Module
 
+Multi-match save replacement requires an explicit canonical identity before any
+driver operation. Empty/index-only/operator selectors fail closed. See the
+[replacement contract](llm/contracts/README.md#canonical-replacement-selector).
+
 ## Internal Durable Journals
 
 Unversioned internal execution journals reuse `compareAndSetItem` with the
@@ -172,3 +176,15 @@ The framework default database names are `masterLocal` and `testLocal`. An uncha
 Local deployment inherits them without a project/environment database block.
 Explicit server, node and tenant names still override these defaults and preserve
 isolation. Changing a default never renames or migrates existing databases.
+
+## Tenant Namespace Derivation
+
+The connection owner supplies pure portable-name validation and deterministic
+tenant name derivation to nDatabase; neither method opens MongoDB. See the
+[physical namespace contract](../database/llm/contracts/tenant-physical-namespace.md)
+for provisioning intent, explicit overrides, pre-provider admission and migration
+limits. Qualified explicit provider overrides remain supported. The current
+DERIVED path fails closed without an exact stored deployment/server binding.
+Structured connection-string parsing supplies non-secret endpoint fingerprints;
+password rotation alone does not change them. Profile persistence/transport and
+installed physical-cluster identity proof remain separate integration gates.

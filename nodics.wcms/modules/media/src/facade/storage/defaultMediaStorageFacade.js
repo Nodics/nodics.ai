@@ -278,8 +278,20 @@ module.exports = {
         });
     },
     /**
-     * Delegates a parsed media upload to the upload service.
+     * Returns a Media-owned path-free upload inspection.
      *
+     * @param {Object} request Desired upload descriptor and trusted request context.
+     * @returns {Promise<Object>} Inspection response.
+     */
+    inspectUpload: function (request) {
+        return SERVICE.DefaultMediaUploadService.inspectUpload(request).then(data => ({ code: 'SUC_MED_00004', data }));
+    },
+    /** Aggregates persisted CURRENT readiness without reading bytes or granting publication. */
+    readReadiness: function (input, request) {
+        return SERVICE.DefaultMediaReadinessService.read(input, request).then(data => ({ code: 'SUC_MED_00004', data }));
+    },
+    /**
+     * Delegates a parsed media upload to the upload service.
      * @param {Object} request Parsed upload request.
      * @returns {Promise<Object>} Upload response.
      */

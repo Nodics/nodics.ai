@@ -1,6 +1,25 @@
-# Promotion
+# Operational Release Admission
+
+Immutable operational snapshot releases do not grant coupon issuance. The
+target validator retains existing publication and seller qualification gates
+and refuses raw code/batch snapshots even when flags are enabled: governed
+issuer operations must establish issuance evidence. This adds no business
+terms, grants, tokens or activation flags and does not authorize replay of
+single-use stock during a failed release repair.
+
+## Promotion
 
 Promotion owns tenant-scoped promotion and coupon policy plus immutable discount-decision evidence. Its simulation service explains status, date, subtotal, customer-group, product, budget, priority, exclusion, and exclusive-stacking outcomes without mutating coupon or campaign state. Archived gComm is reference-only.
+
+Promotion contributes the read-only nImport target validator
+`DefaultPromotionOperationService.validateImportTarget`. Staged authoring
+releases must not include coupon, couponBatch, budget ledger, redemption or
+discount-decision targets. These remain operational stores, including unused
+coupon stock. Promotion policy excludes `budget.spent` and analytics even when
+zero or empty; omit operational fields rather than relaxing the guard. Separate
+forward policy and operational releases; operational issuance is not publication
+and still requires its existing authorization and qualification. Target
+admission is not row-level validation or installed-runtime acceptance.
 
 Promotion records use Profile Enterprise associations for business ownership:
 `issuerEnterpriseRef` for the issuer, `vendorEnterpriseRef` for the marketplace

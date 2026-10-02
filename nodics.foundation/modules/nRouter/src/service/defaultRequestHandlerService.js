@@ -76,6 +76,7 @@ module.exports = {
             method: request.method,
             body: request.body || {}
         };
+        SERVICE.DefaultLoggerService.inheritRequestPrivacy(input, request);
         if (response && typeof response.setHeader === 'function') {
             response.setHeader('X-Request-Id', input.requestId);
             response.setHeader('X-Correlation-Id', input.parentRequestId || input.requestId);

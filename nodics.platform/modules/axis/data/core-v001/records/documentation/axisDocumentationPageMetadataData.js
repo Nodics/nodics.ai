@@ -569,8 +569,8 @@ module.exports = {
     ],
     "sourceRepository": "nodics.platform",
     "sourcePath": "docs/pages/cms-delivery-and-renderers.md",
-    "sourceChecksum": "3e4110bf8ca0e936ce783c4586aaefe41b0a342108992998d656f537049251c1",
-    "sourceWordCount": 935,
+    "sourceChecksum": "c095d101d1ba350050113194061c3bc522eabf9573df5a760168ef4229112b7e",
+    "sourceWordCount": 1248,
     "audience": [
       "developer",
       "architect",
@@ -775,8 +775,8 @@ module.exports = {
     ],
     "sourceRepository": "nodics.platform",
     "sourcePath": "docs/pages/employee-login.md",
-    "sourceChecksum": "1791fde461832bac32175a23378124133466b07c8f9d3da8a1913c61d03f18d2",
-    "sourceWordCount": 1567,
+    "sourceChecksum": "cef77a362066813becffa3317c70fd2fb09522968b8c027d35fdc52a8049747f",
+    "sourceWordCount": 1941,
     "audience": [
       "business-user",
       "administrator",

@@ -23,6 +23,7 @@ module.exports = {
   _running: false,
   _registered: [],
   _operationalState: null,
+  _terminalRegistrationFailure: false,
   _backofficeCapabilityProviders: new Map(),
   _metrics: {
     attempts: 0,
@@ -98,7 +99,7 @@ module.exports = {
       this._timer = null;
       this.runRegistration()
         .then((success) => {
-          if (!this._started) return;
+          if (!this._started || this._terminalRegistrationFailure) return;
           let delay = Number(
             success ? config.heartbeatIntervalMs : config.retryIntervalMs,
           );
@@ -106,7 +107,7 @@ module.exports = {
           if (this._timer.unref) this._timer.unref();
         })
         .catch(() => {
-          if (!this._started) return;
+          if (!this._started || this._terminalRegistrationFailure) return;
           this._timer = setTimeout(schedule, Number(config.retryIntervalMs));
           if (this._timer.unref) this._timer.unref();
         });
@@ -352,11 +353,16 @@ module.exports = {
   /** Returns true when a registration failure can be repaired by refreshing the runtime service token. */
   isRefreshableAuthorizationFailure: function (error) {
     const code = error && (error.code || error.name || error.responseCode);
-    const message = String(error && error.message || "");
     return code === "ERR_AUTH_00001" ||
       code === "ERR_AUTH_00002" ||
-      code === "ERR_AUTH_00003" ||
-      /stale|expired|authorization token|internal service token|runtime credential/i.test(message);
+      code === "ERR_AUTH_00003";
+  },
+
+  /** Recognizes the registry owner's fixed validation rejection, never message text or an arbitrary HTTP 400. */
+  isPermanentRegistrationFailure: function (error) {
+    const status = error?.status ?? error?.metadata?.transportFailure?.httpStatus ?? error?.responseCode;
+    return error?.code === "ERR_BOF_00000" &&
+      (status === 400 || status === "400");
   },
 
   /** Refreshes tenant-scoped runtime credentials when the authentication owner supports renewal. */
@@ -369,6 +375,7 @@ module.exports = {
 
   /** Registers or renews all locally served module leases in one bounded cycle. */
   runRegistration: function () {
+    if (this._terminalRegistrationFailure) return Promise.resolve(false);
     if (this._registrationPromise) return Promise.resolve(false);
     this._registrationPromise = this.performRegistration().finally(() => {
       this._registrationPromise = null;
@@ -378,7 +385,7 @@ module.exports = {
 
   /** Performs the single tracked registration operation and records its outcome. */
   performRegistration: async function () {
-    if (this._running) return false;
+    if (this._running || this._terminalRegistrationFailure) return false;
     this._running = true;
     this._metrics.attempts++;
     try {
@@ -426,6 +433,10 @@ module.exports = {
       this._metrics.lastSuccessAt = new Date().toISOString();
       return true;
     } catch (error) {
+      if (this.isPermanentRegistrationFailure(error)) {
+        this._terminalRegistrationFailure = true;
+        this._operationalState = null;
+      }
       this._metrics.failures++;
       this._metrics.lastFailureAt = new Date().toISOString();
       this._metrics.lastFailureCode =
@@ -435,7 +446,7 @@ module.exports = {
         {
           server: NODICS.getServerName(),
           code: this._metrics.lastFailureCode,
-          reason: String(error.message || "Registration request failed").slice(
+          reason: String(this._terminalRegistrationFailure ? "Registration metadata or deployment scope requires repair" : error.message || "Registration request failed").slice(
             0,
             256,
           ),
@@ -571,6 +582,7 @@ module.exports = {
     this._timer = null;
     if (this._registrationPromise) await this._registrationPromise;
     this._operationalState = null;
+    this._terminalRegistrationFailure = false;
     if (deregister) await this.deregister();
     return true;
   },
@@ -582,6 +594,12 @@ module.exports = {
       status: "UP",
       reasonCode: "BACKOFFICE_REGISTRATION_DISABLED",
       suggestedAction: "Enable BackOffice registration for governed runtime visibility.",
+    };
+    if (this._terminalRegistrationFailure) return {
+      status: "DOWN",
+      reasonCode: "BACKOFFICE_REGISTRATION_REPAIR_REQUIRED",
+      lastFailureAt: this._metrics.lastFailureAt || undefined,
+      suggestedAction: "Repair module registration metadata or approved deployment scope, then explicitly restart registration.",
     };
     const state = this._operationalState;
     if (state && Date.now() < state.expiresAt) return {

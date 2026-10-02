@@ -1,5 +1,25 @@
 # nTooling Agent Contract
 
+Offline fresh-reset planning uses the existing registered
+`project:local-reset-maintenance` entry. Preserve its exact scope, dry-run
+default, secret-free evidence, explicit operator exclusivity/writer attestations
+and outage rechecks. Database destruction and bounded auth reconciliation stay
+with configured provider owners, never raw tooling driver calls. Refuse missing
+owner capabilities, ambiguous scope, live writers and unconfirmed effects;
+retain partial counts and attempt every close. No CLI-provided adapters or
+startup cache erasure. Attestation is not independent exclusivity proof. See
+[maintenance preflight](llm/contracts/tooling-governance-contracts.md#exact-local-reset-maintenance-preflight).
+Registered tenant selection uses that same owner with exact protected durable
+pins and current explicit launch selection. Do not infer names, add wildcards,
+include shared default test databases or treat a serialized observation as proof.
+Derived exceptions expire with the private awaited invocation; execution still
+requires independent exclusivity and outage evidence.
+Native Local writer exclusion uses private source-selected targets, bounded
+real provider/socket/process observations and repeated canonical outage checks.
+Preserve `continuousFence: false`: this is observed host exclusion under the
+operator-controlled outage, never a distributed or future-client lock. Injected
+adapters, attestations and copied selections cannot issue execution receipts.
+
 Native-local migration uses the existing topology owner's `verifyMaintenanceOutage`
 to reject listening backend ports and active runtime/supervisor processes. Missing
 process inventory fails closed. Recheck before effects; this is evidence under

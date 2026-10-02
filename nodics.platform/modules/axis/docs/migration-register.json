@@ -154,8 +154,8 @@
       "canonicalSource": "docs/pages/cms-delivery-and-renderers.md",
       "destinationRoute": "/docs/nodics-axis/cms-renderers",
       "disposition": "migrated",
-      "sourceHash": "3e4110bf8ca0e936ce783c4586aaefe41b0a342108992998d656f537049251c1",
-      "wordCount": 935,
+      "sourceHash": "c095d101d1ba350050113194061c3bc522eabf9573df5a760168ef4229112b7e",
+      "wordCount": 1248,
       "headings": [
         "Runtime boundary",
         "Delivery validation",
@@ -211,8 +211,8 @@
       "canonicalSource": "docs/pages/employee-login.md",
       "destinationRoute": "/docs/nodics-axis/employee-access",
       "disposition": "migrated",
-      "sourceHash": "1791fde461832bac32175a23378124133466b07c8f9d3da8a1913c61d03f18d2",
-      "wordCount": 1567,
+      "sourceHash": "cef77a362066813becffa3317c70fd2fb09522968b8c027d35fdc52a8049747f",
+      "wordCount": 1941,
       "headings": [
         "Startup journey",
         "First-run initialization",

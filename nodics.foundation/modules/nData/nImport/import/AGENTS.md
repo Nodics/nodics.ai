@@ -24,6 +24,18 @@ This file gives AI coding agents mandatory guidance for this Nodics module or pa
 
 ## Module Work Rules
 
+- Preserve the private, awaited startup Init context used by the default
+  Enterprise seed hook. No body/source/options marker may mint it; revoke on
+  success or failure. Do not infer remote readiness from publication receipts.
+
+- Classify failures through `DefaultImportRetryPolicyService` before phased
+  redispatch. Only proved pre-write dependency/transient failures may declare
+  `metadata.importRetry` with `writeOutcome: NOT_APPLIED`. Unknown acknowledgements,
+  wrapped owner denials and CAS failures are terminal; never infer retry from
+  logging suppression. Honour actual file-header/config fail-fast, preserve
+  successful-row guards and record terminal diagnostics on the first phase.
+  See `llm/contracts/README.md#phased-retry-admission`.
+
 - For explicitly managed counters, `saveAll` imports capture original revisions
   through the owning generated read service and retain them for retries of the
   same model-import request. Source rows do not own these counters. Reject other

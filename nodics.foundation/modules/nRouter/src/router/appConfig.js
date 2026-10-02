@@ -87,7 +87,7 @@ module.exports = {
             let options = SERVICE.DefaultHttpHardeningService
                 ? SERVICE.DefaultHttpHardeningService.getUrlencodedParserOptions()
                 : { extended: true };
-            app.use(bodyParser.urlencoded(options));
+            app.use(bodyParser.urlencoded(options), SERVICE.DefaultRouterOperationService.privacyParserError);
             //app.use(bodyParser.json());
             // app.use(bodyParser.raw({ type: 'application/vnd.custom-type' }));
             //app.use(bodyParser.raw());

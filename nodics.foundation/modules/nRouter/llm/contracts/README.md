@@ -1,176 +1,47 @@
 # nRouter AI Contracts
 
-This folder contains module-specific AI/developer contracts for `nodics.foundation/modules/nRouter`.
+## Sensitive Request Capture
 
-Use these files for rules that are more specific than root `AGENTS.md` and the module `AGENTS.md`, especially extension boundaries, override expectations, testing rules, security constraints, and generated-artifact responsibilities.
+See the [private capture and entry contract](request-capture-privacy-contract.md).
+Trusted metadata, pre-parser suppression and exact-object proof are independent
+of domain authorization; upstream APM/custom sinks remain deployment gates.
+
+This index routes developers to nRouter's schema exposure, token admission, route permissions and HTTP boundary contracts.
+
+Keep capability-owned exposure separate from permission and token admission. Layered configuration may narrow policy; discovery and OpenAPI do not authorize execution.
+
+Detailed material is preserved in the adjacent [contract guide](routing-governance-contracts.md). This README is the discovery index, not a replacement authority or evidence that runtime qualification passed.
+
+Read [owner guidance](../../AGENTS.md) before changing behavior. Customize through the established later-loaded configuration, services, providers, schemas and runtime layers described in the guide; do not copy framework owners or bypass their invariants. Verification commands and their limits are retained in the guide. This documentation-only reorganization runs no behavioral tests or operations.
 
 ## Schema Exposure Tests
 
-Schema owners reuse `test/helpers/schemaExposure.cjs` for the common selective
-route-projection matrix. Fixtures and explicit exposed/service-only decisions
-remain with the schema owner. The harness opens no listeners, performs no
-persistence and restores caller globals and string helpers on success/failure.
-`schemaRouteGroupContract.test.js` validates it with independent fixtures.
-Projection checks complement, rather than replace, authorization, schema access
-policy and effective-runtime generation tests. Keep invariant checks here instead
-of duplicating the router harness into every functional module.
+See [Schema Exposure Tests](routing-governance-contracts.md#schema-exposure-tests).
 
 ## Configurable route permissions
 
-A server-authored route may declare `jsonBodyLimit` for a bounded JSON intake
-that requires a different limit from the runtime default. The JSON handler
-copies the default parser options before applying this route-only limit;
-other routes and URL-encoded intake retain their existing restrictions.
-Never derive this limit from request bodies, headers or query parameters.
-
-- Prefer `permissionConfig` for route action permissions that projects,
-  environments, servers, nodes, or tenants may customize.
-- `permissionConfig` values must resolve through layered `properties.js` or
-  runtime governance. Literal `permission` values are acceptable only for
-  non-negotiable platform constants.
-- Tests for secured routes should assert the configuration path when a route
-  uses configurable permission metadata.
+See [Configurable route permissions](routing-governance-contracts.md#configurable-route-permissions).
 
 ## Token-type boundaries
 
-OpenAPI is a projection of the effective route declarations, not an independent
-authorization registry. Preserve both string and object `apiExposure` values in
-operation `x-nodics` metadata. Keep absence distinct from an explicit category;
-never infer a Workbench, public or internal category from a schema or URL.
-Duplicate method/path declarations with different exposure metadata must fail
-generation rather than silently choose one security contract. Category presence
-does not prove it is enabled or that the current principal can use the route.
-Runtime exposure and permission checks remain in the existing request owners.
-
-- Use `authTokenTypes: ['service']` for module-to-module routes that must reject
-  human access tokens and API-key identities.
-- Token-type acceptance is enforced independently from access groups and
-  permissions; do not use a permission grant as a substitute for token type.
-- Leave `authTokenTypes` absent only when the route intentionally supports the
-  normal authenticated credential types.
+See [Token-type boundaries](routing-governance-contracts.md#token-type-boundaries).
 
 ## Resource-oriented route keys
 
-- `nRouter` exposes configured routes as
-  `/<contextRoot>/<modulePrefix>/<apiVersion><route.key>`. Because the module
-  prefix is already part of the public URL, `route.key` must start with the
-  resource, schema, or capability owned by that module.
-- Do not place human audience, client shell, or access-channel markers such as
-  `/customer`, `/employee`, `/operator`, or `/backoffice` at the start of a
-  module route key. These terms are not ownership boundaries and create stale
-  coupling when the same capability is used by storefronts, Axis, employees,
-  service agents, automation, or integrations.
-- Encode audience/security through `secured`, `authTokenTypes`, `accessGroups`,
-  `permission`, `permissionConfig`, `apiExposure`, request context, and
-  token/session ownership checks.
-- Acceptable examples: `/carts`, `/carts/:cartCode`, `/products/discovery`,
-  `/products/:productCode`, `/promotions/preview`, `/promotions/:promotionCode/approve`.
-- Avoid examples: `/customer/carts`, `/customer/products/:productCode`,
-  `/operator/products/publication/search`, `/backoffice/promotions/drafts`.
+See [Resource-oriented route keys](routing-governance-contracts.md#resource-oriented-route-keys).
 
 ## HTTP boundary defaults
 
-`httpHardening.cors.allowedHeaderOverrides` and `exposedHeaderOverrides` default
-to empty maps. A true entry includes a header; false removes it from the resolved
-baseline. Matching against baseline names is case-insensitive. Use the same key
-spelling across layers: conflicting case variants reject rather than guessing
-merge order. Invalid token names, non-boolean choices and non-map values reject
-in the owning CORS consumer. The baseline arrays remain supported for intentional
-complete selections; ordinary nConfig array semantics do not change.
-
-Only the declared differences belong in deployment properties. Header additions
-never grant origin access, enable CORS, allow credentials or bypass request
-authorization. Empty overrides inherit; use explicit map replacement to clear
-inherited overrides, and keyed false to remove a previously included header.
-Test permitted/disallowed origins, later additions/removals, malformed input and
-unchanged source declarations. See `test/httpHardeningContract.test.js`.
-
-
-- Keep CORS closed in framework defaults. Select configured browser endpoints or
-  declare exact browser origins through environment/server properties. Never use wildcard origins with credentials.
-- Because layered origin arrays may merge, use server-layer `deniedOrigins` to
-  subtract inherited origins. Explicit denial always takes precedence.
-- Default API responses to the standard CSP/clickjacking/nosniff/referrer
-  headers and `Cache-Control: no-store`; a capability may replace caching only
-  through an explicit response contract.
-- Keep JSON parsing strict and bounded. Larger route-specific payloads require
-  a named body-parser handler and a configured maximum.
-- Internal module routes require service-token metadata even when browser CORS
-  would already block a caller; origin policy is not authentication.
+See [HTTP boundary defaults](routing-governance-contracts.md#http-boundary-defaults).
 
 ## Deployment-bound service access
 
-A runtime-bound service credential must name the requested module. Its route
-eligibility uses the configured `authSecurity.internalToken.runtimeAccessGroups`
-(default `userGroup`), while restricted groups and `authTokenTypes` continue to
-limit eligible routes. Issued runtime JWTs contain no identity groups; nRouter
-must not hydrate group permissions for them. Explicit route permissions are
-checked against the approved JWT permission list even when legacy action policy
-is disabled or permissive. Legacy routes without action permissions still require
-an approved module and permitted base access group. Do not use this mechanism to
-bypass a domain's principal-type, tenant, ownership or mutation checks.
-
-OpenAPI generation resolves the selected project environment and server through the
-existing runtime metadata owner. It loads schema/router metadata without invoking
-application service initialization hooks: static generation must not start runtime
-resources or require operational API-key proof. Runtime startup retains all of its
-credential checks. Persisted-schema reads remain an explicit generation option.
+See [Deployment-bound service access](routing-governance-contracts.md#deployment-bound-service-access).
 
 ## Capability-owned exposure defaults
 
-Each route-owning capability declares `apiExposure.categories.<category>` in its own properties. An omitted `enabled` inherits nRouter's common `apiExposure.default.enabled`; an explicit boolean overrides that default. Loading another functional group must not be needed to declare the category. nRouter owns enforcement and the common `schemaApi` policy; category enablement never replaces authentication, token type, permission, tenant, runtime-role or record authorization.
-
-The framework common default is enabled. Unknown categories inherit that default unless `apiExposure.unknown.enabled` explicitly overrides it. Missing or nonboolean effective enablement is denied; an explicit category denial cannot be undone by the common default. Deployment/node/tenant overrides remain authoritative. Declare customer categories in their actual customer capability even when inheriting the default. Do not copy every category into each project, infer categories from URLs, or change exposure when merely selecting internal provider/knowledge modules. Exposure is route availability, not permission to import, initialize or publish data.
-
-OpenAPI options retain the canonical environment/server returned by nTooling runtime metadata resolution, including short aliases. Resolve before populating runtime E/S arguments; never pass an unresolved alias into nConfig. Invalid selected servers must fail rather than fall back to a different graph.
-
-Outbound module URLs use the existing discovered package `prefix`, matching route registration. Keep logical module identity and connection aliases unchanged; discover a remote capability source when its API prefix differs from its name.
-
+See [Capability-owned exposure defaults](routing-governance-contracts.md#capability-owned-exposure-defaults).
 
 ## Configured browser-origin construction
 
-nRouter owns `httpHardening.cors.originDefaults` (`protocol: 'http'`,
-`host: 'localhost'`), the six standard application `originEndpoints`, enabled CORS,
-and `originEndpointOverrides` (empty). Later layers may disable or replace this
-policy. Changing endpoints or headers does not override explicit disablement. No request Host/Origin/forwarded header, bound listener, filesystem
-scan, DNS result or running-process inspection can create an allowed endpoint.
-The configured sources are browser-facing frontend addresses, including the
-published port seen through a proxy or container mapping.
-
-`originEndpoints` accepts either a map keyed by frontend code or an array of
-objects with unique `code` values. A value is an exact HTTP(S) origin URL or an
-object with an integer `port` in 1..65535 and optional `host`/`protocol` overrides.
-Structured values inherit `originDefaults`; a full URL already supplies its own
-host, protocol and port. Standard ports normalize to an origin without a port.
-Wildcards, unspecified bind addresses, credentials, paths, query strings,
-fragments and malformed endpoints reject. Explicit legacy origin lists retain
-their existing matching behavior; the strict construction contract applies to
-configured endpoint sources.
-
-All configured endpoints are included by default. A known code mapped to false
-in `originEndpointOverrides` denies that endpoint, following its current address
-when the port or domain changes. True removes that code-specific denial; an
-explicit `deniedOrigins` entry still wins. Unknown codes, non-boolean overrides,
-duplicate codes and invalid collection shapes reject. Explicit `allowedOrigins`
-remain additive; derived and explicit denials override every allow entry.
-
-Inherit the standard origins and declare differences through the existing layered
-`httpHardening.cors` policy.
-Never derive API trust or CORS enablement from frontend lifecycle configuration.
-A frontend repository, process or health response is not required for backend
-startup, readiness or API acceptance. Frontends own rendering, outage/retry UI,
-and UI tests. Backend browser-session/CORS tests send HTTP requests directly.
-
-Use nConfig `replace` to replace an endpoint collection or clear inherited lists
-and override maps. Use `keyed` with key `code` for array endpoint updates. Removing
-an endpoint requires clearing any override entry that names it. This validation
-prevents a stale denial from silently ceasing to protect the selected frontend.
-
-Validation lives in `test/httpHardeningContract.test.js`: defaults/closure,
-Local ports, custom HTTPS hosts, port changes, negative frontend selection,
-explicit-origin compatibility, empty collections, normalization, malformed
-rejection, independent declarations and initialization rejection. This capability
-changes browser reachability only; request authorization remains independently
-enforced by the route/authentication owners.
-
-nRouter supplies the framework browser origins, Axis 3100 and Nexus 3200. Customer application origins belong in project/environment CORS properties so all intended API compositions receive them independently of application activation or frontend health. Server denials and explicit disablement remain supported. nRouter never reads a frontend launch catalogue. Exact origins, header policy and route authorization remain enforced.
+See [Configured browser-origin construction](routing-governance-contracts.md#configured-browser-origin-construction).

@@ -28,7 +28,9 @@ module.exports = {
     resolvePage: async function (request) {
         let context = this.normalizeContext(request);
         let accessMode = this.resolveAccessMode(request);
-        if ((((CONFIG.get('cms') || {}).publication || {}).enabled) === true) return this.resolvePublishedManifest(request, context, accessMode);
+        let composition = this.employeeCompositionScope(request, context, accessMode);
+        if ((((CONFIG.get('cms') || {}).publication || {}).enabled) === true) return this.resolvePublishedManifest(request, context, accessMode, composition);
+        if (composition) throw this.error('ERR_CMS_00090', 'shared composition requires Online publication');
         let route = await this.resolveRoute(request, context, accessMode);
         if (route.routeType === 'REDIRECT') {
             return { result: { contractVersion: 1, type: 'REDIRECT', path: context.path, redirectPath: route.redirectPath } };
@@ -76,22 +78,84 @@ module.exports = {
     },
 
     /** Resolves delivery exclusively through the configured immutable Online manifest authority. */
-    resolvePublishedManifest: async function (request, context, accessMode) {
-        let pointer = await this.getSingle(SERVICE.DefaultCmsOnlinePublicationPointerService, request, {
+    resolvePublishedManifest: async function (request, context, accessMode, composition) {
+        const read = (kind, service, query, code) => composition
+            ? this.readEmployeeCompositionRecord(kind, composition, query, code)
+            : this.getSingle(service, request, query, code);
+        let pointer = await read('pointer', SERVICE.DefaultCmsOnlinePublicationPointerService, {
             site: context.site, path: context.path, locale: context.locale, channel: context.channel,
             accessMode: accessMode, active: true
         }, 'ERR_CMS_00090');
-        let manifest = await this.getSingle(SERVICE.DefaultCmsPublicationManifestService, request,
+        if (composition && (typeof pointer.manifestCode !== 'string' || !pointer.manifestCode || pointer.manifestCode.length > 256)) {
+            throw this.error('ERR_CMS_00091', 'shared composition manifest pin is invalid');
+        }
+        let manifest = await read('manifest', SERVICE.DefaultCmsPublicationManifestService,
             { code: pointer.manifestCode, active: true }, 'ERR_CMS_00091');
         let snapshot = manifest.snapshot;
         if (snapshot && [0, 2].includes(snapshot.contractVersion) && snapshot.bundleType === 'SITE') {
+            if (composition && snapshot.site !== context.site) throw this.error('ERR_CMS_00091', 'shared composition Site is invalid');
             let matches = (snapshot.routes || []).filter(route => route.site === context.site && route.path === context.path &&
                 route.locale === context.locale && route.channel === context.channel &&
                 route.accessMode === accessMode);
             if (matches.length !== 1) throw this.error('ERR_CMS_00091', 'published bundle route is missing or ambiguous');
             snapshot = this.expandSharedComponents(matches[0], manifest.snapshot && manifest.snapshot.sharedComponents);
         }
+        if (composition && (!snapshot || ![0, 1, 2].includes(snapshot.contractVersion) ||
+            !snapshot.page || manifest.code !== pointer.manifestCode ||
+            ['site', 'path', 'locale', 'channel'].some(field => snapshot[field] !== context[field] || pointer[field] !== context[field]) ||
+            snapshot.accessMode !== 'AUTHENTICATED' || pointer.accessMode !== 'AUTHENTICATED')) {
+            throw this.error('ERR_CMS_00091', 'shared composition publication scope is invalid');
+        }
         return { result: snapshot };
+    },
+    /** Authorizes explicitly shared static employee composition without changing the caller or accepting a storage selector. */
+    employeeCompositionScope: function (request, context, accessMode) {
+        const baselines = (((CONFIG.get('cms') || {}).publication || {}).baselines || {});
+        const policies = Object.values(baselines).filter(item => item && item.rootType === 'site' &&
+            item.rootCode === context.site && item.employeeCompositionPaths !== undefined);
+        if (!policies.length) return undefined;
+        if (policies.length !== 1 || !Array.isArray(policies[0].employeeCompositionPaths) ||
+            policies[0].employeeCompositionPaths.length > 32 ||
+            policies[0].employeeCompositionPaths.some(path => typeof path !== 'string' || path.length > 256 ||
+                !/^\/[A-Za-z0-9_/-]*$/.test(path) || path.includes('//')) ||
+            new Set(policies[0].employeeCompositionPaths).size !== policies[0].employeeCompositionPaths.length) {
+            throw this.error('ERR_CMS_00083', 'shared composition policy is invalid');
+        }
+        if (!policies[0].employeeCompositionPaths.includes(context.path)) return undefined;
+        if ((((CONFIG.get('cms') || {}).publication || {}).runtimeRole) !== 'ONLINE') {
+            throw this.error('ERR_CMS_00090', 'shared composition requires Online delivery');
+        }
+        const auth = request.authData || {};
+        const security = SERVICE.DefaultSecuredRequestPipelineService;
+        const permission = this.settings().authenticatedPermission;
+        if (accessMode !== 'AUTHENTICATED' || request.router && request.router.publicAccess === true ||
+            auth.tokenType !== 'access' || auth.principalType !== 'human' ||
+            !(auth.principalId || auth.loginId) || !request.tenant || auth.tenant !== request.tenant ||
+            !auth.entCode || request.entCode && auth.entCode !== request.entCode ||
+            !permission || !security || typeof security.getGrantedPermissions !== 'function' ||
+            typeof security.isPermissionGranted !== 'function' ||
+            !security.isPermissionGranted(permission, security.getGrantedPermissions(request), {})) {
+            throw this.error('ERR_CMS_00086', 'shared composition requires an authorized employee');
+        }
+        const identity = SERVICE.DefaultIdentityGovernanceService;
+        if (!identity || typeof identity.getSystemAuthData !== 'function') {
+            throw this.error('ERR_CMS_00083', 'shared composition reader is unavailable');
+        }
+        const authData = identity.getSystemAuthData();
+        if (!authData) throw this.error('ERR_CMS_00083', 'shared composition reader is unavailable');
+        return { tenant: CONFIG.get('defaultTenant') || 'default', authData: authData };
+    },
+    /** Reads exactly one private Online pointer or pinned manifest; never forwards caller options or reads business records. */
+    readEmployeeCompositionRecord: async function (kind, scope, query, code) {
+        const service = kind === 'pointer' ? SERVICE.DefaultCmsOnlinePublicationPointerService :
+            kind === 'manifest' ? SERVICE.DefaultCmsPublicationManifestService : undefined;
+        if (!service || typeof service.get !== 'function') throw this.error(code, 'shared composition reader is unavailable');
+        const response = await service.get({ tenant: scope.tenant, authData: scope.authData,
+            options: { recursive: false }, searchOptions: { pageSize: 2, pageNumber: 1 }, query: query });
+        if (!response || !Array.isArray(response.result) || response.result.length !== 1) {
+            throw this.error(code, 'shared composition is missing or ambiguous');
+        }
+        return response.result[0];
     },
     /** Rehydrates compacted site-bundle component references for the selected delivery route. */
     expandSharedComponents: function (route, sharedComponents) {

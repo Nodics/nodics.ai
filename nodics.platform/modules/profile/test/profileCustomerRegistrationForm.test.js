@@ -104,33 +104,111 @@ test("owner validation and identity member remain supported later-layer extensio
   assert.equal(customized.formModel(form).code, "PARTNER_user@example.com");
 });
 test("service registration persists customer through Profile system write context", async () => {
-  const systemAuth = { isSystem: true, userGroups: ["serviceAccountUserGroup"] };
+  const systemAuth = {
+    isSystem: true,
+    userGroups: ["serviceAccountUserGroup"],
+  };
   global.SERVICE.DefaultIdentityGovernanceService = {
     getSystemAuthData: () => systemAuth,
   };
-  global.SERVICE.DefaultKycDecisionEnforcementService = null;
-  let savedRequest;
-  const process = {
-    nextSuccess: () => {},
-    error: (request, response, error) => {
-      throw error;
+  const currentConfig = CONFIG.get;
+  CONFIG.get = (key) =>
+    key === "profileCustomerParticipation"
+      ? { eligibilityService: "DefaultKycDecisionEnforcementService" }
+      : currentConfig(key);
+  SERVICE.DefaultEnterpriseManagementService = {
+    retrieveEnterpriseForAccess: async (code) => {
+      assert.equal(code, "fixture-enterprise");
+      return { enterprise: { code, active: true }, tenantCode: "default" };
     },
   };
-  await registration.createCustomer(
-    {
-      tenant: "default",
-      authData: { tokenType: "service" },
-      model: { loginId: "user@example.com" },
-      defaultCustomerService: {
-        save: async (request) => {
-          savedRequest = request;
-          return { result: { code: request.model.loginId } };
+  const approved = Object.freeze({
+    eligible: true,
+    decisionId: "FIXTURE_ONLY_DECISION",
+  });
+  const admissions = new WeakSet();
+  // This consumer fixture supplies an explicit isolated decision owner; durable audit/private admission itself is exercised by the governance contract.
+  SERVICE.DefaultKycDecisionEnforcementService = {
+    enforce: async (request, action, subject) => {
+      assert.equal(request.tenant, "default");
+      assert.equal(action, "ONBOARDING");
+      assert.deepEqual(subject, {
+        subjectType: "CUSTOMER",
+        subjectCode: "user@example.com",
+        enterpriseCode: "fixture-enterprise",
+      });
+      return approved;
+    },
+  };
+  SERVICE.DefaultCustomerEligibilityDecisionGovernanceService = {
+    transferRegistrationDecision: (original, projected) => {
+      assert.equal(original, approved);
+      assert.deepEqual(projected, approved);
+      admissions.add(projected);
+      return projected;
+    },
+    withRegistrationDecision: async (command, decision, operation) => {
+      assert.equal(admissions.has(decision), true);
+      admissions.delete(decision);
+      assert.equal(command.kycDecisionReference, approved.decisionId);
+      assert.equal(command.authData, systemAuth);
+      return operation(command);
+    },
+  };
+  let savedRequest;
+  const outcome = await new Promise((resolve, reject) =>
+    registration.createCustomer(
+      {
+        tenant: "default",
+        enterprise: { code: "fixture-enterprise" },
+        authData: { tokenType: "service" },
+        model: { loginId: "user@example.com" },
+        defaultCustomerService: {
+          save: async (request) => {
+            savedRequest = request;
+            return {
+              code: "SUC_SAVE_00000",
+              result: { code: request.model.loginId },
+            };
+          },
         },
       },
-    },
-    {},
-    process,
+      {},
+      {
+        nextSuccess: (request, response) => resolve(response.success),
+        error: (request, response, error) => reject(error),
+      },
+    ),
   );
+  assert.equal(outcome.code, "SUC_SAVE_00000");
   assert.deepEqual(savedRequest.authData, systemAuth);
   assert.equal(savedRequest.model.loginId, "user@example.com");
+  assert.equal(savedRequest.kycDecisionReference, approved.decisionId);
+});
+
+test("service registration with no selected eligibility owner completes failure and never saves", async () => {
+  let savedRequest;
+  SERVICE.DefaultKycDecisionEnforcementService = null;
+  const failure = await new Promise((resolve, reject) =>
+    registration.createCustomer(
+      {
+        tenant: "default",
+        enterprise: { code: "fixture-enterprise" },
+        model: { loginId: "user@example.com" },
+        defaultCustomerService: {
+          save: async (request) => {
+            savedRequest = request;
+          },
+        },
+      },
+      {},
+      {
+        nextSuccess: () =>
+          reject(Error("missing owner must not complete registration")),
+        error: (request, response, error) => resolve(error),
+      },
+    ),
+  );
+  assert.match(String(failure), /ERR_PROFILE_MEMBERSHIP_UNAVAILABLE/);
+  assert.equal(savedRequest, undefined);
 });

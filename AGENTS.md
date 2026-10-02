@@ -139,6 +139,12 @@ and avoid redundant validation and CI polling without weakening required gates.
 
 ## Minimal configuration principle
 
+For every email/SMS change, follow
+[Module-Owned Email And SMS Presentation](nodics.foundation/modules/nSetup/llm/contracts/nodics-principles.md#module-owned-email-and-sms-presentation).
+Keep domain presentation in layered `src/templates` resources, reusable rendering
+and delivery in Communication, and customer projects limited to actual overrides.
+Never introduce new notification bodies in configuration or provider code.
+
 Apply [Existing Layers And Project Independence](nodics.foundation/modules/nSetup/llm/contracts/nodics-principles.md#existing-layers-and-project-independence)
 to every implementation and review. Do not invent another architectural layer
 or parallel authority. Project-specific configuration is prohibited throughout

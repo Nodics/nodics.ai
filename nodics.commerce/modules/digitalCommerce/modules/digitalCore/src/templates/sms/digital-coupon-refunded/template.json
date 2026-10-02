@@ -1,0 +1,26 @@
+{
+  "formatVersion": 1,
+  "code": "DIGITAL_COUPON_REFUNDED_SMS",
+  "ownerModule": "digitalCore",
+  "version": 1,
+  "status": "ACTIVE",
+  "purpose": "DIGITAL_COUPON_REFUNDED",
+  "sourceModules": [
+    "digitalCore"
+  ],
+  "channel": "SMS",
+  "defaultLocale": "en",
+  "requiresSelection": true,
+  "parameters": {
+    "purchaseReference": {
+      "type": "string",
+      "required": true,
+      "maximumLength": 128
+    },
+    "nextStep": {
+      "type": "string",
+      "required": true,
+      "maximumLength": 320
+    }
+  }
+}

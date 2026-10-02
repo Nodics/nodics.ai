@@ -1,0 +1,357 @@
+# backoffice
+
+BackOffice owns the canonical `acceptance:capability-registry` tooling suite.
+Customer projects invoke it through `nodics project:run` with `--execute`, supply
+deployment inputs, and retain no copy of its assertions. It verifies discovery,
+activation visibility and restoration through authorized APIs. See
+[canonical registry acceptance](llm/contracts/README.md#canonical-registry-acceptance).
+
+`backoffice` is the backend registry, discovery, catalogue, compatibility, and
+bootstrap capability for the separate Nodics Axis administration application.
+
+Application profiles also publish an inert setup review derived from their existing
+capability and preparation declarations. See the [business offering contract](llm/contracts/README.md#business-offering-setup-review).
+The preview does not activate dependencies or execute imports. Framework-owned
+`backofficeApplicationInitialization.planPresentation` supplies shared copy;
+owners contribute offering metadata through the existing layers.
+
+BackOffice persistence schemas consume layered policies under
+`schemaPolicies.backoffice`. Partner modules may extend `contractReader` or
+`administrator` without copying BackOffice schemas; effective schema access
+groups remain authoritative.
+
+## Responsibilities
+
+Module Registry lists declared business capabilities, not composition-only
+groups. Obsolete structural-group records remain historical and cannot be
+activated or used to gate descendant presentation. Package metadata is the
+authority; application setup continues to declare its actual required modules.
+
+Functional lifecycle revisions protect administrator decisions and activation
+policy, not heartbeat timestamps or replica membership. Activation packages and
+receipts retain their execution targets, while existing project descriptors can
+override routing for a release. See `llm/contracts/capability-registry-contract.md`
+and `test/functionalModuleConcurrency.test.js` for concurrency guarantees.
+
+- Receive authenticated module self-registration and refresh requests.
+- Maintain environment-bound observed deployment registrations.
+- Discover and validate module identity, versions, capabilities, contracts, and
+  sanitized health information.
+- Expose a permission-filtered, client-safe registry to Nodics Axis.
+- Aggregate bounded module-owned documentation sources for Framework,
+  live Swagger/OpenAPI, Nodics Axis, and future customer projects. BackOffice
+  owns source discovery only; CMS, System/OpenAPI, and nImport retain their
+  respective runtime authorities.
+- Contribute the active **Nodics Documentation** entry under the governed
+  Workspace navigation group. The entry points to `/docs`; CMS owns route and
+  content resolution while Axis owns presentation.
+- Select an optional CMS UI-composition provider without depending on CMS at
+  package or startup level.
+- Track BackOffice presentation enablement, compatibility, availability, and
+  registry/discovery audit history.
+- Contribute the permission-filtered **Module Health** workspace and return
+  sanitized per-instance readiness evidence for registered environment,
+  server, and node coordinates.
+- Contribute the permission-filtered **Core Data** workspace while preserving
+  nImport as the only core-data import authority.
+- Persist and project tenant-scoped, client-safe Axis employee experience
+  policy with optimistic operator updates.
+- Project application capability readiness with stable blocker and repair
+  metadata so Axis can explain blocked setup, approval, media, runtime,
+  manifest, and publication states without becoming the readiness authority.
+- Return compact preparation operation evidence for setup-only capability
+  repairs so Axis can show before/after readiness without inspecting import
+  internals.
+- Aggregate operational readiness snapshots and a bounded timeline from
+  backend-owned evidence. Axis may render these snapshots, but BackOffice
+  remains responsible for source, state, blocker count, and next-action
+  semantics.
+
+## Explicit Exclusions
+
+- No frontend source or executable UI delivery.
+- No proxying of normal CRUD, job, workflow, CMS, or business operations.
+- No replacement of target-module permissions, validation, tenant isolation,
+  runtime activation, or business audit.
+- No credentials, internal tokens, private keys, or unapproved internal
+  endpoints in frontend registry responses.
+- No parallel schema, router, topology, runtime-governance, or health authority.
+
+## Runtime Interaction
+
+The frontend authenticates with Profile, retrieves its authorized registry from
+BackOffice, and then calls registered modules directly. Each target module
+independently validates the Profile-issued human token and authorizes the
+requested operation.
+
+Axis first uses `/bootstrap/public`, which exposes only active Profile/CMS
+endpoints and non-sensitive CMS composition identifiers needed to display
+employee login. After Profile authentication, Axis uses the existing secured
+`/bootstrap` contract for the permission-filtered module catalogue and
+client-safe employee policy. The same response contains ordered
+`documentationSources`. Each source declares a safe Axis route, runtime
+connection module, and either a CMS Site/catalog/content-pack identity or live
+OpenAPI/Swagger paths. Axis renders this list dynamically and never maintains a
+second documentation registry. The initial policy supports configured idle
+screen locking; private policy persistence and operator mutation remain owned
+by BackOffice.
+
+Module registration uses the separate Nodics service-to-service identity path.
+Registration must be idempotent, environment-bound, auditable, retryable with
+bounded backoff, and safe when BackOffice is unavailable.
+
+## Operational Readiness Timeline
+
+The secured bootstrap contract includes `operationalReadiness`, a canonical
+aggregate across startup validation, runtime registration, imports, publishing,
+approval, documentation, media, search, assistant knowledge, application parity,
+and acceptance evidence. Every aggregate call records an in-memory, client-safe
+snapshot and appends a bounded timeline event. Events are emitted best-effort to
+the configured audit publisher and must never expose credentials, private
+tokens, internal-only URLs, or raw target payloads.
+
+The timeline exists to guide operators after reset/start/import/publish cycles:
+it shows the latest state, checked time, blocker count, and owning source. Any
+new readiness contributor must be implemented in its owning framework module and
+then projected through BackOffice. Customer projects must not duplicate
+readiness logic merely to make Axis display a green status.
+
+## Go-Live Recovery Matrix
+
+BackOffice also projects `operationalReadiness.summary.recoveryMatrix`, a
+business-user recovery lane model consumed by Axis. Lanes are derived from the
+same canonical readiness sections and currently cover runtime communication,
+data imports, staged publication, governed approvals, documentation, media,
+search/read-source policy, Assistant knowledge, and acceptance evidence.
+
+Every lane should expose only client-safe guidance:
+
+- `state`, `blockerCount`, and stable issue codes.
+- `ownerModule`, `source`, and existing Axis repair route.
+- `businessImpact` explaining why the blocker matters.
+- `repairActions` derived from owner repair metadata, not frontend inference.
+- `runtimeDependencies` when blockers identify target server/role/node
+  coordinates.
+
+The matrix is not a second workflow engine. Install, approve, publish, media
+repair, indexing, and acceptance capture remain owner-module operations. Axis
+may render the lane and open the owner workspace, but it must not inspect raw
+release manifests, generated files, private media paths, credentials, or
+custom-project data to decide readiness.
+
+## Guided Repair Execution
+
+BackOffice exposes a governed readiness repair dispatcher at
+`/operations/readiness/repairs`. Axis may call it only for blockers whose owner
+metadata declares an executable repair (`repair.available === true` and
+`repair.eligibility` is `MANUAL` or `AUTOMATIC`). Every call must include an
+idempotency key, operation, action, owner module, dry-run flag, repair contract
+version, correlation id, bounded timeout, and stable target identity such as
+`releaseCode`, `profileCode`, `publicationCode`, `taskCode`,
+`mediaManifestCode`, or `sourceCode`. Display labels are never enough to execute
+a repair.
+
+The dispatcher is intentionally conservative:
+
+- Dry-runs can validate and explain an operation before execution.
+- Actual execution succeeds only when an owner repair provider is registered.
+- BackOffice records bounded repair history and audit events, but does not
+  implement module-specific repair logic.
+- Results use a stable shape: state, operation, action, changed/skipped counts,
+  remaining blockers, retryability, next action, evidence reference, checked
+  time, target identifiers, preview targets, prerequisite evidence, transaction
+  and rollback metadata, policy metadata, and retry policy.
+- Missing providers, unavailable repairs, or non-executable eligibility return
+  explicit non-success states instead of silently mutating data.
+- High-impact repair execution requires an operator note. Owner providers may
+  also report environment policy or approval requirements, which Axis should
+  render without trying to bypass them.
+
+Owner modules should expose repair providers for their own domains. For
+example, nImport owns release install/manifest repair, CMS owns staged/Online
+publication, Process owns approval reconciliation, nMedia owns media object and
+reference repair, nSearch owns indexing/read-source repair, and Copilot
+Knowledge owns source registration/indexing. Customer projects must not add
+parallel repair scripts just to satisfy Axis.
+
+An owner repair provider may expose `repairCapability(repair)` or
+`readinessRepairCapability(repair)` before execution. The capability response
+declares `repairContractVersion`, availability, optional supported
+operation/action pairs, and unavailable guidance. The execution method remains
+owner-specific (`executeRepair` or `executeReadinessRepair`), but it must honor
+dry-run parity, idempotency, target identity, timeout/correlation context, audit
+expectations, and the normalized result contract. Provider implementation code
+belongs in the owning framework/module package, not in `nodics.kickoff`.
+
+Owner modules can register providers with
+`DefaultBackofficeOperationalReadinessService.registerRepairProvider(ownerModule,
+provider, metadata)` during startup. Registry discovery is preferred over
+hard-coded service-name lookup; legacy service discovery remains only as a
+framework compatibility fallback. Registered providers expose lifecycle state
+such as `REGISTERED`, `READY`, `DEGRADED`, `DISABLED`, `MISCONFIGURED`, or
+`UNAVAILABLE`, plus supported operation/action pairs.
+
+BackOffice adds common repair governance around every provider:
+
+- target-scoped execution locks prevent concurrent execution for the same owner
+  operation and target identifiers;
+- non-dry-run execution creates a client-safe repair receipt;
+- successful or partial repairs publish a best-effort
+  `operationalReadinessRepairChanged` event so clustered nodes can refresh
+  readiness/cache/search/config state through owner listeners;
+- dry-run and execution results may include a business-readable plan, a
+  machine-readable plan, safety level, refresh scopes, rollback advisory, and
+  receipt/evidence references;
+- batch execution remains disabled by default until owner approvals, locking,
+  rollback, and dependency ordering are mature.
+
+Owner-specific repairs are still separate work. nImport owns release
+install/manifest repair, Process owns approval reconciliation, nPublish/WCMS
+owns staged-to-Online operations, Media owns object/reference/file repair,
+nSearch owns index/read-source repair, Docs owns documentation pack readiness,
+Assistant/Copilot owns knowledge-source repair, and eWaste owns Circa draft
+asset cleanup and channel-specific acceptance readiness.
+
+## Runtime Communication Diagnostics
+
+Runtime communication readiness is derived from BackOffice bootstrap/module
+registry evidence, not static customer-project server lists. Each runtime
+observation should carry project, environment, server, node, runtime role,
+state, freshness, reason code, and recovery action. Stable reason codes include:
+
+- `RUNTIME_OBSERVED` when a module has current heartbeat evidence.
+- `RUNTIME_NOT_REGISTERED` when no runtime heartbeat is visible.
+- `HEARTBEAT_STALE` when an existing observation is too old.
+- `RUNTIME_UNAVAILABLE` when availability probes report an unavailable runtime.
+- `RUNTIME_API_KEY_GRANT_READY` as a readiness check for server-level internal
+  communication identity and grants.
+
+BackOffice may show diagnostics for API-key or grant readiness, but server
+credentials remain owned by the runtime/server configuration layer. Axis renders
+the reason code, server, node, and recovery action; it must not infer whether a
+runtime is safe to call from frontend-only state.
+
+Authenticated presentation, lifecycle listings, receipt reads and lease
+reconciliation read every page of the project/tenant functional
+catalogue using the model pipeline's `pageSize` and `pageNumber` contract.
+`backofficeFunctionalModuleCatalogue.eligibilityPageSize` controls each read,
+not the total eligible module count. A failed page aborts the projection.
+Leases retain their client-safe `functionalModuleIdentity`; a declared owner
+must be registered, enabled, and active before its capability is exposed,
+including when a durable record is missing. Validated lease ownership remains
+authoritative when different servers observe different technical members.
+Runtime observation alone never activates an optional module.
+
+Workbench navigation also checks its existing target module, and lifecycle
+actions check their existing owner. Missing targets disable only the affected
+feature/action with backend-owned guidance. Published menu overrides inherit
+module-owned execution metadata and cannot resurrect an unauthorized or absent
+provider. Current observations are projected without mutating provider defaults,
+so recovery restores eligible functionality. No additional dependency
+configuration is introduced. APIs retain their own validation and authorization.
+
+Replica membership is aggregated from active leases; a narrower renewal cannot
+erase another runtime's technical members. Last-known offline membership is
+diagnostic only. Validate paging/replicas with
+`test/functionalModuleLifecyclePagination.test.js` and feature isolation with
+`test/navigationModuleAvailability.test.js`.
+
+Activation dependency states also carry client-safe `reason` and `resolution`
+text. `describeFunctionalDependency` is the later-layer copy customization
+point; it does not change eligibility. Status projections report `BLOCKED`
+while required dependencies are unsatisfied, even without required data packs.
+Missing records and failed lookups remain distinct; neither satisfies a
+dependency. Internal lookup errors are never exposed to Axis.
+
+Later layers may tune the page size or override the existing catalogue service,
+but must preserve complete reads, tenant/project scope, and owner eligibility.
+Validate these boundaries with `test/functionalModuleEligibilityPagination.test.js`,
+`test/functionalModuleCatalogueService.test.js`, and
+`test/backofficeCapabilityRegistryService.test.js`. The paging regression uses
+the real model option normalizer, covers more than 256 records and page-size
+overrides, and rejects partial or malformed reads.
+
+The store defaults to process memory for local development. Production adapters,
+API and security contracts, operator guides, compatibility/history governance,
+readiness, performance, release acceptance and Axis content guidance are in the
+canonical documentation topic `solution.backoffice.technical-reference`.
+
+## Customization
+
+Projects may override BackOffice configuration and contribute same-named
+services, facades, controllers, routers, schemas, pipelines, interceptors, and
+tests from later active modules. Override the smallest method or definition
+required; do not copy the whole capability.
+
+Control-plane registration routes require the governed internal-token
+permission. Human discovery and diagnostics routes require distinct BackOffice
+permissions and return only configured client-safe metadata.
+
+The bootstrap response contains only active `clientCallable` modules permitted
+for the authenticated human and fields selected by
+`backofficeRegistry.clientSafeMetadata`. It also returns the authenticated
+request tenant code so Axis can display the same tenant context without
+guessing, parsing an unverified browser token, or hardcoding `default`. It does
+not expose service or Cron
+credentials, registration secrets, or internal lease-expiry state. See
+[`nodics.docs/security/backoffice-browser-security.md`](https://github.com/Nodics/nodics.docs).
+
+Projects add documentation through the concrete owning module's optional
+BackOffice capability service. Source IDs must be unique,
+paths must be application-relative, and optional permissions are filtered
+before bootstrap. A CMS source uses a dedicated Site/catalog pair and a
+configured nImport pack; an OpenAPI source references the live System contract.
+Do not copy API contracts into CMS or add an Axis-owned source list.
+
+Backend modules may also contribute bounded, non-executable
+`workbenchPresentation` hints on navigation entries. These hints can describe
+default columns, quick filters, and owner-action labels for reusable Axis schema
+workspaces. They do not grant permissions, execute operations, or transfer
+business authority away from the target module.
+
+The [module-owned UI contribution contract](../../../nodics.foundation/modules/nSetup/llm/contracts/module-owned-ui-contribution-contract.md) governs shared groups and accelerator subtrees. The existing registry composes them and withdraws complete orphaned branches; it does not become their data owner.
+
+Required data permits activation only after confirmed CURRENT release status.
+Preserve running/incomplete receipts and reject before catalogue activation. See
+[completion gate](llm/contracts/README.md#required-data-completion-before-activation).
+
+This capability declares an inert model-service inventory for [governed Local reset](../../../nodics.foundation/modules/nSystem/llm/contracts/local-reset.md).
+A server must explicitly select it; contributions never enable reset or bypass tenant, environment, confirmation or required-service checks.
+
+Background contract discovery uses the existing repository-owned system context
+for normalized observation persistence. The runtime reporting a validated lease
+retains its group-free, scoped credential; discovery must not give it generic
+BackOffice schema rights. Preserve source-instance evidence and existing bounded
+normalization, compatibility classification, approval and revision checks. Human
+contract decisions retain their authenticated actor and permission gates.
+
+Route-category defaults belong to this capability; deployments supply only intentional overrides.
+Preserve nRouter enforcement and independent route authorization. See [exposure ownership](../../../nodics.foundation/modules/nRouter/llm/contracts/README.md#capability-owned-exposure-defaults).
+
+Application targets and package facts inherit owning defaults; see [the contract](llm/contracts/README.md#inherited-application-targets-and-observed-package-facts).
+
+BackOffice owns inert capability-registry acceptance defaults. Resolve observed
+server coordinates from the selected deployment rather than a reference-project
+string. Media preparation steps may declare `manifestModule` with an owner-relative
+`manifestPath`; the owner must match the step's module identity. Resolve only through
+the existing raw-module registry, confine real paths and payloads to that owner,
+and retain project-relative compatibility. Never return local source paths to clients.
+Existing authorization, target-role, media upload and publication gates still apply.
+
+Operator-triggered application and remote activation imports forward the
+authenticated human bearer to the configured nImport owner. Require a human
+principal and bearer before execution; do not substitute the group-free runtime
+credential or add administrator groups to it. Status/preflight retains the scoped
+runtime credential. nImport still enforces the operator's import permission, tenant,
+release governance and schema access at the destination.
+
+## Application Bootstrap Acceptance
+
+`acceptance:local --execute --approve-publications` runs the capability-owned
+application administration suite with the selected customer's declarative
+`tooling.acceptance.localBootstrap` fixtures. It can import, activate and publish;
+it is not read-only. Runtime startup additionally requires `--start-runtimes`.
+Fresh reset requires LOCAL class, explicit reset intent and exclusive owned startup.
+Only owned children are stopped. Frontends and Docker execution are independent.
+Missing identity grants or fixture prerequisites fail through their normal owners;
+the suite never adds privileges or accesses provider collections directly.

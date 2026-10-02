@@ -21,41 +21,50 @@
  * @property {Object} log Default logging transports and levels.
  */
 module.exports = {
-    errorExitCode: 1,
+  errorExitCode: 1,
 
-    moduleIdentityAliases: {
-        'nodics.core': 'nodics.foundation'
-    },
+  moduleIdentityAliases: {
+    "nodics.core": "nodics.foundation",
+  },
 
-    runtimeLifecycle: {
-        enabled: true,
-        installSignalHandlers: true,
-        handleFatalErrors: true,
-        exitOnSignal: true,
-        contributorTimeoutMs: 10000,
-        shutdownTimeoutMs: 30000,
-        httpDrainTimeoutMs: 5000
-    },
+  runtimeLifecycle: {
+    enabled: true,
+    installSignalHandlers: true,
+    handleFatalErrors: true,
+    exitOnSignal: true,
+    contributorTimeoutMs: 10000,
+    shutdownTimeoutMs: 30000,
+    httpDrainTimeoutMs: 5000,
+  },
 
-    /*
+  /*
         If the system is running as multiple cluster nodes, this property must be configured.
         Two different systems cannot run with the same node id.
     */
-    nodeId: 'node0',
+  nodeId: "node0",
 
-    /**
-     * System id is to group all clusters running for same module
-     */
-    systemId: 0,
+  /**
+   * System id is to group all clusters running for same module
+   */
+  systemId: 0,
 
-    /*
+  /*
         These values are used as system values, so they cannot be used as variable or class names.
     */
-    illegalUsernames: [
-        'nodics', 'administrator', 'password', 'admin', 'user', 'unknown', 'anonymous', 'null', 'undefined', 'api'
-    ],
+  illegalUsernames: [
+    "nodics",
+    "administrator",
+    "password",
+    "admin",
+    "user",
+    "unknown",
+    "anonymous",
+    "null",
+    "undefined",
+    "api",
+  ],
 
-    /*
+  /*
         - Use this when some properties need to be loaded from outside the config directory.
         - The system looks for this file from the root of Nodics HOME.
         - In this case, the path will be NODICS_HOME/externalProps.js.
@@ -69,116 +78,125 @@ module.exports = {
             ]
         }
     */
-    externalPropertyFile: [
-        'externalProps.js'
-    ],
-    // User database related setting
-    // samples
-    // databaseUserURI = mongodb://user:pass@localhost:port/database
-    // databaseUserURI = mongodb://user:pass@localhost:port,anotherhost:port,yetanother:port/mydatabase
-    // databaseUserURI = mongodb://hostA:27501,hostB:27501
-    // databaseUserURI = mongodb://nonexistent.domain:27000
-    dynamoEnabled: false,
-    defaultContentType: 'application/json',
-    defaultTenant: 'default',
-    defaultEnterprise: 'default',
-    profileModuleName: 'profile',
-    nemsModuleName: 'nems',
-    dynamoModuleName: 'dynamo',
-    systemModuleName: 'system',
-    workflowModuleName: 'workflow',
-    processRetrySleepTime: 2000,
-    defaultAuthDetail: {
-        entCode: 'default',
-        tenant: 'default'
-    },
+  externalPropertyFile: ["externalProps.js"],
+  // User database related setting
+  // samples
+  // databaseUserURI = mongodb://user:pass@localhost:port/database
+  // databaseUserURI = mongodb://user:pass@localhost:port,anotherhost:port,yetanother:port/mydatabase
+  // databaseUserURI = mongodb://hostA:27501,hostB:27501
+  // databaseUserURI = mongodb://nonexistent.domain:27000
+  dynamoEnabled: false,
+  defaultContentType: "application/json",
+  defaultTenant: "default",
+  defaultEnterprise: "default",
+  profileModuleName: "profile",
+  nemsModuleName: "nems",
+  dynamoModuleName: "dynamo",
+  systemModuleName: "system",
+  workflowModuleName: "workflow",
+  processRetrySleepTime: 2000,
+  defaultAuthDetail: {
+    entCode: "default",
+    tenant: "default",
+  },
 
-    log: {
-        enabled: true,
-        level: 'info',
-        redaction: {
-            enabled: true,
-            mask: '[REDACTED]',
-            sensitiveKeys: [
-                'authorization',
-                'authToken',
-                'accessToken',
-                'refreshToken',
-                'token',
-                'password',
-                'secret',
-                'credential',
-                'credentials',
-                'apiKey',
-                'x-api-key',
-                'cookie',
-                'set-cookie',
-                'jwtSecretKey',
-                'clientSecret',
-                'privateKey'
-            ]
+  log: {
+    enabled: true,
+    level: "info",
+    requestPrivacy: {
+      qualified: false,
+      captureMode: "disabled",
+    },
+    redaction: {
+      enabled: true,
+      mask: "[REDACTED]",
+      maximumStringLength: 32768,
+      maximumDepth: 16,
+      maximumEntries: 1024,
+      maximumJsonSnippets: 16,
+      sensitiveKeys: [
+        "authorization",
+        "authToken",
+        "accessToken",
+        "refreshToken",
+        "token",
+        "password",
+        "secret",
+        "credential",
+        "credentials",
+        "apiKey",
+        "x-api-key",
+        "cookie",
+        "set-cookie",
+        "jwtSecretKey",
+        "clientSecret",
+        "privateKey",
+        "encryptionKey",
+        "NODICS_RUNTIME_CONFIGURATION_ENCRYPTION_KEY",
+        "customerEligibilityDecision",
+      ],
+    },
+    storage: {
+      defaultProvider: "local",
+      providers: {
+        local: {
+          enabled: true,
+          basePath: "",
+          fallbackRelativeBasePath: "temp/logs",
         },
-        storage: {
-            defaultProvider: 'local',
-            providers: {
-                local: {
-                    enabled: true,
-                    basePath: '',
-                    fallbackRelativeBasePath: 'temp/logs'
-                },
-                nas: {
-                    enabled: false,
-                    basePath: '/mnt/nodics-logs'
-                }
-            },
-            layout: '{filename}'
+        nas: {
+          enabled: false,
+          basePath: "/mnt/nodics-logs",
         },
-        transports: {
-            console: {
-                consoleTransport: {
-                    enabled: true,
-                    format: 'simple'
-                }
-            },
-            file: {
-                fileErrorLog: {
-                    enabled: false,
-                    format: 'simple',
-                    options: {
-                        filename: 'nodics-error.log',
-                        level: 'error',
-                        maxsize: '20971520',
-                        maxFiles: '14',
-                        tailable: true,
-                        zippedArchive: true
-                    }
-                },
-                fileRestLog: {
-                    enabled: false,
-                    format: 'simple',
-                    options: {
-                        filename: 'nodics.log',
-                        level: 'info',
-                        maxsize: '20971520',
-                        maxFiles: '14',
-                        tailable: true,
-                        zippedArchive: true
-                    }
-                }
-            },
-            elastic: {
-                elasticLogRecorder: {
-                    enabled: false,
-                    format: 'simple',
-                    options: {
-                        level: 'info',
-                        index: 'nodicsLog'
-                    },
-                    client: {
-                        hosts: ['http://localhost:9200']
-                    }
-                }
-            }
-        }
-    }
+      },
+      layout: "{filename}",
+    },
+    transports: {
+      console: {
+        consoleTransport: {
+          enabled: true,
+          format: "simple",
+        },
+      },
+      file: {
+        fileErrorLog: {
+          enabled: false,
+          format: "simple",
+          options: {
+            filename: "nodics-error.log",
+            level: "error",
+            maxsize: "20971520",
+            maxFiles: "14",
+            tailable: true,
+            zippedArchive: true,
+          },
+        },
+        fileRestLog: {
+          enabled: false,
+          format: "simple",
+          options: {
+            filename: "nodics.log",
+            level: "info",
+            maxsize: "20971520",
+            maxFiles: "14",
+            tailable: true,
+            zippedArchive: true,
+          },
+        },
+      },
+      elastic: {
+        elasticLogRecorder: {
+          enabled: false,
+          format: "simple",
+          options: {
+            level: "info",
+            index: "nodicsLog",
+          },
+          client: {
+            hosts: ["http://localhost:9200"],
+          },
+        },
+      },
+    },
+  },
 };

@@ -12,6 +12,14 @@
 const assert = require('assert');
 const path = require('path');
 
+/**
+ * @module wcms/test/axisContentCatalogDataContract
+ * @description Validates Axis baseline contracts and canonical WCMS startup using offline installation ports.
+ * @layer test
+ * @owner wcms
+ * @override Extend data assertions without adding another startup import authority.
+ */
+
 const wcmsProperties = require('../../../config/properties');
 const moduleRoot = path.resolve(__dirname, '..');
 const axisModuleRoot = path.resolve(moduleRoot, '../../../nodics.platform/modules/axis');
@@ -229,4 +237,117 @@ assert.strictEqual(enabledHeaders.length, 9);
 assert(enabledHeaders.every(item => item.options.operation === 'saveAll'));
 assert(enabledHeaders.every(item => item.query.code === '$code'));
 
-console.log('Axis content catalog init-data contract tests passed');
+/** Exercises actual framework startup and release installation with offline persistence/import ports. */
+async function verifyCanonicalWcmsStartup() {
+    const wcms = require('../nodics');
+    const framework = require('../../../../nodics.foundation/nodics');
+    const config = require('../../../../nodics.foundation/modules/nConfig');
+    const lifecycle = require('../../../../nodics.foundation/modules/nConfig/src/service/DefaultRuntimeLifecycleService');
+    const releaseExecution = require('../../../../nodics.foundation/modules/nData/nImport/import/test/helpers/releaseExecution');
+    const lodash = require('lodash');
+    const originals = Object.fromEntries(['CONFIG', 'NODICS', 'SERVICE', 'CLASSES', 'UTILS'].map(key =>
+        [key, { exists: Object.hasOwn(global, key), value: global[key] }]));
+    const configMethods = ['start', 'initUtilities', 'loadModules', 'initEntities', 'finalizeEntities', 'finalizeModules'];
+    const originalConfig = Object.fromEntries(configMethods.map(key => [key, config[key]]));
+    const originalLog = lifecycle.LOG;
+    let failImport;
+    try {
+        const selectedPolicy = structuredClone(require('../../../../nodics.foundation/modules/nData/nImport/import/config/properties').data.dataReleases);
+        selectedPolicy.allowedDestinationRoles = ['WCMS_STAGED'];
+        const state = releaseExecution({
+            modules: { axis: { ...require(path.join(axisModuleRoot, 'package.json')), name: 'axis', path: axisModuleRoot, parent: 'nodics.platform' } },
+            configuration: selectedPolicy,
+            onImport: async () => { if (failImport) throw failImport; }
+        });
+        global.UTILS = { isObject: lodash.isObject, isArray: Array.isArray, isBlank: lodash.isEmpty };
+        global.CLASSES = { NodicsError: class extends Error {
+            constructor(code, message) { super(message || String(code)); this.code = code; }
+        } };
+        const releaseOwner = { ...state.service, activeExecutions: new Map() };
+        let serverState = 'starting';
+        let listeners = 0;
+        let grants = 0;
+        Object.assign(NODICS, {
+            getServerState: () => serverState, setServerState: value => { serverState = value; },
+            isInitRequired: () => false, setEndTime() {}, getStartDuration: () => 0,
+            addInternalAuthToken() {}, LOG: { info() {} }
+        });
+        lifecycle.reset();
+        lifecycle.LOG = { error() {} };
+        Object.assign(SERVICE, {
+            DefaultDataReleaseService: releaseOwner,
+            DefaultRuntimeLifecycleService: lifecycle,
+            DefaultScriptsHandlerService: { executePostScripts: async () => true },
+            DefaultRouterService: { startServers: async () => { listeners += 1; } },
+            DefaultInternalAuthenticationProviderService: {
+                fetchInternalAuthToken: async () => { grants += 1; return { authToken: 'offline-fixture-only' }; },
+                scheduleInternalAuthTokenRefresh() {}
+            },
+            DefaultEnterpriseHandlerService: { buildEnterprises: async () => true }
+        });
+        configMethods.forEach(key => { config[key] = async () => true; });
+        config.finalizeModules = () => wcms.postInit({});
+        const runtime = { ...framework, executeMandatoryBootstrapServices: async () => true };
+        assert.strictEqual(await runtime.start({}), true);
+        assert.strictEqual(serverState, 'started');
+        assert(state.imports.length > 0, 'First startup installs actual immutable Axis Init releases');
+        const imported = state.imports.length;
+        const receiptSnapshot = JSON.stringify(state.installations);
+        assert.strictEqual(lifecycle.getContributors().some(c => c.name === 'wcmsStartupImport'), false,
+            'Mandatory Init must not run in a log-and-continue READY contributor');
+        assert.strictEqual(await runtime.start({}), true);
+        assert.strictEqual(await wcms.importStartupData(), true);
+        assert.strictEqual(state.imports.length, imported, 'Restart and compatibility calls must not replay CURRENT releases');
+        assert.strictEqual(JSON.stringify(state.installations), receiptSnapshot, 'No-op startup leaves durable receipts unchanged');
+
+        const checksum = state.installations[0].checksum;
+        state.installations[0].checksum = 'offline-drift';
+        const beforeListeners = listeners;
+        const beforeGrants = grants;
+        await assert.rejects(runtime.start({}), /changed without a new version/);
+        assert.strictEqual(listeners, beforeListeners);
+        assert.strictEqual(grants, beforeGrants);
+        assert.strictEqual(serverState, 'stopped');
+        assert.strictEqual(state.imports.length, imported);
+        state.installations[0].checksum = checksum;
+
+        lifecycle.reset(); serverState = 'starting';
+        state.installations[0].status = 'RUNNING';
+        await assert.rejects(runtime.start({}), /still running/);
+        assert.strictEqual(listeners, beforeListeners);
+        assert.strictEqual(state.imports.length, imported);
+
+        lifecycle.reset(); serverState = 'starting';
+        state.installations.length = 0;
+        failImport = new Error('offline mandatory Init failure');
+        await assert.rejects(runtime.start({}), error => error === failImport);
+        assert.strictEqual(listeners, beforeListeners);
+        assert.strictEqual(grants, beforeGrants);
+        assert.strictEqual(serverState, 'stopped');
+
+        failImport = undefined;
+        state.installations.length = 0;
+        state.runtimeRole = 'WCMS_ONLINE';
+        selectedPolicy.allowedDestinationRoles = [];
+        const beforeOnline = state.imports.length;
+        assert.strictEqual(await wcms.importStartupData(), true);
+        assert.strictEqual(state.imports.length, beforeOnline, 'Online must not receive Staged Init through compatibility delegation');
+        await assert.rejects(releaseOwner.preparePlan({ tenant: 'default', releaseRequest: {
+            dataType: 'init', releaseCodes: ['axis:axisBaseline']
+        } }), { code: 'ERR_IMP_00004' });
+        delete SERVICE.DefaultDataReleaseService;
+        await assert.rejects(wcms.importStartupData(), /requires DefaultDataReleaseService/);
+        console.log('WCMS canonical startup validated: immutable install, repeat no-op, destination/drift/running guards and blocking mandatory failure');
+    } finally {
+        Object.assign(config, originalConfig);
+        lifecycle.reset(); lifecycle.LOG = originalLog;
+        Object.entries(originals).forEach(([key, value]) => {
+            if (value.exists) global[key] = value.value;
+            else delete global[key];
+        });
+    }
+}
+
+verifyCanonicalWcmsStartup().then(() => {
+    console.log('Axis content catalog init-data contract tests passed');
+}).catch(error => { console.error(error); process.exitCode = 1; });

@@ -14,9 +14,11 @@
 /** @module checkoutCore/src/service/defaultCheckoutPlacementPortsService @description Binds placement orchestration to generated domain repositories and owner services. @layer service @owner checkoutCore */
 module.exports = {
   /** Unwraps a standard result envelope while preserving raw provider values. */
-  unwrap: function (response) { return response && Object.prototype.hasOwnProperty.call(response, "result")
+  unwrap: function (response) {
+    return response && Object.prototype.hasOwnProperty.call(response, "result")
       ? response.result
-      : response; },
+      : response;
+  },
   /**
    * Executes `serviceAuthData` as a loader-visible operation owned by this module.
    * @param {*} request Value defined by the owning module contract.
@@ -621,6 +623,14 @@ module.exports = {
           checkpoint.authData,
         );
       },
+      notifyCommitted: (request, result) =>
+        SERVICE.DefaultDigitalCommerceNotificationService?.request(
+          {
+            ...request,
+            orderCode: result?.evidence?.orderCode || result?.code,
+          },
+          "PURCHASED",
+        ),
       compensate: async (checkpoint, error, request) => {
         const outcomes = [];
         const promotionCommit = checkpoint.results.promotionCommit;
@@ -763,6 +773,13 @@ module.exports = {
             });
           }
         }
+        if (checkpoint.results.digitalReservationRecoveryRequired === true) {
+          outcomes.push({
+            type: "DIGITAL_COUPON_RELEASE",
+            status: "FAILED",
+            errorCode: "DIGITAL_RESERVATION_UNCERTAIN",
+          });
+        }
         return self.save(
           SERVICE.DefaultCheckoutCheckpointService,
           checkpoint.tenant,
@@ -779,6 +796,10 @@ module.exports = {
             evidence: {
               completed: checkpoint.completed,
               compensation: outcomes,
+              digitalReservationRecoveryRequired:
+                checkpoint.results.digitalReservationRecoveryRequired === true,
+              digitalReservationUncertainKey:
+                checkpoint.results.digitalReservationUncertainKey,
               errorCode: error.code || "PLACEMENT_FAILED",
             },
           },

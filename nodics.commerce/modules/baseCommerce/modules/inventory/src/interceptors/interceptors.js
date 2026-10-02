@@ -16,3 +16,12 @@ module.exports = {
     warehousePublicationpreUpdate: { type: 'schema', item: 'warehouse', trigger: 'preUpdate', active: 'true', index: -30,
         handler: 'DefaultInventoryPublicationService.validateSourceAuthoring' },
 };
+
+// Operational stores must never be persisted by a Staged policy runtime.
+for (const item of ['inventoryBalance', 'inventoryMovement', 'inventoryReservation']) {
+    for (const trigger of ['preSave', 'preUpdate', 'preRemove']) {
+        module.exports[item + trigger] = { type: 'schema', item, trigger,
+            active: 'true', index: -20,
+            handler: 'DefaultInventoryOperationService.requireOperationalRuntime' };
+    }
+}

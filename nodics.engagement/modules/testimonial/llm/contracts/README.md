@@ -1,5 +1,15 @@
 # testimonial Contracts
 
+## Email presentation
+
+This module owns `src/templates/email/testimonial-consent-request`: a parameterized
+HTML/text/subject resource, not delivery logic or configuration content. It requires
+explicit selection or optional sample-v002 adoption; file discovery alone never
+enables sending. Later customer modules and runtime scopes may override individual
+files using the [Communication resource contract](../../../../../nodics.communication/modules/commsCore/llm/contracts/template-resources.md).
+Keep source ownership, required parameters and optional activation invariant.
+Communication renders and transports; this domain retains business decisions.
+
 ## Testimonial capability contract
 
 - Status: implemented; consent-controlled editorial and publication behavior is active only when the project capability flag is enabled.

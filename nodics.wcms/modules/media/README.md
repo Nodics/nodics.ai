@@ -2,6 +2,18 @@
 
 Media owns governed asset records, folders, formats, storage providers, upload, download, delivery, publication transfer, references, and media sets.
 
+## Governed Library
+
+Axis Media Library and All Media use the existing backend-operations workspace,
+not generated schema CRUD. Media supplies scoped, permission-checked metadata
+reads, current exact versions where CURRENT versioned storage is installed, and
+an explicit version/reference form for requesting existing nPublish approval.
+No paths, provider locators or bytes enter library DTOs. Unversioned metadata
+remains readable but does not acquire an invented publication version.
+Publication defaults remain off; the library does not grant approval or Online
+activation. See [the library contract](llm/contracts/media-library-publication.md)
+for APIs, permissions, customization and installed acceptance requirements.
+
 ## Canonical Staged Media Preparation
 
 Run `nodics project:run acceptance:media-seed --manifest-modules=<module,...> --execute`
@@ -22,6 +34,11 @@ back automatically. Reconcile the cause before retrying. Online publication,
 service credentials and approval decisions are not part of this command.
 
 ## Responsibility
+
+Routine setup reads can use the [persisted readiness aggregate](llm/contracts/media-lifecycle-contracts.md#persisted-readiness-aggregate)
+to inspect up to 100 CURRENT metadata descriptors in one authorized request.
+This is not provider-byte verification or Online publication proof; explicit
+preparation and publication retain their existing integrity checks.
 
 This module manages media metadata and storage policy. Product, CMS, engagement, and import/export modules own their domain relationship to a media code.
 

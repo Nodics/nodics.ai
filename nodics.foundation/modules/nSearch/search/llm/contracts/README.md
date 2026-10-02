@@ -6,6 +6,23 @@ Use these files for rules that are more specific than root `AGENTS.md` and the m
 
 Database fallback defaults to false. A caller/deployment may intentionally select fallback through the existing search options. Search activation and provider selection remain explicit.
 
+Expected startup skips with effective `options.enabled:false` log at debug.
+Missing/invalid configuration or an unavailable engine while search is selected
+retain warning/error visibility. Diagnostic classification never enables search,
+changes provider admission, or converts a provider rejection into success.
+
+## Logical And Physical Index Identity
+
+The layered definition key and `typeName` identify the logical search model.
+`indexName` identifies the physical provider index and may be overridden by a later
+deployment layer. Implicit generated-service lookup uses the schema's `typeName`,
+with `indexName` fallback for legacy definitions without a logical pointer.
+Explicit request selectors remain logical; never rewrite them or introduce a
+parallel physical-name registry. Model-specific contributors prefer the logical
+definition key and retain the existing physical-key contributor as a compatibility
+fallback. Engine creation/existence bookkeeping uses the physical lowercase name.
+Tenant/module validation and provider activation remain unchanged.
+
 ## Search Readiness And Read-Source Policy
 
 `nSearch/search` owns the canonical readiness contract for search engine health,

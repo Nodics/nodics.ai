@@ -11,6 +11,7 @@
 
 const util = require('util');
 const clearRequire = require('clear-module');
+const defaultRetryPolicy = require('./defaultImportRetryPolicyService');
 
 /**
  * @module nodics.foundation/modules/nData/nImport/import/src/service/process/init/defaultDataImportProcessService
@@ -211,7 +212,7 @@ module.exports = {
                             _self.LOG.debug('Processing file: ' + fileObj.file.replace(NODICS.getNodicsHome(), '.') + ' on phase: ' + (options.phase + 1));
                             let fileData = require(fileObj.file);
                             clearRequire(fileObj.file);
-                            SERVICE.DefaultPipelineService.start('processFileDataImportPipeline', {
+                            const fileRequest = {
                                 tenant: request.tenant,
                                 importRun: request.importRun,
                                 dataFiles: request.dataFiles,
@@ -221,8 +222,9 @@ module.exports = {
                                 sourceDataFile: fileObj.file,
                                 fileData: fileData,
                                 inputPath: request.inputPath,
-                                suppressRetryErrorLog: _self.shouldSuppressRetryErrorLog(request, options)
-                            }, {}).then(success => {
+                                suppressRetryErrorLog: _self.shouldSuppressRetryErrorLog(Object.assign({}, request, { fileData }), options)
+                            };
+                            SERVICE.DefaultPipelineService.start('processFileDataImportPipeline', fileRequest, {}).then(success => {
                                 fileObj.done = true;
                                 SERVICE.DefaultFileHandlerService.moveFile(
                                     [fileObj.file],
@@ -242,7 +244,8 @@ module.exports = {
                                     reject(error);
                                 });
                             }).catch(error => {
-                                if (options.phase >= options.phaseLimit - 1) {
+                                const retryPolicy = SERVICE.DefaultImportRetryPolicyService || defaultRetryPolicy;
+                                if (retryPolicy.shouldStop(fileRequest) || !retryPolicy.canRetry(error) || options.phase >= options.phaseLimit - 1) {
                                     _self.LOG.error('Import process failed due to error on file: ' + fileObj.file.replace(NODICS.getNodicsHome(), '.'));
                                     reject(error);
                                 } else {
@@ -273,14 +276,8 @@ module.exports = {
      * @returns {boolean} True when the error is not from the final phase.
      */
     shouldSuppressRetryErrorLog: function (request, options) {
-        let headerOption = request && request.fileData && request.fileData.header &&
-            request.fileData.header.options && request.fileData.header.options.stopImportOnFailure;
-        if (headerOption === true) {
-            return false;
-        }
-        let dataConfig = typeof CONFIG !== 'undefined' && CONFIG && typeof CONFIG.get === 'function' ?
-            CONFIG.get('data') || {} : {};
-        if (dataConfig.stopImportOnFailure === true) {
+        const retryPolicy = SERVICE.DefaultImportRetryPolicyService || defaultRetryPolicy;
+        if (retryPolicy.shouldStop(request)) {
             return false;
         }
         if (!options || options.phase === undefined || options.phaseLimit === undefined) {

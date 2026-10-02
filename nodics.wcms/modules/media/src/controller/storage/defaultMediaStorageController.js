@@ -31,7 +31,22 @@ module.exports = {
     /** Prepares or activates exact retained Media content. */
     deployRetainedPublication: function (request, callback) { return this.invokeRetainedPublication('deploy', request, callback); },
     /** Captures exact metadata and bytes before requesting governed Process approval. */
-    createRetainedPublication: function (request, callback) { return this.invokeRetainedPublication('createGoverned', request, callback); },
+    createRetainedPublication: function (request, callback) {
+        const promise = Promise.resolve().then(() => {
+            const http = request.httpRequest || {};
+            if (request.httpResponse && typeof request.httpResponse.setHeader === 'function') request.httpResponse.setHeader('Cache-Control', 'no-store');
+            if (Object.keys(http.query || {}).length) SERVICE.DefaultMediaLibraryService.fail();
+            return FACADE.DefaultMediaLibraryFacade.requestPublication(http.body || {}, {
+                tenant: request.tenant, authData: request.authData,
+                requestId: request.requestId, correlationId: request.correlationId,
+                httpRequest: { headers: { authorization: (http.headers || {}).authorization || (http.headers || {}).Authorization } }
+            });
+        }).then(result => ({ code: 'SUC_SYS_00000', result })).catch(() => {
+            throw new CLASSES.NodicsError('ERR_MED_00023', 'Media library operation is unavailable or invalid');
+        });
+        if (!callback) return promise;
+        promise.then(result => callback(null, result)).catch(callback);
+    },
     /** Checks stored Staged publication intent for an authenticated target runtime. */
     authorizeRetainedPublication: function (request, callback) { return this.invokeRetainedPublication('authorizeTarget', request, callback); },
     /** Returns active Media publication evidence. */
@@ -375,8 +390,32 @@ module.exports = {
         }
     },
     /**
-     * Stores one media-parsed media upload through media.
+     * Inspects desired upload bytes through the trusted tenant and principal.
      *
+     * @param {Object} request Nodics request wrapper containing the desired descriptor.
+     * @param {Function} callback Optional callback used by router pipeline.
+     * @returns {Promise<Object>|void} Inspection response or callback result.
+     */
+    inspectUpload: function (request, callback) {
+        const body = request && request.httpRequest && request.httpRequest.body || {};
+        const input = Object.assign({}, body, { tenant: request && request.tenant, authData: request && request.authData });
+        const result = FACADE.DefaultMediaStorageFacade.inspectUpload(input);
+        if (callback) return result.then(value => callback(null, value)).catch(error => callback(error));
+        return result;
+    },
+    /** Reads one bounded Media-owned metadata aggregate through the authenticated facade. */
+    readReadiness: function (request, callback) {
+        const result = Promise.resolve().then(() => {
+            if (request.httpResponse && typeof request.httpResponse.setHeader === 'function') request.httpResponse.setHeader('Cache-Control', 'no-store');
+            const http = request.httpRequest || {};
+            if (Object.keys(http.query || {}).length) SERVICE.DefaultMediaLibraryService.fail();
+            return FACADE.DefaultMediaStorageFacade.readReadiness(http.body || {}, { tenant: request.tenant, authData: request.authData });
+        }).catch(() => { throw new CLASSES.NodicsError('ERR_MED_00023', 'Media readiness evidence is unavailable'); });
+        if (callback) return result.then(value => callback(null, value)).catch(error => callback(error));
+        return result;
+    },
+    /**
+     * Stores one media-parsed media upload through media.
      * @param {Object} request Nodics request wrapper containing `httpRequest.files`.
      * @param {Function} callback Optional callback used by router pipeline.
      * @returns {Promise<Object>|void} Upload response or callback result.

@@ -56,6 +56,16 @@ new control-plane API is introduced.
 
 ## Health And Readiness
 
+Runtime configuration schema/effective DTOs separately expose content-free
+`secretPersistence` readiness. A configured credential need not be writable when
+this runtime lacks its encryption prerequisite. Secret saves validate this before
+record construction; ordinary updates remain available. See the
+[runtime configuration contract](llm/contracts/README.md#secret-persistence-prerequisites)
+for form integration, per-consumer runtime scope and safe operator recovery.
+The optional deployment input `NODICS_RUNTIME_CONFIGURATION_ENCRYPTION_KEY`
+resolves through nConfig with a null fallback. Updated builds and affected
+runtime restarts are required; no key is generated or supplied by default.
+
 `GET /nodics/system/v0/health/live` is a low-disclosure liveness endpoint. It is
 marked with `publicProbe: true` so infrastructure can confirm the process is
 alive without enterprise or tenant headers. This is not the same as a normal

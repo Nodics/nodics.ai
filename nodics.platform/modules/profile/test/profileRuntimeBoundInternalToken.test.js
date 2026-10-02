@@ -28,6 +28,52 @@ function setup() {
         DefaultPrincipalScopeAssignmentService: { get: async () => { reads++; return { code: 'SUC_FIND_00000', result: structuredClone(rows) }; } },
         DefaultServiceTokenService: { issue: async options => { issued.push(options); return 'signed-runtime-token'; } } };
 }
+test('actual local runtime provider cannot reuse a default-tenant API-key proof as a newly provisioned tenant identity', async t => {
+    const provider = require('../../../../nodics.foundation/modules/nService/src/service/authentication/defaultInternalAuthenticationProviderService');
+    const authentication = require('../src/service/authentication/defaultAuthenticationProviderService');
+    const previous = { CONFIG: global.CONFIG, NODICS: global.NODICS };
+    t.after(() => {
+        global.CONFIG = previous.CONFIG;
+        if (previous.NODICS === undefined) delete global.NODICS; else global.NODICS = previous.NODICS;
+    });
+    setup();
+    const baseConfig = previous.CONFIG;
+    global.CONFIG = { get: (key, tenant) => {
+        if (key === 'defaultAuthDetail') return { apiKey: 'fictional-provider-proof', entCode: 'warehouse' };
+        if (key === 'runtimeIdentity') return { instanceCode: scope.instanceCode };
+        return baseConfig.get(key, tenant);
+    } };
+    global.NODICS = {
+        getEnvironmentName: () => scope.projectCode,
+        getSelectedEnvironmentName: () => scope.environmentCode,
+        getServerName: () => scope.serverCode,
+        getActiveModules: () => scope.modules,
+        isModuleActive: () => true,
+    };
+    const proofReads = [];
+    SERVICE.DefaultEnterpriseService = { retrieveEnterprise: async code => {
+        proofReads.push(['enterprise', code]);
+        return { code: 'warehouse', active: true, tenant: { code: 'default', active: true } };
+    } };
+    SERVICE.DefaultEmployeeService = { findByAPIKey: async request => {
+        proofReads.push(['principal', request.tenant]);
+        return { ...structuredClone(requestFixturePrincipal()), apiKeyScopes: scope.permissions };
+    } };
+    SERVICE.DefaultAuthenticationProviderService = Object.assign(Object.create(authentication), {
+        recordAuthEvent: async () => true,
+    });
+    const local = Object.assign(Object.create(provider), {
+        getInternalAuthToken: issuer.getInternalAuthToken,
+    });
+    await assert.rejects(local.fetchInternalAuthToken('new-enterprise-tenant'), error =>
+        error.code === 'ERR_AUTH_00003' && /authenticated service principal in the requested tenant/.test(error.message));
+    assert.deepEqual(proofReads, [['enterprise', 'warehouse'], ['principal', 'default']]);
+    assert.equal(reads, 0, 'A wrong-tenant proof cannot reach deployment-grant admission');
+    assert.equal(issued.length, 0, 'No relabelled or default-tenant fallback token may be issued');
+});
+function requestFixturePrincipal() {
+    return request.authData.person;
+}
 test('approved runtime receives only explicit permissions and renewed credentials re-read the grant', async () => {
     setup(); const first = await issuer.getInternalAuthToken(structuredClone(request));
     assert.equal(first.result.authToken, 'signed-runtime-token');
@@ -46,6 +92,40 @@ test('unapproved modules, deployment changes, duplicate claims and another repli
     }
     assert.equal(issued.length, 0);
 });
+for (const environmentCode of ['qa', 'kickoffLocal', 'productionLocal']) {
+    test(`${environmentCode} issuance rejects excess modules independently of the caller strict flag`, async () => {
+        for (const strictFlag of [undefined, false, true]) {
+            setup();
+            rows[0].runtimeScope.environmentCode = environmentCode;
+            const changed = structuredClone(request);
+            changed.headers['x-nodics-environment'] = environmentCode;
+            changed.headers['x-nodics-modules'] = 'cronjob,inventory';
+            if (strictFlag !== undefined) changed.requireExactModules = strictFlag;
+            await assert.rejects(issuer.getInternalAuthToken(changed), error =>
+                error.code === 'ERR_AUTH_00003' && error.message === 'Requested modules exceed approved runtime deployment scope');
+            assert.equal(reads, 1);
+            assert.equal(issued.length, 0);
+        }
+    });
+    test(`${environmentCode} issuance accepts only requested approved modules`, async () => {
+        for (const modules of [scope.modules, ['cronjob']]) {
+            setup();
+            rows[0].runtimeScope.environmentCode = environmentCode;
+            const approved = structuredClone(request);
+            approved.headers['x-nodics-environment'] = environmentCode;
+            approved.headers['x-nodics-modules'] = modules.join(',');
+            approved.requireExactModules = false;
+            const result = await issuer.getInternalAuthToken(approved);
+            assert.equal(result.result.authToken, 'signed-runtime-token');
+            assert.equal(reads, 1);
+            assert.equal(issued.length, 1);
+            assert.deepEqual(issued[0].modules, modules);
+            assert(issued[0].modules.every(module => rows[0].runtimeScope.modules.includes(module)));
+            assert.deepEqual(issued[0].permissions, scope.permissions);
+            assert.deepEqual(issued[0].userGroups, []);
+        }
+    });
+}
 test('native local runtimes may share the generated local service principal while matching one grant', async () => {
     setup();
     const localScope = { ...scope, environmentCode: 'kickoffLocal', serverCode: 'wasteServer', instanceCode: 'kickoff-local-waste-1' };

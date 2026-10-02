@@ -17,6 +17,11 @@ Those responsibilities belong to `nConfig`. `nCommon` contributes shared
 runtime primitives after `nConfig` has prepared the active module hierarchy and
 effective layered configuration.
 
+Common error DTOs reuse nConfig's canonical bounded diagnostic sanitizer for
+messages, stacks, metadata and nested causes. See the
+[outward error contract](llm/contracts/README.md#outward-error-privacy);
+this does not qualify third-party APM or raw-error capture.
+
 ## When To Use This Module
 
 Use `nCommon` when a deterministic helper, error/status contract, processor,

@@ -14,6 +14,7 @@
 module.exports = {
   /** Maps only route, body and trace fields into the declared server-owned operation. */
   invoke: function (operation, request, callback) {
+    request.httpResponse?.setHeader?.("Cache-Control", "no-store");
     const http = request.httpRequest || {},
       p = http.body || {},
       h = http.headers || {};
@@ -22,15 +23,34 @@ module.exports = {
       authData: request.authData,
       code: http.params?.code,
       payload: p,
+      query: http.query || {},
       authorization: h.authorization,
       idempotencyKey: h["idempotency-key"] || p.idempotencyKey,
       correlationId: h["x-correlation-id"] || request.requestId,
     };
     const promise = Promise.resolve()
-      .then(() =>
-        SERVICE.DefaultDigitalCommerceMerchantService[operation](input),
-      )
-      .then((data) => ({ data }));
+      .then(() => {
+        if (["validate", "confirm"].includes(operation)) {
+          SERVICE.DefaultLoggerService.assertSensitiveRequest(request);
+          SERVICE.DefaultLoggerService.inheritRequestPrivacy(input, request);
+        }
+        if (
+          ![
+            "validate",
+            "eligibleMerchants",
+            "claim",
+            "queue",
+            "workspace",
+            "confirm",
+          ].includes(operation)
+        )
+          throw new CLASSES.NodicsError("ERR_DIGITAL_MERCHANT_INVALID");
+        return FACADE.DefaultDigitalCommerceMerchantFacade[operation](input);
+      })
+      .then((data) => ({ data }))
+      .catch(() => {
+        throw new CLASSES.NodicsError("ERR_DIGITAL_MERCHANT_INVALID");
+      });
     return callback
       ? promise.then((r) => callback(null, r)).catch(callback)
       : promise;
@@ -50,6 +70,10 @@ module.exports = {
   /** Reads only scoped merchant requests. */
   queue: function (r, c) {
     return this.invoke("queue", r, c);
+  },
+  /** Reads inert current staff outlet choices without accepting tenant or merchant identity. @param {Object} r Signed request. @param {Function} c Callback. @returns {Promise<Object>|void} Safe owner workspace. */
+  workspace: function (r, c) {
+    return this.invoke("workspace", r, c);
   },
   /** Confirms fulfillment through the configured provider. */
   confirm: function (r, c) {

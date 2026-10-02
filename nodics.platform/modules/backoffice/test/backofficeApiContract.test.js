@@ -22,20 +22,193 @@ const service = require("../src/service/contract/defaultBackofficeContractServic
 const routers = require("../src/router/routers").backoffice;
 const statusDefinitions = require("../src/utils/statusDefinitions");
 const repositoryRoot = path.resolve(__dirname, "../../../..");
+const previousConfig = global.CONFIG;
+const previousService = global.SERVICE;
+global.SERVICE = {
+  ...previousService,
+  DefaultEnterpriseManagementService: require(
+    "../../profile/src/service/enterprise/defaultEnterpriseManagementService",
+  ),
+  DefaultEnterpriseSetupContinuationService: require(
+    "../../profile/src/service/enterprise/defaultEnterpriseSetupContinuationService",
+  ),
+};
+const profileProperties = require(
+  path.join(
+    repositoryRoot,
+    "nodics.platform/modules/profile/config/properties",
+  ),
+);
+const mediaProperties = require(
+  path.join(repositoryRoot, "nodics.wcms/modules/media/config/properties"),
+);
+global.CONFIG = {
+  get: (name) =>
+    name === "media" ? mediaProperties.media : profileProperties[name],
+};
+require("node:test").after(() => {
+  if (previousConfig === undefined) delete global.CONFIG;
+  else global.CONFIG = previousConfig;
+  if (previousService === undefined) delete global.SERVICE;
+  else global.SERVICE = previousService;
+});
 
-const prefilledField = { name: "enterpriseCode", label: "Enterprise", type: "TEXT", defaultFromParameter: "enterpriseCode" };
+const prefilledField = {
+  name: "enterpriseCode",
+  label: "Enterprise",
+  type: "TEXT",
+  defaultFromParameter: "enterpriseCode",
+};
 assert(service.validateBackendWorkspaceField(prefilledField));
-assert(!service.validateBackendWorkspaceField({ ...prefilledField, type: "PASSWORD" }));
-assert(!service.validateBackendWorkspaceField({ ...prefilledField, defaultFromParameter: "../enterprise" }));
+assert(
+  !service.validateBackendWorkspaceField({
+    ...prefilledField,
+    type: "PASSWORD",
+  }),
+);
+assert(
+  !service.validateBackendWorkspaceField({
+    ...prefilledField,
+    defaultFromParameter: "../enterprise",
+  }),
+);
 
 const capabilities = [
-  require(path.join(repositoryRoot, "nodics.platform/modules/profile/src/service/defaultProfileBackofficeCapabilityService")).getCapability(),
-  require(path.join(repositoryRoot, "nodics.wcms/modules/cms/src/service/defaultCmsBackofficeCapabilityService")).getCapability(),
-  require(path.join(repositoryRoot, "nodics.process/modules/cronjob/src/service/defaultCronjobBackofficeCapabilityService")).getCapability(),
-  require(path.join(repositoryRoot, "nodics.process/modules/workflow/src/service/defaultWorkflowBackofficeCapabilityService")).getCapability(),
-  require(path.join(repositoryRoot, "nodics.wcms/modules/media/src/service/defaultMediaBackofficeCapabilityService")).getCapability(),
+  require(
+    path.join(
+      repositoryRoot,
+      "nodics.platform/modules/profile/src/service/defaultProfileBackofficeCapabilityService",
+    ),
+  ).getCapability(),
+  require(
+    path.join(
+      repositoryRoot,
+      "nodics.wcms/modules/cms/src/service/defaultCmsBackofficeCapabilityService",
+    ),
+  ).getCapability(),
+  require(
+    path.join(
+      repositoryRoot,
+      "nodics.process/modules/cronjob/src/service/defaultCronjobBackofficeCapabilityService",
+    ),
+  ).getCapability(),
+  require(
+    path.join(
+      repositoryRoot,
+      "nodics.process/modules/workflow/src/service/defaultWorkflowBackofficeCapabilityService",
+    ),
+  ).getCapability(),
+  require(
+    path.join(
+      repositoryRoot,
+      "nodics.wcms/modules/media/src/service/defaultMediaBackofficeCapabilityService",
+    ),
+  ).getCapability(),
   require("../src/service/defaultBackofficeBackofficeCapabilityService").getCapability(),
-];
+].map((metadata) => JSON.parse(JSON.stringify(metadata)));
+
+const nativeWorkspace = {
+  contractVersion: 1,
+  renderer: "axis.workspace.native",
+  workspaceCode: "media.library",
+  viewCode: "library",
+  title: "Media Library",
+};
+for (const ownerSelector of [
+  { runtimeRoleCode: "WCMS_STAGED" },
+  { publicationRole: "STAGED" },
+  { runtimeRoleCode: "WCMS_STAGED", publicationRole: "STAGED" },
+  { runtimeRoleCode: "WCMS_ONLINE", publicationRole: "ONLINE" },
+])
+  assert(
+    service.validateBackendWorkspace({ ...nativeWorkspace, ownerSelector }),
+  );
+for (const ownerSelector of [
+  {},
+  null,
+  [],
+  "WCMS_STAGED",
+  { server: "staged" },
+  { environment: "local" },
+  { instanceId: "instance" },
+  { endpoint: "https://target.test" },
+  { tenant: "other" },
+  { runtimeRoleCode: "wcms_staged" },
+  { runtimeRoleCode: "../WCMS_STAGED" },
+  { runtimeRoleCode: "A".repeat(65) },
+  { runtimeRoleCode: undefined },
+  { publicationRole: "UNKNOWN" },
+  { publicationRole: false },
+  { runtimeRoleCode: "WCMS_STAGED", authorization: "Bearer token" },
+])
+  assert(
+    !service.validateBackendWorkspace({ ...nativeWorkspace, ownerSelector }),
+  );
+assert(
+  service.validateBackendWorkspace(nativeWorkspace),
+  "selector remains optional for existing native descriptors",
+);
+const selectorSchema =
+  contracts.backendWorkspace.oneOf[1].properties.ownerSelector;
+assert.equal(selectorSchema.additionalProperties, false);
+assert.equal(selectorSchema.minProperties, 1);
+assert.deepEqual(Object.keys(selectorSchema.properties).sort(), [
+  "publicationRole",
+  "runtimeRoleCode",
+]);
+assert.deepEqual(selectorSchema.properties.publicationRole.enum, [
+  "STAGED",
+  "ONLINE",
+]);
+assert.equal(selectorSchema.properties.runtimeRoleCode.maxLength, 64);
+assert.strictEqual(
+  contracts.backendWorkspace.oneOf[0].properties.ownerSelector,
+  selectorSchema,
+);
+const mediaCapability = capabilities.find(
+  (item) => item.moduleName === "media" || item.capabilityId === "media",
+);
+const realMediaWorkspaces = (
+  mediaCapability ? mediaCapability.navigation : capabilities[4].navigation
+).filter(
+  (item) =>
+    item.id === "media-library" || item.id === "media-publication-requests",
+);
+assert.equal(realMediaWorkspaces.length, 2);
+for (const item of realMediaWorkspaces) {
+  assert.deepEqual(item.backendWorkspace.ownerSelector, {
+    runtimeRoleCode: "WCMS_STAGED",
+    publicationRole: "STAGED",
+  });
+  assert(
+    service.validateBackendWorkspace(item.backendWorkspace),
+    "real Media workspace metadata must pass the shared strict contract",
+  );
+  assert(
+    !service.validateBackendWorkspace({
+      ...item.backendWorkspace,
+      ownerSelector: {},
+    }),
+  );
+  assert(
+    !service.validateBackendWorkspace({
+      ...item.backendWorkspace,
+      ownerSelector: { runtimeRoleCode: "WCMS_STAGED", server: "other" },
+    }),
+  );
+  const { ownerSelector, ...legacyWorkspace } = item.backendWorkspace;
+  assert(
+    service.validateBackendWorkspace(legacyWorkspace),
+    "selector remains optional for existing declarative descriptors",
+  );
+  assert(
+    !service.validateBackendWorkspaceEndpoint({
+      ...item.backendWorkspace.tabs[0].sections[0].endpoint,
+      ownerSelector,
+    }),
+    "selector is workspace-level only, not endpoint authority",
+  );
+}
 
 assert(contracts.registrationBatch.required.includes("registrations"));
 assert(contracts.registration.properties.moduleIndex);
@@ -57,36 +230,35 @@ assert(contracts.bootstrapData.required.includes("tenantCode"));
 assert(contracts.bootstrapData.required.includes("documentationSources"));
 assert(contracts.bootstrapData.required.includes("startupValidation"));
 assert(contracts.bootstrapData.required.includes("operationalReadiness"));
-assert.deepStrictEqual(contracts.operationalReadinessReport.properties.state.enum, [
-  "READY",
-  "NEEDS_ATTENTION",
-  "NOT_READY",
-]);
+assert.deepStrictEqual(
+  contracts.operationalReadinessReport.properties.state.enum,
+  ["READY", "NEEDS_ATTENTION", "NOT_READY"],
+);
 assert(
   contracts.operationalReadinessSection.required.includes("blockers") &&
     contracts.operationalReadinessBlocker.required.includes("suggestedAction"),
   "operational readiness sections must expose guided blockers for Axis and tooling",
 );
 assert.strictEqual(
-  contracts.functionalModuleRegistration.properties.runtimeObservations.items.properties.reasonCode.type,
+  contracts.functionalModuleRegistration.properties.runtimeObservations.items
+    .properties.reasonCode.type,
   "string",
   "runtime observations must expose stable reason codes for Axis and support diagnostics",
 );
 assert.strictEqual(
-  contracts.functionalModuleRegistration.properties.runtimeObservations.items.properties.recoveryAction.type,
+  contracts.functionalModuleRegistration.properties.runtimeObservations.items
+    .properties.recoveryAction.type,
   "string",
   "runtime observations must expose recovery guidance without frontend inference",
 );
-assert.deepStrictEqual(contracts.startupValidationReport.properties.state.enum, [
-  "READY",
-  "NEEDS_ATTENTION",
-  "NOT_READY",
-]);
-assert.deepStrictEqual(contracts.startupValidationFinding.properties.severity.enum, [
-  "ERROR",
-  "WARNING",
-  "INFO",
-]);
+assert.deepStrictEqual(
+  contracts.startupValidationReport.properties.state.enum,
+  ["READY", "NEEDS_ATTENTION", "NOT_READY"],
+);
+assert.deepStrictEqual(
+  contracts.startupValidationFinding.properties.severity.enum,
+  ["ERROR", "WARNING", "INFO"],
+);
 assert(
   contracts.startupValidationFinding.required.includes("auditRequired"),
   "startup validation warnings must declare whether dismissal/acknowledgement is auditable",
@@ -95,15 +267,15 @@ assert(
   contracts.startupValidationFinding.required.includes("repair"),
   "startup validation findings must declare backend-owned repair metadata",
 );
-assert.deepStrictEqual(contracts.startupRepairMetadata.properties.eligibility.enum, [
-  "AUTOMATIC",
-  "MANUAL",
-  "NOT_AVAILABLE",
-]);
+assert.deepStrictEqual(
+  contracts.startupRepairMetadata.properties.eligibility.enum,
+  ["AUTOMATIC", "MANUAL", "NOT_AVAILABLE"],
+);
 assert(
   contracts.startupRepairMetadata.required.includes("available") &&
     contracts.startupRepairMetadata.required.includes("operation") &&
-    contracts.startupRepairMetadata.required.includes("unavailableReason") === false,
+    contracts.startupRepairMetadata.required.includes("unavailableReason") ===
+      false,
   "repair metadata must include stable operation fields while leaving unavailableReason conditional",
 );
 assert(
@@ -112,7 +284,9 @@ assert(
   "startup finding acknowledgement must expose bounded evidence and require an operator reason",
 );
 assert(
-  contracts.startupValidationReport.properties.summary.required.includes("acknowledged"),
+  contracts.startupValidationReport.properties.summary.required.includes(
+    "acknowledged",
+  ),
   "startup validation summary must count backend-owned acknowledgements",
 );
 assert(
@@ -166,8 +340,13 @@ assert.strictEqual(
   routers.operationalReadiness.acknowledgeStartupFinding.permission,
   "backoffice.startupValidation.acknowledge",
 );
-assert.deepStrictEqual(contracts.publicBootstrapData.properties.endpointRoles.properties.cms.enum, ["ONLINE"]);
-assert(contracts.publicBootstrapData.properties.endpoints.properties.engagement);
+assert.deepStrictEqual(
+  contracts.publicBootstrapData.properties.endpointRoles.properties.cms.enum,
+  ["ONLINE"],
+);
+assert(
+  contracts.publicBootstrapData.properties.endpoints.properties.engagement,
+);
 assert(contracts.publicBootstrapData.properties.endpoints.properties.editorial);
 assert.deepStrictEqual(contracts.moduleAvailability.properties.state.enum, [
   "UP",
@@ -264,11 +443,13 @@ assert(
   "public bootstrap response schema must be declared",
 );
 assert(
-  contracts.backofficeMetadata.properties.navigation.items.properties.workbenchPresentation.properties.summary,
+  contracts.backofficeMetadata.properties.navigation.items.properties
+    .workbenchPresentation.properties.summary,
   "navigation workbench presentation summary must be part of the public contract",
 );
 assert(
-  contracts.backofficeMetadata.properties.navigation.items.properties.workbenchTarget.properties.publicationHandoffRoute,
+  contracts.backofficeMetadata.properties.navigation.items.properties
+    .workbenchTarget.properties.publicationHandoffRoute,
   "documentation governance handoff route metadata must be part of the public contract",
 );
 assert(
@@ -283,7 +464,15 @@ assert(
   routers.axisPolicy.update.responses["200"],
   "Axis policy update response schema must be declared",
 );
-["SUC_BOF_00014", "SUC_BOF_00015", "SUC_BOF_00016", "SUC_BOF_00017", "SUC_BOF_00018", "SUC_BOF_00019", "SUC_BOF_00020"].forEach((code) => {
+[
+  "SUC_BOF_00014",
+  "SUC_BOF_00015",
+  "SUC_BOF_00016",
+  "SUC_BOF_00017",
+  "SUC_BOF_00018",
+  "SUC_BOF_00019",
+  "SUC_BOF_00020",
+].forEach((code) => {
   assert(
     statusDefinitions[code],
     code + " must be registered before its controller response is serialized",
@@ -487,7 +676,9 @@ assert.strictEqual(
 );
 assert.strictEqual(
   service.validateBackofficeMetadata({
-    navigation: [{ id: "child", label: "Child", parentModuleName: "nodics.wcms" }],
+    navigation: [
+      { id: "child", label: "Child", parentModuleName: "nodics.wcms" },
+    ],
   }),
   false,
   "cross-module parent references must include a parent id",
@@ -751,39 +942,51 @@ let registration = {
   endpoint: "https://cms.example/nodics/cms",
   capabilities: ["router"],
   leaseTtlMs: 30000,
-  authorityClaims: [{
-    kind: "schema",
-    moduleName: "cms",
-    claimName: "cmsPage",
-    authorityContext: "cms.cmsPage",
-  }],
+  authorityClaims: [
+    {
+      kind: "schema",
+      moduleName: "cms",
+      claimName: "cmsPage",
+      authorityContext: "cms.cmsPage",
+    },
+  ],
   backoffice: capabilities[1],
 };
 assert(service.validateRegistration(registration));
-assert(service.validateRegistration(Object.assign({}, registration, {
-  activationDataPackages: [{
-    code: "cms:core-reference",
-    classification: "reference",
-    owner: "cms",
-    required: true,
-    trigger: "ACTIVATION",
-    targetModule: "cms",
-    operation: "IMPORT",
-    dataType: "core",
-  }],
-})));
+assert(
+  service.validateRegistration(
+    Object.assign({}, registration, {
+      activationDataPackages: [
+        {
+          code: "cms:core-reference",
+          classification: "reference",
+          owner: "cms",
+          required: true,
+          trigger: "ACTIVATION",
+          targetModule: "cms",
+          operation: "IMPORT",
+          dataType: "core",
+        },
+      ],
+    }),
+  ),
+);
 assert.strictEqual(
-  service.validateRegistration(Object.assign({}, registration, {
-    activationDataPackages: [{
-      code: "cms:core-reference",
-      classification: "reference",
-      owner: "cms",
-      required: true,
-      trigger: "AUTO",
-      operation: "IMPORT",
-      dataType: "core",
-    }],
-  })),
+  service.validateRegistration(
+    Object.assign({}, registration, {
+      activationDataPackages: [
+        {
+          code: "cms:core-reference",
+          classification: "reference",
+          owner: "cms",
+          required: true,
+          trigger: "AUTO",
+          operation: "IMPORT",
+          dataType: "core",
+        },
+      ],
+    }),
+  ),
   false,
   "activation package descriptors must fail closed when trigger semantics are not bounded",
 );
@@ -826,7 +1029,11 @@ assert.strictEqual(
   service.validateRegistrationBatch(
     {
       instanceId: "runtime-1",
-      runtimeRole: { code: "WCMS_STAGED", publication: "STAGED", secret: "invalid" },
+      runtimeRole: {
+        code: "WCMS_STAGED",
+        publication: "STAGED",
+        secret: "invalid",
+      },
       registrations: [registration],
     },
     10,

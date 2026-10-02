@@ -206,6 +206,17 @@ async function run() {
     assert.strictEqual(staleAttempts, 2,
         'stale-token recovery must retry the same bounded registration cycle exactly once');
 
+    staleAttempts = 0;
+    refreshedRuntimeTokens = 0;
+    SERVICE.DefaultModuleService.fetch = async () => {
+        staleAttempts++;
+        throw Object.assign(new Error('credentials unavailable'), { code: 'ERR_AUTH_00001' });
+    };
+    assert.equal(await service.runRegistration(), false);
+    assert.equal(staleAttempts, 2, 'persistent authentication rejection cannot recurse');
+    assert.equal(refreshedRuntimeTokens, 1);
+    assert.equal(service._terminalRegistrationFailure, false);
+
     // A BackOffice restart temporarily rejects registration. The same runtime
     // must recover on its configured retry loop without restarting itself.
     NODICS.getInternalAuthToken = () => 'service-token';
@@ -229,6 +240,58 @@ async function run() {
     assert(recoveryAttempts >= 2, 'registration must retry after BackOffice becomes available again');
     assert(recovering._metrics.failures >= 1, 'the unavailable BackOffice attempt must remain observable');
     assert(recovering._metrics.successes >= 1, 'the next retry must recover registration without a runtime restart');
+
+    const permanent = Object.assign({}, definition, { _started: false, _terminalRegistrationFailure: false,
+        _registrationPromise: null, _timer: null, _running: false, _operationalState: { expiresAt: Date.now() + 30000 },
+        _metrics: { attempts: 0, successes: 0, failures: 0 }, LOG: { warn: (...args) => warnings.push(args) } });
+    let permanentAttempts = 0;
+    const warnings = [];
+    SERVICE.DefaultModuleService.fetch = async () => {
+        permanentAttempts++;
+        throw Object.assign(new Error('private-invalid-descriptor-sentinel'), { code: 'ERR_BOF_00000', responseCode: 400 });
+    };
+    const refreshBefore = refreshedRuntimeTokens;
+    permanent.start();
+    await new Promise(resolve => setTimeout(resolve, 30));
+    assert.equal(permanentAttempts, 1, 'permanent validation must not generate a five-second retry storm');
+    assert.equal(permanent._timer, null);
+    assert.equal(await permanent.runRegistration(), false);
+    assert.equal(permanentAttempts, 1, 'a latched rejected cycle cannot be silently replayed');
+    assert.equal(refreshedRuntimeTokens, refreshBefore);
+    assert.equal(permanent.getReadinessStatus().status, 'DOWN', 'old operational evidence cannot conceal a terminal rejection');
+    assert.equal(permanent.getDiagnostics().readiness.reasonCode, 'BACKOFFICE_REGISTRATION_REPAIR_REQUIRED');
+    assert.equal(JSON.stringify(warnings).includes('private-invalid-descriptor-sentinel'), false);
+    assert.equal(JSON.stringify(permanent.getDiagnostics()).includes('private-invalid-descriptor-sentinel'), false);
+    for (const error of [{ code: 'ERR_BOF_00000', status: 503, responseCode: 400 },
+        { code: 'ERR_BOF_00000', responseCode: 400, metadata: { transportFailure: { code: 'REMOTE_HTTP_503', httpStatus: 503 } } },
+        { code: 'ERR_AUTH_00001', responseCode: 400 }, { code: 'ERR_SYS_00000', responseCode: 400 },
+        { message: 'Invalid module registration batch', status: 400 }])
+        assert.equal(permanent.isPermanentRegistrationFailure(error), false);
+    assert.equal(permanent.isPermanentRegistrationFailure({ code: 'ERR_BOF_00000', status: 400 }), true);
+    assert.equal(permanent.isRefreshableAuthorizationFailure(new Error('expired runtime credential')), false,
+        'message text must not trigger credential refresh');
+    await permanent.stop(false);
+    SERVICE.DefaultModuleService.fetch = async () => ({ data: { operationalState: { instanceId: 'cms-instance',
+        projectCode: 'envs', expiresAt: Date.now() + 30000, modules: ['cms', 'utility'].map(moduleName => ({ moduleName, enabled: true })) } } });
+    assert.equal(await permanent.runRegistration(), true, 'explicit stop resets the rejected cycle after operator repair');
+
+    for (const failure of [{ code: 'ECONNREFUSED' }, { code: 'EOPENBREAKER' }, { status: 503, code: 'ERR_BOF_00000' },
+        { code: 'ERR_BOF_00000', responseCode: 400, metadata: { transportFailure: { code: 'REMOTE_HTTP_503', httpStatus: 503 } } }]) {
+        let attempts = 0;
+        SERVICE.DefaultModuleService.fetch = async () => {
+            attempts++;
+            if (attempts === 1) throw Object.assign(new Error('temporary unavailable'), failure);
+            return { data: { operationalState: { instanceId: 'cms-instance', projectCode: 'envs',
+                expiresAt: Date.now() + 30000, modules: ['cms', 'utility'].map(moduleName => ({ moduleName, enabled: true })) } } };
+        };
+        const transient = Object.assign({}, definition, { _started: false, _registrationPromise: null,
+            _metrics: { attempts: 0, successes: 0, failures: 0 }, LOG: { warn() {} } });
+        transient.start();
+        await new Promise(resolve => setTimeout(resolve, 25));
+        assert.ok(transient._metrics.successes >= 1, 'transient connection/circuit/503 failure must recover');
+        assert.equal(transient._terminalRegistrationFailure, false);
+        await transient.stop(false);
+    }
     console.log('Module registration agent validated');
 }
 

@@ -73,6 +73,13 @@ from a directory name or from the presence of `package.json` and `nodics.js`.
 Runtime artifacts must live where the Nodics loader can discover and merge them:
 
 - services: `src/service/**/*Service.js`
+- communication presentation resources: `src/templates/<channel>/<name>/` through
+  Communication's exported template service and existing discovered/indexed paths;
+  inert HTML/text resources are not executable service-loader inputs. EMAIL uses
+  `email/<name>/template.json` and locale `subject.txt`, `email.html`, `email.txt`;
+  SMS uses `sms/<name>/template.json` and locale `message.txt`. OTP is a purpose,
+  not a channel folder. Follow the
+  [module-owned presentation principle](nodics-principles.md#module-owned-email-and-sms-presentation).
 - controllers: `src/controller/**/*Controller.js`
 - facades: `src/facade/**/*Facade.js`
 - route registries: `src/router/routers.js`

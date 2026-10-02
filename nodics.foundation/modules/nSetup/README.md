@@ -72,6 +72,12 @@ release process. nTooling's principle audit checks its discovery and core clause
 
 ## Runtime Boundary
 
+Email/SMS changes follow the
+[module-owned presentation principle](llm/contracts/nodics-principles.md#module-owned-email-and-sms-presentation):
+domain-owned resource files, framework-owned rendering/delivery and minimal
+customer/runtime overrides. The principle links to the executable owner contract
+and the detailed authoring guide.
+
 Do not add runtime module behavior here unless `nSetup` is intentionally promoted into the active module hierarchy with a clear startup contract.
 
 Do not include `nSetup` in server/module startup lists.

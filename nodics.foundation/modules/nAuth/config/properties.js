@@ -20,16 +20,45 @@
 module.exports = {
   bootstrapIdentity: {
     source: "environment",
-    adminPassword: { $config: "env", name: "NODICS_BOOTSTRAP_ADMIN_PASSWORD", fallback: null },
-    servicePassword: { $config: "env", name: "NODICS_BOOTSTRAP_SERVICE_PASSWORD", fallback: null },
-    serviceApiKey: { $config: "env", name: "NODICS_BOOTSTRAP_SERVICE_API_KEY", fallback: null },
+    adminPassword: {
+      $config: "env",
+      name: "NODICS_BOOTSTRAP_ADMIN_PASSWORD",
+      fallback: null,
+    },
+    servicePassword: {
+      $config: "env",
+      name: "NODICS_BOOTSTRAP_SERVICE_PASSWORD",
+      fallback: null,
+    },
+    serviceApiKey: {
+      $config: "env",
+      name: "NODICS_BOOTSTRAP_SERVICE_API_KEY",
+      fallback: null,
+    },
   },
   defaultAuthDetail: {
     apiKey: { $config: "env", name: "NODICS_API_KEY", fallback: null },
   },
   authSecurity: {
+    sessionContextValidation: {
+      qualified: false,
+      validatorService: "DefaultModuleSessionContextValidationService",
+      requiredPrincipalTypes: [],
+      localValidatorService: null,
+      connectionName: null,
+      remoteQualified: false,
+      captureProtectionQualified: false,
+      allowInsecureLoopback: false,
+      timeoutMs: 5000,
+      permission: "profile.sessionContext.validate",
+    },
+    authorizationPolicy: { enabled: false, qualified: false, version: 1 },
     jwt: {
-      secret: { $config: "env", name: "NODICS_JWT_SECRET", fallback: null },
+      secret: {
+        $config: "env",
+        name: "NODICS_JWT_SECRET",
+        fallback: null,
+      },
       minimumSecretLength: 32,
       issuer: "nodics",
       audience: "nodics-services",
@@ -57,7 +86,11 @@ module.exports = {
       requireScopes: true,
       allowLegacyHumanPrincipals: false,
       allowLegacyPlaintextLookup: false,
-      pepper: { $config: "env", name: "NODICS_API_KEY_PEPPER", fallback: null },
+      pepper: {
+        $config: "env",
+        name: "NODICS_API_KEY_PEPPER",
+        fallback: null,
+      },
       minimumPepperLength: 32,
     },
     audit: {
@@ -209,6 +242,7 @@ module.exports = {
       "profile.enterpriseAccess.search",
       "profile.enterpriseAccess.assign",
       "profile.enterpriseAccess.register",
+      "profile.enterpriseAccess.applyDecision",
       "cms.backoffice.view",
       "cms.backoffice.manage",
       "cms.publication.emergencyOverride",
@@ -258,6 +292,7 @@ module.exports = {
       "process.definition.publish",
       "process.definition.delete",
       "process.instance.start",
+      "process.instance.start.internal",
       "process.instance.cancel",
       "process.instance.retry",
       "process.instance.compensate",

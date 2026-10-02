@@ -1,5 +1,10 @@
 # nConfig Agent Contract
 
+Apply the [sensitive request capture contract](../nRouter/llm/contracts/request-capture-privacy-contract.md)
+to logger or request-context changes. Preserve synchronous pre-buffer suppression,
+exact-object admission, disabled-capture qualification and bounded redaction.
+Ambient suppression, serialized flags and an APM send filter are not entry proof.
+
 Offline maintenance reuses `DefaultFrameworkInitializerService.loadMaintenanceServices`
 after effective configuration discovery. It loads utilities/classes/services in
 module order without lifecycle hooks, deployment scripts, generated runtime
@@ -39,6 +44,12 @@ existing role-profile projection. Do not add accelerator/customer names to a
 Foundation allowlist to enable this mechanism. Profiles use only selected
 contributions and never activate modules or authorize imports. Preserve the
 existing profile merge precedence and remove unselected profile maps from CONFIG.
+
+Explicit inactive-owner configuration uses selected-server metadata and the
+existing discovery/merge boundary, never arbitrary paths or module activation.
+Resolve only the selected role and preserve later collection replacement. Keep
+offline projection independent of global runtime state. See
+[the selector contract](llm/contracts/configuration-inheritance-contract.md#explicit-inactive-owner-configuration).
 
 Apply [server build and lifecycle ownership](../nConfig/llm/contracts/configuration-inheritance-contract.md#server-build-and-lifecycle-ownership).
 Keep generation, loading, cleanup and test discovery on the same selected server;
@@ -81,3 +92,9 @@ project/environment/server/node contributions through the same binding and merge
 sequence. This preserves explicit replacement/keyed semantics for framework-owned
 tooling defaults; never merge defaults back into already-resolved collections.
 This projection does not activate modules or alter runtime startup authority.
+
+Reusable isolated composed-graph projection belongs to
+`DefaultDeploymentConfigurationProjectionService` here; nTooling's historical
+configuration probe delegates to it. Runtime owners must not depend on the
+non-runtime tooling package or copy the canonical loader. Treat returned
+properties as private deployment input, not public metadata or approval proof.

@@ -10,6 +10,7 @@
  */
 
 const util = require('util');
+const defaultRetryPolicy = require('../init/defaultImportRetryPolicyService');
 
 /**
  * @module nodics.foundation/modules/nData/nImport/import/src/service/process/file/defaultFileDataImportProcessService
@@ -386,7 +387,7 @@ module.exports = {
      */
     recordImportBatchFailure: function (request, options, batch, error) {
         let header = request.fileData.header;
-        let recordDiagnosticFailure = this.shouldRecordImportFailure(request);
+        let recordDiagnosticFailure = this.shouldRecordImportFailure(request, error);
         options.errors = options.errors || [];
         batch.forEach(entry => {
             let recordError = this.createRecordImportFailureError(request, header, entry, error);
@@ -414,9 +415,12 @@ module.exports = {
      * failures makes successful later phases look failed.
      *
      * @param {Object} request Import request containing phase metadata.
-     * @returns {boolean} True when the failure is final or fail-fast is active.
+     * @param {*} [error] Owner failure to classify before retry.
+     * @returns {boolean} True when the failure is terminal, final or fail-fast is active.
      */
-    shouldRecordImportFailure: function (request) {
+    shouldRecordImportFailure: function (request, error) {
+        const retryPolicy = SERVICE.DefaultImportRetryPolicyService || defaultRetryPolicy;
+        if (error && !retryPolicy.canRetry(error)) return true;
         if (this.shouldStopImportOnFailure(request)) {
             return true;
         }

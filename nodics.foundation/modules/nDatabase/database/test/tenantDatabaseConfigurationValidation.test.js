@@ -24,6 +24,9 @@ class NodicsError extends Error {
     constructor(code, message) { super(message || code && code.message || String(code)); this.code = typeof code === 'string' ? code : code && code.code; }
 }
 global.CLASSES = { NodicsError };
+global.SERVICE = {
+    DefaultMongodbDatabaseConnectionHandlerService: require('../../mongodb/src/service/connection/defaultMongodbDatabaseConnectionHandlerService')
+};
 
 let activeModules = ['default', 'profile'];
 let activeTenants = ['default', 'tenantA'];
@@ -94,6 +97,7 @@ assert.throws(() => service.getDatabaseConfiguration('profile', 'tenantWithoutDa
 configurations.tenantInvalidAdapter = { default: { options: { databaseType: 'mongodb' }, mongodb: { options: {} } } };
 activeTenants.push('tenantInvalidAdapter');
 assert.throws(() => service.getDatabaseConfiguration('profile', 'tenantInvalidAdapter'), /connectionHandler/);
+activeTenants = ['default', 'tenantA'];
 
 let tenantADatabase = { master: { name: 'tenant-a-profile' } };
 service.addTenantDatabase('profile', 'tenantA', tenantADatabase);

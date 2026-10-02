@@ -48,14 +48,14 @@ function createGeneratedService(store, captures) {
     return {
         get: async function (request) {
             captures.push(clone(request));
-            return { result: store.filter(item => matches(item, request.query)).map(clone) };
+            return { code: 'SUC_DBS_00000', result: store.filter(item => matches(item, request.query)).map(clone) };
         }
     };
 }
 
 const instances = [
-    { code: 'instance-1', definitionCode: 'contentApproval', status: 'RUNNING', startedAt: new Date('2026-08-09T08:00:00Z') },
-    { code: 'instance-2', definitionCode: 'contentApproval', status: 'COMPLETED', startedAt: new Date('2026-08-09T07:00:00Z') }
+    { code: 'instance-1', definitionCode: 'contentApproval', version: 1, status: 'RUNNING', startedAt: new Date('2026-08-09T08:00:00Z') },
+    { code: 'instance-2', definitionCode: 'contentApproval', version: 1, status: 'COMPLETED', startedAt: new Date('2026-08-09T07:00:00Z') }
 ];
 const tasks = [
     { code: 'task-1', instanceCode: 'instance-1', nodeCode: 'review', assignee: 'content-admin', status: 'OPEN' },
@@ -65,10 +65,16 @@ const auditEvents = [
     { code: 'audit-1', definitionCode: 'contentApproval', instanceCode: 'instance-1', eventType: 'task.created', outcome: 'success' }
 ];
 const captures = [];
+const versions = [{
+    definitionCode: 'contentApproval', version: 1, status: 'PUBLISHED',
+    graph: { nodes: [{ code: 'review', type: 'TASK' }, { code: 'approve', type: 'TASK' }] }
+}];
 
 global.SERVICE = {
     DefaultProcessInstanceService: createGeneratedService(instances, captures),
     DefaultProcessTaskService: createGeneratedService(tasks, captures),
+    DefaultProcessDefinitionVersionService: createGeneratedService(versions, captures),
+    DefaultProcessRuntimeLifecycleService: require('../modules/workflow/src/service/operation/defaultProcessRuntimeLifecycleService'),
     DefaultProcessAuditEventService: createGeneratedService(auditEvents, captures)
 };
 
@@ -103,7 +109,7 @@ const inspectionService = require('../modules/workflow/src/service/operation/def
         query: { definitionCode: 'contentApproval', instanceCode: 'instance-1', eventType: 'task.created' }
     });
     assert.strictEqual(audit.data.length, 1);
-    assert.deepStrictEqual(captures[4].query, {
+    assert.deepStrictEqual(captures.find(capture => capture.query.eventType === 'task.created').query, {
         definitionCode: 'contentApproval',
         instanceCode: 'instance-1',
         eventType: 'task.created'

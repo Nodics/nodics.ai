@@ -27,6 +27,11 @@ No additional identity map, copied capability service or import path is required
 - Use media references instead of embedding physical storage paths.
 - Preserve publication, localization, route resolution, and renderer mapping contracts.
 
+Static employee UI composition may opt into project-shared Online delivery using
+exact paths on an existing publication baseline Site descriptor. Employee
+authentication and permissions remain unchanged; business data and ordinary CMS
+reads stay tenant-local. See [shared employee composition](llm/contracts/content-delivery-contract.md#shared-employee-composition).
+
 ## Documentation
 
 Deep documentation lives in:

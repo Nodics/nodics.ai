@@ -41,6 +41,57 @@ module.exports = {
 
 /** Merchant confirmation is separated from the customer-owned claim operation. */
 module.exports.digitalCore.merchant = {};
+module.exports.digitalCore.notifications = {
+  recipientSource: {
+    secured: true,
+    authTokenTypes: ["service"],
+    accessGroups: ["serviceAccountUserGroup"],
+    permission: "commerce.digital.notification.source.read",
+    apiExposure: "commerceNotificationSources",
+    key: "/internal/notifications/recipient-source",
+    requestPrivacy: { sensitive: true },
+    method: "POST",
+    controller: "DefaultDigitalCommerceNotificationController",
+    operation: "recipientSource",
+    cache: { enabled: false },
+  },
+  workspace: {
+    secured: true,
+    authTokenTypes: ["access"],
+    accessGroups: ["employeeUserGroup"],
+    permission: "commerce.digital.notification.read",
+    apiExposure: "commerceNotificationManagement",
+    key: "/orders/:code/notifications/workspace",
+    method: "GET",
+    controller: "DefaultDigitalCommerceNotificationController",
+    operation: "workspace",
+    cache: { enabled: false },
+  },
+  inspect: {
+    secured: true,
+    authTokenTypes: ["access"],
+    accessGroups: ["employeeUserGroup"],
+    permission: "commerce.digital.notification.read",
+    apiExposure: "commerceNotificationManagement",
+    key: "/orders/:code/notifications/inspect",
+    method: "POST",
+    controller: "DefaultDigitalCommerceNotificationController",
+    operation: "inspect",
+    cache: { enabled: false },
+  },
+  retry: {
+    secured: true,
+    authTokenTypes: ["access"],
+    accessGroups: ["employeeUserGroup"],
+    permission: "commerce.digital.notification.retry",
+    apiExposure: "commerceNotificationManagement",
+    key: "/orders/:code/notifications/retry",
+    method: "POST",
+    controller: "DefaultDigitalCommerceNotificationController",
+    operation: "retry",
+    cache: { enabled: false },
+  },
+};
 module.exports.digitalCore.merchant.eligibleMerchants = {
   secured: true,
   authTokenTypes: ["access"],
@@ -81,6 +132,7 @@ module.exports.digitalCore.merchant.confirm = {
   permission: "commerce.coupon.pos.redeem",
   apiExposure: "commerceManagement",
   key: "/merchant/redemptions/:code/confirm",
+  requestPrivacy: { sensitive: true },
   method: "POST",
   controller: "DefaultDigitalCommerceMerchantController",
   operation: "confirm",
@@ -90,4 +142,10 @@ module.exports.digitalCore.merchant.validate = {
   ...module.exports.digitalCore.merchant.confirm,
   key: "/merchant/redemptions/validate",
   operation: "validate",
+};
+module.exports.digitalCore.merchant.workspace = {
+  ...module.exports.digitalCore.merchant.queue,
+  key: "/merchant/redemptions/workspace",
+  operation: "workspace",
+  cache: { enabled: false },
 };

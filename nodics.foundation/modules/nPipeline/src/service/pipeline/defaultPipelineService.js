@@ -29,9 +29,9 @@ const _ = require('lodash');
  */
 module.exports = {
     /**
-     * This function is used to initiate entity loader process. If there is any functionalities, required to be executed on entity loading. 
-     * defined it that with Promise way
-     * @param {*} options 
+     * Initializes the pipeline service without starting an execution.
+     * @param {Object} options Layered service initialization options.
+     * @returns {Promise<boolean>} Resolves when initialization is complete.
      */
     init: function (options) {
         return new Promise((resolve, reject) => {
@@ -40,9 +40,9 @@ module.exports = {
     },
 
     /**
-     * This function is used to finalize entity loader process. If there is any functionalities, required to be executed after entity loading. 
-     * defined it that with Promise way
-     * @param {*} options 
+     * Finalizes pipeline service initialization without executing a pipeline.
+     * @param {Object} options Layered service initialization options.
+     * @returns {Promise<boolean>} Resolves when post-initialization is complete.
      */
     postInit: function (options) {
         return new Promise((resolve, reject) => {
@@ -213,6 +213,7 @@ module.exports = {
      * @throws {CLASSES.NodicsError} Rejects when the pipeline name is invalid or construction fails.
      */
     start: function (name, request, response) {
+        SERVICE.DefaultLoggerService.inheritRequestPrivacy(request);
         return new Promise((resolve, reject) => {
             if ((typeof name === 'string' || name instanceof String) && name !== 'defaultPipeline' && PIPELINE[name]) {
                 let id = name + '_' + UTILS.generateUniqueCode();

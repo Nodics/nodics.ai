@@ -1,5 +1,20 @@
 # cms AI Contracts
 
+## Navigation Import Dependencies
+
+Navigation PAGE/ROUTE targets require nonempty scalar codes and fresh uncached
+generated-owner reads before any navigation write. Only a canonical successful
+empty lookup (`SUC_FIND_00000`, count 0, empty result, no transport failure) may
+declare `DEPENDENCY` / `NOT_APPLIED` through the existing import retry owner.
+Later files in that same approved import may then supply the target; successful
+rows are not replayed. Missing services, malformed/denied reads, invalid nodes,
+unsafe URLs and unknown write outcomes remain terminal. Bounded exhaustion still
+fails the run. This does not authorize automatic retries of retained failed runs
+or alter immutable release content. The inert
+`test/cmsNavigationImportDependencyContract.test.js` composes CMS validation,
+generated get/save failure serialization and real import phases with the existing
+Nexus records; it is source verification, not live import acceptance.
+
 ## Documentation product discovery
 
 `cmsDocumentationProduct` records own product name, `publicRootPath`, Site,
@@ -109,7 +124,54 @@ runtime and an enabled initialization profile using the framework `foundation`
 template. Application publication selections, Site identities and delivery probes
 belong to their accelerator or customer pack. Defaults never install or publish data.
 
+## Nested Association Identity
+
+`DefaultCmsComponentDetailInterceptorService.generateCmsComponentDetailCode`
+is the selected exported identity helper. Its default convention remains
+`source + '2' + uppercaseFirst(target)`; supplied codes stay unchanged.
+The `cmsComponent.subComponents` and `cmsPage.cmsComponents` parent preSave
+hooks prepare missing source and await this helper through `SERVICE` BEFORE
+nested `cmsComponentDetail.saveAll` constructs its query. Child preSave remains
+idempotent. Parent hooks must not bypass the database primary-identity guard,
+remove replacement flags, infer catalog versions or grant replacement authority.
+
+Later-layer helper overrides must preserve explicit codes and deterministic
+identity. Obsolete-page placement comparison uses the same selected preparation;
+it must not rederive default identities and retire customized incoming records.
+Association position, source/target and index validation remain unchanged.
+`test/cmsContentDeliveryContract.test.js` covers the actual nested model service
+and generated query builder with component/page defaults, explicit identity,
+async project override, collision/invariant rejection and retirement consistency.
+
+## Slot Template Import Dependency
+
+`cmsSlotDefinition.preSave` validates layout before reading its owning template.
+Only a fresh (`skipItemCache: true`), successful generated template lookup carrying
+the native `SUC_FIND_00000` code, `count: 0` and an empty `result` array declares `metadata.importRetry` as
+`{ kind: 'DEPENDENCY', writeOutcome: 'NOT_APPLIED' }` on `ERR_CMS_00095`.
+The slot has not been persisted at this boundary. The declaration does not
+authorize writes or skip validation; the selected nImport retry owner may defer
+the pending record within its existing phase limit and fail-fast policy.
+
+Malformed template identity/layout, denied or failed provider reads, malformed
+responses, missing/unknown success codes or counts and mismatched returned records
+remain terminal and unmarked. Native generated reads have no separate HTTP status;
+any added transport status must be explicitly successful (2xx). Other
+CMS reference callers do not inherit this declaration. Existing optional-service
+compatibility is unchanged. No header/body flag supplies retry authority.
+`test/cmsWcmsAuthoringSchemaContract.test.js` composes actual outer/file import
+phase owners, generated get/cache gates, bulk `addFailure`/serialization/result
+completion and `insertLocalSchemaModel` with existing Axis slot/template records
+and offline persistence:
+dependency recovery, bounded exhaustion, no repeated successful template writes,
+and terminal identity/layout/access/provider failures. Live installation remains
+a separate acceptance gate; do not rewrite immutable Axis releases to reorder
+this dependency or weaken generated persistence guards.
+
 ## Publication Readiness Diagnostics
+
+Retained Media readiness is separate from CMS `ONLINE`. Follow
+[Retained Media Dependency Readiness](publication-manifest-contract.md#retained-media-dependency-readiness).
 
 - CMS/nPublish owns publication readiness facts for source release/content-pack
   state, publication lifecycle receipts, validation state, approval request

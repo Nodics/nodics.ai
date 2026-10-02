@@ -222,10 +222,31 @@ module.exports = {
         !/^[a-f0-9]{64}$/.test(command.proof) || !this.equalDigest(current.proofHash, this.digest(command.proof)) ||
         this.time(current.proofExpiresAt) <= now.getTime() || this.time(current.expiresAt) <= now.getTime()) this.fail("ERR_COMMS_VERIFY_STATE");
     const saved = await this.transition(context, current, { status: "CONSUMED", consumedAt: now,
-      consumedOperationHash: this.digest([command.sourceModule, command.operationReference]), proofHash: "" },
+      consumedOperationHash: this.digest([command.sourceModule, command.operationReference]), consumedProofHash: current.proofHash, proofHash: "" },
     { proofExpiresAt: { $gt: now }, expiresAt: { $gt: now } });
     if (this.time(saved.proofExpiresAt) <= this.time(this.now()) || this.time(saved.expiresAt) <= this.time(this.now())) this.fail("ERR_COMMS_VERIFY_STATE");
     return { ...this.project(saved), consumedAt: saved.consumedAt };
+  },
+  /**
+   * Reads evidence of an earlier consumption without consuming again or granting
+   * another business execution. The purpose owner must inspect its own outcome.
+   * Requires the original high-entropy proof and exact command/binding/generation;
+   * expired proof cannot become a new account-recovery authentication method.
+   * @param {Object} request Authorised internal caller in the original tenant.
+   * @param {Object} command Original bound consume command, including proof.
+   * @returns {Promise<Object>} Safe immutable consumption receipt; never a grant.
+   */
+  readConsumptionReceiptStored: async function (request, command) {
+    const { current } = await this.boundRecord(request, command);
+    const now = this.time(this.now());
+    this.text(command.operationReference);
+    if (current.status !== "CONSUMED" || command.generation !== current.generation ||
+        typeof command.proof !== "string" || !/^[a-f0-9]{64}$/.test(command.proof) ||
+        !this.equalDigest(current.consumedProofHash, this.digest(command.proof)) ||
+        !this.equalDigest(current.consumedOperationHash, this.digest([command.sourceModule, command.operationReference])) ||
+        this.time(current.proofExpiresAt) <= now || this.time(current.expiresAt) <= now ||
+        this.time(current.consumedAt) > now) this.fail("ERR_COMMS_VERIFY_STATE");
+    return { ...this.project(current), consumedAt: current.consumedAt, executionGranted: false };
   },
   /** Replaces a challenge in-place so delayed codes/proofs cannot survive a resend. Limits and revision come from owner policy/state. */
   replaceStored: async function (request, command) {

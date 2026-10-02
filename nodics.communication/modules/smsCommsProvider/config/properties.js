@@ -10,4 +10,26 @@
  */
 
 /** @module smsCommsProvider/config/properties @description Defines secret-reference-only SMS sandbox defaults. @layer config @owner smsCommsProvider */
-module.exports = { smsCommsProvider: { enabled: false, maturity: 'SANDBOX_CAPABLE', sandboxOnly: true, liveQualified: false, endpoint: '', credentialReference: '', senderReference: '', timeoutMilliseconds: 5000 } };
+module.exports = {
+  communication: {
+    providerTypes: {
+      SMS_SANDBOX: {
+        code: "sms-sandbox",
+        service: "DefaultSmsCommunicationProviderService",
+        timeoutMilliseconds: 5000,
+      },
+    },
+  },
+  smsCommsProvider: {
+    enabled: false,
+    maturity: "SANDBOX_CAPABLE",
+    sandboxOnly: true,
+    liveQualified: false,
+    endpoint: "",
+    credentialReference: "",
+    senderReference: "",
+    sandboxTransportService: "",
+    maximumContentBytes: 1600,
+    timeoutMilliseconds: 5000,
+  },
+};

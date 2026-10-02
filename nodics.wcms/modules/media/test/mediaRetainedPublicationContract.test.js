@@ -193,6 +193,23 @@ test('failed receipt rolls back activation, malformed bytes fail before storage 
     await assert.rejects(provider.getVersion({ ...publication, domain: 'cms' }, f.context));
 });
 
+test('legacy PUBLIC READY metadata and stored bytes do not authorize retained Online delivery', async () => {
+    const f = fixture();
+    assert.equal(f.tables().onemedia.hero.status, 'READY');
+    assert.equal(f.tables().onemedia.hero.access, 'PUBLIC');
+    assert(f.retained.has(f.record.storageKey));
+    f.online();
+    let mutableFallback = false;
+    SERVICE.DefaultMediaStorageProviderRegistryService.resolveImportSource = () => {
+        mutableFallback = true;
+        throw new Error('mutable fallback must never run');
+    };
+    await assert.rejects(delivery.deliver({ tenant: 'one', mediaCode: 'hero' }), /Media is not activated/);
+    assert.equal(mutableFallback, false);
+    assert.equal(Object.keys(f.tables().onepointer || {}).length, 0);
+    assert.equal(Object.keys(f.tables().onereceipt || {}).length, 0);
+});
+
 test('private retained metadata still obeys delivery access policy without mutable fallback', async () => {
     const f = fixture(); f.tables().onemedia.hero.access = 'PRIVATE';
     const manifest = await manifests.capture({ code: 'hero', versionId: 0 }, f.context);

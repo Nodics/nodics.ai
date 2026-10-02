@@ -20,6 +20,26 @@ before choosing an extension point.
 
 ## Core Rule
 
+### Email And SMS Implementation Gate
+
+Before adding a notification, apply the
+[module-owned presentation principle](nodics-principles.md#module-owned-email-and-sms-presentation)
+and the Communication resource contract. Identify the domain owner, purpose,
+trusted source, required parameters, locale/channel representations, activation
+gate, recipient authority and idempotency identity before writing files.
+
+Create presentation in the domain's `src/templates/email` or `src/templates/sms`,
+not `config/properties.js`, controllers, provider services or new database body
+records. Extend the existing mergeable Communication services only when supported
+file/policy customization is insufficient. Preserve exported member customization,
+file/function JSDoc and framework ownership; do not copy the renderer into a project.
+
+Review requested/default locale precedence, partial runtime overrides, parameter
+injection/bounds, frozen retry content, optional selection, source authorization
+and provider maturity. Document successful, rejected and recovery paths. Distinguish
+authored source, documentation validation, local tests and live acceptance; do not
+enable delivery or import releases just to demonstrate a documentation example.
+
 Write code as if a partner will customize one small behavior tomorrow.
 
 That means:
@@ -187,8 +207,9 @@ Use these defaults:
 | Event declarations and listeners | `src/event/events.js`, `src/event/listeners.js` |
 | Scheduled jobs | `src/jobs/jobs.js` or module-standard job registry |
 | Utility functions | `src/utils/utils.js` or focused utility files under `src/utils` |
-| Enums | `src/utils/enums.js` |
-| Stable statuses, reason codes, error codes, lifecycle states | `src/utils/statusDefinitions.js` |
+| Module-owned communication presentation resources | `src/templates/<channel>/<name>/template.json` and locale HTML/text files; follow commsCore's template-resource contract |
+| Enums, including stable wire lifecycle states and operation keys | `src/utils/enums.js` |
+| Stable response statuses, reason codes and error codes | `src/utils/statusDefinitions.js` |
 | Initial, core, sample, or documentation data | backend-owned `data/...` folders and content-pack manifests |
 | Tests | owning module `test/` using focused default and override/customization evidence |
 
@@ -196,6 +217,14 @@ Do not put status/error codes in `config/properties.js`. Properties define
 customizable configuration and policy. Status definitions define stable
 contract vocabulary that code, APIs, logs, tests, documentation, and operators
 can rely on.
+
+Respect each loader's accepted shape. `DefaultStatusService` requires HTTP
+response-code and message metadata for every status definition. A bare lifecycle
+string or operation allowlist is not an HTTP response: declare its keys through
+the existing enum owner and consume the effective `ENUMS` values. Preserve wire
+keys and independent transition/authorization checks; adding an enum key must
+not itself grant a transition or operation. Do not add a parallel vocabulary
+loader or fabricate HTTP success metadata just to store a state list.
 
 Do not put executable business logic in `config/properties.js`. If a property
 needs computation, expose the value as configuration and perform behavior in a

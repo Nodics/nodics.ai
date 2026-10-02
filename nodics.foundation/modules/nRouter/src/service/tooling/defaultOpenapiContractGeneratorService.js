@@ -416,6 +416,7 @@ module.exports = exportedService = {
             JSON.stringify(existingMetadata.permissions || []) === JSON.stringify(incomingMetadata.permissions || []) &&
             JSON.stringify(existingMetadata.permissionConfig || []) === JSON.stringify(incomingMetadata.permissionConfig || []) &&
             JSON.stringify(existingMetadata.apiExposure) === JSON.stringify(incomingMetadata.apiExposure) &&
+            JSON.stringify(existingMetadata.requestPrivacy) === JSON.stringify(incomingMetadata.requestPrivacy) &&
             JSON.stringify(existingMetadata.authTokenTypes || []) === JSON.stringify(incomingMetadata.authTokenTypes || []) &&
             Boolean(existingMetadata.schemaGoverned) === Boolean(incomingMetadata.schemaGoverned);
         if (equivalent) {
@@ -436,6 +437,7 @@ module.exports = exportedService = {
     /** Implements prepareDefaultRoute as an overrideable service operation. */
     prepareDefaultRoute: function (options) {
     const definition = (this.clone || exportedService.clone).call(this, options.routerDef);
+    require('../router/defaultRouterOperationService').isPrivateRoute(definition);
     const schemaName = options.schemaName;
     const schemaObject = options.schemaObject;
     definition.method = String(definition.method || '').toLowerCase();
@@ -469,6 +471,7 @@ module.exports = exportedService = {
         permissions: definition.permissions || [],
         permissionConfig: definition.permissionConfig || [],
         apiExposure: definition.apiExposure,
+        requestPrivacy: definition.requestPrivacy,
         authTokenTypes: definition.authTokenTypes || [],
         routerAlias: schemaObject.router && schemaObject.router.alias
     };
@@ -486,6 +489,7 @@ module.exports = exportedService = {
     /** Implements prepareConfiguredRoute as an overrideable service operation. */
     prepareConfiguredRoute: function (options) {
     const definition = (this.clone || exportedService.clone).call(this, options.routerDef);
+    require('../router/defaultRouterOperationService').isPrivateRoute(definition);
     definition.method = String(definition.method || '').toLowerCase();
     definition.apiVersion = definition.apiVersion || 'v0';
     definition.url = '/' + options.contextRoot + '/' + options.urlPrefix + '/' + definition.apiVersion + definition.key;
@@ -514,6 +518,7 @@ module.exports = exportedService = {
         permissions: definition.permissions || [],
         permissionConfig: definition.permissionConfig || [],
         apiExposure: definition.apiExposure,
+        requestPrivacy: definition.requestPrivacy,
         authTokenTypes: definition.authTokenTypes || [],
         responseHandler: definition.responseHandler,
         publicProbe: definition.publicProbe === true,

@@ -61,3 +61,6 @@ module.exports = {
     ERR_PROCESS_00026: { code: '409', message: 'Process instance code belongs to a different or unverified start request' },
     ERR_PROCESS_00027: { code: '409', message: 'Process start is incomplete; inspect the existing instance before recovery' }
 };
+
+module.exports.ERR_PROCESS_00028 = { code: '403', message: 'Runtime-owned process start is unavailable or not authorised.' };
+module.exports.ERR_PROCESS_00029 = { code: '403', message: 'This reviewer or decision is not authorised for the task.' };

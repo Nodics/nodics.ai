@@ -142,6 +142,7 @@ module.exports = {
      */
 
     prepareFromSchema: function (moduleName, schemaName, tntCode) {
+        const _self = this;
         let moduleObject = NODICS.getModule(moduleName);
         let rawSchema = moduleObject.rawSchema[schemaName];
         if (!rawSchema.tenants || rawSchema.tenants.includes(tntCode)) {

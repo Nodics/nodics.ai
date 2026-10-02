@@ -174,7 +174,10 @@ module.exports = {
                         reject(new CLASSES.SearchError('ERR_SRCH_00000', 'Invalid connection handler configuration for : ' + moduleName + ', tenant: ' + tntCode));
                     }
                 } else {
-                    _self.LOG.warn('Search is not enabled for module: ' + moduleName);
+                    if (searchOptions?.options?.enabled === false)
+                        _self.LOG.debug('Search is not enabled for module: ' + moduleName);
+                    else
+                        _self.LOG.warn('Search is not enabled for module: ' + moduleName);
                     resolve(true);
                 }
             } catch (err) {

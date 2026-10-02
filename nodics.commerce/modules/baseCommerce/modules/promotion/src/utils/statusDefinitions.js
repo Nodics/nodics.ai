@@ -9,4 +9,17 @@
 
  */
 /** @module promotion/utils/statusDefinitions @description Defines actionable campaign validity failures for merchant redemption. @layer utility @owner promotion */
-module.exports={ERR_PROMOTION_POS_INVALID:{code:"409",message:"The coupon is unavailable for merchant fulfillment"}};
+module.exports = {
+  ERR_PROMOTION_BENEFIT_UNCONFIRMED: {
+    code: "409",
+    message: "Authoritative coupon benefit could not be confirmed",
+  },
+  ERR_PROMOTION_POS_INVALID: {
+    code: "409",
+    message: "The coupon is unavailable for merchant fulfillment",
+  },
+  ERR_PROMOTION_SELLER_UNCONFIRMED: {
+    code: "409",
+    message: "Issuer seller authorization could not be confirmed",
+  },
+};

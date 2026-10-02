@@ -51,4 +51,8 @@ module.exports = {
         code: '403',
         message: 'Operation not allowed'
     },
+    ERR_TNT_PROVISIONING_HELD: {
+        code: '409',
+        message: 'Tenant provisioning is held pending owner review'
+    },
 };

@@ -1,5 +1,10 @@
 # redisCache Agent Contract
 
+Offline isolated auth cleanup follows the provider-owned
+[Local maintenance contract](llm/contracts/local-reset-maintenance.md). Keep
+bounded private inventories, unchanged reviewed keys, exact batch deletion and
+count-only partial/uncertain receipts. No global flush or startup security purge.
+
 This file gives AI coding agents mandatory guidance for this Nodics module or package boundary.
 
 ## Inheritance

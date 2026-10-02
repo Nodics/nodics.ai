@@ -22,23 +22,65 @@ const _ = require('lodash');
 module.exports = {
     /** Atomically stores a versioned value only when its version cannot move backwards. */
     putVersioned: function (options) {
-        return this.observeCacheOperation('putVersioned', options, () => {
-            const field = options.versionProperty || 'revision';
-            if (!/^[A-Za-z][A-Za-z0-9_]{0,63}$/.test(field) || ['constructor', 'prototype', '__proto__'].includes(field) ||
-                (options.advance !== undefined && typeof options.advance !== 'boolean') ||
-                !options.value || typeof options.value !== 'object' || Array.isArray(options.value) || !Number.isSafeInteger(options.value[field]) || options.value[field] < 0) {
-                throw new CLASSES.CacheError('ERR_CACHE_00006', 'Versioned cache write requires a safe nonnegative integer');
-            }
-            const channel = SERVICE.DefaultCacheEngineService.getCacheEngine(options.moduleName, options.channelName);
-            if (!channel) throw new CLASSES.CacheError('ERR_CACHE_00006', 'Versioned cache channel is unavailable');
-            this.assertCapability(channel, 'atomicVersionWrite');
-            this.assertWriteCapabilities(channel, options.ttl);
-            const handler = SERVICE[channel.engineOptions.cacheHandler];
-            const specialized = options.channelName + 'PutVersioned';
-            const method = handler && typeof handler[specialized] === 'function' ? specialized : 'putVersioned';
-            if (!handler || typeof handler[method] !== 'function') throw new CLASSES.CacheError('ERR_CACHE_00006', 'Cache adapter does not support versioned writes');
-            return handler[method]({ ...options, versionProperty: field, channel });
-        }, 'Error while writing a versioned cache value');
+        if (this.hasProtectedReadCacheScope(options))
+            return Promise.reject(
+                new CLASSES.CacheError({
+                    code: 'ERR_CACHE_00006',
+                    message: 'Protected schema public cache excluded'
+                })
+            );
+        return this.observeCacheOperation(
+            'putVersioned',
+            options,
+            () => {
+                const field = options.versionProperty || 'revision';
+                if (
+                    !/^[A-Za-z][A-Za-z0-9_]{0,63}$/.test(field) ||
+                    ['constructor', 'prototype', '__proto__'].includes(field) ||
+                    (options.advance !== undefined &&
+                        typeof options.advance !== 'boolean') ||
+                    !options.value ||
+                    typeof options.value !== 'object' ||
+                    Array.isArray(options.value) ||
+                    !Number.isSafeInteger(options.value[field]) ||
+                    options.value[field] < 0
+                ) {
+                    throw new CLASSES.CacheError(
+                        'ERR_CACHE_00006',
+                        'Versioned cache write requires a safe nonnegative integer'
+                    );
+                }
+                const channel =
+                    SERVICE.DefaultCacheEngineService.getCacheEngine(
+                        options.moduleName,
+                        options.channelName
+                    );
+                if (!channel)
+                    throw new CLASSES.CacheError(
+                        'ERR_CACHE_00006',
+                        'Versioned cache channel is unavailable'
+                    );
+                this.assertCapability(channel, 'atomicVersionWrite');
+                this.assertWriteCapabilities(channel, options.ttl);
+                const handler = SERVICE[channel.engineOptions.cacheHandler];
+                const specialized = options.channelName + 'PutVersioned';
+                const method =
+                    handler && typeof handler[specialized] === 'function'
+                        ? specialized
+                        : 'putVersioned';
+                if (!handler || typeof handler[method] !== 'function')
+                    throw new CLASSES.CacheError(
+                        'ERR_CACHE_00006',
+                        'Cache adapter does not support versioned writes'
+                    );
+                return handler[method]({
+                    ...options,
+                    versionProperty: field,
+                    channel
+                });
+            },
+            'Error while writing a versioned cache value'
+        );
     },
 
     /**
@@ -52,9 +94,9 @@ module.exports = {
     },
 
     /**
-     * This function is used to initiate entity loader process. If there is any functionalities, required to be executed on entity loading. 
+     * This function is used to initiate entity loader process. If there is any functionalities, required to be executed on entity loading.
      * defined it that with Promise way
-     * @param {*} options 
+     * @param {*} options
      */
     init: function (options) {
         return new Promise((resolve, reject) => {
@@ -63,9 +105,9 @@ module.exports = {
     },
 
     /**
-     * This function is used to finalize entity loader process. If there is any functionalities, required to be executed after entity loading. 
+     * This function is used to finalize entity loader process. If there is any functionalities, required to be executed after entity loading.
      * defined it that with Promise way
-     * @param {*} options 
+     * @param {*} options
      */
     postInit: function (options) {
         return new Promise((resolve, reject) => {
@@ -73,64 +115,179 @@ module.exports = {
         });
     },
 
+    /** Excludes standard public schema/router/search channels for modules containing protected effective schemas; no second registry or role bypass is introduced. @param {Object} options Actual cache scope. @returns {boolean} Privacy exclusion. */
+    hasProtectedReadCacheScope: function (options) {
+        const database = SERVICE.DefaultDatabaseConfigurationService;
+        if (typeof database?.getRawSchema !== 'function') return false;
+        const schemas = database.getRawSchema()?.[options.moduleName];
+        const protectedNames = Object.keys(schemas || {}).filter(
+            (name) => schemas[name]?.readProtection !== undefined
+        );
+        if (!protectedNames.length) return false;
+        const cache = CONFIG.get('cache') || {};
+        const channels = new Set(['schema', 'router', 'search']);
+        for (const mapping of [
+            cache.schemaCacheChannelNameMapping,
+            cache.routerCacheChannelNameMapping
+        ]) {
+            for (const channel of Object.values(mapping || {}))
+                channels.add(channel);
+        }
+        return channels.has(options.channelName);
+    },
+
     /** Stores a value through the configured module and channel cache engine. */
     put: function (options) {
-        return this.observeCacheOperation('put', options, () => {
-            let channel = SERVICE.DefaultCacheEngineService.getCacheEngine(options.moduleName, options.channelName);
-            if (channel) {
-                this.assertWriteCapabilities(channel, options.ttl);
-                let operationName = 'put';
-                if (SERVICE[channel.engineOptions.cacheHandler][options.channelName + 'Put'] && typeof SERVICE[channel.engineOptions.cacheHandler][options.channelName + 'Put'] === 'function') {
-                    operationName = options.channelName + 'Put';
+        if (this.hasProtectedReadCacheScope(options))
+            return Promise.resolve({
+                cacheable: false,
+                reason: 'schemaReadProtection'
+            });
+        return this.observeCacheOperation(
+            'put',
+            options,
+            () => {
+                let channel = SERVICE.DefaultCacheEngineService.getCacheEngine(
+                    options.moduleName,
+                    options.channelName
+                );
+                if (channel) {
+                    this.assertWriteCapabilities(channel, options.ttl);
+                    let operationName = 'put';
+                    if (
+                        SERVICE[channel.engineOptions.cacheHandler][
+                            options.channelName + 'Put'
+                        ] &&
+                        typeof SERVICE[channel.engineOptions.cacheHandler][
+                            options.channelName + 'Put'
+                        ] === 'function'
+                    ) {
+                        operationName = options.channelName + 'Put';
+                    }
+                    options.channel = channel;
+                    return SERVICE[channel.engineOptions.cacheHandler][
+                        operationName
+                    ](options);
+                } else {
+                    return Promise.reject(
+                        new CLASSES.CacheError({
+                            code: 'ERR_CACHE_00006',
+                            message:
+                                'Could not found cache client for channel: ' +
+                                options.channelName +
+                                ', within module: ' +
+                                options.moduleName
+                        })
+                    );
                 }
-                options.channel = channel;
-                return SERVICE[channel.engineOptions.cacheHandler][operationName](options);
-            } else {
-                return Promise.reject(new CLASSES.CacheError({
-                    code: 'ERR_CACHE_00006',
-                    message: 'Could not found cache client for channel: ' + options.channelName + ', within module: ' + options.moduleName
-                }));
-            }
-        }, 'Error while putting value in cache');
+            },
+            'Error while putting value in cache'
+        );
     },
 
     /** Reads a value through the configured module and channel cache engine. */
     get: function (options) {
-        return this.observeCacheOperation('get', options, () => {
-            let channel = SERVICE.DefaultCacheEngineService.getCacheEngine(options.moduleName, options.channelName);
-            if (channel) {
-                let operationName = 'get';
-                if (SERVICE[channel.engineOptions.cacheHandler][options.channelName + 'Get'] && typeof SERVICE[channel.engineOptions.cacheHandler][options.channelName + 'Get'] === 'function') {
-                    operationName = options.channelName + 'Get';
+        if (this.hasProtectedReadCacheScope(options))
+            return Promise.reject(
+                new CLASSES.CacheError({
+                    code: 'ERR_CACHE_00001',
+                    message: 'Protected schema public cache excluded'
+                })
+            );
+        return this.observeCacheOperation(
+            'get',
+            options,
+            () => {
+                let channel = SERVICE.DefaultCacheEngineService.getCacheEngine(
+                    options.moduleName,
+                    options.channelName
+                );
+                if (channel) {
+                    let operationName = 'get';
+                    if (
+                        SERVICE[channel.engineOptions.cacheHandler][
+                            options.channelName + 'Get'
+                        ] &&
+                        typeof SERVICE[channel.engineOptions.cacheHandler][
+                            options.channelName + 'Get'
+                        ] === 'function'
+                    ) {
+                        operationName = options.channelName + 'Get';
+                    }
+                    options.channel = channel;
+                    return SERVICE[channel.engineOptions.cacheHandler][
+                        operationName
+                    ](options);
+                } else {
+                    return Promise.reject(
+                        new CLASSES.CacheError({
+                            code: 'ERR_CACHE_00006',
+                            message:
+                                'Could not found cache client for channel: ' +
+                                options.channelName +
+                                ', within module: ' +
+                                options.moduleName
+                        })
+                    );
                 }
-                options.channel = channel;
-                return SERVICE[channel.engineOptions.cacheHandler][operationName](options);
-            } else {
-                return Promise.reject(new CLASSES.CacheError({
-                    code: 'ERR_CACHE_00006',
-                    message: 'Could not found cache client for channel: ' + options.channelName + ', within module: ' + options.moduleName
-                }));
-            }
-        }, 'Error while getting value from cache');
+            },
+            'Error while getting value from cache'
+        );
     },
 
     /** Atomically removes and returns one cache value through the active engine. */
     consume: function (options) {
-        return this.observeCacheOperation('consume', options, () => {
-            let channel = SERVICE.DefaultCacheEngineService.getCacheEngine(options.moduleName, options.channelName);
-            if (!channel) {
-                return Promise.reject(new CLASSES.CacheError('ERR_CACHE_00006', 'Could not found cache client for channel: ' + options.channelName + ', within module: ' + options.moduleName));
-            }
-            let handler = SERVICE[channel.engineOptions.cacheHandler];
-            this.assertCapability(channel, 'atomicConsume');
-            let operationName = options.channelName + 'Consume';
-            if (!handler[operationName] || typeof handler[operationName] !== 'function') operationName = 'consume';
-            if (!handler[operationName] || typeof handler[operationName] !== 'function') {
-                return Promise.reject(new CLASSES.CacheError('ERR_CACHE_00006', 'Cache engine does not support atomic consume for channel: ' + options.channelName));
-            }
-            options.channel = channel;
-            return handler[operationName](options);
-        }, 'Error while atomically consuming cache value');
+        if (this.hasProtectedReadCacheScope(options))
+            return Promise.reject(
+                new CLASSES.CacheError({
+                    code: 'ERR_CACHE_00001',
+                    message: 'Protected schema public cache excluded'
+                })
+            );
+        return this.observeCacheOperation(
+            'consume',
+            options,
+            () => {
+                let channel = SERVICE.DefaultCacheEngineService.getCacheEngine(
+                    options.moduleName,
+                    options.channelName
+                );
+                if (!channel) {
+                    return Promise.reject(
+                        new CLASSES.CacheError(
+                            'ERR_CACHE_00006',
+                            'Could not found cache client for channel: ' +
+                                options.channelName +
+                                ', within module: ' +
+                                options.moduleName
+                        )
+                    );
+                }
+                let handler = SERVICE[channel.engineOptions.cacheHandler];
+                this.assertCapability(channel, 'atomicConsume');
+                let operationName = options.channelName + 'Consume';
+                if (
+                    !handler[operationName] ||
+                    typeof handler[operationName] !== 'function'
+                )
+                    operationName = 'consume';
+                if (
+                    !handler[operationName] ||
+                    typeof handler[operationName] !== 'function'
+                ) {
+                    return Promise.reject(
+                        new CLASSES.CacheError(
+                            'ERR_CACHE_00006',
+                            'Cache engine does not support atomic consume for channel: ' +
+                                options.channelName
+                        )
+                    );
+                }
+                options.channel = channel;
+                return handler[operationName](options);
+            },
+            'Error while atomically consuming cache value'
+        );
     },
 
     /**
@@ -138,23 +295,50 @@ module.exports = {
      * the counter is first created.
      */
     incrementBounded: function (options) {
-        return this.observeCacheOperation('incrementBounded', options, () => {
-            let channel = SERVICE.DefaultCacheEngineService.getCacheEngine(options.moduleName, options.channelName);
-            if (!channel) {
-                return Promise.reject(new CLASSES.CacheError('ERR_CACHE_00006',
-                    'Could not found cache client for channel: ' + options.channelName + ', within module: ' + options.moduleName));
-            }
-            this.assertCapability(channel, 'atomicBoundedIncrement');
-            let handler = SERVICE[channel.engineOptions.cacheHandler];
-            let operationName = options.channelName + 'IncrementBounded';
-            if (!handler[operationName] || typeof handler[operationName] !== 'function') operationName = 'incrementBounded';
-            if (!handler[operationName] || typeof handler[operationName] !== 'function') {
-                return Promise.reject(new CLASSES.CacheError('ERR_CACHE_00006',
-                    'Cache engine does not support atomic bounded increment for channel: ' + options.channelName));
-            }
-            options.channel = channel;
-            return handler[operationName](options);
-        }, 'Error while atomically incrementing bounded cache counter');
+        return this.observeCacheOperation(
+            'incrementBounded',
+            options,
+            () => {
+                let channel = SERVICE.DefaultCacheEngineService.getCacheEngine(
+                    options.moduleName,
+                    options.channelName
+                );
+                if (!channel) {
+                    return Promise.reject(
+                        new CLASSES.CacheError(
+                            'ERR_CACHE_00006',
+                            'Could not found cache client for channel: ' +
+                                options.channelName +
+                                ', within module: ' +
+                                options.moduleName
+                        )
+                    );
+                }
+                this.assertCapability(channel, 'atomicBoundedIncrement');
+                let handler = SERVICE[channel.engineOptions.cacheHandler];
+                let operationName = options.channelName + 'IncrementBounded';
+                if (
+                    !handler[operationName] ||
+                    typeof handler[operationName] !== 'function'
+                )
+                    operationName = 'incrementBounded';
+                if (
+                    !handler[operationName] ||
+                    typeof handler[operationName] !== 'function'
+                ) {
+                    return Promise.reject(
+                        new CLASSES.CacheError(
+                            'ERR_CACHE_00006',
+                            'Cache engine does not support atomic bounded increment for channel: ' +
+                                options.channelName
+                        )
+                    );
+                }
+                options.channel = channel;
+                return handler[operationName](options);
+            },
+            'Error while atomically incrementing bounded cache counter'
+        );
     },
 
     /** Selects key-based or prefix-based invalidation from the supplied scope. */
@@ -162,12 +346,18 @@ module.exports = {
         try {
             this.validateMutationScope(options);
             let flush;
-            if (options.keys && options.keys instanceof Array && options.keys.length > 0) {
+            if (
+                options.keys &&
+                options.keys instanceof Array &&
+                options.keys.length > 0
+            ) {
                 flush = this.flushByKeys(options);
             } else {
                 flush = this.flushByPrefix(options);
             }
-            return Promise.resolve(flush).then(result => this.propagateInvalidation(options).then(() => result));
+            return Promise.resolve(flush).then((result) =>
+                this.propagateInvalidation(options).then(() => result)
+            );
         } catch (error) {
             return Promise.reject(new CLASSES.CacheError(error));
         }
@@ -175,44 +365,90 @@ module.exports = {
 
     /** Invalidates values matching a prefix through the active cache engine. */
     flushByPrefix: function (options) {
-        return this.observeCacheOperation('flushByPrefix', options, () => {
-            let channel = SERVICE.DefaultCacheEngineService.getCacheEngine(options.moduleName, options.channelName);
-            if (channel) {
-                this.assertCapability(channel, 'prefixFlush');
-                let operationName = 'flushByPrefix';
-                if (SERVICE[channel.engineOptions.cacheHandler][options.channelName + 'FlushByPrefix'] && typeof SERVICE[channel.engineOptions.cacheHandler][options.channelName + 'FlushByPrefix'] === 'function') {
-                    operationName = options.channelName + 'FlushByPrefix';
+        return this.observeCacheOperation(
+            'flushByPrefix',
+            options,
+            () => {
+                let channel = SERVICE.DefaultCacheEngineService.getCacheEngine(
+                    options.moduleName,
+                    options.channelName
+                );
+                if (channel) {
+                    this.assertCapability(channel, 'prefixFlush');
+                    let operationName = 'flushByPrefix';
+                    if (
+                        SERVICE[channel.engineOptions.cacheHandler][
+                            options.channelName + 'FlushByPrefix'
+                        ] &&
+                        typeof SERVICE[channel.engineOptions.cacheHandler][
+                            options.channelName + 'FlushByPrefix'
+                        ] === 'function'
+                    ) {
+                        operationName = options.channelName + 'FlushByPrefix';
+                    }
+                    options.channel = channel;
+                    return SERVICE[channel.engineOptions.cacheHandler][
+                        operationName
+                    ](options);
+                } else {
+                    return Promise.reject(
+                        new CLASSES.CacheError({
+                            code: 'ERR_CACHE_00006',
+                            message:
+                                'Could not found cache client for channel: ' +
+                                options.channelName +
+                                ', within module: ' +
+                                options.moduleName
+                        })
+                    );
                 }
-                options.channel = channel;
-                return SERVICE[channel.engineOptions.cacheHandler][operationName](options);
-            } else {
-                return Promise.reject(new CLASSES.CacheError({
-                    code: 'ERR_CACHE_00006',
-                    message: 'Could not found cache client for channel: ' + options.channelName + ', within module: ' + options.moduleName
-                }));
-            }
-        }, 'Error while flushing cache');
+            },
+            'Error while flushing cache'
+        );
     },
 
     /** Invalidates explicit keys through the active cache engine. */
     flushByKeys: function (options) {
-        return this.observeCacheOperation('flushByKeys', options, () => {
-            let channel = SERVICE.DefaultCacheEngineService.getCacheEngine(options.moduleName, options.channelName);
-            if (channel) {
-                this.assertCapability(channel, 'keyFlush');
-                let operationName = 'flushByKeys';
-                if (SERVICE[channel.engineOptions.cacheHandler][options.channelName + 'FlushByKeys'] && typeof SERVICE[channel.engineOptions.cacheHandler][options.channelName + 'FlushByKeys'] === 'function') {
-                    operationName = options.channelName + 'FlushByKeys';
+        return this.observeCacheOperation(
+            'flushByKeys',
+            options,
+            () => {
+                let channel = SERVICE.DefaultCacheEngineService.getCacheEngine(
+                    options.moduleName,
+                    options.channelName
+                );
+                if (channel) {
+                    this.assertCapability(channel, 'keyFlush');
+                    let operationName = 'flushByKeys';
+                    if (
+                        SERVICE[channel.engineOptions.cacheHandler][
+                            options.channelName + 'FlushByKeys'
+                        ] &&
+                        typeof SERVICE[channel.engineOptions.cacheHandler][
+                            options.channelName + 'FlushByKeys'
+                        ] === 'function'
+                    ) {
+                        operationName = options.channelName + 'FlushByKeys';
+                    }
+                    options.channel = channel;
+                    return SERVICE[channel.engineOptions.cacheHandler][
+                        operationName
+                    ](options);
+                } else {
+                    return Promise.reject(
+                        new CLASSES.CacheError({
+                            code: 'ERR_CACHE_00006',
+                            message:
+                                'Could not found cache client for channel: ' +
+                                options.channelName +
+                                ', within module: ' +
+                                options.moduleName
+                        })
+                    );
                 }
-                options.channel = channel;
-                return SERVICE[channel.engineOptions.cacheHandler][operationName](options);
-            } else {
-                return Promise.reject(new CLASSES.CacheError({
-                    code: 'ERR_CACHE_00006',
-                    message: 'Could not found cache client for channel: ' + options.channelName + ', within module: ' + options.moduleName
-                }));
-            }
-        }, 'Error while flushing keys in cache');
+            },
+            'Error while flushing keys in cache'
+        );
     },
 
     /**
@@ -224,18 +460,42 @@ module.exports = {
      * @param {string} errorMessage Context message for synchronous operation failures.
      * @returns {Promise<*>} Original operation result.
      */
-    observeCacheOperation: function (operation, options, executor, errorMessage) {
+    observeCacheOperation: function (
+        operation,
+        options,
+        executor,
+        errorMessage
+    ) {
         let startedAt = Date.now();
         try {
-            return Promise.resolve(executor()).then(success => {
-                this.recordCacheMetric(operation, options, this.resolveMetricResult(operation, true), startedAt);
-                return success;
-            }).catch(error => {
-                this.recordCacheMetric(operation, options, this.resolveMetricResult(operation, false, error), startedAt, error);
-                throw error;
-            });
+            return Promise.resolve(executor())
+                .then((success) => {
+                    this.recordCacheMetric(
+                        operation,
+                        options,
+                        this.resolveMetricResult(operation, true),
+                        startedAt
+                    );
+                    return success;
+                })
+                .catch((error) => {
+                    this.recordCacheMetric(
+                        operation,
+                        options,
+                        this.resolveMetricResult(operation, false, error),
+                        startedAt,
+                        error
+                    );
+                    throw error;
+                });
         } catch (error) {
-            this.recordCacheMetric(operation, options, this.resolveMetricResult(operation, false, error), startedAt, error);
+            this.recordCacheMetric(
+                operation,
+                options,
+                this.resolveMetricResult(operation, false, error),
+                startedAt,
+                error
+            );
             return Promise.reject(new CLASSES.CacheError(error, errorMessage));
         }
     },
@@ -249,8 +509,15 @@ module.exports = {
      * @returns {string} One of `hit`, `miss`, `success`, or `error`.
      */
     resolveMetricResult: function (operation, success, error) {
-        if (success && (operation === 'get' || operation === 'consume')) return 'hit';
-        if (!success && error && error.code === 'ERR_CACHE_00001' && (operation === 'get' || operation === 'consume')) return 'miss';
+        if (success && (operation === 'get' || operation === 'consume'))
+            return 'hit';
+        if (
+            !success &&
+            error &&
+            error.code === 'ERR_CACHE_00001' &&
+            (operation === 'get' || operation === 'consume')
+        )
+            return 'miss';
         return success ? 'success' : 'error';
     },
 
@@ -262,7 +529,11 @@ module.exports = {
     getCacheDiagnosticsOptions: function () {
         let defaults = { enabled: true, includeTenant: true };
         try {
-            let cacheConfig = typeof CONFIG !== 'undefined' && CONFIG.get && CONFIG.get('cache') || {};
+            let cacheConfig =
+                (typeof CONFIG !== 'undefined' &&
+                    CONFIG.get &&
+                    CONFIG.get('cache')) ||
+                {};
             return _.merge({}, defaults, cacheConfig.diagnostics || {});
         } catch (error) {
             return defaults;
@@ -277,14 +548,28 @@ module.exports = {
      * @param {Object} diagnosticsOptions Effective diagnostics options.
      * @returns {Object} Metrics dimensions.
      */
-    buildCacheMetricDimensions: function (operation, options, diagnosticsOptions) {
+    buildCacheMetricDimensions: function (
+        operation,
+        options,
+        diagnosticsOptions
+    ) {
         options = options || {};
         return {
             moduleName: options.moduleName || '<unknown>',
-            tenant: diagnosticsOptions.includeTenant === false ? '<redacted>' : options.tenant || '<unknown>',
-            channelName: options.channelName || options.channel && options.channel.channelName || '<unknown>',
+            tenant:
+                diagnosticsOptions.includeTenant === false
+                    ? '<redacted>'
+                    : options.tenant || '<unknown>',
+            channelName:
+                options.channelName ||
+                (options.channel && options.channel.channelName) ||
+                '<unknown>',
             operation: operation,
-            cacheLayer: options.cacheLayer || options.layer || options.cacheType || '<unknown>',
+            cacheLayer:
+                options.cacheLayer ||
+                options.layer ||
+                options.cacheType ||
+                '<unknown>',
             resourceName: options.resourceName || options.prefix || '<unknown>',
             reasonCode: options.reasonCode || '<none>'
         };
@@ -303,8 +588,17 @@ module.exports = {
     recordCacheMetric: function (operation, options, result, startedAt, error) {
         let diagnosticsOptions = this.getCacheDiagnosticsOptions();
         if (diagnosticsOptions.enabled === false) return true;
-        let dimensions = this.buildCacheMetricDimensions(operation, options, diagnosticsOptions);
-        let key = [dimensions.moduleName, dimensions.tenant, dimensions.channelName, dimensions.operation].join('|');
+        let dimensions = this.buildCacheMetricDimensions(
+            operation,
+            options,
+            diagnosticsOptions
+        );
+        let key = [
+            dimensions.moduleName,
+            dimensions.tenant,
+            dimensions.channelName,
+            dimensions.operation
+        ].join('|');
         let elapsedMs = Math.max(0, Date.now() - startedAt);
         let existing = this.cacheMetrics.operations[key] || {
             moduleName: dimensions.moduleName,
@@ -329,22 +623,32 @@ module.exports = {
         existing.count += 1;
         existing.results[result] = (existing.results[result] || 0) + 1;
         if (dimensions.reasonCode !== '<none>') {
-            existing.reasonCodes[dimensions.reasonCode] = (existing.reasonCodes[dimensions.reasonCode] || 0) + 1;
+            existing.reasonCodes[dimensions.reasonCode] =
+                (existing.reasonCodes[dimensions.reasonCode] || 0) + 1;
         }
         if (dimensions.resourceName !== '<unknown>') {
-            existing.resources[dimensions.resourceName] = (existing.resources[dimensions.resourceName] || 0) + 1;
+            existing.resources[dimensions.resourceName] =
+                (existing.resources[dimensions.resourceName] || 0) + 1;
         }
         if (dimensions.cacheLayer !== '<unknown>') {
-            existing.layers[dimensions.cacheLayer] = (existing.layers[dimensions.cacheLayer] || 0) + 1;
+            existing.layers[dimensions.cacheLayer] =
+                (existing.layers[dimensions.cacheLayer] || 0) + 1;
         }
         existing.totalLatencyMs += elapsedMs;
         existing.maxLatencyMs = Math.max(existing.maxLatencyMs, elapsedMs);
         existing.lastLatencyMs = elapsedMs;
         existing.lastResult = result;
-        existing.lastErrorCode = error && error.code || null;
-        existing.lastReasonCode = dimensions.reasonCode !== '<none>' ? dimensions.reasonCode : null;
-        existing.lastResourceName = dimensions.resourceName !== '<unknown>' ? dimensions.resourceName : null;
-        existing.lastCacheLayer = dimensions.cacheLayer !== '<unknown>' ? dimensions.cacheLayer : null;
+        existing.lastErrorCode = (error && error.code) || null;
+        existing.lastReasonCode =
+            dimensions.reasonCode !== '<none>' ? dimensions.reasonCode : null;
+        existing.lastResourceName =
+            dimensions.resourceName !== '<unknown>'
+                ? dimensions.resourceName
+                : null;
+        existing.lastCacheLayer =
+            dimensions.cacheLayer !== '<unknown>'
+                ? dimensions.cacheLayer
+                : null;
         existing.updatedAt = new Date().toISOString();
         this.cacheMetrics.operations[key] = existing;
         return true;
@@ -360,13 +664,19 @@ module.exports = {
     recordPolicyDecision: function (decision, context) {
         decision = decision || {};
         context = context || {};
-        this.recordCacheMetric('policyDecision', {
-            tenant: context.tenant,
-            moduleName: context.moduleName,
-            channelName: context.channelName || decision.layer || context.layer,
-            cacheLayer: context.layer || decision.layer,
-            reasonCode: decision.reasonCode
-        }, decision.cacheable === false ? 'skipped' : 'accepted', Date.now());
+        this.recordCacheMetric(
+            'policyDecision',
+            {
+                tenant: context.tenant,
+                moduleName: context.moduleName,
+                channelName:
+                    context.channelName || decision.layer || context.layer,
+                cacheLayer: context.layer || decision.layer,
+                reasonCode: decision.reasonCode
+            },
+            decision.cacheable === false ? 'skipped' : 'accepted',
+            Date.now()
+        );
         return true;
     },
 
@@ -379,18 +689,40 @@ module.exports = {
     getCacheMetricsSnapshot: function (filter) {
         filter = filter || {};
         let snapshot = _.cloneDeep(this.cacheMetrics);
-        snapshot.operations = Object.keys(snapshot.operations).reduce((result, key) => {
-            let item = snapshot.operations[key];
-            if (filter.moduleName && item.moduleName !== filter.moduleName) return result;
-            if (filter.tenant && item.tenant !== filter.tenant) return result;
-            if (filter.channelName && item.channelName !== filter.channelName) return result;
-            if (filter.operation && item.operation !== filter.operation) return result;
-            if (filter.cacheLayer && !(item.layers && item.layers[filter.cacheLayer])) return result;
-            if (filter.reasonCode && !(item.reasonCodes && item.reasonCodes[filter.reasonCode])) return result;
-            if (filter.resourceName && !(item.resources && item.resources[filter.resourceName])) return result;
-            result[key] = item;
-            return result;
-        }, {});
+        snapshot.operations = Object.keys(snapshot.operations).reduce(
+            (result, key) => {
+                let item = snapshot.operations[key];
+                if (filter.moduleName && item.moduleName !== filter.moduleName)
+                    return result;
+                if (filter.tenant && item.tenant !== filter.tenant)
+                    return result;
+                if (
+                    filter.channelName &&
+                    item.channelName !== filter.channelName
+                )
+                    return result;
+                if (filter.operation && item.operation !== filter.operation)
+                    return result;
+                if (
+                    filter.cacheLayer &&
+                    !(item.layers && item.layers[filter.cacheLayer])
+                )
+                    return result;
+                if (
+                    filter.reasonCode &&
+                    !(item.reasonCodes && item.reasonCodes[filter.reasonCode])
+                )
+                    return result;
+                if (
+                    filter.resourceName &&
+                    !(item.resources && item.resources[filter.resourceName])
+                )
+                    return result;
+                result[key] = item;
+                return result;
+            },
+            {}
+        );
         return snapshot;
     },
 
@@ -410,8 +742,12 @@ module.exports = {
     /** Resolves the layered search-cache channel for a schema. */
     getSearchCacheChannel: function (schemaName) {
         let channelName = 'search';
-        if (CONFIG.get('cache').schemaCacheChannelNameMapping && CONFIG.get('cache').schemaCacheChannelNameMapping[schemaName]) {
-            channelName = CONFIG.get('cache').schemaCacheChannelNameMapping[schemaName];
+        if (
+            CONFIG.get('cache').schemaCacheChannelNameMapping &&
+            CONFIG.get('cache').schemaCacheChannelNameMapping[schemaName]
+        ) {
+            channelName =
+                CONFIG.get('cache').schemaCacheChannelNameMapping[schemaName];
         }
         return channelName;
     },
@@ -419,8 +755,12 @@ module.exports = {
     /** Resolves the layered item-cache channel for a schema. */
     getSchemaCacheChannel: function (schemaName) {
         let channelName = 'schema';
-        if (CONFIG.get('cache').schemaCacheChannelNameMapping && CONFIG.get('cache').schemaCacheChannelNameMapping[schemaName]) {
-            channelName = CONFIG.get('cache').schemaCacheChannelNameMapping[schemaName];
+        if (
+            CONFIG.get('cache').schemaCacheChannelNameMapping &&
+            CONFIG.get('cache').schemaCacheChannelNameMapping[schemaName]
+        ) {
+            channelName =
+                CONFIG.get('cache').schemaCacheChannelNameMapping[schemaName];
         }
         return channelName;
     },
@@ -428,8 +768,12 @@ module.exports = {
     /** Resolves the layered API-cache channel for a router. */
     getRouterCacheChannel: function (routerName) {
         let channelName = 'router';
-        if (CONFIG.get('cache').routerCacheChannelNameMapping && CONFIG.get('cache').routerCacheChannelNameMapping[routerName]) {
-            channelName = CONFIG.get('cache').routerCacheChannelNameMapping[routerName];
+        if (
+            CONFIG.get('cache').routerCacheChannelNameMapping &&
+            CONFIG.get('cache').routerCacheChannelNameMapping[routerName]
+        ) {
+            channelName =
+                CONFIG.get('cache').routerCacheChannelNameMapping[routerName];
         }
         return channelName;
     },
@@ -437,30 +781,41 @@ module.exports = {
     /** Resolves the layered authentication-cache channel for a tenant. */
     getAuthCacheChannel: function (tenant) {
         let channelName = 'auth';
-        if (CONFIG.get('cache').authCacheChannelNameMapping && CONFIG.get('cache').authCacheChannelNameMapping[tenant]) {
-            channelName = CONFIG.get('cache').authCacheChannelNameMapping[tenant];
+        if (
+            CONFIG.get('cache').authCacheChannelNameMapping &&
+            CONFIG.get('cache').authCacheChannelNameMapping[tenant]
+        ) {
+            channelName =
+                CONFIG.get('cache').authCacheChannelNameMapping[tenant];
         }
         return channelName;
     },
 
     /** Returns normalized capabilities for initialized and legacy custom adapters. */
     getChannelCapabilities: function (channel) {
-        let engineOptions = channel && channel.engineOptions || {};
-        return Object.assign({
-            distributed: engineOptions.distributed === true,
-            atomicConsume: engineOptions.atomicConsume === true,
-            ttl: true,
-            nonExpiringTtl: true,
-            prefixFlush: true,
-            keyFlush: true,
-            serialization: 'custom'
-        }, engineOptions.capabilities || {});
+        let engineOptions = (channel && channel.engineOptions) || {};
+        return Object.assign(
+            {
+                distributed: engineOptions.distributed === true,
+                atomicConsume: engineOptions.atomicConsume === true,
+                ttl: true,
+                nonExpiringTtl: true,
+                prefixFlush: true,
+                keyFlush: true,
+                serialization: 'custom'
+            },
+            engineOptions.capabilities || {}
+        );
     },
 
     /** Fails when an operation requires a capability the selected adapter did not declare. */
     assertCapability: function (channel, capability) {
         if (this.getChannelCapabilities(channel)[capability] !== true) {
-            throw new CLASSES.CacheError('ERR_CACHE_00009', 'Cache adapter does not support required capability: ' + capability);
+            throw new CLASSES.CacheError(
+                'ERR_CACHE_00009',
+                'Cache adapter does not support required capability: ' +
+                    capability
+            );
         }
         return true;
     },
@@ -474,64 +829,127 @@ module.exports = {
 
     /** Resolves a cache purpose through layered channel mappings. */
     resolveCacheChannel: function (cacheType, resourceName, tenant) {
-        if (cacheType === 'router') return this.getRouterCacheChannel(resourceName);
-        if (cacheType === 'schema') return this.getSchemaCacheChannel(resourceName);
-        if (cacheType === 'search') return this.getSearchCacheChannel(resourceName);
+        if (cacheType === 'router')
+            return this.getRouterCacheChannel(resourceName);
+        if (cacheType === 'schema')
+            return this.getSchemaCacheChannel(resourceName);
+        if (cacheType === 'search')
+            return this.getSearchCacheChannel(resourceName);
         if (cacheType === 'auth') return this.getAuthCacheChannel(tenant);
-        throw new CLASSES.CacheError('ERR_CACHE_00009', 'Unknown cache purpose: ' + cacheType);
+        throw new CLASSES.CacheError(
+            'ERR_CACHE_00009',
+            'Unknown cache purpose: ' + cacheType
+        );
     },
 
     /** Resolves every active channel that may contain a resource, including customized router-channel mappings. */
     resolveInvalidationChannels: function (options) {
         if (options.cacheType !== 'router') {
-            return [this.resolveCacheChannel(options.cacheType, options.resourceName, options.tenant)];
+            return [
+                this.resolveCacheChannel(
+                    options.cacheType,
+                    options.resourceName,
+                    options.tenant
+                )
+            ];
         }
         let cacheConfig = CONFIG.get('cache') || {};
-        let candidates = ['router'].concat(Object.values(cacheConfig.routerCacheChannelNameMapping || {}));
-        let configured = SERVICE.DefaultCacheConfigurationService.getCacheChannels(options.moduleName) || {};
+        let candidates = ['router'].concat(
+            Object.values(cacheConfig.routerCacheChannelNameMapping || {})
+        );
+        let configured =
+            SERVICE.DefaultCacheConfigurationService.getCacheChannels(
+                options.moduleName
+            ) || {};
         let unique = Array.from(new Set(candidates));
-        let active = unique.filter(channelName => configured[channelName]);
-        return active.length > 0 ? active : [this.getRouterCacheChannel(options.resourceName)];
+        let active = unique.filter((channelName) => configured[channelName]);
+        return active.length > 0
+            ? active
+            : [this.getRouterCacheChannel(options.resourceName)];
     },
 
     /** Invalidates one tenant-owned logical resource using the effective layered channel mapping. */
     invalidateResource: function (options) {
         options = Object.assign({}, options || {});
         if (!options.resourceName || !options.cacheType) {
-            return Promise.reject(new CLASSES.CacheError('ERR_CACHE_00009', 'resourceName and cacheType are required for cache invalidation'));
+            return Promise.reject(
+                new CLASSES.CacheError(
+                    'ERR_CACHE_00009',
+                    'resourceName and cacheType are required for cache invalidation'
+                )
+            );
         }
         let channels = this.resolveInvalidationChannels(options);
         let startedAt = Date.now();
-        return Promise.all(channels.map(channelName => this.flushCache(Object.assign({}, options, {
-            channelName: channelName,
-            prefix: options.resourceName,
-            internalCacheOperation: true
-        })))).then(success => {
-            this.recordCacheMetric('invalidateResource', Object.assign({}, options, {
-                channelName: channels.join(','),
-                cacheLayer: options.cacheType
-            }), 'success', startedAt);
-            return success;
-        }).catch(error => {
-            this.recordCacheMetric('invalidateResource', Object.assign({}, options, {
-                channelName: channels.join(','),
-                cacheLayer: options.cacheType
-            }), 'error', startedAt, error);
-            throw error;
-        });
+        return Promise.all(
+            channels.map((channelName) =>
+                this.flushCache(
+                    Object.assign({}, options, {
+                        channelName: channelName,
+                        prefix: options.resourceName,
+                        internalCacheOperation: true
+                    })
+                )
+            )
+        )
+            .then((success) => {
+                this.recordCacheMetric(
+                    'invalidateResource',
+                    Object.assign({}, options, {
+                        channelName: channels.join(','),
+                        cacheLayer: options.cacheType
+                    }),
+                    'success',
+                    startedAt
+                );
+                return success;
+            })
+            .catch((error) => {
+                this.recordCacheMetric(
+                    'invalidateResource',
+                    Object.assign({}, options, {
+                        channelName: channels.join(','),
+                        cacheLayer: options.cacheType
+                    }),
+                    'error',
+                    startedAt,
+                    error
+                );
+                throw error;
+            });
     },
 
     /** Broadcasts local-adapter invalidation to peer module nodes; shared adapters need no duplicate event. */
     propagateInvalidation: function (options) {
-        let channel = options.channel || SERVICE.DefaultCacheEngineService.getCacheEngine(options.moduleName, options.channelName);
+        let channel =
+            options.channel ||
+            SERVICE.DefaultCacheEngineService.getCacheEngine(
+                options.moduleName,
+                options.channelName
+            );
         let cacheConfig = CONFIG.get('cache') || {};
         let policy = cacheConfig.invalidation || {};
-        const crossNode = policy.crossNode == null ? (CONFIG.get('event') || {}).remotePublishEnabled === true : policy.crossNode;
-        if (options.suppressPropagation === true || crossNode === false || this.getChannelCapabilities(channel).distributed === true) {
+        const crossNode =
+            policy.crossNode == null
+                ? (CONFIG.get('event') || {}).remotePublishEnabled === true
+                : policy.crossNode;
+        if (
+            options.suppressPropagation === true ||
+            crossNode === false ||
+            this.getChannelCapabilities(channel).distributed === true
+        ) {
             return Promise.resolve(true);
         }
-        if (!SERVICE.DefaultEventService || typeof SERVICE.DefaultEventService.publish !== 'function') {
-            return Promise.reject(new CLASSES.CacheError('ERR_CACHE_00009', 'Cross-node invalidation requires the configured event service'));
+        if (
+            !SERVICE.DefaultEventService ||
+            typeof SERVICE.DefaultEventService.publish !== 'function'
+        ) {
+            return Promise.reject(
+                new CLASSES.CacheError(
+                    'ERR_CACHE_00009',
+                    'Cross-node invalidation requires the configured event service'
+                )
+            );
         }
         return SERVICE.DefaultEventService.publish({
             tenant: options.tenant,
@@ -551,22 +969,33 @@ module.exports = {
         });
     },
 
-
     /** Publishes a governed runtime API-cache configuration update. */
     updateRouterCacheConfiguration: function (request) {
         return new Promise((resolve, reject) => {
             try {
                 this.validateMutationScope(request);
-                this.publishCacheChangeEvent(request, 'apiCacheChange').then(success => {
-                    resolve({
-                        code: 'SUC_CACHE_00000',
-                        result: success
+                this.publishCacheChangeEvent(request, 'apiCacheChange')
+                    .then((success) => {
+                        resolve({
+                            code: 'SUC_CACHE_00000',
+                            result: success
+                        });
+                    })
+                    .catch((error) => {
+                        reject(
+                            new CLASSES.CacheError(
+                                error,
+                                'Facing issue while updating router cache'
+                            )
+                        );
                     });
-                }).catch(error => {
-                    reject(new CLASSES.CacheError(error, 'Facing issue while updating router cache'));
-                });
             } catch (error) {
-                reject(new CLASSES.CacheError(error, 'Facing issue while updating router cache'));
+                reject(
+                    new CLASSES.CacheError(
+                        error,
+                        'Facing issue while updating router cache'
+                    )
+                );
             }
         });
     },
@@ -576,16 +1005,28 @@ module.exports = {
         return new Promise((resolve, reject) => {
             try {
                 this.validateMutationScope(request);
-                this.publishCacheChangeEvent(request, 'itemCacheChange').then(success => {
-                    resolve({
-                        code: 'SUC_CACHE_00000',
-                        result: success
+                this.publishCacheChangeEvent(request, 'itemCacheChange')
+                    .then((success) => {
+                        resolve({
+                            code: 'SUC_CACHE_00000',
+                            result: success
+                        });
+                    })
+                    .catch((error) => {
+                        reject(
+                            new CLASSES.CacheError(
+                                error,
+                                'Facing issue while updating item cache'
+                            )
+                        );
                     });
-                }).catch(error => {
-                    reject(new CLASSES.CacheError(error, 'Facing issue while updating item cache'));
-                });
             } catch (error) {
-                reject(new CLASSES.CacheError(error, 'Facing issue while updating item cache'));
+                reject(
+                    new CLASSES.CacheError(
+                        error,
+                        'Facing issue while updating item cache'
+                    )
+                );
             }
         });
     },
@@ -599,23 +1040,69 @@ module.exports = {
     validateMutationScope: function (request) {
         request = request || {};
         let authData = request.authData || {};
-        let authorizedTenant = authData.tenant || authData.enterprise && authData.enterprise.tenant && authData.enterprise.tenant.code;
+        let authorizedTenant =
+            authData.tenant ||
+            (authData.enterprise &&
+                authData.enterprise.tenant &&
+                authData.enterprise.tenant.code);
         let body = request.httpRequest && request.httpRequest.body;
         let config = request.config;
         let moduleName = request.moduleName;
         let tenant = request.tenant;
-        let bodyModule = body && !Array.isArray(body) && (body.moduleName || body.targetModule || body.targetModuleName) || config && (config.moduleName || config.targetModule || config.targetModuleName);
-        let bodyTenant = body && !Array.isArray(body) && body.tenant || config && config.tenant;
-        let modules = typeof NODICS !== 'undefined' && typeof NODICS.getModules === 'function' ? NODICS.getModules() : undefined;
-        let activeModule = typeof NODICS !== 'undefined' && typeof NODICS.getModule === 'function' ? NODICS.getModule(moduleName) : modules && modules[moduleName];
-        let activeTenants = typeof NODICS !== 'undefined' && typeof NODICS.getActiveTenants === 'function' ? NODICS.getActiveTenants() : undefined;
+        let bodyModule =
+            (body &&
+                !Array.isArray(body) &&
+                (body.moduleName ||
+                    body.targetModule ||
+                    body.targetModuleName)) ||
+            (config &&
+                (config.moduleName ||
+                    config.targetModule ||
+                    config.targetModuleName));
+        let bodyTenant =
+            (body && !Array.isArray(body) && body.tenant) ||
+            (config && config.tenant);
+        let modules =
+            typeof NODICS !== 'undefined' &&
+            typeof NODICS.getModules === 'function'
+                ? NODICS.getModules()
+                : undefined;
+        let activeModule =
+            typeof NODICS !== 'undefined' &&
+            typeof NODICS.getModule === 'function'
+                ? NODICS.getModule(moduleName)
+                : modules && modules[moduleName];
+        let activeTenants =
+            typeof NODICS !== 'undefined' &&
+            typeof NODICS.getActiveTenants === 'function'
+                ? NODICS.getActiveTenants()
+                : undefined;
         let internalOperation = request.internalCacheOperation === true;
-        if (!moduleName || (!tenant && !internalOperation) || authorizedTenant && authorizedTenant !== tenant || bodyTenant && bodyTenant !== tenant || bodyModule && bodyModule !== moduleName || (activeModule === undefined && (modules || typeof NODICS !== 'undefined' && typeof NODICS.getModule === 'function')) || tenant && Array.isArray(activeTenants) && activeTenants.length > 0 && !activeTenants.includes(tenant)) {
-            throw new CLASSES.CacheError('ERR_CACHE_00007', 'Cache mutation must remain within authorized tenant ' + (tenant || '<missing>') + ' and active module ' + (moduleName || '<missing>'));
+        if (
+            !moduleName ||
+            (!tenant && !internalOperation) ||
+            (authorizedTenant && authorizedTenant !== tenant) ||
+            (bodyTenant && bodyTenant !== tenant) ||
+            (bodyModule && bodyModule !== moduleName) ||
+            (activeModule === undefined &&
+                (modules ||
+                    (typeof NODICS !== 'undefined' &&
+                        typeof NODICS.getModule === 'function'))) ||
+            (tenant &&
+                Array.isArray(activeTenants) &&
+                activeTenants.length > 0 &&
+                !activeTenants.includes(tenant))
+        ) {
+            throw new CLASSES.CacheError(
+                'ERR_CACHE_00007',
+                'Cache mutation must remain within authorized tenant ' +
+                    (tenant || '<missing>') +
+                    ' and active module ' +
+                    (moduleName || '<missing>')
+            );
         }
         return true;
     },
-
 
     /** Broadcasts a tenant-aware cache configuration change to active module nodes. */
     publishCacheChangeEvent: function (request, eventName) {
@@ -628,21 +1115,27 @@ module.exports = {
                     sourceName: request.moduleName,
                     sourceId: CONFIG.get('nodeId'),
                     target: request.moduleName,
-                    state: "NEW",
+                    state: 'NEW',
                     type: 'SYNC',
                     targetType: ENUMS.TargetType.MODULE_NODES.key,
                     data: request.config
-                }).then(success => {
-                    resolve(success);
-                }).catch(error => {
-                    reject(error);
-                });
+                })
+                    .then((success) => {
+                        resolve(success);
+                    })
+                    .catch((error) => {
+                        reject(error);
+                    });
             } catch (error) {
-                reject(new CLASSES.CacheError(error, 'Facing issue while publishing update cache event'));
+                reject(
+                    new CLASSES.CacheError(
+                        error,
+                        'Facing issue while publishing update cache event'
+                    )
+                );
             }
         });
     },
-
 
     /** Applies an API-cache configuration event to the effective router definition. */
     handleRouterCacheChangeEvent: function (request) {
@@ -658,22 +1151,38 @@ module.exports = {
                         key = key + '_' + request.config.schemaName;
                     }
                     key = key + '_' + request.config.routerName;
-                    let routerDefinition = NODICS.getRouter(key.toLowerCase(), request.moduleName);
+                    let routerDefinition = NODICS.getRouter(
+                        key.toLowerCase(),
+                        request.moduleName
+                    );
                     if (routerDefinition) {
-                        routerDefinition.cache = _.merge(routerDefinition.cache || {}, request.config.cache);
+                        routerDefinition.cache = _.merge(
+                            routerDefinition.cache || {},
+                            request.config.cache
+                        );
                         resolve({
                             code: 'SUC_CACHE_00000'
                         });
                     } else {
-                        let msg = 'Could not found router definition for router name: ' + request.config.routerName;
+                        let msg =
+                            'Could not found router definition for router name: ' +
+                            request.config.routerName;
                         if (request.config.schemaName) {
-                            msg = msg + ' and schemaName: ' + request.config.schemaName;
+                            msg =
+                                msg +
+                                ' and schemaName: ' +
+                                request.config.schemaName;
                         }
                         reject(new CLASSES.CacheError('ERR_CACHE_00005', msg));
                     }
                 }
             } catch (error) {
-                reject(new CLASSES.CacheError(error, 'Facing issue while updating router cache'));
+                reject(
+                    new CLASSES.CacheError(
+                        error,
+                        'Facing issue while updating router cache'
+                    )
+                );
             }
         });
     },
@@ -687,14 +1196,26 @@ module.exports = {
                 } else if (!request.config.schemaName) {
                     reject(new CLASSES.CacheError('ERR_CACHE_00004'));
                 } else {
-                    let modelName = UTILS.createModelName(request.config.schemaName);
+                    let modelName = UTILS.createModelName(
+                        request.config.schemaName
+                    );
                     try {
-                        NODICS.getActiveTenants().forEach(tntName => {
-                            let model = NODICS.getModels(request.moduleName, tntName)[modelName];
+                        NODICS.getActiveTenants().forEach((tntName) => {
+                            let model = NODICS.getModels(
+                                request.moduleName,
+                                tntName
+                            )[modelName];
                             if (model) {
-                                model.cache = _.merge(model.cache || {}, request.config.cache || {});
+                                model.cache = _.merge(
+                                    model.cache || {},
+                                    request.config.cache || {}
+                                );
                             } else {
-                                throw new Error('Invalid schemaName: ' + request.config.schemaName + ' to update item cache');
+                                throw new Error(
+                                    'Invalid schemaName: ' +
+                                        request.config.schemaName +
+                                        ' to update item cache'
+                                );
                             }
                         });
                     } catch (error) {
@@ -704,8 +1225,13 @@ module.exports = {
                     resolve({ code: 'SUC_CACHE_00000' });
                 }
             } catch (error) {
-                reject(new CLASSES.CacheError(error, 'Facing issue while updating item cache'));
+                reject(
+                    new CLASSES.CacheError(
+                        error,
+                        'Facing issue while updating item cache'
+                    )
+                );
             }
         });
-    },
+    }
 };

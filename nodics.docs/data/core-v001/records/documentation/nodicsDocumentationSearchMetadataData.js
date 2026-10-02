@@ -2139,6 +2139,549 @@ module.exports = {
     "active": true
   },
   "record52": {
+    "code": "nodicsDocsSearchnodenodicsdocsnodepageacceleratorscircacollectionreference",
+    "product": "nodicsDocumentationProduct",
+    "targetType": "NODE",
+    "targetCode": "nodicsDocsNodePageacceleratorsCircaCollectionReference",
+    "title": "Circa Collection-Centre Record Reference",
+    "summary": "Exact authored collection point identities, coordinates, categories, operator and infrastructure-owner relationships.",
+    "searchText": "Circa Collection-Centre Record Reference Exact authored collection point identities, coordinates, categories, operator and infrastructure-owner relationships. circa ewaste collection-reference configuration source records",
+    "keywords": [
+      "circa",
+      "ewaste",
+      "collection-reference",
+      "configuration",
+      "source records"
+    ],
+    "facets": {
+      "nodeLevel": "PAGE_LINK",
+      "nodeType": "PAGE",
+      "audience": [
+        "business",
+        "architect",
+        "administrator",
+        "developer",
+        "operator",
+        "qa",
+        "ai-tool"
+      ]
+    },
+    "managedInAxis": true,
+    "axisAuthoringPermissions": [
+      "documentation.search.preview"
+    ],
+    "workflowRequired": true,
+    "workflowTriggers": [
+      "SEARCH_METADATA_CHANGE"
+    ],
+    "locale": "en",
+    "channel": "web",
+    "accessPolicy": "nodicsDocsAccessPublic",
+    "accessMode": "PUBLIC",
+    "lifecycleState": "ONLINE",
+    "indexState": "INDEX_READY",
+    "active": true
+  },
+  "record53": {
+    "code": "nodicsDocsSearchnodenodicsdocsnodepageacceleratorscircaenterprisereference",
+    "product": "nodicsDocumentationProduct",
+    "targetType": "NODE",
+    "targetCode": "nodicsDocsNodePageacceleratorsCircaEnterpriseReference",
+    "title": "Circa Enterprise, Staff and Scope Reference",
+    "summary": "Enterprise source records, business capabilities, operational employees, resource scopes and ownership alignment caveats.",
+    "searchText": "Circa Enterprise, Staff and Scope Reference Enterprise source records, business capabilities, operational employees, resource scopes and ownership alignment caveats. circa ewaste enterprise-reference configuration source records",
+    "keywords": [
+      "circa",
+      "ewaste",
+      "enterprise-reference",
+      "configuration",
+      "source records"
+    ],
+    "facets": {
+      "nodeLevel": "PAGE_LINK",
+      "nodeType": "PAGE",
+      "audience": [
+        "business",
+        "architect",
+        "administrator",
+        "developer",
+        "operator",
+        "qa",
+        "ai-tool"
+      ]
+    },
+    "managedInAxis": true,
+    "axisAuthoringPermissions": [
+      "documentation.search.preview"
+    ],
+    "workflowRequired": true,
+    "workflowTriggers": [
+      "SEARCH_METADATA_CHANGE"
+    ],
+    "locale": "en",
+    "channel": "web",
+    "accessPolicy": "nodicsDocsAccessPublic",
+    "accessMode": "PUBLIC",
+    "lifecycleState": "ONLINE",
+    "indexState": "INDEX_READY",
+    "active": true
+  },
+  "record54": {
+    "code": "nodicsDocsSearchnodenodicsdocsnodepageacceleratorscircasourceinventory",
+    "product": "nodicsDocumentationProduct",
+    "targetType": "NODE",
+    "targetCode": "nodicsDocsNodePageacceleratorsCircaSourceInventory",
+    "title": "Circa Source Release and Record Inventory",
+    "summary": "Manifest versions, destinations, all source record counts, optional packages and publication boundaries.",
+    "searchText": "Circa Source Release and Record Inventory Manifest versions, destinations, all source record counts, optional packages and publication boundaries. circa ewaste source-inventory configuration source records",
+    "keywords": [
+      "circa",
+      "ewaste",
+      "source-inventory",
+      "configuration",
+      "source records"
+    ],
+    "facets": {
+      "nodeLevel": "PAGE_LINK",
+      "nodeType": "PAGE",
+      "audience": [
+        "business",
+        "architect",
+        "administrator",
+        "developer",
+        "operator",
+        "qa",
+        "ai-tool"
+      ]
+    },
+    "managedInAxis": true,
+    "axisAuthoringPermissions": [
+      "documentation.search.preview"
+    ],
+    "workflowRequired": true,
+    "workflowTriggers": [
+      "SEARCH_METADATA_CHANGE"
+    ],
+    "locale": "en",
+    "channel": "web",
+    "accessPolicy": "nodicsDocsAccessPublic",
+    "accessMode": "PUBLIC",
+    "lifecycleState": "ONLINE",
+    "indexState": "INDEX_READY",
+    "active": true
+  },
+  "record55": {
+    "code": "nodicsDocsSearchnodenodicsdocsnodepageacceleratorscircacataloguereference",
+    "product": "nodicsDocumentationProduct",
+    "targetType": "NODE",
+    "targetCode": "nodicsDocsNodePageacceleratorsCircaCatalogueReference",
+    "title": "Circa Store, Product, Price and Coupon Record Reference",
+    "summary": "Exact store, product, variant, points price, inventory, promotion, batch and code-pool sample records.",
+    "searchText": "Circa Store, Product, Price and Coupon Record Reference Exact store, product, variant, points price, inventory, promotion, batch and code-pool sample records. circa ewaste catalogue-reference configuration source records",
+    "keywords": [
+      "circa",
+      "ewaste",
+      "catalogue-reference",
+      "configuration",
+      "source records"
+    ],
+    "facets": {
+      "nodeLevel": "PAGE_LINK",
+      "nodeType": "PAGE",
+      "audience": [
+        "business",
+        "architect",
+        "administrator",
+        "developer",
+        "operator",
+        "qa",
+        "ai-tool"
+      ]
+    },
+    "managedInAxis": true,
+    "axisAuthoringPermissions": [
+      "documentation.search.preview"
+    ],
+    "workflowRequired": true,
+    "workflowTriggers": [
+      "SEARCH_METADATA_CHANGE"
+    ],
+    "locale": "en",
+    "channel": "web",
+    "accessPolicy": "nodicsDocsAccessPublic",
+    "accessMode": "PUBLIC",
+    "lifecycleState": "ONLINE",
+    "indexState": "INDEX_READY",
+    "active": true
+  },
+  "record56": {
+    "code": "nodicsDocsSearchnodenodicsdocsnodepageacceleratorscircaconfigurationreference",
+    "product": "nodicsDocumentationProduct",
+    "targetType": "NODE",
+    "targetCode": "nodicsDocsNodePageacceleratorsCircaConfigurationReference",
+    "title": "Circa Configuration and Extension Reference",
+    "summary": "Application and domain configuration groups, current policy values, provider gates and later-layer customization.",
+    "searchText": "Circa Configuration and Extension Reference Application and domain configuration groups, current policy values, provider gates and later-layer customization. circa ewaste configuration-reference configuration source records",
+    "keywords": [
+      "circa",
+      "ewaste",
+      "configuration-reference",
+      "configuration",
+      "source records"
+    ],
+    "facets": {
+      "nodeLevel": "PAGE_LINK",
+      "nodeType": "PAGE",
+      "audience": [
+        "business",
+        "architect",
+        "administrator",
+        "developer",
+        "operator",
+        "qa",
+        "ai-tool"
+      ]
+    },
+    "managedInAxis": true,
+    "axisAuthoringPermissions": [
+      "documentation.search.preview"
+    ],
+    "workflowRequired": true,
+    "workflowTriggers": [
+      "SEARCH_METADATA_CHANGE"
+    ],
+    "locale": "en",
+    "channel": "web",
+    "accessPolicy": "nodicsDocsAccessPublic",
+    "accessMode": "PUBLIC",
+    "lifecycleState": "ONLINE",
+    "indexState": "INDEX_READY",
+    "active": true
+  },
+  "record57": {
+    "code": "nodicsDocsSearchnodenodicsdocsnodepageacceleratorscircaoverview",
+    "product": "nodicsDocumentationProduct",
+    "targetType": "NODE",
+    "targetCode": "nodicsDocsNodePageacceleratorsCircaOverview",
+    "title": "Circa and the eWaste Product",
+    "summary": "Source-backed product capability, audience, architecture and reference-application boundaries for Waste Management showcased through Circa.",
+    "searchText": "Circa and the eWaste Product Source-backed product capability, audience, architecture and reference-application boundaries for Waste Management showcased through Circa. circa ewaste waste management product nexus accelerator",
+    "keywords": [
+      "circa",
+      "ewaste",
+      "waste management",
+      "product",
+      "nexus",
+      "accelerator"
+    ],
+    "facets": {
+      "nodeLevel": "PAGE_LINK",
+      "nodeType": "PAGE",
+      "audience": [
+        "business",
+        "architect",
+        "administrator",
+        "developer",
+        "operator",
+        "qa",
+        "ai-tool"
+      ]
+    },
+    "managedInAxis": true,
+    "axisAuthoringPermissions": [
+      "documentation.search.preview"
+    ],
+    "workflowRequired": true,
+    "workflowTriggers": [
+      "SEARCH_METADATA_CHANGE"
+    ],
+    "locale": "en",
+    "channel": "web",
+    "accessPolicy": "nodicsDocsAccessPublic",
+    "accessMode": "PUBLIC",
+    "lifecycleState": "ONLINE",
+    "indexState": "INDEX_READY",
+    "active": true
+  },
+  "record58": {
+    "code": "nodicsDocsSearchnodenodicsdocsnodepageacceleratorscircadatanetwork",
+    "product": "nodicsDocumentationProduct",
+    "targetType": "NODE",
+    "targetCode": "nodicsDocsNodePageacceleratorsCircaDataNetwork",
+    "title": "Circa Data, Enterprises and Collection Network",
+    "summary": "Enterprise, employee, store, location, collection-point, catalogue and release configuration with installed-history preservation.",
+    "searchText": "Circa Data, Enterprises and Collection Network Enterprise, employee, store, location, collection-point, catalogue and release configuration with installed-history preservation. circa enterprise store collection centre data release coupon location",
+    "keywords": [
+      "circa",
+      "enterprise",
+      "store",
+      "collection centre",
+      "data release",
+      "coupon",
+      "location"
+    ],
+    "facets": {
+      "nodeLevel": "PAGE_LINK",
+      "nodeType": "PAGE",
+      "audience": [
+        "business",
+        "architect",
+        "administrator",
+        "developer",
+        "operator",
+        "qa",
+        "ai-tool"
+      ]
+    },
+    "managedInAxis": true,
+    "axisAuthoringPermissions": [
+      "documentation.search.preview"
+    ],
+    "workflowRequired": true,
+    "workflowTriggers": [
+      "SEARCH_METADATA_CHANGE"
+    ],
+    "locale": "en",
+    "channel": "web",
+    "accessPolicy": "nodicsDocsAccessPublic",
+    "accessMode": "PUBLIC",
+    "lifecycleState": "ONLINE",
+    "indexState": "INDEX_READY",
+    "active": true
+  },
+  "record59": {
+    "code": "nodicsDocsSearchnodenodicsdocsnodepageacceleratorscircasubmissionjourney",
+    "product": "nodicsDocumentationProduct",
+    "targetType": "NODE",
+    "targetCode": "nodicsDocsNodePageacceleratorsCircaSubmissionJourney",
+    "title": "Circa Customer eWaste Submission",
+    "summary": "Customer authentication, fresh arrival, photo preparation, correction, confirmation, account workspace and safe recovery.",
+    "searchText": "Circa Customer eWaste Submission Customer authentication, fresh arrival, photo preparation, correction, confirmation, account workspace and safe recovery. circa submit ewaste arrival photo draft telegram account",
+    "keywords": [
+      "circa",
+      "submit ewaste",
+      "arrival",
+      "photo",
+      "draft",
+      "telegram",
+      "account"
+    ],
+    "facets": {
+      "nodeLevel": "PAGE_LINK",
+      "nodeType": "PAGE",
+      "audience": [
+        "business",
+        "architect",
+        "administrator",
+        "developer",
+        "operator",
+        "qa",
+        "ai-tool"
+      ]
+    },
+    "managedInAxis": true,
+    "axisAuthoringPermissions": [
+      "documentation.search.preview"
+    ],
+    "workflowRequired": true,
+    "workflowTriggers": [
+      "SEARCH_METADATA_CHANGE"
+    ],
+    "locale": "en",
+    "channel": "web",
+    "accessPolicy": "nodicsDocsAccessPublic",
+    "accessMode": "PUBLIC",
+    "lifecycleState": "ONLINE",
+    "indexState": "INDEX_READY",
+    "active": true
+  },
+  "record60": {
+    "code": "nodicsDocsSearchnodenodicsdocsnodepageacceleratorscircaoperationsrewards",
+    "product": "nodicsDocumentationProduct",
+    "targetType": "NODE",
+    "targetCode": "nodicsDocsNodePageacceleratorsCircaOperationsRewards",
+    "title": "Circa Review, Assets, Rewards and Environmental Evidence",
+    "summary": "Axis roles/scopes, verification, approval, custody, asset ownership, assessments, settlement and recovery boundaries.",
+    "searchText": "Circa Review, Assets, Rewards and Environmental Evidence Axis roles/scopes, verification, approval, custody, asset ownership, assessments, settlement and recovery boundaries. circa axis review approval reward carbon assessment custody",
+    "keywords": [
+      "circa",
+      "axis",
+      "review",
+      "approval",
+      "reward",
+      "carbon",
+      "assessment",
+      "custody"
+    ],
+    "facets": {
+      "nodeLevel": "PAGE_LINK",
+      "nodeType": "PAGE",
+      "audience": [
+        "business",
+        "architect",
+        "administrator",
+        "developer",
+        "operator",
+        "qa",
+        "ai-tool"
+      ]
+    },
+    "managedInAxis": true,
+    "axisAuthoringPermissions": [
+      "documentation.search.preview"
+    ],
+    "workflowRequired": true,
+    "workflowTriggers": [
+      "SEARCH_METADATA_CHANGE"
+    ],
+    "locale": "en",
+    "channel": "web",
+    "accessPolicy": "nodicsDocsAccessPublic",
+    "accessMode": "PUBLIC",
+    "lifecycleState": "ONLINE",
+    "indexState": "INDEX_READY",
+    "active": true
+  },
+  "record61": {
+    "code": "nodicsDocsSearchnodenodicsdocsnodepageacceleratorscircacouponscommerce",
+    "product": "nodicsDocumentationProduct",
+    "targetType": "NODE",
+    "targetCode": "nodicsDocsNodePageacceleratorsCircaCouponsCommerce",
+    "title": "Circa Shop, Coupon Purchase and Redemption",
+    "summary": "Published browsing, reviewed purchase, reservation, expiry, entitlements, outlet fulfillment, refunds and notification limits.",
+    "searchText": "Circa Shop, Coupon Purchase and Redemption Published browsing, reviewed purchase, reservation, expiry, entitlements, outlet fulfillment, refunds and notification limits. circa coupon purchase store expiry redeem refund shop",
+    "keywords": [
+      "circa",
+      "coupon",
+      "purchase",
+      "store",
+      "expiry",
+      "redeem",
+      "refund",
+      "shop"
+    ],
+    "facets": {
+      "nodeLevel": "PAGE_LINK",
+      "nodeType": "PAGE",
+      "audience": [
+        "business",
+        "architect",
+        "administrator",
+        "developer",
+        "operator",
+        "qa",
+        "ai-tool"
+      ]
+    },
+    "managedInAxis": true,
+    "axisAuthoringPermissions": [
+      "documentation.search.preview"
+    ],
+    "workflowRequired": true,
+    "workflowTriggers": [
+      "SEARCH_METADATA_CHANGE"
+    ],
+    "locale": "en",
+    "channel": "web",
+    "accessPolicy": "nodicsDocsAccessPublic",
+    "accessMode": "PUBLIC",
+    "lifecycleState": "ONLINE",
+    "indexState": "INDEX_READY",
+    "active": true
+  },
+  "record62": {
+    "code": "nodicsDocsSearchnodenodicsdocsnodepageacceleratorscircacustomization",
+    "product": "nodicsDocumentationProduct",
+    "targetType": "NODE",
+    "targetCode": "nodicsDocsNodePageacceleratorsCircaCustomization",
+    "title": "Customize and Extend Circa Safely",
+    "summary": "Worked project-layer configuration, focused services, governed data/content, EMAIL/SMS resources and preserved framework guarantees.",
+    "searchText": "Customize and Extend Circa Safely Worked project-layer configuration, focused services, governed data/content, EMAIL/SMS resources and preserved framework guarantees. circa customization extends templates email sms project overlay",
+    "keywords": [
+      "circa",
+      "customization",
+      "extends",
+      "templates",
+      "email",
+      "sms",
+      "project overlay"
+    ],
+    "facets": {
+      "nodeLevel": "PAGE_LINK",
+      "nodeType": "PAGE",
+      "audience": [
+        "business",
+        "architect",
+        "administrator",
+        "developer",
+        "operator",
+        "qa",
+        "ai-tool"
+      ]
+    },
+    "managedInAxis": true,
+    "axisAuthoringPermissions": [
+      "documentation.search.preview"
+    ],
+    "workflowRequired": true,
+    "workflowTriggers": [
+      "SEARCH_METADATA_CHANGE"
+    ],
+    "locale": "en",
+    "channel": "web",
+    "accessPolicy": "nodicsDocsAccessPublic",
+    "accessMode": "PUBLIC",
+    "lifecycleState": "ONLINE",
+    "indexState": "INDEX_READY",
+    "active": true
+  },
+  "record63": {
+    "code": "nodicsDocsSearchnodenodicsdocsnodepageacceleratorscircadeploymentverification",
+    "product": "nodicsDocumentationProduct",
+    "targetType": "NODE",
+    "targetCode": "nodicsDocsNodePageacceleratorsCircaDeploymentVerification",
+    "title": "Circa Deployment, Operations and Verification",
+    "summary": "Runtime/data/publication gates, development commands, joint acceptance matrix, troubleshooting and safe deployment recovery.",
+    "searchText": "Circa Deployment, Operations and Verification Runtime/data/publication gates, development commands, joint acceptance matrix, troubleshooting and safe deployment recovery. circa deployment runtime publication testing recovery devops",
+    "keywords": [
+      "circa",
+      "deployment",
+      "runtime",
+      "publication",
+      "testing",
+      "recovery",
+      "devops"
+    ],
+    "facets": {
+      "nodeLevel": "PAGE_LINK",
+      "nodeType": "PAGE",
+      "audience": [
+        "business",
+        "architect",
+        "administrator",
+        "developer",
+        "operator",
+        "qa",
+        "ai-tool"
+      ]
+    },
+    "managedInAxis": true,
+    "axisAuthoringPermissions": [
+      "documentation.search.preview"
+    ],
+    "workflowRequired": true,
+    "workflowTriggers": [
+      "SEARCH_METADATA_CHANGE"
+    ],
+    "locale": "en",
+    "channel": "web",
+    "accessPolicy": "nodicsDocsAccessPublic",
+    "accessMode": "PUBLIC",
+    "lifecycleState": "ONLINE",
+    "indexState": "INDEX_READY",
+    "active": true
+  },
+  "record64": {
     "code": "nodicsDocsSearchnodenodicsdocsnodepagedocsgateway",
     "product": "nodicsDocumentationProduct",
     "targetType": "NODE",
@@ -2182,7 +2725,7 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record53": {
+  "record65": {
     "code": "nodicsDocsSearchnodenodicsdocsnodepageframeworkwhatisnodics",
     "product": "nodicsDocumentationProduct",
     "targetType": "NODE",
@@ -2225,7 +2768,7 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record54": {
+  "record66": {
     "code": "nodicsDocsSearchnodenodicsdocsnodepageframeworkwhynodicsexists",
     "product": "nodicsDocumentationProduct",
     "targetType": "NODE",
@@ -2269,7 +2812,7 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record55": {
+  "record67": {
     "code": "nodicsDocsSearchnodenodicsdocsnodepageframeworkhownodicsworks",
     "product": "nodicsDocumentationProduct",
     "targetType": "NODE",
@@ -2313,7 +2856,7 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record56": {
+  "record68": {
     "code": "nodicsDocsSearchnodenodicsdocsnodepageframeworkadoptionandfirstjourney",
     "product": "nodicsDocumentationProduct",
     "targetType": "NODE",
@@ -2357,7 +2900,7 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record57": {
+  "record69": {
     "code": "nodicsDocsSearchnodenodicsdocsnodepagedocsdocumentationroadmap",
     "product": "nodicsDocumentationProduct",
     "targetType": "NODE",
@@ -2399,7 +2942,7 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record58": {
+  "record70": {
     "code": "nodicsDocsSearchnodenodicsdocsnodepagedocsdocumentationprinciples",
     "product": "nodicsDocumentationProduct",
     "targetType": "NODE",
@@ -2443,7 +2986,7 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record59": {
+  "record71": {
     "code": "nodicsDocsSearchnodenodicsdocsnodepagedocsreaderjourneyandcoverage",
     "product": "nodicsDocumentationProduct",
     "targetType": "NODE",
@@ -2487,7 +3030,7 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record60": {
+  "record72": {
     "code": "nodicsDocsSearchnodenodicsdocsnodepagedocsdocumentationpublishingmodel",
     "product": "nodicsDocumentationProduct",
     "targetType": "NODE",
@@ -2531,7 +3074,7 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record61": {
+  "record73": {
     "code": "nodicsDocsSearchnodenodicsdocsnodepageframeworkmodulararchitecture",
     "product": "nodicsDocumentationProduct",
     "targetType": "NODE",
@@ -2573,7 +3116,7 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record62": {
+  "record74": {
     "code": "nodicsDocsSearchnodenodicsdocsnodepageframeworkruntimeservercomposition",
     "product": "nodicsDocumentationProduct",
     "targetType": "NODE",
@@ -2615,7 +3158,7 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record63": {
+  "record75": {
     "code": "nodicsDocsSearchnodenodicsdocsnodepageframeworkmoduleloadingserviceprecedence",
     "product": "nodicsDocumentationProduct",
     "targetType": "NODE",
@@ -2657,7 +3200,7 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record64": {
+  "record76": {
     "code": "nodicsDocsSearchnodenodicsdocsnodepageframeworkarchitecturedecisionguide",
     "product": "nodicsDocumentationProduct",
     "targetType": "NODE",
@@ -2699,7 +3242,7 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record65": {
+  "record77": {
     "code": "nodicsDocsSearchnodenodicsdocsnodepageplatformmoduleregistry",
     "product": "nodicsDocumentationProduct",
     "targetType": "NODE",
@@ -2741,7 +3284,7 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record66": {
+  "record78": {
     "code": "nodicsDocsSearchnodenodicsdocsnodepagefoundationoverview",
     "product": "nodicsDocumentationProduct",
     "targetType": "NODE",
@@ -2783,7 +3326,7 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record67": {
+  "record79": {
     "code": "nodicsDocsSearchnodenodicsdocsnodepageapplicationssuite",
     "product": "nodicsDocumentationProduct",
     "targetType": "NODE",
@@ -2826,7 +3369,7 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record68": {
+  "record80": {
     "code": "nodicsDocsSearchnodenodicsdocsnodepagesolutionstaskexecutionengine",
     "product": "nodicsDocumentationProduct",
     "targetType": "NODE",
@@ -2872,7 +3415,7 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record69": {
+  "record81": {
     "code": "nodicsDocsSearchnodenodicsdocsnodepagesolutionsdataengineeringanalyticsplatform",
     "product": "nodicsDocumentationProduct",
     "targetType": "NODE",
@@ -2919,7 +3462,7 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record70": {
+  "record82": {
     "code": "nodicsDocsSearchnodenodicsdocsnodepageacceleratorsagoraindustrytemplates",
     "product": "nodicsDocumentationProduct",
     "targetType": "NODE",
@@ -2963,7 +3506,7 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record71": {
+  "record83": {
     "code": "nodicsDocsSearchnodenodicsdocsnodepageacceleratorsagoraapparelproductdataauthoring",
     "product": "nodicsDocumentationProduct",
     "targetType": "NODE",
@@ -3009,7 +3552,7 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record72": {
+  "record84": {
     "code": "nodicsDocsSearchnodenodicsdocsnodepageframeworklocalquickstart",
     "product": "nodicsDocumentationProduct",
     "targetType": "NODE",
@@ -3051,7 +3594,7 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record73": {
+  "record85": {
     "code": "nodicsDocsSearchnodenodicsdocsnodepageframeworkfreshschemasetupjourney",
     "product": "nodicsDocumentationProduct",
     "targetType": "NODE",
@@ -3093,7 +3636,7 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record74": {
+  "record86": {
     "code": "nodicsDocsSearchnodenodicsdocsnodepageframeworklocalruntimetroubleshooting",
     "product": "nodicsDocumentationProduct",
     "targetType": "NODE",
@@ -3135,7 +3678,7 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record75": {
+  "record87": {
     "code": "nodicsDocsSearchnodenodicsdocsnodepageinstallerinstalledruntimeapplicationbuilder",
     "product": "nodicsDocumentationProduct",
     "targetType": "NODE",
@@ -3179,7 +3722,7 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record76": {
+  "record88": {
     "code": "nodicsDocsSearchnodenodicsdocsnodepagebuilderworkspacegeneration",
     "product": "nodicsDocumentationProduct",
     "targetType": "NODE",
@@ -3221,7 +3764,7 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record77": {
+  "record89": {
     "code": "nodicsDocsSearchnodenodicsdocsnodepageprocessvisualdesigner",
     "product": "nodicsDocumentationProduct",
     "targetType": "NODE",
@@ -3263,7 +3806,7 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record78": {
+  "record90": {
     "code": "nodicsDocsSearchnodenodicsdocsnodepageaxisbusinesscustomization",
     "product": "nodicsDocumentationProduct",
     "targetType": "NODE",
@@ -3305,7 +3848,7 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record79": {
+  "record91": {
     "code": "nodicsDocsSearchnodenodicsdocsnodepageplatformoverview",
     "product": "nodicsDocumentationProduct",
     "targetType": "NODE",
@@ -3347,7 +3890,7 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record80": {
+  "record92": {
     "code": "nodicsDocsSearchnodenodicsdocsnodepagesecurityidentityaccessgovernance",
     "product": "nodicsDocumentationProduct",
     "targetType": "NODE",
@@ -3389,7 +3932,7 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record81": {
+  "record93": {
     "code": "nodicsDocsSearchnodenodicsdocsnodepageconfigurationruntimebehaviormanagement",
     "product": "nodicsDocumentationProduct",
     "targetType": "NODE",
@@ -3431,7 +3974,7 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record82": {
+  "record94": {
     "code": "nodicsDocsSearchnodenodicsdocsnodepageconfigurationframeworkstartuplifecycle",
     "product": "nodicsDocumentationProduct",
     "targetType": "NODE",
@@ -3484,7 +4027,7 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record83": {
+  "record95": {
     "code": "nodicsDocsSearchnodenodicsdocsnodepageroutingapigovernance",
     "product": "nodicsDocumentationProduct",
     "targetType": "NODE",
@@ -3528,7 +4071,7 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record84": {
+  "record96": {
     "code": "nodicsDocsSearchnodenodicsdocsnodepageroutingapirequestlifecycle",
     "product": "nodicsDocumentationProduct",
     "targetType": "NODE",
@@ -3573,7 +4116,7 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record85": {
+  "record97": {
     "code": "nodicsDocsSearchnodenodicsdocsnodepagefoundationerrorhandlingstatuscodes",
     "product": "nodicsDocumentationProduct",
     "targetType": "NODE",
@@ -3622,7 +4165,7 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record86": {
+  "record98": {
     "code": "nodicsDocsSearchnodenodicsdocsnodepageruntimegovernedchange",
     "product": "nodicsDocumentationProduct",
     "targetType": "NODE",
@@ -3664,7 +4207,7 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record87": {
+  "record99": {
     "code": "nodicsDocsSearchnodenodicsdocsnodepagelocalizationinternationalization",
     "product": "nodicsDocumentationProduct",
     "targetType": "NODE",
@@ -3706,7 +4249,7 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record88": {
+  "record100": {
     "code": "nodicsDocsSearchnodenodicsdocsnodepageschemadatamodelingmanagement",
     "product": "nodicsDocumentationProduct",
     "targetType": "NODE",
@@ -3748,7 +4291,7 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record89": {
+  "record101": {
     "code": "nodicsDocsSearchnodenodicsdocsnodepagepersistenceproviderdataaccesslayer",
     "product": "nodicsDocumentationProduct",
     "targetType": "NODE",
@@ -3790,7 +4333,7 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record90": {
+  "record102": {
     "code": "nodicsDocsSearchnodenodicsdocsnodepagecacheruntimestatemanagement",
     "product": "nodicsDocumentationProduct",
     "targetType": "NODE",
@@ -3832,7 +4375,7 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record91": {
+  "record103": {
     "code": "nodicsDocsSearchnodenodicsdocsnodepageframeworkcustomizationguide",
     "product": "nodicsDocumentationProduct",
     "targetType": "NODE",
@@ -3874,7 +4417,7 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record92": {
+  "record104": {
     "code": "nodicsDocsSearchnodenodicsdocsnodepageframeworkbackendextensionpatterns",
     "product": "nodicsDocumentationProduct",
     "targetType": "NODE",
@@ -3917,7 +4460,7 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record93": {
+  "record105": {
     "code": "nodicsDocsSearchnodenodicsdocsnodepageframeworkaxiscontentcustomization",
     "product": "nodicsDocumentationProduct",
     "targetType": "NODE",
@@ -3959,7 +4502,7 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record94": {
+  "record106": {
     "code": "nodicsDocsSearchnodenodicsdocsnodepageprocessdevelopercustomization",
     "product": "nodicsDocumentationProduct",
     "targetType": "NODE",
@@ -4001,7 +4544,7 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record95": {
+  "record107": {
     "code": "nodicsDocsSearchnodenodicsdocsnodepageprocesscustomprojectextension",
     "product": "nodicsDocumentationProduct",
     "targetType": "NODE",
@@ -4043,7 +4586,7 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record96": {
+  "record108": {
     "code": "nodicsDocsSearchnodenodicsdocsnodepagecommercebasefoundations",
     "product": "nodicsDocumentationProduct",
     "targetType": "NODE",
@@ -4085,7 +4628,7 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record97": {
+  "record109": {
     "code": "nodicsDocsSearchnodenodicsdocsnodepagewcmsoverview",
     "product": "nodicsDocumentationProduct",
     "targetType": "NODE",
@@ -4127,7 +4670,7 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record98": {
+  "record110": {
     "code": "nodicsDocsSearchnodenodicsdocsnodepagewcmscontentcatalogmodel",
     "product": "nodicsDocumentationProduct",
     "targetType": "NODE",
@@ -4169,7 +4712,7 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record99": {
+  "record111": {
     "code": "nodicsDocsSearchnodenodicsdocsnodepagewcmspagedesignercomponents",
     "product": "nodicsDocumentationProduct",
     "targetType": "NODE",
@@ -4211,7 +4754,7 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record100": {
+  "record112": {
     "code": "nodicsDocsSearchnodenodicsdocsnodepagewcmssitepublicationvisibility",
     "product": "nodicsDocumentationProduct",
     "targetType": "NODE",
@@ -4254,7 +4797,7 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record101": {
+  "record113": {
     "code": "nodicsDocsSearchnodenodicsdocsnodepagecatalogproductdiscoverymanagement",
     "product": "nodicsDocumentationProduct",
     "targetType": "NODE",
@@ -4296,7 +4839,7 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record102": {
+  "record114": {
     "code": "nodicsDocsSearchnodenodicsdocsnodepagediscoverysearchindexing",
     "product": "nodicsDocumentationProduct",
     "targetType": "NODE",
@@ -4338,7 +4881,7 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record103": {
+  "record115": {
     "code": "nodicsDocsSearchnodenodicsdocsnodepagewcmsmediamanagement",
     "product": "nodicsDocumentationProduct",
     "targetType": "NODE",
@@ -4380,7 +4923,7 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record104": {
+  "record116": {
     "code": "nodicsDocsSearchnodenodicsdocsnodepagewcmsmediastoragedelivery",
     "product": "nodicsDocumentationProduct",
     "targetType": "NODE",
@@ -4422,7 +4965,7 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record105": {
+  "record117": {
     "code": "nodicsDocsSearchnodenodicsdocsnodepagewcmsmediaimportpublication",
     "product": "nodicsDocumentationProduct",
     "targetType": "NODE",
@@ -4464,7 +5007,7 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record106": {
+  "record118": {
     "code": "nodicsDocsSearchnodenodicsdocsnodepageinventorystockmanagement",
     "product": "nodicsDocumentationProduct",
     "targetType": "NODE",
@@ -4506,7 +5049,7 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record107": {
+  "record119": {
     "code": "nodicsDocsSearchnodenodicsdocsnodepagepricingpromotionstaxmanagement",
     "product": "nodicsDocumentationProduct",
     "targetType": "NODE",
@@ -4548,7 +5091,7 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record108": {
+  "record120": {
     "code": "nodicsDocsSearchnodenodicsdocsnodepagecommerceoverview",
     "product": "nodicsDocumentationProduct",
     "targetType": "NODE",
@@ -4590,7 +5133,7 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record109": {
+  "record121": {
     "code": "nodicsDocsSearchnodenodicsdocsnodepagecommercecartorder",
     "product": "nodicsDocumentationProduct",
     "targetType": "NODE",
@@ -4632,7 +5175,7 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record110": {
+  "record122": {
     "code": "nodicsDocsSearchnodenodicsdocsnodepagecommercepaymentfulfillment",
     "product": "nodicsDocumentationProduct",
     "targetType": "NODE",
@@ -4674,7 +5217,7 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record111": {
+  "record123": {
     "code": "nodicsDocsSearchnodenodicsdocsnodepagefulfillmentshippingmanagement",
     "product": "nodicsDocumentationProduct",
     "targetType": "NODE",
@@ -4716,7 +5259,7 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record112": {
+  "record124": {
     "code": "nodicsDocsSearchnodenodicsdocsnodepageordermanagementlifecycle",
     "product": "nodicsDocumentationProduct",
     "targetType": "NODE",
@@ -4758,7 +5301,7 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record113": {
+  "record125": {
     "code": "nodicsDocsSearchnodenodicsdocsnodepagecommercereturnsrefunds",
     "product": "nodicsDocumentationProduct",
     "targetType": "NODE",
@@ -4800,7 +5343,7 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record114": {
+  "record126": {
     "code": "nodicsDocsSearchnodenodicsdocsnodepageengagementcustomerreviews",
     "product": "nodicsDocumentationProduct",
     "targetType": "NODE",
@@ -4842,7 +5385,7 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record115": {
+  "record127": {
     "code": "nodicsDocsSearchnodenodicsdocsnodepageengagementreviewmoderationgovernance",
     "product": "nodicsDocumentationProduct",
     "targetType": "NODE",
@@ -4884,7 +5427,7 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record116": {
+  "record128": {
     "code": "nodicsDocsSearchnodenodicsdocsnodepageengagementreviewaggregationrecovery",
     "product": "nodicsDocumentationProduct",
     "targetType": "NODE",
@@ -4926,7 +5469,7 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record117": {
+  "record129": {
     "code": "nodicsDocsSearchnodenodicsdocsnodepageengagementcustomerfeedback",
     "product": "nodicsDocumentationProduct",
     "targetType": "NODE",
@@ -4968,7 +5511,7 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record118": {
+  "record130": {
     "code": "nodicsDocsSearchnodenodicsdocsnodepageengagementunifiedoperations",
     "product": "nodicsDocumentationProduct",
     "targetType": "NODE",
@@ -5010,7 +5553,7 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record119": {
+  "record131": {
     "code": "nodicsDocsSearchnodenodicsdocsnodepageengagementgovernedautomation",
     "product": "nodicsDocumentationProduct",
     "targetType": "NODE",
@@ -5052,7 +5595,7 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record120": {
+  "record132": {
     "code": "nodicsDocsSearchnodenodicsdocsnodepageengagemententerpriseoperations",
     "product": "nodicsDocumentationProduct",
     "targetType": "NODE",
@@ -5094,7 +5637,7 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record121": {
+  "record133": {
     "code": "nodicsDocsSearchnodenodicsdocsnodepagecommunicationoverview",
     "product": "nodicsDocumentationProduct",
     "targetType": "NODE",
@@ -5136,7 +5679,7 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record122": {
+  "record134": {
     "code": "nodicsDocsSearchnodenodicsdocsnodepageeventsmessagingclustercoordination",
     "product": "nodicsDocumentationProduct",
     "targetType": "NODE",
@@ -5178,7 +5721,7 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record123": {
+  "record135": {
     "code": "nodicsDocsSearchnodenodicsdocsnodepageprocessoverview",
     "product": "nodicsDocumentationProduct",
     "targetType": "NODE",
@@ -5220,7 +5763,7 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record124": {
+  "record136": {
     "code": "nodicsDocsSearchnodenodicsdocsnodepageprocessruntimelifecycle",
     "product": "nodicsDocumentationProduct",
     "targetType": "NODE",
@@ -5262,7 +5805,7 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record125": {
+  "record137": {
     "code": "nodicsDocsSearchnodenodicsdocsnodepageprocessworkfloworchestrationpatterns",
     "product": "nodicsDocumentationProduct",
     "targetType": "NODE",
@@ -5314,7 +5857,7 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record126": {
+  "record138": {
     "code": "nodicsDocsSearchnodenodicsdocsnodepageprocessfirstworkflow",
     "product": "nodicsDocumentationProduct",
     "targetType": "NODE",
@@ -5356,7 +5899,7 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record127": {
+  "record139": {
     "code": "nodicsDocsSearchnodenodicsdocsnodepageprocessfirsthumantask",
     "product": "nodicsDocumentationProduct",
     "targetType": "NODE",
@@ -5398,7 +5941,7 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record128": {
+  "record140": {
     "code": "nodicsDocsSearchnodenodicsdocsnodepageprocessbusinessvalue",
     "product": "nodicsDocumentationProduct",
     "targetType": "NODE",
@@ -5440,7 +5983,7 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record129": {
+  "record141": {
     "code": "nodicsDocsSearchnodenodicsdocsnodepagepipelinebusinesslogicorchestration",
     "product": "nodicsDocumentationProduct",
     "targetType": "NODE",
@@ -5492,7 +6035,7 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record130": {
+  "record142": {
     "code": "nodicsDocsSearchnodenodicsdocsnodepagecronoperations",
     "product": "nodicsDocumentationProduct",
     "targetType": "NODE",
@@ -5534,7 +6077,7 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record131": {
+  "record143": {
     "code": "nodicsDocsSearchnodenodicsdocsnodepagecronnoderesponsibilitytee",
     "product": "nodicsDocumentationProduct",
     "targetType": "NODE",
@@ -5577,7 +6120,7 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record132": {
+  "record144": {
     "code": "nodicsDocsSearchnodenodicsdocsnodepagecronprojectcustomization",
     "product": "nodicsDocumentationProduct",
     "targetType": "NODE",
@@ -5619,7 +6162,7 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record133": {
+  "record145": {
     "code": "nodicsDocsSearchnodenodicsdocsnodepageprocessprocesscronruntime",
     "product": "nodicsDocumentationProduct",
     "targetType": "NODE",
@@ -5661,7 +6204,7 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record134": {
+  "record146": {
     "code": "nodicsDocsSearchnodenodicsdocsnodepageprocessscheduledautomation",
     "product": "nodicsDocumentationProduct",
     "targetType": "NODE",
@@ -5703,7 +6246,7 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record135": {
+  "record147": {
     "code": "nodicsDocsSearchnodenodicsdocsnodepagedataimportexportmigration",
     "product": "nodicsDocumentationProduct",
     "targetType": "NODE",
@@ -5745,7 +6288,7 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record136": {
+  "record148": {
     "code": "nodicsDocsSearchnodenodicsdocsnodepageprocessactionadapters",
     "product": "nodicsDocumentationProduct",
     "targetType": "NODE",
@@ -5787,7 +6330,7 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record137": {
+  "record149": {
     "code": "nodicsDocsSearchnodenodicsdocsnodepageframeworkdevopsruntime",
     "product": "nodicsDocumentationProduct",
     "targetType": "NODE",
@@ -5829,7 +6372,7 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record138": {
+  "record150": {
     "code": "nodicsDocsSearchnodenodicsdocsnodepageframeworkruntimereleaserollback",
     "product": "nodicsDocumentationProduct",
     "targetType": "NODE",
@@ -5871,7 +6414,7 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record139": {
+  "record151": {
     "code": "nodicsDocsSearchnodenodicsdocsnodepageframeworklocalbrowseracceptancejourney",
     "product": "nodicsDocumentationProduct",
     "targetType": "NODE",
@@ -5913,7 +6456,7 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record140": {
+  "record152": {
     "code": "nodicsDocsSearchnodenodicsdocsnodepageframeworklocalverificationchecklist",
     "product": "nodicsDocumentationProduct",
     "targetType": "NODE",
@@ -5955,7 +6498,7 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record141": {
+  "record153": {
     "code": "nodicsDocsSearchnodenodicsdocsnodepagecommerceenterpriseoperations",
     "product": "nodicsDocumentationProduct",
     "targetType": "NODE",
@@ -5997,7 +6540,7 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record142": {
+  "record154": {
     "code": "nodicsDocsSearchnodenodicsdocsnodepageprocessincidentrecovery",
     "product": "nodicsDocumentationProduct",
     "targetType": "NODE",
@@ -6039,7 +6582,7 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record143": {
+  "record155": {
     "code": "nodicsDocsSearchnodenodicsdocsnodepageprocessdevopstopology",
     "product": "nodicsDocumentationProduct",
     "targetType": "NODE",
@@ -6081,7 +6624,7 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record144": {
+  "record156": {
     "code": "nodicsDocsSearchnodenodicsdocsnodepageprocessqaregressionguide",
     "product": "nodicsDocumentationProduct",
     "targetType": "NODE",
@@ -6123,7 +6666,7 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record145": {
+  "record157": {
     "code": "nodicsDocsSearchnodenodicsdocsnodepageframeworkcapabilitydocumentationmaturitypattern",
     "product": "nodicsDocumentationProduct",
     "targetType": "NODE",
@@ -6165,7 +6708,7 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record146": {
+  "record158": {
     "code": "nodicsDocsSearchnodenodicsdocsnodepagedocsoverview",
     "product": "nodicsDocumentationProduct",
     "targetType": "NODE",
@@ -6207,7 +6750,7 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record147": {
+  "record159": {
     "code": "nodicsDocsSearchnodenodicsdocsnodepagewcmspublishinglifecycle",
     "product": "nodicsDocumentationProduct",
     "targetType": "NODE",
@@ -6249,7 +6792,7 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record148": {
+  "record160": {
     "code": "nodicsDocsSearchnodenodicsdocsnodepageapplicationsnexusdatacontentguide",
     "product": "nodicsDocumentationProduct",
     "targetType": "NODE",
@@ -6293,7 +6836,7 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record149": {
+  "record161": {
     "code": "nodicsDocsSearchnodenodicsdocsnodepageapplicationsaxissetuperrorcontracts",
     "product": "nodicsDocumentationProduct",
     "targetType": "NODE",
@@ -6337,7 +6880,7 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record150": {
+  "record162": {
     "code": "nodicsDocsSearchnodenodicsdocsnodepagewcmscmssourcemapauthoringcontract",
     "product": "nodicsDocumentationProduct",
     "targetType": "NODE",
@@ -6381,7 +6924,7 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record151": {
+  "record163": {
     "code": "nodicsDocsSearchnodenodicsdocsnodepagewcmsmediaoperationsrunbook",
     "product": "nodicsDocumentationProduct",
     "targetType": "NODE",
@@ -6425,7 +6968,7 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record152": {
+  "record164": {
     "code": "nodicsDocsSearchnodenodicsdocsnodepagedataimportexportproviderguides",
     "product": "nodicsDocumentationProduct",
     "targetType": "NODE",
@@ -6470,7 +7013,7 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record153": {
+  "record165": {
     "code": "nodicsDocsSearchnodenodicsdocsnodepagecommercedataauthoringfulfillment",
     "product": "nodicsDocumentationProduct",
     "targetType": "NODE",
@@ -6515,7 +7058,7 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record154": {
+  "record166": {
     "code": "nodicsDocsSearchnodenodicsdocsnodepagedocsdocumentationpublishingrunbook",
     "product": "nodicsDocumentationProduct",
     "targetType": "NODE",
@@ -6559,7 +7102,7 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record155": {
+  "record167": {
     "code": "nodicsDocsSearchnodenodicsdocsnodepageplatformmoduleregistryjourney",
     "product": "nodicsDocumentationProduct",
     "targetType": "NODE",
@@ -6603,7 +7146,7 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record156": {
+  "record168": {
     "code": "nodicsDocsSearchnodenodicsdocsnodepagecommercesearchguide",
     "product": "nodicsDocumentationProduct",
     "targetType": "NODE",
@@ -6647,7 +7190,7 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record157": {
+  "record169": {
     "code": "nodicsDocsSearchnodenodicsdocsnodepagelocalizationruntimeauthoring",
     "product": "nodicsDocumentationProduct",
     "targetType": "NODE",
@@ -6691,7 +7234,7 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record158": {
+  "record170": {
     "code": "nodicsDocsSearchnodenodicsdocsnodepagecommercepaymentproviderboundaries",
     "product": "nodicsDocumentationProduct",
     "targetType": "NODE",
@@ -6735,7 +7278,7 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record159": {
+  "record171": {
     "code": "nodicsDocsSearchnodenodicsdocsnodepageloyaltywalletsrewardsledger",
     "product": "nodicsDocumentationProduct",
     "targetType": "NODE",
@@ -6783,7 +7326,7 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record160": {
+  "record172": {
     "code": "nodicsDocsSearchnodenodicsdocsnodepagecommerceshoppinglistcommerceboundary",
     "product": "nodicsDocumentationProduct",
     "targetType": "NODE",
@@ -6829,7 +7372,7 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record161": {
+  "record173": {
     "code": "nodicsDocsSearchnodenodicsdocsnodepagefoundationnmsruntimemonitoring",
     "product": "nodicsDocumentationProduct",
     "targetType": "NODE",
@@ -6873,7 +7416,7 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record162": {
+  "record174": {
     "code": "nodicsDocsSearchnodenodicsdocsnodepagefoundationserviceruntimeoverrides",
     "product": "nodicsDocumentationProduct",
     "targetType": "NODE",
@@ -6917,7 +7460,7 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record163": {
+  "record175": {
     "code": "nodicsDocsSearchnodenodicsdocsnodepagefoundationmoduletomodulecommunication",
     "product": "nodicsDocumentationProduct",
     "targetType": "NODE",
@@ -6963,7 +7506,7 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record164": {
+  "record176": {
     "code": "nodicsDocsSearchnodenodicsdocsnodepagefoundationcacheproviderrunbooks",
     "product": "nodicsDocumentationProduct",
     "targetType": "NODE",
@@ -7007,7 +7550,7 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record165": {
+  "record177": {
     "code": "nodicsDocsSearchnodenodicsdocsnodepagefoundationdatabaseproviderboundaries",
     "product": "nodicsDocumentationProduct",
     "targetType": "NODE",
@@ -7051,7 +7594,7 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record166": {
+  "record178": {
     "code": "nodicsDocsSearchnodenodicsdocsnodepagesecurityotpsecurityflow",
     "product": "nodicsDocumentationProduct",
     "targetType": "NODE",
@@ -7095,14 +7638,14 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record167": {
+  "record179": {
     "code": "nodicsDocsSearchnodenodicsdocsnodepagecommunicationproviderrunbooks",
     "product": "nodicsDocumentationProduct",
     "targetType": "NODE",
     "targetCode": "nodicsDocsNodePagecommunicationProviderRunbooks",
     "title": "Communication Provider Runbooks",
-    "summary": "SMTP and SMS provider delivery, template, locale, suppression, retry, callback, receipt, privacy, and failure evidence guidance.",
-    "searchText": "Communication Provider Runbooks SMTP and SMS provider delivery, template, locale, suppression, retry, callback, receipt, privacy, and failure evidence guidance. communication smtp sms delivery retry",
+    "summary": "Source-backed SMTP controlled-test and SMS injected-sandbox configuration, credentials, frozen-content delivery, safeguards, uncertainty recovery and live qualification boundaries.",
+    "searchText": "Communication Provider Runbooks Source-backed SMTP controlled-test and SMS injected-sandbox configuration, credentials, frozen-content delivery, safeguards, uncertainty recovery and live qualification boundaries. communication smtp sms delivery retry",
     "keywords": [
       "communication",
       "smtp",
@@ -7139,7 +7682,7 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record168": {
+  "record180": {
     "code": "nodicsDocsSearchnodenodicsdocsnodepageengagementcontactsubmissionoperations",
     "product": "nodicsDocumentationProduct",
     "targetType": "NODE",
@@ -7183,7 +7726,7 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record169": {
+  "record181": {
     "code": "nodicsDocsSearchnodenodicsdocsnodepageprocessworkflowbpmsourcemap",
     "product": "nodicsDocumentationProduct",
     "targetType": "NODE",
@@ -7227,7 +7770,7 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record170": {
+  "record182": {
     "code": "nodicsDocsSearchnodenodicsdocsnodepageprocesscronjobdataauthoring",
     "product": "nodicsDocumentationProduct",
     "targetType": "NODE",
@@ -7271,7 +7814,7 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record171": {
+  "record183": {
     "code": "nodicsDocsSearchnodenodicsdocsnodepageframeworkreleaseupgradecompatibility",
     "product": "nodicsDocumentationProduct",
     "targetType": "NODE",
@@ -7315,7 +7858,7 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record172": {
+  "record184": {
     "code": "nodicsDocsSearchnodenodicsdocsnodepagecommercefulfillmentcoresourcemap",
     "product": "nodicsDocumentationProduct",
     "targetType": "NODE",
@@ -7359,7 +7902,7 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record173": {
+  "record185": {
     "code": "nodicsDocsSearchnodenodicsdocsnodepageacceleratorsdomaincommercesourcemap",
     "product": "nodicsDocumentationProduct",
     "targetType": "NODE",
@@ -7403,7 +7946,7 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record174": {
+  "record186": {
     "code": "nodicsDocsSearchnodenodicsdocsnodepagefoundationtoolingruntimecontracts",
     "product": "nodicsDocumentationProduct",
     "targetType": "NODE",
@@ -7447,7 +7990,7 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record175": {
+  "record187": {
     "code": "nodicsDocsSearchnodenodicsdocsnodepagefoundationemsruntimeclientrunbook",
     "product": "nodicsDocumentationProduct",
     "targetType": "NODE",
@@ -7491,7 +8034,7 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record176": {
+  "record188": {
     "code": "nodicsDocsSearchnodenodicsdocsnodepagereferenceinternalsourceboundaryregister",
     "product": "nodicsDocumentationProduct",
     "targetType": "NODE",
@@ -7535,7 +8078,7 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record177": {
+  "record189": {
     "code": "nodicsDocsSearchnodenodicsdocsnodepagetoolingaideveloperenablement",
     "product": "nodicsDocumentationProduct",
     "targetType": "NODE",
@@ -7577,7 +8120,7 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record178": {
+  "record190": {
     "code": "nodicsDocsSearchnodenodicsdocsnodepagereferencesourcemapglossary",
     "product": "nodicsDocumentationProduct",
     "targetType": "NODE",
@@ -7619,7 +8162,7 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record179": {
+  "record191": {
     "code": "nodicsDocsSearchnodenodicsdocsnodepagereferencesourcebackeddocumentationcoverageaudit",
     "product": "nodicsDocumentationProduct",
     "targetType": "NODE",
@@ -7663,7 +8206,7 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record180": {
+  "record192": {
     "code": "nodicsDocsSearchnodenodicsdocsnodepagereferencedocumentationgapbacklog",
     "product": "nodicsDocumentationProduct",
     "targetType": "NODE",
@@ -7707,7 +8250,7 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record181": {
+  "record193": {
     "code": "nodicsDocsSearchnodenodicsdocsnodepagewasteimpactproviders",
     "product": "nodicsDocumentationProduct",
     "targetType": "NODE",
@@ -7752,7 +8295,53 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record182": {
+  "record194": {
+    "code": "nodicsDocsSearchnodenodicsdocsnodepagecommunicationemailsmstemplates",
+    "product": "nodicsDocumentationProduct",
+    "targetType": "NODE",
+    "targetCode": "nodicsDocsNodePagecommunicationEmailSmsTemplates",
+    "title": "Email and SMS Templates",
+    "summary": "Detailed notification flow, existing inventory, typed manifests, configuration and adoption, layered overrides, locale precedence, safe HTML, new email/SMS examples, frozen retries and troubleshooting.",
+    "searchText": "Email and SMS Templates Detailed notification flow, existing inventory, typed manifests, configuration and adoption, layered overrides, locale precedence, safe HTML, new email/SMS examples, frozen retries and troubleshooting. email sms templates notifications customization locale parameters",
+    "keywords": [
+      "email",
+      "sms",
+      "templates",
+      "notifications",
+      "customization",
+      "locale",
+      "parameters"
+    ],
+    "facets": {
+      "nodeLevel": "PAGE_LINK",
+      "nodeType": "PAGE",
+      "audience": [
+        "business",
+        "architect",
+        "administrator",
+        "developer",
+        "operator",
+        "qa",
+        "ai-tool"
+      ]
+    },
+    "managedInAxis": true,
+    "axisAuthoringPermissions": [
+      "documentation.search.preview"
+    ],
+    "workflowRequired": true,
+    "workflowTriggers": [
+      "SEARCH_METADATA_CHANGE"
+    ],
+    "locale": "en",
+    "channel": "web",
+    "accessPolicy": "nodicsDocsAccessPublic",
+    "accessMode": "PUBLIC",
+    "lifecycleState": "ONLINE",
+    "indexState": "INDEX_READY",
+    "active": true
+  },
+  "record195": {
     "code": "nodicsDocsSearchdashboardnodicsdocsdashboardproduct",
     "product": "nodicsDocumentationProduct",
     "targetType": "DASHBOARD",
@@ -7785,7 +8374,7 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record183": {
+  "record196": {
     "code": "nodicsDocsSearchdashboardnodicsdocsdashboardnavigation",
     "product": "nodicsDocumentationProduct",
     "targetType": "DASHBOARD",
@@ -7818,7 +8407,7 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record184": {
+  "record197": {
     "code": "nodicsDocsSearchdashboardnodicsdocsdashboardsecstarthere",
     "product": "nodicsDocumentationProduct",
     "targetType": "DASHBOARD",
@@ -7851,7 +8440,7 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record185": {
+  "record198": {
     "code": "nodicsDocsSearchdashboardnodicsdocsdashboardsecnodicsframework",
     "product": "nodicsDocumentationProduct",
     "targetType": "DASHBOARD",
@@ -7884,7 +8473,7 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record186": {
+  "record199": {
     "code": "nodicsDocsSearchdashboardnodicsdocsdashboardsecdocumentationroadmap",
     "product": "nodicsDocumentationProduct",
     "targetType": "DASHBOARD",
@@ -7917,7 +8506,7 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record187": {
+  "record200": {
     "code": "nodicsDocsSearchdashboardnodicsdocsdashboardsecframeworkarchitectureanddesign",
     "product": "nodicsDocumentationProduct",
     "targetType": "DASHBOARD",
@@ -7950,7 +8539,7 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record188": {
+  "record201": {
     "code": "nodicsDocsSearchdashboardnodicsdocsdashboardseccapabilityregistryandlifecyclemanagement",
     "product": "nodicsDocumentationProduct",
     "targetType": "DASHBOARD",
@@ -7983,7 +8572,7 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record189": {
+  "record202": {
     "code": "nodicsDocsSearchdashboardnodicsdocsdashboardsecfoundationruntimeservices",
     "product": "nodicsDocumentationProduct",
     "targetType": "DASHBOARD",
@@ -8016,7 +8605,7 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record190": {
+  "record203": {
     "code": "nodicsDocsSearchdashboardnodicsdocsdashboardsecnodicsapplicationsuite",
     "product": "nodicsDocumentationProduct",
     "targetType": "DASHBOARD",
@@ -8049,7 +8638,7 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record191": {
+  "record204": {
     "code": "nodicsDocsSearchdashboardnodicsdocsdashboardsecsolutionusecases",
     "product": "nodicsDocumentationProduct",
     "targetType": "DASHBOARD",
@@ -8082,7 +8671,7 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record192": {
+  "record205": {
     "code": "nodicsDocsSearchdashboardnodicsdocsdashboardsecacceleratorsandindustrysolutiontemplates",
     "product": "nodicsDocumentationProduct",
     "targetType": "DASHBOARD",
@@ -8115,7 +8704,7 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record193": {
+  "record206": {
     "code": "nodicsDocsSearchdashboardnodicsdocsdashboardsecnodicsinstallerandworkspacesetup",
     "product": "nodicsDocumentationProduct",
     "targetType": "DASHBOARD",
@@ -8148,7 +8737,7 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record194": {
+  "record207": {
     "code": "nodicsDocsSearchdashboardnodicsdocsdashboardsecapplicationbuilderandworkspacegeneration",
     "product": "nodicsDocumentationProduct",
     "targetType": "DASHBOARD",
@@ -8181,7 +8770,7 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record195": {
+  "record208": {
     "code": "nodicsDocsSearchdashboardnodicsdocsdashboardsecaxisandbackofficeoperations",
     "product": "nodicsDocumentationProduct",
     "targetType": "DASHBOARD",
@@ -8214,7 +8803,7 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record196": {
+  "record209": {
     "code": "nodicsDocsSearchdashboardnodicsdocsdashboardsecbusinesscustomizationinaxis",
     "product": "nodicsDocumentationProduct",
     "targetType": "DASHBOARD",
@@ -8247,7 +8836,7 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record197": {
+  "record210": {
     "code": "nodicsDocsSearchdashboardnodicsdocsdashboardsecuserenterpriseandtenantmanagement",
     "product": "nodicsDocumentationProduct",
     "targetType": "DASHBOARD",
@@ -8280,7 +8869,7 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record198": {
+  "record211": {
     "code": "nodicsDocsSearchdashboardnodicsdocsdashboardsecsecuritygovernanceandcompliance",
     "product": "nodicsDocumentationProduct",
     "targetType": "DASHBOARD",
@@ -8313,7 +8902,7 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record199": {
+  "record212": {
     "code": "nodicsDocsSearchdashboardnodicsdocsdashboardsecapplicationconfigurationandruntimebehaviormanagement",
     "product": "nodicsDocumentationProduct",
     "targetType": "DASHBOARD",
@@ -8346,7 +8935,7 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record200": {
+  "record213": {
     "code": "nodicsDocsSearchdashboardnodicsdocsdashboardsecruntimegovernanceanddynamicchangemanagement",
     "product": "nodicsDocumentationProduct",
     "targetType": "DASHBOARD",
@@ -8379,7 +8968,7 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record201": {
+  "record214": {
     "code": "nodicsDocsSearchdashboardnodicsdocsdashboardseclocalizationandinternationalization",
     "product": "nodicsDocumentationProduct",
     "targetType": "DASHBOARD",
@@ -8412,7 +9001,7 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record202": {
+  "record215": {
     "code": "nodicsDocsSearchdashboardnodicsdocsdashboardsecdatamodelingandschemamanagement",
     "product": "nodicsDocumentationProduct",
     "targetType": "DASHBOARD",
@@ -8445,7 +9034,7 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record203": {
+  "record216": {
     "code": "nodicsDocsSearchdashboardnodicsdocsdashboardsecdatabaseandpersistencemanagement",
     "product": "nodicsDocumentationProduct",
     "targetType": "DASHBOARD",
@@ -8478,7 +9067,7 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record204": {
+  "record217": {
     "code": "nodicsDocsSearchdashboardnodicsdocsdashboardseccachingandruntimestatemanagement",
     "product": "nodicsDocumentationProduct",
     "targetType": "DASHBOARD",
@@ -8511,7 +9100,7 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record205": {
+  "record218": {
     "code": "nodicsDocsSearchdashboardnodicsdocsdashboardsecdeveloperextensionandprojectcustomization",
     "product": "nodicsDocumentationProduct",
     "targetType": "DASHBOARD",
@@ -8544,7 +9133,7 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record206": {
+  "record219": {
     "code": "nodicsDocsSearchdashboardnodicsdocsdashboardsecstoremarketsiteandchannelmanagement",
     "product": "nodicsDocumentationProduct",
     "targetType": "DASHBOARD",
@@ -8577,7 +9166,7 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record207": {
+  "record220": {
     "code": "nodicsDocsSearchdashboardnodicsdocsdashboardsecwcmsandcontentmanagement",
     "product": "nodicsDocumentationProduct",
     "targetType": "DASHBOARD",
@@ -8610,7 +9199,7 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record208": {
+  "record221": {
     "code": "nodicsDocsSearchdashboardnodicsdocsdashboardsecproductcataloganddiscovery",
     "product": "nodicsDocumentationProduct",
     "targetType": "DASHBOARD",
@@ -8643,7 +9232,7 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record209": {
+  "record222": {
     "code": "nodicsDocsSearchdashboardnodicsdocsdashboardsecsearchanddiscovery",
     "product": "nodicsDocumentationProduct",
     "targetType": "DASHBOARD",
@@ -8676,7 +9265,7 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record210": {
+  "record223": {
     "code": "nodicsDocsSearchdashboardnodicsdocsdashboardsecmediamanagement",
     "product": "nodicsDocumentationProduct",
     "targetType": "DASHBOARD",
@@ -8709,7 +9298,7 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record211": {
+  "record224": {
     "code": "nodicsDocsSearchdashboardnodicsdocsdashboardsecinventoryandstockmanagement",
     "product": "nodicsDocumentationProduct",
     "targetType": "DASHBOARD",
@@ -8742,7 +9331,7 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record212": {
+  "record225": {
     "code": "nodicsDocsSearchdashboardnodicsdocsdashboardsecpricingpromotionsandtax",
     "product": "nodicsDocumentationProduct",
     "targetType": "DASHBOARD",
@@ -8775,7 +9364,7 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record213": {
+  "record226": {
     "code": "nodicsDocsSearchdashboardnodicsdocsdashboardseccommercecartandcheckout",
     "product": "nodicsDocumentationProduct",
     "targetType": "DASHBOARD",
@@ -8808,7 +9397,7 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record214": {
+  "record227": {
     "code": "nodicsDocsSearchdashboardnodicsdocsdashboardsecpaymentmanagement",
     "product": "nodicsDocumentationProduct",
     "targetType": "DASHBOARD",
@@ -8841,7 +9430,7 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record215": {
+  "record228": {
     "code": "nodicsDocsSearchdashboardnodicsdocsdashboardsecloyaltyandrewards",
     "product": "nodicsDocumentationProduct",
     "targetType": "DASHBOARD",
@@ -8874,7 +9463,7 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record216": {
+  "record229": {
     "code": "nodicsDocsSearchdashboardnodicsdocsdashboardsecshippingandfulfillment",
     "product": "nodicsDocumentationProduct",
     "targetType": "DASHBOARD",
@@ -8907,7 +9496,7 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record217": {
+  "record230": {
     "code": "nodicsDocsSearchdashboardnodicsdocsdashboardsecordermanagement",
     "product": "nodicsDocumentationProduct",
     "targetType": "DASHBOARD",
@@ -8940,7 +9529,7 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record218": {
+  "record231": {
     "code": "nodicsDocsSearchdashboardnodicsdocsdashboardseccancellationsreturnsandrefunds",
     "product": "nodicsDocumentationProduct",
     "targetType": "DASHBOARD",
@@ -8973,7 +9562,7 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record219": {
+  "record232": {
     "code": "nodicsDocsSearchdashboardnodicsdocsdashboardseccustomerengagementandfeedback",
     "product": "nodicsDocumentationProduct",
     "targetType": "DASHBOARD",
@@ -9006,7 +9595,7 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record220": {
+  "record233": {
     "code": "nodicsDocsSearchdashboardnodicsdocsdashboardseccommunicationandnotifications",
     "product": "nodicsDocumentationProduct",
     "targetType": "DASHBOARD",
@@ -9039,7 +9628,7 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record221": {
+  "record234": {
     "code": "nodicsDocsSearchdashboardnodicsdocsdashboardseceventandmessagingmanagement",
     "product": "nodicsDocumentationProduct",
     "targetType": "DASHBOARD",
@@ -9072,7 +9661,7 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record222": {
+  "record235": {
     "code": "nodicsDocsSearchdashboardnodicsdocsdashboardsecprocessandworkflowautomation",
     "product": "nodicsDocumentationProduct",
     "targetType": "DASHBOARD",
@@ -9105,7 +9694,7 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record223": {
+  "record236": {
     "code": "nodicsDocsSearchdashboardnodicsdocsdashboardsecpipelineandbusinesslogicorchestration",
     "product": "nodicsDocumentationProduct",
     "targetType": "DASHBOARD",
@@ -9138,7 +9727,7 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record224": {
+  "record237": {
     "code": "nodicsDocsSearchdashboardnodicsdocsdashboardseccronandscheduledautomation",
     "product": "nodicsDocumentationProduct",
     "targetType": "DASHBOARD",
@@ -9171,7 +9760,7 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record225": {
+  "record238": {
     "code": "nodicsDocsSearchdashboardnodicsdocsdashboardsecdataimportexportandmigration",
     "product": "nodicsDocumentationProduct",
     "targetType": "DASHBOARD",
@@ -9204,7 +9793,7 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record226": {
+  "record239": {
     "code": "nodicsDocsSearchdashboardnodicsdocsdashboardsecsystemintegrationandexternalconnectivity",
     "product": "nodicsDocumentationProduct",
     "targetType": "DASHBOARD",
@@ -9237,7 +9826,7 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record227": {
+  "record240": {
     "code": "nodicsDocsSearchdashboardnodicsdocsdashboardsecoperationsmonitoringandrecovery",
     "product": "nodicsDocumentationProduct",
     "targetType": "DASHBOARD",
@@ -9270,7 +9859,7 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record228": {
+  "record241": {
     "code": "nodicsDocsSearchdashboardnodicsdocsdashboardsecqualitytestingandcertification",
     "product": "nodicsDocumentationProduct",
     "targetType": "DASHBOARD",
@@ -9303,7 +9892,7 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record229": {
+  "record242": {
     "code": "nodicsDocsSearchdashboardnodicsdocsdashboardsecdocumentationmanagement",
     "product": "nodicsDocumentationProduct",
     "targetType": "DASHBOARD",
@@ -9336,7 +9925,7 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record230": {
+  "record243": {
     "code": "nodicsDocsSearchdashboardnodicsdocsdashboardsecreleasestagingandpublication",
     "product": "nodicsDocumentationProduct",
     "targetType": "DASHBOARD",
@@ -9369,7 +9958,7 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record231": {
+  "record244": {
     "code": "nodicsDocsSearchdashboardnodicsdocsdashboardsecaianddevelopertooling",
     "product": "nodicsDocumentationProduct",
     "targetType": "DASHBOARD",
@@ -9402,7 +9991,7 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record232": {
+  "record245": {
     "code": "nodicsDocsSearchdashboardnodicsdocsdashboardsecreference",
     "product": "nodicsDocumentationProduct",
     "targetType": "DASHBOARD",
@@ -9435,7 +10024,611 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record233": {
+  "record246": {
+    "code": "nodicsDocsSearchpagenodicsdocsmetadataacceleratorscircacollectionreference",
+    "product": "nodicsDocumentationProduct",
+    "targetType": "PAGE",
+    "targetCode": "nodicsDocsMetadataacceleratorsCircaCollectionReference",
+    "title": "Circa Collection-Centre Record Reference",
+    "summary": "Exact authored collection point identities, coordinates, categories, operator and infrastructure-owner relationships.",
+    "searchText": "Circa Collection-Centre Record Reference Exact authored collection point identities, coordinates, categories, operator and infrastructure-owner relationships. # Circa Collection-Centre Record Reference\n\n![Collection-point ownership and location relationships](../assets/images/circa-record-network.png)\n\nThis source-backed diagram explains ownership and boundaries; it is not live\ndeployment or acceptance evidence. Qualification notes remain part of the flow.\n\nThis reference answers exactly which collection points the source provides and how\ntheir relationships are configured. Beginners must distinguish authored records,\nselected setup packages, installed records and currently visible eligible centres.\nThe following inventory is source evidence as reviewed on 30 September 2026; it\ndoes not assert a live database count or real partner accreditation. Business and\noperator teams can use it to reconcile a deployment before changing allocations.\nThe business problem is keeping discovery, operational ownership and staff access\naligned: a visible centre alone proves neither authorization nor eligible arrival.\n\n## How many collection points exist in source?\n\n| Source contribution | Number | Selection and ownership |\n| --- | ---: | --- |\n| Circa original `cc-dxb-*` points | 3 | `circa.ewaste:waste`, optional fresh-environment transaction sample; Location/Profile sections separate |\n| Shared Waste Collection network | 17 | Setup selects `wasteCollection:sample-collection-points`, plus shared location/address packages |\n| Sunmarke school point | 1 | Separate `sunmarke-waste`, `sunmarke-location`, `sunmarke-profile` manifest sections; not one of the three original points |\n\nThere are 21 distinct authored point codes across those reviewed contributions.\nThe default Circa setup package list selects the shared network and original Circa\nlocation data, but Circa Waste transactions are optional. It does not select the\nthree Sunmarke sections in that list. Therefore neither 3, 20 nor 21 is a universal\ninstalled/visible count. Installed release receipts, point status/visibility, missing\nreferences and owner API filters determine what a customer actually sees.\n\n## Original three Circa points\n\n| Point code | English name | Location code | Latitude | Longitude |\n| --- | --- | --- | ---: | ---: |\n| cc-dxb-01 | Circa Green Hub Al Quoz | cc-dxb-01-location | 25.1358 | 55.2274 |\n| cc-dxb-02 | Emirates Circular Drop Box | cc-dxb-02-location | 25.0470694 | 55.243265 |\n| cc-dxb-03 | TechCycle Collection Desk | cc-dxb-03-location | 25.2515 | 55.3194 |\n\nAll three declare `collectionPointType: COLLECTION_CENTRE`, `operatingStatus: ACTIVE`,\n`publicVisibility: PUBLIC`, `status: ACTIVE`, `revision: 1` and `active: true`.\nEach `operatorEnterpriseRef` points to Profile enterprise `default`. None of these\nthree authored point records declares a separate bin-owner reference. Do not infer\none from the programme name or assign the shared network's owner automatically.\n\nEach `locationRef` has module `locationCore`, schema `location` and its listed code.\nEach Location points back through `sourceRef` to Waste Collection schema\n`wasteCollectionPoint` and the original point code. Location declares category\nWASTE_COLLECTION, type COLLECTION_CENTRE and public visibility. Its `addressRef`\ntargets Profile `cc-dxb-01-address`, `cc-dxb-02-address` or `cc-dxb-03-address`.\nThe authored address lines are Al Quoz Industrial Area 3, First Avenue Mall/Motor\nCity, and Dubai Internet City Building 10 respectively. They are reference data,\nnot independently verified real-world operating arrangements.\n\nAll three publish a sample opening label Daily 09:00-20:00 and sample telephone\nmetadata. The common acceptance summary is phones, computers and household\nelectronics, with specialist items needing prior arrangement. A label is not\ntime-aware availability or item acceptance enforcement.\n\n## Accepted category metadata and policy\n\nThe original points each list 19 acceptedCategoryCodes: MOBILE_DEVICE,\nLAPTOP_COMPUTER, TABLET, DESKTOP_COMPUTER, MONITOR_DISPLAY, CABLE_CHARGER,\nSMALL_APPLIANCE, LITHIUM_BATTERY, POWER_BANK, MIXED_ELECTRONICS, CIRCA_MIX,\nCIRCA_LARGE_HOUSEHOLD_APPLIANCES, CIRCA_SMALL_HOUSEHOLD_APPLIANCES,\nCIRCA_IT_EQUIPMENT_INCLUDING_MONITORS, CIRCA_CONSUMER_ELECTRONICS_INCLUDING_TELEVISIONS,\nCIRCA_TOYS, CIRCA_TOOLS, CIRCA_MONITORING_AND_CONTROL_INSTRUMENTS and\nCIRCA_AUTOMATIC_DISPENSERS. These metadata values must remain distinct from owner\nacceptance-rule and preset decisions; do not invent eligibility from displayed text.\n\nThe Circa policy overlay contributes EWASTE_DROP_OFF_STANDARD and CIRCA_MALL_DROP_OFF.\nThe standard overlay chooses CIRCA_VERIFIED_DEVICE_RECOVERY, rule references\nEWASTE_DROP_OFF_MOBILE_DEVICE, EWASTE_DROP_OFF_LAPTOP and CIRCA_DROP_OFF_SMART_HOME,\nand DROP_OFF/RECEIPT/CIRCA_ONBOARDING capabilities. The mall record selects\nEWASTE_STANDARD_RECEIPT, EWASTE_STANDARD_VERIFICATION and EWASTE_STANDARD_PHOTO,\nwith DROP_OFF/RECEIPT/PUBLIC_COUNTER capabilities. These are policy records, not\nproof that a specific point has completed receipt or applied every preset.\n\n## Shared 17-point network\n\nFor the following table, each suffix expands to point code\n`WCP_SAMPLE_COLLECTION_CENTRE_<suffix>` and location code\n`LOC_SAMPLE_COLLECTION_CENTRE_<suffix>`:\n\n| Suffix | Authored English label |\n| --- | --- |\n| YOU_AND_CO | You&Co Collection Centre |\n| AVERDA_NADD_AL_HAMAR | Averda Recycling Center - Nadd Al Hamar |\n| AVERDA_METRO_FOOTBRIDGE | Averda Recycling Center - Metro Footbridge |\n| AVERDA_AL_SAFA | Averda Recycling Center - Al Safa |\n| AVERDA_AL_SATWA | Averda Recycling Center - Al Satwa |\n| AVERDA_AL_RASHIDIYA | Averda Recycling Center - Al Rashidiya |\n| AVERDA_AL_NAHDA_2 | Averda Recycling Center - Al Nahda 2 |\n| AVERDA_MUHAISNAH_1 | Averda Recycling Center - Muhaisnah 1 |\n| EFATE_DEIRA | EFATE - Deira |\n| EFATE_SUSTAINABLE_CITY | EFATE - The Sustainable City |\n| EFATE_RIGGAT_AL_BUTEEN | EFATE - Riggat Al Buteen |\n| EFATE_DUBAI_MARINA | EFATE - Dubai Marina |\n| EFATE_AL_QUOZ | EFATE - Al Quoz |\n| EFATE_AL_QUOZ_1 | EFATE - Al Quoz 1 |\n| DU_TELECOM_DIAC | DU Telecom - Dubai International Academic City |\n| DU_HQ_DUBAI_HILLS | DU HQ - Dubai Hills |\n| AL_HAWAI_RESIDENCE_BARSHA_HEIGHTS | Al-Hawai Residence - Barsha Heights |\n\nThese sample points reference operator NODICS_WASTE_MANAGEMENT_CO and the separate\n`assetOwnerEnterpriseRef` infrastructure-owner field referencing\nBEAH_RECYCLING_SERVICES. Their labels do\nnot establish commercial affiliation with the named places/companies. The\nenterprise and staff reference guide explains why operator, owner and employee\npermissions are distinct. Do not rewrite those references based on branding.\n\n## Sunmarke contribution\n\nThe optional point is `cc-dxb-sunmarke-jvt`, named Sunmarke School, JVT, referencing\n`cc-dxb-sunmarke-jvt-location` and operator `default`. The selected source location\nin `sample-v003/sunmarke-location` is latitude 25.0469679, longitude 55.193292,\nreferencing `cc-dxb-sunmarke-jvt-address`. The point has PUBLIC/ACTIVE/sample\nmetadata and the same 19-category list. This documents an authored user-requested\nlocal registration, not independently verified school access or installed status.\n\n## Customize and extend safely\n\nA developer adds a point in a custom backend data release, with a reviewed unique\ncode, Profile operator, optional separately governed owner, Location and address.\nFor example, a fourth project point must not reuse cc-dxb-03 or overwrite its\nlocation. Install the selected owner releases, grant staff resource scopes and\nvalidate the point through the current collection/arrival APIs. Source extension\nalone does not publish it or change current installed records.\n\nReject missing/inactive references, unauthorized operator changes, stale location\nand wrong-centre scope. Failed installation or arrival preserves existing history;\ninspect owner receipts before retrying. Test default and custom project layers,\nexact radius, public/private filtering, address resolution and independent bin ownership.\n\n## Common mistakes\n\nReporting three as the entire network; reporting all source points as installed;\nusing map camera coordinates; treating accepted-category copy as policy; using\noperator enterprise as automatic bin owner; and widening employee scope to repair\na missing point are incorrect. Coordinate edits require approved owner mutation.\n\n## Verification\n\nSource files are Circa manifest-selected Waste/Location/Profile records and shared\nWaste Collection sample records. DevOps must reconcile installed receipts and fresh\nowner projections independently. Live counts and geography were not queried for\nthis documentation update. See [enterprise/staff references](circa-enterprise-reference.md),\n[source inventory](circa-source-inventory.md) and [data overview](circa-data-network.md).\n",
+    "keywords": [
+      "circa",
+      "ewaste",
+      "collection-reference",
+      "configuration",
+      "source records",
+      "Circa",
+      "Source reference"
+    ],
+    "facets": {
+      "section": "accelerators-and-industry-solution-templates",
+      "group": "accelerators-and-industry-solution-templates",
+      "navigationDepth": 2,
+      "documentType": "configuration",
+      "audience": [
+        "business",
+        "architect",
+        "administrator",
+        "developer",
+        "operator",
+        "qa",
+        "ai-tool"
+      ],
+      "maturityState": "partial"
+    },
+    "managedInAxis": true,
+    "axisAuthoringPermissions": [
+      "documentation.search.preview"
+    ],
+    "workflowRequired": true,
+    "workflowTriggers": [
+      "SEARCH_METADATA_CHANGE"
+    ],
+    "locale": "en",
+    "channel": "web",
+    "accessPolicy": "nodicsDocsAccessPublic",
+    "accessMode": "PUBLIC",
+    "lifecycleState": "ONLINE",
+    "indexState": "INDEX_READY",
+    "active": true
+  },
+  "record247": {
+    "code": "nodicsDocsSearchpagenodicsdocsmetadataacceleratorscircaenterprisereference",
+    "product": "nodicsDocumentationProduct",
+    "targetType": "PAGE",
+    "targetCode": "nodicsDocsMetadataacceleratorsCircaEnterpriseReference",
+    "title": "Circa Enterprise, Staff and Scope Reference",
+    "summary": "Enterprise source records, business capabilities, operational employees, resource scopes and ownership alignment caveats.",
+    "searchText": "Circa Enterprise, Staff and Scope Reference Enterprise source records, business capabilities, operational employees, resource scopes and ownership alignment caveats. # Circa Enterprise, Staff and Scope Reference\n\n![Enterprise associations and explicit staff scope](../assets/images/circa-record-network.png)\n\nThis source-backed diagram explains ownership and boundaries; it is not live\ndeployment or acceptance evidence. Qualification notes remain part of the flow.\n\nThis page explains the actual enterprise references beneath Circa's sample network,\nnot only the intended operating model. Beginners should separate an enterprise's\nbusiness roles, its parent relationship, an employee's permission groups and a\nresource scope assignment. The business value is controlled multi-organization\nparticipation without duplicating credentials or silently granting operational access.\n\n## Which enterprises are referenced?\n\n| Code | Authored name and source | Business roles | Reference use |\n| --- | --- | --- | --- |\n| default | Default; Profile init-v001 enterprise initializer | PLATFORM_OWNER | Original three Circa points, optional Sunmarke and Circa Commerce store reference |\n| NODICS_WASTE_MANAGEMENT_CO | Nodics Waste Management Co.; Waste Core core-v001 contribution to Profile | PROGRAM_OPERATOR, SERVICE_PROVIDER | Operator of shared 17-point network |\n| BEAH_RECYCLING_SERVICES | BEAH Recycling Services; Waste Core core-v001 contribution to Profile | SERVICE_PROVIDER, ASSET_OWNER, BUSINESS_PARTNER | Shared network infrastructure-owner reference |\n\nThe Circa module's profile sample itself contains three customers and three centre\naddresses, not three new enterprises. Across the reviewed point/store templates,\nthree distinct enterprise codes are referenced. This is not a count of all enterprise\nrecords installed on Platform. The separately discussed seven-enterprise network\nis a preparation plan, not these persisted source records or an approved import.\n\nThe initializer enterprise `default` declares `tenant: default:true`, description\nDefault platform owner enterprise, address `defaultEntAddress` and contact\n`defaultEntContact`. Its capability scope is Profile PLATFORM_OWNER/GLOBAL. The\ncolon-bearing tenant initializer representation is an import-layer value; it must\nnot be copied into a customer HTTP tenant parameter or treated as another company.\n\n## Operator and infrastructure-owner capabilities\n\nNODICS_WASTE_MANAGEMENT_CO declares Waste Core PROGRAM_OPERATOR/WASTE_MANAGEMENT\nand SERVICE_PROVIDER/COLLECTION_CENTRE_OPERATION capability scopes. The BEAH\nreference declares SERVICE_PROVIDER/RECYCLING_SERVICE_OPERATION,\nASSET_OWNER/COLLECTION_BIN_OWNERSHIP and BUSINESS_PARTNER/WASTE_MANAGEMENT_PARTNERSHIP.\nBoth authored enterprise records are active with empty addresses/contacts.\n\nThis demonstrates multi-role enterprises. It does not prove a real BEAH partnership,\nactual recycling capacity or current contract. A centre's operator reference identifies\nwho operates it; a separately supplied owner reference identifies infrastructure\nownership. Neither creates an employee membership or a data-access permission.\nThe original Circa points provide an operator but no independent bin-owner field;\nthat missing information must not be silently filled from shared sample assumptions.\n\n## Seven operational sample employees\n\nThe `circa.ewaste:operations` release contains seven employee records and eight\nscope records. This public guide deliberately omits passwords, credential material\nand login details. It records stable sample employee codes and permission groups:\n\n| Employee code | userGroups contribution | Scope sample |\n| --- | --- | --- |\n| circa-administrator | wasteEnterpriseAdministratorUserGroup | ENTERPRISE/default |\n| circa-centre-operator | wasteCentreOperatorUserGroup | BUSINESS_UNIT/You&Co shared point code |\n| circa-verifier | wasteVerifierUserGroup | BUSINESS_UNIT/You&Co shared point code |\n| circa-approver | wasteApproverUserGroup | BUSINESS_UNIT/You&Co shared point code |\n| circa-coupon-manager | wasteCouponManagerUserGroup | ENTERPRISE/default |\n| circa-marketplace-moderator | wasteMarketplaceModeratorUserGroup | ENTERPRISE/default |\n| circa-auditor | wasteAuditorUserGroup | ENTERPRISE/default |\n\nThe eighth assignment is `circa-scope-platform-admin`, targeting the existing\nplatform admin principal with GLOBAL/* scope. It is not an eighth employee record.\nEach authored assignment uses principalType human, tenantCode/enterpriseCode\ndefault, ALLOW, DIRECT inheritance and ACTIVE status. The centre scopes explicitly\ntarget `WCP_SAMPLE_COLLECTION_CENTRE_YOU_AND_CO`; they do not target cc-dxb-01,\ncc-dxb-02 or cc-dxb-03. An operator should expect a scope mismatch to reject and\nreview intended allocation, not add unrestricted permissions to make a demo pass.\n\n## Scope and enterprise alignment checks\n\nEmployee record codes, login/principal identifiers and enterprise memberships are\nnot interchangeable. Scope principalCode must resolve through Profile's canonical\nprincipal semantics. Role groups describe permitted actions; operational scope\nlimits where those actions apply. Profile admission, account freshness and route\npermissions remain independently required.\n\nThe shared You&Co point references NODICS_WASTE_MANAGEMENT_CO, while these scope\ntemplates declare enterpriseCode default. Documenting both facts is not qualification\nof that cross-reference. Reconcile current installed memberships, target-owner scope\nsemantics and approved staff allocation before operational acceptance. Do not\nrewrite source or extend access merely because the source records coexist.\n\nCirca sets requireScopes and requireVerification true and requireDifferentApprover\nfalse. A person with both explicitly authorized permissions may perform both review\nstages; the false flag does not give an operator the approver group. An enterprise\nadministrator is not automatically a merchant operator at every outlet.\n\n## Hierarchy and platform authority\n\nProfile already models superEnterprise/subEnterprises. None of the three enterprise\ninitializer records reviewed here establishes the proposed GreenPerks parent/child\nnetwork. Consent-based ancestor administration remains an accepted but incompletely\nenforced framework policy in the current batch. Default-false creation consent\nmust not be assumed to exist as an activated configuration API.\n\nAuthorized platform super administrators can have independent platform authority;\nordinary PLATFORM_OWNER membership/business role cannot manufacture it. Enterprise\nsuper administration, employee membership, operational scopes and coupon commercial\nrelationships must remain separate. Session permissions resolve for the selected\nenterprise, not a union of every membership. Last-super-admin and dependency\ninvalidation improvements still require complete source/installed qualification.\n\n## Customize and extend safely\n\nA custom project contributes approved enterprise records through Profile-owned\ndata releases, then creates employee identities/memberships through lifecycle owners\nand assigns bounded operational scopes. A worked example assigns a verifier to a\nnew centre: retain one canonical human identity, select the target enterprise,\ngrant only verification permission and that centre's scope, and confirm approval\nremains denied. Do not clone an existing password, insert a generic admin or copy\nthe platform GLOBAL scope.\n\nDevelopers test wrong enterprise, wrong centre, missing membership, inactive actor,\nrevoked permission, DENY precedence, stale session and independent valid memberships.\nRecovery uses the qualified Profile access lifecycle with audit, not direct data\nediting. Operators inspect effective rights and saved assignments; DevOps preserves\nthe actor and grant history through upgrades.\n\n## Common mistakes\n\nCounting customers as enterprises; counting the extra scope as an employee; deriving\nrights from enterprise roleCodes; assuming the shared operator owns every bin;\nconfusing sample principal login with record code; and granting all descendants\nbecause a hierarchy exists violate owner boundaries.\n\n## Verification\n\nCounts and fields come from Profile default initialization, Waste Core enterprise\ncontribution and Circa operations records. No installed principal/membership inventory\nor credential validation was performed. Confirm actual mappings through approved\nowner APIs during joint acceptance. See [collection references](circa-collection-reference.md),\n[operations/rewards](circa-operations-rewards.md) and [customization](circa-customization.md).\n",
+    "keywords": [
+      "circa",
+      "ewaste",
+      "enterprise-reference",
+      "configuration",
+      "source records",
+      "Circa",
+      "Source reference"
+    ],
+    "facets": {
+      "section": "accelerators-and-industry-solution-templates",
+      "group": "accelerators-and-industry-solution-templates",
+      "navigationDepth": 2,
+      "documentType": "configuration",
+      "audience": [
+        "business",
+        "architect",
+        "administrator",
+        "developer",
+        "operator",
+        "qa",
+        "ai-tool"
+      ],
+      "maturityState": "partial"
+    },
+    "managedInAxis": true,
+    "axisAuthoringPermissions": [
+      "documentation.search.preview"
+    ],
+    "workflowRequired": true,
+    "workflowTriggers": [
+      "SEARCH_METADATA_CHANGE"
+    ],
+    "locale": "en",
+    "channel": "web",
+    "accessPolicy": "nodicsDocsAccessPublic",
+    "accessMode": "PUBLIC",
+    "lifecycleState": "ONLINE",
+    "indexState": "INDEX_READY",
+    "active": true
+  },
+  "record248": {
+    "code": "nodicsDocsSearchpagenodicsdocsmetadataacceleratorscircasourceinventory",
+    "product": "nodicsDocumentationProduct",
+    "targetType": "PAGE",
+    "targetCode": "nodicsDocsMetadataacceleratorsCircaSourceInventory",
+    "title": "Circa Source Release and Record Inventory",
+    "summary": "Manifest versions, destinations, all source record counts, optional packages and publication boundaries.",
+    "searchText": "Circa Source Release and Record Inventory Manifest versions, destinations, all source record counts, optional packages and publication boundaries. # Circa Source Release and Record Inventory\n\nThis is the detailed data index for the Circa reference product. Beginners can use\nit to answer which module contributes a record, how many authored exports it has,\nwhich runtime receives it and which release is selected. Business/operator teams\nmust not interpret these counts as installed users, current stock, live wallet\nbalances or completed transactions. Counts were inspected from current source on\n30 September 2026, without imports, owner API calls or database reads.\n\n## Manifest sections and destinations\n\nThe business problem is release reconciliation: teams need to know which source packages contribute records before deciding what to import or publish. This inventory supplies that context without claiming a successful deployment.\n\nAll paths below are beneath the customer backend\n`modules/circa.ewaste/data`; the manifest, not the oldest directory name, selects\nactive contribution roots. The framework guide describes them without relocating\nthe application's data into a framework domain.\n\n| Section | Source root | Version | Destination | Publication |\n| --- | --- | --- | --- | --- |\n| profile | sample-v001 | 0.0.4 | PLATFORM | NONE |\n| location | sample-v001 | 0.0.4 | LOCATION | NONE |\n| waste | sample-v004 | 0.0.5 | WASTE | NONE; EXPLICIT optional transaction sample |\n| waste-policy | core-v002 | 0.0.1 | WASTE | NONE; EXPLICIT reference overlay |\n| loyalty | sample-v001 | 0.0.4 | LOYALTY | NONE |\n| content | sample-v001 | 0.0.9 | WCMS_STAGED | REQUIRED |\n| commerce | sample-v001 | 0.0.4 | COMMERCE_STAGED | REQUIRED |\n| operations | sample-v001 | 0.0.2 | PLATFORM | NONE |\n| customer-workspace | core-v001 | 0.0.3 | WCMS_STAGED | REQUIRED |\n| sunmarke-profile | sample-v001 | 0.0.2 | PLATFORM | NONE |\n| sunmarke-location | sample-v003 | 0.0.3 | LOCATION | NONE |\n| sunmarke-waste | sample-v001 | 0.0.1 | WASTE | NONE |\n\nWaste policy has environmentScope ALL. The other listed sections are scoped to\nLOCAL and LOCAL_PRODUCTION_SIMULATION. An ALL reference scope is not permission\nto replay local transactional samples in production. PUBLISHABLE source requires\nseparate governed Online activation; importing Staged is not publishing.\n\n## Profile, Location and operational files\n\n| Section/records filename | Exports | Role of records |\n| --- | ---: | --- |\n| profile/circaAddressData.js | 3 | Address references for original three centres |\n| profile/circaCustomerData.js | 3 | Reference customer identities; no passwords reproduced here |\n| location/circaLocationData.js | 3 | Original three canonical locations |\n| operations/circaOperationalEmployeeData.js | 7 | Operational employee templates |\n| operations/circaOperationalScopeData.js | 8 | Seven employee scope templates plus existing platform-admin scope |\n| sunmarke-profile/sunmarkeAddressData.js | 1 | Optional school address |\n| sunmarke-location/sunmarkeLocationData.js | 1 | Optional school location |\n| sunmarke-waste/sunmarkeWasteCollectionPointData.js | 1 | Optional school collection point |\n\nFor each section, filenames live under its source root and section's `records`\ndirectory. Employee templates and scope principal identifiers need Profile lifecycle\nresolution; counts do not prove current membership or credential availability.\nEnterprise definitions are dependencies, not Circa profile records: Profile owns\ndefault initialization; Waste Core contributes the two shared-network enterprises.\n\n## Waste transaction and reference files\n\n| Selected section/filename | Exports |\n| --- | ---: |\n| waste/circaWasteAssetData.js | 11 |\n| waste/circaWasteAssetOwnershipEventData.js | 11 |\n| waste/circaWasteCollectionPointData.js | 3 |\n| waste/circaWasteEvidenceData.js | 21 |\n| waste/circaWasteImpactResultData.js | 11 |\n| waste/circaWasteSubmissionData.js | 21 |\n| waste/circaWasteVerificationData.js | 16 |\n| waste-policy/eWasteAcceptanceRuleData.js | 1 |\n| waste-policy/eWasteCategoryData.js | 25 |\n| waste-policy/eWasteCollectionPresetData.js | 2 |\n| waste-policy/eWasteImpactProfileData.js | 2 |\n| waste-policy/eWasteItemTypeData.js | 28 |\n\nThe selected submission field is `submissionStatus`: 11 APPROVED, 5 SUBMITTED,\n5 REJECTED. Verification uses `verificationStatus`: 11 APPROVED, 5 REJECTED.\nAsset uses `assetStatus`: 6 OWNED, 5 LISTED. Older prose describing 20 submissions\nor ten approved records is a historical opening snapshot, not this successor count.\nDo not query a generic `status` field and report undefined values as lifecycle state.\n\nThe policy counts describe Circa's source overlay exports, not total composed\ntaxonomy. nImport can inherit the selected eWaste reference predecessor. Matching\nfile names, export keys and header targets determine composition. Counting the\ntwo files as two full taxonomies would be incorrect. Historical core-v001 roots\nand earlier Waste samples are retained compatibility evidence, not extra active\nrecords to import alongside the successor.\n\n## Loyalty files\n\n| Filename in loyalty/records | Exports |\n| --- | ---: |\n| circaLoyaltyProgramData.js | 1 |\n| circaLoyaltyRewardTypeData.js | 1 |\n| circaLoyaltyWalletData.js | 3 |\n| circaLoyaltyWalletRewardBalanceData.js | 6 |\n| circaRewardLedgerEntryData.js | 22 |\n\nConfiguration uses programme circa, reward type points and carbon reward type\ncircaCarbon. One Circa-authored reward-type export is not proof that the whole\ndeployment has only one reward type: inspect inherited owner reference data.\nOpening ledger records are not repeatable top-ups. Preserve source references,\noriginal reward/asset history and owner balance arithmetic.\n\n## Commerce files\n\n| Filename in commerce/records | Exports |\n| --- | ---: |\n| circaCategoryData.js | 2 |\n| circaCategoryLocalizationData.js | 4 |\n| circaProductData.js | 8 |\n| circaProductLocalizationData.js | 16 |\n| circaProductVariantData.js | 8 |\n| circaProductVariantLocalizationData.js | 16 |\n| circaPriceBookData.js | 1 |\n| circaPriceRowData.js | 8 |\n| circaInventoryBalanceData.js | 8 |\n| circaCouponBatchData.js | 3 |\n| circaCouponData.js | 150 |\n| circaPromotionData.js | 3 |\n| circaStoreData.js | 1 |\n| circaTaxPolicyData.js | 1 |\n| circaWarehouseData.js | 1 |\n\nEight products comprise five asset listings and three coupon offers. Two categories\nare circaAssets and circaCoupons. Sixteen localized product and variant rows\nrepresent English/Arabic contributions, not sixteen additional products.\nThe [catalogue record reference](circa-catalogue-reference.md) shows exact identities,\nprices, inventory and promotion relationships. The 35-offer preparation plan has\nnot replaced these source releases or been imported by this documentation change.\n\n## Content, assets and account composition\n\nContent exports are circaCmsComponentData.js (10), circaCmsGroupData.js (1),\ncircaCmsPageData.js (3), circaCmsRendererData.js (9), circaCmsRouteData.js (3),\ncircaCmsSiteData.js (1), circaCmsSlotData.js (1), circaCmsTemplateData.js (1),\ncircaCmsTypeData.js (9) and circaContentCatalogData.js (1). The assetManifest declares\n18 media assets; circaMediaData.js maps those entries to Media hydration records.\nDo not count the asset manifest and hydration projection as 36 independent assets.\n\nCustomer-workspace exports one record each from circaWorkspaceComponentData.js,\nGroupData.js, PageData.js, RendererData.js, RouteData.js, SlotData.js, TemplateData.js\nand TypeData.js (all with the circaWorkspace prefix). These records supply the\npublished account composition, not eight customer transactions. The shared typed\nrenderer consumes safe backend configuration; it does not execute server-supplied\nJavaScript or grant domain actions from copy.\n\n## Customize and extend safely\n\nDevelopers add a focused custom release and update its authoritative manifest with\nexisting tooling. A worked example changes only one account banner component while\nleaving transaction and opening-wallet sections unselected. Validate checksums,\nsource keys, owner headers and generated artifacts before reviewing publication.\nReject unknown baseline or conflicting release versions; recover through owner\nreceipts rather than deleting history or editing generated hashes.\n\n## Common mistakes\n\nSumming overlapping historical/current roots; treating locale rows as products;\ncounting policy overlays as complete composed taxonomy; treating exported opening\nbalances as current balances; and reimporting transactions to update a banner are\nincorrect. Source status counts are dated documentation evidence, not live telemetry.\n\n## Verification\n\nThis inventory comes from the manifest's selected file lists and offline exported\ndata shapes, with no runtimes or credentials. Operators/DevOps must verify installed\nreceipts and authorized owner API inventory separately. Check source inventory again\nafter any release change and preserve counts/source-root/version in documentation.\nSee [collection centres](circa-collection-reference.md), [enterprise/staff](circa-enterprise-reference.md)\nand [configuration](circa-configuration-reference.md) for field-level interpretation.\n",
+    "keywords": [
+      "circa",
+      "ewaste",
+      "source-inventory",
+      "configuration",
+      "source records",
+      "Circa",
+      "Source reference"
+    ],
+    "facets": {
+      "section": "accelerators-and-industry-solution-templates",
+      "group": "accelerators-and-industry-solution-templates",
+      "navigationDepth": 2,
+      "documentType": "operations",
+      "audience": [
+        "business",
+        "architect",
+        "administrator",
+        "developer",
+        "operator",
+        "qa",
+        "ai-tool"
+      ],
+      "maturityState": "partial"
+    },
+    "managedInAxis": true,
+    "axisAuthoringPermissions": [
+      "documentation.search.preview"
+    ],
+    "workflowRequired": true,
+    "workflowTriggers": [
+      "SEARCH_METADATA_CHANGE"
+    ],
+    "locale": "en",
+    "channel": "web",
+    "accessPolicy": "nodicsDocsAccessPublic",
+    "accessMode": "PUBLIC",
+    "lifecycleState": "ONLINE",
+    "indexState": "INDEX_READY",
+    "active": true
+  },
+  "record249": {
+    "code": "nodicsDocsSearchpagenodicsdocsmetadataacceleratorscircacataloguereference",
+    "product": "nodicsDocumentationProduct",
+    "targetType": "PAGE",
+    "targetCode": "nodicsDocsMetadataacceleratorsCircaCatalogueReference",
+    "title": "Circa Store, Product, Price and Coupon Record Reference",
+    "summary": "Exact store, product, variant, points price, inventory, promotion, batch and code-pool sample records.",
+    "searchText": "Circa Store, Product, Price and Coupon Record Reference Exact store, product, variant, points price, inventory, promotion, batch and code-pool sample records. # Circa Store, Product, Price and Coupon Record Reference\n\nThis page lists the current authored catalogue rather than only explaining the\nshopping flow. Beginners should read it alongside the purchase journey: a Product\nname, a Price row and a Promotion action are different records. The business and\noperator value is being able to reconcile what a customer sees with the actual\nconfigured price, supply and eligibility before a programme is published.\n\n## Store, warehouse and price book\n\nThe business decision is whether an authored offer is ready to sell. Product\ncopy, price, inventory and executable benefit conditions must agree; a sample\ntitle alone is not evidence of an enforceable discount.\n\nThere is one Circa-authored Store, `circaMainStore`, named Circa eWaste. It declares\ntenant default, enterpriseCode default, revision 1, ACTIVE status, active true,\ndefaultCurrency POINTS, defaultLocale en and timezone Asia/Dubai. The selected\nauthoring catalogVersion is circaStaged. The marketplace selects price book\ncircaPointsPriceBook and warehouse circaDigitalRegistry. The digital registry is\nnot a declaration of physical stock availability or delivery operations.\n\nThese are source identities and should not be renamed while upgrading an installed\nprogramme. A fresh adopter can select its own approved store and programme through\ncustom data/configuration. Price currency POINTS does not establish an AED exchange\nrate, carbon price or cash settlement policy.\n\n## All eight source products and prices\n\n| Product code | Authored name | unitAmount POINTS | Source availability |\n| --- | --- | ---: | ---: |\n| CIRCA_ASSET_EWA-1047 | Damaged ThinkPad T480 | 34 | 1 |\n| CIRCA_ASSET_EWA-1051 | Office LED Monitor | 26 | 1 |\n| CIRCA_ASSET_EWA-1052 | Home Wi-Fi Router | 16 | 1 |\n| CIRCA_ASSET_EWA-1055 | Compact Digital Camera | 20 | 1 |\n| CIRCA_ASSET_EWA-1092 | Mesh Router Pair | 16 | 1 |\n| CIRCA_COUPON_CPN-GRN-30 | AED 30 repair credit | 14 | 50 |\n| CIRCA_COUPON_CPN-ECO-15 | 15% recycled accessories offer | 9 | 50 |\n| CIRCA_COUPON_CPN-SVC-50 | AED 50 device diagnosis | 20 | 50 |\n\nEvery Product declares DIGITAL and fulfillmentStrategy DIGITAL_COMMERCE. The\nthree coupon products additionally declare digitalDeliveryType COUPON_CODE. Asset\nproducts use category circaAssets, coupon products circaCoupons. Exact current\navailability comes from the owner, not the opening values in this table.\n\nThe product code maps to variant code `<product>_VARIANT`, SKU `<product>_SKU`\nand price row `<product>_POINTS`. Price rows reference circaPointsPriceBook,\nproductCode, unitAmount as a decimal string, currency POINTS and minQuantity \"1\".\nProduct and variant localized content has English and Arabic rows. Missing offer\nterms must not be invented from a product title.\n\n## Inventory and coupon pool\n\nInventory code is `circaDigitalRegistry:<SKU>`, with warehouseCode, sku, onHand,\nreserved, allocated, available and priority. The five source asset rows have\nonHand/available \"1\", reserved/allocated \"0\". The three coupon rows have\nonHand/available \"50\", reserved/allocated \"0\", inventoryStrategy COUPON_CODE_POOL,\ndigitalDeliveryType COUPON_CODE and explicit promotionCode/couponBatchCode.\n\nFor each coupon product prefix, the promotion code is `<product>_PROMO` and batch\ncode `<product>_BATCH`. Each batch declares issuedCount 50, reservedCount 0, ACTIVE,\ntokenHashPolicy TENANT_UPPERCASE_SHA256 and sourceReference equal to the product code.\nThere are 150 authored coupon-unit records across three batches. Batch issuedCount\nis pool issuance, not 150 completed customer purchases. Do not expose raw sample\ntokens/hash details in public documentation or browser catalogue data.\n\n## Promotion actions versus title claims\n\n| Promotion suffix/product | validFrom | validTo | Authored action |\n| --- | --- | --- | --- |\n| CPN-GRN-30 | 2026-01-01 | 2026-12-31 23:59:59Z | AMOUNT, discountValue \"1\", discountAmount \"1\" |\n| CPN-ECO-15 | 2026-01-01 | 2026-11-15 23:59:59Z | AMOUNT, discountValue \"1\", discountAmount \"1\" |\n| CPN-SVC-50 | 2026-01-01 | 2027-01-20 23:59:59Z | AMOUNT, discountValue \"1\", discountAmount \"1\" |\n\nAll three are ACTIVE, revision 1, priority 25, with couponRequired and\ncustomerOwnsCouponCode true, sourceProductCode matching the product, reasonCode\nCIRCA_SAMPLE_OFFER and budget limit \"1000\"/spent \"0\". The authored dates are fixed\ncampaign dates, not purchase-relative expiry.\n\nImportant limitation: the title \"15%\" does not make the source action PERCENT;\nthe \"AED 30\"/\"AED 50\" names do not make the configured action 30/50 AED. These are\nillustrative sample records with a nominal one-unit action. Do not sell them as a\nqualified real benefit, infer settlement from their names or silently change old\nissued rights. Production benefit validation and approved seller/outlet contracts\nare separate required implementation/acceptance.\n\n## What is not configured by this source catalogue\n\nThe three Promotion conditions contain no explicit storeCodes list, minimum-spend\nreceipt evidence, percentage cap or item/bundle fulfillment rule. The Store is\nonline browsing/purchase context, not a record of two new physical redemption outlets.\nNo source declaration here establishes the prepared GreenPerks network. Parent-child\nenterprises cannot fill those missing commercial/outlet relationships automatically.\n\nThe separately staged purchased-rights capability remains disabled/unqualified by\ndefault. Its policy can retain purchase-relative terms/expiry when qualified; it\ndoes not retroactively convert these source campaign dates into 30 days after every\npurchase. Preserve legacy compatibility and approved terms through owner operations.\n\n## Customize and extend safely\n\nA developer authors a new product/variant, price, inventory pool, batch and Promotion\npolicy in a custom backend release, keeping exact cross-references. For example,\nadd a new named repair benefit with approved currency/rate, eligible outlets and\nenforceable receipt policy; do not merely change the display title to a richer offer.\nValidate/approve Commerce Staged, then publish its projection independently of WCMS.\n\nReject missing variant/price, invalid currency, exhausted pool, wrong owner/outlet,\nunsupported condition or incomplete persistence evidence. Recovery uses original\ncheckout/order keys and qualified owner compensation, not fresh purchases or raw\ndatabase edits. Test default and custom layers, price changes, fixed/retained expiry,\npool exhaustion, double redemption, terms display and interrupted reversal.\n\n## Common mistakes\n\nAssuming a title defines mathematical benefit; treating inventory opening values as\nlive stock; exposing coupon tokens; reporting the planned 35 offers as installed;\nand publishing a website instead of the Commerce projection are incorrect.\nLocal sample stock is not a vendor promise or production acceptance.\n\n## Verification\n\nCounts and exact values come from Circa commerce Product, Variant, PriceRow,\nInventoryBalance, CouponBatch and Promotion source files. No current customer\npurchase, code or wallet was inspected. Operators and DevOps reconcile installed\nreceipt/version and owner projections before any import or commercial activation.\nSee [purchase journey](circa-coupons-commerce.md), [inventory](circa-source-inventory.md)\nand [customization](circa-customization.md).\n",
+    "keywords": [
+      "circa",
+      "ewaste",
+      "catalogue-reference",
+      "configuration",
+      "source records",
+      "Circa",
+      "Source reference"
+    ],
+    "facets": {
+      "section": "accelerators-and-industry-solution-templates",
+      "group": "accelerators-and-industry-solution-templates",
+      "navigationDepth": 2,
+      "documentType": "configuration",
+      "audience": [
+        "business",
+        "architect",
+        "administrator",
+        "developer",
+        "operator",
+        "qa",
+        "ai-tool"
+      ],
+      "maturityState": "partial"
+    },
+    "managedInAxis": true,
+    "axisAuthoringPermissions": [
+      "documentation.search.preview"
+    ],
+    "workflowRequired": true,
+    "workflowTriggers": [
+      "SEARCH_METADATA_CHANGE"
+    ],
+    "locale": "en",
+    "channel": "web",
+    "accessPolicy": "nodicsDocsAccessPublic",
+    "accessMode": "PUBLIC",
+    "lifecycleState": "ONLINE",
+    "indexState": "INDEX_READY",
+    "active": true
+  },
+  "record250": {
+    "code": "nodicsDocsSearchpagenodicsdocsmetadataacceleratorscircaconfigurationreference",
+    "product": "nodicsDocumentationProduct",
+    "targetType": "PAGE",
+    "targetCode": "nodicsDocsMetadataacceleratorsCircaConfigurationReference",
+    "title": "Circa Configuration and Extension Reference",
+    "summary": "Application and domain configuration groups, current policy values, provider gates and later-layer customization.",
+    "searchText": "Circa Configuration and Extension Reference Application and domain configuration groups, current policy values, provider gates and later-layer customization. # Circa Configuration and Extension Reference\n\nThis page indexes every top-level contribution in Circa's backend configuration,\nso beginners can locate a setting instead of searching unrelated framework defaults.\nThe source is `modules/circa.ewaste/config/properties.js` in the customer backend.\nValues describe authored reference choices as reviewed on 30 September 2026; they\nare not an effective runtime export. Business/operator policy, environment layers,\nserver/module load order and governed runtime configuration can change the outcome.\n\n## Application and journey settings\n\nThe business value of layered configuration is adapting the Circa journey without\ncopying authoritative domain engines. Developers and operators must distinguish\nproject defaults from effective runtime policy and persisted records.\n\n| Property | Source choice and meaning |\n| --- | --- |\n| circaEWaste.application.code | CIRCA_EWASTE; preserve on installed upgrades |\n| application.frontendModuleName | nodics.circa.eWaste |\n| application.projectModuleName | circa.ewaste |\n| application.backendModuleName | eWaste; reusable domain owner |\n| application.frameworkModuleName | nodics.waste; generic Waste authority |\n| application.requiredScenarioModules | eWaste and wasteRecycling; dependency selection is not journey acceptance |\n| presentation.brandName/brandByline | Circa / by Nodics |\n| presentation.sampleMode | true; do not hide illustrative limitations |\n| presentation.walletLabels | Reward points / Carbon units |\n| journey.contractVersion | 2 |\n| journey.arrivalRadiusMetres | Environment descriptor CIRCA_EWASTE_ARRIVAL_RADIUS_METRES, numeric fallback 50 |\n| journey.conversationMaximumCharacters | 1500 |\n| journey.reviewAssignment.queueCode | CIRCA_EWASTE_REVIEW |\n| journey.depositInstruction | Parameterized centre-name display instruction, not receipt evidence |\n| journeys | submission, approvedAsset, marketplace, gift, donation, couponRedemption and recyclingHandoff enabled source flags |\n\nEnabled journey flags describe selection, not completed production integration.\nRadius is distance-based and inclusive; reported accuracy does not replace direct\ndistance or fresh coordinates. Do not assume historical values in old notes are\nthe effective radius. The existing eWaste/Location owners define timing and validity\nrequirements; the Circa module cannot manufacture an arrival proof.\n\n## Marketplace, rewards and review policy\n\n`eWaste.marketplace` selects circaPointsPriceBook, circaDigitalRegistry,\nCIRCA_LOCAL_DIGITAL_OWNERSHIP_V1, circaMainStore and circaStaged. Currency is POINTS,\nprogramme circa, reward type points and carbon reward type circaCarbon. rewardScale\nis 2, carbonScale 3, jurisdiction CIRCA_SAMPLE, saleMode DIGITAL_OWNERSHIP,\ncouponCarbonMode UNCHANGED, orderCodePrefix CIRCA_ORDER_ and refundsEnabled true.\nautoPublishListings is a source policy choice, not permission to bypass publication\napproval. Listing presentation explicitly says no physical delivery is included.\n\n`circaEWaste.rewardValuation` declares illustrative true, version\ncirca-weight-rewards-v2, pointsPerKg 10 and carbonUnitsPerEstimatedKg 1. The\nselected provider is DefaultCircaEWasteRewardValuationService. These are sample\nvaluation settings, not cash conversion or certified carbon issuance. Owner Rules/\nLoyalty evidence governs actual assessment and settlement. Later reassessments do\nnot recalculate old balances automatically.\n\n`waste.projectOverlay` selects circa.ewaste:waste-policy as a PROJECT layer.\n`waste.operations` requires scopes and verification and does not require different\napprover. Broader business-role or application flags cannot relax those checks.\n\n## Full top-level configuration ownership index\n\n| Configuration subtree | Purpose and owner interpretation |\n| --- | --- |\n| tooling.acceptance.wasteManagement.fixture | Inert acceptance fixture codes, expected metrics and receipt prerequisite; not automatic test execution |\n| data.dataReleases.runtimeRoleProfiles | WASTE initialization profile selecting material/eWaste/Circa references |\n| product.runtimeRoleProfiles | COMMERCE_STAGED authoring, circaStaged, en/ar locales |\n| cart.runtimeRoleProfiles | COMMERCE customer default jurisdiction AE and currency AED; not the marketplace POINTS price book |\n| fulfillmentCore.runtimeRoleProfiles | Configured physical shipping/return options; does not make digital ownership physically delivered |\n| circaEWaste | App/presentation/journey/sample valuation; see above |\n| order.disputes/order.refunds | CIRCA_ORDER_ scope and configured eWaste owner port/target authority |\n| promotion.legacyTokenHashPolicies | TENANT_COLON_UPPERCASE_SHA256 compatibility; not permission to expose tokens |\n| digitalCore.merchantRedemption | Source enabled flag; complete merchant/outlet qualification remains independent |\n| profileExternalIdentity | Circa TELEGRAM application binding and one-use browser-handoff requirement |\n| runtimeConfigurationSchemas | telegramExternalIdentity and telegramDelivery governance; sensitive secret fields, permissions and refresh behavior |\n| bidding | Enabled bid policy, exact amount scale/maximum and per-store choices |\n| cms.publication | Project publication choices; nPublish remains generic authority |\n| backofficeApplicationInitialization.profiles | Circa setup identity, capabilities, user-triggered packages and Online approval requirement |\n| media.customerUploads | Source enabled choice; Media still authorizes upload/storage |\n| waste | Project overlay and operational checks |\n| wasteImpact.calculation | Provider selection, fallback chain, timeout and explicit mock compatibility policy |\n| eWaste | Domain policy deltas, owner authorities, marketplace, communication/channel/guidance composition |\n| apiExposure.categories.circaCustomer | App route exposure; each route still enforces its permission/auth contract |\n| copilot.runtimeRoleProfiles | WASTE ingestion, scoped knowledge registry, provider references and generation profiles |\n| wasteSubmission.runtimeRoleProfiles | WASTE metadata suggestion enable/adapter/profile |\n\nThis is a discovery index, not an invitation to duplicate those framework owners\ninside a project service. Read the owner contract for each subtree before changing\nit. Project configuration should contain actual selection/deltas, not copied default\nendpoints, service credentials or alternative authentication registries.\n\n## Providers, communication and secrets\n\n`wasteImpact.calculation` selects DefaultEWasteOpenAiImpactProviderService, then\nDefaultEWasteWarmImpactProviderService fallback, timeoutMs 90000 and failureMode\nRESULT. Its mock compatibility subtree defines illustrative weights/factors but does\nnot activate a mock provider. Metadata suggestion separately selects OpenAI with\nprofile eWastePhotoMetadata. Copilot profiles also include structuredTool and\ncustomerGuidance; guidance uses scoped customer knowledge and configured runtime\nprovider choices. Provider/model configuration is not evidence of a successful call.\n\n`eWaste.channelAuthentication` selects TELEGRAM with Circa application binding and\nseamlessSignIn choice. Outcome communication selects engagement and\nWASTE_REVIEW_OUTCOME_V1. Target authorities separately identify ENGAGEMENT, COMMERCE,\nCOMMERCE_STAGED and WCMS_STAGED. Optional coupon EMAIL/SMS resources do not become\nactive lifecycle triggers through these waste-outcome settings.\n\nTelegram bot and provider secrets are referenced through governed runtime fields.\nThis guide does not reproduce secret values, sample passwords or effective bearer\ntokens. Runtime configuration permissions and refresh/restart policy must be honored;\nsource field declarations alone do not prove current credentials are present.\n\n## Customize and extend safely\n\nDevelopers export a focused project config delta. For example, select a custom\npublished Store and price book together while preserving original installed order\nprefix/application identity during an upgrade. Use `$config` replace/ref/env/path\ndescriptors only under their existing contracts; replacing an array can remove\nrequired predecessors and must be tested. Never let a customer request choose\nprovider or service identifiers. Validate effective merge, rejected values, missing\nprovider recovery and default-versus-later-layer behavior before activation.\n\n## Common mistakes\n\nUsing Cart AED defaults as the coupon POINTS currency; treating mock settings as an\nactive provider; changing a flag as proof of integration; copying secret values;\nand confusing source policy with installed data are incorrect. Production DevOps\nmust inspect the effective runtime and owner release evidence independently.\n\n## Verification\n\nReview this index whenever properties.js gains/removes a subtree. Check selected\nmodule/server order, environment references, governed runtime values and actual\nowner availability during joint acceptance. Documentation generation does not\nstart providers or mutate runtime configuration. Continue with\n[customization](circa-customization.md), [record inventory](circa-source-inventory.md)\nand [deployment](circa-deployment-verification.md).\n",
+    "keywords": [
+      "circa",
+      "ewaste",
+      "configuration-reference",
+      "configuration",
+      "source records",
+      "Circa",
+      "Source reference"
+    ],
+    "facets": {
+      "section": "accelerators-and-industry-solution-templates",
+      "group": "accelerators-and-industry-solution-templates",
+      "navigationDepth": 2,
+      "documentType": "configuration",
+      "audience": [
+        "business",
+        "architect",
+        "administrator",
+        "developer",
+        "operator",
+        "qa",
+        "ai-tool"
+      ],
+      "maturityState": "partial"
+    },
+    "managedInAxis": true,
+    "axisAuthoringPermissions": [
+      "documentation.search.preview"
+    ],
+    "workflowRequired": true,
+    "workflowTriggers": [
+      "SEARCH_METADATA_CHANGE"
+    ],
+    "locale": "en",
+    "channel": "web",
+    "accessPolicy": "nodicsDocsAccessPublic",
+    "accessMode": "PUBLIC",
+    "lifecycleState": "ONLINE",
+    "indexState": "INDEX_READY",
+    "active": true
+  },
+  "record251": {
+    "code": "nodicsDocsSearchpagenodicsdocsmetadataacceleratorscircaoverview",
+    "product": "nodicsDocumentationProduct",
+    "targetType": "PAGE",
+    "targetCode": "nodicsDocsMetadataacceleratorsCircaOverview",
+    "title": "Circa and the eWaste Product",
+    "summary": "Source-backed product capability, audience, architecture and reference-application boundaries for Waste Management showcased through Circa.",
+    "searchText": "Circa and the eWaste Product Source-backed product capability, audience, architecture and reference-application boundaries for Waste Management showcased through Circa. # Circa and the eWaste Product\n\n![Circa architecture and domain ownership](../assets/images/circa-architecture.png)\n\nThis source-backed diagram explains ownership and boundaries; it is not live\ndeployment or acceptance evidence. Qualification notes remain part of the flow.\n\nCirca is Nodics' connected reference experience for electronic-waste participation\nand circular ownership. Nexus presents Waste Management as a framework product\nshowcased through Circa. The reusable electronic-waste domain accelerator is\n`eWaste`; Circa is the application that composes it with Profile, Location, Media,\nWaste, Loyalty, Commerce, WCMS, Communication and Engagement. There is not a second\nCirca domain engine or independent wallet hidden behind the website.\n\nFor beginners, start with a simple business scenario: a customer visits a collection\ncentre, prepares a photographed electronic item, confirms a submission and waits\nfor authorized review. The accepted outcome can produce an owned asset and governed\nrewards. The same account can browse assets or coupons and review purchases.\nApproval, physical receipt, environmental assessment, reward settlement, marketplace\nsale and coupon redemption are separate facts. One does not prove the others.\n\n## Detailed reference pages\n\nUse the [data network guide](circa-data-network.md) for the relationship overview,\nthen consult these exact source references:\n\n| Reference | Details |\n| --- | --- |\n| [Collection centres](circa-collection-reference.md) | Three original points, 17 shared points, optional Sunmarke, coordinates, categories and ownership |\n| [Enterprises and employees](circa-enterprise-reference.md) | Three referenced enterprise codes, capabilities, seven sample employees and eight scopes |\n| [Source release inventory](circa-source-inventory.md) | Twelve manifest sections, record-file counts, destinations and publication gates |\n| [Catalogue records](circa-catalogue-reference.md) | Store, eight products, prices, inventory, three coupon batches and benefit caveats |\n| [Configuration reference](circa-configuration-reference.md) | Application settings, domain ownership, providers and extension points |\n\nCounts describe reviewed authored records, not installed or publicly visible totals.\nThe [submission](circa-submission-journey.md), [operations](circa-operations-rewards.md),\n[commerce](circa-coupons-commerce.md), [customization](circa-customization.md) and\n[deployment](circa-deployment-verification.md) guides explain the connected journeys.\n\n## Product capability map\n\n| Experience | What the current source supplies | Authoritative owner |\n| --- | --- | --- |\n| Public website and help | Published page composition, collection discovery, contact intake, application copy and imagery | WCMS, Location, Engagement; Circa presentation |\n| Customer identity | Profile registration/sign-in and authenticated account context | Profile and authentication framework |\n| Guided eWaste submission | Arrival check, temporary photo analysis, saved preparation, correction and explicit confirmation | eWaste orchestration over Waste/Media |\n| Staff review | Scope-aware queues, evidence, verified overlays, decisions and recovery surfaces in Axis | Waste/eWaste with Profile permissions |\n| Environmental information | Provider assessments, estimates, input-only limitations, provenance and assessment history | Waste Impact and eWaste providers |\n| Account workspace | Drafts, submissions, assets, details, filters, quick view and authorized actions | Owner-scoped eWaste projections |\n| Rewards | Wallet balance/history and references to approval settlement | Loyalty; Rules/valuation evidence where configured |\n| Asset marketplace | Published catalogue, reviewed digital-ownership purchase, listing, gifts and bid surfaces | Waste and Commerce, not frontend state |\n| Coupons | Published offers, purchase review, entitlement history, owner-authorized reveal and merchant-facing framework integration | Promotion, Digital Commerce, Order and Payment |\n| Updates | Communication inbox and authorized item-linked outcome presentation | Communication and source-domain resolution |\n\nThese are source capabilities, not a promise that every deployment has activated\nall providers, permissions or data releases. Production merchant acceptance,\ncommercial allocations and certain recovery/security improvements still require\nqualification. A visible button or enabled setting is not acceptance evidence.\n\n## Repository and authority map\n\nFramework source packages generic Waste behavior under `nodics.waste` and reusable\nelectronics composition under `nodics.accelerators/modules/waste/modules/eWaste`.\nThe reference customer backend `circa.ewaste` lives in Kickoff. It supplies\napplication identity, site adapters, governed content/sample releases, deployment\nchoices and illustrative policy. `nodics.circa.eWaste` supplies the customer UI;\nAxis supplies employee operations. Nexus supplies the framework product discovery\nexperience. `nodics.docs` owns this framework product guide and generated CMS\ndocumentation release; customer-specific runbooks remain with their backend owner.\n\nDevelopers must not move Circa-branded data into generic Waste merely because the\nreference is marketed as a Nodics product. Equally, reusable lifecycle corrections\nmust not remain as a copied engine in Kickoff. Module availability, module `extends`,\nruntime `extends` and exported-service load order are distinct mechanisms.\n\n## Customer navigation and screen flow\n\nThe web experience exposes Submit Waste, Find Collection Center, Shop and Help.\nShop and Coupons have public browsing and independent details. Account views split\ndashboard, My items, Wallet, Bids, Purchases and coupons, and Ownership activity.\nDrafts are separate from submitted items. Mobile and Telegram use shared domain\ncomponents while retaining host launch context through navigation and sign-in.\n\n```mermaid\nflowchart TD\n  Discover[\"Discover centre\"] --> Identity[\"Sign in\"]\n  Identity --> Arrival[\"Fresh arrival check\"]\n  Arrival --> Photo[\"Analyze photo and prepare\"]\n  Photo --> Confirm[\"Explicit confirmation\"]\n  Confirm --> Review[\"Authorized staff review\"]\n  Review --> Account[\"Account outcome and owner evidence\"]\n  Account --> Wallet[\"Wallet and owned items\"]\n  Shop[\"Shop or Coupons\"] --> Details[\"Offer details\"]\n  Details --> Purchase[\"Explicit purchase review and confirm\"]\n  Purchase --> Order[\"Saved owner order\"]\n```\n\nQuick view is read-only. Browser return/reload must not create another submission,\norder, wallet effect or coupon. A customer account can have no items and an empty\nwallet; sample opening balances do not define registration behavior.\n\n## Environmental and commercial limitations\n\nPotential CO2e savings are estimates, not certified emission reductions. Carbon\nequivalent in tonnes is a unit conversion, not issued credits. Carbon units in the\nreference programme are reward units. Available input mass/count does not establish\ncompleted diversion. Unknown outcomes remain unknown; negative or zero calculated\nvalues are not hidden to make a benefit card look attractive.\n\nReference asset offers describe digital ownership and do not promise physical\ndelivery. A configured logistics partner does not imply fleet/dispatch orchestration.\nRepair/reuse business relationships do not by themselves activate a repair lifecycle.\nTelegram source integration and a host shell are not proof of actual-client\nacceptance. Nexus channel positioning must not be read as an activated WhatsApp\nidentity, submission or delivery integration.\n\n## Customize and extend safely\n\nAdopters create their own backend application module and frontend brand, extending\nthe existing eWaste capability. A minimal presentation change belongs in the custom\nmodule's `config/properties.js`, exporting a focused `circaEWaste.presentation`\ndelta when extending the Circa reference. A domain change belongs in a focused\n`eWaste` policy/provider delta, not a copied submission service. Use new application\nidentity for a new installation; preserve identity when upgrading an existing one.\n\nFor example, change the brand display name and published banner while keeping the\nsame arrival and authorization operations. Test effective configuration, published\nrenderer compatibility, missing-content recovery and both mobile and desktop\nlayout. Do not claim a new channel, certified benefit or payment method from copy\nchanges alone. See [customization](circa-customization.md) for exact file patterns.\n\n## Common mistakes\n\nTreating all configured journeys as production-qualified; treating parent enterprise\nmembership as outlet authority; treating approval as physical receipt; copying\nsample wallets into a live programme; embedding coupon secrets in public content;\nand moving persisted data into a frontend are all incorrect. Operators should use\nsaved owner evidence and review outstanding gates before activating a programme.\n\n## Verification\n\nThis guide is grounded in Nexus backend product records, eWaste routes/contracts,\nCirca backend configuration/data and customer frontend source. Static documentation\nchecks establish catalogue and content consistency, not live acceptance. DevOps\nand QA must separately record installed versions, effective policy, API authorization,\nfailure/recovery and desktop/mobile/native-client evidence. Continue with the\n[data guide](circa-data-network.md), [submission journey](circa-submission-journey.md),\n[operations](circa-operations-rewards.md), [commerce](circa-coupons-commerce.md) and\n[deployment guide](circa-deployment-verification.md).\n",
+    "keywords": [
+      "circa",
+      "ewaste",
+      "waste management",
+      "product",
+      "nexus",
+      "accelerator",
+      "Circa",
+      "eWaste",
+      "Product boundaries"
+    ],
+    "facets": {
+      "section": "accelerators-and-industry-solution-templates",
+      "group": "accelerators-and-industry-solution-templates",
+      "navigationDepth": 2,
+      "documentType": "overview",
+      "audience": [
+        "business",
+        "architect",
+        "administrator",
+        "developer",
+        "operator",
+        "qa",
+        "ai-tool"
+      ],
+      "maturityState": "partial"
+    },
+    "managedInAxis": true,
+    "axisAuthoringPermissions": [
+      "documentation.search.preview"
+    ],
+    "workflowRequired": true,
+    "workflowTriggers": [
+      "SEARCH_METADATA_CHANGE"
+    ],
+    "locale": "en",
+    "channel": "web",
+    "accessPolicy": "nodicsDocsAccessPublic",
+    "accessMode": "PUBLIC",
+    "lifecycleState": "ONLINE",
+    "indexState": "INDEX_READY",
+    "active": true
+  },
+  "record252": {
+    "code": "nodicsDocsSearchpagenodicsdocsmetadataacceleratorscircadatanetwork",
+    "product": "nodicsDocumentationProduct",
+    "targetType": "PAGE",
+    "targetCode": "nodicsDocsMetadataacceleratorsCircaDataNetwork",
+    "title": "Circa Data, Enterprises and Collection Network",
+    "summary": "Enterprise, employee, store, location, collection-point, catalogue and release configuration with installed-history preservation.",
+    "searchText": "Circa Data, Enterprises and Collection Network Enterprise, employee, store, location, collection-point, catalogue and release configuration with installed-history preservation. # Circa Data, Enterprises and Collection Network\n\nCirca composes records from several domain owners; it does not have one universal\nCirca table. For beginners, distinguish a business enterprise, a sellable store,\na physical collection point and a coupon offer before importing data. Each has\nits own lifecycle and permissions. The business value of this separation is that\none programme can change operators, locations or offers without rewriting customer\nownership, credentials or settlement history.\n\n## Data ownership and record relationships\n\n| Record or relationship | Owner | Meaning |\n| --- | --- | --- |\n| Enterprise, parent/child, employees and memberships | Profile | Organizational responsibility and explicit access, not automatic trade permissions |\n| Location | Location | Canonical coordinates and location metadata |\n| Waste collection point | Waste Collection | Collection eligibility, policies and references to a location/operator |\n| Collection preset, taxonomy and acceptance policy | Waste with eWaste references | Supported items, evidence/receipt requirements and assessment selection |\n| Submission, verification, evidence, receipt and asset | Waste | Customer facts, decisions, physical custody and ownership |\n| Store, category, product, variant and localized copy | Commerce Product/Store | Published browsing and purchase context |\n| Price book/rows, inventory and coupon batch | Commerce/Promotion | Cost and purchasable supply, separate from issued customer codes |\n| Wallet, rewards and ledger | Loyalty | Governed value movement and immutable references |\n| Page, route, renderer, component and media | WCMS/Media | Published presentation, not business transaction truth |\n\nCollection-point references must resolve to real owner records. A map marker's\ndisplay text is not the location authority. A physical redemption outlet is also\nnot the online store that sold a coupon. A shared parent company does not make\nevery subsidiary an eligible coupon merchant or every employee an operator.\n\n## Enterprises and employee access\n\nThe reference Commerce store `circaMainStore` currently declares tenant and\nenterprise `default`. Existing centre records reference Profile enterprises; their\noperator allocation must be inspected before changing it. Do not infer ownership\nfrom an illustrative centre name or substitute a proposed company into old records.\nEnterprise business roles can express multiple responsibilities without duplicating\nthe enterprise identity. Operational employee permissions still need explicit\nmembership, selected enterprise context and owner-governed resource scopes.\n\nProfile already represents parent/child enterprises. Hierarchy alone grants no\nmembership, administrative delegation or outlet access. Consent-based ancestor\ndelegation has an accepted framework policy, but complete enforcement remains\nunqualified in the current source batch. Keep existing exact-target/platform checks;\ndo not grant access by inserting an ancestor lookup. Authorized platform admins are\ndifferent from ordinary employees of a PLATFORM_OWNER enterprise.\n\n## Collection-centre configuration\n\nAcross the reviewed sources there are three original Circa points, 17 shared\nWaste Collection points and one separately selectable Sunmarke point: 21 authored\ncodes, not an installed total. Setup selects shared packages; the Circa transaction\nsample is optional and Sunmarke sections are not selected in that setup list.\nThe [collection reference](circa-collection-reference.md) lists all point identities,\ncoordinates and associations. The [enterprise reference](circa-enterprise-reference.md)\ndocuments operator ownership, `assetOwnerEnterpriseRef` and staff scope caveats.\n\nThe original Circa sample contains `cc-dxb-01`, `cc-dxb-02` and `cc-dxb-03`,\nlinked respectively to `cc-dxb-01-location`, `cc-dxb-02-location` and\n`cc-dxb-03-location`. The collection record controls its eligible operations and\nreference policy; the Location record supplies coordinates. Arrival uses fresh\nreported customer coordinates and direct distance, not map route distance or an\nassertion that the customer has arrived. Confirm the active runtime location after\nan authorized coordinate change; editing source alone does not update persisted data.\n\nFor a new centre, create/approve the enterprise allocation, canonical location,\ncollection point and applicable presets through the existing owner tools/APIs.\nAssign employee centre scope separately. Then verify visibility, nearby discovery,\neligible item handling and the inclusive arrival boundary. A missing or inactive\ncentre must not be treated as eligible just because a browser retains its card.\n\n## Store and catalogue configuration\n\nThe reference selects `eWaste.marketplace.storeCode = circaMainStore`,\n`catalogVersion = circaStaged`, `priceBookCode = circaPointsPriceBook` and\n`warehouseCode = circaDigitalRegistry`. The Store record declares POINTS currency,\nEnglish locale and Asia/Dubai timezone. Product, variant, localized content, price,\ninventory and promotion references must agree before publication. The source has\nillustrative asset products and three coupon products; this is not evidence that\nthe separately prepared 35-offer network has been installed.\n\nAuthor catalogue data in Commerce Staged and publish through the owning governed\nprojection. Publishing the website does not publish Commerce. An active source\nproduct that is not in the Online projection can correctly be absent from Shop.\nOptional localized offer copy includes terms, eligibility, exclusions,\nredemptionInstructions and purchaseConditions. Copy is not enforcement of minimum\nspend, a discount cap, stock or merchant authorization.\n\n## Releases, inheritance and preservation\n\n`circa.ewaste/data/manifest.json` is the source release authority. Sections route\nProfile, Location, Waste, Loyalty, Commerce, operations and content to their\nappropriate runtime roles. Source sample sections are limited to Local and Local\nProduction Simulation. Their environment scopes are not production-data approval.\n\nThe explicit reference sequence selects `eWaste:core-reference` and\n`circa.ewaste:waste-policy`, currently version `0.0.1` from `core-v002`. Existing\nnImport source-key composition uses matching filenames, exported keys and header\ntargets. It is not a JavaScript import of mutable framework records. Historical\n`core-v001`/sample snapshots remain retained. The optional Waste transaction sample\nuses `sample-v004`, version `0.0.5`, and excludes taxonomy/profile writes. Explicit\nselection alone does not prove that the destination is fresh.\n\nBefore an upgrade, inventory installed receipts, checksum/version, existing codes,\ncustomer references and operational overrides through owner APIs. Unknown provenance\nblocks adoption. Never reimport opening wallets, submissions or ownership events\nover transactional history merely to refresh a demo. Do not manually edit generated\nmanifest hashes or bypass import validation with direct database writes.\n\n## Customize and extend safely\n\nDevelopers add only intentional records/deltas under their custom backend module's\n`data/<release>/headers` and `records` trees. Configure the module's governed release\nmanifest through existing tooling. A worked example is a fourth collection point:\nuse a new approved code, reference an approved Location and operator, select existing\neWaste policy, and leave the original three points and customers untouched. Do not\ncopy the entire eWaste taxonomy to change one collection profile.\n\nTest composition against a fresh fixture and an installed-reference fixture with\ndivergent policy. Verify that only selected records change, old assessment/ledger\nevidence remains intact, ambiguous references reject and retries retain receipts.\nRollback is an owner-reviewed release action, not deletion of records with history.\n\n## Common mistakes\n\nConfusing coupon offers with issued codes; conflating store and outlet; using a Maps\ncamera coordinate instead of the selected place; deriving access from enterprise\nbusiness roles; refreshing sample transactions on a live installation; and treating\nconfiguration edits as installed data changes all produce misleading programmes.\n\n## Verification\n\nOperators and DevOps should inspect source manifests and installed owner receipts\nseparately. Review cross-domain references, tenant/enterprise separation, missing\nreferences, duplicate codes, quantities and localization. Author negative and\nfailure/recovery fixtures before joint imports. Source validation and pack generation\ndo not execute imports. Continue with [submission](circa-submission-journey.md),\n[coupon commerce](circa-coupons-commerce.md) and [customization](circa-customization.md).\n",
+    "keywords": [
+      "circa",
+      "enterprise",
+      "store",
+      "collection centre",
+      "data release",
+      "coupon",
+      "location",
+      "Circa",
+      "Data configuration"
+    ],
+    "facets": {
+      "section": "accelerators-and-industry-solution-templates",
+      "group": "accelerators-and-industry-solution-templates",
+      "navigationDepth": 2,
+      "documentType": "configuration",
+      "audience": [
+        "business",
+        "architect",
+        "administrator",
+        "developer",
+        "operator",
+        "qa",
+        "ai-tool"
+      ],
+      "maturityState": "partial"
+    },
+    "managedInAxis": true,
+    "axisAuthoringPermissions": [
+      "documentation.search.preview"
+    ],
+    "workflowRequired": true,
+    "workflowTriggers": [
+      "SEARCH_METADATA_CHANGE"
+    ],
+    "locale": "en",
+    "channel": "web",
+    "accessPolicy": "nodicsDocsAccessPublic",
+    "accessMode": "PUBLIC",
+    "lifecycleState": "ONLINE",
+    "indexState": "INDEX_READY",
+    "active": true
+  },
+  "record253": {
+    "code": "nodicsDocsSearchpagenodicsdocsmetadataacceleratorscircasubmissionjourney",
+    "product": "nodicsDocumentationProduct",
+    "targetType": "PAGE",
+    "targetCode": "nodicsDocsMetadataacceleratorsCircaSubmissionJourney",
+    "title": "Circa Customer eWaste Submission",
+    "summary": "Customer authentication, fresh arrival, photo preparation, correction, confirmation, account workspace and safe recovery.",
+    "searchText": "Circa Customer eWaste Submission Customer authentication, fresh arrival, photo preparation, correction, confirmation, account workspace and safe recovery. # Circa Customer eWaste Submission\n\n![eWaste submission and independent outcomes](../assets/images/circa-submission.png)\n\nThis source-backed diagram explains ownership and boundaries; it is not live\ndeployment or acceptance evidence. Qualification notes remain part of the flow.\n\nThe submission experience guides a customer from intent to evidence and an explicit\nreview request. Beginners should understand that recognizing a photographed item\ndoes not approve it, deposit it physically or credit a wallet. The business purpose\nis consistent evidence collection with fewer technical questions, while retaining\ncustomer ownership checks and staff accountability.\n\n## Sign-in, intent and channels\n\nThe public Submit Waste action remains available on web and mobile. Sign-in retains\nthe intended journey rather than forcing the customer to rediscover it. Registration\nuses the Circa adapter to forward business form fields to Profile; it does not\nconstruct credentials locally. A new account is independent and may have an empty\nwallet. OTP is not silently imposed on the reference customer registration journey.\n\nThe web, mobile and Telegram host share domain components. Telegram launch assertions\nare verified by backend/Profile integration and governed credential references.\nA `/telegram` shell or valid launch check is not proof of durable account linking,\nbrowser-handoff recovery or actual native-client acceptance. Account linking must\nuse authenticated proof, never matching an email or trusting a host user identifier.\nWhatsApp product positioning is not a qualified Circa WhatsApp implementation.\n\n## Locate a centre and prove arrival\n\nThe customer can browse a centre list and map without proving arrival. If location\nis unavailable, browsing and help remain useful. A chosen pin, directions link or\nroute estimate never unlocks photo preparation. Circa requests fresh device/browser\ncoordinates and submits them to backend arrival validation against a current\neligible collection point.\n\n`circaEWaste.journey.arrivalRadiusMetres` uses an environment-backed reference\nfallback of 50 metres. The boundary is inclusive and measured by direct distance.\nAccuracy is optional observation metadata, not an arrival gate in this policy.\nInvalid/stale coordinates reject; the browser must preserve saved work and offer a\nretry. Telegram uses its native location capability when available, with browser\nfallback where appropriate. Permission denial and inaccurate/unavailable readings\nhave distinct recovery controls. Neither control changes backend policy.\n\n## Prepare the photo without an empty submission\n\n```mermaid\nflowchart TD\n  Arrival[\"Fresh arrival\"] --> Photo[\"Choose or capture photo\"]\n  Photo --> Analyze[\"Analyze temporary bytes\"]\n  Analyze --> Evidence[\"Metadata and mandatory assessment\"]\n  Evidence --> Draft[\"Save Media and prepared draft\"]\n  Draft --> Review[\"Customer review and correction\"]\n  Review --> Confirm[\"Explicit confirm\"]\n  Confirm --> Submitted[\"Saved submitted item\"]\n  Analyze --> Failure[\"Failure or cancellation: no new empty submission\"]\n```\n\nArrival preview creates no submission. Automatic preparation analyzes temporary\nbytes before saving Media and a prepared Waste draft. Closing or failing before\nsuccessful analysis does not create a new empty submission. A failed replacement\nretains the previously saved photo/item. Saved unfinished work appears in Drafts;\nthe submitted-item collection excludes unfinished states so totals and pagination\ndo not contradict the filter.\n\nPhoto metadata and environmental assessment are separate operations. Suggested\nclassification, materials and physical details remain advisory until staff review.\nImpact assessment is mandatory for the eWaste journey: configured provider/profile\nfailure propagates for retry rather than producing an apparently ready empty result.\nSupported partial assessment is explicit and can have input-only coverage without\nnumerical carbon savings.\n\n## Review, correction and confirmation\n\nCustomers see the photo, item name/description, supported details and environmental\nassessment with provenance/limitations. They edit name and description; authorized\nAxis reviewers own technical classification and physical/environmental correction.\nInconclusive recognition can use the configured manual-review path rather than\nasking a customer to invent technical facts.\n\nFinal confirmation is an explicit authenticated domain command. It preserves the\ndisplayed revision and stable idempotency identity, validates current permissions,\nownership, evidence and policy, and transitions the saved preparation to submitted\nwork. Local optimistic UI is not a successful submission acknowledgement. If a\nresponse is uncertain, inspect the owner record before retrying; do not create a\nsecond draft simply because a spinner timed out.\n\n## Account workspace and customer outcomes\n\n| View | Expected behavior |\n| --- | --- |\n| Dashboard `/account` | Owner-backed wallet cards, status totals, recent items and draft shortcuts |\n| My items `/account/items` | Server filters, stable pagination, exact counts and grid/list controls |\n| Drafts | Saved-photo preview and explicit Continue action |\n| Submission `/account/submissions/:code` | Independently authorized item detail and public review feedback |\n| Asset `/account/assets/:code` | Accepted descriptor, available ownership actions and assessment history |\n| Mobile/Telegram item link | Preserves requested selector through sign-in; never substitutes another draft |\n\nQuick view is read-only. Full detail is independently fetched, not trusted from a\nprevious list. WCMS `/account/waste` supplies presentation through\n`circa.wasteWorkspace`, while `/nodics/eWaste/v0/account/items` supplies owner-scoped\nrecords/actions. Missing published composition gives a recoverable content error.\nPrivate photos require authorized Media reads; WCMS never stores customer records.\n\nUpdates show Communication inbox entries resolved to authorized source items.\nMissing or inaccessible sources use a generic outcome, not leaked item details.\nRaw message bodies, arbitrary URLs and internal references are not customer copy.\nNotifications can fail independently of a committed review; that requires delivery\nrecovery, not repeated approval.\n\n## Customize and extend safely\n\nIn a custom backend `config/properties.js`, export a focused journey-radius delta\nor approved display instruction. Preserve eWaste request mapping, authenticated\nidentity, fresh coordinates and Location distance ownership. To change account\nbanner/detail order, author the custom WCMS page/component records and publish them;\ndo not embed domain eligibility in a React component. A radius change affects new\narrival decisions, not retroactive approval or automatic submission.\n\nDevelopers must test just-inside/exact/outside radius, stale location, inactive\ncentre, denied camera/location permissions, cancelled preparation, failed replacement,\nunknown assessment, wrong-owner detail, repeated confirmation and later-layer policy.\nCheck desktop/mobile text, touch/keyboard controls and host Back navigation jointly.\n\n## Common mistakes\n\nTreating directions as proof; storing an empty draft before analysis; overwriting\noriginal AI/evidence with reviewer corrections; showing input mass as achieved\ndiversion; or using a customer-supplied owner/tenant/service name violates the journey.\nAn expired token needs authentication recovery, not broader backend service access.\n\n## Verification\n\nSource entry points include eWaste `src/router/routers.js`, Circa journey adapters\nand customer frontend `CustomerWasteWorkspace`/item-detail components. Operator and\nDevOps acceptance must verify owner records before and after cancellation/retries,\nnot merely UI messages. Behavioral and visual tests are separate from documentation\nvalidation. Continue to [staff review and rewards](circa-operations-rewards.md) and\n[deployment/verification](circa-deployment-verification.md).\n",
+    "keywords": [
+      "circa",
+      "submit ewaste",
+      "arrival",
+      "photo",
+      "draft",
+      "telegram",
+      "account",
+      "Circa",
+      "Submission journey"
+    ],
+    "facets": {
+      "section": "accelerators-and-industry-solution-templates",
+      "group": "accelerators-and-industry-solution-templates",
+      "navigationDepth": 2,
+      "documentType": "how-to",
+      "audience": [
+        "business",
+        "architect",
+        "administrator",
+        "developer",
+        "operator",
+        "qa",
+        "ai-tool"
+      ],
+      "maturityState": "partial"
+    },
+    "managedInAxis": true,
+    "axisAuthoringPermissions": [
+      "documentation.search.preview"
+    ],
+    "workflowRequired": true,
+    "workflowTriggers": [
+      "SEARCH_METADATA_CHANGE"
+    ],
+    "locale": "en",
+    "channel": "web",
+    "accessPolicy": "nodicsDocsAccessPublic",
+    "accessMode": "PUBLIC",
+    "lifecycleState": "ONLINE",
+    "indexState": "INDEX_READY",
+    "active": true
+  },
+  "record254": {
+    "code": "nodicsDocsSearchpagenodicsdocsmetadataacceleratorscircaoperationsrewards",
+    "product": "nodicsDocumentationProduct",
+    "targetType": "PAGE",
+    "targetCode": "nodicsDocsMetadataacceleratorsCircaOperationsRewards",
+    "title": "Circa Review, Assets, Rewards and Environmental Evidence",
+    "summary": "Axis roles/scopes, verification, approval, custody, asset ownership, assessments, settlement and recovery boundaries.",
+    "searchText": "Circa Review, Assets, Rewards and Environmental Evidence Axis roles/scopes, verification, approval, custody, asset ownership, assessments, settlement and recovery boundaries. # Circa Review, Assets, Rewards and Environmental Evidence\n\nCirca's operational journey connects customer evidence to accountable staff decisions.\nFor beginners, verification means reviewing facts; approval means accepting a\nsubmission under policy; receipt means recording physical custody. Reward settlement\nis a separate owner operation. The business benefit is traceability: an operator\ncan explain which actor accepted which facts and why a wallet changed, without\nusing a website status badge as the source of truth.\n\n## Staff roles and resource boundaries\n\nAxis consumes backend-governed eWaste/Waste workspaces and permissions. Profile\nowns the employee identity, selected enterprise membership and operational scopes.\neWaste contributes its concrete electronics navigation to generic Waste operations;\nthe frontend does not own a parallel review registry or persistence route.\n\n| Responsibility | What it permits conceptually | What it does not imply |\n| --- | --- | --- |\n| Queue/read staff | View authorized submissions and evidence | Verification, approval or all-centre access |\n| Verifier | Record a verified overlay under permission | Approval authority or editing original evidence |\n| Approver | Accept/reject authorized reviewed work | Arbitrary wallet adjustment or physical receipt |\n| Collection/custody operator | Record authorized receipt/custody evidence | Transport dispatch or enterprise administration |\n| Merchant operator | Use qualified store-scoped coupon operations | Waste review or other outlet access |\n| Enterprise administrator | Govern bounded enterprise staff/access | Automatic operational scope or platform authority |\n\nThe Circa reference sets `waste.operations.requireScopes = true` and\n`requireVerification = true`. It sets `requireDifferentApprover = false`: one\nemployee with both explicit grants may verify and approve the same item. Separate\npermission checks, verification prerequisites and actor audit records still apply.\nDeployments requiring separation of duties must set and qualify the narrower policy;\ntwo accounts in a sample are not enforcement by themselves.\n\n## Review and decision screen flow\n\n```mermaid\nflowchart TD\n  Queue[\"Authorized queue\"] --> Detail[\"Current detail and evidence\"]\n  Detail --> Assignment[\"Assignment when required\"]\n  Assignment --> Verification[\"Verified correction and revision\"]\n  Verification --> Decision[\"Authorized decision\"]\n  Decision --> Outcome[\"Saved outcome\"]\n  Outcome --> Asset[\"Asset and settlement effects\"]\n  Outcome --> Notification[\"Independent notification delivery\"]\n```\n\nThe review detail presents original photo/evidence, suggested data, customer fields,\ncentre context, assessment and audit. Reviewer corrections are a verified overlay,\nnot a silent replacement of submitted data or AI output. Customer-facing feedback\nmust be distinguished from private reviewer notes. Rejection needs an appropriate\nreason; the customer account should show the saved public outcome, not private proof.\n\nThe eWaste routes expose review-workspace listing/detail, assignment, recovery,\nsettlement retry and notification resolution/retry. Their presence does not qualify\nevery interruption path. A stale revision, changed assignment, missing scope or\nambiguous owner response must reject rather than fabricate a completed decision.\nInspect retained state before retrying a committed effect.\n\n## Assets, receipt and ownership\n\nApproval and associated policy can create/update an owned Waste asset. Receipt and\ncustody remain separately recorded Waste facts; they cannot be inferred from a\ncustomer reaching a map pin or uploading a photo. Preserve linked evidence and\nhistory through any subsequent owner transition.\n\nAn approved asset may expose list, gift, purchase or other policy-defined actions.\nAvailable actions come from the backend and are revalidated at execution. The\nreference's marketplace is digital ownership, not a promise to deliver a device.\nAttached illustrative carbon can move with an asset while historical approval\nrewards remain with the original contributor. Donation/recycling handoff and\nrepair/reuse presentation must not be mistaken for a qualified logistics or repair\norchestration product. Only activate actions whose owner policy and integration\nhave passed the deployment's acceptance gates.\n\n## Environmental assessments and history\n\nCirca selects `DefaultEWasteOpenAiImpactProviderService` with configured\n`DefaultEWasteWarmImpactProviderService` fallback under `wasteImpact.calculation`.\nThe environmental call is separate from photo metadata. It uses normalized item\ninformation and source references; invalid/timed-out results advance through the\nconfigured chain. Secrets remain governed provider references, not authored records.\n\nSaved results retain provider/model or factor-set version, source references, units,\nmass ranges, geography, scenario assumptions and limitations. INPUT_ONLY represents\navailable input information without defensible calculated savings. WARM proxy and\nbundle-reference comparisons need their disclosed assumptions; they are not a\nmeasurement of achieved treatment or a certified item composition.\n\nAxis exposes assessment history, reassessment and explicit acceptance with reasons\nand revision checks. Accepted customer/asset details and history use authorized\nowner projections. Changing the provider does not overwrite old results. Reassessment\ndoes not silently revalue settled approval rewards. Show true zero/negative values,\nunknown metrics and limitation messages rather than substituting appealing defaults.\n\n## Rewards and settlement\n\nLoyalty owns wallet balances, ledger, reservations, debits, transfers and reversals.\nRules/valuation assessment and original approval evidence determine the configured\nreward path. Circa renders confirmed assessment and settlement evidence; legacy\nvaluation is compatibility context, not permission to recalculate balances locally.\n\nThe reference's illustrative programme selects `circa`, reward type `points` and\ncarbon reward type `circaCarbon`. Its weight valuation configuration includes sample\nrates and an illustrative marker. Those rates are not production financial policy,\ncash conversion, carbon prices or issued credits. Reward points, carbon units,\nCO2e estimates and tonnes of carbon equivalent are different concepts.\n\nIf approval commits but settlement fails, inspect the original approval and the\nowner settlement reference. Use the qualified settlement recovery operation with\nthe same command identity. Do not approve again, add an opening ledger or manually\nincrease a balance. Notification failure is independently recoverable and cannot\nbe used as a reason to repeat a wallet effect.\n\n## Customize and extend safely\n\nA project can select approved acceptance/verification/receipt/impact policy records\nthrough its governed data overlay. For example, require independent approval by\nexporting `waste.operations.requireDifferentApprover: true` in the project config,\nthen assign separate verifier/approver memberships and centre scopes. Do not copy\nreview services, change private evidence in WCMS or remove freshness/CAS checks.\n\nDevelopers test same-actor refusal under the changed policy, successful independent\nreview, wrong-centre rejection, last-minute scope loss, stale revisions, partial\nsettlement, retained notification retries and original evidence preservation.\nDevOps verifies effective configuration and owner receipts, not just source values.\nKeep provider choice and reward programme explicit during upgrades; previous results\nmust continue to be understandable under their saved versions.\n\n## Common mistakes\n\nShowing certified carbon claims from sample factors; rewarding both preparation and\napproval; merging private/public comments; treating admin groups as all-centre\nscope; inferring custody from arrival; and retrying approval to repair delivery are\nincorrect. Review before accepting an environmental reassessment and preserve\nthe original contributor's reward history after ownership transfer.\n\n## Verification\n\nRead the eWaste review workspace routes and Waste/Loyalty owner contracts alongside\nthe current project policy. Verify positive, denied, stale, interrupted and\nlater-layer scenarios through the joint acceptance plan. Static source and docs\nchecks do not prove external provider accuracy, installed settlement or actual\noperator permissions. Continue with [commerce](circa-coupons-commerce.md) and\n[deployment verification](circa-deployment-verification.md).\n",
+    "keywords": [
+      "circa",
+      "axis",
+      "review",
+      "approval",
+      "reward",
+      "carbon",
+      "assessment",
+      "custody",
+      "Circa",
+      "Operations and rewards"
+    ],
+    "facets": {
+      "section": "accelerators-and-industry-solution-templates",
+      "group": "accelerators-and-industry-solution-templates",
+      "navigationDepth": 2,
+      "documentType": "operations",
+      "audience": [
+        "business",
+        "architect",
+        "administrator",
+        "developer",
+        "operator",
+        "qa",
+        "ai-tool"
+      ],
+      "maturityState": "partial"
+    },
+    "managedInAxis": true,
+    "axisAuthoringPermissions": [
+      "documentation.search.preview"
+    ],
+    "workflowRequired": true,
+    "workflowTriggers": [
+      "SEARCH_METADATA_CHANGE"
+    ],
+    "locale": "en",
+    "channel": "web",
+    "accessPolicy": "nodicsDocsAccessPublic",
+    "accessMode": "PUBLIC",
+    "lifecycleState": "ONLINE",
+    "indexState": "INDEX_READY",
+    "active": true
+  },
+  "record255": {
+    "code": "nodicsDocsSearchpagenodicsdocsmetadataacceleratorscircacouponscommerce",
+    "product": "nodicsDocumentationProduct",
+    "targetType": "PAGE",
+    "targetCode": "nodicsDocsMetadataacceleratorsCircaCouponsCommerce",
+    "title": "Circa Shop, Coupon Purchase and Redemption",
+    "summary": "Published browsing, reviewed purchase, reservation, expiry, entitlements, outlet fulfillment, refunds and notification limits.",
+    "searchText": "Circa Shop, Coupon Purchase and Redemption Published browsing, reviewed purchase, reservation, expiry, entitlements, outlet fulfillment, refunds and notification limits. # Circa Shop, Coupon Purchase and Redemption\n\n## October 2026 Owner Integration Update\n\nPromotion now has authored issuer-governed seller authorization. The issuer's\nexact scoped administrator grants/revokes bounded seller rights; sale reservation\nretains its consent revision. Generic writes cannot manufacture issuer permission.\nIssuer/vendor reference equality alone is still not authorization. Independent\nsource/exposure qualifications remain false until installed acceptance.\n\nDigital Core requests purchase notifications only after confirmed checkout,\ncapture and unit-delivery evidence. Refund notifications require confirmed owner\nrefund completion, payment outcome and unit reversal. Delivery failure is separate\nfrom financial compensation: it cannot undo a placed order or repeat a refund.\nCommunication owns frozen durable intents and same-original-intent retry. Templates\nremain layered module resources. Source-bound inspection/retry takes no caller\ndestination, template, amount or arbitrary intent identifier.\n\nThe separately qualified native operator workspace is\nGET `/orders/:code/notifications/workspace`. Its exact module\nbase follows the selected runtime's router contract; consumers use the published\noperation route rather than hardcoding a deployment URL. The versioned DTO keeps\norder code/revision and financial state separate from event/channel delivery\nobservations. A persisted intent status is not mailbox delivery or financial proof.\nInspection rereads deterministic original EMAIL/SMS intents through Communication's\nsource-scoped API; missing, denied or failed reads remain UNCONFIRMED, including\npartial observations. Purchase inspection uses original committed evidence even\nafter a coupon is redeemed or refunded; it does not authorize a new purchase message.\nRetry stays limited to the original frozen intent, current source eligibility,\nfresh operator permission and a reviewed order revision. Axis handles uncertainty\nby inspection, never by automatically replaying purchase, refund or notification.\nNavigation, presentation and fixed commands are owned by Digital Core; later-layer\nconfiguration may customize labels without changing eligibility or persistence.\n\nThe monetary-benefit source supports fixed discounts, percentages, caps and\nminimum spend through exact amount arithmetic and owner-priced transaction evidence.\nBrowser subtotals and merchant text are not that evidence. SKU/bundle fulfillment\nremains refused without approved product mappings and an authoritative priced/POS\nintegration. Offer display names never become executable SKU rules. Existing approved\nsample records are not supplemented with invented identities, mappings or terms.\n\nVerified-recipient and priced/POS adapters are not yet installed owning integrations.\nQualification stays false and delivery remains disabled. Business users, beginners\nand operators must distinguish authored mechanics from an enabled Circa journey.\nDevelopers customize existing Promotion, Digital Core and Communication exports and\nresources through later layers; do not copy engines into Kickoff or put financial\nauthority in Circa UI. Joint automated/visual acceptance remains NOT RUN. No runtime\nimport, approval of sample commercial terms or message send follows from this release.\n\n![Coupon purchase, redemption and recovery boundaries](../assets/images/circa-coupon.png)\n\nThis source-backed diagram explains ownership and boundaries; it is not live\ndeployment or acceptance evidence. Qualification notes remain part of the flow.\n\nCirca uses Commerce for browsing and purchases, Waste for asset ownership, Promotion\nfor coupon units and Digital Commerce for purchased entitlements. Beginners should\ndistinguish the coupon offer a customer browses from the unique code received for\na purchased unit. The business value is a single account experience with explicit\npurchase review, while the owning frameworks protect prices, inventory and value.\n\n## Published browsing and offer content\n\n`/shop` and `/coupons` share search, filters, sorting, grid/list layout, exact counts,\nserver pagination and read-only quick view. Listing URLs preserve selectors through\ndetails/reload/return. Public Circa APIs are\n`GET /nodics/circa.ewaste/v0/catalogue` and `/catalogue/:code`, with kind ASSET or\nCOUPON. Independent detail reads validate kind and current availability rather\nthan trusting a card previously loaded in a listing.\n\nSelectors include q, category, condition, issuer, minPoints, maxPoints, validUntil,\nsort, page and pageSize. Sorts are FEATURED, POINTS_ASC, POINTS_DESC, NAME and\ncoupon-only EXPIRY. `validUntil` asks that the listed coupon remains valid through\nthe selected date; it is not a purchase-relative expiry switch. The reference\ncomposition reads Product pages in batches of 100 and bounds the catalogue at\n2,000 published products, with default page size 12 and maximum 48. Repeated owner\npages or bound overflow reject instead of silently presenting truncated totals.\n\nProduct localized attributes can carry terms, eligibility, exclusions,\nredemptionInstructions and purchaseConditions as strings/arrays. Missing information\nis reported as missing. Developers must not convert descriptive copy into implied\nenforcement. In particular, the current illustrative sample offer names are not\nevidence of real partner commitments or production discount settlement.\n\n## Purchase screen flow and owner sequence\n\n```mermaid\nflowchart TD\n  Offer[\"Published offer\"] --> Review[\"Authenticated review\"]\n  Review --> Fresh[\"Fresh wallet and offer evidence\"]\n  Fresh --> Confirm[\"Explicit confirm with revision and command key\"]\n  Confirm --> Checkout[\"Commerce checkout\"]\n  Checkout --> Reserve[\"Coupon reservation\"]\n  Reserve --> Payment[\"Payment or value owner\"]\n  Payment --> Sale[\"Confirmed sale\"]\n  Sale --> Entitlement[\"Entitlement and delivery evidence\"]\n  Entitlement --> History[\"Customer purchase history\"]\n```\n\nThe eWaste marketplace purchase route is\n`POST /nodics/eWaste/v0/marketplace/:code/purchase`. The request mapper supplies\ntrusted context; caller bodies cannot choose service, store or owner. The displayed\nrevision and stable command identity accompany explicit confirmation. Wallet refresh\nfailure leaves confirmation unavailable; backend owners still validate/debit value.\nNo browser wallet calculation acknowledges payment.\n\nFor coupon-code-pool products, Digital Core expands purchased quantity into units\nand asks Promotion to reserve concrete supply. Quantity must be a bounded positive\ninteger; `digitalCore.maximumCouponUnitsPerCheckout` defaults to 100 across the\ncalculation. Confirmed partial acquisitions and the uncertain failing command are\nretained for Checkout compensation. An uncertain reservation is not successful\nrelease even if every known unit was released.\n\nPromotion owns reservation/sale/delivery state, original buyer/order/idempotency\nbindings and revisioned writes. The staged safety increment requires strict owner\nacknowledgement and uncached readback; it no longer accepts a locally constructed\nfallback as persisted success. Terminal sale/delivery replay cannot downgrade state\nor reset the original sale timestamp. Installed generated-owner CAS/uniqueness and\ncross-owner interrupted recovery still require qualification.\n\n## Offer, batch, code and entitlement\n\n| Concept               | Lifecycle significance                                        |\n| --------------------- | ------------------------------------------------------------- |\n| Product/offer         | Browsable terms, price and listing context                    |\n| Promotion             | Eligibility/actions and retained-rights source when qualified |\n| Batch/pool            | Supply available for purchase, not customer entitlement       |\n| Coupon unit           | Concrete reserved/sold/customer-bound code                    |\n| Digital entitlement   | Customer purchase/claim/delivery/reversal evidence            |\n| Merchant confirmation | Authorized fulfillment at an eligible physical outlet         |\n\nSupply of 100 units is not 100 codes already issued to customers. A unit intended\nfor single use cannot be consumed at each eligible outlet separately. Wrong-outlet\nor failed confirmation must not consume it. Issuer, online seller and outlet owner\ncan be different enterprises; a parent company association is not a commercial\nauthorization or staff scope grant.\n\n## Expiry and retained purchase rights\n\nExisting samples use campaign dates. A staged, independently gated Promotion policy\nsupports `purchasedCouponPolicy` with validityDays, plain-text terms and optional\nrefundPolicy. `promotion.purchasedRights.enabled` and `.qualified` default false.\nWhen qualified, sale captures campaign revision/rules and calculates validTo from\nthe original successful sale, not launch, later delivery or retry. Digital\nentitlements retain expiry and safe purchaseTerms for the customer view.\n\nPurchase history now displays owner expiry/terms; an expired or invalid supplied\nexpiry hides reveal. Backend reveal/use checks remain authoritative. Generic\nmutation/provenance protection and installed acceptance are still outstanding,\nso this guide is not permission to turn the retained-rights gate on. Legacy fixed\ndates must not be rewritten without a governed compatibility plan.\n\n## Claim, outlet fulfillment and customer refresh\n\nAuthenticated eWaste routes expose coupon reveal, eligible merchants and claim.\nMerchant confirmation belongs to qualified Digital Commerce/Promotion operations\nwith Profile employee context and canonical Store scope. Supported Promotion\nconditions include coupon ownership/product and explicit storeCodes. Richer receipt\nsubtotal, minimum-spend and cap validation now uses the native priced-cart adapter\ndescribed below. Unsupported SKU/bundle mappings and unknown conditions reject\nrather than being ignored; no offer prose is interpreted as executable benefit terms.\n\nPurchase history can refresh saved merchant/receipt evidence without executing\npurchase/claim/redemption again. Its default visible refresh is 60 seconds and on\nfocus/return; the presentation option accepts 15-300 seconds. Failed refresh marks\nhistory stale and hides reveal actions. Session change clears displayed history and\ninvalidates late reveals. Secret codes are not published into WCMS, email templates,\nanalytics or an all-customer catalogue.\n\n## Cancellation, refunds and failure recovery\n\nOrder owns reviewed cancellation/refund orchestration; Payment owns original\ncaptured-value reversal; Digital Core/Promotion own entitlement/code revocation.\nUnused does not universally mean automatically refundable. Claimed/redeemed/mixed\norders require review. The staged retained policy checks allowed request type and\npurchase-relative window before locking; absent retained refund policy requires\nmanual review. General provider and seller-settlement qualification remain separate.\n\nPrepared units enter REFUND_PENDING with an original refund binding before value\nreversal. Completion requires saved matching revocation/reversal evidence. An\nexact bounded unit multiset is rechecked at preview, preparation and completion:\nmissing/extra units or duplicate entitlement/code identities cannot produce success.\nRepeated order entries of one product are aggregated before comparison. An\nuncertain payment or partial owner write requires inspection under the same command,\nnot a fresh refund. Purchase/refund EMAIL/SMS resources exist under Digital Core\n`src/templates`, with committed-evidence intent triggers wired to the owning purchase\nand refund boundaries. Recipient and privacy qualification remain independently gated.\nA resource file is not a sent notification; pending reversal must never send a\ncompleted-refund message.\n\n## Native Priced Basket And Merchant Confirmation\n\nThe native provider accepts `CART:<existing-cart-code>` before validation. It is\nexplicitly PRICED_CART: evidence of an existing basket priced by activated Nodics\nPricing, not external POS settlement or payment capture. ORDER handles reject because\ntoday's prices must not reprice a committed order. A custom external POS connector\nrequires its own provider contract and approved operational records.\n\nCart owns buyer intent and quantities; Store owns the canonical outlet; Promotion\nowns the delivered/claimed purchased coupon; Pricing owns activated policy and exact\nline/subtotal arithmetic; Digital Core owns the current employee authorization and\nfrozen native receipt. Pricing derives the buyer from the purchased coupon, checks\nissuer/outlet/Cart ownership and currency, then reads the complete bounded entry set.\nClient amounts, saved Cart totals and entry price fields are not authoritative prices.\nAmbiguous price precedence, partial reads, variants/quotes and missing activated roots\nreject. The adapter rereads coupon, Cart, entries, Store and published policy to detect\ndrift before returning source evidence.\n\nService-only POST `/internal/merchant/priced-transaction` accepts exactly `couponCode`,\n`storeCode` and `sourceReference`. It requires the configured runtime permission and\nsigned tenant/enterprise scope, operational owning modules and private capture.\nPromotion calls it through existing authenticated module transport with bounded HTTPS\nand no redirects or retry. Later layers may select another qualified provider; they\ncannot replace owner evidence with browser totals or permissive fallback pricing.\n\nThe merchant workspace exposes `pricedSourceRequired` and configured\n`pricedSourceLabel`. Axis collects the reference before POST\n`/merchant/redemptions/validate`, retains validationCode/expiry/revision and confirms\nwith the same original reference. Validation compares current fixed/percentage/cap/\nminimum terms and binds the exact benefit snapshot. Confirmation rereads current\nmembership and pricing; changed basket/outlet/price/scope requires original-command\nreview. An acknowledged receipt replay retains its original snapshot without repricing.\nDisplayed monetary evidence never claims seller settlement or refund completion.\n\n## Committed Notifications And Recipient Authority\n\n![Circa committed-event, canonical-contact and delivery authority](../assets/images/circa-notification-authority.png)\n\nSolid arrows show owning proof/delivery interactions; dashed arrows show fresh\nsource reread and separately reviewed retry. Green identifies user/operator entry,\nblue Commerce financial authority, teal Profile contact authority and rose\nCommunication. The yellow note marks unexecuted installation and acceptance gates.\nThe [editable diagram source](../assets/diagrams/circa-notification-authority.dot)\ncontains no customer records, sender credentials or fabricated delivery evidence.\n\nDigital Core freezes intent only from committed purchase/refund evidence. It asks\nProfile's private `/internal/commerce/notification-recipient` with channel plus exact\nevent coordinates: kind, orderCode, sourceCode and orderRevision. No recipient address\nor arbitrary buyer ID is accepted. Profile asks Digital Core's private\n`/internal/notifications/recipient-source` to independently prove the current committed\nevent and derive its stored buyer. Only then may the selected Profile verified-contact\nowner read verification, transactional consent and suppression. The financial source\nis reread after contact admission; drift fails without a new intent or financial write.\n\nCommunication owns template rendering, provider delivery, retained status and original\nretry semantics. Purchase is not marketing consent. Inspection and retry eligibility\nare separate operator outcomes; pending finance must never produce a completed-refund\nmessage. Approved recipients, sending grants, private capture, connection/TLS and\ncontact-proof qualification remain mandatory. No email/SMS has been sent as part of\nsource implementation or documentation generation.\n\n## Customize and extend safely\n\nIn the custom backend, author products/variants/prices/promotion policies and\nlocalized copy in governed data releases, then publish Commerce. Select store,\nwallet reward type and approved fulfillment policy in focused configuration.\nA safe example adds offer exclusions and an explicit eligible outlet list while\npreserving code ownership, single-use CAS, current employee scope and reviewed\npurchase. Copy alone cannot implement a capped percentage benefit. New provider\nlogic belongs with Promotion/Digital Commerce through the Nodics contribution\nprocess, not a Circa button or duplicate Kickoff checkout engine.\n\n## Common mistakes\n\nEquating catalogue validity with purchased expiry; refunding because a code looks\nunused; granting all group outlets implicitly; interpreting sample POINTS as AED;\nshowing cached history as authorization; and treating a released known reservation\nas proof about an uncertain unit are incorrect. Preserve the original order/key.\n\n## Verification\n\nOperator/DevOps acceptance must inspect owner order/payment/entitlement/receipt\nreferences, not only the success screen. Cover stock exhaustion, fractional and\naggregate quantity limits, insufficient wallet, changed price/revision, duplicate\nconfirm, expiry, wrong owner/outlet, double redemption, interrupted persistence,\nrefund window and retry. Visual acceptance covers details, terms, empty/stale\nhistory and desktop/mobile purchase review. Continue with\n[customization](circa-customization.md) and [deployment](circa-deployment-verification.md).\n",
+    "keywords": [
+      "circa",
+      "coupon",
+      "purchase",
+      "store",
+      "expiry",
+      "redeem",
+      "refund",
+      "shop",
+      "Circa",
+      "Coupon commerce"
+    ],
+    "facets": {
+      "section": "accelerators-and-industry-solution-templates",
+      "group": "accelerators-and-industry-solution-templates",
+      "navigationDepth": 2,
+      "documentType": "how-to",
+      "audience": [
+        "business",
+        "architect",
+        "administrator",
+        "developer",
+        "operator",
+        "qa",
+        "ai-tool"
+      ],
+      "maturityState": "partial"
+    },
+    "managedInAxis": true,
+    "axisAuthoringPermissions": [
+      "documentation.search.preview"
+    ],
+    "workflowRequired": true,
+    "workflowTriggers": [
+      "SEARCH_METADATA_CHANGE"
+    ],
+    "locale": "en",
+    "channel": "web",
+    "accessPolicy": "nodicsDocsAccessPublic",
+    "accessMode": "PUBLIC",
+    "lifecycleState": "ONLINE",
+    "indexState": "INDEX_READY",
+    "active": true
+  },
+  "record256": {
+    "code": "nodicsDocsSearchpagenodicsdocsmetadataacceleratorscircacustomization",
+    "product": "nodicsDocumentationProduct",
+    "targetType": "PAGE",
+    "targetCode": "nodicsDocsMetadataacceleratorsCircaCustomization",
+    "title": "Customize and Extend Circa Safely",
+    "summary": "Worked project-layer configuration, focused services, governed data/content, EMAIL/SMS resources and preserved framework guarantees.",
+    "searchText": "Customize and Extend Circa Safely Worked project-layer configuration, focused services, governed data/content, EMAIL/SMS resources and preserved framework guarantees. # Customize and Extend Circa Safely\n\n![Customization, import and publication layers](../assets/images/circa-layers.png)\n\nThis source-backed diagram explains ownership and boundaries; it is not live\ndeployment or acceptance evidence. Qualification notes remain part of the flow.\n\nCirca demonstrates framework composition, not a fork that adopters must maintain.\nBeginners should first decide whether a change concerns presentation, deployment,\nreference policy or reusable lifecycle behavior. Business differentiation normally\nbelongs in a customer-owned application overlay. Framework invariants remain with\ntheir owners, even when a customer first requests the enhancement.\n\n## Choose the owning layer\n\n| Desired change | Custom project surface | Preserve |\n| --- | --- | --- |\n| Brand, banners, page copy/detail order | Project WCMS records and frontend presentation | Published renderer contract and safe media delivery |\n| App identity/channel selection | Project config/adapters using eWaste/Profile | Authenticated proof, tenant context, secret references |\n| Centre or outlet allocation | Profile/Location/Waste/Store owner records and governed data | Explicit scopes and cross-domain references |\n| Arrival distance policy | Focused journey config and existing eWaste arrival adapter | Fresh coordinates, current centre, direct distance |\n| Acceptance/assessment policy | Project reference overlay/provider selection | Original evidence, limitations, provider history |\n| Coupon terms/supply | Commerce/Promotion records and published catalogue | Price/stock ownership and code/entitlement authority |\n| New reusable lifecycle mechanics | Nodics-owned framework/domain contribution | Layer ownership, generated persistence, contracts/tests |\n| EMAIL/SMS look and feel | Layered module template resources | Parameter validation, escaping, frozen intent and source authority |\n\nDo not edit dependency source as a partner customization. Reuse then extend through\nthe existing module hierarchy; request reusable changes through Nodics review and\nrelease. A custom module does not rename the functional capability it extends.\nTechnical-module identity and product branding are not permission authorities.\n\n## Project file layout\n\nUse the standard module shape, keeping only files that actually contribute a delta:\n\n```text\nmodules/acme.circular/\n  package.json\n  config/properties.js\n  src/service/defaultAcmePresentationService.js\n  src/templates/email/<notification>/template.json\n  src/templates/email/<notification>/en/subject.txt\n  src/templates/email/<notification>/en/email.html\n  src/templates/email/<notification>/en/email.txt\n  data/<release>/headers/\n  data/<release>/records/\n  data/manifest.json\n  test/\n  README.md\n  AGENTS.md\n  llm/contracts/\n  llm/examples/\n```\n\nThis is an illustrative customer layout, not a new generator or mandatory duplicate\nservice. Define functional inheritance using the existing module metadata and actual\nruntime boot chain. Package dependency makes source available; it does not establish\nservice precedence. Effective exported members are merged in load order. Verify\nthe selected module/server index rather than assuming a sibling folder wins.\n\n## Worked presentation and arrival example\n\nWhen extending the Circa reference, a custom `config/properties.js` can export a\nsmall delta:\n\n```js\n'use strict';\n/** @module acme.circular/config/properties @description Custom brand and approved arrival policy. @layer config @owner acme.circular */\nmodule.exports = {\n    circaEWaste: {\n        presentation: { brandName: 'Acme Circular' },\n        journey: { arrivalRadiusMetres: 40 }\n    }\n};\n```\n\nThe example changes presentation and narrows the reference 50-metre radius. It does\nnot create a new enterprise, update saved locations, grant permissions or publish\ncontent. A deployment must approve the radius and validate the effective merged\nvalue. Keep sample/estimate labels accurate. For an independent eWaste adoption,\nuse its domain configuration and your own app presentation namespace rather than\nintroducing a dependency on Circa-branded services.\n\nInvalid policy, stale coordinates or an outside-radius request must still reject.\nRecovery preserves saved work and asks for a fresh reading; it must not retry with\nmade-up coordinates. Test inherited defaults, the custom layer, exact boundary,\nwrong centre, permission loss and restoration. The UI cannot override this gate.\n\n## Focused service overrides and trusted mapping\n\nServices use exported loader-visible members with file/function JSDocs. Customize\nthe smallest existing member rather than copy the complete framework service or\nhide behavior in a closed local helper. Circa's catalogue composition changes the\nexisting eWaste marketplace list boundary; purchase and other methods remain\ninherited. Controller adapters reuse `DefaultEWasteRequestService` with server-owned\nselection. User payloads cannot select a service, transport, owner or tenant.\n\nBefore an override, read the nearest README/AGENTS/contracts and related fixtures.\nRecord owner, business outcome, data/security/runtime effects, intended files and\nvalidation route. Retain authorization, DENY precedence, revisions, idempotency,\ncurrent resource scope and exact persistence evidence. An override that removes\nthese checks is not supported customization, even if the happy path still works.\n\n## Data and publication customization\n\nAdd intentional data records/deltas to a customer release, preserving installed\ncodes and history. Existing nImport source-key inheritance supplies reusable\nfields when configured; matching filename/key/header semantics matter. Do not\nrewrite retained release bytes or manually adjust hashes. A new centre needs\napproved Location/operator references; a new coupon needs Product, price, batch,\npolicy, eligible outlet and published projection, not just an HTML card.\n\nUse Staged validation/review/publication for WCMS and Commerce separately. Source\nchanges, installed data, Online projection and browser cache are different states.\nRollback must consider owner receipts and dependent transactions; deleting a failed\ndeployment's records can destroy history. Test missing baseline, wrong version,\nambiguous references and interrupted import through governed owners.\n\n## EMAIL/SMS customization\n\nDefault templates come from their framework module under `src/templates/email`\nor `src/templates/sms`. Customize locale HTML/text/subject resources through later\nmodule/runtime layers using the same template identity and metadata contract. Keep\nstatic look/content in resource files and dynamic values as declared bounded\nparameters. OTP is purpose-specific secure data, not a browser configuration value.\n\nRead the framework [EMAIL/SMS guide](../nodics.communication/email-sms-templates.md)\nbefore adding a notification. Preserve sourceModules, channel/purpose, required\nselection and parameter validation. Do not send raw coupon secrets or claim a\nrefund completed before owner proof. Retry must retain the qualified original\nintent/template selection rather than rebuild from mutable current content. Merely\nadding an optional Digital Core template does not wire a lifecycle trigger.\n\n## Common mistakes\n\nCopying whole services, storing template bodies in properties, editing generated\ndocumentation records, relaxing permission checks for a demo, introducing a second\nwallet or identity store, and putting reusable logic into Kickoff all increase\nupgrade risk. One custom app can reuse several functional modules without becoming\ntheir persistence authority.\n\n## Verification\n\nDevelopers and AI tools must verify default plus later-layer behavior, not only the\noverlay. Operators inspect effective configuration and installed/published records.\nDevOps checks missing dependency/provider recovery and version compatibility.\nDocumentation needs concrete rejected, boundary, failure/recovery and customized\nexamples. Behavioral/visual acceptance remains separate from static docs generation.\nSee [deployment and verification](circa-deployment-verification.md) for commands,\nevidence gates and operational ownership.\n",
+    "keywords": [
+      "circa",
+      "customization",
+      "extends",
+      "templates",
+      "email",
+      "sms",
+      "project overlay",
+      "Circa",
+      "Customization"
+    ],
+    "facets": {
+      "section": "accelerators-and-industry-solution-templates",
+      "group": "accelerators-and-industry-solution-templates",
+      "navigationDepth": 2,
+      "documentType": "customization",
+      "audience": [
+        "business",
+        "architect",
+        "administrator",
+        "developer",
+        "operator",
+        "qa",
+        "ai-tool"
+      ],
+      "maturityState": "partial"
+    },
+    "managedInAxis": true,
+    "axisAuthoringPermissions": [
+      "documentation.search.preview"
+    ],
+    "workflowRequired": true,
+    "workflowTriggers": [
+      "SEARCH_METADATA_CHANGE"
+    ],
+    "locale": "en",
+    "channel": "web",
+    "accessPolicy": "nodicsDocsAccessPublic",
+    "accessMode": "PUBLIC",
+    "lifecycleState": "ONLINE",
+    "indexState": "INDEX_READY",
+    "active": true
+  },
+  "record257": {
+    "code": "nodicsDocsSearchpagenodicsdocsmetadataacceleratorscircadeploymentverification",
+    "product": "nodicsDocumentationProduct",
+    "targetType": "PAGE",
+    "targetCode": "nodicsDocsMetadataacceleratorsCircaDeploymentVerification",
+    "title": "Circa Deployment, Operations and Verification",
+    "summary": "Runtime/data/publication gates, development commands, joint acceptance matrix, troubleshooting and safe deployment recovery.",
+    "searchText": "Circa Deployment, Operations and Verification Runtime/data/publication gates, development commands, joint acceptance matrix, troubleshooting and safe deployment recovery. # Circa Deployment, Operations and Verification\n\nCirca is a multi-owner product experience. Beginners should distinguish backend\nreadiness, imported reference data, published content/catalogue and frontend health.\nA running Vite server proves none of the first three. The business objective of\ndeployment verification is an understandable, recoverable programme whose customer\nand operator journeys agree with saved owner evidence.\n\n## Runtime topology and prerequisites\n\nThe reference uses runtime authorities for Platform/Profile, Waste, Location, Media,\nLoyalty, Commerce Staged/Commerce, WCMS Staged/Online and Engagement/Communication,\nwith Process for governed review/publication where required. Follow the chosen\nproject's runtime descriptors and launch commands; these are deployment-specific,\nnot a permanent list of universal ports. Backend readiness must work without a\nfrontend checkout/server. Frontend startup and unavailable/retry UI remain frontend\nresponsibilities.\n\nThe current Circa frontend package uses React, TypeScript and Vite, with Location\nmap UI and Leaflet/Mapbox dependencies. Its checked-in package and lockfile define\nexact supported dependencies; do not substitute remembered newest versions.\nProvider credentials are governed secret references. Browser endpoint/CORS settings,\nruntime role authority and application/channel bindings must be checked in their\nexisting owners rather than copied into a second endpoint or authentication registry.\n\n## Prepare data and publish separately\n\n| Gate | Expected evidence | Not sufficient |\n| --- | --- | --- |\n| Framework/schema readiness | Owner runtimes ready and compatible schema/config | Frontend renders a home shell |\n| Reference preparation | Selected release receipt, version/checksum and policy | Files exist on disk |\n| Operational allocation | Approved enterprises, employees and centre/store scopes | Shared admin credentials |\n| WCMS publication | Approved Online route/page/template/renderer references | Staged page exists |\n| Commerce publication | Active published product/price/inventory/promotion projection | Website publication succeeded |\n| Transaction acceptance | Order/payment/asset/entitlement/ledger references | Browser success message |\n| Notification delivery | Qualified source intent and delivery evidence | HTML/SMS resource exists |\n\nThe Circa setup profile prepares maps/Waste policy, local sample profiles/operator\naccess, collection centres, reward programme, Commerce Staged catalogue and website.\nLocal sample sections are explicitly scoped. Never use setup replay to refresh\ntransactional ownership/opening ledgers in an established installation. Inspect\nowner inventory and receipts first. Sample data is not production partner approval.\n\nFor account composition, the `circa.ewaste:customer-workspace` release contributes\nWCMS `/account/waste` and `circa.wasteWorkspace`; install into Staged and publish\nthrough the normal approved route. Do not import old transaction samples merely\nbecause a new customer workspace page is required.\n\n## Development commands and test boundaries\n\nDevelopers should use the checked-in lockfile and owner test entry points. Keep\nAPI mocks separate from connected acceptance, and record any provider/runtime\nassumption a fixture substitutes. A successful mocked interaction does not prove\nthe installed owner's authorization, persistence acknowledgement or recovery.\n\nFrom the frontend checkout:\n\n```bash\nnpm ci\nnpm run typecheck\nnpm run build\nnpm run dev -- --host 127.0.0.1 --port 3600\n```\n\nThese are documented operator commands, not automatic runtime permission. Installation\nand builds can change local artifacts; use the approved project workflow. If the\nport is occupied, choose an available one and align browser configuration. The\nfrontend's `npm run verify` includes behavioral tests/build; do not run it during a\nstatic-only work phase. Docker deployment guidance stays with the frontend's\n`docker/README.md`; do not move its lifecycle into backend properties.\n\nBackend adapters use module `npm test` under `circa.ewaste`. Frontend mocked behavior\nuses `npm run test`; connected browser scripts include\n`test/live/catalogue-browsing.mjs`, `customer-workspace.mjs`,\n`customer-journey.mjs` and `reviewed-descriptor.mjs`. Read each script's fixture and\nmutation requirements first. Catalogue browsing is designed to cancel purchase\nreview; a complete customer journey can write real local records. Physical device,\nnative Telegram and real provider delivery acceptance remain separate.\n\n## Joint acceptance matrix\n\nCover successful, unauthorized, boundary, interrupted and custom-layer behavior:\nregistration and session switch; absent/stale location; centre browsing versus arrival;\nexact/outside radius; analysis failure/cancellation/replacement; persisted drafts;\nconfirmation retry; wrong-owner item/media; staff scope and verified overlays;\napproval/rejection; partial assessment; original reward evidence; settlement retry;\ncatalogue publication/filter totals; changed price; insufficient wallet; quantity\nlimits; partial/uncertain coupon reservation; duplicate sale/redemption; expiry;\nwrong outlet; refund policy and original payment reversal; notification retry.\n\nVisual acceptance covers desktop/mobile/navigation, long localized text, keyboard\nand touch, loading/empty/stale/error states, private-photo delivery, quick view/detail\nreturn, saved draft resume, purchase terms and token clearing after session change.\nUse sanitized screenshots with runtime/version context. A screenshot cannot prove\npermission enforcement, physical custody or an external provider's calculation.\n\n## Troubleshooting and recovery\n\n| Symptom | Inspect first | Safe recovery boundary |\n| --- | --- | --- |\n| Empty Shop despite source products | Store, published catalogue/price/inventory and kind | Correct/review Staged projection; do not add browser fixtures as real data |\n| Centre distance appears wrong | Canonical/runtime location plus reported coordinates | Approved Location correction, then fresh arrival check |\n| Preparation fails | Photo/provider/assessment contract and retained draft | Retry analysis without creating empty duplicates |\n| Approved item lacks rewards | Saved decision and Loyalty settlement reference | Qualified settlement recovery, not reapproval |\n| Purchase response uncertain | Checkout/order/payment and reservation checkpoint | Owner inspection under original key, not a new purchase |\n| Coupon history stale | Authorized read and current customer session | Read-only refresh; clear revealed token |\n| Refund or message incomplete | Original refund/intent, payment and delivery evidence | Qualified recovery; no fabricated completion |\n\nLog correlation/command identifiers and revisions without exposing passwords,\nbearers, OTPs, coupon tokens, private photos or unnecessary personal data. Unknown\nprovenance, conflicting writes and incomplete invalidation should stop success.\nBackups and restore need cross-owner receipt/ledger consistency; no universal\nCirca rollback API is implied. Use the existing runtime release/rollback process.\n\n## Customize and extend safely\n\nDeployments select actual endpoint/provider/channel differences in project/runtime\nlayers. A minimal example changes the frontend port and its approved public endpoint\nwhile leaving backend launch ownership independent. Test unavailable backend startup,\nCORS/session behavior and correct retry UI. Do not embed backend start commands into\nfrontend tests as a framework readiness dependency or copy secrets into example data.\nUse [customization](circa-customization.md) before changing functional defaults.\n\n## Common mistakes\n\nCalling source-written code accepted; running a mutating browser script against a\nnon-disposable environment; merging after static checks alone; confusing docs\ncatalogue ONLINE metadata with published runtime evidence; and treating production\nintegration requirements as merely test gaps all obscure release risk.\n\n## Verification\n\nDocumentation checks are `npm run docs:generate`, `npm run docs:check` and\n`npm run validate` in `nodics.docs`, with framework principle/context and scoped\nwhitespace checks. They do not import or publish this guide. Record authored,\ngenerated/validated, rendered, imported/published and live-accepted states separately.\nThe ongoing enterprise/coupon batch still has source gaps in delegation, complete\nadministrator safeguards, commercial authority, rich benefit validation and trusted\nnotification wiring. Complete those before declaring the whole product qualified.\nRelease/merge/push requires the separately approved acceptance and Git process.\n",
+    "keywords": [
+      "circa",
+      "deployment",
+      "runtime",
+      "publication",
+      "testing",
+      "recovery",
+      "devops",
+      "Circa",
+      "Deployment and verification"
+    ],
+    "facets": {
+      "section": "accelerators-and-industry-solution-templates",
+      "group": "accelerators-and-industry-solution-templates",
+      "navigationDepth": 2,
+      "documentType": "operations",
+      "audience": [
+        "business",
+        "architect",
+        "administrator",
+        "developer",
+        "operator",
+        "qa",
+        "ai-tool"
+      ],
+      "maturityState": "partial"
+    },
+    "managedInAxis": true,
+    "axisAuthoringPermissions": [
+      "documentation.search.preview"
+    ],
+    "workflowRequired": true,
+    "workflowTriggers": [
+      "SEARCH_METADATA_CHANGE"
+    ],
+    "locale": "en",
+    "channel": "web",
+    "accessPolicy": "nodicsDocsAccessPublic",
+    "accessMode": "PUBLIC",
+    "lifecycleState": "ONLINE",
+    "indexState": "INDEX_READY",
+    "active": true
+  },
+  "record258": {
     "code": "nodicsDocsSearchpagenodicsdocsmetadatadocsgateway",
     "product": "nodicsDocumentationProduct",
     "targetType": "PAGE",
@@ -9486,7 +10679,7 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record234": {
+  "record259": {
     "code": "nodicsDocsSearchpagenodicsdocsmetadataframeworkoverview",
     "product": "nodicsDocumentationProduct",
     "targetType": "PAGE",
@@ -9536,7 +10729,7 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record235": {
+  "record260": {
     "code": "nodicsDocsSearchpagenodicsdocsmetadataframeworkwhynodicsexists",
     "product": "nodicsDocumentationProduct",
     "targetType": "PAGE",
@@ -9586,7 +10779,7 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record236": {
+  "record261": {
     "code": "nodicsDocsSearchpagenodicsdocsmetadataframeworkhownodicsworks",
     "product": "nodicsDocumentationProduct",
     "targetType": "PAGE",
@@ -9636,7 +10829,7 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record237": {
+  "record262": {
     "code": "nodicsDocsSearchpagenodicsdocsmetadataframeworkadoptionandfirstjourney",
     "product": "nodicsDocumentationProduct",
     "targetType": "PAGE",
@@ -9686,7 +10879,7 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record238": {
+  "record263": {
     "code": "nodicsDocsSearchpagenodicsdocsmetadatadocsdocumentationroadmap",
     "product": "nodicsDocumentationProduct",
     "targetType": "PAGE",
@@ -9734,7 +10927,7 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record239": {
+  "record264": {
     "code": "nodicsDocsSearchpagenodicsdocsmetadatadocsdocumentationprinciples",
     "product": "nodicsDocumentationProduct",
     "targetType": "PAGE",
@@ -9784,7 +10977,7 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record240": {
+  "record265": {
     "code": "nodicsDocsSearchpagenodicsdocsmetadatadocsreaderjourneyandcoverage",
     "product": "nodicsDocumentationProduct",
     "targetType": "PAGE",
@@ -9834,7 +11027,7 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record241": {
+  "record266": {
     "code": "nodicsDocsSearchpagenodicsdocsmetadatadocsdocumentationpublishingmodel",
     "product": "nodicsDocumentationProduct",
     "targetType": "PAGE",
@@ -9884,7 +11077,7 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record242": {
+  "record267": {
     "code": "nodicsDocsSearchpagenodicsdocsmetadataframeworkmodulararchitecture",
     "product": "nodicsDocumentationProduct",
     "targetType": "PAGE",
@@ -9932,7 +11125,7 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record243": {
+  "record268": {
     "code": "nodicsDocsSearchpagenodicsdocsmetadataframeworkruntimeservercomposition",
     "product": "nodicsDocumentationProduct",
     "targetType": "PAGE",
@@ -9980,7 +11173,7 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record244": {
+  "record269": {
     "code": "nodicsDocsSearchpagenodicsdocsmetadataframeworkmoduleloadingserviceprecedence",
     "product": "nodicsDocumentationProduct",
     "targetType": "PAGE",
@@ -10028,7 +11221,7 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record245": {
+  "record270": {
     "code": "nodicsDocsSearchpagenodicsdocsmetadataframeworkarchitecturedecisionguide",
     "product": "nodicsDocumentationProduct",
     "targetType": "PAGE",
@@ -10076,7 +11269,7 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record246": {
+  "record271": {
     "code": "nodicsDocsSearchpagenodicsdocsmetadataplatformmoduleregistry",
     "product": "nodicsDocumentationProduct",
     "targetType": "PAGE",
@@ -10124,7 +11317,7 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record247": {
+  "record272": {
     "code": "nodicsDocsSearchpagenodicsdocsmetadatafoundationoverview",
     "product": "nodicsDocumentationProduct",
     "targetType": "PAGE",
@@ -10172,7 +11365,7 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record248": {
+  "record273": {
     "code": "nodicsDocsSearchpagenodicsdocsmetadataapplicationssuite",
     "product": "nodicsDocumentationProduct",
     "targetType": "PAGE",
@@ -10222,7 +11415,7 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record249": {
+  "record274": {
     "code": "nodicsDocsSearchpagenodicsdocsmetadatasolutionstaskexecutionengine",
     "product": "nodicsDocumentationProduct",
     "targetType": "PAGE",
@@ -10275,7 +11468,7 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record250": {
+  "record275": {
     "code": "nodicsDocsSearchpagenodicsdocsmetadatasolutionsdataengineeringanalyticsplatform",
     "product": "nodicsDocumentationProduct",
     "targetType": "PAGE",
@@ -10329,14 +11522,14 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record251": {
+  "record276": {
     "code": "nodicsDocsSearchpagenodicsdocsmetadataacceleratorsagoraindustrytemplates",
     "product": "nodicsDocumentationProduct",
     "targetType": "PAGE",
     "targetCode": "nodicsDocsMetadataacceleratorsAgoraIndustryTemplates",
     "title": "Accelerators and Industry Solution Templates",
     "summary": "Agora accelerator family overview for Apparel, Electronics, and Telco customer commerce storefronts.",
-    "searchText": "Accelerators and Industry Solution Templates Agora accelerator family overview for Apparel, Electronics, and Telco customer commerce storefronts. # Accelerators and Industry Solution Templates\n\nAccelerators and Industry Solution Templates are customer-facing starting points built with Nodics capabilities. They help a team move faster without hiding the framework contracts underneath. Beginners should read this page before treating an accelerator as a product, because the accelerator is a packaged reference application pattern, not the owner of catalog, checkout, payment, fulfillment, content, identity, or publication logic.\n\n## Business perspective\n\nAgora is the accelerator application family for commerce experiences. The current split is intentionally domain-specific: Agora Apparel, Agora Electronics, and Agora Telco. Each application gives an implementation partner a focused storefront pattern, test contract, visual journey, and integration shape that can be adapted for a customer. The value is faster time to market: business teams can begin with a working journey, inspect how products and content flow from backend data, and then customize only the areas that differentiate their brand or industry.\n\n| Accelerator | Business fit | Starting journey | Expected customization |\n| --- | --- | --- | --- |\n| Agora Apparel | Fashion, apparel, accessories, collections, campaign-led commerce | Home, collection, product detail, cart, checkout, order history | Size and fit rules, seasonal campaigns, editorial content, return reasons |\n| Agora Electronics | Devices, accessories, specifications, warranty-led commerce | Home, category discovery, product detail, cart, checkout, order status | Specification comparison, warranty content, compatibility rules, pickup or delivery options |\n| Agora Telco | Plans, bundles, devices, service activation, account-led commerce | Home, plan/device selection, bundle review, checkout, order lifecycle | Plan eligibility, contract terms, activation flows, customer verification |\n\nThe accelerator group gives business users a place to understand what can be reused and what must still be owned by the customer project. It also gives developers a clean source map: frontend presentation belongs to each Agora app, business data belongs to backend content and commerce data packs, and rules stay in the owning framework modules or project-layer extensions.\n\n## Accelerator flow\n\n```mermaid\nflowchart TD\n  Backend[Kickoff or customer backend] --> Online[Published Online catalog and content]\n  Online --> Apparel[Agora Apparel storefront]\n  Online --> Electronics[Agora Electronics storefront]\n  Online --> Telco[Agora Telco storefront]\n  Apparel --> Checkout[Commerce checkout APIs]\n  Electronics --> Checkout\n  Telco --> Checkout\n  Checkout --> Orders[Order lifecycle and customer service]\n  Orders --> Axis[Axis operations and evidence]\n```\n\nThe same business journey can be inspected from several directions. A merchandiser sees content, products, media, price, and availability. A developer sees API clients, renderer contracts, cart state, checkout validation, payment-result handling, and test coverage. An operator sees backend health, publication state, data-import status, and order lifecycle evidence.\n\n## Technical perspective\n\nThe concrete frontend applications are `nodics.agora.apparel`, `nodics.agora.electronics`, and `nodics.agora.telco`. Those identifiers belong in technical source maps and repository references, not in the primary business navigation label. The business-facing documentation should call them Agora Apparel, Agora Electronics, and Agora Telco.\n\nEach accelerator consumes content, catalog, pricing, inventory, media, checkout, payment, fulfillment, engagement, and order lifecycle contracts from the backend. The storefront should not copy backend rules into React components. When a customer needs a different pricing rule, inventory availability rule, content slot, checkout step, payment provider, carrier, or return policy, the implementation should update the owning backend module or project-layer extension and then verify the storefront rendering against that published behavior.\n\n## Customization and extension\n\nAccelerators should be customized through three layers:\n\n| Layer | What changes here | What should not change here |\n| --- | --- | --- |\n| Backend project data | Products, categories, content, media, prices, inventory, markets, sites, publication state | Frontend-only business truth |\n| Project backend extension | Schemas, services, providers, events, pipelines, validations, policies | Vendor framework source |\n| Agora frontend app | Presentation, responsive behavior, renderer mapping, browser state, accessibility, tests | Commerce ownership, payment authority, tenant policy |\n\nThis separation allows a customer to replace local data with staged/online data, change providers, or add a new domain app without corrupting framework upgrade paths. It also makes the documentation useful for AI tools: each page must state what the accelerator owns, what it consumes, and where a generated or manual change should be made.\n\n## Publication and visibility\n\nAccelerator documentation belongs under this group in the published documentation hierarchy. Public overview pages can be visible in Nexus after Online approval. Implementation details that expose internal environment, operator, or partner-only behavior should use authenticated or permission-based access and appear through Axis. When new accelerator domains are added, they should be added as new child topics in this group with source-backed catalogue metadata, diagrams, customization tables, validation steps, and links to the owning Commerce, WCMS, Search, Payment, Shipping, Order Management, and Engagement topics.\n\n## Common mistakes\n\n- Calling Agora a single generic application after the domain split. The correct documentation shape is an accelerator family with Apparel, Electronics, Telco, and later domain templates.\n- Letting the storefront own commerce rules. The frontend presents the journey; backend modules and project extensions own business decisions.\n- Copying sample data into a component because it is faster. Data should come from backend APIs or safe development fixtures, with clear test-only boundaries.\n- Forgetting business readers. A useful accelerator page explains the revenue path, operating model, and customization impact before it lists files.\n\n## Verification\n\nVerify this topic by checking that the three active storefront repositories exist under `nodics.exp` and that their package names are `nodics.agora.apparel`, `nodics.agora.electronics`, and `nodics.agora.telco`. In each app, run the local verification command when changing presentation contracts. In `nodics.docs`, run `npm run docs:check` and `npm run validate` to prove the accelerator page is in the backend documentation catalogue and produces CMS records, hierarchy nodes, dashboard data, access policy, publication state, and search metadata.\n\n## Active Accelerator Coverage\n\nThe accelerator family now has three active application templates. They share\nthe Nodics Commerce, WCMS, Search, Media, Localization, Payment, Fulfillment,\nOrder, and Engagement documentation, but each accelerator should add its own\ndomain page when its data, UI, or operating model becomes distinct enough for\nbusiness users.\n\n```mermaid\nflowchart LR\n  Framework[\"Nodics Framework\"] --> Apparel[\"Agora Apparel\"]\n  Framework --> Electronics[\"Agora Electronics\"]\n  Framework --> Telco[\"Agora Telco\"]\n  Apparel --> Commerce[\"Commerce capability docs\"]\n  Electronics --> Discovery[\"Discovery and media docs\"]\n  Telco --> Customer[\"Customer onboarding and engagement docs\"]\n```\n\n| Accelerator | Business focus | Documentation references |\n| --- | --- | --- |\n| Agora Apparel | Apparel storefront, category browsing, product detail, media-rich merchandising, cart, checkout, returns. | Product Catalog, WCMS, Media, Pricing, Inventory, Cart/Checkout, Orders, Returns. |\n| Agora Electronics | Electronics catalog, specifications, search facets, recommendations, warranty-style data, checkout and fulfillment. | Product Catalog, Discovery, Media, Pricing, Shipping/Fulfillment, Reviews. |\n| Agora Telco | Plans, devices, offers, customer onboarding, service-style fulfillment, support, and engagement. | Catalog, Pricing/Promotion, Identity, Checkout, Process, Communication, Engagement. |\n\nThe accelerator documentation must stay honest about ownership: the\naccelerator presents and composes journeys; backend modules and project\nextensions own business data and decisions. A storefront screenshot or UI\ncomponent is useful evidence, but it cannot replace schema, API, data-pack,\npublication, and validation evidence.\n",
+    "searchText": "Accelerators and Industry Solution Templates Agora accelerator family overview for Apparel, Electronics, and Telco customer commerce storefronts. # Accelerators and Industry Solution Templates\n\nAccelerators and Industry Solution Templates are customer-facing starting points built with Nodics capabilities. They help a team move faster without hiding the framework contracts underneath. Beginners should read this page before treating an accelerator as a product, because the accelerator is a packaged reference application pattern, not the owner of catalog, checkout, payment, fulfillment, content, identity, or publication logic.\n\n## Business perspective\n\nThe framework product catalogue also includes Waste Management showcased through\n[Circa](circa-overview.md). Its detailed guide separates data/network configuration,\nsubmission, operations/rewards, coupon commerce, customization and deployment.\nThat is the documentation depth pattern for further Agora product topics; it does\nnot make Circa a Commerce domain accelerator or move customer-owned data into the\nframework. Product positioning and implementation ownership remain distinct.\n\nAgora is the accelerator application family for commerce experiences. The current split is intentionally domain-specific: Agora Apparel, Agora Electronics, and Agora Telco. Each application gives an implementation partner a focused storefront pattern, test contract, visual journey, and integration shape that can be adapted for a customer. The value is faster time to market: business teams can begin with a working journey, inspect how products and content flow from backend data, and then customize only the areas that differentiate their brand or industry.\n\n| Accelerator | Business fit | Starting journey | Expected customization |\n| --- | --- | --- | --- |\n| Agora Apparel | Fashion, apparel, accessories, collections, campaign-led commerce | Home, collection, product detail, cart, checkout, order history | Size and fit rules, seasonal campaigns, editorial content, return reasons |\n| Agora Electronics | Devices, accessories, specifications, warranty-led commerce | Home, category discovery, product detail, cart, checkout, order status | Specification comparison, warranty content, compatibility rules, pickup or delivery options |\n| Agora Telco | Plans, bundles, devices, service activation, account-led commerce | Home, plan/device selection, bundle review, checkout, order lifecycle | Plan eligibility, contract terms, activation flows, customer verification |\n\nThe accelerator group gives business users a place to understand what can be reused and what must still be owned by the customer project. It also gives developers a clean source map: frontend presentation belongs to each Agora app, business data belongs to backend content and commerce data packs, and rules stay in the owning framework modules or project-layer extensions.\n\n## Accelerator flow\n\n```mermaid\nflowchart TD\n  Backend[Kickoff or customer backend] --> Online[Published Online catalog and content]\n  Online --> Apparel[Agora Apparel storefront]\n  Online --> Electronics[Agora Electronics storefront]\n  Online --> Telco[Agora Telco storefront]\n  Apparel --> Checkout[Commerce checkout APIs]\n  Electronics --> Checkout\n  Telco --> Checkout\n  Checkout --> Orders[Order lifecycle and customer service]\n  Orders --> Axis[Axis operations and evidence]\n```\n\nThe same business journey can be inspected from several directions. A merchandiser sees content, products, media, price, and availability. A developer sees API clients, renderer contracts, cart state, checkout validation, payment-result handling, and test coverage. An operator sees backend health, publication state, data-import status, and order lifecycle evidence.\n\n## Technical perspective\n\nThe concrete frontend applications are `nodics.agora.apparel`, `nodics.agora.electronics`, and `nodics.agora.telco`. Those identifiers belong in technical source maps and repository references, not in the primary business navigation label. The business-facing documentation should call them Agora Apparel, Agora Electronics, and Agora Telco.\n\nEach accelerator consumes content, catalog, pricing, inventory, media, checkout, payment, fulfillment, engagement, and order lifecycle contracts from the backend. The storefront should not copy backend rules into React components. When a customer needs a different pricing rule, inventory availability rule, content slot, checkout step, payment provider, carrier, or return policy, the implementation should update the owning backend module or project-layer extension and then verify the storefront rendering against that published behavior.\n\n## Customization and extension\n\nAccelerators should be customized through three layers:\n\n| Layer | What changes here | What should not change here |\n| --- | --- | --- |\n| Backend project data | Products, categories, content, media, prices, inventory, markets, sites, publication state | Frontend-only business truth |\n| Project backend extension | Schemas, services, providers, events, pipelines, validations, policies | Vendor framework source |\n| Agora frontend app | Presentation, responsive behavior, renderer mapping, browser state, accessibility, tests | Commerce ownership, payment authority, tenant policy |\n\nThis separation allows a customer to replace local data with staged/online data, change providers, or add a new domain app without corrupting framework upgrade paths. It also makes the documentation useful for AI tools: each page must state what the accelerator owns, what it consumes, and where a generated or manual change should be made.\n\n## Publication and visibility\n\nAccelerator documentation belongs under this group in the published documentation hierarchy. Public overview pages can be visible in Nexus after Online approval. Implementation details that expose internal environment, operator, or partner-only behavior should use authenticated or permission-based access and appear through Axis. When new accelerator domains are added, they should be added as new child topics in this group with source-backed catalogue metadata, diagrams, customization tables, validation steps, and links to the owning Commerce, WCMS, Search, Payment, Shipping, Order Management, and Engagement topics.\n\n## Common mistakes\n\n- Calling Agora a single generic application after the domain split. The correct documentation shape is an accelerator family with Apparel, Electronics, Telco, and later domain templates.\n- Letting the storefront own commerce rules. The frontend presents the journey; backend modules and project extensions own business decisions.\n- Copying sample data into a component because it is faster. Data should come from backend APIs or safe development fixtures, with clear test-only boundaries.\n- Forgetting business readers. A useful accelerator page explains the revenue path, operating model, and customization impact before it lists files.\n\n## Verification\n\nVerify this topic by checking that the three active storefront repositories exist under `nodics.exp` and that their package names are `nodics.agora.apparel`, `nodics.agora.electronics`, and `nodics.agora.telco`. In each app, run the local verification command when changing presentation contracts. In `nodics.docs`, run `npm run docs:check` and `npm run validate` to prove the accelerator page is in the backend documentation catalogue and produces CMS records, hierarchy nodes, dashboard data, access policy, publication state, and search metadata.\n\n## Active Accelerator Coverage\n\nThe accelerator family now has three active application templates. They share\nthe Nodics Commerce, WCMS, Search, Media, Localization, Payment, Fulfillment,\nOrder, and Engagement documentation, but each accelerator should add its own\ndomain page when its data, UI, or operating model becomes distinct enough for\nbusiness users.\n\n```mermaid\nflowchart LR\n  Framework[\"Nodics Framework\"] --> Apparel[\"Agora Apparel\"]\n  Framework --> Electronics[\"Agora Electronics\"]\n  Framework --> Telco[\"Agora Telco\"]\n  Apparel --> Commerce[\"Commerce capability docs\"]\n  Electronics --> Discovery[\"Discovery and media docs\"]\n  Telco --> Customer[\"Customer onboarding and engagement docs\"]\n```\n\n| Accelerator | Business focus | Documentation references |\n| --- | --- | --- |\n| Agora Apparel | Apparel storefront, category browsing, product detail, media-rich merchandising, cart, checkout, returns. | Product Catalog, WCMS, Media, Pricing, Inventory, Cart/Checkout, Orders, Returns. |\n| Agora Electronics | Electronics catalog, specifications, search facets, recommendations, warranty-style data, checkout and fulfillment. | Product Catalog, Discovery, Media, Pricing, Shipping/Fulfillment, Reviews. |\n| Agora Telco | Plans, devices, offers, customer onboarding, service-style fulfillment, support, and engagement. | Catalog, Pricing/Promotion, Identity, Checkout, Process, Communication, Engagement. |\n\nThe accelerator documentation must stay honest about ownership: the\naccelerator presents and composes journeys; backend modules and project\nextensions own business data and decisions. A storefront screenshot or UI\ncomponent is useful evidence, but it cannot replace schema, API, data-pack,\npublication, and validation evidence.\n",
     "keywords": [
       "accelerators",
       "industry-solution-templates",
@@ -10380,7 +11573,7 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record252": {
+  "record277": {
     "code": "nodicsDocsSearchpagenodicsdocsmetadataacceleratorsagoraapparelproductdataauthoring",
     "product": "nodicsDocumentationProduct",
     "targetType": "PAGE",
@@ -10434,7 +11627,7 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record253": {
+  "record278": {
     "code": "nodicsDocsSearchpagenodicsdocsmetadataframeworklocalquickstart",
     "product": "nodicsDocumentationProduct",
     "targetType": "PAGE",
@@ -10482,7 +11675,7 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record254": {
+  "record279": {
     "code": "nodicsDocsSearchpagenodicsdocsmetadataframeworkfreshschemasetupjourney",
     "product": "nodicsDocumentationProduct",
     "targetType": "PAGE",
@@ -10530,7 +11723,7 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record255": {
+  "record280": {
     "code": "nodicsDocsSearchpagenodicsdocsmetadataframeworklocalruntimetroubleshooting",
     "product": "nodicsDocumentationProduct",
     "targetType": "PAGE",
@@ -10578,7 +11771,7 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record256": {
+  "record281": {
     "code": "nodicsDocsSearchpagenodicsdocsmetadatainstallerinstalledruntimeapplicationbuilder",
     "product": "nodicsDocumentationProduct",
     "targetType": "PAGE",
@@ -10628,7 +11821,7 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record257": {
+  "record282": {
     "code": "nodicsDocsSearchpagenodicsdocsmetadatabuilderworkspacegeneration",
     "product": "nodicsDocumentationProduct",
     "targetType": "PAGE",
@@ -10676,7 +11869,7 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record258": {
+  "record283": {
     "code": "nodicsDocsSearchpagenodicsdocsmetadataprocessvisualdesigner",
     "product": "nodicsDocumentationProduct",
     "targetType": "PAGE",
@@ -10724,7 +11917,7 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record259": {
+  "record284": {
     "code": "nodicsDocsSearchpagenodicsdocsmetadataaxisbusinesscustomization",
     "product": "nodicsDocumentationProduct",
     "targetType": "PAGE",
@@ -10772,7 +11965,7 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record260": {
+  "record285": {
     "code": "nodicsDocsSearchpagenodicsdocsmetadataplatformoverview",
     "product": "nodicsDocumentationProduct",
     "targetType": "PAGE",
@@ -10820,14 +12013,14 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record261": {
+  "record286": {
     "code": "nodicsDocsSearchpagenodicsdocsmetadatasecurityidentityaccessgovernance",
     "product": "nodicsDocumentationProduct",
     "targetType": "PAGE",
     "targetCode": "nodicsDocsMetadatasecurityIdentityAccessGovernance",
     "title": "Security, Identity, and Access Governance",
     "summary": "Authentication, authorization, groups, documentation authoring roles, read-only Axis access, tenant isolation, and audit responsibilities.",
-    "searchText": "Security, Identity, and Access Governance Authentication, authorization, groups, documentation authoring roles, read-only Axis access, tenant isolation, and audit responsibilities. # Security, Identity, and Access Governance\n\nAuthentication, authorization, groups, documentation authoring roles, read-only Axis access, tenant isolation, and audit responsibilities. This page is intentionally written for beginners, business users, developers, operators, architects, QA owners, and AI tools. It explains the business problem first, then the technical ownership model, then the exact customization and verification responsibilities so nobody has to guess where a change belongs.\n\nA platform that lets business users change content, configuration, and runtime behavior must prove who can read, edit, review, approve, publish, and operate each capability. Profile centralizes users, groups, permissions, token context, and enterprise or tenant assignments. Capability modules declare permission needs, while routes, services, and Axis workspaces enforce them consistently.\n\n## Business context\n\nFor a business user, this topic answers what decision can be made, which operational journey is supported, and what risk is reduced. The practical value is faster delivery without losing governance: teams can understand the current capability, decide whether it applies to their project, and know when Axis, Nexus, content catalog, workflow, or runtime services are involved.\n\nFor beginners, the mental model is simple: the page title is the business capability, the table identifies who owns each part, and the diagram shows how a request or change flows. A reader should not need source-code knowledge to understand the journey, but the developer path is still available when customization is needed.\n\n| Business question | Answer for this topic |\n| --- | --- |\n| What problem does it solve? | A platform that lets business users change content, configuration, and runtime behavior must prove who can read, edit, review, approve, publish, and operate each capability. |\n| Who uses it? | Business users, administrators, developers, operators, QA owners, implementation partners, and AI-assisted delivery tools. |\n| What changes can it support? | Profile centralizes users, groups, permissions, token context, and enterprise or tenant assignments. Capability modules declare permission needs, while routes, services, and Axis workspaces enforce them consistently. |\n| What must be governed? | Permissions, validation, source ownership, publication state, runtime impact, audit evidence, and rollback boundaries. |\n\n## Journey and ownership\n\nProfile owns users, employees, groups, permissions, and identity context. Documentation author and read-only viewer roles extend this model without creating a separate documentation-only security authority. This keeps the reader-facing name friendly while preserving exact source ownership for developers and AI tools. Axis may render management screens or authenticated documentation, Nexus may render public Online content, and the backend content catalog remains authoritative for navigation, pages, access policies, and publication state.\n\n```mermaid\nflowchart LR\n  Reader[\"Business or developer request\"] --> Axis[\"Axis or Nexus view\"]\n  Axis --> Backend[\"Owning backend capability\"]\n  Backend --> Catalog[\"Content/catalog/schema/config records\"]\n  Catalog --> Runtime[\"Runtime behavior or published page\"]\n  Runtime --> Evidence[\"Audit, validation, and support evidence\"]\n```\n\n| Responsibility | Owner | Notes |\n| --- | --- | --- |\n| Business capability name | Security, Governance, and Compliance | Used in navigation and dashboards so readers are not exposed to raw module names first. |\n| Source owner | nodics.platform | Carries exact implementation, documentation, and validation evidence. |\n| Technical module | profile | Holds the relevant schema, service, router, data, or contract detail where applicable. |\n| Axis experience | Backend-declared workspace | Axis renders metadata and actions but does not become the authority. |\n| Public experience | Online content delivery | Nexus renders only records approved for public access. |\n\n## Data and configuration detail\n\nEvery topic must explain the data that changes behavior. Some topics are schema-driven, some are configuration-driven, some are publishable content, and some are operational records. The documentation must say which category applies before showing code. That keeps production operators and developers aligned on whether a change needs publication, restart, event propagation, approval, or only a project-layer override.\n\n| Detail area | What to document | Verification signal |\n| --- | --- | --- |\n| Model or record | Type code, catalog, tenant, enterprise, state, owner, and lifecycle. | Schema contract or generated model test. |\n| Configuration key | Default value, override location, environment scope, and runtime impact. | Config validation and runtime refresh evidence. |\n| API or event | Route/event name, payload boundary, permission, idempotency, and failure mode. | Route, service, event, and authorization tests. |\n| Publication and access | Staged/Online state, access mode, roles, groups, and permissions. | Content-pack validation and access-policy test. |\n\n```js\npermission: { code: \"documentation.draft.create\", group: \"documentationAuthorUserGroup\", publish: false }\n```\n\n## Customization and extension\n\nDevelopers should customize from the project layer first. A customer project may add properties, services, validators, pipelines, renderers, data packs, or provider configuration when the extension respects the owning capability. Business users may update governed records in Axis when the record is designed for administration. Framework source changes are reserved for improving the reusable product capability itself.\n\n| Customization type | Recommended path | Avoid |\n| --- | --- | --- |\n| Business label, navigation, or content area | Axis-managed content catalog item with publication workflow. | Hardcoding labels or page trees in the frontend. |\n| Runtime setting | Module configuration with validation and governed runtime propagation. | Editing node-local files on each server by hand. |\n| Domain behavior | Extension service, validator, pipeline step, or provider adapter. | Forking the standard module for customer-only logic. |\n| Public visibility | Access policy with public/authenticated/role-based state. | Exposing internal or draft pages through Nexus. |\n\n## Operations and governance\n\nOperators need production-safe evidence, not only implementation notes. Each page must call out logging, tracing, permission checks, event propagation, data import/export, publication status, rollback behavior, and troubleshooting. If a capability affects multiple nodes, the documentation must explain how changes reach every node and how a partial failure is detected.\n\n| Operational concern | Required documentation detail |\n| --- | --- |\n| Security | Authentication mode, permission code, role/group, tenant and enterprise isolation. |\n| Audit | Actor, timestamp, source record, checksum, approval, route/event, and result. |\n| Resilience | Retry, idempotency, compensation, fallback, cache invalidation, and rollback. |\n| Observability | Logs, metrics, dashboard cards, health checks, and support evidence. |\n\n## Common mistakes\n\n- Treating a friendly navigation label as the technical source owner.\n- Writing only developer details and skipping the business decision that the page supports.\n- Updating Axis or Nexus code when the content catalog, schema, or backend capability should own the change.\n- Forgetting access rules for public, authenticated, role-based, group-based, or permission-based pages.\n- Skipping diagrams, comparison tables, source maps, or troubleshooting matrices because the topic feels obvious.\n- Changing runtime behavior without explaining production impact, cluster propagation, and rollback.\n- Leaving generated documentation without source evidence, validation commands, and maturity state.\n\n## Verification\n\nVerification starts with the document itself: it must include business context, technical ownership, a visual flow, data or configuration tables, customization guidance, common mistakes, and validation evidence. Developers then run the documentation generator and content-pack validator so the page becomes backend-owned data with checksum, lifecycle, navigation, access policy, publication state, and search metadata.\n\nFor implementation verification, run the owning module tests and any Axis or Nexus renderer tests that consume the page. Operators should confirm that production-like runtime behavior matches the documentation: permissions reject unauthorized access, Online pages do not expose Staged data, runtime changes propagate through governed events, and troubleshooting evidence is available without exposing secrets.\n\n## Current implementation coverage\n\nSecurity, identity, and access governance covers employees, customers,\nenterprises, tenants, user groups, permissions, principal scope assignments,\nauthentication providers, browser sessions, internal runtime tokens, password\nrecords, and identity migration evidence. This page also owns the\ndocumentation roles discussed for Axis: super admin, admin reviewer/approver,\ndocumentation author, and read-only Axis viewer. Admin may review, approve,\nand publish; author can create and update documentation content; viewer can\ninspect Axis applications without write permissions.\n\n```mermaid\nflowchart LR\n  Principal[\"Customer or employee\"] --> Auth[\"Authentication provider\"]\n  Auth --> Session[\"Token/session\"]\n  Session --> Scope[\"Enterprise and tenant scope\"]\n  Scope --> Groups[\"User groups and permissions\"]\n  Groups --> Decision[\"Route and operation decision\"]\n  Decision --> Audit[\"Audit and support evidence\"]\n```\n\n| Access topic | Source records | Documentation requirement |\n| --- | --- | --- |\n| Enterprise and tenant | Enterprise, Tenant, Address, Contact. | Isolation, activation, default tenant behavior, and migration risk. |\n| Principal identity | User, Employee, Customer, Password, UserState. | Authentication, status, ownership, and protected data handling. |\n| Group and permission | UserGroup and resolved permissions. | Exact permission codes, inherited access, and denial behavior. |\n| Scope assignment | PrincipalScopeAssignment. | Which enterprise/tenant/domain a principal can act within. |\n| Documentation access | Page access policy and lifecycle visibility. | Public, authenticated, role-based, group-based, permission-based, or restricted visibility. |\n\nFor Axis, every left-navigation entry and page action should map to a\nbackend-declared capability and permission. The frontend may hide unavailable\nactions for usability, but backend authorization remains the decision point.\nFor Nexus, public pages must come only from Online content and must not expose\nrestricted documentation, secrets, internal routes, or draft implementation\nnotes.\n\nImplementation evidence comes from profile route contracts, authentication\nservice tests, browser session tests, runtime internal token tests, user group\npermission resolution, principal authorization scope contracts, recursive\ninterceptor tests, identity governance and migration tests, mandatory identity\nbootstrap checks, and generated schema contracts for Enterprise, Tenant,\nCustomer, Employee, UserGroup, User, UserState, Password, and\nPrincipalScopeAssignment.\n\nProfile refresh sessions use the Profile-owned `auth` cache channel. Its module\nconfiguration references nAuth's strict channel defaults through nConfig; do not\ncopy those defaults into a customer environment or redirect identity ownership.\nThe deployment must still enable the distributed provider. Later Profile channel\noverrides use normal layering, preserving atomic consume and no local fallback.\n\nBrowser sessions resolve credentialed origins through nRouter's existing\n`resolveCorsOrigins` service. Endpoint-derived origins and explicit origin lists\nshare one policy; explicit denials and endpoint disables take precedence.\nProfile continues to enforce cookie security, CSRF and refresh rotation.\n\nDuring a governed Local reset, the provider's private authority may reach scope\ncleanup after Employee deletion. Profile must prove principal absence through an\nauthoritative read and await nAuth shared-stamp revocation. It must reject failed\nreads or revocation, and a request field cannot forge reset authority. Existing\nprincipals and ordinary scope mutations still require exactly one acknowledged\nEmployee update. This rule is independent of reset inventory ordering.\n\nScoped runtime route admission recognizes `userGroup` and\n`serviceAccountUserGroup` as base route classes. These labels do not become JWT\ngroups or expand permissions. nRouter still enforces the approved module, explicit\naction permission, accepted token type and deployment exposure. Administrator and\nhuman-only groups remain ineligible; later deployment policy may narrow the list.\n",
+    "searchText": "Security, Identity, and Access Governance Authentication, authorization, groups, documentation authoring roles, read-only Axis access, tenant isolation, and audit responsibilities. # Security, Identity, and Access Governance\n\n## October 2026 Source Consolidation Boundary\n\nFor business users and operators, source availability is different from an\nenabled enterprise journey. The current branch adds explicit target-owned consent,\nheld hierarchy changes, historical application retirement and staged historical\nidentity linking. Those capabilities retain independent false qualifications.\nBeginners must not activate switches to bypass missing owner approval or unfinished\nacceptance. Developers extend existing Profile owners; Kickoff remains lightweight.\n\n### Target Consent And Relationship Changes\n\nProfile stores private consent on existing Enterprise records, not another tree or\nidentity registry. New enterprise creation captures creationDefault=false with empty\nrights; retries retain existing rights and later configuration changes never retrofit\nthem. Positive-default source requires an explicitly approved `creationRights` policy,\nfresh human platform authority and a ready immediate-parent administrator; missing\napproval or incomplete rights reject before setup writes. This policy remains null\nby default. Source administration also recognizes fresh accepted assignments with\nan explicit `ENTERPRISE_ADMIN` role classification, not a role label or broad group\nalone. Targets can grant explicit ancestor VIEW/INVITE consent with role and exact-\nrecipient ceilings, bounded expiry and canonical source evidence. Independently\nqualified MANAGE_ACCESS permits bounded onward commands, never operational authority,\nautomatic descendant access or Customer consent. Onward qualification stays false.\n\nConsent routes GET/POST `/nodics/profile/v0/enterprise-administration/consent` use\nmanagement exposure, human access authentication, configured permission and no-store\nresponses. Generic CRUD cannot manufacture, replace or erase private proof. Operator\nprojections contain only current revision and bounded grant summaries, not canonical\nlocators, command hashes or credentials. Ancestor invitations revalidate ceilings at\nacceptance and membership issue/switch/refresh. Independent typed consent stamps join\ncanonical and membership proofs; groups are never unioned across enterprises.\n\nThe target-aware GET `/enterprise-administration/:enterpriseCode/workspace` publishes\nversioned presentation, revision, authorized source-assignment choices, explicit\ncommands and bounded options. Matching GET/POST `/:enterpriseCode/consent` routes\nretain independent target admission; selecting a target is not permission. Grant\ncommands use an opaque `recipientAssignmentCode`, resolved by Profile, rather than a\nbrowser-supplied canonical identity locator. Axis reviews one inspected revision and\none operation ID; a failed or uncertain response leads to inspection, not automatic\nreplay. Backend navigation remains hidden until enforcement is qualified.\n\nProfile's secured pipeline contribution rechecks owner contexts after token\nauthentication on each request. This observes expiry/source loss and current relationship\nevidence. Installed cross-runtime/module-boundary enforcement and distributed cache\nbehavior are not yet demonstrated; production qualification must cover all consumers.\n\nHierarchy GET/POST `/enterprise-administration/hierarchy` are separate fresh PASSWORD\nplatform-super-admin operations. A held operation advances relationship epoch, rejects\nhierarchy reads while PENDING, revokes only retained path-dependent grants and repairs\ntheir individual stamps before the final parent CAS. Interrupted commands retain their\nexact original identity and targets; they are never stolen on timeout. Returning to an\nold parent never revives old consent. Reverse subEnterprises is not a second authority.\n\nSeparately qualified POST `/enterprise-administration/hierarchy/recover` consumes an\nexact retained operation ID and graph revision. Recovery is not a timeout-based lock\ntakeover. Terminal cancellation retains the original parent and advanced epoch, so\nthe abandoned command cannot acknowledge a late parent change or revive old grants.\nPrivate cancellation facts must be verified by the consent owner before hierarchy\nreads resume. Installed concurrency, source-loss and lost-acknowledgement acceptance\nare still required; no recovery switch has been enabled.\n\n### Historical Identity And Application Recovery\n\nHistorical canonical linking requires current proof of both original passwords,\nreviewed inventory fingerprint and independently qualified retirement guards. It stages\nthe original target inactive, retires its local credential at the Password owner and\nretains private recovery evidence. Canonical credentials and histories are preserved;\nno membership, customer consent or active session follows from linking. Targets with\ndependent checkpoints/memberships reject rather than being silently reassociated.\nCustomer eligibility now has a Profile-owned live admission path consuming published\nRules policies and current original account, credential, lockout and consent evidence.\nIt is not a fabricated KYC approval or an email-as-verification shortcut. Policy,\nprovider and installation qualification remain explicit; missing evidence rejects.\n\nApplication retirement can select an exact retained WITHDRAWN/EXPIRED historical\nattempt with the current assignment revision. The owner uses its original Process\ncorrelation and never mutates a resubmitted application's history or new decision.\nAxis confirms the selected attempt and handles competing/uncertain results without\nautomatic replay. Inspection is retained source evidence, not live proof of retirement.\n\n### Customize And Accept Safely\n\nExisting later Profile modules contribute `config/properties.js`; preserve false\nqualifications until accepted installed evidence. Tighten `administrationConsent`\nmaximumGrants, maximumLifetimeDays and allowedRoleCodes through layering. Exported\nowner members may narrow behavior but cannot remove canonical proof, private evidence,\nconditional acknowledgements, role/action/recipient ceilings or non-revival. Full\ncommand and recovery detail is in Profile's `administration-consent-commands.md` and\n`enterprise-membership.md`; those contracts do not authorize runtime migration.\n\nFor example, a later-loaded Profile extension can narrow limits and change labels\nin its existing `config/properties.js` without replacing authentication or persistence:\n\n```js\nmodule.exports = {\n  enterpriseManagement: {\n    administrationConsent: {\n      maximumGrants: 10,\n      maximumLifetimeDays: 7,\n      maximumDelegationDepth: 2,\n      workspace: {\n        presentation: { title: \"Organisation Administration\" },\n      },\n    },\n  },\n};\n```\n\nThe module must extend Profile and load after it through the normal runtime hierarchy.\nThe example inherits disabled qualification and false creation defaults; it neither\ngrants permissions nor rewrites existing rights. Role classification does not add\npermissions to imported groups. Approved action permissions remain governed group/\nscope records. Validate default and later-layer composition, malformed configuration,\nstale revisions, denied sources, expiry, cancellation and uncertain-write inspection\nin the joint session before activation. Do not copy the full default configuration.\n\n| Evidence                                        | Current Boundary                        |\n| ----------------------------------------------- | --------------------------------------- |\n| Source/fixtures                                 | Authored; behavioral fixtures NOT RUN   |\n| Static governance                               | Reported separately after consolidation |\n| Installed indexes/cache/owner retirement        | Qualification remains false             |\n| Axis/Circa automated and visual acceptance      | Joint session, NOT RUN                  |\n| Runtime imports, notification sends and release | Not authorized in this batch            |\n\n## Enterprise Hierarchy Evidence\n\nProfile's existing Enterprise owner resolves a child-to-root chain using fresh,\nbounded, non-recursive Enterprise and Tenant reads. Parent and tenant references\nuse code coordinates, including resolved objects whose code is reloaded. The\nsingular `superEnterprise` is the traversal source; `subEnterprises` is not an\nindependent authority or proof of a bidirectional transaction.\n\n`enterpriseManagement.hierarchy.maximumDepth` defaults to 32 records including\nthe child. Later Profile layers may narrow it within the integer range 1-128.\nMissing/inactive/ambiguous dependencies, cycles, malformed references and overflow\nreject; a second pass detects observed drift but is not an atomic graph snapshot.\nCreation validates its proposed parent before tenant, enterprise and activation\nwrites, including self/descendant-parent refusal. Existing creation retries do not\nretrofit rights or create another enterprise.\n\nThis framework dependency grants no parent administration or business-data access.\nTarget consent, bounded grant provenance, authority ceilings, serialized reparenting\nand dependent-session invalidation remain separate implementation requirements.\nProjects customize the existing exported Profile owner and layered depth setting;\nthey do not copy the hierarchy into Kickoff, Axis or Circa. The new fixtures are\nauthored for joint testing, not accepted runtime evidence.\n\n## Explicit Structural Recovery Resumption\n\nThe independently qualified migration recovery command accepts an exact reviewed\naudit code/fingerprint under fresh original PASSWORD platform authority. An\ninterrupted RECOVERING audit resumes only its original persisted operation fence.\nIt never clears a lease, takes another operation identity or infers canonical\nidentity linking from structural evidence.\n\nThe acknowledged completed prefix must still match audited post-state. Remaining\nrecords must match exact pre/post facts: post-state is skipped; pre-state uses the\nexisting conditional owner write. Every progress checkpoint compares phase,\noperation, fingerprint and previous applied count. All post-states are rechecked\nbefore terminal acknowledgement; an already completed recovered audit permits\nonly read-only replay against unchanged post-state. Drift or owner failures reject.\nThis is not a transactional snapshot, credential restoration or runtime/index\nqualification. ROLLING_BACK inspection remains separate and does not gain resume\nauthority from this change. Behavioral and concurrency acceptance stays required.\n\n## Accepted Hierarchical Delegation Design\n\nEnterprise parent/child relationships already belong to Profile. The approved\nframework direction is target-consented ancestor administration, supporting\ndescendant depth without automatic subtree access. Employees still\nreceive explicit target-enterprise memberships and roles; parent relationships and\nenterprise business roles do not automatically grant access. Administrative scope\nis separate from operational and business-data access. This applies across Nodics,\nnot only to one application or accelerator.\n\nAdministrators must remain within their assignable-role/action ceiling. Preserve\ngrant provenance, separate enterprise session permissions and independent valid\ngrants. New subsidiaries do not automatically receive employee access. Reparenting,\nrevocation, expiry and source authority changes require grant revalidation and\naffected access/refresh invalidation, without deleting existing customer or asset\nhistory. Configuration and extensions remain in Profile's existing layers.\n\nThe enterprise's super administrator controls parent access. Consent defaults to\nfalse; a layered global default is evaluated only when creating the enterprise to\ninitialize explicit rights. Changing that default does not rewrite existing rights\nand it is not reapplied when reparenting. Later changes use explicit grant/revocation\ncommands. Immediate-parent access requires consent; higher ancestors must be\nexplicitly selected. Backend visibility follows valid scoped grants, not merely\nhierarchy membership or frontend filters.\n\nAccess management is a separate permission with approved role, action, recipient\nand enterprise ceilings. A parent grant does not automatically confer full super\nadministration or redelegation. Revocation invalidates dependent onward grants and\naffected sessions, preserves independent memberships and never automatically revives\nrevoked grants. Reparenting removes old hierarchy-dependent authority; the new parent\nrequires fresh explicit consent. Protect the last active enterprise super\nadministrator against removal, suspension or demotion until a replacement is active;\nexceptional recovery requires an audited platform-super-administrator action.\n\nAuthorized administrators of the designated PLATFORM_OWNER enterprise retain\nplatform-wide administration independent of parent consent. Mere enterprise\nmembership/business role is insufficient; tenant boundaries, route permissions,\naccount checks and auditing still apply. This is not automatic customer-data access\nor impersonation authority.\n\nMaturity: accepted design, not complete implementation or installed acceptance.\nCurrent exact-target/platform checks are unchanged. A hierarchy-only permission\nbypass is prohibited; complete scope, grant, session and mutation enforcement must\nbe implemented and qualified before activation. No customer-specific engine or\nnew parallel hierarchy is needed.\n\n## Staged Customer Consent And Recovery\n\nThe enterprise lifecycle source includes separately qualified Customer consent\nrenewal/withdrawal. Renewal requires the current disclosed terms and inspected\nrevision; withdrawal retains purchases/history and Employee access while invalidating\nold Customer proof. These are not deployed acceptance claims. Enable only after\nthe joint owner/browser tests and eligibility qualification.\n\nAcceptance itself changes no Employee cookie. Explicit Customer session transition\nis a separate Profile action: it validates exact origin and CSRF, consumes matching\nEmployee refresh proof, clears Employee cookies and writes distinct Customer cookies.\nThe returned access token belongs only in memory; refresh never leaves HttpOnly\ncookies. An uncertain transition clears both cookie namespaces and requires sign-in\nor supported recovery, never an automatic retry or staff-grant upgrade.\n\nStructural identity recovery rechecks stored audited pre/post state and rejects drift.\nIt is not email-based linking, global uniqueness certification or automatic crash\nrecovery. Canonical index declarations remain disabled pending governed installed\nindex preparation. Historical identity linking requires separate ownership proof.\n\nOperators can separately qualify Profile's read-only `/identity/migration/inspect`\nwith a saved auditCode/fingerprint and confirmed:true. It reports bounded positional\npre/post/drift observations, not identities, credentials or replay authority.\nInspection flags default false; recovery enablement cannot implicitly enable it.\nInspection alone leaves RECOVERING/ROLLING_BACK locked. Explicit reviewed\nsame-fence resumption is a separate recovery command; ROLLING_BACK remains\ninspection-only here. Audit drift rejects, provider failures return\nno partial report, and record observations are explicitly non-atomic. Neither an\nall-post report nor static checks prove that an interrupted worker has stopped.\n\nAuthentication, authorization, groups, documentation authoring roles, read-only Axis access, tenant isolation, and audit responsibilities. This page is intentionally written for beginners, business users, developers, operators, architects, QA owners, and AI tools. It explains the business problem first, then the technical ownership model, then the exact customization and verification responsibilities so nobody has to guess where a change belongs.\n\nA platform that lets business users change content, configuration, and runtime behavior must prove who can read, edit, review, approve, publish, and operate each capability. Profile centralizes users, groups, permissions, token context, and enterprise or tenant assignments. Capability modules declare permission needs, while routes, services, and Axis workspaces enforce them consistently.\n\n## Business context\n\nFor a business user, this topic answers what decision can be made, which operational journey is supported, and what risk is reduced. The practical value is faster delivery without losing governance: teams can understand the current capability, decide whether it applies to their project, and know when Axis, Nexus, content catalog, workflow, or runtime services are involved.\n\nFor beginners, the mental model is simple: the page title is the business capability, the table identifies who owns each part, and the diagram shows how a request or change flows. A reader should not need source-code knowledge to understand the journey, but the developer path is still available when customization is needed.\n\n| Business question            | Answer for this topic                                                                                                                                                                                                    |\n| ---------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |\n| What problem does it solve?  | A platform that lets business users change content, configuration, and runtime behavior must prove who can read, edit, review, approve, publish, and operate each capability.                                            |\n| Who uses it?                 | Business users, administrators, developers, operators, QA owners, implementation partners, and AI-assisted delivery tools.                                                                                               |\n| What changes can it support? | Profile centralizes users, groups, permissions, token context, and enterprise or tenant assignments. Capability modules declare permission needs, while routes, services, and Axis workspaces enforce them consistently. |\n| What must be governed?       | Permissions, validation, source ownership, publication state, runtime impact, audit evidence, and rollback boundaries.                                                                                                   |\n\n## Journey and ownership\n\nProfile owns users, employees, groups, permissions, and identity context. Documentation author and read-only viewer roles extend this model without creating a separate documentation-only security authority. This keeps the reader-facing name friendly while preserving exact source ownership for developers and AI tools. Axis may render management screens or authenticated documentation, Nexus may render public Online content, and the backend content catalog remains authoritative for navigation, pages, access policies, and publication state.\n\n```mermaid\nflowchart LR\n  Reader[\"Business or developer request\"] --> Axis[\"Axis or Nexus view\"]\n  Axis --> Backend[\"Owning backend capability\"]\n  Backend --> Catalog[\"Content/catalog/schema/config records\"]\n  Catalog --> Runtime[\"Runtime behavior or published page\"]\n  Runtime --> Evidence[\"Audit, validation, and support evidence\"]\n```\n\n| Responsibility           | Owner                                | Notes                                                                                   |\n| ------------------------ | ------------------------------------ | --------------------------------------------------------------------------------------- |\n| Business capability name | Security, Governance, and Compliance | Used in navigation and dashboards so readers are not exposed to raw module names first. |\n| Source owner             | nodics.platform                      | Carries exact implementation, documentation, and validation evidence.                   |\n| Technical module         | profile                              | Holds the relevant schema, service, router, data, or contract detail where applicable.  |\n| Axis experience          | Backend-declared workspace           | Axis renders metadata and actions but does not become the authority.                    |\n| Public experience        | Online content delivery              | Nexus renders only records approved for public access.                                  |\n\n## Data and configuration detail\n\nEvery topic must explain the data that changes behavior. Some topics are schema-driven, some are configuration-driven, some are publishable content, and some are operational records. The documentation must say which category applies before showing code. That keeps production operators and developers aligned on whether a change needs publication, restart, event propagation, approval, or only a project-layer override.\n\n| Detail area            | What to document                                                               | Verification signal                             |\n| ---------------------- | ------------------------------------------------------------------------------ | ----------------------------------------------- |\n| Model or record        | Type code, catalog, tenant, enterprise, state, owner, and lifecycle.           | Schema contract or generated model test.        |\n| Configuration key      | Default value, override location, environment scope, and runtime impact.       | Config validation and runtime refresh evidence. |\n| API or event           | Route/event name, payload boundary, permission, idempotency, and failure mode. | Route, service, event, and authorization tests. |\n| Publication and access | Staged/Online state, access mode, roles, groups, and permissions.              | Content-pack validation and access-policy test. |\n\n```js\npermission: { code: \"documentation.draft.create\", group: \"documentationAuthorUserGroup\", publish: false }\n```\n\n## Customization and extension\n\nDevelopers should customize from the project layer first. A customer project may add properties, services, validators, pipelines, renderers, data packs, or provider configuration when the extension respects the owning capability. Business users may update governed records in Axis when the record is designed for administration. Framework source changes are reserved for improving the reusable product capability itself.\n\n| Customization type                          | Recommended path                                                       | Avoid                                                |\n| ------------------------------------------- | ---------------------------------------------------------------------- | ---------------------------------------------------- |\n| Business label, navigation, or content area | Axis-managed content catalog item with publication workflow.           | Hardcoding labels or page trees in the frontend.     |\n| Runtime setting                             | Module configuration with validation and governed runtime propagation. | Editing node-local files on each server by hand.     |\n| Domain behavior                             | Extension service, validator, pipeline step, or provider adapter.      | Forking the standard module for customer-only logic. |\n| Public visibility                           | Access policy with public/authenticated/role-based state.              | Exposing internal or draft pages through Nexus.      |\n\n## Operations and governance\n\nOperators need production-safe evidence, not only implementation notes. Each page must call out logging, tracing, permission checks, event propagation, data import/export, publication status, rollback behavior, and troubleshooting. If a capability affects multiple nodes, the documentation must explain how changes reach every node and how a partial failure is detected.\n\n| Operational concern | Required documentation detail                                                      |\n| ------------------- | ---------------------------------------------------------------------------------- |\n| Security            | Authentication mode, permission code, role/group, tenant and enterprise isolation. |\n| Audit               | Actor, timestamp, source record, checksum, approval, route/event, and result.      |\n| Resilience          | Retry, idempotency, compensation, fallback, cache invalidation, and rollback.      |\n| Observability       | Logs, metrics, dashboard cards, health checks, and support evidence.               |\n\n## Common mistakes\n\n- Treating a friendly navigation label as the technical source owner.\n- Writing only developer details and skipping the business decision that the page supports.\n- Updating Axis or Nexus code when the content catalog, schema, or backend capability should own the change.\n- Forgetting access rules for public, authenticated, role-based, group-based, or permission-based pages.\n- Skipping diagrams, comparison tables, source maps, or troubleshooting matrices because the topic feels obvious.\n- Changing runtime behavior without explaining production impact, cluster propagation, and rollback.\n- Leaving generated documentation without source evidence, validation commands, and maturity state.\n\n## Verification\n\nVerification starts with the document itself: it must include business context, technical ownership, a visual flow, data or configuration tables, customization guidance, common mistakes, and validation evidence. Developers then run the documentation generator and content-pack validator so the page becomes backend-owned data with checksum, lifecycle, navigation, access policy, publication state, and search metadata.\n\nFor implementation verification, run the owning module tests and any Axis or Nexus renderer tests that consume the page. Operators should confirm that production-like runtime behavior matches the documentation: permissions reject unauthorized access, Online pages do not expose Staged data, runtime changes propagate through governed events, and troubleshooting evidence is available without exposing secrets.\n\n## Current implementation coverage\n\nSecurity, identity, and access governance covers employees, customers,\nenterprises, tenants, user groups, permissions, principal scope assignments,\nauthentication providers, browser sessions, internal runtime tokens, password\nrecords, and identity migration evidence. This page also owns the\ndocumentation roles discussed for Axis: super admin, admin reviewer/approver,\ndocumentation author, and read-only Axis viewer. Admin may review, approve,\nand publish; author can create and update documentation content; viewer can\ninspect Axis applications without write permissions.\n\n```mermaid\nflowchart LR\n  Principal[\"Customer or employee\"] --> Auth[\"Authentication provider\"]\n  Auth --> Session[\"Token/session\"]\n  Session --> Scope[\"Enterprise and tenant scope\"]\n  Scope --> Groups[\"User groups and permissions\"]\n  Groups --> Decision[\"Route and operation decision\"]\n  Decision --> Audit[\"Audit and support evidence\"]\n```\n\n| Access topic          | Source records                                 | Documentation requirement                                                                   |\n| --------------------- | ---------------------------------------------- | ------------------------------------------------------------------------------------------- |\n| Enterprise and tenant | Enterprise, Tenant, Address, Contact.          | Isolation, activation, default tenant behavior, and migration risk.                         |\n| Principal identity    | User, Employee, Customer, Password, UserState. | Authentication, status, ownership, and protected data handling.                             |\n| Group and permission  | UserGroup and resolved permissions.            | Exact permission codes, inherited access, and denial behavior.                              |\n| Scope assignment      | PrincipalScopeAssignment.                      | Which enterprise/tenant/domain a principal can act within.                                  |\n| Documentation access  | Page access policy and lifecycle visibility.   | Public, authenticated, role-based, group-based, permission-based, or restricted visibility. |\n\nFor Axis, every left-navigation entry and page action should map to a\nbackend-declared capability and permission. The frontend may hide unavailable\nactions for usability, but backend authorization remains the decision point.\nFor Nexus, public pages must come only from Online content and must not expose\nrestricted documentation, secrets, internal routes, or draft implementation\nnotes.\n\nImplementation evidence comes from profile route contracts, authentication\nservice tests, browser session tests, runtime internal token tests, user group\npermission resolution, principal authorization scope contracts, recursive\ninterceptor tests, identity governance and migration tests, mandatory identity\nbootstrap checks, and generated schema contracts for Enterprise, Tenant,\nCustomer, Employee, UserGroup, User, UserState, Password, and\nPrincipalScopeAssignment.\n\nProfile refresh sessions use the Profile-owned `auth` cache channel. Its module\nconfiguration references nAuth's strict channel defaults through nConfig; do not\ncopy those defaults into a customer environment or redirect identity ownership.\nThe deployment must still enable the distributed provider. Later Profile channel\noverrides use normal layering, preserving atomic consume and no local fallback.\n\nBrowser sessions resolve credentialed origins through nRouter's existing\n`resolveCorsOrigins` service. Endpoint-derived origins and explicit origin lists\nshare one policy; explicit denials and endpoint disables take precedence.\nProfile continues to enforce cookie security, CSRF and refresh rotation.\n\nDuring a governed Local reset, the provider's private authority may reach scope\ncleanup after Employee deletion. Profile must prove principal absence through an\nauthoritative read and await nAuth shared-stamp revocation. It must reject failed\nreads or revocation, and a request field cannot forge reset authority. Existing\nprincipals and ordinary scope mutations still require exactly one acknowledged\nEmployee update. This rule is independent of reset inventory ordering.\n\nScoped runtime route admission recognizes `userGroup` and\n`serviceAccountUserGroup` as base route classes. These labels do not become JWT\ngroups or expand permissions. nRouter still enforces the approved module, explicit\naction permission, accepted token type and deployment exposure. Administrator and\nhuman-only groups remain ineligible; later deployment policy may narrow the list.\n\n## Enterprise-scope expiry and reliable access decisions\n\n**Functional owner:** `nodics.platform`; technical owner: Profile. This section\nexplains the source-level scope safeguards on the lifecycle feature branch.\nGenerated-runtime, browser and business-reader acceptance remain separate.\n\nA scope identifies a responsibility within an enterprise or another business\nboundary. It does not prove identity, create an employee or replace ordinary\nroute permissions. All those controls still apply.\n\n### Worked example: temporary responsibility\n\nSuppose an existing direct enterprise scope starts at `2026-09-30T08:00:00Z`\nand ends at `2026-10-01T08:00:00Z`. These are illustrative UTC values.\n\n1. Before the start, that scope grants no access.\n2. At the exact start, it may become effective, subject to identity, enterprise,\n   role and other permission checks.\n3. At the exact end, it has expired. The end is exclusive; there is no extra\n   request or one-second grace period.\n4. Renewal requires the existing authorised scope-management operation.\n   Registration retry or account recovery does not extend a scope.\n\nA missing boundary can be open where the existing policy permits. A supplied\ninvalid date cannot be treated as missing. Each boundary is checked separately,\nso a missing end cannot hide a malformed start, or vice versa.\n\n```mermaid\nflowchart LR\n  R[Request scoped access] --> O[Read current scope through its owner]\n  O --> V{Valid owner response and stored policy?}\n  V -->|No| D[Reject; do not infer permission]\n  V -->|Yes| T[Check status, time, principal and normal permissions]\n  T --> A[Apply existing ALLOW and DENY rules]\n```\n\nThis authored flow explains the control order. It is not a rendered deployment\nscreenshot or evidence that a live account was tested.\n\n### Failure and recovery\n\nIf a stored DENY carries a malformed time, resolution fails instead of discarding\nit and exposing a matching ALLOW. An unavailable database or failed owner response\nis likewise not an empty successful scope list. Keep the operation closed and\nprovide the authorised maintainer with a non-secret request reference. Correct\npolicy records only through their owning administrative service; do not edit a\ndatabase directly or suppress a denial to make the screen work.\n\nAn inactive record and a record without a stored ACTIVE state cannot be revived\nby applying configuration defaults while reading it. This is different from\napplying valid defaults when intentionally creating a new record.\n\n### Customize and extend safely\n\nKeep validation in `DefaultPrincipalScopeGovernanceService` and reuse the existing\nscope registry and permission rules. A project may supply legitimate effective\ndates through supported owner operations. It may not customize a read failure into\npermission or make an invalid time mean unlimited access. Delegation policy and\nmembership revocation are separate concerns: disabling new invitations for a role\ndoes not, by itself, revoke an existing assignment.\n\nValidate changes with `principalScopeLifetimeContract.test.js` and the existing\n`principalAuthorizationScopeContract.test.js`. Installed persistence, interface\nbehaviour, diagram rendering and guide publication require their own evidence.\n\n## Employee self-application intake\n\n### Withdrawal, Corrected Attempts And Deadlines\n\nProfile now contains independently qualified application lifecycle source, with\nmatching Axis rendering. This is employee access onboarding, not deactivation\nof an already approved enterprise. Deployment acceptance has not been established.\n\nApplicants can withdraw their own pending application using the advertised\nwithdrawal command and displayed revision after mailbox proof. Approval and\nwithdrawal share revision/hash concurrency checks: a stale action rejects rather\nthan overwriting a newer outcome. Axis asks for confirmation and requires progress\ninspection after an uncertain response. Identical acknowledged withdrawals are\nread-only; other mailboxes and approved/claimed registrations are ineligible.\n\nRejected, withdrawn or expired attempts can be corrected after new mailbox\nverification, subject to current enterprise eligibility and attempt limits.\nEach fresh attempt retains its predecessor's details, outcome and Process\ncorrelation privately, has a new attempt-bound hash and consumes fresh proof.\nSafe history shows attempt, outcome, submission/closure/deadline timestamps and\nreviewer feedback, never private proof, workflow handles, tenant or credentials.\n\nFramework configuration lives at\n`enterpriseManagement.applications.lifecycle`: `qualified: false`,\n`maximumAttempts: 5`, `maximumHistoryBytes: 65536`, `expiryDays: null`.\nAn explicitly chosen 1-365 day expiry freezes its deadline at draft creation.\nChanging configuration does not retrofit existing applications. Profile lazily\nenforces deadlines on resolution, status, submission, reviewer-list reads and\ndecision application. It never expires approved/registered access. Idle records\nare not proactively swept by this source; no cron job or business deadline has\nbeen invented. Later project/runtime layers can narrow limits and override\npresentation through normal partial exports, without copying the lifecycle owner.\n\nApplication history is protected from generic CRUD through private owner-write\nadmission. A delayed claimed Process callback for a closed old attempt completes\nwith no access outcome rather than approving a fresh attempt. Independently false\n`applications.review.retirementQualified` enables source-owned retirement after\ncommitted closure. Its signed Process route requires original context and one\nwaiting governed task; task CAS competes with completion, and matching private\nclosure evidence allows staged lost-ack recovery. Claimed remote actions require\ninspection. Closure is not rolled back by retirement uncertainty. Existing Axis\nrecovery adds the revision-bound RETRY_REVIEW_RETIREMENT command for qualified\nclosed reviews. Superseded historical attempts and idle sweeps remain separate;\ngeneric governed-review cancellation is not bypassed. Before activation, jointly verify races, stale\ncallbacks, lost acknowledgements, expiry boundaries, correction/history, exact\ninstalled permissions, keyboard/focus and narrow Axis layouts.\n\nSee the [account access contract](../../../../nodics.platform/modules/profile/llm/contracts/account-access-journeys.md)\nfor exact commands, bounds, customization and remaining integration gates.\n\nThis Profile capability saves a new person's request to join an enterprise. It\nis disabled by default. The source-tested intake and read-only administrator\nlist do not yet constitute the complete Axis/Process approval journey.\nDo not enable the business journey until its actual client and workflow\nintegration have passed their separate acceptance checks.\n\nFor the applicant, email verification proves control of the mailbox. It does not\nmake the person an employee. For an administrator, a pending request means that\nverified details are available for review; it does not mean a workflow decision\nwas made, a password was created, or access was granted.\n\n```mermaid\nflowchart TD\n  Email[Existing Profile email verification] --> Eligible[Named eligible enterprise choices]\n  Eligible --> Details[First name, last name and optional message]\n  Details --> Draft[Private application draft]\n  Draft --> Proof[Consume proof for this exact application]\n  Proof --> Pending[Awaiting review: no login or scope]\n  Pending --> List[Enterprise-scoped administrator list]\n  Pending -. Separate integration still required .-> Review[Process task and decision]\n  Review -. Separate authorised onboarding .-> Access[Approved membership and account setup]\n```\n\nThe solid arrows describe intake. The dashed arrows are required follow-on\nintegration, not a claim that approval or employee activation is implemented by\nthis intake service. Process remains the task and decision authority.\n\n### Worked request and failure recovery\n\nSuppose Maya requests access to Example Company. The enterprise must already\nexist and explicitly permit applications. Maya enters her email once through\nProfile's existing start/verify continuation. Only after successful verification\ndoes the response offer enterprise names. An existing employee or customer goes\nto existing-account authentication instead; this path never creates a duplicate.\n\nThe frontend must use the backend-advertised application submit path. Its finite\nrequest consists of the current continuation, selected enterprise, first and last\nnames, and optional note. It must not submit a password, role, approval, reviewer,\ntenant or verification flag. For example, the non-secret details are:\n\n```json\n{\n  \"enterpriseCode\": \"exampleCompany\",\n  \"firstName\": \"Maya\",\n  \"lastName\": \"Example\",\n  \"note\": \"Joining the operations team\"\n}\n```\n\nThe protected continuation is additionally required and stays in client memory;\nit is deliberately omitted from this example. A saved result has stage\n`APPLICATION_PENDING` and item status `AWAITING_REVIEW`. The administrator's\nread-only list is `GET /nodics/profile/v0/enterprise-access/applications`.\nThe owning route still checks employee authentication, access groups, permission\nand enterprise scope. A platform-authorised administrator may filter enterprises;\nan ordinary enterprise administrator cannot select another enterprise's records.\n\n| Situation                                                             | Safe outcome                                                                            |\n| --------------------------------------------------------------------- | --------------------------------------------------------------------------------------- |\n| Proof is missing, expired or belongs to another continuation          | No application becomes reviewable; verify again.                                        |\n| The code was consumed but its response was lost                       | Inspect the exact original consumption receipt; do not create a second execution grant. |\n| The submission response was lost after persistence                    | Exact revision/marker readback confirms the same submission without another record.     |\n| The enterprise no longer accepts applications                         | Stop before submission; the earlier choice is not continuing authority.                 |\n| An invitation, registration or conflicting application already exists | Preserve it and report a conflict, rather than replacing its history.                   |\n| Persistence is unavailable or returns an unrelated record             | Fail safely; no success or empty permitted directory is inferred.                       |\n| An administrator attempts another enterprise's review list            | Deny the request unless the authenticated platform context explicitly permits it.       |\n\n### Customize and extend safely\n\nThe Profile defaults live in `enterpriseManagement.applications`. A later project\nlayer may narrow permitted initial roles, choice counts, note length and page\nsize, and refine the declarative presentation. The enterprise record's\n`employeeApplicationPolicy` contains its explicit `enabled`, `method` and\n`roleCode` selection. For a standard operator application, use the existing\n`OPERATOR` responsibility with the supported `PASSWORD` method; no role catalogue\nbelongs in Axis. Absence of enterprise policy means no applications.\n\nDo not customise away proof, immutable request binding, existing-record\npreservation, enterprise filtering or the distinction between application and\napproval. Configuring an eligible enterprise does not install a Process\nworkflow, grant runtime credentials, enable SMTP, or complete a frontend.\n\nRun `node --test nodics.platform/modules/profile/test/enterpriseApplicationIntake.test.js`\nfrom the framework root, followed by the existing registration/setup regressions.\nThese tests use actual services with controlled persistence and transport. Real\ninstalled-schema, distributed-runtime, browser and business-reader acceptance\nremain separate. This section is authored source, not evidence of publication.\n\n## Personal memberships and enterprise context\n\nThe source now provides a separate My enterprise memberships task. This is not\nthe administrator's team screen: it shows only the current person's assignments\nand invitations. A reviewed acceptance links a responsibility to the existing\ncanonical person; it neither creates another password nor changes the active\nbrowser context. After uncertain acceptance, inspect current state before\nexplicitly resuming a prepared acceptance. Suspended access cannot be entered.\n\nEntering an accepted enterprise is a second reviewed action. Profile verifies\nmatching PASSWORD Employee access/refresh contexts, exact current assignment\nrevision and canonical identity, approved browser origin and CSRF. It rotates\nthe HttpOnly refresh credential and returns only target access data. Axis hides\nthe old workspace, cancels/clears caches and loads the target's authenticated\nbootstrap. It never unions permissions or changes the project's endpoints.\n\nA failed or lost switch acknowledgement requires normal sign-in rather than\nautomatic retry or restoration of the old UI. Customer/external switching is\nunavailable, and a legacy canonical baseline without a managed assignment is\nentered through normal sign-in. Runtime qualification remains disabled, including\n`enterpriseManagement.memberships.browserContextSwitchQualified`; source is not\njoint-session or customer acceptance. The detailed owner/security/customization\ncontract is Profile's `llm/contracts/enterprise-membership.md`.\n\n## Current-enterprise team administration\n\nProfile now supplies the source contract for a native Axis team task through the\nexisting Employees capability. This is default-disabled implementation source,\nnot a deployed or accepted feature. See Profile's\n`llm/contracts/enterprise-membership.md` for the owner and extension contract.\n\nOnce the installed membership inventory, session bindings, assignment claim\nindex and serialized team writes are qualified, and `profileMembership` exposure\nis explicitly enabled, an admitted administrator can read the current enterprise's\nbounded team workspace. The signed access context selects the enterprise. A URL,\nquery field or browser draft cannot select another tenant or grant authority.\n\nRows carry an assignment revision and backend-provided actions. The designated\ndefault administrator and the last active administrator cannot be suspended or\nrevoked through team commands. Handover targets an existing active administrator;\nit changes the designation, not credentials or the target's permissions. Missing\nlegacy administrator evidence blocks the task pending reconciliation.\n\nAxis reviews the selected person and action before submitting one command. A\nlost acknowledgement is an uncertain result, not a failed write: inspect current\nstate or explicitly resume the same command with the same operation ID and\nrevision. Never generate a fresh command to escape a pending operation or assume\nthat a completed marker proves success. Browser recovery state is in memory;\nreload/crash and loss of actor authority require the still-pending operator\nrecovery work before qualification.\n\nLater Profile layers customize\n`enterpriseManagement.teamAdministration.presentation` and exported service\nmembers, preserving permission, scope, revision, designation and serialization\ninvariants. Kickoff does not need copied team services or a separate registry.\nThis task does not implement invitation acceptance or browser enterprise-context\nswitching. Behavioral, keyboard, narrow-layout and installed-runtime acceptance\nremain deferred to the joint validation session.\n\n## Application review recovery: decisions and messages are separate\n\nConsider Maya's request to join Example Enterprise. Profile saves her verified\napplication. Process owns the reviewer task and its decision. Communication owns\nthe subsequent message. A message failure cannot undo a completed review, and a\nmessage marked accepted cannot establish that Maya has an active employee account.\n\nA lost Process-start response is reconciled using the same saved instance identity\nand pinned definition version. It does not justify creating another review. An\nincomplete start is a Process recovery incident, not permission to replay nodes.\nAn authorised recovery command must use the current application revision and the\nadministrator's own permitted enterprise context; another enterprise is denied.\n\n```mermaid\nflowchart TD\n  A[Verified application saved] --> B[Process review correlation retained]\n  B --> C[Process reviewer decision]\n  C --> D[Profile records approved or rejected]\n  D --> E[Freeze non-secret notification inputs]\n  E --> F[Communication intent requested with stable key]\n  F --> G[Record intent reference and request status]\n  F --> H[Unconfirmed: preserve decision and original message]\n  H --> F\n  G --> I[Communication owns delivery and reconciliation]\n```\n\nThe return arrow reuses one Communication request identity. It never calls SMTP\ndirectly, creates another approval or repeats employee provisioning.\n\n### Developer and support integration\n\nThe Profile recovery route is\n`POST /nodics/profile/v0/enterprise-access/applications/:applicationCode/actions`.\nIts body contains only `operation` and the current integer `revision`.\n`RETRY_REVIEW_START` reconciles the existing submitted review.\n`RETRY_NOTIFICATION` requests the existing approved/rejected outcome message.\nThe route does not accept an approval, password, role, recipient or template.\nIts response is a fresh management projection, not a new employee or permission.\nThe matched Axis action and authoritative revision view must be connected before\nthis API can be presented as a complete business-user task.\n\n| Observed condition                               | Correct interpretation and recovery                                                                 |\n| ------------------------------------------------ | --------------------------------------------------------------------------------------------------- |\n| Review start is not confirmed                    | Retain the application and its pinned correlation; reconcile that same Process instance.            |\n| Approval saved, message unconfirmed              | Keep the approval; retry the same Communication intent through authorised recovery.                 |\n| Intent already has a reference                   | Do not request a second provider send from Profile; use Communication's existing delivery recovery. |\n| Application changed after the operator loaded it | Refresh the owning record before another command; do not overwrite the newer revision.              |\n| Applicant already registered                     | Do not send obsolete setup instructions as a new notification.                                      |\n| New application intake paused                    | Existing review visibility is separate from allowing new applications.                              |\n\n### Customize and extend safely\n\nUse the existing layered review/mail settings for connection selection and safe\npresentation changes. Existing message snapshots remain immutable across retries;\na later wording change applies to later decisions. Override exported owner methods\nonly while preserving human scope, exact revision, Process correlation, single\nCommunication intent and non-secret evidence. The focused source regression is\n`profile/test/enterpriseApplicationReviewRecovery.test.js`; it does not replace\ninstalled-provider, browser, accessibility or business-reader acceptance.\n\n## Read-only legacy identity assessment\n\nProfile now has an additive source-only assessment command at\n`POST /nodics/profile/v0/identity/migration/assessment`, accepting `{}` only.\nIt remains disabled by default under\n`identityGovernance.migration.assessment.enabled`. Approved operators need a human\nplatform-context access token, `runtimeConfigAdminUserGroup` and the existing\n`identity.migration.preview` permission. Customers, service credentials and tenant\nadministrators outside the platform context cannot use it as an identity directory.\n\nThe existing migration owner reads counted, bounded inventories through generated\nProfile services across the authority's declared tenants. Two matching metadata\npasses produce counts and redacted conflict references for email collisions,\ncustomer/employee coexistence, credential references, groups, assignments and\ninterrupted registration. References are opaque and correlate only within one run.\nNo email, password, hash or raw provider error is returned. An unavailable tenant,\nincomplete page or changed second pass rejects the assessment rather than proving\nthat an account is absent.\n\nThis is not a transactional snapshot or an executable migration plan. Every\nsuccessful report retains `atomicSnapshot: false` and `readyForApply: false`.\nThe command performs no repair, account linking, credential rewrite, index change\nor registration enablement. Preserve existing histories and interrupted operations;\nan email match never authorizes identity merging. Operator-reviewed reconciliation,\nadministrator coverage, final-write concurrency and live acceptance remain separate.\n\n### Customize and extend safely\n\nPartners customize the existing layered limits or narrow exported migration-service\nmembers, not customer copies of the inventory implementation. The exact API,\nprojection, limits, recovery and extension contract is maintained in Profile's\n`llm/contracts/identity-assessment.md`; fixture coverage is authored in\n`test/identityAssessmentContract.test.js`. Neither source documentation nor fixtures\nclaim that target inventory or installed-runtime testing has taken place.\n\nFor example, in `<project>/modules/<profile-extension>/config/properties.js`,\nreduce the approved per-pass capacity without activating the route:\n\n```js\nmodule.exports = {\n  identityGovernance: {\n    migration: { assessment: { enabled: false, maximumRecords: 10000 } },\n  },\n};\n```\n\nThe remaining framework limits are inherited. Project/runtime service overrides\nuse the same existing service identity and exported members. They may add stricter\nchecks but cannot permit system-token access, partial success, secret output or\nautomatic identity linking. On a bound failure, review capacity with the operator;\non a changed observation, retry a fresh read during an approved quieter window.\n\n## Scope changes and evidenced team recovery\n\nProfile owns security propagation for persisted scope saves/upserts, updates and\nremovals. A validated mutation captures old and new human/customer/group targets\nprivately, then invalidates before writing and again after writing. Group targets\ninclude current inheriting groups. Counted fresh inventories reject truncation,\nrepeated identifiers, changing counts and configured overflow. Flat `$set` and\n`$unset` scope updates are supported; dotted fields and other operators reject.\n\nAn ordinary original-account mutation uses its generated principal owner and\nawaits exactly one acknowledged update plus shared security stamps. This is\nconservative: all proofs bound to that original account may expire. A linked\nEmployee projection instead advances its accepted target membership revision;\ncredentials and other enterprise projections are not rewritten. Linked Customer\nscope mutation remains unavailable pending governed reverse participation.\nScope hooks do not invalidate all sessions after a global configuration change.\n\nFor users, a scope change can require sign-in or selecting the enterprise again.\nA failed mutation can leave earlier security invalidations applied; administrators\nmust inspect the owning scope record before deciding whether to resubmit. Missing\nprincipals do not produce fictitious acknowledged updates. Runtime deployment\nscopes keep their existing private reset and service-principal path.\n\nFor operators, `POST /nodics/profile/v0/enterprise-team/reconcile-committed`\naccepts only `{enterpriseCode, teamRevision, operationId}`. It requires fresh\nPASSWORD platform-administrator authority, current assignment permission and\nindependent recovery qualification. New operations retain reviewed input privately.\nThe owner verifies the saved input/hash/actor and exact committed membership state,\nrepairs its stamp, rechecks actor and assignment, then finalizes the held operation\nthrough the existing conditional enterprise write. The response contains no\nprivate identity/input/hash. The command never resubmits a membership mutation.\n\nFlow: operator reviews recorded operation -> Profile admits fresh platform proof\n-> verifies committed assignment evidence -> repairs stamp -> rechecks authority\nand assignment -> conditionally records the original outcome. Any uncertainty\nstops before lease completion. A pending handover, absent input, stale revision,\nuncommitted write or changed assignment remains locked; timeouts never authorize\ntakeover. General actor-loss recovery and a matching operator UI remain open.\n\n### Customize and extend safely\n\nFor a stricter inventory bound, use a small later Profile property contribution:\n\n```js\nmodule.exports = {\n  identityGovernance: {\n    securityStampInventory: { pageSize: 50, maximumPages: 20 },\n  },\n  enterpriseManagement: {\n    teamAdministration: { operatorRecoveryQualified: false },\n  },\n};\n```\n\nUse `<project>/modules/<profile-extension>/config/properties.js`; inherit the\nframework owners instead of copying services into Kickoff. Limits are positive\nintegers at most 1000 each. Preserve bounded complete reads and private provenance.\nLater exported scope/team members may impose stricter admission but cannot bypass\ncanonical credential ownership, acknowledged writes, evidence verification or\nrevision guards. Reject overflow until capacity and operator authority are reviewed;\ndo not treat raising a limit as runtime acceptance.\n\nFramework-maintainer fixtures cover direct/group/linked targets, old/new selectors,\nsave preimages, failed acknowledgements, forged targets, default-off recovery,\nwrong platform/method, missing input, tampered evidence and late assignment changes\nin `profile/test/humanScopeInvalidationContract.test.js` and\n`profile/test/teamCommittedRecoveryContract.test.js`. These fixtures are authored,\nnot executed acceptance. Installed distributed cache/persistence, competing writes,\nuser/operator browser acceptance and global-policy invalidation remain separate\ngates. Documentation is authored source only; no content-pack publication or\nruntime qualification follows from this guide.\n\n## Live Context Admission And Privacy Boundary\n\nThe October source increment adds generic nAuth/nService validation after JWT,\nrevocation and security stamps. A typed session requires a qualified installed\nowner and exact matching `{valid:true,owner,code,version}` evidence. The validator\nreceives detached, deeply frozen bounded JSON-safe claims; it cannot change the\nverified identity, tenant, groups or permissions returned by authorization.\nUnsupported, missing, malformed or failed owners reject without a stamp-only\nfallback or private error details.\n\nProfile contributes `DefaultProfileSessionContextValidationService`, which calls\nthe live membership, participation or native customer eligibility owner and returns\nonly the matched proof, not canonical records. Qualification remains false. The\nimplemented nService bridge uses existing module topology and transport; remote\nconsumers pass the original signed access token to the fixed private Profile route\n`POST /internal/session-context/validate`. A separately authenticated runtime principal\nneeds `profile.sessionContext.validate`. Profile independently verifies the subject\ntoken, checks exact tenant/enterprise scope and performs live owner admission. Neither\nservice credentials nor unsigned caller claims can impersonate the subject.\nThere is no public unsigned-claims endpoint. Later framework/runtime layers must\npreserve fresh owning admission and fail-closed validation, not duplicate identity\nregistries in a customer project.\n\nConsent provenance retains the governed authorization-policy version. Effective\npolicy changes must advance that version across issuers and consumers; restoring\nold policy values must not roll back the version or revive old grants. Read-only\nworkspaces project expiry and exact revoke authority without silently writing an\nexpiry transition.\n\nEnterprise team evidence and historical identity-retirement markers are stripped\nfrom public generated reads. Exact private owner requests retain the evidence\nneeded for guards and recovery. nConfig's logger has source corrections for\nstructured, serialized/quoted JSON and Error redaction, but fixtures remain unrun.\nThe router now admits sensitive routes before body parsing through Logger's private\nrequest context, and carries exact admission into derived owner requests. Logger\nsuppresses supported private capture before buffering; providers must use a detached\n`runSensitiveOperation` request. The credential retirement primitive uses revision CAS\nand metadata-only acknowledgement rather than putting a stored hash in a query.\nInstalled raw-body/APM/proxy capture, custom sinks, Password writer coverage and\ndistributed cache behavior still require qualification. Source availability does not\ncertify end-to-end privacy or distributed access.\n\n### Configure The Live Context Bridge\n\nThe generic contribution lives in nAuth `config/properties.js`; Profile contributes\nthe local owner, while nService owns topology and authenticated transport. Keep\n`sessionContextValidation.qualified`, `remoteQualified` and\n`captureProtectionQualified` false until the installed acceptance matrix passes.\n`connectionName` defaults to `profileModuleName`; it selects an existing connection,\nnot a second endpoint catalogue. `timeoutMs` is bounded to 1-60000 milliseconds.\n`allowInsecureLoopback` defaults false. HTTPS must preserve certificate verification,\nand sensitive transport does not follow redirects or carry credentials in a URL.\n\nOnce a coordinated native-customer rollout is approved, Profile's\n`requiredPrincipalTypes:[\"customer\"]` must be mirrored across all consumers. A\ncontextless customer token then rejects instead of bypassing current eligibility.\nDo not upgrade old tokens silently or enable consumers ahead of the issuing owner.\nHuman/service context requirements remain explicit policy, not a blanket platform\nlogin redesign. Failure of the selected owner, malformed evidence, changed scope or\nmissing private admission fails closed; existing revocation and stamp checks still run.\n\n### Native Customer Issue And Refresh\n\nQualified native customer issuance retains `profile.customerEligibility` with the\noriginal customer code/auth revision and both original identity/customer bindings.\nIssuance rereads the original account, current credentials, lockout and current groups\nafter authentication. It registers existing stamp bindings before creating the pair\nand performs live eligibility admission again before returning credentials. Refresh\nrevalidates retained context, resolves the same original account and rereads current\nstate; it never substitutes an Employee membership or unions enterprise groups.\nFailed final admission removes the newly created refresh record. Disabled policy\npreserves legacy behavior, but is not evidence of installed lifecycle enforcement.\n\n### Repair Committed Consent Stamps\n\nUse GET `/enterprise-administration/:enterpriseCode/consent/stamps/repair` to inspect\nbounded committed grants. Admission requires a fresh PASSWORD-authenticated target\nadministrator or independent platform super-admin and the separately configured\n`profile.enterpriseAdministration.repairSecurityStamps` permission. A grant carries\nonly code, revision, status and explicit `canRepair`; private evidence stays in Profile.\n\nPOST the same path with `enterpriseCode`, inspected `revision`, retained `operationId`\nand an explicit unique `grantCodes` selection (1-100). Repair verifies the committed\nsource again and advances stamps monotonically. It neither replays grant/revoke nor\nchanges enterprise hierarchy, adopts another command or steals a pending lease.\nOnly an exact COMPLETE receipt acknowledges the reviewed selection. Uncertainty\nrequires fresh inspection and explicit confirmation of the original command.\n`stampRepairQualified` and `externalInvalidationQualified` remain false until accepted\nwriter coverage, persistence and cache evidence. Customer participation is independent\nof enterprise administration consent throughout these flows.\n\n### Canonical Contact Verification And Notification Preferences\n\nProfile's `DefaultProfileVerifiedContactService` uses the existing Contact linked\nfrom the original canonical identity. A native Customer owns that Customer's\ncontacts; an Employee-backed Customer participation uses the original Employee's\ncontacts without receiving employee permissions. Current actor, customer\nparticipation, original locator and complete association are rechecked. Login or\nemail equality is never identity or verification evidence. Channel selection uses\nthe unique lowest-priority active EMAIL/PHONE contact; ties and missing associations\nreject rather than silently selecting an address.\n\nThe protected Customer-only POST routes under\n`/customer/contacts/verification/` are `inspect`, `begin`, `verify`, `consent` and\n`suppression`. All need qualified private capture, current access/stamps, configured\n`profile.customer.contact.manage` and explicit API exposure. The browser supplies\nits ownerId and channel, never an address, template or canonical locator. Inspect\nreturns safe progress; begin includes expectedRevision; verify adds original\ncommandId and transient code. Secrets and proofs stay out of responses and records.\nConsent adds purpose, its reviewed purposeVersion, explicit granted and operationReference; suppression adds\npurpose and explicit suppressed. Both require the inspected expectedRevision.\n\nGET `/customer/contacts/verification/workspace` publishes the self-owned projection\nID, admitted channels, explicit purpose versions/labels and twenty bounded plain-text\npresentation fields. It accepts no selectors and performs no delivery or mutation.\nCirca must use this metadata rather than guessing an ID from login/email or supplying\nits own notification-purpose policy. A hidden/disabled application feature is not\nbackend authorization; every command still proves current self ownership.\n\nCirca's shared account/preferences view consumes that workspace across Web and\nmobile/Telegram. `VITE_CIRCA_CONTACT_PREFERENCES_ENABLED` defaults off and controls\npresentation only. Customers select an admitted channel, inspect original progress,\nreview a one-shot verification or preference command, and inspect again after an\nuncertain result. No destination input or technical owner ID is displayed. Consent\npins the reviewed purpose version as well as the Contact revision; changed policy\nrequires fresh review. Clearing suppression never grants consent. Held verification\ncheckpoints remain inspect-only when their original proof cannot safely be recovered.\n\nAn Employee-to-Customer browser handoff first reviews the current participation\nworkspace. `currentTerms` and `canSwitch` are fresh owner projections, not inference\nfrom COMPLETE status. When current consent is ready, POST\n`/employee/browser/customer-participation/switch` consumes the original Employee\nrefresh proof and issues Customer-only authority. The endpoint stays within the\nexisting Employee cookie path, with existing CSRF protection; cookie scope is not\nwidened to all Profile operations. Changed/withdrawn consent requires explicit review,\nnot forced renewal of unchanged terms or silent conversion of staff tokens.\n\nThe owning sequence is:\n\n```text\nCustomer -> protected Profile self command -> canonical Contact selection\n         -> Contact ISSUE_PENDING CAS -> Communication challenge ISSUE\n         -> original delivery checkpoint -> Communication template delivery\n         -> submitted code -> VERIFY_PENDING CAS -> Communication VERIFY\n         -> CONSUME_PENDING CAS and frozen completion -> Communication CONSUME\n         -> Contact VERIFIED readback -> separate explicit purpose consent\nCommerce committed event -> stored buyer proof -> current Contact proof/consent\n                         -> source reread -> original Communication intent\n```\n\nContact stores only private versioned binding, checkpoint digests/deadlines,\nacknowledged verification and consent/suppression. Generic Contact mutation cannot\nmanufacture or erase it; Customer/Employee reassociation and recursive public reads\nmust use the installed guards and redaction. Actual Contact CAS and complete\nreadback are required. A receipt may reconcile only the exact original held consumed\ncommand; it does not execute consumption again, extend deadlines or grant consent.\nMissing transient proof or interrupted expiry remains held for reviewed recovery,\nnot an automatic command replacement or CRUD reset.\n\nThe resources live under Profile `src/templates/email/contact-email-verification`\nand `src/templates/sms/contact-sms-verification`. Manifests identify\n`profile.contact.emailVerification` and `profile.contact.smsVerification`, purpose\nPROFILE_CANONICAL_CONTACT and declared verificationCode/expiresAt parameters.\nHTML/text/subject/message files follow the normal layered resource loader; content\ndoes not belong in properties, and Employee templates are not a Contact fallback.\nCommunication still owns rendering, provider delivery and durable intent status.\nQueued/provider-accepted is not independent mailbox receipt.\n\n### Customize Contact And Eligibility Safely\n\nUse a later Profile module's `config/properties.js`, not copied Kickoff services.\nAll `profileVerifiedContacts` qualification gates and its API exposure default false.\n`maximumVerifiedAgeSeconds` is deliberately unset until a reviewed policy selects\nit. Sender/provider/secret references and recipients remain approved runtime inputs.\nThe two declared DIGITAL_COUPON_PURCHASED/REFUNDED purposes are transactional\ndescriptors, not granted consent or marketing subscription. Every declared purpose\nrequires explicit self consent for its current version. Suppression overrides it;\nclearing suppression never grants permission.\n\nFor example, a custom project may narrow maximumContacts, remove SMS from selected\npurpose channels and override only `en/email.html` plus `en/email.txt` beneath the\nsame template directory. Preserve manifest identity, purpose, parameters and secure\nrendering. A genuine regulated evidence provider may extend the existing Rules\nproperty catalogue; it may not turn a missing proof into verified or approve every\ncustomer. Published policy and scope selections are intentionally unapproved here.\n\nThe registered generic provider is `profile.customerEligibility`, catalogue version\n1, with explicit PROFILE_CUSTOMER_ELIGIBILITY_ALLOW/DENY outcomes. It loads current\naccount/identity/consent/contact facts into a private transient Rules context, not\nbrowser-supplied evidence. Denial overrides approval; absence of a matched approved\npublished policy is not eligibility. Regulated KYC vendor integration is a separate\nlater-layer provider, never a fictional framework certificate.\n\nJoint acceptance must include native and Employee-backed customers, missing/changed\ncontacts, tied priority, consent withdrawal, suppression, purpose version change,\nprovider rejection, lost consume/delivery acknowledgement, recursive CRUD/cache\nprivacy and cross-runtime financial-source drift. All behavioral and visual evidence\nremains NOT RUN. The detailed implementation and recovery contract is Profile's\n`verified-contact-consent.md`; source availability authorizes no sending or migration.\n",
     "keywords": [
       "security-governance-and-compliance",
       "identity-and-access-governance",
@@ -10868,7 +12061,7 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record262": {
+  "record287": {
     "code": "nodicsDocsSearchpagenodicsdocsmetadataconfigurationruntimebehaviormanagement",
     "product": "nodicsDocumentationProduct",
     "targetType": "PAGE",
@@ -10916,7 +12109,7 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record263": {
+  "record288": {
     "code": "nodicsDocsSearchpagenodicsdocsmetadataconfigurationframeworkstartuplifecycle",
     "product": "nodicsDocumentationProduct",
     "targetType": "PAGE",
@@ -10976,7 +12169,7 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record264": {
+  "record289": {
     "code": "nodicsDocsSearchpagenodicsdocsmetadataroutingapigovernance",
     "product": "nodicsDocumentationProduct",
     "targetType": "PAGE",
@@ -11028,7 +12221,7 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record265": {
+  "record290": {
     "code": "nodicsDocsSearchpagenodicsdocsmetadataroutingapirequestlifecycle",
     "product": "nodicsDocumentationProduct",
     "targetType": "PAGE",
@@ -11081,7 +12274,7 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record266": {
+  "record291": {
     "code": "nodicsDocsSearchpagenodicsdocsmetadatafoundationerrorhandlingstatuscodes",
     "product": "nodicsDocumentationProduct",
     "targetType": "PAGE",
@@ -11137,7 +12330,7 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record267": {
+  "record292": {
     "code": "nodicsDocsSearchpagenodicsdocsmetadataruntimegovernedchange",
     "product": "nodicsDocumentationProduct",
     "targetType": "PAGE",
@@ -11185,7 +12378,7 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record268": {
+  "record293": {
     "code": "nodicsDocsSearchpagenodicsdocsmetadatalocalizationinternationalization",
     "product": "nodicsDocumentationProduct",
     "targetType": "PAGE",
@@ -11233,14 +12426,14 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record269": {
+  "record294": {
     "code": "nodicsDocsSearchpagenodicsdocsmetadataschemadatamodelingmanagement",
     "product": "nodicsDocumentationProduct",
     "targetType": "PAGE",
     "targetCode": "nodicsDocsMetadataschemaDataModelingManagement",
     "title": "Data Modeling and Schema Management",
     "summary": "How schemas define model behavior, generated services, API contracts, validation, and project-layer property extension.",
-    "searchText": "Data Modeling and Schema Management How schemas define model behavior, generated services, API contracts, validation, and project-layer property extension. # Data Modeling and Schema Management\n\n## Shared schema metadata for every API consumer\n\nA module owns its data and APIs. Axis, exports, Copilot and another application\nconsume the same capability contracts. Foundation's existing `nDatabase` Schema\nUtility service describes the effective schema; Safe Query translates bounded\nsearch; generated controllers, facades and services retain the normal persistence\npipeline. No Workbench service, parallel registry or extra architectural layer\nis required.\n\nFor an operator, this means a field added through an authorized schema extension\nappears consistently in discovery, forms and search. It does not grant access to\nthat field or authorize a business transition. Schema access, property rules,\ntenant/record ownership, publication and concurrency remain backend decisions.\n\n| Capability | Canonical interface relative to the module endpoint | Owner |\n| --- | --- | --- |\n| Schema collection | `GET /schemas` | Schema Utility `listSchemas` |\n| Schema detail | `GET /schemas/:schema` | Schema Utility `getSchema` |\n| Resource capabilities | `GET /<schema>/capabilities` | Generated transport to the same Utility owner |\n| Bounded search | `POST /<schema>/safe-search` | Safe Query and generated read |\n| Create | `PUT /<schema>` with a raw model | Generated save pipeline |\n| Update | `PATCH /<schema>` with query/model/options | Generated update pipeline |\n| Delete impact | `POST /<schema>/delete-impact` with an identity | Utility and Reference Integrity |\n| Delete | `DELETE /<schema>` with a query | Generated remove pipeline |\n| Explicit bounded bulk | `POST /<schema>/bulk` | Utility and generated remove |\n| Enterprise setup | `POST /enterprises` in Profile | Enterprise Management |\n\n### Customize and extend safely\n\nDeclare fields in the owning schema through the existing module hierarchy.\nUse its `backoffice` metadata for client-safe fields, forms, relationships and\npermitted operations. For example:\n\n```javascript\nbackoffice: {\n    excludedFields: ['internalNotes'],\n    form: {\n        sections: {\n            businessDetails: { label: 'Business details', fields: ['name', 'customerReference'] }\n        }\n    }\n}\n```\n\nThe fields must exist in the effective schema. Preserve inherited exclusions\nwhen overriding an array. A deleted field disappears; ungrouped editable fields\nremain available. Form visibility cannot bypass required input or authorization.\nWhen metadata is insufficient, override the existing `DefaultSchemaUtilityService`\nhelper through ordinary module service inheritance. Do not copy a base service,\ncreate another schema catalogue or place metadata authority in a UI.\n\n### Failure, compatibility and operational rollout\n\nThe framework is unreleased. All `/schema/workbench` endpoints and their\ncontroller, facade and service are removed. The owning configuration is now\n`schemaApi`, with `system.schema.view` and `system.schema.manage` defaults.\nCurrent callers, configuration and bootstrap grants move together; there are no\nold-route aliases or second namespace defaults. Persisted grants from an earlier\nlocal database need the normal governed data update before authenticated use.\nThis source migration does not rewrite stored records or permission documents.\n\nUnknown, inactive, excluded and inaccessible schemas fail closed. A missing owner\nis an error, not permission to load raw schema or another service implementation.\nProtected filters and unbounded searches fail before reads. Rebuild and restart\naffected runtimes, and verify allowed and denied identities against their actual\npolicy. Source composition and mocked persistence checks do not establish live\nHTTP authentication, custom service overrides or persisted policy acceptance.\n\n### Validation and remaining route migration\n\nCanonical schema transport migration is complete in source. Contract tests cover\ncompiled controller/facade/service templates, active aliases, effective overrides,\nfield filtering, original revisions, tenant/owner scope, callbacks and no-write\nrejections. Axis tests cover the actual client requests and persisted responses.\nPrepared Local/Docker runtime checks inspect API coverage, permissions and OpenAPI\nmetadata without binding a listener. Live signed-in acceptance remains separate.\n\n## Generated create, update and delete contracts\n\nControllers map declared input instead of merging arbitrary body properties into\nthe secured request. Authentication, tenant, enterprise, module/schema identity,\ntransaction and trace context stay server-owned, including non-enumerable values.\nUnknown, protected and read-only top-level model fields are omitted; fixed schema\nvalues and trusted scope are applied. Nested validation stays with schema owners.\nOperator model patches such as `$set`, `$inc` and dotted paths are rejected.\n\nSelective schema APIs use one scalar primary identity for update/delete and keep\nthe original revision when required. They cannot accept a broad operator query\nin place of the selected record. An explicit domain create command blocks generic\ncreate/createAll. Staged-only and read-only metadata reject writes independently\nof the client's form, the route's visibility or the presence of a manage grant.\n\n```json\n{\n  \"query\": { \"code\": \"record-one\", \"revision\": 4 },\n  \"model\": { \"name\": \"Updated label\" },\n  \"options\": { \"recursive\": false, \"returnModified\": true }\n}\n```\n\nFor this update, the concurrency owner compares revision 4 and computes the next\nvalue. Missing, malformed and stale managed tokens retain the existing 428, 400\nand 409 contracts. Reload and review a conflict; never automatically replace its\ntoken with a freshly fetched revision. Advanced broad-query/by-ID interfaces,\nwhen explicitly exposed by the owning schema, retain their separate contracts.\nInternal domain/import calls use their existing policy and persistence pipeline.\n\n### Compatibility, errors and retries\n\nKeep the generated response envelope. A create/update client must receive one\npersisted record with its identity and usable managed revision: a direct record,\na single-record array or the generated `models` result. A count, missing identity,\nempty/multiple models or unusable revision is an error for record editing.\n`modifiedCount: 0` can be a valid no-op when one persisted record is returned.\nAn invalid success response may follow an applied write; retain user input and\ninspect/reload the data before retrying. Never synthesize success from form input.\n\nGeneric idempotency-key forwarding is not a durable replay ledger. Domain commands\nretain their existing principal-bound key, input digest and recovery rules.\nSelected bulk deletion is schema-opted-in, bounded and keyed, and retains every\nidentity's required revision in the remove query. It uses Reference Integrity and\nthe normal generated remove pipeline. The current provider contract does not\nsupport managed-counter multi-record CAS, so those schemas do not advertise bulk\nDELETE and reject it before dispatch. They remain editable one record at a time.\nThe governed Local reset has its separate provider-issued maintenance authority;\na caller flag or lookalike object cannot activate it.\n\n### Canonical schema discovery\n\n`GET /schemas` returns `{ code, data: { moduleName, schemas } }`; detail and\ncapabilities return `{ code, data: descriptor }`. An authorized empty module\nreturns an empty list. An unavailable detail returns the existing unavailable\nerror. Thin controller/facade adapters pass the original secured request and the\nroute-selected schema separately to Utility `listSchemas/getSchema`.\n\nDiscovery preserves active aliases, effective extensions, safe fields, authoring,\nform/reference/concurrency metadata and prepared API routes. Collection/detail\nuse `schemaApi.discoveryPermission` (default `system.schema.view`), secured\n`userGroup` access and exposure category `schemaApi`. Tagged resource reads use\n`schemaApi.readPermission`; writes use `schemaApi.writePermission`. Change grants\nthrough the existing identity owner. Metadata and exposure never grant access.\n\nAxis uses the canonical collection and detail paths, or an advertised capability\nroute for detail. Import/export, documentation, media and other schema screens\nshare this typed client. Missing/disabled routes and authorization errors remain\nvisible. No fallback selects Workbench, another runtime or Online authoring.\nSuccessful connections retain their identity when another connection fails.\n\n### Selective module APIs and route-driven clients\n\nAn eligible model can opt into the existing nRouter template group without\nexposing broad raw-query, by-ID or unrestricted bulk-create routes:\n\n```javascript\nrouter: { enabled: true, groups: { schemaOperations: true } }\n```\n\nThis group contains the seven resource operations above. Effective schema access\nand authoring determine which are usable. Product and PriceRow use this group;\nsource writes require Staged. Editorial Online projections and publication\nreceipts permit secured inspection while rejecting generated writes. Public\nEditorial delivery continues through its sanitized business APIs.\n\n`router.enabled: false` still disables generated routes. An explicit empty groups\nobject selects none; `schemaOperations: false` removes an inherited group. Unknown\ngroups and non-boolean entries fail configuration rather than enabling broad CRUD.\nOmitting `groups` preserves the schema's existing full default-group selection.\nGlobal module HTTP enablement remains independent; internal schema contributors\ndo not acquire listeners or API hosts merely by declaring a model.\n\n`apiOperations` comes from prepared matching generated-controller routes. It is\nan inert projection, not another registry. Each operation declares `method`, a\nstatic relative `path`, `apiVersion` and `active`:\n\n```json\n{\"create\":{\"method\":\"PUT\",\"path\":\"/product\",\"apiVersion\":\"v0\",\"active\":true}}\n```\n\nAxis validates and follows this path under the selected connection. Missing\noptional route metadata uses the standard canonical resource path; no response\ntriggers a second transport. Disabled declarations send no request. Ambiguous\nroutes, unsafe paths, unsupported methods or versions fail closed. Later modules\ncan override the existing routes; use `active: false` to disable an inherited\noperation instead of introducing a competing endpoint.\n\n### Domain setup and confirmation\n\nSchema `aggregateOperations` can name an existing owning controller operation;\nUtility resolves its actual prepared route. Service names are not executable\nclient metadata and there is no generic aggregate dispatcher. Profile's declared\nenterprise setup maps to `POST /enterprises` with `{ model: { ... } }` and a valid\n`Idempotency-Key` header. Profile validates writable fields, keeps tenant setup\nserver-owned, preserves references and uses its existing activation retry logic.\nA generic enterprise PUT cannot replace that business operation.\n\nCopilot prepares Product actions at `/products/prepare` and executes through its\nconfirmation API. The duplicate Product execution HTTP adapter is removed.\nConfirmed Product/PriceRow writes use canonical module PUT resources and retain\nfresh policy, connection/tenant/target scope and key forwarding. They do not\ncreate an automatic transaction or durable replay guarantee.\n\n### Rollout and verification\n\nUpgrade backend source, generated output, current clients and governed grants as\none coordinated change. Existing metadata extensions move to Schema Utility;\napplication identity stays in application contributions. Keep domain workflows,\noriginal revisions, policy rejection and response errors visible. Verify default\nand later-layer behavior, disabled groups/routes, allowed/denied identities,\nStaged/Online, aliases, tenant isolation, conflict recovery and missing owners.\nNo migration silently rewrites stored data. Generated documentation and runtime\npreparation evidence complement, rather than replace, authenticated live checks.\n\n## Publication-aware Generic Authoring\n\nCanonical owner: Foundation's `nDatabase` resolves generic authoring policy;\n`nController` checks generated HTTP mutations before request-body mapping. The\nowning schema declares its lifecycle in existing `backoffice` metadata. The\nexisting server-owned `runtimeRole.publication` supplies Staged/Online context.\n\n```js\nbackoffice: {\n    mutationPolicy: { lifecycle: 'PUBLISHABLE', publishRequired: true }\n}\n```\n\nThis source may be authored only where the runtime publication role is STAGED.\nONLINE, OPERATIONAL, unknown and missing roles do not grant authoring. Read/search\nremain subject to normal access checks. Workbench removes write, bulk and\naggregate capabilities; generated HTTP mutations reject before persistence,\nincluding saveAll and delete-by-code/id. A body field cannot override the role.\n\nFor an owner-managed projection or receipt use:\n\n```js\nbackoffice: { mutationMode: 'READ_ONLY', operations: ['search', 'read'] }\n```\n\nThat denies generic HTTP and Workbench mutations, not the owning publication\nservice. nPublish/domain providers and approved import workflows retain their\nexisting generated-service paths, authentication, lifecycle and tenant checks.\nThis boundary does not authorize arbitrary internal writes or replace approval.\n\nCMS content, Editorial sources, and Product/Category/Variant catalogue sources\ndeclare the publication rule. Their publication evidence and derived projections\ndeclare read-only generic authoring. Store/Point of Service remain operational.\nDo not infer publication from a module name, technical revision or native version\nfield. Mixed-lifecycle modules are supported intentionally.\n\n```mermaid\nflowchart LR\n    A[Effective schema metadata] --> P[Shared authoring policy]\n    R[Existing runtime role] --> P\n    P --> W[Workbench descriptor and mutation checks]\n    P --> C[Generated HTTP mutation guard]\n    W --> S[Authorized source CRUD]\n    C --> S\n    D[Owning publication workflow] --> O[Online projection and activation]\n```\n\n### Customize and Extend Safely\n\nAdd the fragment above to the owning custom module's\n`src/schemas/schemas.js`; retain normal fields, references and access groups.\nUse its existing environment `config/properties.js` to declare\n`runtimeRole: { code: 'PROJECT_STAGED', publication: 'STAGED' }`.\nDo not add a separate publication-schema registry or infer authority in Axis.\nA service override may extend `DefaultSchemaAuthoringPolicyService` but must\npreserve fail-closed Online/missing-role behavior and the existing writer owner.\n\nExample: promotional copy requires Staged authoring and publication, while an\norder in the same module remains operational. A publication receipt must be\nread-only in Workbench even for an administrator; changing its state manually is\nnot publishing. Reclassifying an inherited source as operational requires\nremoving all publication markers through schema composition and documenting a\nreal change in ownership, not bypassing approval for convenience.\n\nRun `schemaAuthoringAuthorityContract.test.js`, `schemaWorkbenchContract.test.js`,\nthe owning publication tests and Axis Workbench tests. Verify missing role,\nread-only targets, body spoofing, promise/callback errors, and no persistence on\nrejection. A full Published view must read active domain projections; these\ngeneric guards do not create a publication workflow or a source/Online diff UI.\n\n## Technical revisions without manual arithmetic\n\nCanonical owner: `nodics.foundation`, implemented by `nDatabase/database` and\nthe MongoDB provider. A technical edit counter detects two people changing the\nsame record. It is not a business version, a published content version, or a\ndata-release version. The existing effective schema declares who manages it:\n\n```js\nbackoffice: {\n    concurrency: { field: 'revision', managed: true }\n}\n```\n\nThis is schema metadata, not a new configuration file, registry, or importer.\nThe first migrated framework schemas are `store.store`, `store.salesChannel`,\nand `store.pointOfService`. Other schemas are not automatically migrated merely\nbecause they contain a property named `revision`.\n\n| Operation         | Caller responsibility                                        | Framework responsibility                                           |\n| ----------------- | ------------------------------------------------------------ | ------------------------------------------------------------------ |\n| Create            | Supply business fields and stable identity, no counter       | Initialize counter to 1                                            |\n| Edit              | Retain the original read token, send changed business fields | Compare original token atomically and increment once               |\n| Save unchanged    | Retain original token                                        | Return current record without advancing counter or mutation events |\n| Delete            | Retain original token and identity                           | Apply access/reference checks and conditional delete               |\n| Import `saveAll`  | Author ordinary data rows without counters                   | Read original tokens and use generated CRUD                        |\n| Concurrent change | Review newer data and resolve the user's intended edit       | Reject stale write; never silently overwrite                       |\n\n```mermaid\nsequenceDiagram\n    participant A as Editor A\n    participant B as Editor B\n    participant G as Generated CRUD\n    participant D as Database provider\n    A->>G: Read record\n    G-->>A: Record with revision 7\n    B->>G: Read record\n    G-->>B: Record with revision 7\n    A->>G: Edit with original token 7\n    G->>D: Atomic match identity and revision 7\n    D-->>A: Persisted record with revision 8\n    B->>G: Edit with original token 7\n    G-->>B: 409 conflict, review latest record\n```\n\n### Developer service example\n\nUse the existing generated service inside an authorized module operation. The\nexample assumes `tenant` and `authData` come from the authenticated request:\n\n```js\nconst response = await SERVICE.DefaultPointOfServiceService.get({\n  tenant,\n  authData,\n  query: { code: \"project-web-pos\" },\n});\nconst original = response.result[0];\nconst saved = await SERVICE.DefaultPointOfServiceService.update({\n  tenant,\n  authData,\n  query: { code: original.code, revision: original.revision ?? 0 },\n  model: { name: \"Updated web service point\" },\n  options: { returnModified: true },\n});\nconst nextEditingSnapshot = saved.result.models[0];\n```\n\nPoint of Service uses a string name. Other schemas may use localized objects;\nalways follow the effective field type. Never write `revision + 1` in the caller.\nAxis carries the original token automatically and treats the returned record as\nthe next editing snapshot. It excludes managed counters from editable payloads.\n\n### Conflict and recovery behavior\n\n| Response                      | Meaning                                                                    | Recovery                                                                                          |\n| ----------------------------- | -------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------- |\n| 409 / `ERR_CONCURRENCY_00001` | Record changed, disappeared, or identity raced during creation             | Preserve draft, read latest through the owning service, review differences, deliberately resubmit |\n| 428 / `ERR_CONCURRENCY_00002` | Existing-record edit omitted original token                                | Fix caller to retain its read result; do not manufacture a token                                  |\n| 400 / `ERR_CONCURRENCY_00003` | Invalid token, broad selector, operator patch, unsupported provider/schema | Correct the contract; do not disable concurrency to suppress the error                            |\n\nLegacy records with no counter use token 0 and a missing-field compare-and-set.\nTheir first changed write creates counter 1. Existing populated counters never\nreset. An old token cannot succeed by supplying a newer number in the payload:\nthe query token takes precedence. Audit timestamps alone do not count as edits.\n\n### Customize and extend safely\n\nUse your existing later-loaded project module's `src/schemas/schemas.js`, not a\nnew revision configuration layer. For a project-owned non-versioned schema whose\nwrites all use generated CRUD, declare a typed technical field and metadata:\n\n```js\nmodule.exports = {\n  projectOperations: {\n    serviceDesk: {\n      definition: {\n        code: { type: \"string\", required: true, unique: true },\n        editCounter: {\n          type: \"long\",\n          required: true,\n          default: 1,\n          description:\n            \"Framework-managed counter used to detect concurrent edits.\",\n        },\n      },\n      backoffice: { concurrency: { field: \"editCounter\", managed: true } },\n    },\n  },\n};\n```\n\nCompose this fragment with the project's established model, access and ownership\ndefaults. Keep a scalar unique primary identity. Audit every writer before\nmigration: generated single-record save/update/delete supports plain field\npatches, not `$inc`, `$set`, dotted paths, or mass updates. Domain services already\nincrementing their own counters must retain that authority until deliberately\nmigrated. `managed: false` leaves that existing behavior intact; it is not a\nconcurrency bypass to apply to an already-managed shared schema.\n\n`versionId` and `isVersionedEnabled: true` cannot use this managed-counter path.\nThe versioned provider and nPublish remain authoritative. A project cannot\ncustomize away access checks, tenant selection, atomic matching, original-token\nrequirements, or genuine conflict rejection. Alternate providers must implement\nthe same atomic `compareAndSetItem` boundary and return the persisted record.\n\nTest create, successive edits, no-op, stale/missing/malformed token, simultaneous\nwriters, ownership denial, legacy missing counter, deletion restrictions, and\nproject field-name overrides. Run `modelConcurrencyContract.test.js` under\n`nDatabase/database/test` and `mongodbManagedConcurrencyContract.test.js` under\n`nDatabase/mongodb/test`. In Axis, create a disposable Point of Service, edit it\ntwice, and verify that the counter is read-only. Never delete real business data\nto test a revision migration.\n\nThis mechanism protects one record. Nested model saves and import files can\ncomplete some writes before a later conflict; they are not transactions. Use the\nexisting supported database transaction or owning workflow for atomic business\noperations. See the import documentation for retry and release boundaries.\n\nHow schemas define model behavior, generated services, API contracts, validation, and project-layer property extension. This page is intentionally written for beginners, business users, developers, operators, architects, QA owners, and AI tools. It explains the business problem first, then the technical ownership model, then the exact customization and verification responsibilities so nobody has to guess where a change belongs.\n\nCustomers need to add fields, validation, and domain records without bypassing generated services, route contracts, permissions, or publication behavior. Nodics uses schema metadata as the model authority. Generated controllers, services, validators, routes, and workbench screens derive from effective schema composition.\n\n## Business context\n\nFor a business user, this topic answers what decision can be made, which operational journey is supported, and what risk is reduced. The practical value is faster delivery without losing governance: teams can understand the current capability, decide whether it applies to their project, and know when Axis, Nexus, content catalog, workflow, or runtime services are involved.\n\nFor beginners, the mental model is simple: the page title is the business capability, the table identifies who owns each part, and the diagram shows how a request or change flows. A reader should not need source-code knowledge to understand the journey, but the developer path is still available when customization is needed.\n\n| Business question            | Answer for this topic                                                                                                                                                    |\n| ---------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |\n| What problem does it solve?  | Customers need to add fields, validation, and domain records without bypassing generated services, route contracts, permissions, or publication behavior.                |\n| Who uses it?                 | Business users, administrators, developers, operators, QA owners, implementation partners, and AI-assisted delivery tools.                                               |\n| What changes can it support? | Nodics uses schema metadata as the model authority. Generated controllers, services, validators, routes, and workbench screens derive from effective schema composition. |\n| What must be governed?       | Permissions, validation, source ownership, publication state, runtime impact, audit evidence, and rollback boundaries.                                                   |\n\n## Journey and ownership\n\nFoundation schema services own schema compilation and generated artifacts. Each functional module owns its business schema definitions and allowed extension points. This keeps the reader-facing name friendly while preserving exact source ownership for developers and AI tools. Axis may render management screens or authenticated documentation, Nexus may render public Online content, and the backend content catalog remains authoritative for navigation, pages, access policies, and publication state.\n\n```mermaid\nflowchart LR\n  Reader[\"Business or developer request\"] --> Axis[\"Axis or Nexus view\"]\n  Axis --> Backend[\"Owning backend capability\"]\n  Backend --> Catalog[\"Content/catalog/schema/config records\"]\n  Catalog --> Runtime[\"Runtime behavior or published page\"]\n  Runtime --> Evidence[\"Audit, validation, and support evidence\"]\n```\n\n| Responsibility           | Owner                               | Notes                                                                                   |\n| ------------------------ | ----------------------------------- | --------------------------------------------------------------------------------------- |\n| Business capability name | Data Modeling and Schema Management | Used in navigation and dashboards so readers are not exposed to raw module names first. |\n| Source owner             | nodics.foundation                   | Carries exact implementation, documentation, and validation evidence.                   |\n| Technical module         | nSchema                             | Holds the relevant schema, service, router, data, or contract detail where applicable.  |\n| Axis experience          | Backend-declared workspace          | Axis renders metadata and actions but does not become the authority.                    |\n| Public experience        | Online content delivery             | Nexus renders only records approved for public access.                                  |\n\n## Data and configuration detail\n\nEvery topic must explain the data that changes behavior. Some topics are schema-driven, some are configuration-driven, some are publishable content, and some are operational records. The documentation must say which category applies before showing code. That keeps production operators and developers aligned on whether a change needs publication, restart, event propagation, approval, or only a project-layer override.\n\n| Detail area            | What to document                                                               | Verification signal                             |\n| ---------------------- | ------------------------------------------------------------------------------ | ----------------------------------------------- |\n| Model or record        | Type code, catalog, tenant, enterprise, state, owner, and lifecycle.           | Schema contract or generated model test.        |\n| Configuration key      | Default value, override location, environment scope, and runtime impact.       | Config validation and runtime refresh evidence. |\n| API or event           | Route/event name, payload boundary, permission, idempotency, and failure mode. | Route, service, event, and authorization tests. |\n| Publication and access | Staged/Online state, access mode, roles, groups, and permissions.              | Content-pack validation and access-policy test. |\n\n```js\nschemaExtension: { typeCode: \"Product\", properties: { fit: { type: \"String\", localized: true } } }\n```\n\n## Customization and extension\n\nDevelopers should customize from the project layer first. A customer project may add properties, services, validators, pipelines, renderers, data packs, or provider configuration when the extension respects the owning capability. Business users may update governed records in Axis when the record is designed for administration. Framework source changes are reserved for improving the reusable product capability itself.\n\n| Customization type                          | Recommended path                                                       | Avoid                                                |\n| ------------------------------------------- | ---------------------------------------------------------------------- | ---------------------------------------------------- |\n| Business label, navigation, or content area | Axis-managed content catalog item with publication workflow.           | Hardcoding labels or page trees in the frontend.     |\n| Runtime setting                             | Module configuration with validation and governed runtime propagation. | Editing node-local files on each server by hand.     |\n| Domain behavior                             | Extension service, validator, pipeline step, or provider adapter.      | Forking the standard module for customer-only logic. |\n| Public visibility                           | Access policy with public/authenticated/role-based state.              | Exposing internal or draft pages through Nexus.      |\n\n## Operations and governance\n\nOperators need production-safe evidence, not only implementation notes. Each page must call out logging, tracing, permission checks, event propagation, data import/export, publication status, rollback behavior, and troubleshooting. If a capability affects multiple nodes, the documentation must explain how changes reach every node and how a partial failure is detected.\n\n| Operational concern | Required documentation detail                                                      |\n| ------------------- | ---------------------------------------------------------------------------------- |\n| Security            | Authentication mode, permission code, role/group, tenant and enterprise isolation. |\n| Audit               | Actor, timestamp, source record, checksum, approval, route/event, and result.      |\n| Resilience          | Retry, idempotency, compensation, fallback, cache invalidation, and rollback.      |\n| Observability       | Logs, metrics, dashboard cards, health checks, and support evidence.               |\n\n## Common mistakes\n\n- Treating a friendly navigation label as the technical source owner.\n- Writing only developer details and skipping the business decision that the page supports.\n- Updating Axis or Nexus code when the content catalog, schema, or backend capability should own the change.\n- Forgetting access rules for public, authenticated, role-based, group-based, or permission-based pages.\n- Skipping diagrams, comparison tables, source maps, or troubleshooting matrices because the topic feels obvious.\n- Changing runtime behavior without explaining production impact, cluster propagation, and rollback.\n- Leaving generated documentation without source evidence, validation commands, and maturity state.\n\n## Verification\n\nVerification starts with the document itself: it must include business context, technical ownership, a visual flow, data or configuration tables, customization guidance, common mistakes, and validation evidence. Developers then run the documentation generator and content-pack validator so the page becomes backend-owned data with checksum, lifecycle, navigation, access policy, publication state, and search metadata.\n\nFor implementation verification, run the owning module tests and any Axis or Nexus renderer tests that consume the page. Operators should confirm that production-like runtime behavior matches the documentation: permissions reject unauthorized access, Online pages do not expose Staged data, runtime changes propagate through governed events, and troubleshooting evidence is available without exposing secrets.\n\n### Governed local maintenance\n\nThe governed Local reset is a separate maintenance operation. Its existing\nprovider-issued opaque authority permits bulk removal of configured local\nmodels, including managed-counter schemas, through the generated remove\npipeline. Caller-supplied flags or lookalike authority objects cannot enable\nthis path. Ordinary generated deletes still require a scalar identity and the\noriginal revision; no client or project may disable these checks for editing.\n",
+    "searchText": "Data Modeling and Schema Management How schemas define model behavior, generated services, API contracts, validation, and project-layer property extension. # Data Modeling and Schema Management\n\n## Shared schema metadata for every API consumer\n\nA module owns its data and APIs. Axis, exports, Copilot and another application\nconsume the same capability contracts. Foundation's existing `nDatabase` Schema\nUtility service describes the effective schema; Safe Query translates bounded\nsearch; generated controllers, facades and services retain the normal persistence\npipeline. No Workbench service, parallel registry or extra architectural layer\nis required.\n\nFor an operator, this means a field added through an authorized schema extension\nappears consistently in discovery, forms and search. It does not grant access to\nthat field or authorize a business transition. Schema access, property rules,\ntenant/record ownership, publication and concurrency remain backend decisions.\n\n| Capability | Canonical interface relative to the module endpoint | Owner |\n| --- | --- | --- |\n| Schema collection | `GET /schemas` | Schema Utility `listSchemas` |\n| Schema detail | `GET /schemas/:schema` | Schema Utility `getSchema` |\n| Resource capabilities | `GET /<schema>/capabilities` | Generated transport to the same Utility owner |\n| Bounded search | `POST /<schema>/safe-search` | Safe Query and generated read |\n| Create | `PUT /<schema>` with a raw model | Generated save pipeline |\n| Update | `PATCH /<schema>` with query/model/options | Generated update pipeline |\n| Delete impact | `POST /<schema>/delete-impact` with an identity | Utility and Reference Integrity |\n| Delete | `DELETE /<schema>` with a query | Generated remove pipeline |\n| Explicit bounded bulk | `POST /<schema>/bulk` | Utility and generated remove |\n| Enterprise setup | `POST /enterprises` in Profile | Enterprise Management |\n\n### Customize and extend safely\n\nDeclare fields in the owning schema through the existing module hierarchy.\nUse its `backoffice` metadata for client-safe fields, forms, relationships and\npermitted operations. For example:\n\n```javascript\nbackoffice: {\n    excludedFields: ['internalNotes'],\n    form: {\n        sections: {\n            businessDetails: { label: 'Business details', fields: ['name', 'customerReference'] }\n        }\n    }\n}\n```\n\nThe fields must exist in the effective schema. Preserve inherited exclusions\nwhen overriding an array. A deleted field disappears; ungrouped editable fields\nremain available. Form visibility cannot bypass required input or authorization.\nWhen metadata is insufficient, override the existing `DefaultSchemaUtilityService`\nhelper through ordinary module service inheritance. Do not copy a base service,\ncreate another schema catalogue or place metadata authority in a UI.\n\n### Failure, compatibility and operational rollout\n\nThe framework is unreleased. All `/schema/workbench` endpoints and their\ncontroller, facade and service are removed. The owning configuration is now\n`schemaApi`, with `system.schema.view` and `system.schema.manage` defaults.\nCurrent callers, configuration and bootstrap grants move together; there are no\nold-route aliases or second namespace defaults. Persisted grants from an earlier\nlocal database need the normal governed data update before authenticated use.\nThis source migration does not rewrite stored records or permission documents.\n\nUnknown, inactive, excluded and inaccessible schemas fail closed. A missing owner\nis an error, not permission to load raw schema or another service implementation.\nProtected filters and unbounded searches fail before reads. Rebuild and restart\naffected runtimes, and verify allowed and denied identities against their actual\npolicy. Source composition and mocked persistence checks do not establish live\nHTTP authentication, custom service overrides or persisted policy acceptance.\n\n### Validation and remaining route migration\n\nCanonical schema transport migration is complete in source. Contract tests cover\ncompiled controller/facade/service templates, active aliases, effective overrides,\nfield filtering, original revisions, tenant/owner scope, callbacks and no-write\nrejections. Axis tests cover the actual client requests and persisted responses.\nPrepared Local/Docker runtime checks inspect API coverage, permissions and OpenAPI\nmetadata without binding a listener. Live signed-in acceptance remains separate.\n\n## Generated create, update and delete contracts\n\nControllers map declared input instead of merging arbitrary body properties into\nthe secured request. Authentication, tenant, enterprise, module/schema identity,\ntransaction and trace context stay server-owned, including non-enumerable values.\nUnknown, protected and read-only top-level model fields are omitted; fixed schema\nvalues and trusted scope are applied. Nested validation stays with schema owners.\nOperator model patches such as `$set`, `$inc` and dotted paths are rejected.\n\nSelective schema APIs use one scalar primary identity for update/delete and keep\nthe original revision when required. They cannot accept a broad operator query\nin place of the selected record. An explicit domain create command blocks generic\ncreate/createAll. Staged-only and read-only metadata reject writes independently\nof the client's form, the route's visibility or the presence of a manage grant.\n\n```json\n{\n  \"query\": { \"code\": \"record-one\", \"revision\": 4 },\n  \"model\": { \"name\": \"Updated label\" },\n  \"options\": { \"recursive\": false, \"returnModified\": true }\n}\n```\n\nFor this update, the concurrency owner compares revision 4 and computes the next\nvalue. Missing, malformed and stale managed tokens retain the existing 428, 400\nand 409 contracts. Reload and review a conflict; never automatically replace its\ntoken with a freshly fetched revision. Advanced broad-query/by-ID interfaces,\nwhen explicitly exposed by the owning schema, retain their separate contracts.\nInternal domain/import calls use their existing policy and persistence pipeline.\n\n### Compatibility, errors and retries\n\nKeep the generated response envelope. A create/update client must receive one\npersisted record with its identity and usable managed revision: a direct record,\na single-record array or the generated `models` result. A count, missing identity,\nempty/multiple models or unusable revision is an error for record editing.\n`modifiedCount: 0` can be a valid no-op when one persisted record is returned.\nAn invalid success response may follow an applied write; retain user input and\ninspect/reload the data before retrying. Never synthesize success from form input.\n\nGeneric idempotency-key forwarding is not a durable replay ledger. Domain commands\nretain their existing principal-bound key, input digest and recovery rules.\nSelected bulk deletion is schema-opted-in, bounded and keyed, and retains every\nidentity's required revision in the remove query. It uses Reference Integrity and\nthe normal generated remove pipeline. The current provider contract does not\nsupport managed-counter multi-record CAS, so those schemas do not advertise bulk\nDELETE and reject it before dispatch. They remain editable one record at a time.\nThe governed Local reset has its separate provider-issued maintenance authority;\na caller flag or lookalike object cannot activate it.\n\n### Canonical schema discovery\n\n`GET /schemas` returns `{ code, data: { moduleName, schemas } }`; detail and\ncapabilities return `{ code, data: descriptor }`. An authorized empty module\nreturns an empty list. An unavailable detail returns the existing unavailable\nerror. Thin controller/facade adapters pass the original secured request and the\nroute-selected schema separately to Utility `listSchemas/getSchema`.\n\nDiscovery preserves active aliases, effective extensions, safe fields, authoring,\nform/reference/concurrency metadata and prepared API routes. Collection/detail\nuse `schemaApi.discoveryPermission` (default `system.schema.view`), secured\n`userGroup` access and exposure category `schemaApi`. Tagged resource reads use\n`schemaApi.readPermission`; writes use `schemaApi.writePermission`. Change grants\nthrough the existing identity owner. Metadata and exposure never grant access.\n\nAxis uses the canonical collection and detail paths, or an advertised capability\nroute for detail. Import/export, documentation, media and other schema screens\nshare this typed client. Missing/disabled routes and authorization errors remain\nvisible. No fallback selects Workbench, another runtime or Online authoring.\nSuccessful connections retain their identity when another connection fails.\n\n### Selective module APIs and route-driven clients\n\nAn eligible model can opt into the existing nRouter template group without\nexposing broad raw-query, by-ID or unrestricted bulk-create routes:\n\n```javascript\nrouter: { enabled: true, groups: { schemaOperations: true } }\n```\n\nThis group contains the seven resource operations above. Effective schema access\nand authoring determine which are usable. Product and PriceRow use this group;\nsource writes require Staged. Editorial Online projections and publication\nreceipts permit secured inspection while rejecting generated writes. Public\nEditorial delivery continues through its sanitized business APIs.\n\n`router.enabled: false` still disables generated routes. An explicit empty groups\nobject selects none; `schemaOperations: false` removes an inherited group. Unknown\ngroups and non-boolean entries fail configuration rather than enabling broad CRUD.\nOmitting `groups` preserves the schema's existing full default-group selection.\nGlobal module HTTP enablement remains independent; internal schema contributors\ndo not acquire listeners or API hosts merely by declaring a model.\n\n`apiOperations` comes from prepared matching generated-controller routes. It is\nan inert projection, not another registry. Each operation declares `method`, a\nstatic relative `path`, `apiVersion` and `active`:\n\n```json\n{\"create\":{\"method\":\"PUT\",\"path\":\"/product\",\"apiVersion\":\"v0\",\"active\":true}}\n```\n\nAxis validates and follows this path under the selected connection. Missing\noptional route metadata uses the standard canonical resource path; no response\ntriggers a second transport. Disabled declarations send no request. Ambiguous\nroutes, unsafe paths, unsupported methods or versions fail closed. Later modules\ncan override the existing routes; use `active: false` to disable an inherited\noperation instead of introducing a competing endpoint.\n\n### Domain setup and confirmation\n\nSchema `aggregateOperations` can name an existing owning controller operation;\nUtility resolves its actual prepared route. Service names are not executable\nclient metadata and there is no generic aggregate dispatcher. Profile's declared\nenterprise setup maps to `POST /enterprises` with `{ model: { ... } }` and a valid\n`Idempotency-Key` header. Profile validates writable fields, keeps tenant setup\nserver-owned, preserves references and uses its existing activation retry logic.\nA generic enterprise PUT cannot replace that business operation.\n\nCopilot prepares Product actions at `/products/prepare` and executes through its\nconfirmation API. The duplicate Product execution HTTP adapter is removed.\nConfirmed Product/PriceRow writes use canonical module PUT resources and retain\nfresh policy, connection/tenant/target scope and key forwarding. They do not\ncreate an automatic transaction or durable replay guarantee.\n\n### Rollout and verification\n\nUpgrade backend source, generated output, current clients and governed grants as\none coordinated change. Existing metadata extensions move to Schema Utility;\napplication identity stays in application contributions. Keep domain workflows,\noriginal revisions, policy rejection and response errors visible. Verify default\nand later-layer behavior, disabled groups/routes, allowed/denied identities,\nStaged/Online, aliases, tenant isolation, conflict recovery and missing owners.\nNo migration silently rewrites stored data. Generated documentation and runtime\npreparation evidence complement, rather than replace, authenticated live checks.\n\n## Publication-aware Generic Authoring\n\nCanonical owner: Foundation's `nDatabase` resolves generic authoring policy;\n`nController` checks generated HTTP mutations before request-body mapping. The\nowning schema declares its lifecycle in existing `backoffice` metadata. The\nexisting server-owned `runtimeRole.publication` supplies Staged/Online context.\n\n```js\nbackoffice: {\n    mutationPolicy: { lifecycle: 'PUBLISHABLE', publishRequired: true }\n}\n```\n\nThis source may be authored only where the runtime publication role is STAGED.\nONLINE, OPERATIONAL, unknown and missing roles do not grant authoring. Read/search\nremain subject to normal access checks. Workbench removes write, bulk and\naggregate capabilities; generated HTTP mutations reject before persistence,\nincluding saveAll and delete-by-code/id. A body field cannot override the role.\n\nFor an owner-managed projection or receipt use:\n\n```js\nbackoffice: { mutationMode: 'READ_ONLY', operations: ['search', 'read'] }\n```\n\nThat denies generic HTTP and Workbench mutations, not the owning publication\nservice. nPublish/domain providers and approved import workflows retain their\nexisting generated-service paths, authentication, lifecycle and tenant checks.\nThis boundary does not authorize arbitrary internal writes or replace approval.\n\nCMS content, Editorial sources, and Product/Category/Variant catalogue sources\ndeclare the publication rule. Their publication evidence and derived projections\ndeclare read-only generic authoring. Store/Point of Service remain operational.\nDo not infer publication from a module name, technical revision or native version\nfield. Mixed-lifecycle modules are supported intentionally.\n\n```mermaid\nflowchart LR\n    A[Effective schema metadata] --> P[Shared authoring policy]\n    R[Existing runtime role] --> P\n    P --> W[Workbench descriptor and mutation checks]\n    P --> C[Generated HTTP mutation guard]\n    W --> S[Authorized source CRUD]\n    C --> S\n    D[Owning publication workflow] --> O[Online projection and activation]\n```\n\n### Customize and Extend Safely\n\nAdd the fragment above to the owning custom module's\n`src/schemas/schemas.js`; retain normal fields, references and access groups.\nUse its existing environment `config/properties.js` to declare\n`runtimeRole: { code: 'PROJECT_STAGED', publication: 'STAGED' }`.\nDo not add a separate publication-schema registry or infer authority in Axis.\nA service override may extend `DefaultSchemaAuthoringPolicyService` but must\npreserve fail-closed Online/missing-role behavior and the existing writer owner.\n\nExample: promotional copy requires Staged authoring and publication, while an\norder in the same module remains operational. A publication receipt must be\nread-only in Workbench even for an administrator; changing its state manually is\nnot publishing. Reclassifying an inherited source as operational requires\nremoving all publication markers through schema composition and documenting a\nreal change in ownership, not bypassing approval for convenience.\n\nRun `schemaAuthoringAuthorityContract.test.js`, `schemaWorkbenchContract.test.js`,\nthe owning publication tests and Axis Workbench tests. Verify missing role,\nread-only targets, body spoofing, promise/callback errors, and no persistence on\nrejection. A full Published view must read active domain projections; these\ngeneric guards do not create a publication workflow or a source/Online diff UI.\n\n## Installed Version Migration\n\nConverting installed ordinary records to versioned authoring is a maintenance\noperation, separate from moving source code, changing a technical revision,\nresetting a schema or publishing a release. Database owns the scoped command\nand orchestration; the selected database provider owns conditional record/index\neffects, nImport owns strict `importRun` evidence, and nTooling owns local outage\ninspection. Operators control downtime and reopening. Business users do not run\nthis procedure through generic CRUD or Axis.\n\nThe current native-local sequence is: stop and exclude all writers; capture and\nreview an immutable scoped plan; durably begin/checkpoint the attempt; backfill\nonly `versionId: 0`; create/verify version-qualified unique indexes before dropping\nmapped old constraints; verify every planned record/index; then separately adopt\nsource flags and variants before reopening. No other record values, revisions or\ntimestamps are regenerated. Batch intent acknowledgement reduces journal writes,\nbut each record remains conditional and requires reconciliation after interruption.\n\nPlanning and execution require ordinary source schemas. Do not enable\n`isVersionedEnabled` first and let startup reconcile installed indexes. After\nverified forward completion, opt in the owning schemas explicitly, include\n`vDatabase`, `vService` and the matching provider variant, and qualify CURRENT\nauthoring reads where intended. Invalidate affected caches and account for every\ntenant/database loading that source, including separate Online installations.\nCURRENT reads do not activate a published release. The maintenance result always\nleaves `writersMayRestart: false` pending this handoff.\n\n### Failure And Recovery\n\nMissing outage evidence, source/index drift, storage failure, wrong worker or\nunplanned record state stops the operation. Preserve the original plan/checksum,\nidentity and journal, and keep writers offline. Resume or interrupted-attempt\nrollback applies only to a RUNNING journal with verified previous-worker stop\nevidence. It must not reopen a terminal COMPLETED/ROLLED_BACK journal.\n\nPre-reopen compensation of a completed migration needs a **new linked journal**,\nfresh outage and verification of the exact unchanged target. The parent remains\nCOMPLETED; successful linked compensation becomes ROLLED_BACK. Database owns the\ncommand integration and rollback-direction enforcement; the journal API alone\ndoes not execute compensation. Preserve/restore the reviewed ordinary source\ncomposition without bypassing its original hash. Any subsequent authoring or\nunaccounted state requires separately qualified repair, not deletion of history.\n\n### Customize And Extend Safely\n\nProject owners select actual environment/server/tenant/schema scope through the\nexisting command and effective configuration; generic mechanics stay in the\nframework. `installedVersionMigration.limits` controls bounded source/plan work;\nthe strict journal has a separate aggregate evidence budget. A project's\n`modules/<owning-module>/src/schemas/schemas.js` may later select\n`isVersionedEnabled: true` and `versionedReadMode: 'CURRENT'` on qualified schemas.\nDo not edit the global base, invent a journal or copy provider operations into a\ncustomer script. Extensions cannot weaken immutable scope/checksum, durability,\nworker fencing, outage, conditional writes, index ordering or terminal evidence.\n\nFollow the [operator contract](../../../../nodics.foundation/modules/nDatabase/database/llm/contracts/installed-version-migration.md)\nand [worked local example](../../../../nodics.foundation/modules/nDatabase/database/llm/examples/installed-version-migration.md).\nValidate command parsing, orchestration, provider/journal contracts and outage\nfailure cases, then retain separate installed-run and post-restart application\nevidence. This authored guide is not proof of a live migration, generated\ndocumentation update, publication or production qualification.\n\n## Technical revisions without manual arithmetic\n\nCanonical owner: `nodics.foundation`, implemented by `nDatabase/database` and\nthe MongoDB provider. A technical edit counter detects two people changing the\nsame record. It is not a business version, a published content version, or a\ndata-release version. The existing effective schema declares who manages it:\n\n```js\nbackoffice: {\n    concurrency: { field: 'revision', managed: true }\n}\n```\n\nThis is schema metadata, not a new configuration file, registry, or importer.\nThe first migrated framework schemas are `store.store`, `store.salesChannel`,\nand `store.pointOfService`. Other schemas are not automatically migrated merely\nbecause they contain a property named `revision`.\n\n| Operation         | Caller responsibility                                        | Framework responsibility                                           |\n| ----------------- | ------------------------------------------------------------ | ------------------------------------------------------------------ |\n| Create            | Supply business fields and stable identity, no counter       | Initialize counter to 1                                            |\n| Edit              | Retain the original read token, send changed business fields | Compare original token atomically and increment once               |\n| Save unchanged    | Retain original token                                        | Return current record without advancing counter or mutation events |\n| Delete            | Retain original token and identity                           | Apply access/reference checks and conditional delete               |\n| Import `saveAll`  | Author ordinary data rows without counters                   | Read original tokens and use generated CRUD                        |\n| Concurrent change | Review newer data and resolve the user's intended edit       | Reject stale write; never silently overwrite                       |\n\n```mermaid\nsequenceDiagram\n    participant A as Editor A\n    participant B as Editor B\n    participant G as Generated CRUD\n    participant D as Database provider\n    A->>G: Read record\n    G-->>A: Record with revision 7\n    B->>G: Read record\n    G-->>B: Record with revision 7\n    A->>G: Edit with original token 7\n    G->>D: Atomic match identity and revision 7\n    D-->>A: Persisted record with revision 8\n    B->>G: Edit with original token 7\n    G-->>B: 409 conflict, review latest record\n```\n\n### Developer service example\n\nUse the existing generated service inside an authorized module operation. The\nexample assumes `tenant` and `authData` come from the authenticated request:\n\n```js\nconst response = await SERVICE.DefaultPointOfServiceService.get({\n  tenant,\n  authData,\n  query: { code: \"project-web-pos\" },\n});\nconst original = response.result[0];\nconst saved = await SERVICE.DefaultPointOfServiceService.update({\n  tenant,\n  authData,\n  query: { code: original.code, revision: original.revision ?? 0 },\n  model: { name: \"Updated web service point\" },\n  options: { returnModified: true },\n});\nconst nextEditingSnapshot = saved.result.models[0];\n```\n\nPoint of Service uses a string name. Other schemas may use localized objects;\nalways follow the effective field type. Never write `revision + 1` in the caller.\nAxis carries the original token automatically and treats the returned record as\nthe next editing snapshot. It excludes managed counters from editable payloads.\n\n### Conflict and recovery behavior\n\n| Response                      | Meaning                                                                    | Recovery                                                                                          |\n| ----------------------------- | -------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------- |\n| 409 / `ERR_CONCURRENCY_00001` | Record changed, disappeared, or identity raced during creation             | Preserve draft, read latest through the owning service, review differences, deliberately resubmit |\n| 428 / `ERR_CONCURRENCY_00002` | Existing-record edit omitted original token                                | Fix caller to retain its read result; do not manufacture a token                                  |\n| 400 / `ERR_CONCURRENCY_00003` | Invalid token, broad selector, operator patch, unsupported provider/schema | Correct the contract; do not disable concurrency to suppress the error                            |\n\nLegacy records with no counter use token 0 and a missing-field compare-and-set.\nTheir first changed write creates counter 1. Existing populated counters never\nreset. An old token cannot succeed by supplying a newer number in the payload:\nthe query token takes precedence. Audit timestamps alone do not count as edits.\n\n### Customize and extend safely\n\nUse your existing later-loaded project module's `src/schemas/schemas.js`, not a\nnew revision configuration layer. For a project-owned non-versioned schema whose\nwrites all use generated CRUD, declare a typed technical field and metadata:\n\n```js\nmodule.exports = {\n  projectOperations: {\n    serviceDesk: {\n      definition: {\n        code: { type: \"string\", required: true, unique: true },\n        editCounter: {\n          type: \"long\",\n          required: true,\n          default: 1,\n          description:\n            \"Framework-managed counter used to detect concurrent edits.\",\n        },\n      },\n      backoffice: { concurrency: { field: \"editCounter\", managed: true } },\n    },\n  },\n};\n```\n\nCompose this fragment with the project's established model, access and ownership\ndefaults. Keep a scalar unique primary identity. Audit every writer before\nmigration: generated single-record save/update/delete supports plain field\npatches, not `$inc`, `$set`, dotted paths, or mass updates. Domain services already\nincrementing their own counters must retain that authority until deliberately\nmigrated. `managed: false` leaves that existing behavior intact; it is not a\nconcurrency bypass to apply to an already-managed shared schema.\n\n`versionId` and `isVersionedEnabled: true` cannot use this managed-counter path.\nThe versioned provider and nPublish remain authoritative. A project cannot\ncustomize away access checks, tenant selection, atomic matching, original-token\nrequirements, or genuine conflict rejection. Alternate providers must implement\nthe same atomic `compareAndSetItem` boundary and return the persisted record.\n\nTest create, successive edits, no-op, stale/missing/malformed token, simultaneous\nwriters, ownership denial, legacy missing counter, deletion restrictions, and\nproject field-name overrides. Run `modelConcurrencyContract.test.js` under\n`nDatabase/database/test` and `mongodbManagedConcurrencyContract.test.js` under\n`nDatabase/mongodb/test`. In Axis, create a disposable Point of Service, edit it\ntwice, and verify that the counter is read-only. Never delete real business data\nto test a revision migration.\n\nThis mechanism protects one record. Nested model saves and import files can\ncomplete some writes before a later conflict; they are not transactions. Use the\nexisting supported database transaction or owning workflow for atomic business\noperations. See the import documentation for retry and release boundaries.\n\nHow schemas define model behavior, generated services, API contracts, validation, and project-layer property extension. This page is intentionally written for beginners, business users, developers, operators, architects, QA owners, and AI tools. It explains the business problem first, then the technical ownership model, then the exact customization and verification responsibilities so nobody has to guess where a change belongs.\n\nCustomers need to add fields, validation, and domain records without bypassing generated services, route contracts, permissions, or publication behavior. Nodics uses schema metadata as the model authority. Generated controllers, services, validators, routes, and workbench screens derive from effective schema composition.\n\n## Business context\n\nFor a business user, this topic answers what decision can be made, which operational journey is supported, and what risk is reduced. The practical value is faster delivery without losing governance: teams can understand the current capability, decide whether it applies to their project, and know when Axis, Nexus, content catalog, workflow, or runtime services are involved.\n\nFor beginners, the mental model is simple: the page title is the business capability, the table identifies who owns each part, and the diagram shows how a request or change flows. A reader should not need source-code knowledge to understand the journey, but the developer path is still available when customization is needed.\n\n| Business question            | Answer for this topic                                                                                                                                                    |\n| ---------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |\n| What problem does it solve?  | Customers need to add fields, validation, and domain records without bypassing generated services, route contracts, permissions, or publication behavior.                |\n| Who uses it?                 | Business users, administrators, developers, operators, QA owners, implementation partners, and AI-assisted delivery tools.                                               |\n| What changes can it support? | Nodics uses schema metadata as the model authority. Generated controllers, services, validators, routes, and workbench screens derive from effective schema composition. |\n| What must be governed?       | Permissions, validation, source ownership, publication state, runtime impact, audit evidence, and rollback boundaries.                                                   |\n\n## Journey and ownership\n\nFoundation schema services own schema compilation and generated artifacts. Each functional module owns its business schema definitions and allowed extension points. This keeps the reader-facing name friendly while preserving exact source ownership for developers and AI tools. Axis may render management screens or authenticated documentation, Nexus may render public Online content, and the backend content catalog remains authoritative for navigation, pages, access policies, and publication state.\n\n```mermaid\nflowchart LR\n  Reader[\"Business or developer request\"] --> Axis[\"Axis or Nexus view\"]\n  Axis --> Backend[\"Owning backend capability\"]\n  Backend --> Catalog[\"Content/catalog/schema/config records\"]\n  Catalog --> Runtime[\"Runtime behavior or published page\"]\n  Runtime --> Evidence[\"Audit, validation, and support evidence\"]\n```\n\n| Responsibility           | Owner                               | Notes                                                                                   |\n| ------------------------ | ----------------------------------- | --------------------------------------------------------------------------------------- |\n| Business capability name | Data Modeling and Schema Management | Used in navigation and dashboards so readers are not exposed to raw module names first. |\n| Source owner             | nodics.foundation                   | Carries exact implementation, documentation, and validation evidence.                   |\n| Technical module         | nSchema                             | Holds the relevant schema, service, router, data, or contract detail where applicable.  |\n| Axis experience          | Backend-declared workspace          | Axis renders metadata and actions but does not become the authority.                    |\n| Public experience        | Online content delivery             | Nexus renders only records approved for public access.                                  |\n\n## Data and configuration detail\n\nEvery topic must explain the data that changes behavior. Some topics are schema-driven, some are configuration-driven, some are publishable content, and some are operational records. The documentation must say which category applies before showing code. That keeps production operators and developers aligned on whether a change needs publication, restart, event propagation, approval, or only a project-layer override.\n\n| Detail area            | What to document                                                               | Verification signal                             |\n| ---------------------- | ------------------------------------------------------------------------------ | ----------------------------------------------- |\n| Model or record        | Type code, catalog, tenant, enterprise, state, owner, and lifecycle.           | Schema contract or generated model test.        |\n| Configuration key      | Default value, override location, environment scope, and runtime impact.       | Config validation and runtime refresh evidence. |\n| API or event           | Route/event name, payload boundary, permission, idempotency, and failure mode. | Route, service, event, and authorization tests. |\n| Publication and access | Staged/Online state, access mode, roles, groups, and permissions.              | Content-pack validation and access-policy test. |\n\n```js\nschemaExtension: { typeCode: \"Product\", properties: { fit: { type: \"String\", localized: true } } }\n```\n\n## Customization and extension\n\nDevelopers should customize from the project layer first. A customer project may add properties, services, validators, pipelines, renderers, data packs, or provider configuration when the extension respects the owning capability. Business users may update governed records in Axis when the record is designed for administration. Framework source changes are reserved for improving the reusable product capability itself.\n\n| Customization type                          | Recommended path                                                       | Avoid                                                |\n| ------------------------------------------- | ---------------------------------------------------------------------- | ---------------------------------------------------- |\n| Business label, navigation, or content area | Axis-managed content catalog item with publication workflow.           | Hardcoding labels or page trees in the frontend.     |\n| Runtime setting                             | Module configuration with validation and governed runtime propagation. | Editing node-local files on each server by hand.     |\n| Domain behavior                             | Extension service, validator, pipeline step, or provider adapter.      | Forking the standard module for customer-only logic. |\n| Public visibility                           | Access policy with public/authenticated/role-based state.              | Exposing internal or draft pages through Nexus.      |\n\n## Operations and governance\n\nOperators need production-safe evidence, not only implementation notes. Each page must call out logging, tracing, permission checks, event propagation, data import/export, publication status, rollback behavior, and troubleshooting. If a capability affects multiple nodes, the documentation must explain how changes reach every node and how a partial failure is detected.\n\n| Operational concern | Required documentation detail                                                      |\n| ------------------- | ---------------------------------------------------------------------------------- |\n| Security            | Authentication mode, permission code, role/group, tenant and enterprise isolation. |\n| Audit               | Actor, timestamp, source record, checksum, approval, route/event, and result.      |\n| Resilience          | Retry, idempotency, compensation, fallback, cache invalidation, and rollback.      |\n| Observability       | Logs, metrics, dashboard cards, health checks, and support evidence.               |\n\n## Common mistakes\n\n- Treating a friendly navigation label as the technical source owner.\n- Writing only developer details and skipping the business decision that the page supports.\n- Updating Axis or Nexus code when the content catalog, schema, or backend capability should own the change.\n- Forgetting access rules for public, authenticated, role-based, group-based, or permission-based pages.\n- Skipping diagrams, comparison tables, source maps, or troubleshooting matrices because the topic feels obvious.\n- Changing runtime behavior without explaining production impact, cluster propagation, and rollback.\n- Leaving generated documentation without source evidence, validation commands, and maturity state.\n\n## Verification\n\nVerification starts with the document itself: it must include business context, technical ownership, a visual flow, data or configuration tables, customization guidance, common mistakes, and validation evidence. Developers then run the documentation generator and content-pack validator so the page becomes backend-owned data with checksum, lifecycle, navigation, access policy, publication state, and search metadata.\n\nFor implementation verification, run the owning module tests and any Axis or Nexus renderer tests that consume the page. Operators should confirm that production-like runtime behavior matches the documentation: permissions reject unauthorized access, Online pages do not expose Staged data, runtime changes propagate through governed events, and troubleshooting evidence is available without exposing secrets.\n\n### Governed local maintenance\n\nThe governed Local reset is a separate maintenance operation. Its existing\nprovider-issued opaque authority permits bulk removal of configured local\nmodels, including managed-counter schemas, through the generated remove\npipeline. Caller-supplied flags or lookalike authority objects cannot enable\nthis path. Ordinary generated deletes still require a scalar identity and the\noriginal revision; no client or project may disable these checks for editing.\n",
     "keywords": [
       "data-modeling-and-schema-management",
       "schema-and-model-extension",
@@ -11281,7 +12474,7 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record270": {
+  "record295": {
     "code": "nodicsDocsSearchpagenodicsdocsmetadatapersistenceproviderdataaccesslayer",
     "product": "nodicsDocumentationProduct",
     "targetType": "PAGE",
@@ -11329,7 +12522,7 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record271": {
+  "record296": {
     "code": "nodicsDocsSearchpagenodicsdocsmetadatacacheruntimestatemanagement",
     "product": "nodicsDocumentationProduct",
     "targetType": "PAGE",
@@ -11377,7 +12570,7 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record272": {
+  "record297": {
     "code": "nodicsDocsSearchpagenodicsdocsmetadataframeworkcustomizationguide",
     "product": "nodicsDocumentationProduct",
     "targetType": "PAGE",
@@ -11425,7 +12618,7 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record273": {
+  "record298": {
     "code": "nodicsDocsSearchpagenodicsdocsmetadataframeworkbackendextensionpatterns",
     "product": "nodicsDocumentationProduct",
     "targetType": "PAGE",
@@ -11474,7 +12667,7 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record274": {
+  "record299": {
     "code": "nodicsDocsSearchpagenodicsdocsmetadataframeworkaxiscontentcustomization",
     "product": "nodicsDocumentationProduct",
     "targetType": "PAGE",
@@ -11522,7 +12715,7 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record275": {
+  "record300": {
     "code": "nodicsDocsSearchpagenodicsdocsmetadataprocessdevelopercustomization",
     "product": "nodicsDocumentationProduct",
     "targetType": "PAGE",
@@ -11570,7 +12763,7 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record276": {
+  "record301": {
     "code": "nodicsDocsSearchpagenodicsdocsmetadataprocesscustomprojectextension",
     "product": "nodicsDocumentationProduct",
     "targetType": "PAGE",
@@ -11618,7 +12811,7 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record277": {
+  "record302": {
     "code": "nodicsDocsSearchpagenodicsdocsmetadatacommercebasefoundations",
     "product": "nodicsDocumentationProduct",
     "targetType": "PAGE",
@@ -11666,7 +12859,7 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record278": {
+  "record303": {
     "code": "nodicsDocsSearchpagenodicsdocsmetadatawcmsoverview",
     "product": "nodicsDocumentationProduct",
     "targetType": "PAGE",
@@ -11714,7 +12907,7 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record279": {
+  "record304": {
     "code": "nodicsDocsSearchpagenodicsdocsmetadatawcmscontentcatalogmodel",
     "product": "nodicsDocumentationProduct",
     "targetType": "PAGE",
@@ -11762,7 +12955,7 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record280": {
+  "record305": {
     "code": "nodicsDocsSearchpagenodicsdocsmetadatawcmspagedesignercomponents",
     "product": "nodicsDocumentationProduct",
     "targetType": "PAGE",
@@ -11810,7 +13003,7 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record281": {
+  "record306": {
     "code": "nodicsDocsSearchpagenodicsdocsmetadatawcmssitepublicationvisibility",
     "product": "nodicsDocumentationProduct",
     "targetType": "PAGE",
@@ -11859,7 +13052,7 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record282": {
+  "record307": {
     "code": "nodicsDocsSearchpagenodicsdocsmetadatacatalogproductdiscoverymanagement",
     "product": "nodicsDocumentationProduct",
     "targetType": "PAGE",
@@ -11907,7 +13100,7 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record283": {
+  "record308": {
     "code": "nodicsDocsSearchpagenodicsdocsmetadatadiscoverysearchindexing",
     "product": "nodicsDocumentationProduct",
     "targetType": "PAGE",
@@ -11955,7 +13148,7 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record284": {
+  "record309": {
     "code": "nodicsDocsSearchpagenodicsdocsmetadatawcmsmediamanagement",
     "product": "nodicsDocumentationProduct",
     "targetType": "PAGE",
@@ -12003,7 +13196,7 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record285": {
+  "record310": {
     "code": "nodicsDocsSearchpagenodicsdocsmetadatawcmsmediastoragedelivery",
     "product": "nodicsDocumentationProduct",
     "targetType": "PAGE",
@@ -12051,7 +13244,7 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record286": {
+  "record311": {
     "code": "nodicsDocsSearchpagenodicsdocsmetadatawcmsmediaimportpublication",
     "product": "nodicsDocumentationProduct",
     "targetType": "PAGE",
@@ -12099,7 +13292,7 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record287": {
+  "record312": {
     "code": "nodicsDocsSearchpagenodicsdocsmetadatainventorystockmanagement",
     "product": "nodicsDocumentationProduct",
     "targetType": "PAGE",
@@ -12147,7 +13340,7 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record288": {
+  "record313": {
     "code": "nodicsDocsSearchpagenodicsdocsmetadatapricingpromotionstaxmanagement",
     "product": "nodicsDocumentationProduct",
     "targetType": "PAGE",
@@ -12195,7 +13388,7 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record289": {
+  "record314": {
     "code": "nodicsDocsSearchpagenodicsdocsmetadatacommerceoverview",
     "product": "nodicsDocumentationProduct",
     "targetType": "PAGE",
@@ -12243,7 +13436,7 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record290": {
+  "record315": {
     "code": "nodicsDocsSearchpagenodicsdocsmetadatacommercecartorder",
     "product": "nodicsDocumentationProduct",
     "targetType": "PAGE",
@@ -12291,7 +13484,7 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record291": {
+  "record316": {
     "code": "nodicsDocsSearchpagenodicsdocsmetadatacommercepaymentfulfillment",
     "product": "nodicsDocumentationProduct",
     "targetType": "PAGE",
@@ -12339,7 +13532,7 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record292": {
+  "record317": {
     "code": "nodicsDocsSearchpagenodicsdocsmetadatafulfillmentshippingmanagement",
     "product": "nodicsDocumentationProduct",
     "targetType": "PAGE",
@@ -12387,7 +13580,7 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record293": {
+  "record318": {
     "code": "nodicsDocsSearchpagenodicsdocsmetadataordermanagementlifecycle",
     "product": "nodicsDocumentationProduct",
     "targetType": "PAGE",
@@ -12435,14 +13628,14 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record294": {
+  "record319": {
     "code": "nodicsDocsSearchpagenodicsdocsmetadatacommercereturnsrefunds",
     "product": "nodicsDocumentationProduct",
     "targetType": "PAGE",
     "targetCode": "nodicsDocsMetadatacommerceReturnsRefunds",
     "title": "Cancellation, return, and refund lifecycle",
     "summary": "Structured self-service and operator journey for policy, maker-checker approval, owner intents, checkpoints, recovery, and final Order evidence.",
-    "searchText": "Cancellation, return, and refund lifecycle Structured self-service and operator journey for policy, maker-checker approval, owner intents, checkpoints, recovery, and final Order evidence. # Cancellation, return, and refund lifecycle\n\n## Why one lifecycle is needed\n\nCancellation, return, and refund are related but different business intents. Cancellation tries to stop unfulfilled work. Return moves delivered goods back through Fulfillment and Inventory. Refund moves money through Payment. Order owns the customer intent, eligibility snapshot, approval trail, checkpoints, and final history projection.\n\n| Intent | Typical prerequisite | Domain actions |\n| --- | --- | --- |\n| Cancellation | cancellable unfulfilled quantity | Fulfillment stop, Inventory release, Payment void or refund |\n| Return | delivered eligible quantity | RMA, receipt, inspection, Inventory disposition, Payment refund |\n| Refund | captured refundable amount | maker-checker approval, Payment refund, reconciliation |\n\nCatalog and Product screens do not initiate these actions because a product alone has no customer, quantity, shipment, payment, or settlement evidence.\n\n## Customer self-service journey\n\nFor beginners, requesting a reversal is not the same as completing it.\n\nThe customer opens an owned Order, selects eligible entries and quantities, chooses a reason, and requests a preview. The backend evaluates policy and returns exact refundable amounts, non-refundable charges, tax and discount allocation, expected logistics, approval requirements, and expiry. Submitting creates an immutable request version with an idempotency key.\n\nThe customer can read only their own requests. A retry returns the original result. The UI shows pending, awaiting approval, logistics, inspection, refund, reconciliation, completed, rejected, or failed states from backend evidence. It never promises money before Payment confirms the outcome.\n\n## Administrator and operator journey\n\nAn operator sees queues grouped by Order lifecycle, not Catalog keywords. Approval is governed by tenant scope, workflow state, and explicit permissions, with requester identity retained as audit evidence. The approver sees policy version, quantities, exact allocation, source Order revision, fulfillment state, payment state, customer reason, and risk evidence.\n\nAfter approval, the workflow calls Fulfillment, Inventory, and Payment through owner intents. Each step records a checkpoint. Failures remain retryable and reconcilable. Emergency stop may pause new execution but cannot erase already completed provider or warehouse evidence.\n\nAxis keeps Cancellation, Return, and Refund as distinct workspaces and provides links only within the backend-published hierarchy. Payment reconciliation remains in Payment Operations. Return receipt and inspection remain in Fulfillment Operations. Catalog displays the explicit message that no catalog-only refund action exists.\n\n## Developer guidance\n\nDevelopers change eligibility through versioned policy pipelines. Exact reversal allocation must reference original price, discount, tax, payment, shipment, and prior reversal evidence. Never recalculate a historic order using today’s price or tax policy.\n\nWorkflow definitions are configured for cancellation, return, and refund with maker-checker steps. Order coordinates but delegates physical and monetary actions. Every service accepts tenant and correlation evidence. Customer extensions may add policy steps or approval thresholds through later layers while retaining owner contracts and history.\n\nCompatibility aliases support migration for two minor releases or 180 days, whichever approved window applies. Aliases map old names to new contracts; they do not keep duplicate authorities alive.\n\n## Operator and DevOps guidance\n\nMonitor pending approvals, checkpoint age, retry counts, unknown payment outcomes, return-in-transit age, inspection backlog, disposition drift, and Order projection lag. Recovery resumes from the last durable checkpoint and reuses idempotency keys.\n\nBackup/restore acceptance must prove requests, versions, approvals, checkpoints, owner evidence, and Order history remain consistent. Disaster recovery must not reissue refunds. Reconciliation compares restored state with Payment and Fulfillment providers before progressing unknown work.\n\n## Security and privacy\n\nCustomer access requires ownership checks. Operator and approver permissions are separate. Service calls use service audiences. Reasons and evidence may contain protected data, so Axis receives only necessary projections and exports are bounded, audited, and retention-controlled.\n\n## Common mistakes\n\n- Starting refunds from Product or Catalog.\n- Treating requester identity as the approval gate instead of checking tenant scope, workflow state, and explicit permissions.\n- Repricing historic orders with current policy.\n- Issuing a second refund after timeout.\n- Updating the original Order instead of appending history.\n- Restocking before receipt and inspection evidence.\n- Treating UI visibility as backend authorization.\n\n## Verification\n\nTest customer ownership, tenant isolation, eligibility rejection, exact partial allocation, duplicate request, approval permission enforcement, cancellation before and after shipment, partial return, failed pickup, inspection disposition, void versus refund, provider timeout, checkpoint restart, reconciliation, and final Order history. Axis tests verify domain hierarchy, no Catalog refund action, accessibility, responsive rendering, and backend denial behavior. Production release requires approved policy, provider, legal, finance, operations, recovery, and residual-risk evidence.\n\n## Return Receipt And Reversal Calculation Coverage\n\nCancellation, return, and refund documentation must show how the reverse\njourney is assembled from order lifecycle, fulfillment return, receipt,\ninspection, payment refund, and reversal calculation evidence. The key\nbusiness rule is that no domain acts alone: order owns lifecycle eligibility,\nfulfillment owns physical return evidence, payment owns money movement, and\nhistory explains the final customer-visible state.\n\n```mermaid\nflowchart LR\n  Request[\"Lifecycle request\"] --> Eligibility[\"Order eligibility\"]\n  Eligibility --> Reversal[\"Order reversal calculation\"]\n  Reversal --> Return[\"Fulfillment return\"]\n  Return --> Receipt[\"Return receipt\"]\n  Receipt --> Inspection[\"Return inspection\"]\n  Inspection --> Refund[\"Payment refund\"]\n  Refund --> History[\"Order history\"]\n```\n\n| Reverse-flow record | Purpose | Documentation requirement |\n| --- | --- | --- |\n| OrderReversalCalculation | Calculates eligible cancellation, return, or refund amount. | Explain exact amount, historic pricing, tax, discounts, shipping, and partial quantity. |\n| FulfillmentReturn | Owns operational return process. | Explain pickup/drop-off, carrier, warehouse, and failed return behavior. |\n| ReturnReceipt | Proves returned goods were received. | Explain receipt time, location, quantity, and condition evidence. |\n| ReturnInspection | Decides restock, reject, repair, or dispose. | Explain policy, actor, reason, and inventory impact. |\n| Payment refund entry | Moves money only after approved evidence. | Explain idempotency, provider outcome, reconciliation, and duplicate prevention. |\n\nAxis should present this as a single guided business journey with links to the\nowning records. Developers should extend eligibility policy, inspection\npolicy, or provider execution through owning services and tests.\n",
+    "searchText": "Cancellation, return, and refund lifecycle Structured self-service and operator journey for policy, maker-checker approval, owner intents, checkpoints, recovery, and final Order evidence. # Cancellation, return, and refund lifecycle\n\n## Staged Purchased Coupon Increment\n\nCoupon purchases reuse Commerce rather than a customer-specific refund engine.\nThe staged source strengthens owner CAS/readback, preserves original sale time on\nreplay and hands partial digital acquisitions to Checkout compensation. An uncertain\nunit remains recovery-required; known releases do not prove all effects were undone.\n\nPromotion's purchasedRights defaults disabled/unqualified. Qualified campaign policy\ncan retain a purchase-relative duration, disclosed terms, benefit/outlet conditions\nand optional refund window/request types. The clock starts at the original successful\nsale, not offer launch or delayed delivery. Legacy codes keep their existing policy;\nhistorical issued rights must not be silently rewritten. A stored JSON snapshot is\nnot proof of immutable storage or complete generic-CRUD provenance protection.\n\nDigital Core checks retained refund eligibility before locking an unused entitlement.\nMissing terms require manual review, rather than a universal digital-product refund\nrule. Order/Payment remain the approval, capture reversal and recovery owners.\nCurrent automatic full-order refund capture supports qualified original loyalty\npoints evidence; this is not general cash-provider or split-tender acceptance.\nCirca displays backend-provided expiration and retained text terms; browser dates\ndo not authorize redemption or refunds.\n\nDigital Core now compares a complete bounded purchase-unit multiset at preview,\npreparation and completion: aggregate repeated-product entries, unique entitlement\nand provider identities, exact tenant/enterprise/customer/order/Promotion binding,\nand no missing/extra units. An empty read cannot return completed reversal. The\n100-unit complete-read boundary and installed provider pagination remain explicit\nqualification constraints, not universal large-order support.\n\nPurchase/refund EMAIL/SMS bundles are module-owned optional resources. They contain\nno coupon code, require explicit selection and do not activate lifecycle triggers.\nOnly confirmed owner purchase/refund evidence can authorize a notification intent;\npending or uncertain reversal must not send a completed-refund message. Override\nindividual HTML/text files through existing customer/runtime template layers.\n\nSource availability and authored fixtures are not installed qualification. Seller\nauthorization, receipt minimum-spend/cap/item validation, protected policy provenance,\nall races/partial recovery and real provider/customer acceptance remain gates.\n\n## Why one lifecycle is needed\n\nCancellation, return, and refund are related but different business intents. Cancellation tries to stop unfulfilled work. Return moves delivered goods back through Fulfillment and Inventory. Refund moves money through Payment. Order owns the customer intent, eligibility snapshot, approval trail, checkpoints, and final history projection.\n\n| Intent | Typical prerequisite | Domain actions |\n| --- | --- | --- |\n| Cancellation | cancellable unfulfilled quantity | Fulfillment stop, Inventory release, Payment void or refund |\n| Return | delivered eligible quantity | RMA, receipt, inspection, Inventory disposition, Payment refund |\n| Refund | captured refundable amount | maker-checker approval, Payment refund, reconciliation |\n\nCatalog and Product screens do not initiate these actions because a product alone has no customer, quantity, shipment, payment, or settlement evidence.\n\n## Customer self-service journey\n\nFor beginners, requesting a reversal is not the same as completing it.\n\nThe customer opens an owned Order, selects eligible entries and quantities, chooses a reason, and requests a preview. The backend evaluates policy and returns exact refundable amounts, non-refundable charges, tax and discount allocation, expected logistics, approval requirements, and expiry. Submitting creates an immutable request version with an idempotency key.\n\nThe customer can read only their own requests. A retry returns the original result. The UI shows pending, awaiting approval, logistics, inspection, refund, reconciliation, completed, rejected, or failed states from backend evidence. It never promises money before Payment confirms the outcome.\n\n## Administrator and operator journey\n\nAn operator sees queues grouped by Order lifecycle, not Catalog keywords. Approval is governed by tenant scope, workflow state, and explicit permissions, with requester identity retained as audit evidence. The approver sees policy version, quantities, exact allocation, source Order revision, fulfillment state, payment state, customer reason, and risk evidence.\n\nAfter approval, the workflow calls Fulfillment, Inventory, and Payment through owner intents. Each step records a checkpoint. Failures remain retryable and reconcilable. Emergency stop may pause new execution but cannot erase already completed provider or warehouse evidence.\n\nAxis keeps Cancellation, Return, and Refund as distinct workspaces and provides links only within the backend-published hierarchy. Payment reconciliation remains in Payment Operations. Return receipt and inspection remain in Fulfillment Operations. Catalog displays the explicit message that no catalog-only refund action exists.\n\n## Developer guidance\n\nDevelopers change eligibility through versioned policy pipelines. Exact reversal allocation must reference original price, discount, tax, payment, shipment, and prior reversal evidence. Never recalculate a historic order using today’s price or tax policy.\n\nWorkflow definitions are configured for cancellation, return, and refund with maker-checker steps. Order coordinates but delegates physical and monetary actions. Every service accepts tenant and correlation evidence. Customer extensions may add policy steps or approval thresholds through later layers while retaining owner contracts and history.\n\nCompatibility aliases support migration for two minor releases or 180 days, whichever approved window applies. Aliases map old names to new contracts; they do not keep duplicate authorities alive.\n\n## Operator and DevOps guidance\n\nMonitor pending approvals, checkpoint age, retry counts, unknown payment outcomes, return-in-transit age, inspection backlog, disposition drift, and Order projection lag. Recovery resumes from the last durable checkpoint and reuses idempotency keys.\n\nBackup/restore acceptance must prove requests, versions, approvals, checkpoints, owner evidence, and Order history remain consistent. Disaster recovery must not reissue refunds. Reconciliation compares restored state with Payment and Fulfillment providers before progressing unknown work.\n\n## Security and privacy\n\nCustomer access requires ownership checks. Operator and approver permissions are separate. Service calls use service audiences. Reasons and evidence may contain protected data, so Axis receives only necessary projections and exports are bounded, audited, and retention-controlled.\n\n## Common mistakes\n\n- Starting refunds from Product or Catalog.\n- Treating requester identity as the approval gate instead of checking tenant scope, workflow state, and explicit permissions.\n- Repricing historic orders with current policy.\n- Issuing a second refund after timeout.\n- Updating the original Order instead of appending history.\n- Restocking before receipt and inspection evidence.\n- Treating UI visibility as backend authorization.\n\n## Verification\n\nTest customer ownership, tenant isolation, eligibility rejection, exact partial allocation, duplicate request, approval permission enforcement, cancellation before and after shipment, partial return, failed pickup, inspection disposition, void versus refund, provider timeout, checkpoint restart, reconciliation, and final Order history. Axis tests verify domain hierarchy, no Catalog refund action, accessibility, responsive rendering, and backend denial behavior. Production release requires approved policy, provider, legal, finance, operations, recovery, and residual-risk evidence.\n\n## Return Receipt And Reversal Calculation Coverage\n\nCancellation, return, and refund documentation must show how the reverse\njourney is assembled from order lifecycle, fulfillment return, receipt,\ninspection, payment refund, and reversal calculation evidence. The key\nbusiness rule is that no domain acts alone: order owns lifecycle eligibility,\nfulfillment owns physical return evidence, payment owns money movement, and\nhistory explains the final customer-visible state.\n\n```mermaid\nflowchart LR\n  Request[\"Lifecycle request\"] --> Eligibility[\"Order eligibility\"]\n  Eligibility --> Reversal[\"Order reversal calculation\"]\n  Reversal --> Return[\"Fulfillment return\"]\n  Return --> Receipt[\"Return receipt\"]\n  Receipt --> Inspection[\"Return inspection\"]\n  Inspection --> Refund[\"Payment refund\"]\n  Refund --> History[\"Order history\"]\n```\n\n| Reverse-flow record | Purpose | Documentation requirement |\n| --- | --- | --- |\n| OrderReversalCalculation | Calculates eligible cancellation, return, or refund amount. | Explain exact amount, historic pricing, tax, discounts, shipping, and partial quantity. |\n| FulfillmentReturn | Owns operational return process. | Explain pickup/drop-off, carrier, warehouse, and failed return behavior. |\n| ReturnReceipt | Proves returned goods were received. | Explain receipt time, location, quantity, and condition evidence. |\n| ReturnInspection | Decides restock, reject, repair, or dispose. | Explain policy, actor, reason, and inventory impact. |\n| Payment refund entry | Moves money only after approved evidence. | Explain idempotency, provider outcome, reconciliation, and duplicate prevention. |\n\nAxis should present this as a single guided business journey with links to the\nowning records. Developers should extend eligibility policy, inspection\npolicy, or provider execution through owning services and tests.\n",
     "keywords": [
       "cancellations-returns-and-refunds",
       "reverse-order-lifecycle",
@@ -12483,7 +13676,7 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record295": {
+  "record320": {
     "code": "nodicsDocsSearchpagenodicsdocsmetadataengagementcustomerreviews",
     "product": "nodicsDocumentationProduct",
     "targetType": "PAGE",
@@ -12531,7 +13724,7 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record296": {
+  "record321": {
     "code": "nodicsDocsSearchpagenodicsdocsmetadataengagementreviewmoderationgovernance",
     "product": "nodicsDocumentationProduct",
     "targetType": "PAGE",
@@ -12579,7 +13772,7 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record297": {
+  "record322": {
     "code": "nodicsDocsSearchpagenodicsdocsmetadataengagementreviewaggregationrecovery",
     "product": "nodicsDocumentationProduct",
     "targetType": "PAGE",
@@ -12627,7 +13820,7 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record298": {
+  "record323": {
     "code": "nodicsDocsSearchpagenodicsdocsmetadataengagementcustomerfeedback",
     "product": "nodicsDocumentationProduct",
     "targetType": "PAGE",
@@ -12675,7 +13868,7 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record299": {
+  "record324": {
     "code": "nodicsDocsSearchpagenodicsdocsmetadataengagementunifiedoperations",
     "product": "nodicsDocumentationProduct",
     "targetType": "PAGE",
@@ -12723,7 +13916,7 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record300": {
+  "record325": {
     "code": "nodicsDocsSearchpagenodicsdocsmetadataengagementgovernedautomation",
     "product": "nodicsDocumentationProduct",
     "targetType": "PAGE",
@@ -12771,7 +13964,7 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record301": {
+  "record326": {
     "code": "nodicsDocsSearchpagenodicsdocsmetadataengagemententerpriseoperations",
     "product": "nodicsDocumentationProduct",
     "targetType": "PAGE",
@@ -12819,14 +14012,14 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record302": {
+  "record327": {
     "code": "nodicsDocsSearchpagenodicsdocsmetadatacommunicationoverview",
     "product": "nodicsDocumentationProduct",
     "targetType": "PAGE",
     "targetCode": "nodicsDocsMetadatacommunicationOverview",
     "title": "Communication, delivery, and verification",
     "summary": "Beginner-to-operator journey for templates, intent, consent, suppression, verification, provider delivery, callbacks, retry, inbox, recovery, and domain integration.",
-    "searchText": "Communication, delivery, and verification Beginner-to-operator journey for templates, intent, consent, suppression, verification, provider delivery, callbacks, retry, inbox, recovery, and domain integration. # Communication, delivery, and verification\n\nNodics Communication turns a business-owned request to inform or verify someone into a governed message and delivery outcome. This beginner-friendly guide explains templates, recipients, consent and suppression, provider delivery, retry, callbacks, inbox records, and the boundary between Communication and consuming modules such as Engagement, Order, Process, Profile/KYC, and Security.\n\nCommunication owns how a message is prepared and delivered. The consuming domain owns why it was requested and what business state changes afterward. For example, Contact Submission owns an enquiry and may request an acknowledgement. Communication renders and sends that acknowledgement, but a provider failure never deletes or rolls back the enquiry.\n\n## Module structure\n\n| Module | Responsibility |\n| --- | --- |\n| `commsSchema` | Source declarations for templates, intents, delivery attempts, suppression, inbox, and verification evidence. |\n| `commsCore` | Rendering, idempotency, policy, delivery orchestration, retry, fallback, and content-free events. |\n| `commsVerification` | Expiring, hashed, attempt-limited communication challenges without owning identity. |\n| `localCommsProvider` | Deterministic development delivery with no external network transmission. |\n| `commsApi` | Secured customer inbox, operator recovery, and service-authenticated callback routes. |\n\n## End-to-end delivery journey\n\n```mermaid\nflowchart LR\n  Domain[\"Business module creates intent\"] --> Policy[\"Recipient, purpose, consent and suppression\"]\n  Policy -->|Suppressed| Evidence[\"Suppression evidence\"]\n  Policy -->|Allowed| Template[\"Validated template version\"]\n  Template --> Render[\"Transient declared-variable rendering\"]\n  Render --> Provider[\"Certified channel provider\"]\n  Provider -->|Delivered| Outcome[\"Content-free delivery evidence\"]\n  Provider -->|Failed| Retry[\"Bounded retry or fallback\"]\n  Retry --> Provider\n  Retry -->|Exhausted| Dead[\"Dead letter and reconciliation\"]\n  Outcome --> Domain\n```\n\n## Template and rendering journey\n\nAn administrator defines a template code, purpose, supported channels, and declared variables. Each locale/channel body is an immutable validated version with a checksum. Activation moves the template pointer; it does not rewrite earlier delivery evidence.\n\nThe renderer accepts only declared variables, rejects executable constructs, and enforces count and rendered-size limits. Rendering is transient. Intent and event records store a variables hash and template version, not a convenient copy of every customer field. Provider secrets never appear in templates or Axis.\n\nDevelopers add a template by declaring the smallest variable set, providing safe locale/channel versions, testing missing and unknown variables, validating output size and escaping, and supplying a migration path before retiring an active version.\n\n## Consent, purpose, and suppression\n\nEvery intent states a purpose such as transactional, service, consent, verification, or marketing. Marketing consent must never be inferred from permission to send a transaction or security challenge. A suppression is recipient-, purpose-, and channel-scoped with reason, source, and validity period.\n\nPolicy runs before rendering and provider delivery. A suppressed request produces evidence and returns safely to the caller. It is not retried through another provider to evade customer preference. Emergency or legally required messages need an explicit policy rather than a hidden bypass.\n\n## Idempotency and delivery evidence\n\nThe consuming domain supplies an idempotency key and correlation ID. Repeating the same logical request returns the existing intent instead of sending a duplicate. Delivery attempts record provider, channel, attempt, bounded status, safe provider reference, response code, retry time, and timestamps. Events contain codes and statuses, not message bodies, addresses, or provider payloads.\n\nRetry uses exponential delay and a maximum attempt count. Ambiguous timeouts require provider reconciliation before replay. Fallback between providers or channels must be allowed by purpose, consent, residency, and customer preference; it is not an automatic escape hatch.\n\n## Verification journey\n\nVerification creates a random transient secret and stores only salted hash evidence plus a destination hash. The challenge has purpose, subject reference, channel, expiry, attempt limit, status, and correlation. Successful comparison marks it verified once. Expiry or lockout prevents further use.\n\nCommunication proves possession of a channel; it does not decide that a user is authenticated, KYC-approved, authorized, or safe. Profile, KYC, Security, or the requesting domain consumes the verified outcome and applies its own current policy.\n\n## Axis and customer journey\n\nCustomers use the secured Communication inbox route to list only their own in-app messages. They can never select another recipient identifier in the URL or query. Axis operators inspect delivery evidence and retry only failed, retry-pending, or dead-letter attempts with explicit permission. Raw content and addresses stay masked.\n\nProvider callbacks use service authentication and bounded provider evidence. Production adapters additionally verify signature, timestamp/replay window, provider/account identity, and idempotency before reconciling an attempt. A callback does not trust domain identifiers supplied by an external payload.\n\n## Engagement integration\n\n`engagementComms` is a later-loaded bridge. It maps CONTACT, FEEDBACK, REVIEW, and TESTIMONIAL scenarios to Communication templates, declared variables, purpose, recipient/address reference, and a stable idempotency key. The dependency is one-way: Communication never imports Engagement or changes its status.\n\nWhen Communication is unavailable, the bridge returns deferred evidence with `domainStateChanged: false`. Contact intake and other safe domain operations remain durable. A scheduled worker can retry or reconcile later.\n\n## Provider activation and operations\n\nThe local provider is enabled for development and returns deterministic content-free evidence. SMTP and Twilio-style external providers remain disabled until a deployment supplies secured credentials, verified sender identity, region/residency approval, consent mapping, callbacks, retry/fallback, observability, rate and cost limits, incident response, and rollback.\n\nOperators monitor accepted/suppressed intent volume, render failures, provider latency/error, delivered rate, retry age, dead letters, callback rejection/replay, inbox expiry, verification success/lockout, and consent/suppression decisions. Logs use intent, attempt, template, and correlation codes without content.\n\n## Common mistakes\n\n- Letting Engagement, Order, or Process own email templates or provider retry.\n- Letting Communication change order, case, identity, or security status.\n- Storing rendered bodies or recipient addresses in events and logs.\n- Treating transactional permission as marketing consent.\n- Sending again after retry without checking the idempotency key or ambiguous provider outcome.\n- Storing a verification secret in plaintext or allowing unlimited guesses.\n- Enabling an external provider because local delivery passed.\n- Trusting callback fields without service authentication, signature, replay, tenant, and provider-reference validation.\n\n## Verification\n\nProve template version/checksum, declared-variable rendering, executable and unknown-variable rejection, output limits, purpose/channel denial, suppression, consent separation, idempotent replay, content-free events, local delivery, provider failure, exponential retry, dead letter, safe fallback, callback authentication and replay policy, tenant isolation, customer inbox ownership, challenge hashing/expiry/lockout/single use, one-way domain integration, and domain durability during outage. Run Communication package tests, generated schema contracts, Communication route/security contracts, Engagement bridge tests, documentation generation/validation, and the effective Engagement server build to confirm Communication loads first.\n\n## Customization and extension\n\nProjects may add providers, templates, channel policies, callback adapters,\nverification purposes, and inbox views through Communication-owned extension\npoints. The extension must preserve consent, suppression, content masking,\nidempotency, replay protection, tenant isolation, and the rule that\nCommunication delivers messages but does not decide domain state.\n",
+    "searchText": "Communication, delivery, and verification Beginner-to-operator journey for templates, intent, consent, suppression, verification, provider delivery, callbacks, retry, inbox, recovery, and domain integration. # Communication, delivery, and verification\n\nNodics Communication turns a business-owned request to inform or verify someone into a governed message and delivery outcome. This beginner-friendly guide explains templates, recipients, consent and suppression, provider delivery, retry, callbacks, inbox records, and the boundary between Communication and consuming modules such as Engagement, Order, Process, Profile/KYC, and Security.\n\nCommunication owns how a message is prepared and delivered. The consuming domain owns why it was requested and what business state changes afterward. For example, Contact Submission owns an enquiry and may request an acknowledgement. Communication renders and sends that acknowledgement, but a provider failure never deletes or rolls back the enquiry.\n\n## Module structure\n\n| Module | Responsibility |\n| --- | --- |\n| `commsSchema` | Source declarations for templates, intents, delivery attempts, suppression, inbox, and verification evidence. |\n| `commsCore` | Rendering, idempotency, policy, delivery orchestration, retry, fallback, and content-free events. |\n| `commsVerification` | Expiring, hashed, attempt-limited communication challenges without owning identity. |\n| `localCommsProvider` | Deterministic development delivery with no external network transmission. |\n| `commsApi` | Secured customer inbox, operator recovery, and service-authenticated callback routes. |\n\n## End-to-end delivery journey\n\n```mermaid\nflowchart LR\n  Domain[\"Business module creates intent\"] --> Policy[\"Recipient, purpose, consent and suppression\"]\n  Policy -->|Suppressed| Evidence[\"Suppression evidence\"]\n  Policy -->|Allowed| Template[\"Validated template version\"]\n  Template --> Render[\"Typed rendering and frozen private intent\"]\n  Render --> Provider[\"Explicitly selected guarded provider\"]\n  Provider -->|Delivered| Outcome[\"Content-free delivery evidence\"]\n  Provider -->|Known retryable failure| Retry[\"Authorized bounded retry\"]\n  Provider -->|Ambiguous| Uncertain[\"Uncertain: reconcile before resend\"]\n  Retry --> Provider\n  Retry -->|Exhausted| Dead[\"Dead letter and reconciliation\"]\n  Outcome --> Domain\n```\n\n## Template and rendering journey\n\nDomain modules supply neutral presentation under `src/templates/email/<name>`\nor `src/templates/sms/<name>`. An inert manifest declares code, owner, purpose,\nchannel, source allowlist and typed parameters. Email has locale subject, HTML and\nplain-text files; SMS has a locale message.txt. Customer/runtime layers override\nindividual files. Configuration and published adoption records select resources;\nnew EMAIL/SMS presentation does not belong in configuration or database body blobs.\n\nThe shared renderer accepts declared typed values, escapes HTML and enforces bounds.\nNew intents privately store frozen rendered content and effective template identity\nfor deterministic retry, as well as a variables hash/version. Public results,\nevents and logs omit content. Providers consume frozen representations and do not\nload templates. Provider credentials never belong in presentation. The private\nmessage content needs storage access and retention controls.\n\nDevelopers add a template by declaring the smallest variable set, providing safe locale/channel versions, testing missing and unknown variables, validating output size and escaping, and supplying a migration path before retiring an active version.\n\nUse [Email and SMS Templates](email-sms-templates.md) for the complete inventory,\nselection precedence, customer/server overrides, localization and worked examples.\n\n## Consent, purpose, and suppression\n\nEvery intent states a purpose such as transactional, service, consent, verification, or marketing. Marketing consent must never be inferred from permission to send a transaction or security challenge. A suppression is recipient-, purpose-, and channel-scoped with reason, source, and validity period.\n\nTrusted-source and template policy run before new rendering; durable suppression\nand expiry checks prevent sending. A suppressed request produces evidence. It must\nnot switch providers to evade customer preference. The diagram above summarizes\npolicy responsibility rather than promising that every suppression read precedes\nrendering. Emergency exceptions require an explicit owner-defined policy.\n\n## Idempotency and delivery evidence\n\nThe consuming domain supplies an idempotency key and correlation ID. Repeating the same logical request returns the existing intent instead of sending a duplicate. Delivery attempts record provider, channel, attempt, bounded status, safe provider reference, response code, retry time, and timestamps. Events contain codes and statuses, not message bodies, addresses, or provider payloads.\n\nRetry uses exponential delay and a maximum attempt count. Ambiguous timeouts require provider reconciliation before replay. Fallback between providers or channels must be allowed by purpose, consent, residency, and customer preference; it is not an automatic escape hatch.\n\n## Verification journey\n\nVerification creates a random transient secret and stores only salted hash evidence plus a destination hash. The challenge has purpose, subject reference, channel, expiry, attempt limit, status, and correlation. Successful comparison marks it verified once. Expiry or lockout prevents further use.\n\nCommunication proves possession of a channel; it does not decide that a user is authenticated, KYC-approved, authorized, or safe. Profile, KYC, Security, or the requesting domain consumes the verified outcome and applies its own current policy.\n\n## Axis and customer journey\n\nCustomers use the secured Communication inbox route to list only their own in-app messages. They can never select another recipient identifier in the URL or query. Axis operators inspect delivery evidence and retry only failed, retry-pending, or dead-letter attempts with explicit permission. Raw content and addresses stay masked.\n\nProvider callbacks use service authentication and bounded provider evidence. Production adapters additionally verify signature, timestamp/replay window, provider/account identity, and idempotency before reconciling an attempt. A callback does not trust domain identifiers supplied by an external payload.\n\n## Engagement integration\n\n`engagementComms` is a later-loaded bridge. It maps CONTACT, FEEDBACK, REVIEW, and TESTIMONIAL scenarios to Communication templates, declared variables, purpose, recipient/address reference, and a stable idempotency key. The dependency is one-way: Communication never imports Engagement or changes its status.\n\nWhen Communication is unavailable, the bridge returns deferred evidence with `domainStateChanged: false`. Contact intake and other safe domain operations remain durable. A scheduled worker can retry or reconcile later.\n\n## Provider activation and operations\n\nThe local provider returns deterministic development evidence. SMTP supports a\ndisabled-by-default guarded test mode with approved recipients and TLS. SMS is an\ninjected sandbox adapter, not a supplied live carrier client. Neither is qualified\nfor unrestricted production simply by configuring credentials. See\n[provider runbooks](provider-runbooks.md) for exact settings, outcome semantics\nand the remaining delivery/operational qualification gates.\n\nOperators monitor accepted/suppressed intent volume, render failures, provider latency/error, delivered rate, retry age, dead letters, callback rejection/replay, inbox expiry, verification success/lockout, and consent/suppression decisions. Logs use intent, attempt, template, and correlation codes without content.\n\n## Common mistakes\n\n- Putting domain presentation in generic configuration, or domain-owned provider retry.\n- Letting Communication change order, case, identity, or security status.\n- Storing rendered bodies or recipient addresses in events and logs.\n- Treating transactional permission as marketing consent.\n- Sending again after retry without checking the idempotency key or ambiguous provider outcome.\n- Logging verification secrets, storing plaintext as authoritative challenge evidence,\n  or allowing unlimited guesses. Private delivery content is a separate protected boundary.\n- Enabling an external provider because local delivery passed.\n- Trusting callback fields without service authentication, signature, replay, tenant, and provider-reference validation.\n\n## Verification\n\nProve template version/checksum, declared-variable rendering, executable and unknown-variable rejection, output limits, purpose/channel denial, suppression, consent separation, idempotent replay, content-free events, local delivery, provider failure, exponential retry, dead letter, safe fallback, callback authentication and replay policy, tenant isolation, customer inbox ownership, challenge hashing/expiry/lockout/single use, one-way domain integration, and domain durability during outage. Run Communication package tests, generated schema contracts, Communication route/security contracts, Engagement bridge tests, documentation generation/validation, and the effective Engagement server build to confirm Communication loads first.\n\n## Customize and extend safely\n\nProjects may add providers, templates, channel policies, callback adapters,\nverification purposes, and inbox views through Communication-owned extension\npoints. The extension must preserve consent, suppression, content masking,\nidempotency, replay protection, tenant isolation, and the rule that\nCommunication delivers messages but does not decide domain state.\n\nFor example, replace only\n`<customer-module>/src/templates/email/employee-email-verification/en/subject.txt`\nto brand a subject while inheriting the owner's manifest and bodies. The module\nmust be discovered in the effective sending hierarchy. Wrong source, incompatible\nmanifest and invalid parameters reject; queued intents keep their old content.\nVerify the effective override and rejection/replay behavior using the\n[worked guide](email-sms-templates.md#customize-and-extend-safely).\n",
     "keywords": [
       "communication-and-notifications",
       "communication-delivery-and-verification",
@@ -12867,7 +14060,7 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record303": {
+  "record328": {
     "code": "nodicsDocsSearchpagenodicsdocsmetadataeventsmessagingclustercoordination",
     "product": "nodicsDocumentationProduct",
     "targetType": "PAGE",
@@ -12915,7 +14108,7 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record304": {
+  "record329": {
     "code": "nodicsDocsSearchpagenodicsdocsmetadataprocessoverview",
     "product": "nodicsDocumentationProduct",
     "targetType": "PAGE",
@@ -12963,7 +14156,7 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record305": {
+  "record330": {
     "code": "nodicsDocsSearchpagenodicsdocsmetadataprocessruntimelifecycle",
     "product": "nodicsDocumentationProduct",
     "targetType": "PAGE",
@@ -13011,7 +14204,7 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record306": {
+  "record331": {
     "code": "nodicsDocsSearchpagenodicsdocsmetadataprocessworkfloworchestrationpatterns",
     "product": "nodicsDocumentationProduct",
     "targetType": "PAGE",
@@ -13070,7 +14263,7 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record307": {
+  "record332": {
     "code": "nodicsDocsSearchpagenodicsdocsmetadataprocessfirstworkflow",
     "product": "nodicsDocumentationProduct",
     "targetType": "PAGE",
@@ -13118,14 +14311,14 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record308": {
+  "record333": {
     "code": "nodicsDocsSearchpagenodicsdocsmetadataprocessfirsthumantask",
     "product": "nodicsDocumentationProduct",
     "targetType": "PAGE",
     "targetCode": "nodicsDocsMetadataprocessFirstHumanTask",
     "title": "Build Your First Human Task Flow",
     "summary": "Understand task lifecycle, assignment, Axis presentation, and customer customization for human workflow steps.",
-    "searchText": "Build Your First Human Task Flow Understand task lifecycle, assignment, Axis presentation, and customer customization for human workflow steps. # Build Your First Human Task Flow\n\nHuman tasks are the bridge between automation and people. A task tells an\noperator, reviewer, merchandiser, support agent, or approver what needs human\nattention.\n\n## Example business scenario\n\nA content editor changes a page. The change should not go live until someone\nreviews it. The process creates a task called `Review content`. The reviewer can\nclaim it, assign it, complete it, or cancel it.\n\n```mermaid\nstateDiagram-v2\n  [*] --> OPEN\n  OPEN --> CLAIMED: claim\n  OPEN --> COMPLETED: complete\n  CLAIMED --> COMPLETED: complete\n  OPEN --> CANCELLED: cancel\n  CLAIMED --> CANCELLED: cancel\n```\n\n## Task fields you should understand\n\n| Field | Why it matters |\n| --- | --- |\n| `code` | Stable task identifier for audit and support. |\n| `instanceCode` | Links the task to the running process instance. |\n| `nodeCode` | Shows which workflow step produced the task. |\n| `assignee` | Person, queue, or group expected to work on it. |\n| `status` | Current state such as `OPEN`, `CLAIMED`, or `COMPLETED`. |\n| `dueAt` | Optional SLA date for operations. |\n\n## How Axis should present task work\n\nAxis should show tasks as business work, not as raw database rows. A good task\nscreen answers:\n\n1. What process created this task?\n2. What business object is affected?\n3. Who owns it now?\n4. What action can I take safely?\n5. What happened before this task?\n\nThe detail timeline answers the fifth question by reading Process audit events.\n\n## Developer customization\n\nCustomer modules can customize assignment without editing standard Process\nsource. For example:\n\n- route enterprise onboarding approvals to an enterprise admin queue;\n- route product publishing approvals to merchandising;\n- route logistics exceptions to warehouse operations;\n- route refund approval tasks to finance.\n\nThe customization should live in the customer or domain module, not in Axis.\nAxis renders authorized actions; Process owns task lifecycle.\n\n## End-to-end task example\n\nConsider a high-value refund that requires finance approval. The Order module\nowns refund eligibility and the Payment module owns provider execution. Process\ncreates the approval task with bounded business references, candidate group,\ndue date, and expected outcome choices. It does not copy the full Order or\npayment credentials into task data.\n\nAn authorized finance user opens Axis, claims the task, reviews backend-owned\ncontext, and chooses approve or reject. The claim request includes the current\ntask version so two users cannot both become the assignee. Completion includes\nthe expected task state, chosen outcome, correlation identifier, and a bounded\ncomment. Process records the transition and invokes the next registered domain\nadapter; Axis does not calculate the next node.\n\n| Test path | Expected result | Evidence |\n| --- | --- | --- |\n| Authorized claim | Task becomes assigned once. | Assignee, version, timestamp, and audit event |\n| Competing claim | Stale request is rejected. | Stable conflict code and unchanged assignee |\n| Unauthorized completion | No state or domain side effect changes. | Permission denial and security audit |\n| Valid approval | Process advances to the approved path. | Completion event and next-node correlation |\n| Expired task | Policy-driven escalation or rejection occurs. | Due-date evaluation and escalation evidence |\n| Runtime restart | Open task remains available in the same state. | Durable task and process instance projection |\n\nOperators should monitor open-task age, overdue volume, claim conflicts,\ncompletion latency, failed continuations, and escalation backlog. Alerts must\nidentify the tenant and stable task or process reference without exposing\nsensitive task payloads. A business administrator may change assignment policy\nthrough a governed definition or customer configuration, but cannot bypass\npermissions or rewrite completed history.\n\n## Common mistakes\n\n- Letting the browser assign, complete, or reopen tasks without backend validation and expected-state checks.\n- Omitting tenant, permission, correlation, expiry, escalation, or audit requirements.\n\n## Verification\n\nCreate a task, test authorized claim and completion, reject an unauthorized actor and stale update, then confirm assignment history, process continuation, and operator-visible audit evidence.\nThis is the minimum beginner verification before adding assignment customization.\n",
+    "searchText": "Build Your First Human Task Flow Understand task lifecycle, assignment, Axis presentation, and customer customization for human workflow steps. # Build Your First Human Task Flow\n\nFor governed reviewer tasks, claim now uses the stored actor policy before writing:\nthe reviewer must have current enterprise/permission authority and cannot be the\nrequester. A claim cannot select another reviewer as a shortcut around assignment.\nConcurrent changes reject rather than returning a fabricated claimed task. Inspect\nthe actual stored task after an uncertain response. Completion binds the inspected\nassignee and instance/node. This does not establish atomic cancellation across an\ninstance and its tasks; cross-owner lifecycle acceptance remains separate.\n\nCompletion and cancellation require an acknowledged single task write followed by\nfresh owner readback before audit or advancement. Failed responses or changed\ndecision/actor/timestamp refuse success. Generic task and instance cancellation\ncannot cancel governed actor-policy reviews: the owning domain must first define\nits withdrawal/cancellation contract. This does not yet implement application\nwithdrawal, expiry or resubmission by itself. Profile owns those domain commands.\nProcess adds a separately default-disabled signed-source retirement route for\nexact closed review correlation. It cancels the waiting task with CAS before\nretiring its instance, recovers only matching own closure evidence, and refuses\ncompleted competing decisions or in-flight remote actions. Private persistence\nhooks guard retirement markers. This is staged reconciliation, not a cross-owner\ntransaction; inspect uncertain outcomes using the source owner's recovery command.\n\nHuman tasks are the bridge between automation and people. A task tells an\noperator, reviewer, merchandiser, support agent, or approver what needs human\nattention.\n\n## Example business scenario\n\nA content editor changes a page. The change should not go live until someone\nreviews it. The process creates a task called `Review content`. The reviewer can\nclaim it, assign it, or complete it. Generic cancellation is available only for\nnon-governed tasks; governed reviews require a domain-owned cancellation contract.\n\n```mermaid\nstateDiagram-v2\n  [*] --> OPEN\n  OPEN --> CLAIMED: claim\n  OPEN --> COMPLETED: complete\n  CLAIMED --> COMPLETED: complete\n  OPEN --> CANCELLED: cancel\n  CLAIMED --> CANCELLED: cancel\n```\n\n## Task fields you should understand\n\n| Field          | Why it matters                                           |\n| -------------- | -------------------------------------------------------- |\n| `code`         | Stable task identifier for audit and support.            |\n| `instanceCode` | Links the task to the running process instance.          |\n| `nodeCode`     | Shows which workflow step produced the task.             |\n| `assignee`     | Person, queue, or group expected to work on it.          |\n| `status`       | Current state such as `OPEN`, `CLAIMED`, or `COMPLETED`. |\n| `dueAt`        | Optional SLA date for operations.                        |\n\n## How Axis should present task work\n\nAxis should show tasks as business work, not as raw database rows. A good task\nscreen answers:\n\n1. What process created this task?\n2. What business object is affected?\n3. Who owns it now?\n4. What action can I take safely?\n5. What happened before this task?\n\nThe detail timeline answers the fifth question by reading Process audit events.\n\n## Developer customization\n\nCustomer modules can customize assignment without editing standard Process\nsource. For example:\n\n- route enterprise onboarding approvals to an enterprise admin queue;\n- route product publishing approvals to merchandising;\n- route logistics exceptions to warehouse operations;\n- route refund approval tasks to finance.\n\nThe customization should live in the customer or domain module, not in Axis.\nAxis renders authorized actions; Process owns task lifecycle.\n\n## End-to-end task example\n\nConsider a high-value refund that requires finance approval. The Order module\nowns refund eligibility and the Payment module owns provider execution. Process\ncreates the approval task with bounded business references, candidate group,\ndue date, and expected outcome choices. It does not copy the full Order or\npayment credentials into task data.\n\nAn authorized finance user opens Axis, claims the task, reviews backend-owned\ncontext, and chooses approve or reject. The claim request includes the current\ntask version so two users cannot both become the assignee. Completion includes\nthe expected task state, chosen outcome, correlation identifier, and a bounded\ncomment. Process records the transition and invokes the next registered domain\nadapter; Axis does not calculate the next node.\n\n| Test path               | Expected result                                | Evidence                                      |\n| ----------------------- | ---------------------------------------------- | --------------------------------------------- |\n| Authorized claim        | Task becomes assigned once.                    | Assignee, version, timestamp, and audit event |\n| Competing claim         | Stale request is rejected.                     | Stable conflict code and unchanged assignee   |\n| Unauthorized completion | No state or domain side effect changes.        | Permission denial and security audit          |\n| Valid approval          | Process advances to the approved path.         | Completion event and next-node correlation    |\n| Expired task            | Policy-driven escalation or rejection occurs.  | Due-date evaluation and escalation evidence   |\n| Runtime restart         | Open task remains available in the same state. | Durable task and process instance projection  |\n\nOperators should monitor open-task age, overdue volume, claim conflicts,\ncompletion latency, failed continuations, and escalation backlog. Alerts must\nidentify the tenant and stable task or process reference without exposing\nsensitive task payloads. A business administrator may change assignment policy\nthrough a governed definition or customer configuration, but cannot bypass\npermissions or rewrite completed history.\n\n## Common mistakes\n\n- Letting the browser assign, complete, or reopen tasks without backend validation and expected-state checks.\n- Omitting tenant, permission, correlation, expiry, escalation, or audit requirements.\n\n## Verification\n\nCreate a task, test authorized claim and completion, reject an unauthorized actor and stale update, then confirm assignment history, process continuation, and operator-visible audit evidence.\nThis is the minimum beginner verification before adding assignment customization.\n",
     "keywords": [
       "process-and-workflow-automation",
       "human-task-flow",
@@ -13166,7 +14359,7 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record309": {
+  "record334": {
     "code": "nodicsDocsSearchpagenodicsdocsmetadataprocessbusinessvalue",
     "product": "nodicsDocumentationProduct",
     "targetType": "PAGE",
@@ -13214,7 +14407,7 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record310": {
+  "record335": {
     "code": "nodicsDocsSearchpagenodicsdocsmetadatapipelinebusinesslogicorchestration",
     "product": "nodicsDocumentationProduct",
     "targetType": "PAGE",
@@ -13272,7 +14465,7 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record311": {
+  "record336": {
     "code": "nodicsDocsSearchpagenodicsdocsmetadatacronoperations",
     "product": "nodicsDocumentationProduct",
     "targetType": "PAGE",
@@ -13320,7 +14513,7 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record312": {
+  "record337": {
     "code": "nodicsDocsSearchpagenodicsdocsmetadatacronnoderesponsibilitytee",
     "product": "nodicsDocumentationProduct",
     "targetType": "PAGE",
@@ -13369,7 +14562,7 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record313": {
+  "record338": {
     "code": "nodicsDocsSearchpagenodicsdocsmetadatacronprojectcustomization",
     "product": "nodicsDocumentationProduct",
     "targetType": "PAGE",
@@ -13417,7 +14610,7 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record314": {
+  "record339": {
     "code": "nodicsDocsSearchpagenodicsdocsmetadataprocessprocesscronruntime",
     "product": "nodicsDocumentationProduct",
     "targetType": "PAGE",
@@ -13465,7 +14658,7 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record315": {
+  "record340": {
     "code": "nodicsDocsSearchpagenodicsdocsmetadataprocessscheduledautomation",
     "product": "nodicsDocumentationProduct",
     "targetType": "PAGE",
@@ -13513,7 +14706,7 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record316": {
+  "record341": {
     "code": "nodicsDocsSearchpagenodicsdocsmetadatadataimportexportmigration",
     "product": "nodicsDocumentationProduct",
     "targetType": "PAGE",
@@ -13561,7 +14754,7 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record317": {
+  "record342": {
     "code": "nodicsDocsSearchpagenodicsdocsmetadataprocessactionadapters",
     "product": "nodicsDocumentationProduct",
     "targetType": "PAGE",
@@ -13609,7 +14802,7 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record318": {
+  "record343": {
     "code": "nodicsDocsSearchpagenodicsdocsmetadataframeworkdevopsruntime",
     "product": "nodicsDocumentationProduct",
     "targetType": "PAGE",
@@ -13657,7 +14850,7 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record319": {
+  "record344": {
     "code": "nodicsDocsSearchpagenodicsdocsmetadataframeworkruntimereleaserollback",
     "product": "nodicsDocumentationProduct",
     "targetType": "PAGE",
@@ -13705,7 +14898,7 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record320": {
+  "record345": {
     "code": "nodicsDocsSearchpagenodicsdocsmetadataframeworklocalbrowseracceptancejourney",
     "product": "nodicsDocumentationProduct",
     "targetType": "PAGE",
@@ -13753,7 +14946,7 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record321": {
+  "record346": {
     "code": "nodicsDocsSearchpagenodicsdocsmetadataframeworklocalverificationchecklist",
     "product": "nodicsDocumentationProduct",
     "targetType": "PAGE",
@@ -13801,7 +14994,7 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record322": {
+  "record347": {
     "code": "nodicsDocsSearchpagenodicsdocsmetadatacommerceenterpriseoperations",
     "product": "nodicsDocumentationProduct",
     "targetType": "PAGE",
@@ -13849,7 +15042,7 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record323": {
+  "record348": {
     "code": "nodicsDocsSearchpagenodicsdocsmetadataprocessincidentrecovery",
     "product": "nodicsDocumentationProduct",
     "targetType": "PAGE",
@@ -13897,7 +15090,7 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record324": {
+  "record349": {
     "code": "nodicsDocsSearchpagenodicsdocsmetadataprocessdevopstopology",
     "product": "nodicsDocumentationProduct",
     "targetType": "PAGE",
@@ -13945,7 +15138,7 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record325": {
+  "record350": {
     "code": "nodicsDocsSearchpagenodicsdocsmetadataprocessqaregressionguide",
     "product": "nodicsDocumentationProduct",
     "targetType": "PAGE",
@@ -13993,7 +15186,7 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record326": {
+  "record351": {
     "code": "nodicsDocsSearchpagenodicsdocsmetadataframeworkcapabilitydocumentationmaturitypattern",
     "product": "nodicsDocumentationProduct",
     "targetType": "PAGE",
@@ -14041,7 +15234,7 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record327": {
+  "record352": {
     "code": "nodicsDocsSearchpagenodicsdocsmetadatadocsoverview",
     "product": "nodicsDocumentationProduct",
     "targetType": "PAGE",
@@ -14089,7 +15282,7 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record328": {
+  "record353": {
     "code": "nodicsDocsSearchpagenodicsdocsmetadatawcmspublishinglifecycle",
     "product": "nodicsDocumentationProduct",
     "targetType": "PAGE",
@@ -14137,7 +15330,7 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record329": {
+  "record354": {
     "code": "nodicsDocsSearchpagenodicsdocsmetadataapplicationsnexusdatacontentguide",
     "product": "nodicsDocumentationProduct",
     "targetType": "PAGE",
@@ -14187,7 +15380,7 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record330": {
+  "record355": {
     "code": "nodicsDocsSearchpagenodicsdocsmetadataapplicationsaxissetuperrorcontracts",
     "product": "nodicsDocumentationProduct",
     "targetType": "PAGE",
@@ -14237,7 +15430,7 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record331": {
+  "record356": {
     "code": "nodicsDocsSearchpagenodicsdocsmetadatawcmscmssourcemapauthoringcontract",
     "product": "nodicsDocumentationProduct",
     "targetType": "PAGE",
@@ -14287,7 +15480,7 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record332": {
+  "record357": {
     "code": "nodicsDocsSearchpagenodicsdocsmetadatawcmsmediaoperationsrunbook",
     "product": "nodicsDocumentationProduct",
     "targetType": "PAGE",
@@ -14337,7 +15530,7 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record333": {
+  "record358": {
     "code": "nodicsDocsSearchpagenodicsdocsmetadatadataimportexportproviderguides",
     "product": "nodicsDocumentationProduct",
     "targetType": "PAGE",
@@ -14388,7 +15581,7 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record334": {
+  "record359": {
     "code": "nodicsDocsSearchpagenodicsdocsmetadatacommercedataauthoringfulfillment",
     "product": "nodicsDocumentationProduct",
     "targetType": "PAGE",
@@ -14439,7 +15632,7 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record335": {
+  "record360": {
     "code": "nodicsDocsSearchpagenodicsdocsmetadatadocsdocumentationpublishingrunbook",
     "product": "nodicsDocumentationProduct",
     "targetType": "PAGE",
@@ -14489,7 +15682,7 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record336": {
+  "record361": {
     "code": "nodicsDocsSearchpagenodicsdocsmetadataplatformmoduleregistryjourney",
     "product": "nodicsDocumentationProduct",
     "targetType": "PAGE",
@@ -14539,7 +15732,7 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record337": {
+  "record362": {
     "code": "nodicsDocsSearchpagenodicsdocsmetadatacommercesearchguide",
     "product": "nodicsDocumentationProduct",
     "targetType": "PAGE",
@@ -14589,7 +15782,7 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record338": {
+  "record363": {
     "code": "nodicsDocsSearchpagenodicsdocsmetadatalocalizationruntimeauthoring",
     "product": "nodicsDocumentationProduct",
     "targetType": "PAGE",
@@ -14639,7 +15832,7 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record339": {
+  "record364": {
     "code": "nodicsDocsSearchpagenodicsdocsmetadatacommercepaymentproviderboundaries",
     "product": "nodicsDocumentationProduct",
     "targetType": "PAGE",
@@ -14689,7 +15882,7 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record340": {
+  "record365": {
     "code": "nodicsDocsSearchpagenodicsdocsmetadataloyaltywalletsrewardsledger",
     "product": "nodicsDocumentationProduct",
     "targetType": "PAGE",
@@ -14743,7 +15936,7 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record341": {
+  "record366": {
     "code": "nodicsDocsSearchpagenodicsdocsmetadatacommerceshoppinglistcommerceboundary",
     "product": "nodicsDocumentationProduct",
     "targetType": "PAGE",
@@ -14795,7 +15988,7 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record342": {
+  "record367": {
     "code": "nodicsDocsSearchpagenodicsdocsmetadatafoundationnmsruntimemonitoring",
     "product": "nodicsDocumentationProduct",
     "targetType": "PAGE",
@@ -14845,7 +16038,7 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record343": {
+  "record368": {
     "code": "nodicsDocsSearchpagenodicsdocsmetadatafoundationserviceruntimeoverrides",
     "product": "nodicsDocumentationProduct",
     "targetType": "PAGE",
@@ -14895,7 +16088,7 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record344": {
+  "record369": {
     "code": "nodicsDocsSearchpagenodicsdocsmetadatafoundationmoduletomodulecommunication",
     "product": "nodicsDocumentationProduct",
     "targetType": "PAGE",
@@ -14949,7 +16142,7 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record345": {
+  "record370": {
     "code": "nodicsDocsSearchpagenodicsdocsmetadatafoundationcacheproviderrunbooks",
     "product": "nodicsDocumentationProduct",
     "targetType": "PAGE",
@@ -14999,7 +16192,7 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record346": {
+  "record371": {
     "code": "nodicsDocsSearchpagenodicsdocsmetadatafoundationdatabaseproviderboundaries",
     "product": "nodicsDocumentationProduct",
     "targetType": "PAGE",
@@ -15049,7 +16242,7 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record347": {
+  "record372": {
     "code": "nodicsDocsSearchpagenodicsdocsmetadatasecurityotpsecurityflow",
     "product": "nodicsDocumentationProduct",
     "targetType": "PAGE",
@@ -15099,14 +16292,14 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record348": {
+  "record373": {
     "code": "nodicsDocsSearchpagenodicsdocsmetadatacommunicationproviderrunbooks",
     "product": "nodicsDocumentationProduct",
     "targetType": "PAGE",
     "targetCode": "nodicsDocsMetadatacommunicationProviderRunbooks",
     "title": "Communication Provider Runbooks",
-    "summary": "SMTP and SMS provider delivery, template, locale, suppression, retry, callback, receipt, privacy, and failure evidence guidance.",
-    "searchText": "Communication Provider Runbooks SMTP and SMS provider delivery, template, locale, suppression, retry, callback, receipt, privacy, and failure evidence guidance. # Communication Provider Runbooks\n\nCommunication providers deliver messages through channels such as SMTP email\nand SMS. The provider sends or queues delivery, but business modules own the\nreason for the message: order confirmation, OTP, approval, contact response,\npublication event, or support notification. For beginners, communication is a\ndelivery lane, not the owner of business decisions.\n\n## Source map\n\n| Area | Source location |\n| --- | --- |\n| Communication overview | `docs/pages/nodics.communication/overview.md` |\n| SMTP provider | `../nodics.communication/modules/smtpCommsProvider/package.json` |\n| SMS provider | `../nodics.communication/modules/smsCommsProvider/package.json` |\n| OTP integration | `../nodics.foundation/modules/nOtp/package.json` |\n| Engagement source | `../nodics.engagement/modules/contactSubmission/package.json` |\n\n## Delivery flow\n\n```mermaid\nflowchart LR\n  Source[\"Owning business module\"] --> Intent[\"Delivery intent\"]\n  Intent --> Template[\"Template and locale\"]\n  Template --> Provider[\"SMTP or SMS provider\"]\n  Provider --> Receipt[\"Delivery receipt\"]\n  Receipt --> Audit[\"Audit and retry evidence\"]\n```\n\nThe business problem is reliable communication. Customers and administrators\nneed clear, timely messages. Developers need provider abstractions so a module\ncan request a message without knowing gateway details. Operators need failed\ndelivery evidence, retry policy, suppression, and provider health in\nproduction.\n\n## Provider contract\n\nProviders should accept normalized recipient, template, locale, payload,\npriority, and correlation id. They should return status, provider reference,\nretryability, and failure reason. They should not own order, OTP, publication,\nor contact business state.\n\n```js\nconst deliveryIntent = {\n  channel: 'email',\n  templateCode: 'orderConfirmation',\n  locale: 'en',\n  recipientRef: 'customer001',\n  correlationId: 'order-1001'\n};\n```\n\n## Customization and extension guidance\n\nDevelopers can add providers, template renderers, delivery callbacks, retry\npolicies, suppression lists, and audit adapters. Business users should manage\ntemplate text, enablement, and consent where Axis exposes those controls.\nOperators should track queue depth, sent count, failed count, retry age, and\nprovider outage status.\n\n## Implementation handoff\n\nA communication provider handoff should include supported channel, template\ncontract, locale behavior, retryability, suppression behavior, provider health\ncheck, callback evidence, and privacy handling. Business users get predictable\nmessage journeys, developers get integration boundaries, operators get\nproduction recovery signals, and QA owners can test sent, delayed, failed,\nsuppressed, and retried messages.\n\n## Evidence checklist\n\nDelivery evidence should include message code, source module, template code,\nlocale, channel, recipient reference, provider reference, delivery state,\nretry count, suppression decision, and correlation id. Operators should be\nable to prove whether a message was blocked by policy, delayed by a provider,\nor rejected permanently. Business users should see a clear communication\nstate, not raw gateway text.\n\nThis evidence should be searchable from the originating business object. For\nexample, an order confirmation should be traceable from order to delivery\nintent, provider receipt, retry history, and final outcome.\n\nProduction support should also know whether a message was intentionally not\nsent. Consent, suppression, invalid recipient, missing template, and disabled\nprovider states are normal controlled outcomes, not always incidents.\n\n## Common mistakes\n\n- Putting business state transitions inside SMTP or SMS provider code.\n- Logging sensitive payloads or raw OTP values.\n- Retrying non-retryable failures indefinitely.\n- Sending messages without locale or consent checks.\n- Showing gateway error text directly to business users.\n\n## Verification\n\nRun provider tests with successful delivery, temporary failure, permanent\nfailure, retry, suppression, template missing, and locale missing cases. In a\nfresh schema, trigger OTP and contact messages, inspect receipts, and confirm\nAxis shows safe delivery status. Production readiness requires business\ntemplate approval, developer contract tests, operator failure dashboards, and\nQA evidence for retries.\n",
+    "summary": "Source-backed SMTP controlled-test and SMS injected-sandbox configuration, credentials, frozen-content delivery, safeguards, uncertainty recovery and live qualification boundaries.",
+    "searchText": "Communication Provider Runbooks Source-backed SMTP controlled-test and SMS injected-sandbox configuration, credentials, frozen-content delivery, safeguards, uncertainty recovery and live qualification boundaries. # Communication Provider Runbooks\n\nBeginners should first distinguish a template preview, sandbox acknowledgement,\nSMTP server acceptance and an observed customer receipt; they prove different things.\n\nProviders deliver frozen messages; they do not decide whether an order is ready,\nan employee is verified or a testimonial has consent. Think of them as delivery\nservices that receive a prepared envelope. The business domain chooses the\nrecipient and purpose; Communication renders, persists, claims and supervises\ndelivery. Email and SMS share this ownership model but have different transport\nand qualification requirements.\n\nFunctional owner: nodics.communication. Technical owners: smtpCommsProvider and\nsmsCommsProvider. This guide is for administrators, operators, partner developers,\nQA, framework maintainers and AI tools. Business authors should start with\n[Email and SMS Templates](email-sms-templates.md) for wording and branding changes.\n\n## Implemented modes and limits\n\n| Mode | Current implementation | Default | What success proves |\n| --- | --- | --- | --- |\n| Email SANDBOX | Injected credential resolver and send port | Disabled | Selected test port reported acceptance |\n| Email SMTP | Real SMTP/MIME through Nodemailer with guarded test policy | Disabled; must explicitly select SMTP | Server accepted the one permitted recipient |\n| SMS_SANDBOX | Durable adapter to an injected sandbox service | Disabled; sandbox-only | Selected test port reported acceptance |\n| Production SMS carrier | Not supplied by this adapter | Not qualified | Requires a separately reviewed integration and acceptance |\n\nNone of these alone proves that a person read a message. SMTP DELIVERED is\ntransport acceptance, not independently observed mailbox receipt. SMS sandbox\nDELIVERED is not a carrier delivery report or handset observation. Do not set a\nliveQualified flag to bypass these restrictions: current adapters reject unsupported\nlive settings. Runtime credentials, recipient authorization and actual acceptance\nremain explicit operational gates.\n\n## Source map\n\n| Concern | Framework source |\n| --- | --- |\n| Durable orchestration | nodics.communication/modules/commsCore/src/service/defaultCommunicationRuntimeService.js |\n| Resource rendering | nodics.communication/modules/commsCore/src/service/defaultCommunicationTemplateService.js |\n| SMTP configuration and adapter | nodics.communication/modules/smtpCommsProvider/config/properties.js and src/service/defaultSmtpCommunicationProviderService.js |\n| SMS configuration and adapter | nodics.communication/modules/smsCommsProvider/config/properties.js and src/service/defaultSmsCommunicationProviderService.js |\n| Verification challenge authority | nodics.communication/modules/commsVerification |\n| Intent and attempt schemas | nodics.communication/modules/commsSchema |\n| Template authoring and overrides | [Email and SMS Templates](email-sms-templates.md) |\n\n## Delivery sequence\n\n```mermaid\nsequenceDiagram\n  participant Domain as Domain owner\n  participant Core as Communication runtime\n  participant Store as Managed intent storage\n  participant Provider as Selected provider\n  participant Transport as SMTP or injected sandbox\n  Domain->>Core: Trusted request and stable event key\n  Core->>Store: Read replay or persist frozen render\n  Core->>Core: Check policy, suppression and expiry\n  Core->>Store: Acquire exact managed claim\n  Store-->>Core: Confirm this writer owns the claim\n  Core->>Provider: request, claimed intent, selected policy\n  Provider->>Provider: Validate tenant, lease, expiry and content\n  Provider->>Transport: One bounded delivery invocation\n  Transport-->>Provider: Acceptance, rejection or ambiguous failure\n  Provider-->>Core: Redacted status and references\n  Core->>Store: Persist attempt/outcome\n  Core-->>Domain: Safe intent/status projection\n```\n\nProviders receive the durable form `deliver({ request, intent, policy })`.\nThey consume intent.renderedContent, not a template code requiring provider-side\nrendering. The legacy injected three-argument sandbox interface remains for\ncompatibility. Domain code must call the Communication owner rather than either\nprovider interface directly.\n\nThe runtime checks its own managed write marker and revision before delivery.\nA zero-match update, read failure or another writer's claim is not authorization\nto send. An expired external-delivery claim can be uncertain because a previous\nworker may already have invoked the transport.\n\n## Before configuring any provider\n\n1. Identify the sending runtime and confirm its effective Communication/provider\n   modules. A setting in a separate API runtime does not configure the sender.\n2. Verify the template owner is discovered, resource selected, source trusted,\n   recipient authoritative and business feature enabled by its existing owner.\n3. Prepare an approved test recipient, controlled sender identity, private credential\n   reference and redacted evidence plan. Do not use arbitrary customer addresses.\n4. Verify schema installation and current intent/attempt contracts through the\n   normal owner path. Source generation is not database installation.\n5. Keep the adapter disabled until the approved test window. Configuration examples\n   below show shapes and fake values; they are not deployment instructions to execute\n   automatically or proof of production readiness.\n\n## Email: controlled SMTP configuration\n\nThe provider type SMTP is registered by the existing provider module. Do not copy\nits service name into a new provider registry. The following deployment fragment\nselects it, but intentionally leaves delivery disabled:\n\n```js\nmodule.exports = {\n  communication: {\n    providers: {\n      EMAIL: {\n        type: \"SMTP\",\n        enabled: false,\n        mode: \"SMTP\",\n        sandboxOnly: false,\n        testOnly: true,\n        liveQualified: false,\n        senderReference: \"notifications\",\n        credentialReference: \"notification-mail\",\n        allowedRecipients: [\"approved-recipient@example.test\"],\n        smtp: {\n          host: \"smtp.example.test\",\n          port: 587,\n          secure: false,\n          requireTLS: true\n        }\n      }\n    },\n    senders: {\n      notifications: {\n        address: \"notifications@example.test\",\n        name: \"Example Company\"\n      }\n    }\n  }\n};\n```\n\nReplace fake values only in the correct customer/private deployment layer. The\nauthorized operator enables the selected provider during the controlled test.\nDefaults such as timeout and maximum content size remain inherited unless an\nintentional difference is required. Never commit a credential value to properties.\n\n### SMTP settings\n\n| Setting | Default or rule |\n| --- | --- |\n| enabled | false; true required to send |\n| mode | SANDBOX by default; select SMTP for the real protocol |\n| sandboxOnly | Must be false for SMTP, true for sandbox |\n| testOnly | Must remain true for this controlled SMTP implementation |\n| liveQualified | Must not be true; no unrestricted production mode is supplied |\n| senderReference | Key in communication.senders |\n| credentialReference | Key resolved by the existing secure configuration owners |\n| allowedRecipients | Explicit non-empty list, at most 100 approved mailbox values |\n| maximumContentBytes | Default 65536; bound subject, text and optional HTML |\n| timeoutMilliseconds | Default 5000; valid integer 1 through 60000 |\n| smtp.host / port | Explicit host, port 1 through 65535 |\n| smtp.secure | Implicit TLS when true; port 465 requires true |\n| smtp.requireTLS | Required STARTTLS when secure is false, except approved loopback fixture |\n| smtp.allowInsecureLoopback | false by default; true allowed only for loopback tests |\n\nTLS certificate verification stays enabled. Remote plaintext, ignoreTLS,\nrejectUnauthorized:false and arbitrary SMTP options are not supported overrides.\nFor a local fixture only, the explicit allowInsecureLoopback option can permit\nplaintext on localhost, 127.0.0.1 or ::1. Never carry that exception into a remote\ndeployment. Nodemailer gets bounded timeouts, no pooling, no transport debug/logging,\nno file/URL access and no arbitrary attachment/raw-message options.\n\n### Sender and credentials\n\ncommunication.senders[senderReference] is either a plain mailbox string or an\nobject with address and optional name. The approved sender must match the\ncredential account user in the current controlled-test adapter; alias or delegated\nsend-as support requires separate qualification. Recipient input is one plain\nmailbox, not a display-name expression, recipient list or arbitrary SMTP envelope.\n\nCredentials resolve on every send. runtimeConfiguration.credentials takes precedence\nwhen it owns the reference; otherwise secureConfiguration.credentials is used.\nSupported secret object shapes are a login user/pass or OAuth2 type/user/accessToken.\nThese are descriptions of a protected store, not instructions to add plaintext\nsecrets to a source file. The existing secret owner supplies/rotates them.\nThe transport does not refresh OAuth tokens or retain credentials in a pool.\n\n### MIME and content\n\nThe provider sends plain text and optional HTML as MIME alternatives. Both come\nfrom frozen private intent content. Plain text remains required. Subjects reject\nheader injection, all representations are strings, and combined content is bounded.\nPrivate templateIdentity does not become a message header or transport payload.\nProviders never fetch a template, render a placeholder or resolve HTML asset URLs.\n\n## Email: injected sandbox mode\n\nSelect the SMTP provider type with mode SANDBOX and a trusted\nsandboxTransportService exposing resolveCredential and send. The provider also\nneeds its endpoint, senderReference and credentialReference, enabled:true and\nsandboxOnly:true; all are deployment selections, not browser input. Defaults remain\ndisabled. Do not confuse a sandbox endpoint with smtp.host.\n\nThe durable path validates tenant, EMAIL channel, DELIVERING state, future lease\nand expiry before ports. It projects bounded subject/body/optional HTML and excludes\nprivate provenance. The injected port owns its sandbox protocol. It is not proof\nthat the real SMTP path or a mailbox has been exercised.\n\n## SMS: injected sandbox configuration\n\nThe existing module registers SMS_SANDBOX. This illustrative selection remains\ndisabled and names a customer-owned sandbox port that must actually be implemented\nthrough the normal service hierarchy:\n\n```js\nmodule.exports = {\n  communication: {\n    providers: {\n      SMS: {\n        type: \"SMS_SANDBOX\",\n        enabled: false,\n        endpoint: \"https://sms-sandbox.example.test/messages\",\n        credentialReference: \"notification-sms\",\n        senderReference: \"notifications\",\n        sandboxTransportService: \"AcmeSmsSandboxTransportService\"\n      }\n    }\n  }\n};\n```\n\nThe fictional service name is not built into Nodics. Compose a trusted exported\nservice with resolveCredential(reference) and send(envelope) before enabling the\nselection in an approved sandbox. Methods are bound to the effective service\nreceiver so later-layer behavior remains available.\n\nThe send envelope contains endpoint, resolved credential, senderReference,\nrecipientAddressReference, rendered.body, idempotencyKey and timeoutMilliseconds.\nThe port must apply its own sandbox transport and recipient-resolution policy,\nhonor the timeout and avoid secret/content logging. Unlike SMTP, the SMS adapter\ndoes not supply a mailbox-style allowedRecipients implementation or a live carrier\nclient. Provider qualification must establish those channel-specific controls.\n\nThe sandbox response needs a nonempty string reference, at most 256 characters;\nan optional string code is bounded at 128. accepted:false maps to FAILED.\nA valid acknowledgement otherwise maps to sandbox DELIVERED under the compatibility\ncontract. Port authors should return an explicit accepted:true on positive acceptance.\nMalformed replies or transport exceptions after invocation are uncertain, not a\nsafe reason to send again.\n\n### SMS safety and limits\n\n- Validate matching request/authenticated/intent tenant, SMS channel, DELIVERING\n  state, future lease, expiry and bounded identities before transport.\n- Use a nonempty literal body only. HTML is rejected and template provenance is\n  stripped. Do not pass an entire intent to a gateway.\n- maximumContentBytes defaults to 1600 and is validated in the range 1 through\n  65536. The bound measures UTF-8 bytes, not carrier segments or character credits.\n- sandboxOnly remains true and liveQualified remains false. A real SMS provider,\n  authenticated callbacks, opt-out handling, rate/cost controls and delivery-report\n  semantics require explicit integration and acceptance.\n- A credential/send port is trusted framework/customer implementation, not a\n  public extensibility input. It must not be chosen by a submitted browser body.\n\n## Customize and extend safely\n\nBranding and wording changes belong in\n[layered resources](email-sms-templates.md#customize-and-extend-safely), not transport\nservices. Select providers and actual deployment differences through the existing\nconfiguration hierarchy. Do not add credentials, gateways or rendering code to\nKickoff merely because it is the demonstration project.\n\nFor a transport-specific requirement, use the existing provider's mergeable\nexported service members and documented extension boundary. A later concrete\ncustomer module can supply the sandbox service referenced above; reusable provider\nmechanics belong with their framework owner. Do not replace Communication's claim,\nidempotency, suppression or uncertainty ledger with a customer-owned queue.\n\nA credential-resolver override must preserve reference-only configuration, least\nprivilege, rotation and redacted errors. A transport override must preserve tenant,\nlease, expiry, content bounds and one-invocation semantics. A change to production\nbehavior requires its own reviewed contract and evidence; setting flags is not\nqualification. Do not invent custom callback handlers that update employee,\norder or testimonial status directly.\n\n## Outcomes and recovery\n\n| State | Meaning | Operator action |\n| --- | --- | --- |\n| UNCONFIGURED | Disabled/missing/invalid provider configuration or credential | Fix configuration through its owner; inspect supported recovery without inventing a new event |\n| SUPPRESSED | Recipient/purpose/channel policy or delivery expiry prevents send | Confirm policy; never switch providers to evade it |\n| DELIVERED | Selected adapter's positive acceptance evidence | Observe real mailbox/handset separately when required |\n| FAILED | Definite rejection or invalid request | Diagnose redacted reason; use only authorized supported recovery |\n| RETRY_PENDING | Known retryable rejection with bounded due time | Wait for due time and use the existing authorized retry operation |\n| UNCERTAIN | Send may have happened; reply/claim outcome is ambiguous | Reconcile evidence before any resend |\n| DEAD_LETTER | Attempt ceiling exhausted | Investigate and reconcile; do not reset counters to bypass policy |\n\nThe durable binding does not install an automatic retry scheduler. Authorized retry\nchecks current status, due time and attempt ceiling. Uncertain recovery requires\ncurrent managed revision, reason and an explicit decision: MARK_DELIVERED,\nAUTHORIZE_RESEND or CANCEL. Authorization to resend is not itself a send.\nManual MARK_DELIVERED is operator evidence, not an authenticated provider receipt.\n\nIf the source-domain operation succeeded but notification failed, retain the domain\nsuccess and report notification progress separately. Never replay registration,\napproval, password reset or consent capture to force a new message.\n\n## Operations and troubleshooting\n\nUse intent code, source reference, channel, template code/version, attempt count,\nredacted provider reference, status and correlation ID to connect business events\nwith delivery. Do not log bodies, addresses, raw replies, OTPs or credentials.\nHealth/configuration availability does not imply external delivery readiness.\n\n| Observation | Check | Safe response |\n| --- | --- | --- |\n| No intent created | Trusted source, command, resource and parameter validation | Correct caller/configuration before trying a new authorized request |\n| Provider UNCONFIGURED | Effective sending-runtime settings, mode, refs and ports | Do not alter domain decisions or disable security checks |\n| SMTP authentication rejected | Secret owner, account, expiry/rotation | Fix privately; do not paste secrets/provider text into tickets |\n| SMTP sender rejected | Sender account binding and provider policy | Qualify alias support rather than bypassing binding |\n| TLS connection fails | Host, port, required TLS and certificate trust | Fix endpoint/certificates; never disable validation remotely |\n| SMS text rejected | Nonempty plain body and final UTF-8 size | Shorten the template and revalidate without HTML |\n| Timeout after possible acceptance | Intent/attempt and provider evidence | Keep UNCERTAIN until authorized reconciliation |\n| Template edits do not affect pending intent | Frozen stored render | Expected; no automatic content rewrite |\n| Provider reports success but inbox is empty | Spam/quarantine, mailbox routing or carrier semantics | Gather separate observed-receipt evidence, avoid duplicate sends |\n\nIncident handoff should identify mode, runtime, affected intent references,\nredacted failure classification, whether transport invocation occurred, retry/\nuncertainty state, policy constraints and the authorized next action. Include\nresidency, consent, rate/cost and rollback owners for any production qualification.\n\n## Common mistakes\n\n- Enabling a provider before verifying the effective sending-runtime policy.\n- Treating SMS sandbox acceptance as a carrier delivery report.\n- Committing credentials, disabling remote TLS validation or widening recipients.\n- Passing templates to providers instead of frozen representations.\n- Resetting attempts or changing event keys to bypass uncertain-send reconciliation.\n- Updating domain approval or identity state in a provider callback.\n\n## Verification and joint acceptance\n\nTest defaults and customization with fake values first. Exercise disabled mode,\nmissing ports/credentials, tenant mismatch, expired lease/intent, subject injection,\noversized content, invalid recipient/sender, TLS downgrade refusal, accepted,\nrejected and ambiguous outcomes, rotation and frozen replay. Inspect MIME text/HTML\nand private-data exclusion. The focused suites live under the two provider test\ndirectories and commsCore/test.\n\nOnly then, in a named approved runtime, install current schemas/adoption records,\ninspect effective policy, enable one controlled provider and recipient, and observe\nactual delivery. Test a real email client separately from Chrome previews.\nA carrier test is separate from an injected SMS port test. Confirm domain state\ndoes not change on notification retry and disable the controlled selection after\nthe agreed window. Record authored, generated, local-tested, runtime-tested and\nlive-observed states separately.\n\n## Related topics\n\n- [Communication overview](overview.md)\n- [Template inventory, configuration and authoring](email-sms-templates.md)\n- [SMTP implementation contract](../../../../nodics.communication/modules/smtpCommsProvider/llm/contracts/README.md)\n- [SMS implementation contract](../../../../nodics.communication/modules/smsCommsProvider/llm/contracts/README.md)\n",
     "keywords": [
       "communication",
       "smtp",
@@ -15149,7 +16342,7 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record349": {
+  "record374": {
     "code": "nodicsDocsSearchpagenodicsdocsmetadataengagementcontactsubmissionoperations",
     "product": "nodicsDocumentationProduct",
     "targetType": "PAGE",
@@ -15199,7 +16392,7 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record350": {
+  "record375": {
     "code": "nodicsDocsSearchpagenodicsdocsmetadataprocessworkflowbpmsourcemap",
     "product": "nodicsDocumentationProduct",
     "targetType": "PAGE",
@@ -15249,7 +16442,7 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record351": {
+  "record376": {
     "code": "nodicsDocsSearchpagenodicsdocsmetadataprocesscronjobdataauthoring",
     "product": "nodicsDocumentationProduct",
     "targetType": "PAGE",
@@ -15299,7 +16492,7 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record352": {
+  "record377": {
     "code": "nodicsDocsSearchpagenodicsdocsmetadataframeworkreleaseupgradecompatibility",
     "product": "nodicsDocumentationProduct",
     "targetType": "PAGE",
@@ -15349,7 +16542,7 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record353": {
+  "record378": {
     "code": "nodicsDocsSearchpagenodicsdocsmetadatacommercefulfillmentcoresourcemap",
     "product": "nodicsDocumentationProduct",
     "targetType": "PAGE",
@@ -15399,7 +16592,7 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record354": {
+  "record379": {
     "code": "nodicsDocsSearchpagenodicsdocsmetadataacceleratorsdomaincommercesourcemap",
     "product": "nodicsDocumentationProduct",
     "targetType": "PAGE",
@@ -15449,7 +16642,7 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record355": {
+  "record380": {
     "code": "nodicsDocsSearchpagenodicsdocsmetadatafoundationtoolingruntimecontracts",
     "product": "nodicsDocumentationProduct",
     "targetType": "PAGE",
@@ -15499,7 +16692,7 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record356": {
+  "record381": {
     "code": "nodicsDocsSearchpagenodicsdocsmetadatafoundationemsruntimeclientrunbook",
     "product": "nodicsDocumentationProduct",
     "targetType": "PAGE",
@@ -15549,7 +16742,7 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record357": {
+  "record382": {
     "code": "nodicsDocsSearchpagenodicsdocsmetadatareferenceinternalsourceboundaryregister",
     "product": "nodicsDocumentationProduct",
     "targetType": "PAGE",
@@ -15599,7 +16792,7 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record358": {
+  "record383": {
     "code": "nodicsDocsSearchpagenodicsdocsmetadatatoolingaideveloperenablement",
     "product": "nodicsDocumentationProduct",
     "targetType": "PAGE",
@@ -15647,7 +16840,7 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record359": {
+  "record384": {
     "code": "nodicsDocsSearchpagenodicsdocsmetadatareferencesourcemapglossary",
     "product": "nodicsDocumentationProduct",
     "targetType": "PAGE",
@@ -15695,7 +16888,7 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record360": {
+  "record385": {
     "code": "nodicsDocsSearchpagenodicsdocsmetadatareferencesourcebackeddocumentationcoverageaudit",
     "product": "nodicsDocumentationProduct",
     "targetType": "PAGE",
@@ -15746,7 +16939,7 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record361": {
+  "record386": {
     "code": "nodicsDocsSearchpagenodicsdocsmetadatareferencedocumentationgapbacklog",
     "product": "nodicsDocumentationProduct",
     "targetType": "PAGE",
@@ -15797,7 +16990,7 @@ module.exports = {
     "indexState": "INDEX_READY",
     "active": true
   },
-  "record362": {
+  "record387": {
     "code": "nodicsDocsSearchpagenodicsdocsmetadatawasteimpactproviders",
     "product": "nodicsDocumentationProduct",
     "targetType": "PAGE",
@@ -15819,6 +17012,57 @@ module.exports = {
     "facets": {
       "section": "framework-architecture-and-design",
       "group": "framework-architecture-and-design",
+      "navigationDepth": 2,
+      "documentType": "how-to",
+      "audience": [
+        "business",
+        "architect",
+        "administrator",
+        "developer",
+        "operator",
+        "qa",
+        "ai-tool"
+      ],
+      "maturityState": "operational"
+    },
+    "managedInAxis": true,
+    "axisAuthoringPermissions": [
+      "documentation.search.preview"
+    ],
+    "workflowRequired": true,
+    "workflowTriggers": [
+      "SEARCH_METADATA_CHANGE"
+    ],
+    "locale": "en",
+    "channel": "web",
+    "accessPolicy": "nodicsDocsAccessPublic",
+    "accessMode": "PUBLIC",
+    "lifecycleState": "ONLINE",
+    "indexState": "INDEX_READY",
+    "active": true
+  },
+  "record388": {
+    "code": "nodicsDocsSearchpagenodicsdocsmetadatacommunicationemailsmstemplates",
+    "product": "nodicsDocumentationProduct",
+    "targetType": "PAGE",
+    "targetCode": "nodicsDocsMetadatacommunicationEmailSmsTemplates",
+    "title": "Email and SMS Templates",
+    "summary": "Detailed notification flow, existing inventory, typed manifests, configuration and adoption, layered overrides, locale precedence, safe HTML, new email/SMS examples, frozen retries and troubleshooting.",
+    "searchText": "Email and SMS Templates Detailed notification flow, existing inventory, typed manifests, configuration and adoption, layered overrides, locale precedence, safe HTML, new email/SMS examples, frozen retries and troubleshooting. # Email and SMS Templates\n\n## Signed Integration Source Authority\n\nThe internal intent request API requires a verified service principal, matching\nauthenticated/request tenant, explicit communication.request permission and signed\nmodule scopes containing both commsApi and the selected trusted source module.\nThe configured trusted-source list alone is not a grant. A runtime authorized for\nProfile cannot impersonate Order by changing sourceModule in a payload.\n\nRetry and uncertainty resolution authorize exactly one stored intent's source,\nnot a source supplied by the caller. They validate the signed context before\nreading private intent evidence; unreadable, missing or ambiguous records refuse\nthe action. No recipient, template variables or message body is disclosed.\nDeployments use existing nAuth/nRouter runtime grants. This source boundary remains\nsubject to installed token/transport acceptance; no delivery is activated by it.\n\n## Employee Lifecycle Intent Integration\n\nProfile's exported `DefaultEnterpriseNotificationService` owns invitation and\naccount-ready decisions. Framework defaults live in\n`enterpriseManagement.notifications`: enabled/qualified are false, with declarations\nfor INVITATION and ACCOUNT_READY. This policy selects resources, not inline HTML.\nExisting framework resource bundles provide subject, HTML and plain text. Later\nmodule, custom-project and runtime layers override those resource paths using the\nexisting loader. Keep declared parameter contracts compatible with frozen inputs.\n\nOn an admitted event Profile first stores private assignment lifecycleNotifications:\nthe recipient, templateCode/purpose/locale, bounded variables and stable idempotency\nkey. It then delegates to Communication's trusted internal communications API.\nCommunication owns rendered snapshots, queueing, delivery and provider retries;\nProfile does not create another queue or call SMTP directly. An uncertain request\nretains the same frozen inputs/key, so an explicit retry reconciles the same intent.\nOnce intentCode is saved, Profile returns that evidence rather than re-enqueuing.\nIts saved status is intent-request progress, not refreshed mailbox delivery proof.\n\nInvitation creation requests INVITATION only for an active unused unexpired\ninvitation. Completed registration or membership acceptance requests ACCOUNT_READY\nonly after stored completion. Delivery failure never rolls back account readiness\nand receiving mail never grants access. Frozen recipient changes, withdrawals or\nincomplete readiness fail closed. Generic CRUD cannot manufacture this evidence.\n\nFor customization, set approved connection/purpose/locale/nextStep in a later\nProfile property layer and override the matching template resources. nextStep is\nplain text, not HTML or a URL; action links need declared safe https-url parameters\nand an owner-approved destination. Never pass credentials, OTP proof, access tokens,\nrole grants or caller-selected recipients. A new lifecycle kind requires a domain\nreadiness contract and reviewed owner implementation, not an arbitrary template\ncode accepted from HTTP. Reuse Communication for any new channel.\n\nPOST `/enterprise-team/retry-notification` takes only assignmentCode, current\nrevision and INVITATION/ACCOUNT_READY under fresh administrator authority. It\ndoes not replace recipients/content or resend a known intent. Qualify trusted\nProfile source admission, approved sender/recipients, deployed resource layering\nand delivery/provider recovery before enabling policy. No delivery acceptance or\nmail send has been performed for this source increment.\n\nFor beginners, start with the example below, then read the inventory and the\nsmallest-change customization table before attempting a new notification.\n\nAn email or SMS notification is a business message delivered through Communication.\nThink of the template as stationery, the domain service as the person deciding what\nto say, and the provider as the delivery service. Changing the stationery must not\nchange who is allowed to send, what a verification code proves, or whether an\nenterprise application has been approved.\n\nFor example, Profile decides that an employee may receive an email-verification\nchallenge. It supplies the code and expiry to Communication. Communication resolves\nthe effective template, safely inserts those values, stores the private rendered\nmessage and invokes the selected email provider. A customer can replace the subject\nor HTML without copying Profile, the renderer or SMTP into the customer project.\n\n## Scope, audience and maturity\n\nFunctional owner: `nodics.communication`. Technical owner: `commsCore`.\nBusiness presentation also has a domain owner, such as Profile or customerFeedback.\nThis guide addresses business evaluators, notification authors, administrators,\npartner developers, framework maintainers, operators, QA engineers and AI tools.\n\nLayered files, typed rendering, durable intents, source gating and provider adapters\nare implemented. SMTP supports guarded controlled-test delivery. SMS remains a\ndisabled-by-default injected sandbox boundary, not a supplied production carrier\nintegration. A template editor, arbitrary email scripting, automatic localization,\nSMS segmentation and automatic uncertain-send retry are not promised capabilities.\nAuthored configuration examples are not authorization to enable or send messages.\n\nBusiness users review wording, destination journeys and approved notifications.\nDevelopers author deployed resources. Operators select qualified transports and\ninspect redacted evidence. This guide does not assert that Axis provides a visual\neditor for these resource files. See [provider operations](provider-runbooks.md)\nfor sender credentials, transport policy and delivery-result interpretation.\n\n## Ownership and source map\n\n| Concern | Canonical owner | What must not move here |\n| --- | --- | --- |\n| Business eligibility, purpose, recipient and values | Requesting domain service | Provider credentials and retries |\n| Default wording and HTML for a domain | Domain module `src/templates` | Project-specific branding in framework defaults |\n| Generic runtime notice presentation | commsCore `src/templates` | Another domain's business copy |\n| Discovery, manifests, parameters and rendering | DefaultCommunicationTemplateService | A project-specific loader or renderer |\n| Intents, source policy, claims, suppression and recovery | DefaultCommunicationRuntimeService | Domain approval or identity transitions |\n| Schema source | commsSchema | Another message ledger in a project |\n| SMTP/MIME transport | smtpCommsProvider | Template lookup and business decisions |\n| SMS sandbox transport boundary | smsCommsProvider | HTML rendering or assumed carrier qualification |\n| Reusable verification challenge lifecycle | commsVerification | Email-file ownership of proof or identity |\n| Customer branding/deployment selection | Existing concrete customer and runtime layers | Copied framework services |\n\nThe main sources, relative to the framework repository, are:\n\n- `nodics.communication/modules/commsCore/src/service/defaultCommunicationTemplateService.js`\n- `nodics.communication/modules/commsCore/src/service/defaultCommunicationRuntimeService.js`\n- `nodics.communication/modules/commsCore/config/properties.js`\n- `nodics.communication/modules/commsCore/llm/contracts/template-resources.md`\n- `nodics.communication/modules/commsSchema/src/schemas/schemas.js`\n- `nodics.communication/modules/smtpCommsProvider/config/properties.js`\n- `nodics.communication/modules/smsCommsProvider/config/properties.js`\n\n## How a notification travels\n\n```mermaid\nflowchart TD\n  Domain[\"Domain validates business event and recipient\"] --> Request[\"Trusted Communication request\"]\n  Request --> Replay{\"Existing idempotency identity?\"}\n  Replay -->|Same command| Existing[\"Return stored safe result without resending\"]\n  Replay -->|Changed command| Conflict[\"Reject conflict\"]\n  Replay -->|New| Select[\"Select configured reference, resource or published version\"]\n  Select --> Validate[\"Check source, purpose, channel and typed parameters\"]\n  Validate --> Render[\"Render text and optional HTML\"]\n  Render --> Persist[\"Persist frozen private content and bundle provenance\"]\n  Persist --> Policy[\"Check suppression and expiry\"]\n  Policy --> Claim[\"Acquire managed delivery claim\"]\n  Claim --> Provider[\"Provider receives frozen representations\"]\n  Provider --> Evidence[\"Store redacted outcome or uncertain state\"]\n```\n\nThe diagram is a reading aid, not an independent workflow engine. In the actual\nrequest path, trusted-source policy is checked before replay lookup. The command\nidentity includes domain/source, template, recipient, purpose, channel, locale and\nvariables. The same key with changed command data rejects. New content is rendered\nbefore intent persistence; send-time suppression, expiry and claim checks still\napply. Invalid rendering creates no new intent.\n\nTransport failure does not undo the business event. A failed notification must not\nrepeat enterprise approval, password reset, registration or feedback creation.\nThe domain should retain the Communication reference and expose truthful progress.\nThe dispatcher owns attempts; providers neither re-render nor perform hidden retries.\n\n## Standard folder layout\n\n```text\n<owning-module>/\n  src/\n    templates/\n      email/\n        employee-email-verification/\n          template.json\n          en/\n            subject.txt\n            email.html\n            email.txt\n      sms/\n        runtime-notice/\n          template.json\n          en/\n            message.txt\n```\n\nDirectories are lowercase `email` and `sms`; manifest channel values are uppercase\n`EMAIL` and `SMS`. OTP is a purpose, not a channel folder. An OTP sent by email\nuses the email layout; an OTP sent by SMS uses the SMS layout. Adding an SMS file\ndoes not make a caller that requests EMAIL switch channels.\n\nEmail requires all three locale representations. The subject is plain text and\nmust not contain CR/LF/NUL after rendering; trailing file newlines are trimmed.\n`email.txt` is the plain-text alternative, not source generated by stripping HTML.\n`email.html` is trusted static markup with escaped parameter insertion. SMS uses\nonly `message.txt`; a provider refuses HTML in an SMS envelope.\n\nResources are deployed source artifacts. They are not arbitrary uploaded paths,\ntemplate URLs or editable database body blobs. A project/application root is not\na concrete template owner: use a customer module or a selected runtime module.\n\n## Existing template inventory\n\nAll current bundles below use manifest version 2 and default locale `en`.\nThe resource folder is distinct from the stable code supplied by the caller.\n\n| Owner | Channel and folder | Stable template code | Purpose | Required variables |\n| --- | --- | --- | --- | --- |\n| profile | email/employee-email-verification | profile.employee.emailVerification | EMPLOYEE_EMAIL_VERIFICATION | verificationCode, expiresAt |\n| profile | email/employee-otp-verification | profileEmployeeRecoveryCode | EMPLOYEE_PASSWORD_RECOVERY | verificationCode, expiresAt |\n| profile | email/employee-application-outcome | profile.employee.applicationOutcome | EMPLOYEE_APPLICATION_OUTCOME | enterpriseName, decision, decidedAt, nextStep |\n| profile | email/employee-invitation | profile.employee.invitation | EMPLOYEE_INVITATION | enterpriseName, responsibility, nextStep |\n| profile | email/employee-account-ready | profile.employee.accountReady | EMPLOYEE_ACCOUNT_READY | enterpriseName, nextStep |\n| profile | email/employee-password-reset | profileEmployeePasswordReset | EMPLOYEE_PASSWORD_RESET_CONFIRMATION | completedAt |\n| commsCore | email/runtime-notice | COMMUNICATION_RUNTIME_NOTICE | TRANSACTIONAL | reference, message |\n| commsCore | sms/runtime-notice | COMMUNICATION_RUNTIME_NOTICE | TRANSACTIONAL | reference, message |\n| contactSubmission | email/contact-acknowledgement | CONTACT_ACKNOWLEDGEMENT | TRANSACTIONAL | reference |\n| customerFeedback | email/feedback-acknowledgement | FEEDBACK_ACKNOWLEDGEMENT | TRANSACTIONAL | reference |\n| customerReview | email/review-acknowledgement | REVIEW_ACKNOWLEDGEMENT | TRANSACTIONAL | reference |\n| testimonial | email/testimonial-consent-request | TESTIMONIAL_CONSENT_REQUEST | CONSENT | reference |\n\nProfile resources are under `nodics.platform/modules/profile`; Engagement resources\nare under `nodics.engagement/modules/<owner>`; commsCore is under\n`nodics.communication/modules/commsCore`. Source allowlists name those technical\nowners, not the functional group or customer brand.\n\nProfile bundles additionally accept optional `brandName`, maximum length 120,\ndefaulting to `Account services`. Verification code/expiry, decision, timestamps\nand completion timestamp are bounded at 128 characters; enterpriseName at 256\nand nextStep at 2000. Runtime notice reference is bounded at 256 and message at\n10000; each Engagement reference at 256. These are parameter bounds, not provider\ndelivery limits. In particular SMS still enforces its smaller final byte limit.\n\nThe notice and four Engagement resources require explicit selection. Profile\nresources do not use that optional-resource selection gate, but Profile's business\nfeature policy, trusted sources, recipient checks and provider gates still apply.\nInvitation/account-ready resources are presentation defaults only. Their durable\nlifecycle triggers are not wired or enabled by adding files; sender, recipients\nand delivery/recovery acceptance remain gated. Do not send readiness mail from\napplication approval or treat an invitation message as an access grant. Customize\nthese files through the same project/runtime overrides without copying services.\nDynamic nextStep is plain text; introduce action links only through declared\n`https-url` parameters and an owner-approved destination, never bearer secrets.\n\nThe application-outcome template does not itself make an approved applicant ready\nto sign in. The recovery OTP folder is not the registration verification template.\nNew business scenarios may require additional resources and caller integration.\n\n## Manifest reference\n\nThis is the implemented Profile email-verification declaration:\n\n```json\n{\n  \"formatVersion\": 1,\n  \"code\": \"profile.employee.emailVerification\",\n  \"ownerModule\": \"profile\",\n  \"version\": 2,\n  \"status\": \"ACTIVE\",\n  \"purpose\": \"EMPLOYEE_EMAIL_VERIFICATION\",\n  \"sourceModules\": [\"profile\"],\n  \"channel\": \"EMAIL\",\n  \"defaultLocale\": \"en\",\n  \"parameters\": {\n    \"verificationCode\": {\n      \"type\": \"string\", \"required\": true, \"maximumLength\": 128\n    },\n    \"expiresAt\": {\n      \"type\": \"string\", \"required\": true, \"maximumLength\": 128\n    },\n    \"brandName\": {\n      \"type\": \"string\", \"required\": false, \"maximumLength\": 120,\n      \"default\": \"Account services\"\n    }\n  }\n}\n```\n\n| Field | Meaning and constraint |\n| --- | --- |\n| formatVersion | Supported resource format is 1 |\n| code | Stable identity, not a filename; simple bounded identifier |\n| ownerModule | First manifest must come from this discovered module |\n| version | Positive integer, distinct from a data-release semantic version |\n| status | ACTIVE is required for resolution |\n| purpose | Exact business purpose matched against the request |\n| sourceModules | Explicit non-empty source-module allowlist |\n| channel | EMAIL or SMS, matching the requested channel |\n| defaultLocale | Locale folder used when a requested-locale file is absent |\n| requiresSelection | Optional boolean; true requires explicit resource selection/adoption |\n| parameters | Declared simple parameter names and string contracts |\n| type | Resource parameters support string, not arbitrary objects or numbers |\n| required | Required strings must be supplied and nonblank; cannot have defaults |\n| maximumLength | Positive string-length limit; not a UTF-8 byte or SMS segment count |\n| default | Optional presentation default, never a secret or a required proof value |\n| format | Optional https-url for safe dynamic href/src insertion |\n\nA later complete manifest may change version, default locale and optional\npresentation defaults. It cannot change owner, code, purpose, channel, source\nallowlist, requiresSelection behavior or parameter names/types/requiredness/limits/\nformat. Use a new owner-defined identity for an incompatible contract, not a\nbranding override. Duplicate identities under different resource folder names reject.\n\n## Configuration and activation\n\nFour separate decisions are involved:\n\n1. The sending runtime discovers the files' owner module.\n2. The relevant template is selected and valid.\n3. The requesting business operation and trusted source are allowed.\n4. A selected, enabled and qualified provider can deliver to the recipient.\n\nNeither installing a package nor adding a template passes the other gates.\nConfiguration must be effective in the sending runtime, not only in a web or\nProfile runtime that makes the original request.\n\n| Configuration | Default | Purpose |\n| --- | --- | --- |\n| communication.templateResources.enabled | true | Enable file-resource resolution |\n| communication.templateResources.modules | empty object | Explicit discovered inactive owners whose files may be used |\n| communication.templateResources.selections | empty object | Optional resource codes explicitly selected with true |\n| communication.templateResources.maximumFileBytes | 65536 | Bound each source file |\n| communication.templateResources.maximumTemplatesPerModule | 100 | Bound resource catalogue scanning |\n| communication.templateResources.maximumLayers | 512 | Bound effective resource layers |\n| communication.rendering.maximumVariables | 50 | Bound declared/accepted render data |\n| communication.rendering.maximumRenderedBytes | 65536 | Bound serialized rendered output, including private identity |\n| communication.trustedSourceModules | empty array | Permit requesting technical module names |\n| communication.templates | empty object | Existing explicit configured selection/compatibility map |\n| communication.providers.EMAIL | absent | Select email provider type and deployment differences |\n| communication.providers.SMS | absent | Select SMS provider type and deployment differences |\n\nResource rendering rejects unknown variables regardless of a legacy permissive\npolicy expectation. Defaults are inherited; customer properties should contain only\nthe intended differences, not a copy of this table.\n\nFor example, an existing customer module may select a framework acknowledgement:\n\n```js\nmodule.exports = {\n  communication: {\n    trustedSourceModules: [\"contactSubmission\"],\n    templateResources: {\n      selections: { CONTACT_ACKNOWLEDGEMENT: true }\n    }\n  }\n};\n```\n\nThis is a fragment for a runtime whose intended trusted-source set includes that\nmodule. Preserve other required sources according to the existing configuration\nmerge contract; do not blindly replace a live allowlist. It does not select a\nprovider, enable contact intake or create a notification request.\n\nFor a split sending runtime that discovers but does not activate Profile:\n\n```js\nmodule.exports = {\n  communication: {\n    templateResources: { modules: { profile: true } }\n  }\n};\n```\n\nThis only makes Profile's deployed files eligible. The existing runtime discovery\nroots must already include the owner package. Unknown selected owners fail closed.\nDo not activate all Profile services just to obtain email files.\n\n## Selection precedence and published references\n\nFor a new intent, selection is:\n\n1. Explicit `communication.templates[templateCode]`.\n2. A matching available/selected module resource.\n3. An active parent and active locale/channel version in the existing published store.\n\nA configured inline legacy entry therefore shadows a same-code resource. Remove\nthat old selection through a reviewed migration when adopting files. Do not\ndiagnose its unchanged wording as a file-override failure.\n\nAn explicit configured resource reference can pin version selection without bodies:\n\n```js\nmodule.exports = {\n  communication: {\n    templates: {\n      CONTACT_ACKNOWLEDGEMENT: {\n        code: \"CONTACT_ACKNOWLEDGEMENT\",\n        resourceCode: \"CONTACT_ACKNOWLEDGEMENT\",\n        version: 2,\n        status: \"ACTIVE\",\n        purpose: \"TRANSACTIONAL\",\n        channels: [\"EMAIL\"],\n        sourceModules: [\"contactSubmission\"]\n      }\n    }\n  }\n};\n```\n\nUse one deliberate selection approach, not every example simultaneously.\nA reference's resourceCode must equal the requested code. The effective resource\nversion, purpose and source must match. A reference cannot also have subjectTemplate\nor bodyTemplate. Resource availability still follows existing discovery.\n\nPublished parents store explicit sourceModules, declared variables, channels,\npurpose and currentVersion. Active version rows select resourceCode, version,\nchannel and locale; they do not own HTML/text presentation. Missing source ownership\nis not a wildcard. The published lookup requires its requested locale/version row;\nresource-file locale fallback does not invent a missing published selection row.\n\nCurrent commsCore releases use core-v002 and optional sample-v002 source roots at\nrelease version 0.0.1, with message resource version 2. The old v001 files remain\nunchanged historical inputs, not active manifest inputs. The IN_APP notice remains\nlegacy text because this migration concerns EMAIL/SMS. Import schema changes and\nadoption records only through the governed owner path in an authorized runtime.\nDo not edit old releases or bulk-rewrite queued messages.\n\n## Customize and extend safely\n\n### Choose the smallest change\n\n| Desired change | Correct extension |\n| --- | --- |\n| Change one email subject | Override only locale subject.txt |\n| Change HTML branding/layout | Override email.html; review email.txt for equivalent information |\n| Change wording for SMS | Override message.txt |\n| Change a declared optional brand default | Supply a complete compatible template.json |\n| Add a language | Add corresponding locale files, select that request locale |\n| Different server-specific wording | Same resource path under the selected server/node module |\n| New purpose or parameter contract | New domain-owned code and manifest |\n| Different provider | Existing provider selection/extension, not template changes |\n| Different business trigger or recipient rule | Owning domain extension, not presentation or transport |\n\n### Override a subject without copying the framework\n\nIn an already discovered and active concrete customer module:\n\n```text\n<customer-module>/src/templates/email/employee-email-verification/en/subject.txt\n```\n\n```text\nYour Example Company verification code\n```\n\nThat is the entire presentation override. The framework manifest, HTML and plain\ntext remain inherited. The folder name must remain employee-email-verification,\neven though the caller uses profile.employee.emailVerification. Do not add a\ntemplate registration service or duplicate renderer.\n\n### Override HTML and plain text together\n\nCreate the same two locale files in the customer module:\n\n```html\n<!doctype html>\n<html lang=\"en\">\n  <body style=\"margin:0;padding:24px;font-family:Arial,sans-serif;color:#202724;\">\n    <h1 style=\"font-size:24px;\">Verify your Example Company email</h1>\n    <p>Your verification code is <strong>{{verificationCode}}</strong>.</p>\n    <p>It expires at {{expiresAt}}.</p>\n    <p>If you did not request this code, ignore this message.</p>\n  </body>\n</html>\n```\n\n```text\nVerify your Example Company email.\nYour verification code is {{verificationCode}}.\nIt expires at {{expiresAt}}.\nIf you did not request this code, ignore this message.\n```\n\nUse email-compatible static markup and inline CSS. Preserve essential information\nin the text version. Static images, when used, need trusted HTTPS URLs and useful\nalt text; remote image loading depends on the recipient client. The renderer does\nnot fetch assets. Never place secrets in asset URLs.\n\n### Customize optional branding defaults\n\nCopy the complete owner manifest into the matching customer resource folder,\npreserve its identity and parameter contract, and change only the optional\nbrandName default. There is no partial JSON merge for manifests. A file containing\nonly parameters.brandName.default is invalid. Caller-supplied brandName takes\nprecedence over that default.\n\nExisting resources without a brandName parameter cannot acquire one through a\nbranding override. Use static wording in the HTML or introduce an owner-reviewed\nnew template identity when a new dynamic parameter is genuinely required.\n\n### Layer precedence\n\nResource resolution follows the existing module graph, low to high:\n\n1. Explicitly selected discovered inactive owners, before indexed active modules.\n2. Indexed active concrete modules in their existing order.\n3. Selected environment, server-root, server and node modules, deduplicated in that order.\n\nRuntime scopes are evaluated last even if normal module indexes differ. Project/\napplication roots are excluded. A customer package merely installed on disk is not\nautomatically an active overriding layer. Inspect the sending runtime's indexed/raw\nmodule metadata rather than guessing precedence from directory names.\n\nTo make an environment override, put the same relative resource path under that\nselected environment module, for example:\n\n```text\n<environment-module>/src/templates/email/employee-email-verification/en/subject.txt\n<server-module>/src/templates/email/employee-email-verification/en/email.html\n<node-module>/src/templates/sms/runtime-notice/en/message.txt\n```\n\nThese are placeholders for existing discovered module roots, not new loader\ndirectories. The highest eligible existing file wins. Missing files inherit;\nan existing invalid, oversized or unreadable file rejects instead of silently\nfalling back. No automatic tenant-name directory lookup exists. Tenant-specific\nbranding requires an explicitly governed existing deployment/customization route;\ndo not infer a new per-tenant filesystem loader.\n\n### Locale fallback\n\nAdd translated files under a locale such as fr. For each required file, requested\nlocale is preferred across all layers; only then does defaultLocale fallback apply.\nA framework fr file therefore beats a customer en file for a fr request.\n\n| Available files for a fr request | Effective file |\n| --- | --- |\n| Owner en, customer en, no fr anywhere | Highest eligible en file |\n| Owner fr, customer en | Owner fr |\n| Owner fr, customer fr | Customer fr |\n| Customer fr subject only | Customer fr subject; other files fall back independently |\n| No requested/default file for a required representation | Reject incomplete bundle |\n\nPartial translations can produce mixed-language representations. Supply the full\nlocale bundle when consistency is required. The renderer does not translate dates,\nchoose a customer's language or format numbers. The trusted caller supplies\nlocalized strings and the desired locale.\n\n## Build a new email notification\n\nThis worked example is an illustrative customer-domain notification, not a newly\nshipped framework capability. Assume an existing discovered module acmeOrders owns\nthe approved order-ready event. Do not create a module solely to hold framework\nmechanics or change a framework module from a partner project.\n\n### 1. Define the business contract\n\nThe domain has already determined that the order is ready and selected the eligible\nrecipient from authoritative data. It supplies only orderNumber and a safe HTTPS\norderUrl. Purpose is TRANSACTIONAL. The message neither marks an order ready nor\ngrants access to the order. Use a stable event identity and authorize the linked\npage independently.\n\n### 2. Add the manifest\n\n`<acmeOrders-module>/src/templates/email/order-ready/template.json`:\n\n```json\n{\n  \"formatVersion\": 1,\n  \"code\": \"acme.orderReady\",\n  \"ownerModule\": \"acmeOrders\",\n  \"version\": 1,\n  \"status\": \"ACTIVE\",\n  \"purpose\": \"TRANSACTIONAL\",\n  \"sourceModules\": [\"acmeOrders\"],\n  \"channel\": \"EMAIL\",\n  \"defaultLocale\": \"en\",\n  \"requiresSelection\": true,\n  \"parameters\": {\n    \"orderNumber\": {\n      \"type\": \"string\", \"required\": true, \"maximumLength\": 64\n    },\n    \"orderUrl\": {\n      \"type\": \"string\", \"required\": true, \"maximumLength\": 512,\n      \"format\": \"https-url\"\n    }\n  }\n}\n```\n\n### 3. Add all three representations\n\n`en/subject.txt`:\n\n```text\nOrder {{orderNumber}} is ready\n```\n\n`en/email.txt`:\n\n```text\nYour order {{orderNumber}} is ready.\nView the order: {{orderUrl}}\n```\n\n`en/email.html`:\n\n```html\n<!doctype html>\n<html lang=\"en\">\n  <body style=\"margin:0;padding:24px;font-family:Arial,sans-serif;color:#202724;\">\n    <h1 style=\"font-size:24px;\">Order ready</h1>\n    <p>Your order <strong>{{orderNumber}}</strong> is ready.</p>\n    <p><a href=\"{{orderUrl}}\">View your order</a></p>\n  </body>\n</html>\n```\n\nThe full href is one quoted https-url parameter. Do not construct it with\n`href=\"https://example.test/{{orderNumber}}\"`: mixed dynamic attributes are not\nsupported. Construct and validate the complete URL in the domain service. HTTPS\nvalidation alone does not authorize an arbitrary destination; apply the domain's\napproved host/path policy before passing it.\n\n### 4. Select the notification\n\nAdd only the necessary differences in the existing customer configuration:\n\n```js\nmodule.exports = {\n  communication: {\n    trustedSourceModules: [\"acmeOrders\"],\n    templateResources: { selections: { \"acme.orderReady\": true } }\n  }\n};\n```\n\nCompose the customer owner and Communication into the appropriate runtime or use\nthe existing secured Communication service route for a split topology. Do not\nassume a service global from another process exists locally. Provider selection\nis separate; see the runbook. New resources do not require a new schema, router or\ndata-release pack when direct configured selection meets the requirement.\n\n### 5. Request through the existing owner\n\nWithin an authorized server-side domain service, the in-process call shape is:\n\n```js\nreturn SERVICE.DefaultCommunicationRuntimeService.request(request, {\n  sourceModule: \"acmeOrders\",\n  sourceType: \"ORDER\",\n  sourceCode: order.code,\n  templateCode: \"acme.orderReady\",\n  purpose: \"TRANSACTIONAL\",\n  channel: \"EMAIL\",\n  locale: \"en\",\n  recipientId: recipient.code,\n  recipientAddressReference: recipient.approvedEmail,\n  variables: {\n    orderNumber: order.number,\n    orderUrl: approvedOrderUrl\n  },\n  idempotencyKey: notificationEventKey,\n  correlationId: request.correlationId\n});\n```\n\nThe shown identifiers represent values already validated by the domain, not browser\nbody fields. The request must carry trusted tenant/authentication context. The\nservice route additionally requires its existing service permission. Keep real\nrecipient addresses and values out of logs. For SMTP, the recipient reference is\na validated single mailbox; another provider may resolve a reference differently.\n\nnotificationEventKey must be deterministic for that domain event, channel and\nrecipient. Replaying the same event reuses it; changing variables under it conflicts.\nDo not append a timestamp on every retry. A later distinct authorized event gets\na distinct key. Supply expiresAt when business delivery validity is bounded.\nFor OTP, align delivery validity with the existing verification authority.\n\n## Build a new SMS notification\n\nUse the same domain event and renderer, with a separate channel resource:\n\n```text\n<acmeOrders-module>/src/templates/sms/order-ready/template.json\n<acmeOrders-module>/src/templates/sms/order-ready/en/message.txt\n```\n\nUse the complete email manifest above with channel changed to SMS; retain the same\ncode, owner, purpose and parameter declarations for this illustrative dual-channel\nmessage. The channel separates resource lookup. The message file is:\n\n```text\nOrder {{orderNumber}} is ready. View: {{orderUrl}}\n```\n\nRequest channel SMS, supply the recipient reference understood by the selected\nSMS transport, and use a distinct channel-specific event key. An email idempotency\nkey cannot be reused with a changed channel. The existing optional selection is\ncode-scoped: selecting acme.orderReady makes either matching channel resource\neligible; it does not authorize both channels for every domain event.\n\nSMS is text, not a miniature HTML email. No subject or email.html is required.\nThe sandbox provider enforces a default maximum of 1600 UTF-8 bytes. Multi-byte\ncharacters consume more bytes; this bound is not a promise of a particular number\nof GSM/UCS-2 segments or a carrier price. Segmentation, opt-out handling, recipient\nresolution and real carrier delivery need an explicitly qualified transport.\nDo not invent an SMS OTP proof store or a live carrier adapter in a template file.\n\n## Parameter safety and supported interaction\n\nOnly simple `{{name}}` expressions are supported. HTML output escapes dynamic\nvalues; text output preserves literal characters. Required values must be nonblank\nstrings. Unknown values reject, optional absent values become blank unless a default\nexists, and object/array/number values are not resource parameters.\n\nRejected syntax includes raw triple braces, helpers, blocks, loops, partials,\ndynamic lookup and prototype/property traversal. Reserved helper/prototype names\nare invalid declarations. Compose alternative messages in the domain by selecting\nthe correct template or supplying an already-approved string, not by executing\nbusiness logic inside HTML.\n\nHTML parsing rejects script/style blocks, embedded documents, forms, event handlers,\nunsafe URLs and active CSS. Use static inline styling. Dynamic attributes are only\nquoted href/src whose entire value is a declared https-url parameter. This is\ntrusted deployment-resource validation, not a general public HTML sanitizer.\n\nSupported interaction means safe links to authorized application journeys.\nJavaScript, form submission, embedded payment actions and executable email widgets\nare not supported. Never make the presence of a link or a rendered decision string\nthe authority for a privileged action.\n\n## Durability, privacy and upgrades\n\nEach new intent records templateVersion and private renderedContent, including\ntext, optional HTML and templateIdentity. That identity contains a checksum,\nowner and per-file module/locale/resource provenance, not absolute filesystem\npaths or variable values. The checksum covers the effective manifest and files,\nso branding changes are distinguishable even if a compatible version is retained.\n\nProvider payloads contain only required representations; private provenance stays\nlocal. Public results, events and logs remain content-free. The private intent can\ncontain sensitive message content, including an OTP; it needs existing storage\naccess and retention controls. Do not incorrectly claim that only a hash is stored.\nProof hashing in commsVerification is a separate security contract.\n\nExisting intents are not re-rendered after a template change. Identical replay\nreturns stored evidence even if the files have been removed; retry uses frozen\ncontent. New requests use the then-effective resources. An operator must not\nresend to apply a new brand layout or change an idempotency key to evade uncertainty.\n\nPublished release checksums identify framework bundles; the actual customized\nbundle hash is pinned in a new intent. A reference-pinned version must continue to\nmatch its selected resource. Plan manifest version/adoption changes together.\nLegacy persisted/configured text stays on the shared restricted compatibility\nrenderer and cannot silently become HTML.\n\n## Troubleshooting matrix\n\n| Symptom | Likely cause | Safe next action |\n| --- | --- | --- |\n| Communication source is not configured | Source missing from sending runtime policy | Review effective trustedSourceModules, not browser fields |\n| Resource owner is unavailable | Owner not discovered or wrong selected name | Inspect raw metadata and existing discovery roots |\n| Template unavailable for source | Purpose/channel/source mismatch or optional unselected resource | Compare manifest, caller and selection/adoption |\n| Resource reference unavailable | Pinned version does not match effective resource | Coordinate version and governed adoption |\n| Old wording after file override | Configured legacy entry shadows files, or wrong runtime/locale | Inspect selection precedence and provenance |\n| Incomplete bundle | Required file missing in requested and default locales | Supply/inherit all required representations |\n| Parameter missing or invalid | Wrong type, blank required value, too long or unsafe URL | Fix trusted caller data; never weaken security for bad input |\n| Unknown variable | Caller supplied undeclared input | Minimize data or create an owner-reviewed new contract |\n| Manifest override rejected | Changed source/purpose/parameter contract or partial manifest | Keep compatible full manifest or create a new identity |\n| Rendered content too large | Output plus identity exceeds configured byte bound | Reduce copy/markup and check all representation sizes |\n| SMS rejected despite valid rendering | Final text exceeds provider bytes or contains HTML | Shorten SMS and retain provider safety bounds |\n| UNCONFIGURED | Provider disabled, missing references/ports or invalid auth | Follow provider runbook; do not change template copy |\n| UNCERTAIN | Transport may have accepted before reply was lost | Reconcile exact managed revision; no blind retry |\n| New layout absent on retry | Intent correctly retained frozen content | Use a genuinely new authorized event to observe new files |\n\nErrors must remain content-free. Investigate with template/intent/correlation codes\nand protected metadata; do not paste production bodies, addresses, credentials or\nverification values into support records.\n\n## Common mistakes\n\n- Copying the renderer into a customer project instead of overriding files.\n- Using a resource folder name as the request code or confusing OTP with a channel.\n- Treating optional selection as permission to send or as production qualification.\n- Adding undeclared parameters through a partial manifest or using raw HTML values.\n- Expecting a customer default-locale file to replace an existing exact-locale file.\n- Retrying with a new idempotency key because the first send outcome is uncertain.\n- Claiming that private intents contain no message content.\n\n## Verification workflow\n\nFor joint testing, prepare a fake-value preview before enabling any transport:\n\n- Resolve each default and each intended customer/environment/server/node override.\n- Check subject, HTML, text and SMS independently; include long strings and small screens.\n- Exercise requested-locale precedence and incomplete/malformed resource rejection.\n- Reject unknown/missing/oversized values, raw markup, helper syntax and unsafe URLs.\n- Confirm optional resources stay unavailable until explicitly selected/adopted.\n- Confirm wrong source, purpose, channel and published version reject before persistence.\n- Prove replay and retry retain content, and changed data under the same key conflicts.\n- Check disabled providers, tenant/lease/expiry, suppression and uncertain recovery.\n- Confirm private identity never reaches provider content, public DTOs or logs.\n- Qualify actual database schema installation, live mailbox/client rendering and\n  approved SMS carrier behavior separately from source and sandbox tests.\n\nExisting focused suites are Communication template resources, channel migration,\ndurable runtime, SMTP runtime adapter, SMS runtime adapter and Profile employee\ntemplate resources under their owning module test directories. They are a map for\ntesting, not evidence that a particular customer deployment has passed.\n\n## Related topics\n\n- [Communication overview](overview.md)\n- [Provider configuration and operations](provider-runbooks.md)\n- [Resource implementation contract](../../../../nodics.communication/modules/commsCore/llm/contracts/template-resources.md)\n- [Framework presentation principle](../../../../nodics.foundation/modules/nSetup/llm/contracts/nodics-principles.md#module-owned-email-and-sms-presentation)\n",
+    "keywords": [
+      "email",
+      "sms",
+      "templates",
+      "notifications",
+      "customization",
+      "locale",
+      "parameters",
+      "Communication and Notifications",
+      "Email and SMS Templates"
+    ],
+    "facets": {
+      "section": "communication-and-notifications",
+      "group": "communication-and-notifications",
       "navigationDepth": 2,
       "documentType": "how-to",
       "audience": [

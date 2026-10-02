@@ -67,6 +67,9 @@ module.exports = {
 
     /** Checks existing required tenant database handles without opening probe connections. */
     areRequiredConnectionsReady: function () {
+        if (typeof SERVICE.DefaultDatabaseConfigurationService.areRequiredConnectionsReady === 'function') {
+            return SERVICE.DefaultDatabaseConfigurationService.areRequiredConnectionsReady();
+        }
         let modules = SERVICE.DefaultDatabaseConfigurationService.getDatabaseActiveModules();
         let tenants = NODICS.getActiveTenants();
         if (tenants.length === 0) tenants = [CONFIG.get('defaultTenant') || 'default'];
@@ -79,11 +82,10 @@ module.exports = {
 
     /** Closes all registered module and tenant database handles during shutdown. */
     closeAllConnections: async function () {
-        const modules = [...new Set(['default', ...SERVICE.DefaultDatabaseConfigurationService.getDatabaseActiveModules()])];
-        const tenants = [...new Set([CONFIG.get('defaultTenant') || 'default', ...NODICS.getActiveTenants()])];
+        const scopes = SERVICE.DefaultDatabaseConfigurationService.getRetainedDatabaseScopesForCleanup();
         const closed = new Set();
-        const results = await Promise.allSettled(modules.flatMap(moduleName => tenants.map(tenant =>
-            this.closeConnection(moduleName, tenant, closed))));
+        const results = await Promise.allSettled(scopes.map(({ moduleName, tenant }) =>
+            this.closeConnection(moduleName, tenant, closed)));
         const failure = results.find(result => result.status === 'rejected');
         if (failure) throw failure.reason;
         return true;
@@ -122,6 +124,9 @@ module.exports = {
                 if (defaultIndex >= 0) {
                     dbModules.splice(defaultIndex, 1);
                 }
+                // Admit the whole requested batch before even the default provider opens.
+                ['default', ...(!onlyDefault ? dbModules : [])].forEach(moduleName =>
+                    SERVICE.DefaultDatabaseConfigurationService.getDatabaseConfiguration(moduleName, tntCode));
                 _self.createDatabase('default', tntCode).then(success => {
                     let allModules = [];
                     if (!onlyDefault) {
@@ -142,6 +147,7 @@ module.exports = {
                     reject(error);
                 });
             } catch (error) {
+                if (['ERR_DATABASE_TENANT_NAMESPACE', 'ERR_DATABASE_TENANT_BINDING'].includes(error.code)) return reject(error);
                 reject(new CLASSES.NodicsError(error, 'MongoDB default connection error', 'ERR_DBS_00000'));
             }
         });
@@ -226,6 +232,7 @@ module.exports = {
                     reject(new CLASSES.NodicsError('ERR_DBS_00000', 'Invalid database configuration found for module: ' + moduleName + ', and tenant: ' + tntCode));
                 }
             } catch (error) {
+                if (['ERR_DATABASE_TENANT_NAMESPACE', 'ERR_DATABASE_TENANT_BINDING'].includes(error.code)) return reject(error);
                 reject(new CLASSES.NodicsError(error, 'MongoDB default connection error', 'ERR_DBS_00000'));
             }
         });
@@ -319,16 +326,20 @@ module.exports = {
      * @sideEffects Delegates connection closure to the configured connection handler.
      */
     closeConnection: async function (moduleName, tntCode, closed = new Set()) {
-        const connection = SERVICE.DefaultDatabaseConfigurationService.getTenantDatabase(moduleName, tntCode);
+        const connection = SERVICE.DefaultDatabaseConfigurationService.getRetainedTenantDatabaseForCleanup(moduleName, tntCode);
         const work = [];
         for (const database of connection ? [connection.master, connection.test] : []) {
             if (!database) continue;
-            const handle = typeof database.getClient === 'function' ? database.getClient() : database;
+            const handle = (typeof database.getClient === 'function' ? database.getClient() : undefined) || database;
             if (closed.has(handle)) continue;
-            const handler = SERVICE[database.getOptions().connectionHandler];
-            if (!handler || typeof handler.closeConnection !== 'function') continue;
             closed.add(handle);
-            work.push(Promise.resolve().then(() => handler.closeConnection(database)));
+            work.push(Promise.resolve().then(() => {
+                const handler = SERVICE[database.getOptions().connectionHandler];
+                if (!handler || typeof handler.closeConnection !== 'function') {
+                    throw new CLASSES.NodicsError('ERR_DBS_00000', 'Retained database has no closure provider');
+                }
+                return handler.closeConnection(database);
+            }));
         }
         const results = await Promise.allSettled(work);
         const failure = results.find(result => result.status === 'rejected');

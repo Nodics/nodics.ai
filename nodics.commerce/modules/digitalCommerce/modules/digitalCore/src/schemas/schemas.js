@@ -44,6 +44,8 @@ module.exports = { digitalCore: {
         claimStatus: { type: 'string', required: false , description: 'Tracks whether and how this record has been claimed by the entitled party.'},
         revealPolicy: { type: 'object', required: false , description: 'Defines the reveal policy that controls how this record is handled.'},
         purchasedAt: { type: 'date', required: false , description: 'Records when the purchased event or value applies.'},
+        validTo: { type: 'date', required: false, description: 'Retained purchase-derived coupon expiration, independent of catalogue launch dates.' },
+        purchasePolicy: { type: 'object', required: false, description: 'Retained Promotion-owned purchase rights evidence; credentials and coupon tokens are excluded.' },
         deliveredAt: { type: 'date', required: false , description: 'Records when the delivered event or value applies.'},
         revokedAt: { type: 'date', required: false , description: 'Records when the revoked event or value applies.'}
     }) }),

@@ -13,11 +13,17 @@
 const test = require('node:test');
 const assert = require('node:assert/strict');
 const path = require('node:path');
+const fs = require('node:fs');
+const crypto = require('node:crypto');
 const fixture = require('../../../../nodics.foundation/modules/nData/nImport/import/test/helpers/releaseExecution');
 const installer = require('../../../../nodics.process/modules/workflow/src/service/definition/defaultProcessDefinitionContributionService');
 const validator = require('../../../../nodics.process/modules/workflow/src/service/designer/defaultProcessGraphValidationService');
 const manifest = require('../data/manifest.json');
-const graph = require('../data/init-v002/records/process/mediaPublicationWorkflowDefinitionData');
+const historicalFile = '../data/init-v002/records/process/mediaPublicationWorkflowDefinitionData.js';
+const historical = require(historicalFile);
+const currentFile = '../data/init-v003/records/process/mediaPublicationWorkflowDefinitionData.js';
+const graph = require(currentFile);
+const runtime = require('../../../../nodics.process/modules/workflow/src/service/operation/defaultProcessRuntimeLifecycleService');
 
 /** Provides only an error constructor; no runtime is initialized. */
 function errors() { global.CLASSES = { NodicsError: class extends Error { constructor(code, message) { super(message); this.code = code; } } }; }
@@ -27,7 +33,13 @@ test('new workflow uses a forward directory and explicit release selection witho
     const owner = { name: 'media', path: path.resolve(__dirname, '..') };
     const f = fixture({ modules: { media: owner }, runtimeRole: 'PROCESS' });
     const release = manifest.sections.mediaPublicationWorkflow;
-    assert.equal(release.sourceRoot, 'init-v002'); assert.equal(release.version, '1.0.0');
+    assert.equal(release.sourceRoot, 'init-v003'); assert.equal(release.version, '1.0.1');
+    assert.deepEqual(Object.keys(release.files), [currentFile.slice('../data/'.length)]);
+    assert.equal(crypto.createHash('sha256').update(fs.readFileSync(path.resolve(__dirname, historicalFile))).digest('hex'),
+        '44355063df521b219094703cee293b65df954352e5ced7b77b8b6153acbb5fe9');
+    assert.equal(crypto.createHash('sha256').update(fs.readFileSync(path.resolve(__dirname, currentFile))).digest('hex'),
+        release.files[currentFile.slice('../data/'.length)]);
+    assert.equal(graph.definitions[0].code, historical.definitions[0].code);
     assert.equal(release.selectionPolicy, 'EXPLICIT');
     for (const name of ['mediaReplicationRetryJob', 'mediaCleanupRetentionJob']) {
         assert.equal(manifest.sections[name].sourceRoot, 'init-v001');
@@ -47,19 +59,25 @@ test('new workflow uses a forward directory and explicit release selection witho
 test('installed earlier Media workflow advances through Process lifecycle, replays unchanged, and rejects drift/downgrade', async () => {
     errors();
     const definition = structuredClone(graph.definitions[0]);
-    const history = [{ ...structuredClone(definition), currentVersion: 1, status: 'PUBLISHED', contributionOwner: 'media',
-        contributionCode: 'media:mediaPublicationWorkflow', contributionVersion: '0.9.0', contributionChecksum: 'a'.repeat(64) }];
+    const history = [{ ...structuredClone(historical.definitions[0]), definitionCode: definition.code,
+        version: 1, currentVersion: 1, status: 'PUBLISHED', contributionOwner: 'media',
+        contributionCode: 'media:mediaPublicationWorkflow', contributionVersion: '1.0.0', contributionChecksum: 'a'.repeat(64) }];
+    const running = { code: 'running-v1', definitionCode: definition.code, version: 1,
+        status: 'WAITING', currentNode: 'mediaReview', context: { sourceVersion: 'retained-v1' } };
+    const runningBefore = structuredClone(running);
     let current = structuredClone(history[0]), prepared = 0;
     global.CONFIG = { get: () => ({ definitionContributions: {} }) };
     global.NODICS = { getRawModule: () => ({ path: path.resolve(__dirname, '..') }) };
     global.SERVICE = {
         DefaultProcessGraphValidationService: validator,
+        DefaultProcessDefinitionVersionService: { get: async request => ({ result: history.filter(version =>
+            version.definitionCode === request.query.definitionCode && version.version === request.query.version) }) },
         DefaultProcessDefinitionLifecycleService: {
             findDefinition: async () => current,
             prepareNextDraft: async () => { prepared++; current.status = 'DRAFT'; },
             updateDraft: async request => { Object.assign(current, request.processDefinition); },
             publishDraft: async () => { current.status = 'PUBLISHED'; current.currentVersion++;
-                history.push(structuredClone(current)); return { data: { version: current.currentVersion } }; }
+                history.push({ ...structuredClone(current), version: current.currentVersion }); return { data: { version: current.currentVersion } }; }
         }
     };
     const contribution = { ...manifest.sections.mediaPublicationWorkflow, moduleName: 'media',
@@ -68,10 +86,21 @@ test('installed earlier Media workflow advances through Process lifecycle, repla
     const before = structuredClone(history[0]);
     await installer.installContribution({ tenant: 'one', contribution });
     assert.equal(prepared, 1); assert.equal(current.currentVersion, 2);
-    assert.equal(current.contributionVersion, '1.0.0'); assert.deepEqual(history[0], before);
+    assert.equal(current.contributionVersion, '1.0.1'); assert.deepEqual(history[0], before);
+    const pinned = await runtime.requireVersion({ tenant: 'one' }, running.definitionCode, running.version);
+    assert.deepEqual(pinned, before);
+    assert.equal(pinned.graph.nodes.find(node => node.code === 'mediaReview').policy, undefined);
+    const successor = await runtime.requireVersion({ tenant: 'one' }, definition.code, 2);
+    assert.equal(successor.graph.nodes.find(node => node.code === 'mediaReview').policy.decisionContract.kind, 'APPROVAL');
+    assert.deepEqual(successor.policy.actorPolicy, definition.policy.actorPolicy);
+    assert.deepEqual(running, runningBefore);
     const replay = await installer.installContribution({ tenant: 'one', contribution });
     assert.equal(replay.data.definitions[0].status, 'CURRENT'); assert.equal(prepared, 1);
     await assert.rejects(installer.installContribution({ tenant: 'one', contribution: { ...contribution, checksum: 'c'.repeat(64) } }), /without a version change/);
-    await assert.rejects(installer.installContribution({ tenant: 'one', contribution: { ...contribution, version: '0.8.0' } }), /downgrade/);
+    const drifted = structuredClone(definition);
+    drifted.graph.nodes.find(node => node.code === 'mediaReview').policy.decisionContract.maximumReasonLength = 2000;
+    await assert.rejects(installer.planDefinition({ tenant: 'one' }, drifted, contribution), /without a contribution version change/);
+    await assert.rejects(installer.installContribution({ tenant: 'one', contribution: { ...contribution, version: '1.0.0' } }), /downgrade/);
     assert.deepEqual(history[0], before); assert.equal(history.length, 2);
+    assert.deepEqual(running, runningBefore); assert.equal(prepared, 1);
 });

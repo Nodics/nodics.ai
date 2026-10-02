@@ -23,6 +23,7 @@ const coreRoot = path.dirname(require.resolve('nodics.foundation/package.json'))
 const { assertRouteContracts } = require(path.join(coreRoot, 'modules/nRouter/test/routerContractTestUtils'));
 const authProperties = require(path.join(coreRoot, 'modules/nAuth/config/properties'));
 const mediaCapabilityService = require('../src/service/defaultMediaBackofficeCapabilityService');
+const mediaProperties = require('../config/properties');
 const routerConfig = require('../src/router/routers');
 
 const expectedRoutes = [
@@ -79,8 +80,17 @@ assert(publicationImportRoute, 'media publication import route must be registere
 assert.strictEqual(publicationImportRoute.apiExposure, 'moduleInternal', 'media publication import must remain internal only');
 assert.deepStrictEqual(publicationImportRoute.authTokenTypes, ['service'], 'media publication import must require service token authentication');
 assert.strictEqual(publicationImportRoute.bodyParserHandler, 'mediaPublicationBodyParserHandler', 'media publication import must use bounded publication body parsing');
+const previousConfig = global.CONFIG;
+let capability;
+try {
+    global.CONFIG = { get: key => mediaProperties[key] };
+    capability = mediaCapabilityService.getCapability();
+} finally {
+    if (previousConfig === undefined) delete global.CONFIG;
+    else global.CONFIG = previousConfig;
+}
 assert.strictEqual(
-    mediaCapabilityService.getCapability().discovery.openApiPath,
+    capability.discovery.openApiPath,
     '/nodics/system/v0/contract/openapi/internal',
     'media BackOffice discovery must use the central System OpenAPI contract endpoint'
 );

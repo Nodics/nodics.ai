@@ -1,5 +1,54 @@
 # database AI Contracts
 
+## Bulk Failure Metadata Boundary
+
+`DefaultModelsSaveInitializerService.addFailure` preserves capability-owner error
+metadata and stores a deep-cloned failed record only at `metadata.failedModel`.
+The former flat diagnostic paths such as `metadata.code` now become
+`metadata.failedModel.code`. Source fields are never merged into owner metadata:
+an imported record's `importRetry` cannot authorize replay, and diagnostic capture
+cannot erase a genuine owner's pre-write declaration. Non-object owner metadata
+is retained under `metadata.ownerMetadata`; the `failedModel` namespace is reserved
+for database diagnostics. Error codes, causes and normal bulk success/failure
+aggregation remain unchanged. Serialization continues through the existing
+error/privacy owner. Later-layer bulk owners must preserve this boundary.
+
+## Nested Save Replacement Isolation
+
+`DefaultModelService.saveNestedModels` copies ordinary options but strips
+`allowCmsAssociationReplacement`, `replaceAllMatchesByQuery` and
+`replaceArraysOnVersionMerge` unless both parent and child belong to the actual
+effective `cms` schema registry. Module/schema metadata and exact parent schema
+identity are required; names, caller flags and copied schema objects are not
+proof. Only these admitted CMS children receive association access-group defaults
+and a code query template. `versionedImport` always remains local to the selected
+root operation, never inherited by children. Other options and reference-only
+descriptor behavior remain unchanged.
+
+Implicit generated save queries use fields declared `definition.primary: true`,
+not the provider's `schemaOptions.primaryKeys`, which also includes ordinary
+index fields. An incomplete declared identity leaves ordinary creates in insert
+intent with no implicit selector, allowing existing defaults/preSave owners to
+generate required keys later. Never form a partial or ordinary-index selector.
+Replacement requests still reject incomplete identities before owner/provider
+effects, and the Mongo replacement guard independently requires a bounded
+canonical selector. Schemas without a declared primary and without explicit
+`_id`/query retain insert behavior.
+Ordinary indexes never become canonical write identity. Explicit queries remain
+subject to their existing owner authorization/credential/managed-revision guards.
+
+`test/nestedImportReplacementContract.test.js` connects actual import, bulk-save,
+single-save, nested, query and Mongo adapter nodes with an in-memory driver. It
+checks an unchanged synthetic administrator, seven distinct staff credential
+references, replacement isolation and valid CMS version replacement. It also
+composes the actual raw-schema loader and versioned vService/vMongodb save
+path: scalar code/active/version filters, append-only successor and intact history.
+Effective later-layer CMS customization uses the same registered raw schema, not
+an alias. Versioned updates continue their independent owner/version fences and
+insert successors; they do not dispatch multi-match save replacement. This test does
+not boot a runtime, qualify installed data or authorize recovery/reinstallation.
+Later-layer replacements must preserve all of these boundaries.
+
 ## Installed Version Migration
 
 The [operator contract](installed-version-migration.md) owns generic orchestration,
@@ -8,6 +57,11 @@ Use the [scoped example](../examples/installed-version-migration.md), not a copi
 project script or startup import. Terminal completion is not restart approval.
 
 ## Generated Read Dispatch
+
+Declared prepared-schema read owners guard standard query/count and cache
+boundaries independently of rollout qualification. See
+[Protected Schema Provider Reads](protected-schema-provider-reads.md) for fixed
+interfaces, independent privacy composition, cache exclusion and installed gates.
 
 The generated get pipeline validates `resolveReadMethod` before progressing to
 cache lookup and dispatches `readItems` inside its existing error/response path.

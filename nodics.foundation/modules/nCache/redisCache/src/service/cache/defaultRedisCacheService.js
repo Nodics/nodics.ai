@@ -18,6 +18,12 @@
  */
 
 module.exports = {
+    /** Opens bounded exact-key offline cleanup through the provider-owned maintenance boundary. */
+    openLocalResetMaintenance: function (options) {
+        const owner = global.SERVICE?.DefaultRedisLocalResetMaintenanceService ||
+            require('../maintenance/defaultRedisLocalResetMaintenanceService');
+        return owner.open(options);
+    },
     /** Atomically compares and stores a JSON version using one Redis script. */
     putVersioned: function (options) {
         try {

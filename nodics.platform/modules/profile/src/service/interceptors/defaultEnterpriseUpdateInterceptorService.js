@@ -85,15 +85,15 @@ module.exports = {
      */
 
     enterpriseSaveEvent: function (request, response) {
-        return new Promise((resolve, reject) => {
-            resolve(true);
-            this.triggerEnterpriseUpdateEvent(request.model).then(success => {
-                this.LOG.debug('All modules have been informed about Enterprise model changes: ' + request.model.code);
-            }).catch(error => {
-                this.LOG.error('Failed to update modules about Enterprise model changes: ' + request.model.code);
-                this.LOG.error(error);
-            });
-        });
+        const defaultTenant = CONFIG.get('defaultTenant') || 'default';
+        const tenantCode = typeof request.model?.tenant === 'object' ? request.model.tenant.code : request.model?.tenant;
+        if (request.tenant === defaultTenant && tenantCode === defaultTenant &&
+            SERVICE.DefaultDataReleaseService?.isStartupReleaseExecution(defaultTenant) === true) {
+            // Startup installs the default seed before identity grants/tokens, then
+            // discovers enterprises. Do not recursively prepare or notify here.
+            return Promise.resolve(true);
+        }
+        return this.triggerEnterpriseUpdateEvent(request.model).then(() => true);
     },
 
     /**
@@ -111,19 +111,8 @@ module.exports = {
      */
 
     enterpriseUpdateEvent: function (request, response) {
-        return new Promise((resolve, reject) => {
-            resolve(true);
-            if (request.result && request.result.models && request.result.models.length > 0) {
-                request.result.models.forEach(model => {
-                    this.triggerEnterpriseUpdateEvent(model).then(success => {
-                        this.LOG.debug('All modules have been informed about Enterprise model changes: ' + model.code);
-                    }).catch(error => {
-                        this.LOG.error('Failed to update modules about Enterprise model changes: ' + model.code);
-                        this.LOG.error(error);
-                    });
-                });
-            }
-        });
+        const models = request.result?.models || response?.success?.result?.models || [];
+        return Promise.all(models.map(model => this.triggerEnterpriseUpdateEvent(model))).then(() => true);
     },
 
     /**
@@ -170,7 +159,20 @@ module.exports = {
 
      */
 
-    triggerEnterpriseUpdateEvent: function (enterprise, isRemoved) {
+    triggerEnterpriseUpdateEvent: async function (enterprise, isRemoved) {
+        if (enterprise.active && enterprise.tenant && !isRemoved) {
+            const tenantCode = typeof enterprise.tenant === 'object' ? enterprise.tenant.code : enterprise.tenant;
+            const tenants = await SERVICE.DefaultEnterpriseTenantProvisioningService.rows('DefaultTenantService', { code: tenantCode });
+            if (tenants.length !== 1 || tenants[0].active !== true) {
+                throw new CLASSES.NodicsError('ERR_PROFILE_TENANT_PROVISIONING_HELD');
+            }
+            // Events carry identity only. Receivers use authenticated inventory
+            // for configuration; future private Enterprise fields cannot leak.
+            enterprise = { code: enterprise.code, active: true, tenant: { code: tenantCode, active: true } };
+        }
+        enterprise = { code: enterprise.code, active: enterprise.active === true,
+            tenant: { code: typeof enterprise.tenant === 'object' ? enterprise.tenant.code : enterprise.tenant,
+                active: enterprise.tenant?.active === true } };
         return new Promise((resolve, reject) => {
             let profileModuleName = CONFIG.get('profileModuleName') || 'profile';
             let defaultTenant = CONFIG.get('defaultTenant') || 'default';
@@ -222,7 +224,7 @@ module.exports = {
                     this.LOG.error('Failed to check if current tenant is associated with other active enterprises as well : ', error);
                     reject(error);
                 });
-            } else if (enterprise.active && enterprise.tenant.active && !NODICS.getActiveTenants().includes(enterprise.tenant.code)) {
+            } else if (enterprise.active && enterprise.tenant.active) {
                 SERVICE.DefaultEnterpriseHandlerService.buildEnterprise([enterprise]).then(success => {
                     this.LOG.debug('Enterprise: ' + enterprise.code + ' has been successfully activated within profile module');
                     event.event = 'addEnterprise';

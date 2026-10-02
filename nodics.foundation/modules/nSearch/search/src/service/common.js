@@ -60,7 +60,7 @@ module.exports = {
         let moduleName = request.moduleName || 'mdulnm';
         request.schemaModel = NODICS.getModels(moduleName, request.tenant).mdlnm;
         request.moduleName = moduleName;
-        request.indexName = request.indexName ? request.indexName : request.schemaModel.indexName;
+        request.indexName = request.indexName ? request.indexName : (request.schemaModel.typeName || request.schemaModel.indexName);
         if (!request.tenant || !request.indexName) {
             throw new CLASSES.SearchError('ERR_SRCH_00003', 'Invalid request or search is not active for this type');
         } else {

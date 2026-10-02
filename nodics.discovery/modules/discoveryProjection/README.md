@@ -18,6 +18,12 @@ Add domain-specific source fields in the owning source/provider module, then
 map them into the generic projection contract. Do not hardcode one domain's
 shape into this module.
 
+Physical provider indexes may be customized through nSearch's layered index
+definitions while retaining the logical `typeName`. Projection services resolve
+that logical identity rather than treating the physical index as a registry key.
+See the [binding contract](llm/contracts/README.md) and
+`test/customPhysicalIndexBinding.test.js` for customization and failure coverage.
+
 ## Verification
 
 Run the focused contract test from the repository root after changes:

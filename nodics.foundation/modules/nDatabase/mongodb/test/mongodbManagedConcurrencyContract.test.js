@@ -14,6 +14,7 @@
 const assert = require('node:assert/strict');
 const { test } = require('node:test');
 const provider = require('../src/schemas/model').default;
+global.SERVICE = {};
 global.CLASSES = { NodicsError: class extends Error { constructor(code) { super(code); this.code = code; } } };
 
 test('managed updates return the driver document with original selector, no upsert, and the transaction session', async () => {

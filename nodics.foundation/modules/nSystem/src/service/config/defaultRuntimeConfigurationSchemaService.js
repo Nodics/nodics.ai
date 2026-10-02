@@ -102,6 +102,7 @@ module.exports = {
                 ownerModule: schema.ownerModule,
                 status: missingRequired.length > 0 ? 'UNCONFIGURED' : 'CONFIGURED',
                 missingRequired: missingRequired,
+                secretPersistence: this.getSecretPersistenceReadiness(schema),
                 values: values
             },
             metadata: {
@@ -226,7 +227,27 @@ module.exports = {
             delete copy.sampleValue;
             return copy;
         });
+        described.secretPersistence = this.getSecretPersistenceReadiness(schema);
         return described;
+    },
+
+    /**
+     * Projects encryption readiness for this runtime without exposing key material.
+     * @param {Object} schema Owner-declared configuration schema.
+     * @param {Object} [values] Submitted fields; omitted for schema-wide readiness.
+     * @returns {Object} Content-free prerequisite status, not an authorization grant.
+     */
+    getSecretPersistenceReadiness: function (schema, values) {
+        let required = (schema.fields || []).some(field =>
+            field.sensitive === true &&
+            (values === undefined || Object.prototype.hasOwnProperty.call(values || {}, field.code))
+        );
+        let ready = !required || Boolean(this.resolveEncryptionKey());
+        return {
+            required: required,
+            ready: ready,
+            reason: !required ? 'NOT_REQUIRED' : ready ? 'READY' : 'ENCRYPTION_KEY_REQUIRED'
+        };
     },
 
     /** Resolves one field from runtime, secure, or credential configuration sources. */
@@ -257,9 +278,10 @@ module.exports = {
     /** Extracts the operator-facing scalar value from wrapped configuration entries. */
     unwrapValue: function (value) {
         if (value && typeof value === 'object') {
-            if (typeof value.value === 'string') return value.value;
+            if (['string', 'number', 'boolean'].includes(typeof value.value)) return value.value;
             if (typeof value.token === 'string') return value.token;
             if (typeof value.secretReference === 'string') return value.secretReference;
+            return undefined;
         }
         return value;
     },
@@ -269,11 +291,14 @@ module.exports = {
         if (!this.isPresent(value)) {
             return false;
         }
+        if (['string', 'number', 'boolean'].includes(field.type) && typeof value !== field.type) {
+            return false;
+        }
         let unconfiguredValues = field.unconfiguredValues || ['', 'changeme', 'sample', 'placeholder'];
         if (typeof value === 'string' && unconfiguredValues.includes(value.trim())) {
             return false;
         }
-        if (field.pattern && typeof value === 'string' && !(new RegExp(field.pattern).test(value))) {
+        if (field.pattern && (typeof value !== 'string' || !(new RegExp(field.pattern).test(value)))) {
             return false;
         }
         return true;
@@ -300,6 +325,10 @@ module.exports = {
     validateValues: function (schema, values, options) {
         options = options || {};
         let errors = [];
+        let secretPersistence = this.getSecretPersistenceReadiness(schema, values);
+        if (!secretPersistence.ready) {
+            errors.push('Runtime configuration encryption key is required for sensitive values');
+        }
         let fieldMap = {};
         (schema.fields || []).forEach(field => {
             fieldMap[field.code] = field;
@@ -328,6 +357,7 @@ module.exports = {
         return {
             valid: errors.length === 0,
             errors: errors,
+            secretPersistence: secretPersistence,
             maskedValues: this.maskUpdateValues(schema, values)
         };
     },

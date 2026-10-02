@@ -73,6 +73,7 @@ module.exports = {
      * @returns {void}
      */
     handleError: function (request, response, error) {
+        if (SERVICE.DefaultRouterOperationService?.sendPrivateError(request, response, error)) return;
         response.json(error);
     }
 };

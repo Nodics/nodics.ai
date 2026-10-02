@@ -9,5 +9,14 @@
 
  */
 
-/** @module pricing/utils/statusDefinitions @description Declares stable negotiated-price validation failures. @layer config @owner pricing */
-module.exports = { ERR_PRICE_QUOTE_INVALID: { code:"400", message:"The negotiated price is unavailable for this checkout" } };
+/** @module pricing/utils/statusDefinitions @description Declares stable negotiated-price and private merchant-evidence validation failures. @layer config @owner pricing */
+module.exports = {
+  ERR_PRICE_QUOTE_INVALID: {
+    code: "400",
+    message: "The negotiated price is unavailable for this checkout",
+  },
+  ERR_PRICING_MERCHANT_UNCONFIRMED: {
+    code: "409",
+    message: "The merchant priced source could not be confirmed",
+  },
+};

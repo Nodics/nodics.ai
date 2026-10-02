@@ -1,5 +1,44 @@
 # Cancellation, return, and refund lifecycle
 
+## Staged Purchased Coupon Increment
+
+Coupon purchases reuse Commerce rather than a customer-specific refund engine.
+The staged source strengthens owner CAS/readback, preserves original sale time on
+replay and hands partial digital acquisitions to Checkout compensation. An uncertain
+unit remains recovery-required; known releases do not prove all effects were undone.
+
+Promotion's purchasedRights defaults disabled/unqualified. Qualified campaign policy
+can retain a purchase-relative duration, disclosed terms, benefit/outlet conditions
+and optional refund window/request types. The clock starts at the original successful
+sale, not offer launch or delayed delivery. Legacy codes keep their existing policy;
+historical issued rights must not be silently rewritten. A stored JSON snapshot is
+not proof of immutable storage or complete generic-CRUD provenance protection.
+
+Digital Core checks retained refund eligibility before locking an unused entitlement.
+Missing terms require manual review, rather than a universal digital-product refund
+rule. Order/Payment remain the approval, capture reversal and recovery owners.
+Current automatic full-order refund capture supports qualified original loyalty
+points evidence; this is not general cash-provider or split-tender acceptance.
+Circa displays backend-provided expiration and retained text terms; browser dates
+do not authorize redemption or refunds.
+
+Digital Core now compares a complete bounded purchase-unit multiset at preview,
+preparation and completion: aggregate repeated-product entries, unique entitlement
+and provider identities, exact tenant/enterprise/customer/order/Promotion binding,
+and no missing/extra units. An empty read cannot return completed reversal. The
+100-unit complete-read boundary and installed provider pagination remain explicit
+qualification constraints, not universal large-order support.
+
+Purchase/refund EMAIL/SMS bundles are module-owned optional resources. They contain
+no coupon code, require explicit selection and do not activate lifecycle triggers.
+Only confirmed owner purchase/refund evidence can authorize a notification intent;
+pending or uncertain reversal must not send a completed-refund message. Override
+individual HTML/text files through existing customer/runtime template layers.
+
+Source availability and authored fixtures are not installed qualification. Seller
+authorization, receipt minimum-spend/cap/item validation, protected policy provenance,
+all races/partial recovery and real provider/customer acceptance remain gates.
+
 ## Why one lifecycle is needed
 
 Cancellation, return, and refund are related but different business intents. Cancellation tries to stop unfulfilled work. Return moves delivered goods back through Fulfillment and Inventory. Refund moves money through Payment. Order owns the customer intent, eligibility snapshot, approval trail, checkpoints, and final history projection.

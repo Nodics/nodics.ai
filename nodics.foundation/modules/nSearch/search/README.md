@@ -62,6 +62,11 @@ Index definitions belong in `src/search/indexes.js` for the module that owns the
 
 Keep provider-neutral index ownership in this module family. Engine-specific options belong in provider configuration or adapter modules.
 
+A later `src/search/indexes.js` contribution may override a physical `indexName`
+while retaining the logical definition key and `typeName`. Generated service
+lookup and model customization use the logical identity; provider operations and
+engine bookkeeping use the physical index. See the [identity contract](llm/contracts/README.md#logical-and-physical-index-identity).
+
 ## Engine Adapter Checklist
 
 When adding a new search engine:

@@ -1,5 +1,15 @@
 # customerReview Contracts
 
+## Email presentation
+
+This module owns `src/templates/email/review-acknowledgement`: a parameterized
+HTML/text/subject resource, not delivery logic or configuration content. It requires
+explicit selection or optional sample-v002 adoption; file discovery alone never
+enables sending. Later customer modules and runtime scopes may override individual
+files using the [Communication resource contract](../../../../../nodics.communication/modules/commsCore/llm/contracts/template-resources.md).
+Keep source ownership, required parameters and optional activation invariant.
+Communication renders and transports; this domain retains business decisions.
+
 ## Review capability contract
 
 - Status: implemented; the review foundation and governed CRES cutover boundary are active only when explicitly enabled.

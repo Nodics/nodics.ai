@@ -115,11 +115,15 @@ module.exports = {
         this.rawSearchModel[engine] = definition;
     },
 
-    /**
-     * This function is used to get module specific search configuration, if not enabled, it will return undefined
-     * @param {*} moduleName 
-     * @param {*} tntCode 
-     */
+    /** Classifies expected disabled startup logging only; missing/invalid configuration remains warning-worthy and cannot alter provider admission. */
+    isSearchExplicitlyDisabled: function (moduleName, tenant) {
+        try {
+            return this.getSearchConfiguration(moduleName, tenant)?.options?.enabled === false;
+        } catch {
+            return false;
+        }
+    },
+    /** Resolves effective module/tenant provider options through the canonical layered configuration. */
     getSearchConfiguration: function (moduleName, tenant) {
         if (!moduleName && !NODICS.isModuleActive(moduleName)) {
             throw new CLASSES.SearchError('ERR_SRCH_00003', 'Invalid module name: ' + moduleName);

@@ -599,6 +599,27 @@ module.exports = {
     getCapability: function () {
         let result = JSON.parse(JSON.stringify(capability));
         result.navigation = (result.navigation || []).map(entry => Object.assign({ help: defaultMediaHelp }, entry));
+        const media = CONFIG.get('media') || {};
+        const library = media.library || {};
+        for (const entry of result.navigation) {
+            if (['media-library', 'media'].includes(entry.id)) {
+                entry.featureState = 'ACTIVE';
+                delete entry.workbenchTarget;
+                entry.backendWorkspace = JSON.parse(JSON.stringify(library.workspace));
+                entry.help = { ...defaultMediaHelp, summary: 'Inspect scoped current Media metadata and exact versions through the governed library API.' };
+            }
+        }
+        result.navigation.push({
+            id: 'media-publication-requests', parentId: 'media-library', label: 'Request Media Publication',
+            route: '/media/publication', icon: 'media', order: 312,
+            group: { id: 'media-management', label: 'Media Management', order: 300 },
+            perspectives: ['operations'], contexts: ['environment', 'tenant', 'enterprise'],
+            featureState: 'ACTIVE',
+            requiredPermissions: ['media.storage.policy.view', 'publish.lifecycle.create',
+                'publish.lifecycle.validate', 'publish.lifecycle.requestApproval', 'process.instance.start', 'process.definition.read'],
+            help: { ...defaultMediaHelp, summary: 'Request approval for an explicit Media source version; this does not approve or activate it.' },
+            backendWorkspace: JSON.parse(JSON.stringify(library.publicationWorkspace))
+        });
         return result;
     }
 };

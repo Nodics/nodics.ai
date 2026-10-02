@@ -154,6 +154,8 @@ module.exports = {
                 'Process action adapter implementation is unavailable',
             );
         }
+        if (allowed.requiresCompletedTask === true)
+            execution = await SERVICE.DefaultProcessRuntimeLifecycleService.completedDecisionExecution(request, execution);
         return SERVICE[allowed.service][allowed.method](request, execution);
     },
 };

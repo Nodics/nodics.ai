@@ -20,6 +20,12 @@ This module owns generic import mechanics. Functional modules own their data mea
 
 ## Developer Notes
 
+- Import phases retry only explicit owner-declared dependency/safe-transient
+  failures with `NOT_APPLIED` write outcomes. Unknown outcomes, authorization,
+  credential, validation and concurrency refusals are terminal. The outer loop
+  honours file-header/config fail-fast policy and preserves successful-row
+  processed keys. See [phased retry admission](llm/contracts/README.md#phased-retry-admission).
+
 - Managed-counter `saveAll` data files omit technical revisions. The importer
   captures each record's original token through generated reads and generated
   CRUD initializes/increments it. Same-request retries retain that snapshot;
@@ -32,6 +38,17 @@ This module owns generic import mechanics. Functional modules own their data mea
 - Keep tenant precedence, publication state, checksum, and rollback evidence explicit.
 
 ## Release Readiness Contract
+
+Release planning and execution delegate header-target admission to capability
+owners selected by `data.dataReleases.targetValidators.<moduleName>`. Each
+loader-visible service exports read-only `validateImportTarget(metadata)` and
+must return exactly `true`; unavailable owners, refusals and owner failures
+reject before any installation claim or row dispatch. Metadata contains only
+module/schema/index/operation and release destination/lifecycle, never rows.
+This prevents a correctly labelled Staged release from hiding operational
+targets. It does not replace row validation, grant permissions or make a failed
+partial import atomic. Custom installers retain their existing preflight owner.
+See [target admission and partial recovery](llm/contracts/README.md#release-target-admission-and-partial-recovery).
 
 The data-release catalogue is the backend authority for import readiness. Every
 catalogue item can carry a client-safe `readiness` projection with:
@@ -171,3 +188,9 @@ Own release safeguards and inert initialization profile templates. Deployment se
 Content-pack defaults belong to `data.contentPacks.defaults` in this capability. Selected packs inherit source conventions, update policy and complete presentation fields; partner contributions override only intentional differences. Resolve omitted content paths from the selected manifest section, preserving explicit path overrides and all import authorization/checksum/staging guards. See `llm/contracts/README.md#content-pack-defaults-and-manifest-paths`.
 
 Sample releases are available to authorized manual operators by default, with optional deployment restriction. Only Init can auto-run at startup. Environment scope reads the effective `environment.class` projected by nConfig from the selected environment module metadata; never author it in environment properties or derive it from the selected environment name or another capability policy. Permissions, roles, tenant isolation, release checksums and durable receipts remain mandatory.
+
+Explicit enterprise placement belongs in a checksummed developer release header,
+not imported rows or operator claims. nImport delegates fresh validation through
+`data.dataReleases.targetValidators` and exposes only transient exact-request
+metadata to the owning generated operation. Read the
+[placement contract](llm/contracts/README.md#explicit-enterprise-placement).

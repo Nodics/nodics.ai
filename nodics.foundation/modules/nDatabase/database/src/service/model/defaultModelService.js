@@ -146,20 +146,34 @@ module.exports = {
                             });
                             return;
                         }
-                        if (request.options && request.options.allowCmsAssociationReplacement === true) {
+                        const nestedOptions = Object.assign({}, request.options || {});
+                        const targetModule = propertyObject.moduleName || request.schemaModel.moduleName;
+                        const cms = request.schemaModel.moduleName === 'cms' && typeof NODICS !== 'undefined' &&
+                            typeof NODICS.getModule === 'function' && NODICS.getModule('cms');
+                        const cmsAssociation = request.schemaModel.moduleName === 'cms' && targetModule === 'cms' &&
+                            cms && cms.rawSchema && cms.rawSchema[request.schemaModel.schemaName] === request.schemaModel.rawSchema &&
+                            Boolean(cms.rawSchema[propertyObject.schemaName]);
+                        if (!cmsAssociation) {
+                            delete nestedOptions.allowCmsAssociationReplacement;
+                            delete nestedOptions.replaceAllMatchesByQuery;
+                            delete nestedOptions.replaceArraysOnVersionMerge;
+                        }
+                        // A version-selection option belongs to the selected root, never its child.
+                        delete nestedOptions.versionedImport;
+                        if (nestedOptions.allowCmsAssociationReplacement === true) {
                             models.forEach(item => {
                                 if (item && !Array.isArray(item.accessGroups)) {
                                     item.accessGroups = Array.isArray(model.accessGroups) ? model.accessGroups.slice() : ['userGroup'];
                                 }
                             });
                         }
-                        let nestedQuery = request.options && request.options.allowCmsAssociationReplacement === true &&
+                        let nestedQuery = nestedOptions.allowCmsAssociationReplacement === true &&
                             models.every(item => item && item.code) ? { code: '$code' } : undefined;
                         SERVICE['Default' + propertyObject.schemaName.toUpperCaseFirstChar() + 'Service'].saveAll({
                             tenant: request.tenant,
                             authData: request.authData,
                             searchOptions: request.searchOptions,
-                            options: request.options,
+                            options: nestedOptions,
                             query: nestedQuery,
                             models: models
                         }).then(success => {

@@ -22,6 +22,7 @@
 
 let assert = require('assert');
 const flatted = require('flatted');
+const defaultLogger = require('../../../nConfig/src/service/DefaultLoggerService');
 
 /**
  * @module common/lib/NodicsError
@@ -195,13 +196,13 @@ module.exports = class NodicsError extends Error {
     toJson(returnStack, visited) {
         visited = visited || new WeakSet();
         if (visited.has(this)) {
-            return {
+            return this.constructor.redactPublicJson({
                 responseCode: this.responseCode,
                 code: this.code,
                 name: this.name,
                 message: this.message,
                 circular: true
-            };
+            });
         }
         visited.add(this);
 
@@ -227,7 +228,19 @@ module.exports = class NodicsError extends Error {
             errorJson.errors = this.errors.map(error => this.constructor.serializeNestedError(error, returnStack, visited));
         }
         if (this.stack && (returnStack || CONFIG.get('returnErrorStack'))) errorJson.stack = this.stack;
-        return errorJson;
+        return this.constructor.redactPublicJson(errorJson);
+    }
+
+    /**
+     * Reuses the canonical logger sanitizer for outward error diagnostics.
+     * @param {*} value JSON-safe diagnostic value.
+     * @returns {*} Bounded diagnostic with immutable baseline secrets masked.
+     */
+    static redactPublicJson(value) {
+        const logger = typeof SERVICE !== 'undefined' &&
+            typeof SERVICE.DefaultLoggerService?.redactLogValue === 'function'
+            ? SERVICE.DefaultLoggerService : defaultLogger;
+        return logger.redactLogValue(value);
     }
 
     /**
@@ -257,7 +270,7 @@ module.exports = class NodicsError extends Error {
     static toSafeJson(value) {
         try {
             let visited = new WeakSet();
-            return JSON.parse(JSON.stringify(value, (key, item) => {
+            return this.redactPublicJson(JSON.parse(JSON.stringify(value, (key, item) => {
                 if (item instanceof Error) {
                     return {
                         name: item.name,
@@ -275,15 +288,15 @@ module.exports = class NodicsError extends Error {
                     return undefined;
                 }
                 return item;
-            }));
+            })));
         } catch (error) {
             try {
-                return flatted.toJSON(value);
+                return this.redactPublicJson(flatted.toJSON(value));
             } catch (flattedError) {
-                return {
+                return this.redactPublicJson({
                     name: value && value.name,
                     message: value && value.message ? value.message : String(value)
-                };
+                });
             }
         }
     }

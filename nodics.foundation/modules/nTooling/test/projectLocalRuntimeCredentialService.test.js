@@ -42,6 +42,20 @@ assert.strictEqual(first.NODICS_RUNTIME_API_KEY, undefined,
 assert.strictEqual(first.NODICS_WASTE_API_KEY, undefined,
     'new native-local credentials must not generate server-prefixed API-key aliases');
 
+const readOnlyFile = fs.readFileSync(file);
+const readOnlyStat = fs.statSync(file);
+const readOnly = service.readExistingEnvironment(fs.realpathSync(root), 'kickoffLocal', { CUSTOM_VALUE: 'retained' });
+assert.strictEqual(readOnly.NODICS_JWT_SECRET, first.NODICS_JWT_SECRET);
+assert.strictEqual(readOnly.CUSTOM_VALUE, 'retained');
+assert.deepStrictEqual(fs.readFileSync(file), readOnlyFile);
+assert.strictEqual(fs.statSync(file).mtimeMs, readOnlyStat.mtimeMs);
+assert.throws(() => service.readExistingEnvironment(fs.realpathSync(root), 'missingLocal', {}), /RESOLUTION_REFUSED/);
+assert.strictEqual(fs.existsSync(service.credentialPath(root, 'missingLocal')), false);
+fs.writeFileSync(file, '{}');
+assert.throws(() => service.readExistingEnvironment(fs.realpathSync(root), 'kickoffLocal', {}), /RESOLUTION_REFUSED/);
+assert.strictEqual(fs.readFileSync(file, 'utf8'), '{}');
+fs.writeFileSync(file, readOnlyFile);
+
 const merged = service.mergeEnvironment(root, 'kickoffLocal', {
     NODICS_API_KEY: 'external-runtime-key',
     CUSTOM_VALUE: 'kept'
@@ -73,5 +87,53 @@ assert.strictEqual(migrated.NODICS_API_KEY, 'r'.repeat(48),
     'legacy retained runtime proof must migrate to the server-local runtime proof');
 assert.strictEqual(migrated.NODICS_RUNTIME_API_KEY, undefined);
 assert.strictEqual(migrated.NODICS_WASTE_API_KEY, undefined);
+
+// Rotation uses only the existing file, even if compatibility normalization would otherwise change its contents.
+const jwt = require('jsonwebtoken');
+const rotationRoot = fs.realpathSync(fs.mkdtempSync(path.join(os.tmpdir(), 'nodics-selective-jwt-')));
+const rotationFile = service.credentialPath(rotationRoot, 'fixtureLocal');
+fs.mkdirSync(path.dirname(rotationFile), {recursive:true,mode:0o700});
+const values = {
+    NODICS_JWT_SECRET: service.randomSecret(64),
+    NODICS_API_KEY_PEPPER: service.randomSecret(64),
+    NODICS_BOOTSTRAP_ADMIN_PASSWORD: service.randomSecret(),
+    NODICS_BOOTSTRAP_SERVICE_PASSWORD: 'legacy-kept-without-normalization',
+    NODICS_BOOTSTRAP_SERVICE_API_KEY: service.randomSecret(),
+    NODICS_API_KEY: service.randomSecret(),
+    NODICS_RUNTIME_API_KEY: service.randomSecret()
+};
+fs.writeFileSync(rotationFile,JSON.stringify(values,null,2)+'\n',{mode:0o600});
+const rotating = {...service,ensureCredentials:() => {throw Error('normalization forbidden');}};
+try {
+    const prior = jwt.sign({sub:'fixture',authVersion:1},values.NODICS_JWT_SECRET,{algorithm:'HS256'});
+    const receipt = rotating.rotateJwtSecret(rotationRoot,'fixtureLocal');
+    const current = JSON.parse(fs.readFileSync(rotationFile,'utf8'));
+    assert.deepStrictEqual(receipt.changedKeys,['NODICS_JWT_SECRET']);
+    assert.strictEqual(receipt.administratorPasswordPreserved,true);
+    assert.strictEqual(Buffer.from(current.NODICS_JWT_SECRET).equals(Buffer.from(values.NODICS_JWT_SECRET)),false);
+    for (const key of Object.keys(values).filter(key => key !== 'NODICS_JWT_SECRET'))
+        assert.strictEqual(Buffer.from(current[key]).equals(Buffer.from(values[key])),true,'non-JWT credential bytes must remain unchanged');
+    assert.strictEqual(fs.statSync(rotationFile).mode & 0o777,0o600);
+    assert.throws(() => jwt.verify(prior,current.NODICS_JWT_SECRET,{algorithms:['HS256']}),/invalid signature/);
+    const fresh = jwt.sign({sub:'fixture',authVersion:1},current.NODICS_JWT_SECRET,{algorithm:'HS256'});
+    assert.strictEqual(jwt.verify(fresh,current.NODICS_JWT_SECRET,{algorithms:['HS256']}).authVersion,1);
+    assert.deepStrictEqual(fs.readdirSync(path.dirname(rotationFile)),['credentials.json']);
+    const retained = fs.readFileSync(rotationFile);
+    for (const environment of ['production','../fixtureLocal','fixtureLocal/../fixtureLocal','missingLocal','',null])
+        assert.throws(() => rotating.rotateJwtSecret(rotationRoot,environment),/JWT_ROTATION_REFUSED/);
+    assert.strictEqual(fs.readFileSync(rotationFile).equals(retained),true);
+    fs.chmodSync(rotationFile,0o644);
+    assert.throws(() => rotating.rotateJwtSecret(rotationRoot,'fixtureLocal'),/JWT_ROTATION_REFUSED/);
+    fs.chmodSync(rotationFile,0o600);
+    const other = path.join(rotationRoot,'outside.json');
+    fs.renameSync(rotationFile,other);
+    fs.symlinkSync(other,rotationFile);
+    assert.throws(() => rotating.rotateJwtSecret(rotationRoot,'fixtureLocal'),/JWT_ROTATION_REFUSED/);
+    assert.strictEqual(fs.readFileSync(other).equals(retained),true);
+    fs.unlinkSync(rotationFile);
+    fs.renameSync(other,rotationFile);
+    fs.writeFileSync(rotationFile,'{}');
+    assert.throws(() => rotating.rotateJwtSecret(rotationRoot,'fixtureLocal'),/JWT_ROTATION_REFUSED/);
+} finally { fs.rmSync(rotationRoot,{recursive:true,force:true}); }
 
 console.log('Project local runtime credential service validated');

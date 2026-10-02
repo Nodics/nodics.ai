@@ -11,6 +11,14 @@
 
 ## Capability Boundary
 
+- Generic tab workspace `setupContinuation` is an explicit versioned inert
+  transport contract, not an unknown-field exception. Keep schema and executable
+  validation aligned: unavailable may omit actions, available requires both,
+  resume is bounded to expectedRevision, and custom prepared relative prefixes
+  remain supported. Never publish retained setup intent/proof or let descriptor
+  availability grant execution authority. See the startup/configuration section
+  of `llm/contracts/README.md` and the actual Profile registration fixture.
+
 - Business offering setup reviews use the existing application-initialization
   profiles and inert `setupPlan` projection. Do not add an Axis-owned offering
   registry, category switch or dependency executor. Viewing a plan never selects
@@ -38,6 +46,10 @@
   presentation enablement. `nConfig`, `nService`, `nSystem`, `nDynamo`, Profile,
   and target modules remain authoritative for topology, activation, health,
   runtime governance, identity, permissions, contracts, and business behavior.
+- Read private project presentation eligibility in the configured default-tenant
+  catalogue authority, not the employee tenant. Preserve the authenticated
+  request and employee permission filtering; never retarget employee policy or
+  business reads, copy registry data, or widen grants to repair bootstrap.
 - Module self-registration is service-to-service traffic. Keep it separate
   from employee/customer username-password authentication and preserve tenant,
   environment, module-identity, replay, idempotency, audit, and secret-redaction
@@ -151,6 +163,12 @@
   consolidated/modular topology, and later-loaded override tests as applicable.
 
 Native workspaces use the bounded `backendWorkspace` native variant with stable workspace/view codes, never component imports or executable properties. Cross-module orphan removal must cascade through local grandchildren, and effective cross-provider cycles must be rejected. Follow the global module-owned UI contribution contract.
+
+Declarative workspace `rowNavigation` and `readSource` use the strict
+[listing-to-reviewed-source contract](llm/contracts/backoffice-governance-contracts.md#listing-to-reviewed-source-commands).
+Require a contributed same-module destination, one declared lookup parameter,
+fixed same-owner GET/POST paths and fresh frozen field bindings. Metadata never
+grants permission, executes a returned command path or automatically retries a write.
 
 Required data permits activation only after confirmed CURRENT release status.
 Preserve running/incomplete receipts and reject before catalogue activation. See

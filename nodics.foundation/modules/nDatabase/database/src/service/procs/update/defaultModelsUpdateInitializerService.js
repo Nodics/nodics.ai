@@ -198,8 +198,10 @@ module.exports = {
     executeQuery: function (request, response, process) {
         this.LOG.debug('Executing remove query');
         const concurrency = SERVICE.DefaultModelConcurrencyService;
-        const update = concurrency && concurrency.getField(request.schemaModel.rawSchema)
-            ? concurrency.execute(request, 'update') : request.schemaModel.updateItems(request);
+        const update = concurrency?.ownsCredentialRetirement(request)
+            ? concurrency.executeCredentialRetirement(request)
+            : concurrency && concurrency.getField(request.schemaModel.rawSchema)
+                ? concurrency.execute(request, 'update') : request.schemaModel.updateItems(request);
         update.then(result => {
             if (this.getAffectedCount(result) > 0) {
                 result.message = 'Items have been updated successfull';

@@ -30,34 +30,28 @@ module.exports = {
     },
 
     /**
-     * Finalizes the WCMS module after module artifacts have loaded.
+     * Finalizes artifacts; the framework installs required releases before READY.
      *
      * @param {Object} options Module loader options supplied during startup.
      * @returns {Promise<boolean>} Resolves when post-initialization is complete.
      */
     postInit: function (options) {
-        if (typeof SERVICE !== 'undefined' && SERVICE.DefaultRuntimeLifecycleService) {
-            SERVICE.DefaultRuntimeLifecycleService.registerContributor('wcmsStartupImport', {
-                order: 760,
-                timeoutMs: Number((CONFIG.get('wcmsStartupImport') || {}).timeoutMs || 60000),
-                ready: () => this.importStartupData()
-            });
-        }
         return Promise.resolve(true);
     },
 
     /**
-     * Imports WCMS-owned init data only after the runtime is marked started.
+     * Compatibility entrypoint delegating to the canonical startup release owner.
+     * Never register mandatory installation as a non-blocking ready contributor.
      *
      * @returns {Promise<boolean>} Resolves when startup import completes or is disabled.
      */
     importStartupData: function () {
         const policy = CONFIG.get('wcmsStartupImport') || {};
         if (policy.enabled === false || policy.importInitDataOnReady === false) return Promise.resolve(true);
-        if (!SERVICE.DefaultImportService || typeof SERVICE.DefaultImportService.importInitData !== 'function') {
-            return Promise.resolve(true);
+        if (!SERVICE.DefaultDataReleaseService || typeof SERVICE.DefaultDataReleaseService.installStartupReleases !== 'function') {
+            return Promise.reject(new Error('WCMS startup requires DefaultDataReleaseService.installStartupReleases'));
         }
-        return SERVICE.DefaultImportService.importInitData({
+        return SERVICE.DefaultDataReleaseService.installStartupReleases({
             tenant: CONFIG.get('defaultTenant') || 'default',
             modules: NODICS.getActiveModules(),
             source: policy.source || 'nodics.wcms.runtimeReady'

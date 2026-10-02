@@ -1,277 +1,118 @@
-# profile AI Contracts
+# Profile AI Contracts
+
+This is the module-local contract index. The full existing contractual text is
+retained in [Profile lifecycle and runtime governance](identity-access-lifecycle.md).
+Read the owning module AGENTS.md and root contracts before implementation.
+Source availability does not establish qualification or live acceptance.
+
+## Dedicated Contracts
+
+- [Enterprise tenant provisioning and durable namespace admission](enterprise-tenant-provisioning.md)
+
+- [Private notification and verification transport](private-notification-transport.md)
+
+- [Enterprise delegation](enterprise-delegation.md)
+- [Explicit consent commands and held hierarchy changes](administration-consent-commands.md)
+- [Canonical identity and membership](enterprise-membership.md)
+- [Account access journeys and historical review retirement](account-access-journeys.md)
+- [Read-only identity assessment](identity-assessment.md)
+- [External customer identity](external-customer-identity.md)
+- [Live session context adapter](session-context-validation.md)
+- [Private enterprise read projections](enterprise-team-read-privacy.md)
+
+## Documentation
+
+The detailed guide preserves the original contract text and relative links.
+The sections below retain existing README anchors and point to their full rules.
+
+## Hierarchical Enterprise Delegation
+
+Read [Hierarchical Enterprise Delegation](identity-access-lifecycle.md#hierarchical-enterprise-delegation).
+
+## Account Access Journeys
+
+Read [Account Access Journeys](identity-access-lifecycle.md#account-access-journeys).
+
+## Canonical Memberships
+
+Read [Canonical Memberships](identity-access-lifecycle.md#canonical-memberships).
+
+## Read-Only Identity Inventory
+
+Read [Read-Only Identity Inventory](identity-access-lifecycle.md#read-only-identity-inventory).
+
+## Employee Message Resources
+
+Read [Employee Message Resources](identity-access-lifecycle.md#employee-message-resources).
 
 ## Runtime Grant Acceptance
 
-The capability-owned runtime deployment grant suite reads existing governed
-assignments; it never provisions credentials, rotates keys or repairs grants.
-Imports and help are inert. Every selected runtime must have one matching active
-ALLOW service assignment for its project, environment, server, instance, enterprise
-and tenant. Verify both active and remote module requirements and both owner
-permission sources. Modules and permissions must be arrays, never strings whose
-substring matching could fabricate coverage. Missing, ambiguous, malformed and
-denied records fail the suite.
-
-Run `node --test nodics.platform/modules/profile/test/runtimeDeploymentGrantAcceptance.test.mjs`
-from the framework root. These injected API fixtures prove assertions and refusal
-behavior only; live assignment provisioning remains a separate governed operation.
-
-This folder contains module-specific AI/developer contracts for `nodics.platform/modules/profile`.
-
-Use these files for rules that are more specific than root `AGENTS.md` and the module `AGENTS.md`, especially extension boundaries, override expectations, testing rules, security constraints, and generated-artifact responsibilities.
+Read [Runtime Grant Acceptance](identity-access-lifecycle.md#runtime-grant-acceptance).
 
 ## Authentication route governance
 
-- Internal authentication token retrieval must remain a permissioned service
-  capability. The route should use `permissionConfig` to resolve
-  `authSecurity.internalToken.routePermission`. Runtime issuance additionally
-  requires matching authenticated tenant, enterprise and approved deployment;
-  a broad cross-tenant permission does not bypass that assignment.
-- Do not weaken profile authentication routes by relying on broad `userGroup`
-  access alone. Use layered identity-governance configuration when a project
-  needs different permission names or service-principal policies.
-- Employee and customer username/password login routes should be
-  pre-authentication routes (`secured: false`) that still require enterprise
-  context through the non-secured request pipeline before credential validation.
-- Authentication, refresh, logout, authorization, and API-key changes must keep
-  tenant isolation, reason/audit traceability, and credential-free logs.
-- Keep module-to-module access separate: internal token retrieval, cron/job
-  service calls, and cross-module API calls must continue to use secured API-key
-  or internal-token flows.
+Read [Authentication route governance](identity-access-lifecycle.md#authentication-route-governance).
 
 ## Enterprise management search
 
-Enterprise setup obtains effective writable fields from the existing
-`DefaultSchemaUtilityService`, not from a screen's service. Preserve Profile's
-authorization, tenant derivation, provisioning, principal-bound idempotency,
-additional-field validation and client-safe projection. Missing metadata fails
-before creation. Canonical POST `/enterprises` accepts `{ model }` and a validated
-`Idempotency-Key` header, then delegates to `createFromModel` through the existing
-facade. No Workbench adapter remains; never replace setup with a generic insert. Metadata customizations belong on the effective shared
-utility so generated and domain consumers receive one contract.
-
-- `profile_searchenterprises` is the stable operation identity for the bounded
-  `GET /enterprises/search` management intent.
-- The route requires a human access token and `profile.enterprise.search`.
-  Service tokens must fail even if a caller reaches the service directly.
-- Accept only exact scalar `code`, `name`, and `active` filters and configured
-  positive `page` and `limit` bounds. Reject unknown keys, object/operator
-  filters, invalid booleans, unsafe codes, and out-of-bound pagination.
-- Delegate persistence to `DefaultEnterpriseService` in the configured Profile
-  enterprise tenant with `recursive: false`. Do not add an Assistant,
-  BackOffice, Elasticsearch, or controller-owned search path.
-- Project only the configured client-safe fields. Never expose contacts,
-  addresses, credentials, secrets, API keys, or recursive tenant objects.
-- Assistant policy may reference this operation by logical identity, but must
-  rediscover its current method, path, and permission through BackOffice before
-  every call and forward the employee bearer to Profile.
+Read [Enterprise management search](identity-access-lifecycle.md#enterprise-management-search).
 
 ## Enterprise access assignments
 
-- Profile owns `enterpriseAccessAssignment` as the pre-approved employee
-  registration registry. Store assignment registry state in the configured
-  Profile authority tenant and create the employee/password/scope records in
-  the assigned enterprise tenant only after registration completes.
-- Platform administrators may create enterprises and pre-assign users for any
-  enterprise. Enterprise administrators may pre-assign users only for their own
-  authenticated enterprise context.
-- `profile.enterpriseAccess.search` and `profile.enterpriseAccess.assign`
-  protect authenticated management routes. Public registration routes may
-  resolve and complete only a matching, active pre-assignment and must not
-  expose recursive identity data.
-- Registration must create an employee, save the password through Profile's
-  password service, assign configured user groups from layered role policy, and
-  create a Profile `principalScopeAssignment` with `scopeType: ENTERPRISE`.
-- Axis enterprise/user-management components must be driven by the Profile
-  BackOffice `backendWorkspace` contract or the public
-  `/enterprise-access/workspace` contract. Do not hardcode role labels, fields,
-  tabs, columns, or operation endpoints into an enterprise-specific Axis page.
+Read [Enterprise access assignments](identity-access-lifecycle.md#enterprise-access-assignments).
 
 ### Assignment identity and completed-registration safeguards
 
-A new assignment code is `enterpriseAccess_` followed by the existing
-`commandDigest` of `['enterpriseAccess', enterpriseCode, normalizedEmail]`.
-Normalize the email through the existing Profile policy before deriving the key.
-Do not erase punctuation to make an identifier: `alex.smith@example.test` and
-`alex-smith@example.test` must remain different assignment identities. The tuple
-also prevents enterprise/email boundary ambiguity and keeps the code bounded.
-This digest is an identifier, not a secret or evidence of mailbox ownership.
-
-Refresh a matching eligible legacy assignment under its existing persisted code.
-Do not rename historic associations, credentials or principal scopes during this
-change. Existing-person membership acceptance and credential/scope identity
-migration retain their separate Profile lifecycle requirements.
-
-Before pre-assignment, `findRegisteredAssignment` performs a fresh exact
-enterprise/email/REGISTERED query through the generated assignment service in the
-Profile authority tenant. It is deliberately independent of `activeStatuses` and
-invitation expiry. Completed registration cannot become invitation-eligible
-because an old expiry elapsed or because newer pending rows fill a result page.
-Owner errors and malformed/explicitly failed responses block the write.
-`findActiveAssignment` remains the invitation lookup; do not add REGISTERED to its
-eligible states to make the management guard work.
-
-For an authorised administrator, the observable procedure is:
-
-1. Submit the employee email and a permitted responsibility in the existing
-   enterprise-team operation.
-2. If the exact enterprise/email assignment is already registered, stop without
-   rewriting it as pending. Use the supported member-management journey instead
-   of changing the email to evade the check.
-3. If an eligible pending assignment exists, preserve its identity on refresh.
-   Otherwise derive a new assignment identifier without lossy email slugs.
-4. If the registry cannot establish the registration state, retain the current
-   task and retry only through the owning operation after service recovery.
-
-Later layers can still override `assignmentCode` or the effective `commandDigest`
-member. They must preserve exact pair separation, stable identity and the existing
-registry owner. Do not introduce another invitation table or frontend key builder.
-
-Run `node --test nodics.platform/modules/profile/test/enterpriseAccessAssignmentSafety.test.js`.
-The focused fixtures cover punctuation/boundary cases, long identifiers, legacy
-refresh, completed/expired protection, more than one page of pending rows, failed
-reads, cross-enterprise rejection and effective-member customization. These are
-isolated generated-service fixtures, not live data tests.
-
-**Scope limit:** this sequential pre-assignment guard is not a transaction across
-concurrent registration and invitation refresh. Atomic provisioning/recovery,
-email-proof enforcement, global identity linking and existing-person membership
-acceptance need their own owner-level tests and acceptance before enabling the
-complete onboarding journey. Do not infer those guarantees from this helper.
+Read [Assignment identity and completed-registration safeguards](identity-access-lifecycle.md#assignment-identity-and-completed-registration-safeguards).
 
 ## Principal authorization scopes
 
-- Profile owns the `principalScopeAssignment` schema and
-  `DefaultPrincipalScopeGovernanceService`.
-- Scope assignments model which principal or group can operate a tenant,
-  enterprise, catalog, channel, store, region, business unit, or global scope.
-- Do not put this relationship directly into tenant or enterprise schemas.
-  Enterprise keeps its tenant reference, and Profile-owned scope assignments
-  answer "who can operate what".
-- Scope assignment can optionally narrow by `permissionCode` or
-  `capabilityCode`; target modules still enforce their own route permission,
-  schema policy, tenant rules, and business validation.
-- `DENY` overrides matching `ALLOW`, inactive or expired assignments do not
-  apply, and group assignments are resolved from the principal's known direct
-  and expanded group codes.
-- Project modules may add scope types, effects, statuses, and inheritance modes
-  through layered `principalAuthorizationScopes` configuration or replace the
-  service in a later module. Do not create an Axis-only or capability-local
-  parallel registry.
-- Validate changes with
-  `node nodics.platform/modules/profile/test/principalAuthorizationScopeContract.test.js`.
+Read [Principal authorization scopes](identity-access-lifecycle.md#principal-authorization-scopes).
 
 ## Address and contact authority
 
-- Profile `address` is the canonical reusable address schema for customer,
-  employee, enterprise, billing, shipping, office, and reusable physical
-  addresses.
-- Reusable postal fields, address type/default flags, contact references,
-  landmark hints, access or delivery notes, address geocoding latitude and
-  longitude, geocoding confidence, verification metadata, and privacy-safe
-  display/redaction policy belong here.
-- Location may reference Profile address through `addressRef`, but must not
-  duplicate Profile address fields. Location keeps only its operational map
-  point as separate `latitude` and `longitude` because a place marker can differ
-  from the address geocode.
-- Business modules such as Store, Sales Channel, POS, and Waste Collection Point
-  should use `locationRef` or `primaryLocationRef` for physical-place behavior
-  and Profile `address`/`contact` references for address/contact authority.
-- Validate changes with
-  `node nodics.platform/modules/profile/test/profileAddressContract.test.js`.
+Read [Address and contact authority](identity-access-lifecycle.md#address-and-contact-authority).
 
 ## Enterprise seed ownership
 
-- Profile init data owns only global enterprise seed records, including the
-  default platform owner enterprise.
-- Capability-specific enterprises must live in the owning module's `data`
-  folder and target Profile's `enterprise` schema through the import header.
-  Do not seed Waste, Loyalty, Commerce, or other capability demo enterprises in
-  Profile global init data.
-- Enterprise records may carry `roleCodes` and `capabilityScopes` so the
-  business graph can show what roles the enterprise can play without adding
-  every possible role reference to every business schema.
-- Keep Enterprise as the business graph authority. Business schemas should use
-  explicit enterprise association references when ownership, operation, issuer,
-  seller, partner, or visibility matters; do not use tenant as business owner.
+Read [Enterprise seed ownership](identity-access-lifecycle.md#enterprise-seed-ownership).
 
-- [External customer identity](external-customer-identity.md)
+## Application recovery projections
+
+Read [Application recovery projections](identity-access-lifecycle.md#application-recovery-projections).
 
 ## Runtime deployment grants
 
-The existing `principalScopeAssignment` is the sole approved deployment store.
-`RUNTIME_DEPLOYMENT` requires a direct service principal, tenant, enterprise and
-`runtimeScope: { projectCode, environmentCode, serverCode, instanceCode, modules,
-permissions }`. A single principal cannot represent several active instance
-identities. Modules and permissions are bounded unique explicit values. Runtime
-headers request a scope; they never grant it. Issuance requires one effective
-ALLOW, rejects matching DENY/expiry/ambiguity, and intersects the request with
-approved modules and the principal's permissions. Issued groups are empty so
-group expansion cannot widen the approved credential.
+Read [Runtime deployment grants](identity-access-lifecycle.md#runtime-deployment-grants).
 
-The built-in proof path uses existing Profile API-key authentication. Deployments
-provision a distinct principal and retained secret per instance, then approve its
-assignment through governed Profile records. The first Profile authority uses
-trusted initializer data or existing privileged setup; runtimes cannot enroll
-themselves by choosing headers. A single-use enrollment-grant provider is not
-implemented by this path. Restart and renewal reauthenticate retained proof and
-re-read the assignment; no second business registration is required.
+## Internal registration-verification transport
 
-Native local startup is the one repair exception. After a local schema reset,
-Profile mandatory identity bootstrap may discover sibling runtime server package
-metadata from the selected project/environment, resolve each server's effective
-active modules through nConfig, and create or update explicit local
-`RUNTIME_DEPLOYMENT` assignments for the generated `apiAdmin` proof. The
-permissions used by those grants must also be present on the service principal
-API-key scope through `identityGovernance.migration`; the runtime request
-headers remain a request and are still checked against the persisted assignment.
-This local repair does not apply to non-local environments and does not create a
-generic topology-based entitlement path.
+Read [Internal registration-verification transport](identity-access-lifecycle.md#internal-registration-verification-transport).
 
-Assignment save/update/removal captures old and new affected principals and
-awaits their existing Employee update path. That path allocates the security
-version in `preparePrincipalUpdate` and registers it after persistence. Callers
-request invalidation through an Employee/Customer update containing authVersion;
-they do not allocate their own version or call a process-local clock. Assignment
-reads bypass item caching. Failed invalidation cannot be acknowledged as success.
+### Example and recovery
 
-The initial authority and every tenant use the same proof/grant authorization as renewal. `DefaultMandatoryIdentityBootstrapService.prepareTenant` first awaits governed Init release completion and then reconciles existing identity metadata. It never derives approvals from requested modules or generates runtime credentials.
+Read [Example and recovery](identity-access-lifecycle.md#example-and-recovery).
 
-Generated Profile reads return the canonical `{code, result}` envelope, with a
-success code and result array; they do not set a Boolean `success: true`. Runtime
-authorization/removal must validate that envelope and reject explicit failures.
-A runtime-scope mutation completes only after the existing Employee update
-acknowledges exactly one matched principal and its stamp hooks finish. Zero or
-multiple matches cannot count as successful credential invalidation.
+## Invited employee registration continuation and recovery
 
-The existing `GET /enterprise/get` also serves scoped runtime bootstrap. Its
-service path requires `profile` module scope, `profile.enterprise.search`, and
-an exact match between authenticated enterprise/tenant and requested context.
-It returns one active enterprise with only code, active state and its tenant
-code/state/properties. The trusted Profile lookup stays inside Profile after
-authorization; runtime tokens gain no group-based generic CRUD access. Local
-startup may prepare its authority-owned tenant inventory; a remote runtime may
-only discover the enterprise authorized by its retained proof and deployment
-grant. Tenant properties are protected runtime configuration, not public data.
+Read [Invited employee registration continuation and recovery](identity-access-lifecycle.md#invited-employee-registration-continuation-and-recovery).
 
-`profileInitialization.requiredEmployeeLogins` owns initializer identity checks,
-with admin/apiAdmin defaults matching Profile Init data. Runtime API-key login
-metadata does not select the initializer employee. Custom identities require
-matching governed Init data; partial checks never reset existing credentials.
+### Verification and qualification
 
-Profile refresh sessions use the Profile-owned `auth` cache channel. Its module
-configuration references nAuth's strict channel defaults through nConfig; do not
-copy those defaults into a customer environment or redirect identity ownership.
-The deployment must still enable the distributed provider. Later Profile channel
-overrides use normal layering, preserving atomic consume and no local fallback.
+Read [Verification and qualification](identity-access-lifecycle.md#verification-and-qualification).
 
-Browser sessions resolve credentialed origins through nRouter's existing
-`resolveCorsOrigins` service. Endpoint-derived origins and explicit origin lists
-share one policy; explicit denials and endpoint disables take precedence.
-Profile continues to enforce cookie security, CSRF and refresh rotation.
+### Exact session-readiness evidence
 
-During a governed Local reset, the provider's private authority may reach scope
-cleanup after Employee deletion. Profile must prove principal absence through an
-authoritative read and await nAuth shared-stamp revocation. It must reject failed
-reads or revocation, and a request field cannot forge reset authority. Existing
-principals and ordinary scope mutations still require exactly one acknowledged
-Employee update. This rule is independent of reset inventory ordering.
+Read [Exact session-readiness evidence](identity-access-lifecycle.md#exact-session-readiness-evidence).
+
+## Authoritative scope lifetimes and read outcomes
+
+Read [Authoritative scope lifetimes and read outcomes](identity-access-lifecycle.md#authoritative-scope-lifetimes-and-read-outcomes).
+
+## Proof-bound employee application intake
+
+Read [Proof-bound employee application intake](identity-access-lifecycle.md#proof-bound-employee-application-intake).
+
+## Application-review recovery and notification evidence
+
+Read [Application-review recovery and notification evidence](identity-access-lifecycle.md#application-review-recovery-and-notification-evidence).

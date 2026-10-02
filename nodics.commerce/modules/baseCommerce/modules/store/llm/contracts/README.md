@@ -1,5 +1,12 @@
 # Store contracts
 
+`DefaultStoreContextService.resolveMerchantStore` reads through caller-authorized
+generated Store services and admits exactly one active tenant-consistent revisioned
+outlet with canonical Profile enterprise association. Caller storeCode is a selector,
+not evidence. Digital Core separately requires current Profile STORE permission/
+scope and Promotion eligibility; preserve these owners in later-layer extensions.
+This source contract remains unqualified pending joint installed-owner acceptance.
+
 Store master-data technical counters are framework-managed through the existing
 effective `backoffice.concurrency` metadata. Never manually increment them or
 author them in core records. Preserve scalar identity, original read tokens,

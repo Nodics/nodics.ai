@@ -414,7 +414,8 @@ function getCodes(dataModel) {
         if (firstPhase && request.dataModel.code === 'one') {
             return Promise.reject({
                 code: 'ERR_TEST_RETRYABLE_IMPORT',
-                message: 'Synthetic retryable import failure'
+                message: 'Synthetic retryable import failure',
+                metadata: { importRetry: { kind: 'DEPENDENCY', writeOutcome: 'NOT_APPLIED' } }
             });
         }
         return Promise.resolve({

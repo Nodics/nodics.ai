@@ -1,0 +1,23 @@
+digraph Submission {
+  graph [rankdir=TB, bgcolor="#ffffff", pad="0.35", nodesep="0.35", ranksep="0.45", fontname="Helvetica", label="eWaste: evidence, decision and independent outcomes", labelloc=t, fontsize=20];
+  node [shape=box, style="rounded,filled", fillcolor="#f3f4f6", color="#64748b", fontname="Helvetica", fontsize=12, margin="0.16,0.12"];
+  edge [color="#475569", fontname="Helvetica", fontsize=10];
+  identity [label="1. Profile sign-in\nCanonical customer", fillcolor="#dcfce7"];
+  arrival [label="2. Fresh arrival\nCurrent centre + direct distance"];
+  photo [label="3. Temporary photo\nMetadata + mandatory assessment"];
+  draft [label="4. Saved preparation\nMedia + Waste draft"];
+  confirm [label="5. Explicit confirm\nOwnership / revision / command key"];
+  review [label="6. Staff verification\nand authorized decision", fillcolor="#ccfbf1"];
+  asset [label="Approved asset\nOwner evidence"];
+  rewards [label="Loyalty settlement\nOriginal approval reference"];
+  notify [label="Communication outcome\nIndependent retry evidence"];
+  receipt [label="Physical receipt / custody\nSeparate authorized Waste fact", fillcolor="#fef3c7"];
+  failure [label="Rejected location / analysis failure:\npreserve saved work; no new empty submission", fillcolor="#fee2e2"];
+  identity -> arrival -> photo -> draft -> confirm -> review;
+  arrival -> failure [style=dashed];
+  photo -> failure [style=dashed];
+  review -> asset [label="approved policy"];
+  review -> rewards;
+  review -> notify [label="saved public outcome"];
+  asset -> receipt [style=dashed, label="not implied by approval"];
+}

@@ -1,0 +1,243 @@
+# nService
+
+`nService` is where reusable application behavior is performed. In a simple
+request, a route accepts the call, a controller translates it, and a service
+does the meaningful work. Services can also be called by jobs, events,
+pipelines, workflows, or other modules without going through HTTP controllers.
+
+`nService` owns shared service-layer contracts used by framework and project
+modules, including module communication, tenant/enterprise handling,
+authentication-provider cache access, authorization helpers, and status/log
+services.
+
+It also owns the local runtime registration hook for optional concrete-module
+BackOffice capability providers. The registration agent serializes their safe
+projections into authenticated module leases; it does not activate modules or
+execute their business operations.
+
+Authentication token cache helpers must preserve tenant scope and avoid leaking
+credential material. Invalidation callbacks may emit structured observability
+and audit context such as reason code, tenant, enterprise, principal, source,
+and token type, but must never log or persist bearer tokens, refresh tokens,
+API keys, or auth cache keys.
+
+## When To Use This Module
+
+Use this group for shared service mechanics, generated service contracts,
+tenant and enterprise context, authorization helpers, and the one governed
+module communication client. Put domain behavior in the module that owns the
+domain. Use [vService](vService/README.md) only for a deliberate service variant,
+not as a second home for base behavior.
+
+## Service Model
+
+Services are generated and handwritten business-behavior contracts that can be
+generalized or overridden by later modules. Services own behavior, facades
+orchestrate services, controllers map requests, and routers declare HTTP/access
+contracts.
+
+## Capability
+
+`nService` provides:
+
+- generated schema service templates for get, get by id, get by code, save, save all, update, remove, remove by id, and remove by code;
+- generated service artifacts under `src/service/gen`;
+- module-to-module and external HTTP request helpers;
+- bounded request deadlines, pooled keep-alive connections, safe retries,
+  circuit breaking, lifecycle cleanup, and sanitized transport diagnostics;
+- standard header normalization for authorization, API key, and enterprise context;
+- authentication provider services for user login and internal module access;
+- authorization provider services;
+- API key service behavior;
+- tenant and enterprise handler services;
+- status definition lookup;
+- logging service wrappers;
+- module, node, and module-configuration library objects.
+
+Generated services delegate schema CRUD behavior into pipeline contracts. Handwritten services own business behavior that should not live in controllers, facades, routers, or generated artifacts.
+
+## Runtime Flow
+
+1. A router maps an HTTP operation to a controller.
+2. The controller normalizes request parameters, query, headers, and body into Nodics request context.
+3. The facade coordinates the operation and calls the owning service.
+4. A generated service resolves the schema model from module and tenant context.
+5. The service starts the relevant pipeline, such as get, save, update, or remove.
+6. Database, validation, interceptor, audit, cache, and diagnostics behavior runs through the pipeline.
+
+For module-to-module calls, `DefaultModuleService` builds governed request options, normalizes headers, delegates URL resolution to the router service, executes the request, and enriches failures with sanitized context.
+
+Transport policy is layered under `serviceCommunication`. Automatic retries
+apply only to GET, HEAD, and OPTIONS requests, or writes carrying an explicit
+idempotency key. Projects may override the service or properties, but must keep
+timeouts bounded and must not expose credentials or response bodies through
+diagnostics.
+
+An open circuit rejects calls without moving its original recovery deadline or
+counting another remote failure. Registration polling therefore cannot prevent
+reconnection after Platform recovers. A successful probe closes the circuit; an
+actual failed probe opens a new recovery interval. Rejections remain visible in
+transport diagnostics. Customize the existing `serviceCommunication.circuitBreaker`
+policy, not registration-specific bypasses or a second transport client. The
+focused transport resilience test covers repeated rejection and probe recovery.
+
+Expected domain refusals may be declared by the capability under
+`serviceCommunication.circuitBreaker.domainRefusals.<logicalModule>` as exact
+error-code/numeric-status pairs. The generic default is empty; nImport declares
+only `ERR_IMP_00003: 400` and `ERR_IMP_00004: 404`. Such requests still fail and
+remain in diagnostic failure counts, but do not penalize the module circuit.
+They neither retry nor waive admission. Matching uses actual HTTP evidence,
+not normalized default status or response-body metadata. Prior closed-state
+faults remain retained; a half-open declared response closes the transport
+circuit without converting the business refusal to success. Authentication,
+rate-limit, server and network faults keep existing protection. Later layers
+can null an owner declaration; never exempt all 4xx responses. See the
+[exact owner contract](llm/contracts/README.md#capability-owned-domain-refusals)
+and offline `test/moduleDomainRefusalCircuitContract.test.js`.
+
+## Configuration And Security
+
+Service behavior must be driven by active modules, layered configuration, tenant context, schemas, pipelines, and runtime governance.
+
+Do not hardcode:
+
+- credentials;
+- bearer tokens;
+- API keys;
+- tenant mappings;
+- enterprise mappings;
+- remote module URLs;
+- permission decisions;
+- customer-specific business rules.
+
+Authentication token cache helpers must preserve tenant scope and avoid leaking credential material. Invalidation callbacks may emit structured observability and audit context such as reason code, tenant, enterprise, principal, source, and token type, but must never log or persist bearer tokens, refresh tokens, API keys, or auth cache keys.
+
+## Override Path
+
+Project modules may override service behavior by contributing same-name service files through later active modules. The overriding service must preserve the published capability contract unless the project also updates the router/facade/schema/tests/docs that expose the new contract.
+
+Use this layer when the change owns business behavior, data mutation, runtime policy, integration behavior, or reusable domain logic. Keep controllers thin and keep facades focused on orchestration.
+
+## Extension Contract
+
+Project modules may add or replace services through the module hierarchy. New
+service behavior must document configuration, tenant/request context, generated
+artifacts affected, downstream dependencies, errors, diagnostics, and tests for
+both default behavior and later-module overrides.
+
+## Tests
+
+Run focused service coverage with:
+
+```bash
+node nodics.foundation/modules/nService/test/authTokenInvalidationService.test.js
+node nodics.foundation/modules/nService/test/moduleRequestHeaderNormalization.test.js
+node nodics.foundation/modules/nService/test/moduleTransportResilience.test.js
+node nodics.foundation/modules/nService/test/modulesConfigurationService.test.js
+node nodics.foundation/modules/nService/test/statusDefinitionCatalog.test.js
+npm run quality:docs
+```
+
+## What To Avoid
+
+Avoid:
+
+- placing business behavior in controllers when it belongs in services;
+- editing generated service artifacts manually instead of changing source definitions and regenerating;
+- bypassing tenant context when resolving schema models;
+- using direct HTTP clients outside `DefaultModuleService` for module communication;
+- logging tokens, API keys, auth cache keys, or credentials;
+- adding service files outside `src/service`, where the Nodics loader will not discover them consistently.
+
+## Integration And Contract Boundaries
+
+Services consume schemas, models, pipelines, configuration, tenant context, and
+provider contracts. They may emit events or call another module, but the data
+contract and failure behavior must remain owned and documented.
+
+`DefaultModulesConfigurationService` owns the process-level effective topology
+registry built from layered `servers.*` configuration. It creates one
+`ModuleConfiguration` descriptor per configured module and activates a rebuilt
+registry only after every contribution validates. Routers and module clients
+consume this service; they do not construct a parallel topology container.
+
+Human username/password authentication is separate from internal
+module-to-module and scheduled access. Internal communication uses service
+identity and `DefaultModuleService`; it must not reuse a person's credentials.
+BackOffice self-registration remains asynchronous control-plane work so module
+startup and high-volume request paths do not synchronously depend on registry
+availability.
+
+Registration uses the router's effective module configuration to exclude
+`remoteOnly` dependencies, even when they appear in the active module list.
+Remote consumers must not advertise the owner's endpoint, schemas, or activation
+packages under their own instance identity. Actual local replicas and distinct
+Staged/Online runtimes remain independent registrations. Projects customize this
+through layered `servers.<module>.remoteOnly` (or effective options), not through
+client-side schema deduplication. After correcting a running deployment, restart
+the affected runtime and let old leases drain or expire, then refresh Axis
+bootstrap. The focused `test/moduleRegistrationAgent.test.js` covers local,
+remote-only, later-layer override, and registration retry behavior.
+
+## Observability, Performance, And Resilience
+
+- Keep timeouts bounded and connections reusable.
+- Retry safe reads or explicitly idempotent writes only.
+- Open the circuit according to configured transport policy rather than
+  allowing repeated dependency failures to consume request capacity.
+- Preserve correlation, tenant, target module, operation, attempt, duration,
+  and sanitized failure classification.
+- Never log authorization headers, tokens, API keys, credentials, or arbitrary
+  response bodies.
+- Close pooled transport resources through the runtime lifecycle coordinator.
+
+## Common Mistakes
+
+- Creating a direct HTTP client for one module or cron job.
+- Retrying an unsafe write without an idempotency contract.
+- Mixing human login credentials with internal service identity.
+- Resolving a remote URL from hardcoded source instead of `servers.*` and the
+  router/module service contract.
+- Copying a generated service to customize one method instead of using the
+  layered service override mechanism.
+
+## Continue
+
+- Build application behavior: [How To Create Application Functionality](https://github.com/Nodics/nodics.docs)
+- Module communication and APIs: [How To Create APIs](https://github.com/Nodics/nodics.docs)
+- Service variant: [vService](vService/README.md)
+- Framework map: [nodics.foundation](../README.md)
+
+## Tenant startup completion
+
+Enterprise discovery, tenant database/model creation, search setup and initial
+Cron job creation must complete before startup succeeds. Propagate required
+failures; do not launch background enterprise retry loops or a second job
+scheduler. Cron owns recurrence. Internal token refresh registers with the
+existing runtime lifecycle service, prevents overlapping refreshes, stops its
+timer and awaits active refresh work before transport/resource shutdown.
+
+Runtime proof uses explicit instance configuration. Bounded asynchronous credential renewal and batched registration supply the owning modules with fresh operational admission.
+
+Initial, tenant and renewal credentials share the configured proof and approved Profile scope path. Local Profile tenant preparation awaits governed Init releases and identity reconciliation before requesting a token.
+
+Revocation checks distinguish a missing marker from an unavailable authority;
+cache failures reject authorization and never imply that a token is unrevoked.
+
+For split runtimes, `runtimeIdentity.remoteModules` requests additional permitted
+APIs through Profile deployment grants; it never loads their source. The router's
+`remoteOnly` option also forces remote dispatch for locally loaded modules and
+connection aliases. Authority and consumers share the configured
+`authSecurity.securityStamp.cacheModuleName` for stamps and revocation markers.
+
+See the [runtime contract](llm/contracts/README.md) and the
+[detailed configuration and acceptance guide](../../../nodics.docs/docs/pages/nodics.foundation/service-runtime-overrides.md)
+for proof, grants, tenant discovery, cache namespaces and live test commands.
+
+Keep common authority contexts bounded to explicitly selected modules; schema overrides and Profile-issued scopes remain authoritative. See the local contract.
+
+A registry lease endpoint already names its canonical module API path and is preserved, including a prefix different from the logical module name. An origin-only endpoint uses the existing discovered package prefix or module name. Credentials, logical ownership and target-authority filtering remain unchanged.
+
+Inherit authentication policy and bind deployment credentials through the existing
+nAuth/nService contract. Keep provisioning proof separate from retained runtime
+proof; preserve strict shared auth state and Profile grants. See the local contract.

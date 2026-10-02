@@ -1,4 +1,14 @@
-# Inventory
+# Import Runtime Admission
+
+Inventory contributes `DefaultInventoryOperationService.validateImportTarget`
+to nImport target validators. Balance, movement and reservation stores reject
+Staged mutations through generated hooks and owner writers. Warehouse
+configuration remains the publication source. Immutable operational snapshots
+cannot directly import live stock: use existing governed stock operations and
+retained movement evidence, never replace balances. Ordinary Online owner
+operations remain unchanged; flags do not approve stock.
+
+## Inventory
 
 Inventory is its named Commerce capability boundary. Reusable contracts and behavior belong to this named capability boundary. Archived gComm is reference-only.
 

@@ -55,8 +55,24 @@
         "npm run test:full"
       ],
       "ownedDependencies": {
+        "htmlparser2": {
+          "owners": ["nodics.communication"],
+          "type": "runtime-template",
+          "reason": "Communication validates email HTML element and URL contexts with a parser rather than regular-expression markup handling.",
+          "restricted": true,
+          "allowedConsumers": ["nodics.communication/modules/commsCore"]
+        },
+        "handlebars": {
+          "owners": ["nodics.communication"],
+          "type": "runtime-template",
+          "reason": "Communication renders bounded module-owned HTML/text templates using restricted, escaped interpolation.",
+          "restricted": true,
+          "allowedConsumers": ["nodics.communication/modules/commsCore"]
+        },
         "acorn": {
-          "owners": ["nodics.foundation"],
+          "owners": [
+            "nodics.foundation"
+          ],
           "type": "development-governance",
           "reason": "nTooling parses runtime source exports for complete, syntax-aware extension-contract governance."
         },
@@ -175,6 +191,13 @@
           ],
           "type": "runtime-database",
           "reason": "MongoDB adapter for schema, CRUD, repository, and initializer data operations."
+        },
+        "mongodb-connection-string-url": {
+          "owners": ["nodics.foundation"],
+          "type": "runtime-database",
+          "reason": "Structured parsing for private MongoDB tenant namespace endpoint fingerprints.",
+          "restricted": true,
+          "allowedConsumers": ["nodics.foundation/modules/nDatabase/mongodb"]
         },
         "node-fetch": {
           "owners": [
@@ -333,6 +356,17 @@
           "allowedConsumers": [
             "nodics.foundation/modules/nLog"
           ]
+        },
+        "nodemailer": {
+          "owners": [
+            "nodics.communication"
+          ],
+          "type": "runtime-email-transport",
+          "reason": "The existing SMTP provider delegates MIME and SMTP/TLS transport to Nodemailer; Profile and Axis must not import the client.",
+          "restricted": true,
+          "allowedConsumers": [
+            "nodics.communication/modules/smtpCommsProvider"
+          ]
         }
       }
     }
@@ -410,6 +444,8 @@
     "@scarf/scarf": false
   },
   "dependencies": {
+    "htmlparser2": "10.0.0",
+    "handlebars": "4.7.9",
     "@formatjs/icu-messageformat-parser": "^3.5.16",
     "bcryptjs": "^2.4.3",
     "body-parser": "^1.19.2",
@@ -426,7 +462,9 @@
     "lodash": "^4.17.21",
     "logform": "^2.4.0",
     "mongodb": "^4.17.2",
+    "mongodb-connection-string-url": "2.6.0",
     "node-fetch": "^2.7.0",
+    "nodemailer": "10.0.12",
     "object-sizeof": "^1.6.3",
     "require-from-string": "^2.0.2",
     "stream-json": "^3.6.0",

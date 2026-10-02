@@ -11,3 +11,8 @@ Follow the root Nodics AI agent contract before changing this boundary:
 Communication owns message and delivery evidence, not Engagement, Order, Process, Profile, KYC, or Security state. Keep provider secrets in secured configuration, events content-free, callbacks authenticated and replay-safe, delivery idempotent, and providers replaceable. Never use archived `gNotify` files as source authority.
 
 Every behavior change requires focused success, suppression, retry, callback, tenant, and recovery evidence plus regenerated effective artifacts.
+
+Email/SMS presentation follows [the resource contract](modules/commsCore/llm/contracts/template-resources.md).
+Domains own default files; Communication owns the engine. New configuration and
+adoption records select resources, not inline bodies. Keep runtime overrides,
+optional selection, frozen retry content and sandbox/live boundaries discoverable.

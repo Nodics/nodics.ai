@@ -18,6 +18,16 @@
 module.exports = {
     /** Returns the immutable backend routing configuration. */
     configuration: function () { return ((CONFIG.get('axis') || {}).initialization || {}); },
+    /**
+     * Selects project baseline authority for readiness reads without retargeting commands.
+     * @param {string} operation Fixed owner operation, status or initiate.
+     * @param {Object} request Original authenticated employee request.
+     * @returns {string} Internal credential tenant; no browser-provided authority selector.
+     * @override Preserve project-owned readiness and the caller-scoped initiation boundary.
+     */
+    authenticationTenant: function (operation, request) {
+        return operation === 'status' ? CONFIG.get('defaultTenant') || 'default' : request.tenant;
+    },
     /** Requires an authenticated human employee and returns its stable identity. */
     human: function (request) {
         let auth = request && request.authData || {};
@@ -29,6 +39,17 @@ module.exports = {
     },
     /** Preserves sanitized target-side diagnostics without exposing internal credentials. */
     targetDiagnostic: function (error, baselineCode) {
+        const transport = SERVICE.DefaultModuleService.classifyTransportFailure(error);
+        if (transport) return new CLASSES.NodicsError({
+            code: 'ERR_BOF_00083',
+            message: 'Axis initialization target is temporarily unavailable.',
+            metadata: {
+                targetCode: transport.code,
+                targetResponseCode: transport.httpStatus === undefined ? undefined : String(transport.httpStatus),
+                baselineCode: baselineCode,
+                targetModuleName: 'cms'
+            }
+        });
         let source = error && (error.data || error.result || error.response || error);
         let remoteResponse = source && source.remoteResponse || error && error.remoteResponse;
         let targetCode = String(source && (source.code || source.errorCode) || error && error.code || 'UNKNOWN_TARGET_ERROR');
@@ -62,14 +83,14 @@ module.exports = {
         }
         if (SERVICE.DefaultInternalAuthenticationProviderService &&
             typeof SERVICE.DefaultInternalAuthenticationProviderService.refreshInternalAuthTokens === 'function') {
-            return SERVICE.DefaultInternalAuthenticationProviderService.refreshInternalAuthTokens(request.tenant).then(() =>
+            return SERVICE.DefaultInternalAuthenticationProviderService.refreshInternalAuthTokens(this.authenticationTenant(operation, request)).then(() =>
                 this.invokeWithInternalToken(operation, request, principal, configuration, target, baselineCode));
         }
         return this.invokeWithInternalToken(operation, request, principal, configuration, target, baselineCode);
     },
     /** Calls the configured target using the current internal token after any available refresh. */
     invokeWithInternalToken: function (operation, request, principal, configuration, target, baselineCode) {
-        let token = NODICS.getInternalAuthToken(request.tenant);
+        let token = NODICS.getInternalAuthToken(this.authenticationTenant(operation, request));
         if (!token) throw new CLASSES.NodicsError('AXIS_INITIALIZATION_INTERNAL_AUTH_UNAVAILABLE', 'Axis initialization authentication is unavailable');
         let body = operation === 'initiate' ? { requestedBy: principal, reason: request.initialization && request.initialization.reason,
             correlationId: request.correlationId || request.requestId } : undefined;

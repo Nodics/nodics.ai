@@ -32,6 +32,7 @@ global.UTILS = {
 };
 
 const configurationService = require('../src/service/config/defaultCacheConfigurationService');
+const privacy = require('../../../nConfig/src/service/DefaultLoggerService');
 const localCacheService = Object.assign({}, require('../../nodeCache/src/service/cache/defaultLocalCacheService'), { LOG: { debug: () => {} } });
 const cacheServiceDefinition = require('../src/service/cache/defaultCacheService');
 const requestPipeline = Object.assign({}, require('../../../nRouter/src/service/request/defaultRequestHandlerPipelineService'), { LOG: { debug: () => {}, warn: () => {} } });
@@ -77,6 +78,7 @@ function requestFor(tenant, principal, groups = ['reader'], permissions = ['prof
 
     let stopped;
     global.SERVICE = {
+        DefaultLoggerService: privacy,
         DefaultCacheConfigurationService: configurationService,
         DefaultCacheService: {
             getRouterCacheChannel: () => 'router',
@@ -99,6 +101,7 @@ function requestFor(tenant, principal, groups = ['reader'], permissions = ['prof
     let cacheBypassed = false;
     global.CONFIG = { get: key => key === 'defaultTenant' ? 'default' : key === 'cache' ? { enabled: false } : undefined };
     global.SERVICE = {
+        DefaultLoggerService: privacy,
         DefaultCacheConfigurationService: configurationService,
         DefaultCacheService: {
             getRouterCacheChannel: () => 'router',
@@ -127,7 +130,7 @@ function requestFor(tenant, principal, groups = ['reader'], permissions = ['prof
     };
     itemPipeline.lookupCache({
         tenant: 'tenant-a',
-        schemaModel: { moduleName: 'profile', schemaName: 'employee', cache: { enabled: true } }
+        schemaModel: { moduleName: 'profile', schemaName: 'employee', rawSchema: {}, cache: { enabled: true } }
     }, {}, {
         stop: (_request, _response, value) => { stopped = value; },
         nextSuccess: () => {},
@@ -149,7 +152,7 @@ function requestFor(tenant, principal, groups = ['reader'], permissions = ['prof
     };
     itemPipeline.lookupCache({
         tenant: 'tenant-a',
-        schemaModel: { moduleName: 'profile', schemaName: 'employee', cache: { enabled: true } }
+        schemaModel: { moduleName: 'profile', schemaName: 'employee', rawSchema: {}, cache: { enabled: true } }
     }, {}, {
         stop: () => { throw new Error('Global cache disable must not stop from item cache'); },
         nextSuccess: () => { cacheBypassed = true; },

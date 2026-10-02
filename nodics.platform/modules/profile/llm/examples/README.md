@@ -1,5 +1,27 @@
 # profile AI Examples
 
+For enterprise delegation, use the [accepted semantic example](../contracts/enterprise-delegation.md#customization-and-verification).
+A selected administrator subtree is not an employee grant: give each person exact
+target memberships and roles, and retain independent resource scopes. Source
+enforcement is pending; do not invent a working configuration DTO or enable parent
+access using only hierarchy fields. Keep reusable implementation in Profile.
+
+For an approved interrupted-audit inspection window, configure only the existing
+Profile migration `recoveryInspectionEnabled`, `recoveryInspectionQualified` and
+bounded `recoveryInspectionMaximumChanges`. Submit the saved auditCode and
+fingerprint with confirmed:true to `/identity/migration/inspect`. Do not supply a
+replacement plan or worker identity. Review positional observations; a locked
+report does not authorize replay, finalization or unlocking. Keep the flags false
+until the installed provider, admission and redaction contracts are accepted.
+
+For an approved identity-inventory window, override only the necessary
+`identityGovernance.migration.assessment` limits in the existing deployment layer.
+Keep `enabled: false` outside that window. The secured assessment request body is
+`{}`; scope comes from Profile's authoritative records, never from request fields.
+See the [assessment contract](../contracts/identity-assessment.md) for bounds and
+fixture examples. Changing `pageSize` does not waive counted terminal pagination;
+an unavailable tenant or changed second pass must reject the whole assessment.
+
 This folder contains examples that help AI agents and developers work correctly inside the `nodics.platform/modules/profile` module boundary.
 
 Prefer small examples that show proper layered customization, configuration overrides, service extension, schema/router changes, tests, and documentation updates without modifying unrelated Nodics code.
@@ -23,6 +45,15 @@ and password to `/customer/registrations`; the form contract test demonstrates
 Profile limit and identity-member customization.
 
 For a long-lived channel journey, complete a fresh handoff once and call origin resolution with the resulting customer bearer token. A later expired launch must not prevent origin resolution for that bound session. Revoke its link and verify that both origin and refresh fail. Password sign-in followed by linking must finish another handoff before entering the journey.
+
+For a stricter Team retry policy, override the exported
+`committedRecoveryMatches` member in a later Profile layer and preserve the
+default exact-operation checks before imposing an additional rejection. Both
+original-administrator retry and platform recovery resolve the effective member
+through `repairCommittedAssignment`. Never treat a stamp repair as permission to
+skip fresh actor or assignment checks. The composition suite
+`test/teamWithdrawalRecoveryComposition.test.js` proves delegated default checks
+and a stricter rejecting override without a second assignment mutation.
 
 `profileInitialization.requiredEmployeeLogins` owns initializer identity checks,
 with admin/apiAdmin defaults matching Profile Init data. Runtime API-key login

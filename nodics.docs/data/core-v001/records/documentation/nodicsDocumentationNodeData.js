@@ -325,7 +325,7 @@ module.exports = {
     "childJourneyLinks": [],
     "childStatusSummary": {
       "childCount": 49,
-      "pages": 130
+      "pages": 143
     },
     "nodeOrder": 10,
     "expandable": true,
@@ -1137,7 +1137,19 @@ module.exports = {
       "pages": [
         "accelerators.agora-industry-templates",
         "accelerators.agora-apparel-product-data-authoring",
-        "accelerators.domain-commerce-source-map"
+        "accelerators.domain-commerce-source-map",
+        "accelerators.circa-overview",
+        "accelerators.circa-data-network",
+        "accelerators.circa-submission-journey",
+        "accelerators.circa-operations-rewards",
+        "accelerators.circa-coupons-commerce",
+        "accelerators.circa-customization",
+        "accelerators.circa-deployment-verification",
+        "accelerators.circa-collection-reference",
+        "accelerators.circa-enterprise-reference",
+        "accelerators.circa-source-inventory",
+        "accelerators.circa-catalogue-reference",
+        "accelerators.circa-configuration-reference"
       ]
     },
     "nodeDashboard": "nodicsDocsDashboardSecacceleratorsAndIndustrySolutionTemplates",
@@ -1159,6 +1171,78 @@ module.exports = {
         "title": "Domain Commerce Accelerator Source Map",
         "summary": "How domain commerce, electronics product, telco catalog, and telco subscription accelerators extend Commerce without becoming duplicate authorities.",
         "order": 30
+      },
+      {
+        "code": "accelerators.circa-overview",
+        "title": "Circa and the eWaste Product",
+        "summary": "Source-backed product capability, audience, architecture and reference-application boundaries for Waste Management showcased through Circa.",
+        "order": 40
+      },
+      {
+        "code": "accelerators.circa-data-network",
+        "title": "Circa Data, Enterprises and Collection Network",
+        "summary": "Enterprise, employee, store, location, collection-point, catalogue and release configuration with installed-history preservation.",
+        "order": 50
+      },
+      {
+        "code": "accelerators.circa-submission-journey",
+        "title": "Circa Customer eWaste Submission",
+        "summary": "Customer authentication, fresh arrival, photo preparation, correction, confirmation, account workspace and safe recovery.",
+        "order": 60
+      },
+      {
+        "code": "accelerators.circa-operations-rewards",
+        "title": "Circa Review, Assets, Rewards and Environmental Evidence",
+        "summary": "Axis roles/scopes, verification, approval, custody, asset ownership, assessments, settlement and recovery boundaries.",
+        "order": 70
+      },
+      {
+        "code": "accelerators.circa-coupons-commerce",
+        "title": "Circa Shop, Coupon Purchase and Redemption",
+        "summary": "Published browsing, reviewed purchase, reservation, expiry, entitlements, outlet fulfillment, refunds and notification limits.",
+        "order": 80
+      },
+      {
+        "code": "accelerators.circa-customization",
+        "title": "Customize and Extend Circa Safely",
+        "summary": "Worked project-layer configuration, focused services, governed data/content, EMAIL/SMS resources and preserved framework guarantees.",
+        "order": 90
+      },
+      {
+        "code": "accelerators.circa-deployment-verification",
+        "title": "Circa Deployment, Operations and Verification",
+        "summary": "Runtime/data/publication gates, development commands, joint acceptance matrix, troubleshooting and safe deployment recovery.",
+        "order": 100
+      },
+      {
+        "code": "accelerators.circa-collection-reference",
+        "title": "Circa Collection-Centre Record Reference",
+        "summary": "Exact authored collection point identities, coordinates, categories, operator and infrastructure-owner relationships.",
+        "order": 110
+      },
+      {
+        "code": "accelerators.circa-enterprise-reference",
+        "title": "Circa Enterprise, Staff and Scope Reference",
+        "summary": "Enterprise source records, business capabilities, operational employees, resource scopes and ownership alignment caveats.",
+        "order": 120
+      },
+      {
+        "code": "accelerators.circa-source-inventory",
+        "title": "Circa Source Release and Record Inventory",
+        "summary": "Manifest versions, destinations, all source record counts, optional packages and publication boundaries.",
+        "order": 130
+      },
+      {
+        "code": "accelerators.circa-catalogue-reference",
+        "title": "Circa Store, Product, Price and Coupon Record Reference",
+        "summary": "Exact store, product, variant, points price, inventory, promotion, batch and code-pool sample records.",
+        "order": 140
+      },
+      {
+        "code": "accelerators.circa-configuration-reference",
+        "title": "Circa Configuration and Extension Reference",
+        "summary": "Application and domain configuration groups, current policy values, provider gates and later-layer customization.",
+        "order": 150
       }
     ],
     "childJourneyLinks": [
@@ -1176,11 +1260,26 @@ module.exports = {
         "label": "Domain Commerce Accelerator Source Map",
         "targetPage": "accelerators.domain-commerce-source-map",
         "route": "/docs/framework/accelerators-domain-commerce-source-map"
+      },
+      {
+        "label": "Circa and the eWaste Product",
+        "targetPage": "accelerators.circa-overview",
+        "route": "/docs/framework/accelerators/circa"
+      },
+      {
+        "label": "Circa Data, Enterprises and Collection Network",
+        "targetPage": "accelerators.circa-data-network",
+        "route": "/docs/framework/accelerators/circa/data-network"
+      },
+      {
+        "label": "Circa Customer eWaste Submission",
+        "targetPage": "accelerators.circa-submission-journey",
+        "route": "/docs/framework/accelerators/circa/submission"
       }
     ],
     "childStatusSummary": {
-      "childCount": 3,
-      "pages": 3
+      "childCount": 15,
+      "pages": 15
     },
     "nodeOrder": 80,
     "expandable": true,
@@ -3682,6 +3781,7 @@ module.exports = {
       "navigationDepth": 2,
       "pages": [
         "communication.overview",
+        "communication.email-sms-templates",
         "communication.provider-runbooks"
       ]
     },
@@ -3694,10 +3794,16 @@ module.exports = {
         "order": 10
       },
       {
+        "code": "communication.email-sms-templates",
+        "title": "Email and SMS Templates",
+        "summary": "Detailed notification flow, existing inventory, typed manifests, configuration and adoption, layered overrides, locale precedence, safe HTML, new email/SMS examples, frozen retries and troubleshooting.",
+        "order": 20
+      },
+      {
         "code": "communication.provider-runbooks",
         "title": "Communication Provider Runbooks",
-        "summary": "SMTP and SMS provider delivery, template, locale, suppression, retry, callback, receipt, privacy, and failure evidence guidance.",
-        "order": 20
+        "summary": "Source-backed SMTP controlled-test and SMS injected-sandbox configuration, credentials, frozen-content delivery, safeguards, uncertainty recovery and live qualification boundaries.",
+        "order": 30
       }
     ],
     "childJourneyLinks": [
@@ -3707,14 +3813,19 @@ module.exports = {
         "route": "/docs/framework/communication-overview"
       },
       {
+        "label": "Email and SMS Templates",
+        "targetPage": "communication.email-sms-templates",
+        "route": "/docs/framework/communication-email-sms-templates"
+      },
+      {
         "label": "Communication Provider Runbooks",
         "targetPage": "communication.provider-runbooks",
         "route": "/docs/framework/communication-provider-runbooks"
       }
     ],
     "childStatusSummary": {
-      "childCount": 2,
-      "pages": 2
+      "childCount": 3,
+      "pages": 3
     },
     "nodeOrder": 350,
     "expandable": true,
@@ -4989,6 +5100,846 @@ module.exports = {
     "active": true
   },
   "record50": {
+    "code": "nodicsDocsNodePageacceleratorsCircaCollectionReference",
+    "product": "nodicsDocumentationProduct",
+    "navigation": "nodicsDocumentationNavigation",
+    "parentNode": "nodicsDocsNodeSecacceleratorsAndIndustrySolutionTemplates",
+    "nodeLevel": "PAGE_LINK",
+    "nodeType": "PAGE",
+    "nodeTitle": "Circa Collection-Centre Record Reference",
+    "nodeSummary": "Exact authored collection point identities, coordinates, categories, operator and infrastructure-owner relationships.",
+    "nodeContentArea": {
+      "route": "/docs/framework/accelerators/circa/collection-reference",
+      "documentType": "configuration",
+      "businessAudience": [],
+      "technicalAudience": []
+    },
+    "childSummaryCards": [],
+    "childJourneyLinks": [],
+    "childStatusSummary": {
+      "childCount": 0
+    },
+    "targetDocumentationPage": "nodicsDocsMetadataacceleratorsCircaCollectionReference",
+    "targetPage": "nodicsDocsPageacceleratorsCircaCollectionReference",
+    "targetRoute": "nodicsDocsRouteacceleratorsCircaCollectionReference",
+    "nodeOrder": 10110,
+    "expandable": false,
+    "expandedByDefault": false,
+    "nodeIcon": "file-text",
+    "nodeAudience": [
+      "business",
+      "architect",
+      "administrator",
+      "developer",
+      "operator",
+      "qa",
+      "ai-tool"
+    ],
+    "accessPolicy": "nodicsDocsAccessPublic",
+    "accessMode": "PUBLIC",
+    "allowedRoles": [],
+    "allowedGroups": [],
+    "allowedPermissions": [],
+    "managedInAxis": true,
+    "axisAuthoringPermissions": [
+      "documentation.navigation.update"
+    ],
+    "workflowRequired": true,
+    "workflowTriggers": [
+      "NAVIGATION_CHANGE",
+      "DASHBOARD_CHANGE",
+      "ACCESS_POLICY_CHANGE"
+    ],
+    "lifecycleState": "ONLINE",
+    "maturityState": "IMPLEMENTED",
+    "searchKeywords": [
+      "circa",
+      "ewaste",
+      "collection-reference",
+      "configuration",
+      "source records"
+    ],
+    "relatedNodes": [
+      "nodicsDocsNodePageacceleratorsCircaOverview",
+      "nodicsDocsNodePageacceleratorsCircaDataNetwork",
+      "nodicsDocsNodePageacceleratorsCircaCustomization"
+    ],
+    "locale": "en",
+    "channel": "web",
+    "active": true
+  },
+  "record51": {
+    "code": "nodicsDocsNodePageacceleratorsCircaEnterpriseReference",
+    "product": "nodicsDocumentationProduct",
+    "navigation": "nodicsDocumentationNavigation",
+    "parentNode": "nodicsDocsNodeSecacceleratorsAndIndustrySolutionTemplates",
+    "nodeLevel": "PAGE_LINK",
+    "nodeType": "PAGE",
+    "nodeTitle": "Circa Enterprise, Staff and Scope Reference",
+    "nodeSummary": "Enterprise source records, business capabilities, operational employees, resource scopes and ownership alignment caveats.",
+    "nodeContentArea": {
+      "route": "/docs/framework/accelerators/circa/enterprise-reference",
+      "documentType": "configuration",
+      "businessAudience": [],
+      "technicalAudience": []
+    },
+    "childSummaryCards": [],
+    "childJourneyLinks": [],
+    "childStatusSummary": {
+      "childCount": 0
+    },
+    "targetDocumentationPage": "nodicsDocsMetadataacceleratorsCircaEnterpriseReference",
+    "targetPage": "nodicsDocsPageacceleratorsCircaEnterpriseReference",
+    "targetRoute": "nodicsDocsRouteacceleratorsCircaEnterpriseReference",
+    "nodeOrder": 10120,
+    "expandable": false,
+    "expandedByDefault": false,
+    "nodeIcon": "file-text",
+    "nodeAudience": [
+      "business",
+      "architect",
+      "administrator",
+      "developer",
+      "operator",
+      "qa",
+      "ai-tool"
+    ],
+    "accessPolicy": "nodicsDocsAccessPublic",
+    "accessMode": "PUBLIC",
+    "allowedRoles": [],
+    "allowedGroups": [],
+    "allowedPermissions": [],
+    "managedInAxis": true,
+    "axisAuthoringPermissions": [
+      "documentation.navigation.update"
+    ],
+    "workflowRequired": true,
+    "workflowTriggers": [
+      "NAVIGATION_CHANGE",
+      "DASHBOARD_CHANGE",
+      "ACCESS_POLICY_CHANGE"
+    ],
+    "lifecycleState": "ONLINE",
+    "maturityState": "IMPLEMENTED",
+    "searchKeywords": [
+      "circa",
+      "ewaste",
+      "enterprise-reference",
+      "configuration",
+      "source records"
+    ],
+    "relatedNodes": [
+      "nodicsDocsNodePageacceleratorsCircaOverview",
+      "nodicsDocsNodePageacceleratorsCircaDataNetwork",
+      "nodicsDocsNodePageacceleratorsCircaCustomization"
+    ],
+    "locale": "en",
+    "channel": "web",
+    "active": true
+  },
+  "record52": {
+    "code": "nodicsDocsNodePageacceleratorsCircaSourceInventory",
+    "product": "nodicsDocumentationProduct",
+    "navigation": "nodicsDocumentationNavigation",
+    "parentNode": "nodicsDocsNodeSecacceleratorsAndIndustrySolutionTemplates",
+    "nodeLevel": "PAGE_LINK",
+    "nodeType": "PAGE",
+    "nodeTitle": "Circa Source Release and Record Inventory",
+    "nodeSummary": "Manifest versions, destinations, all source record counts, optional packages and publication boundaries.",
+    "nodeContentArea": {
+      "route": "/docs/framework/accelerators/circa/source-inventory",
+      "documentType": "operations",
+      "businessAudience": [],
+      "technicalAudience": []
+    },
+    "childSummaryCards": [],
+    "childJourneyLinks": [],
+    "childStatusSummary": {
+      "childCount": 0
+    },
+    "targetDocumentationPage": "nodicsDocsMetadataacceleratorsCircaSourceInventory",
+    "targetPage": "nodicsDocsPageacceleratorsCircaSourceInventory",
+    "targetRoute": "nodicsDocsRouteacceleratorsCircaSourceInventory",
+    "nodeOrder": 10130,
+    "expandable": false,
+    "expandedByDefault": false,
+    "nodeIcon": "file-text",
+    "nodeAudience": [
+      "business",
+      "architect",
+      "administrator",
+      "developer",
+      "operator",
+      "qa",
+      "ai-tool"
+    ],
+    "accessPolicy": "nodicsDocsAccessPublic",
+    "accessMode": "PUBLIC",
+    "allowedRoles": [],
+    "allowedGroups": [],
+    "allowedPermissions": [],
+    "managedInAxis": true,
+    "axisAuthoringPermissions": [
+      "documentation.navigation.update"
+    ],
+    "workflowRequired": true,
+    "workflowTriggers": [
+      "NAVIGATION_CHANGE",
+      "DASHBOARD_CHANGE",
+      "ACCESS_POLICY_CHANGE"
+    ],
+    "lifecycleState": "ONLINE",
+    "maturityState": "IMPLEMENTED",
+    "searchKeywords": [
+      "circa",
+      "ewaste",
+      "source-inventory",
+      "configuration",
+      "source records"
+    ],
+    "relatedNodes": [
+      "nodicsDocsNodePageacceleratorsCircaOverview",
+      "nodicsDocsNodePageacceleratorsCircaDataNetwork",
+      "nodicsDocsNodePageacceleratorsCircaCustomization"
+    ],
+    "locale": "en",
+    "channel": "web",
+    "active": true
+  },
+  "record53": {
+    "code": "nodicsDocsNodePageacceleratorsCircaCatalogueReference",
+    "product": "nodicsDocumentationProduct",
+    "navigation": "nodicsDocumentationNavigation",
+    "parentNode": "nodicsDocsNodeSecacceleratorsAndIndustrySolutionTemplates",
+    "nodeLevel": "PAGE_LINK",
+    "nodeType": "PAGE",
+    "nodeTitle": "Circa Store, Product, Price and Coupon Record Reference",
+    "nodeSummary": "Exact store, product, variant, points price, inventory, promotion, batch and code-pool sample records.",
+    "nodeContentArea": {
+      "route": "/docs/framework/accelerators/circa/catalogue-reference",
+      "documentType": "configuration",
+      "businessAudience": [],
+      "technicalAudience": []
+    },
+    "childSummaryCards": [],
+    "childJourneyLinks": [],
+    "childStatusSummary": {
+      "childCount": 0
+    },
+    "targetDocumentationPage": "nodicsDocsMetadataacceleratorsCircaCatalogueReference",
+    "targetPage": "nodicsDocsPageacceleratorsCircaCatalogueReference",
+    "targetRoute": "nodicsDocsRouteacceleratorsCircaCatalogueReference",
+    "nodeOrder": 10140,
+    "expandable": false,
+    "expandedByDefault": false,
+    "nodeIcon": "file-text",
+    "nodeAudience": [
+      "business",
+      "architect",
+      "administrator",
+      "developer",
+      "operator",
+      "qa",
+      "ai-tool"
+    ],
+    "accessPolicy": "nodicsDocsAccessPublic",
+    "accessMode": "PUBLIC",
+    "allowedRoles": [],
+    "allowedGroups": [],
+    "allowedPermissions": [],
+    "managedInAxis": true,
+    "axisAuthoringPermissions": [
+      "documentation.navigation.update"
+    ],
+    "workflowRequired": true,
+    "workflowTriggers": [
+      "NAVIGATION_CHANGE",
+      "DASHBOARD_CHANGE",
+      "ACCESS_POLICY_CHANGE"
+    ],
+    "lifecycleState": "ONLINE",
+    "maturityState": "IMPLEMENTED",
+    "searchKeywords": [
+      "circa",
+      "ewaste",
+      "catalogue-reference",
+      "configuration",
+      "source records"
+    ],
+    "relatedNodes": [
+      "nodicsDocsNodePageacceleratorsCircaOverview",
+      "nodicsDocsNodePageacceleratorsCircaDataNetwork",
+      "nodicsDocsNodePageacceleratorsCircaCustomization"
+    ],
+    "locale": "en",
+    "channel": "web",
+    "active": true
+  },
+  "record54": {
+    "code": "nodicsDocsNodePageacceleratorsCircaConfigurationReference",
+    "product": "nodicsDocumentationProduct",
+    "navigation": "nodicsDocumentationNavigation",
+    "parentNode": "nodicsDocsNodeSecacceleratorsAndIndustrySolutionTemplates",
+    "nodeLevel": "PAGE_LINK",
+    "nodeType": "PAGE",
+    "nodeTitle": "Circa Configuration and Extension Reference",
+    "nodeSummary": "Application and domain configuration groups, current policy values, provider gates and later-layer customization.",
+    "nodeContentArea": {
+      "route": "/docs/framework/accelerators/circa/configuration-reference",
+      "documentType": "configuration",
+      "businessAudience": [],
+      "technicalAudience": []
+    },
+    "childSummaryCards": [],
+    "childJourneyLinks": [],
+    "childStatusSummary": {
+      "childCount": 0
+    },
+    "targetDocumentationPage": "nodicsDocsMetadataacceleratorsCircaConfigurationReference",
+    "targetPage": "nodicsDocsPageacceleratorsCircaConfigurationReference",
+    "targetRoute": "nodicsDocsRouteacceleratorsCircaConfigurationReference",
+    "nodeOrder": 10150,
+    "expandable": false,
+    "expandedByDefault": false,
+    "nodeIcon": "file-text",
+    "nodeAudience": [
+      "business",
+      "architect",
+      "administrator",
+      "developer",
+      "operator",
+      "qa",
+      "ai-tool"
+    ],
+    "accessPolicy": "nodicsDocsAccessPublic",
+    "accessMode": "PUBLIC",
+    "allowedRoles": [],
+    "allowedGroups": [],
+    "allowedPermissions": [],
+    "managedInAxis": true,
+    "axisAuthoringPermissions": [
+      "documentation.navigation.update"
+    ],
+    "workflowRequired": true,
+    "workflowTriggers": [
+      "NAVIGATION_CHANGE",
+      "DASHBOARD_CHANGE",
+      "ACCESS_POLICY_CHANGE"
+    ],
+    "lifecycleState": "ONLINE",
+    "maturityState": "IMPLEMENTED",
+    "searchKeywords": [
+      "circa",
+      "ewaste",
+      "configuration-reference",
+      "configuration",
+      "source records"
+    ],
+    "relatedNodes": [
+      "nodicsDocsNodePageacceleratorsCircaOverview",
+      "nodicsDocsNodePageacceleratorsCircaDataNetwork",
+      "nodicsDocsNodePageacceleratorsCircaCustomization"
+    ],
+    "locale": "en",
+    "channel": "web",
+    "active": true
+  },
+  "record55": {
+    "code": "nodicsDocsNodePageacceleratorsCircaOverview",
+    "product": "nodicsDocumentationProduct",
+    "navigation": "nodicsDocumentationNavigation",
+    "parentNode": "nodicsDocsNodeSecacceleratorsAndIndustrySolutionTemplates",
+    "nodeLevel": "PAGE_LINK",
+    "nodeType": "PAGE",
+    "nodeTitle": "Circa and the eWaste Product",
+    "nodeSummary": "Source-backed product capability, audience, architecture and reference-application boundaries for Waste Management showcased through Circa.",
+    "nodeContentArea": {
+      "route": "/docs/framework/accelerators/circa",
+      "documentType": "overview",
+      "businessAudience": [],
+      "technicalAudience": []
+    },
+    "childSummaryCards": [],
+    "childJourneyLinks": [],
+    "childStatusSummary": {
+      "childCount": 0
+    },
+    "targetDocumentationPage": "nodicsDocsMetadataacceleratorsCircaOverview",
+    "targetPage": "nodicsDocsPageacceleratorsCircaOverview",
+    "targetRoute": "nodicsDocsRouteacceleratorsCircaOverview",
+    "nodeOrder": 10040,
+    "expandable": false,
+    "expandedByDefault": false,
+    "nodeIcon": "file-text",
+    "nodeAudience": [
+      "business",
+      "architect",
+      "administrator",
+      "developer",
+      "operator",
+      "qa",
+      "ai-tool"
+    ],
+    "accessPolicy": "nodicsDocsAccessPublic",
+    "accessMode": "PUBLIC",
+    "allowedRoles": [],
+    "allowedGroups": [],
+    "allowedPermissions": [],
+    "managedInAxis": true,
+    "axisAuthoringPermissions": [
+      "documentation.navigation.update"
+    ],
+    "workflowRequired": true,
+    "workflowTriggers": [
+      "NAVIGATION_CHANGE",
+      "DASHBOARD_CHANGE",
+      "ACCESS_POLICY_CHANGE"
+    ],
+    "lifecycleState": "ONLINE",
+    "maturityState": "IMPLEMENTED",
+    "searchKeywords": [
+      "circa",
+      "ewaste",
+      "waste management",
+      "product",
+      "nexus",
+      "accelerator"
+    ],
+    "relatedNodes": [
+      "nodicsDocsNodePageacceleratorsCircaDataNetwork",
+      "nodicsDocsNodePageacceleratorsCircaSubmissionJourney",
+      "nodicsDocsNodePageacceleratorsCircaOperationsRewards",
+      "nodicsDocsNodePageacceleratorsCircaCouponsCommerce",
+      "nodicsDocsNodePageacceleratorsCircaCustomization",
+      "nodicsDocsNodePageacceleratorsCircaDeploymentVerification"
+    ],
+    "locale": "en",
+    "channel": "web",
+    "active": true
+  },
+  "record56": {
+    "code": "nodicsDocsNodePageacceleratorsCircaDataNetwork",
+    "product": "nodicsDocumentationProduct",
+    "navigation": "nodicsDocumentationNavigation",
+    "parentNode": "nodicsDocsNodeSecacceleratorsAndIndustrySolutionTemplates",
+    "nodeLevel": "PAGE_LINK",
+    "nodeType": "PAGE",
+    "nodeTitle": "Circa Data, Enterprises and Collection Network",
+    "nodeSummary": "Enterprise, employee, store, location, collection-point, catalogue and release configuration with installed-history preservation.",
+    "nodeContentArea": {
+      "route": "/docs/framework/accelerators/circa/data-network",
+      "documentType": "configuration",
+      "businessAudience": [],
+      "technicalAudience": []
+    },
+    "childSummaryCards": [],
+    "childJourneyLinks": [],
+    "childStatusSummary": {
+      "childCount": 0
+    },
+    "targetDocumentationPage": "nodicsDocsMetadataacceleratorsCircaDataNetwork",
+    "targetPage": "nodicsDocsPageacceleratorsCircaDataNetwork",
+    "targetRoute": "nodicsDocsRouteacceleratorsCircaDataNetwork",
+    "nodeOrder": 10050,
+    "expandable": false,
+    "expandedByDefault": false,
+    "nodeIcon": "file-text",
+    "nodeAudience": [
+      "business",
+      "architect",
+      "administrator",
+      "developer",
+      "operator",
+      "qa",
+      "ai-tool"
+    ],
+    "accessPolicy": "nodicsDocsAccessPublic",
+    "accessMode": "PUBLIC",
+    "allowedRoles": [],
+    "allowedGroups": [],
+    "allowedPermissions": [],
+    "managedInAxis": true,
+    "axisAuthoringPermissions": [
+      "documentation.navigation.update"
+    ],
+    "workflowRequired": true,
+    "workflowTriggers": [
+      "NAVIGATION_CHANGE",
+      "DASHBOARD_CHANGE",
+      "ACCESS_POLICY_CHANGE"
+    ],
+    "lifecycleState": "ONLINE",
+    "maturityState": "IMPLEMENTED",
+    "searchKeywords": [
+      "circa",
+      "enterprise",
+      "store",
+      "collection centre",
+      "data release",
+      "coupon",
+      "location"
+    ],
+    "relatedNodes": [
+      "nodicsDocsNodePageacceleratorsCircaOverview",
+      "nodicsDocsNodePageacceleratorsCircaCustomization"
+    ],
+    "locale": "en",
+    "channel": "web",
+    "active": true
+  },
+  "record57": {
+    "code": "nodicsDocsNodePageacceleratorsCircaSubmissionJourney",
+    "product": "nodicsDocumentationProduct",
+    "navigation": "nodicsDocumentationNavigation",
+    "parentNode": "nodicsDocsNodeSecacceleratorsAndIndustrySolutionTemplates",
+    "nodeLevel": "PAGE_LINK",
+    "nodeType": "PAGE",
+    "nodeTitle": "Circa Customer eWaste Submission",
+    "nodeSummary": "Customer authentication, fresh arrival, photo preparation, correction, confirmation, account workspace and safe recovery.",
+    "nodeContentArea": {
+      "route": "/docs/framework/accelerators/circa/submission",
+      "documentType": "how-to",
+      "businessAudience": [],
+      "technicalAudience": []
+    },
+    "childSummaryCards": [],
+    "childJourneyLinks": [],
+    "childStatusSummary": {
+      "childCount": 0
+    },
+    "targetDocumentationPage": "nodicsDocsMetadataacceleratorsCircaSubmissionJourney",
+    "targetPage": "nodicsDocsPageacceleratorsCircaSubmissionJourney",
+    "targetRoute": "nodicsDocsRouteacceleratorsCircaSubmissionJourney",
+    "nodeOrder": 10060,
+    "expandable": false,
+    "expandedByDefault": false,
+    "nodeIcon": "file-text",
+    "nodeAudience": [
+      "business",
+      "architect",
+      "administrator",
+      "developer",
+      "operator",
+      "qa",
+      "ai-tool"
+    ],
+    "accessPolicy": "nodicsDocsAccessPublic",
+    "accessMode": "PUBLIC",
+    "allowedRoles": [],
+    "allowedGroups": [],
+    "allowedPermissions": [],
+    "managedInAxis": true,
+    "axisAuthoringPermissions": [
+      "documentation.navigation.update"
+    ],
+    "workflowRequired": true,
+    "workflowTriggers": [
+      "NAVIGATION_CHANGE",
+      "DASHBOARD_CHANGE",
+      "ACCESS_POLICY_CHANGE"
+    ],
+    "lifecycleState": "ONLINE",
+    "maturityState": "IMPLEMENTED",
+    "searchKeywords": [
+      "circa",
+      "submit ewaste",
+      "arrival",
+      "photo",
+      "draft",
+      "telegram",
+      "account"
+    ],
+    "relatedNodes": [
+      "nodicsDocsNodePageacceleratorsCircaOperationsRewards",
+      "nodicsDocsNodePageacceleratorsCircaDeploymentVerification"
+    ],
+    "locale": "en",
+    "channel": "web",
+    "active": true
+  },
+  "record58": {
+    "code": "nodicsDocsNodePageacceleratorsCircaOperationsRewards",
+    "product": "nodicsDocumentationProduct",
+    "navigation": "nodicsDocumentationNavigation",
+    "parentNode": "nodicsDocsNodeSecacceleratorsAndIndustrySolutionTemplates",
+    "nodeLevel": "PAGE_LINK",
+    "nodeType": "PAGE",
+    "nodeTitle": "Circa Review, Assets, Rewards and Environmental Evidence",
+    "nodeSummary": "Axis roles/scopes, verification, approval, custody, asset ownership, assessments, settlement and recovery boundaries.",
+    "nodeContentArea": {
+      "route": "/docs/framework/accelerators/circa/operations",
+      "documentType": "operations",
+      "businessAudience": [],
+      "technicalAudience": []
+    },
+    "childSummaryCards": [],
+    "childJourneyLinks": [],
+    "childStatusSummary": {
+      "childCount": 0
+    },
+    "targetDocumentationPage": "nodicsDocsMetadataacceleratorsCircaOperationsRewards",
+    "targetPage": "nodicsDocsPageacceleratorsCircaOperationsRewards",
+    "targetRoute": "nodicsDocsRouteacceleratorsCircaOperationsRewards",
+    "nodeOrder": 10070,
+    "expandable": false,
+    "expandedByDefault": false,
+    "nodeIcon": "file-text",
+    "nodeAudience": [
+      "business",
+      "architect",
+      "administrator",
+      "developer",
+      "operator",
+      "qa",
+      "ai-tool"
+    ],
+    "accessPolicy": "nodicsDocsAccessPublic",
+    "accessMode": "PUBLIC",
+    "allowedRoles": [],
+    "allowedGroups": [],
+    "allowedPermissions": [],
+    "managedInAxis": true,
+    "axisAuthoringPermissions": [
+      "documentation.navigation.update"
+    ],
+    "workflowRequired": true,
+    "workflowTriggers": [
+      "NAVIGATION_CHANGE",
+      "DASHBOARD_CHANGE",
+      "ACCESS_POLICY_CHANGE"
+    ],
+    "lifecycleState": "ONLINE",
+    "maturityState": "IMPLEMENTED",
+    "searchKeywords": [
+      "circa",
+      "axis",
+      "review",
+      "approval",
+      "reward",
+      "carbon",
+      "assessment",
+      "custody"
+    ],
+    "relatedNodes": [
+      "nodicsDocsNodePageacceleratorsCircaSubmissionJourney",
+      "nodicsDocsNodePageacceleratorsCircaCouponsCommerce"
+    ],
+    "locale": "en",
+    "channel": "web",
+    "active": true
+  },
+  "record59": {
+    "code": "nodicsDocsNodePageacceleratorsCircaCouponsCommerce",
+    "product": "nodicsDocumentationProduct",
+    "navigation": "nodicsDocumentationNavigation",
+    "parentNode": "nodicsDocsNodeSecacceleratorsAndIndustrySolutionTemplates",
+    "nodeLevel": "PAGE_LINK",
+    "nodeType": "PAGE",
+    "nodeTitle": "Circa Shop, Coupon Purchase and Redemption",
+    "nodeSummary": "Published browsing, reviewed purchase, reservation, expiry, entitlements, outlet fulfillment, refunds and notification limits.",
+    "nodeContentArea": {
+      "route": "/docs/framework/accelerators/circa/coupons-commerce",
+      "documentType": "how-to",
+      "businessAudience": [],
+      "technicalAudience": []
+    },
+    "childSummaryCards": [],
+    "childJourneyLinks": [],
+    "childStatusSummary": {
+      "childCount": 0
+    },
+    "targetDocumentationPage": "nodicsDocsMetadataacceleratorsCircaCouponsCommerce",
+    "targetPage": "nodicsDocsPageacceleratorsCircaCouponsCommerce",
+    "targetRoute": "nodicsDocsRouteacceleratorsCircaCouponsCommerce",
+    "nodeOrder": 10080,
+    "expandable": false,
+    "expandedByDefault": false,
+    "nodeIcon": "file-text",
+    "nodeAudience": [
+      "business",
+      "architect",
+      "administrator",
+      "developer",
+      "operator",
+      "qa",
+      "ai-tool"
+    ],
+    "accessPolicy": "nodicsDocsAccessPublic",
+    "accessMode": "PUBLIC",
+    "allowedRoles": [],
+    "allowedGroups": [],
+    "allowedPermissions": [],
+    "managedInAxis": true,
+    "axisAuthoringPermissions": [
+      "documentation.navigation.update"
+    ],
+    "workflowRequired": true,
+    "workflowTriggers": [
+      "NAVIGATION_CHANGE",
+      "DASHBOARD_CHANGE",
+      "ACCESS_POLICY_CHANGE"
+    ],
+    "lifecycleState": "ONLINE",
+    "maturityState": "IMPLEMENTED",
+    "searchKeywords": [
+      "circa",
+      "coupon",
+      "purchase",
+      "store",
+      "expiry",
+      "redeem",
+      "refund",
+      "shop"
+    ],
+    "relatedNodes": [
+      "nodicsDocsNodePageacceleratorsCircaDataNetwork",
+      "nodicsDocsNodePageacceleratorsCircaCustomization"
+    ],
+    "locale": "en",
+    "channel": "web",
+    "active": true
+  },
+  "record60": {
+    "code": "nodicsDocsNodePageacceleratorsCircaCustomization",
+    "product": "nodicsDocumentationProduct",
+    "navigation": "nodicsDocumentationNavigation",
+    "parentNode": "nodicsDocsNodeSecacceleratorsAndIndustrySolutionTemplates",
+    "nodeLevel": "PAGE_LINK",
+    "nodeType": "PAGE",
+    "nodeTitle": "Customize and Extend Circa Safely",
+    "nodeSummary": "Worked project-layer configuration, focused services, governed data/content, EMAIL/SMS resources and preserved framework guarantees.",
+    "nodeContentArea": {
+      "route": "/docs/framework/accelerators/circa/customization",
+      "documentType": "customization",
+      "businessAudience": [],
+      "technicalAudience": []
+    },
+    "childSummaryCards": [],
+    "childJourneyLinks": [],
+    "childStatusSummary": {
+      "childCount": 0
+    },
+    "targetDocumentationPage": "nodicsDocsMetadataacceleratorsCircaCustomization",
+    "targetPage": "nodicsDocsPageacceleratorsCircaCustomization",
+    "targetRoute": "nodicsDocsRouteacceleratorsCircaCustomization",
+    "nodeOrder": 10090,
+    "expandable": false,
+    "expandedByDefault": false,
+    "nodeIcon": "file-text",
+    "nodeAudience": [
+      "business",
+      "architect",
+      "administrator",
+      "developer",
+      "operator",
+      "qa",
+      "ai-tool"
+    ],
+    "accessPolicy": "nodicsDocsAccessPublic",
+    "accessMode": "PUBLIC",
+    "allowedRoles": [],
+    "allowedGroups": [],
+    "allowedPermissions": [],
+    "managedInAxis": true,
+    "axisAuthoringPermissions": [
+      "documentation.navigation.update"
+    ],
+    "workflowRequired": true,
+    "workflowTriggers": [
+      "NAVIGATION_CHANGE",
+      "DASHBOARD_CHANGE",
+      "ACCESS_POLICY_CHANGE"
+    ],
+    "lifecycleState": "ONLINE",
+    "maturityState": "IMPLEMENTED",
+    "searchKeywords": [
+      "circa",
+      "customization",
+      "extends",
+      "templates",
+      "email",
+      "sms",
+      "project overlay"
+    ],
+    "relatedNodes": [
+      "nodicsDocsNodePageacceleratorsCircaOverview",
+      "nodicsDocsNodePageacceleratorsCircaDeploymentVerification"
+    ],
+    "locale": "en",
+    "channel": "web",
+    "active": true
+  },
+  "record61": {
+    "code": "nodicsDocsNodePageacceleratorsCircaDeploymentVerification",
+    "product": "nodicsDocumentationProduct",
+    "navigation": "nodicsDocumentationNavigation",
+    "parentNode": "nodicsDocsNodeSecacceleratorsAndIndustrySolutionTemplates",
+    "nodeLevel": "PAGE_LINK",
+    "nodeType": "PAGE",
+    "nodeTitle": "Circa Deployment, Operations and Verification",
+    "nodeSummary": "Runtime/data/publication gates, development commands, joint acceptance matrix, troubleshooting and safe deployment recovery.",
+    "nodeContentArea": {
+      "route": "/docs/framework/accelerators/circa/deployment-verification",
+      "documentType": "operations",
+      "businessAudience": [],
+      "technicalAudience": []
+    },
+    "childSummaryCards": [],
+    "childJourneyLinks": [],
+    "childStatusSummary": {
+      "childCount": 0
+    },
+    "targetDocumentationPage": "nodicsDocsMetadataacceleratorsCircaDeploymentVerification",
+    "targetPage": "nodicsDocsPageacceleratorsCircaDeploymentVerification",
+    "targetRoute": "nodicsDocsRouteacceleratorsCircaDeploymentVerification",
+    "nodeOrder": 10100,
+    "expandable": false,
+    "expandedByDefault": false,
+    "nodeIcon": "file-text",
+    "nodeAudience": [
+      "business",
+      "architect",
+      "administrator",
+      "developer",
+      "operator",
+      "qa",
+      "ai-tool"
+    ],
+    "accessPolicy": "nodicsDocsAccessPublic",
+    "accessMode": "PUBLIC",
+    "allowedRoles": [],
+    "allowedGroups": [],
+    "allowedPermissions": [],
+    "managedInAxis": true,
+    "axisAuthoringPermissions": [
+      "documentation.navigation.update"
+    ],
+    "workflowRequired": true,
+    "workflowTriggers": [
+      "NAVIGATION_CHANGE",
+      "DASHBOARD_CHANGE",
+      "ACCESS_POLICY_CHANGE"
+    ],
+    "lifecycleState": "ONLINE",
+    "maturityState": "IMPLEMENTED",
+    "searchKeywords": [
+      "circa",
+      "deployment",
+      "runtime",
+      "publication",
+      "testing",
+      "recovery",
+      "devops"
+    ],
+    "relatedNodes": [
+      "nodicsDocsNodePageacceleratorsCircaOverview",
+      "nodicsDocsNodePageacceleratorsCircaCustomization"
+    ],
+    "locale": "en",
+    "channel": "web",
+    "active": true
+  },
+  "record62": {
     "code": "nodicsDocsNodePagedocsGateway",
     "product": "nodicsDocumentationProduct",
     "navigation": "nodicsDocumentationNavigation",
@@ -5066,7 +6017,7 @@ module.exports = {
     "channel": "web",
     "active": true
   },
-  "record51": {
+  "record63": {
     "code": "nodicsDocsNodePageframeworkWhatIsNodics",
     "product": "nodicsDocumentationProduct",
     "navigation": "nodicsDocumentationNavigation",
@@ -5147,7 +6098,7 @@ module.exports = {
     "channel": "web",
     "active": true
   },
-  "record52": {
+  "record64": {
     "code": "nodicsDocsNodePageframeworkWhyNodicsExists",
     "product": "nodicsDocumentationProduct",
     "navigation": "nodicsDocumentationNavigation",
@@ -5227,7 +6178,7 @@ module.exports = {
     "channel": "web",
     "active": true
   },
-  "record53": {
+  "record65": {
     "code": "nodicsDocsNodePageframeworkHowNodicsWorks",
     "product": "nodicsDocumentationProduct",
     "navigation": "nodicsDocumentationNavigation",
@@ -5307,7 +6258,7 @@ module.exports = {
     "channel": "web",
     "active": true
   },
-  "record54": {
+  "record66": {
     "code": "nodicsDocsNodePageframeworkAdoptionAndFirstJourney",
     "product": "nodicsDocumentationProduct",
     "navigation": "nodicsDocumentationNavigation",
@@ -5387,7 +6338,7 @@ module.exports = {
     "channel": "web",
     "active": true
   },
-  "record55": {
+  "record67": {
     "code": "nodicsDocsNodePagedocsDocumentationRoadmap",
     "product": "nodicsDocumentationProduct",
     "navigation": "nodicsDocumentationNavigation",
@@ -5467,7 +6418,7 @@ module.exports = {
     "channel": "web",
     "active": true
   },
-  "record56": {
+  "record68": {
     "code": "nodicsDocsNodePagedocsDocumentationPrinciples",
     "product": "nodicsDocumentationProduct",
     "navigation": "nodicsDocumentationNavigation",
@@ -5547,7 +6498,7 @@ module.exports = {
     "channel": "web",
     "active": true
   },
-  "record57": {
+  "record69": {
     "code": "nodicsDocsNodePagedocsReaderJourneyAndCoverage",
     "product": "nodicsDocumentationProduct",
     "navigation": "nodicsDocumentationNavigation",
@@ -5627,7 +6578,7 @@ module.exports = {
     "channel": "web",
     "active": true
   },
-  "record58": {
+  "record70": {
     "code": "nodicsDocsNodePagedocsDocumentationPublishingModel",
     "product": "nodicsDocumentationProduct",
     "navigation": "nodicsDocumentationNavigation",
@@ -5707,7 +6658,7 @@ module.exports = {
     "channel": "web",
     "active": true
   },
-  "record59": {
+  "record71": {
     "code": "nodicsDocsNodePageframeworkModularArchitecture",
     "product": "nodicsDocumentationProduct",
     "navigation": "nodicsDocumentationNavigation",
@@ -5787,7 +6738,7 @@ module.exports = {
     "channel": "web",
     "active": true
   },
-  "record60": {
+  "record72": {
     "code": "nodicsDocsNodePageframeworkRuntimeServerComposition",
     "product": "nodicsDocumentationProduct",
     "navigation": "nodicsDocumentationNavigation",
@@ -5864,7 +6815,7 @@ module.exports = {
     "channel": "web",
     "active": true
   },
-  "record61": {
+  "record73": {
     "code": "nodicsDocsNodePageframeworkModuleLoadingServicePrecedence",
     "product": "nodicsDocumentationProduct",
     "navigation": "nodicsDocumentationNavigation",
@@ -5943,7 +6894,7 @@ module.exports = {
     "channel": "web",
     "active": true
   },
-  "record62": {
+  "record74": {
     "code": "nodicsDocsNodePageframeworkArchitectureDecisionGuide",
     "product": "nodicsDocumentationProduct",
     "navigation": "nodicsDocumentationNavigation",
@@ -6020,7 +6971,7 @@ module.exports = {
     "channel": "web",
     "active": true
   },
-  "record63": {
+  "record75": {
     "code": "nodicsDocsNodePageplatformModuleRegistry",
     "product": "nodicsDocumentationProduct",
     "navigation": "nodicsDocumentationNavigation",
@@ -6097,7 +7048,7 @@ module.exports = {
     "channel": "web",
     "active": true
   },
-  "record64": {
+  "record76": {
     "code": "nodicsDocsNodePagefoundationOverview",
     "product": "nodicsDocumentationProduct",
     "navigation": "nodicsDocumentationNavigation",
@@ -6173,7 +7124,7 @@ module.exports = {
     "channel": "web",
     "active": true
   },
-  "record65": {
+  "record77": {
     "code": "nodicsDocsNodePageapplicationsSuite",
     "product": "nodicsDocumentationProduct",
     "navigation": "nodicsDocumentationNavigation",
@@ -6252,7 +7203,7 @@ module.exports = {
     "channel": "web",
     "active": true
   },
-  "record66": {
+  "record78": {
     "code": "nodicsDocsNodePagesolutionsTaskExecutionEngine",
     "product": "nodicsDocumentationProduct",
     "navigation": "nodicsDocumentationNavigation",
@@ -6336,7 +7287,7 @@ module.exports = {
     "channel": "web",
     "active": true
   },
-  "record67": {
+  "record79": {
     "code": "nodicsDocsNodePagesolutionsDataEngineeringAnalyticsPlatform",
     "product": "nodicsDocumentationProduct",
     "navigation": "nodicsDocumentationNavigation",
@@ -6421,7 +7372,7 @@ module.exports = {
     "channel": "web",
     "active": true
   },
-  "record68": {
+  "record80": {
     "code": "nodicsDocsNodePageacceleratorsAgoraIndustryTemplates",
     "product": "nodicsDocumentationProduct",
     "navigation": "nodicsDocumentationNavigation",
@@ -6502,7 +7453,7 @@ module.exports = {
     "channel": "web",
     "active": true
   },
-  "record69": {
+  "record81": {
     "code": "nodicsDocsNodePageacceleratorsAgoraApparelProductDataAuthoring",
     "product": "nodicsDocumentationProduct",
     "navigation": "nodicsDocumentationNavigation",
@@ -6587,7 +7538,7 @@ module.exports = {
     "channel": "web",
     "active": true
   },
-  "record70": {
+  "record82": {
     "code": "nodicsDocsNodePageframeworkLocalQuickStart",
     "product": "nodicsDocumentationProduct",
     "navigation": "nodicsDocumentationNavigation",
@@ -6666,7 +7617,7 @@ module.exports = {
     "channel": "web",
     "active": true
   },
-  "record71": {
+  "record83": {
     "code": "nodicsDocsNodePageframeworkFreshSchemaSetupJourney",
     "product": "nodicsDocumentationProduct",
     "navigation": "nodicsDocumentationNavigation",
@@ -6743,7 +7694,7 @@ module.exports = {
     "channel": "web",
     "active": true
   },
-  "record72": {
+  "record84": {
     "code": "nodicsDocsNodePageframeworkLocalRuntimeTroubleshooting",
     "product": "nodicsDocumentationProduct",
     "navigation": "nodicsDocumentationNavigation",
@@ -6820,7 +7771,7 @@ module.exports = {
     "channel": "web",
     "active": true
   },
-  "record73": {
+  "record85": {
     "code": "nodicsDocsNodePageinstallerInstalledRuntimeApplicationBuilder",
     "product": "nodicsDocumentationProduct",
     "navigation": "nodicsDocumentationNavigation",
@@ -6900,7 +7851,7 @@ module.exports = {
     "channel": "web",
     "active": true
   },
-  "record74": {
+  "record86": {
     "code": "nodicsDocsNodePagebuilderWorkspaceGeneration",
     "product": "nodicsDocumentationProduct",
     "navigation": "nodicsDocumentationNavigation",
@@ -6977,7 +7928,7 @@ module.exports = {
     "channel": "web",
     "active": true
   },
-  "record75": {
+  "record87": {
     "code": "nodicsDocsNodePageprocessVisualDesigner",
     "product": "nodicsDocumentationProduct",
     "navigation": "nodicsDocumentationNavigation",
@@ -7053,7 +8004,7 @@ module.exports = {
     "channel": "web",
     "active": true
   },
-  "record76": {
+  "record88": {
     "code": "nodicsDocsNodePageaxisBusinessCustomization",
     "product": "nodicsDocumentationProduct",
     "navigation": "nodicsDocumentationNavigation",
@@ -7130,7 +8081,7 @@ module.exports = {
     "channel": "web",
     "active": true
   },
-  "record77": {
+  "record89": {
     "code": "nodicsDocsNodePageplatformOverview",
     "product": "nodicsDocumentationProduct",
     "navigation": "nodicsDocumentationNavigation",
@@ -7206,7 +8157,7 @@ module.exports = {
     "channel": "web",
     "active": true
   },
-  "record78": {
+  "record90": {
     "code": "nodicsDocsNodePagesecurityIdentityAccessGovernance",
     "product": "nodicsDocumentationProduct",
     "navigation": "nodicsDocumentationNavigation",
@@ -7283,7 +8234,7 @@ module.exports = {
     "channel": "web",
     "active": true
   },
-  "record79": {
+  "record91": {
     "code": "nodicsDocsNodePageconfigurationRuntimeBehaviorManagement",
     "product": "nodicsDocumentationProduct",
     "navigation": "nodicsDocumentationNavigation",
@@ -7363,7 +8314,7 @@ module.exports = {
     "channel": "web",
     "active": true
   },
-  "record80": {
+  "record92": {
     "code": "nodicsDocsNodePageconfigurationFrameworkStartupLifecycle",
     "product": "nodicsDocumentationProduct",
     "navigation": "nodicsDocumentationNavigation",
@@ -7455,7 +8406,7 @@ module.exports = {
     "channel": "web",
     "active": true
   },
-  "record81": {
+  "record93": {
     "code": "nodicsDocsNodePageroutingApiGovernance",
     "product": "nodicsDocumentationProduct",
     "navigation": "nodicsDocumentationNavigation",
@@ -7547,7 +8498,7 @@ module.exports = {
     "channel": "web",
     "active": true
   },
-  "record82": {
+  "record94": {
     "code": "nodicsDocsNodePageroutingApiRequestLifecycle",
     "product": "nodicsDocumentationProduct",
     "navigation": "nodicsDocumentationNavigation",
@@ -7639,7 +8590,7 @@ module.exports = {
     "channel": "web",
     "active": true
   },
-  "record83": {
+  "record95": {
     "code": "nodicsDocsNodePagefoundationErrorHandlingStatusCodes",
     "product": "nodicsDocumentationProduct",
     "navigation": "nodicsDocumentationNavigation",
@@ -7736,7 +8687,7 @@ module.exports = {
     "channel": "web",
     "active": true
   },
-  "record84": {
+  "record96": {
     "code": "nodicsDocsNodePageruntimeGovernedChange",
     "product": "nodicsDocumentationProduct",
     "navigation": "nodicsDocumentationNavigation",
@@ -7813,7 +8764,7 @@ module.exports = {
     "channel": "web",
     "active": true
   },
-  "record85": {
+  "record97": {
     "code": "nodicsDocsNodePagelocalizationInternationalization",
     "product": "nodicsDocumentationProduct",
     "navigation": "nodicsDocumentationNavigation",
@@ -7890,7 +8841,7 @@ module.exports = {
     "channel": "web",
     "active": true
   },
-  "record86": {
+  "record98": {
     "code": "nodicsDocsNodePageschemaDataModelingManagement",
     "product": "nodicsDocumentationProduct",
     "navigation": "nodicsDocumentationNavigation",
@@ -7967,7 +8918,7 @@ module.exports = {
     "channel": "web",
     "active": true
   },
-  "record87": {
+  "record99": {
     "code": "nodicsDocsNodePagepersistenceProviderDataAccessLayer",
     "product": "nodicsDocumentationProduct",
     "navigation": "nodicsDocumentationNavigation",
@@ -8044,7 +8995,7 @@ module.exports = {
     "channel": "web",
     "active": true
   },
-  "record88": {
+  "record100": {
     "code": "nodicsDocsNodePagecacheRuntimeStateManagement",
     "product": "nodicsDocumentationProduct",
     "navigation": "nodicsDocumentationNavigation",
@@ -8121,7 +9072,7 @@ module.exports = {
     "channel": "web",
     "active": true
   },
-  "record89": {
+  "record101": {
     "code": "nodicsDocsNodePageframeworkCustomizationGuide",
     "product": "nodicsDocumentationProduct",
     "navigation": "nodicsDocumentationNavigation",
@@ -8200,7 +9151,7 @@ module.exports = {
     "channel": "web",
     "active": true
   },
-  "record90": {
+  "record102": {
     "code": "nodicsDocsNodePageframeworkBackendExtensionPatterns",
     "product": "nodicsDocumentationProduct",
     "navigation": "nodicsDocumentationNavigation",
@@ -8280,7 +9231,7 @@ module.exports = {
     "channel": "web",
     "active": true
   },
-  "record91": {
+  "record103": {
     "code": "nodicsDocsNodePageframeworkAxisContentCustomization",
     "product": "nodicsDocumentationProduct",
     "navigation": "nodicsDocumentationNavigation",
@@ -8357,7 +9308,7 @@ module.exports = {
     "channel": "web",
     "active": true
   },
-  "record92": {
+  "record104": {
     "code": "nodicsDocsNodePageprocessDeveloperCustomization",
     "product": "nodicsDocumentationProduct",
     "navigation": "nodicsDocumentationNavigation",
@@ -8433,7 +9384,7 @@ module.exports = {
     "channel": "web",
     "active": true
   },
-  "record93": {
+  "record105": {
     "code": "nodicsDocsNodePageprocessCustomProjectExtension",
     "product": "nodicsDocumentationProduct",
     "navigation": "nodicsDocumentationNavigation",
@@ -8509,7 +9460,7 @@ module.exports = {
     "channel": "web",
     "active": true
   },
-  "record94": {
+  "record106": {
     "code": "nodicsDocsNodePagecommerceBaseFoundations",
     "product": "nodicsDocumentationProduct",
     "navigation": "nodicsDocumentationNavigation",
@@ -8585,7 +9536,7 @@ module.exports = {
     "channel": "web",
     "active": true
   },
-  "record95": {
+  "record107": {
     "code": "nodicsDocsNodePagewcmsOverview",
     "product": "nodicsDocumentationProduct",
     "navigation": "nodicsDocumentationNavigation",
@@ -8665,7 +9616,7 @@ module.exports = {
     "channel": "web",
     "active": true
   },
-  "record96": {
+  "record108": {
     "code": "nodicsDocsNodePagewcmsContentCatalogModel",
     "product": "nodicsDocumentationProduct",
     "navigation": "nodicsDocumentationNavigation",
@@ -8742,7 +9693,7 @@ module.exports = {
     "channel": "web",
     "active": true
   },
-  "record97": {
+  "record109": {
     "code": "nodicsDocsNodePagewcmsPageDesignerComponents",
     "product": "nodicsDocumentationProduct",
     "navigation": "nodicsDocumentationNavigation",
@@ -8819,7 +9770,7 @@ module.exports = {
     "channel": "web",
     "active": true
   },
-  "record98": {
+  "record110": {
     "code": "nodicsDocsNodePagewcmsSitePublicationVisibility",
     "product": "nodicsDocumentationProduct",
     "navigation": "nodicsDocumentationNavigation",
@@ -8897,7 +9848,7 @@ module.exports = {
     "channel": "web",
     "active": true
   },
-  "record99": {
+  "record111": {
     "code": "nodicsDocsNodePagecatalogProductDiscoveryManagement",
     "product": "nodicsDocumentationProduct",
     "navigation": "nodicsDocumentationNavigation",
@@ -8974,7 +9925,7 @@ module.exports = {
     "channel": "web",
     "active": true
   },
-  "record100": {
+  "record112": {
     "code": "nodicsDocsNodePagediscoverySearchIndexing",
     "product": "nodicsDocumentationProduct",
     "navigation": "nodicsDocumentationNavigation",
@@ -9051,7 +10002,7 @@ module.exports = {
     "channel": "web",
     "active": true
   },
-  "record101": {
+  "record113": {
     "code": "nodicsDocsNodePagewcmsMediaManagement",
     "product": "nodicsDocumentationProduct",
     "navigation": "nodicsDocumentationNavigation",
@@ -9129,7 +10080,7 @@ module.exports = {
     "channel": "web",
     "active": true
   },
-  "record102": {
+  "record114": {
     "code": "nodicsDocsNodePagewcmsMediaStorageDelivery",
     "product": "nodicsDocumentationProduct",
     "navigation": "nodicsDocumentationNavigation",
@@ -9204,7 +10155,7 @@ module.exports = {
     "channel": "web",
     "active": true
   },
-  "record103": {
+  "record115": {
     "code": "nodicsDocsNodePagewcmsMediaImportPublication",
     "product": "nodicsDocumentationProduct",
     "navigation": "nodicsDocumentationNavigation",
@@ -9279,7 +10230,7 @@ module.exports = {
     "channel": "web",
     "active": true
   },
-  "record104": {
+  "record116": {
     "code": "nodicsDocsNodePageinventoryStockManagement",
     "product": "nodicsDocumentationProduct",
     "navigation": "nodicsDocumentationNavigation",
@@ -9356,7 +10307,7 @@ module.exports = {
     "channel": "web",
     "active": true
   },
-  "record105": {
+  "record117": {
     "code": "nodicsDocsNodePagepricingPromotionsTaxManagement",
     "product": "nodicsDocumentationProduct",
     "navigation": "nodicsDocumentationNavigation",
@@ -9433,7 +10384,7 @@ module.exports = {
     "channel": "web",
     "active": true
   },
-  "record106": {
+  "record118": {
     "code": "nodicsDocsNodePagecommerceOverview",
     "product": "nodicsDocumentationProduct",
     "navigation": "nodicsDocumentationNavigation",
@@ -9510,7 +10461,7 @@ module.exports = {
     "channel": "web",
     "active": true
   },
-  "record107": {
+  "record119": {
     "code": "nodicsDocsNodePagecommerceCartOrder",
     "product": "nodicsDocumentationProduct",
     "navigation": "nodicsDocumentationNavigation",
@@ -9587,7 +10538,7 @@ module.exports = {
     "channel": "web",
     "active": true
   },
-  "record108": {
+  "record120": {
     "code": "nodicsDocsNodePagecommercePaymentFulfillment",
     "product": "nodicsDocumentationProduct",
     "navigation": "nodicsDocumentationNavigation",
@@ -9663,7 +10614,7 @@ module.exports = {
     "channel": "web",
     "active": true
   },
-  "record109": {
+  "record121": {
     "code": "nodicsDocsNodePagefulfillmentShippingManagement",
     "product": "nodicsDocumentationProduct",
     "navigation": "nodicsDocumentationNavigation",
@@ -9740,7 +10691,7 @@ module.exports = {
     "channel": "web",
     "active": true
   },
-  "record110": {
+  "record122": {
     "code": "nodicsDocsNodePageorderManagementLifecycle",
     "product": "nodicsDocumentationProduct",
     "navigation": "nodicsDocumentationNavigation",
@@ -9817,7 +10768,7 @@ module.exports = {
     "channel": "web",
     "active": true
   },
-  "record111": {
+  "record123": {
     "code": "nodicsDocsNodePagecommerceReturnsRefunds",
     "product": "nodicsDocumentationProduct",
     "navigation": "nodicsDocumentationNavigation",
@@ -9893,7 +10844,7 @@ module.exports = {
     "channel": "web",
     "active": true
   },
-  "record112": {
+  "record124": {
     "code": "nodicsDocsNodePageengagementCustomerReviews",
     "product": "nodicsDocumentationProduct",
     "navigation": "nodicsDocumentationNavigation",
@@ -9971,7 +10922,7 @@ module.exports = {
     "channel": "web",
     "active": true
   },
-  "record113": {
+  "record125": {
     "code": "nodicsDocsNodePageengagementReviewModerationGovernance",
     "product": "nodicsDocumentationProduct",
     "navigation": "nodicsDocumentationNavigation",
@@ -10046,7 +10997,7 @@ module.exports = {
     "channel": "web",
     "active": true
   },
-  "record114": {
+  "record126": {
     "code": "nodicsDocsNodePageengagementReviewAggregationRecovery",
     "product": "nodicsDocumentationProduct",
     "navigation": "nodicsDocumentationNavigation",
@@ -10121,7 +11072,7 @@ module.exports = {
     "channel": "web",
     "active": true
   },
-  "record115": {
+  "record127": {
     "code": "nodicsDocsNodePageengagementCustomerFeedback",
     "product": "nodicsDocumentationProduct",
     "navigation": "nodicsDocumentationNavigation",
@@ -10197,7 +11148,7 @@ module.exports = {
     "channel": "web",
     "active": true
   },
-  "record116": {
+  "record128": {
     "code": "nodicsDocsNodePageengagementUnifiedOperations",
     "product": "nodicsDocumentationProduct",
     "navigation": "nodicsDocumentationNavigation",
@@ -10273,7 +11224,7 @@ module.exports = {
     "channel": "web",
     "active": true
   },
-  "record117": {
+  "record129": {
     "code": "nodicsDocsNodePageengagementGovernedAutomation",
     "product": "nodicsDocumentationProduct",
     "navigation": "nodicsDocumentationNavigation",
@@ -10349,7 +11300,7 @@ module.exports = {
     "channel": "web",
     "active": true
   },
-  "record118": {
+  "record130": {
     "code": "nodicsDocsNodePageengagementEnterpriseOperations",
     "product": "nodicsDocumentationProduct",
     "navigation": "nodicsDocumentationNavigation",
@@ -10425,7 +11376,7 @@ module.exports = {
     "channel": "web",
     "active": true
   },
-  "record119": {
+  "record131": {
     "code": "nodicsDocsNodePagecommunicationOverview",
     "product": "nodicsDocumentationProduct",
     "navigation": "nodicsDocumentationNavigation",
@@ -10495,13 +11446,14 @@ module.exports = {
     ],
     "relatedNodes": [
       "nodicsDocsNodePageengagementCustomerFeedback",
-      "nodicsDocsNodePageprocessActionAdapters"
+      "nodicsDocsNodePageprocessActionAdapters",
+      "nodicsDocsNodePagecommunicationEmailSmsTemplates"
     ],
     "locale": "en",
     "channel": "web",
     "active": true
   },
-  "record120": {
+  "record132": {
     "code": "nodicsDocsNodePageeventsMessagingClusterCoordination",
     "product": "nodicsDocumentationProduct",
     "navigation": "nodicsDocumentationNavigation",
@@ -10578,7 +11530,7 @@ module.exports = {
     "channel": "web",
     "active": true
   },
-  "record121": {
+  "record133": {
     "code": "nodicsDocsNodePageprocessOverview",
     "product": "nodicsDocumentationProduct",
     "navigation": "nodicsDocumentationNavigation",
@@ -10656,7 +11608,7 @@ module.exports = {
     "channel": "web",
     "active": true
   },
-  "record122": {
+  "record134": {
     "code": "nodicsDocsNodePageprocessRuntimeLifecycle",
     "product": "nodicsDocumentationProduct",
     "navigation": "nodicsDocumentationNavigation",
@@ -10733,7 +11685,7 @@ module.exports = {
     "channel": "web",
     "active": true
   },
-  "record123": {
+  "record135": {
     "code": "nodicsDocsNodePageprocessWorkflowOrchestrationPatterns",
     "product": "nodicsDocumentationProduct",
     "navigation": "nodicsDocumentationNavigation",
@@ -10826,7 +11778,7 @@ module.exports = {
     "channel": "web",
     "active": true
   },
-  "record124": {
+  "record136": {
     "code": "nodicsDocsNodePageprocessFirstWorkflow",
     "product": "nodicsDocumentationProduct",
     "navigation": "nodicsDocumentationNavigation",
@@ -10903,7 +11855,7 @@ module.exports = {
     "channel": "web",
     "active": true
   },
-  "record125": {
+  "record137": {
     "code": "nodicsDocsNodePageprocessFirstHumanTask",
     "product": "nodicsDocumentationProduct",
     "navigation": "nodicsDocumentationNavigation",
@@ -10979,7 +11931,7 @@ module.exports = {
     "channel": "web",
     "active": true
   },
-  "record126": {
+  "record138": {
     "code": "nodicsDocsNodePageprocessBusinessValue",
     "product": "nodicsDocumentationProduct",
     "navigation": "nodicsDocumentationNavigation",
@@ -11055,7 +12007,7 @@ module.exports = {
     "channel": "web",
     "active": true
   },
-  "record127": {
+  "record139": {
     "code": "nodicsDocsNodePagepipelineBusinessLogicOrchestration",
     "product": "nodicsDocumentationProduct",
     "navigation": "nodicsDocumentationNavigation",
@@ -11145,7 +12097,7 @@ module.exports = {
     "channel": "web",
     "active": true
   },
-  "record128": {
+  "record140": {
     "code": "nodicsDocsNodePagecronOperations",
     "product": "nodicsDocumentationProduct",
     "navigation": "nodicsDocumentationNavigation",
@@ -11223,7 +12175,7 @@ module.exports = {
     "channel": "web",
     "active": true
   },
-  "record129": {
+  "record141": {
     "code": "nodicsDocsNodePagecronNodeResponsibilityTee",
     "product": "nodicsDocumentationProduct",
     "navigation": "nodicsDocumentationNavigation",
@@ -11300,7 +12252,7 @@ module.exports = {
     "channel": "web",
     "active": true
   },
-  "record130": {
+  "record142": {
     "code": "nodicsDocsNodePagecronProjectCustomization",
     "product": "nodicsDocumentationProduct",
     "navigation": "nodicsDocumentationNavigation",
@@ -11376,7 +12328,7 @@ module.exports = {
     "channel": "web",
     "active": true
   },
-  "record131": {
+  "record143": {
     "code": "nodicsDocsNodePageprocessProcessCronRuntime",
     "product": "nodicsDocumentationProduct",
     "navigation": "nodicsDocumentationNavigation",
@@ -11452,7 +12404,7 @@ module.exports = {
     "channel": "web",
     "active": true
   },
-  "record132": {
+  "record144": {
     "code": "nodicsDocsNodePageprocessScheduledAutomation",
     "product": "nodicsDocumentationProduct",
     "navigation": "nodicsDocumentationNavigation",
@@ -11528,7 +12480,7 @@ module.exports = {
     "channel": "web",
     "active": true
   },
-  "record133": {
+  "record145": {
     "code": "nodicsDocsNodePagedataImportExportMigration",
     "product": "nodicsDocumentationProduct",
     "navigation": "nodicsDocumentationNavigation",
@@ -11605,7 +12557,7 @@ module.exports = {
     "channel": "web",
     "active": true
   },
-  "record134": {
+  "record146": {
     "code": "nodicsDocsNodePageprocessActionAdapters",
     "product": "nodicsDocumentationProduct",
     "navigation": "nodicsDocumentationNavigation",
@@ -11681,7 +12633,7 @@ module.exports = {
     "channel": "web",
     "active": true
   },
-  "record135": {
+  "record147": {
     "code": "nodicsDocsNodePageframeworkDevopsRuntime",
     "product": "nodicsDocumentationProduct",
     "navigation": "nodicsDocumentationNavigation",
@@ -11761,7 +12713,7 @@ module.exports = {
     "channel": "web",
     "active": true
   },
-  "record136": {
+  "record148": {
     "code": "nodicsDocsNodePageframeworkRuntimeReleaseRollback",
     "product": "nodicsDocumentationProduct",
     "navigation": "nodicsDocumentationNavigation",
@@ -11836,7 +12788,7 @@ module.exports = {
     "channel": "web",
     "active": true
   },
-  "record137": {
+  "record149": {
     "code": "nodicsDocsNodePageframeworkLocalBrowserAcceptanceJourney",
     "product": "nodicsDocumentationProduct",
     "navigation": "nodicsDocumentationNavigation",
@@ -11911,7 +12863,7 @@ module.exports = {
     "channel": "web",
     "active": true
   },
-  "record138": {
+  "record150": {
     "code": "nodicsDocsNodePageframeworkLocalVerificationChecklist",
     "product": "nodicsDocumentationProduct",
     "navigation": "nodicsDocumentationNavigation",
@@ -11991,7 +12943,7 @@ module.exports = {
     "channel": "web",
     "active": true
   },
-  "record139": {
+  "record151": {
     "code": "nodicsDocsNodePagecommerceEnterpriseOperations",
     "product": "nodicsDocumentationProduct",
     "navigation": "nodicsDocumentationNavigation",
@@ -12067,7 +13019,7 @@ module.exports = {
     "channel": "web",
     "active": true
   },
-  "record140": {
+  "record152": {
     "code": "nodicsDocsNodePageprocessIncidentRecovery",
     "product": "nodicsDocumentationProduct",
     "navigation": "nodicsDocumentationNavigation",
@@ -12143,7 +13095,7 @@ module.exports = {
     "channel": "web",
     "active": true
   },
-  "record141": {
+  "record153": {
     "code": "nodicsDocsNodePageprocessDevopsTopology",
     "product": "nodicsDocumentationProduct",
     "navigation": "nodicsDocumentationNavigation",
@@ -12219,7 +13171,7 @@ module.exports = {
     "channel": "web",
     "active": true
   },
-  "record142": {
+  "record154": {
     "code": "nodicsDocsNodePageprocessQaRegressionGuide",
     "product": "nodicsDocumentationProduct",
     "navigation": "nodicsDocumentationNavigation",
@@ -12295,7 +13247,7 @@ module.exports = {
     "channel": "web",
     "active": true
   },
-  "record143": {
+  "record155": {
     "code": "nodicsDocsNodePageframeworkCapabilityDocumentationMaturityPattern",
     "product": "nodicsDocumentationProduct",
     "navigation": "nodicsDocumentationNavigation",
@@ -12371,7 +13323,7 @@ module.exports = {
     "channel": "web",
     "active": true
   },
-  "record144": {
+  "record156": {
     "code": "nodicsDocsNodePagedocsOverview",
     "product": "nodicsDocumentationProduct",
     "navigation": "nodicsDocumentationNavigation",
@@ -12450,7 +13402,7 @@ module.exports = {
     "channel": "web",
     "active": true
   },
-  "record145": {
+  "record157": {
     "code": "nodicsDocsNodePagewcmsPublishingLifecycle",
     "product": "nodicsDocumentationProduct",
     "navigation": "nodicsDocumentationNavigation",
@@ -12526,7 +13478,7 @@ module.exports = {
     "channel": "web",
     "active": true
   },
-  "record146": {
+  "record158": {
     "code": "nodicsDocsNodePageapplicationsNexusDataContentGuide",
     "product": "nodicsDocumentationProduct",
     "navigation": "nodicsDocumentationNavigation",
@@ -12606,7 +13558,7 @@ module.exports = {
     "channel": "web",
     "active": true
   },
-  "record147": {
+  "record159": {
     "code": "nodicsDocsNodePageapplicationsAxisSetupErrorContracts",
     "product": "nodicsDocumentationProduct",
     "navigation": "nodicsDocumentationNavigation",
@@ -12686,7 +13638,7 @@ module.exports = {
     "channel": "web",
     "active": true
   },
-  "record148": {
+  "record160": {
     "code": "nodicsDocsNodePagewcmsCmsSourceMapAuthoringContract",
     "product": "nodicsDocumentationProduct",
     "navigation": "nodicsDocumentationNavigation",
@@ -12766,7 +13718,7 @@ module.exports = {
     "channel": "web",
     "active": true
   },
-  "record149": {
+  "record161": {
     "code": "nodicsDocsNodePagewcmsMediaOperationsRunbook",
     "product": "nodicsDocumentationProduct",
     "navigation": "nodicsDocumentationNavigation",
@@ -12846,7 +13798,7 @@ module.exports = {
     "channel": "web",
     "active": true
   },
-  "record150": {
+  "record162": {
     "code": "nodicsDocsNodePagedataImportExportProviderGuides",
     "product": "nodicsDocumentationProduct",
     "navigation": "nodicsDocumentationNavigation",
@@ -12926,7 +13878,7 @@ module.exports = {
     "channel": "web",
     "active": true
   },
-  "record151": {
+  "record163": {
     "code": "nodicsDocsNodePagecommerceDataAuthoringFulfillment",
     "product": "nodicsDocumentationProduct",
     "navigation": "nodicsDocumentationNavigation",
@@ -13007,7 +13959,7 @@ module.exports = {
     "channel": "web",
     "active": true
   },
-  "record152": {
+  "record164": {
     "code": "nodicsDocsNodePagedocsDocumentationPublishingRunbook",
     "product": "nodicsDocumentationProduct",
     "navigation": "nodicsDocumentationNavigation",
@@ -13087,7 +14039,7 @@ module.exports = {
     "channel": "web",
     "active": true
   },
-  "record153": {
+  "record165": {
     "code": "nodicsDocsNodePageplatformModuleRegistryJourney",
     "product": "nodicsDocumentationProduct",
     "navigation": "nodicsDocumentationNavigation",
@@ -13166,7 +14118,7 @@ module.exports = {
     "channel": "web",
     "active": true
   },
-  "record154": {
+  "record166": {
     "code": "nodicsDocsNodePagecommerceSearchGuide",
     "product": "nodicsDocumentationProduct",
     "navigation": "nodicsDocumentationNavigation",
@@ -13245,7 +14197,7 @@ module.exports = {
     "channel": "web",
     "active": true
   },
-  "record155": {
+  "record167": {
     "code": "nodicsDocsNodePagelocalizationRuntimeAuthoring",
     "product": "nodicsDocumentationProduct",
     "navigation": "nodicsDocumentationNavigation",
@@ -13324,7 +14276,7 @@ module.exports = {
     "channel": "web",
     "active": true
   },
-  "record156": {
+  "record168": {
     "code": "nodicsDocsNodePagecommercePaymentProviderBoundaries",
     "product": "nodicsDocumentationProduct",
     "navigation": "nodicsDocumentationNavigation",
@@ -13403,7 +14355,7 @@ module.exports = {
     "channel": "web",
     "active": true
   },
-  "record157": {
+  "record169": {
     "code": "nodicsDocsNodePageloyaltyWalletsRewardsLedger",
     "product": "nodicsDocumentationProduct",
     "navigation": "nodicsDocumentationNavigation",
@@ -13487,7 +14439,7 @@ module.exports = {
     "channel": "web",
     "active": true
   },
-  "record158": {
+  "record170": {
     "code": "nodicsDocsNodePagecommerceShoppingListCommerceBoundary",
     "product": "nodicsDocumentationProduct",
     "navigation": "nodicsDocumentationNavigation",
@@ -13568,7 +14520,7 @@ module.exports = {
     "channel": "web",
     "active": true
   },
-  "record159": {
+  "record171": {
     "code": "nodicsDocsNodePagefoundationNmsRuntimeMonitoring",
     "product": "nodicsDocumentationProduct",
     "navigation": "nodicsDocumentationNavigation",
@@ -13647,7 +14599,7 @@ module.exports = {
     "channel": "web",
     "active": true
   },
-  "record160": {
+  "record172": {
     "code": "nodicsDocsNodePagefoundationServiceRuntimeOverrides",
     "product": "nodicsDocumentationProduct",
     "navigation": "nodicsDocumentationNavigation",
@@ -13728,7 +14680,7 @@ module.exports = {
     "channel": "web",
     "active": true
   },
-  "record161": {
+  "record173": {
     "code": "nodicsDocsNodePagefoundationModuleToModuleCommunication",
     "product": "nodicsDocumentationProduct",
     "navigation": "nodicsDocumentationNavigation",
@@ -13811,7 +14763,7 @@ module.exports = {
     "channel": "web",
     "active": true
   },
-  "record162": {
+  "record174": {
     "code": "nodicsDocsNodePagefoundationCacheProviderRunbooks",
     "product": "nodicsDocumentationProduct",
     "navigation": "nodicsDocumentationNavigation",
@@ -13890,7 +14842,7 @@ module.exports = {
     "channel": "web",
     "active": true
   },
-  "record163": {
+  "record175": {
     "code": "nodicsDocsNodePagefoundationDatabaseProviderBoundaries",
     "product": "nodicsDocumentationProduct",
     "navigation": "nodicsDocumentationNavigation",
@@ -13969,7 +14921,7 @@ module.exports = {
     "channel": "web",
     "active": true
   },
-  "record164": {
+  "record176": {
     "code": "nodicsDocsNodePagesecurityOtpSecurityFlow",
     "product": "nodicsDocumentationProduct",
     "navigation": "nodicsDocumentationNavigation",
@@ -14048,7 +15000,7 @@ module.exports = {
     "channel": "web",
     "active": true
   },
-  "record165": {
+  "record177": {
     "code": "nodicsDocsNodePagecommunicationProviderRunbooks",
     "product": "nodicsDocumentationProduct",
     "navigation": "nodicsDocumentationNavigation",
@@ -14056,7 +15008,7 @@ module.exports = {
     "nodeLevel": "PAGE_LINK",
     "nodeType": "PAGE",
     "nodeTitle": "Communication Provider Runbooks",
-    "nodeSummary": "SMTP and SMS provider delivery, template, locale, suppression, retry, callback, receipt, privacy, and failure evidence guidance.",
+    "nodeSummary": "Source-backed SMTP controlled-test and SMS injected-sandbox configuration, credentials, frozen-content delivery, safeguards, uncertainty recovery and live qualification boundaries.",
     "nodeContentArea": {
       "route": "/docs/framework/communication-provider-runbooks",
       "documentType": "operations",
@@ -14081,7 +15033,7 @@ module.exports = {
     "targetDocumentationPage": "nodicsDocsMetadatacommunicationProviderRunbooks",
     "targetPage": "nodicsDocsPagecommunicationProviderRunbooks",
     "targetRoute": "nodicsDocsRoutecommunicationProviderRunbooks",
-    "nodeOrder": 10020,
+    "nodeOrder": 10030,
     "expandable": false,
     "expandedByDefault": false,
     "nodeIcon": "file-text",
@@ -14121,13 +15073,14 @@ module.exports = {
     "relatedNodes": [
       "nodicsDocsNodePagecommunicationOverview",
       "nodicsDocsNodePagesecurityOtpSecurityFlow",
-      "nodicsDocsNodePageengagementContactSubmissionOperations"
+      "nodicsDocsNodePageengagementContactSubmissionOperations",
+      "nodicsDocsNodePagecommunicationEmailSmsTemplates"
     ],
     "locale": "en",
     "channel": "web",
     "active": true
   },
-  "record166": {
+  "record178": {
     "code": "nodicsDocsNodePageengagementContactSubmissionOperations",
     "product": "nodicsDocumentationProduct",
     "navigation": "nodicsDocumentationNavigation",
@@ -14206,7 +15159,7 @@ module.exports = {
     "channel": "web",
     "active": true
   },
-  "record167": {
+  "record179": {
     "code": "nodicsDocsNodePageprocessWorkflowBpmSourceMap",
     "product": "nodicsDocumentationProduct",
     "navigation": "nodicsDocumentationNavigation",
@@ -14286,7 +15239,7 @@ module.exports = {
     "channel": "web",
     "active": true
   },
-  "record168": {
+  "record180": {
     "code": "nodicsDocsNodePageprocessCronjobDataAuthoring",
     "product": "nodicsDocumentationProduct",
     "navigation": "nodicsDocumentationNavigation",
@@ -14365,7 +15318,7 @@ module.exports = {
     "channel": "web",
     "active": true
   },
-  "record169": {
+  "record181": {
     "code": "nodicsDocsNodePageframeworkReleaseUpgradeCompatibility",
     "product": "nodicsDocumentationProduct",
     "navigation": "nodicsDocumentationNavigation",
@@ -14444,7 +15397,7 @@ module.exports = {
     "channel": "web",
     "active": true
   },
-  "record170": {
+  "record182": {
     "code": "nodicsDocsNodePagecommerceFulfillmentCoreSourceMap",
     "product": "nodicsDocumentationProduct",
     "navigation": "nodicsDocumentationNavigation",
@@ -14523,7 +15476,7 @@ module.exports = {
     "channel": "web",
     "active": true
   },
-  "record171": {
+  "record183": {
     "code": "nodicsDocsNodePageacceleratorsDomainCommerceSourceMap",
     "product": "nodicsDocumentationProduct",
     "navigation": "nodicsDocumentationNavigation",
@@ -14602,7 +15555,7 @@ module.exports = {
     "channel": "web",
     "active": true
   },
-  "record172": {
+  "record184": {
     "code": "nodicsDocsNodePagefoundationToolingRuntimeContracts",
     "product": "nodicsDocumentationProduct",
     "navigation": "nodicsDocumentationNavigation",
@@ -14681,7 +15634,7 @@ module.exports = {
     "channel": "web",
     "active": true
   },
-  "record173": {
+  "record185": {
     "code": "nodicsDocsNodePagefoundationEmsRuntimeClientRunbook",
     "product": "nodicsDocumentationProduct",
     "navigation": "nodicsDocumentationNavigation",
@@ -14760,7 +15713,7 @@ module.exports = {
     "channel": "web",
     "active": true
   },
-  "record174": {
+  "record186": {
     "code": "nodicsDocsNodePagereferenceInternalSourceBoundaryRegister",
     "product": "nodicsDocumentationProduct",
     "navigation": "nodicsDocumentationNavigation",
@@ -14840,7 +15793,7 @@ module.exports = {
     "channel": "web",
     "active": true
   },
-  "record175": {
+  "record187": {
     "code": "nodicsDocsNodePagetoolingAiDeveloperEnablement",
     "product": "nodicsDocumentationProduct",
     "navigation": "nodicsDocumentationNavigation",
@@ -14917,7 +15870,7 @@ module.exports = {
     "channel": "web",
     "active": true
   },
-  "record176": {
+  "record188": {
     "code": "nodicsDocsNodePagereferenceSourceMapGlossary",
     "product": "nodicsDocumentationProduct",
     "navigation": "nodicsDocumentationNavigation",
@@ -14994,7 +15947,7 @@ module.exports = {
     "channel": "web",
     "active": true
   },
-  "record177": {
+  "record189": {
     "code": "nodicsDocsNodePagereferenceSourceBackedDocumentationCoverageAudit",
     "product": "nodicsDocumentationProduct",
     "navigation": "nodicsDocumentationNavigation",
@@ -15075,7 +16028,7 @@ module.exports = {
     "channel": "web",
     "active": true
   },
-  "record178": {
+  "record190": {
     "code": "nodicsDocsNodePagereferenceDocumentationGapBacklog",
     "product": "nodicsDocumentationProduct",
     "navigation": "nodicsDocumentationNavigation",
@@ -15155,7 +16108,7 @@ module.exports = {
     "channel": "web",
     "active": true
   },
-  "record179": {
+  "record191": {
     "code": "nodicsDocsNodePagewasteImpactProviders",
     "product": "nodicsDocumentationProduct",
     "navigation": "nodicsDocumentationNavigation",
@@ -15229,6 +16182,86 @@ module.exports = {
     "relatedNodes": [
       "nodicsDocsNodePageframeworkModularArchitecture",
       "nodicsDocsNodePageframeworkCustomizationGuide"
+    ],
+    "locale": "en",
+    "channel": "web",
+    "active": true
+  },
+  "record192": {
+    "code": "nodicsDocsNodePagecommunicationEmailSmsTemplates",
+    "product": "nodicsDocumentationProduct",
+    "navigation": "nodicsDocumentationNavigation",
+    "parentNode": "nodicsDocsNodeSeccommunicationAndNotifications",
+    "nodeLevel": "PAGE_LINK",
+    "nodeType": "PAGE",
+    "nodeTitle": "Email and SMS Templates",
+    "nodeSummary": "Detailed notification flow, existing inventory, typed manifests, configuration and adoption, layered overrides, locale precedence, safe HTML, new email/SMS examples, frozen retries and troubleshooting.",
+    "nodeContentArea": {
+      "route": "/docs/framework/communication-email-sms-templates",
+      "documentType": "how-to",
+      "businessAudience": [
+        "business user",
+        "administrator",
+        "implementation partner"
+      ],
+      "technicalAudience": [
+        "architect",
+        "developer",
+        "operator",
+        "qa engineer",
+        "ai tool"
+      ]
+    },
+    "childSummaryCards": [],
+    "childJourneyLinks": [],
+    "childStatusSummary": {
+      "childCount": 0
+    },
+    "targetDocumentationPage": "nodicsDocsMetadatacommunicationEmailSmsTemplates",
+    "targetPage": "nodicsDocsPagecommunicationEmailSmsTemplates",
+    "targetRoute": "nodicsDocsRoutecommunicationEmailSmsTemplates",
+    "nodeOrder": 10020,
+    "expandable": false,
+    "expandedByDefault": false,
+    "nodeIcon": "file-text",
+    "nodeAudience": [
+      "business",
+      "architect",
+      "administrator",
+      "developer",
+      "operator",
+      "qa",
+      "ai-tool"
+    ],
+    "accessPolicy": "nodicsDocsAccessPublic",
+    "accessMode": "PUBLIC",
+    "allowedRoles": [],
+    "allowedGroups": [],
+    "allowedPermissions": [],
+    "managedInAxis": true,
+    "axisAuthoringPermissions": [
+      "documentation.navigation.update"
+    ],
+    "workflowRequired": true,
+    "workflowTriggers": [
+      "NAVIGATION_CHANGE",
+      "DASHBOARD_CHANGE",
+      "ACCESS_POLICY_CHANGE"
+    ],
+    "lifecycleState": "ONLINE",
+    "maturityState": "IMPLEMENTED",
+    "searchKeywords": [
+      "email",
+      "sms",
+      "templates",
+      "notifications",
+      "customization",
+      "locale",
+      "parameters"
+    ],
+    "relatedNodes": [
+      "nodicsDocsNodePagecommunicationOverview",
+      "nodicsDocsNodePagecommunicationProviderRunbooks"
     ],
     "locale": "en",
     "channel": "web",

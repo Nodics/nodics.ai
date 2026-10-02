@@ -1,0 +1,36 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Verify your contact email</title>
+  </head>
+  <body
+    style="
+      margin: 0;
+      padding: 24px;
+      background: #f5f6f7;
+      color: #202428;
+      font-family: Arial, sans-serif;
+    "
+  >
+    <main
+      style="max-width: 560px; margin: auto; background: #fff; padding: 24px"
+    >
+      <h1 style="font-size: 24px">Verify your contact email</h1>
+      <p>Your contact verification code is:</p>
+      <p style="font-size: 24px; font-weight: bold; overflow-wrap: anywhere">
+        {{verificationCode}}
+      </p>
+      <p>It expires at {{expiresAt}}.</p>
+      <p>
+        This code verifies the email contact on your account. It does not grant
+        enterprise access or notification consent.
+      </p>
+      <p>
+        Do not share the code. If you did not request verification, ignore this
+        message.
+      </p>
+    </main>
+  </body>
+</html>

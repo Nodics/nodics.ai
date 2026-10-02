@@ -12,6 +12,11 @@ other routes remain unchanged.
 
 ## Developer Notes
 
+- Sensitive routes use owner-authored `requestPrivacy: { sensitive: true }`.
+  See the [capture and exact-entry contract](llm/contracts/request-capture-privacy-contract.md).
+  Deployment qualification remains closed by default; static source is not
+  installed APM/custom-sink qualification.
+
 - Declare routes through backend configuration or generated model contracts.
 - Keep authentication, permission, tenant, and request-context behavior explicit.
 - Generated OpenAPI preserves route `apiExposure` under each operation's

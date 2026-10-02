@@ -26,6 +26,35 @@ const initializer = require('../src/service/system/defaultSystemDataImportInitia
 const processor = require('../../jsImport/src/service/init/defaultJsFileDataProcessService');
 const common = require('../../../../nCommon/src/utils/utils');
 
+test('forward source roots retain their logical initialization position', () => {
+    assert.equal(releases.releaseSequence({ sectionCode: 'init-v001', sourceRoot: 'init-v008' }), 1);
+    assert.equal(releases.releaseSequence({ sectionCode: 'core-v002', sourceRoot: 'core-v019' }), 2);
+    assert.equal(releases.releaseSequence({ sectionCode: 'inventory', sourceRoot: 'sample-v003' }), 3);
+    assert.equal(releases.releaseSequence({ sourceRoot: 'init-v004' }), 4);
+    assert.equal(releases.releaseSequence({ sourceRoot: 'init' }), 0);
+});
+
+test('actual Profile forward baseline is discovered before dependent group deltas on a fresh installation', () => {
+    const previous = { NODICS: global.NODICS, CONFIG: global.CONFIG, CLASSES: global.CLASSES };
+    const owner = { name: 'profile', index: '10', path: path.resolve(__dirname, '../../../../../../nodics.platform/modules/profile') };
+    try {
+        global.NODICS = { getActiveModules: () => ['profile'], getRawModule: () => owner,
+            getIndexedModules: () => new Map([['10', owner]]), isModuleActive: () => true,
+            getSelectedEnvironmentName: () => 'test' };
+        global.CONFIG = { get: () => undefined };
+        global.CLASSES = { NodicsError: class extends Error { constructor(code, message) { super(message); this.code = code; } } };
+        const found = releases.discoverReleases('init');
+        assert.deepEqual(found.map(release => release.releaseCode), [
+            'profile:init-v001', 'profile:init-v002', 'profile:init-v003', 'profile:init-v004', 'profile:init-v005',
+            'profile:employeeApplicationReview',
+        ]);
+        assert.equal(found[0].sourceRoot, 'init-v008');
+        assert(found.every(release => !release.invalidManifest), 'all current immutable release manifests remain valid');
+    } finally {
+        Object.assign(global, previous);
+    }
+});
+
 test('project release inherits matching current source fields without replaying unrelated baseline records', async () => {
     const root = fs.mkdtempSync(path.join(os.tmpdir(), 'nodics-layered-releases-'));
     const owners = [{ name: 'base', index: '10', path: path.join(root, 'base') },

@@ -33,7 +33,9 @@ module.exports = {
   },
   /** Returns the declared field names for a bounded object contract. */
   getContractFieldNames: function (contract) {
-    return contract && contract.properties && typeof contract.properties === "object"
+    return contract &&
+      contract.properties &&
+      typeof contract.properties === "object"
       ? Object.keys(contract.properties)
       : [];
   },
@@ -104,16 +106,23 @@ module.exports = {
       typeof target === "object" &&
       !Array.isArray(target) &&
       !Object.keys(target).some(
-        (key) => !["moduleName", "schemaName", "mode"].concat(optionalRoutes).includes(key),
+        (key) =>
+          !["moduleName", "schemaName", "mode"]
+            .concat(optionalRoutes)
+            .includes(key),
       ) &&
       contracts.moduleName.pattern &&
       new RegExp(contracts.moduleName.pattern).test(target.moduleName || "") &&
       this.isString(target.schemaName, 128) &&
       /^[A-Za-z][A-Za-z0-9._-]{0,127}$/.test(target.schemaName) &&
       (target.mode === undefined || target.mode === "create") &&
-      (target.governanceService === undefined || this.isString(target.governanceService, 128)) &&
-      optionalRoutes.filter((key) => key !== "governanceService").every((key) =>
-        target[key] === undefined || this.isSafePath(target[key]))
+      (target.governanceService === undefined ||
+        this.isString(target.governanceService, 128)) &&
+      optionalRoutes
+        .filter((key) => key !== "governanceService")
+        .every(
+          (key) => target[key] === undefined || this.isSafePath(target[key]),
+        )
     );
   },
   /** Validates backend-owned reusable detail panel declarations for schema workspaces. */
@@ -171,10 +180,10 @@ module.exports = {
             "defaultColumns",
             "hiddenFields",
             "editableFields",
-              "readonlyFields",
-              "forbiddenFields",
-              "summary",
-              "detailSections",
+            "readonlyFields",
+            "forbiddenFields",
+            "summary",
+            "detailSections",
             "quickFilters",
             "fixedFilters",
             "recoveryActions",
@@ -245,11 +254,7 @@ module.exports = {
     for (let filterGroupName of ["quickFilters", "fixedFilters"]) {
       let filters = presentation[filterGroupName];
       if (filters === undefined) continue;
-      if (
-        !Array.isArray(filters) ||
-        filters.length > 24
-      )
-        return false;
+      if (!Array.isArray(filters) || filters.length > 24) return false;
       let ids = filters.map((filter) => filter && filter.id);
       if (
         ids.some((id) => !this.isString(id, 128)) ||
@@ -366,9 +371,13 @@ module.exports = {
       ) &&
       this.isString(readiness.kind, 64) &&
       contracts.moduleName.pattern &&
-      new RegExp(contracts.moduleName.pattern).test(readiness.ownerModule || "") &&
+      new RegExp(contracts.moduleName.pattern).test(
+        readiness.ownerModule || "",
+      ) &&
       (readiness.sourceModule === undefined ||
-        new RegExp(contracts.moduleName.pattern).test(readiness.sourceModule)) &&
+        new RegExp(contracts.moduleName.pattern).test(
+          readiness.sourceModule,
+        )) &&
       (readiness.sourceSchema === undefined ||
         /^[A-Za-z][A-Za-z0-9._-]{0,127}$/.test(readiness.sourceSchema)) &&
       (readiness.statusField === undefined ||
@@ -381,8 +390,7 @@ module.exports = {
           readiness.desiredFreshnessSeconds <= 31536000)) &&
       (readiness.repairRoute === undefined ||
         this.isSafePath(readiness.repairRoute)) &&
-      (readiness.summary === undefined ||
-        this.isString(readiness.summary, 320))
+      (readiness.summary === undefined || this.isString(readiness.summary, 320))
     );
   },
   /** Validates bounded non-executable lifecycle action hints for Axis workspaces. */
@@ -436,7 +444,9 @@ module.exports = {
         (action.operationRoute !== undefined &&
           !this.isSafePath(action.operationRoute)) ||
         (action.httpMethod !== undefined &&
-          !["GET", "POST", "PUT", "PATCH", "DELETE"].includes(action.httpMethod)) ||
+          !["GET", "POST", "PUT", "PATCH", "DELETE"].includes(
+            action.httpMethod,
+          )) ||
         (action.inputFields !== undefined &&
           (!Array.isArray(action.inputFields) ||
             action.inputFields.length > 16 ||
@@ -461,13 +471,23 @@ module.exports = {
                 !this.isString(field.name, 128) ||
                 !/^[A-Za-z][A-Za-z0-9._-]{0,127}$/.test(field.name) ||
                 !this.isString(field.label, 128) ||
-                !["TEXT", "MULTILINE", "SELECT", "JSON", "HIDDEN"].includes(field.type) ||
-                (field.required !== undefined && typeof field.required !== "boolean") ||
-                (field.options !== undefined && !this.isStringList(field.options, 32)) ||
-                (field.type === "SELECT" && (!field.options || field.options.length === 0)) ||
-                (field.valueFromRecord !== undefined && !this.isString(field.valueFromRecord, 128)) ||
-                (field.defaultValue !== undefined && !this.isString(field.defaultValue, 4000)) ||
-                (field.maximumLength !== undefined && (!Number.isInteger(field.maximumLength) || field.maximumLength < 1 || field.maximumLength > 4000)),
+                !["TEXT", "MULTILINE", "SELECT", "JSON", "HIDDEN"].includes(
+                  field.type,
+                ) ||
+                (field.required !== undefined &&
+                  typeof field.required !== "boolean") ||
+                (field.options !== undefined &&
+                  !this.isStringList(field.options, 32)) ||
+                (field.type === "SELECT" &&
+                  (!field.options || field.options.length === 0)) ||
+                (field.valueFromRecord !== undefined &&
+                  !this.isString(field.valueFromRecord, 128)) ||
+                (field.defaultValue !== undefined &&
+                  !this.isString(field.defaultValue, 4000)) ||
+                (field.maximumLength !== undefined &&
+                  (!Number.isInteger(field.maximumLength) ||
+                    field.maximumLength < 1 ||
+                    field.maximumLength > 4000)),
             ))) ||
         (action.order !== undefined && !Number.isInteger(action.order))
       )
@@ -527,7 +547,8 @@ module.exports = {
         (Number.isInteger(field.maximumLength) &&
           field.maximumLength >= 1 &&
           field.maximumLength <= 4000)) &&
-      (field.bindToPath === undefined || typeof field.bindToPath === "boolean") &&
+      (field.bindToPath === undefined ||
+        typeof field.bindToPath === "boolean") &&
       (field.defaultFromParameter === undefined ||
         (field.type === "TEXT" &&
           this.isString(field.defaultFromParameter, 128) &&
@@ -549,12 +570,153 @@ module.exports = {
       typeof endpoint === "object" &&
       !Array.isArray(endpoint) &&
       !Object.keys(endpoint).some(
-        (key) => !["method", "path", "resultPath"].includes(key),
+        (key) =>
+          ![
+            "method",
+            "path",
+            "resultPath",
+            "bodyShape",
+            "idempotencyField",
+          ].includes(key),
       ) &&
       ["GET", "POST", "PUT", "PATCH", "DELETE"].includes(endpoint.method) &&
       this.isSafePath(endpoint.path) &&
+      (endpoint.bodyShape === undefined ||
+        ["FIELDS", "MODEL"].includes(endpoint.bodyShape)) &&
+      (endpoint.idempotencyField === undefined ||
+        (typeof endpoint.idempotencyField === "string" &&
+          /^[A-Za-z][A-Za-z0-9_]{0,63}$/.test(endpoint.idempotencyField))) &&
+      (endpoint.bodyShape !== "MODEL" ||
+        (endpoint.method !== "GET" &&
+          endpoint.idempotencyField !== undefined)) &&
       (endpoint.resultPath === undefined ||
         this.isString(endpoint.resultPath, 256))
+    );
+  },
+  /** Validates bounded direct scalar mappings, never expressions or nested private projections. */
+  validateWorkspaceMapping: function (mapping) {
+    return (
+      mapping &&
+      typeof mapping === "object" &&
+      !Array.isArray(mapping) &&
+      Object.keys(mapping).length >= 1 &&
+      Object.keys(mapping).length <= 8 &&
+      Object.entries(mapping).every(
+        ([key, value]) =>
+          /^[A-Za-z][A-Za-z0-9_]{0,63}$/.test(key) &&
+          typeof value === "string" &&
+          /^[A-Za-z][A-Za-z0-9_]{0,63}$/.test(value),
+      )
+    );
+  },
+  /** Bounds listing navigation to declared scalar columns and a non-executable local route. */
+  validateWorkspaceRowNavigation: function (section) {
+    const action = section.rowNavigation;
+    return (
+      section.type === "listing" &&
+      action &&
+      typeof action === "object" &&
+      !Array.isArray(action) &&
+      Object.keys(action).every((key) =>
+        ["label", "route", "parameters"].includes(key),
+      ) &&
+      this.isString(action.label, 128) &&
+      this.isString(action.route, 512) &&
+      /^\/[A-Za-z0-9_-]+(?:\/[A-Za-z0-9_-]+)*$/.test(action.route) &&
+      this.validateWorkspaceMapping(action.parameters) &&
+      Object.values(action.parameters).every(
+        (field) =>
+          Array.isArray(section.columns) &&
+          section.columns.some((column) => column && column.field === field),
+      )
+    );
+  },
+  /** Bounds fresh inspection to one path parameter, the fixed POST owner and required frozen TEXT fields. */
+  validateWorkspaceReadSource: function (section) {
+    const read = section.readSource;
+    if (
+      section.type !== "form" ||
+      section.public === true ||
+      section.endpoint.method !== "POST" ||
+      (section.endpoint.bodyShape !== undefined &&
+        section.endpoint.bodyShape !== "FIELDS") ||
+      !read ||
+      typeof read !== "object" ||
+      Array.isArray(read) ||
+      !Object.keys(read).every((key) =>
+        [
+          "endpoint",
+          "parameter",
+          "fields",
+          "commandId",
+          "unavailableMessage",
+          "unavailableMessagePath",
+        ].includes(key),
+      ) ||
+      typeof read.parameter !== "string" ||
+      !/^[A-Za-z][A-Za-z0-9_]{0,63}$/.test(read.parameter) ||
+      !this.isString(read.commandId, 128) ||
+      !/^[A-Za-z][A-Za-z0-9._-]{0,127}$/.test(read.commandId) ||
+      !this.isString(read.unavailableMessage, 512) ||
+      (read.unavailableMessagePath !== undefined &&
+        (!this.isString(read.unavailableMessagePath, 256) ||
+          !/^[A-Za-z][A-Za-z0-9_]*(?:\.[A-Za-z][A-Za-z0-9_]*)*$/.test(
+            read.unavailableMessagePath,
+          ) ||
+          read.unavailableMessagePath
+            .split(".")
+            .some((segment) =>
+              ["constructor", "prototype", "__proto__"].includes(segment),
+            ))) ||
+      !this.validateWorkspaceMapping(read.fields) ||
+      !read.endpoint ||
+      typeof read.endpoint !== "object" ||
+      Array.isArray(read.endpoint) ||
+      !Object.keys(read.endpoint).every((key) =>
+        ["method", "path", "resultPath"].includes(key),
+      ) ||
+      read.endpoint.method !== "GET" ||
+      !this.isString(read.endpoint.path, 512)
+    )
+      return false;
+    const segments = read.endpoint.path.split("/").slice(1);
+    if (
+      segments.filter((segment) => segment === "{" + read.parameter + "}")
+        .length !== 1 ||
+      segments.some(
+        (segment) =>
+          segment !== "{" + read.parameter + "}" &&
+          !/^[A-Za-z0-9_-]+$/.test(segment),
+      ) ||
+      (read.endpoint.resultPath !== undefined &&
+        (!this.isString(read.endpoint.resultPath, 256) ||
+          !/^[A-Za-z][A-Za-z0-9_]*(?:\.[A-Za-z][A-Za-z0-9_]*)*$/.test(
+            read.endpoint.resultPath,
+          )))
+    )
+      return false;
+    const prefix = /^\/[A-Za-z0-9_-]+\/[A-Za-z0-9_-]+\/v[0-9]+\//;
+    const readPrefix = read.endpoint.path.match(prefix);
+    const writePrefix = section.endpoint.path.match(prefix);
+    if (
+      !readPrefix ||
+      !writePrefix ||
+      readPrefix[0] !== writePrefix[0] ||
+      !/^\/[A-Za-z0-9_-]+(?:\/[A-Za-z0-9_-]+)*$/.test(section.endpoint.path) ||
+      !Object.prototype.hasOwnProperty.call(read.fields, read.parameter)
+    )
+      return false;
+    return Object.keys(read.fields).every(
+      (name) =>
+        Array.isArray(section.fields) &&
+        section.fields.filter(
+          (field) =>
+            field &&
+            field.name === name &&
+            field.type === "TEXT" &&
+            field.required === true &&
+            field.bindToPath !== true,
+        ).length === 1,
     );
   },
   /** Validates one backend-driven Axis workspace section. */
@@ -569,11 +731,14 @@ module.exports = {
             "type",
             "title",
             "submitLabel",
+            "successMessage",
             "public",
             "endpoint",
             "columns",
             "filters",
             "fields",
+            "rowNavigation",
+            "readSource",
           ].includes(key),
       ) ||
       !this.isString(section.id, 128) ||
@@ -581,8 +746,30 @@ module.exports = {
       !this.isString(section.title, 160) ||
       (section.submitLabel !== undefined &&
         !this.isString(section.submitLabel, 128)) ||
+      (section.successMessage !== undefined &&
+        !this.isString(section.successMessage, 512)) ||
       (section.public !== undefined && typeof section.public !== "boolean") ||
       !this.validateBackendWorkspaceEndpoint(section.endpoint)
+    )
+      return false;
+    if (
+      (section.rowNavigation !== undefined &&
+        !this.validateWorkspaceRowNavigation(section)) ||
+      (section.readSource !== undefined &&
+        !this.validateWorkspaceReadSource(section))
+    )
+      return false;
+    if (
+      section.endpoint.bodyShape === "MODEL" &&
+      (section.type !== "form" ||
+        !Array.isArray(section.fields) ||
+        section.fields.filter(
+          (field) =>
+            field &&
+            field.name === section.endpoint.idempotencyField &&
+            field.type === "IDEMPOTENCY" &&
+            field.required === true,
+        ).length !== 1)
     )
       return false;
     if (
@@ -604,23 +791,128 @@ module.exports = {
         section[key] === undefined ||
         (Array.isArray(section[key]) &&
           section[key].length <= 32 &&
-          section[key].every((field) => this.validateBackendWorkspaceField(field))),
+          section[key].every((field) =>
+            this.validateBackendWorkspaceField(field),
+          )),
     );
+  },
+  /** Bounds selection to existing authorized connection role facts, never endpoints or credentials. */
+  validateWorkspaceOwnerSelector: function (selector) {
+    if (!selector || typeof selector !== "object" || Array.isArray(selector))
+      return false;
+    const keys = Object.keys(selector);
+    return (
+      keys.length > 0 &&
+      keys.every((key) =>
+        ["runtimeRoleCode", "publicationRole"].includes(key),
+      ) &&
+      (selector.runtimeRoleCode === undefined ||
+        (this.isString(selector.runtimeRoleCode, 64) &&
+          /^[A-Z][A-Z0-9_]{0,63}$/.test(selector.runtimeRoleCode))) &&
+      (selector.publicationRole === undefined ||
+        ["STAGED", "ONLINE"].includes(selector.publicationRole)) &&
+      keys.every((key) => selector[key] !== undefined)
+    );
+  },
+  /**
+   * Validates inert setup metadata, never stored intent, actor proof or replay authority.
+   * @param {Object} descriptor Owner-projected metadata.
+   * @returns {boolean} Exact contract admission.
+   */
+  validateEnterpriseSetupContinuation: function (descriptor) {
+    const schema = contracts.enterpriseSetupContinuation;
+    const exact = (value, definition) =>
+      value &&
+      typeof value === "object" &&
+      !Array.isArray(value) &&
+      Object.keys(value).every((key) =>
+        Object.hasOwn(definition.properties, key),
+      ) &&
+      (definition.required || []).every((key) => Object.hasOwn(value, key));
+    if (
+      !exact(descriptor, schema) ||
+      descriptor.version !== 1 ||
+      descriptor.type !== "enterpriseSetupContinuation" ||
+      typeof descriptor.available !== "boolean" ||
+      (descriptor.actions !== undefined &&
+        !exact(descriptor.actions, schema.properties.actions)) ||
+      !exact(descriptor.presentation, schema.properties.presentation)
+    )
+      return false;
+    for (const [name, action] of Object.entries(descriptor.actions || {})) {
+      const definition = schema.properties.actions.properties[name];
+      if (
+        !exact(action, definition) ||
+        action.method !== (name === "inspect" ? "GET" : "POST") ||
+        !this.isString(action.path, 512) ||
+        !new RegExp(definition.properties.path.pattern).test(action.path) ||
+        action.path
+          .split("/")
+          .some((segment) => segment === "." || segment === "..")
+      )
+        return false;
+      if (
+        name === "resume" &&
+        (typeof action.qualified !== "boolean" ||
+          !Array.isArray(action.bodyFields) ||
+          action.bodyFields.length !== 1 ||
+          action.bodyFields[0] !== "expectedRevision" ||
+          (action.qualified && !descriptor.available))
+      )
+        return false;
+    }
+    if (
+      descriptor.available &&
+      (!descriptor.actions?.inspect || !descriptor.actions?.resume)
+    )
+      return false;
+    for (const [key, value] of Object.entries(descriptor.presentation)) {
+      const definition = schema.properties.presentation.properties[key];
+      if (key === "reasons") {
+        if (
+          !exact(value, definition) ||
+          Object.values(value).some((label) => !this.isString(label, 512))
+        )
+          return false;
+      } else if (!this.isString(value, definition.maxLength)) return false;
+    }
+    return true;
   },
   /** Validates a bounded backend-driven Axis workspace. */
   /** Accepts only versioned non-executable keys for a client-installed native workspace. */
   validateNativeWorkspace: function (workspace) {
-    return workspace.contractVersion === 1 &&
-      !Object.keys(workspace).some(key => !['contractVersion', 'renderer', 'workspaceCode', 'viewCode', 'title', 'description'].includes(key)) &&
+    return (
+      workspace.contractVersion === 1 &&
+      !Object.keys(workspace).some(
+        (key) =>
+          ![
+            "contractVersion",
+            "renderer",
+            "workspaceCode",
+            "viewCode",
+            "title",
+            "description",
+            "ownerSelector",
+          ].includes(key),
+      ) &&
       this.isString(workspace.title, 160) &&
-      (workspace.description === undefined || this.isString(workspace.description, 512)) &&
-      ['workspaceCode', 'viewCode'].every(key => this.isString(workspace[key], 128) && /^[a-z][a-z0-9]*(?:[._-][a-z0-9]+)*$/i.test(workspace[key]));
+      (workspace.description === undefined ||
+        this.isString(workspace.description, 512)) &&
+      (workspace.ownerSelector === undefined ||
+        this.validateWorkspaceOwnerSelector(workspace.ownerSelector)) &&
+      ["workspaceCode", "viewCode"].every(
+        (key) =>
+          this.isString(workspace[key], 128) &&
+          /^[a-z][a-z0-9]*(?:[._-][a-z0-9]+)*$/i.test(workspace[key]),
+      )
+    );
   },
   /** Validates the declarative native or form workspace before authenticated discovery exposes it. */
   validateBackendWorkspace: function (workspace) {
     if (!workspace || typeof workspace !== "object" || Array.isArray(workspace))
       return false;
-    if (workspace.renderer === 'axis.workspace.native') return this.validateNativeWorkspace(workspace);
+    if (workspace.renderer === "axis.workspace.native")
+      return this.validateNativeWorkspace(workspace);
     if (
       Object.keys(workspace).some(
         (key) =>
@@ -631,6 +923,8 @@ module.exports = {
             "renderer",
             "defaultTab",
             "tabs",
+            "ownerSelector",
+            "setupContinuation",
           ].includes(key),
       ) ||
       !Number.isInteger(workspace.contractVersion) ||
@@ -638,6 +932,10 @@ module.exports = {
       !this.isString(workspace.title, 160) ||
       (workspace.description !== undefined &&
         !this.isString(workspace.description, 512)) ||
+      (workspace.ownerSelector !== undefined &&
+        !this.validateWorkspaceOwnerSelector(workspace.ownerSelector)) ||
+      (workspace.setupContinuation !== undefined &&
+        !this.validateEnterpriseSetupContinuation(workspace.setupContinuation)) ||
       workspace.renderer !== "axis.workspace.backend-operations" ||
       (workspace.defaultTab !== undefined &&
         !this.isString(workspace.defaultTab, 128)) ||
@@ -765,6 +1063,37 @@ module.exports = {
       return false;
     let byId = Object.fromEntries(navigation.map((item) => [item.id, item]));
     if (
+      navigation.some((item) =>
+        ((item.backendWorkspace && item.backendWorkspace.tabs) || []).some(
+          (tab) =>
+            tab.sections.some(
+              (section) =>
+                section.rowNavigation &&
+                !navigation.some((target) => {
+                  if (
+                    target.route !== section.rowNavigation.route ||
+                    !target.backendWorkspace
+                  )
+                    return false;
+                  const sources = (target.backendWorkspace.tabs || [])
+                    .flatMap((targetTab) => targetTab.sections)
+                    .filter((targetSection) => targetSection.readSource)
+                    .map((targetSection) => targetSection.readSource);
+                  const parameters = Object.keys(
+                    section.rowNavigation.parameters,
+                  );
+                  return sources.some(
+                    (read) =>
+                      parameters.length === 1 &&
+                      parameters[0] === read.parameter,
+                  );
+                }),
+            ),
+        ),
+      )
+    )
+      return false;
+    if (
       navigation.some(
         (item) =>
           item.parentId &&
@@ -834,9 +1163,13 @@ module.exports = {
         return false;
       if (source.type === "CMS") {
         return (
-          ["site", "catalog", "defaultPage", "packCode", "initializationProfile"].every((key) =>
-            this.isString(source[key], 128),
-          ) &&
+          [
+            "site",
+            "catalog",
+            "defaultPage",
+            "packCode",
+            "initializationProfile",
+          ].every((key) => this.isString(source[key], 128)) &&
           this.isSafePath(source.defaultPage) &&
           source.openApiPath === undefined &&
           source.swaggerPath === undefined
@@ -845,9 +1178,13 @@ module.exports = {
       return (
         this.isSafePath(source.openApiPath) &&
         this.isSafePath(source.swaggerPath) &&
-        ["site", "catalog", "defaultPage", "packCode", "initializationProfile"].every(
-          (key) => source[key] === undefined,
-        )
+        [
+          "site",
+          "catalog",
+          "defaultPage",
+          "packCode",
+          "initializationProfile",
+        ].every((key) => source[key] === undefined)
       );
     });
   },
@@ -1058,67 +1395,94 @@ module.exports = {
         (registration.functionalModule &&
           typeof registration.functionalModule === "object" &&
           !Array.isArray(registration.functionalModule) &&
-          !Object.keys(registration.functionalModule).some((key) =>
-            !["identity", "displayName", "type", "protected"].includes(key)) &&
-          new RegExp(contracts.moduleName.pattern).test(registration.functionalModule.identity || "") &&
+          !Object.keys(registration.functionalModule).some(
+            (key) =>
+              !["identity", "displayName", "type", "protected"].includes(key),
+          ) &&
+          new RegExp(contracts.moduleName.pattern).test(
+            registration.functionalModule.identity || "",
+          ) &&
           this.isString(registration.functionalModule.displayName, 160) &&
-          ["STANDARD", "EXTENSION"].includes(registration.functionalModule.type) &&
+          ["STANDARD", "EXTENSION"].includes(
+            registration.functionalModule.type,
+          ) &&
           typeof registration.functionalModule.protected === "boolean")) &&
-      this.validateAuthorityClaims(registration.authorityClaims, registration.moduleName) &&
-      this.validateActivationDataPackages(registration.activationDataPackages) &&
+      this.validateAuthorityClaims(
+        registration.authorityClaims,
+        registration.moduleName,
+      ) &&
+      this.validateActivationDataPackages(
+        registration.activationDataPackages,
+      ) &&
       this.validateBackofficeMetadata(registration.backoffice)
     );
   },
   /** Validates bounded schema/service authority claims carried by module registration. */
   validateAuthorityClaims: function (authorityClaims, moduleName) {
     if (authorityClaims === undefined) return true;
-    if (!Array.isArray(authorityClaims) || authorityClaims.length > 512) return false;
+    if (!Array.isArray(authorityClaims) || authorityClaims.length > 512)
+      return false;
     let modulePattern = new RegExp(contracts.moduleName.pattern);
     let claimPattern = /^[A-Za-z][A-Za-z0-9_.-]{0,255}$/;
-    return authorityClaims.every((claim) =>
-      claim &&
-      typeof claim === "object" &&
-      !Array.isArray(claim) &&
-      !Object.keys(claim).some((key) =>
-        !["kind", "moduleName", "claimName", "authorityContext"].includes(key)) &&
-      ["schema", "service"].includes(claim.kind) &&
-      claim.moduleName === moduleName &&
-      modulePattern.test(claim.moduleName || "") &&
-      claimPattern.test(claim.claimName || "") &&
-      claimPattern.test(claim.authorityContext || ""));
+    return authorityClaims.every(
+      (claim) =>
+        claim &&
+        typeof claim === "object" &&
+        !Array.isArray(claim) &&
+        !Object.keys(claim).some(
+          (key) =>
+            !["kind", "moduleName", "claimName", "authorityContext"].includes(
+              key,
+            ),
+        ) &&
+        ["schema", "service"].includes(claim.kind) &&
+        claim.moduleName === moduleName &&
+        modulePattern.test(claim.moduleName || "") &&
+        claimPattern.test(claim.claimName || "") &&
+        claimPattern.test(claim.authorityContext || ""),
+    );
   },
   /** Validates bounded module-owned activation data package descriptors. */
   validateActivationDataPackages: function (packages) {
     if (packages === undefined) return true;
     if (!Array.isArray(packages) || packages.length > 128) return false;
     let modulePattern = new RegExp(contracts.moduleName.pattern);
-    return packages.every((item) =>
-      item &&
-      typeof item === "object" &&
-      !Array.isArray(item) &&
-      !Object.keys(item).some((key) =>
-        ![
-          "code",
-          "classification",
-          "owner",
-          "required",
-          "trigger",
-          "targetModule",
-          "targetServer",
-          "targetDatabase",
-          "operation",
-          "dataType",
-        ].includes(key)) &&
-      this.isString(item.code, 256) &&
-      this.isString(item.classification, 64) &&
-      modulePattern.test(item.owner || "") &&
-      typeof item.required === "boolean" &&
-      ["ACTIVATION", "USER"].includes(item.trigger) &&
-      (item.targetModule === undefined || modulePattern.test(item.targetModule || "")) &&
-      (item.targetServer === undefined || item.targetServer === "" || this.isString(item.targetServer, 128)) &&
-      (item.targetDatabase === undefined || item.targetDatabase === "" || this.isString(item.targetDatabase, 128)) &&
-      this.isString(item.operation, 64) &&
-      ["init", "core", "sample"].includes(item.dataType));
+    return packages.every(
+      (item) =>
+        item &&
+        typeof item === "object" &&
+        !Array.isArray(item) &&
+        !Object.keys(item).some(
+          (key) =>
+            ![
+              "code",
+              "classification",
+              "owner",
+              "required",
+              "trigger",
+              "targetModule",
+              "targetServer",
+              "targetDatabase",
+              "operation",
+              "dataType",
+            ].includes(key),
+        ) &&
+        this.isString(item.code, 256) &&
+        this.isString(item.classification, 64) &&
+        modulePattern.test(item.owner || "") &&
+        typeof item.required === "boolean" &&
+        ["ACTIVATION", "USER"].includes(item.trigger) &&
+        (item.targetModule === undefined ||
+          modulePattern.test(item.targetModule || "")) &&
+        (item.targetServer === undefined ||
+          item.targetServer === "" ||
+          this.isString(item.targetServer, 128)) &&
+        (item.targetDatabase === undefined ||
+          item.targetDatabase === "" ||
+          this.isString(item.targetDatabase, 128)) &&
+        this.isString(item.operation, 64) &&
+        ["init", "core", "sample"].includes(item.dataType),
+    );
   },
   /** Validates one bounded runtime registration batch and its stable instance identity. */
   validateRegistrationBatch: function (batch, limit) {

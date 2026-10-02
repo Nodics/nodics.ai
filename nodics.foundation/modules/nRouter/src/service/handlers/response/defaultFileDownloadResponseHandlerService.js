@@ -102,6 +102,7 @@ module.exports = exportedService = {
      * @returns {void}
      */
     handleError: function (request, response, error) {
+        if (SERVICE.DefaultRouterOperationService?.sendPrivateError(request, response, error)) return;
         error = (this.normalizeError || exportedService.normalizeError).call(this, error);
         if (this.LOG && this.LOG.error) {
             this.LOG.error(error);

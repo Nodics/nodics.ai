@@ -1,0 +1,25 @@
+{
+  "formatVersion": 1,
+  "code": "profile.contact.smsVerification",
+  "ownerModule": "profile",
+  "version": 2,
+  "status": "ACTIVE",
+  "requiresSelection": true,
+  "purpose": "PROFILE_CANONICAL_CONTACT",
+  "sourceModules": ["profile"],
+  "channel": "SMS",
+  "defaultLocale": "en",
+  "parameters": {
+    "verificationCode": {
+      "type": "string",
+      "required": true,
+      "maximumLength": 128
+    },
+    "expiresAt": {
+      "type": "string",
+      "required": true,
+      "maximumLength": 128,
+      "presentation": "date-time"
+    }
+  }
+}

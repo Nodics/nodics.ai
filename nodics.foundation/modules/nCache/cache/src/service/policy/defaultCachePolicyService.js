@@ -75,6 +75,9 @@ module.exports = {
      * @returns {Object} Cacheability decision with reason and metadata.
      */
     isItemCacheable: function (request, responseSuccess) {
+        if (request.schemaModel?.rawSchema?.readProtection !== undefined) {
+            return { cacheable: false, reason: 'schemaReadProtection', reasonCode: 'RSN_CACHE_00010' };
+        }
         let legacyAllowed = !UTILS || typeof UTILS.isItemCashable !== 'function' || UTILS.isItemCashable(responseSuccess && responseSuccess.result, request.schemaModel);
         return this.evaluateCacheability({
             layer: 'schema',

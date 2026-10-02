@@ -65,7 +65,10 @@ const documentationSource = {
     catalog: { type: "string", minLength: 1, maxLength: 128 },
     defaultPage: { type: "string", pattern: "^/(?!/)", maxLength: 512 },
     packCode: { type: "string", minLength: 1, maxLength: 128 },
-    initializationProfile: { type: "string", pattern: "^[a-z][a-z0-9_-]{0,63}$" },
+    initializationProfile: {
+      type: "string",
+      pattern: "^[a-z][a-z0-9_-]{0,63}$",
+    },
     openApiPath: { type: "string", pattern: "^/(?!/)", maxLength: 512 },
     swaggerPath: { type: "string", pattern: "^/(?!/)", maxLength: 512 },
     requiredPermissions: {
@@ -362,12 +365,42 @@ const navigationWorkbenchTarget = {
     },
     mode: { enum: ["create"] },
     governanceService: { type: "string", minLength: 1, maxLength: 128 },
-    authoringModelRoute: { type: "string", minLength: 1, maxLength: 512, pattern: "^/(?!/)" },
-    validationRoute: { type: "string", minLength: 1, maxLength: 512, pattern: "^/(?!/)" },
-    renderProjectionRoute: { type: "string", minLength: 1, maxLength: 512, pattern: "^/(?!/)" },
-    searchRoute: { type: "string", minLength: 1, maxLength: 512, pattern: "^/(?!/)" },
-    publicationHandoffRoute: { type: "string", minLength: 1, maxLength: 512, pattern: "^/(?!/)" },
-    migrationPlanRoute: { type: "string", minLength: 1, maxLength: 512, pattern: "^/(?!/)" },
+    authoringModelRoute: {
+      type: "string",
+      minLength: 1,
+      maxLength: 512,
+      pattern: "^/(?!/)",
+    },
+    validationRoute: {
+      type: "string",
+      minLength: 1,
+      maxLength: 512,
+      pattern: "^/(?!/)",
+    },
+    renderProjectionRoute: {
+      type: "string",
+      minLength: 1,
+      maxLength: 512,
+      pattern: "^/(?!/)",
+    },
+    searchRoute: {
+      type: "string",
+      minLength: 1,
+      maxLength: 512,
+      pattern: "^/(?!/)",
+    },
+    publicationHandoffRoute: {
+      type: "string",
+      minLength: 1,
+      maxLength: 512,
+      pattern: "^/(?!/)",
+    },
+    migrationPlanRoute: {
+      type: "string",
+      minLength: 1,
+      maxLength: 512,
+      pattern: "^/(?!/)",
+    },
   },
 };
 const navigationWorkbenchQuickFilter = {
@@ -544,7 +577,12 @@ const navigationReadiness = {
       pattern: "^[A-Za-z][A-Za-z0-9._-]{0,127}$",
     },
     desiredFreshnessSeconds: { type: "integer", minimum: 1, maximum: 31536000 },
-    repairRoute: { type: "string", minLength: 1, maxLength: 512, pattern: "^/(?!/)" },
+    repairRoute: {
+      type: "string",
+      minLength: 1,
+      maxLength: 512,
+      pattern: "^/(?!/)",
+    },
     summary: { type: "string", minLength: 1, maxLength: 320 },
   },
 };
@@ -634,7 +672,11 @@ const backendWorkspaceField = {
     maximumLength: { type: "integer", minimum: 1, maximum: 4000 },
     defaultValue: {},
     bindToPath: { type: "boolean" },
-    defaultFromParameter: { type: "string", pattern: "^[A-Za-z][A-Za-z0-9_-]{0,127}$", maxLength: 128 },
+    defaultFromParameter: {
+      type: "string",
+      pattern: "^[A-Za-z][A-Za-z0-9_-]{0,127}$",
+      maxLength: 128,
+    },
     options: {
       type: "array",
       uniqueItems: true,
@@ -651,7 +693,25 @@ const backendWorkspaceEndpoint = {
     method: { enum: ["GET", "POST", "PUT", "PATCH", "DELETE"] },
     path: { type: "string", pattern: "^/(?!/)", maxLength: 512 },
     resultPath: { type: "string", minLength: 1, maxLength: 256 },
+    bodyShape: { enum: ["FIELDS", "MODEL"] },
+    idempotencyField: {
+      type: "string",
+      pattern: "^[A-Za-z][A-Za-z0-9_]{0,63}$",
+      maxLength: 64,
+    },
   },
+  allOf: [
+    {
+      if: {
+        required: ["bodyShape"],
+        properties: { bodyShape: { const: "MODEL" } },
+      },
+      then: {
+        required: ["idempotencyField"],
+        properties: { method: { enum: ["POST", "PUT", "PATCH", "DELETE"] } },
+      },
+    },
+  ],
 };
 const backendWorkspaceColumn = {
   type: "object",
@@ -660,6 +720,83 @@ const backendWorkspaceColumn = {
   properties: {
     field: { type: "string", minLength: 1, maxLength: 128 },
     label: { type: "string", minLength: 1, maxLength: 128 },
+  },
+};
+const backendWorkspaceMapping = {
+  type: "object",
+  minProperties: 1,
+  maxProperties: 8,
+  additionalProperties: false,
+  patternProperties: {
+    "^[A-Za-z][A-Za-z0-9_]{0,63}$": {
+      type: "string",
+      pattern: "^[A-Za-z][A-Za-z0-9_]{0,63}$",
+      maxLength: 64,
+    },
+  },
+};
+const backendWorkspaceRowNavigation = {
+  type: "object",
+  additionalProperties: false,
+  required: ["label", "route", "parameters"],
+  properties: {
+    label: { type: "string", minLength: 1, maxLength: 128 },
+    route: {
+      type: "string",
+      maxLength: 512,
+      pattern: "^/[A-Za-z0-9_-]+(?:/[A-Za-z0-9_-]+)*$",
+    },
+    parameters: backendWorkspaceMapping,
+  },
+};
+const backendWorkspaceReadSource = {
+  type: "object",
+  additionalProperties: false,
+  required: [
+    "endpoint",
+    "parameter",
+    "fields",
+    "commandId",
+    "unavailableMessage",
+  ],
+  properties: {
+    endpoint: {
+      type: "object",
+      additionalProperties: false,
+      required: ["method", "path"],
+      properties: {
+        method: { const: "GET" },
+        path: {
+          type: "string",
+          maxLength: 512,
+          pattern:
+            "^/(?:[A-Za-z0-9_-]+/)*\\{[A-Za-z][A-Za-z0-9_]{0,63}\\}(?:/[A-Za-z0-9_-]+)*$",
+        },
+        resultPath: {
+          type: "string",
+          maxLength: 256,
+          pattern: "^[A-Za-z][A-Za-z0-9_]*(?:\\.[A-Za-z][A-Za-z0-9_]*)*$",
+        },
+      },
+    },
+    parameter: {
+      type: "string",
+      maxLength: 64,
+      pattern: "^[A-Za-z][A-Za-z0-9_]{0,63}$",
+    },
+    fields: backendWorkspaceMapping,
+    commandId: {
+      type: "string",
+      maxLength: 128,
+      pattern: "^[A-Za-z][A-Za-z0-9._-]{0,127}$",
+    },
+    unavailableMessage: { type: "string", minLength: 1, maxLength: 512 },
+    unavailableMessagePath: {
+      type: "string",
+      maxLength: 256,
+      pattern:
+        "^(?!(?:.*\\.)?(?:constructor|prototype|__proto__)(?:\\.|$))[A-Za-z][A-Za-z0-9_]*(?:\\.[A-Za-z][A-Za-z0-9_]*)*$",
+    },
   },
 };
 const backendWorkspaceSection = {
@@ -671,8 +808,11 @@ const backendWorkspaceSection = {
     type: { enum: ["listing", "form"] },
     title: { type: "string", minLength: 1, maxLength: 160 },
     submitLabel: { type: "string", minLength: 1, maxLength: 128 },
+    successMessage: { type: "string", minLength: 1, maxLength: 512 },
     public: { type: "boolean" },
     endpoint: backendWorkspaceEndpoint,
+    rowNavigation: backendWorkspaceRowNavigation,
+    readSource: backendWorkspaceReadSource,
     columns: {
       type: "array",
       uniqueItems: true,
@@ -692,6 +832,167 @@ const backendWorkspaceSection = {
       items: backendWorkspaceField,
     },
   },
+  allOf: [
+    {
+      if: { required: ["rowNavigation"] },
+      then: { properties: { type: { const: "listing" } } },
+    },
+    {
+      if: { required: ["readSource"] },
+      then: {
+        required: ["fields"],
+        properties: {
+          type: { const: "form" },
+          public: { const: false },
+          endpoint: {
+            properties: {
+              method: { const: "POST" },
+              bodyShape: { const: "FIELDS" },
+            },
+          },
+        },
+      },
+    },
+  ],
+};
+const backendWorkspaceOwnerSelector = {
+  type: "object",
+  additionalProperties: false,
+  minProperties: 1,
+  properties: {
+    runtimeRoleCode: {
+      type: "string",
+      minLength: 1,
+      maxLength: 64,
+      pattern: "^[A-Z][A-Z0-9_]{0,63}$",
+    },
+    publicationRole: { enum: ["STAGED", "ONLINE"] },
+  },
+};
+const enterpriseSetupTaskLabels = [
+  "title",
+  "inspectLabel",
+  "resumeLabel",
+  "workingLabel",
+  "reviewTitle",
+  "confirmLabel",
+  "cancelLabel",
+  "enterpriseLabel",
+  "tenantLabel",
+  "administratorLabel",
+  "statusLabel",
+  "revisionLabel",
+  "heldMessage",
+  "completeMessage",
+  "unavailableMessage",
+  "uncertainMessage",
+];
+const enterpriseSetupReasons = [
+  "ORIGINAL_INTENT_UNAVAILABLE",
+  "NOMINATION_POLICY_CHANGED",
+  "TENANT_NAMESPACE_UNSAFE",
+  "ASSIGNMENT_READ_UNAVAILABLE",
+  "NOMINATION_CHANGED",
+  "OTHER_OPERATION_PENDING",
+  "OPERATION_EVIDENCE_INVALID",
+  "ORIGINAL_OPERATOR_REQUIRED",
+  "STEP_OUTCOME_UNCONFIRMED",
+  "COMPLETION_UNCONFIRMED",
+];
+const enterpriseSetupActionPath = {
+  type: "string",
+  minLength: 1,
+  maxLength: 512,
+  pattern:
+    "^(?!.*(?:/\\.\\.?)(?:/|$))/(?:[A-Za-z0-9_.-]+/)*\\{enterpriseCode\\}(?:/[A-Za-z0-9_.-]+)*$",
+};
+const enterpriseSetupContinuation = {
+  type: "object",
+  additionalProperties: false,
+  required: ["version", "type", "available", "presentation"],
+  oneOf: [
+    {
+      required: ["actions"],
+      properties: {
+        available: { enum: [true] },
+        actions: { required: ["inspect", "resume"] },
+      },
+    },
+    {
+      properties: {
+        available: { enum: [false] },
+        actions: {
+          properties: {
+            resume: { properties: { qualified: { enum: [false] } } },
+          },
+        },
+      },
+    },
+  ],
+  properties: {
+    version: { enum: [1] },
+    type: { enum: ["enterpriseSetupContinuation"] },
+    available: { type: "boolean" },
+    actions: {
+      type: "object",
+      additionalProperties: false,
+      properties: {
+        inspect: {
+          type: "object",
+          additionalProperties: false,
+          required: ["method", "path"],
+          properties: {
+            method: { enum: ["GET"] },
+            path: enterpriseSetupActionPath,
+          },
+        },
+        resume: {
+          type: "object",
+          additionalProperties: false,
+          required: ["method", "path", "qualified", "bodyFields"],
+          properties: {
+            method: { enum: ["POST"] },
+            path: enterpriseSetupActionPath,
+            qualified: { type: "boolean" },
+            bodyFields: {
+              type: "array",
+              minItems: 1,
+              maxItems: 1,
+              items: { enum: ["expectedRevision"] },
+            },
+          },
+        },
+      },
+    },
+    presentation: {
+      type: "object",
+      additionalProperties: false,
+      required: enterpriseSetupTaskLabels.concat("reasons"),
+      properties: {
+        ...Object.fromEntries(
+          enterpriseSetupTaskLabels.map((key) => [
+            key,
+            {
+              type: "string",
+              minLength: 1,
+              maxLength: key === "title" ? 160 : 512,
+            },
+          ]),
+        ),
+        reasons: {
+          type: "object",
+          additionalProperties: false,
+          required: enterpriseSetupReasons,
+          properties: Object.fromEntries(
+            enterpriseSetupReasons.map((key) => [
+              key,
+              { type: "string", minLength: 1, maxLength: 512 },
+            ]),
+          ),
+        },
+      },
+    },
+  },
 };
 const backendOperationsWorkspace = {
   type: "object",
@@ -702,6 +1003,8 @@ const backendOperationsWorkspace = {
     title: { type: "string", minLength: 1, maxLength: 160 },
     description: { type: "string", minLength: 1, maxLength: 512 },
     renderer: { enum: ["axis.workspace.backend-operations"] },
+    ownerSelector: backendWorkspaceOwnerSelector,
+    setupContinuation: enterpriseSetupContinuation,
     defaultTab: { type: "string", minLength: 1, maxLength: 128 },
     tabs: {
       type: "array",
@@ -728,16 +1031,39 @@ const backendOperationsWorkspace = {
     },
   },
 };
-const backendWorkspace = { oneOf: [backendOperationsWorkspace, {
-  type: 'object', additionalProperties: false,
-  required: ['contractVersion', 'renderer', 'workspaceCode', 'viewCode', 'title'],
-  properties: {
-    contractVersion: { enum: [1] }, renderer: { enum: ['axis.workspace.native'] },
-    workspaceCode: { type: 'string', maxLength: 128, pattern: '^[a-zA-Z][a-zA-Z0-9]*([._-][a-zA-Z0-9]+)*$' },
-    viewCode: { type: 'string', maxLength: 128, pattern: '^[a-zA-Z][a-zA-Z0-9]*([._-][a-zA-Z0-9]+)*$' },
-    title: { type: 'string', minLength: 1, maxLength: 160 }, description: { type: 'string', minLength: 1, maxLength: 512 }
-  }
-}] };
+const backendWorkspace = {
+  oneOf: [
+    backendOperationsWorkspace,
+    {
+      type: "object",
+      additionalProperties: false,
+      required: [
+        "contractVersion",
+        "renderer",
+        "workspaceCode",
+        "viewCode",
+        "title",
+      ],
+      properties: {
+        contractVersion: { enum: [1] },
+        renderer: { enum: ["axis.workspace.native"] },
+        workspaceCode: {
+          type: "string",
+          maxLength: 128,
+          pattern: "^[a-zA-Z][a-zA-Z0-9]*([._-][a-zA-Z0-9]+)*$",
+        },
+        viewCode: {
+          type: "string",
+          maxLength: 128,
+          pattern: "^[a-zA-Z][a-zA-Z0-9]*([._-][a-zA-Z0-9]+)*$",
+        },
+        title: { type: "string", minLength: 1, maxLength: 160 },
+        description: { type: "string", minLength: 1, maxLength: 512 },
+        ownerSelector: backendWorkspaceOwnerSelector,
+      },
+    },
+  ],
+};
 const backofficeMetadata = {
   type: "object",
   additionalProperties: false,
@@ -831,7 +1157,15 @@ const authorityClaim = {
 const activationDataPackage = {
   type: "object",
   additionalProperties: false,
-  required: ["code", "classification", "owner", "required", "trigger", "operation", "dataType"],
+  required: [
+    "code",
+    "classification",
+    "owner",
+    "required",
+    "trigger",
+    "operation",
+    "dataType",
+  ],
   properties: {
     code: { type: "string", minLength: 1, maxLength: 256 },
     classification: { type: "string", minLength: 1, maxLength: 64 },
@@ -890,8 +1224,8 @@ const registration = {
         identity: moduleName,
         displayName: { type: "string", minLength: 1, maxLength: 160 },
         type: { enum: ["STANDARD", "EXTENSION"] },
-        protected: { type: "boolean" }
-      }
+        protected: { type: "boolean" },
+      },
     },
     backoffice: backofficeMetadata,
     authorityClaims: {
@@ -909,7 +1243,17 @@ const registration = {
 const functionalModuleRegistration = {
   type: "object",
   additionalProperties: false,
-  required: ["project", "functionalModule", "displayName", "registrationState", "enabled", "required", "runtimeState", "technicalModules", "catalogueRevision"],
+  required: [
+    "project",
+    "functionalModule",
+    "displayName",
+    "registrationState",
+    "enabled",
+    "required",
+    "runtimeState",
+    "technicalModules",
+    "catalogueRevision",
+  ],
   properties: {
     project: moduleName,
     functionalModule: moduleName,
@@ -926,7 +1270,11 @@ const functionalModuleRegistration = {
       maxItems: 512,
       items: activationDataPackage,
     },
-    observedServers: { type: "array", uniqueItems: true, items: { type: "string" } },
+    observedServers: {
+      type: "array",
+      uniqueItems: true,
+      items: { type: "string" },
+    },
     runtimeObservations: {
       type: "array",
       maxItems: 128,
@@ -941,14 +1289,14 @@ const functionalModuleRegistration = {
           node: { type: "string", minLength: 1, maxLength: 120 },
           lastObservedAt: { type: "string", format: "date-time" },
           reasonCode: { type: "string", minLength: 1, maxLength: 128 },
-          recoveryAction: { type: "string", minLength: 1, maxLength: 512 }
-        }
-      }
+          recoveryAction: { type: "string", minLength: 1, maxLength: 512 },
+        },
+      },
     },
     catalogueRevision: { type: "integer", minimum: 1 },
     registeredAt: { type: "string", format: "date-time" },
-    lastObservedAt: { type: "string", format: "date-time" }
-  }
+    lastObservedAt: { type: "string", format: "date-time" },
+  },
 };
 const functionalModuleLifecycleDecision = {
   type: "object",
@@ -959,8 +1307,8 @@ const functionalModuleLifecycleDecision = {
     expectedRevision: { type: "integer", minimum: 1 },
     reason: { type: "string", minLength: 1, maxLength: 512 },
     dryRun: { type: "boolean" },
-    includeActivationData: { type: "boolean" }
-  }
+    includeActivationData: { type: "boolean" },
+  },
 };
 const functionalModuleSelectionApply = {
   type: "object",
@@ -980,11 +1328,11 @@ const functionalModuleSelectionApply = {
         properties: {
           functionalModule: moduleName,
           expectedRevision: { type: "integer", minimum: 1 },
-          selected: { type: "boolean" }
-        }
-      }
-    }
-  }
+          selected: { type: "boolean" },
+        },
+      },
+    },
+  },
 };
 const moduleLease = {
   type: "object",
@@ -1013,7 +1361,15 @@ const moduleLease = {
 const startupRepairMetadata = {
   type: "object",
   additionalProperties: false,
-  required: ["available", "operation", "actionCode", "eligibility", "label", "idempotent", "requiresConfirmation"],
+  required: [
+    "available",
+    "operation",
+    "actionCode",
+    "eligibility",
+    "label",
+    "idempotent",
+    "requiresConfirmation",
+  ],
   properties: {
     available: { type: "boolean" },
     operation: { type: "string", minLength: 1, maxLength: 160 },
@@ -1049,7 +1405,17 @@ const startupFindingAcknowledgementRequest = {
 const startupValidationFinding = {
   type: "object",
   additionalProperties: false,
-  required: ["code", "severity", "owner", "ownerType", "message", "action", "dismissible", "auditRequired", "repair"],
+  required: [
+    "code",
+    "severity",
+    "owner",
+    "ownerType",
+    "message",
+    "action",
+    "dismissible",
+    "auditRequired",
+    "repair",
+  ],
   properties: {
     code: { type: "string", minLength: 1, maxLength: 128 },
     severity: { enum: ["ERROR", "WARNING", "INFO"] },
@@ -1067,7 +1433,15 @@ const startupValidationFinding = {
 const startupBootstrapCheck = {
   type: "object",
   additionalProperties: false,
-  required: ["code", "state", "owner", "ownerType", "message", "action", "auditRequired"],
+  required: [
+    "code",
+    "state",
+    "owner",
+    "ownerType",
+    "message",
+    "action",
+    "auditRequired",
+  ],
   properties: {
     code: { type: "string", minLength: 1, maxLength: 128 },
     state: { enum: ["READY", "MISSING", "NEEDS_ATTENTION"] },
@@ -1094,7 +1468,14 @@ const startupBootstrapChecks = {
 const startupValidationReport = {
   type: "object",
   additionalProperties: false,
-  required: ["state", "checkedAt", "source", "summary", "bootstrapChecks", "findings"],
+  required: [
+    "state",
+    "checkedAt",
+    "source",
+    "summary",
+    "bootstrapChecks",
+    "findings",
+  ],
   properties: {
     state: { enum: ["READY", "NEEDS_ATTENTION", "NOT_READY"] },
     checkedAt: { type: "string", format: "date-time" },
@@ -1102,7 +1483,14 @@ const startupValidationReport = {
     summary: {
       type: "object",
       additionalProperties: false,
-      required: ["total", "errors", "warnings", "info", "dismissible", "acknowledged"],
+      required: [
+        "total",
+        "errors",
+        "warnings",
+        "info",
+        "dismissible",
+        "acknowledged",
+      ],
       properties: {
         total: { type: "integer", minimum: 0 },
         errors: { type: "integer", minimum: 0 },
@@ -1119,7 +1507,18 @@ const startupValidationReport = {
 const operationalReadinessBlocker = {
   type: "object",
   additionalProperties: true,
-  required: ["blockerCode", "code", "severity", "ownerType", "source", "action", "message", "disabledReason", "repair", "suggestedAction"],
+  required: [
+    "blockerCode",
+    "code",
+    "severity",
+    "ownerType",
+    "source",
+    "action",
+    "message",
+    "disabledReason",
+    "repair",
+    "suggestedAction",
+  ],
   properties: {
     blockerCode: { type: "string", minLength: 1, maxLength: 160 },
     code: { type: "string", minLength: 1, maxLength: 160 },
@@ -1138,7 +1537,17 @@ const operationalReadinessBlocker = {
 const operationalReadinessSection = {
   type: "object",
   additionalProperties: false,
-  required: ["key", "title", "businessStatus", "ownerModule", "source", "route", "summary", "blockers", "nextAction"],
+  required: [
+    "key",
+    "title",
+    "businessStatus",
+    "ownerModule",
+    "source",
+    "route",
+    "summary",
+    "blockers",
+    "nextAction",
+  ],
   properties: {
     key: { type: "string", minLength: 1, maxLength: 128 },
     title: { type: "string", minLength: 1, maxLength: 160 },
@@ -1147,21 +1556,37 @@ const operationalReadinessSection = {
     source: { type: "string", minLength: 1, maxLength: 160 },
     route: { type: "string", minLength: 1, maxLength: 256 },
     summary: { type: "object" },
-    blockers: { type: "array", maxItems: 256, items: operationalReadinessBlocker },
+    blockers: {
+      type: "array",
+      maxItems: 256,
+      items: operationalReadinessBlocker,
+    },
     nextAction: { type: "string", minLength: 1, maxLength: 1024 },
   },
 };
 const operationalReadinessReport = {
   type: "object",
   additionalProperties: false,
-  required: ["contractVersion", "state", "checkedAt", "source", "summary", "sections"],
+  required: [
+    "contractVersion",
+    "state",
+    "checkedAt",
+    "source",
+    "summary",
+    "sections",
+  ],
   properties: {
     contractVersion: { enum: [1] },
     state: { enum: ["READY", "NEEDS_ATTENTION", "NOT_READY"] },
     checkedAt: { type: "string", format: "date-time" },
     source: { type: "string", minLength: 1, maxLength: 160 },
     summary: { type: "object" },
-    sections: { type: "array", minItems: 1, maxItems: 32, items: operationalReadinessSection },
+    sections: {
+      type: "array",
+      minItems: 1,
+      maxItems: 32,
+      items: operationalReadinessSection,
+    },
   },
 };
 const readinessRepairRequest = {
@@ -1198,8 +1623,22 @@ const readinessRepairRequest = {
 const readinessRepairResult = {
   type: "object",
   additionalProperties: false,
-  required: ["contractVersion", "idempotencyKey", "dryRun", "state", "operation", "action", "ownerModule",
-    "changedCount", "skippedCount", "blockersRemaining", "retryable", "nextAction", "message", "checkedAt"],
+  required: [
+    "contractVersion",
+    "idempotencyKey",
+    "dryRun",
+    "state",
+    "operation",
+    "action",
+    "ownerModule",
+    "changedCount",
+    "skippedCount",
+    "blockersRemaining",
+    "retryable",
+    "nextAction",
+    "message",
+    "checkedAt",
+  ],
   properties: {
     contractVersion: { enum: [1] },
     repairContractVersion: { type: "integer", minimum: 1 },
@@ -1239,28 +1678,42 @@ const readinessRepairResult = {
 
 module.exports = {
   registrationResult: {
-    type: 'object', required: ['code', 'data'],
+    type: "object",
+    required: ["code", "data"],
     properties: {
-      code: { type: 'string' },
+      code: { type: "string" },
       data: {
-        type: 'object', required: ['instanceId', 'registeredModules', 'operationalState'],
+        type: "object",
+        required: ["instanceId", "registeredModules", "operationalState"],
         properties: {
-          instanceId: { type: 'string' }, registeredModules: { type: 'integer', minimum: 1 },
-          reconciledFunctionalModules: { type: 'integer', minimum: 0 },
+          instanceId: { type: "string" },
+          registeredModules: { type: "integer", minimum: 1 },
+          reconciledFunctionalModules: { type: "integer", minimum: 0 },
           operationalState: {
-            type: 'object', required: ['instanceId', 'projectCode', 'expiresAt', 'modules'],
+            type: "object",
+            required: ["instanceId", "projectCode", "expiresAt", "modules"],
             properties: {
-              instanceId: { type: 'string' }, projectCode: { type: 'string' },
-              expiresAt: { type: 'integer', minimum: 1 },
-              modules: { type: 'array', maxItems: 512, items: {
-                type: 'object', required: ['moduleName', 'enabled', 'catalogueRevision'],
-                properties: { moduleName, enabled: { type: 'boolean' }, catalogueRevision: { type: 'integer', minimum: 0 } }
-              } }
-            }
-          }
-        }
-      }
-    }
+              instanceId: { type: "string" },
+              projectCode: { type: "string" },
+              expiresAt: { type: "integer", minimum: 1 },
+              modules: {
+                type: "array",
+                maxItems: 512,
+                items: {
+                  type: "object",
+                  required: ["moduleName", "enabled", "catalogueRevision"],
+                  properties: {
+                    moduleName,
+                    enabled: { type: "boolean" },
+                    catalogueRevision: { type: "integer", minimum: 0 },
+                  },
+                },
+              },
+            },
+          },
+        },
+      },
+    },
   },
   axisPolicy: axisPolicy,
   axisPolicyUpdate: axisPolicyUpdate,
@@ -1380,6 +1833,7 @@ module.exports = {
   navigationHelp: navigationHelp,
   navigationReadiness: navigationReadiness,
   backendWorkspace: backendWorkspace,
+  enterpriseSetupContinuation: enterpriseSetupContinuation,
   contractHistorySnapshot: contractHistorySnapshot,
   contractActivation: contractActivation,
   contractCurrentData: {
@@ -1448,25 +1902,33 @@ module.exports = {
         type: "array",
         items: {
           type: "object",
-          required: ["functionalModule", "selected", "action", "status", "module"],
+          required: [
+            "functionalModule",
+            "selected",
+            "action",
+            "status",
+            "module",
+          ],
           properties: {
             functionalModule: moduleName,
             selected: { type: "boolean" },
-            action: { enum: ["registerActivate", "activate", "deactivate", "unchanged"] },
+            action: {
+              enum: ["registerActivate", "activate", "deactivate", "unchanged"],
+            },
             status: { enum: ["APPLIED", "UNCHANGED"] },
-            module: functionalModuleRegistration
-          }
-        }
-      }
-    }
+            module: functionalModuleRegistration,
+          },
+        },
+      },
+    },
   },
   functionalModuleCatalogueData: {
     type: "object",
     required: ["project", "items"],
     properties: {
       project: moduleName,
-      items: { type: "array", items: functionalModuleRegistration }
-    }
+      items: { type: "array", items: functionalModuleRegistration },
+    },
   },
   registrationBatch: {
     type: "object",
@@ -1565,8 +2027,17 @@ module.exports = {
           defaultPublicPage: { type: "string", pattern: "^/(?!/)" },
           defaultAuthenticatedPage: { type: "string", pattern: "^/(?!/)" },
           locale: { type: "string" },
-          supportedLocales: { type: "array", items: { type: "string" }, minItems: 1, uniqueItems: true },
-          fallbackLocales: { type: "array", items: { type: "string" }, uniqueItems: true },
+          supportedLocales: {
+            type: "array",
+            items: { type: "string" },
+            minItems: 1,
+            uniqueItems: true,
+          },
+          fallbackLocales: {
+            type: "array",
+            items: { type: "string" },
+            uniqueItems: true,
+          },
           channel: { type: "string" },
           fallbackMode: { enum: ["STATIC_RECOVERY_SHELL"] },
         },

@@ -1,0 +1,19 @@
+{
+  "formatVersion": 1,
+  "code": "FEEDBACK_ACKNOWLEDGEMENT",
+  "ownerModule": "customerFeedback",
+  "version": 2,
+  "status": "ACTIVE",
+  "purpose": "TRANSACTIONAL",
+  "sourceModules": ["customerFeedback"],
+  "channel": "EMAIL",
+  "defaultLocale": "en",
+  "requiresSelection": true,
+  "parameters": {
+    "reference": {
+      "type": "string",
+      "required": true,
+      "maximumLength": 256
+    }
+  }
+}

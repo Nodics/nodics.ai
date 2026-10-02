@@ -40,12 +40,22 @@ module.exports = {
     }
   },
   "cms": {
+    "runtimeRoleProfiles": {
+      "WCMS_ONLINE": {
+        "publication": {
+          "baselines": {
+            "axis": { "$config": "ref", "path": ["cms", "publication", "baselines", "axis"] }
+          }
+        }
+      }
+    },
     "publication": {
       "baselines": {
         "axis": {
           "releaseCode": "axis:axisBaseline",
           "rootType": "site",
           "rootCode": "axisCmsSite",
+          "employeeCompositionPaths": ["/dashboard", "/lock-screen"],
           "sourceVersion": "0"
         },
         "axisassistant": {

@@ -30,7 +30,7 @@ module.exports = {
         let models = NODICS.getModels(moduleName, request.tenant) || {};
         request.schemaModel = models.DiscoveryDocumentProjectionModel;
         request.moduleName = moduleName;
-        request.indexName = request.indexName ? request.indexName : request.schemaModel && request.schemaModel.indexName;
+        request.indexName = request.indexName ? request.indexName : request.schemaModel && (request.schemaModel.typeName || request.schemaModel.indexName);
         if (!request.tenant || !request.indexName) {
             throw new CLASSES.SearchError('ERR_SRCH_00003', 'Invalid Discovery projection request or search is not active');
         }

@@ -63,6 +63,7 @@ module.exports = {
     },
     /** Exports only explicitly referenced READY media without provider paths or credentials. */
     exportReferenced: async function (mediaCodes, request) {
+        if (this.policy().versionProviderEnabled === true) return this.exportCurrentReferenced(mediaCodes, request);
         let codes = Array.from(new Set([].concat(mediaCodes || []).filter(Boolean))).sort();
         let policy = this.policy();
         if (codes.length > Number(policy.maximumAssets || 100)) throw new CLASSES.NodicsError('ERR_MED_00012', 'Media publication asset boundary exceeded');
@@ -88,6 +89,51 @@ module.exports = {
                 businessPurpose: media.businessPurpose, ownerType: media.ownerType, enterpriseCode: media.enterpriseCode,
                 ownerReference: media.ownerReference, reusable: media.reusable !== false,
                 publicationCode: request.publicationCode, manifestCode: request.manifestCode,
+                contentBase64: buffer.toString('base64') });
+        }
+        return assets;
+    },
+    /** Pins qualified CURRENT metadata and verifies exact bytes plus unchanged full retained projection without fabricating legacy versions. */
+    exportCurrentReferenced: async function (mediaCodes, request) {
+        const retained = SERVICE.DefaultMediaRetainedPublicationService;
+        if (!retained) throw new CLASSES.NodicsError('ERR_MED_00014', 'Qualified Media export owner is unavailable');
+        retained.assertScope(request, 'STAGED');
+        retained.assertVersionedSource(request);
+        retained.transactionScope(request);
+        const policy = this.policy();
+        const codes = Array.from(new Set([].concat(mediaCodes || []).filter(Boolean))).sort();
+        if (codes.length > Number(policy.maximumAssets || 100) || codes.some(code => typeof code !== 'string' || !/^[A-Za-z0-9][A-Za-z0-9._-]{0,191}$/.test(code))) {
+            throw new CLASSES.NodicsError('ERR_MED_00012', 'Invalid Media publication asset selection');
+        }
+        const assets = [];
+        let total = 0;
+        for (const code of codes) {
+            const read = async () => {
+                const response = await SERVICE.DefaultMediaService.get({ tenant: request.tenant, authData: request.authData,
+                    query: { code, active: true, status: 'READY' }, skipcache: true,
+                    searchOptions: { limit: 2, pageSize: 2, pageNumber: 1 } });
+                if (!response || !Array.isArray(response.result) || response.result.length !== 1 ||
+                    response.result[0].code !== code || response.result[0].active !== true || response.result[0].status !== 'READY') {
+                    throw new CLASSES.NodicsError('ERR_MED_00013', 'Exact current referenced Media is unavailable');
+                }
+                return response.result[0];
+            };
+            const media = await read();
+            const asset = retained.project(media);
+            if (!Number.isSafeInteger(asset.versionId) || asset.versionId < 0) {
+                throw new CLASSES.NodicsError('ERR_MED_00014', 'Exact current referenced Media version is unavailable');
+            }
+            const buffer = await SERVICE.DefaultMediaStorageProviderRegistryService.read({ providerCode: media.providerCode,
+                storageKey: media.storageKey, maximumBytes: Number(policy.maximumAssetBytes || 52428800) });
+            retained.validateBytes(asset, buffer);
+            const fresh = await read();
+            if (fresh.providerCode !== media.providerCode || fresh.storageKey !== media.storageKey ||
+                retained.digest(retained.project(fresh)) !== retained.digest(asset)) {
+                throw new CLASSES.NodicsError('ERR_MED_00014', 'Referenced Media changed during exact export');
+            }
+            total += buffer.length;
+            if (total > Number(policy.maximumTotalBytes || 104857600)) throw new CLASSES.NodicsError('ERR_MED_00012', 'Media publication total boundary exceeded');
+            assets.push({ ...asset, publicationCode: request.publicationCode, manifestCode: request.manifestCode,
                 contentBase64: buffer.toString('base64') });
         }
         return assets;

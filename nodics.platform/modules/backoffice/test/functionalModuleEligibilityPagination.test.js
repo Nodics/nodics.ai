@@ -14,7 +14,7 @@
  * @description Exercises complete eligibility reads with real Nodics paging normalization and functional-owner gating.
  * @layer test
  * @owner backoffice
- * @override Later-layer page-size and getRecords overrides must preserve project/tenant scope and fail-closed reads.
+ * @override Later-layer page-size and getRecords overrides must preserve project/authority-tenant scope and fail-closed reads.
  */
 const assert = require('node:assert/strict');
 const properties = require('../config/properties');
@@ -25,18 +25,22 @@ const leaseRegistry = Object.assign({}, require('../src/service/registry/default
 const paging = Object.assign({}, require('../../../../nodics.foundation/modules/nDatabase/database/src/service/procs/get/defaultModelsGetInitializerService'),
     { LOG: { debug() {} } });
 let pageSize = properties.backofficeFunctionalModuleCatalogue.eligibilityPageSize;
-global.CONFIG = { get: key => key === 'backofficeFunctionalModuleCatalogue' ? { eligibilityPageSize: pageSize } :
+global.CONFIG = { get: key => key === 'defaultTenant' ? 'catalogue-authority' :
+    key === 'backofficeFunctionalModuleCatalogue' ? { eligibilityPageSize: pageSize } :
     key === 'defaultPageSize' ? 10 : key === 'defaultPageNumber' ? 1 : undefined };
 global.CLASSES = { NodicsError: class extends Error { constructor(code, message) { super(message); this.code = code; } } };
 global.NODICS = { getEnvironmentName: () => 'example.project' };
 const authData = { principalId: 'system' };
-const service = Object.assign({}, definition, { getModel: () => ({}), getPersistenceAuthData: () => authData });
+const service = Object.assign({}, definition, { getModel: tenant => {
+    assert.equal(tenant, 'catalogue-authority', 'resolve only the configured project catalogue model');
+    return {};
+}, getPersistenceAuthData: () => authData });
 let records = [];
 let calls = [];
 global.SERVICE = { DefaultPipelineService: { start: async (pipeline, request) => {
     assert.equal(pipeline, 'modelsGetInitializerPipeline');
     assert.equal(request.moduleName, 'backoffice');
-    assert.equal(request.tenant, 'tenant-one');
+    assert.equal(request.tenant, 'catalogue-authority', 'every page must retain project authority, not employee tenancy');
     assert.equal(request.authData, authData);
     assert.deepEqual(request.query, { projectCode: 'example.project' });
     assert.deepEqual(request.searchOptions.sort, { functionalModule: 1, code: 1 });
@@ -58,7 +62,9 @@ async function run() {
             code: `example.project::module${index}`, functionalModule: `module${index}`,
             technicalModules: [`member${index}`], registrationState: 'AVAILABLE', enabled: false, runtimeState: 'ACTIVE'
         }));
-        const eligibility = await service.getPresentationEligibility({ tenant: 'tenant-one' });
+        const employeeRequest = Object.freeze({ tenant: 'tenant-one' });
+        const eligibility = await service.getPresentationEligibility(employeeRequest);
+        assert.equal(employeeRequest.tenant, 'tenant-one', 'paging must not retarget the authenticated request');
         assert.equal(eligibility.governedModules.length, size * 2);
         assert.deepEqual(eligibility.eligibleModules, []);
         assert.equal(calls.length, Math.floor(size / pageSize) + 1);

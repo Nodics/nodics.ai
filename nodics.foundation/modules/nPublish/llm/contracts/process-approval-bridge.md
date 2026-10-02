@@ -106,6 +106,36 @@ does not modify Process services, routes, domain graphs or shared configuration.
 
 ## Authority And Recovery
 
+### Native Requester Binding
+
+A domain may select `requesterBinding: 'NATIVE_ACTOR'`, with `reviewNodeCode`
+and `reviewPermission` in its approval workflow policy. Before the pending-state
+CAS, `approvalEvidence` requires the authenticated human access principal,
+matching tenant/enterprise, and the stored publication's `requestedBy` equal to
+the existing publication lifecycle `getActor(request)` mapping. It takes the
+requester's login ID only from authenticated `authData.loginId`, never from body
+or publication input. This explicitly aligns with Process's existing login-ID
+actor-policy namespace; a principal ID is not guessed to be a login ID.
+
+The original bearer reads the selected published definition and bounded version
+list, verifies its actor and typed decision policies, and rechecks the current
+pointer. The atomic pending journal records `requesterBinding`, `requestedActor`,
+`requestedBy`, `workflowVersion`, and the deterministic `instanceCode`. Process
+starts with that explicit immutable version and content-free context. The start
+response and claimed callback must match the journaled version and requester.
+A generic Process start with another requester or an older version cannot grant
+publication authority, even if its instance code matches. No additional registry,
+principal store, body flag, service-token substitution or permission grant exists.
+
+Retries use the committed pending journal, not a newly selected current version.
+Legacy pending journals without this marker retain their original callback
+context and version; they are not repinned or upgraded. They cannot silently
+start a newly requester-bound cycle. New bound cycles require the native maker
+and the current qualified candidate; legacy domains without the policy retain
+their existing behavior. Process independently enforces the published policy's
+review permission, tenant/enterprise, no-self-review, typed approval decision
+and required rejection reason. Source tests do not qualify deployed providers.
+
 Callbacks carry exactly `{ instanceCode, executionCode }`. The incoming principal
 must be a verified Workflow runtime. The target uses its own scoped runtime
 credential through nService to claim `/instances/:instanceCode/actions/claim`;

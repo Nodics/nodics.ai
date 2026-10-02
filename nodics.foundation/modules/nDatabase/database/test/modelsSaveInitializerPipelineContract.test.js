@@ -117,8 +117,8 @@ function runProcessModelsContract() {
                     assert.deepStrictEqual(originalModels.map(model => model.code), ['product-001', 'product-002', 'product-003']);
                     assert.strictEqual(response.success.length, 2);
                     assert.strictEqual(response.failed.length, 1);
-                    assert.strictEqual(response.failed[0].metadata.code, 'product-002');
-                    assert.strictEqual(response.failed[0].metadata.fail, true);
+                    assert.strictEqual(response.failed[0].metadata.failedModel.code, 'product-002');
+                    assert.strictEqual(response.failed[0].metadata.failedModel.fail, true);
                     assert.strictEqual(queryObjects.length, 3);
                     assert.strictEqual(response.success[0].code, 'product-001');
                     assert.notStrictEqual(queryObjects[0], queryObjects[1]);
@@ -147,7 +147,7 @@ function runSuccessEndContract(response) {
                     assert.strictEqual(output.errors.length, 1);
                     assert.strictEqual(output.errors[0].code, 'ERR_SAVE_00000');
                     assert.strictEqual(output.errors[0].message, 'Plain save failure');
-                    assert.strictEqual(output.errors[0].metadata.code, 'product-002');
+                    assert.strictEqual(output.errors[0].metadata.failedModel.code, 'product-002');
                     resolve(true);
                 } catch (error) {
                     reject(error);

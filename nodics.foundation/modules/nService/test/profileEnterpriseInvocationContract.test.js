@@ -43,6 +43,9 @@ global.CONFIG = {
 };
 global._ = { merge: Object.assign };
 global.SERVICE = {
+    DefaultInternalAuthenticationProviderService: { fetchInternalAuthToken: async () => ({ authToken: 'retained-runtime-proof' }) },
+    DefaultAuthorizationProviderService: { authorizeToken: async () => ({ code: 'SUC_AUTH_00000', result: { tenant: 'default', entCode: 'enterprise-a' } }) },
+    DefaultLoggerService: { runSensitiveOperation: async (context, work) => work() },
     DefaultIdentityGovernanceService: {
         getSystemAuthData: () => ({
             isSystem: true,
@@ -54,6 +57,7 @@ global.SERVICE = {
         invokeModule: options => {
             calls.push(options);
             return Promise.resolve({
+                code: 'SUC_PRFL_00000',
                 success: true,
                 result: [
                     { code: 'enterprise-a', tenant: { code: 'default', active: true } }
@@ -87,14 +91,15 @@ const handler = Object.assign({}, require('../src/service/enterprise/defaultEnte
     assert.strictEqual(enterprises.length, 1);
     assert.strictEqual(calls[1].moduleName, 'profile');
     assert.strictEqual(calls[1].serviceName, 'DefaultEnterpriseService');
-    assert.strictEqual(calls[1].operationName, 'get');
+    assert.strictEqual(calls[1].operationName, 'getRuntimeEnterprise');
     assert.strictEqual(calls[1].apiName, '/enterprise/get');
     assert.deepStrictEqual(calls[1].request, {
         tenant: 'default',
-        options: { recursive: true }
+        entCode: 'enterprise-a', authData: { tenant: 'default', entCode: 'enterprise-a' }
     });
     assert.deepStrictEqual(calls[1].requestBody, {});
-    assert.strictEqual(calls[1].header.recursive, true);
+    assert.strictEqual(calls[1].authToken, 'retained-runtime-proof');
+    assert.strictEqual(calls[1].maxAttempts, 1);
 
     let activeTenants = [];
     let bootstrapRequest;
@@ -114,6 +119,12 @@ const handler = Object.assign({}, require('../src/service/enterprise/defaultEnte
     };
     global.SERVICE.DefaultDatabaseConnectionHandlerService = {
         createDatabaseConnection: () => Promise.resolve(true)
+    };
+    global.SERVICE.DefaultDatabaseConfigurationService = {
+        getDatabaseActiveModules: () => [], getDatabaseConfiguration() {}
+    };
+    global.SERVICE.DefaultEnterpriseTenantProvisioningService = {
+        prepare: async value => value.tenant
     };
     global.SERVICE.DefaultDatabaseModelHandlerService = {
         buildModelsForTenant: () => Promise.resolve(true)

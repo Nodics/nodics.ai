@@ -8,6 +8,13 @@
     root LICENSE file or a separate written agreement with Nodics.
 
  */
-
-/** @module smtpCommsProvider/config/properties @description Defines secret-reference-only email sandbox defaults. @layer config @owner smtpCommsProvider */
-module.exports = { smtpCommsProvider: { enabled: false, maturity: 'SANDBOX_CAPABLE', sandboxOnly: true, liveQualified: false, endpoint: '', credentialReference: '', senderReference: '', timeoutMilliseconds: 5000 } };
+/** @module smtpCommsProvider/config/properties @description Declares disabled sandbox/SMTP provider defaults; deployments select only their actual sender, secret references and transport policy. @layer config @owner smtpCommsProvider */
+module.exports = {
+    communication: { providerTypes: { SMTP: { code: 'smtp', service: 'DefaultSmtpCommunicationProviderService', timeoutMilliseconds: 5000 } }, senders: {} },
+    smtpCommsProvider: {
+        enabled: false, mode: 'SANDBOX', maturity: 'SMTP_TEST_CAPABLE', sandboxOnly: true, liveQualified: false,
+        endpoint: '', credentialReference: '', senderReference: '', sandboxTransportService: '', timeoutMilliseconds: 5000,
+        testOnly: true, allowedRecipients: [], maximumContentBytes: 65536,
+        smtp: { host: '', port: 587, secure: false, requireTLS: true, allowInsecureLoopback: false }
+    }
+};

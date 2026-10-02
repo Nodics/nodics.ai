@@ -17,6 +17,83 @@
  * @override Project modules may override this behavior through later active modules while preserving the published capability contract.
  */
 module.exports = {
+    /** Returns only the browser owner's access result and redacts switch failures. @param {Object} request Secured browser request. @param {Function} callback Optional callback. @returns {Promise<Object>|void} Safe authentication envelope. */
+    switchEmployeeBrowser: function (request, callback) {
+        const promise = Promise.resolve()
+            .then(() =>
+                FACADE.DefaultAuthenticationProviderFacade.switchEmployeeBrowser(
+                    request
+                )
+            )
+            .then((result) => ({ code: 'SUC_AUTH_00000', result }))
+            .catch((error) => {
+                throw new CLASSES.NodicsError(
+                    /^ERR_PROFILE_MEMBERSHIP_[A-Z_]+$/.test(error?.code || '')
+                        ? error.code
+                        : 'ERR_PROFILE_MEMBERSHIP_IDENTITY'
+                );
+            });
+        return callback
+            ? promise.then((result) => callback(null, result)).catch(callback)
+            : promise;
+    },
+
+    /** Maps fixed public recovery operations through the existing authentication facade and redacts internal failures. */
+    employeeRecovery: function (request, operation, callback) {
+        const safe = {
+            httpRequest: request.httpRequest,
+            body: request.httpRequest?.body || request.body || {}
+        };
+        const promise = Promise.resolve()
+            .then(() =>
+                FACADE.DefaultAuthenticationProviderFacade.employeeRecovery(
+                    safe,
+                    operation
+                )
+            )
+            .then((result) => ({ code: 'SUC_AUTH_00000', result }))
+            .catch((error) => {
+                throw new CLASSES.NodicsError(
+                    error &&
+                        typeof error.code === 'string' &&
+                        error.code.startsWith('ERR_PROFILE_RECOVERY_')
+                        ? error.code
+                        : 'ERR_PROFILE_RECOVERY_UNAVAILABLE'
+                );
+            });
+        if (callback) {
+            promise.then(
+                (value) => callback(null, value),
+                (error) => callback(error)
+            );
+            return;
+        }
+        return promise;
+    },
+    /** Returns inert backend-owned recovery fields and actions. */
+    employeeRecoveryWorkspace: function (request, callback) {
+        return this.employeeRecovery(request, 'WORKSPACE', callback);
+    },
+    /** Starts purpose-bound recovery without disclosing account existence. */
+    startEmployeeRecovery: function (request, callback) {
+        return this.employeeRecovery(request, 'START', callback);
+    },
+    /** Verifies the current recovery email code. */
+    verifyEmployeeRecovery: function (request, callback) {
+        return this.employeeRecovery(request, 'VERIFY', callback);
+    },
+    /** Replaces a recovery code through the owning verifier. */
+    resendEmployeeRecovery: function (request, callback) {
+        return this.employeeRecovery(request, 'RESEND', callback);
+    },
+    /** Reads only the caller's protected recovery continuation. */
+    employeeRecoveryStatus: function (request, callback) {
+        return this.employeeRecovery(request, 'STATUS', callback);
+    },
+    /** Resets the supported credential without issuing a login session or changing membership. */
+    completeEmployeeRecovery: function (request, callback) {
+        return this.employeeRecovery(request, 'COMPLETE', callback);
+    },
 
     /**
 
@@ -32,14 +109,20 @@ module.exports = {
 
     mapCredentials: function (request) {
         let body = request.httpRequest.body || {};
-        let compatibility = CONFIG.get('authSecurity') && CONFIG.get('authSecurity').compatibility || {};
+        let compatibility =
+            (CONFIG.get('authSecurity') &&
+                CONFIG.get('authSecurity').compatibility) ||
+            {};
         request.loginId = body.loginId;
         request.password = body.password;
         request.source = body.source;
         if (compatibility.allowPasswordHeaders === true) {
-            request.loginId = request.loginId || request.httpRequest.get('loginId');
-            request.password = request.password || request.httpRequest.get('password');
-            request.source = request.source || request.httpRequest.get('source');
+            request.loginId =
+                request.loginId || request.httpRequest.get('loginId');
+            request.password =
+                request.password || request.httpRequest.get('password');
+            request.source =
+                request.source || request.httpRequest.get('source');
         }
     },
 
@@ -77,13 +160,19 @@ module.exports = {
     authenticateEmployee: function (request, callback) {
         this.mapCredentials(request);
         if (callback) {
-            FACADE.DefaultAuthenticationProviderFacade.authenticateEmployee(request).then(success => {
-                callback(null, success);
-            }).catch(error => {
-                callback(error);
-            });
+            FACADE.DefaultAuthenticationProviderFacade.authenticateEmployee(
+                request
+            )
+                .then((success) => {
+                    callback(null, success);
+                })
+                .catch((error) => {
+                    callback(error);
+                });
         } else {
-            return FACADE.DefaultAuthenticationProviderFacade.authenticateEmployee(request);
+            return FACADE.DefaultAuthenticationProviderFacade.authenticateEmployee(
+                request
+            );
         }
     },
 
@@ -92,18 +181,26 @@ module.exports = {
      */
     authenticateEmployeeBrowser: function (request, callback) {
         this.mapCredentials(request);
-        let operation = FACADE.DefaultAuthenticationProviderFacade.authenticateEmployee(request)
-            .then(authentication => {
-                let tokens = authentication && authentication.result;
-                if (!tokens) {
-                    throw new CLASSES.NodicsError(
-                        'ERR_AUTH_00001', 'Employee authentication result is invalid'
+        let operation =
+            FACADE.DefaultAuthenticationProviderFacade.authenticateEmployee(
+                request
+            )
+                .then((authentication) => {
+                    let tokens = authentication && authentication.result;
+                    if (!tokens) {
+                        throw new CLASSES.NodicsError(
+                            'ERR_AUTH_00001',
+                            'Employee authentication result is invalid'
+                        );
+                    }
+                    return SERVICE.DefaultBrowserSessionService.start(
+                        request,
+                        tokens
                     );
-                }
-                return SERVICE.DefaultBrowserSessionService.start(request, tokens);
-            })
-            .then(result => ({ code: 'SUC_AUTH_00001', result: result }));
-        if (callback) operation.then(result => callback(null, result)).catch(callback);
+                })
+                .then((result) => ({ code: 'SUC_AUTH_00001', result: result }));
+        if (callback)
+            operation.then((result) => callback(null, result)).catch(callback);
         else return operation;
     },
 
@@ -111,9 +208,11 @@ module.exports = {
      * Rotates the HttpOnly browser refresh session and returns a new access token.
      */
     restoreEmployeeBrowser: function (request, callback) {
-        let operation = SERVICE.DefaultBrowserSessionService.restore(request)
-            .then(result => ({ code: 'SUC_AUTH_00000', result: result }));
-        if (callback) operation.then(result => callback(null, result)).catch(callback);
+        let operation = SERVICE.DefaultBrowserSessionService.restore(
+            request
+        ).then((result) => ({ code: 'SUC_AUTH_00000', result: result }));
+        if (callback)
+            operation.then((result) => callback(null, result)).catch(callback);
         else return operation;
     },
 
@@ -121,9 +220,11 @@ module.exports = {
      * Revokes and clears the Profile-owned browser session.
      */
     logoutEmployeeBrowser: function (request, callback) {
-        let operation = SERVICE.DefaultBrowserSessionService.logout(request)
-            .then(result => ({ code: 'SUC_AUTH_00000', result: result }));
-        if (callback) operation.then(result => callback(null, result)).catch(callback);
+        let operation = SERVICE.DefaultBrowserSessionService.logout(
+            request
+        ).then((result) => ({ code: 'SUC_AUTH_00000', result: result }));
+        if (callback)
+            operation.then((result) => callback(null, result)).catch(callback);
         else return operation;
     },
 
@@ -144,13 +245,19 @@ module.exports = {
     authenticateCustomer: function (request, callback) {
         this.mapCredentials(request);
         if (callback) {
-            FACADE.DefaultAuthenticationProviderFacade.authenticateCustomer(request).then(success => {
-                callback(null, success);
-            }).catch(error => {
-                callback(error);
-            });
+            FACADE.DefaultAuthenticationProviderFacade.authenticateCustomer(
+                request
+            )
+                .then((success) => {
+                    callback(null, success);
+                })
+                .catch((error) => {
+                    callback(error);
+                });
         } else {
-            return FACADE.DefaultAuthenticationProviderFacade.authenticateCustomer(request);
+            return FACADE.DefaultAuthenticationProviderFacade.authenticateCustomer(
+                request
+            );
         }
     },
 
@@ -170,9 +277,21 @@ module.exports = {
 
     refreshToken: function (request, callback) {
         this.mapRefreshToken(request);
-        let operation = SERVICE.DefaultAuthenticationProviderService.rotateRefreshToken(request);
-        if (callback) operation.then(result => callback(null, { code: 'SUC_AUTH_00000', result: result })).catch(callback);
-        else return operation.then(result => ({ code: 'SUC_AUTH_00000', result: result }));
+        let operation =
+            SERVICE.DefaultAuthenticationProviderService.rotateRefreshToken(
+                request
+            );
+        if (callback)
+            operation
+                .then((result) =>
+                    callback(null, { code: 'SUC_AUTH_00000', result: result })
+                )
+                .catch(callback);
+        else
+            return operation.then((result) => ({
+                code: 'SUC_AUTH_00000',
+                result: result
+            }));
     },
 
     /**
@@ -191,8 +310,18 @@ module.exports = {
 
     logout: function (request, callback) {
         this.mapRefreshToken(request);
-        let operation = SERVICE.DefaultAuthenticationProviderService.revokeSession(request);
-        if (callback) operation.then(() => callback(null, { code: 'SUC_AUTH_00000', result: true })).catch(callback);
-        else return operation.then(() => ({ code: 'SUC_AUTH_00000', result: true }));
+        let operation =
+            SERVICE.DefaultAuthenticationProviderService.revokeSession(request);
+        if (callback)
+            operation
+                .then(() =>
+                    callback(null, { code: 'SUC_AUTH_00000', result: true })
+                )
+                .catch(callback);
+        else
+            return operation.then(() => ({
+                code: 'SUC_AUTH_00000',
+                result: true
+            }));
     }
 };

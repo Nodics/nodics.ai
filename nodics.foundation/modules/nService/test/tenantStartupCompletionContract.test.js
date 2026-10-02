@@ -22,13 +22,14 @@ const auth = require('../src/service/authentication/defaultInternalAuthenticatio
 
 test('tenant search setup is awaited and failure prevents dependent jobs and identity', async () => {
     const calls = [];
-    global.NODICS = { addActiveEnterprise() {}, removeActiveEnterprise() {}, getActiveTenants: () => [], addActiveTenant() {},
+    global.NODICS = { addActiveEnterprise() {}, removeActiveEnterprise() {}, getActiveTenants: () => [], addActiveTenant() {}, removeActiveTenant() {},
         isModuleActive: () => false, getModules: () => ({}), addInternalAuthToken: () => calls.push('token') };
     global.CONFIG = { get: name => name === 'cronjob' ? { runOnStartup: true } : undefined,
         getProperties: () => ({}), setProperties() {} };
     let release;
     const failure = new Error('search unavailable');
     global.SERVICE = { DefaultDatabaseConnectionHandlerService: { createDatabaseConnection: async () => {} },
+        DefaultDatabaseConfigurationService: { getDatabaseActiveModules: () => [], getDatabaseConfiguration() {} },
         DefaultDatabaseModelHandlerService: { buildModelsForTenant: async () => {} },
         DefaultSearchEngineConnectionHandlerService: { createTenantsSearchEngines: () => new Promise((resolve, reject) => { release = reject; }) },
         DefaultCronJobService: { createAllJobs: async () => calls.push('jobs') },
@@ -47,6 +48,62 @@ test('tenant search setup is awaited and failure prevents dependent jobs and ide
     assert.deepEqual(calls, ['jobs', 'auth', 'token']);
     const owner = Object.assign({}, enterprise, { fetchEnterprise: async () => { throw failure; } });
     await assert.rejects(owner.buildEnterprises(), error => error === failure);
+});
+
+test('failed preparation removes provisional activation and the same enterprise resumes without duplicate readiness', async () => {
+    const tenants = new Set(), enterprises = new Set(), calls = [];
+    global.NODICS = {
+        addActiveEnterprise: code => enterprises.add(code), removeActiveEnterprise: code => enterprises.delete(code),
+        getActiveTenants: () => [...tenants], addActiveTenant: tenant => tenants.add(tenant),
+        removeActiveTenant: tenant => tenants.delete(tenant), isModuleActive: () => true,
+        getActiveModules: () => ['import', 'profile'], addInternalAuthToken: () => calls.push('token')
+    };
+    global.CONFIG = { get: () => undefined, getProperties: () => ({}), setProperties() {} };
+    const failure = new Error('receipt model unavailable');
+    let fail = true;
+    global.SERVICE = {
+        DefaultDatabaseConfigurationService: { getDatabaseActiveModules: () => [], getDatabaseConfiguration() {} },
+        DefaultEnterpriseTenantProvisioningService: { prepare: async value => value.tenant },
+        DefaultDatabaseConnectionHandlerService: { createDatabaseConnection: async () => calls.push('connection') },
+        DefaultDatabaseModelHandlerService: { buildModelsForTenant: async () => calls.push('models') },
+        DefaultMandatoryIdentityBootstrapService: { prepareTenant: async () => { calls.push('identity'); if (fail) throw failure; } },
+        DefaultInternalAuthenticationProviderService: { fetchInternalAuthToken: async () => { calls.push('auth'); return { authToken: 'fixture' }; } }
+    };
+    const owner = { ...enterprise, _tenantPreparations: new Map() };
+    const record = { code: 'existing-partial', active: true, tenant: { code: 'new-tenant', active: true, properties: {} } };
+    await assert.rejects(owner.buildEnterprise([record]), error => error === failure);
+    assert.equal(tenants.size, 0); assert.equal(enterprises.size, 0); assert.equal(owner._tenantPreparations.size, 0);
+    assert.deepEqual(calls, ['connection', 'models', 'identity']);
+    fail = false;
+    await owner.buildEnterprise([record]);
+    assert.deepEqual(calls, ['connection', 'models', 'identity', 'connection', 'models', 'identity', 'auth', 'token']);
+    assert.deepEqual([...tenants], ['new-tenant']); assert.deepEqual([...enterprises], ['existing-partial']);
+    await owner.buildEnterprise([record]);
+    assert.equal(calls.length, 8);
+});
+
+test('Profile activation joins in-flight preparation instead of mistaking provisional activation for readiness', async () => {
+    const profile = require('../../../../nodics.platform/modules/profile/src/service/enterprise/defaultEnterpriseManagementService');
+    const tenants = new Set();
+    let finish, tokens = 0, connections = 0;
+    global.NODICS = { addActiveEnterprise() {}, removeActiveEnterprise() {},
+        getActiveTenants: () => [...tenants], addActiveTenant: tenant => tenants.add(tenant), removeActiveTenant: tenant => tenants.delete(tenant),
+        isModuleActive: () => false, addInternalAuthToken: () => tokens++ };
+    global.CONFIG = { get: () => undefined, getProperties: () => ({}), setProperties() {} };
+    const owner = { ...enterprise, _tenantPreparations: new Map() };
+    global.SERVICE = { DefaultEnterpriseHandlerService: owner,
+        DefaultDatabaseConfigurationService: { getDatabaseActiveModules: () => [], getDatabaseConfiguration() {} },
+        DefaultDatabaseConnectionHandlerService: { createDatabaseConnection: () => { connections++; return new Promise(resolve => { finish = resolve; }); } },
+        DefaultDatabaseModelHandlerService: { buildModelsForTenant: async () => {} },
+        DefaultInternalAuthenticationProviderService: { fetchInternalAuthToken: async () => ({ authToken: 'fixture' }) } };
+    const record = { code: 'partial', active: true, tenant: { code: 'new-tenant', active: true, properties: {} } };
+    const first = owner.buildEnterprise([record]);
+    let settled = false;
+    const joined = profile.activateEnterpriseRuntime(record, record.tenant.code).then(() => { settled = true; });
+    await new Promise(resolve => setImmediate(resolve));
+    assert.equal(settled, false); assert.equal(connections, 1); assert.equal(tokens, 0);
+    finish(); await Promise.all([first, joined]);
+    assert.equal(settled, true); assert.equal(tokens, 1);
 });
 
 test('token rotation admits one refresh at a time and drain waits for it after clearing the timer', async () => {

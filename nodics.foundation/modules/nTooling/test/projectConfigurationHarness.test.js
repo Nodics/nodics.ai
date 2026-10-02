@@ -17,6 +17,14 @@ const path = require('node:path');
 const { createProjectConfigurationTestHarness } = require('./helpers/projectConfiguration');
 const probe = require('../src/service/project/defaultProjectConfigurationProbeService');
 
+test('tooling delegates to the single runtime-owned nConfig projection without a parallel loader', () => {
+  const owner = require('../../nConfig/src/service/defaultDeploymentConfigurationProjectionService');
+  assert.equal(probe, owner);
+  assert.equal(probe.coordinates({ projectRoot: '/selected-project', environment: 'quality', server: 'author' }).frameworkRoot,
+    path.resolve(__dirname, '../../../..'));
+  assert.throws(() => owner.coordinates({ projectRoot: '/selected-project', environment: '../other', server: 'author' }));
+});
+
 test('harness creation is inert and requires explicit absolute project coordinates', () => {
   assert.throws(() => createProjectConfigurationTestHarness(), /absolute projectRoot/);
   assert.throws(() => createProjectConfigurationTestHarness({ projectRoot: 'relative' }), /absolute projectRoot/);

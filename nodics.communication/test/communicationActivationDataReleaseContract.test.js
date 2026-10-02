@@ -60,15 +60,15 @@ Object.values(sections).forEach(section => {
 
 const runtimeTemplates = require(path.join(
     releaseRoot,
-    'core-v001/records/communication/commsRuntimeDefaultTemplateData.js'
+    'core-v002/records/communication/commsRuntimeDefaultTemplateData.js'
 ));
 const runtimeHeader = require(path.join(
     releaseRoot,
-    'core-v001/headers/communication/commsRuntimeDefaultHeader.js'
+    'core-v002/headers/communication/commsRuntimeDefaultHeader.js'
 ));
 const sampleTemplates = require(path.join(
     releaseRoot,
-    'sample-v001/records/communication/commsSampleTemplateData.js'
+    'sample-v002/records/communication/commsSampleTemplateData.js'
 ));
 
 assert.strictEqual(runtimeTemplates.record0.code, 'COMMUNICATION_RUNTIME_NOTICE');

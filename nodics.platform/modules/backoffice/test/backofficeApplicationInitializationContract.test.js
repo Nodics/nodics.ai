@@ -156,6 +156,11 @@ global.CONFIG = {
         : undefined,
 };
 global.NODICS = { getInternalAuthToken: () => "service-token" };
+// Routing integration is covered separately against the canonical deployment alias owner.
+service.applicationTargetBinding = (connectionName, runtimeRole) => ({
+  connectionName,
+  targetAuthority: { server: connectionName, runtimeRole: { code: runtimeRole } },
+});
 let moduleInvocationHandler = async (request) => ({
   data: {
     readiness: "IMPORTED",
@@ -179,7 +184,11 @@ let functionalModuleRecords = {
 };
 global.SERVICE = {
   DefaultModuleService: {
-    invokeModule: (request) => moduleInvocationHandler(request),
+    invokeModule: (request) => request.apiName === '/storage/readiness' ? Promise.resolve({ data: {
+      contractVersion: 1, owner: 'media', evidenceKind: 'PERSISTED_CURRENT_METADATA', checkedAt: new Date().toISOString(),
+      items: request.requestBody.assets.map(asset => ({ mediaCode: asset.mediaCode, checksum: asset.checksum,
+        versionId: 1, exists: true, metadataMatched: true, storedBytesVerified: false }))
+    } }) : moduleInvocationHandler(request),
   },
   DefaultFunctionalModuleCatalogueService: {
     getRecord: async (_project, functionalModule) =>
@@ -193,10 +202,17 @@ global.SERVICE = {
     }),
   },
 };
-global.fetch = async (url) => {
-  operationSequence.push("media:upload");
+let mediaPrepared = false;
+global.fetch = async (url, options) => {
+  const inspecting = String(url).endsWith("/inspect");
+  operationSequence.push(inspecting ? "media:inspect" : "media:upload");
   fetchUrls.push(String(url));
-  return { ok: true, text: async () => "{}" };
+  const data = inspecting ? { contractVersion: 1, mediaCode: "sample-product-media", versioned: true, exists: mediaPrepared, unchanged: mediaPrepared,
+      versionId: mediaPrepared ? 0 : undefined }
+    : { code: "sample-product-media", versionId: 0, checksumAlgorithm: "sha256",
+        checksum: require("node:crypto").createHash("sha256").update(Buffer.from(await options.body.get("file").arrayBuffer())).digest("hex") };
+  if (!inspecting) mediaPrepared = true;
+  return { ok: true, text: async () => JSON.stringify({ data }) };
 };
 
 (async () => {
@@ -297,7 +313,7 @@ global.fetch = async (url) => {
     httpRequest: { headers: { authorization: "Bearer operator-token" } },
   });
   assert.deepStrictEqual(initiateRequest.targetAuthority, {
-    runtimeRole: "WCMS_STAGED",
+    server: "wcmsStaged", runtimeRole: { code: "WCMS_STAGED" },
   });
   assert.strictEqual(initiateRequest.requestBody.forceRefresh, true);
   assert.strictEqual(
@@ -480,6 +496,7 @@ global.fetch = async (url) => {
     "Application media must be uploaded before WCMS content imports bind media references",
   );
   assert.deepStrictEqual(fetchUrls, [
+    "https://runtime.example.test/nodics/media/v0/storage/upload/inspect",
     "https://runtime.example.test/nodics/media/v0/storage/upload",
   ]);
   moduleInvocationHandler = async (request) => {
@@ -700,20 +717,20 @@ global.fetch = async (url) => {
   assert(
     blockedBySetupData.capability.blockers.some(
       (blocker) =>
-        blocker.code === "IMPORT_FAILED" &&
+        blocker.code === "READINESS_UNAVAILABLE" &&
         blocker.severity === "REPAIR_REQUIRED" &&
         blocker.ownerType === "DATA_RELEASE" &&
         blocker.source === "IMPORT_PREFLIGHT" &&
         blocker.repair &&
         blocker.repair.available === true &&
-        blocker.repair.eligibility === "AUTOMATIC" &&
-        blocker.repair.operation === "applicationInitialization.prepareCapability" &&
+        blocker.repair.action === "REFRESH_READINESS" &&
+        blocker.repair.operation === "applicationInitialization.status" &&
         blocker.runtimeDiagnostic &&
         blocker.runtimeDiagnostic.targetModule === "import" &&
         blocker.runtimeDiagnostic.targetServer === "wcmsStaged" &&
         blocker.runtimeDiagnostic.targetRuntimeRole === "WCMS_STAGED",
     ),
-    "Unavailable setup data must expose governed retry/repair and runtime diagnostic hints without leaking target errors",
+    "Unavailable setup data must expose non-executing owner history review and runtime diagnostic hints without leaking target errors",
   );
   unavailableReleaseCalls = [];
   let blockedInitiateBySetupData = await service.initiate("agoraapparel", {
@@ -760,7 +777,7 @@ global.fetch = async (url) => {
   assert.strictEqual(contentPackRequest.local, false);
   assert.strictEqual(contentPackRequest.connectionName, "wcmsStaged");
   assert.deepStrictEqual(contentPackRequest.targetAuthority, {
-    runtimeRole: "WCMS_STAGED",
+    server: "wcmsStaged", runtimeRole: { code: "WCMS_STAGED" },
   });
   assert.strictEqual(contentPackRequest.moduleName, "system");
   assert.strictEqual(

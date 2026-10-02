@@ -20,6 +20,11 @@ module.exports = {
   profile: {
     tenant: {
       super: "super",
+      indexes: {
+        individual: {
+          tenantCode: { name: "code", enabled: true, options: { unique: true } },
+        },
+      },
       backoffice: {
         enabled: true,
         label: "Tenant",
@@ -45,7 +50,7 @@ module.exports = {
           required: false,
           description: "JSON formate of properties defined for this tenant",
           searchOptions: {
-            enabled: true, // default is false
+            enabled: false, // Lifecycle provenance and storage bindings must not enter search indexes.
           },
         },
       },
@@ -57,21 +62,63 @@ module.exports = {
         enabled: true,
         label: "Address",
         displayProperty: "code",
-        displayProperties: ["building", "street", "city", "countryCode", "code"],
+        displayProperties: [
+          "building",
+          "street",
+          "city",
+          "countryCode",
+          "code",
+        ],
         form: {
           sections: {
-            address: { label: "Address", fields: ["type", "flatNo", "building", "street", "addressLine1", "addressLine2", "locality", "city", "state", "postalCode", "countryCode", "isPrimery"] },
-            contacts: { label: "Contact details", fields: ["contacts", "landmarkHint", "accessNotes"] },
-            administration: { label: "Additional details", fields: ["code", "active", "description"] },
+            address: {
+              label: "Address",
+              fields: [
+                "type",
+                "flatNo",
+                "building",
+                "street",
+                "addressLine1",
+                "addressLine2",
+                "locality",
+                "city",
+                "state",
+                "postalCode",
+                "countryCode",
+                "isPrimery",
+              ],
+            },
+            contacts: {
+              label: "Contact details",
+              fields: ["contacts", "landmarkHint", "accessNotes"],
+            },
+            administration: {
+              label: "Additional details",
+              fields: ["code", "active", "description"],
+            },
           },
-          hiddenFields: ["geocodingProvider", "geocodingReference", "geocodingPrecision", "geocodingConfidence", "verificationSource", "verifiedByRef", "verifiedAt", "displayPolicy"],
+          hiddenFields: [
+            "geocodingProvider",
+            "geocodingReference",
+            "geocodingPrecision",
+            "geocodingConfidence",
+            "verificationSource",
+            "verifiedByRef",
+            "verifiedAt",
+            "displayPolicy",
+          ],
           defaultColumns: ["code", "type", "building", "city", "countryCode"],
         },
         operations: ["search", "read", "create", "update", "delete"],
         relationships: {
           contacts: {
             targetModule: "profile",
-            actions: ["SELECT_EXISTING", "CREATE_RELATED", "EDIT_RELATED", "UNLINK"],
+            actions: [
+              "SELECT_EXISTING",
+              "CREATE_RELATED",
+              "EDIT_RELATED",
+              "UNLINK",
+            ],
           },
         },
       },
@@ -239,6 +286,10 @@ module.exports = {
 
     contact: {
       super: "base",
+      readProtection: {
+        owner: "DefaultProfileVerifiedContactInterceptorService",
+        qualified: false,
+      },
       backoffice: {
         enabled: true,
         label: "Contact",
@@ -246,8 +297,14 @@ module.exports = {
         displayProperties: ["value", "type", "code"],
         form: {
           sections: {
-            contact: { label: "Contact details", fields: ["type", "prefix", "value", "priority"] },
-            administration: { label: "Additional details", fields: ["code", "active", "description"] },
+            contact: {
+              label: "Contact details",
+              fields: ["type", "prefix", "value", "priority"],
+            },
+            administration: {
+              label: "Additional details",
+              fields: ["code", "active", "description"],
+            },
           },
           defaultColumns: ["value", "type", "priority", "active"],
         },
@@ -288,26 +345,58 @@ module.exports = {
           required: true,
           default: 0,
 
-          description: 'Stores the numeric priority used by this record.'},
+          description: "Stores the numeric priority used by this record.",
+        },
       },
     },
 
     enterprise: {
+      readProtection: {
+        owner: "DefaultProfileVerifiedContactInterceptorService",
+        qualified: false,
+      },
       super: "base",
       backoffice: {
         enabled: true,
         label: "Enterprise",
-        excludedFields: ["setupRequestKey", "setupRequestHash"],
+        excludedFields: [
+          "setupRequestKey",
+          "setupRequestHash",
+          "defaultAdminAssignmentCode",
+          "administrationConsent",
+          "administrationHierarchyEpoch",
+          "administrationHierarchyOperation",
+          "administrationHierarchySerialOperation",
+        ],
         displayProperty: "code",
         displayProperties: ["name", "code"],
         form: {
           createOperation: "setupEnterprise",
-          completionAction: { label: "Set up enterprise users", path: "/profile/enterprises?tab=users&enterpriseCode={code}" },
+          completionAction: {
+            label: "Set up enterprise users",
+            path: "/profile/enterprises?tab=users&enterpriseCode={code}",
+          },
           managedCreateFields: ["tenant"],
           sections: {
-            enterprise: { label: "Enterprise details", fields: ["name", "code", "active", "description", "roleCodes"] },
-            organisation: { label: "Organisation", fields: ["tenant", "superEnterprise", "subEnterprises"] },
-            relationships: { label: "Addresses and contacts", fields: ["addresses", "contacts"] },
+            enterprise: {
+              label: "Enterprise details",
+              fields: [
+                "name",
+                "code",
+                "active",
+                "description",
+                "roleCodes",
+                "adminEmail",
+              ],
+            },
+            organisation: {
+              label: "Organisation",
+              fields: ["tenant", "superEnterprise", "subEnterprises"],
+            },
+            relationships: {
+              label: "Addresses and contacts",
+              fields: ["addresses", "contacts"],
+            },
           },
           hiddenFields: ["capabilityScopes"],
           defaultColumns: ["name", "code", "active", "superEnterprise"],
@@ -397,8 +486,62 @@ module.exports = {
         },
       },
       definition: {
-        setupRequestKey: { type: "string", required: false, readOnly: true, description: "Identifies the authenticated enterprise setup request so an interrupted activation can be resumed without creating another enterprise." },
-        setupRequestHash: { type: "string", required: false, readOnly: true, description: "Detects changes to an enterprise setup request before a retry can reuse its completed creation." },
+        adminEmail: {
+          type: "string",
+          required: false,
+          label: "Administrator email",
+          description:
+            "Initial administrator nomination. Leave blank only when one enterprise EMAIL contact is selected. Later contact edits never transfer access.",
+        },
+        defaultAdminAssignmentCode: {
+          type: "string",
+          required: false,
+          readOnly: true,
+          description:
+            "Profile-owned initial/default administrator association; not a credential or editable access grant.",
+        },
+        administrationConsent: {
+          type: "object",
+          required: false,
+          readOnly: true,
+          description:
+            "Private Profile-owned explicit ancestor consent, retained provenance and reviewed command evidence. Never editable through generic CRUD.",
+        },
+        administrationHierarchyEpoch: {
+          type: "int",
+          required: false,
+          readOnly: true,
+          description:
+            "Managed relationship generation; prevents old relationship-dependent authority reviving after reparenting.",
+        },
+        administrationHierarchyOperation: {
+          type: "object",
+          required: false,
+          readOnly: true,
+          description:
+            "Private held relationship change, dependent invalidation targets and original reviewed actor/command. Never generic CRUD input.",
+        },
+        administrationHierarchySerialOperation: {
+          type: "object",
+          required: false,
+          readOnly: true,
+          description:
+            "Private platform-Enterprise serial fence for graph mutations; retained command and generation, never caller-owned authority.",
+        },
+        setupRequestKey: {
+          type: "string",
+          required: false,
+          readOnly: true,
+          description:
+            "Identifies the authenticated enterprise setup request so an interrupted activation can be resumed without creating another enterprise.",
+        },
+        setupRequestHash: {
+          type: "string",
+          required: false,
+          readOnly: true,
+          description:
+            "Detects changes to an enterprise setup request before a retry can reuse its completed creation.",
+        },
         name: {
           type: "string",
           required: true,
@@ -451,7 +594,8 @@ module.exports = {
         roleCodes: {
           type: "array",
           required: false,
-          description: "Business association roles this enterprise can play, such as PLATFORM_OWNER, PROGRAM_OPERATOR, SERVICE_PROVIDER, MARKETPLACE_VENDOR, ISSUER, ASSET_OWNER, or BUSINESS_PARTNER",
+          description:
+            "Business association roles this enterprise can play, such as PLATFORM_OWNER, PROGRAM_OPERATOR, SERVICE_PROVIDER, MARKETPLACE_VENDOR, ISSUER, ASSET_OWNER, or BUSINESS_PARTNER",
           searchOptions: {
             enabled: true,
           },
@@ -459,7 +603,8 @@ module.exports = {
         capabilityScopes: {
           type: "array",
           required: false,
-          description: "Capability-owned role scope metadata contributed by functional anchor modules while Profile remains the Enterprise schema authority",
+          description:
+            "Capability-owned role scope metadata contributed by functional anchor modules while Profile remains the Enterprise schema authority",
         },
       },
       indexes: {
@@ -479,15 +624,15 @@ module.exports = {
       service: {
         enabled: true,
       },
-      router: { groups: { schemaOperations: true },
-        enabled: true,
-      },
+      router: { groups: { schemaOperations: true }, enabled: true },
       definition: {
         personId: {
           type: "objectId",
           required: true,
 
-          description: 'Stores the person identifier used to correlate this record.'},
+          description:
+            "Stores the person identifier used to correlate this record.",
+        },
         loginId: {
           type: "string",
           required: true,
@@ -548,16 +693,33 @@ module.exports = {
     },
 
     password: {
+      readProtection: {
+        owner: "DefaultProfileVerifiedContactInterceptorService",
+        qualified: false,
+      },
       super: "super",
       schemaPolicies: ["administrative"],
       model: true,
       service: {
         enabled: true,
       },
-      router: { groups: { schemaOperations: true },
-        enabled: true,
+      router: { groups: { schemaOperations: true }, enabled: true },
+      backoffice: { concurrency: { managed: false, field: "revision" } },
+      credentialRetirement: {
+        enabled: false,
+        writerCoverageQualified: false,
+        revisionField: "revision",
+        credentialField: "password",
+        activeField: "active",
+        evidenceField: "identityLinkRetirement",
+        ownerService: "DefaultCanonicalHistoricalIdentityLinkService",
       },
       definition: {
+        revision: {
+          type: "long",
+          required: false,
+          description: "Original generated credential revision; managed ownership is opt-in after approved migration",
+        },
         loginId: {
           type: "string",
           required: true,
@@ -629,7 +791,9 @@ module.exports = {
           type: "object",
           required: true,
 
-          description: 'Stores the business display name shown to administrators and related user journeys.'},
+          description:
+            "Stores the business display name shown to administrators and related user journeys.",
+        },
         "name.title": {
           type: "string",
           required: false,
@@ -708,6 +872,10 @@ module.exports = {
 
     employee: {
       super: "user",
+      readProtection: {
+        owner: "DefaultProfileVerifiedContactInterceptorService",
+        qualified: false,
+      },
       schemaPolicies: ["administrative"],
       backoffice: {
         displayProperty: "loginId",
@@ -780,12 +948,16 @@ module.exports = {
           type: "date",
           required: false,
 
-          description: 'Records when the api key created event or value applies.'},
+          description:
+            "Records when the api key created event or value applies.",
+        },
         apiKeyExpiresAt: {
           type: "date",
           required: false,
 
-          description: 'Records when the api key expires event or value applies.'},
+          description:
+            "Records when the api key expires event or value applies.",
+        },
         apiKeyScopes: {
           type: "array",
           required: false,
@@ -797,7 +969,18 @@ module.exports = {
 
     customer: {
       super: "user",
-      definition: { "name.lastName": { type: "string", required: false, description: "Family name when the customer has one; mononyms remain valid" } },
+      readProtection: {
+        owner: "DefaultProfileVerifiedContactInterceptorService",
+        qualified: false,
+      },
+      definition: {
+        "name.lastName": {
+          type: "string",
+          required: false,
+          description:
+            "Family name when the customer has one; mononyms remain valid",
+        },
+      },
       schemaPolicies: ["customerOwned"],
       model: true,
       service: {
@@ -813,23 +996,89 @@ module.exports = {
     },
 
     externalIdentityLink: {
-      super: 'base', model: true, schemaPolicies: ['administrative'],
-      service: { enabled: true }, router: { enabled: false }, cache: { enabled: false }, search: { enabled: false }, event: { enabled: false },
-      backoffice: { enabled: false, concurrency: { managed: true, field: 'revision' } },
-      definition: {
-        code: { type: 'string', required: true, description: 'Stable hash of verified enterprise, provider, application and external subject' },
-        enterpriseCode: { type: 'string', required: true, description: 'Enterprise which owns this external identity integration' },
-        provider: { type: 'string', required: true, description: 'Configured trusted identity provider' },
-        applicationCode: { type: 'string', required: true, description: 'Configured application within the provider' },
-        applicationSubject: { type: 'string', required: true, description: 'Verified external application identifier' },
-        providerSubject: { type: 'string', required: true, description: 'Verified immutable external user identifier' },
-        principalCode: { type: 'string', required: true, description: 'Canonical Profile customer login identifier' },
-        authVersion: { type: 'string', required: true, description: 'Principal security stamp at explicit linking' },
-        allowsWrite: { type: 'bool', required: true, description: 'Verified provider permission to send direct outcome messages' },
-        revision: { type: 'int', required: true, description: 'Managed optimistic concurrency revision', default: 0 },
-        status: { type: 'string', required: true, enum: ['ACTIVE', 'REVOKED'], description: 'External identity link lifecycle' }
+      super: "base",
+      model: true,
+      schemaPolicies: ["administrative"],
+      service: { enabled: true },
+      router: { enabled: false },
+      cache: { enabled: false },
+      search: { enabled: false },
+      event: { enabled: false },
+      backoffice: {
+        enabled: false,
+        concurrency: { managed: true, field: "revision" },
       },
-      indexes: { individual: { externalIdentityKey: { name: 'code', enabled: true, options: { unique: true } } } }
+      definition: {
+        code: {
+          type: "string",
+          required: true,
+          description:
+            "Stable hash of verified enterprise, provider, application and external subject",
+        },
+        enterpriseCode: {
+          type: "string",
+          required: true,
+          description:
+            "Enterprise which owns this external identity integration",
+        },
+        provider: {
+          type: "string",
+          required: true,
+          description: "Configured trusted identity provider",
+        },
+        applicationCode: {
+          type: "string",
+          required: true,
+          description: "Configured application within the provider",
+        },
+        applicationSubject: {
+          type: "string",
+          required: true,
+          description: "Verified external application identifier",
+        },
+        providerSubject: {
+          type: "string",
+          required: true,
+          description: "Verified immutable external user identifier",
+        },
+        principalCode: {
+          type: "string",
+          required: true,
+          description: "Canonical Profile customer login identifier",
+        },
+        authVersion: {
+          type: "string",
+          required: true,
+          description: "Principal security stamp at explicit linking",
+        },
+        allowsWrite: {
+          type: "bool",
+          required: true,
+          description:
+            "Verified provider permission to send direct outcome messages",
+        },
+        revision: {
+          type: "int",
+          required: true,
+          description: "Managed optimistic concurrency revision",
+          default: 0,
+        },
+        status: {
+          type: "string",
+          required: true,
+          enum: ["ACTIVE", "REVOKED"],
+          description: "External identity link lifecycle",
+        },
+      },
+      indexes: {
+        individual: {
+          externalIdentityKey: {
+            name: "code",
+            enabled: true,
+            options: { unique: true },
+          },
+        },
+      },
     },
 
     principalScopeAssignment: {
@@ -988,7 +1237,8 @@ module.exports = {
         runtimeScope: {
           type: "object",
           required: false,
-          description: "Direct RUNTIME_DEPLOYMENT assignment: approved projectCode, environmentCode, serverCode, instanceCode, modules and permissions. Profile governance validates this scope before storage and issuance.",
+          description:
+            "Direct RUNTIME_DEPLOYMENT assignment: approved projectCode, environmentCode, serverCode, instanceCode, modules and permissions. Profile governance validates this scope before storage and issuance.",
         },
         reasonCode: {
           type: "string",
@@ -1040,12 +1290,7 @@ module.exports = {
           "created",
           "updated",
         ],
-        filterFields: [
-          "enterpriseCode",
-          "tenantCode",
-          "roleCode",
-          "status",
-        ],
+        filterFields: ["enterpriseCode", "tenantCode", "roleCode", "status"],
         defaultSortField: "created",
         defaultSortDirection: "DESC",
       },
@@ -1053,9 +1298,7 @@ module.exports = {
       service: {
         enabled: true,
       },
-      router: { groups: { schemaOperations: true },
-        enabled: true,
-      },
+      router: { groups: { schemaOperations: true }, enabled: true },
       cache: {
         enabled: true,
         ttl: 60,
@@ -1134,7 +1377,8 @@ module.exports = {
         expiresAt: {
           type: "date",
           required: false,
-          description: "Optional expiry timestamp for this pre-assigned registration",
+          description:
+            "Optional expiry timestamp for this pre-assigned registration",
         },
         invitedBy: {
           type: "string",
@@ -1169,6 +1413,10 @@ module.exports = {
     },
 
     identityMigrationAudit: {
+      readProtection: {
+        owner: "DefaultProfileVerifiedContactInterceptorService",
+        qualified: false,
+      },
       super: "base",
       schemaPolicies: ["administrative"],
       model: true,
@@ -1176,15 +1424,337 @@ module.exports = {
       event: { enabled: false },
       router: { groups: { schemaOperations: true }, enabled: true },
       definition: {
-        migrationVersion: { type: "int", required: true , description: 'Stores the numeric migration version used by this record.'},
-        status: { type: "string", required: true , description: 'Tracks the lifecycle state that controls whether this record can be used in business processes.'},
-        tenant: { type: "string", required: true , description: 'Identifies the runtime tenant partition that scopes this record.'},
-        requestedBy: { type: "string", required: false , description: 'Stores the requested by value used by this record.'},
-        preview: { type: "object", required: false , description: 'Stores structured preview details used by this record.'},
-        snapshot: { type: "object", required: false , description: 'Stores structured snapshot details used by this record.'},
-        result: { type: "object", required: false , description: 'Stores structured result details used by this record.'},
-        correlationId: { type: "string", required: false , description: 'Stores the correlation identifier used to correlate this record.'},
+        migrationVersion: {
+          type: "int",
+          required: true,
+          description:
+            "Stores the numeric migration version used by this record.",
+        },
+        status: {
+          type: "string",
+          required: true,
+          description:
+            "Tracks the lifecycle state that controls whether this record can be used in business processes.",
+        },
+        tenant: {
+          type: "string",
+          required: true,
+          description:
+            "Identifies the runtime tenant partition that scopes this record.",
+        },
+        requestedBy: {
+          type: "string",
+          required: false,
+          description: "Stores the requested by value used by this record.",
+        },
+        preview: {
+          type: "object",
+          required: false,
+          description: "Stores structured preview details used by this record.",
+        },
+        snapshot: {
+          type: "object",
+          required: false,
+          description:
+            "Stores structured snapshot details used by this record.",
+        },
+        result: {
+          type: "object",
+          required: false,
+          description: "Stores structured result details used by this record.",
+        },
+        correlationId: {
+          type: "string",
+          required: false,
+          description:
+            "Stores the correlation identifier used to correlate this record.",
+        },
       },
     },
   },
 };
+
+// Extend the existing assignment, not a separate onboarding or identity registry.
+// This private checkpoint must never be exposed through generated HTTP CRUD.
+Object.assign(module.exports.profile.enterpriseAccessAssignment, {
+  router: { enabled: false },
+  cache: { enabled: false },
+  event: { enabled: false },
+  backoffice: {
+    enabled: false,
+    concurrency: { managed: true, field: "revision" },
+  },
+});
+Object.assign(module.exports.profile.enterpriseAccessAssignment.definition, {
+  revision: {
+    type: "int",
+    required: true,
+    default: 0,
+    description: "Generated managed compare-and-set revision.",
+  },
+  registration: {
+    type: "object",
+    required: false,
+    description:
+      "Private immutable command details and acknowledged provisioning checkpoint; contains no password or raw proof.",
+  },
+  identityClaimed: {
+    type: "bool",
+    required: false,
+    description:
+      "Reserves one invited-new-employee registration per normalised email in the Profile authority.",
+  },
+});
+// Existing installed indexes require an authorised inspection/migration before
+// enabling the journey. No startup script, reset or index execution is added.
+module.exports.profile.enterpriseAccessAssignment.indexes.individual.normalizedEmail =
+  {
+    name: "normalizedEmail",
+    enabled: true,
+    options: {
+      unique: true,
+      partialFilterExpression: { identityClaimed: true },
+    },
+  };
+module.exports.profile.employee.definition.registrationAssignmentCode = {
+  type: "string",
+  required: false,
+  description:
+    "Profile assignment used to gate initial employee session readiness. This reference itself grants no access.",
+};
+module.exports.profile.employee.backoffice.excludedFields = [
+  ...module.exports.profile.employee.backoffice.excludedFields,
+  "registrationAssignmentCode",
+];
+
+module.exports.profile.employee.definition.registrationSuspended = {
+  type: "bool",
+  required: false,
+  description:
+    "Explicit employee disable/reactivate decision; initial inactive registration is not a suspension. Inert for legacy principals without a registration reference.",
+};
+module.exports.profile.contact.definition.profileVerifiedContact = {
+  type: "object",
+  required: false,
+  readOnly: true,
+  description:
+    "Private canonical contact proof checkpoints, explicit transactional consent and suppression. No raw verification secret or proof; only the verified Contact owner may mutate this evidence.",
+};
+module.exports.profile.contact.backoffice.excludedFields = [
+  ...(module.exports.profile.contact.backoffice.excludedFields || []),
+  "profileVerifiedContact",
+];
+module.exports.profile.employee.backoffice.excludedFields.push(
+  "registrationSuspended",
+);
+
+// Original accounts still require credentials through the Profile save guard.
+// Only the private membership owner may create a credential-free projection.
+for (const name of ["employee", "customer", "password"]) {
+  module.exports.profile[name].definition.identityLinkRetirement = {
+    type: "object",
+    required: false,
+    readOnly: true,
+    description:
+      "Private original historical-link retirement handle and reviewed fingerprint. No credentials; generic replacement/reactivation is prohibited.",
+  };
+  if (module.exports.profile[name].backoffice) {
+    module.exports.profile[name].backoffice.excludedFields = [
+      ...(module.exports.profile[name].backoffice.excludedFields || []),
+      "identityLinkRetirement",
+    ];
+  }
+}
+module.exports.profile.employee.definition.password = {
+  type: "objectId",
+  required: false,
+  description:
+    "Original account credential; absent only on an owner-proved canonical identity projection.",
+};
+for (const name of ["employee", "customer"]) {
+  // Installation is governed separately; a property flag cannot certify indexes.
+  const indexes = module.exports.profile[name].indexes || {};
+  module.exports.profile[name].indexes = {
+    ...indexes,
+    composite: {
+      ...indexes.composite,
+      canonicalTenant: {
+        name: "authenticationIdentity.tenantCode",
+        enabled: false,
+        options: {
+          unique: true,
+          partialFilterExpression: {
+            "authenticationIdentity.tenantCode": { $type: "string" },
+            "authenticationIdentity.recordKind": { $type: "string" },
+            "authenticationIdentity.recordId": { $type: "string" },
+          },
+        },
+      },
+      canonicalKind: {
+        name: "authenticationIdentity.recordKind",
+        enabled: false,
+      },
+      canonicalRecord: {
+        name: "authenticationIdentity.recordId",
+        enabled: false,
+      },
+    },
+  };
+  module.exports.profile[name].definition.password = {
+    type: "objectId",
+    required: false,
+    description:
+      "Original credential, required by the owner save guard unless a privately admitted canonical projection.",
+  };
+  module.exports.profile[name].definition.authenticationIdentity = {
+    type: "object",
+    required: false,
+    description:
+      "Private direct immutable canonical locator. Never copied credentials, an email-based link, a chain or client-supplied identity proof.",
+  };
+  module.exports.profile[name].backoffice = {
+    ...(module.exports.profile[name].backoffice || {}),
+    excludedFields: [
+      ...(module.exports.profile[name].backoffice?.excludedFields || []),
+      "authenticationIdentity",
+    ],
+  };
+}
+module.exports.profile.customer.definition.customerParticipation = {
+  type: "object",
+  required: false,
+  description:
+    "Private explicit customer terms acceptance and independent participation revision. Never employee authority.",
+};
+module.exports.profile.customer.backoffice.excludedFields.push(
+  "customerParticipation",
+);
+Object.assign(module.exports.profile.identityMigrationAudit.definition, {
+  recoveryOperationId: {
+    type: "string",
+    required: false,
+    description:
+      "Unique structural recovery admission claim; ambiguous recovering audits remain locked.",
+  },
+  appliedChangeCount: {
+    type: "int",
+    required: false,
+    description:
+      "Count of structural writes whose progress was durably acknowledged; not automatic crash-resume authority.",
+  },
+  planFingerprint: {
+    type: "string",
+    required: false,
+    description:
+      "Reviewed structural change-set fingerprint retained for audit reconciliation.",
+  },
+});
+module.exports.profile.enterpriseAccessAssignment.definition.lifecycleNotifications =
+  {
+    type: "object",
+    required: false,
+    description:
+      "Private frozen lifecycle message/intent evidence; delivery belongs to Communication.",
+  };
+Object.assign(module.exports.profile.enterpriseAccessAssignment.definition, {
+  invitationAuthority: {
+    type: "object",
+    required: false,
+    description:
+      "Private inviter identity and context, rechecked before membership acceptance.",
+  },
+  membership: {
+    type: "object",
+    required: false,
+    description:
+      "Private immutable identity binding and recoverable acceptance checkpoint, not a new identity reservation.",
+  },
+  membershipMutation: {
+    type: "string",
+    required: false,
+    description: "Private exact own-write acknowledgement marker.",
+  },
+  invitationWithdrawal: {
+    type: "object",
+    required: false,
+    description: "Private serialized unused-invitation withdrawal evidence.",
+    backoffice: { exclude: true },
+  },
+});
+Object.assign(module.exports.profile.enterprise.definition, {
+  setupContinuation: {
+    type: "object",
+    required: false,
+    readOnly: true,
+    searchOptions: { enabled: false },
+    description:
+      "Private original setup nomination and monotonic continuation checkpoints.",
+  },
+  teamRevision: {
+    type: "int",
+    required: false,
+    description:
+      "Private serialized team-operation generation, not a last-writer timestamp.",
+  },
+  teamOperation: {
+    type: "object",
+    required: false,
+    description:
+      "Private immutable team command, pending recovery or safe completed outcome. No credentials.",
+  },
+});
+module.exports.profile.enterprise.backoffice.excludedFields = [
+  ...(module.exports.profile.enterprise.backoffice.excludedFields || []),
+  "teamRevision",
+  "teamOperation",
+  "defaultAdminAssignmentCode",
+  "setupContinuation",
+];
+module.exports.profile.enterprise.readProtection = {
+  ...module.exports.profile.enterprise.readProtection,
+  owner: "DefaultEnterpriseSetupContinuationService",
+};
+for (const field of [
+  "setupRequestKey",
+  "setupRequestHash",
+  "defaultAdminAssignmentCode",
+  "teamRevision",
+  "teamOperation",
+])
+  module.exports.profile.enterprise.definition[field].searchOptions = {
+    enabled: false,
+  };
+
+// Enterprise policy controls discovery; an application remains private pending data.
+module.exports.profile.enterprise.definition.employeeApplicationPolicy = {
+  type: "object",
+  required: false,
+  description:
+    "Explicit employee application eligibility: enabled, supported method and configured initial role. Absence disables self-application. This policy never approves an applicant.",
+};
+Object.assign(module.exports.profile.enterpriseAccessAssignment.definition, {
+  origin: {
+    type: "string",
+    required: false,
+    description:
+      "ADMIN_PRE_ENROLLED or SELF_APPLICATION; a self-application is never an administrator invitation.",
+  },
+  application: {
+    type: "object",
+    required: false,
+    description:
+      "Private proof-bound application details and submission checkpoint, separate from employee provisioning. No passwords or raw email proof.",
+  },
+});
+
+// Eligibility evidence stays on the existing Customer, with no separate policy/revision authority.
+module.exports.profile.customer.definition.customerEligibilityDecision = {
+  type: "object",
+  required: false,
+  readOnly: true,
+  description: "Private current Rules eligibility receipt, bounded retained history and pending policy invalidation fence. Owner-managed; no credentials, raw facts, regulated KYC certificate or invented policy revision.",
+};
+module.exports.profile.customer.backoffice.excludedFields = [
+  ...(module.exports.profile.customer.backoffice.excludedFields || []),
+  "customerEligibilityDecision",
+];

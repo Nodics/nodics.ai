@@ -11,7 +11,7 @@
 
 /**
  * @module cms/service/interceptors/DefaultCmsComponentDetailInterceptorService
- * @description CMS interceptor service that generates component-detail codes and normalizes page/component relationship sources before save.
+ * @description Prepares CMS association identity before nested query construction and normalizes page/component relationship sources before save.
  * @layer interceptor
  * @owner cms
  * @override Project modules may replace this interceptor to customize component-detail identity or source assignment rules.
@@ -49,6 +49,7 @@ module.exports = {
      * @param {Object} response Interceptor response context.
      * @returns {Promise<boolean>} Resolves after detail code normalization.
      * @sideEffects Mutates `request.model.code`.
+     * @override Keep explicit codes unchanged; parent preparation and retirement use this selected exported identity helper.
      */
     generateCmsComponentDetailCode: function (request, response) {
         return new Promise((resolve, reject) => {
@@ -58,7 +59,7 @@ module.exports = {
     },
 
     /**
-     * Sets missing component-detail source values from the parent CMS page code.
+     * Prepares missing source and canonical code before nested page associations enter generated save query construction.
      *
      * @param {Object} request Nodics request context.
      * @param {Object} request.model CMS page model being saved.
@@ -66,22 +67,25 @@ module.exports = {
      * @returns {Promise<boolean>} Resolves after page component details are normalized.
      * @sideEffects Mutates entries in `request.model.cmsComponents`.
      */
-    setCompDetailSourceForPage: function (request, response) {
-        return new Promise((resolve, reject) => {
-            let model = request.model;
-            if (model.cmsComponents && model.cmsComponents.length > 0) {
-                model.cmsComponents.forEach(detail => {
-                    if (!detail.source) detail.source = model.code;
-                    if (!Array.isArray(detail.accessGroups)) {
-                        detail.accessGroups = Array.isArray(model.accessGroups) ? model.accessGroups.slice() : ['userGroup'];
-                    }
-                    if (request.options && request.options.allowCmsAssociationReplacement === true) {
-                        detail.allowCmsAssociationReplacement = true;
-                    }
-                });
+    setCompDetailSourceForPage: async function (request, response) {
+        let model = request.model;
+        if (model.cmsComponents && model.cmsComponents.length > 0) {
+            for (const detail of model.cmsComponents) {
+                if (!detail.source) detail.source = model.code;
+                if (!Array.isArray(detail.accessGroups)) {
+                    detail.accessGroups = Array.isArray(model.accessGroups) ? model.accessGroups.slice() : ['userGroup'];
+                }
+                if (request.options && request.options.allowCmsAssociationReplacement === true) {
+                    detail.allowCmsAssociationReplacement = true;
+                }
+                if (!detail.code) {
+                    await SERVICE.DefaultCmsComponentDetailInterceptorService.generateCmsComponentDetailCode(
+                        Object.assign({}, request, { model: detail }), response
+                    );
+                }
             }
-            resolve(true);
-        });
+        }
+        return true;
     },
 
     /**
@@ -101,16 +105,9 @@ module.exports = {
                 typeof SERVICE.DefaultCmsComponentDetailService.update !== 'function')) {
             return true;
         }
+        await SERVICE.DefaultCmsComponentDetailInterceptorService.setCompDetailSourceForPage(request, response);
         let incomingCodes = model.cmsComponents.reduce((codes, detail) => {
-            if (!detail.source) detail.source = model.code;
-            if (!Array.isArray(detail.accessGroups)) {
-                detail.accessGroups = Array.isArray(model.accessGroups) ? model.accessGroups.slice() : ['userGroup'];
-            }
-            if (request.options && request.options.allowCmsAssociationReplacement === true) {
-                detail.allowCmsAssociationReplacement = true;
-            }
-            let target = String(detail.target || '');
-            let code = detail.code || (target ? detail.source + '2' + target.charAt(0).toUpperCase() + target.slice(1) : undefined);
+            let code = detail.code;
             if (code) codes[code] = true;
             return codes;
         }, {});
@@ -137,7 +134,7 @@ module.exports = {
     },
 
     /**
-     * Sets missing component-detail source values from the parent CMS component code.
+     * Prepares missing source and canonical code before nested component associations enter generated save query construction.
      *
      * @param {Object} request Nodics request context.
      * @param {Object} request.model CMS component model being saved.
@@ -145,15 +142,18 @@ module.exports = {
      * @returns {Promise<boolean>} Resolves after sub-component details are normalized.
      * @sideEffects Mutates entries in `request.model.subComponents`.
      */
-    setCompDetailSourceForComp: function (request, response) {
-        return new Promise((resolve, reject) => {
-            let model = request.model;
-            if (model.subComponents && model.subComponents.length > 0) {
-                model.subComponents.forEach(detail => {
-                    if (!detail.source) detail.source = model.code;
-                });
+    setCompDetailSourceForComp: async function (request, response) {
+        let model = request.model;
+        if (model.subComponents && model.subComponents.length > 0) {
+            for (const detail of model.subComponents) {
+                if (!detail.source) detail.source = model.code;
+                if (!detail.code) {
+                    await SERVICE.DefaultCmsComponentDetailInterceptorService.generateCmsComponentDetailCode(
+                        Object.assign({}, request, { model: detail }), response
+                    );
+                }
             }
-            resolve(true);
-        });
+        }
+        return true;
     }
 };

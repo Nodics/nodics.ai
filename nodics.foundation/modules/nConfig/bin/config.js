@@ -10,6 +10,7 @@
  */
 
 const configurationBindings = require("../src/service/defaultConfigurationBindingService");
+const defaultLogger = require("../src/service/DefaultLoggerService");
 
 /**
  * @module config/bin/Config
@@ -46,6 +47,22 @@ module.exports = function () {
     } else {
       return _tntProperties["default"];
     }
+  };
+
+  /**
+   * Projects configuration for outward diagnostics through the canonical sanitizer.
+   * Internal consumers must continue using get/getProperties for effective values.
+   * This does not authorize configuration disclosure or create a public route.
+   * @param {string} [tenant] Existing tenant scope.
+   * @returns {Object} Independent bounded, masked configuration projection.
+   */
+  this.getPublicProperties = function (tenant) {
+    const logger =
+      typeof SERVICE !== "undefined" &&
+      typeof SERVICE.DefaultLoggerService?.redactLogValue === "function"
+        ? SERVICE.DefaultLoggerService
+        : defaultLogger;
+    return logger.redactLogValue(this.getProperties(tenant) || {});
   };
 
   this.get = function (key, tenant) {

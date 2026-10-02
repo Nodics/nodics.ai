@@ -19,26 +19,160 @@ const crypto = require('crypto');
  * @override Projects may layer cookie policy while preserving HttpOnly refresh, exact-origin, CSRF, and rotation guarantees.
  */
 module.exports = {
+    /** Switches explicitly from Employee refresh proof to distinct Customer cookies with exact origin/CSRF; both namespaces clear on uncertainty. @param {Object} request Reviewed participation revision. @returns {Promise<Object>} Memory-only customer access result. */
+    switchParticipation: async function (request) {
+        const employee = this.config({
+                ...request,
+                browserSessionPrincipalType: 'Employee',
+            }),
+            customerRequest = {
+                ...request,
+                browserSessionPrincipalType: 'Customer',
+            },
+            customer = this.config(customerRequest);
+        if (
+            new Set([
+                employee.refreshCookieName,
+                employee.csrfCookieName,
+                customer.refreshCookieName,
+                customer.csrfCookieName,
+            ]).size !== 4 ||
+            !request.httpResponse?.getHeader
+        )
+            throw new CLASSES.NodicsError('ERR_AUTH_00001');
+        this.validateOrigin(request, employee);
+        this.validateOrigin(customerRequest, customer);
+        const cookies = this.cookies(request);
+        this.validateCsrf(request, employee, cookies);
+        const clearBoth = () => {
+            this.clear(request, employee);
+            const first = request.httpResponse.getHeader('Set-Cookie');
+            this.clear(customerRequest, customer);
+            request.httpResponse.setHeader('Set-Cookie', [
+                ...first,
+                ...request.httpResponse.getHeader('Set-Cookie'),
+            ]);
+        };
+        let tokens;
+        try {
+            tokens =
+                await SERVICE.DefaultAuthenticationProviderService.switchCustomerParticipationContext(
+                    {
+                        ...request,
+                        body: request.httpRequest?.body || request.body || {},
+                        refreshToken: cookies[employee.refreshCookieName],
+                    },
+                );
+            await this.revokePreviousRefreshToken(
+                cookies[customer.refreshCookieName],
+            );
+            this.clear(request, employee);
+            const first = request.httpResponse.getHeader('Set-Cookie');
+            this.write(
+                customerRequest,
+                tokens.refreshToken,
+                crypto.randomBytes(32).toString('base64url'),
+                customer,
+            );
+            request.httpResponse.setHeader('Set-Cookie', [
+                ...first,
+                ...request.httpResponse.getHeader('Set-Cookie'),
+            ]);
+            return {
+                authToken: tokens.authToken,
+                loginId: tokens.loginId,
+                enterpriseCode: tokens.enterpriseCode,
+            };
+        } catch (error) {
+            try {
+                if (tokens?.refreshToken)
+                    await SERVICE.DefaultAuthenticationProviderService.removeToken(
+                        CONFIG.get('profileModuleName') || 'profile',
+                        tokens.refreshToken,
+                    );
+            } finally {
+                clearBoth();
+            }
+            throw error;
+        }
+    },
+    /** Switches only after exact-origin/CSRF validation; uncertain issuance clears cookies and never exposes refresh proof. @param {Object} request Secured browser command. @returns {Promise<Object>} Memory-only access result. */
+    switchEnterprise: async function (request) {
+        const config = this.config(request);
+        this.validateOrigin(request, config);
+        const cookies = this.cookies(request);
+        this.validateCsrf(request, config, cookies);
+        let tokens;
+        try {
+            tokens =
+                await SERVICE.DefaultAuthenticationProviderService.switchEnterpriseContext(
+                    {
+                        ...request,
+                        body: request.httpRequest?.body || request.body || {},
+                        refreshToken: cookies[config.refreshCookieName],
+                    },
+                );
+            this.write(
+                request,
+                tokens.refreshToken,
+                crypto.randomBytes(32).toString('base64url'),
+                config,
+            );
+            return {
+                authToken: tokens.authToken,
+                loginId: tokens.loginId,
+                enterpriseCode: tokens.enterpriseCode,
+            };
+        } catch (error) {
+            try {
+                if (tokens?.refreshToken)
+                    await SERVICE.DefaultAuthenticationProviderService.removeToken(
+                        CONFIG.get('profileModuleName') || 'profile',
+                        tokens.refreshToken,
+                    );
+            } finally {
+                this.clear(request, config);
+            }
+            throw error;
+        }
+    },
     /** Resolves request-scoped cookie policy without mutating configuration. Explicit local HTTP loopback support retains Secure cookies for HTTPS; origin authorization remains mandatory. */
     config: function (request) {
-        const key = request && request.browserSessionPrincipalType === 'Customer' ? 'profileCustomerBrowserSession' : 'profileBrowserSession';
+        const key =
+            request && request.browserSessionPrincipalType === 'Customer'
+                ? 'profileCustomerBrowserSession'
+                : 'profileBrowserSession';
         let config = CONFIG.get(key) || {};
         if (config.enabled !== true) {
-            throw new CLASSES.NodicsError('ERR_AUTH_00001', 'Browser sessions are disabled');
+            throw new CLASSES.NodicsError(
+                'ERR_AUTH_00001',
+                'Browser sessions are disabled',
+            );
         }
         if (config.secure === true && config.allowInsecureLoopback === true) {
             const origin = request?.httpRequest?.headers?.origin;
             try {
                 const parsed = new URL(origin);
-                if (parsed.protocol === 'http:' && ['localhost', '127.0.0.1', '[::1]'].includes(parsed.hostname)) {
+                if (
+                    parsed.protocol === 'http:' &&
+                    ['localhost', '127.0.0.1', '[::1]'].includes(
+                        parsed.hostname,
+                    )
+                ) {
                     config = Object.assign({}, config, { secure: false });
                 }
-            } catch (_) { /* Origin validation below rejects missing or invalid origins. */ }
+            } catch (_) {
+                /* Origin validation below rejects missing or invalid origins. */
+            }
         }
         let names = [config.refreshCookieName, config.csrfCookieName];
         let sameSite = ['Strict', 'Lax', 'None'];
-        if (names.some(name => typeof name !== 'string' ||
-            !/^[A-Za-z0-9_-]{1,64}$/.test(name)) ||
+        if (
+            names.some(
+                (name) =>
+                    typeof name !== 'string' ||
+                    !/^[A-Za-z0-9_-]{1,64}$/.test(name),
+            ) ||
             names[0] === names[1] ||
             typeof config.cookiePath !== 'string' ||
             !config.cookiePath.startsWith('/') ||
@@ -48,10 +182,13 @@ module.exports = {
             !Number.isInteger(config.maximumAgeSeconds) ||
             config.maximumAgeSeconds < 60 ||
             typeof config.secure !== 'boolean' ||
-            (config.allowInsecureLoopback !== undefined && typeof config.allowInsecureLoopback !== 'boolean') ||
-            (config.sameSite === 'None' && config.secure !== true)) {
+            (config.allowInsecureLoopback !== undefined &&
+                typeof config.allowInsecureLoopback !== 'boolean') ||
+            (config.sameSite === 'None' && config.secure !== true)
+        ) {
             throw new CLASSES.NodicsError(
-                'ERR_AUTH_00001', 'Browser session configuration is invalid'
+                'ERR_AUTH_00001',
+                'Browser session configuration is invalid',
             );
         }
         return config;
@@ -59,54 +196,82 @@ module.exports = {
 
     /** Parses request cookies into a decoded name-value map. */
     cookies: function (request) {
-        let header = request.httpRequest && request.httpRequest.headers &&
-            request.httpRequest.headers.cookie || '';
-        return String(header).split(';').reduce((result, item) => {
-            let index = item.indexOf('=');
-            if (index > 0) {
-                let name = item.slice(0, index).trim();
-                let value = item.slice(index + 1).trim();
-                if (name) {
-                    try {
-                        result[name] = decodeURIComponent(value);
-                    } catch (error) {
-                        throw new CLASSES.NodicsError(
-                            'ERR_AUTH_00001', 'Browser session cookie is invalid'
-                        );
+        let header =
+            (request.httpRequest &&
+                request.httpRequest.headers &&
+                request.httpRequest.headers.cookie) ||
+            '';
+        return String(header)
+            .split(';')
+            .reduce((result, item) => {
+                let index = item.indexOf('=');
+                if (index > 0) {
+                    let name = item.slice(0, index).trim();
+                    let value = item.slice(index + 1).trim();
+                    if (name) {
+                        try {
+                            result[name] = decodeURIComponent(value);
+                        } catch (error) {
+                            throw new CLASSES.NodicsError(
+                                'ERR_AUTH_00001',
+                                'Browser session cookie is invalid',
+                            );
+                        }
                     }
                 }
-            }
-            return result;
-        }, {});
+                return result;
+            }, {});
     },
 
     /** Enforces the configured credentialed browser origin policy. */
     validateOrigin: function (request, config) {
-        let origin = request.httpRequest && request.httpRequest.headers &&
+        let origin =
+            request.httpRequest &&
+            request.httpRequest.headers &&
             request.httpRequest.headers.origin;
-        let cors = CONFIG.get('httpHardening') && CONFIG.get('httpHardening').cors || {};
-        const policy = SERVICE.DefaultHttpHardeningService.resolveCorsOrigins(cors);
-        if (cors.enabled !== true || cors.allowCredentials !== true ||
-            !origin || policy.deniedOrigins.includes(origin) ||
-            policy.allowedOrigins.includes('*') || !policy.allowedOrigins.includes(origin)) {
-            throw new CLASSES.NodicsError('ERR_AUTH_00001', 'Browser session origin is not allowed');
+        let cors =
+            (CONFIG.get('httpHardening') && CONFIG.get('httpHardening').cors) ||
+            {};
+        const policy =
+            SERVICE.DefaultHttpHardeningService.resolveCorsOrigins(cors);
+        if (
+            cors.enabled !== true ||
+            cors.allowCredentials !== true ||
+            !origin ||
+            policy.deniedOrigins.includes(origin) ||
+            policy.allowedOrigins.includes('*') ||
+            !policy.allowedOrigins.includes(origin)
+        ) {
+            throw new CLASSES.NodicsError(
+                'ERR_AUTH_00001',
+                'Browser session origin is not allowed',
+            );
         }
         let parsed;
         try {
             parsed = new URL(origin);
         } catch (error) {
-            throw new CLASSES.NodicsError('ERR_AUTH_00001', 'Browser session origin is invalid');
-        }
-        let loopback = ['localhost', '127.0.0.1', '[::1]'].includes(parsed.hostname);
-        if (config.secure !== true && (!loopback || parsed.protocol !== 'http:')) {
             throw new CLASSES.NodicsError(
                 'ERR_AUTH_00001',
-                'Non-secure browser cookies are allowed only for loopback HTTP development'
+                'Browser session origin is invalid',
+            );
+        }
+        let loopback = ['localhost', '127.0.0.1', '[::1]'].includes(
+            parsed.hostname,
+        );
+        if (
+            config.secure !== true &&
+            (!loopback || parsed.protocol !== 'http:')
+        ) {
+            throw new CLASSES.NodicsError(
+                'ERR_AUTH_00001',
+                'Non-secure browser cookies are allowed only for loopback HTTP development',
             );
         }
         if (config.secure === true && parsed.protocol !== 'https:') {
             throw new CLASSES.NodicsError(
-                'ERR_AUTH_00001', 'Secure browser sessions require an HTTPS origin'
+                'ERR_AUTH_00001',
+                'Secure browser sessions require an HTTPS origin',
             );
         }
     },
@@ -121,10 +286,15 @@ module.exports = {
 
     /** Validates the double-submit CSRF token for a browser-session request. */
     validateCsrf: function (request, config, cookies) {
-        let header = request.httpRequest && request.httpRequest.headers &&
+        let header =
+            request.httpRequest &&
+            request.httpRequest.headers &&
             request.httpRequest.headers['x-csrf-token'];
         if (!this.equal(header, cookies[config.csrfCookieName])) {
-            throw new CLASSES.NodicsError('ERR_AUTH_00001', 'Browser session CSRF validation failed');
+            throw new CLASSES.NodicsError(
+                'ERR_AUTH_00001',
+                'Browser session CSRF validation failed',
+            );
         }
     },
 
@@ -134,7 +304,7 @@ module.exports = {
             name + '=' + encodeURIComponent(value),
             'Path=' + options.path,
             'SameSite=' + options.sameSite,
-            'Max-Age=' + String(options.maximumAgeSeconds)
+            'Max-Age=' + String(options.maximumAgeSeconds),
         ];
         if (options.httpOnly) parts.push('HttpOnly');
         if (options.secure) parts.push('Secure');
@@ -150,15 +320,15 @@ module.exports = {
                 sameSite: config.sameSite,
                 maximumAgeSeconds: config.maximumAgeSeconds,
                 httpOnly: true,
-                secure: config.secure
+                secure: config.secure,
             }),
             this.cookie(config.csrfCookieName, csrfToken, {
                 path: config.csrfCookiePath,
                 sameSite: config.sameSite,
                 maximumAgeSeconds: config.maximumAgeSeconds,
                 httpOnly: false,
-                secure: config.secure
-            })
+                secure: config.secure,
+            }),
         ]);
     },
 
@@ -167,13 +337,19 @@ module.exports = {
         request.httpResponse.setHeader('Cache-Control', 'no-store');
         request.httpResponse.setHeader('Set-Cookie', [
             this.cookie(config.refreshCookieName, '', {
-                path: config.cookiePath, sameSite: config.sameSite,
-                maximumAgeSeconds: 0, httpOnly: true, secure: config.secure
+                path: config.cookiePath,
+                sameSite: config.sameSite,
+                maximumAgeSeconds: 0,
+                httpOnly: true,
+                secure: config.secure,
             }),
             this.cookie(config.csrfCookieName, '', {
-                path: config.csrfCookiePath, sameSite: config.sameSite,
-                maximumAgeSeconds: 0, httpOnly: false, secure: config.secure
-            })
+                path: config.csrfCookiePath,
+                sameSite: config.sameSite,
+                maximumAgeSeconds: 0,
+                httpOnly: false,
+                secure: config.secure,
+            }),
         ]);
     },
 
@@ -187,10 +363,13 @@ module.exports = {
         if (!token) return Promise.resolve(false);
         let authentication = SERVICE.DefaultAuthenticationProviderService;
         let moduleName = CONFIG.get('profileModuleName') || 'profile';
-        return authentication.consumeToken(moduleName, token).then(() => true).catch(error => {
-            if (error && error.code === 'ERR_CACHE_00001') return false;
-            throw error;
-        });
+        return authentication
+            .consumeToken(moduleName, token)
+            .then(() => true)
+            .catch((error) => {
+                if (error && error.code === 'ERR_CACHE_00001') return false;
+                throw error;
+            });
     },
 
     /**
@@ -203,7 +382,7 @@ module.exports = {
             this.clear(request, config);
             return {
                 restored: false,
-                reason: 'BROWSER_SESSION_UNAVAILABLE'
+                reason: 'BROWSER_SESSION_UNAVAILABLE',
             };
         }
         throw error;
@@ -214,16 +393,20 @@ module.exports = {
         let config = this.config(request);
         this.validateOrigin(request, config);
         if (!tokens || !tokens.authToken || !tokens.refreshToken) {
-            throw new CLASSES.NodicsError('ERR_AUTH_00001', 'Browser session tokens are invalid');
+            throw new CLASSES.NodicsError(
+                'ERR_AUTH_00001',
+                'Browser session tokens are invalid',
+            );
         }
-        let existingRefreshToken = this.cookies(request)[config.refreshCookieName];
+        let existingRefreshToken =
+            this.cookies(request)[config.refreshCookieName];
         let revoke = this.revokePreviousRefreshToken(existingRefreshToken);
         return revoke.then(() => {
             let csrfToken = crypto.randomBytes(32).toString('base64url');
             this.write(request, tokens.refreshToken, csrfToken, config);
             return {
                 authToken: tokens.authToken,
-                loginId: request.loginId
+                loginId: request.loginId,
             };
         });
     },
@@ -235,22 +418,27 @@ module.exports = {
         let cookies = this.cookies(request);
         this.validateCsrf(request, config, cookies);
         if (!cookies[config.refreshCookieName]) {
-            throw new CLASSES.NodicsError('ERR_AUTH_00001', 'Browser session is unavailable');
+            throw new CLASSES.NodicsError(
+                'ERR_AUTH_00001',
+                'Browser session is unavailable',
+            );
         }
         return SERVICE.DefaultAuthenticationProviderService.rotateRefreshToken({
             refreshToken: cookies[config.refreshCookieName],
             entCode: request.entCode,
-            type: request.browserSessionPrincipalType || 'Employee'
-        }).then(tokens => {
-            let csrfToken = crypto.randomBytes(32).toString('base64url');
-            this.write(request, tokens.refreshToken, csrfToken, config);
-            return {
-                authToken: tokens.authToken,
-                loginId: tokens.loginId
-            };
-        }).catch(error => {
-            return this.handleMissingRefreshSession(request, config, error);
-        });
+            type: request.browserSessionPrincipalType || 'Employee',
+        })
+            .then((tokens) => {
+                let csrfToken = crypto.randomBytes(32).toString('base64url');
+                this.write(request, tokens.refreshToken, csrfToken, config);
+                return {
+                    authToken: tokens.authToken,
+                    loginId: tokens.loginId,
+                };
+            })
+            .catch((error) => {
+                return this.handleMissingRefreshSession(request, config, error);
+            });
     },
 
     /** Revokes the refresh credential and clears the browser session. */
@@ -260,13 +448,15 @@ module.exports = {
         let cookies = this.cookies(request);
         this.validateCsrf(request, config, cookies);
         let refreshToken = cookies[config.refreshCookieName];
-        let operation = refreshToken ?
-            SERVICE.DefaultAuthenticationProviderService.removeToken(
-                CONFIG.get('profileModuleName') || 'profile', refreshToken
-            ) : Promise.resolve();
+        let operation = refreshToken
+            ? SERVICE.DefaultAuthenticationProviderService.removeToken(
+                  CONFIG.get('profileModuleName') || 'profile',
+                  refreshToken,
+              )
+            : Promise.resolve();
         return operation.then(() => {
             this.clear(request, config);
             return true;
         });
-    }
+    },
 };

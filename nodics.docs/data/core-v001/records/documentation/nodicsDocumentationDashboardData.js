@@ -334,7 +334,7 @@ module.exports = {
     ],
     "statusSummary": {
       "sections": 49,
-      "pages": 130,
+      "pages": 143,
       "lifecycleState": "ONLINE"
     },
     "product": "nodicsDocumentationProduct",
@@ -668,7 +668,7 @@ module.exports = {
     ],
     "statusSummary": {
       "sections": 49,
-      "pages": 130,
+      "pages": 143,
       "searchable": true,
       "expandable": true
     },
@@ -1201,6 +1201,78 @@ module.exports = {
         "title": "Domain Commerce Accelerator Source Map",
         "summary": "How domain commerce, electronics product, telco catalog, and telco subscription accelerators extend Commerce without becoming duplicate authorities.",
         "order": 30
+      },
+      {
+        "code": "accelerators.circa-overview",
+        "title": "Circa and the eWaste Product",
+        "summary": "Source-backed product capability, audience, architecture and reference-application boundaries for Waste Management showcased through Circa.",
+        "order": 40
+      },
+      {
+        "code": "accelerators.circa-data-network",
+        "title": "Circa Data, Enterprises and Collection Network",
+        "summary": "Enterprise, employee, store, location, collection-point, catalogue and release configuration with installed-history preservation.",
+        "order": 50
+      },
+      {
+        "code": "accelerators.circa-submission-journey",
+        "title": "Circa Customer eWaste Submission",
+        "summary": "Customer authentication, fresh arrival, photo preparation, correction, confirmation, account workspace and safe recovery.",
+        "order": 60
+      },
+      {
+        "code": "accelerators.circa-operations-rewards",
+        "title": "Circa Review, Assets, Rewards and Environmental Evidence",
+        "summary": "Axis roles/scopes, verification, approval, custody, asset ownership, assessments, settlement and recovery boundaries.",
+        "order": 70
+      },
+      {
+        "code": "accelerators.circa-coupons-commerce",
+        "title": "Circa Shop, Coupon Purchase and Redemption",
+        "summary": "Published browsing, reviewed purchase, reservation, expiry, entitlements, outlet fulfillment, refunds and notification limits.",
+        "order": 80
+      },
+      {
+        "code": "accelerators.circa-customization",
+        "title": "Customize and Extend Circa Safely",
+        "summary": "Worked project-layer configuration, focused services, governed data/content, EMAIL/SMS resources and preserved framework guarantees.",
+        "order": 90
+      },
+      {
+        "code": "accelerators.circa-deployment-verification",
+        "title": "Circa Deployment, Operations and Verification",
+        "summary": "Runtime/data/publication gates, development commands, joint acceptance matrix, troubleshooting and safe deployment recovery.",
+        "order": 100
+      },
+      {
+        "code": "accelerators.circa-collection-reference",
+        "title": "Circa Collection-Centre Record Reference",
+        "summary": "Exact authored collection point identities, coordinates, categories, operator and infrastructure-owner relationships.",
+        "order": 110
+      },
+      {
+        "code": "accelerators.circa-enterprise-reference",
+        "title": "Circa Enterprise, Staff and Scope Reference",
+        "summary": "Enterprise source records, business capabilities, operational employees, resource scopes and ownership alignment caveats.",
+        "order": 120
+      },
+      {
+        "code": "accelerators.circa-source-inventory",
+        "title": "Circa Source Release and Record Inventory",
+        "summary": "Manifest versions, destinations, all source record counts, optional packages and publication boundaries.",
+        "order": 130
+      },
+      {
+        "code": "accelerators.circa-catalogue-reference",
+        "title": "Circa Store, Product, Price and Coupon Record Reference",
+        "summary": "Exact store, product, variant, points price, inventory, promotion, batch and code-pool sample records.",
+        "order": 140
+      },
+      {
+        "code": "accelerators.circa-configuration-reference",
+        "title": "Circa Configuration and Extension Reference",
+        "summary": "Application and domain configuration groups, current policy values, provider gates and later-layer customization.",
+        "order": 150
       }
     ],
     "journeyLinks": [
@@ -1218,10 +1290,25 @@ module.exports = {
         "label": "Domain Commerce Accelerator Source Map",
         "targetPage": "accelerators.domain-commerce-source-map",
         "route": "/docs/framework/accelerators-domain-commerce-source-map"
+      },
+      {
+        "label": "Circa and the eWaste Product",
+        "targetPage": "accelerators.circa-overview",
+        "route": "/docs/framework/accelerators/circa"
+      },
+      {
+        "label": "Circa Data, Enterprises and Collection Network",
+        "targetPage": "accelerators.circa-data-network",
+        "route": "/docs/framework/accelerators/circa/data-network"
+      },
+      {
+        "label": "Circa Customer eWaste Submission",
+        "targetPage": "accelerators.circa-submission-journey",
+        "route": "/docs/framework/accelerators/circa/submission"
       }
     ],
     "statusSummary": {
-      "pages": 3,
+      "pages": 15,
       "navigationDepth": 2
     },
     "accessMode": "PUBLIC",
@@ -2803,10 +2890,16 @@ module.exports = {
         "order": 10
       },
       {
+        "code": "communication.email-sms-templates",
+        "title": "Email and SMS Templates",
+        "summary": "Detailed notification flow, existing inventory, typed manifests, configuration and adoption, layered overrides, locale precedence, safe HTML, new email/SMS examples, frozen retries and troubleshooting.",
+        "order": 20
+      },
+      {
         "code": "communication.provider-runbooks",
         "title": "Communication Provider Runbooks",
-        "summary": "SMTP and SMS provider delivery, template, locale, suppression, retry, callback, receipt, privacy, and failure evidence guidance.",
-        "order": 20
+        "summary": "Source-backed SMTP controlled-test and SMS injected-sandbox configuration, credentials, frozen-content delivery, safeguards, uncertainty recovery and live qualification boundaries.",
+        "order": 30
       }
     ],
     "journeyLinks": [
@@ -2816,13 +2909,18 @@ module.exports = {
         "route": "/docs/framework/communication-overview"
       },
       {
+        "label": "Email and SMS Templates",
+        "targetPage": "communication.email-sms-templates",
+        "route": "/docs/framework/communication-email-sms-templates"
+      },
+      {
         "label": "Communication Provider Runbooks",
         "targetPage": "communication.provider-runbooks",
         "route": "/docs/framework/communication-provider-runbooks"
       }
     ],
     "statusSummary": {
-      "pages": 2,
+      "pages": 3,
       "navigationDepth": 2
     },
     "accessMode": "PUBLIC",

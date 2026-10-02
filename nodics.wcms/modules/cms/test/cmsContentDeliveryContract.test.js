@@ -9,7 +9,13 @@
 
  */
 
-/** Focused contract and behavior coverage for the CMS Phase 0/1 delivery foundation. */
+/**
+ * @module cms/test/cmsContentDeliveryContract
+ * @description Covers CMS delivery, association identity and nested generated-query composition without runtime providers.
+ * @layer test
+ * @owner cms
+ * @override Extend existing owner assertions when association identity or selected service customization changes.
+ */
 const assert = require('assert');
 const path = require('path');
 
@@ -67,6 +73,7 @@ assert.strictEqual(statusDefinitions.ERR_CMS_00093.code, '422');
 
 global.CONFIG = { get: () => undefined };
 global.SERVICE = {
+    DefaultCmsComponentDetailInterceptorService: componentDetailInterceptor,
     DefaultCmsComponentDetailService: {
         get: () => Promise.resolve({ result: [] }),
         remove: () => Promise.resolve({ result: true }),
@@ -86,7 +93,127 @@ global.SERVICE = {
     }
 };
 
+/** Exercises parent normalization, actual nested-save delegation and the actual generated primary query guard without providers. */
+async function verifyNestedAssociationIdentity() {
+    const previous = Object.fromEntries(['SERVICE', 'UTILS', 'CLASSES', 'NODICS'].map(key => [key, global[key]]));
+    const stringProperties = Object.getOwnPropertyDescriptors(String.prototype);
+    const queryBuilder = Object.assign({}, require('../../../../nodics.foundation/modules/nDatabase/database/src/service/procs/query/defaultModelQueryBuilderPipelineService'), { LOG: { debug() {} } });
+    const nested = require('../../../../nodics.foundation/modules/nDatabase/database/src/service/model/defaultModelService');
+    const base = require('../../../../nodics.foundation/modules/nDatabase/database/src/schemas/schemas');
+    const cmsSchemas = schemas.cms;
+    const childSchema = { ...cmsSchemas.cmsComponentDetail,
+        definition: { ...base.default.base.definition, ...cmsSchemas.cmsComponentDetail.definition } };
+    const reads = [], saved = [];
+    const auth = { tenant: 'tenant-a', entCode: 'enterprise-a' };
+    const selected = { ...componentDetailInterceptor };
+    try {
+        require('../../../../nodics.foundation/modules/nConfig/config/prescripts').addStringCamelCaseFunction();
+        global.CLASSES = { NodicsError: class extends Error {
+            constructor(code, message) { super(message); this.code = code; }
+            add(error) { this.causes = [...(this.causes || []), error]; }
+        } };
+        global.UTILS = { isObject: value => value !== null && typeof value === 'object' && !Array.isArray(value),
+            isObjectId: () => false, isArrayOfObject: value => Array.isArray(value) && value.every(item => item && typeof item === 'object') };
+        global.NODICS = { getModule: name => name === 'cms' ? { rawSchema: cmsSchemas } : undefined };
+        global.SERVICE = {
+            DefaultCmsComponentDetailInterceptorService: selected,
+            DefaultModelService: nested,
+            DefaultCmsComponentDetailService: {
+                get: async request => { reads.push(request); return { result: [] }; },
+                saveAll: async request => {
+                    assert.strictEqual(request.authData, auth);
+                    assert.strictEqual(request.tenant, 'tenant-a');
+                    assert.strictEqual(request.options.replaceAllMatchesByQuery, true);
+                    const result = [];
+                    for (const model of request.models) {
+                        const child = { ...request, model, schemaModel: { moduleName: 'cms', schemaName: 'cmsComponentDetail', rawSchema: childSchema } };
+                        queryBuilder.buildPrimeryQuery(child, {}, { stop() {}, nextSuccess: () => assert.fail('Primary code guard must remain active') });
+                        assert.deepStrictEqual(child.query, { code: model.code });
+                        await selected.generateCmsComponentDetailCode(child, {});
+                        await validation.validateAssociation(child);
+                        saved.push(structuredClone(model));
+                        result.push(model);
+                    }
+                    return { result };
+                }
+            }
+        };
+        const persist = async (schemaName, property, parent, normalize = true) => {
+            const request = { tenant: 'tenant-a', authData: auth, model: parent, options: { replaceAllMatchesByQuery: true },
+                schemaModel: { moduleName: 'cms', schemaName, rawSchema: cmsSchemas[schemaName] } };
+            if (normalize) await componentDetailInterceptor[property === 'subComponents' ? 'setCompDetailSourceForComp' : 'setCompDetailSourceForPage'](request, {});
+            await nested.saveNestedModels({ request, response: {}, model: parent, propertiesList: [property] });
+            return parent;
+        };
+        await assert.rejects(persist('cmsComponent', 'subComponents', { code: 'parent', subComponents: [{ source: 'parent', target: 'hero', slot: 'body', index: 0 }] }, false),
+            error => error.code === 'ERR_SAVE_00003');
+        assert.strictEqual(saved.length, 0, 'No child can reach validation/persistence before primary identity exists');
+        for (const [schemaName, property] of [['cmsComponent', 'subComponents'], ['cmsPage', 'cmsComponents']]) {
+            const parent = { code: 'parent', accessGroups: ['authors'], [property]: [
+                { target: 'hero', slot: 'body', index: 0, active: true },
+                { code: 'explicit-code', source: 'explicit-source', target: 'footer', slot: 'footer', index: 1, active: true }
+            ] };
+            await persist(schemaName, property, parent);
+            assert.deepStrictEqual(parent[property], ['parent2Hero', 'explicit-code']);
+            assert.strictEqual(saved.at(-1).source, 'explicit-source');
+            assert.strictEqual(saved.at(-2).slot, 'body');
+            assert.strictEqual(saved.at(-2).index, 0);
+            assert.strictEqual(saved.at(-2).active, true);
+        }
+        let overrideCalls = 0;
+        selected.generateCmsComponentDetailCode = async request => {
+            await Promise.resolve();
+            if (!request.model.code) { overrideCalls++; request.model.code = 'project-placement'; }
+            return true;
+        };
+        for (const [schemaName, property] of [['cmsComponent', 'subComponents'], ['cmsPage', 'cmsComponents']]) {
+            const parent = { code: 'custom-parent', [property]: [{ target: 'hero', slot: 'custom', index: 2 },
+                { code: 'custom-explicit', target: 'footer', slot: 'footer', index: 3 }] };
+            await persist(schemaName, property, parent);
+            assert.deepStrictEqual(parent[property], ['project-placement', 'custom-explicit']);
+        }
+        assert.strictEqual(overrideCalls, 2, 'Parent preparation uses selected asynchronous helper only for missing identities');
+        const customizedIdentity = selected.generateCmsComponentDetailCode;
+        selected.generateCmsComponentDetailCode = async () => true;
+        const beforeInvalidOverride = saved.length;
+        await assert.rejects(persist('cmsComponent', 'subComponents', { code: 'parent', subComponents: [{ target: 'hero', slot: 'body', index: 0 }] }),
+            error => error.code === 'ERR_SAVE_00003');
+        assert.strictEqual(saved.length, beforeInvalidOverride, 'An incomplete project helper cannot bypass the generated replacement identity guard');
+        selected.generateCmsComponentDetailCode = async () => { throw new Error('Project identity preparation denied'); };
+        await assert.rejects(persist('cmsPage', 'cmsComponents', { code: 'parent', cmsComponents: [{ target: 'hero', slot: 'body', index: 0 }] }),
+            /Project identity preparation denied/);
+        assert.strictEqual(saved.length, beforeInvalidOverride, 'Selected helper failure stops before nested save');
+        selected.generateCmsComponentDetailCode = customizedIdentity;
+        const service = SERVICE.DefaultCmsComponentDetailService;
+        service.get = async () => ({ result: [{ code: 'occupied-placement', source: 'parent', slot: 'body', index: 0, active: true }] });
+        const beforeCollision = saved.length;
+        await assert.rejects(persist('cmsComponent', 'subComponents', { code: 'parent', subComponents: [{ target: 'hero', slot: 'body', index: 0 }] }),
+            error => error.code === 'CMS_ASSOCIATION_POSITION_CONFLICT');
+        assert.strictEqual(saved.length, beforeCollision, 'Project identity cannot bypass existing association collision validation');
+        service.get = async () => ({ result: [] });
+        await assert.rejects(persist('cmsPage', 'cmsComponents', { code: 'parent', cmsComponents: [{ target: 'hero', slot: 'body', index: -1 }] }),
+            error => error.code === 'CMS_ASSOCIATION_INVALID');
+        const removed = [];
+        service.get = async () => ({ result: [{ code: 'project-placement' }, { code: 'old-placement' }] });
+        service.remove = async request => { removed.push(request.query.code); return { result: true }; };
+        await componentDetailInterceptor.retireObsoletePageComponentDetails({ tenant: 'tenant-a', authData: auth,
+            model: { code: 'custom-parent', cmsComponents: [{ target: 'hero', slot: 'body', index: 0 }] }, options: {} }, {});
+        assert.deepStrictEqual(removed, ['old-placement'], 'Retirement must compare selected prepared identities, not rederive default codes');
+        assert(reads.length > 0);
+        console.log('CMS nested association identity composition validated: strict primary guard, component/page defaults, explicit codes, selected override, collision/invariant and retirement');
+    } finally {
+        for (const [key, value] of Object.entries(previous)) {
+            if (value === undefined) delete global[key]; else global[key] = value;
+        }
+        for (const key of Object.getOwnPropertyNames(String.prototype)) {
+            if (!Object.hasOwn(stringProperties, key)) delete String.prototype[key];
+        }
+        Object.defineProperties(String.prototype, stringProperties);
+    }
+}
+
 (async () => {
+    await verifyNestedAssociationIdentity();
     await validation.validateRenderer({ model: { renderer: 'component.hero-banner' } });
     await validation.validateRenderer({ model: { renderer: 'agora.heroBanner' } });
     await assert.rejects(validation.validateRenderer({ model: { renderer: 'https://host/view.js' } }), error => error.code === 'CMS_RENDERER_KEY_INVALID');

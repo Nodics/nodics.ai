@@ -15,6 +15,23 @@ const crypto = require('node:crypto');
 
 /** @module inventory/src/service/defaultInventoryOperationService @description Owns explicit BackOffice stock operations while keeping balance and movement schemas read-only through generic CRUD. @layer service @owner inventory */
 module.exports = {
+    /** Rejects operational writes on the policy runtime without changing ordinary Online ownership. @returns {boolean} Runtime admission. @override Preserve stock/policy separation. */
+    requireOperationalRuntime: function () {
+        const role = CONFIG.get('runtimeRole');
+        if ((typeof role === 'string' ? role : role?.code) === 'COMMERCE_STAGED' ||
+            CONFIG.get('inventory')?.publication?.runtimeRole === 'STAGED')
+            throw new Error('Inventory operational mutation is forbidden on Staged policy runtime');
+        return true;
+    },
+    /** Checks immutable release targets without granting stock authority. Live balances are derived through owner operations, not operational snapshot imports. @param {Object} request Trusted target metadata. @returns {boolean} Admission. @override Additional owner admission must retain stock provenance and runtime guards. */
+    validateImportTarget: function (request) {
+        if (['inventoryBalance', 'inventoryMovement', 'inventoryReservation'].includes(request.schemaName)) {
+            this.requireOperationalRuntime();
+            if (request.lifecycle === 'OPERATIONAL_VERSIONED')
+                throw new Error('Operational stock snapshots require governed Inventory operations; direct release import is not approved');
+        }
+        return true;
+    },
     /** Unwraps a standard result envelope while preserving raw provider values. */
     unwrap: function (response) { return response && Object.prototype.hasOwnProperty.call(response, 'result') ? response.result : response; },
     /** Builds service credentials for Inventory-owned persistence. @param {Object} request Request. @returns {Object} Service auth data. */
@@ -58,6 +75,7 @@ module.exports = {
     },
     /** Persists a balance through the generated schema service. @param {Object} request Request. @param {Object} balance Balance. @returns {Promise<Object>} Saved balance. */
     saveBalance: async function (request, balance) {
+        this.requireOperationalRuntime();
         const service = SERVICE.DefaultInventoryBalanceService;
         const payload = { tenant: request.tenant, authData: this.serviceAuthData(request), query: Object.assign({ tenant: request.tenant, code: balance.code }, request.enterpriseCode ? { enterpriseCode: request.enterpriseCode } : {}), model: Object.assign({}, balance, request.enterpriseCode ? { enterpriseCode: request.enterpriseCode } : {}) };
         if (service.update) return this.unwrap(await service.update(payload));
@@ -66,6 +84,7 @@ module.exports = {
     },
     /** Persists append-only stock movement evidence. @param {Object} request Request. @param {Object} movement Movement. @returns {Promise<Object>} Saved movement. */
     saveMovement: async function (request, movement) {
+        this.requireOperationalRuntime();
         if (!SERVICE.DefaultInventoryMovementService || !SERVICE.DefaultInventoryMovementService.save) return movement;
         return this.unwrap(await SERVICE.DefaultInventoryMovementService.save({ tenant: request.tenant, authData: this.serviceAuthData(request), model: movement }));
     },

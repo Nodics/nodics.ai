@@ -17,40 +17,101 @@ const crypto = require("node:crypto");
 module.exports = {
   /** Identifies policy authoring without changing disabled legacy behavior. */
   isStagedPolicyRuntime: function () {
-    return typeof CONFIG !== 'undefined' && (CONFIG.get('promotion') || {}).publication?.runtimeRole === 'STAGED';
+    return (
+      typeof CONFIG !== "undefined" &&
+      (CONFIG.get("promotion") || {}).publication?.runtimeRole === "STAGED"
+    );
   },
   /** Operational mutations never run against the policy-authoring store. */
   requireOperationalRuntime: function () {
-    if (this.isStagedPolicyRuntime()) throw new Error('Promotion operational mutation is forbidden on Staged policy runtime');
+    if (this.isStagedPolicyRuntime())
+      throw new Error(
+        "Promotion operational mutation is forbidden on Staged policy runtime",
+      );
+    return true;
+  },
+  /**
+   * Rejects operational release targets before nImport claims any installation.
+   * This read-only admission does not authorize rows, publication or issuance;
+   * generated schema interceptors remain the mutation authority.
+   * @param {Object} request Trusted release-header target metadata, never a row.
+   * @returns {boolean} True when the runtime permits this target class.
+   * @override Later layers may extend admission without weakening runtime guards.
+   */
+  validateImportTarget: function (request) {
+    if (
+      [
+        "coupon",
+        "couponBatch",
+        "promotionBudgetLedger",
+        "promotionRedemption",
+        "discountDecision",
+      ].includes(request.schemaName)
+    ) {
+      this.requireOperationalRuntime();
+      if (request.lifecycle === "OPERATIONAL_VERSIONED") {
+        const policy = CONFIG.get("promotion") || {};
+        if (policy.sellerAuthorization?.enabled !== true ||
+            policy.sellerAuthorization.qualified !== true ||
+            policy.publication?.delivery?.enabled !== true)
+          throw new Error("Operational coupon release requires published policy and qualified issuer authorization");
+        // Raw token/batch snapshots are not equivalent to an issuer-approved issuance.
+        throw new Error("Operational coupon snapshots require governed issuance; direct release import is not approved");
+      }
+    }
     return true;
   },
   /** Guards schema and draft writes, including dotted and operator updates. */
   validatePolicyAuthoring: function (request) {
     if (!this.isStagedPolicyRuntime()) return true;
-    const visit = (value, prefix = '') => {
-      if (!value || typeof value !== 'object') return;
+    const visit = (value, prefix = "") => {
+      if (!value || typeof value !== "object") return;
       for (const [key, item] of Object.entries(value)) {
-        if (key.startsWith('$') && !['$set', '$setOnInsert', '$unset'].includes(key)) {
-          throw new Error('Staged promotion authoring requires explicit policy field updates');
+        if (
+          key.startsWith("$") &&
+          !["$set", "$setOnInsert", "$unset"].includes(key)
+        ) {
+          throw new Error(
+            "Staged promotion authoring requires explicit policy field updates",
+          );
         }
-        const field = key.startsWith('$') ? prefix : prefix ? prefix + '.' + key : key;
-        if (field === 'analytics' || field.startsWith('analytics.') ||
-            field.startsWith('budget.') && field !== 'budget.limit') {
-          throw new Error('Staged promotion authoring excludes operational consumption');
+        const field = key.startsWith("$")
+          ? prefix
+          : prefix
+            ? prefix + "." + key
+            : key;
+        if (
+          field === "analytics" ||
+          field.startsWith("analytics.") ||
+          (field.startsWith("budget.") && field !== "budget.limit")
+        ) {
+          throw new Error(
+            "Staged promotion authoring excludes operational consumption",
+          );
         }
-        if (field === 'budget' && (item === null || typeof item !== 'object' || Array.isArray(item))) {
-          throw new Error('Staged promotion budget must contain policy limit only');
+        if (
+          field === "budget" &&
+          (item === null || typeof item !== "object" || Array.isArray(item))
+        ) {
+          throw new Error(
+            "Staged promotion budget must contain policy limit only",
+          );
         }
         visit(item, field);
       }
     };
-    for (const model of [].concat(request.models || request.model || request.payload || [])) visit(model);
+    for (const model of [].concat(
+      request.models || request.model || request.payload || [],
+    ))
+      visit(model);
     return true;
   },
   /** Unwraps a standard result envelope while preserving raw provider values. */
-  unwrap: function (response) { return response && Object.prototype.hasOwnProperty.call(response, "result")
+  unwrap: function (response) {
+    return response && Object.prototype.hasOwnProperty.call(response, "result")
       ? response.result
-      : response; },
+      : response;
+  },
   /**
    * Builds service-account authorization context for Promotion-owned internal reads and mutations.
    * Customer and BackOffice route permissions guard entry into this operation service; generated schema
@@ -256,22 +317,41 @@ module.exports = {
    * @override Later-loaded modules may replace this member through the standard merge contract.
    */
   promotions: async function (request) {
-    const delivery = typeof CONFIG === 'undefined' ? {} : ((CONFIG.get('promotion') || {}).publication || {}).delivery || {};
-    if (delivery.enabled === true && SERVICE.DefaultPromotionPublicationService.deliveryEnabled(request)) {
+    const delivery =
+      typeof CONFIG === "undefined"
+        ? {}
+        : ((CONFIG.get("promotion") || {}).publication || {}).delivery || {};
+    if (
+      delivery.enabled === true &&
+      SERVICE.DefaultPromotionPublicationService.deliveryEnabled(request)
+    ) {
       const publication = SERVICE.DefaultPromotionPublicationService;
       const auth = request.authData || {};
       const enterpriseCode = auth.enterpriseCode || auth.entCode;
-      if (!auth.tenant || request.tenant !== auth.tenant || !enterpriseCode ||
-          [auth.enterpriseCode, auth.entCode, request.enterpriseCode, request.entCode]
-            .some(value => value !== undefined && value !== enterpriseCode)) {
-        throw new Error('Authenticated Promotion policy scope mismatch');
+      if (
+        !auth.tenant ||
+        request.tenant !== auth.tenant ||
+        !enterpriseCode ||
+        [
+          auth.enterpriseCode,
+          auth.entCode,
+          request.enterpriseCode,
+          request.entCode,
+        ].some((value) => value !== undefined && value !== enterpriseCode)
+      ) {
+        throw new Error("Authenticated Promotion policy scope mismatch");
       }
       const context = { ...request, enterpriseCode };
       context.authData = this.serviceAuthData(context);
-      const policies = [], seen = new Set();
+      const policies = [],
+        seen = new Set();
       for (const rootCode of publication.deliveryRoots(request)) {
-        for (const policy of await publication.readActivatedWithConsumption(context, rootCode)) {
-          if (seen.has(policy.code)) throw new Error('Activated promotion membership conflict');
+        for (const policy of await publication.readActivatedWithConsumption(
+          context,
+          rootCode,
+        )) {
+          if (seen.has(policy.code))
+            throw new Error("Activated promotion membership conflict");
           seen.add(policy.code);
           policies.push(policy);
         }
@@ -370,6 +450,249 @@ module.exports = {
   persistedModel: function (persisted, fallback) {
     const candidate = Array.isArray(persisted) ? persisted[0] : persisted;
     return candidate && candidate.code ? candidate : fallback;
+  },
+  /** Reads exactly one current coupon through its generated owner without cache. @param {Object} request Runtime context. @param {string} code Coupon identity. @returns {Promise<Object>} Authoritative coupon. */
+  readLifecycleCoupon: async function (request, code) {
+    const service = SERVICE.DefaultCouponService;
+    if (!service?.get)
+      throw new Error("Coupon persistence owner is unavailable");
+    const response = await service.get({
+      tenant: request.tenant,
+      authData: this.serviceAuthData(request),
+      query: this.enterpriseQuery(request, { tenant: request.tenant, code }),
+      options: { recursive: false, skipItemCache: true },
+      searchOptions: { pageSize: 2 },
+    });
+    this.assertLifecycleEnvelope(response);
+    const value = response.result;
+    const rows = Array.isArray(value) ? value : value?.code ? [value] : [];
+    if (rows.length !== 1 || rows[0].code !== code)
+      throw new Error("Coupon lifecycle evidence is missing or ambiguous");
+    return rows[0];
+  },
+  /** Rejects failed generated-owner envelopes before accepting lifecycle evidence. @param {Object} response Generated response. @returns {void} Successful envelope or rejection. */
+  assertLifecycleEnvelope: function (response) {
+    if (
+      !response ||
+      !/^SUC_/.test(response.code || "") ||
+      response.success === false ||
+      response.error ||
+      (response.errors &&
+        (!Array.isArray(response.errors) || response.errors.length))
+    )
+      throw new Error("Coupon lifecycle persistence was not confirmed");
+  },
+  /** Commits a coupon CAS and verifies the exact saved lifecycle patch. @param {Object} request Context. @param {Object} previous Current coupon. @param {Object} model Intended successor. @returns {Promise<Object>} Saved evidence. */
+  commitLifecycleCoupon: async function (request, previous, model) {
+    const service = SERVICE.DefaultCouponService;
+    if (
+      !service?.update ||
+      !Number.isSafeInteger(previous.revision) ||
+      previous.revision < 0
+    )
+      throw new Error("Revisioned coupon persistence owner is required");
+    const command = {
+      tenant: request.tenant,
+      authData: this.serviceAuthData(request),
+      query: this.enterpriseQuery(request, {
+        tenant: request.tenant,
+        code: previous.code,
+        revision: previous.revision,
+        status: previous.status,
+      }),
+      model,
+    };
+    const response = SERVICE.DefaultCouponSellerAuthorizationService
+      ? await SERVICE.DefaultCouponSellerAuthorizationService.writeCoupon(
+          command,
+        )
+      : await service.update(command);
+    this.assertLifecycleEnvelope(response);
+    if (
+      response.result?.acknowledged !== true ||
+      response.result?.matchedCount !== 1
+    )
+      throw new Error(
+        "Coupon lifecycle write lost its revision; inspect before retrying",
+      );
+    const saved = await this.readLifecycleCoupon(request, previous.code);
+    if (
+      Object.keys(model).some(
+        (key) => JSON.stringify(saved[key]) !== JSON.stringify(model[key]),
+      )
+    )
+      throw new Error(
+        "Coupon lifecycle readback changed; inspect before retrying",
+      );
+    return saved;
+  },
+  /** Captures bounded purchase-relative rights from the current owner campaign, never caller policy. @param {Object} request Context. @param {Object} coupon Reserved unit. @param {Date} purchasedAt Original successful sale time. @returns {Promise<Object>} Retained rights patch or legacy empty patch. */
+  capturePurchasedRights: async function (request, coupon, purchasedAt) {
+    const service = SERVICE.DefaultPromotionService;
+    if (!service?.get) throw new Error("Coupon campaign owner is required");
+    const governedSeller = Boolean(
+      coupon.sellerAuthorizationProof ||
+      CONFIG.get("promotion")?.sellerAuthorization?.enabled === true,
+    );
+    if (governedSeller) {
+      if (!SERVICE.DefaultCouponSellerAuthorizationService?.authorizeSale)
+        throw new Error("Coupon seller authorization owner is unavailable");
+      await SERVICE.DefaultCouponSellerAuthorizationService.authorizeSale(
+        request,
+        coupon,
+      );
+    }
+    const response = await service.get({
+      tenant: request.tenant,
+      authData: this.serviceAuthData(request),
+      query: governedSeller
+        ? {
+            tenant: request.tenant,
+            code: coupon.promotionCode,
+          }
+        : this.enterpriseQuery(request, {
+            tenant: request.tenant,
+            code: coupon.promotionCode,
+          }),
+      options: { recursive: false, skipItemCache: true },
+      searchOptions: { pageSize: 2 },
+    });
+    this.assertLifecycleEnvelope(response);
+    const value = response.result,
+      rows = Array.isArray(value) ? value : value?.code ? [value] : [];
+    const campaign = rows.length === 1 ? rows[0] : undefined;
+    if (
+      !campaign ||
+      campaign.code !== coupon.promotionCode ||
+      campaign.status !== "ACTIVE" ||
+      campaign.active === false
+    )
+      throw new Error("The coupon campaign is not available for purchase");
+    if (governedSeller)
+      SERVICE.DefaultCouponSellerAuthorizationService.proof(
+        request,
+        coupon,
+        campaign,
+      );
+    const purchasedTime = purchasedAt?.getTime();
+    if (
+      !Number.isFinite(purchasedTime) ||
+      (campaign.validFrom &&
+        (!Number.isFinite(Date.parse(campaign.validFrom)) ||
+          Date.parse(campaign.validFrom) > purchasedTime)) ||
+      (campaign.validTo &&
+        (!Number.isFinite(Date.parse(campaign.validTo)) ||
+          Date.parse(campaign.validTo) <= purchasedTime))
+    )
+      throw new Error("Coupon campaign is outside its sale window");
+    const policy = campaign.purchasedCouponPolicy;
+    if (!policy) return {};
+    const qualification = CONFIG.get("promotion").purchasedRights;
+    if (qualification?.enabled !== true || qualification.qualified !== true)
+      throw new Error("Purchased coupon rights are not qualified");
+    const days = policy.validityDays,
+      maximum = qualification.maximumValidityDays;
+    if (
+      !Number.isSafeInteger(maximum) ||
+      maximum < 1 ||
+      maximum > 36500 ||
+      !Number.isSafeInteger(days) ||
+      days < 1 ||
+      days > maximum ||
+      !Number.isSafeInteger(campaign.revision) ||
+      campaign.revision < 0 ||
+      !Number.isFinite(purchasedAt.getTime())
+    )
+      throw new Error("Purchased coupon policy is invalid");
+    if (
+      Object.keys(policy).some(
+        (key) => !["validityDays", "terms", "refundPolicy"].includes(key),
+      ) ||
+      !Array.isArray(policy.terms) ||
+      policy.terms.length > 30 ||
+      policy.terms.some(
+        (line) =>
+          typeof line !== "string" || !line.trim() || line.length > 1000,
+      )
+    )
+      throw new Error("Purchased coupon terms are invalid");
+    if (
+      policy.refundPolicy &&
+      (Object.keys(policy.refundPolicy).some(
+        (key) => !["windowHours", "requestTypes"].includes(key),
+      ) ||
+        !Number.isSafeInteger(policy.refundPolicy.windowHours) ||
+        policy.refundPolicy.windowHours < 1 ||
+        policy.refundPolicy.windowHours > days * 24 ||
+        !Array.isArray(policy.refundPolicy.requestTypes) ||
+        !policy.refundPolicy.requestTypes.length ||
+        new Set(policy.refundPolicy.requestTypes).size !==
+          policy.refundPolicy.requestTypes.length ||
+        policy.refundPolicy.requestTypes.some(
+          (type) => !["REFUND", "CANCELLATION"].includes(type),
+        ))
+    )
+      throw new Error("Purchased refund policy is invalid");
+    const snapshot = {
+      version: 1,
+      promotionCode: campaign.code,
+      promotionRevision: campaign.revision,
+      purchasedAt: purchasedAt.toISOString(),
+      validityDays: days,
+      name: campaign.name,
+      conditions: campaign.conditions || {},
+      actions: campaign.actions || {},
+      terms: policy.terms,
+      refundPolicy: policy.refundPolicy,
+      issuerEnterpriseRef: coupon.issuerEnterpriseRef,
+      vendorEnterpriseRef: coupon.vendorEnterpriseRef,
+    };
+    if (Buffer.byteLength(JSON.stringify(snapshot), "utf8") > 65536)
+      throw new Error("Purchased coupon policy exceeds its bound");
+    return {
+      validFrom: purchasedAt,
+      validTo: new Date(purchasedAt.getTime() + days * 86400000),
+      purchasePolicy: JSON.parse(JSON.stringify(snapshot)),
+    };
+  },
+  /** Resolves retained campaign rules only under independent qualification; legacy codes keep legacy policy. @param {Object} coupon Purchased code. @param {Object} campaign Current campaign. @returns {Object} Authoritative redemption rules. */
+  purchasedCampaign: function (coupon, campaign) {
+    if (!coupon.purchasePolicy) return campaign;
+    const p = CONFIG.get("promotion").purchasedRights,
+      snapshot = coupon.purchasePolicy;
+    if (
+      p?.enabled !== true ||
+      p.qualified !== true ||
+      snapshot.version !== 1 ||
+      snapshot.promotionCode !== coupon.promotionCode ||
+      campaign?.code !== coupon.promotionCode ||
+      !Number.isSafeInteger(snapshot.promotionRevision) ||
+      snapshot.promotionRevision < 0 ||
+      !require("node:util").isDeepStrictEqual(
+        snapshot.issuerEnterpriseRef,
+        coupon.issuerEnterpriseRef,
+      ) ||
+      !require("node:util").isDeepStrictEqual(
+        snapshot.vendorEnterpriseRef,
+        coupon.vendorEnterpriseRef,
+      ) ||
+      Buffer.byteLength(JSON.stringify(snapshot), "utf8") > 65536 ||
+      !coupon.soldAt ||
+      Date.parse(snapshot.purchasedAt) !== Date.parse(coupon.soldAt) ||
+      !Number.isSafeInteger(snapshot.validityDays) ||
+      snapshot.validityDays < 1 ||
+      Date.parse(coupon.validTo) !==
+        Date.parse(coupon.soldAt) + snapshot.validityDays * 86400000
+    )
+      throw new Error("Purchased coupon rights cannot be verified");
+    return {
+      ...snapshot,
+      code: snapshot.promotionCode,
+      active: true,
+      status: "ACTIVE",
+      validFrom: coupon.soldAt,
+      validTo: coupon.validTo,
+    };
   },
   /**
    * Executes `idempotencyKey` as a loader-visible operation owned by this module.
@@ -984,11 +1307,45 @@ module.exports = {
   reserveCouponCodeForCheckout: async function (request) {
     this.requireOperationalRuntime();
     const existing = await this.findCouponByIdempotency(request);
-    if (existing) return existing;
     const payload = request.payload || {};
+    if (
+      !request.ownerId ||
+      !request.idempotencyKey ||
+      !payload.orderCode ||
+      !payload.batchCode
+    )
+      throw new Error("Coupon reservation identity is required");
+    if (existing) {
+      const current = await this.readLifecycleCoupon(request, existing.code);
+      if (
+        current.idempotencyKey !== request.idempotencyKey ||
+        current.orderCode !== payload.orderCode ||
+        current.batchCode !== payload.batchCode ||
+        current.productCode !== payload.productCode ||
+        current.entryCode !== payload.entryCode ||
+        !["RESERVED", "SOLD", "DELIVERED", "CLAIMED", "REDEEMED"].includes(
+          current.status,
+        ) ||
+        (current.soldTo || current.reservedFor) !== request.ownerId
+      )
+        throw new Error(
+          "Coupon reservation replay differs from its original purchase",
+        );
+      return current;
+    }
     const coupons = await this.loadCouponPool(request);
     const coupon = coupons.find((item) => this.couponSaleAvailable(item));
     if (!coupon) throw new Error("Coupon code stock unavailable");
+    if (
+      CONFIG.get("promotion")?.sellerAuthorization?.enabled === true &&
+      !SERVICE.DefaultCouponSellerAuthorizationService?.authorizeSale
+    )
+      throw new Error("Coupon seller authorization owner is unavailable");
+    const sellerAuthorizationProof =
+      await SERVICE.DefaultCouponSellerAuthorizationService?.authorizeSale(
+        request,
+        coupon,
+      );
     const reservedAt = this.schemaDate(request.now);
     const reservedUntil = payload.reservedUntil
       ? this.schemaDate(payload.reservedUntil)
@@ -1009,24 +1366,12 @@ module.exports = {
         idempotencyKey: request.idempotencyKey,
         reservedAt,
         reservedUntil,
+        ...(sellerAuthorizationProof ? { sellerAuthorizationProof } : {}),
         revision: Number(coupon.revision || 0) + 1,
       }),
       request,
     );
-    return this.persistedModel(
-      await this.updateOrSave(SERVICE.DefaultCouponService, {
-        tenant: request.tenant,
-        authData: this.serviceAuthData(request),
-        query: this.enterpriseQuery(request, {
-          tenant: request.tenant,
-          code: coupon.code,
-          revision: coupon.revision,
-          status: coupon.status,
-        }),
-        model,
-      }),
-      model,
-    );
+    return this.commitLifecycleCoupon(request, coupon, model);
   },
   /**
    * Executes `transitionReservedCouponSale` as a loader-visible operation owned by this module.
@@ -1067,12 +1412,9 @@ module.exports = {
   /** Locks or completes revocation of an unused purchased coupon under a stable approved order refund reference. */
   revokePurchasedCoupon: async function (request) {
     this.requireOperationalRuntime();
-    const coupon = await this.getOne(SERVICE.DefaultCouponService, {
-      tenant: request.tenant,
-      authData: this.serviceAuthData(request),
-      query: this.enterpriseQuery(request, { code: request.couponCode }),
-      pageSize: 1,
-    });
+    if (!request.refundCode)
+      throw new Error("Approved refund reference is required");
+    const coupon = await this.readLifecycleCoupon(request, request.couponCode);
     if (
       !coupon ||
       coupon.soldTo !== request.ownerId ||
@@ -1098,28 +1440,13 @@ module.exports = {
       },
       request,
     );
-    await this.updateOrSave(SERVICE.DefaultCouponService, {
-      tenant: request.tenant,
-      authData: this.serviceAuthData(request),
-      query: this.enterpriseQuery(request, {
-        code: coupon.code,
-        status: coupon.status,
-        revision: coupon.revision,
-      }),
-      model,
-    });
-    const saved = await this.getOne(SERVICE.DefaultCouponService, {
-      tenant: request.tenant,
-      authData: this.serviceAuthData(request),
-      query: this.enterpriseQuery(request, { code: coupon.code }),
-      pageSize: 1,
-    });
+    const saved = await this.commitLifecycleCoupon(request, coupon, model);
     if (saved.status !== target || saved.refundReference !== request.refundCode)
       throw new Error("Coupon refund lock changed; reload before retrying");
     return { code: saved.code, status: saved.status };
   },
   /** Enforces supported purchased-code conditions; richer campaigns require an owning Promotion override before merchant use. */
-  validateMerchantConditions: function (campaign, coupon) {
+  validateMerchantConditions: function (campaign, coupon, request = {}) {
     const conditions = campaign.conditions || {};
     if (
       Object.keys(conditions).some(
@@ -1128,6 +1455,10 @@ module.exports = {
             "couponRequired",
             "customerOwnsCouponCode",
             "sourceProductCode",
+            "storeCodes",
+            ...(CONFIG.get("promotion")?.merchantBenefits?.enabled === true
+              ? ["minimumSubtotal"]
+              : []),
           ].includes(k),
       )
     )
@@ -1139,6 +1470,19 @@ module.exports = {
       conditions.sourceProductCode !== coupon.productCode
     )
       throw new Error("The coupon product does not match its campaign");
+    if (
+      conditions.storeCodes !== undefined &&
+      (!Array.isArray(conditions.storeCodes) ||
+        !conditions.storeCodes.length ||
+        conditions.storeCodes.length > 100 ||
+        new Set(conditions.storeCodes).size !== conditions.storeCodes.length ||
+        conditions.storeCodes.some(
+          (code) =>
+            typeof code !== "string" || !/^[A-Za-z0-9_.:-]{1,128}$/.test(code),
+        ) ||
+        !conditions.storeCodes.includes(request.storeCode))
+    )
+      throw new Error("This outlet is not eligible for the campaign");
   },
   /** Reads and validates a sold POS coupon without consuming it or exposing its secret. */
   validateMerchantCoupon: async function (request) {
@@ -1165,10 +1509,11 @@ module.exports = {
         coupon.claimTargetCode !== request.targetCode)
     )
       throw new Error("The coupon is bound to another fulfillment target");
-    const campaign = await this.getOne(
+    let campaign = await this.getOne(
       SERVICE.DefaultPromotionService,
       query(coupon.promotionCode),
     );
+    campaign = this.purchasedCampaign(coupon, campaign);
     if (
       !campaign ||
       campaign.status !== "ACTIVE" ||
@@ -1195,11 +1540,23 @@ module.exports = {
       )
         throw new Error("The coupon has expired; request manual order review");
     }
-    this.validateMerchantConditions(campaign, coupon);
+    this.validateMerchantConditions(campaign, coupon, request);
+    if (
+      CONFIG.get("promotion")?.merchantBenefits?.enabled === true &&
+      !SERVICE.DefaultPromotionMerchantBenefitService?.validate
+    )
+      throw new Error("Merchant benefit owner is unavailable");
+    const benefit =
+      await SERVICE.DefaultPromotionMerchantBenefitService?.validate(
+        request,
+        campaign,
+        coupon,
+      );
     return {
       eligible: true,
       promotionCode: coupon.promotionCode,
       conditions: {
+        ...(benefit ? { benefit } : {}),
         name: campaign.name,
         validFrom: campaign.validFrom,
         validTo: campaign.validTo,
@@ -1214,15 +1571,7 @@ module.exports = {
     const payload = request.payload || {};
     const couponCode = payload.couponCode || request.couponCode;
     if (!couponCode) throw new Error("Coupon code is required");
-    const coupon = await this.getOne(SERVICE.DefaultCouponService, {
-      tenant: request.tenant,
-      authData: this.serviceAuthData(request),
-      query: this.enterpriseQuery(request, {
-        tenant: request.tenant,
-        code: couponCode,
-      }),
-      pageSize: 1,
-    });
+    const coupon = await this.readLifecycleCoupon(request, couponCode);
     if (!coupon) throw new Error("Coupon was not found");
     const ownerId = request.ownerId || coupon.reservedFor || coupon.soldTo;
     if (
@@ -1233,6 +1582,45 @@ module.exports = {
       throw new Error("Coupon is reserved for another customer");
     if (coupon.soldTo && request.ownerId && coupon.soldTo !== request.ownerId)
       throw new Error("Coupon is owned by another customer");
+    if (targetStatus === "SOLD" || targetStatus === "DELIVERED") {
+      if (
+        !request.ownerId ||
+        !payload.orderCode ||
+        (coupon.orderCode && coupon.orderCode !== payload.orderCode) ||
+        !request.idempotencyKey ||
+        coupon.idempotencyKey !== request.idempotencyKey
+      )
+        throw new Error(
+          "Coupon purchase identity does not match its reservation",
+        );
+      if (
+        ["SOLD", "DELIVERED", "CLAIMED", "REDEEMED"].includes(coupon.status)
+      ) {
+        if (
+          coupon.soldTo !== request.ownerId ||
+          coupon.orderCode !== payload.orderCode ||
+          !coupon.soldAt
+        )
+          throw new Error("Coupon original purchase evidence is incomplete");
+        if (targetStatus === "SOLD" || coupon.status !== "SOLD") return coupon;
+      }
+      if (targetStatus === "SOLD" && coupon.status !== "RESERVED")
+        throw new Error("Only a reserved coupon can be sold");
+      if (targetStatus === "DELIVERED" && coupon.status !== "SOLD")
+        throw new Error("Only a sold coupon can be delivered");
+      if (targetStatus === "SOLD") {
+        if (
+          (coupon.sellerAuthorizationProof ||
+            CONFIG.get("promotion")?.sellerAuthorization?.enabled === true) &&
+          !SERVICE.DefaultCouponSellerAuthorizationService?.authorizeSale
+        )
+          throw new Error("Coupon seller authorization owner is unavailable");
+        patch = {
+          ...patch,
+          ...(await this.capturePurchasedRights(request, coupon, patch.soldAt)),
+        };
+      }
+    }
     if (targetStatus === "CLAIMED" || targetStatus === "REDEEMED") {
       const targetCode = payload.targetCode;
       const targetType = payload.targetType;
@@ -1257,7 +1645,7 @@ module.exports = {
             "ERR_PROMOTION_POS_INVALID",
             "A reviewed POS fulfillment target is required",
           );
-        const campaign = await this.getOne(SERVICE.DefaultPromotionService, {
+        let campaign = await this.getOne(SERVICE.DefaultPromotionService, {
           tenant: request.tenant,
           authData: this.serviceAuthData(request),
           query: this.enterpriseQuery(request, {
@@ -1266,6 +1654,7 @@ module.exports = {
           }),
           pageSize: 1,
         });
+        campaign = this.purchasedCampaign(coupon, campaign);
         if (!campaign || campaign.active === false)
           throw new CLASSES.NodicsError(
             "ERR_PROMOTION_POS_INVALID",
@@ -1295,6 +1684,11 @@ module.exports = {
         throw new Error("Only a delivered coupon can be claimed");
       if (targetStatus === "REDEEMED" && coupon.status !== "CLAIMED")
         throw new Error("Only a claimed coupon can be redeemed");
+      if (coupon.purchasePolicy) {
+        this.purchasedCampaign(coupon);
+        if (Date.parse(coupon.validTo) <= Date.now())
+          throw new Error("The purchased coupon has expired");
+      }
       if (
         targetStatus === "REDEEMED" &&
         coupon.claimTargetType === "POS" &&
@@ -1323,20 +1717,7 @@ module.exports = {
       }),
       request,
     );
-    return this.persistedModel(
-      await this.updateOrSave(SERVICE.DefaultCouponService, {
-        tenant: request.tenant,
-        authData: this.serviceAuthData(request),
-        query: this.enterpriseQuery(request, {
-          tenant: request.tenant,
-          code: coupon.code,
-          revision: coupon.revision,
-          status: coupon.status,
-        }),
-        model,
-      }),
-      model,
-    );
+    return this.commitLifecycleCoupon(request, coupon, model);
   },
   /**
    * Executes `confirmCouponCodeSale` as a loader-visible operation owned by this module.
@@ -1350,7 +1731,7 @@ module.exports = {
       saleStatus: "SOLD",
       benefitStatus: "UNCLAIMED",
       orderCode: request.payload && request.payload.orderCode,
-      soldAt: this.schemaDate(request.now),
+      soldAt: this.schemaDate(),
     });
   },
   /**
@@ -1379,15 +1760,7 @@ module.exports = {
     const payload = request.payload || {};
     const couponCode = payload.couponCode || request.couponCode;
     if (!couponCode) throw new Error("Coupon code is required");
-    const coupon = await this.getOne(SERVICE.DefaultCouponService, {
-      tenant: request.tenant,
-      authData: this.serviceAuthData(request),
-      query: this.enterpriseQuery(request, {
-        tenant: request.tenant,
-        code: couponCode,
-      }),
-      pageSize: 1,
-    });
+    const coupon = await this.readLifecycleCoupon(request, couponCode);
     if (!coupon) return undefined;
     if (coupon.status !== "RESERVED") return coupon;
     if (
@@ -1414,18 +1787,14 @@ module.exports = {
       }),
       request,
     );
-    return this.persistedModel(
-      await this.updateOrSave(SERVICE.DefaultCouponService, {
-        tenant: request.tenant,
-        authData: this.serviceAuthData(request),
-        query: this.enterpriseQuery(request, {
-          tenant: request.tenant,
-          code: coupon.code,
-        }),
-        model,
-      }),
-      model,
-    );
+    if (
+      !request.idempotencyKey ||
+      coupon.idempotencyKey !== request.idempotencyKey
+    )
+      throw new Error(
+        "Coupon release must use its original reservation command",
+      );
+    return this.commitLifecycleCoupon(request, coupon, model);
   },
   /**
    * Executes `claimPurchasedCouponCode` as a loader-visible operation owned by this module.
@@ -1678,8 +2047,15 @@ module.exports = {
   consumeBudget: async function (request, promotion, amount) {
     this.requireOperationalRuntime();
     if (!promotion.budget) return promotion;
-    const delivery = typeof CONFIG === 'undefined' ? {} : ((CONFIG.get('promotion') || {}).publication || {}).delivery || {};
-    if (delivery.enabled === true && SERVICE.DefaultPromotionPublicationService.deliveryEnabled(request)) return this.consumeActivatedBudget(request, promotion, amount);
+    const delivery =
+      typeof CONFIG === "undefined"
+        ? {}
+        : ((CONFIG.get("promotion") || {}).publication || {}).delivery || {};
+    if (
+      delivery.enabled === true &&
+      SERVICE.DefaultPromotionPublicationService.deliveryEnabled(request)
+    )
+      return this.consumeActivatedBudget(request, promotion, amount);
     const exact = this.exact();
     const spent = exact.normalize(String(promotion.budget.spent || "0.00"));
     const limit = exact.normalize(String(promotion.budget.limit || "0.00"));
@@ -1729,24 +2105,60 @@ module.exports = {
   consumeActivatedBudget: async function (request, policy, amount) {
     this.requireOperationalRuntime();
     const publication = SERVICE.DefaultPromotionPublicationService;
-    const current = await publication.readRecord(SERVICE.DefaultPromotionService, policy.code, request);
-    if (!current || !current.budget || typeof current.budget.spent !== 'string' ||
-        !Number.isSafeInteger(current.revision)) throw new Error('Current promotion budget is unavailable');
-    const exact = this.exact(), spent = exact.normalize(current.budget.spent);
+    const current = await publication.readRecord(
+      SERVICE.DefaultPromotionService,
+      policy.code,
+      request,
+    );
+    if (
+      !current ||
+      !current.budget ||
+      typeof current.budget.spent !== "string" ||
+      !Number.isSafeInteger(current.revision)
+    )
+      throw new Error("Current promotion budget is unavailable");
+    const exact = this.exact(),
+      spent = exact.normalize(current.budget.spent);
     const nextSpent = exact.add(spent, amount);
-    if (exact.compare(nextSpent, policy.budget.limit) > 0) throw new Error('Promotion budget exhausted');
-    const result = this.unwrap(await SERVICE.DefaultPromotionService.update({
-      tenant: request.tenant, authData: this.serviceAuthData(request),
-      query: { ...publication.scope(request), code: current.code, revision: current.revision, 'budget.spent': current.budget.spent },
-      model: { budget: { ...current.budget, spent: nextSpent }, revision: current.revision + 1 }
-    }));
-    if (!result || result.modifiedCount !== 1) throw new Error('Promotion budget consumption conflict');
+    if (exact.compare(nextSpent, policy.budget.limit) > 0)
+      throw new Error("Promotion budget exhausted");
+    const result = this.unwrap(
+      await SERVICE.DefaultPromotionService.update({
+        tenant: request.tenant,
+        authData: this.serviceAuthData(request),
+        query: {
+          ...publication.scope(request),
+          code: current.code,
+          revision: current.revision,
+          "budget.spent": current.budget.spent,
+        },
+        model: {
+          budget: { ...current.budget, spent: nextSpent },
+          revision: current.revision + 1,
+        },
+      }),
+    );
+    if (!result || result.modifiedCount !== 1)
+      throw new Error("Promotion budget consumption conflict");
     await this.persistBudgetLedger(request, {
-      promotionCode: policy.code, mutationType: 'COMMIT', amount, beforeSpent: spent, afterSpent: nextSpent,
-      targetCode: (request.payload && request.payload.cartCode) || request.ownerId,
-      idempotencyKey: this.idempotencyKey(request, policy, (request.payload && request.payload.cartCode) || request.ownerId)
+      promotionCode: policy.code,
+      mutationType: "COMMIT",
+      amount,
+      beforeSpent: spent,
+      afterSpent: nextSpent,
+      targetCode:
+        (request.payload && request.payload.cartCode) || request.ownerId,
+      idempotencyKey: this.idempotencyKey(
+        request,
+        policy,
+        (request.payload && request.payload.cartCode) || request.ownerId,
+      ),
     });
-    return { ...current, budget: { ...current.budget, spent: nextSpent }, revision: current.revision + 1 };
+    return {
+      ...current,
+      budget: { ...current.budget, spent: nextSpent },
+      revision: current.revision + 1,
+    };
   },
   /**
    * Executes `releaseCoupon` as a loader-visible operation owned by this module.

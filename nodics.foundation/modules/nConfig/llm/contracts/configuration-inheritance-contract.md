@@ -66,6 +66,65 @@ binding/merge contract. Later runtime overrides operate on effective consumer
 keys; consumed profiles are not reapplied. Put environment/server exceptions in
 the selected profile where required by that existing precedence.
 
+Data-release role profiles retain their dedicated accumulating `contributions`
+merge. Profiles derived from a selected server's declared `runtimeModuleRoots`
+must use that same merge when composed with already-loaded role profiles, before
+role projection. Positional merging here could replace one domain's inactive-owner
+selector with another domain's selector. Other ordered profile arrays retain
+replacement semantics; ordinary configuration arrays remain positional. Raw
+module discovery and explicit section selectors are both required by nImport;
+this composition grants neither module activation nor import authorization.
+
+### Explicit Inactive Owner Configuration
+
+A selected server may declare up to 32 `nodics.runtimeConfigurationContributions`
+entries in its existing package metadata. Each entry has exactly `moduleName`,
+`namespace`, and `runtimeRole`; it never accepts a file path or URL. The owner
+must be discoverable beneath that server's declared `runtimeModuleRoots` (or
+`extends` when roots are omitted). nConfig uses its existing metadata discovery
+and duplicate-name validation, including in offline tooling without a global
+NODICS module map. It reads only the conventional owner `config/properties.js`,
+rejects escaped symlinks, and resolves only the selected role's profile.
+
+The contribution is the owner's `<namespace>.runtimeRoleProfiles.<runtimeRole>`.
+It becomes an earlier default through `configurationBindings.merge`, before
+ordinary active-module and project/environment/server/node contributions. The
+same merge applies offline. Explicit `$config: replace` with `value: []` disables
+an inherited path list; ordinary arrays retain their existing positional merge.
+References may reuse canonical owner descriptors rather than copying them.
+Unselected roles do not load their owners. Duplicate namespace/role selectors,
+unknown selected owners/profiles, unsafe identifiers and malformed selectors
+fail closed. Runtime activation, identity/credentials, topology and database
+namespaces cannot be selected through this mechanism.
+
+For example, an Axis deployment's WCMS Online server can explicitly wire:
+
+```json
+{
+  "nodics": {
+    "runtimeModuleRoots": ["nodics.wcms", "nodics.discovery", "nodics.platform"],
+    "runtimeConfigurationContributions": [
+      { "moduleName": "axis", "namespace": "cms", "runtimeRole": "WCMS_ONLINE" }
+    ]
+  }
+}
+```
+
+Preserve that server's other discovery roots and existing package fields. Keep
+`axis` out of its active modules. Discovery contributes no services, runtime
+permissions, imports or publication operations. Axis owns the referenced static
+composition descriptor; CMS owns delivery. The Local reference deployment wires
+this explicitly, not automatically for other deployments. Docker runtime
+qualification is a separate operational gate and is not implied by source tests.
+
+`test/inactiveRuntimeRoleConfiguration.test.js` covers role isolation, canonical
+merge/replacement, inactive-module/grant preservation and invalid selectors.
+Deployment adoption must also test its actual composed graph and offline
+`readDeploymentConfiguration` result before restart.
+The isolated `runtimeRootDataReleaseProjectionContract.test.js` covers live and
+offline composition, retained later selectors, immutable inputs, and discovery
+rejection after removing delegation. It reads manifests but performs no imports.
+
 Validate selected and unselected roles, unrelated owner namespaces, empty and
 shortened arrays, immutable inputs and later overrides with
 `test/runtimePropertyProjectionContract.test.js`, then run consumer preparation.
@@ -234,6 +293,25 @@ Bindings resolve at their contribution boundary. A node that changes an endpoint
 
 
 ## Runtime and property projections
+
+`DefaultDeploymentConfigurationProjectionService` owns the reusable selected
+deployment projection. Its `read({projectRoot, environment, server,
+frameworkRoot?, variables?, inheritEnvironment?})` runs the existing canonical
+nConfig loader in an isolated child and returns effective `properties` plus
+indexed `modules`. It starts no lifecycle hooks, providers, imports or listeners.
+`resolve` is the in-process counterpart for already isolated consumers; it owns
+process-wide globals and is not safe to invoke inside a running authority.
+The old nTooling `defaultProjectConfigurationProbeService` is a compatibility
+delegator, not a second loader and not a runtime dependency of business owners.
+
+Consumers must supply exact trusted deployment coordinates and prevent inherited
+server/node selection inputs from redirecting a sibling projection. Properties
+may contain private deployment inputs: do not publish/log the returned object or
+raw subprocess errors. Configuration projection establishes composition, not
+authorization, installed-provider evidence or runtime readiness. Profile's
+separately admitted native-Local bootstrap may consume this graph when reconciling
+its own approved grants; arbitrary runtime callers cannot turn projection into
+module entitlement.
 
 `{ $config: 'runtime', name: 'apiServer', path: 'servers.default.endpoint' }`
 projects a selected sibling server's authored endpoint through existing project,

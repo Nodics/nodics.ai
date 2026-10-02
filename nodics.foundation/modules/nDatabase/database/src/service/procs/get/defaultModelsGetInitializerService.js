@@ -29,9 +29,9 @@ const _ = require('lodash');
  */
 module.exports = {
     /**
-     * This function is used to initiate entity loader process. If there is any functionalities, required to be executed on entity loading. 
+     * This function is used to initiate entity loader process. If there is any functionalities, required to be executed on entity loading.
      * defined it that with Promise way
-     * @param {*} options 
+     * @param {*} options
      */
     init: function (options) {
         return new Promise((resolve, reject) => {
@@ -40,9 +40,9 @@ module.exports = {
     },
 
     /**
-     * This function is used to finalize entity loader process. If there is any functionalities, required to be executed after entity loading. 
+     * This function is used to finalize entity loader process. If there is any functionalities, required to be executed after entity loading.
      * defined it that with Promise way
-     * @param {*} options 
+     * @param {*} options
      */
     postInit: function (options) {
         return new Promise((resolve, reject) => {
@@ -62,11 +62,37 @@ module.exports = {
         this.LOG.debug('Validating get request ');
         let searchOptions = request.searchOptions || {};
         if (!request.schemaModel) {
-            process.error(request, response, new CLASSES.NodicsError('ERR_FIND_00003', 'Model not available within tenant: ' + request.tenant));
-        } else if (searchOptions && searchOptions.projection && !UTILS.isObject(searchOptions.projection)) {
-            process.error(request, response, new CLASSES.NodicsError('ERR_FIND_00003', 'Invalid projection object'));
-        } else if (searchOptions && searchOptions.sort && !UTILS.isObject(searchOptions.sort)) {
-            process.error(request, response, new CLASSES.NodicsError('ERR_FIND_00003', 'Invalid sort object'));
+            process.error(
+                request,
+                response,
+                new CLASSES.NodicsError(
+                    'ERR_FIND_00003',
+                    'Model not available within tenant: ' + request.tenant
+                )
+            );
+        } else if (
+            searchOptions &&
+            searchOptions.projection &&
+            !UTILS.isObject(searchOptions.projection)
+        ) {
+            process.error(
+                request,
+                response,
+                new CLASSES.NodicsError(
+                    'ERR_FIND_00003',
+                    'Invalid projection object'
+                )
+            );
+        } else if (
+            searchOptions &&
+            searchOptions.sort &&
+            !UTILS.isObject(searchOptions.sort)
+        ) {
+            process.error(
+                request,
+                response,
+                new CLASSES.NodicsError('ERR_FIND_00003', 'Invalid sort object')
+            );
         } else {
             try {
                 this.resolveReadMethod(request);
@@ -87,10 +113,24 @@ module.exports = {
     checkAccess: function (request, response, process) {
         this.LOG.debug('Checking model access');
         let rawSchema = request.schemaModel.rawSchema;
-        if (SERVICE.DefaultSchemaAccessHandlerService.getAccessPoint(request.authData, rawSchema.accessGroups) >= CONFIG.get('accessPoints').readAccessPoint) {
-            SERVICE.DefaultRecordOwnershipPolicyService.enforce(request, 'read').then(() => process.nextSuccess(request, response)).catch(error => process.error(request, response, error));
+        if (
+            SERVICE.DefaultSchemaAccessHandlerService.getAccessPoint(
+                request.authData,
+                rawSchema.accessGroups
+            ) >= CONFIG.get('accessPoints').readAccessPoint
+        ) {
+            SERVICE.DefaultRecordOwnershipPolicyService.enforce(request, 'read')
+                .then(() => process.nextSuccess(request, response))
+                .catch((error) => process.error(request, response, error));
         } else {
-            process.error(request, response, new CLASSES.NodicsError('ERR_AUTH_00003', 'current user do not have access to this resource'));
+            process.error(
+                request,
+                response,
+                new CLASSES.NodicsError(
+                    'ERR_AUTH_00003',
+                    'current user do not have access to this resource'
+                )
+            );
         }
     },
     /**
@@ -120,8 +160,9 @@ module.exports = {
         let inputOptions = request.searchOptions || {};
         request.query = request.query || {};
         let pageSize = inputOptions.pageSize || CONFIG.get('defaultPageSize');
-        let pageNumber = inputOptions.pageNumber || CONFIG.get('defaultPageNumber');
-        pageNumber = pageNumber ? (pageNumber <= 0) ? 0 : pageNumber - 1 : 0;
+        let pageNumber =
+            inputOptions.pageNumber || CONFIG.get('defaultPageNumber');
+        pageNumber = pageNumber ? (pageNumber <= 0 ? 0 : pageNumber - 1) : 0;
         inputOptions.limit = pageSize;
         inputOptions.skip = pageSize * pageNumber;
         //inputOptions.explain = inputOptions.explain || false;
@@ -141,7 +182,9 @@ module.exports = {
      */
     getSchemaLineage: function (request) {
         let parentSchemas = request.schemaModel.rawSchema.parents || [];
-        let baseSchemas = Array.isArray(parentSchemas) ? parentSchemas.slice() : [];
+        let baseSchemas = Array.isArray(parentSchemas)
+            ? parentSchemas.slice()
+            : [];
         if (!baseSchemas.includes(request.schemaModel.schemaName)) {
             baseSchemas.push(request.schemaModel.schemaName);
         }
@@ -156,38 +199,76 @@ module.exports = {
      * @returns {undefined}
      */
     lookupCache: function (request, response, process) {
+        const owner = SERVICE.DefaultSchemaReadAccessPolicyService;
+        if (
+            request.schemaModel.rawSchema.readProtection !== undefined &&
+            typeof owner?.providerRead !== 'function'
+        ) {
+            process.error(
+                request,
+                response,
+                new CLASSES.NodicsError('ERR_AUTH_00003')
+            );
+            return;
+        }
+        Promise.resolve()
+            .then(() => owner?.providerRead?.(request, request.schemaModel))
+            .then(() => this.lookupGuardedCache(request, response, process))
+            .catch((error) => process.error(request, response, error));
+    },
+    /** Looks up only ordinary shared-cache records after the exact schema query guard; protected owner reads never share item cache state. @param {Object} request Prepared get. @param {Object} response Pipeline wrapper. @param {Object} process Controller. @returns {undefined} */
+    lookupGuardedCache: function (request, response, process) {
         let cacheConfig = CONFIG.get('cache') || {};
-        if (request.options && request.options.skipItemCache) {
+        if (
+            request.schemaModel.rawSchema.readProtection !== undefined ||
+            (request.options && request.options.skipItemCache)
+        ) {
             process.nextSuccess(request, response);
-        } else if (cacheConfig.enabled !== false &&
+        } else if (
+            cacheConfig.enabled !== false &&
             request.schemaModel.cache &&
-            request.schemaModel.cache.enabled) {
-            request.cacheKeyHash = request.cacheKeyHash || SERVICE.DefaultCacheConfigurationService.createItemKey(request);
-            this.LOG.debug('Model cache lookup for key: ' + request.cacheKeyHash);
+            request.schemaModel.cache.enabled
+        ) {
+            request.cacheKeyHash =
+                request.cacheKeyHash ||
+                SERVICE.DefaultCacheConfigurationService.createItemKey(request);
+            this.LOG.debug(
+                'Model cache lookup for key: ' + request.cacheKeyHash
+            );
             SERVICE.DefaultCacheService.get({
                 tenant: request.tenant,
                 moduleName: request.schemaModel.moduleName,
-                channelName: SERVICE.DefaultCacheService.getSchemaCacheChannel(request.schemaModel.schemaName),
+                channelName: SERVICE.DefaultCacheService.getSchemaCacheChannel(
+                    request.schemaModel.schemaName
+                ),
                 key: request.cacheKeyHash
-            }).then(value => {
-                this.LOG.debug('Fulfilled from model cache');
-                let cachedResponse = _.cloneDeep(value);
-                cachedResponse.cache = 'item hit';
-                response.success = cachedResponse;
-                let cachePolicyProcess = {};
-                cachePolicyProcess.nextSuccess = () => process.stop(request, response, response.success);
-                cachePolicyProcess.error = (req, res, error) => process.error(req, res, error);
-                this.applyReadAccessPolicies(request, response, cachePolicyProcess);
-            }).catch(error => {
-                if (error.code === 'ERR_CACHE_00001') {
-                    process.nextSuccess(request, response);
-                } else if (error.code === 'ERR_CACHE_00006') {
-                    this.LOG.warn(error.toJson(false));
-                    process.nextSuccess(request, response);
-                } else {
-                    process.error(request, response, error);
-                }
-            });
+            })
+                .then((value) => {
+                    this.LOG.debug('Fulfilled from model cache');
+                    let cachedResponse = _.cloneDeep(value);
+                    cachedResponse.cache = 'item hit';
+                    response.success = cachedResponse;
+                    let cachePolicyProcess = {};
+                    cachePolicyProcess.nextSuccess = () =>
+                        process.stop(request, response, response.success);
+                    cachePolicyProcess.error = (req, res, error) =>
+                        process.error(req, res, error);
+                    this.applyReadAccessPolicies(
+                        request,
+                        response,
+                        cachePolicyProcess
+                    );
+                })
+                .catch((error) => {
+                    if (error.code === 'ERR_CACHE_00001') {
+                        process.nextSuccess(request, response);
+                    } else if (error.code === 'ERR_CACHE_00006') {
+                        this.LOG.warn(error.toJson(false));
+                        process.nextSuccess(request, response);
+                    } else {
+                        process.error(request, response, error);
+                    }
+                });
         } else {
             process.nextSuccess(request, response);
         }
@@ -204,15 +285,30 @@ module.exports = {
         this.LOG.debug('Applying pre get model interceptors');
         let interceptors = {};
         let baseSchemas = this.getSchemaLineage(request);
-        baseSchemas.forEach(schemaName => {
-            interceptors = _.merge(interceptors, SERVICE.DefaultDatabaseConfigurationService.getSchemaInterceptors(schemaName));
+        baseSchemas.forEach((schemaName) => {
+            interceptors = _.merge(
+                interceptors,
+                SERVICE.DefaultDatabaseConfigurationService.getSchemaInterceptors(
+                    schemaName
+                )
+            );
         });
         if (interceptors && interceptors.preGet) {
-            SERVICE.DefaultInterceptorService.executeInterceptors([].concat(interceptors.preGet), request, response).then(success => {
-                process.nextSuccess(request, response);
-            }).catch(error => {
-                process.error(request, response, new CLASSES.NodicsError(error, null, 'ERR_FIND_00005'));
-            });
+            SERVICE.DefaultInterceptorService.executeInterceptors(
+                [].concat(interceptors.preGet),
+                request,
+                response
+            )
+                .then((success) => {
+                    process.nextSuccess(request, response);
+                })
+                .catch((error) => {
+                    process.error(
+                        request,
+                        response,
+                        new CLASSES.NodicsError(error, null, 'ERR_FIND_00005')
+                    );
+                });
         } else {
             process.nextSuccess(request, response);
         }
@@ -229,15 +325,31 @@ module.exports = {
         this.LOG.debug('Applying pre model validator');
         let validators = {};
         let baseSchemas = this.getSchemaLineage(request);
-        baseSchemas.forEach(schemaName => {
-            validators = _.merge(validators, SERVICE.DefaultDatabaseConfigurationService.getSchemaValidators(request.tenant, schemaName));
+        baseSchemas.forEach((schemaName) => {
+            validators = _.merge(
+                validators,
+                SERVICE.DefaultDatabaseConfigurationService.getSchemaValidators(
+                    request.tenant,
+                    schemaName
+                )
+            );
         });
         if (validators && validators.preGet) {
-            SERVICE.DefaultValidatorService.executeValidators([].concat(validators.preGet), request, response).then(success => {
-                process.nextSuccess(request, response);
-            }).catch(error => {
-                process.error(request, response, new CLASSES.NodicsError(error, null, 'ERR_FIND_00005'));
-            });
+            SERVICE.DefaultValidatorService.executeValidators(
+                [].concat(validators.preGet),
+                request,
+                response
+            )
+                .then((success) => {
+                    process.nextSuccess(request, response);
+                })
+                .catch((error) => {
+                    process.error(
+                        request,
+                        response,
+                        new CLASSES.NodicsError(error, null, 'ERR_FIND_00005')
+                    );
+                });
         } else {
             process.nextSuccess(request, response);
         }
@@ -253,25 +365,31 @@ module.exports = {
      */
     executeQuery: function (request, response, process) {
         this.LOG.debug('Executing get query');
-        Promise.resolve().then(() => this.readItems(request)).then(success => {
-            response.success = {
-                code: 'SUC_FIND_00000',
-                cache: 'item mis',
-                query: success.query,
-                options: success.options,
-                count: success.count,
-                result: success.result
-            };
-            process.nextSuccess(request, response);
-        }).catch(error => {
-            process.error(request, response, error);
-        });
+        Promise.resolve()
+            .then(() => this.readItems(request))
+            .then((success) => {
+                response.success = {
+                    code: 'SUC_FIND_00000',
+                    cache: 'item mis',
+                    query: success.query,
+                    options: success.options,
+                    count: success.count,
+                    result: success.result
+                };
+                process.nextSuccess(request, response);
+            })
+            .catch((error) => {
+                process.error(request, response, error);
+            });
     },
     /** Resolves ordinary reads; explicit version-aware policies require the owning service variant before any cache lookup. */
     resolveReadMethod: function (request) {
         const mode = (request.schemaModel.rawSchema || {}).versionedReadMode;
         if (mode !== undefined && mode !== 'HISTORY') {
-            throw new CLASSES.NodicsError('ERR_FIND_00003', 'Version-aware read capability is unavailable');
+            throw new CLASSES.NodicsError(
+                'ERR_FIND_00003',
+                'Version-aware read capability is unavailable'
+            );
         }
         return 'getItems';
     },
@@ -296,11 +414,17 @@ module.exports = {
                 models: response.success.result,
                 index: 0,
                 callback: SERVICE.DefaultModelService.populateNestedModels
-            }).then(success => {
-                process.nextSuccess(request, response);
-            }).catch(error => {
-                process.error(request, response, new CLASSES.NodicsError(error, null, 'ERR_FIND_00003'));
-            });
+            })
+                .then((success) => {
+                    process.nextSuccess(request, response);
+                })
+                .catch((error) => {
+                    process.error(
+                        request,
+                        response,
+                        new CLASSES.NodicsError(error, null, 'ERR_FIND_00003')
+                    );
+                });
         } else {
             process.nextSuccess(request, response);
         }
@@ -316,8 +440,15 @@ module.exports = {
     populateVirtualProperties: function (request, response, process) {
         this.LOG.debug('Populating virtual properties');
         let virtualProperties = request.schemaModel.rawSchema.virtualProperties;
-        if (response.success.result && virtualProperties && !UTILS.isBlank(virtualProperties)) {
-            SERVICE.DefaultSchemaVirtualPropertiesHandlerService.populateVirtualProperties(virtualProperties, response.success.result);
+        if (
+            response.success.result &&
+            virtualProperties &&
+            !UTILS.isBlank(virtualProperties)
+        ) {
+            SERVICE.DefaultSchemaVirtualPropertiesHandlerService.populateVirtualProperties(
+                virtualProperties,
+                response.success.result
+            );
             process.nextSuccess(request, response);
         } else {
             process.nextSuccess(request, response);
@@ -335,15 +466,35 @@ module.exports = {
         this.LOG.debug('Applying post model validator');
         let validators = {};
         let baseSchemas = this.getSchemaLineage(request);
-        baseSchemas.forEach(schemaName => {
-            validators = _.merge(validators, SERVICE.DefaultDatabaseConfigurationService.getSchemaValidators(request.tenant, schemaName));
+        baseSchemas.forEach((schemaName) => {
+            validators = _.merge(
+                validators,
+                SERVICE.DefaultDatabaseConfigurationService.getSchemaValidators(
+                    request.tenant,
+                    schemaName
+                )
+            );
         });
         if (validators && validators.postGet) {
-            SERVICE.DefaultValidatorService.executeValidators([].concat(validators.postGet), request, response).then(success => {
-                process.nextSuccess(request, response);
-            }).catch(error => {
-                process.error(request, response, new CLASSES.NodicsError(error, null, error.code || 'ERR_FIND_00006'));
-            });
+            SERVICE.DefaultValidatorService.executeValidators(
+                [].concat(validators.postGet),
+                request,
+                response
+            )
+                .then((success) => {
+                    process.nextSuccess(request, response);
+                })
+                .catch((error) => {
+                    process.error(
+                        request,
+                        response,
+                        new CLASSES.NodicsError(
+                            error,
+                            null,
+                            error.code || 'ERR_FIND_00006'
+                        )
+                    );
+                });
         } else {
             process.nextSuccess(request, response);
         }
@@ -360,15 +511,34 @@ module.exports = {
         this.LOG.debug('Applying post model interceptors');
         let interceptors = {};
         let baseSchemas = this.getSchemaLineage(request);
-        baseSchemas.forEach(schemaName => {
-            interceptors = _.merge(interceptors, SERVICE.DefaultDatabaseConfigurationService.getSchemaInterceptors(schemaName));
+        baseSchemas.forEach((schemaName) => {
+            interceptors = _.merge(
+                interceptors,
+                SERVICE.DefaultDatabaseConfigurationService.getSchemaInterceptors(
+                    schemaName
+                )
+            );
         });
         if (interceptors && interceptors.postGet) {
-            SERVICE.DefaultInterceptorService.executeInterceptors([].concat(interceptors.postGet), request, response).then(success => {
-                process.nextSuccess(request, response);
-            }).catch(error => {
-                process.error(request, response, new CLASSES.NodicsError(error, null, error.code || 'ERR_FIND_00006'));
-            });
+            SERVICE.DefaultInterceptorService.executeInterceptors(
+                [].concat(interceptors.postGet),
+                request,
+                response
+            )
+                .then((success) => {
+                    process.nextSuccess(request, response);
+                })
+                .catch((error) => {
+                    process.error(
+                        request,
+                        response,
+                        new CLASSES.NodicsError(
+                            error,
+                            null,
+                            error.code || 'ERR_FIND_00006'
+                        )
+                    );
+                });
         } else {
             process.nextSuccess(request, response);
         }
@@ -383,29 +553,60 @@ module.exports = {
      */
     updateCache: function (request, response, process) {
         this.LOG.debug('Updating cache for new Items');
-        if (request.options && request.options.skipItemCache) {
+        if (
+            request.schemaModel.rawSchema.readProtection !== undefined ||
+            (request.options && request.options.skipItemCache)
+        ) {
             process.nextSuccess(request, response);
             return;
         }
-        let cacheDecision = SERVICE.DefaultCachePolicyService && typeof SERVICE.DefaultCachePolicyService.isItemCacheable === 'function' ?
-            SERVICE.DefaultCachePolicyService.isItemCacheable(request, response.success) :
-            { cacheable: UTILS.isItemCashable(response.success.result, request.schemaModel), reason: 'legacyPolicy', reasonCode: 'RSN_CACHE_00010' };
+        let cacheDecision =
+            SERVICE.DefaultCachePolicyService &&
+            typeof SERVICE.DefaultCachePolicyService.isItemCacheable ===
+                'function'
+                ? SERVICE.DefaultCachePolicyService.isItemCacheable(
+                      request,
+                      response.success
+                  )
+                : {
+                      cacheable: UTILS.isItemCashable(
+                          response.success.result,
+                          request.schemaModel
+                      ),
+                      reason: 'legacyPolicy',
+                      reasonCode: 'RSN_CACHE_00010'
+                  };
         request.cachePolicyDecision = cacheDecision;
         if (cacheDecision.cacheable) {
             SERVICE.DefaultCacheService.put({
                 tenant: request.tenant,
                 moduleName: request.schemaModel.moduleName,
-                channelName: SERVICE.DefaultCacheService.getSchemaCacheChannel(request.schemaModel.schemaName),
+                channelName: SERVICE.DefaultCacheService.getSchemaCacheChannel(
+                    request.schemaModel.schemaName
+                ),
                 key: request.cacheKeyHash,
                 value: response.success,
                 ttl: request.schemaModel.cache.ttl
-            }).then(success => {
-                this.LOG.info('Item saved in item cache');
-            }).catch(error => {
-                this.LOG.error('While saving item in item cache : ', error);
-            });
-        } else if (cacheDecision.reason && cacheDecision.reason !== 'legacyPolicy' && (!CONFIG.get('cache') || !CONFIG.get('cache').cacheability || CONFIG.get('cache').cacheability.logSkippedReason !== false)) {
-            this.LOG.debug('Skipping item cache write: ' + cacheDecision.reasonCode + ' ' + cacheDecision.reason);
+            })
+                .then((success) => {
+                    this.LOG.info('Item saved in item cache');
+                })
+                .catch((error) => {
+                    this.LOG.error('While saving item in item cache : ', error);
+                });
+        } else if (
+            cacheDecision.reason &&
+            cacheDecision.reason !== 'legacyPolicy' &&
+            (!CONFIG.get('cache') ||
+                !CONFIG.get('cache').cacheability ||
+                CONFIG.get('cache').cacheability.logSkippedReason !== false)
+        ) {
+            this.LOG.debug(
+                'Skipping item cache write: ' +
+                    cacheDecision.reasonCode +
+                    ' ' +
+                    cacheDecision.reason
+            );
         }
         process.nextSuccess(request, response);
     },
@@ -418,15 +619,31 @@ module.exports = {
      * @returns {undefined}
      */
     applyReadAccessPolicies: function (request, response, process) {
-        if (!SERVICE.DefaultSchemaReadAccessPolicyService ||
-            typeof SERVICE.DefaultSchemaReadAccessPolicyService.applyReadPolicies !== 'function') {
+        if (
+            !SERVICE.DefaultSchemaReadAccessPolicyService ||
+            typeof SERVICE.DefaultSchemaReadAccessPolicyService
+                .applyReadPolicies !== 'function'
+        ) {
             process.nextSuccess(request, response);
             return;
         }
-        SERVICE.DefaultSchemaReadAccessPolicyService.applyReadPolicies(request, response).then(success => {
-            process.nextSuccess(request, response);
-        }).catch(error => {
-            process.error(request, response, new CLASSES.NodicsError(error, null, error.code || 'ERR_FIND_00006'));
-        });
+        SERVICE.DefaultSchemaReadAccessPolicyService.applyReadPolicies(
+            request,
+            response
+        )
+            .then((success) => {
+                process.nextSuccess(request, response);
+            })
+            .catch((error) => {
+                process.error(
+                    request,
+                    response,
+                    new CLASSES.NodicsError(
+                        error,
+                        null,
+                        error.code || 'ERR_FIND_00006'
+                    )
+                );
+            });
     }
 };

@@ -10,6 +10,7 @@
  */
 
 const assert = require('assert');
+global.SERVICE = { DefaultLoggerService: require('../../nConfig/src/service/DefaultLoggerService') };
 
 global.UTILS = {
     isBlank: value => value === null || value === undefined || value === ''
@@ -103,4 +104,3 @@ assert.strictEqual(multipleCredentials.state.success, true);
 assert.strictEqual(multipleCredentials.request.apiKey, undefined);
 assert.strictEqual(multipleCredentials.request.authToken, undefined);
 assert.strictEqual(multipleCredentials.request.auth.credentials.length, 2);
-

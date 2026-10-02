@@ -1,0 +1,21 @@
+digraph Layers {
+  graph [rankdir=TB, bgcolor="#ffffff", pad="0.4", nodesep="0.4", ranksep="0.5", fontname="Helvetica", label="Customization, import and publication are distinct layers", labelloc=t, fontsize=20];
+  node [shape=box, style="rounded,filled", fillcolor="#f3f4f6", color="#64748b", fontname="Helvetica", fontsize=12, margin="0.18,0.12"];
+  edge [color="#475569", fontname="Helvetica", fontsize=10];
+  framework [label="Framework domain defaults\nExported services / schemas / contracts"];
+  ewaste [label="eWaste accelerator\nReusable electronics policy / orchestration"];
+  project [label="Customer application overlay\nFocused config, services, data, content, templates", fillcolor="#ccfbf1"];
+  runtime [label="Selected runtime / environment layer\nEffective load order + governed secret references"];
+  import [label="nImport selected release\nValidate versions / keys / checksums / receipts"];
+  operational [label="Owner operational records\nProfile / Location / Waste / Loyalty"];
+  staged [label="WCMS Staged / Commerce Staged\nIndependent source projections"];
+  publication [label="Governed review / publication\nOwning nPublish + Process contracts"];
+  online [label="WCMS Online / published Commerce\nIndependent activation evidence"];
+  ui [label="Circa / Axis / Nexus consumers\nFrontend never owns persistent domain truth", fillcolor="#dcfce7"];
+  framework -> ewaste -> project -> runtime;
+  project -> import [label="authored data release"];
+  import -> operational;
+  import -> staged;
+  staged -> publication -> online -> ui;
+  runtime -> operational [style=dashed, label="effective policy, not retroactive data rewrite"];
+}

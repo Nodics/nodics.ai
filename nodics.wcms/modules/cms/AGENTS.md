@@ -28,6 +28,13 @@ This file gives AI coding agents mandatory guidance for this Nodics module or pa
   Storefront introspection for the `cms` audience; never trust caller Site,
   tenant, enterprise, locale, or channel overrides and never copy Storefront
   context authority into CMS.
+- Shared employee UI composition is opt-in on the existing publication baseline
+  Site descriptor, with bounded exact paths. Authorize the original employee,
+  using canonical nAuth human/access claims after normal context validation,
+  never the issuance-only `type` field,
+  then privately read only the project-authority Online pointer and pinned
+  manifest. Never retarget generic delivery reads, employee context, business
+  data, Media or writes. Follow [the delivery contract](llm/contracts/content-delivery-contract.md#shared-employee-composition).
 
 This capability declares an inert model-service inventory for [governed Local reset](../../../nodics.foundation/modules/nSystem/llm/contracts/local-reset.md).
 A server must explicitly select it; contributions never enable reset or bypass tenant, environment, confirmation or required-service checks.

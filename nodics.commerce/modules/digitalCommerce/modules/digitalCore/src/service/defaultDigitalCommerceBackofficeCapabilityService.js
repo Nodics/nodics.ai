@@ -9,7 +9,7 @@
 
  */
 "use strict";
-/** @module digitalCore/service/defaultDigitalCommerceBackofficeCapabilityService @description Publishes the Digital Core-owned merchant fulfillment workspace through the canonical BackOffice registry. @layer service @owner digitalCore */
+/** @module digitalCore/service/defaultDigitalCommerceBackofficeCapabilityService @description Publishes Digital Core-owned merchant fulfillment and native order-notification workspaces through the canonical BackOffice registry. @layer service @owner digitalCore @override Later layers may customize presentation; preserve fixed owner commands and independent qualification. */
 module.exports = {
   /** Registers this owning capability through the framework lifecycle. */
   init: function () {
@@ -19,10 +19,10 @@ module.exports = {
     );
     return Promise.resolve(true);
   },
-  /** Supplies the scoped merchant navigation only when the deployment enables fulfillment. */
+  /** Supplies scoped merchant navigation and independently qualified native notification commands. @returns {Object} Canonical BackOffice capability projection. */
   getCapability: function () {
     const d = SERVICE.DefaultBackofficeCapabilityDefinitionService;
-    return d.capability({
+    const capability = d.capability({
       capabilityId: "digital-merchant-fulfillment",
       displayName: "Merchant Fulfillment",
       category: "commerce",
@@ -57,5 +57,53 @@ module.exports = {
           ]
         : [],
     });
+    const p = CONFIG.get("digitalCore")?.notifications || {};
+    const presentation =
+      SERVICE.DefaultDigitalCommerceNotificationService.workspacePresentation();
+    const qualified =
+      p.enabled === true &&
+      p.qualified === true &&
+      p.workspaceQualified === true &&
+      CONFIG.get("apiExposure")?.categories?.commerceNotificationManagement
+        ?.enabled === true;
+    capability.navigation.push(
+      d.nativeWorkspace({
+        id: "order-notifications",
+        label: presentation.navigationLabel,
+        route: "/commerce/orders/notifications",
+        order: 1330,
+        permission: "commerce.digital.notification.read",
+        featureState: qualified ? "ACTIVE" : "DISABLED",
+        summary: presentation.summary,
+        group: {
+          id: "orders-checkouts",
+          label: "Orders and Checkouts",
+          order: 800,
+        },
+        backendWorkspace: {
+          contractVersion: 1,
+          renderer: "axis.workspace.native",
+          workspaceCode: "commerce.orderNotifications",
+          viewCode: "orderNotifications.detail",
+          title: presentation.title,
+          description: presentation.summary,
+        },
+        lifecycleActions:
+          SERVICE.DefaultDigitalCommerceNotificationService.workspaceCommands().map(
+            (command) => ({
+              id: command.id,
+              label: command.label,
+              intent: command.intent,
+              permission: command.permission,
+              ownerModule: command.ownerModule,
+              handlerAction: command.handlerAction,
+              operationRoute: command.operationRoute,
+              httpMethod: command.httpMethod,
+              featureState: qualified ? "ACTIVE" : "DISABLED",
+            }),
+          ),
+      }),
+    );
+    return capability;
   },
 };

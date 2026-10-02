@@ -1,0 +1,39 @@
+{
+  "formatVersion": 1,
+  "code": "profile.employee.applicationOutcome",
+  "ownerModule": "profile",
+  "version": 2,
+  "status": "ACTIVE",
+  "purpose": "EMPLOYEE_APPLICATION_OUTCOME",
+  "sourceModules": ["profile"],
+  "channel": "EMAIL",
+  "defaultLocale": "en",
+  "parameters": {
+    "enterpriseName": {
+      "type": "string",
+      "required": true,
+      "maximumLength": 256
+    },
+    "decision": {
+      "type": "string",
+      "required": true,
+      "maximumLength": 128
+    },
+    "decidedAt": {
+      "type": "string",
+      "required": true,
+      "maximumLength": 128
+    },
+    "nextStep": {
+      "type": "string",
+      "required": true,
+      "maximumLength": 2000
+    },
+    "brandName": {
+      "type": "string",
+      "required": false,
+      "maximumLength": 120,
+      "default": "Account services"
+    }
+  }
+}

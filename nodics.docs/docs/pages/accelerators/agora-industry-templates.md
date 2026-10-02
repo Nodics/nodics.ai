@@ -4,6 +4,13 @@ Accelerators and Industry Solution Templates are customer-facing starting points
 
 ## Business perspective
 
+The framework product catalogue also includes Waste Management showcased through
+[Circa](circa-overview.md). Its detailed guide separates data/network configuration,
+submission, operations/rewards, coupon commerce, customization and deployment.
+That is the documentation depth pattern for further Agora product topics; it does
+not make Circa a Commerce domain accelerator or move customer-owned data into the
+framework. Product positioning and implementation ownership remain distinct.
+
 Agora is the accelerator application family for commerce experiences. The current split is intentionally domain-specific: Agora Apparel, Agora Electronics, and Agora Telco. Each application gives an implementation partner a focused storefront pattern, test contract, visual journey, and integration shape that can be adapted for a customer. The value is faster time to market: business teams can begin with a working journey, inspect how products and content flow from backend data, and then customize only the areas that differentiate their brand or industry.
 
 | Accelerator | Business fit | Starting journey | Expected customization |

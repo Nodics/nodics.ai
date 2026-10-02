@@ -163,9 +163,10 @@ module.exports = {
         }
         let pending = Object.assign({}, publication, { revision: Number(publication.revision || 0) + 1 });
         let workflowRef = workflow && workflow.reference ? workflow.reference(pending) : undefined;
+        let requesterEvidence = workflow && workflow.approvalEvidence ? await workflow.approvalEvidence(pending, request) : {};
         let updated = await this.transition(publication, 'PENDING_APPROVAL', request,
             workflowRef ? { workflowRef: workflowRef } : {},
-            workflowRef ? { workflow: { instanceCode: workflowRef } } : undefined);
+            workflowRef ? { workflow: Object.assign({}, requesterEvidence, { instanceCode: workflowRef }) } : undefined);
         if (workflow && workflow.requestApproval) await workflow.requestApproval(updated, request);
         return updated;
     },

@@ -1,0 +1,29 @@
+digraph CircaNotificationAuthority {
+  graph [rankdir=TB, bgcolor="#ffffff", pad="0.45", nodesep="0.35", ranksep="0.65", fontname="Helvetica", label="Circa notifications: committed event, canonical contact and delivery authority", labelloc=t, fontsize=21];
+  node [shape=box, style="rounded,filled", fillcolor="#f3f4f6", color="#64748b", fontname="Helvetica", fontsize=13, margin="0.18,0.13"];
+  edge [color="#475569", fontname="Helvetica", fontsize=11, arrowsize=0.7];
+  customer [label="Customer self journey\nNative Customer or Employee-backed participation", fillcolor="#dcfce7"];
+  contact [label="Profile Contact owner\nCanonical association + exact held proof\nSeparate transactional consent / suppression", fillcolor="#ccfbf1"];
+  challenge [label="Communication verification owner\nISSUE / VERIFY / CONSUME\nReceipt repairs only original held command", fillcolor="#ffe4e6"];
+  finance [label="Commerce owning result\nCommitted purchase / refund\nStored order, buyer and original source revision", fillcolor="#e0f2fe"];
+  digital [label="Digital Core original notification intent\nFrozen event coordinates\nNo buyer/address supplied by a browser", fillcolor="#e0f2fe"];
+  recipient [label="Profile private recipient endpoint\nIndependently proves financial source\nResolves current verified contact + consent", fillcolor="#ccfbf1"];
+  source [label="Digital Core source callback\nRereads committed owner evidence\nSame tenant, enterprise, channel and event", fillcolor="#e0f2fe"];
+  comms [label="Communication intent / templates / provider\nLayered HTML/text/SMS resources\nDurable status and original-command retry", fillcolor="#ffe4e6"];
+  operator [label="Axis inspection\nRead status first; retry is separate\nMail state never compensates finance", fillcolor="#dcfce7"];
+  gate [label="SOURCE is not installed acceptance\nQualification remains OFF; approved policy, contacts, sender, TLS,\nprivate capture and joint end-to-end evidence are required.", shape=note, fillcolor="#fef3c7"];
+  customer -> contact [label="Explicit self proof and preferences"];
+  contact -> challenge [label="Authenticated private RPC"];
+  challenge -> contact [label="Bound consumed evidence, not consent"];
+  finance -> digital [label="Only committed result"];
+  digital -> recipient [label="Exact original event + channel"];
+  recipient -> source [label="Independent financial proof"];
+  source -> recipient [label="Current stored buyer; no arbitrary lookup"];
+  contact -> recipient [label="Current verification / consent / suppression"];
+  recipient -> source [style=dashed, label="Reread after contact admission"];
+  recipient -> digital [label="Bound private recipient only"];
+  digital -> comms [label="Frozen original communication command"];
+  comms -> operator [label="Scoped durable evidence"];
+  operator -> comms [style=dashed, label="Explicit eligible retry only"];
+  comms -> gate [style=invis];
+}

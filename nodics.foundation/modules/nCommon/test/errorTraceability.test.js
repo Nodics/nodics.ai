@@ -17,6 +17,7 @@
  * @override Capability modules may add layer-specific context scenarios while preserving the common error serialization contract.
  */
 const assert = require('assert');
+const loggerOwner = require('../../nConfig/src/service/DefaultLoggerService');
 
 global.CONFIG = {
     get: function (key) {
@@ -42,6 +43,7 @@ global.SERVICE = {
         }
     },
     DefaultLoggerService: {
+        ...loggerOwner,
         createLogger: function () {
             return {
                 debug: function () {},

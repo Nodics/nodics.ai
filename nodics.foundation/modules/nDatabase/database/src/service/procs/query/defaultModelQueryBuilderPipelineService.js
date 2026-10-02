@@ -134,14 +134,20 @@ module.exports = {
      */
     buildPrimeryQuery: function (request, response, process) {
         this.LOG.debug('Building query from primery keys');
-        let schemaOptions = request.schemaModel.rawSchema.schemaOptions[request.tenant];
-        if (schemaOptions && schemaOptions.primaryKeys && schemaOptions.primaryKeys.length > 0) {
-            if (!request.query) request.query = {};
-            schemaOptions.primaryKeys.forEach(key => {
-                if (request.model[key]) {
-                    request.query[key] = request.model[key];
+        const definition = request.schemaModel.rawSchema.definition || {};
+        const primaryKeys = Object.keys(definition).filter(key => definition[key].primary === true);
+        if (primaryKeys.length > 0) {
+            const missingIdentity = primaryKeys.some(key =>
+                request.model[key] === undefined || request.model[key] === null || request.model[key] === '');
+            if (missingIdentity) {
+                if (request.options && request.options.replaceAllMatchesByQuery === true) {
+                    throw new CLASSES.NodicsError('ERR_SAVE_00003', 'Declared primary identity is required for save');
                 }
-            });
+                // Defaults and owning preSave hooks may supply an insert identity later; never build a partial selector.
+                delete request.query;
+            } else {
+                request.query = Object.fromEntries(primaryKeys.map(key => [key, request.model[key]]));
+            }
             process.stop(request, response);
         } else {
             process.nextSuccess(request, response);

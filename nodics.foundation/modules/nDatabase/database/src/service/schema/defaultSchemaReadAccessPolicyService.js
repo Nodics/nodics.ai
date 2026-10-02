@@ -22,6 +22,48 @@
  * preserving the generated get pipeline contract.
  */
 module.exports = {
+    /** Resolves fixed read hooks from actual prepared schema metadata, never request flags. Qualification is evidence, not a privacy bypass. @param {Object} model Prepared provider receiver. @returns {Object|null} Effective configured owner. */
+    protectedReadOwner: function (model) {
+        const policy =
+            model && model.rawSchema && model.rawSchema.readProtection;
+        if (policy === undefined) return null;
+        if (
+            !policy ||
+            typeof policy !== 'object' ||
+            Array.isArray(policy) ||
+            typeof policy.owner !== 'string' ||
+            !/^[A-Za-z][A-Za-z0-9]*Service$/.test(policy.owner)
+        ) {
+            throw new CLASSES.NodicsError('ERR_AUTH_00003');
+        }
+        const owner = SERVICE[policy.owner];
+        if (
+            typeof owner?.providerRead !== 'function' ||
+            typeof owner?.providerResult !== 'function'
+        ) {
+            throw new CLASSES.NodicsError('ERR_AUTH_00003');
+        }
+        return owner;
+    },
+
+    /** Guards the exact request before cache/provider query or count execution. @param {Object} request Exact original input. @param {Object} model Actual prepared receiver. @returns {Promise<boolean>} Owner acknowledgement. */
+    providerRead: async function (request, model) {
+        const owner = this.protectedReadOwner(model);
+        if (owner && (await owner.providerRead(request, model)) !== true)
+            throw new CLASSES.NodicsError('ERR_AUTH_00003');
+        return true;
+    },
+
+    /** Projects the original response envelope before public delivery; no synthetic owner admission is created. @param {Object} request Exact original input. @param {Object} response Pipeline wrapper with success. @param {Object} model Actual prepared receiver. @returns {Promise<Object>} Projected wrapper. */
+    providerResult: async function (request, response, model) {
+        const owner = this.protectedReadOwner(model);
+        if (
+            owner &&
+            (await owner.providerResult(request, response, model)) !== true
+        )
+            throw new CLASSES.NodicsError('ERR_AUTH_00003');
+        return response;
+    },
 
     /**
      * Initializes the read access policy service.
@@ -51,7 +93,9 @@ module.exports = {
      * @returns {Promise<Object>} Resolves with the response after policy application.
      */
     applyReadPolicies: function (request, response) {
-        return this.applyAccessPolicies(request, response, 'read');
+        return this.providerResult(request, response, request.schemaModel).then(
+            () => this.applyAccessPolicies(request, response, 'read')
+        );
     },
 
     /**
@@ -62,7 +106,9 @@ module.exports = {
      * @returns {Promise<Object>} Resolves with the response after policy application.
      */
     applyExportPolicies: function (request, response) {
-        return this.applyAccessPolicies(request, response, 'export');
+        return this.providerResult(request, response, request.schemaModel).then(
+            () => this.applyAccessPolicies(request, response, 'export')
+        );
     },
 
     /**
@@ -74,18 +120,30 @@ module.exports = {
      * @returns {Promise<Object>} Resolves with the response after policy application.
      */
     applyAccessPolicies: function (request, response, action) {
-        if (!this.isPolicyResolverAvailable() || !response || !response.success || !Array.isArray(response.success.result)) {
+        if (
+            !this.isPolicyResolverAvailable() ||
+            !response ||
+            !response.success ||
+            !Array.isArray(response.success.result)
+        ) {
             return Promise.resolve(response);
         }
         let properties = this.getPolicyControlledProperties(request);
         if (properties.length === 0 || response.success.result.length === 0) {
             return Promise.resolve(response);
         }
-        return this.resolvePropertyDecisions(request, properties, action).then(decisions => {
-            response.success.result = response.success.result.map(model => this.applyDecisionsToModel(model, decisions));
-            response.success.policy = this.buildPolicyMetadata(decisions, action);
-            return response;
-        });
+        return this.resolvePropertyDecisions(request, properties, action).then(
+            (decisions) => {
+                response.success.result = response.success.result.map((model) =>
+                    this.applyDecisionsToModel(model, decisions)
+                );
+                response.success.policy = this.buildPolicyMetadata(
+                    decisions,
+                    action
+                );
+                return response;
+            }
+        );
     },
 
     /**
@@ -94,8 +152,11 @@ module.exports = {
      * @returns {boolean} True when policy resolution can be performed.
      */
     isPolicyResolverAvailable: function () {
-        return SERVICE.DefaultSchemaAccessPolicyResolverService &&
-            typeof SERVICE.DefaultSchemaAccessPolicyResolverService.resolveAccess === 'function';
+        return (
+            SERVICE.DefaultSchemaAccessPolicyResolverService &&
+            typeof SERVICE.DefaultSchemaAccessPolicyResolverService
+                .resolveAccess === 'function'
+        );
     },
 
     /**
@@ -105,7 +166,10 @@ module.exports = {
      * @returns {string[]} Property names.
      */
     getPolicyControlledProperties: function (request) {
-        let definition = request.schemaModel && request.schemaModel.rawSchema ? request.schemaModel.rawSchema.definition : {};
+        let definition =
+            request.schemaModel && request.schemaModel.rawSchema
+                ? request.schemaModel.rawSchema.definition
+                : {};
         return Object.keys(definition || {});
     },
 
@@ -119,19 +183,24 @@ module.exports = {
      */
     resolvePropertyDecisions: function (request, properties, action) {
         let decisions = {};
-        return Promise.all(properties.map(propertyName => {
-            return SERVICE.DefaultSchemaAccessPolicyResolverService.resolveAccess(request, {
-                tenant: request.tenant,
-                moduleName: request.schemaModel.moduleName,
-                schemaName: request.schemaModel.schemaName,
-                propertyName: propertyName,
-                action: action,
-                userGroups: this.getUserGroups(request),
-                now: request.now
-            }).then(decision => {
-                decisions[propertyName] = decision;
-            });
-        })).then(() => decisions);
+        return Promise.all(
+            properties.map((propertyName) => {
+                return SERVICE.DefaultSchemaAccessPolicyResolverService.resolveAccess(
+                    request,
+                    {
+                        tenant: request.tenant,
+                        moduleName: request.schemaModel.moduleName,
+                        schemaName: request.schemaModel.schemaName,
+                        propertyName: propertyName,
+                        action: action,
+                        userGroups: this.getUserGroups(request),
+                        now: request.now
+                    }
+                ).then((decision) => {
+                    decisions[propertyName] = decision;
+                });
+            })
+        ).then(() => decisions);
     },
 
     /**
@@ -141,7 +210,9 @@ module.exports = {
      * @returns {string[]} User group codes.
      */
     getUserGroups: function (request) {
-        return request.authData && Array.isArray(request.authData.userGroups) ? request.authData.userGroups : [];
+        return request.authData && Array.isArray(request.authData.userGroups)
+            ? request.authData.userGroups
+            : [];
     },
 
     /**
@@ -153,12 +224,18 @@ module.exports = {
      */
     applyDecisionsToModel: function (model, decisions) {
         let filtered = this.toPlainObject(model);
-        Object.keys(decisions).forEach(propertyName => {
+        Object.keys(decisions).forEach((propertyName) => {
             let decision = decisions[propertyName];
             if (decision.effect === 'HIDE' || decision.effect === 'DENY') {
                 delete filtered[propertyName];
-            } else if (decision.effect === 'MASK' && Object.prototype.hasOwnProperty.call(filtered, propertyName)) {
-                filtered[propertyName] = this.maskValue(filtered[propertyName], decision.maskStrategy);
+            } else if (
+                decision.effect === 'MASK' &&
+                Object.prototype.hasOwnProperty.call(filtered, propertyName)
+            ) {
+                filtered[propertyName] = this.maskValue(
+                    filtered[propertyName],
+                    decision.maskStrategy
+                );
             }
         });
         return filtered;
@@ -193,7 +270,9 @@ module.exports = {
         }
         if (strategy === 'last4') {
             let text = String(value);
-            return text.length <= 4 ? '****' : '*'.repeat(text.length - 4) + text.slice(-4);
+            return text.length <= 4
+                ? '****'
+                : '*'.repeat(text.length - 4) + text.slice(-4);
         }
         if (strategy === 'empty') {
             return '';
@@ -212,15 +291,19 @@ module.exports = {
      * @returns {Object} Policy metadata.
      */
     buildPolicyMetadata: function (decisions, action) {
-        let applied = Object.keys(decisions).filter(propertyName => {
-            return ['HIDE', 'DENY', 'MASK'].includes(decisions[propertyName].effect);
-        }).map(propertyName => {
-            return {
-                propertyName: propertyName,
-                effect: decisions[propertyName].effect,
-                policyCode: decisions[propertyName].policyCode
-            };
-        });
+        let applied = Object.keys(decisions)
+            .filter((propertyName) => {
+                return ['HIDE', 'DENY', 'MASK'].includes(
+                    decisions[propertyName].effect
+                );
+            })
+            .map((propertyName) => {
+                return {
+                    propertyName: propertyName,
+                    effect: decisions[propertyName].effect,
+                    policyCode: decisions[propertyName].policyCode
+                };
+            });
         return {
             action: action,
             applied: applied,

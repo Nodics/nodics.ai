@@ -17,6 +17,14 @@
  * @override Project modules may override this behavior through later active modules while preserving the published capability contract.
  */
 module.exports = {
+    ERR_DATABASE_TENANT_NAMESPACE: {
+        code: '409',
+        message: 'Enterprise storage isolation could not be confirmed. Setup requires administrator attention.'
+    },
+    ERR_DATABASE_TENANT_BINDING: {
+        code: '409',
+        message: 'Enterprise storage does not match its approved setup. Review the deployment before continuing.'
+    },
     ERR_CONCURRENCY_00001: { code: '409', message: 'This record changed after it was read. Review the latest record before saving.' },
     ERR_CONCURRENCY_00002: { code: '428', message: 'The original record revision is required. Read the record before changing it.' },
     ERR_CONCURRENCY_00003: { code: '400', message: 'Invalid managed concurrency request or schema contract' },

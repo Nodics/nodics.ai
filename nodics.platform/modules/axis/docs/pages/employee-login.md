@@ -47,6 +47,31 @@ authorization, CMS delivery, or session-revocation failures.
 A customer login is never used as a fallback. Authentication or authorization
 failure keeps the employee outside the dashboard and displays a safe message.
 
+Public login content uses the configured project's enterprise context. A verified
+registration sign-in hint selects the Profile authentication enterprise, not the
+public CMS content tenant. Authenticated CMS requests retain the authenticated
+employee context. This separation does not broaden runtime service credentials.
+
+After a successful login or restore, Axis retains a non-secret enterprise routing
+hint in tab-scoped session storage, keyed by the configured project endpoint.
+Ordinary session expiry or a failed restore clears authenticated state and cached
+data, but preserves this hint so the next password login reaches the same
+enterprise. It is not a session, permission, identity or credential: Profile must
+authenticate again and BackOffice must rebuild authorized navigation. Confirmed
+logout and an uncertain explicit enterprise switch clear it. A verified
+registration handoff takes precedence; public CMS content still uses the project
+context. Customization must not store tokens or use the hint to select an arbitrary
+backend, authorize access, or fall back to another enterprise after refusal.
+
+After registration, choose **Sign in** explicitly. If another employee session is
+open, Axis first asks Profile to revoke that session; only confirmed logout clears
+the previous session and forwards the new account's bounded enterprise hint.
+Failed logout keeps the previous session locked with recovery guidance. Merely
+viewing or completing registration does not end an existing session. Returning
+with an already registered email requires fresh mailbox proof and does not create
+another account; Profile may return an unambiguous enterprise sign-in hint after
+checking the existing account, assignment, credential and access eligibility.
+
 Password fields on login and lock-screen pages include an accessible show/hide
 control so employees can verify local typing mistakes before submission.
 Revealing a password changes only the current input presentation. Axis still
@@ -54,6 +79,14 @@ sends the value only to Profile, never stores it, and never exposes it through
 BackOffice, CMS, URLs, logs, query cache, or browser storage.
 
 ## First-run initialization
+
+Axis readiness describes the project's shared application baseline, not a new
+baseline for each employee enterprise. The status owner reads that baseline under
+the configured project authority while retaining the employee's identity and
+view authorization. This read does not let enterprise administrators initialize
+or publish project content; initiation retains its existing independent scope
+and authorization. Do not reimport a duplicate Axis baseline to repair an
+employee login or change the employee's tenant to the platform tenant.
 
 When the managed Axis baseline is absent, the bundled recovery screen remains
 available after employee authentication. Choose **Prepare required modules**
@@ -71,16 +104,21 @@ retry does not grant approval or bypass an unavailable module.
 
 ## Password recovery
 
-The public `/forgot-password` page uses the same responsive authentication
-layout as login, with CMS-owned introduction, identifier label, placeholder,
-action label, assistance, and legal text. Axis intentionally keeps submission
-unavailable today because Profile does not yet expose an approved employee
-self-recovery API.
+The public `/forgot-password` route renders Profile's independently discovered
+`axis.employee-recovery` workspace. Profile supplies labels, constraints,
+operations and safe progress; Communication owns verification delivery. When the
+deployment has qualified and enabled recovery, the user verifies their mailbox
+before entering a replacement password. An unavailable capability remains
+unavailable; Axis never simulates success or substitutes registration.
 
-Do not simulate success, send identifiers to BackOffice or CMS, or build a
-frontend-only reset path. The future Profile contract must be anti-enumeration,
-rate-limited, tenant-aware, auditable, and compatible with the existing OTP and
-notification authorities before this form is connected.
+Recovery does not select enterprise roles, create an employee, or grant membership.
+Profile owns anti-enumeration, rate limits, proof expiry, credential mutation,
+audit and session invalidation. Uncertain outcomes use the owner's explicit
+progress inspection rather than an automatic repeated password change. Successful
+completion returns to normal sign-in through the same secure handoff described
+above. Custom projects extend Profile presentation and the existing Communication
+templates, not a second browser-owned identity workflow. See
+`profile/llm/contracts/account-access-journeys.md` for the authoritative contract.
 
 ## Idle screen lock
 

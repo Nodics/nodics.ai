@@ -96,6 +96,7 @@ test.beforeEach(() => {
     },
     DefaultDigitalEntitlementService: {
       get: async (r) => ({
+        code: "SUC_READ",
         result: Object.entries(r.query).every(
           ([k, v]) =>
             k === "tenant" || k.startsWith("evidence.") || row[k] === v,
@@ -115,13 +116,22 @@ test.beforeEach(() => {
           throw Error("interrupted persistence");
         }
         row = { ...row, ...clone(r.model), revision: row.revision + 1 };
-        return { result: clone(row) };
+        return {
+          code: "SUC_SYS_00000",
+          result: { acknowledged: true, matchedCount: 1 },
+        };
       },
     },
     DefaultDigitalDeliveryService: {
+      get: async (r) => ({
+        code: "SUC_READ",
+        result: receipts.has(r.query.code)
+          ? [clone(receipts.get(r.query.code))]
+          : [],
+      }),
       save: async (r) => {
         receipts.set(r.model.code, clone(r.model));
-        return { result: r.model };
+        return { code: "SUC_SAVE", result: r.model };
       },
     },
     DefaultPromotionOperationService: {
@@ -280,6 +290,94 @@ test("interrupted entitlement persistence resumes from the stored receipt withou
   });
   assert.equal(done.claimStatus, "REDEEMED");
   assert.equal(receipts.size, 1);
+});
+test("a saved fulfillment receipt is reused without repeating provider effects", async () => {
+  const r = await validated();
+  let calls = 0;
+  SERVICE.DefaultDigitalCommerceMerchantScreenProviderService = {
+    confirm: async (...args) => {
+      calls++;
+      return provider.confirm(...args);
+    },
+  };
+  failRedeem = true;
+  await assert.rejects(merchant.confirm(r), /interrupted/);
+  await merchant.confirm(r);
+  assert.equal(calls, 1);
+  assert.equal(receipts.size, 1);
+});
+test("provider acknowledgement must match the original receipt and mode", async () => {
+  const r = await validated();
+  SERVICE.DefaultDigitalCommerceMerchantScreenProviderService = {
+    confirm: async (...args) => ({
+      ...(await provider.confirm(...args)),
+      merchantReceiptReference: "OTHER-RECEIPT",
+    }),
+  };
+  await assert.rejects(merchant.confirm(r), /not confirmed/);
+  assert.equal(coupon, "CLAIMED");
+  assert.equal(receipts.size, 0);
+});
+test("terminal confirmation replay requires its original persisted receipt", async () => {
+  const r = await validated();
+  await merchant.confirm(r);
+  receipts.clear();
+  await assert.rejects(merchant.confirm(r), /receipt is unavailable/);
+  assert.equal(row.claimStatus, "REDEEMED");
+  assert.equal(coupon, "REDEEMED");
+  assert.equal(receipts.size, 0);
+});
+test("missing receipt owner rejects before acquiring a coupon claim", async () => {
+  const r = await validated();
+  delete SERVICE.DefaultDigitalDeliveryService.get;
+  await assert.rejects(merchant.confirm(r), /receipt persistence/);
+  assert.equal(coupon, "DELIVERED");
+  assert.equal(row.claimStatus, "UNCLAIMED");
+});
+test("missing fulfillment provider rejects before saving an instruction or claim", async () => {
+  const r = await validated();
+  delete SERVICE.DefaultDigitalCommerceMerchantScreenProviderService;
+  await assert.rejects(merchant.confirm(r), /provider is unavailable/);
+  assert.equal(coupon, "DELIVERED");
+  assert.equal(row.claimStatus, "UNCLAIMED");
+  assert.equal(row.evidence.merchantRedemption?.confirmationKey, undefined);
+});
+test("failed receipt acknowledgement cannot redeem a claimed coupon", async () => {
+  const r = await validated();
+  SERVICE.DefaultDigitalDeliveryService.save = async () => ({
+    code: "ERR_SAVE",
+    result: {},
+  });
+  await assert.rejects(merchant.confirm(r), /persistence was not confirmed/);
+  assert.equal(coupon, "CLAIMED");
+  assert.equal(row.claimStatus, "CLAIMED");
+  assert.equal(receipts.size, 0);
+});
+test("a missing or altered saved receipt cannot fabricate redemption", async () => {
+  const r = await validated();
+  SERVICE.DefaultDigitalDeliveryService.save = async () => ({
+    code: "SUC_SAVE",
+    result: {},
+  });
+  await assert.rejects(merchant.confirm(r), /saved identity/);
+  assert.equal(coupon, "CLAIMED");
+  assert.equal(row.claimStatus, "CLAIMED");
+});
+test("persisted receipt replay rejects another buyer or fulfillment evidence", async () => {
+  const r = await validated();
+  await merchant.confirm(r);
+  const original = clone(receipts.values().next().value);
+  await assert.rejects(
+    merchant.persistMerchantReceipt(
+      { tenant: "runtime", enterpriseCode: "partition" },
+      {
+        ...original,
+        evidence: { ...original.evidence, confirmedBy: "another" },
+      },
+    ),
+    /readback changed/,
+  );
+  assert.deepEqual(receipts.get(original.code), original);
 });
 test("Promotion eligibility failure and an inactive issuer fail closed before claim", async () => {
   SERVICE.DefaultPromotionOperationService.validateMerchantCoupon =

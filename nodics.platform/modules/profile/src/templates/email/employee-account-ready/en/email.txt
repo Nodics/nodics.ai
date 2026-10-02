@@ -1,0 +1,8 @@
+{{brandName}}
+
+Your employee account for {{enterpriseName}} is ready.
+
+{{nextStep}}
+
+Your access remains subject to current enterprise permissions and account status. This message does not enroll you as a customer or change your password.
+Never share your password or verification code.

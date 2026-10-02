@@ -1,5 +1,10 @@
 # nRouter Agent Contract
 
+Sensitive HTTP routes must follow the [request capture contract](llm/contracts/request-capture-privacy-contract.md).
+Bind trusted `requestPrivacy: { sensitive: true }` before parsers; preserve exact
+private admission on derived inputs, cache exclusion and generic failures.
+Do not equate a deployment flag or APM send filter with pre-capture proof.
+
 This file gives AI coding agents mandatory guidance for this Nodics module or package boundary.
 
 ## Inheritance

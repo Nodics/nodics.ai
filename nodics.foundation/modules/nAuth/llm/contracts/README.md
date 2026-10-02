@@ -6,6 +6,40 @@ Use these files for rules that are more specific than root `AGENTS.md` and the m
 
 ## Strict auth cache activation
 
+Capability-supplied `securityBindings` are one to eight distinct, bounded
+`{tenant, principalId, authVersion}` coordinates. Every coordinate validates
+fail-closed, even when legacy stamp policy is disabled or permits missing stamps.
+Use typed immutable IDs to avoid Customer/Employee collisions. nAuth owns generic
+shape and stamp mechanics, never Profile account lookup, tenant selection or
+membership authority. `sessionContext` is inert `{owner, code, version}` and
+requires bindings. Only person access tokens may carry these claims or the
+allowlisted PASSWORD/EXTERNAL method supplied after owning proof verification.
+Profile must preserve them through refresh and reject stale context before issue.
+
+A validated person sessionContext replaces the ambiguous legacy tenant/login
+stamp with strict typed independent bindings. Validate the bounded context and
+access-token/person type before skipping that alias. Contextless legacy proofs
+retain existing stamp behavior; adding arbitrary context is not a bypass.
+
+Live context admission additionally requires the qualified selected owner and its
+exact public proof through `validateAuthorizationContext`; stamps are never a
+fallback. See [live authorization context validation](session-context-validation.md).
+Unsupported remote contexts reject; the remote bridge remains a genuine source
+gap rather than a qualification-only task. New fixtures remain deferred.
+
+`authSecurity.authorizationPolicy` is disabled/unqualified by default. When
+enabled/qualified its integer version (1..2147483647) must exactly match the
+`authorizationPolicyVersion` claim or retained refresh proof. Missing/stale
+versions reject independently of legacy fail-open settings. Profile checks it
+before issuing and while consuming refresh/switch proof. Coordinate increasing
+versions across issuers/validators; never disable or roll back to reuse stale
+proofs. Configuration changes do not automatically bump the version. Installed
+rollout, drift, cache and failure behavior still require qualification.
+
+`test/independentSecurityBindings.test.js` provides owner-injected cases for
+independent revocation, fail-open refusal, unsafe payloads and later-layer override.
+Those fixtures do not qualify an installed shared-cache deployment.
+
 - Strict security-stamp and refresh-token state must fail closed unless the
   effective layered cache configuration enables the cache subsystem, enables
   the `auth.auth` channel, selects an enabled distributed engine, declares

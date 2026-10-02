@@ -21,9 +21,18 @@ module.exports = { commsSchema: {
 } };
 
 // Private retry material and managed compare-and-set claims belong to Communication storage.
+module.exports.commsSchema.commsTemplate.definition.sourceModules = {
+    type: 'array', required: false, description: 'Explicit authorized source modules; legacy missing lists never imply wildcard authority.'
+};
+module.exports.commsSchema.commsTemplateVersion.definition.resourceCode = {
+    type: 'string', required: false, description: 'Stable module-owned template resource identity; reference records carry no presentation body.'
+};
+module.exports.commsSchema.commsTemplateVersion.definition.bodyTemplate.required = false;
+
 Object.assign(module.exports.commsSchema.commsIntent, {backoffice:{enabled:false,concurrency:{managed:true,field:'revision'}}});
 Object.assign(module.exports.commsSchema.commsIntent.definition, {
  revision:{type:'int',default:0,required:true,description:'Managed optimistic revision for delivery claims.'},
+ lastMutationId:{type:'string',required:false,description:'Private delivery transition marker; only an exact acknowledged owner revision may invoke the provider.'},
  reconciliation:{type:'array',description:'Audited explicit operator decisions for uncertain deliveries; a resend requires a separate retry.'},
  commandHash:{type:'string',description:'Immutable command fingerprint that detects idempotency collisions.'},
  renderedContent:{type:'object',description:'Private immutable rendered message used for durable retry.'},
@@ -49,6 +58,11 @@ Object.assign(module.exports.commsSchema.commsVerificationChallenge.definition, 
     proofExpiresAt: { type: 'date', description: 'Verified proof expiry, never later than challenge expiry.' },
     consumedAt: { type: 'date', description: 'Time of the one acknowledged proof consumption.' },
     consumedOperationHash: { type: 'string', description: 'Private receipt binding consumption to an owning business command; not authorisation to rerun it.' },
+    consumedProofHash: { type: 'string', description: 'Private verifier for read-only consumption receipt recovery; never a second execution grant or public API field.' },
     lastMutationId: { type: 'string', description: 'Private per-attempt write marker used to confirm exact acknowledged persistence.' }
 });
 module.exports.commsSchema.commsVerificationChallenge.definition.status.enum.push('CONSUMED');
+
+// Runtime/provider configuration failures are persisted outcomes, not successful delivery.
+module.exports.commsSchema.commsIntent.definition.status.enum.push('UNCONFIGURED');
+module.exports.commsSchema.commsDeliveryAttempt.definition.status.enum.push('UNCONFIGURED');

@@ -12,6 +12,10 @@
 const crypto = require("crypto");
 const fs = require("fs");
 const path = require("path");
+const { AsyncLocalStorage } = require("node:async_hooks");
+const startupReleaseExecution = new AsyncLocalStorage();
+const placementRequests = new WeakMap();
+const placementRuns = new WeakMap();
 
 /**
  * @module import/service/release/DefaultDataReleaseService
@@ -266,8 +270,10 @@ module.exports = {
           );
         releases.forEach((release) => this.validateDestination(release));
       } else {
-        releases = releases.filter((release) =>
-          release.selectionPolicy !== "EXPLICIT" && this.isDestinationCompatible(release),
+        releases = releases.filter(
+          (release) =>
+            release.selectionPolicy !== "EXPLICIT" &&
+            this.isDestinationCompatible(release),
         );
       }
       return {
@@ -333,13 +339,18 @@ module.exports = {
       typeof configuredRole === "string"
         ? configuredRole
         : configuredRole && configuredRole.code;
+    const allowed = Array.isArray(policy.allowedDestinationRoles)
+      ? policy.allowedDestinationRoles
+      : runtimeRole
+        ? [runtimeRole]
+        : [];
     let environment = String(
-      (CONFIG.get("environment") || {}).class ||
-        "",
+      (CONFIG.get("environment") || {}).class || "",
     ).toUpperCase();
     return Boolean(
       runtimeRole &&
       release.destinationRole === runtimeRole &&
+      allowed.includes(release.destinationRole) &&
       Array.isArray(release.environmentScope) &&
       (release.environmentScope.includes("ALL") ||
         release.environmentScope.includes(environment)),
@@ -410,10 +421,9 @@ module.exports = {
       importExecuted: false,
       ready: ready,
       skipped: executablePlan.releases.length === 0,
-      reason:
-        !ready
-          ? "Selected contribution plans are blocked; review owner evidence"
-          : executablePlan.releases.length === 0
+      reason: !ready
+        ? "Selected contribution plans are blocked; review owner evidence"
+        : executablePlan.releases.length === 0
           ? "Selected data releases are already current"
           : "Data release plan validated; no import execution was performed",
     };
@@ -434,18 +444,32 @@ module.exports = {
   preflightContributions: async function (request, plan) {
     const results = [];
     for (const release of plan.releases.filter((item) => item.installer)) {
-      const providerName = (this.configuration().installers || {})[release.installer];
+      const providerName = (this.configuration().installers || {})[
+        release.installer
+      ];
       const provider = providerName && SERVICE[providerName];
       if (!provider || typeof provider.preflightContribution !== "function") {
-        throw this.error("ERR_IMP_00003", "Data release installer preflight is unavailable: " + release.installer);
+        throw this.error(
+          "ERR_IMP_00003",
+          "Data release installer preflight is unavailable: " +
+            release.installer,
+        );
       }
       const result = await provider.preflightContribution(
-        Object.assign({}, request, { tenant: plan.tenant, contribution: release }),
+        Object.assign({}, request, {
+          tenant: plan.tenant,
+          contribution: release,
+        }),
       );
       if (!result || typeof result.ready !== "boolean") {
-        throw this.error("ERR_IMP_00003", "Data release installer preflight result is invalid");
+        throw this.error(
+          "ERR_IMP_00003",
+          "Data release installer preflight result is invalid",
+        );
       }
-      results.push(Object.assign({}, result, { releaseCode: release.releaseCode }));
+      results.push(
+        Object.assign({}, result, { releaseCode: release.releaseCode }),
+      );
     }
     return results;
   },
@@ -466,8 +490,7 @@ module.exports = {
         .length,
       update: outcomes.filter((outcome) => outcome.operation === "UPDATE")
         .length,
-      retry: outcomes.filter((outcome) => outcome.operation === "RETRY")
-        .length,
+      retry: outcomes.filter((outcome) => outcome.operation === "RETRY").length,
       skip: outcomes.filter((outcome) => outcome.operation === "SKIP_CURRENT")
         .length,
       blocked: outcomes.filter((outcome) => outcome.operation === "BLOCKED")
@@ -581,9 +604,11 @@ module.exports = {
         INSTALL: "Release will be installed for this runtime.",
         UPDATE: "Installed release will be updated to the available version.",
         RETRY: "The previous failed release import will be retried.",
-        SKIP_CURRENT: "No import will run because the release is already current.",
+        SKIP_CURRENT:
+          "No import will run because the release is already current.",
         WAIT: "Import is already running; refresh after it completes.",
-        BLOCKED: "Release cannot be imported until its readiness blocker is repaired.",
+        BLOCKED:
+          "Release cannot be imported until its readiness blocker is repaired.",
       }[operation] || "Review release readiness before continuing."
     );
   },
@@ -642,11 +667,26 @@ module.exports = {
     }
     if (states.every((release) => release.status === "CURRENT"))
       return { skipped: true, reason: "INIT_CURRENT" };
-    return this.executePreparedPlan(operation, plan);
+    const context = { tenant: plan.tenant, active: true };
+    return startupReleaseExecution.run(context, async () => {
+      try {
+        return await this.executePreparedPlan(operation, plan);
+      } finally {
+        context.active = false;
+      }
+    });
+  },
+
+  /** Reports only the current awaited startup Init execution, never caller options. @param {string} tenant Canonical target tenant. @returns {boolean} Whether the startup owner currently installs this tenant's Init releases. */
+  isStartupReleaseExecution: function (tenant) {
+    const context = startupReleaseExecution.getStore();
+    return context?.active === true && context.tenant === tenant;
   },
 
   /** Applies a trusted validated plan while preserving version ordering and installation receipts. */
   executePreparedPlan: async function (request, plan) {
+    for (const release of plan.releases)
+      await this.validateReleaseTargets(release, plan.tenant);
     const operationReleases = await this.operationReleases(plan, "AVAILABLE");
     if (operationReleases.some((release) => release.status === "RUNNING")) {
       throw this.error(
@@ -761,7 +801,9 @@ module.exports = {
     let requested =
       requestedCodes ||
       requestedModules ||
-      available.filter((item) => item.selectionPolicy !== "EXPLICIT").map((item) => item.releaseCode);
+      available
+        .filter((item) => item.selectionPolicy !== "EXPLICIT")
+        .map((item) => item.releaseCode);
     if (
       requested.length >
         Number(this.configuration().maximumModulesPerRun || 256) ||
@@ -785,7 +827,9 @@ module.exports = {
       ? requested.map((code) => availableByCode[code])
       : requested.map((moduleName) => {
           let matches = available.filter(
-            (item) => item.moduleName === moduleName && item.selectionPolicy !== "EXPLICIT",
+            (item) =>
+              item.moduleName === moduleName &&
+              item.selectionPolicy !== "EXPLICIT",
           );
           if (matches.length > 1)
             throw this.error(
@@ -820,6 +864,8 @@ module.exports = {
     });
     let tenant = this.resolveTenant(request);
     releases.forEach((release) => this.validateDestination(release));
+    for (const release of releases)
+      await this.validateReleaseTargets(release, tenant);
     let installations = await this.getInstallations(tenant);
     let installedByCode = Object.fromEntries(
       installations.map((item) => [item.code, item]),
@@ -954,6 +1000,123 @@ module.exports = {
     return targets;
   },
 
+  /**
+   * Delegates trusted header-target admission to the owning capability before
+   * any release claim or record dispatch. Never silently skips an unavailable
+   * configured owner, rewrites a destination, or submits record/secret values.
+   * @param {Object} release Immutable selected source descriptor.
+   * @returns {Promise<boolean>} True after every selected target is admitted.
+   * @override Extend through data.dataReleases.targetValidators and owner exports.
+   */
+  validateReleaseTargets: async function (release, tenant) {
+    if (release.installer) return true;
+    if (
+      !(release.declaredFiles || []).some((file) =>
+        /(?:^|\/)headers\/.+\.js$/.test(file),
+      )
+    )
+      return true;
+    const validators = this.configuration().targetValidators || {};
+    const owner = NODICS.getRawModule(release.moduleName);
+    if (!owner || !owner.path)
+      throw this.error(
+        "ERR_IMP_00003",
+        "Data release source owner is unavailable",
+      );
+    for (const file of release.declaredFiles || []) {
+      if (!/(?:^|\/)headers\/.+\.js$/.test(file)) continue;
+      const headers = this.requireReleaseFile(
+        path.resolve(owner.path, "data", file),
+      );
+      for (const [moduleName, definitions] of Object.entries(headers || {})) {
+        for (const header of Object.values(definitions || {})) {
+          const options = (header && header.options) || {};
+          if (options.enabled === false || options.enabled === "false")
+            continue;
+          const targetModule = options.moduleName || moduleName;
+          if (
+            options.enterpriseCode !== undefined &&
+            (typeof options.enterpriseCode !== "string" ||
+              !/^[A-Za-z0-9_.:-]{1,128}$/.test(options.enterpriseCode))
+          )
+            throw this.error(
+              "ERR_IMP_00003",
+              "Explicit import enterprise code is invalid",
+            );
+          const providerName = validators[targetModule];
+          if (!providerName) {
+            if (options.enterpriseCode !== undefined)
+              throw this.error(
+                "ERR_IMP_00003",
+                "Explicit import placement validator is unavailable",
+              );
+            continue;
+          }
+          const provider = SERVICE[providerName];
+          if (!provider || typeof provider.validateImportTarget !== "function")
+            throw this.error(
+              "ERR_IMP_00003",
+              "Data release target validator is unavailable: " + targetModule,
+            );
+          let admitted;
+          try {
+            admitted = await provider.validateImportTarget({
+              moduleName: targetModule,
+              schemaName: options.schemaName,
+              indexName: options.indexName,
+              operation: options.operation,
+              destinationRole: release.destinationRole,
+              lifecycle: release.lifecycle,
+              ...(options.enterpriseCode !== undefined
+                ? { tenant, enterpriseCode: options.enterpriseCode }
+                : {}),
+            });
+          } catch (error) {
+            throw this.targetAdmissionError(error);
+          }
+          if (admitted !== true)
+            throw this.error(
+              "ERR_IMP_00003",
+              "Data release target was not admitted: " + targetModule,
+            );
+        }
+      }
+    }
+    return true;
+  },
+
+  /** Normalizes owner refusal to reviewed diagnostic codes and fixed copy; never retains owner exceptions, stacks or payloads. @param {Error} error Owner refusal. @returns {Error} Content-free import error. */
+  targetAdmissionError: function (error) {
+    const messages = {
+      ERR_PROFILE_MEMBERSHIP_UNAVAILABLE:
+        "Customer onboarding prerequisites are unavailable; verify qualified eligibility collaborators and an approved published policy before retry",
+      ERR_PROFILE_MEMBERSHIP_FORBIDDEN:
+        "Customer onboarding is not admitted for the selected tenant and enterprise",
+      ERR_PROFILE_ELIGIBILITY_OWNER:
+        "Customer onboarding eligibility owner is unavailable",
+      ERR_PROFILE_ELIGIBILITY_CONFIGURATION:
+        "Customer onboarding eligibility is disabled or unqualified",
+      ERR_PROFILE_ELIGIBILITY_COLLABORATORS:
+        "Customer onboarding eligibility collaborators are unavailable or unqualified",
+      ERR_PROFILE_ELIGIBILITY_POLICY:
+        "Customer onboarding requires an approved current published eligibility policy",
+      ERR_PROFILE_ELIGIBILITY_REGISTRY:
+        "Customer onboarding eligibility property and outcome registrations are incomplete",
+      ERR_PROFILE_ELIGIBILITY_AUDIT:
+        "Customer onboarding decision audit or invalidation is unqualified",
+    };
+    const code = error?.code;
+    const reviewed = typeof code === "string" && Object.hasOwn(messages, code);
+    const normalized = this.error(
+      "ERR_IMP_00003",
+      reviewed
+        ? messages[code]
+        : "Data release target violates owner runtime policy",
+    );
+    if (reviewed) normalized.metadata = { targetReadinessCode: code };
+    return normalized;
+  },
+
   /** Prevents a qualified release from being installed into a runtime role or environment outside its manifest contract. */
   validateDestination: function (release) {
     let policy = this.configuration();
@@ -985,8 +1148,7 @@ module.exports = {
       );
     }
     let environment = String(
-      (CONFIG.get("environment") || {}).class ||
-        "",
+      (CONFIG.get("environment") || {}).class || "",
     ).toUpperCase();
     if (
       !release.environmentScope.includes("ALL") &&
@@ -1145,7 +1307,8 @@ module.exports = {
                   entry[1],
                   entry[0],
                   !selector.active,
-                  aggregate.retainedRoots && aggregate.retainedRoots[entry[1].sourceRoot],
+                  aggregate.retainedRoots &&
+                    aggregate.retainedRoots[entry[1].sourceRoot],
                 ),
                 { discoveryOrder: discovery.order++ },
               ),
@@ -1167,10 +1330,20 @@ module.exports = {
         });
         if (selector.active) {
           let representedRoots = new Set(
-            sections.map((entry) => entry[1].sourceRoot || entry[0])
-              .concat(aggregate.retainedRoots ? Object.values(aggregate.sections)
-                .filter(section => section && section.kind === "CONTENT_PACK" && section.contentPath)
-                .map(section => section.contentPath.split("/")[0]) : [])
+            sections
+              .map((entry) => entry[1].sourceRoot || entry[0])
+              .concat(
+                aggregate.retainedRoots
+                  ? Object.values(aggregate.sections)
+                      .filter(
+                        (section) =>
+                          section &&
+                          section.kind === "CONTENT_PACK" &&
+                          section.contentPath,
+                      )
+                      .map((section) => section.contentPath.split("/")[0])
+                  : [],
+              )
               .concat(Object.keys(aggregate.retainedRoots || {})),
           );
           this.discoverFolderReleases(
@@ -1200,11 +1373,12 @@ module.exports = {
     );
   },
 
-  /** Orders immutable directory deltas before layer precedence within each version. */
+  /** Preserves logical delta order when an immutable successor moves to a later physical source root. */
   releaseSequence: function (release) {
-    const match = /^(?:init|core|sample)-v(\d{3})$/.exec(
-      release.sourceRoot || "",
-    );
+    const pattern = /^(?:init|core|sample)-v(\d{3})$/;
+    const match =
+      pattern.exec(release.sectionCode || "") ||
+      pattern.exec(release.sourceRoot || "");
     return match ? Number(match[1]) : 0;
   },
 
@@ -1363,37 +1537,74 @@ module.exports = {
 
   /** Hashes a complete contained source tree, including metadata, without executing payloads. */
   sourceRootFiles: function (dataRoot, sourceRoot) {
-    if (typeof sourceRoot !== "string" || !/^(init|core|sample)(-v\d{3})?$/.test(sourceRoot)) {
+    if (
+      typeof sourceRoot !== "string" ||
+      !/^(init|core|sample)(-v\d{3})?$/.test(sourceRoot)
+    ) {
       throw this.error("ERR_IMP_00003", "Data release sourceRoot is invalid");
     }
     const canonicalData = fs.realpathSync(dataRoot);
     const folder = path.join(dataRoot, sourceRoot);
-    if (fs.lstatSync(dataRoot).isSymbolicLink() || fs.lstatSync(folder).isSymbolicLink() ||
-        fs.realpathSync(folder) !== path.join(canonicalData, sourceRoot) || !fs.statSync(folder).isDirectory()) {
-      throw this.error("ERR_IMP_00003", "Data release sourceRoot must be contained without symlinks");
+    if (
+      fs.lstatSync(dataRoot).isSymbolicLink() ||
+      fs.lstatSync(folder).isSymbolicLink() ||
+      fs.realpathSync(folder) !== path.join(canonicalData, sourceRoot) ||
+      !fs.statSync(folder).isDirectory()
+    ) {
+      throw this.error(
+        "ERR_IMP_00003",
+        "Data release sourceRoot must be contained without symlinks",
+      );
     }
-    return Object.fromEntries(this.collectReleaseFiles(folder).map(relative => {
-      const file = path.join(folder, relative);
-      if (!fs.statSync(file).isFile()) throw this.error("ERR_IMP_00003", "Data release requires regular files");
-      return [sourceRoot + "/" + relative, crypto.createHash("sha256").update(fs.readFileSync(file)).digest("hex")];
-    }));
+    return Object.fromEntries(
+      this.collectReleaseFiles(folder).map((relative) => {
+        const file = path.join(folder, relative);
+        if (!fs.statSync(file).isFile())
+          throw this.error(
+            "ERR_IMP_00003",
+            "Data release requires regular files",
+          );
+        return [
+          sourceRoot + "/" + relative,
+          crypto
+            .createHash("sha256")
+            .update(fs.readFileSync(file))
+            .digest("hex"),
+        ];
+      }),
+    );
   },
 
   /** Validates opt-in historical source retention before discovery or generation may suppress a root. */
   validateRetainedRoots: function (dataRoot, manifest) {
     if (manifest.retainedRoots === undefined) return new Set();
-    const isMap = value => value && typeof value === "object" && !Array.isArray(value);
-    const fail = message => { throw this.error("ERR_IMP_00003", "Retained release " + message); };
-    if (!isMap(manifest.retainedRoots) || !isMap(manifest.sections)) fail("maps are invalid");
+    const isMap = (value) =>
+      value && typeof value === "object" && !Array.isArray(value);
+    const fail = (message) => {
+      throw this.error("ERR_IMP_00003", "Retained release " + message);
+    };
+    if (!isMap(manifest.retainedRoots) || !isMap(manifest.sections))
+      fail("maps are invalid");
     const identities = new Set();
     for (const [root, retained] of Object.entries(manifest.retainedRoots)) {
-      if (!isMap(retained) || !isMap(retained.files) || !isMap(retained.sections) ||
-          !Object.keys(retained.sections).length ||
-          (retained.scope !== undefined && retained.scope !== "SECTIONS")) fail("root metadata is invalid: " + root);
+      if (
+        !isMap(retained) ||
+        !isMap(retained.files) ||
+        !isMap(retained.sections) ||
+        !Object.keys(retained.sections).length ||
+        (retained.scope !== undefined && retained.scope !== "SECTIONS")
+      )
+        fail("root metadata is invalid: " + root);
       const actual = this.sourceRootFiles(dataRoot, root);
-      if (!Object.keys(retained.files).length ||
-          (retained.scope !== "SECTIONS" && Object.keys(actual).length !== Object.keys(retained.files).length) ||
-          Object.entries(retained.files).some(([file, hash]) => !/^[a-f0-9]{64}$/.test(hash) || actual[file] !== hash)) {
+      if (
+        !Object.keys(retained.files).length ||
+        (retained.scope !== "SECTIONS" &&
+          Object.keys(actual).length !== Object.keys(retained.files).length) ||
+        Object.entries(retained.files).some(
+          ([file, hash]) =>
+            !/^[a-f0-9]{64}$/.test(hash) || actual[file] !== hash,
+        )
+      ) {
         fail("tree checksum or membership changed: " + root);
       }
       const claimedFiles = new Set();
@@ -1401,43 +1612,87 @@ module.exports = {
         const successor = manifest.sections[code];
         const original = this.retainedSectionSource(section);
         const next = this.retainedSectionSource(successor);
-        if (original.sourceRoot !== root ||
-            Object.entries(original.files).some(([file, hash]) => actual[file] !== hash) ||
-            successor.kind !== section.kind || successor.dataType !== section.dataType || successor.pack !== section.pack ||
-            !/^\d+\.\d+\.\d+$/.test(successor.version || "") || this.compareVersions(successor.version, section.version) <= 0 ||
-            this.releaseSequence(next) <= this.releaseSequence(original)) fail("section requires an unchanged snapshot and a newer active successor: " + code);
+        if (
+          original.sourceRoot !== root ||
+          Object.entries(original.files).some(
+            ([file, hash]) => actual[file] !== hash,
+          ) ||
+          successor.kind !== section.kind ||
+          successor.dataType !== section.dataType ||
+          successor.pack !== section.pack ||
+          !/^\d+\.\d+\.\d+$/.test(successor.version || "") ||
+          this.compareVersions(successor.version, section.version) <= 0 ||
+          this.releaseSequence(next) <= this.releaseSequence(original)
+        )
+          fail(
+            "section requires an unchanged snapshot and a newer active successor: " +
+              code,
+          );
         const identity = code + "@" + section.version;
-        if (identities.has(identity)) fail("identity is duplicated: " + identity);
+        if (identities.has(identity))
+          fail("identity is duplicated: " + identity);
         identities.add(identity);
         const successorFiles = this.sourceRootFiles(dataRoot, next.sourceRoot);
-        if (next.sourceRoot.split("-")[0] !== root.split("-")[0] ||
-            Object.entries(next.files).some(([file, hash]) => successorFiles[file] !== hash)) {
+        if (
+          next.sourceRoot.split("-")[0] !== root.split("-")[0] ||
+          Object.entries(next.files).some(
+            ([file, hash]) => successorFiles[file] !== hash,
+          )
+        ) {
           fail("active successor checksum or ownership is invalid: " + code);
         }
         for (const file of Object.keys(original.files)) {
-          if (claimedFiles.has(file)) fail("historical sections overlap: " + file);
+          if (claimedFiles.has(file))
+            fail("historical sections overlap: " + file);
           claimedFiles.add(file);
         }
       }
-      if (retained.scope === "SECTIONS" && (claimedFiles.size !== Object.keys(retained.files).length ||
-          [...claimedFiles].some(file => !Object.hasOwn(retained.files, file)))) {
-        fail("section retention must contain exactly its historical file claims: " + root);
+      if (
+        retained.scope === "SECTIONS" &&
+        (claimedFiles.size !== Object.keys(retained.files).length ||
+          [...claimedFiles].some(
+            (file) => !Object.hasOwn(retained.files, file),
+          ))
+      ) {
+        fail(
+          "section retention must contain exactly its historical file claims: " +
+            root,
+        );
       }
       // Section-scoped retention leaves disjoint active payloads free to evolve.
       for (const section of Object.values(manifest.sections)) {
         if (!isMap(section)) continue;
         const files = section.files || section.generatedHashes || {};
-        if (String(section.sourceRoot || section.contentPath || section.dataType || "").split("/")[0] !== root &&
-            !Object.keys(files).some(file => file.startsWith(root + "/"))) continue;
+        if (
+          String(
+            section.sourceRoot || section.contentPath || section.dataType || "",
+          ).split("/")[0] !== root &&
+          !Object.keys(files).some((file) => file.startsWith(root + "/"))
+        )
+          continue;
         const active = this.retainedSectionSource(section);
-        if (active.sourceRoot !== root) fail("active section claims another source root");
+        if (active.sourceRoot !== root)
+          fail("active section claims another source root");
         for (const [file, hash] of Object.entries(active.files)) {
-          if (claimedFiles.has(file) || (retained.scope !== "SECTIONS" && actual[file] !== hash)) fail("active and retained ownership conflict: " + file);
+          if (
+            claimedFiles.has(file) ||
+            (retained.scope !== "SECTIONS" && actual[file] !== hash)
+          )
+            fail("active and retained ownership conflict: " + file);
           claimedFiles.add(file);
         }
       }
-      if (retained.scope !== "SECTIONS" && Object.keys(actual).some(file => file !== root + "/release.descriptor.json" && !claimedFiles.has(file))) {
-        fail("tree contains files without historical section ownership: " + root);
+      if (
+        retained.scope !== "SECTIONS" &&
+        Object.keys(actual).some(
+          (file) =>
+            file !== root + "/release.descriptor.json" &&
+            !claimedFiles.has(file),
+        )
+      ) {
+        fail(
+          "tree contains files without historical section ownership: " + root,
+        );
       }
     }
     return new Set(Object.keys(manifest.retainedRoots));
@@ -1445,25 +1700,55 @@ module.exports = {
 
   /** Normalizes existing data-release and content-pack fields for retention without changing their identities. */
   retainedSectionSource: function (section) {
-    const isMap = value => value && typeof value === "object" && !Array.isArray(value);
-    if (!isMap(section) || !["DATA_RELEASE", "CONTENT_PACK"].includes(section.kind) ||
-        !/^\d+\.\d+\.\d+$/.test(section.version || "")) {
+    const isMap = (value) =>
+      value && typeof value === "object" && !Array.isArray(value);
+    if (
+      !isMap(section) ||
+      !["DATA_RELEASE", "CONTENT_PACK"].includes(section.kind) ||
+      !/^\d+\.\d+\.\d+$/.test(section.version || "")
+    ) {
       throw this.error("ERR_IMP_00003", "Retained release section is invalid");
     }
-    const sourceRoot = section.kind === "CONTENT_PACK" ? section.contentPath : section.sourceRoot;
-    const files = section.kind === "CONTENT_PACK" ? section.generatedHashes : section.files;
-    if (typeof sourceRoot !== "string" || !/^(init|core|sample)(-v\d{3})?$/.test(sourceRoot) ||
-        !isMap(files) || !Object.keys(files).length ||
-        Object.entries(files).some(([file, hash]) => !file.startsWith(sourceRoot + "/") ||
-          file.split(/[\\/]/).some(part => part === ".." || part === "." || part === "") ||
-          file.includes("\\") || !/^[a-f0-9]{64}$/.test(hash)) ||
-        (section.kind === "DATA_RELEASE" && section.dataType !== sourceRoot.split("-")[0])) {
-      throw this.error("ERR_IMP_00003", "Retained release section source or files are invalid");
+    const sourceRoot =
+      section.kind === "CONTENT_PACK"
+        ? section.contentPath
+        : section.sourceRoot;
+    const files =
+      section.kind === "CONTENT_PACK" ? section.generatedHashes : section.files;
+    if (
+      typeof sourceRoot !== "string" ||
+      !/^(init|core|sample)(-v\d{3})?$/.test(sourceRoot) ||
+      !isMap(files) ||
+      !Object.keys(files).length ||
+      Object.entries(files).some(
+        ([file, hash]) =>
+          !file.startsWith(sourceRoot + "/") ||
+          file
+            .split(/[\\/]/)
+            .some((part) => part === ".." || part === "." || part === "") ||
+          file.includes("\\") ||
+          !/^[a-f0-9]{64}$/.test(hash),
+      ) ||
+      (section.kind === "DATA_RELEASE" &&
+        section.dataType !== sourceRoot.split("-")[0])
+    ) {
+      throw this.error(
+        "ERR_IMP_00003",
+        "Retained release section source or files are invalid",
+      );
     }
-    if (section.kind === "CONTENT_PACK" &&
-        (!/^[A-Za-z0-9._-]+$/.test(section.pack || "") || section.releaseChecksum !==
-          require("../contentPack/defaultContentPackService").createReleaseChecksum(files))) {
-      throw this.error("ERR_IMP_00003", "Retained content-pack identity or release checksum is invalid");
+    if (
+      section.kind === "CONTENT_PACK" &&
+      (!/^[A-Za-z0-9._-]+$/.test(section.pack || "") ||
+        section.releaseChecksum !==
+          require("../contentPack/defaultContentPackService").createReleaseChecksum(
+            files,
+          ))
+    ) {
+      throw this.error(
+        "ERR_IMP_00003",
+        "Retained content-pack identity or release checksum is invalid",
+      );
     }
     return { sourceRoot, files };
   },
@@ -1526,9 +1811,14 @@ module.exports = {
       dataType,
       lifecycleRequired,
     );
-    if (manifest.selectionPolicy !== undefined &&
-        !["DEFAULT", "EXPLICIT"].includes(manifest.selectionPolicy)) {
-      throw this.error("ERR_IMP_00003", "Data release selectionPolicy must be DEFAULT or EXPLICIT");
+    if (
+      manifest.selectionPolicy !== undefined &&
+      !["DEFAULT", "EXPLICIT"].includes(manifest.selectionPolicy)
+    ) {
+      throw this.error(
+        "ERR_IMP_00003",
+        "Data release selectionPolicy must be DEFAULT or EXPLICIT",
+      );
     }
     let installer = manifest.installer;
     if (installer !== undefined && !/^[A-Z][A-Z0-9_]{1,63}$/.test(installer)) {
@@ -1551,7 +1841,11 @@ module.exports = {
       sourceRoot,
       manifest.files,
       isAggregate,
-      retainedSource ? Object.values(retainedSource.sections).flatMap(section => Object.keys(this.retainedSectionSource(section).files)) : [],
+      retainedSource
+        ? Object.values(retainedSource.sections).flatMap((section) =>
+            Object.keys(this.retainedSectionSource(section).files),
+          )
+        : [],
     );
     let descriptor = this.releaseDescriptor(
       releaseRoot,
@@ -1637,9 +1931,13 @@ module.exports = {
     }
     let allFiles = this.collectReleaseFiles(sourceFolder)
       .filter((relativeFile) => relativeFile !== "release.descriptor.json")
-      .filter((relativeFile) => !excludedFiles.includes(isAggregate ? sourceRoot + "/" + relativeFile : relativeFile))
-      .reduce(
-      (result, relativeFile) => {
+      .filter(
+        (relativeFile) =>
+          !excludedFiles.includes(
+            isAggregate ? sourceRoot + "/" + relativeFile : relativeFile,
+          ),
+      )
+      .reduce((result, relativeFile) => {
         let releaseFile = isAggregate
           ? sourceRoot + "/" + relativeFile
           : relativeFile;
@@ -1648,9 +1946,7 @@ module.exports = {
           .update(fs.readFileSync(path.resolve(releaseRoot, releaseFile)))
           .digest("hex");
         return result;
-      },
-      {},
-    );
+      }, {});
     let declaredNames = Object.keys(declaredFiles || {});
     if (declaredNames.length === 0) return allFiles;
     let selected = declaredNames.reduce((result, relativeFile) => {
@@ -1671,7 +1967,12 @@ module.exports = {
   },
 
   /** Reads optional source-side release descriptor metadata without making it import payload. */
-  releaseDescriptor: function (releaseRoot, sourceRoot, sectionCode, isAggregate) {
+  releaseDescriptor: function (
+    releaseRoot,
+    sourceRoot,
+    sectionCode,
+    isAggregate,
+  ) {
     const descriptorPath = isAggregate
       ? path.resolve(releaseRoot, sourceRoot, "release.descriptor.json")
       : path.resolve(releaseRoot, "release.descriptor.json");
@@ -1685,7 +1986,11 @@ module.exports = {
         "Data release descriptor JSON is invalid for " + sectionCode,
       );
     }
-    if (!descriptor || typeof descriptor !== "object" || Array.isArray(descriptor)) {
+    if (
+      !descriptor ||
+      typeof descriptor !== "object" ||
+      Array.isArray(descriptor)
+    ) {
       throw this.error(
         "ERR_IMP_00003",
         "Data release descriptor is invalid for " + sectionCode,
@@ -1935,7 +2240,11 @@ module.exports = {
   /** Validates optional release-to-capability metadata used for business readiness rollups. */
   validateCapabilityMetadata: function (capability, moduleName, sectionCode) {
     if (capability === undefined) return undefined;
-    if (!capability || typeof capability !== "object" || Array.isArray(capability)) {
+    if (
+      !capability ||
+      typeof capability !== "object" ||
+      Array.isArray(capability)
+    ) {
       throw this.error(
         "ERR_IMP_00003",
         "Capability metadata is invalid for " + moduleName + ":" + sectionCode,
@@ -2166,7 +2475,117 @@ module.exports = {
         }),
       ),
     });
+    const placements = [];
+    const canonicalReleases = this.discoverReleases(plan.dataType);
+    for (const release of plan.releases) {
+      if (release.sourceOnly || release.installer) continue;
+      const canonical = canonicalReleases.filter(
+        (item) =>
+          !item.invalidManifest &&
+          item.releaseCode === release.releaseCode &&
+          item.version === release.version &&
+          item.checksum === release.checksum &&
+          item.sourceRoot === release.sourceRoot &&
+          item.moduleName === release.moduleName &&
+          JSON.stringify(item.declaredFiles) ===
+            JSON.stringify(release.declaredFiles),
+      );
+      if (canonical.length !== 1) continue;
+      const owner = NODICS.getRawModule(release.moduleName);
+      if (!owner?.path) continue;
+      for (const file of release.declaredFiles || []) {
+        if (!/(?:^|\/)headers\/.+\.js$/.test(file)) continue;
+        const headers = this.requireReleaseFile(
+          path.resolve(owner.path, "data", file),
+        );
+        for (const [moduleName, definitions] of Object.entries(headers || {})) {
+          for (const [name, header] of Object.entries(definitions || {})) {
+            const options = header?.options || {};
+            if (
+              options.enterpriseCode === undefined ||
+              options.enabled === false ||
+              options.enabled === "false"
+            )
+              continue;
+            if (
+              typeof options.enterpriseCode !== "string" ||
+              !/^[A-Za-z0-9_.:-]{1,128}$/.test(options.enterpriseCode)
+            )
+              throw this.error(
+                "ERR_IMP_00003",
+                "Explicit import enterprise code is invalid",
+              );
+            if (
+              ![
+                options.moduleName || moduleName,
+                options.schemaName,
+                options.operation,
+                plan.tenant,
+              ].every(
+                (value) =>
+                  typeof value === "string" &&
+                  /^[A-Za-z0-9_.:-]{1,128}$/.test(value),
+              )
+            )
+              throw this.error(
+                "ERR_IMP_00003",
+                "Explicit import placement metadata is invalid",
+              );
+            placements.push(
+              Object.freeze({
+                moduleName: options.moduleName || moduleName,
+                schemaName: options.schemaName,
+                operation: options.operation,
+                tenant: plan.tenant,
+                enterpriseCode: options.enterpriseCode,
+                dataFilePrefix: options.dataFilePrefix || name,
+              }),
+            );
+          }
+        }
+      }
+    }
+    if (placements.length) {
+      // An inbound run object is not provenance for a newly selected release.
+      delete next.importRun;
+      placementRequests.set(next, { placements: Object.freeze(placements) });
+    }
     return next;
+  },
+
+  /** Binds only an exact release-created request to its in-memory run; serialized markers never qualify. @param {Object} request Existing system initializer request. @returns {boolean} Whether private provenance was bound. */
+  bindOperationMetadataRun: function (request) {
+    const admission = placementRequests.get(request);
+    if (
+      !admission ||
+      admission.run ||
+      !request.importRun ||
+      typeof request.importRun !== "object"
+    )
+      return false;
+    admission.run = request.importRun;
+    placementRuns.set(admission.run, admission.placements);
+    return true;
+  },
+
+  /** Returns exact immutable-header placement metadata only during its active import lifetime. @param {Object} request Internal model dispatch request. @returns {Object|undefined} Frozen content-free placement, never caller authority. */
+  readTrustedOperationMetadata: function (request) {
+    const options = request?.header?.options;
+    const placements =
+      request?.importRun && placementRuns.get(request.importRun);
+    if (!options || !placements) return undefined;
+    const matching = placements.filter(
+      (item) =>
+        item.moduleName === options.moduleName &&
+        item.schemaName === options.schemaName &&
+        item.operation === options.operation &&
+        item.tenant === request.tenant &&
+        item.enterpriseCode === options.enterpriseCode &&
+        item.dataFilePrefix === options.dataFilePrefix,
+    );
+    if (matching.length !== 1) return undefined;
+    const { dataFilePrefix, ...metadata } = matching[0];
+    return Object.freeze(metadata);
   },
 
   /** Invokes the authoritative Init, Core, or Sample import operation. */
@@ -2198,16 +2617,22 @@ module.exports = {
       );
     }
     if (standard.length > 0) {
-      results.push(
-        await SERVICE.DefaultImportService[operation](
-          Object.assign(request, {
-            dataReleasePlan: standard,
-            modules: [
-              ...new Set(standard.map((release) => release.moduleName)),
-            ],
-          }),
-        ),
-      );
+      try {
+        results.push(
+          await SERVICE.DefaultImportService[operation](
+            Object.assign(request, {
+              dataReleasePlan: standard,
+              modules: [
+                ...new Set(standard.map((release) => release.moduleName)),
+              ],
+            }),
+          ),
+        );
+      } finally {
+        const admission = placementRequests.get(request);
+        if (admission?.run) placementRuns.delete(admission.run);
+        placementRequests.delete(request);
+      }
     }
     return { contributions: results };
   },
@@ -2398,7 +2823,8 @@ module.exports = {
 
   /** Projects backend-owned business readiness for Axis data-preparation screens. */
   releaseReadinessProjection: function (release) {
-    const code = release.releaseCode || release.moduleName + ":" + release.dataType;
+    const code =
+      release.releaseCode || release.moduleName + ":" + release.dataType;
     const blockers = this.releaseReadinessBlockers(release);
     const businessStatus = this.releaseBusinessStatus(release.status);
     const capability = release.capability || {};
@@ -2447,7 +2873,8 @@ module.exports = {
 
   /** Builds guided recovery blockers from immutable release state. */
   releaseReadinessBlockers: function (release) {
-    const code = release.releaseCode || release.moduleName + ":" + release.dataType;
+    const code =
+      release.releaseCode || release.moduleName + ":" + release.dataType;
     if (release.status === "CURRENT") return [];
     if (release.status === "RUNNING")
       return [
@@ -2510,7 +2937,8 @@ module.exports = {
 
   /** Builds one shared readiness blocker using the BackOffice/Axis severity vocabulary. */
   releaseReadinessBlocker: function (release, definition) {
-    const owner = release.releaseCode || release.moduleName + ":" + release.dataType;
+    const owner =
+      release.releaseCode || release.moduleName + ":" + release.dataType;
     const code = definition.code;
     const repairCode = definition.repairCode || code;
     return {
@@ -2524,7 +2952,9 @@ module.exports = {
       action: definition.action,
       disabledReason: this.releaseReadinessDisabledReason(repairCode, release),
       technicalStatus: release.status,
-      targetServer: release.targetServer ? String(release.targetServer) : undefined,
+      targetServer: release.targetServer
+        ? String(release.targetServer)
+        : undefined,
       targetRuntimeRole: release.targetRuntimeRole
         ? String(release.targetRuntimeRole)
         : undefined,

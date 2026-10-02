@@ -1,0 +1,24 @@
+{
+  "formatVersion": 1,
+  "code": "profileEmployeePasswordReset",
+  "ownerModule": "profile",
+  "version": 2,
+  "status": "ACTIVE",
+  "purpose": "EMPLOYEE_PASSWORD_RESET_CONFIRMATION",
+  "sourceModules": ["profile"],
+  "channel": "EMAIL",
+  "defaultLocale": "en",
+  "parameters": {
+    "completedAt": {
+      "type": "string",
+      "required": true,
+      "maximumLength": 128
+    },
+    "brandName": {
+      "type": "string",
+      "required": false,
+      "maximumLength": 120,
+      "default": "Account services"
+    }
+  }
+}

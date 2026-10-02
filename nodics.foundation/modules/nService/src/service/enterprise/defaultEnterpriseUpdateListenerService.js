@@ -57,8 +57,12 @@ module.exports = {
         if (event.data.enterprise) {
             let enterprise = event.data.enterprise;
             if (enterprise.tenant && enterprise.tenant.code) {
-                if (!NODICS.getActiveTenants().includes(enterprise.tenant.code)) {
-                    SERVICE.DefaultEnterpriseHandlerService.buildEnterprise([enterprise]).then(success => {
+                SERVICE.DefaultEnterpriseHandlerService.fetchEnterprise().then(inventory => {
+                    const matches = inventory.filter(item => item.code === enterprise.code && item.active === true &&
+                        item.tenant?.code === enterprise.tenant.code && item.tenant.active === true);
+                    if (matches.length !== 1) throw new CLASSES.NodicsError('ERR_PROFILE_TENANT_PROVISIONING_HELD');
+                    return SERVICE.DefaultEnterpriseHandlerService.buildEnterprise(matches);
+                }).then(success => {
                         this.LOG.debug('Enterprise: ' + enterprise.code + ' has been successfully activated');
                         callback(null, {
                             success: true,
@@ -67,21 +71,12 @@ module.exports = {
                         });
                     }).catch(error => {
                         this.LOG.error('Enterprise: ' + enterprise.code + ' can not be activated');
-                        this.LOG.error(error);
                         callback({
                             success: false,
                             code: 'ERR_EVNT_00000',
-                            error: error.toString()
+                            message: 'Enterprise preparation could not be confirmed'
                         });
                     });
-                } else {
-                    this.LOG.debug('Enterprise: ' + enterprise.code + ' is already activated');
-                    callback(null, {
-                        success: true,
-                        code: 'SUC_SYS_00000',
-                        message: 'Successfully updated enterprise'
-                    });
-                }
             } else {
                 this.LOG.error('Enterprise model dont have tenant associated or wrong tenant object');
                 callback({

@@ -5,9 +5,9 @@
         "runtime-defaults": {
             "kind": "DATA_RELEASE",
             "dataType": "core",
-            "version": "0.0.0",
+            "version": "0.0.1",
             "displayName": "Communication Runtime Defaults",
-            "description": "Minimal provider-neutral Communication templates required before Communication capabilities are activated.",
+            "description": "Governed Communication resource selections; presentation is module-owned.",
             "owningDomain": "communication",
             "lifecycle": "REFERENCE",
             "destinationRole": "ENGAGEMENT",
@@ -20,18 +20,18 @@
             "initialPublicationPolicy": "NONE",
             "removalPolicy": "RETAIN",
             "files": {
-                "core-v001/records/communication/commsRuntimeDefaultTemplateData.js": "9d01675cce0b6c89615aa1c29d36529c616444d940852c531517072da6280169",
-                "core-v001/records/communication/commsRuntimeDefaultTemplateVersionData.js": "de3df801527f208c2547e20045e4160a245772d48c1570d625d9275f50897a73",
-                "core-v001/headers/communication/commsRuntimeDefaultHeader.js": "e8fec61b19e9b33a8c957cd5a4b7855ee7b85f223cdcc3f7bc66dd03d8f6b03f"
+                "core-v002/records/communication/commsRuntimeDefaultTemplateData.js": "16be370806cd8af47bc7226ca627c37c7e1d2a7f166ee2e726309859a1faa9f4",
+                "core-v002/records/communication/commsRuntimeDefaultTemplateVersionData.js": "7fe6436f75a6f48cad43ba1ce8c2c89df2104556e4c0699f91d43e3725f45735",
+                "core-v002/headers/communication/commsRuntimeDefaultHeader.js": "0a9c84a586f023014eb6ab8526efae71558130e7b1b3cc3af5550615378b707d"
             },
-            "sourceRoot": "core-v001"
+            "sourceRoot": "core-v002"
         },
         "sample-templates": {
             "kind": "DATA_RELEASE",
             "dataType": "sample",
-            "version": "0.0.0",
+            "version": "0.0.1",
             "displayName": "Communication Sample Templates",
-            "description": "Optional local sample templates for engagement acknowledgement and consent flows.",
+            "description": "Optional acknowledgement and consent resource selections; user-triggered adoption remains required.",
             "owningDomain": "communication",
             "lifecycle": "REFERENCE",
             "destinationRole": "ENGAGEMENT",
@@ -44,11 +44,11 @@
             "initialPublicationPolicy": "NONE",
             "removalPolicy": "RETAIN",
             "files": {
-                "sample-v001/records/communication/commsSampleTemplateData.js": "7fbef86c6c5a8f35dc50f84a0c67fb413b1fb93d29ed1ed9c8ecb1c7d396643e",
-                "sample-v001/records/communication/commsSampleTemplateVersionData.js": "b931e3c77dafe93a109bfba5577c5dd7f51f09791c7c0198a0abeb50b554a499",
-                "sample-v001/headers/communication/commsSampleTemplateHeader.js": "ca3186788e07587c89826c28a9b97b0428dcfba8bb5ce8bc41fc075f92b23895"
+                "sample-v002/records/communication/commsSampleTemplateData.js": "f7ee483ceb3a4697dad71833b0c42ad58a40366720c7128af0c5ab78698777e1",
+                "sample-v002/records/communication/commsSampleTemplateVersionData.js": "45a8af906665494a1a9d61a67c60e4e42de4f84455e8a34b1d7a13449c651228",
+                "sample-v002/headers/communication/commsSampleHeader.js": "464ccac525a4a3a2fd7c2d528e3dc6713fc682e360109c52d09932fb058dae35"
             },
-            "sourceRoot": "sample-v001"
+            "sourceRoot": "sample-v002"
         }
     }
 }

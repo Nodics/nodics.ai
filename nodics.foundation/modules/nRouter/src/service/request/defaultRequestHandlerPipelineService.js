@@ -111,7 +111,10 @@ module.exports = {
       !exposure.categories ||
       !Object.prototype.hasOwnProperty.call(exposure.categories, category)
     ) {
-      if (exposure.unknown && Object.prototype.hasOwnProperty.call(exposure.unknown, "enabled")) {
+      if (
+        exposure.unknown &&
+        Object.prototype.hasOwnProperty.call(exposure.unknown, "enabled")
+      ) {
         return exposure.unknown.enabled === true;
       }
       if (Object.prototype.hasOwnProperty.call(defaultConfig, "enabled")) {
@@ -297,7 +300,12 @@ module.exports = {
    * @throws Emits `ERR_AUTH_00002` through the pipeline when neither credentials nor enterprise code are supplied for normal routes.
    */
   parseHeader: function (request, response, process) {
-    this.LOG.debug("Parsing request header for : " + request.originalUrl);
+    this.LOG.debug(
+      "Parsing request header for : " +
+        (SERVICE.DefaultLoggerService.isSensitiveRequest(request)
+          ? "[SENSITIVE_REQUEST]"
+          : request.originalUrl),
+    );
     request.auth = this.normalizeAuthHeaders(request);
     if (request.auth.deprecated) {
       this.LOG.warn(
@@ -364,7 +372,12 @@ module.exports = {
    */
   handleSpecialRequest: function (request, response, process) {
     if (request.special) {
-      this.LOG.debug("Handling special request : " + request.originalUrl);
+      this.LOG.debug(
+        "Handling special request : " +
+          (SERVICE.DefaultLoggerService.isSensitiveRequest(request)
+            ? "[SENSITIVE_REQUEST]"
+            : request.originalUrl),
+      );
       if (!request.tenant) {
         request.tenant = CONFIG.get("defaultTenant") || "default";
       }
@@ -399,7 +412,10 @@ module.exports = {
    */
   redirectRequest: function (request, response, process) {
     this.LOG.debug(
-      "Redirecting secured/non-secured request  : " + request.originalUrl,
+      "Redirecting secured/non-secured request  : " +
+        (SERVICE.DefaultLoggerService.isSensitiveRequest(request)
+          ? "[SENSITIVE_REQUEST]"
+          : request.originalUrl),
     );
     if (this.isPublicRequest(request.router)) {
       if (request.entCode) {
@@ -432,9 +448,16 @@ module.exports = {
    * @throws Propagates non-cache-miss cache errors through the pipeline.
    */
   lookupCache: function (request, response, process) {
+    if (SERVICE.DefaultLoggerService.isSensitiveRequest(request)) {
+      process.nextSuccess(request, response);
+      return;
+    }
     let _self = this;
     this.LOG.debug(
-      "Looking up result in cache system  : " + request.originalUrl,
+      "Looking up result in cache system  : " +
+        (SERVICE.DefaultLoggerService.isSensitiveRequest(request)
+          ? "[SENSITIVE_REQUEST]"
+          : request.originalUrl),
     );
     try {
       let keyHash = UTILS.generateHash(
@@ -494,7 +517,12 @@ module.exports = {
    */
   handleRequest: function (request, response, process) {
     let _self = this;
-    _self.LOG.debug("processing your request : " + request.originalUrl);
+    _self.LOG.debug(
+      "processing your request : " +
+        (SERVICE.DefaultLoggerService.isSensitiveRequest(request)
+          ? "[SENSITIVE_REQUEST]"
+          : request.originalUrl),
+    );
     try {
       CONTROLLER[request.router.controller][request.router.operation](
         request,
@@ -503,10 +531,13 @@ module.exports = {
             process.error(request, response, error);
           } else {
             response.success = success;
-            let cacheDecision =
-              SERVICE.DefaultCachePolicyService &&
-              typeof SERVICE.DefaultCachePolicyService.isApiCacheable ===
-                "function"
+            let cacheDecision = SERVICE.DefaultLoggerService.isSensitiveRequest(
+              request,
+            )
+              ? { cacheable: false, reason: "sensitiveRequest" }
+              : SERVICE.DefaultCachePolicyService &&
+                  typeof SERVICE.DefaultCachePolicyService.isApiCacheable ===
+                    "function"
                 ? SERVICE.DefaultCachePolicyService.isApiCacheable(
                     request,
                     response.success,

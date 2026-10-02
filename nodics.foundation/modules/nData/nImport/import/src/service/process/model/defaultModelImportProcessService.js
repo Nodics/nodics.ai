@@ -11,6 +11,7 @@
 
 const _ = require('lodash');
 const managedImportSnapshots = new WeakMap();
+const admittedOperationMetadata = new WeakMap();
 
 /**
  * @module nodics.foundation/modules/nData/nImport/import/src/service/process/model/defaultModelImportProcessService
@@ -20,6 +21,36 @@ const managedImportSnapshots = new WeakMap();
  * @override Project modules may override this behavior through later active modules while preserving the published capability contract.
  */
 module.exports = {
+    /** Returns private content-free placement only for the exact currently awaited generated operation request. @param {Object} request Exact schema-service request. @returns {Object|undefined} Frozen metadata. @override Preserve request identity and transient lifetime; never accept body markers. */
+    readAdmittedOperationMetadata: function (request) {
+        return request && typeof request === 'object' ? admittedOperationMetadata.get(request) : undefined;
+    },
+    /** Revalidates an explicitly placed immutable header with the configured capability owner, then admits only the awaited generated request. @param {Object} request Internal model-import request. @param {Object} operationRequest Exact generated schema-service request. @param {Object} schemaService Existing generated service. @returns {Promise<Object>} Existing operation result. */
+    executeAdmittedSchemaOperation: async function (request, operationRequest, schemaService) {
+        const options = request.header.options;
+        const operation = options.operation;
+        const hasPlacement = options.enterpriseCode !== undefined;
+        let metadata;
+        if (hasPlacement) {
+            metadata = SERVICE.DefaultDataReleaseService?.readTrustedOperationMetadata(request);
+            if (!metadata) throw new CLASSES.DataImportError('ERR_IMP_00003', 'Import placement requires exact immutable source-header provenance');
+            const providerName = CONFIG.get('data')?.dataReleases?.targetValidators?.[metadata.moduleName];
+            const provider = providerName && SERVICE[providerName];
+            let admitted;
+            if (provider && typeof provider.validateImportTarget === 'function') {
+                try { admitted = await provider.validateImportTarget(metadata); }
+                catch (error) { throw SERVICE.DefaultDataReleaseService.targetAdmissionError(error); }
+            }
+            if (admitted !== true)
+                throw new CLASSES.DataImportError('ERR_IMP_00003', 'Import placement owner did not admit the operation');
+        }
+        try {
+            if (metadata) admittedOperationMetadata.set(operationRequest, metadata);
+            return await schemaService[operation](operationRequest);
+        } finally {
+            admittedOperationMetadata.delete(operationRequest);
+        }
+    },
     /**
      * This function is used to initiate entity loader process. If there is any functionalities, required to be executed on entity loading. 
      * defined it that with Promise way
@@ -512,7 +543,13 @@ module.exports = {
                     });
                     resolve(data);
                 } else {
-                    reject(new CLASSES.DataImportError('ERR_IMP_00001', 'None ' + options.macro.options.model.toUpperCaseFirstChar() + 's found'));
+                    const error = new CLASSES.DataImportError('ERR_IMP_00001', 'None ' + options.macro.options.model.toUpperCaseFirstChar() + 's found');
+                    if (Array.isArray(result.result) && result.result.length === 0) {
+                        error.metadata = Object.assign({}, error.metadata, {
+                            importRetry: { kind: 'DEPENDENCY', writeOutcome: 'NOT_APPLIED' }
+                        });
+                    }
+                    reject(error);
                 }
             }).catch(error => {
                 reject(new CLASSES.DataImportError(error, null, 'ERR_IMP_00000'));
@@ -623,26 +660,34 @@ module.exports = {
             let schemaService = importContext.schemaService;
             let reconciledModels = importContext.reconciledModels;
             let options = Object.assign({}, request.options || {});
-            if (this.isGovernedContentPackRun(request)) {
+            delete options.allowCmsAssociationReplacement;
+            delete options.replaceAllMatchesByQuery;
+            delete options.replaceArraysOnVersionMerge;
+            const cms = header.options.moduleName === 'cms' && typeof NODICS.getModule === 'function' && NODICS.getModule('cms');
+            const ownsCmsTarget = header.options.moduleName === 'cms' &&
+                cms && cms.rawSchema && cms.rawSchema[header.options.schemaName] === header.rawSchema;
+            if (this.isGovernedContentPackRun(request) && ownsCmsTarget) {
                 options.allowCmsAssociationReplacement = true;
                 options.replaceAllMatchesByQuery = true;
                 options.replaceArraysOnVersionMerge = true;
+            }
+            if (this.isGovernedContentPackRun(request)) {
                 if (header.rawSchema && header.rawSchema.isVersionedEnabled === true) {
                     options.versionedImport = true;
                 }
             }
             return new Promise((resolve, reject) => {
-                schemaService[header.options.operation]({
-                tenant: request.tenant,
-                authData: {
-                    userGroups: header.options.userGroups
-                },
-                options: options,
-                searchOptions: request.searchOptions,
-                query: header.query,
-                models: reconciledModels,
-                suppressRetryErrorLog: request.suppressRetryErrorLog === true
-            }).then(success => {
+                this.executeAdmittedSchemaOperation(request, {
+                    tenant: request.tenant,
+                    authData: {
+                        userGroups: header.options.userGroups
+                    },
+                    options: options,
+                    searchOptions: request.searchOptions,
+                    query: header.query,
+                    models: reconciledModels,
+                    suppressRetryErrorLog: request.suppressRetryErrorLog === true
+                }, schemaService).then(success => {
                 if (success && success.result && success.result.length > 0) {
                     resolve(success.result);
                 } else if (header.options.operation === 'remove' && success && success.result) {
@@ -1054,6 +1099,7 @@ module.exports = {
         const concurrency = SERVICE.DefaultModelConcurrencyService;
         const field = concurrency && concurrency.getField(header.rawSchema);
         if (!field) return models;
+        const credentialPolicy = concurrency.getCredentialWritePolicy(header.rawSchema);
         if (!header.options || header.options.operation !== 'saveAll') {
             throw new CLASSES.NodicsError('ERR_CONCURRENCY_00003', 'Managed-counter data imports require the saveAll operation');
         }
@@ -1066,6 +1112,10 @@ module.exports = {
         for (const model of models) {
             const query = this.resolveImportModelQuery(header.query || {}, model);
             delete query[field];
+            if (credentialPolicy && (Object.hasOwn(query, credentialPolicy.credentialField) ||
+                Object.hasOwn(query, credentialPolicy.evidenceField) || Object.hasOwn(model, credentialPolicy.evidenceField))) {
+                throw new CLASSES.NodicsError('ERR_CONCURRENCY_00003');
+            }
             if (Object.keys(query).length === 0 && typeof model.code === 'string') query.code = model.code;
             if (Object.keys(query).length === 0 || Object.values(query).some(value => value === undefined)) {
                 throw new CLASSES.NodicsError('ERR_CONCURRENCY_00003');
@@ -1074,11 +1124,13 @@ module.exports = {
             if (!snapshots.has(key)) {
                 const response = await schemaService.get({ tenant: request.tenant,
                     authData: { userGroups: header.options.userGroups },
-                    query: query, searchOptions: { limit: 2 }, options: { recursive: false } });
+                    query: query, searchOptions: { limit: 2 }, options: { recursive: false, skipItemCache: true } });
                 const records = response && response.result;
                 if (!Array.isArray(records) || records.length > 1) throw new CLASSES.NodicsError('ERR_CONCURRENCY_00003');
                 const revision = records[0] && records[0][field] !== undefined ? records[0][field] : 0;
                 if (!Number.isSafeInteger(revision) || revision < 0) throw new CLASSES.NodicsError('ERR_CONCURRENCY_00003');
+                if (credentialPolicy && records[0] && (revision < 1 || records[0].active !== true ||
+                    Object.hasOwn(records[0], credentialPolicy.evidenceField))) throw new CLASSES.NodicsError('ERR_CONCURRENCY_00001');
                 snapshots.set(key, revision);
             }
             model[field] = snapshots.get(key);
@@ -1180,6 +1232,8 @@ module.exports = {
 
     insertRemoteModel: function (request, models) {
         let header = request.header;
+        if (header.options.enterpriseCode !== undefined)
+            return Promise.reject(new CLASSES.DataImportError('ERR_IMP_00003', 'Import placement requires local generated owner admission'));
         return new Promise((resolve, reject) => {
             let event = {
                 tenant: request.tenant,

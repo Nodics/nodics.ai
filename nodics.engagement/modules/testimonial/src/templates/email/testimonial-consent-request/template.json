@@ -1,0 +1,19 @@
+{
+  "formatVersion": 1,
+  "code": "TESTIMONIAL_CONSENT_REQUEST",
+  "ownerModule": "testimonial",
+  "version": 2,
+  "status": "ACTIVE",
+  "purpose": "CONSENT",
+  "sourceModules": ["testimonial"],
+  "channel": "EMAIL",
+  "defaultLocale": "en",
+  "requiresSelection": true,
+  "parameters": {
+    "reference": {
+      "type": "string",
+      "required": true,
+      "maximumLength": 256
+    }
+  }
+}

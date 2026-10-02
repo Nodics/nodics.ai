@@ -1,0 +1,2 @@
+Your employee account password was changed at {{completedAt}}.
+Enterprise memberships, approval status and permissions have not changed. If you did not make this change, contact your authorised account support team.

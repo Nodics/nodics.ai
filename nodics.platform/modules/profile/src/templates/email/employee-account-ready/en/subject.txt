@@ -1,0 +1,1 @@
+Your employee account for {{enterpriseName}} is ready

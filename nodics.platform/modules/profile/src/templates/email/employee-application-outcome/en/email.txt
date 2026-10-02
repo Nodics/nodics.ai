@@ -1,0 +1,3 @@
+Your request for {{enterpriseName}} was reviewed at {{decidedAt}}. Result: {{decision}}.
+{{nextStep}}
+This message does not contain a password or verification code.

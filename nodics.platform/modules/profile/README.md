@@ -1,132 +1,53 @@
 # profile
 
-Profile owns identity, authentication, authorization, enterprise and tenant scope, users, employees, customers, groups, permissions, and session behavior.
+Profile owns enterprise, employee and customer identity, registration, access assignments and session-context decisions.
+
+Parent relationships never grant access automatically. Preserve exact-target authority, canonical credentials, private application evidence, proof-bound onboarding and independent platform authority. Documented qualification gates remain unchanged.
+
+Detailed material is preserved in the adjacent [implementation and operations guide](profile-identity-onboarding-guide.md). This README is the discovery index, not a replacement authority or evidence that runtime qualification passed.
+
+Read [owner guidance](AGENTS.md) before changing behavior. Customize through the established later-loaded configuration, services, providers, schemas and runtime layers described in the guide; do not copy framework owners or bypass their invariants. Verification commands and their limits are retained in the guide. This documentation-only reorganization runs no behavioral tests or operations.
 
 ## Responsibility
 
-This module provides the identity and access foundation used by Axis, Nexus, backend routes, documentation access policy, and customer-project authorization. Profile also owns reusable address and contact records for customers, employees, enterprises, billing, shipping, offices, and reusable physical addresses.
+See [Responsibility](profile-identity-onboarding-guide.md#responsibility).
 
 ## Developer Notes
 
-- Enterprise Workbench creation delegates to
-  `DefaultEnterpriseManagementService.createFromModel` through the declared
-  `setupEnterprise` aggregate. Profile derives tenant assignment, retains allowed
-  effective project fields and activates the enterprise. Generic HTTP create is
-  not an alternative setup path. Updates retain their existing concurrency rules.
-  Effective fields come directly from `DefaultSchemaUtilityService`; the setup
-  owner does not need a Workbench service. Metadata helper overrides belong on
-  the shared utility, with absent/excluded metadata rejected before creation.
-- The setup command stores a principal-bound key and canonical input digest for
-  retrying interrupted activation without inserting another enterprise. These
-  fields are excluded from Workbench output. Nested Address/Contact saves remain
-  separate writes; a failed enterprise save does not roll them back. See the
-  Axis Schema Workbench guide for the full business journey and customization.
-
-- Keep route access, password handling, session restoration, and permission resolution inside profile-owned contracts.
-- External identity link/unlink and recipient resolution use authenticated controller routes. See [the external identity contract](llm/contracts/external-customer-identity.md); special handlers must not bypass bearer authentication.
-- Keep reusable address/contact facts in Profile. Location and business modules should reference Profile addresses and contacts instead of duplicating postal, geocoding, verification, access-note, or display-policy fields.
-- Keep global enterprise seed data in Profile. Capability-specific enterprises must be contributed from the owning module data folder into Profile enterprise authority, so inactive capabilities do not create their demo or reference enterprises.
-- Add project-specific users, groups, and permissions through profile data/configuration, not frontend shortcuts.
-- Preserve tenant and enterprise isolation.
-- Keep documentation author and view-only Axis responsibilities aligned with profile roles/groups.
-- Manage enterprise creation, enterprise role codes, email pre-assignment, and pre-approved employee registration through Profile `enterpriseManagement` services, schemas, routes, and layered configuration.
-- Keep Axis enterprise/user-management screens backend-component driven through the Profile BackOffice workspace contract; business users should customize labels, tabs, forms, roles, columns, and endpoints in configuration/published metadata rather than hardcoding Axis pages.
+See [Developer Notes](profile-identity-onboarding-guide.md#developer-notes).
 
 ## Documentation
 
-Deep documentation lives in:
+See [Documentation](profile-identity-onboarding-guide.md#documentation).
 
-- `nodics.docs/docs/pages/nodics.platform/security-identity-access.md`
-- `nodics.docs/docs/pages/applications/axis-business-customization.md`
-- `nodics.docs/docs/pages/nodics.foundation/routing-api-governance.md`
+Canonical framework documentation:
+
+- [nodics.docs/docs/pages/nodics.platform/security-identity-access.md](../../../nodics.docs/docs/pages/nodics.platform/security-identity-access.md)
+- [nodics.docs/docs/pages/applications/axis-business-customization.md](../../../nodics.docs/docs/pages/applications/axis-business-customization.md)
+- [nodics.docs/docs/pages/nodics.foundation/routing-api-governance.md](../../../nodics.docs/docs/pages/nodics.foundation/routing-api-governance.md)
 
 ## Verification
 
-Run profile identity and access tests when behavior changes, then run:
-
-```bash
-npm --prefix nodics.docs test
-npm run quality:docs
-```
-
-Customer account forms are normalized and registered by Profile through its
-existing signup pipeline; see [account form registration](llm/contracts/customer-registration-form.md).
-External browser sign-in can use a one-use Profile auth-cache handoff so domain
-orchestrators never receive refresh credentials; see
-[external identity](llm/contracts/external-customer-identity.md).
-
-Established external customer sessions retain an opaque identity-link binding for journey continuation and refresh, with current link/account checks. Launch freshness remains bounded; see the [external identity contract](llm/contracts/external-customer-identity.md).
-
-This capability declares an inert model-service inventory for [governed Local reset](../../../nodics.foundation/modules/nSystem/llm/contracts/local-reset.md).
-A server must explicitly select it; contributions never enable reset or bypass tenant, environment, confirmation or required-service checks.
-
-Runtime deployment authorization reuses direct service-principal scope assignments and API-key proof. Each instance has its own retained secret and approved project/environment/server/modules; assignment changes invalidate issued credentials.
-
-Runtime tenant bootstrap awaits governed Init releases and reconciles existing identity metadata before proof/grant validation. Native local startup may repair missing deployment records for discovered sibling runtime identities after a schema reset, using generated local credential proof and explicit `RUNTIME_DEPLOYMENT` assignments. Non-local deployment records and securely retained proof must still be provisioned by the operator.
-
-Runtime deployment scope uses the canonical generated-service response envelope.
-Grant reads require successful records; scope invalidation requires an acknowledged
-update matching exactly one service principal before completion is reported.
-
-The existing `GET /enterprise/get` also serves scoped runtime bootstrap. Its
-service path requires `profile` module scope, `profile.enterprise.search`, and
-an exact match between authenticated enterprise/tenant and requested context.
-It returns one active enterprise with only code, active state and its tenant
-code/state/properties. The trusted Profile lookup stays inside Profile after
-authorization; runtime tokens gain no group-based generic CRUD access. Local
-startup may prepare its authority-owned tenant inventory; a remote runtime may
-only discover the enterprise authorized by its retained proof and deployment
-grant. Tenant properties are protected runtime configuration, not public data.
-
-Route-category defaults belong to this capability; deployments supply only intentional overrides.
-Preserve nRouter enforcement and independent route authorization. See [exposure ownership](../../../nodics.foundation/modules/nRouter/llm/contracts/README.md#capability-owned-exposure-defaults).
-
-`profileInitialization.requiredEmployeeLogins` owns initializer identity checks,
-with admin/apiAdmin defaults matching Profile Init data. Runtime API-key login
-metadata does not select the initializer employee. Custom identities require
-matching governed Init data; partial checks never reset existing credentials.
-
-Profile refresh sessions use the Profile-owned `auth` cache channel. Its module
-configuration references nAuth's strict channel defaults through nConfig; do not
-copy those defaults into a customer environment or redirect identity ownership.
-The deployment must still enable the distributed provider. Later Profile channel
-overrides use normal layering, preserving atomic consume and no local fallback.
-
-Browser sessions resolve credentialed origins through nRouter's existing
-`resolveCorsOrigins` service. Endpoint-derived origins and explicit origin lists
-share one policy; explicit denials and endpoint disables take precedence.
-Profile continues to enforce cookie security, CSRF and refresh rotation.
-
-During a governed Local reset, the provider's private authority may reach scope
-cleanup after Employee deletion. Profile must prove principal absence through an
-authoritative read and await nAuth shared-stamp revocation. It must reject failed
-reads or revocation, and a request field cannot forge reset authority. Existing
-principals and ordinary scope mutations still require exactly one acknowledged
-Employee update. This rule is independent of reset inventory ordering.
-
-For a deployment serving both an approved HTTPS origin and local HTTP development,
-keep browser-session `secure: true` and opt into `allowInsecureLoopback: true` in
-the appropriate customer or employee session configuration. Only exact HTTP
-localhost, IPv4 loopback and IPv6 loopback requests receive non-Secure cookies;
-HTTPS retains Secure. This is resolved per request without changing shared
-configuration. Exact credentialed CORS, CSRF, proof freshness and refresh rotation
-remain required. Non-loopback HTTP and SameSite=None with non-Secure cookies fail.
+See [Verification](profile-identity-onboarding-guide.md#verification).
 
 ## Enterprise access-assignment safeguards
 
-New pre-assignment identifiers retain exact enterprise/email identity through the
-existing canonical digest; eligible legacy associations retain their codes.
-The management operation checks completed registration independently of pending
-invitation expiry and paging. A completed association is not reset by an ordinary
-pre-assignment request, and unavailable registry evidence blocks that request.
-See [the assignment contract and worked cases](llm/contracts/README.md#assignment-identity-and-completed-registration-safeguards).
+See [Enterprise access-assignment safeguards](profile-identity-onboarding-guide.md#enterprise-access-assignment-safeguards).
+Team retry and operator-recovery invariants are defined in the
+[membership contract](llm/contracts/enterprise-membership.md#team-serialization-and-recovery).
 
-Focused verification:
+## Internal verification transport
 
-```bash
-node --test nodics.platform/modules/profile/test/enterpriseAccessAssignmentSafety.test.js
-```
+See [Internal verification transport](profile-identity-onboarding-guide.md#internal-verification-transport).
 
-This is a bounded pre-assignment safeguard, not acceptance of OTP enforcement,
-concurrent provisioning, multi-enterprise identity, recovery or the full Axis
-journey. No credential migration, new UI field or data reset is introduced.
+## Invited employee registration
+
+See [Invited employee registration](profile-identity-onboarding-guide.md#invited-employee-registration).
+
+## Employee application intake
+
+See [Employee application intake](profile-identity-onboarding-guide.md#employee-application-intake).
+
+## Application review recovery
+
+See [Application review recovery](profile-identity-onboarding-guide.md#application-review-recovery).

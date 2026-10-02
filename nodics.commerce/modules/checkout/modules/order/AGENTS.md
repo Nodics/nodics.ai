@@ -1,5 +1,9 @@
 # Order Agent Contract
 
+Refund messaging is a post-COMPLETED Digital Core owner attempt, not a refund
+phase or financial rollback reason. Require fresh Payment and reversal evidence;
+see Digital Core's committed coupon notification contract before extending it.
+
 - Follow `../../../../../AGENTS.md` and `../../../../../nodics.foundation/modules/nSetup/llm/ai-enablement-index.md`.
 - Follow ancestor contracts and read local guidance.
 
