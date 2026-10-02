@@ -31,6 +31,11 @@ and nImport's retained-root validator. Preserve immutable historical trees and
 section identities; never recreate retained roots as conventional releases. See
 `llm/contracts/README.md#forward-data-releases` before integrating any generator.
 
+Copyright governance preserves the exact checksum-frozen Profile init-v007 service
+employee payload through a content-digest compatibility entry. Its existing root
+license attribution stays intact; changed bytes or new short-header source do not
+inherit that compatibility. New source uses the standard Nodics header.
+
 This file gives AI coding agents mandatory guidance for this Nodics module or package boundary.
 
 ## Inheritance

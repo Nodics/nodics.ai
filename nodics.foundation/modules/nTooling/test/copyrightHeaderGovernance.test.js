@@ -61,4 +61,9 @@ assert(fs.readFileSync(shorterHeaderFile, 'utf8').startsWith(copyrightHeaders.co
     'immutable release payloads must not be mechanically rewritten solely for header migration');
 assert(copyrightHeaders.requiredHeader.includes('Copyright (c) 2026 Nodics All rights reserved.'));
 
+const retainedPayload = fs.readFileSync(path.resolve(__dirname, '../../../../nodics.platform/modules/profile/data/init-v007/records/user/defaultServiceEmployeeData.js'), 'utf8');
+assert(copyrightHeaders.hasRequiredHeader(retainedPayload), 'the exact retained release preserves its existing license attribution');
+assert(!copyrightHeaders.hasRequiredHeader(retainedPayload + '\n'), 'compatibility must reject changed retained bytes');
+assert(!copyrightHeaders.hasRequiredHeader('/* Copyright (c) 2026 Nodics. Governed by the root LICENSE. */\nmodule.exports = {};\n'), 'new source must use the standard header');
+
 console.log('Copyright header governance validated');

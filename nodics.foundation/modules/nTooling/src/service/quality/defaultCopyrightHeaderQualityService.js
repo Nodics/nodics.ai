@@ -11,6 +11,7 @@
 
 const fs = require('fs');
 const path = require('path');
+const crypto = require('node:crypto');
 
 /**
  * @module nTooling/service/quality/defaultCopyrightHeaderQualityService
@@ -37,6 +38,9 @@ const compatibleImmutableReleaseHeader = '/*\n' +
     ' *  This source code is licensed under the license found in the\n' +
     ' *  LICENSE file in the root directory of this source tree.\n' +
     ' */\n';
+
+// Retained Profile init-v007 has equivalent license attribution; its published bytes are immutable.
+const compatibleRetainedReleaseDigest = 'bcf04cbde2633ef37ecc123e88b0c65d1a185450661cda925da3de8d3c0149dd';
 
 const excludedDirectories = new Set([
     '.git',
@@ -149,7 +153,8 @@ module.exports = exportedService = {
     hasRequiredHeader: function (content) {
     const shebangParts = (this.splitShebang || exportedService.splitShebang).call(this, content);
     return shebangParts.body.startsWith(requiredHeader) ||
-        shebangParts.body.startsWith(compatibleImmutableReleaseHeader);
+        shebangParts.body.startsWith(compatibleImmutableReleaseHeader) ||
+        crypto.createHash('sha256').update(content).digest('hex') === compatibleRetainedReleaseDigest;
 },
 
     /** Implements collect as an overrideable service operation. */
