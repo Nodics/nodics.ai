@@ -82,7 +82,10 @@ function collectUsedStatusCodes(javaScriptFiles) {
 }
 
 const javaScriptFiles = collectJavaScriptFiles();
-const statusCatalog = collectStatusDefinitions(javaScriptFiles);
+// Registration recognizes a remote registry response; its definition stays BackOffice-owned.
+const statusCatalog = collectStatusDefinitions(javaScriptFiles.concat([
+    path.resolve(rootDir, '../nodics.platform/modules/backoffice/src/utils/statusDefinitions.js')
+]));
 const statusUsages = collectUsedStatusCodes(javaScriptFiles);
 const missingDefinitions = Object.keys(statusUsages).filter(statusCode => !statusCatalog.definitions[statusCode]).map(statusCode => {
     return {
