@@ -14,3 +14,4 @@
 const targets = require("../../../../../../../nodics.foundation/modules/nAuth/config/properties").identityGovernance.migration.groupTargets;
 const codes = ["axisOperationalUserGroup", "wasteEnterpriseAdministratorUserGroup", "wasteCentreOperatorUserGroup", "wasteVerifierUserGroup", "wasteApproverUserGroup", "wasteCouponManagerUserGroup", "wasteMarketplaceModeratorUserGroup", "wasteAuditorUserGroup"];
 module.exports = Object.fromEntries(codes.map((code, index) => ["record"+index, {code, name:code, active:true, parentGroups:targets[code].parentGroups, permissions:targets[code].permissions}]));
+

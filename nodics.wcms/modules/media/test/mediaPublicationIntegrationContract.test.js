@@ -157,7 +157,7 @@ test('same-code forward Media release uses existing installer upgrade and preser
     assert.deepEqual(existing, before);
 });
 
-test('successor policy uses real native Process maker-checker and typed rejection guards', () => {
+test('successor policy uses native Process access rights and typed rejection guards', () => {
     fixture();
     const runtime = require('../../../../nodics.process/modules/workflow/src/service/operation/defaultProcessRuntimeLifecycleService');
     const definition = require('../data/init-v003/records/process/mediaPublicationWorkflowDefinitionData').definitions[0];
@@ -170,7 +170,10 @@ test('successor policy uses real native Process maker-checker and typed rejectio
     const instance = { context: { enterpriseCode: 'owner', requestedBy: 'maker@example.invalid' } };
     const request = { tenant: 'one', authData: { tenant: 'one', entCode: 'owner', tokenType: 'access', principalType: 'human',
         principalId: 'different-native-id', loginId: 'maker@example.invalid', permissions: ['publish.lifecycle.approve'] } };
+    runtime.assertTaskActor(request, instance, policy);
+    request.authData.permissions = [];
     assert.throws(() => runtime.assertTaskActor(request, instance, policy));
+    request.authData.permissions = ['publish.lifecycle.approve'];
     request.authData.loginId = 'reviewer@example.invalid';
     runtime.assertTaskActor(request, instance, policy);
     assert.throws(() => runtime.assertTaskActorPolicy(request, instance, policy, { approved: false, reason: '' }));
@@ -257,9 +260,13 @@ test('governed operator entry captures once and delegates fixed-domain publicati
         },
         validate: async request => { calls.push('validate'); assert.equal(request.expectedRevision, 1);
             const result = publications.get(request.publicationCode); Object.assign(result, { state: 'VALIDATED', revision: 2 }); return result; },
-        requestApproval: async request => { calls.push('approval'); assert.equal(request.expectedRevision, 2);
+        requestApproval: async request => { calls.push('approval');
+            const result = publications.get(request.publicationCode);
+            assert.equal(request.expectedRevision, result.revision);
             assert.equal(request.httpRequest.headers.authorization, 'Bearer fixture-starter');
-            const result = publications.get(request.publicationCode); Object.assign(result, { state: 'PENDING_APPROVAL', revision: 3 }); return result; }
+            if (result.state === 'VALIDATED') Object.assign(result, { state: 'PENDING_APPROVAL', revision: 3 });
+            else assert.equal(result.state, 'PENDING_APPROVAL');
+            return result; }
     };
     SERVICE.DefaultMediaLibraryService = require('../src/service/defaultMediaLibraryService');
     SERVICE.DefaultModuleService = { invokeModule: async request => request.responseSelector({ data:
@@ -282,10 +289,18 @@ test('governed operator entry captures once and delegates fixed-domain publicati
     await assert.rejects(controller.createRetainedPublication({ ...request, httpRequest: { body: { ...input, domain: 'forged', sourceVersion: 'forged' } } }));
     const first = await controller.createRetainedPublication(request);
     assert.equal(first.result.state, 'PENDING_APPROVAL');
-    await controller.createRetainedPublication(request);
-    assert.equal(captures, 1); assert.deepEqual(calls, ['create', 'validate', 'approval']);
-    await assert.rejects(provider.createGoverned({ ...input, versionId: 3 }, request), /retry identity conflict/);
-    await assert.rejects(provider.createGoverned({ ...input, mediaCode: 'other' }, request), /retry identity conflict/);
+    const retried = await controller.createRetainedPublication(request);
+    assert.equal(retried.result.revision, 3);
+    assert.equal(captures, 1); assert.deepEqual(calls, ['create', 'validate', 'approval', 'approval']);
+    for (const patch of [{ versionId: 3 }, { mediaCode: 'other' }]) {
+        await assert.rejects(provider.createGoverned({ ...input, ...patch }, request), error => {
+            assert.equal(error.code, 'ERR_MED_00023');
+            assert.equal(error.mediaPublicationStage, 'INSPECT');
+            assert.equal(error.message.includes('retry identity conflict'), false);
+            return true;
+        });
+    }
+    assert.deepEqual(calls, ['create', 'validate', 'approval', 'approval']);
     await assert.rejects(controller.createRetainedPublication({ ...request, tenant: 'other' }));
     await assert.rejects(controller.createRetainedPublication({ ...request, authData: f.context.authData }));
     f.policy.runtimeRole = 'ONLINE'; await assert.rejects(controller.createRetainedPublication(request));
